@@ -155,6 +155,31 @@ async function effectDiags(source, flowName) {
     : [];
 }
 
+/** Parse a source string and return the FULL parser ParseResult record (flows/policies/guardDecls). */
+async function parseToResult(source) {
+  const lexRes = await executeFlow("tokenize", new Map([["source", vStr(source)]]), lexer.ast);
+  let tokensVal = lexRes.value ?? lexRes;
+  if (tokensVal.__tag === "ok") tokensVal = tokensVal.value;
+  const parseRes = await executeFlow("parseFlows", new Map([["tokens", tokensVal]]), parser.ast);
+  return parseRes.value ?? parseRes;
+}
+
+/**
+ * Tranche 5's runner — drive a guard-domain governance flow that needs parser outputs BEYOND `flows`
+ * (`policies` for GOV-004, `guardDecls` for GOV-005). argKeys are BOTH the ParseResult field names AND
+ * the flow's parameter names (they coincide: flows/policies/guardDecls) — so we map each param to its
+ * same-named ParseResult field. Value over the hand-built self-hosted-governance-verifier.test.mjs:
+ * proves the parser actually EMITS policies/guardDecls that these sub-verifiers consume.
+ */
+async function govGuardCodes(source, flowName, argKeys) {
+  const pr = await parseToResult(source);
+  const argMap = new Map(argKeys.map((k) => [k, pr.fields.get(k)]));
+  const r = await executeFlow(flowName, argMap, gov.ast, gov.flows, undefined, undefined, { pureFastPath: false });
+  const rec = r.value ?? r;
+  const d = rec.fields.get("diagnostics");
+  return d?.__tag === "list" ? d.items.map((x) => (x.value ?? x).fields.get("code").value) : [];
+}
+
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
 
 // Correct programs: the self-hosted type-checker MUST accept (zero diagnostics).
@@ -361,6 +386,51 @@ describe("RD-0528 I-3 functional corpus (tranche 4: effect-correctness) — chec
   }
 });
 
+// Tranche 5 (2026-07-24): governance-correctness WIDENING — the two charter codes reachable through the
+// pipeline BEYOND verifyGovernance's {GOV-002,VAL-001,VAL-002}: GOV-004 (a declared effect not permitted
+// by / a conforms_to naming a missing policy) via verifyDomainGuardConformance(flows, policies), and
+// GOV-005 (guard permitted_effects contains an unknown capability token) via verifyGuardDecl(guardDecls).
+// Every case below was MEASURED through the real self-hosted parse->govern pipeline (2026-07-24), not
+// guessed. The other 9 gov-verifier charter codes (INHERIT-001/002 · MONO-001/002 · TRAP-001/002 ·
+// MUTATION-001/002 · STEP-001) are PARSER-BLOCKED — the self-hosted parser has NO production for
+// emergency/parent_policy/trap/mutation-policy/step (measured; R&D-confirmed at source, bridge 0208/0209),
+// so they receive empty input and cannot be exercised through the pipeline. They are OUT of I-3 scope
+// until the parser learns those constructs (a documented gov-verifier flip precondition, not a tranche gap).
+const GOV_GUARD_CONFORMANCE = [ // verifyDomainGuardConformance(flows, policies)
+  { label: "conforms_to a policy that permits the declared effect — clean", expect: null,
+    src: `policy P { permitted_effects { audit.write } }\n\nsecure flow pay(id: String) -> Result<String, String>\ncontract [conforms_to: P] {\n  intent { "ok" }\n  effects { audit.write }\n}\n{ return Ok(id) }` },
+  { label: "conforms_to a policy that does not exist", expect: "FUNGI-GOV-004",
+    src: `secure flow pay(id: String) -> Result<String, String>\ncontract [conforms_to: NoSuchPolicy] {\n  intent { "missing policy" }\n  effects { audit.write }\n}\n{ return Ok(id) }` },
+  { label: "no conforms_to — the check is conditional, stays silent", expect: null,
+    src: `secure flow pay(id: String) -> Result<String, String>\ncontract {\n  intent { "unbound" }\n  effects { audit.write }\n}\n{ return Ok(id) }` },
+];
+const GOV_GUARD_DECL = [ // verifyGuardDecl(guardDecls)
+  { label: "guard permitted_effects are all known capability tokens — clean", expect: null,
+    src: `guard G1 {\n  permitted_effects {\n    audit.write\n  }\n}` },
+  { label: "guard permitted_effects contains an unknown capability token", expect: "FUNGI-GOV-005",
+    src: `guard G2 {\n  permitted_effects {\n    database.write\n  }\n}` },
+];
+
+describe("RD-0528 I-3 functional corpus (tranche 5: governance widening) — verifyDomainGuardConformance (GOV-004, parse -> flows+policies)", () => {
+  for (const c of GOV_GUARD_CONFORMANCE) {
+    it(`${c.expect ? "rejects" : "accepts"}: ${c.label}`, async () => {
+      const codes = await govGuardCodes(c.src, "verifyDomainGuardConformance", ["flows", "policies"]);
+      if (c.expect) assert.ok(codes.includes(c.expect), `expected ${c.expect}, got ${JSON.stringify(codes)}`);
+      else assert.deepEqual(codes, [], `expected clean conformance, got ${JSON.stringify(codes)}`);
+    });
+  }
+});
+
+describe("RD-0528 I-3 functional corpus (tranche 5: governance widening) — verifyGuardDecl (GOV-005, parse -> guardDecls)", () => {
+  for (const c of GOV_GUARD_DECL) {
+    it(`${c.expect ? "rejects" : "accepts"}: ${c.label}`, async () => {
+      const codes = await govGuardCodes(c.src, "verifyGuardDecl", ["guardDecls"]);
+      if (c.expect) assert.ok(codes.includes(c.expect), `expected ${c.expect}, got ${JSON.stringify(codes)}`);
+      else assert.deepEqual(codes, [], `expected clean guard decl, got ${JSON.stringify(codes)}`);
+    });
+  }
+});
+
 describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
   it("the corpus carries known-bad cases (a corpus that can only pass proves nothing)", () => {
     assert.ok(MUST_FAIL.length >= 5, "the type must-fail set must be non-trivial");
@@ -368,6 +438,8 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
     assert.ok(MUST_FAIL_PARSE.length >= 4, "the parse must-fail set must be non-trivial");
     assert.ok(GOV_VERIFY.some((c) => c.expect) && GOV_BODY.some((c) => c.expect), "the governance corpus must carry reject cases");
     assert.ok(GOV_SAFETY.some((c) => c.contains.length > 0), "the safety_critical governance corpus must carry reject cases");
+    assert.ok(GOV_GUARD_CONFORMANCE.some((c) => c.expect) && GOV_GUARD_CONFORMANCE.some((c) => !c.expect), "the GOV-004 corpus must carry both a reject and an accept case");
+    assert.ok(GOV_GUARD_DECL.some((c) => c.expect) && GOV_GUARD_DECL.some((c) => !c.expect), "the GOV-005 corpus must carry both a reject and an accept case");
   });
   it("the parse corpus exercises every FUNGI-PARSE code (001..004), not just one path", () => {
     const covered = new Set(MUST_FAIL_PARSE.map((c) => c.contains));
@@ -375,12 +447,14 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
       assert.ok(covered.has(code), `the parse corpus must exercise ${code}`);
     }
   });
-  it("the governance corpus exercises every reachable pipeline code (GOV-002 · VAL-001 · VAL-002)", () => {
-    const covered = new Set([...GOV_VERIFY, ...GOV_BODY].map((c) => c.expect).filter(Boolean));
+  it("the governance corpus exercises every PIPELINE-REACHABLE gov-verifier code (GOV-002 · VAL-001 · VAL-002 · GOV-004 · GOV-005 = 5 of 14; the other 9 are parser-blocked, bridge 0208/0209)", () => {
+    const covered = new Set([...GOV_VERIFY, ...GOV_BODY, ...GOV_GUARD_CONFORMANCE, ...GOV_GUARD_DECL].map((c) => c.expect).filter(Boolean));
     for (const c of GOV_SAFETY) for (const code of c.contains) covered.add(code);
     assert.ok(covered.has("FUNGI-GOV-002"), "must exercise FUNGI-GOV-002 (verifyGovernance secure-no-effects)");
     assert.ok(covered.has("FUNGI-VAL-001"), "must exercise FUNGI-VAL-001 (body-audit + safety_critical no-audit)");
     assert.ok(covered.has("FUNGI-VAL-002"), "must exercise FUNGI-VAL-002 (safety_critical not-deterministic, unlocked by finding d)");
+    assert.ok(covered.has("FUNGI-GOV-004"), "must exercise FUNGI-GOV-004 (conforms_to a missing policy, verifyDomainGuardConformance)");
+    assert.ok(covered.has("FUNGI-GOV-005"), "must exercise FUNGI-GOV-005 (guard permitted_effects unknown capability, verifyGuardDecl)");
   });
   it("the effect corpus exercises the effect twin's ENTIRE 9-code charter (001..009), both lanes, with accept controls", () => {
     const covered = new Set();
