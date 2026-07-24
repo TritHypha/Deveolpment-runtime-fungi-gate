@@ -142,10 +142,18 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 //                      handled explicitly. (R&D also named 3VL-005/006, but MEASURED: neither is emitted
 //                      by checkTypes — absent from type-checker.ts — so they do NOT ride this advisory
 //                      bucket; if they exist they are governance-verifier codes, already counted. 0170.)
-// Corpus blast radius MEASURED 0/460 .fungi for ALL of these (latent-prevention, no live site) before
-// promoting — so this reds no shipped file. SINGLE source of truth: both the `check` advisory
-// path and the `build` govErrors gate read THIS set (a duplicated security set could drift).
-const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003"]);
+//   FUNGI-K3-002       `!v` boolean-negates a Verdict (turns a trit into a decision — fail-open, the
+//                      `!`-on-Verdict form is the direct analog of K3-001) / `flip` applied to a
+//                      non-Verdict (K3-negation on the wrong type). Both are checkTypes governance errors.
+//   FUNGI-K3-003       an `all{}`/`any{}` K3 min/max fold with a non-Verdict operand — a non-Verdict
+//                      silently coerced into a governance fold produces an unsound verdict.
+// The full FUNGI-K3-* / FUNGI-GOV-3VL-* family that checkTypes emits {TYPE-033 aside} is now HERE — an
+// INVARIANT GATE (tests/security-type-codes-invariant.test.mjs) asserts every such code the type-checker
+// emits is in THIS set, so a future governance/verdict code cannot silently rejoin the advisory bucket
+// (the F1/F2/F3 fail-open class, made unrepresentable). Corpus blast radius MEASURED 0/460 .fungi for ALL
+// of these (latent-prevention). SINGLE source of truth: both the `check` advisory path and the `build`
+// govErrors gate read THIS set (a duplicated security set could drift).
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003"]);
 
 async function main() {
   let [, , command = "help", ...rest] = process.argv;

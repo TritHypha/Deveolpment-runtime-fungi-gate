@@ -43,7 +43,7 @@ function cli(cmd, file, extra = []) {
 
 after(() => {
   for (const p of fixtures) { try { rmSync(p, { force: true }); } catch { /* ignore */ } }
-  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match"]) {
+  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match", "__sectype_notv", "__sectype_fold"]) {
     for (const ext of [".wasm", ".wat", ".lmanifest", ".lmanifest.json", ".fuse.json", ".governance-impact.json"]) {
       try { rmSync(join(BUILD, `${base}${ext}`), { force: true }); } catch { /* ignore */ }
     }
@@ -59,6 +59,10 @@ const MIXED = `pure flow g(v: Verdict, w: Verdict) -> Verdict { return v and w }
 const MIXEDBAD = `pure flow g(v: Verdict, b: Bool) -> Verdict { let r: Verdict = v and b  return r }\n`;
 // S3 — a Verdict `match` whose wildcard covers the DENY arm (fail-open: DENY swept into the default)
 const MATCHBAD = `pure flow g(v: Verdict) -> Int { match v { Allow => { return 1 } _ => { return 0 } } }\n`;
+// S3+ — `!v` boolean-negates a Verdict (FUNGI-K3-002 — turns a trit into a decision, fail-open)
+const NOTVERDICT = `pure flow g(v: Verdict) -> Bool { return !v }\n`;
+// S3+ — a K3 fold `all{}` with a non-Verdict operand (FUNGI-K3-003 — unsound coercion into the fold)
+const FOLDBAD = `pure flow g(v: Verdict, n: Int) -> Verdict { return all{ v n } }\n`;
 // An ORDINARY type error (Int returned as String) — must STAY advisory (not in the security carve-out)
 const MISMATCH = `pure flow g(n: Int) -> String { return n }\n`;
 // The sanctioned Verdict authorization idiom — must be clean
@@ -120,6 +124,24 @@ test("build: the Verdict-match wildcard-over-DENY (FUNGI-GOV-3VL-003) REFUSES th
   assert.match(r.out, /FUNGI-GOV-3VL-003/, "build must name the wildcard-over-DENY fail-open code");
   assert.match(r.out, /FAILED \(fail-closed/, "build must fail closed, not mint an artifact");
   assert.equal(r.status, 1, `build of the wildcard-over-DENY fail-open must be refused\n${r.out}`);
+});
+
+test("check+build: `!v` on a Verdict (FUNGI-K3-002) fails CLOSED — counted + build refused", () => {
+  const c = cli("check", fixture("__sectype_notv.fungi", NOTVERDICT));
+  assert.match(c.out, /FUNGI-K3-002/, "boolean-negating a Verdict must surface as an error");
+  assert.equal(c.status, 1, `plain check must exit non-zero\n${c.out}`);
+  const b = cli("build", fixture("__sectype_notv.fungi", NOTVERDICT));
+  assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
+  assert.equal(b.status, 1, `build must be refused\n${b.out}`);
+});
+
+test("check+build: K3 fold `all{ v n }` with a non-Verdict (FUNGI-K3-003) fails CLOSED", () => {
+  const c = cli("check", fixture("__sectype_fold.fungi", FOLDBAD));
+  assert.match(c.out, /FUNGI-K3-003/, "a non-Verdict fold operand must surface as an error");
+  assert.equal(c.status, 1, `plain check must exit non-zero\n${c.out}`);
+  const b = cli("build", fixture("__sectype_fold.fungi", FOLDBAD));
+  assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
+  assert.equal(b.status, 1, `build must be refused\n${b.out}`);
 });
 
 test("REGRESSION: an ORDINARY type error (Int↦String) STAYS advisory in plain check — exit 0", () => {
