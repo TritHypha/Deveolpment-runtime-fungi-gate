@@ -131,10 +131,16 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 //   FUNGI-GOV-3VL-004  an ordered comparison on a Verdict (`v >= 1`, `v > 0`) — authorization is
 //                      `== Verdict.Allow` ONLY; the K3 order is for the algebra, and an ordered
 //                      test fails OPEN the instant an out-of-domain value appears (F2).
-// Corpus blast radius MEASURED 0/460 .fungi (both are latent-prevention, no live site) before
+//   FUNGI-K3-001       a mixed Verdict×Bool boolean operand (`v and b`, S3 / battery F3) — the code's
+//                      own message says it "silently turns UNKNOWN into a decision (fail-open)". Direct
+//                      analog of 3VL-004. (The OTHER two F3 cases — `v == b`, `return 2` as Verdict —
+//                      surface via GENERIC FUNGI-TYPE-004/008, which have 17/31 live corpus sites, so
+//                      they are NOT surgically promotable here; they need dedicated K3 codes — an open
+//                      design question routed to R&D, bridge 0169.)
+// Corpus blast radius MEASURED 0/460 .fungi for all three (latent-prevention, no live site) before
 // promoting — so this reds no shipped file. SINGLE source of truth: both the `check` advisory
 // path and the `build` govErrors gate read THIS set (a duplicated security set could drift).
-const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004"]);
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001"]);
 
 async function main() {
   let [, , command = "help", ...rest] = process.argv;

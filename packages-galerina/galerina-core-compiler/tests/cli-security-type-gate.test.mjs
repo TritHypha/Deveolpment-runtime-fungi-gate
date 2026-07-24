@@ -43,7 +43,7 @@ function cli(cmd, file, extra = []) {
 
 after(() => {
   for (const p of fixtures) { try { rmSync(p, { force: true }); } catch { /* ignore */ } }
-  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean"]) {
+  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv"]) {
     for (const ext of [".wasm", ".wat", ".lmanifest", ".lmanifest.json", ".fuse.json", ".governance-impact.json"]) {
       try { rmSync(join(BUILD, `${base}${ext}`), { force: true }); } catch { /* ignore */ }
     }
@@ -54,6 +54,9 @@ after(() => {
 const ORD = `pure flow g(v: Verdict) -> Int { if v >= 1 { return 1 } return 0 }\n`;
 // S1 — non-Bool if condition (fail-open control flow)
 const IFINT = `pure flow g(n: Int) -> Int { if n { return 1 } return 0 }\n`;
+// S3 — mixed Verdict×Bool boolean operand (fail-open: UNKNOWN coerced into a decision)
+const MIXED = `pure flow g(v: Verdict, w: Verdict) -> Verdict { return v and w }\n`;
+const MIXEDBAD = `pure flow g(v: Verdict, b: Bool) -> Verdict { let r: Verdict = v and b  return r }\n`;
 // An ORDINARY type error (Int returned as String) — must STAY advisory (not in the security carve-out)
 const MISMATCH = `pure flow g(n: Int) -> String { return n }\n`;
 // The sanctioned Verdict authorization idiom — must be clean
@@ -83,6 +86,25 @@ test("build: `if <Int>` (FUNGI-TYPE-033) REFUSES the build — no signed artifac
   assert.match(r.out, /FUNGI-TYPE-033/, "build must name the fail-open code");
   assert.match(r.out, /FAILED \(fail-closed/, "build must fail closed, not mint an artifact");
   assert.equal(r.status, 1, `build of the fail-open flow must be refused\n${r.out}`);
+});
+
+test("check: `v and b` (FUNGI-K3-001, S3) fails CLOSED in plain check — counted, exit 1", () => {
+  const r = cli("check", fixture("__sectype_mixed.fungi", MIXEDBAD));
+  assert.match(r.out, /FUNGI-K3-001/, "mixed Verdict×Bool operand must surface as an error, not an advisory");
+  assert.equal(r.status, 1, `plain check must exit non-zero on the mixed-operand fail-open\n${r.out}`);
+});
+
+test("build: `v and b` (FUNGI-K3-001) REFUSES the build — no signed artifact", () => {
+  const r = cli("build", fixture("__sectype_mixed.fungi", MIXEDBAD));
+  assert.match(r.out, /FUNGI-K3-001/, "build must name the mixed-operand fail-open code");
+  assert.match(r.out, /FAILED \(fail-closed/, "build must fail closed, not mint an artifact");
+  assert.equal(r.status, 1, `build of the mixed-operand fail-open must be refused\n${r.out}`);
+});
+
+test("control: `v and w` (Verdict×Verdict, the sanctioned K3 lane) is clean — exit 0", () => {
+  const r = cli("check", fixture("__sectype_vv.fungi", MIXED));
+  assert.doesNotMatch(r.out, /FUNGI-K3-001/, "the Verdict×Verdict K3 min/max lane must not trip the gate");
+  assert.equal(r.status, 0, `the sanctioned K3 lane must pass\n${r.out}`);
 });
 
 test("REGRESSION: an ORDINARY type error (Int↦String) STAYS advisory in plain check — exit 0", () => {
