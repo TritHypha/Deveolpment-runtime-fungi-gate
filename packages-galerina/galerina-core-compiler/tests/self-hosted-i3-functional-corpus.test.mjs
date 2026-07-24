@@ -2,7 +2,10 @@
  * RD-0528 I-3 — self-hosted FUNCTIONAL-correctness corpus (tranche 1: type-correctness;
  * tranche 2: parse-correctness — the parser's own FUNGI-PARSE-00x fail-closed reporting;
  * tranche 3: governance-correctness — parse -> verifyGovernance/checkBodyGovernance, the REAL
- * pipeline, distinct from the hand-built-record self-hosted-governance-verifier.test.mjs).
+ * pipeline, distinct from the hand-built-record self-hosted-governance-verifier.test.mjs;
+ * tranche 4: effect-correctness — parse -> checkFlowEffects/checkBodyEffects, the full
+ * FUNGI-EFFECT-001..009 charter incl. transitive body reconciliation, distinct from the
+ * hand-built-record self-hosted-effect-checker tests).
  *
  * Owner ruling 2026-07-22: I-3 (the oracle that must hold before the .ts compiler can be
  * retired) is FUNCTIONAL correctness — the self-hosted pipeline accepts correct programs and
@@ -21,9 +24,11 @@
  *   3. STRICTLY PRE-AUTHORITY — this is a test only: no ledger entry, no signed seed hash, no
  *      .ts touched. The flip stays owner-gated (I-4).
  *
- * Reach: the self-hosted pipeline currently composes lex -> parse -> type-check (the supported
- * subset). Later tranches drive the effect-checker + governance-verifier (both loadable today)
- * for effect/governance fail-closed cases, and — once a self-hosted backend exists — end-to-end
+ * Reach: the self-hosted pipeline composes lex -> parse -> {type-check | effect-check | govern}.
+ * Tranche 4 (2026-07-24) drives the effect-checker (both lanes: checkFlowEffects declaration
+ * charter + checkBodyEffects body-derived/transitive reconciliation) across its entire 9-code
+ * FUNGI-EFFECT-001..009 charter. Still future: the runtime stage (needs an execution-value
+ * oracle, not a diagnostics one) and — once a self-hosted backend exists — end-to-end
  * compilation to correct governed WASM.
  */
 
@@ -44,12 +49,13 @@ function load(name) {
   return p;
 }
 
-let lexer, parser, checker, gov;
+let lexer, parser, checker, gov, effectChecker;
 before(() => {
   lexer = load("lexer.fungi");
   parser = load("parser.fungi");
   checker = load("type-checker.fungi");
   gov = load("governance-verifier.fungi");
+  effectChecker = load("effect-checker.fungi");
 });
 
 const vStr = (s) => ({ __tag: "string", value: s });
@@ -128,6 +134,27 @@ async function govCodes(source, flowName) {
   return d?.__tag === "list" ? d.items.map((x) => (x.value ?? x).fields.get("code").value) : [];
 }
 
+/**
+ * Run a source string through parse -> an effect-checker flow (checkFlowEffects or
+ * checkBodyEffects) and return its {code, flowName} diagnostics. Tranche 4's runner —
+ * same shape as govCodes, driving the self-hosted effect-checker from the PARSER's output.
+ */
+async function effectDiags(source, flowName) {
+  const flows = await parseToFlows(source);
+  const r = await executeFlow(
+    flowName, new Map([["flows", flows]]), effectChecker.ast, effectChecker.flows,
+    undefined, undefined, { pureFastPath: false },
+  );
+  const rec = r.value ?? r;
+  const d = rec.fields.get("diagnostics");
+  return d?.__tag === "list"
+    ? d.items.map((x) => {
+        const f = (x.value ?? x).fields;
+        return { code: f.get("code").value, flowName: f.get("flowName").value };
+      })
+    : [];
+}
+
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
 
 // Correct programs: the self-hosted type-checker MUST accept (zero diagnostics).
@@ -196,6 +223,36 @@ const GOV_SAFETY = [
   { label: "safety_critical, audit + deterministic -> passes", src: `guarded flow fire() -> Int\ncontract { value { classification safety_critical } effects { audit.write } safety { require deterministic_execution } } { return 1 }`, contains: [] },
   { label: "safety_critical, audit but NOT deterministic -> VAL-002", src: `guarded flow fire() -> Int\ncontract { value { classification safety_critical } effects { audit.write } } { return 1 }`, contains: ["FUNGI-VAL-002"] },
   { label: "standard classification -> no safety_critical checks (passes)", src: `guarded flow ok() -> Int\ncontract { value { classification standard } effects { hw.write } } { return 1 }`, contains: [] },
+];
+
+// Tranche 4 — effect-correctness via the REAL pipeline (parse -> effect-checker), all MEASURED
+// 2026-07-24. TWO LANES with DIFFERENT reach (measured; load-bearing for reading these cases):
+//   · checkFlowEffects (DECL lane) validates the DECLARED effect list only — it does NOT see body
+//     usage, so ANY known declared effect reports 007 OVERDECLARED there, even one the body uses.
+//     Its charter: pure-boundary (003), registry (004), aliases (005/009), deny-only (006),
+//     overdeclared (007), privileged-on-plain (008).
+//   · checkBodyEffects (BODY lane) DERIVES usedEffects from the body call-graph (the effectOfCall
+//     builtin registry: dbRead/dbWrite/netGet/netPost/readFile/writeFile/auditWrite), including
+//     TRANSITIVE helper calls, and reconciles used-vs-declared: undeclared use (001), transitive
+//     undeclared (002), pure-uses-effect (003). Full reconciliation lives HERE — so the
+//     accept-with-effects control (declares AND uses audit.write -> clean) is a BODY-lane case.
+// Together the two lanes exercise the effect twin's ENTIRE 9-code charter (001..009) end-to-end.
+const EFFECT_DECL = [
+  { label: "pure flow declaring an effect -> 003 boundary violation", src: `pure flow p() -> Int\ncontract { effects { audit.write } } { return 1 }`, contains: ["FUNGI-EFFECT-003"] },
+  { label: "unrecognised effect name -> 004", src: `secure flow s() -> Int\ncontract { effects { bogus.effect } } { return 1 }`, contains: ["FUNGI-EFFECT-004"] },
+  { label: "broad alias 'network' -> 005", src: `secure flow s() -> Int\ncontract { effects { network } } { return 1 }`, contains: ["FUNGI-EFFECT-005"] },
+  { label: "deny-only 'memory.spill' -> 006", src: `secure flow s() -> Int\ncontract { effects { memory.spill } } { return 1 }`, contains: ["FUNGI-EFFECT-006"] },
+  { label: "declared-but-unobserved effect -> 007 (decl lane cannot see body use)", src: `secure flow s() -> Int\ncontract { effects { audit.write } } { return 1 }`, contains: ["FUNGI-EFFECT-007"] },
+  { label: "privileged effect on a PLAIN flow -> 008 (alongside its 007)", src: `flow f() -> Int\ncontract { effects { secret.read } } { return 1 }`, contains: ["FUNGI-EFFECT-008"] },
+  { label: "non-broad alias 'http.get' -> 009", src: `secure flow s() -> Int\ncontract { effects { http.get } } { return 1 }`, contains: ["FUNGI-EFFECT-009"] },
+  { label: "clean pure flow (no effects) -> passes", src: `pure flow p(a: Int) -> Int { return a }`, contains: [] },
+];
+const EFFECT_BODY = [
+  { label: "body dbWrite() with only audit.write declared -> 001 undeclared use", src: `secure flow s() -> Int\ncontract { effects { audit.write } } { dbWrite() auditWrite() return 1 }`, contains: [{ code: "FUNGI-EFFECT-001", flowName: "s" }] },
+  { label: "TRANSITIVE: caller reaches database.write via helper, declares only audit.write -> 002", src: `secure flow helper() -> Int\ncontract { effects { database.write } } { dbWrite() return 1 }\nsecure flow s() -> Int\ncontract { effects { audit.write } } { helper() auditWrite() return 1 }`, contains: [{ code: "FUNGI-EFFECT-002", flowName: "s" }] },
+  { label: "pure flow whose body dbRead()s -> 003 boundary + 001 undeclared", src: `pure flow p() -> Int { dbRead() return 1 }`, contains: [{ code: "FUNGI-EFFECT-003", flowName: "p" }, { code: "FUNGI-EFFECT-001", flowName: "p" }] },
+  { label: "accept-with-effects control: declares AND uses audit.write -> clean", src: `secure flow s() -> Int\ncontract { effects { audit.write } } { auditWrite() return 1 }`, contains: [] },
+  { label: "clean pure flow (pure body) -> passes", src: `pure flow p(a: Int) -> Int { return a }`, contains: [] },
 ];
 
 describe("RD-0528 I-3 functional corpus (tranche 1: type-correctness) — MUST-PASS", () => {
@@ -269,6 +326,32 @@ describe("RD-0528 I-3 functional corpus (tranche 3b: safety_critical VAL via par
   }
 });
 
+describe("RD-0528 I-3 functional corpus (tranche 4: effect-correctness) — checkFlowEffects (decl lane)", () => {
+  for (const c of EFFECT_DECL) {
+    it(`${c.contains.length ? "rejects" : "accepts"}: ${c.label}`, async () => {
+      const diags = await effectDiags(c.src, "checkFlowEffects");
+      const codes = diags.map((d) => d.code);
+      for (const code of c.contains) assert.ok(codes.includes(code), `expected ${code}, got ${JSON.stringify(diags)}`);
+      if (c.contains.length === 0) assert.deepEqual(diags, [], `expected clean effect check, got ${JSON.stringify(diags)}`);
+    });
+  }
+});
+
+describe("RD-0528 I-3 functional corpus (tranche 4: effect-correctness) — checkBodyEffects (body lane, transitive)", () => {
+  for (const c of EFFECT_BODY) {
+    it(`${c.contains.length ? "rejects" : "accepts"}: ${c.label}`, async () => {
+      const diags = await effectDiags(c.src, "checkBodyEffects");
+      for (const want of c.contains) {
+        assert.ok(
+          diags.some((d) => d.code === want.code && d.flowName === want.flowName),
+          `expected ${JSON.stringify(want)}, got ${JSON.stringify(diags)}`,
+        );
+      }
+      if (c.contains.length === 0) assert.deepEqual(diags, [], `expected clean effect check, got ${JSON.stringify(diags)}`);
+    });
+  }
+});
+
 describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
   it("the corpus carries known-bad cases (a corpus that can only pass proves nothing)", () => {
     assert.ok(MUST_FAIL.length >= 5, "the type must-fail set must be non-trivial");
@@ -289,5 +372,17 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
     assert.ok(covered.has("FUNGI-GOV-002"), "must exercise FUNGI-GOV-002 (verifyGovernance secure-no-effects)");
     assert.ok(covered.has("FUNGI-VAL-001"), "must exercise FUNGI-VAL-001 (body-audit + safety_critical no-audit)");
     assert.ok(covered.has("FUNGI-VAL-002"), "must exercise FUNGI-VAL-002 (safety_critical not-deterministic, unlocked by finding d)");
+  });
+  it("the effect corpus exercises the effect twin's ENTIRE 9-code charter (001..009), both lanes, with accept controls", () => {
+    const covered = new Set();
+    for (const c of EFFECT_DECL) for (const code of c.contains) covered.add(code);
+    for (const c of EFFECT_BODY) for (const w of c.contains) covered.add(w.code);
+    for (let n = 1; n <= 9; n++) {
+      const code = `FUNGI-EFFECT-00${n}`;
+      assert.ok(covered.has(code), `the effect corpus must exercise ${code}`);
+    }
+    assert.ok(EFFECT_DECL.some((c) => c.contains.length === 0), "the decl lane must carry an accept control");
+    assert.ok(EFFECT_BODY.some((c) => c.contains.length === 0), "the body lane must carry an accept control");
+    assert.ok(EFFECT_BODY.some((c) => c.contains.some((w) => w.code === "FUNGI-EFFECT-002")), "the body lane must carry a TRANSITIVE reject (the 002 class a decl-only corpus cannot see)");
   });
 });
