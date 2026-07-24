@@ -654,11 +654,11 @@ const RD0528_COMPILER = [
   {
     id: "rd0528-parser-param-readonly",
     file: "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
-    find: "isReadonly: false",
-    replace: "isReadonly: true",
+    find: "mut isRo: Bool = false",
+    replace: "mut isRo: Bool = true",
     cwd: "packages-galerina/galerina-core-compiler",
     test: ["node", "--test", "tests/self-hosted-parser.test.mjs"],
-    desc: "RD-0528 compiler self-hosting — parser.fungi mis-classifies a non-readonly param as readonly at its unique `isReadonly: false` field (the non-readonly path; -> true); the self-hosted-parser oracle asserts params[0].isReadonly == 'false'. The parser's outputs are otherwise structural __tags, so this classification field is the clean data anchor (a record-field bool, no loop control).",
+    desc: "RD-0528 compiler self-hosting — parser.fungi mis-classifies a non-readonly param as readonly by flipping the DEFAULT `mut isRo: Bool = false` (parser.fungi:478, the live single-capture-path default that flows to the sole `isReadonly: isRo` construction) -> true; the self-hosted-parser oracle asserts a non-readonly param's params[0].isReadonly == 'false' (self-hosted-parser.test.mjs:331) so the mutant breaks that row (the readonly fixture at :363 still passes -> exactly one row breaks). Record-field bool, no loop control. Re-pointed 2026-07-24 (bridge 0211/0216): the OLD anchor `isReadonly: false` was removed by R&D's C4/C5 parseParams rework — its two-capture-path generic branch — and survived only in comments (:474/:477) -> matched 2x -> unplantable -> the mutant SURVIVED -> gate RED; `mut isRo: Bool = false` is the unique (1x) faithful replacement preserving the original false->true direction + catching oracle row.",
   },
 ];
 
