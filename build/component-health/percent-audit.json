@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "main",
-    "sha": "2bcfd457",
+    "sha": "ecebed10",
     "detached": false,
-    "dirty": true
+    "dirty": false
   },
   "shipReadinessPct": 97.9381443298969,
   "ztAvg": 78,
@@ -122,7 +122,7 @@
         },
         {
           "label": "Type checker / Effect checker",
-          "pct": 100,
+          "pct": 97,
           "status": null,
           "live": false,
           "evidence": {
@@ -155,7 +155,8 @@
               "FUNGI-TYPE-025",
               "FUNGI-TYPE-026",
               "FUNGI-TYPE-030",
-              "FUNGI-TYPE-032"
+              "FUNGI-TYPE-032",
+              "FUNGI-TYPE-033"
             ]
           }
         },
