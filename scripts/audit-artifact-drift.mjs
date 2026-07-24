@@ -17,8 +17,10 @@
 //                        (marker form <!-- registry:counts.KEY -->N, exact; or a
 //                        registry-noun-anchored prose form "N live/total/dead/phantom
 //                        codes"). FUNGI-DRIFT-001.
-//   A3  baseline       — dead + phantom are shrink-only; an INCREASE past the frozen
-//                        baseline FAILS (new drift entering the registry). FUNGI-DRIFT-002.
+//   A3  baseline       — phantom is a shrink-only COUNT (INCREASE past the frozen baseline
+//                        FAILS); dead is a NAMED SET checked by MEMBERSHIP (R&D 0182 A-PRIME:
+//                        a bare count is maskable by a promote+enter swap) — an unlisted dead
+//                        code OR a stale named entry FAILS. FUNGI-DRIFT-002.
 //   reserved-code      — a family's reserved sub-range (FUNGI-MEMORY-001..007) must stay
 //   stability            un-emitted; a silent promotion to `live` FAILS (RD-0511-3, the
 //   (RD-0511-3)          Galerina-side fold of KB kb-closure-drift check D). FUNGI-DRIFT-002.
@@ -39,8 +41,13 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTRY = join(ROOT, "build", "code-registry", "registry.json");
 
-// Shrink-only baselines (RD-0499): freeze today's known-drift counts; block on increase.
-const BASELINE = Object.freeze({ phantom: 111, dead: 8 });
+// Shrink-only count baseline (RD-0499): PHANTOM is a frozen count — block on increase.
+// DEAD is NOT a bare count here — see DEAD_RESERVED_SPEC below. R&D 0182 (RULING on bridge 0179):
+// a bare dead-count ratchet is MASKABLE — one reserved code promoted to live (13→12) plus one NEW
+// abandoned code entering (12→13) nets to the same count, so the gate stays green while real drift
+// entered. The fail-closed form is a NAMED SET checked by MEMBERSHIP, not by count. (phantom carries
+// the same latent hazard; a named-set upgrade for it is a separate, unruled change — left a count here.)
+const BASELINE = Object.freeze({ phantom: 111 });
 
 // The registry-count keys A1 knows how to check (the nouns it anchors prose on).
 const KNOWN_COUNT_KEYS = Object.freeze(["live", "total", "dead", "phantom", "ref", "inline", "referenced"]);
@@ -152,6 +159,33 @@ export function reservedCodesOf(spec) {
   }
   return out;
 }
+// ── A-PRIME dead-set baseline (R&D 0182 ruling on bridge 0179) ───────────────────────────────────
+// The dead baseline as a NAMED SET, not a count. Every code here is a verified RESERVED declaration
+// (a `code:` const in galerina-core-compiler/src/index.ts, declared-but-never-emitted — verified at
+// source 2026-07-24, bridges 0179/0182), NOT abandoned debt. Built programmatically (prefix + number,
+// same discipline as RESERVED_SPEC) so no complete FUNGI-<CAT>-NNN literal appears in this file.
+// The count DERIVES from the set; the check is MEMBERSHIP, which a promote+enter swap cannot mask.
+const DEAD_RESERVED_SPEC = Object.freeze({
+  "FUNGI-ASYNC": Object.freeze([2, 3, 4, 5, 6]),
+  "FUNGI-BLOCK": Object.freeze([3]),
+  "FUNGI-BYTE": Object.freeze([2, 3, 5]),
+  "FUNGI-CHAR": Object.freeze([2, 4]),
+  "FUNGI-STRING": Object.freeze([3, 4]),
+});
+// Membership drift on the dead set (both directions, both FUNGI-DRIFT-002):
+//   unlisted — a registry `dead` code NOT in the named set = REAL drift entered, regardless of count
+//              (the masking case a bare count ratchet cannot see);
+//   stale    — a named code that is NO LONGER dead (promoted to live/referenced, or deleted) = a
+//              stale baseline entry that must be REMOVED from the set (no-stale-exceptions; the set
+//              is shrink-only in the honest direction). An empty/absent entries list leaves every
+//              named code "stale", so a can't-read fails LOUDLY, never a silent pass.
+export function deadSetDrift(entries, deadReservedList) {
+  const deadNow = new Set((entries ?? []).filter((e) => e.status === "dead").map((e) => e.code));
+  const unlisted = [...deadNow].filter((c) => !deadReservedList.includes(c)).sort();
+  const stale = deadReservedList.filter((c) => !deadNow.has(c)).sort();
+  return { unlisted, stale };
+}
+
 // A reserved code must be PRESENT in the registry and NOT `live`. promoted = a reserved code the registry now
 // marks live (the silent-promotion class). absent = a reserved code with no entry at all (the family's shape
 // changed → can't verify → fail-closed, never a silent no-op). Both are FUNGI-DRIFT-002 violations.
@@ -182,10 +216,27 @@ if (process.argv.includes("--self-test")) {
   ok(countDrift([{ key: "live", claimed: 133, form: "marker" }], { live: 133 }).length === 0, "a matching claim is SILENT (not always-fire)");
   ok(countDrift([{ key: "families", claimed: 5 }], { live: 133 }).length === 0, "an unknown count key is ignored — never a false fail on a number we can't ground");
 
-  // A3 baseline — shrink-only
+  // A3 baseline — shrink-only (phantom; dead moved to the named set below)
   ok(baselineBreach({ phantom: 111, dead: 8 }, BASELINE).length === 0, "at-baseline is silent");
   ok(baselineBreach({ phantom: 112, dead: 8 }, BASELINE).some((b) => b.key === "phantom" && b.kind === "INCREASE"), "a phantom INCREASE fires (shrink-only ratchet)");
   ok(baselineBreach({ dead: 8 }, BASELINE).some((b) => b.key === "phantom" && b.kind === "MISSING"), "a MISSING count fires (fail-closed — a can't-read is not a silent pass)");
+
+  // A-PRIME dead-set membership (R&D 0182) — synthetic FUNGI-X family, same trick as the reserved test.
+  const DS = reservedCodesOf({ "FUNGI-X": [1, 2] });
+  ok(deadSetDrift([{ code: "FUNGI-X-001", status: "dead" }, { code: "FUNGI-X-002", status: "dead" }], DS).unlisted.length === 0 &&
+     deadSetDrift([{ code: "FUNGI-X-001", status: "dead" }, { code: "FUNGI-X-002", status: "dead" }], DS).stale.length === 0,
+     "dead set exactly == named set is silent");
+  ok(deadSetDrift([{ code: "FUNGI-X-001", status: "dead" }, { code: "FUNGI-X-002", status: "dead" }, { code: "FUNGI-X-009", status: "dead" }], DS).unlisted.join() === "FUNGI-X-009",
+     "an UNLISTED dead code fires — real drift entered regardless of count");
+  ok(deadSetDrift([{ code: "FUNGI-X-001", status: "dead" }, { code: "FUNGI-X-002", status: "live" }], DS).stale.join() === "FUNGI-X-002",
+     "a named code no longer dead fires as STALE — the entry must be removed (no-stale-exceptions)");
+  // ★ the masking scenario the 0182 ruling exists for: one named code promoted OUT + one new code
+  // entering keeps count == |set| (2), yet BOTH directions fire — a count ratchet would stay green.
+  const masked = deadSetDrift([{ code: "FUNGI-X-001", status: "dead" }, { code: "FUNGI-X-002", status: "live" }, { code: "FUNGI-X-009", status: "dead" }], DS);
+  ok(masked.unlisted.length === 1 && masked.stale.length === 1,
+     "★ masking swap (promote-out + enter-new, count unchanged) fires BOTH ways — the class a bare count cannot see");
+  ok(deadSetDrift(undefined, DS).stale.length === 2, "absent entries → every named code reads stale — a can't-read fails LOUDLY, never a silent pass");
+  ok(reservedCodesOf(DEAD_RESERVED_SPEC).length === 13, "the real dead-reserved spec derives 13 codes (5 ASYNC + 1 BLOCK + 3 BYTE + 2 CHAR + 2 STRING) — the count DERIVES from the set");
 
   // A2 severity-completeness — a live FUNGI-* with no severity is a gap; ERR_* is scoped out by design.
   ok(severityIncomplete([{ code: "FUNGI-X-001", namespace: "FUNGI", status: "live", severities: [] }]).length === 1, "a live FUNGI-* with BLANK severity fires (A2)");
@@ -244,6 +295,8 @@ const drift = countDrift(claims, counts);
 const breach = baselineBreach(counts, BASELINE);
 const sevGaps = severityIncomplete(reg.entries);
 const reserved = reservedDrift(reg.entries, reservedCodesOf(RESERVED_SPEC));
+const deadReserved = reservedCodesOf(DEAD_RESERVED_SPEC);
+const deadSet = deadSetDrift(reg.entries, deadReserved);
 
 console.log("artifact-drift · FAMILY A (registry) — checks A1 count-drift + A2 severity-completeness + A3 baseline + reserved-code stability (RD-0511-3).");
 console.log("  NOT checked this pass (surface-honest): A4 production-blocker CONVERSE (needs a registry `production_blocker` attribute; its emitter half is lint-conventions `production-blockers`, satisfied) · families B manifest / C assembly / D register (next — see to-rnd RD-0499 plan).");
@@ -251,15 +304,18 @@ console.log(`  A1 surface: ${docs.length} markdown doc(s) scanned [root *.md + b
 for (const d of drift) console.log(`  ⚠ FUNGI-DRIFT-001 ${d.file}: states "${d.claimed} ${d.key}" but registry.counts.${d.key} = ${d.actual} (${d.form} form)`);
 if (drift.length === 0) console.log(`  ✅ A1: every gradeable count claim matches registry.counts (live=${counts.live} · total=${counts.total} · dead=${counts.dead} · phantom=${counts.phantom}).`);
 for (const b of breach) console.log(`  ⚠ FUNGI-DRIFT-002 counts.${b.key} = ${b.now} ${b.kind === "INCREASE" ? `> frozen baseline ${b.baseline} (shrink-only — a new drift entered the registry)` : "is MISSING from registry.counts"}`);
-if (breach.length === 0) console.log(`  ✅ A3: dead=${counts.dead}≤${BASELINE.dead} · phantom=${counts.phantom}≤${BASELINE.phantom} (shrink-only baseline holds).`);
+if (breach.length === 0) console.log(`  ✅ A3: phantom=${counts.phantom}≤${BASELINE.phantom} (shrink-only count baseline holds).`);
+for (const c of deadSet.unlisted) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a registry 'dead' code NOT in the named dead-reserved set — real drift entered, regardless of count (R&D 0182 A-PRIME).`);
+for (const c of deadSet.stale) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: named in the dead-reserved set but NO LONGER dead in the registry — remove the stale entry (no-stale-exceptions).`);
+if (deadSet.unlisted.length + deadSet.stale.length === 0) console.log(`  ✅ A3 dead-set: registry dead codes == the ${deadReserved.length} NAMED verified-reserved codes (membership check — count derives from the set; a promote+enter swap cannot mask it).`);
 for (const c of sevGaps) console.log(`  ⚠ FUNGI-DRIFT-003 ${c}: a LIVE FUNGI-* diagnostic with NO captured severity (A2 severity-completeness).`);
 if (sevGaps.length === 0) console.log(`  ✅ A2: every live FUNGI-* diagnostic carries a severity (${(reg.entries ?? []).filter((e) => e.namespace === "FUNGI" && e.status === "live").length} FUNGI-* live; ERR_* scoped out by design).`);
 for (const c of reserved.promoted) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a RESERVED code is now 'live' in the registry — a silent promotion (the 65e29f6f scanner/fixture class). Reserved codes must stay un-emitted.`);
 for (const c of reserved.absent) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a RESERVED code is ABSENT from the registry — the reserved family changed shape and can no longer be verified (fail-closed).`);
 if (reserved.promoted.length + reserved.absent.length === 0) console.log(`  ✅ reserved-code stability: the ${reservedCodesOf(RESERVED_SPEC).length} reserved FUNGI-MEMORY placeholders are all present and NON-live (RD-0511-3).`);
 
-const violations = drift.length + breach.length + sevGaps.length + reserved.promoted.length + reserved.absent.length;
+const violations = drift.length + breach.length + sevGaps.length + reserved.promoted.length + reserved.absent.length + deadSet.unlisted.length + deadSet.stale.length;
 console.log(violations === 0
-  ? `✅ artifact-drift family A: 0 violation(s) across ${docs.length} doc(s) + the registry (counts, severities, baseline, reserved-code stability).`
-  : `❌ artifact-drift family A: ${violations} violation(s) — a count drifted, a live FUNGI-* lacks a severity, a shrink-only baseline grew, or a reserved code drifted.`);
+  ? `✅ artifact-drift family A: 0 violation(s) across ${docs.length} doc(s) + the registry (counts, severities, baseline, dead-set membership, reserved-code stability).`
+  : `❌ artifact-drift family A: ${violations} violation(s) — a count drifted, a live FUNGI-* lacks a severity, a baseline grew, the dead set diverged from its named baseline, or a reserved code drifted.`);
 process.exit(violations === 0 ? 0 : 1);
