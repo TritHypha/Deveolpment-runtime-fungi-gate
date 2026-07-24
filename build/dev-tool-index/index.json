@@ -4,9 +4,9 @@
     "packages": 97,
     "testBearing": 96,
     "tests": 7591,
-    "devTools": 111,
-    "auditTools": 64,
-    "toolsInCadence": 47,
+    "devTools": 118,
+    "auditTools": 71,
+    "toolsInCadence": 52,
     "proofs": 40
   },
   "packages": [
@@ -1187,6 +1187,18 @@
       ]
     },
     {
+      "name": "audit-compiler-stage-hashes.mjs",
+      "category": "audit",
+      "purpose": "RD-0528 evidence-pack drift GATE (bridge 0101/0103, owner-blessed 0104)",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "naming",
+        "doc-drift"
+      ]
+    },
+    {
       "name": "audit-compiler-stage-twins.mjs",
       "category": "audit",
       "purpose": "(no header description)",
@@ -1298,6 +1310,21 @@
       ]
     },
     {
+      "name": "audit-emitter-completeness.mjs",
+      "category": "audit",
+      "purpose": "RD-0529 B2: the standalone-emitter completeness matrix",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "effects",
+        "signing/fusion",
+        "governance",
+        "diagnostics",
+        "doc-drift",
+        "web-stub"
+      ]
+    },
+    {
       "name": "audit-example-diagnostics.mjs",
       "category": "audit",
       "purpose": "the curriculum-wide diagnostics gate.",
@@ -1308,6 +1335,31 @@
         "governance",
         "diagnostics",
         "teaching-corpus"
+      ]
+    },
+    {
+      "name": "audit-examples-vs-declared.mjs",
+      "category": "audit",
+      "purpose": "teaching-corpus rot gate: an example's DECLARED",
+      "selfTest": true,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "gate-wiring",
+        "diagnostics",
+        "teaching-corpus"
+      ]
+    },
+    {
+      "name": "audit-flowparam-fidelity.mjs",
+      "category": "audit",
+      "purpose": "audit-flowparam-fidelity — the C4 FlowParam qualifier-fidelity gate (standing, self-tested)",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "sinks/taint",
+        "diagnostics",
+        "graph/index"
       ]
     },
     {
@@ -1875,6 +1927,18 @@
       ]
     },
     {
+      "name": "audit-u2-version-floor.mjs",
+      "category": "audit",
+      "purpose": "U2 compiler-version admission floor",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "provenance",
+        "gate-wiring"
+      ]
+    },
+    {
       "name": "audit-unlowered-nodes.mjs",
       "category": "audit",
       "purpose": "the un-lowered-node ratchet (R&D grounding #6.1)",
@@ -1900,6 +1964,32 @@
         "doc-drift",
         "web-stub",
         "graph/index"
+      ]
+    },
+    {
+      "name": "audit-wasmtime-presence.mjs",
+      "category": "audit",
+      "purpose": "RD-0529 A4: turn the wasmtime \"availability check\" into a real GATE",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "coverage",
+        "teaching-corpus",
+        "web-stub"
+      ]
+    },
+    {
+      "name": "audit-wat-emitter-mutation.mjs",
+      "category": "audit",
+      "purpose": "RD-0529 C1: prove the WASM execution corpus is NON-VACUOUS by",
+      "selfTest": true,
+      "inCadence": false,
+      "concerns": [
+        "diagnostics",
+        "mutation-testing",
+        "teaching-corpus",
+        "web-stub",
+        "proofs"
       ]
     },
     {
@@ -2564,6 +2654,7 @@
       "audit-stray-docs.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-wasmtime-presence.mjs",
       "audit-web-stub-guard.mjs",
       "graph-all.mjs",
       "ts-retirement-graph.mjs",
@@ -2585,7 +2676,10 @@
       "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-emitter-completeness.mjs",
       "audit-example-diagnostics.mjs",
+      "audit-examples-vs-declared.mjs",
+      "audit-flowparam-fidelity.mjs",
       "audit-fungi-corpus-check.mjs",
       "audit-graph-integrity.mjs",
       "audit-gscm.mjs",
@@ -2610,6 +2704,7 @@
       "audit-twin-emit-parity.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "fix-logicn-brand.mjs",
       "graph-all.mjs",
       "memory-graph.mjs",
@@ -2662,6 +2757,7 @@
       "audit-diagnostic-doc-drift.mjs",
       "audit-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-flowparam-fidelity.mjs",
       "audit-fungi-corpus-check.mjs",
       "audit-gate-selftests.mjs",
       "audit-graph-integrity.mjs",
@@ -2743,6 +2839,7 @@
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-examples-vs-declared.mjs",
       "audit-fungi-runtime.mjs",
       "audit-gscm.mjs",
       "audit-import-governance.mjs",
@@ -2758,6 +2855,7 @@
       "audit-syntax-reference-links.mjs",
       "audit-syntax.mjs",
       "audit-twin-emit-parity.mjs",
+      "audit-u2-version-floor.mjs",
       "gen-unit-registry.mjs",
       "lint-conventions.mjs",
       "check-gate-injection.mjs",
@@ -2773,9 +2871,12 @@
       "audit-cast-hygiene.mjs",
       "audit-checker-wiring.mjs",
       "audit-claim-hygiene.mjs",
+      "audit-compiler-stage-hashes.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-dss-wasm-build.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-emitter-completeness.mjs",
+      "audit-examples-vs-declared.mjs",
       "audit-fungi-corpus-check.mjs",
       "audit-gscm.mjs",
       "audit-hardening-determinism.mjs",
@@ -2795,6 +2896,7 @@
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-u2-version-floor.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
       "audit-wat-lowering.mjs",
@@ -2832,12 +2934,14 @@
       "audit-checker-wiring.mjs",
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
+      "audit-compiler-stage-hashes.mjs",
       "audit-compiler-stage-twins.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-emitter-completeness.mjs",
       "audit-fungi-corpus-check.mjs",
       "audit-kernel-floor.mjs",
       "audit-kernel-fungi-twins.mjs",
@@ -2893,6 +2997,7 @@
       "audit-coverage.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-emitter-completeness.mjs",
       "audit-example-diagnostics.mjs",
       "audit-graph-integrity.mjs",
       "audit-gscm.mjs",
@@ -2952,11 +3057,13 @@
       "audit-diagnostic-codes.mjs",
       "audit-license-compat.mjs",
       "audit-silent-overwrite.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
       "license-rollout.mjs"
     ],
     "sinks/taint": [
       "audit-checker-wiring.mjs",
+      "audit-flowparam-fidelity.mjs",
       "audit-hardening-determinism.mjs",
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
@@ -2969,6 +3076,7 @@
     ],
     "naming": [
       "audit-claim-hygiene.mjs",
+      "audit-compiler-stage-hashes.mjs",
       "audit-name-collisions.mjs",
       "audit-private-doc-leak.mjs",
       "audit-silent-overwrite.mjs",
@@ -2991,6 +3099,7 @@
       "audit-codes-full.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-effect-canonicality.mjs",
+      "audit-emitter-completeness.mjs",
       "audit-example-diagnostics.mjs",
       "audit-gscm.mjs",
       "audit-hardening-determinism.mjs",
@@ -3019,6 +3128,7 @@
       "audit-coverage.mjs",
       "audit-doc-drift.mjs",
       "audit-example-diagnostics.mjs",
+      "audit-examples-vs-declared.mjs",
       "audit-fungi-corpus-check.mjs",
       "audit-fungi-runtime.mjs",
       "audit-gate-key-injectivity.mjs",
@@ -3029,6 +3139,8 @@
       "audit-percent-evidence.mjs",
       "audit-stage-execution.mjs",
       "audit-wasm-validate.mjs",
+      "audit-wasmtime-presence.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "audit-wat-lowering.mjs",
       "ts-retirement-graph.mjs",
       "lint-conventions.mjs",
@@ -3052,16 +3164,20 @@
       "hardening-show-derived.mjs",
       "rename-package.mjs"
     ],
+    "web-stub": [
+      "audit-emitter-completeness.mjs",
+      "audit-kernel-floor.mjs",
+      "audit-wasm-validate.mjs",
+      "audit-wasmtime-presence.mjs",
+      "audit-wat-emitter-mutation.mjs",
+      "audit-web-stub-guard.mjs",
+      "wat-invalid-triage.mjs"
+    ],
     "mutation-testing": [
       "audit-gate-selftests.mjs",
       "audit-mutation.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "lint-conventions.mjs"
-    ],
-    "web-stub": [
-      "audit-kernel-floor.mjs",
-      "audit-wasm-validate.mjs",
-      "audit-web-stub-guard.mjs",
-      "wat-invalid-triage.mjs"
     ],
     "muted-diagnostics": [
       "audit-muted-diagnostics.mjs",
@@ -3071,6 +3187,7 @@
     "provenance": [
       "audit-path-leak.mjs",
       "audit-provenance.mjs",
+      "audit-u2-version-floor.mjs",
       "audit-wasm-validate.mjs",
       "code-index.mjs",
       "gen-code-registry.mjs",
@@ -3099,6 +3216,7 @@
       "audit-diagnostic-doc-drift.mjs",
       "audit-dss-wasm-build.mjs",
       "audit-example-diagnostics.mjs",
+      "audit-examples-vs-declared.mjs",
       "audit-gate-selftests.mjs",
       "audit-graph-integrity.mjs",
       "audit-hardening-determinism.mjs",
@@ -3121,6 +3239,7 @@
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
       "audit-unlowered-nodes.mjs",
+      "audit-wat-emitter-mutation.mjs",
       "audit-web-stub-guard.mjs",
       "lint-fungi.mjs"
     ]

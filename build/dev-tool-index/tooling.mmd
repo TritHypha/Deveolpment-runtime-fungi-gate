@@ -83,6 +83,10 @@ flowchart LR
   T_audit_codes_full_mjs --> C_source_hygiene
   T_audit_codes_full_mjs --> C_doc_drift
   T_audit_codes_full_mjs --> C_graph_index
+  T_audit_compiler_stage_hashes_mjs["audit-compiler-stage-hashes.mjs"]
+  T_audit_compiler_stage_hashes_mjs --> C_signing_fusion
+  T_audit_compiler_stage_hashes_mjs --> C_naming
+  T_audit_compiler_stage_hashes_mjs --> C_doc_drift
   T_audit_compiler_stage_twins_mjs["audit-compiler-stage-twins.mjs"]
   T_audit_compiler_stage_twins_mjs --> C_governance
   T_audit_compiler_stage_twins_mjs --> C_source_hygiene
@@ -130,11 +134,27 @@ flowchart LR
   T_audit_effect_canonicality_mjs --> C_doc_drift
   T_audit_effect_canonicality_mjs --> C_graph_index
   T_audit_effect_canonicality_mjs --> C_sensitive_allowlist
+  T_audit_emitter_completeness_mjs["audit-emitter-completeness.mjs"]
+  T_audit_emitter_completeness_mjs --> C_effects
+  T_audit_emitter_completeness_mjs --> C_signing_fusion
+  T_audit_emitter_completeness_mjs --> C_governance
+  T_audit_emitter_completeness_mjs --> C_diagnostics
+  T_audit_emitter_completeness_mjs --> C_doc_drift
+  T_audit_emitter_completeness_mjs --> C_web_stub
   T_audit_example_diagnostics_mjs["audit-example-diagnostics.mjs"]
   T_audit_example_diagnostics_mjs --> C_effects
   T_audit_example_diagnostics_mjs --> C_governance
   T_audit_example_diagnostics_mjs --> C_diagnostics
   T_audit_example_diagnostics_mjs --> C_teaching_corpus
+  T_audit_examples_vs_declared_mjs["audit-examples-vs-declared.mjs"]
+  T_audit_examples_vs_declared_mjs --> C_signing_fusion
+  T_audit_examples_vs_declared_mjs --> C_gate_wiring
+  T_audit_examples_vs_declared_mjs --> C_diagnostics
+  T_audit_examples_vs_declared_mjs --> C_teaching_corpus
+  T_audit_flowparam_fidelity_mjs["audit-flowparam-fidelity.mjs"]
+  T_audit_flowparam_fidelity_mjs --> C_sinks_taint
+  T_audit_flowparam_fidelity_mjs --> C_diagnostics
+  T_audit_flowparam_fidelity_mjs --> C_graph_index
   T_audit_fungi_corpus_check_mjs["audit-fungi-corpus-check.mjs"]
   T_audit_fungi_corpus_check_mjs --> C_signing_fusion
   T_audit_fungi_corpus_check_mjs --> C_diagnostics
@@ -363,6 +383,10 @@ flowchart LR
   T_audit_twin_emit_parity_mjs --> C_gate_wiring
   T_audit_twin_emit_parity_mjs --> C_diagnostics
   T_audit_twin_emit_parity_mjs --> C_tier_floor
+  T_audit_u2_version_floor_mjs["audit-u2-version-floor.mjs"]
+  T_audit_u2_version_floor_mjs --> C_signing_fusion
+  T_audit_u2_version_floor_mjs --> C_provenance
+  T_audit_u2_version_floor_mjs --> C_gate_wiring
   T_audit_unlowered_nodes_mjs["audit-unlowered-nodes.mjs"]
   T_audit_unlowered_nodes_mjs --> C_signing_fusion
   T_audit_unlowered_nodes_mjs --> C_diagnostics
@@ -375,6 +399,16 @@ flowchart LR
   T_audit_wasm_validate_mjs --> C_doc_drift
   T_audit_wasm_validate_mjs --> C_web_stub
   T_audit_wasm_validate_mjs --> C_graph_index
+  T_audit_wasmtime_presence_mjs["audit-wasmtime-presence.mjs"]
+  T_audit_wasmtime_presence_mjs --> C_coverage
+  T_audit_wasmtime_presence_mjs --> C_teaching_corpus
+  T_audit_wasmtime_presence_mjs --> C_web_stub
+  T_audit_wat_emitter_mutation_mjs["audit-wat-emitter-mutation.mjs"]
+  T_audit_wat_emitter_mutation_mjs --> C_diagnostics
+  T_audit_wat_emitter_mutation_mjs --> C_mutation_testing
+  T_audit_wat_emitter_mutation_mjs --> C_teaching_corpus
+  T_audit_wat_emitter_mutation_mjs --> C_web_stub
+  T_audit_wat_emitter_mutation_mjs --> C_proofs
   T_audit_wat_lowering_mjs["audit-wat-lowering.mjs"]
   T_audit_wat_lowering_mjs --> C_signing_fusion
   T_audit_wat_lowering_mjs --> C_teaching_corpus

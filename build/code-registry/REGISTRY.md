@@ -9,11 +9,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | status | count | meaning |
 |---|---|---|
 | live | 132 | emitted with an exported constant |
-| inline | 162 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 168 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 111 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 181 | referenced only (no def/emit) |
+| phantom | 112 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 191 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -33,12 +33,26 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 ## Catalog (by family)
 
+### A (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-A-1 | ref | — | — |
+
 ### ACCESS (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-ACCESS-001 | inline | ACCESS_UNKNOWN_CAPABILITY | — |
 | FUNGI-ACCESS-002 | inline | ACCESS_GRANT_WITHOUT_EFFECT | — |
+
+### ADMIT (3)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-ADMIT-001 | inline | — | — |
+| FUNGI-ADMIT-002 | inline | — | — |
+| FUNGI-ADMIT-003 | inline | ADMISSION_PREDICATE_TYPE | error |
 
 ### AFFINE (1)
 
@@ -119,6 +133,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-AUDIT-005 | phantom | — | — |
 | FUNGI-AUDIT-006 | phantom | — | — |
 | FUNGI-AUDIT-007 | phantom | — | — |
+
+### B (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-B-2 | ref | — | — |
 
 ### BACKEND (1)
 
@@ -381,10 +401,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-ECON-002 | referenced | LINEAGE_MISSING | info |
 | FUNGI-ECON-003 | referenced | AI_MODEL_UNAPPROVED | error |
 
-### EFFECT (9)
+### EFFECT (11)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
+| FUNGI-EFFECT-00 | ref | — | — |
 | FUNGI-EFFECT-001 | inline | UNDECLARED_EFFECT | error |
 | FUNGI-EFFECT-002 | inline | TRANSITIVE_EFFECT_NOT_DECLARED | error |
 | FUNGI-EFFECT-003 | inline | EFFECT_BOUNDARY_VIOLATION | error |
@@ -394,6 +415,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-EFFECT-007 | inline | OVERDECLARED_EFFECT | warning |
 | FUNGI-EFFECT-008 | inline | PRIVILEGED_EFFECT_ON_PLAIN_FLOW | warning |
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
+| FUNGI-EFFECT-906 | ref | — | — |
 
 ### ERR_* (98)
 
@@ -547,6 +569,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-FOO-001 | ref | — | — |
 
+### FUEL (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-FUEL-001 | phantom | — | — |
+
 ### FX (6)
 
 | code | status | name(s) | severity |
@@ -579,7 +607,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-GEN-TEST-005 | ref | — | — |
 
-### GOV (28)
+### GOV (30)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -607,9 +635,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-GOV-022 | inline | DOMAIN_GUARD_POLICY_VIOLATION | — |
 | FUNGI-GOV-023 | inline | PHYSICAL_HARDENING_ON_LOW_RISK_FLOW | — |
 | FUNGI-GOV-024 | live | SANDBOX_REQUIRED_BUT_UNAVAILABLE | warning |
+| FUNGI-GOV-3V | ref | — | — |
 | FUNGI-GOV-3VL-001 | live | INDETERMINATE_COLLAPSED_TO_DENY | warning |
 | FUNGI-GOV-3VL-003 | inline | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error |
 | FUNGI-GOV-3VL-004 | inline | ORDERED_COMPARISON_ON_VERDICT | error |
+| FUNGI-GOV-902 | ref | — | — |
 | FUNGI-GOV-TPL-001 | inline | — | — |
 
 ### GRAPH (6)
@@ -714,13 +744,15 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-INV-003 | inline | INVARIANT_BLOCK_EMPTY | — |
 | FUNGI-INV-004 | inline | SYMBOL_UNRESOLVED_IN_INVARIANT | — |
 
-### K3 (3)
+### K3 (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-K3-001 | inline | MIXED_VERDICT_BOOL_OPERANDS | error |
 | FUNGI-K3-002 | inline | VERDICT_UNARY_MISMATCH | error |
 | FUNGI-K3-003 | inline | FOLD_OPERAND_NOT_VERDICT | error |
+| FUNGI-K3-004 | inline | VERDICT_COMPARED_TO_NON_VERDICT | error |
+| FUNGI-K3-005 | inline | NON_VERDICT_RETURNED_AS_VERDICT | error |
 
 ### LAYOUT (1)
 
@@ -887,13 +919,21 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-OMNI-004 | live | MALFORMED_EVIDENCE | error |
 | FUNGI-OMNI-005 | live | INVALID_STATE | error |
 
-### PARSE (4)
+### OTHER (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
+| FUNGI-OTHER-1 | ref | — | — |
+
+### PARSE (6)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-PARSE-00 | ref | — | — |
 | FUNGI-PARSE-001 | ref | — | — |
 | FUNGI-PARSE-002 | ref | — | — |
 | FUNGI-PARSE-003 | ref | — | — |
+| FUNGI-PARSE-004 | ref | — | — |
 | FUNGI-PARSE-DEPTH-001 | ref | — | — |
 
 ### PASSPORT (1)
@@ -1313,7 +1353,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-TRI-004 | live | UNKNOWN_LEAKED | error |
 | FUNGI-TRI-005 | live | MALFORMED_UNKNOWN_REASON | error |
 
-### TYPE (32)
+### TYPE (34)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1348,7 +1388,9 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-TYPE-030 | live | TENSOR_ELEMENT_TYPE_MISMATCH | error |
 | FUNGI-TYPE-031 | referenced | TENSOR_DIMENSION_MISMATCH | error |
 | FUNGI-TYPE-032 | inline | INVALID_CURRENCY_TAG | error |
+| FUNGI-TYPE-033 | inline | CONDITION_NOT_BOOL | error |
 | FUNGI-TYPE-099 | ref | WRONG_NAME | — |
+| FUNGI-TYPE-903 | ref | — | — |
 
 ### VAL (4)
 
