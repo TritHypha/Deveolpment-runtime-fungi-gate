@@ -102,6 +102,9 @@ const VALID = [
 // gate today, which is the point (this gate is what forces the harden).
 const ERROR_EDGE = [
   { label: "div-by-zero 10/0", src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d", names: ["a", "b"], args: [10, 0] },
+  // missing ENTRY flow: call a flow the program doesn't define. .ts → runtimeError value, .fungi → Err
+  // (runProgram hardened, step 1b 4cba01d1). Measured both fault this session.
+  { label: "missing entry flow (call undefined)", src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "nope", names: [], args: [] },
 ];
 
 describe("RD-0528 .fungi ≡ .ts edge-differential — VALID inputs: value-parity", () => {
