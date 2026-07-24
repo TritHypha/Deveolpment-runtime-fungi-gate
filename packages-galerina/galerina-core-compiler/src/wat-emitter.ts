@@ -4213,6 +4213,19 @@ export function buildWATModuleFromGIR(
   /** Phase 27: export all pure flows for WebAssembly.instantiate callers. */
   exportAllPure?: boolean,
 ): WATModule {
+  // #163 intern-store isolation (R&D bridge 0171): the module-level `_stringTable`/`_nextStringId` (:833)
+  // persist for the whole process. `resetStringTable()` (:869) was authored for exactly this — "call before
+  // emitting a new module to avoid IDs leaking across compilation units" — but was DEAD CODE (0 callers), so
+  // string handles ACCUMULATED across every build in one process. `gather-compiler-stage-hashes` builds all 7
+  // stages over one import → stage N's WASM embedded IDs depended on every stage built before it, so a single
+  // parser.fungi edit drifted the other 5 stages' evidence hashes (item-d not independently pinnable). Wiring
+  // the reset at this SOLE production emission entry makes every module build start fresh (IDs from 1),
+  // deterministic + build-order-independent. SAFE (measured, bridge 0172): production `galerina build` is
+  // one-module-per-process → already restarts at 1 per module, so this is a NO-OP for a single-module process
+  // (empty table on entry → prod .wat byte-identical) and only aligns in-process multi-builds to that same
+  // per-module behavior the fuse host already reconstructs (renderStringTableComments is per-module). The DSS
+  // getInternedStrings()=15 fixture builds ONLY the supervisor (single build) → reset is a no-op there too.
+  resetStringTable();
   // BK-4 (50yr "unknown version ⇒ REJECT, never best-effort"): the GIR schema is versioned; a consumer must
   // REJECT an unrecognised version rather than structurally best-effort-parse a future/foreign GIR (the C++
   // "old tool eats new format" trap). emitGIR always stamps "fungi.gir.v1".
