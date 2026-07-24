@@ -14,6 +14,12 @@ async function parseAndRun(source, flowName, args = new Map()) {
 }
 const INT = (n) => ({ __tag: "int", value: n });
 const hasCode = (r, code) => (r.diagnostics ?? []).some((d) => d.code === code);
+function checkDiags(src) {
+  const parsed = parseProgram(src, "test.fungi");
+  resolveSymbols(parsed.ast);
+  return checkTypes(parsed.ast).diagnostics ?? [];
+}
+const hasDiag = (diags, code) => diags.some((d) => d.code === code);
 
 describe("Flagship — three-valued parameter admission (where)", () => {
   it("REFUSES on empty all{} (⇒ UNKNOWN, not ALLOW) — the fail-closed K3 core", async () => {
@@ -87,5 +93,19 @@ describe("Flagship — three-valued parameter admission (where)", () => {
       (parsed.diagnostics ?? []).some((d) => d.code === "FUNGI-ADMIT-003"),
       "expected FUNGI-ADMIT-003 for a where on an fn param",
     );
+  });
+
+  // ── CHECK-TIME type gate (the DX layer on top of the fail-closed runtime gate) ──
+  it("CHECK-TIME: a non-Bool/Verdict `where` predicate is FUNGI-ADMIT-003 (Int)", () => {
+    const d = checkDiags(`pure flow g(p: Int where p) -> Int { return p }`);
+    assert.ok(hasDiag(d, "FUNGI-ADMIT-003"), "an Int predicate must be a compile-time FUNGI-ADMIT-003");
+  });
+  it("CHECK-TIME: a Verdict predicate (all{}) is accepted — no FUNGI-ADMIT-003", () => {
+    const d = checkDiags(`pure flow g(p: Int where all{}) -> Int { return p }`);
+    assert.ok(!hasDiag(d, "FUNGI-ADMIT-003"), "a Verdict predicate must not be flagged");
+  });
+  it("CHECK-TIME: a Bool predicate (p >= 0) is accepted — no FUNGI-ADMIT-003", () => {
+    const d = checkDiags(`pure flow g(p: Int where p >= 0) -> Int { return p }`);
+    assert.ok(!hasDiag(d, "FUNGI-ADMIT-003"), "a Bool predicate must not be flagged");
   });
 });

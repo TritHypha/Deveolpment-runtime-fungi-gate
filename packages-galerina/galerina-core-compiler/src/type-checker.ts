@@ -1401,6 +1401,35 @@ class TypeChecker {
         this.popBindingScope();
         return;
 
+      // ── Flagship (0119 item 2): parameter-admission predicate typing ─────────
+      // `name: T where <predicate>` gates a flow at entry, admitting ONLY on Verdict.Allow (a Bool
+      // auto-lifts). The predicate MUST type as Bool or Verdict — a non-Bool/Verdict predicate (e.g.
+      // `where 5`, `where someInt`) can never admit, so refuse it at CHECK time (FUNGI-ADMIT-003, the
+      // broadened admission-invalid code). This upgrades the runtime gate's fail-closed refusal to a
+      // compile error (the DX layer; the runtime gate already refuses wrong-typed predicates). This runs
+      // inside the flow's binding scope (params registered above), so a param-referencing predicate infers.
+      // A predicate whose type cannot be inferred (undefined) is NOT flagged — it falls through to the
+      // fail-closed runtime gate rather than a false compile error.
+      case "paramAdmissionDecl": {
+        for (const entry of node.children ?? []) {
+          if (entry.kind !== "admissionEntry") continue;
+          const predicate = entry.children?.[0];
+          if (predicate === undefined) continue;
+          const t = this.inferType(predicate);
+          if (t !== undefined && t !== "Bool" && t !== "Verdict") {
+            this.diagnostics.push(makeTCDiag(
+              "FUNGI-ADMIT-003",
+              "ADMISSION_PREDICATE_TYPE",
+              `Parameter admission predicate for '${entry.value ?? "?"}' must be Bool or Verdict, but has type '${t}'. ` +
+                `The entry gate admits only on Verdict.Allow (a Bool auto-lifts); a '${t}' predicate can never admit.`,
+              entry.location,
+              `Use a Verdict expression (e.g. \`where all{ … }\`) or a Bool condition (e.g. \`where p >= 0\`).`,
+            ));
+          }
+        }
+        return;
+      }
+
       // ── Phase 8A: return type checking ─────────────────────────────────────
       case "returnStmt": {
         const returnExpr = node.children?.[0];
