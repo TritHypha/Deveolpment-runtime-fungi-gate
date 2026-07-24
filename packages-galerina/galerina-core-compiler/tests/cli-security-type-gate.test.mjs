@@ -43,7 +43,7 @@ function cli(cmd, file, extra = []) {
 
 after(() => {
   for (const p of fixtures) { try { rmSync(p, { force: true }); } catch { /* ignore */ } }
-  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv"]) {
+  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match"]) {
     for (const ext of [".wasm", ".wat", ".lmanifest", ".lmanifest.json", ".fuse.json", ".governance-impact.json"]) {
       try { rmSync(join(BUILD, `${base}${ext}`), { force: true }); } catch { /* ignore */ }
     }
@@ -57,6 +57,8 @@ const IFINT = `pure flow g(n: Int) -> Int { if n { return 1 } return 0 }\n`;
 // S3 — mixed Verdict×Bool boolean operand (fail-open: UNKNOWN coerced into a decision)
 const MIXED = `pure flow g(v: Verdict, w: Verdict) -> Verdict { return v and w }\n`;
 const MIXEDBAD = `pure flow g(v: Verdict, b: Bool) -> Verdict { let r: Verdict = v and b  return r }\n`;
+// S3 — a Verdict `match` whose wildcard covers the DENY arm (fail-open: DENY swept into the default)
+const MATCHBAD = `pure flow g(v: Verdict) -> Int { match v { Allow => { return 1 } _ => { return 0 } } }\n`;
 // An ORDINARY type error (Int returned as String) — must STAY advisory (not in the security carve-out)
 const MISMATCH = `pure flow g(n: Int) -> String { return n }\n`;
 // The sanctioned Verdict authorization idiom — must be clean
@@ -105,6 +107,19 @@ test("control: `v and w` (Verdict×Verdict, the sanctioned K3 lane) is clean —
   const r = cli("check", fixture("__sectype_vv.fungi", MIXED));
   assert.doesNotMatch(r.out, /FUNGI-K3-001/, "the Verdict×Verdict K3 min/max lane must not trip the gate");
   assert.equal(r.status, 0, `the sanctioned K3 lane must pass\n${r.out}`);
+});
+
+test("check: `match v { .Allow => .. _ => .. }` (FUNGI-GOV-3VL-003, S3) fails CLOSED — counted, exit 1", () => {
+  const r = cli("check", fixture("__sectype_match.fungi", MATCHBAD));
+  assert.match(r.out, /FUNGI-GOV-3VL-003/, "a Verdict-match wildcard over DENY must surface as an error, not an advisory");
+  assert.equal(r.status, 1, `plain check must exit non-zero on the wildcard-over-DENY fail-open\n${r.out}`);
+});
+
+test("build: the Verdict-match wildcard-over-DENY (FUNGI-GOV-3VL-003) REFUSES the build", () => {
+  const r = cli("build", fixture("__sectype_match.fungi", MATCHBAD));
+  assert.match(r.out, /FUNGI-GOV-3VL-003/, "build must name the wildcard-over-DENY fail-open code");
+  assert.match(r.out, /FAILED \(fail-closed/, "build must fail closed, not mint an artifact");
+  assert.equal(r.status, 1, `build of the wildcard-over-DENY fail-open must be refused\n${r.out}`);
 });
 
 test("REGRESSION: an ORDINARY type error (Int↦String) STAYS advisory in plain check — exit 0", () => {

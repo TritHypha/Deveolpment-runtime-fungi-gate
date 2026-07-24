@@ -136,11 +136,16 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 //                      analog of 3VL-004. (The OTHER two F3 cases — `v == b`, `return 2` as Verdict —
 //                      surface via GENERIC FUNGI-TYPE-004/008, which have 17/31 live corpus sites, so
 //                      they are NOT surgically promotable here; they need dedicated K3 codes — an open
-//                      design question routed to R&D, bridge 0169.)
-// Corpus blast radius MEASURED 0/460 .fungi for all three (latent-prevention, no live site) before
+//                      design question routed to R&D, bridge 0170.)
+//   FUNGI-GOV-3VL-003  a `match` on a Verdict whose wildcard `_` covers the DENY arm (S3 / R&D 0169) —
+//                      a fail-open: DENY is silently swept into the catch-all default instead of being
+//                      handled explicitly. (R&D also named 3VL-005/006, but MEASURED: neither is emitted
+//                      by checkTypes — absent from type-checker.ts — so they do NOT ride this advisory
+//                      bucket; if they exist they are governance-verifier codes, already counted. 0170.)
+// Corpus blast radius MEASURED 0/460 .fungi for ALL of these (latent-prevention, no live site) before
 // promoting — so this reds no shipped file. SINGLE source of truth: both the `check` advisory
 // path and the `build` govErrors gate read THIS set (a duplicated security set could drift).
-const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001"]);
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003"]);
 
 async function main() {
   let [, , command = "help", ...rest] = process.argv;
