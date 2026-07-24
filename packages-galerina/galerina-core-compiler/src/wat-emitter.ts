@@ -4143,6 +4143,23 @@ export function buildWATModule(
 }
 
 // ---------------------------------------------------------------------------
+/**
+ * Flagship (0119 item 2): true if any flow in the AST carries a parameter admission (`where <predicate>`)
+ * — i.e. a `paramAdmissionDecl` clause anywhere. Used to REFUSE raw-WASM lowering of admission-bearing
+ * flows (the admission entry gate is not yet lowered to WAT, so a raw run would bypass it). Exported so the
+ * `galerina build` standalone path can refuse per-file gracefully before reaching the emitter's hard throw.
+ */
+export function astHasParamAdmission(node: AstNode | undefined | null): boolean {
+  // Null-safe: some (untyped JS) callers reach the emitter without an AST. `ast` is TS-required on the real
+  // security surfaces (cli raw-WASM paths), so a missing AST here means a caller that structurally has no
+  // admission clause to see — return false rather than crash (the crash masked the greet-flow lowering test).
+  if (node === undefined || node === null) return false;
+  if (node.kind === "paramAdmissionDecl") return true;
+  for (const c of node.children ?? []) if (astHasParamAdmission(c)) return true;
+  return false;
+}
+
+// ---------------------------------------------------------------------------
 // GIRProgram overload — buildWATModuleFromGIR
 // ---------------------------------------------------------------------------
 
@@ -4207,6 +4224,24 @@ export function buildWATModuleFromGIR(
       `buildWATModuleFromGIR: ${gir.schemaVersion === undefined ? "MISSING" : "unsupported"} GIR schemaVersion ` +
       `${JSON.stringify(gir.schemaVersion)} — expected "fungi.gir.v1" (BK-4/A4 fail-closed; an absent or ` +
       `unrecognised GIR version is refused, never best-effort lowered).`,
+    );
+  }
+
+  // Flagship (0119 item 2) — RAW-WASM ADMISSION-BYPASS GUARD (bridge 0155/0157, R&D-measured). A parameter
+  // `where` admission is a Verdict-ALLOW-only ENTRY gate enforced by the interpreter; it is NOT lowered to
+  // WAT (this emitter has no admission emit). A compiled export therefore runs a DENIED/UNKNOWN admission to
+  // completion — the raw `--invoke` and `galerina build`+wasmtime surfaces sit OUTSIDE the interpreter and
+  // bypass the gate (the 4 fast-tier exclusions only cover the interpreter). Refuse to lower here — the
+  // single WASM-emission chokepoint — so NO raw path can produce a runnable module for an admission-bearing
+  // flow. This makes the bypass UNREPRESENTABLE rather than patched per entry point. Lowering the predicate
+  // into WAT is the long-run fix; until then, run the flow via the governed interpreter. Fail-closed,
+  // mirrors the BK-4 refusal above.
+  if (astHasParamAdmission(ast)) {
+    throw new Error(
+      `buildWATModuleFromGIR: refusing to lower a flow carrying a parameter admission (\`where <predicate>\`) ` +
+      `to WASM — the admission entry gate is NOT lowered to WAT, so a raw WASM run (--invoke / build+wasmtime) ` +
+      `would BYPASS it and run a denied/unknown admission to completion (fail-closed, bridge 0155). Run the ` +
+      `flow via the governed interpreter until admission lowering lands.`,
     );
   }
   const watInput: WATGIRInput = {

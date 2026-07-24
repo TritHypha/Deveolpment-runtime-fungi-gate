@@ -37,7 +37,7 @@ import { checkProductionReadiness } from "./production-check.js";
 import { runProductionSecurityGate, productionGateBlocks } from "./security-gate.js";
 import { buildAiGraph, emitGIR } from "./gir-emitter.js";
 import { generateManifest, serializeManifest } from "./manifest-generator.js";
-import { buildWATModuleFromGIR, renderWAT } from "./wat-emitter.js";
+import { buildWATModuleFromGIR, renderWAT, astHasParamAdmission } from "./wat-emitter.js";
 import { assembleWAT } from "./wat-assembler.js";
 import { STDLIB_CAPABILITY_MAP } from "./stdlib-registry.js";
 import { EFFECT_REGISTRY } from "./effect-checker.js";
@@ -980,6 +980,18 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
         gateErrors.map((e) => `  - ${e}\n`).join(""),
       );
       continue; // do NOT lower / write an ungoverned artifact
+    }
+
+    // Flagship (0119 item 2, bridge 0155): a parameter `where` admission is a Verdict-ALLOW-only ENTRY gate
+    // enforced by the interpreter and NOT lowered to WAT — a raw WASM run would BYPASS it. Refuse per-file,
+    // fail-closed (the emitter also throws as a backstop; this gives a clean message + per-file granularity).
+    if (astHasParamAdmission(parseResult.ast)) {
+      process.stderr.write(
+        `[error] ${filePath}: refusing to emit WASM — a flow carries a parameter admission (\`where <predicate>\`) ` +
+        `that is not lowered to WAT; a raw WASM run would BYPASS the admission entry gate (fail-closed, bridge 0155). ` +
+        `Run the flow via the governed interpreter until admission lowering lands.\n`,
+      );
+      continue; // do NOT lower / write a module whose entry gate WASM cannot enforce
     }
 
     const girResult = emitGIR(parseResult.ast, parseResult.flows, effectResults);

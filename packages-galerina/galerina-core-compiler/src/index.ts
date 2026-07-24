@@ -755,6 +755,7 @@ export {
   renderWAT,
   buildWATModule,
   buildWATModuleFromGIR,
+  astHasParamAdmission,
   emitWATBody,
   emitWATFromFlowAST,
   emitWATExpr,
