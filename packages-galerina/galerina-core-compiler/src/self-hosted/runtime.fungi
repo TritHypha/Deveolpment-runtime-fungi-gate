@@ -248,7 +248,10 @@ contract { intent { "Evaluate a GIR binop opcode over two runtime values." } }
   if op == "sub" { return rtInt(a.i - b.i) }
   if op == "mul" { return rtInt(a.i * b.i) }
   if op == "div" {
-    if b.i == 0 { return rtInt(0) }
+    // Fail-CLOSED on div-by-zero: return an Err-tagged fault, mirroring the .ts reference
+    // (interpreter.ts div0 -> null fault). Returning rtInt(0) here was a silent wrong value —
+    // a parity regression where the .fungi twin was LESS safe than its own .ts (R&D bridge 0222).
+    if b.i == 0 { return rtTag("Err", rtStr("division by zero")) }
     return rtInt(a.i / b.i)
   }
   // Equality is type-aware: Bool values carry their payload in `.b` (with `.i`
@@ -267,7 +270,8 @@ contract { intent { "Evaluate a GIR binop opcode over two runtime values." } }
   if op == "gt" { return rtBool(a.i > b.i) }
   if op == "le" { return rtBool(a.i <= b.i) }
   if op == "ge" { return rtBool(a.i >= b.i) }
-  return rtInt(0)
+  // Fail-CLOSED on an unknown binop: an Err fault, not a silent rtInt(0) (R&D bridge 0222).
+  return rtTag("Err", rtStr("unknown binop"))
 }
 
 // Find a flow entry by name in the flow table; sentinel (empty name/params/body)

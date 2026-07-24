@@ -262,7 +262,7 @@ async function execValue(source, entryName, argNums) {
   const rec = runRes.value ?? runRes;
   const rv = rec.fields.get("retVal");
   const f = (rv.value ?? rv).fields;
-  return { ty: f.get("ty").value, i: f.get("i").value, b: f.get("b").value, s: f.get("s").value };
+  return { ty: f.get("ty").value, i: f.get("i").value, b: f.get("b").value, s: f.get("s").value, tag: f.get("tag").value };
 }
 
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
@@ -585,12 +585,18 @@ const RUNTIME_EXEC = [
   { label: "compare a>b -> Bool true",   src: `pure flow gt(a: Int, b: Int) -> Bool { return a > b }`, entry: "gt",     args: [5, 2],  field: "b", value: true },
   { label: "compare a>b -> Bool false",  src: `pure flow gt(a: Int, b: Int) -> Bool { return a > b }`, entry: "gt",     args: [2, 5],  field: "b", value: false },
 ];
-// Documented silent-degrade edges: the interpreter does NOT fault on these — it returns a default. Pinned
-// as the runtime's ACTUAL contract (a change here is a real behavior change the oracle catches), and flagged
-// for the eventual fail-closed hardening (div-by-zero and missing-entry-flow should arguably fault, not 0/sentinel).
+// Edge inputs where the runtime MUST fail-closed (match the .ts reference, which faults), NOT return a
+// plausible wrong value. R&D bridge 0222 MEASURED that the .ts interpreter faults here (div0 -> null,
+// missing-flow -> runtimeError) while the .fungi returned 0/sentinel — a parity regression where the
+// .fungi twin was LESS safe than its own .ts. Harden-first (R&D 0222 step 1):
+//   ✅ div0 + unknown-binop -> now an Err-tagged fault (applyBinop hardened).
+//   🔴 REMAINING (next increment, R&D 0222 step 1b): missing-flow still returns the sentinel default —
+//      that harden needs Err-propagation through the cross-flow call path (runProgram/evalGIRExpr call),
+//      structurally larger than applyBinop. Pinned here as the CURRENT (still-wrong) value so the oracle
+//      goes RED the moment it's hardened, forcing this assertion to be updated in lockstep.
 const RUNTIME_EXEC_EDGES = [
-  { label: "div-by-zero -> silent 0 (documented soft edge)",          src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "i",  value: 0 },
-  { label: "missing entry flow -> sentinel Int default (documented)", src: `pure flow x() -> Int { return 1 }`,                   entry: "nope", args: [],      field: "ty", value: "Int" },
+  { label: "div-by-zero -> fail-closed Err (hardened, R&D 0222)",                         src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "tag", value: "Err" },
+  { label: "missing entry flow -> sentinel Int default (REMAINING regression, R&D 0222 step 1b)", src: `pure flow x() -> Int { return 1 }`,           entry: "nope", args: [],      field: "ty",  value: "Int" },
 ];
 
 describe("RD-0528 I-3 functional corpus (tranche 8: runtime exec-VALUE) — buildFlowTable -> runProgram (parse -> exec)", () => {
