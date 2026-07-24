@@ -589,14 +589,13 @@ const RUNTIME_EXEC = [
 // plausible wrong value. R&D bridge 0222 MEASURED that the .ts interpreter faults here (div0 -> null,
 // missing-flow -> runtimeError) while the .fungi returned 0/sentinel — a parity regression where the
 // .fungi twin was LESS safe than its own .ts. Harden-first (R&D 0222 step 1):
-//   ✅ div0 + unknown-binop -> now an Err-tagged fault (applyBinop hardened).
-//   🔴 REMAINING (next increment, R&D 0222 step 1b): missing-flow still returns the sentinel default —
-//      that harden needs Err-propagation through the cross-flow call path (runProgram/evalGIRExpr call),
-//      structurally larger than applyBinop. Pinned here as the CURRENT (still-wrong) value so the oracle
-//      goes RED the moment it's hardened, forcing this assertion to be updated in lockstep.
+//   ✅ div0 + unknown-binop -> Err-tagged fault (applyBinop hardened, R&D 0222 step 1).
+//   ✅ missing ENTRY flow -> Err (runProgram hardened, R&D 0222 step 1b). NOTE: the cross-flow CALL
+//      path (a `call` to a nonexistent flow INSIDE a body, evalGIRExpr) is a separate remaining sub-case
+//      — no tranche-8 edge exercises it yet; tracked for a later increment.
 const RUNTIME_EXEC_EDGES = [
-  { label: "div-by-zero -> fail-closed Err (hardened, R&D 0222)",                         src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "tag", value: "Err" },
-  { label: "missing entry flow -> sentinel Int default (REMAINING regression, R&D 0222 step 1b)", src: `pure flow x() -> Int { return 1 }`,           entry: "nope", args: [],      field: "ty",  value: "Int" },
+  { label: "div-by-zero -> fail-closed Err (hardened, R&D 0222)",              src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "tag", value: "Err" },
+  { label: "missing entry flow -> fail-closed Err (hardened, R&D 0222 step 1b)", src: `pure flow x() -> Int { return 1 }`,                   entry: "nope", args: [],      field: "tag", value: "Err" },
 ];
 
 describe("RD-0528 I-3 functional corpus (tranche 8: runtime exec-VALUE) — buildFlowTable -> runProgram (parse -> exec)", () => {

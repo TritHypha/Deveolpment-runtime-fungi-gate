@@ -14,8 +14,8 @@
       "sha256": "613d0cad86fd726c4a55ed8a12b8619f9d4540c9605f40c00fb1792d7fd684ee"
     },
     "runtime": {
-      "bytes": 6348,
-      "sha256": "7aacca77504dec287b1ac9266a980d096d3eb66755ce0bcec67acaceee85fb28"
+      "bytes": 6400,
+      "sha256": "348ddd1657cd91258a4b5a96339ac16294e8f595aee38f1defd365f599a5e041"
     },
     "type-checker": {
       "bytes": 10600,

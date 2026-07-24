@@ -938,6 +938,12 @@ pure flow runProgram(flows: Array<FlowEntry>, entryName: String, args: Array<RtV
 contract { intent { "Run a flow-table program from an entry flow with positional args; return value + audit log." } }
 {
   let entry: FlowEntry = lookupFlow(flows, entryName)
+  // Fail-CLOSED when the entry flow is absent: lookupFlow returns an empty-name sentinel, and
+  // executing its empty body would silently return a default value. The .ts reference faults
+  // (interpreter runtimeError) — mirror that with an Err, don't run a phantom flow (R&D bridge 0222).
+  if entry.name == "" {
+    return { retVal: rtTag("Err", rtStr("no such flow")), auditLog: Array.empty() }
+  }
   let params: Array<Auto> = entry.params
   mut env: Array<Binding> = Array.empty()
   mut i: Int = 0
