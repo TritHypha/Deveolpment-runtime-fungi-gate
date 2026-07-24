@@ -6,8 +6,8 @@ Explain this code like I'm smart but lazy:
 - less talk more work
 
 Check
-- are you still using this for coding standards C:\Users\phill\Documents\GitHub\Galerina\docs\security\rd0528-ts-to-fungi-self-hosting-standard.md
-- use myco over glob and grep C:\Users\phill\Documents\GitHub\Galerina\packages-galerina\galerina-tools-myco
+- are you still using this for coding standards docs/security/rd0528-ts-to-fungi-self-hosting-standard.md
+- use myco over glob and grep packages-galerina/galerina-tools-myco
 - loosely follow these rules, use your own intuition github.com/TritHypha/Claude-Zero-Trust-Rules-Sir
 - focus on a single task, get it done and then move on rather than following rabbit holes
 - IMPORTANT: this is a zero-trust project everrthing we build is checked for security and quality, verify-don't-assume
