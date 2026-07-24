@@ -303,6 +303,7 @@ contract { intent { "The canonical Stage-A diagnostic name for a code the twin e
   if code == "FUNGI-TYPE-026" { return "DEFERRED_TYPE_CHECK" }
   if code == "FUNGI-TYPE-030" { return "TENSOR_ELEMENT_TYPE_MISMATCH" }
   if code == "FUNGI-TYPE-032" { return "INVALID_CURRENCY_TAG" }
+  if code == "FUNGI-TYPE-033" { return "CONDITION_NOT_BOOL" }
   if code == "FUNGI-NAME-002" { return "DUPLICATE_NAME" }
   if code == "FUNGI-BINDING-005" { return "IMMUTABLE_BINDING_REASSIGNED" }
   return ""
@@ -337,6 +338,7 @@ contract { intent { "The canonical Stage-A severity for a code the twin emits (e
   if code == "FUNGI-TYPE-025" { return "error" }
   if code == "FUNGI-TYPE-030" { return "error" }
   if code == "FUNGI-TYPE-032" { return "error" }
+  if code == "FUNGI-TYPE-033" { return "error" }
   if code == "FUNGI-NAME-002" { return "error" }
   if code == "FUNGI-BINDING-005" { return "error" }
   return "error"
@@ -502,6 +504,52 @@ contract {
   return None
 }
 
+// FUNGI-TYPE-033 (S1 condition gate, mirrored 2026-07-24 under the doc-08 §5a ceremony): an `if`/`while`
+// must branch on a Bool condition. Faithfulness to Stage-A (type-checker.ts checkConditionBool): Stage-A
+// emits ONLY when inferType(cond) is DEFINED and != "Bool" — an uninferable condition is NOT flagged
+// (conservative). The twin mirrors that exactly: only a KNOWN inferred type (isKnownType) that is not
+// Bool emits; "" / "Unknown" / "ERROR" all mean can't-infer -> NO emit (the "ERROR" case matters: a bad
+// arith condition must stay silent here, as Stage-A's inferType yields undefined for it).
+pure flow checkCondNotBool(flowName: String, kw: String, cond: Expr) -> Array<Auto>
+contract {
+  intent { "Emit FUNGI-TYPE-033 when an if/while condition has a KNOWN non-Bool type; silent when Bool or uninferable." }
+}
+{
+  mut diags: Array<Auto> = Array.empty()
+  mut leftT: String = ""
+  mut rightT: String = ""
+  let kids: Array<Expr> = cond.children
+  if kids.count() > 0 {
+    let k0 = kids.get(0)
+    match k0 {
+      Some(a) => { leftT = a.litType }
+      None => {}
+      _ => {}
+    }
+  }
+  if kids.count() > 1 {
+    let k1 = kids.get(1)
+    match k1 {
+      Some(b) => { rightT = b.litType }
+      None => {}
+      _ => {}
+    }
+  }
+  // Body-statement Exprs use the parser's "lit" kind; inferExprType speaks the return-expr
+  // vocabulary ("literal"). Normalize — MEASURED 2026-07-24: `if 42` parses as
+  // { kind: "lit", litType: "Int" }, which un-normalized fell to "Unknown" (never emitted).
+  mut condKind: String = cond.kind
+  if condKind == "lit" { condKind = "literal" }
+  let t: String = inferExprType(condKind, cond.litType, leftT, rightT)
+  if isKnownType(t) {
+    if t != "Bool" {
+      let msg33: String = kw + "(...) branches on a Bool condition, but this condition has type '" + t + "' (FUNGI-TYPE-033)"
+      diags = diags.append({ code: "FUNGI-TYPE-033", message: msg33, flowName: flowName })
+    }
+  }
+  return diags
+}
+
 // Check one statement, recursing into if/while bodies, returning its diagnostics.
 pure flow checkStmt(flowName: String, stmt: Stmt, scope: Array<Auto>) -> Array<Auto>
 contract {
@@ -518,12 +566,24 @@ contract {
     diags = appendAll(diags, checkBinding(flowName, stmt, scope))
   }
   if kind == "if" {
+    let condOptIf = firstExpr(stmt)
+    match condOptIf {
+      Some(condIf) => { diags = appendAll(diags, checkCondNotBool(flowName, "if", condIf)) }
+      None => {}
+      _ => {}
+    }
     let stmtBody: Array<Stmt> = stmt.body
     let stmtElse: Array<Stmt> = stmt.elseBody
     diags = appendAll(diags, checkStmtList(flowName, stmtBody, scope))
     diags = appendAll(diags, checkStmtList(flowName, stmtElse, scope))
   }
   if kind == "while" {
+    let condOptWhile = firstExpr(stmt)
+    match condOptWhile {
+      Some(condWhile) => { diags = appendAll(diags, checkCondNotBool(flowName, "while", condWhile)) }
+      None => {}
+      _ => {}
+    }
     let stmtBody: Array<Stmt> = stmt.body
     diags = appendAll(diags, checkStmtList(flowName, stmtBody, scope))
   }

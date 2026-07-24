@@ -163,6 +163,11 @@ const MUST_PASS = [
   { label: "Int literal return", src: `pure flow answer() -> Int { return 42 }` },
   { label: "String literal return", src: `pure flow greet() -> String { return "hi" }` },
   { label: "two independent clean flows", src: `pure flow g(a: Int) -> Int { return a }\npure flow h(b: Int) -> Int { return b }` },
+  // TYPE-033 silence controls (the other half of the non-vacuity pair): a Bool-literal condition and
+  // a compare condition must NOT emit — and an UNINFERABLE condition (bare param ref) must stay
+  // silent too, mirroring Stage-A's `t !== undefined` conservatism.
+  { label: "if true (Bool literal condition) — no TYPE-033", src: `pure flow okc() -> Int { if true { return 1 } return 2 }` },
+  { label: "if bare param ref (uninferable condition) — conservative, no TYPE-033", src: `pure flow okd(a: Int) -> Int { if a { return 1 } return 2 }` },
 ];
 
 // Known-bad programs: the self-hosted type-checker MUST reject, with this exact diagnostic.
@@ -173,6 +178,10 @@ const MUST_FAIL = [
   { label: "unknown return type", src: `pure flow bad4() -> Nope { return 1 }`, expect: { code: "FUNGI-TYPE-001", flowName: "bad4" } },
   { label: "unknown param type", src: `pure flow bad5(a: Nope) -> Int { return 1 }`, expect: { code: "FUNGI-TYPE-001", flowName: "bad5" } },
   { label: "one bad flow beside a good one — only the bad flagged", src: `pure flow bad6() -> String { return 42 }\npure flow ok(a: Int) -> Int { return a }`, expect: { code: "FUNGI-TYPE-008", flowName: "bad6" } },
+  // TYPE-033 non-vacuity pair (the twin mirror's §5a fixture, measured 2026-07-24): a known non-Bool
+  // condition MUST emit; the Bool-literal + compare controls in MUST_PASS below MUST stay silent.
+  { label: "if branches on an Int literal (non-Bool condition)", src: `pure flow bad7() -> Int { if 42 { return 1 } return 2 }`, expect: { code: "FUNGI-TYPE-033", flowName: "bad7" } },
+  { label: "while branches on a String literal (non-Bool condition)", src: `pure flow bad8() -> Int { while "x" { return 1 } return 2 }`, expect: { code: "FUNGI-TYPE-033", flowName: "bad8" } },
 ];
 
 // Tranche 2 — parse-correctness. Malformed programs the self-hosted PARSER must reject with a

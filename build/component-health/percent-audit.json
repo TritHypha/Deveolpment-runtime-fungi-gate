@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "main",
-    "sha": "ecebed10",
+    "sha": "7a27ed30",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
   "shipReadinessPct": 97.9381443298969,
   "ztAvg": 78,
@@ -122,7 +122,7 @@
         },
         {
           "label": "Type checker / Effect checker",
-          "pct": 97,
+          "pct": 100,
           "status": null,
           "live": false,
           "evidence": {
