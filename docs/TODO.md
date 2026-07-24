@@ -85,6 +85,32 @@ single indivisible verified unit; tick-slicing is the worse fail-open). **Order:
 > Phase-1-vs-Phase-2 ordering was the owner's call; the ruling fixed **Phase 2's internal order** (C4+C5 first).
 > S1–S3 ride as the next arc or as tick-sized side-work.
 
+### Session deliverables — 2026-07-24 (cont.18–21: VALUESTATE-011 reg cycle · gov-verifier I-3 3→5 · gir-emitter I-3 · roadmap · green battery)
+
+Full-auto loop (main). Commits below, NONE pushed (owner pushes). Owner **unlocked** the owner-gated items
+this session (per-stage flips / DSS-5 / R4-5-8 / Package Standard / work-state trim) — flips still gated on
+complete per-stage evidence + doc-08 §5a ceremony (one stage at a time; never self-authorize; never extend
+a nod across stages). No stage flipped this arc (gir-emitter is closest but its mutation-kill item is unverified).
+
+- **VALUESTATE-011 registration cycle CLOSED** — floor landed `c365fc8d`, R&D registered in KB `aaf5ab0`, allowlist
+  shrunk to EMPTY `e32dc936` (`diagnostic-namespace` 3/3).
+- **Gov-verifier I-3 tranche 5** `f702c13d` — GOV-004 + GOV-005 (coverage **3→5 of 14**), measured through the real
+  pipeline. Finding (R&D-confirmed 0208/0209): the other **9 of 14** gov-verifier codes are **PARSER-BLOCKED**
+  (`emergency`/`parent_policy`/`trap`/mutation-policy/`step` have no self-hosted parser production) → gov-verifier
+  flip is parser-gated, not one-tranche-away.
+- **Gir-emitter I-3 tranche 6** `2376fc1f` — gir-emitter FUNCTIONAL oracle driven from the parser (parse→emitGIRModule),
+  5 measured cases / ≥4 distinct ops. gir-emitter now has R3-parity (14/14) **+** functional I-3.
+- **Roadmap refreshed** `948e27e6` + correction `41ca5b89` (struck a phantom "gir-emitter op:load oracle gap" I had
+  inherited from the stale morning snapshot — verify-don't-trust caught it).
+- **Green battery (owner-asked "run graph/audit/tests"):** graph-all **6/6** (project 6912n/7181e · integrity 0 ·
+  border 97/0 · dev-tools 97/118/40) · audit gates **5/5** (artifact-drift, stage-twins, percent-history,
+  private-doc-leak, path-leak all exit 0) · compiler suite **5045 real tests pass** (`npm test`).
+- ⚠ **Self-inflicted finding (led with it):** the one apparent test "failure" was a **phantom directory**
+  `tests/sec-002-mutation.test.mjs/` that **myco created** when I queried it against a non-existent file path
+  (it dropped a `.myco` index-cache dir there). The recently-compacted flat `tests/*.test.mjs` glob then matched
+  the directory and `node --test` choked. Real suite is green; the phantom dir is pollution to delete. **myco bug
+  to fix durably:** never create a directory for a non-existent query target.
+
 ### Session deliverables — 2026-07-24 (RD-0528 self-hosting cont. · effect-checker flip · VALUESTATE-011 security floor · doc-08 stance)
 
 Full-auto loop (main). Commits below, NONE pushed (owner pushes). Each landed complete with its own differential.
