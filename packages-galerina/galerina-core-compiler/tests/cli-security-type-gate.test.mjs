@@ -43,7 +43,7 @@ function cli(cmd, file, extra = []) {
 
 after(() => {
   for (const p of fixtures) { try { rmSync(p, { force: true }); } catch { /* ignore */ } }
-  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match", "__sectype_notv", "__sectype_fold"]) {
+  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match", "__sectype_notv", "__sectype_fold", "__sectype_cmp", "__sectype_ret", "__sectype_vcmp", "__sectype_vret"]) {
     for (const ext of [".wasm", ".wat", ".lmanifest", ".lmanifest.json", ".fuse.json", ".governance-impact.json"]) {
       try { rmSync(join(BUILD, `${base}${ext}`), { force: true }); } catch { /* ignore */ }
     }
@@ -63,6 +63,10 @@ const MATCHBAD = `pure flow g(v: Verdict) -> Int { match v { Allow => { return 1
 const NOTVERDICT = `pure flow g(v: Verdict) -> Bool { return !v }\n`;
 // S3+ — a K3 fold `all{}` with a non-Verdict operand (FUNGI-K3-003 — unsound coercion into the fold)
 const FOLDBAD = `pure flow g(v: Verdict, n: Int) -> Verdict { return all{ v n } }\n`;
+// S3/A9 — a Verdict compared to a non-Verdict (FUNGI-K3-004, minted per R&D 0174)
+const CMPBAD = `pure flow g(v: Verdict, b: Bool) -> Int { if v == b { return 1 } return 0 }\n`;
+// S3/A9 — a non-Verdict returned where Verdict is declared (FUNGI-K3-005, minted per R&D 0174)
+const RETBAD = `pure flow g() -> Verdict { return 2 }\n`;
 // An ORDINARY type error (Int returned as String) — must STAY advisory (not in the security carve-out)
 const MISMATCH = `pure flow g(n: Int) -> String { return n }\n`;
 // The sanctioned Verdict authorization idiom — must be clean
@@ -142,6 +146,33 @@ test("check+build: K3 fold `all{ v n }` with a non-Verdict (FUNGI-K3-003) fails 
   const b = cli("build", fixture("__sectype_fold.fungi", FOLDBAD));
   assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
   assert.equal(b.status, 1, `build must be refused\n${b.out}`);
+});
+
+test("check+build: `v == b` (FUNGI-K3-004) fails CLOSED — counted + build refused", () => {
+  const c = cli("check", fixture("__sectype_cmp.fungi", CMPBAD));
+  assert.match(c.out, /FUNGI-K3-004/, "Verdict compared to a non-Verdict must surface as an error");
+  assert.equal(c.status, 1, `plain check must exit non-zero\n${c.out}`);
+  const b = cli("build", fixture("__sectype_cmp.fungi", CMPBAD));
+  assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
+  assert.equal(b.status, 1, `build must be refused\n${b.out}`);
+});
+
+test("check+build: `return 2` as Verdict (FUNGI-K3-005) fails CLOSED — counted + build refused", () => {
+  const c = cli("check", fixture("__sectype_ret.fungi", RETBAD));
+  assert.match(c.out, /FUNGI-K3-005/, "a non-Verdict returned as Verdict must surface as an error");
+  assert.equal(c.status, 1, `plain check must exit non-zero\n${c.out}`);
+  const b = cli("build", fixture("__sectype_ret.fungi", RETBAD));
+  assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
+  assert.equal(b.status, 1, `build must be refused\n${b.out}`);
+});
+
+test("control: `v == Verdict.Allow` + `return Verdict.Allow` stay clean — exit 0", () => {
+  const r1 = cli("check", fixture("__sectype_vcmp.fungi", `pure flow g(v: Verdict) -> Int { if v == Verdict.Allow { return 1 } return 0 }\n`));
+  assert.doesNotMatch(r1.out, /FUNGI-K3-004/, "the sanctioned Verdict==Verdict authorization must not trip K3-004");
+  assert.equal(r1.status, 0, `== Verdict.Allow must pass\n${r1.out}`);
+  const r2 = cli("check", fixture("__sectype_vret.fungi", `pure flow g() -> Verdict { return Verdict.Allow }\n`));
+  assert.doesNotMatch(r2.out, /FUNGI-K3-005/, "returning a real Verdict must not trip K3-005");
+  assert.equal(r2.status, 0, `return Verdict.Allow must pass\n${r2.out}`);
 });
 
 test("REGRESSION: an ORDINARY type error (Int↦String) STAYS advisory in plain check — exit 0", () => {

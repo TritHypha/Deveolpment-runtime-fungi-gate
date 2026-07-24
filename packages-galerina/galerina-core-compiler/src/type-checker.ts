@@ -1445,6 +1445,22 @@ class TypeChecker {
               (returnExpr.value === "Ok" || returnExpr.value === "Err" || returnExpr.value === "Some");
             const declaredBase = this.currentReturnType.split("<")[0]?.trim() ?? this.currentReturnType;
             if (!isOkErrReturn && !isAssignmentCompatible(declaredBase, inferredType)) {
+              // K3-005 (S3/A9, R&D bridge 0174) — a NON-Verdict value returned where Verdict is declared.
+              // `return 2` (or any non-Verdict) as a Verdict smuggles an out-of-K3-domain value into a
+              // governance result (fail-open). Fires BEFORE the generic TYPE-008 so the author gets the K3
+              // reason. `return Verdict.Allow` is Verdict→Verdict (compatible, never reaches here). Extracted
+              // into galerina.mjs SECURITY_TYPE_CODES → fails closed at check + build.
+              if (declaredBase === "Verdict") {
+                this.diagnostics.push(makeTCDiag(
+                  "FUNGI-K3-005",
+                  "NON_VERDICT_RETURNED_AS_VERDICT",
+                  `Flow declares return type 'Verdict' but this return expression has type '${inferredType}' — only a ` +
+                  `Verdict (Verdict.Allow / Verdict.Deny / Verdict.Unknown, or a check/fold result) is a valid ` +
+                  `governance verdict. A '${inferredType}' returned as a Verdict is an out-of-K3-domain value (fail-open).`,
+                  node.location,
+                  `Return a Verdict (Verdict.Allow / Verdict.Deny / Verdict.Unknown), or fix the declared return type.`,
+                ));
+              } else {
               // A `#record` LITERAL where a DECLARED record type is expected adopts that
               // record type STRUCTURALLY (fields checked against the declaration) instead of
               // collapsing to the opaque 'Record' — the corpus-wide `return { ty: "Int", … }
@@ -1463,6 +1479,7 @@ class TypeChecker {
                   node.location,
                   `Return a value of type '${this.currentReturnType}', or correct the flow return type declaration.`,
                 ));
+              }
               }
             } else if (!isOkErrReturn && declaredBase === "Auto") {
               // Surface the deferral: isAssignmentCompatible() treats an `Auto`-declared
@@ -2276,6 +2293,23 @@ class TypeChecker {
     // Equality operators
     if (op === "==" || op === "!=") {
       // SecureString equality is caught by value-state checker (FUNGI-SECRET-002)
+      // K3-004 (S3/A9, R&D bridge 0174) — a Verdict compared to a NON-Verdict. Authorization is
+      // `== Verdict.Allow` (Verdict == Verdict) ONLY; comparing a verdict to a Bool/Int/etc. silently
+      // coerces a K3 value into a boolean decision (fail-open). Fires BEFORE the generic TYPE-004 so the
+      // author gets the K3 reason. Verdict == Verdict (the sanctioned idiom, incl. `v == Verdict.Allow`)
+      // is UNaffected. Extracted into galerina.mjs SECURITY_TYPE_CODES → fails closed at check + build.
+      if ((leftType === "Verdict") !== (rightType === "Verdict")) {
+        this.diagnostics.push(makeTCDiag(
+          "FUNGI-K3-004",
+          "VERDICT_COMPARED_TO_NON_VERDICT",
+          `Operator '${op}' compares a Verdict with a non-Verdict ('${leftType}' ${op} '${rightType}'). ` +
+          `A Verdict is compared only to another Verdict — authorize with '== Verdict.Allow'. Comparing a ` +
+          `verdict to a Bool/Int coerces a K3 value into a boolean decision (fail-open).`,
+          location,
+          `Compare Verdict to Verdict (e.g. x == Verdict.Allow), or branch all three arms with check(x){ … }.`,
+        ));
+        return;
+      }
       // Cross-type equality: warn but allow for now (Phase 8B will tighten)
       if (leftType !== rightType && !NUMERIC_TYPES.has(leftType) && !NUMERIC_TYPES.has(rightType)) {
         this.diagnostics.push(makeTCDiag(

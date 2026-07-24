@@ -147,13 +147,19 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 //                      non-Verdict (K3-negation on the wrong type). Both are checkTypes governance errors.
 //   FUNGI-K3-003       an `all{}`/`any{}` K3 min/max fold with a non-Verdict operand — a non-Verdict
 //                      silently coerced into a governance fold produces an unsound verdict.
+//   FUNGI-K3-004       a Verdict compared to a non-Verdict (`v == b`, S3/A9, R&D 0174) — authorization is
+//                      `== Verdict.Allow` (Verdict==Verdict); comparing a verdict to a Bool/Int coerces a
+//                      K3 value into a boolean decision (fail-open). Minted BEFORE the generic TYPE-004.
+//   FUNGI-K3-005       a non-Verdict value returned where Verdict is declared (`return 2` as Verdict, S3/A9,
+//                      R&D 0174) — an out-of-K3-domain value smuggled into a governance result (fail-open).
+//                      Minted BEFORE the generic TYPE-008.
 // The full FUNGI-K3-* / FUNGI-GOV-3VL-* family that checkTypes emits {TYPE-033 aside} is now HERE — an
 // INVARIANT GATE (tests/security-type-codes-invariant.test.mjs) asserts every such code the type-checker
 // emits is in THIS set, so a future governance/verdict code cannot silently rejoin the advisory bucket
 // (the F1/F2/F3 fail-open class, made unrepresentable). Corpus blast radius MEASURED 0/460 .fungi for ALL
 // of these (latent-prevention). SINGLE source of truth: both the `check` advisory path and the `build`
 // govErrors gate read THIS set (a duplicated security set could drift).
-const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003"]);
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003", "FUNGI-K3-004", "FUNGI-K3-005"]);
 
 async function main() {
   let [, , command = "help", ...rest] = process.argv;
