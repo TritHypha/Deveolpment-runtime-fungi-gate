@@ -23,6 +23,10 @@ import { join } from "node:path";
 const argv = process.argv.slice(2);
 const soft = argv.includes("--soft");
 const asJson = argv.includes("--json");
+// --check-anchors: the FAST liveness half of the mutation gate (no plant/build/test) — cheap enough to
+// wire into phase-close so a STALE anchor is caught the moment it goes stale, not only when the heavy
+// mutation run happens to be invoked (it is in NEITHER the test glob NOR run-phase-close.mjs).
+const checkAnchors = argv.includes("--check-anchors");
 const rootArg = argv[argv.indexOf("--root") + 1];
 const ROOT = argv.includes("--root") ? rootArg : process.cwd();
 // Guard like --root above: indexOf returns -1 when --config is absent, so a bare argv[0]
@@ -676,6 +680,33 @@ function run(spec, cmd) {
   // npm/npx are .cmd shims on Windows — spawning them needs shell:true (EINVAL otherwise, the CVE-2024-27980 fix).
   const needsShell = cmd[0] === "npm" || cmd[0] === "npx";
   return spawnSync(exe(cmd[0]), cmd.slice(1), { cwd: join(ROOT, spec.cwd), encoding: "utf8", shell: needsShell });
+}
+
+// ── --check-anchors: fast anchor-liveness pre-check (read-only, no mutation) ──────────────────────────
+// Every mutant's `find` string MUST match its target file EXACTLY once. 0 matches = the anchored source
+// was removed/renamed (a refactor stranded the anchor); 2+ = ambiguous (the harness can't plant uniquely).
+// Either way the mutation is silently unplantable → that gate's fail-closed test is NO LONGER proven to
+// guard its hole. This gate exists because rd0528-parser-param-readonly went stale exactly this way
+// (its `isReadonly: false` literal was removed by a refactor, surviving only in comments → matched 2×)
+// and the RED sat undetected — the heavy mutation run is in neither the test glob nor phase-close.
+if (checkAnchors) {
+  const bad = [];
+  for (const m of MUTANTS) {
+    let occurrences;
+    try { occurrences = readFileSync(join(ROOT, m.file), "utf8").split(m.find).length - 1; }
+    catch (e) { bad.push({ id: m.id, file: m.file, find: m.find, occurrences: `READ_ERROR: ${e.message}` }); continue; }
+    if (occurrences !== 1) bad.push({ id: m.id, file: m.file, find: m.find, occurrences });
+  }
+  if (asJson) {
+    console.log(JSON.stringify({ tool: "mutation-anchors", total: MUTANTS.length, violations: bad.length, bad }));
+  } else {
+    for (const b of bad) console.log(`  ✗ ${b.id}: anchor "${b.find}" matched ${b.occurrences}× in ${b.file} (need exactly 1)`);
+    console.log(bad.length === 0
+      ? `mutation-anchor liveness: ${MUTANTS.length}/${MUTANTS.length} anchors match their target exactly 1× ✓`
+      : `mutation-anchor liveness: ${bad.length} STALE anchor(s) of ${MUTANTS.length} — a stale anchor silently disables its mutation-kill gate.`);
+    console.log(`VIOLATIONS: ${bad.length}`);
+  }
+  process.exit(bad.length === 0 || soft ? 0 : 1);
 }
 
 // Precondition: refuse to mutate if ANY target file is already dirty (stale leftover or real edit).

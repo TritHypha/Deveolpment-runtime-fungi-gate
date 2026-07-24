@@ -490,6 +490,15 @@ run("compiler-stage-twins", "node", ["scripts/audit-compiler-stage-twins.mjs"]);
 //   change). Self-tested (determinism = 2 live derivations identical + a drift-detection truth table).
 run("compiler-stage-hashes", "node", ["scripts/audit-compiler-stage-hashes.mjs"]);
 
+// mutation-anchors — the FAST liveness half of the SEC-002 mutation gate (audit-mutation.mjs). The heavy
+//   per-mutant plant/build/test run is in NEITHER the test glob NOR phase-close (too slow), so a STALE
+//   mutation anchor (its `find` source removed/renamed by a refactor → 0 or 2+ matches → unplantable)
+//   silently disabled its mutation-kill gate and the RED sat undetected for commits (rd0528-parser-param-
+//   readonly, cont.23/0211). This read-only check asserts every mutant `find` matches its file EXACTLY 1× —
+//   cheap enough to gate every phase-close, catching the stale-anchor rot the moment it happens (not only
+//   when the heavy run is invoked). Verified: GREEN 59/59 · RED (exit 1) on a 0-match fixture.
+run("mutation-anchors", "node", ["scripts/audit-mutation.mjs", "--check-anchors"]);
+
 // flowparam-fidelity — C4 (bridge 0145/0147, plan row C4): the Stage-B twin's parseParams used to
 //   hardcode isReadonly:false in its generic capture branch, so `readonly tainted a: Int` silently
 //   LOST the readonly guarantee (probe rows 3-5, zero errors). Fixed with one qualifier loop + ONE
