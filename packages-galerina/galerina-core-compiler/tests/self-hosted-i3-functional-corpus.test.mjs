@@ -234,6 +234,37 @@ async function tierFor(source, isIntegerOnly) {
   return { qualifier, effectCount, tier: rec.fields.get("tier").value, isOptimal: rec.fields.get("isOptimal").value };
 }
 
+/**
+ * Tranche 8's runner — the runtime exec-VALUE oracle (#56 coupled exec-driver). Drives the FULL execution
+ * path: parse -> buildFlowTable (gir-emitter lowers each flow to an executable FlowEntry { name, params,
+ * body: Array<GIRStmt> }) -> runProgram (runtime.fungi tree-walks the GIR body, binds positional args,
+ * resolves cross-flow calls) -> the COMPUTED RtValue. Where tranche 7 proves tier DISPATCH ("did it route
+ * right"), this proves EXECUTION ("did it compute the right ANSWER"). Its real reach: it proves the
+ * gir-emitter's GIRStmt/GIRExpr output and the runtime's evaluator COMPOSE — two independently-authored
+ * stages meeting at the FlowEntry seam. Int args are built via the runtime's own `rtInt` (a genuine
+ * RtValue, not a hand-forged record). Every value MEASURED 2026-07-24 through the real pipeline.
+ */
+async function rtInt(n) {
+  const r = await executeFlow("rtInt", new Map([["n", vInt(n)]]), rt.ast, rt.flows, undefined, undefined, { pureFastPath: false });
+  return r.value ?? r;
+}
+async function execValue(source, entryName, argNums) {
+  const flows = await parseToFlows(source);
+  const tableRes = await executeFlow("buildFlowTable", new Map([["flows", flows]]), gir.ast, gir.flows, undefined, undefined, { pureFastPath: false });
+  const table = tableRes.value ?? tableRes;
+  const args = [];
+  for (const n of argNums) args.push(await rtInt(n));
+  const runRes = await executeFlow(
+    "runProgram",
+    new Map([["flows", table], ["entryName", vStr(entryName)], ["args", { __tag: "list", items: args }]]),
+    rt.ast, rt.flows, undefined, undefined, { pureFastPath: false },
+  );
+  const rec = runRes.value ?? runRes;
+  const rv = rec.fields.get("retVal");
+  const f = (rv.value ?? rv).fields;
+  return { ty: f.get("ty").value, i: f.get("i").value, b: f.get("b").value, s: f.get("s").value };
+}
+
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
 
 // Correct programs: the self-hosted type-checker MUST accept (zero diagnostics).
@@ -538,6 +569,45 @@ describe("RD-0528 I-3 functional corpus (tranche 7: runtime tier-dispatch) — s
   }
 });
 
+// Tranche 8 (2026-07-24): runtime-stage exec-VALUE — parse -> buildFlowTable -> runProgram, the coupled
+// exec-driver (#56). Tranche 7 proves tier ROUTING; this proves the interpreter computes the CORRECT VALUE
+// end-to-end, composing the gir-emitter's executable GIR with the runtime evaluator at the FlowEntry seam.
+// Positive-value corpus + the runtime's documented silent-degrade EDGES pinned (not flip-blockers — recorded
+// so the eventual fail-closed hardening has a baseline the oracle will defend). Non-vacuity = >=5 DISTINCT
+// computed values (a stubbed interpreter collapses to one default). Every value MEASURED 2026-07-24.
+const RUNTIME_EXEC = [
+  { label: "Int literal return",         src: `pure flow answer() -> Int { return 42 }`,               entry: "answer", args: [],      field: "i", value: 42 },
+  { label: "param passthrough (a)",      src: `pure flow f(a: Int, b: Int) -> Int { return a }`,       entry: "f",      args: [3, 4],  field: "i", value: 3 },
+  { label: "arith add a+b",              src: `pure flow add(a: Int, b: Int) -> Int { return a + b }`, entry: "add",    args: [3, 4],  field: "i", value: 7 },
+  { label: "arith sub a-b",              src: `pure flow sub(a: Int, b: Int) -> Int { return a - b }`, entry: "sub",    args: [10, 3], field: "i", value: 7 },
+  { label: "arith mul a*b",              src: `pure flow mul(a: Int, b: Int) -> Int { return a * b }`, entry: "mul",    args: [6, 7],  field: "i", value: 42 },
+  { label: "String literal return",      src: `pure flow greet() -> String { return "hi" }`,           entry: "greet",  args: [],      field: "s", value: "hi" },
+  { label: "compare a>b -> Bool true",   src: `pure flow gt(a: Int, b: Int) -> Bool { return a > b }`, entry: "gt",     args: [5, 2],  field: "b", value: true },
+  { label: "compare a>b -> Bool false",  src: `pure flow gt(a: Int, b: Int) -> Bool { return a > b }`, entry: "gt",     args: [2, 5],  field: "b", value: false },
+];
+// Documented silent-degrade edges: the interpreter does NOT fault on these — it returns a default. Pinned
+// as the runtime's ACTUAL contract (a change here is a real behavior change the oracle catches), and flagged
+// for the eventual fail-closed hardening (div-by-zero and missing-entry-flow should arguably fault, not 0/sentinel).
+const RUNTIME_EXEC_EDGES = [
+  { label: "div-by-zero -> silent 0 (documented soft edge)",          src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "i",  value: 0 },
+  { label: "missing entry flow -> sentinel Int default (documented)", src: `pure flow x() -> Int { return 1 }`,                   entry: "nope", args: [],      field: "ty", value: "Int" },
+];
+
+describe("RD-0528 I-3 functional corpus (tranche 8: runtime exec-VALUE) — buildFlowTable -> runProgram (parse -> exec)", () => {
+  for (const c of RUNTIME_EXEC) {
+    it(`computes ${JSON.stringify(c.value)}: ${c.label}`, async () => {
+      const v = await execValue(c.src, c.entry, c.args);
+      assert.equal(v[c.field], c.value, `value mismatch: ${JSON.stringify(v)}`);
+    });
+  }
+  for (const c of RUNTIME_EXEC_EDGES) {
+    it(`pins soft-edge (${JSON.stringify(c.value)}): ${c.label}`, async () => {
+      const v = await execValue(c.src, c.entry, c.args);
+      assert.equal(v[c.field], c.value, `soft-edge behavior changed (was ${JSON.stringify(c.value)}): ${JSON.stringify(v)}`);
+    });
+  }
+});
+
 describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
   it("the corpus carries known-bad cases (a corpus that can only pass proves nothing)", () => {
     assert.ok(MUST_FAIL.length >= 5, "the type must-fail set must be non-trivial");
@@ -552,6 +622,10 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
     const tiers = new Set(RUNTIME_TIER.map((c) => c.tier));
     assert.ok(tiers.size >= 4, `the runtime corpus must exercise >=4 DISTINCT tiers (a stubbed classifier collapses to one), got: ${[...tiers].join(", ")}`);
     assert.ok(RUNTIME_TIER.some((c) => !c.isOptimal), "the runtime corpus must carry a governed flow that is NOT routed to an optimal tier (the security property)");
+    const execVals = new Set(RUNTIME_EXEC.map((c) => `${c.field}:${JSON.stringify(c.value)}`));
+    assert.ok(execVals.size >= 5, `the exec-VALUE corpus must compute >=5 DISTINCT values (a stubbed interpreter collapses to one default), got: ${[...execVals].join(", ")}`);
+    assert.ok(RUNTIME_EXEC.some((c) => c.args.length > 0), "the exec-VALUE corpus must exercise positional-arg binding (not only zero-arg entries)");
+    assert.ok(RUNTIME_EXEC_EDGES.length >= 2, "the exec-VALUE corpus must pin the documented silent-degrade edges");
   });
   it("the parse corpus exercises every FUNGI-PARSE code (001..004), not just one path", () => {
     const covered = new Set(MUST_FAIL_PARSE.map((c) => c.contains));
