@@ -1,5 +1,28 @@
 # RD-0528 compiler self-hosting — I-1 evidence pack (7 stages)
 
+> ## ★ EDITORIAL UPDATE 2026-07-24 — this 2026-07-22 pack's "NOT flip-ready" framing is SUPERSEDED for tier-1
+>
+> The authority ledger [`rd0528-compiler-authoritative-stages.json`](rd0528-compiler-authoritative-stages.json)
+> is the LIVE authority and now lists **THREE stages authoritative** — `type-checker.fungi` (2026-07-23),
+> `effect-checker.fungi` (2026-07-24), `gir-emitter.fungi` (2026-07-24) — NOT the empty `twins` this body
+> below still describes. What changed: the **owner ruled 2026-07-22** (recorded in
+> `self-hosted-i3-functional-corpus.test.mjs:7-27` + the ledger `prerequisites`) that **I-3 is FUNCTIONAL
+> correctness** — the self-hosted pipeline accepts correct programs and rejects incorrect ones — **NOT** the
+> comprehensive `.fungi ≡ .ts` equivalence this body frames as I-3. So a **TIER-1 authority-flip** stands on
+> **(a) R3 byte-parity + (c) mutation-kill + (d) hash-pin/#105 + the I-3 FUNCTIONAL oracle**
+> (`self-hosted-i3-functional-corpus` per-stage tranche). The stricter `.ts`-equivalence oracle + the I-2
+> bootstrap-seed this body lists under "Open prerequisites" gate **TIER-2 (`.ts` DELETION)**, which stays
+> DEFERRED — every flip keeps its running `.ts` differential shadow.
+>
+> **Current flip protocol (owner "unlock all green light" 2026-07-24, with zero-trust maintained):** the
+> per-stage authorization ASK is lifted, but the EVIDENCE gate + the **doc-08 §5a change-ceremony** remain —
+> a stage flips only when all four items are green AND R&D runs the independent §5a verify (proposer≠verifier)
+> AND the owner's push countersigns. One stage at a time; never on incomplete evidence; never self-verified.
+>
+> The **I-1 evidence below (a/c/d for all 7 stages) remains valid** and is what the three landed flips cite;
+> only the "NOT flip-ready / none askable / twins stays empty" conclusions are superseded. (Dated 2026-07-22
+> body preserved verbatim for provenance.)
+
 **Assembled:** 2026-07-22 · **Track:** RD-0528 Phase I — compiler self-hosting (retire the `.ts` compiler so `.fungi` compiles `.fungi`) · **State:** ⚠ **I-1 EVIDENCE ONLY — NOT flip-ready.**
 
 This pack records the three I-1 evidence items — **(a)** R3 byte-parity, **(c)** mutation-kill non-vacuity, **(d)** hash-pin + #105 admission — for all seven self-hosted compiler stages. It does **not** support an authority flip. Every stage stays non-authoritative: the authority ledger [`rd0528-compiler-authoritative-stages.json`](rd0528-compiler-authoritative-stages.json) `twins` array is empty and stays empty until the owner's per-stage condition-form nod (I-4). If any item below later proves false, that evidence is void.
