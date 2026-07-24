@@ -1352,11 +1352,15 @@ Baseline comparison (governance-cost):
     } else {
       allDiags.forEach(d => console.log(`${d.severity === "error" ? "❌" : "⚠️"} ${d.code}: ${d.message}`));
     }
-    // Advisory type-error NOTE — printed AFTER the ✅/diagnostics in plain mode (a COUNT, not the full
-    // list, to keep clean output readable) so the check↔governed divergence stays visible without
-    // suppressing ✅. --strict-types instead surfaces each as ❌ above and exits non-zero.
+    // Advisory NOTE — printed AFTER the ✅/diagnostics in plain mode (a COUNT, not the full list, to keep
+    // clean output readable) so the check↔governed divergence stays visible without suppressing ✅.
+    // --strict-types instead surfaces each as ❌ above and exits non-zero.
+    // LABEL accuracy (R&D bridge 0167 + MEASURED corpus-wide): `typeErrors` is the WHOLE checkTypes
+    // error output MINUS the extracted SECURITY_TYPE_CODES — so it is NOT only FUNGI-TYPE-* (it also
+    // carries FUNGI-NAME-* / FUNGI-HALLMARK-* etc.). The note formerly said "FUNGI-TYPE-*", which
+    // mislabeled those; say "advisory diagnostic(s)" so a hidden non-TYPE code is never disguised.
     if (!strictTypes && typeErrors.length > 0) {
-      console.log(`ℹ️  +${typeErrors.length} FUNGI-TYPE-* advisory (not counted in plain check; they FAIL a governed run — run 'galerina check ${fungiFile} --strict-types' to see + enforce).`);
+      console.log(`ℹ️  +${typeErrors.length} advisory diagnostic(s) (not counted in plain check; they FAIL a governed run — run 'galerina check ${fungiFile} --strict-types' to see + enforce).`);
     }
 
     // ── --diff flag: show change class vs HEAD~1 before pushing (#64) ─────────
