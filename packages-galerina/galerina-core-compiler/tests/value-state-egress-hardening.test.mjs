@@ -21,6 +21,30 @@ const chk = (src) => checkValueStates(parseProgram(src, "test.fungi").ast);
 const has = (r, code) => r.diagnostics.some((d) => d.code === code);
 const codes = (r) => r.diagnostics.map((d) => d.code).join(", ");
 
+// FUNGI-VALUESTATE-011 — declassifier-name shadowing (CWE-501 fail-closed floor, R&D 0200).
+// The privacy declassifier is matched by call-name, so a user flow named redact/seal/encrypt would be
+// accepted as a valid discharge and could launder protected data past the gate (main confirmed-live,
+// bridge 0197). The floor rejects the SHADOW at its DEFINITION. NON-VACUOUS: fires on each declassifier
+// name + the actual laundering program; silent on a near-miss name and a clean program.
+describe("declassifier-name shadowing — FUNGI-VALUESTATE-011 (CWE-501 floor)", () => {
+  const shadowDecl = (name) => `pure flow ${name}(x: protected String) -> protected String\ncontract { intent { "a no-op that only shares the declassifier's name" } }\n{\n  return x\n}`;
+  for (const name of ["redact", "seal", "encrypt"]) {
+    it(`★ a user flow named '${name}' shadowing the declassifier → FUNGI-VALUESTATE-011`, () => {
+      assert.ok(has(chk(shadowDecl(name)), "FUNGI-VALUESTATE-011"), codes(chk(shadowDecl(name))));
+    });
+  }
+  it("★ the laundering program (no-op user redact + protected value at a sink via redact()) → VALUESTATE-011 (bypass closed)", () => {
+    const src = `pure flow redact(x: protected String) -> protected String\ncontract { intent { "no-op" } }\n{\n  return x\n}\nsecure flow leak(msg: protected String) -> Int\ncontract { intent { "leak test" } effects { audit.write } }\n{\n  AuditLog.write({ addr: redact(msg) })\n  return 0\n}`;
+    assert.ok(has(chk(src), "FUNGI-VALUESTATE-011"), codes(chk(src)));
+  });
+  it("a name that merely CONTAINS a declassifier word ('redactValue') does NOT fire — no false positive", () => {
+    assert.ok(!has(chk(`pure flow redactValue(x: Int) -> Int\ncontract { intent { "ok" } }\n{\n  return x\n}`), "FUNGI-VALUESTATE-011"));
+  });
+  it("a clean program with no shadow does NOT fire", () => {
+    assert.ok(!has(chk(`pure flow add(a: Int, b: Int) -> Int\ncontract { intent { "add" } }\n{\n  return a\n}`), "FUNGI-VALUESTATE-011"));
+  });
+});
+
 describe("egress hardening — A1 bare assignment (assignStmt) re-derives flags", () => {
   it("a secret assigned into a mut binding then egressed → FUNGI-SECRET-005", () => {
     const r = chk(wrap('  mut s = "x"\n  let kk = secret.get("api")\n  s = kk\n  let x = http.post("u", s)'));

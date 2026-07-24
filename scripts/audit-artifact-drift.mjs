@@ -47,13 +47,13 @@ const REGISTRY = join(ROOT, "build", "code-registry", "registry.json");
 // abandoned code entering (12→13) nets to the same count, so the gate stays green while real drift
 // entered. The fail-closed form is a NAMED SET checked by MEMBERSHIP, not by count. (phantom carries
 // the same latent hazard; a named-set upgrade for it is a separate, unruled change — left a count here.)
-const BASELINE = Object.freeze({ phantom: 112 });
-// phantom 111→112 reconciled 2026-07-24 (owner-directed index regen): the single verified entrant is
-// FUNGI-FUEL-001 — a genuine RESERVED code (RD-0314 fuel cap; KB registration held for the post-ceremony
-// batch), docs=3 / defs=0 / emits=0 → legitimately doc-only/phantom, benign. This is a VERIFIED single-
-// delta bump (the exact entrant identified via a phantom-set diff), not a blind ratchet raise, so no
-// masking is possible. ⚠ phantom is still a bare COUNT (the dead-set got the A-PRIME named-set treatment,
-// R&D 0182); flagged to R&D to give phantom the same masking-proof form — their RD-0499 gate, their call.
+const BASELINE = Object.freeze({ phantom: 111 });
+// Note on FUNGI-FUEL-001 (2026-07-24): a genuine RESERVED code (RD-0314 fuel cap; KB registration held for
+// the post-ceremony batch), referenced in docs (docs=3) with no source emit. Because it is NAMED here (a
+// source reference), the registry classifies it as `ref`, NOT a doc-only `phantom` — so the phantom count
+// holds at 111 and NO baseline bump is needed. (A momentary regen mid-session read it as phantom=112 before
+// this reference existed; once the reference lands, 111 is the true count.) ⚠ phantom is a bare COUNT; the
+// dead-set got the A-PRIME named-set treatment (R&D 0182) — flagged to R&D for the same masking-proof form.
 
 // The registry-count keys A1 knows how to check (the nouns it anchors prose on).
 const KNOWN_COUNT_KEYS = Object.freeze(["live", "total", "dead", "phantom", "ref", "inline", "referenced"]);
@@ -223,8 +223,8 @@ if (process.argv.includes("--self-test")) {
   ok(countDrift([{ key: "families", claimed: 5 }], { live: 133 }).length === 0, "an unknown count key is ignored — never a false fail on a number we can't ground");
 
   // A3 baseline — shrink-only (phantom; dead moved to the named set below)
-  ok(baselineBreach({ phantom: 112, dead: 8 }, BASELINE).length === 0, "at-baseline is silent");
-  ok(baselineBreach({ phantom: 113, dead: 8 }, BASELINE).some((b) => b.key === "phantom" && b.kind === "INCREASE"), "a phantom INCREASE fires (shrink-only ratchet)");
+  ok(baselineBreach({ phantom: 111, dead: 8 }, BASELINE).length === 0, "at-baseline is silent");
+  ok(baselineBreach({ phantom: 112, dead: 8 }, BASELINE).some((b) => b.key === "phantom" && b.kind === "INCREASE"), "a phantom INCREASE fires (shrink-only ratchet)");
   ok(baselineBreach({ dead: 8 }, BASELINE).some((b) => b.key === "phantom" && b.kind === "MISSING"), "a MISSING count fires (fail-closed — a can't-read is not a silent pass)");
 
   // A-PRIME dead-set membership (R&D 0182) — synthetic FUNGI-X family, same trick as the reserved test.

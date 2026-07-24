@@ -2284,6 +2284,44 @@ function scanUnlowerableNumerics(root: AstNode): ValueStateDiagnostic[] {
   return out;
 }
 
+// FUNGI-VALUESTATE-011 (R&D 0200 GO). The privacy declassifiers redact()/seal()/encrypt() are recognised
+// by bare CALL-NAME — isRedactCall (`node.value === "redact"`) and isSealCall (`"seal"|"encrypt"`), never a
+// resolved trusted identity. So a user flow with one of those names is accepted as a valid discharge at
+// EVERY discharge site: a no-op `pure flow redact(x){ return x }` launders protected/secret/PII past the
+// fail-closed value-state gate (CWE-501; main confirmed-live through the CLI, bridge 0197). Fail-closed
+// FLOOR: reject the SHADOW at its DEFINITION. This single scan closes all 8 discharge sites BY CONSTRUCTION
+// (a shadow can't be defined clean, so isRedactCall/isSealCall can never match a user flow anywhere).
+// ⚠ Keep DECLASSIFIER_NAMES in sync with isRedactCall/isSealCall — a new declassifier verb added there
+// without adding it here re-opens the bypass. Interim until the durable `disclose` primitive lands
+// (effect + reserved keyword + intrinsic + typed return = unspoofable; VALUESTATE-011 then folds).
+const DECLASSIFIER_NAMES: ReadonlySet<string> = new Set(["redact", "seal", "encrypt"]);
+const FLOW_DECL_KINDS: ReadonlySet<string> = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
+export function scanDeclassifierShadows(ast: AstNode): ValueStateDiagnostic[] {
+  const out: ValueStateDiagnostic[] = [];
+  const visit = (node: AstNode): void => {
+    if (FLOW_DECL_KINDS.has(node.kind)) {
+      const name = node.value ?? "";
+      if (DECLASSIFIER_NAMES.has(name)) {
+        out.push(makeVSDiag(
+          "FUNGI-VALUESTATE-011",
+          "DECLASSIFIER_NAME_SHADOWED",
+          `A user flow named '${name}' shadows the built-in privacy declassifier '${name}(...)'. The declassifier is recognised by call-name, so a same-named flow is accepted as a valid discharge and could launder protected/secret/PII data past the fail-closed value-state gate (CWE-501). Rename the flow.`,
+          node.location,
+          `Rename the flow so it does not shadow the declassifier (e.g. '${name}Value').`,
+          undefined,
+          {
+            why: `The privacy declassifier '${name}' is matched by NAME, not by a resolved trusted identity — a user flow with the same name is indistinguishable from the real discharge at every governed sink.`,
+            risk: `A no-op '${name}' could 'discharge' a protected/secret value that was never actually redacted or sealed, leaking PII/secrets past the gate.`,
+          },
+        ));
+      }
+    }
+    for (const c of node.children ?? []) visit(c);
+  };
+  visit(ast);
+  return out;
+}
+
 export function checkValueStates(
   ast: AstNode,
   // R&D 0093 stage-2: in production/deterministic builds, FUNGI-VALUESTATE-008 (the 34B-hole
@@ -2301,6 +2339,9 @@ export function checkValueStates(
   // Always-on (correctness, not a taint rule) — merged into the result the governed runtime +
   // production build already surface as fail-closed errors.
   const numericDiags = scanUnlowerableNumerics(ast);
-  if (numericDiags.length === 0) return result;
-  return { ...result, diagnostics: [...result.diagnostics, ...numericDiags] };
+  // FUNGI-VALUESTATE-011: fail-closed floor against declassifier-name shadowing (CWE-501, R&D 0200).
+  const shadowDiags = scanDeclassifierShadows(ast);
+  const extraDiags = [...numericDiags, ...shadowDiags];
+  if (extraDiags.length === 0) return result;
+  return { ...result, diagnostics: [...result.diagnostics, ...extraDiags] };
 }

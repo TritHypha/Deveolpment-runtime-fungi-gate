@@ -1901,7 +1901,7 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:1724",
-      "ref scripts/audit-artifact-drift.mjs:244",
+      "ref scripts/audit-artifact-drift.mjs:250",
       "ref scripts/code-index.mjs:122",
       "test scripts/tests/codes.test.mjs:45"
     ]
@@ -5550,7 +5550,7 @@
     "severities": [],
     "allSites": [
       "ref scripts/audit-artifact-drift.mjs:19",
-      "ref scripts/audit-artifact-drift.mjs:304"
+      "ref scripts/audit-artifact-drift.mjs:310"
     ]
   },
   {
@@ -5569,14 +5569,14 @@
     "allSites": [
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
-      "ref scripts/audit-artifact-drift.mjs:149",
-      "ref scripts/audit-artifact-drift.mjs:175",
-      "ref scripts/audit-artifact-drift.mjs:191",
-      "ref scripts/audit-artifact-drift.mjs:306",
-      "ref scripts/audit-artifact-drift.mjs:308",
-      "ref scripts/audit-artifact-drift.mjs:309",
-      "ref scripts/audit-artifact-drift.mjs:313",
-      "ref scripts/audit-artifact-drift.mjs:314"
+      "ref scripts/audit-artifact-drift.mjs:155",
+      "ref scripts/audit-artifact-drift.mjs:181",
+      "ref scripts/audit-artifact-drift.mjs:197",
+      "ref scripts/audit-artifact-drift.mjs:312",
+      "ref scripts/audit-artifact-drift.mjs:314",
+      "ref scripts/audit-artifact-drift.mjs:315",
+      "ref scripts/audit-artifact-drift.mjs:319",
+      "ref scripts/audit-artifact-drift.mjs:320"
     ]
   },
   {
@@ -5593,7 +5593,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "ref scripts/audit-artifact-drift.mjs:311"
+      "ref scripts/audit-artifact-drift.mjs:317"
     ]
   },
   {
@@ -7074,19 +7074,20 @@
     "code": "FUNGI-FUEL-001",
     "namespace": "FUNGI",
     "family": "FUEL",
-    "occurrences": 3,
-    "docOnly": true,
+    "occurrences": 4,
+    "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 0,
-    "refs": 0,
+    "refs": 1,
     "docs": 3,
     "names": [],
     "severities": [],
     "allSites": [
       "doc docs/reference/dss-wasm-runtime-errors.md:44",
       "doc docs/reference/dss-wasm-runtime-errors.md:48",
-      "doc docs/reference/dss-wasm-runtime-errors.md:85"
+      "doc docs/reference/dss-wasm-runtime-errors.md:85",
+      "ref scripts/audit-artifact-drift.mjs:51"
     ]
   },
   {
@@ -11434,8 +11435,8 @@
       "doc docs/COVERAGE.md:423",
       "doc docs/COVERAGE.md:433",
       "ref scripts/audit-artifact-drift.mjs:24",
-      "ref scripts/audit-artifact-drift.mjs:145",
-      "ref scripts/audit-artifact-drift.mjs:153",
+      "ref scripts/audit-artifact-drift.mjs:151",
+      "ref scripts/audit-artifact-drift.mjs:159",
       "ref scripts/audit-production-blockers.mjs:5",
       "ref scripts/audit-twin-emit-parity.mjs:175",
       "ref scripts/code-index.mjs:154",
@@ -12599,7 +12600,7 @@
       "ref packages-galerina/galerina-core-compiler/src/u64-arith.ts:27",
       "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2205",
       "emit packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2240",
-      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2300",
+      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2338",
       "ref packages-galerina/galerina-core-compiler/src/wat-emitter.ts:928",
       "test packages-galerina/galerina-core-compiler/tests/cli-numeric-gate.test.mjs:2",
       "test packages-galerina/galerina-core-compiler/tests/cli-numeric-gate.test.mjs:15",
@@ -14708,23 +14709,23 @@
       "test packages-galerina/galerina-core-compiler/tests/embedding-egress-privacy.test.mjs:76",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:86",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:43",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:29",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:31",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:59",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:61",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:70",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:72",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:81",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:53",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:55",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:83",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:85",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:87",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:92",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:94",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:163",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:165",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:172",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:96",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:105",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:107",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:109",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:111",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:116",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:118",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:187",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:189",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:191",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:196",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:213",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:215",
       "ref packages-galerina/galerina-tower-citizen/src/substrate-erasure.ts:56",
       "doc docs/examples/gate/AI-AUTHORING-GUIDE.md:82",
       "doc docs/examples/gate/RULES.md:25",
@@ -14787,10 +14788,10 @@
     "allSites": [
       "emit packages-galerina/galerina-core-compiler/src/value-state-checker.ts:1737",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:3",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:116",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:118",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:144",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:146",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:140",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:142",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:168",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:170",
       "ref scripts/audit-muted-diagnostics.mjs:45"
     ]
   },
@@ -16450,29 +16451,29 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs:1376",
       "test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs:1382",
       "test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs:1387",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:25",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:27",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:35",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:40",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:42",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:46",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:50",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:55",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:57",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:49",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:51",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:59",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:64",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:66",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:68",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:77",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:70",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:74",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:79",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:155",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:157",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:159",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:161",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:176",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:81",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:90",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:92",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:101",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:103",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:179",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:181",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:183",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:185",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:187"
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:200",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:205",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:207",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:209",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:211"
     ]
   },
   {
@@ -16495,10 +16496,10 @@
     "allSites": [
       "emit packages-galerina/galerina-core-compiler/src/value-state-checker.ts:1721",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:3",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:111",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:113",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:139",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:141",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:135",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:137",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:163",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:165",
       "ref scripts/audit-muted-diagnostics.mjs:43"
     ]
   },
@@ -22032,7 +22033,7 @@
       "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:1346",
       "emit packages-galerina/galerina-core-compiler/src/value-state-checker.ts:1914",
       "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:1915",
-      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2289",
+      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2327",
       "test packages-galerina/galerina-core-compiler/tests/c1-value-state-alias.test.mjs:1",
       "test packages-galerina/galerina-core-compiler/tests/c1-value-state-alias.test.mjs:20",
       "test packages-galerina/galerina-core-compiler/tests/c1-value-state-alias.test.mjs:24",
@@ -22120,6 +22121,39 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs:922",
       "test packages-galerina/galerina-core-compiler/tests/value-state-checker.test.mjs:923",
       "ref scripts/audit-muted-diagnostics.mjs:64"
+    ]
+  },
+  {
+    "code": "FUNGI-VALUESTATE-011",
+    "namespace": "FUNGI",
+    "family": "VALUESTATE",
+    "occurrences": 11,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2305"
+    ],
+    "tests": 7,
+    "refs": 3,
+    "docs": 0,
+    "names": [
+      "DECLASSIFIER_NAME_SHADOWED"
+    ],
+    "severities": [
+      "error"
+    ],
+    "allSites": [
+      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2287",
+      "emit packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2305",
+      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2306",
+      "ref packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2342",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:24",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:29",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:32",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:33",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:38",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44"
     ]
   },
   {

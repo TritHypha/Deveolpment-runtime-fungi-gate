@@ -9,11 +9,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | status | count | meaning |
 |---|---|---|
 | live | 132 | emitted with an exported constant |
-| inline | 168 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 169 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 112 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 191 | referenced only (no def/emit) |
+| phantom | 111 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 192 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -573,7 +573,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-FUEL-001 | phantom | — | — |
+| FUNGI-FUEL-001 | ref | — | — |
 
 ### FX (6)
 
@@ -1413,7 +1413,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-VALUE-STATE-001 | phantom | — | — |
 
-### VALUESTATE (10)
+### VALUESTATE (11)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1427,6 +1427,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-VALUESTATE-007 | live | REDACTED_BOUNDARY_VIOLATION | error |
 | FUNGI-VALUESTATE-008 | inline | BOUNDARY_INPUT_UNCLEAN | error |
 | FUNGI-VALUESTATE-009 | inline | PROTECTED_VALUE_AT_AUDIT_LOG | error |
+| FUNGI-VALUESTATE-011 | inline | DECLASSIFIER_NAME_SHADOWED | error |
 
 ### VAULT (7)
 

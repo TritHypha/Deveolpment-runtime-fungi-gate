@@ -1,10 +1,10 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 715,
+  "total": 716,
   "counts": {
-    "ref": 191,
-    "inline": 168,
-    "phantom": 112,
+    "ref": 192,
+    "inline": 169,
+    "phantom": 111,
     "live": 132,
     "referenced": 99,
     "dead": 13
@@ -3635,7 +3635,7 @@
       "code": "FUNGI-FUEL-001",
       "family": "FUEL",
       "namespace": "FUNGI",
-      "status": "phantom",
+      "status": "ref",
       "names": [],
       "severities": [],
       "defs": 0,
@@ -9542,6 +9542,22 @@
       "defs": 0,
       "emits": 1,
       "tests": 18,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-VALUESTATE-011",
+      "family": "VALUESTATE",
+      "namespace": "FUNGI",
+      "status": "inline",
+      "names": [
+        "DECLASSIFIER_NAME_SHADOWED"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 0,
+      "emits": 1,
+      "tests": 7,
       "docs": 0
     },
     {
