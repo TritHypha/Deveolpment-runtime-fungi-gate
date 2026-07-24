@@ -37,8 +37,10 @@ A stage moves toward self-hosting in **two distinct steps**. Conflating them is 
 | **Tier 1 — Authority flip** | The stage's `.fungi` becomes the authoritative **spec of record**; the `.ts` is **retained as a running differential shadow** that the parity gate keeps holding `===`. | A `twins` entry is added | **Nothing** — the `.ts` still executes; a flip retires **0 lines of code** | R3 byte-parity + mutation-kill non-vacuity + hash-pin + #105 admission + I-3 functional oracle; one owner condition-form nod per stage (I-4) |
 | **Tier 2 — Full retirement** | The `.ts` is deleted; the `.fungi` both specifies **and** runs | (stage stays authoritative) | The stage's **`.ts` file** | **Deferred today.** Requires I-2 bootstrap-seed (a trusted stage-0 `.fungi`→WASM compiler, so `.fungi` compiles `.fungi` with no `.ts`) + I-3 oracle-before-deletion + a shadow-bake window. **The self-hosted backend does not exist yet, so no `.ts` is deleted.** |
 
-**Current state (read the ledger for the live value):** exactly one stage is Tier-1 flipped —
-**type-checker** (2026-07-23). All seven stages remain Tier-2 (their `.ts` executes).
+**Current state:** the set of Tier-1-flipped stages is whatever the ledger
+[`rd0528-compiler-authoritative-stages.json`](rd0528-compiler-authoritative-stages.json) `twins` array
+lists — that JSON is the single source of truth and this prose deliberately carries **no count** so it
+cannot rot behind it. All seven stages remain Tier-2 (their `.ts` still executes; no `.ts` is deleted).
 
 ## 4 · THE STANDARD — where a change goes
 
