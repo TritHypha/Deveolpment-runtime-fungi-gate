@@ -1,17 +1,32 @@
-﻿@version 1
+@version 1
 /// example: 020-readable-boolean (PROPOSED)
+/// status: proposed - not yet in grammar
 /// concept: readable boolean operators
+/// readable_form: isActive and isVerified / isAdmin or isOwner
+/// canonical_form: isActive && isVerified / isAdmin || isOwner
+/// expected_diagnostics: none (when adopted)
 /// test_status: stable
 
-// Traditional (current, valid)
-if isActive && isVerified {
-  return Ok("proceed")
-}
+pure flow authorize(isActive: Bool, isVerified: Bool, isAdmin: Bool, isOwner: Bool) -> Result<String, String>
 
-if isAdmin || isOwner {
-  return Ok("allowed")
+contract {
+  intent {
+    "Combine boolean conditions with && and || to decide access."
+  }
 }
+{
+  // Traditional (current, valid)
+  if isActive && isVerified {
+    return Ok("proceed")
+  }
 
-// Readable form (proposed aliases)
-// if isActive and isVerified { return Ok("proceed") }
-// if isAdmin or isOwner { return Ok("allowed") }
+  if isAdmin || isOwner {
+    return Ok("allowed")
+  }
+
+  // Readable form (proposed aliases — same AST when adopted)
+  // if isActive and isVerified { return Ok("proceed") }
+  // if isAdmin or isOwner { return Ok("allowed") }
+
+  return Ok("denied")
+}

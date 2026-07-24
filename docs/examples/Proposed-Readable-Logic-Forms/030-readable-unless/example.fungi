@@ -1,14 +1,29 @@
-﻿@version 1
+@version 1
 /// example: 030-readable-unless (PROPOSED)
+/// status: proposed - not yet in grammar
 /// concept: unless as if-not alias
+/// readable_form: unless isApproved
+/// canonical_form: if !isApproved
+/// expected_diagnostics: none (when adopted)
 /// test_status: stable
 
-// Traditional (current, valid)
-if !isApproved {
-  return Err(ApiError.notAuthorized("Approval required"))
-}
+pure flow requireApproval(isApproved: Bool) -> Result<String, String>
 
-// Readable form (proposed alias)
-// unless isApproved {
-//   return Err(ApiError.notAuthorized("Approval required"))
-// }
+contract {
+  intent {
+    "Reject the request unless it has been approved."
+  }
+}
+{
+  // Traditional (current, valid)
+  if !isApproved {
+    return Err("Approval required")
+  }
+
+  // Readable form (proposed alias — same AST when adopted)
+  // unless isApproved {
+  //   return Err("Approval required")
+  // }
+
+  return Ok("approved")
+}

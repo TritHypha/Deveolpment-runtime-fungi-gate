@@ -1,16 +1,29 @@
-﻿@version 1
+@version 1
 /// example: 011-readable-comparison (PROPOSED)
+/// status: proposed - not yet in grammar
 /// concept: readable numeric comparison alias
 /// readable_form: amount is greater than limit
 /// canonical_form: amount > limit
+/// expected_diagnostics: none (when adopted)
 /// test_status: stable
 
-// Traditional (current, valid)
-if amount > limit {
-  return triggerApproval()
-}
+pure flow checkThreshold(amount: Int, limit: Int) -> Result<String, String>
 
-// Readable form (proposed alias)
-// if amount is greater than limit {
-//   return triggerApproval()
-// }
+contract {
+  intent {
+    "Approve when the amount exceeds the limit, using a numeric comparison."
+  }
+}
+{
+  // Traditional (current, valid)
+  if amount > limit {
+    return Ok("approve")
+  }
+
+  // Readable form (proposed alias — same AST when adopted)
+  // if amount is greater than limit {
+  //   return Ok("approve")
+  // }
+
+  return Ok("hold")
+}
