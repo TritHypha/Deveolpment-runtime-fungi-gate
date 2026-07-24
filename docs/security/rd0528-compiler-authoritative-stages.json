@@ -30,6 +30,20 @@
         "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 4 — FUNGI-EFFECT-001..009 full charter (decl + body/transitive lanes) MUST-PASS/FAIL, exit 0 (d5679b38)",
         "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
       }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "gir-emitter.fungi",
+      "tier": "authority-flip (tier 1): gir-emitter.fungi is the authoritative SPEC of record; the co-located src/gir-emitter.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-24",
+      "nod": "owner 'RD-0528 gir-emitter.fungi yes go for it' 2026-07-24 over the gir-emitter evidence pack (per-stage I-4 nod; the third RD-0528 compiler-stage authority flip). Pure-authority flip: adding this ledger line moves 0 source/hash bytes, so NO re-pin (unlike a source edit) — cf. effect-checker.",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-giremit-parity.test.mjs — 14/14 (Stage-A interpreter === Stage-B WASM + non-vacuity), re-verified 2026-07-24 at HEAD 595506ac",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — gir-emitter anchor rd0528-gir-emitter-op-load (op = \"load\" -> \"xoad\", the covered param-read path) killed; full run 59/59, VIOLATIONS 0; anchor-liveness now gated every phase-close (mutation-anchors, 595506ac)",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs — deterministic sha256, #105-admitted; audit-compiler-stage-hashes 7/7 match the reviewed baseline at HEAD",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 6 — parse -> emitGIRModule per-return-expr GIR op (literal->const · param->load · arith->add · compare->cmp), >=4 DISTINCT ops non-vacuous, driven from the PARSER's output (2376fc1f); exercises the op:load return-literal path the I-1 pack recorded as an uncovered oracle gap",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
+      }
     }
   ]
 }
