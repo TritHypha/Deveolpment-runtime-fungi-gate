@@ -666,7 +666,16 @@ const RD0528_COMPILER = [
   },
 ];
 
-const MUTANTS = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE, ...CC_I32, ...VSC_EGRESS, ...QUORUM_GOV, ...RD0361_T1, ...RD0361_T2_MEMORY, ...RD0361_IO_NETWORK, ...RD0361_APPKERNEL_TOWER, ...RD_DIFFERENTIAL_TAIL, ...RD0528_COMPILER];
+const _CATALOG = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE, ...CC_I32, ...VSC_EGRESS, ...QUORUM_GOV, ...RD0361_T1, ...RD0361_T2_MEMORY, ...RD0361_IO_NETWORK, ...RD0361_APPKERNEL_TOWER, ...RD_DIFFERENTIAL_TAIL, ...RD0528_COMPILER];
+// --only <id>: run/anchor-check a SINGLE mutant by id — the cheap per-stage kill probe a flip's evidence
+// item (c) needs (verifying one stage's mutant kills without the full ~59-mutant sweep). Fail-closed: an
+// id that matches nothing EXITS 2 (never silently runs the whole catalog, which would fake a green).
+const onlyId = argv.includes("--only") ? argv[argv.indexOf("--only") + 1] : undefined;
+if (onlyId && !_CATALOG.some((m) => m.id === onlyId)) {
+  console.error(`audit-mutation: --only "${onlyId}" matched no mutant of ${_CATALOG.length} (ids include: ${_CATALOG.slice(0, 4).map((m) => m.id).join(", ")}…)`);
+  process.exit(2);
+}
+const MUTANTS = onlyId ? _CATALOG.filter((m) => m.id === onlyId) : _CATALOG;
 
 function git(args) { return spawnSync("git", args, { cwd: ROOT, encoding: "utf8" }); }
 function isClean(file) { return git(["diff", "--quiet", "--", file]).status === 0; }
