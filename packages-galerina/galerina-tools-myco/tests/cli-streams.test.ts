@@ -12,7 +12,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, writeFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -61,5 +61,31 @@ test("a REAL error still goes to stderr and exits non-zero (stderr stays trustwo
     const r = await runCli(["-e", "(a+)+$", dir, "--no-color", "--no-gitignore"]); // ReDoS pattern, refused fail-closed
     assert.equal(r.code, 2, `a refused pattern must exit 2, got ${r.code}`);
     assert.notEqual(r.err, "", "a real error MUST write to stderr");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// Defect 3 (2026-07-24) — a NON-EXISTENT target path silently fell through to buildIndex,
+// which mkdir'd `<root>/.myco` and MATERIALISED a phantom directory at the queried path. A
+// stray query against a not-yet-existing `tests/foo.test.mjs` created a directory that the
+// compacted flat `tests/*.test.mjs` runner glob then choked on. Fix: a missing path is a
+// clean exit-2 error and creates NOTHING.
+test("defect 3: a non-existent target path errors (exit 2) and creates NO directory", async () => {
+  const dir = fixture();
+  const ghost = path.join(dir, "does-not-exist.test.mjs");
+  try {
+    const r = await runCli(["somepattern", ghost, "--no-color", "--no-gitignore"]);
+    assert.equal(r.code, 2, `a missing path must exit 2, got ${r.code}; err=${r.err}`);
+    assert.match(r.err, /path not found/, "the error must name the missing path");
+    assert.equal(existsSync(ghost), false, "myco must NOT create the queried path as a directory");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("defect 3: `index` on a non-existent path also errors and creates nothing", async () => {
+  const dir = fixture();
+  const ghost = path.join(dir, "nope-dir");
+  try {
+    const r = await runCli(["index", ghost]);
+    assert.equal(r.code, 2, `index on a missing path must exit 2, got ${r.code}; err=${r.err}`);
+    assert.equal(existsSync(ghost), false, "myco index must NOT create a phantom directory");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

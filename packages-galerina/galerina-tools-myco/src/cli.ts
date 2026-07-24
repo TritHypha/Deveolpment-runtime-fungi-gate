@@ -95,6 +95,12 @@ function useColor(values: Record<string, unknown>): boolean {
 }
 
 async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
+  // Same phantom-directory guard as cmdSearch: `myco index <nonexistent>` must error,
+  // not mkdir `<root>/.myco` at a path that does not exist.
+  if ((await fs.stat(root).catch(() => undefined)) === undefined) {
+    process.stderr.write(`myco: path not found: ${root}\n`);
+    return 2;
+  }
   const started = process.hrtime.bigint();
   const { stats, skippedLargePaths } = await buildIndex(root, index);
   const ms = Number(process.hrtime.bigint() - started) / 1e6;
@@ -157,8 +163,17 @@ async function cmdSearch(
   // index is per-directory (it mkdir's `<root>/.myco`), so a file root previously died
   // with `ENOTDIR: not a directory, mkdir <file>`. A lone file needs no prune anyway.
   const targetStat = await fs.stat(root).catch(() => undefined);
+  // A NON-EXISTENT target must be a clean error — never a silent index over an empty set.
+  // Otherwise the else-branch below calls buildIndex(root), which mkdir's `<root>/.myco`
+  // and thereby MATERIALISES a directory at a path the caller only meant to query. A stray
+  // `myco <pat> tests/foo.test.mjs` against a not-yet-existing file created a phantom
+  // directory that a flat `tests/*.test.mjs` runner glob then tried to load as a module.
+  if (targetStat === undefined) {
+    process.stderr.write(`myco: path not found: ${root}\n`);
+    return 2;
+  }
   let outcome: SearchOutcome;
-  if (targetStat?.isFile()) {
+  if (targetStat.isFile()) {
     outcome = await searchFile(root, pattern, sOpts);
   } else {
     // Refresh (incremental) unless told not to, so results are never stale.
