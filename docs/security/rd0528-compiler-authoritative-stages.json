@@ -16,6 +16,20 @@
         "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs — TYPE-001/008 MUST-PASS/FAIL, exit 0",
         "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md (fca7b44e)"
       }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "effect-checker.fungi",
+      "tier": "authority-flip (tier 1): effect-checker.fungi is the authoritative SPEC of record; the co-located effect-checker.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-24",
+      "nod": "owner 'unlocked' 2026-07-24 (relayed R&D bridge 0193) over the effect-checker evidence pack (per-stage I-4 nod; the second RD-0528 compiler-stage authority flip)",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-effectchecker-parity.test.mjs — 14/14 (Stage-A interpreter === Stage-B WASM + non-vacuity), re-verified 2026-07-24 at HEAD 85980b29",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — effect-checker anchor rd0528-effect-checker-effect006 (colon-form code) killed",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs — deterministic sha256 ae30aec16a4e / 6206B, #105-admitted; pinned in rd0528-compiler-stage-hashes-baseline.json",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 4 — FUNGI-EFFECT-001..009 full charter (decl + body/transitive lanes) MUST-PASS/FAIL, exit 0 (d5679b38)",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
+      }
     }
   ]
 }
