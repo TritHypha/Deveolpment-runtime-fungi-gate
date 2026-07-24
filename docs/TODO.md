@@ -85,6 +85,49 @@ single indivisible verified unit; tick-slicing is the worse fail-open). **Order:
 > Phase-1-vs-Phase-2 ordering was the owner's call; the ruling fixed **Phase 2's internal order** (C4+C5 first).
 > S1–S3 ride as the next arc or as tick-sized side-work.
 
+### Session deliverables — 2026-07-24 (RD-0528 self-hosting cont. · effect-checker flip · VALUESTATE-011 security floor · doc-08 stance)
+
+Full-auto loop (main). Commits below, NONE pushed (owner pushes). Each landed complete with its own differential.
+
+- **VALUESTATE-011 security floor** (`c365fc8d`) — fail-closed guard against declassifier-name shadowing (CWE-501).
+  The privacy declassifiers `redact()`/`seal()`/`encrypt()` were recognised by bare CALL-NAME (`isRedactCall`/
+  `isSealCall` match `node.value`), never a resolved identity — so a no-op `pure flow redact(x){ return x }` was
+  accepted as a valid discharge and laundered a protected/secret/PII value past the fail-closed value-state gate at
+  every sink (main measured it live through the CLI, bridge 0197; R&D GO bridge 0200). Fix = `scanDeclassifierShadows`
+  (value-state-checker.ts): a SINGLE definition-site pass emits `FUNGI-VALUESTATE-011 DECLASSIFIER_NAME_SHADOWED`
+  (severity error) for any user flow named redact/seal/encrypt — closes all 8 discharge sites BY CONSTRUCTION.
+  Regression `value-state-egress-hardening 32/32` (fires on the shadows + the actual laundering program; silent on a
+  near-miss name + a clean program). CLI spoof now exits 1 with VALUESTATE-011 (was exit 0). Interim floor; the durable
+  `disclose` primitive (effect+reserved-keyword+intrinsic+typed-return = unspoofable, owner-delegated) subsumes it when
+  it lands. VALUESTATE-011 allowlisted pending R&D KB registration (same cycle as K3-004/005).
+- **Effect-checker authority flip** (`852620dc`) — `effect-checker.fungi` flipped to authoritative under the doc-08 §5a
+  change-ceremony (R&D §5a VERIFY-PASS bridge 0196, owner nod bridge 0193). Ledger-only move (a pure flip carries 0
+  source/hash → no re-pin). **Ledger now: 2 of 7 stages flipped** (type-checker.fungi + effect-checker.fungi); `.ts`
+  retained as the running differential shadow, 0 lines retired (Tier-2 retirement still DEFERRED, needs I-2 bootstrap-seed).
+- **TYPE-033 twin mirror + re-pin** (`93bbae0e` mirror, `a133fa1a` re-pin) — S1 condition-type gate (`if`/`while` must be
+  Bool) mirrored into the authoritative `type-checker.fungi` under the §5a ceremony (declared scope → proposer≠verifier
+  → re-pin AFTER R&D independent verify bridge 0187 → owner push countersigns). A source edit to an authoritative twin,
+  so it DID need `--update-baseline`; diff scope clean, 6 stages byte-identical, R3 13/13, I-3 49/49.
+- **doc-08 clean stance version landed** (`ad64e8c9`) — `docs/security/rd0528-ts-to-fungi-self-hosting-standard.md`, the
+  PUBLIC three-valued-stance standard (the `.ts`→`.fungi` self-hosting standard). Owner-ruled scope: doc-08 is the ONLY
+  public stance doc; every other stance doc is `-PRIVATE` (KB-only). No consolidated Galerina copy is created (bridge
+  0202/0204). Absorbs the §5a change-ceremony refinements (R&D bridge 0183).
+- **RD-0528 I-3 functional-oracle tranche 4** (`d5679b38`) — non-vacuous must-pass/must-fail corpus over the REAL
+  self-hosted pipeline, extending the I-3 functional-correctness oracle (owner ruled I-3 = FUNCTIONAL correctness, not
+  `.ts`-intermediate identity).
+- **examples-vs-declared comparer** (`85980b29`) + **PRL examples fixed** (`35ad2a22`) — a comparer that catches an
+  example whose declared surface diverges from what the checker measures (R&D 0189 self-test caught my earlier omission);
+  the PRL example set reconciled against it.
+- **Artifact-drift dead-baseline → A-PRIME named set** (`7a27ed30`) — dead-count converted from a bare count to a named
+  set (`DEAD_RESERVED_SPEC` / `deadSetDrift` membership check) so a promote+enter count-swap can no longer mask a change
+  (R&D RD-0499 ruling 0182: named set, not a count bump). ⚠ **Correction landed this session:** my `cb767587` index regen
+  briefly bumped `BASELINE.phantom` 111→112 for FUNGI-FUEL-001; FUEL-001 is NAMED in `audit-artifact-drift.mjs` so it
+  classifies as `ref` not doc-only `phantom` → phantom holds at **111**, baseline reverted 112→111 (net-zero, folded into
+  `c365fc8d`). My earlier bridge 0205 flag of this bump is now moot.
+- **Index + graph regen** (`cb767587`) — code-index, code-registry, graph-all regenerated; codebase-memory MCP re-indexed.
+- **Stance question fully resolved** — owner's "clean version of three-valued-stance" = doc-08 (bridge 0202/0204); no new
+  consolidated copy. `memory/doc08-is-the-clean-stance-version.md` records it.
+
 ## 📍 2026-07-23 (superseded by the 2026-07-24 head above) — compiler self-hosting RD-0528 + crypto-agility 0099 part 1 + parameter-enhancements commission · pre-flip battery run
 
 **Forward view:** `roadmap-2026-07-23.md`. This head supersedes the U2-ceremony block below — U2 is DONE + enforced, and the token-kind arc is LIVE-COMPLETE (not "active"). Owner unlocked the I-2/I-4/crypto/DSS gates; key bytes stay the owner's.
