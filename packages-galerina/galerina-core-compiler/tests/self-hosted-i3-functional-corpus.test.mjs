@@ -49,13 +49,14 @@ function load(name) {
   return p;
 }
 
-let lexer, parser, checker, gov, effectChecker;
+let lexer, parser, checker, gov, effectChecker, gir;
 before(() => {
   lexer = load("lexer.fungi");
   parser = load("parser.fungi");
   checker = load("type-checker.fungi");
   gov = load("governance-verifier.fungi");
   effectChecker = load("effect-checker.fungi");
+  gir = load("gir-emitter.fungi");
 });
 
 const vStr = (s) => ({ __tag: "string", value: s });
@@ -178,6 +179,32 @@ async function govGuardCodes(source, flowName, argKeys) {
   const rec = r.value ?? r;
   const d = rec.fields.get("diagnostics");
   return d?.__tag === "list" ? d.items.map((x) => (x.value ?? x).fields.get("code").value) : [];
+}
+
+/**
+ * Tranche 6's runner — drive parse -> emitGIRModule (the self-hosted GIR emitter) and return the expr
+ * GIR nodes. gir-emitter is an EMITTER, not a checker: its functional oracle is "correct input -> CORRECT
+ * GIR op", a positive oracle with no reject cases. Non-vacuity = distinct return-expr kinds yield DISTINCT
+ * ops (a stubbed/broken emitter collapses everything to "unknown"). Driven from the PARSER's `flows`,
+ * proving the parser emits the `returnExpr` shape emitGIRModule reads — value over the hand-built-record
+ * self-hosted-gir-emitter.test.mjs, which feeds synthetic FlowDecl records.
+ */
+async function girExprOps(source) {
+  const flows = await parseToFlows(source);
+  const r = await executeFlow("emitGIRModule", new Map([["flows", flows]]), gir.ast, gir.flows, undefined, undefined, { pureFastPath: false });
+  const rec = r.value ?? r;
+  const ex = rec.fields.get("exprNodes");
+  return ex?.__tag === "list"
+    ? ex.items.map((n) => {
+        const x = n.value ?? n;
+        return {
+          flowName: x.fields.get("flowName").value,
+          exprKind: x.fields.get("exprKind").value,
+          op: x.fields.get("op").value,
+          resultType: x.fields.get("resultType").value,
+        };
+      })
+    : [];
 }
 
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
@@ -431,6 +458,35 @@ describe("RD-0528 I-3 functional corpus (tranche 5: governance widening) — ver
   }
 });
 
+// Tranche 6 (2026-07-24): GIR-emitter correctness — parse -> emitGIRModule, the self-hosted GIR emitter's
+// per-return-expr lowering. gir-emitter is a non-checker (emitter) stage; this is its FUNCTIONAL I-3 oracle
+// driven from the PARSER's output (the hand-built self-hosted-gir-emitter.test.mjs feeds synthetic records;
+// this proves the parser emits the returnExpr shape emitGIRModule reads). Every op MEASURED 2026-07-24 via
+// the real pipeline. As an EMITTER (not a checker) it has no reject cases; non-vacuity = >=4 DISTINCT ops
+// (a stubbed emitter collapses to a single "unknown"). NOTE: param -> resultType "Unknown" is MEASURED, not
+// a bug — the flat-returnExpr emitter (gir-emitter.fungi:186 "stays for back-compat") does not carry the
+// param's declared type; asserted as-measured.
+const GIR_EMIT = [
+  { label: "Int literal return -> const/Int",       src: `pure flow f() -> Int { return 42 }`,               op: "const", resultType: "Int",     exprKind: "literal" },
+  { label: "String literal return -> const/String",  src: `pure flow s() -> String { return "hi" }`,          op: "const", resultType: "String",  exprKind: "literal" },
+  { label: "param return -> load (Unknown, measured)", src: `pure flow g(x: Int) -> Int { return x }`,         op: "load",  resultType: "Unknown", exprKind: "param" },
+  { label: "arith return -> add/Int",                src: `pure flow h(a: Int, b: Int) -> Int { return a + b }`, op: "add", resultType: "Int",    exprKind: "arith" },
+  { label: "compare return -> cmp/Bool",             src: `pure flow k(a: Int) -> Bool { return a > 1 }`,     op: "cmp",   resultType: "Bool",    exprKind: "compare" },
+];
+
+describe("RD-0528 I-3 functional corpus (tranche 6: gir-correctness) — emitGIRModule (parse -> GIR emit)", () => {
+  for (const c of GIR_EMIT) {
+    it(`emits ${c.op}: ${c.label}`, async () => {
+      const ops = await girExprOps(c.src);
+      assert.equal(ops.length, 1, `expected exactly one expr node, got ${JSON.stringify(ops)}`);
+      const e = ops[0];
+      assert.equal(e.op, c.op, `op mismatch: ${JSON.stringify(e)}`);
+      assert.equal(e.resultType, c.resultType, `resultType mismatch: ${JSON.stringify(e)}`);
+      assert.equal(e.exprKind, c.exprKind, `exprKind mismatch: ${JSON.stringify(e)}`);
+    });
+  }
+});
+
 describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
   it("the corpus carries known-bad cases (a corpus that can only pass proves nothing)", () => {
     assert.ok(MUST_FAIL.length >= 5, "the type must-fail set must be non-trivial");
@@ -440,6 +496,8 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
     assert.ok(GOV_SAFETY.some((c) => c.contains.length > 0), "the safety_critical governance corpus must carry reject cases");
     assert.ok(GOV_GUARD_CONFORMANCE.some((c) => c.expect) && GOV_GUARD_CONFORMANCE.some((c) => !c.expect), "the GOV-004 corpus must carry both a reject and an accept case");
     assert.ok(GOV_GUARD_DECL.some((c) => c.expect) && GOV_GUARD_DECL.some((c) => !c.expect), "the GOV-005 corpus must carry both a reject and an accept case");
+    const girOps = new Set(GIR_EMIT.map((c) => c.op));
+    assert.ok(girOps.size >= 4, `the gir corpus must exercise >=4 DISTINCT ops (a stubbed emitter collapses to one), got: ${[...girOps].join(", ")}`);
   });
   it("the parse corpus exercises every FUNGI-PARSE code (001..004), not just one path", () => {
     const covered = new Set(MUST_FAIL_PARSE.map((c) => c.contains));
