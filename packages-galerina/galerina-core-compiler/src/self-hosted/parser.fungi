@@ -501,7 +501,12 @@ contract { intent { "Parse a parenthesised parameter list. Caller must advance p
           mut srcScan: Bool = true
           while srcScan {
             let sv = tokVal(tokens, endP)
-            let srcEnd: Bool = sv == "" or sv == "," or sv == ")"
+            // COMMIT 2 fix (bridge 0164): `where` is ALSO a boundary — the canonical order is
+            // `source_from Origin where <pred>`, so without this the source_from scan swallows the whole
+            // `where` clause into sourceFrom (measured `source_from Net where a>=0` → "Netwherea>=0") and
+            // the where-capture below finds nothing. The .ts stops source_from at the `where` KEYWORD
+            // (parser.ts:1155/1169 accumulate identifier/dot only); this mirrors it.
+            let srcEnd: Bool = sv == "" or sv == "," or sv == ")" or sv == "where"
             if srcEnd { srcScan = false }
             if srcEnd == false { srcFrom = srcFrom + sv  endP = endP + 1 }
           }

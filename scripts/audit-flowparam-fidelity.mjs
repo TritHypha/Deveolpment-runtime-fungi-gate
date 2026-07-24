@@ -61,6 +61,9 @@ const ROWS = [
   // COMMIT 2: `where <k3-predicate>` admission carried faithfully (raw predicate text, depth-tracked capture).
   { param: "a: Int where all{}",                                        expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "",                    whereExpr: "all{}" } },
   { param: "readonly a: Int where a >= 0",                              expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: false, sourceFrom: "",                    whereExpr: "a>=0" } },
+  // COMMIT 2 combo (bridge 0164): source_from AND where together — source_from must stop at `where`, not
+  // swallow it. The where-alone rows above were blind to this; R&D's independent probe caught the mangle.
+  { param: "readonly tainted a: Int source_from Net where a >= 0",      expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: true,  sourceFrom: "Net",                 whereExpr: "a>=0" } },
 ];
 
 // ---- run one source through the SELF-HOSTED pipeline and extract flows[0].params[0] -----------
