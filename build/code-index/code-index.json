@@ -17,7 +17,7 @@
       "ref packages-galerina/galerina-ext-bridge-cpp/src/addon-loader.ts:96",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:58",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:63",
-      "doc docs/TODO.md:557"
+      "doc docs/TODO.md:626"
     ]
   },
   {
@@ -39,7 +39,7 @@
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:53",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:68",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:74",
-      "doc docs/TODO.md:556"
+      "doc docs/TODO.md:625"
     ]
   },
   {
@@ -107,7 +107,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/compiled-policy.test.mjs:56",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:146",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:152",
-      "doc docs/TODO.md:877"
+      "doc docs/TODO.md:946"
     ]
   },
   {
@@ -298,7 +298,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:114",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:120",
-      "doc docs/TODO.md:874"
+      "doc docs/TODO.md:943"
     ]
   },
   {
@@ -520,8 +520,8 @@
       "emit packages-galerina/galerina-tower-citizen/src/hybrid-engine.ts:1085",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:53",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:113",
-      "doc docs/TODO.md:470",
-      "doc docs/TODO.md:844"
+      "doc docs/TODO.md:539",
+      "doc docs/TODO.md:913"
     ]
   },
   {
@@ -543,8 +543,8 @@
       "ref packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:52",
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:81",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:96",
-      "doc docs/TODO.md:470",
-      "doc docs/TODO.md:864"
+      "doc docs/TODO.md:539",
+      "doc docs/TODO.md:933"
     ]
   },
   {
@@ -981,7 +981,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/governance-hardening.test.mjs:38",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:136",
       "doc docs/reports/galerina-ground-up-security-architectural-audit-report.md:625",
-      "doc docs/TODO.md:875"
+      "doc docs/TODO.md:944"
     ]
   },
   {
@@ -2079,7 +2079,7 @@
       "doc docs/ANTI_HALLUCINATION.md:88",
       "doc docs/paper/defensive-papers/dp-rd-0271-secure-by-omission-contract-field-defaults.md:62",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:35",
-      "doc docs/TODO.md:431"
+      "doc docs/TODO.md:500"
     ]
   },
   {
@@ -2441,7 +2441,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:68",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:77",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:107",
-      "doc docs/TODO.md:856",
+      "doc docs/TODO.md:925",
       "ref scripts/audit-import-governance.mjs:20"
     ]
   },
@@ -2463,7 +2463,7 @@
     "allSites": [
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:137",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:81",
-      "doc docs/TODO.md:858"
+      "doc docs/TODO.md:927"
     ]
   },
   {
@@ -2614,7 +2614,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/index.ts:1961",
       "def packages-galerina/galerina-core-compiler/src/index.ts:1977",
-      "doc docs/TODO.md:379"
+      "doc docs/TODO.md:448"
     ]
   },
   {
@@ -2638,7 +2638,7 @@
     ],
     "allSites": [
       "def packages-galerina/galerina-core-compiler/src/index.ts:1988",
-      "doc docs/TODO.md:290"
+      "doc docs/TODO.md:359"
     ]
   },
   {
@@ -2757,8 +2757,8 @@
       "def packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:102",
-      "doc docs/TODO.md:701",
-      "doc docs/TODO.md:715"
+      "doc docs/TODO.md:770",
+      "doc docs/TODO.md:784"
     ]
   },
   {
@@ -3914,8 +3914,8 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/cli.ts:578",
-      "doc docs/TODO.md:702",
-      "doc docs/TODO.md:706"
+      "doc docs/TODO.md:771",
+      "doc docs/TODO.md:775"
     ]
   },
   {
@@ -5734,7 +5734,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:390"
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:576"
     ]
   },
   {
@@ -5847,8 +5847,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:534",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:7",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:30",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:260",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:262",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:339",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:341",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:190",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:336",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:910",
@@ -5969,8 +5969,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:485",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:495",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:517",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:261",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:395",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:340",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:581",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:230",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:237",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:240",
@@ -6077,8 +6077,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:333",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:414",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:613",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:250",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:262",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:329",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:341",
       "test packages-galerina/galerina-core-compiler/tests/tier-floor-fungi-tier-001.test.mjs:42",
       "test packages-galerina/galerina-core-compiler/tests/tier-floor-fungi-tier-001.test.mjs:76",
       "test packages-galerina/galerina-core-compiler/tests/tier-floor-fungi-tier-001.test.mjs:78",
@@ -6191,7 +6191,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:523",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:527",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:543",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:251",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:330",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:210",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:220",
       "doc packages-galerina/galerina-devtools-project-graph/README.md:189",
@@ -6211,7 +6211,7 @@
       "doc docs/patterns/applications/01-crud-resource.md:94",
       "doc docs/reference/effects.md:67",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:16",
-      "doc docs/TODO.md:100",
+      "doc docs/TODO.md:169",
       "ref scripts/audit-corpus-effect-names.mjs:15",
       "ref scripts/audit-corpus-effect-names.mjs:17",
       "ref scripts/audit-muted-diagnostics.mjs:46",
@@ -6302,7 +6302,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:230",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:242",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:250",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:252",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:331",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:213",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:219",
       "doc docs/compiler-effect-and-boundary-checker.md:977",
@@ -6380,7 +6380,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:606",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:613",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:620",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:253",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:332",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:202",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:209",
       "doc docs/CONSISTENCY_GATES.md:59",
@@ -6398,7 +6398,7 @@
       "doc docs/reference/effects.md:438",
       "doc docs/reference/effects.md:447",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:50",
-      "doc docs/TODO.md:646",
+      "doc docs/TODO.md:715",
       "ref scripts/audit-codes-full.mjs:79",
       "ref scripts/audit-codes-full.mjs:82",
       "ref scripts/audit-corpus-effect-names.mjs:134",
@@ -6456,7 +6456,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:301",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:534",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:570",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:254"
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:333"
     ]
   },
   {
@@ -6495,7 +6495,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:549",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:570",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:620",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:255",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:334",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:193",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:199",
       "doc docs/roadmap-2026-07-15.md:53"
@@ -6549,7 +6549,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:224",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:257",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-effect-checker.test.mjs:265",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:256",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:335",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:223",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:227",
       "ref scripts/audit-muted-diagnostics.mjs:62"
@@ -7074,19 +7074,20 @@
     "code": "FUNGI-FUEL-001",
     "namespace": "FUNGI",
     "family": "FUEL",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 1,
-    "docs": 3,
+    "docs": 4,
     "names": [],
     "severities": [],
     "allSites": [
       "doc docs/reference/dss-wasm-runtime-errors.md:44",
       "doc docs/reference/dss-wasm-runtime-errors.md:48",
       "doc docs/reference/dss-wasm-runtime-errors.md:85",
+      "doc docs/TODO.md:150",
       "ref scripts/audit-artifact-drift.mjs:51"
     ]
   },
@@ -7345,7 +7346,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:155",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:158",
       "doc docs/architecture/gate-cutset-version-gating-decision-2026-07-11.md:42",
-      "doc docs/TODO.md:528"
+      "doc docs/TODO.md:597"
     ]
   },
   {
@@ -7380,7 +7381,7 @@
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
-      "doc docs/TODO.md:532"
+      "doc docs/TODO.md:601"
     ]
   },
   {
@@ -7519,9 +7520,9 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:80",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:137",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:138",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:210",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:217",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:381",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:289",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:296",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:565",
       "test packages-galerina/galerina-core-compiler/tests/wat-p9-governance-parity.test.mjs:102",
       "ref packages-galerina/galerina-devtools-intelligence/src/extractor.ts:174",
       "emit packages-galerina/galerina-devtools-intelligence/src/extractor.ts:179",
@@ -7538,7 +7539,7 @@
       "doc docs/examples/README.md:124",
       "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:51",
-      "doc docs/TODO.md:96",
+      "doc docs/TODO.md:165",
       "ref scripts/audit-mutation.mjs:612",
       "ref scripts/audit-mutation.mjs:616",
       "ref scripts/audit-muted-diagnostics.mjs:49",
@@ -7673,21 +7674,21 @@
       "doc docs/language/fungi/05-bindings-taint-privacy.md:268",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:18",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:36",
-      "doc docs/TODO.md:745",
-      "doc docs/TODO.md:802"
+      "doc docs/TODO.md:814",
+      "doc docs/TODO.md:871"
     ]
   },
   {
     "code": "FUNGI-GOV-004",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 26,
+    "occurrences": 28,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1702"
     ],
-    "tests": 10,
+    "tests": 12,
     "refs": 5,
     "docs": 4,
     "names": [
@@ -7715,6 +7716,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:145",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:146",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:149",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:456",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:568",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:544",
       "doc docs/examples/EXAMPLES_INDEX.md:188",
       "fungi docs/examples/Level-5-Governance/205-remote-execution-violation/example.fungi:5",
@@ -7727,7 +7730,7 @@
     "code": "FUNGI-GOV-005",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 34,
+    "occurrences": 36,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:506"
@@ -7735,7 +7738,7 @@
     "emits": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1860"
     ],
-    "tests": 11,
+    "tests": 13,
     "refs": 4,
     "docs": 8,
     "names": [
@@ -7767,6 +7770,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:570",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:573",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:574",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:464",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:569",
       "doc docs/AI/DO_NOT_USE_YET.md:166",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:547",
       "doc docs/examples/EXAMPLES_INDEX.md:195",
@@ -8369,7 +8374,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:902",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:905",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:906",
-      "doc docs/TODO.md:583"
+      "doc docs/TODO.md:652"
     ]
   },
   {
@@ -8555,8 +8560,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1717",
       "doc docs/examples/README.md:19",
       "doc docs/examples/README.md:132",
-      "doc docs/TODO.md:389",
-      "doc docs/TODO.md:394",
+      "doc docs/TODO.md:458",
+      "doc docs/TODO.md:463",
       "ref scripts/audit-codes-full.mjs:39",
       "ref scripts/audit-muted-diagnostics.mjs:53"
     ]
@@ -8809,7 +8814,7 @@
       "emit packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:56",
       "ref packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:57",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:39",
-      "doc docs/TODO.md:847"
+      "doc docs/TODO.md:916"
     ]
   },
   {
@@ -10233,7 +10238,7 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:47",
       "doc docs/reference/dss-wasm-runtime-errors.md:49",
       "doc docs/reference/dss-wasm-runtime-errors.md:81",
-      "doc docs/TODO.md:174"
+      "doc docs/TODO.md:243"
     ]
   },
   {
@@ -10290,7 +10295,7 @@
       "test packages-galerina/galerina-core-compiler/tests/wat-tri-fuse-a-elision.test.mjs:5",
       "doc packages-galerina/galerina-core-compiler/TODO.md:18",
       "doc docs/reference/dss-wasm-runtime-errors.md:41",
-      "doc docs/TODO.md:124"
+      "doc docs/TODO.md:193"
     ]
   },
   {
@@ -10445,7 +10450,7 @@
       "doc docs/examples/README.md:18",
       "doc docs/examples/README.md:144",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
-      "doc docs/TODO.md:439"
+      "doc docs/TODO.md:508"
     ]
   },
   {
@@ -10521,7 +10526,7 @@
     "code": "FUNGI-K3-004",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 7,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -10529,7 +10534,7 @@
     ],
     "tests": 4,
     "refs": 1,
-    "docs": 1,
+    "docs": 0,
     "names": [
       "VERDICT_COMPARED_TO_NON_VERDICT"
     ],
@@ -10542,8 +10547,7 @@
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:66",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:151",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:153",
-      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:171",
-      "doc docs/roadmap-2026-07-24.md:28"
+      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:171"
     ]
   },
   {
@@ -10890,7 +10894,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:392",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:393",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:398",
-      "doc docs/TODO.md:687"
+      "doc docs/TODO.md:756"
     ]
   },
   {
@@ -11387,9 +11391,9 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
-      "doc docs/TODO.md:261",
-      "doc docs/TODO.md:427",
-      "doc docs/TODO.md:539"
+      "doc docs/TODO.md:330",
+      "doc docs/TODO.md:496",
+      "doc docs/TODO.md:608"
     ]
   },
   {
@@ -11975,8 +11979,8 @@
       "doc docs/architecture/self-hosting-readiness-2026-07-09.md:135",
       "doc docs/examples/README.md:91",
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:42",
-      "doc docs/TODO.md:706",
-      "doc docs/TODO.md:798"
+      "doc docs/TODO.md:775",
+      "doc docs/TODO.md:867"
     ]
   },
   {
@@ -12915,8 +12919,8 @@
     "allSites": [
       "fungi packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi:1543",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:3",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:70",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:188",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:72",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:267",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:4",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:54"
     ]
@@ -12970,10 +12974,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:682",
       "test packages-galerina/galerina-core-compiler/tests/lexer/bom-strip.test.mjs:2",
       "test packages-galerina/galerina-core-compiler/tests/parser/spans-and-recovery.test.mjs:182",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:190",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:194",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:195",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:374",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:269",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:273",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:274",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:558",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:9",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:67",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:70",
@@ -12987,8 +12991,8 @@
       "doc docs/language/fungi/07-control-flow.md:279",
       "doc docs/language/fungi/README.md:78",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:96",
-      "doc docs/TODO.md:119",
+      "doc docs/TODO.md:165",
+      "doc docs/TODO.md:188",
       "ref scripts/audit-syntax.mjs:4",
       "ref scripts/rebuild-fusable-packages.mjs:100"
     ]
@@ -13016,8 +13020,8 @@
       "test packages-galerina/galerina-core-compiler/tests/parser.test.mjs:265",
       "test packages-galerina/galerina-core-compiler/tests/parser.test.mjs:267",
       "test packages-galerina/galerina-core-compiler/tests/parser.test.mjs:268",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:196",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:374",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:275",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:558",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:10",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:74",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:77"
@@ -13045,8 +13049,8 @@
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:134",
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:136",
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:137",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:197",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:374",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:276",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:558",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:11",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:80",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:82",
@@ -13070,9 +13074,9 @@
     "allSites": [
       "fungi packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi:2058",
       "fungi packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi:2062",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:198",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:199",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:374",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:277",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:278",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:558",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:12",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:91",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:94"
@@ -13139,7 +13143,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/affine-passport-typestate-0111.test.mjs:36",
       "doc docs/reference/value-states.md:118",
       "doc docs/reference/value-states.md:134",
-      "doc docs/TODO.md:814"
+      "doc docs/TODO.md:883"
     ]
   },
   {
@@ -14645,10 +14649,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:113",
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:117",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:71",
-      "doc docs/TODO.md:571",
-      "doc docs/TODO.md:702",
-      "doc docs/TODO.md:717",
-      "doc docs/TODO.md:732"
+      "doc docs/TODO.md:640",
+      "doc docs/TODO.md:771",
+      "doc docs/TODO.md:786",
+      "doc docs/TODO.md:801"
     ]
   },
   {
@@ -14742,9 +14746,9 @@
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:62",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:102",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:129",
-      "doc docs/TODO.md:532",
-      "doc docs/TODO.md:905",
-      "doc docs/TODO.md:912",
+      "doc docs/TODO.md:601",
+      "doc docs/TODO.md:974",
+      "doc docs/TODO.md:981",
       "ref scripts/audit-muted-diagnostics.mjs:44",
       "ref scripts/code-index.mjs:81",
       "ref scripts/kb-index.mjs:9",
@@ -16035,7 +16039,7 @@
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:31",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:86",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:139",
-      "doc docs/TODO.md:793"
+      "doc docs/TODO.md:862"
     ]
   },
   {
@@ -16310,8 +16314,8 @@
       "doc docs/patterns/applications/08-secrets.md:14",
       "doc docs/patterns/applications/08-secrets.md:38",
       "doc docs/reference/value-states.md:93",
-      "doc docs/TODO.md:684",
-      "doc docs/TODO.md:811",
+      "doc docs/TODO.md:753",
+      "doc docs/TODO.md:880",
       "ref scripts/audit-muted-diagnostics.mjs:42"
     ]
   },
@@ -17748,7 +17752,7 @@
       "fungi docs/examples/Level-9-Enterprise/465-enterprise-summary/example.fungi:29",
       "doc docs/roadmap-2026-07-15.md:158",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:428",
+      "doc docs/TODO.md:497",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:95",
       "ref scripts/audit-fungi-corpus-check.mjs:162",
@@ -17774,7 +17778,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:137",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:429"
+      "doc docs/TODO.md:498"
     ]
   },
   {
@@ -17808,7 +17812,7 @@
       "test packages-galerina/galerina-core-compiler/tests/version-header.test.mjs:69",
       "doc docs/examples/README.md:19",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:37",
-      "doc docs/TODO.md:432"
+      "doc docs/TODO.md:501"
     ]
   },
   {
@@ -18245,8 +18249,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tenant-isolation.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:55",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:57",
-      "doc docs/TODO.md:238",
-      "doc docs/TODO.md:368"
+      "doc docs/TODO.md:307",
+      "doc docs/TODO.md:437"
     ]
   },
   {
@@ -18957,9 +18961,9 @@
       "test packages-galerina/galerina-core-compiler/tests/phase29.test.mjs:162",
       "test packages-galerina/galerina-core-compiler/tests/runtime.test.mjs:27",
       "test packages-galerina/galerina-core-compiler/tests/runtime.test.mjs:55",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:178",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:179",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:189",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:257",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:258",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:268",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:7",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:107",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:108",
@@ -19792,10 +19796,10 @@
       "ref packages-galerina/galerina-core-compiler/src/type-checker.ts:1476",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:186",
       "test packages-galerina/galerina-core-compiler/tests/hallmark.test.mjs:69",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:175",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:176",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:177",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:180",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:254",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:255",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:256",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:259",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:101",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:105",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:113",
@@ -21036,8 +21040,8 @@
       "test packages-galerina/galerina-core-compiler/tests/condition-type-gate.test.mjs:26",
       "test packages-galerina/galerina-core-compiler/tests/condition-type-gate.test.mjs:29",
       "test packages-galerina/galerina-core-compiler/tests/condition-type-gate.test.mjs:32",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:183",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:184"
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:262",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:263"
     ]
   },
   {
@@ -21160,19 +21164,19 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:228",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:237",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:288",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:211",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:214",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:223",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:227",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:231",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:382",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:290",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:293",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:302",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:306",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:310",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:566",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:271",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:348",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:114",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:535",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:536",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:96",
+      "doc docs/TODO.md:165",
       "ref scripts/audit-codes-full.mjs:80",
       "ref scripts/audit-examples-vs-declared.mjs:94",
       "ref scripts/audit-twin-emit-parity.mjs:197"
@@ -21233,9 +21237,9 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:101",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:105",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-governance-verifier.test.mjs:138",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:231",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:233",
-      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:383",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:310",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:312",
+      "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:567",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:115"
     ]
   },
@@ -21650,7 +21654,7 @@
       "doc docs/patterns/applications/11-audit-trails.md:120",
       "doc docs/reference/value-states.md:56",
       "doc docs/reference/value-states.md:128",
-      "doc docs/TODO.md:773",
+      "doc docs/TODO.md:842",
       "ref scripts/audit-mutation.mjs:201",
       "ref scripts/audit-mutation.mjs:208",
       "ref scripts/audit-reference-doc-drift.mjs:65"
@@ -21926,7 +21930,7 @@
       "doc docs/reference/value-states.md:83",
       "doc docs/reference/value-states.md:131",
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
-      "doc docs/TODO.md:812",
+      "doc docs/TODO.md:881",
       "ref scripts/audit-example-diagnostics.mjs:9",
       "ref scripts/audit-example-diagnostics.mjs:160",
       "ref scripts/audit-muted-diagnostics.mjs:63"
@@ -22127,7 +22131,7 @@
     "code": "FUNGI-VALUESTATE-011",
     "namespace": "FUNGI",
     "family": "VALUESTATE",
-    "occurrences": 11,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -22135,7 +22139,7 @@
     ],
     "tests": 7,
     "refs": 3,
-    "docs": 0,
+    "docs": 2,
     "names": [
       "DECLASSIFIER_NAME_SHADOWED"
     ],
@@ -22153,7 +22157,9 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:33",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:38",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
-      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44"
+      "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
+      "doc docs/roadmap-2026-07-24.md:16",
+      "doc docs/TODO.md:123"
     ]
   },
   {
@@ -22430,7 +22436,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/TODO.md:781"
+      "doc docs/TODO.md:850"
     ]
   },
   {

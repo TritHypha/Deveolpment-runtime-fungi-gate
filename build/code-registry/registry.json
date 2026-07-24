@@ -3641,7 +3641,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "FUNGI-FX-001",
@@ -3860,7 +3860,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 10,
+      "tests": 12,
       "docs": 4
     },
     {
@@ -3876,7 +3876,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 11,
+      "tests": 13,
       "docs": 8
     },
     {
@@ -5009,7 +5009,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 4,
-      "docs": 1
+      "docs": 0
     },
     {
       "code": "FUNGI-K3-005",
@@ -9558,7 +9558,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 7,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-VAULT-001",
