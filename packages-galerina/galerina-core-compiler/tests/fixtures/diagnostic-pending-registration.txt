@@ -9,6 +9,6 @@
 # 2026-07-24: FUNGI-ADMIT-001/002/003 (flagship param admission, COMMIT 1) briefly sat here pending KB
 # registration; R&D registered them in compiler-diagnostics.md (b21c59c) — shrunk back to EMPTY.
 #
-# 2026-07-24: FUNGI-TYPE-033 (S1 condition-type gate — if/while must be Bool, bridge 0148). Emitted by
-# MAIN (type-checker.ts); the KB registry is R&D-push-only. Pending R&D KB registration + shrink.
-FUNGI-TYPE-033
+# 2026-07-24: FUNGI-TYPE-033 (S1 condition-type gate — if/while must be Bool, bridge 0148) briefly sat here
+# pending KB registration; R&D registered it in compiler-diagnostics.md (line ~1319, "registered 2026-07-24")
+# — shrunk back to EMPTY. The shrink-only gate (diagnostic-namespace.test.mjs) drove this removal.

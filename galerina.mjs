@@ -118,6 +118,24 @@ function blacklistPlugin(pluginId, reason) {
 const __dir = dirname(fileURLToPath(import.meta.url));
 const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href;
 
+// ── Always-counted SECURITY type-checker codes (S1/S2, battery bridge 0148 F1/F2) ──
+// The rest of the FUNGI-TYPE-* class is DEV-ADVISORY in plain `check` / tolerated by `build`
+// (folded in only under --strict-types) because ~150 baseline files carry unmigrated type
+// errors / checkTypeRef false positives — folding them all would red the corpus. But two of
+// those codes are not type NITS, they are fail-OPEN SECURITY holes that must fail CLOSED on
+// every surface (plain check exit≠0 AND build refusal), exactly like the INTEGRITY_EFFECT_CODES
+// carve-out does for effect codes (galerina.mjs:2058 / the always-fail-closed set):
+//   FUNGI-TYPE-033     an `if`/`while` condition that is not Bool — `if <Verdict>`/`if <Int>`
+//                      branches control flow on a non-boolean (F1): a verdict coerced to truthy
+//                      turns UNKNOWN/DENY into a taken branch (fail-open). Use check(){} for K3.
+//   FUNGI-GOV-3VL-004  an ordered comparison on a Verdict (`v >= 1`, `v > 0`) — authorization is
+//                      `== Verdict.Allow` ONLY; the K3 order is for the algebra, and an ordered
+//                      test fails OPEN the instant an out-of-domain value appears (F2).
+// Corpus blast radius MEASURED 0/460 .fungi (both are latent-prevention, no live site) before
+// promoting — so this reds no shipped file. SINGLE source of truth: both the `check` advisory
+// path and the `build` govErrors gate read THIS set (a duplicated security set could drift).
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004"]);
+
 async function main() {
   let [, , command = "help", ...rest] = process.argv;
 
@@ -1295,13 +1313,19 @@ Baseline comparison (governance-cost):
     // negative examples under docs/examples, so hard-fail is opt-in via --strict-types while the
     // baseline burns down. The self-hosted corpus is 8/8 type-clean and must stay so.
     const strictTypes = rest.includes("--strict-types");
-    const typeErrors = (m.checkTypes(parsed.ast).diagnostics ?? []).filter(d => d.severity === "error");
+    const allTypeErrors = (m.checkTypes(parsed.ast).diagnostics ?? []).filter(d => d.severity === "error");
+    // The SECURITY type-codes (S1/S2 — non-Bool condition, ordered-comparison-on-Verdict) are fail-OPEN
+    // holes, never advisory: they fail closed in EVERY mode (mirrors integrityEffectErrors). The REST of
+    // the type-error class stays dev-advisory unless --strict-types (the ~150-baseline reason below).
+    const securityTypeErrors = allTypeErrors.filter(d => SECURITY_TYPE_CODES.has(d.code));
+    const typeErrors = allTypeErrors.filter(d => !SECURITY_TYPE_CODES.has(d.code));
     // Advisory in plain check: type errors must NOT suppress the ✅ clean line — they are a separate
     // NOTE below it. Otherwise every one of the ~150 baseline files with an unmigrated type error (or a
     // checkTypeRef false positive) loses its ✅, and the canonical clean example verifyPassword.fungi —
     // which trips two false positives on Brand<String,"tag"> + enum — reads as failing. Only
-    // --strict-types folds them into the hard, ✅-suppressing, exit-failing set.
-    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...(strictTypes ? typeErrors : [])];
+    // --strict-types folds them into the hard, ✅-suppressing, exit-failing set. The security carve-out
+    // above is ALWAYS folded (no --strict-types gate) — a fail-open must fail closed at plain check too.
+    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...securityTypeErrors, ...(strictTypes ? typeErrors : [])];
     if (allDiags.length === 0) {
       // We're building the language — distinguish "compiled real content" from "found nothing". A clean
       // parse with ZERO top-level declarations (an empty or comment-only file) must NOT report a blanket
@@ -1359,7 +1383,7 @@ Baseline comparison (governance-cost):
     // still-gated width) — these are unconditional correctness failures the build/run path also rejects.
     // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
     process.exit(errors.length > 0 || valueStateErrors.length > 0 || integrityEffectErrors.length > 0
-      || (strictTypes && typeErrors.length > 0) ? 1 : 0);
+      || securityTypeErrors.length > 0 || (strictTypes && typeErrors.length > 0) ? 1 : 0);
   }
 
   // ── galerina generate tests <file.fungi> [--tap] — contract-driven test obligations (0016) ──
@@ -2073,6 +2097,14 @@ Baseline comparison (governance-cost):
   const valueStateResult = m.checkValueStates(parsed.ast, buildIsProduction ? "production" : "development");
   for (const d of valueStateResult.diagnostics ?? []) {
     if (d.severity === "error") govErrors.push(d);
+  }
+  // SECURITY type-codes (S1/S2, battery bridge 0148 F1/F2) fail the build/run CLOSED in EVERY profile —
+  // the broader FUNGI-TYPE-* class stays advisory (folded only under --strict-types, the ~150-baseline
+  // reason), but these two are fail-OPEN holes that a signed artifact must never carry (measured: build
+  // formerly minted a signed .wasm for `if <Verdict>` / `v >= 1`). Unconditional and in the SHARED compile
+  // section (not build-scoped) so `run --invoke` refuses them too — a fail-open must not execute either.
+  for (const d of m.checkTypes(parsed.ast).diagnostics ?? []) {
+    if (d.severity === "error" && SECURITY_TYPE_CODES.has(d.code)) govErrors.push(d);
   }
   // RD-0234b Class A(iii): the bundled build path never ran symbol resolution, so a file
   // referencing an UNRESOLVED symbol (typo'd flow / missing helper) still minted a hybrid-signed
