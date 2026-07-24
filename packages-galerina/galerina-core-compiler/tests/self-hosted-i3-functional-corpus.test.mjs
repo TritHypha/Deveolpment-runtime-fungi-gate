@@ -49,7 +49,7 @@ function load(name) {
   return p;
 }
 
-let lexer, parser, checker, gov, effectChecker, gir;
+let lexer, parser, checker, gov, effectChecker, gir, rt;
 before(() => {
   lexer = load("lexer.fungi");
   parser = load("parser.fungi");
@@ -57,6 +57,7 @@ before(() => {
   gov = load("governance-verifier.fungi");
   effectChecker = load("effect-checker.fungi");
   gir = load("gir-emitter.fungi");
+  rt = load("runtime.fungi");
 });
 
 const vStr = (s) => ({ __tag: "string", value: s });
@@ -205,6 +206,32 @@ async function girExprOps(source) {
         };
       })
     : [];
+}
+
+const vInt = (n) => ({ __tag: "int", value: n });
+const vBool = (b) => ({ __tag: "bool", value: b });
+
+/**
+ * Tranche 7's runner — drive runtime.fungi `selectTier` from the PARSER-derived flow properties
+ * (qualifier = fd.kind, effectCount = fd.effects.count). This is the runtime stage's tier-DISPATCH
+ * charter: a security property — a `secure`/effectful flow must NOT be routed to an optimised tier that
+ * skips governance; it must land in the `tree` tier (isOptimal:false). ⚠ `isIntegerOnly` is NOT a parser
+ * field (it's a semantic property of the flow's types), so it is a TEST knob here, not parser-sourced —
+ * documented, not hidden. The runtime's exec-VALUE oracle (runProgram, the interpreter proper) is a
+ * DIFFERENT shape (parse→emitGIR→runProgram) = the coupled exec-driver (#56), still unbuilt — out of scope here.
+ */
+async function tierFor(source, isIntegerOnly) {
+  const flows = await parseToFlows(source);
+  const fd = flows.items[0]?.value ?? flows.items[0];
+  const qualifier = fd.fields.get("kind").value;
+  const effectCount = fd.fields.get("effects").items.length;
+  const r = await executeFlow(
+    "selectTier",
+    new Map([["qualifier", vStr(qualifier)], ["effectCount", vInt(effectCount)], ["isIntegerOnly", vBool(isIntegerOnly)]]),
+    rt.ast, rt.flows, undefined, undefined, { pureFastPath: false },
+  );
+  const rec = r.value ?? r;
+  return { qualifier, effectCount, tier: rec.fields.get("tier").value, isOptimal: rec.fields.get("isOptimal").value };
 }
 
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
@@ -487,6 +514,30 @@ describe("RD-0528 I-3 functional corpus (tranche 6: gir-correctness) — emitGIR
   }
 });
 
+// Tranche 7 (2026-07-24): runtime-stage TIER DISPATCH — parse -> selectTier, the self-hosted runtime's
+// execution-tier classifier. Security property: a governed/effectful flow must route to the full `tree` tier
+// (isOptimal:false), never an optimised tier that would skip governance. Driven from the PARSER's flow
+// properties (qualifier=fd.kind, effectCount=fd.effects.count); isIntegerOnly is a TEST knob (not a parser
+// field). Every tier MEASURED 2026-07-24 through the real pipeline. Non-vacuity = >=4 DISTINCT tiers (a
+// stubbed classifier collapses to one). This covers the runtime's DISPATCH charter only — its exec-VALUE
+// oracle (runProgram) is the separate coupled exec-driver (#56), unbuilt.
+const RUNTIME_TIER = [
+  { label: "pure int-only, 0 effects -> bytecode (optimal)", src: `pure flow f() -> Int { return 42 }`,          intOnly: true,  tier: "bytecode", isOptimal: true },
+  { label: "pure non-int, 0 effects -> wasm (optimal)",      src: `pure flow s() -> String { return "hi" }`,      intOnly: false, tier: "wasm",     isOptimal: true },
+  { label: "guarded, 0 effects -> sync (optimal)",           src: `guarded flow g(a: Int) -> Int { return a }`,  intOnly: false, tier: "sync",     isOptimal: true },
+  { label: "secure + 2 effects -> tree (NOT optimal — governed)", src: `secure flow n(a: Int) -> Int\ncontract { effects { audit.write, network.send } }\n{ return a }`, intOnly: false, tier: "tree", isOptimal: false },
+];
+
+describe("RD-0528 I-3 functional corpus (tranche 7: runtime tier-dispatch) — selectTier (parse -> tier)", () => {
+  for (const c of RUNTIME_TIER) {
+    it(`routes to ${c.tier}: ${c.label}`, async () => {
+      const r = await tierFor(c.src, c.intOnly);
+      assert.equal(r.tier, c.tier, `tier mismatch: ${JSON.stringify(r)}`);
+      assert.equal(r.isOptimal, c.isOptimal, `isOptimal mismatch: ${JSON.stringify(r)}`);
+    });
+  }
+});
+
 describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
   it("the corpus carries known-bad cases (a corpus that can only pass proves nothing)", () => {
     assert.ok(MUST_FAIL.length >= 5, "the type must-fail set must be non-trivial");
@@ -498,6 +549,9 @@ describe("RD-0528 I-3 functional corpus — non-vacuity guard", () => {
     assert.ok(GOV_GUARD_DECL.some((c) => c.expect) && GOV_GUARD_DECL.some((c) => !c.expect), "the GOV-005 corpus must carry both a reject and an accept case");
     const girOps = new Set(GIR_EMIT.map((c) => c.op));
     assert.ok(girOps.size >= 4, `the gir corpus must exercise >=4 DISTINCT ops (a stubbed emitter collapses to one), got: ${[...girOps].join(", ")}`);
+    const tiers = new Set(RUNTIME_TIER.map((c) => c.tier));
+    assert.ok(tiers.size >= 4, `the runtime corpus must exercise >=4 DISTINCT tiers (a stubbed classifier collapses to one), got: ${[...tiers].join(", ")}`);
+    assert.ok(RUNTIME_TIER.some((c) => !c.isOptimal), "the runtime corpus must carry a governed flow that is NOT routed to an optimal tier (the security property)");
   });
   it("the parse corpus exercises every FUNGI-PARSE code (001..004), not just one path", () => {
     const covered = new Set(MUST_FAIL_PARSE.map((c) => c.contains));
