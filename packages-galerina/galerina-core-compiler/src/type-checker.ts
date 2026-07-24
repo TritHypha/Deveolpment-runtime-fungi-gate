@@ -1286,6 +1286,10 @@ class TypeChecker {
     if (node.kind === "checkExpr") this.checkCheckSubject(node);
     // W5b T2.4: prefilter(subject){…} is also verdict-only (same A9 rationale).
     if (node.kind === "prefilterExpr") this.checkPrefilterSubject(node);
+    // S1 (bridge 0148, F1 fix): `if`/`while` branch control flow on a BOOLEAN. A non-Bool condition
+    // (Int, Verdict, …) is the F1 fail-open — `if <Int>` / `if <Verdict>` compiled clean, even --strict-types.
+    // check(){} is the K3 Verdict-dispatch construct (checkCheckSubject); if/while are Bool-only.
+    if (node.kind === "ifStmt" || node.kind === "whileStmt") this.checkConditionBool(node);
     switch (node.kind) {
       case "flowDecl":
       case "secureFlowDecl":
@@ -2399,6 +2403,34 @@ class TypeChecker {
         `check is verdict-only; use 'match' for '${t}' values.`,
         subject.location ?? node.location,
         `Make the subject a Verdict, or use 'match' for '${t}'.`,
+      ));
+    }
+  }
+
+  /**
+   * S1 (bridge 0148, F1 fix): `if` / `while` conditions must type as Bool. A non-Bool condition (Int,
+   * Verdict, String, …) can never be a well-formed control-flow test — `if <Int>` / `if <Verdict>` compiled
+   * clean today, even under --strict-types (the F1 fail-open). Verdict dispatch belongs in check(){} (the
+   * verdict-only construct); if/while are Bool-only. An UNINFERABLE condition (type undefined) is NOT flagged
+   * — conservative, avoids a false compile error on a type the checker cannot resolve.
+   */
+  private checkConditionBool(node: AstNode): void {
+    const cond = node.children?.[0];
+    if (cond === undefined) return;
+    const t = this.inferType(cond);
+    if (t !== undefined && t !== "Bool") {
+      const kw = node.kind === "whileStmt" ? "while" : "if";
+      this.diagnostics.push(makeTCDiag(
+        "FUNGI-TYPE-033",
+        "CONDITION_NOT_BOOL",
+        `${kw}(...) branches on a Bool condition, but this condition has type '${t}'.` +
+        (t === "Verdict"
+          ? ` A Verdict is not a Bool — use check(...) for K3 verdict dispatch, not ${kw}.`
+          : ` Use a Bool expression (a comparison, or a Bool binding).`),
+        cond.location ?? node.location,
+        t === "Verdict"
+          ? `Dispatch a Verdict with check(...) { if:/deny:/ambig: }, or compare it (e.g. == Verdict.Allow).`
+          : `Make the condition a Bool (e.g. \`${kw} n > 0\`).`,
       ));
     }
   }
