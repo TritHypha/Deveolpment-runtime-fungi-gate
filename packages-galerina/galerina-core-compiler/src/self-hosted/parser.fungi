@@ -30,6 +30,10 @@ record FlowParam {
   isReadonly: Bool
   isTainted: Bool     // C4 (bridge 0145/0147): carried, no longer silently dropped
   sourceFrom: String  // C4: `source_from Origin` suffix; "" = none
+  whereExpr: String   // COMMIT 2 (0119 flagship): `where <k3-predicate>` admission text; "" = none.
+                      // A flat field, not a flow-clause: the twin FlowDecl has no clause structure (0145's
+                      // flow-clause was .ts-side reasoning re paramDecl's 36 consumers; N/A to the flat twin).
+                      // Carried faithfully so the twin does not DROP admission (the flip-precondition class).
 }
 
 // â”€â”€ Expression AST (folded from body-parser.fungi, Milestone M-A) â”€â”€
@@ -502,7 +506,34 @@ contract { intent { "Parse a parenthesised parameter list. Caller must advance p
             if srcEnd == false { srcFrom = srcFrom + sv  endP = endP + 1 }
           }
         }
-        params = params.append({ name: pname, typeName: ptype, isReadonly: isRo, isTainted: isTa, sourceFrom: srcFrom })
+        // COMMIT 2 (0119 flagship): optional `where <k3-predicate>` admission after the type (and any
+        // source_from). Captured as raw predicate text — the twin does not LOWER admission (WASM lowering
+        // is deferred; the .ts interpreter enforces it) — so carrying the source form is the faithful
+        // mirror. DEPTH-TRACKED: a predicate like `all{ f(a, b) }` contains inner `,`/`{`/`(`, so accumulate
+        // to a `,`/`)` only at bracket depth 0 (mirrors typeEndPos' <> scan, extended to () {} <>).
+        mut wherePred: String = ""
+        if tokVal(tokens, endP) == "where" {
+          endP = endP + 1
+          mut depth: Int = 0
+          mut wScan: Bool = true
+          while wScan {
+            let wv = tokVal(tokens, endP)
+            if wv == "" { wScan = false }
+            // Only () and {} NEST in a predicate. `<`/`>`/`<=`/`>=` are COMPARISON operators here, NOT
+            // generic brackets, so they must not affect depth (a `where p < 10` would otherwise unbalance).
+            let opens: Bool = wv == "(" or wv == "{"
+            let closes: Bool = wv == ")" or wv == "}"
+            let boundaryTop: Bool = depth == 0 and (wv == "," or wv == ")")
+            if wv != "" and boundaryTop { wScan = false }
+            if wv != "" and boundaryTop == false {
+              if opens { depth = depth + 1 }
+              if closes { depth = depth - 1 }
+              wherePred = wherePred + wv
+              endP = endP + 1
+            }
+          }
+        }
+        params = params.append({ name: pname, typeName: ptype, isReadonly: isRo, isTainted: isTa, sourceFrom: srcFrom, whereExpr: wherePred })
         p = endP
       }
       if colon != ":" { p = p + 1 }

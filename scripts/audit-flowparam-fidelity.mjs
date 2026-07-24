@@ -52,12 +52,15 @@ function loadSelfHosted(file) {
 
 // ---- the row table (R&D bridge 0145 rows 1-5; row 6 = maximal composition, pinned here) -------
 const ROWS = [
-  { param: "a: Int",                                                    expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "" } },
-  { param: "readonly a: Int",                                           expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: false, sourceFrom: "" } },
-  { param: "tainted a: Int",                                            expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: true,  sourceFrom: "" } },
-  { param: "a: Int source_from Origin",                                 expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "Origin" } },
-  { param: "readonly tainted a: Int source_from Origin",                expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: true,  sourceFrom: "Origin" } },
-  { param: "tainted readonly b: Array<Token> source_from Network.ClientSocket", expect: { name: "b", typeName: "Array<Token>", isReadonly: true,  isTainted: true,  sourceFrom: "Network.ClientSocket" } },
+  { param: "a: Int",                                                    expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "",                    whereExpr: "" } },
+  { param: "readonly a: Int",                                           expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: false, sourceFrom: "",                    whereExpr: "" } },
+  { param: "tainted a: Int",                                            expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: true,  sourceFrom: "",                    whereExpr: "" } },
+  { param: "a: Int source_from Origin",                                 expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "Origin",              whereExpr: "" } },
+  { param: "readonly tainted a: Int source_from Origin",                expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: true,  sourceFrom: "Origin",              whereExpr: "" } },
+  { param: "tainted readonly b: Array<Token> source_from Network.ClientSocket", expect: { name: "b", typeName: "Array<Token>", isReadonly: true,  isTainted: true,  sourceFrom: "Network.ClientSocket", whereExpr: "" } },
+  // COMMIT 2: `where <k3-predicate>` admission carried faithfully (raw predicate text, depth-tracked capture).
+  { param: "a: Int where all{}",                                        expect: { name: "a", typeName: "Int",          isReadonly: false, isTainted: false, sourceFrom: "",                    whereExpr: "all{}" } },
+  { param: "readonly a: Int where a >= 0",                              expect: { name: "a", typeName: "Int",          isReadonly: true,  isTainted: false, sourceFrom: "",                    whereExpr: "a>=0" } },
 ];
 
 // ---- run one source through the SELF-HOSTED pipeline and extract flows[0].params[0] -----------
@@ -86,6 +89,7 @@ async function parseFirstParam(lexerAst, parserAst, paramText) {
     isReadonly: un(recField(p0, "isReadonly")),
     isTainted: un(recField(p0, "isTainted")),
     sourceFrom: un(recField(p0, "sourceFrom")),
+    whereExpr: un(recField(p0, "whereExpr")),
   };
 }
 
