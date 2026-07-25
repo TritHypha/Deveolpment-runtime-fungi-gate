@@ -27,6 +27,25 @@ function gitSha() {
   }
 }
 
+/**
+ * A reproducible ISO timestamp so the JSON artifact stops byte-churning on every regen (#133).
+ * Precedence: SOURCE_DATE_EPOCH (reproducible-builds convention, as in generate-sbom.mjs) → the HEAD
+ * commit date (deterministic given the commit the `sha` field already pins) → wall-clock (non-git fallback).
+ * A real source change still moves `sha` + the commit date, so legitimate regens still differ.
+ */
+function deterministicTimestamp() {
+  const sde = process.env.SOURCE_DATE_EPOCH;
+  let epoch = sde && /^\d+$/.test(sde) ? Number(sde) : NaN;
+  if (!Number.isFinite(epoch)) {
+    try {
+      epoch = Number(execSync("git show -s --format=%ct HEAD", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim());
+    } catch {
+      epoch = NaN;
+    }
+  }
+  return Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString() : new Date().toISOString();
+}
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const COMPILER = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
 const OUT_DIR = join(ROOT, "docs/contract-registry");
@@ -155,10 +174,11 @@ if (process.argv.includes("--self-test")) {
 
 const data = await collect();
 const sha = gitSha();
-const generatedAt = new Date().toISOString();
+const generatedAt = deterministicTimestamp();
 const md = render(data);
-// --check compares only the human doc (md), NOT the json — the json embeds generatedAt/sha which
-// always differ on a re-run. The stale check is: "does a re-run produce the same flow list?"
+// --check compares only the human doc (md), NOT the json — the json embeds `sha` (generation-HEAD),
+// which differs from the post-commit HEAD. `generatedAt` is now deterministic per commit (#133), so the
+// only cross-commit variance left is `sha`. The stale check is: "does a re-run produce the same flow list?"
 const jsonPayload = {
   generatedBy: "gen-contract-registry.mjs",
   generatedAt,
@@ -173,7 +193,7 @@ const jsonPath = join(OUT_DIR, "contract-registry.json");
 
 if (process.argv.includes("--check")) {
   // Stale check: re-generate and compare only the Markdown (deterministic given the same source).
-  // The JSON always differs on generatedAt/sha, so we compare only the flow list length + md.
+  // The JSON's `sha` reflects generation-HEAD (differs after commit), so we compare only the flow list length + md.
   const stale = !existsSync(mdPath) || readFileSync(mdPath, "utf8") !== md;
   if (stale) {
     console.log("❌ contract-registry: on-disk doc is STALE — run `node scripts/gen-contract-registry.mjs`");

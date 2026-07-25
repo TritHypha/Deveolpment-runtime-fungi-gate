@@ -1,8 +1,8 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-07-22T11:44:06.869Z",
-  "sha": "2bcfd457",
-  "contracts": 926,
+  "generatedAt": "2026-07-25T06:45:48.000Z",
+  "sha": "de128b49",
+  "contracts": 936,
   "parsed": 460,
   "rows": [
     {
@@ -2440,6 +2440,30 @@
       "intent": "Return a readable status label using equality comparison."
     },
     {
+      "file": "docs/examples/Proposed-Readable-Logic-Forms/011-readable-comparison/example.fungi",
+      "name": "checkThreshold",
+      "qualifier": "pure",
+      "signature": "pure flow checkThreshold(amount: Int, limit: Int) -> Result<String,String>",
+      "effects": [],
+      "intent": "Approve when the amount exceeds the limit, using a numeric comparison."
+    },
+    {
+      "file": "docs/examples/Proposed-Readable-Logic-Forms/020-readable-boolean/example.fungi",
+      "name": "authorize",
+      "qualifier": "pure",
+      "signature": "pure flow authorize(isActive: Bool, isVerified: Bool, isAdmin: Bool, isOwner: Bool) -> Result<String,String>",
+      "effects": [],
+      "intent": "Combine boolean conditions with && and || to decide access."
+    },
+    {
+      "file": "docs/examples/Proposed-Readable-Logic-Forms/030-readable-unless/example.fungi",
+      "name": "requireApproval",
+      "qualifier": "pure",
+      "signature": "pure flow requireApproval(isApproved: Bool) -> Result<String,String>",
+      "effects": [],
+      "intent": "Reject the request unless it has been approved."
+    },
+    {
       "file": "docs/examples/Proposed-Readable-Logic-Forms/040-governance-readable/example.fungi",
       "name": "approvePayment",
       "qualifier": "secure",
@@ -4357,11 +4381,27 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
+      "name": "isHexDigit",
+      "qualifier": "pure",
+      "signature": "pure flow isHexDigit(c: Char) -> Bool",
+      "effects": [],
+      "intent": "Return true iff c is a hexadecimal digit (0-9, a-f, A-F)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
+      "name": "scanUnicodeEscape",
+      "qualifier": "pure",
+      "signature": "pure flow scanUnicodeEscape(source: String, pos: Int, srcLen: Int) -> Array<String>",
+      "effects": [],
+      "intent": "Scan and validate a \\\\u{...} or \\\\uHHHH escape body; return [endPos, valid, rawText]."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
       "name": "scanString",
       "qualifier": "pure",
       "signature": "pure flow scanString(source: String, startPos: Int, srcLen: Int) -> Array<String>",
       "effects": [],
-      "intent": "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos] as strings."
+      "intent": "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag, escErrFlag]."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -4369,7 +4409,7 @@
       "qualifier": "pure",
       "signature": "pure flow scanCharLit(source: String, startPos: Int, srcLen: Int) -> Array<String>",
       "effects": [],
-      "intent": "Scan a single-quoted char literal at startPos. Returns [unquotedValue, endPos] as strings."
+      "intent": "Scan a single-quoted char literal at startPos. Returns [unquotedValue, endPos, terminatedFlag] as strings."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -4434,6 +4474,14 @@
       "signature": "pure flow isOpSym(tokens: Array<Token>, pos: Int, val: String) -> Bool",
       "effects": [],
       "intent": "True when the token at pos is an Operator/Symbol token with the given value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "bodyHasModulo",
+      "qualifier": "pure",
+      "signature": "pure flow bodyHasModulo(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
+      "effects": [],
+      "intent": "True when a `%` operator token appears in the flow-body token range."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
@@ -4661,11 +4709,35 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "isTrivia",
+      "qualifier": "pure",
+      "signature": "pure flow isTrivia(tokens: Array<Token>, pos: Int) -> Bool",
+      "effects": [],
+      "intent": "True when tokens[pos] is a newline or a comment-kind token (top-level trivia)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "bodyHasTrapConstruct",
+      "qualifier": "pure",
+      "signature": "pure flow bodyHasTrapConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
+      "effects": [],
+      "intent": "True when a `trap <expr> :` hardware-trap statement appears at statement-start in the flow-body range."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "bodyHasStepConstruct",
+      "qualifier": "pure",
+      "signature": "pure flow bodyHasStepConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
+      "effects": [],
+      "intent": "True when a `step <flowName>(` DWI-isolate call appears in the flow-body range."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
       "name": "parseFlows",
       "qualifier": "pure",
       "signature": "pure flow parseFlows(tokens: Array<Token>) -> ParseResult",
       "effects": [],
-      "intent": "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only."
+      "intent": "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
@@ -4930,6 +5002,14 @@
       "signature": "pure flow firstExpr(stmt: Stmt) -> Option<Expr>",
       "effects": [],
       "intent": "Return Some(expr) for the statement's lone expr (RHS/condition), else None."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "checkCondNotBool",
+      "qualifier": "pure",
+      "signature": "pure flow checkCondNotBool(flowName: String, kw: String, cond: Expr) -> Array<Auto>",
+      "effects": [],
+      "intent": "Emit FUNGI-TYPE-033 when an if/while condition has a KNOWN non-Bool type; silent when Bool or uninferable."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
