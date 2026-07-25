@@ -1214,7 +1214,7 @@ contract { intent { "Every call site in an expression tree as a callee-name + ar
   mut sites: Array<Auto> = Array.empty()
   let eChildren: Array<Expr> = e.children
   if e.kind == "call" {
-    sites = sites.append({ name: e.value, argCount: eChildren.count() })
+    sites = sites.append({ name: e.value, argCount: eChildren.count(), args: eChildren })
   }
   mut i: Int = 0
   while i < eChildren.count() {
@@ -1298,6 +1298,108 @@ contract { intent { "FUNGI-TYPE-007: a call's argument count must equal the call
             let msg7: String = "call to '" + site.name + "' passes " + site.argCount + " argument(s) but '" + site.name + "' declares " + expected + " parameter(s) (FUNGI-TYPE-007)"
             diags = diags.append({ code: "FUNGI-TYPE-007", message: msg7, flowName: flowName })
           }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return diags
+}
+
+// The declared parameter LIST of the flow named `name`, or empty when it is not found — the
+// arg-TYPE counterpart of paramCountForFlow (same flat flow-name lookup, no scope resolution).
+pure flow paramsForFlow(flows: Array<FlowDecl>, name: String) -> Array<FlowParam>
+contract { intent { "The declared parameters of the flow with this name (empty when unknown)." } }
+{
+  mut i: Int = 0
+  while i < flows.count() {
+    let fOpt = flows.get(i)
+    match fOpt {
+      Some(fd) => { if fd.name == name { return fd.params } }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return Array.empty()
+}
+
+// True when passing a literal of type `argType` to a parameter declared `paramType` is a WIDENING
+// the reference compiler accepts (an Int literal into a wider numeric slot). An explicit allowlist,
+// so the arg-type check can never flag a legal widening — under-report, never a false positive.
+pure flow isAcceptedWidening(argType: String, paramType: String) -> Bool
+contract { intent { "True when an Int literal is passed to a wider numeric parameter (a legal widening)." } }
+{
+  if argType == "Int" {
+    if paramType == "Float" { return true }
+    if paramType == "Decimal" { return true }
+    if paramType == "Int64" { return true }
+  }
+  return false
+}
+
+// FUNGI-TYPE-005 (INVALID_CALL_ARG_TYPE): a call argument whose type differs from the declared
+// parameter type — the Stage-A check at type-checker.ts:1571-1580 ("argument type mismatch, for
+// inferrable types only"). CLOSES THE SECOND HALF OF A MEASURED FAIL-OPEN: before this, `greet(42)`
+// against `greet(name: String)` type-checked CLEAN in the authoritative twin while Stage-A rejected
+// it (both-engines probe 2026-07-25, bridges 0327/0329; R&D independently reproduced it in 0326).
+//
+// Scope = LITERAL arguments, deliberately. Stage-A itself only checks "inferrable types"; a literal
+// carries its type directly (`litType`), so the comparison is exact with no inference machinery and
+// therefore no guessing. Every other argument shape (param ref, call result, arithmetic, unknown) is
+// SKIPPED, as is an unknown callee, an unknown arg/param type, and an accepted numeric widening.
+// That is four independent skip-guards: the check under-reports on everything it cannot decide and
+// can never emit a false positive. (`kind == "lit"` is normalized to "literal" — the same parser
+// vocabulary mismatch documented at the FUNGI-TYPE-018 cond check.)
+pure flow checkCallArgTypes(flowName: String, fd: FlowDecl, flows: Array<FlowDecl>) -> Array<Auto>
+contract { intent { "FUNGI-TYPE-005: a literal call argument's type must match the declared parameter type." } }
+{
+  mut diags: Array<Auto> = Array.empty()
+  let sites: Array<Auto> = collectCallSites(fd.body)
+  mut i: Int = 0
+  while i < sites.count() {
+    let stOpt = sites.get(i)
+    match stOpt {
+      Some(site) => {
+        let params: Array<FlowParam> = paramsForFlow(flows, site.name)
+        let args: Array<Expr> = site.args
+        mut k: Int = 0
+        while k < args.count() {
+          if k < params.count() {
+            let aOpt = args.get(k)
+            let pOpt = params.get(k)
+            match aOpt {
+              Some(a) => {
+                match pOpt {
+                  Some(p) => {
+                    mut aKind: String = a.kind
+                    if aKind == "lit" { aKind = "literal" }
+                    if aKind == "literal" {
+                      let at: String = a.litType
+                      let pt: String = p.typeName
+                      if isKnownType(at) {
+                        if isKnownType(pt) {
+                          if at != pt {
+                            if isAcceptedWidening(at, pt) == false {
+                              let msg5: String = "argument " + k + " of call to '" + site.name + "' is " + at + " but parameter '" + p.name + "' is declared " + pt + " (FUNGI-TYPE-005)"
+                              diags = diags.append({ code: "FUNGI-TYPE-005", message: msg5, flowName: flowName })
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  None => {}
+                  _ => {}
+                }
+              }
+              None => {}
+              _ => {}
+            }
+          }
+          k = k + 1
         }
       }
       None => {}
@@ -1447,6 +1549,9 @@ contract {
         // FUNGI-TYPE-007: a call's argument count must equal the callee's declared parameter count.
         // Same cross-flow `flows` lookup as 014; closes the measured call-arity fail-open (bridge 0327).
         allDiags = appendAll(allDiags, checkCallArity(name, fd, flows))
+        // FUNGI-TYPE-005: a literal call argument's type must match the declared parameter type
+        // (the second half of the call-arg fail-open — bridges 0327/0329, R&D-confirmed 0326).
+        allDiags = appendAll(allDiags, checkCallArgTypes(name, fd, flows))
         // FUNGI-BINDING-005: reassigning an immutable (`let`, never `mut`) binding in this flow's body.
         allDiags = appendAll(allDiags, checkImmutableReassign(name, fd.body))
         flowCount = flowCount + 1

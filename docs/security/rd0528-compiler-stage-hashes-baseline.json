@@ -18,8 +18,8 @@
       "sha256": "348ddd1657cd91258a4b5a96339ac16294e8f595aee38f1defd365f599a5e041"
     },
     "type-checker": {
-      "bytes": 11369,
-      "sha256": "efc0cbc25d6d068f3ae45d08913f15a4d597db20c5849bf940531f8d9cd7ec60"
+      "bytes": 11956,
+      "sha256": "bbaf35330ca823963f6828ea8024c4b1fb151e5e2d22f383bcc893571225aecb"
     },
     "effect-checker": {
       "bytes": 6206,
