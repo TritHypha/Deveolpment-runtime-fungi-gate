@@ -6181,7 +6181,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 23,
-      "docs": 12
+      "docs": 13
     },
     {
       "code": "FUNGI-PARSE-002",
@@ -9662,7 +9662,7 @@
       "defs": 2,
       "emits": 2,
       "tests": 1,
-      "docs": 4
+      "docs": 5
     },
     {
       "code": "FUNGI-VAULT-005",

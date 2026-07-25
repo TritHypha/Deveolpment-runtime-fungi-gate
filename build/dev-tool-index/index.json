@@ -6,7 +6,7 @@
     "tests": 7876,
     "devTools": 123,
     "auditTools": 75,
-    "toolsInCadence": 55,
+    "toolsInCadence": 56,
     "proofs": 40
   },
   "packages": [
@@ -2101,7 +2101,7 @@
       "category": "generator",
       "purpose": "the ROADMAP as a subway map, generated from live ledgers (owner ask 2026-07-25).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
         "doc-drift"
       ]
