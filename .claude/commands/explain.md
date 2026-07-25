@@ -168,8 +168,9 @@ Explain the code like I'm smart but lazy:
 - **Commit, don't push.** Sir performs the pushes, unless a per-project custody grant says
   otherwise. More than ~30 commits stacked up → *"Sir, ready to push?"*
 - **Explicit pathspecs only** — never `git add -A` / `git add .`; commit what you touched.
-- **Nothing machine-specific ships:** no absolute local paths (`C:\Users\…`, `/home/…`), no
-  secrets, keys, or `.env`. Scan before committing — then encode the scan as a check.
+- **Nothing machine-specific ships:** no absolute local paths (a home-directory or drive-rooted
+  prefix — it leaks identity and breaks on every other machine), no secrets, keys, or `.env`.
+  Scan before committing — then encode the scan as a check.
 - **References point at reality** — never cite a path, package, or name that doesn't exist yet; a
   rename lands *after* its target exists.
 - Keep the number of open branches low.
