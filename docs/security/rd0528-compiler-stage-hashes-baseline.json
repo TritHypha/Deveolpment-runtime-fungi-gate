@@ -2,8 +2,8 @@
   "note": "RD-0528 evidence item (d) baseline — re-derived + gated by scripts/audit-compiler-stage-hashes.mjs. Emitter drift is legitimate; on a drift FAIL, review then re-run --update-baseline (expected) or investigate a .fungi change (unexpected).",
   "stages": {
     "lexer": {
-      "bytes": 6673,
-      "sha256": "2fcf4c7bba3feb82f5abfb37891547a87edb99aa5aa09125ebf60911f9545cd7"
+      "bytes": 6680,
+      "sha256": "dc108a413b48fafae2d66d76b259fa385c626c08f272684c7cf0a6fca4dfab90"
     },
     "parser": {
       "bytes": 18153,

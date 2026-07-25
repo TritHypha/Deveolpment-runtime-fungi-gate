@@ -538,7 +538,11 @@ contract {
   // (`lexer.ts` ONE_CHAR_OPERATORS ∪ SYMBOLS). Any char outside this set (backtick, ^, ~, $,
   // control, non-ASCII) is an "unexpected character" (`.ts` FUNGI-PARSE-001), NOT a Symbol —
   // emitting a Symbol for anything was a fail-open (R&D 0228/0229).
-  let validSingle: Array<String> = ["+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|", "?", "(", ")", "{", "}", "[", "]", ",", ":", ";", ".", "@"]
+  // `_` is the match WILDCARD (a mandatory catch-all arm, G4/FUNGI-TYPE-023). It is not a letter,
+  // so scanWord never takes it; it reaches this fall-through and must be accepted as a Symbol (value
+  // "_"), which the parser reads as the wildcard. Omitting it made the unexpected-char harden reject
+  // every match-with-wildcard program at lex (regression from 74f7d996; nameOf fixture Err'd).
+  let validSingle: Array<String> = ["+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|", "?", "(", ")", "{", "}", "[", "]", ",", ":", ";", ".", "@", "_"]
   mut tokens: Array<Token> = Array.empty()
   mut pos: Int = 0
   mut line: Int = 1

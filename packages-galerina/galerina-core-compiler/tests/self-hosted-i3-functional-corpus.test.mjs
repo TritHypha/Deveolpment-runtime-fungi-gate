@@ -301,7 +301,11 @@ const MUST_FAIL = [
 // stops any of them reaching the type-checker. Each asserts the errors list CONTAINS the expected
 // code (a missing brace legitimately raises two: "no body" + a stray top-level token).
 const MUST_FAIL_PARSE = [
-  { label: "garbage tokens at top level", src: `!!! @@@ ###`, contains: "FUNGI-PARSE-001" },
+  // Tranche-2 tests PARSE rejection, so the input must LEX clean and fail at the parser. The old
+  // `!!! @@@ ###` char-garbage is now caught one stage earlier — the lexer unexpected-char harden
+  // (74f7d996) rejects `#`, so `tokenize` returns Err and parseFlows never runs. `banana garbage
+  // tokens` are valid identifier tokens that are garbage at the top level → FUNGI-PARSE-001.
+  { label: "garbage tokens at top level", src: `banana garbage tokens`, contains: "FUNGI-PARSE-001" },
   { label: "trailing non-grammar token after a valid flow", src: `pure flow f() -> Int { return 1 } zzz`, contains: "FUNGI-PARSE-001" },
   { label: "qualifier not followed by 'flow'", src: `pure zzz f() -> Int { return 1 }`, contains: "FUNGI-PARSE-002" },
   { label: "dangling 'flow' keyword at EOF (no name)", src: `pure flow`, contains: "FUNGI-PARSE-003" },

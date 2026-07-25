@@ -94,9 +94,12 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
     // owner Fork A=TRAP: integer +/-/* now lower to checked-arith helper calls
     // ($fungi_checked_add_i32 / _sub_ / _mul_), which the module also defines — these are
     // DEFINED calls, not undefined ones, so they belong in the allowed set.
+    // isHexDigit + scanUnicodeEscape are the invalid-unicode-escape harden helpers (7a1deb31,
+    // RD-0528 lexer fail-open closure) — DEFINED lexer flows like the scan* family, not undefined
+    // calls; they joined the module when scanString gained `\u{...}` validation.
     const noUndefinedCalls = [...wat.matchAll(/\(call \$([A-Za-z0-9_]+)/g)]
       .map((m) => m[1])
-      .every((c) => c.startsWith("host_") || /^fungi_checked_(add|sub|mul)_i32$/.test(c) || /^(makeKeywordTable|scanWord|scanOperator|scanDigits|scanString|scanCharLit|scanLineComment|scanBlockComment|tokenize)$/.test(c));
+      .every((c) => c.startsWith("host_") || /^fungi_checked_(add|sub|mul)_i32$/.test(c) || /^(makeKeywordTable|scanWord|scanOperator|scanDigits|scanString|scanCharLit|scanLineComment|scanBlockComment|scanUnicodeEscape|isHexDigit|tokenize)$/.test(c));
     assert.equal(noUndefinedCalls, true, "no undefined function calls remain in the lexer");
     const asm = await assembleWAT(wat);
     assert.equal(usedRealWabt(asm), true, "lexer module LINKS + assembles via REAL wabt (no stub fallback)");
