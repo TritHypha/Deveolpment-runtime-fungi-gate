@@ -94,7 +94,12 @@ const EXPECTED = [
   {
     id: "E3-observation-vocabulary-disjoint",
     code: "FUNGI-EFFECT-001", side: "twin-only", witness: "undeclared-use",
-    reason: "The engines disagree about WHAT A BODY DOES before any declaration is compared: the twin's BODY lane derives used effects from its own builtin registry (effectOfCall, effect-checker.fungi:413 — dbRead/dbWrite/auditWrite/...), while Stage-A observes via inferEffectsFromNode (effect-checker.ts:680), which does not know those names (0 hits in effect-checker.ts). On a body calling dbWrite() the twin sees database.write and flags the undeclared use; Stage-A sees nothing and stays silent. Found by this harness's first live run, mechanism verified at source both sides. Resolution belongs to the rework: ONE observation vocabulary, one source of truth.",
+    reason: "The engines disagree about WHAT A BODY DOES before any declaration is compared: the twin's BODY lane derives used effects from its builtin registry (effectOfCall, effect-checker.fungi:413 — 7 BARE identifiers: dbRead/dbWrite/netGet/netPost/readFile/writeFile/auditWrite), while Stage-A observes via inferEffectsFromNode -> EFFECT_CALL_PATTERNS (effect-checker.ts:533 — every pattern requires a DOTTED member shape: OrdersDB.insert, AuditLog.write, fs.read, Env.get...). No call text is both a bare identifier and dotted, so the vocabularies are disjoint BY CONSTRUCTION, not just on sampled names. Twin-vocab direction: dbWrite() -> twin flags the undeclared database.write, Stage-A sees nothing (the fail-open direction). Resolution belongs to the rework: ONE observation vocabulary, one source of truth.",
+  },
+  {
+    id: "E4-lane-split-observable-on-converse-witness",
+    code: "FUNGI-EFFECT-007", side: "twin-only", witness: "converse-vocabulary",
+    reason: "The lane split I wrongly predicted at E2 IS real — it just needs a witness Stage-A can observe. AuditLog.write() matches Stage-A's pattern table, so Stage-A sees audit.write used and stays silent; the twin's effectOfCall cannot map a dotted callee, so its BODY lane derives nothing and its DECL lane emits 007 by charter. E2's refutation and this entry are the same fact seen from the two vocabularies: on twin-vocab sources the split is masked (both emit 007, different causes); on Stage-A-vocab sources it is exposed.",
   },
 ];
 
@@ -112,6 +117,8 @@ const CORPUS = [
     job: "SAME-CODE-DIFFERENT-CAUSE exhibit — both emit 007, the twin from its DECL charter, Stage-A because it never observed auditWrite() (E3's vocabulary gap). Reads as a match; a set diff cannot see cause. Kept as the documented limit of v1." },
   { id: "undeclared-use", src: "secure flow s() -> Int\ncontract { effects { audit.write } } { dbWrite() auditWrite() return 1 }",
     job: "E3 witness — twin BODY lane derives database.write from dbWrite() and flags the undeclared use (001); Stage-A's observer does not know the name and misses it" },
+  { id: "converse-vocabulary", src: "secure flow s() -> Int\ncontract { effects { audit.write } } { AuditLog.write() return 1 }",
+    job: "E4 witness, the converse leg — a Stage-A-vocabulary body: Stage-A observes audit.write via its pattern table and is silent; the twin cannot map the dotted callee, so DECL-charter 007 surfaces alone" },
 ];
 
 // ── self-test: every rule paired with a control that must NOT fire ──────────
