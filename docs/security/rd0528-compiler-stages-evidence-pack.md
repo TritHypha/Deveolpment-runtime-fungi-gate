@@ -32,8 +32,11 @@
 > — keyword + delimiter, **newline-tolerant** (`emergency\n{`) per R&D's 0284 build note — while a bare
 > `emergency`/`parent_policy` used as an effect VALUE stays parity-clean (no false positive). Gate-locked by
 > 4 rows in `tests/self-hosted-parser-failclosed.test.mjs`; parser stage hash re-pinned (`09e1f2d0`→`c81ac75e`);
-> R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). ⚠ **Site #3 (flow-body `trap`/`step`) DEFERRED** —
-> it needs statement-context handling (a flat token scan risks cross-statement false positives); next increment.
+> R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). **Site #3a (flow-body `trap <expr> :`) LANDED** —
+> `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`, newline-tolerant) refuses it fail-closed;
+> proven false-positive-free by a 13/13 probe (bare `trap`, `trap()`, `let trap=5`, `x=trap`, `foo(trap)`,
+> `trap.foo()`, bare-`trap`-then-`let y: Int` all parse clean). ⚠ **Site #3b (`step`) DEFERRED** — no `.ts` oracle
+> (STEP-001 is `.fungi`-only; the `.ts` uses GOV-024) and its surface syntax is unconfirmed; next increment.
 > This is a **parser hardening**, not a flip (parser stays a differential shadow); it is the pre-Tier-2 close of
 > the Q-B fail-open, separable from the gov-verifier Q-A dead-code disposition (owner-gated).
 >

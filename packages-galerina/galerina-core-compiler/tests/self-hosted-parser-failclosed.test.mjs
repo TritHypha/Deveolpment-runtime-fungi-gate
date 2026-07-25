@@ -153,4 +153,20 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     const gd = await pipeline("guard PaymentGuard {\n  permitted_effects {\n    database.write\n  }\n}\n");
     assert.deepEqual(gd.errors, [], "a normal guard parses clean");
   });
+
+  // Site #3: flow-body `trap <expr> :` hardware-trap statement (the .ts parses trapDecl + governs FUNGI-TRAP-001/002).
+  it("FUNGI-PARSE-006: a flow-body `trap <expr> :` hardware-trap statement is refused fail-closed", async () => {
+    const r = await pipeline("pure flow safeDivide(n: Int) -> Int\ncontract { effects {} }\n{\n  trap n == 0 : ERR_DIV_BY_ZERO\n  return n\n}\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: a newline before the trap `:` still refuses (no whitespace bypass)", async () => {
+    const r = await pipeline("pure flow f(n: Int) -> Int\ncontract { effects {} }\n{\n  trap n == 0\n  : ERR_ZERO\n  return n\n}\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: NO false positive — bare `trap` + `let trap=5` + a later `let y: Int` parse clean", async () => {
+    const bare = await pipeline("pure flow f(n: Int) -> Int\ncontract { effects {} }\n{\n  let trap = 5\n  trap\n  let y: Int = 3\n  return n\n}\n");
+    assert.deepEqual(bare.errors, [], "bare trap + a later type-annotation colon is not the trap construct");
+  });
 });

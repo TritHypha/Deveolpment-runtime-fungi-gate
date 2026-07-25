@@ -1563,6 +1563,36 @@ contract {
   return t
 }
 
+// FUNGI-PARSE-006 (Q-B harden site #3, R&D 0284 §5a): a `trap <expr> : ERR_CODE` hardware-trap statement is
+// an UNMODELED governance construct — the .ts compiler parses it into a `trapDecl` (trap-decl.test.mjs) and
+// governs FUNGI-TRAP-001/002, but the self-hosted parser has no production, so `parseStmt` SILENTLY absorbs it
+// as expr-statements (a fail-OPEN, measured main 0283/0285). This scanner detects the CONSTRUCT SHAPE so the
+// flow parser can refuse it fail-closed. Precision (no false positives — measured by the harden probe):
+//   • statement-start only (prev token is a Newline or `{`) — so `foo(trap)`, `x = trap`, `let trap = 5`,
+//     and a `trap` used mid-expression are NOT candidates;
+//   • then PARSE the condition via parseExpr and require a `:` after it (newline-tolerant via skipNewlines) —
+//     so a bare `trap` statement or a `trap(...)` call (no trailing `:`) does NOT match, only `trap <expr> :`.
+pure flow bodyHasTrapConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool
+contract { intent { "True when a `trap <expr> :` hardware-trap statement appears at statement-start in the flow-body range." } }
+{
+  mut i: Int = startPos
+  while i < endPos {
+    if tokVal(tokens, i) == "trap" {
+      mut atStart: Bool = false
+      if i == startPos { atStart = true }
+      if isNewline(tokens, i - 1) { atStart = true }
+      if tokVal(tokens, i - 1) == "{" { atStart = true }
+      if atStart {
+        let ep: ExprParse = parseExpr(tokens, i + 1)
+        let j: Int = skipNewlines(tokens, ep.nextPos)
+        if isOpSym(tokens, j, ":") { return true }
+      }
+    }
+    i = i + 1
+  }
+  return false
+}
+
 pure flow parseFlows(tokens: Array<Token>) -> ParseResult
 contract {
   intent { "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)." }
@@ -2119,6 +2149,12 @@ contract {
           // `%` support (opcodeOf + applyBinop) is future work that touches the flipped gir-emitter.
           if bodyHasModulo(tokens, bodyStart, p) {
             errs = errs.append("FUNGI-PARSE-005: flow '" + flowName + "' uses the '%' (modulo) operator, which the self-hosted parser does not model yet - refused fail-closed (the .ts reference computes it)")
+          }
+          // FUNGI-PARSE-006 (Q-B harden site #3): refuse a `trap <expr> :` hardware-trap statement fail-closed
+          // — the self-hosted parser has no production and would silently absorb it (fail-open); the .ts parses
+          // a trapDecl + verifies FUNGI-TRAP-001/002. bodyHasTrapConstruct is statement-start + shape-precise.
+          if bodyHasTrapConstruct(tokens, bodyStart, p) {
+            errs = errs.append("FUNGI-PARSE-006: flow '" + flowName + "' uses a `trap <expr> :` hardware-trap statement, which the self-hosted parser does not model - refused fail-closed (the .ts reference parses trapDecl + verifies FUNGI-TRAP-001/002)")
           }
         }
         else {
