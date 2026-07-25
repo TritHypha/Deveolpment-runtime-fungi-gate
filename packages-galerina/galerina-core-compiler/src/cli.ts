@@ -30,7 +30,7 @@ import { checkSourceEscapes } from "./source-escape-checker.js";
 import { verifyGovernance } from "./governance-verifier.js";
 import { checkNamingPolicy } from "./naming-policy-checker.js";
 import { checkTaint } from "./taint-checker.js";
-import { checkLint } from "./lint-checker.js";
+import { checkLint, checkUnusedBindings } from "./lint-checker.js";
 import { checkMonkeyPatching, checkMonkeyPatchingSource } from "./monkey-patch-checker.js";
 import { checkAttributeDirectives } from "./attribute-checker.js";
 import { checkProductionReadiness } from "./production-check.js";
@@ -534,6 +534,11 @@ function compileFile(
   // FUNGI-LINT-001: ergonomics lint (excessive nesting) — informational, every mode.
   for (const d of checkLint(parseResult.ast, parseResult.flows)) {
     pushDiag(diagnostics, d.code, d.severity as CliDiagnostic["severity"], d.message, filePath, undefined, undefined);
+  }
+
+  // FUNGI-LINT-002: unused-binding lint (dead local / match binding) — warning, every mode.
+  for (const d of checkUnusedBindings(parseResult.ast, parseResult.flows)) {
+    pushDiag(diagnostics, d.code, d.severity as CliDiagnostic["severity"], d.message, filePath, d.location?.line, d.location?.column);
   }
 
   // Governance verification (for production AND deterministic builds).

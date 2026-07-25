@@ -983,11 +983,14 @@ export {
   FUNGI_TAINT_006,
 } from "./taint-checker.js";
 
-// Lint Checker (FUNGI-LINT-001 EXCESSIVE_NESTING — ergonomics info)
+// Lint Checker (FUNGI-LINT-001 EXCESSIVE_NESTING — ergonomics info; FUNGI-LINT-002 UNUSED_BINDING)
 export {
   checkLint,
   FUNGI_LINT_001,
   type LintDiagnostic,
+  checkUnusedBindings,
+  FUNGI_LINT_002,
+  type UnusedBindingDiagnostic,
 } from "./lint-checker.js";
 
 // Phase 29/33 — Economics Inference (convention over configuration)
