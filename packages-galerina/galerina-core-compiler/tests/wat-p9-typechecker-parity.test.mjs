@@ -52,6 +52,25 @@ contract { intent { "P9 R3 driver: check flow bodies and project flowCount." } }
     Err(e) => { return -1 }
   }
 }
+
+/// R3 driver C — checkFlowBodies; project the DIAGNOSTIC COUNT (R&D bridge 0338).
+/// Drivers A and B project flowCount, so they lock "no trap + same flow count" but are VACUOUS on
+/// EMISSION: a WASM-only silent skip (walk completes, flowCount identical, diagnostic dropped) would
+/// pass them green. That is the exact hole that let the call-arg fail-open ship. This driver makes
+/// emission itself the projected value, so the lock holds by construction rather than by hand-probe.
+pure flow tcDiagCount(src: String) -> Int
+contract { intent { "P9 R3 driver: check flow bodies and project the diagnostic count." } }
+{
+  let res = tokenize(src)
+  match res {
+    Ok(toks) => {
+      let p = parseFlows(toks)
+      let r = checkFlowBodies(p.flows)
+      return r.diagnostics.count()
+    }
+    Err(e) => { return -1 }
+  }
+}
 `;
 
 const SRC = "@version 1\n" + strip("lexer.fungi") + "\n" + strip("parser.fungi") + "\n" + strip("type-checker.fungi") + "\n" + DRIVER;
@@ -140,5 +159,42 @@ describe("P9 R3 · type-checker stage: checkFlowBodies byte-parity (Stage-A inte
     const [i, w] = await Promise.all([runInterp("tcBodyProbe", rich), runWasm("tcBodyProbe", rich)]);
     assert.equal(i, 1, "interpreter must report 1 flow from the body-level check");
     assert.equal(w, i, "WASM agrees");
+  });
+});
+
+// ── EMISSION parity (R&D bridge 0338) ───────────────────────────────────────────
+// The two describes above project flowCount: they lock no-trap, not emission. R&D closed that by
+// hand-probe and asked for a permanent lock; this is it. The three call-bearing rows carry the
+// expectations — a clean call must be SILENT on both backends, and each mismatch must EMIT on both.
+const CALL_OK = 5;      // addok(1,2) — correct call: the silence control
+const CALL_BADTYPE = 6; // greetp(42) — String param, Int literal → FUNGI-TYPE-005
+const CALL_BADARITY = 7;// addp(1,2,3) — 2 params, 3 args   → FUNGI-TYPE-007
+
+describe("P9 R3 · type-checker stage: checkFlowBodies EMISSION parity (diagnostics, not just flowCount)", () => {
+  for (const input of CORPUS) {
+    it(`diagnostic count identical for ${JSON.stringify(input.slice(0, 40))}`, async () => {
+      const [i, w] = await Promise.all([runInterp("tcDiagCount", input), runWasm("tcDiagCount", input)]);
+      assert.equal(w, i, `WASM diagnostic count must equal interpreter for ${JSON.stringify(input.slice(0, 40))}`);
+    });
+  }
+
+  // Equality alone would be satisfied by BOTH backends emitting nothing, so the three call rows carry
+  // measured expectations. Values below were measured through this harness, not assumed.
+  it("non-vacuity: a CORRECT call is silent on BOTH backends (the false-positive control)", async () => {
+    const [i, w] = await Promise.all([runInterp("tcDiagCount", CORPUS[CALL_OK]), runWasm("tcDiagCount", CORPUS[CALL_OK])]);
+    assert.equal(i, 0, "interpreter must not diagnose a correct call");
+    assert.equal(w, 0, "WASM must not diagnose a correct call");
+  });
+
+  it("non-vacuity: an arg-TYPE mismatch EMITS on BOTH backends (not just no-trap)", async () => {
+    const [i, w] = await Promise.all([runInterp("tcDiagCount", CORPUS[CALL_BADTYPE]), runWasm("tcDiagCount", CORPUS[CALL_BADTYPE])]);
+    assert.ok(i >= 1, `interpreter must emit for an arg-type mismatch, got ${i}`);
+    assert.ok(w >= 1, `WASM must emit for an arg-type mismatch, got ${w} — a WASM-only silent skip is the vacuity this row exists to catch`);
+  });
+
+  it("non-vacuity: an arg-COUNT mismatch EMITS on BOTH backends (not just no-trap)", async () => {
+    const [i, w] = await Promise.all([runInterp("tcDiagCount", CORPUS[CALL_BADARITY]), runWasm("tcDiagCount", CORPUS[CALL_BADARITY])]);
+    assert.ok(i >= 1, `interpreter must emit for an arity mismatch, got ${i}`);
+    assert.ok(w >= 1, `WASM must emit for an arity mismatch, got ${w} — a WASM-only silent skip is the vacuity this row exists to catch`);
   });
 });
