@@ -4,9 +4,9 @@
     "packages": 97,
     "testBearing": 96,
     "tests": 7876,
-    "devTools": 122,
+    "devTools": 123,
     "auditTools": 75,
-    "toolsInCadence": 54,
+    "toolsInCadence": 55,
     "proofs": 40
   },
   "packages": [
@@ -1356,7 +1356,7 @@
       "category": "audit",
       "purpose": "the curriculum-wide diagnostics gate.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
         "effects",
         "governance",
@@ -2094,6 +2094,16 @@
         "effects",
         "signing/fusion",
         "governance"
+      ]
+    },
+    {
+      "name": "gen-roadmap-subway.mjs",
+      "category": "generator",
+      "purpose": "the ROADMAP as a subway map, generated from live ledgers (owner ask 2026-07-25).",
+      "selfTest": true,
+      "inCadence": false,
+      "concerns": [
+        "doc-drift"
       ]
     },
     {
@@ -3024,6 +3034,7 @@
       "audit-syntax.mjs",
       "audit-wasm-validate.mjs",
       "fix-logicn-brand.mjs",
+      "gen-roadmap-subway.mjs",
       "gen-status-blocks.mjs",
       "graph-all.mjs",
       "code-index.mjs",
@@ -3284,7 +3295,6 @@
       "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-dss-wasm-build.mjs",
-      "audit-example-diagnostics.mjs",
       "audit-examples-vs-declared.mjs",
       "audit-gate-selftests.mjs",
       "audit-graph-integrity.mjs",
