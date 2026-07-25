@@ -278,6 +278,18 @@ const MUST_PASS = [
   // silent too, mirroring Stage-A's `t !== undefined` conservatism.
   { label: "if true (Bool literal condition) — no TYPE-033", src: `pure flow okc() -> Int { if true { return 1 } return 2 }` },
   { label: "if bare param ref (uninferable condition) — conservative, no TYPE-033", src: `pure flow okd(a: Int) -> Int { if a { return 1 } return 2 }` },
+  // ── CALL-ARG silence controls (2026-07-25) — the other half of the MUST-FAIL call-arg pair. The
+  // arg checks carry FOUR deliberate skip-guards (unknown callee · non-literal arg · unknown type ·
+  // accepted numeric widening); each row below pins one, so an over-eager future change that starts
+  // guessing trips HERE rather than emitting a false positive on real code.
+  { label: "call-arg: correct arity + types -> silent (the base control)", src: `pure flow addk(x: Int, y: Int) -> Int { return x }\npure flow okcall() -> Int { let r: Int = addk(1, 2) return r }` },
+  { label: "call-arg: NON-LITERAL arg (param ref) -> skipped, no TYPE-005", src: `pure flow takesStr(s: String) -> Int { return 1 }\npure flow okcall2(a: Int) -> Int { let r: Int = takesStr(a) return r }` },
+  { label: "call-arg: UNKNOWN callee (not a user flow) -> skipped, no 005/007", src: `pure flow okcall3() -> Int { let r: Int = mysteryHelper(1, 2, 3) return r }` },
+  // NOTE (measured 2026-07-25): the 4th guard (accepted numeric widening) cannot be exercised as a
+  // MUST-PASS row — the twin's isKnownType admits only Int/Bool/String/Array, so a `Float` param is
+  // itself FUNGI-TYPE-001 and the unknown-TYPE guard skips the arg check before widening is ever
+  // consulted. That guard is therefore INERT in the twin's current type vocabulary (kept as
+  // guard-in-depth for when it learns wider numerics). Its MUST-FAIL counterpart is below.
 ];
 
 // Known-bad programs: the self-hosted type-checker MUST reject, with this exact diagnostic.
@@ -292,6 +304,20 @@ const MUST_FAIL = [
   // condition MUST emit; the Bool-literal + compare controls in MUST_PASS below MUST stay silent.
   { label: "if branches on an Int literal (non-Bool condition)", src: `pure flow bad7() -> Int { if 42 { return 1 } return 2 }`, expect: { code: "FUNGI-TYPE-033", flowName: "bad7" } },
   { label: "while branches on a String literal (non-Bool condition)", src: `pure flow bad8() -> Int { while "x" { return 1 } return 2 }`, expect: { code: "FUNGI-TYPE-033", flowName: "bad8" } },
+  // ── CALL-ARG rows (2026-07-25) — the corpus gap that let a FAIL-OPEN ship in an AUTHORITATIVE stage.
+  // The type-checker was flipped 07-23 with NO arg-mismatch input anywhere in the R3/i3 corpus, so the
+  // twin silently accepted call-arg-type and arg-count errors Stage-A rejects (measured both-engines by
+  // main, bridges 0327/0329, independently reproduced by R&D 0326 which retracted its "not a fail-open"
+  // read). Fixed by checkCallArgTypes/checkCallArity (5553528f + 4e962a17); these rows PIN it so the
+  // regression cannot re-enter silently. Generalised precondition: a stage's corpus must exercise every
+  // code its .ts twin emits live — otherwise a flip can bless an under-checking twin.
+  { label: "call-arg TYPE: Int literal passed where String declared", src: `pure flow greet(name: String) -> Int { return 1 }\npure flow caller() -> Int { let r: Int = greet(42) return r }`, expect: { code: "FUNGI-TYPE-005", flowName: "caller" } },
+  { label: "call-arg COUNT: 3 args passed to a 2-param flow", src: `pure flow add(x: Int, y: Int) -> Int { return x }\npure flow caller2() -> Int { let r: Int = add(1, 2, 3) return r }`, expect: { code: "FUNGI-TYPE-007", flowName: "caller2" } },
+  { label: "call-arg COUNT: 1 arg passed to a 2-param flow (too FEW, not just too many)", src: `pure flow add2(x: Int, y: Int) -> Int { return x }\npure flow caller3() -> Int { let r: Int = add2(1) return r }`, expect: { code: "FUNGI-TYPE-007", flowName: "caller3" } },
+  // The 4th skip-guard's reachable half: a param of a type the twin does not know is FUNGI-TYPE-001,
+  // and that unknown-TYPE guard fires BEFORE the arg check — so the widening branch is inert in the
+  // twin's current vocabulary (Int/Bool/String/Array only). Pins which check owns this program.
+  { label: "call-arg: param of an unknown type -> TYPE-001 owns it (arg check skips, no spurious 005)", src: `pure flow takesF(f: Float) -> Int { return 1 }\npure flow caller4() -> Int { let r: Int = takesF(42) return r }`, expect: { code: "FUNGI-TYPE-001", flowName: "takesF" } },
 ];
 
 // Tranche 2 — parse-correctness. Malformed programs the self-hosted PARSER must reject with a
