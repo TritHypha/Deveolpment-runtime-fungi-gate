@@ -327,23 +327,26 @@ describe("RD-0528 edge-differential — ESCAPE VALUES: symmetric pass-through (b
   }
 });
 
-describe("RD-0528 edge-differential — ESCAPE VALUES: \\u is ASYMMETRIC (CHARACTERIZATION, measured not blessed)", () => {
-  it("\\u0041 — .ts DECODES to 'A' (1 char); the authoritative twin keeps the raw 6 chars", async () => {
+// FLIPPED from characterization to PARITY (RD-0528 increment-1). These two rows previously pinned a
+// measured DIVERGENCE — `.ts` decoded `\u` while the authoritative twin kept the raw text — and their
+// own failure messages said to convert them the day it closed. It closed: the owner ruled DECODE with
+// UTF-16 length semantics, and the twin now decodes in scanString. Equality is the assertion now.
+describe("RD-0528 edge-differential — ESCAPE VALUES: \\u is now PARITY (was a pinned divergence)", () => {
+  it("\\u0041 — BOTH sides decode to 'A'", async () => {
     const lit = `${BS}u0041`;
     const ts = tsLiteralValue(lit);
     const fu = await fungiLiteralValue(lit);
     assert.equal(ts, "A", `.ts must decode \\u0041, got ${JSON.stringify(ts)}`);
-    assert.equal(fu, `${BS}u0041`, `.fungi must still keep rawText, got ${JSON.stringify(fu)}`);
-    assert.notEqual(ts, fu, "the divergence this row exists to pin has vanished — convert to a parity assertion");
+    assert.equal(fu, ts, `the twin must now AGREE with the reference, got ${JSON.stringify(fu)}`);
   });
 
-  it("\\u{1F600} — .ts DECODES to the astral char (length 2, UTF-16); the twin keeps the raw 9 chars", async () => {
+  it("\\u{1F600} — BOTH sides decode to the astral char at UTF-16 length 2", async () => {
     const lit = `${BS}u{1F600}`;
     const ts = tsLiteralValue(lit);
     const fu = await fungiLiteralValue(lit);
     assert.equal(ts.length, 2, `.ts astral decode is UTF-16 surrogate-pair (length 2), got ${ts.length}`);
-    assert.equal(fu, `${BS}u{1F600}`, `.fungi must still keep rawText, got ${JSON.stringify(fu)}`);
-    assert.notEqual(ts, fu, "the divergence this row exists to pin has vanished — convert to a parity assertion");
+    assert.equal(fu, ts, `the twin must now AGREE with the reference, got ${JSON.stringify(fu)}`);
+    assert.equal(fu.length, 2, "and at the SAME length — code-point semantics (1) would be a divergence");
   });
 
   it("non-vacuity: the twin still REJECTS an invalid \\u fail-closed, so validity parity is intact", async () => {

@@ -94,13 +94,21 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
     // owner Fork A=TRAP: integer +/-/* now lower to checked-arith helper calls
     // ($fungi_checked_add_i32 / _sub_ / _mul_), which the module also defines — these are
     // DEFINED calls, not undefined ones, so they belong in the allowed set.
-    // isHexDigit + scanUnicodeEscape are the invalid-unicode-escape harden helpers (7a1deb31,
-    // RD-0528 lexer fail-open closure) — DEFINED lexer flows like the scan* family, not undefined
-    // calls; they joined the module when scanString gained `\u{...}` validation.
-    const noUndefinedCalls = [...wat.matchAll(/\(call \$([A-Za-z0-9_]+)/g)]
-      .map((m) => m[1])
-      .every((c) => c.startsWith("host_") || /^fungi_checked_(add|sub|mul)_i32$/.test(c) || /^(makeKeywordTable|scanWord|scanOperator|scanDigits|scanString|scanCharLit|scanLineComment|scanBlockComment|scanUnicodeEscape|isHexDigit|tokenize)$/.test(c));
-    assert.equal(noUndefinedCalls, true, "no undefined function calls remain in the lexer");
+    // The defined-name set is DERIVED from the module, not hand-listed (2026-07-25). It used to be a
+    // literal alternation of flow names, which had to be edited by hand every time a legitimate new
+    // flow joined the module — isHexDigit/scanUnicodeEscape were appended that way when scanString
+    // gained `\u{...}` validation, and hexToInt tripped it again when scanString gained decoding.
+    // That made the check "is this name on my list?" rather than "is this call defined?": a genuinely
+    // undefined call and a newly-added legitimate flow were indistinguishable, and the only way to
+    // green it was to add a name — which is exactly how a real undefined call would have been waved
+    // through. Now every `(func $x` — whether an imported bridge or a defined flow — enters the set,
+    // so the assertion tests the property it names and needs no maintenance.
+    const defined = new Set([...wat.matchAll(/\(func \$([A-Za-z0-9_]+)/g)].map((m) => m[1]));
+    assert.ok(defined.size > 5, `the defined-name scan must find the module's functions, got ${defined.size}`);
+    const called = [...wat.matchAll(/\(call \$([A-Za-z0-9_]+)/g)].map((m) => m[1]);
+    assert.ok(called.length > 0, "the call scan must find calls — an empty set would pass vacuously");
+    const undefinedCalls = [...new Set(called.filter((c) => !defined.has(c)))];
+    assert.deepEqual(undefinedCalls, [], `undefined function call(s) in the lexer: ${undefinedCalls.join(", ")}`);
     const asm = await assembleWAT(wat);
     assert.equal(usedRealWabt(asm), true, "lexer module LINKS + assembles via REAL wabt (no stub fallback)");
     assert.equal(asm.wasm[0], 0x00); assert.equal(asm.wasm[1], 0x61); // \0asm magic header

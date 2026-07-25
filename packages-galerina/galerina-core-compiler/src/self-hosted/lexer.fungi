@@ -208,6 +208,36 @@ contract { intent { "Return true iff c is a hexadecimal digit (0-9, a-f, A-F)." 
   return false
 }
 
+// Fold a validated \u escape body to its code point (RD-0528 increment-1, owner-ruled decode).
+// Input is scanUnicodeEscape's rawText — either `{H...}` (brace form) or `HHHH` (fixed form) — so
+// braces are skipped rather than parsed: this runs ONLY on a body scanUnicodeEscape already returned
+// valid("1"), which guarantees 1-6 hex digits in range for the brace form and exactly 4 for the fixed
+// one. Non-hex characters are skipped for the same reason (they cannot occur in a validated body);
+// the fold is deliberately total rather than fallible, because the REFUSAL already happened upstream
+// and duplicating it here would be a second, divergeable copy of the same rule.
+pure flow hexToInt(text: String) -> Int
+contract { intent { "Fold a validated hex escape body (braces optional) to its integer code point." } }
+{
+  mut acc: Int = 0
+  mut i: Int = 0
+  let n: Int = text.charCount()      // String length is charCount() here; count() is the ARRAY method
+  while i < n {
+    let opt: Option<Char> = text.charAt(i)
+    match opt {
+      None => { i = n }
+      Some(c) => {
+        let p: Int = c.codePoint()
+        if p >= 48 and p <= 57  { acc = acc * 16 + (p - 48) }        // 0-9
+        if p >= 97 and p <= 102 { acc = acc * 16 + (p - 87) }        // a-f  (97 - 10)
+        if p >= 65 and p <= 70  { acc = acc * 16 + (p - 55) }        // A-F  (65 - 10)
+        i = i + 1
+      }
+      _ => { i = n }
+    }
+  }
+  return acc
+}
+
 // Validate a \u escape whose `\u` is already consumed; `pos` points at the char AFTER `\u`.
 // Returns [endPos, valid("1"/"0"), rawText]. Fail-CLOSED, mirroring lexer.ts:534-604 (FUNGI-LEX-003):
 //   brace  \u{H}  valid iff H is 1-6 hex digits AND codepoint <= 0x10FFFF;
@@ -326,25 +356,38 @@ contract {
       }
       Some(nc) => {
         if nc.codePoint() == 92 {
-          // backslash escape: keep it + the following char; \u escapes are VALIDATED (R&D 0246).
-          value = value + nc.toString()
+          // Backslash escape. `\u` is DECODED to its character (owner ruling 2026-07-25, RD-0528
+          // increment-1); every OTHER escape stays pass-through, backslash retained — which is
+          // SYMMETRIC with lexer.ts:601 and therefore not a divergence. Deliberately scoped: making
+          // `\n \t \\ \"` decode too is increment-2, a both-twins change where `.ts` moves first.
+          // NOTE the prefix is no longer appended eagerly — a decoded `\u` must contribute neither
+          // the backslash nor the 'u', so nothing is emitted until the escape kind is known.
           i = i + 1
           let opt2: Option<Char> = source.charAt(i)
           match opt2 {
             None => {
+              value = value + nc.toString()      // trailing lone backslash: keep it, then EOF
               done = true
             }
             Some(ec) => {
-              value = value + ec.toString()
               i = i + 1
-              if ec.codePoint() == 117 {   // 'u' — validate the unicode escape body
+              if ec.codePoint() == 117 {   // 'u' — validate, then DECODE the unicode escape body
                 let esc: Array<String> = scanUnicodeEscape(source, i, srcLen)   // [endPos, valid, rawText]
-                value = value + esc.get(2).unwrapOr("")
+                let raw: String = esc.get(2).unwrapOr("")
                 i = esc.first().unwrapOr(i.toString()).toInt().unwrapOr(i)
                 if esc.get(1).unwrapOr("0") == "0" {
+                  // INVALID escape: fail-CLOSED exactly as before (R&D 0246). The raw text is kept
+                  // so the erroring literal still reports what was written.
+                  value = value + nc.toString() + ec.toString() + raw
                   escErr = "1"
                   done = true
                 }
+                else {
+                  value = value + Char.fromCode(hexToInt(raw)).toString()
+                }
+              }
+              else {
+                value = value + nc.toString() + ec.toString()   // pass-through, backslash retained
               }
             }
             _ => {
