@@ -317,6 +317,16 @@ function model() {
 // subject; line-ending churn is not.
 const stripProvenance = (s) => (s ?? "").replace(/\r\n/g, "\n").replace(/^<sub>generated from.*$/m, "<sub>PROVENANCE</sub>");
 
+// One pure classifier for a target's state (R&D 0424, equivalence-proven 4/4 against the inline loop
+// before adoption). Extracted so the ABSENCE path is drivable by the self-test — it was the one branch
+// proven only by a one-off manual drive, which is not a repeatable proof.
+export function classifyTarget(abs, block) {
+  if (!existsSync(abs)) return "gone-missing";
+  const cur = currentBlock(readFileSync(abs, "utf8"));
+  if (cur === null) return "gone-unmarked";
+  return stripProvenance(cur) !== stripProvenance(block) ? "stale" : "ok";
+}
+
 const injectBlock = (text, block) => {
   const b = text.indexOf(BEGIN), e = text.indexOf(END);
   return b < 0 || e < 0 ? null : text.slice(0, b) + block + text.slice(e + END.length);
@@ -369,6 +379,29 @@ if (process.argv.includes("--self-test")) {
     "★ DRIVEN: a DATA difference still fires through the normalization — ignoring provenance did not neuter the gate");
   ok(stripProvenance(block.replace(/\n/g, "\r\n")) === stripProvenance(block),
     "★ DRIVEN: a CRLF-only difference (git autocrlf on checkout) is NOT drift");
+  // ABSENCE PATH, driven (R&D 0424): four classifier outcomes against fixtures built from the REAL
+  // README target — so "ok" is a genuine positive, not a straw one. The stale fixture asserts its own
+  // validity first (R&D's v1 fixture mutated a % OUTSIDE the block and nearly reported a false miss):
+  // a synthetic bad input has to actually be bad.
+  {
+    const { writeFileSync: wf, rmSync, mkdtempSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const dir = mkdtempSync(join(tmpdir(), "subway-absence-"));
+    const real = readFileSync(join(ROOT, "README.md"), "utf8");
+    const okPath = join(dir, "ok.md"); wf(okPath, real);
+    const unmarkedPath = join(dir, "unmarked.md"); wf(unmarkedPath, real.replace(BEGIN, "").replace(END, ""));
+    const b = real.indexOf(BEGIN), e = real.indexOf(END) + END.length;
+    const staleBody = real.slice(0, b) + real.slice(b, e).replace(/\d+%/, "999%") + real.slice(e);
+    ok(currentBlock(staleBody) !== currentBlock(real), "★ fixture validity: the stale mutation changed the BLOCK (not some % outside it)");
+    const stalePath = join(dir, "stale.md"); wf(stalePath, staleBody);
+    const liveBlock = currentBlock(real); // classify against the doc's own block so "ok" is exact
+    ok(classifyTarget(join(dir, "no-such-file.md"), liveBlock) === "gone-missing", "★ DRIVEN: a missing target classifies gone-missing");
+    ok(classifyTarget(unmarkedPath, liveBlock) === "gone-unmarked", "★ DRIVEN: stripped markers classify gone-unmarked");
+    ok(classifyTarget(stalePath, liveBlock) === "stale", "★ DRIVEN: an in-block data change classifies stale");
+    ok(classifyTarget(okPath, liveBlock) === "ok", "★ DRIVEN: the unchanged real doc classifies ok — the non-vacuity leg (a classifier failing everything would pass the other three)");
+    rmSync(dir, { recursive: true, force: true });
+  }
+
   // COMPLETENESS (owner catch): every tracking-registry workstream must appear in BOTH outputs — the v1
   // map dropped the whole section and nothing noticed. Checked against the SOURCE count, not a typed one.
   ok(m.meta.registry.length > 0 && m.meta.registry.every((r) => block.includes(`registry (${m.meta.registry.length})`) && svg.includes(esc(r.item))),
@@ -388,11 +421,10 @@ if (process.argv.includes("--check")) {
   // a member leaving must be an event, not a skip. Seeding a brand-new target is --write's job.
   const stale = [], gone = [];
   for (const rel of TARGETS) {
-    const abs = join(ROOT, rel);
-    if (!existsSync(abs)) { gone.push(`${rel} (file MISSING)`); continue; }
-    const cur = currentBlock(readFileSync(abs, "utf8"));
-    if (cur === null) { gone.push(`${rel} (SUBWAY markers REMOVED)`); continue; }
-    if (stripProvenance(cur) !== stripProvenance(block)) stale.push(rel);
+    const verdict = classifyTarget(join(ROOT, rel), block);
+    if (verdict === "gone-missing") gone.push(`${rel} (file MISSING)`);
+    else if (verdict === "gone-unmarked") gone.push(`${rel} (SUBWAY markers REMOVED)`);
+    else if (verdict === "stale") stale.push(rel);
   }
   if (gone.length || stale.length) {
     for (const g of gone) console.error(`  ❌ roadmap-drift: ${g} — a target leaving the set is a failure, not a skip`);
