@@ -123,4 +123,34 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     const r = await pipeline("qqq www eee\n");
     assert.equal(r.errors.length, 1, JSON.stringify(r.errors));
   });
+
+  // ── FUNGI-PARSE-006: unmodeled governance sub-constructs refused fail-closed (Q-B harden, R&D 0284 §5a) ──
+  // The self-hosted parser has no production for a policy `emergency {}` transition or a guard
+  // `parent_policy:` inheritance annotation. It silently DROPPED them — a governance fail-open: a program
+  // the .ts REJECTS (FUNGI-MONO-001 / FUNGI-INHERIT-001) parsed CLEAN in the twin (main 0283/0293, R&D
+  // 0270/0274/0284). The twin now REFUSES the construct SHAPE (keyword + delimiter, newline-tolerant),
+  // while a bare `emergency`/`parent_policy` used as an effect VALUE stays parity-clean (no false positive).
+  it("FUNGI-PARSE-006: a policy `emergency {}` transition block is refused fail-closed", async () => {
+    const r = await pipeline("policy { emergency { on invariant_failure { allow network.outbound } } }\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: a newline before the `emergency {` brace still refuses (no whitespace bypass)", async () => {
+    const r = await pipeline("policy { emergency\n{ on invariant_failure { allow network.outbound } } }\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: a guard `parent_policy:` inheritance annotation is refused fail-closed", async () => {
+    const r = await pipeline("guard ChildGuard {\n  parent_policy: NonExistentParent\n  permitted_effects {\n    database.read\n  }\n}\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: NO false positive — `emergency`/`parent_policy` as effect VALUES parse clean", async () => {
+    const em = await pipeline("policy P {\n  permitted_effects {\n    emergency\n  }\n}\n");
+    assert.deepEqual(em.errors, [], "emergency as an effect value is not the construct");
+    const pp = await pipeline("policy P {\n  permitted_effects {\n    parent_policy\n  }\n}\n");
+    assert.deepEqual(pp.errors, [], "parent_policy as an effect value is not the construct");
+    const gd = await pipeline("guard PaymentGuard {\n  permitted_effects {\n    database.write\n  }\n}\n");
+    assert.deepEqual(gd.errors, [], "a normal guard parses clean");
+  });
 });

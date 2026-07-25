@@ -1652,6 +1652,20 @@ contract {
             polDepth = polDepth - 1
             if polDepth == 0 { pp = pp + 1 }
           }
+          // FUNGI-PARSE-006 (Q-B harden, R&D 0284 §5a): a policy body declaring an `emergency {}`
+          // transition block is an UNMODELED governance construct (no self-hosted parser production).
+          // Left unhandled the block is SILENTLY dropped — a fail-OPEN: a program the .ts REJECTS with
+          // FUNGI-MONO-001 (emergency monotonicity) parses CLEAN in the twin (measured, R&D 0270/0274).
+          // Refuse the CONSTRUCT SHAPE fail-closed: keyword `emergency` followed (skipping newlines, since
+          // `emergency\n{` is the same construct) by `{`. A bare `emergency` used as an effect VALUE inside
+          // permitted_effects is NOT followed by `{` (it is `}`/`,`/newline), so it stays parity-clean.
+          if polDepth == 1 and pv == "emergency" {
+            mut epk: Int = pp + 1
+            while isNewline(tokens, epk) { epk = epk + 1 }
+            if tokVal(tokens, epk) == "{" {
+              errs = errs.append("FUNGI-PARSE-006: policy declares an `emergency {}` transition block, which the self-hosted parser does not model - refused fail-closed (the .ts reference verifies FUNGI-MONO-001 emergency monotonicity)")
+            }
+          }
           // Extract permitted_effects { e1, e2 }
           if polDepth == 1 and pv == "permitted_effects" {
             pp = pp + 1
@@ -1729,6 +1743,20 @@ contract {
           if gv == "}" {
             gDepth = gDepth - 1
             if gDepth == 0 { gp = gp + 1 }
+          }
+          // FUNGI-PARSE-006 (Q-B harden, R&D 0284 §5a): a guard body declaring a `parent_policy:` inheritance
+          // annotation is an UNMODELED governance construct (GuardDecl carries no parent field). Left unhandled
+          // it is SILENTLY dropped — a fail-OPEN: a program the .ts REJECTS with FUNGI-INHERIT-001 (parent
+          // resolution / subset) parses CLEAN in the twin (measured, main 0293 / R&D 0284). Refuse the CONSTRUCT
+          // SHAPE fail-closed: keyword `parent_policy` followed (skipping newlines) by `:`. A bare `parent_policy`
+          // used as an effect VALUE is a `name`/`name.sub`, never `name:`, so the `:` uniquely marks the
+          // annotation and effect values stay parity-clean.
+          if gDepth == 1 and gv == "parent_policy" {
+            mut gpk: Int = gp + 1
+            while isNewline(tokens, gpk) { gpk = gpk + 1 }
+            if isOpSym(tokens, gpk, ":") {
+              errs = errs.append("FUNGI-PARSE-006: guard declares a `parent_policy:` inheritance annotation, which the self-hosted parser does not model - refused fail-closed (the .ts reference verifies FUNGI-INHERIT-001/002 hierarchy subset)")
+            }
           }
           if gDepth == 1 and gv == "permitted_effects" {
             gp = gp + 1

@@ -23,6 +23,20 @@
 > only the "NOT flip-ready / none askable / twins stays empty" conclusions are superseded. (Dated 2026-07-22
 > body preserved verbatim for provenance.)
 
+> ## ★ ADDENDUM 2026-07-25 — Q-B parser fail-closed harden: FUNGI-PARSE-006 (R&D 0284 §5a)
+>
+> The self-hosted **parser** silently DROPPED two unmodeled governance constructs — a policy `emergency {}`
+> transition block and a guard `parent_policy:` inheritance annotation — a governance **fail-open**: a program
+> the `.ts` REJECTS (`FUNGI-MONO-001` / `FUNGI-INHERIT-001`) parsed **clean** in the twin (measured, main
+> 0283/0293 · R&D 0270/0274). `parser.fungi` now REFUSES the construct SHAPE fail-closed via **FUNGI-PARSE-006**
+> — keyword + delimiter, **newline-tolerant** (`emergency\n{`) per R&D's 0284 build note — while a bare
+> `emergency`/`parent_policy` used as an effect VALUE stays parity-clean (no false positive). Gate-locked by
+> 4 rows in `tests/self-hosted-parser-failclosed.test.mjs`; parser stage hash re-pinned (`09e1f2d0`→`c81ac75e`);
+> R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). ⚠ **Site #3 (flow-body `trap`/`step`) DEFERRED** —
+> it needs statement-context handling (a flat token scan risks cross-statement false positives); next increment.
+> This is a **parser hardening**, not a flip (parser stays a differential shadow); it is the pre-Tier-2 close of
+> the Q-B fail-open, separable from the gov-verifier Q-A dead-code disposition (owner-gated).
+>
 > ## ★ ADDENDUM 2026-07-25 — the self-hosted twin's INTERPRETED-SUBSET operator boundary (R&D 0256/0258/0260/0262)
 >
 > The `.fungi` self-hosted twin implements a **subset** of the operators the `.ts` compiler supports, and the
