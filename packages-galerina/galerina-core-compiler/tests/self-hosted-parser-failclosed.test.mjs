@@ -88,6 +88,21 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     assert.match(r.errors[0], /^FUNGI-PARSE-003/);
   });
 
+  it("FUNGI-PARSE-003: an unterminated flow BODY block (EOF before `}`) errors", async () => {
+    // The last fail-open class: parseBlock previously returned silently on EOF, so a
+    // truncated flow body parsed "clean" and the incomplete flow was accepted. The
+    // BlockParse.closed signal now makes the missing `}` un-consumable (RD-0528).
+    const r = await pipeline("pure flow f() -> Int {\n  return 1\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-003")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-003: an unterminated nested block inside a flow body errors", async () => {
+    // Nested unterminated (`if {` with no closing `}`) runs the inner parseBlock to EOF;
+    // the outer flow-body block is then also unclosed, so the error still surfaces.
+    const r = await pipeline("pure flow f(x: Int) -> Int {\n  if x {\n    return 1\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-003")), JSON.stringify(r.errors));
+  });
+
   it("FUNGI-PARSE-004: a flow header with no body block errors", async () => {
     const r = await pipeline("flow f(a: Int) -> Int\n");
     assert.equal(r.errors.length, 1);

@@ -71,7 +71,10 @@ record Stmt {
 }
 
 record StmtParse { stmt: Stmt, nextPos: Int }
-record BlockParse { stmts: Array<Stmt>, nextPos: Int }
+// `closed` distinguishes a block that ended on its matching `}` (true) from one that
+// ran off the end of the token stream unterminated (false). The flow-body caller reads
+// it to raise FUNGI-PARSE-003 so an unclosed body can no longer be silently accepted.
+record BlockParse { stmts: Array<Stmt>, nextPos: Int, closed: Bool }
 
 // A decomposed return expression â€” Phase S6 bridge to the self-hosted
 // type-checker.fungi and gir-emitter.fungi, which both consume exactly this shape.
@@ -1290,7 +1293,7 @@ contract { intent { "Parse one statement; dispatch on the leading token kind/val
     while isNewline(tokens, p) {
       p = p + 1
     }
-    mut blk: BlockParse = { stmts: Array.empty(), nextPos: p }
+    mut blk: BlockParse = { stmts: Array.empty(), nextPos: p, closed: true }
     if isOpSym(tokens, p, "{") {
       blk = parseBlock(tokens, p + 1)
     }
@@ -1330,7 +1333,7 @@ contract { intent { "Parse one statement; dispatch on the leading token kind/val
     while isNewline(tokens, p) {
       p = p + 1
     }
-    mut blk: BlockParse = { stmts: Array.empty(), nextPos: p }
+    mut blk: BlockParse = { stmts: Array.empty(), nextPos: p, closed: true }
     if isOpSym(tokens, p, "{") {
       blk = parseBlock(tokens, p + 1)
     }
@@ -1428,6 +1431,9 @@ contract { intent { "Parse statements until the matching closing brace; skip new
   mut p: Int = pos
   let total: Int = tokens.count()
   mut scanning: Bool = true
+  // Only a matching `}` sets this true; every other exit (EOF token, or the cursor
+  // running past the end) leaves it false so the caller can detect an unterminated block.
+  mut closed: Bool = false
 
   while p < total and scanning {
     if isNewline(tokens, p) {
@@ -1437,6 +1443,7 @@ contract { intent { "Parse statements until the matching closing brace; skip new
       if isOpSym(tokens, p, "}") {
         p = p + 1
         scanning = false
+        closed = true
       }
       else {
         if tokVal(tokens, p) == "" {
@@ -1455,7 +1462,7 @@ contract { intent { "Parse statements until the matching closing brace; skip new
     }
   }
 
-  return { stmts: stmts, nextPos: p }
+  return { stmts: stmts, nextPos: p, closed: closed }
 }
 
 // Scan a brace-balanced body (from startPos, just past the opening "{") for the
@@ -2053,6 +2060,12 @@ contract {
           let blk: BlockParse = parseBlock(tokens, p + 1)
           bodyStmts = blk.stmts
           p = blk.nextPos
+          // FUNGI-PARSE-003: the body opened with `{` but the token stream ended before its
+          // matching `}`. Previously parseBlock returned silently on EOF (fail-open) and the
+          // truncated flow was accepted; the error now makes it un-consumable to the drivers.
+          if blk.closed == false {
+            errs = errs.append("FUNGI-PARSE-003: flow '" + flowName + "' body block not closed ('}' expected)")
+          }
         }
         else {
           // FUNGI-PARSE-004 (R&D 0050 class): a flow HEADER parsed but no `{` body block follows.
