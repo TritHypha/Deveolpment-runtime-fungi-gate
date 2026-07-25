@@ -32,11 +32,14 @@
 > — keyword + delimiter, **newline-tolerant** (`emergency\n{`) per R&D's 0284 build note — while a bare
 > `emergency`/`parent_policy` used as an effect VALUE stays parity-clean (no false positive). Gate-locked by
 > 4 rows in `tests/self-hosted-parser-failclosed.test.mjs`; parser stage hash re-pinned (`09e1f2d0`→`c81ac75e`);
-> R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). **Site #3a (flow-body `trap <expr> :`) LANDED** —
-> `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`, newline-tolerant) refuses it fail-closed;
-> proven false-positive-free by a 13/13 probe (bare `trap`, `trap()`, `let trap=5`, `x=trap`, `foo(trap)`,
-> `trap.foo()`, bare-`trap`-then-`let y: Int` all parse clean). ⚠ **Site #3b (`step`) DEFERRED** — no `.ts` oracle
-> (STEP-001 is `.fungi`-only; the `.ts` uses GOV-024) and its surface syntax is unconfirmed; next increment.
+> R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). **Site #3a (`trap <expr> :`) + #3b (`step <flowName>(`)
+> LANDED** — `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`) and `bodyHasStepConstruct`
+> (`step`+ident+`(` shape), both newline-tolerant, refuse fail-closed. False-positive-free by probes (trap 13/13,
+> step 9/9): bare `trap`/`step`, `trap()`/`step()`, `step.foo()`, `let trap/step=5`, args, `trap.foo()`,
+> bare-`trap`-then-`let y: Int` all parse clean. The `step` construct HAS a `.ts` oracle after all — `parser.ts:2522`
+> parses `step <name>(args)` into a `step:` callExpr the `.ts` governance-verifier flags **GOV-024** (my 0297
+> "no oracle" was imprecise: STEP-001 the *code* is `.fungi`-only, but the *construct* is `.ts`-live via GOV-024).
+> ⟹ **Q-B COMPLETE**: all 4 unmodeled governance constructs (emergency · parent_policy · trap · step) refused fail-closed.
 > This is a **parser hardening**, not a flip (parser stays a differential shadow); it is the pre-Tier-2 close of
 > the Q-B fail-open, separable from the gov-verifier Q-A dead-code disposition (owner-gated).
 >

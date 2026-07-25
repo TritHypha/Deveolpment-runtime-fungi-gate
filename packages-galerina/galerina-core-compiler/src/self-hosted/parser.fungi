@@ -1593,6 +1593,31 @@ contract { intent { "True when a `trap <expr> :` hardware-trap statement appears
   return false
 }
 
+// FUNGI-PARSE-006 (Q-B harden site #3b): a `step <flowName>(args)` DWI-isolate call is an UNMODELED governance
+// construct — the .ts parser (`parser.ts:2522-2532`) recognises `step` + a flow-name identifier + `(` and emits a
+// `callExpr` valued `step:<name>`, which the .ts governance-verifier flags GOV-024 (SANDBOX_REQUIRED, error in
+// production/deterministic). The self-hosted parser has no production: `parseStmt` reads `step` as a bare identifier
+// and drops the construct (a fail-OPEN — a program the .ts governs would pass clean in the twin). Refuse the SHAPE
+// fail-closed: keyword `step` + an identifier + `(` (newline-tolerant). Precision: a bare `step`, `let step = 5`,
+// `step.foo()` (`.` not an ident), and `step(args)` (a call to `step` — no intervening flow-name) all lack the
+// `step <ident> (` shape, so they stay parity-clean — matching the .ts, which only treats that exact shape as `step`.
+pure flow bodyHasStepConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool
+contract { intent { "True when a `step <flowName>(` DWI-isolate call appears in the flow-body range." } }
+{
+  mut i: Int = startPos
+  while i < endPos {
+    if tokVal(tokens, i) == "step" {
+      let j: Int = skipNewlines(tokens, i + 1)
+      if isIdent(tokens, j) {
+        let k: Int = skipNewlines(tokens, j + 1)
+        if tokVal(tokens, k) == "(" { return true }
+      }
+    }
+    i = i + 1
+  }
+  return false
+}
+
 pure flow parseFlows(tokens: Array<Token>) -> ParseResult
 contract {
   intent { "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)." }
@@ -2155,6 +2180,12 @@ contract {
           // a trapDecl + verifies FUNGI-TRAP-001/002. bodyHasTrapConstruct is statement-start + shape-precise.
           if bodyHasTrapConstruct(tokens, bodyStart, p) {
             errs = errs.append("FUNGI-PARSE-006: flow '" + flowName + "' uses a `trap <expr> :` hardware-trap statement, which the self-hosted parser does not model - refused fail-closed (the .ts reference parses trapDecl + verifies FUNGI-TRAP-001/002)")
+          }
+          // FUNGI-PARSE-006 (Q-B harden site #3b): refuse a `step <flowName>(args)` DWI-isolate call fail-closed
+          // — unmodeled by the self-hosted parser (dropped, fail-open); the .ts parses a `step:` callExpr + the
+          // governance-verifier flags GOV-024 (sandbox required). bodyHasStepConstruct is `step`+ident+`(` shape-precise.
+          if bodyHasStepConstruct(tokens, bodyStart, p) {
+            errs = errs.append("FUNGI-PARSE-006: flow '" + flowName + "' uses a `step <flowName>(...)` DWI-isolate call, which the self-hosted parser does not model - refused fail-closed (the .ts reference emits a step callExpr + verifies FUNGI-GOV-024 sandbox)")
           }
         }
         else {

@@ -6,8 +6,8 @@
       "sha256": "dc108a413b48fafae2d66d76b259fa385c626c08f272684c7cf0a6fca4dfab90"
     },
     "parser": {
-      "bytes": 18669,
-      "sha256": "a1639c7a56fb8fe4f8c54692f6195ef5930d17ba862d16ee8e9428b56b507c1b"
+      "bytes": 18837,
+      "sha256": "808cc9c8597a49b7bae0c491bad4964f9c35e36159dc1d29cee48c0b6f5e3304"
     },
     "gir-emitter": {
       "bytes": 3930,

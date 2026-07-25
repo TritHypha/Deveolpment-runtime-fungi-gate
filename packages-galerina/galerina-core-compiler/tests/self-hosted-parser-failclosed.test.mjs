@@ -169,4 +169,17 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     const bare = await pipeline("pure flow f(n: Int) -> Int\ncontract { effects {} }\n{\n  let trap = 5\n  trap\n  let y: Int = 3\n  return n\n}\n");
     assert.deepEqual(bare.errors, [], "bare trap + a later type-annotation colon is not the trap construct");
   });
+
+  // Site #3b: flow-body `step <flowName>(args)` DWI-isolate call (the .ts emits a step callExpr + governs GOV-024).
+  it("FUNGI-PARSE-006: a flow-body `step <flowName>(...)` DWI-isolate call is refused fail-closed", async () => {
+    const r = await pipeline("pure flow f() -> Int\ncontract { effects {} }\n{\n  step doThing(5)\n  return 1\n}\n");
+    assert.ok(r.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), JSON.stringify(r.errors));
+  });
+
+  it("FUNGI-PARSE-006: NO false positive — bare `step`, `step(x)` call, `let step=5` parse clean", async () => {
+    const bare = await pipeline("pure flow f() -> Int\ncontract { effects {} }\n{\n  let step = 5\n  step\n  return 1\n}\n");
+    assert.deepEqual(bare.errors, [], "bare step is not the DWI construct");
+    const call = await pipeline("pure flow f() -> Int\ncontract { effects {} }\n{\n  step(5)\n  return 1\n}\n");
+    assert.deepEqual(call.errors, [], "step(x) is a call to `step`, not the `step <flowName>(` DWI construct");
+  });
 });
