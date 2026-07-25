@@ -395,6 +395,46 @@ jobs:
       # cascade class). On a clean CI checkout this proves no signed artifact was committed dirty.
       - name: Signed-fixture drift guard (enforcing)
         run: node scripts/audit-signed-fixture-drift.mjs
+      # ── Mirrored 2026-07-25 (bridge 0426/0428) ────────────────────────────────────────────────────
+      # These four ran ONLY in run-phase-close.mjs, whose final line is `process.exit(0)` — an
+      # informational Stop hook that never blocks. Each one's own source asserts that it blocks
+      # ("Exit = violation count" · "MANDATORY" · "Exit 1 on" · "Blocking."), so each was a gate whose
+      # declared enforcement had no enforcing home: it could go red for weeks and fail nothing.
+      # A gate that cannot fail anything is not a gate. Wired here, where a non-zero exit stops the run.
+      #
+      # Selection is DELIBERATELY conservative and evidence-led, not "wire all twelve": wiring a RED
+      # gate converts a hidden failure into a blocking one without fixing anything. Only gates measured
+      # GREEN are mirrored. The remaining unmirrored ones stay local until each is separately green.
+      # All four verified before wiring: --self-test green (3 of 4 ship one; workspace:pointers does
+      # not, so it is enforcing-only rather than pretending to a self-test it lacks), enforcing exit 0,
+      # zero write calls in source, and `git status` byte-identical after running all of them.
+      # BUILD-FREE by inspection — none references packages-galerina/*/dist, so this job stays build-free;
+      # stage-execution DOES import the compiler dist and is therefore wired into build-cli-gates instead.
+      #
+      # private-doc-leak — no tracked file in this PUBLIC repo may reference a never-public -PRIVATE KB
+      # doc (or the private KB path). The highest-consequence one of the four: the failure it exists to
+      # stop is a private title reaching a public mirror, which a push makes irreversible.
+      - name: Private-doc leak guard (self-test, then enforcing)
+        run: |
+          node scripts/audit-private-doc-leak.mjs --self-test
+          node scripts/audit-private-doc-leak.mjs
+      # no-redeclare — a structural WASM correctness invariant (duplicate declarations that compile clean
+      # and only fail at instantiate), not a style preference; its own comment says MANDATORY.
+      - name: No-redeclare guard (self-test, then enforcing)
+        run: |
+          node scripts/audit-no-redeclare.mjs --self-test
+          node scripts/audit-no-redeclare.mjs
+      # workspace:pointers — every packages-galerina/* path named in galerina.workspace.json must resolve
+      # to a real directory: catches a renamed package that never updated the workspace file.
+      - name: Workspace named-pointer validation (enforcing)
+        run: node scripts/validate-workspace-pointers.mjs
+      # bench-report-stale — report.md must match compare.mjs(results/latest.json). Guards the class where
+      # a published benchmark report describes an older run than the data beside it. --stale-only is the
+      # read-only half (no run, no regeneration), which is why it is safe on a CI checkout.
+      - name: Benchmark report staleness guard (self-test, then enforcing)
+        run: |
+          node packages-galerina/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs --self-test
+          node packages-galerina/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs --stale-only
       # dev-tool script tests — the audit/index/registry tooling itself (scripts/tests/) lives OUTSIDE
       # packages-galerina, so the package runner never sees it. Run here so the gates that guard the repo
       # are themselves regression-gated (incl. the doc-drift KB-resolution + fail-closed benches).
@@ -463,6 +503,17 @@ jobs:
         run: |
           node scripts/audit-import-governance.mjs --self-test
           node scripts/audit-import-governance.mjs
+      # stage-execution (mirrored 2026-07-25, bridge 0426/0428) — P9 enforcement: stops a self-hosted
+      # compiler stage silently regressing RUN → TRAP. Belongs in THIS lane, not the build-free one:
+      # it imports galerina-core-compiler/dist (:37) and fail-closes with "compiler dist not built"
+      # (:295) without it — so mirrored build-free it would have failed for lack of input, the exact
+      # surface/capability mismatch that made gate-selftests red here for a month.
+      # TRAP_BASELINE is 0 and shrink-only (floor reached 2026-07-22 when the #100 checker debt was
+      # paid): ANY trapping stage exits 1. Never raise the number to make it pass — fix the stage.
+      - name: Self-hosted stage-execution ratchet (self-test, then enforcing)
+        run: |
+          node scripts/audit-stage-execution.mjs --self-test
+          node scripts/audit-stage-execution.mjs
 
   # ★ kb-preflight IS DELETED, AND IT IS WORTH KNOWING WHY — it was RIGHT about the risk and still lost.
   #
