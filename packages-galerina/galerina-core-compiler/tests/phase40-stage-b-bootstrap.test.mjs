@@ -66,6 +66,63 @@ describe("Phase 40: compiler.capabilities.fungi executes", () => {
     assert.deepEqual(r.value, { __tag: "bool", value: false });
   });
 
+  // sourceHasContract / sourceHasEffects / countTokens (2026-07-25) — the three flows the
+  // dead-flow detector flagged in this file. They are NOT dead code: every flow here is a leaf
+  // query with no in-.fungi caller by design (compilerAllowedCapabilities, isCapabilityAllowed,
+  // capabilityClass and sourceHasFlow are all in the same shape), so in THIS file the liveness
+  // contract IS test coverage — and these three simply never got any. Wiring them closes the
+  // CG-9.1 gap without deleting a declared capability-query surface.
+
+  it("sourceHasContract detects a contract block", async () => {
+    const src = { __tag: "string", value: "contract { intent { \"x\" } }" };
+    const r = await executeFlow("sourceHasContract", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "bool", value: true });
+  });
+
+  it("sourceHasContract returns false with no contract block", async () => {
+    const src = { __tag: "string", value: "no such block here" };
+    const r = await executeFlow("sourceHasContract", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "bool", value: false });
+  });
+
+  it("sourceHasEffects detects an effects block", async () => {
+    const src = { __tag: "string", value: "contract { effects { storage.read } }" };
+    const r = await executeFlow("sourceHasEffects", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "bool", value: true });
+  });
+
+  it("sourceHasEffects returns false when only an intent block is present", async () => {
+    const src = { __tag: "string", value: "contract { intent { \"x\" } }" };
+    const r = await executeFlow("sourceHasEffects", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "bool", value: false });
+  });
+
+  it("countTokens counts whitespace-separated words plus lines", async () => {
+    // "pure flow add" -> split(" ").length 3 + split("\n").length 1 = 4.
+    const src = { __tag: "string", value: "pure flow add" };
+    const r = await executeFlow("countTokens", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "int", value: 4 });
+  });
+
+  it("countTokens on the empty string returns 2 (one empty word + one empty line)", async () => {
+    const src = { __tag: "string", value: "" };
+    const r = await executeFlow("countTokens", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "int", value: 2 });
+  });
+
+  it("CHARACTERIZATION: countTokens' line term is INERT on real newlines", async () => {
+    // MEASURED, not blessed. A real line break adds nothing to the count: "a b c\nd" scores 4,
+    // the same as the single-line "pure flow add", where a working line term would give 5.
+    // Cause is upstream of this flow — a .fungi string literal is escape-PASS-THROUGH for
+    // everything except \u (lexer.ts:601 keeps the backslash: `value += bslash + advance()`),
+    // so the "\n" written in countTokens' body is the two characters backslash+n and never
+    // matches a real line break. Pinned here so that if the escape semantics are ever changed,
+    // this reds and forces countTokens to be revisited rather than silently changing meaning.
+    const src = { __tag: "string", value: "a b c\nd" };
+    const r = await executeFlow("countTokens", new Map([["source", src]]), prog.ast, prog.flows);
+    assert.deepEqual(r.value, { __tag: "int", value: 4 });
+  });
+
   it("capabilityClass(storage.write) returns 2 (write class)", async () => {
     const r = await executeFlow("capabilityClass", new Map([["name",{__tag:"string",value:"storage.write"}]]), prog.ast, prog.flows);
     assert.deepEqual(r.value, { __tag: "int", value: 2 });
