@@ -383,7 +383,17 @@ contract {
                   done = true
                 }
                 else {
-                  value = value + Char.fromCode(hexToInt(raw)).toString()
+                  // The typed local is LOad-BEARING, not style (R&D §5a 0366). Written as the chain
+                  // `Char.fromCode(hexToInt(raw)).toString()` the WASM backend emitted DECIMAL TEXT —
+                  // `A` became "65", `\u{1F600}` became "128512" — because wat-emitter's
+                  // type-directed toString resolves its receiver via inferExprType, which cannot see
+                  // `Char` through a CALL-RESULT receiver and falls back to __int_to_str. The
+                  // interpreter was correct throughout, so this was a silent wrong VALUE on one
+                  // backend only. An explicit `Char` binding restores the type direction to
+                  // __char_to_string. Same chained-member-access class as the parser's local-based
+                  // idiom; do not re-inline this.
+                  let c: Char = Char.fromCode(hexToInt(raw))
+                  value = value + c.toString()
                 }
               }
               else {

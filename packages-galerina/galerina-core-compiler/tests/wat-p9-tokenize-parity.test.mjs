@@ -84,6 +84,18 @@ const CORPUS = [
   'x = "a\\nb"',      // escaped newline inside a string (scanString backslash branch)
   'q = "tab\\there"', // escaped tab
   "nl = '\\n'",       // escaped char literal
+  // RD-0528 increment-1 (2026-07-25) — `\u` DECODE rows. Their absence is why a silent WRONG-VALUE
+  // divergence shipped: the corpus carried no `\u` literal, so the WASM decode branch had never
+  // executed under this gate, and every other gate's `\u` row is interpreter-side. The WASM leg was
+  // rendering the code point as DECIMAL TEXT (`A` -> "65", `\u{1F600}` -> "128512") because the
+  // chained `Char.fromCode(...).toString()` defeated the emitter's type-directed toString. Found by
+  // R&D's formal §5a (0366), not by any gate — these rows are the durable lock so the decode path
+  // can never again be reachable-but-unexercised on the second backend.
+  'a = "\\u0041"',       // fixed form -> "A"
+  'b = "\\u{41}"',       // brace form -> "A"
+  'c = "\\u{1F600}"',    // astral -> UTF-16 surrogate pair (the ruled semantics)
+  'd = "\\u{10FFFF}"',   // maximum valid code point
+  'e = "x\\u{2345}y"',   // decode embedded between ordinary characters
 ];
 
 describe("P9 #143: tokenize byte-parity (Stage-A interpreter == Stage-B WASM)", () => {
