@@ -411,6 +411,11 @@ contract {
 }
 {
   let keywords = makeKeywordTable()
+  // Valid single-char tokens — a fail-CLOSED whitelist mirroring the .ts reference
+  // (`lexer.ts` ONE_CHAR_OPERATORS ∪ SYMBOLS). Any char outside this set (backtick, ^, ~, $,
+  // control, non-ASCII) is an "unexpected character" (`.ts` FUNGI-PARSE-001), NOT a Symbol —
+  // emitting a Symbol for anything was a fail-open (R&D 0228/0229).
+  let validSingle: Array<String> = ["+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|", "?", "(", ")", "{", "}", "[", "]", ",", ":", ";", ".", "@"]
   mut tokens: Array<Token> = Array.empty()
   mut pos: Int = 0
   mut line: Int = 1
@@ -639,6 +644,11 @@ contract {
                 tokens = tokens.append({ kind: TokenKind.Operator, value: opStrX, line: startLineX, column: startColX, endLine: line, endColumn: startColX + opLenX, start: pos, end: newPosX })
               }
               if isMultiX == "false" {
+                // Fail-CLOSED on an unexpected character: reject anything not in the valid single-char
+                // whitelist instead of accepting it as a Symbol (the backtick/control-char fail-open, R&D 0228).
+                if validSingle.contains(opStrX) == false {
+                  return Err({ message: "unexpected character", line: startLineX, col: startColX })
+                }
                 tokens = tokens.append({ kind: TokenKind.Symbol, value: opStrX, line: startLineX, column: startColX, endLine: line, endColumn: startColX + opLenX, start: pos, end: newPosX })
               }
               pos = newPosX
