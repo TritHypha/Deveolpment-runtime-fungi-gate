@@ -4,9 +4,9 @@
     "packages": 97,
     "testBearing": 96,
     "tests": 7876,
-    "devTools": 119,
-    "auditTools": 72,
-    "toolsInCadence": 53,
+    "devTools": 120,
+    "auditTools": 73,
+    "toolsInCadence": 54,
     "proofs": 40
   },
   "packages": [
@@ -1241,6 +1241,19 @@
         "teaching-corpus",
         "doc-drift",
         "graph/index"
+      ]
+    },
+    {
+      "name": "audit-diagnostic-code-collisions.mjs",
+      "category": "audit",
+      "purpose": "one code, one meaning. Across BOTH engines.",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "governance",
+        "naming",
+        "diagnostics",
+        "doc-drift"
       ]
     },
     {
@@ -2686,6 +2699,7 @@
       "audit-codes-full.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
+      "audit-diagnostic-code-collisions.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
@@ -2953,6 +2967,7 @@
       "audit-compiler-stage-twins.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
+      "audit-diagnostic-code-collisions.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
@@ -3010,6 +3025,7 @@
       "audit-codes-full.mjs",
       "audit-compiler-stage-twins.mjs",
       "audit-coverage.mjs",
+      "audit-diagnostic-code-collisions.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
       "audit-emitter-completeness.mjs",
@@ -3093,6 +3109,7 @@
     "naming": [
       "audit-claim-hygiene.mjs",
       "audit-compiler-stage-hashes.mjs",
+      "audit-diagnostic-code-collisions.mjs",
       "audit-name-collisions.mjs",
       "audit-private-doc-leak.mjs",
       "audit-silent-overwrite.mjs",

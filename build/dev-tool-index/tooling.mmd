@@ -108,6 +108,11 @@ flowchart LR
   T_audit_coverage_mjs --> C_teaching_corpus
   T_audit_coverage_mjs --> C_doc_drift
   T_audit_coverage_mjs --> C_graph_index
+  T_audit_diagnostic_code_collisions_mjs["audit-diagnostic-code-collisions.mjs"]
+  T_audit_diagnostic_code_collisions_mjs --> C_governance
+  T_audit_diagnostic_code_collisions_mjs --> C_naming
+  T_audit_diagnostic_code_collisions_mjs --> C_diagnostics
+  T_audit_diagnostic_code_collisions_mjs --> C_doc_drift
   T_audit_diagnostic_codes_mjs["audit-diagnostic-codes.mjs"]
   T_audit_diagnostic_codes_mjs --> C_diagnostics
   T_audit_diagnostic_codes_mjs --> C_proofs
