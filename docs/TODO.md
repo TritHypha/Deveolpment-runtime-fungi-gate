@@ -4,7 +4,33 @@ Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-r
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).
 The dated blocks below are a historical log; the **CURRENT STATE** block is the head.
 
-## 📍 CURRENT STATE — 2026-07-24 (three-valued-stance corrections + path-forward plan · owner ruling: tick-bounding suspended for the parser arc)
+## 📍 CURRENT STATE — 2026-07-25 (gov-verifier flip investigation + chapter-close consolidation · owner re-affirmed FULL UNLOCK)
+
+**Forward view:** `../ZTF-Knowledge-Bases/galerina-roadmap.md`. This chapter landed **no code** — it was a
+measurement/coordination arc on the **5th self-hosting flip** (governance-verifier), held under proposer≠verifier.
+HEAD unchanged at `ef3a746e`. Owner **re-affirmed full unlock** 2026-07-25 (authorization gates lifted; the
+**evidence gate + R&D §5a countersign remain structural** — a flip still may not bless dead code).
+
+### Chapter-close battery (owner-asked "run graph/audit/tests" · all green)
+- **graph-all 6/6** — project 6951n/7220e · integrity 0 · kb 17 orphans/0 broken · **border 97/0** · memory clean (7 dangling `[[links]]`, benign) · dev-tools 97 pkgs/118 tools/40 proofs.
+- **tests** — `run-all-tests.cjs` **95/95 packages · 7,867 tests · 0 fail** (compiler 5,104).
+- **audits 5/5** — artifact-drift 0/542 · compiler-stage-twins (**4 authoritative — RD-0528 flip LIVE**) · percent-history · private-doc-leak 0/3917 · path-leak, all exit 0.
+- **% audit regenerated** — `component-health.mjs --audit-html` → build/component-health/percent-audit.{html,json}; staleness gate GREEN. Ship-readiness **97.9%** (95/97) · ZT-thesis avg **78%** · build avg **75%** · 20 tracking items. Rendered as a meter widget this session.
+- ⚠ **version.json drift** — the one `[live]` row reads version.json (**7,591**) but the live suite is **7,867**; no auto-writer exists, NOT hand-edited (would be the hand-typed anti-pattern). Follow-up: build/locate a version-count regen so the [live] number is honest.
+
+### Gov-verifier 5th-flip investigation (bridges 0268–0293; both sessions converged)
+- 🔴 **RETRACTED my 0277 "flip-ready" pack** — the 9 parser-blocked check-flows are **dead code in the twin** (uncalled + untested; `verifyGovernance` dispatches only checkSecure + checkSafetyCritical). R&D 0268 §5a independently HELD on the same finding.
+- **Decomposed two problems** (both sessions concur): **Q-A** = flip dead-code (5 uncalled `.fungi` flows, CG-9.1) · **Q-B** = `parser.fungi` silently drops governance constructs (a latent, pre-Tier-2 defect). Neither fix substitutes for the other.
+- **Q-A disposition (evidenced, call-sites not tests):** STEP + MUTATION are **symmetric-dead** in `.ts` too → **remove-safe**. MONO + INHERIT + TRAP have **live `.ts` enforcement** → removing them = a permanent Tier-2 capability gap → **wire (grammar work), don't delete**. `Sir,` this is the one human/architecture decision to unblock the 5th flip.
+- **Q-B parser fail-open MEASURED** (validated probe + both-sides `.ts` oracle): `policy{emergency{…allow…}}` (`.ts` REJECTS MONO-001) · `trap n==0:ERR` (`.ts` builds trapDecl) · `guard{parent_policy:X}` (`.ts` REJECTS INHERIT-001) — all three **accepted clean, construct dropped** by the `.fungi` parser, across 3 distinct parse paths (policy name-gate `:1622` · guard-body `:1794` · parseStmt fallthrough `:1426`).
+- **Q-B harden design SETTLED** — shape-match refusal at all 3 sites (`emergency {` · `parent_policy :` · `trap <expr> :`/`step:`), one new code **FUNGI-PARSE-006**, reusing the FUNGI-PARSE-005 `bodyHasModulo` scanner pattern (no record-shape threading). Build-feasibility resolved. **Awaiting R&D §5a-confirm (bridge 0293) before touching `parser.fungi`.**
+
+### Chapter open items
+- ⏳ **R&D §5a-confirm** on the Q-B harden (bridge 0293, shape-match-all-3) → then build FUNGI-PARSE-006 + SUBSET-REFUSAL rows + re-pin parser hash → R&D §5a of the built change.
+- `Sir,` **Q-A decision**: STEP/MUTATION remove-safe; MONO/INHERIT/TRAP wire-vs-document → unblocks the gov-verifier as the 5th authoritative stage.
+- Stage-B NOT done (see roadmap): 4/7 authoritative · gov-verifier held · lexer+parser un-flipped · bootstrap fixpoint + `.ts`-retirement post-v1.
+
+## 📍 2026-07-24 (superseded) — three-valued-stance corrections + path-forward plan · owner ruling: tick-bounding suspended for the parser arc
 
 **Forward view:** `roadmap-2026-07-24.md`. Source of truth for this plan is the R&D corrections & path-forward
 plan (relayed via bridge `0150`/`0151`, owner-directed 2026-07-24); the rows below mirror it onto this board

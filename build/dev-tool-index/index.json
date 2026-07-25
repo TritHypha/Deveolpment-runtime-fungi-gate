@@ -6,7 +6,7 @@
     "tests": 7591,
     "devTools": 118,
     "auditTools": 71,
-    "toolsInCadence": 52,
+    "toolsInCadence": 53,
     "proofs": 40
   },
   "packages": [
@@ -1513,7 +1513,7 @@
       "category": "audit",
       "purpose": "TASK-SEC-002 (#219 standard \"mutation / red-team test per gate\", Stryker-style).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
         "mutation-testing",
         "graph/index"
@@ -3223,7 +3223,6 @@
       "audit-import-governance.mjs",
       "audit-kernel-floor.mjs",
       "audit-license-compat.mjs",
-      "audit-mutation.mjs",
       "audit-node-dependencies.mjs",
       "audit-overclaim-phrases.mjs",
       "audit-package-border.mjs",
