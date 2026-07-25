@@ -99,6 +99,12 @@ const CORPUS = [
   "pure flow f(a: Int) -> Int\ncontract { intent { \"x\" } }\n{ return a }\npure flow g(b: Int) -> Int\ncontract { intent { \"y\" } }\n{ return b }",
   "pure flow lit() -> Int\ncontract { intent { \"x\" } }\n{ return 1 }",
   "pure flow rich(a: Int, b: Int) -> Int\ncontract { intent { \"body\" } }\n{ let x = a\n if x > 0 { return x }\n while x < 10 { x = a }\n return b }",
+  // CALL-BEARING rows (2026-07-25) — the inputs this corpus never had. Their absence is why the
+  // type-checker flip went green over a call-arg fail-open, AND why the WASM `unreachable` trap in the
+  // first fix went unseen (both sessions' §5a probes were interpreter-only; bridges 0333/0334).
+  "pure flow addok(x: Int, y: Int) -> Int\ncontract { intent { \"x\" } }\n{ return x }\npure flow callok() -> Int\ncontract { intent { \"y\" } }\n{ let r = addok(1, 2)\n return r }",
+  "pure flow greetp(name: String) -> Int\ncontract { intent { \"x\" } }\n{ return 1 }\npure flow callp() -> Int\ncontract { intent { \"y\" } }\n{ let r = greetp(42)\n return r }",
+  "pure flow addp(x: Int, y: Int) -> Int\ncontract { intent { \"x\" } }\n{ return x }\npure flow callq() -> Int\ncontract { intent { \"y\" } }\n{ let r = addp(1, 2, 3)\n return r }",
 ];
 
 describe("P9 R3 · type-checker stage: checkFlows byte-parity (Stage-A interpreter == Stage-B WASM)", () => {
