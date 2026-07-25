@@ -5,7 +5,7 @@
 /// expected_diagnostics: FUNGI-VAULT-003
 /// ai_rule: A flow that reads vault state via secure.* must declare vault.read in its effects. Missing vault.read emits FUNGI-VAULT-003.
 
-vault {
+vault secure {
   loginCount: Int {
     allow getLoginCount  read
     allow incrementLogin write

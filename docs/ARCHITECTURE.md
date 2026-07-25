@@ -2281,7 +2281,7 @@ readonly MatrixSize: Int = 4
 Shared state belongs in vaults and should be accessed through `secure`:
 
 ```galerina
-vault {
+vault secure {
   loginCount: Int {
     allow incrementLogin write
     allow getLoginCount read

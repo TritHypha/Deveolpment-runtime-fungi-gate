@@ -252,6 +252,18 @@ export const FUNGI_GOV_012 = {
 // state. The governance verifier enforces: vault reads require vault.read effect; vault writes
 // require vault.write effect; writes must use `mut secure.*`; readonly entries cannot be mutated.
 
+/**
+ * FUNGI-VAULT-008 (parse): a vault declaration did not name its scope, or named one that has no
+ * grammar yet. RD-0531: `vault` is ONE family with three scopes — `secure` (implemented), `global`
+ * (typed config, lands with its secret-pattern detector) and `session` (semantics undefined). The
+ * scope word is mandatory so a bare `vault {` cannot parse, which makes "which vault did I get?"
+ * unrepresentable rather than merely diagnosable. (Declared in parser, registered here.)
+ */
+export const FUNGI_VAULT_008 = {
+  code: "FUNGI-VAULT-008", name: "VAULT_MISSING_SCOPE", severity: "error" as const,
+  message: "A vault declaration must name its scope: vault secure | vault global | vault session.",
+} as const;
+
 /** FUNGI-VAULT-001 (parse): `vault` block missing opening brace. (Declared in parser, registered here.) */
 export const FUNGI_VAULT_001 = {
   code: "FUNGI-VAULT-001", name: "VAULT_MISSING_OPEN_BRACE", severity: "error" as const,

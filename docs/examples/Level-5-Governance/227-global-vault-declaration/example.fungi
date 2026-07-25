@@ -13,7 +13,7 @@
 ;;   - Writes always require mut secure.<name> = ...
 ;;   - audit required = every write emits an audit event
 ;;   - readonly entries cannot be mutated after creation
-vault {
+vault secure {
   loginCount: Int {
     allow incrementLogin write     ;; only incrementLogin may write this entry
     allow getLoginCount  read      ;; only getLoginCount may read this entry

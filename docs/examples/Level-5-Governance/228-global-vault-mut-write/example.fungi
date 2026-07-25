@@ -5,7 +5,7 @@
 /// expected_diagnostics: none
 /// ai_rule: Every GlobalVault write must use mut secure.x = ... or mut secure.x++. The mut keyword is required by the compiler. Missing mut emits FUNGI-VAULT-005.
 
-vault {
+vault secure {
   loginCount: Int {
     allow incrementLogin write
     allow getLoginCount  read

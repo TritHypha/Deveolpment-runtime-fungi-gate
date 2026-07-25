@@ -5758,10 +5758,53 @@ class Parser {
     const loc = this.loc();
     this.advance(); // consume "vault"
     this.skipNewlines();
+
+    // RD-0531 step 1 — the SCOPE WORD IS MANDATORY: `vault secure|global|session { … }`.
+    //
+    // `vault` is one family with three scopes, and the declaration lost its scope word while the
+    // ACCESS namespace kept it: `vault { … }` declares what `secure.*` reads (the verifier gates
+    // those reads via FUNGI-VAULT-003), and the curriculum tells authors to "use `vault.secure`".
+    // Declaration and access disagreeing is the defect — not the keyword. Requiring the word makes
+    // the confusion UNREPRESENTABLE rather than merely diagnosed: a bare `vault {` cannot parse, so
+    // no program can silently get the wrong vault.
+    //
+    // `secure` lexes as a KEYWORD (it is in the keyword table); `global`/`session` lex as
+    // identifiers — both kinds are accepted here so the scope word is recognised either way.
+    const SCOPES = ["secure", "global", "session"];
+    const scopeTok = this.current();
+    const scope = SCOPES.includes(scopeTok.value) && (scopeTok.kind === "keyword" || scopeTok.kind === "identifier")
+      ? scopeTok.value
+      : null;
+
+    if (scope === null) {
+      this.emit("FUNGI-VAULT-008", "VAULT_MISSING_SCOPE",
+        "A vault declaration must name its scope: 'vault secure', 'vault global' or 'vault session'.",
+        this.loc(),
+        "vault secure { entryName: Type { allow flowName read } }");
+      this.skipToNextDeclaration();
+      return { kind: "vaultDecl", location: loc, children: [] };
+    }
+    this.advance();          // consume the scope word
+    this.skipNewlines();
+
+    // Only `secure` has a grammar today — it reproduces the previous `vault { … }` body EXACTLY, so
+    // this step is a pure rename with zero semantic change. `global` (typed config: dotted keys, `=`
+    // defaults) is a separate increment that must land WITH its secret-pattern detector, and
+    // `session` has no TTL/owner-check semantics defined at all. Both are REFUSED rather than
+    // half-parsed: a scope the compiler cannot enforce must not silently accept a program.
+    if (scope !== "secure") {
+      this.emit("FUNGI-VAULT-008", "VAULT_MISSING_SCOPE",
+        `The '${scope}' vault scope is not implemented yet — only 'vault secure' has a grammar today.`,
+        this.loc(),
+        "vault secure { entryName: Type { allow flowName read } }");
+      this.skipToNextDeclaration();
+      return { kind: "vaultDecl", location: loc, children: [] };
+    }
+
     if (!this.currentIs("symbol", "{")) {
       this.emit("FUNGI-VAULT-001", "VAULT_MISSING_OPEN_BRACE",
-        "Expected '{' after 'vault'.", this.loc(),
-        "vault { entryName: Type { allow flowName read } }");
+        "Expected '{' after 'vault secure'.", this.loc(),
+        "vault secure { entryName: Type { allow flowName read } }");
       this.skipToNextDeclaration();
       return { kind: "vaultDecl", location: loc, children: [] };
     }
