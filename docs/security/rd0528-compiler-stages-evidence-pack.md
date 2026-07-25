@@ -3,9 +3,9 @@
 > ## ★ EDITORIAL UPDATE 2026-07-24 — this 2026-07-22 pack's "NOT flip-ready" framing is SUPERSEDED for tier-1
 >
 > The authority ledger [`rd0528-compiler-authoritative-stages.json`](rd0528-compiler-authoritative-stages.json)
-> is the LIVE authority and now lists **THREE stages authoritative** — `type-checker.fungi` (2026-07-23),
-> `effect-checker.fungi` (2026-07-24), `gir-emitter.fungi` (2026-07-24) — NOT the empty `twins` this body
-> below still describes. What changed: the **owner ruled 2026-07-22** (recorded in
+> is the LIVE authority and now lists **FOUR stages authoritative** — `type-checker.fungi` (2026-07-23),
+> `effect-checker.fungi` (2026-07-24), `gir-emitter.fungi` (2026-07-24), `runtime.fungi` (2026-07-25, R&D §5a
+> bridge 0256) — NOT the empty `twins` this body below still describes. What changed: the **owner ruled 2026-07-22** (recorded in
 > `self-hosted-i3-functional-corpus.test.mjs:7-27` + the ledger `prerequisites`) that **I-3 is FUNCTIONAL
 > correctness** — the self-hosted pipeline accepts correct programs and rejects incorrect ones — **NOT** the
 > comprehensive `.fungi ≡ .ts` equivalence this body frames as I-3. So a **TIER-1 authority-flip** stands on
@@ -22,6 +22,30 @@
 > The **I-1 evidence below (a/c/d for all 7 stages) remains valid** and is what the three landed flips cite;
 > only the "NOT flip-ready / none askable / twins stays empty" conclusions are superseded. (Dated 2026-07-22
 > body preserved verbatim for provenance.)
+
+> ## ★ ADDENDUM 2026-07-25 — the self-hosted twin's INTERPRETED-SUBSET operator boundary (R&D 0256/0258/0260/0262)
+>
+> The `.fungi` self-hosted twin implements a **subset** of the operators the `.ts` compiler supports, and the
+> boundary is now **explicit + machine-locked** (the `SUBSET_REFUSAL` block in
+> `tests/rd0528-fungi-ts-edge-differential.test.mjs`). The three `.fungi≡.ts` relationships:
+>
+> | operators | relationship | mechanism |
+> |---|---|---|
+> | `+ - * /` · `== != < > <= >=` | **value-parity** — `.fungi` == `.ts`, same value | modeled end-to-end |
+> | `%` (modulo) | **subset-refusal** — `.ts` computes (5%2=1), `.fungi` FAULTS fail-closed | parser drops it → **`FUNGI-PARSE-005`** (`parser.fungi` `bodyHasModulo`) |
+> | `and` `or` (logical) | **subset-refusal** — `.ts` computes, `.fungi` FAULTS fail-closed | gir-emitter `opcodeOf` has no logical case → `op:"unknown"` → `applyBinop` **Err** (`runtime.fungi:273-274`) |
+>
+> No fail-opens remain (R&D verified, bridge 0260) — every unmodeled operator FAULTS rather than silently
+> mis-computing, and each `SUBSET_REFUSAL` row is a safety lock that RED's if that ever regresses.
+>
+> **Modeling `and`/`or` is DEFERRED (owner-gated) and carries a measured gotcha (R&D 0262):** `and`/`or`
+> **SHORT-CIRCUIT** in `.ts` — `false and (10/0==0)` → `false` (RHS skipped, does NOT fault). So they CANNOT be
+> modeled as a plain `applyBinop("and", a, b)` binop: `evalGIRExpr` evaluates BOTH kids before `applyBinop`, which
+> would lose short-circuit AND fault on `false and <erroring>` where `.ts` returns `false`. Proper modeling needs
+> **conditional evaluation inside `evalGIRExpr`** (eval left; `and`+left-false → false without eval-ing right) — a
+> control-flow change touching the **flipped runtime.fungi + gir-emitter** ⇒ a deliberate **2×§5a** increment, not a
+> rote `opcodeOf` addition. `%` support is likewise deferred (it would touch the flipped gir-emitter's `opcodeOf`).
+> Until then the twin's honest interpreted subset is: arithmetic + comparison; `%`/`and`/`or` fault-closed.
 
 **Assembled:** 2026-07-22 · **Track:** RD-0528 Phase I — compiler self-hosting (retire the `.ts` compiler so `.fungi` compiles `.fungi`) · **State:** ⚠ **I-1 EVIDENCE ONLY — NOT flip-ready.**
 
