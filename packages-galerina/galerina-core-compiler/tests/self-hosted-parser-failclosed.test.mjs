@@ -109,6 +109,16 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     assert.match(r.errors[0], /^FUNGI-PARSE-004/);
   });
 
+  it("FUNGI-PARSE-005: the unsupported `%` (modulo) operator is refused fail-closed", async () => {
+    // `%` is a first-class .ts operator (5%2=1) the self-hosted parser doesn't model — it silently
+    // dropped `% rhs` and collapsed to the left operand (5), a fail-open R&D 0256 caught. The twin
+    // now REFUSES it. A `%` inside a string literal must NOT trip it (isOpSym excludes StringLiteral).
+    const bad = await pipeline("pure flow f() -> Int {\n  return 5 % 2\n}\n");
+    assert.ok(bad.errors.some((e) => e.startsWith("FUNGI-PARSE-005")), JSON.stringify(bad.errors));
+    const strOk = await pipeline("pure flow g() -> String {\n  return \"50%\"\n}\n");
+    assert.deepEqual(strOk.errors, [], "a `%` inside a string literal is not the operator — no false positive");
+  });
+
   it("anti-cascade: three garbage tokens on ONE line yield exactly ONE error", async () => {
     const r = await pipeline("qqq www eee\n");
     assert.equal(r.errors.length, 1, JSON.stringify(r.errors));

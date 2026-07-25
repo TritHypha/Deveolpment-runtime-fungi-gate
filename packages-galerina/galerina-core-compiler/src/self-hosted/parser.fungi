@@ -299,6 +299,24 @@ contract { intent { "True when the token at pos is an Operator/Symbol token with
   }
 }
 
+// True when a `%` (modulo) OPERATOR token appears in the token range [startPos, endPos).
+// `%` is a first-class Galerina operator the .ts compiler computes (5 % 2 = 1), but the self-hosted
+// parser does not model it (no precedence rung in the multiplicative cascade, no opcodeOf/applyBinop
+// case). Left unhandled it SILENTLY DROPS `% rhs` and the expression collapses to its left operand — a
+// fail-OPEN (.ts=1 vs .fungi=5; R&D 0256, verified at source). Detecting it lets the flow parser FAULT
+// (fail-closed subset) rather than mis-handle. isOpSym matches only an Operator/Symbol token, so a "%"
+// inside a StringLiteral is NOT flagged (no false positive).
+pure flow bodyHasModulo(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool
+contract { intent { "True when a `%` operator token appears in the flow-body token range." } }
+{
+  mut i: Int = startPos
+  while i < endPos {
+    if isOpSym(tokens, i, "%") { return true }
+    i = i + 1
+  }
+  return false
+}
+
 // True when the token at pos is a Newline token.
 pure flow isNewline(tokens: Array<Token>, pos: Int) -> Bool
 contract { intent { "True when the token at pos is a Newline token." } }
@@ -2056,6 +2074,7 @@ contract {
         mut bodyStmts: Array<Stmt> = Array.empty()
         mut returnExpr: ReturnExpr = { kind: "literal", litType: "Unknown", leftType: "", rightType: "" }
         if tokVal(tokens, p) == "{" {
+          let bodyStart: Int = p
           returnExpr = findReturnExpr(tokens, p + 1, total)
           let blk: BlockParse = parseBlock(tokens, p + 1)
           bodyStmts = blk.stmts
@@ -2065,6 +2084,13 @@ contract {
           // truncated flow was accepted; the error now makes it un-consumable to the drivers.
           if blk.closed == false {
             errs = errs.append("FUNGI-PARSE-003: flow '" + flowName + "' body block not closed ('}' expected)")
+          }
+          // FUNGI-PARSE-005: fail-CLOSED on the `%` (modulo) operator (R&D 0256). The multiplicative
+          // cascade silently drops `%` -> the expression collapses to its left operand (5 % 2 -> 5, a
+          // fail-open vs the .ts reference's 1). The twin REFUSES `%` rather than mis-handle it; full
+          // `%` support (opcodeOf + applyBinop) is future work that touches the flipped gir-emitter.
+          if bodyHasModulo(tokens, bodyStart, p) {
+            errs = errs.append("FUNGI-PARSE-005: flow '" + flowName + "' uses the '%' (modulo) operator, which the self-hosted parser does not model yet - refused fail-closed (the .ts reference computes it)")
           }
         }
         else {
