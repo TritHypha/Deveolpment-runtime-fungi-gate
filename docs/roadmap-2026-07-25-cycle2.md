@@ -122,8 +122,19 @@ interpreter parity 100%; `audit-stage-execution` trap baseline 0.
   and each gets a code named for its own subject. The twin is not a mis-numbered copy of the `.ts`
   checks. This unblocks the rename, but §5 gates the order it lands in.
 
-**Post-v1:** lexer + parser flips · bootstrap fixpoint (blocked on duplicate export names across
-concatenated stages) · Tier-2 `.ts` retirement.
+**Ledger read at source this cycle** (`audit-compiler-stage-twins`, 8/8 check-clean):
+
+| authority | stages |
+|---|---|
+| **authoritative (5)** | `lexer` · `type-checker` · `effect-checker` · `gir-emitter` · `runtime` |
+| **differential (2)** — execute through #105 | `parser` · `governance-verifier` |
+| shadow (1) | `compiler.capabilities` |
+
+⚠️ Correction to an earlier draft of this document, which listed "lexer + parser flips" as remaining:
+**`lexer` is already authoritative.** Only `parser` and `governance-verifier` are still differential.
+
+**Post-v1:** parser flip (needs #163 per-stage intern isolation) · bootstrap fixpoint (blocked on
+duplicate export names across concatenated stages) · Tier-2 `.ts` retirement.
 
 ---
 
