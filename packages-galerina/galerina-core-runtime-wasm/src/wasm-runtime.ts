@@ -327,6 +327,17 @@ export function createHostRuntime(
       const n = parseInt(strings[h] ?? "", 10);
       return tap("__str_to_int", [h], Number.isNaN(n) ? -1 : n) as number; // Option<Int>: -1 = None
     },
+    // Char.fromCode (RD-0528 step 1) — Int -> Char. A Char IS its code point i32, so the VALUE is
+    // the argument unchanged; this exists for the REFUSAL, not the conversion. stdlib.ts:1961-1963
+    // calls String.fromCodePoint with no range check, so the interpreter THROWS on a negative or
+    // > 0x10FFFF code point. Calling it here the same way mirrors that exactly (§313: mirror stdlib
+    // for byte-parity) and the throw surfaces as a WASM trap — fault-parity by construction rather
+    // than by re-deriving the range rule. Lowering it as a bare identity in the emitter would have
+    // been a fail-OPEN: WASM would silently accept a code point the interpreter refuses.
+    __char_from_code: (code: number) => {
+      String.fromCodePoint(code);                       // throws RangeError on an invalid code point
+      return tap("__char_from_code", [code], code) as number;
+    },
     // Char ops — a char is its code point i32 (see __str_char_at). Mirrors stdlib.ts.
     __char_is_letter: (code: number) =>
       tap("__char_is_letter", [code], code >= 0 && /\p{L}/u.test(String.fromCodePoint(code)) ? 1 : 0) as number,

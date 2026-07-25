@@ -1874,6 +1874,18 @@ export function emitWATExpr(
           return emitWATExpr(realReceiver, vars, staticConsts);
         }
 
+        // RD-0528 step 1: Char.fromCode(Int) -> Char. A Char IS its code point i32, so the VALUE is
+        // the argument unchanged — but this is deliberately NOT lowered as a bare identity. The
+        // interpreter (stdlib.ts:1961-1963) calls String.fromCodePoint with no range check and so
+        // THROWS on a negative or > 0x10FFFF code point; an identity lowering would silently accept
+        // what the reference refuses, i.e. a fail-OPEN introduced in the WASM backend. Routing to
+        // __char_from_code re-uses the reference's own String.fromCodePoint, so the refusal is
+        // parity by construction, and the operand is evaluated exactly once (no temp local — this
+        // emitter has no scratch-local facility, which is the other reason identity+guard was wrong).
+        if (name === "fromCode" && recvName0 === "Char" && argNodes.length === 1) {
+          return `(call $host___char_from_code ${emitWATExpr(argNodes[0]!, vars, staticConsts)})`;
+        }
+
         // #160: type-directed toString/toStr. Char → __char_to_string (String.fromCodePoint);
         // everything else defaults to __int_to_str (matches prior behaviour for Int).
         if ((name === "toString" || name === "toStr") && realReceiver !== undefined) {
@@ -3905,6 +3917,7 @@ export function buildWATModule(
     { module: "host", name: "__char_is_lower",  effect: "stdlib.char",  type: { params: ["i32"],          results: ["i32"] } }, // #169
     { module: "host", name: "__char_is_whitespace", effect: "stdlib.char", type: { params: ["i32"],       results: ["i32"] } }, // #169
     { module: "host", name: "__char_to_string", effect: "stdlib.char",  type: { params: ["i32"],          results: ["i32"] } },
+    { module: "host", name: "__char_from_code", effect: "stdlib.char",  type: { params: ["i32"],          results: ["i32"] } }, // RD-0528 step 1
     // Result/Option helpers
     { module: "host", name: "__unwrap_or",      effect: "stdlib.result", type: { params: ["i32", "i32"],  results: ["i32"] } },
     { module: "host", name: "__option_some",    effect: "stdlib.result", type: { params: ["i32"],          results: ["i32"] } },

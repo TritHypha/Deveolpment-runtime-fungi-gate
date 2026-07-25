@@ -49,6 +49,39 @@ describe("#185 host stdlib oracle: char→string (__char_to_string)", () => {
   });
 });
 
+// RD-0528 step 1 — Char.fromCode. The VALUE is identity (a Char IS its code point i32), so every
+// row here that matters is a REFUSAL row: the interpreter's String.fromCodePoint throws on an
+// invalid code point, and this host fn must throw too or the WASM backend fail-OPENS on input the
+// reference rejects. Value rows are the controls that stop the refusal rows passing vacuously.
+describe("#185 host stdlib oracle: Char.fromCode (__char_from_code)", () => {
+  it("VALUE is identity for a valid BMP code point (control — the refusals below are not vacuous)", () => {
+    const { fn } = host();
+    assert.equal(fn.__char_from_code(65), 65, "'A'");
+    assert.equal(fn.__char_from_code(0), 0, "U+0000 is a valid code point");
+    assert.equal(fn.__char_from_code(0x10FFFF), 0x10FFFF, "the maximum valid code point is accepted");
+  });
+
+  it("astral code point survives, and renders as UTF-16 length 2 (the ruled semantics)", () => {
+    const { rt, fn } = host();
+    const c = fn.__char_from_code(0x1F600);
+    assert.equal(c, 0x1F600, "the code point is carried unchanged");
+    const s = rt.readString(fn.__char_to_string(c));
+    assert.equal(s, "\u{1F600}");
+    assert.equal(s.length, 2, "UTF-16 surrogate pair — length 2, matching the .ts reference");
+  });
+
+  it("REFUSES above the maximum code point — matching the interpreter's throw", () => {
+    const { fn } = host();
+    assert.throws(() => fn.__char_from_code(0x110000), RangeError,
+      "0x110000 is one past the max; identity would have silently accepted it");
+  });
+
+  it("REFUSES a negative code point — matching the interpreter's throw", () => {
+    const { fn } = host();
+    assert.throws(() => fn.__char_from_code(-1), RangeError);
+  });
+});
+
 describe("#185 host stdlib oracle: string concat (__str_concat)", () => {
   it("concatenates VALUES into a fresh interned handle", () => {
     const { rt, fn } = host();
