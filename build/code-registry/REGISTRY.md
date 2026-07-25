@@ -10,10 +10,10 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|
 | live | 133 | emitted with an exported constant |
 | inline | 169 | emitted, NO exported constant (R4 — Stage F) |
-| referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
+| referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 115 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 191 | referenced only (no def/emit) |
+| phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 192 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -46,13 +46,14 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-ACCESS-001 | inline | ACCESS_UNKNOWN_CAPABILITY | — |
 | FUNGI-ACCESS-002 | inline | ACCESS_GRANT_WITHOUT_EFFECT | — |
 
-### ADMIT (3)
+### ADMIT (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-ADMIT-001 | inline | — | — |
 | FUNGI-ADMIT-002 | inline | — | — |
 | FUNGI-ADMIT-003 | inline | ADMISSION_PREDICATE_TYPE | error |
+| FUNGI-ADMIT-004 | ref | — | — |
 
 ### AFFINE (1)
 
@@ -607,7 +608,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-GEN-TEST-005 | ref | — | — |
 
-### GOV (31)
+### GOV (30)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -615,8 +616,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-GOV-002 | inline | MISSING_AUDIT_FOR_GOVERNED_SINK | — |
 | FUNGI-GOV-003 | live | PROTECTED_DATA_IN_RESPONSE | error |
 | FUNGI-GOV-004 | inline | DENIED_TARGET_SELECTED | — |
-| FUNGI-GOV-005 | live | POLICY_PURPOSE_MISMATCH | warning |
-| FUNGI-GOV-006 | live | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning |
+| FUNGI-GOV-005 | live | POLICY_PURPOSE_MISMATCH / GUARD_UNKNOWN_CAPABILITY / SOMETHING_ELSE / VAULT_MISSING_OPEN_BRACE | warning/error |
+| FUNGI-GOV-006 | live | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING / SOMETHING_ELSE / POLICY_PURPOSE_MISMATCH | warning/error |
 | FUNGI-GOV-007 | live | AUTHORITY_BLOCK_MISSING_REASON | error |
 | FUNGI-GOV-008 | ref | — | — |
 | FUNGI-GOV-009 | live | PRIVILEGED_FLOW_MISSING_CAPABILITY | warning |
@@ -640,7 +641,6 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-GOV-3VL-003 | inline | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error |
 | FUNGI-GOV-3VL-004 | inline | ORDERED_COMPARISON_ON_VERDICT | error |
 | FUNGI-GOV-902 | ref | — | — |
-| FUNGI-GOV-ERRDECL-00 | phantom | — | — |
 | FUNGI-GOV-TPL-001 | inline | — | — |
 
 ### GRAPH (6)
@@ -1410,11 +1410,10 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-VALIDATE-001 | phantom | — | — |
 
-### VALUE (2)
+### VALUE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-VALUE-DELTA-00 | phantom | — | — |
 | FUNGI-VALUE-STATE-001 | phantom | — | — |
 
 ### VALUESTATE (11)
@@ -1433,7 +1432,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-VALUESTATE-009 | inline | PROTECTED_VALUE_AT_AUDIT_LOG | error |
 | FUNGI-VALUESTATE-011 | inline | DECLASSIFIER_NAME_SHADOWED | error |
 
-### VAULT (7)
+### VAULT (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1444,6 +1443,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-VAULT-005 | live | VAULT_WRITE_WITHOUT_MUT | error |
 | FUNGI-VAULT-006 | referenced | VAULT_PERMISSION_DENIED | error |
 | FUNGI-VAULT-007 | referenced | VAULT_READONLY_WRITE | error |
+| FUNGI-VAULT-008 | referenced | VAULT_MISSING_SCOPE | error |
 
 ### VER (1)
 

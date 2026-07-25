@@ -2,11 +2,11 @@
   "generatedFrom": "build/code-index/code-index.json",
   "total": 720,
   "counts": {
-    "ref": 191,
+    "ref": 192,
     "inline": 169,
-    "phantom": 115,
+    "phantom": 113,
     "live": 133,
-    "referenced": 99,
+    "referenced": 100,
     "dead": 13
   },
   "entries": [
@@ -1264,6 +1264,18 @@
       "defs": 0,
       "emits": 1,
       "tests": 9,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-ADMIT-004",
+      "family": "ADMIT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -3869,14 +3881,18 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "POLICY_PURPOSE_MISMATCH"
+        "POLICY_PURPOSE_MISMATCH",
+        "GUARD_UNKNOWN_CAPABILITY",
+        "SOMETHING_ELSE",
+        "VAULT_MISSING_OPEN_BRACE"
       ],
       "severities": [
-        "warning"
+        "warning",
+        "error"
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 13,
+      "tests": 15,
       "docs": 10
     },
     {
@@ -3885,14 +3901,17 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING"
+        "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING",
+        "SOMETHING_ELSE",
+        "POLICY_PURPOSE_MISMATCH"
       ],
       "severities": [
-        "warning"
+        "warning",
+        "error"
       ],
       "defs": 1,
-      "emits": 1,
-      "tests": 11,
+      "emits": 2,
+      "tests": 12,
       "docs": 0
     },
     {
@@ -4234,18 +4253,6 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
-    },
-    {
-      "code": "FUNGI-GOV-ERRDECL-00",
-      "family": "GOV",
-      "namespace": "FUNGI",
-      "status": "phantom",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 1
     },
     {
       "code": "FUNGI-GOV-TPL-001",
@@ -7506,7 +7513,7 @@
       "severities": [],
       "defs": 0,
       "emits": 2,
-      "tests": 5,
+      "tests": 8,
       "docs": 0
     },
     {
@@ -9417,18 +9424,6 @@
       "docs": 2
     },
     {
-      "code": "FUNGI-VALUE-DELTA-00",
-      "family": "VALUE",
-      "namespace": "FUNGI",
-      "status": "phantom",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 1
-    },
-    {
       "code": "FUNGI-VALUE-STATE-001",
       "family": "VALUE",
       "namespace": "FUNGI",
@@ -9624,8 +9619,8 @@
         "error"
       ],
       "defs": 2,
-      "emits": 1,
-      "tests": 1,
+      "emits": 7,
+      "tests": 3,
       "docs": 7
     },
     {
@@ -9723,6 +9718,22 @@
       "emits": 0,
       "tests": 0,
       "docs": 1
+    },
+    {
+      "code": "FUNGI-VAULT-008",
+      "family": "VAULT",
+      "namespace": "FUNGI",
+      "status": "referenced",
+      "names": [
+        "VAULT_MISSING_SCOPE"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
     },
     {
       "code": "FUNGI-VER-001",

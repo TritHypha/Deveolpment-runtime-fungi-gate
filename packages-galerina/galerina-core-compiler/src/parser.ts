@@ -4175,10 +4175,12 @@ class Parser {
     const params = this.parseParamList();
     // Flagship (0119 item 2): `where` admission is only valid on FLOW parameters — an fn helper is not a
     // governed entry point (no runFlow entry gate runs for it), so a `where` here would be silently
-    // unenforced (fail-open). Refuse it, and drain so nothing leaks to a later declaration. FUNGI-ADMIT-003.
+    // unenforced (fail-open). Refuse it, and drain so nothing leaks to a later declaration. FUNGI-ADMIT-004
+    // — a PLACEMENT rule, distinct from the type-checker's FUNGI-ADMIT-003 predicate-TYPE rule. The two
+    // shared 003 as a deliberately "broadened" code until RD-0532; one code, one meaning, so this one moved.
     if (this.pendingParamAdmissions.length > 0) {
       this.emit(
-        "FUNGI-ADMIT-003",
+        "FUNGI-ADMIT-004",
         "ADMISSION_ON_FN_PARAM",
         `Parameter admission ('where') is only valid on flow parameters, not fn helper '${name}' — ` +
           `an fn is not a governed entry point, so the admission gate would never run (fail-closed).`,

@@ -84,14 +84,21 @@ describe("Flagship — three-valued parameter admission (where)", () => {
     assert.ok(!hasCode(r, "FUNGI-ADMIT-001"));
   });
 
-  it("REFUSES `where` on an fn helper parameter (FUNGI-ADMIT-003 — fn is not a governed entry point)", () => {
+  // PLACEMENT rule (parse-time). Distinct code from the CHECK-TIME predicate-type rule below: FUNGI-ADMIT-003
+  // used to cover both, and one code cannot carry two meanings (RD-0532), so placement moved to 004.
+  it("REFUSES `where` on an fn helper parameter (FUNGI-ADMIT-004 — fn is not a governed entry point)", () => {
     const parsed = parseProgram(
       `pure flow outer(p: Int) -> Int {\n  fn helper(q: Int where true) -> Int { return q }\n  return helper(p)\n}`,
       "test.fungi",
     );
     assert.ok(
-      (parsed.diagnostics ?? []).some((d) => d.code === "FUNGI-ADMIT-003"),
-      "expected FUNGI-ADMIT-003 for a where on an fn param",
+      (parsed.diagnostics ?? []).some((d) => d.code === "FUNGI-ADMIT-004"),
+      "expected FUNGI-ADMIT-004 for a where on an fn param",
+    );
+    // Anti-regression on the split itself: the placement refusal must NOT re-borrow the type code.
+    assert.ok(
+      !(parsed.diagnostics ?? []).some((d) => d.code === "FUNGI-ADMIT-003"),
+      "placement refusal must not emit FUNGI-ADMIT-003 (that code means predicate-TYPE)",
     );
   });
 
