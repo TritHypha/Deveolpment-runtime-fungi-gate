@@ -17,9 +17,16 @@
 // Pure Node ESM, zero deps. Read-only on the memory tree except the generated MEMORY-GRAPH.json sidecar.
 // =============================================================================
 
-import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, existsSync, mkdtempSync } from "node:fs";
 import { join, basename } from "node:path";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
+import { createHash } from "node:crypto";
+
+// A non-reversible tag for "which memory tree is this report about". Needed because the autodetect can
+// pick a tree that is not yours and a health report for the wrong tree reads exactly like a clean bill
+// for the right one — but printing the path to disambiguate would leak the username. 8 hex disambiguates
+// between the handful of dirs on a box without carrying anything back.
+const dirTag = (d) => createHash("sha256").update(String(d)).digest("hex").slice(0, 8);
 
 // Resolve the auto-memory dir ROBUSTLY. A hardcoded C:\Users\<name>\... path breaks on any machine
 // reinstall / username change (it did: the old `desig` default 404'd after the box was rebuilt as `phill`).
@@ -65,8 +72,73 @@ for (let i = 0; i < argv.length; i++) {
   else if (argv[i] === "--tag") tagFilter = (argv[++i] || "").replace(/^#/, "").toLowerCase();
   else terms.push(argv[i]);
 }
+// ── SELF-TEST ────────────────────────────────────────────────────────────────
+// Drives the real CLI end-to-end against a throwaway fixture, because both defects this covers are
+// defects of the OUTPUT, not of a helper: one invented an unindexed file, the other printed a machine
+// path. Every check is paired with a control — a fix that simply reported nothing would otherwise pass.
+if (argv.includes("--self-test")) {
+  const { execFileSync } = await import("node:child_process");
+  const fx = mkdtempSync(join(tmpdir(), "memgraph-selftest-"));
+  const w = (n, t) => writeFileSync(join(fx, n), t, "utf8");
+  w("MEMORY.md", [
+    "# Memory index", "", "## Project",
+    "- [Work state](work-state.md) — read first ([archive](work-state-archive.md) for digs). #proj",
+    "- [Plain](plain.md) — a normal row.",
+    "- [External](has-url.md) — see [docs](https://example.com/x.md) for more.",
+    "- [Missing](gone.md) — index row whose file does not exist.", "",
+  ].join("\n"));
+  for (const f of ["work-state", "work-state-archive", "plain", "has-url", "lonely"]) {
+    w(`${f}.md`, `---\nname: ${f}\ndescription: fixture ${f}\nmetadata:\n  type: project\n---\n\nbody\n`);
+  }
+  // link fixtures: one real link to a real file, one real link to a MISSING file (must be reported),
+  // and two written in backticks/a fence as prose ABOUT the syntax (must NOT be reported).
+  w("plain.md", `---\nname: plain\ndescription: fixture plain\nmetadata:\n  type: project\n---\n\n`
+    + `Links to [[work-state]] and to [[never-written]].\n`
+    + `Syntax is \`[[in-a-code-span]]\`.\n\n\`\`\`\n[[in-a-fence]]\n\`\`\`\n`);
+  const out = execFileSync(process.execPath, [process.argv[1], "--dir", fx], { encoding: "utf8" });
+  const graph = JSON.parse(readFileSync(join(fx, "MEMORY-GRAPH.json"), "utf8"));
+
+  const checks = [
+    // THE FIX: a companion link on an index row is indexed, not a phantom orphan.
+    ["companion link on an index row counts as INDEXED (was reported unindexed)",
+      !graph.health.orphans.includes("work-state-archive")],
+    // CONTROL for it: a file in NO index row must still be caught, else the fix is just "report nothing".
+    ["CONTROL a genuinely unindexed file is STILL reported",
+      graph.health.orphans.join() === "lonely" && out.includes("unindexed (add to")],
+    // CONTROL on the widening: an http target must not index anything and must not become a dangling row.
+    ["CONTROL an http link on an index row indexes nothing (dangling = the missing local file only)",
+      graph.health.danglingIndex.join() === "gone"],
+    ["conservation: indexed + unindexed = files, and the line says so",
+      out.includes("(Σ 4 indexed + 1 unindexed = 5 files)")],
+    // THE OTHER FIX: no absolute machine path on stdout.
+    ["console output carries NO absolute memory-dir path", !out.includes(fx)],
+    // CONTROL for it: prove that assertion is not vacuous — the path IS present where it is allowed to be.
+    ["CONTROL the withheld path is genuinely findable (generatedFrom still records it)",
+      graph.generatedFrom === fx],
+    ["dir-id tag is printed so two trees are still distinguishable", out.includes(`[dir-id ${dirTag(fx)}]`)],
+    // THIRD phantom of the same class: prose ABOUT the link syntax counted as a link.
+    ["[[targets]] inside a code span or fence are NOT links",
+      !graph.nodes.plain.links.includes("in-a-code-span") && !graph.nodes.plain.links.includes("in-a-fence")],
+    // CONTROL: a real link still resolves AND a real dangling one is still reported — else "strip
+    // everything" would pass the check above while blinding the health report entirely.
+    ["CONTROL real links survive: one resolved, one genuinely dangling and reported",
+      graph.nodes.plain.links.includes("work-state")
+      && graph.health.danglingLinks.length === 1
+      && graph.health.danglingLinks[0].to === "never-written"],
+  ];
+  let bad = 0;
+  for (const [name, ok] of checks) { if (!ok) bad++; console.log(`  ${ok ? "OK  " : "FAIL"} ${name}`); }
+  console.log(`\nmemory-graph self-test: ${checks.length - bad}/${checks.length} passed`);
+  process.exit(bad ? 1 : 0);
+}
+
 if (!dir || !existsSync(dir)) {
-  console.error(`memory-graph: memory dir not resolved${dir ? `: ${dir}` : " (autodetect found none)"}\n  pass --dir <path> or set MEMORY_DIR.`);
+  // Echo the path ONLY when the caller typed it: a bad --dir is a typo they must see, and it is their
+  // own input coming back. An AUTODETECTED path is not — printing that puts a machine path (and the
+  // username inside it) in a terminal that gets pasted into notes, which is the leak the repo's own
+  // path-leak guard exists to stop. Same class as the bare `C--Users-<name>` slug that guard was blind to.
+  const where = dir ? (chosenExplicitly ? `: ${dir}` : " (autodetected path withheld — pass --dir to see it echoed)") : " (autodetect found none)";
+  console.error(`memory-graph: memory dir not resolved${where}\n  pass --dir <path> or set MEMORY_DIR.`);
   process.exit(2);
 }
 // Name what was NOT examined. Silence here is the fail-open: the report says "0 unindexed files" and a
@@ -78,20 +150,39 @@ if (!chosenExplicitly && autodetectCandidates > 1) {
 }
 
 // ── parse the MEMORY.md index: "- [subject](slug.md) — hook #tag #tag" ───────
+// An index ROW may carry MORE THAN ONE link — the house style writes a companion inline, e.g.
+//   - [work-state](galerina-work-state.md) — read first ([archive](galerina-work-state-archive-pre-0718.md) for digs).
+// Taking only the first link reported the companion as UNINDEXED, and "unindexed" is the tool's
+// prompt to add-or-DELETE — a phantom here argues for deleting a file that is indexed fine.
+// Every link on the row counts; the FIRST local one owns the row's subject/hook/tags.
+// LOCAL only: a target with `/` or `:` is a URL or a path into another tree and cannot mark a topic
+// file in THIS dir as indexed — widening that far would make the unindexed check unable to fire.
+const LINK_RE = /\[([^\]]*)\]\(([^)\s]+)\)/g;
+const isLocalSlug = (t) => /^[^/:\\]+\.md$/i.test(t);
+
 function parseIndex(text) {
   const entries = new Map(); // slug -> {subject, hook, tags[], section}
   let section = "";
   for (const line of text.split(/\r?\n/)) {
     const sec = /^##\s+(.+?)\s*$/.exec(line);
     if (sec) { section = sec[1]; continue; }
-    const m = /^- \[([^\]]+)\]\(([^)]+)\)\s*(?:[—-]\s*(.*))?$/.exec(line);
-    if (!m) continue;
-    const subject = m[1].trim();
-    const slug = m[2].trim();
-    const rest = (m[3] ?? "").trim();
+    if (!/^- \[/.test(line)) continue; // still an index ROW, not any line that happens to hold a link
+    const links = [...line.matchAll(LINK_RE)].filter((m) => isLocalSlug(m[2].trim()));
+    if (!links.length) continue;
+    const [primary, ...companions] = links;
+    // hook/tags come from the row text after the primary link, with link markup flattened to its text
+    const rest = line
+      .slice(primary.index + primary[0].length)
+      .replace(LINK_RE, "$1")
+      .replace(/^\s*[—-]\s*/, "")
+      .trim();
     const tags = [...rest.matchAll(/#([a-z0-9-]+)/gi)].map((t) => t[1].toLowerCase());
     const hook = rest.replace(/#[a-z0-9-]+/gi, "").replace(/\s+$/, "").trim();
-    entries.set(slug, { subject, hook, tags, section });
+    entries.set(primary[2].trim(), { subject: primary[1].trim(), hook, tags, section });
+    for (const c of companions) {
+      const slug = c[2].trim();
+      if (!entries.has(slug)) entries.set(slug, { subject: c[1].trim(), hook: "", tags: [], section });
+    }
   }
   return entries;
 }
@@ -108,7 +199,12 @@ function parseTopic(text) {
     if (desc) meta.description = desc[2].trim().replace(/^["']|["']$/g, "");
     if (type) meta.type = type[2].trim();
   }
-  const links = [...text.matchAll(/\[\[([a-z0-9-]+)\]\]/gi)].map((l) => l[1].toLowerCase());
+  // Strip code spans and fences FIRST. A memory file that documents the link syntax writes `[[name]]`
+  // in backticks; counting those produced dangling-link reports for targets nobody ever meant to exist
+  // (`[[x]]`, `[[wikilinks]]`). A note in the memory tree already described that noise and worked around
+  // it instead of fixing it here — so the tool kept charging every reader for the same false report.
+  const prose = text.replace(/```[\s\S]*?```/g, " ").replace(/`[^`\n]*`/g, " ");
+  const links = [...prose.matchAll(/\[\[([a-z0-9-]+)\]\]/gi)].map((l) => l[1].toLowerCase());
   return { meta, links: [...new Set(links)] };
 }
 
@@ -212,12 +308,18 @@ writeFileSync(join(dir, "MEMORY-GRAPH.json"), JSON.stringify(graph, null, 2));
 
 const topTags = Object.entries(graph.tags).slice(0, 12).map(([t, c]) => `#${t}(${c})`).join(" ");
 console.log(`\nmemory-graph: ${graph.counts.files} files · ${graph.counts.indexed} indexed · ${Object.keys(graph.tags).length} tags`);
-console.log(`  -> ${join(dir, "MEMORY-GRAPH.json")}`);
+// The sidecar path is NOT printed: it is an absolute machine path (username included) and this line
+// gets pasted into notes. `generatedFrom` stays inside the JSON — that file sits in the dir it
+// describes, so it leaks nothing that reading it does not already tell you.
+console.log(`  -> MEMORY-GRAPH.json written in the memory dir  [dir-id ${dirTag(dir)}]`);
 console.log(`  TIERS: ${graph.counts.hot} hot (MEMORY.md, auto-loaded) · ${graph.counts.cold} cold (MEMORY-ARCHIVE.md, recall by query)`);
 console.log(`  top tags: ${topTags}`);
 // "unindexed" = a topic file in NEITHER index (genuinely undiscoverable → add a line or delete). Being COLD
 // (in the archive, not in MEMORY.md) is EXPECTED and healthy — that is how the hot set is kept tiny.
-console.log(`  HEALTH: ${danglingIndex.length} dangling index, ${orphans.length} unindexed files, ${danglingLinks.length} dangling [[links]], ${dupes.length} dup-description clusters`);
+// Conservation law, printed: every topic file lands in exactly ONE bucket. A category-only report can
+// lose a file silently (this tool did the opposite — it INVENTED one); an accounting line that must sum
+// to the file count cannot be satisfied by a miscount in either direction.
+console.log(`  HEALTH: ${danglingIndex.length} dangling index, ${orphans.length} unindexed files, ${danglingLinks.length} dangling [[links]], ${dupes.length} dup-description clusters  (Σ ${files.length - orphans.length} indexed + ${orphans.length} unindexed = ${files.length} files)`);
 if (danglingIndex.length) console.log(`    dangling index (prune or create the file): ${danglingIndex.slice(0, 20).join(", ")}`);
 if (orphans.length) console.log(`    unindexed (add to MEMORY.md or MEMORY-ARCHIVE.md, or delete): ${orphans.slice(0, 20).join(", ")}`);
 if (danglingLinks.length) console.log(`    dangling [[links]] (fix or write target): ${danglingLinks.slice(0, 20).map((d) => `${d.from}→${d.to}`).join(", ")}`);
