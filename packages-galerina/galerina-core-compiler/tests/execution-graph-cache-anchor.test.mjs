@@ -82,7 +82,11 @@ test("execution-graph: ★ the staleness guard FIRES on a module with no such ex
 test("execution-graph: the disk cache path does NOT move with process.cwd()", () => {
   const fromRepo = cacheDirFrom(PKG_ROOT);
   const fromElsewhere = cacheDirFrom(tmpdir());
-  assert.notEqual(fromRepo, "null", "the module must expose its cache dir for this lock to mean anything");
+  // The SET, not a single string (R&D 0416): the lone "null" here was a sentinel chosen separately
+  // from the code that produces it, and it drifted the moment the coalesce was dropped — a stale
+  // build now yields "undefined", which this line waved through and the equality below then compared
+  // to itself. Instance THREE of the class; the named set is the durable form, applied to BOTH sites.
+  assert.ok(!NOT_A_PATH.has(fromRepo), "the module must expose its cache dir for this lock to mean anything");
   assert.equal(fromRepo, fromElsewhere,
     "the cache dir changed with the working directory — this is the exact defect: launched from a " +
     "different cwd the compiler writes its cache somewhere else, outside the repo and outside cleanup.");
