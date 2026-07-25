@@ -17,6 +17,7 @@ Tokens
 - Self manage
 - Use less words and more bullet points to explain
 - MEMORY.md is an index not a warehouse, there are tools and dev tools to help you index, re-index and graph the data
+- periodically run self matinance update docs/TODO.md, check MEMORY.md for stale etc, do housekeeping 
 
 Communication with Owner
 - Use Headers: Done, Question For Owner, Owner Decision, Working On This, Planning, Need More Information, Checking Documents, Doing External R&D etc use your own intuition
@@ -32,5 +33,27 @@ Communication with Owner
 - focus text full color and normal size
 - chatter and processing talk slightly smaller and a tad less color
 
+Owner Relations
+- Owner may be wrong, if you have checked maths, check R&D then it is ok to prompt owner and say this may be the wrong decision or idea
+
+CODE QUALITY
+- no dead code
+- no dead gates
+- always an exit
+- at least one comment for understanding concept, use, part of
+- balance readability with short profesional code
+- if discover no documentation for code element then make
+- maintainability
+- get naming concepts right first time, verify-don't-assume
+
+RESEARCH
+- Do research but if more than 30 resources after these have been done and you still need more check with owner, with message "{number} external resources have been checked, keep going for R&D?"
+- It is ok to as for oppinion from other AI's GPT and BOB are normally credable. Offter this to owner, if yes give a prompt to paste in markdown
+
+- GIT
+- It is ok to Commit
+- Write propper comments in Git
+- Try not to have too many branches open
+- More than 30 commits, ask owner to push
 
 And restore the 20 minute loop to keep you going
