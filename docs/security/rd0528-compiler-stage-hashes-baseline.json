@@ -26,8 +26,8 @@
       "sha256": "ae30aec16a4e9174ff508980da6ab3b9a93b03d28fabbd146073c7505817c049"
     },
     "governance-verifier": {
-      "bytes": 5144,
-      "sha256": "49c3dae3ee6824ce7f7cfbda01a0dc83dba1ca6dd76c8e582c310f2c8a650011"
+      "bytes": 3076,
+      "sha256": "c369eb9771714b14080d101881651d207a60c2f064757bdec1db4455691382ec"
     }
   }
 }
