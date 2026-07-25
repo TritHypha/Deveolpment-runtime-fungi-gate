@@ -194,7 +194,7 @@ export function findTwinInternalCollisions(fungiBindings) {
   const byFileCode = new Map();
   for (const b of fungiBindings) {
     if (b.resolved === false) continue;             // cannot see the message — never guess
-    const key = `${b.file} ${b.code}`;
+    const key = `${b.file}\u0000${b.code}`;
     if (!byFileCode.has(key)) byFileCode.set(key, new Map());
     const subjects = byFileCode.get(key);
     const s = subjectOf(b.meaning);
@@ -204,7 +204,7 @@ export function findTwinInternalCollisions(fungiBindings) {
   const out = [];
   for (const [key, subjects] of byFileCode) {
     if (subjects.size < 2) continue;
-    const [file, code] = key.split(" ");
+    const [file, code] = key.split("\u0000");
     out.push({ code, file, uses: [...subjects.values()].map((v) => v[0]) });
   }
   return out;
