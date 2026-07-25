@@ -2,7 +2,13 @@
 
 The authoritative catalog of EVERY diagnostic/error code, GENERATED from the code-index (standard #10).
 Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-code-registry.mjs`.
-Universal-coverage anchor (#219 std 1): every code below is registered by construction — no orphans.
+> **Coverage is PARTIAL — do not read this as the code space.** This catalog covers codes the code-index
+> can see: NUMERIC-tailed codes (`FUNGI-<FAMILY>-001`) reached through the emit shapes its line-based
+> matcher recognises. **80 real codes are absent outright** because their tail is not numeric —
+> **51 of them on the signing path** (unsigned, hash mismatch, tamper, revoked key, sidecar drift).
+> Those refusals DO fire; this catalog cannot see them. **Absence here is not evidence a code is
+> unregistered.** Board #164/#165. Counts are DERIVED at generation time by
+> `scripts/audit-code-catalog-coverage.mjs` — never hand-typed, so they cannot rot into a comfortable lie.
 
 ## Status counts
 

@@ -74,6 +74,12 @@ flowchart LR
   T_audit_claim_hygiene_mjs --> C_source_hygiene
   T_audit_claim_hygiene_mjs --> C_doc_drift
   T_audit_claim_hygiene_mjs --> C_proofs
+  T_audit_code_catalog_coverage_mjs["audit-code-catalog-coverage.mjs"]
+  T_audit_code_catalog_coverage_mjs --> C_signing_fusion
+  T_audit_code_catalog_coverage_mjs --> C_coverage
+  T_audit_code_catalog_coverage_mjs --> C_diagnostics
+  T_audit_code_catalog_coverage_mjs --> C_doc_drift
+  T_audit_code_catalog_coverage_mjs --> C_graph_index
   T_audit_codes_full_mjs["audit-codes-full.mjs"]
   T_audit_codes_full_mjs --> C_effects
   T_audit_codes_full_mjs --> C_governance
@@ -465,7 +471,7 @@ flowchart LR
   T_code_index_mjs --> C_doc_drift
   T_code_index_mjs --> C_graph_index
   T_gen_code_registry_mjs["gen-code-registry.mjs"]
-  T_gen_code_registry_mjs --> C_governance
+  T_gen_code_registry_mjs --> C_signing_fusion
   T_gen_code_registry_mjs --> C_provenance
   T_gen_code_registry_mjs --> C_coverage
   T_gen_code_registry_mjs --> C_diagnostics

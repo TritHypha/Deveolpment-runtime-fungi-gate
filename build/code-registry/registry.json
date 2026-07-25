@@ -3889,7 +3889,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 13,
-      "docs": 10
+      "docs": 11
     },
     {
       "code": "FUNGI-GOV-006",
@@ -3933,7 +3933,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-GOV-009",
