@@ -125,10 +125,17 @@ function runOne({ name, dir }) {
   const nodeTestMatch = testScript.match(/node\s+--test\s+(.+?)(?:\s*&&|\s*$)/);
 
   let r;
+  let buildSkipped = false; // surfaced in the summary — see SKIPPED_BUILDS below
   if (needsBuild && distExists && nodeTestMatch) {
     const globs = nodeTestMatch[1].trim().split(/\s+/);
     const files = globs.flatMap((g) => expandTestGlob(dir, g));
     if (files.length > 0) {
+      // The package's own `test` script would have BUILT first; this path deliberately does not.
+      // Recorded rather than assumed silent: a suite that skips the build is testing whatever dist/
+      // happens to hold, so a green here means "the tests pass against the LAST build", which is a
+      // weaker claim than "the tests pass against this source". Measured 2026-07-25: a stale dist/
+      // in galerina-core-compiler read an export as `undefined` for a whole session because of this.
+      buildSkipped = true;
       r = spawnSync('node', ['--test', ...files], { cwd: dir, encoding: 'utf8', shell: false, timeout: 600_000 });
     } else {
       r = spawnSync('npm', ['test'], { cwd: dir, encoding: 'utf8', shell: true, timeout: 600_000 });
@@ -139,7 +146,30 @@ function runOne({ name, dir }) {
   const ms = Date.now() - t0;
   const out = `${r.stdout || ''}\n${r.stderr || ''}`;
   const counts = parseCounts(out);
-  return { name, status: r.status === 0 ? 'pass' : 'fail', code: r.status, ...counts, ms, out };
+  return { name, status: r.status === 0 ? 'pass' : 'fail', code: r.status, ...counts, ms, out, buildSkipped };
+}
+
+/**
+ * Report which packages ran WITHOUT their build step (the smart-dispatch above).
+ *
+ * Why this is surfaced rather than left implicit: the dispatch is a real convenience — it avoids
+ * requiring `tsc` on PATH — but it means those suites tested whatever `dist/` already contained.
+ * A silent skip lets "N packages, 0 fail" read as "the current source passes", when the honest
+ * claim is "the current TESTS pass against the LAST BUILD". Those differ exactly when it matters:
+ * after a source change that was never compiled. Measured on 2026-07-25 — a stale
+ * galerina-core-compiler/dist reported a newly-added export as `undefined` for an entire session.
+ *
+ * Not a gate, and deliberately not: turning it red would break every machine without tsc on PATH.
+ * It states what was skipped so the number is read at its true strength.
+ */
+function reportSkippedBuilds(results) {
+  const skipped = results.filter((r) => r.buildSkipped).map((r) => r.name);
+  if (skipped.length === 0) return;
+  console.log(`\n⚠  ${skipped.length} package(s) ran with the BUILD SKIPPED (dist/ already existed, so the`);
+  console.log(`   package's own build step was bypassed). These suites tested the LAST BUILD, not`);
+  console.log(`   necessarily the current source. Run \`npm run build\` in a package before trusting`);
+  console.log(`   its result after a source change:`);
+  for (const n of skipped.sort()) console.log(`     • ${n}`);
 }
 
 // ── canonical count emission (#150) ───────────────────────────────────────────
@@ -334,6 +364,7 @@ for (const r of results) {
 const passed = results.filter((r) => r.status === 'pass').length;
 process.stdout.write('─────────────────────────────────────────\n');
 process.stdout.write(`${passed}/${results.length} packages passed · ${totalTests} tests total\n`);
+reportSkippedBuilds(results);
 
 // ── emit canonical counts (#150) ──────────────────────────────────────────────
 // Only when explicitly requested AND the run is a clean FULL run. Writing on a
