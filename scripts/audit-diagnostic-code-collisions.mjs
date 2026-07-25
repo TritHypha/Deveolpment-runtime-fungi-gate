@@ -50,10 +50,23 @@ function trackedFiles(patterns) {
  */
 export function extractTsBindings(text, file) {
   const out = [];
-  const re = /code:\s*"(FUNGI-[A-Z0-9-]+)"\s*,\s*name:\s*"([A-Z0-9_]+)"/g;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    out.push({ code: m[1], name: m[2], file, line: text.slice(0, m.index).split("\n").length });
+  // TWO emit forms, and matching only the first is a 28% blind spot (R&D 0384, measured):
+  //   { code: "FUNGI-X-001", name: "SOME_NAME", … }        object literal
+  //   makeGovDiag("FUNGI-GOV-004", "DENIED_TARGET_SELECTED", …)   POSITIONAL
+  //   this.emit("FUNGI-VAULT-008", "VAULT_MISSING_SCOPE", …)      POSITIONAL
+  // My first version matched the object form ONLY, so C1's green meant "no duplicate names among
+  // the codes I happened to parse" — the vacuity class again, this time hidden by SURFACE rather
+  // than by logic. R&D's detector had the identical gap and it hid two real collisions from both of
+  // us. The verdict line now prints the per-form code counts so a green states what it covered.
+  const forms = [
+    { kind: "object", re: /code:\s*"(FUNGI-[A-Z0-9-]+)"\s*,\s*name:\s*"([A-Z0-9_]+)"/g },
+    { kind: "positional", re: /\(\s*"(FUNGI-[A-Z0-9-]+)"\s*,\s*"([A-Z0-9_]+)"/g },
+  ];
+  for (const { kind, re } of forms) {
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      out.push({ code: m[1], name: m[2], form: kind, file, line: text.slice(0, m.index).split("\n").length });
+    }
   }
   return out;
 }
@@ -219,7 +232,14 @@ function main() {
   console.log(`  surface: ${tsFiles.length} .ts · ${fungiFiles.length} .fungi · ${docFiles.length} .md  (git-tracked, node_modules excluded)`);
   const resolved = fungi.filter((f) => f.resolved).length;
   const unresolved = fungi.length - resolved;
+  // State the surface in CODES, not just files — a file count says nothing about how many codes were
+  // actually parsed, and that ambiguity is what let a 28% blind spot read as a clean green.
+  const objCodes = new Set(ts.filter((b) => b.form === "object").map((b) => b.code));
+  const posCodes = new Set(ts.filter((b) => b.form === "positional").map((b) => b.code));
+  const allCodes = new Set(ts.map((b) => b.code));
+  const posOnly = [...posCodes].filter((c) => !objCodes.has(c)).length;
   console.log(`  bindings: ${ts.length} .ts (code+name) · ${fungi.length} .fungi (code+message) · ${docs.length} doc rows`);
+  console.log(`  .ts CODES: ${allCodes.size} distinct — ${objCodes.size} object-literal · ${posCodes.size} positional (${posOnly} positional-ONLY)`);
   // No silent caps: say what was NOT compared, so a green result cannot be read as wider than it is.
   console.log(`  twin messages: ${resolved} literal (compared) · ${unresolved} built in a local (NOT compared — see the extractor note)`);
   if (ts.length === 0) { console.error("  ❌ NON-VACUITY: zero .ts bindings found — the extractor is blind, not the tree clean."); process.exit(1); }
