@@ -416,6 +416,15 @@ run("wat-lowering", "node", ["scripts/audit-wat-lowering.mjs"]);
 //   clears checkTypes + governance + security (052/077 hid here). 10 baselined (A1/A2/A3/B emitter
 //   classes); shrink-only, a NEW invalid → exit 1. Complements the source-level audit-wat-lowering sweep.
 run("wasm-validate", "node", ["scripts/audit-wasm-validate.mjs"]);
+// dss-wasm-build (#57) — the SUPERVISOR half of the WASM surface, and a DIFFERENT subject to the two
+//   gates above: wasm-validate + wat-lowering scan docs/examples, so neither has ever looked at
+//   galerina-core-security/src/dss/*.fungi. Its ratchet (a module that used to build to real WASM and
+//   no longer does → exit 1) ran automatically NOWHERE: CI spawns only its --self-test via
+//   gate-selftests, and --self-test exits BEFORE the baseline comparison and before artifact emission.
+//   The "asserts but is wired to nothing" class, on the gate that owns DSS.wasm. Wired 2026-07-25 after
+//   measuring the cost: build/dss-wasm/ was 4 days stale and two modules had drifted 17 B each.
+//   Regenerates build/dss-wasm/*.wasm + sha256 manifest as a side effect — untracked build output.
+run("dss-wasm-build", "node", ["scripts/audit-dss-wasm-build.mjs"]);
 // emitter-completeness (RD-0529 B2) — the per-CONSTRUCT companion to wasm-validate's per-FILE sweep:
 //   classifies a curated construct inventory through the same front-end gate + emitter into the MEASURED
 //   taxonomy {standalone-valid | fail-closed | host-import | emitter-invalid | gate-refused} and derives an
