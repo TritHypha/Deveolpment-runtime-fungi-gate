@@ -153,6 +153,7 @@ const LEX_VALID = [
   { label: "string literal", src: `pure flow g() -> String { return "hi" }` },
   { label: "operators", src: `pure flow h(a: Int, b: Int) -> Int { return a + b }` },
   { label: "valid unicode escape \\u{41}", src: `pure flow g() -> String { return "\\u{41}" }` },
+  { label: "valid lowercase unicode escape \\u{10ffff}", src: `pure flow g() -> String { return "\\u{10ffff}" }` },
 ];
 const LEX_MALFORMED = [
   { label: "unterminated string", src: `pure flow f() -> String { return "hi }` },
@@ -161,6 +162,7 @@ const LEX_MALFORMED = [
   { label: "bitwise ^ (not a .fungi op)", src: `pure flow f() -> Int { return 1 ^ 2 }` },
   { label: "invalid unicode escape \\u{110000} (>max)", src: `pure flow g() -> String { return "\\u{110000}" }` },
   { label: "non-hex unicode escape \\u{ZZZ}", src: `pure flow g() -> String { return "\\u{ZZZ}" }` },
+  { label: "non-hex 6th digit \\u{10FFFG}", src: `pure flow g() -> String { return "\\u{10FFFG}" }` },
 ];
 
 describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on valid, fault-parity on malformed", () => {
