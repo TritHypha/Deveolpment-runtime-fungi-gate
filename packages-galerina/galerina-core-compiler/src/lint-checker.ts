@@ -10,9 +10,10 @@
 //                  (`Some(x)`) whose name is never read anywhere in its flow. Enforces the owner's
 //                  "no dead code" standard (CG code-quality) and catches the wrong-variable tell
 //                  (a bound `Some(ex)` where the arm body used a different name). R&D corpus
-//                  `audit-tooling/unused-binding-diagnostic-corpus` (bridge 0244). Scope this rung:
-//                  locals + match bindings (corpus R1–R3); params (R5/F1) and self-referential dead
-//                  `mut acc=acc+1` (R4 — needs liveness, a syntactic read exists) are DEFERRED rungs.
+//                  `audit-tooling/unused-binding-diagnostic-corpus` (bridge 0244). Covers corpus
+//                  R1–R4: locals, match bindings, AND self-referential dead `mut acc=acc+1` (R4/F3 —
+//                  a read inside a variable's own self-assignment RHS is not a use). Params (R5/F1,
+//                  no `_`-suppression spelling yet) remain a DEFERRED rung.
 // =============================================================================
 
 import { type AstNode, type FlowMeta, type SourceLocation } from "./parser.js";
@@ -210,24 +211,34 @@ function collectBindings(node: AstNode, bindings: BindingSite[], patternNodes: S
   for (const child of node.children ?? []) collectBindings(child, bindings, patternNodes);
 }
 
-/** Collect every name READ (identifier node) in the subtree, excluding pattern-binding sites. */
-function collectReads(node: AstNode, patternNodes: Set<AstNode>, reads: Set<string>): void {
+/**
+ * Collect every name READ (identifier node) in the subtree, excluding pattern-binding sites AND a
+ * read of a self-assignment's own target inside its RHS. `suppress` is the target name of the
+ * enclosing `assignStmt` (`x` for `x = <expr>`, carried in the node's `.value`); a read of `x`
+ * within that RHS feeds only a write-back to `x`, so it is NOT a genuine use (corpus R4/F3: a write
+ * is not a use). A read of the name ANYWHERE else — a condition, a return, another var's RHS —
+ * still counts, so a real accumulator or loop counter is never flagged (that read isn't suppressed).
+ */
+function collectReads(node: AstNode, patternNodes: Set<AstNode>, reads: Set<string>, suppress?: string): void {
   if (node.kind === "identifier" && !patternNodes.has(node)) {
     const name = (node.value ?? "").trim();
-    if (name !== "") reads.add(name);
+    if (name !== "" && name !== suppress) reads.add(name);
   }
-  for (const child of node.children ?? []) collectReads(child, patternNodes, reads);
+  // Descending into an assignStmt's RHS, suppress the statement's own target (R4 dead self-write).
+  const childSuppress = node.kind === "assignStmt" ? (bindingNameOf(node.value) ?? suppress) : suppress;
+  for (const child of node.children ?? []) collectReads(child, patternNodes, reads, childSuppress);
 }
 
 /**
  * Check every flow for named bindings (locals + match-pattern bindings) that are never read
  * anywhere in the flow (FUNGI-LINT-002).
  *
- * Sound direction: a binding is flagged ONLY if its name appears as NO identifier-read in the
- * whole flow, so any real use (even in dead code or a sibling arm) suppresses the warning — the
+ * Sound direction: a binding is flagged ONLY if its name appears as NO genuine identifier-read in
+ * the whole flow, so any real use (even in dead code or a sibling arm) suppresses the warning — the
  * check cannot produce a false positive; it can only miss (e.g. a shadowed earlier binding whose
- * name is read by the shadowing one — a safe under-report, F4). Params (F1) and self-referential
- * dead `mut` (R4, a syntactic read exists) are deferred rungs, not handled here.
+ * name is read by the shadowing one — a safe under-report, F4). Self-referential dead `mut`
+ * (R4/F3 — `x = x + 1` with no other read) IS caught: collectReads discounts a read inside its own
+ * self-assignment RHS. Params (F1, no `_`-suppression spelling yet) remain a deferred rung.
  */
 export function checkUnusedBindings(ast: AstNode, flows: readonly FlowMeta[]): UnusedBindingDiagnostic[] {
   const diagnostics: UnusedBindingDiagnostic[] = [];

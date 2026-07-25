@@ -48,8 +48,19 @@ describe("FUNGI-LINT-002 — unused-binding lint (both-direction teeth)", () => 
     assert.deepEqual(flagged(`pure flow f() -> Int {\n  let a = 1\n  let b = 2\n  return 0\n}\n`), ["a", "b"]);
   });
 
-  // ── DEFERRED rung (documented): R4 self-referential dead mut has a syntactic read → not flagged ──
-  it("R4 (deferred): `mut acc = acc + 1` with no later read is NOT flagged this rung (needs liveness)", () => {
-    assert.deepEqual(flagged(`pure flow f() -> Int {\n  mut acc = 0\n  acc = acc + 1\n  return 0\n}\n`), []);
+  // ── R4/F3: self-referential dead mut (a read only inside its own self-assignment RHS) IS flagged ──
+  it("R4: `mut acc = acc + 1` with no other read is flagged (self-write is not a use)", () => {
+    assert.deepEqual(flagged(`pure flow f() -> Int {\n  mut acc = 0\n  acc = acc + 1\n  return 0\n}\n`), ["acc"]);
+  });
+
+  // ── R4 no-false-positive controls: a real use OUTSIDE the self-assignment RHS keeps it live ──
+  it("R4 control: a live accumulator (read in `return acc`) is NOT flagged", () => {
+    assert.deepEqual(flagged(`pure flow f(n: Int) -> Int {\n  mut acc = 0\n  acc = acc + n\n  return acc\n}\n`), []);
+  });
+  it("R4 control: a read on ANOTHER var's assignment RHS keeps it live", () => {
+    assert.deepEqual(flagged(`pure flow f(n: Int) -> Int {\n  mut acc = 0\n  mut out = 0\n  out = acc + n\n  return out\n}\n`), []);
+  });
+  it("R4 control: a loop counter read in the `while` condition is NOT flagged", () => {
+    assert.deepEqual(flagged(`pure flow f(n: Int) -> Int {\n  mut i = 0\n  while i < n {\n    i = i + 1\n  }\n  return 0\n}\n`), []);
   });
 });
