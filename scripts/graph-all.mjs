@@ -92,7 +92,19 @@ log(`   Hardened Border: ${pass} PASS / ${fail} FAIL${fail ? " (border drift): "
 // 5. memory graph — .claude memory health
 log("── 5/6 memory graph (.claude memory health) ──");
 const g5 = run(["scripts/memory-graph.mjs"]);
-const memory = first(g5.stdout, /HEALTH:\s*(.+)/).trim();
+// memory-graph FAILS CLOSED (exit 2) when more than one memory dir carries a MEMORY.md and nothing says
+// which is yours (8f017543 — it used to pick the most populated, which on a multi-project box reports a
+// clean bill of health for a tree nobody asked about). That is a REFUSAL, not a crash, and it arrives on
+// stderr — so `first(stdout, /HEALTH:/)` finds nothing and falls back to "?", printing a refusal as a
+// missing number while the sweep still exits 0. That is exactly the skip-reads-as-a-result defect this
+// file already fixed for step 2 above, reintroduced through a different child. Name it, with the reason.
+// (No path is passed here on purpose: graph-all cannot know which tree is the caller's, and hardcoding
+// one would bake a machine path into a tracked file. A caller who knows sets MEMORY_DIR, which the child
+// honours and spawnSync inherits.)
+const memCandidates = (g5.stderr ?? "").match(/^memory-graph:\s*(\d+) memory dirs/m);
+const memory = g5.status === 2
+  ? `REFUSED — ${memCandidates ? `${memCandidates[1]} candidate memory dirs, none chosen` : "see stderr"}; set MEMORY_DIR or pass --dir`
+  : first(g5.stdout, /HEALTH:\s*(.+)/).trim();
 log(`   memory graph: ${memory} (exit ${g5.status})`);
 
 // 6. dev-tool index/graph — packages + dev tools coverage
