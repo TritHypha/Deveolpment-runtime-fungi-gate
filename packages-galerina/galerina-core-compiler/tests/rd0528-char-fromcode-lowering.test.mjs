@@ -111,4 +111,21 @@ describe("RD-0528 step 1 · fault-parity: WASM refuses what the interpreter refu
     assert.equal((await run(0x110000)).__tag, "runtimeError", "out of range must fault in the interpreter too");
     assert.equal((await run(-1)).__tag, "runtimeError", "negative must fault in the interpreter too");
   });
+
+  // R&D 0356: the interpreter's refusal is a GOVERNED fault, not an escaping RangeError — something
+  // upstream already wraps it. That means this row can name the exact failure instead of settling for
+  // "it failed somehow", which is the difference between a lock and a shrug. Both the carried message
+  // and the emitted diagnostic CODE are asserted: a future refactor that keeps the tag but loses the
+  // reason, or reclassifies the code, reds here.
+  it("the interpreter's refusal is GOVERNED and NAMED — message + FUNGI-RUNTIME-003, not a bare tag", async () => {
+    const p = L.parseProgram(SUBJECT_SRC, "fromcode.fungi");
+    for (const n of [0x110000, -1]) {
+      const r = await L.executeFlow("mk", new Map([["n", { __tag: "int", value: n }]]), p.ast, p.flows);
+      assert.match(r.value.message, new RegExp(`Invalid code point ${n}`),
+        `the fault must carry WHICH code point was refused (n=${n})`);
+      const codes = (r.diagnostics ?? []).map((d) => d.code);
+      assert.ok(codes.includes("FUNGI-RUNTIME-003"),
+        `the governed fault must surface as FUNGI-RUNTIME-003, got ${JSON.stringify(codes)}`);
+    }
+  });
 });
