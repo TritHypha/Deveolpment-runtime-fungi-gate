@@ -203,8 +203,9 @@ export const V1_ACTIVE_KEYWORDS: ReadonlySet<string> = new Set([
   // were renamed first (binary-trees var check→acc; six `flow check(...)` fixtures
   // → checkFlow). `authorize` stays for T2.3 (schema); `project` stays a declaration.
   "check", "fault",
-  // GlobalVault declaration (W5b vault sprint, 2026-07-21):
-  // `vault { name: Type { allow flowName read|write; audit required|optional } }`.
+  // Vault declaration (W5b vault sprint, 2026-07-21; scope word made mandatory 2026-07-25):
+  // `vault secure { name: Type { allow flowName read|write; audit required|optional } }`.
+  // The scope word is required — `secure` is the only scope implemented; `global`/`session` refuse.
   // The vault keyword is the Galerina replacement for global mutable state — a
   // permission-controlled, auditable runtime state map. Access via `secure.name`.
   // Lexed as a keyword so the parser can dispatch to parseVaultDecl at top level.
