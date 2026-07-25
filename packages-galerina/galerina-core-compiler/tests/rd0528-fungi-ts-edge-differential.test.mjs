@@ -131,10 +131,59 @@ describe("RD-0528 .fungi ≡ .ts edge-differential — ERROR edges: fault-parity
   }
 });
 
+// ── LEX-STAGE differential (2nd predicate family, R&D 0234) ─────────────────────
+// The runtime rows above compare COMPUTED values / runtime faults; the lexer faults at a DIFFERENT layer,
+// so it needs its own fault predicate: `.ts` faults = `parseProgram(src).diagnostics` non-empty (lex+parse
+// diagnostics, measured — backtick→FUNGI-PARSE-001, unterminated→FUNGI-PARSE-003); `.fungi` faults =
+// `tokenize(src)` returns `Err`. Locks the lexer harden (unterminated string/char `15bf1f54`/`4a2d2aef`,
+// unexpected char `74f7d996`) into the differential so a fail-open regression there RED's this gate.
+function tsLexFault(src) {
+  const p = parseProgram(src, "edge-lex.fungi");
+  const d = p.diagnostics ?? [];
+  return { faulted: d.length > 0, codes: d.map((x) => x.code ?? x).slice(0, 2) };
+}
+async function fungiLexFault(src) {
+  const r = await executeFlow("tokenize", new Map([["source", vStr(src)]]), lexer.ast);
+  const v = r.value ?? r;
+  return { faulted: v.__tag === "err" };
+}
+
+const LEX_VALID = [
+  { label: "number + symbols", src: `pure flow f() -> Int { return 1 }` },
+  { label: "string literal", src: `pure flow g() -> String { return "hi" }` },
+  { label: "operators", src: `pure flow h(a: Int, b: Int) -> Int { return a + b }` },
+];
+const LEX_MALFORMED = [
+  { label: "unterminated string", src: `pure flow f() -> String { return "hi }` },
+  { label: "unterminated char", src: `pure flow f() -> Int { return 'a }` },
+  { label: "stray backtick", src: "pure flow f() -> Int { return `y` }" },
+  { label: "bitwise ^ (not a .fungi op)", src: `pure flow f() -> Int { return 1 ^ 2 }` },
+];
+
+describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on valid, fault-parity on malformed", () => {
+  for (const c of LEX_VALID) {
+    it(`valid: ${c.label} → neither faults`, async () => {
+      const ts = tsLexFault(c.src);
+      const fu = await fungiLexFault(c.src);
+      assert.equal(ts.faulted, false, `.ts lex faulted on valid input: ${JSON.stringify(ts)}`);
+      assert.equal(fu.faulted, false, `.fungi lex faulted on valid input: ${c.label}`);
+    });
+  }
+  for (const c of LEX_MALFORMED) {
+    it(`malformed: ${c.label} → both fault`, async () => {
+      const ts = tsLexFault(c.src);
+      const fu = await fungiLexFault(c.src);
+      assert.equal(ts.faulted, true, `.ts did NOT fault on malformed lex input: ${JSON.stringify(ts)}`);
+      assert.equal(fu.faulted, true, `.fungi lex did NOT fault (fail-open regression) where .ts does: ${c.label}`);
+    });
+  }
+});
+
 describe("RD-0528 edge-differential — non-vacuity", () => {
   it("has both a value-parity corpus and a fault-parity corpus, and the fault predicate distinguishes them", async () => {
     assert.ok(VALID.length >= 2, "value-parity corpus must be non-trivial");
     assert.ok(ERROR_EDGE.length >= 1, "must carry at least one error-edge fault-parity case");
+    assert.ok(LEX_VALID.length >= 2 && LEX_MALFORMED.length >= 2, "the lex-stage corpus must carry both accept and reject rows");
     // The instrument's positive control: a VALID input must be observed as NON-faulting on both sides
     // (else 'both fault' would pass vacuously for any input).
     const ts = await tsExec(VALID[0].src, VALID[0].entry, VALID[0].args, VALID[0].names);
