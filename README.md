@@ -342,11 +342,30 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 
 **The K3 verdict lattice (deny-by-default, No-Coercion min)**
 
+![Galerina — capability radar: Security & Governance](docs/diagrams/radar-1-security-governance.svg)
+
+**Capability radar 1 · Security & Governance**
+
+![Galerina — capability radar: Language & Type System](docs/diagrams/radar-11-language-type-system.svg)
+
+**Capability radar 11 · Language & Type System**
+
+The other nine capability radars:
+[2 · Raw Performance & Systems](docs/diagrams/radar-2-performance-systems.svg) ·
+[3 · Developer Experience & Ecosystem](docs/diagrams/radar-3-devx-ecosystem.svg) ·
+[4 · Governed Chaos & Multi-Substrate](docs/diagrams/radar-4-governed-chaos.svg) ·
+[5 · CI/CD & Developer Support](docs/diagrams/radar-5-cicd-devsupport.svg) ·
+[6 · Tri / Ternary Logic](docs/diagrams/radar-6-tri-ternary.svg) ·
+[7 · Web App / API / Secure Web](docs/diagrams/radar-7-web-api-secure.svg) ·
+[8 · Databasing — over SQL vs native TritMesh](docs/diagrams/radar-8-databasing.svg) ·
+[9 · Data Science](docs/diagrams/radar-9-data-science.svg) ·
+[10 · AI / ML / Neural Nets](docs/diagrams/radar-10-AI-ML-NuroNet.svg)
+
 ![Galerina — the breach that can't compile](docs/diagrams/galerina-ungoverned-vs-governed-breach.svg)
 
 **The breach that can't compile (ungoverned vs governed)**
 
-> **18 more** — capability radars (security/governance · performance · DevX · web/API · databasing · data science · AI/ML · language/type-system vs Rust/TS/Python …) and concept maps (trust-state lifecycle · govern-don't-absorb · privacy-cut authoring · governed healthcare + payment lanes) — in [`docs/diagrams/`](docs/diagrams/).
+> **16 more** concept maps (trust-state lifecycle · govern-don't-absorb · privacy-cut authoring · governed healthcare + payment lanes …) — in [`docs/diagrams/`](docs/diagrams/).
 
 ---
 
