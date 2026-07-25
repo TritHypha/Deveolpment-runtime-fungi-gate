@@ -367,6 +367,13 @@ run("artifact-drift", "node", ["scripts/audit-artifact-drift.mjs"]);
 //   run `node scripts/audit-silent-overwrite.mjs` for the candidate list, `--all` for guarded+unguarded.
 //   Its --self-test also runs in the gate-selftests meta-gate.
 run("silent-overwrite", "node", ["scripts/audit-silent-overwrite.mjs"]);
+// example-diagnostics — every curriculum example under docs/examples/Level-* must honour its declared
+//   `/// expected_diagnostics:` contract. WIRED 2026-07-25 (board #173): the gate existed and was RED
+//   since 2026-07-21 but ran NOWHERE, so nothing in the close knew — "catalogued is not wired" (R&D 0404).
+//   Deliberately wired only AFTER its 6 regressions were closed: wiring a red gate converts a hidden
+//   failure into a blocking one without fixing anything. Baseline-gated (89 known-drift) + the
+//   Proposed-* exclusion is name-ratcheted, so a failing example cannot be renamed into silence.
+run("example-diagnostics", "node", ["scripts/audit-example-diagnostics.mjs"]);
 // claim:hygiene — RD technical-claims-audit (2026-07-14) durable fix: public docs (README · SECURITY ·
 //   docs/**) must carry their evidence tier — no unqualified superlatives ("absolute", "native-class",
 //   "mathematical proof", "unhackable" asserted rather than rebutted), controlled security/PQ vocabulary

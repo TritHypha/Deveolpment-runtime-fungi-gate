@@ -4777,7 +4777,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 8,
-      "docs": 2
+      "docs": 1
     },
     {
       "code": "FUNGI-INHERIT-002",
@@ -5707,7 +5707,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 16,
-      "docs": 3
+      "docs": 2
     },
     {
       "code": "FUNGI-MONO-002",
@@ -5747,7 +5747,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 4
+      "docs": 3
     },
     {
       "code": "FUNGI-NAME-001",
@@ -7982,7 +7982,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 3
+      "docs": 2
     },
     {
       "code": "FUNGI-STORAGE-001",
@@ -8670,7 +8670,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 13,
-      "docs": 2
+      "docs": 1
     },
     {
       "code": "FUNGI-TRAP-002",
@@ -8867,7 +8867,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 26,
-      "docs": 3
+      "docs": 5
     },
     {
       "code": "FUNGI-TYPE-006",

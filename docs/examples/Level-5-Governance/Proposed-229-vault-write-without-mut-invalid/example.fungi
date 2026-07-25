@@ -1,0 +1,44 @@
+@version 1
+/// example: 229-vault-write-without-mut-invalid
+/// level: 5
+/// concept: FUNGI-VAULT-004 — vault write effect missing when flow mutates vault without declaring it
+/// expected_diagnostics: FUNGI-VAULT-004
+/// ai_rule: Every vault secure write must declare vault.write in the contract effects block. Missing the vault.write effect declaration emits FUNGI-VAULT-004.
+
+vault secure {
+  loginCount: Int {
+    allow incrementLogin write
+    allow getLoginCount  read
+    audit required
+  }
+}
+
+;; INVALID — vault.write effect is missing from the contract.
+;; The flow mutates vault state but does not declare vault.write → FUNGI-VAULT-004.
+;;
+;; NOTE on what makes this a HONEST negative example: everything here except the missing
+;; `vault.write` is CORRECT. The tier is `secure` because audit.write is a secure-tier effect,
+;; and the boundary input is gated before it reaches a sink. Without that, the example emitted
+;; FUNGI-TIER-001 and FUNGI-VALUESTATE-008 and never reached the defect it claims to teach —
+;; a negative example must isolate exactly ONE fault, or the reader learns the wrong lesson.
+secure flow incrementLogin(userId: String) -> Result<Bool, Error>
+contract {
+  intent "Increment the login counter (INVALID — missing vault.write in effects)"
+  effects { audit.write }
+}
+{
+  safe mut userId = validate.userId(userId)?
+
+  ;; ⚠ THE DEFECT THIS EXAMPLE TEACHES CANNOT CURRENTLY BE WRITTEN.
+  ;; `mut secure.loginCount = secure.loginCount + 1` is the syntax the governance verifier
+  ;; documents (governance-verifier.ts:302) and that example 228 tells authors to use — but it
+  ;; does NOT parse: parser.ts:1601 `parseMutDecl` consumes `mut`, ONE identifier, then expects
+  ;; `=` immediately. There is no member-path production, so `mut secure.x` is unparseable by
+  ;; construction. Attempting it emits two FUNGI-PARSE-001 alongside the intended FUNGI-VAULT-004.
+  ;; Left un-written on purpose: an example must not teach syntax the compiler cannot accept.
+  ;; Tracked as board #174. When the grammar lands, restore the write and this example becomes a
+  ;; true single-fault negative.
+
+  AuditLog.write({ event: "LoginAttempt", user: userId })
+  return Ok(true)
+}

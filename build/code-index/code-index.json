@@ -710,7 +710,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "fungi docs/examples/Level-9-Enterprise/473-scoped-vault-request/example.fungi:66"
+      "fungi docs/examples/Level-9-Enterprise/Proposed-473-scoped-vault-request/example.fungi:66"
     ]
   },
   {
@@ -1903,7 +1903,7 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:1724",
-      "ref scripts/audit-artifact-drift.mjs:250",
+      "ref scripts/audit-artifact-drift.mjs:303",
       "ref scripts/code-index.mjs:122",
       "test scripts/tests/codes.test.mjs:45"
     ]
@@ -3310,7 +3310,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:966",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:967",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:974",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:632"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:630"
     ]
   },
   {
@@ -5574,19 +5574,19 @@
     "severities": [],
     "allSites": [
       "ref scripts/audit-artifact-drift.mjs:19",
-      "ref scripts/audit-artifact-drift.mjs:310"
+      "ref scripts/audit-artifact-drift.mjs:364"
     ]
   },
   {
     "code": "FUNGI-DRIFT-002",
     "namespace": "FUNGI",
     "family": "DRIFT",
-    "occurrences": 12,
+    "occurrences": 14,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 0,
-    "refs": 10,
+    "refs": 12,
     "docs": 2,
     "names": [],
     "severities": [],
@@ -5595,14 +5595,16 @@
       "doc docs/TODO.md:97",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
-      "ref scripts/audit-artifact-drift.mjs:155",
-      "ref scripts/audit-artifact-drift.mjs:181",
-      "ref scripts/audit-artifact-drift.mjs:197",
-      "ref scripts/audit-artifact-drift.mjs:312",
-      "ref scripts/audit-artifact-drift.mjs:314",
-      "ref scripts/audit-artifact-drift.mjs:315",
-      "ref scripts/audit-artifact-drift.mjs:319",
-      "ref scripts/audit-artifact-drift.mjs:320"
+      "ref scripts/audit-artifact-drift.mjs:170",
+      "ref scripts/audit-artifact-drift.mjs:196",
+      "ref scripts/audit-artifact-drift.mjs:229",
+      "ref scripts/audit-artifact-drift.mjs:366",
+      "ref scripts/audit-artifact-drift.mjs:368",
+      "ref scripts/audit-artifact-drift.mjs:369",
+      "ref scripts/audit-artifact-drift.mjs:371",
+      "ref scripts/audit-artifact-drift.mjs:372",
+      "ref scripts/audit-artifact-drift.mjs:376",
+      "ref scripts/audit-artifact-drift.mjs:377"
     ]
   },
   {
@@ -5619,7 +5621,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "ref scripts/audit-artifact-drift.mjs:317"
+      "ref scripts/audit-artifact-drift.mjs:374"
     ]
   },
   {
@@ -7114,7 +7116,7 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:48",
       "doc docs/reference/dss-wasm-runtime-errors.md:85",
       "doc docs/TODO.md:184",
-      "ref scripts/audit-artifact-drift.mjs:51"
+      "ref scripts/audit-artifact-drift.mjs:66"
     ]
   },
   {
@@ -7801,7 +7803,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:525",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:678",
       "doc docs/AI/DO_NOT_USE_YET.md:166",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:547",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:546",
       "doc docs/examples/EXAMPLES_INDEX.md:195",
       "doc docs/examples/EXAMPLES_INDEX.md:318",
       "fungi docs/examples/Level-5-Governance/212-policy-purpose-mismatch/example.fungi:5",
@@ -9567,7 +9569,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:184",
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:197",
       "test packages-galerina/galerina-core-compiler/tests/gir-emitter.test.mjs:198",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1018",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1021",
       "doc docs/examples/EXAMPLES_INDEX.md:240",
       "doc docs/examples/EXAMPLES_INDEX.md:269",
       "doc docs/examples/EXAMPLES_INDEX.md:296",
@@ -9994,7 +9996,7 @@
     "code": "FUNGI-INHERIT-001",
     "namespace": "FUNGI",
     "family": "INHERIT",
-    "occurrences": 18,
+    "occurrences": 17,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -10002,7 +10004,7 @@
     ],
     "tests": 8,
     "refs": 5,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "PARENT_POLICY_NOT_FOUND"
     ],
@@ -10024,7 +10026,6 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:166",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:167",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:130",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:549",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:30"
     ]
   },
@@ -10640,8 +10641,8 @@
       "ref scripts/audit-wat-lowering.mjs:152",
       "ref scripts/audit-wat-lowering.mjs:153",
       "ref scripts/audit-wat-lowering.mjs:204",
-      "ref scripts/run-phase-close.mjs:398",
-      "ref scripts/run-phase-close.mjs:399"
+      "ref scripts/run-phase-close.mjs:405",
+      "ref scripts/run-phase-close.mjs:406"
     ]
   },
   {
@@ -11505,8 +11506,8 @@
       "doc docs/COVERAGE.md:423",
       "doc docs/COVERAGE.md:433",
       "ref scripts/audit-artifact-drift.mjs:24",
-      "ref scripts/audit-artifact-drift.mjs:151",
-      "ref scripts/audit-artifact-drift.mjs:159",
+      "ref scripts/audit-artifact-drift.mjs:166",
+      "ref scripts/audit-artifact-drift.mjs:174",
       "ref scripts/audit-production-blockers.mjs:5",
       "ref scripts/audit-twin-emit-parity.mjs:175",
       "ref scripts/code-index.mjs:154",
@@ -11822,7 +11823,7 @@
     "code": "FUNGI-MONO-001",
     "namespace": "FUNGI",
     "family": "MONO",
-    "occurrences": 35,
+    "occurrences": 34,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -11830,7 +11831,7 @@
     ],
     "tests": 16,
     "refs": 13,
-    "docs": 3,
+    "docs": 2,
     "names": [
       "EMERGENCY_EXPANDS_CAPABILITY"
     ],
@@ -11868,7 +11869,6 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/emergency-monotonicity.test.mjs:98",
       "test packages-galerina/galerina-core-compiler/tests/governance/emergency-monotonicity.test.mjs:116",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:130",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:545",
       "doc docs/language/fungi/06-governance-constructs.md:255",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:30"
     ]
@@ -11924,17 +11924,16 @@
     "code": "FUNGI-MUTATION-001",
     "namespace": "FUNGI",
     "family": "MUTATION",
-    "occurrences": 4,
+    "occurrences": 3,
     "docOnly": true,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 0,
-    "docs": 4,
+    "docs": 3,
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:548",
       "doc docs/roadmap-2026-07-25-cycle2.md:38",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:76",
       "doc docs/TODO.md:97"
@@ -12131,7 +12130,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:418",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:584",
       "doc docs/architecture/stage6-hundred-percent-fungi-roadmap-2026-07-10.md:39",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:638",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:636",
       "doc docs/examples/README.md:92",
       "ref scripts/audit-silent-overwrite.mjs:11",
       "ref scripts/audit-silent-overwrite.mjs:39",
@@ -12966,7 +12965,7 @@
     "code": "FUNGI-PARSE-001",
     "namespace": "FUNGI",
     "family": "PARSE",
-    "occurrences": 60,
+    "occurrences": 61,
     "docOnly": false,
     "defs": [],
     "emits": [],
@@ -13023,6 +13022,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:67",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:70",
       "doc docs/examples/Level-2-Types/096-hallmark-reserved-name/notes.md:19",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:37",
       "doc docs/language/fungi/01-flows-and-functions.md:172",
       "doc docs/language/fungi/03-effects-and-capabilities.md:222",
       "doc docs/language/fungi/04-types-and-values.md:198",
@@ -14119,7 +14119,7 @@
       "doc docs/examples/Level-9-Enterprise/456-compliance-pii-effect/notes.md:5",
       "fungi docs/examples/Level-9-Enterprise/466-pii-without-pii-effect/example.fungi:6",
       "fungi docs/examples/Level-9-Enterprise/466-pii-without-pii-effect/example.fungi:11",
-      "ref scripts/audit-example-diagnostics.mjs:165"
+      "ref scripts/audit-example-diagnostics.mjs:201"
     ]
   },
   {
@@ -16976,17 +16976,16 @@
     "code": "FUNGI-STEP-001",
     "namespace": "FUNGI",
     "family": "STEP",
-    "occurrences": 3,
+    "occurrences": 2,
     "docOnly": true,
     "defs": [],
     "emits": [],
     "tests": 0,
     "refs": 0,
-    "docs": 3,
+    "docs": 2,
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:550",
       "doc docs/roadmap-2026-07-25-cycle2.md:39",
       "doc docs/TODO.md:97"
     ]
@@ -18317,7 +18316,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1058",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1061",
       "doc docs/examples/EXAMPLES_INDEX.md:294",
       "doc docs/examples/Level-6-Compute/AI_SUMMARY.md:47",
       "fungi docs/examples/Level-8-Targets/414-target-no-fallback-invalid/example.fungi:6",
@@ -18547,7 +18546,7 @@
     "code": "FUNGI-TIER-001",
     "namespace": "FUNGI",
     "family": "TIER",
-    "occurrences": 44,
+    "occurrences": 46,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -18593,6 +18592,8 @@
       "test packages-galerina/galerina-core-compiler/tests/tier-floor-fungi-tier-001.test.mjs:112",
       "doc packages-galerina/galerina-core-compiler/TODO.md:46",
       "doc docs/contract-authoring-model.md:27",
+      "fungi docs/examples/Level-5-Governance/228-global-vault-mut-write/example.fungi:30",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:22",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:15",
       "doc docs/paper/defensive-papers/fail-open-taxonomy-signed-green-is-not-safe-defensive-publication-2026-07-08.md:39",
       "doc docs/reference/effects.md:17",
@@ -18602,8 +18603,8 @@
       "doc docs/reference/effects.md:163",
       "doc docs/roadmap-2026-07-25-cycle2.md:100",
       "doc docs/TODO.md:98",
-      "ref scripts/audit-example-diagnostics.mjs:165",
-      "ref scripts/audit-example-diagnostics.mjs:167",
+      "ref scripts/audit-example-diagnostics.mjs:201",
+      "ref scripts/audit-example-diagnostics.mjs:203",
       "ref scripts/audit-twin-emit-parity.mjs:115"
     ]
   },
@@ -18629,7 +18630,7 @@
     "code": "FUNGI-TRAP-001",
     "namespace": "FUNGI",
     "family": "TRAP",
-    "occurrences": 25,
+    "occurrences": 24,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -18637,7 +18638,7 @@
     ],
     "tests": 13,
     "refs": 6,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "TRAP_INVALID_ERROR_CODE"
     ],
@@ -18666,7 +18667,6 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/trap-decl.test.mjs:182",
       "test packages-galerina/galerina-core-compiler/tests/governance/trap-decl.test.mjs:269",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:157",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:551",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:77"
     ]
   },
@@ -18856,7 +18856,7 @@
     "severities": [],
     "allSites": [
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11.test.mjs:479",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:638"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:636"
     ]
   },
   {
@@ -19164,9 +19164,9 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-hot-paths.test.mjs:140",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-hot-paths.test.mjs:145",
       "doc packages-galerina/galerina-core-compiler/TODO.md:15",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:626",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:634",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:635",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:623",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:632",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:633",
       "doc docs/examples/EXAMPLES_INDEX.md:100",
       "fungi docs/examples/Level-2-Types/084-unknown-type/example.fungi:5",
       "fungi docs/examples/Level-2-Types/084-unknown-type/example.fungi:6",
@@ -19185,11 +19185,11 @@
       "doc docs/reference/types.md:39",
       "ref scripts/audit-codes-full.mjs:77",
       "ref scripts/audit-codes-full.mjs:78",
-      "ref scripts/audit-example-diagnostics.mjs:157",
-      "ref scripts/audit-example-diagnostics.mjs:162",
-      "ref scripts/audit-example-diagnostics.mjs:163",
-      "ref scripts/audit-example-diagnostics.mjs:164",
-      "ref scripts/audit-example-diagnostics.mjs:169",
+      "ref scripts/audit-example-diagnostics.mjs:193",
+      "ref scripts/audit-example-diagnostics.mjs:198",
+      "ref scripts/audit-example-diagnostics.mjs:199",
+      "ref scripts/audit-example-diagnostics.mjs:200",
+      "ref scripts/audit-example-diagnostics.mjs:205",
       "ref scripts/audit-twin-emit-parity.mjs:214",
       "ref scripts/audit-twin-emit-parity.mjs:215",
       "ref scripts/audit-twin-emit-parity.mjs:216",
@@ -19764,7 +19764,7 @@
     "code": "FUNGI-TYPE-005",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 45,
+    "occurrences": 47,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -19772,7 +19772,7 @@
     ],
     "tests": 26,
     "refs": 3,
-    "docs": 3,
+    "docs": 5,
     "names": [
       "INVALID_CALL_ARG_TYPE"
     ],
@@ -19824,7 +19824,9 @@
       "test packages-galerina/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs:170",
       "doc packages-galerina/galerina-core-compiler/TODO.md:43",
       "doc docs/architecture/self-hosting-evolution-plan-2026-07-10.md:28",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:640"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:622",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:624",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:638"
     ]
   },
   {
@@ -19897,7 +19899,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:769",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:779",
       "test packages-galerina/galerina-core-compiler/tests/wat-p9-typechecker-parity.test.mjs:171",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:636",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:634",
       "doc docs/examples/README.md:80"
     ]
   },
@@ -20099,8 +20101,8 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:237",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:249",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:250",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:631",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1036",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:629",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:1039",
       "doc docs/examples/EXAMPLES_INDEX.md:81",
       "doc docs/examples/EXAMPLES_INDEX.md:84",
       "doc docs/examples/EXAMPLES_INDEX.md:97",
@@ -20393,7 +20395,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:180",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:191",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-phase11-wave2.test.mjs:192",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:627",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:625",
       "ref scripts/audit-codes-full.mjs:70",
       "ref scripts/audit-twin-emit-parity.mjs:176",
       "ref scripts/audit-twin-emit-parity.mjs:181",
@@ -20763,7 +20765,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:520",
       "test packages-galerina/galerina-core-compiler/tests/type-checker.test.mjs:529",
       "doc docs/architecture/session4-5hr-autonomous-roadmap-2026-07-11.md:62",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:633",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:631",
       "doc docs/examples/README.md:85",
       "doc docs/roadmap-2026-07-15.md:91"
     ]
@@ -21052,7 +21054,7 @@
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:267",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:290",
       "test packages-galerina/galerina-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:295",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:639",
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:637",
       "doc docs/roadmap-2026-07-15.md:47"
     ]
   },
@@ -21180,7 +21182,7 @@
       "test packages-galerina/galerina-core-compiler/tests/condition-type-gate.test.mjs:32",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:305",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:306",
-      "doc docs/contract-registry/CONTRACT_REGISTRY.md:628"
+      "doc docs/contract-registry/CONTRACT_REGISTRY.md:626"
     ]
   },
   {
@@ -22072,7 +22074,7 @@
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
       "doc docs/TODO.md:915",
       "ref scripts/audit-example-diagnostics.mjs:9",
-      "ref scripts/audit-example-diagnostics.mjs:160",
+      "ref scripts/audit-example-diagnostics.mjs:196",
       "ref scripts/audit-muted-diagnostics.mjs:63"
     ]
   },
@@ -22155,7 +22157,7 @@
     "code": "FUNGI-VALUESTATE-008",
     "namespace": "FUNGI",
     "family": "VALUESTATE",
-    "occurrences": 53,
+    "occurrences": 55,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -22217,6 +22219,8 @@
       "fungi docs/examples/Level-4-Security/178-governed-data-query/example.fungi:11",
       "fungi docs/examples/Level-4-Security/178-governed-data-query/example.fungi:41",
       "doc docs/examples/Level-4-Security/178-governed-data-query/notes.md:5",
+      "fungi docs/examples/Level-5-Governance/228-global-vault-mut-write/example.fungi:38",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:22",
       "fungi docs/examples/Level-6-Compute/310-compute-fallback-required/example.fungi:32",
       "fungi docs/examples/Level-6-Compute/315-compute-summary/example.fungi:30",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:15",
@@ -22340,14 +22344,14 @@
       "doc docs/COVERAGE.md:300",
       "doc docs/COVERAGE.md:914",
       "doc docs/examples/EXAMPLES_INDEX.md:57",
-      "doc docs/examples/Level-1-Basics/024-vault-global-basic/notes.md:15",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:4",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:5",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:6",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:9",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:14",
-      "fungi docs/examples/Level-1-Basics/025-vault-global-secret-invalid/example.fungi:17",
-      "doc docs/examples/Level-1-Basics/025-vault-global-secret-invalid/notes.md:6",
+      "doc docs/examples/Level-1-Basics/Proposed-024-vault-global-basic/notes.md:15",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:4",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:5",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:6",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:9",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:14",
+      "fungi docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/example.fungi:17",
+      "doc docs/examples/Level-1-Basics/Proposed-025-vault-global-secret-invalid/notes.md:6",
       "doc docs/examples/README.md:152",
       "ref scripts/audit-diagnostic-code-collisions.mjs:16",
       "ref scripts/audit-diagnostic-code-collisions.mjs:46"
@@ -22437,7 +22441,7 @@
     "code": "FUNGI-VAULT-004",
     "namespace": "FUNGI",
     "family": "VAULT",
-    "occurrences": 16,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:295",
@@ -22448,7 +22452,7 @@
       "packages-galerina/galerina-core-config/src/index.ts:1361"
     ],
     "tests": 1,
-    "refs": 3,
+    "refs": 4,
     "docs": 4,
     "names": [
       "VAULT_WRITE_EFFECT_MISSING"
@@ -22465,14 +22469,16 @@
       "def packages-galerina/galerina-core-config/src/index.ts:1320",
       "emit packages-galerina/galerina-core-config/src/index.ts:1361",
       "test packages-galerina/galerina-core-config/tests/config-contracts.test.mjs:309",
-      "fungi docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/example.fungi:4",
-      "fungi docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/example.fungi:5",
-      "fungi docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/example.fungi:6",
-      "fungi docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/example.fungi:17",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:4",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:5",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:6",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:17",
+      "fungi docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi:37",
       "doc docs/examples/README.md:155",
       "doc docs/language/fungi/03-effects-and-capabilities.md:65",
       "doc docs/reference/effects.md:148",
-      "doc docs/reference/effects.md:149"
+      "doc docs/reference/effects.md:149",
+      "ref scripts/audit-example-diagnostics.mjs:99"
     ]
   },
   {
@@ -22510,8 +22516,8 @@
       "fungi docs/examples/Level-5-Governance/228-global-vault-mut-write/example.fungi:6",
       "doc docs/examples/Level-5-Governance/228-global-vault-mut-write/notes.md:18",
       "doc docs/examples/Level-5-Governance/228-global-vault-mut-write/notes.md:19",
-      "doc docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/notes.md:12",
-      "doc docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/notes.md:13",
+      "doc docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/notes.md:12",
+      "doc docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/notes.md:13",
       "doc docs/examples/README.md:156"
     ]
   },

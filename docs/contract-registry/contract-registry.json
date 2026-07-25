@@ -1,8 +1,8 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-07-25T06:45:48.000Z",
-  "sha": "de128b49",
-  "contracts": 936,
+  "generatedAt": "2026-07-25T18:23:52.000Z",
+  "sha": "5f51ac32",
+  "contracts": 939,
   "parsed": 460,
   "rows": [
     {
@@ -155,30 +155,6 @@
       "intent": "Approve an order using readable operator aliases (and, or, unless, is) to express the approval logic."
     },
     {
-      "file": "docs/examples/Level-1-Basics/024-vault-global-basic/example.fungi",
-      "name": "getMaxUploadMb",
-      "qualifier": "pure",
-      "signature": "pure flow getMaxUploadMb() -> Int",
-      "effects": [],
-      "intent": ""
-    },
-    {
-      "file": "docs/examples/Level-1-Basics/024-vault-global-basic/example.fungi",
-      "name": "isPaymentsEnabled",
-      "qualifier": "pure",
-      "signature": "pure flow isPaymentsEnabled() -> Bool",
-      "effects": [],
-      "intent": ""
-    },
-    {
-      "file": "docs/examples/Level-1-Basics/024-vault-global-basic/example.fungi",
-      "name": "getPaymentCurrency",
-      "qualifier": "pure",
-      "signature": "pure flow getPaymentCurrency() -> String",
-      "effects": [],
-      "intent": ""
-    },
-    {
       "file": "docs/examples/Level-1-Basics/026-pure-flow-main/example.fungi",
       "name": "main",
       "qualifier": "pure",
@@ -193,6 +169,30 @@
       "signature": "pure flow main() -> Int",
       "effects": [],
       "intent": "Demonstrate print() with multiple value types."
+    },
+    {
+      "file": "docs/examples/Level-1-Basics/Proposed-024-vault-global-basic/example.fungi",
+      "name": "getMaxUploadMb",
+      "qualifier": "pure",
+      "signature": "pure flow getMaxUploadMb() -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/Level-1-Basics/Proposed-024-vault-global-basic/example.fungi",
+      "name": "isPaymentsEnabled",
+      "qualifier": "pure",
+      "signature": "pure flow isPaymentsEnabled() -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/Level-1-Basics/Proposed-024-vault-global-basic/example.fungi",
+      "name": "getPaymentCurrency",
+      "qualifier": "pure",
+      "signature": "pure flow getPaymentCurrency() -> String",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "docs/examples/Level-2-Types/051-int-basic/example.fungi",
@@ -1490,20 +1490,10 @@
     {
       "file": "docs/examples/Level-5-Governance/228-global-vault-mut-write/example.fungi",
       "name": "incrementLogin",
-      "qualifier": "guarded",
-      "signature": "guarded flow incrementLogin(userId: String) -> Result<Bool,Error>",
+      "qualifier": "secure",
+      "signature": "secure flow incrementLogin(userId: String) -> Result<Bool,Error>",
       "effects": [
         "vault.write",
-        "audit.write"
-      ],
-      "intent": ""
-    },
-    {
-      "file": "docs/examples/Level-5-Governance/229-vault-write-without-mut-invalid/example.fungi",
-      "name": "incrementLogin",
-      "qualifier": "guarded",
-      "signature": "guarded flow incrementLogin(userId: String) -> Result<Bool,Error>",
-      "effects": [
         "audit.write"
       ],
       "intent": ""
@@ -1514,6 +1504,16 @@
       "qualifier": "guarded",
       "signature": "guarded flow unauthorisedFlow() -> Int",
       "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/Level-5-Governance/Proposed-229-vault-write-without-mut-invalid/example.fungi",
+      "name": "incrementLogin",
+      "qualifier": "secure",
+      "signature": "secure flow incrementLogin(userId: String) -> Result<Bool,Error>",
+      "effects": [
+        "audit.write"
+      ],
       "intent": ""
     },
     {
@@ -2365,7 +2365,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/473-scoped-vault-request/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-473-scoped-vault-request/example.fungi",
       "name": "loadCustomer",
       "qualifier": "guarded",
       "signature": "guarded flow loadCustomer(id: CustomerId) -> Result<Customer,Error>",
@@ -2376,7 +2376,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/473-scoped-vault-request/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-473-scoped-vault-request/example.fungi",
       "name": "getCustomerForOrder",
       "qualifier": "guarded",
       "signature": "guarded flow getCustomerForOrder(id: CustomerId) -> Result<Customer,Error>",
@@ -2386,7 +2386,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/473-scoped-vault-request/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-473-scoped-vault-request/example.fungi",
       "name": "createOrder",
       "qualifier": "secure",
       "signature": "secure flow createOrder(readonly request: Request, customerId: CustomerId) -> Result<OrderId,Error>",
@@ -2400,7 +2400,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/474-vault-session-session-pattern/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-474-vault-session-session-pattern/example.fungi",
       "name": "loadPermissions",
       "qualifier": "guarded",
       "signature": "guarded flow loadPermissions(userId: UserId) -> Result<PermissionSummary,Error>",
@@ -2411,7 +2411,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/474-vault-session-session-pattern/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-474-vault-session-session-pattern/example.fungi",
       "name": "authorizeAction",
       "qualifier": "guarded",
       "signature": "guarded flow authorizeAction(userId: UserId, action: String) -> Result<Bool,Error>",
@@ -2421,7 +2421,7 @@
       "intent": ""
     },
     {
-      "file": "docs/examples/Level-9-Enterprise/474-vault-session-session-pattern/example.fungi",
+      "file": "docs/examples/Level-9-Enterprise/Proposed-474-vault-session-session-pattern/example.fungi",
       "name": "renderDashboard",
       "qualifier": "secure",
       "signature": "secure flow renderDashboard(readonly request: Request, userId: UserId) -> Result<DashboardData,Error>",
@@ -4308,46 +4308,6 @@
       "intent": "FUNGI-GOV-005: guard permitted_effects must all be known capability tokens."
     },
     {
-      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
-      "name": "verifyPolicyHierarchy",
-      "qualifier": "pure",
-      "signature": "pure flow verifyPolicyHierarchy(guards: Array<Auto>) -> GovResult",
-      "effects": [],
-      "intent": "FUNGI-INHERIT-001/002: parent_policy references resolve; child effects ⊆ parent effects."
-    },
-    {
-      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
-      "name": "verifyEmergencyTransitions",
-      "qualifier": "pure",
-      "signature": "pure flow verifyEmergencyTransitions(guardDecl: Array<Auto>) -> GovResult",
-      "effects": [],
-      "intent": "FUNGI-MONO-001/002: emergency transitions must only DENY capabilities, never grant them."
-    },
-    {
-      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
-      "name": "verifyTrapDecl",
-      "qualifier": "pure",
-      "signature": "pure flow verifyTrapDecl(trapDecl: Array<Auto>, flowParams: Array<Auto>) -> GovResult",
-      "effects": [],
-      "intent": "FUNGI-TRAP-001/002: trap error code must be a non-blank identifier and must not shadow a flow parameter."
-    },
-    {
-      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
-      "name": "verifyStepExpr",
-      "qualifier": "pure",
-      "signature": "pure flow verifyStepExpr(stepExpr: Array<Auto>, flowQualifier: String) -> GovResult",
-      "effects": [],
-      "intent": "FUNGI-STEP-001: warn when a step expression is used inside a pure flow."
-    },
-    {
-      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/governance-verifier.fungi",
-      "name": "verifyMutationPolicy",
-      "qualifier": "pure",
-      "signature": "pure flow verifyMutationPolicy(policyBlock: Array<Auto>, flowBody: Array<Auto>) -> GovResult",
-      "effects": [],
-      "intent": "FUNGI-MUTATION-001/002: enforce only_decrease and max_change mutation constraints from policy blocks."
-    },
-    {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
       "name": "makeKeywordTable",
       "qualifier": "pure",
@@ -4386,6 +4346,14 @@
       "signature": "pure flow isHexDigit(c: Char) -> Bool",
       "effects": [],
       "intent": "Return true iff c is a hexadecimal digit (0-9, a-f, A-F)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
+      "name": "hexToInt",
+      "qualifier": "pure",
+      "signature": "pure flow hexToInt(text: String) -> Int",
+      "effects": [],
+      "intent": "Fold a validated hex escape body (braces optional) to its integer code point."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -5130,6 +5098,62 @@
       "signature": "pure flow effectsForFlow(flows: Array<FlowDecl>, name: String) -> Array<Auto>",
       "effects": [],
       "intent": "The declared effects of the flow with this name (empty if unknown or effect-free)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "flowExists",
+      "qualifier": "pure",
+      "signature": "pure flow flowExists(flows: Array<FlowDecl>, name: String) -> Bool",
+      "effects": [],
+      "intent": "True when a flow with this name is declared in the program."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "paramCountForFlow",
+      "qualifier": "pure",
+      "signature": "pure flow paramCountForFlow(flows: Array<FlowDecl>, name: String) -> Int",
+      "effects": [],
+      "intent": "The declared parameter count of the flow with this name (0 when unknown — gate with flowExists)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "paramTypeAt",
+      "qualifier": "pure",
+      "signature": "pure flow paramTypeAt(flows: Array<FlowDecl>, name: String, index: Int) -> String",
+      "effects": [],
+      "intent": "The declared type name of the index-th parameter of this flow (empty when absent)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "paramNameAt",
+      "qualifier": "pure",
+      "signature": "pure flow paramNameAt(flows: Array<FlowDecl>, name: String, index: Int) -> String",
+      "effects": [],
+      "intent": "The declared name of the index-th parameter of this flow (empty when absent)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "checkArgsOfCallExpr",
+      "qualifier": "pure",
+      "signature": "pure flow checkArgsOfCallExpr(flowName: String, e: Expr, flows: Array<FlowDecl>) -> Array<Auto>",
+      "effects": [],
+      "intent": "FUNGI-TYPE-005/007 for one expression tree: argument count and literal argument types must match the callee's declaration."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "isAcceptedWidening",
+      "qualifier": "pure",
+      "signature": "pure flow isAcceptedWidening(argType: String, paramType: String) -> Bool",
+      "effects": [],
+      "intent": "True when an Int literal is passed to a wider numeric parameter (a legal widening)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+      "name": "checkCallArgs",
+      "qualifier": "pure",
+      "signature": "pure flow checkCallArgs(flowName: String, stmts: Array<Stmt>, flows: Array<FlowDecl>) -> Array<Auto>",
+      "effects": [],
+      "intent": "FUNGI-TYPE-005/007: every call in this body must match its callee's declared parameters."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",

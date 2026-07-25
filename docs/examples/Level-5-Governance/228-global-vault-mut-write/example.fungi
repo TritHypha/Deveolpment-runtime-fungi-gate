@@ -24,13 +24,20 @@ contract {
   return count
 }
 
-;; Counter write — vault.write effect required; body uses secure.loginCount write
-guarded flow incrementLogin(userId: String) -> Result<Bool, Error>
+;; Counter write — vault.write effect required; body uses secure.loginCount write.
+;; `secure`, not `guarded`: this flow uses audit.write, a SECURE-TIER effect. Declaring it
+;; `guarded` silently skips the secure-only obligations (intent justification, epilogue proof,
+;; secret-egress sealing) — FUNGI-TIER-001. The tier follows the effects, not the author's taste.
+secure flow incrementLogin(userId: String) -> Result<Bool, Error>
 contract {
   intent "Record a login attempt in the vault"
   effects { vault.write, audit.write }
 }
 {
+  ;; `userId` is a bare parameter of a secure flow — an entry-boundary input. It cannot reach a
+  ;; governed sink untouched (FUNGI-VALUESTATE-008); the gate is what makes it safe to audit.
+  safe mut userId = validate.userId(userId)?
+
   AuditLog.write({ event: "LoginAttempt", user: userId })
   return Ok(true)
 }

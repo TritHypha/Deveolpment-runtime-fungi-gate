@@ -76,6 +76,42 @@ function categorize(why) {
 const EXAMPLE_ROOTS = ['docs/examples'];
 const EXCLUDE_RE = /(^|\/)Proposed-/i;
 
+// ── Proposed-* is an EXCLUSION, so it must be RATCHETED (2026-07-25) ─────────────────────────
+// Anything matching EXCLUDE_RE stops being gated. That is correct for a genuine pre-curriculum
+// draft — an example of syntax the compiler does not implement yet cannot have a meaningful
+// expected_diagnostics contract. It is also, unratcheted, a perfect escape hatch: rename any
+// failing example to `Proposed-…` and the gate goes quiet. Nothing here distinguishes the two.
+//
+// So the exclusion carries a NAMED SET, the same shape as the phantom and advisory ratchets
+// (R&D 0182: a bare count is maskable by a leave+enter swap; membership is not). Every excluded
+// example must be named here WITH the reason it cannot be gated, and every name must still be
+// excluded — a stale entry fails too, so a draft that quietly re-entered the curriculum is loud.
+const PROPOSED_BASELINE = Object.freeze({
+  // Pre-dates the ratchet — it was silently excluded and never justified anywhere. Found by this
+  // check on its FIRST run, which is the argument for the check: the exclusion was already load-
+  // bearing and nobody had written down why. Verified honest at source: every draft under it
+  // declares `status: proposed - not yet in grammar` and `expected_diagnostics: none (when adopted)`.
+  'Proposed-Readable-Logic-Forms':
+    'readable-alias syntax (`status is Active` for `==`) is a LANGUAGE PROPOSAL with no grammar; its examples self-declare "not yet in grammar" and an expected_diagnostics contract that applies only "when adopted"',
+  'Proposed-024-vault-global-basic':          '`vault global` has no grammar — parser.ts:5764 implements only `vault secure` (RD-0531 step 1)',
+  'Proposed-025-vault-global-secret-invalid':  '`vault global` has no grammar — same RD-0531 refusal',
+  'Proposed-229-vault-write-without-mut-invalid':
+    'cannot demonstrate FUNGI-VAULT-004: the vault-write syntax `mut secure.x = v` that governance-verifier.ts:302 documents does NOT parse (parser.ts:1601 parseMutDecl takes ONE identifier then expects `=`; no member-path production). Board #174',
+  'Proposed-473-scoped-vault-request':         '`vault request` is not one of the three declared scopes (secure|global|session)',
+  'Proposed-474-vault-session-session-pattern': '`vault session` has no grammar — same RD-0531 refusal',
+});
+
+/** Membership drift on the excluded set. Both directions, because they need opposite fixes. */
+export function proposedSetDrift(excludedDirNames, baseline) {
+  const now = new Set(excludedDirNames);
+  const names = Object.keys(baseline);
+  // unlisted — an example was excluded from gating without being named + justified here.
+  const unlisted = [...now].filter((n) => !names.includes(n)).sort();
+  // stale — a named draft is no longer excluded (renamed back into the curriculum, or deleted).
+  const stale = names.filter((n) => !now.has(n)).sort();
+  return { unlisted, stale };
+}
+
 const CODE_RE = /FUNGI-[A-Z]+-\d+/g;
 const CLEAN_RE = /0 errors, 0 governance warnings/;
 const ADVISORY_RE = /\+(\d+)\s+FUNGI-\S+\s+advisory/; // the "hidden under plain" note
@@ -231,8 +267,19 @@ if (withStrict) {
 
 const gated = okCount + failures.length;
 console.log('');
+// Proposed-* exclusions are RATCHETED by name. Derive the dir name from each excluded path so a
+// nested rename cannot slip past, then check membership BOTH ways against PROPOSED_BASELINE.
+const excludedDirs = [...new Set(excluded.map((rel) => (rel.split('/').find((seg) => EXCLUDE_RE.test(seg)) ?? rel)))];
+const proposedDrift = proposedSetDrift(excludedDirs, PROPOSED_BASELINE);
 if (excluded.length) {
-  console.log(`note: ${excluded.length} pre-curriculum proposal draft(s) logged-but-not-gated (Proposed-*).`);
+  console.log(`note: ${excluded.length} pre-curriculum proposal draft file(s) in ${excludedDirs.length} named draft dir(s), logged-but-not-gated (Proposed-*).`);
+  for (const [name, why] of Object.entries(PROPOSED_BASELINE)) console.log(`    • ${name} — ${why}`);
+}
+for (const n of proposedDrift.unlisted) {
+  console.log(`  ⚠ ${n}: EXCLUDED from gating but NOT named in PROPOSED_BASELINE. Renaming a failing example to 'Proposed-*' is not a fix — name it here with the reason the compiler cannot gate it, or fix the example.`);
+}
+for (const n of proposedDrift.stale) {
+  console.log(`  ⚠ ${n}: named in PROPOSED_BASELINE but no longer excluded (renamed back into the curriculum, or deleted) — remove the stale entry.`);
 }
 
 // ── baseline-aware gating ──────────────────────────────────────────────────────
@@ -272,9 +319,10 @@ if (newFailures.length) {
   for (const f of newFailures) console.log(`  FAIL  ${f.rel}\n        ${f.why}`);
 }
 
-if (newFailures.length || resolved.length) {
+const proposedViolations = proposedDrift.unlisted.length + proposedDrift.stale.length;
+if (newFailures.length || resolved.length || proposedViolations) {
   console.log(
-    `\n❌ example-diagnostics: gate RED — ${newFailures.length} new regression(s), ${resolved.length} stale baseline entr(y/ies).`,
+    `\n❌ example-diagnostics: gate RED — ${newFailures.length} new regression(s), ${resolved.length} stale baseline entr(y/ies), ${proposedViolations} unratcheted Proposed-* exclusion(s).`,
   );
   process.exit(1);
 }

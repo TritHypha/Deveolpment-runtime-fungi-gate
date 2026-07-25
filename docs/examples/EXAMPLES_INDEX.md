@@ -53,8 +53,8 @@ Core syntax — pure/guarded/secure flow, let/mut/readonly, Result, Option, matc
 | `021-flow-contract-basic` | flow contract block with types, intent, and events | stable | Array, Result, events, match, protected |
 | `022-no-toplevel-let` | top-level let bindings are rejected `FUNGI-SYNTAX-006` | stable | contract, flow |
 | `023-readable-logic-forms` | readable operator aliases — and, or, unless, is | stable | unless |
-| `024-vault-global-basic` | `vault global` — typed non-secret application configuration | stable | vault |
-| `025-vault-global-secret-invalid` | secret-like value in `vault global` is rejected `FUNGI-VAULT-001` | stable | vault |
+| `Proposed-024-vault-global-basic` | `vault global` — typed non-secret application configuration | proposed | vault |
+| `Proposed-025-vault-global-secret-invalid` | secret-like value in `vault global` is rejected `FUNGI-VAULT-001` | proposed | vault |
 
 ## Level 2 — Types
 
@@ -209,7 +209,7 @@ Governance — intent, policy, authority, contract blocks (errors, context, time
 | `226-full-16-section-minimal` | all 16 contract sections in canonical order — minimal but complete template | stable | Result, audit, errors, events, limits, observability |
 | `227-global-vault-declaration` | GlobalVault — declaring `vault secure {}` with typed entries, allow lists and audit | stable | vault |
 | `228-global-vault-mut-write` | GlobalVault writes — `mut secure.x` required; vault.write effect required | stable | vault |
-| `229-vault-write-without-mut-invalid` | vault write without mut rejected `FUNGI-VAULT-005` | stable | vault |
+| `Proposed-229-vault-write-without-mut-invalid` | vault write without mut rejected `FUNGI-VAULT-005` | proposed | vault |
 | `230-vault-access-denied-invalid` | flow not in vault allow list rejected `FUNGI-VAULT-006` | stable | vault |
 
 ## Level 6 — Compute
@@ -325,8 +325,8 @@ Enterprise patterns — healthcare PII, financial payments, compliance effects, 
 | `470-contract-healthcare-search` | healthcare patient search with complete privacy, observability, errors, and context contract sections | draft | Result, audit, errors, events, limits, observability |
 | `471-medical-medication-check` | medical domain — record types Patient and Medication, interaction validation pattern | stable | Result, audit, errors, events, observability, privacy |
 | `472-physics-simulation` | scientific domain — Mass, Force, Energy domain record types, pure kinetic energy calculation | stable | record |
-| `473-scoped-vault-request` | vault.request — per-request scoped vault for safe data reuse without global state | stable | vault |
-| `474-vault-session-session-pattern` | vault.session — user session vault for permission cache and profile data | stable | vault |
+| `Proposed-473-scoped-vault-request` | vault.request — per-request scoped vault for safe data reuse without global state | proposed | vault |
+| `Proposed-474-vault-session-session-pattern` | vault.session — user session vault for permission cache and profile data | proposed | vault |
 
 ## Proposed — Readable Logic Forms
 
