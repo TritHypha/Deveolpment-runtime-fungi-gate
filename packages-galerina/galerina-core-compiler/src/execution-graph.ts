@@ -13,7 +13,8 @@
 // =============================================================================
 
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { AstNode } from "./parser.js";
 import type { GalerinaValue } from "./interpreter.js";
 
@@ -58,7 +59,24 @@ export interface ExecutionGraph {
 const MEMORY_CACHE = new Map<string, ExecutionGraph>();
 
 // ── Disk cache ────────────────────────────────────────────────────────────────
-const DISK_CACHE_DIR = "build/.fungi-cache";
+// ANCHORED to this package, deliberately (2026-07-25). This was `"build/.fungi-cache"` — a bare
+// RELATIVE path, so it resolved against `process.cwd()` rather than the repo. Run the compiler from
+// the repo and the cache landed in `Galerina/build/.fungi-cache` (correct, and gitignored); run it
+// with the cwd one level up and it landed in a `build/.fungi-cache` OUTSIDE every repository, where
+// no .gitignore and no cleanup reaches it. Measured when found: 204 stray files at the hub level.
+//
+// It is not only litter. This is a COMPILER CACHE keyed on flow name + source hash: an unanchored
+// path means the set of graphs the compiler trusts depends on the directory it was launched from,
+// and a shared parent directory is a cache two unrelated checkouts can both read and write. A
+// build input whose location varies with cwd is a supply-chain surface, not a tidiness question — so
+// it gets a fixed, in-package home. `dirname(import.meta.url)/..` is the package root from BOTH
+// `src/` (strip-types) and `dist/` (compiled), and `**/.fungi-cache/` already ignores it.
+const DISK_CACHE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "build", ".fungi-cache");
+
+// Exposed for the cwd-independence regression lock (tests/execution-graph-cache-anchor.test.mjs).
+// A test cannot assert this path is cwd-independent without being able to read it, and asserting
+// "it is absolute" would NOT catch the bug — resolve("build/…") is absolute and still moves.
+export const __diskCacheDirForTest = DISK_CACHE_DIR;
 
 function diskCachePath(key: string): string {
   const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
