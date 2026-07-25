@@ -190,6 +190,19 @@ const PARSE_MALFORMED = [
   { label: "unterminated nested block in flow body", src: `pure flow f() -> Int { if true { return 1 }` },
 ];
 
+// ── SUBSET-REFUSAL corpus (R&D 0260 ruling — the 3rd .fungi≡.ts relationship) ────────────────────
+// A first-class .ts operator the .fungi twin does NOT model: `.ts` is VALID (computes a value) while
+// `.fungi` FAULTS fail-closed. NOT a fail-open (no silent wrong value), NOT both-fault. The `.fungi`
+// fault surfaces at DIFFERENT stages, so the predicate differs per row: `%` at PARSE (FUNGI-PARSE-005 —
+// the parser drops it) · `and`/`or` at RUNTIME (gir-emitter opcodeOf → op:"unknown" → applyBinop Err).
+// Each row is a SAFETY LOCK: "the twin must fault on this operator" — if `%` ever regresses to fail-open
+// (silent 5) or a botched "add support" silently mis-computes, the row RED's (R&D 0260).
+const SUBSET_REFUSAL = [
+  { label: "% (modulo) — refused at PARSE", src: `pure flow f() -> Int { return 5 % 2 }`, entry: "f", names: [], args: [], fungiFault: "parse" },
+  { label: "and (logical) — refused at RUNTIME", src: `pure flow f() -> Bool { return true and false }`, entry: "f", names: [], args: [], fungiFault: "runtime" },
+  { label: "or (logical) — refused at RUNTIME", src: `pure flow f() -> Bool { return true or false }`, entry: "f", names: [], args: [], fungiFault: "runtime" },
+];
+
 describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on valid, fault-parity on malformed", () => {
   for (const c of LEX_VALID) {
     it(`valid: ${c.label} → neither faults`, async () => {
@@ -228,11 +241,33 @@ describe("RD-0528 .fungi ≡ .ts edge-differential — PARSE stage: no-fault on 
   }
 });
 
+describe("RD-0528 .fungi ≡ .ts edge-differential — SUBSET-REFUSAL: .ts valid, .fungi fault-closed-refuses (R&D 0260)", () => {
+  for (const c of SUBSET_REFUSAL) {
+    it(`${c.label} → .ts VALID, .fungi FAULTS`, async () => {
+      const ts = await tsExec(c.src, c.entry, c.args, c.names);
+      assert.equal(ts.faulted, false, `.ts unexpectedly faulted on an operator it models: ${JSON.stringify(ts)}`);
+      // Predicate per row: `%` faults at parse (parseFlows errors), and/or at runtime (applyBinop Err).
+      const fu = c.fungiFault === "parse" ? await fungiParseFault(c.src) : await fungiExec(c.src, c.entry, c.args);
+      assert.equal(fu.faulted, true, `.fungi did NOT fault — the subset-refusal is lost (fail-open?) on ${c.label}: ${JSON.stringify(fu)}`);
+    });
+  }
+  // Non-vacuity: a MODELED op must be VALID on BOTH sides, so "`.fungi` faults" can't pass vacuously.
+  it("non-vacuity: a modeled op (+) is valid on BOTH sides (5 + 2 = 7), not a vacuous 'fungi faults'", async () => {
+    const src = `pure flow f(a: Int, b: Int) -> Int { return a + b }`;
+    const ts = await tsExec(src, "f", [5, 2], ["a", "b"]);
+    const fu = await fungiExec(src, "f", [5, 2]);
+    assert.equal(ts.faulted, false, ".ts should compute a+b");
+    assert.equal(fu.faulted, false, `.fungi should compute a+b, not fault: ${JSON.stringify(fu)}`);
+    assert.equal(fu.i, 7, ".fungi a+b value must be 7");
+  });
+});
+
 describe("RD-0528 edge-differential — non-vacuity", () => {
   it("has both a value-parity corpus and a fault-parity corpus, and the fault predicate distinguishes them", async () => {
     assert.ok(VALID.length >= 2, "value-parity corpus must be non-trivial");
     assert.ok(ERROR_EDGE.length >= 1, "must carry at least one error-edge fault-parity case");
     assert.ok(LEX_VALID.length >= 2 && LEX_MALFORMED.length >= 2, "the lex-stage corpus must carry both accept and reject rows");
+    assert.ok(SUBSET_REFUSAL.length >= 3, "the subset-refusal corpus must carry the 3 unmodeled operators (%, and, or)");
     assert.ok(PARSE_VALID.length >= 2 && PARSE_MALFORMED.length >= 2, "the parse-stage corpus must carry both accept and reject rows");
     // Parse-stage positive control: an unterminated body must fault on .fungi via parseFlows, NOT via a
     // tokenize Err (else this would collapse into the lex family and prove nothing about the parser).
