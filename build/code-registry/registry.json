@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 716,
+  "total": 720,
   "counts": {
-    "ref": 192,
+    "ref": 191,
     "inline": 169,
-    "phantom": 111,
-    "live": 132,
+    "phantom": 115,
+    "live": 133,
     "referenced": 99,
     "dead": 13
   },
@@ -343,7 +343,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 2,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -1135,7 +1135,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 1,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -1210,7 +1210,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 22,
-      "docs": 5
+      "docs": 6
     },
     {
       "code": "FUNGI-ACCESS-002",
@@ -3877,7 +3877,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 13,
-      "docs": 8
+      "docs": 10
     },
     {
       "code": "FUNGI-GOV-006",
@@ -4234,6 +4234,18 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "FUNGI-GOV-ERRDECL-00",
+      "family": "GOV",
+      "namespace": "FUNGI",
+      "status": "phantom",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 1
     },
     {
       "code": "FUNGI-GOV-TPL-001",
@@ -4764,8 +4776,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 7,
-      "docs": 1
+      "tests": 8,
+      "docs": 2
     },
     {
       "code": "FUNGI-INHERIT-002",
@@ -5170,6 +5182,22 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-LINT-002",
+      "family": "LINT",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "UNUSED_BINDING"
+      ],
+      "severities": [
+        "warning"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-LOGIC-001",
       "family": "LOGIC",
       "namespace": "FUNGI",
@@ -5465,7 +5493,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 5,
-      "docs": 20
+      "docs": 22
     },
     {
       "code": "FUNGI-MEMORY-001",
@@ -5678,8 +5706,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 15,
-      "docs": 2
+      "tests": 16,
+      "docs": 3
     },
     {
       "code": "FUNGI-MONO-002",
@@ -5713,25 +5741,13 @@
       "code": "FUNGI-MUTATION-001",
       "family": "MUTATION",
       "namespace": "FUNGI",
-      "status": "ref",
+      "status": "phantom",
       "names": [],
       "severities": [],
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 1
-    },
-    {
-      "code": "FUNGI-MUTATION-002",
-      "family": "MUTATION",
-      "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-NAME-001",
@@ -6164,7 +6180,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 20,
+      "tests": 23,
       "docs": 12
     },
     {
@@ -6188,7 +6204,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 10,
+      "tests": 15,
       "docs": 0
     },
     {
@@ -6202,6 +6218,30 @@
       "emits": 0,
       "tests": 6,
       "docs": 0
+    },
+    {
+      "code": "FUNGI-PARSE-005",
+      "family": "PARSE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 3,
+      "docs": 2
+    },
+    {
+      "code": "FUNGI-PARSE-006",
+      "family": "PARSE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 17,
+      "docs": 6
     },
     {
       "code": "FUNGI-PARSE-DEPTH-001",
@@ -7936,7 +7976,7 @@
       "code": "FUNGI-STEP-001",
       "family": "STEP",
       "namespace": "FUNGI",
-      "status": "ref",
+      "status": "phantom",
       "names": [],
       "severities": [],
       "defs": 0,
@@ -8629,8 +8669,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 12,
-      "docs": 1
+      "tests": 13,
+      "docs": 2
     },
     {
       "code": "FUNGI-TRAP-002",
@@ -8754,7 +8794,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 232,
+      "tests": 235,
       "docs": 18
     },
     {
@@ -8826,7 +8866,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 24,
+      "tests": 26,
       "docs": 3
     },
     {
@@ -8854,7 +8894,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 10,
+      "tests": 13,
       "docs": 2
     },
     {
@@ -9275,7 +9315,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 19,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-TYPE-099",
@@ -9375,6 +9415,18 @@
       "emits": 0,
       "tests": 0,
       "docs": 2
+    },
+    {
+      "code": "FUNGI-VALUE-DELTA-00",
+      "family": "VALUE",
+      "namespace": "FUNGI",
+      "status": "phantom",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 1
     },
     {
       "code": "FUNGI-VALUE-STATE-001",

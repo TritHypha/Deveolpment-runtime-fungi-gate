@@ -77,7 +77,11 @@
 > keyword; **TRAP** (FUNGI-TRAP-001/002, the `trap <expr>:` error-declaration construct) vs the WASM **`trap`/`unreachable`**
 > runtime fault (wat-emitter.ts:370) and the memory-safety **"trap band"**. Removing the two dead flows resolves the
 > collision for now (and touches neither `mut` bindings, WASM traps, nor the trap-band). A future rebuild re-adding these
-> checks should mint collision-free codes (e.g. `FUNGI-VALUE-DELTA-00x`, `FUNGI-GOV-ERRDECL-00x`).
+> checks should mint collision-free codes in a VALUE-DELTA / GOV-ERRDECL family. (Written as prose, not as
+> `FUNGI-`-prefixed examples: the code-registry scanner harvests any `FUNGI-*`-shaped token out of docs, so the
+> illustrative names originally written here were ingested as two real PHANTOM codes and tripped the shrink-only
+> phantom ratchet in `audit-artifact-drift`. The scanner surface is the real defect — a prose example should not
+> become a registry entry — but the doc should not bait it in the meantime.)
 >
 > **Remaining before the gov-verifier flip §5a re-propose:** R&D §5a of the removal (`0319`); the a/c/d/i3 flip-readiness
 > legs assembled for gov-verifier. Ledger stays 5 of 7 until then.

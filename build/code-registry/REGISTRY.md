@@ -8,12 +8,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | status | count | meaning |
 |---|---|---|
-| live | 132 | emitted with an exported constant |
+| live | 133 | emitted with an exported constant |
 | inline | 169 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 99 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 111 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 192 | referenced only (no def/emit) |
+| phantom | 115 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 191 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -607,7 +607,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-GEN-TEST-005 | ref | — | — |
 
-### GOV (30)
+### GOV (31)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -640,6 +640,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-GOV-3VL-003 | inline | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error |
 | FUNGI-GOV-3VL-004 | inline | ORDERED_COMPARISON_ON_VERDICT | error |
 | FUNGI-GOV-902 | ref | — | — |
+| FUNGI-GOV-ERRDECL-00 | phantom | — | — |
 | FUNGI-GOV-TPL-001 | inline | — | — |
 
 ### GRAPH (6)
@@ -777,11 +778,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-LIMIT-001 | inline | ENFORCED_LIMIT_EXCEEDED | — |
 
-### LINT (1)
+### LINT (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-LINT-001 | live | EXCESSIVE_NESTING | info |
+| FUNGI-LINT-002 | live | UNUSED_BINDING | warning |
 
 ### LOGIC (14)
 
@@ -850,12 +852,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-MONO-002 | inline | UNKNOWN_EMERGENCY_SIGNAL | — |
 | FUNGI-MONO-003 | inline | EMERGENCY_UNKNOWN_ACTION | — |
 
-### MUTATION (2)
+### MUTATION (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-MUTATION-001 | ref | — | — |
-| FUNGI-MUTATION-002 | ref | — | — |
+| FUNGI-MUTATION-001 | phantom | — | — |
 
 ### NAME (3)
 
@@ -925,7 +926,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (6)
+### PARSE (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -934,6 +935,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | FUNGI-PARSE-002 | ref | — | — |
 | FUNGI-PARSE-003 | ref | — | — |
 | FUNGI-PARSE-004 | ref | — | — |
+| FUNGI-PARSE-005 | ref | — | — |
+| FUNGI-PARSE-006 | ref | — | — |
 | FUNGI-PARSE-DEPTH-001 | ref | — | — |
 
 ### PASSPORT (1)
@@ -1228,7 +1231,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-STEP-001 | ref | — | — |
+| FUNGI-STEP-001 | phantom | — | — |
 
 ### STORAGE (1)
 
@@ -1407,10 +1410,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | FUNGI-VALIDATE-001 | phantom | — | — |
 
-### VALUE (1)
+### VALUE (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
+| FUNGI-VALUE-DELTA-00 | phantom | — | — |
 | FUNGI-VALUE-STATE-001 | phantom | — | — |
 
 ### VALUESTATE (11)
