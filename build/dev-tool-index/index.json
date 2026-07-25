@@ -6,7 +6,7 @@
     "tests": 7876,
     "devTools": 123,
     "auditTools": 75,
-    "toolsInCadence": 56,
+    "toolsInCadence": 57,
     "proofs": 40
   },
   "packages": [
@@ -1312,7 +1312,7 @@
       "category": "audit",
       "purpose": "measured, ratcheted R0 build gate for the DSS.wasm modules (RD-0366:",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
         "signing/fusion",
         "coverage"
@@ -3294,7 +3294,6 @@
       "audit-codes-full.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",
-      "audit-dss-wasm-build.mjs",
       "audit-examples-vs-declared.mjs",
       "audit-gate-selftests.mjs",
       "audit-graph-integrity.mjs",
