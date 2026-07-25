@@ -230,7 +230,9 @@ are rebaselined.
 
 **No percentage claimed:** Stage-B self-hosting — WASM execution (P9) · B8 governed HTTP transport (TLSTP).
 
+**Tracking registry (20):** shipped 11 · building 5 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 
-<sub>generated from component-health + the RD-0528/RD-0361 authority ledgers at main@39d9be10 · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
+<sub>generated from component-health + the RD-0528/RD-0361 authority ledgers at main@5572575c (DIRTY TREE) · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->

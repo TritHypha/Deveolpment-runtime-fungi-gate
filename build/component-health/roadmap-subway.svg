@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 998" width="1180" height="998" role="img" aria-label="Galerina roadmap subway map">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1332" width="1180" height="1332" role="img" aria-label="Galerina roadmap subway map">
 <style>
   :root { --paper:#fbfaf7; --ink:#1b1a17; --rule:#c9c4ba; }
   @media (prefers-color-scheme: dark) { :root { --paper:#16181c; --ink:#e8e6e1; --rule:#3a3f47; } }
@@ -13,7 +13,7 @@
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="202" y="34" text-anchor="end" class="title">Where the project is</text>
 <text x="220" y="34" class="sub">v1.0.0-beta.2 · 95 packages · 7876 tests · ship-readiness 97.9% · Zero-Trust thesis avg 78% · build avg 75%</text>
-<text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers at main@39d9be10</text>
+<text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers at main@5572575c (DIRTY TREE)</text>
 <text x="202" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="202" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
 <line x1="220" y1="96" x2="1110" y2="96" stroke="#c8102e" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
@@ -178,11 +178,56 @@
 <circle cx="246.7" cy="814" r="6.5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2.75" stroke-dasharray="3 2.5"/>
 <text x="259.7" y="818" class="pct">3%</text>
 <text x="292.7" y="818" class="sub">asserted</text>
-<text x="202" y="854" text-anchor="end" class="line-name" fill="var(--ink)">Not a number</text>
-<text x="202" y="868" text-anchor="end" class="sub">no percentage claimed</text>
-<circle cx="220" cy="854" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="234" y="858" class="stn">Stage-B self-hosting — WASM execution (P9)</text>
-<circle cx="220" cy="876" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="234" y="880" class="stn">B8 governed HTTP transport (TLSTP)</text>
-<text x="220" y="944" class="sub"><tspan class="stn">solid station</tspan> — reached / authority flipped</text><text x="220" y="959" class="sub"><tspan class="stn">hollow station</tspan> — not yet reached</text><text x="220" y="974" class="sub"><tspan class="stn">dashed ring</tspan> — the number is ASSERTED (hand-typed), not measured</text>
+<text x="202" y="854" text-anchor="end" class="line-name" fill="#1c5ea8">Tracking registry</text>
+<text x="202" y="868" text-anchor="end" class="sub">20 named workstreams</text>
+<text x="220" y="854" class="stn">shipped (11)</text>
+<circle cx="220" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="878" class="sub">Twin corpus + 6 sentinels</text>
+<circle cx="665" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="878" class="sub">Hardening / residency (RD-0358)</text>
+<circle cx="220" cy="894" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="898" class="sub">Epistemic trust-trit (RD-0337)</text>
+<circle cx="665" cy="894" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="898" class="sub">Hallmark open types (RD-0353 H1)</text>
+<circle cx="220" cy="914" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="918" class="sub">CANONICAL_EFFECTS registry (RD-0341)</text>
+<circle cx="665" cy="914" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="918" class="sub">Contract Registry (RD-0359)</text>
+<circle cx="220" cy="934" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="938" class="sub">Workspace package families</text>
+<circle cx="665" cy="934" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="938" class="sub">Devtools audit suite</text>
+<circle cx="220" cy="954" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="958" class="sub">Signing-key custody</text>
+<circle cx="665" cy="954" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="958" class="sub">ZTF-KB path-leak guard</text>
+<circle cx="220" cy="974" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="978" class="sub">myco</text>
+<text x="220" y="1008" class="stn">building (5)</text>
+<circle cx="220" cy="1028" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="1032" class="sub">Execution-cutover (RD-0361)</text>
+<circle cx="665" cy="1028" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="1032" class="sub">Value-unit types (RD-0349)</text>
+<circle cx="220" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="1052" class="sub">Package Standard + pub ladder</text>
+<circle cx="665" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="1052" class="sub">Security-infra designs (×4)</text>
+<circle cx="220" cy="1068" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="1072" class="sub">RD-0363/0364/0365 wiring (R&amp;D done)</text>
+<text x="220" y="1102" class="stn">post-v1 (4)</text>
+<circle cx="220" cy="1122" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="232" y="1126" class="sub">Self-hosting Stages 3–6</text>
+<circle cx="665" cy="1122" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="677" y="1126" class="sub">DSS.wasm supervisor (#102–106)</text>
+<circle cx="220" cy="1142" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="232" y="1146" class="sub">KB category indexes</text>
+<circle cx="665" cy="1142" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="677" y="1146" class="sub">TritMesh / .hypha / TritMeshQL</text>
+<text x="202" y="1188" text-anchor="end" class="line-name" fill="var(--ink)">Not a number</text>
+<text x="202" y="1202" text-anchor="end" class="sub">no percentage claimed</text>
+<circle cx="220" cy="1188" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="234" y="1192" class="stn">Stage-B self-hosting — WASM execution (P9)</text>
+<circle cx="220" cy="1210" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="234" y="1214" class="stn">B8 governed HTTP transport (TLSTP)</text>
+<text x="220" y="1278" class="sub"><tspan class="stn">solid station</tspan> — reached / authority flipped</text><text x="220" y="1293" class="sub"><tspan class="stn">hollow station</tspan> — not yet reached</text><text x="220" y="1308" class="sub"><tspan class="stn">dashed ring</tspan> — the number is ASSERTED (hand-typed), not measured</text>
 </svg>

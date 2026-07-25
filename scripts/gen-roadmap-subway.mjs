@@ -168,6 +168,29 @@ export function renderSVG({ stages, thesis, build, kernel, meta }) {
   pctLine("Zero-Trust thesis", "the five trust boundaries", LINES.thesis, thesis);
   pctLine("Build progress", "layers with a number", LINES.build, build);
 
+  // --- Tracking registry: the 20 named workstreams (owner catch 2026-07-25 — the first cut dropped this
+  // section entirely, so DSS.wasm / .spore / TritMesh simply vanished from the map). Grouped by state:
+  // shipped = solid, building = hollow, post-v1 = hollow + dashed (declared out of the current horizon).
+  if (meta.registry.length) {
+    const groups = [["shipped", true, ""], ["building", false, ""], ["post-v1", false, ` stroke-dasharray="3 2.5"`]];
+    out.push(`<text x="${PAD_L - 18}" y="${y}" text-anchor="end" class="line-name" fill="${LINES.build}">Tracking registry</text>`);
+    out.push(`<text x="${PAD_L - 18}" y="${y + 14}" text-anchor="end" class="sub">${meta.registry.length} named workstreams</text>`);
+    for (const [state, filled, dash] of groups) {
+      const items = meta.registry.filter((r) => r.state === state);
+      if (!items.length) continue;
+      out.push(`<text x="${x(0)}" y="${y}" class="stn">${esc(state)} (${items.length})</text>`);
+      y += 20;
+      // Two columns so twenty rows do not double the map's height.
+      items.forEach((r, i) => {
+        const cx = x(0) + (i % 2) * ((TRACK / 2) | 0), cy = y + Math.floor(i / 2) * 20;
+        out.push(`<circle cx="${cx}" cy="${cy}" r="5" fill="${filled ? LINES.build : "var(--paper)"}" stroke="${LINES.build}" stroke-width="2"${dash}/>`);
+        out.push(`<text x="${cx + 12}" y="${cy + 4}" class="sub">${esc(r.item)}</text>`);
+      });
+      y += Math.ceil(items.length / 2) * 20 + 14;
+    }
+    y += 12;
+  }
+
   // --- WORD rows: layers with no percentage at all. They belong on the map as terminus markers, because
   // omitting them would make the map look more complete than the project is.
   if (meta.wordRows.length) {
@@ -241,6 +264,10 @@ export function renderBlock(model) {
     ...build.map((r) => `| ${r.label} | ${r.pct}% | ${r.measured ? "measured" : "**asserted**"} |`),
     ...(meta.wordRows.length ? [``, `**No percentage claimed:** ${meta.wordRows.join(" · ")}.`] : []),
     ``,
+    `**Tracking registry (${meta.registry.length}):** ` + ["shipped", "building", "post-v1"]
+      .map((s) => `${s} ${meta.registry.filter((r) => r.state === s).length}`).join(" · ")
+      + ` — every named workstream, from the same percent-audit source; the map's registry section lists each one.`,
+    ``,
     `> **Read the map honestly: ${measured} of ${total} percentages are measured** (a live reading or a countable ladder); the remaining ${total - measured} are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.`,
     ``,
     `<sub>${meta.provenance} · regenerate: \`node scripts/gen-roadmap-subway.mjs --write\`</sub>`,
@@ -265,6 +292,8 @@ export function buildModel({ pa, hashBaseline, ledger, kernelLedger, version }) 
       caption: `v${version.version} · ${version.packageCount} packages · ${version.testCount} tests · ship-readiness ${pa.shipReadinessPct.toFixed(1)}% · Zero-Trust thesis avg ${pa.ztAvg}% · build avg ${pa.buildAvg}%`,
       provenance: `generated from component-health + the RD-0528/RD-0361 authority ledgers at ${p.branch ?? "?"}@${p.sha ?? "?"}${p.dirty ? " (DIRTY TREE)" : ""}`,
       wordRows: [...words(sect("zero-trust-thesis").rows), ...words(sect("build-progress").rows)],
+      // Every registry row, state normalised — the map must not drop a workstream (owner catch: v1 did).
+      registry: sect("tracking-registry").rows.map((r) => ({ item: r.item, state: String(r.state) })),
     },
   };
 }
@@ -283,7 +312,10 @@ function model() {
 // the gate, not by reasoning: the block embeds the HEAD sha, so committing the block advances HEAD
 // and the gate reads perpetually stale; and --write dirties the tree, flipping the DIRTY flag it
 // just embedded. A gate that can never be green is as useless as one that can never be red.
-const stripProvenance = (s) => (s ?? "").replace(/^<sub>generated from.*$/m, "<sub>PROVENANCE</sub>");
+// CRLF is also normalised: git autocrlf rewrites the doc's line endings on checkout (found by driving
+// the absence probe — the restore came back CRLF and the gate false-positived). Content drift is the
+// subject; line-ending churn is not.
+const stripProvenance = (s) => (s ?? "").replace(/\r\n/g, "\n").replace(/^<sub>generated from.*$/m, "<sub>PROVENANCE</sub>");
 
 const injectBlock = (text, block) => {
   const b = text.indexOf(BEGIN), e = text.indexOf(END);
@@ -325,7 +357,7 @@ if (process.argv.includes("--self-test")) {
   ok(block.startsWith(BEGIN) && block.trimEnd().endsWith(END), "block is marker-delimited");
   ok(renderBlock(model()) === block, "generation is DETERMINISTIC (no clock — the gate cannot false-positive)");
   ok(svg.startsWith("<svg") && svg.includes("</svg>") && !svg.includes("NaN"), "SVG is well-formed and free of NaN coordinates");
-  ok(!/ /.test(block + svg), "★ output carries no literal NUL bytes (the defect class shipped twice this session)");
+  ok(!/\u0000/.test(block + svg), "★ output carries no literal NUL bytes (the defect class shipped twice this session)");
   ok(m.thesis.concat(m.build).some((r) => !r.measured), "★ the asserted class is present and rendered — the map is not flattering itself");
   ok(currentBlock(`x${block.replace(/\d+%/, "999%")}y`) !== block, "drift detector: a hand-edited block differs from the generated one");
   // DRIVEN both ways: the gate must IGNORE a provenance-only difference (else it is perpetually red —
@@ -335,6 +367,12 @@ if (process.argv.includes("--self-test")) {
     "★ DRIVEN: a provenance-ONLY difference (new HEAD sha) is NOT drift — the gate can actually be green");
   ok(stripProvenance(block.replace(/\d+%/, "999%")) !== stripProvenance(block),
     "★ DRIVEN: a DATA difference still fires through the normalization — ignoring provenance did not neuter the gate");
+  ok(stripProvenance(block.replace(/\n/g, "\r\n")) === stripProvenance(block),
+    "★ DRIVEN: a CRLF-only difference (git autocrlf on checkout) is NOT drift");
+  // COMPLETENESS (owner catch): every tracking-registry workstream must appear in BOTH outputs — the v1
+  // map dropped the whole section and nothing noticed. Checked against the SOURCE count, not a typed one.
+  ok(m.meta.registry.length > 0 && m.meta.registry.every((r) => block.includes(`registry (${m.meta.registry.length})`) && svg.includes(esc(r.item))),
+    `★ DRIVEN-BY-SOURCE: all ${m.meta.registry.length} registry workstreams render in the SVG and the block counts them`);
 
   console.log(process.exitCode ? "  subway self-test FAILED" : `  subway self-test: ${checks} checks incl. ${driven} driven controls ✅`);
   process.exit(process.exitCode ?? 0);
@@ -344,20 +382,25 @@ const m = model();
 const block = renderBlock(m);
 
 if (process.argv.includes("--check")) {
-  const stale = [];
+  // ABSENCE IS FAILURE (R&D 0422): the day-one version `continue`d past a missing target and past
+  // missing markers, then printed "all target(s) match" and exited 0 — a drift gate whose subject is
+  // a doc region, blind to the one edit that removes its own hook. The set of targets is the subject;
+  // a member leaving must be an event, not a skip. Seeding a brand-new target is --write's job.
+  const stale = [], gone = [];
   for (const rel of TARGETS) {
     const abs = join(ROOT, rel);
-    if (!existsSync(abs)) continue;
+    if (!existsSync(abs)) { gone.push(`${rel} (file MISSING)`); continue; }
     const cur = currentBlock(readFileSync(abs, "utf8"));
-    if (cur === null) { console.error(`  ⚠ ${rel}: no SUBWAY markers — run --write once to seed them`); continue; }
+    if (cur === null) { gone.push(`${rel} (SUBWAY markers REMOVED)`); continue; }
     if (stripProvenance(cur) !== stripProvenance(block)) stale.push(rel);
   }
-  if (stale.length) {
-    console.error(`\n  ❌ roadmap-drift: ${stale.length} doc(s) carry a STALE roadmap block:\n${stale.map((r) => `     ${r}`).join("\n")}`);
-    console.error(`  Fix: node scripts/gen-roadmap-subway.mjs --write  (never hand-edit the block)`);
+  if (gone.length || stale.length) {
+    for (const g of gone) console.error(`  ❌ roadmap-drift: ${g} — a target leaving the set is a failure, not a skip`);
+    if (stale.length) console.error(`  ❌ roadmap-drift: ${stale.length} doc(s) carry a STALE roadmap block:\n${stale.map((r) => `     ${r}`).join("\n")}`);
+    console.error(`  Fix: node scripts/gen-roadmap-subway.mjs --write  (re-seed/regenerate — never hand-edit the block; if a target was retired on purpose, remove it from TARGETS in the same change)`);
     process.exit(1);
   }
-  console.log(`  ✅ roadmap-drift: all target(s) match the live ledgers.`);
+  console.log(`  ✅ roadmap-drift: all ${TARGETS.length} target(s) present and matching the live ledgers.`);
   process.exit(0);
 }
 

@@ -116,6 +116,12 @@ run("doc:wat-drift", "node", ["scripts/emit-doc-wat.mjs", "--check"]);
 // (gen-status-blocks.mjs regenerates the ship-readiness/ZT/Build/registry block; --check fails on drift.)
 run("doc:status-drift", "node", ["scripts/gen-status-blocks.mjs", "--check"]);
 
+// ── 1b4b. Subway-roadmap drift gate — the generated roadmap block/SVG must match the live ledgers ──
+// (gen-roadmap-subway.mjs derives stations from the RD-0528/RD-0361 authority ledgers + component-health;
+// --check fails on drift AND on a missing target/markers — R&D 0422 found the day-one version was wired
+// into nothing and failed open on absence; both closed the same tick.)
+run("doc:roadmap-drift", "node", ["scripts/gen-roadmap-subway.mjs", "--check"]);
+
 // ── 1b5. Cast-hygiene lint (R&D sorted-path S0) — no NEW bare `as Verdict`/`as Trit` authority cast ──
 // A bare cast MINTS governance authority past every gate (the laundering a type-brand cannot see; SUITE 5:
 // an unvoted reading cast to a Verdict manufactures ALLOW). Shrink-only baseline of the casts that exist
