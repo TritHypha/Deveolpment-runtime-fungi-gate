@@ -3,7 +3,7 @@
 This folder holds Galerina's publishable scholarly artifacts, consolidated 2026-07-09 from
 `docs/scientific-papers/`, the ZTF KB `defensive-publications/`, and the root `Galerina-ScientificPapers/` stray:
 
-- [`defensive-papers/`](defensive-papers/) — all **43** defensive-publication notes (timestamped prior-art records, novelty *disclaimed*; several are design-stage disclosures, marked as such)
+- [`defensive-papers/`](defensive-papers/) — all **44** defensive-publication notes (timestamped prior-art records, novelty *disclaimed*; several are design-stage disclosures, marked as such)
 - [`scientific-papers/`](scientific-papers/) — eprint-shaped drafts (currently **8**): 1 superseded measured-negative draft + **7** harness-backed construction disclosures (novelty disclaimed; 3 added 2026-07-16, 4 added 2026-07-22)
 
 **Read the standard before adding anything here.**
@@ -132,6 +132,16 @@ Seven drafts that had passed the harm filter in the KB staging batches (the RD-0
 | [`dp-rd-0522-optimize-the-verified-graph-not-the-attested-artifact.md`](defensive-papers/dp-rd-0522-optimize-the-verified-graph-not-the-attested-artifact.md) | 2026-07-18 | The fail-closed compiler rule: code-reducing passes run on the **verified graph, before the hash** (then re-verify + differential), never on the attested artifact after; shipped instance = provability-gated gate elision; transport compression stays **outside** the attested boundary. |
 | [`dp-rd-0523-verdict-brand-family-disjoint-governance-brands-per-value-space.md`](defensive-papers/dp-rd-0523-verdict-brand-family-disjoint-governance-brands-per-value-space.md) | 2026-07-19 | The verdict-brand **family**: one shared K3 algebra, mutually non-assignable brands per governed value-space, cross-domain only via audited boundary adjudication — the two-brand instance ships machine-checked (169/169, re-run 2026-07-22); the N-brand family is the disclosed design law. |
 | [`dp-rd-0524-governing-the-ai-control-plane-tool-results-are-data-value-state-not-wrappers.md`](defensive-papers/dp-rd-0524-governing-the-ai-control-plane-tool-results-are-data-value-state-not-wrappers.md) | 2026-07-19 | Governing the AI control plane: tool results are **data, not instructions** (hash-pinned, re-validated per call), provenance as a **value-state** rather than wrapper generics, private data kept off remote models, AI-output acceptance as a fail-closed K3 verdict on its own disjoint brand; shipped mechanisms vs proposed extensions separated. |
+
+### Defensive publications added 2026-07-25 (RD-0530 — the fail-closed loop-parallelisation disclosure)
+
+Mirrored from the KB `papers/` dir byte-identically (sha256 verified) after its own conformance + harm-filter pass:
+design-stage, novelty disclaimed, no weakness/gap-map or private-tag leak; the single shipped-capability claim (the
+per-loop fuel cap) was verified real before it was allowed to stand.
+
+| Document | Disclosed | Subject |
+|---|---|---|
+| [`dp-rd-0530-fail-closed-loop-parallelisation-deterministic-by-proof.md`](defensive-papers/dp-rd-0530-fail-closed-loop-parallelisation-deterministic-by-proof.md) | 2026-07-25 | **Design-stage** — loop parallelisation inverted to a fail-closed default: a conservative compile-time classifier (DOALL / blessed associative-commutative reduction / **serial by default**), a **parallel≡serial byte-for-byte differential** as the determinism lock (a divergence rejects the transform rather than shipping it), shared-nothing isolates (no shared memory ⇒ no race to synchronise), cache-tiled working sets under a compiler-enforced residency ceiling, and a three-token spine — per-chunk fuel that traps past budget · a concurrency-permit pool bounding degree · a capability register where absent ⇒ N=1. Degree N is proven **result-neutral**, so it is a latency knob and never a correctness one; accelerate ≠ adjudicate (governance folds use the Kleene meet, never a wrapping ternary sum). Gated on a measured parallel-fraction threshold; no performance number claimed. |
 
 ### Design-stage defensive publications (filed 2026-07-09 — mechanisms specified, not yet implemented)
 
