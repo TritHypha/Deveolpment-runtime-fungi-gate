@@ -76,7 +76,24 @@ const PATTERNS = [
   // in, single-dash asserted). A fixture taken from the rule can only ever confirm the rule; it cannot
   // report that the rule pictures the wrong thing. The regression case below plants the shape the
   // ENCODER produces, which is the only fixture that could have caught this.
-  { name: "dash-encoded-user-home", re: /(?<![A-Za-z0-9])[A-Za-z]-{1,2}Users-(?!<)[A-Za-z0-9_.]+-[A-Za-z0-9]/g },
+  // ★ THE TRAILING SEGMENT IS OPTIONAL — DO NOT MAKE IT MANDATORY AGAIN (R&D finding, 2026-07-25).
+  // This rule used to end `[A-Za-z0-9_.]+-[A-Za-z0-9]`, requiring a path segment AFTER the username. So
+  // it saw `C--Users-someone-Documents-GitHub` but was blind to a bare `C--Users-someone` — which is the
+  // form that leaks the username with nothing else attached, i.e. the purest instance of exactly what
+  // this guard exists to stop. One sat in a tracked file (`scripts/memory-graph.mjs`, a last-resort dir
+  // fallback) reading green the whole time.
+  //
+  // Same root cause as the `-{1,2}` miss above, third time on this one rule: EVERY fixture was drawn
+  // from the pattern's own surface, and all of them carried trailing segments because the pattern
+  // demanded them. A fixture taken from the rule can only confirm the rule. The bare-slug case below is
+  // taken from what the encoder emits when a project id has no trailing path.
+  //
+  // The widening trades a little noise for fail-closed: `<letter>-Users-<word>` with no further segment
+  // now fires. That anchor is already narrow (a LONE letter, then 1-2 dashes, then a literal `Users-`,
+  // and never preceded by an alphanumeric), the `(?!<)` keeps `<name>` placeholders legal, and the
+  // silence cases below pin the prose forms. A false positive costs one review; a false negative puts
+  // the owner's username in a public repo.
+  { name: "dash-encoded-user-home", re: /(?<![A-Za-z0-9])[A-Za-z]-{1,2}Users-(?!<)[A-Za-z0-9_.]+(?:-[A-Za-z0-9])?/g },
 ];
 
 // Paths that must NEVER be tracked at all, whatever they contain — mirrors the .gitignore policy for
@@ -194,6 +211,14 @@ function selfTest() {
     // — a fixture taken from the rule can only confirm the rule, never report that the rule is wrong.
     ["DOUBLE-dash slug fires — the shape reality produces (C--Users-…)",
       fires('"project": "C--Users-someone-Documents-GitHub-Galerina"')],
+    // ★ THE BARE-SLUG REGRESSION (R&D finding, 2026-07-25). Every fire-case above carries trailing path
+    // segments, because the rule used to require one — so the shape with NOTHING after the username, the
+    // one that leaks the username and only the username, was invisible for this rule's whole life. A live
+    // instance sat in scripts/memory-graph.mjs while this gate printed green. If this case goes red,
+    // someone made the trailing segment mandatory again and the guard is blind to the barest form.
+    ["★ BARE slug fires — username with no trailing segment (C--Users-someone)",
+      fires('const fallback = join(home, ".claude", "projects", "C--Users-someone", "memory");')],
+    ["★ BARE single-dash slug fires too", fires('id = "C-Users-someone"')],
     ["dash-encoded placeholder does NOT fire", !fires("the slug looks like C-Users-<name>-Documents")],
     // …and the widening must not cry wolf. A guard that fires on `<name>` placeholders or ordinary prose
     // teaches people to reach for the allow-marker, and a habit of allow-marking is how the next REAL

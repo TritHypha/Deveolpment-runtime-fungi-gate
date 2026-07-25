@@ -25,6 +25,10 @@ import { homedir } from "node:os";
 // reinstall / username change (it did: the old `desig` default 404'd after the box was rebuilt as `phill`).
 // Precedence: --dir (parsed below) > MEMORY_DIR env > autodetect the populated memory/ under
 // ~/.claude/projects (the folder that actually holds MEMORY.md) > a last-resort guess.
+// How many dirs actually carried a MEMORY.md. More than one means the pick below is a GUESS, and a
+// health report for the wrong tree reads exactly like a clean bill for yours — so it gets said out loud.
+let autodetectCandidates = 0;
+
 function autodetectMemoryDir() {
   const projects = join(homedir(), ".claude", "projects");
   let entries;
@@ -36,30 +40,41 @@ function autodetectMemoryDir() {
     let mds;
     try { mds = readdirSync(mem).filter((f) => f.endsWith(".md")); } catch { continue; }
     // Strongly prefer the dir carrying the MEMORY.md index; tie-break on note count.
-    const score = mds.length + (mds.includes("MEMORY.md") ? 1_000_000 : 0);
+    const hasIndex = mds.includes("MEMORY.md");
+    if (hasIndex) autodetectCandidates++;
+    const score = mds.length + (hasIndex ? 1_000_000 : 0);
     if (score > bestScore) { bestScore = score; best = mem; }
   }
   return best;
 }
 
-const DEFAULT_DIR =
-  process.env.MEMORY_DIR ??
-  autodetectMemoryDir() ??
-  join(homedir(), ".claude", "projects", "C--Users-phill", "memory");
+// No last-resort guess. The old fallback baked in a dash-encoded machine slug — the same username
+// leak as an absolute path, and the path-leak guard was blind to the bare `C--Users-<name>` form so it
+// read green over this line for the file's whole life (widened 2026-07-25). A guess is also worse than
+// an error when it happens to EXIST: it answers silently about the wrong tree.
+const DEFAULT_DIR = process.env.MEMORY_DIR ?? autodetectMemoryDir();
 
 // ── args ─────────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
 let dir = DEFAULT_DIR;
+let chosenExplicitly = Boolean(process.env.MEMORY_DIR); // an explicit choice silences the guess warning
 let tagFilter = null;
 const terms = [];
 for (let i = 0; i < argv.length; i++) {
-  if (argv[i] === "--dir") dir = argv[++i];
+  if (argv[i] === "--dir") { dir = argv[++i]; chosenExplicitly = true; }
   else if (argv[i] === "--tag") tagFilter = (argv[++i] || "").replace(/^#/, "").toLowerCase();
   else terms.push(argv[i]);
 }
-if (!existsSync(dir)) {
-  console.error(`memory-graph: memory dir not found: ${dir}\n  pass --dir <path> or set MEMORY_DIR.`);
+if (!dir || !existsSync(dir)) {
+  console.error(`memory-graph: memory dir not resolved${dir ? `: ${dir}` : " (autodetect found none)"}\n  pass --dir <path> or set MEMORY_DIR.`);
   process.exit(2);
+}
+// Name what was NOT examined. Silence here is the fail-open: the report says "0 unindexed files" and a
+// reader takes that as their memory being healthy, when another tree entirely was the one measured.
+// Counts only — printing the candidate paths would put a machine path in every terminal and log, which
+// is the leak this codebase's own guard exists to prevent.
+if (!chosenExplicitly && autodetectCandidates > 1) {
+  console.error(`memory-graph: ⚠ ${autodetectCandidates} memory dirs carry a MEMORY.md — auto-picked the most populated; ${autodetectCandidates - 1} NOT examined. Pass --dir <path> to choose.`);
 }
 
 // ── parse the MEMORY.md index: "- [subject](slug.md) — hook #tag #tag" ───────
