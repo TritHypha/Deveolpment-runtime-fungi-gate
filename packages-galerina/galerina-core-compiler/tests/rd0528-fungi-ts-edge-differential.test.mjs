@@ -148,6 +148,21 @@ async function fungiLexFault(src) {
   return { faulted: v.__tag === "err" };
 }
 
+// PARSE-stage `.fungi` fault predicate (3rd family, R&D 0254). Distinct from lex: an unterminated flow
+// BODY tokenizes CLEAN (the tokens are all valid) — the fault is in parseFlows' `errors` list, not
+// tokenize's Err. So: tokenize (Ok) → parseFlows → `errors` non-empty. The `.ts` side reuses tsLexFault
+// (`parseProgram(src).diagnostics` spans BOTH lex and parse — an unterminated body surfaces there as
+// FUNGI-PARSE-001). Assert FAULT-PARITY only, never code-equality: `.ts` classifies it PARSE-001 (top-level
+// unclosed), `.fungi` PARSE-003 (body-specific) — different detection points, both valid (R&D 0254 caveat).
+async function fungiParseFault(src) {
+  const lexRes = await executeFlow("tokenize", new Map([["source", vStr(src)]]), lexer.ast);
+  const lv = lexRes.value ?? lexRes;
+  const toks = lv.__tag === "ok" ? lv.value : lv;
+  const pr = await executeFlow("parseFlows", new Map([["tokens", toks]]), parser.ast);
+  const errs = (pr.value ?? pr).fields.get("errors");
+  return { faulted: errs?.__tag === "list" && errs.items.length > 0 };
+}
+
 const LEX_VALID = [
   { label: "number + symbols", src: `pure flow f() -> Int { return 1 }` },
   { label: "string literal", src: `pure flow g() -> String { return "hi" }` },
@@ -163,6 +178,16 @@ const LEX_MALFORMED = [
   { label: "invalid unicode escape \\u{110000} (>max)", src: `pure flow g() -> String { return "\\u{110000}" }` },
   { label: "non-hex unicode escape \\u{ZZZ}", src: `pure flow g() -> String { return "\\u{ZZZ}" }` },
   { label: "non-hex 6th digit \\u{10FFFG}", src: `pure flow g() -> String { return "\\u{10FFFG}" }` },
+];
+
+// ── PARSE-stage corpus (R&D 0254): unterminated flow BODY block. Tokenizes clean, faults at parse. ──
+const PARSE_VALID = [
+  { label: "closed body", src: `pure flow f() -> Int { return 1 }` },
+  { label: "closed nested if body", src: `pure flow f() -> Int { if true { return 1 } return 0 }` },
+];
+const PARSE_MALFORMED = [
+  { label: "unterminated flow body (EOF before })", src: `pure flow f() -> Int { return 1` },
+  { label: "unterminated nested block in flow body", src: `pure flow f() -> Int { if true { return 1 }` },
 ];
 
 describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on valid, fault-parity on malformed", () => {
@@ -184,11 +209,35 @@ describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on va
   }
 });
 
+describe("RD-0528 .fungi ≡ .ts edge-differential — PARSE stage: no-fault on valid, fault-parity on unterminated body", () => {
+  for (const c of PARSE_VALID) {
+    it(`valid: ${c.label} → neither faults`, async () => {
+      const ts = tsLexFault(c.src); // parseProgram diagnostics span lex+parse — the .ts static-fault predicate
+      const fu = await fungiParseFault(c.src);
+      assert.equal(ts.faulted, false, `.ts faulted on valid parse input: ${JSON.stringify(ts)}`);
+      assert.equal(fu.faulted, false, `.fungi parseFlows faulted on valid input: ${c.label}`);
+    });
+  }
+  for (const c of PARSE_MALFORMED) {
+    it(`malformed: ${c.label} → both fault`, async () => {
+      const ts = tsLexFault(c.src);
+      const fu = await fungiParseFault(c.src);
+      assert.equal(ts.faulted, true, `.ts did NOT fault on malformed parse input: ${JSON.stringify(ts)}`);
+      assert.equal(fu.faulted, true, `.fungi parseFlows did NOT fault (fail-open regression) where .ts does: ${c.label}`);
+    });
+  }
+});
+
 describe("RD-0528 edge-differential — non-vacuity", () => {
   it("has both a value-parity corpus and a fault-parity corpus, and the fault predicate distinguishes them", async () => {
     assert.ok(VALID.length >= 2, "value-parity corpus must be non-trivial");
     assert.ok(ERROR_EDGE.length >= 1, "must carry at least one error-edge fault-parity case");
     assert.ok(LEX_VALID.length >= 2 && LEX_MALFORMED.length >= 2, "the lex-stage corpus must carry both accept and reject rows");
+    assert.ok(PARSE_VALID.length >= 2 && PARSE_MALFORMED.length >= 2, "the parse-stage corpus must carry both accept and reject rows");
+    // Parse-stage positive control: an unterminated body must fault on .fungi via parseFlows, NOT via a
+    // tokenize Err (else this would collapse into the lex family and prove nothing about the parser).
+    const fu = await fungiParseFault(PARSE_MALFORMED[0].src);
+    assert.equal(fu.faulted, true, "parse positive control: .fungi parseFlows must fault on an unterminated body");
     // The instrument's positive control: a VALID input must be observed as NON-faulting on both sides
     // (else 'both fault' would pass vacuously for any input).
     const ts = await tsExec(VALID[0].src, VALID[0].entry, VALID[0].args, VALID[0].names);
