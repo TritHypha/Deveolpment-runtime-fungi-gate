@@ -255,12 +255,13 @@ contract {
 // closing quote. Backslash (92) escapes the next char (so '\'' would not end early).
 pure flow scanCharLit(source: String, startPos: Int, srcLen: Int) -> Array<String>
 contract {
-  intent { "Scan a single-quoted char literal at startPos. Returns [unquotedValue, endPos] as strings." }
+  intent { "Scan a single-quoted char literal at startPos. Returns [unquotedValue, endPos, terminatedFlag] as strings." }
 }
 {
   mut i = startPos + 1            // skip opening quote
   mut value: String = ""
   mut done = false
+  mut termFlag: String = "0"     // "1" iff a closing quote was found; "0" = unterminated (fail-CLOSED, R&D 0228)
   while i < srcLen and done == false {
     let opt: Option<Char> = source.charAt(i)
     match opt {
@@ -289,6 +290,7 @@ contract {
           if nc.codePoint() == 39 {
             i = i + 1            // consume closing quote
             done = true
+            termFlag = "1"
           }
           else {
             value = value + nc.toString()
@@ -301,7 +303,7 @@ contract {
       }
     }
   }
-  return [value, i.toString()]
+  return [value, i.toString(), termFlag]
 }
 
 // â”€â”€ scanLineComment: read a // line comment to (but not including) the newline â”€
@@ -493,7 +495,12 @@ contract {
           let startColC = col
           let resC = scanCharLit(source, pos, srcLen)
           let valC = resC.first().unwrapOr("")
-          let endPosStrC = resC.last().unwrapOr((pos + 1).toString())
+          let endPosStrC = resC.get(1).unwrapOr((pos + 1).toString())
+          let termC = resC.get(2).unwrapOr("1")
+          // Fail-CLOSED on an unterminated char literal, mirroring the .ts lexer + scanString (R&D 0228).
+          if termC == "0" {
+            return Err({ message: "unterminated char literal", line: startLineC, col: startColC })
+          }
           let endPosC = endPosStrC.toInt().unwrapOr(pos + 1)
           col = col + (endPosC - startPosC)
           pos = endPosC
