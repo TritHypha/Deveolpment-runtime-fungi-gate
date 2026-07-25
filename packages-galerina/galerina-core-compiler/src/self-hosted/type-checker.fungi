@@ -1186,6 +1186,128 @@ contract { intent { "The declared effects of the flow with this name (empty if u
   return Array.empty()
 }
 
+// The declared parameter COUNT of the flow named `name`, or -1 when it is not found. -1 means "not a
+// known user flow" (a builtin, a method call, a host function) and the arity check SKIPS it rather
+// than guessing — an unknown callee can never produce a false positive. Same flat flow-name lookup
+// convention as effectsForFlow (no symbol table, no scope resolution).
+pure flow paramCountForFlow(flows: Array<FlowDecl>, name: String) -> Int
+contract { intent { "The declared parameter count of the flow with this name, or -1 when unknown." } }
+{
+  mut i: Int = 0
+  while i < flows.count() {
+    let fOpt = flows.get(i)
+    match fOpt {
+      Some(fd) => { if fd.name == name { return fd.params.count() } }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return 0 - 1
+}
+
+// Every call SITE in an expression tree as { name, argCount } — the arity counterpart of
+// collectCallsInExpr (which collects names only). A `call` expr's `children` ARE its arguments.
+pure flow collectCallSitesInExpr(e: Expr) -> Array<Auto>
+contract { intent { "Every call site in an expression tree as a callee-name + argument-count record." } }
+{
+  mut sites: Array<Auto> = Array.empty()
+  let eChildren: Array<Expr> = e.children
+  if e.kind == "call" {
+    sites = sites.append({ name: e.value, argCount: eChildren.count() })
+  }
+  mut i: Int = 0
+  while i < eChildren.count() {
+    let cOpt = eChildren.get(i)
+    match cOpt {
+      Some(c) => { sites = appendAll(sites, collectCallSitesInExpr(c)) }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return sites
+}
+
+// Every call site in a statement body, descending into nested if/while/match block bodies — the
+// recursion is kind-gated exactly like collectCallNames, so `body`/`elseBody` are only read where
+// they exist.
+pure flow collectCallSites(stmts: Array<Stmt>) -> Array<Auto>
+contract { intent { "Every call site (callee name + argument count) in a statement body, including nested blocks." } }
+{
+  mut sites: Array<Auto> = Array.empty()
+  mut i: Int = 0
+  while i < stmts.count() {
+    let sOpt = stmts.get(i)
+    match sOpt {
+      Some(s) => {
+        let sExpr: Array<Expr> = s.expr
+        mut j: Int = 0
+        while j < sExpr.count() {
+          let eOpt = sExpr.get(j)
+          match eOpt {
+            Some(e) => { sites = appendAll(sites, collectCallSitesInExpr(e)) }
+            None => {}
+            _ => {}
+          }
+          j = j + 1
+        }
+        if s.kind == "if" {
+          let sBody: Array<Stmt> = s.body
+          let sElse: Array<Stmt> = s.elseBody
+          sites = appendAll(sites, collectCallSites(sBody))
+          sites = appendAll(sites, collectCallSites(sElse))
+        }
+        if s.kind == "while" {
+          let sBody: Array<Stmt> = s.body
+          sites = appendAll(sites, collectCallSites(sBody))
+        }
+        if s.kind == "match" {
+          let sBody: Array<Stmt> = s.body
+          sites = appendAll(sites, collectCallSites(sBody))
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return sites
+}
+
+// FUNGI-TYPE-007 (INVALID_ARGUMENT_COUNT): a call whose argument count differs from the callee's
+// declared parameter count — the Stage-A check at type-checker.ts:1561-1565. CLOSES A MEASURED
+// FAIL-OPEN: before this, `add(1, 2, 3)` against `add(x: Int, y: Int)` type-checked CLEAN in the
+// authoritative twin while Stage-A rejected it (both-engines probe 2026-07-25, bridge 0327 — the
+// twin emitted NO code where .ts emitted 007). Fail-SAFE by construction: a callee that is not a
+// known user flow (builtin, method, host function) resolves to -1 and is SKIPPED, so an unknown
+// callee can never produce a false positive (an under-report on unknowns, never a false one).
+pure flow checkCallArity(flowName: String, fd: FlowDecl, flows: Array<FlowDecl>) -> Array<Auto>
+contract { intent { "FUNGI-TYPE-007: a call's argument count must equal the callee's declared parameter count." } }
+{
+  mut diags: Array<Auto> = Array.empty()
+  let sites: Array<Auto> = collectCallSites(fd.body)
+  mut i: Int = 0
+  while i < sites.count() {
+    let stOpt = sites.get(i)
+    match stOpt {
+      Some(site) => {
+        let expected: Int = paramCountForFlow(flows, site.name)
+        if expected >= 0 {
+          if site.argCount != expected {
+            let msg7: String = "call to '" + site.name + "' passes " + site.argCount + " argument(s) but '" + site.name + "' declares " + expected + " parameter(s) (FUNGI-TYPE-007)"
+            diags = diags.append({ code: "FUNGI-TYPE-007", message: msg7, flowName: flowName })
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return diags
+}
+
 // FUNGI-TYPE-014 (MISSING_REQUIRED_EFFECT): the JOINT effect/type check. For every flow the current
 // flow CALLS, each effect that callee declares must also be declared by the current flow. Stage-A
 // (type-checker.ts:1395-1409) builds `flowDeclaredEffects` in a pre-pass (collectDeclarations) and
@@ -1322,6 +1444,9 @@ contract {
         // FUNGI-TYPE-014: the joint effect/type pass — every callee's declared effects must be
         // declared by this flow. Needs the whole `flows` set (cross-flow callee lookup).
         allDiags = appendAll(allDiags, checkCallEffects(name, fd, flows))
+        // FUNGI-TYPE-007: a call's argument count must equal the callee's declared parameter count.
+        // Same cross-flow `flows` lookup as 014; closes the measured call-arity fail-open (bridge 0327).
+        allDiags = appendAll(allDiags, checkCallArity(name, fd, flows))
         // FUNGI-BINDING-005: reassigning an immutable (`let`, never `mut`) binding in this flow's body.
         allDiags = appendAll(allDiags, checkImmutableReassign(name, fd.body))
         flowCount = flowCount + 1
