@@ -152,12 +152,15 @@ const LEX_VALID = [
   { label: "number + symbols", src: `pure flow f() -> Int { return 1 }` },
   { label: "string literal", src: `pure flow g() -> String { return "hi" }` },
   { label: "operators", src: `pure flow h(a: Int, b: Int) -> Int { return a + b }` },
+  { label: "valid unicode escape \\u{41}", src: `pure flow g() -> String { return "\\u{41}" }` },
 ];
 const LEX_MALFORMED = [
   { label: "unterminated string", src: `pure flow f() -> String { return "hi }` },
   { label: "unterminated char", src: `pure flow f() -> Int { return 'a }` },
   { label: "stray backtick", src: "pure flow f() -> Int { return `y` }" },
   { label: "bitwise ^ (not a .fungi op)", src: `pure flow f() -> Int { return 1 ^ 2 }` },
+  { label: "invalid unicode escape \\u{110000} (>max)", src: `pure flow g() -> String { return "\\u{110000}" }` },
+  { label: "non-hex unicode escape \\u{ZZZ}", src: `pure flow g() -> String { return "\\u{ZZZ}" }` },
 ];
 
 describe("RD-0528 .fungi ≡ .ts edge-differential — LEX stage: no-fault on valid, fault-parity on malformed", () => {

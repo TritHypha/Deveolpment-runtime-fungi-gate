@@ -194,16 +194,130 @@ contract {
 // UNQUOTED content and endPos is the index just past the closing '"'.
 // A backslash (codePoint 92) escapes the next char so an escaped quote does not
 // terminate the string. The backslash+escaped char are both kept in value
-// (Galerina string escapes are pass-through, so this mirrors the raw source text).
+// (most Galerina string escapes are kept raw/pass-through; \uHHHH and \u{H...} are VALIDATED — an
+// invalid unicode escape fail-CLOSES via the escErr flag. Phase-16, mirrors lexer.ts:534-604, R&D 0246).
+
+// True iff c is a hexadecimal digit (0-9 / a-f / A-F). Used only by the \u escape validator below.
+pure flow isHexDigit(c: Char) -> Bool
+contract { intent { "Return true iff c is a hexadecimal digit (0-9, a-f, A-F)." } }
+{
+  let p: Int = c.codePoint()
+  if p >= 48 and p <= 57 { return true }    // 0-9
+  if p >= 97 and p <= 102 { return true }   // a-f
+  if p >= 65 and p <= 70 { return true }    // A-F
+  return false
+}
+
+// Validate a \u escape whose `\u` is already consumed; `pos` points at the char AFTER `\u`.
+// Returns [endPos, valid("1"/"0"), rawText]. Fail-CLOSED, mirroring lexer.ts:534-604 (FUNGI-LEX-003):
+//   brace  \u{H}  valid iff H is 1-6 hex digits AND codepoint <= 0x10FFFF;
+//   fixed  \uHHHH valid iff exactly 4 hex digits.
+// The <= 0x10FFFF check is CHAR-based (Galerina has no hex->int): 1-5 hex digits are always in range
+// (max 0xFFFFF = 1048575 < 0x10FFFF); a 6-digit escape is valid iff its first digit is '0' OR its first
+// two digits are "10" (0x10FFFF is the max, so "10" + any 4 hex <= "10FFFF").
+pure flow scanUnicodeEscape(source: String, pos: Int, srcLen: Int) -> Array<String>
+contract { intent { "Scan and validate a \\u{...} or \\uHHHH escape body; return [endPos, valid, rawText]." } }
+{
+  mut i: Int = pos
+  mut text: String = ""
+  let optBrace: Option<Char> = source.charAt(i)
+  match optBrace {
+    None => { return [i.toString(), "0", text] }   // `\u` at end of source
+    Some(bc) => {
+      if bc.codePoint() == 123 {                   // '{' -> brace form \u{H...}
+        text = text + bc.toString()
+        i = i + 1
+        mut hexCount: Int = 0
+        mut first: String = ""
+        mut second: String = ""
+        mut closed: Bool = false
+        mut bad: Bool = false
+        mut scanning: Bool = true
+        while i < srcLen and scanning {
+          let optH: Option<Char> = source.charAt(i)
+          match optH {
+            None => { scanning = false }
+            Some(hc) => {
+              let cp: Int = hc.codePoint()
+              if cp == 125 {                        // '}' closes the brace
+                text = text + hc.toString()
+                i = i + 1
+                closed = true
+                scanning = false
+              }
+              if cp == 34 { scanning = false }      // '"' before '}' -> unterminated
+              if cp == 10 { scanning = false }       // newline before '}' -> unterminated
+              if closed == false {
+                if scanning {
+                  if isHexDigit(hc) {
+                    if hexCount == 0 { first = hc.toString() }
+                    if hexCount == 1 { second = hc.toString() }
+                    hexCount = hexCount + 1
+                    text = text + hc.toString()
+                    i = i + 1
+                  }
+                  else {
+                    bad = true                       // a non-hex, non-close char in the escape
+                    text = text + hc.toString()
+                    i = i + 1
+                  }
+                }
+              }
+            }
+            _ => { scanning = false }
+          }
+        }
+        if closed == false { return [i.toString(), "0", text] }   // unterminated brace
+        if bad { return [i.toString(), "0", text] }                // non-hex digit
+        if hexCount == 0 { return [i.toString(), "0", text] }       // empty \u{}
+        if hexCount > 6 { return [i.toString(), "0", text] }        // too many digits
+        if hexCount == 6 {                                          // range check (no hex->int)
+          if first == "0" { return [i.toString(), "1", text] }
+          if first == "1" {
+            if second == "0" { return [i.toString(), "1", text] }
+          }
+          return [i.toString(), "0", text]                         // > 0x10FFFF
+        }
+        return [i.toString(), "1", text]                           // 1-5 hex digits: always in range
+      }
+      // fixed form \uHHHH -> read exactly 4 hex digits
+      mut hexCount2: Int = 0
+      mut scanning2: Bool = true
+      while i < srcLen and scanning2 {
+        if hexCount2 >= 4 { scanning2 = false }
+        if scanning2 {
+          let optH2: Option<Char> = source.charAt(i)
+          match optH2 {
+            None => { scanning2 = false }
+            Some(hc2) => {
+              if isHexDigit(hc2) {
+                hexCount2 = hexCount2 + 1
+                text = text + hc2.toString()
+                i = i + 1
+              }
+              else { scanning2 = false }
+            }
+            _ => { scanning2 = false }
+          }
+        }
+      }
+      if hexCount2 == 4 { return [i.toString(), "1", text] }
+      return [i.toString(), "0", text]                             // fewer than 4 hex digits
+    }
+    _ => { return [i.toString(), "0", text] }
+  }
+}
+
 pure flow scanString(source: String, startPos: Int, srcLen: Int) -> Array<String>
 contract {
-  intent { "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag] as strings." }
+  intent { "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag, escErrFlag]." }
 }
 {
   mut i = startPos + 1            // skip opening quote
   mut value: String = ""
   mut done = false
   mut termFlag: String = "0"     // "1" iff a closing quote was found; "0" = unterminated (fail-CLOSED, R&D 0228)
+  mut escErr: String = "0"       // "1" iff an invalid \u unicode escape was seen (fail-CLOSED, R&D 0246)
   while i < srcLen and done == false {
     let opt: Option<Char> = source.charAt(i)
     match opt {
@@ -212,7 +326,7 @@ contract {
       }
       Some(nc) => {
         if nc.codePoint() == 92 {
-          // backslash escape: keep it plus the following char (if any)
+          // backslash escape: keep it + the following char; \u escapes are VALIDATED (R&D 0246).
           value = value + nc.toString()
           i = i + 1
           let opt2: Option<Char> = source.charAt(i)
@@ -223,6 +337,15 @@ contract {
             Some(ec) => {
               value = value + ec.toString()
               i = i + 1
+              if ec.codePoint() == 117 {   // 'u' — validate the unicode escape body
+                let esc: Array<String> = scanUnicodeEscape(source, i, srcLen)   // [endPos, valid, rawText]
+                value = value + esc.get(2).unwrapOr("")
+                i = esc.first().unwrapOr(i.toString()).toInt().unwrapOr(i)
+                if esc.get(1).unwrapOr("0") == "0" {
+                  escErr = "1"
+                  done = true
+                }
+              }
             }
             _ => {
               done = true
@@ -246,7 +369,7 @@ contract {
       }
     }
   }
-  return [value, i.toString(), termFlag]
+  return [value, i.toString(), termFlag, escErr]
 }
 
 // â”€â”€ scanCharLit: read a '...' char literal starting at the opening quote â”€â”€â”€â”€â”€â”€â”€
@@ -485,6 +608,12 @@ contract {
           // StringLiteral was a fail-open divergence (R&D 0228/0229). Return a LexError instead.
           if termS == "0" {
             return Err({ message: "unterminated string literal", line: startLineS, col: startColS })
+          }
+          let escS = resS.get(3).unwrapOr("0")
+          // Fail-CLOSED on an invalid \u unicode escape (bad hex / empty / >6 / >0x10FFFF / <4 fixed /
+          // unterminated brace), mirroring the .ts FUNGI-LEX-003 reject (R&D 0246).
+          if escS == "1" {
+            return Err({ message: "invalid unicode escape", line: startLineS, col: startColS })
           }
           let endPosS = endPosStrS.toInt().unwrapOr(pos + 1)
           col = col + (endPosS - startPosS)
