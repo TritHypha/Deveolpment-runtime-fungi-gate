@@ -4,34 +4,28 @@ Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-r
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).
 The dated blocks below are a historical log; the **CURRENT STATE** block is the head.
 
-## 📍 CURRENT STATE — 2026-07-25 (gov-verifier flip investigation + chapter-close consolidation · owner re-affirmed FULL UNLOCK)
+## 📍 CURRENT STATE — 2026-07-25 (LEXER FLIPPED = 5th authoritative · gov-verifier Q-A resolved · consolidation before the 6th flip)
 
-**Forward view:** `../ZTF-Knowledge-Bases/galerina-roadmap.md`. This chapter landed **no code** — it was a
-measurement/coordination arc on the **5th self-hosting flip** (governance-verifier), held under proposer≠verifier.
-HEAD unchanged at `ef3a746e`. Owner **re-affirmed full unlock** 2026-07-25 (authorization gates lifted; the
-**evidence gate + R&D §5a countersign remain structural** — a flip still may not bless dead code).
+**Forward view:** `../ZTF-Knowledge-Bases/galerina-roadmap.md`. HEAD `4b0688cd` (ahead 3; owner pushed the prior batch).
+Ledger **5 of 7 authoritative**. Owner directive 2026-07-25: **get everything else sorted before the 6th flip — don't
+rush** (this block is that consolidation).
 
-### Chapter-close battery (owner-asked "run graph/audit/tests" · all green)
-- **graph-all 6/6** — project 6951n/7220e · integrity 0 · kb 17 orphans/0 broken · **border 97/0** · memory clean (7 dangling `[[links]]`, benign) · dev-tools 97 pkgs/118 tools/40 proofs.
-- **tests** — `run-all-tests.cjs` **95/95 packages · 7,867 tests · 0 fail** (compiler 5,104).
-- **audits 5/5** — artifact-drift 0/542 · compiler-stage-twins (**4 authoritative — RD-0528 flip LIVE**) · percent-history · private-doc-leak 0/3917 · path-leak, all exit 0.
-- **% audit regenerated** — `component-health.mjs --audit-html` → build/component-health/percent-audit.{html,json}; staleness gate GREEN. Ship-readiness **97.9%** (95/97) · ZT-thesis avg **78%** · build avg **75%** · 20 tracking items. Rendered as a meter widget this session.
-- ⚠ **version.json drift** — the one `[live]` row reads version.json (**7,591**) but the live suite is **7,867**; no auto-writer exists, NOT hand-edited (would be the hand-typed anti-pattern). Follow-up: build/locate a version-count regen so the [live] number is honest.
+### RD-0528 self-hosting — the flip ledger (`docs/security/rd0528-compiler-authoritative-stages.json`)
+- ✅ **LEXER FLIPPED `3e0bd71b`** = **5th authoritative** (type-checker · effect-checker · gir-emitter · runtime · **lexer**). R&D §5a GREEN 0308 (no dead code / no fail-open, a/c/d/i3 all green); pure-authority ledger-line, no re-pin. twins-gate reads **5 authoritative — flip LIVE**. Owner push of `3e0bd71b` = the countersign.
+- ✅ **Q-B COMPLETE + fully §5a-verified** (R&D 0306, two independent routes 16/16 + 20/20): all 4 unmodeled gov constructs (emergency · parent_policy · trap · step) refused fail-closed by the parser (FUNGI-PARSE-006). Parser stays an **intentional differential** (not a flip candidate — deliberate divergence from `.ts`).
+- ✅ **Gov-verifier Q-A RESOLVED — removed 5 dead-orphaned flows `4b0688cd`** (verifyPolicyHierarchy/EmergencyTransitions/TrapDecl/StepExpr/MutationPolicy; 0 in-`.fungi` callers + 0 test/corpus drivers). **KEPT verifyGuardDecl** (corpus-live, i3 tranche 5) as a documented tested-but-unwired forward-spec. 🔴 A NEAR-MISS (in-file occurrence count read all 6 as dead) was caught by an external-caller check before any edit; both sessions retracted the "all 6 dead" premise. Detector 0-dead · gov twin 8/8 · i3+parity green · hash re-pinned · suite 95/95·7,876.
+- **GOV-005 collision = LATENT, recorded (not a blocker):** `.ts` GOV-005 = POLICY_PURPOSE_MISMATCH (live) vs `.fungi` guard-capability (tested-but-unwired → never fires in a real compile) → one live meaning in production. Documented in the evidence pack for a future-rebuild rename. Same disposition as the MUTATION↔`mut` / TRAP↔WASM-`trap` naming-hygiene note (R&D 0318, owner-raised) — the removals resolve those for now.
 
-### Gov-verifier 5th-flip investigation (bridges 0268–0293; both sessions converged)
-- 🔴 **RETRACTED my 0277 "flip-ready" pack** — the 9 parser-blocked check-flows are **dead code in the twin** (uncalled + untested; `verifyGovernance` dispatches only checkSecure + checkSafetyCritical). R&D 0268 §5a independently HELD on the same finding.
-- **Decomposed two problems** (both sessions concur): **Q-A** = flip dead-code (5 uncalled `.fungi` flows, CG-9.1) · **Q-B** = `parser.fungi` silently drops governance constructs (a latent, pre-Tier-2 defect). Neither fix substitutes for the other.
-- **Q-A disposition (evidenced, call-sites not tests):** STEP + MUTATION are **symmetric-dead** in `.ts` too → **remove-safe**. MONO + INHERIT + TRAP have **live `.ts` enforcement** → removing them = a permanent Tier-2 capability gap → **wire (grammar work), don't delete**. `Sir,` this is the one human/architecture decision to unblock the 5th flip.
-- **Q-B parser fail-open MEASURED** (validated probe + both-sides `.ts` oracle): `policy{emergency{…allow…}}` (`.ts` REJECTS MONO-001) · `trap n==0:ERR` (`.ts` builds trapDecl) · `guard{parent_policy:X}` (`.ts` REJECTS INHERIT-001) — all three **accepted clean, construct dropped** by the `.fungi` parser, across 3 distinct parse paths (policy name-gate `:1622` · guard-body `:1794` · parseStmt fallthrough `:1426`).
-- **Q-B harden design SETTLED** — shape-match refusal at all 3 sites (`emergency {` · `parent_policy :` · `trap <expr> :`/`step:`), one new code **FUNGI-PARSE-006**, reusing the FUNGI-PARSE-005 `bodyHasModulo` scanner pattern (no record-shape threading). Build-feasibility resolved. **Awaiting R&D §5a-confirm (bridge 0293) before touching `parser.fungi`.**
+### Consolidation done this session (before the 6th flip)
+- ✅ **version.json count drift RECONCILED** `ccbf378c` — ran `run-all-tests.cjs --emit-counts` (the generator IS the evidence): testCount **7,591 → 7,876**; sibling KB SOT synced `d5029bf`. (Corrected my earlier "no version-writer exists" — `writeVersionJson` at scripts/run-all-tests.cjs:213.)
+- ✅ **#133 generator determinism** — `gen-contract-registry.mjs` (`0c842ad3`) + `lib/provenance.mjs` (`3fec9c85`) now stamp SOURCE_DATE_EPOCH→commit-date, ending regen byte-churn (SBOM already was). Sidecars refresh deterministically at next phase-close.
+- ✅ **dead-flow detector built** `6c75e7bc` — `scripts/audit-selfhosted-dead-flows.mjs` (self-test 7/7): a `.fungi` twin flow is LIVE iff called in-`.fungi` OR referenced in tests/ (conservative — bias to keep). Mechanizes the near-miss class.
 
-### Chapter open items
-- ✅ **Q-B harden sites #1/#2 BUILT + LANDED** (`fd1ecf68`) — R&D §5a-CONFIRMED the design (0284); `FUNGI-PARSE-006` refuses `emergency {` + `parent_policy :` fail-closed, newline-tolerant; probe 10/10 · failclosed 15/15 · R3 all-5 parity · stage-hash re-pinned · full suite 95/95·7,871. Awaiting R&D §5a of the build (bridge 0295).
-- ✅ **Q-B harden site #3a (flow-body `trap <expr> :`) LANDED** (`b3631ceb`) — `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`, newline-tolerant), 13/13 false-positive-free probe · failclosed 18/18 · R3 all-5 · full suite 95/95·7,874. Q-B now closed for all 3 oracle-backed gov constructs (emergency · parent_policy · trap). Awaiting R&D §5a (bridge 0297).
-- ✅ **Q-B harden site #3b (`step <flowName>(`) LANDED** (`d422600b`) — corrected the 0297 "no oracle": the step CONSTRUCT is `.ts`-live via GOV-024 (`parser.ts:2522`). `bodyHasStepConstruct` refuses it fail-closed; 9/9 probe · failclosed 21/21 · full suite 95/95·7,876. Awaiting R&D §5a (bridge 0301).
-- ✅ **Q-B COMPLETE** — all 4 unmodeled governance constructs refused fail-closed (emergency · parent_policy · trap · step). Parser fail-open closed on its full measurable surface.
-- `Sir,` **Q-A decision**: STEP/MUTATION remove-safe; MONO/INHERIT/TRAP wire-vs-document → unblocks the gov-verifier as the 5th authoritative stage.
-- Stage-B NOT done (see roadmap): 4/7 authoritative · gov-verifier held · lexer+parser un-flipped · bootstrap fixpoint + `.ts`-retirement post-v1.
+### Open threads (owner-gated or forward — NOT rushing)
+- **6th flip (gov-verifier)** — gated on: R&D §5a of the removal (bridge `0319`) + the a/c/d/i3 flip-readiness legs for gov-verifier. Evidence-pack Q-A addendum DONE this session. Then owner push.
+- **10 dead-flow CANDIDATES** (detector) — 3 in `compiler.capabilities.fungi` (countTokens/sourceHasContract/sourceHasEffects) + **7 in the AUTHORITATIVE `type-checker.fungi`** (buildStaticEnv/resolveStatic/checkStaticDecls/buildBitfieldEnv/resolveBitfieldAccess/checkViewBindings/checkStepExpr) — a CG-9.1 concern in a flipped stage IF confirmed. Need per-flow verify (proposer≠verifier); reads like an unwired static/bitfield/view cluster. Separate cleanup thread.
+- **RD-0530 (PROPOSED, canonical assigned) — while-loop parallelisation under zero-trust** (R&D owner-directed handover, bridge 0318; full design held in the KB). Fracture to CPU threads **only for a provably-safe class, fail-closed to serial** otherwise; built on Galerina's own shared-nothing + graph-managed mechanisms. **Owner-gated to BUILD** (Galerina code is main's; R&D is read-only + §5a's each increment). First slice = the classifier gate + a `parallel==serial` determinism differential, emitting SERIAL until the gate is trusted (no thread spawns before the gate + differential prove out).
+- **myco mirror re-vendor** (2 fixes behind `subprojects/myco@5bdb05f`) — queued on owner push. **#137 Decimal→f64** — owner design (handle-vs-wide).
 
 ## 📍 2026-07-24 (superseded) — three-valued-stance corrections + path-forward plan · owner ruling: tick-bounding suspended for the parser arc
 

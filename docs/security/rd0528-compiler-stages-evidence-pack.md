@@ -44,7 +44,43 @@
 > "no oracle" was imprecise: STEP-001 the *code* is `.fungi`-only, but the *construct* is `.ts`-live via GOV-024).
 > ⟹ **Q-B COMPLETE**: all 4 unmodeled governance constructs (emergency · parent_policy · trap · step) refused fail-closed.
 > This is a **parser hardening**, not a flip (parser stays a differential shadow); it is the pre-Tier-2 close of
-> the Q-B fail-open, separable from the gov-verifier Q-A dead-code disposition (owner-gated).
+> the Q-B fail-open, separable from the gov-verifier Q-A dead-code disposition (below).
+>
+> ## ★ ADDENDUM 2026-07-25 — gov-verifier Q-A RESOLVED (dead-flow removal) + verifyGuardDecl subset + GOV-005 latent collision
+>
+> **Q-A (the 64%-dead charter) is resolved by removing 5 dead-orphaned flows** (`4b0688cd`): verifyPolicyHierarchy
+> (INHERIT) · verifyEmergencyTransitions (MONO) · verifyTrapDecl (TRAP) · verifyStepExpr (STEP) · verifyMutationPolicy
+> (MUTATION). Each had **0 in-`.fungi` callers AND 0 test/corpus drivers** — mechanically confirmed by
+> `scripts/audit-selfhosted-dead-flows.mjs` (built after a near-miss where an in-file occurrence count read all six as
+> dead; the external-caller check caught that verifyGuardDecl is live). Behaviour-preserving: `verifyGovernance` never
+> dispatched them; INHERIT/MONO/TRAP **inputs** (parent_policy/emergency/trap) are refused fail-closed **upstream at
+> parse** by FUNGI-PARSE-006 (Q-B), so that governance is preserved — the verifier flows were dead because the parser
+> already closed those paths; STEP/MUTATION were `.fungi`-only codes with no `.ts` counterpart.
+>
+> **verifyGuardDecl (FUNGI-GOV-005, guard permitted_effects = known capability tokens) is KEPT** — it is corpus-LIVE
+> (`self-hosted-i3-functional-corpus` tranche 5). It is a **tested-but-UNWIRED forward-spec**: `verifyGovernance` does
+> NOT dispatch it, so a real compile does not run the guard-capability check. This is **symmetric with the `.ts` twin**,
+> which also does not enforce guard-capability (`.ts` FUNGI-ACCESS-001 covers `access{}` grants only, never `guard{}`
+> permitted_effects). So the flip asserts governance authority for the **reachable** surface; the guard-capability check
+> is a documented forward-spec, not a claimed-live enforcement. **Wiring it would make `.fungi` stricter than `.ts`**
+> (reject guards the `.ts` accepts) — a governed-program-acceptance change, deferred as an owner call, not taken here.
+>
+> **GOV-005 code collision — LATENT, recorded for a future rebuild (not a blocker):** `.ts` uses FUNGI-GOV-005 for
+> POLICY_PURPOSE_MISMATCH (**live**); `.fungi` verifyGuardDecl uses it for guard-capability (**tested-but-unwired → never
+> fires in a real compile**). So in production GOV-005 has exactly ONE live meaning (`.ts`); the two-meanings-one-code
+> collision is on-paper/corpus only. It is recorded here for a future rebuild to rename one side (e.g. keep GOV-005 =
+> policy-purpose, move guard-capability to a distinct code) — the rename becomes load-bearing only if verifyGuardDecl is
+> ever wired. Same class, and same record-now-rename-later disposition, as the naming-hygiene note below.
+>
+> **Naming-hygiene (R&D 0318, owner-raised):** the REMOVED MUTATION/TRAP families collided with core Galerina concepts —
+> **MUTATION** (FUNGI-MUTATION-001/002, a `policy{ only_decrease, max_change }` value-delta check) vs the **`mut`** binding
+> keyword; **TRAP** (FUNGI-TRAP-001/002, the `trap <expr>:` error-declaration construct) vs the WASM **`trap`/`unreachable`**
+> runtime fault (wat-emitter.ts:370) and the memory-safety **"trap band"**. Removing the two dead flows resolves the
+> collision for now (and touches neither `mut` bindings, WASM traps, nor the trap-band). A future rebuild re-adding these
+> checks should mint collision-free codes (e.g. `FUNGI-VALUE-DELTA-00x`, `FUNGI-GOV-ERRDECL-00x`).
+>
+> **Remaining before the gov-verifier flip §5a re-propose:** R&D §5a of the removal (`0319`); the a/c/d/i3 flip-readiness
+> legs assembled for gov-verifier. Ledger stays 5 of 7 until then.
 >
 > ## ★ ADDENDUM 2026-07-25 — the self-hosted twin's INTERPRETED-SUBSET operator boundary (R&D 0256/0258/0260/0262)
 >
