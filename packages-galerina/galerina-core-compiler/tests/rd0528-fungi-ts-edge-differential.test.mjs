@@ -262,6 +262,97 @@ describe("RD-0528 .fungi ≡ .ts edge-differential — SUBSET-REFUSAL: .ts valid
   });
 });
 
+// ── ESCAPE VALUE characterization (main 0341 / R&D 0342 + 0344) ──────────────────────────────────
+// The LEX_VALID rows above already carry `\u{41}` and `\u{10ffff}`, but the LEX predicate returns
+// `{ faulted }` ONLY — so they lock "neither side errors" and are VACUOUS on the VALUE. Both sessions
+// then measured, independently and with identical numbers, that the values DIVERGE:
+//
+//   `\n` `\t` `\\` `\"`  SYMMETRIC — both twins retain the backslash (lexer.ts:601 / lexer.fungi:328-339)
+//   `\u`                 ASYMMETRIC — .ts DECODES (:562/:587); lexer.fungi VALIDATES and keeps rawText
+//                        (:340-348, appending scanUnicodeEscape's `rawText` element)
+//
+// This block is a CHARACTERIZATION, deliberately NOT a parity assertion: it pins what each side does
+// TODAY so the divergence cannot drift silently, and it lands GREEN. A true value-parity row would red
+// on arrival, and the fix is not a patch — it needs a hex->int in the twin, a `Char.fromCode` WASM
+// lowering (R&D measured it as interpreter-only: WAT assembly refuses `$fromCode`), and an owner spec
+// call on whether `\u{1F600}` is length 2 (UTF-16, matching .ts) or 1 (code point). When that lands,
+// these rows convert to equality assertions.
+//
+// Severity, evidenced not assumed: LATENT. A scan of all 460 TRACKED `.fungi` sources found 17 `\u`
+// occurrences, ALL inside lexer.fungi's own comments plus one `\\u` in a contract intent — ZERO live
+// `\u` escapes anywhere in the corpus. Nothing compiled today consumes the divergent path.
+const BS = String.fromCharCode(92); // build escapes at runtime — authoring-time decoding ate R&D's first probe
+
+/** The `.ts` production parser's own value for a string literal (the node keeps its outer quotes). */
+function tsLiteralValue(literal) {
+  const p = parseProgram(`pure flow f() -> String { return "${literal}" }`, "escape-char.fungi");
+  let found;
+  const walk = (n) => {
+    if (!n || typeof n !== "object" || found !== undefined) return;
+    if (Array.isArray(n)) return n.forEach(walk);
+    if (n.kind === "stringLiteral") { found = n.value; return; }
+    for (const k of Object.keys(n)) if (k !== "parent") walk(n[k]);
+  };
+  walk(p.ast);
+  if (typeof found === "string" && found.startsWith('"') && found.endsWith('"')) found = found.slice(1, -1);
+  return found;
+}
+
+/** The `.fungi` twin's token value for the same literal (token `kind` is a variant, so select by position). */
+async function fungiLiteralValue(literal) {
+  const r = await executeFlow("tokenize", new Map([["source", vStr(`pure flow f() -> String { return "${literal}" }`)]]), lexer.ast);
+  const lv = r.value ?? r;
+  const toks = lv.__tag === "ok" ? lv.value : lv;
+  const vals = (toks.items ?? []).map((t) => (t.value ?? t).fields?.get("value")?.value);
+  const idx = vals.indexOf("return");
+  return idx >= 0 ? vals[idx + 1] : undefined;
+}
+
+const ESCAPE_SYMMETRIC = [
+  { label: "plain (CONTROL — proves both extractors read real values)", lit: "ab", len: 2 },
+  { label: `${BS}n  retained by BOTH`, lit: `a${BS}nb`, len: 4 },
+  { label: `${BS}t  retained by BOTH`, lit: `a${BS}tb`, len: 4 },
+  { label: `${BS}${BS} retained by BOTH`, lit: `a${BS}${BS}b`, len: 4 },
+  { label: `${BS}"  retained by BOTH (does not terminate the literal)`, lit: `a${BS}"b`, len: 4 },
+];
+
+describe("RD-0528 edge-differential — ESCAPE VALUES: symmetric pass-through (both twins agree)", () => {
+  for (const c of ESCAPE_SYMMETRIC) {
+    it(`${c.label} → same value on both sides`, async () => {
+      const ts = tsLiteralValue(c.lit);
+      const fu = await fungiLiteralValue(c.lit);
+      assert.equal(ts, fu, `escape pass-through must stay symmetric: .ts=${JSON.stringify(ts)} .fungi=${JSON.stringify(fu)}`);
+      assert.equal(ts.length, c.len, `measured length changed for ${c.label}: got ${ts.length}`);
+    });
+  }
+});
+
+describe("RD-0528 edge-differential — ESCAPE VALUES: \\u is ASYMMETRIC (CHARACTERIZATION, measured not blessed)", () => {
+  it("\\u0041 — .ts DECODES to 'A' (1 char); the authoritative twin keeps the raw 6 chars", async () => {
+    const lit = `${BS}u0041`;
+    const ts = tsLiteralValue(lit);
+    const fu = await fungiLiteralValue(lit);
+    assert.equal(ts, "A", `.ts must decode \\u0041, got ${JSON.stringify(ts)}`);
+    assert.equal(fu, `${BS}u0041`, `.fungi must still keep rawText, got ${JSON.stringify(fu)}`);
+    assert.notEqual(ts, fu, "the divergence this row exists to pin has vanished — convert to a parity assertion");
+  });
+
+  it("\\u{1F600} — .ts DECODES to the astral char (length 2, UTF-16); the twin keeps the raw 9 chars", async () => {
+    const lit = `${BS}u{1F600}`;
+    const ts = tsLiteralValue(lit);
+    const fu = await fungiLiteralValue(lit);
+    assert.equal(ts.length, 2, `.ts astral decode is UTF-16 surrogate-pair (length 2), got ${ts.length}`);
+    assert.equal(fu, `${BS}u{1F600}`, `.fungi must still keep rawText, got ${JSON.stringify(fu)}`);
+    assert.notEqual(ts, fu, "the divergence this row exists to pin has vanished — convert to a parity assertion");
+  });
+
+  it("non-vacuity: the twin still REJECTS an invalid \\u fail-closed, so validity parity is intact", async () => {
+    const bad = `pure flow g() -> String { return "${BS}u{110000}" }`;
+    const fu = await fungiLexFault(bad);
+    assert.equal(fu.faulted, true, "an out-of-range \\u must still fault in the twin — this is a VALUE divergence, not a fail-open");
+  });
+});
+
 describe("RD-0528 edge-differential — non-vacuity", () => {
   it("has both a value-parity corpus and a fault-parity corpus, and the fault predicate distinguishes them", async () => {
     assert.ok(VALID.length >= 2, "value-parity corpus must be non-trivial");
