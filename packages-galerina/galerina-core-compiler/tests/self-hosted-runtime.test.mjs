@@ -116,6 +116,37 @@ const gStmt = ({ op, name = "", expr = [], body = [], elseBody = [] }) =>
 const constI = (n) => gExpr("const", "Int", String(n));
 const constB = (x) => gExpr("const", "Bool", x ? "true" : "false");
 
+// An RtValue (the runtime's value record) + a caller that passes RtValue records directly (argsOf
+// only auto-wraps primitives). Used for the applyBinop unknown-op harden below.
+const emptyList = vList([]);
+const rtInt = (n) => vRec({ ty: vStr("Int"), i: vInt(n), b: vBool(false), s: vStr(""), tag: vStr(""), payload: emptyList, fields: emptyList });
+async function callRt(flowName, argMap) {
+  const r = await executeFlow(flowName, argMap, program.ast, program.flows, undefined, undefined, { pureFastPath: false }, undefined, undefined);
+  return r.value ?? r;
+}
+
+describe("runtime.fungi — applyBinop unknown-op harden (RD-0528; R&D 0256/0258)", () => {
+  // The unknown-op fail-CLOSED harden (runtime.fungi:273-274). R&D 0258 corrected 0256: this path IS
+  // source-reachable — gir-emitter's opcodeOf maps the logical operators `and`/`or` (and any operator
+  // outside applyBinop's set) to op="unknown", so `true and false` routes here. Pins the harden (my 0256
+  // claim that it was already unit-tested was WRONG — retracted; this is that missing test).
+  it("non-vacuity control: a KNOWN opcode computes — add(1,2) = 3 (applyBinop takes OPCODES, not symbols)", async () => {
+    const r = await callRt("applyBinop", new Map([["op", vStr("add")], ["a", rtInt(1)], ["b", rtInt(2)]]));
+    assert.equal(field(r, "ty"), "Int");
+    assert.equal(field(r, "i"), 3);
+  });
+  it("★ op='unknown' (what opcodeOf yields for and/or/%) fails CLOSED to Err", async () => {
+    const r = await callRt("applyBinop", new Map([["op", vStr("unknown")], ["a", rtInt(1)], ["b", rtInt(2)]]));
+    assert.equal(field(r, "ty"), "tag");
+    assert.equal(field(r, "tag"), "Err");
+  });
+  it("a bogus operator symbol also fails closed (not only the literal 'unknown')", async () => {
+    const r = await callRt("applyBinop", new Map([["op", vStr("@@@")], ["a", rtInt(1)], ["b", rtInt(2)]]));
+    assert.equal(field(r, "ty"), "tag");
+    assert.equal(field(r, "tag"), "Err");
+  });
+});
+
 async function runGIR(stmts, env = []) {
   const r = await executeFlow(
     "runGIRBody", new Map([["stmts", vList(stmts)], ["env", vList(env)]]),
