@@ -197,12 +197,13 @@ contract {
 // (Galerina string escapes are pass-through, so this mirrors the raw source text).
 pure flow scanString(source: String, startPos: Int, srcLen: Int) -> Array<String>
 contract {
-  intent { "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos] as strings." }
+  intent { "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag] as strings." }
 }
 {
   mut i = startPos + 1            // skip opening quote
   mut value: String = ""
   mut done = false
+  mut termFlag: String = "0"     // "1" iff a closing quote was found; "0" = unterminated (fail-CLOSED, R&D 0228)
   while i < srcLen and done == false {
     let opt: Option<Char> = source.charAt(i)
     match opt {
@@ -232,6 +233,7 @@ contract {
           if nc is '"' {
             i = i + 1            // consume closing quote
             done = true
+            termFlag = "1"
           }
           else {
             value = value + nc.toString()
@@ -244,7 +246,7 @@ contract {
       }
     }
   }
-  return [value, i.toString()]
+  return [value, i.toString(), termFlag]
 }
 
 // â”€â”€ scanCharLit: read a '...' char literal starting at the opening quote â”€â”€â”€â”€â”€â”€â”€
@@ -470,7 +472,13 @@ contract {
           let startColS = col
           let resS = scanString(source, pos, srcLen)
           let valS = resS.first().unwrapOr("")
-          let endPosStrS = resS.last().unwrapOr((pos + 1).toString())
+          let endPosStrS = resS.get(1).unwrapOr((pos + 1).toString())
+          let termS = resS.get(2).unwrapOr("1")
+          // Fail-CLOSED on an unterminated string: the .ts lexer errors here; returning a normal
+          // StringLiteral was a fail-open divergence (R&D 0228/0229). Return a LexError instead.
+          if termS == "0" {
+            return Err({ message: "unterminated string literal", line: startLineS, col: startColS })
+          }
           let endPosS = endPosStrS.toInt().unwrapOr(pos + 1)
           col = col + (endPosS - startPosS)
           pos = endPosS
