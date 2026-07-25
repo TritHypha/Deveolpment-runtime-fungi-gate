@@ -3188,7 +3188,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-DRIFT-003",
@@ -5747,7 +5747,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 2
+      "docs": 4
     },
     {
       "code": "FUNGI-NAME-001",
@@ -7982,7 +7982,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 1
+      "docs": 3
     },
     {
       "code": "FUNGI-STORAGE-001",
@@ -8644,7 +8644,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 26,
-      "docs": 9
+      "docs": 11
     },
     {
       "code": "FUNGI-TRACE-001",
@@ -9566,7 +9566,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 31,
-      "docs": 5
+      "docs": 7
     },
     {
       "code": "FUNGI-VALUESTATE-009",
@@ -9726,7 +9726,7 @@
       "defs": 1,
       "emits": 0,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-VER-001",

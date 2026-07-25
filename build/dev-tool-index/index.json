@@ -4,8 +4,8 @@
     "packages": 97,
     "testBearing": 96,
     "tests": 7876,
-    "devTools": 121,
-    "auditTools": 74,
+    "devTools": 122,
+    "auditTools": 75,
     "toolsInCadence": 54,
     "proofs": 40
   },
@@ -1854,6 +1854,18 @@
       ]
     },
     {
+      "name": "audit-signing-refusal-recon.mjs",
+      "category": "audit",
+      "purpose": "a RECONNAISSANCE MAP of the signing-path refusal codes.",
+      "selfTest": true,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "proofs"
+      ]
+    },
+    {
       "name": "audit-silent-overwrite.mjs",
       "category": "audit",
       "purpose": "hunt the silent-name-collision class with myco (owner 2026-07-18)",
@@ -2742,6 +2754,7 @@
       "audit-report-blind-consumers.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-selfhosted-dead-flows.mjs",
+      "audit-signing-refusal-recon.mjs",
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
@@ -2940,6 +2953,7 @@
       "audit-runtime-coverage.mjs",
       "audit-selfhosted-dead-flows.mjs",
       "audit-signed-fixture-drift.mjs",
+      "audit-signing-refusal-recon.mjs",
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
@@ -3107,6 +3121,7 @@
       "audit-compiler-stage-twins.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-license-compat.mjs",
+      "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
       "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
@@ -3289,6 +3304,7 @@
       "audit-runtime-coverage.mjs",
       "audit-selfhost-readiness.mjs",
       "audit-selfhosted-dead-flows.mjs",
+      "audit-signing-refusal-recon.mjs",
       "audit-syntax-reference-links.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",

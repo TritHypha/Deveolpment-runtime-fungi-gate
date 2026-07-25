@@ -45,9 +45,24 @@ const REGISTRY = join(ROOT, "build", "code-registry", "registry.json");
 // DEAD is NOT a bare count here — see DEAD_RESERVED_SPEC below. R&D 0182 (RULING on bridge 0179):
 // a bare dead-count ratchet is MASKABLE — one reserved code promoted to live (13→12) plus one NEW
 // abandoned code entering (12→13) nets to the same count, so the gate stays green while real drift
-// entered. The fail-closed form is a NAMED SET checked by MEMBERSHIP, not by count. (phantom carries
-// the same latent hazard; a named-set upgrade for it is a separate, unruled change — left a count here.)
+// entered. The fail-closed form is a NAMED SET checked by MEMBERSHIP, not by count.
+//
+// 2026-07-25 — PHANTOM NOW GETS THE SAME TREATMENT (owner: "zero-trust solution", board #172). The count
+// stays as a cheap first line, but the authority is PHANTOM_BASELINE, a frozen NAMED SET seeded from the
+// 111-baseline commit. Why the upgrade was earned rather than assumed: three phantoms had entered above
+// the count baseline and every one was traceable to a distinct real cause (a premature doc reference to
+// an unminted code; two codes named in `governance-verifier` intent lines whose grammar the self-hosted
+// parser has no production for). A bare count told us "3 more" and nothing else — it could not have told
+// us a leave+enter swap had happened at all.
+//
+// The set is a JSON SIDECAR, not literals in this file, and that is load-bearing: code-index.mjs scans
+// .ts/.mjs/.cjs/.fungi/.md only, so naming 111 codes in a .json does NOT register them as doc-only codes.
+// Inlining them here would make this gate manufacture the very phantoms it measures — the same
+// self-ingestion trap that made a detector's own self-test fixtures read as real registrations.
 const BASELINE = Object.freeze({ phantom: 111 });
+const PHANTOM_BASELINE = Object.freeze(
+  JSON.parse(readFileSync(join(ROOT, "scripts", "baselines", "phantom-codes.json"), "utf8")).codes,
+);
 // Note on FUNGI-FUEL-001 (2026-07-24): a genuine RESERVED code (RD-0314 fuel cap; KB registration held for
 // the post-ceremony batch), referenced in docs (docs=3) with no source emit. Because it is NAMED here (a
 // source reference), the registry classifies it as `ref`, NOT a doc-only `phantom` — so the phantom count
@@ -192,6 +207,23 @@ export function deadSetDrift(entries, deadReservedList) {
   return { unlisted, stale };
 }
 
+// Same membership shape for PHANTOM (board #172). Both directions are reported SEPARATELY because they
+// need opposite fixes and a count conflates them:
+//   entered — a doc-only code not in the frozen set. Fix the DOC (a code that isn't minted must not be
+//             written in the form that means "minted") or implement the code. Never widen the set to
+//             make it quiet — that is the baseline-bump this gate exists to refuse.
+//   left    — a named code that is no longer phantom. The entry is STALE and must be REMOVED from the
+//             sidecar. Reported, and it fails: an unreadable/empty registry leaves all 111 "left", so a
+//             can't-read is LOUD, never a silent pass.
+// A leave+enter swap nets to the same count and is invisible to `BASELINE.phantom`; it is not invisible
+// here. That is the whole reason for the upgrade.
+export function phantomSetDrift(entries, phantomBaselineList) {
+  const now = new Set((entries ?? []).filter((e) => e.status === "phantom").map((e) => e.code));
+  const entered = [...now].filter((c) => !phantomBaselineList.includes(c)).sort();
+  const left = phantomBaselineList.filter((c) => !now.has(c)).sort();
+  return { entered, left };
+}
+
 // A reserved code must be PRESENT in the registry and NOT `live`. promoted = a reserved code the registry now
 // marks live (the silent-promotion class). absent = a reserved code with no entry at all (the family's shape
 // changed → can't verify → fail-closed, never a silent no-op). Both are FUNGI-DRIFT-002 violations.
@@ -242,6 +274,27 @@ if (process.argv.includes("--self-test")) {
   ok(masked.unlisted.length === 1 && masked.stale.length === 1,
      "★ masking swap (promote-out + enter-new, count unchanged) fires BOTH ways — the class a bare count cannot see");
   ok(deadSetDrift(undefined, DS).stale.length === 2, "absent entries → every named code reads stale — a can't-read fails LOUDLY, never a silent pass");
+
+  // A3 phantom-set membership (board #172) — same synthetic FUNGI-X family, so no real code literal enters
+  // this file. Mirrors the dead-set battery deliberately: the failure MODES are identical, and a check that
+  // only tested the happy path would pass while the ratchet stayed as maskable as the count it replaced.
+  const PS = reservedCodesOf({ "FUNGI-X": [1, 2] });
+  const atBase = [{ code: "FUNGI-X-001", status: "phantom" }, { code: "FUNGI-X-002", status: "phantom" }];
+  ok(phantomSetDrift(atBase, PS).entered.length === 0 && phantomSetDrift(atBase, PS).left.length === 0,
+    "phantom set exactly at baseline is silent");
+  ok(phantomSetDrift([...atBase, { code: "FUNGI-X-009", status: "phantom" }], PS).entered.join() === "FUNGI-X-009",
+    "a NEW doc-only code fires as 'entered' (the premature-reference class that turned this gate red on 2026-07-25)");
+  ok(phantomSetDrift([{ code: "FUNGI-X-001", status: "phantom" }, { code: "FUNGI-X-002", status: "live" }], PS).left.join() === "FUNGI-X-002",
+    "a code that stopped being doc-only fires as 'left' — the stale entry must be removed, not left to pad the set");
+  // ★ THE CONTROL THIS UPGRADE EXISTS FOR: one leaves, one enters, count is UNCHANGED at 2.
+  const swap = phantomSetDrift([{ code: "FUNGI-X-001", status: "phantom" }, { code: "FUNGI-X-002", status: "live" }, { code: "FUNGI-X-009", status: "phantom" }], PS);
+  ok(swap.entered.join() === "FUNGI-X-009" && swap.left.join() === "FUNGI-X-002",
+    "★ a leave+enter SWAP fires BOTH directions — the bare count nets to 2 and stays green, which is exactly why the count is no longer the authority");
+  ok(baselineBreach({ phantom: 2 }, Object.freeze({ phantom: 2 })).length === 0,
+    "   CONTROL for that swap: the count check is genuinely blind to it (2 vs baseline 2 = silent) — the two checks are not redundant");
+  ok(phantomSetDrift(undefined, PS).left.length === 2, "absent entries → every named phantom reads 'left' — a can't-read fails LOUDLY here too");
+  ok(PHANTOM_BASELINE.length === 111 && PHANTOM_BASELINE.every((c) => typeof c === "string" && c.length > 0),
+    "the real frozen phantom set loads from its JSON sidecar and holds 111 named codes (sidecar, NOT literals — a .json is outside code-index's scan extensions, so naming them cannot register them)");
   ok(reservedCodesOf(DEAD_RESERVED_SPEC).length === 13, "the real dead-reserved spec derives 13 codes (5 ASYNC + 1 BLOCK + 3 BYTE + 2 CHAR + 2 STRING) — the count DERIVES from the set");
 
   // A2 severity-completeness — a live FUNGI-* with no severity is a gap; ERR_* is scoped out by design.
@@ -303,6 +356,7 @@ const sevGaps = severityIncomplete(reg.entries);
 const reserved = reservedDrift(reg.entries, reservedCodesOf(RESERVED_SPEC));
 const deadReserved = reservedCodesOf(DEAD_RESERVED_SPEC);
 const deadSet = deadSetDrift(reg.entries, deadReserved);
+const phantomSet = phantomSetDrift(reg.entries, PHANTOM_BASELINE);
 
 console.log("artifact-drift · FAMILY A (registry) — checks A1 count-drift + A2 severity-completeness + A3 baseline + reserved-code stability (RD-0511-3).");
 console.log("  NOT checked this pass (surface-honest): A4 production-blocker CONVERSE (needs a registry `production_blocker` attribute; its emitter half is lint-conventions `production-blockers`, satisfied) · families B manifest / C assembly / D register (next — see to-rnd RD-0499 plan).");
@@ -314,13 +368,17 @@ if (breach.length === 0) console.log(`  ✅ A3: phantom=${counts.phantom}≤${BA
 for (const c of deadSet.unlisted) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a registry 'dead' code NOT in the named dead-reserved set — real drift entered, regardless of count (R&D 0182 A-PRIME).`);
 for (const c of deadSet.stale) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: named in the dead-reserved set but NO LONGER dead in the registry — remove the stale entry (no-stale-exceptions).`);
 if (deadSet.unlisted.length + deadSet.stale.length === 0) console.log(`  ✅ A3 dead-set: registry dead codes == the ${deadReserved.length} NAMED verified-reserved codes (membership check — count derives from the set; a promote+enter swap cannot mask it).`);
+for (const c of phantomSet.entered) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a doc-only code NOT in the frozen phantom set — fix the DOC (an unminted code must not be written in the form that means 'minted') or implement the code. Widening the set is not a fix.`);
+for (const c of phantomSet.left) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: named in the frozen phantom set but no longer doc-only — remove the STALE entry from scripts/baselines/phantom-codes.json.`);
+if (phantomSet.entered.length + phantomSet.left.length === 0) console.log(`  ✅ A3 phantom-set: registry phantom codes == the ${PHANTOM_BASELINE.length} NAMED baseline codes (membership — a leave+enter swap that a bare count nets to zero cannot mask it).`);
 for (const c of sevGaps) console.log(`  ⚠ FUNGI-DRIFT-003 ${c}: a LIVE FUNGI-* diagnostic with NO captured severity (A2 severity-completeness).`);
 if (sevGaps.length === 0) console.log(`  ✅ A2: every live FUNGI-* diagnostic carries a severity (${(reg.entries ?? []).filter((e) => e.namespace === "FUNGI" && e.status === "live").length} FUNGI-* live; ERR_* scoped out by design).`);
 for (const c of reserved.promoted) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a RESERVED code is now 'live' in the registry — a silent promotion (the 65e29f6f scanner/fixture class). Reserved codes must stay un-emitted.`);
 for (const c of reserved.absent) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a RESERVED code is ABSENT from the registry — the reserved family changed shape and can no longer be verified (fail-closed).`);
 if (reserved.promoted.length + reserved.absent.length === 0) console.log(`  ✅ reserved-code stability: the ${reservedCodesOf(RESERVED_SPEC).length} reserved FUNGI-MEMORY placeholders are all present and NON-live (RD-0511-3).`);
 
-const violations = drift.length + breach.length + sevGaps.length + reserved.promoted.length + reserved.absent.length + deadSet.unlisted.length + deadSet.stale.length;
+const violations = drift.length + breach.length + sevGaps.length + reserved.promoted.length + reserved.absent.length
+  + deadSet.unlisted.length + deadSet.stale.length + phantomSet.entered.length + phantomSet.left.length;
 console.log(violations === 0
   ? `✅ artifact-drift family A: 0 violation(s) across ${docs.length} doc(s) + the registry (counts, severities, baseline, dead-set membership, reserved-code stability).`
   : `❌ artifact-drift family A: ${violations} violation(s) — a count drifted, a live FUNGI-* lacks a severity, a baseline grew, the dead set diverged from its named baseline, or a reserved code drifted.`);
