@@ -91,8 +91,17 @@ export function extractFungiBindings(text, file) {
       // deeper stays unresolved and is REPORTED as such rather than guessed.
       const varName = rhs.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*[,}]/)?.[1];
       if (varName) {
-        const decl = new RegExp(`(?:let|mut)\\s+${varName}\\s*(?::\\s*String\\s*)?=\\s*"((?:[^"\\\\]|\\\\.)*)"`);
-        meaning = text.match(decl)?.[1] ?? null;
+        // Resolve to the NEAREST PRECEDING declaration, not the first in the file. An earlier draft
+        // used text.match(), which returns the FIRST occurrence anywhere — so a file with several
+        // `let msg: String = …` bindings attributed the WRONG text to every emit site after the
+        // first. It reported the GOV-005 twin meaning as "safety_critical flow '…'" when that site
+        // actually emits the guard permitted_effects message. A resolver that silently mis-attributes
+        // is worse than one that declines: it produces confident, wrong evidence.
+        const decl = new RegExp(`(?:let|mut)\\s+${varName}\\s*(?::\\s*String\\s*)?=\\s*"((?:[^"\\\\]|\\\\.)*)"`, "g");
+        const before = text.slice(0, m.index);
+        let d, last = null;
+        while ((d = decl.exec(before)) !== null) last = d[1];   // last match BEFORE the emit = nearest
+        meaning = last;
       }
     }
     out.push(meaning !== null
