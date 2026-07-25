@@ -1598,7 +1598,9 @@ contract { intent { "True when a `trap <expr> :` hardware-trap statement appears
 // `callExpr` valued `step:<name>`, which the .ts governance-verifier flags GOV-024 (SANDBOX_REQUIRED, error in
 // production/deterministic). The self-hosted parser has no production: `parseStmt` reads `step` as a bare identifier
 // and drops the construct (a fail-OPEN — a program the .ts governs would pass clean in the twin). Refuse the SHAPE
-// fail-closed: keyword `step` + an identifier + `(` (newline-tolerant). Precision: a bare `step`, `let step = 5`,
+// fail-closed: keyword `step` + an identifier + `(` (newline-tolerant AFTER `step`, but `(` must IMMEDIATELY follow the
+// flow-name — parity with parser.ts:2528 `currentIs("(")`, which does not skip newlines there; `step foo<NL>(` is NOT
+// the construct in .ts). Precision: a bare `step`, `let step = 5`,
 // `step.foo()` (`.` not an ident), and `step(args)` (a call to `step` — no intervening flow-name) all lack the
 // `step <ident> (` shape, so they stay parity-clean — matching the .ts, which only treats that exact shape as `step`.
 pure flow bodyHasStepConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool
@@ -1609,7 +1611,9 @@ contract { intent { "True when a `step <flowName>(` DWI-isolate call appears in 
     if tokVal(tokens, i) == "step" {
       let j: Int = skipNewlines(tokens, i + 1)
       if isIdent(tokens, j) {
-        let k: Int = skipNewlines(tokens, j + 1)
+        // No skipNewlines here: .ts requires `(` immediately after the flow-name (parser.ts:2528), so
+        // `step foo<NL>(` drops to the identifier fallback there and is NOT a step:callExpr — refusing it would over-refuse.
+        let k: Int = j + 1
         if tokVal(tokens, k) == "(" { return true }
       }
     }

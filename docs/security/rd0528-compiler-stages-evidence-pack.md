@@ -34,9 +34,12 @@
 > 4 rows in `tests/self-hosted-parser-failclosed.test.mjs`; parser stage hash re-pinned (`09e1f2d0`→`c81ac75e`);
 > R3 parity re-proven (all 5 `wat-p9-parser-*-parity` green). **Site #3a (`trap <expr> :`) + #3b (`step <flowName>(`)
 > LANDED** — `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`) and `bodyHasStepConstruct`
-> (`step`+ident+`(` shape), both newline-tolerant, refuse fail-closed. False-positive-free by probes (trap 13/13,
-> step 9/9): bare `trap`/`step`, `trap()`/`step()`, `step.foo()`, `let trap/step=5`, args, `trap.foo()`,
-> bare-`trap`-then-`let y: Int` all parse clean. The `step` construct HAS a `.ts` oracle after all — `parser.ts:2522`
+> (`step`+ident+`(` shape) refuse fail-closed. `trap` is newline-tolerant throughout; `step` is newline-tolerant
+> AFTER `step` but requires `(` IMMEDIATELY after the flow-name — exact parity with `parser.ts:2528` `currentIs("(")`
+> (no newline-skip there), so `step foo<NL>(` is NOT the construct in `.ts` and is left clean (R&D §5a 0302 caught a
+> 1-case over-refusal from an extra skipNewlines; fixed `parser.fungi:1612`, +1 parity row). False-positive-free by
+> probes (trap 13/13, step 9/9): bare `trap`/`step`, `trap()`/`step()`, `step.foo()`, `let trap/step=5`, args,
+> `trap.foo()`, bare-`trap`-then-`let y: Int` all parse clean. The `step` construct HAS a `.ts` oracle after all — `parser.ts:2522`
 > parses `step <name>(args)` into a `step:` callExpr the `.ts` governance-verifier flags **GOV-024** (my 0297
 > "no oracle" was imprecise: STEP-001 the *code* is `.fungi`-only, but the *construct* is `.ts`-live via GOV-024).
 > ⟹ **Q-B COMPLETE**: all 4 unmodeled governance constructs (emergency · parent_policy · trap · step) refused fail-closed.

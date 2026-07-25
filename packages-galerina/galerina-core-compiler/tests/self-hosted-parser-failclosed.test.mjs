@@ -181,5 +181,9 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     assert.deepEqual(bare.errors, [], "bare step is not the DWI construct");
     const call = await pipeline("pure flow f() -> Int\ncontract { effects {} }\n{\n  step(5)\n  return 1\n}\n");
     assert.deepEqual(call.errors, [], "step(x) is a call to `step`, not the `step <flowName>(` DWI construct");
+    // Parity: .ts requires `(` immediately after the flow-name (parser.ts:2528, no newline skip), so
+    // `step foo<NL>(` is NOT a step:callExpr there — refusing it would over-refuse (R&D §5a 0302). Must stay clean.
+    const nlBeforeParen = await pipeline("pure flow f() -> Int\ncontract { effects {} }\n{\n  step doThing\n  (5)\n  return 1\n}\n");
+    assert.ok(!nlBeforeParen.errors.some((e) => e.startsWith("FUNGI-PARSE-006")), "newline before `(` is not the DWI construct in .ts: " + JSON.stringify(nlBeforeParen.errors));
   });
 });
