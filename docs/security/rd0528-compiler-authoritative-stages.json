@@ -44,6 +44,20 @@
         "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 6 — parse -> emitGIRModule per-return-expr GIR op (literal->const · param->load · arith->add · compare->cmp), >=4 DISTINCT ops non-vacuous, driven from the PARSER's output (2376fc1f); exercises the op:load return-literal path the I-1 pack recorded as an uncovered oracle gap",
         "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
       }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "runtime.fungi",
+      "tier": "authority-flip (tier 1): runtime.fungi is the authoritative SPEC of record; the co-located interpreter.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-25",
+      "nod": "STANDING FLIP PROTOCOL — owner 'unlock all green light' 2026-07-24 lifted the per-stage 'may I?' ask (the fourth flip; the first taken purely under the standing directive rather than a stage-specific owner phrase). The OWNER'S PUSH of this commit is the countersign (R&D 0256 framing) — a non-push/revert is the safety if the standing directive was not intended to cover this stage. Rests on: harden-first precondition SATISFIED (fail-open class closed: div0/missing-flow/unknown-op -> Err + the .fungi≡.ts edge-diff gate) + R&D §5a INDEPENDENT VERIFY GREEN 2026-07-25 (bridge 0256, proposer≠verifier — R&D re-ran all four legs + diff-scope). Pure-authority flip: this ledger line moves 0 source/hash bytes, so NO re-pin (cf. gir-emitter).",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-runtime-exec-parity.test.mjs + self-hosted-runtime.test.mjs — 31/31 (Stage-A interpreter === Stage-B WASM + non-vacuity), R&D-re-verified 2026-07-25 (bridge 0256)",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — runtime anchor rd0528-runtime-tier-sync (tier: \"sync\" -> \"synx\", the no-effects fast-path tier classification) KILLED, 0 survived; anchor-liveness --check-anchors 59/59 match 1x (non-vacuous, R&D 0256)",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs — deterministic sha256, #105-admitted; audit-compiler-stage-hashes all 7 stages match baseline (bytes + sha256) at HEAD",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 8 (runtime exec-VALUE: buildFlowTable -> runProgram, computes 42/3/7 + pins div0/missing-flow soft edges as Err) + tranche 7 (tier-dispatch) — 73/73, exit 0. NOTE (R&D 0256, honest residual): the unknown-op harden (applyBinop op-outside-the-10 -> Err) is fail-CLOSED at source but lacks a dedicated self-hosted-runtime unit test (my 'covered by unit tests' claim was WRONG — retracted); a direct-applyBinop test is separate follow-up work, does not block this flip (unknown-op is not source-reachable — the parser drops unmapped ops).",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
+      }
     }
   ]
 }
