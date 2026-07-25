@@ -174,6 +174,42 @@ export function findCrossEngineCollisions(tsBindings, fungiBindings) {
   return out;
 }
 
+/**
+ * C1c: the same code used for two DIFFERENT rules inside ONE twin file (R&D 0394's fifth
+ * collision, `FUNGI-VAL-001` — `safety_critical must declare audit.write` at :91 vs `secure
+ * flow performs no audit call in its body` at :370).
+ *
+ * None of the three earlier comparisons could see this class: C1 is `.ts`↔`.ts`, C1b is
+ * `.ts`↔twin, and R&D's cross-surface scan keyed by code with first-occurrence-wins, so a
+ * second meaning under the same code was silently discarded as a duplicate. Three instruments,
+ * and the blind spot was the same shape each time — the tool could not tell a second MEANING
+ * from a repeated LINE.
+ *
+ * Compared on the leading subject words of the message, not the whole string: two emit sites
+ * for the SAME rule often word themselves slightly differently, and flagging that would be
+ * noise. Different opening subject = different rule.
+ */
+export function findTwinInternalCollisions(fungiBindings) {
+  const subjectOf = (m) => m.toLowerCase().replace(/['"]/g, " ").split(/\s+/).filter(Boolean).slice(0, 2).join(" ");
+  const byFileCode = new Map();
+  for (const b of fungiBindings) {
+    if (b.resolved === false) continue;             // cannot see the message — never guess
+    const key = `${b.file} ${b.code}`;
+    if (!byFileCode.has(key)) byFileCode.set(key, new Map());
+    const subjects = byFileCode.get(key);
+    const s = subjectOf(b.meaning);
+    if (!subjects.has(s)) subjects.set(s, []);
+    subjects.get(s).push({ at: `${b.file}:${b.line}`, meaning: b.meaning });
+  }
+  const out = [];
+  for (const [key, subjects] of byFileCode) {
+    if (subjects.size < 2) continue;
+    const [file, code] = key.split(" ");
+    out.push({ code, file, uses: [...subjects.values()].map((v) => v[0]) });
+  }
+  return out;
+}
+
 // ── self-test ────────────────────────────────────────────────────────────────
 // The known-bad fixtures reproduce the SHAPE of the GOV-005 collision that motivated the
 // detector: if it cannot see that shape, it is not a detector. Plus clean controls, so a
@@ -219,6 +255,18 @@ function selfTest() {
   ok(crossClean.length === 0, "CONTROL: agreeing subjects must NOT be reported");
 
   ok(extractTsBindings(tsFixture, "f.ts").length === 3, "extractor non-vacuity: it must find the fixture's bindings");
+
+  // C1c — twin-internal double-use. Fixture reproduces the VAL-001 shape: one code, two rules,
+  // one file. The CONTROL is the case that would make this check worthless if it fired: the same
+  // rule emitted twice must stay silent, or every loop in every twin becomes a "collision".
+  const twinDouble = extractFungiBindings(
+    `d.append({ code: "${P}SELFTEST-004", message: "safety_critical flow must declare audit.write" })\n` +
+    `d.append({ code: "${P}SELFTEST-004", message: "secure flow performs no audit call in its body" })`, "t.fungi");
+  ok(findTwinInternalCollisions(twinDouble).length === 1, "known-bad: one code, two rules, one twin file must be reported");
+  const twinSame = extractFungiBindings(
+    `d.append({ code: "${P}SELFTEST-005", message: "secure flow performs no audit call in its body" })\n` +
+    `d.append({ code: "${P}SELFTEST-005", message: "secure flow performs no audit call in its body" })`, "t.fungi");
+  ok(findTwinInternalCollisions(twinSame).length === 0, "CONTROL: the same rule emitted twice must NOT be reported");
   // Guard the guard: if a future edit inlines a literal code back into this file, the catalog
   // silently re-poisons. Assert this source file contains no literal real-code token at all.
   // Scope = NON-COMMENT lines only, which is exactly code-index.mjs's own ingestion surface:
@@ -277,6 +325,7 @@ function main() {
 
   const c1 = findNameCollisions(ts);
   const c1b = findCrossEngineCollisions(ts, fungi);
+  const c1c = findTwinInternalCollisions(fungi);
 
   for (const c of c1) {
     console.log(`  🔴 C1 one code, two meanings: ${c.code}`);
@@ -299,6 +348,20 @@ function main() {
       console.log(`               twin "${c.twinMeaning}" @ ${c.twinAt}`);
     }
     if (c1b.length > 12) console.log(`      … +${c1b.length - 12} more (no silent cap: the count above is the total)`);
+  }
+
+  // C1c is ADVISORY for the same reason as C1b — it compares prose, not names — and additionally
+  // because what it finds is not mine to fix silently: deciding WHICH rule keeps a doubled code is
+  // a taxonomy adjudication. Reporting it makes an invisible class visible; gating it today would
+  // just park a red that gets ignored. It gates once the twins carry a `name:` field, at which point
+  // the comparison stops being a heuristic.
+  if (c1c.length) {
+    console.log(`\n  ⚠ ADVISORY (not gating) — ${c1c.length} twin-internal double-use: one code, two rules, one file.`);
+    console.log("    Invisible to C1 (.ts↔.ts) and C1b (.ts↔twin) by construction — this class needs its own check.");
+    for (const c of c1c) {
+      console.log(`      ${c.code}  in ${c.file}`);
+      for (const u of c.uses) console.log(`               "${u.meaning}" @ ${u.at}`);
+    }
   }
 
   if (c1.length === 0) {
