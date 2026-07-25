@@ -28,6 +28,7 @@
     "report": "node src/report.mjs",
     "chart": "node src/chart.mjs",
     "ui": "node src/build-chart.mjs",
+    "compare-ui": "node src/compare-chart.mjs",
     "ui:full": "node --expose-gc src/runner.mjs && node src/build-chart.mjs",
     "variance": "node src/variance.mjs",
     "noise-gate": "node src/noise-gate.mjs",

@@ -492,8 +492,9 @@ run("workspace:pointers", "node", ["scripts/validate-workspace-pointers.mjs"]);
 // doesn't run cannot fail, and its silence reads exactly like success.
 //
 // stage-execution — P9 enforcement: stops a self-hosted stage silently regressing RUN → TRAP.
-//   TRAP_BASELINE = 3 (shrink-only); a new trapping stage or a baseline increase → exit 1.
-//   component-health.mjs states "VIOLATIONS 0 · baseline 3 · exit 0" as the current assertion.
+//   TRAP_BASELINE = 0 (shrink-only, floor reached 2026-07-22 when the #100 checker debt was paid);
+//   ANY stage trapping → exit 1. The live constant is audit-stage-execution.mjs:72 — that file is
+//   authoritative, this comment is description (it carried "= 3" for 3 days after the payoff; R&D 0428).
 run("stage-execution", "node", ["scripts/audit-stage-execution.mjs"]);
 //
 // kernel-fungi-twins — RD-0361 authority ledger: guards the 4 decision-surface twins flipped to
