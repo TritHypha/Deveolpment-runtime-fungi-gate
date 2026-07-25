@@ -3881,18 +3881,14 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "POLICY_PURPOSE_MISMATCH",
-        "GUARD_UNKNOWN_CAPABILITY",
-        "SOMETHING_ELSE",
-        "VAULT_MISSING_OPEN_BRACE"
+        "POLICY_PURPOSE_MISMATCH"
       ],
       "severities": [
-        "warning",
-        "error"
+        "warning"
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 15,
+      "tests": 13,
       "docs": 10
     },
     {
@@ -3901,17 +3897,14 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING",
-        "SOMETHING_ELSE",
-        "POLICY_PURPOSE_MISMATCH"
+        "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING"
       ],
       "severities": [
-        "warning",
-        "error"
+        "warning"
       ],
       "defs": 1,
-      "emits": 2,
-      "tests": 12,
+      "emits": 1,
+      "tests": 11,
       "docs": 0
     },
     {
@@ -9619,8 +9612,8 @@
         "error"
       ],
       "defs": 2,
-      "emits": 7,
-      "tests": 3,
+      "emits": 1,
+      "tests": 1,
       "docs": 7
     },
     {

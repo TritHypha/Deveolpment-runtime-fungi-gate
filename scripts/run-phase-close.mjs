@@ -242,6 +242,14 @@ run("code-registry", "node", ["scripts/gen-code-registry.mjs"]);
 // differential — now that the type-system twin is complete, a permanent regression guard against a new
 // cluster mirroring a code the checker never raises. Standalone, source-scanned (no registry dependency).
 run("twin-emit-parity", "node", ["scripts/audit-twin-emit-parity.mjs"]);
+// One code, one meaning (RD-0532, owner ruling 2026-07-24). C1 GATES the `.ts` reference: the same
+// FUNGI-* code bound to two different NAMES is a taxonomy collision, and the owner's standing note is
+// that this "may be a 50-year mistake if it slips" — so the fix and its detector ship as one unit and
+// the detector runs every close. Runs its own self-test first: a detector that cannot fire on a
+// known-bad shape is not evidence, so a broken checker fails the close rather than passing quietly.
+// (C1b `.ts`↔twin stays ADVISORY — prose-matched until the twins carry a `name:` field.)
+run("code-collisions:selftest", "node", ["scripts/audit-diagnostic-code-collisions.mjs", "--self-test"]);
+run("code-collisions", "node", ["scripts/audit-diagnostic-code-collisions.mjs"]);
 run("kb-index", "node", ["scripts/kb-index.mjs"]); // KB keyword index (token-saver): keep build/kb-index/ fresh vs the docs
 
 // ── 5b. Convention lint gate (TASK-ENV-001) ──

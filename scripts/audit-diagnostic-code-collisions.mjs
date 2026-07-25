@@ -175,41 +175,64 @@ export function findCrossEngineCollisions(tsBindings, fungiBindings) {
 }
 
 // ── self-test ────────────────────────────────────────────────────────────────
-// The known-bad fixture IS the GOV-005 collision that motivated the detector: if it cannot
-// see the instance it was built for, it is not a detector. Plus a clean control, so a
+// The known-bad fixtures reproduce the SHAPE of the GOV-005 collision that motivated the
+// detector: if it cannot see that shape, it is not a detector. Plus clean controls, so a
 // pass cannot come from the checker matching nothing.
+//
+// ★ Fixture codes are ASSEMBLED AT RUNTIME from `P`, never written as literal `FUNGI-…`
+// text. Reason (measured 2026-07-25): scripts/ is scanned as source by code-index.mjs, whose
+// matcher is LINE-BASED and cannot tell a fixture string from a real registration. Literal
+// fixtures using real codes were being ingested as genuine registrations — GOV-005 acquired
+// GUARD_UNKNOWN_CAPABILITY and SOMETHING_ELSE, GOV-006 acquired SOMETHING_ELSE, all from the
+// lines below. That corrupts the derived registry, which is the TIEBREAKER for code-collision
+// adjudications, so a self-test was fabricating the evidence used to settle taxonomy disputes.
+// A synthetic family under a runtime-built prefix exercises every extractor path identically
+// while leaving the catalog untouched. Do NOT inline these back into literals.
+const P = "FUNGI-";
 function selfTest() {
   const fails = [];
-  const ok = (cond, what) => { if (!cond) fails.push(what); };
+  let checks = 0; // DERIVED, never hand-typed — the denominator must move when a check is added
+  const ok = (cond, what) => { checks += 1; if (!cond) fails.push(what); };
 
   const tsFixture = `
-    export const A = { code: "FUNGI-GOV-005", name: "POLICY_PURPOSE_MISMATCH", severity: "error" } as const;
-    export const B = { code: "FUNGI-GOV-005", name: "GUARD_UNKNOWN_CAPABILITY", severity: "error" } as const;
-    export const C = { code: "FUNGI-GOV-006", name: "SOMETHING_ELSE", severity: "error" } as const;`;
+    export const A = { code: "${P}SELFTEST-001", name: "POLICY_PURPOSE_MISMATCH", severity: "error" } as const;
+    export const B = { code: "${P}SELFTEST-001", name: "GUARD_UNKNOWN_CAPABILITY", severity: "error" } as const;
+    export const C = { code: "${P}SELFTEST-002", name: "SOMETHING_ELSE", severity: "error" } as const;`;
   const collisions = findNameCollisions(extractTsBindings(tsFixture, "fixture.ts"));
   ok(collisions.length === 1, "known-bad: one code with two names must be reported");
-  ok(collisions[0]?.code === "FUNGI-GOV-005", "known-bad: the reported code must be GOV-005");
+  ok(collisions[0]?.code === `${P}SELFTEST-001`, "known-bad: the reported code must be the two-name one");
   ok(collisions[0]?.names.length === 2, "known-bad: both meanings must be listed");
 
   const cleanOnly = findNameCollisions(extractTsBindings(
-    `export const C = { code: "FUNGI-GOV-006", name: "SOMETHING_ELSE", severity: "error" } as const;`, "clean.ts"));
+    `export const C = { code: "${P}SELFTEST-002", name: "SOMETHING_ELSE", severity: "error" } as const;`, "clean.ts"));
   ok(cleanOnly.length === 0, "CONTROL: a clean file must report nothing (else the checker fires on everything)");
 
   // cross-engine: the real shape — .ts registers a POLICY meaning, the twin emits a GUARD one
   const cross = findCrossEngineCollisions(
-    extractTsBindings(`export const A = { code: "FUNGI-GOV-005", name: "POLICY_PURPOSE_MISMATCH" } as const;`, "a.ts"),
-    extractFungiBindings(`guardDiags.append({ code: "FUNGI-GOV-005", message: "guard permitted_effects contains unknown capability" })`, "b.fungi"));
+    extractTsBindings(`export const A = { code: "${P}SELFTEST-001", name: "POLICY_PURPOSE_MISMATCH" } as const;`, "a.ts"),
+    extractFungiBindings(`guardDiags.append({ code: "${P}SELFTEST-001", message: "guard permitted_effects contains unknown capability" })`, "b.fungi"));
   ok(cross.length === 1, "known-bad: cross-engine subject mismatch must be reported");
 
   const crossClean = findCrossEngineCollisions(
-    extractTsBindings(`export const A = { code: "FUNGI-VAULT-001", name: "VAULT_MISSING_OPEN_BRACE" } as const;`, "a.ts"),
-    extractFungiBindings(`d.append({ code: "FUNGI-VAULT-001", message: "vault block missing opening brace" })`, "b.fungi"));
+    extractTsBindings(`export const A = { code: "${P}SELFTEST-003", name: "VAULT_MISSING_OPEN_BRACE" } as const;`, "a.ts"),
+    extractFungiBindings(`d.append({ code: "${P}SELFTEST-003", message: "vault block missing opening brace" })`, "b.fungi"));
   ok(crossClean.length === 0, "CONTROL: agreeing subjects must NOT be reported");
 
   ok(extractTsBindings(tsFixture, "f.ts").length === 3, "extractor non-vacuity: it must find the fixture's bindings");
+  // Guard the guard: if a future edit inlines a literal code back into this file, the catalog
+  // silently re-poisons. Assert this source file contains no literal real-code token at all.
+  // Scope = NON-COMMENT lines only, which is exactly code-index.mjs's own ingestion surface:
+  // measured 2026-07-25 — the illustrative codes in this file's header comments produce no
+  // registry rows at all (`FUNGI-X-001` is absent from registry.json), so comments are safe and
+  // documenting the real emit shapes stays worthwhile. A code in LIVE code here is the hazard.
+  const selfSrc = readFileSync(new URL(import.meta.url), "utf8");
+  const literalCodes = selfSrc.split("\n")
+    .filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l))
+    .flatMap((l) => [...l.matchAll(/"FUNGI-[A-Z][A-Z0-9-]*-?\d*"/g)].map((m) => m[0]));
+  ok(literalCodes.length === 0, `no literal code tokens may appear outside comments (found ${literalCodes.join(", ")}) — assemble fixtures from P`);
 
   console.log(fails.length === 0
-    ? `  ✅ self-test ${6 - fails.length}/6 — the GOV-005 collision is visible to this detector, and controls stay silent`
+    ? `  ✅ self-test ${checks - fails.length}/${checks} — the GOV-005 collision SHAPE is visible to this detector (synthetic codes, so the catalog stays clean), and controls stay silent`
     : `  ❌ self-test FAILED:\n     - ${fails.join("\n     - ")}`);
   return fails.length === 0 ? 0 : 1;
 }
