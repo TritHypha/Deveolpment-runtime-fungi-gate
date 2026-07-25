@@ -108,7 +108,7 @@ included in source maps as values
 Use `vault` for controlled shared runtime state.
 
 ```Galerina
-vault {
+vault secure {
   OrderCache: Shared<Map<OrderId, Order>> {
     access "locked"
     max_size 10000

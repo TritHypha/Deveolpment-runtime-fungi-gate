@@ -207,7 +207,7 @@ Governance — intent, policy, authority, contract blocks (errors, context, time
 | `224-contract-best-practices` | gold standard contract — named result type, full contract, raw->protected->redact->audit | stable | Result, audit, errors, events, observability, privacy |
 | `225-context-missing` | FUNGI-CONTEXT-001 — context require actor declared but never accessed `FUNGI-CONTEXT-001` | stable | Result, audit |
 | `226-full-16-section-minimal` | all 16 contract sections in canonical order — minimal but complete template | stable | Result, audit, errors, events, limits, observability |
-| `227-global-vault-declaration` | GlobalVault — declaring `vault {}` with typed entries, allow lists and audit | stable | vault |
+| `227-global-vault-declaration` | GlobalVault — declaring `vault secure {}` with typed entries, allow lists and audit | stable | vault |
 | `228-global-vault-mut-write` | GlobalVault writes — `mut secure.x` required; vault.write effect required | stable | vault |
 | `229-vault-write-without-mut-invalid` | vault write without mut rejected `FUNGI-VAULT-005` | stable | vault |
 | `230-vault-access-denied-invalid` | flow not in vault allow list rejected `FUNGI-VAULT-006` | stable | vault |

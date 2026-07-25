@@ -2,7 +2,7 @@
 
 ## Concept
 
-`vault {}` at module level declares the GlobalVault — the Galerina replacement for
+`vault secure {}` at module level declares the GlobalVault — the Galerina replacement for
 global mutable state. Every entry is typed, permission-controlled, and optionally
 audited.
 
@@ -17,6 +17,6 @@ audited.
 
 ## AI rules
 
-- `vault {}` is for **mutable** runtime state. For non-secret config, use `vault global`.
-- Declaring `vault {}` does not grant access — every flow must be in the `allow` list.
+- `vault secure {}` is for **mutable** runtime state. For non-secret config, use `vault global`.
+- Declaring `vault secure {}` does not grant access — every flow must be in the `allow` list.
 - `secure.x = y` without `mut` is rejected (`FUNGI-VAULT-005`).

@@ -247,10 +247,15 @@ export const FUNGI_GOV_012 = {
 } as const;
 
 
-// ── GlobalVault diagnostic codes (W5b vault sprint, 2026-07-21) ──────────────────────────
-// The vault {} top-level block declares GlobalVault — permission-controlled, auditable runtime
-// state. The governance verifier enforces: vault reads require vault.read effect; vault writes
-// require vault.write effect; writes must use `mut secure.*`; readonly entries cannot be mutated.
+// ── Secure-vault diagnostic codes (W5b vault sprint, 2026-07-21; renamed RD-0531 2026-07-25) ──────
+// The `vault secure {}` top-level block declares permission-controlled, auditable runtime state,
+// read through the `secure.*` namespace. The governance verifier enforces: vault reads require
+// vault.read effect; vault writes require vault.write effect; writes must use `mut secure.*`;
+// readonly entries cannot be mutated.
+//
+// Previously called "GlobalVault", which was the confusion RD-0531 resolves: the IMPLEMENTED scope
+// is `secure`, while `global` names a DIFFERENT (config) scope that is documented but not yet built.
+// Calling the secure one "Global" is what made `global` read as overloaded.
 
 /**
  * FUNGI-VAULT-008 (parse): a vault declaration did not name its scope, or named one that has no
@@ -264,10 +269,13 @@ export const FUNGI_VAULT_008 = {
   message: "A vault declaration must name its scope: vault secure | vault global | vault session.",
 } as const;
 
-/** FUNGI-VAULT-001 (parse): `vault` block missing opening brace. (Declared in parser, registered here.) */
+/** FUNGI-VAULT-001 (parse): `vault secure` block missing opening brace. (Declared in parser, registered here.) */
 export const FUNGI_VAULT_001 = {
   code: "FUNGI-VAULT-001", name: "VAULT_MISSING_OPEN_BRACE", severity: "error" as const,
-  message: "Expected '{' after 'vault'. Syntax: vault { entryName: Type { allow flowName read|write } }",
+  // Scope word mandatory since RD-0531 — this message previously taught `vault {`, which no longer
+  // parses. A registered diagnostic message IS documentation; citing a dead form here is the
+  // "references point at reality" rule inverted, in the one place a stuck reader will look.
+  message: "Expected '{' after 'vault secure'. Syntax: vault secure { entryName: Type { allow flowName read|write } }",
 } as const;
 
 /** FUNGI-VAULT-002 (parse): a vault entry has no permission block. */

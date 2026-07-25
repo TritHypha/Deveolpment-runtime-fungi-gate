@@ -5901,7 +5901,9 @@ class Parser {
         this.emit("FUNGI-VAULT-002", "VAULT_ENTRY_MISSING_PERMISSIONS",
           `Vault entry '${entryName}' has no permission block. Add { allow flowName read|write; audit required }.`,
           entryLoc,
-          `vault { ${entryName}: ${typeName} { allow yourFlow read } }`);
+          // `vault secure` — the scope word is mandatory (RD-0531). A fix-it is read by someone who
+          // is ALREADY stuck, so it is the worst possible place to print a form that no longer parses.
+          `vault secure { ${entryName}: ${typeName} { allow yourFlow read } }`);
       }
       entries.push({ kind: "vaultEntryDecl", value: entryName, location: entryLoc, children: entryChildren });
       this.skipNewlines();

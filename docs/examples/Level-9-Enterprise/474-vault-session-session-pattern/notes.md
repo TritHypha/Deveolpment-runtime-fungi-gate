@@ -17,7 +17,7 @@ lifetime. Owner-checked on every access. Cleared on logout or session expiry.
 - **Secrets, API keys, tokens** → `vault.secure`
 - **Per-request data** → `vault.request`
 - **Service-wide config** → `vault global`
-- **Mutable process-lifetime state** → GlobalVault (`vault {}`)
+- **Mutable process-lifetime state** → GlobalVault (`vault secure {}`)
 
 ## Security rules
 

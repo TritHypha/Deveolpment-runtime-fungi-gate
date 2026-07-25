@@ -9,7 +9,7 @@ entry's `allow` list cannot read or write that entry, even if it declares
 ## The rule
 
 ```text
-vault { loginCount: Int { allow incrementLogin write; allow getLoginCount read } }
+vault secure { loginCount: Int { allow incrementLogin write; allow getLoginCount read } }
 ```
 
 - `incrementLogin` may write `loginCount` ✅

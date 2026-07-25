@@ -131,7 +131,7 @@ a pure flow may not perform.
 #### `vault.read`
 **What** — read a variable value from the governed **vault**: the sanctioned channel for state that crosses
 *between* flows (fetch a value another flow saved — the replacement for global mutable state). Per-flow-per-variable
-permissioned — the `vault {}` declaration's entry allow-list gates who may reach it, and the reading flow declares
+permissioned — the `vault secure {}` declaration's entry allow-list gates who may reach it, and the reading flow declares
 `vault.read`. **Distinct** from the legacy `vault.secret` call-pattern, which infers `secret.read` (a *credential*
 read), not this cross-flow-state effect. (Owner-ruled canonical 2026-07-23; tier assignment — whether a vault read
 should be pure-forbidden — is an open refinement, so it currently carries no tier badge.)
@@ -141,7 +141,7 @@ whenever a flow reads vault state (`FUNGI-VAULT-003` if omitted).
 
 #### `vault.write`
 **What** — write a variable value to the governed vault (save state for another flow to fetch) — the governed
-cross-flow-state mutation. Per-flow-per-variable permissioned by the `vault {}` declaration, and a write must go
+cross-flow-state mutation. Per-flow-per-variable permissioned by the `vault secure {}` declaration, and a write must go
 through `mut secure.<name>` (a readonly entry cannot be mutated). Distinct from `vault.secret`→`secret.read`.
 (Owner-ruled canonical 2026-07-23; secure-tier assignment is an open refinement — currently no tier badge.)
 **Inferred from** — mutating a vault entry via `mut secure.<name>`; the governance verifier **requires**

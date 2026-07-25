@@ -26,7 +26,7 @@ codebase.
 
 - API keys → use `secret {}`
 - User data, PII → use `vault.secure` or scoped vault
-- Runtime-changing state → use GlobalVault (`vault {}`)
+- Runtime-changing state → use GlobalVault (`vault secure {}`)
 
 ## KB references
 

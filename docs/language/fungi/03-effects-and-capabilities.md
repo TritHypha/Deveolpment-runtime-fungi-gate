@@ -66,7 +66,7 @@ This is the complete set the production effect checker accepts. Grouped for lear
 
 > `vault.read` / `vault.write` are the governed **cross-flow state** effects (owner-ruled canonical 2026-07-23)
 > and are **NOT** interchangeable with `secret.read` — that is a *credential* read (the `vault.secret`
-> call-pattern). The `vault {}` declaration block is covered in [06 — Governance constructs](06-governance-constructs.md).
+> call-pattern). The `vault secure {}` declaration block is covered in [06 — Governance constructs](06-governance-constructs.md).
 
 ### Network & messaging
 | Effect | Meaning |

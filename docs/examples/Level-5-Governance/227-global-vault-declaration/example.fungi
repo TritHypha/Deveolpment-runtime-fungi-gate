@@ -1,11 +1,11 @@
 @version 1
 /// example: 227-global-vault-declaration
 /// level: 5
-/// concept: GlobalVault — declaring protected runtime state with vault {} and permission lists
+/// concept: GlobalVault — declaring protected runtime state with vault secure {} and permission lists
 /// expected_diagnostics: none
-/// ai_rule: Use vault {} (GlobalVault) for mutable runtime state that must persist across flow calls. Every entry must declare which flows may read and write it, and whether writes require audit. Access via secure.valueName.
+/// ai_rule: Use vault secure {} (GlobalVault) for mutable runtime state that must persist across flow calls. Every entry must declare which flows may read and write it, and whether writes require audit. Access via secure.valueName.
 
-;; vault {} declares GlobalVault — named, permission-controlled, auditable runtime state.
+;; vault secure {} declares GlobalVault — named, permission-controlled, auditable runtime state.
 ;; This is the Galerina replacement for global mutable state.
 ;;
 ;; Rules:
