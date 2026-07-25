@@ -58,6 +58,20 @@
         "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs tranche 8 (runtime exec-VALUE: buildFlowTable -> runProgram, computes 42/3/7 + pins div0/missing-flow soft edges as Err) + tranche 7 (tier-dispatch) — 73/73, exit 0. NOTE (R&D 0256/0258): the unknown-op harden (applyBinop op-outside-the-10 -> Err) is fail-CLOSED at source and NOW PINNED by self-hosted-runtime.test.mjs 'applyBinop unknown-op harden' (add(1,2)=3 control + op='unknown'/'@@@' -> Err). CORRECTED (R&D 0258): unknown-op IS source-reachable — gir-emitter opcodeOf has no logical case, so the `and`/`or` operators map to op:'unknown' -> applyBinop Err (0256's 'not source-reachable' was WRONG, as was my earlier 'already unit-tested' claim — both retracted). Still fail-CLOSED (Err), so runtime.fungi stays faithful and the §5a GREEN verdict stands.",
         "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md"
       }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "lexer.fungi",
+      "tier": "authority-flip (tier 1): lexer.fungi is the authoritative SPEC of record; the co-located lexer.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-25",
+      "nod": "STANDING FLIP PROTOCOL — owner 'unlock all green light' 2026-07-24 lifted the per-stage 'may I?' ask (the fifth flip). The OWNER'S PUSH of this commit is the countersign (R&D 0256 framing) — a non-push/revert is the safety if the standing directive was not intended to cover this stage. Rests on R&D §5a INDEPENDENT VERIFY GREEN 2026-07-25 (bridge 0308, proposer≠verifier — R&D re-ran all four legs + the two 0277-lesson checks: NO dead code [all 10 tokenize helpers have a call site] + NO fail-open [own 6/6 probe: unterminated string/char, invalid \\u, stray backtick, lone control char all -> Err]). Proposer evidence re-verified current at HEAD 3fec9c85 (main 0307). Pure-authority flip: this ledger line moves 0 source/hash bytes, so NO re-pin (cf. runtime).",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-tokenize-parity.test.mjs 21/21 + wat-p9-tokenize-execution.test.mjs 3/3 (Stage-A interpreter === Stage-B WASM + non-vacuity), R&D-re-verified 2026-07-25 (bridge 0308)",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — lexer anchor rd0528-lexer-keyword-table ('let' -> 'lett', a keyword-table VALUE change the self-hosted-lexer correctness oracle catches as interp != EXPECTED without hanging) KILLED, 0 survived (non-vacuous, R&D 0308 + main re-verify 3fec9c85)",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs — deterministic sha256, #105-admitted; audit-compiler-stage-hashes 7/7 bytes+sha256 match baseline at HEAD (lexer.fungi unchanged since the 0299 pack — last touch b36b945b, pre-pack)",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs 73/73 + self-hosted-lexer.test.mjs 32/32 (non-vacuous: accept + the 5 fail-CLOSED reject classes — unterminated string/char, invalid unicode escape, stray backtick, lone control char), exit 0; validSingle:545 whitelist fail-closes anything outside the .ts ONE_CHAR_OPERATORS ∪ SYMBOLS set",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md (flip-readiness pack = R&D bridge 0299; §5a GREEN = 0308)"
+      }
     }
   ]
 }
