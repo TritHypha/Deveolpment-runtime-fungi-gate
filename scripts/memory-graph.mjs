@@ -34,43 +34,62 @@ const dirTag = (d) => createHash("sha256").update(String(d)).digest("hex").slice
 // ~/.claude/projects (the folder that actually holds MEMORY.md) > a last-resort guess.
 // How many dirs actually carried a MEMORY.md. More than one means the pick below is a GUESS, and a
 // health report for the wrong tree reads exactly like a clean bill for yours — so it gets said out loud.
-let autodetectCandidates = 0;
-
-function autodetectMemoryDir() {
+function autodetectCandidateDirs() {
   const projects = join(homedir(), ".claude", "projects");
   let entries;
-  try { entries = readdirSync(projects, { withFileTypes: true }); } catch { return null; }
-  let best = null, bestScore = -1;
+  try { entries = readdirSync(projects, { withFileTypes: true }); } catch { return []; }
+  const out = [];
   for (const e of entries) {
     if (!e.isDirectory()) continue;
     const mem = join(projects, e.name, "memory");
     let mds;
     try { mds = readdirSync(mem).filter((f) => f.endsWith(".md")); } catch { continue; }
-    // Strongly prefer the dir carrying the MEMORY.md index; tie-break on note count.
-    const hasIndex = mds.includes("MEMORY.md");
-    if (hasIndex) autodetectCandidates++;
-    const score = mds.length + (hasIndex ? 1_000_000 : 0);
-    if (score > bestScore) { bestScore = score; best = mem; }
+    if (mds.includes("MEMORY.md")) out.push({ dir: mem, files: mds.length });
   }
-  return best;
+  return out;
+}
+
+// ★ FAIL CLOSED ON AN AMBIGUOUS BOX (2026-07-25, R&D 0440). This used to pick the MOST POPULATED
+// candidate and print a warning. On this machine that picks a tree with 142 files when the asking
+// session's tree has 77 — so `node scripts/memory-graph.mjs` with no args produced a confident,
+// conservation-checked, dir-id-stamped health report about a memory tree nobody asked about.
+//
+// The warning was not enough, and the polish made it worse: I added a conservation law and a dir-id
+// to this report the same morning, which made the WRONG-tree output read as MORE authoritative, not
+// less. A guess dressed in evidence is harder to catch than a bare guess.
+//
+// "Most populated" was never a reason to believe a dir is YOURS — it is a reason to believe it is
+// someone's. With >1 candidate and no explicit choice there is no fact to prefer one, so the honest
+// answer is to refuse and name the options by dir-id (never by path — that is the username leak).
+// Pure, and separated from the I/O above so the refusal can be driven without touching a real home dir.
+export function chooseMemoryDir({ explicitDir, envDir, candidates }) {
+  if (explicitDir) return { dir: explicitDir, explicit: true };
+  if (envDir) return { dir: envDir, explicit: true };
+  if (candidates.length === 1) return { dir: candidates[0].dir, explicit: false };
+  if (candidates.length === 0) {
+    return { refuse: "autodetect found no memory dir carrying a MEMORY.md" };
+  }
+  return {
+    refuse: `${candidates.length} memory dirs carry a MEMORY.md and nothing says which is yours — `
+      + `refusing to guess (a health report for the wrong tree reads exactly like a clean bill for yours). `
+      + `Candidates by dir-id: ${candidates.map((c) => `${dirTag(c.dir)}(${c.files} files)`).join(" · ")}. `
+      + `Pass --dir <path> or set MEMORY_DIR.`,
+  };
 }
 
 // No last-resort guess. The old fallback baked in a dash-encoded machine slug — the same username
 // leak as an absolute path, and the path-leak guard was blind to the bare `C--Users-<name>` form so it
 // read green over this line for the file's whole life (widened 2026-07-25). A guess is also worse than
 // an error when it happens to EXIST: it answers silently about the wrong tree.
-const DEFAULT_DIR = process.env.MEMORY_DIR ?? autodetectMemoryDir();
-
 // ── args ─────────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
-let dir = DEFAULT_DIR;
-let chosenExplicitly = Boolean(process.env.MEMORY_DIR); // an explicit choice silences the guess warning
+let explicitDir = null;
 let tagFilter = null;
 const terms = [];
 for (let i = 0; i < argv.length; i++) {
-  if (argv[i] === "--dir") { dir = argv[++i]; chosenExplicitly = true; }
+  if (argv[i] === "--dir") { explicitDir = argv[++i]; }
   else if (argv[i] === "--tag") tagFilter = (argv[++i] || "").replace(/^#/, "").toLowerCase();
-  else terms.push(argv[i]);
+  else if (argv[i] !== "--self-test") terms.push(argv[i]);
 }
 // ── SELF-TEST ────────────────────────────────────────────────────────────────
 // Drives the real CLI end-to-end against a throwaway fixture, because both defects this covers are
@@ -126,27 +145,50 @@ if (argv.includes("--self-test")) {
       && graph.health.danglingLinks.length === 1
       && graph.health.danglingLinks[0].to === "never-written"],
   ];
+
+  // ── ambiguous-box resolution (R&D 0440). Driven through the PURE chooser so the refusal is provable
+  // without a real home dir — no monkeypatching, no fixture ~/.claude tree.
+  const two = [{ dir: "/a/memory", files: 142 }, { dir: "/b/memory", files: 77 }];
+  const amb = chooseMemoryDir({ candidates: two });
+  checks.push(
+    ["THE FIX: 2 candidates and no explicit choice REFUSES instead of picking the most populated", Boolean(amb.refuse)],
+    ["the refusal names candidates by dir-id and leaks NO path",
+      amb.refuse.includes(dirTag("/a/memory")) && !amb.refuse.includes("/a/memory")],
+    // CONTROL: the refusal must not fire when the caller HAS said which tree — else it blocks every run.
+    ["CONTROL an explicit --dir still resolves with 2 candidates present",
+      chooseMemoryDir({ explicitDir: "/chosen", candidates: two }).dir === "/chosen"],
+    ["CONTROL MEMORY_DIR also counts as explicit",
+      chooseMemoryDir({ envDir: "/env", candidates: two }).dir === "/env"],
+    // CONTROL: an UNAMBIGUOUS box must still work with no arguments at all.
+    ["CONTROL a single candidate resolves with no arguments (the fix is not 'always refuse')",
+      chooseMemoryDir({ candidates: [two[1]] }).dir === "/b/memory"],
+    ["no candidate at all refuses too (fail-closed, not a silent empty report)",
+      Boolean(chooseMemoryDir({ candidates: [] }).refuse)],
+  );
   let bad = 0;
   for (const [name, ok] of checks) { if (!ok) bad++; console.log(`  ${ok ? "OK  " : "FAIL"} ${name}`); }
   console.log(`\nmemory-graph self-test: ${checks.length - bad}/${checks.length} passed`);
   process.exit(bad ? 1 : 0);
 }
 
-if (!dir || !existsSync(dir)) {
+const choice = chooseMemoryDir({
+  explicitDir,
+  envDir: process.env.MEMORY_DIR,
+  candidates: autodetectCandidateDirs(),
+});
+if (choice.refuse) {
+  console.error(`memory-graph: ${choice.refuse}`);
+  process.exit(2);
+}
+const dir = choice.dir;
+if (!existsSync(dir)) {
   // Echo the path ONLY when the caller typed it: a bad --dir is a typo they must see, and it is their
   // own input coming back. An AUTODETECTED path is not — printing that puts a machine path (and the
   // username inside it) in a terminal that gets pasted into notes, which is the leak the repo's own
   // path-leak guard exists to stop. Same class as the bare `C--Users-<name>` slug that guard was blind to.
-  const where = dir ? (chosenExplicitly ? `: ${dir}` : " (autodetected path withheld — pass --dir to see it echoed)") : " (autodetect found none)";
-  console.error(`memory-graph: memory dir not resolved${where}\n  pass --dir <path> or set MEMORY_DIR.`);
+  const where = choice.explicit ? `: ${dir}` : " (autodetected path withheld — pass --dir to see it echoed)";
+  console.error(`memory-graph: memory dir does not exist${where}\n  pass --dir <path> or set MEMORY_DIR.`);
   process.exit(2);
-}
-// Name what was NOT examined. Silence here is the fail-open: the report says "0 unindexed files" and a
-// reader takes that as their memory being healthy, when another tree entirely was the one measured.
-// Counts only — printing the candidate paths would put a machine path in every terminal and log, which
-// is the leak this codebase's own guard exists to prevent.
-if (!chosenExplicitly && autodetectCandidates > 1) {
-  console.error(`memory-graph: ⚠ ${autodetectCandidates} memory dirs carry a MEMORY.md — auto-picked the most populated; ${autodetectCandidates - 1} NOT examined. Pass --dir <path> to choose.`);
 }
 
 // ── parse the MEMORY.md index: "- [subject](slug.md) — hook #tag #tag" ───────
