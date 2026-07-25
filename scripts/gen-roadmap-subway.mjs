@@ -279,6 +279,12 @@ function model() {
   });
 }
 
+// The provenance line is DISPLAY-ONLY and must be excluded from drift comparison. Found by running
+// the gate, not by reasoning: the block embeds the HEAD sha, so committing the block advances HEAD
+// and the gate reads perpetually stale; and --write dirties the tree, flipping the DIRTY flag it
+// just embedded. A gate that can never be green is as useless as one that can never be red.
+const stripProvenance = (s) => (s ?? "").replace(/^<sub>generated from.*$/m, "<sub>PROVENANCE</sub>");
+
 const injectBlock = (text, block) => {
   const b = text.indexOf(BEGIN), e = text.indexOf(END);
   return b < 0 || e < 0 ? null : text.slice(0, b) + block + text.slice(e + END.length);
@@ -322,6 +328,13 @@ if (process.argv.includes("--self-test")) {
   ok(!/ /.test(block + svg), "★ output carries no literal NUL bytes (the defect class shipped twice this session)");
   ok(m.thesis.concat(m.build).some((r) => !r.measured), "★ the asserted class is present and rendered — the map is not flattering itself");
   ok(currentBlock(`x${block.replace(/\d+%/, "999%")}y`) !== block, "drift detector: a hand-edited block differs from the generated one");
+  // DRIVEN both ways: the gate must IGNORE a provenance-only difference (else it is perpetually red —
+  // committing the block advances HEAD) yet still FIRE on a data difference. Found by running --check.
+  const otherSha = block.replace(/^(<sub>generated from.*@)[0-9a-f]+/m, "$1deadbeef");
+  ok(otherSha !== block && stripProvenance(otherSha) === stripProvenance(block),
+    "★ DRIVEN: a provenance-ONLY difference (new HEAD sha) is NOT drift — the gate can actually be green");
+  ok(stripProvenance(block.replace(/\d+%/, "999%")) !== stripProvenance(block),
+    "★ DRIVEN: a DATA difference still fires through the normalization — ignoring provenance did not neuter the gate");
 
   console.log(process.exitCode ? "  subway self-test FAILED" : `  subway self-test: ${checks} checks incl. ${driven} driven controls ✅`);
   process.exit(process.exitCode ?? 0);
@@ -337,7 +350,7 @@ if (process.argv.includes("--check")) {
     if (!existsSync(abs)) continue;
     const cur = currentBlock(readFileSync(abs, "utf8"));
     if (cur === null) { console.error(`  ⚠ ${rel}: no SUBWAY markers — run --write once to seed them`); continue; }
-    if (cur !== block) stale.push(rel);
+    if (stripProvenance(cur) !== stripProvenance(block)) stale.push(rel);
   }
   if (stale.length) {
     console.error(`\n  ❌ roadmap-drift: ${stale.length} doc(s) carry a STALE roadmap block:\n${stale.map((r) => `     ${r}`).join("\n")}`);

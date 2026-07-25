@@ -13,7 +13,7 @@
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="202" y="34" text-anchor="end" class="title">Where the project is</text>
 <text x="220" y="34" class="sub">v1.0.0-beta.2 · 95 packages · 7876 tests · ship-readiness 97.9% · Zero-Trust thesis avg 78% · build avg 75%</text>
-<text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers at main@9235e385 (DIRTY TREE)</text>
+<text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers at main@39d9be10</text>
 <text x="202" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="202" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
 <line x1="220" y1="96" x2="1110" y2="96" stroke="#c8102e" stroke-width="7" stroke-linecap="round" opacity="0.9"/>

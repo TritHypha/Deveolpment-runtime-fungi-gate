@@ -232,5 +232,5 @@ are rebaselined.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 
-<sub>generated from component-health + the RD-0528/RD-0361 authority ledgers at main@9235e385 (DIRTY TREE) · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
+<sub>generated from component-health + the RD-0528/RD-0361 authority ledgers at main@39d9be10 · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->
