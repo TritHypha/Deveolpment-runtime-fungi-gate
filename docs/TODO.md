@@ -28,7 +28,8 @@ HEAD unchanged at `ef3a746e`. Owner **re-affirmed full unlock** 2026-07-25 (auth
 ### Chapter open items
 - ✅ **Q-B harden sites #1/#2 BUILT + LANDED** (`fd1ecf68`) — R&D §5a-CONFIRMED the design (0284); `FUNGI-PARSE-006` refuses `emergency {` + `parent_policy :` fail-closed, newline-tolerant; probe 10/10 · failclosed 15/15 · R3 all-5 parity · stage-hash re-pinned · full suite 95/95·7,871. Awaiting R&D §5a of the build (bridge 0295).
 - ✅ **Q-B harden site #3a (flow-body `trap <expr> :`) LANDED** (`b3631ceb`) — `bodyHasTrapConstruct` (statement-start + parse-condition-then-require-`:`, newline-tolerant), 13/13 false-positive-free probe · failclosed 18/18 · R3 all-5 · full suite 95/95·7,874. Q-B now closed for all 3 oracle-backed gov constructs (emergency · parent_policy · trap). Awaiting R&D §5a (bridge 0297).
-- ⏳ **Q-B harden site #3b (`step`)** — deferred: no `.ts` oracle (STEP-001 is `.fungi`-only; `.ts` uses GOV-024), surface syntax unconfirmed. Asked R&D for the syntax.
+- ✅ **Q-B harden site #3b (`step <flowName>(`) LANDED** (`d422600b`) — corrected the 0297 "no oracle": the step CONSTRUCT is `.ts`-live via GOV-024 (`parser.ts:2522`). `bodyHasStepConstruct` refuses it fail-closed; 9/9 probe · failclosed 21/21 · full suite 95/95·7,876. Awaiting R&D §5a (bridge 0301).
+- ✅ **Q-B COMPLETE** — all 4 unmodeled governance constructs refused fail-closed (emergency · parent_policy · trap · step). Parser fail-open closed on its full measurable surface.
 - `Sir,` **Q-A decision**: STEP/MUTATION remove-safe; MONO/INHERIT/TRAP wire-vs-document → unblocks the gov-verifier as the 5th authoritative stage.
 - Stage-B NOT done (see roadmap): 4/7 authoritative · gov-verifier held · lexer+parser un-flipped · bootstrap fixpoint + `.ts`-retirement post-v1.
 
