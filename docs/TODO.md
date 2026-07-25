@@ -26,7 +26,8 @@ HEAD unchanged at `ef3a746e`. Owner **re-affirmed full unlock** 2026-07-25 (auth
 - **Q-B harden design SETTLED** — shape-match refusal at all 3 sites (`emergency {` · `parent_policy :` · `trap <expr> :`/`step:`), one new code **FUNGI-PARSE-006**, reusing the FUNGI-PARSE-005 `bodyHasModulo` scanner pattern (no record-shape threading). Build-feasibility resolved. **Awaiting R&D §5a-confirm (bridge 0293) before touching `parser.fungi`.**
 
 ### Chapter open items
-- ⏳ **R&D §5a-confirm** on the Q-B harden (bridge 0293, shape-match-all-3) → then build FUNGI-PARSE-006 + SUBSET-REFUSAL rows + re-pin parser hash → R&D §5a of the built change.
+- ✅ **Q-B harden sites #1/#2 BUILT + LANDED** (`fd1ecf68`) — R&D §5a-CONFIRMED the design (0284); `FUNGI-PARSE-006` refuses `emergency {` + `parent_policy :` fail-closed, newline-tolerant; probe 10/10 · failclosed 15/15 · R3 all-5 parity · stage-hash re-pinned · full suite 95/95·7,871. Awaiting R&D §5a of the build (bridge 0295).
+- ⏳ **Q-B harden site #3 (flow-body `trap`/`step`)** — deferred; needs statement-context detection (next increment).
 - `Sir,` **Q-A decision**: STEP/MUTATION remove-safe; MONO/INHERIT/TRAP wire-vs-document → unblocks the gov-verifier as the 5th authoritative stage.
 - Stage-B NOT done (see roadmap): 4/7 authoritative · gov-verifier held · lexer+parser un-flipped · bootstrap fixpoint + `.ts`-retirement post-v1.
 
