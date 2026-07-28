@@ -1,6 +1,6 @@
 {
   "name": "@galerina/tri-regex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ternary streaming pattern matching — ReDoS-immune by construction. Non-backtracking automaton, compile-time cost certificate, fail-closed SECURITY_VETO on uncertifiable patterns, three-valued streaming verdicts (+1 match / 0 indeterminate / -1 refuse) with fail-closed collapse at end-of-stream.",
   "type": "module",
   "exports": {
@@ -10,6 +10,7 @@
     "dist",
     "README.md",
     "AUDIT.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "engines": {
@@ -32,6 +33,14 @@
   ],
   "author": "TritHypha <hello@trithypha.dev>",
   "license": "Apache-2.0",
+  "galerinaVendor": {
+    "upstream": "subprojects/TriRegex",
+    "upstreamBaseCommit": "e9fbb8e75281a5a9c6270348e976bc1ffee5630b",
+    "sourceState": "0.1.1 working-tree snapshot; upstream changes were uncommitted at sync",
+    "syncedAt": "2026-07-28",
+    "contains": "v0.1.1 budget validation, complete cost accounting, stream lifecycle hardening, and differential tests",
+    "rule": "MIRROR SOURCE — fix implementation upstream, then re-vendor and re-test. Package-specific documentation and metadata may describe Galerina/TLL boundaries."
+  },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "typescript": "^5.8.0"

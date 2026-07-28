@@ -67,6 +67,34 @@ The downstream keyed gate is whatever unforgeable check your endpoint requires �
 + idempotency pipeline specified for `@galerina/core-network` (webhook security), or an ML-DSA / Ed25519 signature
 verification. The pre-filter never replaces it; it only removes obvious non-matches before it runs.
 
+## triLowLevel (TLL) integration boundary
+
+**Status: PROPOSED — no TLL runtime or WebSocket integration exists.**
+
+Tritsocket may sit under TLL's planned API ingress as an optional hostile-load
+prefilter after bounded protocol framing and before an expensive application
+keyed gate. TLS and WebSocket termination still happen first; Tritsocket does
+not replace transport security.
+
+The ABI values are deliberately local to this prefilter:
+
+| Type | Values |
+|---|---|
+| Tritsocket prefilter | `Deny = 0`, `Maybe = 1` |
+| TLL authoritative `Verdict3` | `Deny = -1`, `Indeterminate = 0`, `Allow = +1` |
+
+This numeric overlap is dangerous: Tritsocket `Maybe = 1` must never be cast,
+serialised, or passed through GABI as TLL `Allow = +1`. A TLL adapter must use a
+distinct nominal result such as `Reject | ContinueToKeyedGate`, keep it internal
+to ingress, and invoke the real keyed gate on every continuation. Matching the
+prefilter does not authenticate, sanitise input, create a capability, or produce
+TLL authority.
+
+The TypeScript package is useful as conformance evidence. TLL's Stage-0 native
+runtime should consume a reviewed, pinned Rust/GABI implementation with a
+versioned bounded handshake, mask identity, nonce/replay/freshness rules,
+differential vectors, lifecycle/fault tests, and equivalent-work benchmarks.
+
 ## Provenance
 
 Implements the **sound half** of Galerina/TritMesh **RD-0162 / RD-0163** — a bit-packed SIMD-friendly ternary

@@ -18,7 +18,8 @@ import * as path from "node:path";
 import { buildIndex, DEFAULT_INDEX_OPTIONS } from "./ingest/indexer.ts";
 import type { IndexOptions } from "./ingest/indexer.ts";
 import { loadGraph } from "./graph/store.ts";
-import { search, searchFile, isError } from "./query/search.ts";
+import { buildPathFilter } from "./query/path-filter.ts";
+import { search, searchFile, isError, detectRegexIntent } from "./query/search.ts";
 import type { MatchMode, SearchOptions, SearchOutcome } from "./query/search.ts";
 import { render, summaryLine } from "./output.ts";
 import { VERSION } from "./index.ts";
@@ -42,6 +43,15 @@ CASE
   -i, --ignore-case     force case-insensitive
   -S, --case-sensitive  force case-sensitive
 
+SCOPE
+      --in <glob>   search only under this path; repeatable (patterns OR together).
+                    Root-relative and POSIX. A plain path means "and everything
+                    under it" (--in src matches src/a.ts, never srcfoo/a.ts).
+                    Globs: * within a segment · ** across segments · ? one char.
+                    Excluded candidates are COUNTED in the summary, and a glob that
+                    matches nothing is called out — a scoped zero must never read
+                    as a tree-wide absence.
+
 OUTPUT
   -C, --context N   show N lines of context (content search)
   -n, --limit N     max results (default 200)
@@ -52,6 +62,7 @@ INDEXING
       --no-refresh    search the existing index without refreshing first
       --no-gitignore  do not honour .gitignore
       --max-size N    skip files larger than N megabytes (default 5)
+      --vendored      descend into vendored deps (node_modules; skipped + reported by default)
 
 Exit codes: 0 = matches, 1 = no matches, 2 = error.`;
 
@@ -84,6 +95,7 @@ function toOptions(values: Record<string, unknown>): {
         ? Math.floor(maxMb * 1024 * 1024)
         : DEFAULT_INDEX_OPTIONS.maxFileSize,
       useGitignore: !values["no-gitignore"],
+      includeVendored: Boolean(values["vendored"]),
     },
   };
 }
@@ -95,14 +107,14 @@ function useColor(values: Record<string, unknown>): boolean {
 }
 
 async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
-  // Same phantom-directory guard as cmdSearch: `myco index <nonexistent>` must error,
-  // not mkdir `<root>/.myco` at a path that does not exist.
-  if ((await fs.stat(root).catch(() => undefined)) === undefined) {
+  // Same fail-closed guard as cmdSearch: `myco index <nonexistent>` must not
+  // mkdir `<root>/.myco` at a path that doesn't exist. Create nothing, exit 2.
+  if (!(await fs.stat(root).catch(() => undefined))) {
     process.stderr.write(`myco: path not found: ${root}\n`);
     return 2;
   }
   const started = process.hrtime.bigint();
-  const { stats, skippedLargePaths } = await buildIndex(root, index);
+  const { stats, skippedLargePaths, skippedVendoredDirs } = await buildIndex(root, index);
   const ms = Number(process.hrtime.bigint() - started) / 1e6;
   // Informational output → stdout. stderr is reserved for real errors (which all
   // exit non-zero), so a consumer can treat any stderr output — or a non-zero exit —
@@ -122,6 +134,14 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
       `  ${skippedLargePaths.length} file(s) exceed --max-size (${mib} MiB) — NOT searchable:\n`,
     );
     for (const p of skippedLargePaths) process.stdout.write(`    ${p}\n`);
+  }
+  // Same no-silent-caps rule for vendored trees: name the pruned dirs and the
+  // escape hatch, so a miss inside node_modules can never read as absence.
+  if (skippedVendoredDirs.length > 0) {
+    process.stdout.write(
+      `  ${skippedVendoredDirs.length} vendored dir(s) skipped (NOT searchable; pass --vendored to include):\n`,
+    );
+    for (const p of skippedVendoredDirs) process.stdout.write(`    ${p}\n`);
   }
   return 0;
 }
@@ -159,21 +179,55 @@ async function cmdSearch(
   }
   const { search: sOpts, index: iOpts } = toOptions(values);
 
+  // --in is a coverage cap. If it cannot be honoured exactly as written, STOP —
+  // never fall back to searching everything. A filter that silently widens is the
+  // worst outcome available here: the user believes they scoped, the tool returns
+  // tree-wide hits, and the extra results look like evidence rather than noise.
+  const inPatterns = values["in"] as string[] | undefined;
+  if (inPatterns !== undefined) {
+    const built = buildPathFilter(inPatterns);
+    if (typeof built === "string") {
+      process.stderr.write(`myco: ${built}\n`);
+      return 2;
+    }
+    sOpts.pathFilter = built;
+  }
+
+  // A regex-shaped pattern (`a|b`, `\(`, `.*`, anchors) outside regex mode runs as a
+  // LITERAL — correct, but two zero-trust probes were misled by exactly this in one
+  // day (2026-07-25): the literal miss read as "absent". Say so up front; stdout,
+  // informational — the search still runs, semantics unchanged (fail-closed = keep
+  // behavior, surface the trap).
+  if (!values["json"] && sOpts.mode !== "regex" && detectRegexIntent(pattern)) {
+    process.stdout.write(
+      `myco: note — pattern looks like a regex but ran as a LITERAL ${sOpts.mode} match; pass -e for regex\n`,
+    );
+  }
+
   // A file path arg (not a directory) → search just that one file, no index. myco's
   // index is per-directory (it mkdir's `<root>/.myco`), so a file root previously died
   // with `ENOTDIR: not a directory, mkdir <file>`. A lone file needs no prune anyway.
   const targetStat = await fs.stat(root).catch(() => undefined);
-  // A NON-EXISTENT target must be a clean error — never a silent index over an empty set.
-  // Otherwise the else-branch below calls buildIndex(root), which mkdir's `<root>/.myco`
-  // and thereby MATERIALISES a directory at a path the caller only meant to query. A stray
-  // `myco <pat> tests/foo.test.mjs` against a not-yet-existing file created a phantom
-  // directory that a flat `tests/*.test.mjs` runner glob then tried to load as a module.
-  if (targetStat === undefined) {
+  if (!targetStat) {
+    // A missing (or unstattable) path must NOT fall through to the buildIndex branch:
+    // buildIndex → saveGraph() mkdir's `<root>/.myco` RECURSIVELY, which would
+    // MATERIALISE a directory tree at a path the user only queried — a read-only
+    // search with a filesystem side effect (a typo'd path becomes a stray dir, and
+    // the created dir can then be picked up by a test-runner glob → spurious failure).
+    // Fail closed: report and create nothing.
     process.stderr.write(`myco: path not found: ${root}\n`);
     return 2;
   }
   let outcome: SearchOutcome;
-  if (targetStat.isFile()) {
+  if (targetStat?.isFile()) {
+    // --in scopes a TREE; the target here is one named file, so the flag can only
+    // be a mistake — either the user meant a different root, or they expect a
+    // filter that will never be consulted. Accepting it and ignoring it would
+    // return that file's hits while the user believes a scope was applied.
+    if (sOpts.pathFilter) {
+      process.stderr.write("myco: --in scopes a directory tree, but the path given is a single file — drop --in, or point at the directory\n");
+      return 2;
+    }
     outcome = await searchFile(root, pattern, sOpts);
   } else {
     // Refresh (incremental) unless told not to, so results are never stale.
@@ -201,6 +255,14 @@ async function cmdSearch(
             `not searched (run \`myco index\` to list them)\n`,
         );
       }
+      // Vendored trees pruned on the search path get the same visibility as the
+      // over-size skip — a node_modules miss must never read as absence.
+      if (!values["json"] && built.skippedVendoredDirs.length > 0) {
+        process.stdout.write(
+          `myco: note — ${built.skippedVendoredDirs.length} vendored dir(s) (node_modules) ` +
+            `not searched (pass --vendored to include)\n`,
+        );
+      }
     }
     outcome = await search(root, graph, pattern, sOpts);
   }
@@ -218,6 +280,15 @@ async function cmdSearch(
   // stderr-non-empty is a trustworthy failure signal at the shell/tool boundary.
   if (!values["json"]) process.stdout.write(summaryLine(outcome) + "\n");
 
+  // An incomplete coverage result is evidence, but never a successful proof of
+  // presence or absence. Preserve the body/JSON for diagnosis and fail the
+  // process boundary closed. A user-requested result limit is different: it
+  // proves at least the returned matches and remains a normal capped result.
+  if (
+    outcome.searchTimeBudgetExceeded ||
+    outcome.regexTimedOut ||
+    outcome.regexLinesTruncated > 0
+  ) return 2;
   return outcome.matches.length > 0 ? 0 : 1;
 }
 
@@ -238,6 +309,8 @@ async function run(argv: string[]): Promise<number> {
       "no-gitignore": { type: "boolean" },
       "no-refresh": { type: "boolean" },
       "max-size": { type: "string" },
+      in: { type: "string", multiple: true },
+      vendored: { type: "boolean" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "v" },
     },

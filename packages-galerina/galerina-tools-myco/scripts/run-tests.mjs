@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const testDir = path.join(here, "..", "test");
+const testDir = path.join(here, "..", "tests");
 
 const files = readdirSync(testDir)
   .filter((f) => f.endsWith(".test.ts"))

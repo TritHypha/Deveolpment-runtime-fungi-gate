@@ -11,10 +11,10 @@
 
 | Metric | Count |
 |---|---|
-| Files | 12 |
-| Internal edges | 23 |
-| External dependencies | 3 |
-| ├─ Node core | 3 |
+| Files | 14 |
+| Internal edges | 28 |
+| External dependencies | 4 |
+| ├─ Node core | 4 |
 | ├─ Workspace (@galerina/*) | 0 |
 | └─ Third-party | 0 |
 | Orphan files | 0 |
@@ -25,6 +25,7 @@
 - `node:fs`
 - `node:path`
 - `node:util`
+- `node:worker_threads`
 
 ### Workspace (@galerina/*)
 _none_

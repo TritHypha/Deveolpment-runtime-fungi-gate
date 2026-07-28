@@ -15,7 +15,14 @@ import * as path from "node:path";
 
 import type { FileId, SearchGraph } from "../graph/model.ts";
 import { foldCase, hasUpper, wordScanner } from "../util/normalize.ts";
-import { assessRegexSafety, MAX_REGEX_LINE_LEN, SEARCH_TIME_BUDGET_MS } from "./regex-guard.ts";
+import { applyPathFilter, type PathFilter } from "./path-filter.ts";
+import { RegexExecutor } from "./regex-executor.ts";
+import {
+  assessRegexSafety,
+  MAX_REGEX_LINE_LEN,
+  REGEX_OPERATION_TIME_BUDGET_MS,
+  SEARCH_TIME_BUDGET_MS,
+} from "./regex-guard.ts";
 
 export type MatchMode = "word" | "substring" | "regex";
 
@@ -26,6 +33,9 @@ export interface SearchOptions {
   files: boolean; // search file paths instead of file contents
   limit: number;
   context: number; // lines of context on each side (content search only)
+  // Restrict the search to part of the tree (`--in`). A user-requested coverage
+  // cap, so the result reports what it removed — see pathFilterExcluded below.
+  pathFilter?: PathFilter;
 }
 
 export interface Match {
@@ -43,11 +53,35 @@ export interface SearchResult {
   filesSearched: number;
   filesMatched: number;
   truncated: boolean;
+  /** Output was capped by --limit or the internal bounded-collection path. */
+  resultLimitExceeded: boolean;
+  /** The whole-search wall-clock budget expired before every candidate was read. */
+  searchTimeBudgetExceeded: boolean;
+  /** An isolated JavaScript regex operation exceeded its deadline and was killed. */
+  regexTimedOut: boolean;
+  /** Lines whose suffix was not searched because it exceeded the regex input cap. */
+  regexLinesTruncated: number;
   // Word-mode only: files that CONTAIN the pattern verbatim but produced no match
   // because the word-boundary test rejected them. Surfaced so a narrowed result can
   // never be mistaken for absence — the "no silent caps" contract (DESIGN §8/§10)
   // applied to the matcher itself, not just to the walker's size cap.
   wordBoundaryExcluded: number;
+  // Content search only: phase-1 pruning intersected the query's word-terms and NO
+  // file contained all of them, so zero files were even opened. Without this flag
+  // the summary's "(0 searched)" is cryptic — and for a regex-intent pattern run
+  // literally (e.g. `a|b` in word mode) it silently reads as absence (field report
+  // 2026-07-25: two sessions independently misled in one day).
+  prunedToZero: boolean;
+  // `--in` only: how many candidate files the path filter removed before phase 2.
+  // A cap the user asked for is still a cap — it is reported for the same reason
+  // the over-size skip is (DESIGN §8/§10).
+  pathFilterExcluded: number;
+  // `--in` only: the filter matched NOTHING anywhere in the index. Almost always a
+  // mistyped or wrongly-rooted glob, and it is the dangerous case — every result is
+  // excluded, so the search returns a confident zero that looks exactly like a real
+  // absence. Tested against the WHOLE index, not just this query's candidates: a
+  // query that legitimately finds nothing in a valid scope must NOT raise this.
+  pathFilterMatchedNothing: boolean;
 }
 
 export interface SearchError {
@@ -62,6 +96,24 @@ export function isError(o: SearchOutcome): o is SearchError {
 
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Does a NON-regex-mode query look like it was MEANT as a regex? Word/substring
+// mode escapes metacharacters and runs the pattern literally — correct, but a user
+// typing `fromCodePoint|fromCharCode` or `codePoint\(\)` gets a literal miss with
+// no hint (field report 2026-07-25: a probe nearly logged a false "absent" against
+// a string that WAS present). Deliberately NARROW — only the strong signals:
+//   alternation `|` · an escape sequence `\w \d \b \s \( …` · `.*`/`.+` · a
+//   leading `^` or trailing `$` anchor.
+// A bare `(`, `.`, or `+` does NOT fire: `foo(`, `.fungi`, and `c++` are common
+// honest literal queries (the per-edge boundary comment above exists for exactly
+// the `foo(` case), and a note that cries wolf trains users to ignore it.
+export function detectRegexIntent(query: string): boolean {
+  if (query.includes("|")) return true;
+  if (/\\[wdbsWDBS(){}[\]+*?.]/.test(query)) return true;
+  if (/\.[*+]/.test(query)) return true;
+  if (query.startsWith("^") || query.endsWith("$")) return true;
+  return false;
 }
 
 function resolveSensitivity(query: string, opt: boolean | "smart"): boolean {
@@ -214,6 +266,78 @@ async function matchFile(
   return { hits: out, excludedByBoundary };
 }
 
+async function matchFileRegex(
+  absPath: string,
+  relPath: string,
+  executor: RegexExecutor,
+  context: number,
+  maxHits: number,
+  operationTimeoutMs: number,
+): Promise<{
+  hits: Match[];
+  regexLinesTruncated: number;
+  regexTimedOut: boolean;
+  hitLimitReached: boolean;
+}> {
+  let text: string;
+  try {
+    text = await fs.readFile(absPath, "utf8");
+  } catch {
+    return {
+      hits: [],
+      regexLinesTruncated: 0,
+      regexTimedOut: false,
+      hitLimitReached: false,
+    };
+  }
+  const lines = text.split("\n");
+  const out: Match[] = [];
+  let regexLinesTruncated = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i] ?? "";
+    const scanned = await executor.scan(
+      line,
+      MAX_REGEX_LINE_LEN,
+      Math.max(1, maxHits - out.length),
+      operationTimeoutMs,
+    );
+    if (scanned.lineTruncated) regexLinesTruncated++;
+    if (scanned.timedOut) {
+      return {
+        hits: out,
+        regexLinesTruncated,
+        regexTimedOut: true,
+        hitLimitReached: false,
+      };
+    }
+    for (const hit of scanned.hits) {
+      out.push({
+        path: relPath,
+        line: i + 1,
+        col: hit.col,
+        length: hit.length,
+        text: line,
+        before: context > 0 ? lines.slice(Math.max(0, i - context), i) : [],
+        after: context > 0 ? lines.slice(i + 1, i + 1 + context) : [],
+      });
+    }
+    if (scanned.hitLimitReached || out.length >= maxHits) {
+      return {
+        hits: out,
+        regexLinesTruncated,
+        regexTimedOut: false,
+        hitLimitReached: true,
+      };
+    }
+  }
+  return {
+    hits: out,
+    regexLinesTruncated,
+    regexTimedOut: false,
+    hitLimitReached: false,
+  };
+}
+
 // Rank: files with more hits first, then shorter paths, then alphabetical;
 // lines ascending within a file. Keeps the most relevant file at the top.
 function rank(matches: Match[]): Match[] {
@@ -239,11 +363,13 @@ function searchNames(
   matcher: RegExp,
   limit: number,
   loose?: RegExp,
+  pathFilter?: PathFilter,
 ): SearchResult {
   const matches: Match[] = [];
   let searched = 0;
   let excluded = 0;
-  for (const rec of graph.files()) {
+  const { kept, excluded: filtered } = applyPathFilter([...graph.files()], pathFilter);
+  for (const rec of kept) {
     searched++;
     const nameHits = scanLine(rec.path, matcher);
     if (nameHits.length === 0) {
@@ -275,7 +401,87 @@ function searchNames(
     filesSearched: searched,
     filesMatched: matched,
     truncated: ranked.length > limit,
+    resultLimitExceeded: ranked.length > limit,
+    searchTimeBudgetExceeded: false,
+    regexTimedOut: false,
+    regexLinesTruncated: 0,
     wordBoundaryExcluded: excluded,
+    prunedToZero: false, // name search scans every indexed path — nothing is pruned
+    pathFilterExcluded: filtered,
+    // Name search already covers the whole index, so "kept nothing" IS "matched
+    // nothing anywhere" — no second pass needed to tell the two apart.
+    pathFilterMatchedNothing: pathFilter !== undefined && kept.length === 0,
+  };
+}
+
+async function searchNamesRegex(
+  graph: SearchGraph,
+  executor: RegexExecutor,
+  limit: number,
+  pathFilter?: PathFilter,
+): Promise<SearchResult> {
+  const matches: Match[] = [];
+  let searched = 0;
+  let resultLimitExceeded = false;
+  let searchTimeBudgetExceeded = false;
+  let regexTimedOut = false;
+  const { kept, excluded: filtered } = applyPathFilter([...graph.files()], pathFilter);
+  const startedAt = Date.now();
+
+  for (const rec of kept) {
+    const remaining = SEARCH_TIME_BUDGET_MS - (Date.now() - startedAt);
+    if (remaining <= 0) {
+      searchTimeBudgetExceeded = true;
+      break;
+    }
+    searched++;
+    const scanned = await executor.scan(
+      rec.path,
+      MAX_REGEX_LINE_LEN,
+      Math.max(1, limit + 1 - matches.length),
+      Math.min(REGEX_OPERATION_TIME_BUDGET_MS, remaining),
+    );
+    if (scanned.timedOut) {
+      regexTimedOut = true;
+      break;
+    }
+    for (const hit of scanned.hits) {
+      matches.push({
+        path: rec.path,
+        line: 0,
+        col: hit.col,
+        length: hit.length,
+        text: rec.path,
+        before: [],
+        after: [],
+      });
+    }
+    if (scanned.hitLimitReached || matches.length > limit) {
+      resultLimitExceeded = true;
+      break;
+    }
+  }
+
+  const ranked = matches.sort((a, b) =>
+    a.path.length !== b.path.length
+      ? a.path.length - b.path.length
+      : a.path < b.path
+        ? -1
+        : 1,
+  );
+  return {
+    matches: ranked.slice(0, limit),
+    filesSearched: searched,
+    filesMatched: new Set(ranked.map((m) => m.path)).size,
+    truncated: resultLimitExceeded || searchTimeBudgetExceeded || regexTimedOut,
+    resultLimitExceeded,
+    searchTimeBudgetExceeded,
+    regexTimedOut,
+    regexLinesTruncated: 0,
+    wordBoundaryExcluded: 0,
+    prunedToZero: false,
+    pathFilterExcluded: filtered,
+    pathFilterMatchedNothing: pathFilter !== undefined && kept.length === 0,
   };
 }
 
@@ -286,9 +492,8 @@ export async function search(
   opts: SearchOptions,
 ): Promise<SearchOutcome> {
   if (query === "") return { error: "empty query" };
-  // ReDoS guard: refuse an exponential-by-construction pattern BEFORE it is compiled
-  // or run (fail-closed). Ordinary patterns pass; the input cap + time budget below
-  // bound whatever the static check conservatively allows.
+  // Refuse known exponential shapes before compilation. This is only a first
+  // filter: every accepted raw regex still runs in the killable worker below.
   if (opts.mode === "regex") {
     const verdict = assessRegexSafety(query);
     if (!verdict.safe) return { error: `unsafe regex refused (ReDoS guard): ${verdict.reason}` };
@@ -321,53 +526,132 @@ export async function search(
   const loose =
     opts.mode === "word" ? buildLooseProbe(query, sensitive) : undefined;
 
-  if (opts.files) return searchNames(graph, matcher, opts.limit, loose);
+  if (opts.files) {
+    if (opts.mode !== "regex") {
+      return searchNames(graph, matcher, opts.limit, loose, opts.pathFilter);
+    }
+    const executor = new RegexExecutor(query, matcher.flags);
+    try {
+      return await searchNamesRegex(graph, executor, opts.limit, opts.pathFilter);
+    } finally {
+      await executor.close();
+    }
+  }
 
   const ids = candidates(graph, queryTerms(query), opts.mode);
-  const records =
+  const unfiltered =
     ids === null
       ? [...graph.files()]
       : ids.map((id) => graph.file(id)).filter((r) => r !== undefined);
+
+  // Scope AFTER the prune and BEFORE phase 2, so the filter also saves file reads.
+  const { kept: records, excluded: pathExcluded } = applyPathFilter(unfiltered, opts.pathFilter);
+  // Does the filter match anything AT ALL in the index? Answered against the whole
+  // index rather than this query's candidates, because the two failures need
+  // different words: "nothing here matches your query" is a normal result, while
+  // "your --in matches no file in this tree" is a broken query dressed as one.
+  // Costs one string test per indexed path, and only when --in was passed.
+  const filterMatchedNothing =
+    opts.pathFilter !== undefined &&
+    ![...graph.files()].some((r) => opts.pathFilter?.test(r.path));
 
   const all: Match[] = [];
   const filesMatched = new Set<string>();
   const startedAt = Date.now();
   let budgetExceeded = false;
+  let regexTimedOut = false;
+  let regexLinesTruncated = 0;
+  let resultLimitExceeded = false;
   let searched = 0;
   let excluded = 0;
-  for (const rec of records) {
-    // Wall-clock ceiling — a slow-but-not-refused pattern cannot run forever. We
-    // stop between files (a single exec is already bounded by scanLine's input cap).
-    // Reporting the real `searched` count + `truncated` keeps myco's "never mistake
-    // nothing for absent" contract honest (DESIGN §8/§10).
+  const regexExecutor =
+    opts.mode === "regex" ? new RegexExecutor(query, matcher.flags) : undefined;
+  try {
+    for (const rec of records) {
+      // Whole-search ceiling in addition to the worker's per-operation deadline.
+      // Reporting the exact reason keeps a partial result from reading as absence.
     if (Date.now() - startedAt > SEARCH_TIME_BUDGET_MS) {
       budgetExceeded = true;
       break;
     }
-    searched++;
-    const abs = path.join(root, rec.path);
-    const { hits, excludedByBoundary } = await matchFile(
-      abs,
-      rec.path,
-      matcher,
-      opts.context,
-      loose,
-    );
+      searched++;
+      const abs = path.join(root, rec.path);
+      let hits: Match[];
+      let excludedByBoundary = false;
+      if (regexExecutor !== undefined) {
+        const remaining = SEARCH_TIME_BUDGET_MS - (Date.now() - startedAt);
+        if (remaining <= 0) {
+          budgetExceeded = true;
+          break;
+        }
+        const scanned = await matchFileRegex(
+          abs,
+          rec.path,
+          regexExecutor,
+          opts.context,
+          Math.max(1, opts.limit + 1 - all.length),
+          Math.min(REGEX_OPERATION_TIME_BUDGET_MS, remaining),
+        );
+        hits = scanned.hits;
+        regexLinesTruncated += scanned.regexLinesTruncated;
+        if (scanned.regexTimedOut) {
+          regexTimedOut = true;
+          all.push(...hits);
+          if (hits.length > 0) filesMatched.add(rec.path);
+          break;
+        }
+        if (scanned.hitLimitReached) resultLimitExceeded = true;
+      } else {
+        const matchedFile = await matchFile(
+          abs,
+          rec.path,
+          matcher,
+          opts.context,
+          loose,
+        );
+        hits = matchedFile.hits;
+        excludedByBoundary = matchedFile.excludedByBoundary;
+      }
     if (hits.length > 0) {
       filesMatched.add(rec.path);
       all.push(...hits);
     } else if (excludedByBoundary) {
       excluded++;
     }
+      if (resultLimitExceeded || all.length > opts.limit) {
+        resultLimitExceeded = true;
+        break;
+      }
+    }
+  } finally {
+    if (regexExecutor !== undefined) await regexExecutor.close();
   }
 
   const ranked = rank(all);
+  resultLimitExceeded ||= ranked.length > opts.limit;
   return {
     matches: ranked.slice(0, opts.limit),
     filesSearched: searched,
     filesMatched: filesMatched.size,
-    truncated: ranked.length > opts.limit || budgetExceeded,
+    truncated:
+      resultLimitExceeded ||
+      budgetExceeded ||
+      regexTimedOut ||
+      regexLinesTruncated > 0,
+    resultLimitExceeded,
+    searchTimeBudgetExceeded: budgetExceeded,
+    regexTimedOut,
+    regexLinesTruncated,
     wordBoundaryExcluded: excluded,
+    // The index pruned to an EMPTY candidate set (multi-term AND with no common
+    // file) — surfaced so "(0 searched)" explains itself instead of reading as absence.
+    // Measured on `unfiltered`, not `records`: with --in in play, an empty candidate
+    // set caused by the FILTER must not be reported as the INDEX having pruned it,
+    // or the summary blames the wrong mechanism and sends the user to fix a query
+    // that was fine.
+    prunedToZero: ids !== null && unfiltered.length === 0,
+    pathFilterExcluded: pathExcluded,
+    pathFilterMatchedNothing: filterMatchedNothing,
   };
 }
 
@@ -405,17 +689,61 @@ export async function searchFile(
       filesSearched: 1,
       filesMatched: hits.length > 0 ? 1 : 0,
       truncated: hits.length > opts.limit,
+      resultLimitExceeded: hits.length > opts.limit,
+      searchTimeBudgetExceeded: false,
+      regexTimedOut: false,
+      regexLinesTruncated: 0,
       wordBoundaryExcluded: hits.length === 0 && loose !== undefined && loose.test(rel) ? 1 : 0,
+      prunedToZero: false, // single-file search has no index to prune
+      // --in scopes a tree; an explicit single-file target IS the scope. The CLI
+      // refuses the combination rather than silently ignoring the flag.
+      pathFilterExcluded: 0,
+      pathFilterMatchedNothing: false,
     };
   }
 
-  const { hits, excludedByBoundary } = await matchFile(absFile, rel, matcher, opts.context, loose);
+  let hits: Match[];
+  let excludedByBoundary = false;
+  let regexTimedOut = false;
+  let regexLinesTruncated = 0;
+  let resultLimitExceeded = false;
+  if (opts.mode === "regex") {
+    const executor = new RegexExecutor(query, matcher.flags);
+    try {
+      const scanned = await matchFileRegex(
+        absFile,
+        rel,
+        executor,
+        opts.context,
+        Math.max(1, opts.limit + 1),
+        REGEX_OPERATION_TIME_BUDGET_MS,
+      );
+      hits = scanned.hits;
+      regexTimedOut = scanned.regexTimedOut;
+      regexLinesTruncated = scanned.regexLinesTruncated;
+      resultLimitExceeded = scanned.hitLimitReached;
+    } finally {
+      await executor.close();
+    }
+  } else {
+    const matchedFile = await matchFile(absFile, rel, matcher, opts.context, loose);
+    hits = matchedFile.hits;
+    excludedByBoundary = matchedFile.excludedByBoundary;
+  }
   const ranked = rank(hits);
+  resultLimitExceeded ||= ranked.length > opts.limit;
   return {
     matches: ranked.slice(0, opts.limit),
     filesSearched: 1,
     filesMatched: hits.length > 0 ? 1 : 0,
-    truncated: ranked.length > opts.limit,
+    truncated: resultLimitExceeded || regexTimedOut || regexLinesTruncated > 0,
+    resultLimitExceeded,
+    searchTimeBudgetExceeded: false,
+    regexTimedOut,
+    regexLinesTruncated,
     wordBoundaryExcluded: excludedByBoundary ? 1 : 0,
+    prunedToZero: false, // single-file search has no index to prune
+    pathFilterExcluded: 0,
+    pathFilterMatchedNothing: false,
   };
 }

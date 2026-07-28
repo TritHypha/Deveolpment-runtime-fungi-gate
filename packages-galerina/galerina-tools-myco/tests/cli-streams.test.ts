@@ -1,4 +1,4 @@
-// cli-streams.test.ts — two owner-directed CLI defects (bridge 0138), each guarded:
+// cli-streams.test.ts — owner-directed CLI defects (bridge 0138+), each guarded:
 //
 //   Defect 1 — informational notes/summary went to STDERR while exiting 0, so a
 //   benign run was indistinguishable from a real failure at the shell/tool boundary
@@ -8,6 +8,12 @@
 //   Defect 2 — a FILE path arg died `ENOTDIR` (the per-directory index mkdir'd under
 //   the file). Fix: a file path searches just that file (searchFile, no index).
 //   Guard: `-s "a.b" <file>` returns the match (exit 0), and treats `.` literally.
+//
+//   Defect 3 — a NONEXISTENT path fell through to buildIndex, whose saveGraph()
+//   recursively mkdir'd `<root>/.myco`, MATERIALISING a directory at a path the user
+//   only queried (fail-open: a read-only search with a filesystem side effect; the
+//   stray dir could then be matched by a test-runner glob → spurious failure). Fix:
+//   cmdSearch + cmdIndex guard on existence → missing path exits 2, creates NOTHING.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -55,6 +61,28 @@ test("defect 1: a successful search leaves STDERR empty (notes/summary on stdout
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test("defect 3: a NONEXISTENT search path exits 2 and creates NOTHING (no phantom .myco)", async () => {
+  const dir = fixture();
+  const missing = path.join(dir, "does-not-exist");
+  try {
+    const r = await runCli(["-s", "anything", missing, "--no-color", "--no-gitignore"]);
+    assert.equal(r.code, 2, `a missing path must exit 2, got ${r.code}`);
+    assert.match(r.err, /path not found/, "a missing path must report on stderr");
+    // The core guarantee: a read-only query must have NO filesystem side effect.
+    assert.equal(existsSync(missing), false, "myco must NOT materialise a directory at a queried path");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("defect 3: `myco index <nonexistent>` also exits 2 and creates NOTHING", async () => {
+  const dir = fixture();
+  const missing = path.join(dir, "does-not-exist");
+  try {
+    const r = await runCli(["index", missing, "--no-color"]);
+    assert.equal(r.code, 2, `index of a missing path must exit 2, got ${r.code}`);
+    assert.equal(existsSync(missing), false, "index must NOT mkdir at a nonexistent path");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("a REAL error still goes to stderr and exits non-zero (stderr stays trustworthy)", async () => {
   const dir = fixture();
   try {
@@ -64,28 +92,13 @@ test("a REAL error still goes to stderr and exits non-zero (stderr stays trustwo
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-// Defect 3 (2026-07-24) — a NON-EXISTENT target path silently fell through to buildIndex,
-// which mkdir'd `<root>/.myco` and MATERIALISED a phantom directory at the queried path. A
-// stray query against a not-yet-existing `tests/foo.test.mjs` created a directory that the
-// compacted flat `tests/*.test.mjs` runner glob then choked on. Fix: a missing path is a
-// clean exit-2 error and creates NOTHING.
-test("defect 3: a non-existent target path errors (exit 2) and creates NO directory", async () => {
+test("an incomplete regex result exits 2 even though diagnostic evidence is returned", async () => {
   const dir = fixture();
-  const ghost = path.join(dir, "does-not-exist.test.mjs");
+  const file = path.join(dir, "evil.txt");
+  writeFileSync(file, "a".repeat(5000) + "!");
   try {
-    const r = await runCli(["somepattern", ghost, "--no-color", "--no-gitignore"]);
-    assert.equal(r.code, 2, `a missing path must exit 2, got ${r.code}; err=${r.err}`);
-    assert.match(r.err, /path not found/, "the error must name the missing path");
-    assert.equal(existsSync(ghost), false, "myco must NOT create the queried path as a directory");
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("defect 3: `index` on a non-existent path also errors and creates nothing", async () => {
-  const dir = fixture();
-  const ghost = path.join(dir, "nope-dir");
-  try {
-    const r = await runCli(["index", ghost]);
-    assert.equal(r.code, 2, `index on a missing path must exit 2, got ${r.code}; err=${r.err}`);
-    assert.equal(existsSync(ghost), false, "myco index must NOT create a phantom directory");
+    const r = await runCli(["-e", "(a|aa)+$", file, "--no-color"]);
+    assert.equal(r.code, 2, `incomplete coverage must fail closed, got ${r.code}`);
+    assert.match(r.out, /exceeded its deadline and was terminated/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

@@ -970,7 +970,7 @@ Provides:
 
 ## galerina-tools-myco
 
-grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Galerina's owned dev-tool finder (vendored from the myco subproject). Smart-case, token-precise, instant on repeat searches.
+grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.
 
 Provides:
 - FileId
@@ -1213,6 +1213,7 @@ Provides:
 - Closure
 - Compiled
 - compileAst
+- inRangesWithCost
 - inRanges
 - TriStream
 - TriMatcher
@@ -1221,7 +1222,6 @@ Provides:
 - CompileOk
 - compile
 - normalizeRanges
-- complementRanges
 
 ## galerina-ext-spore
 

@@ -6,6 +6,7 @@
 // and still pipe-friendly.
 
 import type { Match, SearchResult } from "./query/search.ts";
+import { MAX_REGEX_LINE_LEN } from "./query/regex-guard.ts";
 
 export interface RenderOptions {
   color: boolean;
@@ -125,7 +126,14 @@ export function render(
           filesMatched: result.filesMatched,
           hits: result.matches.length,
           truncated: result.truncated,
+          resultLimitExceeded: result.resultLimitExceeded,
+          searchTimeBudgetExceeded: result.searchTimeBudgetExceeded,
+          regexTimedOut: result.regexTimedOut,
+          regexLinesTruncated: result.regexLinesTruncated,
           wordBoundaryExcluded: result.wordBoundaryExcluded,
+          prunedToZero: result.prunedToZero,
+          pathFilterExcluded: result.pathFilterExcluded,
+          pathFilterMatchedNothing: result.pathFilterMatchedNothing,
         },
       },
       null,
@@ -145,7 +153,19 @@ export function summaryLine(result: SearchResult): string {
     `${result.filesMatched} file${result.filesMatched === 1 ? "" : "s"}`,
     `(${result.filesSearched} searched)`,
   ];
-  if (result.truncated) bits.push("[truncated — raise --limit]");
+  if (result.resultLimitExceeded) bits.push("[truncated — raise --limit]");
+  if (result.searchTimeBudgetExceeded) {
+    bits.push("[incomplete — search time budget expired]");
+  }
+  if (result.regexTimedOut) {
+    bits.push("[incomplete — regex operation exceeded its deadline and was terminated]");
+  }
+  if (result.regexLinesTruncated > 0) {
+    const n = result.regexLinesTruncated;
+    bits.push(
+      `[incomplete — ${n} over-size regex line${n === 1 ? "" : "s"} searched only to the ${MAX_REGEX_LINE_LEN}-UTF-16-code-unit cap]`,
+    );
+  }
   // Never let a narrowed result read as absence. If whole-word matching threw away
   // files that DO contain the pattern, say so and name the escape hatch — the same
   // "no silent caps" rule the over-size skip note already follows.
@@ -154,6 +174,25 @@ export function summaryLine(result: SearchResult): string {
     bits.push(
       `${n} file${n === 1 ? "" : "s"} contain${n === 1 ? "s" : ""} the pattern but ${n === 1 ? "was" : "were"} excluded by whole-word matching — try -s`,
     );
+  }
+  // "(0 searched)" must explain itself: the index AND-intersects the query's word
+  // terms, so a multi-word (or regex-meant-as-literal) pattern can prune every
+  // candidate. Cryptic zero reads as absence — the exact misread this line closes.
+  if (result.prunedToZero) {
+    bits.push("index pruned all candidates: no file contains ALL the query's words — miss ≠ absent (regex? use -e)");
+  }
+  // A scope the user asked for is still a scope. Report what it removed, so a
+  // narrowed count is never read as a tree-wide one.
+  if (result.pathFilterExcluded > 0) {
+    const n = result.pathFilterExcluded;
+    bits.push(`${n} candidate${n === 1 ? "" : "s"} outside --in (not searched)`);
+  }
+  // The dangerous case, and the reason this flag exists separately from the count
+  // above: the filter excluded the ENTIRE index, so every possible result was
+  // removed before matching and the zero below means "you scoped to nowhere", not
+  // "it is not here". Those are opposite conclusions from identical output.
+  if (result.pathFilterMatchedNothing) {
+    bits.push("⚠ --in matched NO indexed path — the scope is empty, so this zero says nothing about the tree (check the glob; paths are root-relative)");
   }
   return bits.join(" · ");
 }

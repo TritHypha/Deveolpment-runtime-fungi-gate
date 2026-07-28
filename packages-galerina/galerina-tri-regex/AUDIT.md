@@ -1,6 +1,6 @@
-# TriRegex v0.1.0 — build audit
+# TriRegex v0.1.1 — build audit
 
-Audit of the initial build (2026-07-19). Scope: supply chain, fail-closed
+Audit updated 2026-07-28. Scope: supply chain, fail-closed
 surfaces, bound enforcement, test evidence, declared gaps.
 
 ## Supply chain
@@ -20,28 +20,43 @@ surfaces, bound enforcement, test evidence, declared gaps.
   named test. Unknown constructs are refused, never guessed at.
 - Streaming `end()` collapses INDETERMINATE to `-1` (K3 collapse-at-boundary,
   `test/streaming.test.mjs`).
+- Runtime budget overrides are validated as finite safe integers. `NaN`,
+  infinity, fractions and invalid negative values cannot bypass a limit.
+- Lazy, possessive and stacked quantifier spellings are refused. They were
+  previously reinterpreted as nested repetition (`a+?` could match empty).
+- The terminal MATCH instruction now counts toward `maxInstructions`.
 
 ## Bound enforcement (the ReDoS claim, evidenced)
-- The certificate (`instructions`, `restingStates`, `perCharWorkBound`) is
+- The certificate (`instructions`, `restingStates`, `perCharWorkBound`,
+  `boundaryWorkBound`, `maxRangeComparisons`) is
   produced **before** any input runs; the engine counts its own work in the
-  same unit (bitset word-ops) and the suite asserts `steps ≤ (chars+2) ×
-  perCharWorkBound` on classic killer patterns over adversarial input
-  (`test/redos.test.mjs`), plus a linear-growth check (double input ≤ 2.5×
-  steps) and `maxActive ≤ restingStates`.
+  same unit and the suite asserts
+  `steps ≤ chars × perCharWorkBound + boundaryWorkBound` on classic killer
+  patterns over adversarial input (`tests/redos.test.mjs`). The bound now
+  includes active-slot tests, range comparisons, bitset unions, start
+  propagation and stream-boundary scans.
+- EOL resolution and fresh end matches are precomputed, rather than performing
+  uncounted epsilon walks during `end()`.
 - Quantifier expansion is budget-checked **during** emission — an over-budget
   pattern aborts as a veto mid-compile; it cannot escape into a big automaton.
 
 ## Correctness evidence
-- 28/28 tests green: semantics (literals/alt/classes/anchors/quantifiers/
+- 34/34 tests green: semantics (literals/alt/classes/anchors/quantifiers/
   epsilon-loop termination/astral Unicode/escapes), leftmost-longest spans,
   chunk-split invariance at **every** split point per case, mid-stream verdict
   transitions, anchored mid-stream impossibility, eol-until-boundary, uniform
   mode equivalence, version-drift (VERSION === package.json).
+- A deterministic generated corpus compares the supported language-membership
+  intersection against native Unicode `RegExp`; span policy is deliberately not
+  compared because TriRegex is leftmost-longest.
+- Stream lifecycle tests establish idempotent `end()` and refusal of
+  `feed()` after the boundary.
 - `test()` is literally `stream(feed all) + end()` — whole-vs-chunked
   equivalence holds **by construction**, not by luck.
 
 ## Declared gaps (v0.1 — honest, not hidden)
 - No capture groups; span is the first leftmost-longest match only.
+- No certified `findAll`; this blocks direct use as Myco's regex backend.
 - `\b/\B` refused (v0.2 candidate: needs one code point of lookbehind state —
   compatible with the no-rewind design).
 - ASCII shorthand classes; no case-insensitive mode; no multiline `^$` mode.
@@ -50,11 +65,20 @@ surfaces, bound enforcement, test evidence, declared gaps.
   made for JS.
 - One engine path (sparse bitset). Performance is untuned and **no performance
   numbers are claimed** (house rule: measured on a named machine or not at all).
+- `memoryBoundBytes` is a portable accounting estimate, not a JavaScript heap
+  ceiling; runtime object overhead is engine-specific.
+- Publication is BLOCKED until `LICENSE` contains the full Apache-2.0 text.
 
-## Distribution rule (owner directive, 2026-07-19)
-The Galerina main session must **not** consume this working copy. Galerina
-receives its **own vendored copy** in the Galerina package library
-(`packages-galerina/`), copied at a pinned commit and re-tested there. This
-directory remains the R&D-editable original (the myco pattern).
+## Galerina vendor state
+
+This is Galerina's own vendored package copy. It was refreshed on 2026-07-28
+from the standalone TriRegex 0.1.1 working tree based on commit
+`e9fbb8e75281a5a9c6270348e976bc1ffee5630b`, then re-tested here. The upstream
+0.1.1 changes were not committed at the time of the sync, so this package
+records a **working-tree snapshot**, not a falsely claimed pinned commit.
+Implementation fixes still belong upstream and must be re-vendored.
+
+TLL use remains PROPOSED. The numeric pattern result is not TLL `Verdict3`;
+matching neither sanitises data nor grants authority.
 
 Contact hello@trithypha.dev · Apache-2.0.
