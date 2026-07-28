@@ -17,6 +17,18 @@ frontend.
 - [x] Record the `.fungi` control-flow standard: `match` for one decision with
   two or more alternatives; Verdict-based exits use exhaustive `check`;
   Boolean refusal guards use `trap` or a typed error return.
+- [x] Convert the first high-confidence auth-service alternative dispatch
+  examples from repeated `if` to total `match`.
+- [ ] Repair the pre-existing strict-check failures in
+  `economicsService.fungi` and `auditChainService.fungi` (duplicate local
+  declarations and `Response`/record return mismatches). The new `match` forms
+  parse cleanly, but these files are not yet full-check green.
+- [ ] Audit the remaining `.fungi` example corpus for repeated alternative
+  `if` dispatch. Convert only semantically exclusive decisions; retain and
+  document genuinely independent checks.
+- [x] Restore deterministic generation for
+  `../ZTF-Knowledge-Bases/build/kb-index/KB-INDEX.md` and refresh it from the
+  same live corpus as the category index.
 - [ ] Owner: answer the blocking decisions in
   `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
 - [ ] Finish detached executable GIR: full bodies, control flow, memory,

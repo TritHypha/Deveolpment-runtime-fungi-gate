@@ -74,9 +74,11 @@ match someValue {
 }
 ```
 
-The self-hosted lexer works around the absence of `else if` with sequential guarded `if`s and a
-`handled` flag (see `.../self-hosted/lexer.fungi:427-627`) — a good pattern to study when a real
-multi-branch dispatch can't be a clean `match`.
+The self-hosted lexer currently contains legacy sequential guarded `if`s with a
+`handled` flag (see `.../self-hosted/lexer.fungi:427-627`). Do not copy that
+shape for new code. Retain it only where the checks are genuinely independent
+or until the lexer dispatch can be converted to a semantically equivalent
+`match`.
 
 ## `match` — exhaustive pattern matching
 

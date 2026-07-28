@@ -36,10 +36,12 @@ contract {
 {
   ;; only three statuses are valid — any other value is a governance violation
   ;; — unknown status strings cannot be admitted to the tamper-evident ledger
-  if status == "Success" { return true }
-  if status == "Denied" { return true }
-  if status == "Failed" { return true }
-  return false
+  match status {
+    "Success" => { return true }
+    "Denied" => { return true }
+    "Failed" => { return true }
+    _ => { return false }
+  }
 }
 
 ;; Bound an untrusted audit identifier (flow name / timestamp) to a maximum length before it is composed
@@ -65,10 +67,12 @@ contract {
 // @effect [Verdict only] -> returns the validated status (or "" if unrecognised); no state is mutated.
 pure flow validateStatus(status: String) -> String
 {
-  if status == "Success" { return "Success" }
-  if status == "Denied" { return "Denied" }
-  if status == "Failed" { return "Failed" }
-  return ""
+  match status {
+    "Success" => { return "Success" }
+    "Denied" => { return "Denied" }
+    "Failed" => { return "Failed" }
+    _ => { return "" }
+  }
 }
 
 ;; Ingests an untrusted request, traps empty fields, then chains a redacted audit entry — permitted because every tainted value is redacted before it reaches the ledger.

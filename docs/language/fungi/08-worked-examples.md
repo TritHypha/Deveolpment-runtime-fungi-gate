@@ -209,9 +209,9 @@ contract {
 
 * `pure flow`s can be substantial. Note `mut` loop state, `while … and …`, `match` on `Option<Char>`,
   and `is` for character equality elsewhere in the file (`if nc is '"'`).
-* Because there's no `else if`, multi-branch character dispatch uses sequential guarded `if`s with a
-  `handled` flag (see the main `tokenize` loop, lines ~427-627) — study this pattern; it is the
-  idiomatic workaround.
+* The current lexer contains legacy sequential guarded `if` dispatch. New
+  multi-branch decisions use `match`; sequential `if`s are reserved for
+  independent checks where multiple bodies may run.
 * `contract { intent { "..." } }` on a pure helper is minimal but present — every flow gets an intent.
 
 The self-hosted set also includes `parser.fungi`, `type-checker.fungi`, `effect-checker.fungi`,

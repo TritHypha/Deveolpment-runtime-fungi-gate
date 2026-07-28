@@ -8,10 +8,12 @@
 // @effect [Output only] -> returns the compute cost Int; no state is mutated.
 pure flow estimateComputeCost(opCount: Int, targetClass: Int) -> Int
 {
-  if targetClass == 4 { return opCount * 10 }
-  if targetClass == 3 { return opCount * 3 }
-  if targetClass == 2 { return opCount * 1 }
-  return opCount * 2
+  match targetClass {
+    4 => { return opCount * 10 }
+    3 => { return opCount * 3 }
+    2 => { return opCount * 1 }
+    _ => { return opCount * 2 }
+  }
 }
 
 ;; Estimates risk cost by scaling record count against the data classification level — pure arithmetic, safe with no authority.
@@ -20,10 +22,12 @@ pure flow estimateComputeCost(opCount: Int, targetClass: Int) -> Int
 // @effect [Output only] -> returns the risk cost Int; no state is mutated.
 pure flow estimateRiskCost(recordCount: Int, classificationLevel: Int) -> Int
 {
-  if classificationLevel >= 4 { return recordCount * 160 }
-  if classificationLevel >= 3 { return recordCount * 80 }
-  if classificationLevel >= 2 { return recordCount * 40 }
-  return recordCount * 10
+  match classificationLevel {
+    when classificationLevel >= 4 => { return recordCount * 160 }
+    when classificationLevel >= 3 => { return recordCount * 80 }
+    when classificationLevel >= 2 => { return recordCount * 40 }
+    _ => { return recordCount * 10 }
+  }
 }
 
 ;; Sums the compute, risk, and audit cost components into a total — pure arithmetic, safe with no authority.
@@ -43,18 +47,22 @@ pure flow validateCount(n: Int) -> Int
 {
   ;; MAX_COUNT: the largest legitimate op/record count. Caps count*160 (the top risk weight) far below
   ;; the i32 ceiling, closing the integer-overflow / cost-DoS exposure.
-  if n < 0 { return 0 }
-  if n > 1000000 { return 1000000 }
-  return n
+  match n {
+    when n < 0 => { return 0 }
+    when n > 1000000 => { return 1000000 }
+    _ => { return n }
+  }
 }
 
 ;; Bounds an untrusted class index to the recognised [0, 4] range before it selects a cost weight.
 ;; Pure — no runtime authority / no effects.
 pure flow validateClass(c: Int) -> Int
 {
-  if c < 0 { return 0 }
-  if c > 4 { return 4 }
-  return c
+  match c {
+    when c < 0 => { return 0 }
+    when c > 4 => { return 4 }
+    _ => { return c }
+  }
 }
 
 ;; Accepts untrusted cost inputs over HTTP, traps negatives, and returns a cost breakdown, writing a redacted audit entry — permitted because the tainted total is redacted before the write.
