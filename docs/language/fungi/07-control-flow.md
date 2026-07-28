@@ -11,6 +11,38 @@ Galerina's control flow is deliberately small and explicit. Two things surprise 
 **there is no `else if`** (use `match`), and **bitwise operators are not part of the language** (they
 live in the engine layer). Both are enforced by the parser.
 
+## Project control-flow standard
+
+Use the smallest construct that expresses the complete decision:
+
+| Decision shape | Preferred construct |
+|---|---|
+| One simple Boolean choice | `if` / `else` |
+| Two or more alternative conditions or outcomes | `match`, including a fail-closed `_ =>` arm |
+| A Kleene K3 `Verdict` deciding proceed, deny, or unresolved exit | exhaustive `check` |
+| A Boolean condition whose only purpose is refusal | `trap`, or an explicit typed error return |
+
+Do not write two or more sequential `if` statements to simulate one
+multi-branch decision. Use `match` so the alternatives and default outcome are
+visible together. Separate `if` statements remain valid when the conditions are
+genuinely independent and more than one body is allowed to run.
+
+`check` is not a shorter spelling of `if`. Its subject must be a `Verdict`, and
+all three arms are required:
+
+```fungi
+check(admission) {
+  if:    { return Ok(plan) }
+  deny:  { return Err(AdmissionDenied) }
+  ambig: { return Err(AdmissionUnresolved) }
+}
+```
+
+The `deny` and `ambig` arms must leave the current trust path. They must never
+fall through to privileged work. Until `check` has complete target-lowering
+parity, a target that cannot lower it must reject or trap rather than rewrite it
+as Boolean `if`.
+
 ## `if` / `else` — simple two-way branch only
 
 ```fungi

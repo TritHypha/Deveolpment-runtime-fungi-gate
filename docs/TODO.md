@@ -14,6 +14,9 @@ frontend.
   than trusting the source-language or container label.
 - [x] Define deterministic action-DAG/CAS, Kleene K3, Tri-Fuse, Tower Citizen,
   Tri-Pipe, and Linux driver boundaries in the CTLL v2 planning set.
+- [x] Record the `.fungi` control-flow standard: `match` for one decision with
+  two or more alternatives; Verdict-based exits use exhaustive `check`;
+  Boolean refusal guards use `trap` or a typed error return.
 - [ ] Owner: answer the blocking decisions in
   `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
 - [ ] Finish detached executable GIR: full bodies, control flow, memory,

@@ -195,6 +195,20 @@ failure report output
 target report output
 ```
 
+### `.fungi` control-flow standard
+
+- Use `if`/`else` for one simple Boolean choice.
+- When one decision would require two or more alternative `if` conditions, use
+  `match` and include a fail-closed `_ =>` arm.
+- Separate `if` statements are acceptable only when the checks are independent
+  and more than one body may execute.
+- When a Kleene K3 `Verdict` controls whether execution proceeds or exits, use
+  exhaustive `check` with `if`, `deny`, and `ambig` arms. Both non-allow arms
+  must leave the current trust path.
+- Do not pass a `Bool` to `check`; use `trap` or an explicit typed error return
+  when a Boolean condition exists only to refuse execution.
+- No default, wildcard, unknown, cache, or fallback path may silently proceed.
+
 ---
 
 ## Example Contributions
