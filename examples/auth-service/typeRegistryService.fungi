@@ -20,14 +20,16 @@ contract {
   intent { "Return true when the type name is a Galerina built-in primitive." }
 }
 {
-  if name == "Int" { return true }
-  if name == "Bool" { return true }
-  if name == "String" { return true }
-  if name == "Float" { return true }
-  if name == "Bytes" { return true }
-  if name == "Unit" { return true }
-  if name == "Void" { return true }
-  return false
+  match name {
+    "Int" => { return true }
+    "Bool" => { return true }
+    "String" => { return true }
+    "Float" => { return true }
+    "Bytes" => { return true }
+    "Unit" => { return true }
+    "Void" => { return true }
+    _ => { return false }
+  }
 }
 
 // Returns the category string for the given type name.
@@ -41,19 +43,21 @@ contract {
   intent { "Return the category for the given type name." }
 }
 {
-  if name == "Int" { return "primitive" }
-  if name == "Bool" { return "primitive" }
-  if name == "String" { return "primitive" }
-  if name == "Float" { return "primitive" }
-  if name == "Bytes" { return "primitive" }
-  if name == "Unit" { return "primitive" }
-  if name == "Void" { return "primitive" }
-  if name == "List" { return "collection" }
-  if name == "Map" { return "collection" }
-  if name == "Set" { return "collection" }
-  if name.contains("Effect") { return "effect" }
-  if name.contains("Governance") { return "governance" }
-  return "unknown"
+  match name {
+    "Int" => { return "primitive" }
+    "Bool" => { return "primitive" }
+    "String" => { return "primitive" }
+    "Float" => { return "primitive" }
+    "Bytes" => { return "primitive" }
+    "Unit" => { return "primitive" }
+    "Void" => { return "primitive" }
+    "List" => { return "collection" }
+    "Map" => { return "collection" }
+    "Set" => { return "collection" }
+    when name.contains("Effect") => { return "effect" }
+    when name.contains("Governance") => { return "governance" }
+    _ => { return "unknown" }
+  }
 }
 
 ;; Validate an untrusted type name against the governed registry's recognised vocabulary before it drives
@@ -65,19 +69,21 @@ contract {
 // @effect [Verdict only] -> returns the validated type name/marker (or "" if unrecognised); no state mutated.
 pure flow validateTypeName(name: String) -> String
 {
-  if name == "Int" { return "Int" }
-  if name == "Bool" { return "Bool" }
-  if name == "String" { return "String" }
-  if name == "Float" { return "Float" }
-  if name == "Bytes" { return "Bytes" }
-  if name == "Unit" { return "Unit" }
-  if name == "Void" { return "Void" }
-  if name == "List" { return "List" }
-  if name == "Map" { return "Map" }
-  if name == "Set" { return "Set" }
-  if name.contains("Effect") { return "Effect" }
-  if name.contains("Governance") { return "Governance" }
-  return ""
+  match name {
+    "Int" => { return "Int" }
+    "Bool" => { return "Bool" }
+    "String" => { return "String" }
+    "Float" => { return "Float" }
+    "Bytes" => { return "Bytes" }
+    "Unit" => { return "Unit" }
+    "Void" => { return "Void" }
+    "List" => { return "List" }
+    "Map" => { return "Map" }
+    "Set" => { return "Set" }
+    when name.contains("Effect") => { return "Effect" }
+    when name.contains("Governance") => { return "Governance" }
+    _ => { return "" }
+  }
 }
 
 // The governed type resolution endpoint.
@@ -101,29 +107,30 @@ contract {
   ;; validate the untrusted type name against the recognised registry vocabulary before it drives the
   ;; resolution — the validating gate clears the taint
   let validTypeName: String = validateTypeName(typeName)
+  trap validTypeName == "" : ERR_INVALID_TYPE_NAME
   let isBuiltin: Bool = isBuiltinType(validTypeName)
   let category: String = typeCategory(validTypeName)
 
   let retTypeName: String = validTypeName
   let retIsBuiltin: Bool = isBuiltin
   let retCategory: String = category
-  safe mut typeName = redact(typeName)
-  safe mut isBuiltin = redact(isBuiltin)
-  safe mut category = redact(category)
+  safe mut auditTypeName = redact(typeName)
+  safe mut auditIsBuiltin = redact(isBuiltin)
+  safe mut auditCategory = redact(category)
 
   AuditLog.write({
     event: "TypeResolve",
-    typeName: typeName,
-    isBuiltin: isBuiltin,
-    category: category
+    typeName: auditTypeName,
+    isBuiltin: auditIsBuiltin,
+    category: auditCategory
   })
 
-  return {
+  return Response.ok({
     typeName: retTypeName,
     isBuiltin: retIsBuiltin,
     category: retCategory,
     resolved: true
-  }
+  })
 }
 
 route POST "/types/resolve" {

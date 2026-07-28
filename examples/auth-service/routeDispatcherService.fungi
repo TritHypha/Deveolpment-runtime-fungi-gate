@@ -32,29 +32,25 @@ contract {
   intent { "Map an HTTP method+path pair to the governing flow name. Core dispatch table driven by route registry." }
 }
 {
-  if method == "POST" {
-    if path == "/auth/verify" {
-      return "verifyPassword"
+  match method {
+    "POST" => {
+      match path {
+        "/auth/verify" => { return "verifyPassword" }
+        "/audit/write" => { return "writeAuditEvent" }
+        "/capability/resolve" => { return "resolveCapability" }
+        "/stdlib/demo" => { return "stdlibDemo" }
+        _ => { return "" }
+      }
     }
-    if path == "/audit/write" {
-      return "writeAuditEvent"
+    "GET" => {
+      match path {
+        "/health" => { return "healthCheck" }
+        "/rate-status" => { return "rateStatus" }
+        _ => { return "" }
+      }
     }
-    if path == "/capability/resolve" {
-      return "resolveCapability"
-    }
-    if path == "/stdlib/demo" {
-      return "stdlibDemo"
-    }
+    _ => { return "" }
   }
-  if method == "GET" {
-    if path == "/health" {
-      return "healthCheck"
-    }
-    if path == "/rate-status" {
-      return "rateStatus"
-    }
-  }
-  return ""
 }
 
 // Determine the governance profile for a given flow
@@ -83,22 +79,26 @@ contract {
 ;; drives a decision; a pure lookup only propagates taint. Pure — no runtime authority / no effects.
 pure flow validateMethod(method: String) -> String
 {
-  if method == "POST" { return "POST" }
-  if method == "GET" { return "GET" }
-  return ""
+  match method {
+    "POST" => { return "POST" }
+    "GET" => { return "GET" }
+    _ => { return "" }
+  }
 }
 
 ;; Validate an untrusted request path against the registered route allowlist — admit only known paths,
 ;; returning a constant. Pure — no runtime authority / no effects.
 pure flow validatePath(path: String) -> String
 {
-  if path == "/auth/verify" { return "/auth/verify" }
-  if path == "/audit/write" { return "/audit/write" }
-  if path == "/capability/resolve" { return "/capability/resolve" }
-  if path == "/stdlib/demo" { return "/stdlib/demo" }
-  if path == "/health" { return "/health" }
-  if path == "/rate-status" { return "/rate-status" }
-  return ""
+  match path {
+    "/auth/verify" => { return "/auth/verify" }
+    "/audit/write" => { return "/audit/write" }
+    "/capability/resolve" => { return "/capability/resolve" }
+    "/stdlib/demo" => { return "/stdlib/demo" }
+    "/health" => { return "/health" }
+    "/rate-status" => { return "/rate-status" }
+    _ => { return "" }
+  }
 }
 
 // The governed route dispatcher -- makes routing decisions and audits them
@@ -133,34 +133,36 @@ contract {
   ;; validate the untrusted method + path before they drive the dispatch decision — the gates clear the taint
   let validMethod: String = validateMethod(rawMethod)
   let validPath: String = validatePath(rawPath)
+  trap validMethod == "" : ERR_INVALID_HTTP_METHOD
+  trap validPath == "" : ERR_INVALID_PATH
   let resolvedFlow: String = resolveRoute(validMethod, validPath)
   let profile: String = flowGovernanceProfile(resolvedFlow)
   let denied: Bool = profile == "denied"
 
-  let retRawMethod: String = rawMethod
-  let retRawPath: String = rawPath
+  let retMethod: String = validMethod
+  let retPath: String = validPath
   let retResolvedFlow: String = resolvedFlow
   let retProfile: String = profile
-  safe mut rawMethod = redact(rawMethod)
-  safe mut rawPath = redact(rawPath)
-  safe mut resolvedFlow = redact(resolvedFlow)
-  safe mut profile = redact(profile)
+  safe mut auditMethod = redact(rawMethod)
+  safe mut auditPath = redact(rawPath)
+  safe mut auditResolvedFlow = redact(resolvedFlow)
+  safe mut auditProfile = redact(profile)
 
   AuditLog.write({
     event: "RouteDispatched"
-    method: rawMethod
-    path: rawPath
-    resolvedFlow: resolvedFlow
-    profile: profile
+    method: auditMethod
+    path: auditPath
+    resolvedFlow: auditResolvedFlow
+    profile: auditProfile
   })
 
   if denied {
-    return Err("Route not found: " + retRawMethod + " " + retRawPath)
+    return Err("Route not admitted")
   }
 
   return Ok({
-    method: retRawMethod
-    path: retRawPath
+    method: retMethod
+    path: retPath
     resolvedFlow: retResolvedFlow
     governanceProfile: retProfile
     dispatched: true

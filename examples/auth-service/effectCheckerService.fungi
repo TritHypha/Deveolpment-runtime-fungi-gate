@@ -41,10 +41,10 @@ contract {
   intent { "Return true if the effect declaration is consistent with the flow qualifier." }
 }
 {
-  if qualifier == "pure" {
-    if declaredEffect != "" { return false }
+  match qualifier {
+    "pure" => { return declaredEffect == "" }
+    _ => { return true }
   }
-  return true
 }
 
 ;; Maps a capability to its audit severity for compliance tracking — pure lookup, safe with no authority.
@@ -142,10 +142,12 @@ contract {
 // @effect [Verdict only] -> returns the validated qualifier (or "" if unrecognised); no state is mutated.
 pure flow validateQualifier(qualifier: String) -> String
 {
-  if qualifier == "pure" { return "pure" }
-  if qualifier == "secure" { return "secure" }
-  if qualifier == "guarded" { return "guarded" }
-  return ""
+  match qualifier {
+    "pure" => { return "pure" }
+    "secure" => { return "secure" }
+    "guarded" => { return "guarded" }
+    _ => { return "" }
+  }
 }
 
 ;; Verifies an untrusted flow's declared effects are valid and complete, writing a redacted audit entry — permitted because tainted inputs are redacted before the write.
@@ -172,19 +174,21 @@ contract {
   ;; capability + completeness checks — the validating gates clear the taint
   let validEffect: String = validateEffectName(rawEffect)
   let validQualifier: String = validateQualifier(rawQualifier)
+  trap validEffect == "" : ERR_INVALID_EFFECT
+  trap validQualifier == "" : ERR_INVALID_QUALIFIER
   let capability: String = effectRequiresCapability(validEffect)
   let severity: String = classifyEffectSeverity(capability)
   let complete: Bool = effectsAreComplete(validEffect, validQualifier)
 
   let retRawEffect: String = validEffect
   let retCapability: String = capability
-  safe mut rawEffect = redact(rawEffect)
-  safe mut capability = redact(capability)
+  safe mut auditEffect = redact(rawEffect)
+  safe mut auditCapability = redact(capability)
 
   AuditLog.write({
     eventName: "EffectChecked"
-    effectName: rawEffect
-    capability: capability
+    effectName: auditEffect
+    capability: auditCapability
   })
 
   return Ok({

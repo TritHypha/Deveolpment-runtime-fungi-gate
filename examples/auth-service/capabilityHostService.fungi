@@ -21,40 +21,23 @@ contract {
   intent { "Check if an effect is allowed in the given execution context." }
 }
 {
-  if effect.contains("network") {
-    ;; network effects are denied in production and deterministic contexts
-    ;; — outbound calls bypass the governed DAG and create untracked side effects
-    if context.contains("production") { return false }
-    if context.contains("deterministic") { return false }
-    return true
+  match effect {
+    when effect.contains("network") => {
+      return context != "production" and context != "deterministic"
+    }
+    when effect.contains("database") => {
+      return context != "deterministic"
+    }
+    when effect.contains("audit") => { return true }
+    when effect.contains("crypto") => { return true }
+    when effect.contains("secret") => {
+      return context != "deterministic"
+    }
+    when effect.contains("filesystem") => {
+      return context != "deterministic"
+    }
+    _ => { return false }
   }
-
-  if effect.contains("database") {
-    ;; database mutations are denied in deterministic contexts
-    ;; — non-deterministic state changes invalidate proof reproducibility
-    if context.contains("deterministic") { return false }
-    return true
-  }
-
-  ;; audit writes are always permitted — governance requirement, cannot be denied
-  if effect.contains("audit") { return true }
-
-  ;; crypto effects are always permitted — used for governed proof verification
-  if effect.contains("crypto") { return true }
-
-  if effect.contains("secret") {
-    ;; secret reads denied in deterministic contexts — vault I/O is non-deterministic
-    if context.contains("deterministic") { return false }
-    return true
-  }
-
-  if effect.contains("filesystem") {
-    ;; filesystem writes denied in deterministic contexts — same proof-reproducibility reason
-    if context.contains("deterministic") { return false }
-    return true
-  }
-
-  return false
 }
 
 ;; Classifies an effect into a governance class (denied/read/write/compute/external) — pure lookup, safe with no authority.
@@ -67,14 +50,16 @@ contract {
   intent { "Return the governance class for an effect. 0=denied, 1=read, 2=write, 3=compute, 4=external" }
 }
 {
-  if effect.contains("audit") { return 2 }
-  if effect.contains("crypto") { return 3 }
-  if effect.contains("secret") { return 1 }
-  if effect.contains(".read") { return 1 }
-  if effect.contains(".write") { return 2 }
-  if effect.contains("network") { return 4 }
-  if effect.contains("ai") { return 4 }
-  return 0
+  match effect {
+    when effect.contains("audit") => { return 2 }
+    when effect.contains("crypto") => { return 3 }
+    when effect.contains("secret") => { return 1 }
+    when effect.contains(".read") => { return 1 }
+    when effect.contains(".write") => { return 2 }
+    when effect.contains("network") => { return 4 }
+    when effect.contains("ai") => { return 4 }
+    _ => { return 0 }
+  }
 }
 
 ;; Validate an untrusted effect name against the canonical Galerina effect vocabulary before it drives a
@@ -151,11 +136,13 @@ contract {
 // @effect [Verdict only] -> returns the validated context (or "" if unrecognised); no state is mutated.
 pure flow validateContext(context: String) -> String
 {
-  if context == "deterministic" { return "deterministic" }
-  if context == "production" { return "production" }
-  if context == "dev" { return "dev" }
-  if context == "check-only" { return "check-only" }
-  return ""
+  match context {
+    "deterministic" => { return "deterministic" }
+    "production" => { return "production" }
+    "dev" => { return "dev" }
+    "check-only" => { return "check-only" }
+    _ => { return "" }
+  }
 }
 
 ;; Resolves an untrusted effect/context request into an allow decision and governance class, writing a redacted audit entry — permitted because tainted inputs are redacted before the write.
@@ -181,29 +168,31 @@ contract {
   ;; the allow policy — the validating gates clear the taint
   let validEffect: String = validateEffectName(effect)
   let validContext: String = validateContext(context)
+  trap validEffect == "" : ERR_INVALID_EFFECT
+  trap validContext == "" : ERR_INVALID_CONTEXT
   let allowed: Bool = isEffectAllowedInContext(validEffect, validContext)
   let govClass: Int = effectGovernanceClass(validEffect)
 
   let retEffect: String = validEffect
   let retContext: String = validContext
   let retAllowed: Bool = allowed
-  safe mut effect = redact(effect)
-  safe mut context = redact(context)
-  safe mut allowed = redact(allowed)
+  safe mut auditEffect = redact(effect)
+  safe mut auditContext = redact(context)
+  safe mut auditAllowed = redact(allowed)
 
   AuditLog.write({
     event: "CapabilityCheck",
-    effect: effect,
-    context: context,
-    allowed: allowed
+    effect: auditEffect,
+    context: auditContext,
+    allowed: auditAllowed
   })
 
-  return {
+  return Response.ok({
     effect: retEffect,
     context: retContext,
     allowed: retAllowed,
     governanceClass: govClass
-  }
+  })
 }
 
 route POST "/capability/check" {

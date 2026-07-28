@@ -101,28 +101,31 @@ contract {
   let validFlowName: String = sanitizeIdentifier(flowName)
   let validTimestamp: String = sanitizeIdentifier(timestamp)
   let validStatus: String = validateStatus(status)
+  trap validFlowName == "" : ERR_INVALID_FLOW_NAME
+  trap validTimestamp == "" : ERR_INVALID_TIMESTAMP
+  trap validStatus == "" : ERR_INVALID_STATUS
   let eventId: String = auditEventId(validFlowName, validTimestamp)
   let statusValid: Bool = isValidAuditStatus(validStatus)
 
   let retEventId: String = eventId
   let retStatusValid: Bool = statusValid
-  safe mut eventId = redact(eventId)
-  safe mut status = redact(status)
-  safe mut statusValid = redact(statusValid)
+  safe mut auditEventId = redact(eventId)
+  safe mut auditStatus = redact(status)
+  safe mut auditStatusValid = redact(statusValid)
 
   AuditLog.write({
     event: "AuditChain",
-    eventId: eventId,
-    status: status,
-    statusValid: statusValid
+    eventId: auditEventId,
+    status: auditStatus,
+    statusValid: auditStatusValid
   })
 
-  return {
+  return Response.ok({
     eventId: retEventId,
     statusValid: retStatusValid,
     schemaVersion: "fungi.runtime.audit.v1",
     chained: true
-  }
+  })
 }
 
 route POST "/audit/chain" {

@@ -41,13 +41,11 @@ contract {
 {
   ;; both fields required — audit entries without eventName or level cannot be
   ;; properly routed, retained, or included in the tamper-evident chain
-  if eventName == "" {
-    return false
+  match eventName {
+    "" => { return false }
+    when level == "" => { return false }
+    _ => { return true }
   }
-  if level == "" {
-    return false
-  }
-  return true
 }
 
 ;; Bound an untrusted audit event name to a maximum length before it drives the severity classification —
@@ -94,18 +92,19 @@ contract {
   ;; bound the untrusted event name before it drives the severity classification — the validating gate
   ;; clears the taint (the name stays open-vocabulary; only its length is constrained)
   let validEvent: String = sanitizeEventName(rawEvent)
+  trap validEvent == "" : ERR_INVALID_AUDIT_EVENT
   let severity: String = classifyAuditSeverity(validEvent)
 
   let retRawEvent: String = validEvent
   let retSeverity: String = severity
-  safe mut rawEvent = redact(rawEvent)
-  safe mut rawLevel = redact(rawLevel)
-  safe mut severity = redact(severity)
+  safe mut auditEvent = redact(rawEvent)
+  safe mut auditLevel = redact(rawLevel)
+  safe mut auditSeverity = redact(severity)
 
   AuditLog.write({
-    event: rawEvent
-    level: rawLevel
-    severity: severity
+    event: auditEvent
+    level: auditLevel
+    severity: auditSeverity
   })
 
   return Ok({

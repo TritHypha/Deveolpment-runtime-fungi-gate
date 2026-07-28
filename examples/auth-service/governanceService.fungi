@@ -22,12 +22,14 @@ contract {
 }
 {
   ;; critical flows require the highest level — mandatory zk proof + hardware shielding
-  if effectTag.contains("critical") { return 3 }
+  match effectTag {
+    when effectTag.contains("critical") => { return 3 }
   ;; secure flows require audit.write and redaction before any externally-visible output
-  if effectTag.contains("secure") { return 2 }
+    when effectTag.contains("secure") => { return 2 }
   ;; guarded flows require audit.write
-  if effectTag.contains("guarded") { return 1 }
-  return 0
+    when effectTag.contains("guarded") => { return 1 }
+    _ => { return 0 }
+  }
 }
 
 ;; Returns true when a governance level (>= 2) mandates an audit trail — pure predicate, safe with no authority.
@@ -60,10 +62,24 @@ contract {
 }
 {
   ;; only the recognised governance qualifiers are admitted; anything else normalises to "" (none)
-  if effectTag.contains("critical") { return "critical" }
-  if effectTag.contains("secure") { return "secure" }
-  if effectTag.contains("guarded") { return "guarded" }
-  return ""
+  match effectTag {
+    "critical" => { return "critical" }
+    "secure" => { return "secure" }
+    "guarded" => { return "guarded" }
+    _ => { return "" }
+  }
+}
+
+;; Admits only the three K3 flow qualifiers. Returning constants prevents an untrusted spelling from
+;; being reflected into policy state.
+pure flow validateQualifier(qualifier: String) -> String
+{
+  match qualifier {
+    "pure" => { return "pure" }
+    "guarded" => { return "guarded" }
+    "secure" => { return "secure" }
+    _ => { return "" }
+  }
 }
 
 ;; Verifies an untrusted flow's governance level against its declared qualifier, writing a redacted audit entry — permitted because tainted inputs are redacted before the write.
@@ -84,33 +100,36 @@ contract {
   unsafe let qualifier: String = request.jsonBody.qualifier
 
   trap effectTag == "" : ERR_EMPTY_EFFECT_TAG
-  ;; validate the untrusted qualifier BEFORE it drives a governance decision — the validating gate
-  ;; clears the taint (RD adjudication 2026-07-17: a governance/quota decision on unvalidated input is
-  ;; the exact gap FUNGI-VALUESTATE-004 flags)
+  trap qualifier == "" : ERR_EMPTY_QUALIFIER
+  ;; Validate both policy inputs and explicitly reject the validator sentinel. A validator returning ""
+  ;; is not authority to continue into a default branch.
   let validEffectTag: String = validateEffectTag(effectTag)
+  let validQualifier: String = validateQualifier(qualifier)
+  trap validEffectTag == "" : ERR_INVALID_EFFECT_TAG
+  trap validQualifier == "" : ERR_INVALID_QUALIFIER
   let level: Int = governanceLevel(validEffectTag)
   let requiresAudit: Bool = requiresAuditForLevel(level)
 
-  let qualifierValid: Bool = qualifier == "pure" || qualifier == "guarded" || qualifier == "secure"
+  let qualifierValid: Bool = validQualifier != ""
 
   let retLevel: Int = level
-  safe mut effectTag = redact(effectTag)
-  safe mut qualifier = redact(qualifier)
-  safe mut level = redact(level)
+  safe mut auditEffectTag = redact(effectTag)
+  safe mut auditQualifier = redact(qualifier)
+  safe mut auditLevel = redact(level)
 
   AuditLog.write({
     event: "GovernanceVerify",
-    effectTag: effectTag,
-    qualifier: qualifier,
-    level: level
+    effectTag: auditEffectTag,
+    qualifier: auditQualifier,
+    level: auditLevel
   })
 
-  return {
+  return Response.ok({
     level: retLevel,
     requiresAudit: requiresAudit,
     qualifierValid: qualifierValid,
     governed: true
-  }
+  })
 }
 
 route POST "/governance/verify" {

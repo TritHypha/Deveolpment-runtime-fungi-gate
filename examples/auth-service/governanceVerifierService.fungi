@@ -15,16 +15,13 @@ contract {
   intent { "Return true if effectName is allowed under the given deployment profile." }
 }
 {
-  if profile == "deterministic" {
-    ;; network.outbound, storage.write, process.spawn are denied in deterministic profile
-    ;; — these effects break proof reproducibility and must be excluded from the DAG
-    if effectName == "network.outbound" { return false }
-    if effectName == "storage.write" { return false }
-    if effectName == "process.spawn" { return false }
+  match effectName {
+    "eval.execute" => { return false }
+    "network.outbound" => { return profile != "deterministic" }
+    "storage.write" => { return profile != "deterministic" }
+    "process.spawn" => { return profile != "deterministic" }
+    _ => { return true }
   }
-  ;; eval.execute is unconditionally denied — arbitrary code execution bypasses the governance layer
-  if effectName == "eval.execute" { return false }
-  return true
 }
 
 ;; Enforces that secure and guarded qualifiers declare audit.write (FUNGI-GOV-010) — pure predicate, safe with no authority.
@@ -39,13 +36,11 @@ contract {
 {
   ;; secure and guarded qualifiers both require audit.write — FUNGI-GOV-010 enforcement
   ;; a secure flow without audit.write is a governance violation and must be denied
-  if qualifier == "secure" {
-    if hasAudit == false { return false }
+  match qualifier {
+    "secure" => { return hasAudit }
+    "guarded" => { return hasAudit }
+    _ => { return true }
   }
-  if qualifier == "guarded" {
-    if hasAudit == false { return false }
-  }
-  return true
 }
 
 ;; Maps effect-gate and invariant check results to a structured APPROVED/DENIED outcome label — pure classification, safe with no authority.
@@ -58,9 +53,11 @@ contract {
   intent { "Map governance check results to a structured outcome label." }
 }
 {
-  if permitted == false { return "DENIED_EFFECT_GATE" }
-  if invariants == false { return "DENIED_INVARIANT_VIOLATION" }
-  return "APPROVED"
+  match permitted {
+    false => { return "DENIED_EFFECT_GATE" }
+    when invariants == false => { return "DENIED_INVARIANT_VIOLATION" }
+    _ => { return "APPROVED" }
+  }
 }
 
 ;; Validate an untrusted effect name against the canonical Galerina effect vocabulary before it drives a
@@ -137,11 +134,32 @@ contract {
 // @effect [Verdict only] -> returns the validated profile (or "" if unrecognised); no state is mutated.
 pure flow validateProfile(profile: String) -> String
 {
-  if profile == "deterministic" { return "deterministic" }
-  if profile == "production" { return "production" }
-  if profile == "dev" { return "dev" }
-  if profile == "check-only" { return "check-only" }
-  return ""
+  match profile {
+    "deterministic" => { return "deterministic" }
+    "production" => { return "production" }
+    "dev" => { return "dev" }
+    "check-only" => { return "check-only" }
+    _ => { return "" }
+  }
+}
+
+pure flow validateQualifier(qualifier: String) -> String
+{
+  match qualifier {
+    "pure" => { return "pure" }
+    "secure" => { return "secure" }
+    "guarded" => { return "guarded" }
+    _ => { return "" }
+  }
+}
+
+pure flow validateBoolStr(flag: String) -> String
+{
+  match flag {
+    "true" => { return "true" }
+    "false" => { return "false" }
+    _ => { return "" }
+  }
 }
 
 ;; Verifies an untrusted flow's effects and qualifier invariants against a profile and returns APPROVED/DENIED, writing a redacted audit entry — permitted because tainted inputs are redacted before the write.
@@ -171,26 +189,32 @@ contract {
   ;; validate the untrusted effect name against the canonical vocabulary before it drives the effect gate —
   ;; the validating gate clears the taint (a policy decision on an unvalidated effect name is the gap
   ;; FUNGI-VALUESTATE-004 flags)
+  let validQualifier: String = validateQualifier(rawQualifier)
   let validEffect: String = validateEffectName(rawEffect)
   let validProfile: String = validateProfile(rawProfile)
-  let hasAudit: Bool = rawHasAudit == "true"
+  let validHasAudit: String = validateBoolStr(rawHasAudit)
+  trap validQualifier == "" : ERR_INVALID_QUALIFIER
+  trap validEffect == "" : ERR_INVALID_EFFECT
+  trap validProfile == "" : ERR_INVALID_PROFILE
+  trap validHasAudit == "" : ERR_INVALID_BOOLEAN_FLAG
+  let hasAudit: Bool = validHasAudit == "true"
   let permitted: Bool = isEffectPermittedInProfile(validEffect, validProfile)
-  let invariants: Bool = checkQualifierInvariants(rawQualifier, hasAudit)
+  let invariants: Bool = checkQualifierInvariants(validQualifier, hasAudit)
   let outcome: String = classifyGovernanceOutcome(permitted, invariants)
 
-  let retRawQualifier: String = rawQualifier
+  let retQualifier: String = validQualifier
   let retOutcome: String = outcome
-  safe mut rawQualifier = redact(rawQualifier)
-  safe mut outcome = redact(outcome)
+  safe mut auditQualifier = redact(rawQualifier)
+  safe mut auditOutcome = redact(outcome)
 
   AuditLog.write({
     eventName: "GovernanceVerified"
-    qualifier: rawQualifier
-    outcome: outcome
+    qualifier: auditQualifier
+    outcome: auditOutcome
   })
 
   return Ok({
-    qualifier: retRawQualifier
+    qualifier: retQualifier
     effect: validEffect
     profile: validProfile
     outcome: retOutcome

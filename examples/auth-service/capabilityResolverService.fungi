@@ -142,15 +142,16 @@ contract {
   ;; validate the untrusted effect name against the canonical vocabulary before it drives the availability
   ;; and tier lookups — the validating gate clears the taint
   let validEffect: String = validateEffectName(rawEffect)
+  trap validEffect == "" : ERR_INVALID_EFFECT
   let available: Bool = isEffectAvailable(validEffect)
   let tier: String = effectTier(validEffect)
 
   let retRawEffect: String = validEffect
-  safe mut rawEffect = redact(rawEffect)
+  safe mut auditEffect = redact(rawEffect)
 
   AuditLog.write({
     event: "CapabilityResolved",
-    effectName: rawEffect
+    effectName: auditEffect
   })
 
   return Ok({

@@ -8,12 +8,14 @@
 // @effect [Verdict only] -> returns the sensitivity class Int (4..0); no state mutated.
 pure flow classifyValue(typeName: String) -> Int
 {
-  if typeName.contains("medical") { return 4 }
-  if typeName.contains("financial") { return 3 }
-  if typeName.contains("pii") { return 3 }
-  if typeName.contains("email") { return 2 }
-  if typeName.contains("public") { return 0 }
-  return 1
+  match typeName {
+    when typeName.contains("medical") => { return 4 }
+    when typeName.contains("financial") => { return 3 }
+    when typeName.contains("pii") => { return 3 }
+    when typeName.contains("email") => { return 2 }
+    when typeName.contains("public") => { return 0 }
+    _ => { return 1 }
+  }
 }
 
 ;; Returns whether a sensitivity classification requires redaction (level >= 3); safe as a pure comparison with no side effects.
@@ -40,12 +42,14 @@ pure flow requiresEncryption(classification: Int) -> Bool
 ;; Pure — no runtime authority / no effects.
 pure flow validateTypeName(typeName: String) -> String
 {
-  if typeName.contains("medical") { return "medical" }
-  if typeName.contains("financial") { return "financial" }
-  if typeName.contains("pii") { return "pii" }
-  if typeName.contains("email") { return "email" }
-  if typeName.contains("public") { return "public" }
-  return ""
+  match typeName {
+    when typeName.contains("medical") => { return "medical" }
+    when typeName.contains("financial") => { return "financial" }
+    when typeName.contains("pii") => { return "pii" }
+    when typeName.contains("email") => { return "email" }
+    when typeName.contains("public") => { return "public" }
+    _ => { return "" }
+  }
 }
 
 ;; Classifies request data into a governed value-sensitivity class and its redaction/encryption needs; permitted because the untrusted type name is trapped-on-empty and the derived classification redacted before the audit write.
@@ -62,13 +66,14 @@ contract {
   trap typeName == "" : ERR_EMPTY_TYPE_NAME
   ;; validate the untrusted type name before it drives the classification — the gate clears the taint
   let validTypeName: String = validateTypeName(typeName)
+  trap validTypeName == "" : ERR_INVALID_TYPE_NAME
   let classification: Int = classifyValue(validTypeName)
   let needsRedact: Bool = requiresRedaction(classification)
   let encrypt: Bool = requiresEncryption(classification)
   let retClassification: Int = classification
-  safe mut classification = redact(classification)
-  AuditLog.write({ event: "ValueClassification", classification: classification })
-  return { typeName: typeName, classification: retClassification, requiresRedaction: needsRedact, requiresEncryption: encrypt }
+  safe mut auditClassification = redact(classification)
+  AuditLog.write({ event: "ValueClassification", classification: auditClassification })
+  return Response.ok({ typeName: validTypeName, classification: retClassification, requiresRedaction: needsRedact, requiresEncryption: encrypt })
 }
 
 route POST "/value/classify" { request Request  response Response  flow classifyData }

@@ -14,12 +14,14 @@ contract {
   intent { "Select the optimal execution tier for a flow." }
 }
 {
-  if qualifier == "pure" {
-    if isIntegerOnly { return "bytecode" }
-    return "wasm"
+  match qualifier {
+    "pure" => {
+      if isIntegerOnly { return "bytecode" }
+      return "wasm"
+    }
+    when hasEffects => { return "tree" }
+    _ => { return "sync" }
   }
-  if hasEffects { return "tree" }
-  return "sync"
 }
 
 ;; Maps an execution tier to a traffic-light colour for display — pure lookup, safe with no authority.
@@ -47,19 +49,23 @@ contract {
 ;; before it drives a decision. Pure — no runtime authority / no effects.
 pure flow validateQualifier(qualifier: String) -> String
 {
-  if qualifier == "pure" { return "pure" }
-  if qualifier == "secure" { return "secure" }
-  if qualifier == "guarded" { return "guarded" }
-  return ""
+  match qualifier {
+    "pure" => { return "pure" }
+    "secure" => { return "secure" }
+    "guarded" => { return "guarded" }
+    _ => { return "" }
+  }
 }
 
 ;; Validate an untrusted boolean-flag string against {"true","false"} before it is decoded to a Bool —
 ;; admit only the two literals, returning a constant. Pure — no runtime authority / no effects.
 pure flow validateBoolStr(flag: String) -> String
 {
-  if flag == "true" { return "true" }
-  if flag == "false" { return "false" }
-  return ""
+  match flag {
+    "true" => { return "true" }
+    "false" => { return "false" }
+    _ => { return "" }
+  }
 }
 
 ;; Accepts untrusted flow metadata over HTTP, traps empty fields, and returns the selected tier while writing a redacted audit entry — permitted because the tainted tier is redacted before the write.
@@ -79,15 +85,20 @@ contract {
   trap rawHasEffects == "" : ERR_EMPTY_HAS_EFFECTS
   trap rawIsIntegerOnly == "" : ERR_EMPTY_IS_INTEGER_ONLY
   ;; validate the untrusted flag strings before decoding to Bool — the gates clear the taint
-  let hasEffects: Bool = validateBoolStr(rawHasEffects) == "true"
-  let isIntegerOnly: Bool = validateBoolStr(rawIsIntegerOnly) == "true"
+  let validHasEffects: String = validateBoolStr(rawHasEffects)
+  let validIsIntegerOnly: String = validateBoolStr(rawIsIntegerOnly)
+  trap validHasEffects == "" : ERR_INVALID_HAS_EFFECTS
+  trap validIsIntegerOnly == "" : ERR_INVALID_IS_INTEGER_ONLY
+  let hasEffects: Bool = validHasEffects == "true"
+  let isIntegerOnly: Bool = validIsIntegerOnly == "true"
   ;; validate the untrusted qualifier before it drives tier selection — the gate clears the taint
   let validQualifier: String = validateQualifier(rawQualifier)
+  trap validQualifier == "" : ERR_INVALID_QUALIFIER
   let tier: String = selectExecutionTier(validQualifier, hasEffects, isIntegerOnly)
   let light: String = tierTrafficLight(tier)
   let retTier: String = tier
-  safe mut tier = redact(tier)
-  AuditLog.write({ eventName: "TierSelected" tier: tier })
+  safe mut auditTier = redact(tier)
+  AuditLog.write({ eventName: "TierSelected" tier: auditTier })
   return Ok({ tier: retTier trafficLight: light phase: 59 })
 }
 

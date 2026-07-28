@@ -82,13 +82,11 @@ contract {
   intent { "Clamp n to the range [lo, hi]." }
 }
 {
-  if n < lo {
-    return lo
+  match n {
+    when n < lo => { return lo }
+    when n > hi => { return hi }
+    _ => { return n }
   }
-  if n > hi {
-    return hi
-  }
-  return n
 }
 
 ;; Bound an untrusted free-text input to a maximum length before it drives the stdlib demo computations —
@@ -128,16 +126,17 @@ contract {
   ;; bound the untrusted input length before it drives the stdlib computations — the validating gate clears
   ;; the taint (CWE-400: cap the per-character work an unbounded input would drive)
   let validInput: String = sanitizeInput(rawInput)
+  trap validInput == "" : ERR_INVALID_INPUT
   let len: Int = strLength(validInput)
   let hasContent: Bool = len > 0
   let clamped: Int = mathClamp(len, 0, 100)
 
   let retClamped: Int = clamped
-  safe mut clamped = redact(clamped)
+  safe mut auditClamped = redact(clamped)
 
   AuditLog.write({
     event: "StdlibDemo"
-    inputLength: clamped.toString()
+    inputLength: auditClamped.toString()
   })
 
   return Ok({

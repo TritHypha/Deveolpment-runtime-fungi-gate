@@ -8,9 +8,11 @@
 // @effect [Verdict only] -> returns Bool; no state mutated.
 pure flow profileAllowsRecursion(profile: String) -> Bool
 {
-  if profile.contains("strict") { return false }
-  if profile.contains("high_integrity") { return false }
-  return true
+  match profile {
+    when profile.contains("strict") => { return false }
+    when profile.contains("high_integrity") => { return false }
+    _ => { return true }
+  }
 }
 
 ;; Returns whether a runtime profile permits unbounded loops (denied for strict/deterministic); safe as a pure predicate over the profile string.
@@ -19,9 +21,11 @@ pure flow profileAllowsRecursion(profile: String) -> Bool
 // @effect [Verdict only] -> returns Bool; no state mutated.
 pure flow profileAllowsUnboundedLoop(profile: String) -> Bool
 {
-  if profile.contains("strict") { return false }
-  if profile.contains("deterministic") { return false }
-  return true
+  match profile {
+    when profile.contains("strict") => { return false }
+    when profile.contains("deterministic") => { return false }
+    _ => { return true }
+  }
 }
 
 ;; Returns whether a runtime profile requires an execution budget (true for high_integrity/deterministic); safe as a pure predicate over the profile string.
@@ -30,9 +34,11 @@ pure flow profileAllowsUnboundedLoop(profile: String) -> Bool
 // @effect [Verdict only] -> returns Bool; no state mutated.
 pure flow profileRequiresBudget(profile: String) -> Bool
 {
-  if profile.contains("high_integrity") { return true }
-  if profile.contains("deterministic") { return true }
-  return false
+  match profile {
+    when profile.contains("high_integrity") => { return true }
+    when profile.contains("deterministic") => { return true }
+    _ => { return false }
+  }
 }
 
 ;; Returns the security level rank for a runtime profile (deterministic highest, 1 default); safe as a pure lookup with no side effects.
@@ -41,11 +47,13 @@ pure flow profileRequiresBudget(profile: String) -> Bool
 // @effect [Verdict only] -> returns the level Int (4..1); no state mutated.
 pure flow profileSecurityLevel(profile: String) -> Int
 {
-  if profile.contains("deterministic") { return 4 }
-  if profile.contains("high_integrity") { return 3 }
-  if profile.contains("strict") { return 3 }
-  if profile.contains("production") { return 2 }
-  return 1
+  match profile {
+    when profile.contains("deterministic") => { return 4 }
+    when profile.contains("high_integrity") => { return 3 }
+    when profile.contains("strict") => { return 3 }
+    when profile.contains("production") => { return 2 }
+    _ => { return 1 }
+  }
 }
 
 ;; Validate an untrusted runtime-profile name against the recognised set before it drives the permission
@@ -57,11 +65,13 @@ pure flow profileSecurityLevel(profile: String) -> Int
 // @effect [Verdict only] -> returns the validated profile (or "" if unrecognised); no state is mutated.
 pure flow validateProfile(profile: String) -> String
 {
-  if profile == "strict" { return "strict" }
-  if profile == "high_integrity" { return "high_integrity" }
-  if profile == "deterministic" { return "deterministic" }
-  if profile == "production" { return "production" }
-  return ""
+  match profile {
+    "strict" => { return "strict" }
+    "high_integrity" => { return "high_integrity" }
+    "deterministic" => { return "deterministic" }
+    "production" => { return "production" }
+    _ => { return "" }
+  }
 }
 
 ;; Checks a runtime-profile request against the governed profile rules and returns its permissions; permitted because the untrusted profile name is trapped-on-empty and redacted before the audit write.
@@ -79,16 +89,17 @@ contract {
   ;; validate the untrusted profile name against the recognised set before it drives the permission
   ;; decisions — the validating gate clears the taint
   let validProfile: String = validateProfile(profile)
+  trap validProfile == "" : ERR_INVALID_PROFILE
   let allowsRecursion: Bool = profileAllowsRecursion(validProfile)
   let allowsUnbounded: Bool = profileAllowsUnboundedLoop(validProfile)
   let requiresBudget: Bool = profileRequiresBudget(validProfile)
   let securityLevel: Int = profileSecurityLevel(validProfile)
   let retProfile: String = validProfile
   let retSecurityLevel: Int = securityLevel
-  safe mut profile = redact(profile)
-  safe mut securityLevel = redact(securityLevel)
-  AuditLog.write({ event: "ProfileCheck", profile: profile, level: securityLevel })
-  return { profile: retProfile, allowsRecursion: allowsRecursion, allowsUnboundedLoop: allowsUnbounded, requiresBudget: requiresBudget, securityLevel: retSecurityLevel }
+  safe mut auditProfile = redact(profile)
+  safe mut auditSecurityLevel = redact(securityLevel)
+  AuditLog.write({ event: "ProfileCheck", profile: auditProfile, level: auditSecurityLevel })
+  return Response.ok({ profile: retProfile, allowsRecursion: allowsRecursion, allowsUnboundedLoop: allowsUnbounded, requiresBudget: requiresBudget, securityLevel: retSecurityLevel })
 }
 
 route POST "/profile/check" { request Request  response Response  flow checkProfile }

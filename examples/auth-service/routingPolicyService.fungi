@@ -11,10 +11,12 @@ contract {
   intent { "Choose the best execution tier for a flow given its properties." }
 }
 {
-  if isCritical { return "enclave" }
-  if hasAI { return "gpu" }
-  if effectCount == 0 { return "wasm" }
-  return "cpu"
+  match effectCount {
+    when isCritical => { return "enclave" }
+    when hasAI => { return "gpu" }
+    0 => { return "wasm" }
+    _ => { return "cpu" }
+  }
 }
 
 ;; Maps a tier name to its governance class rank (enclave highest, 0 unknown); safe as a pure lookup with no side effects.
@@ -23,11 +25,13 @@ contract {
 // @effect [Verdict only] -> returns the class rank Int (4..0); no state mutated.
 pure flow tierGovernanceClass(tier: String) -> Int
 {
-  if tier.contains("enclave") { return 4 }
-  if tier.contains("gpu") { return 3 }
-  if tier.contains("wasm") { return 2 }
-  if tier.contains("cpu") { return 1 }
-  return 0
+  match tier {
+    when tier.contains("enclave") => { return 4 }
+    when tier.contains("gpu") => { return 3 }
+    when tier.contains("wasm") => { return 2 }
+    when tier.contains("cpu") => { return 1 }
+    _ => { return 0 }
+  }
 }
 
 ;; Bound an untrusted effect count to [0, MAX] before it drives the tier decision — a validating gate
@@ -35,9 +39,11 @@ pure flow tierGovernanceClass(tier: String) -> Int
 ;; before it drives a decision. Pure — no runtime authority / no effects.
 pure flow validateEffectCount(n: Int) -> Int
 {
-  if n < 0 { return 0 }
-  if n > 10000 { return 10000 }
-  return n
+  match n {
+    when n < 0 => { return 0 }
+    when n > 10000 => { return 10000 }
+    _ => { return n }
+  }
 }
 
 ;; Validate an untrusted boolean-flag string against {"true","false"} before it is decoded to a Bool —
@@ -48,9 +54,11 @@ pure flow validateEffectCount(n: Int) -> Int
 // @effect [Verdict only] -> returns "true"/"false", or "" if not a boolean literal; no state is mutated.
 pure flow validateBoolStr(flag: String) -> String
 {
-  if flag == "true" { return "true" }
-  if flag == "false" { return "false" }
-  return ""
+  match flag {
+    "true" => { return "true" }
+    "false" => { return "false" }
+    _ => { return "" }
+  }
 }
 
 ;; Resolves the execution route and tier for a flow from its routing policy; permitted because the untrusted effect count is trapped-on-negative and the derived tier redacted before the audit write.
@@ -73,15 +81,19 @@ contract {
   ;; is degenerate), so the constraint lives on the string form (R&D adjudication 2026-07-17: validateFlag
   ;; excluded nothing = launder, reverted).
   let validEffectCount: Int = validateEffectCount(effectCount)
-  let hasAI: Bool = validateBoolStr(rawHasAI) == "true"
-  let isCritical: Bool = validateBoolStr(rawIsCritical) == "true"
+  let validHasAI: String = validateBoolStr(rawHasAI)
+  let validIsCritical: String = validateBoolStr(rawIsCritical)
+  trap validHasAI == "" : ERR_INVALID_HAS_AI
+  trap validIsCritical == "" : ERR_INVALID_IS_CRITICAL
+  let hasAI: Bool = validHasAI == "true"
+  let isCritical: Bool = validIsCritical == "true"
   let tier: String = preferredTier(validEffectCount, hasAI, isCritical)
   trap tier == "" : ERR_INVALID_TIER
   let govClass: Int = tierGovernanceClass(tier)
   let retTier: String = tier
-  safe mut tier = redact(tier)
-  AuditLog.write({ event: "RouteDecision", tier: tier })
-  return { tier: retTier, governanceClass: govClass, decided: true }
+  safe mut auditTier = redact(tier)
+  AuditLog.write({ event: "RouteDecision", tier: auditTier })
+  return Response.ok({ tier: retTier, governanceClass: govClass, decided: true })
 }
 
 route POST "/routing/resolve" { request Request  response Response  flow resolveRoute }

@@ -20,9 +20,11 @@ contract {
   intent { "Return true when the algorithm is a recognised proof algorithm." }
 }
 {
-  if alg == "fungi.gov.sig.v1" { return true }
-  if alg == "sha256" { return true }
-  return false
+  match alg {
+    "fungi.gov.sig.v1" => { return true }
+    "sha256" => { return true }
+    _ => { return false }
+  }
 }
 
 // Returns a strength score for the proof algorithm.
@@ -36,9 +38,11 @@ contract {
   intent { "Return the proof strength score for the given algorithm (3=strongest, 0=unknown)." }
 }
 {
-  if algorithm == "fungi.gov.sig.v1" { return 3 }
-  if algorithm == "sha256" { return 2 }
-  return 0
+  match algorithm {
+    "fungi.gov.sig.v1" => { return 3 }
+    "sha256" => { return 2 }
+    _ => { return 0 }
+  }
 }
 
 ;; Validate an untrusted proof-algorithm name against the recognised set (fungi.gov.sig.v1 / sha256) before
@@ -49,9 +53,11 @@ contract {
 // @effect [Verdict only] -> returns the validated algorithm (or "" if unrecognised); no state is mutated.
 pure flow validateAlgorithm(alg: String) -> String
 {
-  if alg == "fungi.gov.sig.v1" { return "fungi.gov.sig.v1" }
-  if alg == "sha256" { return "sha256" }
-  return ""
+  match alg {
+    "fungi.gov.sig.v1" => { return "fungi.gov.sig.v1" }
+    "sha256" => { return "sha256" }
+    _ => { return "" }
+  }
 }
 
 // The governed proof verification endpoint.
@@ -77,29 +83,30 @@ contract {
   ;; validate the untrusted algorithm against the recognised set before it drives the validity + strength
   ;; decision — the validating gate clears the taint
   let validAlgorithm: String = validateAlgorithm(algorithm)
+  trap validAlgorithm == "" : ERR_INVALID_ALGORITHM
   let valid: Bool = isValidAlgorithm(validAlgorithm)
   let strength: Int = proofStrength(validAlgorithm)
 
   let retAlgorithm: String = validAlgorithm
   let retValid: Bool = valid
   let retStrength: Int = strength
-  safe mut algorithm = redact(algorithm)
-  safe mut valid = redact(valid)
-  safe mut strength = redact(strength)
+  safe mut auditAlgorithm = redact(algorithm)
+  safe mut auditValid = redact(valid)
+  safe mut auditStrength = redact(strength)
 
   AuditLog.write({
     event: "ProofVerify",
-    algorithm: algorithm,
-    valid: valid,
-    strength: strength
+    algorithm: auditAlgorithm,
+    valid: auditValid,
+    strength: auditStrength
   })
 
-  return {
+  return Response.ok({
     algorithm: retAlgorithm,
     valid: retValid,
     strength: retStrength,
     phase39Ready: retValid
-  }
+  })
 }
 
 route POST "/proof/verify" {

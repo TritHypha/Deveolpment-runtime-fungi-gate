@@ -42,10 +42,12 @@ contract {
 ;; drives a decision. Pure — no runtime authority / no effects.
 pure flow validateQualifier(qualifier: String) -> String
 {
-  if qualifier == "pure" { return "pure" }
-  if qualifier == "guarded" { return "guarded" }
-  if qualifier == "secure" { return "secure" }
-  return ""
+  match qualifier {
+    "pure" => { return "pure" }
+    "guarded" => { return "guarded" }
+    "secure" => { return "secure" }
+    _ => { return "" }
+  }
 }
 
 // HTTP endpoint: generate a proof graph summary
@@ -64,12 +66,13 @@ contract {
   trap rawQualifier == "" : ERR_EMPTY_QUALIFIER
   ;; validate the untrusted qualifier before it drives the proof-level decision — the gate clears the taint
   let validQualifier: String = validateQualifier(rawQualifier)
+  trap validQualifier == "" : ERR_INVALID_QUALIFIER
   let level: Int = qualifierToProofLevel(validQualifier)
   let sufficient: Bool = proofLevelSufficient(level, 1)
-  let retRawQualifier: String = rawQualifier
-  safe mut rawQualifier = redact(rawQualifier)
-  AuditLog.write({ eventName: "ProofGenerated" qualifier: rawQualifier })
-  return Ok({ qualifier: retRawQualifier proofLevel: level sufficient: sufficient phase: 59 })
+  let retQualifier: String = validQualifier
+  safe mut auditQualifier = redact(rawQualifier)
+  AuditLog.write({ eventName: "ProofGenerated" qualifier: auditQualifier })
+  return Ok({ qualifier: retQualifier proofLevel: level sufficient: sufficient phase: 59 })
 }
 
 route POST "/proof/generate" {

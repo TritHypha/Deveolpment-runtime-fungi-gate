@@ -19,13 +19,16 @@ frontend.
   Boolean refusal guards use `trap` or a typed error return.
 - [x] Convert the first high-confidence auth-service alternative dispatch
   examples from repeated `if` to total `match`.
-- [ ] Repair the pre-existing strict-check failures in
+- [x] Repair the pre-existing strict-check failures in
   `economicsService.fungi` and `auditChainService.fungi` (duplicate local
-  declarations and `Response`/record return mismatches). The new `match` forms
-  parse cleanly, but these files are not yet full-check green.
-- [ ] Audit the remaining `.fungi` example corpus for repeated alternative
-  `if` dispatch. Convert only semantically exclusive decisions; retain and
-  document genuinely independent checks.
+  declarations and `Response`/record return mismatches); both files now pass
+  `galerina check --strict-types`.
+- [x] Audit the remaining `.fungi` example corpus for repeated alternative
+  `if` dispatch. Nineteen remediated auth-service files pass strict checking;
+  evidence is in `docs/reports/control-flow-standard-audit-2026-07-29.md`.
+- [ ] Implement a flow/block-aware `.fungi` lint gate for repeated sibling
+  alternative `if` statements. It must distinguish alternative dispatch from
+  genuinely independent checks and require an explicit review classification.
 - [x] Restore deterministic generation for
   `../ZTF-Knowledge-Bases/build/kb-index/KB-INDEX.md` and refresh it from the
   same live corpus as the category index.
