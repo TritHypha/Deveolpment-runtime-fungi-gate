@@ -1,5 +1,32 @@
 # TODO
 
+## CTLL v2 architecture lane — 2026-07-29
+
+**Status:** planning complete enough for owner decisions; implementation has
+not started. CTLL is an independent platform and Galerina is its first planned
+frontend.
+
+- [x] Record the Galerina integration boundary and current-vs-proposed status in
+  `docs/architecture/ctll-v2-integration-2026-07-29.md`.
+- [x] Scope Galerina's existing memory-safety claims to their implemented
+  tree-walker, WebAssembly, value-semantics, and static-pool mechanisms.
+- [x] Require a verified CTLL memory profile and final-artifact binding rather
+  than trusting the source-language or container label.
+- [x] Define deterministic action-DAG/CAS, Kleene K3, Tri-Fuse, Tower Citizen,
+  Tri-Pipe, and Linux driver boundaries in the CTLL v2 planning set.
+- [ ] Owner: answer the blocking decisions in
+  `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
+- [ ] Finish detached executable GIR: full bodies, control flow, memory,
+  failure, effect, capability, K3-collapse, and source-map semantics.
+- [ ] Define and version the public Galerina-to-CTLL frontend receipt.
+- [ ] Implement the first vertical slice in `.fungi`; do not add `.gate` work
+  in this lane.
+- [ ] Build memory-profile negative fixtures before enabling native execution.
+- [ ] Prove frontend independence with at least one non-Galerina fixture
+  frontend.
+- [ ] Keep the current WebAssembly path as the implemented production/differential
+  path until CTLL release gates pass and the owner approves a transition.
+
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).
 The dated blocks below are a historical log; the **CURRENT STATE** block is the head.

@@ -18,6 +18,21 @@ This document records the confirmed Constellation architecture decisions that go
 
 ---
 
+## 2026-07-29 CTLL v2 boundary addendum
+
+The forward native architecture now includes CTLL v2 as a proposed
+**independent execution platform**. Galerina is its first planned frontend, but
+CTLL is not a Core optional provider and must not depend on Galerina at runtime.
+The dependency direction is Galerina checks/GIR -> public CTLL frontend adapter
+-> CTLL semantic archive.
+
+The current WebAssembly/Node-hosted architecture remains the implemented
+baseline. CTLL must not be described as shipped until its independent frontend,
+memory-profile, deterministic-build, admission, and final-artifact gates pass.
+See `ctll-v2-integration-2026-07-29.md`.
+
+---
+
 ## The Constellation in one diagram
 
 ```
