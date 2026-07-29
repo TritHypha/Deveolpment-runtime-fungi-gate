@@ -12,14 +12,14 @@ surfaces, bound enforcement, test evidence, declared gaps.
 
 ## Fail-closed surfaces (verified by tests)
 - `compile()` **never throws on pattern content** — every refusal is a value
-  `{ok:false, verdict:-1, code, reason}` (`test/refusals.test.mjs`, incl. a
+  `{ok:false, verdict:-1, code, reason}` (`tests/refusals.test.mjs`, incl. a
   hostile-pattern corpus).
 - Refusal completeness: backreferences, lookaround, named groups, `\b/\B`,
   unknown alpha escapes, malformed syntax, and **all budget bounds**
   (pattern length, repetition cap, expanded-instruction cap) each have a
   named test. Unknown constructs are refused, never guessed at.
 - Streaming `end()` collapses INDETERMINATE to `-1` (K3 collapse-at-boundary,
-  `test/streaming.test.mjs`).
+  `tests/streaming.test.mjs`).
 - Runtime budget overrides are validated as finite safe integers. `NaN`,
   infinity, fractions and invalid negative values cannot bypass a limit.
 - Lazy, possessive and stacked quantifier spellings are refused. They were

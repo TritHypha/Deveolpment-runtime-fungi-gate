@@ -4,7 +4,7 @@
 // These are NOT governance violations — the code is correct. These are
 // structural signals that a developer may want to refactor.
 //
-// FUNGI-LINT-001   EXCESSIVE_NESTING   — flow body nesting depth > 4 AND ≥3 identical Err(e) arms.
+// FUNGI-LINT-001   FLOW_EXCESSIVE_NESTING — flow body nesting depth > 4 AND ≥3 identical Err(e) arms.
 //                  Recommendation: extract inner logic into a named helper flow.
 // FUNGI-LINT-002   UNUSED_BINDING      — a named local (`let`/`mut`) or match-pattern binding
 //                  (`Some(x)`) whose name is never read anywhere in its flow. Enforces the owner's
@@ -24,7 +24,7 @@ import { type AstNode, type FlowMeta, type SourceLocation } from "./parser.js";
 
 export const FUNGI_LINT_001 = {
   code: "FUNGI-LINT-001",
-  name: "EXCESSIVE_NESTING",
+  name: "FLOW_EXCESSIVE_NESTING",
   severity: "info" as const,
   message:
     "Flow body nesting depth exceeds 4 and contains repeated Err() propagations. " +
@@ -125,7 +125,7 @@ export function checkLint(
     if (depth > NESTING_THRESHOLD && errCount >= ERR_REPEAT_THRESHOLD) {
       diagnostics.push({
         code: "FUNGI-LINT-001",
-        name: "EXCESSIVE_NESTING",
+        name: "FLOW_EXCESSIVE_NESTING",
         severity: "info",
         message:
           `Flow '${flowName}' has nesting depth ${depth} (>${NESTING_THRESHOLD}) and ` +

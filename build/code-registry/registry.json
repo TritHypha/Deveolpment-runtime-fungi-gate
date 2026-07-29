@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 720,
+  "total": 730,
   "counts": {
-    "ref": 192,
+    "ref": 202,
     "inline": 169,
     "phantom": 113,
     "live": 133,
@@ -129,6 +129,18 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "ERR_ARGUMENT_COUNT",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 4,
+      "docs": 2
     },
     {
       "code": "ERR_ARTIFACT_HASH_MISMATCH",
@@ -343,7 +355,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 3,
+      "tests": 5,
       "docs": 0
     },
     {
@@ -563,6 +575,18 @@
       "docs": 0
     },
     {
+      "code": "ERR_GIR_TYPE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
       "code": "ERR_GUEST_WRITE_DENIED",
       "family": "ERR_*",
       "namespace": "ERR",
@@ -585,6 +609,30 @@
       "emits": 0,
       "tests": 4,
       "docs": 3
+    },
+    {
+      "code": "ERR_I32_OVERFLOW",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 6,
+      "docs": 0
+    },
+    {
+      "code": "ERR_I32_RANGE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
     },
     {
       "code": "ERR_INSUFFICIENT_FUNDS",
@@ -647,6 +695,66 @@
       "docs": 0
     },
     {
+      "code": "ERR_K3_ARM_SET",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_K3_GIR_SHAPE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_K3_INVALID_VALUE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_K3_NON_TERMINAL",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "ERR_K3_SUBJECT_TYPE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
       "code": "ERR_LATENCY_INVARIANT",
       "family": "ERR_*",
       "namespace": "ERR",
@@ -669,6 +777,18 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "ERR_MISSING_FLOW",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 1
     },
     {
       "code": "ERR_MODULE_NOT_FOUND",
@@ -775,7 +895,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 1,
+      "tests": 6,
       "docs": 0
     },
     {
@@ -2404,7 +2524,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 6,
-      "docs": 4
+      "docs": 5
     },
     {
       "code": "FUNGI-CHECK-002",
@@ -4901,9 +5021,9 @@
       "names": [],
       "severities": [],
       "defs": 0,
-      "emits": 1,
-      "tests": 3,
-      "docs": 6
+      "emits": 3,
+      "tests": 12,
+      "docs": 8
     },
     {
       "code": "FUNGI-INV-001",
@@ -6204,8 +6324,8 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 15,
-      "docs": 0
+      "tests": 19,
+      "docs": 2
     },
     {
       "code": "FUNGI-PARSE-004",
@@ -7505,7 +7625,7 @@
       "names": [],
       "severities": [],
       "defs": 0,
-      "emits": 2,
+      "emits": 3,
       "tests": 8,
       "docs": 0
     },
@@ -8794,7 +8914,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 235,
+      "tests": 234,
       "docs": 18
     },
     {

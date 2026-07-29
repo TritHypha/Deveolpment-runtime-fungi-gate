@@ -1,0 +1,10 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+GALERINA_DEVTOOLS_NAMING_CLI = "packages-galerina/galerina-devtools-naming/dist/cli.js"
+GALERINA_DEVTOOLS_CONTEXT_CLI = "packages-galerina/galerina-devtools-context/dist/cli.js"
+GALERINA_DEVTOOLS_INTELLIGENCE_CLI = "packages-galerina/galerina-devtools-intelligence/dist/cli.js"
+GALERINA_DEVTOOLS_PROVENANCE_CLI = "packages-galerina/galerina-devtools-provenance/dist/cli.js"
+GALERINA_DEVTOOLS_SECURITY_CLI = "packages-galerina/galerina-devtools-security/dist/cli.js"
+GALERINA_DEVTOOLS_KEEPGREEN_CLI = "packages-galerina/galerina-devtools-keepgreen/src/cli.mjs"

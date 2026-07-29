@@ -1004,7 +1004,7 @@ export {
   FUNGI_TAINT_006,
 } from "./taint-checker.js";
 
-// Lint Checker (FUNGI-LINT-001 EXCESSIVE_NESTING — ergonomics info; FUNGI-LINT-002 UNUSED_BINDING)
+// Lint Checker (FUNGI-LINT-001 FLOW_EXCESSIVE_NESTING — ergonomics info; FUNGI-LINT-002 UNUSED_BINDING)
 export {
   checkLint,
   FUNGI_LINT_001,

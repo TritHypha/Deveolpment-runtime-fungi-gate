@@ -11,13 +11,13 @@
 
 | Metric | Count |
 |---|---|
-| Files | 123 |
-| Internal edges | 275 |
+| Files | 148 |
+| Internal edges | 276 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
 | └─ Third-party | 3 |
-| Orphan files | 31 |
+| Orphan files | 55 |
 
 ## External Dependencies (the Border)
 
@@ -77,6 +77,30 @@ No boundary violations. All external imports are within the allowlist.
 - `src/self-hosted/slide-v2b-lease-canonical.fungi`
 - `src/self-hosted/slide-v2b-lease-shape.fungi`
 - `src/self-hosted/slide-v2b-lease-use-state.fungi`
+- `src/self-hosted/slide-v2c-aggregate-model.fungi`
+- `src/self-hosted/slide-v2c-aggregate-validator.fungi`
+- `src/self-hosted/slide-v2c-cbor-encoder.fungi`
+- `src/self-hosted/slide-v2c-cbor-importer.fungi`
+- `src/self-hosted/slide-v2c-cbor-validator.fungi`
+- `src/self-hosted/slide-v2c-executable-model.fungi`
+- `src/self-hosted/slide-v2c-executable-validator.fungi`
+- `src/self-hosted/slide-v2c-runtime.fungi`
+- `src/self-hosted/slide-v2c-semantic-digest.fungi`
+- `src/self-hosted/slide-v2d-cbor-encoder.fungi`
+- `src/self-hosted/slide-v2d-cbor-importer.fungi`
+- `src/self-hosted/slide-v2d-cbor-validator.fungi`
+- `src/self-hosted/slide-v2d-executable-model.fungi`
+- `src/self-hosted/slide-v2d-executable-validator.fungi`
+- `src/self-hosted/slide-v2d-memory-model.fungi`
+- `src/self-hosted/slide-v2d-memory-validator.fungi`
+- `src/self-hosted/slide-v2d-runtime.fungi`
+- `src/self-hosted/slide-v2d-semantic-digest.fungi`
+- `src/self-hosted/slide-v2e-cbor-encoder.fungi`
+- `src/self-hosted/slide-v2e-cbor-importer.fungi`
+- `src/self-hosted/slide-v2e-frontend-model.fungi`
+- `src/self-hosted/slide-v2e-frontend-schema.fungi`
+- `src/self-hosted/slide-v2e-frontend-validator.fungi`
+- `src/self-hosted/slide-v2e-signature-evidence.fungi`
 - `src/self-hosted/type-checker.fungi`
 
 ## Entry Points

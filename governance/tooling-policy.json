@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "packageNoTest": {
+    "galerina-registry": {
+      "reason": "Empty signed-package registry until the owner signing ceremony; no executable package surface exists.",
+      "owner": "Galerina registry",
+      "reviewWhen": "The first registry entry or executable source is added."
+    }
+  },
+  "toolExceptions": {},
+  "generators": {}
+}

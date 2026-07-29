@@ -19,7 +19,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 192 | referenced only (no def/emit) |
+| ref | 202 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -424,7 +424,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
 | FUNGI-EFFECT-906 | ref | — | — |
 
-### ERR_* (98)
+### ERR_* (108)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -438,6 +438,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_AMOUNT_EXCEEDS_LIMIT | ref | — | — |
 | ERR_AMOUNT_TOO_LARGE | phantom | — | — |
 | ERR_ANONYMOUS_DENIED | ref | — | — |
+| ERR_ARGUMENT_COUNT | ref | — | — |
 | ERR_ARTIFACT_HASH_MISMATCH | ref | — | — |
 | ERR_BRIDGE_DISPATCH_FAULT | inline | — | — |
 | ERR_BRIDGE_NO_MANIFEST | inline | — | — |
@@ -474,15 +475,24 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_FORBIDDEN_OPERATION | ref | — | — |
 | ERR_FX_THING | ref | — | — |
 | ERR_FX_THROWN | ref | — | — |
+| ERR_GIR_TYPE | ref | — | — |
 | ERR_GUEST_WRITE_DENIED | ref | — | — |
 | ERR_HOST_NATIVE_DENIED | ref | — | — |
+| ERR_I32_OVERFLOW | ref | — | — |
+| ERR_I32_RANGE | ref | — | — |
 | ERR_INSUFFICIENT_FUNDS | ref | — | — |
 | ERR_INVALID_AMOUNT | ref | — | — |
 | ERR_INVALID_ITERATIONS | ref | — | — |
 | ERR_INVALID_N | ref | — | — |
 | ERR_ITERATIONS_EXCEEDED | ref | — | — |
+| ERR_K3_ARM_SET | ref | — | — |
+| ERR_K3_GIR_SHAPE | ref | — | — |
+| ERR_K3_INVALID_VALUE | ref | — | — |
+| ERR_K3_NON_TERMINAL | ref | — | — |
+| ERR_K3_SUBJECT_TYPE | ref | — | — |
 | ERR_LATENCY_INVARIANT | ref | — | — |
 | ERR_MISSING_CORRELATION_ID | ref | — | — |
+| ERR_MISSING_FLOW | ref | — | — |
 | ERR_MODULE_NOT_FOUND | phantom | — | — |
 | ERR_NEGATIVE | ref | — | — |
 | ERR_NEGATIVE_AGE | phantom | — | — |
