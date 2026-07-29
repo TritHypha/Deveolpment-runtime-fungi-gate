@@ -458,6 +458,7 @@ The current branch contains these SLIDE-related checkpoints:
 | `83f73c0c` | Specify the V2-B lease-only effect/capability boundary |
 | `97fcf116` | Validate exact V2-B capability request shapes without authority |
 | `27f16d08` | Validate request-bound V2-B lease and verifier-receipt shapes without authority |
+| `63cb5bfd` | Canonicalize and hybrid-verify V2-B lease signatures without admission authority |
 | `0f2f7c6a` | Harden SLIDE G1 runtime boundaries and add the capability probe |
 | `ab3de224` | Add the bounded SLIDE R1 preflight kernel |
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |

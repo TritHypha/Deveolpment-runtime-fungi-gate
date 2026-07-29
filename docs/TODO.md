@@ -100,8 +100,8 @@ planning checkbox must never be used to imply that implementation exists.
   Eleven hostile lease mutations fail closed; combined focused evidence is
   19/19. Report:
   `docs/reports/slide-v2b-lease-shape-2026-07-29.md`.
-- **Completed (awaiting local checkpoint commit):**
-  `slide-v2b-lease-canonical.fungi` derives a pinned 463-byte
+- **Completed:** local commit `63cb5bfd` adds
+  `slide-v2b-lease-canonical.fungi`; it derives a pinned 463-byte
   deterministic-CBOR lease body and domain-separated signing digest, and the
   lease gate re-derives it before consuming a receipt. The minimal
   `slide-v2b-crypto-verifier.ts` Galerina reference host floor verifies both
@@ -138,7 +138,7 @@ planning checkbox must never be used to imply that implementation exists.
   94/94 packages and 8,102/8,102 tests; graph 7,264 nodes / 7,521 edges;
   zero integrity or KB-link violations; Hardened Border 97/97; explicit
   Galerina memory graph clean; dev-tool index 97 packages / 124 tools /
-  40 proofs. Post-commit Myco refresh remains required.
+  40 proofs. Post-commit Myco indexes 4,101 files with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

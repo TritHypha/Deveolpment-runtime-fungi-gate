@@ -68,10 +68,12 @@ considered.
 
 Verification evidence:
 
+- local implementation commit: `63cb5bfd` (not pushed);
 - compiler package: 5,360/5,360 tests;
 - repository: 94/94 packages and 8,102/8,102 tests;
 - project graph: 7,264 nodes / 7,521 edges, zero integrity violations;
 - KB graph: zero orphans and zero broken links;
 - Hardened Border: 97/97;
 - explicitly selected Galerina memory graph: clean; and
-- dev-tool index: 97 packages / 124 tools / 40 proofs.
+- dev-tool index: 97 packages / 124 tools / 40 proofs; and
+- post-commit Myco: 4,101 indexed files, zero over-size skips.
