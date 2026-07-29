@@ -127,14 +127,35 @@ planning checkbox must never be used to imply that implementation exists.
   explicit TypeScript entry points; compiler boundary scans 148 files with
   zero unexplained orphans and passes; the graph tool's own boundary also
   passes. Local commit: `6127ea9c`.
-- **Current:** Tasks 2-5 are complete. Task 1's structural inventory is the
+- **Completed (Task 6):** `galerina-test` has a distinct exact `slide` lane
+  over only compiler `slide-*.test.mjs` files, refuses empty/uncountable
+  success, propagates real child exits, and optionally reports the independent
+  repository as a separate `slide-independent` child. Removing inherited
+  `NODE_TEST_CONTEXT` closes Node's nested-test silent-suppression path.
+  Standalone fidelity now requires deterministic SHA-256 build evidence over
+  the exact 534 Git-tracked compiler `src/`/`tests/` inputs; missing,
+  malformed, untracked, input-set-drifted, or content-mismatched evidence
+  refuses. Local commit: `ddf9986b`.
+- **Verified (Task 6):** package evidence is 41/41. Live `slide` is 477/477
+  from 25 exact files. The optional independent child is 30/30 from four exact
+  files. Live `all --core --json` passes all five children: unit 5,823 tests,
+  e2e 4/4, R6 10/10, fidelity 9/9, and SLIDE 477/477. The `@galerina/test`
+  Hardened Border passes with one reviewed capability widening:
+  `node:crypto`, used only for build-evidence hashing.
+- **Owner coding rule recorded:** `.fungi` `if` is Boolean-only; K3 uses
+  exhaustive `check`; every other non-K3 decision uses exhaustive `match`;
+  non-allow/default arms explicitly leave the current trust path.
+- **RD-0535 response:** current measurements, remaining status-label gap, and
+  the requested re-review prompt are recorded in
+  `docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md`.
+- **Current:** Tasks 2-6 are complete. Task 1's structural inventory is the
   one intentional blocking red: 21 audit/lint tools still need exact
   phase-close, CI, or executable-fixture dispositions. No exception has been
   added to hide them. A live close after the fixes passed 80/82 checks; its
   second red was only the path gate correctly reading the still-uncommitted
   old line from `HEAD`, and clears when this repo-relative fix is staged.
-- **Next safe work:** resume at Task 6 (non-vacuous SLIDE lane in
-  `galerina-test`), then Tasks 7-8. Task 8 must close the 21 named tooling
+- **Next safe work:** resume at Task 7 (generator/index/report/provenance
+  governance), then Task 8. Task 8 must close the 21 named tooling
   dispositions before phase-close may authorize. Generator policy remains
   deliberately inactive until its Task 7 RED/GREEN contract.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and

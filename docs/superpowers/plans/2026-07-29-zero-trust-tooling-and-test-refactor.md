@@ -636,6 +636,11 @@ git commit -m "feat: govern compiler-loaded source assets"
 - Modify: `packages-galerina/galerina-test/src/index.ts`
 - Modify: `packages-galerina/galerina-test/tests/runners.test.mjs`
 - Modify: `packages-galerina/galerina-test/README.md`
+- Modify: `packages-galerina/galerina-core-compiler/package.json`
+- Create:
+  `packages-galerina/galerina-core-compiler/scripts/write-build-evidence.mjs`
+- Create:
+  `packages-galerina/galerina-test/tests/compiler-build-evidence.test.mjs`
 
 **Interfaces:**
 
@@ -656,7 +661,7 @@ export function runSlide(opts?: SlideOptions): Promise<CheckResult>;
 - Optional independent corpus is read from the supplied SLIDE root; it is a
   separate child result named `slide-independent`.
 
-- [ ] **Step 1: Write RED tests for corpus discovery and failure propagation**
+- [x] **Step 1: Write RED tests for corpus discovery and failure propagation**
 
 ```js
 test("runSlide refuses an empty in-repo corpus", async () => {
@@ -681,7 +686,7 @@ test("runAll includes slide", async () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Step 2: Run RED**
 
 ```powershell
 npm.cmd run typecheck
@@ -691,26 +696,29 @@ node --test tests/runners.test.mjs
 
 Expected: missing `runSlide` export and no slide child.
 
-- [ ] **Step 3: Implement exact corpus discovery**
+- [x] **Step 3: Implement exact corpus discovery**
 
 Discover only files matching `^slide-.*\.test\.mjs$`, sort them
 lexicographically, require at least one, and pass exact paths to
 `node --test`. Do not accept a broad test directory as proof.
 
-- [ ] **Step 4: Make standalone fidelity refuse stale compiler output**
+- [x] **Step 4: Make standalone fidelity refuse stale compiler output**
 
 Before `runFidelity`, compare tracked compiler source/test inputs with the
-compiler build evidence used by the package test chain. If freshness cannot
-be proven, return a failure instructing the caller to run the compiler build;
-do not accept "dist exists".
+compiler build evidence used by the package test chain. The implementation
+uses a deterministic SHA-256 digest over the exact sorted Git-tracked input
+set rather than timestamps. Missing, malformed, untracked, set-drifted, or
+content-mismatched evidence refuses. If freshness cannot be proven, return a
+failure instructing the caller to run the compiler build; do not accept
+"dist exists".
 
-- [ ] **Step 5: Fix negative runner tests so child failure is directly proven**
+- [x] **Step 5: Fix negative runner tests so child failure is directly proven**
 
 Replace the existing comment that leaves conformance/fidelity failure
 direction untested. Use a plain-node fixture subprocess or an injected runner
 seam so both non-zero children are asserted as `ok:false`.
 
-- [ ] **Step 6: Verify**
+- [x] **Step 6: Verify**
 
 ```powershell
 npm.cmd test
@@ -720,7 +728,7 @@ node packages-galerina/galerina-test/dist/cli.js all --core --json
 
 Expected: slide is non-empty, countable, and part of `all`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add -- packages-galerina/galerina-test
