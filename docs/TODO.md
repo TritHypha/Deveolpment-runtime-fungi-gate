@@ -16,6 +16,26 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Final acceptance request checkpoint - 2026-07-29
+
+- **Added to the canonical plan:** Task 11 in
+  `docs/superpowers/plans/2026-07-29-zero-trust-tooling-and-test-refactor.md`
+  now makes the terminal close explicitly run every governed graph, test, and
+  audit surface; fix every reproduced issue; regenerate the full
+  package/fuse/generated build; perform the percentage audit; manually
+  adjudicate and regenerate the roadmap; and run the publication-fidelity
+  benchmark plus its self-contained chart pipeline.
+- **Fail-closed command findings:** `rebuild-fusable-packages.mjs` needs a
+  tested strict mode because its editor-hook mode always exits zero. Raw
+  destructive mutation audits must run only through their hermetic proof or
+  exact cadence command. The repository contains no local tool or project
+  named `Checkmark`; the verified chart helper is
+  `galerina-devtools-benchmarks/src/build-chart.mjs` plus `chart.mjs`.
+- **Current:** plan and exact command inventory are complete. Terminal
+  execution waits until the implementation chapter is complete and the exact
+  memory tree is authorized. This checkpoint is not evidence that the
+  remaining SLIDE implementation already exists.
+
 ### Active zero-trust tooling/test refactor checkpoint — 2026-07-29
 
 - **Scope:** all 14 `galerina-devtools-*` packages, `galerina-test`, Myco,

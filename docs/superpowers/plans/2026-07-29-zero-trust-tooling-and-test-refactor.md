@@ -1105,3 +1105,207 @@ docs: close zero-trust tooling refactor
 
 Then resume the checked-source-to-V2-D adapter work from
 `triLowLevel-v2/27-GENERAL-GALERINA-FRONTEND-HANDOFF.md`.
+
+---
+
+### Task 11: Final whole-project acceptance, readiness map, and benchmark publication
+
+**Trigger:** Run this task only after the documented Galerina/SLIDE
+implementation work is complete and the owner has authorized the exact memory
+tree required by `graph-all`. A partial run is diagnostic and releases no
+completion authority.
+
+**Files:**
+
+- Modify only files implicated by a reproduced failure
+- Modify: `scripts/rebuild-fusable-packages.mjs`
+- Modify/create its focused fixture test before relying on strict build status
+- Regenerate: all policy-declared outputs, package graphs, `version.json`,
+  percentage-audit artifacts, roadmap artifacts, and benchmark artifacts
+- Modify living roadmap/percentage source claims only after manual evidence
+  adjudication
+- Create/update a dated final-acceptance report and all synchronized TODO
+  ledgers
+
+**Acceptance rules:**
+
+- Every child exit, signal, timeout, missing result, empty result, malformed
+  result, stale artifact, unknown graph source, and unexplained skip refuses.
+- A signed package locked to an offline ceremony is reported as
+  `signed-locked`, not rebuilt and not misreported as failed or fresh.
+- Audit mutation tools run only through their hermetic registered proof or
+  their exact cadence command. Never point a raw destructive mutator at the
+  live source tree merely to satisfy an "all tools" count.
+- Timed benchmark results are performance evidence only. They cannot decide a
+  security, governance, compatibility, or release verdict.
+- Missing optional benchmark toolchains are recorded exactly. A runtime that
+  did not execute receives no number and no inferred comparison.
+- Percentages move only when their deciding evidence moved. An unmeasured
+  assertion is converted to a word, a countable ladder, or retained explicitly
+  as asserted; it is never rounded up for presentation.
+- Generated artifacts are reviewed and committed separately from source fixes.
+- Never push.
+
+- [ ] **Step 1: Make the package/fuse rebuild result authorizing**
+
+Add a tested `--strict` mode to
+`scripts/rebuild-fusable-packages.mjs`. The mode returns non-zero for any
+failed, timed-out, signalled, or indeterminate child build while retaining
+the existing non-authorizing informational default for editor hooks. Prove
+failure and clean-control directions in a temporary fixture. Do not use
+`--force` against ceremony-signed packages in the final acceptance run.
+
+- [ ] **Step 2: Run every governed graph surface**
+
+With the owner-authorized exact memory path:
+
+```powershell
+node scripts/graph-all.mjs --memory-dir <authorized-memory-dir>
+node scripts/graph-all.mjs --memory-dir <authorized-memory-dir> --check
+node scripts/ts-retirement-graph.mjs
+node scripts/ts-retirement-graph.mjs --check
+node scripts/rd-0160-0161-tcsr-phasegraph-zerocopy-proof.mjs
+node scripts/rd-0166-0167-cache-graph-fungi-index-proof.mjs
+node scripts/rd-0168-graph-pci-compliance-scanner-proof.mjs
+```
+
+`graph-all` must pass all six children: project graph, graph integrity, KB
+graph, package graph, memory graph, and dev-tool index. The governed package
+test sweep below supplies the tests for all graph devtool packages. Record
+exact node/edge/package counts and every skipped or refused surface.
+
+- [ ] **Step 3: Run every governed test surface**
+
+```powershell
+node scripts/run-all-tests.cjs
+node --test scripts/tests/*.test.mjs
+node packages-galerina/galerina-test/dist/cli.js all --json
+```
+
+Also run the complete independent `../SLIDE` command and its explicit
+V2-C/V2-D/V2-E/frontend command. The root package runner must account for all
+registered packages and execute every non-exempt declared package test,
+including all `galerina-devtools-*`, `galerina-test`, benchmarks, and Myco.
+The one no-test registry exception must remain exact and reason-bearing.
+
+- [ ] **Step 4: Run every governed audit surface safely**
+
+```powershell
+node scripts/audit-gate-selftests.mjs --json
+node scripts/audit-tooling-contract.mjs
+node scripts/audit-generator-contract.mjs --tier exhaustive
+node scripts/run-phase-close.mjs --tier phase-close
+node scripts/run-phase-close.mjs --tier exhaustive
+npm.cmd run audit
+```
+
+Run the final command in
+`packages-galerina/galerina-devtools-security`. Run the benchmark truth audit
+in Step 8 after fresh measurements exist. The audit meta-gate must execute or
+fixture-prove every discovered audit/lint program; the strict/exhaustive
+cadence must run every declared live enforcement command. Publish the
+machine-readable inventory mapping each audit to its live cadence,
+non-vacuity self-test, or hermetic fixture proof. An undisposed program is a
+failure, not an exception added during close.
+
+- [ ] **Step 5: Fix every issue from graphs, tests, and audits**
+
+For each red:
+
+1. preserve the original failure evidence;
+2. classify product defect, tool defect, stale output, environment
+   prerequisite, or genuine external authority blocker;
+3. add a focused RED regression for code/tool defects;
+4. implement the smallest complete fail-closed fix;
+5. rerun the focused check and the affected umbrella;
+6. update all ledgers; and
+7. make a verified local commit.
+
+Do not baseline, allowlist, soften, skip, or relabel a failure merely to
+finish the chapter.
+
+- [ ] **Step 6: Regenerate a full build, including packages**
+
+```powershell
+node scripts/build-core-chain.mjs --gate-subjects
+node scripts/run-all-tests.cjs --emit-counts
+node scripts/rebuild-fusable-packages.mjs --strict
+node scripts/audit-generator-contract.mjs --tier exhaustive
+```
+
+Then run every policy-declared generator in dependency order, review the
+exact diff, and run every corresponding non-mutating check. The package
+runner's 96 declared test chains are the build-current sweep for test-bearing
+packages; the exact registry no-test/no-build policy remains visible.
+Ceremony-signed package outputs are not overwritten.
+
+- [ ] **Step 7: Perform the percentage audit and manually adjudicate the roadmap**
+
+```powershell
+node scripts/component-health.mjs --self-test
+node scripts/component-health.mjs --json
+node scripts/component-health.mjs --audit-html
+node scripts/component-health.mjs --audit-check
+```
+
+Manually compare every asserted percentage and note with current source,
+tests, audit results, component-removal decisions, and SLIDE integration
+status. Change the deciding source in `component-health.mjs` only where fresh
+evidence justifies it. Preserve measured/asserted classification. Then:
+
+```powershell
+node scripts/gen-roadmap-subway.mjs --write
+node scripts/gen-roadmap-subway.mjs --check
+```
+
+Review the generated README block, roadmap document block, SVG, percentage
+JSON, and HTML. The final report records ship readiness, zero-trust average,
+build average, their evidence classes, and the work still preventing 100%.
+
+- [ ] **Step 8: Run the full benchmark and produce the chart**
+
+In `packages-galerina/galerina-devtools-benchmarks`:
+
+```powershell
+node ../../scripts/build-core-chain.mjs
+npm.cmd test
+npm.cmd run noise-gate
+npm.cmd run run
+npm.cmd run audit
+npm.cmd run ui
+npm.cmd run history
+npm.cmd run bench:guard
+npm.cmd run compare-ui
+```
+
+`run` is the publication-fidelity full suite, not `run:quick`. `ui` is the
+fail-closed report/chart pipeline and produces the self-contained SVG-in-HTML
+chart plus standalone artifact. Record available/missing runtime toolchains,
+units, work-equivalence certification, checksums, noise floor, and benchmark
+guard verdict. Never publish an uncertified cross-runtime ratio. The local
+repository contains no tool or project named `Checkmark`; the verified chart
+helper is this benchmark package's `build-chart.mjs`/`chart.mjs` pipeline.
+
+- [ ] **Step 9: Re-run the complete final gate after regeneration**
+
+Repeat Steps 2-4 in non-mutating/check mode, plus:
+
+```powershell
+node scripts/component-health.mjs --audit-check
+node scripts/gen-roadmap-subway.mjs --check
+node scripts/audit-provenance.mjs
+node scripts/audit-artifact-drift.mjs
+```
+
+Require a clean result across every in-scope authorizing command. A remaining
+owner-only external authority requirement is documented as a blocker and
+must not be described as completion.
+
+- [ ] **Step 10: Publish evidence locally and close the ledgers**
+
+Create a dated report containing exact commands, exits, counts, failures and
+fixes, graph totals, package/build totals, the percentage audit, the updated
+roadmap diagram, benchmark table/chart paths, toolchain omissions, current
+commit anchors, known owner changes, and the no-push statement. Commit source
+fixes, generated artifacts, benchmark/roadmap artifacts, and final ledgers in
+reviewable local commits with exact path staging.
