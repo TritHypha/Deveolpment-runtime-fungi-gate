@@ -161,15 +161,24 @@ planning checkbox must never be used to imply that implementation exists.
   semantic digest:
   `7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c`.
   Earlier V2-C wire hashes are superseded and forbidden.
-- **Current:** instruction-drive decoded aggregates under copy/step budgets.
-  Separately replace
+- **Completed:** local commit `be91ce01` adds
+  `slide-v2c-runtime.fungi`, a bounded no-address `.fungi` runtime that
+  instruction-drives only the independently decoded/admitted function 3.
+  Checked indices `0..2` return `3/5/8`; all other Int32 indices carry
+  registered typed failure 4. Exact execution uses 15 steps, copies 56 bytes,
+  reaches aggregate depth 3, caps caller budgets at admitted ceilings, and
+  exposes no partial counts, values, or authority on refusal. Pinned bytes
+  execute in a fresh process without a producer, AST, WAT, or Wasm. Corrected
+  V2-C evidence is 54/54; adjacent R1/V2-A/V2-B regression is 117/117.
+- **Current:** build the genuinely independent second V2-C producer and
+  aggregate source-map parity. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** independently reconstruct, digest, and instruction-drive the
-  detached V2-C aggregate graph, then add a second producer. V2-D memory stays
-  blocked. No lease reference, broker opcode, host handle, or dispatch may
+- **Next:** add a second minimal frontend that produces the conforming
+  aggregate fixture, then close source-map and full required-mutation parity.
+  V2-D memory stays blocked. No lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
@@ -205,6 +214,13 @@ planning checkbox must never be used to imply that implementation exists.
   executable graph 10/10; combined
   pre-binding SLIDE regression 157/157; TypeScript compiler build passes.
   Post-checkpoint Myco indexes 4,109 files with zero over-size skips.
+- **Latest V2-C runtime verification:** corrected V2-C aggregate, producer,
+  structural importer, exact-vector mutation, semantic binder, and runtime
+  suites pass 54/54. Runtime evidence includes exact step/copy ceilings,
+  checked-index success/failure, malformed/truncated/suffixed refusal, and
+  fresh-process execution without producer/AST/WAT/Wasm. Adjacent frozen
+  R1/V2-A/V2-B suites pass 117/117. Post-runtime Myco indexes 4,123 files
+  with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

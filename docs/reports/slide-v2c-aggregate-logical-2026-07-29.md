@@ -10,12 +10,15 @@
 **Structural importer commit:** `39e81b90`
 **Semantic binding commit:** `7d753041`
 **Pre-freeze semantic correction:** `398157da`
+**Bounded reference runtime commit:** `be91ce01`
 
 ## Claim boundary
 
-This checkpoint proves one bounded logical aggregate fixture. It does not yet
-prove canonical V2-C bytes, independent import, a semantic digest, aggregate
-execution, native memory safety, a broker, or production authority.
+This checkpoint proves one bounded logical aggregate fixture, corrected
+canonical V2-C bytes, independent import and semantic binding, and
+instruction-driven fresh-process reference execution. It does not prove
+native memory safety, a second producer, source-map parity, a broker, or
+production authority.
 
 Every successful decision reports `authorityReleased: false`. The fixture has
 zero effects, capabilities, memory objects, host calls, and back edges.
@@ -73,6 +76,14 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   bytes under `slide.gir.semantic.v2\0`. The corrected semantic SHA-256 is
   `7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c`;
   refusal releases no digest or authority.
+- `slide-v2c-runtime.fungi` instruction-drives only independently decoded and
+  admitted function 3 in a fixed 48-slot no-address SSA store. Indices
+  `0/1/2` return `3/5/8`; all other Int32 indices carry registered failure 4.
+  Successful execution takes 15 steps, copies 56 bytes, and reaches depth 3.
+  Runtime step/copy budgets are capped by admitted ceilings; exhaustion
+  refuses without partial values, counts, or authority.
+- Pinned bytes execute in a fresh process without the producer, source AST,
+  WAT, or Wasm.
 
 ## Pre-freeze correction
 
@@ -118,7 +129,7 @@ The canonical producer suite adds 6/6: deterministic bytes plus refusal for
 registry drift, embedded-parent drift, aggregate-operation drift, and
 authority-ceiling injection. All three V2-C suites pass 34/34.
 
-The independent vector suite adds 3/3 high-level tests, including 725 distinct
+The corrected independent vector suite adds 3/3 high-level tests, including 732 distinct
 single-byte mutation cases. This is exact-vector evidence, not structural
 decoding or graph reconstruction.
 
@@ -127,6 +138,11 @@ refuses empty/truncated/suffixed bodies, non-shortest root encoding, wrong root
 count, reordered root keys, and an unknown decoded aggregate opcode. Every
 refusal exposes empty function/constant/descriptor tables and no authority.
 The four non-vector V2-C suites pass 42/42.
+
+The bounded runtime suite adds 6/6: three checked-index successes, registered
+out-of-range failure, exact and exhausted budgets, caller-budget capping,
+malformed/truncated/suffixed refusal, and fresh-process execution. Corrected
+V2-C evidence is 54/54. Adjacent frozen R1/V2-A/V2-B regression is 117/117.
 
 ## What this replaces, rebuilds, and integrates
 
@@ -141,10 +157,6 @@ Galerina must rebuild:
 
 Independent SLIDE must still build:
 
-- the frozen V2-C registry descriptor and digest;
-- canonical 21-key encoding and a separately implemented strict decoder;
-- complete graph reconstruction and domain-separated semantic binding;
-- bounded instruction-driven aggregate execution; and
 - a second non-Galerina producer.
 
 Only after those gates pass may the primary path cut:
@@ -160,6 +172,6 @@ cannot select any of them as a fallback.
 
 ## Next safe boundary
 
-Bind only independently decoded/admitted bytes to a domain-separated semantic
-digest, then instruction-drive the decoded aggregate graph under copy/step
-budgets. V2-D memory remains blocked.
+Build a genuinely independent second producer and prove conforming aggregate
+output, then close aggregate source-map and required-mutation parity. V2-D
+memory remains blocked.
