@@ -292,6 +292,14 @@ planning checkbox must never be used to imply that implementation exists.
   moved to registered `Hash.sha256`; the focused test and e2e build are now
   green (1/1 and 4/4). Regenerate governed evidence before strict tooling
   tiers.
+- **Task 10 first phase-close checkpoint:** every blocking command except two
+  passed. `fungi:corpus-check` correctly refused a stale known-failure entry:
+  the previously repaired `galerina-core-security/src/interim.fungi` remained
+  in the ratchet. `--update-baseline` shrank the exact baseline 30 -> 29, never
+  widened it, and the live corpus gate is now green across 261 checkable files.
+  `graph:all` remains correctly red only because four memory trees exist and
+  no owner-authorized selection is recorded. Do not infer or choose one by
+  size. Commit the ratchet shrink, regenerate, and rerun both strict tiers.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

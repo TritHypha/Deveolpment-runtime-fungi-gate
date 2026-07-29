@@ -6,10 +6,6 @@
       "FUNGI-GOV-010",
       "FUNGI-PARSE-001"
     ],
-    "packages-galerina/galerina-core-security/src/interim.fungi": [
-      "FUNGI-PARSE-001",
-      "FUNGI-VALUESTATE-008"
-    ],
     "packages-galerina/galerina-core-tasks/examples/tasks.fungi": [
       "FUNGI-PARSE-001"
     ],
