@@ -7,6 +7,7 @@
 **Executable integration commit:** `5ea92c78`
 **Canonical producer commit:** `00940a67`
 **Independent vector commit:** `8d7d8cd3`
+**Structural importer commit:** `39e81b90`
 
 ## Claim boundary
 
@@ -56,6 +57,15 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   without loading the producer, model, registry object, or encoder. It refuses
   every single-byte mutation, truncation, empty input, and suffix with a
   terminal identity and releases no authority.
+- `slide-v2c-cbor-importer.fungi` independently walks shortest-form CBOR,
+  reconstructs all 21 root entries, all three functions, constants, ordered
+  record/variant descriptors, limits, failures, and K3 evidence, then runs
+  semantic validation. It reuses generic V2-A decoding primitives but calls
+  neither the V2-C producer nor encoder.
+- The first closed text fixture reconstructs the registered decoded string and
+  proves its bytes equal the strict UTF-8 encoding. General arbitrary-text
+  decoding remains a required later intrinsic; no host decoder is silently
+  trusted here.
 
 ## Mutation evidence
 
@@ -92,6 +102,12 @@ The independent vector suite adds 3/3 high-level tests, including 725 distinct
 single-byte mutation cases. This is exact-vector evidence, not structural
 decoding or graph reconstruction.
 
+The structural importer suite adds 8/8. It reconstructs the complete graph and
+refuses empty/truncated/suffixed bodies, non-shortest root encoding, wrong root
+count, reordered root keys, and an unknown decoded aggregate opcode. Every
+refusal exposes empty function/constant/descriptor tables and no authority.
+The four non-vector V2-C suites pass 42/42.
+
 ## What this replaces, rebuilds, and integrates
 
 Nothing is removed at this checkpoint.
@@ -124,6 +140,6 @@ cannot select any of them as a fallback.
 
 ## Next safe boundary
 
-Build an independent structural 21-key decoder that exposes neither a partial descriptor
-nor partial aggregate graph on refusal, then bind the admitted body to its
-domain-separated semantic digest. V2-D memory remains blocked.
+Bind only independently decoded/admitted bytes to a domain-separated semantic
+digest, then instruction-drive the decoded aggregate graph under copy/step
+budgets. V2-D memory remains blocked.

@@ -141,8 +141,14 @@ planning checkbox must never be used to imply that implementation exists.
   admission for the 725-byte body. It refuses all 725 single-byte mutations,
   truncation, empty input, and suffixes with terminal identities and no
   authority. This is not yet structural decoding.
-- **Current:** implement a separately composed structural 21-key decoder with
-  no-partial-graph refusal. Separately replace
+- **Completed:** local commit `39e81b90` independently decodes all 21 root
+  entries into the complete three-function graph and full constant/record/
+  variant tables, then runs semantic admission without calling the V2-C
+  producer or encoder. Eight focused tests cover reconstruction and
+  no-partial-graph refusal; the four non-vector V2-C suites are 42/42.
+- **Current:** bind only independently decoded/admitted bytes to the V2-C
+  semantic digest, then instruction-drive aggregates under copy/step budgets.
+  Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
