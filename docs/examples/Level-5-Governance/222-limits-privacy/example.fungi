@@ -49,7 +49,9 @@ contract {
 }
 
 {
-  let doc = DocumentsDB.insert({ patientId: request.params.id, content: request.body.data })?
-  AuditLog.write({ event: "DocumentUploaded", docId: doc.id, patientId: doc.patientId })
+  let patientId: protected PatientId = validate.patientId(request.params.id)?
+  let content = validate.documentContent(request.body.data)?
+  let doc = DocumentsDB.insert({ patientId: patientId, content: content })?
+  AuditLog.write({ event: "DocumentUploaded", docId: doc.id, patientId: redact(patientId) })
   return Ok(Response.created({ docId: doc.id }))
 }

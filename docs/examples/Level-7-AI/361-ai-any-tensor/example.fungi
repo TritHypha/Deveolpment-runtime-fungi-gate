@@ -6,7 +6,7 @@
 /// test_status: stable
 /// ai_rule: Use AnyTensor only when the tensor shape cannot be known at compile time; prefer typed Tensor<T, Shape> everywhere else.
 
-guarded flow loadDynamic() -> LoadDynamicResult
+secure flow loadDynamic() -> LoadDynamicResult
 
 contract {
   // Result alias — AnyTensor escapes static shape checking for dynamically loaded models
@@ -23,6 +23,7 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   let handle: AnyTensor = DynamicModelRegistry.load("latest")?
   return Ok(handle)
 }

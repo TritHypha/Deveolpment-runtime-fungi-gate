@@ -6,8 +6,18 @@
 /// ai_rule: Use compute target wasm when the flow must run inside a browser or a WASM sandbox.
 /// test_status: stable
 
-pure flow runInBrowser(input: Tensor<Float32, [1, 128]>) -> Tensor<Float32, [1, 64]>
-  with compute target wasm { fallback cpu }
+secure flow runInBrowser(input: Tensor<Float32, [1, 128]>) -> Tensor<Float32, [1, 64]>
+
+contract {
+  intent {
+    "Run admitted model inference in a browser-compatible Wasm target."
+  }
+
+  effects {
+    ai.inference
+  }
+}
+  compute target wasm { fallback cpu }
 {
   return TinyModel.forward(input)
 }

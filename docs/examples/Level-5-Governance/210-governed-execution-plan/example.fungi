@@ -6,6 +6,10 @@
 /// ai_rule: Combine intent, compute target, and audit for fully governed ML inference flows.
 /// test_status: stable
 
+record FraudInput {
+  transactionId: String
+}
+
 secure flow runFraudModel(input: FraudInput) -> RunFraudModelResult
 
 contract {
@@ -19,6 +23,7 @@ contract {
 
   effects {
     database.write
+    ai.inference
     audit.write
   }
 }

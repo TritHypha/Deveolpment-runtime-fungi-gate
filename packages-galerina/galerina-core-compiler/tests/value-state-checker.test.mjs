@@ -1387,3 +1387,22 @@ contract { effects { secret.read, network.outbound } }
     assert.ok(!hasDiag(r, "FUNGI-SECRET-005"), "Crypto is not an external egress service");
   });
 });
+
+describe("Value-state checker - protected network sealing", () => {
+  it("does not emit FUNGI-VALUESTATE-009 for a protected value sealed before network egress", () => {
+    const result = parseAndCheck(`
+secure flow test(raw: String) -> Result<String, Error>
+contract { effects { network.outbound } }
+{
+  unsafe let rawEmail: String = raw
+  let email: protected Email = validate.email(rawEmail)?
+  EmailGateway.send(seal(email))
+  return Ok("ok")
+}
+`);
+    assert.ok(
+      !hasDiag(result, "FUNGI-VALUESTATE-009"),
+      "Unexpected FUNGI-VALUESTATE-009 when protected network payload is sealed",
+    );
+  });
+});

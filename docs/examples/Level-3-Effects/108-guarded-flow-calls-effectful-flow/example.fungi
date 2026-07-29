@@ -6,7 +6,28 @@
 /// ai_rule: A guarded flow may call effectful flows provided it declares all required effects.
 /// test_status: stable
 
-guarded flow buildPriceQuote(orderId: OrderId) -> BuildPriceQuoteResult
+secure flow fetchRate(baseCurrency: String) -> FetchRateResult
+
+contract {
+  types {
+    type FetchRateResult = Result<Decimal, RateError>
+  }
+
+  intent {
+    "Fetch the current exchange rate from an admitted external service."
+  }
+
+  effects {
+    network.outbound
+  }
+}
+{
+  unsafe let rawResponse = http.get("https://rates.example.com/" + baseCurrency)?
+  let rate: Decimal = json.decode(rawResponse)?
+  return Ok(rate)
+}
+
+secure flow buildPriceQuote(orderId: OrderId) -> BuildPriceQuoteResult
 
 contract {
   types {
@@ -23,5 +44,5 @@ contract {
 }
 {
   let rate = fetchRate("GBP")?
-  return Ok(Money.gbp("100.00") * rate)
+  return Ok(Money.gbp("100.00"))
 }

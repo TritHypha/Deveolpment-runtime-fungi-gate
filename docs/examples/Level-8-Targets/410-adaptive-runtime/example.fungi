@@ -6,7 +6,7 @@
 /// ai_rule: runtime adaptive enables workload-learning optimisations within governance constraints.
 /// test_status: stable
 
-guarded flow runAdaptive(input: Tensor<Float32, [Batch, 512]>) -> RunAdaptiveResult
+secure flow runAdaptive(input: Tensor<Float32, [Batch, 512]>) -> RunAdaptiveResult
 
 contract {
   // Result alias — adaptive runtime learns from workload while preserving security and governance

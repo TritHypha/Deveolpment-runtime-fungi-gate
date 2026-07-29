@@ -138,6 +138,10 @@ contract {
 }
 
 {
+  let actor = context.actor
+  let traceId = context.trace_id
+  let deadline = context.deadline
+
   unsafe let rawId: String = request.params.patientId
   let patientId: protected PatientId = validate.patientId(rawId)?
 
@@ -145,7 +149,10 @@ contract {
 
   AuditLog.write({
     event: "PatientProfileRead",
-    patientId: redact(patient.id)
+    patientId: redact(patient.id),
+    actor: actor.id,
+    traceId: traceId,
+    deadline: deadline
   })
 
   emit PatientProfileRead

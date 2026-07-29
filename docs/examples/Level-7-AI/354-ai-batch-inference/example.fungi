@@ -6,7 +6,7 @@
 /// test_status: stable
 /// ai_rule: Use a named fn helper with Array.map and ? propagation to run batch inference and surface the first error.
 
-guarded flow batchClassify(texts: Array<String>) -> BatchClassifyResult
+secure flow batchClassify(texts: Array<String>) -> BatchClassifyResult
 
 contract {
   // Result alias — Array.map with ? surfaces the first classification error
@@ -23,6 +23,7 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   fn classify(t: String) -> Result<Label, AiError> {
     return ClassifierModel.classify(t)
   }

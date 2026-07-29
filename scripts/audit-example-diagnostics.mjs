@@ -10,8 +10,8 @@
 // The reference-link audit only covers the handful of LINKED examples; this covers ALL.
 //
 // CONTRACT (fail-closed):
-//   expected_diagnostics: none   -> `galerina check` MUST be clean under BOTH plain AND
-//                                   --strict-types (a GOVERNED run). A plain-clean example
+//   expected_diagnostics: none   -> `galerina check --strict-governance` MUST be clean under
+//                                   BOTH plain AND --strict-types. A plain-clean example
 //                                   that fails strict is the 104 class: a protected-leak or
 //                                   undefined-type hidden in plain that breaks a production
 //                                   build. `none` therefore means "clean when it matters".
@@ -195,9 +195,9 @@ function verdict(exp, emitted, clean) {
   };
 }
 
-/** Run `galerina check <rel> [--strict-types]` -> { clean, codes:Set, advisory:int, out }. */
+/** Run a read-only production-strength check, optionally with strict types. */
 function check(rel, strict) {
-  const args = ['galerina.mjs', 'check', rel];
+  const args = ['galerina.mjs', 'check', rel, '--strict-governance'];
   if (strict) args.push('--strict-types');
   const r = spawnSync('node', args, { cwd: root, encoding: 'utf8' });
   const out = `${r.stdout || ''}${r.stderr || ''}`;

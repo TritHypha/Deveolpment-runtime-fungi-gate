@@ -30,6 +30,15 @@ guarded flow pushOrder(order: Order) -> Result<Unit, Error>
 }
 `;
 
+const MISSING_EFFECT = `@version 1
+secure flow pushOrder(order: Order) -> Result<Unit, Error>
+  contract { intent { "Demonstrate strict governance diagnostics without building." } effects { } }
+{
+  let r = http.post("https://api.example.com/orders", order)?
+  return Ok(unit)
+}
+`;
+
 const run = (args, env, dir) =>
   spawnSync("node", [CLI, ...args], { cwd: dir, encoding: "utf8", env: { ...process.env, ...env } });
 const out = (r) => (r.stdout ?? "") + (r.stderr ?? "");
@@ -56,6 +65,25 @@ test("FUNGI-TIER-001/008 enforced through galerina.mjs: dev check WARNS, prod bu
     assert.ok(
       !/fail-closed under GALERINA_PROFILE=production/.test(out(dev)),
       `dev build must not fail-closed on the tier floor: ${out(dev)}`,
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("strict-governance check is read-only and fails closed on production effect obligations", () => {
+  const dir = mkdtempSync(join(tmpdir(), "galerina-strict-gov-cli-"));
+  try {
+    const fungi = join(dir, "missing-effect.fungi");
+    writeFileSync(fungi, MISSING_EFFECT);
+
+    const chk = run(["check", fungi, "--strict-governance"], {}, dir);
+    assert.equal(chk.status, 1, `strict governance check must fail closed: ${out(chk)}`);
+    assert.match(out(chk), /FUNGI-EFFECT-001/, "strict governance check surfaces the undeclared effect");
+    assert.equal(
+      spawnSync("node", ["-e", "const fs=require('fs');process.exit(fs.existsSync('build')?1:0)"], { cwd: dir }).status,
+      0,
+      "strict governance check must not create a build directory",
     );
   } finally {
     rmSync(dir, { recursive: true, force: true });

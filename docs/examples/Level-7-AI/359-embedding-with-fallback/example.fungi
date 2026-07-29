@@ -6,7 +6,7 @@
 /// ai_rule: Declare compute fallback cpu on all embedding flows to allow CPU-only deployment.
 /// test_status: stable
 
-guarded flow embed(text: String) -> EmbedResult
+secure flow embed(text: String) -> EmbedResult
 
 contract {
   // Result alias — NPU/GPU preference with cpu fallback for portability

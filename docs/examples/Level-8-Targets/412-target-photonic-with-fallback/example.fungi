@@ -6,7 +6,7 @@
 /// ai_rule: When photonic is preferred, provide a full fallback chain npu > gpu > cpu to maximise portability.
 /// test_status: stable
 
-guarded flow runOptical(input: Tensor<Float32, [Batch, 1024]>) -> RunOpticalResult
+secure flow runOptical(input: Tensor<Float32, [Batch, 1024]>) -> RunOpticalResult
 
 contract {
   // Result alias — full fallback chain photonic → npu → gpu → cpu for portability

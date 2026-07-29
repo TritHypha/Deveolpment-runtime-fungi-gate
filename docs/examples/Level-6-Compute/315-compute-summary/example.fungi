@@ -6,6 +6,14 @@
 /// ai_rule: The summary pattern combines secure flow, protected types, compute target, deny, audit, and Result propagation.
 /// test_status: stable
 
+record Transaction {
+  id: String
+}
+
+record FraudScore {
+  band: String
+}
+
 secure flow runFraudScore(readonly tx: Transaction) -> RunFraudScoreResult
 
 contract {

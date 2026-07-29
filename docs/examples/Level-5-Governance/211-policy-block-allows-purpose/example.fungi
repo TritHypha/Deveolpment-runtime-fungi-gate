@@ -28,7 +28,7 @@ contract {
   }
 {
   let email: protected Email = patient.email
-  let sent = EmailGateway.send(email, Template.appointmentReminder)?
+  let sent = EmailGateway.send(seal(email), Template.appointmentReminder)?
   AuditLog.write({ action: "emailPatient", purpose: "appointment_reminder" })
   return Ok(unit)
 }

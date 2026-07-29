@@ -6,6 +6,27 @@
 /// expected_diagnostics: FUNGI-EFFECT-003
 /// ai_rule: A pure flow cannot call any flow that declares effects.
 
+secure flow fetchRate(baseCurrency: String) -> FetchRateResult
+
+contract {
+  types {
+    type FetchRateResult = Result<Decimal, RateError>
+  }
+
+  intent {
+    "Fetch the current exchange rate from an admitted external service."
+  }
+
+  effects {
+    network.outbound
+  }
+}
+{
+  unsafe let rawResponse = http.get("https://rates.example.com/" + baseCurrency)?
+  let rate: Decimal = json.decode(rawResponse)?
+  return Ok(rate)
+}
+
 pure flow buildPriceQuote(orderId: OrderId) -> Money<GBP>
 
 contract {

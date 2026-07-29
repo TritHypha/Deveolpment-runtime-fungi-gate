@@ -143,6 +143,21 @@ intent "Create patient record" {
 });
 
 describe("Governance verifier — FUNGI-GOV-004 denied target", () => {
+  it("emits FUNGI-GOV-004 when a flow selects remote execution", () => {
+    const result = parseAndVerify(`
+secure flow runModel(request: Request) -> Result<Response, AiError>
+contract {
+  intent { "Run an admitted model without remote execution." }
+  effects { ai.inference }
+}
+compute target remote {}
+{
+  return Ok(Response.ok({}))
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-GOV-004"), "Expected remote target selection to fail closed");
+  });
+
   it("emits FUNGI-GOV-004 when remote.execution denied but network.outbound declared", () => {
     // The parser currently skips compute target body content,
     // so this test confirms the verifier runs without throwing.

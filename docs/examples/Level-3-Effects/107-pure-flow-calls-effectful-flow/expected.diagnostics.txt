@@ -1,4 +1,3 @@
-none
-// FUNGI-EFFECT-003 is the target diagnostic for this example.
-// pure-calls-effectful detection is tracked for a future compiler wave.
-// The example is stable: fetchRate is undeclared (FUNGI-NAME-001, suppressed).
+FUNGI-EFFECT-003
+// The file defines the effectful callee, so the pure-flow boundary is
+// exercised rather than suppressed as an undeclared-name placeholder.

@@ -6,7 +6,7 @@
 /// ai_rule: best selects the best available target at runtime from the preference list in order.
 /// test_status: stable
 
-guarded flow runWithBest(input: Tensor<Float32, [1, 256]>) -> RunWithBestResult
+secure flow runWithBest(input: Tensor<Float32, [1, 256]>) -> RunWithBestResult
 
 contract {
   // Result alias — runtime selects the best available target from the ordered preference list

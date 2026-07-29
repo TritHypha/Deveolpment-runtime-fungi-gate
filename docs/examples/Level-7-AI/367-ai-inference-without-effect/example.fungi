@@ -2,8 +2,8 @@
 /// example: 367-ai-inference-without-effect
 /// test_status: stable
 /// level: 7
-/// concept: ai.inference effect must be declared
-/// expected_diagnostics: FUNGI-EFFECT-001
+/// concept: pure flows cannot perform AI inference
+/// expected_diagnostics: FUNGI-EFFECT-003
 
 pure flow classify(text: String) -> Label {
   return ClassifierModel.classify(text)?

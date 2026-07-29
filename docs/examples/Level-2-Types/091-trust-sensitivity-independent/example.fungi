@@ -19,10 +19,6 @@ contract {
     "Handle a patient list request, demonstrating orthogonal trust and sensitivity qualifiers."
   }
 
-  effects {
-    database.write
-    audit.write
-  }
 }
 {
 
@@ -30,7 +26,7 @@ contract {
   unsafe let rawEmails: protected Array<String> = request.body.emails
 
   // After validation: trusted AND sensitive
-  let emails: Array<protected Email> = validate.emails(rawEmails)?
+  let emails: protected Array<Email> = validate.emails(rawEmails)?
 
   // Trusted, NOT sensitive
   let count: Int = emails.length()

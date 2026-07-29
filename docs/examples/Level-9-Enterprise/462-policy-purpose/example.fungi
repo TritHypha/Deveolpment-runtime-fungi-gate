@@ -36,7 +36,7 @@ contract {
   let email: protected Email = PatientDB.getEmail(patientId)?
 
   NotificationService.send({
-    to: email,
+    to: seal(email),
     template: "appointment_reminder",
     data: { appointmentDate: request.body.appointmentDate }
   })?

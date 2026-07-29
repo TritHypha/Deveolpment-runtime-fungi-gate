@@ -29,5 +29,8 @@ contract {
 {
   unsafe let rawEmail: String = request.body.email
   let email: protected Email = validate.email(rawEmail)?
-  return Ok(UsersDB.insert({ email: email })?)
+  let userId = UsersDB.insert({ email: email })?
+  let auditEmail: redacted Email = redact(email)
+  AuditLog.write({ action: "createUser", email: auditEmail, userId: userId })
+  return Ok(userId)
 }

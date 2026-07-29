@@ -6,8 +6,18 @@
 /// ai_rule: Explicitly target gpu when the workload is known to saturate the GPU; always add fallback cpu for portability.
 /// test_status: stable
 
-pure flow processImage(pixels: Tensor<Float32, [3, 224, 224]>) -> Tensor<Float32, [1000]>
-  with compute target gpu { fallback cpu }
+secure flow processImage(pixels: Tensor<Float32, [3, 224, 224]>) -> Tensor<Float32, [1000]>
+
+contract {
+  intent {
+    "Classify an admitted image on a GPU with a CPU fallback."
+  }
+
+  effects {
+    ai.inference
+  }
+}
+  compute target gpu { fallback cpu }
 {
   return ImageClassifierModel.forward(pixels)
 }

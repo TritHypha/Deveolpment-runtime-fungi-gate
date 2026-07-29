@@ -6,6 +6,8 @@
 /// ai_rule: Declare storage.read when reading from the filesystem.
 /// test_status: stable
 
+type Config = String
+
 guarded flow loadConfig(path: String) -> LoadConfigResult
 
 contract {

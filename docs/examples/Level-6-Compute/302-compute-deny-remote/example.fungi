@@ -6,6 +6,8 @@
 /// ai_rule: Use deny [remote.execution] for data that must not leave the device.
 /// test_status: stable
 
+type CreditScore = String
+
 secure flow scoreCredit(readonly request: Request) -> ScoreCreditResult
 
 contract {

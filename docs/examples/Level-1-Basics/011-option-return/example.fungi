@@ -6,6 +6,10 @@
 /// ai_rule: Use Option<T> instead of null.
 /// test_status: stable
 
+record User {
+  id: UserId
+}
+
 pure flow findUser(id: UserId) -> Option<User>
 
 contract {

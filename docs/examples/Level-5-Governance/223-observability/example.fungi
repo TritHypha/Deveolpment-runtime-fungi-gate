@@ -43,7 +43,7 @@ contract {
 
   effects {
     database.write
-    network.outbound
+    payment.charge
     audit.write
   }
 

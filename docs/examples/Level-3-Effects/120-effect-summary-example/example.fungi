@@ -6,6 +6,27 @@
 /// ai_rule: Declare every effect used. pure = no effects. guarded/secure = explicit effect list in contract.
 /// test_status: stable
 
+secure flow fetchRate(baseCurrency: String) -> FetchRateResult
+
+contract {
+  types {
+    type FetchRateResult = Result<Decimal, RateError>
+  }
+
+  intent {
+    "Fetch the current exchange rate from an admitted external service."
+  }
+
+  effects {
+    network.outbound
+  }
+}
+{
+  unsafe let rawResponse = http.get("https://rates.example.com/" + baseCurrency)?
+  let rate: Decimal = json.decode(rawResponse)?
+  return Ok(rate)
+}
+
 secure flow processOrder(request: Request) -> ProcessOrderResult
 
 contract {

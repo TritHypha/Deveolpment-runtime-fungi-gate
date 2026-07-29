@@ -106,6 +106,8 @@ export const EFFECT_REGISTRY: Readonly<Record<string, readonly string[]>> = {
 
   // R4B: Anti-abuse — background execution
   "process.spawn": ["process.spawn"],
+  "Process.spawn": ["process.spawn"],
+  "RecordStore.findById": ["database.read"],
 
   // Phase 25: Crypto effects — signature verification and signing
   "Crypto.verify": ["crypto.verify"],
@@ -550,6 +552,7 @@ const EFFECT_CALL_PATTERNS: ReadonlyMap<RegExp, string> = new Map([
   [/\b\w+Api\.send\b/, "network.outbound"],
   [/\b\w+Adapter\.\w+/, "network.outbound"],
   [/\bEmailService\.\w+/, "network.outbound"],
+  [/\b\w+(?:Gateway|Service|Client)\.(?:send|fetch|connect|refer)\b/, "network.outbound"],
   // Filesystem
   [/\bfs\.readText\b/, "storage.read"],
   [/\bfs\.read\b/, "storage.read"],
@@ -563,9 +566,9 @@ const EFFECT_CALL_PATTERNS: ReadonlyMap<RegExp, string> = new Map([
   [/\benv\.secret\b/, "secret.read"],
   [/\bvault\.secret\b/, "secret.read"],
   // AI / inference
-  [/\w+Model\.run\b/, "ai.inference"],
-  [/\w+Model\.infer\b/, "ai.inference"],
+  [/\b\w*Model\.(?:run|infer|forward|embed|classify|classifyWithKey|confidence|score)\b/, "ai.inference"],
   // Payment
+  [/\b\w*Payment(?:Gateway|Service)?\.(?:charge|initiate)\b/, "payment.charge"],
   [/\w+Payment\.\w+/, "payment.charge"],
   [/\w+Payments\.\w+/, "payment.charge"],
   // Desktop / host
@@ -580,6 +583,54 @@ const EFFECT_CALL_PATTERNS: ReadonlyMap<RegExp, string> = new Map([
  * Target: 0 (all patterns migrated). Phase 20 goal.
  */
 export const LEGACY_EFFECT_CALL_PATTERNS_COUNT = EFFECT_CALL_PATTERNS.size;
+
+/**
+ * Effects whose evidence is intentionally not a call-pattern observation.
+ * Some are explicit authority declarations by language contract; vault access
+ * is checked by the dedicated vault/governance verifier. Calling these
+ * "overdeclared" here would create an obligation no source program can
+ * discharge and contradict the authoritative effect reference.
+ */
+const NON_CALL_OBSERVED_EFFECTS: ReadonlySet<string> = new Set([
+  "ledger.mutate",
+  "network.inbound",
+  "network.external",
+  "network.internal",
+  "secret.write",
+  "crypto.sign.ed25519",
+  "crypto.sign.mldsa65",
+  "crypto.sign.slhdsa",
+  "crypto.sign.hybrid",
+  "compute.cpu",
+  "compute.gpu",
+  "compute.npu",
+  "worker.spawn",
+  "event.schedule",
+  "shell.execute",
+  "telemetry.read",
+  "pii.read",
+  "phi.read",
+  "phi.write",
+  "vault.read",
+  "vault.write",
+]);
+
+/**
+ * Resolve a fully-qualified call through the structured registry first, then
+ * fall back to the bounded legacy convention patterns. The authoritative
+ * checker must not maintain a second, weaker capability list: doing so let
+ * registered operations such as Clock.now satisfy the stdlib pass while
+ * remaining invisible to declared-effect reconciliation.
+ */
+function inferEffectsForCallText(callText: string): readonly string[] {
+  const registered = inferEffectsForOperation(callText);
+  if (registered.length > 0) return registered;
+
+  for (const [pattern, effect] of EFFECT_CALL_PATTERNS) {
+    if (pattern.test(callText)) return [effect];
+  }
+  return [];
+}
 
 const PURE_FORBIDDEN_EFFECTS = new Set([
   "database.read", "database.write",
@@ -679,6 +730,7 @@ export function checkFlowEffects(
   // Task 4: infer effects together with call locations so we can point to specific calls
   const observedEffects = flowNode === undefined ? new Set<string>() : inferEffectsFromNode(flowNode);
   const effectCallLocations = flowNode === undefined ? new Map<string, SourceLocation>() : inferEffectCallLocations(flowNode);
+  const fnHelperEffects = flowNode === undefined ? new Map<string, SourceLocation | undefined>() : collectFnHelperEffects(flowNode);
 
   validateDeclaredEffectNames(flow, diagnostics);
 
@@ -762,7 +814,12 @@ export function checkFlowEffects(
     }
 
     for (const effect of flow.declaredEffects) {
-      if (!observedEffects.has(effect) && !hasTransitiveEffect(flow.name, effect, allFlows, callGraph, new Set())) {
+      if (
+        !observedEffects.has(effect)
+        && !fnHelperEffects.has(effect)
+        && !NON_CALL_OBSERVED_EFFECTS.has(effect)
+        && !hasTransitiveEffect(flow.name, effect, allFlows, callGraph, new Set())
+      ) {
         diagnostics.push({
           code: "FUNGI-EFFECT-007",
           name: "OVERDECLARED_EFFECT",
@@ -1347,11 +1404,8 @@ function inferEffectsFromNode(node: AstNode): Set<string> {
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, aliasMap)) {
         const callText = buildCallText(n, aliasMap);
-        for (const [pattern, effect] of EFFECT_CALL_PATTERNS) {
-          if (pattern.test(callText)) {
-            effects.add(effect);
-            break;
-          }
+        for (const effect of inferEffectsForCallText(callText)) {
+          effects.add(effect);
         }
       }
     }
@@ -1380,12 +1434,9 @@ function inferEffectCallLocations(node: AstNode): Map<string, SourceLocation> {
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, aliasMap)) {
         const callText = buildCallText(n, aliasMap);
-        for (const [pattern, effect] of EFFECT_CALL_PATTERNS) {
-          if (pattern.test(callText)) {
-            if (!locations.has(effect) && n.location !== undefined) {
-              locations.set(effect, n.location);
-            }
-            break;
+        for (const effect of inferEffectsForCallText(callText)) {
+          if (!locations.has(effect) && n.location !== undefined) {
+            locations.set(effect, n.location);
           }
         }
       }
@@ -1431,12 +1482,9 @@ function collectFnHelperEffects(flowNode: AstNode): Map<string, SourceLocation |
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, noAliases)) {
         const callText = buildCallText(n);
-        for (const [pattern, effect] of EFFECT_CALL_PATTERNS) {
-          if (pattern.test(callText)) {
-            if (!effects.has(effect)) {
-              effects.set(effect, n.location);
-            }
-            break;
+        for (const effect of inferEffectsForCallText(callText)) {
+          if (!effects.has(effect)) {
+            effects.set(effect, n.location);
           }
         }
       }

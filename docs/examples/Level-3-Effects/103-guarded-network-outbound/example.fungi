@@ -6,7 +6,7 @@
 /// ai_rule: Declare network.outbound when making outbound HTTP or network calls.
 /// test_status: stable
 
-guarded flow fetchRate(baseCurrency: String) -> FetchRateResult
+secure flow fetchRate(baseCurrency: String) -> FetchRateResult
 
 contract {
   types {

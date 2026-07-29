@@ -6,6 +6,10 @@
 /// ai_rule: Use deny [remote.execution] to prevent a flow from being dispatched to a remote compute target.
 /// test_status: stable
 
+record FraudInput {
+  transactionId: String
+}
+
 secure flow runFraudModel(input: FraudInput) -> RunFraudModelResult
 
 contract {
@@ -18,7 +22,7 @@ contract {
   }
 
   effects {
-    database.write
+    ai.inference
     audit.write
   }
 }

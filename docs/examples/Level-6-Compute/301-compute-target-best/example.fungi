@@ -6,8 +6,18 @@
 /// ai_rule: Use prefer [...] to express hardware preference; always declare fallback cpu as the final safety net.
 /// test_status: stable
 
-pure flow embedText(text: String) -> Tensor<Float32, [1, 768]>
-  with compute target best { prefer [npu, gpu, cpu] fallback cpu }
+secure flow embedText(text: String) -> Tensor<Float32, [1, 768]>
+
+contract {
+  intent {
+    "Create a local embedding using the best admitted accelerator."
+  }
+
+  effects {
+    ai.inference
+  }
+}
+  compute target best { prefer [npu, gpu, cpu] fallback cpu }
 {
   return EmbeddingModel.embed(text)
 }

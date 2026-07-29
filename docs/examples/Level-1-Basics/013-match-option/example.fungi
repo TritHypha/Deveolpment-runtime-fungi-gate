@@ -6,6 +6,10 @@
 /// test_status: stable
 /// ai_rule: Every match on Option must handle both Some and None.
 
+record User {
+  name: String
+}
+
 pure flow example(user: Option<User>) -> Void {
   match user {
 

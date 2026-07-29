@@ -6,7 +6,7 @@
 /// ai_rule: List all denied categories in a single deny [...] clause to make the exclusions explicit and auditable.
 /// test_status: stable
 
-guarded flow runStrictLocal(input: Tensor<Float32, [1, 256]>) -> RunStrictLocalResult
+secure flow runStrictLocal(input: Tensor<Float32, [1, 256]>) -> RunStrictLocalResult
 
 contract {
   // Result alias — all denied categories in one deny [...] clause for auditable exclusions

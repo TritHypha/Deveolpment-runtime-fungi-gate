@@ -1724,23 +1724,33 @@ class GovernanceVerifier {
     }
 
     // ── FUNGI-GOV-004: denied compute target selected ───────────────────────
-    // Check if flow denies remote.execution but declares network.outbound
+    // Refuse direct remote selection, and retain the existing contradiction
+    // check for a flow that denies remote execution while granting outbound.
     if (flowNode !== undefined) {
       const deniedTargets = extractDeniedTargets(flowNode);
+      const selectsRemote = findNodes(flowNode, "computeTargetBlock").some(
+        (target) => target.value === "remote" || target.value === "remote.execution",
+      );
       const hasRemoteDenied = deniedTargets.some(
         (t) => t === "remote.execution" || t === "remote",
       );
       const hasNetworkOutbound = flow.declaredEffects.includes("network.outbound") ||
         (effectResult?.declaredEffects ?? []).includes("network.outbound");
 
-      if (hasRemoteDenied && hasNetworkOutbound) {
+      if (selectsRemote || (hasRemoteDenied && hasNetworkOutbound)) {
+        const message = selectsRemote
+          ? `Flow '${flow.name}' selects remote execution as its compute target. Remote execution requires an admitted local target or an explicit future remote-admission contract.`
+          : `Flow '${flow.name}' denies remote.execution but declares network.outbound. These constraints are contradictory.`;
+        const suggestedFix = selectsRemote
+          ? `Select an admitted local target such as best, cpu, gpu, or npu and deny [remote.execution].`
+          : `Remove network.outbound from effects, or remove deny [remote.execution] from compute target block.`;
         this.diagnostics.push(makeGovDiag(
           "FUNGI-GOV-004",
           "DENIED_TARGET_SELECTED",
           "error",
-          `Flow '${flow.name}' denies remote.execution but declares network.outbound. These constraints are contradictory.`,
+          message,
           loc,
-          `Remove network.outbound from effects, or remove deny [remote.execution] from compute target block.`,
+          suggestedFix,
         ));
       }
 

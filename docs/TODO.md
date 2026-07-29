@@ -79,16 +79,28 @@ planning checkbox must never be used to imply that implementation exists.
   Eighteen real network contract-placement defects and nine DSS legacy intent
   forms were migrated to current syntax. Network 192/192, security 15/15,
   unit-registry 7/7, corpus 0 implicit, and compiler-stage hashes are green.
-- **Task 3 still open:** `audit-example-diagnostics.mjs` is green only at an
-  explicit 87/233 known-drift worklist. Its diagnostic parser now recognizes
-  fail-closed multi-part codes such as `FUNGI-HINT-COMPUTE-001` and
-  `FUNGI-SYNTAX-LEGACY-001`; the detector self-test is 16/16. That stronger
-  identity resolved two false missing-header rows and exposed the exact
-  compute-hint codes on nine existing rows. Those examples remain beta-v1
-  burn-down work and are not hidden in the now-empty corpus baseline. The
-  generated unit registry was reconciled and its focused gate is 7/7; the
-  source-rebuilt compiler is 5,718/5,718. The next safe work is to commit this
-  detector correction and adjudicate the 87 curriculum rows.
+- **Task 3 still open, but reduced:** `audit-example-diagnostics.mjs` now has
+  an explicit 29-row known-drift worklist, down from 87. Fifty-eight rows were
+  removed by repairing self-contained examples and five checker/CLI
+  defects rather than weakening the gate. `check --strict-governance` now
+  performs the read-only production effect, tier, and value-state checks;
+  it writes no build/signing artefacts. The authoritative effect pass now
+  consumes the structured operation registry, recognizes `Clock.now`, model
+  inference aliases, governed service/payment adapters, helper-function
+  effects, and distinguishes call-observed effects from explicit PII/PHI
+  authority and separately verified vault authority. Focused effect evidence
+  is 65/65; type/value-state focused evidence is 174/174; both repaired clean
+  clock examples pass strict governance. The 29 remaining rows are still
+  beta-v1 burn-down work, not an accepted release baseline.
+- **Fresh package close for this tranche:** compiler typecheck/build and all
+  **5,727/5,727** tests pass; CEC stable/draft integration is **243/243**;
+  `.fungi` source quality is 0 findings; the curriculum detector self-test is
+  16/16. The generated 29-row inventory is the current factual resume point.
+- **Current safe boundary:** preserve the 29-row generated inventory, commit
+  this coherent compiler/curriculum tranche after focused and package
+  verification, then continue with obsolete diagnostic identities,
+  target-hint fixtures, governance-purpose/authority fixtures, and the
+  remaining deliberately invalid examples.
 - **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this

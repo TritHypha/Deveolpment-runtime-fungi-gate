@@ -6,7 +6,11 @@
 /// ai_rule: Use intent to describe what the flow is allowed to do. The compiler checks declared intent against observed behaviour.
 /// test_status: stable
 
-guarded flow saveOrder(order: Order) -> SaveOrderResult
+record Order {
+  customerId: CustomerId
+}
+
+secure flow saveOrder(order: Order) -> SaveOrderResult
 
 contract {
   types {
@@ -19,9 +23,12 @@ contract {
 
   effects {
     database.write
+    audit.write
   }
 }
 {
-  let orderId = OrdersDB.insert(order)?
+  let safeOrder: Order = validate.order(order)?
+  let orderId = OrdersDB.insert(safeOrder)?
+  AuditLog.write({ action: "saveOrder", orderId: orderId })
   return Ok(orderId)
 }

@@ -1655,7 +1655,7 @@ class ValueStateChecker {
         // Class C (RD-0234b): a PROTECTED (PII) value egressing off-host must also be
         // redacted/sealed. VALUESTATE-006 fired at AuditLog.write ONLY, so protected PII
         // via http.post / EmailService / NotificationService / response.body egressed clean.
-        this.checkArgForProtectedAtAuditLog(child, callName, node.location);
+        this.checkArgForProtectedAtAuditLog(child, callName, node.location, true);
       }
     }
 
@@ -2039,9 +2039,13 @@ class ValueStateChecker {
     node: AstNode,
     sinkName: string,
     location: SourceLocation | undefined,
+    allowSealed = false,
   ): void {
     // A redact() call wrapping the value is the correct pattern — do not recurse into it.
     if (node.kind === "callExpr" && isRedactCall(node)) return;
+    // Network egress may preserve the protected value only inside an
+    // authenticated sealed envelope. Audit logs still require redaction.
+    if (allowSealed && node.kind === "callExpr" && (node.value ?? "") === "seal") return;
 
     if (node.kind === "identifier") {
       // A record-literal field `{ email: redact(email) }` and a named argument `f(email: redact(email))`
@@ -2053,7 +2057,7 @@ class ValueStateChecker {
       //     the protected `email` value escaped unchecked (a real PII leak). Recursing into the field value
       //     wrapped in redact() discharges it; a bare protected value in any field still fails closed.
       if ((node.children?.length ?? 0) > 0) {
-        for (const child of node.children!) this.checkArgForProtectedAtAuditLog(child, sinkName, location);
+        for (const child of node.children!) this.checkArgForProtectedAtAuditLog(child, sinkName, location, allowSealed);
         return;
       }
       const binding = this.lookupBinding(node.value ?? "");
@@ -2063,16 +2067,25 @@ class ValueStateChecker {
         const isProtected = binding.typeName === "protected" ||
           binding.typeName.startsWith("protected ");
         if (isProtected) {
+          const isAuditSink = sinkName === "AuditLog.write";
           this.diagnostics.push(makeVSDiag(
             "FUNGI-VALUESTATE-009",
             "PROTECTED_VALUE_AT_AUDIT_LOG",
-            `Protected binding '${binding.name}' passed to '${sinkName}' without redaction. Protected values must be redacted before appearing in audit logs.`,
+            isAuditSink
+              ? `Protected binding '${binding.name}' passed to '${sinkName}' without redaction. Protected values must be redacted before appearing in audit logs.`
+              : `Protected binding '${binding.name}' passed to '${sinkName}' without sealing or redaction. Protected values must be sealed before network egress.`,
             location,
-            `Wrap with redact: AuditLog.write({ ..., ${binding.name}: redact(${binding.name}) })`,
-            `redact(${binding.name})`,
+            isAuditSink
+              ? `Wrap with redact: AuditLog.write({ ..., ${binding.name}: redact(${binding.name}) })`
+              : `Wrap the egress value with seal(${binding.name}), or redact it if the recipient does not need the original value.`,
+            isAuditSink ? `redact(${binding.name})` : `seal(${binding.name})`,
             {
-              why: `'${binding.name}' is a protected value. Audit logs are often accessible to operators and must not contain raw protected data.`,
-              risk: `Unredacted protected values in audit logs can leak sensitive data such as email addresses, user IDs, or PII.`,
+              why: isAuditSink
+                ? `'${binding.name}' is a protected value. Audit logs are often accessible to operators and must not contain raw protected data.`
+                : `'${binding.name}' is a protected value crossing a network boundary without an authenticated sealed envelope.`,
+              risk: isAuditSink
+                ? `Unredacted protected values in audit logs can leak sensitive data such as email addresses, user IDs, or PII.`
+                : `Unsealed protected values can be disclosed or modified in transit or by an untrusted intermediary.`,
             },
           ));
         }
@@ -2080,7 +2093,7 @@ class ValueStateChecker {
       return;
     }
     for (const child of node.children ?? []) {
-      this.checkArgForProtectedAtAuditLog(child, sinkName, location);
+      this.checkArgForProtectedAtAuditLog(child, sinkName, location, allowSealed);
     }
   }
 

@@ -30,7 +30,8 @@ contract {
     reason "Clinical referral to a contracted specialist within the patient's care pathway."
   }
 {
-  let referralId = http.post("https://specialist.example.nhs.uk/referrals", patient.referralPacket)?
+  let referralPacket = validate.referralPacket(patient.referralPacket)?
+  let referralId = http.post("https://specialist.example.nhs.uk/referrals", seal(referralPacket))?
   AuditLog.write({ action: "sendReferral", referralId: referralId })
   return Ok(referralId)
 }

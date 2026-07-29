@@ -20,6 +20,8 @@ record Medication {
   doseUnit: String
 }
 
+type MedicationCode = String
+
 record InteractionCheckRequest {
   requestPatientId: String
   requestMedA: String

@@ -1,3 +1,4 @@
 # 367 — AI inference without effect
 
-AI model calls require ai.inference to be declared in the effects clause. pure flow cannot perform AI inference.
+AI model calls require `ai.inference`, and a `pure flow` cannot declare or
+perform effects. Move inference to a secure flow with explicit authority.

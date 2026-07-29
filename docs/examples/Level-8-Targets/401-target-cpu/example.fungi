@@ -6,7 +6,7 @@
 /// ai_rule: Use compute target cpu for workloads that are latency-sensitive on small inputs or that require deterministic single-threaded execution.
 /// test_status: stable
 
-guarded flow runOnCpu(input: Tensor<Float32, [1, 128]>) -> RunOnCpuResult
+secure flow runOnCpu(input: Tensor<Float32, [1, 128]>) -> RunOnCpuResult
 
 contract {
   // Result alias — explicit cpu target for deterministic single-threaded execution

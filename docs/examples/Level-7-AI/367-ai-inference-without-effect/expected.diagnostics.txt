@@ -1,4 +1,3 @@
-none
-// FUNGI-EFFECT-001 is the target diagnostic for this example.
-// ai.inference effect enforcement is tracked for a future compiler wave.
-// The example is stable: no unsuppressed errors are produced by the current pipeline.
+FUNGI-EFFECT-003
+// Pure flows have a zero-effect boundary, so direct model inference is a
+// boundary violation rather than an ordinary missing declaration.

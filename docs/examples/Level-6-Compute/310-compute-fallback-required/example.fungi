@@ -6,6 +6,14 @@
 /// ai_rule: Always declare fallback cpu when targeting npu or gpu.
 /// test_status: stable
 
+record Transaction {
+  id: String
+}
+
+record FraudScore {
+  band: String
+}
+
 secure flow runFraudModel(tx: Transaction) -> RunFraudModelResult
 
 contract {

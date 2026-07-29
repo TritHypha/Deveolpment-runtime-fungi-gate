@@ -17,6 +17,8 @@ record ReadResponse {
   responseName: String
 }
 
+type RecordId = String
+
 secure flow getRecord(readonly request: Request) -> GetRecordResult
 
 contract {

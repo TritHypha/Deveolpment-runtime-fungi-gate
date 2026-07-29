@@ -64,6 +64,42 @@ effects [database.write] {
   });
 });
 
+describe("Effect Checker - Clock.now registry parity", () => {
+  it("recognizes Clock.now as clock.read in the authoritative effect pass", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow now() -> Void
+contract {
+  intent {
+    "Read and audit the current governed clock."
+  }
+  effects {
+    audit.write
+    clock.read
+  }
+}
+{
+  AuditLog.write({
+    action: "clock-read",
+    timestamp: Clock.now()
+  })
+  return
+}
+`);
+    assert.ok(
+      effectResults.some((result) => result.observedEffects.includes("clock.read")),
+      "Clock.now must be observed as clock.read, not merely accepted",
+    );
+    assert.ok(
+      !hasEffectDiag(effectResults, "FUNGI-EFFECT-007"),
+      "Clock.now must discharge a declared clock.read effect",
+    );
+    assert.ok(
+      !hasEffectDiag(effectResults, "FUNGI-EFFECT-001"),
+      "Clock.now with clock.read declared must not be under-declared",
+    );
+  });
+});
+
 describe("Effect Checker — secure flow rules", () => {
   it("accepts a secure flow with correctly declared effects", () => {
     const { effectResults } = parseAndCheck(`
@@ -478,6 +514,66 @@ guarded flow loadSecret(name: String) -> Result<String, Error>
 `);
     assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-001"));
   });
+
+  it("ClassifierModel.classify in a guarded flow requires ai.inference", () => {
+    const { effectResults } = parseAndCheck(`
+guarded flow classify(text: String) -> Label {
+  return ClassifierModel.classify(text)?
+}
+`);
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-001"));
+    assert.ok(effectResults.some((result) => result.observedEffects.includes("ai.inference")));
+  });
+
+  it("model inference aliases remain forbidden in pure flows", () => {
+    const { effectResults } = parseAndCheck(`
+pure flow embed(text: String) -> Embedding {
+  return Model.forward(text)?
+}
+`);
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-003"));
+    assert.ok(effectResults.some((result) => result.observedEffects.includes("ai.inference")));
+  });
+
+  it("governed service and payment adapters carry their distinct effects", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow dispatch(message: Message, payment: Payment) -> Result<Unit, Error>
+contract {
+  intent { "Dispatch a governed notification and payment." }
+  effects {
+    network.outbound
+    payment.charge
+  }
+}
+{
+  NotificationService.send(message)?
+  PaymentGateway.charge(payment)?
+  return Ok(unit)
+}
+`);
+    const observed = new Set(effectResults.flatMap((result) => result.observedEffects));
+    assert.ok(observed.has("network.outbound"));
+    assert.ok(observed.has("payment.charge"));
+    assert.ok(!hasEffectDiag(effectResults, "FUNGI-EFFECT-007"));
+  });
+
+  it("does not call explicit sensitive-data authority overdeclared", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow inspect(email: protected Email) -> Unit
+contract {
+  intent { "Inspect admitted personal data under explicit PII authority." }
+  effects { pii.read }
+}
+{
+  return unit
+}
+`);
+    assert.ok(effectResults.some((result) => result.declaredEffects.includes("pii.read")));
+    assert.ok(
+      !hasEffectDiag(effectResults, "FUNGI-EFFECT-007"),
+      "pii.read is explicit authority and has no call-site inference contract",
+    );
+  });
 });
 
 // ── Effect checker — devtools-graph buildCallGraph integration ─────────────────
@@ -702,6 +798,10 @@ guarded flow processOrder(order: Order) -> Result<Unit, Error>
     assert.ok(
       !errors.some((d) => d.code === "FUNGI-EFFECT-002"),
       "No EFFECT-002 expected when parent declares the fn helper's effect"
+    );
+    assert.ok(
+      !hasEffectDiag(effectResults, "FUNGI-EFFECT-007"),
+      "A declared fn-helper effect must count as observed for over-declaration checks"
     );
   });
 });

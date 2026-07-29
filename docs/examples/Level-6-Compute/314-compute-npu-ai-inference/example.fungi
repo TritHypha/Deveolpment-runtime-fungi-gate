@@ -6,7 +6,7 @@
 /// ai_rule: Combine compute target best with deny [remote.execution] to enforce on-device AI inference.
 /// test_status: stable
 
-guarded flow classifyText(text: String) -> ClassifyTextResult
+secure flow classifyText(text: String) -> ClassifyTextResult
 
 contract {
   // Result alias — on-device classification with remote execution denied

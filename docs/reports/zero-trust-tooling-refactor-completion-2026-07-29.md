@@ -90,6 +90,27 @@ independent SLIDE repository, not Galerina.
 - Current generated indexes, registries, graphs, reports, provenance, SBOM,
   status, unit data, and package boundaries.
 
+## Beta-v1 curriculum follow-on checkpoint
+
+The completion matrix below records the earlier tooling-refactor close. The
+subsequent Galerina-first beta-v1 pass is still active and does not inherit a
+completion claim from that close.
+
+- Curriculum diagnostic drift is **29 rows**, reduced from 87 by source and
+  checker repairs; it remains release-blocking work.
+- Root `check --strict-governance` is a read-only production-policy check. It
+  runs effect, secure-tier, and value-state enforcement without creating build
+  or signing output.
+- Effect inference now uses the structured operation registry in the
+  authoritative pass, observes governed clocks, model aliases, service and
+  payment adapters, and helper-function effects, and does not mislabel
+  explicit PII/PHI or separately verified vault authority as overdeclared.
+- Focused fresh evidence: effect checker **65/65**; combined type/value-state
+  checker **174/174**; CEC **243/243**; full compiler **5,727/5,727**. Root
+  close evidence must be rerun after the remaining curriculum work.
+- Wasm/Rust/Python/SLIDE comparison remains deliberately deferred until SLIDE
+  has an executable backend.
+
 ## Eleven-requirement completion matrix
 
 | # | Requirement | Status | Fresh evidence |

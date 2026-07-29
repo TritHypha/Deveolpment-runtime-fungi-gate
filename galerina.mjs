@@ -1303,13 +1303,20 @@ Baseline comparison (governance-cost):
   }
 
   if (command === "check") {
-    const fx = m.checkEffects(parsed.flows, parsed.ast);
+    // Read-only production-strength diagnostics. This runs the same strict
+    // effect/tier/value-state rules as a production build without emitting
+    // WASM, manifests, signatures, or any build artifacts.
+    const strictGovernance = rest.includes("--strict-governance");
+    const fx = strictGovernance
+      ? m.checkEffects(parsed.flows, parsed.ast, "production", true)
+      : m.checkEffects(parsed.flows, parsed.ast);
     const gov = m.verifyGovernance(parsed.ast, parsed.flows, fx, "production");
     // Surface the dev/check-mode tier-floor + boundary-input WARNINGS (FUNGI-TIER-001 / FUNGI-VALUESTATE-008)
     // so a tester sees the obligation here, before a production build escalates the SAME finding to a
     // fail-closed error. The floor scan always runs; only its severity is gated on the production profile,
     // so in `check` these arrive as warnings — display-only, they do not fail the check.
-    const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(d => d.code === "FUNGI-TIER-001"));
+    const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(
+      d => d.code === "FUNGI-TIER-001" && d.severity !== "error"));
     // P2 (threat-model): FUNGI-EFFECT-003 (an effectful op in a PURE flow — a zero-trust boundary breach)
     // and FUNGI-STDLIB-002 (deny-by-default unrecognized effectful method) are integrity invariants the
     // PRODUCTION build already rejects. `check` (all modes) surfaced NEITHER — it took only FUNGI-TIER-001
@@ -1321,13 +1328,21 @@ Baseline comparison (governance-cost):
     const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002", "FUNGI-EFFECT-006"]);
     const integrityEffectErrors = fx.flatMap(r => (r.diagnostics ?? []).filter(
       d => d.severity === "error" && INTEGRITY_EFFECT_CODES.has(d.code)));
+    const strictGovernanceEffectDiagnostics = strictGovernance
+      ? fx.flatMap(r => (r.diagnostics ?? []).filter(
+        d => !INTEGRITY_EFFECT_CODES.has(d.code)))
+      : [];
+    const strictGovernanceEffectErrors = strictGovernanceEffectDiagnostics.filter(
+      d => d.severity === "error");
     // Run the value-state checker ONCE and surface ALL of its ERROR-severity diagnostics, not just the
     // migration-grade FUNGI-VALUESTATE-008 boundary warning. The old code filtered to VALUESTATE-008 ALONE,
     // so a fail-closed value-state ERROR — e.g. FUNGI-NUMERIC-001 for a still-gated 64-bit width (UInt64)
     // the WASM backend would silently truncate — was discarded and `check` printed "0 errors" on a file the
     // production build rejects (the verified hole). These errors are UNCONDITIONAL (not mode-gated), so they
     // also drive the exit code below; VALUESTATE-008 stays a dev/check WARNING and remains display-only.
-    const vsDiags = m.checkValueStates(parsed.ast).diagnostics ?? [];
+    const vsDiags = strictGovernance
+      ? (m.checkValueStates(parsed.ast, "production").diagnostics ?? [])
+      : (m.checkValueStates(parsed.ast).diagnostics ?? []);
     const valueStateErrors = vsDiags.filter(d => d.severity === "error");
     const boundaryWarnings = vsDiags.filter(d => d.code === "FUNGI-VALUESTATE-008" && d.severity !== "error");
     // Finding-(ii) closure (2026-07-10): `check` never ran the TYPE-CHECKER, so a file could be
@@ -1356,7 +1371,7 @@ Baseline comparison (governance-cost):
     // which trips two false positives on Brand<String,"tag"> + enum — reads as failing. Only
     // --strict-types folds them into the hard, ✅-suppressing, exit-failing set. The security carve-out
     // above is ALWAYS folded (no --strict-types gate) — a fail-open must fail closed at plain check too.
-    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...securityTypeErrors, ...(strictTypes ? typeErrors : [])];
+    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...strictGovernanceEffectDiagnostics, ...securityTypeErrors, ...(strictTypes ? typeErrors : [])];
     if (allDiags.length === 0) {
       // We're building the language — distinguish "compiled real content" from "found nothing". A clean
       // parse with ZERO top-level declarations (an empty or comment-only file) must NOT report a blanket
@@ -1418,6 +1433,7 @@ Baseline comparison (governance-cost):
     // still-gated width) — these are unconditional correctness failures the build/run path also rejects.
     // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
     process.exit(errors.length > 0 || valueStateErrors.length > 0 || integrityEffectErrors.length > 0
+      || strictGovernanceEffectErrors.length > 0
       || governanceErrors.length > 0 || securityTypeErrors.length > 0
       || (strictTypes && typeErrors.length > 0) ? 1 : 0);
   }

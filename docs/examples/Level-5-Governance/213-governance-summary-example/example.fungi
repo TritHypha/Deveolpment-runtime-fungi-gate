@@ -32,6 +32,7 @@ contract {
     database.write
     network.outbound
     audit.write
+    clock.read
   }
 }
   compute target best {
@@ -61,7 +62,7 @@ contract {
   })?
 
   http.post("https://spine.nhs.uk/register", {
-    nhsNumber: nhsNumber
+    nhsNumber: seal(nhsNumber)
   })?
 
   let auditEmail: redacted Email = redact(email)

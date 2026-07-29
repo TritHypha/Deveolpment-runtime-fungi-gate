@@ -6,7 +6,7 @@
 /// ai_rule: List gpu before cpu in the quantum fallback chain to enable GPU-accelerated quantum simulation.
 /// test_status: stable
 
-guarded flow runQuantumSim(params: Tensor<Float32, [128]>) -> RunQuantumSimResult
+secure flow runQuantumSim(params: Tensor<Float32, [128]>) -> RunQuantumSimResult
 
 contract {
   // Result alias — quantum → gpu enables GPU-accelerated quantum simulation

@@ -6,6 +6,10 @@
 /// ai_rule: Use an authority block to explicitly grant permission for protected data to cross a trust boundary.
 /// test_status: stable
 
+record PatientData {
+  patientId: PatientId
+}
+
 secure flow sendReferral(readonly request: Request) -> SendReferralResult
 
 contract {
@@ -20,7 +24,6 @@ contract {
 
   effects {
     pii.read
-    database.write  // pii payload — the pii intent lives in the protected types; write authority = the database.write lane
     database.read
     network.outbound
     audit.write

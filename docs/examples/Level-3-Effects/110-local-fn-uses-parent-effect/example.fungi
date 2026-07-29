@@ -6,6 +6,9 @@
 /// ai_rule: Local fn may use effects only when the containing flow declares them.
 /// test_status: stable
 
+type Config = String
+type ConfigError = String
+
 guarded flow loadSettings(path: String) -> LoadSettingsResult
 
 contract {

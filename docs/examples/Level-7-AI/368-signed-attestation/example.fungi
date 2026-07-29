@@ -9,7 +9,7 @@
 event ClassificationCompleted
 event ClassificationFailed
 
-guarded flow classifyMessage(message: String) -> ClassifyMessageResult
+secure flow classifyMessage(message: String) -> ClassifyMessageResult
 
 contract {
   // Result alias — signed attestation proves the build artifact at the compiler level

@@ -1103,3 +1103,21 @@ pure flow f() -> Int {
       "concrete types must not emit the Auto deferral advisory");
   });
 });
+
+describe("Type checker - policy type references", () => {
+  it("checks the type inside allow:/deny: metadata instead of treating the metadata prefix as a type", () => {
+    const result = parseAndCheck(`
+type Email = String
+policy {
+  allow protected Email to "patient"
+  deny protected Email
+}
+`);
+    const unknown = diagsWithCode(result, "FUNGI-TYPE-001");
+    assert.deepEqual(
+      unknown,
+      [],
+      `Policy metadata must not invent allow:protected/deny:protected types: ${unknown.map((d) => d.message).join("; ")}`,
+    );
+  });
+});

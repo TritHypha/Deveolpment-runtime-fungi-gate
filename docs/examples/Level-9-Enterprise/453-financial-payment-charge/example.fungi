@@ -6,6 +6,18 @@
 /// ai_rule: All payment flows must declare payment.charge and audit.write effects and include an intent clause.
 /// test_status: stable
 
+record PaymentRequest {
+  amount: Money<GBP>
+  merchantId: String
+  reference: String
+}
+
+type MerchantId = String
+
+record Receipt {
+  id: String
+}
+
 secure flow chargePayment(request: PaymentRequest) -> ChargePaymentResult
 
 contract {
@@ -29,7 +41,7 @@ contract {
 
   let receipt: Receipt = PaymentGateway.charge({
     amount: amount,
-    merchantId: merchantId,
+    merchantId: seal(merchantId),
     reference: request.reference
   })?
 

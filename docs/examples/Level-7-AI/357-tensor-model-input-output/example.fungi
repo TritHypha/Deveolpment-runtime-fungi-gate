@@ -6,7 +6,7 @@
 /// ai_rule: Use a named Batch dimension to express that tensor rank is fixed but batch size is variable.
 /// test_status: stable
 
-guarded flow project(
+secure flow project(
   input: Tensor<Float32, [Batch, 768]>
 ) -> ProjectResult
 
@@ -25,5 +25,6 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   return ProjectionModel.forward(input)?
 }

@@ -6,7 +6,7 @@
 /// test_status: stable
 /// ai_rule: Use DynamicShape when batch size or sequence length varies at runtime.
 
-guarded flow runModel(input: Tensor<Float32, DynamicShape>) -> Tensor<Float32, DynamicShape>
+secure flow runModel(input: Tensor<Float32, DynamicShape>) -> Tensor<Float32, DynamicShape>
 
 contract {
   // No result alias needed — return type is a concrete tensor, not a Result
@@ -21,5 +21,6 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   return InferenceModel.forward(input)?
 }

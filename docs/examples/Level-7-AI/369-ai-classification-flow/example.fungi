@@ -18,7 +18,7 @@ record ClassifyResponse {
   confidence: String
 }
 
-guarded flow classifyInput(readonly request: Request) -> ClassifyInputResult
+secure flow classifyInput(readonly request: Request) -> ClassifyInputResult
 
 contract {
   // Result alias — full classification contract: model, effects, privacy, audit, attestation

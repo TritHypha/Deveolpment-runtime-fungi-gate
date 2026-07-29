@@ -84,8 +84,7 @@ contract {
   }
 
   effects {
-    database.write
-    network.outbound
+    payment.charge
     audit.write
   }
 
@@ -192,6 +191,7 @@ contract {
 {
   let actor: Actor = context.actor
   let traceId: TraceId = context.trace_id
+  let deadline = context.deadline
 
   unsafe let rawAmount: String = request.body.amount
   unsafe let rawCurrency: String = request.body.currency
@@ -210,6 +210,7 @@ contract {
     event: "PaymentInitiated",
     actor: actor.id,
     traceId: traceId,
+    deadline: deadline,
     transactionId: payment.id,
     amount: redact(amount),
     recipientId: redact(recipientId)

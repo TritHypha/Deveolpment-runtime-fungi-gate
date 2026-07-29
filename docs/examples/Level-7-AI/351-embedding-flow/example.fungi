@@ -6,7 +6,7 @@
 /// test_status: stable
 /// ai_rule: Every flow that calls an embedding model must declare the ai.inference effect.
 
-guarded flow embedText(text: String) -> EmbedTextResult
+secure flow embedText(text: String) -> EmbedTextResult
 
 contract {
   // Result alias — typed tensor output from embedding model
@@ -23,6 +23,7 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   let embedding = EmbeddingModel.embed(text)?
   return Ok(embedding)
 }

@@ -21,7 +21,6 @@ contract {
   }
 
   effects {
-    database.write
     audit.write
   }
 }

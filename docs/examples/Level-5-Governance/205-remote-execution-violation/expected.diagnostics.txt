@@ -1,6 +1,3 @@
-none
-// FUNGI-GOV-004 is the target diagnostic for this example.
-// Remote-execution-policy enforcement is tracked for a future compiler wave.
-// The example is stable: only FUNGI-TYPE-001 (suppressed) is produced —
-// no unsuppressed errors are produced by the current pipeline.
-// Syntax fix: added empty block to compute target remote {} (required by parser).
+FUNGI-GOV-004
+// Selecting a remote compute target fails closed until a remote-admission
+// contract exists. The model effect remains declared independently.

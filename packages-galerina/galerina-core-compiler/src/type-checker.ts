@@ -2581,6 +2581,15 @@ class TypeChecker {
   private checkTypeRef(rawValue: string, location: SourceLocation | undefined): void {
     if (rawValue === "" || rawValue === "<unknown>") return;
 
+    // Inline policy/access clauses are retained as typeRef nodes with an
+    // allow:/deny: metadata prefix and an optional `to <recipient>` suffix.
+    // Validate the referenced carrier type, never the metadata wrapper.
+    const policyType = rawValue.match(/^(?:allow|deny):(.+?)(?:\s+to\s+.+)?$/);
+    if (policyType !== null) {
+      this.checkTypeRef((policyType[1] ?? "").trim(), location);
+      return;
+    }
+
     // ── MMCP view() type: view:cap1|cap2 — capability-masked pointer (task #78) ──
     // These are first-class type annotations emitted by the parser as "view:<capMask>".
     // The governance verifier validates capability bits; the type checker only verifies

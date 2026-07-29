@@ -6,7 +6,7 @@
 /// ai_rule: deny [remote.execution] blocks any remote dispatch, regardless of what appears in the prefer list.
 /// test_status: stable
 
-guarded flow runLocal(input: Tensor<Float32, [1, 512]>) -> RunLocalResult
+secure flow runLocal(input: Tensor<Float32, [1, 512]>) -> RunLocalResult
 
 contract {
   // Result alias — deny [remote.execution] blocks dispatch regardless of prefer list

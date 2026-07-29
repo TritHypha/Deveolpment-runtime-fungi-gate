@@ -6,7 +6,7 @@
 /// ai_rule: Use compute target photonic for extremely high-throughput linear algebra; always include a classical fallback.
 /// test_status: stable
 
-guarded flow runPhotonic(input: Tensor<Float32, [Batch, 512]>) -> RunPhotonicResult
+secure flow runPhotonic(input: Tensor<Float32, [Batch, 512]>) -> RunPhotonicResult
 
 contract {
   // Result alias — photonic target for high-throughput linear algebra with gpu fallback

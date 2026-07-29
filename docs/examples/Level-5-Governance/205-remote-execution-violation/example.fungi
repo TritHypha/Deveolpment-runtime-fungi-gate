@@ -18,6 +18,7 @@ contract {
   }
 
   effects {
+    ai.inference
     audit.write
   }
 }
