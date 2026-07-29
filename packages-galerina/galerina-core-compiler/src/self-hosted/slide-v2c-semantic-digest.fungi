@@ -1,0 +1,55 @@
+@version 1
+/// @file: slide-v2c-semantic-digest.fungi
+/// @purpose: Bind independently decoded and validated V2-C bytes to the v2 semantic domain.
+/// @status: Digest evidence only; never admission or execution authority.
+
+record SLIDEV2CSemanticBinding {
+  decision: SLIDEV2CExecutableDecision
+  digestSuiteId: String
+  domainId: String
+  bodyDigest: String
+  semanticDigest: String
+  authorityReleased: Bool
+}
+
+pure flow emptySLIDEV2CSemanticBinding(
+  decision: SLIDEV2CExecutableDecision,
+) -> SLIDEV2CSemanticBinding
+contract { intent { "Release no digest or authority for refused V2-C semantics." } }
+{
+  return {
+    decision: decision digestSuiteId: "slide.digest.sha256.v1"
+    domainId: "slide.gir.semantic.v2" bodyDigest: ""
+    semanticDigest: "" authorityReleased: false
+  }
+}
+
+pure flow bindSLIDEV2CSemanticDigest(
+  body: Bytes,
+) -> SLIDEV2CSemanticBinding
+contract { intent { "Hash only exact independently decoded and semantically admitted V2-C bytes." } }
+{
+  let imported = decodeSLIDEV2CProgram(body)
+  check(imported.decision.verdict) {
+    deny: { return emptySLIDEV2CSemanticBinding(imported.decision) }
+    ambig: { return emptySLIDEV2CSemanticBinding(imported.decision) }
+    if: {}
+  }
+  let domainPrefix = Bytes.fromHex(
+    "736c6964652e6769722e73656d616e7469632e763200",
+  )
+  let bodyDigest = body.sha256Hex()
+  let semanticDigest = domainPrefix.append(body).sha256Hex()
+  if bodyDigest.length() != 64 or semanticDigest.length() != 64 {
+    return emptySLIDEV2CSemanticBinding(
+      refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-DIGEST-001", "registered SHA-256 primitive unavailable",
+      ),
+    )
+  }
+  return {
+    decision: imported.decision digestSuiteId: "slide.digest.sha256.v1"
+    domainId: "slide.gir.semantic.v2" bodyDigest: bodyDigest
+    semanticDigest: semanticDigest authorityReleased: false
+  }
+}
