@@ -44,8 +44,9 @@ mutations. V2-A now has a semantically gated deterministic 540-byte canonical
 producer body with every critical root table and a pinned registry-descriptor
 digest. An independent `.fungi` importer now reconstructs and semantically
 admits the candidate without producer/encoder access, then binds the exact
-body to the v2 semantic domain. It does not yet execute V2-A, so it replaces
-no current runtime component.
+body to the v2 semantic domain. A bounded reference runtime now
+instruction-drives the decoded call/branch/join/checked-add/K3 graph and typed
+exits. It still replaces no current production component.
 SLIDE packaging, native execution, Tri-Fuse v2, the frontend receipt, driver
 CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
@@ -77,7 +78,7 @@ Planning completion and implementation completion are deliberately separate.
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
-| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, and domain-separated digest | Instruction-driven execution, then versioned memory/effect/capability increments |
+| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, and instruction-driven call/branch/join/K3 execution | Explicit budget increment, then versioned memory/effect/capability increments |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
@@ -134,11 +135,13 @@ The V2-A logical producer and validator are a separate new-major checkpoint,
 not an R1 widening. They prove that a general graph can represent multiple
 functions, direct calls and cross-block typed value transfer, and that hostile
 logical mutations refuse. They currently operate on an in-memory producer
-record. The producer now emits canonical V2 bytes and an independent importer
-decodes, validates, and binds them. Execution is still absent, so the
-authenticated bytes are not yet executed bytes and this cannot replace the
+record. The producer emits canonical V2 bytes; an independent importer decodes,
+validates, and binds them; and the bounded reference runtime executes only
+those records. This satisfies the authenticated-bytes-equal-executed-semantics
+rule for V2-A, but lacks general budgets, memory, effects, capabilities,
+native artifacts, isolation and a second frontend, so it cannot replace the
 current GIR, WAT/Wasm, or interpreter paths. Evidence:
-`../reports/slide-v2a-independent-import-2026-07-29.md`.
+`../reports/slide-v2a-validated-runtime-2026-07-29.md`.
 
 ### 4.3 Control-flow hardening completed so far
 
@@ -309,9 +312,9 @@ domain-separated semantic digest, and instruction-drives only the admitted
 records. Focused evidence is 25/25; after the semantic-memory checkpoint,
 compiler evidence is 5,297/5,297.
 The first generalization increment is now implemented as V2-A logical records,
-semantic admission, canonical encoding, independent import, and digest
-binding. Remaining: instruction-driven execution, memory/budget/effect/
-capability increments, and a second frontend.
+semantic admission, canonical encoding, independent import, digest binding,
+and instruction-driven execution. Remaining: explicit budget, memory,
+effect/capability increments, and a second frontend.
 
 The follow-on safe-value gate walks the admitted R1 registry again, admits only
 the bounded no-address subset, and labels the result
@@ -417,7 +420,7 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. instruction-drive only the independently admitted decoded V2-A graph;
+3. add an explicit V2 budget increment and its exhaustion corpus;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.

@@ -11,13 +11,13 @@
 
 | Metric | Count |
 |---|---|
-| Files | 115 |
+| Files | 116 |
 | Internal edges | 273 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
 | └─ Third-party | 3 |
-| Orphan files | 25 |
+| Orphan files | 26 |
 
 ## External Dependencies (the Border)
 
@@ -69,6 +69,7 @@ No boundary violations. All external imports are within the allowlist.
 - `src/self-hosted/slide-v2a-cbor-encoder.fungi`
 - `src/self-hosted/slide-v2a-cbor-importer.fungi`
 - `src/self-hosted/slide-v2a-logical-model.fungi`
+- `src/self-hosted/slide-v2a-runtime.fungi`
 - `src/self-hosted/slide-v2a-semantic-digest.fungi`
 - `src/self-hosted/slide-v2a-validator.fungi`
 - `src/self-hosted/type-checker.fungi`

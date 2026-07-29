@@ -70,13 +70,18 @@ planning checkbox must never be used to imply that implementation exists.
   exposes no partial graph on refusal, runs semantic admission, and binds the
   pinned v2 domain-separated digest. V2-A focused evidence is 25/25. Report:
   `docs/reports/slide-v2a-independent-import-2026-07-29.md`.
-- **Current:** implement the instruction-driven V2-A executor over only the
-  independently decoded and validated graph.
-- **Next:** add budget/effect/capability/memory increments without widening
-  frozen R1.
-- **Verification:** compiler typecheck/build and 5,322/5,322 tests pass.
-  Frozen R1 remains 27/27; V2-A is 25/25. Regenerated project graph:
-  7,223 nodes / 7,484 edges, zero integrity
+- **Completed (uncommitted checkpoint):** `slide-v2a-runtime.fungi`
+  instruction-drives only independently decoded/admitted records through the
+  pure call, Boolean branch, typed join, checked Int32 and exhaustive K3 exits.
+  It preserves success, denial, unresolved, two overflow paths, malformed
+  bytes, and invalid-fourth-Verdict refusal. V2-A is 27/27. Report:
+  `docs/reports/slide-v2a-validated-runtime-2026-07-29.md`.
+- **Current:** add explicit runtime-budget semantics and negative fixtures.
+- **Next:** add versioned effect/capability/memory increments without widening
+  frozen R1 or authorizing host access.
+- **Verification:** compiler typecheck/build and 5,324/5,324 tests pass.
+  Frozen R1 remains 27/27; V2-A is 27/27. Regenerated project graph:
+  7,231 nodes / 7,491 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero

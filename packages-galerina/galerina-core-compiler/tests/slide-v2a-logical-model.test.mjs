@@ -21,6 +21,7 @@ const VALIDATOR_PATH = join(SELF_HOSTED, "slide-v2a-validator.fungi");
 const ENCODER_PATH = join(SELF_HOSTED, "slide-v2a-cbor-encoder.fungi");
 const IMPORTER_PATH = join(SELF_HOSTED, "slide-v2a-cbor-importer.fungi");
 const DIGEST_PATH = join(SELF_HOSTED, "slide-v2a-semantic-digest.fungi");
+const RUNTIME_PATH = join(SELF_HOSTED, "slide-v2a-runtime.fungi");
 
 let parsed;
 let importer;
@@ -103,12 +104,13 @@ async function validate(value) {
 }
 
 before(async () => {
-  const [modelSource, validatorSource, encoderSource, importerSource, digestSource] = await Promise.all([
+  const [modelSource, validatorSource, encoderSource, importerSource, digestSource, runtimeSource] = await Promise.all([
     readFile(MODEL_PATH, "utf8"),
     readFile(VALIDATOR_PATH, "utf8"),
     readFile(ENCODER_PATH, "utf8"),
     readFile(IMPORTER_PATH, "utf8"),
     readFile(DIGEST_PATH, "utf8"),
+    readFile(RUNTIME_PATH, "utf8"),
   ]);
   const source =
     modelSource +
@@ -138,7 +140,9 @@ before(async () => {
   const independentSourceWithDigest =
     independentSource +
     "\n" +
-    digestSource.replace(/^@version 1\r?\n/, "");
+    digestSource.replace(/^@version 1\r?\n/, "") +
+    "\n" +
+    runtimeSource.replace(/^@version 1\r?\n/, "");
   importer = parseProgram(independentSourceWithDigest, "slide-v2a-cbor-importer.fungi", {
     requireVersionHeader: true,
   });
@@ -259,7 +263,7 @@ describe("SLIDE executable GIR V2-A logical model", () => {
       "decodeSLIDEV2AProgram",
       new Map([["bytes", { __tag: "bytes", value: canonicalBytes }]]),
     );
-    assert.equal(result.audit.result, "ok");
+    assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
     assert.equal(field(field(result.value, "decision"), "verdict").value, 1);
     assert.equal(field(result.value, "consumed").value, 540);
     const decoded = field(result.value, "program");
@@ -299,6 +303,74 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     assert.equal(field(field(refused.value, "decision"), "verdict").value, -1);
     assert.equal(field(refused.value, "bodyDigest").value, "");
     assert.equal(field(refused.value, "semanticDigest").value, "");
+  });
+
+  async function executeV2A(bytes, left, right, admission) {
+    const result = await runOn(
+      importer,
+      "executeSLIDEV2ABytes",
+      new Map([
+        ["body", { __tag: "bytes", value: bytes }],
+        ["left", intValue(left)],
+        ["right", intValue(right)],
+        ["admission", intValue(admission)],
+      ]),
+    );
+    assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
+    return result.value;
+  }
+
+  it("instruction-drives call, branch, join, and all three K3 exits", async () => {
+    const allowed = await executeV2A(canonicalBytes, 2, 3, 1);
+    assert.equal(field(allowed, "status").value, "SUCCEEDED");
+    assert.equal(field(allowed, "value").value, 6);
+    assert.equal(field(allowed, "failureId").value, 0);
+    assert.ok(field(allowed, "steps").value <= 64);
+
+    const negativeBranch = await executeV2A(canonicalBytes, -2, 3, 1);
+    assert.equal(field(negativeBranch, "status").value, "SUCCEEDED");
+    assert.equal(field(negativeBranch, "value").value, 7);
+
+    const denied = await executeV2A(canonicalBytes, 2, 3, -1);
+    assert.equal(field(denied, "status").value, "FAILED");
+    assert.equal(field(denied, "failureId").value, 2);
+
+    const unresolved = await executeV2A(canonicalBytes, 2, 3, 0);
+    assert.equal(field(unresolved, "status").value, "FAILED");
+    assert.equal(field(unresolved, "failureId").value, 3);
+  });
+
+  it("preserves checked overflow and refuses invalid invocation or bytes", async () => {
+    const calleeOverflow = await executeV2A(
+      canonicalBytes,
+      2147483647,
+      0,
+      1,
+    );
+    assert.equal(field(calleeOverflow, "status").value, "FAILED");
+    assert.equal(field(calleeOverflow, "failureId").value, 1);
+
+    const joinOverflow = await executeV2A(
+      canonicalBytes,
+      2147483646,
+      1,
+      1,
+    );
+    assert.equal(field(joinOverflow, "status").value, "FAILED");
+    assert.equal(field(joinOverflow, "failureId").value, 1);
+
+    for (const refused of [
+      await executeV2A(canonicalBytes, 2, 3, 2),
+      await executeV2A(
+        Uint8Array.from([...canonicalBytes, 0]),
+        2,
+        3,
+        1,
+      ),
+    ]) {
+      assert.equal(field(refused, "status").value, "REFUSED");
+      assert.equal(field(field(refused, "decision"), "verdict").value, -1);
+    }
   });
 
   for (const [name, bytes] of [
