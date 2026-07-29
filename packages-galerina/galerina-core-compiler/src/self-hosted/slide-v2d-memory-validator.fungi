@@ -1,0 +1,485 @@
+@version 1
+/// @file: slide-v2d-memory-validator.fungi
+/// @purpose: Fail closed over the first V2-D no-address semantic-memory plan.
+/// @status: Semantic evidence only; never a native certificate or execution permit.
+
+record SLIDEV2DMemoryDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  semanticMemoryBytes: Int
+  guardCount: Int
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2DMemory(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Refuse V2-D without exposing a partial plan or authority." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail semanticMemoryBytes: 0 guardCount: 0
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
+pure flow validatedSLIDEV2DMemory() -> SLIDEV2DMemoryDecision
+contract { intent { "Report semantic memory-plan validation without a native claim." } }
+{
+  return {
+    verdict: Verdict.Allow status: "SEMANTIC_MEMORY_PLAN_VALIDATED"
+    failureId: "NONE" detail: "bounded no-address V2-D memory plan validated"
+    semanticMemoryBytes: 12 guardCount: 1
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
+pure flow emptySLIDEV2DRegion() -> SLIDEV2DRegion
+contract { intent { "Return an inert region behind a refusal boundary." } }
+{
+  return {
+    regionId: -1 parentRegionId: -1 lifetimeClassId: -1
+    cleanupPolicyId: -1 byteCeiling: -1
+  }
+}
+
+pure flow slideV2DRegionAt(
+  values: Array<SLIDEV2DRegion>,
+  index: Int,
+) -> SLIDEV2DRegion
+contract { intent { "Read one region without inventing ownership semantics." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2DRegion() }
+    _ => { return emptySLIDEV2DRegion() }
+  }
+}
+
+pure flow emptySLIDEV2DMemoryObject() -> SLIDEV2DMemoryObject
+contract { intent { "Return an inert object behind a refusal boundary." } }
+{
+  return {
+    objectId: -1 typeId: -1 extentElements: -1 elementBytes: -1
+    alignment: -1 ownerRegionId: -1 lifetimeClassId: -1 mutabilityId: -1
+    initializationId: -1 sensitivityId: -1
+  }
+}
+
+pure flow slideV2DMemoryObjectAt(
+  values: Array<SLIDEV2DMemoryObject>,
+  index: Int,
+) -> SLIDEV2DMemoryObject
+contract { intent { "Read one object without manufacturing memory evidence." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2DMemoryObject() }
+    _ => { return emptySLIDEV2DMemoryObject() }
+  }
+}
+
+pure flow emptySLIDEV2DGuard() -> SLIDEV2DGuard
+contract { intent { "Return an inert guard descriptor behind refusal." } }
+{
+  return {
+    guardId: -1 functionId: -1 blockId: -1 guardResultId: -1
+    accessResultId: -1 objectId: -1 indexResultId: -1 failureId: -1
+  }
+}
+
+pure flow slideV2DGuardAt(
+  values: Array<SLIDEV2DGuard>,
+  index: Int,
+) -> SLIDEV2DGuard
+contract { intent { "Read one guard without manufacturing dominance evidence." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2DGuard() }
+    _ => { return emptySLIDEV2DGuard() }
+  }
+}
+
+pure flow emptySLIDEV2DBlock() -> SLIDEV2ABlock
+contract { intent { "Return an inert block behind a V2-D refusal boundary." } }
+{
+  return {
+    blockId: -1 parameters: Array.empty() instructions: Array.empty()
+    terminator: slideV2ATerminator(-1, Array.empty(), Array.empty())
+  }
+}
+
+pure flow slideV2DBlockAt(
+  values: Array<SLIDEV2ABlock>,
+  index: Int,
+) -> SLIDEV2ABlock
+contract { intent { "Read one guarded block without default executable semantics." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2DBlock() }
+    _ => { return emptySLIDEV2DBlock() }
+  }
+}
+
+pure flow emptySLIDEV2DInstruction() -> SLIDEV2AInstruction
+contract { intent { "Return an inert instruction behind a V2-D refusal boundary." } }
+{
+  return {
+    resultId: -1 opcodeId: -1 typeId: -1
+    operands: Array.empty() immediate: -1
+  }
+}
+
+pure flow slideV2DInstructionAt(
+  values: Array<SLIDEV2AInstruction>,
+  index: Int,
+) -> SLIDEV2AInstruction
+contract { intent { "Read one instruction without default guard or access semantics." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2DInstruction() }
+    _ => { return emptySLIDEV2DInstruction() }
+  }
+}
+
+pure flow validateSLIDEV2DRegistry(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Bind V2-D to the frozen V2-C semantic parent." } }
+{
+  if program.formatMajor != 2 or program.formatMinor != 2 or program.semanticProfileId != "slide.semantic.executable-gir.v2" {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-001", "format or semantic profile changed",
+    )
+  }
+  if program.registrySetId != "slide.registry.executable-gir.v2d" or program.registrySetDigest != "a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648" {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-002", "V2-D registry identity or digest changed",
+    )
+  }
+  if program.parentRegistryId != "slide.registry.executable-gir.v2c" or program.parentRegistryDigest != "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66" {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-003", "V2-C registry parent changed",
+    )
+  }
+  if program.parentSemanticDigest != "7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c" {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-004", "V2-C semantic parent changed",
+    )
+  }
+  if program.memoryProfileId != "slide.memory.safe-value.v1" {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-005", "safe-value memory profile changed",
+    )
+  }
+  if program.nativeCertificatePresent or program.authorityReleased {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-006", "logical input claims native safety or authority",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DLimits(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Require exact finite resource ceilings and zero forbidden memory surfaces." } }
+{
+  let limits = program.limits
+  if limits.canonicalBodyBytes != 28672 or limits.regions != 1 or limits.memoryObjects != 1 or limits.memoryBytes != 12 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-007", "body, region, object, or memory-byte ceiling changed",
+    )
+  }
+  if limits.stackBytes != 4096 or limits.heapBytes != 0 or limits.threads != 1 or limits.outputBytes != 0 or limits.executionSteps != 112 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-008", "stack, heap, thread, output, or step ceiling changed",
+    )
+  }
+  if limits.rawPointers != 0 or limits.manualDeallocations != 0 or limits.sharedMutableAliases != 0 or limits.ffiBoundaries != 0 or limits.unwinds != 0 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-009", "pointer, free, alias, FFI, or unwind surface is nonzero",
+    )
+  }
+  if limits.effects != 0 or limits.capabilities != 0 or limits.hostCalls != 0 or program.effectIds.count() != 0 or program.capabilityIds.count() != 0 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-010", "effect, capability, or host-call surface is nonzero",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DIds(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Require dense append-only V2-D type and opcode identities." } }
+{
+  if program.typeIds.count() != 14 or program.opcodeIds.count() != 22 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-011", "type or opcode table length changed",
+    )
+  }
+  mut i: Int = 0
+  while i < program.typeIds.count() {
+    if slideV2CIntAt(program.typeIds, i) != i + 1 {
+      return refuseSLIDEV2DMemory(
+        "SLIDE-V2D-MEMORY-011", "type identities are missing or reordered",
+      )
+    }
+    i = i + 1
+  }
+  mut o: Int = 0
+  while o < program.opcodeIds.count() {
+    if slideV2CIntAt(program.opcodeIds, o) != o + 1 {
+      return refuseSLIDEV2DMemory(
+        "SLIDE-V2D-MEMORY-011", "opcode identities are missing or reordered",
+      )
+    }
+    o = o + 1
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DRegionAndObject(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Validate ownership, initialization, layout, and checked extent arithmetic." } }
+{
+  if program.regions.count() != 1 or program.memoryObjects.count() != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-012", "region or memory-object table is not exact",
+    )
+  }
+  let region = slideV2DRegionAt(program.regions, 0)
+  if region.regionId != 1 or region.parentRegionId != 0 or region.lifetimeClassId != 1 or region.cleanupPolicyId != 1 or region.byteCeiling != 12 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-013", "region identity, lifetime, cleanup, or ceiling changed",
+    )
+  }
+  let object = slideV2DMemoryObjectAt(program.memoryObjects, 0)
+  if object.objectId != 1 or object.typeId != 10 or object.ownerRegionId != region.regionId or object.lifetimeClassId != region.lifetimeClassId {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-014", "object identity, type, owner, or lifetime changed",
+    )
+  }
+  if object.extentElements <= 0 or object.elementBytes <= 0 or object.extentElements > 16 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-015", "object extent or element width is invalid",
+    )
+  }
+  if object.elementBytes != 4 or object.alignment != 4 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-016", "object element width or alignment changed",
+    )
+  }
+  if object.extentElements > program.limits.memoryBytes / object.elementBytes {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-017", "checked extent multiplication exceeds memory ceiling",
+    )
+  }
+  let totalBytes = object.extentElements * object.elementBytes
+  if totalBytes != program.limits.memoryBytes or totalBytes != region.byteCeiling {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-017", "object bytes disagree with region or memory ceiling",
+    )
+  }
+  if object.mutabilityId != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-018", "object is mutable or mutability is unknown",
+    )
+  }
+  if object.initializationId != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-019", "object is not definitely initialized",
+    )
+  }
+  if object.sensitivityId != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-020", "object sensitivity identity changed",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow slideV2DInstructionShapeMatches(
+  instruction: SLIDEV2AInstruction,
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> Bool
+contract { intent { "Compare one complete V2-D instruction shape without prefix acceptance." } }
+{
+  if instruction.resultId != resultId or instruction.opcodeId != opcodeId or instruction.typeId != typeId or instruction.immediate != immediate {
+    return false
+  }
+  if instruction.operands.count() != operands.count() { return false }
+  mut i: Int = 0
+  while i < operands.count() {
+    if slideV2CIntAt(instruction.operands, i) != slideV2CIntAt(operands, i) {
+      return false
+    }
+    i = i + 1
+  }
+  return true
+}
+
+pure flow validateSLIDEV2DInstruction(
+  instruction: SLIDEV2AInstruction,
+  index: Int,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Validate one exact guarded-access instruction." } }
+{
+  mut matches: Bool = false
+  match index {
+    0 => { matches = slideV2DInstructionShapeMatches(instruction, 0, 12, 6, Array.empty(), 1) }
+    1 => { matches = slideV2DInstructionShapeMatches(instruction, 1, 13, 7, Array.empty(), 2) }
+    2 => { matches = slideV2DInstructionShapeMatches(instruction, 2, 1, 1, Array.empty(), 0) }
+    3 => { matches = slideV2DInstructionShapeMatches(instruction, 3, 2, 1, Array.empty(), 3) }
+    4 => { matches = slideV2DInstructionShapeMatches(instruction, 4, 2, 1, Array.empty(), 5) }
+    5 => { matches = slideV2DInstructionShapeMatches(instruction, 5, 2, 1, Array.empty(), 8) }
+    6 => { matches = slideV2DInstructionShapeMatches(instruction, 6, 14, 10, Array.of(3, 4, 5), 0) }
+    7 => { matches = slideV2DInstructionShapeMatches(instruction, 7, 15, 1, Array.of(6), 0) }
+    8 => { matches = slideV2DInstructionShapeMatches(instruction, 8, 21, 14, Array.of(6, 2), 4) }
+    9 => { matches = slideV2DInstructionShapeMatches(instruction, 9, 22, 13, Array.of(6, 2, 8), 1) }
+    10 => { matches = slideV2DInstructionShapeMatches(instruction, 10, 4, 2, Array.of(7, 2), 0) }
+    11 => { matches = slideV2DInstructionShapeMatches(instruction, 11, 17, 11, Array.of(9, 10, 0), 1) }
+    12 => { matches = slideV2DInstructionShapeMatches(instruction, 12, 18, 13, Array.of(11), 1) }
+    13 => { matches = slideV2DInstructionShapeMatches(instruction, 13, 19, 12, Array.of(12), 1) }
+    14 => { matches = slideV2DInstructionShapeMatches(instruction, 14, 20, 13, Array.of(13), 1) }
+    _ => {
+      return refuseSLIDEV2DMemory(
+        "SLIDE-V2D-MEMORY-021", "unknown or surplus guarded function instruction",
+      )
+    }
+  }
+  if matches == false {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-022", "guarded function instruction changed",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DGuardedFunction(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Validate the exact guard/access graph and dominance relation." } }
+{
+  let function = program.function
+  if function.functionId != 3 or function.qualifierId != 1 or function.parameterTypes.count() != 1 or slideV2CIntAt(function.parameterTypes, 0) != 1 or function.resultTypeId != 13 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-023", "guarded function signature changed",
+    )
+  }
+  if function.declaredEffectIds.count() != 0 or function.requestedCapabilityIds.count() != 0 or function.entryBlockId != 0 or function.blocks.count() != 1 or function.limitRef != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-024", "guarded function authority or block shape changed",
+    )
+  }
+  let block = slideV2DBlockAt(function.blocks, 0)
+  if block.blockId != 0 or block.parameters.count() != 0 or block.instructions.count() != 15 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-025", "guarded block identity or instruction count changed",
+    )
+  }
+  mut i: Int = 0
+  while i < block.instructions.count() {
+    let decision = validateSLIDEV2DInstruction(
+      slideV2DInstructionAt(block.instructions, i), i,
+    )
+    check(decision.verdict) {
+      deny: { return decision }
+      ambig: { return decision }
+      if: {}
+    }
+    i = i + 1
+  }
+  if block.terminator.terminatorId != 4 or block.terminator.operands.count() != 1 or slideV2CIntAt(block.terminator.operands, 0) != 14 or block.terminator.edges.count() != 0 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-026", "guarded function return changed or gained fallthrough",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DGuardDescriptor(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Bind one guard to the exact object, index, access, and registered failure." } }
+{
+  if program.guards.count() != 1 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-027", "guard descriptor table is not exact",
+    )
+  }
+  let guard = slideV2DGuardAt(program.guards, 0)
+  if guard.guardId != 1 or guard.functionId != 3 or guard.blockId != 0 or guard.objectId != 1 or guard.indexResultId != 2 or guard.failureId != 4 {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-028", "guard identity, scope, object, index, or failure changed",
+    )
+  }
+  if guard.guardResultId != 8 or guard.accessResultId != 9 or guard.guardResultId >= guard.accessResultId {
+    return refuseSLIDEV2DMemory(
+      "SLIDE-V2D-MEMORY-029", "guard no longer dominates the guarded access",
+    )
+  }
+  return validatedSLIDEV2DMemory()
+}
+
+pure flow validateSLIDEV2DMemoryProgram(
+  program: SLIDEV2DMemoryProgram,
+) -> SLIDEV2DMemoryDecision
+contract { intent { "Validate every V2-D semantic-memory gate without native or execution authority." } }
+{
+  let registry = validateSLIDEV2DRegistry(program)
+  check(registry.verdict) {
+    deny: { return registry }
+    ambig: { return registry }
+    if: {}
+  }
+  let limits = validateSLIDEV2DLimits(program)
+  check(limits.verdict) {
+    deny: { return limits }
+    ambig: { return limits }
+    if: {}
+  }
+  let ids = validateSLIDEV2DIds(program)
+  check(ids.verdict) {
+    deny: { return ids }
+    ambig: { return ids }
+    if: {}
+  }
+  let object = validateSLIDEV2DRegionAndObject(program)
+  check(object.verdict) {
+    deny: { return object }
+    ambig: { return object }
+    if: {}
+  }
+  let function = validateSLIDEV2DGuardedFunction(program)
+  check(function.verdict) {
+    deny: { return function }
+    ambig: { return function }
+    if: {}
+  }
+  let guard = validateSLIDEV2DGuardDescriptor(program)
+  check(guard.verdict) {
+    deny: { return guard }
+    ambig: { return guard }
+    if: {}
+  }
+  return validatedSLIDEV2DMemory()
+}

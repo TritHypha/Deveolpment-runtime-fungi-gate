@@ -1,0 +1,159 @@
+@version 1
+/// @file: slide-v2d-memory-model.fungi
+/// @purpose: Materialize the first no-address V2-D safe-value memory plan.
+/// @status: Logical producer only; no native memory certificate or authority.
+
+record SLIDEV2DMemoryLimits {
+  canonicalBodyBytes: Int
+  regions: Int
+  memoryObjects: Int
+  memoryBytes: Int
+  stackBytes: Int
+  heapBytes: Int
+  threads: Int
+  outputBytes: Int
+  rawPointers: Int
+  manualDeallocations: Int
+  sharedMutableAliases: Int
+  ffiBoundaries: Int
+  unwinds: Int
+  executionSteps: Int
+  effects: Int
+  capabilities: Int
+  hostCalls: Int
+}
+
+record SLIDEV2DRegion {
+  regionId: Int
+  parentRegionId: Int
+  lifetimeClassId: Int
+  cleanupPolicyId: Int
+  byteCeiling: Int
+}
+
+record SLIDEV2DMemoryObject {
+  objectId: Int
+  typeId: Int
+  extentElements: Int
+  elementBytes: Int
+  alignment: Int
+  ownerRegionId: Int
+  lifetimeClassId: Int
+  mutabilityId: Int
+  initializationId: Int
+  sensitivityId: Int
+}
+
+record SLIDEV2DGuard {
+  guardId: Int
+  functionId: Int
+  blockId: Int
+  guardResultId: Int
+  accessResultId: Int
+  objectId: Int
+  indexResultId: Int
+  failureId: Int
+}
+
+record SLIDEV2DMemoryProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  registrySetId: String
+  registrySetDigest: String
+  parentRegistryId: String
+  parentRegistryDigest: String
+  parentSemanticDigest: String
+  memoryProfileId: String
+  limits: SLIDEV2DMemoryLimits
+  typeIds: Array<Int>
+  opcodeIds: Array<Int>
+  regions: Array<SLIDEV2DRegion>
+  memoryObjects: Array<SLIDEV2DMemoryObject>
+  guards: Array<SLIDEV2DGuard>
+  function: SLIDEV2AFunction
+  effectIds: Array<Int>
+  capabilityIds: Array<Int>
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow materializeSLIDEV2DGuardedFunction() -> SLIDEV2AFunction
+contract { intent { "Materialize one explicit guard and guarded immutable-array access." } }
+{
+  let instructions = Array.of(
+    slideV2AInstruction(0, 12, 6, Array.empty(), 1),
+    slideV2AInstruction(1, 13, 7, Array.empty(), 2),
+    slideV2AInstruction(2, 1, 1, Array.empty(), 0),
+    slideV2AInstruction(3, 2, 1, Array.empty(), 3),
+    slideV2AInstruction(4, 2, 1, Array.empty(), 5),
+    slideV2AInstruction(5, 2, 1, Array.empty(), 8),
+    slideV2AInstruction(6, 14, 10, Array.of(3, 4, 5), 0),
+    slideV2AInstruction(7, 15, 1, Array.of(6), 0),
+    slideV2AInstruction(8, 21, 14, Array.of(6, 2), 4),
+    slideV2AInstruction(9, 22, 13, Array.of(6, 2, 8), 1),
+    slideV2AInstruction(10, 4, 2, Array.of(7, 2), 0),
+    slideV2AInstruction(11, 17, 11, Array.of(9, 10, 0), 1),
+    slideV2AInstruction(12, 18, 13, Array.of(11), 1),
+    slideV2AInstruction(13, 19, 12, Array.of(12), 1),
+    slideV2AInstruction(14, 20, 13, Array.of(13), 1),
+  )
+  let block: SLIDEV2ABlock = {
+    blockId: 0
+    parameters: Array.empty()
+    instructions: instructions
+    terminator: slideV2ATerminator(4, Array.of(14), Array.empty())
+  }
+  return {
+    functionId: 3 qualifierId: 1 parameterTypes: Array.of(1)
+    resultTypeId: 13 declaredEffectIds: Array.empty()
+    requestedCapabilityIds: Array.empty() entryBlockId: 0
+    blocks: Array.of(block) limitRef: 1
+  }
+}
+
+pure flow materializeSLIDEV2DMemoryProgram() -> SLIDEV2DMemoryProgram
+contract { intent { "Materialize the exact bounded safe-value semantic-memory fixture." } }
+{
+  let limits: SLIDEV2DMemoryLimits = {
+    canonicalBodyBytes: 28672 regions: 1 memoryObjects: 1 memoryBytes: 12
+    stackBytes: 4096 heapBytes: 0 threads: 1 outputBytes: 0
+    rawPointers: 0 manualDeallocations: 0 sharedMutableAliases: 0
+    ffiBoundaries: 0 unwinds: 0 executionSteps: 112 effects: 0
+    capabilities: 0 hostCalls: 0
+  }
+  let region: SLIDEV2DRegion = {
+    regionId: 1 parentRegionId: 0 lifetimeClassId: 1 cleanupPolicyId: 1
+    byteCeiling: 12
+  }
+  let object: SLIDEV2DMemoryObject = {
+    objectId: 1 typeId: 10 extentElements: 3 elementBytes: 4 alignment: 4
+    ownerRegionId: 1 lifetimeClassId: 1 mutabilityId: 1
+    initializationId: 1 sensitivityId: 1
+  }
+  let guard: SLIDEV2DGuard = {
+    guardId: 1 functionId: 3 blockId: 0 guardResultId: 8
+    accessResultId: 9 objectId: 1 indexResultId: 2 failureId: 4
+  }
+  return {
+    formatMajor: 2 formatMinor: 2
+    semanticProfileId: "slide.semantic.executable-gir.v2"
+    registrySetId: "slide.registry.executable-gir.v2d"
+    registrySetDigest: "a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648"
+    parentRegistryId: "slide.registry.executable-gir.v2c"
+    parentRegistryDigest: "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66"
+    parentSemanticDigest: "7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c"
+    memoryProfileId: "slide.memory.safe-value.v1"
+    limits: limits
+    typeIds: Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+    opcodeIds: Array.of(
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+      12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+    )
+    regions: Array.of(region) memoryObjects: Array.of(object)
+    guards: Array.of(guard) function: materializeSLIDEV2DGuardedFunction()
+    effectIds: Array.empty() capabilityIds: Array.empty()
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
