@@ -10,7 +10,7 @@
   "bin": { "galerina-graph": "./dist/cli.js" },
   "scripts": {
     "build": "tsc",
-    "test": "node --test tests/*.test.mjs",
+    "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": { "@galerina/core-compiler": "file:../galerina-core-compiler" },

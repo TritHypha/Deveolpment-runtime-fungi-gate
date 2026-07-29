@@ -85,13 +85,22 @@ planning checkbox must never be used to imply that implementation exists.
   registered; benchmarks and Myco are included. Benchmark integrity is 3/3,
   Myco is 52/52, and a fresh four-package core run is 5,823/5,823
   (compiler 5,698; economics 15; security 15; graph algorithms 95).
-- **Current:** Task 2 is ready for its scoped commit. Task 1's structural
+- **Completed (Task 3):** every TypeScript `galerina-devtools-*` package and
+  `galerina-test` now executes `typecheck -> build -> node --test` in that
+  order. The JavaScript-only benchmark package retains its separate countable
+  integrity suite. The package-contract test first failed on 13 stale-build
+  chains and now passes.
+- **Verified (Task 3):** all 15 requested devtools/test packages rebuilt and
+  passed through the governed runner: 15/15 packages, 491/491 tests, zero
+  failures. This includes both graph package variants and `galerina-test`.
+- **Current:** Tasks 2 and 3 are complete. Task 1's structural
   inventory remains intentionally red on 22 audit/lint dispositions because
   true blocking requires Task 4 result propagation and Task 8 promotion of
   report-only/advisory tools; adding exceptions would falsify the design.
-- **Next safe work:** commit Task 2, then execute Task 3 package build-chain
-  standardization. Generator policy remains deliberately inactive until its
-  Task 7 RED/GREEN contract.
+- **Next safe work:** implement Task 4's machine-readable, failure-propagating
+  phase-close tiers, then return to the audit disposition/anti-neutering
+  dependency. Generator policy remains deliberately inactive until its Task
+  7 RED/GREEN contract.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side

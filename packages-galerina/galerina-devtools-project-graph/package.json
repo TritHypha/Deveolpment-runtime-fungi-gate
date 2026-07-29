@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "node --test tests/core.test.mjs tests/algorithms.test.mjs tests/graphs.test.mjs tests/reporting.test.mjs",
+    "test": "npm run typecheck && npm run build && node --test tests/core.test.mjs tests/algorithms.test.mjs tests/graphs.test.mjs tests/reporting.test.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist"
   },

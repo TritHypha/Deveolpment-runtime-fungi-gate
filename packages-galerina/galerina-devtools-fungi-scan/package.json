@@ -15,7 +15,7 @@
   "bin": { "galerina-fungi-scan": "./dist/cli.js" },
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node --test tests/*.test.mjs",
+    "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": { "@galerina/core-compiler": "file:../galerina-core-compiler" },

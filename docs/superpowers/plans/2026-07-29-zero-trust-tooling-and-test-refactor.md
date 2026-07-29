@@ -375,7 +375,7 @@ git commit -m "fix: make package test aggregation complete"
 - The JavaScript-only benchmark package is exempt from TypeScript build, but
   not from standard Node test reporting.
 
-- [ ] **Step 1: Write RED contract tests**
+- [x] **Step 1: Write RED contract tests**
 
 ```js
 test("every TypeScript devtools test rebuilds its public dist", () => {
@@ -391,7 +391,7 @@ test("every TypeScript devtools test rebuilds its public dist", () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Step 2: Run RED**
 
 ```powershell
 node --test scripts/tests/devtools-package-contract.test.mjs
@@ -400,7 +400,7 @@ node --test scripts/tests/devtools-package-contract.test.mjs
 Expected: failures for packages whose current `test` script imports stale
 `dist/` without rebuilding.
 
-- [ ] **Step 3: Update package scripts mechanically**
+- [x] **Step 3: Update package scripts mechanically**
 
 Use:
 
@@ -411,12 +411,12 @@ Use:
 Preserve explicit test-file lists where a package intentionally has multiple
 directories. Do not add dependencies or alter runtime APIs.
 
-- [ ] **Step 4: Verify every affected package**
+- [x] **Step 4: Verify every affected package**
 
 Run `npm.cmd test` in all 14 `galerina-devtools-*` packages and
 `galerina-test`. Record exact Node test counts and exits.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add -- packages-galerina/galerina-devtools-*/package.json packages-galerina/galerina-test/package.json scripts/tests/devtools-package-contract.test.mjs
