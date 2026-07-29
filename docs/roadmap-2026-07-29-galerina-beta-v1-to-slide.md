@@ -63,6 +63,8 @@ flowchart LR
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
 | Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,748/5,748 tests |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 59/59 mutation anchors green |
+| Governed decision authority | 🟦 | 15/29 authoritative after the 6/6 app-kernel tranche; 14 remain differential in tower-citizen, core runtime, sentinel I/O and network |
+| Governed authority hash integrity | 🟩 | 15/15 current ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
 
 ## Active Galerina work
 

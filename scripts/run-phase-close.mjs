@@ -723,12 +723,17 @@ run("workspace:pointers", "node", ["scripts/validate-workspace-pointers.mjs"]);
 //   authoritative, this comment is description (it carried "= 3" for 3 days after the payoff; R&D 0428).
 run("stage-execution", "node", ["scripts/audit-stage-execution.mjs"]);
 //
-// kernel-fungi-twins — RD-0361 authority ledger: guards the 4 decision-surface twins flipped to
-//   AUTHORITATIVE on the owner's nod (synchronization-gate · power-governor · cold-boot · audit-egress).
+// kernel-fungi-twins — RD-0361 authority ledger: guards every decision-surface twin flipped to
+//   AUTHORITATIVE on the owner's nod.
 //   component-health.mjs asserts "RED-on-regression + missing-target enforced by audit-kernel-fungi-
 //   twins.mjs + self-tested" — that assertion was live while the gate was NOT wired. Now it is.
-//   29/29 differentials · 4 authoritative · exit 0 on success.
+//   The live count is derived from the ledger and execution proofs; exit 0 on success.
 run("kernel-fungi-twins", "node", ["scripts/audit-kernel-fungi-twins.mjs"]);
+
+// r4-twin-hashes — re-derives the deterministic WASM for every authoritative RD-0361 twin,
+//   compares it to the ledger hash, signs and #105-admits it, and refuses any import outside
+//   the compiler's closed deterministic stdlib ABI. This closes the stale-static-hash class.
+run("r4-twin-hashes", "node", ["scripts/gather-r4-twin-hashes.mjs", "--verify-ledger"]);
 
 // compiler-stage-twins — RD-0528 compiler self-hosting authority track, SEPARATE from the kernel
 //   sentinel ledger (a sentinel flip retires zero lines of the .ts compiler). Runs `galerina check`

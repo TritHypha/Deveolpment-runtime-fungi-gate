@@ -313,7 +313,7 @@ remain non-authorizing and outside this denominator.
   TypeScript shadow, kills a targeted mutation, binds a reviewed hash, and
   contains no ambient authority.
 
-- [ ] **Step 1: Produce a live 20-candidate queue**
+- [x] **Step 1: Produce a live 20-candidate queue**
 
 Use `audit-kernel-fungi-twins.mjs` output; do not copy counts from prose.
 

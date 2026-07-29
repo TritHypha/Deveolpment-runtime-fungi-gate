@@ -57,7 +57,7 @@
       "dir": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
       "tranche": "T2",
       "surface": "pool-exhaustion admission (LSM-POOL-EXHAUSTED)",
-      "sha256": "81602fd15f014ca7407013aa5fcd2082ddb4cbeb59f02548a1b8a4eae1798421",
+      "sha256": "1b85e0ff9dba897fb42acafbb5110e3f4a766fa94d3f2d17fd0dac46311d207c",
       "evidencePack": "docs/security/rd0361-t2-r4-evidence-pack.md",
       "ownerNod": "2026-07-22 — owner 'unlock R4 flip (#143) — GO!'; T2 Memory assembled + flipped by main under that authorization (pack a–e cleared)",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"
@@ -67,7 +67,7 @@
       "dir": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
       "tranche": "T2",
       "surface": "pool block-size policy floor (blockBytes)",
-      "sha256": "cd04590cb072710113b546c054dbfecdf9083516dba11777b56e7083d4bd6b9b",
+      "sha256": "f4657aac19cee85a13b99e4d86fb335afa8b73713dead202b7084af0f6efa370",
       "evidencePack": "docs/security/rd0361-t2-r4-evidence-pack.md",
       "ownerNod": "2026-07-22 — owner 'unlock R4 flip (#143) — GO!'; T2 Memory assembled + flipped by main under that authorization (pack a–e cleared)",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"
@@ -77,7 +77,7 @@
       "dir": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
       "tranche": "T2",
       "surface": "cross-segment access guard (LSM-SEGV)",
-      "sha256": "b6ff083815a47d2621ff44755c113f20ca861b6bd8002afaabdeb577aecf584f",
+      "sha256": "8f9e5860c5e6117dce4205b674dcbecc42c123d07d395b51dbba63245b31a195",
       "evidencePack": "docs/security/rd0361-t2-r4-evidence-pack.md",
       "ownerNod": "2026-07-22 — owner 'unlock R4 flip (#143) — GO!'; T2 Memory assembled + flipped by main under that authorization (pack a–e cleared)",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"
@@ -87,10 +87,70 @@
       "dir": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
       "tranche": "T2",
       "surface": "trit-buffer 2-bit-corruption sentinel (LSM-TRIT-CORRUPT)",
-      "sha256": "e4523d7cae6e3416c345b58af7b7aac894e47942729343abd216cd7514370dda",
+      "sha256": "4344e9568aec58096f4c590edfd6095b4bca4beabad474aa424cdd5676040a18",
       "evidencePack": "docs/security/rd0361-t2-r4-evidence-pack.md",
       "ownerNod": "2026-07-22 — owner 'unlock R4 flip (#143) — GO!'; T2 Memory assembled + flipped by main under that authorization (pack a–e cleared)",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"
+    },
+    {
+      "file": "fuse-admission.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "fused package descriptor/hash/sidecar/revocation/signature/registry/capability admission",
+      "sha256": "3290d0913fa7694c4b6f907ac2644d6d2e1b26a730d6969d604c81bf528b49fb",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
+    },
+    {
+      "file": "kernel.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "application-kernel authentication gate with explicit channel-verdict authority",
+      "sha256": "0048ffbe26b75afd3da86b248979223d84cef28a00b664905156b938ba2c318c",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
+    },
+    {
+      "file": "package-admission.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "dependency capability/install/registry/hash/signature/revocation admission fold",
+      "sha256": "a725b0ae366e64beebf188f7793f28cb5814d0199c4f2dc0393ac2b274a7b113",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
+    },
+    {
+      "file": "registry-index.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "signed registry-index signature/lookup/risk-policy admission",
+      "sha256": "99796c089eb1a88961ed6ca2766b3d7ec91ab6fa083b378027267ec4280a61e0",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
+    },
+    {
+      "file": "route-defaults.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "posture-aware route ceilings and relaxation detection",
+      "sha256": "b7a27319ea50bfd09525ab151a33851fd2717137a6e2c101b4ed4fdcd8780bff",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
+    },
+    {
+      "file": "secret-gate.fungi",
+      "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+      "tranche": "T3",
+      "surface": "secret-provider presence and required-secret availability admission",
+      "sha256": "ce662c325ef9ba682688a4b18097f5020fe54235ce522773f20e13d0cfda3c36",
+      "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
+      "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
+      "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"
     }
   ]
 }

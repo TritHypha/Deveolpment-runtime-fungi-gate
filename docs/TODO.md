@@ -109,9 +109,22 @@ planning checkbox must never be used to imply that implementation exists.
   hashes matching, and 59/59 mutation anchors live exactly once. A three-case
   negative test proves a missing stage and an external fixture-ledger path are
   refused and that SLIDE/auxiliary files cannot inflate the denominator.
+- **Task 5 governed-authority checkpoint (T3 app-kernel):** the live queue was
+  20 differential candidates in the required 6/4/1/2/7 dependency tranches.
+  App-kernel is now complete: 6/6 execution differentials, 6/6 targeted
+  fail-open mutants killed, 6/6 deterministic builds signed and #105-admitted,
+  and zero imports outside the compiler's closed deterministic stdlib ABI.
+  The authority column is now 15/29 authoritative and 14 differential.
+  During this work the new executable hash verifier found four stale T2 memory
+  hashes. The five memory differentials and five mutations were re-proven,
+  legitimate post-flip emitter drift was documented, the four hashes were
+  re-pinned, and the verifier now reports 15/15 authoritative ledger entries
+  green. The verifier is wired into phase-close, so future hash, admission,
+  ledger-shape, or ambient-import drift is blocking.
 - **Current safe boundary:** proceed to Task 5's governed `.fungi` authority
-  from the top of the dependency chain, then the remaining beta-v1 feature
-  tasks and complete graphs/tests/audits/generators close. The live
+  with the tower-citizen tranche next, then core runtime, sentinel I/O and
+  network. After that, finish the remaining beta-v1 feature tasks and complete
+  graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 - **Flat-package topology ratchet:** the new audit and 6/6 anti-neutering tests

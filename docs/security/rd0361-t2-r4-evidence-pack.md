@@ -1,5 +1,23 @@
 # RD-0361 T2 (Memory) tranche — R4 authority-flip evidence pack
 
+> ## Hash-integrity addendum — 2026-07-29
+>
+> The new executable ledger verifier
+> `node scripts/gather-r4-twin-hashes.mjs --verify-ledger` found that four of
+> the five T2 hashes no longer matched their ledger entries. The twin sources
+> had not changed since their original introduction; the deterministic output
+> moved with reviewed WAT-emitter evolution after the 2026-07-22 flip.
+> `memory-validator` remained byte-identical.
+>
+> This was treated as a blocking provenance failure, not waived. All five
+> current memory differentials were rerun (**5/5**), all five targeted
+> fail-open mutants were killed (**5/5**), all current modules were R0-clean,
+> signed and #105-admitted, and no import outside the compiler's closed
+> deterministic stdlib ABI was present. The four moved hashes were then
+> re-pinned in the live authority ledger. The verifier now compares derived
+> bytes to every ledger hash and refuses mismatch, malformed hash, duplicate
+> entry, missing source/build definition, failed admission, or ambient import.
+>
 **Assembled + FLIPPED:** 2026-07-22 · **Tranche:** T2 (the five `galerina-core-sentinel-memory` boundary twins) · **State:** ★ **FLIPPED 2026-07-22** under the owner's R4 authorization (*"unlock R4 flip (#143) — GO!"*, given after WAT-emitter completion). The five T2 twins are now **`authoritative`** — recorded in the authority ledger [`rd0361-authoritative-twins.json`](rd0361-authoritative-twins.json) and enforced by `audit-kernel-fungi-twins.mjs` (RED-on-regression + missing-target, self-tested). The five sha256 in item (d) were re-gathered immediately before the flip (`node scripts/gather-t2-twin-hashes.mjs`, exit 0). Shadow-bake in progress: each `.ts` is retained as a differential shadow (its execution-cutover test keeps asserting WASM===`.ts`); it is deleted only post-bake. If any evidence item below later proves false the flip is void and reverted (remove the twins from the ledger).
 
 > **Provenance note:** unlike the T1 pack, this pack is written as-of-flip (present tense = today's live state), so there is no pre-flip/post-flip drift to reconcile. Authority truth = the ledger json + `node scripts/audit-kernel-fungi-twins.mjs`, NOT this prose.
@@ -38,17 +56,21 @@ Each twin's execution-cutover differential asserts the **WASM verdict === the re
 - `rd0361-mem-tritbufferguard-tamper` — `checkTritEnc` weakened (a 2-bit-corrupt code 3 decodes 'ok'; tampered backing memory accepted)
 
 ### (d) Each twin hash-pinned, signed, #105-admitted — ✅
-`node scripts/gather-t2-twin-hashes.mjs` builds each twin to WASM (R0), signs it with an ephemeral in-memory dev keypair (no real signing key is touched), and admits it through the attestation-first #105 gate (R1). All five R0-clean + #105-admitted. The pinned sha256 (2026-07-22, current emitter):
+`node scripts/gather-t2-twin-hashes.mjs` builds each twin to WASM (R0), signs it with an ephemeral in-memory dev keypair (no real signing key is touched), and admits it through the attestation-first #105 gate (R1). All five R0-clean + #105-admitted. The pinned sha256 values below are the current 2026-07-29 outputs after the verified emitter-evolution re-pin:
 
 | Twin | bytes | sha256 |
 |---|---|---|
 | `memory-validator` | 298 | `5cf14bbff6684be2775ff7c8fcea590bf4eaa94688c391ba48c0017c477c5239` |
-| `pool-allocation-guard` | 246 | `81602fd15f014ca7407013aa5fcd2082ddb4cbeb59f02548a1b8a4eae1798421` |
-| `pool-policy` | 171 | `cd04590cb072710113b546c054dbfecdf9083516dba11777b56e7083d4bd6b9b` |
-| `segmentation-guard` | 147 | `b6ff083815a47d2621ff44755c113f20ca861b6bd8002afaabdeb577aecf584f` |
-| `trit-buffer-guard` | 214 | `e4523d7cae6e3416c345b58af7b7aac894e47942729343abd216cd7514370dda` |
+| `pool-allocation-guard` | 246 | `1b85e0ff9dba897fb42acafbb5110e3f4a766fa94d3f2d17fd0dac46311d207c` |
+| `pool-policy` | 171 | `f4657aac19cee85a13b99e4d86fb335afa8b73713dead202b7084af0f6efa370` |
+| `segmentation-guard` | 147 | `8f9e5860c5e6117dce4205b674dcbecc42c123d07d395b51dbba63245b31a195` |
+| `trit-buffer-guard` | 214 | `4344e9568aec58096f4c590edfd6095b4bca4beabad474aa424cdd5676040a18` |
 
-> These hashes are the current emitter's deterministic output; a change to a twin or the emitter moves the hash. Re-run the gatherer and re-pin if they move. The `audit-kernel-fungi-twins.mjs` gate does not itself re-hash — it enforces check-clean + differential-proof-present; these hashes are the provenance record of the tranche at flip time.
+> These hashes are the current emitter's deterministic output; a change to a
+> twin or the emitter moves the hash. `audit-kernel-fungi-twins.mjs` enforces
+> check-clean + differential-proof-present, while
+> `gather-r4-twin-hashes.mjs --verify-ledger` independently re-derives and
+> checks the ledger hashes, signed #105 admission, and ambient-import boundary.
 
 ### (e) Measured perf for hot-path twins — N/A
 The T2 memory guards are tiny pure verdict folds (147–298-byte modules), not a hot path. No perf waiver needed.

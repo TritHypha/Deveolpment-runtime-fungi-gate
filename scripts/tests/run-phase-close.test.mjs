@@ -152,4 +152,8 @@ test("live phase-close checks generated evidence without rewriting it", () => {
     runnerSource,
     /run\("code-registry", "node", \["scripts\/gen-code-registry\.mjs", "--check"\]\)/,
   );
+  assert.match(
+    runnerSource,
+    /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
+  );
 });
