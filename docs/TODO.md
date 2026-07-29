@@ -39,9 +39,9 @@ planning checkbox must never be used to imply that implementation exists.
   25/25 tests, including unsupported semantic-profile and malformed Verdict
   signature bytes plus a forged fourth runtime Verdict; report:
   `docs/reports/slide-r1-program-reconstruction-2026-07-29.md`.
-- **Current:** reconstruct the exact historic nesting regression if its source
-  can be located; otherwise retain the already verified minimal four-deep
-  regression and record the evidence limitation.
+- **Open evidence task:** reconstruct the exact historic nesting regression if
+  its source can be located; otherwise retain the already verified minimal
+  four-deep regression and record the evidence limitation.
 - **Completed:** local commit `72c0c210` adds the `.fungi`
   `slide-r1-safe-value-verifier.fungi` gate admits only the validated,
   bounded, effect-free no-address R1 subset and explicitly reports that a
@@ -51,20 +51,34 @@ planning checkbox must never be used to imply that implementation exists.
 - **Completed:** designed the general executable-GIR successor as a new
   frontend-neutral v2 major. Frozen R1 bytes, IDs and semantics remain
   unchanged.
-- **Next:** implement the bounded V2-A two-function/call/join slice while
-  retaining R1 byte and digest invariants.
-- **Verification:** compiler typecheck/build and 5,297/5,297 tests pass.
-  Regenerated project graph: 7,181 nodes / 7,445 edges, zero integrity
+- **Completed:** implemented the first V2-A frontend-neutral logical producer
+  and semantic admission gate in
+  `slide-v2a-logical-model.fungi` and `slide-v2a-validator.fungi`. It covers
+  two typed functions, direct call, Boolean split, block-parameter join,
+  checked Int32, typed failures/Result, exhaustive K3, dense SSA, forward CFG,
+  and zero effects/capabilities/memory. Ten hostile graph mutations fail
+  closed; focused evidence is 14/14. Report:
+  `docs/reports/slide-v2a-logical-admission-2026-07-29.md`.
+- **Current:** define and implement canonical V2-A encoding/import so the
+  semantic gate receives independently decoded bytes rather than the producer
+  object.
+- **Next:** bind a domain-separated V2 semantic digest and add the
+  instruction-driven V2-A executor; then add budget/effect/capability/memory
+  increments without widening frozen R1.
+- **Verification:** compiler typecheck/build and 5,311/5,311 tests pass.
+  Frozen R1 remains 27/27. Regenerated project graph: 7,197 nodes / 7,461 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
-  124 tools, 40 proofs. Post-commit Myco refresh indexes 4,080 files with zero
-  over-size skips.
+  124 tools, 40 proofs. Post-commit Myco refresh is pending this checkpoint's
+  local commit.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
   `../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`,
   `../../triLowLevel-v2/18-R1-REGISTRY-V1.md`, and
-  `../../triLowLevel-v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md`.
+  `../../triLowLevel-v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md`;
+  V2-A numeric IDs and ceilings:
+  `../../triLowLevel-v2/20-V2-A-REGISTRY-V2.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.
@@ -215,12 +229,11 @@ and bundle identity; Galerina is its first frontend.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.
 
-**Next safe work:** make the structural importer reconstruct its own typed
-program value, run general CFG/SSA checks over that record, and compute the
-contract's domain-separated semantic digest. Keep the current executor
-explicitly closed-profile until it dispatches over reconstructed instructions.
-Do not start LLVM, `.slide`
-execution, or driver installation before those semantic gates.
+**Next safe work:** encode V2-A canonically, independently decode it, and run
+the existing V2-A semantic gate over only the decoded graph. Then bind its
+domain-separated semantic digest and execute only validated V2 instructions.
+Do not start LLVM, `.slide` execution, or driver installation before those
+semantic, memory, capability, and artifact gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

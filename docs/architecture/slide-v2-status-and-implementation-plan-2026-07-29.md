@@ -35,7 +35,13 @@ failure results. A second layer now reconstructs the frozen typed program,
 validates its closed registry, blocks, SSA identities/dominance, types,
 failures, terminators, K3 successors/obligation, binds its domain-separated
 semantic digest, and instruction-drives the admitted records in a fresh
-process. This is still a frozen four-block profile, not general executable GIR.
+process. Frozen R1 remains a permanent four-block conformance profile.
+The new frontend-neutral v2 major now has a first bounded V2-A logical
+implementation: two functions, typed call, block-parameter join, checked
+arithmetic, exhaustive K3 and typed exits. Its `.fungi` admission gate rejects
+profile, authority, opcode, SSA, recursion, CFG, block-argument, memory and K3
+mutations. V2-A does not yet have canonical bytes, independent import, a
+semantic digest, or execution, so it replaces no current runtime component.
 SLIDE packaging, native execution, Tri-Fuse v2, the frontend receipt, driver
 CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
@@ -67,6 +73,7 @@ Planning completion and implementation completion are deliberately separate.
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
+| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A frontend-neutral logical records and fail-closed semantic admission for two functions/call/join/K3 with no effects, capabilities, backedges, or memory | Canonical encoding, independent import, semantic digest, execution, then versioned memory/effect/capability increments |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
@@ -108,7 +115,7 @@ The exact inventory and R1 mapping are recorded in
 replacing those dependencies with complete validated R1 nodes, not by writing
 an LLVM emitter around them.
 
-### 4.2 Only the bounded SLIDE R1 prototype is implemented
+### 4.2 Frozen R1 execution and bounded V2-A admission are implemented
 
 Galerina now contains the bounded `slide.semantic.galerina-gir.v1` fixture
 adapter, canonical encoder, exact-vector validator, structural importer, and
@@ -118,6 +125,15 @@ digest binder, and instruction-driven reference runtime. It does not contain
 an implemented `.slide` container, general SLIDE frontend receipt, general GIR
 runtime, native loader, or production runner. The sibling `triLowLevel-v2`
 directory is a planning set and is not currently its own Git repository.
+
+The V2-A logical producer and validator are a separate new-major checkpoint,
+not an R1 widening. They prove that a general graph can represent multiple
+functions, direct calls and cross-block typed value transfer, and that hostile
+logical mutations refuse. They currently operate on an in-memory producer
+record. Until canonical V2 bytes are independently decoded and bound, this
+does not satisfy the authenticated-bytes-equal-executed-bytes rule and cannot
+replace the current GIR, WAT/Wasm, or interpreter paths. Evidence:
+`../reports/slide-v2a-logical-admission-2026-07-29.md`.
 
 ### 4.3 Control-flow hardening completed so far
 
@@ -287,8 +303,10 @@ closed CFG/SSA/type/failure/K3 contract, computes the registered
 domain-separated semantic digest, and instruction-drives only the admitted
 records. Focused evidence is 25/25; after the semantic-memory checkpoint,
 compiler evidence is 5,297/5,297.
-Remaining: generalize the registry, implement memory/budget/capability
-semantics, and prove a second frontend.
+The first generalization increment is now implemented as V2-A logical records
+plus semantic admission. Remaining: canonical V2-A encoding and independent
+import, digest binding, instruction-driven execution, memory/budget/effect/
+capability increments, and a second frontend.
 
 The follow-on safe-value gate walks the admitted R1 registry again, admits only
 the bounded no-address subset, and labels the result
@@ -394,8 +412,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. implement the V2-A two-function/call/join slice from the versioned general
-   executable-GIR successor;
+3. encode V2-A canonically, independently decode it, bind its semantic digest,
+   and instruction-drive only the admitted decoded graph;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.

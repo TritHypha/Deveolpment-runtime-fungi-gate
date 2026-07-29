@@ -1,0 +1,322 @@
+@version 1
+/// @file: slide-v2a-logical-model.fungi
+/// @purpose: Materialize the frontend-neutral V2-A two-function executable graph.
+/// @status: Logical fixture producer only; validation and canonical encoding are separate gates.
+
+record SLIDEV2ABlockParameter {
+  resultId: Int
+  typeId: Int
+}
+
+record SLIDEV2AInstruction {
+  resultId: Int
+  opcodeId: Int
+  typeId: Int
+  operands: Array<Int>
+  immediate: Int
+}
+
+record SLIDEV2AEdge {
+  targetBlockId: Int
+  arguments: Array<Int>
+}
+
+record SLIDEV2ATerminator {
+  terminatorId: Int
+  operands: Array<Int>
+  edges: Array<SLIDEV2AEdge>
+}
+
+record SLIDEV2ABlock {
+  blockId: Int
+  parameters: Array<SLIDEV2ABlockParameter>
+  instructions: Array<SLIDEV2AInstruction>
+  terminator: SLIDEV2ATerminator
+}
+
+record SLIDEV2AFunction {
+  functionId: Int
+  qualifierId: Int
+  parameterTypes: Array<Int>
+  resultTypeId: Int
+  declaredEffectIds: Array<Int>
+  requestedCapabilityIds: Array<Int>
+  entryBlockId: Int
+  blocks: Array<SLIDEV2ABlock>
+  limitRef: Int
+}
+
+record SLIDEV2AFailure {
+  failureId: Int
+  classId: Int
+  retryId: Int
+  actionId: Int
+}
+
+record SLIDEV2AK3Obligation {
+  obligationId: Int
+  functionId: Int
+  checkBlockId: Int
+  allowBlockId: Int
+  denyBlockId: Int
+  indeterminateBlockId: Int
+}
+
+record SLIDEV2ALimits {
+  canonicalBodyBytes: Int
+  functionCount: Int
+  blocksPerFunction: Int
+  instructionsPerFunction: Int
+  valuesPerFunction: Int
+  blockParametersPerBlock: Int
+  callDepth: Int
+  backEdges: Int
+  effects: Int
+  capabilities: Int
+  memoryObjects: Int
+  executionSteps: Int
+}
+
+record SLIDEV2AProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  digestSuiteId: String
+  registrySetId: String
+  memoryProfileId: String
+  requiredFeatureIds: Array<Int>
+  limits: SLIDEV2ALimits
+  functions: Array<SLIDEV2AFunction>
+  failures: Array<SLIDEV2AFailure>
+  k3Obligations: Array<SLIDEV2AK3Obligation>
+  memoryObjectCount: Int
+}
+
+pure flow slideV2AEdge(
+  targetBlockId: Int,
+  arguments: Array<Int>,
+) -> SLIDEV2AEdge
+contract { intent { "Construct one explicit typed-control edge candidate." } }
+{
+  return { targetBlockId: targetBlockId arguments: arguments }
+}
+
+pure flow slideV2ATerminator(
+  terminatorId: Int,
+  operands: Array<Int>,
+  edges: Array<SLIDEV2AEdge>,
+) -> SLIDEV2ATerminator
+contract { intent { "Construct one no-fallthrough V2-A terminator candidate." } }
+{
+  return {
+    terminatorId: terminatorId
+    operands: operands
+    edges: edges
+  }
+}
+
+pure flow slideV2AInstruction(
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> SLIDEV2AInstruction
+contract { intent { "Construct one typed V2-A SSA instruction candidate." } }
+{
+  return {
+    resultId: resultId
+    opcodeId: opcodeId
+    typeId: typeId
+    operands: operands
+    immediate: immediate
+  }
+}
+
+pure flow materializeSLIDEV2ACallee() -> SLIDEV2AFunction
+contract { intent { "Materialize the V2-A checked-add callee fixture." } }
+{
+  let instructions = Array.of(
+    slideV2AInstruction(0, 1, 1, Array.empty(), 0),
+    slideV2AInstruction(1, 2, 1, Array.empty(), 1),
+    slideV2AInstruction(2, 3, 1, Array.of(0, 1), 0),
+  )
+  let block: SLIDEV2ABlock = {
+    blockId: 0
+    parameters: Array.empty()
+    instructions: instructions
+    terminator: slideV2ATerminator(4, Array.of(2), Array.empty())
+  }
+  return {
+    functionId: 1
+    qualifierId: 1
+    parameterTypes: Array.of(1)
+    resultTypeId: 1
+    declaredEffectIds: Array.empty()
+    requestedCapabilityIds: Array.empty()
+    entryBlockId: 0
+    blocks: Array.of(block)
+    limitRef: 1
+  }
+}
+
+pure flow materializeSLIDEV2AMain() -> SLIDEV2AFunction
+contract { intent { "Materialize calls, Boolean control, a typed join, and exhaustive K3 exits." } }
+{
+  let entryInstructions = Array.of(
+    slideV2AInstruction(0, 1, 1, Array.empty(), 0),
+    slideV2AInstruction(1, 1, 1, Array.empty(), 1),
+    slideV2AInstruction(2, 1, 3, Array.empty(), 2),
+    slideV2AInstruction(3, 2, 1, Array.empty(), 0),
+    slideV2AInstruction(4, 4, 2, Array.of(0, 3), 0),
+  )
+  let entryEdges = Array.of(
+    slideV2AEdge(1, Array.of(0, 1, 2)),
+    slideV2AEdge(2, Array.of(0, 1, 2)),
+  )
+  let entry: SLIDEV2ABlock = {
+    blockId: 0
+    parameters: Array.empty()
+    instructions: entryInstructions
+    terminator: slideV2ATerminator(2, Array.of(4), entryEdges)
+  }
+
+  let positive: SLIDEV2ABlock = {
+    blockId: 1
+    parameters: Array.of(
+      { resultId: 5 typeId: 1 },
+      { resultId: 6 typeId: 1 },
+      { resultId: 7 typeId: 3 },
+    )
+    instructions: Array.of(
+      slideV2AInstruction(8, 5, 1, Array.of(5), 1),
+    )
+    terminator: slideV2ATerminator(
+      1, Array.empty(), Array.of(slideV2AEdge(3, Array.of(8, 6, 7))),
+    )
+  }
+  let negative: SLIDEV2ABlock = {
+    blockId: 2
+    parameters: Array.of(
+      { resultId: 9 typeId: 1 },
+      { resultId: 10 typeId: 1 },
+      { resultId: 11 typeId: 3 },
+    )
+    instructions: Array.of(
+      slideV2AInstruction(12, 5, 1, Array.of(10), 1),
+    )
+    terminator: slideV2ATerminator(
+      1, Array.empty(), Array.of(slideV2AEdge(3, Array.of(12, 10, 11))),
+    )
+  }
+
+  let joinEdges = Array.of(
+    slideV2AEdge(4, Array.of(16)),
+    slideV2AEdge(5, Array.empty()),
+    slideV2AEdge(6, Array.empty()),
+  )
+  let join: SLIDEV2ABlock = {
+    blockId: 3
+    parameters: Array.of(
+      { resultId: 13 typeId: 1 },
+      { resultId: 14 typeId: 1 },
+      { resultId: 15 typeId: 3 },
+    )
+    instructions: Array.of(
+      slideV2AInstruction(16, 3, 1, Array.of(13, 14), 0),
+    )
+    terminator: slideV2ATerminator(3, Array.of(15), joinEdges)
+  }
+
+  let allowed: SLIDEV2ABlock = {
+    blockId: 4
+    parameters: Array.of({ resultId: 17 typeId: 1 })
+    instructions: Array.of(
+      slideV2AInstruction(18, 6, 5, Array.of(17), 0),
+    )
+    terminator: slideV2ATerminator(4, Array.of(18), Array.empty())
+  }
+  let denied: SLIDEV2ABlock = {
+    blockId: 5
+    parameters: Array.empty()
+    instructions: Array.of(
+      slideV2AInstruction(19, 7, 4, Array.empty(), 2),
+      slideV2AInstruction(20, 8, 5, Array.of(19), 0),
+    )
+    terminator: slideV2ATerminator(4, Array.of(20), Array.empty())
+  }
+  let unresolved: SLIDEV2ABlock = {
+    blockId: 6
+    parameters: Array.empty()
+    instructions: Array.of(
+      slideV2AInstruction(21, 7, 4, Array.empty(), 3),
+      slideV2AInstruction(22, 8, 5, Array.of(21), 0),
+    )
+    terminator: slideV2ATerminator(4, Array.of(22), Array.empty())
+  }
+
+  return {
+    functionId: 2
+    qualifierId: 1
+    parameterTypes: Array.of(1, 1, 3)
+    resultTypeId: 5
+    declaredEffectIds: Array.empty()
+    requestedCapabilityIds: Array.empty()
+    entryBlockId: 0
+    blocks: Array.of(entry, positive, negative, join, allowed, denied, unresolved)
+    limitRef: 1
+  }
+}
+
+pure flow materializeSLIDEV2AProgram() -> SLIDEV2AProgram
+contract { intent { "Materialize the exact frontend-neutral V2-A logical conformance graph." } }
+{
+  let limits: SLIDEV2ALimits = {
+    canonicalBodyBytes: 16384
+    functionCount: 2
+    blocksPerFunction: 8
+    instructionsPerFunction: 32
+    valuesPerFunction: 48
+    blockParametersPerBlock: 4
+    callDepth: 2
+    backEdges: 0
+    effects: 0
+    capabilities: 0
+    memoryObjects: 0
+    executionSteps: 64
+  }
+  let arithmetic: SLIDEV2AFailure = {
+    failureId: 1 classId: 2 retryId: 1 actionId: 1
+  }
+  let denied: SLIDEV2AFailure = {
+    failureId: 2 classId: 3 retryId: 2 actionId: 1
+  }
+  let unresolved: SLIDEV2AFailure = {
+    failureId: 3 classId: 4 retryId: 2 actionId: 1
+  }
+  let inputRejected: SLIDEV2AFailure = {
+    failureId: 4 classId: 1 retryId: 1 actionId: 1
+  }
+  let obligation: SLIDEV2AK3Obligation = {
+    obligationId: 1
+    functionId: 2
+    checkBlockId: 3
+    allowBlockId: 4
+    denyBlockId: 5
+    indeterminateBlockId: 6
+  }
+  return {
+    formatMajor: 2
+    formatMinor: 0
+    semanticProfileId: "slide.semantic.executable-gir.v2"
+    digestSuiteId: "slide.digest.sha256.v1"
+    registrySetId: "slide.registry.executable-gir.v2a"
+    memoryProfileId: "slide.memory.safe-value.v1"
+    requiredFeatureIds: Array.of(1, 2, 3, 4)
+    limits: limits
+    functions: Array.of(materializeSLIDEV2ACallee(), materializeSLIDEV2AMain())
+    failures: Array.of(arithmetic, denied, unresolved, inputRejected)
+    k3Obligations: Array.of(obligation)
+    memoryObjectCount: 0
+  }
+}

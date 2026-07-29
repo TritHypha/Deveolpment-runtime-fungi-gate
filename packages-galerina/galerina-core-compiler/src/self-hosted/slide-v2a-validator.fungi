@@ -1,0 +1,699 @@
+@version 1
+/// @file: slide-v2a-validator.fungi
+/// @purpose: Validate the closed V2-A executable graph without source, AST, WAT, or ambient registries.
+/// @status: Logical-model validation gate; canonical byte import remains separate.
+
+record SLIDEV2ADecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+}
+
+pure flow slideV2ARefusal(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2ADecision
+contract { intent { "Return one terminal V2-A validation refusal." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: "REFUSED"
+    failureId: failureId
+    detail: detail
+  }
+}
+
+pure flow slideV2AAllowed() -> SLIDEV2ADecision
+contract { intent { "Return V2-A semantic validation success." } }
+{
+  return {
+    verdict: Verdict.Allow
+    status: "VALIDATED"
+    failureId: "NONE"
+    detail: "closed V2-A graph validated"
+  }
+}
+
+pure flow slideV2AIntAt(values: Array<Int>, index: Int) -> Int
+contract { intent { "Read one integer or return a non-authoritative sentinel." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return -1 }
+    _ => { return -1 }
+  }
+}
+
+pure flow emptySLIDEV2ABlockParameter() -> SLIDEV2ABlockParameter
+contract { intent { "Return an inert block parameter." } }
+{
+  return { resultId: -1 typeId: -1 }
+}
+
+pure flow emptySLIDEV2AInstruction() -> SLIDEV2AInstruction
+contract { intent { "Return an inert instruction." } }
+{
+  return {
+    resultId: -1 opcodeId: -1 typeId: -1
+    operands: Array.empty() immediate: -1
+  }
+}
+
+pure flow emptySLIDEV2AEdge() -> SLIDEV2AEdge
+contract { intent { "Return an inert control edge." } }
+{
+  return { targetBlockId: -1 arguments: Array.empty() }
+}
+
+pure flow emptySLIDEV2ATerminator() -> SLIDEV2ATerminator
+contract { intent { "Return an inert terminator." } }
+{
+  return { terminatorId: -1 operands: Array.empty() edges: Array.empty() }
+}
+
+pure flow emptySLIDEV2ABlock() -> SLIDEV2ABlock
+contract { intent { "Return an inert block." } }
+{
+  return {
+    blockId: -1
+    parameters: Array.empty()
+    instructions: Array.empty()
+    terminator: emptySLIDEV2ATerminator()
+  }
+}
+
+pure flow emptySLIDEV2AFunction() -> SLIDEV2AFunction
+contract { intent { "Return an inert function." } }
+{
+  return {
+    functionId: -1 qualifierId: -1 parameterTypes: Array.empty()
+    resultTypeId: -1 declaredEffectIds: Array.empty()
+    requestedCapabilityIds: Array.empty() entryBlockId: -1
+    blocks: Array.empty() limitRef: -1
+  }
+}
+
+pure flow slideV2ABlockParameterAt(
+  values: Array<SLIDEV2ABlockParameter>,
+  index: Int,
+) -> SLIDEV2ABlockParameter
+contract { intent { "Read one block parameter without inventing a value." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2ABlockParameter() }
+    _ => { return emptySLIDEV2ABlockParameter() }
+  }
+}
+
+pure flow slideV2AInstructionAt(
+  values: Array<SLIDEV2AInstruction>,
+  index: Int,
+) -> SLIDEV2AInstruction
+contract { intent { "Read one instruction without inventing semantics." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2AInstruction() }
+    _ => { return emptySLIDEV2AInstruction() }
+  }
+}
+
+pure flow slideV2AEdgeAt(
+  values: Array<SLIDEV2AEdge>,
+  index: Int,
+) -> SLIDEV2AEdge
+contract { intent { "Read one edge without inventing a target." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2AEdge() }
+    _ => { return emptySLIDEV2AEdge() }
+  }
+}
+
+pure flow slideV2ABlockAt(
+  values: Array<SLIDEV2ABlock>,
+  index: Int,
+) -> SLIDEV2ABlock
+contract { intent { "Read one block without inventing control flow." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2ABlock() }
+    _ => { return emptySLIDEV2ABlock() }
+  }
+}
+
+pure flow slideV2AFunctionAt(
+  values: Array<SLIDEV2AFunction>,
+  index: Int,
+) -> SLIDEV2AFunction
+contract { intent { "Read one function without an ambient registry fallback." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2AFunction() }
+    _ => { return emptySLIDEV2AFunction() }
+  }
+}
+
+pure flow slideV2ATypeRegistered(typeId: Int) -> Bool
+contract { intent { "Admit only V2-A registered type identities." } }
+{
+  match typeId {
+    1 => { return true }
+    2 => { return true }
+    3 => { return true }
+    4 => { return true }
+    5 => { return true }
+    _ => { return false }
+  }
+}
+
+pure flow slideV2AFailureRegistered(
+  failures: Array<SLIDEV2AFailure>,
+  failureId: Int,
+) -> Bool
+contract { intent { "Require an exact declared V2-A failure identity." } }
+{
+  mut found: Bool = false
+  mut i: Int = 0
+  while i < failures.count() {
+    let candidate = failures.get(i)
+    match candidate {
+      Some(value) => {
+        if value.failureId == failureId { found = true }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return found
+}
+
+pure flow slideV2AValueTypeInBlock(
+  graphBlock: SLIDEV2ABlock,
+  resultId: Int,
+) -> Int
+contract { intent { "Resolve a value only from the current explicit block scope." } }
+{
+  mut typeId: Int = -1
+  mut p: Int = 0
+  while p < graphBlock.parameters.count() {
+    let parameter = slideV2ABlockParameterAt(graphBlock.parameters, p)
+    if parameter.resultId == resultId { typeId = parameter.typeId }
+    p = p + 1
+  }
+  mut i: Int = 0
+  while i < graphBlock.instructions.count() {
+    let instruction = slideV2AInstructionAt(graphBlock.instructions, i)
+    if instruction.resultId == resultId { typeId = instruction.typeId }
+    i = i + 1
+  }
+  return typeId
+}
+
+pure flow slideV2AOperandsVisible(
+  graphBlock: SLIDEV2ABlock,
+  operands: Array<Int>,
+  beforeResultId: Int,
+) -> Bool
+contract { intent { "Require every operand to be defined earlier in the same explicit block scope." } }
+{
+  mut valid: Bool = true
+  mut i: Int = 0
+  while i < operands.count() {
+    let resultId = slideV2AIntAt(operands, i)
+    if resultId < 0 or resultId >= beforeResultId {
+      valid = false
+    }
+    if slideV2AValueTypeInBlock(graphBlock, resultId) < 0 {
+      valid = false
+    }
+    i = i + 1
+  }
+  return valid
+}
+
+pure flow slideV2AIncomingCount(
+  blocks: Array<SLIDEV2ABlock>,
+  targetBlockId: Int,
+) -> Int
+contract { intent { "Count explicit incoming edges for reachability validation." } }
+{
+  mut count: Int = 0
+  mut b: Int = 0
+  while b < blocks.count() {
+    let graphBlock = slideV2ABlockAt(blocks, b)
+    mut e: Int = 0
+    while e < graphBlock.terminator.edges.count() {
+      let edge = slideV2AEdgeAt(graphBlock.terminator.edges, e)
+      if edge.targetBlockId == targetBlockId { count = count + 1 }
+      e = e + 1
+    }
+    b = b + 1
+  }
+  return count
+}
+
+pure flow validateSLIDEV2ALimits(limits: SLIDEV2ALimits) -> SLIDEV2ADecision
+contract { intent { "Require the exact closed V2-A semantic ceilings." } }
+{
+  if limits.canonicalBodyBytes != 16384 or limits.functionCount != 2 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "root ceilings changed")
+  }
+  if limits.blocksPerFunction != 8 or limits.instructionsPerFunction != 32 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "graph ceilings changed")
+  }
+  if limits.valuesPerFunction != 48 or limits.blockParametersPerBlock != 4 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "value ceilings changed")
+  }
+  if limits.callDepth != 2 or limits.backEdges != 0 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "call or edge ceilings changed")
+  }
+  if limits.effects != 0 or limits.capabilities != 0 or limits.memoryObjects != 0 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "authority or memory ceiling changed")
+  }
+  if limits.executionSteps != 64 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "execution ceiling changed")
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AFailures(
+  failures: Array<SLIDEV2AFailure>,
+) -> SLIDEV2ADecision
+contract { intent { "Validate the complete closed V2-A failure registry." } }
+{
+  if failures.count() != 4 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "failure count changed")
+  }
+  mut i: Int = 0
+  while i < failures.count() {
+    let candidate = failures.get(i)
+    match candidate {
+      Some(value) => {
+        if value.failureId != i + 1 or value.actionId != 1 {
+          return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "failure identity or action changed")
+        }
+        match value.failureId {
+          1 => {
+            if value.classId != 2 or value.retryId != 1 {
+              return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "arithmetic failure changed")
+            }
+          }
+          2 => {
+            if value.classId != 3 or value.retryId != 2 {
+              return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "denial failure changed")
+            }
+          }
+          3 => {
+            if value.classId != 4 or value.retryId != 2 {
+              return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "unresolved failure changed")
+            }
+          }
+          4 => {
+            if value.classId != 1 or value.retryId != 1 {
+              return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "input failure changed")
+            }
+          }
+          _ => {
+            return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "surplus failure")
+          }
+        }
+      }
+      None => {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "missing failure")
+      }
+      _ => {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "invalid failure")
+      }
+    }
+    i = i + 1
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AInstruction(
+  program: SLIDEV2AProgram,
+  function: SLIDEV2AFunction,
+  graphBlock: SLIDEV2ABlock,
+  instruction: SLIDEV2AInstruction,
+) -> SLIDEV2ADecision
+contract { intent { "Validate one registered typed V2-A instruction." } }
+{
+  if slideV2ATypeRegistered(instruction.typeId) == false {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "unknown result type")
+  }
+  if slideV2AOperandsVisible(graphBlock, instruction.operands, instruction.resultId) == false {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-007", "operand is undefined, cross-block, or non-dominating")
+  }
+
+  match instruction.opcodeId {
+    1 => {
+      if graphBlock.blockId != function.entryBlockId or instruction.operands.count() != 0 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "parameter shape changed")
+      }
+      if instruction.immediate < 0 or instruction.immediate >= function.parameterTypes.count() {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "parameter index changed")
+      }
+      if instruction.typeId != slideV2AIntAt(function.parameterTypes, instruction.immediate) {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "parameter type changed")
+      }
+    }
+    2 => {
+      if instruction.typeId != 1 or instruction.operands.count() != 0 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "constant shape changed")
+      }
+      if instruction.immediate < -2147483648 or instruction.immediate > 2147483647 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "constant is outside Int32")
+      }
+    }
+    3 => {
+      if instruction.typeId != 1 or instruction.operands.count() != 2 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "checked add shape changed")
+      }
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 0)) != 1 or slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 1)) != 1 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "checked add type changed")
+      }
+    }
+    4 => {
+      if instruction.typeId != 2 or instruction.operands.count() != 2 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-005", "comparison shape changed")
+      }
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 0)) != 1 or slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 1)) != 1 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "comparison type changed")
+      }
+    }
+    5 => {
+      if instruction.immediate < 1 or instruction.immediate >= function.functionId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-008", "call target is unknown, recursive, or forward")
+      }
+      let callee = slideV2AFunctionAt(program.functions, instruction.immediate - 1)
+      if instruction.operands.count() != callee.parameterTypes.count() or instruction.typeId != callee.resultTypeId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-008", "call signature changed")
+      }
+      mut a: Int = 0
+      while a < instruction.operands.count() {
+        if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, a)) != slideV2AIntAt(callee.parameterTypes, a) {
+          return slideV2ARefusal("SLIDE-V2A-PROGRAM-008", "call argument type changed")
+        }
+        a = a + 1
+      }
+    }
+    6 => {
+      if instruction.typeId != 5 or instruction.operands.count() != 1 or slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 0)) != 1 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "success result shape changed")
+      }
+    }
+    7 => {
+      if instruction.typeId != 4 or instruction.operands.count() != 0 or slideV2AFailureRegistered(program.failures, instruction.immediate) == false {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-003", "failure reference changed")
+      }
+    }
+    8 => {
+      if instruction.typeId != 5 or instruction.operands.count() != 1 or slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(instruction.operands, 0)) != 4 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "failure result shape changed")
+      }
+    }
+    _ => {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-004", "unknown opcode")
+    }
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AEdges(
+  function: SLIDEV2AFunction,
+  graphBlock: SLIDEV2ABlock,
+) -> SLIDEV2ADecision
+contract { intent { "Validate forward targets and exact typed block arguments." } }
+{
+  mut e: Int = 0
+  while e < graphBlock.terminator.edges.count() {
+    let edge = slideV2AEdgeAt(graphBlock.terminator.edges, e)
+    if edge.targetBlockId <= graphBlock.blockId or edge.targetBlockId >= function.blocks.count() {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-010", "edge is invalid, backward, or out of range")
+    }
+    let target = slideV2ABlockAt(function.blocks, edge.targetBlockId)
+    if edge.arguments.count() != target.parameters.count() {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-011", "block argument count changed")
+    }
+    if slideV2AOperandsVisible(graphBlock, edge.arguments, 2147483647) == false {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-007", "edge argument is not visible")
+    }
+    mut a: Int = 0
+    while a < edge.arguments.count() {
+      let parameter = slideV2ABlockParameterAt(target.parameters, a)
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(edge.arguments, a)) != parameter.typeId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-011", "block argument type changed")
+      }
+      a = a + 1
+    }
+    mut other: Int = e + 1
+    while other < graphBlock.terminator.edges.count() {
+      if slideV2AEdgeAt(graphBlock.terminator.edges, other).targetBlockId == edge.targetBlockId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-010", "successor targets are aliased")
+      }
+      other = other + 1
+    }
+    e = e + 1
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2ATerminatorForBlock(
+  function: SLIDEV2AFunction,
+  graphBlock: SLIDEV2ABlock,
+) -> SLIDEV2ADecision
+contract { intent { "Validate one total no-fallthrough V2-A terminator." } }
+{
+  let edgeDecision = validateSLIDEV2AEdges(function, graphBlock)
+  check(edgeDecision.verdict) {
+    deny: { return edgeDecision }
+    ambig: { return edgeDecision }
+    if: {}
+  }
+  if slideV2AOperandsVisible(
+    graphBlock, graphBlock.terminator.operands, 2147483647,
+  ) == false {
+    return slideV2ARefusal(
+      "SLIDE-V2A-PROGRAM-007",
+      "terminator operand is undefined or cross-block",
+    )
+  }
+
+  match graphBlock.terminator.terminatorId {
+    1 => {
+      if graphBlock.terminator.operands.count() != 0 or graphBlock.terminator.edges.count() != 1 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-009", "jump shape changed")
+      }
+    }
+    2 => {
+      if graphBlock.terminator.operands.count() != 1 or graphBlock.terminator.edges.count() != 2 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-009", "Boolean branch shape changed")
+      }
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(graphBlock.terminator.operands, 0)) != 2 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "Boolean branch subject changed")
+      }
+    }
+    3 => {
+      if graphBlock.terminator.operands.count() != 1 or graphBlock.terminator.edges.count() != 3 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-009", "K3 check shape changed")
+      }
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(graphBlock.terminator.operands, 0)) != 3 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "K3 subject changed")
+      }
+    }
+    4 => {
+      if graphBlock.terminator.operands.count() != 1 or graphBlock.terminator.edges.count() != 0 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-009", "return shape changed")
+      }
+      if slideV2AValueTypeInBlock(graphBlock, slideV2AIntAt(graphBlock.terminator.operands, 0)) != function.resultTypeId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-006", "return type changed")
+      }
+    }
+    _ => {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-009", "unknown terminator")
+    }
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AFunction(
+  program: SLIDEV2AProgram,
+  function: SLIDEV2AFunction,
+  expectedFunctionId: Int,
+) -> SLIDEV2ADecision
+contract { intent { "Validate one closed V2-A function, CFG, SSA and signature." } }
+{
+  if function.functionId != expectedFunctionId or function.qualifierId != 1 or function.entryBlockId != 0 or function.limitRef != 1 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-012", "function identity or qualifier changed")
+  }
+  if function.declaredEffectIds.count() != 0 or function.requestedCapabilityIds.count() != 0 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-013", "V2-A function requests authority")
+  }
+  match function.functionId {
+    1 => {
+      if function.parameterTypes.count() != 1 or slideV2AIntAt(function.parameterTypes, 0) != 1 or function.resultTypeId != 1 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-012", "callee signature changed")
+      }
+    }
+    2 => {
+      if function.parameterTypes.count() != 3 or slideV2AIntAt(function.parameterTypes, 0) != 1 or slideV2AIntAt(function.parameterTypes, 1) != 1 or slideV2AIntAt(function.parameterTypes, 2) != 3 or function.resultTypeId != 5 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-012", "main signature changed")
+      }
+    }
+    _ => {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-012", "unknown function")
+    }
+  }
+  if function.blocks.count() < 1 or function.blocks.count() > program.limits.blocksPerFunction {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-014", "block ceiling violated")
+  }
+
+  mut expectedValueId: Int = 0
+  mut instructionCount: Int = 0
+  mut b: Int = 0
+  while b < function.blocks.count() {
+    let graphBlock = slideV2ABlockAt(function.blocks, b)
+    if graphBlock.blockId != b {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-014", "block identities are not dense")
+    }
+    if b > 0 and slideV2AIncomingCount(function.blocks, b) < 1 {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-010", "block is unreachable")
+    }
+    if graphBlock.parameters.count() > program.limits.blockParametersPerBlock {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-015", "block parameter ceiling violated")
+    }
+    mut p: Int = 0
+    while p < graphBlock.parameters.count() {
+      let parameter = slideV2ABlockParameterAt(graphBlock.parameters, p)
+      if parameter.resultId != expectedValueId or slideV2ATypeRegistered(parameter.typeId) == false {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-015", "block parameter identity or type changed")
+      }
+      expectedValueId = expectedValueId + 1
+      p = p + 1
+    }
+    mut i: Int = 0
+    while i < graphBlock.instructions.count() {
+      let instruction = slideV2AInstructionAt(graphBlock.instructions, i)
+      if instruction.resultId != expectedValueId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-016", "SSA identities are not dense")
+      }
+      let instructionDecision = validateSLIDEV2AInstruction(
+        program, function, graphBlock, instruction,
+      )
+      check(instructionDecision.verdict) {
+        deny: { return instructionDecision }
+        ambig: { return instructionDecision }
+        if: {}
+      }
+      expectedValueId = expectedValueId + 1
+      instructionCount = instructionCount + 1
+      i = i + 1
+    }
+    let terminatorDecision = validateSLIDEV2ATerminatorForBlock(function, graphBlock)
+    check(terminatorDecision.verdict) {
+      deny: { return terminatorDecision }
+      ambig: { return terminatorDecision }
+      if: {}
+    }
+    b = b + 1
+  }
+  if instructionCount > program.limits.instructionsPerFunction or expectedValueId > program.limits.valuesPerFunction {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-016", "instruction or value ceiling violated")
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AK3(
+  program: SLIDEV2AProgram,
+) -> SLIDEV2ADecision
+contract { intent { "Bind the one V2-A K3 obligation to its exact check and successors." } }
+{
+  if program.k3Obligations.count() != 1 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-017", "K3 obligation count changed")
+  }
+  let candidate = program.k3Obligations.get(0)
+  match candidate {
+    Some(value) => {
+      if value.obligationId != 1 or value.functionId != 2 or value.checkBlockId != 3 or value.allowBlockId != 4 or value.denyBlockId != 5 or value.indeterminateBlockId != 6 {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-017", "K3 obligation changed")
+      }
+      let function = slideV2AFunctionAt(program.functions, 1)
+      let graphBlock = slideV2ABlockAt(function.blocks, value.checkBlockId)
+      if graphBlock.terminator.terminatorId != 3 or slideV2AEdgeAt(graphBlock.terminator.edges, 0).targetBlockId != value.allowBlockId or slideV2AEdgeAt(graphBlock.terminator.edges, 1).targetBlockId != value.denyBlockId or slideV2AEdgeAt(graphBlock.terminator.edges, 2).targetBlockId != value.indeterminateBlockId {
+        return slideV2ARefusal("SLIDE-V2A-PROGRAM-017", "K3 check does not match obligation")
+      }
+    }
+    None => {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-017", "K3 obligation missing")
+    }
+    _ => {
+      return slideV2ARefusal("SLIDE-V2A-PROGRAM-017", "K3 obligation invalid")
+    }
+  }
+  return slideV2AAllowed()
+}
+
+pure flow validateSLIDEV2AProgram(
+  program: SLIDEV2AProgram,
+) -> SLIDEV2ADecision
+contract { intent { "Validate the complete closed V2-A logical graph before any execution or encoding authority." } }
+{
+  if program.formatMajor != 2 or program.formatMinor != 0 or program.semanticProfileId != "slide.semantic.executable-gir.v2" {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "format or semantic profile changed")
+  }
+  if program.digestSuiteId != "slide.digest.sha256.v1" or program.registrySetId != "slide.registry.executable-gir.v2a" or program.memoryProfileId != "slide.memory.safe-value.v1" {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "digest, registry, or memory profile changed")
+  }
+  if program.requiredFeatureIds.count() != 4 or slideV2AIntAt(program.requiredFeatureIds, 0) != 1 or slideV2AIntAt(program.requiredFeatureIds, 1) != 2 or slideV2AIntAt(program.requiredFeatureIds, 2) != 3 or slideV2AIntAt(program.requiredFeatureIds, 3) != 4 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "required feature set changed")
+  }
+  if program.memoryObjectCount != 0 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-013", "V2-A contains memory objects")
+  }
+  let limitDecision = validateSLIDEV2ALimits(program.limits)
+  check(limitDecision.verdict) {
+    deny: { return limitDecision }
+    ambig: { return limitDecision }
+    if: {}
+  }
+  let failureDecision = validateSLIDEV2AFailures(program.failures)
+  check(failureDecision.verdict) {
+    deny: { return failureDecision }
+    ambig: { return failureDecision }
+    if: {}
+  }
+  if program.functions.count() != 2 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-012", "function count changed")
+  }
+  mut f: Int = 0
+  while f < program.functions.count() {
+    let function = slideV2AFunctionAt(program.functions, f)
+    let functionDecision = validateSLIDEV2AFunction(program, function, f + 1)
+    check(functionDecision.verdict) {
+      deny: { return functionDecision }
+      ambig: { return functionDecision }
+      if: {}
+    }
+    f = f + 1
+  }
+  let k3Decision = validateSLIDEV2AK3(program)
+  check(k3Decision.verdict) {
+    deny: { return k3Decision }
+    ambig: { return k3Decision }
+    if: {}
+  }
+  return slideV2AAllowed()
+}
