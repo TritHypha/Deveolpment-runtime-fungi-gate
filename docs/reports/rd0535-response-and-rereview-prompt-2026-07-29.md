@@ -102,13 +102,15 @@ components:
   receipt-producing Tower Citizen, and backend-neutral witnessed Tri-Fuse.
   Its cited Galerina facts must be re-verified at source before implementation.
 
-The generator-governance chapter now has eleven live generators. Fresh
-evidence through Galerina commit `f5b76ec3` is:
+The generator-governance chapter now has thirteen live repository-output
+generators plus one fail-closed graph orchestrator and one external-output
+memory generator. Fresh evidence through Galerina commit `497b02e9` is:
 
-- the focused generator fixture suite passes 22/22 and the package-graph core
-  package passes 27/27;
+- the focused generator fixture suite passes 25/25, the graph-orchestrator
+  injected-failure fixture passes 1/1, the package-graph core passes 27/27,
+  and the KB-graph core passes 31/31;
 - the contract-registry anti-vacuous self-test finds 1,331 contracts;
-- the live generator audit passes 11/11 after exact declared-write,
+- the live generator audit passes 13/13 after exact declared-write,
   provenance, second-run idempotence, and non-mutating-check verification;
 - package-graph governance preflights all 97 registered packages before
   publishing any output, enumerates all 195 outputs without a wildcard, and
@@ -117,12 +119,21 @@ evidence through Galerina commit `f5b76ec3` is:
   extension bug is regression-tested and the ownership sets are now explicit.
   One dormant benchmark sampler remains visibly justified as an allowed
   orphan rather than being counted as live;
+- the private KB index and KB graph bind their explicitly selected external
+  corpus by SHA-256 without publishing absolute paths. The memory graph binds
+  and checks its selected external tree in place. `graph-all` now runs all six
+  children, separates generate/check modes, aggregates results, and propagates
+  every refusal instead of returning success unconditionally;
+- the read-only live `graph-all --check` passes 5/6 and correctly refuses the
+  memory child because four candidate memory trees exist and none is
+  authorized. That owner-only selection remains red and is recorded in
+  SLIDE `QUESTIONS-FOR-OWNER.md` at commit `5f3b2ff`;
 - the tooling-contract audit deliberately remains red on the same 21 named
   Task 8 dispositions. That red is tracked work, not a release-green claim;
 - generated Task 9 outputs remain a separate unstaged working set and were
   not mixed into the manual generator commit.
 
-Independent SLIDE commit `8a28199` remains 30/30 from four separately named
+Independent SLIDE code at commit `8a28199` remains 30/30 from four separately named
 suites. Neither repository branch was pushed.
 
 ## Prompt for the RD-0535 reviewer
@@ -165,9 +176,9 @@ Answer the response, not merely the original review:
    diff. Check exact SLIDE corpus discovery, empty/uncountable refusal, child
    exit propagation, NODE_TEST_CONTEXT removal, compiler asset ownership, and
    deterministic compiler build evidence.
-   Also inspect current Galerina commit f5b76ec3 and independent SLIDE commit
-   8a28199. Never infer that unstaged generated artifacts belong to the manual
-   commit.
+   Also inspect current Galerina commit 497b02e9, independent SLIDE code commit
+   8a28199, and its question-ledger commit 5f3b2ff. Never infer that unstaged
+   generated artifacts belong to the manual commit.
 6. Try to falsify the build-evidence contract: missing evidence, malformed
    schema, altered tracked content with preserved/older timestamps, added or
    removed tracked inputs, untracked source, deleted tracked source, and Git
@@ -183,13 +194,16 @@ Answer the response, not merely the original review:
    proposed architecture, experiments, blocked work, and rejected ideas. Do
    not infer native safety, performance, admission, or twenty-year
    compatibility from test counts.
-9. Try to falsify the eleven live generator contracts. Confirm exact declared
+9. Try to falsify the thirteen live repository-generator contracts, the
+   external memory check, and graph-all orchestration. Confirm exact declared
    write sets, provenance, second-run semantic idempotence, and non-mutating
    check modes. For package graphs, verify all 97 registered package sets, all
    195 explicit outputs, `.mjs` internal-edge resolution, no partial
    publication, and the one visible dormant-sampler exception. Reconcile the
-   intentional 21-tool Task 8 red set; do not call the phase close green while
-   it remains.
+   external KB corpus digests, memory source digest, all-six child coverage,
+   and nonzero child-refusal propagation. Reconcile the intentional 21-tool
+   Task 8 red set; do not call the phase close green while it remains, and do
+   not choose one of four memory trees by file count.
 10. Re-evaluate RD-0580/RD-0581 against current Galerina source. Distinguish
     “cut from the future mandatory path” from physical deletion. Test the
     claimed K3 duplication, Tower/Tri-Pipe authority shapes, Tri-Fuse backend
