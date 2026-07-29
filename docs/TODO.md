@@ -148,6 +148,15 @@ planning checkbox must never be used to imply that implementation exists.
 - **RD-0535 response:** current measurements, remaining status-label gap, and
   the requested re-review prompt are recorded in
   `docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md`.
+- **RD-0577 disposition:** the handover was diffed read-only against the
+  current 75-rule ZT-Sir canon (`CLAUDE.md`, all four `brains/*.md` modules,
+  and `README.md`) at clean commit `ff09ee0`. Scoped fail-closed operation
+  exit and the closed false-trust list are materially sharper than the
+  current rules; total authority-bearing control flow, receipt
+  non-authority, model non-authority, origin-not-memory-safety, and
+  independence-without-shortcuts are genuine gaps. No held canon file was
+  changed. The candidate-by-candidate evidence and owner gates are recorded
+  in `docs/reports/rd0577-zt-sir-canon-diff-2026-07-29.md`.
 - **Current:** Tasks 2-6 are complete. Task 1's structural inventory is the
   one intentional blocking red: 21 audit/lint tools still need exact
   phase-close, CI, or executable-fixture dispositions. No exception has been
