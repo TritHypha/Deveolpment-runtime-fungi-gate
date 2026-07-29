@@ -3,7 +3,9 @@ pure flow addDecimal(a: Decimal, b: Decimal) -> Decimal {
   return a + b
 }
 
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Add two decimal values and print the deterministic result." } }
+{
   let total: Decimal = addDecimal(1.20, 2.30)
   console.log("decimal sum: " . total)
   return Ok()

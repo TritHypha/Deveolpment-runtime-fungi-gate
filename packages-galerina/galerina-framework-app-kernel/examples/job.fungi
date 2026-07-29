@@ -1,13 +1,15 @@
 @version 1
-job ProcessVideoFile {
-  input videoId: VideoId
-  queue "video_jobs"
+// Queue names and resource limits are admitted host-manifest data. The .fungi
+// decision surface remains portable across Windows, macOS, and Linux hosts.
 
-  limits {
-    timeout 30m
-    max_memory 8gb
-    max_retries 3
+type VideoJob {
+  videoId: String
+  attempt: Int
+}
+
+pure flow mayRetryVideoJob(job: VideoJob) -> Bool {
+  match job.attempt {
+    when job.attempt < 3 => return true
+    _ => return false
   }
-
-  handler processVideoFile
 }

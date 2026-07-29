@@ -16,20 +16,29 @@ type Payload {
   data: String
 }
 
-/// Sends a payload. `move` is a reserved annotation; Galerina does not enforce a borrow/move
-/// model, so it does not invalidate the caller's binding (value semantics).
-flow sendPayload(move p: Payload) -> Result<Void, String> {
-  effects [network.external]
+/// Sends a payload value. Galerina does not expose a borrow/move model, so the
+/// caller's binding remains valid.
+secure flow sendPayload(p: Payload) -> Result<Void, String>
+contract {
+  intent { "Transmit one payload through the admitted external network effect." }
+  effects { network.external }
+}
+{
   return transmit(p.data)
 }
 
 /// ACCEPTED: re-reading `payload` after passing it is safe under value semantics —
 /// there is no use-after-move hazard to reject (no FUNGI-MEMORY-001; that code is RESERVED).
-flow demonstrateValueSemantics() -> Result<Void, String> {
+secure flow demonstrateValueSemantics() -> Result<Void, String>
+contract {
+  intent { "Demonstrate that a value remains readable after a value-parameter call." }
+  effects { network.external }
+}
+{
   let payload: Payload = Payload { data: "hello" }
 
   // Pass the value into a flow...
-  sendPayload(move payload)
+  sendPayload(payload)
 
   // ...and the binding remains usable. Value semantics, not a borrow checker.
   return transmit(payload.data)

@@ -1,20 +1,27 @@
 @version 1
-security {
-  api_methods {
-    allow [GET, POST]
-    deny [PUT, PATCH, DELETE, CONNECT, TRACE]
-  }
+// Deny-by-default policy decisions. Host firewall and filesystem enforcement
+// consume these decisions only after the surrounding manifest is admitted.
 
-  inbound_ports {
-    allow [80, 443]
-    deny_all_other true
+pure flow allowApiMethod(method: String) -> Bool {
+  match method {
+    "GET" => return true
+    "POST" => return true
+    _ => return false
   }
+}
 
-  file_access {
-    default "deny"
+pure flow allowInboundPort(port: Int) -> Bool {
+  match port {
+    80 => return true
+    443 => return true
+    _ => return false
   }
+}
 
-  shell {
-    default "deny"
-  }
+pure flow allowFileAccess(path: String) -> Bool {
+  return false
+}
+
+pure flow allowShell(command: String) -> Bool {
+  return false
 }

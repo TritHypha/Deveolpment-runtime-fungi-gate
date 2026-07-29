@@ -1,27 +1,7 @@
 @version 1
-project "BrowserFormDemo"
-
-target browser {
-  output js
-  wasm optional
-  fallback js
-  source_maps true
-}
-
-capabilities {
-  allow dom
-  allow fetch
-  allow storage
-
-  block environment
-  block filesystem
-  block server_database
-  block secrets
-  block native_bindings
-}
-
-import browser.dom
-import browser.http
+// Browser targets and capabilities are admitted manifest data. Keeping them
+// out of executable syntax prevents an unaudited source declaration from
+// minting DOM, network, storage, filesystem, or secret authority.
 
 type ContactFormData {
   name: String
@@ -29,6 +9,8 @@ type ContactFormData {
   message: String
 }
 
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Initialize a browser form only after host capability admission." } }
+{
   return Ok()
 }

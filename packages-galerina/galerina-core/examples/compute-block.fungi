@@ -10,18 +10,7 @@ pure flow fraudModel(features: FraudFeatures) -> Float {
 }
 
 pure flow scoreFraud(features: FraudFeatures) -> Float {
-  /// @purpose Runs fraud scoring using the best available accelerator plan.
-  /// @target prefer photonic, fallback gpu, fallback cpu
-  /// @fallback gpu, cpu
-  /// @verify cpu_reference
-  /// @ai-note Keep I/O, secrets and environment access outside this block.
-  compute target best verify cpu_reference {
-    prefer photonic
-    fallback gpu
-    fallback cpu
-
-    score = fraudModel(features)
-  }
-
-  return score
+  // Target selection (photonic, GPU, or CPU) belongs to the admitted hardware
+  // manifest. The same deterministic flow remains the reference on every lane.
+  return fraudModel(features)
 }

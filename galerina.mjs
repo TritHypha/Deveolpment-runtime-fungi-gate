@@ -1339,6 +1339,12 @@ Baseline comparison (governance-cost):
     // baseline burns down. The self-hosted corpus is 8/8 type-clean and must stay so.
     const strictTypes = rest.includes("--strict-types");
     const allTypeErrors = (m.checkTypes(parsed.ast).diagnostics ?? []).filter(d => d.severity === "error");
+    // Governance diagnostics are already displayed below, but the exit predicate
+    // historically omitted them. That made an error such as
+    // FUNGI-SUBSTRATE-001 print with a red marker and still return success.
+    const governanceErrors = (gov.diagnostics ?? []).filter(
+      d => d.severity === "error",
+    );
     // The SECURITY type-codes (S1/S2 — non-Bool condition, ordered-comparison-on-Verdict) are fail-OPEN
     // holes, never advisory: they fail closed in EVERY mode (mirrors integrityEffectErrors). The REST of
     // the type-error class stays dev-advisory unless --strict-types (the ~150-baseline reason below).
@@ -1412,7 +1418,8 @@ Baseline comparison (governance-cost):
     // still-gated width) — these are unconditional correctness failures the build/run path also rejects.
     // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
     process.exit(errors.length > 0 || valueStateErrors.length > 0 || integrityEffectErrors.length > 0
-      || securityTypeErrors.length > 0 || (strictTypes && typeErrors.length > 0) ? 1 : 0);
+      || governanceErrors.length > 0 || securityTypeErrors.length > 0
+      || (strictTypes && typeErrors.length > 0) ? 1 : 0);
   }
 
   // ── galerina generate tests <file.fungi> [--tap] — contract-driven test obligations (0016) ──

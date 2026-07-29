@@ -11,19 +11,15 @@ enum OrderError {
   StockUnavailable
 }
 
-secure flow completeOrder(order: Order) -> Result<Order, OrderError> {
-  checkpoint beforeOrderComplete
-
+// Transaction checkpoints and compensating actions are admitted host
+// resources. The portable flow exposes one terminal Result and never resumes
+// after an error.
+secure flow completeOrder(order: Order) -> Result<Order, OrderError>
+contract { intent { "Complete stock, payment, and dispatch as one governed order operation." } }
+{
   reserveStock(order)
   takePayment(order)
   dispatchOrder(order)
 
   return Ok(order)
-
-} rollback error {
-  restore beforeOrderComplete
-  releaseStock(order)
-  refundPayment(order)
-
-  return Err(error)
 }

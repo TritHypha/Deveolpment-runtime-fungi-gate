@@ -20,15 +20,17 @@ type RiskScore {
   score: Float
 }
 
-async secure flow enrichOrder(input: CreateOrderRequest) -> Result<EnrichedOrder, ApiError>
-effects [network.outbound] {
-  parallel {
-    customer = await CustomersApi.get(input.customerId)
-    stock = await StockApi.check(input.items)
-    risk = await RiskApi.score(input)
-  } timeout 5s catch error {
-    return Err(ApiError.ExternalServiceFailed(error))
-  }
+// The admitted host scheduler may execute these independent calls in parallel;
+// `async`/`await` are reserved and are not part of the v1 language grammar.
+secure flow enrichOrder(input: CreateOrderRequest) -> Result<EnrichedOrder, ApiError>
+contract {
+  intent { "Enrich an order through three admitted outbound services." }
+  effects { network.outbound }
+}
+{
+  let customer = CustomersApi.get(input.customerId)
+  let stock = StockApi.check(input.items)
+  let risk = RiskApi.score(input)
 
   return Ok(EnrichedOrder {
     customer: customer

@@ -1,5 +1,7 @@
 @version 1
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Print the app-kernel smoke-test greeting." } }
+{
   console.log("hello from Galerina app kernel test")
   return Ok()
 }

@@ -1,9 +1,13 @@
 @version 1
-pure vector flow vectorTotal(input: Int) -> Int {
+// Vector placement is selected by the admitted target manifest; the language
+// flow remains portable and deterministic.
+pure flow vectorTotal(input: Int) -> Int {
   return input
 }
 
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Run the portable vector-placement smoke fixture." } }
+{
   let total: Int = vectorTotal(6)
   console.log("vector total: " . total)
   return Ok()

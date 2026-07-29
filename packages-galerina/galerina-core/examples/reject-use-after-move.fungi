@@ -1,28 +1,32 @@
 @version 1
-// EXPECT: REJECT
-// ERROR: FUNGI-MEMORY-001
+// EXPECT: ACCEPT
 // AREA: memory
-// PURPOSE: use after move is rejected — moved value cannot be accessed again
+// PURPOSE: legacy filename retained to document that Rust-style use-after-move
+//          rejection is not part of Galerina's value-semantics model.
 
 type Payload {
   data: String
 }
 
-/// Sends a payload by taking ownership of it.
-flow sendPayload(move p: Payload) -> Result<Void, String> {
-  effects [network.external]
+/// Sends a payload value without invalidating the caller's binding.
+secure flow sendPayload(p: Payload) -> Result<Void, String>
+contract {
+  intent { "Transmit one payload through the admitted external network effect." }
+  effects { network.external }
+}
+{
   return transmit(p.data)
 }
 
-/// INTENTIONAL ERROR: uses `payload` after it has been moved.
-/// The checker must emit FUNGI-MEMORY-001 at the second use of `payload`.
-flow demonstrateUseAfterMove() -> Result<Void, String> {
+/// The second read is valid: Galerina has value semantics and no raw aliases.
+secure flow demonstrateLegacyFilename() -> Result<Void, String>
+contract {
+  intent { "Prove the legacy use-after-move filename now teaches value semantics." }
+  effects { network.external }
+}
+{
   let payload: Payload = Payload { data: "hello" }
 
-  // First use — ownership moves into sendPayload
-  sendPayload(move payload)
-
-  // INVALID: payload was moved; this access must be rejected
-  // Expected diagnostic: FUNGI-MEMORY-001 USE_AFTER_MOVE
+  sendPayload(payload)
   return transmit(payload.data)
 }

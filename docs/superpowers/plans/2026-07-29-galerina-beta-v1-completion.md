@@ -189,7 +189,7 @@ out-of-scope, and cross-ledger authority entries are denied.
   ownership.
 - The global `knownFailing` object becomes empty and cannot grow.
 
-- [ ] **Step 1: Generate an exact adjudication table**
+- [x] **Step 1: Generate an exact adjudication table**
 
 Run each named baseline file through:
 
@@ -200,18 +200,18 @@ node galerina.mjs check <repository-relative-file> --strict
 Classify it as positive source, teaching example, or intentional negative
 fixture. Record actual diagnostics and the test that owns them.
 
-- [ ] **Step 2: Add RED audit tests**
+- [x] **Step 2: Add RED audit tests**
 
 Prove a new implicit baseline entry, an unowned diagnostic sidecar, a stale
 sidecar, and a positive file with any error all fail.
 
-- [ ] **Step 3: Repair positive sources in dependency order**
+- [x] **Step 3: Repair positive sources in dependency order**
 
 Repair compiler/core examples first, then framework examples, then benchmark
 examples. Use only documented v1 syntax and run the owning package test after
 each file group.
 
-- [ ] **Step 4: Convert negative fixtures to explicit evidence**
+- [x] **Step 4: Convert negative fixtures to explicit evidence**
 
 Keep OWASP and syntax-denial programs negative only where an owning test
 requires them. Pin exact diagnostic codes beside the fixture and prove a
@@ -227,6 +227,15 @@ node scripts/lint-fungi.mjs
 
 Expected: `knownFailing` empty, zero unowned failures, zero source-quality
 findings.
+
+Checkpoint 2026-07-29: the implicit baseline is empty; all 13 intentional
+negatives have exact adjacent ownership; the audit self-test and ownership
+test are green; all five affected package suites are green, including the
+compiler at 5,718/5,718. Step 5 remains open because the separate curriculum
+audit still carries 89 explicit known-drift rows and the global source-quality
+lint still refuses 584 findings across 103 files. Those debts are recorded in
+`docs/reports/fungi-corpus-adjudication-2026-07-29.md` and must be burned down,
+not baselined into this gate.
 
 ### Task 4: Promote the two remaining compiler stages
 

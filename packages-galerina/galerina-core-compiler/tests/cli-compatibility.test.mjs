@@ -25,6 +25,10 @@ const ROOT   = join(__dir, "../../.."); // monorepo root
 const GALERINA = join(ROOT, "galerina.mjs");
 const BENCH  = join(ROOT, "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi");
 const CLEAN  = join(ROOT, "examples/auth-service/verifyPassword.fungi");
+const WRONG_PHOTONIC_SIGN = join(
+  ROOT,
+  "examples/gaming-substrate/03-anticheat-sign-photonic-WRONG.fungi",
+);
 
 const isWin = process.platform === "win32";
 
@@ -303,6 +307,21 @@ describe("CLI compatibility — galerina check", () => {
   it("galerina check output contains ✅ on clean file", () => {
     const { stdout } = galerina("check", CLEAN);
     assert.ok(stdout.includes("✅"), `expected ✅ in: ${stdout}`);
+  });
+
+  it("strict check exits non-zero on an error-severity governance diagnostic", () => {
+    for (const args of [
+      ["check", WRONG_PHOTONIC_SIGN],
+      ["check", WRONG_PHOTONIC_SIGN, "--strict-types"],
+    ]) {
+      const { code, stdout } = galerina(...args);
+      assert.match(stdout, /FUNGI-SUBSTRATE-001/);
+      assert.notEqual(
+        code,
+        0,
+        "an error-severity governance diagnostic must fail closed",
+      );
+    }
   });
 });
 

@@ -24,7 +24,11 @@ enum ArithmeticBenchmarkError {
 secure flow runArithmeticThresholdBenchmark(
 threshold: Int
 ) -> Result<ArithmeticBenchmarkReport, ArithmeticBenchmarkError>
-effects [runtime.clock, runtime.metrics] {
+contract {
+  intent { "Measure a deterministic arithmetic loop with explicit runtime metrics." }
+  effects { runtime.clock, runtime.metrics }
+}
+{
   if threshold <= 0 {
     return Err(ArithmeticBenchmarkError.InvalidThreshold)
   }
@@ -64,7 +68,9 @@ effects [runtime.clock, runtime.metrics] {
   })
 }
 
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Run the arithmetic-threshold benchmark and print its report." } }
+{
   let result: Result<ArithmeticBenchmarkReport, ArithmeticBenchmarkError> =
   runArithmeticThresholdBenchmark(100_000_000_000_000)
 

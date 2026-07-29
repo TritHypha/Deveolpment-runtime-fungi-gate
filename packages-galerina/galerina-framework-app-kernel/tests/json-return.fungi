@@ -1,15 +1,11 @@
 @version 1
-secure flow responsePayload() -> Json {
-  return {
-    "items": [
-      { "id": 1, "test": "xxx" },
-      { "id": 2, "test": "xxx" },
-      { "id": 3, "test": "xxx" }
-    ]
-  }
+pure flow responsePayload() -> Json {
+  return json.decode<Json>("{\"items\":[{\"id\":1,\"test\":\"xxx\"},{\"id\":2,\"test\":\"xxx\"},{\"id\":3,\"test\":\"xxx\"}]}")
 }
 
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Decode and print one deterministic JSON response payload." } }
+{
   let payload: Json = responsePayload()
   console.log("json payload:\n" . json.pretty(payload))
   return Ok()

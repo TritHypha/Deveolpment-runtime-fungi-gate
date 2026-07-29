@@ -1,9 +1,9 @@
 @version 1
-project "AiContextDemo"
-
-entry "./hello.fungi"
-
-secure flow main() -> Result<Void, Error> {
+// Project names and entry paths are deployment-manifest fields, not executable
+// top-level language declarations.
+secure flow main() -> Result<Void, Error>
+contract { intent { "Print the AI-context demonstration greeting." } }
+{
   print("AI context example")
   return Ok()
 }

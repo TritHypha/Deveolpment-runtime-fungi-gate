@@ -14,26 +14,25 @@ enum ConnectionError {
   Closed
 }
 
-/// Takes ownership of a connection and closes it on completion.
-/// After move, the caller cannot access the connection.
-secure flow closeConnection(move conn: Connection) -> Result<Void, ConnectionError> {
-  effects [network.close]
-
-  // conn is fully owned here; we are responsible for cleanup
+/// Closes a connection value. Resource uniqueness is enforced by the admitted
+/// host capability, not a source-level move annotation.
+secure flow closeConnection(conn: Connection) -> Result<Void, ConnectionError>
+contract {
+  intent { "Close one admitted connection and return the terminal result." }
+  effects { network.close }
+}
+{
   let result: Result<Void, ConnectionError> = performClose(conn.host, conn.port)
-
-  // conn is released at the end of this scope — no double-close possible
   return result
 }
 
-/// Opens a connection then transfers ownership to the closer.
-secure flow connectAndClose(host: String, port: Int) -> Result<Void, ConnectionError> {
-  effects [network.external, network.close]
-
+/// Opens a connection value and delegates terminal cleanup.
+secure flow connectAndClose(host: String, port: Int) -> Result<Void, ConnectionError>
+contract {
+  intent { "Open one admitted connection and close it before returning." }
+  effects { network.external, network.close }
+}
+{
   let conn: Connection = Connection { host: host, port: port }
-
-  // move transfers ownership; conn is no longer accessible in this scope
-  return closeConnection(move conn)
-
-  // conn cannot be referenced here — ownership moved to closeConnection
+  return closeConnection(conn)
 }

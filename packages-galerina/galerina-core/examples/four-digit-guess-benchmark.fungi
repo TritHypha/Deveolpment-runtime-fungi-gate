@@ -1,102 +1,30 @@
 @version 1
-type FourDigitCode = String
+// Local-only request admission for the archived four-digit search fixture.
+// The portable language does not expose a brute-force loop or runtime metrics
+// as a benchmark claim; execution remains host-owned until SLIDE is executable.
 
-type FourDigitGuessReport {
-  target: FourDigitCode
-  found: Bool
-  attempts: Int
-  guessedValue: Option<FourDigitCode>
-  elapsedMs: Int
-  attemptsPerSecond: Float
-  cpuUserMs: Int
-  cpuSystemMs: Int
-  memoryRssBytes: Int
-  memoryHeapUsedBytes: Int
+type FourDigitGuessRequest {
+  codeLength: Int
+  maxAttempts: Int
 }
 
 enum FourDigitGuessError {
-  InvalidTarget
+  InvalidCodeLength
   InvalidMaxAttempts
   MaxAttemptsTooHigh
 }
 
-/// @purpose Demonstrates a safe local-only benchmark that finds a four-digit code.
-/// @input FourDigitCode target, Int maxAttempts
-/// @output Result<FourDigitGuessReport, FourDigitGuessError>
-/// @effects [runtime.clock, runtime.random, runtime.metrics]
-secure flow guessFourDigitCode(
-target: FourDigitCode,
-maxAttempts: Int
-) -> Result<FourDigitGuessReport, FourDigitGuessError>
-effects [runtime.clock, runtime.random, runtime.metrics] {
-  if target.length != 4 {
-    return Err(FourDigitGuessError.InvalidTarget)
-  }
-
-  if maxAttempts <= 0 {
-    return Err(FourDigitGuessError.InvalidMaxAttempts)
-  }
-
-  if maxAttempts > 1_000_000 {
-    return Err(FourDigitGuessError.MaxAttemptsTooHigh)
-  }
-
-  let startedAt: Int = Time.nowMs()
-  let startedCpu: CpuUsage = Runtime.cpuUsage()
-  let startedMemory: MemoryUsage = Runtime.memoryUsage()
-  mut attempt: Int = 0
-
-  while attempt < maxAttempts {
-    attempt = attempt + 1
-
-    let candidate: FourDigitCode = attempt.formatDigits(4)
-
-    if candidate == target {
-      let elapsed: Int = Time.nowMs() - startedAt
-      let cpu: CpuUsage = Runtime.cpuUsageSince(startedCpu)
-      let memory: MemoryUsage = Runtime.memoryUsage()
-
-      return Ok(FourDigitGuessReport {
-        target: target
-        found: true
-        attempts: attempt
-        guessedValue: Some(candidate)
-        elapsedMs: elapsed
-        attemptsPerSecond: attempt / (elapsed / 1000)
-        cpuUserMs: cpu.userMs
-        cpuSystemMs: cpu.systemMs
-        memoryRssBytes: memory.rssBytes
-        memoryHeapUsedBytes: memory.heapUsedBytes
-      })
+pure flow validateFourDigitGuessRequest(
+request: FourDigitGuessRequest
+) -> Result<FourDigitGuessRequest, FourDigitGuessError> {
+  match request.codeLength {
+    4 => {
+      match request.maxAttempts {
+        when request.maxAttempts <= 0 => return Err(FourDigitGuessError.InvalidMaxAttempts)
+        when request.maxAttempts > 1000000 => return Err(FourDigitGuessError.MaxAttemptsTooHigh)
+        _ => return Ok(request)
+      }
     }
+    _ => return Err(FourDigitGuessError.InvalidCodeLength)
   }
-
-  let elapsed: Int = Time.nowMs() - startedAt
-  let cpu: CpuUsage = Runtime.cpuUsageSince(startedCpu)
-  let memory: MemoryUsage = Runtime.memoryUsage()
-
-  return Ok(FourDigitGuessReport {
-    target: target
-    found: false
-    attempts: maxAttempts
-    guessedValue: None
-    elapsedMs: elapsed
-    attemptsPerSecond: maxAttempts / (elapsed / 1000)
-    cpuUserMs: cpu.userMs
-    cpuSystemMs: cpu.systemMs
-    memoryRssBytes: memory.rssBytes
-    memoryHeapUsedBytes: memory.heapUsedBytes
-  })
-}
-
-secure flow main() -> Result<Void, Error> {
-  let result: Result<FourDigitGuessReport, FourDigitGuessError> = guessFourDigitCode("9999", 100_000)
-
-  match result {
-    Ok(report) => print(report)
-    Err(error) => return Err(error)
-    _ => return Err(error)
-  }
-
-  return Ok()
 }

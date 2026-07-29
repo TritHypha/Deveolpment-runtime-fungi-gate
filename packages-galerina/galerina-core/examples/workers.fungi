@@ -1,17 +1,16 @@
 @version 1
+// Worker counts, queues, and dead-letter paths belong to an admitted deployment
+// manifest. The portable language core only decides how an event is classified.
+
 type OrderEvent {
   id: String
   type: String
 }
 
-channel orders: Channel<OrderEvent> {
-  buffer 1000
-  overflow "dead_letter"
-  dead_letter "./storage/dead/orders.jsonl"
-}
-
-worker OrderWorker count 8 {
-  for event in orders {
-    processOrderEvent(event)
+pure flow orderAction(order: OrderEvent) -> String {
+  match order.type {
+    "created" => return "process"
+    "cancelled" => return "cancel"
+    _ => return "dead-letter"
   }
 }

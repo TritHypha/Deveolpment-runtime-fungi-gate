@@ -2,7 +2,9 @@
 // EXPECT: ACCEPT
 // AREA: basic
 // PURPOSE: simplest possible flow — print and return Ok
-secure flow main() -> Result<Void, Error> {
+secure flow main() -> Result<Void, Error>
+contract { intent { "Print the canonical Galerina greeting." } }
+{
   print("hello from Galerina")
   return Ok()
 }

@@ -8,31 +8,22 @@ type PaymentEvent {
   orderId: String
 }
 
-webhook PaymentWebhook {
-  path "/webhooks/payment"
-  method POST
-
-  security {
-    hmac_header "Payment-Signature"
-    secret env.secret("PAYMENT_WEBHOOK_SECRET")
-    max_age 5m
-    max_body_size 512kb
-    replay_protection true
-  }
-
-  idempotency_key json.path("$.id")
-  handler handlePaymentWebhook
-}
+// Path, HMAC key binding, replay window, body ceiling, and idempotency key are
+// admitted host-manifest data. Source code cannot mint those capabilities.
 
 secure flow handlePaymentWebhook(req: Request) -> Result<Response, WebhookError>
-effects [network.inbound] {
+contract {
+  intent { "Dispatch one host-verified payment webhook by admitted event type." }
+  effects { network.inbound }
+}
+{
   let event: PaymentEvent = json.decode<PaymentEvent>(req.body)
 
   match event.type {
     "payment.succeeded" => handlePaymentSucceeded(event)
     "payment.failed"    => handlePaymentFailed(event)
-    _ => return JsonResponse({ "ignored": true })
+    _ => return JsonResponse("ignored")
   }
 
-  return JsonResponse({ "received": true })
+  return JsonResponse("received")
 }

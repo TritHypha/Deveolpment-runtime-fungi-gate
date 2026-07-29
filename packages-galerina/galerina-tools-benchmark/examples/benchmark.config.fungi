@@ -1,23 +1,32 @@
 @version 1
-benchmark {
-  default_mode "light"
-  max_duration 180s
-  run_on_major_update true
-  allow_submit false
+// Benchmark execution remains host-owned until an executable SLIDE backend
+// exists. This portable source validates the deterministic default request;
+// it does not publish a cross-runtime performance claim.
 
-  targets {
-    cpu true
-    vector true
-    gpu optional
-    ai_accelerator optional
-    low_bit_ai optional
-    optical_io optional
+type BenchmarkRequest {
+  durationSeconds: Int
+  submitResults: Bool
+  includeHostIdentity: Bool
+}
+
+pure flow defaultBenchmarkRequest() -> BenchmarkRequest {
+  return BenchmarkRequest {
+    durationSeconds: 180
+    submitResults: false
+    includeHostIdentity: false
   }
+}
 
-  privacy {
-    include_hostname false
-    include_username false
-    include_project_path false
-    anonymise_cpu_model true
+pure flow benchmarkRequestAllowed(request: BenchmarkRequest) -> Bool {
+  match request.submitResults {
+    true => return false
+    false => {
+      match request.includeHostIdentity {
+        true => return false
+        false => return request.durationSeconds > 0
+        _ => return false
+      }
+    }
+    _ => return false
   }
 }

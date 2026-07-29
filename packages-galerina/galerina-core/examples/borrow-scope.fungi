@@ -1,16 +1,17 @@
 @version 1
 // EXPECT: ACCEPT
 // AREA: memory
-// PURPOSE: scoped borrow keeps owner valid after borrow ends
+// PURPOSE: immutable value input keeps the caller's owner valid
 
 type Buffer {
   data: Array<UInt8>
   size: Int
 }
 
-/// Reads the first byte of a buffer without taking ownership.
-/// The borrow expires when this flow returns; the caller keeps the buffer.
-pure flow peekFirstByte(borrow buf: Buffer) -> Option<UInt8> {
+/// Reads the first byte from an immutable value input.
+/// Galerina uses value semantics on today's silicon; it does not expose a
+/// Rust-style borrow annotation in the v1 grammar.
+pure flow peekFirstByte(buf: Buffer) -> Option<UInt8> {
   if buf.size == 0 {
     return None
   }
@@ -24,8 +25,8 @@ flow inspectBuffer() -> Result<UInt8, String> {
     size: 5
   }
 
-  // Borrow buf for inspection — buf remains owned after this call
-  let firstByte: Option<UInt8> = peekFirstByte(borrow buf)
+  // The caller retains its value after the immutable call.
+  let firstByte: Option<UInt8> = peekFirstByte(buf)
 
   // buf is still fully accessible here; the borrow has ended
   match firstByte {

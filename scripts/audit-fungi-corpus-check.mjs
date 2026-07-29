@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// audit-fungi-corpus-check.mjs — fail-CLOSED gate: every `.fungi` in the repo that is SUPPOSED to
-// compile must still pass `galerina check`. A ratcheted baseline holds today's known-bad so the gate
-// lands green, while any NEW breakage is RED.
+// audit-fungi-corpus-check.mjs — fail-CLOSED gate: every positive `.fungi` in
+// the repo must pass `galerina check`; every intentional negative must declare
+// and continue to emit one exact diagnostic set.
 //
 // WHY THIS EXISTS (2026-07-15): the flagship `examples/auth-service/sovereignTransaction.fungi` had
 // rotted to a HARD ERROR — `authority { }` nested inside `contract { }`, rejected deny-by-default
@@ -20,11 +20,11 @@
 //    re-implementation: a private copy of the pipeline would drift from the CLI and the gate would lie.
 //  - CACHE by (size, mtimeMs) under build/fungi-corpus-check/ so only CHANGED files re-check: the first
 //    sweep costs minutes, every later run seconds — cheap enough for the phase-close cadence.
-//  - SKIP what other gates own: docs/examples/** (audit-example-diagnostics.mjs owns that corpus,
-//    including its expected.diagnostics.txt sidecars) and any file with an in-file
-//    `expected_diagnostics:` header or a sidecar — those are negative fixtures, SUPPOSED to fail.
-//  - RATCHET: the baseline may only SHRINK. New failure / new code on a known-bad file / a baselined
-//    file that now passes (record the win!) — all RED.
+//  - DELEGATE only docs/examples/** (audit-example-diagnostics.mjs owns that
+//    corpus). Elsewhere, `/// expected_diagnostics: CODE` or an exact adjacent
+//    `<file>.fungi.expected.diagnostics.txt` sidecar is validated, never skipped.
+//  - RATCHET: the implicit baseline may only SHRINK. The update command refuses
+//    growth; new failure, new code, stale ownership, or a fixed baseline row is RED.
 //
 // Usage:
 //   node scripts/audit-fungi-corpus-check.mjs --self-test          # prove the detector fires (CI first)
@@ -78,18 +78,117 @@ function findFungi() {
   return { files: union, finder: `myco graph finder (${viaMyco.length}) ∪ git index (${tracked.length})`, finderDrift };
 }
 
-// ── scope: what OTHER gates own, and negative fixtures ──────────────────────────────────────
+// ── scope and explicit diagnostic ownership ────────────────────────────────────────────────
 const ownedElsewhere = (rel) =>
   rel.startsWith("docs/examples/") // audit-example-diagnostics.mjs owns that corpus
   || rel.startsWith("build/");     // generated tree — no authored .fungi belongs there (incl. the self-test plants)
-const isNegativeFixture = (rel) => {
-  try { if (/expected_diagnostics\s*:/i.test(readFileSync(join(ROOT, rel), "utf8"))) return true; } catch { return true; }
-  return existsSync(join(ROOT, dirname(rel), "expected.diagnostics.txt")); // sidecar convention
-};
+const DIAGNOSTIC_CODE = /^FUNGI-[A-Z][A-Z0-9]*-\d+[A-Za-z]?$/;
+const EXACT_SIDECAR_SUFFIX = ".fungi.expected.diagnostics.txt";
+
+function parseExpectedCodes(text, label) {
+  const values = String(text)
+    .split(/[\s,]+/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+  if (values.length === 1 && values[0].toLowerCase() === "none") {
+    return { codes: [], error: null };
+  }
+  if (
+    values.length === 0
+    || values.some((value) => !DIAGNOSTIC_CODE.test(value))
+    || new Set(values).size !== values.length
+  ) {
+    return {
+      codes: [],
+      error:
+        `${label} must contain a non-empty, duplicate-free list of exact `
+        + "FUNGI-*-NNN codes (or the single word none)",
+    };
+  }
+  return { codes: values.sort(), error: null };
+}
+
+function diagnosticExpectation(rel) {
+  let source;
+  try {
+    source = readFileSync(join(ROOT, rel), "utf8");
+  } catch (error) {
+    return { codes: [], error: `cannot read ${rel}: ${error.message}` };
+  }
+  const headers = [
+    ...source.matchAll(/^\/\/\/\s*expected_diagnostics:\s*(.+)$/gim),
+  ];
+  const sidecar = `${join(ROOT, rel)}.expected.diagnostics.txt`;
+  const hasSidecar = existsSync(sidecar);
+  if (headers.length > 1 || (headers.length === 1 && hasSidecar)) {
+    return {
+      codes: [],
+      error: `${rel} has ambiguous diagnostic ownership`,
+    };
+  }
+  if (headers.length === 1) {
+    return parseExpectedCodes(headers[0][1], `${rel} expected_diagnostics`);
+  }
+  if (hasSidecar) {
+    return parseExpectedCodes(
+      readFileSync(sidecar, "utf8"),
+      relative(ROOT, sidecar).replace(/\\/g, "/"),
+    );
+  }
+  return { codes: [], error: null };
+}
+
+function diagnosticOwnershipViolation(expectation, verdict) {
+  if (expectation.error) return expectation.error;
+  if (expectation.codes.length === 0) {
+    return verdict.ok
+      ? null
+      : `positive source emitted ${verdict.codes.join(", ") || "an unclassified error"}`;
+  }
+  if (verdict.ok) {
+    return `expected ${expectation.codes.join(", ")} but the fixture passed`;
+  }
+  const actual = [...verdict.codes].sort();
+  return actual.join("\0") === expectation.codes.join("\0")
+    ? null
+    : `expected ${expectation.codes.join(", ")}; got ${actual.join(", ") || "no diagnostic code"}`;
+}
+
+function implicitBaselineGrowth(base, failing) {
+  return Object.keys(failing).filter((rel) => !(rel in base));
+}
+
+function diagnosticSidecars() {
+  const result = spawnSync(
+    "git",
+    [
+      "ls-files",
+      "--cached",
+      "--others",
+      "--exclude-standard",
+      `*${EXACT_SIDECAR_SUFFIX}`,
+    ],
+    { ...SPAWN, cwd: ROOT, timeout: 60000 },
+  );
+  return (result.stdout ?? "")
+    .split(/\r?\n/)
+    .map((value) => value.trim().replace(/\\/g, "/"))
+    .filter(Boolean);
+}
+
+function orphanSidecars(sidecars, fungiFiles) {
+  const corpus = new Set(fungiFiles);
+  return sidecars.filter((sidecar) => {
+    const owner = sidecar.slice(0, -".expected.diagnostics.txt".length);
+    return !owner.endsWith(".fungi") || !corpus.has(owner);
+  });
+}
 
 // ── ADJUDICATE (real CLI) + cache by (size, mtime) ───────────────────────────────────────────
-function checkFile(rel) {
-  const r = spawnSync("node", [join(ROOT, "galerina.mjs"), "check", rel],
+function checkFile(rel, strictTypes = false) {
+  const args = [join(ROOT, "galerina.mjs"), "check", rel];
+  if (strictTypes) args.push("--strict-types");
+  const r = spawnSync("node", args,
     { ...SPAWN, cwd: ROOT, timeout: 60000 });
   const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
   // A real code ends in a numeric segment (FUNGI-SYNTAX-011); the CLI's "+N FUNGI-TYPE-* advisory"
@@ -133,16 +232,22 @@ function sweep(candidates) {
   let checked = 0, cached = 0;
   for (const rel of candidates) {
     let st; try { st = statSync(join(ROOT, rel)); } catch { continue; } // vanished between find and sweep
-    const key = `${st.size}:${Math.round(st.mtimeMs)}`;
+    const expectation = diagnosticExpectation(rel);
+    const strictTypes = expectation.codes.length > 0;
+    const key = `${st.size}:${Math.round(st.mtimeMs)}:${strictTypes ? "strict" : "plain"}`;
     const hit = cache[rel];
     let verdict;
     if (hit !== undefined && hit.key === key) { verdict = hit; cached++; }
-    else { const { ok, codes } = checkFile(rel); verdict = { key, ok, codes }; checked++; }
+    else {
+      const { ok, codes } = checkFile(rel, strictTypes);
+      verdict = { key, ok, codes };
+      checked++;
+    }
     fresh[rel] = verdict;
     if (!verdict.ok) failing[rel] = verdict.codes;
   }
   try { mkdirSync(CACHE_DIR, { recursive: true }); writeFileSync(CACHE, JSON.stringify({ generated: "audit-fungi-corpus-check", fingerprint: fp, entries: fresh }, null, 2)); } catch { /* cache is an optimisation, never a failure */ }
-  return { failing, checked, cached };
+  return { failing, verdicts: fresh, checked, cached };
 }
 
 // ── SELF-TEST: a gate that cannot fail is worse than none ────────────────────────────────────
@@ -167,47 +272,108 @@ if (process.argv.includes("--self-test")) {
   ok(/^[0-9a-f]{16}$/.test(compilerFingerprint()) && compilerFingerprint() === compilerFingerprint(),
     "compiler fingerprint is a stable hash — cache is scoped to the compiler build (a new rule busts it)");
   ok(ownedElsewhere("docs/examples/Level-4-Security/169-secret-comparison/example.fungi"), "docs/examples/** deferred to audit-example-diagnostics");
-  ok(isNegativeFixture("scripts/audit-fungi-corpus-check.mjs"), "negative-fixture marker detection works (this file mentions the header)");
+  ok(
+    implicitBaselineGrowth(
+      { "held.fungi": ["FUNGI-TEST-001"] },
+      {
+        "held.fungi": ["FUNGI-TEST-001"],
+        "new.fungi": ["FUNGI-TEST-002"],
+      },
+    ).join() === "new.fungi",
+    "implicit baseline growth is refused",
+  );
+  ok(
+    orphanSidecars(
+      ["tests/orphan.fungi.expected.diagnostics.txt"],
+      ["tests/owned.fungi"],
+    ).length === 1,
+    "orphan diagnostic sidecar is refused",
+  );
+  ok(
+    diagnosticOwnershipViolation(
+      { codes: ["FUNGI-TEST-001"], error: null },
+      { ok: false, codes: ["FUNGI-TEST-002"] },
+    )?.startsWith("expected FUNGI-TEST-001"),
+    "stale exact diagnostic ownership is refused",
+  );
+  ok(
+    diagnosticOwnershipViolation(
+      { codes: [], error: null },
+      { ok: false, codes: ["FUNGI-TEST-003"] },
+    )?.startsWith("positive source emitted"),
+    "positive source diagnostics are refused",
+  );
   console.log(process.exitCode ? "  fungi-corpus-check self-test FAILED" : "  fungi-corpus-check self-test: finder coverage + detector verified ✅");
   process.exit(process.exitCode ?? 0);
 }
 
 // ── enforce / record ─────────────────────────────────────────────────────────────────────────
 const { files, finder, finderDrift } = findFungi();
-const candidates = files.filter((f) => !ownedElsewhere(f) && !isNegativeFixture(f));
-const { failing, checked, cached } = sweep(candidates);
+const candidates = files.filter((f) => !ownedElsewhere(f));
+const { verdicts, checked, cached } = sweep(candidates);
 const base = loadJson(BASELINE, { knownFailing: {} }).knownFailing ?? {};
+const positiveFailing = {};
+const ownershipProblems = [];
+let explicitlyOwned = 0;
+for (const rel of candidates) {
+  const expectation = diagnosticExpectation(rel);
+  const verdict = verdicts[rel] ?? { ok: false, codes: [] };
+  if (expectation.error) {
+    ownershipProblems.push(`${rel}: ${expectation.error}`);
+  } else if (expectation.codes.length > 0) {
+    explicitlyOwned += 1;
+    const violation = diagnosticOwnershipViolation(expectation, verdict);
+    if (violation) ownershipProblems.push(`${rel}: ${violation}`);
+  } else if (!verdict.ok) {
+    positiveFailing[rel] = verdict.codes;
+  }
+}
+const orphanedSidecars = orphanSidecars(diagnosticSidecars(), files);
+const baselineGrowth = implicitBaselineGrowth(base, positiveFailing);
 
 if (process.argv.includes("--update-baseline")) {
+  if (
+    baselineGrowth.length > 0
+    || ownershipProblems.length > 0
+    || orphanedSidecars.length > 0
+  ) {
+    console.error(
+      "  REFUSED: --update-baseline may only shrink existing implicit debt; "
+      + "new failures or diagnostic-ownership errors must be fixed.",
+    );
+    process.exit(1);
+  }
   mkdirSync(dirname(BASELINE), { recursive: true });
   writeFileSync(BASELINE, JSON.stringify({
-    note: "Known-failing .fungi (galerina check). RATCHET: may only SHRINK — fix a file => remove it here; never baseline a NEW break. See task #75 for the VALUESTATE-004 adjudication.",
+    note: "Implicit known-failing positive .fungi (galerina check). RATCHET: may only SHRINK; intentional negatives require exact adjacent ownership.",
     generated: "audit-fungi-corpus-check",
-    knownFailing: failing,
+    knownFailing: positiveFailing,
   }, null, 2) + "\n");
-  console.log(`  baseline recorded: ${Object.keys(failing).length} known-failing of ${candidates.length} checked (${checked} fresh, ${cached} cached; ${finder}).`);
+  console.log(`  baseline shrunk: ${Object.keys(positiveFailing).length} implicit failures of ${candidates.length} checked (${explicitlyOwned} explicit negatives; ${checked} fresh, ${cached} cached; ${finder}).`);
   process.exit(0);
 }
 
-const nowFailing = Object.keys(failing);
-const NEW_BREAKS = nowFailing.filter((f) => !(f in base));
-const NEW_CODES = nowFailing.filter((f) => f in base && failing[f].some((c) => !(base[f] ?? []).includes(c)))
-  .map((f) => `${f}  new: ${failing[f].filter((c) => !(base[f] ?? []).includes(c)).join(", ")}`);
-const FIXED = Object.keys(base).filter((f) => !(f in failing));
+const nowFailing = Object.keys(positiveFailing);
+const NEW_BREAKS = baselineGrowth;
+const NEW_CODES = nowFailing.filter((f) => f in base && positiveFailing[f].some((c) => !(base[f] ?? []).includes(c)))
+  .map((f) => `${f}  new: ${positiveFailing[f].filter((c) => !(base[f] ?? []).includes(c)).join(", ")}`);
+const FIXED = Object.keys(base).filter((f) => !(f in positiveFailing));
 
-console.log(`  fungi-corpus-check: ${candidates.length} checkable of ${files.length} .fungi (${finder}); ${checked} checked, ${cached} cached; ${nowFailing.length} failing vs ${Object.keys(base).length} baselined.`);
+console.log(`  fungi-corpus-check: ${candidates.length} governed of ${files.length} .fungi (${finder}); ${checked} checked, ${cached} cached; ${explicitlyOwned} exact negative fixtures; ${nowFailing.length} implicit failures vs ${Object.keys(base).length} baselined.`);
 if (finderDrift.length) console.log(`  ⚠️  finder drift: myco missed ${finderDrift.length} tracked .fungi (union with the git index kept the gate complete) — file on the myco roadmap.`);
 
 const problems = [];
-if (NEW_BREAKS.length) problems.push(`NEW breakage (${NEW_BREAKS.length}):\n${NEW_BREAKS.map((f) => `     ${f}  [${failing[f].join(", ")}]`).join("\n")}`);
+if (orphanedSidecars.length) problems.push(`ORPHAN diagnostic sidecar (${orphanedSidecars.length}):\n${orphanedSidecars.map((f) => `     ${f}`).join("\n")}`);
+if (ownershipProblems.length) problems.push(`DIAGNOSTIC ownership violation (${ownershipProblems.length}):\n${ownershipProblems.map((f) => `     ${f}`).join("\n")}`);
+if (NEW_BREAKS.length) problems.push(`NEW breakage (${NEW_BREAKS.length}):\n${NEW_BREAKS.map((f) => `     ${f}  [${positiveFailing[f].join(", ")}]`).join("\n")}`);
 if (NEW_CODES.length) problems.push(`NEW diagnostic on a known-bad file (${NEW_CODES.length}):\n${NEW_CODES.map((s) => `     ${s}`).join("\n")}`);
 if (FIXED.length) problems.push(`FIXED — remove from the baseline so it only shrinks (${FIXED.length}):\n${FIXED.map((f) => `     ${f}`).join("\n")}`);
 
 if (problems.length) {
   console.error(`\n  ❌ fungi-corpus-check:\n\n  ${problems.join("\n\n  ")}\n`);
-  console.error(`  Fix: every repo .fungi must pass \`node galerina.mjs check <file>\`. A NEGATIVE example belongs to`);
-  console.error(`  docs/examples/** (audit-example-diagnostics) or carries an \`expected_diagnostics:\` header. To`);
-  console.error(`  re-record deliberately: --update-baseline (review the diff; the baseline may only shrink).`);
+  console.error(`  Fix: every positive .fungi must pass \`node galerina.mjs check <file>\`.`);
+  console.error(`  An intentional negative must carry an exact \`expected_diagnostics:\` header or`);
+  console.error(`  adjacent \`<file>.fungi.expected.diagnostics.txt\` sidecar. --update-baseline may only shrink.`);
   process.exit(1);
 }
-console.log(`  ✅ fungi-corpus-check: no new breakage (${nowFailing.length} known-bad held at the ratchet — task #75).`);
+console.log(`  ✅ fungi-corpus-check: explicit negatives exact; no new breakage (${nowFailing.length} implicit failures held at the shrink-only ratchet).`);

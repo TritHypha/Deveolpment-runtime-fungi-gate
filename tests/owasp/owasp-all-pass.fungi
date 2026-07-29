@@ -21,15 +21,19 @@ type UserId = Brand<String, "UserId">
 type Email = Brand<String, "Email">
 type AuthToken = Brand<String, "AuthToken">
 type PatientId = Brand<String, "PatientId">
-type PatientSummary = record { patientId: PatientId, name: String, dob: String }
+type PatientSummary {
+  patientRef: String
+  name: String
+  dob: String
+}
 
 type AuthResult = Result<AuthToken, AuthError>
 type PatientResult = Result<PatientSummary, PatientError>
 type MutationResult = Result<Bool, MutationError>
 
-type AuthError = enum { InvalidCredentials InvalidInput AccountLocked }
-type PatientError = enum { NotFound Unauthorized EmptyInput }
-type MutationError = enum { EmptyInput Unauthorized DatabaseError }
+enum AuthError { InvalidCredentials InvalidInput AccountLocked }
+enum PatientError { NotFound Unauthorized EmptyInput }
+enum MutationError { EmptyInput Unauthorized DatabaseError }
 
 // ── A01 — Broken Access Control: Domain Guard Ceilings ───────────────────────
 
@@ -154,22 +158,25 @@ contract [conforms_to: ClinicalReadGuard] {
 }
 {
   // A03: taint demotion — validate raw parameter before database read
-  let patientId: protected PatientId = validate.patientId(request.params.id)?
-  trap patientId == "" : ERR_EMPTY_PATIENT_ID
+  unsafe let rawPatientId: String = request.params.id
+  let patientId: protected PatientId = validate.patientId(rawPatientId)?
 
   let patient = PatientsDB.find(patientId)?
 
   // A02: PHI redacted before entering audit log
   let redactedId: redacted String = redact(patientId)
+  unsafe let rawActor: String = request.context.actor
+  let actor: String = validate.string(rawActor)?
+  let redactedActor: redacted String = redact(actor)
   // A09: structured audit record with actor
   AuditLog.write({
     event: "PatientAccessed",
     patient_ref: redactedId,
-    actor: request.context.actor
+    actor: redactedActor
   })
 
   return Ok({
-    patientId: patientId,
+    patientRef: redactedId,
     name: redact(patient.name),
     dob: redact(patient.dob)
   })
@@ -181,7 +188,7 @@ contract [conforms_to: ClinicalReadGuard] {
 ;; govComment — A04: limits {} prevent resource exhaustion — insecure design impossible
 ;; govComment — A05: no wildcard — effects listed explicitly
 ;; govComment — A09: structured deletion event with actor and redacted patient ref
-secure flow deleteClinicalRecord(patientId: PatientId) -> MutationResult
+secure flow deleteClinicalRecord(patientId: String) -> MutationResult
 contract [conforms_to: MedicalServiceGuard] {
   intent "Delete a clinical record — every deletion must produce a forensic audit event"
   effects { database.write, audit.write }
@@ -198,8 +205,9 @@ contract [conforms_to: MedicalServiceGuard] {
 {
   trap patientId == "" : ERR_EMPTY_PATIENT_ID
 
-  let redactedId: redacted String = redact(patientId)
-  MedicalDB.delete(patientId)
+  let admittedPatientId: protected PatientId = validate.patientId(patientId)?
+  let redactedId: redacted String = redact(admittedPatientId)
+  MedicalDB.delete(admittedPatientId)
 
   ;; govComment — deletion event hashed into epilogue receipt (DRCM Phase 6)
   AuditLog.write({

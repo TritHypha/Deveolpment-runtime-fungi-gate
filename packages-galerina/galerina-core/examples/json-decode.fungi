@@ -15,7 +15,9 @@ type CreateOrderRequest {
   currency: String
 }
 
-secure flow decodeOrder(req: Request) -> Result<CreateOrderRequest, ApiError> {
+secure flow decodeOrder(req: Request) -> Result<CreateOrderRequest, ApiError>
+contract { intent { "Decode a typed order request from an admitted request body." } }
+{
   let input: CreateOrderRequest = json.decode<CreateOrderRequest>(req.body)
   return Ok(input)
 }

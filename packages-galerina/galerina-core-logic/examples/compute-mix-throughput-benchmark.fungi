@@ -1,123 +1,38 @@
 @version 1
-type ComputeMixBenchmarkReport {
-  runtime: String
-  benchmark: String
-  executionMode: String
-  comparisonType: String
-  mode: String
-  targetMs: Int?
-  requestedOperations: Int?
+// Benchmark request authority for the core-logic package.
+//
+// UInt32 shifts, XOR kernels, hardware counters, and wall-clock measurement are
+// engine/host responsibilities. No Wasm/Rust/Python/SLIDE comparison is valid
+// until SLIDE has an executable backend. This source therefore validates only
+// the portable, deterministic request envelope.
+
+type ComputeMixBenchmarkRequest {
+  targetMs: Int
+  requestedOperations: Int
   warmupMs: Int
   batchSize: Int
   bufferSize: Int
-  seed: UInt32
-  elapsedMs: Float
-  operations: Int
-  operationsPerSecond: Float
-  checksum: UInt32
-  finalState: UInt32
-  cursor: UInt32
-  overshootMs: Float
-  cpuUserMs: Float?
-  cpuSystemMs: Float?
-  cpuTotalMs: Float?
-  memoryRssBytes: Int?
-  memoryHeapUsedBytes: Int?
 }
 
-enum ComputeMixBenchmarkError {
-  InvalidTargetMs
-  InvalidOperations
-  InvalidWarmupMs
-  InvalidBatchSize
-  InvalidBufferSize
-}
-
-/// @purpose Stronger deterministic benchmark using UInt32 compute, branching and ring-buffer memory reads/writes.
-/// @notes This benchmark is designed for 10-30 second timed comparisons and fixed-operation checksum validation.
-/// @effects [runtime.clock, runtime.metrics]
-secure flow runComputeMixThroughputBenchmark(
-  targetMs: Int,
-  requestedOperations: Int?,
-  warmupMs: Int,
-  batchSize: Int,
-  bufferSize: Int,
-  seed: UInt32
-) -> Result<ComputeMixBenchmarkReport, ComputeMixBenchmarkError>
-effects [runtime.clock, runtime.metrics] {
-  if requestedOperations == null {
-    if targetMs < 10000 {
-      return Err(ComputeMixBenchmarkError.InvalidTargetMs)
-    }
-
-    if targetMs > 30000 {
-      return Err(ComputeMixBenchmarkError.InvalidTargetMs)
+pure flow computeMixRequestAllowed(request: ComputeMixBenchmarkRequest) -> Bool {
+  match request.targetMs {
+    when request.targetMs < 10000 => return false
+    when request.targetMs > 30000 => return false
+    _ => {
+      match request.requestedOperations {
+        when request.requestedOperations < 0 => return false
+        _ => {
+          match request.warmupMs {
+            when request.warmupMs < 0 => return false
+            _ => {
+              match request.batchSize {
+                when request.batchSize <= 0 => return false
+                _ => return request.bufferSize > 0
+              }
+            }
+          }
+        }
+      }
     }
   }
-
-  if requestedOperations != null {
-    if requestedOperations <= 0 {
-      return Err(ComputeMixBenchmarkError.InvalidOperations)
-    }
-  }
-
-  if warmupMs < 0 {
-    return Err(ComputeMixBenchmarkError.InvalidWarmupMs)
-  }
-
-  if batchSize <= 0 {
-    return Err(ComputeMixBenchmarkError.InvalidBatchSize)
-  }
-
-  if bufferSize <= 0 {
-    return Err(ComputeMixBenchmarkError.InvalidBufferSize)
-  }
-
-  // Implementation note:
-  // The prototype runner should execute the same UInt32 algorithm as:
-  // - compute-mix-throughput-benchmark.node.js
-  // - compute-mix-throughput-benchmark.py
-  //
-  // Workload per operation:
-  // 1. Advance UInt32 state using multiply/add/xor/shift.
-  // 2. Select a ring-buffer index.
-  // 3. Read old UInt32 value.
-  // 4. Mix state, old value and checksum.
-  // 5. Execute a small data-dependent branch.
-  // 6. Write a new UInt32 value back to the buffer.
-  // 7. Update checksum and cursor.
-  //
-  // The checksum prevents the benchmark from becoming dead code.
-  // Fixed-operation mode should produce identical checksums across runtimes.
-  // Timed-throughput mode does not need matching checksums because each runtime
-  // may complete a different number of operations.
-
-  return Runtime.runBenchmarkFixture("compute-mix-throughput-v2", {
-    targetMs: targetMs,
-    requestedOperations: requestedOperations,
-    warmupMs: warmupMs,
-    batchSize: batchSize,
-    bufferSize: bufferSize,
-    seed: seed
-  })
-}
-
-secure flow main() -> Result<Void, Error> {
-  let result: Result<ComputeMixBenchmarkReport, ComputeMixBenchmarkError> =
-    runComputeMixThroughputBenchmark(
-      20000,
-      null,
-      2000,
-      100000,
-      65536,
-      123456789
-    )
-
-  match result {
-    Ok(report) => print(report)
-    Err(error) => return Err(error)
-    _ => return Err(ComputeMixBenchmarkError.InvalidOperations)
-  }
-
-  return Ok()
 }

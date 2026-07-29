@@ -1137,19 +1137,16 @@ effects [network.outbound] {
     assert(asyncFlow.effects.includes("network.outbound"), "Expected async flow effects to be parsed.");
   });
 
-  test("parse boot.fungi project and targets", () => {
+  test("portable boot source cannot mint manifest authority", () => {
     const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     assertNoLexErrors(result);
-    assert(result.ast.project === "OrderRiskDemo", "Expected boot.fungi project name to be OrderRiskDemo.");
-    assert(result.ast.entry === "./src/main.fungi", "Expected boot.fungi to declare ./src/main.fungi entry.");
-    for (const target of ["binary", "wasm", "gpu", "photonic", "ternary", "omni"]) {
-      assert(result.ast.targets.some((item) => item.name === target), `Expected boot.fungi to declare ${target} target.`);
-    }
-    assert(result.ast.runtime.memory.softLimit === "512mb", "Expected boot.fungi runtime soft memory limit.");
-    assert(result.ast.runtime.runMode === "checked", "Expected boot.fungi runtime run mode.");
-    assert(result.ast.runtime.cacheIr === true, "Expected boot.fungi runtime cache_ir setting.");
-    assert(result.ast.globals.some((global) => global.name === "PAYMENT_WEBHOOK_SECRET" && global.type === "SecureString"), "Expected boot.fungi global registry secret.");
-    assert(result.ast.runtime.memory.spill.deny.includes("SecureString"), "Expected runtime spill deny list to include SecureString.");
+    assert(!result.ast.project, `Expected portable boot source to omit project identity authority, found ${JSON.stringify(result.ast.project)}.`);
+    assert(!result.ast.entry, "Expected portable boot source to omit host entry paths.");
+    assert(result.ast.targets.length === 0, "Expected portable boot source to omit hardware targets.");
+    assert(result.ast.globals.length === 0, "Expected portable boot source to omit host secrets and configuration.");
+    assert(!result.ast.runtime, "Expected portable boot source to omit host runtime and memory policy.");
+    assert(result.ast.flows.some((flow) => flow.name === "hardwareUsable"), "Expected hardware admission policy flow.");
+    assert(result.ast.flows.some((flow) => flow.name === "targetAllowed"), "Expected target admission policy flow.");
   });
 
   test("valid examples check without intentional error fixture", () => {
@@ -1248,14 +1245,15 @@ secure flow main() -> Result<Void, Error> {
     assert(diagnostic.target === "browser", "Expected diagnostic target to be browser.");
   });
 
-  test("browser-safe example plans JavaScript output", () => {
+  test("portable browser example cannot mint target or capability authority", () => {
     const result = analyseProject(loadProject(path.join(root, "browser-form.fungi")));
     const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     assert(errors.length === 0, `Expected browser-form.fungi to have no errors, found ${errors.length}.`);
-    assert(hasEnabledTarget(result.ast, "browser"), "Expected browser-form.fungi to enable browser target.");
+    assert(!hasEnabledTarget(result.ast, "browser"), "Expected browser target admission to remain manifest-owned.");
+    assert(result.ast.capabilities.allow.length === 0, "Expected source not to grant browser capabilities.");
+    assert(result.ast.capabilities.block.length === 0, "Expected host manifest to own capability denial policy.");
     const manifest = buildManifest(result, { "app.browser.js": browserJavaScriptPlaceholder(result) });
-    assert(manifest.targetOutputs.browserJavaScript === "app.browser.js", "Expected manifest to include browser JavaScript output.");
-    assert(browserJavaScriptPlaceholder(result).includes("server-only imports blocked"), "Expected browser placeholder to mention import security.");
+    assert(!manifest.targetOutputs.browserJavaScript, "Expected no browser output without an admitted browser target.");
   });
 
   test("memory checks warn on explicit Json clone", () => {
@@ -1329,23 +1327,22 @@ flow decision(status: PaymentStatus) -> Decision {
     assert(openapi.paths["/orders"].post.operationId === "createOrder", "Expected createOrder operationId.");
   });
 
-  test("target planner reports fallback-covered compute blocks", () => {
+  test("target planner rejects incompatible compute blocks and leaves portable logic unassigned", () => {
     const result = analyseProject(loadProject(root));
     const report = buildTargetReport(result);
-    const compatible = report.computeBlocks.find((block) => block.file === "compute-block.fungi");
+    const portable = report.computeBlocks.find((block) => block.file === "compute-block.fungi");
     const incompatible = report.computeBlocks.find((block) => block.file === "source-map-error.fungi");
-    assert(compatible && compatible.fallbackCovered === true, "Expected compute-block.fungi to have fallback coverage.");
+    assert(!portable, "Expected portable compute-block.fungi to leave target selection to the admitted manifest.");
     assert(incompatible && incompatible.status === "blocked", "Expected source-map-error.fungi to be blocked.");
     assert(report.summary.computeBlocksBlocked >= 1, "Expected target report to count blocked compute blocks.");
-    assert(report.logicCapability.some((target) => target.target === "ternary" && target.nativeLogicWidth === 3), "Expected ternary logic capability in target report.");
+    assert(report.cpuCompatibility === "required", "Expected target planning to retain today's-silicon CPU compatibility.");
   });
 
-  test("target planner reports CPU reference verification", () => {
+  test("portable compute source leaves verification policy to the admitted manifest", () => {
     const result = analyseProject(loadProject(path.join(root, "compute-block.fungi")));
     const report = buildTargetReport(result);
-    const block = report.computeBlocks.find((item) => item.file === "compute-block.fungi");
-    assert(block.verification.cpuReference === true, "Expected compute-block.fungi to request CPU reference verification.");
-    assert(report.precisionSummary.cpuReferenceChecks === 1, "Expected one CPU reference check.");
+    assert(report.computeBlocks.length === 0, "Expected no source-minted compute target block.");
+    assert(report.precisionSummary.cpuReferenceChecks === 0, "Expected manifest admission to determine reference checks.");
   });
 
   test("ai context includes compact summaries", () => {
@@ -1480,8 +1477,7 @@ secure flow main() -> Result<Void, Error> {
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "galerina-build-clean-"));
     const keepFile = path.join(outDir, "keep.txt");
     try {
-      build(analyseProject(loadProject(path.join(root, "browser-form.fungi"))), outDir);
-      assert(fs.existsSync(path.join(outDir, "app.browser.js")), "Expected browser build to create app.browser.js.");
+      fs.writeFileSync(path.join(outDir, "app.browser.js"), "stale generated output\n", "utf8");
       fs.writeFileSync(keepFile, "user-owned file\n", "utf8");
 
       build(analyseProject(loadProject(path.join(root, "hello.fungi"))), outDir);
@@ -1492,14 +1488,14 @@ secure flow main() -> Result<Void, Error> {
     }
   });
 
-  test("runtime report describes memory pressure and spill policy", () => {
+  test("portable boot source leaves runtime and memory authority unconfigured", () => {
     const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildRuntimeReport(result);
-    assert(report.execution.runMode === "checked", "Expected runtime report run mode.");
-    assert(report.memory.softLimit === "512mb", "Expected runtime report soft memory limit.");
-    assert(report.memory.spill.enabled === true, "Expected runtime spill to be enabled.");
-    assert(report.memory.spill.encryption === true, "Expected runtime spill encryption.");
-    assert(report.memory.spill.deny.includes("SecureString"), "Expected runtime spill deny list to include SecureString.");
+    assert(report.execution.runMode === "checked", "Expected fail-closed checked execution default.");
+    assert(report.memory.softLimit === null, "Expected no source-minted soft memory limit.");
+    assert(report.memory.hardLimit === null, "Expected no source-minted hard memory limit.");
+    assert(report.memory.spill.enabled === false, "Expected spill to remain disabled without manifest admission.");
+    assert(report.memory.spill.redactSecrets === true, "Expected fail-closed secret redaction default.");
   });
 
   test("memory report describes pressure ladder and cache bypass", () => {
@@ -1520,13 +1516,12 @@ secure flow main() -> Result<Void, Error> {
     assert(report.aiGuideRule.includes("successful compile"), "Expected successful compile AI guide rule.");
   });
 
-  test("global report describes registry and redacts secrets", () => {
+  test("portable boot source contains no embedded host secrets", () => {
     const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildGlobalReport(result);
-    const secret = report.globals.find((global) => global.name === "PAYMENT_WEBHOOK_SECRET");
-    assert(report.summary.secretCount >= 1, "Expected at least one global secret.");
-    assert(secret && secret.value === "[redacted]", "Expected global secret value to be redacted.");
-    assert(report.requiredEnvironment.some((item) => item.name === "PAYMENT_WEBHOOK_SECRET"), "Expected required environment entry.");
+    assert(report.summary.total === 0, "Expected no source-minted global registry entries.");
+    assert(report.summary.secretCount === 0, "Expected no embedded host secrets.");
+    assert(report.requiredEnvironment.length === 0, "Expected host manifest to own environment requirements.");
   });
 
   test("global secret must use SecureString", () => {
@@ -2143,33 +2138,6 @@ function strictMismatch(source, comment, tag, problem, diagnostics) {
 }
 
 function applyProjectChecks(project, ast, diagnostics) {
-  if (!ast.project) {
-    ast.project = "LOProject";
-  }
-
-  const targetNames = new Set(ast.targets.filter((target) => target.enabled).map((target) => target.name));
-  if (!targetNames.has("binary")) {
-    ast.targets.unshift({
-      name: "binary",
-      enabled: true,
-      mode: "output",
-      fallback: null,
-      output: "build/debug/app.bin",
-      line: 1,
-      column: 1,
-      file: "(implicit)"
-    });
-    diagnostics.push({
-      severity: "info",
-      errorType: "ImplicitCpuTarget",
-      file: "(project)",
-      line: 1,
-      column: 1,
-      problem: "No binary target was declared, so CPU binary compatibility is enabled implicitly.",
-      suggestedFix: "Declare a binary target in boot.fungi for explicit output paths."
-    });
-  }
-
   for (const target of ast.targets) {
     if ((target.name === "photonic" || target.name === "gpu") && !target.fallback) {
       diagnostics.push({

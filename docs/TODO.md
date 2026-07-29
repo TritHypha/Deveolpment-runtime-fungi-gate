@@ -57,6 +57,26 @@ planning checkbox must never be used to imply that implementation exists.
   numbers until SLIDE has an executable backend. Historical Galerina
   benchmarks remain evidence only; the requested current and
   earliest-archive comparison charts move to the post-SLIDE gate.
+- **Task 3 corpus checkpoint:** the old 29-entry implicit `.fungi`
+  `knownFailing` baseline is now empty. The live gate checks 268/511 tracked
+  sources, binds 13 intentional negatives to exact adjacent diagnostics, and
+  refuses baseline growth, orphan/stale sidecars, and positive-source errors.
+  The stricter run exposed and fixed a root CLI fail-open where governance
+  errors could be printed while `check` returned success. It also removed the
+  legacy core analyzer's implicit `LOProject` identity and automatically
+  enabled binary target. Portable source no longer mints project, target,
+  driver, runtime, memory, secret, or environment authority.
+- **Task 3 verification:** corpus audit and self-test pass; ownership test is
+  1/1; core is 42/42 plus 11/11 utility/lexer; compiler is 5,718/5,718;
+  core-logic 53/53; core-tasks 7/7; app-kernel 120/120; benchmark 9/9.
+  Full adjudication:
+  `docs/reports/fungi-corpus-adjudication-2026-07-29.md`.
+- **Task 3 still open:** `audit-example-diagnostics.mjs` is green only at an
+  explicit 89/233 known-drift worklist, and `lint-fungi.mjs` refuses 584
+  findings across 103 non-fixture files (489 comment, 86 contract, 9 intent).
+  These remain beta-v1 burn-down work and are not hidden in the now-empty
+  corpus baseline. Next safe work is to classify and repair that source
+  quality debt before compiler-stage authority promotion.
 - **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this
