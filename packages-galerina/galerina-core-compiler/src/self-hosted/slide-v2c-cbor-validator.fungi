@@ -1,0 +1,108 @@
+@version 1
+/// @file: slide-v2c-cbor-validator.fungi
+/// @purpose: Independently pin the first complete canonical V2-C body.
+/// @status: Exact-vector admission only; structural decoding and graph reconstruction remain separate.
+
+record SLIDEV2CWireDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  consumed: Int
+  expectedLength: Int
+  mismatchOffset: Int
+  authorityReleased: Bool
+}
+
+pure flow slideV2CCanonicalReferenceBytes() -> Bytes
+contract { intent { "Return the independently pinned 725-byte V2-C reference vector." } }
+{
+  let part1 = "b500020101027820736c6964652e73656d616e7469632e65786563757461626c652d6769722e76320376736c6964652e6469676573742e7368613235362e763104827821736c6964652e72656769737472792e65786563757461626c652d6769722e76326378406333373362643663313261376533363032613435633630386664303939376532323237613730336337336163373563343237303533393535323837376264333805781a736c6964652e6d656d6f72792e736166652d76616c75652e76310685010203040507951960000103081820183004020000000018601901001904001008080419100000088101098d0102030405060708090a0b0c0d0a8201020b83890101810101808000818400808385000101800085010201800185020301820001008304810280018902018301010305808000878400808585000101800085010101800185020103800285030201800085040402820003008302810482820183000102820283000102840183820501820601820703818508050181050183018081820383080607840283820901820a01820b0381850c0501810a01830180818203830c0a0b840383820d01820e01820f038185100301820d0e008303810f838204811082058082068084048182110181851206058111008304811280840580828513070480028514080581130083048114808406808285150704800385160805811500830481168001890301800d808000818400808d85000c06800185010d07800285020101800385030101800585040101800885050e0a830203040085060f018105008507100d820502008508040282060200"
+  let part2 = "8509110b8307080001850a120d810901850b130c810a01850c140d810b018304810c80010c8484010201018402030201840304020184040101010d800e800f8186010203040506108011801282840106014847616c6572696e618402070244000102ff138182018382010d820202820306148182018282010d820204"
+  return Bytes.fromHex(part1 + part2)
+}
+
+pure flow refuseSLIDEV2CWire(
+  failureId: String,
+  detail: String,
+  consumed: Int,
+  mismatchOffset: Int,
+) -> SLIDEV2CWireDecision
+contract { intent { "Refuse canonical admission without semantic or runtime authority." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail consumed: consumed expectedLength: 725
+    mismatchOffset: mismatchOffset authorityReleased: false
+  }
+}
+
+pure flow validateSLIDEV2CCanonicalBody(
+  candidate: Bytes,
+) -> SLIDEV2CWireDecision
+contract { intent { "Admit only the complete independently pinned first V2-C canonical vector." } }
+{
+  let expected = slideV2CCanonicalReferenceBytes()
+  if expected.length() != 725 {
+    return refuseSLIDEV2CWire(
+      "SLIDE-V2C-WIRE-001", "internal reference length is invalid", 0, -1,
+    )
+  }
+  if candidate.length() < expected.length() {
+    return refuseSLIDEV2CWire(
+      "SLIDE-V2C-WIRE-002", "canonical body is truncated",
+      candidate.length(), candidate.length(),
+    )
+  }
+  if candidate.length() > expected.length() {
+    return refuseSLIDEV2CWire(
+      "SLIDE-V2C-WIRE-003", "canonical body has surplus bytes",
+      expected.length(), expected.length(),
+    )
+  }
+  mut i: Int = 0
+  while i < expected.length() {
+    let actualByte = candidate.get(i)
+    let expectedByte = expected.get(i)
+    match actualByte {
+      Some(actualValue) => {
+        match expectedByte {
+          Some(expectedValue) => {
+            if actualValue != expectedValue {
+              return refuseSLIDEV2CWire(
+                "SLIDE-V2C-WIRE-004", "canonical byte mismatch", i, i,
+              )
+            }
+          }
+          None => {
+            return refuseSLIDEV2CWire(
+              "SLIDE-V2C-WIRE-001", "reference byte is absent", i, i,
+            )
+          }
+          _ => {
+            return refuseSLIDEV2CWire(
+              "SLIDE-V2C-WIRE-001", "reference byte is malformed", i, i,
+            )
+          }
+        }
+      }
+      None => {
+        return refuseSLIDEV2CWire(
+          "SLIDE-V2C-WIRE-002", "candidate byte is absent", i, i,
+        )
+      }
+      _ => {
+        return refuseSLIDEV2CWire(
+          "SLIDE-V2C-WIRE-004", "candidate byte is malformed", i, i,
+        )
+      }
+    }
+    i = i + 1
+  }
+  return {
+    verdict: Verdict.Allow status: "CANONICAL_VECTOR_ADMITTED"
+    failureId: "NONE" detail: "exact 725-byte V2-C vector admitted"
+    consumed: expected.length() expectedLength: expected.length()
+    mismatchOffset: -1 authorityReleased: false
+  }
+}
