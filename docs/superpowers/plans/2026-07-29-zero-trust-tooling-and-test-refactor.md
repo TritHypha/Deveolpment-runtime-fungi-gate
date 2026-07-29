@@ -556,7 +556,7 @@ type PackageGraphConfig = {
   the package root, unique, and part of the scanned node set.
 - Under `--check`, every unexplained orphan is a violation.
 
-- [ ] **Step 1: Write RED tests for explicit assets and orphan refusal**
+- [x] **Step 1: Write RED tests for explicit assets and orphan refusal**
 
 ```js
 test("an unexplained orphan fails --check", () => {
@@ -586,7 +586,7 @@ test("missing and escaping asset declarations fail closed", () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Step 2: Run RED**
 
 ```powershell
 npm.cmd run build
@@ -595,19 +595,19 @@ node --test tests/package-graph.test.mjs
 
 Expected: config fields are ignored and unexplained orphans do not fail.
 
-- [ ] **Step 3: Implement validated entry-point/asset ownership**
+- [x] **Step 3: Implement validated entry-point/asset ownership**
 
 Do not infer ownership from filename. Merge explicitly declared paths with
 the built-in `index.ts`/`cli.ts` entry-point set only after validation.
 
-- [ ] **Step 4: Declare compiler self-hosted assets**
+- [x] **Step 4: Declare compiler self-hosted assets**
 
 In `galerina-core-compiler/package.json`, declare every
 `src/self-hosted/*.fungi` stage that is independently loaded. Generate this
 list from tracked source during the edit and write explicit stable paths; do
 not use a wildcard whose future additions become silently admitted.
 
-- [ ] **Step 5: Regenerate and enforce the compiler boundary**
+- [x] **Step 5: Regenerate and enforce the compiler boundary**
 
 ```powershell
 npm.cmd test
@@ -617,7 +617,7 @@ node packages-galerina/galerina-devtools-package-graph/dist/cli.js packages-gale
 Expected: zero unexplained compiler orphans; missing any declared SLIDE stage
 fails.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add -- packages-galerina/galerina-devtools-package-graph packages-galerina/galerina-core-compiler/package.json packages-galerina/galerina-core-compiler/.graph

@@ -115,14 +115,26 @@ planning checkbox must never be used to imply that implementation exists.
   self-test is 38/38 and live is green; example-diagnostics self-test is 15/15
   and the 233-example sweep is green at its exact 89-row known-drift
   baseline; compiler-stage-hash self-test is 7/7 and live is green.
-- **Current:** Tasks 2-4 are complete. Task 1's structural inventory is the
+- **Completed (Task 5):** package-graph ownership is now explicit and
+  fail-closed. Exact, canonical, in-package, existing, scanned, non-duplicate
+  `entryPoints`, `loadedAssets`, and reason-bearing `allowOrphans`
+  declarations replace the broad `main`/`server`/`App` filename inference.
+  Every unexplained orphan is a blocking `--check` violation. The positional
+  CLI form used by the plan is supported, and invalid ownership configuration
+  is refused without an internal stack trace.
+- **Verified (Task 5):** package-graph is 25/25 after a fresh typecheck/build;
+  the compiler declares all 53 tracked self-hosted `.fungi` stages plus three
+  explicit TypeScript entry points; compiler boundary scans 148 files with
+  zero unexplained orphans and passes; the graph tool's own boundary also
+  passes. Local commit: `6127ea9c`.
+- **Current:** Tasks 2-5 are complete. Task 1's structural inventory is the
   one intentional blocking red: 21 audit/lint tools still need exact
   phase-close, CI, or executable-fixture dispositions. No exception has been
   added to hide them. A live close after the fixes passed 80/82 checks; its
   second red was only the path gate correctly reading the still-uncommitted
   old line from `HEAD`, and clears when this repo-relative fix is staged.
-- **Next safe work:** resume at Task 5 (explicit package-graph asset/orphan
-  ownership), then Tasks 6-8. Task 8 must close the 21 named tooling
+- **Next safe work:** resume at Task 6 (non-vacuous SLIDE lane in
+  `galerina-test`), then Tasks 7-8. Task 8 must close the 21 named tooling
   dispositions before phase-close may authorize. Generator policy remains
   deliberately inactive until its Task 7 RED/GREEN contract.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
