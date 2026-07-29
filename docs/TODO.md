@@ -49,18 +49,44 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/superpowers/plans/2026-07-29-zero-trust-tooling-and-test-refactor.md`
   gives ten RED-to-GREEN tasks, exact paths/interfaces/commands, local commit
   boundaries, and the final evidence matrix.
-- **Current:** planning is complete; implementation has not started. Generated
-  files changed by the baseline phase-close run are retained for source-led
-  review under Task 9 and must not be hand-edited or mixed into plan commits.
-- **Next safe work:** execute Task 1, the fail-closed tooling inventory and
-  exception policy, then Task 2, the complete build-current root test runner.
+- **Completed (Task 1 checkpoint):** the workspace now registers all 97
+  package directories. `scripts/lib/tooling-inventory.mjs`,
+  `scripts/audit-tooling-contract.mjs`, and
+  `governance/tooling-policy.json` implement bidirectional package
+  reconciliation, exact no-test policy, audit/lint discovery, and exact
+  phase-close/CI/external-test evidence. Twelve tooling-contract tests prove
+  uncovered tools, missing/unregistered packages, malformed/stale policy,
+  isolated fixtures, and both refusal/control directions.
+- **Completed (shared gate):** `dev-tool-index.mjs --root ... --check --json`
+  now consumes the same contract validator and returns non-zero for an
+  uncovered audit. The combined tooling/diagnostic focused suite is 16/16.
+- **Completed (findings fixed):** the diagnostic audit now enforces an exact,
+  bidirectional profile-severity declaration. Live evidence is 338 codes,
+  338 names, zero violations. The duplicate nesting diagnostic identity is
+  now `FLOW_EXCESSIVE_NESTING`. The deterministic unlowered-node ratchets were
+  lowered from 385/142 to the repeatedly measured 132/74; their real
+  fire/silent self-test passes.
+- **Verified:** the complete core-compiler test command rebuilt from source
+  and passed 5,698/5,698 tests. The first `npm test` spelling was refused by
+  Windows PowerShell execution policy; the equivalent `npm.cmd test` command
+  is the verified Windows invocation.
+- **Current:** Task 1 is functionally implemented but its final policy
+  dispositions and scoped commit are still open. The live inventory found 22
+  audit/lint tools outside authoritative cadence; each must become an exact
+  gate or an explicit non-authorizing exception, never a blanket baseline.
+- **Next safe work:** finish the 22-tool disposition table and Task 1 commit,
+  then execute Task 2, the complete build-current root test runner. Generator
+  policy remains deliberately inactive until its Task 7 RED/GREEN contract.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side
   SLIDE evidence with independent SLIDE verification.
-- **Preservation:** the owner's modified
-  `packages-galerina/galerina-tri-regex/AUDIT.md` and untracked `.codex/`
-  remain outside this work. Never push.
+- **Owner question (non-blocking):** local commit `15759710` appeared with
+  generated outputs plus `.codex/config.toml` and the owner's
+  `galerina-tri-regex/AUDIT.md`. It has not been rewritten or pushed. Confirm
+  later whether it should remain as one mixed local commit or be split.
+- **Preservation:** do not rewrite `15759710` or alter owner content without
+  confirmation. Never push.
 
 ### Active SLIDE implementation checkpoint — 2026-07-29
 

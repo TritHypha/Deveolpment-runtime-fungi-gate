@@ -14,6 +14,7 @@ import { spawnSync } from "node:child_process";
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const SCRIPTS = join(TEST_DIR, "..");
 const AUDIT = join(SCRIPTS, "audit-tooling-contract.mjs");
+const DEV_INDEX = join(SCRIPTS, "dev-tool-index.mjs");
 const MODULE_URL = new URL("../lib/tooling-inventory.mjs", import.meta.url);
 const api = await import(MODULE_URL).catch(() => ({}));
 const roots = [];
@@ -229,6 +230,24 @@ test("the audit CLI self-test proves both refusal and clean-control directions",
 
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /self-test.*PASS/i);
+});
+
+test("dev-tool-index --check rejects the same uncovered audit contract", () => {
+  const root = fixture({
+    "scripts/audit-index-gap.mjs": "process.exit(0);\n",
+  });
+  const result = spawnSync(
+    process.execPath,
+    [DEV_INDEX, "--root", root, "--check", "--json"],
+    { encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 1);
+  assert.notEqual(result.stdout.trim(), "", "dev-tool index must emit JSON");
+  const report = JSON.parse(result.stdout);
+  assert.ok(report.contractViolations.some((violation) =>
+    violation.code === "TOOLING-AUDIT-UNCOVERED"
+    && violation.subject === "audit-index-gap.mjs"));
 });
 
 test("test fixtures are isolated from the real repository", () => {

@@ -25,11 +25,19 @@
 //            (a cadence gate — coverage can only grow); else 0.
 // =============================================================================
 import { readdirSync, readFileSync, existsSync, writeFileSync, mkdirSync, statSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  discoverTooling,
+  loadToolingPolicy,
+  validateToolingContract,
+} from "./lib/tooling-inventory.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, "..");
+const ROOT_ARG = process.argv.indexOf("--root");
+const ROOT = ROOT_ARG >= 0 && process.argv[ROOT_ARG + 1]
+  ? resolve(process.argv[ROOT_ARG + 1])
+  : join(HERE, "..");
 const PKG_DIR = join(ROOT, "packages-galerina");
 const OUT_DIR = join(ROOT, "build", "dev-tool-index");
 const JSON_OUT = process.argv.includes("--json");
@@ -50,7 +58,7 @@ const version = (() => { try { return JSON.parse(read(join(ROOT, "version.json")
 const testsByPkg = version.testCountByPackage || {};
 
 const packages = [];
-for (const name of readdirSync(PKG_DIR)) {
+for (const name of existsSync(PKG_DIR) ? readdirSync(PKG_DIR) : []) {
   const dir = join(PKG_DIR, name);
   if (!statSync(dir).isDirectory()) continue;
   if (!existsSync(join(dir, "package.json"))) continue;
@@ -155,6 +163,19 @@ const gaps = {
   concernsNoTool: allConcerns.filter((c) => !concernToTools[c]),
   toolsNotInCadence: tools.filter((t) => (t.category === "audit" || t.category === "lint") && !t.inCadence).map((t) => t.name),
 };
+let contractViolations;
+try {
+  contractViolations = validateToolingContract(
+    discoverTooling(ROOT),
+    loadToolingPolicy(ROOT),
+  );
+} catch (error) {
+  contractViolations = [{
+    code: error.code || "TOOLING-CONTRACT-ERROR",
+    subject: "tooling-policy.json",
+    detail: error.message,
+  }];
+}
 
 const byKind = {};
 for (const p of packages) (byKind[p.kind] ??= []).push(p);
@@ -172,11 +193,14 @@ const summary = {
     toolsInCadence: tools.filter((t) => t.inCadence).length,
     proofs: proofCount,
   },
-  packages, tools, coverage: concernToTools, gaps,
+  packages, tools, coverage: concernToTools, gaps, contractViolations,
 };
 
 // ── 4. RENDER ────────────────────────────────────────────────────────────────
-if (JSON_OUT) { console.log(JSON.stringify(summary, null, 2)); process.exit(0); }
+if (JSON_OUT) {
+  console.log(JSON.stringify(summary, null, 2));
+  process.exit(CHECK && contractViolations.length > 0 ? 1 : 0);
+}
 
 mkdirSync(OUT_DIR, { recursive: true });
 
@@ -273,6 +297,9 @@ console.log(`  gaps: ${gaps.packagesNoTests.length} pkgs-no-tests · ${gaps.conc
 if (CHECK) {
   const problems = [];
   if (gaps.concernsNoTool.length) problems.push(`concern(s) with no tool: ${gaps.concernsNoTool.join(", ")}`);
+  for (const violation of contractViolations) {
+    problems.push(`${violation.code} ${violation.subject}: ${violation.detail}`);
+  }
   // (packagesNoTests is informational — many template pkgs legitimately have no suite; not gated)
   if (problems.length) { console.error("dev-tool-index --check FAILED:\n  " + problems.join("\n  ")); process.exit(1); }
   console.log("dev-tool-index --check: OK");

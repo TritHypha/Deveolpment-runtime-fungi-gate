@@ -59,9 +59,24 @@ export function emit(isProduction) {
 }
 `;
 
+const registry = (severities) => `
+export const DIAGNOSTIC_ALLOWED_SEVERITIES = {
+  "FUNGI-GOV-999": [${severities.map((item) => `"${item}"`).join(", ")}],
+};
+`;
+
 test("an exact declared profile-severity set admits the observed severities", () => {
   const { result, report } = run(fixture(
     definition('allowedSeverities: ["error", "warning"],'),
+  ));
+
+  assert.equal(result.status, 0);
+  assert.deepEqual(report.violations, []);
+});
+
+test("an exact central severity registry admits an inline-only diagnostic", () => {
+  const { result, report } = run(fixture(
+    definition() + registry(["error", "warning"]),
   ));
 
   assert.equal(result.status, 0);

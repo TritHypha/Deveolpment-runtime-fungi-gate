@@ -1,118 +1,224 @@
 #!/usr/bin/env node
-// audit-diagnostic-codes.mjs — re-runnable conformance scanner for Galerina's diagnostic-code
-// namespaces (#215, the durable fix from galerina-diagnostic-code-taxonomy-audit-2026-06-22.md).
-//
-// THE INVARIANTS (one code = one fault = one name = one severity, single source of truth):
-//   V1 OVERLOAD          one code emitted under >1 distinct `name`
-//   V2 COLLISION         one `name` emitted under >1 distinct code
-//   V3 SEVERITY-VOCAB    a `severity` value outside the canonical {error, warning, info}
-//   V4 MULTI-SEVERITY    one code emitted at >1 distinct severity (candidate; legit dev/prod toggle excepted by review)
-//
-// Scope: packages-galerina/<pkg>/src/**/*.ts. Reports a concise baseline + exit code = #violations
-// (so it can later gate CI). Pragmatic regex extraction — flags candidates for review, not a proof.
-import { readdirSync, statSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+// Fail-closed diagnostic taxonomy audit:
+// one code = one fault = one name, with an exact declared severity set.
+import {
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
+import { join, resolve } from "node:path";
 import { CODE_TEST } from "./lib/codes.mjs";
 
-const ROOT = join(process.cwd(), "packages-galerina");
-const CANON_SEV = new Set(["error", "warning", "info"]);
-// code-token validation comes from the SHARED module (scripts/lib/codes.mjs) — CODE_TEST (anchored).
+const argv = process.argv.slice(2);
+const asJson = argv.includes("--json");
+const rootIndex = argv.indexOf("--root");
+const root = rootIndex >= 0 && typeof argv[rootIndex + 1] === "string"
+  ? resolve(argv[rootIndex + 1])
+  : process.cwd();
+const sourceRoot = join(root, "packages-galerina");
+const canonicalSeverities = new Set(["error", "warning", "info"]);
 
-function walk(dir) {
-  const out = [];
-  let ents;
-  try { ents = readdirSync(dir); } catch { return out; }
-  for (const e of ents) {
-    if (e === "node_modules" || e === "dist" || e === "tests") continue;
-    const p = join(dir, e);
-    const s = statSync(p);
-    if (s.isDirectory()) out.push(...walk(p));
-    else if (e.endsWith(".ts") && !e.endsWith(".d.ts")) out.push(p);
+function walk(directory) {
+  const files = [];
+  let entries;
+  try {
+    entries = readdirSync(directory);
+  } catch {
+    return files;
   }
-  return out;
+  for (const entry of entries) {
+    if (entry === "node_modules" || entry === "dist" || entry === "tests") {
+      continue;
+    }
+    const path = join(directory, entry);
+    const stats = statSync(path);
+    if (stats.isDirectory()) files.push(...walk(path));
+    else if (entry.endsWith(".ts") && !entry.endsWith(".d.ts")) files.push(path);
+  }
+  return files;
 }
 
-// (code -> Map<name, Set<"file:line">>), (name -> Set<code>), severity offenders, (code -> Set<severity>)
+function add(map, key, value) {
+  if (!map.has(key)) map.set(key, new Set());
+  map.get(key).add(value);
+}
+
+function sameSet(left, right) {
+  return left.size === right.size
+    && [...left].every((item) => right.has(item));
+}
+
+function sortedSet(values) {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
+function parseAllowedSeverities(lines, start) {
+  for (let index = start; index < Math.min(start + 12, lines.length); index += 1) {
+    const match = lines[index].match(
+      /allowedSeverities:\s*\[((?:\s*"[^"]+"\s*,?)+)\]/,
+    );
+    if (!match) continue;
+    return new Set(
+      [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]),
+    );
+  }
+  return null;
+}
+
 const codeToNames = new Map();
 const nameToCodes = new Map();
-const sevOffenders = [];
-const codeToSevs = new Map();
+const codeToSeverities = new Map();
+const codeToAllowedSets = new Map();
 
-const add = (m, k, v) => { if (!m.has(k)) m.set(k, new Set()); m.get(k).add(v); };
-
-for (const file of walk(ROOT)) {
-  const rel = file.slice(ROOT.length + 1).replace(/\\/g, "/");
-  const lines = readFileSync(file, "utf8").split(/\r?\n/);
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    // V3: every severity literal
-    const sev = line.match(/severity:\s*"([^"]+)"/);
-    if (sev && !CANON_SEV.has(sev[1])) sevOffenders.push(`${sev[1].padEnd(16)} ${rel}:${i + 1}`);
-
-    // Pattern A — object literal: code: "X" then name: "Y" / severity: "Z" within 8 lines
-    const codeM = line.match(/code:\s*"([^"]+)"/);
-    if (codeM && CODE_TEST.test(codeM[1])) {
-      const code = codeM[1];
-      let name, sevHere;
-      for (let j = i; j < Math.min(i + 8, lines.length); j++) {
-        const nm = lines[j].match(/name:\s*"([^"]+)"/); if (nm && !name) name = nm[1];
-        const sv = lines[j].match(/severity:\s*"([^"]+)"/); if (sv && !sevHere) sevHere = sv[1];
+for (const file of walk(sourceRoot)) {
+  const source = readFileSync(file, "utf8");
+  const lines = source.split(/\r?\n/);
+  const registryEntry = /["']([^"']+)["']\s*:\s*\[((?:\s*"[^"]+"\s*,?)+)\]/g;
+  for (const match of source.matchAll(registryEntry)) {
+    if (!CODE_TEST.test(match[1])) continue;
+    const allowed = new Set(
+      [...match[2].matchAll(/"([^"]+)"/g)].map((item) => item[1]),
+    );
+    if (!codeToAllowedSets.has(match[1])) codeToAllowedSets.set(match[1], []);
+    codeToAllowedSets.get(match[1]).push(allowed);
+  }
+  for (let index = 0; index < lines.length; index += 1) {
+    const codeMatch = lines[index].match(/code:\s*"([^"]+)"/);
+    if (codeMatch && CODE_TEST.test(codeMatch[1])) {
+      const code = codeMatch[1];
+      let name;
+      let severity;
+      for (let cursor = index; cursor < Math.min(index + 8, lines.length); cursor += 1) {
+        const nameMatch = lines[cursor].match(/name:\s*"([^"]+)"/);
+        const severityMatch = lines[cursor].match(/severity:\s*"([^"]+)"/);
+        if (name === undefined && nameMatch) name = nameMatch[1];
+        if (severity === undefined && severityMatch) severity = severityMatch[1];
       }
-      if (name) { add(codeToNames, code, `${name}`); add(nameToCodes, name, code); }
-      if (sevHere) add(codeToSevs, code, sevHere);
+      if (name !== undefined) {
+        add(codeToNames, code, name);
+        add(nameToCodes, name, code);
+      }
+      if (severity !== undefined) add(codeToSeverities, code, severity);
+      const allowed = parseAllowedSeverities(lines, index);
+      if (allowed !== null) {
+        if (!codeToAllowedSets.has(code)) codeToAllowedSets.set(code, []);
+        codeToAllowedSets.get(code).push(allowed);
+      }
     }
 
-    // Pattern B — make*Diag(code, name, ...) incl. multi-line calls: grab the first two quoted
-    // args from the call onward. Gate arg[1] to an identifier (no spaces) so a (code, message)
-    // helper can't register a message string as a "name".
-    const mkIdx = line.search(/make\w*Diag\(/);
-    if (mkIdx >= 0) {
-      const win = line.slice(mkIdx) + " " + lines.slice(i + 1, Math.min(i + 4, lines.length)).join(" ");
-      const args = [...win.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
-      if (args.length >= 2 && CODE_TEST.test(args[0]) && /^[A-Za-z][A-Za-z0-9_]*$/.test(args[1])) {
-        add(codeToNames, args[0], args[1]); add(nameToCodes, args[1], args[0]);
-        if (args[2] && CANON_SEV.has(args[2])) add(codeToSevs, args[0], args[2]);
+    const callIndex = lines[index].search(/make\w*Diag\(/);
+    if (callIndex < 0) continue;
+    const window = lines[index].slice(callIndex)
+      + " "
+      + lines.slice(index + 1, Math.min(index + 4, lines.length)).join(" ");
+    const args = [...window.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+    if (args.length < 2
+        || !CODE_TEST.test(args[0])
+        || !/^[A-Za-z][A-Za-z0-9_]*$/.test(args[1])) {
+      continue;
+    }
+    add(codeToNames, args[0], args[1]);
+    add(nameToCodes, args[1], args[0]);
+    for (const argument of args.slice(2)) {
+      if (canonicalSeverities.has(argument)) {
+        add(codeToSeverities, args[0], argument);
       }
     }
   }
 }
 
-const overloaded = [...codeToNames].filter(([, names]) => names.size > 1);
-const collisions = [...nameToCodes].filter(([, codes]) => codes.size > 1);
-const multiSev = [...codeToSevs].filter(([, sevs]) => sevs.size > 1);
+const violations = [];
+for (const [code, names] of codeToNames) {
+  if (names.size > 1) {
+    violations.push({
+      code: "V1_CODE_OVERLOAD",
+      subject: code,
+      detail: `Observed names: ${sortedSet(names).join(", ")}`,
+    });
+  }
+}
+for (const [name, codes] of nameToCodes) {
+  if (codes.size > 1) {
+    violations.push({
+      code: "V2_NAME_COLLISION",
+      subject: name,
+      detail: `Observed codes: ${sortedSet(codes).join(", ")}`,
+    });
+  }
+}
+for (const [code, severities] of codeToSeverities) {
+  const invalid = sortedSet(severities)
+    .filter((severity) => !canonicalSeverities.has(severity));
+  if (invalid.length > 0) {
+    violations.push({
+      code: "V3_SEVERITY_VOCAB",
+      subject: code,
+      detail: `Invalid severities: ${invalid.join(", ")}`,
+    });
+  }
 
-const out = [];
-out.push("# Galerina diagnostic-code conformance baseline\n");
-out.push(`codes-with-names: ${codeToNames.size} · names: ${nameToCodes.size}\n`);
+  const declaredSets = codeToAllowedSets.get(code) ?? [];
+  const declared = declaredSets[0] ?? null;
+  if (declaredSets.some((candidate) => !sameSet(candidate, declared))) {
+    violations.push({
+      code: "V4_POLICY_CONFLICT",
+      subject: code,
+      detail: "Multiple diagnostic definitions declare different allowedSeverities sets.",
+    });
+    continue;
+  }
+  if (severities.size > 1 && declared === null) {
+    violations.push({
+      code: "V4_MULTI_SEVERITY",
+      subject: code,
+      detail: `Observed undeclared severities: ${sortedSet(severities).join(", ")}`,
+    });
+  } else if (declared !== null && !sameSet(severities, declared)) {
+    violations.push({
+      code: "V4_POLICY_STALE",
+      subject: code,
+      detail: `Observed ${sortedSet(severities).join(", ")}; declared ${sortedSet(declared).join(", ")}`,
+    });
+  }
+}
+for (const [name, codes] of nameToCodes) {
+  if (/^[A-Z]/.test(name) && /[a-z]/.test(name)) {
+    violations.push({
+      code: "V5_NAME_CASE",
+      subject: name,
+      detail: `Diagnostic name for ${sortedSet(codes).join(", ")} is not UPPER_SNAKE.`,
+    });
+  }
+}
 
-out.push(`\n## V1 OVERLOAD — one code, >1 name (${overloaded.length})`);
-for (const [code, names] of overloaded.sort()) out.push(`  ${code}  ->  ${[...names].join(" | ")}`);
+violations.sort((left, right) =>
+  left.code.localeCompare(right.code)
+  || left.subject.localeCompare(right.subject));
 
-out.push(`\n## V2 COLLISION — one name, >1 code (${collisions.length})`);
-for (const [name, codes] of collisions.sort()) out.push(`  ${name}  ->  ${[...codes].join(" | ")}`);
+const report = {
+  tool: "diagnostic-code-audit",
+  schemaVersion: 1,
+  root,
+  counts: {
+    codesWithNames: codeToNames.size,
+    names: nameToCodes.size,
+    violations: violations.length,
+  },
+  violations,
+};
 
-// V3 — DIAGNOSTIC severity vocab only: a severity ATTACHED TO A CODE that is outside {error,warning,info}.
-// Audit-event severity (tower-citizen) and risk-rating (ai-agent/devtools-pci/-security) are SEPARATE axes
-// (conventions §4) and are NOT diagnostic severities, so they are excluded here.
-const badSevCodes = [...codeToSevs.entries()].filter(([, sevs]) => [...sevs].some((s) => !CANON_SEV.has(s))).sort();
-out.push(`\n## V3 SEVERITY-VOCAB — a code's severity outside {error,warning,info} (${badSevCodes.length})`);
-for (const [code, sevs] of badSevCodes) out.push(`  ${code}  ->  ${[...sevs].join(" | ")}`);
+if (asJson) {
+  console.log(JSON.stringify(report, null, 2));
+} else {
+  console.log("# Galerina diagnostic-code conformance");
+  console.log(
+    `codes-with-names: ${report.counts.codesWithNames}`
+    + ` | names: ${report.counts.names}`,
+  );
+  for (const item of violations) {
+    console.log(`${item.code} ${item.subject}: ${item.detail}`);
+  }
+  console.log(`VIOLATIONS: ${violations.length}`);
+}
 
-out.push(`\n## V4 MULTI-SEVERITY — one code, >1 severity (${multiSev.length}; review for legit dev/prod toggles)`);
-for (const [code, sevs] of multiSev.sort()) out.push(`  ${code}  ->  ${[...sevs].join(" | ")}`);
-
-// V5 NAME-CASE — diagnostic `name` must be UPPER_SNAKE (conventions §3); flag PascalCase (a lowercase
-// letter after a leading uppercase). All-lowercase names (metrics/report fields) are NOT diagnostic names → skip.
-const isPascal = (n) => /^[A-Z]/.test(n) && /[a-z]/.test(n);
-const badCase = [...nameToCodes.entries()].filter(([n]) => isPascal(n)).sort();
-out.push(`\n## V5 NAME-CASE — PascalCase name, convention §3 requires UPPER_SNAKE (${badCase.length})`);
-for (const [name, codes] of badCase) out.push(`  ${name}  (${[...codes].join(",")})`);
-
-const v3n = badSevCodes.length;
-const total = overloaded.length + collisions.length + v3n + multiSev.length + badCase.length;
-out.push(`\n## TOTAL flagged: V1 ${overloaded.length} + V2 ${collisions.length} + V3 ${v3n} + V4 ${multiSev.length} + V5 ${badCase.length}`);
-console.log(out.join("\n"));
-console.log("VIOLATIONS: " + total); // machine-readable line the lint-conventions umbrella parses (so a
-                                     // crash/missing-line is a TOOL ERROR, not silently counted as 1 violation)
-process.exit(Math.min(total, 250));
+process.exit(Math.min(violations.length, 250));

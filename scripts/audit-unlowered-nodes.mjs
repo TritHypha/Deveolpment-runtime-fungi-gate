@@ -140,13 +140,13 @@ const STAGES = [
 // This counts nodes in EVERY flow of each module, not only the flow R2 drives — module-wide coverage, not the
 // run-path. Deterministic across runs. Shrink-only: a RISE = a new un-lowerable construct (fix the node); a
 // FALL = real lowering progress (lower the number to lock it in). Fixing #100 removes only its subset.
-const UNLOWERED_BASELINE = 385;
+const UNLOWERED_BASELINE = 132;
 
 // ★ RUN-PATH baseline — un-lowered nodes REACHABLE from each stage's R2 entry (a subset of module-wide: most
 // un-lowered nodes sit in funcs the entry never calls). Shrink-only, MEASURED. The (run-path, module-wide)
 // pair per stage is R&D's R2->R3 bridge: run-path>0 ⇒ the entry reaches a node the emitter declined (an R2
 // trap, latent or live); module-wide>0 ⇒ won't byte-parity at R3 even where run-path is 0.
-const RUNPATH_BASELINE = 142; // MEASURED. Per stage: lexer 0 · parser 1 · type-checker 16 · effect-checker 9 · governance-verifier 6 · gir-emitter 10 · runtime 100. lexer(0,>0) is the pure "runs but won't byte-parity" row; the 385-142=243 gap is un-lowered nodes in funcs unreachable from the entries.
+const RUNPATH_BASELINE = 74; // MEASURED. Per stage: lexer 0 · parser 1 · type-checker 0 · effect-checker 4 · governance-verifier 0 · gir-emitter 0 · runtime 69. lexer(0,>0) is the pure "runs but won't byte-parity" row; the 132-74=58 gap is un-lowered nodes in funcs unreachable from the entries.
 
 // ── #2-law self-test fixtures — generated from ONE template, element type the only variable ──────────────
 const mkFixture = (elemType, flowName) => `@version 1

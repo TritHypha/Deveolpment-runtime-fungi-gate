@@ -740,6 +740,21 @@ export const FUNGI_GOV_024 = {
   message: "Flow uses a `step` expression (DWI isolate call) which requires DSS.wasm process isolation. In Stage A this is simulated — the inner flow runs in the same process. Full sandbox isolation is deferred to the WASM tier (tasks #102–#106).",
 } as const;
 
+/**
+ * Exact profile-dependent severity contract for diagnostics emitted in this
+ * verifier. The taxonomy audit compares observed severities with these sets
+ * bidirectionally: an omitted severity and an unused/over-broad severity both
+ * fail. Codes absent from this registry must have exactly one severity.
+ */
+export const DIAGNOSTIC_ALLOWED_SEVERITIES = {
+  "FUNGI-ACCESS-001": ["error", "warning"],
+  "FUNGI-ASSUME-004": ["error", "warning"],
+  "FUNGI-GOV-002": ["info", "warning"],
+  "FUNGI-GOV-010": ["error", "info"],
+  "FUNGI-GOV-021": ["error", "warning"],
+  "FUNGI-GOV-024": ["error", "warning"],
+} as const;
+
 /** Recognised value classifications from the Galerina governance scope KB. */
 export const RECOGNISED_VALUE_CLASSIFICATIONS = new Set([
   "safety_critical", "mission_critical", "regulated", "financial",
