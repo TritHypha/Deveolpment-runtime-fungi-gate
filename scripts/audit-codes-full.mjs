@@ -23,14 +23,25 @@
 //   node scripts/code-index.mjs && node scripts/audit-codes-full.mjs
 //   node scripts/audit-codes-full.mjs --json    # machine-readable JSON to stdout
 //   node scripts/audit-codes-full.mjs --family VALUESTATE   # focus on one family
+//   node scripts/audit-codes-full.mjs --root <dir>  # audit a hermetic repository fixture
 //
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { resolve, join, relative } from "node:path";
 
-const ROOT = process.cwd();
 const args = process.argv.slice(2);
+const valueAfter = (flag) => {
+  const index = args.indexOf(flag);
+  if (index < 0) return null;
+  const value = args[index + 1];
+  if (!value || value.startsWith("--")) {
+    console.error(`audit-codes-full: ${flag} requires a value.`);
+    process.exit(2);
+  }
+  return value;
+};
+const ROOT = resolve(valueAfter("--root") ?? process.cwd());
 const JSON_MODE = args.includes("--json");
-const FAMILY_FILTER = (() => { const i = args.indexOf("--family"); return i >= 0 ? args[i + 1]?.toUpperCase() : null; })();
+const FAMILY_FILTER = valueAfter("--family")?.toUpperCase() ?? null;
 
 // ── KNOWN LEGITIMATE MULTI-SEVERITY CODES ──────────────────────────────────
 // These codes intentionally emit at different severities depending on profile.

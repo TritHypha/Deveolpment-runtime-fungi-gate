@@ -160,17 +160,21 @@ planning checkbox must never be used to imply that implementation exists.
   independence-without-shortcuts are genuine gaps. No held canon file was
   changed. The candidate-by-candidate evidence and owner gates are recorded
   in `docs/reports/rd0577-zt-sir-canon-diff-2026-07-29.md`.
-- **Current:** Tasks 2-6 are complete. Task 1's structural inventory is the
-  one intentional blocking red: 21 audit/lint tools still need exact
-  phase-close, CI, or executable-fixture dispositions. No exception has been
-  added to hide them. A live close after the fixes passed 80/82 checks; its
-  second red was only the path gate correctly reading the still-uncommitted
-  old line from `HEAD`, and clears when this repo-relative fix is staged.
-- **Next safe work:** begin Task 8's 21 named tooling dispositions. Task 7
-  implementation is complete; its live orchestration close remains correctly
-  red on one owner-only memory-tree selection described below. Thirteen
-  repository-output generators are live under the fail-closed contract;
-  external inputs/outputs are separately bound rather than false-greened as
+- **Current:** Tasks 2-7 are complete. Task 8 is reducing two independently
+  measured red sets: executable audit/lint anti-neutering gaps and uncovered
+  tooling dispositions. Its first three-gate fixture group proves
+  `audit-allowlist-sensitive`, `audit-codes-full`, and
+  `audit-corpus-effect-names` fire on planted defects and clear on controls.
+  Anti-neutering advisories fell 13 -> 10; tooling-contract gaps fell 21 -> 19
+  because the corpus gate was already cadence-wired. No exception was added
+  to hide a tool.
+- **Next safe work:** close the remaining ten anti-neutering gaps in groups
+  of no more than three, repair/split the existing monolithic dev-tool
+  fixture, then reconcile the remaining nineteen tooling dispositions. Task
+  7's live orchestration close remains correctly red on one owner-only
+  memory-tree selection described below. Thirteen repository-output
+  generators are live under the fail-closed contract; external
+  inputs/outputs are separately bound rather than false-greened as
   repository-local.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from

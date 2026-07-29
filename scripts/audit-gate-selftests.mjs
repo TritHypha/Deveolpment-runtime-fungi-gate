@@ -55,6 +55,9 @@ const RUN_TIMEOUT_MS = 60000; // a single gate self-test that runs longer than t
 // (a deleted/renamed proof drops the gate back to advisory, surfacing the loss; the map can't lie). Keep this
 // list justified — each entry is a real fixture in scripts/tests/ that runs the tool end-to-end in the cadence.
 const SELFTEST_VIA_TEST = {
+  "audit-allowlist-sensitive.mjs": { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic malformed-policy refusal plus clean-policy control" },
+  "audit-codes-full.mjs":          { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic security-code defect refusal plus empty-index control" },
+  "audit-corpus-effect-names.mjs": { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic unknown teaching-effect refusal plus canonical-effect control" },
   "audit-mutation.mjs":            { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "hermetic KILL/SURVIVE/git-safety fixture (--config); never run via --self-test (it ignores unknown flags → would mutate real security source)" },
   "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
   "audit-doc-drift.mjs":          { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: living-doc stale count flagged; dated/-log exempt; missing-corpus fail-closed" },
