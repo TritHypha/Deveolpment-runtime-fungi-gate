@@ -218,14 +218,20 @@ planning checkbox must never be used to imply that implementation exists.
   drift refuse. Refusals expose no partial functions, regions, objects,
   guards, native certificate, or authority. Focused V2-D evidence is 63/63;
   frozen R1/V2-A/V2-B/V2-C regression evidence is 246/246.
-- **Current:** derive and pin the V2-D semantic digest only after independent
-  structural admission. Separately replace
+- **Completed:** local commit `ed910667` binds only independently decoded and
+  admitted bytes under `slide.gir.semantic.v2\0`. The pinned semantic digest
+  is `a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4`;
+  every structural or semantic refusal emits no body digest, semantic digest,
+  or authority. Focused V2-D evidence is 65/65.
+- **Current:** implement detached guarded execution over only the imported
+  graph, with checked guard-before-observation and exact accounting.
+  Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** add detached guarded execution with exact guard-before-observation,
-  registered failure, and memory-accounting evidence. Keep the
+- **Next:** close the remaining runtime mutation/differential and independent
+  validator exit gates. Keep the
   V2-E receipt/source-map lane
   independently gated before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may

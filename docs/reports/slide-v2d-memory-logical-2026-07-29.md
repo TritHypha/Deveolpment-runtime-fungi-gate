@@ -5,18 +5,20 @@
 **Executable integration commit:** `5b98ccaf`
 **Canonical producer commit:** `917bef9b`
 **Independent wire/import commit:** `8b137394`
+**Semantic binding commit:** `ed910667`
 **Registry descriptor:** 1,383 LF bytes
 **Registry SHA-256:** `a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648`
 **Canonical body:** 791 bytes
 **Canonical body SHA-256:** `b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38`
+**Semantic SHA-256:** `a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4`
 
 ## Claim boundary
 
 This checkpoint proves one bounded logical semantic-memory plan, a
 deterministic canonical producer, and independent canonical reconstruction.
-It does not prove the V2-D semantic digest, detached guarded execution, native
-memory safety, LLVM guard preservation, final-artifact safety, containment,
-or execution authority.
+It does not prove detached guarded execution, native memory safety, LLVM
+guard preservation, final-artifact safety, containment, or execution
+authority.
 
 Every success reports:
 
@@ -93,6 +95,11 @@ guard records into importer-owned values. Structural mutations and every
 refusal expose no partial graph or memory plan. Total focused V2-D evidence is
 63/63; the adjacent frozen R1/V2-A/V2-B/V2-C suites pass 246/246.
 
+The semantic binder adds 2/2 tests. It hashes only the body returned from
+independent structural and semantic admission under the registered v2 domain.
+Structural and semantic refusals expose no body digest, semantic digest, or
+authority. Total focused V2-D evidence is 65/65.
+
 ## Replacement and integration
 
 Nothing is removed at this checkpoint.
@@ -107,6 +114,6 @@ fallback.
 
 ## Next safe boundary
 
-Derive the V2-D semantic digest only after independent admission, then add
-detached guarded execution with exact guard-before-observation and memory
-accounting. LLVM/native work remains blocked.
+Add detached guarded execution with exact guard-before-observation and memory
+accounting, then close the second-validator/differential gate. LLVM/native
+work remains blocked.
