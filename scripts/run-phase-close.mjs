@@ -7,11 +7,11 @@
 //   2. DevTools tests    (naming / context / intelligence / provenance)
 //   3. Security audit    (auth-service corpus — in-process, fast)
 //   4. DevTools audits   (naming sweep + provenance directory audit)
-//   5. Graph re-index    (full project graph)
+//   5. Graph/index drift (non-mutating generated-evidence checks)
 //
 // Wired as a Stop hook in .claude/settings.json — runs at the end of every
-// response. Always exits 0 (informational); prints a PASS/FAIL summary so a
-// regression is visible without blocking the session.
+// response. Blocking mode exits non-zero on any failed child; --report-only
+// is the explicit non-authorizing diagnostic mode.
 //
 // Skip with:  GALERINA_SKIP_PHASE_CLOSE=1   (env)   — e.g. for rapid iteration.
 // Run manually:  node scripts/run-phase-close.mjs
@@ -456,19 +456,19 @@ try {
   }
 } catch { /* non-fatal if no manifests */ }
 
-// ── 5. Full graph re-index — graph-all.mjs runs the ENTIRE graph family (the single source of truth
+// ── 5. Full graph drift check — graph-all.mjs runs the ENTIRE graph family (the single source of truth
 //   for "run graph", so on-demand and this cadence can't drift): project graph (build/graph) +
 //   graph-integrity validation + kb graph (build/kb-graph; the orphan/broken-link signal the stray-docs
 //   audit below reads) + per-package Hardened Border --check + memory graph (.claude health) +
 //   dev-tool index/graph. Add/remove graph tools THERE, not here. ──
-run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet"]);
+run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check"]);
 
 // ── 5a. Code index + derived registry — the INDEXES the audits read (a DIFFERENT family from the
-//        graphs in graph:all above); regenerate from source first so the lint/coverage gates below see
-//        current state (std #10 derived-catalog, #219). memory-graph + dev-tool-index moved INTO
-//        graph:all — do not re-run them here (that was the drift). ──
-run("code-index", "node", ["scripts/code-index.mjs"]);
-run("code-registry", "node", ["scripts/gen-code-registry.mjs"]);
+//        graphs in graph:all above). Phase-close verifies their exact current
+//        bytes and refuses drift; generation is a separate reviewed operation.
+//        memory-graph + dev-tool-index remain inside graph:all. ──
+run("code-index", "node", ["scripts/code-index.mjs", "--check"]);
+run("code-registry", "node", ["scripts/gen-code-registry.mjs", "--check"]);
 // FUNGI-TYPE twin-parity (RD-0412): the self-hosted type-checker twin must only emit codes the real
 // type-checker.ts emits (scanned from actual call-sites, per-pass). Fail-closed — exit 3 on a false
 // differential — now that the type-system twin is complete, a permanent regression guard against a new

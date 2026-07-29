@@ -319,8 +319,16 @@ planning checkbox must never be used to imply that implementation exists.
   `npm.cmd test` and explicit V2-C frontend/conformance + V2-D + V2-E command
   each pass 30/30 across four exact files. This is independent evidence; it
   does not borrow Galerina's 477/477 result and grants no release authority.
+- **Task 10 non-mutating exit-gate checkpoint:** final review found that live
+  phase-close still ran `graph:all`, `code-index`, and `code-registry` in
+  writer mode, allowing the gate to repair the evidence it was judging and
+  dirty the worktree. A RED source-contract test now requires all three exact
+  live commands to use their check modes. The runner uses `graph-all
+  --quiet --check` plus both index `--check` commands; its header no longer
+  falsely says the now-blocking runner always exits zero. Focused runner
+  evidence is 6/6. Generation remains a separately reviewed operation.
 - **Current / next safe boundary:** commit the provenance source/test/ledger
-  checkpoint, regenerate all governed artifacts from that source commit,
+  and non-mutating-runner checkpoint, regenerate all governed artifacts,
   publish the reviewed outputs separately, and repeat all fourteen direct
   checks plus provenance/artifact gates. Then write the 11-requirement
   completion matrix. Full requirement 9 remains owner-blocked only on an

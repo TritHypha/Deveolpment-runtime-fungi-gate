@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import {
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -15,6 +16,7 @@ const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const RUNNER = join(TEST_DIR, "..", "run-phase-close.mjs");
 const RESULT_MODULE = new URL("../lib/phase-close-result.mjs", import.meta.url);
 const resultApi = await import(RESULT_MODULE).catch(() => ({}));
+const runnerSource = readFileSync(RUNNER, "utf8");
 const roots = [];
 
 after(() => {
@@ -135,4 +137,19 @@ test("malformed governance-diff JSON is an explicit failed result", () => {
   );
   assert.equal(clean.ok, true);
   assert.equal(clean.changeClass, "neutral");
+});
+
+test("live phase-close checks generated evidence without rewriting it", () => {
+  assert.match(
+    runnerSource,
+    /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check"\]\)/,
+  );
+  assert.match(
+    runnerSource,
+    /run\("code-index", "node", \["scripts\/code-index\.mjs", "--check"\]\)/,
+  );
+  assert.match(
+    runnerSource,
+    /run\("code-registry", "node", \["scripts\/gen-code-registry\.mjs", "--check"\]\)/,
+  );
 });
