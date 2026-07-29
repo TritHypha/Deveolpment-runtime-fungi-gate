@@ -48,8 +48,8 @@ function main(): void {
     process.exit(1);
   }
   const gate = runBoundaryGate(scopePath, graph, check);
-  const jsonPath = writeJson(scopePath, graph);
-  const mdPath = writeBoundaryMarkdown(scopePath, graph, gate);
+  const jsonPath = check ? null : writeJson(scopePath, graph);
+  const mdPath = check ? null : writeBoundaryMarkdown(scopePath, graph, gate);
 
   // ── Console summary ────────────────────────────────────────────────────────
   console.log(`\n  Package Boundary — ${graph.packageName}`);
@@ -81,8 +81,12 @@ function main(): void {
   if (gate.violations.length > 0) {
     for (const v of gate.violations) console.log(`     ❌ unlisted external dependency: ${v}`);
   }
-  console.log(`\n  Written: ${jsonPath}`);
-  console.log(`           ${mdPath}\n`);
+  if (jsonPath !== null && mdPath !== null) {
+    console.log(`\n  Written: ${jsonPath}`);
+    console.log(`           ${mdPath}\n`);
+  } else {
+    console.log("\n  Check mode: no files written.\n");
+  }
 
   if (check && gate.status === "FAIL") process.exit(1);
   process.exit(0);

@@ -5,6 +5,15 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "loadedAssets": [
+      "src/self-hosted/governance-decisions.fungi",
+      "src/self-hosted/inference-governance.fungi",
+      "src/self-hosted/pq-admission-policy.fungi",
+      "src/self-hosted/transport-fsm.fungi",
+      "src/trit-brand.type-guard.ts"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

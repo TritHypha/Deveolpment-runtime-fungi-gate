@@ -246,6 +246,25 @@ test("CLI accepts the documented positional scope and exits one for an unexplain
   rmSync(root, { recursive: true, force: true });
 });
 
+test("CLI --check never writes derived graph reports", () => {
+  const root = makeFixture({
+    "src/index.ts": `export const index = 1;`,
+  });
+  runBoundaryGate(root, buildGraph(scanPackage(root)), false);
+  const jsonPath = join(root, ".graph", "package-graph.json");
+  const markdownPath = join(root, ".graph", "BOUNDARY.md");
+
+  const result = spawnSync(process.execPath, [CLI, root, "--check"], {
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+  assert.equal(existsSync(jsonPath), false);
+  assert.equal(existsSync(markdownPath), false);
+  assert.match(result.stdout, /Check mode: no files written/);
+  rmSync(root, { recursive: true, force: true });
+});
+
 test("CLI reports invalid ownership configuration without an internal stack trace", () => {
   const root = makeFixture({
     "package.json": JSON.stringify({
@@ -432,6 +451,26 @@ test(".fungi internal imports resolve as edges; ;;-comments + plugin form handle
   assert.deepEqual(froms, ["src/main.fungi->src/plugins/pay.fungi", "src/main.fungi->src/util.fungi"]);
   // The ;;-commented import never produced a (dangling) edge.
   assert.ok(!froms.some((f) => f.includes("commented-out")));
+  rmSync(root, { recursive: true, force: true });
+});
+
+test(".mjs internal imports preserve their source extension", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: { extensions: [".mjs"] },
+    }),
+    "src/runner.mjs": `import { units } from "./throughput-units.mjs";\nexport { units };`,
+    "src/throughput-units.mjs": `export const units = "ops/s";`,
+  });
+
+  const graph = buildGraph(scanPackage(root));
+
+  assert.deepEqual(graph.internalEdges, [{
+    from: "src/runner.mjs",
+    to: "src/throughput-units.mjs",
+  }]);
+  assert.deepEqual(graph.orphans, ["src/runner.mjs"]);
   rmSync(root, { recursive: true, force: true });
 });
 

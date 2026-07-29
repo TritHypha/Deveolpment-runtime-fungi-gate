@@ -11,6 +11,32 @@
       ".fungi",
       ".mjs",
       ".js"
+    ],
+    "entryPoints": [
+      "src/audit-benchmark-integrity.mjs",
+      "src/audit.mjs",
+      "src/bench-guard.mjs",
+      "src/build-chart.mjs",
+      "src/build-native.mjs",
+      "src/chart.mjs",
+      "src/compare-chart.mjs",
+      "src/compare.mjs",
+      "src/diagnostic-runner.mjs",
+      "src/history.mjs",
+      "src/noise-gate.mjs",
+      "src/report.mjs",
+      "src/runner.mjs",
+      "src/snapshot.mjs",
+      "src/variance.mjs"
+    ],
+    "loadedAssets": [
+      "src/wasm-runner.mjs"
+    ],
+    "allowOrphans": [
+      {
+        "path": "src/mem-sampler.mjs",
+        "reason": "Dormant exported sampler retained for benchmark instrumentation; no executable or import currently owns it."
+      }
     ]
   },
   "scripts": {

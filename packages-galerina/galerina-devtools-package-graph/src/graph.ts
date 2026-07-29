@@ -10,7 +10,7 @@
  * Hardened Border. The `--check` gate compares it against an allowlist.
  */
 
-import { dirname, join, normalize, sep } from "node:path";
+import { dirname, extname, join, normalize, sep } from "node:path";
 import type { ScanResult, EdgeKind, AllowedOrphan } from "./scanner.js";
 
 export interface InternalEdge {
@@ -54,7 +54,7 @@ function resolveInternal(fromFile: string, specifier: string): string | null {
   // already name the source file, so they are left as-is; an extensionless TS import
   // (rare) falls back to ".ts".
   if (target.endsWith(".js")) target = target.slice(0, -3) + ".ts";
-  else if (!target.endsWith(".ts") && !target.endsWith(".fungi")) target = target + ".ts";
+  else if (extname(target) === "") target = target + ".ts";
   return target;
 }
 

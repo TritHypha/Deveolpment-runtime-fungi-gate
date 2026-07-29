@@ -5,6 +5,14 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "entryPoints": [
+      "src/bool-boundary/index.ts",
+      "src/decision/index.ts",
+      "src/omni/index.ts",
+      "src/tri/index.ts"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

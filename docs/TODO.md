@@ -166,10 +166,12 @@ planning checkbox must never be used to imply that implementation exists.
   added to hide them. A live close after the fixes passed 80/82 checks; its
   second red was only the path gate correctly reading the still-uncommitted
   old line from `HEAD`, and clears when this repo-relative fix is staged.
-- **Next safe work:** resume at Task 7 (generator/index/report/provenance
-  governance), then Task 8. Task 8 must close the 21 named tooling
-  dispositions before phase-close may authorize. Generator policy remains
-  deliberately inactive until its Task 7 live declarations are complete.
+- **Next safe work:** continue Task 7 at the three external-boundary/root
+  orchestration cases (`kb-index.mjs`, `memory-graph.mjs`, `graph-all.mjs`),
+  then Task 8. Task 8 must close the 21 named tooling dispositions before
+  phase-close may authorize. Eleven repository-contained generators are now
+  live under the fail-closed generator contract; external inputs/outputs must
+  not be false-greened by pretending they are repository-local.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
@@ -278,16 +280,33 @@ planning checkbox must never be used to imply that implementation exists.
   existing current-time default. The core CLI package is 21/21 after a source
   rebuild, the isolated wrapper fixture is 1/1, the combined affected suite is
   33/33, and the live audit passes 10/10.
-- **Task 7 remains incomplete:** three named root generators plus explicit
-  package-graph generation remain undeclared. Next resume: handle the dynamic
-  package output set, then the external knowledge-base
-  output and `graph-all`'s dynamic package boundary set without a wildcard or
-  hidden exception.
+- **Task 7 package-graph generation:** the new
+  `package-graph-generator.mjs` compares the registered workspace set with all
+  97 package directories, requires every existing boundary policy to pass,
+  derives every report in memory, and refuses the complete run before any
+  publication if one package fails. Policy enumerates all 195 outputs
+  explicitly (97 JSON graphs, 97 Markdown boundaries, one provenance sidecar)
+  with no wildcard. The underlying CLI's `--check` no longer writes reports,
+  and a root-cause fix preserves `.mjs` internal-import extensions instead of
+  rewriting them to `.ts`. Live preflight exposed and closed 15 previously
+  unexplained ownership sets through exact entry-point/loaded-asset
+  declarations. One real dormant utility, benchmark `mem-sampler.mjs`, remains
+  a named justified `allowOrphans` item rather than being described as live.
+  Package evidence is 27/27, the aggregate fixture is 1/1, the focused
+  generator fixture suite is 22/22, and the live audit passes 11/11.
+- **Task 7 remains incomplete:** three cases remain:
+  `kb-index.mjs` reads a sibling private knowledge base and writes intentionally
+  ignored repository output; `memory-graph.mjs` reads and writes a selected
+  external memory directory; and `graph-all.mjs` is an orchestration command
+  that currently returns success even when a child fails. Define an explicit
+  external-boundary contract and make the orchestrator propagate every child
+  refusal; do not register either external tool as an ordinary repository
+  generator merely to increase the green count.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
-  generated code-index, code-registry, coverage, dev-tool-index, and graph
-  outputs. They remain deliberately uncommitted for Task 9's deterministic
-  two-run regeneration/review; do not discard or mix them into hand-authored
-  changes.
+  generated code-index, code-registry, coverage, dev-tool-index, project
+  graph, and all 195 package-graph outputs. They remain deliberately
+  uncommitted for Task 9's deterministic two-run regeneration/review; do not
+  discard or mix them into hand-authored changes.
 - **New tooling defect queued:** `audit-path-leak.mjs` fails closed when a
   staged path is newly added but also emits `git show HEAD:<new-path>` fatals
   and can report a stale HEAD-only leak until the commit exists. It did not

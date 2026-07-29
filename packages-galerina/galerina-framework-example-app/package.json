@@ -5,6 +5,15 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "entryPoints": [
+      "host/server.ts",
+      "src/App.fungi"
+    ],
+    "loadedAssets": [
+      "src/flows/greeting.fungi"
+    ]
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",

@@ -5,6 +5,11 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
+  "packageGraph": {
+    "entryPoints": [
+      "src/index.fungi"
+    ]
+  },
   "scripts": {
     "build": "node ../../galerina.mjs build --package .",
     "test": "node ../galerina-core-compiler/node_modules/typescript/bin/tsc -p ../galerina-framework-app-kernel/tsconfig.json && node ../../galerina.mjs build --package . && node --test tests/*.test.mjs"
