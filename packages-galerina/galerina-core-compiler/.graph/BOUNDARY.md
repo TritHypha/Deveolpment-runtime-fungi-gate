@@ -17,7 +17,7 @@
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
 | └─ Third-party | 3 |
-| Orphan files | 55 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -44,11 +44,19 @@
 - `bcryptjs`
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
+
+## Entry Points
+- `src/cli.ts`
 - `src/governance-mode.ts`
+- `src/index.ts`
 - `src/plugin-schema.ts`
+- `src/runtime/index.ts`
+
+## Loaded Assets
 - `src/self-hosted/compiler.capabilities.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/gir-emitter.fungi`
@@ -103,7 +111,5 @@ No boundary violations. All external imports are within the allowlist.
 - `src/self-hosted/slide-v2e-signature-evidence.fungi`
 - `src/self-hosted/type-checker.fungi`
 
-## Entry Points
-- `src/cli.ts`
-- `src/index.ts`
-- `src/runtime/index.ts`
+## Allowed Orphans
+_none declared_

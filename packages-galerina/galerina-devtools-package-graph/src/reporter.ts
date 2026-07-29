@@ -27,7 +27,7 @@ export interface BoundaryPolicy {
 
 export interface CheckResult {
   readonly status: "PASS" | "FAIL" | "BASELINE_CREATED";
-  readonly violations: readonly string[]; // external deps not in the allowlist
+  readonly violations: readonly string[]; // border deps, unexplained orphans, or policy failures
   readonly orphanWarnings: readonly string[];
 }
 
@@ -55,7 +55,8 @@ export function runBoundaryGate(scopePath: string, graph: PackageGraph, check: b
   const policyPath = join(dir, "boundary-policy.json");
   const currentExternal = graph.externalDeps.map((d) => d.specifier).sort();
 
-  const orphanWarnings = graph.orphans.map((o) => `orphan: ${o} (no inbound internal import)`);
+  const orphanWarnings = graph.orphans.map((o) => `orphan:${o} (no inbound internal import or ownership declaration)`);
+  const orphanViolations = check ? graph.orphans.map((o) => `orphan:${o}`) : [];
 
   if (!existsSync(policyPath)) {
     // FAIL-CLOSED on a MISSING policy under --check (delete-to-launder defence). If --check re-baselined a
@@ -67,7 +68,8 @@ export function runBoundaryGate(scopePath: string, graph: PackageGraph, check: b
       return {
         status: "FAIL",
         violations: ["boundary-policy.json is missing — cannot enforce the Hardened Border under --check " +
-                     "(run the generator without --check to establish a baseline)"],
+                     "(run the generator without --check to establish a baseline)",
+                     ...orphanViolations],
         orphanWarnings,
       };
     }
@@ -87,7 +89,11 @@ export function runBoundaryGate(scopePath: string, graph: PackageGraph, check: b
   try {
     policy = JSON.parse(readFileSync(policyPath, "utf-8"));
   } catch {
-    return { status: "FAIL", violations: ["boundary-policy.json is unreadable/corrupt"], orphanWarnings };
+    return {
+      status: "FAIL",
+      violations: ["boundary-policy.json is unreadable/corrupt", ...orphanViolations],
+      orphanWarnings,
+    };
   }
   // A present-but-malformed allowlist is unknown → DENY (not allow-all). If `allowedExternal` is not a
   // string array, the allowlist is untrustworthy, so under --check fail-closed rather than letting
@@ -96,7 +102,10 @@ export function runBoundaryGate(scopePath: string, graph: PackageGraph, check: b
     return { status: "FAIL", violations: ["boundary-policy.json: allowedExternal is missing or malformed — refusing to enforce a non-array allowlist (unknown → deny)"], orphanWarnings };
   }
   const allowed = new Set(policy.allowedExternal);
-  const violations = currentExternal.filter((spec) => !allowed.has(spec));
+  const violations = [
+    ...currentExternal.filter((spec) => !allowed.has(spec)),
+    ...orphanViolations,
+  ];
 
   if (check && violations.length > 0) {
     return { status: "FAIL", violations, orphanWarnings };
@@ -164,16 +173,22 @@ ${fmtDeps(group("thirdparty"))}
 
 ## Governance${check.violations.length > 0 ? " — VIOLATIONS" : ""}
 ${check.violations.length === 0
-  ? "No boundary violations. All external imports are within the allowlist."
-  : check.violations.map((v) => `- ❌ Unlisted external dependency: \`${v}\``).join("\n")}
+  ? "No boundary violations. All external imports are allowed and every scanned file has declared ownership."
+  : check.violations.map((v) => `- VIOLATION: \`${v}\``).join("\n")}
 
 ## Orphaned Files
 ${graph.orphans.length === 0
-  ? "_none_ — every file is reachable from an internal import or entry point."
+  ? "_none_ -- every file is reachable from an internal import or has an exact ownership declaration."
   : graph.orphans.map((o) => `- \`${o}\``).join("\n")}
 
 ## Entry Points
 ${graph.entryPoints.map((e) => `- \`${e}\``).join("\n") || "_none detected_"}
+
+## Loaded Assets
+${graph.loadedAssets.map((e) => `- \`${e}\``).join("\n") || "_none declared_"}
+
+## Allowed Orphans
+${graph.allowedOrphans.map((entry) => `- \`${entry.path}\` -- ${entry.reason}`).join("\n") || "_none declared_"}
 `;
 
   writeFileSync(path, md);

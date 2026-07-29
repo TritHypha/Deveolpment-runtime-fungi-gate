@@ -1,9 +1,23 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+  existsSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { scanPackage, buildGraph, runBoundaryGate } from "../dist/index.js";
+
+const CLI = fileURLToPath(new URL("../dist/cli.js", import.meta.url));
+const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+const COMPILER_ROOT = join(REPO_ROOT, "packages-galerina", "galerina-core-compiler");
 
 // Build a throwaway fixture package on disk.
 function makeFixture(files, pkgName = "@galerina/fixture") {
@@ -62,6 +76,212 @@ test("orphan detection flags unreferenced non-entry files", () => {
   assert.ok(!graph.orphans.includes("src/index.ts"));
   assert.ok(!graph.orphans.includes("src/used.ts"));
   rmSync(root, { recursive: true, force: true });
+});
+
+test("boundary gate: an unexplained orphan is a blocking --check violation", () => {
+  const root = makeFixture({
+    "src/index.ts": `export const main = 1;`,
+    "src/unowned.fungi": `pure flow unowned() -> Int { return 1 }`,
+  });
+  runBoundaryGate(root, buildGraph(scanPackage(root)), false);
+
+  const result = runBoundaryGate(root, buildGraph(scanPackage(root)), true);
+
+  assert.equal(result.status, "FAIL");
+  assert.ok(result.violations.includes("orphan:src/unowned.fungi"));
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("declared loaded assets are exact owned nodes, not unexplained orphans", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: { loadedAssets: ["src/self-hosted/stage.fungi"] },
+    }),
+    "src/index.ts": `export const main = 1;`,
+    "src/self-hosted/stage.fungi": `pure flow stage() -> Int { return 1 }`,
+  });
+
+  const graph = buildGraph(scanPackage(root));
+
+  assert.deepEqual(graph.loadedAssets, ["src/self-hosted/stage.fungi"]);
+  assert.deepEqual(graph.orphans, []);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("explicit entry points replace broad main/server/App filename inference", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: { entryPoints: ["src/worker.ts"] },
+    }),
+    "src/index.ts": `export const index = 1;`,
+    "src/worker.ts": `export const worker = 1;`,
+    "src/main.ts": `export const main = 1;`,
+    "src/App.fungi": `pure flow app() -> Int { return 1 }`,
+  });
+
+  const graph = buildGraph(scanPackage(root));
+
+  assert.deepEqual(graph.entryPoints, ["src/index.ts", "src/worker.ts"]);
+  assert.deepEqual(graph.orphans, ["src/App.fungi", "src/main.ts"]);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("a named allowOrphans entry suppresses only its exact justified path", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: {
+        allowOrphans: [{
+          path: "src/direct-subpath.ts",
+          reason: "Compiled public subpath imported directly by a separate consumer.",
+        }],
+      },
+    }),
+    "src/index.ts": `export const index = 1;`,
+    "src/direct-subpath.ts": `export const direct = 1;`,
+    "src/unexplained.ts": `export const unexplained = 1;`,
+  });
+
+  const graph = buildGraph(scanPackage(root));
+
+  assert.deepEqual(graph.allowedOrphans, [{
+    path: "src/direct-subpath.ts",
+    reason: "Compiled public subpath imported directly by a separate consumer.",
+  }]);
+  assert.deepEqual(graph.orphans, ["src/unexplained.ts"]);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("declared ownership paths refuse missing, escaping, non-canonical, duplicate, and malformed entries", () => {
+  const cases = [
+    {
+      name: "missing loaded asset",
+      packageGraph: { loadedAssets: ["src/missing.fungi"] },
+      match: /loadedAssets.*does not exist/i,
+    },
+    {
+      name: "escaping entry point",
+      packageGraph: { entryPoints: ["../outside.ts"] },
+      match: /entryPoints.*inside the package/i,
+    },
+    {
+      name: "non-canonical loaded asset",
+      packageGraph: { loadedAssets: ["src/./stage.fungi"] },
+      match: /loadedAssets.*canonical/i,
+    },
+    {
+      name: "duplicate ownership",
+      packageGraph: {
+        entryPoints: ["src/stage.fungi"],
+        loadedAssets: ["src/stage.fungi"],
+      },
+      match: /declared more than once/i,
+    },
+    {
+      name: "blank allowOrphans reason",
+      packageGraph: {
+        allowOrphans: [{ path: "src/stage.fungi", reason: "" }],
+      },
+      match: /allowOrphans.*reason/i,
+    },
+  ];
+
+  for (const fixture of cases) {
+    const root = makeFixture({
+      "package.json": JSON.stringify({
+        name: "@galerina/fixture",
+        packageGraph: fixture.packageGraph,
+      }),
+      "src/index.ts": `export const index = 1;`,
+      "src/stage.fungi": `pure flow stage() -> Int { return 1 }`,
+    });
+    try {
+      assert.throws(
+        () => buildGraph(scanPackage(root)),
+        fixture.match,
+        fixture.name,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+test("declared ownership must be inside the scanned node set", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: {
+        roots: ["src"],
+        extensions: [".ts"],
+        loadedAssets: ["src/stage.fungi"],
+      },
+    }),
+    "src/index.ts": `export const index = 1;`,
+    "src/stage.fungi": `pure flow stage() -> Int { return 1 }`,
+  });
+
+  assert.throws(
+    () => buildGraph(scanPackage(root)),
+    /loadedAssets.*scanned node set/i,
+  );
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("CLI accepts the documented positional scope and exits one for an unexplained orphan", () => {
+  const root = makeFixture({
+    "src/index.ts": `export const index = 1;`,
+    "src/unexplained.ts": `export const unexplained = 1;`,
+  });
+  runBoundaryGate(root, buildGraph(scanPackage(root)), false);
+
+  const result = spawnSync(process.execPath, [CLI, root, "--check"], {
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(`${result.stdout}${result.stderr}`, /orphan:src\/unexplained\.ts/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("CLI reports invalid ownership configuration without an internal stack trace", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/fixture",
+      packageGraph: { loadedAssets: ["src/missing.fungi"] },
+    }),
+    "src/index.ts": `export const index = 1;`,
+  });
+
+  const result = spawnSync(process.execPath, [CLI, "--scope", root, "--check"], {
+    encoding: "utf8",
+  });
+  const output = `${result.stdout}${result.stderr}`;
+
+  assert.equal(result.status, 1);
+  assert.match(output, /packageGraph\.loadedAssets.*does not exist/i);
+  assert.doesNotMatch(output, /\n\s+at scanPackage/);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test("compiler package explicitly declares every self-hosted Fungi stage as a loaded asset", () => {
+  const pkg = JSON.parse(readFileSync(join(COMPILER_ROOT, "package.json"), "utf8"));
+  const actual = readdirSync(join(COMPILER_ROOT, "src", "self-hosted"))
+    .filter((name) => name.endsWith(".fungi"))
+    .map((name) => `src/self-hosted/${name}`)
+    .sort();
+  const declared = [...(pkg.packageGraph?.loadedAssets ?? [])].sort();
+
+  assert.deepEqual(declared, actual);
+});
+
+test("compiler package has zero unexplained source orphans", () => {
+  const graph = buildGraph(scanPackage(COMPILER_ROOT));
+
+  assert.deepEqual(graph.orphans, []);
+  assert.ok(graph.allowedOrphans.every((entry) => entry.reason.trim().length > 0));
 });
 
 test("comments do not produce phantom imports", () => {

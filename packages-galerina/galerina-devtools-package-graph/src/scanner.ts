@@ -38,7 +38,7 @@
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from "node:path";
 
 export type EdgeKind = "internal" | "node_core" | "workspace" | "thirdparty";
 
@@ -61,6 +61,22 @@ export interface ScanResult {
   readonly roots: readonly string[];       // source roots actually scanned (those that exist)
   readonly extensions: readonly string[];  // source extensions scanned
   readonly files: readonly ScannedFile[];
+  readonly entryPoints: readonly string[];
+  readonly loadedAssets: readonly string[];
+  readonly allowOrphans: readonly AllowedOrphan[];
+}
+
+export interface AllowedOrphan {
+  readonly path: string;
+  readonly reason: string;
+}
+
+export interface PackageGraphConfig {
+  readonly roots?: readonly string[];
+  readonly extensions?: readonly string[];
+  readonly entryPoints?: readonly string[];
+  readonly loadedAssets?: readonly string[];
+  readonly allowOrphans?: readonly AllowedOrphan[];
 }
 
 /** Default source roots — the canonical app template puts governed source in src/ and its host in host/. */
@@ -146,28 +162,141 @@ interface PackageMeta {
   readonly name: string;
   readonly roots: readonly string[];
   readonly extensions: readonly string[];
+  readonly entryPoints: readonly string[];
+  readonly loadedAssets: readonly string[];
+  readonly allowOrphans: readonly AllowedOrphan[];
 }
 
 /** Read the package name and (optional) `packageGraph` scan config. A provided config REPLACES the default. */
 function readPackageMeta(scopePath: string): PackageMeta {
+  let pkg: unknown;
   try {
-    const pkg = JSON.parse(readFileSync(join(scopePath, "package.json"), "utf-8"));
-    const name: string = typeof pkg.name === "string" ? pkg.name : scopePath;
-    const cfg = (pkg && typeof pkg.packageGraph === "object" && pkg.packageGraph) || {};
-    const roots = stringArray(cfg.roots) ?? [...DEFAULT_ROOTS];
-    const extensions = stringArray(cfg.extensions) ?? [...DEFAULT_EXTENSIONS];
-    return { name, roots, extensions };
-  } catch {
-    return { name: scopePath, roots: [...DEFAULT_ROOTS], extensions: [...DEFAULT_EXTENSIONS] };
+    pkg = JSON.parse(readFileSync(join(scopePath, "package.json"), "utf-8"));
+  } catch (error) {
+    throw new Error(`package.json is missing or unreadable: ${error instanceof Error ? error.message : String(error)}`);
   }
+  if (!isRecord(pkg)) throw new Error("package.json must contain a JSON object");
+
+  const name = typeof pkg.name === "string" && pkg.name.length > 0 ? pkg.name : scopePath;
+  if (pkg.packageGraph !== undefined && !isRecord(pkg.packageGraph)) {
+    throw new Error("packageGraph must be a JSON object");
+  }
+  const cfg = (pkg.packageGraph ?? {}) as Record<string, unknown>;
+  return {
+    name,
+    roots: configuredStrings(cfg, "roots", DEFAULT_ROOTS, false),
+    extensions: configuredStrings(cfg, "extensions", DEFAULT_EXTENSIONS, false),
+    entryPoints: configuredStrings(cfg, "entryPoints", [], true),
+    loadedAssets: configuredStrings(cfg, "loadedAssets", [], true),
+    allowOrphans: configuredAllowedOrphans(cfg.allowOrphans),
+  };
 }
 
 /** A non-empty array of non-empty strings, or null (→ caller uses the default). Guards a malformed config. */
-function stringArray(v: unknown): string[] | null {
-  if (Array.isArray(v) && v.length > 0 && v.every((s) => typeof s === "string" && s.length > 0)) {
-    return v as string[];
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function configuredStrings(
+  cfg: Record<string, unknown>,
+  key: string,
+  fallback: readonly string[],
+  allowEmpty: boolean,
+): string[] {
+  if (!(key in cfg)) return [...fallback];
+  const value = cfg[key];
+  if (!Array.isArray(value) ||
+      (!allowEmpty && value.length === 0) ||
+      !value.every((item) => typeof item === "string" && item.length > 0)) {
+    throw new Error(`packageGraph.${key} must be ${allowEmpty ? "an" : "a non-empty"} array of non-empty strings`);
   }
-  return null;
+  return [...value] as string[];
+}
+
+function configuredAllowedOrphans(value: unknown): AllowedOrphan[] {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) throw new Error("packageGraph.allowOrphans must be an array");
+  return value.map((entry, index) => {
+    if (!isRecord(entry) ||
+        typeof entry.path !== "string" || entry.path.length === 0 ||
+        typeof entry.reason !== "string" || entry.reason.trim().length === 0) {
+      throw new Error(`packageGraph.allowOrphans[${index}] must contain non-empty path and reason strings`);
+    }
+    return { path: entry.path, reason: entry.reason };
+  });
+}
+
+function canonicalDeclaredPath(
+  scopePath: string,
+  kind: "entryPoints" | "loadedAssets" | "allowOrphans",
+  path: string,
+): string {
+  const posix = path.replace(/\\/g, "/");
+  if (path !== posix || posix.length === 0 || isAbsolute(path) || /^[A-Za-z]:/.test(posix)) {
+    throw new Error(`packageGraph.${kind} path '${path}' must be a canonical package-relative path inside the package`);
+  }
+  const canonical = normalize(posix).split(sep).join("/");
+  if (canonical !== posix || canonical === ".") {
+    throw new Error(`packageGraph.${kind} path '${path}' must be canonical`);
+  }
+  if (canonical === ".." || canonical.startsWith("../")) {
+    throw new Error(`packageGraph.${kind} path '${path}' must be inside the package`);
+  }
+  const absolute = resolve(scopePath, canonical);
+  const fromScope = relative(scopePath, absolute).split(sep).join("/");
+  if (fromScope === ".." || fromScope.startsWith("../")) {
+    throw new Error(`packageGraph.${kind} path '${path}' must be inside the package`);
+  }
+  if (!existsSync(absolute)) {
+    throw new Error(`packageGraph.${kind} path '${path}' does not exist`);
+  }
+  let fileStat;
+  try { fileStat = statSync(absolute); } catch {
+    throw new Error(`packageGraph.${kind} path '${path}' cannot be inspected`);
+  }
+  if (!fileStat.isFile()) {
+    throw new Error(`packageGraph.${kind} path '${path}' must identify a file`);
+  }
+  return canonical;
+}
+
+function validateOwnership(
+  scopePath: string,
+  meta: PackageMeta,
+  nodeSet: ReadonlySet<string>,
+): Pick<ScanResult, "entryPoints" | "loadedAssets" | "allowOrphans"> {
+  const declared = new Map<string, string>();
+  const validate = (
+    kind: "entryPoints" | "loadedAssets" | "allowOrphans",
+    path: string,
+  ): string => {
+    const canonical = canonicalDeclaredPath(scopePath, kind, path);
+    if (!nodeSet.has(canonical)) {
+      throw new Error(`packageGraph.${kind} path '${path}' is not part of the scanned node set`);
+    }
+    const previous = declared.get(canonical);
+    if (previous !== undefined) {
+      throw new Error(`packageGraph path '${canonical}' is declared more than once (${previous}, ${kind})`);
+    }
+    declared.set(canonical, kind);
+    return canonical;
+  };
+
+  const configuredEntryPoints = meta.entryPoints.map((path) => validate("entryPoints", path));
+  const loadedAssets = meta.loadedAssets.map((path) => validate("loadedAssets", path));
+  const allowOrphans = meta.allowOrphans.map((entry) => ({
+    path: validate("allowOrphans", entry.path),
+    reason: entry.reason,
+  }));
+  const builtInEntryPoints = meta.roots
+    .flatMap((root) => [`${root}/index.ts`, `${root}/cli.ts`])
+    .filter((path) => nodeSet.has(path) && !declared.has(path));
+
+  return {
+    entryPoints: [...builtInEntryPoints, ...configuredEntryPoints].sort(),
+    loadedAssets: loadedAssets.sort(),
+    allowOrphans: allowOrphans.sort((a, b) => a.path.localeCompare(b.path)),
+  };
 }
 
 /** Strip line and block comments so commented-out imports are not counted. `;;` is a Galerina line comment. */
@@ -291,5 +420,13 @@ export function scanPackage(scopePath: string): ScanResult {
     return { path: relPath, imports, exportsFrom };
   });
 
-  return { packageName: meta.name, scopePath, roots, extensions: meta.extensions, files };
+  const ownership = validateOwnership(scopePath, meta, new Set(files.map((file) => file.path)));
+  return {
+    packageName: meta.name,
+    scopePath,
+    roots,
+    extensions: meta.extensions,
+    files,
+    ...ownership,
+  };
 }

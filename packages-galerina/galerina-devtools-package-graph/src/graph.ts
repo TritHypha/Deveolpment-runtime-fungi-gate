@@ -11,7 +11,7 @@
  */
 
 import { dirname, join, normalize, sep } from "node:path";
-import type { ScanResult, EdgeKind } from "./scanner.js";
+import type { ScanResult, EdgeKind, AllowedOrphan } from "./scanner.js";
 
 export interface InternalEdge {
   readonly from: string; // package-relative path
@@ -32,7 +32,9 @@ export interface PackageGraph {
   readonly internalEdges: readonly InternalEdge[];
   readonly externalDeps: readonly ExternalDep[];
   readonly orphans: readonly string[];
-  readonly entryPoints: readonly string[];  // index.ts, cli.ts — never orphans
+  readonly entryPoints: readonly string[];
+  readonly loadedAssets: readonly string[];
+  readonly allowedOrphans: readonly AllowedOrphan[];
   readonly stats: {
     readonly fileCount: number;
     readonly internalEdgeCount: number;
@@ -43,15 +45,6 @@ export interface PackageGraph {
     readonly orphanCount: number;
   };
 }
-
-// Conventional entry-point basenames (matched case-insensitively). Entry points are
-// never orphans: nothing in a package is required to import its top-level runnable. This
-// covers the TS host entries (index/cli/server/main) AND the Galerina composition roots
-// (index.fungi, main.fungi, App.fungi) so scanning host/ + .fungi does not flag them as orphans.
-const ENTRY_BASENAMES = new Set([
-  "index.ts", "cli.ts", "server.ts", "main.ts",
-  "index.fungi", "main.fungi", "app.fungi",
-]);
 
 /** Resolve a relative import specifier to a package-relative source path (best effort). */
 function resolveInternal(fromFile: string, specifier: string): string | null {
@@ -93,14 +86,17 @@ export function buildGraph(scan: ScanResult): PackageGraph {
     }
   }
 
-  const entryPoints = nodes.filter((n) => {
-    const base = (n.split("/").pop() ?? n).toLowerCase();
-    return ENTRY_BASENAMES.has(base);
-  });
-  const entrySet = new Set(entryPoints);
+  const entryPoints = [...scan.entryPoints].sort();
+  const loadedAssets = [...scan.loadedAssets].sort();
+  const allowedOrphans = [...scan.allowOrphans].sort((a, b) => a.path.localeCompare(b.path));
+  const ownedSet = new Set([
+    ...entryPoints,
+    ...loadedAssets,
+    ...allowedOrphans.map((entry) => entry.path),
+  ]);
 
-  // Orphans: zero inbound internal edges AND not an entry point.
-  const orphans = nodes.filter((n) => (inbound.get(n) ?? 0) === 0 && !entrySet.has(n));
+  // Orphans: zero inbound internal edges and no exact ownership declaration.
+  const orphans = nodes.filter((n) => (inbound.get(n) ?? 0) === 0 && !ownedSet.has(n));
 
   const externalDeps: ExternalDep[] = [...extMap.entries()]
     .map(([specifier, v]) => ({ specifier, kind: v.kind, importedBy: [...v.importedBy].sort() })) // perf-allow: loop-sort — sorts this dep's own importedBy set, distinct per entry (not loop-invariant)
@@ -119,6 +115,8 @@ export function buildGraph(scan: ScanResult): PackageGraph {
     externalDeps,
     orphans,
     entryPoints,
+    loadedAssets,
+    allowedOrphans,
     stats: {
       fileCount: nodes.length,
       internalEdgeCount: internalEdges.length,

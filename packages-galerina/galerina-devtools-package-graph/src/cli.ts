@@ -4,6 +4,7 @@
  *
  * Usage:
  *   node dist/cli.js --scope <package-path>          scan + write .graph/ outputs
+ *   node dist/cli.js <package-path>                  equivalent positional form
  *   node dist/cli.js --scope <package-path> --check  enforce the boundary policy (CI gate)
  *
  * Writes into <scope>/.graph/:
@@ -25,20 +26,27 @@ function main(): void {
   const argv = process.argv.slice(2);
   const scopeIdx = argv.indexOf("--scope");
   const check = argv.includes("--check");
+  const positionalScope = argv.find((arg) => !arg.startsWith("-"));
+  const scopeArg = scopeIdx >= 0 ? argv[scopeIdx + 1] : positionalScope;
 
-  if (scopeIdx < 0 || !argv[scopeIdx + 1]) {
-    console.error("Usage: galerina package-graph --scope <package-path> [--check]");
+  if (!scopeArg) {
+    console.error("Usage: galerina package-graph [--scope] <package-path> [--check]");
     process.exit(2);
   }
 
-  const scopePath = resolve(argv[scopeIdx + 1]!);
+  const scopePath = resolve(scopeArg);
   if (!existsSync(scopePath)) {
     console.error(`Scope path not found: ${scopePath}`);
     process.exit(2);
   }
 
-  const scan = scanPackage(scopePath);
-  const graph = buildGraph(scan);
+  let graph;
+  try {
+    graph = buildGraph(scanPackage(scopePath));
+  } catch (error) {
+    console.error(`Package graph refused: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
   const gate = runBoundaryGate(scopePath, graph, check);
   const jsonPath = writeJson(scopePath, graph);
   const mdPath = writeBoundaryMarkdown(scopePath, graph, gate);
