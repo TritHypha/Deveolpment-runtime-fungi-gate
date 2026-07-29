@@ -38,6 +38,7 @@ const REQUIRED_FILES = [
   "slide-v2e-frontend-validator.fungi",
   "slide-v2e-cbor-encoder.fungi",
   "slide-v2e-cbor-importer.fungi",
+  "slide-gfrontend-checked-snapshot.fungi",
   "slide-gfrontend-public-candidate.fungi",
 ];
 
@@ -46,7 +47,7 @@ const vBytes = (value) => ({ __tag: "bytes", value });
 
 let compiler;
 let sourceText;
-let parsedFacts;
+let checkedSnapshot;
 let expectations;
 
 function field(record, name) {
@@ -77,18 +78,19 @@ async function run(flowName, args = new Map()) {
 async function parseFacts(source) {
   const tokenized = await run("tokenize", new Map([["source", vStr(source)]]));
   const tokens = tokenized.__tag === "ok" ? tokenized.value : tokenized;
-  return run("parseFlows", new Map([["tokens", tokens]]));
+  const parsed = await run("parseFlows", new Map([["tokens", tokens]]));
+  return { parsed, tokens };
 }
 
 async function materialize(
   source = sourceText,
-  facts = parsedFacts,
+  snapshot = checkedSnapshot,
   expected = expectations,
 ) {
   return run(
     "materializeSLIDEG4FrontendCandidate",
     new Map([
-      ["parsed", facts],
+      ["checkedSnapshot", snapshot],
       ["sourceText", vStr(source)],
       ["expectedExternalEvidence", expected],
     ]),
@@ -118,10 +120,22 @@ before(async () => {
     ),
     "G4 materialize-once public candidate is not implemented",
   );
-  parsedFacts = await parseFacts(sourceText);
+  const facts = await parseFacts(sourceText);
+  const sealed = await run(
+    "sealSLIDEG4CheckedSnapshot",
+    new Map([
+      ["tokens", facts.tokens],
+      ["parsed", facts.parsed],
+      ["sourceText", vStr(sourceText)],
+    ]),
+  );
+  assert.equal(field(field(sealed, "decision"), "verdict").value, 1);
+  checkedSnapshot = field(sealed, "snapshot");
   expectations = record({
     compilerArtifactDigest: vStr("11".repeat(32)),
-    diagnosticSetDigest: vStr("22".repeat(32)),
+    diagnosticSetDigest: vStr(
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ),
     corpusDigest: vStr("33".repeat(32)),
     vectorSetDigest: vStr("44".repeat(32)),
     buildActionRootDigest: vStr("55".repeat(32)),
@@ -178,6 +192,7 @@ describe("SLIDE G4 materialize-once public candidate", () => {
         new Map([
           ["receiptBytes", vBytes(variant)],
           ["sourceText", vStr(sourceText)],
+          ["checkedSnapshot", checkedSnapshot],
           ["semanticBody", vBytes(body)],
           ["expectedExternalEvidence", expectations],
         ]),
@@ -193,7 +208,7 @@ describe("SLIDE G4 materialize-once public candidate", () => {
       "return value + 1",
       "return value + 2",
     );
-    const candidate = await materialize(changedSource, parsedFacts);
+    const candidate = await materialize(changedSource, checkedSnapshot);
     assert.equal(field(field(candidate, "decision"), "verdict").value, -1);
     assert.equal(field(candidate, "materialized").value, false);
     assert.equal(field(candidate, "semanticBody").value.length, 0);
@@ -206,7 +221,7 @@ describe("SLIDE G4 materialize-once public candidate", () => {
   it("refuses malformed external evidence without partial outputs", async () => {
     const malformed = structuredClone(expectations);
     malformed.fields.set("diagnosticSetDigest", vStr("not-a-digest"));
-    const candidate = await materialize(sourceText, parsedFacts, malformed);
+    const candidate = await materialize(sourceText, checkedSnapshot, malformed);
     assert.equal(field(field(candidate, "decision"), "verdict").value, -1);
     assert.equal(field(candidate, "materialized").value, false);
     assert.equal(field(candidate, "semanticBody").value.length, 0);

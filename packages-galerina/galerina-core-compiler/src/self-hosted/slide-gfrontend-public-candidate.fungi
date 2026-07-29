@@ -14,6 +14,7 @@ record SLIDEG4FrontendCandidate {
   authorityReleased: Bool
 }
 
+// Return one terminal public refusal without semantic bytes or authority.
 pure flow refuseSLIDEG4FrontendCandidate(
   failureId: String,
   detail: String,
@@ -28,6 +29,7 @@ contract { intent { "Refuse the public G4 seam without any partial artifact or a
   }
 }
 
+// Compare the public input with the frozen normalized source identity.
 pure flow slideG4SourceExact(sourceText: String) -> Bool
 contract { intent { "Pin the normalized G4 source bytes without ambient path identity." } }
 {
@@ -38,60 +40,10 @@ contract { intent { "Pin the normalized G4 source bytes without ambient path ide
   return bytes.sha256Hex() == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
 }
 
-pure flow slideG4FunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan
-contract { intent { "Return the exact normalized G4 source span for one function." } }
-{
-  match functionId {
-    1 => { return { startByte: 142, endByte: 310 } }
-    2 => { return { startByte: 310, endByte: 835 } }
-    3 => { return { startByte: 835, endByte: 1641 } }
-    _ => { return { startByte: 0, endByte: 0 } }
-  }
-}
-
-pure flow materializeSLIDEG4SourceMappings(
-  program: SLIDEV2DExecutableProgram,
-) -> Array<SLIDEV2ESourceMapEntry>
-contract { intent { "Map every frozen V2-D instruction and terminator to one exact G4 function span." } }
-{
-  mut mappings: Array<SLIDEV2ESourceMapEntry> = Array.empty()
-  mut mapId: Int = 1
-  mut functionIndex: Int = 0
-  while functionIndex < program.functions.count() {
-    let function = slideV2AFunctionAt(program.functions, functionIndex)
-    let span = slideG4FunctionSpan(function.functionId)
-    if span.endByte <= span.startByte { return Array.empty() }
-    mut blockIndex: Int = 0
-    while blockIndex < function.blocks.count() {
-      let block = slideV2ABlockAt(function.blocks, blockIndex)
-      mut instructionIndex: Int = 0
-      while instructionIndex < block.instructions.count() {
-        let instruction = slideV2AInstructionAt(
-          block.instructions, instructionIndex,
-        )
-        mappings = mappings.append({
-          mapId: mapId functionId: function.functionId blockId: block.blockId
-          nodeKindId: 1 nodeId: instruction.resultId sourceUnitId: 1
-          startByte: span.startByte endByte: span.endByte
-        })
-        mapId = mapId + 1
-        instructionIndex = instructionIndex + 1
-      }
-      mappings = mappings.append({
-        mapId: mapId functionId: function.functionId blockId: block.blockId
-        nodeKindId: 2 nodeId: block.terminator.terminatorId sourceUnitId: 1
-        startByte: span.startByte endByte: span.endByte
-      })
-      mapId = mapId + 1
-      blockIndex = blockIndex + 1
-    }
-    functionIndex = functionIndex + 1
-  }
-  return mappings
-}
-
+// Bind exact semantic bytes and checked trace facts into frontend evidence.
 pure flow materializeSLIDEG4FrontendEvidence(
   sourceText: String,
+  checkedSnapshot: SLIDEG4CheckedSnapshot,
   fixture: SLIDEG4FixtureCandidate,
   expected: SLIDEV2EExternalEvidenceExpectation,
 ) -> SLIDEV2EFrontendEvidence
@@ -100,6 +52,11 @@ contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and call
   if slideG4SourceExact(sourceText) == false {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-GFRONT-001", "raw G4 source bytes or edition refused",
+    )
+  }
+  if slideG4CheckedSnapshotExact(checkedSnapshot) == false or checkedSnapshot.sourceDigest != sourceText.encode().sha256Hex() {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-003", "checked snapshot or raw-source binding refused",
     )
   }
   check(fixture.decision.verdict) {
@@ -130,6 +87,11 @@ contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and call
       "SLIDE-GFRONT-008", "external evidence digest shape refused",
     )
   }
+  if expected.diagnosticSetDigest != checkedSnapshot.diagnosticSetDigest {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "caller diagnostic expectation disagrees with the snapshot",
+    )
+  }
 
   let imported = decodeSLIDEV2DProgram(fixture.semanticBody)
   check(imported.decision.verdict) {
@@ -151,7 +113,7 @@ contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and call
     sourceText: sourceText sourceByteLength: sourceBytes.length()
     sourceBytesDigest: sourceBytes.sha256Hex()
   }
-  let mappings = materializeSLIDEG4SourceMappings(imported.program)
+  let mappings = checkedSnapshot.sourceMappings
   if mappings.count() != 40 {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-GFRONT-006", "complete G4 source mapping was not derived",
@@ -178,7 +140,7 @@ contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and call
     sourceSetDigest: slideV2EDomainDigest(
       "slide.frontend.source-set.v1", sourceSetBytes,
     )
-    diagnosticSetDigest: expected.diagnosticSetDigest
+    diagnosticSetDigest: checkedSnapshot.diagnosticSetDigest
     sourceMapDigest: slideV2EDomainDigest(
       "slide.frontend.source-map.v1", sourceMapBytes,
     )
@@ -210,9 +172,11 @@ contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and call
   }
 }
 
+// Re-derive and validate the complete frontend evidence before export.
 pure flow validateSLIDEG4FrontendEvidence(
   evidence: SLIDEV2EFrontendEvidence,
   sourceText: String,
+  checkedSnapshot: SLIDEG4CheckedSnapshot,
   semanticBody: Bytes,
   expected: SLIDEV2EExternalEvidenceExpectation,
 ) -> SLIDEV2EFrontendEvidence
@@ -221,6 +185,11 @@ contract { intent { "Independently re-derive the bounded G4 source, semantic, ma
   if evidence.materialized == false or evidence.authorityReleased {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-GFRONT-008", "producer evidence is incomplete or authorizing",
+    )
+  }
+  if slideG4CheckedSnapshotExact(checkedSnapshot) == false or checkedSnapshot.sourceDigest != sourceText.encode().sha256Hex() {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-003", "independent checked snapshot validation refused",
     )
   }
   if slideG4SourceExact(sourceText) == false or evidence.sourceUnits.count() != 1 {
@@ -277,7 +246,7 @@ contract { intent { "Independently re-derive the bounded G4 source, semantic, ma
   let expectedSourceSet = slideV2EDomainDigest(
     "slide.frontend.source-set.v1", slideV2ECBORSourceSet(source),
   )
-  let expectedMappings = materializeSLIDEG4SourceMappings(imported.program)
+  let expectedMappings = checkedSnapshot.sourceMappings
   let expectedSourceMap = slideV2EDomainDigest(
     "slide.frontend.source-map.v1", slideV2ECBORSourcemap(expectedMappings),
   )
@@ -331,16 +300,18 @@ contract { intent { "Independently re-derive the bounded G4 source, semantic, ma
   }
 }
 
+// Encode the receipt only after the logical evidence validator grants it.
 pure flow exportSLIDEG4CanonicalReceipt(
   evidence: SLIDEV2EFrontendEvidence,
   sourceText: String,
+  checkedSnapshot: SLIDEG4CheckedSnapshot,
   semanticBody: Bytes,
   expected: SLIDEV2EExternalEvidenceExpectation,
 ) -> SLIDEV2EReceiptExport
 contract { intent { "Export the bounded G4 receipt only after independent logical validation." } }
 {
   let validated = validateSLIDEG4FrontendEvidence(
-    evidence, sourceText, semanticBody, expected,
+    evidence, sourceText, checkedSnapshot, semanticBody, expected,
   )
   check(validated.decision.verdict) {
     deny: {
@@ -377,9 +348,11 @@ contract { intent { "Export the bounded G4 receipt only after independent logica
   }
 }
 
+// Decode and independently verify receipt, source, semantic, and trace bindings.
 pure flow verifySLIDEG4CanonicalReceipt(
   receiptBytes: Bytes,
   sourceText: String,
+  checkedSnapshot: SLIDEG4CheckedSnapshot,
   semanticBody: Bytes,
   expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
 ) -> SLIDEV2EReceiptImport
@@ -402,6 +375,11 @@ contract { intent { "Decode and independently verify the complete bounded G4 rec
   if slideG4SourceExact(sourceText) == false {
     return refuseSLIDEV2EReceiptImport(
       "SLIDE-GFRONT-001", "independent raw G4 source refused",
+    )
+  }
+  if slideG4CheckedSnapshotExact(checkedSnapshot) == false or checkedSnapshot.sourceDigest != sourceText.encode().sha256Hex() {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-003", "decoded receipt snapshot binding refused",
     )
   }
   let receipt = decoded.receipt
@@ -455,7 +433,7 @@ contract { intent { "Decode and independently verify the complete bounded G4 rec
     }
     if: {}
   }
-  let mappings = materializeSLIDEG4SourceMappings(imported.program)
+  let mappings = checkedSnapshot.sourceMappings
   let expectedSourceMap = slideV2EDomainDigest(
     "slide.frontend.source-map.v1", slideV2ECBORSourcemap(mappings),
   )
@@ -519,14 +497,15 @@ contract { intent { "Decode and independently verify the complete bounded G4 rec
   }
 }
 
+// Materialize the bounded semantic body and receipt exactly once per request.
 pure flow materializeSLIDEG4FrontendCandidate(
-  parsed: ParseResult,
+  checkedSnapshot: SLIDEG4CheckedSnapshot,
   sourceText: String,
   expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
 ) -> SLIDEG4FrontendCandidate
 contract { intent { "Return semantic and receipt bytes once, or one empty fail-closed refusal." } }
 {
-  let fixture = adaptSLIDEG4CheckedFixture(parsed)
+  let fixture = adaptSLIDEG4CheckedSnapshot(checkedSnapshot)
   check(fixture.decision.verdict) {
     deny: {
       return refuseSLIDEG4FrontendCandidate(
@@ -541,7 +520,7 @@ contract { intent { "Return semantic and receipt bytes once, or one empty fail-c
     if: {}
   }
   let evidence = materializeSLIDEG4FrontendEvidence(
-    sourceText, fixture, expectedExternalEvidence,
+    sourceText, checkedSnapshot, fixture, expectedExternalEvidence,
   )
   check(evidence.decision.verdict) {
     deny: {
@@ -557,7 +536,8 @@ contract { intent { "Return semantic and receipt bytes once, or one empty fail-c
     if: {}
   }
   let exported = exportSLIDEG4CanonicalReceipt(
-    evidence, sourceText, fixture.semanticBody, expectedExternalEvidence,
+    evidence, sourceText, checkedSnapshot, fixture.semanticBody,
+    expectedExternalEvidence,
   )
   check(exported.verdict) {
     deny: {
@@ -573,7 +553,7 @@ contract { intent { "Return semantic and receipt bytes once, or one empty fail-c
     if: {}
   }
   let verified = verifySLIDEG4CanonicalReceipt(
-    exported.bytes, sourceText, fixture.semanticBody,
+    exported.bytes, sourceText, checkedSnapshot, fixture.semanticBody,
     expectedExternalEvidence,
   )
   check(verified.decision.verdict) {

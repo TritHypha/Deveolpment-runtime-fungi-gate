@@ -24,6 +24,7 @@
       "src/self-hosted/lexer.fungi",
       "src/self-hosted/parser.fungi",
       "src/self-hosted/runtime.fungi",
+      "src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
       "src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
       "src/self-hosted/slide-gfrontend-public-candidate.fungi",
       "src/self-hosted/slide-r1-adapter.fungi",

@@ -1,0 +1,448 @@
+@version 1
+/// @file: slide-gfrontend-checked-snapshot.fungi
+/// @purpose: Seal one bounded immutable checked-module snapshot and total lowering trace.
+/// @status: G4-C bounded snapshot floor; not a general frontend or authority source.
+
+record SLIDEG4CheckedSnapshot {
+  profileId: String
+  sourceUnitId: Int
+  logicalName: String
+  normalizedPathIdentity: String
+  sourceLanguageEdition: String
+  sourceByteLength: Int
+  sourceDigest: String
+  diagnosticSetDigest: String
+  errorCount: Int
+  warningCount: Int
+  checkerProfileId: String
+  declarationDigest: String
+  checkedFactsDigest: String
+  recordDecls: Array<RecordDecl>
+  enumDecls: Array<EnumDecl>
+  flows: Array<FlowEntry>
+  sourceMappings: Array<SLIDEV2ESourceMapEntry>
+  instructionCount: Int
+  terminatorCount: Int
+  parserNodeCeiling: Int
+  traceCeiling: Int
+}
+
+record SLIDEG4CheckedSnapshotResult {
+  decision: SLIDEV2DExecutableDecision
+  snapshot: SLIDEG4CheckedSnapshot
+}
+
+// Build the non-authorizing value returned by every snapshot refusal.
+pure flow emptySLIDEG4CheckedSnapshot() -> SLIDEG4CheckedSnapshot
+contract { intent { "Return a non-authorizing empty snapshot for terminal refusal." } }
+{
+  return {
+    profileId: "" sourceUnitId: 0 logicalName: ""
+    normalizedPathIdentity: "" sourceLanguageEdition: ""
+    sourceByteLength: 0 sourceDigest: "" diagnosticSetDigest: ""
+    errorCount: 0 warningCount: 0 checkerProfileId: ""
+    declarationDigest: "" checkedFactsDigest: ""
+    recordDecls: Array.empty() enumDecls: Array.empty()
+    flows: Array.empty() sourceMappings: Array.empty()
+    instructionCount: 0 terminatorCount: 0
+    parserNodeCeiling: 0 traceCeiling: 0
+  }
+}
+
+// Collapse a rejected snapshot request to one terminal decision and no facts.
+pure flow refuseSLIDEG4CheckedSnapshot(
+  failureId: String,
+  detail: String,
+) -> SLIDEG4CheckedSnapshotResult
+contract { intent { "Refuse snapshot sealing without releasing partial checked facts." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    snapshot: emptySLIDEG4CheckedSnapshot()
+  }
+}
+
+// Compare the input against the frozen normalized G4 source identity.
+pure flow slideG4SnapshotSourceExact(sourceText: String) -> Bool
+contract { intent { "Pin the bounded raw source bytes before any checked fact is sealed." } }
+{
+  let bytes = sourceText.encode()
+  if bytes.length() != 1641 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+    return false
+  }
+  return bytes.sha256Hex() == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+}
+
+// Prove lexer ranges are monotonic, bounded, and terminated at source end.
+pure flow slideG4SnapshotTokensBounded(tokens: Array<Token>) -> Bool
+contract { intent { "Require monotonic lexer byte ranges covering the exact bounded source." } }
+{
+  if tokens.count() == 0 or tokens.count() > 512 {
+    return false
+  }
+  mut previousEnd: Int = 0
+  mut sawSourceEnd: Bool = false
+  mut index: Int = 0
+  while index < tokens.count() {
+    match tokens.get(index) {
+      Some(token) => {
+        if token.start < previousEnd or token.end < token.start or token.end > 1641 {
+          return false
+        }
+        previousEnd = token.end
+        if token.start == 1641 and token.end == 1641 {
+          sawSourceEnd = true
+        }
+      }
+      None => { return false }
+      _ => { return false }
+    }
+    index = index + 1
+  }
+  return sawSourceEnd
+}
+
+// Compare every observable lexer fact without accepting partial agreement.
+pure flow slideG4SnapshotTokensEqual(
+  left: Array<Token>,
+  right: Array<Token>,
+) -> Bool
+contract { intent { "Compare every lexer fact so caller-supplied tokens cannot disagree with source bytes." } }
+{
+  if left.count() != right.count() {
+    return false
+  }
+  mut index: Int = 0
+  while index < left.count() {
+    match left.get(index) {
+      Some(leftToken) => {
+        match right.get(index) {
+          Some(rightToken) => {
+            let identity: Bool = leftToken.kind == rightToken.kind and leftToken.value == rightToken.value
+            let start: Bool = leftToken.line == rightToken.line and leftToken.column == rightToken.column and leftToken.start == rightToken.start
+            let finish: Bool = leftToken.endLine == rightToken.endLine and leftToken.endColumn == rightToken.endColumn and leftToken.end == rightToken.end
+            if identity == false or start == false or finish == false {
+              return false
+            }
+          }
+          None => { return false }
+          _ => { return false }
+        }
+      }
+      None => { return false }
+      _ => { return false }
+    }
+    index = index + 1
+  }
+  return true
+}
+
+// Re-tokenize the source and reject any caller-owned lexer substitution.
+guarded flow slideG4SnapshotTokensMatchSource(
+  tokens: Array<Token>,
+  sourceText: String,
+) -> Bool
+contract { intent { "Re-lex the bound bytes and require exact token identity before sealing." } }
+{
+  let tokenized = tokenize(sourceText)
+  match tokenized {
+    Ok(expected) => { return slideG4SnapshotTokensEqual(tokens, expected) }
+    Err(error) => { return false }
+    _ => { return false }
+  }
+}
+
+// Construct one immutable source-to-lowered-node trace entry.
+pure flow slideG4TraceEntry(
+  mapId: Int,
+  functionId: Int,
+  blockId: Int,
+  nodeKindId: Int,
+  nodeId: Int,
+  startByte: Int,
+  endByte: Int,
+) -> SLIDEV2ESourceMapEntry
+contract { intent { "Construct one exact bounded instruction or terminator source mapping." } }
+{
+  return {
+    mapId: mapId functionId: functionId blockId: blockId
+    nodeKindId: nodeKindId nodeId: nodeId sourceUnitId: 1
+    startByte: startByte endByte: endByte
+  }
+}
+
+// Enumerate the complete frozen instruction and terminator trace.
+pure flow materializeSLIDEG4CheckedTrace() -> Array<SLIDEV2ESourceMapEntry>
+contract { intent { "Materialize the complete instruction-level trace for the exact G4 fixture." } }
+{
+  mut trace: Array<SLIDEV2ESourceMapEntry> = Array.empty()
+
+  trace = trace.append(slideG4TraceEntry(1, 1, 0, 1, 0, 179, 189))
+  trace = trace.append(slideG4TraceEntry(2, 1, 0, 1, 1, 305, 306))
+  trace = trace.append(slideG4TraceEntry(3, 1, 0, 1, 2, 297, 306))
+  trace = trace.append(slideG4TraceEntry(4, 1, 0, 2, 4, 290, 306))
+
+  trace = trace.append(slideG4TraceEntry(5, 2, 0, 1, 0, 340, 349))
+  trace = trace.append(slideG4TraceEntry(6, 2, 0, 1, 1, 353, 363))
+  trace = trace.append(slideG4TraceEntry(7, 2, 0, 1, 2, 367, 385))
+  trace = trace.append(slideG4TraceEntry(8, 2, 0, 1, 3, 532, 533))
+  trace = trace.append(slideG4TraceEntry(9, 2, 0, 1, 4, 539, 548))
+  trace = trace.append(slideG4TraceEntry(10, 2, 0, 2, 2, 534, 674))
+  trace = trace.append(slideG4TraceEntry(11, 2, 1, 1, 8, 564, 596))
+  trace = trace.append(slideG4TraceEntry(12, 2, 1, 2, 1, 555, 604))
+  trace = trace.append(slideG4TraceEntry(13, 2, 2, 1, 12, 629, 662))
+  trace = trace.append(slideG4TraceEntry(14, 2, 2, 2, 1, 620, 670))
+  trace = trace.append(slideG4TraceEntry(15, 2, 3, 1, 16, 555, 670))
+  trace = trace.append(slideG4TraceEntry(16, 2, 3, 2, 3, 677, 831))
+  trace = trace.append(slideG4TraceEntry(17, 2, 4, 1, 18, 815, 825))
+  trace = trace.append(slideG4TraceEntry(18, 2, 4, 2, 4, 808, 825))
+  trace = trace.append(slideG4TraceEntry(19, 2, 5, 1, 19, 720, 738))
+  trace = trace.append(slideG4TraceEntry(20, 2, 5, 1, 20, 715, 740))
+  trace = trace.append(slideG4TraceEntry(21, 2, 5, 2, 4, 708, 740))
+  trace = trace.append(slideG4TraceEntry(22, 2, 6, 1, 21, 768, 793))
+  trace = trace.append(slideG4TraceEntry(23, 2, 6, 1, 22, 763, 795))
+  trace = trace.append(slideG4TraceEntry(24, 2, 6, 2, 4, 756, 795))
+
+  trace = trace.append(slideG4TraceEntry(25, 3, 0, 1, 0, 1000, 1034))
+  trace = trace.append(slideG4TraceEntry(26, 3, 0, 1, 1, 1000, 1034))
+  trace = trace.append(slideG4TraceEntry(27, 3, 0, 1, 2, 835, 902))
+  trace = trace.append(slideG4TraceEntry(28, 3, 0, 1, 3, 1026, 1027))
+  trace = trace.append(slideG4TraceEntry(29, 3, 0, 1, 4, 1029, 1030))
+  trace = trace.append(slideG4TraceEntry(30, 3, 0, 1, 5, 1032, 1033))
+  trace = trace.append(slideG4TraceEntry(31, 3, 0, 1, 6, 1025, 1034))
+  trace = trace.append(slideG4TraceEntry(32, 3, 0, 1, 7, 1051, 1061))
+  trace = trace.append(slideG4TraceEntry(33, 3, 0, 1, 8, 1037, 1102))
+  trace = trace.append(slideG4TraceEntry(34, 3, 0, 1, 9, 1137, 1154))
+  trace = trace.append(slideG4TraceEntry(35, 3, 0, 1, 10, 1037, 1065))
+  trace = trace.append(slideG4TraceEntry(36, 3, 0, 1, 11, 1201, 1310))
+  trace = trace.append(slideG4TraceEntry(37, 3, 0, 1, 12, 1411, 1424))
+  trace = trace.append(slideG4TraceEntry(38, 3, 0, 1, 13, 1317, 1360))
+  trace = trace.append(slideG4TraceEntry(39, 3, 0, 1, 14, 1367, 1533))
+  trace = trace.append(slideG4TraceEntry(40, 3, 0, 2, 4, 1157, 1638))
+
+  return trace
+}
+
+// Seal parser facts only after source, lexer, declaration, and body checks agree.
+guarded flow sealSLIDEG4CheckedSnapshot(
+  tokens: Array<Token>,
+  parsed: ParseResult,
+  sourceText: String,
+) -> SLIDEG4CheckedSnapshotResult
+contract { intent { "Seal exact compiler facts without retaining the source AST or selecting a backend." } }
+{
+  if slideG4SnapshotSourceExact(sourceText) == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-001", "raw G4 source bytes or edition refused",
+    )
+  }
+  if slideG4SnapshotTokensBounded(tokens) == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "lexer ranges are incomplete or inconsistent",
+    )
+  }
+  if slideG4SnapshotTokensMatchSource(tokens, sourceText) == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "caller lexer facts disagree with the bound source",
+    )
+  }
+  if parsed.errors.count() != 0 {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-002", "self-hosted parsing did not complete cleanly",
+    )
+  }
+  let ambientFacts: Bool = parsed.imports.count() != 0 or parsed.policies.count() != 0 or parsed.guardDecls.count() != 0
+  if ambientFacts {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "unsupported ambient declaration facts are present",
+    )
+  }
+  if slideG4ExactDeclarations(parsed) == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "ordered record or enum declarations changed",
+    )
+  }
+
+  let flows = buildFlowTable(parsed.flows)
+  if parsed.flows.count() != 3 or flows.count() != 3 {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "the bounded source must contain exactly three flows",
+    )
+  }
+  let increment = slideG4FlowAt(flows, 0)
+  let join = slideG4FlowAt(flows, 1)
+  let memory = slideG4FlowAt(flows, 2)
+  let signatures: Bool = slideG4ExactIncrementSignature(increment) and slideG4ExactJoinSignature(join) and slideG4ExactMemorySignature(memory)
+  if signatures == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-003", "ordered flow identities or signatures changed",
+    )
+  }
+  let bodies: Bool = slideG4ExactIncrementBody(increment) and slideG4ExactJoinBody(join) and slideG4ExactMemoryBody(memory)
+  if bodies == false {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-005", "checked source facts do not derive the bounded graph",
+    )
+  }
+
+  let trace = materializeSLIDEG4CheckedTrace()
+  if trace.count() != 40 {
+    return refuseSLIDEG4CheckedSnapshot(
+      "SLIDE-GFRONT-006", "instruction-total lowering trace is incomplete",
+    )
+  }
+  let declarationDigest = "SLIDEG4FixtureRecord:selected:Int,length:Int,label:String|SLIDEG4FixtureVariant:Selected,Missing".encode().sha256Hex()
+  let checkedFactsDigest = "slide_g4_checked_increment|slide_g4_k3_join|slide_g4_guarded_memory|31|9|40".encode().sha256Hex()
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "G4_CHECKED_SNAPSHOT_SEALED"
+      failureId: "NONE"
+      detail: "bounded immutable checked facts and total trace sealed"
+      authorityReleased: false
+    }
+    snapshot: {
+      profileId: "galerina.checked-module.g4.fixture.v1"
+      sourceUnitId: 1
+      logicalName: "fixtures/slide-g4-checked-source.fungi"
+      normalizedPathIdentity: "fixtures/slide-g4-checked-source.fungi"
+      sourceLanguageEdition: "fungi.v1"
+      sourceByteLength: 1641
+      sourceDigest: sourceText.encode().sha256Hex()
+      diagnosticSetDigest: "".encode().sha256Hex()
+      errorCount: 0 warningCount: 0
+      checkerProfileId: "galerina.check.bounded-shape.v1"
+      declarationDigest: declarationDigest
+      checkedFactsDigest: checkedFactsDigest
+      recordDecls: parsed.recordDecls enumDecls: parsed.enumDecls
+      flows: flows sourceMappings: trace
+      instructionCount: 31 terminatorCount: 9
+      parserNodeCeiling: 256 traceCeiling: 40
+    }
+  }
+}
+
+// Revalidate the exact frozen record and enum declaration facts.
+pure flow slideG4SnapshotDeclarationsExact(
+  snapshot: SLIDEG4CheckedSnapshot,
+) -> Bool
+contract { intent { "Independently validate the ordered declaration facts in a sealed snapshot." } }
+{
+  if snapshot.recordDecls.count() != 1 or snapshot.enumDecls.count() != 1 {
+    return false
+  }
+  let recordDecl = slideG4RecordAt(snapshot.recordDecls, 0)
+  if recordDecl.name != "SLIDEG4FixtureRecord" or recordDecl.fields.count() != 3 {
+    return false
+  }
+  let selected = slideG4FieldAt(recordDecl.fields, 0)
+  let length = slideG4FieldAt(recordDecl.fields, 1)
+  let label = slideG4FieldAt(recordDecl.fields, 2)
+  let fieldsExact: Bool = selected.name == "selected" and selected.typeName == "Int" and length.name == "length" and length.typeName == "Int" and label.name == "label" and label.typeName == "String"
+  if fieldsExact == false {
+    return false
+  }
+  let enumDecl = slideG4EnumAt(snapshot.enumDecls, 0)
+  return enumDecl.name == "SLIDEG4FixtureVariant" and enumDecl.cases.count() == 2 and slideG4StringAt(enumDecl.cases, 0) == "Selected" and slideG4StringAt(enumDecl.cases, 1) == "Missing"
+}
+
+// Recheck every immutable snapshot identity, fact, limit, and trace invariant.
+pure flow slideG4CheckedSnapshotExact(
+  snapshot: SLIDEG4CheckedSnapshot,
+) -> Bool
+contract { intent { "Validate every bounded snapshot identity, fact, limit, and trace without ambient state." } }
+{
+  let identity: Bool = snapshot.profileId == "galerina.checked-module.g4.fixture.v1" and snapshot.sourceUnitId == 1 and snapshot.logicalName == "fixtures/slide-g4-checked-source.fungi" and snapshot.normalizedPathIdentity == "fixtures/slide-g4-checked-source.fungi" and snapshot.sourceLanguageEdition == "fungi.v1"
+  let source: Bool = snapshot.sourceByteLength == 1641 and snapshot.sourceDigest == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+  let diagnostics: Bool = snapshot.diagnosticSetDigest == "".encode().sha256Hex() and snapshot.errorCount == 0 and snapshot.warningCount == 0 and snapshot.checkerProfileId == "galerina.check.bounded-shape.v1"
+  let declarationDigest = "SLIDEG4FixtureRecord:selected:Int,length:Int,label:String|SLIDEG4FixtureVariant:Selected,Missing".encode().sha256Hex()
+  let checkedFactsDigest = "slide_g4_checked_increment|slide_g4_k3_join|slide_g4_guarded_memory|31|9|40".encode().sha256Hex()
+  let facts: Bool = snapshot.declarationDigest == declarationDigest and snapshot.checkedFactsDigest == checkedFactsDigest
+  let limits: Bool = snapshot.instructionCount == 31 and snapshot.terminatorCount == 9 and snapshot.parserNodeCeiling == 256 and snapshot.traceCeiling == 40
+  if identity == false or source == false or diagnostics == false or facts == false or limits == false {
+    return false
+  }
+  if slideG4SnapshotDeclarationsExact(snapshot) == false or snapshot.flows.count() != 3 {
+    return false
+  }
+  let increment = slideG4FlowAt(snapshot.flows, 0)
+  let join = slideG4FlowAt(snapshot.flows, 1)
+  let memory = slideG4FlowAt(snapshot.flows, 2)
+  let signatures: Bool = slideG4ExactIncrementSignature(increment) and slideG4ExactJoinSignature(join) and slideG4ExactMemorySignature(memory)
+  let bodies: Bool = slideG4ExactIncrementBody(increment) and slideG4ExactJoinBody(join) and slideG4ExactMemoryBody(memory)
+  if signatures == false or bodies == false {
+    return false
+  }
+  let expectedTrace = materializeSLIDEG4CheckedTrace()
+  return snapshot.sourceMappings.count() == 40 and slideV2ESourceMapsEqual(
+    snapshot.sourceMappings, expectedTrace,
+  )
+}
+
+// Materialize the bounded semantic body only from an exact checked snapshot.
+pure flow adaptSLIDEG4CheckedSnapshot(
+  snapshot: SLIDEG4CheckedSnapshot,
+) -> SLIDEG4FixtureCandidate
+contract { intent { "Materialize frozen V2-D only from an independently validated immutable snapshot." } }
+{
+  if slideG4CheckedSnapshotExact(snapshot) == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-003", "checked snapshot identity, facts, limits, or trace refused",
+    )
+  }
+  let program = materializeSLIDEV2DExecutableProgram()
+  let validation = validateSLIDEV2DExecutableProgram(program)
+  check(validation.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-005", "snapshot-derived V2-D graph failed semantic validation",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-005", "snapshot-derived V2-D validation was unresolved",
+      )
+    }
+    if: {}
+  }
+  let exported = exportSLIDEV2DCanonicalBody(program)
+  check(exported.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "snapshot-derived canonical body export refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "snapshot-derived canonical export was unresolved",
+      )
+    }
+    if: {}
+  }
+  let binding = bindSLIDEV2DSemanticDigest(exported.bytes)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "snapshot-derived import or digest binding refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "snapshot-derived import or digest was unresolved",
+      )
+    }
+    if: {}
+  }
+  let exactBody: Bool = exported.byteLength == 791 and binding.bodyDigest == "b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38"
+  let exactSemantic: Bool = binding.semanticDigest == "a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4"
+  if exactBody == false or exactSemantic == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-007", "snapshot-derived canonical identity changed",
+    )
+  }
+  return {
+    decision: binding.decision materialized: true
+    semanticBody: exported.bytes semanticBodyDigest: binding.bodyDigest
+    semanticDigest: binding.semanticDigest sourceFlowCount: snapshot.flows.count()
+    authorityReleased: false
+  }
+}
