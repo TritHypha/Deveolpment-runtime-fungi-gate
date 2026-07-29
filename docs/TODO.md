@@ -345,6 +345,16 @@ planning checkbox must never be used to imply that implementation exists.
   exhaustive, then mark completion requirement 9 green. Until that decision,
   the documented implementation is complete but the release gate stays
   closed.
+- **Memory-authority follow-up audit:** completed bridge `0440` (R&D → main)
+  explicitly identifies `958d1a5f` as this project's tree at 77 files; `0441`
+  (main → R&D) accepts it at 78 files; committed refusal `8f017543` records the
+  same asking-session distinction. The newer canonical owner-question ledger
+  nevertheless requires an exact owner-supplied path, so that historical
+  agent-to-agent statement was not promoted into authority. A read-only,
+  path-withheld check matched current dir ID `958d1a5f` internally and refused
+  with exit 1 because `MEMORY-GRAPH.json` is missing or stale; it wrote
+  nothing. The owner action is now exact: confirm `958d1a5f` and authorize
+  refreshing its external graph sidecar, or name a different candidate.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

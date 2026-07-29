@@ -142,13 +142,39 @@ The owner must identify the intended directory path for `--dir <path>` or
 Until then the memory graph remains unavailable and the overall gate remains
 closed.
 
+### Follow-up authority audit
+
+The completed session bridge contains older, explicit project-identification
+evidence:
+
+- `_session-bridge/done/0440-...md` (R&D → main) says the most-populated
+  `ab9db789` tree was wrong and identifies `958d1a5f` as “this project's
+  memory” at 77 files.
+- `_session-bridge/done/0441-...md` (main → R&D) accepts that measurement,
+  records `958d1a5f` at 78 files, and says the real tree was regression-checked.
+- committed fail-close change `8f017543` records the same asking-session
+  distinction.
+
+That is useful identity evidence, but it is not silently promoted over the
+newer canonical owner-question ledger, which deliberately requires the owner
+to provide the exact path. A read-only 2026-07-29 check matched the current
+`958d1a5f` path internally by its SHA-256 dir ID, disclosed no path, and
+returned exit 1: `MEMORY-GRAPH.json` is missing or stale. The check wrote
+nothing.
+
+Therefore the remaining authorization is now precise: confirm whether
+`958d1a5f` is the intended tree and authorize refreshing its external
+`MEMORY-GRAPH.json`. An old agent-to-agent handover is not sufficient authority
+for that external write.
+
 After that one decision:
 
-1. run the selected memory graph in check mode;
-2. rerun `graph-all --check`;
-3. rerun strict phase-close and exhaustive;
-4. record the owner-selected corpus without exposing a private absolute path;
-5. only then mark requirement 9 PASS.
+1. regenerate the selected external graph sidecar;
+2. run the selected memory graph in check mode;
+3. rerun `graph-all --check`;
+4. rerun strict phase-close and exhaustive;
+5. record the owner-selected corpus without exposing a private absolute path;
+6. only then mark requirement 9 PASS.
 
 ## Open work outside this refactor's completed implementation
 
