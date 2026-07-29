@@ -251,12 +251,14 @@ function selfTest() {
     // ★ SURFACE cases (R&D 2026-07-17) — these pin the fail-open where the guard printed a count it had
     // not read. Every case above tests a PATTERN; these test WHAT GETS SCANNED, which is the axis that
     // was actually broken. A ruleset can be perfect and still never be shown the file.
-    ["★ surface: a tracked-but-DELETED file is STILL read, from HEAD (the KB's skipped private key)",
-      JSON.stringify(planScanTargets(["k.env"], new Set(["k.env"]), () => false)) === JSON.stringify([{ rel: "k.env", from: "HEAD" }])],
-    ["★ surface: a DIRTY file is read BOTH ways — a tidy worktree must not vouch for HEAD",
-      JSON.stringify(planScanTargets(["d.md"], new Set(["d.md"]), () => true)) === JSON.stringify([{ rel: "d.md", from: "worktree" }, { rel: "d.md", from: "HEAD" }])],
-    ["★ surface: an unmodified file is read ONCE from the worktree (worktree == HEAD, so that IS HEAD)",
+    ["★ surface: a tracked-but-DELETED file is STILL read, from the index (the KB's skipped private key)",
+      JSON.stringify(planScanTargets(["k.env"], new Set(["k.env"]), () => false)) === JSON.stringify([{ rel: "k.env", from: "index" }])],
+    ["★ surface: an unstaged-DIRTY file is read BOTH ways — worktree cannot vouch for the index",
+      JSON.stringify(planScanTargets(["d.md"], new Set(["d.md"]), () => true)) === JSON.stringify([{ rel: "d.md", from: "worktree" }, { rel: "d.md", from: "index" }])],
+    ["★ surface: an index-current file is read ONCE from the worktree (worktree == index)",
       JSON.stringify(planScanTargets(["c.md"], new Set(), () => true)) === JSON.stringify([{ rel: "c.md", from: "worktree" }])],
+    ["★ surface: a newly staged file has no stale HEAD fallback — its worktree bytes equal the index",
+      JSON.stringify(planScanTargets(["new.md"], new Set(), () => true)) === JSON.stringify([{ rel: "new.md", from: "worktree" }])],
     ["★ surface: an allowlisted file is planned for NOTHING (and is declared in the green)",
       planScanTargets([...ALLOW_FILES][0] ? [[...ALLOW_FILES][0]] : ["scripts/audit-path-leak.mjs"], new Set(), () => true).length === 0],
     // ★ TARGETED modes (--files/--staged, 2026-07-18): the pre-commit surface must run the SAME detectors, so
@@ -325,8 +327,8 @@ if (process.argv.includes("--staged") || process.argv.includes("--files")) {
 
 /**
  * Decide WHAT to scan and FROM WHERE. The index and the working tree are two different snapshots:
- * `git ls-files` enumerates the INDEX, `readFileSync` reads the DISK. For an unmodified file they agree
- * — so reading the disk IS reading HEAD — and for a file that is dirty or tracked-but-deleted they do not.
+ * `git ls-files` enumerates the INDEX, `readFileSync` reads the DISK. For an index-current file they
+ * agree; for an unstaged modification or tracked-but-deleted worktree file they do not.
  *
  * ⚠ THIS FUNCTION EXISTS BECAUSE OF A MEASURED FAIL-OPEN (R&D, 2026-07-17; mirrored here). The old loop
  * enumerated the index and then did `if (!existsSync(abs)) continue`, silently DROPPING every
@@ -339,11 +341,12 @@ if (process.argv.includes("--staged") || process.argv.includes("--files")) {
  *
  * Galerina had 0 tracked-but-absent files, so it was not silently skipping anything TODAY. That is luck,
  * not correctness: the same `if (!existsSync) continue` sat here, and the same working-tree read meant a
- * leak committed at HEAD but tidied on disk would report GREEN. Fixed on the structure, not the symptom.
+ * leak staged in the index but tidied on disk would report GREEN. Fixed on the structure, not the symptom.
  *
- * A leak is what is COMMITTED, so HEAD is the authoritative surface. The working tree is scanned too, so
- * a leak is caught BEFORE it lands rather than only after. Where the snapshots differ, BOTH are read —
- * a tidy working tree does not get to vouch for HEAD.
+ * This is also the pre-commit surface, so the INDEX is authoritative: it is exactly what the next commit
+ * will contain. Scanning stale HEAD here made a staged fix remain red until after commit and attempted
+ * `git show HEAD:<new-path>` for newly staged files that have no HEAD blob. The working tree is scanned
+ * too; where worktree and index differ, BOTH are read. A tidy worktree does not vouch for the index.
  *
  * Pure + injected `exists` so the surface is testable rather than an `if` buried in a loop.
  */
@@ -352,15 +355,16 @@ export function planScanTargets(tracked, dirty, exists) {
   for (const rel of tracked) {
     if (ALLOW_FILES.has(rel)) continue;
     if (exists(rel)) plan.push({ rel, from: "worktree" });
-    if (dirty.has(rel)) plan.push({ rel, from: "HEAD" }); // dirty includes tracked-but-DELETED
+    if (dirty.has(rel)) plan.push({ rel, from: "index" }); // dirty includes unstaged tracked deletions
   }
   return plan;
 }
 
 const files = git("ls-files").split("\n").map((s) => s.trim()).filter(Boolean);
-// `git diff --name-only HEAD` reports DIRTY *and* tracked-but-DELETED paths — the two cases where the
-// index and the working tree disagree, and the only cases where reading the disk is not reading HEAD.
-const dirty = new Set(git("diff", "--name-only", "HEAD").split("\n").map((s) => s.trim()).filter(Boolean));
+// Plain `git diff` compares INDEX ↔ worktree and reports unstaged modifications plus tracked-but-deleted
+// worktree paths. Staged changes are already in the index; using `git diff HEAD` here was the stale-HEAD
+// bug and tried to read a nonexistent HEAD blob for every newly staged file.
+const dirty = new Set(git("diff", "--name-only").split("\n").map((s) => s.trim()).filter(Boolean));
 let leakFiles = 0, leakCount = 0;
 const report = [];
 // Structural pass FIRST: forbidden-to-track paths (content-independent, catches binaries).
@@ -368,27 +372,27 @@ for (const h of scanTrackedList(files)) {
   leakFiles++; leakCount++;
   report.push(`  ${h.rel}  [tracked-forbidden:${h.pattern}]  machine-local index artifact must not be tracked — git rm --cached it`);
 }
-let readWorktree = 0, readHead = 0, skippedBinary = 0;
+let readWorktree = 0, readIndex = 0, skippedBinary = 0;
 for (const { rel, from } of planScanTargets(files, dirty, (r) => existsSync(join(ROOT, r)))) {
   let buf;
   if (from === "worktree") {
     buf = readFileSync(join(ROOT, rel));
   } else {
-    // In HEAD but not on disk, or on disk but DIFFERENT from HEAD. A leak is what is COMMITTED.
-    try {
-      buf = execFileSync("git", ["show", `HEAD:${rel}`], { cwd: ROOT, windowsHide: true, maxBuffer: 64 * 1024 * 1024 });
-    } catch {
-      continue; // staged-new: no HEAD blob exists yet, and the worktree pass already read it
-    }
+    // In the index but absent/different on disk. `files` came from `git ls-files`, so this blob exists.
+    buf = execFileSync("git", ["show", `:${rel}`], {
+      cwd: ROOT,
+      windowsHide: true,
+      maxBuffer: 64 * 1024 * 1024,
+    });
   }
   if (isBinary(buf)) { skippedBinary++; continue; }
-  from === "worktree" ? readWorktree++ : readHead++;
+  from === "worktree" ? readWorktree++ : readIndex++;
   const hits = scanText(buf.toString("utf8"));
   if (hits.length) {
     leakFiles++; leakCount += hits.length;
-    // Label the snapshot: a HEAD-only hit is INVISIBLE on disk, and a reader told to "fix line 22" of a
-    // file that looks clean will conclude the guard is broken rather than that HEAD is dirty.
-    const tag = from === "HEAD" ? " [in HEAD, not on disk]" : "";
+    // Label the snapshot: an index-only hit is INVISIBLE on disk, and a reader told to "fix line 22" of a
+    // file that looks clean will conclude the guard is broken rather than that the staged index is dirty.
+    const tag = from === "index" ? " [in index, not on disk]" : "";
     for (const h of hits) report.push(`  ${rel}:${h.line}:${h.col}${tag}  [${h.pattern}]  ${h.text}`);
   }
 }
@@ -441,8 +445,8 @@ if (leakCount) {
 // missing one was its private signing key. Two numbers that must agree, printed apart, is a lie waiting
 // to happen; printed together, it is arithmetic a reader can check.
 console.log(`  ✅ path-leak [${subject}/]: no absolute-local-path leaks.${outsideNote}`);
-console.log(`     read: ${readWorktree} working-tree file(s) + ${readHead} committed blob(s) where HEAD differs from disk, of ${files.length} tracked.`);
+console.log(`     read: ${readWorktree} working-tree file(s) + ${readIndex} index blob(s) where the worktree differs, of ${files.length} tracked.`);
 console.log(`     shapes: ${PATTERNS.map((p) => p.name).join(" · ")}`);
 console.log(`     …of those shapes ONLY — an unmodelled encoding is INVISIBLE here, not absent.`);
 console.log(`     NOT examined: ${skippedBinary} binary file(s) (the structural pass covers the forbidden ones),`);
-console.log(`     ${ALLOW_FILES.size} allowlisted file(s), lines marked "${ALLOW_MARKER}", untracked files, and every commit before HEAD.`);
+console.log(`     ${ALLOW_FILES.size} allowlisted file(s), lines marked "${ALLOW_MARKER}", untracked files, and historical commits.`);

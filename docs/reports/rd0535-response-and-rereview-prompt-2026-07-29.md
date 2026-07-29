@@ -143,19 +143,21 @@ Re-review the native-first SLIDE / triLowLevel v2 work as a hostile,
 evidence-first architecture and implementation auditor. Do not modify any
 repository.
 
+Resolve every path below relative to the shared GitHub workspace root.
+
 Read these two documents first:
-1. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0535-trilowlevel-v2-review-native-first-slide-and-the-label-discipline-gap.md
-2. C:\Users\phill\Documents\GitHub\Galerina\docs\reports\rd0535-response-and-rereview-prompt-2026-07-29.md
+1. ZTF-Knowledge-Bases/RD-0535-trilowlevel-v2-review-native-first-slide-and-the-label-discipline-gap.md
+2. Galerina/docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md
 
 Then read these follow-on handovers:
-3. C:\Users\phill\Documents\GitHub\SLIDE\docs\NESTING-AND-XOR-DECISION.md
-4. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0580-HANDOVER-what-tll-v2-changes-in-galerina-component-removal.md
-5. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0581-galerina-named-component-manifest.md
+3. SLIDE/docs/NESTING-AND-XOR-DECISION.md
+4. ZTF-Knowledge-Bases/RD-0580-HANDOVER-what-tll-v2-changes-in-galerina-component-removal.md
+5. ZTF-Knowledge-Bases/RD-0581-galerina-named-component-manifest.md
 
 Then review all three scopes, without treating one as a substitute for another:
-- planning/architecture: C:\Users\phill\Documents\GitHub\triLowLevel-v2
-- independent implementation: C:\Users\phill\Documents\GitHub\SLIDE
-- Galerina integration: C:\Users\phill\Documents\GitHub\Galerina
+- planning/architecture: triLowLevel-v2/
+- independent implementation: SLIDE/
+- Galerina integration: Galerina/
 
 Answer the response, not merely the original review:
 

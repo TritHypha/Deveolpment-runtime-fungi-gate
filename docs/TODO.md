@@ -378,6 +378,14 @@ planning checkbox must never be used to imply that implementation exists.
   and can report a stale HEAD-only leak until the commit exists. It did not
   false-green and the post-commit full scan is green, but Task 8 must add a
   staged-new-file fixture and remove the noisy/stale fallback.
+- **Task 8 path-audit defect fixed:** the full/pre-commit surface now treats
+  the Git index as the candidate commit rather than rereading stale `HEAD`.
+  It compares index to worktree, reads both only when they differ, and never
+  asks `HEAD` for a newly staged blob. The built-in anti-neutering suite pins
+  staged-new, unstaged-dirty, deleted-worktree, and current-control plans. The
+  re-review prompt's eight committed machine paths were also replaced with
+  workspace-relative paths; after exact staging the full audit is the
+  acceptance check for this commit.
 - **Existing monolithic fixture debt confirmed:** direct execution of
   `scripts/tests/dev-tools-scripts.test.mjs` aborts during top-level setup
   because its old code-registry fixture does not create the now-required
