@@ -1,0 +1,315 @@
+@version 1
+/// @file: slide-v2e-frontend-schema.fungi
+/// @purpose: Define shared V2-E receipt, source-map, and plan-derivation records.
+/// @status: Frontend-neutral verification schema; no producer or authority.
+
+record SLIDEV2ESourceUnit {
+  sourceUnitId: Int
+  logicalName: String
+  sourceText: String
+  sourceByteLength: Int
+  sourceBytesDigest: String
+}
+
+record SLIDEV2ESourceSpan {
+  startByte: Int
+  endByte: Int
+}
+
+record SLIDEV2ESourceMapEntry {
+  mapId: Int
+  functionId: Int
+  blockId: Int
+  nodeKindId: Int
+  nodeId: Int
+  sourceUnitId: Int
+  startByte: Int
+  endByte: Int
+}
+
+record SLIDEV2EPlanDigests {
+  functionGraphDigest: String
+  typePlanDigest: String
+  memoryPlanDigest: String
+  effectPlanDigest: String
+  capabilityPlanDigest: String
+  importPlanDigest: String
+  k3ObligationSetDigest: String
+  failureModelDigest: String
+  resourcePlanDigest: String
+}
+
+record SLIDEV2EExternalEvidenceExpectation {
+  compilerArtifactDigest: String
+  diagnosticSetDigest: String
+  corpusDigest: String
+  vectorSetDigest: String
+  buildActionRootDigest: String
+  toolchainLockDigest: String
+  environmentContractDigest: String
+}
+
+record SLIDEV2EFrontendReceipt {
+  receiptMajor: Int
+  receiptMinor: Int
+  receiptProfileId: String
+  receiptRoleId: String
+  digestSuiteId: String
+  producerId: String
+  producerVersion: String
+  compilerArtifactDigest: String
+  frontendProfileId: String
+  sourceLanguageEdition: String
+  authoritativeCheckProfileId: String
+  sourceSetDigest: String
+  diagnosticSetDigest: String
+  sourceMapDigest: String
+  semanticArchiveMediaType: String
+  semanticBodyDigest: String
+  semanticDigest: String
+  semanticProfileId: String
+  registrySetId: String
+  registrySetDigest: String
+  memoryProfileId: String
+  plans: SLIDEV2EPlanDigests
+  corpusDigest: String
+  vectorSetDigest: String
+  buildActionRootDigest: String
+  toolchainLockDigest: String
+  environmentContractDigest: String
+  deterministic: Bool
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+record SLIDEV2EFrontendEvidence {
+  decision: SLIDEV2DExecutableDecision
+  materialized: Bool
+  receipt: SLIDEV2EFrontendReceipt
+  sourceUnits: Array<SLIDEV2ESourceUnit>
+  sourceMappings: Array<SLIDEV2ESourceMapEntry>
+  authorityReleased: Bool
+}
+
+pure flow emptySLIDEV2EPlans() -> SLIDEV2EPlanDigests
+contract { intent { "Return no plan digest for refused frontend evidence." } }
+{
+  return {
+    functionGraphDigest: "" typePlanDigest: "" memoryPlanDigest: ""
+    effectPlanDigest: "" capabilityPlanDigest: "" importPlanDigest: ""
+    k3ObligationSetDigest: "" failureModelDigest: "" resourcePlanDigest: ""
+  }
+}
+
+pure flow emptySLIDEV2EReceipt() -> SLIDEV2EFrontendReceipt
+contract { intent { "Return a non-admissible receipt sentinel with no authority." } }
+{
+  return {
+    receiptMajor: 0 receiptMinor: 0 receiptProfileId: "" receiptRoleId: ""
+    digestSuiteId: "" producerId: "" producerVersion: ""
+    compilerArtifactDigest: "" frontendProfileId: ""
+    sourceLanguageEdition: "" authoritativeCheckProfileId: ""
+    sourceSetDigest: "" diagnosticSetDigest: "" sourceMapDigest: ""
+    semanticArchiveMediaType: "" semanticBodyDigest: "" semanticDigest: ""
+    semanticProfileId: "" registrySetId: "" registrySetDigest: ""
+    memoryProfileId: "" plans: emptySLIDEV2EPlans()
+    corpusDigest: "" vectorSetDigest: "" buildActionRootDigest: ""
+    toolchainLockDigest: "" environmentContractDigest: ""
+    deterministic: false nativeCertificatePresent: false
+    authorityReleased: false
+  }
+}
+
+pure flow refuseSLIDEV2EFrontendEvidence(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2EFrontendEvidence
+contract { intent { "Refuse V2-E without partial source, mapping, receipt, or authority." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    materialized: false receipt: emptySLIDEV2EReceipt()
+    sourceUnits: Array.empty() sourceMappings: Array.empty()
+    authorityReleased: false
+  }
+}
+
+pure flow slideV2EFunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan
+contract { intent { "Return the exact normalized-source span for one frozen fixture flow." } }
+{
+  match functionId {
+    1 => { return { startByte: 144 endByte: 310 } }
+    2 => { return { startByte: 310 endByte: 683 } }
+    3 => { return { startByte: 683 endByte: 1492 } }
+    _ => { return { startByte: 0 endByte: 0 } }
+  }
+}
+
+pure flow materializeSLIDEV2ESourceMappings(
+  program: SLIDEV2DExecutableProgram,
+) -> Array<SLIDEV2ESourceMapEntry>
+contract { intent { "Map every admitted instruction and terminator exactly once." } }
+{
+  mut mappings: Array<SLIDEV2ESourceMapEntry> = Array.empty()
+  mut mapId: Int = 1
+  mut functionIndex: Int = 0
+  while functionIndex < program.functions.count() {
+    let function = slideV2AFunctionAt(program.functions, functionIndex)
+    let span = slideV2EFunctionSpan(function.functionId)
+    mut blockIndex: Int = 0
+    while blockIndex < function.blocks.count() {
+      let block = slideV2ABlockAt(function.blocks, blockIndex)
+      mut instructionIndex: Int = 0
+      while instructionIndex < block.instructions.count() {
+        let instruction = slideV2AInstructionAt(
+          block.instructions, instructionIndex,
+        )
+        mappings = mappings.append({
+          mapId: mapId functionId: function.functionId blockId: block.blockId
+          nodeKindId: 1 nodeId: instruction.resultId sourceUnitId: 1
+          startByte: span.startByte endByte: span.endByte
+        })
+        mapId = mapId + 1
+        instructionIndex = instructionIndex + 1
+      }
+      mappings = mappings.append({
+        mapId: mapId functionId: function.functionId blockId: block.blockId
+        nodeKindId: 2 nodeId: block.terminator.terminatorId sourceUnitId: 1
+        startByte: span.startByte endByte: span.endByte
+      })
+      mapId = mapId + 1
+      blockIndex = blockIndex + 1
+    }
+    functionIndex = functionIndex + 1
+  }
+  return mappings
+}
+
+pure flow slideV2EPlanDigest(domainId: String, semanticBody: Bytes) -> String
+contract { intent { "Domain-bind one independently admitted canonical plan envelope." } }
+{
+  return domainId.encode().append(Bytes.of(0)).append(semanticBody).sha256Hex()
+}
+
+pure flow deriveSLIDEV2EPlanDigests(
+  semanticBody: Bytes,
+) -> SLIDEV2EPlanDigests
+contract { intent { "Derive nine distinct common-plan digests from exact admitted GIR bytes." } }
+{
+  return {
+    functionGraphDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.function-graph.v1", semanticBody,
+    )
+    typePlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.type.v1", semanticBody,
+    )
+    memoryPlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.memory.v1", semanticBody,
+    )
+    effectPlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.effect.v1", semanticBody,
+    )
+    capabilityPlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.capability.v1", semanticBody,
+    )
+    importPlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.import.v1", semanticBody,
+    )
+    k3ObligationSetDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.k3.v1", semanticBody,
+    )
+    failureModelDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.failure.v1", semanticBody,
+    )
+    resourcePlanDigest: slideV2EPlanDigest(
+      "slide.frontend.plan.resource.v1", semanticBody,
+    )
+  }
+}
+
+pure flow slideV2ECBORSourceSet(
+  source: SLIDEV2ESourceUnit,
+) -> Bytes
+contract { intent { "Canonicalize one stable source-unit descriptor without ambient paths." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 1)
+  body = body.append(slideV2ACBORHead(4, 4))
+  body = body.append(slideV2ACBORUInt(source.sourceUnitId))
+  body = body.append(slideV2ACBORText(source.logicalName))
+  body = body.append(slideV2ACBORUInt(source.sourceByteLength))
+  body = body.append(slideV2ACBORText(source.sourceBytesDigest))
+  return body
+}
+
+pure flow slideV2ECBORSourcemap(
+  mappings: Array<SLIDEV2ESourceMapEntry>,
+) -> Bytes
+contract { intent { "Canonicalize the complete ordered source-map table." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, mappings.count())
+  mut i: Int = 0
+  while i < mappings.count() {
+    let itemOpt = mappings.get(i)
+    match itemOpt {
+      Some(item) => {
+        body = body.append(slideV2ACBORHead(4, 8))
+        body = body.append(slideV2ACBORUInt(item.mapId))
+        body = body.append(slideV2ACBORUInt(item.functionId))
+        body = body.append(slideV2ACBORUInt(item.blockId))
+        body = body.append(slideV2ACBORUInt(item.nodeKindId))
+        body = body.append(slideV2ACBORUInt(item.nodeId))
+        body = body.append(slideV2ACBORUInt(item.sourceUnitId))
+        body = body.append(slideV2ACBORUInt(item.startByte))
+        body = body.append(slideV2ACBORUInt(item.endByte))
+      }
+      None => { return Bytes.empty() }
+      _ => { return Bytes.empty() }
+    }
+    i = i + 1
+  }
+  return body
+}
+
+pure flow slideV2EDomainDigest(domainId: String, body: Bytes) -> String
+contract { intent { "Hash canonical frontend evidence under an explicit domain." } }
+{
+  return domainId.encode().append(Bytes.of(0)).append(body).sha256Hex()
+}
+
+pure flow slideV2EAllExternalDigestsShaped(
+  compilerArtifactDigest: String,
+  diagnosticSetDigest: String,
+  corpusDigest: String,
+  vectorSetDigest: String,
+  buildActionRootDigest: String,
+  toolchainLockDigest: String,
+  environmentContractDigest: String,
+) -> Bool
+contract { intent { "Require every external evidence digest to have SHA-256 width." } }
+{
+  let first: Bool = slideV2EIsCanonicalSHA256(compilerArtifactDigest) and slideV2EIsCanonicalSHA256(diagnosticSetDigest)
+  let second: Bool = slideV2EIsCanonicalSHA256(corpusDigest) and slideV2EIsCanonicalSHA256(vectorSetDigest)
+  let third: Bool = slideV2EIsCanonicalSHA256(buildActionRootDigest) and slideV2EIsCanonicalSHA256(toolchainLockDigest)
+  return first and second and third and slideV2EIsCanonicalSHA256(environmentContractDigest)
+}
+
+pure flow slideV2EIsCanonicalSHA256(value: String) -> Bool
+contract { intent { "Accept exactly one lowercase 32-byte SHA-256 hexadecimal encoding." } }
+{
+  if value.length() != 64 { return false }
+  let decoded = Bytes.fromHex(value)
+  return decoded.length() == 32 and decoded.toHex() == value
+}
+
+pure flow slideV2EExternalEvidenceMatches(
+  receipt: SLIDEV2EFrontendReceipt,
+  expected: SLIDEV2EExternalEvidenceExpectation,
+) -> Bool
+contract { intent { "Compare every external evidence claim to caller-owned expectations." } }
+{
+  let producer: Bool = receipt.compilerArtifactDigest == expected.compilerArtifactDigest
+  let diagnostics: Bool = receipt.diagnosticSetDigest == expected.diagnosticSetDigest
+  let conformance: Bool = receipt.corpusDigest == expected.corpusDigest and receipt.vectorSetDigest == expected.vectorSetDigest
+  let reproducibility: Bool = receipt.buildActionRootDigest == expected.buildActionRootDigest and receipt.toolchainLockDigest == expected.toolchainLockDigest and receipt.environmentContractDigest == expected.environmentContractDigest
+  return producer and diagnostics and conformance and reproducibility
+}

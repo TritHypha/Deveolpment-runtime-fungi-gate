@@ -59,8 +59,15 @@ with guard-before-observation behavior and exact accounting. The direct
 negative matrix passes 69/69, the complete Galerina V2-D suite passes 111/111,
 frozen predecessor evidence remains 246/246, and independent SLIDE passes
 13/13. No native certificate or authority is released.
-SLIDE packaging, native execution, Tri-Fuse v2, the implemented V2-E frontend
-receipt/source-map lane, driver CLI, and benchmarks do not yet exist.
+V2-E now closes the bounded frontend-evidence gate without changing V2-D:
+Galerina emits and independently imports one 1,739-byte canonical receipt,
+binds a 1,492-byte normalized source and all 40 executable nodes, re-derives
+nine plan commitments, checks caller-owned external evidence, and verifies
+non-authorizing Ed25519 + ML-DSA-65 producer evidence. Galerina passes 117/117
+focused V2-E tests; independent SLIDE passes 17/17. The complete Galerina
+SLIDE regression surface passes 477/477 and independent SLIDE passes 30/30.
+SLIDE packaging, native execution, Tri-Fuse v2, the general Galerina frontend
+handoff, driver CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
 bytecode/runtime tiers, and WebAssembly toolchain. SLIDE must not be presented
 as shipped, benchmarked, memory-safe, deterministic, or production-ready.
@@ -90,13 +97,13 @@ Planning completion and implementation completion are deliberately separate.
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
-| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A detached graph/runtime; non-authorizing V2-B capability/lease/nonce reference; V2-C immutable-aggregate exit complete; V2-D canonical memory graph independently imported, domain-bound, and executed | Implement V2-E producer receipt/source-map binding and general Galerina frontend; integrate real V2-B receipt/broker adapters separately |
+| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A detached graph/runtime; non-authorizing V2-B capability/lease/nonce reference; V2-C immutable-aggregate exit complete; V2-D canonical memory graph independently imported, domain-bound, and executed; bounded V2-E frontend evidence complete | Generalize the Galerina frontend without AST recovery; integrate real V2-B receipt/broker adapters separately |
 | V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact request/lease/canonical-signing gates; reference hybrid verifier; pure nonce transition; single-process reference CAS with independent state decode; typed receipt validation; exhaustive seven-input K3 shape composition; all success remains non-authorizing | Real producer/verifier adapters, independent crypto and crash-consistent nonce store, isolated broker, audit-before-success, then authority integration |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
-| Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented; V2-E is the next isolated implementation boundary | Implement producer plus independent TLL re-derivation/verification without changing frontend-neutral GIR identity |
+| Galerina frontend receipt | `IMPLEMENTED-PARTIAL` | Bounded `.fungi` producer/schema/validator, 1,739-byte canonical CBOR, fatal UTF-8 source-byte boundary, 40-node map, nine plan commitments, caller-owned external-evidence binding, hybrid producer attribution, fresh-process import, and zero-dependency independent SLIDE verification; 117/117 Galerina and 17/17 independent V2-E evidence | Integrate the same receipt through the general checked-source frontend; production key custody/independent crypto and later artifact authority remain separate |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
 | First fixture | `IMPLEMENTED-VERIFIED` | Exact four-block body, pinned checksum/semantic digest, whole-vector mutation kill, reconstructed validation, semantic mutations, K3/Int32 parity, fourth-Verdict trap, and fresh-process instruction dispatch | Retain as a frozen conformance fixture while the registry generalizes |
-| Memory profile | `IMPLEMENTED-PARTIAL` | V2-D semantic exit complete: initialized immutable 12-byte object, checked extent arithmetic, guard dominance, canonical independent import/digest/runtime, 69/69 named negatives, 111/111 complete V2-D, 13/13 independent SLIDE; no native claim | Add V2-E source binding, post-optimization audit, final-artifact binding, and hostile FFI/handle corpus |
+| Memory profile | `IMPLEMENTED-PARTIAL` | V2-D semantic exit complete and bounded V2-E source/receipt binding complete; initialized immutable 12-byte object, checked extent arithmetic, guard dominance, canonical independent import/digest/runtime; no native claim | Add post-optimization audit, final-artifact binding, and hostile FFI/handle corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
 | LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
@@ -107,7 +114,7 @@ Planning completion and implementation completion are deliberately separate.
 | Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
 | Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
 | SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
-| Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE V2-C producer (`2496af3`) plus zero-dependency V2-D validator/runtime (`4557a1b`); full independent evidence 13/13 | Widen beyond the conformance slices before claiming general frontend/platform independence |
+| Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE V2-C producer, zero-dependency V2-D validator/runtime, and zero-dependency V2-E canonical receipt verifier; complete independent suite 30/30 | Widen beyond the conformance slices before claiming general frontend/platform independence |
 | SLIDE benchmarks | `NOT-STARTED` | Security/TCB gates and weighted scorecard documented | Benchmark only after equivalent native execution exists |
 
 ## 4. Evidence behind the status
@@ -140,7 +147,7 @@ adapter, canonical encoder, exact-vector validator, structural importer, and
 closed-profile differential executor. It also contains an importer-owned typed
 program reconstruction, closed-registry semantic validator, domain-separated
 digest binder, and instruction-driven reference runtime. It does not contain
-an implemented `.slide` container, general SLIDE frontend receipt, general GIR
+an implemented `.slide` container, generalized Galerina frontend handoff, general GIR
 runtime, native loader, or production runner. The sibling `triLowLevel-v2`
 directory is a separate uncommitted planning repository; it is not an
 implemented runtime.
@@ -371,10 +378,10 @@ Implement the contract in
 Exit gate: the fixture round-trips and executes without source text, AST, parser
 state, WAT, or ambient registries.
 
-### Phase G3 — frontend receipt
+### Phase G3 — bounded frontend receipt — complete
 
-Implement
-`../../../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`:
+Implemented under
+`../../../triLowLevel-v2/26-V2-E-FRONTEND-RECEIPT-AND-SOURCE-MAP.md`:
 
 1. materialize canonical GIR and plan bytes once;
 2. bind source, compiler, check profile, registries, functions, memory,
@@ -384,6 +391,8 @@ Implement
 5. reject every digest, role, profile, or plan mismatch.
 
 Exit gate: a valid producer signature with a lying plan is still rejected.
+The gate is satisfied for the bounded V2-D fixture. It releases no execution
+authority and removes no AST, WAT/Wasm, runtime, or host component.
 
 ### Phase G4 — memory profile and Tri-Fuse
 
@@ -443,8 +452,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. implement V2-E producer receipt/source-map binding without changing
-   frontend-neutral V2-D semantic identity;
+3. preserve bounded V2-E as frozen conformance evidence and integrate the
+   receipt through the general Galerina frontend without post-GIR AST recovery;
 4. separately replace generic V2-B evidence shapes with real receipt adapters;
 5. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
@@ -452,7 +461,8 @@ Safe work that does not require an owner choice:
 
 V2-D no longer blocks design of later native gates. Do not claim or execute
 native safety, container signing, driver installation, or production native
-execution before V2-E and the named post-optimization/final-artifact gates.
+execution before the general frontend and named
+post-optimization/final-artifact gates.
 
 ## 9. Recorded local commits
 

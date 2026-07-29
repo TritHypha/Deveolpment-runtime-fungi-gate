@@ -1,0 +1,250 @@
+@version 1
+/// @file: slide-v2e-frontend-validator.fungi
+/// @purpose: Independently re-derive and validate bounded V2-E frontend evidence.
+/// @status: Logical verifier; signature and canonical receipt bytes remain separate gates.
+
+pure flow emptySLIDEV2ESourceUnit() -> SLIDEV2ESourceUnit
+contract { intent { "Return a non-admissible source-unit sentinel." } }
+{
+  return {
+    sourceUnitId: -1 logicalName: "" sourceText: ""
+    sourceByteLength: 0 sourceBytesDigest: ""
+  }
+}
+
+pure flow emptySLIDEV2ESourceMapEntry() -> SLIDEV2ESourceMapEntry
+contract { intent { "Return a non-admissible source-map sentinel." } }
+{
+  return {
+    mapId: -1 functionId: -1 blockId: -1 nodeKindId: -1 nodeId: -1
+    sourceUnitId: -1 startByte: -1 endByte: -1
+  }
+}
+
+pure flow slideV2ESourceUnitAt(
+  values: Array<SLIDEV2ESourceUnit>,
+  index: Int,
+) -> SLIDEV2ESourceUnit
+contract { intent { "Read one source unit without inventing evidence." } }
+{
+  let item = values.get(index)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2ESourceUnit() }
+    _ => { return emptySLIDEV2ESourceUnit() }
+  }
+}
+
+pure flow slideV2ESourceMapAt(
+  values: Array<SLIDEV2ESourceMapEntry>,
+  index: Int,
+) -> SLIDEV2ESourceMapEntry
+contract { intent { "Read one mapping without inventing source coverage." } }
+{
+  let item = values.get(index)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2ESourceMapEntry() }
+    _ => { return emptySLIDEV2ESourceMapEntry() }
+  }
+}
+
+pure flow slideV2ESourceMapsEqual(
+  left: Array<SLIDEV2ESourceMapEntry>,
+  right: Array<SLIDEV2ESourceMapEntry>,
+) -> Bool
+contract { intent { "Compare complete ordered source coverage without set coercion." } }
+{
+  if left.count() != right.count() { return false }
+  mut i: Int = 0
+  while i < left.count() {
+    let a = slideV2ESourceMapAt(left, i)
+    let b = slideV2ESourceMapAt(right, i)
+    let identity: Bool = a.mapId == b.mapId and a.functionId == b.functionId
+    let node: Bool = a.blockId == b.blockId and a.nodeKindId == b.nodeKindId and a.nodeId == b.nodeId
+    let source: Bool = a.sourceUnitId == b.sourceUnitId and a.startByte == b.startByte and a.endByte == b.endByte
+    if identity == false or node == false or source == false { return false }
+    i = i + 1
+  }
+  return true
+}
+
+pure flow slideV2EPlansEqual(
+  left: SLIDEV2EPlanDigests,
+  right: SLIDEV2EPlanDigests,
+) -> Bool
+contract { intent { "Compare all nine independently re-derived common-plan digests." } }
+{
+  let graph: Bool = left.functionGraphDigest == right.functionGraphDigest
+  let types: Bool = left.typePlanDigest == right.typePlanDigest
+  let memory: Bool = left.memoryPlanDigest == right.memoryPlanDigest
+  let effects: Bool = left.effectPlanDigest == right.effectPlanDigest
+  let capabilities: Bool = left.capabilityPlanDigest == right.capabilityPlanDigest
+  let imports: Bool = left.importPlanDigest == right.importPlanDigest
+  let k3: Bool = left.k3ObligationSetDigest == right.k3ObligationSetDigest
+  let failures: Bool = left.failureModelDigest == right.failureModelDigest
+  let resources: Bool = left.resourcePlanDigest == right.resourcePlanDigest
+  return graph and types and memory and effects and capabilities and imports and k3 and failures and resources
+}
+
+pure flow validatedSLIDEV2EFrontendDecision() -> SLIDEV2DExecutableDecision
+contract { intent { "Report verified frontend evidence without admission authority." } }
+{
+  return {
+    verdict: Verdict.Allow status: "FRONTEND_EVIDENCE_VALIDATED"
+    failureId: "NONE"
+    detail: "source, source map, semantic body, and common plans independently agree"
+    authorityReleased: false
+  }
+}
+
+pure flow validateSLIDEV2EFrontendEvidence(
+  evidence: SLIDEV2EFrontendEvidence,
+  sourceText: String,
+  semanticBody: Bytes,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EFrontendEvidence
+contract { intent { "Verify producer claims against exact source and independently imported V2-D semantics." } }
+{
+  if evidence.materialized == false or evidence.authorityReleased {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-010", "producer evidence state or authority changed",
+    )
+  }
+  let receipt = evidence.receipt
+  if receipt.receiptMajor != 1 or receipt.receiptMinor != 0 or receipt.receiptProfileId != "slide.frontend.galerina.v1" or receipt.receiptRoleId != "FRONTEND_EVIDENCE" or receipt.digestSuiteId != "slide.digest.sha256.v1" {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-002", "receipt version, profile, role, or digest suite changed",
+    )
+  }
+  let producerIdentity: Bool = receipt.producerId == "galerina.frontend.reference" and receipt.producerVersion == "1.0.0-beta.2"
+  let producerProfile: Bool = receipt.frontendProfileId == "galerina.frontend.slide.v2e.fixture" and receipt.sourceLanguageEdition == "fungi.v1" and receipt.authoritativeCheckProfileId == "galerina.check.zero-trust.v1"
+  if producerIdentity == false or producerProfile == false or receipt.compilerArtifactDigest.length() != 64 {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-003", "producer descriptor changed",
+    )
+  }
+
+  let sourceBytes = sourceText.encode()
+  let sourceDigest = sourceBytes.sha256Hex()
+  if sourceBytes.length() != 1492 or sourceText.contains("\u000D") or sourceText.contains("\u0000") or sourceDigest != "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde" {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "independent source normalization or digest refused",
+    )
+  }
+  if evidence.sourceUnits.count() != 1 {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "source-unit cardinality changed",
+    )
+  }
+  let source = slideV2ESourceUnitAt(evidence.sourceUnits, 0)
+  if source.sourceUnitId != 1 or source.logicalName != "fixtures/slide-v2d-memory.fungi" or source.sourceText != sourceText or source.sourceByteLength != 1492 or source.sourceBytesDigest != sourceDigest {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "source-unit binding changed",
+    )
+  }
+  let sourceSetBytes = slideV2ECBORSourceSet(source)
+  let expectedSourceSetDigest = slideV2EDomainDigest(
+    "slide.frontend.source-set.v1", sourceSetBytes,
+  )
+  if receipt.sourceSetDigest != expectedSourceSetDigest {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "source-set digest changed",
+    )
+  }
+
+  let binding = bindSLIDEV2DSemanticDigest(semanticBody)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic body refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic body unresolved",
+      )
+    }
+    if: {}
+  }
+  let imported = decodeSLIDEV2DProgram(semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic program refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic program unresolved",
+      )
+    }
+    if: {}
+  }
+  let semanticIdentity: Bool = receipt.semanticArchiveMediaType == "application/vnd.slide.executable-gir+cbor" and receipt.semanticBodyDigest == binding.bodyDigest and receipt.semanticDigest == binding.semanticDigest
+  let semanticProfiles: Bool = receipt.semanticProfileId == imported.program.semanticProfileId and receipt.registrySetId == imported.program.registrySetId and receipt.registrySetDigest == imported.program.registrySetDigest and receipt.memoryProfileId == imported.program.memoryProfileId
+  if semanticIdentity == false or semanticProfiles == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-006", "semantic archive binding changed",
+    )
+  }
+
+  let expectedMappings = materializeSLIDEV2ESourceMappings(imported.program)
+  if expectedMappings.count() != 40 or slideV2ESourceMapsEqual(evidence.sourceMappings, expectedMappings) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-005", "source-map coverage changed",
+    )
+  }
+  let sourceMapBytes = slideV2ECBORSourcemap(evidence.sourceMappings)
+  let expectedSourceMapDigest = slideV2EDomainDigest(
+    "slide.frontend.source-map.v1", sourceMapBytes,
+  )
+  if receipt.sourceMapDigest != expectedSourceMapDigest {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-005", "source-map digest changed",
+    )
+  }
+
+  let expectedPlans = deriveSLIDEV2EPlanDigests(semanticBody)
+  if slideV2EPlansEqual(receipt.plans, expectedPlans) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-007", "producer plan disagrees with independent derivation",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    receipt.compilerArtifactDigest, receipt.diagnosticSetDigest,
+    receipt.corpusDigest, receipt.vectorSetDigest,
+    receipt.buildActionRootDigest, receipt.toolchainLockDigest,
+    receipt.environmentContractDigest,
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-008", "conformance or reproducibility digest shape changed",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    expectedExternalEvidence.compilerArtifactDigest,
+    expectedExternalEvidence.diagnosticSetDigest,
+    expectedExternalEvidence.corpusDigest,
+    expectedExternalEvidence.vectorSetDigest,
+    expectedExternalEvidence.buildActionRootDigest,
+    expectedExternalEvidence.toolchainLockDigest,
+    expectedExternalEvidence.environmentContractDigest,
+  ) == false or slideV2EExternalEvidenceMatches(
+    receipt, expectedExternalEvidence,
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-008", "external evidence does not match caller-owned expectations",
+    )
+  }
+  if receipt.deterministic == false or receipt.nativeCertificatePresent or receipt.authorityReleased {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-010", "determinism, native, or authority invariant changed",
+    )
+  }
+
+  return {
+    decision: validatedSLIDEV2EFrontendDecision()
+    materialized: true receipt: receipt sourceUnits: evidence.sourceUnits
+    sourceMappings: evidence.sourceMappings authorityReleased: false
+  }
+}

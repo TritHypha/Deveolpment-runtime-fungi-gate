@@ -1,0 +1,528 @@
+@version 1
+/// @file: slide-v2e-cbor-importer.fungi
+/// @purpose: Independently decode and verify canonical V2-E receipt bytes.
+/// @status: Bounded verifier; does not call the receipt producer or encoder.
+
+record SLIDEV2ETextDecode {
+  cursor: SLIDEV2AImportCursor
+  value: String
+}
+
+record SLIDEV2EBoolDecode {
+  cursor: SLIDEV2AImportCursor
+  value: Bool
+}
+
+record SLIDEV2EReceiptImport {
+  decision: SLIDEV2DExecutableDecision
+  consumed: Int
+  receipt: SLIDEV2EFrontendReceipt
+  receiptDigest: String
+  semanticDigest: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2EReceiptImport(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2EReceiptImport
+contract { intent { "Release no partial receipt, digest, semantics, or authority." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    consumed: 0 receipt: emptySLIDEV2EReceipt()
+    receiptDigest: "" semanticDigest: "" authorityReleased: false
+  }
+}
+
+pure flow slideV2EImportFailure(
+  offset: Int,
+  detail: String,
+) -> SLIDEV2AImportCursor
+contract { intent { "Create one sticky V2-E canonical receipt refusal." } }
+{
+  return {
+    ok: false offset: offset failureId: "SLIDE-V2E-RECEIPT-001"
+    reason: detail
+  }
+}
+
+pure flow slideV2EReadText(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2ETextDecode
+contract { intent { "Decode bounded canonical UTF-8 text without replacement characters." } }
+{
+  if cursor.ok == false { return { cursor: cursor value: "" } }
+  let head = slideV2AReadCanonicalHead(bytes, cursor.offset, 3)
+  if head.ok == false or head.value > 512 or head.nextOffset + head.value > bytes.length() {
+    return {
+      cursor: slideV2EImportFailure(cursor.offset, "text head, length, or ceiling refused")
+      value: ""
+    }
+  }
+  let payload = bytes.slice(head.nextOffset, head.nextOffset + head.value)
+  let decoded = payload.decode()
+  match decoded {
+    Ok(value) => {
+      return {
+        cursor: {
+          ok: true offset: head.nextOffset + head.value
+          failureId: "NONE" reason: ""
+        }
+        value: value
+      }
+    }
+    Err(error) => {
+      return {
+        cursor: slideV2EImportFailure(cursor.offset, "invalid UTF-8 text")
+        value: ""
+      }
+    }
+    _ => {
+      return {
+        cursor: slideV2EImportFailure(cursor.offset, "unresolved UTF-8 decode")
+        value: ""
+      }
+    }
+  }
+}
+
+pure flow slideV2EReadBool(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2EBoolDecode
+contract { intent { "Decode only canonical CBOR false or true." } }
+{
+  if cursor.ok == false { return { cursor: cursor value: false } }
+  let value = slideV2AImportByte(bytes, cursor.offset)
+  match value {
+    244 => {
+      return {
+        cursor: {
+          ok: true offset: cursor.offset + 1 failureId: "NONE" reason: ""
+        }
+        value: false
+      }
+    }
+    245 => {
+      return {
+        cursor: {
+          ok: true offset: cursor.offset + 1 failureId: "NONE" reason: ""
+        }
+        value: true
+      }
+    }
+    _ => {
+      return {
+        cursor: slideV2EImportFailure(cursor.offset, "canonical Boolean refused")
+        value: false
+      }
+    }
+  }
+}
+
+pure flow slideV2EExpectArray(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+  expected: Int,
+) -> SLIDEV2AImportCursor
+contract { intent { "Consume one exact bounded canonical array head." } }
+{
+  if cursor.ok == false { return cursor }
+  let head = slideV2AReadCanonicalHead(bytes, cursor.offset, 4)
+  if head.ok == false or head.value != expected {
+    return slideV2EImportFailure(cursor.offset, "receipt tuple shape changed")
+  }
+  return {
+    ok: true offset: head.nextOffset failureId: "NONE" reason: ""
+  }
+}
+
+pure flow slideV2EExpectText(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+  expected: String,
+) -> SLIDEV2AImportCursor
+contract { intent { "Consume one exact registered text identity." } }
+{
+  let decoded = slideV2EReadText(bytes, cursor)
+  if decoded.cursor.ok and decoded.value != expected {
+    return slideV2EImportFailure(cursor.offset, "registered text identity changed")
+  }
+  return decoded.cursor
+}
+
+pure flow slideV2EExpectUInt(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+  expected: Int,
+) -> SLIDEV2AImportCursor
+contract { intent { "Consume one exact unsigned key or value." } }
+{
+  let decoded = slideV2AReadUInt(bytes, cursor, "SLIDE-V2E-RECEIPT-001")
+  if decoded.cursor.ok and decoded.value != expected {
+    return slideV2EImportFailure(cursor.offset, "ordered integer key or value changed")
+  }
+  return decoded.cursor
+}
+
+pure flow decodeSLIDEV2ECanonicalReceipt(
+  receiptBytes: Bytes,
+) -> SLIDEV2EReceiptImport
+contract { intent { "Reconstruct the complete receipt from bounded shortest-form CBOR." } }
+{
+  if receiptBytes.isEmpty() or receiptBytes.length() > 8192 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-001", "empty or over-ceiling receipt",
+    )
+  }
+  let root = slideV2AReadCanonicalHead(receiptBytes, 0, 5)
+  if root.ok == false or root.value != 14 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-001", "receipt root is not an exact 14-key map",
+    )
+  }
+  mut c: SLIDEV2AImportCursor = {
+    ok: true offset: root.nextOffset failureId: "NONE" reason: ""
+  }
+
+  c = slideV2EExpectUInt(receiptBytes, c, 0)
+  let major = slideV2AReadUInt(receiptBytes, c, "SLIDE-V2E-RECEIPT-001")
+  c = major.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 1)
+  let minor = slideV2AReadUInt(receiptBytes, c, "SLIDE-V2E-RECEIPT-001")
+  c = minor.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 2)
+  let receiptProfile = slideV2EReadText(receiptBytes, c)
+  c = receiptProfile.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 3)
+  let receiptRole = slideV2EReadText(receiptBytes, c)
+  c = receiptRole.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 4)
+  let digestSuite = slideV2EReadText(receiptBytes, c)
+  c = digestSuite.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 5)
+  c = slideV2EExpectArray(receiptBytes, c, 6)
+  let producerId = slideV2EReadText(receiptBytes, c)
+  c = producerId.cursor
+  let producerVersion = slideV2EReadText(receiptBytes, c)
+  c = producerVersion.cursor
+  let compilerArtifact = slideV2EReadText(receiptBytes, c)
+  c = compilerArtifact.cursor
+  let frontendProfile = slideV2EReadText(receiptBytes, c)
+  c = frontendProfile.cursor
+  let sourceEdition = slideV2EReadText(receiptBytes, c)
+  c = sourceEdition.cursor
+  let checkProfile = slideV2EReadText(receiptBytes, c)
+  c = checkProfile.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 6)
+  c = slideV2EExpectArray(receiptBytes, c, 3)
+  let sourceSet = slideV2EReadText(receiptBytes, c)
+  c = sourceSet.cursor
+  let diagnostics = slideV2EReadText(receiptBytes, c)
+  c = diagnostics.cursor
+  let sourceMap = slideV2EReadText(receiptBytes, c)
+  c = sourceMap.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 7)
+  c = slideV2EExpectArray(receiptBytes, c, 7)
+  let mediaType = slideV2EReadText(receiptBytes, c)
+  c = mediaType.cursor
+  let bodyDigest = slideV2EReadText(receiptBytes, c)
+  c = bodyDigest.cursor
+  let semanticDigest = slideV2EReadText(receiptBytes, c)
+  c = semanticDigest.cursor
+  let semanticProfile = slideV2EReadText(receiptBytes, c)
+  c = semanticProfile.cursor
+  let registryId = slideV2EReadText(receiptBytes, c)
+  c = registryId.cursor
+  let registryDigest = slideV2EReadText(receiptBytes, c)
+  c = registryDigest.cursor
+  let memoryProfile = slideV2EReadText(receiptBytes, c)
+  c = memoryProfile.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 8)
+  c = slideV2EExpectArray(receiptBytes, c, 9)
+  let functionGraph = slideV2EReadText(receiptBytes, c)
+  c = functionGraph.cursor
+  let typePlan = slideV2EReadText(receiptBytes, c)
+  c = typePlan.cursor
+  let memoryPlan = slideV2EReadText(receiptBytes, c)
+  c = memoryPlan.cursor
+  let effectPlan = slideV2EReadText(receiptBytes, c)
+  c = effectPlan.cursor
+  let capabilityPlan = slideV2EReadText(receiptBytes, c)
+  c = capabilityPlan.cursor
+  let importPlan = slideV2EReadText(receiptBytes, c)
+  c = importPlan.cursor
+  let k3Plan = slideV2EReadText(receiptBytes, c)
+  c = k3Plan.cursor
+  let failurePlan = slideV2EReadText(receiptBytes, c)
+  c = failurePlan.cursor
+  let resourcePlan = slideV2EReadText(receiptBytes, c)
+  c = resourcePlan.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 9)
+  c = slideV2EExpectArray(receiptBytes, c, 2)
+  let corpus = slideV2EReadText(receiptBytes, c)
+  c = corpus.cursor
+  let vectors = slideV2EReadText(receiptBytes, c)
+  c = vectors.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 10)
+  c = slideV2EExpectArray(receiptBytes, c, 3)
+  let actionRoot = slideV2EReadText(receiptBytes, c)
+  c = actionRoot.cursor
+  let toolchain = slideV2EReadText(receiptBytes, c)
+  c = toolchain.cursor
+  let environment = slideV2EReadText(receiptBytes, c)
+  c = environment.cursor
+
+  c = slideV2EExpectUInt(receiptBytes, c, 11)
+  let deterministic = slideV2EReadBool(receiptBytes, c)
+  c = deterministic.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 12)
+  let nativeCertificate = slideV2EReadBool(receiptBytes, c)
+  c = nativeCertificate.cursor
+  c = slideV2EExpectUInt(receiptBytes, c, 13)
+  let authority = slideV2EReadBool(receiptBytes, c)
+  c = authority.cursor
+
+  if c.ok == false or c.offset != receiptBytes.length() {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-001", "canonical receipt truncated, malformed, or suffixed",
+    )
+  }
+  let plans: SLIDEV2EPlanDigests = {
+    functionGraphDigest: functionGraph.value typePlanDigest: typePlan.value
+    memoryPlanDigest: memoryPlan.value effectPlanDigest: effectPlan.value
+    capabilityPlanDigest: capabilityPlan.value importPlanDigest: importPlan.value
+    k3ObligationSetDigest: k3Plan.value failureModelDigest: failurePlan.value
+    resourcePlanDigest: resourcePlan.value
+  }
+  let receipt: SLIDEV2EFrontendReceipt = {
+    receiptMajor: major.value receiptMinor: minor.value
+    receiptProfileId: receiptProfile.value receiptRoleId: receiptRole.value
+    digestSuiteId: digestSuite.value producerId: producerId.value
+    producerVersion: producerVersion.value
+    compilerArtifactDigest: compilerArtifact.value
+    frontendProfileId: frontendProfile.value
+    sourceLanguageEdition: sourceEdition.value
+    authoritativeCheckProfileId: checkProfile.value
+    sourceSetDigest: sourceSet.value diagnosticSetDigest: diagnostics.value
+    sourceMapDigest: sourceMap.value semanticArchiveMediaType: mediaType.value
+    semanticBodyDigest: bodyDigest.value semanticDigest: semanticDigest.value
+    semanticProfileId: semanticProfile.value registrySetId: registryId.value
+    registrySetDigest: registryDigest.value memoryProfileId: memoryProfile.value
+    plans: plans corpusDigest: corpus.value vectorSetDigest: vectors.value
+    buildActionRootDigest: actionRoot.value toolchainLockDigest: toolchain.value
+    environmentContractDigest: environment.value
+    deterministic: deterministic.value
+    nativeCertificatePresent: nativeCertificate.value
+    authorityReleased: authority.value
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "CANONICAL_RECEIPT_DECODED"
+      failureId: "NONE" detail: "complete bounded receipt reconstructed"
+      authorityReleased: false
+    }
+    consumed: c.offset receipt: receipt receiptDigest: ""
+    semanticDigest: "" authorityReleased: false
+  }
+}
+
+pure flow verifySLIDEV2ECanonicalReceipt(
+  receiptBytes: Bytes,
+  sourceText: String,
+  semanticBody: Bytes,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EReceiptImport
+contract { intent { "Verify decoded receipt claims by independently re-deriving source, map, and plans." } }
+{
+  let decoded = decodeSLIDEV2ECanonicalReceipt(receiptBytes)
+  check(decoded.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        decoded.decision.failureId, decoded.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        decoded.decision.failureId, decoded.decision.detail,
+      )
+    }
+    if: {}
+  }
+  let receipt = decoded.receipt
+  let identity: Bool = receipt.receiptMajor == 1 and receipt.receiptMinor == 0 and receipt.receiptProfileId == "slide.frontend.galerina.v1" and receipt.receiptRoleId == "FRONTEND_EVIDENCE" and receipt.digestSuiteId == "slide.digest.sha256.v1"
+  if identity == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-002", "receipt identity refused",
+    )
+  }
+  let producer: Bool = receipt.producerId == "galerina.frontend.reference" and receipt.producerVersion == "1.0.0-beta.2" and receipt.frontendProfileId == "galerina.frontend.slide.v2e.fixture"
+  let sourceProfile: Bool = receipt.sourceLanguageEdition == "fungi.v1" and receipt.authoritativeCheckProfileId == "galerina.check.zero-trust.v1"
+  if producer == false or sourceProfile == false or receipt.compilerArtifactDigest.length() != 64 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-003", "producer descriptor refused",
+    )
+  }
+
+  let sourceBytes = sourceText.encode()
+  let sourceDigest = sourceBytes.sha256Hex()
+  if sourceBytes.length() != 1492 or sourceText.contains("\u000D") or sourceText.contains("\u0000") or sourceDigest != "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde" {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-004", "normalized source refused",
+    )
+  }
+  let source: SLIDEV2ESourceUnit = {
+    sourceUnitId: 1 logicalName: "fixtures/slide-v2d-memory.fungi"
+    sourceText: sourceText sourceByteLength: 1492
+    sourceBytesDigest: sourceDigest
+  }
+  let expectedSourceSet = slideV2EDomainDigest(
+    "slide.frontend.source-set.v1", slideV2ECBORSourceSet(source),
+  )
+  if receipt.sourceSetDigest != expectedSourceSet {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-004", "source-set digest mismatch",
+    )
+  }
+
+  let binding = bindSLIDEV2DSemanticDigest(semanticBody)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-006", "semantic body refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-006", "semantic body unresolved",
+      )
+    }
+    if: {}
+  }
+  let imported = decodeSLIDEV2DProgram(semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-006", "semantic import refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-006", "semantic import unresolved",
+      )
+    }
+    if: {}
+  }
+  let semanticIdentity: Bool = receipt.semanticArchiveMediaType == "application/vnd.slide.executable-gir+cbor" and receipt.semanticBodyDigest == binding.bodyDigest and receipt.semanticDigest == binding.semanticDigest
+  let semanticProfiles: Bool = receipt.semanticProfileId == imported.program.semanticProfileId and receipt.registrySetId == imported.program.registrySetId and receipt.registrySetDigest == imported.program.registrySetDigest and receipt.memoryProfileId == imported.program.memoryProfileId
+  if semanticIdentity == false or semanticProfiles == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-006", "semantic binding mismatch",
+    )
+  }
+
+  let mappings = materializeSLIDEV2ESourceMappings(imported.program)
+  let expectedSourceMap = slideV2EDomainDigest(
+    "slide.frontend.source-map.v1", slideV2ECBORSourcemap(mappings),
+  )
+  if mappings.count() != 40 or receipt.sourceMapDigest != expectedSourceMap {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-005", "source-map derivation mismatch",
+    )
+  }
+  let expectedPlans = deriveSLIDEV2EPlanDigests(semanticBody)
+  if slideV2EPlansEqual(receipt.plans, expectedPlans) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-007", "producer plan disagrees with independent derivation",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    receipt.compilerArtifactDigest, receipt.diagnosticSetDigest,
+    receipt.corpusDigest, receipt.vectorSetDigest,
+    receipt.buildActionRootDigest, receipt.toolchainLockDigest,
+    receipt.environmentContractDigest,
+  ) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-008", "external evidence digest shape refused",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    expectedExternalEvidence.compilerArtifactDigest,
+    expectedExternalEvidence.diagnosticSetDigest,
+    expectedExternalEvidence.corpusDigest,
+    expectedExternalEvidence.vectorSetDigest,
+    expectedExternalEvidence.buildActionRootDigest,
+    expectedExternalEvidence.toolchainLockDigest,
+    expectedExternalEvidence.environmentContractDigest,
+  ) == false or slideV2EExternalEvidenceMatches(
+    receipt, expectedExternalEvidence,
+  ) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-008", "external evidence does not match caller-owned expectations",
+    )
+  }
+  if receipt.deterministic == false or receipt.nativeCertificatePresent or receipt.authorityReleased {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-010", "determinism, native, or authority invariant changed",
+    )
+  }
+  let receiptDigest = slideV2EDomainDigest(
+    "slide.frontend.galerina.v1", receiptBytes,
+  )
+  if receiptDigest.length() != 64 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-012", "receipt digest primitive unavailable",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "FRONTEND_RECEIPT_VERIFIED"
+      failureId: "NONE"
+      detail: "canonical receipt, source, source map, and plans independently agree"
+      authorityReleased: false
+    }
+    consumed: decoded.consumed receipt: receipt receiptDigest: receiptDigest
+    semanticDigest: binding.semanticDigest authorityReleased: false
+  }
+}
+
+pure flow verifySLIDEV2ECanonicalReceiptBytes(
+  receiptBytes: Bytes,
+  sourceBytes: Bytes,
+  semanticBody: Bytes,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EReceiptImport
+contract { intent { "Admit source only after fatal UTF-8 decode, then independently verify the receipt." } }
+{
+  if sourceBytes.length() >= 3 and slideV2AImportByte(sourceBytes, 0) == 239 and slideV2AImportByte(sourceBytes, 1) == 187 and slideV2AImportByte(sourceBytes, 2) == 191 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-V2E-RECEIPT-004", "UTF-8 BOM is forbidden",
+    )
+  }
+  let decodedSource = sourceBytes.decode()
+  match decodedSource {
+    Ok(sourceText) => {
+      return verifySLIDEV2ECanonicalReceipt(
+        receiptBytes, sourceText, semanticBody, expectedExternalEvidence,
+      )
+    }
+    Err(error) => {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-004", "source bytes are not valid UTF-8",
+      )
+    }
+    _ => {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-V2E-RECEIPT-004", "source UTF-8 decode is unresolved",
+      )
+    }
+  }
+}

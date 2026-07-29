@@ -1,0 +1,125 @@
+@version 1
+/// @file: slide-v2e-frontend-model.fungi
+/// @purpose: Materialize bounded Galerina frontend evidence over frozen V2-D.
+/// @status: Logical producer only; no signature, native certificate, or authority.
+
+pure flow materializeSLIDEV2EFrontendEvidence(
+  sourceText: String,
+  compilerArtifactDigest: String,
+  diagnosticSetDigest: String,
+  corpusDigest: String,
+  vectorSetDigest: String,
+  buildActionRootDigest: String,
+  toolchainLockDigest: String,
+  environmentContractDigest: String,
+  semanticBody: Bytes,
+) -> SLIDEV2EFrontendEvidence
+contract { intent { "Materialize one non-authorizing receipt only from exact source and admitted V2-D bytes." } }
+{
+  let sourceBytes = sourceText.encode()
+  if sourceBytes.length() != 1492 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "source normalization or byte ceiling changed",
+    )
+  }
+  let sourceDigest = sourceBytes.sha256Hex()
+  if sourceDigest != "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde" {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "source bytes changed",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    compilerArtifactDigest, diagnosticSetDigest, corpusDigest, vectorSetDigest,
+    buildActionRootDigest, toolchainLockDigest, environmentContractDigest,
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-008", "external evidence digest shape changed",
+    )
+  }
+
+  let binding = bindSLIDEV2DSemanticDigest(semanticBody)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic body refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic body unresolved",
+      )
+    }
+    if: {}
+  }
+  let imported = decodeSLIDEV2DProgram(semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic program unavailable",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-006", "semantic program unresolved",
+      )
+    }
+    if: {}
+  }
+
+  let source: SLIDEV2ESourceUnit = {
+    sourceUnitId: 1 logicalName: "fixtures/slide-v2d-memory.fungi"
+    sourceText: sourceText sourceByteLength: sourceBytes.length()
+    sourceBytesDigest: sourceDigest
+  }
+  let mappings = materializeSLIDEV2ESourceMappings(imported.program)
+  if mappings.count() != 40 {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-005", "complete node mapping was not derived",
+    )
+  }
+  let sourceSetBytes = slideV2ECBORSourceSet(source)
+  let sourceMapBytes = slideV2ECBORSourcemap(mappings)
+  if sourceSetBytes.isEmpty() or sourceMapBytes.isEmpty() {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-004", "canonical source evidence unavailable",
+    )
+  }
+  let sourceSetDigest = slideV2EDomainDigest(
+    "slide.frontend.source-set.v1", sourceSetBytes,
+  )
+  let sourceMapDigest = slideV2EDomainDigest(
+    "slide.frontend.source-map.v1", sourceMapBytes,
+  )
+  let plans = deriveSLIDEV2EPlanDigests(semanticBody)
+  let receipt: SLIDEV2EFrontendReceipt = {
+    receiptMajor: 1 receiptMinor: 0
+    receiptProfileId: "slide.frontend.galerina.v1"
+    receiptRoleId: "FRONTEND_EVIDENCE"
+    digestSuiteId: "slide.digest.sha256.v1"
+    producerId: "galerina.frontend.reference"
+    producerVersion: "1.0.0-beta.2"
+    compilerArtifactDigest: compilerArtifactDigest
+    frontendProfileId: "galerina.frontend.slide.v2e.fixture"
+    sourceLanguageEdition: "fungi.v1"
+    authoritativeCheckProfileId: "galerina.check.zero-trust.v1"
+    sourceSetDigest: sourceSetDigest diagnosticSetDigest: diagnosticSetDigest
+    sourceMapDigest: sourceMapDigest
+    semanticArchiveMediaType: "application/vnd.slide.executable-gir+cbor"
+    semanticBodyDigest: binding.bodyDigest semanticDigest: binding.semanticDigest
+    semanticProfileId: imported.program.semanticProfileId
+    registrySetId: imported.program.registrySetId
+    registrySetDigest: imported.program.registrySetDigest
+    memoryProfileId: imported.program.memoryProfileId plans: plans
+    corpusDigest: corpusDigest vectorSetDigest: vectorSetDigest
+    buildActionRootDigest: buildActionRootDigest
+    toolchainLockDigest: toolchainLockDigest
+    environmentContractDigest: environmentContractDigest
+    deterministic: true nativeCertificatePresent: false
+    authorityReleased: false
+  }
+  return {
+    decision: validatedSLIDEV2DExecutable()
+    materialized: true receipt: receipt sourceUnits: Array.of(source)
+    sourceMappings: mappings authorityReleased: false
+  }
+}

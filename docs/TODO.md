@@ -248,16 +248,30 @@ planning checkbox must never be used to imply that implementation exists.
   semantic-memory result only: it is not a native-code certificate, final
   artifact binding, production authority, or permission to remove legacy
   paths.
-- **Paused checkpoint (owner request):** V2-D is closed and locally committed;
-  no V2-E implementation has started. The next implementation boundary is the
-  independently gated V2-E frontend receipt/source-map lane.
+- **Completed:** `../../triLowLevel-v2/26-V2-E-FRONTEND-RECEIPT-AND-SOURCE-MAP.md`
+  defines V2-E as a separately canonical, non-authorizing producer receipt
+  over frozen V2-D. It fixes normalized-source rules, complete source-map node
+  coverage, nine independently re-derived plan digests, distinct producer
+  signature evidence, refusal identities, and the direct exit matrix. V2-D
+  bytes and semantic identity cannot move.
+- **Current — V2-E exit verification:** the `.fungi` schema, bounded producer,
+  independent logical validator, shortest-form canonical CBOR encoder/importer,
+  fatal UTF-8 byte boundary, fresh-process producer/encoder-free import,
+  caller-owned external-evidence binding, non-authorizing signature policy,
+  and minimal Ed25519 + ML-DSA-65 host verifier are implemented. The named
+  logical/import matrix is 87/87, encoder evidence is 5/5, hybrid signature
+  evidence is 25/25, and independent SLIDE is 17/17. Frozen V2-D bytes and
+  semantic identity did not move. The owner's unrelated tri-regex audit and
+  `.codex/` files remain untouched.
 - **Parallel design lane:** replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next after resume:** specify and implement the V2-E receipt/source-map
-  lane independently before any AST cut. No
+- **Next:** run the complete V2-E suite in one process, typecheck/build, rerun
+  frozen predecessor and V2-D evidence, adjudicate the exit gate, refresh the
+  architecture/integration report and all three ledgers, then make scoped
+  local Galerina and SLIDE commits. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.

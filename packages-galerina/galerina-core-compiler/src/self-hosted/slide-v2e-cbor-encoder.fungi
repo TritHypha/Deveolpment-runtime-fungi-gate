@@ -1,0 +1,201 @@
+@version 1
+/// @file: slide-v2e-cbor-encoder.fungi
+/// @purpose: Canonically encode only independently validated V2-E producer evidence.
+/// @status: Receipt body/digest only; signatures and authority remain absent.
+
+record SLIDEV2EReceiptExport {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  bytes: Bytes
+  byteLength: Int
+  receiptDigest: String
+  semanticDigest: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2EReceiptExport(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2EReceiptExport
+contract { intent { "Release no receipt bytes, digest, or authority after refusal." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId detail: detail
+    bytes: Bytes.empty() byteLength: 0 receiptDigest: ""
+    semanticDigest: "" authorityReleased: false
+  }
+}
+
+pure flow slideV2ECBORBool(value: Bool) -> Bytes
+contract { intent { "Encode one canonical CBOR Boolean." } }
+{
+  if value { return Bytes.of(245) }
+  return Bytes.of(244)
+}
+
+pure flow slideV2ECBORProducer(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode the exact bounded producer descriptor." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 6)
+  body = body.append(slideV2ACBORText(receipt.producerId))
+  body = body.append(slideV2ACBORText(receipt.producerVersion))
+  body = body.append(slideV2ACBORText(receipt.compilerArtifactDigest))
+  body = body.append(slideV2ACBORText(receipt.frontendProfileId))
+  body = body.append(slideV2ACBORText(receipt.sourceLanguageEdition))
+  body = body.append(slideV2ACBORText(receipt.authoritativeCheckProfileId))
+  return body
+}
+
+pure flow slideV2ECBORSources(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode source-set, diagnostic-set, and source-map digests." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 3)
+  body = body.append(slideV2ACBORText(receipt.sourceSetDigest))
+  body = body.append(slideV2ACBORText(receipt.diagnosticSetDigest))
+  body = body.append(slideV2ACBORText(receipt.sourceMapDigest))
+  return body
+}
+
+pure flow slideV2ECBORSemantics(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode exact frozen semantic archive identities." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 7)
+  body = body.append(slideV2ACBORText(receipt.semanticArchiveMediaType))
+  body = body.append(slideV2ACBORText(receipt.semanticBodyDigest))
+  body = body.append(slideV2ACBORText(receipt.semanticDigest))
+  body = body.append(slideV2ACBORText(receipt.semanticProfileId))
+  body = body.append(slideV2ACBORText(receipt.registrySetId))
+  body = body.append(slideV2ACBORText(receipt.registrySetDigest))
+  body = body.append(slideV2ACBORText(receipt.memoryProfileId))
+  return body
+}
+
+pure flow slideV2ECBORPlans(plans: SLIDEV2EPlanDigests) -> Bytes
+contract { intent { "Encode all nine stated common-plan digests in fixed order." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 9)
+  body = body.append(slideV2ACBORText(plans.functionGraphDigest))
+  body = body.append(slideV2ACBORText(plans.typePlanDigest))
+  body = body.append(slideV2ACBORText(plans.memoryPlanDigest))
+  body = body.append(slideV2ACBORText(plans.effectPlanDigest))
+  body = body.append(slideV2ACBORText(plans.capabilityPlanDigest))
+  body = body.append(slideV2ACBORText(plans.importPlanDigest))
+  body = body.append(slideV2ACBORText(plans.k3ObligationSetDigest))
+  body = body.append(slideV2ACBORText(plans.failureModelDigest))
+  body = body.append(slideV2ACBORText(plans.resourcePlanDigest))
+  return body
+}
+
+pure flow slideV2ECBORConformance(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode bounded corpus and vector-set evidence digests." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 2)
+  body = body.append(slideV2ACBORText(receipt.corpusDigest))
+  body = body.append(slideV2ACBORText(receipt.vectorSetDigest))
+  return body
+}
+
+pure flow slideV2ECBORReproducibility(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode action-root, toolchain-lock, and environment-contract digests." } }
+{
+  mut body: Bytes = slideV2ACBORHead(4, 3)
+  body = body.append(slideV2ACBORText(receipt.buildActionRootDigest))
+  body = body.append(slideV2ACBORText(receipt.toolchainLockDigest))
+  body = body.append(slideV2ACBORText(receipt.environmentContractDigest))
+  return body
+}
+
+pure flow slideV2ECanonicalReceiptBody(
+  receipt: SLIDEV2EFrontendReceipt,
+) -> Bytes
+contract { intent { "Encode the exact 14-key V2-E receipt body with ordered integer keys." } }
+{
+  mut body: Bytes = slideV2ACBORHead(5, 14)
+  body = body.append(slideV2ACBORUInt(0))
+  body = body.append(slideV2ACBORUInt(receipt.receiptMajor))
+  body = body.append(slideV2ACBORUInt(1))
+  body = body.append(slideV2ACBORUInt(receipt.receiptMinor))
+  body = body.append(slideV2ACBORUInt(2))
+  body = body.append(slideV2ACBORText(receipt.receiptProfileId))
+  body = body.append(slideV2ACBORUInt(3))
+  body = body.append(slideV2ACBORText(receipt.receiptRoleId))
+  body = body.append(slideV2ACBORUInt(4))
+  body = body.append(slideV2ACBORText(receipt.digestSuiteId))
+  body = body.append(slideV2ACBORUInt(5))
+  body = body.append(slideV2ECBORProducer(receipt))
+  body = body.append(slideV2ACBORUInt(6))
+  body = body.append(slideV2ECBORSources(receipt))
+  body = body.append(slideV2ACBORUInt(7))
+  body = body.append(slideV2ECBORSemantics(receipt))
+  body = body.append(slideV2ACBORUInt(8))
+  body = body.append(slideV2ECBORPlans(receipt.plans))
+  body = body.append(slideV2ACBORUInt(9))
+  body = body.append(slideV2ECBORConformance(receipt))
+  body = body.append(slideV2ACBORUInt(10))
+  body = body.append(slideV2ECBORReproducibility(receipt))
+  body = body.append(slideV2ACBORUInt(11))
+  body = body.append(slideV2ECBORBool(receipt.deterministic))
+  body = body.append(slideV2ACBORUInt(12))
+  body = body.append(slideV2ECBORBool(receipt.nativeCertificatePresent))
+  body = body.append(slideV2ACBORUInt(13))
+  body = body.append(slideV2ECBORBool(receipt.authorityReleased))
+  return body
+}
+
+pure flow exportSLIDEV2ECanonicalReceipt(
+  evidence: SLIDEV2EFrontendEvidence,
+  sourceText: String,
+  semanticBody: Bytes,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EReceiptExport
+contract { intent { "Emit canonical producer evidence only after independent logical validation." } }
+{
+  let validated = validateSLIDEV2EFrontendEvidence(
+    evidence, sourceText, semanticBody, expectedExternalEvidence,
+  )
+  check(validated.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptExport(
+        validated.decision.failureId, validated.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptExport(
+        validated.decision.failureId, validated.decision.detail,
+      )
+    }
+    if: {}
+  }
+  let body = slideV2ECanonicalReceiptBody(validated.receipt)
+  if body.isEmpty() or body.length() > 8192 {
+    return refuseSLIDEV2EReceiptExport(
+      "SLIDE-V2E-RECEIPT-001", "canonical receipt body unavailable or over ceiling",
+    )
+  }
+  let receiptDigest = slideV2EDomainDigest(
+    "slide.frontend.galerina.v1", body,
+  )
+  if receiptDigest.length() != 64 {
+    return refuseSLIDEV2EReceiptExport(
+      "SLIDE-V2E-RECEIPT-012", "registered SHA-256 primitive unavailable",
+    )
+  }
+  return {
+    verdict: Verdict.Allow status: "CANONICAL_FRONTEND_RECEIPT"
+    failureId: "NONE" detail: "canonical non-authorizing producer receipt emitted"
+    bytes: body byteLength: body.length() receiptDigest: receiptDigest
+    semanticDigest: validated.receipt.semanticDigest authorityReleased: false
+  }
+}

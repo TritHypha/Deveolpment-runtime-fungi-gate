@@ -1,0 +1,60 @@
+@version 1
+
+type SLIDEV2EFixtureRecord {
+  selected: Int
+  length: Int
+  label: String
+}
+
+enum SLIDEV2EFixtureVariant {
+  Selected
+  Missing
+}
+
+pure flow slide_v2e_checked_increment(value: Int) -> Int
+contract { intent { "Apply the checked arithmetic used by the detached fixture." } }
+{
+  return value + 1
+}
+
+pure flow slide_v2e_k3_join(
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> Result<Int,String>
+contract { intent { "Preserve one Boolean join and all three K3 exits." } }
+{
+  let joined: Int = left + right
+  check(admission) {
+    deny: { return Err("SLIDE_PROBE_DENIED") }
+    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }
+    if: { return Ok(joined) }
+  }
+}
+
+pure flow slide_v2e_guarded_memory(index: Int) -> Result<Int,String>
+contract { intent { "Read one immutable array only after a fail-closed bounds decision." } }
+{
+  let values: Array<Int> = [3, 5, 8]
+  if index < 0 or index >= 3 {
+    return Err("SLIDE_PROBE_BOUNDS")
+  }
+  let selected: Option<Int> = values.get(index)
+  match selected {
+    Some(value) => {
+      let item = SLIDEV2EFixtureRecord {
+        selected: value
+        length: 3
+        label: "Galerina"
+      }
+      let state: SLIDEV2EFixtureVariant = Selected
+      match state {
+        Selected => return Ok(item.selected)
+        Missing => return Err("SLIDE_PROBE_MISSING")
+        _ => return Err("SLIDE_PROBE_UNKNOWN")
+      }
+    }
+    None => return Err("SLIDE_PROBE_BOUNDS")
+    _ => return Err("SLIDE_PROBE_INVALID_OPTION")
+  }
+}

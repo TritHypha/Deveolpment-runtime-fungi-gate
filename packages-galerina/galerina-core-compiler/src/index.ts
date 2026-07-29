@@ -241,6 +241,13 @@ export type {
   SLIDEV2BCryptoVerifierPolicy,
   SLIDEV2BCryptoVerifierReceipt,
 } from "./slide-v2b-crypto-verifier.js";
+export { verifySLIDEV2EHybridFrontendSignature } from "./slide-v2e-crypto-verifier.js";
+export type {
+  SLIDEV2ECryptoVerdict,
+  SLIDEV2EHybridFrontendSignature,
+  SLIDEV2ECryptoVerifierPolicy,
+  SLIDEV2ECryptoVerifierReceipt,
+} from "./slide-v2e-crypto-verifier.js";
 export { SLIDEV2BAtomicStateReference } from "./slide-v2b-atomic-state-reference.js";
 export type {
   SLIDEV2BAtomicReservationCandidate,

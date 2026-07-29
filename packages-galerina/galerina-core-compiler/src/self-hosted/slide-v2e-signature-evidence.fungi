@@ -1,0 +1,207 @@
+@version 1
+/// @file: slide-v2e-signature-evidence.fungi
+/// @purpose: Validate typed host-crypto evidence for a verified V2-E receipt.
+/// @status: Producer attribution only; never build, admission, or execution authority.
+
+record SLIDEV2EFrontendVerifierReceipt {
+  schemaId: String
+  verifierId: String
+  signatureSuiteId: Int
+  signerRoleId: Int
+  keyClassId: Int
+  keyId: String
+  subjectReceiptDigest: String
+  signatureDigest: String
+  verdict: Verdict
+  verifiedAt: Int
+  evidenceDigest: String
+}
+
+record SLIDEV2ESignedFrontendEvidence {
+  decision: SLIDEV2DExecutableDecision
+  producerVerified: Bool
+  receiptDigest: String
+  semanticDigest: String
+  producerKeyId: String
+  verifierEvidenceDigest: String
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2ESignedFrontendEvidence(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2ESignedFrontendEvidence
+contract { intent { "Release no verified producer identity, digest, or authority after refusal." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    producerVerified: false receiptDigest: "" semanticDigest: ""
+    producerKeyId: "" verifierEvidenceDigest: ""
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
+pure flow slideV2EFrameVerifierEvidence(payload: Bytes) -> Bytes
+contract { intent { "Length-frame one bounded verifier-evidence field." } }
+{
+  let length = payload.length()
+  if length < 0 or length > 2147483647 { return Bytes.empty() }
+  let byte3: Int = length / 16777216
+  let remainder3: Int = length - byte3 * 16777216
+  let byte2: Int = remainder3 / 65536
+  let remainder2: Int = remainder3 - byte2 * 65536
+  let byte1: Int = remainder2 / 256
+  let byte0: Int = remainder2 - byte1 * 256
+  return Bytes.of(byte3, byte2, byte1, byte0).append(payload)
+}
+
+pure flow slideV2EVerifierVerdictText(verdict: Verdict) -> String
+contract { intent { "Encode every K3 verifier outcome without a Boolean collapse." } }
+{
+  check(verdict) {
+    deny: { return "-1" }
+    ambig: { return "0" }
+    if: { return "1" }
+  }
+}
+
+pure flow deriveSLIDEV2EVerifierEvidenceDigest(
+  receipt: SLIDEV2EFrontendVerifierReceipt,
+  productionPolicy: Bool,
+) -> String
+contract { intent { "Independently re-derive the host verifier's framed evidence digest." } }
+{
+  mut bytes: Bytes = slideV2EFrameVerifierEvidence(
+    "slide.frontend.crypto-verifier-evidence.v1\u0000".encode(),
+  )
+  bytes = bytes.append(slideV2EFrameVerifierEvidence(receipt.schemaId.encode()))
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.verifierId.encode()),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.signatureSuiteId.toString().encode()),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.signerRoleId.toString().encode()),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.keyClassId.toString().encode()),
+  )
+  bytes = bytes.append(slideV2EFrameVerifierEvidence(receipt.keyId.encode()))
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.subjectReceiptDigest.encode()),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.signatureDigest.encode()),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(
+      slideV2EVerifierVerdictText(receipt.verdict).encode(),
+    ),
+  )
+  bytes = bytes.append(
+    slideV2EFrameVerifierEvidence(receipt.verifiedAt.toString().encode()),
+  )
+  if productionPolicy {
+    bytes = bytes.append(
+      slideV2EFrameVerifierEvidence("production".encode()),
+    )
+  } else {
+    bytes = bytes.append(
+      slideV2EFrameVerifierEvidence("development".encode()),
+    )
+  }
+  return bytes.sha256Hex()
+}
+
+pure flow validateSLIDEV2EProducerSignatureEvidence(
+  imported: SLIDEV2EReceiptImport,
+  verifierReceipt: SLIDEV2EFrontendVerifierReceipt,
+  productionPolicy: Bool,
+  expectedKeyId: String,
+  validationTime: Int,
+  maximumEvidenceAge: Int,
+) -> SLIDEV2ESignedFrontendEvidence
+contract { intent { "Bind exact typed hybrid-verifier evidence to an independently verified receipt." } }
+{
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2ESignedFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-009", "canonical frontend receipt was not verified",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2ESignedFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-009", "canonical frontend receipt is unresolved",
+      )
+    }
+    if: {}
+  }
+  let verifierIdentity: Bool = verifierReceipt.schemaId == "slide.frontend.crypto-verifier-receipt.v1" and verifierReceipt.verifierId == "slide.crypto.frontend-hybrid-ed25519-mldsa65.v1"
+  let signatureIdentity: Bool = verifierReceipt.signatureSuiteId == 1 and verifierReceipt.signerRoleId == 2
+  let keyClassKnown: Bool = verifierReceipt.keyClassId == 1 or verifierReceipt.keyClassId == 2
+  if verifierIdentity == false or signatureIdentity == false or keyClassKnown == false {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "signature verifier, suite, role, or key class refused",
+    )
+  }
+  if productionPolicy and verifierReceipt.keyClassId != 2 {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "development key refused by production policy",
+    )
+  }
+  if expectedKeyId.length() < 1 or expectedKeyId.length() > 128 or verifierReceipt.keyId != expectedKeyId {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "producer key identity or policy binding refused",
+    )
+  }
+  if verifierReceipt.subjectReceiptDigest != imported.receiptDigest or imported.receiptDigest.length() != 64 {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "signature subject does not bind the verified receipt",
+    )
+  }
+  if verifierReceipt.signatureDigest.length() != 64 or verifierReceipt.evidenceDigest.length() != 64 or verifierReceipt.verifiedAt < 0 {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "signature or verifier evidence shape refused",
+    )
+  }
+  if validationTime < 0 or maximumEvidenceAge < 0 or maximumEvidenceAge > 86400 or verifierReceipt.verifiedAt > validationTime or validationTime - verifierReceipt.verifiedAt > maximumEvidenceAge {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "verifier evidence time is stale or outside policy",
+    )
+  }
+  let expectedEvidenceDigest = deriveSLIDEV2EVerifierEvidenceDigest(
+    verifierReceipt, productionPolicy,
+  )
+  if expectedEvidenceDigest.length() != 64 or verifierReceipt.evidenceDigest != expectedEvidenceDigest {
+    return refuseSLIDEV2ESignedFrontendEvidence(
+      "SLIDE-V2E-RECEIPT-009", "verifier evidence digest does not bind its fields",
+    )
+  }
+  check(verifierReceipt.verdict) {
+    deny: {
+      return refuseSLIDEV2ESignedFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-009", "producer signature denied",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2ESignedFrontendEvidence(
+        "SLIDE-V2E-RECEIPT-009", "producer signature evidence unavailable",
+      )
+    }
+    if: {}
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "FRONTEND_PRODUCER_VERIFIED"
+      failureId: "NONE"
+      detail: "producer attribution binds the independently verified receipt"
+      authorityReleased: false
+    }
+    producerVerified: true receiptDigest: imported.receiptDigest
+    semanticDigest: imported.semanticDigest producerKeyId: verifierReceipt.keyId
+    verifierEvidenceDigest: verifierReceipt.evidenceDigest
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
