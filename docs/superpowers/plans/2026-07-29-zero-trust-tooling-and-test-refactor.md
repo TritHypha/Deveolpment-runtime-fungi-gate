@@ -63,7 +63,7 @@ project/package graph tools.
 - `tooling-policy.json` records exceptions only. Unknown or unused exception
   keys are violations.
 
-- [ ] **Step 1: Write RED tests for discovery and fail-closed policy behavior**
+- [x] **Step 1: Write RED tests for discovery and fail-closed policy behavior**
 
 Create fixture tests that assert:
 
@@ -125,7 +125,7 @@ test("an unregistered package directory is a blocking violation", () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run:
 
@@ -136,7 +136,7 @@ node --test scripts/tests/tooling-contract.test.mjs
 Expected: failure because `tooling-inventory.mjs`,
 `audit-tooling-contract.mjs`, and the policy do not exist.
 
-- [ ] **Step 3: Implement the inventory data model and strict validator**
+- [x] **Step 3: Implement the inventory data model and strict validator**
 
 Use the following exported shapes:
 
@@ -190,7 +190,7 @@ Register both currently unlisted package directories,
 exception; the benchmark package is executable and must enter normal test
 discovery.
 
-- [ ] **Step 4: Make the tool index consume the shared inventory**
+- [x] **Step 4: Make the tool index consume the shared inventory**
 
 Remove duplicate filename/source-string classification from
 `dev-tool-index.mjs`. Its `--check` must fail for every
@@ -251,7 +251,7 @@ type PackageTestRun = {
 };
 ```
 
-- [ ] **Step 1: Write RED fixture tests for omitted and stale-build classes**
+- [x] **Step 1: Write RED fixture tests for omitted and stale-build classes**
 
 ```js
 test("full discovery includes any registered package with a test script", () => {
@@ -287,7 +287,7 @@ test("a zero exit with no parseable count refuses", () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Step 2: Run RED**
 
 ```powershell
 node --test scripts/tests/run-all-tests.test.mjs
@@ -296,7 +296,7 @@ node --test scripts/tests/run-all-tests.test.mjs
 Expected: the custom script is excluded, stale `dist/` bypasses the build, and
 an uncounted pass is accepted.
 
-- [ ] **Step 3: Replace regex suite discovery with reconciled-policy discovery**
+- [x] **Step 3: Replace regex suite discovery with reconciled-policy discovery**
 
 Delete `isRealSuite` and the smart direct-`node --test` dispatch. Always run
 the package's declared `npm test` command. On Windows invoke `npm.cmd`; on
@@ -317,7 +317,7 @@ const complete =
 A null status, signal, timeout, missing package, missing test script,
 unparseable count, zero tests, or count mismatch is failure.
 
-- [ ] **Step 4: Standardize benchmark integrity tests**
+- [x] **Step 4: Standardize benchmark integrity tests**
 
 Change:
 
@@ -328,7 +328,7 @@ Change:
 Keep timed scripts (`run`, `bench`, `variance`, `history`) separate. Confirm
 the three files fail through process exit when any invariant throws.
 
-- [ ] **Step 5: Verify benchmarks and Myco enter the full list**
+- [x] **Step 5: Verify benchmarks and Myco enter the full list**
 
 ```powershell
 node scripts/run-all-tests.cjs --list
@@ -337,7 +337,7 @@ node scripts/run-all-tests.cjs --list
 Expected: 96 governed test-bearing packages from 97 registered packages; both
 `galerina-devtools-benchmarks` and `galerina-tools-myco` appear.
 
-- [ ] **Step 6: Run focused and package tests**
+- [x] **Step 6: Run focused and package tests**
 
 ```powershell
 node --test scripts/tests/run-all-tests.test.mjs
@@ -349,7 +349,7 @@ Run the second command separately in:
 - `packages-galerina/galerina-devtools-benchmarks`
 - `packages-galerina/galerina-tools-myco`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add -- scripts/run-all-tests.cjs scripts/tests/run-all-tests.test.mjs packages-galerina/galerina-devtools-benchmarks/package.json packages-galerina/galerina-tools-myco/package.json

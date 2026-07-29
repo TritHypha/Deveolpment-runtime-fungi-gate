@@ -1,390 +1,424 @@
-// run-all-tests.js
-// Root test runner for the Galerina monorepo.
-//
-// There are no npm workspaces here — each package under packages-galerina/* is
-// self-contained (file:../ deps, its own `npm test` that does
-// typecheck && build && node --test). This script gives ONE command + ONE exit
-// code across packages, parses each package's node:test summary, and prints an
-// aggregate table (the same cross-package totals the runtime-status SOT tracks).
-//
-// Usage:
-//   node scripts/run-all-tests.js              # all test-bearing packages
-//   node scripts/run-all-tests.js --core       # just the SOT four (fast: ~30s)
-//   node scripts/run-all-tests.js --list       # list discoverable test packages, no run
-//   node scripts/run-all-tests.js <pkg> [pkg]  # only the named package(s)
-//   node scripts/run-all-tests.js --bail       # stop at the first failing package
-//   node scripts/run-all-tests.js --emit-counts # after a clean FULL run, write the
-//                                               # canonical totals into version.json
-//                                               # (testCount + per-package map) and
-//                                               # the SOT doc's "verified" line (#150)
-//
-// Exit code: 0 if every selected package passed, 1 otherwise (3 = usage error).
+#!/usr/bin/env node
+// Complete, build-current package test runner for the Galerina workspace.
+// Unknown, missing, empty, signalled, timed-out, or uncountable results refuse.
 
-'use strict';
+"use strict";
 
-const { spawnSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const { spawnSync } = require("node:child_process");
+const fs = require("node:fs");
+const path = require("node:path");
+const { pathToFileURL } = require("node:url");
 
-const ROOT = path.join(__dirname, '..');
-const PACKAGES_DIR = path.join(ROOT, 'packages-galerina');
+const DEFAULT_ROOT = path.join(__dirname, "..");
+const CORE = Object.freeze([
+  "galerina-devtools-graph-algorithms",
+  "galerina-core-economics",
+  "galerina-core-compiler",
+  "galerina-core-security",
+]);
+const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
+const TIMEOUT_MS = 600_000;
 
-// The four packages whose counts the runtime-status SOT aggregates, in build
-// order (graph-algorithms is a compiler dependency; security builds last).
-const CORE = [
-  'galerina-devtools-graph-algorithms',
-  'galerina-core-economics',
-  'galerina-core-compiler',
-  'galerina-core-security',
-];
-
-// Consumers that must run AFTER the rest (downstream of the generated graph).
-const RUN_LAST = ['galerina-devtools-graph-project'];
-
-// ── args ─────────────────────────────────────────────────────────────────────
-const argv = process.argv.slice(2);
-const flags = new Set(argv.filter((a) => a.startsWith('--')));
-const named = argv.filter((a) => !a.startsWith('--'));
-const isCore = flags.has('--core');
-const isList = flags.has('--list');
-const bail = flags.has('--bail');
-const emitCounts = flags.has('--emit-counts');
-
-// ── helpers ──────────────────────────────────────────────────────────────────
-function readPkg(dir) {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
-  } catch {
-    return null;
-  }
-}
-function hasTestScript(dir) {
-  const pkg = readPkg(dir);
-  return typeof pkg?.scripts?.test === 'string';
-}
-// A "real" test suite runs node --test (or the galerina example runner) rather
-// than only typechecking — used to distinguish suites from typecheck-only gates.
-function isRealSuite(dir) {
-  const t = readPkg(dir)?.scripts?.test || '';
-  return /node\s+--test|galerina\.js\s+test/.test(t);
-}
-
-// Parse a node:test run summary from captured output. Handles both the TAP
-// (`# tests N`) and spec-reporter (`ℹ tests N`) formats.
-function parseCounts(out) {
-  const grab = (label) => {
-    const m = out.match(new RegExp(`(?:^|\\n)\\s*(?:#|\\u2139)\\s*${label}\\s+(\\d+)`));
-    return m ? Number(m[1]) : null;
+function parseArguments(argv) {
+  const options = {
+    root: DEFAULT_ROOT,
+    json: false,
+    list: false,
+    core: false,
+    bail: false,
+    emitCounts: false,
+    named: [],
   };
-  return { tests: grab('tests'), pass: grab('pass'), fail: grab('fail') };
-}
-
-function discover() {
-  if (named.length) {
-    return named.map((name) => ({ name, dir: path.join(PACKAGES_DIR, name) }));
-  }
-  if (isCore) {
-    return CORE.map((name) => ({ name, dir: path.join(PACKAGES_DIR, name) }));
-  }
-  // All test-bearing packages: graph-algorithms-style first, RUN_LAST last.
-  const all = fs
-    .readdirSync(PACKAGES_DIR)
-    .filter((name) => fs.statSync(path.join(PACKAGES_DIR, name)).isDirectory())
-    .map((name) => ({ name, dir: path.join(PACKAGES_DIR, name) }))
-    .filter(({ dir }) => hasTestScript(dir) && isRealSuite(dir));
-  const last = all.filter((p) => RUN_LAST.includes(p.name));
-  const mid = all.filter((p) => !RUN_LAST.includes(p.name)).sort((a, b) => a.name.localeCompare(b.name));
-  return [...mid, ...last];
-}
-
-// Expand a glob like "tests/*.test.mjs" against a package dir into real paths.
-// Cross-platform: cmd.exe (shell:true) does NOT expand globs, so we do it in JS.
-function expandTestGlob(dir, glob) {
-  // glob form: "<subdir>/<pattern>.mjs" — support a single * in the basename.
-  const slash = glob.lastIndexOf('/');
-  const sub = slash >= 0 ? glob.slice(0, slash) : '.';
-  const pat = slash >= 0 ? glob.slice(slash + 1) : glob;
-  const subDir = path.join(dir, sub);
-  if (!fs.existsSync(subDir)) return [];
-  const re = new RegExp('^' + pat.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');
-  return fs.readdirSync(subDir).filter((f) => re.test(f)).map((f) => path.join(sub, f));
-}
-
-function runOne({ name, dir }) {
-  if (!fs.existsSync(dir)) return { name, status: 'missing', tests: null, ms: 0 };
-  if (!hasTestScript(dir)) return { name, status: 'no-test', tests: null, ms: 0 };
-  const t0 = Date.now();
-
-  // Smart dispatch: if the test script needs a build (npm run typecheck/build) but
-  // dist/ already exists, run only the `node --test <globs>` portion directly,
-  // expanding globs in JS (cmd.exe doesn't). Avoids requiring tsc on PATH.
-  const pkg = readPkg(dir);
-  const testScript = pkg?.scripts?.test ?? '';
-  const distExists = fs.existsSync(path.join(dir, 'dist'));
-  const needsBuild = /npm run (typecheck|build[:a-z]*)/.test(testScript);
-  const nodeTestMatch = testScript.match(/node\s+--test\s+(.+?)(?:\s*&&|\s*$)/);
-
-  let r;
-  let buildSkipped = false; // surfaced in the summary — see SKIPPED_BUILDS below
-  if (needsBuild && distExists && nodeTestMatch) {
-    const globs = nodeTestMatch[1].trim().split(/\s+/);
-    const files = globs.flatMap((g) => expandTestGlob(dir, g));
-    if (files.length > 0) {
-      // The package's own `test` script would have BUILT first; this path deliberately does not.
-      // Recorded rather than assumed silent: a suite that skips the build is testing whatever dist/
-      // happens to hold, so a green here means "the tests pass against the LAST build", which is a
-      // weaker claim than "the tests pass against this source". Measured 2026-07-25: a stale dist/
-      // in galerina-core-compiler read an export as `undefined` for a whole session because of this.
-      buildSkipped = true;
-      r = spawnSync('node', ['--test', ...files], { cwd: dir, encoding: 'utf8', shell: false, timeout: 600_000 });
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === "--root") {
+      const value = argv[index + 1];
+      if (!value || value.startsWith("--")) {
+        throw new Error("--root requires a workspace path");
+      }
+      options.root = path.resolve(value);
+      index += 1;
+    } else if (argument === "--json") {
+      options.json = true;
+    } else if (argument === "--list") {
+      options.list = true;
+    } else if (argument === "--core") {
+      options.core = true;
+    } else if (argument === "--bail") {
+      options.bail = true;
+    } else if (argument === "--emit-counts") {
+      options.emitCounts = true;
+    } else if (argument.startsWith("--")) {
+      throw new Error(`Unknown option: ${argument}`);
     } else {
-      r = spawnSync('npm', ['test'], { cwd: dir, encoding: 'utf8', shell: true, timeout: 600_000 });
+      options.named.push(argument);
     }
+  }
+  if (options.core && options.named.length > 0) {
+    throw new Error("--core cannot be combined with named packages");
+  }
+  return options;
+}
+
+function parseCounts(output) {
+  function value(label) {
+    const match = output.match(
+      new RegExp(
+        `(?:^|\\n)\\s*[^A-Za-z0-9\\r\\n]*${label}\\s+(\\d+)\\s*(?:\\r?$|\\n)`,
+      ),
+    );
+    return match ? Number(match[1]) : null;
+  }
+  return {
+    tests: value("tests"),
+    pass: value("pass"),
+    fail: value("fail"),
+  };
+}
+
+function runNpmTest(directory) {
+  const childEnv = { ...process.env };
+  // A runner invoked by node:test must start a new top-level test process.
+  // Inheriting this marker makes Node treat the package suite as recursive
+  // and silently skip every file.
+  delete childEnv.NODE_TEST_CONTEXT;
+  const common = {
+    cwd: directory,
+    encoding: "utf8",
+    env: childEnv,
+    shell: false,
+    timeout: TIMEOUT_MS,
+    windowsHide: true,
+  };
+  if (process.platform === "win32") {
+    return spawnSync(
+      process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
+      ["/d", "/s", "/c", "npm.cmd", "test"],
+      common,
+    );
+  }
+  return spawnSync("npm", ["test"], common);
+}
+
+function failureFor(child, counts) {
+  if (child.error?.code === "ETIMEDOUT") {
+    return ["TEST-TIMEOUT", `Package test exceeded ${TIMEOUT_MS}ms.`];
+  }
+  if (child.error) {
+    return ["TEST-SPAWN-ERROR", child.error.message];
+  }
+  if (child.signal) {
+    return ["TEST-SIGNALLED", `Package test ended by signal ${child.signal}.`];
+  }
+  if (child.status === null) {
+    return ["TEST-STATUS-UNKNOWN", "Package test returned no numeric exit status."];
+  }
+  if (child.status !== 0) {
+    return ["TEST-CHILD-FAILED", `Package test exited ${child.status}.`];
+  }
+  if (counts.tests === null || counts.pass === null || counts.fail === null) {
+    return [
+      "TEST-SUMMARY-UNPARSEABLE",
+      "Exit zero did not include tests/pass/fail counters.",
+    ];
+  }
+  if (counts.tests === 0) {
+    return ["TEST-SUMMARY-EMPTY", "A zero-test suite is not evidence."];
+  }
+  if (counts.fail !== 0
+      || counts.pass !== counts.tests) {
+    return [
+      "TEST-SUMMARY-MISMATCH",
+      `Expected tests=pass and fail=0; observed ${counts.tests}/${counts.pass}/${counts.fail}.`,
+    ];
+  }
+  return null;
+}
+
+function runPackage(record) {
+  const started = Date.now();
+  const child = runNpmTest(record.absolutePath);
+  const durationMs = Date.now() - started;
+  const output = `${child.stdout || ""}\n${child.stderr || ""}`;
+  const counts = parseCounts(output);
+  const failure = failureFor(child, counts);
+  return {
+    package: record.subject,
+    status: failure === null ? "pass" : "fail",
+    exitCode: typeof child.status === "number" ? child.status : 1,
+    tests: counts.tests,
+    pass: counts.pass,
+    fail: counts.fail,
+    built: child.error === undefined && child.status !== null,
+    durationMs,
+    ...(failure === null
+      ? {}
+      : { failureCode: failure[0], detail: failure[1] }),
+    _output: output,
+  };
+}
+
+function stablePackageRecords(inventory, policy, options) {
+  const exceptions = new Set(Object.keys(policy.packageNoTest || {}));
+  const runnable = inventory.packages.filter((record) =>
+    record.registered
+    && record.exists
+    && record.packageJsonError === null
+    && record.testScript !== null
+    && !exceptions.has(record.subject));
+  const byName = new Map();
+  for (const record of runnable) {
+    byName.set(record.subject, record);
+    byName.set(path.basename(record.path), record);
+  }
+
+  let selected;
+  if (options.named.length > 0) {
+    selected = options.named.map((name) => {
+      const record = byName.get(name);
+      if (!record) throw new Error(`Unknown or non-runnable package: ${name}`);
+      return record;
+    });
+  } else if (options.core) {
+    selected = CORE.map((name) => {
+      const record = byName.get(name);
+      if (!record) throw new Error(`Core package is missing or non-runnable: ${name}`);
+      return record;
+    });
   } else {
-    r = spawnSync('npm', ['test'], { cwd: dir, encoding: 'utf8', shell: true, timeout: 600_000 });
+    selected = runnable;
   }
-  const ms = Date.now() - t0;
-  const out = `${r.stdout || ''}\n${r.stderr || ''}`;
-  const counts = parseCounts(out);
-  return { name, status: r.status === 0 ? 'pass' : 'fail', code: r.status, ...counts, ms, out, buildSkipped };
+
+  const unique = [...new Map(
+    selected.map((record) => [record.subject, record]),
+  ).values()];
+  return unique.sort((left, right) => {
+    const leftLast = RUN_LAST.has(left.subject);
+    const rightLast = RUN_LAST.has(right.subject);
+    if (leftLast !== rightLast) return leftLast ? 1 : -1;
+    return left.subject.localeCompare(right.subject);
+  });
 }
 
-/**
- * Report which packages ran WITHOUT their build step (the smart-dispatch above).
- *
- * Why this is surfaced rather than left implicit: the dispatch is a real convenience — it avoids
- * requiring `tsc` on PATH — but it means those suites tested whatever `dist/` already contained.
- * A silent skip lets "N packages, 0 fail" read as "the current source passes", when the honest
- * claim is "the current TESTS pass against the LAST BUILD". Those differ exactly when it matters:
- * after a source change that was never compiled. Measured on 2026-07-25 — a stale
- * galerina-core-compiler/dist reported a newly-added export as `undefined` for an entire session.
- *
- * Not a gate, and deliberately not: turning it red would break every machine without tsc on PATH.
- * It states what was skipped so the number is read at its true strength.
- */
-function reportSkippedBuilds(results) {
-  const skipped = results.filter((r) => r.buildSkipped).map((r) => r.name);
-  if (skipped.length === 0) return;
-  console.log(`\n⚠  ${skipped.length} package(s) ran with the BUILD SKIPPED (dist/ already existed, so the`);
-  console.log(`   package's own build step was bypassed). These suites tested the LAST BUILD, not`);
-  console.log(`   necessarily the current source. Run \`npm run build\` in a package before trusting`);
-  console.log(`   its result after a source change:`);
-  for (const n of skipped.sort()) console.log(`     • ${n}`);
+function packageContractViolations(violations) {
+  return violations.filter((item) =>
+    item.code.startsWith("TOOLING-PACKAGE")
+    || item.code.startsWith("TOOLING-WORKSPACE")
+    || item.code === "TOOLING-POLICY-MALFORMED"
+    || item.code === "TOOLING-POLICY-MISSING");
 }
 
-// ── canonical count emission (#150) ───────────────────────────────────────────
-// After a clean FULL run, write the canonical totals back into version.json and
-// the runtime-status SOT doc so those figures are generated, not hand-edited
-// (which is how they drifted). Idempotent: rewriting with identical numbers is a
-// no-op. Safe: refuses to write on a partial scope or any failure (see callsite).
-
-// Stable per-package map: { "<pkg>": <tests>, ... } for passed suites that
-// reported a count. Sorted by name so the JSON diff is deterministic.
-function buildPerPackage(res) {
-  const map = {};
-  for (const r of [...res].sort((a, b) => a.name.localeCompare(b.name))) {
-    if (r.status === 'pass' && typeof r.tests === 'number') map[r.name] = r.tests;
-  }
-  return map;
-}
-
-/**
- * Cross-check testCountByPackage against the workspace package list.
- *
- * Item 9 (Bob architectural review 2026-07): version.json testCountByPackage is
- * a second hand-maintained registry that can drift from galerina.workspace.json.
- * After writing new counts, validate that:
- *   (a) every key in the new perPackage map corresponds to a real discovered package
- *       (no ghost entries from renamed/removed packages).
- *   (b) warn about packages that ARE in the workspace but produced no count
- *       (possible newly-added packages not yet in the map).
- *
- * Mismatches are printed as warnings — not fatal, because a freshly-added package
- * may not have landed in the SOT yet. Stale ghosts (case a) are always actionable.
- */
-function validateTestCountVsWorkspace(perPackage) {
-  // Load workspace package names from galerina.workspace.json
-  let workspacePkgs;
+function writeCanonicalCounts(root, results) {
+  const versionPath = path.join(root, "version.json");
+  if (!fs.existsSync(versionPath)) return {
+    ok: false,
+    detail: `version.json is missing: ${versionPath}`,
+  };
+  let current;
   try {
-    const ws = JSON.parse(fs.readFileSync(path.join(ROOT, 'galerina.workspace.json'), 'utf8'));
-    workspacePkgs = new Set(
-      (ws.packages || []).map((p) => p.replace(/^packages-galerina\//, '')),
-    );
-  } catch {
-    process.stdout.write('   ⚠️  workspace cross-check: could not read galerina.workspace.json; skipped.\n');
-    return;
+    current = JSON.parse(fs.readFileSync(versionPath, "utf8"));
+  } catch (error) {
+    return { ok: false, detail: `version.json is malformed: ${error.message}` };
   }
-
-  const countKeys = new Set(Object.keys(perPackage));
-
-  // (a) Keys in testCountByPackage that are NOT in the workspace — ghost entries.
-  const ghosts = [...countKeys].filter((k) => !workspacePkgs.has(k));
-  if (ghosts.length > 0) {
-    process.stdout.write(
-      `   ⚠️  workspace cross-check: ${ghosts.length} ghost key(s) in testCountByPackage not in workspace: ` +
-      ghosts.join(', ') + '\n',
-    );
+  const perPackage = {};
+  for (const result of [...results].sort((a, b) =>
+    a.package.localeCompare(b.package))) {
+    perPackage[result.package] = result.tests;
   }
-
-  // (b) Workspace packages not in testCountByPackage — newly-added or renamed.
-  const missing = [...workspacePkgs].filter((k) => !countKeys.has(k));
-  if (missing.length > 0) {
-    process.stdout.write(
-      `   ℹ️  workspace cross-check: ${missing.length} workspace package(s) absent from testCountByPackage: ` +
-      missing.join(', ') + '\n',
-    );
-  }
-
-  if (ghosts.length === 0 && missing.length === 0) {
-    process.stdout.write(`   ✅ workspace cross-check: testCountByPackage keys match workspace (${countKeys.size} packages).\n`);
-  }
-}
-
-function writeVersionJson(total, pkgCount, perPackage) {
-  const file = path.join(ROOT, 'version.json');
-  let raw;
-  try {
-    raw = fs.readFileSync(file, 'utf8');
-  } catch {
-    process.stdout.write(`⚠️  --emit-counts: version.json not found at ${file}; skipped\n`);
-    return false;
-  }
-  // Detect trailing newline so we preserve the file's existing style.
-  const trailingNL = raw.endsWith('\n');
-  let json;
-  try {
-    json = JSON.parse(raw);
-  } catch (e) {
-    process.stdout.write(`⚠️  --emit-counts: version.json is not valid JSON (${e.message}); skipped\n`);
-    return false;
-  }
+  const total = results.reduce((sum, result) => sum + result.tests, 0);
   const today = new Date().toISOString().slice(0, 10);
-  json.testCount = total;
-  json.packageCount = pkgCount;
-  json.testCountByPackage = perPackage;
-  json.testCountNote =
-    `${today} auto-generated by scripts/run-all-tests.cjs --emit-counts: ` +
-    `${pkgCount}/${pkgCount} packages, ${total.toLocaleString('en-US')} tests, 0 fail` +
-    (typeof perPackage['galerina-core-compiler'] === 'number'
-      ? ` (compiler ${perPackage['galerina-core-compiler'].toLocaleString('en-US')}).`
-      : '.');
-  const next = JSON.stringify(json, null, 2) + (trailingNL ? '\n' : '');
-  if (next === raw) {
-    process.stdout.write('   version.json already current (no change).\n');
-    return true;
-  }
-  fs.writeFileSync(file, next);
-  process.stdout.write(`   version.json updated → testCount=${total}, packageCount=${pkgCount}.\n`);
-  return true;
+  const next = {
+    ...current,
+    testCount: total,
+    packageCount: results.length,
+    testCountByPackage: perPackage,
+    testCountNote:
+      `${today} auto-generated by scripts/run-all-tests.cjs --emit-counts: `
+      + `${results.length}/${results.length} packages, `
+      + `${total.toLocaleString("en-US")} tests, 0 fail`
+      + (typeof perPackage["galerina-core-compiler"] === "number"
+        ? ` (compiler ${perPackage["galerina-core-compiler"].toLocaleString("en-US")}).`
+        : "."),
+  };
+  fs.writeFileSync(versionPath, `${JSON.stringify(next, null, 2)}\n`);
+  return { ok: true, path: versionPath };
 }
 
-function writeSotDoc(total, pkgCount) {
-  // The SOT doc migrated to the sibling ZTF-Knowledge-Bases repo — resolve like kb-index.mjs
-  // (GALERINA_KB_DIR override, sibling default). Absence stays non-fatal (optional target).
-  const kbDir = process.env.GALERINA_KB_DIR || path.join(ROOT, '..', 'ZTF-Knowledge-Bases');
-  const file = path.join(kbDir, 'galerina-runtime-status-SOT.md');
-  let raw;
-  try {
-    raw = fs.readFileSync(file, 'utf8');
-  } catch {
-    process.stdout.write('   SOT doc not present; skipped.\n');
-    return true; // optional target — absence is not a failure
-  }
-  const today = new Date().toISOString().slice(0, 10);
-  const totalStr = total.toLocaleString('en-US');
-  // Canonical "verified" line only: a bold date-prefixed line ending "0 fail.".
-  // Historical change-log / blockquote snapshots are intentionally NOT touched.
-  const re = /(\*\*)\d{4}-\d{2}-\d{2} verified: \d+\/\d+ packages, [\d,]+ tests, 0 fail\.(\*\*)/;
-  if (!re.test(raw)) {
-    process.stdout.write('   SOT doc canonical "verified" line not found; left unchanged.\n');
-    return true;
-  }
-  const next = raw.replace(
-    re,
-    `$1${today} verified: ${pkgCount}/${pkgCount} packages, ${totalStr} tests, 0 fail.$2`,
+function publicResult(result) {
+  const { _output, ...visible } = result;
+  return visible;
+}
+
+function humanReport(report, results) {
+  process.stdout.write(
+    `Galerina root test runner — ${report.scope}: `
+    + `${report.totals.selected} package(s)\n\n`,
   );
-  if (next === raw) {
-    process.stdout.write('   SOT doc already current (no change).\n');
-    return true;
+  for (const result of results) {
+    if (result.status === "pass") {
+      process.stdout.write(
+        `✅ ${result.package}: ${result.tests} tests `
+        + `(${(result.durationMs / 1000).toFixed(1)}s)\n`,
+      );
+    } else {
+      process.stdout.write(
+        `❌ ${result.package}: ${result.failureCode} — ${result.detail}\n`,
+      );
+      for (const line of result._output
+        .split(/\r?\n/)
+        .filter((candidate) => /not ok|Error:|fail \d/i.test(candidate))
+        .slice(0, 8)) {
+        process.stdout.write(`   ${line.trim()}\n`);
+      }
+    }
   }
-  fs.writeFileSync(file, next);
-  process.stdout.write(`   SOT doc verified line updated → ${pkgCount}/${pkgCount} packages, ${totalStr} tests.\n`);
-  return true;
+  process.stdout.write(
+    `\n${report.totals.passed}/${report.totals.executed} packages passed`
+    + ` · ${report.totals.tests} tests total\n`,
+  );
 }
 
-// ── list mode ────────────────────────────────────────────────────────────────
-if (isList) {
-  const pkgs = discover();
-  process.stdout.write(`Test-bearing packages (${pkgs.length}):\n`);
-  for (const { name, dir } of pkgs) {
-    const kind = isRealSuite(dir) ? 'suite' : hasTestScript(dir) ? 'typecheck-only' : 'no-test';
-    process.stdout.write(`  ${name.padEnd(36)} ${kind}\n`);
+async function main() {
+  let options;
+  try {
+    options = parseArguments(process.argv.slice(2));
+  } catch (error) {
+    process.stderr.write(`run-all-tests: ${error.message}\n`);
+    process.exit(3);
   }
-  process.exit(0);
-}
 
-// ── run ──────────────────────────────────────────────────────────────────────
-const selection = discover();
-const scope = named.length ? 'named' : isCore ? 'core (SOT four)' : 'all suites';
-process.stdout.write(`Galerina root test runner — ${scope}: ${selection.length} package(s)\n\n`);
+  const inventoryModule = await import(pathToFileURL(
+    path.join(__dirname, "lib", "tooling-inventory.mjs"),
+  ).href);
+  let inventory;
+  let policy;
+  let contractViolations;
+  try {
+    inventory = inventoryModule.discoverTooling(options.root);
+    policy = inventoryModule.loadToolingPolicy(options.root);
+    contractViolations = packageContractViolations(
+      inventoryModule.validateToolingContract(inventory, policy),
+    );
+  } catch (error) {
+    const report = {
+      tool: "run-all-tests",
+      schemaVersion: 1,
+      ok: false,
+      root: options.root,
+      violations: [{
+        code: error.code || "TEST-INVENTORY-ERROR",
+        detail: error.message,
+      }],
+      results: [],
+    };
+    if (options.json) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    else process.stderr.write(`run-all-tests: ${error.message}\n`);
+    process.exit(1);
+  }
 
-const results = [];
-let totalTests = 0;
-let anyFail = false;
+  if (contractViolations.length > 0) {
+    const report = {
+      tool: "run-all-tests",
+      schemaVersion: 1,
+      ok: false,
+      root: options.root,
+      violations: contractViolations,
+      results: [],
+    };
+    if (options.json) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    else {
+      for (const item of contractViolations) {
+        process.stderr.write(`${item.code} ${item.subject}: ${item.detail}\n`);
+      }
+    }
+    process.exit(1);
+  }
 
-for (const pkg of selection) {
-  process.stdout.write(`▶ ${pkg.name} … `);
-  const res = runOne(pkg);
-  results.push(res);
-  if (res.status === 'pass') {
-    if (typeof res.tests === 'number') totalTests += res.tests;
-    const cnt = typeof res.tests === 'number' ? `${res.tests} tests` : 'ok';
-    process.stdout.write(`✅ ${cnt} (${(res.ms / 1000).toFixed(1)}s)\n`);
-  } else if (res.status === 'fail') {
-    anyFail = true;
-    process.stdout.write(`❌ FAIL (exit ${res.code}, ${(res.ms / 1000).toFixed(1)}s)\n`);
-    // surface the failing lines for quick triage
-    const fails = (res.out || '').split('\n').filter((l) => /not ok|✖|Error:|fail \d/.test(l)).slice(0, 8);
-    for (const l of fails) process.stdout.write(`    ${l.trim()}\n`);
-    if (bail) break;
+  let selection;
+  try {
+    selection = stablePackageRecords(inventory, policy, options);
+  } catch (error) {
+    process.stderr.write(`run-all-tests: ${error.message}\n`);
+    process.exit(3);
+  }
+
+  if (options.list) {
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify({
+        tool: "run-all-tests",
+        schemaVersion: 1,
+        root: options.root,
+        packages: selection.map((record) => record.subject),
+      }, null, 2)}\n`);
+    } else {
+      process.stdout.write(`Test-bearing packages (${selection.length}):\n`);
+      for (const record of selection) {
+        process.stdout.write(`  ${record.subject}\n`);
+      }
+    }
+    process.exit(0);
+  }
+
+  const results = [];
+  for (const record of selection) {
+    const result = runPackage(record);
+    results.push(result);
+    if (options.bail && result.status === "fail") break;
+  }
+  const visibleResults = results.map(publicResult);
+  const passed = results.filter((result) => result.status === "pass").length;
+  const failed = results.length - passed;
+  const totalTests = results.reduce(
+    (sum, result) => sum + (result.status === "pass" ? result.tests : 0),
+    0,
+  );
+  const complete = failed === 0 && results.length === selection.length;
+  const scope = options.named.length > 0
+    ? "named"
+    : options.core
+      ? "core"
+      : "all";
+  let countWrite = null;
+  if (options.emitCounts) {
+    if (scope !== "all" || !complete) {
+      countWrite = {
+        ok: false,
+        detail: "Canonical counts require a complete successful full run.",
+      };
+    } else {
+      countWrite = writeCanonicalCounts(options.root, visibleResults);
+    }
+  }
+  const ok = complete && (countWrite === null || countWrite.ok);
+  const report = {
+    tool: "run-all-tests",
+    schemaVersion: 1,
+    ok,
+    root: options.root,
+    scope,
+    totals: {
+      selected: selection.length,
+      executed: results.length,
+      passed,
+      failed,
+      tests: totalTests,
+    },
+    results: visibleResults,
+    ...(countWrite === null ? {} : { countWrite }),
+  };
+
+  if (options.json) {
+    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   } else {
-    process.stdout.write(`⚠️  ${res.status}\n`);
+    humanReport(report, results);
+    if (countWrite && !countWrite.ok) {
+      process.stderr.write(`--emit-counts refused: ${countWrite.detail}\n`);
+    }
   }
+  process.exit(ok ? 0 : 1);
 }
 
-// ── summary ──────────────────────────────────────────────────────────────────
-process.stdout.write('\n── Summary ──────────────────────────────\n');
-const pad = (s, n) => String(s).padEnd(n);
-process.stdout.write(`${pad('package', 38)}${pad('tests', 8)}status\n`);
-for (const r of results) {
-  const tests = typeof r.tests === 'number' ? r.tests : '—';
-  const mark = r.status === 'pass' ? '✅ pass' : r.status === 'fail' ? '❌ fail' : `⚠️  ${r.status}`;
-  process.stdout.write(`${pad(r.name, 38)}${pad(tests, 8)}${mark}\n`);
-}
-const passed = results.filter((r) => r.status === 'pass').length;
-process.stdout.write('─────────────────────────────────────────\n');
-process.stdout.write(`${passed}/${results.length} packages passed · ${totalTests} tests total\n`);
-reportSkippedBuilds(results);
-
-// ── emit canonical counts (#150) ──────────────────────────────────────────────
-// Only when explicitly requested AND the run is a clean FULL run. Writing on a
-// partial scope (--core / named) or after any failure would corrupt the SOT.
-if (emitCounts) {
-  process.stdout.write('\n── --emit-counts ────────────────────────\n');
-  const isFullScope = !named.length && !isCore;
-  if (!isFullScope) {
-    process.stdout.write('   refused: counts are only canonical for a FULL run (no --core / named pkgs).\n');
-  } else if (anyFail) {
-    process.stdout.write('   refused: at least one package failed; counts not written.\n');
-  } else if (passed !== results.length) {
-    process.stdout.write('   refused: not every selected package passed; counts not written.\n');
-  } else {
-    const perPackage = buildPerPackage(results);
-    writeVersionJson(totalTests, passed, perPackage);
-    writeSotDoc(totalTests, passed);
-    // Item 9 (Bob review 2026-07): cross-check testCountByPackage vs workspace
-    validateTestCountVsWorkspace(perPackage);
-  }
-}
-
-process.exit(anyFail ? 1 : 0);
+main().catch((error) => {
+  process.stderr.write(`run-all-tests: ${error.stack || error.message}\n`);
+  process.exit(1);
+});

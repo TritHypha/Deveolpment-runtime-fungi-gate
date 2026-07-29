@@ -70,13 +70,28 @@ planning checkbox must never be used to imply that implementation exists.
   and passed 5,698/5,698 tests. The first `npm test` spelling was refused by
   Windows PowerShell execution policy; the equivalent `npm.cmd test` command
   is the verified Windows invocation.
-- **Current:** Task 1 is functionally implemented but its final policy
-  dispositions and scoped commit are still open. The live inventory found 22
-  audit/lint tools outside authoritative cadence; each must become an exact
-  gate or an explicit non-authorizing exception, never a blanket baseline.
-- **Next safe work:** finish the 22-tool disposition table and Task 1 commit,
-  then execute Task 2, the complete build-current root test runner. Generator
-  policy remains deliberately inactive until its Task 7 RED/GREEN contract.
+- **Completed (Task 2 implementation):** the root runner now consumes the
+  reconciled package/policy inventory, supports `--root`, `--json`, `--list`,
+  `--core`, `--bail`, and `--emit-counts`, executes each exact `npm test`
+  chain without a stale-`dist` bypass, and refuses missing, signalled,
+  timed-out, non-zero, uncountable, empty, or inconsistent results. Four
+  subprocess RED/GREEN fixtures cover omitted script spellings, real build
+  execution despite an existing `dist/`, unparseable success, and zero tests.
+- **Completed (recursive-test defect):** the fixture exposed that inheriting
+  `NODE_TEST_CONTEXT` makes Node silently skip a nested package suite. The
+  runner removes that marker before the independent child process. This is
+  locked by the real one-test build-current fixture.
+- **Verified (Task 2):** full discovery is 96 runnable packages from 97
+  registered; benchmarks and Myco are included. Benchmark integrity is 3/3,
+  Myco is 52/52, and a fresh four-package core run is 5,823/5,823
+  (compiler 5,698; economics 15; security 15; graph algorithms 95).
+- **Current:** Task 2 is ready for its scoped commit. Task 1's structural
+  inventory remains intentionally red on 22 audit/lint dispositions because
+  true blocking requires Task 4 result propagation and Task 8 promotion of
+  report-only/advisory tools; adding exceptions would falsify the design.
+- **Next safe work:** commit Task 2, then execute Task 3 package build-chain
+  standardization. Generator policy remains deliberately inactive until its
+  Task 7 RED/GREEN contract.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side
