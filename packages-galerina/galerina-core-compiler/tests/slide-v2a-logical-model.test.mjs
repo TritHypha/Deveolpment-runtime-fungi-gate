@@ -19,8 +19,11 @@ const MODEL_PATH = join(
 );
 const VALIDATOR_PATH = join(SELF_HOSTED, "slide-v2a-validator.fungi");
 const ENCODER_PATH = join(SELF_HOSTED, "slide-v2a-cbor-encoder.fungi");
+const IMPORTER_PATH = join(SELF_HOSTED, "slide-v2a-cbor-importer.fungi");
+const DIGEST_PATH = join(SELF_HOSTED, "slide-v2a-semantic-digest.fungi");
 
 let parsed;
+let importer;
 let program;
 let canonicalBytes;
 
@@ -63,12 +66,27 @@ function edgeAt(block, index) {
   return field(field(block, "terminator"), "edges").items[index];
 }
 
+function mutateUniqueSequence(source, sequence, relativeOffset, replacement) {
+  const matches = [];
+  for (let i = 0; i <= source.length - sequence.length; i += 1) {
+    if (sequence.every((byte, j) => source[i + j] === byte)) matches.push(i);
+  }
+  assert.equal(matches.length, 1, `sequence must occur exactly once: ${sequence}`);
+  const value = source.slice();
+  value[matches[0] + relativeOffset] = replacement;
+  return value;
+}
+
 async function run(flowName, args = new Map()) {
+  return runOn(parsed, flowName, args);
+}
+
+async function runOn(target, flowName, args = new Map()) {
   return executeFlow(
     flowName,
     args,
-    parsed.ast,
-    parsed.flows,
+    target.ast,
+    target.flows,
     undefined,
     undefined,
     { pureFastPath: false },
@@ -85,10 +103,12 @@ async function validate(value) {
 }
 
 before(async () => {
-  const [modelSource, validatorSource, encoderSource] = await Promise.all([
+  const [modelSource, validatorSource, encoderSource, importerSource, digestSource] = await Promise.all([
     readFile(MODEL_PATH, "utf8"),
     readFile(VALIDATOR_PATH, "utf8"),
     readFile(ENCODER_PATH, "utf8"),
+    readFile(IMPORTER_PATH, "utf8"),
+    readFile(DIGEST_PATH, "utf8"),
   ]);
   const source =
     modelSource +
@@ -105,6 +125,29 @@ before(async () => {
   );
   assert.deepEqual(
     checkTypes(parsed.ast).diagnostics.filter(
+      (diagnostic) => diagnostic.severity === "error",
+    ),
+    [],
+  );
+  const independentSource =
+    modelSource +
+    "\n" +
+    validatorSource.replace(/^@version 1\r?\n/, "") +
+    "\n" +
+    importerSource.replace(/^@version 1\r?\n/, "");
+  const independentSourceWithDigest =
+    independentSource +
+    "\n" +
+    digestSource.replace(/^@version 1\r?\n/, "");
+  importer = parseProgram(independentSourceWithDigest, "slide-v2a-cbor-importer.fungi", {
+    requireVersionHeader: true,
+  });
+  assert.deepEqual(
+    importer.diagnostics.filter((diagnostic) => diagnostic.severity === "error"),
+    [],
+  );
+  assert.deepEqual(
+    checkTypes(importer.ast).diagnostics.filter(
       (diagnostic) => diagnostic.severity === "error",
     ),
     [],
@@ -209,6 +252,106 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     assert.equal(field(result.value, "byteLength").value, 0);
     assert.equal(field(result.value, "bytes").value.length, 0);
   });
+
+  it("independently decodes and semantically admits the canonical body", async () => {
+    const result = await runOn(
+      importer,
+      "decodeSLIDEV2AProgram",
+      new Map([["bytes", { __tag: "bytes", value: canonicalBytes }]]),
+    );
+    assert.equal(result.audit.result, "ok");
+    assert.equal(field(field(result.value, "decision"), "verdict").value, 1);
+    assert.equal(field(result.value, "consumed").value, 540);
+    const decoded = field(result.value, "program");
+    assert.equal(field(decoded, "formatMajor").value, 2);
+    assert.equal(field(decoded, "functions").items.length, 2);
+    assert.equal(
+      field(blockAt(functionAt(decoded, 1), 3), "parameters").items.length,
+      3,
+    );
+  });
+
+  it("binds only independently admitted bytes to the v2 semantic domain", async () => {
+    const result = await runOn(
+      importer,
+      "bindSLIDEV2ASemanticDigest",
+      new Map([["body", { __tag: "bytes", value: canonicalBytes }]]),
+    );
+    assert.equal(result.audit.result, "ok");
+    assert.equal(field(field(result.value, "decision"), "verdict").value, 1);
+    assert.equal(
+      field(result.value, "bodyDigest").value,
+      "ee143f6de55eab66e7e2d6f23ab03816337165d771f8645040ba60ff06976a07",
+    );
+    assert.equal(
+      field(result.value, "semanticDigest").value,
+      "910727d92460501cd592af8130dbef4acd6abd1432d7ea384ba52be66e9d3464",
+    );
+
+    const refused = await runOn(
+      importer,
+      "bindSLIDEV2ASemanticDigest",
+      new Map([[
+        "body",
+        { __tag: "bytes", value: Uint8Array.from([...canonicalBytes, 0]) },
+      ]]),
+    );
+    assert.equal(field(field(refused.value, "decision"), "verdict").value, -1);
+    assert.equal(field(refused.value, "bodyDigest").value, "");
+    assert.equal(field(refused.value, "semanticDigest").value, "");
+  });
+
+  for (const [name, bytes] of [
+    ["truncation", () => canonicalBytes.slice(0, -1)],
+    ["suffix", () => Uint8Array.from([...canonicalBytes, 0])],
+    ["root-key drift", () => {
+      const value = canonicalBytes.slice();
+      value[2] = 1;
+      return value;
+    }],
+    ["non-shortest root length", () =>
+      Uint8Array.from([0xb8, 0x12, ...canonicalBytes.slice(1)])],
+    ["unknown decoded opcode", () =>
+      mutateUniqueSequence(
+        canonicalBytes,
+        [0x85, 0x08, 0x05, 0x01, 0x81, 0x05, 0x01],
+        2,
+        0x09,
+      )],
+    ["decoded K3 successor drift", () =>
+      mutateUniqueSequence(
+        canonicalBytes,
+        [0x86, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06],
+        6,
+        0x05,
+      )],
+    ["registry-digest drift", () => {
+      const value = canonicalBytes.slice();
+      const marker = new TextEncoder().encode(
+        "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327",
+      );
+      let offset = -1;
+      for (let i = 0; i <= value.length - marker.length; i += 1) {
+        if (marker.every((byte, j) => value[i + j] === byte)) {
+          offset = i;
+          break;
+        }
+      }
+      assert.notEqual(offset, -1);
+      value[offset] ^= 1;
+      return value;
+    }],
+  ]) {
+    it(`independent import exposes no partial graph for ${name}`, async () => {
+      const result = await runOn(
+        importer,
+        "decodeSLIDEV2AProgram",
+        new Map([["bytes", { __tag: "bytes", value: bytes() }]]),
+      );
+      assert.equal(field(field(result.value, "decision"), "verdict").value, -1);
+      assert.equal(field(field(result.value, "program"), "functions").items.length, 0);
+    });
+  }
 
   const mutations = [
     [

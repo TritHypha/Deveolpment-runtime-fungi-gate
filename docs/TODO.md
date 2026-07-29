@@ -65,14 +65,18 @@ planning checkbox must never be used to imply that implementation exists.
   constant/effect/capability/memory/extension table, then emitted a pinned
   540-byte canonical V2-A body. Report:
   `docs/reports/slide-v2a-canonical-producer-2026-07-29.md`.
-- **Current:** implement independent V2-A decoding so the semantic gate
-  receives reconstructed candidate records rather than the producer object.
-- **Next:** bind a domain-separated V2 semantic digest and add the
-  instruction-driven V2-A executor; then add budget/effect/capability/memory
-  increments without widening frozen R1.
-- **Verification:** compiler typecheck/build and 5,313/5,313 tests pass.
-  Frozen R1 remains 27/27; V2-A is 16/16. Regenerated project graph:
-  7,204 nodes / 7,466 edges, zero integrity
+- **Completed (uncommitted checkpoint):** independent `.fungi` decoding now
+  reconstructs all 18 critical root fields without the producer/encoder,
+  exposes no partial graph on refusal, runs semantic admission, and binds the
+  pinned v2 domain-separated digest. V2-A focused evidence is 25/25. Report:
+  `docs/reports/slide-v2a-independent-import-2026-07-29.md`.
+- **Current:** implement the instruction-driven V2-A executor over only the
+  independently decoded and validated graph.
+- **Next:** add budget/effect/capability/memory increments without widening
+  frozen R1.
+- **Verification:** compiler typecheck/build and 5,322/5,322 tests pass.
+  Frozen R1 remains 27/27; V2-A is 25/25. Regenerated project graph:
+  7,223 nodes / 7,484 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero
