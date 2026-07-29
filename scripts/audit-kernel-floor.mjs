@@ -13,13 +13,22 @@
 // Zero-dep (node:fs/path only), never throws, exit 1 only on a violation.
 //   node scripts/audit-kernel-floor.mjs           # enforce (table + verdict)
 //   node scripts/audit-kernel-floor.mjs --json     # machine-readable
+//   node scripts/audit-kernel-floor.mjs --root <dir>  # hermetic repository fixture
 import { readFileSync, readdirSync, existsSync } from "node:fs";
-import { join, dirname, basename } from "node:path";
+import { join, dirname, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-kernel-floor: --root requires a value.");
+  process.exit(2);
+}
+const ROOT = rootIndex >= 0
+  ? resolve(argv[rootIndex + 1])
+  : join(dirname(fileURLToPath(import.meta.url)), "..");
 const KERNEL_SRC = join(ROOT, "packages-galerina", "galerina-framework-app-kernel", "src");
-const AS_JSON = process.argv.includes("--json");
+const AS_JSON = argv.includes("--json");
 
 // The ONE file permitted to hold the host floor — the declared TCB seam.
 const DECLARED_SEAM = "fuse-loader.ts";

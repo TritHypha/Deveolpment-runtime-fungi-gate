@@ -165,10 +165,14 @@ planning checkbox must never be used to imply that implementation exists.
   tooling dispositions. Its first three-gate fixture group proves
   `audit-allowlist-sensitive`, `audit-codes-full`, and
   `audit-corpus-effect-names` fire on planted defects and clear on controls.
-  Anti-neutering advisories fell 13 -> 10; tooling-contract gaps fell 21 -> 19
-  because the corpus gate was already cadence-wired. No exception was added
-  to hide a tool.
-- **Next safe work:** close the remaining ten anti-neutering gaps in groups
+  The second group proves diagnostic-name collisions, non-seam kernel host
+  reach, and leaking build scratch directories in both directions. Live
+  diagnostic identity is 338/338 with zero violations; the kernel floor is
+  confined to its nine-primitive seam; all five live scratch factories are
+  clean. Anti-neutering advisories fell 13 -> 7; tooling-contract gaps fell
+  21 -> 17 because the corpus and scratch gates were already cadence-wired.
+  No exception was added to hide a tool.
+- **Next safe work:** close the remaining seven anti-neutering gaps in groups
   of no more than three, repair/split the existing monolithic dev-tool
   fixture, then reconcile the remaining nineteen tooling dispositions. Task
   7's live orchestration close remains correctly red on one owner-only

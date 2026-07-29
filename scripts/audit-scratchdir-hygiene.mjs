@@ -21,19 +21,27 @@
 // (`PREFIX-${process.pid}-${Math.random()}`, no `build/`) are NOT candidates: in-memory
 // strings, no disk.
 //
-// Usage:  node scripts/audit-scratchdir-hygiene.mjs [--json]
+// Usage:  node scripts/audit-scratchdir-hygiene.mjs [--json] [--root <dir>]
 // Exit:   0 = every candidate is clean; 1 = >=1 candidate leaks (no rmSync) OR sweeps broad;
 //         3 = usage/error.
 // =============================================================================
 "use strict";
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "..");
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-scratchdir-hygiene: --root requires a value.");
+  process.exit(3);
+}
+const ROOT = rootIndex >= 0
+  ? resolve(argv[rootIndex + 1])
+  : join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const PKGS = join(ROOT, "packages-galerina");
-const asJson = process.argv.includes("--json");
+const asJson = argv.includes("--json");
 
 // ── walk packages-galerina/*/tests/**/*.mjs ──────────────────────────────────
 function walk(dir, out) {
