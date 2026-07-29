@@ -1,15 +1,15 @@
 # Galerina Graph Report
 
 Workspace: Galerina-app
-Generated: 2026-07-29T10:04:45.185Z
+Generated: 2026-07-29T15:07:43.000Z
 
 ## Summary
 
-- Packages: 95
-- Documents: 3427
-- Types/interfaces: 2692
-- Functions: 1286
-- Relationships: 7776
+- Packages: 97
+- Documents: 3551
+- Types/interfaces: 2697
+- Functions: 1288
+- Relationships: 7937
 
 ## Package Nodes
 
@@ -69,6 +69,7 @@ Generated: 2026-07-29T10:04:45.185Z
 - galerina-core-tasks (packages-galerina/galerina-core-tasks/README.md)
 - galerina-tools-benchmark (packages-galerina/galerina-tools-benchmark/README.md)
 - galerina-tools-myco (packages-galerina/galerina-tools-myco/README.md)
+- galerina-devtools-benchmarks (packages-galerina/galerina-devtools-benchmarks/README.md)
 - galerina-test (packages-galerina/galerina-test/README.md)
 - galerina-devtools-graph-project (packages-galerina/galerina-devtools-graph-project/README.md)
 - galerina-framework-example-app (packages-galerina/galerina-framework-example-app/README.md)
@@ -93,6 +94,7 @@ Generated: 2026-07-29T10:04:45.185Z
 - galerina-ext-secrets-vault (packages-galerina/galerina-ext-secrets-vault/package.json)
 - galerina-ext-secrets-spore (packages-galerina/galerina-ext-secrets-spore/README.md)
 - galerina-ext-tritsocket (packages-galerina/galerina-ext-tritsocket/README.md)
+- galerina-registry (packages-galerina/galerina-registry/README.md)
 - galerina-governance-telemetry (packages-galerina/galerina-governance-telemetry/README.md)
 - galerina-observability (packages-galerina/galerina-observability/README.md)
 - galerina-hardware-tier (packages-galerina/galerina-hardware-tier/README.md)

@@ -17,7 +17,7 @@
 | ├─ Node core | 0 |
 | ├─ Workspace (@galerina/*) | 0 |
 | └─ Third-party | 0 |
-| Orphan files | 5 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -31,15 +31,21 @@ _none_
 _none_
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
+
+## Entry Points
+- `src/index.ts`
+
+## Loaded Assets
 - `src/dss/dag-validator.fungi`
 - `src/dss/dss-supervisor.fungi`
 - `src/dss/epilogue-receipt.fungi`
+- `src/dss/index.fungi`
 - `src/dss/mmcp-registry.fungi`
 - `src/interim.fungi`
 
-## Entry Points
-- `src/dss/index.fungi`
-- `src/index.ts`
+## Allowed Orphans
+_none declared_

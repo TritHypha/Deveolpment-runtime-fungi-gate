@@ -12,12 +12,12 @@
 | Metric | Count |
 |---|---|
 | Files | 21 |
-| Internal edges | 0 |
+| Internal edges | 11 |
 | External dependencies | 6 |
 | ├─ Node core | 6 |
 | ├─ Workspace (@galerina/*) | 0 |
 | └─ Third-party | 0 |
-| Orphan files | 21 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -36,9 +36,12 @@ _none_
 _none_
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
+
+## Entry Points
 - `src/audit-benchmark-integrity.mjs`
 - `src/audit.mjs`
 - `src/bench-guard.mjs`
@@ -48,18 +51,15 @@ No boundary violations. All external imports are within the allowlist.
 - `src/compare-chart.mjs`
 - `src/compare.mjs`
 - `src/diagnostic-runner.mjs`
-- `src/galerina-runner.mjs`
-- `src/gpu-detect.mjs`
 - `src/history.mjs`
-- `src/mem-sampler.mjs`
 - `src/noise-gate.mjs`
 - `src/report.mjs`
 - `src/runner.mjs`
 - `src/snapshot.mjs`
-- `src/throughput-units.mjs`
 - `src/variance.mjs`
-- `src/wasm-runner.mjs`
-- `src/work-equivalence.mjs`
 
-## Entry Points
-_none detected_
+## Loaded Assets
+- `src/wasm-runner.mjs`
+
+## Allowed Orphans
+- `src/mem-sampler.mjs` -- Dormant exported sampler retained for benchmark instrumentation; no executable or import currently owns it.

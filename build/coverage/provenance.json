@@ -1,0 +1,12 @@
+{
+  "tool": "audit-coverage",
+  "gitCommit": "3604545fb5d0e45dcf82e3694894b5bc5436de41",
+  "builtAt": "2026-07-29T15:07:43.000Z",
+  "node": "v24.18.0",
+  "externalInputs": [
+    {
+      "name": "galerina-governance-rules.md",
+      "sha256": "82e91e2752f6612c0c072ebeb312dbb55efe308815e177657417e993b85cd2b0"
+    }
+  ]
+}

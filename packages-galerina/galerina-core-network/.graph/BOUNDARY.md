@@ -17,7 +17,7 @@
 | ├─ Node core | 0 |
 | ├─ Workspace (@galerina/*) | 1 |
 | └─ Third-party | 0 |
-| Orphan files | 7 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -31,9 +31,15 @@ _none_
 _none_
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
+
+## Entry Points
+- `src/index.ts`
+
+## Loaded Assets
 - `src/self-hosted/admission-feedback.fungi`
 - `src/self-hosted/b8-admission.fungi`
 - `src/self-hosted/cert-gate.fungi`
@@ -42,5 +48,5 @@ No boundary violations. All external imports are within the allowlist.
 - `src/self-hosted/egress-guard.fungi`
 - `src/self-hosted/inbound-guard.fungi`
 
-## Entry Points
-- `src/index.ts`
+## Allowed Orphans
+_none declared_

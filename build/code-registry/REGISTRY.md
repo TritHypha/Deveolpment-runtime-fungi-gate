@@ -19,7 +19,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 202 | referenced only (no def/emit) |
+| ref | 206 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -527,8 +527,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_TRAP | ref | — | — |
 | ERR_UNREALISTIC_AGE | phantom | — | — |
 | ERR_UNVERIFIED_METADATA | ref | — | — |
-| ERR_VALID_CODE | ref | — | — |
 | ERR_VALIDATION_FAILURE | ref | — | — |
+| ERR_VALID_CODE | ref | — | — |
 | ERR_X | ref | — | — |
 | ERR_X_Y | ref | — | — |
 | ERR_ZERO | ref | — | — |
@@ -624,7 +624,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-GEN-TEST-005 | ref | — | — |
 
-### GOV (30)
+### GOV (31)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -657,6 +657,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-GOV-3VL-003 | inline | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error |
 | FUNGI-GOV-3VL-004 | inline | ORDERED_COMPARISON_ON_VERDICT | error |
 | FUNGI-GOV-902 | ref | — | — |
+| FUNGI-GOV-999 | ref | — | — |
 | FUNGI-GOV-TPL-001 | inline | — | — |
 
 ### GRAPH (6)
@@ -771,6 +772,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-K3-004 | inline | VERDICT_COMPARED_TO_NON_VERDICT | error |
 | FUNGI-K3-005 | inline | NON_VERDICT_RETURNED_AS_VERDICT | error |
 
+### KB (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-KB-001 | ref | — | — |
+
 ### LAYOUT (1)
 
 | code | status | name(s) | severity |
@@ -798,7 +805,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-LINT-001 | live | EXCESSIVE_NESTING | info |
+| FUNGI-LINT-001 | live | FLOW_EXCESSIVE_NESTING | info |
 | FUNGI-LINT-002 | live | UNUSED_BINDING | warning |
 
 ### LOGIC (14)
@@ -1079,6 +1086,13 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PRIVACY-002 | live | EMBEDDING_EGRESS_DENIED | error |
 | FUNGI-PRIVACY-003 | ref | — | — |
 | FUNGI-PRIVACY-004 | inline | EMBEDDING_CROSSES_FLOW_BOUNDARY | — |
+
+### PROBE (2)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-PROBE-001 | ref | — | — |
+| FUNGI-PROBE-002 | ref | — | — |
 
 ### PROFILE (8)
 

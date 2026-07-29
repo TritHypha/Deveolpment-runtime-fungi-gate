@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-07-25T18:23:52.000Z",
-  "sha": "5f51ac32",
-  "contracts": 939,
-  "parsed": 460,
+  "generatedAt": "2026-07-29T15:07:43.000Z",
+  "sha": "3604545f",
+  "contracts": 1331,
+  "parsed": 507,
   "rows": [
     {
       "file": "docs/examples/Level-1-Basics/001-pure-flow/example.fungi",
@@ -2931,6 +2931,14 @@
     },
     {
       "file": "examples/auth-service/governanceService.fungi",
+      "name": "validateQualifier",
+      "qualifier": "pure",
+      "signature": "pure flow validateQualifier(qualifier: String) -> String",
+      "effects": [],
+      "intent": "Verify a flow's governance level against its declared effect qualifier."
+    },
+    {
+      "file": "examples/auth-service/governanceService.fungi",
       "name": "verifyGovernance",
       "qualifier": "secure",
       "signature": "secure flow verifyGovernance(readonly request: Request) -> Response",
@@ -2982,6 +2990,22 @@
     },
     {
       "file": "examples/auth-service/governanceVerifierService.fungi",
+      "name": "validateQualifier",
+      "qualifier": "pure",
+      "signature": "pure flow validateQualifier(qualifier: String) -> String",
+      "effects": [],
+      "intent": "Accept a governance verification request. Return APPROVED or DENIED with reason."
+    },
+    {
+      "file": "examples/auth-service/governanceVerifierService.fungi",
+      "name": "validateBoolStr",
+      "qualifier": "pure",
+      "signature": "pure flow validateBoolStr(flag: String) -> String",
+      "effects": [],
+      "intent": "Accept a governance verification request. Return APPROVED or DENIED with reason."
+    },
+    {
+      "file": "examples/auth-service/governanceVerifierService.fungi",
       "name": "verifyFlowGovernance",
       "qualifier": "secure",
       "signature": "secure flow verifyFlowGovernance(readonly request: Request) -> VerifyResult",
@@ -3008,7 +3032,7 @@
       "qualifier": "pure",
       "signature": "pure flow isValidManifestVersion(version: String) -> Bool",
       "effects": [],
-      "intent": "Verify a runtime manifest's schema version and signature status."
+      "intent": ""
     },
     {
       "file": "examples/auth-service/manifestVerificationService.fungi",
@@ -3038,7 +3062,7 @@
       "file": "examples/auth-service/manifestVerificationService.fungi",
       "name": "manifestTrustLevel",
       "qualifier": "pure",
-      "signature": "pure flow manifestTrustLevel(verified: Bool, hasSignature: Bool, flagsValid: Bool) -> Int",
+      "signature": "pure flow manifestTrustLevel(verified: Bool, versionValid: Bool, hasSignature: Bool, flagsValid: Bool) -> Int",
       "effects": [],
       "intent": "Verify a runtime manifest's schema version and signature status."
     },
@@ -3276,7 +3300,7 @@
       "qualifier": "pure",
       "signature": "pure flow profileAllowsUnboundedLoop(profile: String) -> Bool",
       "effects": [],
-      "intent": "Check a runtime profile request against the governed profile rules."
+      "intent": ""
     },
     {
       "file": "examples/auth-service/runtimeProfileService.fungi",
@@ -4197,6 +4221,14 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/gir-emitter.fungi",
+      "name": "paramTypes",
+      "qualifier": "pure",
+      "signature": "pure flow paramTypes(params: Array<FlowParam>) -> Array<String>",
+      "effects": [],
+      "intent": "Extract each FlowParam's declared type into an ordered array."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/gir-emitter.fungi",
       "name": "buildFlowTable",
       "qualifier": "pure",
       "signature": "pure flow buildFlowTable(flows: Array<FlowDecl>) -> Array<FlowEntry>",
@@ -4653,6 +4685,14 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "parseCheckArms",
+      "qualifier": "pure",
+      "signature": "pure flow parseCheckArms(tokens: Array<Token>, openBracePos: Int) -> CheckArmsResult",
+      "effects": [],
+      "intent": "Parse all contextual check arms without collapsing K3 into Bool."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
       "name": "parseStmt",
       "qualifier": "pure",
       "signature": "pure flow parseStmt(tokens: Array<Token>, pos: Int) -> StmtParse",
@@ -4698,6 +4738,22 @@
       "signature": "pure flow bodyHasStepConstruct(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
       "effects": [],
       "intent": "True when a `step <flowName>(` DWI-isolate call appears in the flow-body range."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "parseTopLevelRecordDecl",
+      "qualifier": "pure",
+      "signature": "pure flow parseTopLevelRecordDecl(tokens: Array<Token>, keywordPos: Int) -> RecordDeclParse",
+      "effects": [],
+      "intent": "Preserve one ordered record/type declaration as checked frontend facts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "parseTopLevelEnumDecl",
+      "qualifier": "pure",
+      "signature": "pure flow parseTopLevelEnumDecl(tokens: Array<Token>, keywordPos: Int) -> EnumDeclParse",
+      "effects": [],
+      "intent": "Preserve one ordered payload-free enum declaration as checked frontend facts."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
@@ -4765,6 +4821,14 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
+      "name": "rtVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow rtVerdict(x: Int) -> RtValue",
+      "effects": [],
+      "intent": "Build an exact K3 Verdict runtime value; callers still face use-site validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
       "name": "rtStr",
       "qualifier": "pure",
       "signature": "pure flow rtStr(x: String) -> RtValue",
@@ -4825,7 +4889,7 @@
       "qualifier": "pure",
       "signature": "pure flow applyBinop(op: String, a: RtValue, b: RtValue) -> RtValue",
       "effects": [],
-      "intent": "Evaluate a GIR binop opcode over two runtime values."
+      "intent": "Evaluate a GIR binop with fail-closed Int32 arithmetic."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
@@ -4850,6 +4914,22 @@
       "signature": "pure flow evalFirst(exprs: Array<GIRExpr>, env: Array<Binding>, flows: Array<FlowEntry>) -> RtValue",
       "effects": [],
       "intent": "Evaluate a statement's single carried GIR expression, or Int 0 if none."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
+      "name": "countK3Arm",
+      "qualifier": "pure",
+      "signature": "pure flow countK3Arm(arms: Array<GIRStmt>, label: String) -> Int",
+      "effects": [],
+      "intent": "Count exact K3 successor labels so missing and duplicate arms refuse."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
+      "name": "findK3Arm",
+      "qualifier": "pure",
+      "signature": "pure flow findK3Arm(arms: Array<GIRStmt>, label: String) -> GIRStmt",
+      "effects": [],
+      "intent": "Return the uniquely validated K3 successor for a label."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
@@ -4882,6 +4962,3030 @@
       "signature": "pure flow runProgram(flows: Array<FlowEntry>, entryName: String, args: Array<RtValue>) -> RunResult",
       "effects": [],
       "intent": "Run a flow-table program from an entry flow with positional args; return value + audit log."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "deriveSLIDER1FixtureName",
+      "qualifier": "pure",
+      "signature": "pure flow deriveSLIDER1FixtureName(flowEntry: R1CompilerFlow) -> String",
+      "effects": [],
+      "intent": "Expose the compiler-derived fixture identity for adapter differential tests."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "emptyR1Expr",
+      "qualifier": "pure",
+      "signature": "pure flow emptyR1Expr() -> R1InputExpr",
+      "effects": [],
+      "intent": "Return a non-admissible expression sentinel for bounded shape inspection."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "emptyR1Stmt",
+      "qualifier": "pure",
+      "signature": "pure flow emptyR1Stmt() -> R1InputStmt",
+      "effects": [],
+      "intent": "Return a non-admissible statement sentinel for bounded shape inspection."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "firstR1Expr",
+      "qualifier": "pure",
+      "signature": "pure flow firstR1Expr(exprs: Array<R1InputExpr>) -> R1InputExpr",
+      "effects": [],
+      "intent": "Return the first expression or a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "firstR1Stmt",
+      "qualifier": "pure",
+      "signature": "pure flow firstR1Stmt(stmts: Array<R1InputStmt>) -> R1InputStmt",
+      "effects": [],
+      "intent": "Return the first statement or a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "countR1Arm",
+      "qualifier": "pure",
+      "signature": "pure flow countR1Arm(arms: Array<R1InputStmt>, label: String) -> Int",
+      "effects": [],
+      "intent": "Count one exact K3 arm label."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "findR1Arm",
+      "qualifier": "pure",
+      "signature": "pure flow findR1Arm(arms: Array<R1InputStmt>, label: String) -> R1InputStmt",
+      "effects": [],
+      "intent": "Return an exact labelled K3 arm after the caller validates uniqueness."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "isR1Load",
+      "qualifier": "pure",
+      "signature": "pure flow isR1Load(expr: R1InputExpr, expectedName: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one leaf load without coercion or hidden children."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "isR1StringConst",
+      "qualifier": "pure",
+      "signature": "pure flow isR1StringConst(expr: R1InputExpr, expectedValue: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact string constant."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "isR1ErrorArm",
+      "qualifier": "pure",
+      "signature": "pure flow isR1ErrorArm(arm: R1InputStmt, expectedText: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize an exact terminal Err(String) K3 arm."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "isR1AllowArm",
+      "qualifier": "pure",
+      "signature": "pure flow isR1AllowArm(arm: R1InputStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize the exact terminal Ok(checked left + right) ALLOW arm."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "r1StringAt",
+      "qualifier": "pure",
+      "signature": "pure flow r1StringAt(values: Array<String>, position: Int) -> String",
+      "effects": [],
+      "intent": "Return a string at an exact position or an empty refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "emptySLIDER1LogicalProgram",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1LogicalProgram() -> SLIDER1LogicalProgram",
+      "effects": [],
+      "intent": "Return a clearly non-materialized logical program for refusal results."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "materializeSLIDER1Fixture",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDER1Fixture() -> SLIDER1LogicalProgram",
+      "effects": [],
+      "intent": "Materialize the closed logical R1 program after exact source-GIR validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
+      "name": "adaptSLIDER1Fixture",
+      "qualifier": "pure",
+      "signature": "pure flow adaptSLIDER1Fixture(flowEntry: R1CompilerFlow) -> SLIDER1AdapterResult",
+      "effects": [],
+      "intent": "Derive preflight facts from one compiler-owned GIR flow and materialize only the exact R1 fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "refuseSLIDER1BodyExport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDER1BodyExport(failureId: String, reasonText: String) -> SLIDER1BodyExport",
+      "effects": [],
+      "intent": "Return a terminal refusal without releasing partial semantic bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1IntAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1IntAt(values: Array<Int>, position: Int) -> Int",
+      "effects": [],
+      "intent": "Read one required integer or return a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1InstructionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1InstructionAt(values: Array<SLIDER1LogicalInstruction>, position: Int) -> SLIDER1LogicalInstruction",
+      "effects": [],
+      "intent": "Read one required instruction or return a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1BlockAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1BlockAt(values: Array<SLIDER1LogicalBlock>, position: Int) -> SLIDER1LogicalBlock",
+      "effects": [],
+      "intent": "Read one required block or return a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1FailureAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1FailureAt(values: Array<SLIDER1LogicalFailure>, position: Int) -> SLIDER1LogicalFailure",
+      "effects": [],
+      "intent": "Read one required failure record or return a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1K3At",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1K3At(values: Array<SLIDER1LogicalK3Obligation>, position: Int) -> SLIDER1LogicalK3Obligation",
+      "effects": [],
+      "intent": "Read one required K3 obligation or return a non-admissible sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1ExactIntArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExactIntArray(actual: Array<Int>, expected: Array<Int>) -> Bool",
+      "effects": [],
+      "intent": "Compare bounded ordered integer identities without ignoring surplus values."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1ExactInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExactInstruction(actual: SLIDER1LogicalInstruction, resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> Bool",
+      "effects": [],
+      "intent": "Verify one typed instruction including all operands and its immediate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1ExactTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExactTerminator(actual: SLIDER1LogicalTerminator, terminatorId: Int, operands: Array<Int>) -> Bool",
+      "effects": [],
+      "intent": "Verify one typed terminator and every explicit successor/value operand."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1ExactLogicalProgram",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExactLogicalProgram(program: SLIDER1LogicalProgram) -> Bool",
+      "effects": [],
+      "intent": "Admit exactly the frozen typed-ID R1 semantic model before releasing bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORHead(majorType: Int, value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode one bounded canonical CBOR head or return an empty refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORUInt(value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode one bounded unsigned integer with the shortest RFC 8949 representation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORText",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORText(value: String) -> Bytes",
+      "effects": [],
+      "intent": "Encode one definite-length UTF-8 CBOR text value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORIntArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORIntArray(values: Array<Int>) -> Bytes",
+      "effects": [],
+      "intent": "Encode one definite-length array of bounded unsigned registry values."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORInstruction(value: SLIDER1LogicalInstruction) -> Bytes",
+      "effects": [],
+      "intent": "Encode one typed five-field R1 instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORBlock",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORBlock(value: SLIDER1LogicalBlock) -> Bytes",
+      "effects": [],
+      "intent": "Encode one typed block with definite instruction and terminator arrays."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORFailure(value: SLIDER1LogicalFailure) -> Bytes",
+      "effects": [],
+      "intent": "Encode one five-field registered failure record."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "slideR1CBORK3",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CBORK3(value: SLIDER1LogicalK3Obligation) -> Bytes",
+      "effects": [],
+      "intent": "Encode one six-field registered K3 obligation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-encoder.fungi",
+      "name": "exportSLIDER1CanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDER1CanonicalBody(program: SLIDER1LogicalProgram) -> SLIDER1BodyExport",
+      "effects": [],
+      "intent": "Release canonical deterministic CBOR only for the exact typed-ID R1 program."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ImportFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ImportFailure(offset: Int, failureId: String, reasonText: String) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Create one sticky bounded-import refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ImportByte",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ImportByte(bytes: Bytes, offset: Int) -> Int",
+      "effects": [],
+      "intent": "Read one byte as an integer or return the out-of-bounds sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ReadCanonicalHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ReadCanonicalHead(bytes: Bytes, offset: Int, expectedMajor: Int) -> SLIDER1HeadRead",
+      "effects": [],
+      "intent": "Read one definite shortest-form CBOR head under the R1 16-bit ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectHead(bytes: Bytes, cursor: SLIDER1ImportCursor, major: Int, expectedValue: Int, failureId: String, reasonText: String) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Consume one exact canonical head while preserving the first refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectUInt(bytes: Bytes, cursor: SLIDER1ImportCursor, expectedValue: Int, failureId: String, reasonText: String) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Consume one exact canonical unsigned registry value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectArray(bytes: Bytes, cursor: SLIDER1ImportCursor, expectedCount: Int, failureId: String) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Consume one exact definite array boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectText",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectText(bytes: Bytes, cursor: SLIDER1ImportCursor, expectedText: String, failureId: String, reasonText: String) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Consume and byte-compare one exact bounded UTF-8 profile identity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectInstruction(bytes: Bytes, cursor: SLIDER1ImportCursor, resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Parse one fixed typed instruction and classify registry or operand drift."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "slideR1ExpectTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExpectTerminator(bytes: Bytes, cursor: SLIDER1ImportCursor, terminatorId: Int, operands: Array<Int>, k3: Bool) -> SLIDER1ImportCursor",
+      "effects": [],
+      "intent": "Parse one total terminator and classify K3 successor drift separately."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-importer.fungi",
+      "name": "validateSLIDER1StructuralBody",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDER1StructuralBody(bytes: Bytes) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Structurally admit only the frozen typed-ID R1 graph with canonical encoding and no suffix."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-validator.fungi",
+      "name": "slideR1CanonicalReferenceBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1CanonicalReferenceBytes() -> Bytes",
+      "effects": [],
+      "intent": "Return the independently pinned canonical R1 semantic-body vector."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-validator.fungi",
+      "name": "refuseSLIDER1Wire",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDER1Wire(failureId: String, reasonText: String, mismatchOffset: Int, consumed: Int) -> SLIDER1WireDecision",
+      "effects": [],
+      "intent": "Return a stable terminal refusal without interpreting unadmitted bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-cbor-validator.fungi",
+      "name": "validateSLIDER1CanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDER1CanonicalBody(candidate: Bytes) -> SLIDER1WireDecision",
+      "effects": [],
+      "intent": "Admit only the exact bounded canonical SLIDE R1 semantic-body vector and reject all drift."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-preflight.fungi",
+      "name": "refuseSLIDER1Preflight",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDER1Preflight(failureId: String, failureClass: String, reasonText: String) -> SLIDER1PreflightDecision",
+      "effects": [],
+      "intent": "Return one stable, terminal refusal for an unsupported R1 export fact."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-preflight.fungi",
+      "name": "preflightSLIDER1",
+      "qualifier": "pure",
+      "signature": "pure flow preflightSLIDER1(request: SLIDER1PreflightRequest) -> SLIDER1PreflightDecision",
+      "effects": [],
+      "intent": "Admit only the exact checked-Int32, exhaustive-K3 first R1 fixture shape."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedInstruction() -> SLIDER1DecodedInstruction",
+      "effects": [],
+      "intent": "Return an inert instruction used only behind a refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedTerminator() -> SLIDER1DecodedTerminator",
+      "effects": [],
+      "intent": "Return an inert terminator used only behind a refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedBlock",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedBlock() -> SLIDER1DecodedBlock",
+      "effects": [],
+      "intent": "Return an inert block used only behind a refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedFailure",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedFailure() -> SLIDER1DecodedFailure",
+      "effects": [],
+      "intent": "Return an inert failure used only behind a refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedK3",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedK3() -> SLIDER1DecodedK3",
+      "effects": [],
+      "intent": "Return an inert K3 obligation used only behind a refusal cursor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "emptySLIDER1DecodedProgram",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1DecodedProgram() -> SLIDER1DecodedProgram",
+      "effects": [],
+      "intent": "Return a no-authority program value for refused imports."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramDecision",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramDecision(verdict: Verdict, status: String, failureId: String, reasonText: String, consumed: Int) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Create one typed program-import decision."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ReadUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ReadUInt(bytes: Bytes, cursor: SLIDER1ImportCursor, failureId: String, reasonText: String) -> SLIDER1UIntDecode",
+      "effects": [],
+      "intent": "Decode one canonical unsigned field while retaining its value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ReadArrayCount",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ReadArrayCount(bytes: Bytes, cursor: SLIDER1ImportCursor, ceiling: Int, failureId: String, reasonText: String) -> SLIDER1UIntDecode",
+      "effects": [],
+      "intent": "Decode one definite canonical array count under a hard local ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeIntArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeIntArray(bytes: Bytes, cursor: SLIDER1ImportCursor, ceiling: Int, failureId: String) -> SLIDER1InstructionDecode",
+      "effects": [],
+      "intent": "Decode a bounded unsigned array into the operand field of an inert instruction carrier."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeInstruction(bytes: Bytes, cursor: SLIDER1ImportCursor) -> SLIDER1InstructionDecode",
+      "effects": [],
+      "intent": "Decode one typed R1 instruction without assigning semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeTerminator(bytes: Bytes, cursor: SLIDER1ImportCursor) -> SLIDER1TerminatorDecode",
+      "effects": [],
+      "intent": "Decode one total R1 terminator without assigning control semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeBlock",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeBlock(bytes: Bytes, cursor: SLIDER1ImportCursor) -> SLIDER1BlockDecode",
+      "effects": [],
+      "intent": "Decode one bounded R1 block into independently owned records."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeFailure(bytes: Bytes, cursor: SLIDER1ImportCursor) -> SLIDER1FailureDecode",
+      "effects": [],
+      "intent": "Decode one declared R1 failure record."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodeK3",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodeK3(bytes: Bytes, cursor: SLIDER1ImportCursor) -> SLIDER1K3Decode",
+      "effects": [],
+      "intent": "Decode one K3 obligation without trusting successor meaning."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "decodeSLIDER1Program",
+      "qualifier": "pure",
+      "signature": "pure flow decodeSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport",
+      "effects": [],
+      "intent": "Decode canonical SLIDE R1 bytes into an independent typed graph without semantic fix-up."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodedIntAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodedIntAt(values: Array<Int>, position: Int) -> Int",
+      "effects": [],
+      "intent": "Read one decoded integer or return a no-authority sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodedInstructionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodedInstructionAt(values: Array<SLIDER1DecodedInstruction>, position: Int) -> SLIDER1DecodedInstruction",
+      "effects": [],
+      "intent": "Read one decoded instruction or return an inert sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodedBlockAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodedBlockAt(values: Array<SLIDER1DecodedBlock>, position: Int) -> SLIDER1DecodedBlock",
+      "effects": [],
+      "intent": "Read one decoded block or return an inert sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodedFailureAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodedFailureAt(values: Array<SLIDER1DecodedFailure>, position: Int) -> SLIDER1DecodedFailure",
+      "effects": [],
+      "intent": "Read one decoded failure or return an inert sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1DecodedK3At",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1DecodedK3At(values: Array<SLIDER1DecodedK3>, position: Int) -> SLIDER1DecodedK3",
+      "effects": [],
+      "intent": "Read one decoded K3 obligation or return an inert sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramRefusal",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramRefusal(failureId: String, reasonText: String) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Return one terminal semantic-program refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramTypeOfValue",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramTypeOfValue(program: SLIDER1DecodedProgram, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Resolve one globally unique SSA value type without ambient registries."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramBlockFirstResult",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramBlockFirstResult(program: SLIDER1DecodedProgram, blockIndex: Int) -> Int",
+      "effects": [],
+      "intent": "Return the first dense SSA result identity assigned to a block."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramOperandVisible",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramOperandVisible(program: SLIDER1DecodedProgram, blockIndex: Int, useBoundary: Int, operandId: Int) -> Bool",
+      "effects": [],
+      "intent": "Require an operand to be entry-dominating or earlier in the same successor block."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ProgramHasFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramHasFailure(program: SLIDER1DecodedProgram, failureId: Int) -> Bool",
+      "effects": [],
+      "intent": "Check a failure reference against only the decoded failure table."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ValidateInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ValidateInstruction(program: SLIDER1DecodedProgram, blockIndex: Int, instruction: SLIDER1DecodedInstruction) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Validate one decoded instruction against the frozen registry, SSA visibility, and exact types."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "slideR1ValidateFailures",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ValidateFailures(program: SLIDER1DecodedProgram) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Validate the complete frozen failure registry from decoded records."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "validateSLIDER1DecodedProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDER1DecodedProgram(program: SLIDER1DecodedProgram) -> SLIDER1ImportDecision",
+      "effects": [],
+      "intent": "Validate closed-registry CFG, SSA, types, failures, terminators, and K3 over decoded records only."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi",
+      "name": "importAndValidateSLIDER1Program",
+      "qualifier": "pure",
+      "signature": "pure flow importAndValidateSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport",
+      "effects": [],
+      "intent": "Decode and semantically validate R1 bytes; expose a program only after both gates allow."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "emptySLIDER1RuntimeValue",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1RuntimeValue() -> SLIDER1RuntimeValue",
+      "effects": [],
+      "intent": "Return an inert runtime value for missing lookup paths."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1ProgramExecutionRefused",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramExecutionRefused(failureId: String) -> SLIDER1ProgramExecutionResult",
+      "effects": [],
+      "intent": "Refuse execution without producing a semantic result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1ProgramExecutionFailed",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramExecutionFailed(failureId: Int) -> SLIDER1ProgramExecutionResult",
+      "effects": [],
+      "intent": "Return one declared typed R1 failure."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1ProgramExecutionSucceeded",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ProgramExecutionSucceeded(value: Int) -> SLIDER1ProgramExecutionResult",
+      "effects": [],
+      "intent": "Return one successful R1 Int32 result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1RuntimeValueAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1RuntimeValueAt(values: Array<SLIDER1RuntimeValue>, resultId: Int) -> SLIDER1RuntimeValue",
+      "effects": [],
+      "intent": "Resolve one executed SSA value by its validated result identity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1VerdictRuntimeValue",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1VerdictRuntimeValue(verdict: Verdict) -> Int",
+      "effects": [],
+      "intent": "Convert one exact typed Verdict to its registered R1 integer representation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "slideR1ExecuteDecodedInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1ExecuteDecodedInstruction(instruction: SLIDER1DecodedInstruction, values: Array<SLIDER1RuntimeValue>, left: Int, right: Int, admission: Verdict) -> SLIDER1InstructionStep",
+      "effects": [],
+      "intent": "Execute one previously validated registered R1 instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "executeSLIDER1ValidatedProgram",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDER1ValidatedProgram(program: SLIDER1DecodedProgram, left: Int, right: Int, admission: Verdict) -> SLIDER1ProgramExecutionResult",
+      "effects": [],
+      "intent": "Instruction-drive the validated closed R1 registry with bounded control dispatch."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-runtime.fungi",
+      "name": "executeSLIDER1ProgramBytes",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDER1ProgramBytes(body: Bytes, left: Int, right: Int, admission: Verdict) -> SLIDER1ProgramExecutionResult",
+      "effects": [],
+      "intent": "Decode, validate, and instruction-drive canonical R1 bytes with no fallback path."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-reference-runtime.fungi",
+      "name": "refuseSLIDER1ReferenceImport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDER1ReferenceImport(failureId: String) -> SLIDER1ReferenceResult",
+      "effects": [],
+      "intent": "Leave the execution path when structural byte admission is not ALLOW."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-reference-runtime.fungi",
+      "name": "failSLIDER1Reference",
+      "qualifier": "pure",
+      "signature": "pure flow failSLIDER1Reference(failureId: Int) -> SLIDER1ReferenceResult",
+      "effects": [],
+      "intent": "Return one declared typed R1 failure and no success value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-reference-runtime.fungi",
+      "name": "executeSLIDER1Imported",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDER1Imported(body: Bytes, left: Int, right: Int, admission: Verdict) -> SLIDER1ReferenceResult",
+      "effects": [],
+      "intent": "Reference-execute the exact imported checked-add/K3 graph with total terminal outcomes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-safe-value-verifier.fungi",
+      "name": "slideR1MemoryRefusal",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1MemoryRefusal(failureId: String, detail: String) -> SLIDER1MemoryDecision",
+      "effects": [],
+      "intent": "Return a terminal denial without memory-profile authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-safe-value-verifier.fungi",
+      "name": "slideR1SafeValueInvariantIds",
+      "qualifier": "pure",
+      "signature": "pure flow slideR1SafeValueInvariantIds() -> Array<Int>",
+      "effects": [],
+      "intent": "Name the semantic-layer safe-value invariants established by frozen R1."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-safe-value-verifier.fungi",
+      "name": "validateSLIDER1SafeValueProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDER1SafeValueProgram(program: SLIDER1DecodedProgram) -> SLIDER1MemoryDecision",
+      "effects": [],
+      "intent": "Require validated, bounded, effect-free, no-address R1 before semantic-memory admission."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-safe-value-verifier.fungi",
+      "name": "importAndValidateSLIDER1SafeValue",
+      "qualifier": "pure",
+      "signature": "pure flow importAndValidateSLIDER1SafeValue(body: Bytes) -> SLIDER1MemoryDecision",
+      "effects": [],
+      "intent": "Decode and validate exact R1 semantics before applying the safe-value semantic-memory gate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-semantic-digest.fungi",
+      "name": "emptySLIDER1SemanticBinding",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDER1SemanticBinding(decision: SLIDER1ImportDecision) -> SLIDER1SemanticBinding",
+      "effects": [],
+      "intent": "Return no digest evidence for a refused or unavailable semantic binding."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-semantic-digest.fungi",
+      "name": "bindSLIDER1SemanticDigest",
+      "qualifier": "pure",
+      "signature": "pure flow bindSLIDER1SemanticDigest(body: Bytes) -> SLIDER1SemanticBinding",
+      "effects": [],
+      "intent": "Validate canonical R1 semantics before hashing the exact domain-separated candidate bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "refuseSLIDEV2ABodyExport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2ABodyExport(failureId: String, reasonText: String) -> SLIDEV2ABodyExport",
+      "effects": [],
+      "intent": "Refuse V2-A export without releasing partial bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORHead(majorType: Int, value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode a shortest-form bounded CBOR head."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORUInt(value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode one bounded unsigned integer."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORInt(value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode one signed Int32 with canonical CBOR integer semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORText(value: String) -> Bytes",
+      "effects": [],
+      "intent": "Encode definite UTF-8 text."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORIntArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORIntArray(values: Array<Int>) -> Bytes",
+      "effects": [],
+      "intent": "Encode a definite array of unsigned registry identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORBlockParameter",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORBlockParameter(value: SLIDEV2ABlockParameter) -> Bytes",
+      "effects": [],
+      "intent": "Encode one typed block-parameter definition."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORInstruction(value: SLIDEV2AInstruction) -> Bytes",
+      "effects": [],
+      "intent": "Encode one five-field V2 instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBOREdge",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBOREdge(value: SLIDEV2AEdge) -> Bytes",
+      "effects": [],
+      "intent": "Encode one explicit successor and its block arguments."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORTerminator(value: SLIDEV2ATerminator) -> Bytes",
+      "effects": [],
+      "intent": "Encode one total terminator and every successor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORBlock",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORBlock(value: SLIDEV2ABlock) -> Bytes",
+      "effects": [],
+      "intent": "Encode one V2 block with parameters, instructions, and terminator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORFunction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORFunction(value: SLIDEV2AFunction) -> Bytes",
+      "effects": [],
+      "intent": "Encode one complete typed V2 function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORFailure(value: SLIDEV2AFailure) -> Bytes",
+      "effects": [],
+      "intent": "Encode one registered V2 failure."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORK3",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORK3(value: SLIDEV2AK3Obligation) -> Bytes",
+      "effects": [],
+      "intent": "Encode one exact three-successor K3 obligation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "slideV2ACBORLimits",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACBORLimits(value: SLIDEV2ALimits) -> Bytes",
+      "effects": [],
+      "intent": "Encode every V2-A declared semantic and execution ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-encoder.fungi",
+      "name": "exportSLIDEV2ACanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDEV2ACanonicalBody(program: SLIDEV2AProgram) -> SLIDEV2ABodyExport",
+      "effects": [],
+      "intent": "Release canonical V2-A bytes only after complete logical admission."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AImportFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AImportFailure(offset: Int, failureId: String, reasonText: String) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Create one sticky V2-A import refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AImportByte",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AImportByte(bytes: Bytes, offset: Int) -> Int",
+      "effects": [],
+      "intent": "Read one byte or return an out-of-bounds sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AReadCanonicalHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AReadCanonicalHead(bytes: Bytes, offset: Int, expectedMajor: Int) -> SLIDEV2AHeadRead",
+      "effects": [],
+      "intent": "Read one definite shortest-form CBOR head under the signed-Int32 ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AReadUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AReadUInt(bytes: Bytes, cursor: SLIDEV2AImportCursor, failureId: String) -> SLIDEV2AUIntDecode",
+      "effects": [],
+      "intent": "Decode one canonical unsigned integer."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AReadInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AReadInt(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AUIntDecode",
+      "effects": [],
+      "intent": "Decode one canonical signed Int32."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AReadArrayCount",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AReadArrayCount(bytes: Bytes, cursor: SLIDEV2AImportCursor, ceiling: Int, failureId: String) -> SLIDEV2AUIntDecode",
+      "effects": [],
+      "intent": "Decode a definite array count under an explicit ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AExpectUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AExpectUInt(bytes: Bytes, cursor: SLIDEV2AImportCursor, expected: Int, failureId: String) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Consume one exact unsigned value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2AExpectText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AExpectText(bytes: Bytes, cursor: SLIDEV2AImportCursor, expectedText: String, failureId: String) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Consume and compare exact canonical UTF-8 text."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeIntArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeIntArray(bytes: Bytes, cursor: SLIDEV2AImportCursor, ceiling: Int, failureId: String) -> SLIDEV2AIntArrayDecode",
+      "effects": [],
+      "intent": "Decode one bounded array of unsigned registry identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeBlockParameter",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeBlockParameter(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2ABlockParameterDecode",
+      "effects": [],
+      "intent": "Decode one block parameter."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeInstruction(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AInstructionDecode",
+      "effects": [],
+      "intent": "Decode one typed instruction without assigning authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeEdge",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeEdge(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AEdgeDecode",
+      "effects": [],
+      "intent": "Decode one successor edge and its block arguments."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeTerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeTerminator(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2ATerminatorDecode",
+      "effects": [],
+      "intent": "Decode one no-fallthrough terminator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeBlock",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeBlock(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2ABlockDecode",
+      "effects": [],
+      "intent": "Decode one bounded V2 block."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeFunction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeFunction(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AFunctionDecode",
+      "effects": [],
+      "intent": "Decode one complete V2 function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeFailure(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AFailureDecode",
+      "effects": [],
+      "intent": "Decode one registered failure record."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "slideV2ADecodeK3",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ADecodeK3(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2AK3Decode",
+      "effects": [],
+      "intent": "Decode one K3 obligation without trusting its successor meaning."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "emptySLIDEV2AProgram",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2AProgram() -> SLIDEV2AProgram",
+      "effects": [],
+      "intent": "Return a no-authority program behind a refused import."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "refusedSLIDEV2AImport",
+      "qualifier": "pure",
+      "signature": "pure flow refusedSLIDEV2AImport(cursor: SLIDEV2AImportCursor) -> SLIDEV2AProgramImport",
+      "effects": [],
+      "intent": "Expose no partial graph when V2-A decoding refuses."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-cbor-importer.fungi",
+      "name": "decodeSLIDEV2AProgram",
+      "qualifier": "pure",
+      "signature": "pure flow decodeSLIDEV2AProgram(bytes: Bytes) -> SLIDEV2AProgramImport",
+      "effects": [],
+      "intent": "Reconstruct canonical V2-A bytes without producer or encoder access."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "slideV2AEdge",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AEdge(targetBlockId: Int, arguments: Array<Int>) -> SLIDEV2AEdge",
+      "effects": [],
+      "intent": "Construct one explicit typed-control edge candidate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "slideV2ATerminator",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ATerminator(terminatorId: Int, operands: Array<Int>, edges: Array<SLIDEV2AEdge>) -> SLIDEV2ATerminator",
+      "effects": [],
+      "intent": "Construct one no-fallthrough V2-A terminator candidate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "slideV2AInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AInstruction(resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> SLIDEV2AInstruction",
+      "effects": [],
+      "intent": "Construct one typed V2-A SSA instruction candidate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "materializeSLIDEV2ACallee",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2ACallee() -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Materialize the V2-A checked-add callee fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "materializeSLIDEV2AMain",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2AMain() -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Materialize calls, Boolean control, a typed join, and exhaustive K3 exits."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-logical-model.fungi",
+      "name": "materializeSLIDEV2AProgram",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2AProgram() -> SLIDEV2AProgram",
+      "effects": [],
+      "intent": "Materialize the exact frontend-neutral V2-A logical conformance graph."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "emptySLIDEV2AValueStore",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2AValueStore() -> SLIDEV2AValueStore",
+      "effects": [],
+      "intent": "Create a fixed no-address value store with every slot undefined."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "slideV2AStoreValue",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AStoreValue(store: SLIDEV2AValueStore, resultId: Int, value: Int) -> SLIDEV2AValueStore",
+      "effects": [],
+      "intent": "Return a new bounded store with one explicit SSA slot initialized."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "slideV2AStoreRead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AStoreRead(store: SLIDEV2AValueStore, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Read one initialized value or return a terminal-only sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "slideV2ACheckedAdd",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ACheckedAdd(left: Int, right: Int) -> SLIDEV2AFunctionResult",
+      "effects": [],
+      "intent": "Compute checked Int32 addition without wrapping."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "slideV2ARuntimeRefusal",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ARuntimeRefusal(failureId: String, reasonText: String) -> SLIDEV2ARuntimeResult",
+      "effects": [],
+      "intent": "Terminate a V2-A invocation without executing a fallback."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "executeSLIDEV2ACallee",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2ACallee(function: SLIDEV2AFunction, argument: Int, stepBudget: Int) -> SLIDEV2AFunctionResult",
+      "effects": [],
+      "intent": "Instruction-drive the admitted pure V2-A callee."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "slideV2ABindEdge",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ABindEdge(source: SLIDEV2AValueStore, edge: SLIDEV2AEdge, destination: SLIDEV2ABlock) -> SLIDEV2AEdgeBinding",
+      "effects": [],
+      "intent": "Transfer exact typed edge arguments into target block-parameter slots."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "executeSLIDEV2AWithBudget",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2AWithBudget(body: Bytes, left: Int, right: Int, admission: Int, runtimeBudget: Int) -> SLIDEV2ARuntimeResult",
+      "effects": [],
+      "intent": "Decode, validate, and instruction-drive the V2-A entry function without fallback."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-runtime.fungi",
+      "name": "executeSLIDEV2ABytes",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2ABytes(body: Bytes, left: Int, right: Int, admission: Int) -> SLIDEV2ARuntimeResult",
+      "effects": [],
+      "intent": "Execute V2-A under its exact admitted 64-step ceiling."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-semantic-digest.fungi",
+      "name": "emptySLIDEV2ASemanticBinding",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ASemanticBinding(decision: SLIDEV2ADecision) -> SLIDEV2ASemanticBinding",
+      "effects": [],
+      "intent": "Release no digest for refused or unavailable V2 semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-semantic-digest.fungi",
+      "name": "bindSLIDEV2ASemanticDigest",
+      "qualifier": "pure",
+      "signature": "pure flow bindSLIDEV2ASemanticDigest(body: Bytes) -> SLIDEV2ASemanticBinding",
+      "effects": [],
+      "intent": "Hash only the exact independently decoded and semantically admitted V2-A body."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2ARefusal",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ARefusal(failureId: String, detail: String) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Return one terminal V2-A validation refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AAllowed",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AAllowed() -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Return V2-A semantic validation success."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AIntAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AIntAt(values: Array<Int>, index: Int) -> Int",
+      "effects": [],
+      "intent": "Read one integer or return a non-authoritative sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2ABlockParameter",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ABlockParameter() -> SLIDEV2ABlockParameter",
+      "effects": [],
+      "intent": "Return an inert block parameter."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2AInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2AInstruction() -> SLIDEV2AInstruction",
+      "effects": [],
+      "intent": "Return an inert instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2AEdge",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2AEdge() -> SLIDEV2AEdge",
+      "effects": [],
+      "intent": "Return an inert control edge."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2ATerminator",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ATerminator() -> SLIDEV2ATerminator",
+      "effects": [],
+      "intent": "Return an inert terminator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2ABlock",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ABlock() -> SLIDEV2ABlock",
+      "effects": [],
+      "intent": "Return an inert block."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "emptySLIDEV2AFunction",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2AFunction() -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Return an inert function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2ABlockParameterAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ABlockParameterAt(values: Array<SLIDEV2ABlockParameter>, index: Int) -> SLIDEV2ABlockParameter",
+      "effects": [],
+      "intent": "Read one block parameter without inventing a value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AInstructionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AInstructionAt(values: Array<SLIDEV2AInstruction>, index: Int) -> SLIDEV2AInstruction",
+      "effects": [],
+      "intent": "Read one instruction without inventing semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AEdgeAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AEdgeAt(values: Array<SLIDEV2AEdge>, index: Int) -> SLIDEV2AEdge",
+      "effects": [],
+      "intent": "Read one edge without inventing a target."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2ABlockAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ABlockAt(values: Array<SLIDEV2ABlock>, index: Int) -> SLIDEV2ABlock",
+      "effects": [],
+      "intent": "Read one block without inventing control flow."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AFunctionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AFunctionAt(values: Array<SLIDEV2AFunction>, index: Int) -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Read one function without an ambient registry fallback."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2ATypeRegistered",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ATypeRegistered(typeId: Int) -> Bool",
+      "effects": [],
+      "intent": "Admit only V2-A registered type identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AFailureRegistered",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AFailureRegistered(failures: Array<SLIDEV2AFailure>, failureId: Int) -> Bool",
+      "effects": [],
+      "intent": "Require an exact declared V2-A failure identity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AValueTypeInBlock",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AValueTypeInBlock(graphBlock: SLIDEV2ABlock, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Resolve a value only from the current explicit block scope."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AOperandsVisible",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AOperandsVisible(graphBlock: SLIDEV2ABlock, operands: Array<Int>, beforeResultId: Int) -> Bool",
+      "effects": [],
+      "intent": "Require every operand to be defined earlier in the same explicit block scope."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "slideV2AIncomingCount",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2AIncomingCount(blocks: Array<SLIDEV2ABlock>, targetBlockId: Int) -> Int",
+      "effects": [],
+      "intent": "Count explicit incoming edges for reachability validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2ALimits",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2ALimits(limits: SLIDEV2ALimits) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Require the exact closed V2-A semantic ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AFailures",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AFailures(failures: Array<SLIDEV2AFailure>) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate the complete closed V2-A failure registry."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AInstruction(program: SLIDEV2AProgram, function: SLIDEV2AFunction, graphBlock: SLIDEV2ABlock, instruction: SLIDEV2AInstruction) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate one registered typed V2-A instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AEdges",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AEdges(function: SLIDEV2AFunction, graphBlock: SLIDEV2ABlock) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate forward targets and exact typed block arguments."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2ATerminatorForBlock",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2ATerminatorForBlock(function: SLIDEV2AFunction, graphBlock: SLIDEV2ABlock) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate one total no-fallthrough V2-A terminator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AFunction",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AFunction(program: SLIDEV2AProgram, function: SLIDEV2AFunction, expectedFunctionId: Int) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate one closed V2-A function, CFG, SSA and signature."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AK3",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AK3(program: SLIDEV2AProgram) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Bind the one V2-A K3 obligation to its exact check and successors."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2a-validator.fungi",
+      "name": "validateSLIDEV2AProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2AProgram(program: SLIDEV2AProgram) -> SLIDEV2ADecision",
+      "effects": [],
+      "intent": "Validate the complete closed V2-A logical graph before any execution or encoding authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BFrameBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BFrameBytes(payload: Bytes) -> Bytes",
+      "effects": [],
+      "intent": "Length-frame one bounded receipt digest field."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BVerdictText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BVerdictText(verdict: Verdict) -> String",
+      "effects": [],
+      "intent": "Encode one exhaustive K3 value for receipt evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BAtomicReceiptEvidenceDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BAtomicReceiptEvidenceDigest(receipt: SLIDEV2BAtomicStateReceipt) -> String",
+      "effects": [],
+      "intent": "Independently derive the reference atomic receipt evidence digest."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "validateSLIDEV2BAtomicStateReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BAtomicStateReceipt(receipt: SLIDEV2BAtomicStateReceipt, reservation: SLIDEV2BLeaseUseReservation, lease: SLIDEV2BLease, expectedStoreId: String, expectedCommitTime: Int) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate exact CAS receipt bindings without releasing a lease reference."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BEvidenceShapeDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BEvidenceShapeDigest(receipt: SLIDEV2BEvidenceShapeReceipt) -> String",
+      "effects": [],
+      "intent": "Derive one non-authorizing evidence-shape digest."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "materializeSLIDEV2BEvidenceShape",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2BEvidenceShape(kindId: Int, lease: SLIDEV2BLease, validationTime: Int, verdict: Verdict) -> SLIDEV2BEvidenceShapeReceipt",
+      "effects": [],
+      "intent": "Materialize one deterministic non-production evidence-shape fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "materializeSLIDEV2BEvidenceShapeSet",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2BEvidenceShapeSet(lease: SLIDEV2BLease, validationTime: Int) -> SLIDEV2BEvidenceShapeSet",
+      "effects": [],
+      "intent": "Materialize six exact ALLOW evidence-shape fixtures."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BEvidenceShapeAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BEvidenceShapeAt(values: Array<SLIDEV2BEvidenceShapeReceipt>, index: Int) -> SLIDEV2BEvidenceShapeReceipt",
+      "effects": [],
+      "intent": "Read one evidence fixture after an exact count gate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "validateSLIDEV2BEvidenceShape",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BEvidenceShape(receipt: SLIDEV2BEvidenceShapeReceipt, expectedKindId: Int, lease: SLIDEV2BLease, validationTime: Int) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate one bound evidence shape while preserving exact K3."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "slideV2BK3And",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BK3And(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Compose two authority values using exact Kleene K3 AND."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-admission-composition.fungi",
+      "name": "composeSLIDEV2BAdmissionEvidenceShapes",
+      "qualifier": "pure",
+      "signature": "pure flow composeSLIDEV2BAdmissionEvidenceShapes(evidenceSet: SLIDEV2BEvidenceShapeSet, atomicReceipt: SLIDEV2BAtomicStateReceipt, reservation: SLIDEV2BLeaseUseReservation, lease: SLIDEV2BLease, expectedStoreId: String, validationTime: Int) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Compose seven validated reference evidence shapes without releasing authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "refuseSLIDEV2BCapability",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2BCapability(failureId: String, detail: String) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Refuse a V2-B request set without releasing host authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "validatedSLIDEV2BCapabilityShape",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2BCapabilityShape() -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Report structural validation while explicitly releasing no authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "emptySLIDEV2BCapabilityRequest",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2BCapabilityRequest() -> SLIDEV2BCapabilityRequest",
+      "effects": [],
+      "intent": "Return an inert request behind a refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "slideV2BCapabilityAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BCapabilityAt(requests: Array<SLIDEV2BCapabilityRequest>, index: Int) -> SLIDEV2BCapabilityRequest",
+      "effects": [],
+      "intent": "Read one request without inventing a default capability."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "materializeSLIDEV2BCapabilitySet",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2BCapabilitySet() -> SLIDEV2BCapabilitySet",
+      "effects": [],
+      "intent": "Materialize the exact no-dispatch V2-B capability conformance set."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "validateSLIDEV2BCapabilityRequest",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BCapabilityRequest(request: SLIDEV2BCapabilityRequest, expectedId: Int) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate one exact scoped V2-B capability request."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-capability-request.fungi",
+      "name": "validateSLIDEV2BCapabilitySet",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BCapabilitySet(candidate: SLIDEV2BCapabilitySet) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate the complete frozen request set while granting no lease or host authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-canonical.fungi",
+      "name": "emptySLIDEV2BLeaseSigningEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2BLeaseSigningEvidence(failureId: String, detail: String) -> SLIDEV2BLeaseSigningEvidence",
+      "effects": [],
+      "intent": "Release no signing bytes or digest when lease canonicalization refuses."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-canonical.fungi",
+      "name": "slideV2BCBORHead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BCBORHead(majorType: Int, value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode a shortest-form bounded deterministic-CBOR head."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-canonical.fungi",
+      "name": "slideV2BCBORUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BCBORUInt(value: Int) -> Bytes",
+      "effects": [],
+      "intent": "Encode one bounded unsigned integer."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-canonical.fungi",
+      "name": "slideV2BCBORText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BCBORText(value: String) -> Bytes",
+      "effects": [],
+      "intent": "Encode one definite UTF-8 text value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-canonical.fungi",
+      "name": "deriveSLIDEV2BLeaseSigningEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow deriveSLIDEV2BLeaseSigningEvidence(lease: SLIDEV2BLease, request: SLIDEV2BCapabilityRequest) -> SLIDEV2BLeaseSigningEvidence",
+      "effects": [],
+      "intent": "Derive exact canonical lease signing bytes after unsigned-shape validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-shape.fungi",
+      "name": "materializeSLIDEV2BLeaseFixture",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2BLeaseFixture(capabilitySet: SLIDEV2BCapabilitySet) -> SLIDEV2BLeaseFixture",
+      "effects": [],
+      "intent": "Materialize one deterministic non-production lease-shape fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-shape.fungi",
+      "name": "validateSLIDEV2BUnsignedLeaseShape",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BUnsignedLeaseShape(lease: SLIDEV2BLease, request: SLIDEV2BCapabilityRequest) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate request-bound lease fields that precede signing."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-shape.fungi",
+      "name": "validateSLIDEV2BLeaseShape",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2BLeaseShape(lease: SLIDEV2BLease, request: SLIDEV2BCapabilityRequest, verifierReceipt: SLIDEV2BCryptoVerifierReceipt, validationTime: Int) -> SLIDEV2BCapabilityDecision",
+      "effects": [],
+      "intent": "Validate bound lease/verifier shape while releasing no host authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "emptySLIDEV2BLeaseUseState",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2BLeaseUseState() -> SLIDEV2BLeaseUseState",
+      "effects": [],
+      "intent": "Materialize a non-usable state for terminal refusal records."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "refuseSLIDEV2BLeaseUseReservation",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2BLeaseUseReservation(failureId: String, detail: String) -> SLIDEV2BLeaseUseReservation",
+      "effects": [],
+      "intent": "Refuse a lease-use proposal without releasing state or digest."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "slideV2BLeaseNonceDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BLeaseNonceDigest(lease: SLIDEV2BLease) -> String",
+      "effects": [],
+      "intent": "Bind the lease nonce to its registered digest domain."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "slideV2BLeaseUseStateCanonicalBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BLeaseUseStateCanonicalBytes(state: SLIDEV2BLeaseUseState) -> Bytes",
+      "effects": [],
+      "intent": "Encode one exact lease-use state as deterministic CBOR."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "slideV2BLeaseUseStateDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2BLeaseUseStateDigest(state: SLIDEV2BLeaseUseState) -> String",
+      "effects": [],
+      "intent": "Bind one canonical lease-use state to its registered digest domain."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "materializeSLIDEV2BInitialLeaseUseState",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2BInitialLeaseUseState(lease: SLIDEV2BLease) -> SLIDEV2BLeaseUseFixture",
+      "effects": [],
+      "intent": "Materialize deterministic unconsumed state for the reference fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2b-lease-use-state.fungi",
+      "name": "proposeSLIDEV2BLeaseUseReservation",
+      "qualifier": "pure",
+      "signature": "pure flow proposeSLIDEV2BLeaseUseReservation(lease: SLIDEV2BLease, request: SLIDEV2BCapabilityRequest, verifierReceipt: SLIDEV2BCryptoVerifierReceipt, state: SLIDEV2BLeaseUseState, expectedStateDigest: String, expectedGeneration: Int, requestBytes: Int, validationTime: Int) -> SLIDEV2BLeaseUseReservation",
+      "effects": [],
+      "intent": "Propose one exact nonce/call transition without claiming atomic commit."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-model.fungi",
+      "name": "slideV2CAggregateInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CAggregateInstruction(resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> SLIDEV2CAggregateInstruction",
+      "effects": [],
+      "intent": "Construct one typed immutable-aggregate instruction candidate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-model.fungi",
+      "name": "materializeSLIDEV2CAggregateProgram",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2CAggregateProgram() -> SLIDEV2CAggregateProgram",
+      "effects": [],
+      "intent": "Materialize the exact detached V2-C immutable-aggregate fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "refuseSLIDEV2CAggregate",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2CAggregate(failureId: String, detail: String) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Refuse V2-C aggregate semantics without exposing authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validatedSLIDEV2CAggregate",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2CAggregate() -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Report logical V2-C aggregate validation without authorizing execution."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CIntAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CIntAt(values: Array<Int>, index: Int) -> Int",
+      "effects": [],
+      "intent": "Read one registered integer identity or return an invalid sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "emptySLIDEV2CConstant",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CConstant() -> SLIDEV2CConstant",
+      "effects": [],
+      "intent": "Return an inert constant behind a refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CConstantAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CConstantAt(values: Array<SLIDEV2CConstant>, index: Int) -> SLIDEV2CConstant",
+      "effects": [],
+      "intent": "Read one constant without inventing payload semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "emptySLIDEV2CRecordDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CRecordDescriptor() -> SLIDEV2CRecordDescriptor",
+      "effects": [],
+      "intent": "Return an inert record descriptor behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CRecordDescriptorAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CRecordDescriptorAt(values: Array<SLIDEV2CRecordDescriptor>, index: Int) -> SLIDEV2CRecordDescriptor",
+      "effects": [],
+      "intent": "Read one record descriptor without dynamic field recovery."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "emptySLIDEV2CVariantDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CVariantDescriptor() -> SLIDEV2CVariantDescriptor",
+      "effects": [],
+      "intent": "Return an inert variant descriptor behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CVariantDescriptorAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CVariantDescriptorAt(values: Array<SLIDEV2CVariantDescriptor>, index: Int) -> SLIDEV2CVariantDescriptor",
+      "effects": [],
+      "intent": "Read one variant descriptor without dynamic case recovery."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "emptySLIDEV2CAggregateInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CAggregateInstruction() -> SLIDEV2CAggregateInstruction",
+      "effects": [],
+      "intent": "Return an inert instruction behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CAggregateInstructionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CAggregateInstructionAt(values: Array<SLIDEV2CAggregateInstruction>, index: Int) -> SLIDEV2CAggregateInstruction",
+      "effects": [],
+      "intent": "Read one aggregate instruction without a default operation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "slideV2CBytesEqual",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CBytesEqual(left: Bytes, right: Bytes) -> Bool",
+      "effects": [],
+      "intent": "Compare complete byte sequences without prefix acceptance."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CRegistries",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CRegistries(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Bind V2-C to the frozen parent and non-authorizing V2-B sidecar."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CLimits",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CLimits(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Require exact finite aggregate ceilings and zero ambient authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CIdTables",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CIdTables(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Require dense append-only type and opcode identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CConstants",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CConstants(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Validate exact bounded text and byte constants without host decoding."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CDescriptors",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CDescriptors(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Validate registered ordered fields and cases without name lookup."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CInstructionShape",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CInstructionShape(instruction: SLIDEV2CAggregateInstruction, expectedResultId: Int) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Validate one exact typed V2-C fixture instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CInstructions",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CInstructions(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Validate the complete forward-only immutable aggregate instruction sequence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-aggregate-validator.fungi",
+      "name": "validateSLIDEV2CAggregateProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CAggregateProgram(program: SLIDEV2CAggregateProgram) -> SLIDEV2CAggregateDecision",
+      "effects": [],
+      "intent": "Validate every V2-C aggregate gate before exposing logical success."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "refuseSLIDEV2CBodyExport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2CBodyExport(failureId: String, detail: String) -> SLIDEV2CBodyExport",
+      "effects": [],
+      "intent": "Refuse V2-C export without releasing partial bytes or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "slideV2CCBORBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCBORBytes(value: Bytes) -> Bytes",
+      "effects": [],
+      "intent": "Encode one definite raw-byte payload."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "slideV2CCBORLimits",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCBORLimits(value: SLIDEV2CExecutableLimits) -> Bytes",
+      "effects": [],
+      "intent": "Encode all graph, aggregate, execution, and authority ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "slideV2CCBORConstant",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCBORConstant(value: SLIDEV2CConstant) -> Bytes",
+      "effects": [],
+      "intent": "Encode one full registered constant definition."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "slideV2CCBORRecordDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCBORRecordDescriptor(value: SLIDEV2CRecordDescriptor) -> Bytes",
+      "effects": [],
+      "intent": "Encode one record ID and ordered numeric field/type pairs."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "slideV2CCBORVariantDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCBORVariantDescriptor(value: SLIDEV2CVariantDescriptor) -> Bytes",
+      "effects": [],
+      "intent": "Encode one variant ID and ordered numeric case/type pairs."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-encoder.fungi",
+      "name": "exportSLIDEV2CCanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDEV2CCanonicalBody(program: SLIDEV2CExecutableProgram, aggregate: SLIDEV2CAggregateProgram) -> SLIDEV2CBodyExport",
+      "effects": [],
+      "intent": "Release a complete 21-key V2-C body only after logical admission."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "emptySLIDEV2CExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram",
+      "effects": [],
+      "intent": "Return a no-authority empty graph behind import refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "refusedSLIDEV2CImport",
+      "qualifier": "pure",
+      "signature": "pure flow refusedSLIDEV2CImport(cursor: SLIDEV2AImportCursor) -> SLIDEV2CProgramImport",
+      "effects": [],
+      "intent": "Expose no partial V2-C graph, descriptor, or authority on refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "slideV2CDecodeBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CDecodeBytes(bytes: Bytes, cursor: SLIDEV2AImportCursor, ceiling: Int, failureId: String) -> SLIDEV2CBytesDecode",
+      "effects": [],
+      "intent": "Decode one definite bounded byte string without reinterpretation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "slideV2CDecodeConstant",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CDecodeConstant(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2CConstantDecode",
+      "effects": [],
+      "intent": "Decode one complete registered constant definition."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "slideV2CDecodeRecordDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CDecodeRecordDescriptor(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2CRecordDescriptorDecode",
+      "effects": [],
+      "intent": "Decode one record and all ordered numeric field/type pairs."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "slideV2CDecodeVariantDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CDecodeVariantDescriptor(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2CVariantDescriptorDecode",
+      "effects": [],
+      "intent": "Decode one variant and all ordered numeric case/type pairs."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "slideV2CAggregateFromDecoded",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CAggregateFromDecoded(program: SLIDEV2CExecutableProgram) -> SLIDEV2CAggregateProgram",
+      "effects": [],
+      "intent": "Project decoded descriptor evidence for the independent semantic gate."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-importer.fungi",
+      "name": "decodeSLIDEV2CProgram",
+      "qualifier": "pure",
+      "signature": "pure flow decodeSLIDEV2CProgram(bytes: Bytes) -> SLIDEV2CProgramImport",
+      "effects": [],
+      "intent": "Reconstruct a complete V2-C graph without producer or encoder access."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-validator.fungi",
+      "name": "slideV2CCanonicalReferenceBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CCanonicalReferenceBytes() -> Bytes",
+      "effects": [],
+      "intent": "Return the independently pinned corrected 732-byte V2-C reference vector."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-validator.fungi",
+      "name": "refuseSLIDEV2CWire",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2CWire(failureId: String, detail: String, consumed: Int, mismatchOffset: Int) -> SLIDEV2CWireDecision",
+      "effects": [],
+      "intent": "Refuse canonical admission without semantic or runtime authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-cbor-validator.fungi",
+      "name": "validateSLIDEV2CCanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CCanonicalBody(candidate: Bytes) -> SLIDEV2CWireDecision",
+      "effects": [],
+      "intent": "Admit only the complete independently pinned first V2-C canonical vector."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-model.fungi",
+      "name": "materializeSLIDEV2CAggregateFunction",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2CAggregateFunction(aggregate: SLIDEV2CAggregateProgram) -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Materialize the V2-C aggregate operations as one detached executable function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-model.fungi",
+      "name": "materializeSLIDEV2CExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram",
+      "effects": [],
+      "intent": "Materialize frozen V2-A plus the registered V2-C aggregate function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "refuseSLIDEV2CExecutable",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2CExecutable(failureId: String, detail: String) -> SLIDEV2CExecutableDecision",
+      "effects": [],
+      "intent": "Refuse an incomplete or altered V2-C executable graph."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "validatedSLIDEV2CExecutable",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2CExecutable() -> SLIDEV2CExecutableDecision",
+      "effects": [],
+      "intent": "Report complete logical V2-C graph validation without authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "emptySLIDEV2CExecutableLimits",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CExecutableLimits() -> SLIDEV2CExecutableLimits",
+      "effects": [],
+      "intent": "Return inert limits behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "slideV2CProjectFrozenBase",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CProjectFrozenBase(program: SLIDEV2CExecutableProgram) -> SLIDEV2AProgram",
+      "effects": [],
+      "intent": "Project only the first two functions into the exact frozen V2-A contract."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "validateSLIDEV2CExecutableMetadata",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CExecutableMetadata(program: SLIDEV2CExecutableProgram) -> SLIDEV2CExecutableDecision",
+      "effects": [],
+      "intent": "Validate exact V2-C identities, tables, and resource ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "slideV2CInstructionMatches",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CInstructionMatches(instruction: SLIDEV2AInstruction, resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> Bool",
+      "effects": [],
+      "intent": "Compare one complete instruction without default fields."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "validateSLIDEV2CAggregateFunction",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CAggregateFunction(program: SLIDEV2CExecutableProgram) -> SLIDEV2CExecutableDecision",
+      "effects": [],
+      "intent": "Validate the exact executable aggregate function and total return."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-executable-validator.fungi",
+      "name": "validateSLIDEV2CExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2CExecutableProgram(program: SLIDEV2CExecutableProgram, aggregate: SLIDEV2CAggregateProgram) -> SLIDEV2CExecutableDecision",
+      "effects": [],
+      "intent": "Require frozen base, aggregate descriptors, and executable function to agree."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "emptySLIDEV2CRuntimeStore",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CRuntimeStore() -> SLIDEV2CRuntimeStore",
+      "effects": [],
+      "intent": "Create a fixed no-address store with every SSA slot undefined."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "slideV2CRuntimeStoreValue",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CRuntimeStoreValue(store: SLIDEV2CRuntimeStore, resultId: Int, value: Int, failureId: Int) -> SLIDEV2CRuntimeStore",
+      "effects": [],
+      "intent": "Return a new bounded store with one immutable SSA result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "slideV2CRuntimeRead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CRuntimeRead(store: SLIDEV2CRuntimeStore, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Read one initialized scalar or return a terminal-only sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "slideV2CRuntimeFailureAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2CRuntimeFailureAt(store: SLIDEV2CRuntimeStore, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Read the registered failure carried by one initialized result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "refuseSLIDEV2CRuntime",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2CRuntime(failureId: String, detail: String) -> SLIDEV2CRuntimeResult",
+      "effects": [],
+      "intent": "Terminate V2-C execution without fallback, partial result, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "executeSLIDEV2CWithAllBudgets",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2CWithAllBudgets(body: Bytes, checkedIndex: Int, runtimeStepBudget: Int, runtimeCopyBudget: Int, runtimeDepthBudget: Int) -> SLIDEV2CRuntimeResult",
+      "effects": [],
+      "intent": "Decode, admit, and instruction-drive immutable aggregates under all exact budgets."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "executeSLIDEV2CWithBudgets",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2CWithBudgets(body: Bytes, checkedIndex: Int, runtimeStepBudget: Int, runtimeCopyBudget: Int) -> SLIDEV2CRuntimeResult",
+      "effects": [],
+      "intent": "Execute V2-C under caller step/copy and admitted depth ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-runtime.fungi",
+      "name": "executeSLIDEV2CBytes",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2CBytes(body: Bytes, checkedIndex: Int) -> SLIDEV2CRuntimeResult",
+      "effects": [],
+      "intent": "Execute V2-C under its admitted step and copy ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-semantic-digest.fungi",
+      "name": "emptySLIDEV2CSemanticBinding",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2CSemanticBinding(decision: SLIDEV2CExecutableDecision) -> SLIDEV2CSemanticBinding",
+      "effects": [],
+      "intent": "Release no digest or authority for refused V2-C semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2c-semantic-digest.fungi",
+      "name": "bindSLIDEV2CSemanticDigest",
+      "qualifier": "pure",
+      "signature": "pure flow bindSLIDEV2CSemanticDigest(body: Bytes) -> SLIDEV2CSemanticBinding",
+      "effects": [],
+      "intent": "Hash only exact independently decoded and semantically admitted V2-C bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "refuseSLIDEV2DBodyExport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2DBodyExport(failureId: String, detail: String) -> SLIDEV2DBodyExport",
+      "effects": [],
+      "intent": "Refuse V2-D export without partial bytes, native claim, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORLimits",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORLimits(graph: SLIDEV2CExecutableLimits, memory: SLIDEV2DMemoryLimits) -> Bytes",
+      "effects": [],
+      "intent": "Encode append-only graph, aggregate, memory, and forbidden-surface ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORBytes(value: Bytes) -> Bytes",
+      "effects": [],
+      "intent": "Encode one definite bounded raw-byte value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORConstant",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORConstant(value: SLIDEV2CConstant) -> Bytes",
+      "effects": [],
+      "intent": "Encode one full immutable constant definition."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORRecord",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORRecord(value: SLIDEV2CRecordDescriptor) -> Bytes",
+      "effects": [],
+      "intent": "Encode one ordered registered record descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORVariant",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORVariant(value: SLIDEV2CVariantDescriptor) -> Bytes",
+      "effects": [],
+      "intent": "Encode one ordered registered variant descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORRegion",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORRegion(value: SLIDEV2DRegion) -> Bytes",
+      "effects": [],
+      "intent": "Encode one no-address region descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORMemoryObject",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORMemoryObject(value: SLIDEV2DMemoryObject) -> Bytes",
+      "effects": [],
+      "intent": "Encode one initialized owned memory-object descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "slideV2DCBORGuard",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCBORGuard(value: SLIDEV2DGuard) -> Bytes",
+      "effects": [],
+      "intent": "Encode one exact guard/access dominance descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-encoder.fungi",
+      "name": "exportSLIDEV2DCanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDEV2DCanonicalBody(program: SLIDEV2DExecutableProgram) -> SLIDEV2DBodyExport",
+      "effects": [],
+      "intent": "Release canonical V2-D bytes only after complete logical integration."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "emptySLIDEV2DGraphLimits",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DGraphLimits() -> SLIDEV2CExecutableLimits",
+      "effects": [],
+      "intent": "Return inert graph ceilings behind import refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "emptySLIDEV2DMemoryLimits",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DMemoryLimits() -> SLIDEV2DMemoryLimits",
+      "effects": [],
+      "intent": "Return inert semantic-memory ceilings behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "emptySLIDEV2DExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DExecutableProgram() -> SLIDEV2DExecutableProgram",
+      "effects": [],
+      "intent": "Return a no-authority empty V2-D graph behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "refusedSLIDEV2DImport",
+      "qualifier": "pure",
+      "signature": "pure flow refusedSLIDEV2DImport(cursor: SLIDEV2AImportCursor) -> SLIDEV2DProgramImport",
+      "effects": [],
+      "intent": "Expose no partial V2-D graph, memory plan, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "slideV2DDecodeRegion",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DDecodeRegion(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2DRegionDecode",
+      "effects": [],
+      "intent": "Decode one exact no-address region descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "slideV2DDecodeMemoryObject",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DDecodeMemoryObject(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2DMemoryObjectDecode",
+      "effects": [],
+      "intent": "Decode one exact initialized owned memory object."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "slideV2DDecodeGuard",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DDecodeGuard(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2DGuardDecode",
+      "effects": [],
+      "intent": "Decode one exact guard/access dominance descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-importer.fungi",
+      "name": "decodeSLIDEV2DProgram",
+      "qualifier": "pure",
+      "signature": "pure flow decodeSLIDEV2DProgram(bytes: Bytes) -> SLIDEV2DProgramImport",
+      "effects": [],
+      "intent": "Reconstruct complete V2-D semantics without producer or encoder access."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-validator.fungi",
+      "name": "slideV2DCanonicalReferenceBytes",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DCanonicalReferenceBytes() -> Bytes",
+      "effects": [],
+      "intent": "Return the independently pinned 791-byte V2-D reference vector."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-validator.fungi",
+      "name": "refuseSLIDEV2DWire",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2DWire(failureId: String, detail: String, consumed: Int, mismatchOffset: Int) -> SLIDEV2DWireDecision",
+      "effects": [],
+      "intent": "Refuse canonical admission without graph or runtime authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-cbor-validator.fungi",
+      "name": "validateSLIDEV2DCanonicalBody",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DCanonicalBody(candidate: Bytes) -> SLIDEV2DWireDecision",
+      "effects": [],
+      "intent": "Admit only the complete independently pinned first V2-D vector."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-model.fungi",
+      "name": "materializeSLIDEV2DExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2DExecutableProgram() -> SLIDEV2DExecutableProgram",
+      "effects": [],
+      "intent": "Materialize frozen executable facts plus the V2-D guarded function."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "refuseSLIDEV2DExecutable",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2DExecutable(failureId: String, detail: String) -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Refuse incomplete or altered V2-D executable integration."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "validatedSLIDEV2DExecutable",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2DExecutable() -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Report complete logical V2-D integration without authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "slideV2DProjectFrozenBase",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DProjectFrozenBase(program: SLIDEV2DExecutableProgram) -> SLIDEV2AProgram",
+      "effects": [],
+      "intent": "Project only frozen V2-A functions into their exact validator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "slideV2DProjectMemory",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DProjectMemory(program: SLIDEV2DExecutableProgram) -> SLIDEV2DMemoryProgram",
+      "effects": [],
+      "intent": "Project full executable facts into the exact V2-D memory validator."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "validateSLIDEV2DExecutableMetadata",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DExecutableMetadata(program: SLIDEV2DExecutableProgram) -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Validate V2-D identities, graph ceilings, and table cardinality."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "validateSLIDEV2DAggregateTables",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DAggregateTables(program: SLIDEV2DExecutableProgram) -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Keep V2-C constants and aggregate descriptors exact."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-executable-validator.fungi",
+      "name": "validateSLIDEV2DExecutableProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DExecutableProgram(program: SLIDEV2DExecutableProgram) -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Require frozen base, aggregate tables, and guarded memory plan to agree."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-model.fungi",
+      "name": "materializeSLIDEV2DGuardedFunction",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2DGuardedFunction() -> SLIDEV2AFunction",
+      "effects": [],
+      "intent": "Materialize one explicit guard and guarded immutable-array access."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-model.fungi",
+      "name": "materializeSLIDEV2DMemoryProgram",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2DMemoryProgram() -> SLIDEV2DMemoryProgram",
+      "effects": [],
+      "intent": "Materialize the exact bounded safe-value semantic-memory fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "refuseSLIDEV2DMemory",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2DMemory(failureId: String, detail: String) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Refuse V2-D without exposing a partial plan or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validatedSLIDEV2DMemory",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2DMemory() -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Report semantic memory-plan validation without a native claim."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "emptySLIDEV2DRegion",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DRegion() -> SLIDEV2DRegion",
+      "effects": [],
+      "intent": "Return an inert region behind a refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DRegionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DRegionAt(values: Array<SLIDEV2DRegion>, index: Int) -> SLIDEV2DRegion",
+      "effects": [],
+      "intent": "Read one region without inventing ownership semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "emptySLIDEV2DMemoryObject",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DMemoryObject() -> SLIDEV2DMemoryObject",
+      "effects": [],
+      "intent": "Return an inert object behind a refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DMemoryObjectAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DMemoryObjectAt(values: Array<SLIDEV2DMemoryObject>, index: Int) -> SLIDEV2DMemoryObject",
+      "effects": [],
+      "intent": "Read one object without manufacturing memory evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "emptySLIDEV2DGuard",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DGuard() -> SLIDEV2DGuard",
+      "effects": [],
+      "intent": "Return an inert guard descriptor behind refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DGuardAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DGuardAt(values: Array<SLIDEV2DGuard>, index: Int) -> SLIDEV2DGuard",
+      "effects": [],
+      "intent": "Read one guard without manufacturing dominance evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "emptySLIDEV2DBlock",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DBlock() -> SLIDEV2ABlock",
+      "effects": [],
+      "intent": "Return an inert block behind a V2-D refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DBlockAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DBlockAt(values: Array<SLIDEV2ABlock>, index: Int) -> SLIDEV2ABlock",
+      "effects": [],
+      "intent": "Read one guarded block without default executable semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "emptySLIDEV2DInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DInstruction() -> SLIDEV2AInstruction",
+      "effects": [],
+      "intent": "Return an inert instruction behind a V2-D refusal boundary."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DInstructionAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DInstructionAt(values: Array<SLIDEV2AInstruction>, index: Int) -> SLIDEV2AInstruction",
+      "effects": [],
+      "intent": "Read one instruction without default guard or access semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DRegistry",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DRegistry(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Bind V2-D to the frozen V2-C semantic parent."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DLimits",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DLimits(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Require exact finite resource ceilings and zero forbidden memory surfaces."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DIds",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DIds(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Require dense append-only V2-D type and opcode identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DRegionAndObject",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DRegionAndObject(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Validate ownership, initialization, layout, and checked extent arithmetic."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "slideV2DInstructionShapeMatches",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DInstructionShapeMatches(instruction: SLIDEV2AInstruction, resultId: Int, opcodeId: Int, typeId: Int, operands: Array<Int>, immediate: Int) -> Bool",
+      "effects": [],
+      "intent": "Compare one complete V2-D instruction shape without prefix acceptance."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DInstruction",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DInstruction(instruction: SLIDEV2AInstruction, index: Int) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Validate one exact guarded-access instruction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DGuardedFunction",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DGuardedFunction(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Validate the exact guard/access graph and dominance relation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DGuardDescriptor",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DGuardDescriptor(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Bind one guard to the exact object, index, access, and registered failure."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-memory-validator.fungi",
+      "name": "validateSLIDEV2DMemoryProgram",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2DMemoryProgram(program: SLIDEV2DMemoryProgram) -> SLIDEV2DMemoryDecision",
+      "effects": [],
+      "intent": "Validate every V2-D semantic-memory gate without native or execution authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "emptySLIDEV2DRuntimeStore",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DRuntimeStore() -> SLIDEV2DRuntimeStore",
+      "effects": [],
+      "intent": "Create a fixed no-address store with every SSA slot undefined."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "slideV2DRuntimeStoreValue",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DRuntimeStoreValue(store: SLIDEV2DRuntimeStore, resultId: Int, value: Int, failureId: Int) -> SLIDEV2DRuntimeStore",
+      "effects": [],
+      "intent": "Return a new bounded store with one immutable SSA result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "slideV2DRuntimeRead",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DRuntimeRead(store: SLIDEV2DRuntimeStore, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Read one initialized scalar or return a terminal-only sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "slideV2DRuntimeFailureAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2DRuntimeFailureAt(store: SLIDEV2DRuntimeStore, resultId: Int) -> Int",
+      "effects": [],
+      "intent": "Read the registered failure carried by one initialized result."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "refuseSLIDEV2DRuntime",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2DRuntime(failureId: String, detail: String) -> SLIDEV2DRuntimeResult",
+      "effects": [],
+      "intent": "Terminate without fallback, partial accounting, observation, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "executeSLIDEV2DWithAllBudgets",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2DWithAllBudgets(body: Bytes, checkedIndex: Int, runtimeStepBudget: Int, runtimeCopyBudget: Int, runtimeDepthBudget: Int, runtimeMemoryBudget: Int, runtimeGuardBudget: Int) -> SLIDEV2DRuntimeResult",
+      "effects": [],
+      "intent": "Decode, admit, and instruction-drive one guarded object under exact caller budgets."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-runtime.fungi",
+      "name": "executeSLIDEV2DBytes",
+      "qualifier": "pure",
+      "signature": "pure flow executeSLIDEV2DBytes(body: Bytes, checkedIndex: Int) -> SLIDEV2DRuntimeResult",
+      "effects": [],
+      "intent": "Execute V2-D only under its admitted finite ceilings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-semantic-digest.fungi",
+      "name": "emptySLIDEV2DSemanticBinding",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2DSemanticBinding(decision: SLIDEV2DExecutableDecision) -> SLIDEV2DSemanticBinding",
+      "effects": [],
+      "intent": "Release no digest or authority for refused V2-D semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2d-semantic-digest.fungi",
+      "name": "bindSLIDEV2DSemanticDigest",
+      "qualifier": "pure",
+      "signature": "pure flow bindSLIDEV2DSemanticDigest(body: Bytes) -> SLIDEV2DSemanticBinding",
+      "effects": [],
+      "intent": "Hash only exact independently decoded and admitted V2-D bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "refuseSLIDEV2EReceiptExport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2EReceiptExport(failureId: String, detail: String) -> SLIDEV2EReceiptExport",
+      "effects": [],
+      "intent": "Release no receipt bytes, digest, or authority after refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORBool",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORBool(value: Bool) -> Bytes",
+      "effects": [],
+      "intent": "Encode one canonical CBOR Boolean."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORProducer",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORProducer(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode the exact bounded producer descriptor."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORSources",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORSources(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode source-set, diagnostic-set, and source-map digests."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORSemantics",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORSemantics(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode exact frozen semantic archive identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORPlans",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORPlans(plans: SLIDEV2EPlanDigests) -> Bytes",
+      "effects": [],
+      "intent": "Encode all nine stated common-plan digests in fixed order."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORConformance",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORConformance(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode bounded corpus and vector-set evidence digests."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECBORReproducibility",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORReproducibility(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode action-root, toolchain-lock, and environment-contract digests."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "slideV2ECanonicalReceiptBody",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECanonicalReceiptBody(receipt: SLIDEV2EFrontendReceipt) -> Bytes",
+      "effects": [],
+      "intent": "Encode the exact 14-key V2-E receipt body with ordered integer keys."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-encoder.fungi",
+      "name": "exportSLIDEV2ECanonicalReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDEV2ECanonicalReceipt(evidence: SLIDEV2EFrontendEvidence, sourceText: String, semanticBody: Bytes, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EReceiptExport",
+      "effects": [],
+      "intent": "Emit canonical producer evidence only after independent logical validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "refuseSLIDEV2EReceiptImport",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2EReceiptImport(failureId: String, detail: String) -> SLIDEV2EReceiptImport",
+      "effects": [],
+      "intent": "Release no partial receipt, digest, semantics, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EImportFailure",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EImportFailure(offset: Int, detail: String) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Create one sticky V2-E canonical receipt refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EReadText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EReadText(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2ETextDecode",
+      "effects": [],
+      "intent": "Decode bounded canonical UTF-8 text without replacement characters."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EReadBool",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EReadBool(bytes: Bytes, cursor: SLIDEV2AImportCursor) -> SLIDEV2EBoolDecode",
+      "effects": [],
+      "intent": "Decode only canonical CBOR false or true."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EExpectArray",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EExpectArray(bytes: Bytes, cursor: SLIDEV2AImportCursor, expected: Int) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Consume one exact bounded canonical array head."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EExpectText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EExpectText(bytes: Bytes, cursor: SLIDEV2AImportCursor, expected: String) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Consume one exact registered text identity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "slideV2EExpectUInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EExpectUInt(bytes: Bytes, cursor: SLIDEV2AImportCursor, expected: Int) -> SLIDEV2AImportCursor",
+      "effects": [],
+      "intent": "Consume one exact unsigned key or value."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "decodeSLIDEV2ECanonicalReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow decodeSLIDEV2ECanonicalReceipt(receiptBytes: Bytes) -> SLIDEV2EReceiptImport",
+      "effects": [],
+      "intent": "Reconstruct the complete receipt from bounded shortest-form CBOR."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "verifySLIDEV2ECanonicalReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow verifySLIDEV2ECanonicalReceipt(receiptBytes: Bytes, sourceText: String, semanticBody: Bytes, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EReceiptImport",
+      "effects": [],
+      "intent": "Verify decoded receipt claims by independently re-deriving source, map, and plans."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-cbor-importer.fungi",
+      "name": "verifySLIDEV2ECanonicalReceiptBytes",
+      "qualifier": "pure",
+      "signature": "pure flow verifySLIDEV2ECanonicalReceiptBytes(receiptBytes: Bytes, sourceBytes: Bytes, semanticBody: Bytes, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EReceiptImport",
+      "effects": [],
+      "intent": "Admit source only after fatal UTF-8 decode, then independently verify the receipt."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-model.fungi",
+      "name": "materializeSLIDEV2EFrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2EFrontendEvidence(sourceText: String, compilerArtifactDigest: String, diagnosticSetDigest: String, corpusDigest: String, vectorSetDigest: String, buildActionRootDigest: String, toolchainLockDigest: String, environmentContractDigest: String, semanticBody: Bytes) -> SLIDEV2EFrontendEvidence",
+      "effects": [],
+      "intent": "Materialize one non-authorizing receipt only from exact source and admitted V2-D bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "emptySLIDEV2EPlans",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2EPlans() -> SLIDEV2EPlanDigests",
+      "effects": [],
+      "intent": "Return no plan digest for refused frontend evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "emptySLIDEV2EReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2EReceipt() -> SLIDEV2EFrontendReceipt",
+      "effects": [],
+      "intent": "Return a non-admissible receipt sentinel with no authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "refuseSLIDEV2EFrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2EFrontendEvidence(failureId: String, detail: String) -> SLIDEV2EFrontendEvidence",
+      "effects": [],
+      "intent": "Refuse V2-E without partial source, mapping, receipt, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EFunctionSpan",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EFunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan",
+      "effects": [],
+      "intent": "Return the exact normalized-source span for one frozen fixture flow."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "materializeSLIDEV2ESourceMappings",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEV2ESourceMappings(program: SLIDEV2DExecutableProgram) -> Array<SLIDEV2ESourceMapEntry>",
+      "effects": [],
+      "intent": "Map every admitted instruction and terminator exactly once."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EPlanDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EPlanDigest(domainId: String, semanticBody: Bytes) -> String",
+      "effects": [],
+      "intent": "Domain-bind one independently admitted canonical plan envelope."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "deriveSLIDEV2EPlanDigests",
+      "qualifier": "pure",
+      "signature": "pure flow deriveSLIDEV2EPlanDigests(semanticBody: Bytes) -> SLIDEV2EPlanDigests",
+      "effects": [],
+      "intent": "Derive nine distinct common-plan digests from exact admitted GIR bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2ECBORSourceSet",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORSourceSet(source: SLIDEV2ESourceUnit) -> Bytes",
+      "effects": [],
+      "intent": "Canonicalize one stable source-unit descriptor without ambient paths."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2ECBORSourcemap",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ECBORSourcemap(mappings: Array<SLIDEV2ESourceMapEntry>) -> Bytes",
+      "effects": [],
+      "intent": "Canonicalize the complete ordered source-map table."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EDomainDigest",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EDomainDigest(domainId: String, body: Bytes) -> String",
+      "effects": [],
+      "intent": "Hash canonical frontend evidence under an explicit domain."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EAllExternalDigestsShaped",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EAllExternalDigestsShaped(compilerArtifactDigest: String, diagnosticSetDigest: String, corpusDigest: String, vectorSetDigest: String, buildActionRootDigest: String, toolchainLockDigest: String, environmentContractDigest: String) -> Bool",
+      "effects": [],
+      "intent": "Require every external evidence digest to have SHA-256 width."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EIsCanonicalSHA256",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EIsCanonicalSHA256(value: String) -> Bool",
+      "effects": [],
+      "intent": "Accept exactly one lowercase 32-byte SHA-256 hexadecimal encoding."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-schema.fungi",
+      "name": "slideV2EExternalEvidenceMatches",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EExternalEvidenceMatches(receipt: SLIDEV2EFrontendReceipt, expected: SLIDEV2EExternalEvidenceExpectation) -> Bool",
+      "effects": [],
+      "intent": "Compare every external evidence claim to caller-owned expectations."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "emptySLIDEV2ESourceUnit",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ESourceUnit() -> SLIDEV2ESourceUnit",
+      "effects": [],
+      "intent": "Return a non-admissible source-unit sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "emptySLIDEV2ESourceMapEntry",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEV2ESourceMapEntry() -> SLIDEV2ESourceMapEntry",
+      "effects": [],
+      "intent": "Return a non-admissible source-map sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "slideV2ESourceUnitAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ESourceUnitAt(values: Array<SLIDEV2ESourceUnit>, index: Int) -> SLIDEV2ESourceUnit",
+      "effects": [],
+      "intent": "Read one source unit without inventing evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "slideV2ESourceMapAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ESourceMapAt(values: Array<SLIDEV2ESourceMapEntry>, index: Int) -> SLIDEV2ESourceMapEntry",
+      "effects": [],
+      "intent": "Read one mapping without inventing source coverage."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "slideV2ESourceMapsEqual",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2ESourceMapsEqual(left: Array<SLIDEV2ESourceMapEntry>, right: Array<SLIDEV2ESourceMapEntry>) -> Bool",
+      "effects": [],
+      "intent": "Compare complete ordered source coverage without set coercion."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "slideV2EPlansEqual",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EPlansEqual(left: SLIDEV2EPlanDigests, right: SLIDEV2EPlanDigests) -> Bool",
+      "effects": [],
+      "intent": "Compare all nine independently re-derived common-plan digests."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "validatedSLIDEV2EFrontendDecision",
+      "qualifier": "pure",
+      "signature": "pure flow validatedSLIDEV2EFrontendDecision() -> SLIDEV2DExecutableDecision",
+      "effects": [],
+      "intent": "Report verified frontend evidence without admission authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-frontend-validator.fungi",
+      "name": "validateSLIDEV2EFrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2EFrontendEvidence(evidence: SLIDEV2EFrontendEvidence, sourceText: String, semanticBody: Bytes, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EFrontendEvidence",
+      "effects": [],
+      "intent": "Verify producer claims against exact source and independently imported V2-D semantics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "name": "refuseSLIDEV2ESignedFrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEV2ESignedFrontendEvidence(failureId: String, detail: String) -> SLIDEV2ESignedFrontendEvidence",
+      "effects": [],
+      "intent": "Release no verified producer identity, digest, or authority after refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "name": "slideV2EFrameVerifierEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EFrameVerifierEvidence(payload: Bytes) -> Bytes",
+      "effects": [],
+      "intent": "Length-frame one bounded verifier-evidence field."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "name": "slideV2EVerifierVerdictText",
+      "qualifier": "pure",
+      "signature": "pure flow slideV2EVerifierVerdictText(verdict: Verdict) -> String",
+      "effects": [],
+      "intent": "Encode every K3 verifier outcome without a Boolean collapse."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "name": "deriveSLIDEV2EVerifierEvidenceDigest",
+      "qualifier": "pure",
+      "signature": "pure flow deriveSLIDEV2EVerifierEvidenceDigest(receipt: SLIDEV2EFrontendVerifierReceipt, productionPolicy: Bool) -> String",
+      "effects": [],
+      "intent": "Independently re-derive the host verifier's framed evidence digest."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "name": "validateSLIDEV2EProducerSignatureEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEV2EProducerSignatureEvidence(imported: SLIDEV2EReceiptImport, verifierReceipt: SLIDEV2EFrontendVerifierReceipt, productionPolicy: Bool, expectedKeyId: String, validationTime: Int, maximumEvidenceAge: Int) -> SLIDEV2ESignedFrontendEvidence",
+      "effects": [],
+      "intent": "Bind exact typed hybrid-verifier evidence to an independently verified receipt."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
@@ -5252,6 +8356,30 @@
       "intent": "FUNGI-TYPE-007: step target must be a flow call expression, not a literal or parameter reference."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-v2e-source.fungi",
+      "name": "slide_v2e_checked_increment",
+      "qualifier": "pure",
+      "signature": "pure flow slide_v2e_checked_increment(value: Int) -> Int",
+      "effects": [],
+      "intent": "Apply the checked arithmetic used by the detached fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-v2e-source.fungi",
+      "name": "slide_v2e_k3_join",
+      "qualifier": "pure",
+      "signature": "pure flow slide_v2e_k3_join(left: Int, right: Int, admission: Verdict) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Preserve one Boolean join and all three K3 exits."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-v2e-source.fungi",
+      "name": "slide_v2e_guarded_memory",
+      "qualifier": "pure",
+      "signature": "pure flow slide_v2e_guarded_memory(index: Int) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Read one immutable array only after a fail-closed bounds decision."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/tests/r6-corpus/r6-001-classify.fungi",
       "name": "classify",
       "qualifier": "pure",
@@ -5292,6 +8420,14 @@
       "signature": "pure flow nameOf(code: Int) -> Option<String>",
       "effects": [],
       "intent": "Map a code to an optional name."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/tests/slide-v2/slide-k3-checked-add-probe.fungi",
+      "name": "slideK3CheckedAddProbe",
+      "qualifier": "pure",
+      "signature": "pure flow slideK3CheckedAddProbe(left: Int, right: Int, admission: Verdict) -> Result<Int,String>",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "packages-galerina/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
@@ -5830,7 +8966,7 @@
       "file": "packages-galerina/galerina-core-security/src/interim.fungi",
       "name": "pre_flight_check",
       "qualifier": "pure",
-      "signature": "pure flow pre_flight_check(caller: String, payload_size_bytes: U64) -> ValidationReceipt",
+      "signature": "pure flow pre_flight_check(caller: String, target_: String, payload_size_bytes: Int) -> ValidationReceipt",
       "effects": [],
       "intent": "Validate a cross-boundary call before execution — interim DSS proxy."
     },

@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 730,
+  "total": 734,
   "counts": {
-    "ref": 202,
+    "ref": 206,
     "inline": 169,
     "phantom": 113,
     "live": 133,
@@ -559,7 +559,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 6,
+      "tests": 4,
       "docs": 0
     },
     {
@@ -571,7 +571,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 6,
+      "tests": 5,
       "docs": 0
     },
     {
@@ -1199,18 +1199,6 @@
       "docs": 0
     },
     {
-      "code": "ERR_VALID_CODE",
-      "family": "ERR_*",
-      "namespace": "ERR",
-      "status": "ref",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 0,
-      "tests": 2,
-      "docs": 0
-    },
-    {
       "code": "ERR_VALIDATION_FAILURE",
       "family": "ERR_*",
       "namespace": "ERR",
@@ -1220,6 +1208,18 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_VALID_CODE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -3784,7 +3784,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 3,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -3796,7 +3796,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 4,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -3832,7 +3832,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 4,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -3844,7 +3844,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 5,
+      "tests": 4,
       "docs": 0
     },
     {
@@ -4365,6 +4365,18 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-GOV-999",
+      "family": "GOV",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 8,
       "docs": 0
     },
     {
@@ -5160,6 +5172,18 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-KB-001",
+      "family": "KB",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-LAYOUT-001",
       "family": "LAYOUT",
       "namespace": "FUNGI",
@@ -5291,14 +5315,14 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "EXCESSIVE_NESTING"
+        "FLOW_EXCESSIVE_NESTING"
       ],
       "severities": [
         "info"
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 0,
+      "tests": 1,
       "docs": 0
     },
     {
@@ -7214,6 +7238,30 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-PROBE-001",
+      "family": "PROBE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-PROBE-002",
+      "family": "PROBE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-PROFILE-001",
       "family": "PROFILE",
       "namespace": "FUNGI",
@@ -8725,7 +8773,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 2,
+      "tests": 5,
       "docs": 0
     },
     {

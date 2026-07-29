@@ -986,9 +986,13 @@ Provides:
 - IndexStats
 - DEFAULT_INDEX_OPTIONS
 
+## galerina-devtools-benchmarks
+
+Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest)
+
 ## galerina-test
 
-The consolidated Galerina test harness — one named, consumable package that runs unit, e2e, conformance (R6) and fidelity-differential (walker ≡ bytecode ≡ WASM) checks against a Galerina workspace.
+The consolidated Galerina test harness for unit, e2e, R6 conformance, fidelity-differential, and exact SLIDE corpus checks.
 
 Provides:
 - parseCounts
@@ -1002,7 +1006,7 @@ Provides:
 - runNode
 - CheckKind
 - CheckScope
-- TestCounts
+- CheckResultKind
 
 ## galerina-devtools-graph-project
 
@@ -1351,6 +1355,10 @@ Provides:
 - prefilterBatch
 - ABI_VERSION
 
+## galerina-registry
+
+Signed package registry entries for the Galerina platform. Empty until the owner signing ceremony (registry walkthrough §4) — do not add entries manually. Populated by the registry-index-cli.mjs signing flow after governance review.
+
 ## galerina-governance-telemetry
 
 Blind-observability exporter: streams a Galerina app's governance + operational STATE (masks, verdicts, effect-families, counts, declared budgets) to Prometheus/OpenMetrics — never the data it processes. Log the contract, not the payload.
@@ -1532,11 +1540,11 @@ Provides:
 - BoundaryPolicy
 - CheckResult
 - writeJson
+- renderJson
 - runBoundaryGate
 - writeBoundaryMarkdown
+- renderBoundaryMarkdown
 - EdgeKind
-- FileImport
-- ScannedFile
 
 ## galerina-devtools-pci
 

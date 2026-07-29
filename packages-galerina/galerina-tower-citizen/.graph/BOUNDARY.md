@@ -17,7 +17,7 @@
 | ├─ Node core | 3 |
 | ├─ Workspace (@galerina/*) | 2 |
 | └─ Third-party | 1 |
-| Orphan files | 5 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -34,14 +34,20 @@
 - `@noble/post-quantum/ml-dsa.js`
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
+
+## Entry Points
+- `src/index.ts`
+
+## Loaded Assets
 - `src/self-hosted/governance-decisions.fungi`
 - `src/self-hosted/inference-governance.fungi`
 - `src/self-hosted/pq-admission-policy.fungi`
 - `src/self-hosted/transport-fsm.fungi`
 - `src/trit-brand.type-guard.ts`
 
-## Entry Points
-- `src/index.ts`
+## Allowed Orphans
+_none declared_

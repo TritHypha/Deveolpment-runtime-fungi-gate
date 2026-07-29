@@ -1,14 +1,14 @@
 {
   "generated": "ts-retirement-graph",
   "totals": {
-    "ts": 431,
-    "twinned": 23,
-    "compilerCore": 90,
+    "ts": 463,
+    "twinned": 24,
+    "compilerCore": 97,
     "floor": 16,
-    "program": 302,
-    "fungiInSrc": 52,
-    "packages": 92,
-    "finderDrift": -1,
+    "program": 326,
+    "fungiInSrc": 98,
+    "packages": 95,
+    "finderDrift": 0,
     "authoritativeFlips": 0
   },
   "retirementPaths": {
@@ -54,9 +54,9 @@
       "fungi": 0
     },
     "galerina-core-compiler": {
-      "ts": 97,
+      "ts": 104,
       "twinned": 7,
-      "fungi": 8
+      "fungi": 53
     },
     "galerina-core-compute": {
       "ts": 1,
@@ -90,6 +90,11 @@
     },
     "galerina-core-reports": {
       "ts": 1,
+      "twinned": 0,
+      "fungi": 0
+    },
+    "galerina-core-runtime-wasm": {
+      "ts": 4,
       "twinned": 0,
       "fungi": 0
     },
@@ -428,13 +433,23 @@
       "twinned": 0,
       "fungi": 0
     },
-    "galerina-tower-citizen": {
-      "ts": 28,
+    "galerina-tools-myco": {
+      "ts": 14,
       "twinned": 0,
-      "fungi": 3
+      "fungi": 0
+    },
+    "galerina-tower-citizen": {
+      "ts": 30,
+      "twinned": 1,
+      "fungi": 4
     },
     "galerina-tri-pipe": {
       "ts": 3,
+      "twinned": 0,
+      "fungi": 0
+    },
+    "galerina-tri-regex": {
+      "ts": 5,
       "twinned": 0,
       "fungi": 0
     },
@@ -502,6 +517,7 @@
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/route-defaults.ts",
-    "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts"
+    "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
+    "packages-galerina/galerina-tower-citizen/src/transport-fsm.ts"
   ]
 }

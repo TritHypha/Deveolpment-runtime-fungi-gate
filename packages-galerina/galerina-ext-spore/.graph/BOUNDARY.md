@@ -33,10 +33,16 @@ _none_
 - `@noble/post-quantum/ml-kem.js`
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
-_none_ — every file is reachable from an internal import or entry point.
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
 
 ## Entry Points
 - `src/index.ts`
+
+## Loaded Assets
+_none declared_
+
+## Allowed Orphans
+_none declared_

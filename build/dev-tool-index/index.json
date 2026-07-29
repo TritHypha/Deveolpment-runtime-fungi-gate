@@ -3,10 +3,10 @@
   "totals": {
     "packages": 97,
     "testBearing": 96,
-    "tests": 7876,
-    "devTools": 124,
-    "auditTools": 76,
-    "toolsInCadence": 57,
+    "tests": 8524,
+    "devTools": 129,
+    "auditTools": 78,
+    "toolsInCadence": 59,
     "proofs": 40
   },
   "packages": [
@@ -204,7 +204,7 @@
       "name": "galerina-tools-myco",
       "kind": "tools",
       "description": "grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-",
-      "tests": 29,
+      "tests": 52,
       "hasTestScript": true,
       "border": "PASS",
       "files": 14,
@@ -274,7 +274,7 @@
       "name": "galerina-core",
       "kind": "core",
       "description": "Galerina / Galerina language package, examples, schemas and prototype CLI.",
-      "tests": 9,
+      "tests": 11,
       "hasTestScript": true,
       "border": "PASS",
       "files": 1,
@@ -297,7 +297,7 @@
       "name": "galerina-core-compiler",
       "kind": "core",
       "description": "Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.",
-      "tests": 5113,
+      "tests": 5698,
       "hasTestScript": true,
       "border": "PASS",
       "files": 148,
@@ -527,7 +527,7 @@
       "name": "galerina-tri-regex",
       "kind": "tri",
       "description": "Ternary streaming pattern matching — ReDoS-immune by construction. Non-backtracking automaton, compile-time co",
-      "tests": 28,
+      "tests": 34,
       "hasTestScript": true,
       "border": "PASS",
       "files": 5,
@@ -551,7 +551,7 @@
       "name": "galerina-framework-app-kernel",
       "kind": "framework",
       "description": "Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default rout",
-      "tests": 118,
+      "tests": 120,
       "hasTestScript": true,
       "border": "PASS",
       "files": 13,
@@ -577,7 +577,7 @@
       "name": "galerina-devtools-benchmarks",
       "kind": "devtools",
       "description": "Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest)",
-      "tests": null,
+      "tests": 3,
       "hasTestScript": true,
       "border": "PASS",
       "files": 21,
@@ -679,7 +679,7 @@
       "name": "galerina-devtools-package-graph",
       "kind": "devtools",
       "description": "Per-package boundary-governance graph — internal edges, external-dependency surface, orphan detection, Hardene",
-      "tests": 15,
+      "tests": 27,
       "hasTestScript": true,
       "border": "PASS",
       "files": 5,
@@ -1032,8 +1032,8 @@
     {
       "name": "galerina-test",
       "kind": "test",
-      "description": "The consolidated Galerina test harness — one named, consumable package that runs unit, e2e, conformance (R6) a",
-      "tests": 26,
+      "description": "The consolidated Galerina test harness for unit, e2e, R6 conformance, fidelity-differential, and exact SLIDE c",
+      "tests": 41,
       "hasTestScript": true,
       "border": "PASS",
       "files": 7,
@@ -1190,7 +1190,6 @@
       "selfTest": false,
       "inCadence": false,
       "concerns": [
-        "effects",
         "governance",
         "coverage",
         "diagnostics",
@@ -1249,10 +1248,10 @@
       "inCadence": true,
       "concerns": [
         "governance",
+        "provenance",
         "gate-wiring",
         "coverage",
         "diagnostics",
-        "teaching-corpus",
         "doc-drift",
         "graph/index"
       ]
@@ -1273,12 +1272,13 @@
     {
       "name": "audit-diagnostic-codes.mjs",
       "category": "audit",
-      "purpose": "re-runnable conformance scanner for Galerina's diagnostic-code",
+      "purpose": "Fail-closed diagnostic taxonomy audit:",
       "selfTest": false,
       "inCadence": false,
       "concerns": [
         "diagnostics",
-        "proofs"
+        "source-hygiene",
+        "graph/index"
       ]
     },
     {
@@ -1434,7 +1434,23 @@
       "inCadence": false,
       "concerns": [
         "mutation-testing",
-        "graph/index"
+        "graph/index",
+        "proofs"
+      ]
+    },
+    {
+      "name": "audit-generator-contract.mjs",
+      "category": "audit",
+      "purpose": "executes every declared generator contract",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "coverage",
+        "diagnostics",
+        "tier-floor",
+        "source-hygiene"
       ]
     },
     {
@@ -1815,7 +1831,8 @@
       "inCadence": true,
       "concerns": [
         "diagnostics",
-        "source-hygiene"
+        "source-hygiene",
+        "graph/index"
       ]
     },
     {
@@ -1930,7 +1947,8 @@
       "inCadence": false,
       "concerns": [
         "gate-wiring",
-        "doc-drift"
+        "doc-drift",
+        "graph/index"
       ]
     },
     {
@@ -1942,10 +1960,8 @@
       "concerns": [
         "signing/fusion",
         "gate-wiring",
-        "coverage",
         "diagnostics",
         "source-hygiene",
-        "doc-drift",
         "graph/index"
       ]
     },
@@ -1963,6 +1979,20 @@
         "secrets/privacy",
         "tier-floor",
         "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "audit-tooling-contract.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "coverage",
+        "diagnostics",
         "graph/index"
       ]
     },
@@ -2118,7 +2148,7 @@
       "selfTest": true,
       "inCadence": true,
       "concerns": [
-        "doc-drift"
+        "provenance"
       ]
     },
     {
@@ -2128,22 +2158,34 @@
       "selfTest": true,
       "inCadence": true,
       "concerns": [
-        "doc-drift"
+        "provenance",
+        "doc-drift",
+        "graph/index"
       ]
     },
     {
       "name": "graph-all.mjs",
       "category": "graph",
-      "purpose": "run EVERY Galerina graph-related dev tool in one shot. THIS is \"run graph\".",
+      "purpose": "fail-closed orchestrator for every Galerina graph surface.",
       "selfTest": false,
       "inCadence": true,
       "concerns": [
-        "signing/fusion",
-        "coverage",
-        "diagnostics",
-        "package-border",
+        "governance",
         "source-hygiene",
-        "doc-drift",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "kb-graph-generator.mjs",
+      "category": "graph",
+      "purpose": "normalize and bind one explicit external KB corpus",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "governance",
+        "provenance",
+        "teaching-corpus",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -2159,6 +2201,32 @@
       ]
     },
     {
+      "name": "package-graph-generator.mjs",
+      "category": "graph",
+      "purpose": "derive and enforce every registered package",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "provenance",
+        "package-border",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "project-graph-generator.mjs",
+      "category": "graph",
+      "purpose": "deterministic, fail-closed publication wrapper",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "governance",
+        "provenance",
+        "graph/index"
+      ]
+    },
+    {
       "name": "ts-retirement-graph.mjs",
       "category": "graph",
       "purpose": "graph 7/7: the LIVE `.ts` retirement meter (owner-directed 2026-07-16:",
@@ -2166,6 +2234,7 @@
       "inCadence": false,
       "concerns": [
         "signing/fusion",
+        "provenance",
         "coverage",
         "diagnostics",
         "teaching-corpus",
@@ -2210,7 +2279,9 @@
         "effects",
         "signing/fusion",
         "governance",
+        "provenance",
         "secrets/privacy",
+        "source-hygiene",
         "doc-drift",
         "graph/index"
       ]
@@ -2224,7 +2295,6 @@
       "concerns": [
         "signing/fusion",
         "provenance",
-        "gate-wiring",
         "diagnostics"
       ]
     },
@@ -2235,10 +2305,10 @@
       "selfTest": false,
       "inCadence": true,
       "concerns": [
-        "effects",
         "provenance",
         "diagnostics",
         "secrets/privacy",
+        "source-hygiene",
         "doc-drift",
         "graph/index"
       ]
@@ -2303,12 +2373,12 @@
     {
       "name": "run-all-tests.cjs",
       "category": "runner",
-      "purpose": "Root test runner for the Galerina monorepo.",
+      "purpose": "Complete, build-current package test runner for the Galerina workspace.",
       "selfTest": false,
       "inCadence": true,
       "concerns": [
-        "diagnostics",
-        "doc-drift",
+        "signing/fusion",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -2330,9 +2400,10 @@
       "selfTest": true,
       "inCadence": false,
       "concerns": [
+        "governance",
         "naming",
         "provenance",
-        "diagnostics",
+        "tier-floor",
         "teaching-corpus",
         "graph/index"
       ]
@@ -2508,6 +2579,7 @@
       "concerns": [
         "sinks/taint",
         "signing/fusion",
+        "provenance",
         "diagnostics",
         "doc-drift",
         "graph/index"
@@ -2723,17 +2795,17 @@
       "audit-dss-wasm-build.mjs",
       "audit-fungi-runtime.mjs",
       "audit-gate-key-injectivity.mjs",
+      "audit-generator-contract.mjs",
       "audit-gscm.mjs",
       "audit-name-collisions.mjs",
       "audit-production-blockers.mjs",
       "audit-runtime-coverage.mjs",
       "audit-stage-execution.mjs",
       "audit-stray-docs.mjs",
-      "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-tooling-contract.mjs",
       "audit-wasmtime-presence.mjs",
       "audit-web-stub-guard.mjs",
-      "graph-all.mjs",
       "ts-retirement-graph.mjs",
       "gen-code-registry.mjs",
       "registry-index-cli.mjs",
@@ -2760,6 +2832,7 @@
       "audit-examples-vs-declared.mjs",
       "audit-flowparam-fidelity.mjs",
       "audit-fungi-corpus-check.mjs",
+      "audit-generator-contract.mjs",
       "audit-graph-integrity.mjs",
       "audit-gscm.mjs",
       "audit-kernel-floor.mjs",
@@ -2782,13 +2855,13 @@
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-tooling-contract.mjs",
       "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
       "audit-wat-emitter-mutation.mjs",
       "fix-logicn-brand.mjs",
-      "graph-all.mjs",
       "memory-graph.mjs",
       "ts-retirement-graph.mjs",
       "code-index.mjs",
@@ -2798,9 +2871,7 @@
       "registry-index-cli.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
-      "run-all-tests.cjs",
       "run-core-tests.cjs",
-      "run-phase-close.mjs",
       "run-proofs.mjs",
       "status.mjs",
       "brand-audit.mjs",
@@ -2824,7 +2895,7 @@
       "audit-import-governance.mjs",
       "audit-node-dependencies.mjs",
       "audit-package-border.mjs",
-      "graph-all.mjs",
+      "package-graph-generator.mjs",
       "build-core-chain.mjs",
       "check-gate-injection.mjs",
       "package-usage.mjs"
@@ -2837,6 +2908,7 @@
       "audit-codes-full.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-coverage.mjs",
+      "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",
       "audit-doc-drift.mjs",
       "audit-effect-canonicality.mjs",
@@ -2859,19 +2931,26 @@
       "audit-private-doc-leak.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
+      "audit-scratchdir-hygiene.mjs",
       "audit-selfhost-readiness.mjs",
       "audit-signed-fixture-drift.mjs",
       "audit-silent-overwrite.mjs",
       "audit-sink-canonicality.mjs",
       "audit-stage-execution.mjs",
       "audit-stray-docs.mjs",
+      "audit-syntax-reference-links.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-tooling-contract.mjs",
       "audit-twin-differential.mjs",
       "audit-wasm-validate.mjs",
       "fix-logicn-brand.mjs",
+      "gen-status-blocks.mjs",
       "graph-all.mjs",
+      "kb-graph-generator.mjs",
       "memory-graph.mjs",
+      "package-graph-generator.mjs",
+      "project-graph-generator.mjs",
       "ts-retirement-graph.mjs",
       "code-index.mjs",
       "gen-code-registry.mjs",
@@ -2941,7 +3020,6 @@
       "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
       "audit-u2-version-floor.mjs",
-      "gen-unit-registry.mjs",
       "lint-conventions.mjs",
       "check-gate-injection.mjs",
       "debug-compiler-globs.mjs",
@@ -2964,6 +3042,7 @@
       "audit-emitter-completeness.mjs",
       "audit-examples-vs-declared.mjs",
       "audit-fungi-corpus-check.mjs",
+      "audit-generator-contract.mjs",
       "audit-gscm.mjs",
       "audit-hardening-determinism.mjs",
       "audit-kernel-floor.mjs",
@@ -2984,6 +3063,7 @@
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-tooling-contract.mjs",
       "audit-u2-version-floor.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
@@ -2991,7 +3071,7 @@
       "audit-web-stub-guard.mjs",
       "fix-logicn-brand.mjs",
       "galerina-new.mjs",
-      "graph-all.mjs",
+      "package-graph-generator.mjs",
       "ts-retirement-graph.mjs",
       "gen-code-registry.mjs",
       "gen-contract-registry.mjs",
@@ -3000,6 +3080,7 @@
       "lint-conventions.mjs",
       "lint-fungi.mjs",
       "component-health.mjs",
+      "run-all-tests.cjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
@@ -3048,12 +3129,9 @@
       "audit-stage-execution.mjs",
       "audit-stray-docs.mjs",
       "audit-syntax-reference-links.mjs",
-      "audit-syntax.mjs",
       "audit-wasm-validate.mjs",
       "fix-logicn-brand.mjs",
-      "gen-roadmap-subway.mjs",
       "gen-status-blocks.mjs",
-      "graph-all.mjs",
       "code-index.mjs",
       "gen-code-registry.mjs",
       "gen-contract-registry.mjs",
@@ -3061,7 +3139,6 @@
       "registry-index-cli.mjs",
       "lint-conventions.mjs",
       "component-health.mjs",
-      "run-all-tests.cjs",
       "run-proofs.mjs",
       "status.mjs",
       "emit-doc-wat.mjs",
@@ -3092,6 +3169,7 @@
       "audit-effect-canonicality.mjs",
       "audit-emitter-completeness.mjs",
       "audit-example-diagnostics.mjs",
+      "audit-generator-contract.mjs",
       "audit-graph-integrity.mjs",
       "audit-gscm.mjs",
       "audit-import-governance.mjs",
@@ -3104,12 +3182,18 @@
       "audit-route-overlap.mjs",
       "audit-selfhosted-dead-flows.mjs",
       "audit-tier-boundary.mjs",
+      "audit-tooling-contract.mjs",
       "audit-wasm-validate.mjs",
       "audit-web-stub-guard.mjs",
       "galerina-new.mjs",
+      "graph-all.mjs",
+      "kb-graph-generator.mjs",
+      "package-graph-generator.mjs",
+      "project-graph-generator.mjs",
       "gen-contract-registry.mjs",
       "registry-index-cli.mjs",
       "lint-fungi.mjs",
+      "run-phase-close.mjs",
       "debug-compiler-globs.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3125,6 +3209,8 @@
       "audit-codes-full.mjs",
       "audit-compiler-stage-twins.mjs",
       "audit-corpus-effect-names.mjs",
+      "audit-diagnostic-codes.mjs",
+      "audit-generator-contract.mjs",
       "audit-name-collisions.mjs",
       "audit-papers-index.mjs",
       "audit-private-doc-leak.mjs",
@@ -3134,6 +3220,10 @@
       "audit-tier-boundary.mjs",
       "fix-logicn-brand.mjs",
       "graph-all.mjs",
+      "kb-graph-generator.mjs",
+      "gen-contract-registry.mjs",
+      "kb-index.mjs",
+      "run-all-tests.cjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
@@ -3146,7 +3236,7 @@
       "audit-cast-hygiene.mjs",
       "audit-claim-hygiene.mjs",
       "audit-compiler-stage-twins.mjs",
-      "audit-diagnostic-codes.mjs",
+      "audit-gate-selftests.mjs",
       "audit-license-compat.mjs",
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
@@ -3181,6 +3271,7 @@
     "tier-floor": [
       "audit-claim-hygiene.mjs",
       "audit-codes-full.mjs",
+      "audit-generator-contract.mjs",
       "audit-gscm.mjs",
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
@@ -3188,10 +3279,10 @@
       "audit-tier-boundary.mjs",
       "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
+      "run-phase-close.mjs",
       "license-rollout.mjs"
     ],
     "effects": [
-      "audit-codes-full.mjs",
       "audit-corpus-effect-names.mjs",
       "audit-effect-canonicality.mjs",
       "audit-emitter-completeness.mjs",
@@ -3209,7 +3300,6 @@
       "audit-twin-differential.mjs",
       "galerina-new.mjs",
       "gen-contract-registry.mjs",
-      "kb-index.mjs",
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
       "gather-compiler-stage-hashes.mjs",
@@ -3221,7 +3311,6 @@
     ],
     "teaching-corpus": [
       "audit-corpus-effect-names.mjs",
-      "audit-coverage.mjs",
       "audit-doc-drift.mjs",
       "audit-example-diagnostics.mjs",
       "audit-examples-vs-declared.mjs",
@@ -3240,11 +3329,36 @@
       "audit-wasmtime-presence.mjs",
       "audit-wat-emitter-mutation.mjs",
       "audit-wat-lowering.mjs",
+      "kb-graph-generator.mjs",
       "ts-retirement-graph.mjs",
       "lint-conventions.mjs",
       "run-phase-close.mjs",
       "status.mjs",
       "migrate-fungi.mjs",
+      "wat-invalid-triage.mjs"
+    ],
+    "provenance": [
+      "audit-coverage.mjs",
+      "audit-path-leak.mjs",
+      "audit-provenance.mjs",
+      "audit-u2-version-floor.mjs",
+      "audit-wasm-validate.mjs",
+      "gen-roadmap-subway.mjs",
+      "gen-status-blocks.mjs",
+      "kb-graph-generator.mjs",
+      "package-graph-generator.mjs",
+      "project-graph-generator.mjs",
+      "ts-retirement-graph.mjs",
+      "code-index.mjs",
+      "gen-code-registry.mjs",
+      "gen-contract-registry.mjs",
+      "gen-unit-registry.mjs",
+      "kb-index.mjs",
+      "lint-fungi.mjs",
+      "component-health.mjs",
+      "run-phase-close.mjs",
+      "emit-doc-wat.mjs",
+      "generate-sbom.mjs",
       "wat-invalid-triage.mjs"
     ],
     "secrets/privacy": [
@@ -3282,29 +3396,12 @@
       "audit-perf-hotpath.mjs",
       "audit-private-doc-leak.mjs"
     ],
-    "provenance": [
-      "audit-path-leak.mjs",
-      "audit-provenance.mjs",
-      "audit-u2-version-floor.mjs",
-      "audit-wasm-validate.mjs",
-      "code-index.mjs",
-      "gen-code-registry.mjs",
-      "gen-unit-registry.mjs",
-      "kb-index.mjs",
-      "lint-fungi.mjs",
-      "component-health.mjs",
-      "run-phase-close.mjs",
-      "emit-doc-wat.mjs",
-      "wat-invalid-triage.mjs"
-    ],
     "runtime-coverage": [
       "audit-runtime-coverage.mjs"
     ]
   },
   "gaps": {
-    "packagesNoTests": [
-      "galerina-devtools-benchmarks"
-    ],
+    "packagesNoTests": [],
     "concernsNoTool": [],
     "toolsNotInCadence": [
       "audit-allowlist-sensitive.mjs",
@@ -3342,5 +3439,6 @@
       "audit-web-stub-guard.mjs",
       "lint-fungi.mjs"
     ]
-  }
+  },
+  "contractViolations": []
 }

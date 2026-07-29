@@ -17,7 +17,7 @@
 | ├─ Node core | 3 |
 | ├─ Workspace (@galerina/*) | 2 |
 | └─ Third-party | 0 |
-| Orphan files | 1 |
+| Orphan files | 0 |
 
 ## External Dependencies (the Border)
 
@@ -34,11 +34,17 @@
 _none_
 
 ## Governance
-No boundary violations. All external imports are within the allowlist.
+No boundary violations. All external imports are allowed and every scanned file has declared ownership.
 
 ## Orphaned Files
-- `src/flows/greeting.fungi`
+_none_ -- every file is reachable from an internal import or has an exact ownership declaration.
 
 ## Entry Points
 - `host/server.ts`
 - `src/App.fungi`
+
+## Loaded Assets
+- `src/flows/greeting.fungi`
+
+## Allowed Orphans
+_none declared_
