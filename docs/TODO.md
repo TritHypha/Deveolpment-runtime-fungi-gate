@@ -276,6 +276,22 @@ planning checkbox must never be used to imply that implementation exists.
   live 14/14 generator contract, all fourteen direct drift checks, and the
   complete scripts battery (177/177) pass. Publish the reviewed artifact set
   separately, then repeat all fourteen direct checks at the new HEAD.
+- **Task 9 publication complete:** reviewed generated evidence is isolated in
+  local commit `db5da53a`; every direct generator check remains green 14/14 at
+  that artifact-only HEAD, and the independent contract auditor remains
+  14/14. The worktree was clean before Task 10 began.
+- **Task 10 package/harness checkpoint:** all 16 directly requested package
+  suites pass (fourteen `galerina-devtools-*`, `galerina-test`, and Myco);
+  recursive `rmdir` cleanup in the intelligence test suite was replaced with
+  supported fail-safe `rm`, and its trace-deprecation rerun is 21/21 without
+  the warning. The full aggregate is 96/96 packages and 8,524 tests. Harness
+  unit is 8,524, conformance 10/10, fidelity 9/9, SLIDE 477/477, and ordinary
+  `all` is five/five. The required `e2e --build` initially refused one of four
+  examples because `updateFlightPath.fungi` called undeclared legacy `hash`.
+  A new real-CLI regression reproduced the exact failure before the example
+  moved to registered `Hash.sha256`; the focused test and e2e build are now
+  green (1/1 and 4/4). Regenerate governed evidence before strict tooling
+  tiers.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

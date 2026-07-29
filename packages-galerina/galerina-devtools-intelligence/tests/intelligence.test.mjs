@@ -137,7 +137,7 @@ describe("Indexer", () => {
     if (!available) return;
 
     // Use a temp index dir so we start clean regardless of prior test runs
-    const { mkdtemp, rmdir } = await import("node:fs/promises");
+    const { mkdtemp, rm } = await import("node:fs/promises");
     const { tmpdir } = await import("node:os");
     const tempDir = await mkdtemp(join(tmpdir(), "fungi-idx-test-"));
 
@@ -174,7 +174,7 @@ describe("Indexer", () => {
         `2nd build skipped=${result2.filesSkipped} hashes=${Object.keys(indexContent.fileHashes).length}`,
       );
     } finally {
-      try { await rmdir(tempDir, { recursive: true }); } catch { /* ignore */ }
+      try { await rm(tempDir, { recursive: true, force: true }); } catch { /* ignore */ }
     }
   });
 });

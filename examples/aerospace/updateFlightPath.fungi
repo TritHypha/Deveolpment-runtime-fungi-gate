@@ -58,7 +58,7 @@ contract {
 
   AuditLog.write({
     event: "FlightPathUpdated",
-    commandHash: hash(checkedCommand),
+    commandHash: Hash.sha256(checkedCommand),
     safetyEnvelope: "passed"
   })
 

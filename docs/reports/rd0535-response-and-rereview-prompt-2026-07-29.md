@@ -152,7 +152,7 @@ allowlisted. Current fresh evidence is:
 - code-index, code-registry, and coverage setup is isolated in a seven-test
   Git-backed fixture. Child refusal is asserted before generated outputs are
   read, so one failed generator cannot suppress unrelated tests;
-- a fresh run of every `scripts/tests/*.test.mjs` file passes 177/177 with
+- a fresh run of every `scripts/tests/*.test.mjs` file passes 178/178 with
   zero failures, skips, or Windows shell deprecation warnings.
 
 This closes Task 8 only. It does not make the owner-unselected memory tree
@@ -181,7 +181,7 @@ required fields and compares every stable field exactly, but excludes
 `gitCommit` and `builtAt` from freshness equality. Those two fields describe
 the source snapshot and generation time; an artifact-only commit must not make
 its own evidence stale. Ten focused provenance/contract tests, 14/14 live
-generator contracts, all fourteen direct checks, and 177/177 scripts tests
+generator contracts, all fourteen direct checks, and 178/178 scripts tests
 pass after source commit `13f3fb66`. Generated publication and a
 post-publication fourteen-check proof remain the next Task 9 boundary.
 
@@ -255,7 +255,7 @@ Answer the response, not merely the original review:
    and nonzero child-refusal propagation. Do not choose one of four memory
    trees by file count.
 10. Attempt to falsify the claimed Task 8 closure. Re-run every
-    `scripts/tests/*.test.mjs` file and require exactly 177 passing tests with
+    `scripts/tests/*.test.mjs` file and require exactly 178 passing tests with
     zero failures/skips. Inspect the 79/79 audit/lint proof map and prove that
     missing or vacuous evidence blocks. Remove or neuter one fixture mapping
     in a disposable copy and confirm refusal. Inspect the seven-test
