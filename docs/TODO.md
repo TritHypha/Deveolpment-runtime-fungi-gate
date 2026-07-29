@@ -205,14 +205,20 @@ planning checkbox must never be used to imply that implementation exists.
   Frozen V2-A functions are independently revalidated; every altered base,
   aggregate, memory, authority, or guard binding refuses. Integration is
   14/14; total V2-D logical evidence is 44/44.
-- **Current:** implement deterministic canonical V2-D encoding over the
-  admitted 24-key graph. Separately replace
+- **Completed:** local commit `917bef9b` implements deterministic shortest-form
+  canonical encoding of the admitted 24-key V2-D graph. The exact body is
+  791 bytes with SHA-256
+  `b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38`.
+  Registry, memory, guard, and forbidden-authority mutations release zero
+  partial bytes; focused V2-D logical/canonical evidence is 50/50.
+- **Current:** independently pin and decode the exact canonical V2-D body into
+  importer-owned records. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** independently pin/decode/digest the canonical V2-D body, then add
-  detached guarded execution. Keep the
+- **Next:** derive the semantic digest only after independent structural
+  admission, then add detached guarded execution. Keep the
   V2-E receipt/source-map lane
   independently gated before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may

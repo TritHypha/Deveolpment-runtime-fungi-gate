@@ -3,15 +3,19 @@
 **Date:** 2026-07-29
 **Galerina implementation commit:** `cadbd66f`
 **Executable integration commit:** `5b98ccaf`
+**Canonical producer commit:** `917bef9b`
 **Registry descriptor:** 1,383 LF bytes
 **Registry SHA-256:** `a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648`
+**Canonical body:** 791 bytes
+**Canonical body SHA-256:** `b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38`
 
 ## Claim boundary
 
-This checkpoint proves one bounded logical semantic-memory plan. It does not
-prove canonical V2-D bytes, independent import, detached guarded execution,
-native memory safety, LLVM guard preservation, final-artifact safety,
-containment, or execution authority.
+This checkpoint proves one bounded logical semantic-memory plan and a
+deterministic canonical producer. It does not prove independent canonical
+import, semantic digest, detached guarded execution, native memory safety,
+LLVM guard preservation, final-artifact safety, containment, or execution
+authority.
 
 Every success reports:
 
@@ -76,6 +80,11 @@ two frozen V2-A functions, retains the exact V2-C constant/record/variant
 tables, and binds them to the guarded V2-D function and memory descriptors.
 Total V2-D logical evidence is 44/44.
 
+The canonical producer adds 6/6 tests. It emits one shortest-form 24-key,
+791-byte body and pins its complete SHA-256 digest. Registry, guard, memory,
+and authority mutations each refuse with zero partial bytes. Total focused
+V2-D logical/canonical evidence is 50/50.
+
 ## Replacement and integration
 
 Nothing is removed at this checkpoint.
@@ -90,5 +99,6 @@ fallback.
 
 ## Next safe boundary
 
-Add deterministic canonical encoding, independent import/digest, and detached
-guarded execution. LLVM/native work remains blocked.
+Independently decode and structurally admit the exact canonical body, derive
+its semantic digest only after that admission, and add detached guarded
+execution. LLVM/native work remains blocked.
