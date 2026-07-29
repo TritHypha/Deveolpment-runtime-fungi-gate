@@ -254,27 +254,41 @@ planning checkbox must never be used to imply that implementation exists.
   coverage, nine independently re-derived plan digests, distinct producer
   signature evidence, refusal identities, and the direct exit matrix. V2-D
   bytes and semantic identity cannot move.
-- **Current — V2-E exit verification:** the `.fungi` schema, bounded producer,
+- **Completed:** local commit `ecaf0193` satisfies the bounded V2-E
+  frontend-receipt exit gate. The `.fungi` schema, bounded producer,
   independent logical validator, shortest-form canonical CBOR encoder/importer,
   fatal UTF-8 byte boundary, fresh-process producer/encoder-free import,
   caller-owned external-evidence binding, non-authorizing signature policy,
   and minimal Ed25519 + ML-DSA-65 host verifier are implemented. The named
   logical/import matrix is 87/87, encoder evidence is 5/5, hybrid signature
-  evidence is 25/25, and independent SLIDE is 17/17. Frozen V2-D bytes and
-  semantic identity did not move. The owner's unrelated tri-regex audit and
-  `.codex/` files remain untouched.
+  evidence is 25/25 (117/117 focused), and independent SLIDE commit `5d66da6`
+  passes 17/17. Complete Galerina SLIDE regression is 477/477; complete
+  independent SLIDE is 30/30. Frozen V2-D bytes and semantic identity did not
+  move. No native certificate, execution authority, or component-removal
+  authority was emitted. The owner's unrelated tri-regex audit and `.codex/`
+  files remain untouched.
 - **Parallel design lane:** replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** run the complete V2-E suite in one process, typecheck/build, rerun
-  frozen predecessor and V2-D evidence, adjudicate the exit gate, refresh the
-  architecture/integration report and all three ledgers, then make scoped
-  local Galerina and SLIDE commits. No
+- **Current:** integrate the receipt through the general checked-source
+  Galerina frontend so one public compiler seam returns detached executable
+  GIR plus producer evidence without post-GIR AST recovery. First inventory
+  every existing parse/type/effect/GIR handoff and write the exact
+  keep/rebuild/replace/cut matrix before widening the frozen V2-E vector.
+- **Next:** implement the smallest general checked-source adapter and
+  producer-independent receipt-validation seam under RED tests. Preserve the
+  bounded V2-E vector as permanent conformance evidence; do not widen or
+  silently reinterpret its canonical identity. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.
+- **Latest V2-E verification:** compiler typecheck/build pass; focused V2-E
+  117/117; complete Galerina `slide-*.test.mjs` 477/477; independent SLIDE
+  V2-E 17/17 and complete V2-C/V2-D/V2-E 30/30. Post-commit Myco indexes
+  4,156 files with 64,072 terms and zero over-size skips. Regenerated graph:
+  7,504 nodes / 7,755 edges.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity
