@@ -1,0 +1,267 @@
+@version 1
+/// @file: slide-v2d-executable-validator.fungi
+/// @purpose: Validate complete frozen executable facts plus the V2-D memory plan.
+/// @status: Logical integration only; no bytes, execution, native claim, or authority.
+
+record SLIDEV2DExecutableDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2DExecutable(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2DExecutableDecision
+contract { intent { "Refuse incomplete or altered V2-D executable integration." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail authorityReleased: false
+  }
+}
+
+pure flow validatedSLIDEV2DExecutable() -> SLIDEV2DExecutableDecision
+contract { intent { "Report complete logical V2-D integration without authority." } }
+{
+  return {
+    verdict: Verdict.Allow status: "LOGICAL_EXECUTABLE_MEMORY_VALIDATED"
+    failureId: "NONE"
+    detail: "frozen base, aggregate tables, and guarded memory plan validated"
+    authorityReleased: false
+  }
+}
+
+pure flow slideV2DProjectFrozenBase(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2AProgram
+contract { intent { "Project only frozen V2-A functions into their exact validator." } }
+{
+  let limits: SLIDEV2ALimits = {
+    canonicalBodyBytes: 16384 modules: 1 functionCount: 2
+    blocksPerFunction: 8 instructionsPerFunction: 32 valuesPerFunction: 48
+    blockParametersPerBlock: 4 callDepth: 2 backEdges: 0 effects: 0
+    capabilities: 0 memoryObjects: 0 executionSteps: 64
+  }
+  return {
+    formatMajor: 2 formatMinor: 0
+    semanticProfileId: program.semanticProfileId
+    digestSuiteId: program.digestSuiteId
+    registrySetId: "slide.registry.executable-gir.v2a"
+    registrySetDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
+    memoryProfileId: program.memoryProfileId
+    requiredFeatureIds: Array.of(1, 2, 3, 4)
+    limits: limits moduleIds: program.moduleIds
+    typeIds: Array.of(1, 2, 3, 4, 5) constantIds: Array.empty()
+    functions: Array.of(
+      slideV2AFunctionAt(program.functions, 0),
+      slideV2AFunctionAt(program.functions, 1),
+    )
+    failures: program.failures effectIds: program.effectIds
+    capabilityIds: program.capabilityIds
+    k3Obligations: program.k3Obligations
+    memoryObjectIds: Array.empty() extensionIds: program.extensionIds
+  }
+}
+
+pure flow slideV2DProjectMemory(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2DMemoryProgram
+contract { intent { "Project full executable facts into the exact V2-D memory validator." } }
+{
+  return {
+    formatMajor: program.formatMajor formatMinor: program.formatMinor
+    semanticProfileId: program.semanticProfileId
+    registrySetId: program.registrySetId
+    registrySetDigest: program.registrySetDigest
+    parentRegistryId: program.parentRegistryId
+    parentRegistryDigest: program.parentRegistryDigest
+    parentSemanticDigest: program.parentSemanticDigest
+    memoryProfileId: program.memoryProfileId limits: program.memoryLimits
+    typeIds: program.typeIds opcodeIds: program.opcodeIds
+    regions: program.regions memoryObjects: program.memoryObjects
+    guards: program.guards function: slideV2AFunctionAt(program.functions, 2)
+    effectIds: program.effectIds capabilityIds: program.capabilityIds
+    nativeCertificatePresent: program.nativeCertificatePresent
+    authorityReleased: program.authorityReleased
+  }
+}
+
+pure flow validateSLIDEV2DExecutableMetadata(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2DExecutableDecision
+contract { intent { "Validate V2-D identities, graph ceilings, and table cardinality." } }
+{
+  if program.formatMajor != 2 or program.formatMinor != 2 or program.semanticProfileId != "slide.semantic.executable-gir.v2" or program.digestSuiteId != "slide.digest.sha256.v1" {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-001", "format, profile, or digest suite changed",
+    )
+  }
+  if program.registrySetId != "slide.registry.executable-gir.v2d" or program.registrySetDigest != "a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648" {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-002", "V2-D registry identity or digest changed",
+    )
+  }
+  if program.requiredFeatureIds.count() != 6 or slideV2CIntAt(program.requiredFeatureIds, 5) != 6 or program.moduleIds.count() != 1 or slideV2CIntAt(program.moduleIds, 0) != 1 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-003", "feature or module table changed",
+    )
+  }
+  if program.constantIds.count() != 2 or program.functions.count() != 3 or program.failures.count() != 4 or program.k3Obligations.count() != 1 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-004", "constant, function, failure, or K3 table changed",
+    )
+  }
+  if program.effectIds.count() != 0 or program.capabilityIds.count() != 0 or program.memoryObjectIds.count() != 1 or slideV2CIntAt(program.memoryObjectIds, 0) != 1 or program.extensionIds.count() != 0 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-005", "authority, memory-object, or extension IDs changed",
+    )
+  }
+  let limits = program.graphLimits
+  if limits.canonicalBodyBytes != 28672 or limits.modules != 1 or limits.functionCount != 3 or limits.blocksPerFunction != 8 or limits.instructionsPerFunction != 32 or limits.valuesPerFunction != 48 or limits.blockParametersPerBlock != 4 or limits.callDepth != 2 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-006", "graph or call ceiling changed",
+    )
+  }
+  if limits.backEdges != 0 or limits.effects != 0 or limits.capabilities != 0 or limits.memoryObjects != 1 or limits.executionSteps != 112 or limits.hostCalls != 0 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-007", "execution, memory, or authority ceiling changed",
+    )
+  }
+  if limits.textBytes != 256 or limits.byteBytes != 1024 or limits.arrayElements != 16 or limits.recordFields != 8 or limits.variantCases != 8 or limits.aggregateDepth != 4 or limits.copiedBytes != 4096 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-008", "aggregate ceiling changed",
+    )
+  }
+  if program.nativeCertificatePresent or program.authorityReleased {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-009", "logical graph claims native safety or authority",
+    )
+  }
+  return validatedSLIDEV2DExecutable()
+}
+
+pure flow validateSLIDEV2DAggregateTables(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2DExecutableDecision
+contract { intent { "Keep V2-C constants and aggregate descriptors exact." } }
+{
+  let aggregate = materializeSLIDEV2CAggregateProgram()
+  let aggregateDecision = validateSLIDEV2CAggregateProgram(aggregate)
+  check(aggregateDecision.verdict) {
+    deny: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-012", "frozen aggregate registry is invalid",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-012", "frozen aggregate registry is unresolved",
+      )
+    }
+    if: {}
+  }
+  if program.constants.count() != aggregate.constants.count() or program.recordDescriptors.count() != aggregate.recordDescriptors.count() or program.variantDescriptors.count() != aggregate.variantDescriptors.count() {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-013", "aggregate table cardinality changed",
+    )
+  }
+  let text = slideV2CConstantAt(program.constants, 0)
+  let expectedText = slideV2CConstantAt(aggregate.constants, 0)
+  let raw = slideV2CConstantAt(program.constants, 1)
+  let expectedRaw = slideV2CConstantAt(aggregate.constants, 1)
+  if text.constantId != expectedText.constantId or text.typeId != expectedText.typeId or text.encodingId != expectedText.encodingId or text.utf8Decoded != expectedText.utf8Decoded or slideV2CBytesEqual(text.payload, expectedText.payload) == false {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-014", "text constant differs from frozen V2-C",
+    )
+  }
+  if raw.constantId != expectedRaw.constantId or raw.typeId != expectedRaw.typeId or raw.encodingId != expectedRaw.encodingId or slideV2CBytesEqual(raw.payload, expectedRaw.payload) == false {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-014", "byte constant differs from frozen V2-C",
+    )
+  }
+  let record = slideV2CRecordDescriptorAt(program.recordDescriptors, 0)
+  let expectedRecord = slideV2CRecordDescriptorAt(aggregate.recordDescriptors, 0)
+  if record.recordId != expectedRecord.recordId or record.fieldIds.count() != 3 or record.fieldTypeIds.count() != 3 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-015", "record descriptor shape changed",
+    )
+  }
+  mut fieldIndex: Int = 0
+  while fieldIndex < 3 {
+    if slideV2CIntAt(record.fieldIds, fieldIndex) != slideV2CIntAt(expectedRecord.fieldIds, fieldIndex) or slideV2CIntAt(record.fieldTypeIds, fieldIndex) != slideV2CIntAt(expectedRecord.fieldTypeIds, fieldIndex) {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-015", "record descriptor changed",
+      )
+    }
+    fieldIndex = fieldIndex + 1
+  }
+  let variant = slideV2CVariantDescriptorAt(program.variantDescriptors, 0)
+  let expectedVariant = slideV2CVariantDescriptorAt(aggregate.variantDescriptors, 0)
+  if variant.variantId != expectedVariant.variantId or variant.caseIds.count() != 2 or variant.payloadTypeIds.count() != 2 {
+    return refuseSLIDEV2DExecutable(
+      "SLIDE-V2D-EXECUTABLE-016", "variant descriptor shape changed",
+    )
+  }
+  mut caseIndex: Int = 0
+  while caseIndex < 2 {
+    if slideV2CIntAt(variant.caseIds, caseIndex) != slideV2CIntAt(expectedVariant.caseIds, caseIndex) or slideV2CIntAt(variant.payloadTypeIds, caseIndex) != slideV2CIntAt(expectedVariant.payloadTypeIds, caseIndex) {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-016", "variant descriptor changed",
+      )
+    }
+    caseIndex = caseIndex + 1
+  }
+  return validatedSLIDEV2DExecutable()
+}
+
+pure flow validateSLIDEV2DExecutableProgram(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2DExecutableDecision
+contract { intent { "Require frozen base, aggregate tables, and guarded memory plan to agree." } }
+{
+  let metadata = validateSLIDEV2DExecutableMetadata(program)
+  check(metadata.verdict) {
+    deny: { return metadata }
+    ambig: { return metadata }
+    if: {}
+  }
+  let base = validateSLIDEV2AProgram(slideV2DProjectFrozenBase(program))
+  check(base.verdict) {
+    deny: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-010", "embedded frozen V2-A graph changed",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-010", "embedded frozen V2-A graph is unresolved",
+      )
+    }
+    if: {}
+  }
+  let aggregates = validateSLIDEV2DAggregateTables(program)
+  check(aggregates.verdict) {
+    deny: { return aggregates }
+    ambig: { return aggregates }
+    if: {}
+  }
+  let memory = validateSLIDEV2DMemoryProgram(slideV2DProjectMemory(program))
+  check(memory.verdict) {
+    deny: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-011", "guarded memory plan changed",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2DExecutable(
+        "SLIDE-V2D-EXECUTABLE-011", "guarded memory plan is unresolved",
+      )
+    }
+    if: {}
+  }
+  return validatedSLIDEV2DExecutable()
+}
+

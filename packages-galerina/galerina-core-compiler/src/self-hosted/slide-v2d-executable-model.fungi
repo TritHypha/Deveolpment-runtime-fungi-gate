@@ -1,0 +1,82 @@
+@version 1
+/// @file: slide-v2d-executable-model.fungi
+/// @purpose: Integrate the V2-D memory plan into a complete executable graph.
+/// @status: Logical integration producer; canonical bytes and execution are separate.
+
+record SLIDEV2DExecutableProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  digestSuiteId: String
+  registrySetId: String
+  registrySetDigest: String
+  parentRegistryId: String
+  parentRegistryDigest: String
+  parentSemanticDigest: String
+  memoryProfileId: String
+  requiredFeatureIds: Array<Int>
+  graphLimits: SLIDEV2CExecutableLimits
+  memoryLimits: SLIDEV2DMemoryLimits
+  moduleIds: Array<Int>
+  typeIds: Array<Int>
+  opcodeIds: Array<Int>
+  constantIds: Array<Int>
+  functions: Array<SLIDEV2AFunction>
+  failures: Array<SLIDEV2AFailure>
+  effectIds: Array<Int>
+  capabilityIds: Array<Int>
+  k3Obligations: Array<SLIDEV2AK3Obligation>
+  memoryObjectIds: Array<Int>
+  extensionIds: Array<Int>
+  constants: Array<SLIDEV2CConstant>
+  recordDescriptors: Array<SLIDEV2CRecordDescriptor>
+  variantDescriptors: Array<SLIDEV2CVariantDescriptor>
+  regions: Array<SLIDEV2DRegion>
+  memoryObjects: Array<SLIDEV2DMemoryObject>
+  guards: Array<SLIDEV2DGuard>
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow materializeSLIDEV2DExecutableProgram() -> SLIDEV2DExecutableProgram
+contract { intent { "Materialize frozen executable facts plus the V2-D guarded function." } }
+{
+  let parent = materializeSLIDEV2CExecutableProgram()
+  let memory = materializeSLIDEV2DMemoryProgram()
+  let graphLimits: SLIDEV2CExecutableLimits = {
+    canonicalBodyBytes: 28672 modules: 1 functionCount: 3
+    blocksPerFunction: 8 instructionsPerFunction: 32 valuesPerFunction: 48
+    blockParametersPerBlock: 4 callDepth: 2 backEdges: 0 effects: 0
+    capabilities: 0 memoryObjects: 1 executionSteps: 112
+    textBytes: 256 byteBytes: 1024 arrayElements: 16 recordFields: 8
+    variantCases: 8 aggregateDepth: 4 copiedBytes: 4096 hostCalls: 0
+  }
+  return {
+    formatMajor: 2 formatMinor: 2
+    semanticProfileId: memory.semanticProfileId
+    digestSuiteId: "slide.digest.sha256.v1"
+    registrySetId: memory.registrySetId
+    registrySetDigest: memory.registrySetDigest
+    parentRegistryId: memory.parentRegistryId
+    parentRegistryDigest: memory.parentRegistryDigest
+    parentSemanticDigest: memory.parentSemanticDigest
+    memoryProfileId: memory.memoryProfileId
+    requiredFeatureIds: Array.of(1, 2, 3, 4, 5, 6)
+    graphLimits: graphLimits memoryLimits: memory.limits
+    moduleIds: parent.moduleIds typeIds: memory.typeIds
+    opcodeIds: memory.opcodeIds constantIds: parent.constantIds
+    functions: Array.of(
+      slideV2AFunctionAt(parent.functions, 0),
+      slideV2AFunctionAt(parent.functions, 1),
+      memory.function,
+    )
+    failures: parent.failures effectIds: Array.empty()
+    capabilityIds: Array.empty() k3Obligations: parent.k3Obligations
+    memoryObjectIds: Array.of(1) extensionIds: Array.empty()
+    constants: parent.constants recordDescriptors: parent.recordDescriptors
+    variantDescriptors: parent.variantDescriptors regions: memory.regions
+    memoryObjects: memory.memoryObjects guards: memory.guards
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
