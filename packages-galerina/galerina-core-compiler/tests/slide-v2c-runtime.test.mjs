@@ -50,14 +50,21 @@ async function run(flowName, args = new Map()) {
   );
 }
 
-async function execute(index, steps = 96, copies = 4096, body = canonicalBytes) {
+async function execute(
+  index,
+  steps = 96,
+  copies = 4096,
+  body = canonicalBytes,
+  depth = 4,
+) {
   const result = await run(
-    "executeSLIDEV2CWithBudgets",
+    "executeSLIDEV2CWithAllBudgets",
     new Map([
       ["body", { __tag: "bytes", value: body }],
       ["checkedIndex", intValue(index)],
       ["runtimeStepBudget", intValue(steps)],
       ["runtimeCopyBudget", intValue(copies)],
+      ["runtimeDepthBudget", intValue(depth)],
     ]),
   );
   assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
@@ -133,10 +140,26 @@ describe("validated SLIDE V2-C immutable aggregate execution", () => {
   });
 
   it("caps surplus caller budgets at admitted ceilings", async () => {
-    const result = await execute(2, 1000000, 1000000);
+    const result = await execute(2, 1000000, 1000000, canonicalBytes, 1000000);
     assert.equal(field(result, "status").value, "SUCCEEDED");
     assert.equal(field(result, "steps").value, 15);
     assert.equal(field(result, "copiedBytes").value, 56);
+  });
+
+  it("enforces aggregate-depth budget before nested construction", async () => {
+    const exact = await execute(2, 15, 56, canonicalBytes, 3);
+    assert.equal(field(exact, "status").value, "SUCCEEDED");
+    assert.equal(field(exact, "aggregateDepth").value, 3);
+
+    for (const depth of [2, 1, 0, -1]) {
+      const result = await execute(2, 15, 56, canonicalBytes, depth);
+      assert.equal(field(result, "status").value, "REFUSED");
+      assert.equal(field(field(result, "decision"), "verdict").value, -1);
+      assert.equal(field(result, "steps").value, 0);
+      assert.equal(field(result, "copiedBytes").value, 0);
+      assert.equal(field(result, "aggregateDepth").value, 0);
+      assert.equal(field(result, "authorityReleased").value, false);
+    }
   });
 
   it("never executes malformed, truncated, or suffixed bodies", async () => {

@@ -185,6 +185,26 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       "SLIDE-V2C-AGGREGATE-009",
     ],
     [
+      "effect identity injection",
+      (candidate) => candidate.fields.set("effectIds", arrayValue([intValue(1)])),
+      "SLIDE-V2C-AGGREGATE-009",
+    ],
+    [
+      "host-call ceiling injection",
+      (candidate) => field(candidate, "limits").fields.set("hostCalls", intValue(1)),
+      "SLIDE-V2C-AGGREGATE-008",
+    ],
+    [
+      "back-edge ceiling injection",
+      (candidate) => field(candidate, "limits").fields.set("backEdges", intValue(1)),
+      "SLIDE-V2C-AGGREGATE-008",
+    ],
+    [
+      "descriptor ceiling drift",
+      (candidate) => field(candidate, "limits").fields.set("recordFields", intValue(7)),
+      "SLIDE-V2C-AGGREGATE-007",
+    ],
+    [
       "type table gap",
       (candidate) => field(candidate, "typeIds").items[9] = intValue(11),
       "SLIDE-V2C-AGGREGATE-010",
@@ -195,9 +215,37 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       "SLIDE-V2C-AGGREGATE-014",
     ],
     [
+      "overlong UTF-8 payload",
+      (candidate) => field(candidate, "constants").items[0].fields.set("payload", bytesValue([0xc0, 0xaf])),
+      "SLIDE-V2C-AGGREGATE-014",
+    ],
+    [
+      "text ceiling overflow",
+      (candidate) => field(candidate, "constants").items[0].fields.set(
+        "payload",
+        bytesValue(new Array(257).fill(97)),
+      ),
+      "SLIDE-V2C-AGGREGATE-013",
+    ],
+    [
       "byte ceiling overflow",
       (candidate) => field(candidate, "constants").items[1].fields.set("payload", bytesValue(new Array(1025).fill(0))),
       "SLIDE-V2C-AGGREGATE-016",
+    ],
+    [
+      "empty byte constant",
+      (candidate) => field(candidate, "constants").items[1].fields.set("payload", bytesValue([])),
+      "SLIDE-V2C-AGGREGATE-016",
+    ],
+    [
+      "missing constant definition",
+      (candidate) => field(candidate, "constants").items.pop(),
+      "SLIDE-V2C-AGGREGATE-011",
+    ],
+    [
+      "constant encoding drift",
+      (candidate) => field(candidate, "constants").items[1].fields.set("encodingId", intValue(1)),
+      "SLIDE-V2C-AGGREGATE-015",
     ],
     [
       "record field reorder",
@@ -205,9 +253,58 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       "SLIDE-V2C-AGGREGATE-018",
     ],
     [
+      "duplicate record descriptor",
+      (candidate) => field(candidate, "recordDescriptors").items.push(
+        structuredClone(field(candidate, "recordDescriptors").items[0]),
+      ),
+      "SLIDE-V2C-AGGREGATE-017",
+    ],
+    [
+      "missing variant descriptor",
+      (candidate) => field(candidate, "variantDescriptors").items.pop(),
+      "SLIDE-V2C-AGGREGATE-017",
+    ],
+    [
+      "record field type drift",
+      (candidate) => field(field(candidate, "recordDescriptors").items[0], "fieldTypeIds").items[1] = intValue(1),
+      "SLIDE-V2C-AGGREGATE-019",
+    ],
+    [
+      "record field ceiling overflow",
+      (candidate) => {
+        const descriptor = field(candidate, "recordDescriptors").items[0];
+        for (let i = 4; i <= 9; i += 1) {
+          field(descriptor, "fieldIds").items.push(intValue(i));
+          field(descriptor, "fieldTypeIds").items.push(intValue(1));
+        }
+      },
+      "SLIDE-V2C-AGGREGATE-018",
+    ],
+    [
       "variant case type drift",
       (candidate) => field(field(candidate, "variantDescriptors").items[0], "payloadTypeIds").items[0] = intValue(1),
       "SLIDE-V2C-AGGREGATE-021",
+    ],
+    [
+      "variant case identity drift",
+      (candidate) => field(field(candidate, "variantDescriptors").items[0], "caseIds").items[1] = intValue(3),
+      "SLIDE-V2C-AGGREGATE-021",
+    ],
+    [
+      "variant case ceiling overflow",
+      (candidate) => {
+        const descriptor = field(candidate, "variantDescriptors").items[0];
+        for (let i = 3; i <= 9; i += 1) {
+          field(descriptor, "caseIds").items.push(intValue(i));
+          field(descriptor, "payloadTypeIds").items.push(intValue(4));
+        }
+      },
+      "SLIDE-V2C-AGGREGATE-020",
+    ],
+    [
+      "unknown constant identity",
+      (candidate) => field(candidate, "instructions").items[0].fields.set("immediate", intValue(2)),
+      "SLIDE-V2C-AGGREGATE-023",
     ],
     [
       "unchecked index opcode",
@@ -218,6 +315,16 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       "dynamic field identity",
       (candidate) => field(candidate, "instructions").items[9].fields.set("immediate", intValue(2)),
       "SLIDE-V2C-AGGREGATE-029",
+    ],
+    [
+      "dynamic case identity",
+      (candidate) => field(candidate, "instructions").items[11].fields.set("immediate", intValue(2)),
+      "SLIDE-V2C-AGGREGATE-031",
+    ],
+    [
+      "array operand surplus",
+      (candidate) => field(field(candidate, "instructions").items[5], "operands").items.push(intValue(4)),
+      "SLIDE-V2C-AGGREGATE-025",
     ],
     [
       "surplus operation",
