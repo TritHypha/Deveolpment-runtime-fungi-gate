@@ -190,14 +190,25 @@ planning checkbox must never be used to imply that implementation exists.
   no-partial import, inherited invalid Verdict, frozen vectors, and the second
   producer. V2-C is 73/73; adjacent R1/V2-A/V2-B is 117/117. All V2-C exit
   conditions are satisfied.
-- **Current:** design and implement V2-D safe-value memory
-  objects/guards/limits. Separately replace
+- **Completed:** local commit `cadbd66f` implements the first V2-D logical
+  safe-value memory plan and fail-closed `.fungi` validator. It binds the
+  1,383-byte V2-D registry descriptor, frozen V2-C registry/semantic parent,
+  one function-local runtime-owned region, one immutable definitely
+  initialized 12-byte array object, checked extent arithmetic, and explicit
+  `bounds_guard`/`array_index_guarded` dominance. All pointer/free/shared
+  mutable alias/FFI/unwind/effect/capability/host surfaces are zero. It
+  explicitly reports no native certificate and no authority. V2-D is 30/30;
+  combined V2-C/V2-D is 103/103.
+- **Current:** integrate the guarded function and memory tables into a complete
+  V2-D executable graph over an independently revalidated frozen V2-C parent.
+  Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** implement the smallest V2-D no-address memory-plan increment and
-  independent negative corpus. Keep the V2-E receipt/source-map lane
+- **Next:** complete V2-D executable integration, then canonical
+  encoding/independent import/digest and detached guarded execution. Keep the
+  V2-E receipt/source-map lane
   independently gated before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
@@ -270,6 +281,9 @@ planning checkbox must never be used to imply that implementation exists.
   `../../triLowLevel-v2/24-V2-C-IMMUTABLE-AGGREGATE-INCREMENT.md`.
   V2-C mutation/exit audit:
   `docs/reports/slide-v2c-required-mutation-audit-2026-07-29.md`.
+  V2-D logical checkpoint:
+  `docs/reports/slide-v2d-memory-logical-2026-07-29.md`; registry/design:
+  `../../triLowLevel-v2/25-V2-D-SAFE-VALUE-MEMORY-INCREMENT.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.
