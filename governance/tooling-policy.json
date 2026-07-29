@@ -32,6 +32,36 @@
       ],
       "provenance": "required",
       "tier": "phase-close"
+    },
+    "scripts/dev-tool-index.mjs": {
+      "inputs": [
+        ".github/workflows",
+        "galerina.workspace.json",
+        "governance/tooling-policy.json",
+        "packages-galerina",
+        "proofs",
+        "scripts",
+        "version.json"
+      ],
+      "outputs": [
+        "build/dev-tool-index/INDEX.md",
+        "build/dev-tool-index/index.json",
+        "build/dev-tool-index/packages.mmd",
+        "build/dev-tool-index/provenance.json",
+        "build/dev-tool-index/tooling.mmd"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/dev-tool-index.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/dev-tool-index.mjs",
+        "--generator-check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
     }
   }
 }

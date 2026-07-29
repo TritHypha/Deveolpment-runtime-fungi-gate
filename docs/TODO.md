@@ -185,7 +185,20 @@ planning checkbox must never be used to imply that implementation exists.
   selected tier; the tooling contract is 12/12 and confirms the new audit is
   disposed rather than increasing the intentional uncovered-tool red set
   (still 21, owned by Task 8).
-- **Task 7 remains incomplete:** eleven named root generators plus explicit
+- **Task 7 second live generator:** `dev-tool-index.mjs --root` no longer mixes
+  the selected fixture root with the ambient repository script directory.
+  Its normal generator writes four deterministic views plus required
+  provenance; `--generator-check` compares all five without writing, while
+  the existing `--check` continues to enforce the tooling contract and now
+  also refuses artifact drift. Focused root-isolation and tamper tests are
+  2/2; the combined affected suite is 23/23; the live generator audit passes
+  2/2.
+- **Task 7 performance finding:** the exact whole-workspace before/after
+  snapshots took about 138 seconds for two live generators. Correctness is
+  intact, but phase-close cost will become excessive as the registry grows.
+  Optimize the snapshot implementation without weakening ignored/untracked
+  write detection before enabling the complete generator inventory.
+- **Task 7 remains incomplete:** ten named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or
