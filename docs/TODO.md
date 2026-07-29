@@ -100,11 +100,20 @@ planning checkbox must never be used to imply that implementation exists.
   Eleven hostile lease mutations fail closed; combined focused evidence is
   19/19. Report:
   `docs/reports/slide-v2b-lease-shape-2026-07-29.md`.
-- **Current:** define canonical lease signing bytes and the independently owned
-  cryptographic-verifier adapter. Shape validation is not signature
-  verification and must never be promoted into admission.
-- **Next:** add nonce/replay state and K3 admission composition before any
-  lease reference, broker opcode, host handle, or host dispatch can exist;
+- **Completed (awaiting local checkpoint commit):**
+  `slide-v2b-lease-canonical.fungi` derives a pinned 463-byte
+  deterministic-CBOR lease body and domain-separated signing digest, and the
+  lease gate re-derives it before consuming a receipt. The minimal
+  `slide-v2b-crypto-verifier.ts` Galerina reference host floor verifies both
+  Ed25519 and ML-DSA-65 under an exact protocol context with no downgrade,
+  returns typed K3, and performs no key discovery or authority decision.
+  Focused evidence is 35/35. Report:
+  `docs/reports/slide-v2b-canonical-crypto-verifier-2026-07-29.md`.
+- **Current:** implement atomic nonce/replay and call-budget state plus
+  independent all-evidence K3 composition. The Galerina TypeScript crypto
+  floor is reference/bootstrap evidence, not the independent SLIDE verifier.
+- **Next:** only after those gates pass may any
+  lease reference, broker opcode, host handle, or host dispatch exist;
   then add the versioned memory increment without widening frozen R1.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
@@ -125,6 +134,11 @@ planning checkbox must never be used to imply that implementation exists.
   Myco index contains 4,096 files with zero over-size skips. The lease
   checkpoint post-commit refresh indexes 4,098 files with zero over-size
   skips.
+- **Latest canonical/crypto verification:** compiler 5,360/5,360; repository
+  94/94 packages and 8,102/8,102 tests; graph 7,264 nodes / 7,521 edges;
+  zero integrity or KB-link violations; Hardened Border 97/97; explicit
+  Galerina memory graph clean; dev-tool index 97 packages / 124 tools /
+  40 proofs. Post-commit Myco refresh remains required.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

@@ -1,0 +1,138 @@
+@version 1
+/// @file: slide-v2b-lease-canonical.fungi
+/// @purpose: Derive canonical V2-B lease signing bytes and their domain-separated digest.
+/// @status: Non-authorizing producer evidence; signature verification remains an independent host primitive.
+
+record SLIDEV2BLeaseSigningEvidence {
+  decision: SLIDEV2BCapabilityDecision
+  schemaId: String
+  domainId: String
+  canonicalBytes: Bytes
+  canonicalByteLength: Int
+  signingDigest: String
+}
+
+pure flow emptySLIDEV2BLeaseSigningEvidence(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2BLeaseSigningEvidence
+contract { intent { "Release no signing bytes or digest when lease canonicalization refuses." } }
+{
+  return {
+    decision: refuseSLIDEV2BCapability(failureId, detail)
+    schemaId: "slide.capability.lease.v2b"
+    domainId: "slide.capability.lease-signing.v2b"
+    canonicalBytes: Bytes.empty()
+    canonicalByteLength: 0
+    signingDigest: ""
+  }
+}
+
+pure flow slideV2BCBORHead(majorType: Int, value: Int) -> Bytes
+contract { intent { "Encode a shortest-form bounded deterministic-CBOR head." } }
+{
+  if majorType < 0 or majorType > 7 or value < 0 or value > 2147483647 {
+    return Bytes.empty()
+  }
+  if value < 24 { return Bytes.of(majorType * 32 + value) }
+  if value < 256 { return Bytes.of(majorType * 32 + 24, value) }
+  if value < 65536 {
+    let high: Int = value / 256
+    let low: Int = value - high * 256
+    return Bytes.of(majorType * 32 + 25, high, low)
+  }
+  let byte3: Int = value / 16777216
+  let remainder3: Int = value - byte3 * 16777216
+  let byte2: Int = remainder3 / 65536
+  let remainder2: Int = remainder3 - byte2 * 65536
+  let byte1: Int = remainder2 / 256
+  let byte0: Int = remainder2 - byte1 * 256
+  return Bytes.of(majorType * 32 + 26, byte3, byte2, byte1, byte0)
+}
+
+pure flow slideV2BCBORUInt(value: Int) -> Bytes
+contract { intent { "Encode one bounded unsigned integer." } }
+{
+  return slideV2BCBORHead(0, value)
+}
+
+pure flow slideV2BCBORText(value: String) -> Bytes
+contract { intent { "Encode one definite UTF-8 text value." } }
+{
+  let payload: Bytes = value.encode()
+  let head: Bytes = slideV2BCBORHead(3, payload.length())
+  if head.isEmpty() { return Bytes.empty() }
+  return head.append(payload)
+}
+
+pure flow deriveSLIDEV2BLeaseSigningEvidence(
+  lease: SLIDEV2BLease,
+  request: SLIDEV2BCapabilityRequest,
+) -> SLIDEV2BLeaseSigningEvidence
+contract { intent { "Derive exact canonical lease signing bytes after unsigned-shape validation." } }
+{
+  let shapeDecision = validateSLIDEV2BUnsignedLeaseShape(lease, request)
+  check(shapeDecision.verdict) {
+    deny: {
+      return emptySLIDEV2BLeaseSigningEvidence(
+        shapeDecision.failureId, shapeDecision.detail,
+      )
+    }
+    ambig: {
+      return emptySLIDEV2BLeaseSigningEvidence(
+        "SLIDE-V2B-LEASE-CANON-001", "unsigned lease validation was unresolved",
+      )
+    }
+    if: {}
+  }
+
+  mut body: Bytes = slideV2BCBORHead(4, 21)
+  body = body.append(slideV2BCBORText("slide.capability.lease.v2b"))
+  body = body.append(slideV2BCBORText(lease.leaseId))
+  body = body.append(slideV2BCBORText(lease.artifactSemanticDigest))
+  body = body.append(slideV2BCBORText(lease.admittedBundleId))
+  body = body.append(slideV2BCBORUInt(lease.requestId))
+  body = body.append(slideV2BCBORUInt(lease.capabilityClassId))
+  body = body.append(slideV2BCBORUInt(lease.effectId))
+  body = body.append(slideV2BCBORText(lease.resourceDescriptorDigest))
+  body = body.append(slideV2BCBORText(lease.subjectId))
+  body = body.append(slideV2BCBORText(lease.tenantId))
+  body = body.append(slideV2BCBORUInt(lease.issuedAt))
+  body = body.append(slideV2BCBORUInt(lease.notBefore))
+  body = body.append(slideV2BCBORUInt(lease.expiresAt))
+  body = body.append(slideV2BCBORText(lease.nonce))
+  body = body.append(slideV2BCBORUInt(lease.maxCalls))
+  body = body.append(slideV2BCBORUInt(lease.maxRequestBytes))
+  body = body.append(slideV2BCBORUInt(lease.maxResponseBytes))
+  body = body.append(slideV2BCBORText(lease.routeReceiptDigest))
+  body = body.append(slideV2BCBORText(lease.towerReceiptDigest))
+  body = body.append(slideV2BCBORUInt(lease.issuerRoleId))
+  body = body.append(slideV2BCBORUInt(lease.signatureSuiteId))
+
+  if body.isEmpty() or body.length() > 4096 {
+    return emptySLIDEV2BLeaseSigningEvidence(
+      "SLIDE-V2B-LEASE-CANON-002", "canonical lease body is absent or exceeds 4096 bytes",
+    )
+  }
+  let domainPrefix = Bytes.fromHex(
+    "736c6964652e6361706162696c6974792e6c656173652d7369676e696e672e76326200",
+  )
+  let signingDigest = domainPrefix.append(body).sha256Hex()
+  if signingDigest.length() != 64 {
+    return emptySLIDEV2BLeaseSigningEvidence(
+      "SLIDE-V2B-LEASE-CANON-003", "registered SHA-256 primitive unavailable",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "SIGNING_BYTES_DERIVED" failureId: "NONE"
+      detail: "canonical signing bytes derived; no signature or authority exists"
+      authorityReleased: false
+    }
+    schemaId: "slide.capability.lease.v2b"
+    domainId: "slide.capability.lease-signing.v2b"
+    canonicalBytes: body
+    canonicalByteLength: body.length()
+    signingDigest: signingDigest
+  }
+}

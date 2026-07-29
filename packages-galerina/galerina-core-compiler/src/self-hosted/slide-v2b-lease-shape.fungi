@@ -53,8 +53,7 @@ pure flow materializeSLIDEV2BLeaseFixture(
 contract { intent { "Materialize one deterministic non-production lease-shape fixture." } }
 {
   let request = slideV2BCapabilityAt(capabilitySet.requests, 0)
-  let signedDigest = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-  let lease: SLIDEV2BLease = {
+  let unsignedLease: SLIDEV2BLease = {
     leaseId: "lease-fixture-v2b-0001"
     artifactSemanticDigest: "910727d92460501cd592af8130dbef4acd6abd1432d7ea384ba52be66e9d3464"
     admittedBundleId: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -67,13 +66,33 @@ contract { intent { "Materialize one deterministic non-production lease-shape fi
     maxResponseBytes: request.maxResponseBytes
     routeReceiptDigest: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     towerReceiptDigest: "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-    issuerRoleId: 1 signatureSuiteId: 1 signedBytesDigest: signedDigest
+    issuerRoleId: 1 signatureSuiteId: 1 signedBytesDigest: ""
+  }
+  let signingEvidence = deriveSLIDEV2BLeaseSigningEvidence(unsignedLease, request)
+  let lease: SLIDEV2BLease = {
+    leaseId: unsignedLease.leaseId
+    artifactSemanticDigest: unsignedLease.artifactSemanticDigest
+    admittedBundleId: unsignedLease.admittedBundleId
+    requestId: unsignedLease.requestId
+    capabilityClassId: unsignedLease.capabilityClassId
+    effectId: unsignedLease.effectId
+    resourceDescriptorDigest: unsignedLease.resourceDescriptorDigest
+    subjectId: unsignedLease.subjectId tenantId: unsignedLease.tenantId
+    issuedAt: unsignedLease.issuedAt notBefore: unsignedLease.notBefore
+    expiresAt: unsignedLease.expiresAt nonce: unsignedLease.nonce
+    maxCalls: unsignedLease.maxCalls maxRequestBytes: unsignedLease.maxRequestBytes
+    maxResponseBytes: unsignedLease.maxResponseBytes
+    routeReceiptDigest: unsignedLease.routeReceiptDigest
+    towerReceiptDigest: unsignedLease.towerReceiptDigest
+    issuerRoleId: unsignedLease.issuerRoleId
+    signatureSuiteId: unsignedLease.signatureSuiteId
+    signedBytesDigest: signingEvidence.signingDigest
   }
   let verifierReceipt: SLIDEV2BCryptoVerifierReceipt = {
     schemaId: "slide.crypto.verifier-receipt.v1"
-    verifierId: "slide.test.detached-verifier.v1"
+    verifierId: "slide.crypto.hybrid-ed25519-mldsa65.v1"
     signatureSuiteId: 1 signerRoleId: 1 keyId: "test-key-v2b-1"
-    signedBytesDigest: signedDigest
+    signedBytesDigest: signingEvidence.signingDigest
     signatureDigest: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     verdict: Verdict.Allow verifiedAt: 1001
     evidenceDigest: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
@@ -84,13 +103,11 @@ contract { intent { "Materialize one deterministic non-production lease-shape fi
   }
 }
 
-pure flow validateSLIDEV2BLeaseShape(
+pure flow validateSLIDEV2BUnsignedLeaseShape(
   lease: SLIDEV2BLease,
   request: SLIDEV2BCapabilityRequest,
-  verifierReceipt: SLIDEV2BCryptoVerifierReceipt,
-  validationTime: Int,
 ) -> SLIDEV2BCapabilityDecision
-contract { intent { "Validate bound lease/verifier shape while releasing no host authority." } }
+contract { intent { "Validate request-bound lease fields that precede signing." } }
 {
   let requestDecision = validateSLIDEV2BCapabilityRequest(request, request.requestId)
   check(requestDecision.verdict) {
@@ -103,7 +120,7 @@ contract { intent { "Validate bound lease/verifier shape while releasing no host
       "SLIDE-V2B-LEASE-001", "lease identity, subject, tenant, or nonce is absent",
     )
   }
-  if lease.artifactSemanticDigest.length() != 64 or lease.admittedBundleId.length() != 64 or lease.routeReceiptDigest.length() != 64 or lease.towerReceiptDigest.length() != 64 or lease.signedBytesDigest.length() != 64 {
+  if lease.artifactSemanticDigest.length() != 64 or lease.admittedBundleId.length() != 64 or lease.routeReceiptDigest.length() != 64 or lease.towerReceiptDigest.length() != 64 {
     return refuseSLIDEV2BCapability(
       "SLIDE-V2B-LEASE-002", "lease digest binding is absent or malformed",
     )
@@ -113,7 +130,7 @@ contract { intent { "Validate bound lease/verifier shape while releasing no host
       "SLIDE-V2B-LEASE-003", "lease does not bind the exact capability request",
     )
   }
-  if lease.issuedAt > lease.notBefore or lease.notBefore > validationTime or validationTime >= lease.expiresAt or lease.expiresAt <= lease.issuedAt {
+  if lease.issuedAt > lease.notBefore or lease.expiresAt <= lease.notBefore or lease.expiresAt <= lease.issuedAt {
     return refuseSLIDEV2BCapability(
       "SLIDE-V2B-LEASE-004", "lease chronology or validation window is invalid",
     )
@@ -128,7 +145,44 @@ contract { intent { "Validate bound lease/verifier shape while releasing no host
       "SLIDE-V2B-LEASE-006", "lease issuer role or signature suite changed",
     )
   }
-  if verifierReceipt.schemaId != "slide.crypto.verifier-receipt.v1" or verifierReceipt.verifierId.length() < 1 or verifierReceipt.keyId.length() < 1 {
+  return {
+    verdict: Verdict.Allow status: "UNSIGNED_LEASE_SHAPE_VALIDATED" failureId: "NONE"
+    detail: "unsigned request-bound lease shape validated; no authority exists"
+    authorityReleased: false
+  }
+}
+
+pure flow validateSLIDEV2BLeaseShape(
+  lease: SLIDEV2BLease,
+  request: SLIDEV2BCapabilityRequest,
+  verifierReceipt: SLIDEV2BCryptoVerifierReceipt,
+  validationTime: Int,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Validate bound lease/verifier shape while releasing no host authority." } }
+{
+  let unsignedDecision = validateSLIDEV2BUnsignedLeaseShape(lease, request)
+  check(unsignedDecision.verdict) {
+    deny: { return unsignedDecision }
+    ambig: { return unsignedDecision }
+    if: {}
+  }
+  if lease.notBefore > validationTime or validationTime >= lease.expiresAt {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-LEASE-004", "lease validation time is outside the admitted window",
+    )
+  }
+  let signingEvidence = deriveSLIDEV2BLeaseSigningEvidence(lease, request)
+  check(signingEvidence.decision.verdict) {
+    deny: { return signingEvidence.decision }
+    ambig: { return signingEvidence.decision }
+    if: {}
+  }
+  if lease.signedBytesDigest.length() != 64 or lease.signedBytesDigest != signingEvidence.signingDigest {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-LEASE-012", "lease signed-bytes digest is not canonical",
+    )
+  }
+  if verifierReceipt.schemaId != "slide.crypto.verifier-receipt.v1" or verifierReceipt.verifierId != "slide.crypto.hybrid-ed25519-mldsa65.v1" or verifierReceipt.keyId.length() < 1 {
     return refuseSLIDEV2BCapability(
       "SLIDE-V2B-LEASE-007", "typed verifier receipt identity is absent",
     )

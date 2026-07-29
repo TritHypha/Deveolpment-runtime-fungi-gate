@@ -84,7 +84,7 @@ Planning completion and implementation completion are deliberately separate.
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
 | V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, budget enforcement, and instruction-driven call/branch/join/K3 execution | Versioned effect/capability and memory increments |
-| V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact database/HTTPS/audit descriptors and request-set gate; request-bound lease and typed verifier-receipt shape validation; all success states explicitly release no authority | Define canonical signing bytes, perform real independent cryptographic verification, enforce nonce/replay state, compose all admission evidence with K3, then build the isolated broker |
+| V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact request descriptors/gate; request-bound lease; pinned canonical signing bytes/digest; Galerina reference hybrid Ed25519+ML-DSA-65 verifier; typed receipt; every `.fungi` success still releases no authority | Implement independent SLIDE crypto primitive, atomic nonce/call state, all-evidence K3 composition, then isolated broker |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
@@ -426,8 +426,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. implement canonical V2-B lease signing bytes and an independent
-   cryptographic verifier without accepting a Boolean authority shortcut;
+3. implement atomic V2-B nonce/call-budget state and all-evidence K3
+   composition without releasing a broker reference;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.
