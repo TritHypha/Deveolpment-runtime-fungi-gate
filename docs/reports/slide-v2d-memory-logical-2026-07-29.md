@@ -4,6 +4,7 @@
 **Galerina implementation commit:** `cadbd66f`
 **Executable integration commit:** `5b98ccaf`
 **Canonical producer commit:** `917bef9b`
+**Independent wire/import commit:** `8b137394`
 **Registry descriptor:** 1,383 LF bytes
 **Registry SHA-256:** `a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648`
 **Canonical body:** 791 bytes
@@ -11,11 +12,11 @@
 
 ## Claim boundary
 
-This checkpoint proves one bounded logical semantic-memory plan and a
-deterministic canonical producer. It does not prove independent canonical
-import, semantic digest, detached guarded execution, native memory safety,
-LLVM guard preservation, final-artifact safety, containment, or execution
-authority.
+This checkpoint proves one bounded logical semantic-memory plan, a
+deterministic canonical producer, and independent canonical reconstruction.
+It does not prove the V2-D semantic digest, detached guarded execution, native
+memory safety, LLVM guard preservation, final-artifact safety, containment,
+or execution authority.
 
 Every success reports:
 
@@ -85,6 +86,13 @@ The canonical producer adds 6/6 tests. It emits one shortest-form 24-key,
 and authority mutations each refuse with zero partial bytes. Total focused
 V2-D logical/canonical evidence is 50/50.
 
+The independent vector gate and structural importer add 13/13 tests without
+loading the V2-D producer or encoder. They pin all 791 bytes, refuse every
+single-byte mutation, and reconstruct the complete graph, region, object, and
+guard records into importer-owned values. Structural mutations and every
+refusal expose no partial graph or memory plan. Total focused V2-D evidence is
+63/63; the adjacent frozen R1/V2-A/V2-B/V2-C suites pass 246/246.
+
 ## Replacement and integration
 
 Nothing is removed at this checkpoint.
@@ -99,6 +107,6 @@ fallback.
 
 ## Next safe boundary
 
-Independently decode and structurally admit the exact canonical body, derive
-its semantic digest only after that admission, and add detached guarded
-execution. LLVM/native work remains blocked.
+Derive the V2-D semantic digest only after independent admission, then add
+detached guarded execution with exact guard-before-observation and memory
+accounting. LLVM/native work remains blocked.

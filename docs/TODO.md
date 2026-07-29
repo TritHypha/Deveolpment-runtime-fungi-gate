@@ -211,14 +211,21 @@ planning checkbox must never be used to imply that implementation exists.
   `b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38`.
   Registry, memory, guard, and forbidden-authority mutations release zero
   partial bytes; focused V2-D logical/canonical evidence is 50/50.
-- **Current:** independently pin and decode the exact canonical V2-D body into
-  importer-owned records. Separately replace
+- **Completed:** local commit `8b137394` adds producer-free exact-vector
+  admission and structural import of the complete V2-D graph and no-address
+  memory plan. All 791 single-byte mutations, truncation, suffix,
+  non-shortest/root-shape drift, guarded-opcode drift, region drift, and guard
+  drift refuse. Refusals expose no partial functions, regions, objects,
+  guards, native certificate, or authority. Focused V2-D evidence is 63/63;
+  frozen R1/V2-A/V2-B/V2-C regression evidence is 246/246.
+- **Current:** derive and pin the V2-D semantic digest only after independent
+  structural admission. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** derive the semantic digest only after independent structural
-  admission, then add detached guarded execution. Keep the
+- **Next:** add detached guarded execution with exact guard-before-observation,
+  registered failure, and memory-accounting evidence. Keep the
   V2-E receipt/source-map lane
   independently gated before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may
