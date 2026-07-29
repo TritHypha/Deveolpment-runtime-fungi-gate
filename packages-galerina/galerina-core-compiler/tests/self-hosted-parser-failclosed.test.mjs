@@ -11,8 +11,8 @@
 //   FUNGI-PARSE-003  dangling/unterminated declaration (flow w/o name · unterminated block)
 //   FUNGI-PARSE-004  flow header without a body block
 // GREEN guarantees pinned alongside: comments/newlines/Eof are trivia (never
-// errors), record/enum/type skip STRUCTURALLY (grammar-gap, deliberate — #93),
-// and one bad line yields exactly ONE error (anti-cascade, parser.ts:6177).
+// errors), checked record/enum declaration facts are preserved, type aliases
+// remain a line-scoped grammar gap, and one bad line yields exactly ONE error.
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -58,7 +58,7 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     assert.equal(r.flowCount, 1);
   });
 
-  it("GREEN: comments are trivia and record declarations skip structurally (grammar-gap, not errors)", async () => {
+  it("GREEN: comments are trivia and a valid record declaration is accepted", async () => {
     const r = await pipeline("/// a doc comment\nrecord R {\n  x: Int\n}\npure flow one() -> Int {\n  return 1\n}\n");
     assert.deepEqual(r.errors, []);
     assert.equal(r.flowCount, 1);
@@ -85,6 +85,18 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
   it("FUNGI-PARSE-003: an unterminated record block (EOF before `}`) errors", async () => {
     const r = await pipeline("record R {\n  x: Int\n");
     assert.equal(r.errors.length, 1);
+    assert.match(r.errors[0], /^FUNGI-PARSE-003/);
+  });
+
+  it("FUNGI-PARSE-003: a malformed record field is refused", async () => {
+    const r = await pipeline("record R {\n  x Int\n}\n");
+    assert.equal(r.errors.length, 1, JSON.stringify(r.errors));
+    assert.match(r.errors[0], /^FUNGI-PARSE-003/);
+  });
+
+  it("FUNGI-PARSE-003: a payload-bearing enum case is refused by the checked snapshot profile", async () => {
+    const r = await pipeline("enum E {\n  Selected(Int)\n}\n");
+    assert.equal(r.errors.length, 1, JSON.stringify(r.errors));
     assert.match(r.errors[0], /^FUNGI-PARSE-003/);
   });
 

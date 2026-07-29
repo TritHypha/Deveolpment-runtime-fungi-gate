@@ -291,9 +291,15 @@ planning checkbox must never be used to imply that implementation exists.
   The real 1,492-byte V2-E source now parses with zero self-hosted errors into
   all three complete compiler-owned flow entries. Focused parser/GIR/R1
   adapter evidence is 133/133; compiler typecheck and build pass.
-- **Next:** preserve the V2-E record/enum declarations as compiler-owned
-  snapshot facts, then implement the exact three-flow source-to-V2-D adapter
-  under RED tests. Preserve the
+- **Completed — G3.1 checked declarations:** the self-hosted parser now returns
+  ordered compiler-owned record/type fields and payload-free enum cases in
+  `ParseResult`; malformed fields, payload-bearing cases and unterminated
+  declarations refuse with `FUNGI-PARSE-003`. The frozen V2-E declaration
+  identities are pinned exactly. Focused parser/GIR/R1 adapter evidence is
+  137/137; compiler typecheck and build pass.
+- **Next:** implement the exact three-flow checked-source-to-V2-D adapter under
+  RED tests, accepting only the pinned declarations, signatures and body
+  shapes before materializing the frozen graph. Preserve the
   bounded V2-E vector as permanent conformance evidence; do not widen or
   silently reinterpret its canonical identity. No
   lease reference, broker opcode, host handle, or dispatch may
@@ -301,9 +307,9 @@ planning checkbox must never be used to imply that implementation exists.
   isolation, and audit gates pass.
 - **Latest V2-E verification:** compiler typecheck/build pass; focused V2-E
   117/117; complete Galerina `slide-*.test.mjs` 477/477; independent SLIDE
-  V2-E 17/17 and complete V2-C/V2-D/V2-E 30/30. Post-commit Myco indexes
-  4,156 files with 64,072 terms and zero over-size skips. Regenerated graph:
-  7,504 nodes / 7,755 edges.
+  V2-E 17/17 and complete V2-C/V2-D/V2-E 30/30. Latest Myco checkpoint indexes
+  4,156 files with 64,101 terms and zero over-size skips. Regenerated graph:
+  7,525 nodes / 7,776 edges with zero integrity violations.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity

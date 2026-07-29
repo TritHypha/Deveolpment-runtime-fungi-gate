@@ -194,12 +194,29 @@ record DotPathParse {
   nextPos: Int
 }
 
+record RecordFieldDecl {
+  name: String
+  typeName: String
+}
+
+record RecordDecl {
+  name: String
+  fields: Array<RecordFieldDecl>
+}
+
+record EnumDecl {
+  name: String
+  cases: Array<String>
+}
+
 record ParseResult {
   flows: Array<FlowDecl>
   errors: Array<String>
   imports: Array<String>        // module paths from `import ... from "path"` statements
   policies: Array<PolicyDecl>   // domain guard policies (task #56)
   guardDecls: Array<GuardDecl>  // v2.2 named guard ceiling declarations (task #97/#98)
+  recordDecls: Array<RecordDecl>
+  enumDecls: Array<EnumDecl>
 }
 
 // â”€â”€ Dot-path helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1758,6 +1775,169 @@ contract { intent { "True when a `step <flowName>(` DWI-isolate call appears in 
   return false
 }
 
+record RecordDeclParse {
+  declaration: RecordDecl
+  nextPos: Int
+  closed: Bool
+  error: String
+}
+
+record EnumDeclParse {
+  declaration: EnumDecl
+  nextPos: Int
+  closed: Bool
+  error: String
+}
+
+pure flow parseTopLevelRecordDecl(
+  tokens: Array<Token>,
+  keywordPos: Int,
+) -> RecordDeclParse
+contract { intent { "Preserve one ordered record/type declaration as checked frontend facts." } }
+{
+  let total: Int = tokens.count()
+  let namePos: Int = skipNewlines(tokens, keywordPos + 1)
+  let name: String = tokVal(tokens, namePos)
+  let openPos: Int = skipNewlines(tokens, namePos + 1)
+  if name == "" or tokVal(tokens, openPos) != "{" {
+    return {
+      declaration: { name: name, fields: Array.empty() }
+      nextPos: openPos closed: false
+      error: "record/type declaration requires a name and body"
+    }
+  }
+
+  mut fields: Array<RecordFieldDecl> = Array.empty()
+  mut p: Int = openPos + 1
+  mut closed: Bool = false
+  mut error: String = ""
+  mut scanning: Bool = true
+  while scanning and p < total {
+    p = skipNewlines(tokens, p)
+    let current: String = tokVal(tokens, p)
+    match current {
+      "}" => {
+        closed = true
+        p = p + 1
+        scanning = false
+      }
+      "" => {
+        scanning = false
+      }
+      "," => {
+        p = p + 1
+      }
+      _ => {
+        let fieldName: String = current
+        let colonPos: Int = skipNewlines(tokens, p + 1)
+        if fieldName == "" or tokVal(tokens, colonPos) != ":" {
+          error = "record/type field requires 'name: Type'"
+          scanning = false
+        }
+        else {
+          let typePos: Int = skipNewlines(tokens, colonPos + 1)
+          let typeName: String = readTypeName(tokens, typePos)
+          let afterType: Int = typeEndPos(tokens, typePos)
+          if typeName == "" or afterType <= typePos {
+            error = "record/type field requires a complete type"
+            scanning = false
+          }
+          else {
+            fields = fields.append({ name: fieldName, typeName: typeName })
+            p = afterType
+          }
+        }
+      }
+    }
+  }
+  if error != "" and closed == false {
+    while p < total and tokVal(tokens, p) != "}" {
+      p = p + 1
+    }
+    if tokVal(tokens, p) == "}" {
+      closed = true
+      p = p + 1
+    }
+  }
+  return {
+    declaration: { name: name, fields: fields }
+    nextPos: p closed: closed error: error
+  }
+}
+
+pure flow parseTopLevelEnumDecl(
+  tokens: Array<Token>,
+  keywordPos: Int,
+) -> EnumDeclParse
+contract { intent { "Preserve one ordered payload-free enum declaration as checked frontend facts." } }
+{
+  let total: Int = tokens.count()
+  let namePos: Int = skipNewlines(tokens, keywordPos + 1)
+  let name: String = tokVal(tokens, namePos)
+  let openPos: Int = skipNewlines(tokens, namePos + 1)
+  if name == "" or tokVal(tokens, openPos) != "{" {
+    return {
+      declaration: { name: name, cases: Array.empty() }
+      nextPos: openPos closed: false
+      error: "enum declaration requires a name and body"
+    }
+  }
+
+  mut cases: Array<String> = Array.empty()
+  mut p: Int = openPos + 1
+  mut closed: Bool = false
+  mut error: String = ""
+  mut scanning: Bool = true
+  while scanning and p < total {
+    p = skipNewlines(tokens, p)
+    let current: String = tokVal(tokens, p)
+    match current {
+      "}" => {
+        closed = true
+        p = p + 1
+        scanning = false
+      }
+      "" => {
+        scanning = false
+      }
+      "," => {
+        p = p + 1
+      }
+      _ => {
+        let afterCase: Int = skipNewlines(tokens, p + 1)
+        let next: String = tokVal(tokens, afterCase)
+        if current == "{" or current == "(" or current == ":" or current == "=>" {
+          error = "enum case identity is malformed"
+          scanning = false
+        }
+        else {
+          if next == "(" or next == "{" or next == ":" {
+            error = "payload-bearing enum cases are not preserved by this snapshot profile"
+            scanning = false
+          }
+          else {
+            cases = cases.append(current)
+            p = p + 1
+          }
+        }
+      }
+    }
+  }
+  if error != "" and closed == false {
+    while p < total and tokVal(tokens, p) != "}" {
+      p = p + 1
+    }
+    if tokVal(tokens, p) == "}" {
+      closed = true
+      p = p + 1
+    }
+  }
+  return {
+    declaration: { name: name, cases: cases }
+    nextPos: p closed: closed error: error
+  }
+}
+
 pure flow parseFlows(tokens: Array<Token>) -> ParseResult
 contract {
   intent { "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)." }
@@ -1768,6 +1948,8 @@ contract {
   mut importPaths: Array<String> = Array.empty()
   mut policies: Array<PolicyDecl> = Array.empty()   // domain guard policies (task #56)
   mut guardDecls: Array<GuardDecl> = Array.empty()  // v2.2 named guard ceiling declarations
+  mut recordDecls: Array<RecordDecl> = Array.empty()
+  mut enumDecls: Array<EnumDecl> = Array.empty()
   mut pos: Int = 0
   let total: Int = tokens.count()
 
@@ -2046,35 +2228,47 @@ contract {
       }
     }
 
-    // Grammar-gap structural skip (DELIBERATE, silent): record/enum/type declarations are not yet in
-    // this twin's grammar (Milestone-1+ scope; see #93). Consume the WHOLE declaration — a balanced
-    // { } block, or to end-of-line when no brace opens (a one-line alias) — so known-but-unparsed
-    // forms are CONSUMED, never flagged unexpected (R&D 0050: only UNCONSUMED non-trivia tokens are
-    // errors). An unterminated block at EOF IS an error: FUNGI-PARSE-003 (missing close brace).
-    // Remove each keyword from this skip as its parse milestone lands.
+    // Preserve compiler-owned declaration facts for records/types and payload-free enums.
+    // A type alias has no block and remains a line-scoped grammar gap until its own milestone.
     if consumed == false {
       if tv == "record" or tv == "enum" or tv == "type" {
-        mut sp: Int = pos + 1
-        mut sDepth: Int = 0
-        mut sawBrace: Bool = false
-        mut sScan: Bool = true
-        while sp < total and sScan {
-          let sv: String = tokVal(tokens, sp)
-          if sv == "{" {
-            sDepth = sDepth + 1
-            sawBrace = true
+        let declarationNamePos: Int = skipNewlines(tokens, pos + 1)
+        let declarationOpen: Int = skipNewlines(tokens, declarationNamePos + 1)
+        if tokVal(tokens, declarationOpen) == "{" {
+          if tv == "enum" {
+            let parsedEnum: EnumDeclParse = parseTopLevelEnumDecl(tokens, pos)
+            if parsedEnum.error != "" {
+              errs = errs.append("FUNGI-PARSE-003: " + parsedEnum.error)
+            }
+            if parsedEnum.closed == false {
+              errs = errs.append("FUNGI-PARSE-003: unterminated 'enum' declaration - missing '}' before end of input")
+            }
+            if parsedEnum.error == "" and parsedEnum.closed {
+              enumDecls = enumDecls.append(parsedEnum.declaration)
+            }
+            pos = parsedEnum.nextPos
           }
-          if sv == "}" {
-            sDepth = sDepth - 1
-            if sDepth == 0 { sScan = false }
+          else {
+            let parsedRecord: RecordDeclParse = parseTopLevelRecordDecl(tokens, pos)
+            if parsedRecord.error != "" {
+              errs = errs.append("FUNGI-PARSE-003: " + parsedRecord.error)
+            }
+            if parsedRecord.closed == false {
+              errs = errs.append("FUNGI-PARSE-003: unterminated '" + tv + "' declaration - missing '}' before end of input")
+            }
+            if parsedRecord.error == "" and parsedRecord.closed {
+              recordDecls = recordDecls.append(parsedRecord.declaration)
+            }
+            pos = parsedRecord.nextPos
           }
-          if sawBrace == false and isNewline(tokens, sp) { sScan = false }
-          sp = sp + 1
         }
-        if sDepth > 0 {
-          errs = errs.append("FUNGI-PARSE-003: unterminated '" + tv + "' declaration - missing '}' before end of input")
+        else {
+          mut aliasPos: Int = pos + 1
+          while aliasPos < total and isNewline(tokens, aliasPos) == false {
+            aliasPos = aliasPos + 1
+          }
+          pos = aliasPos
         }
-        pos = sp
         consumed = true
       }
     }
@@ -2346,5 +2540,8 @@ contract {
     }   // end else (not import)
   }
 
-  return { flows: flows, errors: errs, imports: importPaths, policies: policies, guardDecls: guardDecls }
+  return {
+    flows: flows errors: errs imports: importPaths policies: policies
+    guardDecls: guardDecls recordDecls: recordDecls enumDecls: enumDecls
+  }
 }

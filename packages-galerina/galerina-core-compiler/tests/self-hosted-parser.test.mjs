@@ -111,6 +111,27 @@ function flowsList(result) {
   return flows.items;
 }
 
+function recordDeclsList(result) {
+  const declarations = result.fields.get("recordDecls");
+  assert.equal(declarations?.__tag, "list", "ParseResult.recordDecls must be a list");
+  return declarations.items.map((declaration) => ({
+    name: strField(declaration, "name"),
+    fields: declaration.fields.get("fields").items.map((field) => ({
+      name: strField(field, "name"),
+      typeName: strField(field, "typeName"),
+    })),
+  }));
+}
+
+function enumDeclsList(result) {
+  const declarations = result.fields.get("enumDecls");
+  assert.equal(declarations?.__tag, "list", "ParseResult.enumDecls must be a list");
+  return declarations.items.map((declaration) => ({
+    name: strField(declaration, "name"),
+    cases: declaration.fields.get("cases").items.map((entry) => entry.value),
+  }));
+}
+
 /** Extract the effects list from a FlowDecl record. Returns array of strings. */
 function effectsList(flowDecl) {
   const efx = flowDecl.fields.get("effects");
@@ -221,6 +242,55 @@ describe("Self-Hosted Parser (parser.fungi) — parse-time sanity", () => {
     );
   });
 
+});
+
+describe("Self-Hosted Parser — checked declaration facts", () => {
+  it("preserves ordered type fields and enum cases instead of silently skipping them", async () => {
+    const result = await pipeline(`@version 1
+type ExampleRecord {
+  selected: Int
+  values: Array<String>
+}
+enum ExampleState {
+  Selected
+  Missing
+}
+pure flow f(value: Int) -> Int { return value }
+`);
+
+    assert.deepEqual(recordDeclsList(result), [{
+      name: "ExampleRecord",
+      fields: [
+        { name: "selected", typeName: "Int" },
+        { name: "values", typeName: "Array<String>" },
+      ],
+    }]);
+    assert.deepEqual(enumDeclsList(result), [{
+      name: "ExampleState",
+      cases: ["Selected", "Missing"],
+    }]);
+  });
+
+  it("preserves the frozen V2-E declaration identities exactly", async () => {
+    const source = readFileSync(join(__dir, "fixtures", "slide-v2e-source.fungi"), "utf8");
+    const result = await pipeline(source);
+    assert.deepEqual(recordDeclsList(result), [{
+      name: "SLIDEV2EFixtureRecord",
+      fields: [
+        { name: "selected", typeName: "Int" },
+        { name: "length", typeName: "Int" },
+        { name: "label", typeName: "String" },
+      ],
+    }]);
+    assert.deepEqual(enumDeclsList(result), [{
+      name: "SLIDEV2EFixtureVariant",
+      cases: ["Selected", "Missing"],
+    }]);
+    assert.deepEqual(
+      result.fields.get("errors").items.map((entry) => entry.value),
+      [],
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

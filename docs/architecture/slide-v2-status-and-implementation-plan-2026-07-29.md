@@ -419,8 +419,11 @@ First implemented floor: the self-hosted parser now consumes typed record
 constructors and unbraced terminal match arms without losing enclosing block
 structure; self-hosted GIR preserves logical `and`/`or` instead of emitting
 `unknown`. The frozen V2-E source now yields three complete compiler-owned
-flow entries with zero self-hosted parse errors. Declaration facts,
-source spans, the exact V2-D adapter, and the public seam remain open.
+flow entries with zero self-hosted parse errors. The parser also preserves
+ordered record/type fields and payload-free enum cases as checked declaration
+facts, and refuses malformed fields, payload cases and truncation under
+`FUNGI-PARSE-003`. The exact frozen V2-E declarations are pinned by tests.
+Source spans, the exact V2-D adapter, and the public seam remain open.
 
 Exit gate: checked source produces the detached semantic body and receipt
 through one materialize-once seam, and independent SLIDE verifies and executes
