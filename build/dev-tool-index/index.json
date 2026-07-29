@@ -1766,6 +1766,7 @@
       "selfTest": false,
       "inCadence": false,
       "concerns": [
+        "signing/fusion",
         "provenance",
         "diagnostics",
         "doc-drift",
@@ -3053,6 +3054,7 @@
       "audit-overclaim-phrases.mjs",
       "audit-perf-hotpath.mjs",
       "audit-private-doc-leak.mjs",
+      "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
       "audit-report-blind-consumers.mjs",
       "audit-route-overlap.mjs",
