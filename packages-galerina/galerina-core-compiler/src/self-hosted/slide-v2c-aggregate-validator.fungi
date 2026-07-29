@@ -172,6 +172,11 @@ contract { intent { "Bind V2-C to the frozen parent and non-authorizing V2-B sid
       "SLIDE-V2C-AGGREGATE-002", "registry identity changed",
     )
   }
+  if program.registrySetDigest != "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-033", "V2-C registry descriptor digest changed",
+    )
+  }
   if program.parentRegistryDigest != "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327" {
     return refuseSLIDEV2CAggregate(
       "SLIDE-V2C-AGGREGATE-003", "V2-A parent digest changed",

@@ -160,6 +160,11 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       "SLIDE-V2C-AGGREGATE-001",
     ],
     [
+      "registry descriptor drift",
+      (candidate) => candidate.fields.set("registrySetDigest", stringValue("0".repeat(64))),
+      "SLIDE-V2C-AGGREGATE-033",
+    ],
+    [
       "parent digest drift",
       (candidate) => candidate.fields.set("parentRegistryDigest", stringValue("0".repeat(64))),
       "SLIDE-V2C-AGGREGATE-003",

@@ -53,6 +53,7 @@ record SLIDEV2CAggregateProgram {
   formatMinor: Int
   semanticProfileId: String
   registrySetId: String
+  registrySetDigest: String
   parentRegistryId: String
   parentRegistryDigest: String
   authoritySidecarId: String
@@ -130,6 +131,7 @@ contract { intent { "Materialize the exact detached V2-C immutable-aggregate fix
     formatMajor: 2 formatMinor: 1
     semanticProfileId: "slide.semantic.executable-gir.v2"
     registrySetId: "slide.registry.executable-gir.v2c"
+    registrySetDigest: "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38"
     parentRegistryId: "slide.registry.executable-gir.v2a"
     parentRegistryDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
     authoritySidecarId: "slide.capability.lease-broker.v2b"
