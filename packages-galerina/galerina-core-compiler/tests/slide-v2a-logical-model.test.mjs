@@ -320,6 +320,22 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     return result.value;
   }
 
+  async function executeV2AWithBudget(budget) {
+    const result = await runOn(
+      importer,
+      "executeSLIDEV2AWithBudget",
+      new Map([
+        ["body", { __tag: "bytes", value: canonicalBytes }],
+        ["left", intValue(2)],
+        ["right", intValue(3)],
+        ["admission", intValue(1)],
+        ["runtimeBudget", intValue(budget)],
+      ]),
+    );
+    assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
+    return result.value;
+  }
+
   it("instruction-drives call, branch, join, and all three K3 exits", async () => {
     const allowed = await executeV2A(canonicalBytes, 2, 3, 1);
     assert.equal(field(allowed, "status").value, "SUCCEEDED");
@@ -370,6 +386,24 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     ]) {
       assert.equal(field(refused, "status").value, "REFUSED");
       assert.equal(field(field(refused, "decision"), "verdict").value, -1);
+    }
+  });
+
+  it("caps runner work at the admitted budget and fails closed on exhaustion", async () => {
+    const exact = await executeV2AWithBudget(64);
+    const surplus = await executeV2AWithBudget(1000);
+    assert.equal(field(exact, "status").value, "SUCCEEDED");
+    assert.equal(field(surplus, "status").value, "SUCCEEDED");
+    assert.equal(field(exact, "steps").value, field(surplus, "steps").value);
+
+    for (const budget of [0, 1, 8, 12]) {
+      const refused = await executeV2AWithBudget(budget);
+      assert.equal(field(refused, "status").value, "REFUSED");
+      assert.equal(field(refused, "failureId").value, 4);
+      assert.equal(
+        field(refused, "decision").fields.get("failureId").value,
+        "SLIDE-V2A-RUNTIME-015",
+      );
     }
   });
 

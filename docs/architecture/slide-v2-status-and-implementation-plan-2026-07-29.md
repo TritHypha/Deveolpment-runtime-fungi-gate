@@ -46,7 +46,8 @@ digest. An independent `.fungi` importer now reconstructs and semantically
 admits the candidate without producer/encoder access, then binds the exact
 body to the v2 semantic domain. A bounded reference runtime now
 instruction-drives the decoded call/branch/join/checked-add/K3 graph and typed
-exits. It still replaces no current production component.
+exits under an enforced caller-capped 64-step ceiling. It still replaces no
+current production component.
 SLIDE packaging, native execution, Tri-Fuse v2, the frontend receipt, driver
 CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
@@ -78,7 +79,7 @@ Planning completion and implementation completion are deliberately separate.
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
-| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, and instruction-driven call/branch/join/K3 execution | Explicit budget increment, then versioned memory/effect/capability increments |
+| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, budget enforcement, and instruction-driven call/branch/join/K3 execution | Versioned effect/capability and memory increments |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
@@ -313,8 +314,8 @@ records. Focused evidence is 25/25; after the semantic-memory checkpoint,
 compiler evidence is 5,297/5,297.
 The first generalization increment is now implemented as V2-A logical records,
 semantic admission, canonical encoding, independent import, digest binding,
-and instruction-driven execution. Remaining: explicit budget, memory,
-effect/capability increments, and a second frontend.
+instruction-driven execution, and runner-side budget enforcement. Remaining:
+memory/effect/capability increments and a second frontend.
 
 The follow-on safe-value gate walks the admitted R1 registry again, admits only
 the bounded no-address subset, and labels the result
@@ -420,7 +421,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. add an explicit V2 budget increment and its exhaustion corpus;
+3. specify the first V2 effect/capability increment and its lease-only host
+   boundary;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.

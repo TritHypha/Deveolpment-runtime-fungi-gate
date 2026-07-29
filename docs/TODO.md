@@ -76,12 +76,16 @@ planning checkbox must never be used to imply that implementation exists.
   It preserves success, denial, unresolved, two overflow paths, malformed
   bytes, and invalid-fourth-Verdict refusal. V2-A is 27/27. Report:
   `docs/reports/slide-v2a-validated-runtime-2026-07-29.md`.
-- **Current:** add explicit runtime-budget semantics and negative fixtures.
-- **Next:** add versioned effect/capability/memory increments without widening
+- **Completed (uncommitted checkpoint):** the runner now caps caller work at
+  the admitted 64-step ceiling and terminally refuses zero, undersized, and
+  mid-execution budgets as `SLIDE-V2A-RUNTIME-015`. V2-A is 28/28.
+- **Current:** specify the first versioned effect/capability increment and its
+  no-ambient-authority host boundary.
+- **Next:** add memory increments without widening
   frozen R1 or authorizing host access.
-- **Verification:** compiler typecheck/build and 5,324/5,324 tests pass.
-  Frozen R1 remains 27/27; V2-A is 27/27. Regenerated project graph:
-  7,231 nodes / 7,491 edges, zero integrity
+- **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
+  Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
+  7,235 nodes / 7,495 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero

@@ -21,6 +21,9 @@ Implemented behavior:
 - invalid fourth Verdict, out-of-range Int32, malformed bytes, unsupported
   runtime shape, and exhausted/mismatched control state terminate without a
   legacy executor.
+- caller budgets are capped at the admitted 64-step ceiling; zero, undersized,
+  and mid-execution exhaustion return `SLIDE-V2A-RUNTIME-015` rather than a
+  partial result.
 
 Focused evidence:
 
@@ -31,15 +34,15 @@ Focused evidence:
 - invalid fourth Verdict; and
 - malformed canonical bytes.
 
-V2-A is 27/27 and frozen R1 remains 27/27.
+V2-A is 28/28 and frozen R1 remains 27/27.
 
-Full compiler evidence is 5,324/5,324. Regenerated project graph: 7,231 nodes /
-7,491 edges, zero integrity violations; KB zero orphans/broken links; Hardened
+Full compiler evidence is 5,325/5,325. Regenerated project graph: 7,235 nodes /
+7,495 edges, zero integrity violations; KB zero orphans/broken links; Hardened
 Border 97/97; explicit memory graph clean; dev-tool index 97 packages /
 124 tools / 40 proofs.
 
 This completes the first detached V2-A semantic execution slice. It is a
 bounded reference runtime, not a native runner or production replacement.
 Wasm and the current Galerina runtimes remain in place. The next executable-GIR
-increments must add explicit budget semantics and then versioned memory,
-effect, and capability records; each remains deny-by-default.
+increments must add versioned effect, capability, and memory records; each
+remains deny-by-default.

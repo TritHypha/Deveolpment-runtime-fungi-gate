@@ -183,11 +183,12 @@ contract { intent { "Transfer exact typed edge arguments into target block-param
   return { ok: true store: bound }
 }
 
-pure flow executeSLIDEV2ABytes(
+pure flow executeSLIDEV2AWithBudget(
   body: Bytes,
   left: Int,
   right: Int,
   admission: Int,
+  runtimeBudget: Int,
 ) -> SLIDEV2ARuntimeResult
 contract { intent { "Decode, validate, and instruction-drive the V2-A entry function without fallback." } }
 {
@@ -204,6 +205,15 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
       )
     }
     if: {}
+  }
+  if runtimeBudget < 1 {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget is absent or exhausted",
+    )
+  }
+  mut effectiveBudget: Int = runtimeBudget
+  if effectiveBudget > imported.program.limits.executionSteps {
+    effectiveBudget = imported.program.limits.executionSteps
   }
   if left < -2147483648 or left > 2147483647 or right < -2147483648 or right > 2147483647 {
     return slideV2ARuntimeRefusal(
@@ -222,7 +232,7 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
   mut store: SLIDEV2AValueStore = emptySLIDEV2AValueStore()
   mut steps: Int = 0
   mut i: Int = 0
-  while i < entry.instructions.count() and steps < imported.program.limits.executionSteps {
+  while i < entry.instructions.count() and steps < effectiveBudget {
     let instruction = slideV2AInstructionAt(entry.instructions, i)
     match instruction.opcodeId {
       1 => {
@@ -256,7 +266,12 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
     steps = steps + 1
     i = i + 1
   }
-  if i != entry.instructions.count() or entry.terminator.terminatorId != 2 {
+  if i != entry.instructions.count() {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted in entry",
+    )
+  }
+  if entry.terminator.terminatorId != 2 {
     return slideV2ARuntimeRefusal(
       "SLIDE-V2A-RUNTIME-006", "entry block did not reach its Boolean terminal",
     )
@@ -285,9 +300,14 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
   }
   let callArgument = slideV2AStoreRead(store, slideV2AIntAt(call.operands, 0))
   let called = executeSLIDEV2ACallee(
-    callee, callArgument, imported.program.limits.executionSteps - steps,
+    callee, callArgument, effectiveBudget - steps,
   )
   steps = steps + called.steps
+  if steps >= effectiveBudget {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted during call",
+    )
+  }
   if called.ok == false {
     return {
       decision: imported.decision status: "FAILED" value: 0
@@ -310,6 +330,11 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
   }
   store = joinBinding.store
   steps = steps + 2
+  if steps >= effectiveBudget {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted at join",
+    )
+  }
 
   let add = slideV2AInstructionAt(joinBlock.instructions, 0)
   if add.opcodeId != 3 {
@@ -322,6 +347,11 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
     slideV2AStoreRead(store, slideV2AIntAt(add.operands, 1)),
   )
   steps = steps + added.steps
+  if steps >= effectiveBudget {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted before K3",
+    )
+  }
   if added.ok == false {
     return {
       decision: imported.decision status: "FAILED" value: 0
@@ -356,11 +386,21 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
   }
   store = exitBinding.store
   steps = steps + 1
+  if steps >= effectiveBudget {
+    return slideV2ARuntimeRefusal(
+      "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted at K3 exit",
+    )
+  }
 
   let first = slideV2AInstructionAt(exitBlock.instructions, 0)
   match first.opcodeId {
     6 => {
       let value = slideV2AStoreRead(store, slideV2AIntAt(first.operands, 0))
+      if steps + 2 > effectiveBudget {
+        return slideV2ARuntimeRefusal(
+          "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted at success",
+        )
+      }
       return {
         decision: imported.decision status: "SUCCEEDED" value: value
         failureId: 0 steps: steps + 2
@@ -378,6 +418,11 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
           "SLIDE-V2A-RUNTIME-014", "failure exit wrapper changed",
         )
       }
+      if steps + 3 > effectiveBudget {
+        return slideV2ARuntimeRefusal(
+          "SLIDE-V2A-RUNTIME-015", "runtime step budget exhausted at failure",
+        )
+      }
       return {
         decision: imported.decision status: "FAILED" value: 0
         failureId: first.immediate steps: steps + 3
@@ -389,4 +434,15 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
       )
     }
   }
+}
+
+pure flow executeSLIDEV2ABytes(
+  body: Bytes,
+  left: Int,
+  right: Int,
+  admission: Int,
+) -> SLIDEV2ARuntimeResult
+contract { intent { "Execute V2-A under its exact admitted 64-step ceiling." } }
+{
+  return executeSLIDEV2AWithBudget(body, left, right, admission, 64)
 }
