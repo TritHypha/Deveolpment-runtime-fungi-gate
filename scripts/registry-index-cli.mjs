@@ -10,8 +10,9 @@
 //
 // FAIL-CLOSED REVIEW GATE (the #72 walkthrough's blocker 2, encoded as mechanism):
 // an entry is signable ONLY on positive evidence — governance.reviewed === true,
-// reviewedBy/reviewedAt present, a real sha256 content hash, and the authority
-// fields (publisher/keyId/certificationLevel/riskRating). A stub manifest
+// reviewedBy/reviewedAt present, a real sha256 content hash, a non-placeholder
+// package-signature record, and the authority fields
+// (publisher/keyId/certificationLevel/riskRating). A stub manifest
 // ("Pending governance review", hash "sha256:pending") is structurally
 // un-signable: build/sign REFUSE with per-manifest reasons. Signing an index of
 // stubs would convert "unverified" into "authoritatively asserted" — this tool
@@ -87,6 +88,13 @@ export function reviewGate(manifest, path) {
   if (!manifest.name) reasons.push("name is missing");
   if (!manifest.version) reasons.push("version is missing");
   if (!SHA256_RE.test(String(manifest.hash ?? ""))) reasons.push(`hash '${manifest.hash}' is not a real sha256:<64-hex> content hash`);
+  if (
+    typeof manifest.signature !== "string"
+    || manifest.signature.trim().length === 0
+    || manifest.signature.startsWith("placeholder")
+  ) {
+    reasons.push("signature is missing/null/placeholder (FUNGI-PKG-005: unsigned package entry)");
+  }
   if (!manifest.publisher) reasons.push("publisher (authority-asserted) is missing");
   if (!manifest.keyId) reasons.push("keyId (expected manifest-signing key) is missing");
   if (!CERT_LEVELS.includes(manifest.certificationLevel)) reasons.push(`certificationLevel '${manifest.certificationLevel}' is not one of ${CERT_LEVELS.join("|")}`);
@@ -146,6 +154,7 @@ effects:
   - audit.write
 installScript: null
 hash: "sha256:${hashHex}"
+signature: "fixture-package-signature-${keyId}"
 publisher: "galerina-governance"
 keyId: "${keyId}"
 certificationLevel: "certified"

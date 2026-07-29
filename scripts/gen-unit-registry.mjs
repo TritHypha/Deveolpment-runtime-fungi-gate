@@ -228,7 +228,13 @@ export function injectFungiRegion(twinSrc, region) {
   ) {
     throw new Error(`type-checker.fungi: currency-set markers missing/malformed (open@${openAt}, close@${closeAt}) — cannot inject.`);
   }
-  return twinSrc.slice(0, openAt + TWIN_MARK_OPEN.length) + "\n" + region + "\n" + twinSrc.slice(closeAt);
+  const newline = twinSrc.includes("\r\n") ? "\r\n" : "\n";
+  const normalizedRegion = region.replace(/\r\n|\r|\n/g, newline);
+  return twinSrc.slice(0, openAt + TWIN_MARK_OPEN.length)
+    + newline
+    + normalizedRegion
+    + newline
+    + twinSrc.slice(closeAt);
 }
 
 /** Extract the current between-markers region from the twin (for --check), normalized to \n. */
@@ -306,6 +312,19 @@ function selfTest() {
   const t2 = buildTable(parseEntries(XML.replace("<CcyMnrUnts>2</CcyMnrUnts></CcyNtry>\n<CcyNtry><CtryNm>B</CtryNm>", "<CcyMnrUnts>4</CcyMnrUnts></CcyNtry>\n<CcyNtry><CtryNm>B</CtryNm>")));
   ok(r1 !== renderTable(t2, "pin", "s.xml"), "renderTable output CHANGES when the data changes (drift gate is non-vacuous)");
   ok(r1 === renderTable(buildTable(parseEntries(XML)), "pin", "s.xml"), "renderTable is DETERMINISTIC (same input → byte-identical)");
+
+  const lfTwin = `${TWIN_MARK_OPEN}\nold\n${TWIN_MARK_CLOSE}`;
+  const crlfTwin = lfTwin.replace(/\n/g, "\r\n");
+  ok(
+    injectFungiRegion(lfTwin, "new-a\nnew-b") === `${TWIN_MARK_OPEN}\nnew-a\nnew-b\n${TWIN_MARK_CLOSE}`,
+    "twin injection preserves LF worktrees",
+  );
+  const injectedCrlf = injectFungiRegion(crlfTwin, "new-a\nnew-b");
+  ok(
+    injectedCrlf === `${TWIN_MARK_OPEN}\r\nnew-a\r\nnew-b\r\n${TWIN_MARK_CLOSE}`
+      && !/(^|[^\r])\n/.test(injectedCrlf),
+    "twin injection preserves CRLF worktrees without mixed-newline drift",
+  );
 
   console.log(`\n${fail === 0 ? "✅" : "❌"} gen-unit-registry self-test: ${pass} passed, ${fail} failed`);
   process.exit(fail === 0 ? 0 : 1);

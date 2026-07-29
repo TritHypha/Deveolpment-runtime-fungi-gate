@@ -353,16 +353,16 @@ Expected: 0 shadow, 0 differential, 29 authoritative.
 - All 97 workspace packages have a governed, non-empty test result; the
   exception policy contains no stale no-test exemption.
 
-- [ ] **Step 1: Add a RED empty-registry admission test**
+- [x] **Step 1: Add a RED empty-registry admission test**
 
 The test invokes the real registry admission seam and expects terminal denial
 for an empty registry, unknown package, and unsigned entry.
 
-- [ ] **Step 2: Add the package test command and remove the exemption**
+- [x] **Step 2: Add the package test command and remove the exemption**
 
 Use `node --test tests/*.test.mjs`; do not add a pass-only placeholder.
 
-- [ ] **Step 3: Verify package health**
+- [x] **Step 3: Verify package health**
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-registry test
@@ -371,6 +371,18 @@ node scripts/component-health.mjs --json
 ```
 
 Expected: 97/97 package readiness and zero package exceptions.
+
+**Closed 2026-07-29:** the real CLI denial suite is 4/4 and covers an empty
+registry, a reviewed-but-unsigned entry, the live placeholder catalog, and the
+independent unknown-package/unsigned-index admission seam. The builder now
+requires a non-placeholder package-signature record before index construction;
+cryptographic package-signature verification remains the separate admission
+seam and the live central index remains unsigned pending Task 8. The complete
+release aggregate is 97/97 packages and 8,578/8,578 tests. Component health is
+97/97, 100% readiness, zero gaps; the tooling contract is 97 packages, 149
+tools, zero violations. A Windows CRLF regression in
+`gen-unit-registry.mjs --check` exposed by the aggregate was fixed without
+changing the pinned 157-currency table; its self-test is now 12/12.
 
 ### Task 7: Verify the supported developer platform matrix
 

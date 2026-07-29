@@ -50,10 +50,10 @@ planning checkbox must never be used to imply that implementation exists.
   inventories (the report's then-current snapshot was compiler 5/7; governed
   9/29), and its ledger parser refuses
   missing, duplicate, ambiguous, out-of-scope, and cross-ledger entries.
-  Package readiness is now honestly 96/97 (98.97%): the singular `test/`
-  benchmark surface is counted, and only `galerina-registry` remains open
-  because it has no real denial test. Tasks 3 and 4 have since closed; Task 5
-  is the current governed-authority tranche.
+  Package readiness is now **97/97 (100%)**. The singular `test/` benchmark
+  surface is counted, and `galerina-registry` now has a real four-case denial
+  suite instead of a no-test exemption. Tasks 3 through 6 are closed; Task 7
+  is the current platform/release-matrix tranche.
 - **Benchmark decision:** do not publish Wasm/Rust/Python/SLIDE comparison
   numbers until SLIDE has an executable backend. Historical Galerina
   benchmarks remain evidence only; the requested current and
@@ -131,8 +131,21 @@ planning checkbox must never be used to imply that implementation exists.
   and the shared effect differential is green with its witnesses isolated from
   the separate audit-evidence obligation. TypeScript remains the live
   differential shadow; no retirement or push occurred.
-- **Current safe boundary:** proceed to Task 6 package readiness and release
-  surface closure, then platform/signing and the complete
+- **Task 6 package-readiness complete:** the registry package now runs 4/4
+  real CLI tests: empty registry, reviewed-but-unsigned package, live
+  placeholder catalog, and unknown-package/unsigned-index admission all end
+  in terminal refusal without publishing partial output. The obsolete
+  `packageNoTest` exemption is gone. The structural review gate requires a
+  non-placeholder package-signature record; cryptographic verification remains
+  the independent admission seam, and the central index is still unsigned
+  pending the owner ceremony. The release aggregate is **97/97 packages,
+  8,578/8,578 tests**; component health is **100%, zero gaps**, and the tooling
+  contract is **97 packages, 149 tools, zero violations**. The aggregate also
+  found a Windows CRLF-only false drift in the currency twin generator; newline
+  preservation is now regression-tested (12/12) and the pinned 157-currency
+  table remains unchanged.
+- **Current safe boundary:** proceed to Task 7 platform/release-matrix closure,
+  then signing and the complete
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
