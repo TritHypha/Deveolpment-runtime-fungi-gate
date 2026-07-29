@@ -85,8 +85,14 @@ planning checkbox must never be used to imply that implementation exists.
   mutations, and Galerina replace/rebuild/integrate boundaries in
   `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`; Galerina
   status checkpoint `83f73c0c`.
-- **Current:** freeze the V2-B machine descriptor and implement only its
-  capability-request/lease logical validators before adding host dispatch.
+- **Completed (uncommitted checkpoint):** froze the V2-B capability and three
+  resource descriptors, then implemented a `.fungi` request-set shape gate.
+  It binds exact database/HTTPS/audit scope and ceilings, reports
+  `SHAPE_VALIDATED`, and always keeps `authorityReleased: false`. Focused
+  evidence is 7/7. Report:
+  `docs/reports/slide-v2b-capability-shape-2026-07-29.md`.
+- **Current:** implement lease shape plus typed cryptographic-verifier receipt
+  binding; never accept a Boolean “signature valid” fact.
 - **Next:** add memory increments without widening
   frozen R1 or authorizing host access.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
@@ -100,6 +106,10 @@ planning checkbox must never be used to imply that implementation exists.
   post-commit refresh indexes 4,091 files with zero over-size skips.
   The validated-runtime post-commit refresh indexes 4,093 files with zero
   over-size skips; the budget checkpoint retains that count.
+- **Latest V2-B verification:** compiler 5,332/5,332 across 1,179 suites;
+  graph 7,242 nodes / 7,501 edges; zero integrity or KB-link violations;
+  Hardened Border 97/97; explicit memory graph clean; dev-tool index
+  97 packages / 124 tools / 40 proofs.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

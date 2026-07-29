@@ -1,0 +1,198 @@
+@version 1
+/// @file: slide-v2b-capability-request.fungi
+/// @purpose: Validate the frozen V2-B capability-request subprofile without granting host authority.
+/// @status: Logical schema gate only; leases, signatures, broker dispatch, and executable opcodes remain separate.
+
+record SLIDEV2BCapabilityRequest {
+  requestId: Int
+  capabilityClassId: Int
+  effectId: Int
+  resourceDescriptorDigest: String
+  operationId: Int
+  requestSchemaId: Int
+  responseSchemaId: Int
+  maxRequestBytes: Int
+  maxResponseBytes: Int
+  maxCalls: Int
+  timeoutBudgetMs: Int
+  auditRequirementId: Int
+}
+
+record SLIDEV2BCapabilitySet {
+  profileId: String
+  descriptorDigest: String
+  requests: Array<SLIDEV2BCapabilityRequest>
+}
+
+record SLIDEV2BCapabilityDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2BCapability(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Refuse a V2-B request set without releasing host authority." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail authorityReleased: false
+  }
+}
+
+pure flow validatedSLIDEV2BCapabilityShape() -> SLIDEV2BCapabilityDecision
+contract { intent { "Report structural validation while explicitly releasing no authority." } }
+{
+  return {
+    verdict: Verdict.Allow status: "SHAPE_VALIDATED" failureId: "NONE"
+    detail: "capability request shape validated; lease admission remains absent"
+    authorityReleased: false
+  }
+}
+
+pure flow emptySLIDEV2BCapabilityRequest() -> SLIDEV2BCapabilityRequest
+contract { intent { "Return an inert request behind a refusal boundary." } }
+{
+  return {
+    requestId: -1 capabilityClassId: -1 effectId: -1
+    resourceDescriptorDigest: "" operationId: -1 requestSchemaId: -1
+    responseSchemaId: -1 maxRequestBytes: 0 maxResponseBytes: 0
+    maxCalls: 0 timeoutBudgetMs: 0 auditRequirementId: -1
+  }
+}
+
+pure flow slideV2BCapabilityAt(
+  requests: Array<SLIDEV2BCapabilityRequest>,
+  index: Int,
+) -> SLIDEV2BCapabilityRequest
+contract { intent { "Read one request without inventing a default capability." } }
+{
+  let candidate = requests.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2BCapabilityRequest() }
+    _ => { return emptySLIDEV2BCapabilityRequest() }
+  }
+}
+
+pure flow materializeSLIDEV2BCapabilitySet() -> SLIDEV2BCapabilitySet
+contract { intent { "Materialize the exact no-dispatch V2-B capability conformance set." } }
+{
+  let database: SLIDEV2BCapabilityRequest = {
+    requestId: 1 capabilityClassId: 1 effectId: 1
+    resourceDescriptorDigest: "e1b20a025203eeb42ae72e237054595f61c9a1f915ba9527fa6ccdf4ac9aa232"
+    operationId: 1 requestSchemaId: 1 responseSchemaId: 1
+    maxRequestBytes: 4096 maxResponseBytes: 1048576 maxCalls: 1
+    timeoutBudgetMs: 1000 auditRequirementId: 1
+  }
+  let https: SLIDEV2BCapabilityRequest = {
+    requestId: 2 capabilityClassId: 2 effectId: 2
+    resourceDescriptorDigest: "750102fc1c2df495cb09d059ad844f6df2465d31d53db846e003efd14c23acd8"
+    operationId: 2 requestSchemaId: 2 responseSchemaId: 2
+    maxRequestBytes: 4096 maxResponseBytes: 1048576 maxCalls: 1
+    timeoutBudgetMs: 1000 auditRequirementId: 1
+  }
+  let audit: SLIDEV2BCapabilityRequest = {
+    requestId: 3 capabilityClassId: 3 effectId: 3
+    resourceDescriptorDigest: "335755bd2eec69215465d2934d11015c3cb0f5ec9dad230039f37920bb760aaf"
+    operationId: 3 requestSchemaId: 3 responseSchemaId: 3
+    maxRequestBytes: 4096 maxResponseBytes: 4096 maxCalls: 1
+    timeoutBudgetMs: 1000 auditRequirementId: 1
+  }
+  return {
+    profileId: "slide.capability.lease-broker.v2b"
+    descriptorDigest: "1e232c3cc4790344ce62296a85a7a29e79d6f0cc6bc598b18f73530de4aedfda"
+    requests: Array.of(database, https, audit)
+  }
+}
+
+pure flow validateSLIDEV2BCapabilityRequest(
+  request: SLIDEV2BCapabilityRequest,
+  expectedId: Int,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Validate one exact scoped V2-B capability request." } }
+{
+  if request.requestId != expectedId {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-003", "request identities are missing, reordered, or duplicated",
+    )
+  }
+  if request.capabilityClassId != expectedId or request.effectId != expectedId or request.operationId != expectedId or request.requestSchemaId != expectedId or request.responseSchemaId != expectedId {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-004", "class, effect, operation, or schema binding changed",
+    )
+  }
+  if request.maxRequestBytes != 4096 or request.maxCalls != 1 or request.timeoutBudgetMs != 1000 or request.auditRequirementId != 1 {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-005", "request, call, time, or audit ceiling changed",
+    )
+  }
+  match expectedId {
+    1 => {
+      if request.resourceDescriptorDigest != "e1b20a025203eeb42ae72e237054595f61c9a1f915ba9527fa6ccdf4ac9aa232" or request.maxResponseBytes != 1048576 {
+        return refuseSLIDEV2BCapability(
+          "SLIDE-V2B-CAPABILITY-006", "database resource binding changed",
+        )
+      }
+    }
+    2 => {
+      if request.resourceDescriptorDigest != "750102fc1c2df495cb09d059ad844f6df2465d31d53db846e003efd14c23acd8" or request.maxResponseBytes != 1048576 {
+        return refuseSLIDEV2BCapability(
+          "SLIDE-V2B-CAPABILITY-007", "HTTPS resource binding changed",
+        )
+      }
+    }
+    3 => {
+      if request.resourceDescriptorDigest != "335755bd2eec69215465d2934d11015c3cb0f5ec9dad230039f37920bb760aaf" or request.maxResponseBytes != 4096 {
+        return refuseSLIDEV2BCapability(
+          "SLIDE-V2B-CAPABILITY-008", "audit resource binding changed",
+        )
+      }
+    }
+    _ => {
+      return refuseSLIDEV2BCapability(
+        "SLIDE-V2B-CAPABILITY-009", "unknown capability request",
+      )
+    }
+  }
+  return validatedSLIDEV2BCapabilityShape()
+}
+
+pure flow validateSLIDEV2BCapabilitySet(
+  candidate: SLIDEV2BCapabilitySet,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Validate the complete frozen request set while granting no lease or host authority." } }
+{
+  if candidate.profileId != "slide.capability.lease-broker.v2b" {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-001", "capability profile changed",
+    )
+  }
+  if candidate.descriptorDigest != "1e232c3cc4790344ce62296a85a7a29e79d6f0cc6bc598b18f73530de4aedfda" {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-002", "capability descriptor digest changed",
+    )
+  }
+  if candidate.requests.count() != 3 {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-CAPABILITY-003", "request set must contain exactly three records",
+    )
+  }
+  mut i: Int = 0
+  while i < candidate.requests.count() {
+    let decision = validateSLIDEV2BCapabilityRequest(
+      slideV2BCapabilityAt(candidate.requests, i), i + 1,
+    )
+    check(decision.verdict) {
+      deny: { return decision }
+      ambig: { return decision }
+      if: {}
+    }
+    i = i + 1
+  }
+  return validatedSLIDEV2BCapabilityShape()
+}
