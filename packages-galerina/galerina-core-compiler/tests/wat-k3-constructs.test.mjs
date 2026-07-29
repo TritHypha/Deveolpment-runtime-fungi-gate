@@ -89,6 +89,26 @@ test("check{}: ALLOW(+1) → if arm → 1 (WAT + interpreter match)", async () =
   assert.equal(await runInterp(L, CHECK_SRC, "checkId", [1], ["v"]), 1);
 });
 
+test("check{}: malformed fourth trit traps in WAT and interpreter", async () => {
+  const L = await loadCompiler();
+  const prog = L.parseProgram(CHECK_SRC, "t.fungi");
+  const fx = L.checkEffects(prog.flows, prog.ast);
+  const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
+  const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "k3-test", prog.ast, true));
+  const asm = await L.assembleWAT(wat);
+  assert.ok(asm.valid && asm.diagnostics.length === 0);
+  const fn = (await WebAssembly.instantiate(asm.wasm)).instance.exports["checkId"];
+  assert.throws(() => fn(2), WebAssembly.RuntimeError);
+
+  const result = await L.executeFlow(
+    "checkId",
+    new Map([["v", { __tag: "verdict", value: 2 }]]),
+    prog.ast,
+  );
+  assert.equal(result?.audit?.result, "error");
+  assert.match(result?.value?.message ?? "", /invalid Verdict value|fail-closed/);
+});
+
 // check{} with non-trivial arm bodies: arms sum their argument
 const CHECK_ARITH_SRC = `@version 1
 pure flow checkArith(v: Verdict, x: Int) -> Int
@@ -151,6 +171,27 @@ test("prefilter{}: ALLOW(+1) downgraded to maybe arm (A8 zero-trust core)", asyn
   assert.equal(interpResult, 1, "interpreter: ALLOW(+1) → maybe arm → 1");
   const wasmResult = await runWasm(L, PREFILTER_SRC, "pflt", [1]);
   assert.equal(wasmResult, 1, "WASM: ALLOW(+1) → maybe arm → 1");
+});
+
+test("prefilter{}: malformed trit traps rather than entering deny/maybe", async () => {
+  const L = await loadCompiler();
+  const prog = L.parseProgram(PREFILTER_SRC, "t.fungi");
+  const fx = L.checkEffects(prog.flows, prog.ast);
+  const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
+  const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "pflt", prog.ast, true));
+  const asm = await L.assembleWAT(wat);
+  assert.ok(asm.valid && asm.diagnostics.length === 0);
+  const fn = (await WebAssembly.instantiate(asm.wasm)).instance.exports["pflt"];
+  assert.throws(() => fn(-2), WebAssembly.RuntimeError);
+  assert.throws(() => fn(2), WebAssembly.RuntimeError);
+
+  const result = await L.executeFlow(
+    "pflt",
+    new Map([["v", { __tag: "verdict", value: 2 }]]),
+    prog.ast,
+  );
+  assert.equal(result?.audit?.result, "error");
+  assert.match(result?.value?.message ?? "", /invalid Verdict value|fail-closed/);
 });
 
 // ── fault tests ────────────────────────────────────────────────────────────────

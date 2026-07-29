@@ -156,11 +156,11 @@ describe("Phase 50: runtimeProfileService.fungi", () => {
     assert.equal(r.securityLevel, 4);
   });
 
-  it("dev profile allows most things", async () => {
+  it("dev profile is not admitted by the governed runtime-profile endpoint", async () => {
     const r = await post({ profile: "dev" });
-    assert.equal(r.allowsRecursion, true);
-    assert.equal(r.requiresBudget, false);
-    assert.equal(r.securityLevel, 1);
+    assert.equal(r.error, "Internal runtime error");
+    assert.equal(r.allowsRecursion, undefined);
+    assert.equal(r.securityLevel, undefined);
   });
 });
 

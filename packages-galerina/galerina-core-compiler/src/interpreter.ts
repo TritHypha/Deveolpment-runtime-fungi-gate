@@ -189,6 +189,11 @@ function coerceToDeclaredNumeric(declaredBase: string, value: GalerinaValue, ini
 const BOOL_TRUE:  GalerinaValue = { __tag: "bool", value: true };
 const BOOL_FALSE: GalerinaValue = { __tag: "bool", value: false };
 const boolVal = (b: boolean): GalerinaValue => b ? BOOL_TRUE : BOOL_FALSE;
+/** Runtime belt for untyped host boundaries: Verdict is a closed three-value domain. */
+function isCanonicalVerdict(value: GalerinaValue): boolean {
+  return value.__tag === "verdict" &&
+    (value.value === -1 || value.value === 0 || value.value === 1);
+}
 // W5a K3: clamp to the lattice {-1,0,1} so an arithmetic slip can never mint an
 // out-of-range verdict (defense-in-depth; Math.min/max over valid trits stays exact).
 const verdictVal = (v: number): GalerinaValue => ({ __tag: "verdict", value: v < 0 ? -1 : v > 0 ? 1 : 0 });
@@ -630,6 +635,11 @@ class SyncInterpreter {
     for (const [i, paramNode] of paramNodes.entries()) {
       const paramName = ((paramNode.value ?? "").split(":")[0] ?? "").trim();
       const argVal = args.get(paramName) ?? args.get(`p${i}`) ?? FUNGI_VOID;
+      if (bindingTypeName(paramNode.value ?? "") === "Verdict" && !isCanonicalVerdict(argVal)) {
+        // Defer to the async interpreter, whose entry boundary returns the
+        // governed fail-closed runtime result and audit record.
+        throw new SyncNotSupported(`invalid Verdict argument '${paramName}'`);
+      }
       this.scope.set(paramName, argVal);
     }
 
@@ -730,6 +740,12 @@ class SyncInterpreter {
         }
         return FUNGI_VOID;
       }
+
+      case "trapDecl":
+        // Named traps require the governed async exit so the firing is recorded
+        // in diagnostics and the runtime audit trail. Never let the sync tier
+        // interpret an unknown statement as a discarded expression.
+        throw new SyncNotSupported("trap declaration requires governed execution");
 
       case "block":
         // FAIL-CLOSED (2026-06-19): propagate non-SyncReturn throws (was swallowed → fail-open).
@@ -915,6 +931,11 @@ class EarlyReturn {
  */
 class FaultSignal {
   constructor(readonly reason: string, readonly value: GalerinaValue) {}
+}
+
+/** Terminal, audited signal raised by `trap CONDITION : ERROR_CODE`. */
+class TrapSignal {
+  constructor(readonly errorCode: string) {}
 }
 
 /** Best-effort human-facing text for a fault reason value (String → its text). */
@@ -1299,6 +1320,24 @@ class Interpreter {
       return this.buildResult(flowName, qualifier, startedAt, value, msg);
     }
 
+    // Closed-domain runtime admission for all Verdict parameters. TypeScript
+    // callers cannot normally construct a fourth value, but executeFlow is also
+    // an untyped JS/host boundary. Validate before preconditions, parameter
+    // admission, execution-plan fast paths, or body work can observe the value.
+    for (const child of flowNode.children ?? []) {
+      if (child.kind !== "paramDecl" || bindingTypeName(child.value ?? "") !== "Verdict") continue;
+      const paramName = extractParamName(child.value ?? "");
+      const argVal = args.get(paramName) ?? FUNGI_VOID;
+      if (!isCanonicalVerdict(argVal)) {
+        const message =
+          `Flow '${flowName}' received malformed Verdict argument '${paramName}' — ` +
+          `expected exactly Deny(-1), Unknown(0), or Allow(+1); fail-closed`;
+        this.diagnostics.push({ code: "FUNGI-RUNTIME-003", message });
+        const value: GalerinaValue = { __tag: "runtimeError", message };
+        return this.buildResult(flowName, qualifier, startedAt, value, message);
+      }
+    }
+
     // A7 (owner-ruled 2026-07-23, RD-0529): enforce INPUT pre-conditions at flow ENTRY. An
     // `invariant { ensure … }` that does NOT reference `result` is a parameter pre-condition; it is
     // evaluated here, before ANY body work, fail-closed — mirroring the WAT entry gate (ensureDecl) so
@@ -1317,7 +1356,7 @@ class Interpreter {
     // Flagship (0119 item 2): three-valued PARAMETER ADMISSION gate at flow ENTRY, fail-closed. Runs after
     // the A7 pre-condition gate and before ANY body work; a denied (or non-evaluable) admission means the
     // body NEVER runs. Verdict-ALLOW-only — the K3 entry predicate. Admission-bearing flows are excluded
-    // from the fast tiers (flowHasEnforcedInvariants) so this gate is never bypassed.
+    // from the fast tiers (flowRequiresGovernedPath) so this gate is never bypassed.
     {
       const denial = await this.checkParameterAdmission(flowNode, flowName, args);
       if (denial !== undefined) {
@@ -1343,11 +1382,9 @@ class Interpreter {
       this.capabilityHost !== undefined
     ) {
       const plan = this.executionPlans.get(flowName);
-      // 0040/#70: the execution-plan fast-path returns its value BEFORE the output post-condition
-      // gate below. A flow with an `ensure result …` must NOT use it — skip so it falls through to
-      // the normal flow body + the single-exit gate (fail-closed). (Latent today: no in-tree caller
-      // sets useExecutionPlan, but this keeps the governed runFlow path airtight if it is enabled.)
-      if (plan !== undefined && plan.qualifier === "pure" && !flowHasEnforcedInvariants(this.ast, flowName)) {
+      // The execution-plan fast path returns before governed-only control is
+      // enforced. Skip it for invariants, admissions, and named traps.
+      if (plan !== undefined && plan.qualifier === "pure" && !flowRequiresGovernedPath(this.ast, flowName)) {
         const ctx = this.getContext(flowName);
         try {
           const planResult = await executePlan(plan, this.capabilityHost, ctx);
@@ -1408,6 +1445,23 @@ class Interpreter {
     } catch (error: unknown) {
       if (error instanceof EarlyReturn) {
         returnValue = error.value;
+      } else if (error instanceof TrapSignal) {
+        const message = `[Flow '${flowName}'] FUNGI-INV-000 trap '${error.errorCode}' fired`;
+        runtimeError = message;
+        this.auditEntries.push({
+          event: "trap",
+          fields: {
+            code: "FUNGI-INV-000",
+            flowId: flowName,
+            trapKind: error.errorCode,
+          },
+          timestamp: new Date().toISOString(),
+        });
+        this.diagnostics.push({
+          code: "FUNGI-INV-000",
+          message: `Named trap '${error.errorCode}' fired in flow '${flowName}'`,
+        });
+        returnValue = { __tag: "runtimeError", message };
       } else if (error instanceof FaultSignal) {
         // W5b T2.2 (RD-0266 A10): an unhandled fault HALTS + AUDITS + DENIES.
         // Fail-closed — no value is produced (returnValue is a runtimeError, so
@@ -1895,6 +1949,27 @@ class Interpreter {
         return undefined;
       }
 
+      case "trapDecl": {
+        const condition = node.children?.[0];
+        const errorCode = node.value?.trim() || "ERR_TRAP";
+        if (condition === undefined) {
+          throw new Error(`trap '${errorCode}' has no condition — fail-closed`);
+        }
+        const conditionValue = await this.evalExpr(condition);
+        if (conditionValue.__tag === "runtimeError" || conditionValue.__tag === "error") {
+          throw new Error(
+            `trap '${errorCode}' condition could not be evaluated: ${conditionValue.message} — fail-closed`,
+          );
+        }
+        if (conditionValue.__tag !== "bool") {
+          throw new Error(
+            `trap '${errorCode}' condition must be Bool, got '${conditionValue.__tag}' — fail-closed`,
+          );
+        }
+        if (conditionValue.value) throw new TrapSignal(errorCode);
+        return undefined;
+      }
+
       case "matchExpr": {
         const matchResult = await this.evalExpr(node);
         return matchResult.__tag === "void" ? undefined : matchResult;
@@ -1912,7 +1987,13 @@ class Interpreter {
         if (subjVal.__tag !== "verdict") {
           throw new Error(`check(...) subject must be a Verdict, got '${subjVal.__tag}' — fail-closed`);
         }
-        const label = subjVal.value < 0 ? "deny" : subjVal.value > 0 ? "if" : "ambig";
+        // The TypeScript union prevents the interpreter itself from constructing a
+        // fourth Verdict value, but executeFlow is also an untyped runtime boundary.
+        // Never let a forged/out-of-range trit inherit DENY or ALLOW by sign.
+        if (subjVal.value !== -1 && subjVal.value !== 0 && subjVal.value !== 1) {
+          throw new Error(`check(...) subject carries invalid Verdict value '${String(subjVal.value)}' — fail-closed`);
+        }
+        const label = subjVal.value === -1 ? "deny" : subjVal.value === 1 ? "if" : "ambig";
         const arm = (node.children ?? []).slice(1).find((c) => c.kind === "checkArm" && c.value === label);
         if (arm === undefined) {
           throw new Error(`check(...) has no '${label}' arm for verdict ${subjVal.value} — fail-closed`);
@@ -1947,7 +2028,11 @@ class Interpreter {
         if (subjVal.__tag !== "verdict") {
           throw new Error(`prefilter(...) subject must be a Verdict, got '${subjVal.__tag}' — fail-closed`);
         }
-        const label = subjVal.value < 0 ? "deny" : "maybe"; // ALLOW is downgraded to maybe (never honoured)
+        // Reject forged/out-of-range runtime trits before either arm can run.
+        if (subjVal.value !== -1 && subjVal.value !== 0 && subjVal.value !== 1) {
+          throw new Error(`prefilter(...) subject carries invalid Verdict value '${String(subjVal.value)}' — fail-closed`);
+        }
+        const label = subjVal.value === -1 ? "deny" : "maybe"; // ALLOW is downgraded to maybe (never honoured)
         const arm = (node.children ?? []).slice(1).find((c) => c.kind === "prefilterArm" && c.value === label);
         if (arm === undefined) {
           throw new Error(`prefilter(...) has no '${label}' arm for verdict ${subjVal.value} — fail-closed`);
@@ -2420,9 +2505,17 @@ class Interpreter {
     const receiverName = receiver === undefined ? "" : this.getReceiverName(receiver);
     const fullName = receiverName !== "" ? `${receiverName}.${methodName}` : methodName;
 
-    if (methodName === "Ok") return { __tag: "ok", value: await this.evalExpr(args[0] ?? voidIdentifier()) };
-    if (methodName === "Err") return { __tag: "err", error: await this.evalExpr(args[0] ?? voidIdentifier()) };
-    if (methodName === "Some") return { __tag: "some", value: await this.evalExpr(args[0] ?? voidIdentifier()) };
+    if (methodName === "Ok" || methodName === "Err" || methodName === "Some") {
+      const payload = await this.evalExpr(args[0] ?? voidIdentifier());
+      // Fork A=TRAP: a checked arithmetic/liveness trap is not application data
+      // and cannot be converted into apparent success (Ok/Some) or a handleable
+      // domain error (Err). This also keeps the walker aligned with WAT, where
+      // the trap fires before the constructor host call is reached.
+      if (isCheckedTrap(payload)) return payload;
+      if (methodName === "Ok") return { __tag: "ok", value: payload };
+      if (methodName === "Err") return { __tag: "err", error: payload };
+      return { __tag: "some", value: payload };
+    }
 
     if (this.fnIndex.has(methodName) && receiver === undefined) {
       return await this.runLocalFn(methodName, args);
@@ -3278,6 +3371,7 @@ function isCheckedTrap(value: GalerinaValue): boolean {
   // "[Flow 'name'] " prefix — so match by substring, not prefix.
   return m === "IntegerOverflow" || m === "DivisionByZero" ||
     m === FLOAT_NONFINITE_TRAP ||                      // non-finite float (NaN/±Inf) — FUNGI-FLOAT-NAN-001
+    m.includes("FUNGI-INV-000 trap") ||               // named `trap COND : ERROR_CODE` firing
     m.includes("Compute budget exceeded") ||         // global compute-step cap (maxSteps)
     m.includes("Loop exceeded maximum iteration") ||  // per-loop cap (maxIterations)
     m.includes("Recursion depth exceeded");           // call-depth cap (maxCallDepth)
@@ -3443,14 +3537,17 @@ function extractParamAdmissions(flowNode: AstNode): { name: string; predicate: A
 }
 
 /**
- * 0040/#70 + A7: true if the named flow declares ANY enforced invariant — an OUTPUT post-condition
- * (`invariant { ensure result … }`) OR an INPUT pre-condition (a non-`result` ensure). Such flows MUST
- * run through the governed runFlow path where the entry pre-condition gate and the single-exit
- * post-condition gate fire. The fast tiers (bytecode VM, sync fast-path, ExecutionGraph fast-path,
- * pure-flow cache) all return early and would bypass BOTH gates — so executeFlow excludes these flows
- * from them (fail-closed).
+ * True when a flow carries control that only the governed interpreter
+ * currently enforces: input/output invariants, K3 parameter admission, or a
+ * named trap. Fast tiers return before those gates and must be excluded until
+ * each tier proves equivalent lowering.
  */
-function flowHasEnforcedInvariants(ast: AstNode, flowName: string): boolean {
+function astContainsKind(node: AstNode, kind: AstNode["kind"]): boolean {
+  if (node.kind === kind) return true;
+  return (node.children ?? []).some((child) => astContainsKind(child, kind));
+}
+
+function flowRequiresGovernedPath(ast: AstNode, flowName: string): boolean {
   let found = false;
   const FLOW_KINDS = new Set(["pureFlowDecl", "flowDecl", "secureFlowDecl", "guardedFlowDecl"]);
   function walk(node: AstNode): void {
@@ -3459,7 +3556,7 @@ function flowHasEnforcedInvariants(ast: AstNode, flowName: string): boolean {
       FLOW_KINDS.has(node.kind) &&
       node.value === flowName &&
       (extractOutputPostconditions(node).length > 0 || extractInputPreconditions(node).length > 0 ||
-        extractParamAdmissions(node).length > 0)
+        extractParamAdmissions(node).length > 0 || astContainsKind(node, "trapDecl"))
     ) {
       found = true;
       return;
@@ -3608,11 +3705,9 @@ export function executeFlowSync(
 ): GalerinaValue | null {
   const flowMeta = knownFlows.find(f => f.name === flowName);
   if (flowMeta === undefined || flowMeta.qualifier !== "pure") return null;
-  // 0040/#70: a flow with an output post-condition (`ensure result …`) must take the governed
-  // async exit gate (checkOutputPostconditions). The sync fast-path ignores the invariant {} block,
-  // so DECLINE here (return null) — every caller of executeFlowSync falls back to the async
-  // executeFlow, which enforces the post-condition fail-closed. Closes the exported-sync bypass.
-  if (flowHasEnforcedInvariants(ast, flowName)) return null;
+  // The sync fast path does not model invariants, parameter admission, or
+  // named traps. Decline so the governed async interpreter enforces them.
+  if (flowRequiresGovernedPath(ast, flowName)) return null;
   return tryPureFlowSync(ast, knownFlows, flowName, args);
 }
 
@@ -3730,10 +3825,9 @@ export async function executeFlow(
   if (
     runtimeOptions?.pureFastPath === true &&   // opt-in: pass { pureFastPath: true } to enable
     isPureEffectFree(ast, flowName) &&
-    // 0040/#70: a flow with an output post-condition (`ensure result …`) must take the governed
-    // exit (runFlow), where the post-condition gate fires fail-closed. The bytecode VM / sync /
-    // cache tiers below return early and would bypass it — exclude such flows from the fast path.
-    !flowHasEnforcedInvariants(ast, flowName)
+    // Invariants, admissions, and named traps must take the governed exit.
+    // Bytecode/sync/cache cannot bypass control they do not yet model.
+    !flowRequiresGovernedPath(ast, flowName)
   ) {
     // Phase 49: per-request cache scoping.
     // The cache key includes a sourceTag so that pure flows cached for one request
@@ -3921,10 +4015,10 @@ export async function executeFlow(
       // until the graph builder handles all node kinds correctly.
       // Enable with: { egraphFastPath: true } in runtimeOptions.
       const egraphEnabled = (runtimeOptions as Record<string, unknown>)?.egraphFastPath === true;
-      // 0040/#70: the ExecutionGraph fast-path also returns early, bypassing the output
-      // post-condition gate — exclude post-condition flows so they fall through to runFlow.
+      // ExecutionGraph also returns early; exclude every governed-only control
+      // until the graph tier proves equivalent enforcement.
       if (egraphEnabled && egraph.isPure && enforcer === undefined && capabilityHost === undefined
-          && !flowHasEnforcedInvariants(ast, flowName)) {
+          && !flowRequiresGovernedPath(ast, flowName)) {
         const fastResult = runFromGraph(egraph, args);
         if (fastResult !== null) {
           // Fast-path succeeded — return a synthetic FlowExecutionResult

@@ -124,6 +124,45 @@ describe("K3 folds — all{}/any{} + the empty-fold identities", () => {
   });
 });
 
+describe("K3 runtime boundary — malformed fourth values never enter an operator", () => {
+  const malformedCases = [
+    ["identity", "x"],
+    ["and", "x && y"],
+    ["or", "x || y"],
+    ["flip", "flip(x)"],
+    ["all", "all { x\ny }"],
+    ["any", "any { x\ny }"],
+  ];
+
+  for (const [name, expr] of malformedCases) {
+    it(`${name}: forged Verdict(2) traps before walker/Wasm evaluation`, async () => {
+      const src = `@version 1
+pure flow f(x: Verdict, y: Verdict) -> Verdict
+contract { effects {} }
+{ return ${expr} }`;
+      const p = L.parseProgram(src, "k3-malformed.fungi");
+      const walker = await L.executeFlow(
+        "f",
+        new Map([
+          ["x", { __tag: "verdict", value: 2 }],
+          ["y", { __tag: "verdict", value: 1 }],
+        ]),
+        p.ast,
+      );
+      assert.equal(walker.audit.result, "error");
+      assert.match(walker.value.message, /malformed Verdict|fail-closed/);
+
+      const fx = L.checkEffects(p.flows, p.ast);
+      const { gir } = L.emitGIR(p.ast, p.flows, fx);
+      const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "p", p.ast, true));
+      const asm = await L.assembleWAT(wat);
+      assert.ok(asm.valid, `assembles: ${JSON.stringify(asm.diagnostics).slice(0, 300)}`);
+      const { instance } = await WebAssembly.instantiate(asm.wasm);
+      assert.throws(() => instance.exports.f(2, 1), WebAssembly.RuntimeError);
+    });
+  }
+});
+
 describe("A9 compile gates — FUNGI-K3-001/002/003", () => {
   const k3diags = (src) => {
     const p = L.parseProgram(src, "k3.fungi");

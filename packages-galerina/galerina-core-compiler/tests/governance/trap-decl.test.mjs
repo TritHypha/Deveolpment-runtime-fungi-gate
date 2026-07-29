@@ -21,6 +21,7 @@ import {
   checkEffects,
   verifyGovernance,
   checkValueStates,
+  executeFlow,
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -273,5 +274,69 @@ contract {
       0,
       `Expected no FUNGI-TRAP errors for valid trap declaration, got: ${trapErrors.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
     );
+  });
+});
+
+describe("trap runtime semantics are terminal, audited, and fast-tier safe", () => {
+  const source = `
+pure flow guardedValue(value: Int) -> Int
+{
+  trap value <= 0 : ERR_NON_POSITIVE
+  return value
+}
+
+pure flow outer(value: Int) -> Int
+{
+  let admitted: Int = guardedValue(value)
+  return admitted + 1
+}
+`;
+
+  async function run(flowName, value, runtimeOptions) {
+    const parsed = parse(source);
+    return executeFlow(
+      flowName,
+      new Map([["value", { __tag: "int", value }]]),
+      parsed.ast,
+      parsed.flows,
+      undefined,
+      undefined,
+      runtimeOptions,
+    );
+  }
+
+  it("a false trap condition permits normal execution", async () => {
+    const result = await run("guardedValue", 7);
+    assert.deepEqual(result.value, { __tag: "int", value: 7 });
+    assert.equal(result.audit.result, "ok");
+    assert.equal(result.auditEntries.some((entry) => entry.event === "trap"), false);
+  });
+
+  it("a true trap condition returns no application value and records its named audit event", async () => {
+    const result = await run("guardedValue", 0);
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /FUNGI-INV-000 trap 'ERR_NON_POSITIVE' fired/);
+    assert.equal(result.audit.result, "error");
+    assert.ok(result.diagnostics.some((diag) => diag.code === "FUNGI-INV-000"));
+    assert.ok(result.auditEntries.some(
+      (entry) =>
+        entry.event === "trap" &&
+        entry.fields.code === "FUNGI-INV-000" &&
+        entry.fields.trapKind === "ERR_NON_POSITIVE",
+    ));
+  });
+
+  it("pureFastPath cannot bypass a named trap", async () => {
+    const result = await run("guardedValue", 0, { pureFastPath: true });
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /FUNGI-INV-000 trap 'ERR_NON_POSITIVE' fired/);
+    assert.equal(result.executionTier, "tree");
+  });
+
+  it("a nested named trap propagates instead of becoming handleable data", async () => {
+    const result = await run("outer", 0);
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /FUNGI-INV-000 trap 'ERR_NON_POSITIVE' fired/);
+    assert.notDeepEqual(result.value, { __tag: "int", value: 1 });
   });
 });

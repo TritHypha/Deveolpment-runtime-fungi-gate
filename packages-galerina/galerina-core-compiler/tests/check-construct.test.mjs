@@ -92,19 +92,27 @@ describe("T2.2 check — runtime fail-closed", () => {
     assert.equal(r?.audit?.result, "error", "a non-verdict subject must TRAP, never silently pick an arm");
     assert.match(r?.value?.message ?? "", /Verdict|fail-closed/);
   });
+
+  it("a forged fourth Verdict value TRAPS (never aliases to ALLOW by sign)", async () => {
+    const p = L.parseProgram(V(`if:{return "a"} deny:{return "d"} ambig:{return "u"}`), "t.fungi");
+    const r = await L.executeFlow("f", new Map([["v", { __tag: "verdict", value: 2 }]]), p.ast);
+    assert.equal(r?.audit?.result, "error", "an out-of-lattice Verdict must TRAP");
+    assert.match(r?.value?.message ?? "", /invalid Verdict value|fail-closed/);
+  });
 });
 
-describe("T2.2 check — WASM tier is fail-closed until lowered (no parity fail-open)", () => {
-  it("check{} lowers to an (unreachable) trap in WASM, never a silent no-op/miscompile", () => {
-    // check{} runs on the tree-walker (tested above). Its WAT lowering is a
-    // deferred follow-up (needs both-tier parity like W5a). Until then it MUST
-    // fail-CLOSED in WASM (task #128), never silently skip the governance branch.
+describe("T2.2 check — WAT lowering is real and retains a malformed-trit trap", () => {
+  it("check{} lowers all three arms plus an explicit invalid-Verdict trap", () => {
     const src = `@version 1\npure flow f(v: Verdict) -> Void\ncontract { effects {} }\n{ check(v) { if:{return} deny:{return} ambig:{return} } }`;
     const p = L.parseProgram(src, "t.fungi");
     let flow = null;
     (function w(n) { if (!n || typeof n !== "object") return; if (/FlowDecl$/.test(n.kind ?? "")) flow = n; for (const c of n.children ?? []) w(c); })(p.ast);
     const wat = L.emitWATFromFlowAST(flow, ["v"]);
     assert.equal(typeof wat, "string");
-    assert.match(wat, /unsupported-in-WASM:\s*checkExpr|unreachable/);
+    assert.doesNotMatch(wat, /unsupported-in-WASM:\s*checkExpr/);
+    assert.match(wat, /i32\.const -1/);
+    assert.match(wat, /i32\.const 0/);
+    assert.match(wat, /i32\.const 1/);
+    assert.match(wat, /invalid Verdict trit/);
   });
 });

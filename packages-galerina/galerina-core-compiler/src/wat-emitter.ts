@@ -2262,7 +2262,8 @@ export function emitWATExpr(
           return `(unreachable) (; check{}: missing '${label}' arm — fail-closed (FUNGI-CHECK-001 belt) ;)`;
         return body.kind === "block" ? emitBlockLastExpr(body, vars, staticConsts) : emitWATExpr(body, vars, staticConsts);
       };
-      // Nested (if DENY (then …) (else (if AMBIG (then …) (else ALLOW…))))
+      // Exact comparisons preserve the closed K3 domain at the untyped i32 ABI.
+      // The final else traps: a fourth trit must never inherit the ALLOW arm.
       return [
         `(block (result i32)`,
         `  (local.set ${scratch} ${subjectWat})`,
@@ -2271,7 +2272,12 @@ export function emitWATExpr(
         `    (else`,
         `      (if (result i32) (i32.eq (local.get ${scratch}) (i32.const 0))`,
         `        (then ${getArm("ambig")})`,
-        `        (else ${getArm("if")})`,
+        `        (else`,
+        `          (if (result i32) (i32.eq (local.get ${scratch}) (i32.const 1))`,
+        `            (then ${getArm("if")})`,
+        `            (else (unreachable) (; check{}: invalid Verdict trit — fail-closed ;))`,
+        `          )`,
+        `        )`,
         `      )`,
         `    )`,
         `  )`,
@@ -2281,8 +2287,8 @@ export function emitWATExpr(
 
     // W5b T2.4: prefilter(subject){ deny:/maybe: } — DENY-ONLY gate (expression form).
     // DENY(−1) → deny arm; UNKNOWN(0) or ALLOW(+1) → maybe arm (ALLOW is downgraded).
-    // Mirrors check{} lowering strategy; deny-arm fires when subject < 0 (only −1 is
-    // valid but an out-of-lattice trit also fires deny — fail-closed for both).
+    // Mirrors check{} lowering with exact trit validation. An out-of-lattice
+    // value traps rather than being silently reclassified as DENY or maybe.
     case "prefilterExpr": {
       const subjectNode = node.children?.[0];
       const arms = (node.children ?? []).slice(1).filter((c) => c.kind === "prefilterArm");
@@ -2302,9 +2308,18 @@ export function emitWATExpr(
       return [
         `(block (result i32)`,
         `  (local.set ${scratch} ${subjectWat})`,
-        `  (if (result i32) (i32.lt_s (local.get ${scratch}) (i32.const 0))`,
+        `  (if (result i32) (i32.eq (local.get ${scratch}) (i32.const -1))`,
         `    (then ${getArm("deny")})`,
-        `    (else ${getArm("maybe")})`,
+        `    (else`,
+        `      (if (result i32)`,
+        `        (i32.or`,
+        `          (i32.eq (local.get ${scratch}) (i32.const 0))`,
+        `          (i32.eq (local.get ${scratch}) (i32.const 1))`,
+        `        )`,
+        `        (then ${getArm("maybe")})`,
+        `        (else (unreachable) (; prefilter{}: invalid Verdict trit — fail-closed ;))`,
+        `      )`,
+        `    )`,
         `  )`,
         `)`,
       ].join("\n");
@@ -3013,7 +3028,14 @@ function emitBlockStatements(
         for (const l of emitArmStmts("ambig")) bodyLines.push(`        ${l}`);
         bodyLines.push(`      )`);
         bodyLines.push(`      (else`);
-        for (const l of emitArmStmts("if")) bodyLines.push(`        ${l}`);
+        bodyLines.push(`        (if (i32.eq (local.get ${scratch}) (i32.const 1))`);
+        bodyLines.push(`          (then`);
+        for (const l of emitArmStmts("if")) bodyLines.push(`            ${l}`);
+        bodyLines.push(`          )`);
+        bodyLines.push(`          (else`);
+        bodyLines.push(`            (unreachable) ;; check{}: invalid Verdict trit — fail-closed`);
+        bodyLines.push(`          )`);
+        bodyLines.push(`        )`);
         bodyLines.push(`      )`);
         bodyLines.push(`    )`);
         bodyLines.push(`  )`);
@@ -3027,7 +3049,8 @@ function emitBlockStatements(
       }
 
       // W5b T2.4: prefilter(subject){ deny:/maybe: } — DENY-ONLY gate (statement form).
-      // DENY(−1) → deny arm; anything ≥ 0 → maybe arm (ALLOW is downgraded, A8 core).
+      // DENY(−1) → deny arm; UNKNOWN(0)/ALLOW(+1) → maybe arm. Any other
+      // runtime i32 is malformed and traps before an arm runs.
       case "prefilterExpr": {
         const subjectNode = stmt.children?.[0];
         const arms = (stmt.children ?? []).slice(1).filter((c) => c.kind === "prefilterArm");
@@ -3050,12 +3073,23 @@ function emitBlockStatements(
           return lines;
         };
         bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
-        bodyLines.push(`(if (i32.lt_s (local.get ${scratch}) (i32.const 0))`);
+        bodyLines.push(`(if (i32.eq (local.get ${scratch}) (i32.const -1))`);
         bodyLines.push(`  (then`);
         for (const l of emitArmStmts("deny")) bodyLines.push(`    ${l}`);
         bodyLines.push(`  )`);
         bodyLines.push(`  (else`);
-        for (const l of emitArmStmts("maybe")) bodyLines.push(`    ${l}`);
+        bodyLines.push(`    (if`);
+        bodyLines.push(`      (i32.or`);
+        bodyLines.push(`        (i32.eq (local.get ${scratch}) (i32.const 0))`);
+        bodyLines.push(`        (i32.eq (local.get ${scratch}) (i32.const 1))`);
+        bodyLines.push(`      )`);
+        bodyLines.push(`      (then`);
+        for (const l of emitArmStmts("maybe")) bodyLines.push(`        ${l}`);
+        bodyLines.push(`      )`);
+        bodyLines.push(`      (else`);
+        bodyLines.push(`        (unreachable) ;; prefilter{}: invalid Verdict trit — fail-closed`);
+        bodyLines.push(`      )`);
+        bodyLines.push(`    )`);
         bodyLines.push(`  )`);
         bodyLines.push(`)`);
         // Structural terminator: same wabt "type mismatch in implicit return" guard.
@@ -4044,6 +4078,44 @@ export function buildWATModule(
           body = guardedBody;
         }
       }
+    }
+
+    // Closed K3 ABI boundary. A Wasm export is callable by an untyped host, so
+    // validate every declared Verdict parameter before any body instruction or
+    // host bridge can observe it. This protects all K3 operators (not only
+    // check/prefilter) from a forged fourth i32 value.
+    const verdictParamGuards = rawParamTypes.flatMap((typeName, index) => {
+      if (numericBaseType(typeName) !== "Verdict") return [];
+      const param = `$p${index}`;
+      return [
+        `(if`,
+        `  (i32.eqz`,
+        `    (i32.or`,
+        `      (i32.eq (local.get ${param}) (i32.const -1))`,
+        `      (i32.or`,
+        `        (i32.eq (local.get ${param}) (i32.const 0))`,
+        `        (i32.eq (local.get ${param}) (i32.const 1))`,
+        `      )`,
+        `    )`,
+        `  )`,
+        `  (then (unreachable)) ;; malformed Verdict ABI value — fail-closed`,
+        `)`,
+      ];
+    });
+    if (verdictParamGuards.length > 0) {
+      // WAT requires every local declaration to appear before the first
+      // instruction. The AST emitter returns locals as a contiguous prefix,
+      // so splice the entry guards immediately after that prefix.
+      const bodyLines = body.split("\n");
+      let firstInstruction = 0;
+      while (firstInstruction < bodyLines.length && /^\s*\(local\b/.test(bodyLines[firstInstruction] ?? "")) {
+        firstInstruction += 1;
+      }
+      body = [
+        ...bodyLines.slice(0, firstInstruction),
+        ...verdictParamGuards,
+        ...bodyLines.slice(firstInstruction),
+      ].join("\n");
     }
 
     // Phase 27C — TypedArray lowering hints for Float32 tensor flows.

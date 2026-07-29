@@ -1,7 +1,8 @@
 # CTLL v2 and Galerina Integration Architecture
 
 **Date:** 2026-07-29
-**Status:** Proposed architecture; implementation has not started
+**Status:** Proposed architecture; bounded G1 compiler probes have started,
+while CTLL implementation remains absent
 **Project boundary:** CTLL is an independent execution platform. Galerina is its
 first planned language frontend, not a required CTLL runtime dependency.
 **Live status and work order:**
@@ -80,6 +81,13 @@ executable bodies and explicit:
 
 No backend may recover missing semantics from the AST after the detached-GIR
 boundary.
+
+Current evidence is recorded in
+`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`. It confirms that the
+existing WAT wrapper receives the original AST separately from `GIRProgram`
+and still needs it for complete body lowering. Without that AST, its legacy
+summary path can emit an identity body; CTLL must refuse that condition rather
+than inherit the fallback.
 
 ### Memory contract
 

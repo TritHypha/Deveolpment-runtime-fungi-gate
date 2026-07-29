@@ -5,6 +5,20 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
 ## [Unreleased]
 
 ### Security
+- **Closed malformed-K3 and checked-trap wrapping gaps found by the CTLL G1
+  vertical-slice probe.** Every declared Verdict input is now checked at the
+  tree-walker and Wasm ABI boundary, with exact `check`/`prefilter` validation
+  retained as defense in depth; forged fourth trits trap instead of inheriting
+  an ALLOW/defer branch. Hard checked arithmetic and liveness traps also
+  propagate through `Ok`/`Err`/`Some` instead of becoming apparent application
+  success or handleable data.
+- **Made named source traps executable and auditable in the tree-walker.**
+  `trap CONDITION : ERROR_CODE` had been parsed, governed, and lowered to WAT
+  but silently discarded by the reference runtime. It now terminates with
+  `FUNGI-INV-000`, records `trapKind`, propagates through nested flows, and
+  excludes flows from fast tiers lacking equivalent enforcement. Canonical
+  admission and rejection service regressions are aligned with the exact
+  allow-lists. Full compiler suite: 5,205/5,205.
 - **Signing-key trust-root rotation (RD-0368).** The registry-signing trust root was rotated from the
   interim `ab46f4c7e2797b9b` — whose private half was **lost** (it did not survive a workstation rebuild),
   freezing the revocation registry — to the hybrid Ed25519 + ML-DSA-65 key `21415420b447e219`.
@@ -35,6 +49,10 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
   `21415420b447e219`, since the interim `ab46f4c7` root was lost; see RD-0368).
 
 ### Added
+- **CTLL v2 G1 compiler capability probe.** Added a checked `.fungi` fixture,
+  standing walker/Wasm differential, exact post-GIR AST dependency inventory,
+  and current-vs-proposed capability matrix. This is evidence for current
+  Galerina semantics, not a claim that executable GIR or `.ctll` exists.
 - **`scripts/brand-audit.mjs`** — a binary-safe residual-brand + `@`-scope auditor. It reads every file
   as raw bytes (so NUL-containing files that `grep`/`ripgrep` skip as "binary" are still scanned) and
   substring-matches every form (`@spore`, `/spore`, `sporeX`, case variants), enumerating every

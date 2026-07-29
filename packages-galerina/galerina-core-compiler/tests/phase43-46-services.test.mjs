@@ -54,54 +54,64 @@ describe("Phase 43: governanceService.fungi", () => {
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
 
-  it("effects containing 'secure' → level 2, governed: true", async () => {
-    const r = await post({ effects: "network.inbound, audit.write (secure)", qualifier: "secure" });
+  it("canonical 'secure' → level 2, governed: true", async () => {
+    const r = await post({ effects: "secure", qualifier: "secure" });
     assert.equal(r.status, 200);
     assert.equal(r.json.level, 2);
     assert.equal(r.json.governed, true);
   });
 
-  it("effects containing 'critical' → level 3", async () => {
-    const r = await post({ effects: "critical.write", qualifier: "secure" });
+  it("canonical 'critical' → level 3", async () => {
+    const r = await post({ effects: "critical", qualifier: "secure" });
     assert.equal(r.status, 200);
     assert.equal(r.json.level, 3);
   });
 
-  it("effects containing 'guarded' → level 1", async () => {
-    const r = await post({ effects: "guarded.read", qualifier: "guarded" });
+  it("canonical 'guarded' → level 1", async () => {
+    const r = await post({ effects: "guarded", qualifier: "guarded" });
     assert.equal(r.status, 200);
     assert.equal(r.json.level, 1);
   });
 
-  it("unknown effects → level 0", async () => {
+  it("unknown effects fail closed at the public boundary", async () => {
     const r = await post({ effects: "network.inbound", qualifier: "pure" });
-    assert.equal(r.status, 200);
-    assert.equal(r.json.level, 0);
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.governed, undefined);
+  });
+
+  it("a compound string containing a policy word is not admitted", async () => {
+    const r = await post({ effects: "network.inbound, audit.write (secure)", qualifier: "secure" });
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.governed, undefined);
   });
 
   it("level 2 → requiresAudit: true", async () => {
-    const r = await post({ effects: "secure.write", qualifier: "secure" });
+    const r = await post({ effects: "secure", qualifier: "secure" });
     assert.equal(r.json.requiresAudit, true);
   });
 
   it("level 1 → requiresAudit: false", async () => {
-    const r = await post({ effects: "guarded.read", qualifier: "guarded" });
+    const r = await post({ effects: "guarded", qualifier: "guarded" });
     assert.equal(r.json.requiresAudit, false);
   });
 
   it("qualifier 'pure' → qualifierValid: true", async () => {
-    const r = await post({ effects: "none", qualifier: "pure" });
+    const r = await post({ effects: "secure", qualifier: "pure" });
     assert.equal(r.json.qualifierValid, true);
   });
 
   it("qualifier 'guarded' → qualifierValid: true", async () => {
-    const r = await post({ effects: "guarded.read", qualifier: "guarded" });
+    const r = await post({ effects: "guarded", qualifier: "guarded" });
     assert.equal(r.json.qualifierValid, true);
   });
 
-  it("qualifier 'unknown' → qualifierValid: false", async () => {
-    const r = await post({ effects: "network.inbound", qualifier: "unknown" });
-    assert.equal(r.json.qualifierValid, false);
+  it("qualifier 'unknown' fails closed at the public boundary", async () => {
+    const r = await post({ effects: "secure", qualifier: "unknown" });
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.qualifierValid, undefined);
   });
 });
 
@@ -161,9 +171,11 @@ describe("Phase 44: auditChainService.fungi", () => {
     assert.equal(r.json.statusValid, true);
   });
 
-  it("status 'Pending' → statusValid: false", async () => {
+  it("status 'Pending' fails closed before ledger admission", async () => {
     const r = await post({ flowName: "f", status: "Pending", timestamp: "t4" });
-    assert.equal(r.json.statusValid, false);
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.statusValid, undefined);
   });
 
   it("eventId is stable concat regardless of content", async () => {
@@ -214,10 +226,11 @@ describe("Phase 45: proofVerifierService.fungi", () => {
     assert.equal(r.json.strength, 2);
   });
 
-  it("unknown algorithm → valid: false, strength: 0", async () => {
+  it("unknown algorithm fails closed before proof evaluation", async () => {
     const r = await post({ algorithm: "md5", signaturePresent: false });
-    assert.equal(r.json.valid, false);
-    assert.equal(r.json.strength, 0);
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.valid, undefined);
   });
 
   it("phase39Ready matches valid field", async () => {
@@ -285,10 +298,11 @@ describe("Phase 46: typeRegistryService.fungi", () => {
     assert.equal(r.json.isBuiltin, true);
   });
 
-  it("'UserId' (unknown custom type) → isBuiltin: false, category: 'unknown'", async () => {
+  it("'UserId' (unregistered custom type) fails closed", async () => {
     const r = await post({ typeName: "UserId" });
-    assert.equal(r.json.isBuiltin, false);
-    assert.equal(r.json.category, "unknown");
+    assert.equal(r.status, 500);
+    assert.equal(r.json.error, "Internal runtime error");
+    assert.equal(r.json.isBuiltin, undefined);
   });
 
   it("typeName is echoed back in response", async () => {

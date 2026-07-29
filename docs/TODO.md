@@ -2,9 +2,9 @@
 
 ## CTLL v2 architecture lane — 2026-07-29
 
-**Status:** planning complete enough for owner decisions; implementation has
-not started. CTLL is an independent platform and Galerina is its first planned
-frontend.
+**Status:** planning is complete enough for owner decisions and bounded G1
+compiler probing has started. CTLL itself is not implemented. It remains an
+independent platform and Galerina is its first planned frontend.
 
 - [x] Maintain the canonical done/not-done/blocker/implementation ledger in
   `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
@@ -45,17 +45,34 @@ frontend.
   in `../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`.
 - [ ] Owner-confirm the recommended checked-Int/exhaustive-K3 fixture in
   `../triLowLevel-v2/17-FIRST-VERTICAL-SLICE.md`.
-- [ ] Implement the first vertical slice in `.fungi`; do not add `.gate` work
-  in this lane.
+- [x] Add the first vertical-slice capability probe in `.fungi` and verify it
+  across the current tree-walker and WAT/Wasm tiers. Evidence:
+  `docs/reports/ctll-v2-g1-capability-probe-2026-07-29.md`.
+- [x] Inventory every AST fact still consumed after `emitGIR` and map it to
+  proposed R1 nodes or an explicit unsupported exit.
+- [x] Harden current K3 runtime boundaries so an invalid fourth Verdict value
+  traps in the walker and WAT/Wasm tiers.
+- [x] Prevent checked arithmetic/liveness traps from being wrapped as
+  successful/handleable `Ok`, `Err`, or `Some` values.
+- [x] Make named `trap CONDITION : ERROR_CODE` executable in the tree-walker:
+  terminal `FUNGI-INV-000`, named audit entry, nested propagation, and
+  governed-path enforcement where fast tiers lack equivalent proof.
+- [ ] Implement the first detached executable-GIR vertical slice; do not add
+  `.gate` work in this lane.
+- [ ] Add a dedicated R1 export surface that refuses unsupported source rather
+  than entering the current WAT identity/default/walker fallback.
+- [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
+  altered K3 successors, missing failure records, and non-canonical bytes.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
 - [ ] Prove frontend independence with at least one non-Galerina fixture
   frontend.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until CTLL release gates pass and the owner approves a transition.
 
-**Next safe work:** build the G1 capability-probe matrix and enumerate every AST
-fact still consumed after `emitGIR`; do not start LLVM, `.ctll` execution, or
-driver installation before the earlier semantic and owner gates.
+**Next safe work:** define the bounded R1 exporter/preflight surface for the
+single checked fixture, with explicit unsupported refusal and no legacy body
+fallback. Do not start LLVM, `.ctll` execution, or driver installation before
+the earlier semantic and owner gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

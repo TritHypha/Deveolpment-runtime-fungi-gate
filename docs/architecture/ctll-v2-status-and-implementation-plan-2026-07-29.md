@@ -15,7 +15,11 @@ dependency, or implementation phase changes.
 CTLL v2 is a proposed independent execution platform with Galerina as its first
 frontend. Its architecture, zero-trust rules, R1 executable-GIR subset,
 Galerina frontend receipt, memory profile, deterministic AOT graph, Linux
-driver boundary, and first vertical-slice recommendation are documented. CTLL
+driver boundary, and first vertical-slice recommendation are documented. G1
+compiler probing has started: a checked-add/K3 `.fungi` fixture and standing
+walker/Wasm differential now pass, and three current-tier fail-open
+representations found during the probe and full-suite verification were
+closed, including previously ignored named traps. Detached executable GIR, CTLL
 code generation, `.ctll` packaging, native execution, the CTLL verifier,
 Tri-Fuse v2, the frontend adapter, driver CLI, and CTLL benchmarks do not yet
 exist. Galerina's current implemented execution paths remain the interpreter,
@@ -43,13 +47,14 @@ Planning completion and implementation completion are deliberately separate.
 |---|---|---|---|
 | Product boundary | `SPECIFIED` | CTLL is independent; Galerina is the first adapter, not a runtime dependency | Prove with a second non-Galerina frontend |
 | CTLL name and extension | `SPECIFIED` | `.ctll` means **Compiled Tri Low Level**; collision screen documented | Public registration/legal review only after release maturity |
-| K3 semantics | `SPECIFIED` | Kleene K3 authority contract and total-exit rule documented | Publish one independent registry and executable conformance vectors |
+| K3 semantics | `IMPLEMENTED-PARTIAL` | Kleene K3 authority contract documented; current checker, walker, and WAT paths pass three-state and invalid-fourth-state probes | Publish one independent registry and CTLL executable conformance vectors |
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `SPECIFIED` | Deterministic-CBOR R1 schema, CFG, checked Int32, K3 terminator, failures, validation order, mutations | Implement canonical exporter, bounded importer, validator, and reference interpreter |
 | AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
-| First fixture | `RECOMMENDED` | `ctll_k3_checked_add_v1` and ten differential vectors documented | Owner confirmation, then checked `.fungi` source and negative fixtures |
+| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory recorded | Add the dedicated R1 export-refusal surface and serialized mutation fixtures |
+| First fixture | `IMPLEMENTED-PARTIAL` | Recommended `ctll_k3_checked_add_v1` design, ten vectors, and checked `.fungi` capability probe exist | Owner-confirm stable public fixture identity; export canonical R1 and add negative artifacts |
 | Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
@@ -76,12 +81,16 @@ The current compiler exposes:
 - effect, capability, proof, tensor, execution-plan, entry-point, and hash
   metadata.
 
-The current WAT path still reads `gir.ast` for constants, layouts, flow
-signatures, bodies, secret handling, and memory derivation. It also contains
-identity/minimal-body and walker-fallback paths. These are valid facts about
-the current WebAssembly implementation, but they fail the CTLL detached
-semantic boundary. CTLL work begins by removing the need for those paths, not
-by writing an LLVM emitter around them.
+`GIRProgram` does not contain the AST. The current WAT wrapper instead receives
+the original AST separately and copies it into its internal `WATGIRInput.ast`,
+which is then read for constants, layouts, flow signatures, bodies, secret
+handling, and memory derivation. The no-AST path can still emit an identity
+body from summary metadata. These are valid facts about the current
+WebAssembly implementation, but they fail the CTLL detached semantic boundary.
+The exact inventory and R1 mapping are recorded in
+`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`. CTLL work begins by
+replacing those dependencies with complete validated R1 nodes, not by writing
+an LLVM emitter around them.
 
 ### 4.2 No CTLL implementation is being claimed
 
@@ -109,7 +118,28 @@ Not completed:
 
 - compiler-enforced flow/block-aware lint for future code;
 - target-lowering parity proof for every `check` use;
-- CTLL-specific conformance fixtures.
+- canonical CTLL executable-GIR and serialized conformance fixtures.
+
+### 4.4 G1 capability probe
+
+The G1 evidence is
+`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`.
+
+Verified:
+
+- the checked `.fungi` fixture parses and strict-checks;
+- ALLOW, DENY, and INDETERMINATE remain distinct through the tree-walker and
+  current WAT/Wasm path;
+- checked `Int32` addition and typed `Result` exits work in both tested tiers;
+- malformed fourth Verdict values now trap in both tiers;
+- hard checked traps can no longer be wrapped in `Ok`, `Err`, or `Some`;
+- named traps now terminate and audit in the tree-walker, propagate through
+  nested flows, and cannot be bypassed by a pure fast tier;
+- the current GIR cannot reproduce the fixture body without the separately
+  supplied AST.
+
+This is implementation evidence for existing Galerina semantics, not evidence
+that CTLL R1 exists.
 
 ## 5. Architecture that implementation must preserve
 
@@ -191,6 +221,17 @@ Before implementing new lowering:
 
 Exit gate: the test harness can distinguish unsupported, denied, unresolved,
 overflow, and successful execution.
+
+Progress on 2026-07-29:
+
+- the positive `.fungi` fixture and walker/Wasm differential are implemented;
+- malformed Verdict and overflow/Result parity regressions pass;
+- every current post-GIR AST fact is inventoried and mapped to R1;
+- the no-AST identity fallback is exposed as a non-CTLL negative fact.
+
+Remaining: introduce the dedicated R1 export surface with explicit unsupported
+refusal, then create serialized negative/mutation artifacts and stable R1
+failure records. G1 is therefore `IMPLEMENTED-PARTIAL`, not complete.
 
 ### Phase G2 — canonical executable GIR R1
 
@@ -278,13 +319,12 @@ its additional format/verifier/runtime.
 Safe work that does not require an owner choice:
 
 1. keep all CTLL documentation synchronized with this ledger;
-2. manufacture the G1 capability-probe matrix without changing production
-   behavior;
-3. enumerate the exact AST fields currently consumed after `emitGIR`;
-4. map those fields to the proposed R1 nodes and explicit unsupported exits;
-5. prepare negative fixture names and expected outcomes without assigning new
-   diagnostic codes;
-6. keep the current Wasm path green as the factual implementation baseline.
+2. define the dedicated R1 exporter API so unsupported source refuses without
+   entering the legacy identity/default/walker path;
+3. implement the bounded R1 profile preflight for the single probe fixture;
+4. prepare serialized negative fixture names and expected outcomes without
+   assigning new diagnostic codes;
+5. keep the current Wasm path green as the factual implementation baseline.
 
 Do not start LLVM, container signing, driver installation, or native execution
 before their earlier semantic and owner gates.
@@ -300,6 +340,7 @@ The current branch contains these CTLL-related checkpoints:
 | `7316e0dd` | Apply total branch standard to examples |
 | `8b11b018` | Enforce verified total control flow across 19 services |
 | `c7947a89` | Specify the executable-GIR/frontend-receipt handoff |
+| `270ec5f1` | Add the canonical CTLL implementation ledger |
 
 The corresponding Knowledge Base branch contains the canonical CTLL planning
 record and control-flow rules. None of these commits has been pushed by Codex.
