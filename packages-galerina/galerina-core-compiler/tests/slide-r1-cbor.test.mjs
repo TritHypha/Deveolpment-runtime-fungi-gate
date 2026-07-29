@@ -26,6 +26,8 @@ let encoder;
 let validator;
 let importer;
 let programImporter;
+let semanticBinding;
+let programRuntime;
 let referenceRuntime;
 let canonicalProgram;
 let canonicalBytes;
@@ -94,7 +96,15 @@ async function validate(value) {
 }
 
 before(async () => {
-  [encoder, validator, importer, programImporter, referenceRuntime] =
+  [
+    encoder,
+    validator,
+    importer,
+    programImporter,
+    semanticBinding,
+    programRuntime,
+    referenceRuntime,
+  ] =
     await Promise.all([
     loadCombined(
       [
@@ -116,6 +126,22 @@ before(async () => {
         "slide-r1-program-importer.fungi",
       ],
       "slide-r1-program-importer-combined.fungi",
+    ),
+    loadCombined(
+      [
+        "slide-r1-cbor-importer.fungi",
+        "slide-r1-program-importer.fungi",
+        "slide-r1-semantic-digest.fungi",
+      ],
+      "slide-r1-semantic-digest-combined.fungi",
+    ),
+    loadCombined(
+      [
+        "slide-r1-cbor-importer.fungi",
+        "slide-r1-program-importer.fungi",
+        "slide-r1-program-runtime.fungi",
+      ],
+      "slide-r1-program-runtime-combined.fungi",
     ),
     loadCombined(
       ["slide-r1-cbor-importer.fungi", "slide-r1-reference-runtime.fungi"],
@@ -148,6 +174,41 @@ async function decodeProgram(value) {
     programImporter,
     "decodeSLIDER1Program",
     new Map([["bytes", bytesValue(value)]]),
+  );
+  assert.equal(result.audit.result, "ok");
+  return result.value;
+}
+
+async function importAndValidateProgram(value) {
+  const result = await run(
+    programImporter,
+    "importAndValidateSLIDER1Program",
+    new Map([["bytes", bytesValue(value)]]),
+  );
+  assert.equal(result.audit.result, "ok");
+  return result.value;
+}
+
+async function executeProgram(left, right, admission, body = canonicalBytes) {
+  const result = await run(
+    programRuntime,
+    "executeSLIDER1ProgramBytes",
+    new Map([
+      ["body", bytesValue(body)],
+      ["left", { __tag: "int", value: left }],
+      ["right", { __tag: "int", value: right }],
+      ["admission", { __tag: "verdict", value: admission }],
+    ]),
+  );
+  assert.equal(result.audit.result, "ok");
+  return result.value;
+}
+
+async function bindSemanticDigest(value) {
+  const result = await run(
+    semanticBinding,
+    "bindSLIDER1SemanticDigest",
+    new Map([["body", bytesValue(value)]]),
   );
   assert.equal(result.audit.result, "ok");
   return result.value;
@@ -481,6 +542,314 @@ describe("independently reconstructed SLIDE R1 typed program", () => {
     assert.equal(field(decision, "verdict").value, -1);
     assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-004");
     assert.equal(field(program, "blocks").items.length, 0);
+  });
+});
+
+describe("semantic validation over the independently reconstructed R1 program", () => {
+  it("grants VALIDATED only after CFG, SSA, types, failures, and K3 agree", async () => {
+    const imported = await importAndValidateProgram(canonicalBytes);
+    const decision = field(imported, "decision");
+    const program = field(imported, "program");
+
+    assert.equal(field(decision, "verdict").value, 1);
+    assert.equal(field(decision, "status").value, "VALIDATED");
+    assert.equal(field(program, "blocks").items.length, 4);
+  });
+
+  it("rejects unknown opcodes, non-dominating SSA uses, and type drift", async () => {
+    const unknownOpcode = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x03, 0x02, 0x01, 0x82, 0x00, 0x01, 0x00],
+      2,
+      6,
+    );
+    let imported = await importAndValidateProgram(unknownOpcode);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-004",
+    );
+    assert.equal(field(field(imported, "program"), "blocks").items.length, 0);
+
+    const nonDominatingUse = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x03, 0x02, 0x01, 0x82, 0x00, 0x01, 0x00],
+      5,
+      4,
+    );
+    imported = await importAndValidateProgram(nonDominatingUse);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-006",
+    );
+
+    const parameterTypeDrift = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x00, 0x01, 0x01, 0x80, 0x00],
+      3,
+      2,
+    );
+    imported = await importAndValidateProgram(parameterTypeDrift);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-007",
+    );
+  });
+
+  it("rejects block identity, failure registry, CFG successor, and obligation drift", async () => {
+    const blockIdentityDrift = mutateSequence(
+      canonicalBytes,
+      [0x83, 0x01, 0x82, 0x85, 0x03],
+      1,
+      0,
+    );
+    let imported = await importAndValidateProgram(blockIdentityDrift);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-002",
+    );
+
+    const failureRegistryDrift = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x01, 0x02, 0x01, 0x01, 0x01],
+      2,
+      5,
+    );
+    imported = await importAndValidateProgram(failureRegistryDrift);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-010",
+    );
+
+    const successorDrift = mutateSequence(
+      canonicalBytes,
+      [0x82, 0x01, 0x84, 0x02, 0x01, 0x02, 0x03],
+      4,
+      2,
+    );
+    imported = await importAndValidateProgram(successorDrift);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-009",
+    );
+
+    const obligationDrift = mutateSequence(
+      canonicalBytes,
+      [0x86, 0x01, 0x01, 0x00, 0x01, 0x02, 0x03],
+      4,
+      3,
+    );
+    imported = await importAndValidateProgram(obligationDrift);
+    assert.equal(
+      field(field(imported, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-011",
+    );
+  });
+});
+
+describe("SLIDE R1 domain-separated semantic binding", () => {
+  it("binds the exact admitted body to the registered domain and digest suite", async () => {
+    const binding = await bindSemanticDigest(canonicalBytes);
+    assert.equal(field(field(binding, "decision"), "verdict").value, 1);
+    assert.equal(field(binding, "domainId").value, "slide.gir.semantic.v1");
+    assert.equal(
+      field(binding, "digestSuiteId").value,
+      "slide.digest.sha256.v1",
+    );
+    assert.equal(
+      field(binding, "semanticDigest").value,
+      EXPECTED_SEMANTIC_DIGEST,
+    );
+  });
+
+  it("releases no digest when structural or semantic admission refuses", async () => {
+    const malformed = canonicalBytes.slice();
+    malformed[0] = 0xbf;
+    let binding = await bindSemanticDigest(malformed);
+    assert.equal(field(field(binding, "decision"), "verdict").value, -1);
+    assert.equal(field(binding, "semanticDigest").value, "");
+
+    const unknownOpcode = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x03, 0x02, 0x01, 0x82, 0x00, 0x01, 0x00],
+      2,
+      6,
+    );
+    binding = await bindSemanticDigest(unknownOpcode);
+    assert.equal(
+      field(field(binding, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-004",
+    );
+    assert.equal(field(binding, "semanticDigest").value, "");
+
+    const unsupportedProfile = mutateSequence(
+      canonicalBytes,
+      Buffer.from("slide.semantic.galerina-gir.v1", "utf8"),
+      0,
+      "x".charCodeAt(0),
+    );
+    binding = await bindSemanticDigest(unsupportedProfile);
+    assert.equal(
+      field(field(binding, "decision"), "failureId").value,
+      "SLIDE-R1-DECODE-013",
+    );
+    assert.equal(field(binding, "semanticDigest").value, "");
+
+    const invalidVerdictSignature = mutateSequence(
+      canonicalBytes,
+      [0x08, 0x83, 0x01, 0x01, 0x02, 0x09],
+      4,
+      3,
+    );
+    binding = await bindSemanticDigest(invalidVerdictSignature);
+    assert.equal(
+      field(field(binding, "decision"), "failureId").value,
+      "SLIDE-R1-PROGRAM-001",
+    );
+    assert.equal(field(binding, "semanticDigest").value, "");
+  });
+});
+
+describe("validated SLIDE R1 program execution", () => {
+  async function executeReferenceForParity(left, right, admission, body = canonicalBytes) {
+    const result = await run(
+      referenceRuntime,
+      "executeSLIDER1Imported",
+      new Map([
+        ["body", bytesValue(body)],
+        ["left", { __tag: "int", value: left }],
+        ["right", { __tag: "int", value: right }],
+        ["admission", { __tag: "verdict", value: admission }],
+      ]),
+    );
+    assert.equal(result.audit.result, "ok");
+    return result.value;
+  }
+
+  function executionFields(value) {
+    return Object.fromEntries(
+      ["status", "success", "value", "failureId", "importFailureId"].map(
+        (name) => [name, field(value, name).value],
+      ),
+    );
+  }
+
+  it("matches the detached oracle for allowed, denied, ambiguous, and Int32 boundary cases", async () => {
+    const cases = [
+      [20, 22, 1],
+      [0, 0, 1],
+      [2_147_483_646, 1, 1],
+      [-2_147_483_647, -1, 1],
+      [20, 22, -1],
+      [20, 22, 0],
+      [2_147_483_647, 1, 1],
+      [-2_147_483_648, -1, 1],
+    ];
+    for (const [left, right, admission] of cases) {
+      const actual = await executeProgram(left, right, admission);
+      const expected = await executeReferenceForParity(left, right, admission);
+      assert.deepEqual(executionFields(actual), executionFields(expected));
+    }
+  });
+
+  it("refuses malformed or semantically invalid bytes before dispatch", async () => {
+    const malformed = canonicalBytes.slice();
+    malformed[0] = 0xbf;
+    let result = await executeProgram(20, 22, 1, malformed);
+    assert.equal(field(result, "status").value, "IMPORT_REFUSED");
+    assert.equal(field(result, "importFailureId").value, "SLIDE-R1-IMPORT-004");
+
+    const unknownOpcode = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x03, 0x02, 0x01, 0x82, 0x00, 0x01, 0x00],
+      2,
+      6,
+    );
+    result = await executeProgram(20, 22, 1, unknownOpcode);
+    assert.equal(field(result, "status").value, "IMPORT_REFUSED");
+    assert.equal(field(result, "importFailureId").value, "SLIDE-R1-PROGRAM-004");
+  });
+
+  it("traps a forged fourth Verdict at the invocation boundary", async () => {
+    const result = await run(
+      programRuntime,
+      "executeSLIDER1ProgramBytes",
+      new Map([
+        ["body", bytesValue(canonicalBytes)],
+        ["left", { __tag: "int", value: 20 }],
+        ["right", { __tag: "int", value: 22 }],
+        ["admission", { __tag: "verdict", value: 2 }],
+      ]),
+    );
+    assert.equal(result.audit.result, "error");
+    assert.equal(result.value.__tag, "runtimeError");
+    assert.match(result.value.message, /invalid Verdict value|fail-closed/);
+  });
+
+  it("runs canonical bytes in a fresh process without source, fixture, AST, encoder, WAT, or Wasm", async () => {
+    const importerPath = join(SELF_HOSTED, "slide-r1-cbor-importer.fungi");
+    const programImporterPath = join(
+      SELF_HOSTED,
+      "slide-r1-program-importer.fungi",
+    );
+    const runtimePath = join(SELF_HOSTED, "slide-r1-program-runtime.fungi");
+    const distPath = join(HERE, "..", "dist", "index.js");
+    const script = `
+      import { readFile } from "node:fs/promises";
+      import { parseProgram, checkTypes, executeFlow } from ${JSON.stringify(pathToFileURL(distPath).href)};
+      const sources = await Promise.all(
+        ${JSON.stringify([importerPath, programImporterPath, runtimePath])}.map(
+          (path) => readFile(path, "utf8"),
+        ),
+      );
+      const source = sources[0] + "\\n" + sources
+        .slice(1)
+        .map((item) => item.replace(/^@version 1/, ""))
+        .join("\\n");
+      const parsed = parseProgram(source, "fresh-slide-r1-program-runtime.fungi", {
+        requireVersionHeader: true,
+      });
+      const diagnostics = [
+        ...parsed.diagnostics,
+        ...checkTypes(parsed.ast).diagnostics,
+      ].filter((diagnostic) => diagnostic.severity === "error");
+      if (diagnostics.length > 0) {
+        throw new Error(JSON.stringify(diagnostics));
+      }
+      const body = {
+        __tag: "bytes",
+        value: Uint8Array.from(Buffer.from(${JSON.stringify(Buffer.from(canonicalBytes).toString("hex"))}, "hex")),
+      };
+      const result = await executeFlow(
+        "executeSLIDER1ProgramBytes",
+        new Map([
+          ["body", body],
+          ["left", { __tag: "int", value: 20 }],
+          ["right", { __tag: "int", value: 22 }],
+          ["admission", { __tag: "verdict", value: 1 }],
+        ]),
+        parsed.ast,
+        parsed.flows,
+        undefined,
+        undefined,
+        { pureFastPath: false },
+      );
+      const out = Object.fromEntries(
+        [...result.value.fields].map(([key, value]) => [key, value.value]),
+      );
+      process.stdout.write(JSON.stringify(out));
+    `;
+    const { stdout } = await execFileAsync(
+      process.execPath,
+      ["--input-type=module", "-e", script],
+      { maxBuffer: 1024 * 1024 },
+    );
+    assert.deepEqual(JSON.parse(stdout), {
+      status: "OK",
+      success: true,
+      value: 42,
+      failureId: 0,
+      importFailureId: "NONE",
+    });
   });
 });
 

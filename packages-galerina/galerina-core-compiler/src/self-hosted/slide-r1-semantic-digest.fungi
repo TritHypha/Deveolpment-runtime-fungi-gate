@@ -1,0 +1,58 @@
+@version 1
+/// @file: slide-r1-semantic-digest.fungi
+/// @purpose: Bind independently validated SLIDE R1 bytes to the registered semantic digest.
+/// @status: SHA-256 host-crypto floor for R1; a digest is evidence, never admission authority.
+
+record SLIDER1SemanticBinding {
+  decision: SLIDER1ImportDecision
+  digestSuiteId: String
+  domainId: String
+  semanticDigest: String
+}
+
+pure flow emptySLIDER1SemanticBinding(
+  decision: SLIDER1ImportDecision,
+) -> SLIDER1SemanticBinding
+contract { intent { "Return no digest evidence for a refused or unavailable semantic binding." } }
+{
+  return {
+    decision: decision
+    digestSuiteId: "slide.digest.sha256.v1"
+    domainId: "slide.gir.semantic.v1"
+    semanticDigest: ""
+  }
+}
+
+pure flow bindSLIDER1SemanticDigest(
+  body: Bytes,
+) -> SLIDER1SemanticBinding
+contract {
+  intent { "Validate canonical R1 semantics before hashing the exact domain-separated candidate bytes." }
+}
+{
+  let imported = importAndValidateSLIDER1Program(body)
+  if imported.decision.verdict != Verdict.Allow {
+    return emptySLIDER1SemanticBinding(imported.decision)
+  }
+
+  // UTF-8("slide.gir.semantic.v1") followed by one NUL byte. Keeping the
+  // prefix as exact bytes avoids host text-normalisation or separator drift.
+  let domainPrefix = Bytes.fromHex(
+    "736c6964652e6769722e73656d616e7469632e763100",
+  )
+  let semanticDigest = domainPrefix.append(body).sha256Hex()
+  if semanticDigest.length() != 64 {
+    return emptySLIDER1SemanticBinding(
+      slideR1ProgramRefusal(
+        "SLIDE-R1-PROGRAM-012", "registered semantic digest primitive unavailable",
+      ),
+    )
+  }
+
+  return {
+    decision: imported.decision
+    digestSuiteId: "slide.digest.sha256.v1"
+    domainId: "slide.gir.semantic.v1"
+    semanticDigest: semanticDigest
+  }
+}

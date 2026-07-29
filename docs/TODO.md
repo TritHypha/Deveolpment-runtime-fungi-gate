@@ -23,14 +23,31 @@ planning checkbox must never be used to imply that implementation exists.
   execution, SLIDE naming migration, and nesting/XOR adjudication.
 - **Completed:** the first verified reconstruction checkpoint in
   `packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi`
-  decodes canonical fields into importer-owned typed program records. Focused
-  evidence: 16/16 tests; report:
+  decodes canonical fields into importer-owned typed program records (local
+  commit `bc5bd9d7`).
+- **Completed, pending checkpoint commit:** the independent semantic gate now
+  validates the closed registry, dense block/SSA identities, dominance,
+  opcode shapes/types, failures, terminators, CFG successors, and K3
+  obligation. `slide-r1-program-runtime.fungi` instruction-drives only the
+  validated reconstructed graph and matches the prior oracle across K3 and
+  checked-Int32 outcomes.
+- **Completed, pending checkpoint commit:** the `.fungi` semantic binder
+  computes
+  `SHA-256("slide.gir.semantic.v1\0" || canonical_body)` only after both
+  import gates allow, and releases no digest on refusal. Focused evidence:
+  25/25 tests, including unsupported semantic-profile and malformed Verdict
+  signature bytes plus a forged fourth runtime Verdict; report:
   `docs/reports/slide-r1-program-reconstruction-2026-07-29.md`.
-- **Current:** implement closed-registry CFG, SSA, type, failure, terminator,
-  and K3 validation over only the reconstructed value. `DECODED` grants no
-  execution authority.
-- **Next:** semantic mutation fixtures, then instruction-driven reference
-  execution over the validated program.
+- **Current:** reconstruct the exact historic nesting regression if its source
+  can be located; otherwise retain the already verified minimal four-deep
+  regression and record the evidence limitation.
+- **Next:** begin safe-value memory negative fixtures, then broaden the frozen
+  registry toward general executable GIR.
+- **Verification:** compiler typecheck/build and 5,295/5,295 tests pass.
+  Regenerated project graph: 7,176 nodes / 7,441 edges, zero integrity
+  violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
+  explicit Galerina memory graph: clean; dev-tool index: 97 packages,
+  124 tools, 40 proofs.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

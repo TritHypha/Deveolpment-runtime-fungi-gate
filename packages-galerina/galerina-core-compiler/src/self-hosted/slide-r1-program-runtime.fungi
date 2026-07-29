@@ -1,0 +1,308 @@
+@version 1
+/// @file: slide-r1-program-runtime.fungi
+/// @purpose: Execute validated SLIDE R1 instructions and terminators from reconstructed records.
+/// @status: Closed-registry instruction-driven reference runtime; not a native runner.
+///
+/// This runtime receives no source, AST, encoder object, WAT, Wasm, cache, or
+/// ambient registry. It executes opcode and terminator IDs from the validated
+/// decoded program. The former closed-profile executor remains a differential
+/// oracle until this path passes the full mutation corpus.
+
+record SLIDER1RuntimeValue {
+  resultId: Int
+  typeId: Int
+  intValue: Int
+  failureId: Int
+}
+
+record SLIDER1ProgramExecutionResult {
+  status: String
+  success: Bool
+  value: Int
+  failureId: Int
+  importFailureId: String
+}
+
+record SLIDER1InstructionStep {
+  values: Array<SLIDER1RuntimeValue>
+  terminal: Bool
+  result: SLIDER1ProgramExecutionResult
+}
+
+pure flow emptySLIDER1RuntimeValue() -> SLIDER1RuntimeValue
+contract { intent { "Return an inert runtime value for missing lookup paths." } }
+{
+  return { resultId: -1 typeId: -1 intValue: 0 failureId: 0 }
+}
+
+pure flow slideR1ProgramExecutionRefused(
+  failureId: String,
+) -> SLIDER1ProgramExecutionResult
+contract { intent { "Refuse execution without producing a semantic result." } }
+{
+  return {
+    status: "IMPORT_REFUSED"
+    success: false
+    value: 0
+    failureId: 0
+    importFailureId: failureId
+  }
+}
+
+pure flow slideR1ProgramExecutionFailed(
+  failureId: Int,
+) -> SLIDER1ProgramExecutionResult
+contract { intent { "Return one declared typed R1 failure." } }
+{
+  return {
+    status: "FAILED"
+    success: false
+    value: 0
+    failureId: failureId
+    importFailureId: "NONE"
+  }
+}
+
+pure flow slideR1ProgramExecutionSucceeded(
+  value: Int,
+) -> SLIDER1ProgramExecutionResult
+contract { intent { "Return one successful R1 Int32 result." } }
+{
+  return {
+    status: "OK"
+    success: true
+    value: value
+    failureId: 0
+    importFailureId: "NONE"
+  }
+}
+
+pure flow slideR1RuntimeValueAt(
+  values: Array<SLIDER1RuntimeValue>,
+  resultId: Int,
+) -> SLIDER1RuntimeValue
+contract { intent { "Resolve one executed SSA value by its validated result identity." } }
+{
+  mut found: SLIDER1RuntimeValue = emptySLIDER1RuntimeValue()
+  mut i: Int = 0
+  while i < values.count() {
+    let item = values.get(i)
+    match item {
+      Some(value) => {
+        if value.resultId == resultId { found = value }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return found
+}
+
+pure flow slideR1VerdictRuntimeValue(verdict: Verdict) -> Int
+contract { intent { "Convert one exact typed Verdict to its registered R1 integer representation." } }
+{
+  check(verdict) {
+    deny: { return -1 }
+    ambig: { return 0 }
+    if: { return 1 }
+  }
+}
+
+pure flow slideR1ExecuteDecodedInstruction(
+  instruction: SLIDER1DecodedInstruction,
+  values: Array<SLIDER1RuntimeValue>,
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> SLIDER1InstructionStep
+contract { intent { "Execute one previously validated registered R1 instruction." } }
+{
+  mut nextValues: Array<SLIDER1RuntimeValue> = values
+  mut producedInt: Int = 0
+  mut producedFailure: Int = 0
+
+  match instruction.opcodeId {
+    1 => {
+      match instruction.immediate {
+        0 => { producedInt = left }
+        1 => { producedInt = right }
+        2 => { producedInt = slideR1VerdictRuntimeValue(admission) }
+        _ => {
+          return {
+            values: values
+            terminal: true
+            result: slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-001")
+          }
+        }
+      }
+    }
+    2 => {
+      let lhs = slideR1RuntimeValueAt(
+        values, slideR1DecodedIntAt(instruction.operands, 0),
+      )
+      let rhs = slideR1RuntimeValueAt(
+        values, slideR1DecodedIntAt(instruction.operands, 1),
+      )
+      if rhs.intValue > 0 and lhs.intValue > 2147483647 - rhs.intValue {
+        return {
+          values: values
+          terminal: true
+          result: slideR1ProgramExecutionFailed(1)
+        }
+      }
+      if rhs.intValue < 0 and lhs.intValue < -2147483648 - rhs.intValue {
+        return {
+          values: values
+          terminal: true
+          result: slideR1ProgramExecutionFailed(1)
+        }
+      }
+      producedInt = lhs.intValue + rhs.intValue
+    }
+    3 => {
+      let source = slideR1RuntimeValueAt(
+        values, slideR1DecodedIntAt(instruction.operands, 0),
+      )
+      producedInt = source.intValue
+    }
+    4 => {
+      producedFailure = instruction.immediate
+    }
+    5 => {
+      let source = slideR1RuntimeValueAt(
+        values, slideR1DecodedIntAt(instruction.operands, 0),
+      )
+      producedFailure = source.failureId
+    }
+    _ => {
+      return {
+        values: values
+        terminal: true
+        result: slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-002")
+      }
+    }
+  }
+
+  let produced: SLIDER1RuntimeValue = {
+    resultId: instruction.resultId
+    typeId: instruction.typeId
+    intValue: producedInt
+    failureId: producedFailure
+  }
+  nextValues = nextValues.append(produced)
+  return {
+    values: nextValues
+    terminal: false
+    result: slideR1ProgramExecutionRefused("NONE")
+  }
+}
+
+pure flow executeSLIDER1ValidatedProgram(
+  program: SLIDER1DecodedProgram,
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> SLIDER1ProgramExecutionResult
+contract {
+  intent { "Instruction-drive the validated closed R1 registry with bounded control dispatch." }
+}
+{
+  let validation = validateSLIDER1DecodedProgram(program)
+  if validation.verdict != Verdict.Allow {
+    return slideR1ProgramExecutionRefused(validation.failureId)
+  }
+
+  mut values: Array<SLIDER1RuntimeValue> = Array.empty()
+  mut currentBlockId: Int = program.entryBlockId
+  mut terminal: Bool = false
+  mut finalResult: SLIDER1ProgramExecutionResult =
+    slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-003")
+  mut steps: Int = 0
+
+  while terminal == false and steps < 8 {
+    let block = slideR1DecodedBlockAt(program.blocks, currentBlockId)
+    mut instructionIndex: Int = 0
+    while instructionIndex < block.instructions.count() and terminal == false {
+      let instruction = slideR1DecodedInstructionAt(
+        block.instructions, instructionIndex,
+      )
+      let step = slideR1ExecuteDecodedInstruction(
+        instruction, values, left, right, admission,
+      )
+      values = step.values
+      if step.terminal {
+        terminal = true
+        finalResult = step.result
+      }
+      instructionIndex = instructionIndex + 1
+    }
+
+    if terminal == false {
+      match block.terminator.terminatorId {
+        1 => {
+          let subject = slideR1RuntimeValueAt(
+            values, slideR1DecodedIntAt(block.terminator.operands, 0),
+          )
+          let successorIndex: Int = subject.intValue + 1
+          match successorIndex {
+            0 => {
+              currentBlockId = slideR1DecodedIntAt(block.terminator.operands, 2)
+            }
+            1 => {
+              currentBlockId = slideR1DecodedIntAt(block.terminator.operands, 3)
+            }
+            2 => {
+              currentBlockId = slideR1DecodedIntAt(block.terminator.operands, 1)
+            }
+            _ => {
+              terminal = true
+              finalResult = slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-004")
+            }
+          }
+        }
+        2 => {
+          let returned = slideR1RuntimeValueAt(
+            values, slideR1DecodedIntAt(block.terminator.operands, 0),
+          )
+          terminal = true
+          if returned.failureId > 0 {
+            finalResult = slideR1ProgramExecutionFailed(returned.failureId)
+          }
+          else {
+            finalResult = slideR1ProgramExecutionSucceeded(returned.intValue)
+          }
+        }
+        _ => {
+          terminal = true
+          finalResult = slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-005")
+        }
+      }
+    }
+    steps = steps + 1
+  }
+
+  if terminal == false {
+    return slideR1ProgramExecutionRefused("SLIDE-R1-RUNTIME-006")
+  }
+  return finalResult
+}
+
+pure flow executeSLIDER1ProgramBytes(
+  body: Bytes,
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> SLIDER1ProgramExecutionResult
+contract {
+  intent { "Decode, validate, and instruction-drive canonical R1 bytes with no fallback path." }
+}
+{
+  let imported = importAndValidateSLIDER1Program(body)
+  if imported.decision.verdict != Verdict.Allow {
+    return slideR1ProgramExecutionRefused(imported.decision.failureId)
+  }
+  return executeSLIDER1ValidatedProgram(
+    imported.program, left, right, admission,
+  )
+}

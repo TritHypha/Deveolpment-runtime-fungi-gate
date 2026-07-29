@@ -594,3 +594,508 @@ contract {
     }
   }
 }
+
+pure flow slideR1DecodedIntAt(values: Array<Int>, position: Int) -> Int
+contract { intent { "Read one decoded integer or return a no-authority sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return -1 }
+    _ => { return -1 }
+  }
+}
+
+pure flow slideR1DecodedInstructionAt(
+  values: Array<SLIDER1DecodedInstruction>,
+  position: Int,
+) -> SLIDER1DecodedInstruction
+contract { intent { "Read one decoded instruction or return an inert sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDER1DecodedInstruction() }
+    _ => { return emptySLIDER1DecodedInstruction() }
+  }
+}
+
+pure flow slideR1DecodedBlockAt(
+  values: Array<SLIDER1DecodedBlock>,
+  position: Int,
+) -> SLIDER1DecodedBlock
+contract { intent { "Read one decoded block or return an inert sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDER1DecodedBlock() }
+    _ => { return emptySLIDER1DecodedBlock() }
+  }
+}
+
+pure flow slideR1DecodedFailureAt(
+  values: Array<SLIDER1DecodedFailure>,
+  position: Int,
+) -> SLIDER1DecodedFailure
+contract { intent { "Read one decoded failure or return an inert sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDER1DecodedFailure() }
+    _ => { return emptySLIDER1DecodedFailure() }
+  }
+}
+
+pure flow slideR1DecodedK3At(
+  values: Array<SLIDER1DecodedK3>,
+  position: Int,
+) -> SLIDER1DecodedK3
+contract { intent { "Read one decoded K3 obligation or return an inert sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDER1DecodedK3() }
+    _ => { return emptySLIDER1DecodedK3() }
+  }
+}
+
+pure flow slideR1ProgramRefusal(
+  failureId: String,
+  reasonText: String,
+) -> SLIDER1ImportDecision
+contract { intent { "Return one terminal semantic-program refusal." } }
+{
+  return slideR1ProgramDecision(
+    Verdict.Deny, "REFUSED", failureId, reasonText, 0,
+  )
+}
+
+pure flow slideR1ProgramTypeOfValue(
+  program: SLIDER1DecodedProgram,
+  resultId: Int,
+) -> Int
+contract { intent { "Resolve one globally unique SSA value type without ambient registries." } }
+{
+  mut foundType: Int = -1
+  mut blockIndex: Int = 0
+  while blockIndex < program.blocks.count() {
+    let block = slideR1DecodedBlockAt(program.blocks, blockIndex)
+    mut instructionIndex: Int = 0
+    while instructionIndex < block.instructions.count() {
+      let instruction = slideR1DecodedInstructionAt(
+        block.instructions, instructionIndex,
+      )
+      if instruction.resultId == resultId { foundType = instruction.typeId }
+      instructionIndex = instructionIndex + 1
+    }
+    blockIndex = blockIndex + 1
+  }
+  return foundType
+}
+
+pure flow slideR1ProgramBlockFirstResult(
+  program: SLIDER1DecodedProgram,
+  blockIndex: Int,
+) -> Int
+contract { intent { "Return the first dense SSA result identity assigned to a block." } }
+{
+  mut first: Int = 0
+  mut i: Int = 0
+  while i < blockIndex {
+    first = first + slideR1DecodedBlockAt(program.blocks, i).instructions.count()
+    i = i + 1
+  }
+  return first
+}
+
+pure flow slideR1ProgramOperandVisible(
+  program: SLIDER1DecodedProgram,
+  blockIndex: Int,
+  useBoundary: Int,
+  operandId: Int,
+) -> Bool
+contract {
+  intent { "Require an operand to be entry-dominating or earlier in the same successor block." }
+}
+{
+  let entry = slideR1DecodedBlockAt(program.blocks, program.entryBlockId)
+  let entryResultCount: Int = entry.instructions.count()
+  let blockFirst: Int = slideR1ProgramBlockFirstResult(program, blockIndex)
+  if blockIndex == program.entryBlockId {
+    return operandId >= blockFirst and operandId < useBoundary
+  }
+  let fromEntry: Bool = operandId >= 0 and operandId < entryResultCount
+  let fromLocal: Bool = operandId >= blockFirst and operandId < useBoundary
+  return fromEntry or fromLocal
+}
+
+pure flow slideR1ProgramHasFailure(
+  program: SLIDER1DecodedProgram,
+  failureId: Int,
+) -> Bool
+contract { intent { "Check a failure reference against only the decoded failure table." } }
+{
+  mut found: Bool = false
+  mut i: Int = 0
+  while i < program.failures.count() {
+    if slideR1DecodedFailureAt(program.failures, i).failureId == failureId {
+      found = true
+    }
+    i = i + 1
+  }
+  return found
+}
+
+pure flow slideR1ValidateInstruction(
+  program: SLIDER1DecodedProgram,
+  blockIndex: Int,
+  instruction: SLIDER1DecodedInstruction,
+) -> SLIDER1ImportDecision
+contract {
+  intent { "Validate one decoded instruction against the frozen registry, SSA visibility, and exact types." }
+}
+{
+  mut operandIndex: Int = 0
+  while operandIndex < instruction.operands.count() {
+    let operandId: Int = slideR1DecodedIntAt(instruction.operands, operandIndex)
+    if slideR1ProgramOperandVisible(
+      program, blockIndex, instruction.resultId, operandId,
+    ) == false {
+      return slideR1ProgramRefusal(
+        "SLIDE-R1-PROGRAM-006",
+        "instruction operand is undefined, forward, or does not dominate its use",
+      )
+    }
+    operandIndex = operandIndex + 1
+  }
+
+  match instruction.opcodeId {
+    1 => {
+      if blockIndex != program.entryBlockId {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "parameter instruction is outside the entry block",
+        )
+      }
+      if instruction.operands.count() != 0 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "parameter instruction has operands",
+        )
+      }
+      if instruction.immediate < 0 or instruction.immediate >= program.parameterTypeIds.count() {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "parameter index is outside the function signature",
+        )
+      }
+      if instruction.typeId != slideR1DecodedIntAt(
+        program.parameterTypeIds, instruction.immediate,
+      ) {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-007", "parameter result type does not match its signature",
+        )
+      }
+    }
+    2 => {
+      if instruction.typeId != 1 or instruction.operands.count() != 2 or instruction.immediate != 0 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "checked Int32 add shape does not match the registry",
+        )
+      }
+      if slideR1ProgramTypeOfValue(
+        program, slideR1DecodedIntAt(instruction.operands, 0),
+      ) != 1 or slideR1ProgramTypeOfValue(
+        program, slideR1DecodedIntAt(instruction.operands, 1),
+      ) != 1 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-007", "checked Int32 add operand type mismatch",
+        )
+      }
+    }
+    3 => {
+      if instruction.typeId != 3 or instruction.operands.count() != 1 or instruction.immediate != 0 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "result success shape does not match the registry",
+        )
+      }
+      if slideR1ProgramTypeOfValue(
+        program, slideR1DecodedIntAt(instruction.operands, 0),
+      ) != 1 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-007", "result success operand is not Int32",
+        )
+      }
+    }
+    4 => {
+      if instruction.typeId != 4 or instruction.operands.count() != 0 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "failure reference shape does not match the registry",
+        )
+      }
+      if slideR1ProgramHasFailure(program, instruction.immediate) == false {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-010", "failure reference is absent from the decoded table",
+        )
+      }
+    }
+    5 => {
+      if instruction.typeId != 3 or instruction.operands.count() != 1 or instruction.immediate != 0 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-005", "result failure shape does not match the registry",
+        )
+      }
+      if slideR1ProgramTypeOfValue(
+        program, slideR1DecodedIntAt(instruction.operands, 0),
+      ) != 4 {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-007", "result failure operand is not FixtureFailure",
+        )
+      }
+    }
+    _ => {
+      return slideR1ProgramRefusal(
+        "SLIDE-R1-PROGRAM-004", "unknown instruction opcode",
+      )
+    }
+  }
+
+  return slideR1ProgramDecision(
+    Verdict.Allow, "INSTRUCTION_VALID", "NONE", "", 0,
+  )
+}
+
+pure flow slideR1ValidateFailures(
+  program: SLIDER1DecodedProgram,
+) -> SLIDER1ImportDecision
+contract { intent { "Validate the complete frozen failure registry from decoded records." } }
+{
+  if program.failures.count() != 3 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-010", "failure registry must contain exactly three records",
+    )
+  }
+  mut i: Int = 0
+  while i < program.failures.count() {
+    let failure = slideR1DecodedFailureAt(program.failures, i)
+    if failure.failureId != i + 1 or failure.visibilityId != 1 or failure.actionId != 1 {
+      return slideR1ProgramRefusal(
+        "SLIDE-R1-PROGRAM-010", "failure identity, visibility, or action mismatch",
+      )
+    }
+    match i {
+      0 => {
+        if failure.classId != 2 or failure.retryId != 1 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-010", "arithmetic failure registry mismatch",
+          )
+        }
+      }
+      1 => {
+        if failure.classId != 3 or failure.retryId != 2 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-010", "denial failure registry mismatch",
+          )
+        }
+      }
+      2 => {
+        if failure.classId != 4 or failure.retryId != 2 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-010", "indeterminate failure registry mismatch",
+          )
+        }
+      }
+      _ => {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-010", "surplus failure registry entry",
+        )
+      }
+    }
+    i = i + 1
+  }
+  return slideR1ProgramDecision(
+    Verdict.Allow, "FAILURES_VALID", "NONE", "", 0,
+  )
+}
+
+pure flow validateSLIDER1DecodedProgram(
+  program: SLIDER1DecodedProgram,
+) -> SLIDER1ImportDecision
+contract {
+  intent { "Validate closed-registry CFG, SSA, types, failures, terminators, and K3 over decoded records only." }
+}
+{
+  if program.formatMajor != 1 or program.formatMinor != 0 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "unsupported decoded format version",
+    )
+  }
+  if program.semanticProfileId != "slide.semantic.galerina-gir.v1" or program.digestSuiteId != "slide.digest.sha256.v1" {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "decoded semantic or digest profile mismatch",
+    )
+  }
+  if program.memoryProfileId != "slide.memory.safe-value.v1" or program.fixtureName != "slide_k3_checked_add_v1" {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "decoded memory or fixture profile mismatch",
+    )
+  }
+  if program.stableSymbolId != "slide.fixture.k3-checked-add.v1" or program.qualifierId != 1 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "decoded symbol or qualifier mismatch",
+    )
+  }
+  if program.parameterTypeIds.count() != 3 or slideR1DecodedIntAt(program.parameterTypeIds, 0) != 1 or slideR1DecodedIntAt(program.parameterTypeIds, 1) != 1 or slideR1DecodedIntAt(program.parameterTypeIds, 2) != 2 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "decoded parameter type signature mismatch",
+    )
+  }
+  if program.resultTypeId != 3 or program.entryBlockId != 0 or program.blocks.count() != 4 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-001", "decoded result, entry, or block count mismatch",
+    )
+  }
+
+  let failureDecision = slideR1ValidateFailures(program)
+  if failureDecision.verdict != Verdict.Allow { return failureDecision }
+
+  mut nextResultId: Int = 0
+  mut blockIndex: Int = 0
+  while blockIndex < program.blocks.count() {
+    let block = slideR1DecodedBlockAt(program.blocks, blockIndex)
+    if block.blockId != blockIndex {
+      return slideR1ProgramRefusal(
+        "SLIDE-R1-PROGRAM-002", "block identities are not unique dense indices",
+      )
+    }
+    mut instructionIndex: Int = 0
+    while instructionIndex < block.instructions.count() {
+      let instruction = slideR1DecodedInstructionAt(
+        block.instructions, instructionIndex,
+      )
+      if instruction.resultId != nextResultId {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-003", "SSA result identities are not unique dense definitions",
+        )
+      }
+      let instructionDecision = slideR1ValidateInstruction(
+        program, blockIndex, instruction,
+      )
+      if instructionDecision.verdict != Verdict.Allow {
+        return instructionDecision
+      }
+      nextResultId = nextResultId + 1
+      instructionIndex = instructionIndex + 1
+    }
+
+    let terminator = block.terminator
+    match terminator.terminatorId {
+      1 => {
+        if blockIndex != program.entryBlockId or terminator.operands.count() != 4 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-008", "K3 terminator is misplaced or incomplete",
+          )
+        }
+        let subjectId: Int = slideR1DecodedIntAt(terminator.operands, 0)
+        if slideR1ProgramOperandVisible(
+          program, blockIndex, nextResultId, subjectId,
+        ) == false or slideR1ProgramTypeOfValue(program, subjectId) != 2 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-008", "K3 terminator subject is not a visible Verdict",
+          )
+        }
+        let allowBlock: Int = slideR1DecodedIntAt(terminator.operands, 1)
+        let denyBlock: Int = slideR1DecodedIntAt(terminator.operands, 2)
+        let unresolvedBlock: Int = slideR1DecodedIntAt(terminator.operands, 3)
+        let successorsInRange: Bool = allowBlock > 0 and allowBlock < program.blocks.count() and denyBlock > 0 and denyBlock < program.blocks.count() and unresolvedBlock > 0 and unresolvedBlock < program.blocks.count()
+        let successorsDistinct: Bool = allowBlock != denyBlock and allowBlock != unresolvedBlock and denyBlock != unresolvedBlock
+        if successorsInRange == false or successorsDistinct == false {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-009", "K3 successors are missing, invalid, or aliased",
+          )
+        }
+      }
+      2 => {
+        if blockIndex == program.entryBlockId or terminator.operands.count() != 1 {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-008", "return terminator is misplaced or incomplete",
+          )
+        }
+        let returnId: Int = slideR1DecodedIntAt(terminator.operands, 0)
+        if slideR1ProgramOperandVisible(
+          program, blockIndex, nextResultId, returnId,
+        ) == false {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-006", "return value is undefined or does not dominate",
+          )
+        }
+        if slideR1ProgramTypeOfValue(program, returnId) != program.resultTypeId {
+          return slideR1ProgramRefusal(
+            "SLIDE-R1-PROGRAM-007", "return value type does not match the function result",
+          )
+        }
+      }
+      _ => {
+        return slideR1ProgramRefusal(
+          "SLIDE-R1-PROGRAM-008", "unknown or absent block terminator",
+        )
+      }
+    }
+    blockIndex = blockIndex + 1
+  }
+
+  if nextResultId != 9 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-003", "closed R1 fixture must define exactly nine SSA values",
+    )
+  }
+  if program.k3Obligations.count() != 1 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-011", "closed R1 fixture must declare one K3 obligation",
+    )
+  }
+  let obligation = slideR1DecodedK3At(program.k3Obligations, 0)
+  let entry = slideR1DecodedBlockAt(program.blocks, program.entryBlockId)
+  if obligation.obligationId != 1 or obligation.functionId != 1 or obligation.checkBlockId != program.entryBlockId {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-011", "K3 obligation identity or check block mismatch",
+    )
+  }
+  if entry.terminator.terminatorId != 1 or entry.terminator.operands.count() != 4 {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-011", "K3 obligation has no matching check terminator",
+    )
+  }
+  if obligation.allowBlockId != slideR1DecodedIntAt(entry.terminator.operands, 1) or obligation.denyBlockId != slideR1DecodedIntAt(entry.terminator.operands, 2) or obligation.indeterminateBlockId != slideR1DecodedIntAt(entry.terminator.operands, 3) {
+    return slideR1ProgramRefusal(
+      "SLIDE-R1-PROGRAM-011", "K3 obligation successors do not match the terminator",
+    )
+  }
+
+  return slideR1ProgramDecision(
+    Verdict.Allow, "VALIDATED", "NONE",
+    "decoded SLIDE R1 program passed CFG, SSA, type, failure, and K3 validation", 0,
+  )
+}
+
+pure flow importAndValidateSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport
+contract {
+  intent { "Decode and semantically validate R1 bytes; expose a program only after both gates allow." }
+}
+{
+  let decoded = decodeSLIDER1Program(bytes)
+  if decoded.decision.verdict != Verdict.Allow {
+    return {
+      decision: decoded.decision
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+  let validated = validateSLIDER1DecodedProgram(decoded.program)
+  if validated.verdict != Verdict.Allow {
+    return {
+      decision: validated
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+  return { decision: validated program: decoded.program }
+}
