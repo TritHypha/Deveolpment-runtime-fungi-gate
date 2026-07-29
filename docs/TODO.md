@@ -304,12 +304,20 @@ planning checkbox must never be used to imply that implementation exists.
   repository documents, digest
   `fa644b612b2a5949c5b2c27d19a829466c2c2af3ef5fd32c7c3c2b2041c2fed4`;
   the live generator audit passes 12/12.
-- **Task 7 remains incomplete:** two cases remain. `memory-graph.mjs` reads and
-  writes a selected external memory directory, so it needs an in-place
-  non-mutating check and external-output evidence rather than a false
-  repository-local declaration. `graph-all.mjs` is an orchestration command
-  that currently returns success even when a child fails; it must select
-  generate/check child modes explicitly and propagate every child refusal.
+- **Task 7 memory-graph external output:** `memory-graph.mjs` now requires
+  unambiguous directory selection, sorts every Markdown source, binds exact
+  source names/bytes into `sourceDigest`, and makes `--check` compare the
+  selected tree's `MEMORY-GRAPH.json` without writing. Strict parsing refuses
+  duplicate/unknown flags and check/query/self-test mixtures. The isolated
+  missing/tamper/source-drift fixture is 1/1 and the existing
+  negative/control self-test remains 15/15. This is external-output evidence,
+  deliberately not miscounted among the 12 repository-output generators.
+- **Task 7 remains incomplete:** `graph-all.mjs` is the final case. It
+  currently returns success even when a child fails, generates a KB graph
+  through a core CLI with no non-mutating check, and can invoke the memory
+  graph without an explicit tree. Add a governed KB-graph wrapper, give the
+  orchestrator explicit generate/check modes and selected external inputs,
+  and propagate every child refusal.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
   generated code-index, code-registry, coverage, dev-tool-index, project
   graph, and all 195 package-graph outputs. They remain deliberately

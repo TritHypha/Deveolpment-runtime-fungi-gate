@@ -85,17 +85,41 @@ export function chooseMemoryDir({ explicitDir, envDir, candidates }) {
 const argv = process.argv.slice(2);
 let explicitDir = null;
 let tagFilter = null;
+let check = false;
+let selfTest = false;
 const terms = [];
+const seen = new Set();
 for (let i = 0; i < argv.length; i++) {
-  if (argv[i] === "--dir") { explicitDir = argv[++i]; }
-  else if (argv[i] === "--tag") tagFilter = (argv[++i] || "").replace(/^#/, "").toLowerCase();
-  else if (argv[i] !== "--self-test") terms.push(argv[i]);
+  const arg = argv[i];
+  if (arg === "--dir" || arg === "--tag") {
+    if (seen.has(arg) || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
+      console.error(`memory-graph: ${arg} requires exactly one value`);
+      process.exit(2);
+    }
+    seen.add(arg);
+    const value = argv[++i];
+    if (arg === "--dir") explicitDir = value;
+    if (arg === "--tag") tagFilter = value.replace(/^#/, "").toLowerCase();
+  } else if (arg === "--check" && !check) {
+    check = true;
+  } else if (arg === "--self-test" && !selfTest) {
+    selfTest = true;
+  } else if (arg.startsWith("--")) {
+    console.error(`memory-graph: unknown or duplicate argument ${arg}`);
+    process.exit(2);
+  } else {
+    terms.push(arg);
+  }
+}
+if (check && (selfTest || tagFilter !== null || terms.length > 0)) {
+  console.error("memory-graph: --check cannot be combined with query or self-test mode");
+  process.exit(2);
 }
 // ── SELF-TEST ────────────────────────────────────────────────────────────────
 // Drives the real CLI end-to-end against a throwaway fixture, because both defects this covers are
 // defects of the OUTPUT, not of a helper: one invented an unindexed file, the other printed a machine
 // path. Every check is paired with a control — a fix that simply reported nothing would otherwise pass.
-if (argv.includes("--self-test")) {
+if (selfTest) {
   const { execFileSync } = await import("node:child_process");
   const fx = mkdtempSync(join(tmpdir(), "memgraph-selftest-"));
   const w = (n, t) => writeFileSync(join(fx, n), t, "utf8");
@@ -255,7 +279,8 @@ function parseTopic(text) {
 // MEMORY-ARCHIVE.md = COLD overflow (NOT auto-loaded, recall by query). Both are authoritative index files —
 // a topic file listed in EITHER is "indexed". Neither is itself a topic file.
 const INDEX_FILES = ["MEMORY.md", "MEMORY-ARCHIVE.md"];
-const files = readdirSync(dir).filter((f) => f.endsWith(".md") && !INDEX_FILES.includes(f));
+const sourceFiles = readdirSync(dir).filter((f) => f.endsWith(".md")).sort();
+const files = sourceFiles.filter((f) => !INDEX_FILES.includes(f));
 const fileSlugs = new Set(files.map((f) => basename(f, ".md")));
 const readIndex = (name) =>
   existsSync(join(dir, name)) ? parseIndex(readFileSync(join(dir, name), "utf8")) : new Map();
@@ -332,9 +357,21 @@ if (terms.length || tagFilter) {
   process.exit(0);
 }
 
-// ── BUILD mode ──────────────────────────────────────────────────────────────────
+// ── BUILD / CHECK mode ──────────────────────────────────────────────────────────
+const sourceHash = createHash("sha256");
+for (const file of sourceFiles) {
+  const bytes = readFileSync(join(dir, file));
+  sourceHash.update(String(Buffer.byteLength(file)));
+  sourceHash.update(":");
+  sourceHash.update(file);
+  sourceHash.update(":");
+  sourceHash.update(String(bytes.length));
+  sourceHash.update(":");
+  sourceHash.update(bytes);
+}
 const graph = {
   generatedFrom: dir,
+  sourceDigest: sourceHash.digest("hex"),
   counts: { files: files.length, indexed: indexEntries.size, hot: hotEntries.size, cold: coldEntries.size, nodes: Object.keys(nodes).length },
   tags: Object.fromEntries(Object.entries(tagMap).map(([t, a]) => [t, a.length]).sort((a, b) => b[1] - a[1])),
   tagMap,
@@ -346,7 +383,17 @@ const graph = {
     duplicateDescriptions: dupes,
   },
 };
-writeFileSync(join(dir, "MEMORY-GRAPH.json"), JSON.stringify(graph, null, 2));
+const graphPath = join(dir, "MEMORY-GRAPH.json");
+const expected = `${JSON.stringify(graph, null, 2)}\n`;
+if (check) {
+  if (!existsSync(graphPath) || readFileSync(graphPath, "utf8") !== expected) {
+    console.error("memory-graph: MEMORY-GRAPH.json is missing or stale; no files written");
+    process.exit(1);
+  }
+  console.log(`memory-graph: current [dir-id ${dirTag(dir)}] source ${graph.sourceDigest}`);
+  process.exit(0);
+}
+writeFileSync(graphPath, expected);
 
 const topTags = Object.entries(graph.tags).slice(0, 12).map(([t, c]) => `#${t}(${c})`).join(" ");
 console.log(`\nmemory-graph: ${graph.counts.files} files · ${graph.counts.indexed} indexed · ${Object.keys(graph.tags).length} tags`);
