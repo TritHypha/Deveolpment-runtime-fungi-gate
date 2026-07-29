@@ -47,12 +47,13 @@ planning checkbox must never be used to imply that implementation exists.
   Task 2 is complete: generated percentages now derive test and authority
   facts from live inventories/ledgers. Focused verification is 8/8; the
   retirement report distinguishes 24 same-stem pairs from authority
-  inventories (compiler 5/7; governed 9/29), and its ledger parser refuses
+  inventories (the report's then-current snapshot was compiler 5/7; governed
+  9/29), and its ledger parser refuses
   missing, duplicate, ambiguous, out-of-scope, and cross-ledger entries.
   Package readiness is now honestly 96/97 (98.97%): the singular `test/`
   benchmark surface is counted, and only `galerina-registry` remains open
-  because it has no real denial test. Current work moves to Task 3: remove the
-  29-entry implicit `.fungi` known-failure baseline.
+  because it has no real denial test. Tasks 3 and 4 have since closed; Task 5
+  is the current governed-authority tranche.
 - **Benchmark decision:** do not publish Wasm/Rust/Python/SLIDE comparison
   numbers until SLIDE has an executable backend. Historical Galerina
   benchmarks remain evidence only; the requested current and
@@ -100,10 +101,18 @@ planning checkbox must never be used to imply that implementation exists.
   namespace gate initially refused unregistered `FUNGI-GOV-025`; registering
   `GOV-025`, `SECRET-007`, and `TYPE-034` in the canonical Knowledge Base
   restored the full green without an allowlist entry.
-- **Current safe boundary:** proceed to the remaining compiler-authority and
-  beta-v1 feature tasks, then the complete graphs/tests/audits/generators
-  close. The live colour-coded sequence and the binding flat package topology
-  are recorded in
+- **Task 4 compiler-authority checkpoint:** all seven canonical compiler
+  stages are now tier-1 authoritative `.fungi` specifications. TypeScript
+  remains the executing differential shadow and no `.ts` file was deleted.
+  Fresh gates report 7/7 canonical stages clean and authoritative, 49/49
+  auxiliary `.fungi` files check-clean but non-authorizing, all seven reviewed
+  hashes matching, and 59/59 mutation anchors live exactly once. A three-case
+  negative test proves a missing stage and an external fixture-ledger path are
+  refused and that SLIDE/auxiliary files cannot inflate the denominator.
+- **Current safe boundary:** proceed to Task 5's governed `.fungi` authority
+  from the top of the dependency chain, then the remaining beta-v1 feature
+  tasks and complete graphs/tests/audits/generators close. The live
+  colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 - **Flat-package topology ratchet:** the new audit and 6/6 anti-neutering tests
   enforce unique canonical identities and reject new nested native packages.

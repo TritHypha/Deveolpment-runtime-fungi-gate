@@ -217,7 +217,7 @@ Keep OWASP and syntax-denial programs negative only where an owning test
 requires them. Pin exact diagnostic codes beside the fixture and prove a
 changed/missing code makes the test red.
 
-- [ ] **Step 5: Verify zero implicit baseline**
+- [x] **Step 5: Verify zero implicit baseline**
 
 ```powershell
 node scripts/audit-fungi-corpus-check.mjs
@@ -269,22 +269,22 @@ adjudication history remains in
   hash pin, #105 admission, and functional corpus evidence.
 - TypeScript stays the running differential shadow.
 
-- [ ] **Step 1: Re-run each five-part evidence pack separately**
+- [x] **Step 1: Re-run each five-part evidence pack separately**
 
 Record exact command, count, hash, and exit for parser, then governance
 verifier. Do not promote one based on the other's evidence.
 
-- [ ] **Step 2: Run a negative ledger mutation**
+- [x] **Step 2: Run a negative ledger mutation**
 
 Temporarily point a fixture ledger at a missing or non-admitted stage and prove
 `audit-compiler-stage-twins.mjs` refuses.
 
-- [ ] **Step 3: Add one reviewed ledger entry per stage**
+- [x] **Step 3: Add one reviewed ledger entry per stage**
 
 Each entry names the exact evidence files and states that no `.ts` file is
 deleted.
 
-- [ ] **Step 4: Verify 7/7 compiler authority**
+- [x] **Step 4: Verify 7/7 compiler authority**
 
 ```powershell
 node scripts/audit-compiler-stage-twins.mjs

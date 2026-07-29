@@ -21,19 +21,48 @@
  */
 import { spawnSync } from "node:child_process";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const GALERINA = join(ROOT, "galerina.mjs");
 const STAGE_DIR = "packages-galerina/galerina-core-compiler/src/self-hosted";
 const LEDGER_PATH = join(ROOT, "docs", "security", "rd0528-compiler-authoritative-stages.json");
+const FIXTURE_ROOT = resolve(ROOT, "scripts", "fixtures");
+const CANONICAL_STAGES = new Set([
+  "effect-checker.fungi",
+  "gir-emitter.fungi",
+  "governance-verifier.fungi",
+  "lexer.fungi",
+  "parser.fungi",
+  "runtime.fungi",
+  "type-checker.fungi",
+]);
+
+function selectedLedgerPath() {
+  const index = process.argv.indexOf("--fixture-ledger");
+  if (index < 0) return LEDGER_PATH;
+  const supplied = process.argv[index + 1];
+  if (supplied === undefined || supplied.startsWith("--")) {
+    console.error("compiler-stage-twins: --fixture-ledger requires a path");
+    process.exit(2);
+  }
+  const candidate = resolve(supplied);
+  const fixturePrefix = `${FIXTURE_ROOT}${sep}`;
+  if (candidate !== FIXTURE_ROOT && !candidate.startsWith(fixturePrefix)) {
+    console.error(
+      "compiler-stage-twins: fixture ledger must stay inside scripts/fixtures",
+    );
+    process.exit(2);
+  }
+  return candidate;
+}
 
 // A present-but-malformed ledger is RED; an absent ledger means nothing is flipped yet.
-function loadAuthoritative() {
-  if (!existsSync(LEDGER_PATH)) return { set: new Set(), error: null };
+function loadAuthoritative(ledgerPath) {
+  if (!existsSync(ledgerPath)) return { set: new Set(), error: null };
   let raw;
-  try { raw = JSON.parse(readFileSync(LEDGER_PATH, "utf8")); }
+  try { raw = JSON.parse(readFileSync(ledgerPath, "utf8")); }
   catch (e) { return { set: new Set(), error: `compiler authority ledger is malformed JSON (${e.message})` }; }
   if (!raw || !Array.isArray(raw.twins)) return { set: new Set(), error: "compiler authority ledger has no `twins` array" };
   const set = new Set();
@@ -85,9 +114,11 @@ if (process.argv.includes("--self-test")) {
   process.exit(0);
 }
 
-let failed = 0, checked = 0;
+let failed = 0;
+let canonicalChecked = 0, canonicalFailed = 0;
+let auxiliaryChecked = 0, auxiliaryFailed = 0;
 const exec = { shadow: 0, differential: 0, authoritative: 0, regressed: 0 };
-const { set: authoritative, error: ledgerError } = loadAuthoritative();
+const { set: authoritative, error: ledgerError } = loadAuthoritative(selectedLedgerPath());
 if (ledgerError) {
   console.error(`compiler-stage-twins: ${ledgerError} — fail-closed (the RD-0528 authority ledger cannot be trusted).`);
   failed += 1;
@@ -106,15 +137,24 @@ for (const stage of stages) {
   // Fail-closed: check must exit 0 AND report no POSITIVE error count ("0 errors" is clean).
   const out = (r.stdout ?? "") + (r.stderr ?? "");
   const checkOk = r.status === 0 && !/[1-9]\d* error/i.test(out);
-  if (authoritative.has(rel)) seenAuthoritative.add(rel);
-  const state = classifyWithAuthority(rawExecutionState(stage), authoritative.has(rel));
-  exec[state] += 1;
+  const isCanonical = CANONICAL_STAGES.has(stage);
+  if (isCanonical && authoritative.has(rel)) seenAuthoritative.add(rel);
+  const state = isCanonical
+    ? classifyWithAuthority(rawExecutionState(stage), authoritative.has(rel))
+    : "auxiliary";
+  if (isCanonical) exec[state] += 1;
   const ok = checkOk && state !== "regressed";
   const note = state === "regressed"
     ? "  →  AUTHORITATIVE stage regressed to shadow: its differential proof is GONE (trust-root fail-open)"
     : (checkOk ? "" : "  →  " + out.trim().split("\n").slice(-1)[0]);
   console.log(`  ${ok ? "OK  " : "FAIL"} [${state.padEnd(13)}] ${rel}${note}`);
-  checked += 1;
+  if (isCanonical) {
+    canonicalChecked += 1;
+    if (!ok) canonicalFailed += 1;
+  } else {
+    auxiliaryChecked += 1;
+    if (!ok) auxiliaryFailed += 1;
+  }
   if (!ok) failed += 1;
 }
 
@@ -127,11 +167,14 @@ for (const key of authoritative) {
 }
 
 // Unlike the kernel gate's multi-dir sweep, this single dir MUST contain the stages — 0 found is a fault.
-if (checked === 0) {
-  console.error("compiler-stage-twins: no .fungi stages found in the stage dir — fail-closed");
+if (canonicalChecked !== CANONICAL_STAGES.size) {
+  console.error(
+    `compiler-stage-twins: expected ${CANONICAL_STAGES.size} canonical stages, found ${canonicalChecked} — fail-closed`,
+  );
   process.exit(1);
 }
-console.log(`compiler-stage-twins: ${checked - failed}/${checked} check-clean in ${STAGE_DIR}`);
+console.log(`compiler-stage-twins: ${canonicalChecked - canonicalFailed}/${canonicalChecked} canonical compiler stages check-clean`);
+console.log(`compiler-stage-twins: ${auxiliaryChecked - auxiliaryFailed}/${auxiliaryChecked} non-authorizing auxiliary .fungi files check-clean`);
 const flip = exec.authoritative > 0 ? ` — RD-0528 flip LIVE (${exec.authoritative} authoritative)` : " (0 flipped — .ts still decider of record)";
 console.log(`authority column (RD-0528): ${exec.shadow} shadow · ${exec.differential} differential (execute through #105) · ${exec.authoritative} authoritative${exec.regressed ? ` · ${exec.regressed} REGRESSED (RED)` : ""}${flip}`);
 process.exit(failed === 0 ? 0 : 1);

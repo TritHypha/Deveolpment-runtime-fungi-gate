@@ -1,0 +1,8 @@
+{
+  "twins": [
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "missing-stage.fungi"
+    }
+  ]
+}

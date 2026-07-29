@@ -1,5 +1,38 @@
 # RD-0528 compiler self-hosting — I-1 evidence pack (7 stages)
 
+> ## ★ FINAL TIER-1 AUTHORITY ADDENDUM 2026-07-29 — 7/7 compiler specifications
+>
+> The live authority ledger now names **all seven canonical compiler stages** as tier-1 authoritative
+> specifications. The final two entries are `parser.fungi` and `governance-verifier.fungi`. This
+> supersedes the older four-stage and five-stage editorial counts below; those passages remain as dated
+> provenance.
+>
+> This is **not tier-2 retirement**. Every co-located TypeScript implementation remains an executing
+> differential shadow, no `.ts` file was deleted, and the absent self-hosted backend remains a hard
+> prerequisite before retirement. The compiler-twin audit now derives its authority denominator from
+> the exact seven-stage canonical set; the other 49 `.fungi` files in the self-hosted directory must
+> remain check-clean but cannot inflate the authority count.
+>
+> Fresh evidence recorded on 2026-07-29:
+>
+> - **Parser:** five R3 parity files **53/53**; mutation anchor
+>   `rd0528-parser-param-readonly` killed within the full **59/59** mutation run; build
+>   **21122 bytes**, SHA-256
+>   `135751bd0297856f4c2fe86e53a5085c573b49f049e0bc749e9ad7a31b106166`,
+>   reviewed hash-baseline match and #105 admission; whole I-3 functional corpus **83/83**.
+>   The dedicated parser refusal tests remain the fail-closed guard for unmodelled governance shapes.
+> - **Governance verifier:** R3 parity **14/14**; mutation anchor
+>   `rd0528-governance-verifier-gov002` killed within the same **59/59** run; build
+>   **3076 bytes**, SHA-256
+>   `c369eb9771714b14080d101881651d207a60c2f064757bdec1db4455691382ec`,
+>   reviewed hash-baseline match and #105 admission; whole I-3 functional corpus **83/83**.
+>   Five of fourteen verifier codes are pipeline-reachable. The remainder are parser-refused or
+>   documented forward-spec/unwired checks; this addendum does not mislabel them as live enforcement.
+>
+> The authorization basis is the owner's standing “unlock all green light” instruction plus the
+> current autonomous ownership directive, still constrained by the mechanical evidence gate. This
+> addendum does **not** claim that another AI independently reviewed the current edits.
+>
 > ## ★ EDITORIAL UPDATE 2026-07-24 — this 2026-07-22 pack's "NOT flip-ready" framing is SUPERSEDED for tier-1
 >
 > The authority ledger [`rd0528-compiler-authoritative-stages.json`](rd0528-compiler-authoritative-stages.json)

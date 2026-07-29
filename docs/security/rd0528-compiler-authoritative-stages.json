@@ -72,6 +72,34 @@
         "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs 73/73 + self-hosted-lexer.test.mjs 32/32 (non-vacuous: accept + the 5 fail-CLOSED reject classes — unterminated string/char, invalid unicode escape, stray backtick, lone control char), exit 0; validSingle:545 whitelist fail-closes anything outside the .ts ONE_CHAR_OPERATORS ∪ SYMBOLS set",
         "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md (flip-readiness pack = R&D bridge 0299; §5a GREEN = 0308)"
       }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "parser.fungi",
+      "tier": "authority-flip (tier 1): parser.fungi is the authoritative SPEC of record; the co-located parser.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-29",
+      "nod": "STANDING FLIP PROTOCOL — owner 'unlock all green light' 2026-07-24 plus the current 2026-07-29 autonomous ownership directive. The evidence gate remains fail-closed: this entry records specification authority only, retains parser.ts, and does not claim independent current-change verification or tier-2 retirement.",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-parser-block-parity.test.mjs + wat-p9-parser-expr-parity.test.mjs + wat-p9-parser-flows-parity.test.mjs + wat-p9-parser-params-parity.test.mjs + wat-p9-parser-stmt-parity.test.mjs — 53/53, re-verified 2026-07-29",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — parser anchor rd0528-parser-param-readonly KILLED; full run 59/59 killed, 0 survived, VIOLATIONS 0, re-verified 2026-07-29",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs + scripts/audit-compiler-stage-hashes.mjs — parser.fungi 21122 bytes, sha256 135751bd0297856f4c2fe86e53a5085c573b49f049e0bc749e9ad7a31b106166, #105-admitted, reviewed baseline match, re-verified 2026-07-29",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs — whole corpus 83/83; parser tranches cover the admitted parse surface and the full compiler package retains dedicated fail-closed parser tests for refused unmodelled constructs, re-verified 2026-07-29",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md (2026-07-29 final authority addendum)"
+      }
+    },
+    {
+      "dir": "packages-galerina/galerina-core-compiler/src/self-hosted",
+      "file": "governance-verifier.fungi",
+      "tier": "authority-flip (tier 1): governance-verifier.fungi is the authoritative SPEC of record; the co-located governance-verifier.ts is RETAINED as a running differential shadow the gate holds ===. No .ts deleted (tier-2 retirement deferred — self-hosted backend absent).",
+      "flipped": "2026-07-29",
+      "nod": "STANDING FLIP PROTOCOL — owner 'unlock all green light' 2026-07-24 plus the current 2026-07-29 autonomous ownership directive. The evidence gate remains fail-closed: this entry records specification authority only, retains governance-verifier.ts, and does not claim independent current-change verification or tier-2 retirement.",
+      "evidence": {
+        "r3-byte-parity": "wat-p9-governance-parity.test.mjs — 14/14 (Stage-A interpreter === Stage-B WASM + non-vacuity), re-verified 2026-07-29",
+        "mutation-kill": "SEC-002 RD0528_COMPILER (scripts/audit-mutation.mjs) — governance-verifier anchor rd0528-governance-verifier-gov002 KILLED; full run 59/59 killed, 0 survived, VIOLATIONS 0, re-verified 2026-07-29",
+        "hash-pin-105": "scripts/gather-compiler-stage-hashes.mjs + scripts/audit-compiler-stage-hashes.mjs — governance-verifier.fungi 3076 bytes, sha256 c369eb9771714b14080d101881651d207a60c2f064757bdec1db4455691382ec, #105-admitted, reviewed baseline match, re-verified 2026-07-29",
+        "i3-functional-oracle": "self-hosted-i3-functional-corpus.test.mjs — whole corpus 83/83; the reachable governance surface is exercised. Five of fourteen verifier codes are pipeline-reachable; remaining constructs are either parser-refused fail-closed or explicitly documented forward-spec/unwired checks and are not claimed as live enforcement, re-verified 2026-07-29",
+        "pack": "docs/security/rd0528-compiler-stages-evidence-pack.md (2026-07-29 final authority addendum)"
+      }
     }
   ]
 }

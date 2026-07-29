@@ -23,7 +23,7 @@ invented completion percentage. The detailed execution checklist remains
 flowchart LR
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
-    C["🟦 Remaining authoritative<br/>compiler stages and beta-v1 features"]
+    C["🟦 Governed .fungi authority<br/>and beta-v1 features"]
     D["🟦 Full devtools close<br/>graphs, tests, audits, generators"]
     E["🟦 Rebuild and publish<br/>all generated evidence"]
     F["🟦 Beta-v1 release gate<br/>100% required checks green"]
@@ -62,6 +62,7 @@ flowchart LR
 | Focused compiler tests | 🟩 | Effect checker 68/68; governance verifier 121/121 at this tranche |
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
 | Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,748/5,748 tests |
+| Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 59/59 mutation anchors green |
 
 ## Active Galerina work
 
@@ -72,10 +73,14 @@ model exposure. The `464` package-policy lesson was moved to the ratcheted
 `Proposed-*` set because no package-policy grammar or signed root authority
 input exists; it is not represented as an implemented lesson.
 
+The compiler-authority chapter is complete. All seven canonical `.fungi`
+stages are authoritative specifications while their TypeScript implementations
+remain running differential shadows; no `.ts` retirement has started.
+
 The remaining sequence is:
 
-1. Promote and verify the remaining authoritative compiler stages.
-2. Finish the beta-v1 feature and `.fungi` authority work in `docs/TODO.md`.
+1. Complete governed `.fungi` authority from the top of the dependency chain.
+2. Finish the remaining beta-v1 feature work in `docs/TODO.md`.
 3. Run all Galerina graph, test, audit, provenance and generator tools.
 4. Fix every in-scope finding; do not whitelist or suppress unexplained
    failures.
