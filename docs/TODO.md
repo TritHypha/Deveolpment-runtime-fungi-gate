@@ -16,6 +16,46 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Active zero-trust tooling/test refactor checkpoint — 2026-07-29
+
+- **Scope:** all 14 `galerina-devtools-*` packages, `galerina-test`, Myco,
+  root/package test aggregation, phase-close, audit anti-neutering, package
+  graphs, generators, indexes, reports, and provenance.
+- **Completed (inventory):** all 15 requested package-local test commands
+  currently pass, but aggregate green is not yet authoritative. The root
+  runner omits `galerina-devtools-benchmarks` and `galerina-tools-myco`,
+  bypasses package build chains when `dist/` exists, and accepts suites that
+  do not produce parseable non-zero test counts. `version.json` therefore
+  carries a stale Myco count.
+- **Completed (fail-open discovery):** `run-phase-close.mjs` always exits zero,
+  even after a blocking child failure. `dev-tool-index.mjs --check` gates only
+  one coverage class and uses filename/source-string inference.
+  `audit-gate-selftests.mjs` reports 13 audit/lint tools without executable
+  anti-neutering evidence. The compiler package graph reports newly added
+  SLIDE `.fungi` stages as orphans but still passes.
+- **Completed (design):**
+  `docs/superpowers/specs/2026-07-29-zero-trust-tooling-and-test-refactor-design.md`
+  selects a derived inventory plus a small authoritative exception policy,
+  strict non-vacuous test results, build-current execution, blocking
+  phase-close/exhaustive tiers, explicit compiler-loaded assets, a distinct
+  SLIDE harness lane, and deterministic generator/provenance contracts.
+- **Completed (implementation plan):**
+  `docs/superpowers/plans/2026-07-29-zero-trust-tooling-and-test-refactor.md`
+  gives ten RED-to-GREEN tasks, exact paths/interfaces/commands, local commit
+  boundaries, and the final evidence matrix.
+- **Current:** planning is complete; implementation has not started. Generated
+  files changed by the baseline phase-close run are retained for source-led
+  review under Task 9 and must not be hand-edited or mixed into plan commits.
+- **Next safe work:** execute Task 1, the fail-closed tooling inventory and
+  exception policy, then Task 2, the complete build-current root test runner.
+- **Stop gates:** do not describe the current aggregate or phase-close as a
+  security verdict; do not baseline unexplained tools/assets; do not let timed
+  benchmark measurements authorize a release; do not conflate Galerina-side
+  SLIDE evidence with independent SLIDE verification.
+- **Preservation:** the owner's modified
+  `packages-galerina/galerina-tri-regex/AUDIT.md` and untracked `.codex/`
+  remain outside this work. Never push.
+
 ### Active SLIDE implementation checkpoint — 2026-07-29
 
 - **Completed:** 282-byte canonical R1 export, exact-vector admission,
