@@ -132,8 +132,13 @@ planning checkbox must never be used to imply that implementation exists.
   parent drift, injected capability, unchecked index, dynamic projection,
   fallthrough, and surplus-function mutations refuse. The complete-graph
   suite is 10/10; both V2-C suites are 28/28.
-- **Current:** implement canonical 21-key producer bytes from the complete
-  graph plus an independent decoder. Separately replace
+- **Completed:** local commit `00940a67` emits the admitted complete graph as
+  a deterministic 725-byte, shortest-form 21-key CBOR body with SHA-256
+  `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
+  Producer refusal releases no partial bytes or authority. Canonical producer
+  evidence is 6/6; all V2-C suites are 34/34.
+- **Current:** implement a separately composed 21-key decoder with
+  no-partial-graph refusal. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent

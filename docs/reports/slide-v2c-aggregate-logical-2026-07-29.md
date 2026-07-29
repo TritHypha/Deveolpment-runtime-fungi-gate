@@ -5,6 +5,7 @@
 **Local implementation commit:** `437a3987`
 **Registry binding commit:** `3de15ea8`
 **Executable integration commit:** `5ea92c78`
+**Canonical producer commit:** `00940a67`
 
 ## Claim boundary
 
@@ -44,6 +45,12 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   V2-A subgraph under the frozen V2-A validator, binds the complete descriptor
   tables, and validates the aggregate function signature, authority surface,
   instructions, operands, immediates, and no-fallthrough return.
+- `slide-v2c-cbor-encoder.fungi` emits a deterministic shortest-form 21-key
+  CBOR root only after complete logical admission. The canonical body is 725
+  bytes with SHA-256
+  `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
+  Root keys 18-20 carry full constant, record, and variant definitions.
+  Refusal releases neither partial bytes nor authority.
 
 ## Mutation evidence
 
@@ -71,6 +78,10 @@ aggregate-slice suite is 18/18. The complete executable-graph suite adds
 index, dynamic projection, descriptor divergence, surplus function, and
 fallthrough refusal. The two V2-C suites pass 28/28. Compiler TypeScript build
 also passes.
+
+The canonical producer suite adds 6/6: deterministic bytes plus refusal for
+registry drift, embedded-parent drift, aggregate-operation drift, and
+authority-ceiling injection. All three V2-C suites pass 34/34.
 
 ## What this replaces, rebuilds, and integrates
 
@@ -104,6 +115,6 @@ cannot select any of them as a fallback.
 
 ## Next safe boundary
 
-Canonicalize all 21 root entries from the complete executable graph and build
-an independent decoder that exposes neither a partial descriptor nor partial
-aggregate graph on refusal. V2-D memory remains blocked.
+Build an independent 21-key decoder that exposes neither a partial descriptor
+nor partial aggregate graph on refusal, then bind the admitted body to its
+domain-separated semantic digest. V2-D memory remains blocked.
