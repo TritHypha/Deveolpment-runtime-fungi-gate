@@ -147,7 +147,10 @@ planning checkbox must never be used to imply that implementation exists.
   non-allow/default arms explicitly leave the current trust path.
 - **RD-0535 response:** current measurements, remaining status-label gap, and
   the requested re-review prompt are recorded in
-  `docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md`.
+  `docs/reports/rd0535-response-and-rereview-prompt-2026-07-29.md`. The
+  follow-on chapter answer now incorporates the RD-0580/RD-0581 component
+  handovers, the nesting/XOR decision, the six-generator evidence, the
+  intentional 21-tool Task 8 red set, and current local commit anchors.
 - **RD-0577 disposition:** the handover was diffed read-only against the
   current 75-rule ZT-Sir canon (`CLAUDE.md`, all four `brains/*.md` modules,
   and `README.md`) at clean commit `ff09ee0`. Scoped fail-closed operation

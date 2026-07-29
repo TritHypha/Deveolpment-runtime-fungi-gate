@@ -84,6 +84,39 @@ Relevant independent SLIDE status is on branch
 - Ten planning documents/descriptors still lack enforced status association.
 - A planning checkbox is not implementation evidence.
 
+## Later-chapter answer: component handovers and tooling evidence
+
+The 2026-07-29 follow-on handovers do not authorize removing Galerina
+components:
+
+- `SLIDE/docs/NESTING-AND-XOR-DECISION.md` rejects the recalled “three XOR”
+  explanation. Arithmetic Trit XOR remains type-separated from authority;
+  typed, total K3 decisions remain the authority algebra. The exact historical
+  `while -> if -> if -> while` mutation shape still needs a dedicated
+  negative/control regression.
+- RD-0580 says WAT/Wasm is removed only from a future mandatory native hot
+  path, after replacement evidence. It remains an optional backend and
+  differential oracle; no present physical deletion is authorized.
+- RD-0581 is a useful but partial component manifest. Its highest-value
+  obligations are a single canonical K3 binding, proposal-only Tri-Pipe,
+  receipt-producing Tower Citizen, and backend-neutral witnessed Tri-Fuse.
+  Its cited Galerina facts must be re-verified at source before implementation.
+
+The generator-governance chapter now has six live generators. Fresh evidence
+at Galerina commit `d80b9474` is:
+
+- the affected Task 7 suite passes 28/28;
+- the contract-registry anti-vacuous self-test finds 1,331 contracts;
+- the live generator audit passes 6/6 after exact declared-write,
+  provenance, second-run idempotence, and non-mutating-check verification;
+- the tooling-contract audit deliberately remains red on the same 21 named
+  Task 8 dispositions. That red is tracked work, not a release-green claim;
+- generated Task 9 outputs remain a separate unstaged working set and were
+  not mixed into the manual generator commit.
+
+Independent SLIDE commit `8a28199` remains 30/30 from four separately named
+suites. Neither repository branch was pushed.
+
 ## Prompt for the RD-0535 reviewer
 
 ```text
@@ -94,6 +127,11 @@ repository.
 Read these two documents first:
 1. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0535-trilowlevel-v2-review-native-first-slide-and-the-label-discipline-gap.md
 2. C:\Users\phill\Documents\GitHub\Galerina\docs\reports\rd0535-response-and-rereview-prompt-2026-07-29.md
+
+Then read these follow-on handovers:
+3. C:\Users\phill\Documents\GitHub\SLIDE\docs\NESTING-AND-XOR-DECISION.md
+4. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0580-HANDOVER-what-tll-v2-changes-in-galerina-component-removal.md
+5. C:\Users\phill\Documents\GitHub\ZTF-Knowledge-Bases\RD-0581-galerina-named-component-manifest.md
 
 Then review all three scopes, without treating one as a substitute for another:
 - planning/architecture: C:\Users\phill\Documents\GitHub\triLowLevel-v2
@@ -119,6 +157,9 @@ Answer the response, not merely the original review:
    diff. Check exact SLIDE corpus discovery, empty/uncountable refusal, child
    exit propagation, NODE_TEST_CONTEXT removal, compiler asset ownership, and
    deterministic compiler build evidence.
+   Also inspect current Galerina commit d80b9474 and independent SLIDE commit
+   8a28199. Never infer that unstaged generated artifacts belong to the manual
+   commit.
 6. Try to falsify the build-evidence contract: missing evidence, malformed
    schema, altered tracked content with preserved/older timestamps, added or
    removed tracked inputs, untracked source, deleted tracked source, and Git
@@ -134,7 +175,16 @@ Answer the response, not merely the original review:
    proposed architecture, experiments, blocked work, and rejected ideas. Do
    not infer native safety, performance, admission, or twenty-year
    compatibility from test counts.
-9. Give findings first, ordered by severity, with exact file/line evidence.
+9. Try to falsify the six live generator contracts. Confirm exact declared
+   write sets, provenance, second-run semantic idempotence, and non-mutating
+   check modes. Reconcile the intentional 21-tool Task 8 red set; do not call
+   the phase close green while it remains.
+10. Re-evaluate RD-0580/RD-0581 against current Galerina source. Distinguish
+    “cut from the future mandatory path” from physical deletion. Test the
+    claimed K3 duplication, Tower/Tri-Pipe authority shapes, Tri-Fuse backend
+    coupling, and WAT AST dependency. Treat either handover as advisory until
+    its facts reproduce.
+11. Give findings first, ordered by severity, with exact file/line evidence.
    Record your coverage and instrument limitations. If the response is wrong,
    say so plainly; if a prior RD-0535 measurement is now stale, distinguish
    historical accuracy from current accuracy.
