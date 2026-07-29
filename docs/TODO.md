@@ -42,7 +42,7 @@ planning checkbox must never be used to imply that implementation exists.
 - **Current:** reconstruct the exact historic nesting regression if its source
   can be located; otherwise retain the already verified minimal four-deep
   regression and record the evidence limitation.
-- **Completed, pending checkpoint commit:** the `.fungi`
+- **Completed:** local commit `72c0c210` adds the `.fungi`
   `slide-r1-safe-value-verifier.fungi` gate admits only the validated,
   bounded, effect-free no-address R1 subset and explicitly reports that a
   native certificate is absent. Altered profile, unknown/memory-capable
