@@ -10,18 +10,65 @@
 //
 // Per doc it indexes: title (first # heading), all sub-headings, bold terms, FUNGI-*/ERR_ codes, task #NNN refs,
 // [[kb-cross-refs]], and a term-frequency table (title+headings weighted). JSON for tools, MD for humans/AI.
-import { readdirSync, readFileSync, mkdirSync, writeFileSync, statSync } from "node:fs";
-import { join, relative, basename } from "node:path";
+import { existsSync, readdirSync, readFileSync, mkdirSync, writeFileSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { join, relative, basename, resolve } from "node:path";
 import { extractCodes } from "./lib/codes.mjs";
-import { writeProvenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 import { scrubPaths } from "./lib/scrub-paths.mjs"; // extracted + unit-tested (was module-internal, untestable)
 
-const ROOT = process.cwd(); // repo root when run by phase-close (cwd=Galerina); the dev-tool test drives it with cwd=tmp
+function parseArgs(argv) {
+  let root = process.cwd();
+  let kbDir = null;
+  let check = false;
+  let code = null;
+  const terms = [];
+  const seen = new Set();
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--root" || arg === "--kb-dir" || arg === "--code") {
+      if (seen.has(arg) || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
+        throw new Error(`kb-index: ${arg} requires exactly one value`);
+      }
+      seen.add(arg);
+      const value = argv[++i];
+      if (arg === "--root") root = resolve(value);
+      if (arg === "--kb-dir") kbDir = resolve(value);
+      if (arg === "--code") code = value;
+      continue;
+    }
+    if (arg === "--check" && !check) {
+      check = true;
+      continue;
+    }
+    if (arg.startsWith("--")) throw new Error(`kb-index: unknown or duplicate argument ${arg}`);
+    terms.push(arg);
+  }
+  if (check && (code !== null || terms.length > 0)) {
+    throw new Error("kb-index: --check cannot be combined with query mode");
+  }
+  if (code !== null && terms.length > 0) {
+    throw new Error("kb-index: --code cannot be combined with query terms");
+  }
+  return { root, kbDir, check, code, terms };
+}
+
+let options;
+try {
+  options = parseArgs(process.argv.slice(2));
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
+
+const ROOT = options.root;
 // The KB was relocated OUT of this repo (IP separation) — same convention as audit-effect-canonicality.mjs.
 // Default to the sibling ZTF-Knowledge-Bases; override with GALERINA_KB_DIR. Recurse it: rd-absorbed/,
 // defensive-publications/, schemas/ … were silently dropped by the old flat scan of the now-removed
 // docs/Knowledge-Bases (a flat, non-recursive index reports a false "seen everything").
-const KB = process.env.GALERINA_KB_DIR || join(ROOT, "..", "ZTF-Knowledge-Bases");
+const KB = options.kbDir
+  || (process.env.GALERINA_KB_DIR ? resolve(process.env.GALERINA_KB_DIR) : null)
+  || resolve(ROOT, "..", "ZTF-Knowledge-Bases");
 const KB_SKIP = new Set(["build", "node_modules", ".git"]);       // build/ = generated indexes (would self-pollute)
 const EXTRA = ["README.md", "AGENTS.md"]; // also index repo-root key docs if present
 const OUT = join(ROOT, "build", "kb-index");
@@ -42,13 +89,13 @@ function walkMd(dir, out) {
   return out;
 }
 function kbFiles() {
-  const out = walkMd(KB, []);                                    // recurse the whole KB (skip build/ etc.)
+  const externalFiles = walkMd(KB, []).sort();                    // recurse the whole KB (skip build/ etc.)
   // FAIL-CLOSED (worktree footgun, 2026-07-09): an absent/unreadable KB dir used to scan as 0 docs and BUILD
   // silently OVERWROTE the good committed index with an empty one (764->2 docs data-loss inside a
   // .claude/worktrees/** checkout, where the sibling ../ZTF-Knowledge-Bases is NOT adjacent — walkMd's
   // catch{} laundered the ENOENT). A 0-doc KB is never a valid corpus; refuse loudly BEFORE any write.
   // Counted BEFORE adding EXTRA so the repo-root README/AGENTS files can't mask an empty KB as "2 docs".
-  if (out.length === 0) {
+  if (externalFiles.length === 0) {
     console.error(
       `kb-index: FAIL-CLOSED — no .md docs found under the KB dir:\n  ${KB}\n` +
       `  The corpus lives in the sibling ZTF-Knowledge-Bases repo (override: GALERINA_KB_DIR). In a git\n` +
@@ -57,8 +104,9 @@ function kbFiles() {
     );
     process.exit(1);
   }
-  for (const f of EXTRA) { const p = join(ROOT, f); try { statSync(p); out.push(p); } catch { /* absent */ } }
-  return out;
+  const files = [...externalFiles];
+  for (const f of EXTRA) { const p = join(ROOT, f); try { statSync(p); files.push(p); } catch { /* absent */ } }
+  return { externalFiles, files };
 }
 const tokenize = (s) => (s.toLowerCase().match(/[a-z][a-z0-9-]{2,}/g) || []).filter((w) => !STOP.has(w));
 // KB doc titles/headings sometimes embed an absolute local path (a doc titled with `C:\Users\<name>\...`).
@@ -68,7 +116,10 @@ const tokenize = (s) => (s.toLowerCase().match(/[a-z][a-z0-9-]{2,}/g) || []).fil
 const scrub = scrubPaths; // the genericizer now lives in lib/scrub-paths.mjs (importable + unit-tested)
 
 function indexDoc(file) {
-  const rel = relative(ROOT, file).replace(/\\/g, "/");
+  const fromKb = relative(KB, file).replace(/\\/g, "/");
+  const rel = fromKb !== ".." && !fromKb.startsWith("../")
+    ? `kb/${fromKb}`
+    : `repo/${relative(ROOT, file).replace(/\\/g, "/")}`;
   const txt = readFileSync(file, "utf8");
   const lines = txt.split(/\r?\n/);
   const title = scrub((lines.find((l) => /^#\s+/.test(l)) || basename(file)).replace(/^#\s+/, "").trim());
@@ -84,21 +135,20 @@ function indexDoc(file) {
   return { rel, title, headings, bold, codes, tasks, xrefs, tf, len: Math.max(1, [...tf.values()].reduce((a, b) => a + b, 0)) };
 }
 
-const docs = kbFiles().map(indexDoc);
+const selected = kbFiles();
+const docs = selected.files.map(indexDoc);
 const N = docs.length;
 const df = new Map();
 for (const d of docs) for (const w of d.tf.keys()) df.set(w, (df.get(w) || 0) + 1);
 
 // ── QUERY mode ────────────────────────────────────────────────────────────────
-const args = process.argv.slice(2);
-const codeFlag = args.indexOf("--code");
-if (codeFlag !== -1) {
-  const code = args[codeFlag + 1];
+if (options.code !== null) {
+  const code = options.code;
   const hits = docs.filter((d) => d.codes.includes(code)).map((d) => d.rel);
   console.log(`# kb-index --code ${code}  (${hits.length} doc(s))\n${hits.map((h) => "  " + h).join("\n")}`);
   process.exit(0);
 }
-const query = args.filter((a) => !a.startsWith("--"));
+const query = options.terms;
 if (query.length) {
   const qts = tokenize(query.join(" "));
   const scored = docs.map((d) => {
@@ -122,11 +172,9 @@ if (query.length) {
   process.exit(0);
 }
 
-// ── BUILD mode ────────────────────────────────────────────────────────────────
-mkdirSync(OUT, { recursive: true });
+// ── BUILD / CHECK mode ────────────────────────────────────────────────────────
 const topTerms = (d, n) => [...d.tf.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([w]) => w);
 const machine = docs.map((d) => ({ rel: d.rel, title: d.title, headings: d.headings, codes: d.codes, tasks: d.tasks, xrefs: d.xrefs, topTerms: topTerms(d, 25) }));
-writeFileSync(join(OUT, "kb-index.json"), JSON.stringify({ generated: "kb-index", docCount: N, docs: machine }, null, 2));
 const md = [`# Galerina KB index (${N} docs)`, ``, `Query: \`node scripts/kb-index.mjs <terms>\`  ·  by code: \`node scripts/kb-index.mjs --code FUNGI-...\``, ``];
 for (const d of [...docs].sort((a, b) => a.rel.localeCompare(b.rel))) {
   md.push(`## ${d.title}`);
@@ -137,6 +185,39 @@ for (const d of [...docs].sort((a, b) => a.rel.localeCompare(b.rel))) {
   md.push(`- terms: ${topTerms(d, 14).join(", ")}`);
   md.push("");
 }
-writeFileSync(join(OUT, "KB-INDEX.md"), md.join("\n"));
-writeProvenance(OUT, "kb-index"); // BLD-003 / #216
+const digest = createHash("sha256");
+for (const file of selected.externalFiles) {
+  const rel = relative(KB, file).replace(/\\/g, "/");
+  const bytes = readFileSync(file);
+  digest.update(String(Buffer.byteLength(rel)));
+  digest.update(":");
+  digest.update(rel);
+  digest.update(":");
+  digest.update(String(bytes.length));
+  digest.update(":");
+  digest.update(bytes);
+}
+const stamp = {
+  ...provenance("kb-index", ROOT),
+  externalInputDigest: digest.digest("hex"),
+  externalDocumentCount: selected.externalFiles.length,
+};
+const expected = new Map([
+  [join(OUT, "kb-index.json"), `${JSON.stringify({ generated: "kb-index", docCount: N, docs: machine }, null, 2)}\n`],
+  [join(OUT, "KB-INDEX.md"), `${md.join("\n")}\n`],
+  [join(OUT, "provenance.json"), `${JSON.stringify(stamp, null, 2)}\n`],
+]);
+if (options.check) {
+  const stale = [...expected.entries()]
+    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
+  if (stale.length > 0) {
+    console.error(`kb-index: ${stale.length} missing or stale output(s); no files written`);
+    process.exit(1);
+  }
+  console.log(`kb-index: ${N} docs current; external corpus ${stamp.externalInputDigest}`);
+  process.exit(0);
+}
+mkdirSync(OUT, { recursive: true });
+for (const [path, bytes] of expected) writeFileSync(path, bytes);
 console.log(`kb-index: ${N} KB docs indexed -> build/kb-index/KB-INDEX.md + kb-index.json (query: node scripts/kb-index.mjs <terms>)`);

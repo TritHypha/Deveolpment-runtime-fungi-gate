@@ -294,14 +294,22 @@ planning checkbox must never be used to imply that implementation exists.
   a named justified `allowOrphans` item rather than being described as live.
   Package evidence is 27/27, the aggregate fixture is 1/1, the focused
   generator fixture suite is 22/22, and the live audit passes 11/11.
-- **Task 7 remains incomplete:** three cases remain:
-  `kb-index.mjs` reads a sibling private knowledge base and writes intentionally
-  ignored repository output; `memory-graph.mjs` reads and writes a selected
-  external memory directory; and `graph-all.mjs` is an orchestration command
-  that currently returns success even when a child fails. Define an explicit
-  external-boundary contract and make the orchestrator propagate every child
-  refusal; do not register either external tool as an ordinary repository
-  generator merely to increase the green count.
+- **Task 7 KB-index external input:** `kb-index.mjs` now selects one explicit
+  repository root and KB corpus, uses portable `kb/`/`repo/` identities, sorts
+  the recursive corpus, and binds all external relative paths and bytes into a
+  deterministic SHA-256 provenance field without exposing an absolute path.
+  `--check` compares the ignored JSON, Markdown, and provenance artifacts
+  exactly without writing. The isolated build/query/code/tamper/source-drift
+  fixture is 1/1; the live corpus is 1,651 external documents plus two
+  repository documents, digest
+  `fa644b612b2a5949c5b2c27d19a829466c2c2af3ef5fd32c7c3c2b2041c2fed4`;
+  the live generator audit passes 12/12.
+- **Task 7 remains incomplete:** two cases remain. `memory-graph.mjs` reads and
+  writes a selected external memory directory, so it needs an in-place
+  non-mutating check and external-output evidence rather than a false
+  repository-local declaration. `graph-all.mjs` is an orchestration command
+  that currently returns success even when a child fails; it must select
+  generate/check child modes explicitly and propagate every child refusal.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
   generated code-index, code-registry, coverage, dev-tool-index, project
   graph, and all 195 package-graph outputs. They remain deliberately
@@ -312,6 +320,13 @@ planning checkbox must never be used to imply that implementation exists.
   and can report a stale HEAD-only leak until the commit exists. It did not
   false-green and the post-commit full scan is green, but Task 8 must add a
   staged-new-file fixture and remove the noisy/stale fallback.
+- **Existing monolithic fixture debt confirmed:** direct execution of
+  `scripts/tests/dev-tools-scripts.test.mjs` aborts during top-level setup
+  because its old code-registry fixture does not create the now-required
+  living-document marker surface, then reads an output the refused generator
+  correctly did not publish. The focused code-registry generator fixture is
+  green; Task 8 must split or repair this monolith so child refusal is asserted
+  before output reads and one obsolete setup cannot erase all later evidence.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side

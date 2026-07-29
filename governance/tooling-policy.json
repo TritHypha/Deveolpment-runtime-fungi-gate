@@ -247,6 +247,33 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/kb-index.mjs": {
+      "inputs": [
+        "AGENTS.md",
+        "README.md",
+        "scripts/kb-index.mjs",
+        "scripts/lib/codes.mjs",
+        "scripts/lib/provenance.mjs",
+        "scripts/lib/scrub-paths.mjs"
+      ],
+      "outputs": [
+        "build/kb-index/KB-INDEX.md",
+        "build/kb-index/kb-index.json",
+        "build/kb-index/provenance.json"
+      ],
+      "tracked": false,
+      "generate": [
+        "node",
+        "scripts/kb-index.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/kb-index.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/package-graph-generator.mjs": {
       "inputs": [
         "galerina.workspace.json",
