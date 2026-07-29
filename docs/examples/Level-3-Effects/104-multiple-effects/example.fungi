@@ -34,6 +34,11 @@ contract {
     audit.write
   }
 }
+authority share SyncService.orders {
+  reason "The data owner approved this redacted order synchronization."
+  audit required
+  require network.outbound
+}
 {
   ;; Multiple declared effects: database.write + network.outbound + audit.write.
   ;; The order is validated at the boundary and stored protected in the trusted DB,

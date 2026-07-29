@@ -1,4 +1,2 @@
-FUNGI-EFFECT-001
-// The flow uses a phi.read-gated operation but declares no effects at all,
-// which causes FUNGI-EFFECT-001 (EffectUsedButNotDeclared) in the current pipeline.
-// FUNGI-PHI-001 is the intended future target once the PHI effect checker is implemented.
+FUNGI-PHI-001
+// The database effect is declared, but the required PHI-read authority is not.

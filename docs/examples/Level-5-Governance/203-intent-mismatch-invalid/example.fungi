@@ -3,8 +3,8 @@
 /// test_status: stable
 /// level: 5
 /// concept: intent mismatch when flow behaviour contradicts declared intent
-/// expected_diagnostics: FUNGI-INTENT-001
-/// ai_rule: Flow behaviour must be consistent with declared intent. External calls inconsistent with a local intent trigger FUNGI-INTENT-001.
+/// expected_diagnostics: FUNGI-GOV-001
+/// ai_rule: Flow behaviour must be consistent with declared intent. External calls inconsistent with a local intent trigger FUNGI-GOV-001.
 
 guarded flow generatePatientReport(patientId: protected PatientId) -> GeneratePatientReportResult
 
@@ -14,7 +14,7 @@ contract {
   }
 
   // Security intent: BUG â€” intent claims "local" but the body makes an external HTTP call.
-  // The governance verifier detects this contradiction and fires FUNGI-INTENT-001.
+  // The governance verifier detects this contradiction and fires FUNGI-GOV-001.
   intent {
     "Generate local patient report"
   }

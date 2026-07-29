@@ -1,5 +1,1 @@
-none
-// FUNGI-SECRET-001 is the target diagnostic for this example.
-// SecureString-in-AI-call detection is tracked for a future compiler wave.
-// The example is stable: FUNGI-EFFECT-002 is a warning and FUNGI-HINT-COMPUTE-001 is info —
-// no unsuppressed errors are produced by the current pipeline.
+FUNGI-SECRET-007

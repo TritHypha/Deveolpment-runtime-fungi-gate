@@ -1,5 +1,3 @@
-none
-// FUNGI-GOV-002 is the target diagnostic for this example.
-// FUNGI-GOV-002 is suppressed in the current compiler wave (Wave 2 false-positive resolution).
-// The example is stable: FUNGI-TYPE-001 is suppressed; FUNGI-EFFECT-002 is a warning
-// and FUNGI-HINT-COMPUTE-001 is info — no unsuppressed errors.
+FUNGI-AUDIT-001
+// Declaring audit.write creates an evidence obligation.
+// The flow deliberately omits AuditLog.write, so compilation fails closed.

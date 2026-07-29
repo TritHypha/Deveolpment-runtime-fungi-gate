@@ -20,6 +20,7 @@ contract {
 
   effects {
     pii.read
+    database.read
     network.outbound
     audit.write
   }
@@ -28,16 +29,22 @@ contract {
     purpose "appointment_reminder"
     lawfulBasis "legitimate_interest"
   }
+  authority share NotificationService.send {
+    reason "The patient approved appointment-reminder notifications."
+    audit required
+    require network.outbound
+  }
 {
   unsafe let rawId: String = request.body.patientId
   let patientId: protected PatientId = validate.patientId(rawId)?
   let email: protected Email = PatientDB.getEmail(patientId)?
+  let offerId = validate.offerId(request.body.offerId)?
 
   // FUNGI-GOV-005: template "marketing_offer" is inconsistent with declared purpose "appointment_reminder"
   NotificationService.send({
-    to: email,
+    to: seal(email),
     template: "marketing_offer",
-    data: { offerId: request.body.offerId }
+    data: { offerId: offerId }
   })?
 
   AuditLog.write({ event: "EmailSent", patientId: redact(patientId) })

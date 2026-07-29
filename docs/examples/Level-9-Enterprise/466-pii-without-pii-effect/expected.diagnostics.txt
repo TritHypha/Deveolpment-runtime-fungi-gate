@@ -1,4 +1,2 @@
-none
-// FUNGI-PII-001 is the target diagnostic for this example.
-// PII effect enforcement is tracked for a future compiler wave.
-// The example is stable: no unsuppressed errors are produced by the current pipeline.
+FUNGI-PII-001
+// A governed patient read requires explicit PII-read authority.

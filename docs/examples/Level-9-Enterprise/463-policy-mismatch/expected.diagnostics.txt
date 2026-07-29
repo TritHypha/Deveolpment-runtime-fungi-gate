@@ -1,4 +1,1 @@
-FUNGI-EFFECT-001
-// The flow uses pii.read-gated access to email but that effect appears to be detected
-// by the effect checker, producing FUNGI-EFFECT-001 in the current pipeline.
-// FUNGI-GOV-005 (policy-purpose-mismatch) is the intended future target diagnostic.
+FUNGI-GOV-005

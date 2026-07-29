@@ -36,6 +36,11 @@ contract {
     secret.read
   }
 }
+authority share NotificationService.notify {
+  reason "The patient approved this redacted notification."
+  audit required
+  require network.outbound
+}
 {
   unsafe let rawEmail: String = request.body.email
   unsafe let rawNhsNumber: String = request.body.nhsNumber

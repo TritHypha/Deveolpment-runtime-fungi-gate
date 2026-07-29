@@ -27,7 +27,8 @@ contract {
   }
 }
 {
-  compute target best { prefer [npu, gpu, cpu] deny [remote.execution] }
-  let score = RiskModel.run(patient)?
+  compute target best { prefer [npu, gpu, cpu] fallback cpu deny [remote.execution] }
+  let validatedPatient = validate.patient(patient)?
+  let score = RiskModel.run(validatedPatient)?
   return Ok(score)
 }

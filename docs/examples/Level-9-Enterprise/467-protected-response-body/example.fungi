@@ -5,6 +5,10 @@
 /// concept: Protected value in response body requires policy
 /// expected_diagnostics: FUNGI-GOV-003
 
+record ProfileResponse {
+  email: String
+}
+
 secure flow getProfile(readonly request: Request) -> GetProfileResult
 
 contract {
@@ -17,8 +21,16 @@ contract {
     "Return patient profile â€” demonstrates protected value in response body without policy."
   }
 
+  response {
+    returns ProfileResponse
+    denies {
+      email
+    }
+  }
+
   effects {
     database.read
+    pii.read
   }
 }
 {

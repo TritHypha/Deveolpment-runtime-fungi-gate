@@ -1,12 +1,14 @@
 @version 1
 /// example: 464-enterprise-supply-chain
-/// test_status: stable
+/// test_status: proposal
 /// level: 9
 /// concept: flow requiring a module capability that has not been accepted in the supply-chain manifest
 /// expected_diagnostics: FUNGI-MODULE-005
 /// ai_rule: All external module capabilities must be listed and accepted in the supply-chain manifest before use.
 
-// Assumes AnalyticsSDK requires capability "analytics.export" which is not in the accepted manifest.
+// PROPOSAL: package-policy grammar and root-CLI enforcement do not exist yet.
+// Intended case: AnalyticsSDK requires capability "analytics.export" which is
+// absent from an admitted, signed package policy.
 secure flow exportAnalytics(readonly request: Request) -> ExportAnalyticsResult
 
 contract {

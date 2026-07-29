@@ -24,6 +24,7 @@ contract {
 }
 {
   compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
-  let embedding = EmbeddingModel.embed(text)?
+  let validatedText = validate.text(text)?
+  let embedding = EmbeddingModel.embed(validatedText)?
   return Ok(embedding)
 }

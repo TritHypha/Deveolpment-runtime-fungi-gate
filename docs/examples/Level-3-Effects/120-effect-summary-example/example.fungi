@@ -46,6 +46,11 @@ contract {
     audit.write
   }
 }
+authority share RatesService.fetch {
+  reason "The flow may fetch public exchange-rate data but may not disclose the protected order fields."
+  audit required
+  require network.outbound
+}
 {
   unsafe let rawEmail: String = request.body.email
   unsafe let rawOrderId: String = request.body.orderId

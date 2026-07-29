@@ -19,7 +19,7 @@ contract {
   }
 
   effects {
-    ai.inference
+    inference.load
   }
 }
 {

@@ -1,5 +1,1 @@
-none
-// FUNGI-TYPE-002 is the target diagnostic for this example.
-// The type-mismatch check for protected→redacted assignment is tracked
-// under Phase 8B and suppressed during the current compiler wave.
-// The example is stable: top-level let triggers FUNGI-SYNTAX-006 (suppressed).
+FUNGI-TYPE-034

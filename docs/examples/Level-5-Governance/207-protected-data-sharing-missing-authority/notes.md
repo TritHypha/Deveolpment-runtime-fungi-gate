@@ -2,6 +2,6 @@
 
 **Concept:** Sending protected data externally without uthority block
 
-Sending patient.referralPacket (which contains protected data) to an external endpoint without an uthority block is a governance violation. The policy engine requires explicit authority for all external protected data flows.
+Sending a validated and sealed patient referral to an external endpoint without an authority block is still a governance violation. Sealing provides transport protection; it does not grant disclosure permission. The governance verifier raises `FUNGI-GOV-025` unless the protected egress flow carries explicit, reasoned authority.
 
-**AI rule:** Protected data cannot be sent externally without an uthority block granting permission.
+**AI rule:** Protected data cannot be sent externally without an authority block granting permission.

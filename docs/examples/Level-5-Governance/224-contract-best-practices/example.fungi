@@ -41,6 +41,7 @@ contract {
 
   effects {
     database.read
+    pii.read
     audit.write
   }
 

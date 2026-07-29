@@ -1,4 +1,2 @@
-none
-// FUNGI-GOV-003 is the target diagnostic for this example.
-// Protected-value-in-response-body enforcement is tracked for a future compiler wave.
-// The example is stable: no unsuppressed errors are produced by the current pipeline.
+FUNGI-GOV-003
+// A response field denied by the contract cannot cross the API boundary.

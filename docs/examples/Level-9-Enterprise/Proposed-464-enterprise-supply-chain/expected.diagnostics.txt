@@ -1,0 +1,4 @@
+FUNGI-MODULE-005
+// Proposal-only expectation. Promote this directory into the stable curriculum
+// only after package-policy syntax, manifest admission, and the root check/build
+// surfaces all enforce this diagnostic with fail-closed tests.

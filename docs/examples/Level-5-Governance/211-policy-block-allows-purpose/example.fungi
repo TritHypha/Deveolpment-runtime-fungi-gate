@@ -26,6 +26,11 @@ contract {
     purpose "appointment_reminder"
     allow protected Email to "patient"
   }
+  authority share EmailGateway.send {
+    reason "The patient approved appointment-reminder messages."
+    audit required
+    require network.outbound
+  }
 {
   let email: protected Email = patient.email
   let sent = EmailGateway.send(seal(email), Template.appointmentReminder)?

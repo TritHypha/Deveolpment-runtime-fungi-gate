@@ -2,15 +2,16 @@
 /// example: 461-authority-missing
 /// level: 9
 /// concept: sharing protected data across a trust boundary without an authority block
-/// expected_diagnostics: FUNGI-GOV-003
+/// expected_diagnostics: FUNGI-GOV-025
 /// test_status: stable
 /// ai_rule: Sharing a protected value with an external service without an authority block is a governance violation.
 
 secure flow sendReferralNoAuthority(readonly request: Request) -> SendReferralNoAuthorityResult
 
 contract {
-  // Result alias — missing authority block on cross-boundary share triggers FUNGI-GOV-003
+  // Result alias — missing authority block on cross-boundary share triggers FUNGI-GOV-025
   types {
+    type PatientData = String
     type SendReferralNoAuthorityResult = Result<Response, ReferralError>
   }
 
@@ -30,8 +31,8 @@ contract {
   let patientId: protected PatientId = validate.patientId(rawId)?
   let patientData: protected PatientData = PatientDB.get(patientId)?
 
-  // FUNGI-GOV-003: protected PatientData shared with SpecialistService without authority block
-  SpecialistService.refer({ patient: patientData })?
+  // FUNGI-GOV-025: sealed PatientData still needs disclosure authority.
+  SpecialistService.refer({ patient: seal(patientData) })?
 
   AuditLog.write({ event: "ReferralSent", patientId: redact(patientId) })
   return Ok(Response.ok({}))

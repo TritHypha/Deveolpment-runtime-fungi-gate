@@ -33,7 +33,8 @@ contract {
 }
 {
 
-  let saved = OrdersDB.insert(request.body)?
+  let validatedOrder = validate.order(request.body)?
+  let saved = OrdersDB.insert(validatedOrder)?
 
   AuditLog.write({
     event: "OrderCreated",

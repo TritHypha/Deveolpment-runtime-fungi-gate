@@ -905,6 +905,11 @@ contract { effects { audit.write, database.write } }
       hasDiag(result, "FUNGI-VALUESTATE-009"),
       `Expected FUNGI-VALUESTATE-009 for protected Email at AuditLog.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
+    assert.equal(
+      result.diagnostics.filter((d) => d.code === "FUNGI-VALUESTATE-009").length,
+      1,
+      "one protected audit argument must produce one diagnostic",
+    );
   });
 
   it("does not emit FUNGI-VALUESTATE-009 for protected Email wrapped in redact() at AuditLog.write", () => {
@@ -1029,6 +1034,51 @@ ${body}
   it("a secret sent to fetch(...) → FUNGI-SECRET-005", () => {
     const r = parseAndCheck(mk('  let key = vault.read("K")\n  let r = fetch(key)'));
     assert.ok(hasDiag(r, "FUNGI-SECRET-005"));
+  });
+  it("a secret passed to a named AI model inference method emits FUNGI-SECRET-007", () => {
+    const r = parseAndCheck(`
+guarded flow classify(apiKey: SecureString, text: String) -> Label
+contract { effects { ai.inference } }
+{
+  let label = ClassifierModel.classifyWithKey(apiKey, text)?
+  return label
+}
+`);
+    assert.ok(
+      hasDiag(r, "FUNGI-SECRET-007"),
+      `expected secret-to-model egress denial, got: ${r.diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
+  it("an unsafe value passed to a named AI model emits FUNGI-VALUESTATE-003", () => {
+    const r = parseAndCheck(`
+secure flow classify(readonly request: Request) -> Label
+contract { effects { ai.inference } }
+{
+  unsafe let raw: String = request.body.text
+  let label = ClassifierModel.classify(raw)?
+  return label
+}
+`);
+    assert.ok(
+      hasDiag(r, "FUNGI-VALUESTATE-003"),
+      `expected unsafe-to-model denial, got: ${r.diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
+  it("a cleartext embedding passed between explicitly local named models is not network egress", () => {
+    const r = parseAndCheck(`
+secure flow composeModels(text: String) -> Label
+contract { effects { ai.inference } }
+{
+  let safeText = validate.text(text)?
+  let embedding = EmbeddingModel.embed(safeText)?
+  let label = ClassifierModel.classify(embedding)?
+  return label
+}
+`);
+    assert.ok(
+      !hasDiag(r, "FUNGI-PRIVACY-002"),
+      `local model composition must not be classified as network egress: ${r.diagnostics.map((d) => d.code).join(", ")}`,
+    );
   });
   it("redact(secret) to http.post → clean", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let r = http.post("u", redact(key))'));

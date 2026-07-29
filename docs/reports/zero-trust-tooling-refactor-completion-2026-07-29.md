@@ -96,8 +96,8 @@ The completion matrix below records the earlier tooling-refactor close. The
 subsequent Galerina-first beta-v1 pass is still active and does not inherit a
 completion claim from that close.
 
-- Curriculum diagnostic drift is **29 rows**, reduced from 87 by source and
-  checker repairs; it remains release-blocking work.
+- Curriculum diagnostic drift is **zero**: all **232/232** admitted examples
+  honor their exact contract, reduced from 87 by source and checker repairs.
 - Root `check --strict-governance` is a read-only production-policy check. It
   runs effect, secure-tier, and value-state enforcement without creating build
   or signing output.
@@ -105,9 +105,12 @@ completion claim from that close.
   authoritative pass, observes governed clocks, model aliases, service and
   payment adapters, and helper-function effects, and does not mislabel
   explicit PII/PHI or separately verified vault authority as overdeclared.
-- Focused fresh evidence: effect checker **65/65**; combined type/value-state
-  checker **174/174**; CEC **243/243**; full compiler **5,727/5,727**. Root
-  close evidence must be rerun after the remaining curriculum work.
+- Focused fresh evidence: effect checker **68/68**; governance verifier
+  **121/121**; combined type/value-state
+  checker **174/174**; CEC **243/243**; full compiler **5,727/5,727**.
+  Curriculum evidence is fresh at 232/232 and detector self-test 16/16; the
+  post-tranche compiler package is now fresh at **5,748/5,748**. Root close
+  evidence still requires the later complete devtools rerun.
 - Wasm/Rust/Python/SLIDE comparison remains deliberately deferred until SLIDE
   has an executable backend.
 

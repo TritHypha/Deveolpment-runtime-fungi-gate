@@ -3,13 +3,13 @@
 /// test_status: stable
 /// level: 9
 /// concept: passing a protected PatientId directly to a log call without redaction
-/// expected_diagnostics: FUNGI-SECRET-001
+/// expected_diagnostics: FUNGI-VALUESTATE-009
 /// ai_rule: Never pass a protected value to a log or audit call without first applying redact().
 
 secure flow logPatientDirectly(readonly request: Request) -> LogPatientDirectlyResult
 
 contract {
-  // Result alias — protected PatientId to audit without redact() triggers FUNGI-SECRET-001
+  // Result alias — protected PatientId to audit without redact() triggers FUNGI-VALUESTATE-009
   types {
     type LogPatientDirectlyResult = Result<Response, PatientError>
   }
@@ -27,7 +27,7 @@ contract {
   unsafe let rawId: String = request.body.patientId
   let patientId: protected PatientId = validate.patientId(rawId)?
 
-  // FUNGI-SECRET-001: protected PatientId passed directly to AuditLog.write without redact()
+  // FUNGI-VALUESTATE-009: protected PatientId passed directly to AuditLog.write without redact()
   AuditLog.write({ event: "PatientRead", patientId: patientId })
 
   return Ok(Response.ok({}))

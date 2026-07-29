@@ -3,13 +3,13 @@
 /// test_status: stable
 /// level: 7
 /// concept: passing a SecureString to an AI model is a secret-exposure error
-/// expected_diagnostics: FUNGI-SECRET-001
+/// expected_diagnostics: FUNGI-SECRET-007
 /// ai_rule: Never pass a SecureString or secret-typed value to an AI model call.
 
-guarded flow classifyWithSecret(apiKey: SecureString, text: String) -> ClassifyWithSecretResult
+secure flow classifyWithSecret(text: String) -> ClassifyWithSecretResult
 
 contract {
-  // Result alias — SecureString in AI call triggers FUNGI-SECRET-001
+  // Result alias — SecureString in AI call triggers FUNGI-SECRET-007
   types {
     type ClassifyWithSecretResult = Result<Label, AiError>
   }
@@ -20,10 +20,14 @@ contract {
 
   effects {
     ai.inference
+    secret.read
   }
 }
 {
-  // FUNGI-SECRET-001: SecureString apiKey must not be passed to an AI model call
-  let label = ClassifierModel.classifyWithKey(apiKey, text)?
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
+  let apiKey = secret.get("AI_MODEL_KEY")?
+  let validatedText = validate.text(text)?
+  // FUNGI-SECRET-007: SecureString apiKey must not be passed to an AI model call
+  let label = ClassifierModel.classifyWithKey(apiKey, validatedText)?
   return Ok(label)
 }

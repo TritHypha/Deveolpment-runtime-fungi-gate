@@ -537,6 +537,14 @@ export const FUNGI_GOV_007 = {
   message: `Authority block must include a reason declaration. Add: reason "Explain why this authority is needed"`,
 } as const;
 
+/** FUNGI-GOV-025: protected data may not enter a network-egress flow without explicit authority. */
+export const FUNGI_GOV_025 = {
+  code: "FUNGI-GOV-025",
+  name: "PROTECTED_EGRESS_AUTHORITY_MISSING",
+  severity: "error" as const,
+  message: "A flow that accepts protected data and permits network egress requires explicit, reasoned authority.",
+} as const;
+
 /** FUNGI-GOV-009: privileged flow declares no effects or capabilities.
  *  RESERVED / currently UNREACHABLE on real source: the `privileged` flow qualifier is NOT yet wired in the
  *  parser, so real `privileged flow {…}` emits FUNGI-PARSE-001 (verified) and recovers as a plain flow — this
@@ -776,6 +784,34 @@ const PURPOSE_DENIED_EFFECTS: ReadonlyMap<string, readonly string[]> = new Map([
   ["internal",  ["network.outbound"]],
 ]);
 
+type PurposeFamily = "appointment" | "marketing";
+
+function purposeFamily(value: string): PurposeFamily | undefined {
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  if (normalized.includes("appointment") || normalized.includes("reminder")) return "appointment";
+  if (normalized.includes("marketing") || normalized.includes("offer") || normalized.includes("promotion")) return "marketing";
+  return undefined;
+}
+
+function extractTemplateSelections(flowNode: AstNode): Array<{ name: string; family: PurposeFamily }> {
+  const selected: Array<{ name: string; family: PurposeFamily }> = [];
+  for (const member of findNodes(flowNode, "memberExpr")) {
+    const receiver = member.children?.[0];
+    if (receiver?.kind !== "identifier" || receiver.value !== "Template" || member.value === undefined) continue;
+    const family = purposeFamily(member.value);
+    if (family !== undefined) selected.push({ name: member.value, family });
+  }
+  for (const field of findNodes(flowNode, "identifier")) {
+    if ((field.value ?? "").toLowerCase() !== "template") continue;
+    const literal = (field.children ?? []).find((child) => child.kind === "stringLiteral");
+    if (literal?.value === undefined) continue;
+    const name = literal.value.replace(/^["']|["']$/g, "");
+    const family = purposeFamily(name);
+    if (family !== undefined) selected.push({ name, family });
+  }
+  return selected;
+}
+
 /**
  * Extracts all policy block purpose values from a flow node.
  * policy { purpose "read-only" } is stored as policyDecl with an
@@ -811,6 +847,15 @@ function hasAuthorityReason(authorityNode: AstNode): boolean {
     (c) =>
       c.kind === "stringLiteral" ||
       (c.kind === "identifier" && c.value?.startsWith("reason:")),
+  );
+}
+
+function hasProtectedValueDeclaration(flowNode: AstNode): boolean {
+  const protectedType = /(?:^|[<,:\s])protected(?:\s|<)/;
+  return findNodes(flowNode, "typeRef").some((typeNode) =>
+    protectedType.test(typeNode.value?.trim() ?? ""),
+  ) || findNodes(flowNode, "letDecl").some((binding) =>
+    protectedType.test(binding.value?.trim() ?? ""),
   );
 }
 
@@ -1727,6 +1772,28 @@ class GovernanceVerifier {
     // Refuse direct remote selection, and retain the existing contradiction
     // check for a flow that denies remote execution while granting outbound.
     if (flowNode !== undefined) {
+      for (const target of findNodes(flowNode, "computeTargetBlock")) {
+        const targetId = target.value ?? "cpu";
+        const body = target.children?.[0];
+        const hasFallback = (body?.children ?? []).some(
+          (child) => child.kind === "identifier" && child.value?.startsWith("fallback:"),
+        );
+        const requiresFallback = targetId !== "cpu"
+          && targetId !== "remote"
+          && targetId !== "remote.execution";
+
+        if (requiresFallback && !hasFallback) {
+          this.diagnostics.push(makeGovDiag(
+            "FUNGI-TARGET-001",
+            "COMPUTE_TARGET_FALLBACK_MISSING",
+            "error",
+            `Flow '${flow.name}' selects compute target '${targetId}' without an explicit fallback.`,
+            target.location ?? loc,
+            `Add a deterministic fallback such as 'fallback cpu'.`,
+          ));
+        }
+      }
+
       const deniedTargets = extractDeniedTargets(flowNode);
       const selectsRemote = findNodes(flowNode, "computeTargetBlock").some(
         (target) => target.value === "remote" || target.value === "remote.execution",
@@ -1913,6 +1980,22 @@ class GovernanceVerifier {
             ));
           }
         }
+
+        const declaredFamily = purposeFamily(purpose);
+        if (declaredFamily !== undefined) {
+          for (const selectedTemplate of extractTemplateSelections(flowNode)) {
+            if (selectedTemplate.family === declaredFamily) continue;
+            this.diagnostics.push(makeGovDiag(
+              FUNGI_GOV_005.code,
+              FUNGI_GOV_005.name,
+              "warning",
+              `Flow '${flow.name}' declares purpose '${purpose}' but selects Template.${selectedTemplate.name}, ` +
+              `which belongs to the '${selectedTemplate.family}' purpose family.`,
+              loc,
+              `Select a '${declaredFamily}' template or change the declared policy purpose after governance review.`,
+            ));
+          }
+        }
       }
     }
 
@@ -1920,6 +2003,25 @@ class GovernanceVerifier {
     // If an authority block exists but has no reason clause, emit an error.
     if (flowNode !== undefined) {
       const authorityNodes = findNodes(flowNode, "authorityDecl");
+
+      // Sealing protects transport confidentiality; it does not grant
+      // permission to disclose protected data. Network egress from a flow
+      // that accepts protected input therefore requires separate authority.
+      if (
+        flow.declaredEffects.includes("network.outbound")
+        && hasProtectedValueDeclaration(flowNode)
+        && authorityNodes.length === 0
+      ) {
+        this.diagnostics.push(makeGovDiag(
+          FUNGI_GOV_025.code,
+          FUNGI_GOV_025.name,
+          FUNGI_GOV_025.severity,
+          `Flow '${flow.name}' accepts protected data and declares network.outbound but has no authority block.`,
+          loc,
+          `Add a least-authority block naming the recipient, required capability, audit obligation, and reason.`,
+        ));
+      }
+
       for (const authNode of authorityNodes) {
         if (!hasAuthorityReason(authNode)) {
           this.diagnostics.push(makeGovDiag(

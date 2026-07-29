@@ -7,6 +7,10 @@
 /// ai_rule: Declare effects [phi.read] on every flow that accesses HIPAA Protected Health Information.
 
 // Missing: with effects [phi.read, ...]
+record ProtectedHealthInfo {
+  summary: String
+}
+
 secure flow readHealthRecord(readonly request: Request) -> ReadHealthRecordResult
 
 contract {
@@ -16,6 +20,10 @@ contract {
 
   intent {
     "Read a HIPAA health record — demonstrates missing phi.read effect declaration."
+  }
+
+  effects {
+    database.read
   }
 }
 {

@@ -6,7 +6,7 @@
 /// expected_diagnostics: FUNGI-TARGET-001
 /// ai_rule: Every compute target other than cpu requires an explicit fallback clause.
 
-guarded flow runNoFallback(input: Tensor<Float32, [1, 512]>) -> RunNoFallbackResult
+secure flow runNoFallback(input: Tensor<Float32, [1, 512]>) -> RunNoFallbackResult
 
 contract {
   // Result alias — missing fallback on npu target triggers FUNGI-TARGET-001

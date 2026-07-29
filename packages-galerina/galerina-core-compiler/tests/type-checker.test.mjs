@@ -634,6 +634,32 @@ flow test(email: Email) -> String {
 // ── FUNGI-TYPE-002: TypeMismatch (Phase 8A literal inference) ──────────────────
 
 describe("Type checker — FUNGI-TYPE-002 type mismatch", () => {
+  it("emits fail-closed FUNGI-TYPE-034 when protected is claimed as redacted without redact()", () => {
+    const result = parseAndCheck(`
+pure flow test(email: protected Email) -> String {
+  let auditEmail: redacted Email = email
+  return "ok"
+}
+`);
+    assert.ok(
+      hasDiag(result, "FUNGI-TYPE-034"),
+      "Expected FUNGI-TYPE-034 for protected Email assigned directly to redacted Email",
+    );
+  });
+
+  it("accepts an explicit redact() conversion into a redacted binding", () => {
+    const result = parseAndCheck(`
+pure flow test(email: protected Email) -> String {
+  let auditEmail: redacted Email = redact(email)
+  return "ok"
+}
+`);
+    assert.ok(
+      !hasDiag(result, "FUNGI-TYPE-034"),
+      "Explicit redact() must satisfy a redacted binding",
+    );
+  });
+
   it("emits FUNGI-TYPE-002 when string literal assigned to Int binding", () => {
     const result = parseAndCheck(`
 flow test() -> String {

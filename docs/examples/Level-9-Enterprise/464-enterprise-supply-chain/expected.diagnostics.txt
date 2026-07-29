@@ -1,4 +1,0 @@
-none
-// FUNGI-MODULE-005 is the target diagnostic for this example.
-// Supply-chain manifest capability enforcement is tracked for a future compiler wave.
-// The example is stable: FUNGI-EFFECT-002 is a warning — no unsuppressed errors.

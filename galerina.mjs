@@ -159,7 +159,9 @@ const compilerPath = new URL("packages-galerina/galerina-core-compiler/dist/inde
 // (the F1/F2/F3 fail-open class, made unrepresentable). Corpus blast radius MEASURED 0/460 .fungi for ALL
 // of these (latent-prevention). SINGLE source of truth: both the `check` advisory path and the `build`
 // govErrors gate read THIS set (a duplicated security set could drift).
-const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003", "FUNGI-K3-004", "FUNGI-K3-005"]);
+// FUNGI-TYPE-034 is the protected/redacted label-integrity gate: a sensitivity
+// label is not a cast, so direct cross-label assignment must fail closed.
+const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-TYPE-034", "FUNGI-GOV-3VL-004", "FUNGI-K3-001", "FUNGI-GOV-3VL-003", "FUNGI-K3-002", "FUNGI-K3-003", "FUNGI-K3-004", "FUNGI-K3-005"]);
 
 async function main() {
   let [, , command = "help", ...rest] = process.argv;
@@ -1360,6 +1362,11 @@ Baseline comparison (governance-cost):
     const governanceErrors = (gov.diagnostics ?? []).filter(
       d => d.severity === "error",
     );
+    // Event declarations are part of the program authority graph. An emit with
+    // no admitted declaration must never disappear between the library checker
+    // and the root CLI surface.
+    const eventDiagnostics = m.checkEvents(parsed.ast).diagnostics ?? [];
+    const eventErrors = eventDiagnostics.filter(d => d.severity === "error");
     // The SECURITY type-codes (S1/S2 — non-Bool condition, ordered-comparison-on-Verdict) are fail-OPEN
     // holes, never advisory: they fail closed in EVERY mode (mirrors integrityEffectErrors). The REST of
     // the type-error class stays dev-advisory unless --strict-types (the ~150-baseline reason below).
@@ -1371,7 +1378,7 @@ Baseline comparison (governance-cost):
     // which trips two false positives on Brand<String,"tag"> + enum — reads as failing. Only
     // --strict-types folds them into the hard, ✅-suppressing, exit-failing set. The security carve-out
     // above is ALWAYS folded (no --strict-types gate) — a fail-open must fail closed at plain check too.
-    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...strictGovernanceEffectDiagnostics, ...securityTypeErrors, ...(strictTypes ? typeErrors : [])];
+    const allDiags = [...errors, ...gov.diagnostics, ...eventDiagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors, ...strictGovernanceEffectDiagnostics, ...securityTypeErrors, ...(strictTypes ? typeErrors : [])];
     if (allDiags.length === 0) {
       // We're building the language — distinguish "compiled real content" from "found nothing". A clean
       // parse with ZERO top-level declarations (an empty or comment-only file) must NOT report a blanket
@@ -1434,7 +1441,7 @@ Baseline comparison (governance-cost):
     // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
     process.exit(errors.length > 0 || valueStateErrors.length > 0 || integrityEffectErrors.length > 0
       || strictGovernanceEffectErrors.length > 0
-      || governanceErrors.length > 0 || securityTypeErrors.length > 0
+      || governanceErrors.length > 0 || eventErrors.length > 0 || securityTypeErrors.length > 0
       || (strictTypes && typeErrors.length > 0) ? 1 : 0);
   }
 
@@ -2148,6 +2155,11 @@ Baseline comparison (governance-cost):
   // or stays a warning (dev). Int64 is no longer rejected here — the emitter now lowers it faithfully.
   const valueStateResult = m.checkValueStates(parsed.ast, buildIsProduction ? "production" : "development");
   for (const d of valueStateResult.diagnostics ?? []) {
+    if (d.severity === "error") govErrors.push(d);
+  }
+  // Event authority is unconditional: undeclared or contract-forbidden emits
+  // must refuse every artifact-producing profile.
+  for (const d of m.checkEvents(parsed.ast).diagnostics ?? []) {
     if (d.severity === "error") govErrors.push(d);
   }
   // SECURITY type-codes (S1/S2, battery bridge 0148 F1/F2) fail the build/run CLOSED in EVERY profile —

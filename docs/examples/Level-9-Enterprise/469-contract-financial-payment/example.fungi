@@ -7,8 +7,6 @@
 /// test_status: stable
 
 event PaymentInitiated
-event PaymentCompleted
-event PaymentRejected
 
 record PaymentRequest {
   amount: String
@@ -176,8 +174,6 @@ contract {
 
   events {
     emits PaymentInitiated
-    emits PaymentCompleted
-    emits PaymentRejected
   }
 
   audit {

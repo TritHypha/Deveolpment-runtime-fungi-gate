@@ -9,6 +9,7 @@
 event EmailValidationStarted
 event EmailValidationCompleted
 event EmailValidationFailed
+event EmailValidationUnknown
 
 pure flow collectEmails(inputs: Array<String>) -> EmailListResult
 
@@ -26,6 +27,7 @@ contract {
     emits EmailValidationStarted
     emits EmailValidationCompleted
     emits EmailValidationFailed
+    emits EmailValidationUnknown
   }
 
 }
@@ -38,7 +40,7 @@ contract {
   match collected {
     Ok(_)  => emit EmailValidationCompleted
     Err(_) => emit EmailValidationFailed
-    _      => emit EmailValidationFailed
+    _      => emit EmailValidationUnknown
   }
 
   return collected

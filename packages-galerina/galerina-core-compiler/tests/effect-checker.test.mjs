@@ -105,6 +105,8 @@ describe("Effect Checker — secure flow rules", () => {
     const { effectResults } = parseAndCheck(`
 secure flow getOrder(request: GetOrderRequest) -> Result<Order, Error>
 effects [database.read, audit.write] {
+  let order = OrdersDB.get(request.orderId)
+  AuditLog.write("order.read", request.orderId)
   return Ok(order)
 }
 `);
@@ -515,6 +517,25 @@ guarded flow loadSecret(name: String) -> Result<String, Error>
     assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-001"));
   });
 
+  it("fails closed when audit.write is declared without audit evidence", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow deleteRecord(id: RecordId) -> Unit
+contract {
+  intent { "Delete a record with mandatory audit evidence." }
+  effects {
+    database.write
+    audit.write
+  }
+}
+{
+  RecordsDB.delete(id)?
+  return unit
+}
+`);
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-AUDIT-001"));
+    assert.ok(!hasEffectDiag(effectResults, "FUNGI-EFFECT-007"));
+  });
+
   it("ClassifierModel.classify in a guarded flow requires ai.inference", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow classify(text: String) -> Label {
@@ -573,6 +594,36 @@ contract {
       !hasEffectDiag(effectResults, "FUNGI-EFFECT-007"),
       "pii.read is explicit authority and has no call-site inference contract",
     );
+  });
+
+  it("requires explicit PII authority for governed patient reads", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow readPatient(id: PatientId) -> Patient
+contract {
+  intent { "Read an admitted patient record." }
+  effects { database.read }
+}
+{
+  return PatientDB.get(id)?
+}
+`);
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-PII-001"));
+    assert.ok(effectResults.some((result) => result.observedEffects.includes("pii.read")));
+  });
+
+  it("requires explicit PHI authority for governed health-record reads", () => {
+    const { effectResults } = parseAndCheck(`
+secure flow readHealth(id: PatientId) -> ProtectedHealthInfo
+contract {
+  intent { "Read an admitted health record." }
+  effects { database.read }
+}
+{
+  return HealthDB.get(id)?
+}
+`);
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-PHI-001"));
+    assert.ok(effectResults.some((result) => result.observedEffects.includes("phi.read")));
   });
 });
 

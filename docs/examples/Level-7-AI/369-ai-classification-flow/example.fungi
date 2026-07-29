@@ -85,7 +85,7 @@ contract {
 }
 
 {
-  compute target npu {}
+  compute target npu { fallback cpu }
 
   unsafe let rawText: String = request.params.text
   let safeText: String = validate.sanitize(rawText)?

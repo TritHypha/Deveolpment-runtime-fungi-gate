@@ -3,7 +3,10 @@
 /// test_status: stable
 /// level: 4
 /// concept: protected value cannot be directly assigned to redacted binding
-/// expected_diagnostics: FUNGI-TYPE-002
+/// expected_diagnostics: FUNGI-TYPE-034
 /// ai_rule: Protected values must be explicitly redacted. Use redact(email).
 
-let auditEmail: redacted Email = email
+pure flow protectedCannotClaimRedacted(email: protected Email) -> redacted Email {
+  let auditEmail: redacted Email = email
+  return auditEmail
+}

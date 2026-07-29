@@ -19,5 +19,6 @@ contract {
 }
   compute target best { prefer [npu, gpu, cpu] fallback cpu }
 {
-  return EmbeddingModel.embed(text)
+  let validatedText = validate.text(text)?
+  return EmbeddingModel.embed(validatedText)
 }

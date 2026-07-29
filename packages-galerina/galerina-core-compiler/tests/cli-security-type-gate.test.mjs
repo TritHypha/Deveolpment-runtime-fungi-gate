@@ -43,7 +43,7 @@ function cli(cmd, file, extra = []) {
 
 after(() => {
   for (const p of fixtures) { try { rmSync(p, { force: true }); } catch { /* ignore */ } }
-  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match", "__sectype_notv", "__sectype_fold", "__sectype_cmp", "__sectype_ret", "__sectype_vcmp", "__sectype_vret"]) {
+  for (const base of ["__sectype_ord", "__sectype_ifint", "__sectype_label", "__sectype_mismatch", "__sectype_clean", "__sectype_mixed", "__sectype_vv", "__sectype_match", "__sectype_notv", "__sectype_fold", "__sectype_cmp", "__sectype_ret", "__sectype_vcmp", "__sectype_vret"]) {
     for (const ext of [".wasm", ".wat", ".lmanifest", ".lmanifest.json", ".fuse.json", ".governance-impact.json"]) {
       try { rmSync(join(BUILD, `${base}${ext}`), { force: true }); } catch { /* ignore */ }
     }
@@ -54,6 +54,8 @@ after(() => {
 const ORD = `pure flow g(v: Verdict) -> Int { if v >= 1 { return 1 } return 0 }\n`;
 // S1 — non-Bool if condition (fail-open control flow)
 const IFINT = `pure flow g(n: Int) -> Int { if n { return 1 } return 0 }\n`;
+// A sensitivity label is not a cast: this would claim protected data was irreversibly redacted.
+const LABEL_LAUNDER = `pure flow g(email: protected Email) -> String { let audit: redacted Email = email  return "ok" }\n`;
 // S3 — mixed Verdict×Bool boolean operand (fail-open: UNKNOWN coerced into a decision)
 const MIXED = `pure flow g(v: Verdict, w: Verdict) -> Verdict { return v and w }\n`;
 const MIXEDBAD = `pure flow g(v: Verdict, b: Bool) -> Verdict { let r: Verdict = v and b  return r }\n`;
@@ -96,6 +98,17 @@ test("build: `if <Int>` (FUNGI-TYPE-033) REFUSES the build — no signed artifac
   assert.match(r.out, /FUNGI-TYPE-033/, "build must name the fail-open code");
   assert.match(r.out, /FAILED \(fail-closed/, "build must fail closed, not mint an artifact");
   assert.equal(r.status, 1, `build of the fail-open flow must be refused\n${r.out}`);
+});
+
+test("check+build: protected-to-redacted without redact() (FUNGI-TYPE-034) fails CLOSED", () => {
+  const path = fixture("__sectype_label.fungi", LABEL_LAUNDER);
+  const c = cli("check", path);
+  assert.match(c.out, /FUNGI-TYPE-034/, "label laundering must surface as a security error");
+  assert.equal(c.status, 1, `plain check must exit non-zero on label laundering\n${c.out}`);
+  const b = cli("build", path);
+  assert.match(b.out, /FUNGI-TYPE-034/, "build must name the label-integrity diagnostic");
+  assert.match(b.out, /FAILED \(fail-closed/, "build must refuse, not mint an artifact");
+  assert.equal(b.status, 1, `build must be refused on label laundering\n${b.out}`);
 });
 
 test("check: `v and b` (FUNGI-K3-001, S3) fails CLOSED in plain check — counted, exit 1", () => {

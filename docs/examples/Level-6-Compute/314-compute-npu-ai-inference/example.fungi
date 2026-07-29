@@ -23,9 +23,10 @@ contract {
   }
 }
 {
-  compute target best { prefer [npu, gpu, cpu] deny [remote.execution] }
+  compute target best { prefer [npu, gpu, cpu] fallback cpu deny [remote.execution] }
 
-  let embedding: Tensor<Float32, [1, 768]> = EmbeddingModel.embed(text)?
+  let validatedText = validate.text(text)?
+  let embedding: Tensor<Float32, [1, 768]> = EmbeddingModel.embed(validatedText)?
   let label: Label = ClassifierModel.classify(embedding)?
   return Ok(label)
 }

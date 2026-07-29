@@ -17,6 +17,8 @@
     "audit:examples": "node scripts/audit-example-diagnostics.mjs",
     "audit:examples:selftest": "node scripts/audit-example-diagnostics.mjs --self-test",
     "audit:node-floor": "node scripts/audit-node-dependencies.mjs",
+    "audit:package-topology": "node scripts/audit-flat-package-topology.mjs",
+    "audit:package-topology:selftest": "node --test scripts/tests/audit-flat-package-topology.test.mjs",
     "audit:imports": "node scripts/audit-import-governance.mjs",
     "audit:license": "node scripts/audit-license-compat.mjs",
     "audit:license:selftest": "node scripts/audit-license-compat.mjs --self-test",

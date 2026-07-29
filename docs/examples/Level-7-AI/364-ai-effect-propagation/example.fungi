@@ -1,16 +1,35 @@
-﻿@version 1
+@version 1
 /// example: 364-ai-effect-propagation
 /// test_status: stable
 /// level: 7
-/// concept: a pure flow calling an ai.inference flow inherits that effect and must declare it
+/// concept: a caller of an ai.inference flow must declare the propagated effect
 /// expected_diagnostics: FUNGI-EFFECT-002
-/// ai_rule: Effects propagate upward; a caller that does not declare an effect used by its callee receives FUNGI-EFFECT-002.
+/// ai_rule: Effects propagate upward; a governed caller that omits a callee effect receives FUNGI-EFFECT-002.
 
-// classifyText is a guarded flow with effects [ai.inference]
-// This pure caller does not declare ai.inference â€” illegal.
-pure flow pureWrapper(text: String) -> Label
+secure flow classifyText(text: String) -> Label
+contract {
+  intent {
+    "Classify text locally using an admitted model."
+  }
+  effects {
+    ai.inference
+  }
+}
 {
-  // FUNGI-EFFECT-002: ai.inference propagated from classifyText but not declared on pureWrapper
-  let label = classifyText(text)
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
+  return ClassifierModel.classify(text)?
+}
+
+guarded flow wrapperMissingAiEffect(text: String) -> Label
+contract {
+  intent {
+    "Call the classifier but deliberately omit the propagated ai.inference effect."
+  }
+  effects {
+    // BUG: ai.inference is required transitively by classifyText.
+  }
+}
+{
+  let label = classifyText(text)?
   return label
 }

@@ -37,6 +37,7 @@ contract {
 }
   compute target best {
     prefer [cpu]
+    fallback cpu
     deny [remote.execution]
   }
   authority {

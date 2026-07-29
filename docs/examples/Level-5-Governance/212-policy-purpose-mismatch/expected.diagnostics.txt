@@ -1,5 +1,1 @@
-none
-// FUNGI-GOV-005 is the target diagnostic for this example.
-// Policy-purpose-mismatch detection is tracked under Phase 8B.
-// The example is stable: only FUNGI-TYPE-001 (suppressed) and FUNGI-EFFECT-002 (warning)
-// are produced by the current pipeline — no unsuppressed errors.
+FUNGI-GOV-005

@@ -1,4 +1,4 @@
-FUNGI-HINT-COMPUTE-001 (COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE) — info
+FUNGI-TARGET-001 (COMPUTE_TARGET_FALLBACK_MISSING) — error
 
 compute target npu has no fallback declared.
 Add fallback cpu to ensure execution when npu is unavailable:

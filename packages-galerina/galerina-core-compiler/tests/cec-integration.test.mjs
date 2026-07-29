@@ -3,7 +3,8 @@
 //
 // Finds all example.fungi files under docs/Examples/, compiles each through the
 // full Galerina compiler pipeline, and compares actual diagnostics to the
-// expected.diagnostics.txt companion file.
+// authoritative `/// expected_diagnostics:` source contract. A companion
+// expected.diagnostics.txt is a legacy fallback only.
 //
 // Stability tiers (read from /// test_status: header in .fungi files):
 //
@@ -116,6 +117,27 @@ function parseTestStatus(source) {
   return match ? match[1] : "draft";
 }
 
+function expectedDeclaration(source, legacySidecar = null) {
+  const header = source.match(/^\/\/\/\s*expected_diagnostics:\s*(.+)$/m);
+  return header ? header[1].trim() : (legacySidecar ?? "none").trim();
+}
+
+describe("CEC expectation authority", () => {
+  it("uses the source contract instead of a stale legacy sidecar", () => {
+    assert.equal(
+      expectedDeclaration(
+        "/// expected_diagnostics: FUNGI-PII-001",
+        "FUNGI-EFFECT-001",
+      ),
+      "FUNGI-PII-001",
+    );
+  });
+
+  it("retains a sidecar fallback for a legacy source with no contract", () => {
+    assert.equal(expectedDeclaration("", "FUNGI-TYPE-001"), "FUNGI-TYPE-001");
+  });
+});
+
 function loadExamples() {
   if (!existsSync(EXAMPLES_DIR)) return [];
   return walkDir(EXAMPLES_DIR).map((fungiFile) => {
@@ -124,8 +146,9 @@ function loadExamples() {
     const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
     const diagFile = fungiFile.replace(/example\.fungi$/, "expected.diagnostics.txt");
-    let rawExpected = "none";
-    try { rawExpected = readFileSync(diagFile, "utf8").trim(); } catch { /* not present */ }
+    let legacySidecar = null;
+    try { legacySidecar = readFileSync(diagFile, "utf8"); } catch { /* not present */ }
+    const rawExpected = expectedDeclaration(source, legacySidecar);
 
     // Parse expected: "none" | list of FUNGI-* codes
     const lines = rawExpected.split("\n").map((l) => l.trim())

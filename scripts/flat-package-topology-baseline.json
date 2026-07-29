@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "policy": "pre-slide-bootstrap-debt-only",
+  "legacyNestedNativeManifests": [
+    "galerina-framework-example-app/packages/greeting/package.fungi.json"
+  ]
+}

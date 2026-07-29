@@ -1,4 +1,3 @@
-none
-// FUNGI-INTENT-001 is the target diagnostic for this example.
-// Intent-vs-behaviour cross-checking is tracked for a future compiler wave.
-// The example is stable: no unsuppressed errors are produced by the current pipeline.
+FUNGI-GOV-001
+// FUNGI-INTENT-001 was retired; the canonical intent/behaviour mismatch
+// diagnostic is FUNGI-GOV-001.

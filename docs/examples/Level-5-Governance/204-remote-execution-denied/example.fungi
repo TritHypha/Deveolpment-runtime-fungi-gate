@@ -28,10 +28,12 @@ contract {
 }
   compute target best {
     prefer [npu, gpu, cpu]
+    fallback cpu
     deny [remote.execution]
   }
 {
-  let score = FraudModel.score(input)
+  let validatedInput = validate.fraudInput(input)?
+  let score = FraudModel.score(validatedInput)
   AuditLog.write({ action: "runFraudModel", score: score })
   return Ok(score)
 }

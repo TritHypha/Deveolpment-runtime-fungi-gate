@@ -123,6 +123,8 @@ const PROPOSED_BASELINE = Object.freeze({
   'Proposed-025-vault-global-secret-invalid':  '`vault global` has no grammar — same RD-0531 refusal',
   'Proposed-229-vault-write-without-mut-invalid':
     'cannot demonstrate FUNGI-VAULT-004: the vault-write syntax `mut secure.x = v` that governance-verifier.ts:302 documents does NOT parse (parser.ts:1601 parseMutDecl takes ONE identifier then expects `=`; no member-path production). Board #174',
+  'Proposed-464-enterprise-supply-chain':
+    'cannot demonstrate FUNGI-MODULE-005: package-policy grammar and a signed/canonical policy input are absent from the root check/build path; current package enforcement uses FUNGI-PKG-* and MODULE-005 remains design-only',
   'Proposed-473-scoped-vault-request':         '`vault request` is not one of the three declared scopes (secure|global|session)',
   'Proposed-474-vault-session-session-pattern': '`vault session` has no grammar — same RD-0531 refusal',
 });

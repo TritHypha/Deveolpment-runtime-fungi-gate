@@ -17,6 +17,10 @@ contract {
   intent {
     "Read a patient record — demonstrates missing pii.read effect declaration."
   }
+
+  effects {
+    database.read
+  }
 }
 {
   unsafe let rawId: String = request.body.patientId

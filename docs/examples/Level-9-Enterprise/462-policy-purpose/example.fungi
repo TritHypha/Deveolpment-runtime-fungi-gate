@@ -30,6 +30,11 @@ contract {
     lawfulBasis "legitimate_interest"
     retentionDays 30
   }
+  authority share NotificationService.send {
+    reason "The patient approved appointment-reminder messages."
+    audit required
+    require network.outbound
+  }
 {
   unsafe let rawId: String = request.body.patientId
   let patientId: protected PatientId = validate.patientId(rawId)?

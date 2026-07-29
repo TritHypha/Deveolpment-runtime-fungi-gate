@@ -3,13 +3,21 @@
 /// test_status: stable
 /// level: 7
 /// concept: secure AI flow that declares audit.write but omits the AuditLog.write call
-/// expected_diagnostics: FUNGI-GOV-002
+/// expected_diagnostics: FUNGI-AUDIT-001
 /// ai_rule: If a secure flow declares audit.write, it must call AuditLog.write before returning.
+
+record Patient {
+  id: PatientId
+}
+
+record RiskScore {
+  value: Decimal
+}
 
 secure flow scorePatient(readonly patient: Patient) -> ScorePatientResult
 
 contract {
-  // Result alias — audit.write declared but AuditLog.write call is missing (triggers FUNGI-GOV-002)
+  // Result alias — audit.write declared but AuditLog.write call is missing (triggers FUNGI-AUDIT-001)
   types {
     type ScorePatientResult = Result<RiskScore, AiError>
   }
@@ -24,7 +32,9 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu, cpu] fallback cpu deny [remote.execution] }
+
   let score = RiskModel.run(patient)?
-  // FUNGI-GOV-XXX: audit.write declared but AuditLog.write never called
+  // FUNGI-AUDIT-001: audit.write declared but AuditLog.write never called
   return Ok(score)
 }

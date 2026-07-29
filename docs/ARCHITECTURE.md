@@ -84,6 +84,28 @@ data flow (HTTP request → response), the compile-time 14-pass pipeline, and th
 diagnostic code namespace table live in
 `../../ZTF-Knowledge-Bases/galerina-core-package-architecture.md`.
 
+## Canonical flat package topology
+
+The post-SLIDE Galerina-native package resolver must not reproduce npm's nested
+dependency-tree layout. Every independently resolvable Galerina package or
+plugin has exactly one canonical direct-child location under
+`packages-galerina/`. Packages reference canonical peers through admitted
+manifests; they do not embed copied package instances inside child dependency
+trees.
+
+Package-internal source, tests and assets remain valid. Nested independently
+resolvable package identities, duplicate identities or versions, shadowed
+packages, ambiguous resolution, undeclared dependencies, cycles forbidden by
+policy, and hash/provenance mismatches must fail closed. Resolution must emit a
+deterministic dependency graph and provenance receipt.
+
+This is a forward replacement rule. Existing TypeScript and `node_modules`
+bootstrap dependencies remain until executable SLIDE integration provides and
+verifies their replacements. See
+`docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` and the executable
+migration contract in
+`docs/architecture/flat-package-topology-and-post-slide-migration.md`.
+
 ## Documentation Coverage And Conflict Register
 
 `docs/COVERAGE.md` is the current index for language, runtime and package

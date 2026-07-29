@@ -3,7 +3,10 @@
 /// test_status: stable
 /// level: 2
 /// concept: Auto requires an initializer
-/// expected_diagnostics: FUNGI-TYPE-002
+/// expected_diagnostics: FUNGI-PARSE-001
 /// ai_rule: Auto cannot infer a type without an initializer. Provide an initial value.
 
-let count: Auto
+pure flow missingAutoInitializer() -> Int {
+  let count: Auto
+  return 0
+}

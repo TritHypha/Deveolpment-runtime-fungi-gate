@@ -22,6 +22,7 @@ contract {
   }
 }
 {
+  compute target best { prefer [npu, gpu] fallback cpu deny [remote.execution] }
   unsafe let rawInput: String = request.body.text
   let label = ClassifierModel.classify(rawInput)?
   return Ok(label)

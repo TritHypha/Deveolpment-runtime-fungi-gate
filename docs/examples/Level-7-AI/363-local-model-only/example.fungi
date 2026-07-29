@@ -23,7 +23,7 @@ contract {
   }
 }
 {
-  compute target best { prefer [cpu] deny [remote.execution, network.outbound] }
+  compute target best { prefer [cpu] fallback cpu deny [remote.execution, network.outbound] }
 
   unsafe let rawText: String = request.body.text
   let text: String = validate.text(rawText)?

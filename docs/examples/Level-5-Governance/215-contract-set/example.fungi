@@ -7,7 +7,6 @@
 /// test_status: stable
 
 event PatientCreated
-event PatientCreationFailed
 
 contract set NhsPatientData {
   rules {
@@ -17,7 +16,6 @@ contract set NhsPatientData {
 
   events {
     emits PatientCreated
-    emits PatientCreationFailed
   }
 
   audit {

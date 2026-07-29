@@ -79,28 +79,38 @@ planning checkbox must never be used to imply that implementation exists.
   Eighteen real network contract-placement defects and nine DSS legacy intent
   forms were migrated to current syntax. Network 192/192, security 15/15,
   unit-registry 7/7, corpus 0 implicit, and compiler-stage hashes are green.
-- **Task 3 still open, but reduced:** `audit-example-diagnostics.mjs` now has
-  an explicit 29-row known-drift worklist, down from 87. Fifty-eight rows were
-  removed by repairing self-contained examples and five checker/CLI
-  defects rather than weakening the gate. `check --strict-governance` now
+- **Task 3 curriculum gate complete:** `audit-example-diagnostics.mjs` is
+  green for **232/232** admitted examples with **zero known drift**, down from
+  the original 87-row baseline. All rows were removed by repairing examples
+  and checker/CLI defects rather than weakening the gate.
+  `check --strict-governance` now
   performs the read-only production effect, tier, and value-state checks;
   it writes no build/signing artefacts. The authoritative effect pass now
   consumes the structured operation registry, recognizes `Clock.now`, model
   inference aliases, governed service/payment adapters, helper-function
   effects, and distinguishes call-observed effects from explicit PII/PHI
-  authority and separately verified vault authority. Focused effect evidence
-  is 65/65; type/value-state focused evidence is 174/174; both repaired clean
-  clock examples pass strict governance. The 29 remaining rows are still
-  beta-v1 burn-down work, not an accepted release baseline.
-- **Fresh package close for this tranche:** compiler typecheck/build and all
-  **5,727/5,727** tests pass; CEC stable/draft integration is **243/243**;
-  `.fungi` source quality is 0 findings; the curriculum detector self-test is
-  16/16. The generated 29-row inventory is the current factual resume point.
-- **Current safe boundary:** preserve the 29-row generated inventory, commit
-  this coherent compiler/curriculum tranche after focused and package
-  verification, then continue with obsolete diagnostic identities,
-  target-hint fixtures, governance-purpose/authority fixtures, and the
-  remaining deliberately invalid examples.
+  authority and separately verified vault authority. The final tranche adds
+  root event-gate enforcement, governance-qualifier type preservation,
+  protected-egress authority refusal, and a dedicated local-or-remote model
+  secret boundary (`FUNGI-SECRET-007`). The detector's 16/16 self-test is
+  green.
+- **Fresh verification boundary:** compiler typecheck/build is green; the
+  curriculum audit is **232/232**, zero known drift and zero new regression.
+  The post-tranche full compiler package is **5,748/5,748**. The diagnostic
+  namespace gate initially refused unregistered `FUNGI-GOV-025`; registering
+  `GOV-025`, `SECRET-007`, and `TYPE-034` in the canonical Knowledge Base
+  restored the full green without an allowlist entry.
+- **Current safe boundary:** proceed to the remaining compiler-authority and
+  beta-v1 feature tasks, then the complete graphs/tests/audits/generators
+  close. The live colour-coded sequence and the binding flat package topology
+  are recorded in
+  `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+- **Flat-package topology ratchet:** the new audit and 6/6 anti-neutering tests
+  enforce unique canonical identities and reject new nested native packages.
+  Current measured debt is 95 pre-SLIDE `node_modules` trees plus the one
+  exact nested example-app greeting package. `--post-slide` fails on all of
+  them today by design. Migration and resolver details:
+  `docs/architecture/flat-package-topology-and-post-slide-migration.md`.
 - **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this

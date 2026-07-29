@@ -6,9 +6,6 @@
 /// test_status: stable
 /// ai_rule: Readable forms are aliases. 'and' = &&, 'or' = ||, 'unless' = if !cond, 'is' = ==. Same AST.
 
-event OrderApproved
-event OrderRejected
-
 pure flow approveOrder(amount: Int, limit: Int, isActive: Bool, isVerified: Bool) -> Bool
 
 contract {

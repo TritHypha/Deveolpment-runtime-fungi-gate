@@ -237,15 +237,17 @@ Galerina `;;` comment false negatives now have regression tests; real
 contract-placement and intent-syntax findings were repaired. The curriculum
 detector now accepts multi-part diagnostic codes and proves that case in its
 16/16 self-test. Its strict read-only governance profile plus repaired
-type/value-state/effect inference reduced the explicit worklist from 87 to
-29 rows. The effect checker now reconciles its structured operation registry
+type/value-state/effect inference reduced and then eliminated the explicit
+87-row worklist. The effect checker now reconciles its structured operation registry
 with the authoritative pass and distinguishes call-inferred effects from
 explicit or separately verified capability evidence. Focused evidence is
 65/65 effect tests and 174/174 type/value-state tests; the full compiler
-package is 5,727/5,727 and CEC is 243/243. Step 5 remains open on the exact
-29-row worklist. The debt is recorded in
-`docs/reports/fungi-corpus-adjudication-2026-07-29.md` and must be burned down,
-not baselined into this gate.
+package was 5,727/5,727 and CEC was 243/243 at the preceding full checkpoint.
+Step 5 is now complete: the fresh curriculum audit is 232/232 with zero known
+drift and its detector self-test is 16/16. The post-tranche compiler
+typecheck/build and full package suite are green at 5,748/5,748. The
+adjudication history remains in
+`docs/reports/fungi-corpus-adjudication-2026-07-29.md`.
 
 ### Task 4: Promote the two remaining compiler stages
 

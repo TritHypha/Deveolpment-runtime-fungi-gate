@@ -174,6 +174,46 @@ intent "Run model locally" {
   });
 });
 
+describe("Governance verifier — FUNGI-TARGET-001 fallback required", () => {
+  it("rejects a non-CPU target without fallback", () => {
+    const result = parseAndVerify(`
+secure flow infer(input: Tensor<Float32, [1]>) -> Tensor<Float32, [1]>
+contract {
+  intent { "Run local admitted inference." }
+  effects { ai.inference }
+}
+compute target npu {}
+{
+  return Model.run(input)?
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-TARGET-001"));
+  });
+
+  it("accepts a non-CPU target with fallback and a CPU target without one", () => {
+    const withFallback = parseAndVerify(`
+secure flow infer(input: Tensor<Float32, [1]>) -> Tensor<Float32, [1]>
+contract {
+  intent { "Run local admitted inference." }
+  effects { ai.inference }
+}
+compute target npu { fallback cpu }
+{
+  return Model.run(input)?
+}
+`);
+    const cpu = parseAndVerify(`
+pure flow addOne(value: Int) -> Int
+compute target cpu {}
+{
+  return value + 1
+}
+`);
+    assert.ok(!hasDiag(withFallback, "FUNGI-TARGET-001"));
+    assert.ok(!hasDiag(cpu, "FUNGI-TARGET-001"));
+  });
+});
+
 describe("Governance verifier — FUNGI-GOV-011 unknown contract set", () => {
   it("emits FUNGI-GOV-011 when use references an undeclared contract set", () => {
     const result = parseAndVerify(`
@@ -585,6 +625,69 @@ policy {
     assert.ok(hasDiag(result, "FUNGI-GOV-005"), "Expected FUNGI-GOV-005 when internal purpose contradicts network.outbound");
   });
 
+  it("emits FUNGI-GOV-005 when an appointment purpose selects a marketing template", () => {
+    const result = parseAndVerify(`
+secure flow notify(email: protected Email) -> Result<Unit, SendError>
+contract {
+  intent { "Send the approved appointment reminder." }
+  effects { network.outbound }
+}
+policy { purpose "appointment_reminder" }
+authority share EmailGateway.send {
+  reason "The patient approved appointment notifications."
+  require network.outbound
+}
+{
+  let sent = EmailGateway.send(seal(email), Template.marketingOffer)?
+  return Ok(unit)
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-GOV-005"), "Expected purpose/template mismatch to fail governance");
+  });
+
+  it("accepts an appointment purpose with an appointment-reminder template", () => {
+    const result = parseAndVerify(`
+secure flow notify(email: protected Email) -> Result<Unit, SendError>
+contract {
+  intent { "Send the approved appointment reminder." }
+  effects { network.outbound }
+}
+policy { purpose "appointment_reminder" }
+authority share EmailGateway.send {
+  reason "The patient approved appointment notifications."
+  require network.outbound
+}
+{
+  let sent = EmailGateway.send(seal(email), Template.appointmentReminder)?
+  return Ok(unit)
+}
+`);
+    assert.ok(!hasDiag(result, "FUNGI-GOV-005"), "Compatible purpose and template must pass");
+  });
+
+  it("detects a purpose mismatch when the template is a named record field", () => {
+    const result = parseAndVerify(`
+secure flow notify(email: protected Email) -> Result<Unit, SendError>
+contract {
+  intent { "Send an approved appointment reminder." }
+  effects { network.outbound }
+}
+policy { purpose "appointment_reminder" }
+authority share NotificationService.send {
+  reason "The patient approved appointment notifications."
+  require network.outbound
+}
+{
+  let sent = NotificationService.send({
+    to: seal(email),
+    template: "marketing_offer"
+  })?
+  return Ok(unit)
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-GOV-005"), "Expected record template purpose mismatch");
+  });
+
   it("FUNGI-GOV-005 constant has correct code and name", () => {
     assert.equal(FUNGI_GOV_005.code, "FUNGI-GOV-005");
     assert.equal(FUNGI_GOV_005.name, "POLICY_PURPOSE_MISMATCH");
@@ -635,6 +738,78 @@ authority share Payments.processor {
     assert.equal(FUNGI_GOV_007.code, "FUNGI-GOV-007");
     assert.equal(FUNGI_GOV_007.name, "AUTHORITY_BLOCK_MISSING_REASON");
     assert.equal(FUNGI_GOV_007.severity, "error");
+  });
+});
+
+describe("Governance verifier — FUNGI-GOV-025 protected outbound authority", () => {
+  const protectedOutbound = (authority = "") => `
+secure flow send(patient: protected PatientRecord) -> Result<Unit, SendError>
+contract {
+  intent { "Send an approved protected record to an external service." }
+  effects { network.outbound }
+}
+${authority}
+{
+  let packet = validate.patientRecord(patient)?
+  let sent = http.post("https://approved.example/records", seal(packet))?
+  return Ok(unit)
+}
+`;
+
+  it("fails closed when a protected-input flow declares network egress without authority", () => {
+    const result = parseAndVerify(protectedOutbound());
+    assert.ok(
+      hasDiag(result, "FUNGI-GOV-025"),
+      `Expected FUNGI-GOV-025, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
+
+  it("accepts an explicit, reasoned authority block for protected network egress", () => {
+    const result = parseAndVerify(protectedOutbound(`
+authority share Records.processor {
+  reason "The data owner approved this bounded transfer."
+  audit required
+  require network.outbound
+}`));
+    assert.ok(
+      !hasDiag(result, "FUNGI-GOV-025"),
+      `Unexpected FUNGI-GOV-025: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
+
+  it("does not require data-sharing authority when no protected input enters the flow", () => {
+    const result = parseAndVerify(`
+secure flow ping(message: String) -> Result<Unit, SendError>
+contract {
+  intent { "Send a public health probe." }
+  effects { network.outbound }
+}
+{
+  let sent = http.post("https://approved.example/health", message)?
+  return Ok(unit)
+}
+`);
+    assert.ok(!hasDiag(result, "FUNGI-GOV-025"));
+  });
+
+  it("requires authority when protected data is derived inside a network-egress flow", () => {
+    const result = parseAndVerify(`
+secure flow refer(readonly request: Request) -> Result<Unit, SendError>
+contract {
+  intent { "Send a validated patient referral." }
+  effects { network.outbound }
+}
+{
+  let id: protected PatientId = validate.patientId(request.body.patientId)?
+  let record: protected PatientData = PatientDB.get(id)?
+  let sent = SpecialistService.refer(seal(record))?
+  return Ok(unit)
+}
+`);
+    assert.ok(
+      hasDiag(result, "FUNGI-GOV-025"),
+      `Expected derived protected data to require authority, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+    );
   });
 });
 

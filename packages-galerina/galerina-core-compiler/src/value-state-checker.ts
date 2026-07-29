@@ -226,6 +226,9 @@ export function getSinkRequirement(fullCallName: string): SinkRequirement | unde
   if (/\w+Payment\.(charge|process|submit)$/.test(fullCallName)) {
     return { requiredState: "validated", policyNote: "Payment operations require validated data.", match: "pattern" };
   }
+  if (/\w*Model\.(run|infer|predict|generate|complete|classify|classifyWithKey|embed|score)$/i.test(fullCallName)) {
+    return { requiredState: "validated", policyNote: "AI model calls require validated, governed inputs.", match: "pattern" };
+  }
   if (/^fs\.write\w*$/.test(fullCallName)) {
     return { requiredState: "safe", policyNote: "Filesystem writes require safe values.", match: "pattern" };
   }
@@ -342,7 +345,7 @@ function isLogCall(node: AstNode): boolean {
 const EGRESS_SAFE_RECEIVERS = new Set([
   "crypto", "cipher", "hash", "hmac", "signer", "verifier", "kdf", "mac", "digest",
   "vault", "keystore", "keyring", "hsm", "kms", "secretmanager", "secretstore",
-  "sealer", "secretbox", "redactor", "redact",
+  "sealer", "secretbox", "redactor", "redact", "auditlog",
 ]);
 // Egress-shaped method verbs (transmit/persist off-host). A read-only getter (get/list/describe/read) is NOT.
 const EGRESS_METHOD_VERB = /^(send|post|put|publish|push|notify|dispatch|deliver|upload|charge|emit|track|capture|submit|forward|index|write|append|enqueue|produce|ingest|report|export|sync|store)/i;
@@ -371,13 +374,27 @@ function isNetworkSink(node: AstNode): boolean {
   if (r === "ai" && (methodName === "remoteInference" || methodName === "remote" || methodName === "infer")) return true;
   // audit-sink-canonicality gap (RD-0234b tooling): a `Model.run`/`Model.infer`/`Model.predict` call
   // ships the payload to a model (a third-party egress), like ai.remoteInference — was ungoverned.
-  if (r === "model" && /^(run|infer|predict|generate|complete)$/.test(methodName)) return true;
+  // Named model values (ClassifierModel, EmbeddingModel, local aliases ending
+  // in "Model") are still model boundaries. Matching only the literal receiver
+  // `Model` let SecureString arguments bypass the egress gate.
   if (/vectordb$/.test(r) && /^(write|insert|upsert|add|index)$/.test(methodName)) return true;
   // H3 (RD-0234c SAFELIST inversion): a raw secret handed to ANY receiver via an egress-shaped method is a
   // potential off-host exfiltration path — deny by default. Only the known ON-HOST secret-handling primitives
   // (EGRESS_SAFE_RECEIVERS) are exempt. This closes the denylist gap where an UNKNOWN egress service admitted.
   if (EGRESS_METHOD_VERB.test(methodName) && !EGRESS_SAFE_RECEIVERS.has(r)) return true;
   return false;
+}
+
+// A named model is a governed inference boundary, but it is not necessarily a
+// network boundary: compute-target policy may keep it local. Keep model
+// recognition separate from isNetworkSink so local model pipelines do not
+// falsely report network egress while raw credentials remain forbidden in any
+// model context/state.
+function isModelSink(node: AstNode): boolean {
+  const methodName = node.value ?? "";
+  const r = receiverSegment(node);
+  return r.endsWith("model")
+    && /^(run|infer|predict|generate|complete|classify|classifyWithKey|embed|score)$/i.test(methodName);
 }
 
 // ---------------------------------------------------------------------------
@@ -1659,6 +1676,17 @@ class ValueStateChecker {
       }
     }
 
+    // A model can be admitted as local by compute-target policy, so it is not
+    // automatically network egress. Raw credentials are nevertheless forbidden
+    // at every model boundary because they can leak into model context, state,
+    // traces, tensors, generated output, or plugin implementations.
+    if (isModelSink(node)) {
+      const callName = buildFullCallName(node);
+      for (const child of node.children ?? []) {
+        this.checkArgForSecretModel(child, callName, node.location);
+      }
+    }
+
     // Phase 4.3: Inter-flow taint — warn when a tainted argument is passed to a
     // user-defined flow. This is a call-site warning (FUNGI-VALUESTATE-004), NOT
     // full inter-procedural analysis. We do not follow into the callee body.
@@ -1781,6 +1809,35 @@ class ValueStateChecker {
     for (const child of node.children ?? []) {
       this.checkArgForSecretNetwork(child, callName, location);
     }
+  }
+
+  /**
+   * FUNGI-SECRET-007: a SecureString (including derived secret material) must
+   * not enter a model inference boundary. redact() is the only admitted
+   * declassifier, whether execution is local or remote.
+   */
+  private checkArgForSecretModel(
+    node: AstNode,
+    callName: string,
+    location: SourceLocation | undefined,
+  ): void {
+    if (isRedactCall(node)) return;
+    if (!derivesFromSecret(node, (name) => this.lookupBinding(name))) return;
+
+    const bindingName =
+      node.kind === "identifier" ? (node.value ?? "secret value") : "secret-derived value";
+    this.diagnostics.push(makeVSDiag(
+      "FUNGI-SECRET-007",
+      "SECRET_SENT_TO_MODEL",
+      `Raw secret '${bindingName}' must not be passed to model sink '${callName}'.`,
+      location,
+      `Remove the secret from model input or pass an irreversible redacted placeholder.`,
+      node.kind === "identifier" ? `redact(${bindingName})` : "redact(secretValue)",
+      {
+        why: `Model execution can retain or expose context through state, traces, tensors, plugins, or generated output even when compute is local.`,
+        risk: `Credentials, keys, or tokens could become recoverable from model state or downstream model artifacts.`,
+      },
+    ));
   }
 
   /**

@@ -6,6 +6,10 @@
 /// expected_diagnostics: FUNGI-AUDIT-001
 /// ai_rule: AuditLog.write must be called on every return path in a flow that declares audit.write.
 
+record RecordId {
+  value: String
+}
+
 secure flow deleteRecord(readonly request: Request) -> DeleteRecordResult
 
 contract {

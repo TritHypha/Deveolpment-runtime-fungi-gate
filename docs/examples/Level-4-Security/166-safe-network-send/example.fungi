@@ -23,6 +23,10 @@ contract {
     network.outbound
   }
 }
+authority share ApprovedNotificationService.notify {
+  reason "The data owner approved this redacted notification."
+  require network.outbound
+}
 {
   ;; Protected values MUST be redacted before ANY egress sink — network included.
   ;; Sending `email` un-redacted is FUNGI-VALUESTATE-006. Bind the redacted value

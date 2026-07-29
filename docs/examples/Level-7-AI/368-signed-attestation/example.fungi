@@ -7,7 +7,6 @@
 /// test_status: stable
 
 event ClassificationCompleted
-event ClassificationFailed
 
 secure flow classifyMessage(message: String) -> ClassifyMessageResult
 
@@ -32,7 +31,6 @@ contract {
 
   events {
     emits ClassificationCompleted
-    emits ClassificationFailed
   }
 
   audit {
@@ -46,7 +44,8 @@ compute target best {
   fallback cpu
 }
 {
-  let label = ClassifierModel.classify(message)?
+  let validatedMessage = validate.message(message)?
+  let label = ClassifierModel.classify(validatedMessage)?
 
   emit ClassificationCompleted
 

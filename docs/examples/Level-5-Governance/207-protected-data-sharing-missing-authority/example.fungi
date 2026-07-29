@@ -3,10 +3,10 @@
 /// test_status: stable
 /// level: 5
 /// concept: sending protected data externally without authority block
-/// expected_diagnostics: FUNGI-GOV-003
+/// expected_diagnostics: FUNGI-GOV-025
 /// ai_rule: Protected data cannot be sent externally without an authority block granting permission.
 
-secure flow sendReferral(patient: PatientRecord) -> SendReferralResult
+secure flow sendReferral(patient: protected PatientRecord) -> SendReferralResult
 
 contract {
   types {
@@ -14,7 +14,7 @@ contract {
   }
 
   // Security intent: BUG â€” protected patient data is sent externally without an authority block.
-  // FUNGI-GOV-003 fires because no authority block grants permission for external protected data sharing.
+  // FUNGI-GOV-025 fires because no authority block grants permission for external protected data sharing.
   intent {
     "Send a patient referral â€” BUG: missing authority block for external protected data sharing."
   }
@@ -25,7 +25,8 @@ contract {
   }
 }
 {
-  let referralId = http.post("https://specialist.example.nhs.uk/referrals", patient.referralPacket)?
+  let referralPacket = validate.referralPacket(patient.referralPacket)?
+  let referralId = http.post("https://specialist.example.nhs.uk/referrals", seal(referralPacket))?
   AuditLog.write({ action: "sendReferral", referralId: referralId })
   return Ok(referralId)
 }

@@ -2,7 +2,7 @@
 /// example: 111-local-fn-effect-not-covered-by-parent
 /// level: 3
 /// concept: local fn cannot use effects not declared by the containing flow
-/// expected_diagnostics: FUNGI-EFFECT-001
+/// expected_diagnostics: FUNGI-EFFECT-002
 /// test_status: stable
 /// ai_rule: A local fn is bound by the containing flow's effect declarations.
 
@@ -19,7 +19,7 @@ contract {
 
   effects {
     database.write
-    // BUG: network.outbound is missing — local fn fetchRate uses it, triggering FUNGI-EFFECT-001
+    // BUG: network.outbound is missing; the helper propagates FUNGI-EFFECT-002.
   }
 }
 {

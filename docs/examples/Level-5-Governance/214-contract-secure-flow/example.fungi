@@ -7,7 +7,6 @@
 /// test_status: stable
 
 event PatientCreated
-event PatientCreationRejected
 
 secure flow createPatient(readonly request: Request)
 -> CreatePatientResponse
@@ -30,7 +29,6 @@ contract {
 
   events {
     emits PatientCreated
-    emits PatientCreationRejected
   }
 
 }

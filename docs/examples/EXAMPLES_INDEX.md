@@ -75,7 +75,7 @@ Primitive and domain types — Int, Decimal, String, Bool, Byte, Char, Email, Pa
 | `059-nhs-number-type` | protected NhsNumber domain type | stable | protected, unsafe |
 | `060-invalid-email-assignment` | direct assignment to protected Email is forbidden `FUNGI-TYPE-003` | stable | protected |
 | `061-redacted-email` | redacted Email label | stable | redacted |
-| `062-invalid-redacted-email` | protected Email cannot be assigned to redacted Email directly `FUNGI-TYPE-002` | draft | protected, redacted |
+| `062-invalid-redacted-email` | protected Email cannot be assigned to redacted Email directly `FUNGI-TYPE-034` | draft | protected, redacted |
 | `063-option-some` | Option<T> with Some value | stable | Option |
 | `064-option-none` | Option<T> with None value | stable | Option |
 | `065-option-invalid-arity` | Option<T> requires exactly one type parameter `FUNGI-TYPE-009` | stable | Option |
@@ -83,7 +83,7 @@ Primitive and domain types — Int, Decimal, String, Bool, Byte, Char, Email, Pa
 | `067-result-error` | Result<T,E> Err variant | stable | Result |
 | `068-result-invalid-arity` | Result<T,E> requires exactly two type parameters `FUNGI-TYPE-009` | stable | Result |
 | `069-auto-inference` | Auto type inference | stable | — |
-| `070-auto-invalid` | Auto requires an initializer `FUNGI-TYPE-002` | draft | — |
+| `070-auto-invalid` | Auto requires an initializer `FUNGI-PARSE-001` | draft | — |
 | `071-money-gbp` | Money<GBP> type | stable | Money |
 | `072-money-add-same-currency` | Money<GBP> addition with same currency | stable | Money |
 | `073-money-cross-currency-invalid` | cross-currency Money addition is forbidden `FUNGI-TYPE-004` | stable | Money |
@@ -99,7 +99,7 @@ Primitive and domain types — Int, Decimal, String, Bool, Byte, Char, Email, Pa
 | `083-readonly-view-invalid` | ReadOnlyView requires exactly one type parameter `FUNGI-TYPE-009` | stable | flow |
 | `084-unknown-type` | unknown type name produces FUNGI-TYPE-001 `FUNGI-TYPE-001` | stable | flow |
 | `085-type-mismatch` | type mismatch produces FUNGI-TYPE-002 `FUNGI-TYPE-002` | stable | flow |
-| `086-protected-not-redacted` | protected value cannot be directly assigned to redacted binding `FUNGI-TYPE-002` | draft | protected, redacted |
+| `086-protected-not-redacted` | protected value cannot be directly assigned to redacted binding `FUNGI-TYPE-034` | draft | protected, redacted |
 | `087-protected-email-audit` | full protected -> redacted -> audit pattern | stable | audit, protected, redacted |
 | `088-array-range` | Array.range static constructor | stable | Array |
 | `089-duration-type` | Duration type and arithmetic | stable | and, contract, flow |
@@ -154,7 +154,7 @@ Security model — trust boundaries, unsafe let, validate gates, protected/redac
 | `157-invalid-email-assignment` | assigning String directly to protected Email is forbidden `FUNGI-TYPE-003` | stable | protected |
 | `158-redact-email` | redact() converts protected Email to redacted Email | stable | protected, redacted |
 | `159-redact-patient-id` | redact() converts protected PatientId to redacted PatientId | stable | protected, redacted |
-| `160-protected-not-redacted` | protected value cannot be directly assigned to redacted binding `FUNGI-TYPE-002` | draft | protected, redacted |
+| `160-protected-not-redacted` | protected value cannot be directly assigned to redacted binding `FUNGI-TYPE-034` | draft | protected, redacted |
 | `161-safe-audit-log` | safe audit log write with redacted value | stable | audit, protected, redacted |
 | `162-invalid-audit-log` | unsafe value reaches audit sink without validation `FUNGI-VALUESTATE-003` | stable | audit, unsafe |
 | `163-unsafe-audit-log` | passing unsafe value to audit sink `FUNGI-VALUESTATE-003` | stable | audit, unsafe |
@@ -187,7 +187,7 @@ Governance — intent, policy, authority, contract blocks (errors, context, time
 | `204-remote-execution-denied` | compute target with remote.execution denied | stable | Result, audit |
 | `205-remote-execution-violation` | compute target remote violates governance policy `FUNGI-GOV-004` | draft | Result, audit |
 | `206-protected-data-sharing-authority` | authority block for sharing protected data externally | stable | Result, audit, protected |
-| `207-protected-data-sharing-missing-authority` | sending protected data externally without authority block `FUNGI-GOV-003` | draft | Result, audit, protected |
+| `207-protected-data-sharing-missing-authority` | sending protected data externally without authority block `FUNGI-GOV-025` | draft | Result, audit, protected |
 | `208-audit-proof-required` | delete flow with full audit evidence | stable | Result, audit, protected, record, redacted |
 | `209-audit-proof-missing` | intent requires audit but no audit.write sink used `FUNGI-GOV-002` | stable | Result, audit, protected, record |
 | `210-governed-execution-plan` | full governed execution plan for a ML inference flow | stable | Result, audit |
@@ -254,15 +254,15 @@ AI integration — ai.inference effect, embedding flows, batch inference, govern
 | `353-protected-ai-input` | protected PII validated and passed through an AI risk model with redacted audit | stable | Result, audit, protected, redacted, unsafe |
 | `354-ai-batch-inference` | batch AI inference over an array of inputs | draft | Array, Result |
 | `355-ai-governance-denied-remote` | AI inference with remote execution denied for patient data governance | stable | Result |
-| `356-ai-missing-audit` | secure AI flow that declares audit.write but omits the AuditLog.write call `FUNGI-GOV-002` | draft | Result, audit |
+| `356-ai-missing-audit` | secure AI flow that declares audit.write but omits the AuditLog.write call `FUNGI-AUDIT-001` | stable | Result, audit |
 | `357-tensor-model-input-output` | shape-typed model input and output tensors using a batch dimension | stable | Result, Tensor, while |
-| `358-ai-secure-string-in-ai` | passing a SecureString to an AI model is a secret-exposure error `FUNGI-SECRET-001` | draft | Result |
+| `358-ai-secure-string-in-ai` | passing a SecureString to an AI model is a secret-exposure error `FUNGI-SECRET-007` | draft | Result |
 | `359-embedding-with-fallback` | embedding flow with NPU/GPU preference and CPU fallback | stable | Result, Tensor |
 | `360-ai-audit-redacted` | protected patient data redacted in AI audit log entry | stable | Result, audit, protected, redacted, unsafe |
 | `361-ai-any-tensor` | AnyTensor for dynamically loaded models with unknown shape | stable | Result |
 | `362-ai-invalid-tensor-arity` | Tensor type with missing shape argument raises FUNGI-TYPE-009 `FUNGI-TYPE-009` | stable | Result, Tensor |
 | `363-local-model-only` | local-only AI classification denying both remote execution and network outbound | draft | Result, unsafe |
-| `364-ai-effect-propagation` | a pure flow calling an ai.inference flow inherits that effect and must declare it `FUNGI-EFFECT-002` | draft | and, effects, flow |
+| `364-ai-effect-propagation` | a caller of an ai.inference flow must declare the propagated effect `FUNGI-EFFECT-002` | draft | effects, flow |
 | `365-ai-summary-flow` | complete AI governance pattern — healthcare risk scoring with PII, audit, and compute governance | stable | Result, Tensor, audit, protected, unsafe |
 | `366-ai-unsafe-input-to-model` | Unsafe input cannot flow directly to AI model `FUNGI-VALUESTATE-003` | draft | Result, unsafe |
 | `367-ai-inference-without-effect` | ai.inference effect must be declared `FUNGI-EFFECT-001` | draft | flow |
@@ -293,7 +293,7 @@ Compute targets — cpu, gpu, npu, wasm, photonic, quantum, adaptive/determinist
 | `413-target-quantum-simulation` | quantum preference with GPU simulation and CPU fallback | stable | Result, Tensor |
 | `414-target-no-fallback-invalid` | omitting the fallback clause from a non-cpu compute target is an error `FUNGI-TARGET-001` | draft | Result, Tensor |
 | `415-target-summary` | complete compute target governance — prefer, deny, fallback, adaptive runtime, and audit | stable | Result, Tensor, audit, unsafe |
-| `416-target-fallback-missing` | compute target without fallback `FUNGI-HINT-COMPUTE-001` | stable | Tensor |
+| `416-target-fallback-missing` | compute target without fallback `FUNGI-TARGET-001` | stable | Tensor |
 
 ## Level 9 — Enterprise
 
@@ -304,7 +304,7 @@ Enterprise patterns — healthcare PII, financial payments, compliance effects, 
 | ID | Concept | Status | Key Features |
 |---|---|---|---|
 | `451-healthcare-patient-create` | healthcare PII governance pattern — create patient record with NHS number, protected types, and audit | stable | Result, audit, protected, record, unsafe |
-| `452-healthcare-invalid-pii-log` | passing a protected PatientId directly to a log call without redaction `FUNGI-SECRET-001` | draft | Result, audit, protected, record, unsafe |
+| `452-healthcare-invalid-pii-log` | passing a protected PatientId directly to a log call without redaction `FUNGI-VALUESTATE-009` | draft | Result, audit, protected, record, unsafe |
 | `453-financial-payment-charge` | payment governance flow with approved merchant, Money type, and audit | stable | Money, Result, audit, protected |
 | `454-financial-cross-currency-invalid` | adding Money<GBP> and Money<USD> without currency conversion is a type error `FUNGI-TYPE-004` | stable | Money |
 | `455-financial-money-calculation` | financial tax calculation using Money and Decimal | stable | Money |
@@ -313,10 +313,10 @@ Enterprise patterns — healthcare PII, financial payments, compliance effects, 
 | `458-compliance-audit-required` | secure flow that declares audit.write but never calls AuditLog.write `FUNGI-AUDIT-001` | draft | Result, audit, protected, record, unsafe |
 | `459-multi-protected-values` | multiple PII types in one flow — all validated as protected and all redacted in audit | stable | Result, audit, protected, redacted, unsafe |
 | `460-authority-data-sharing` | authority block authorises sharing protected PatientData with an external service | stable | Result, audit, protected, unsafe |
-| `461-authority-missing` | sharing protected data across a trust boundary without an authority block `FUNGI-GOV-003` | draft | Result, audit, protected, unsafe |
+| `461-authority-missing` | sharing protected data across a trust boundary without an authority block `FUNGI-GOV-025` | draft | Result, audit, protected, unsafe |
 | `462-policy-purpose` | policy block declares the permitted purpose for data use in a communication flow | stable | Result, audit, protected, unsafe |
 | `463-policy-mismatch` | declared purpose does not match the template used in the flow body `FUNGI-GOV-005` | draft | Result, audit, match, protected, unsafe |
-| `464-enterprise-supply-chain` | flow requiring a module capability that has not been accepted in the supply-chain manifest `FUNGI-MODULE-005` | draft | Result, audit |
+| `Proposed-464-enterprise-supply-chain` | proposed package-policy denial for an unaccepted module capability `FUNGI-MODULE-005` | proposal | Result, audit |
 | `465-enterprise-summary` | complete enterprise-grade healthcare flow — patient create with PII, NHS number, AI risk scoring, audit, and governance proof | stable | Result, Tensor, audit, protected, record, unsafe |
 | `466-pii-without-pii-effect` | PII access requires pii.read effect `FUNGI-PII-001` | draft | Result |
 | `467-protected-response-body` | Protected value in response body requires policy `FUNGI-GOV-003` | draft | Result, protected |

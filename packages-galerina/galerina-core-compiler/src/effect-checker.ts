@@ -108,6 +108,17 @@ export const EFFECT_REGISTRY: Readonly<Record<string, readonly string[]>> = {
   "process.spawn": ["process.spawn"],
   "Process.spawn": ["process.spawn"],
   "RecordStore.findById": ["database.read"],
+  "DynamicModelRegistry.load": ["inference.load"],
+  "OpticalProjection.forward": ["ai.inference"],
+  "QuantumOptimiser.run": ["ai.inference"],
+  "QuantumSimulator.run": ["ai.inference"],
+  "PatientDB.get": ["database.read", "pii.read"],
+  "PatientDB.getEmail": ["database.read", "pii.read"],
+  "PatientDB.findById": ["database.read", "pii.read"],
+  "PatientsDB.find": ["database.read", "pii.read"],
+  "PatientsDB.findById": ["database.read", "pii.read"],
+  "PatientsDB.search": ["database.read", "pii.read"],
+  "HealthDB.get": ["database.read", "phi.read"],
 
   // Phase 25: Crypto effects — signature verification and signing
   "Crypto.verify": ["crypto.verify"],
@@ -795,6 +806,16 @@ export function checkFlowEffects(
 
     for (const effect of observedEffects) {
       if (!declared.has(effect)) {
+        const code = effect === "pii.read"
+          ? "FUNGI-PII-001"
+          : effect === "phi.read" || effect === "phi.write"
+            ? "FUNGI-PHI-001"
+            : "FUNGI-EFFECT-001";
+        const name = effect === "pii.read"
+          ? "PII_AUTHORITY_MISSING"
+          : effect === "phi.read" || effect === "phi.write"
+            ? "PHI_AUTHORITY_MISSING"
+            : "UNDECLARED_EFFECT";
         // Task 4: point to the specific call expression that requires the effect
         const callLocation = effectCallLocations.get(effect) ?? flow.location;
         // Task 5: suggestedCode is the complete contract.effects block with all merged effects
@@ -802,8 +823,8 @@ export function checkFlowEffects(
           ? buildContractEffectsBlock(mergedEffects)
           : "";
         diagnostics.push({
-          code: "FUNGI-EFFECT-001",
-          name: "UNDECLARED_EFFECT",
+          code,
+          name,
           severity: "error",
           message: `${qualifierLabel} "${flow.name}" uses effect "${effect}" which is not declared.`,
           location: callLocation,
@@ -820,13 +841,18 @@ export function checkFlowEffects(
         && !NON_CALL_OBSERVED_EFFECTS.has(effect)
         && !hasTransitiveEffect(flow.name, effect, allFlows, callGraph, new Set())
       ) {
+        const auditEvidenceMissing = effect === "audit.write";
         diagnostics.push({
-          code: "FUNGI-EFFECT-007",
-          name: "OVERDECLARED_EFFECT",
-          severity: "warning",
-          message: `${qualifierLabel} "${flow.name}" declares effect "${effect}" but no matching operation was observed.`,
+          code: auditEvidenceMissing ? "FUNGI-AUDIT-001" : "FUNGI-EFFECT-007",
+          name: auditEvidenceMissing ? "AUDIT_EVIDENCE_MISSING" : "OVERDECLARED_EFFECT",
+          severity: auditEvidenceMissing ? "error" : "warning",
+          message: auditEvidenceMissing
+            ? `${qualifierLabel} "${flow.name}" declares audit.write but produces no audit evidence.`
+            : `${qualifierLabel} "${flow.name}" declares effect "${effect}" but no matching operation was observed.`,
           location: flow.location,
-          suggestedFix: `Remove "${effect}" from the effects declaration if it is not required.`,
+          suggestedFix: auditEvidenceMissing
+            ? `Call AuditLog.write on every terminal path, or remove audit.write when no audit obligation exists.`
+            : `Remove "${effect}" from the effects declaration if it is not required.`,
         });
       }
     }

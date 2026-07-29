@@ -26,6 +26,7 @@
 //
 // Deferred (require full expression type inference or call graph):
 //   FUNGI-TYPE-002  TypeMismatch               — assignment compatibility (partial Phase 8A)
+//   FUNGI-TYPE-034  GovernanceQualifierMismatch — protected/redacted label laundering
 //   FUNGI-TYPE-005..007  Operator / call / return type checking
 //   FUNGI-TYPE-010  UnsatisfiedGenericConstraint — generic constraint checks
 //   FUNGI-TYPE-012..016  ResultType, SecretOp, MissingEffect, GovernedSink, TensorShape
@@ -337,6 +338,13 @@ interface ParsedTypeRef {
 }
 
 const GOVERNANCE_QUALIFIER_PREFIXES = ["protected ", "redacted "] as const;
+
+function governanceQualifier(raw: string): "protected" | "redacted" | undefined {
+  const input = raw.trim();
+  if (input.startsWith("protected ")) return "protected";
+  if (input.startsWith("redacted ")) return "redacted";
+  return undefined;
+}
 
 function parseTypeString(raw: string): ParsedTypeRef {
   let input = raw.trim();
@@ -1333,13 +1341,10 @@ class TypeChecker {
             // parameters carry their currency parameter through to cross-currency checks.
             const typeRef = child.children?.find((c) => c.kind === "typeRef"); // perf-allow: loop-array-find — bounded N over a paramDecl's children (typeRef lookup)
             if (typeRef?.value) {
-              const parsed = parseTypeString(typeRef.value);
-              // Preserve generic args for Money (cross-currency checks) and other
-              // parameterised types; fall back to base for simple types.
-              const fullType = parsed.args.length > 0
-                ? `${parsed.base}<${parsed.args.join(",")}>`
-                : parsed.base;
-              this.registerBindingType(paramName, fullType);
+              // Preserve the complete annotation, including governance
+              // qualifiers. Erasing `protected`/`redacted` here allowed a
+              // protected value to be claimed as redacted without redact().
+              this.registerBindingType(paramName, typeRef.value.trim());
             }
             for (const typeChild of child.children ?? []) {
               if (typeChild.kind === "typeRef") {
@@ -1752,11 +1757,8 @@ class TypeChecker {
         // Register the binding with its declared type.
         // For generic types (Money<GBP>, Tensor<Float32,...>), preserve the full
         // type annotation so cross-generic comparisons (e.g. Money<GBP> vs Money<USD>)
-        // can be detected. Strip governance qualifiers first.
-        let registeredType = typeSection;
-        for (const q of ["protected ", "redacted "]) {
-          if (registeredType.startsWith(q)) { registeredType = registeredType.slice(q.length).trim(); break; }
-        }
+        // and governance qualifiers remain available to later assignments.
+        const registeredType = typeSection;
         this.registerBindingType(bindingName, registeredType !== "" ? registeredType : declaredBase);
 
         // Phase 8A: check assignment compatibility with init expression
@@ -1791,6 +1793,35 @@ class TypeChecker {
                   : undefined,
               ));
             }
+          }
+        }
+
+        // A sensitivity label is not a cast. In particular, assigning a
+        // protected value to a redacted binding without an explicit redact()
+        // call would launder the value while claiming irreversible
+        // declassification. Preserve the qualifiers in typeScopes and reject
+        // direct cross-qualifier assignments.
+        if (hasGovernanceQualifier && initNode !== undefined) {
+          const inferredType = this.inferType(initNode);
+          const declaredQualifier = governanceQualifier(typeSection);
+          const inferredQualifier = inferredType === undefined
+            ? undefined
+            : governanceQualifier(inferredType);
+          if (
+            inferredType !== undefined
+            && declaredQualifier !== undefined
+            && inferredQualifier !== undefined
+            && declaredQualifier !== inferredQualifier
+          ) {
+            this.diagnostics.push(makeTCDiag(
+              "FUNGI-TYPE-034",
+              "GOVERNANCE_QUALIFIER_MISMATCH",
+              `Cannot assign '${inferredType}' to '${typeSection}'. Governance qualifiers require an explicit conversion.`,
+              node.location,
+              declaredQualifier === "redacted"
+                ? `Pass the protected value through redact() before assigning it to a redacted binding.`
+                : `A redacted value cannot be converted back into a protected value.`,
+            ));
           }
         }
 
