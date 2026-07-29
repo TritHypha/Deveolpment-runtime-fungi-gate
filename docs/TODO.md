@@ -93,14 +93,38 @@ planning checkbox must never be used to imply that implementation exists.
 - **Verified (Task 3):** all 15 requested devtools/test packages rebuilt and
   passed through the governed runner: 15/15 packages, 491/491 tests, zero
   failures. This includes both graph package variants and `galerina-test`.
-- **Current:** Tasks 2 and 3 are complete. Task 1's structural
-  inventory remains intentionally red on 22 audit/lint dispositions because
-  true blocking requires Task 4 result propagation and Task 8 promotion of
-  report-only/advisory tools; adding exceptions would falsify the design.
-- **Next safe work:** implement Task 4's machine-readable, failure-propagating
-  phase-close tiers, then return to the audit disposition/anti-neutering
-  dependency. Generator policy remains deliberately inactive until its Task
-  7 RED/GREEN contract.
+- **Completed (Task 4 runner):** phase-close now has strict `phase-close` and
+  `exhaustive` tiers, machine-readable results, explicit report-only
+  non-authority, Windows-safe child spawning, timeout/signal/missing-result
+  refusal, strict governance-diff parsing, and real exit propagation. The
+  focused subprocess suite is 5/5 and proves failed-child, report-only,
+  exhaustive, missing/malformed command, and malformed-governance-result
+  directions.
+- **Completed (Task 4 live blockers):** the first authoritative live run
+  executed 82 checks and exposed six reds instead of falsely exiting zero.
+  Five are now resolved with independent reruns: the local-path plan reference
+  is repo-relative; the phantom gate preserves the historic 111
+  unadjudicated limit while membership-ratcheting the two documented
+  grammar-blocked identities; seven example rows were migrated exactly from
+  the retired VALUESTATE-006 audit arm to VALUESTATE-009; new `Auto` erasure
+  was replaced with concrete `GIRExpr`, `String`, and
+  `SLIDER1PreflightDecision` types; and four reviewed compiler-stage hashes
+  were refreshed. The Auto baseline was tightened 247 -> 199 (stages
+  245 -> 197), not widened.
+- **Verified (Task 4):** focused GIR/SLIDE evidence is 95/95; artifact drift
+  self-test is 38/38 and live is green; example-diagnostics self-test is 15/15
+  and the 233-example sweep is green at its exact 89-row known-drift
+  baseline; compiler-stage-hash self-test is 7/7 and live is green.
+- **Current:** Tasks 2-4 are complete. Task 1's structural inventory is the
+  one intentional blocking red: 21 audit/lint tools still need exact
+  phase-close, CI, or executable-fixture dispositions. No exception has been
+  added to hide them. A live close after the fixes passed 80/82 checks; its
+  second red was only the path gate correctly reading the still-uncommitted
+  old line from `HEAD`, and clears when this repo-relative fix is staged.
+- **Next safe work:** resume at Task 5 (explicit package-graph asset/orphan
+  ownership), then Tasks 6-8. Task 8 must close the 21 named tooling
+  dispositions before phase-close may authorize. Generator policy remains
+  deliberately inactive until its Task 7 RED/GREEN contract.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side

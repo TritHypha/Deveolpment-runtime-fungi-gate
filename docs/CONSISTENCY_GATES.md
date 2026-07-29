@@ -43,8 +43,13 @@ every gate here is wired into `scripts/run-phase-close.mjs`** so it runs on ever
 | bundled CLI (`galerina.mjs`) pre-signing gate | CG-4 | (in-CLI; `scripts/tests/cg4-signing-boundary.test.mjs`) | the SECOND minting site (`build` / `build --package`): a lenient build of a production-violating package emits `.wasm`/`.wat` but NO `.lmanifest`/`.fuse.json` — loudly, never silently (closed 2026-07-02; the cli.ts fix alone left this site signing) |
 | regression tests | all | `node --test scripts/tests/dev-tools-scripts.test.mjs` | a gate that stops detecting its own defect class |
 
-**How to run them all:** `node scripts/run-phase-close.mjs` (runs every gate + the dev-tool tests),
-plus `node scripts/run-all-tests.cjs` (full suite). Green = every rule holds.
+**How to run them all:** `npm run phase-close` runs the deterministic blocking
+cadence; `npm run phase-close:exhaustive` additionally runs the full governed
+package suite (and, once Task 7 lands, all governed generator checks).
+`run-phase-close.mjs` exits non-zero for any failed, signalled, timed-out,
+missing-status, or malformed child result. `--report-only` is explicitly
+non-authorizing and reports `REPORT_ONLY_PASS` or `REPORT_ONLY_FAILED`; it
+never describes a failed run as green. Use `--json` for the machine result.
 
 ---
 

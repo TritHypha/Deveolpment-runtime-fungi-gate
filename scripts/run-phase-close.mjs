@@ -20,26 +20,112 @@
 
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { parseGovernanceDiff } from "./lib/phase-close-result.mjs";
+
+function parseArguments(argv) {
+  const parsed = {
+    root: join(dirname(fileURLToPath(import.meta.url)), ".."),
+    json: false,
+    reportOnly: false,
+    tier: "phase-close",
+  };
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === "--root") {
+      const value = argv[index + 1];
+      if (!value || value.startsWith("--")) throw new Error("--root requires a path");
+      parsed.root = resolve(value);
+      index += 1;
+    } else if (argument === "--json") {
+      parsed.json = true;
+    } else if (argument === "--report-only") {
+      parsed.reportOnly = true;
+    } else if (argument === "--tier") {
+      const value = argv[index + 1];
+      if (!["phase-close", "exhaustive"].includes(value)) {
+        throw new Error("--tier must be phase-close or exhaustive");
+      }
+      parsed.tier = value;
+      index += 1;
+    } else {
+      throw new Error(`Unknown option: ${argument}`);
+    }
+  }
+  return parsed;
+}
+
+let options;
+try {
+  options = parseArguments(process.argv.slice(2));
+} catch (error) {
+  console.error(`run-phase-close: ${error.message}`);
+  process.exit(3);
+}
 
 if (process.env.GALERINA_SKIP_PHASE_CLOSE === "1") {
-  console.log("⏭️  phase-close skipped (GALERINA_SKIP_PHASE_CLOSE=1)");
+  const skipped = {
+    tool: "run-phase-close",
+    schemaVersion: 1,
+    root: options.root,
+    tier: options.tier,
+    verdict: "SKIPPED",
+    authorizing: false,
+    skipAuthority: "GALERINA_SKIP_PHASE_CLOSE=1",
+    failed: [],
+    totals: { checks: 0, passed: 0, failed: 0 },
+    results: [],
+  };
+  if (options.json) console.log(JSON.stringify(skipped, null, 2));
+  else console.log("⏭️  phase-close skipped (GALERINA_SKIP_PHASE_CLOSE=1; non-authorizing)");
   process.exit(0);
 }
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = options.root;
 const isWin = process.platform === "win32";
 const results = [];
 
 function run(name, cmd, args, { cwd = ROOT, okCodes = [0], timeout = 180000 } = {}) {
   const t0 = Date.now();
-  const r = spawnSync(cmd, args, { cwd, encoding: "utf8", shell: isWin, timeout });
+  const childEnv = { ...process.env };
+  delete childEnv.NODE_TEST_CONTEXT;
+  let executable = cmd === "node" ? process.execPath : cmd;
+  let executableArgs = args;
+  if (isWin && cmd === "npm") {
+    executable = process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe";
+    executableArgs = ["/d", "/s", "/c", "npm.cmd", ...args];
+  }
+  const r = spawnSync(executable, executableArgs, {
+    cwd,
+    encoding: "utf8",
+    env: childEnv,
+    shell: false,
+    timeout,
+    windowsHide: true,
+  });
   const ms = Date.now() - t0;
   const code = r.status;
-  const ok = okCodes.includes(code);
+  const ok = r.error === undefined
+    && r.signal === null
+    && typeof code === "number"
+    && okCodes.includes(code);
   const out = `${r.stdout || ""}${r.stderr || ""}`;
-  results.push({ name, ok, ms, code, detail: summarise(name, out, ok, code) });
+  const detail = r.error
+    ? `spawn failed: ${r.error.message}`
+    : r.signal
+      ? `terminated by signal ${r.signal}`
+      : typeof code !== "number"
+        ? "missing numeric exit status"
+        : summarise(name, out, ok, code);
+  results.push({
+    name,
+    ok,
+    durationMs: ms,
+    exitCode: typeof code === "number" ? code : null,
+    signal: r.signal ?? null,
+    detail,
+  });
   return { ok, out, code };
 }
 
@@ -76,10 +162,135 @@ function summarise(name, out, ok, code) {
   return ok ? "ok" : `FAILED (exit ${code})`;
 }
 
-console.log("══ Galerina phase-close cadence ══");
+function finish() {
+  const normalizedResults = results.map((result) => ({
+    name: result.name,
+    ok: result.ok === true,
+    durationMs: result.durationMs ?? result.ms ?? 0,
+    exitCode: result.exitCode ?? result.code ?? (result.ok === true ? 0 : 1),
+    signal: result.signal ?? null,
+    detail: result.detail ?? "missing result detail",
+  }));
+  const failed = normalizedResults.filter((result) => !result.ok);
+  const verdict = failed.length === 0
+    ? options.reportOnly
+      ? "REPORT_ONLY_PASS"
+      : "PASS"
+    : options.reportOnly
+      ? "REPORT_ONLY_FAILED"
+      : "FAIL";
+  const report = {
+    tool: "run-phase-close",
+    schemaVersion: 1,
+    root: ROOT,
+    tier: options.tier,
+    verdict,
+    authorizing: verdict === "PASS",
+    failed: failed.map((result) => result.name),
+    totals: {
+      checks: normalizedResults.length,
+      passed: normalizedResults.length - failed.length,
+      failed: failed.length,
+    },
+    results: normalizedResults,
+  };
+  if (options.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log("\n-- phase-close summary --");
+    for (const result of normalizedResults) {
+      const mark = result.ok ? "PASS" : "FAIL";
+      const time = result.durationMs
+        ? ` (${(result.durationMs / 1000).toFixed(1)}s)`
+        : "";
+      console.log(`${mark} ${result.name.padEnd(26)} ${result.detail}${time}`);
+    }
+    if (verdict.startsWith("REPORT_ONLY")) {
+      console.log(`\nphase-close: ${verdict}; no authority released.`);
+    } else {
+      console.log(verdict === "PASS"
+        ? "\nphase-close: all blocking gates passed."
+        : "\nphase-close: one or more blocking gates failed.");
+    }
+  }
+  process.exit(failed.length > 0 && !options.reportOnly ? 1 : 0);
+}
+
+function loadFixtureCommands() {
+  const manifestPath = join(ROOT, "governance", "phase-close-commands.json");
+  if (!existsSync(manifestPath)) return null;
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  if (manifest.schemaVersion !== 1
+      || !Array.isArray(manifest.phaseClose)
+      || !Array.isArray(manifest.exhaustive)) {
+    throw new Error("command manifest must use schemaVersion 1 and two arrays");
+  }
+  const selected = options.tier === "exhaustive"
+    ? [...manifest.phaseClose, ...manifest.exhaustive]
+    : manifest.phaseClose;
+  const names = new Set();
+  return selected.map((entry) => {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)
+        || typeof entry.name !== "string" || entry.name.trim() === ""
+        || !Array.isArray(entry.command) || entry.command.length === 0
+        || entry.command.some((part) => typeof part !== "string" || part === "")) {
+      throw new Error("command manifest contains a malformed entry");
+    }
+    if (names.has(entry.name)) throw new Error(`duplicate command: ${entry.name}`);
+    names.add(entry.name);
+    const cwd = entry.cwd === undefined ? ROOT : resolve(ROOT, entry.cwd);
+    const rel = relative(ROOT, cwd);
+    if (isAbsolute(rel) || rel.startsWith("..")) {
+      throw new Error(`command cwd escapes root: ${entry.name}`);
+    }
+    return {
+      name: entry.name,
+      cmd: entry.command[0],
+      args: entry.command.slice(1),
+      cwd,
+      timeout: Number.isInteger(entry.timeoutMs) && entry.timeoutMs > 0
+        ? entry.timeoutMs
+        : 30_000,
+    };
+  });
+}
+
+try {
+  const fixtureCommands = loadFixtureCommands();
+  if (fixtureCommands !== null) {
+    for (const entry of fixtureCommands) {
+      run(entry.name, entry.cmd, entry.args, {
+        cwd: entry.cwd,
+        timeout: entry.timeout,
+      });
+    }
+    finish();
+  }
+} catch (error) {
+  results.push({
+    name: "phase-close:manifest",
+    ok: false,
+    durationMs: 0,
+    exitCode: null,
+    signal: null,
+    detail: error.message,
+  });
+  finish();
+}
+
+if (!options.json) console.log("══ Galerina phase-close cadence ══");
 
 // ── 1. Core tests (SOT four) ──
 run("tests:core", "node", ["scripts/run-all-tests.cjs", "--core"]);
+run("audit:tooling-contract", "node", ["scripts/audit-tooling-contract.mjs"]);
+run(
+  "tests:benchmark-integrity",
+  "npm",
+  ["test"],
+  {
+    cwd: join(ROOT, "packages-galerina", "galerina-devtools-benchmarks"),
+  },
+);
 
 // ── 1b. Architecture pattern examples — galerina check on all tests/patterns/*.fungi ──
 const patternsDir = join(ROOT, "tests", "patterns");
@@ -90,8 +301,17 @@ if (existsSync(patternsDir)) {
   let patternOk = true;
   const patternDetails = [];
   for (const f of patternFiles) {
-    const res = spawnSync("node", [galerinaMjs, "check", join(patternsDir, f)],
-      { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 30000 });
+    const res = spawnSync(
+      process.execPath,
+      [galerinaMjs, "check", join(patternsDir, f)],
+      {
+        cwd: ROOT,
+        encoding: "utf8",
+        shell: false,
+        timeout: 30000,
+        windowsHide: true,
+      },
+    );
     const passed = res.status === 0;
     if (!passed) { patternOk = false; patternDetails.push(`${f}: FAIL`); }
   }
@@ -596,29 +816,46 @@ run("proofs:canonical", "node", ["scripts/run-proofs.mjs", "--canonical-only"]);
 try {
   // Check if HEAD~1 exists (might not on first commit)
   const gitCheck = spawnSync("git", ["rev-parse", "--verify", "HEAD~1"],
-    { cwd: ROOT, encoding: "utf8", shell: isWin });
+    { cwd: ROOT, encoding: "utf8", shell: false, windowsHide: true });
   if (gitCheck.status === 0) {
-    const diffResult = spawnSync("node",
+    const diffResult = spawnSync(process.execPath,
       ["packages-galerina/galerina-core-compiler/dist/cli.js", "diff", "HEAD~1", "--json"],
-      { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 30000 });
-    const diffOut = diffResult.stdout || "";
-    let changeClass = "neutral";
-    let diffSummary = "no .fungi changes";
-    try {
-      const diffData = JSON.parse(diffOut);
-      changeClass = diffData.changeClass ?? "neutral";
-      diffSummary = diffData.summary ?? "no .fungi changes";
-    } catch { /* parse failure = no .fungi changes */ }
-    // In local dev cadence: expansion = warning (GitHub Action handles hard blocking)
-    const govOk = changeClass !== "experimental"; // experimental = requires arch review
+      {
+        cwd: ROOT,
+        encoding: "utf8",
+        shell: false,
+        timeout: 30000,
+        windowsHide: true,
+      });
+    const parsed = parseGovernanceDiff(diffResult.stdout || "", diffResult);
     results.push({
       name: "governance:diff",
-      ok: govOk,
-      ms: 0,
-      detail: `${changeClass.toUpperCase()} — ${diffSummary}`,
+      ok: parsed.ok,
+      durationMs: 0,
+      exitCode: typeof diffResult.status === "number" ? diffResult.status : null,
+      signal: diffResult.signal ?? null,
+      detail: `${parsed.code}: ${parsed.detail}`,
+    });
+  } else {
+    results.push({
+      name: "governance:diff",
+      ok: false,
+      durationMs: 0,
+      exitCode: typeof gitCheck.status === "number" ? gitCheck.status : null,
+      signal: gitCheck.signal ?? null,
+      detail: "GOVERNANCE-DIFF-BASE-MISSING: HEAD~1 could not be verified.",
     });
   }
-} catch { /* git not available or diff failed — skip silently */ }
+} catch (error) {
+  results.push({
+    name: "governance:diff",
+    ok: false,
+    durationMs: 0,
+    exitCode: null,
+    signal: null,
+    detail: `GOVERNANCE-DIFF-ERROR: ${error.message}`,
+  });
+}
 
 // ── 7. R6 final parity gate (#116) ──
 run("tests:r6-corpus", "node",
@@ -643,16 +880,13 @@ run("tests:crypto-suites", "node",
   ["--test", "tests/crypto-suites/crypto-suites.test.mjs"],
   { silent: false });
 
-// ── Summary ──
-console.log("\n── phase-close summary ──");
-let anyFail = false;
-for (const r of results) {
-  const icon = r.ok ? "✅" : "❌";
-  if (!r.ok) anyFail = true;
-  const t = r.ms ? ` (${(r.ms / 1000).toFixed(1)}s)` : "";
-  console.log(`${icon} ${r.name.padEnd(26)} ${r.detail}${t}`);
+if (options.tier === "exhaustive") {
+  run(
+    "tests:all-packages",
+    "node",
+    ["scripts/run-all-tests.cjs", "--json"],
+    { timeout: 1_800_000 },
+  );
 }
-console.log(anyFail
-  ? "\n⚠️  phase-close: one or more checks FAILED — review above."
-  : "\n✅ phase-close: all gates green.");
-process.exit(0); // informational hook — never block the session
+
+finish();

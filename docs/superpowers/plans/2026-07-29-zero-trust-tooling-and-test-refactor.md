@@ -441,7 +441,7 @@ git commit -m "test: rebuild every devtools package before testing"
 - `--report-only` always prints the failed set but returns `0`; output and JSON
   must label the result `report-only`, never `green`.
 
-- [ ] **Step 1: Write RED subprocess tests**
+- [x] **Step 1: Write RED subprocess tests**
 
 Use a fixture command manifest or injected fixture root:
 
@@ -464,7 +464,7 @@ test("--report-only cannot describe a failed run as green", () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Step 2: Run RED**
 
 ```powershell
 node --test scripts/tests/run-phase-close.test.mjs
@@ -472,7 +472,7 @@ node --test scripts/tests/run-phase-close.test.mjs
 
 Expected: default failure returns `0`, and no machine result exists.
 
-- [ ] **Step 3: Implement strict result propagation**
+- [x] **Step 3: Implement strict result propagation**
 
 Replace the terminal success with:
 
@@ -489,7 +489,7 @@ process.exit(failed.length > 0 && !reportOnly ? 1 : 0);
 The governance-diff parse catch must produce an explicit failed/indeterminate
 result, not silently assume "no `.fungi` changes".
 
-- [ ] **Step 4: Wire the tooling-contract audit and deterministic benchmark tests**
+- [x] **Step 4: Wire the tooling-contract audit and deterministic benchmark tests**
 
 Add blocking children for:
 
@@ -499,7 +499,7 @@ Add blocking children for:
 The exhaustive tier additionally runs the full root package suite and every
 generator check defined by policy.
 
-- [ ] **Step 5: Verify GREEN and RED directions**
+- [x] **Step 5: Verify GREEN and RED directions**
 
 ```powershell
 node --test scripts/tests/run-phase-close.test.mjs
@@ -509,7 +509,12 @@ node scripts/run-phase-close.mjs --tier phase-close --json
 
 Also run the fixture with one planted failed child and prove exit `1`.
 
-- [ ] **Step 6: Commit**
+Evidence: the fixture suite is 5/5. The first live blocking run returned exit
+1 with six exact failures instead of a false green; after resolving the five
+independent drift findings, the only substantive red is the deliberately
+undisposed 21-tool contract inventory. Task 8 owns those dispositions.
+
+- [x] **Step 6: Commit**
 
 ```powershell
 git add -- scripts/run-phase-close.mjs scripts/tests/run-phase-close.test.mjs package.json docs/CONSISTENCY_GATES.md
@@ -1048,7 +1053,7 @@ node scripts/audit-artifact-drift.mjs
 
 - [ ] **Step 5: Run independent SLIDE verification**
 
-In `C:\Users\phill\Documents\GitHub\SLIDE`, run its complete test command and
+In the sibling `../SLIDE` repository, run its complete test command and
 the independent V2-C/V2-D/V2-E/frontend suite. Do not infer success from
 Galerina-side tests.
 
