@@ -23,7 +23,7 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const DEFAULT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // A shape-agnostic sweep also catches ILLUSTRATIVE placeholders (`FUNGI-CATEGORY-NNN` in a doc
 // comment, `FUNGI-TYPE-XXX` in a codemod). Those are not missing registrations, and letting them
@@ -37,13 +37,15 @@ const famOf = (c) => c.split("-").slice(0, 2).join("-");
 const SIGNING_FAMILIES = new Set(["FUNGI-FUSE", "FUNGI-MANIFEST", "FUNGI-REVOCATION"]);
 
 /** Measure the catalog's coverage gap. Returns derived counts — never hand-typed downstream. */
-export function measureCoverageGap() {
-  const registry = JSON.parse(readFileSync(join(ROOT, "build/code-registry/registry.json"), "utf8"));
-  const known = new Set(registry.entries.map((e) => e.code));
+export function measureCoverageGap(root = DEFAULT_ROOT, registryEntries = undefined) {
+  const entries = registryEntries ?? JSON.parse(
+    readFileSync(join(root, "build/code-registry/registry.json"), "utf8"),
+  ).entries;
+  const known = new Set(entries.map((entry) => entry.code));
 
   // build/ is EXCLUDED deliberately: ingesting our own generated output is the exact defect that
   // keeps audit-artifact-drift parked on a phantom that sustains itself.
-  const files = execFileSync("git", ["ls-files", "*.ts", "*.mjs", "*.js", "*.fungi"], { cwd: ROOT, encoding: "utf8" })
+  const files = execFileSync("git", ["ls-files", "*.ts", "*.mjs", "*.js", "*.fungi"], { cwd: root, encoding: "utf8" })
     .split("\n").map((s) => s.trim()).filter(Boolean)
     .filter((f) => !f.startsWith("build/") && !f.includes("node_modules/") && !f.endsWith(".d.ts"));
 
@@ -51,7 +53,7 @@ export function measureCoverageGap() {
   let scanned = 0, absent = 0;                      // absent = tracked but not on disk; counted, not swallowed
   for (const f of files) {
     let src;
-    try { src = readFileSync(join(ROOT, f), "utf8"); } catch { absent++; continue; }
+    try { src = readFileSync(join(root, f), "utf8"); } catch { absent++; continue; }
     scanned++;
     src.split("\n").forEach((line, i) => {
       for (const m of line.matchAll(SHAPE_AGNOSTIC)) if (!seen.has(m[0])) seen.set(m[0], `${f}:${i + 1}`);

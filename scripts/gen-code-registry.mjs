@@ -22,11 +22,13 @@
 // only). Output: build/code-registry/REGISTRY.md (browsable catalog) + registry.json (machine, for audit-coverage).
 // Run after code-index.mjs:  node scripts/code-index.mjs && node scripts/gen-code-registry.mjs
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { writeProvenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import { join, relative } from "node:path";
+import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 import { measureCoverageGap } from "./audit-code-catalog-coverage.mjs"; // derives the coverage caveat below
 
 const ROOT = process.cwd();
+const CHECK = process.argv.includes("--check");
+const stableCompare = (left, right) => left < right ? -1 : left > right ? 1 : 0;
 let arr;
 try {
   arr = JSON.parse(readFileSync(join(ROOT, "build/code-index/code-index.json"), "utf8"));
@@ -50,20 +52,23 @@ const entries = arr.map((c) => ({
   code: c.code, family: c.family, namespace: c.namespace, status: statusOf(c),
   names: c.names || [], severities: c.severities || [],
   defs: (c.defs || []).length, emits: (c.emits || []).length, tests: c.tests || 0, docs: c.docs || 0,
-})).sort((a, b) => a.code.localeCompare(b.code));
+})).sort((a, b) => stableCompare(a.code, b.code));
 
 const counts = {};
 for (const e of entries) counts[e.status] = (counts[e.status] || 0) + 1;
 const byFamily = {};
 for (const e of entries) (byFamily[e.family] ??= []).push(e);
 
-mkdirSync(join(ROOT, "build/code-registry"), { recursive: true });
-writeFileSync(join(ROOT, "build/code-registry/registry.json"),
-  JSON.stringify({ generatedFrom: "build/code-index/code-index.json", total: entries.length, counts, entries }, null, 2));
+const registry = {
+  generatedFrom: "build/code-index/code-index.json",
+  total: entries.length,
+  counts,
+  entries,
+};
 
 // Measure the catalog's own blind spots so the coverage caveat is derived, not asserted. A vacuous
 // measurement must not silently become a reassuring "0 missing" — refuse to emit the note instead.
-const gap = measureCoverageGap();
+const gap = measureCoverageGap(ROOT, entries);
 if (gap.vacuous) { console.error("gen-code-registry: coverage measurement was VACUOUS — refusing to write a completeness claim."); process.exit(2); }
 
 const md = [
@@ -89,13 +94,11 @@ const md = [
   entries.filter((e) => e.status === "dead").map((e) => `- \`${e.code}\``).join("\n") || "(none)", "",
   "## Catalog (by family)", "",
 ];
-for (const fam of Object.keys(byFamily).sort()) {
+for (const fam of Object.keys(byFamily).sort(stableCompare)) {
   md.push(`### ${fam} (${byFamily[fam].length})`, "", "| code | status | name(s) | severity |", "|---|---|---|---|");
   for (const e of byFamily[fam]) md.push(`| ${e.code} | ${e.status} | ${e.names.join(" / ") || "—"} | ${e.severities.join("/") || "—"} |`);
   md.push("");
 }
-writeFileSync(join(ROOT, "build/code-registry/REGISTRY.md"), md.join("\n"));
-writeProvenance(join(ROOT, "build/code-registry"), "gen-code-registry"); // BLD-003 / #216
 
 // ── STRUCTURAL STAMP (RD-0499): make a hand-authored count UNREPRESENTABLE ───────────────────────
 // A count stated in a doc behind a `<!-- registry:counts.KEY -->N` marker is OVERWRITTEN from the
@@ -104,13 +107,54 @@ writeProvenance(join(ROOT, "build/code-registry"), "gen-code-registry"); // BLD-
 // idempotent: a doc with no marker is untouched; a marker already correct is a no-op (no churn).
 // `total` folds in from entries.length (it lives at registry.total, not under counts).
 const stampSource = { ...counts, total: entries.length };
+const generatedOutputs = new Map([
+  [
+    join(ROOT, "build/code-registry/registry.json"),
+    JSON.stringify(registry, null, 2),
+  ],
+  [join(ROOT, "build/code-registry/REGISTRY.md"), md.join("\n")],
+  [
+    join(ROOT, "build/code-registry/provenance.json"),
+    JSON.stringify(provenance("gen-code-registry", ROOT), null, 2) + "\n",
+  ],
+]);
 for (const rel of ["AGENTS.md"]) {
   let src;
   try { src = readFileSync(join(ROOT, rel), "utf8"); } catch { continue; }
   const next = src.replace(/(<!--\s*registry:counts\.([a-z]+)\s*-->)[ \t]*[\d,]*/g,
     (m, marker, key) => (key in stampSource ? `${marker}${stampSource[key]}` : m));
-  if (next !== src) { writeFileSync(join(ROOT, rel), next); console.log(`  -> stamped registry counts into ${rel} (drift now unrepresentable)`); }
+  generatedOutputs.set(join(ROOT, rel), next);
+}
+
+if (CHECK) {
+  for (const [path, expected] of generatedOutputs) {
+    let actual;
+    try {
+      actual = readFileSync(path, "utf8");
+    } catch {
+      console.error(`gen-code-registry: missing generated output ${relative(ROOT, path).replace(/\\/g, "/")}`);
+      process.exitCode = 1;
+      continue;
+    }
+    if (actual !== expected) {
+      console.error(`gen-code-registry: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
+      process.exitCode = 1;
+    }
+  }
+} else {
+  mkdirSync(join(ROOT, "build/code-registry"), { recursive: true });
+  for (const [path, content] of generatedOutputs) {
+    const current = (() => {
+      try { return readFileSync(path, "utf8"); } catch { return undefined; }
+    })();
+    if (current !== content) {
+      writeFileSync(path, content);
+      if (relative(ROOT, path).replace(/\\/g, "/") === "AGENTS.md") {
+        console.log("  -> stamped registry counts into AGENTS.md (drift now unrepresentable)");
+      }
+    }
+  }
 }
 
 console.log(`gen-code-registry: ${entries.length} codes — ${Object.entries(counts).map(([k, v]) => `${k}:${v}`).join(" · ")}`);
-console.log("  -> build/code-registry/REGISTRY.md + registry.json");
+console.log(`  -> ${CHECK ? "checked" : "wrote"} build/code-registry/REGISTRY.md + registry.json + provenance.json + AGENTS.md`);

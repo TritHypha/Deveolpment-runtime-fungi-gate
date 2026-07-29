@@ -62,6 +62,40 @@
       ],
       "provenance": "required",
       "tier": "phase-close"
+    },
+    "scripts/gen-code-registry.mjs": {
+      "inputs": [
+        "AGENTS.md",
+        "build/code-index/code-index.json",
+        "docs",
+        "examples",
+        "galerina.mjs",
+        "governance",
+        "packages-galerina",
+        "proofs",
+        "scripts",
+        "subprojects",
+        "tests",
+        "tools"
+      ],
+      "outputs": [
+        "AGENTS.md",
+        "build/code-registry/REGISTRY.md",
+        "build/code-registry/provenance.json",
+        "build/code-registry/registry.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/gen-code-registry.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/gen-code-registry.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
     }
   }
 }

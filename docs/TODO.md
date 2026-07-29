@@ -200,7 +200,15 @@ planning checkbox must never be used to imply that implementation exists.
   still comparing declared semantic output bytes directly. A planted
   same-byte hidden rewrite now refuses. The affected suite is 24/24 and the
   same live 2/2 audit completes in about 11.8 seconds.
-- **Task 7 remains incomplete:** ten named root generators plus explicit
+- **Task 7 third live generator:** `gen-code-registry.mjs --check` derives the
+  registry, partial-coverage measurement, provenance, and living `AGENTS.md`
+  count stamp entirely in memory and refuses missing/tampered bytes without
+  rewriting them. `measureCoverageGap` now accepts the selected root and
+  candidate entries instead of consulting the ambient repository. Its
+  isolated Git fixture is 1/1, the coverage self-test is 8/8, the combined
+  affected suite is 25/25, and the live audit passes 3/3 in about 17.1
+  seconds.
+- **Task 7 remains incomplete:** nine named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or
