@@ -1,5 +1,12 @@
 # Independent review prompt: SLIDE deterministic shape memory
 
+> **Review intake completed 2026-07-29.** Three independent replies are stored
+> locally under `../../../Ai-research1/`. Their exact hashes and the adjudicated
+> adopt/modify/reject record are in
+> `../../../SLIDE/docs/DETERMINISTIC-SHAPE-MEMORY-REVIEW-SYNTHESIS.md`.
+> The prompt remains below as the reusable review instrument; reviewer text is
+> advisory and is not architecture authority by itself.
+
 Use this prompt with independent compiler, systems, security and performance
 reviewers. Do not ask reviewers to implement the design yet.
 
@@ -138,4 +145,3 @@ Initial primary-source starting points:
   <https://nix.dev/manual/nix/latest/store/store-path>
 - `egglog`, incremental fixpoint reasoning and equality saturation:
   <https://arxiv.org/abs/2304.04332>
-
