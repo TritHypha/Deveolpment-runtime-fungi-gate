@@ -1,5 +1,18 @@
 # Galerina — Dev + Production Test/Audit Coverage Review (all components + runtime)
 
+> **Superseding status — 2026-07-29:** this dated review remains historical
+> evidence; do not use its package/test counts as current status. The governed
+> inventory now reconciles 97 registered package directories, 96 test-bearing
+> packages, and one exact reason-bearing no-test package. A fresh build-current
+> run passes 96/96 with 8,524 counted tests. The root runner no longer bypasses
+> declared package chains when `dist/` exists and refuses empty, uncountable,
+> incomplete, or failed runs. All 79 discovered audit/lint gates now have
+> executable anti-neutering evidence. The full product suite is still not
+> claimed as a CI job; that historical owner-gated finding remains open unless
+> separately changed and evidenced. Current implementation evidence and
+> residuals are maintained in `docs/TODO.md`; the historical analysis below is
+> intentionally not rewritten.
+
 **Date:** 2026-07-10 · **Scope:** every package in `galerina.workspace.json` (92) + the audit suite + CI + the
 local cadence. **Method:** 4 read-only reviewers, each reading ≥1 test per package, the `audit-*.mjs` scope
 headers, `run-all-tests.cjs`, `run-phase-close.mjs`, and both `.github/workflows/*.yml`; cross-checked against

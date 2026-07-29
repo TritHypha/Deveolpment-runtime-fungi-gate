@@ -246,6 +246,15 @@ planning checkbox must never be used to imply that implementation exists.
   complete scripts battery is 171/171; the complete generator contract is
   14/14. Regenerate once after the source commit, then finish artifact
   classification.
+- **Task 9 living-status review:** a RED `--emit-counts` fixture proved that
+  `packageCount` changed while its narrative remained frozen at 53 packages.
+  The count writer now replaces both fields from the same complete successful
+  result set. README's living SLIDE/package/test status is corrected to
+  independent 30/30, Galerina 477/477, 97 registered directories, and
+  96/96 / 8,524 without promoting those counts into native/release authority.
+  The dated 2026-07-10 audit has a superseding 2026-07-29 note; its historical
+  body remains intact, and its no-full-suite-CI finding is not falsely closed.
+  Rerun the full count-authorizing suite after committing the writer.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

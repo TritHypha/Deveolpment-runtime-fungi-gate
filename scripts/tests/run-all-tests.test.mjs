@@ -137,3 +137,28 @@ test("a zero-test summary is refused rather than treated as an empty pass", () =
   const report = JSON.parse(result.stdout);
   assert.equal(report.results[0].failureCode, "TEST-SUMMARY-EMPTY");
 });
+
+test("--emit-counts replaces stale package-count narrative with derived scope", () => {
+  const root = workspaceFixture("counted", {
+    name: "@galerina/counted",
+    scripts: { test: "node counted.mjs" },
+  }, {
+    "counted.mjs": "console.log('tests 1\\npass 1\\nfail 0');\n",
+  });
+  write(root, "version.json", JSON.stringify({
+    testCount: 99,
+    packageCount: 53,
+    packageCountNote: "All 53 workspace packages are test-bearing.",
+    testCountByPackage: {},
+  }));
+
+  const result = run(root, "--emit-counts", "--json");
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const version = JSON.parse(readFileSync(join(root, "version.json"), "utf8"));
+  assert.equal(version.packageCount, 1);
+  assert.equal(
+    version.packageCountNote,
+    "Derived from the complete governed package inventory: 1/1 test-bearing packages passed their declared build-current test chains; see testCountByPackage.",
+  );
+});
