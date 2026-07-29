@@ -208,7 +208,14 @@ planning checkbox must never be used to imply that implementation exists.
   isolated Git fixture is 1/1, the coverage self-test is 8/8, the combined
   affected suite is 25/25, and the live audit passes 3/3 in about 17.1
   seconds.
-- **Task 7 remains incomplete:** nine named root generators plus explicit
+- **Task 7 fourth live generator:** `gen-status-blocks.mjs` now honors
+  `--root`; ordinary invocation is print-only; `--write` preflights both
+  declared documents and their markers before any mutation; and `--check`
+  refuses missing/stale artifact, provenance, document, marker, or owned
+  marker-region bytes without writing. The isolated negative/control test is
+  1/1, the existing self-test is 4/4, the combined affected suite is 26/26,
+  and the live audit passes 4/4 in about 21.8 seconds.
+- **Task 7 remains incomplete:** eight named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or

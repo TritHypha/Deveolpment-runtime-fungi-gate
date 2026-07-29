@@ -96,6 +96,42 @@
       ],
       "provenance": "required",
       "tier": "phase-close"
+    },
+    "scripts/gen-status-blocks.mjs": {
+      "inputs": [
+        "AGENTS.md",
+        "docs",
+        "examples",
+        "galerina.mjs",
+        "galerina.workspace.json",
+        "governance",
+        "packages-galerina",
+        "proofs",
+        "scripts",
+        "subprojects",
+        "tests",
+        "tools",
+        "version.json"
+      ],
+      "outputs": [
+        "build/status/STATUS.md",
+        "build/status/provenance.json",
+        "docs/roadmap-2026-07-15.md",
+        "docs/roadmap-2026-07-23.md"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/gen-status-blocks.mjs",
+        "--write"
+      ],
+      "check": [
+        "node",
+        "scripts/gen-status-blocks.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
     }
   }
 }
