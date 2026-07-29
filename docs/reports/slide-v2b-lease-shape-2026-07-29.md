@@ -45,10 +45,12 @@ may exist until those gates pass.
 
 Verification evidence:
 
+- local implementation commit: `27f16d08` (not pushed);
 - compiler package: 5,344/5,344 tests;
 - repository: 94/94 packages and 8,086/8,086 tests;
 - project graph: 7,249 nodes / 7,507 edges, zero integrity violations;
 - KB graph: zero orphans and zero broken links;
 - Hardened Border: 97/97;
 - explicitly selected Galerina memory graph: clean; and
-- dev-tool index: 97 packages / 124 tools / 40 proofs.
+- dev-tool index: 97 packages / 124 tools / 40 proofs; and
+- post-commit Myco: 4,098 indexed files, zero over-size skips.

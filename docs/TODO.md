@@ -91,8 +91,8 @@ planning checkbox must never be used to imply that implementation exists.
   `SHAPE_VALIDATED`, and always keeps `authorityReleased: false`. Focused
   evidence is 7/7. Report:
   `docs/reports/slide-v2b-capability-shape-2026-07-29.md`.
-- **Completed (awaiting local checkpoint commit):**
-  `slide-v2b-lease-shape.fungi` validates exact request/artifact/resource,
+- **Completed:** local commit `27f16d08` adds
+  `slide-v2b-lease-shape.fungi`, which validates exact request/artifact/resource,
   identity, chronology, ceiling, Tower/Tri-Pipe receipt, issuer-role, suite,
   canonical signed-byte digest, and typed cryptographic-verifier receipt
   bindings. It exhaustively refuses verifier `DENY` and `INDETERMINATE`;
@@ -122,8 +122,9 @@ planning checkbox must never be used to imply that implementation exists.
   integrity or KB-link violations;
   Hardened Border 97/97; explicit memory graph clean; dev-tool index
   97 packages / 124 tools / 40 proofs. The prior request-shape post-commit
-  Myco index contains 4,096 files with zero over-size skips; refresh after
-  the lease checkpoint commit is still required.
+  Myco index contains 4,096 files with zero over-size skips. The lease
+  checkpoint post-commit refresh indexes 4,098 files with zero over-size
+  skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
