@@ -82,6 +82,11 @@ tri-low-level payload/profile.
 - [x] Remove self-hosted runtime fail-open defaults at the CTLL-relevant call
   boundary: missing nested flows and missing/surplus arguments now terminate;
   checked Int32 boundaries remain executable in the self-hosted Wasm form.
+- [x] Implement the compiler-owned `.fungi` R1 adapter for the frozen fixture.
+  `FlowEntry` now carries derived signature/effect facts; exact supported GIR
+  invokes the preflight and materializes a four-block logical R1 program,
+  while structural or hidden-field mutations refuse. Evidence:
+  `docs/reports/ctll-r1-adapter-2026-07-29.md`.
 - [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
   altered K3 successors, missing failure records, and non-canonical bytes.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
@@ -93,12 +98,10 @@ tri-low-level payload/profile.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.
 
-**Next safe work:** implement a dedicated `.fungi` R1 adapter over checked
-self-hosted structures. It must derive—not accept—the preflight facts and
-either materialize the complete bounded body or refuse before every legacy
-identity/default/walker fallback. Then bind that result to canonical semantic
-bytes and add serialized mutations. Do not start LLVM, `.slide` execution, or
-driver installation before the earlier semantic gates.
+**Next safe work:** encode the implemented logical R1 fixture as deterministic
+typed bytes, then build a bounded independent decoder/validator and serialized
+mutations. Bind the exact materialized bytes to the decision. Do not start
+LLVM, `.slide` execution, or driver installation before those semantic gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

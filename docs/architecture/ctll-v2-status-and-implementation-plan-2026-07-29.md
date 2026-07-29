@@ -60,8 +60,8 @@ Planning completion and implementation completion are deliberately separate.
 | R1 executable GIR contract | `SPECIFIED` | Deterministic-CBOR R1 schema, CFG, checked Int32, K3 terminator, failures, validation order, mutations | Implement canonical exporter, bounded importer, validator, and reference interpreter |
 | AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
-| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory, fail-closed shape preflight, and bounded self-hosted `check_k3` handoff exist | Derive facts inside a dedicated R1 adapter, export the complete canonical body or refuse, then add serialized mutation fixtures |
-| First fixture | `IMPLEMENTED-PARTIAL` | Owner-confirmed `ctll_k3_checked_add_v1` design, ten vectors, checked `.fungi` capability probe, and fifteen ordered preflight refusals exist | Export canonical R1 and add negative artifacts |
+| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory, fail-closed preflight, self-hosted `check_k3`, and compiler-owned logical R1 adapter exist | Encode canonical bytes, independently import/validate, then add serialized mutation fixtures |
+| First fixture | `IMPLEMENTED-PARTIAL` | Owner-confirmed `ctll_k3_checked_add_v1` design, ten vectors, fifteen preflight refusals, and exact four-block logical R1 materialization exist | Replace operation strings with canonical typed wire IDs and add detached negative artifacts |
 | Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
@@ -254,9 +254,10 @@ Progress on 2026-07-29:
   the bounded `check` as explicit three-way K3 control and checked Int32
   execution, while missing flows and arity mismatches terminate.
 
-Remaining: make a dedicated compiler-owned R1 adapter derive those preflight
-facts from checked structures, translate the internal body into the canonical
-R1 schema or explicitly refuse before all legacy paths, then create serialized
+The dedicated compiler-owned `.fungi` adapter now derives those facts and
+materializes the exact four-block logical R1 fixture or refuses before legacy
+paths. Remaining: replace its frozen operation strings with canonical typed
+wire IDs/bytes, independently import and validate them, then create serialized
 negative/mutation artifacts and registered R1 failure records. The current
 refusal names are stable within the preflight contract but are not frozen
 numeric registry entries. G1 is therefore

@@ -569,6 +569,13 @@ record FlowEntry {
   name: String
   params: Array<Auto>
   body: Array<Auto>
+  // Appended after the runtime-stable first three fields. The CTLL R1 adapter
+  // consumes these compiler-derived facts instead of accepting caller-supplied
+  // preflight booleans or consulting the source AST.
+  qualifier: String
+  paramTypes: Array<Auto>
+  returnType: String
+  effects: Array<Auto>
 }
 
 // Collect the ORDERED parameter names of a flow into an Array<String>.
@@ -589,6 +596,23 @@ contract { intent { "Extract each FlowParam's name into an ordered Array<String>
   return names
 }
 
+pure flow paramTypes(params: Array<FlowParam>) -> Array<Auto>
+contract { intent { "Extract each FlowParam's declared type into an ordered array." } }
+{
+  mut declaredTypes: Array<String> = Array.empty()
+  mut i: Int = 0
+  while i < params.count() {
+    let pOpt = params.get(i)
+    match pOpt {
+      Some(p) => { declaredTypes = declaredTypes.append(p.typeName) }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return declaredTypes
+}
+
 // Build the flow table: one FlowEntry per flow, with lowered GIR bodies.
 pure flow buildFlowTable(flows: Array<FlowDecl>) -> Array<FlowEntry>
 contract { intent { "Build Array<FlowEntry> { name, params: Array<String>, body: Array<GIRStmt> } from parser flows." } }
@@ -599,7 +623,15 @@ contract { intent { "Build Array<FlowEntry> { name, params: Array<String>, body:
     let fOpt = flows.get(i)
     match fOpt {
       Some(fd) => {
-        let entry: FlowEntry = FlowEntry { name: fd.name, params: paramNames(fd.params), body: lowerBody(fd.body) }
+        let entry: FlowEntry = FlowEntry {
+          name: fd.name,
+          params: paramNames(fd.params),
+          body: lowerBody(fd.body),
+          qualifier: fd.kind,
+          paramTypes: paramTypes(fd.params),
+          returnType: fd.returnType,
+          effects: fd.effects
+        }
         table = table.append(entry)
       }
       None => {}

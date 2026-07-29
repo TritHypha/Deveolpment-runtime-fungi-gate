@@ -93,9 +93,12 @@ than inherit the fallback.
 The bounded self-hosted prerequisite is recorded in
 `../reports/ctll-r1-selfhost-k3-2026-07-29.md`. Galerina's `.fungi`
 lexer/parser/internal-GIR/runtime chain now preserves one explicit
-three-successor K3 check and checked Int32 execution. This narrows the adapter
-gap, but the internal records are not the canonical R1 CFG/SSA schema and have
-no deterministic serialization or independent validator.
+three-successor K3 check and checked Int32 execution. The compiler-owned
+`.fungi` adapter in `../reports/ctll-r1-adapter-2026-07-29.md` now derives
+signature/effect/body facts and materializes the exact four-block logical R1
+fixture or refuses. This narrows the adapter gap, but the logical records are
+not canonical R1 wire bytes and have no semantic digest or independent
+validator.
 
 ### Memory contract
 

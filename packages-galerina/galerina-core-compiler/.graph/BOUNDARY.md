@@ -11,13 +11,13 @@
 
 | Metric | Count |
 |---|---|
-| Files | 101 |
+| Files | 102 |
 | Internal edges | 273 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
 | └─ Third-party | 3 |
-| Orphan files | 11 |
+| Orphan files | 12 |
 
 ## External Dependencies (the Border)
 
@@ -50,6 +50,7 @@ No boundary violations. All external imports are within the allowlist.
 - `src/governance-mode.ts`
 - `src/plugin-schema.ts`
 - `src/self-hosted/compiler.capabilities.fungi`
+- `src/self-hosted/ctll-r1-adapter.fungi`
 - `src/self-hosted/ctll-r1-preflight.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/gir-emitter.fungi`

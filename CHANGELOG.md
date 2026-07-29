@@ -55,6 +55,12 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
   `21415420b447e219`, since the interim `ab46f4c7` root was lost; see RD-0368).
 
 ### Added
+- **Compiler-owned CTLL R1 logical adapter.** The self-hosted GIR `FlowEntry`
+  now carries derived signature/effect metadata. A new `.fungi` adapter
+  validates the owner-confirmed fixture, derives the existing preflight
+  request, and materializes one closed four-block logical R1 program only
+  after ALLOW. It is not canonical CBOR, a digest-bound artifact, or a SLIDE
+  bundle. Full compiler suite: 5,270/5,270.
 - **Self-hosted K3 handoff for the bounded CTLL fixture shape.** The `.fungi`
   lexer, parser, GIR emitter, and runtime now preserve `check` as one explicit
   `check_k3` node with exactly three labelled successors and exact

@@ -1,0 +1,391 @@
+@version 1
+/// @file: ctll-r1-adapter.fungi
+/// @purpose: Derive the frozen CTLL R1 fixture from compiler-owned FlowEntry GIR.
+/// @status: Logical materialization only; canonical CBOR/digest/import are not implemented.
+///
+/// The adapter accepts the self-hosted GIR emitter's enriched FlowEntry, derives
+/// every preflight fact, calls preflightCTLLR1, and materializes a closed logical
+/// R1 model only after ALLOW. It never accepts caller-provided support booleans.
+
+record R1InputExpr {
+  op: String
+  ty: String
+  value: String
+  kids: Array<R1InputExpr>
+}
+
+record R1InputStmt {
+  op: String
+  name: String
+  name2: String
+  expr: Array<R1InputExpr>
+  body: Array<R1InputStmt>
+  elseBody: Array<R1InputStmt>
+}
+
+record R1CompilerFlow {
+  name: String
+  params: Array<String>
+  body: Array<R1InputStmt>
+  qualifier: String
+  paramTypes: Array<String>
+  returnType: String
+  effects: Array<String>
+}
+
+record CTLLR1LogicalBlock {
+  blockId: Int
+  name: String
+  operations: Array<String>
+  terminator: String
+}
+
+record CTLLR1LogicalProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  digestSuiteId: String
+  memoryProfileId: String
+  fixtureName: String
+  stableSymbolId: String
+  qualifier: String
+  parameterTypes: Array<String>
+  resultType: String
+  entryBlockId: Int
+  blocks: Array<CTLLR1LogicalBlock>
+  failures: Array<String>
+  k3Obligations: Array<String>
+}
+
+record CTLLR1AdapterResult {
+  decision: Auto
+  materialized: Bool
+  program: CTLLR1LogicalProgram
+}
+
+pure flow deriveCTLLR1FixtureName(flowEntry: R1CompilerFlow) -> String
+contract { intent { "Expose the compiler-derived fixture identity for adapter differential tests." } }
+{
+  return flowEntry.name
+}
+
+pure flow emptyR1Expr() -> R1InputExpr
+contract { intent { "Return a non-admissible expression sentinel for bounded shape inspection." } }
+{
+  return { op: "missing", ty: "", value: "", kids: Array.empty() }
+}
+
+pure flow emptyR1Stmt() -> R1InputStmt
+contract { intent { "Return a non-admissible statement sentinel for bounded shape inspection." } }
+{
+  return {
+    op: "missing",
+    name: "",
+    name2: "",
+    expr: Array.empty(),
+    body: Array.empty(),
+    elseBody: Array.empty()
+  }
+}
+
+pure flow firstR1Expr(exprs: Array<R1InputExpr>) -> R1InputExpr
+contract { intent { "Return the first expression or a non-admissible sentinel." } }
+{
+  let item = exprs.get(0)
+  match item {
+    Some(expr) => { return expr }
+    None => { return emptyR1Expr() }
+    _ => { return emptyR1Expr() }
+  }
+}
+
+pure flow firstR1Stmt(stmts: Array<R1InputStmt>) -> R1InputStmt
+contract { intent { "Return the first statement or a non-admissible sentinel." } }
+{
+  let item = stmts.get(0)
+  match item {
+    Some(stmt) => { return stmt }
+    None => { return emptyR1Stmt() }
+    _ => { return emptyR1Stmt() }
+  }
+}
+
+pure flow countR1Arm(arms: Array<R1InputStmt>, label: String) -> Int
+contract { intent { "Count one exact K3 arm label." } }
+{
+  mut count: Int = 0
+  mut i: Int = 0
+  while i < arms.count() {
+    let armOpt = arms.get(i)
+    match armOpt {
+      Some(arm) => {
+        if arm.op == "k3_arm" and arm.name == label { count = count + 1 }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return count
+}
+
+pure flow findR1Arm(arms: Array<R1InputStmt>, label: String) -> R1InputStmt
+contract { intent { "Return an exact labelled K3 arm after the caller validates uniqueness." } }
+{
+  mut found: R1InputStmt = emptyR1Stmt()
+  mut i: Int = 0
+  while i < arms.count() {
+    let armOpt = arms.get(i)
+    match armOpt {
+      Some(arm) => {
+        if arm.op == "k3_arm" and arm.name == label { found = arm }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return found
+}
+
+pure flow isR1Load(expr: R1InputExpr, expectedName: String) -> Bool
+contract { intent { "Recognize one leaf load without coercion or hidden children." } }
+{
+  let exactIdentity: Bool = expr.op == "load" and expr.value == expectedName
+  return exactIdentity and expr.ty == "" and expr.kids.count() == 0
+}
+
+pure flow isR1StringConst(expr: R1InputExpr, expectedValue: String) -> Bool
+contract { intent { "Recognize one exact string constant." } }
+{
+  let exactKind: Bool = expr.op == "const" and expr.ty == "String"
+  let exactValue: Bool = expr.value == expectedValue and expr.kids.count() == 0
+  return exactKind and exactValue
+}
+
+pure flow isR1ErrorArm(arm: R1InputStmt, expectedText: String) -> Bool
+contract { intent { "Recognize an exact terminal Err(String) K3 arm." } }
+{
+  let cleanArmIdentity: Bool = arm.op == "k3_arm" and arm.name2 == ""
+  let cleanArmEdges: Bool = arm.expr.count() == 0 and arm.elseBody.count() == 0
+  let cleanArmShell: Bool = cleanArmIdentity and cleanArmEdges
+  if cleanArmShell == false { return false }
+  if arm.body.count() != 1 { return false }
+  let ret: R1InputStmt = firstR1Stmt(arm.body)
+  let cleanRetShell: Bool = ret.op == "ret" and ret.name == "" and ret.name2 == ""
+  let cleanRetEdges: Bool = ret.body.count() == 0 and ret.elseBody.count() == 0
+  if cleanRetShell == false or cleanRetEdges == false or ret.expr.count() != 1 {
+    return false
+  }
+  let call: R1InputExpr = firstR1Expr(ret.expr)
+  if call.op != "call" or call.ty != "" or call.value != "Err" or call.kids.count() != 1 {
+    return false
+  }
+  return isR1StringConst(firstR1Expr(call.kids), expectedText)
+}
+
+pure flow isR1AllowArm(arm: R1InputStmt) -> Bool
+contract { intent { "Recognize the exact terminal Ok(checked left + right) ALLOW arm." } }
+{
+  let cleanArmIdentity: Bool = arm.op == "k3_arm" and arm.name2 == ""
+  let cleanArmEdges: Bool = arm.expr.count() == 0 and arm.elseBody.count() == 0
+  let cleanArmShell: Bool = cleanArmIdentity and cleanArmEdges
+  if cleanArmShell == false { return false }
+  if arm.body.count() != 1 { return false }
+  let ret: R1InputStmt = firstR1Stmt(arm.body)
+  let cleanRetShell: Bool = ret.op == "ret" and ret.name == "" and ret.name2 == ""
+  let cleanRetEdges: Bool = ret.body.count() == 0 and ret.elseBody.count() == 0
+  if cleanRetShell == false or cleanRetEdges == false or ret.expr.count() != 1 {
+    return false
+  }
+  let okCall: R1InputExpr = firstR1Expr(ret.expr)
+  if okCall.op != "call" or okCall.ty != "" or okCall.value != "Ok" or okCall.kids.count() != 1 {
+    return false
+  }
+  let addExpr: R1InputExpr = firstR1Expr(okCall.kids)
+  let wrongAddKind: Bool = addExpr.op != "binop" or addExpr.value != "add"
+  let wrongAddShape: Bool = addExpr.ty != "Int" or addExpr.kids.count() != 2
+  if wrongAddKind or wrongAddShape {
+    return false
+  }
+  let leftOpt = addExpr.kids.get(0)
+  let rightOpt = addExpr.kids.get(1)
+  mut leftOk: Bool = false
+  mut rightOk: Bool = false
+  match leftOpt {
+    Some(left) => { leftOk = isR1Load(left, "left") }
+    None => {}
+    _ => {}
+  }
+  match rightOpt {
+    Some(right) => { rightOk = isR1Load(right, "right") }
+    None => {}
+    _ => {}
+  }
+  return leftOk and rightOk
+}
+
+pure flow r1StringAt(values: Array<String>, position: Int) -> String
+contract { intent { "Return a string at an exact position or an empty refusal sentinel." } }
+{
+  let valueOpt = values.get(position)
+  match valueOpt {
+    Some(value) => { return value }
+    None => { return "" }
+    _ => { return "" }
+  }
+}
+
+pure flow emptyCTLLR1LogicalProgram() -> CTLLR1LogicalProgram
+contract { intent { "Return a clearly non-materialized logical program for refusal results." } }
+{
+  return {
+    formatMajor: 0
+    formatMinor: 0
+    semanticProfileId: ""
+    digestSuiteId: ""
+    memoryProfileId: ""
+    fixtureName: ""
+    stableSymbolId: ""
+    qualifier: ""
+    parameterTypes: Array.empty()
+    resultType: ""
+    entryBlockId: -1
+    blocks: Array.empty()
+    failures: Array.empty()
+    k3Obligations: Array.empty()
+  }
+}
+
+pure flow materializeCTLLR1Fixture() -> CTLLR1LogicalProgram
+contract { intent { "Materialize the closed logical R1 program after exact source-GIR validation." } }
+{
+  mut blocks: Array<CTLLR1LogicalBlock> = Array.empty()
+  blocks = blocks.append({
+    blockId: 0
+    name: "entry"
+    operations: ["v0=param.Int32.left", "v1=param.Int32.right", "v2=param.Verdict.admission"]
+    terminator: "check_k3(v2,allow=1,deny=2,indeterminate=3)"
+  })
+  blocks = blocks.append({
+    blockId: 1
+    name: "allow"
+    operations: ["v3=int32.add.checked(v0,v1)", "v4=result.ok(v3)"]
+    terminator: "return(v4)"
+  })
+  blocks = blocks.append({
+    blockId: 2
+    name: "deny"
+    operations: ["v5=failure.POLICY_DENIED", "v6=result.err(v5)"]
+    terminator: "return(v6)"
+  })
+  blocks = blocks.append({
+    blockId: 3
+    name: "indeterminate"
+    operations: ["v7=failure.POLICY_UNRESOLVED", "v8=result.err(v7)"]
+    terminator: "return(v8)"
+  })
+
+  return {
+    formatMajor: 1
+    formatMinor: 0
+    semanticProfileId: "ctll.semantic.galerina-gir.v1"
+    digestSuiteId: "ctll.digest.sha256.v1"
+    memoryProfileId: "ctll.memory.safe-value.v1"
+    fixtureName: "ctll_k3_checked_add_v1"
+    stableSymbolId: "ctll.fixture.k3-checked-add.v1"
+    qualifier: "PURE"
+    parameterTypes: ["Int32", "Int32", "Verdict"]
+    resultType: "Result<Int32,FixtureFailure>"
+    entryBlockId: 0
+    blocks: blocks
+    failures: ["CTLL_FAILURE_ARITHMETIC", "CTLL_FAILURE_POLICY_DENIED", "CTLL_FAILURE_POLICY_UNRESOLVED"]
+    k3Obligations: ["ctll.obligation.fixture-admission.v1"]
+  }
+}
+
+pure flow adaptCTLLR1Fixture(flowEntry: R1CompilerFlow) -> CTLLR1AdapterResult
+contract {
+  intent { "Derive preflight facts from one compiler-owned GIR flow and materialize only the exact R1 fixture." }
+}
+{
+  let top: R1InputStmt = firstR1Stmt(flowEntry.body)
+  let subject: R1InputExpr = firstR1Expr(top.expr)
+  let arms: Array<R1InputStmt> = top.body
+
+  let exactTopIdentity: Bool = flowEntry.body.count() == 1 and top.op == "check_k3"
+  let exactTopShell: Bool = top.name == "" and top.name2 == "" and top.elseBody.count() == 0
+  let exactTop: Bool = exactTopIdentity and exactTopShell
+  let exactSubject: Bool = top.expr.count() == 1 and isR1Load(subject, "admission")
+  let exactArmCount: Bool = arms.count() == 3
+  let exactDenyArm: Bool = countR1Arm(arms, "deny") == 1
+  let exactAmbigArm: Bool = countR1Arm(arms, "ambig") == 1
+  let exactAllowArm: Bool = countR1Arm(arms, "if") == 1
+  let exactLabels: Bool = exactDenyArm and exactAmbigArm and exactAllowArm
+  let exactK3Set: Bool = exactTop and exactSubject and exactArmCount and exactLabels
+
+  let denyArm: R1InputStmt = findR1Arm(arms, "deny")
+  let ambigArm: R1InputStmt = findR1Arm(arms, "ambig")
+  let allowArm: R1InputStmt = findR1Arm(arms, "if")
+
+  let denyTerminal: Bool = isR1ErrorArm(denyArm, "CTLL_PROBE_DENIED")
+  let ambigTerminal: Bool = isR1ErrorArm(ambigArm, "CTLL_PROBE_INDETERMINATE")
+  let allowTerminal: Bool = isR1AllowArm(allowArm)
+  let exactBody: Bool = exactK3Set and denyTerminal and ambigTerminal and allowTerminal
+
+  let leftType: String = r1StringAt(flowEntry.paramTypes, 0)
+  let rightType: String = r1StringAt(flowEntry.paramTypes, 1)
+  let admissionType: String = r1StringAt(flowEntry.paramTypes, 2)
+  let exactLeftName: Bool = r1StringAt(flowEntry.params, 0) == "left"
+  let exactRightName: Bool = r1StringAt(flowEntry.params, 1) == "right"
+  let exactAdmissionName: Bool = r1StringAt(flowEntry.params, 2) == "admission"
+  let exactThreeTypes: Bool = flowEntry.paramTypes.count() == 3
+  let exactParamNames: Bool = exactLeftName and exactRightName and exactAdmissionName
+
+  mut projectedLeftType: String = ""
+  mut projectedRightType: String = ""
+  mut projectedResultType: String = ""
+  if leftType == "Int" { projectedLeftType = "Int32" }
+  if rightType == "Int" { projectedRightType = "Int32" }
+  if flowEntry.returnType == "Result<Int,String>" {
+    projectedResultType = "Result<Int32,FixtureFailure>"
+  }
+
+  mut derivedFailureCount: Int = 0
+  if allowTerminal { derivedFailureCount = derivedFailureCount + 1 }
+  if denyTerminal { derivedFailureCount = derivedFailureCount + 1 }
+  if ambigTerminal { derivedFailureCount = derivedFailureCount + 1 }
+
+  let request: CTLLR1PreflightRequest = {
+    fixtureName: flowEntry.name
+    qualifier: flowEntry.qualifier
+    parameterCount: flowEntry.params.count()
+    leftType: projectedLeftType
+    rightType: projectedRightType
+    admissionType: admissionType
+    resultType: projectedResultType
+    hasExhaustiveK3: exactK3Set
+    hasCheckedInt32: allowTerminal
+    hasExplicitTerminals: denyTerminal and ambigTerminal and allowTerminal
+    hasCompleteBody: exactBody and exactParamNames and exactThreeTypes
+    hasAstDependency: false
+    hasEffects: flowEntry.effects.count() != 0
+    hasHostHandles: exactBody == false
+    failureCount: derivedFailureCount
+  }
+
+  let decision = preflightCTLLR1(request)
+  if decision.verdict != Verdict.Allow {
+    return {
+      decision: decision
+      materialized: false
+      program: emptyCTLLR1LogicalProgram()
+    }
+  }
+
+  return {
+    decision: decision
+    materialized: true
+    program: materializeCTLLR1Fixture()
+  }
+}
