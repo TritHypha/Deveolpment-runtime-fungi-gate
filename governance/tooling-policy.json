@@ -132,6 +132,31 @@
       ],
       "provenance": "required",
       "tier": "phase-close"
+    },
+    "scripts/ts-retirement-graph.mjs": {
+      "inputs": [
+        "packages-galerina",
+        "scripts/lib/find-files.mjs",
+        "scripts/lib/provenance.mjs",
+        "scripts/ts-retirement-graph.mjs"
+      ],
+      "outputs": [
+        "build/ts-retirement/TS-RETIREMENT.md",
+        "build/ts-retirement/provenance.json",
+        "build/ts-retirement/ts-retirement.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/ts-retirement-graph.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/ts-retirement-graph.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
     }
   }
 }

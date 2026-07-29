@@ -215,7 +215,14 @@ planning checkbox must never be used to imply that implementation exists.
   marker-region bytes without writing. The isolated negative/control test is
   1/1, the existing self-test is 4/4, the combined affected suite is 26/26,
   and the live audit passes 4/4 in about 21.8 seconds.
-- **Task 7 remains incomplete:** eight named root generators plus explicit
+- **Task 7 fifth live generator:** the shared graph-and-Git finder now supports
+  an explicit repository root, and `ts-retirement-graph.mjs --check` derives
+  and compares its JSON, Markdown, and provenance without writing. A
+  two-TypeScript-file Git fixture proves exact root isolation and the
+  hand-derived twin/compiler partition. Its focused test is 1/1, the live
+  self-test is 4/4, the combined affected suite is 27/27, and the live audit
+  passes 5/5 in about 30.6 seconds.
+- **Task 7 remains incomplete:** seven named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or

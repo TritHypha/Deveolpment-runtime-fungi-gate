@@ -13,24 +13,29 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const MYCO = resolve(ROOT, "packages-galerina", "galerina-tools-myco", "dist", "cli.js");
+const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SPAWN = { encoding: "utf8", shell: false }; // node/git are real exes — no shell, no DEP0190
 
 /** Tracked files for a base glob — queries BOTH `<base>/*.ext` and `<base>/**\/*.ext` forms (quirk #1). */
 export function findTracked(...globs) {
+  return findTrackedAt(DEFAULT_ROOT, ...globs);
+}
+
+/** Root-selectable tracked-file query for isolated generators and fixtures. */
+export function findTrackedAt(root, ...globs) {
   const expanded = [...new Set(globs.flatMap((g) =>
     g.includes("/**/") ? [g, g.replace("/**/", "/")] : g.includes("*") ? [g] : [g]))];
-  const r = spawnSync("git", ["ls-files", ...expanded], { ...SPAWN, cwd: ROOT, timeout: 60000 });
+  const r = spawnSync("git", ["ls-files", ...expanded], { ...SPAWN, cwd: root, timeout: 60000 });
   return [...new Set((r.stdout ?? "").split(/\r?\n/).map((s) => s.trim().replace(/\\/g, "/")).filter(Boolean))];
 }
 
 /** Graph-finder (myco) filename search for an extension; null when unavailable/truncated (degrade loudly). */
-export function graphFindByExt(ext, { limit = 40000 } = {}) {
-  if (!existsSync(MYCO)) return null;
+export function graphFindByExt(ext, { limit = 40000, root = DEFAULT_ROOT } = {}) {
+  const myco = resolve(root, "packages-galerina", "galerina-tools-myco", "dist", "cli.js");
+  if (!existsSync(myco)) return null;
   // myco 0.1.1: a leading-dot filename query IS an extension match (the 0.1.0 word-mode under-match
   // was fixed at the root). If an older dist under-matches, the git-union + drift report catch it.
-  const r = spawnSync("node", [MYCO, "-f", ext, ROOT, "--json", "--no-color", "-n", String(limit)], { ...SPAWN, timeout: 180000 });
+  const r = spawnSync("node", [myco, "-f", ext, root, "--json", "--no-color", "-n", String(limit)], { ...SPAWN, timeout: 180000 });
   const stdout = r.stdout ?? ""; const j = stdout.indexOf("{"); // an index-refresh banner may precede the JSON
   if (j < 0) return null;
   try {
@@ -45,10 +50,10 @@ export function graphFindByExt(ext, { limit = 40000 } = {}) {
  * Returns { files, finder, finderDrift } — drift = tracked files the graph finder missed (report it;
  * the union keeps the corpus complete either way). scope = optional path-prefix regex.
  */
-export function findCorpus(ext, trackedGlobs, scopeRe) {
+export function findCorpus(ext, trackedGlobs, scopeRe, { root = DEFAULT_ROOT } = {}) {
   const inScope = (p) => (scopeRe ? scopeRe.test(p) : true);
-  const tracked = findTracked(...trackedGlobs).filter((p) => p.endsWith(ext) && inScope(p));
-  const viaGraph = graphFindByExt(ext);
+  const tracked = findTrackedAt(root, ...trackedGlobs).filter((p) => p.endsWith(ext) && inScope(p));
+  const viaGraph = graphFindByExt(ext, { root });
   if (viaGraph === null) return { files: tracked, finder: "git index only (graph finder unavailable)", finderDrift: -1 };
   const graphScoped = viaGraph.filter(inScope);
   const files = [...new Set([...graphScoped, ...tracked])].sort();

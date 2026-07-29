@@ -19,22 +19,36 @@
 //
 //   node scripts/ts-retirement-graph.mjs              # regenerate build/ts-retirement/ + summary line
 //   node scripts/ts-retirement-graph.mjs --self-test  # finder coverage + a known twin pair + sum check
-import { writeFileSync, mkdirSync } from "node:fs";
-import { join, dirname, resolve, basename } from "node:path";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname, relative, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { findCorpus, findTracked } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
+import { findCorpus, findTrackedAt } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
+import { provenance } from "./lib/provenance.mjs";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT_INDEX = process.argv.indexOf("--root");
+const ROOT = ROOT_INDEX >= 0 && process.argv[ROOT_INDEX + 1]
+  ? resolve(process.argv[ROOT_INDEX + 1])
+  : DEFAULT_ROOT;
 const OUT = join(ROOT, "build", "ts-retirement");
+const CHECK = process.argv.includes("--check");
 
 // The bounded-TCB FLOOR (census handover §2): these stay .ts/native forever by ruling — crypto
 // primitives, host seams, pure-algorithm devtools. A floor .ts is not "unfinished"; it is the TCB.
 const FLOOR_PACKAGES = new Set(["galerina-substrate-math", "galerina-devtools-graph-algorithms", "galerina-core-security"]);
 
-export function buildRetirementGraph() {
+export function buildRetirementGraph(root = ROOT) {
   const scope = /^packages-galerina\/[^/]+\/src\//;
-  const { files: ts, finder, finderDrift } = findCorpus(".ts", ["packages-galerina/*/src/**/*.ts"], scope);
-  const fungi = findTracked("packages-galerina/*/src/**/*.fungi").filter((p) => scope.test(p));
+  const { files: ts, finder, finderDrift } = findCorpus(
+    ".ts",
+    ["packages-galerina/*/src/**/*.ts"],
+    scope,
+    { root },
+  );
+  const fungi = findTrackedAt(
+    root,
+    "packages-galerina/*/src/**/*.fungi",
+  ).filter((p) => scope.test(p));
   const pkgOf = (p) => p.split("/")[1];
   const stem = (p) => basename(p).replace(/\.(ts|fungi)$/, "");
   // twin key = package + stem: secret-gate.fungi twins secret-gate.ts IN THE SAME PACKAGE.
@@ -79,8 +93,6 @@ if (process.argv.includes("--self-test")) {
 }
 
 const g = buildRetirementGraph();
-mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, "ts-retirement.json"), JSON.stringify(g, null, 2));
 const t = g.totals;
 const md = [
   `# .ts retirement graph (${t.ts} tracked .ts in package src)`,
@@ -100,5 +112,29 @@ const md = [
   ...g.twinnedPairs.map((p) => `- ${p}`),
   ``,
 ].join("\n");
-writeFileSync(join(OUT, "TS-RETIREMENT.md"), md);
+const generatedOutputs = new Map([
+  [join(OUT, "ts-retirement.json"), JSON.stringify(g, null, 2)],
+  [join(OUT, "TS-RETIREMENT.md"), md],
+  [
+    join(OUT, "provenance.json"),
+    JSON.stringify(provenance("ts-retirement-graph", ROOT), null, 2) + "\n",
+  ],
+]);
+if (CHECK) {
+  for (const [path, expected] of generatedOutputs) {
+    let actual;
+    try { actual = readFileSync(path, "utf8"); } catch {
+      console.error(`ts-retirement: missing generated output ${relative(ROOT, path).replace(/\\/g, "/")}`);
+      process.exitCode = 1;
+      continue;
+    }
+    if (actual !== expected) {
+      console.error(`ts-retirement: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
+      process.exitCode = 1;
+    }
+  }
+} else {
+  mkdirSync(OUT, { recursive: true });
+  for (const [path, content] of generatedOutputs) writeFileSync(path, content);
+}
 console.log(`ts-retirement: ${t.ts} .ts · ${t.twinned} twinned (→#143, 0 flipped) · ${t.compilerCore} compiler-core (fixpoint) · ${t.floor} floor (stays) · ${t.program} migration (#38) · ${t.fungiInSrc} .fungi in src`);
