@@ -93,6 +93,11 @@ function lexSource(source) {
       continue;
     }
 
+    if (char === "@") {
+      readVersionDirective(source, tokens, diagnostics, start);
+      continue;
+    }
+
     if (char === "/" && content[index + 1] === "/") {
       const doc = content[index + 2] === "/";
       const value = consumeUntilNewline();
@@ -188,6 +193,26 @@ function lexSource(source) {
       suggestedFix: "Add a closing double quote."
     });
     output.push(token("string", value, startPos, startPos.index, index));
+  }
+
+  function readVersionDirective(src, output, errors, startPos) {
+    const raw = consumeUntilNewline();
+    const value = raw.endsWith("\r") ? raw.slice(0, -1) : raw;
+    const supported = value === "@version 1" && startPos.line === 1 && startPos.column === 1;
+
+    if (!supported) {
+      errors.push({
+        severity: "error",
+        errorType: "LexError",
+        file: src.relativePath,
+        line: startPos.line,
+        column: startPos.column,
+        problem: "Malformed, unsupported, or misplaced Galerina version directive.",
+        suggestedFix: "Use exactly '@version 1' at line 1, column 1."
+      });
+    }
+
+    output.push(token("directive", value, startPos, startPos.index, index));
   }
 
   function readNumber(output, startPos) {

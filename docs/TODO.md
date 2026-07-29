@@ -223,6 +223,16 @@ planning checkbox must never be used to imply that implementation exists.
   generators are live under the fail-closed contract; external
   inputs/outputs are separately bound rather than false-greened as
   repository-local.
+- **Task 9 full-run defect fixed; aggregate rerun pending:** the first
+  `run-all-tests --emit-counts` pass correctly refused to write canonical
+  counts at 95/96 packages and 8,513 counted tests because
+  `galerina-core` rejected every corpus `@version 1` header. A focused
+  regression first proved the legacy lexer was stale. It now admits only the
+  exact supported directive at line 1, column 1 and refuses malformed,
+  unsupported, `.gate`-style, or misplaced directives. Missing headers remain
+  legacy-compatible here and do not imply modern compiler parity. The package
+  chain is green: 42 prototype checks and 11/11 Node tests. Rerun all 96
+  governed packages before updating `version.json`.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
