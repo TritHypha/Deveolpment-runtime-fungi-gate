@@ -142,6 +142,13 @@ describe("independent structural SLIDE V2-D import", () => {
       value[2] = 1;
       return value;
     }],
+    ["unknown critical root", () =>
+      replaceUnique(
+        canonicalBytes,
+        [0x17, 0x81, 0x88, 0x01, 0x03, 0x00, 0x08, 0x09, 0x01, 0x02, 0x04],
+        0,
+        0x18,
+      )],
     ["unknown guarded opcode", () =>
       replaceUnique(
         canonicalBytes,
