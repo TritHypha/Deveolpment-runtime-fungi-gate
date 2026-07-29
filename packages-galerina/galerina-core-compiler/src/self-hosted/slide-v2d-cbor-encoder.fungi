@@ -1,0 +1,317 @@
+@version 1
+/// @file: slide-v2d-cbor-encoder.fungi
+/// @purpose: Encode only the admitted complete V2-D graph as deterministic CBOR.
+/// @status: Producer evidence; independent vector/import/digest remain separate.
+
+record SLIDEV2DBodyExport {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  bytes: Bytes
+  byteLength: Int
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2DBodyExport(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2DBodyExport
+contract { intent { "Refuse V2-D export without partial bytes, native claim, or authority." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail bytes: Bytes.empty() byteLength: 0
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
+pure flow slideV2DCBORLimits(
+  graph: SLIDEV2CExecutableLimits,
+  memory: SLIDEV2DMemoryLimits,
+) -> Bytes
+contract { intent { "Encode append-only graph, aggregate, memory, and forbidden-surface ceilings." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      graph.canonicalBodyBytes, graph.modules, graph.functionCount,
+      graph.blocksPerFunction, graph.instructionsPerFunction,
+      graph.valuesPerFunction, graph.blockParametersPerBlock, graph.callDepth,
+      graph.backEdges, graph.effects, graph.capabilities, graph.memoryObjects,
+      graph.executionSteps, graph.textBytes, graph.byteBytes,
+      graph.arrayElements, graph.recordFields, graph.variantCases,
+      graph.aggregateDepth, graph.copiedBytes, graph.hostCalls,
+      memory.regions, memory.memoryBytes, memory.stackBytes, memory.heapBytes,
+      memory.threads, memory.outputBytes, memory.rawPointers,
+      memory.manualDeallocations, memory.sharedMutableAliases,
+      memory.ffiBoundaries, memory.unwinds,
+    ),
+  )
+}
+
+pure flow slideV2DCBORBytes(value: Bytes) -> Bytes
+contract { intent { "Encode one definite bounded raw-byte value." } }
+{
+  let prefix = slideV2ACBORHead(2, value.length())
+  if prefix.isEmpty() { return Bytes.empty() }
+  return prefix.append(value)
+}
+
+pure flow slideV2DCBORConstant(value: SLIDEV2CConstant) -> Bytes
+contract { intent { "Encode one full immutable constant definition." } }
+{
+  mut output = slideV2ACBORHead(4, 4)
+  output = output.append(slideV2ACBORUInt(value.constantId))
+  output = output.append(slideV2ACBORUInt(value.typeId))
+  output = output.append(slideV2ACBORUInt(value.encodingId))
+  output = output.append(slideV2DCBORBytes(value.payload))
+  return output
+}
+
+pure flow slideV2DCBORRecord(
+  value: SLIDEV2CRecordDescriptor,
+) -> Bytes
+contract { intent { "Encode one ordered registered record descriptor." } }
+{
+  mut output = slideV2ACBORHead(4, 2)
+  output = output.append(slideV2ACBORUInt(value.recordId))
+  output = output.append(slideV2ACBORHead(4, value.fieldIds.count()))
+  mut i: Int = 0
+  while i < value.fieldIds.count() {
+    output = output.append(slideV2ACBORHead(4, 2))
+    output = output.append(slideV2ACBORUInt(slideV2CIntAt(value.fieldIds, i)))
+    output = output.append(
+      slideV2ACBORUInt(slideV2CIntAt(value.fieldTypeIds, i)),
+    )
+    i = i + 1
+  }
+  return output
+}
+
+pure flow slideV2DCBORVariant(
+  value: SLIDEV2CVariantDescriptor,
+) -> Bytes
+contract { intent { "Encode one ordered registered variant descriptor." } }
+{
+  mut output = slideV2ACBORHead(4, 2)
+  output = output.append(slideV2ACBORUInt(value.variantId))
+  output = output.append(slideV2ACBORHead(4, value.caseIds.count()))
+  mut i: Int = 0
+  while i < value.caseIds.count() {
+    output = output.append(slideV2ACBORHead(4, 2))
+    output = output.append(slideV2ACBORUInt(slideV2CIntAt(value.caseIds, i)))
+    output = output.append(
+      slideV2ACBORUInt(slideV2CIntAt(value.payloadTypeIds, i)),
+    )
+    i = i + 1
+  }
+  return output
+}
+
+pure flow slideV2DCBORRegion(value: SLIDEV2DRegion) -> Bytes
+contract { intent { "Encode one no-address region descriptor." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      value.regionId, value.parentRegionId, value.lifetimeClassId,
+      value.cleanupPolicyId, value.byteCeiling,
+    ),
+  )
+}
+
+pure flow slideV2DCBORMemoryObject(value: SLIDEV2DMemoryObject) -> Bytes
+contract { intent { "Encode one initialized owned memory-object descriptor." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      value.objectId, value.typeId, value.extentElements, value.elementBytes,
+      value.alignment, value.ownerRegionId, value.lifetimeClassId,
+      value.mutabilityId, value.initializationId, value.sensitivityId,
+    ),
+  )
+}
+
+pure flow slideV2DCBORGuard(value: SLIDEV2DGuard) -> Bytes
+contract { intent { "Encode one exact guard/access dominance descriptor." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      value.guardId, value.functionId, value.blockId, value.guardResultId,
+      value.accessResultId, value.objectId, value.indexResultId,
+      value.failureId,
+    ),
+  )
+}
+
+pure flow exportSLIDEV2DCanonicalBody(
+  program: SLIDEV2DExecutableProgram,
+) -> SLIDEV2DBodyExport
+contract { intent { "Release canonical V2-D bytes only after complete logical integration." } }
+{
+  let decision = validateSLIDEV2DExecutableProgram(program)
+  check(decision.verdict) {
+    deny: {
+      return refuseSLIDEV2DBodyExport(decision.failureId, decision.detail)
+    }
+    ambig: {
+      return refuseSLIDEV2DBodyExport(
+        "SLIDE-V2D-CBOR-001", "logical V2-D admission was unresolved",
+      )
+    }
+    if: {}
+  }
+
+  mut body = slideV2ACBORHead(5, 24)
+  body = body.append(slideV2ACBORUInt(0)).append(slideV2ACBORUInt(program.formatMajor))
+  body = body.append(slideV2ACBORUInt(1)).append(slideV2ACBORUInt(program.formatMinor))
+  body = body.append(slideV2ACBORUInt(2)).append(slideV2ACBORText(program.semanticProfileId))
+  body = body.append(slideV2ACBORUInt(3)).append(slideV2ACBORText(program.digestSuiteId))
+  body = body.append(slideV2ACBORUInt(4)).append(slideV2ACBORHead(4, 2))
+  body = body.append(slideV2ACBORText(program.registrySetId))
+  body = body.append(slideV2ACBORText(program.registrySetDigest))
+  body = body.append(slideV2ACBORUInt(5)).append(slideV2ACBORText(program.memoryProfileId))
+  body = body.append(slideV2ACBORUInt(6)).append(slideV2ACBORIntArray(program.requiredFeatureIds))
+  body = body.append(slideV2ACBORUInt(7)).append(
+    slideV2DCBORLimits(program.graphLimits, program.memoryLimits),
+  )
+  body = body.append(slideV2ACBORUInt(8)).append(slideV2ACBORIntArray(program.moduleIds))
+  body = body.append(slideV2ACBORUInt(9)).append(slideV2ACBORIntArray(program.typeIds))
+  body = body.append(slideV2ACBORUInt(10)).append(slideV2ACBORIntArray(program.constantIds))
+
+  body = body.append(slideV2ACBORUInt(11))
+  body = body.append(slideV2ACBORHead(4, program.functions.count()))
+  mut functionIndex: Int = 0
+  while functionIndex < program.functions.count() {
+    body = body.append(
+      slideV2ACBORFunction(slideV2AFunctionAt(program.functions, functionIndex)),
+    )
+    functionIndex = functionIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(12))
+  body = body.append(slideV2ACBORHead(4, program.failures.count()))
+  mut failureIndex: Int = 0
+  while failureIndex < program.failures.count() {
+    let failure = program.failures.get(failureIndex)
+    match failure {
+      Some(value) => { body = body.append(slideV2ACBORFailure(value)) }
+      None => {
+        return refuseSLIDEV2DBodyExport(
+          "SLIDE-V2D-CBOR-002", "failure table changed during encoding",
+        )
+      }
+      _ => {
+        return refuseSLIDEV2DBodyExport(
+          "SLIDE-V2D-CBOR-002", "failure table is malformed",
+        )
+      }
+    }
+    failureIndex = failureIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(13)).append(slideV2ACBORIntArray(program.effectIds))
+  body = body.append(slideV2ACBORUInt(14)).append(slideV2ACBORIntArray(program.capabilityIds))
+  body = body.append(slideV2ACBORUInt(15))
+  body = body.append(slideV2ACBORHead(4, program.k3Obligations.count()))
+  mut k3Index: Int = 0
+  while k3Index < program.k3Obligations.count() {
+    let obligation = program.k3Obligations.get(k3Index)
+    match obligation {
+      Some(value) => { body = body.append(slideV2ACBORK3(value)) }
+      None => {
+        return refuseSLIDEV2DBodyExport(
+          "SLIDE-V2D-CBOR-003", "K3 table changed during encoding",
+        )
+      }
+      _ => {
+        return refuseSLIDEV2DBodyExport(
+          "SLIDE-V2D-CBOR-003", "K3 table is malformed",
+        )
+      }
+    }
+    k3Index = k3Index + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(16)).append(slideV2ACBORIntArray(program.memoryObjectIds))
+  body = body.append(slideV2ACBORUInt(17)).append(slideV2ACBORIntArray(program.extensionIds))
+
+  body = body.append(slideV2ACBORUInt(18))
+  body = body.append(slideV2ACBORHead(4, program.constants.count()))
+  mut constantIndex: Int = 0
+  while constantIndex < program.constants.count() {
+    body = body.append(
+      slideV2DCBORConstant(slideV2CConstantAt(program.constants, constantIndex)),
+    )
+    constantIndex = constantIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(19))
+  body = body.append(slideV2ACBORHead(4, program.recordDescriptors.count()))
+  mut recordIndex: Int = 0
+  while recordIndex < program.recordDescriptors.count() {
+    body = body.append(
+      slideV2DCBORRecord(
+        slideV2CRecordDescriptorAt(program.recordDescriptors, recordIndex),
+      ),
+    )
+    recordIndex = recordIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(20))
+  body = body.append(slideV2ACBORHead(4, program.variantDescriptors.count()))
+  mut variantIndex: Int = 0
+  while variantIndex < program.variantDescriptors.count() {
+    body = body.append(
+      slideV2DCBORVariant(
+        slideV2CVariantDescriptorAt(program.variantDescriptors, variantIndex),
+      ),
+    )
+    variantIndex = variantIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(21))
+  body = body.append(slideV2ACBORHead(4, program.regions.count()))
+  mut regionIndex: Int = 0
+  while regionIndex < program.regions.count() {
+    body = body.append(
+      slideV2DCBORRegion(slideV2DRegionAt(program.regions, regionIndex)),
+    )
+    regionIndex = regionIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(22))
+  body = body.append(slideV2ACBORHead(4, program.memoryObjects.count()))
+  mut objectIndex: Int = 0
+  while objectIndex < program.memoryObjects.count() {
+    body = body.append(
+      slideV2DCBORMemoryObject(
+        slideV2DMemoryObjectAt(program.memoryObjects, objectIndex),
+      ),
+    )
+    objectIndex = objectIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(23))
+  body = body.append(slideV2ACBORHead(4, program.guards.count()))
+  mut guardIndex: Int = 0
+  while guardIndex < program.guards.count() {
+    body = body.append(
+      slideV2DCBORGuard(slideV2DGuardAt(program.guards, guardIndex)),
+    )
+    guardIndex = guardIndex + 1
+  }
+
+  if body.length() > program.graphLimits.canonicalBodyBytes {
+    return refuseSLIDEV2DBodyExport(
+      "SLIDE-V2D-CBOR-004", "canonical body exceeds admitted byte ceiling",
+    )
+  }
+  return {
+    verdict: Verdict.Allow status: "EXPORTED" failureId: "NONE"
+    detail: "complete canonical SLIDE V2-D body exported"
+    bytes: body byteLength: body.length()
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
