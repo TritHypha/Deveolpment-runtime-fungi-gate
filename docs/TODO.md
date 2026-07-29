@@ -121,8 +121,8 @@ planning checkbox must never be used to imply that implementation exists.
   frozen V2-A parent and V2-B sidecar context, appends dense type/opcode IDs,
   validates bounded text/bytes/array/record/variant/checked-index semantics,
   and retains zero effects, capabilities, memory, host calls, back edges, and
-  authority. Follow-up commit `3de15ea8` binds the exact 1,866-byte registry
-  descriptor digest. Fourteen mutation classes refuse; focused V2-C evidence
+  authority. Follow-up commit `3de15ea8` bound the initial, now-superseded
+  1,866-byte registry descriptor digest. Fourteen mutation classes refuse; focused V2-C evidence
   is 18/18 (combined pre-binding regression 157/157). Report:
   `docs/reports/slide-v2c-aggregate-logical-2026-07-29.md`.
 - **Completed:** local commit `5ea92c78` integrates the aggregate slice into a
@@ -133,12 +133,13 @@ planning checkbox must never be used to imply that implementation exists.
   fallthrough, and surplus-function mutations refuse. The complete-graph
   suite is 10/10; both V2-C suites are 28/28.
 - **Completed:** local commit `00940a67` emits the admitted complete graph as
-  a deterministic 725-byte, shortest-form 21-key CBOR body with SHA-256
+  the initial, now-superseded deterministic 725-byte, shortest-form 21-key CBOR body with SHA-256
   `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
   Producer refusal releases no partial bytes or authority. Canonical producer
   evidence is 6/6; all V2-C suites are 34/34.
-- **Completed:** local commit `8d7d8cd3` adds producer-independent exact-vector
-  admission for the 725-byte body. It refuses all 725 single-byte mutations,
+- **Completed:** local commit `8d7d8cd3` added producer-independent
+  exact-vector admission for the initial, now-superseded 725-byte body. It
+  refused all 725 single-byte mutations,
   truncation, empty input, and suffixes with terminal identities and no
   authority. This is not yet structural decoding.
 - **Completed:** local commit `39e81b90` independently decodes all 21 root
@@ -146,8 +147,21 @@ planning checkbox must never be used to imply that implementation exists.
   variant tables, then runs semantic admission without calling the V2-C
   producer or encoder. Eight focused tests cover reconstruction and
   no-partial-graph refusal; the four non-vector V2-C suites are 42/42.
-- **Current:** bind only independently decoded/admitted bytes to the V2-C
-  semantic digest, then instruction-drive aggregates under copy/step budgets.
+- **Completed:** local commit `7d753041` binds only independently
+  decoded/admitted V2-C bytes under `slide.gir.semantic.v2\0` and releases no
+  digest on refusal.
+- **Corrected before freeze:** review found opcode 1 had been used as a
+  constant while function 3 declared no parameter. Local commit `398157da`
+  changes constants to opcode 2, gives function 3 one checked-index `Int32`
+  parameter, validates every immediate/operand, and regenerates all evidence.
+  Current descriptor: 1,917 bytes,
+  `366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66`;
+  body: 732 bytes,
+  `bb15c49cfed356e7bbf059f29605028291bdeacfa2e24343672343289f88fe24`;
+  semantic digest:
+  `7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c`.
+  Earlier V2-C wire hashes are superseded and forbidden.
+- **Current:** instruction-drive decoded aggregates under copy/step budgets.
   Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus

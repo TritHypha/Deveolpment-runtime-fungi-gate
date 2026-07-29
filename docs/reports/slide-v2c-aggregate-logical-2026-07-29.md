@@ -8,6 +8,8 @@
 **Canonical producer commit:** `00940a67`
 **Independent vector commit:** `8d7d8cd3`
 **Structural importer commit:** `39e81b90`
+**Semantic binding commit:** `7d753041`
+**Pre-freeze semantic correction:** `398157da`
 
 ## Claim boundary
 
@@ -25,8 +27,9 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   semantics.
 - V2-C appends type IDs 10-13 and opcode IDs 12-20 without reinterpreting
   frozen V2-A or V2-B IDs.
-- The exact 1,866-byte LF-terminated registry descriptor is bound by SHA-256
-  `c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38`.
+- The corrected exact 1,917-byte LF-terminated registry descriptor is bound
+  by SHA-256
+  `366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66`.
 - The model binds the frozen V2-A registry digest and V2-B sidecar descriptor
   digest as context, but the sidecar supplies no authority.
 - Exact finite ceilings cover canonical-body bytes, text bytes, raw bytes,
@@ -48,12 +51,12 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   tables, and validates the aggregate function signature, authority surface,
   instructions, operands, immediates, and no-fallthrough return.
 - `slide-v2c-cbor-encoder.fungi` emits a deterministic shortest-form 21-key
-  CBOR root only after complete logical admission. The canonical body is 725
-  bytes with SHA-256
-  `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
+  CBOR root only after complete logical admission. The corrected canonical
+  body is 732 bytes with SHA-256
+  `bb15c49cfed356e7bbf059f29605028291bdeacfa2e24343672343289f88fe24`.
   Root keys 18-20 carry full constant, record, and variant definitions.
   Refusal releases neither partial bytes nor authority.
-- `slide-v2c-cbor-validator.fungi` independently pins the exact 725-byte body
+- `slide-v2c-cbor-validator.fungi` independently pins the exact 732-byte body
   without loading the producer, model, registry object, or encoder. It refuses
   every single-byte mutation, truncation, empty input, and suffix with a
   terminal identity and releases no authority.
@@ -66,6 +69,23 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   proves its bytes equal the strict UTF-8 encoding. General arbitrary-text
   decoding remains a required later intrinsic; no host decoder is silently
   trusted here.
+- `slide-v2c-semantic-digest.fungi` binds only independently decoded/admitted
+  bytes under `slide.gir.semantic.v2\0`. The corrected semantic SHA-256 is
+  `7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c`;
+  refusal releases no digest or authority.
+
+## Pre-freeze correction
+
+Review before runtime work found that the initial aggregate records used
+opcode 1 (function parameter) where opcode 2 (Int32 constant) was intended,
+while function 3 declared no parameter. Commit `398157da` corrected the
+logical slice, gave function 3 one `Int32` checked-index parameter, added exact
+parameter/constant validation, and regenerated the descriptor, body, vector,
+import fixtures, and semantic digest.
+
+The earlier 1,866-byte descriptor, 725-byte body, and their hashes are
+superseded pre-freeze evidence and must not be admitted. No released or
+production artifact used them.
 
 ## Mutation evidence
 
