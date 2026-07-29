@@ -6,6 +6,7 @@
 **Registry binding commit:** `3de15ea8`
 **Executable integration commit:** `5ea92c78`
 **Canonical producer commit:** `00940a67`
+**Independent vector commit:** `8d7d8cd3`
 
 ## Claim boundary
 
@@ -51,6 +52,10 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
   Root keys 18-20 carry full constant, record, and variant definitions.
   Refusal releases neither partial bytes nor authority.
+- `slide-v2c-cbor-validator.fungi` independently pins the exact 725-byte body
+  without loading the producer, model, registry object, or encoder. It refuses
+  every single-byte mutation, truncation, empty input, and suffix with a
+  terminal identity and releases no authority.
 
 ## Mutation evidence
 
@@ -82,6 +87,10 @@ also passes.
 The canonical producer suite adds 6/6: deterministic bytes plus refusal for
 registry drift, embedded-parent drift, aggregate-operation drift, and
 authority-ceiling injection. All three V2-C suites pass 34/34.
+
+The independent vector suite adds 3/3 high-level tests, including 725 distinct
+single-byte mutation cases. This is exact-vector evidence, not structural
+decoding or graph reconstruction.
 
 ## What this replaces, rebuilds, and integrates
 
@@ -115,6 +124,6 @@ cannot select any of them as a fallback.
 
 ## Next safe boundary
 
-Build an independent 21-key decoder that exposes neither a partial descriptor
+Build an independent structural 21-key decoder that exposes neither a partial descriptor
 nor partial aggregate graph on refusal, then bind the admitted body to its
 domain-separated semantic digest. V2-D memory remains blocked.

@@ -137,7 +137,11 @@ planning checkbox must never be used to imply that implementation exists.
   `aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3`.
   Producer refusal releases no partial bytes or authority. Canonical producer
   evidence is 6/6; all V2-C suites are 34/34.
-- **Current:** implement a separately composed 21-key decoder with
+- **Completed:** local commit `8d7d8cd3` adds producer-independent exact-vector
+  admission for the 725-byte body. It refuses all 725 single-byte mutations,
+  truncation, empty input, and suffixes with terminal identities and no
+  authority. This is not yet structural decoding.
+- **Current:** implement a separately composed structural 21-key decoder with
   no-partial-graph refusal. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
