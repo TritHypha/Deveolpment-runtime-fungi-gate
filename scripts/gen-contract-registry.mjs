@@ -17,42 +17,22 @@ import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenanceForCheck,
+} from "./lib/provenance.mjs";
 
-/** Resolve current git SHA (short), or "unknown" when not in a git repo / git unavailable. */
-function gitSha(root) {
+function shortCommit(root, commit) {
+  if (commit === null) return "unknown";
   try {
     return execFileSync(
       "git",
-      ["rev-parse", "--short", "HEAD"],
+      ["rev-parse", "--short", commit],
       { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
     ).trim();
   } catch {
     return "unknown";
   }
-}
-
-/**
- * A reproducible ISO timestamp so the JSON artifact stops byte-churning on every regen (#133).
- * Precedence: SOURCE_DATE_EPOCH (reproducible-builds convention, as in generate-sbom.mjs) → the HEAD
- * commit date (deterministic given the commit the `sha` field already pins) → wall-clock (non-git fallback).
- * A real source change still moves `sha` + the commit date, so legitimate regens still differ.
- */
-function deterministicTimestamp(root) {
-  const sde = process.env.SOURCE_DATE_EPOCH;
-  let epoch = sde && /^\d+$/.test(sde) ? Number(sde) : NaN;
-  if (!Number.isFinite(epoch)) {
-    try {
-      epoch = Number(execFileSync(
-        "git",
-        ["show", "-s", "--format=%ct", "HEAD"],
-        { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-      ).trim());
-    } catch {
-      epoch = NaN;
-    }
-  }
-  return Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString() : new Date().toISOString();
 }
 
 /**
@@ -216,8 +196,17 @@ if (OPTIONS.mode === "self-test") {
 }
 
 const data = await collect();
-const sha = gitSha(ROOT);
-const generatedAt = deterministicTimestamp(ROOT);
+const mdPath = join(OUT_DIR, "CONTRACT_REGISTRY.md");
+const jsonPath = join(OUT_DIR, "contract-registry.json");
+const provenancePath = join(OUT_DIR, "provenance.json");
+const stamp = provenanceForCheck(
+  "gen-contract-registry",
+  ROOT,
+  provenancePath,
+  OPTIONS.mode === "check",
+);
+const sha = shortCommit(ROOT, stamp.gitCommit);
+const generatedAt = stamp.builtAt;
 const md = render(data);
 const jsonPayload = {
   generatedBy: "gen-contract-registry.mjs",
@@ -229,13 +218,10 @@ const jsonPayload = {
 };
 const json = JSON.stringify(jsonPayload, null, 2) + "\n";
 const provenanceJson = JSON.stringify(
-  provenance("gen-contract-registry", ROOT),
+  stamp,
   null,
   2,
 ) + "\n";
-const mdPath = join(OUT_DIR, "CONTRACT_REGISTRY.md");
-const jsonPath = join(OUT_DIR, "contract-registry.json");
-const provenancePath = join(OUT_DIR, "provenance.json");
 
 if (OPTIONS.mode === "check") {
   const expected = new Map([
@@ -244,7 +230,9 @@ if (OPTIONS.mode === "check") {
     [provenancePath, provenanceJson],
   ]);
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.log(

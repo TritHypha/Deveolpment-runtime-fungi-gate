@@ -23,7 +23,10 @@
 // Run after code-index.mjs:  node scripts/code-index.mjs && node scripts/gen-code-registry.mjs
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 import { measureCoverageGap } from "./audit-code-catalog-coverage.mjs"; // derives the coverage caveat below
 
 const ROOT = process.cwd();
@@ -136,7 +139,7 @@ if (CHECK) {
       process.exitCode = 1;
       continue;
     }
-    if (actual !== expected) {
+    if (!generatedOutputMatches(path, actual, expected)) {
       console.error(`gen-code-registry: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
       process.exitCode = 1;
     }

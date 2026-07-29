@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -37,7 +43,13 @@ if (process.argv.includes("--check")) process.exit(0);
 for (const relativePath of writes) {
   mkdirSync(dirname(join(root, relativePath)), { recursive: true });
   const value = relativePath.endsWith("provenance.json")
-    ? { generator: "fake-generator", inputs: ["input/source.txt"], builtAt: "volatile" }
+    ? {
+        tool: "fake-generator",
+        gitCommit: "a".repeat(40),
+        builtAt: "2026-07-29T10:00:00.000Z",
+        node: process.version,
+        inputs: ["input/source.txt"],
+      }
     : { value: "stable"${injectTimestamp ? ", nonce: randomUUID()" : ""} };
   writeFileSync(join(root, relativePath), JSON.stringify(value, null, 2) + "\\n");
 }
@@ -139,6 +151,16 @@ test("declared deterministic writes with provenance pass", async () => {
     const result = await verifyGenerator(root, generator);
     assert.equal(result.ok, true, JSON.stringify(result));
     assert.equal(result.code, "GENERATOR-CONTRACT-PASS");
+    assert.equal(
+      existsSync(join(root, "build", "declared.json")),
+      false,
+      "verification must not publish generated output into the selected root",
+    );
+    assert.equal(
+      existsSync(join(root, "build", "provenance.json")),
+      false,
+      "verification must keep provenance in its isolated output root",
+    );
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

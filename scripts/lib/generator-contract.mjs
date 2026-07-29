@@ -1,16 +1,32 @@
 import {
   existsSync,
-  readdirSync,
+  mkdtempSync,
   readFileSync,
+  rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { isAbsolute, join, normalize, relative, resolve, sep } from "node:path";
+import {
+  dirname,
+  isAbsolute,
+  join,
+  normalize,
+  resolve,
+  sep,
+} from "node:path";
+import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
+import { validGeneratedProvenance } from "./provenance.mjs";
 
 const POLICY_PATH = "governance/tooling-policy.json";
 const PROVENANCE_VALUES = new Set(["required", "embedded", "not-applicable"]);
 const TIERS = new Set(["phase-close", "exhaustive"]);
-const SKIP_DIRS = new Set([".git", ".myco", "node_modules"]);
+const SANDBOX_PRELOAD = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "generator-fs-sandbox.cjs",
+);
+let sandboxRunId = 0;
 
 function fail(code, detail, extra = {}) {
   return { ok: false, code, detail, unexpectedWrites: [], ...extra };
@@ -116,52 +132,43 @@ export function loadGeneratorPolicy(root, generator) {
   };
 }
 
-function walkFiles(root, directory = root, result = []) {
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    if (entry.isDirectory() && SKIP_DIRS.has(entry.name)) continue;
-    const absolute = join(directory, entry.name);
-    if (entry.isDirectory()) {
-      walkFiles(root, absolute, result);
-    } else if (entry.isFile()) {
-      result.push(relative(root, absolute).split(sep).join("/"));
-    }
-  }
-  return result;
-}
-
-function snapshot(root) {
-  const files = new Map();
-  for (const path of walkFiles(root).sort()) {
-    const metadata = statSync(join(root, path), { bigint: true });
-    files.set(
-      path,
-      `${metadata.size}:${metadata.mtimeNs}:${metadata.ctimeNs}`,
-    );
-  }
-  return files;
-}
-
-function changedPaths(before, after) {
-  const paths = new Set([...before.keys(), ...after.keys()]);
-  return [...paths]
-    .filter((path) => before.get(path) !== after.get(path))
-    .sort();
-}
-
-function runCommand(root, tokens) {
+function runCommand(root, tokens, policy, sandboxRoot) {
   const [command, ...args] = tokens;
+  if (command !== "node") {
+    return {
+      ok: false,
+      status: null,
+      signal: null,
+      output: "generator sandbox supports only explicit node commands",
+      writes: [],
+    };
+  }
   const executable = command === "node" ? process.execPath : command;
-  const result = spawnSync(executable, args, {
+  const logPath = join(sandboxRoot, `writes-${sandboxRunId++}.jsonl`);
+  writeFileSync(logPath, "");
+  const result = spawnSync(executable, ["--require", SANDBOX_PRELOAD, ...args], {
     cwd: root,
     encoding: "utf8",
     timeout: 600_000,
-    env: { ...process.env, NODE_TEST_CONTEXT: undefined },
+    env: {
+      ...process.env,
+      NODE_TEST_CONTEXT: undefined,
+      GENERATOR_SANDBOX_ALLOWED: JSON.stringify(policy.outputs),
+      GENERATOR_SANDBOX_LOG: logPath,
+      GENERATOR_SANDBOX_ROOT: root,
+      GENERATOR_SANDBOX_SHADOW: join(sandboxRoot, "outputs"),
+    },
   });
+  const writes = readFileSync(logPath, "utf8")
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => JSON.parse(line));
   return {
     ok: !result.error && result.status === 0 && !result.signal,
     status: result.status,
     signal: result.signal,
     output: `${result.stdout ?? ""}\n${result.stderr ?? ""}`,
+    writes: [...new Set(writes)].sort(),
   };
 }
 
@@ -171,18 +178,27 @@ function semanticBytes(path, bytes) {
   }
   try {
     const parsed = JSON.parse(bytes.toString("utf8"));
-    if (isRecord(parsed)) delete parsed.builtAt;
+    if (isRecord(parsed)) {
+      delete parsed.builtAt;
+      delete parsed.gitCommit;
+    }
     return Buffer.from(JSON.stringify(parsed));
   } catch {
     return bytes;
   }
 }
 
-function outputState(root, outputs) {
+function outputPath(root, shadowRoot, path) {
+  const shadow = join(shadowRoot, "outputs", ...path.split("/"));
+  return existsSync(shadow) ? shadow : join(root, path);
+}
+
+function outputState(root, outputs, shadowRoot) {
   const state = new Map();
   for (const path of outputs) {
-    if (!existsSync(join(root, path))) continue;
-    state.set(path, semanticBytes(path, readFileSync(join(root, path))));
+    const selected = outputPath(root, shadowRoot, path);
+    if (!existsSync(selected)) continue;
+    state.set(path, semanticBytes(path, readFileSync(selected)));
   }
   return state;
 }
@@ -196,13 +212,15 @@ function equalOutputState(first, second) {
   return true;
 }
 
-function provenanceMissing(root, policy) {
+function provenanceMissing(root, policy, shadowRoot) {
   if (policy.provenance !== "required") return false;
   const sidecars = policy.outputs.filter((path) => path.endsWith("provenance.json"));
   if (sidecars.length === 0) return true;
   return sidecars.some((path) => {
     try {
-      return !isRecord(JSON.parse(readFileSync(join(root, path), "utf8")));
+      return !validGeneratedProvenance(JSON.parse(
+        readFileSync(outputPath(root, shadowRoot, path), "utf8"),
+      ));
     } catch {
       return true;
     }
@@ -221,67 +239,81 @@ export async function verifyGenerator(rootPath, generator) {
     );
   }
 
-  const before = snapshot(root);
-  const firstRun = runCommand(root, policy.generate);
-  if (!firstRun.ok) {
-    return fail("GENERATOR-RUN-FAILED", firstRun.output);
-  }
-  const afterFirst = snapshot(root);
-  const writes = changedPaths(before, afterFirst);
-  const outputSet = new Set(policy.outputs);
-  const unexpectedWrites = writes.filter((path) => !outputSet.has(path));
-  if (unexpectedWrites.length > 0) {
-    return fail(
-      "GENERATOR-UNDECLARED-WRITE",
-      `undeclared writes: ${unexpectedWrites.join(", ")}`,
-      { unexpectedWrites },
+  const sandboxRoot = mkdtempSync(join(tmpdir(), "generator-contract-output-"));
+  try {
+    const firstRun = runCommand(root, policy.generate, policy, sandboxRoot);
+    const outputSet = new Set(policy.outputs);
+    const unexpectedWrites = firstRun.writes.filter(
+      (path) => !outputSet.has(path),
     );
-  }
-  if (provenanceMissing(root, policy)) {
-    return fail(
-      "GENERATOR-PROVENANCE-MISSING",
-      "tracked generator output lacks required provenance",
+    if (unexpectedWrites.length > 0) {
+      return fail(
+        "GENERATOR-UNDECLARED-WRITE",
+        `undeclared writes: ${unexpectedWrites.join(", ")}`,
+        { unexpectedWrites },
+      );
+    }
+    if (!firstRun.ok) {
+      return fail("GENERATOR-RUN-FAILED", firstRun.output);
+    }
+    if (provenanceMissing(root, policy, sandboxRoot)) {
+      return fail(
+        "GENERATOR-PROVENANCE-MISSING",
+        "tracked generator output lacks required provenance",
+      );
+    }
+    const missingOutputs = policy.outputs.filter(
+      (path) => !existsSync(outputPath(root, sandboxRoot, path)),
     );
-  }
-  const missingOutputs = policy.outputs.filter((path) => !existsSync(join(root, path)));
-  if (missingOutputs.length > 0) {
-    return fail(
-      "GENERATOR-OUTPUT-MISSING",
-      `declared outputs missing: ${missingOutputs.join(", ")}`,
-      { missingOutputs },
-    );
-  }
+    if (missingOutputs.length > 0) {
+      return fail(
+        "GENERATOR-OUTPUT-MISSING",
+        `declared outputs missing: ${missingOutputs.join(", ")}`,
+        { missingOutputs },
+      );
+    }
 
-  const firstOutputs = outputState(root, policy.outputs);
-  const secondRun = runCommand(root, policy.generate);
-  if (!secondRun.ok) {
-    return fail("GENERATOR-RUN-FAILED", secondRun.output);
-  }
-  const secondOutputs = outputState(root, policy.outputs);
-  if (!equalOutputState(firstOutputs, secondOutputs)) {
-    return fail(
-      "GENERATOR-NONDETERMINISTIC",
-      "second generation changed semantic output bytes",
+    const firstOutputs = outputState(root, policy.outputs, sandboxRoot);
+    const secondRun = runCommand(root, policy.generate, policy, sandboxRoot);
+    const secondUnexpected = secondRun.writes.filter(
+      (path) => !outputSet.has(path),
     );
-  }
+    if (secondUnexpected.length > 0) {
+      return fail(
+        "GENERATOR-UNDECLARED-WRITE",
+        `undeclared writes: ${secondUnexpected.join(", ")}`,
+        { unexpectedWrites: secondUnexpected },
+      );
+    }
+    if (!secondRun.ok) {
+      return fail("GENERATOR-RUN-FAILED", secondRun.output);
+    }
+    const secondOutputs = outputState(root, policy.outputs, sandboxRoot);
+    if (!equalOutputState(firstOutputs, secondOutputs)) {
+      return fail(
+        "GENERATOR-NONDETERMINISTIC",
+        "second generation changed semantic output bytes",
+      );
+    }
 
-  const beforeCheck = snapshot(root);
-  const checkRun = runCommand(root, policy.check);
-  if (!checkRun.ok) {
-    return fail("GENERATOR-CHECK-FAILED", checkRun.output);
+    const checkRun = runCommand(root, policy.check, policy, sandboxRoot);
+    if (checkRun.writes.length > 0) {
+      return fail(
+        "GENERATOR-CHECK-MUTATED",
+        `check command wrote files: ${checkRun.writes.join(", ")}`,
+        { unexpectedWrites: checkRun.writes },
+      );
+    }
+    if (!checkRun.ok) {
+      return fail("GENERATOR-CHECK-FAILED", checkRun.output);
+    }
+    return {
+      ok: true,
+      code: "GENERATOR-CONTRACT-PASS",
+      detail: "isolated declared writes, provenance, idempotence, and non-mutating check verified",
+      unexpectedWrites: [],
+    };
+  } finally {
+    rmSync(sandboxRoot, { recursive: true, force: true });
   }
-  const checkWrites = changedPaths(beforeCheck, snapshot(root));
-  if (checkWrites.length > 0) {
-    return fail(
-      "GENERATOR-CHECK-MUTATED",
-      `check command wrote files: ${checkWrites.join(", ")}`,
-      { unexpectedWrites: checkWrites },
-    );
-  }
-  return {
-    ok: true,
-    code: "GENERATOR-CONTRACT-PASS",
-    detail: "declared writes, provenance, idempotence, and check mode verified",
-    unexpectedWrites: [],
-  };
 }

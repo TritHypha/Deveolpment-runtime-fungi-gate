@@ -11,7 +11,10 @@ import {
 } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 /**
  * Parse one selected root and an optional non-mutating check mode.
@@ -175,7 +178,9 @@ expected.set(
 
 if (OPTIONS.check) {
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(OPTIONS.root, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.error(`package-graph: ${stale.length} missing or stale output(s); no files written`);

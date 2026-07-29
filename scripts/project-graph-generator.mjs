@@ -17,9 +17,8 @@ import { dirname, join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
-  builtAtStamp,
-  gitCommit,
-  provenance,
+  generatedOutputMatches,
+  provenanceForCheck,
 } from "./lib/provenance.mjs";
 
 const FILES = Object.freeze([
@@ -58,7 +57,7 @@ function parseArgs(argv) {
 /**
  * Resolve a deterministic epoch for the child graph's generatedAt field.
  */
-function sourceDateEpoch(root) {
+function sourceDateEpoch(builtAt) {
   const supplied = process.env.SOURCE_DATE_EPOCH;
   if (supplied !== undefined && supplied !== "") {
     if (!/^\d+$/.test(supplied)) {
@@ -66,17 +65,14 @@ function sourceDateEpoch(root) {
     }
     return supplied;
   }
-  if (gitCommit(root) === null) {
-    throw new Error("project-graph: deterministic generation requires SOURCE_DATE_EPOCH or a Git commit");
-  }
-  return String(Math.floor(Date.parse(builtAtStamp(root)) / 1000));
+  return String(Math.floor(Date.parse(builtAt) / 1000));
 }
 
 /**
  * Generate and validate the complete graph output set in a temporary
  * directory. No repository output is touched here.
  */
-function derive(root) {
+function derive(root, builtAt) {
   const cli = join(
     root,
     "packages-galerina",
@@ -98,7 +94,7 @@ function derive(root) {
         windowsHide: true,
         env: {
           ...process.env,
-          SOURCE_DATE_EPOCH: sourceDateEpoch(root),
+          SOURCE_DATE_EPOCH: sourceDateEpoch(builtAt),
         },
         maxBuffer: 64 * 1024 * 1024,
       },
@@ -140,26 +136,35 @@ function derive(root) {
 }
 
 const OPTIONS = parseArgs(process.argv.slice(2));
+const outputDirectory = join(OPTIONS.root, "build", "graph");
+const provenancePath = join(outputDirectory, "provenance.json");
+const stamp = provenanceForCheck(
+  "project-graph-generator",
+  OPTIONS.root,
+  provenancePath,
+  OPTIONS.check,
+);
 let generated;
 try {
-  generated = derive(OPTIONS.root);
+  generated = derive(OPTIONS.root, stamp.builtAt);
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 }
 
-const outputDirectory = join(OPTIONS.root, "build", "graph");
 const expected = new Map(
   [...generated].map(([name, bytes]) => [join(outputDirectory, name), bytes]),
 );
 expected.set(
-  join(outputDirectory, "provenance.json"),
-  JSON.stringify(provenance("project-graph-generator", OPTIONS.root), null, 2) + "\n",
+  provenancePath,
+  JSON.stringify(stamp, null, 2) + "\n",
 );
 
 if (OPTIONS.check) {
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(OPTIONS.root, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.error(`project-graph: missing or stale output(s): ${stale.join(", ")}; no files written`);

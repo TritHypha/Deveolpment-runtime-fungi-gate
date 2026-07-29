@@ -32,7 +32,10 @@ import {
   loadToolingPolicy,
   validateToolingContract,
 } from "./lib/tooling-inventory.mjs";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT_ARG = process.argv.indexOf("--root");
@@ -304,7 +307,7 @@ if (CHECK_GENERATED) {
       artifactProblems.push(`missing generated output ${relative(ROOT, path).replace(/\\/g, "/")}`);
       continue;
     }
-    if (actual !== expected) {
+    if (!generatedOutputMatches(path, actual, expected)) {
       artifactProblems.push(`generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
     }
   }

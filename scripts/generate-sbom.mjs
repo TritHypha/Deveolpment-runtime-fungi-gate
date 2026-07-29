@@ -58,9 +58,9 @@ import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import {
-  builtAtStamp,
+  generatedOutputMatches,
   gitCommit,
-  provenance,
+  provenanceForCheck,
 } from "./lib/provenance.mjs";
 
 const SCRIPT_NAME = "generate-sbom.mjs";
@@ -625,7 +625,14 @@ export function runGenerate({
     log("ERROR: deterministic timestamp requires SOURCE_DATE_EPOCH or a Git commit — fail-closed");
     return 1;
   }
-  const deterministicNow = now ?? (() => new Date(builtAtStamp(rootDir)));
+  const provenancePath = join(dirname(outAbs), "provenance.json");
+  const stamp = provenanceForCheck(
+    "generate-sbom",
+    rootDir,
+    provenancePath,
+    check,
+  );
+  const deterministicNow = now ?? (() => new Date(stamp.builtAt));
   const { bom, errors, warnings } = collectSbom({
     rootDir,
     sourceDateEpoch,
@@ -639,11 +646,10 @@ export function runGenerate({
   }
   const text = serializeBom(bom);
   const provenanceText = JSON.stringify(
-    provenance("generate-sbom", rootDir),
+    stamp,
     null,
     2,
   ) + "\n";
-  const provenancePath = join(dirname(outAbs), "provenance.json");
   // Writer-side guard: never persist an absolute local path (ZT-17 class).
   assertNoPathLeak(text);
   if (print) {
@@ -653,7 +659,8 @@ export function runGenerate({
       [outAbs, text],
       [provenancePath, provenanceText],
     ].filter(([path, bytes]) =>
-      !existsSync(path) || readFileSync(path, "utf8") !== bytes);
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes));
     if (stale.length > 0) {
       log(
         `${SCRIPT_NAME}: ${stale.length} missing or stale output(s) — no files written`,

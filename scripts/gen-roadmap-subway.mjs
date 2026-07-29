@@ -21,7 +21,10 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 /**
  * Parse one repository root and one output mode.
@@ -486,7 +489,9 @@ if (OPTIONS.mode === "check") {
     [PROVENANCE_OUT, provenanceText],
   ]);
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
   if (failures.length > 0 || stale.length > 0) {
     for (const failure of failures) {

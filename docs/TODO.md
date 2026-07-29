@@ -216,13 +216,13 @@ planning checkbox must never be used to imply that implementation exists.
   run passes 170/170 with zero failures, skips, or deprecation warnings.
   `audit-gate-selftests --self-test` and the live tooling contract remain
   green.
-- **Next safe work:** perform Task 9's deterministic generated-artifact
+- **Next safe work:** finish Task 9's deterministic generated-artifact
   refresh and review as a separate commit; do not mix its reserved output set
-  into Task 8. Task 7's live orchestration close remains correctly red on one owner-only
-  memory-tree selection described below. Thirteen repository-output
-  generators are live under the fail-closed contract; external
-  inputs/outputs are separately bound rather than false-greened as
-  repository-local.
+  into the generator-contract source commit. Task 7's live orchestration close
+  remains correctly red on one owner-only memory-tree selection described
+  below. Fourteen repository-output generators are live under the fail-closed
+  contract; external inputs/outputs are separately bound rather than
+  false-greened as repository-local.
 - **Task 9 full-run defect fixed; aggregate rerun pending:** the first
   `run-all-tests --emit-counts` pass correctly refused to write canonical
   counts at 95/96 packages and 8,513 counted tests because
@@ -254,7 +254,27 @@ planning checkbox must never be used to imply that implementation exists.
   96/96 / 8,524 without promoting those counts into native/release authority.
   The dated 2026-07-10 audit has a superseding 2026-07-29 note; its historical
   body remains intact, and its no-full-suite-CI finding is not falsely closed.
-  Rerun the full count-authorizing suite after committing the writer.
+- **Task 9 reordered aggregate evidence:** the first post-writer rerun
+  correctly refused at 95/96 because generated unit-registry provenance
+  predated the source commit. After explicit regeneration, all 96/96 governed
+  packages pass with 8,524 counted tests. A final explicit generator pass is
+  14/14 and the complete scripts battery was 172/172 before the isolated
+  verifier work below.
+- **Task 9 generator-isolation/provenance checkpoint:** generator verification
+  no longer runs writers against the selected worktree. A preload sandbox
+  redirects every exact declared repository output into a temporary shadow
+  tree and refuses/logs undeclared writes before mutation. Five focused
+  contract tests prove undeclared and same-byte writes, non-idempotence,
+  missing/malformed provenance, and real-root non-mutation. Provenance drift
+  comparison now requires a well-formed tool, source commit, ISO timestamp,
+  and Node version while treating only `gitCommit` and `builtAt` as
+  informational volatile fields: committing an artifact therefore cannot
+  make that artifact stale when all stable output and provenance fields still
+  match. Nine focused tests, the live 14/14 generator contract, and the fresh
+  complete scripts battery (176/176) pass. The only direct generator check
+  currently red is the expected code-index content drift from these new source
+  files; regenerate after the source commit, then prove all fourteen direct
+  checks remain green after the artifact commit.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

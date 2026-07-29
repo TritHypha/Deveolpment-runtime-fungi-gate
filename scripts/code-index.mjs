@@ -10,7 +10,10 @@
 import { readdirSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { extractCodes, CODE_TEST, familyOf, nsOf } from "./lib/codes.mjs";
-import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 
 const ROOT = process.cwd();
 const CHECK = process.argv.includes("--check");
@@ -50,7 +53,7 @@ function emitOutput(path, content) {
     process.exitCode = 1;
     return;
   }
-  if (actual !== content) {
+  if (!generatedOutputMatches(path, actual, content)) {
     console.error(`code-index: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
     process.exitCode = 1;
   }

@@ -15,7 +15,10 @@ import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { extractCodes } from "./lib/codes.mjs";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 const ROOT = process.cwd();
 const asJson = process.argv.includes("--json");
@@ -146,7 +149,11 @@ if (check) {
   let drift = false;
   try {
     drift = readFileSync(reportPath, "utf8") !== reportBytes
-      || readFileSync(provenancePath, "utf8") !== provenanceBytes;
+      || !generatedOutputMatches(
+        provenancePath,
+        readFileSync(provenancePath, "utf8"),
+        provenanceBytes,
+      );
   } catch {
     drift = true;
   }

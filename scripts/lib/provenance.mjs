@@ -2,8 +2,109 @@
 // at what git commit, when" is auditable + freshness is checkable. Generators (code-index/gen-code-registry/kb-index)
 // write a sidecar `provenance.json` next to their artifact via writeProvenance(); audit-provenance.mjs reads it.
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { basename, join } from "node:path";
+import { isDeepStrictEqual } from "node:util";
+
+function isRecord(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function validCommit(value) {
+  return value === null
+    || (typeof value === "string" && /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/.test(value));
+}
+
+function validTimestamp(value) {
+  return typeof value === "string"
+    && Number.isFinite(Date.parse(value))
+    && new Date(value).toISOString() === value;
+}
+
+export function validGeneratedProvenance(value) {
+  return isRecord(value)
+    && typeof value.tool === "string"
+    && value.tool.length > 0
+    && validCommit(value.gitCommit)
+    && validTimestamp(value.builtAt)
+    && typeof value.node === "string"
+    && /^v\d+\.\d+\.\d+/.test(value.node);
+}
+
+/**
+ * Compare a generated output without making a generated-artifact commit stale.
+ *
+ * `gitCommit` names the source snapshot used to generate the artifact, so it is
+ * expected to lag HEAD after that artifact is committed. `builtAt` is likewise
+ * informational. Both fields remain mandatory and structurally validated; all
+ * other provenance fields and every non-provenance output remain exact.
+ */
+export function generatedOutputMatches(path, actual, expected) {
+  if (basename(path) !== "provenance.json") return actual === expected;
+  let actualBlock;
+  let expectedBlock;
+  try {
+    actualBlock = JSON.parse(actual);
+    expectedBlock = JSON.parse(expected);
+  } catch {
+    return false;
+  }
+  if (
+    !validGeneratedProvenance(actualBlock)
+    || !validGeneratedProvenance(expectedBlock)
+  ) {
+    return false;
+  }
+  if (
+    (actualBlock.gitCommit === null) !== (expectedBlock.gitCommit === null)
+  ) {
+    return false;
+  }
+  const {
+    builtAt: _actualBuiltAt,
+    gitCommit: _actualGitCommit,
+    ...actualStable
+  } = actualBlock;
+  const {
+    builtAt: _expectedBuiltAt,
+    gitCommit: _expectedGitCommit,
+    ...expectedStable
+  } = expectedBlock;
+  return isDeepStrictEqual(actualStable, expectedStable);
+}
+
+/**
+ * Reuse the published source snapshot during a non-mutating check.
+ *
+ * Generated outputs may legitimately embed the source snapshot time or
+ * commit. After those outputs are committed, HEAD points at the artifact
+ * commit rather than the source commit they describe. Reusing only the two
+ * validated volatile fields prevents self-staleness; current tool and Node
+ * identity still come from this process and all generator-specific stable
+ * fields are derived again by the caller.
+ */
+export function provenanceForCheck(tool, root, path, check) {
+  const current = provenance(tool, root);
+  if (!check) return current;
+  try {
+    const published = JSON.parse(readFileSync(path, "utf8"));
+    if (
+      validGeneratedProvenance(published)
+      && published.tool === tool
+      && (published.gitCommit === null) === (current.gitCommit === null)
+    ) {
+      return {
+        ...current,
+        gitCommit: published.gitCommit,
+        builtAt: published.builtAt,
+      };
+    }
+  } catch {
+    // Missing or malformed published provenance is compared and refused by
+    // the caller; never invent a successful prior snapshot here.
+  }
+  return current;
+}
 
 export function gitCommit(root = process.cwd()) {
   try { return execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(); } catch { return null; }

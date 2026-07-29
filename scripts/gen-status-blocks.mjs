@@ -14,7 +14,10 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT_INDEX = process.argv.indexOf("--root");
@@ -107,7 +110,9 @@ if (CHECK) {
       stale.push(relative(ROOT, path).replace(/\\/g, "/"));
       continue;
     }
-    if (actual !== expected) stale.push(relative(ROOT, path).replace(/\\/g, "/"));
+    if (!generatedOutputMatches(path, actual, expected)) {
+      stale.push(relative(ROOT, path).replace(/\\/g, "/"));
+    }
   }
   for (const rel of TARGETS) {
     const abs = join(ROOT, rel);

@@ -102,15 +102,15 @@ components:
   receipt-producing Tower Citizen, and backend-neutral witnessed Tri-Fuse.
   Its cited Galerina facts must be re-verified at source before implementation.
 
-The generator-governance chapter now has thirteen live repository-output
+The generator-governance chapter now has fourteen live repository-output
 generators plus one fail-closed graph orchestrator and one external-output
-memory generator. Fresh evidence through Galerina commit `497b02e9` is:
+memory generator. Fresh evidence on the current Galerina branch is:
 
 - the focused generator fixture suite passes 25/25, the graph-orchestrator
   injected-failure fixture passes 1/1, the package-graph core passes 27/27,
   and the KB-graph core passes 31/31;
 - the contract-registry anti-vacuous self-test finds 1,331 contracts;
-- the live generator audit passes 13/13 after exact declared-write,
+- the live generator audit passes 14/14 after isolated exact declared-write,
   provenance, second-run idempotence, and non-mutating-check verification;
 - package-graph governance preflights all 97 registered packages before
   publishing any output, enumerates all 195 outputs without a wildcard, and
@@ -128,8 +128,8 @@ memory generator. Fresh evidence through Galerina commit `497b02e9` is:
   memory child because four candidate memory trees exist and none is
   authorized. That owner-only selection remains red and is recorded in
   SLIDE `QUESTIONS-FOR-OWNER.md` at commit `5f3b2ff`;
-- the tooling-contract audit deliberately remains red on the same 21 named
-  Task 8 dispositions. That red is tracked work, not a release-green claim;
+- all 79 audit/lint tools have executable anti-neutering evidence and the
+  tooling contract has zero undisposed-tool violations;
 - generated Task 9 outputs remain a separate unstaged working set and were
   not mixed into the manual generator commit.
 
@@ -152,12 +152,37 @@ allowlisted. Current fresh evidence is:
 - code-index, code-registry, and coverage setup is isolated in a seven-test
   Git-backed fixture. Child refusal is asserted before generated outputs are
   read, so one failed generator cannot suppress unrelated tests;
-- a fresh run of every `scripts/tests/*.test.mjs` file passes 170/170 with
+- a fresh run of every `scripts/tests/*.test.mjs` file passes 176/176 with
   zero failures, skips, or Windows shell deprecation warnings.
 
 This closes Task 8 only. It does not make the owner-unselected memory tree
 authoritative, does not turn report-only audits into release gates, and does
 not pre-authorize the separate Task 9 generated-artifact refresh.
+
+## Task 9 chapter answer: generated evidence without self-staleness
+
+Task 9 has now exercised all 96 governed test-bearing packages through their
+declared build/test chains: 96/96 pass with 8,524 counted tests. The generated
+review caught and fixed three distinct false-trust classes:
+
+- legacy `galerina-core` now admits only the exact supported line-1
+  `@version 1` directive and refuses malformed, future, `.gate`-style, or
+  misplaced forms;
+- the tracked coverage report is now an explicitly governed fourteenth
+  generator output with a non-mutating `--check` and path-free binding to its
+  external governance input;
+- package narrative, README status, and dated audit context no longer silently
+  disagree with the complete derived inventory.
+
+The generator auditor itself is now isolated: declared repository writes are
+redirected to a temporary shadow output tree and undeclared writes are refused
+before they reach the selected root. Its provenance comparison validates all
+required fields and compares every stable field exactly, but excludes
+`gitCommit` and `builtAt` from freshness equality. Those two fields describe
+the source snapshot and generation time; an artifact-only commit must not make
+its own evidence stale. Nine focused tests, 14/14 live generator contracts,
+and 176/176 scripts tests pass. Generated publication and a post-publication
+fourteen-check proof remain the next Task 9 boundary.
 
 ## Prompt for the RD-0535 reviewer
 
@@ -201,7 +226,7 @@ Answer the response, not merely the original review:
    diff. Check exact SLIDE corpus discovery, empty/uncountable refusal, child
    exit propagation, NODE_TEST_CONTEXT removal, compiler asset ownership, and
    deterministic compiler build evidence.
-   Also inspect current Galerina commit 497b02e9, independent SLIDE code commit
+   Also inspect the current Galerina branch, independent SLIDE code commit
    8a28199, and its question-ledger commit 5f3b2ff. Never infer that unstaged
    generated artifacts belong to the manual commit.
 6. Try to falsify the build-evidence contract: missing evidence, malformed
@@ -219,7 +244,7 @@ Answer the response, not merely the original review:
    proposed architecture, experiments, blocked work, and rejected ideas. Do
    not infer native safety, performance, admission, or twenty-year
    compatibility from test counts.
-9. Try to falsify the thirteen live repository-generator contracts, the
+9. Try to falsify the fourteen live repository-generator contracts, the
    external memory check, and graph-all orchestration. Confirm exact declared
    write sets, provenance, second-run semantic idempotence, and non-mutating
    check modes. For package graphs, verify all 97 registered package sets, all
@@ -229,7 +254,7 @@ Answer the response, not merely the original review:
    and nonzero child-refusal propagation. Do not choose one of four memory
    trees by file count.
 10. Attempt to falsify the claimed Task 8 closure. Re-run every
-    `scripts/tests/*.test.mjs` file and require exactly 170 passing tests with
+    `scripts/tests/*.test.mjs` file and require exactly 176 passing tests with
     zero failures/skips. Inspect the 79/79 audit/lint proof map and prove that
     missing or vacuous evidence blocks. Remove or neuter one fixture mapping
     in a disposable copy and confirm refusal. Inspect the seven-test

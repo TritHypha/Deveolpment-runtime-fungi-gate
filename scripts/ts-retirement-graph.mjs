@@ -23,7 +23,10 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, relative, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { findCorpus, findTrackedAt } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT_INDEX = process.argv.indexOf("--root");
@@ -128,7 +131,7 @@ if (CHECK) {
       process.exitCode = 1;
       continue;
     }
-    if (actual !== expected) {
+    if (!generatedOutputMatches(path, actual, expected)) {
       console.error(`ts-retirement: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
       process.exitCode = 1;
     }

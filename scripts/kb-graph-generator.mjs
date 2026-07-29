@@ -12,7 +12,10 @@ import {
 import { createHash } from "node:crypto";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenanceForCheck,
+} from "./lib/provenance.mjs";
 
 function parseArgs(argv) {
   let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -121,12 +124,17 @@ async function derive(options) {
       lastModified: new Date(0),
     })),
   };
+  const out = join(options.root, "build", "kb-graph");
   const stamp = {
-    ...provenance("kb-graph-generator", options.root),
+    ...provenanceForCheck(
+      "kb-graph-generator",
+      options.root,
+      join(out, "provenance.json"),
+      options.check,
+    ),
     externalInputDigest: externalDigest(options.kbDir, files),
     externalDocumentCount: files.length,
   };
-  const out = join(options.root, "build", "kb-graph");
   return new Map([
     [join(out, "kb-graph.json"), finalNewline(reporter.generateJSON(graph))],
     [join(out, "kb-graph.dot"), finalNewline(reporter.generateDOT(graph))],
@@ -149,7 +157,9 @@ try {
 
 if (options.check) {
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(options.root, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.error(`kb-graph: ${stale.length} missing or stale output(s); no files written`);

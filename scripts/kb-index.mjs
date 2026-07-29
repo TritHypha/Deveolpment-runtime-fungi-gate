@@ -14,7 +14,10 @@ import { existsSync, readdirSync, readFileSync, mkdirSync, writeFileSync, statSy
 import { createHash } from "node:crypto";
 import { join, relative, basename, resolve } from "node:path";
 import { extractCodes } from "./lib/codes.mjs";
-import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 import { scrubPaths } from "./lib/scrub-paths.mjs"; // extracted + unit-tested (was module-internal, untestable)
 
 function parseArgs(argv) {
@@ -209,7 +212,9 @@ const expected = new Map([
 ]);
 if (options.check) {
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.error(`kb-index: ${stale.length} missing or stale output(s); no files written`);

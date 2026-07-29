@@ -35,7 +35,10 @@ import {
 import { createHash } from "node:crypto";
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { provenance } from "./lib/provenance.mjs";
+import {
+  generatedOutputMatches,
+  provenance,
+} from "./lib/provenance.mjs";
 
 /**
  * Parse one repository root and one mode. Every unknown, duplicate, or
@@ -341,7 +344,9 @@ if (OPTIONS.mode === "check") {
     [PROVENANCE, provenanceText],
   ]);
   const stale = [...expected.entries()]
-    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .filter(([path, bytes]) =>
+      !existsSync(path)
+      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
     .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
   if (stale.length > 0) {
     console.error(
