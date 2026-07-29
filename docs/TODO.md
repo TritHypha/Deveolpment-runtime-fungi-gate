@@ -60,7 +60,7 @@ planning checkbox must never be used to imply that implementation exists.
   and zero effects/capabilities/memory. Ten hostile graph mutations fail
   closed; focused evidence is 14/14. Report:
   `docs/reports/slide-v2a-logical-admission-2026-07-29.md`.
-- **Completed (uncommitted checkpoint):** corrected the pre-freeze root to
+- **Completed:** local commit `4509ed4b` corrected the pre-freeze root to
   carry the registry descriptor digest and every critical module/type/
   constant/effect/capability/memory/extension table, then emitted a pinned
   540-byte canonical V2-A body. Report:
@@ -76,7 +76,8 @@ planning checkbox must never be used to imply that implementation exists.
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero
-  over-size skips.
+  over-size skips at the logical checkpoint and 4,088 files with zero
+  over-size skips after canonical encoding.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

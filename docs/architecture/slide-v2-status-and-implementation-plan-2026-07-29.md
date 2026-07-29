@@ -440,6 +440,7 @@ The current branch contains these SLIDE-related checkpoints:
 | `3cd1f3d2` | Validate, hash, and instruction-drive admitted R1 programs |
 | `72c0c210` | Gate the frozen R1 safe-value semantic-memory subset |
 | `b7998244` | Admit the frontend-neutral V2-A logical graph and hostile mutations |
+| `4509ed4b` | Bind the V2-A registry descriptor and emit canonical producer bytes |
 | `0f2f7c6a` | Harden SLIDE G1 runtime boundaries and add the capability probe |
 | `ab3de224` | Add the bounded SLIDE R1 preflight kernel |
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |
