@@ -32,7 +32,6 @@ const rootIdx = argv.indexOf("--root");
 const ROOT = rootIdx >= 0 && argv[rootIdx + 1]
   ? argv[rootIdx + 1]
   : join(dirname(fileURLToPath(import.meta.url)), "..");
-const isWin = process.platform === "win32";
 
 const baseDirs = rootIdx >= 0
   ? [ROOT]
@@ -63,7 +62,7 @@ for (const pkg of signed) {
   } catch { /* unreadable manifest — the signed check above already treats that fail-closed */ }
   // OWASP F1: array args, no shell interpolation of paths.
   const r = spawnSync("git", ["status", "--porcelain", "--", rel === "" ? "." : rel], {
-    cwd: ROOT, encoding: "utf8", timeout: 30_000, shell: isWin,
+    cwd: ROOT, encoding: "utf8", timeout: 30_000, shell: false,
   });
   if (r.status !== 0) {
     // Not a git repo / git unavailable → cannot prove cleanliness. Report, do not

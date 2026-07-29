@@ -26,7 +26,6 @@ import { isRealSignedManifest, isCommittedSignedManifest, findFusablePackages } 
 
 const SCRIPTS = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT = join(SCRIPTS, "..");
-const isWin = process.platform === "win32";
 
 const REAL_SIG = { algorithm: "Ed25519", keyId: "deadbeefcafe0123", signature: "QUJDREVG", canon: "jcs" };
 
@@ -49,9 +48,9 @@ function makePkg(base, name, { signature } = {}) {
 }
 
 function git(cwd, ...args) {
-  return spawnSync("git", args, { cwd, encoding: "utf8", timeout: 30_000, shell: isWin });
+  return spawnSync("git", args, { cwd, encoding: "utf8", timeout: 30_000, shell: false });
 }
-const gitAvailable = spawnSync("git", ["--version"], { encoding: "utf8", shell: isWin }).status === 0;
+const gitAvailable = spawnSync("git", ["--version"], { encoding: "utf8", shell: false }).status === 0;
 
 // ── 1. the shared predicate ────────────────────────────────────────────────
 test("predicate: real signature → protected; placeholder/missing/absent → regenerable", () => {
@@ -132,7 +131,7 @@ test("detector: clean signed package → exit 0; dirty signed → exit 1; dirty 
   assert.equal(git(repo, "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "fixture").status, 0);
 
   const run = () => spawnSync("node", [join(SCRIPTS, "audit-signed-fixture-drift.mjs"), "--root", repo],
-    { encoding: "utf8", timeout: 60_000, shell: isWin });
+    { encoding: "utf8", timeout: 60_000, shell: false });
 
   assert.equal(run().status, 0, "clean tree must pass");
 
@@ -177,7 +176,7 @@ test("writer guard: deps --all --write skips SIGNED package src, rewrites unsign
   const beforePlain = readFileSync(plainSrc, "utf8");
 
   const r = spawnSync("node", [join(ROOT, "galerina.mjs"), "deps", "--all", base, "--write"],
-    { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+    { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: false });
   assert.equal(r.status, 0, `deps --all --write failed: ${r.stderr}`);
 
   assert.equal(readFileSync(sealedSrc, "utf8"), beforeSealed, "SIGNED package src must be byte-identical");
@@ -194,7 +193,7 @@ test("build --package refuses a SIGNED package without --force; --force override
   const unsigned = makePkg(base, "open-build", {});
   const build = (dir, ...extra) =>
     spawnSync("node", [join(ROOT, "galerina.mjs"), "build", "--package", dir, ...extra],
-      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: false });
   const REFUSAL = /Refusing to locally rebuild SIGNED/;
 
   // signed, no --force → refused BEFORE any compile; message names the rule; manifest untouched
@@ -237,7 +236,7 @@ test("build --package: git-TRACKED signed manifest → refused; untracked dev-si
 
   const build = (dir) =>
     spawnSync("node", [join(ROOT, "galerina.mjs"), "build", "--package", dir],
-      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: false });
   const REFUSAL = /Refusing to locally rebuild SIGNED/;
 
   const refused = build(ceremony);
@@ -273,7 +272,7 @@ test("rebuild guard: committed-signed skipped when stale; placeholder rebuilds; 
 
   const rebuild = (...extra) =>
     spawnSync("node", [join(SCRIPTS, "rebuild-fusable-packages.mjs"), "--root", repo, ...extra],
-      { encoding: "utf8", timeout: 240_000, shell: isWin });
+      { encoding: "utf8", timeout: 240_000, shell: false });
   const sealedMan = join(sealed, "dist", "sealed.lmanifest.json");
   const beforeSealed = readFileSync(sealedMan, "utf8");
 

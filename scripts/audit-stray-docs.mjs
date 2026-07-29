@@ -5,17 +5,24 @@
 //
 //   node scripts/audit-stray-docs.mjs          -> grouped stray list + mtime + duplicate-basename report + stdout summary
 //   node scripts/audit-stray-docs.mjs --json    -> machine-readable JSON
+//   node scripts/audit-stray-docs.mjs --root <dir> -> inspect a hermetic fixture
 //
 // Reports: (a) count + list of stray *.md grouped by top-level dir, with mtime so stale ones stand out;
 // (b) DUPLICATE basenames (how many README.md exist + where) — the owner's specific concern;
 // (c) if build/kb-graph/kb-graph.json exists, surfaces its orphan + broken-link counts.
 // Informational only — exit 0 ALWAYS, handles missing files gracefully.
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative, basename } from "node:path";
+import { join, relative, basename, resolve } from "node:path";
 
-const ROOT = process.cwd();
-const asJson = process.argv.includes("--json");
-const summaryOnly = process.argv.includes("--summary"); // one-line heartbeat for the periodic Stop hook
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-stray-docs: --root requires a value.");
+  process.exit(2);
+}
+const ROOT = rootIndex >= 0 ? resolve(argv[rootIndex + 1]) : process.cwd();
+const asJson = argv.includes("--json");
+const summaryOnly = argv.includes("--summary"); // one-line heartbeat for the periodic Stop hook
 // Stray = *.md NOT under docs/. Skip the noise dirs (vendored / generated / VCS).
 const SKIP_DIRS = new Set(["node_modules", "dist", "build", ".git", ".pytest_cache", "docs", ".cache", "coverage", "out", "target", ".next", ".turbo"]);
 const STALE_DAYS = 120; // flag anything not touched in this many days
@@ -82,6 +89,7 @@ try {
 if (asJson) {
   console.log(JSON.stringify({
     generated: "audit-stray-docs",
+    authority: "report-only",
     strayCount: stray.length,
     byDir: dirsSorted.map(([dir, arr]) => ({ dir, count: arr.length, files: arr.map((f) => ({ rel: f.rel, mtime: fmtDate(f.mtime), ageDays: ageDays(f.mtime) })) })),
     duplicateBasenames: dupes.map(([base, v]) => ({ base, count: v.length, paths: v.map((f) => f.rel) })),

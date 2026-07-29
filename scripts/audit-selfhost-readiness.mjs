@@ -18,14 +18,22 @@
 // A package with NO floor and only .ts is CONVERTIBLE-NOW (pure logic); with a floor it is
 // FLOORED (needs the floor self-hosted first — the LATER/#102-106 DSS.wasm / PQ-custody work).
 //
-// Usage: node scripts/audit-selfhost-readiness.mjs [--json]
+// Usage: node scripts/audit-selfhost-readiness.mjs [--json] [--root <dir>]
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-selfhost-readiness: --root requires a value.");
+  process.exit(2);
+}
+const ROOT = rootIndex >= 0
+  ? resolve(argv[rootIndex + 1])
+  : join(dirname(fileURLToPath(import.meta.url)), "..");
 const PKGDIR = join(ROOT, "packages-galerina");
-const JSON_OUT = process.argv.includes("--json");
+const JSON_OUT = argv.includes("--json");
 
 // Runtime-stack order (the "start of the runtime down"); packages not listed sort after, alpha.
 const STACK_ORDER = [
@@ -75,6 +83,10 @@ function classify(pkgDir) {
   return { ts: ts.length, fungi: fungi.length, pctFungi, floors: [...floors], status, unreadable };
 }
 
+if (!existsSync(PKGDIR)) {
+  console.error(`audit-selfhost-readiness: packages root not found: ${PKGDIR}`);
+  process.exit(2);
+}
 const pkgs = readdirSync(PKGDIR).filter((n) => { try { return statSync(join(PKGDIR, n)).isDirectory(); } catch { return false; } });
 const rows = [];
 for (const n of pkgs) { const c = classify(join(PKGDIR, n)); if (c) rows.push({ pkg: n, ...c }); }
@@ -88,7 +100,10 @@ const summary = { packages: rows.length, fungiFiles: totFungi, tsFiles: totTs,
   fullyFungi: rows.filter((r) => r.status === "FULLY-FUNGI").length,
   convertibleNow: convertible.length, flooredPackages: flooredPkgs.length };
 
-if (JSON_OUT) { console.log(JSON.stringify({ summary, rows }, null, 2)); process.exit(0); }
+if (JSON_OUT) {
+  console.log(JSON.stringify({ authority: "report-only", summary, rows }, null, 2));
+  process.exit(0);
+}
 
 console.log("\n  Self-hosting readiness — packages-galerina (runtime-stack order; the HONEST map, no deletion)\n");
 console.log("  pkg".padEnd(42) + "fungi  ts   %fungi  status / floors");

@@ -32,8 +32,6 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 
-const isWin = process.platform === "win32";
-
 /** Signature-shape check shared by the disk and committed predicates. */
 export function isRealSignature(sig) {
   return (
@@ -73,11 +71,11 @@ export function isRealSignedManifest(manifestPath) {
 export function isCommittedSignedManifest(gitRoot, manifestPath) {
   const rel = relative(gitRoot, manifestPath).replace(/\\/g, "/");
   const tracked = spawnSync("git", ["-C", gitRoot, "ls-files", "--error-unmatch", "--", rel],
-    { encoding: "utf8", timeout: 15_000, shell: isWin });
+    { encoding: "utf8", timeout: 15_000, shell: false });
   if (tracked.status === 1) return false;                        // untracked → dev-local
   if (tracked.status !== 0) return isRealSignedManifest(manifestPath); // git can't answer → disk floor
   const show = spawnSync("git", ["-C", gitRoot, "show", `HEAD:${rel}`],
-    { encoding: "utf8", timeout: 15_000, shell: isWin });
+    { encoding: "utf8", timeout: 15_000, shell: false });
   if (show.status !== 0) return true;                            // tracked but no HEAD blob → protect
   try {
     return isRealSignature(JSON.parse(show.stdout).governanceSignature);

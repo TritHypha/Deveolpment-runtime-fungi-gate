@@ -172,8 +172,18 @@ planning checkbox must never be used to imply that implementation exists.
   clean. Anti-neutering advisories fell 13 -> 7; tooling-contract gaps fell
   21 -> 17 because the corpus and scratch gates were already cadence-wired.
   No exception was added to hide a tool.
-- **Next safe work:** close the remaining seven anti-neutering gaps in groups
-  of no more than three, repair/split the existing monolithic dev-tool
+- **Task 8 third evidence group:** self-host readiness now explicitly reports
+  non-authorizing status and is proven to distinguish a host-I/O floor from a
+  fully-Fungi package. Stray-doc discovery likewise declares report-only
+  authority and proves outside-vs-`docs/` classification. A temporary Git
+  repository proves signed-fixture drift changes clean -> blocking. That
+  exercise also removed an unsafe Windows `shell: true` contradiction from
+  the audit and shared committed-signature predicate. Live evidence is 95
+  mapped code packages (38 floored), one clean committed-signed fixture, and
+  269 stray Markdown files reported without release authority. Anti-neutering
+  advisories are 4; tooling-contract gaps are 16.
+- **Next safe work:** close the remaining four anti-neutering gaps, then
+  repair/split the existing monolithic dev-tool
   fixture, then reconcile the remaining nineteen tooling dispositions. Task
   7's live orchestration close remains correctly red on one owner-only
   memory-tree selection described below. Thirteen repository-output
