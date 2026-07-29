@@ -1,0 +1,484 @@
+@version 1
+/// @file: slide-v2c-aggregate-validator.fungi
+/// @purpose: Fail-closed validation of the detached V2-C immutable-aggregate logical fixture.
+/// @status: Logical admission evidence only; it releases no execution or host authority.
+
+record SLIDEV2CAggregateDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2CAggregate(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Refuse V2-C aggregate semantics without exposing authority." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail authorityReleased: false
+  }
+}
+
+pure flow validatedSLIDEV2CAggregate() -> SLIDEV2CAggregateDecision
+contract { intent { "Report logical V2-C aggregate validation without authorizing execution." } }
+{
+  return {
+    verdict: Verdict.Allow status: "LOGICAL_AGGREGATES_VALIDATED"
+    failureId: "NONE" detail: "bounded immutable aggregate fixture validated"
+    authorityReleased: false
+  }
+}
+
+pure flow slideV2CIntAt(values: Array<Int>, index: Int) -> Int
+contract { intent { "Read one registered integer identity or return an invalid sentinel." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return -1 }
+    _ => { return -1 }
+  }
+}
+
+pure flow emptySLIDEV2CConstant() -> SLIDEV2CConstant
+contract { intent { "Return an inert constant behind a refusal boundary." } }
+{
+  return {
+    constantId: -1 typeId: -1 encodingId: -1
+    payload: Bytes.empty() utf8Decoded: ""
+  }
+}
+
+pure flow slideV2CConstantAt(
+  values: Array<SLIDEV2CConstant>,
+  index: Int,
+) -> SLIDEV2CConstant
+contract { intent { "Read one constant without inventing payload semantics." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2CConstant() }
+    _ => { return emptySLIDEV2CConstant() }
+  }
+}
+
+pure flow emptySLIDEV2CRecordDescriptor() -> SLIDEV2CRecordDescriptor
+contract { intent { "Return an inert record descriptor behind refusal." } }
+{
+  return { recordId: -1 fieldIds: Array.empty() fieldTypeIds: Array.empty() }
+}
+
+pure flow slideV2CRecordDescriptorAt(
+  values: Array<SLIDEV2CRecordDescriptor>,
+  index: Int,
+) -> SLIDEV2CRecordDescriptor
+contract { intent { "Read one record descriptor without dynamic field recovery." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2CRecordDescriptor() }
+    _ => { return emptySLIDEV2CRecordDescriptor() }
+  }
+}
+
+pure flow emptySLIDEV2CVariantDescriptor() -> SLIDEV2CVariantDescriptor
+contract { intent { "Return an inert variant descriptor behind refusal." } }
+{
+  return { variantId: -1 caseIds: Array.empty() payloadTypeIds: Array.empty() }
+}
+
+pure flow slideV2CVariantDescriptorAt(
+  values: Array<SLIDEV2CVariantDescriptor>,
+  index: Int,
+) -> SLIDEV2CVariantDescriptor
+contract { intent { "Read one variant descriptor without dynamic case recovery." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2CVariantDescriptor() }
+    _ => { return emptySLIDEV2CVariantDescriptor() }
+  }
+}
+
+pure flow emptySLIDEV2CAggregateInstruction() -> SLIDEV2CAggregateInstruction
+contract { intent { "Return an inert instruction behind refusal." } }
+{
+  return {
+    resultId: -1 opcodeId: -1 typeId: -1
+    operands: Array.empty() immediate: -1
+  }
+}
+
+pure flow slideV2CAggregateInstructionAt(
+  values: Array<SLIDEV2CAggregateInstruction>,
+  index: Int,
+) -> SLIDEV2CAggregateInstruction
+contract { intent { "Read one aggregate instruction without a default operation." } }
+{
+  let candidate = values.get(index)
+  match candidate {
+    Some(value) => { return value }
+    None => { return emptySLIDEV2CAggregateInstruction() }
+    _ => { return emptySLIDEV2CAggregateInstruction() }
+  }
+}
+
+pure flow slideV2CBytesEqual(left: Bytes, right: Bytes) -> Bool
+contract { intent { "Compare complete byte sequences without prefix acceptance." } }
+{
+  if left.length() != right.length() { return false }
+  mut equal: Bool = true
+  mut i: Int = 0
+  while i < left.length() {
+    let leftByte = left.get(i)
+    let rightByte = right.get(i)
+    match leftByte {
+      Some(leftValue) => {
+        match rightByte {
+          Some(rightValue) => {
+            if leftValue != rightValue { equal = false }
+          }
+          None => { equal = false }
+          _ => { equal = false }
+        }
+      }
+      None => { equal = false }
+      _ => { equal = false }
+    }
+    i = i + 1
+  }
+  return equal
+}
+
+pure flow validateSLIDEV2CRegistries(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Bind V2-C to the frozen parent and non-authorizing V2-B sidecar." } }
+{
+  if program.formatMajor != 2 or program.formatMinor != 1 or program.semanticProfileId != "slide.semantic.executable-gir.v2" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-001", "format or semantic profile changed",
+    )
+  }
+  if program.registrySetId != "slide.registry.executable-gir.v2c" or program.parentRegistryId != "slide.registry.executable-gir.v2a" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-002", "registry identity changed",
+    )
+  }
+  if program.parentRegistryDigest != "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-003", "V2-A parent digest changed",
+    )
+  }
+  if program.authoritySidecarId != "slide.capability.lease-broker.v2b" or program.authoritySidecarDigest != "1e232c3cc4790344ce62296a85a7a29e79d6f0cc6bc598b18f73530de4aedfda" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-004", "V2-B sidecar context changed",
+    )
+  }
+  if program.memoryProfileId != "slide.memory.safe-value.v1" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-005", "safe-value profile changed",
+    )
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CLimits(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Require exact finite aggregate ceilings and zero ambient authority." } }
+{
+  let limits = program.limits
+  if limits.canonicalBodyBytes != 24576 or limits.textBytes != 256 or limits.byteBytes != 1024 or limits.arrayElements != 16 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-006", "body, text, bytes, or array ceiling changed",
+    )
+  }
+  if limits.recordFields != 8 or limits.variantCases != 8 or limits.aggregateDepth != 4 or limits.copiedBytes != 4096 or limits.executionSteps != 96 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-007", "descriptor, nesting, copy, or step ceiling changed",
+    )
+  }
+  if limits.effects != 0 or limits.capabilities != 0 or limits.memoryObjects != 0 or limits.hostCalls != 0 or limits.backEdges != 0 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-008", "authority, memory, host-call, or back-edge ceiling is nonzero",
+    )
+  }
+  if program.effectIds.count() != 0 or program.capabilityIds.count() != 0 or program.memoryObjectIds.count() != 0 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-009", "effect, capability, or memory identity was injected",
+    )
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CIdTables(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Require dense append-only type and opcode identities." } }
+{
+  if program.typeIds.count() != 13 or program.opcodeIds.count() != 20 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-010", "type or opcode table length changed",
+    )
+  }
+  mut i: Int = 0
+  while i < program.typeIds.count() {
+    if slideV2CIntAt(program.typeIds, i) != i + 1 {
+      return refuseSLIDEV2CAggregate(
+        "SLIDE-V2C-AGGREGATE-010", "type identities are missing, reordered, or duplicated",
+      )
+    }
+    i = i + 1
+  }
+  mut o: Int = 0
+  while o < program.opcodeIds.count() {
+    if slideV2CIntAt(program.opcodeIds, o) != o + 1 {
+      return refuseSLIDEV2CAggregate(
+        "SLIDE-V2C-AGGREGATE-010", "opcode identities are missing, reordered, or duplicated",
+      )
+    }
+    o = o + 1
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CConstants(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Validate exact bounded text and byte constants without host decoding." } }
+{
+  if program.constants.count() != 2 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-011", "constant table must contain exactly two entries",
+    )
+  }
+  let textConstant = slideV2CConstantAt(program.constants, 0)
+  if textConstant.constantId != 1 or textConstant.typeId != 6 or textConstant.encodingId != 1 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-012", "text constant identity or encoding changed",
+    )
+  }
+  if textConstant.payload.length() > program.limits.textBytes or textConstant.payload.length() < 1 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-013", "text constant byte ceiling violated",
+    )
+  }
+  if slideV2CBytesEqual(
+    textConstant.payload,
+    textConstant.utf8Decoded.encode(),
+  ) == false {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-014", "text payload is not the exact UTF-8 encoding of its decoded value",
+    )
+  }
+  let byteConstant = slideV2CConstantAt(program.constants, 1)
+  if byteConstant.constantId != 2 or byteConstant.typeId != 7 or byteConstant.encodingId != 2 or byteConstant.utf8Decoded != "" {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-015", "byte constant identity or encoding changed",
+    )
+  }
+  if byteConstant.payload.length() > program.limits.byteBytes or byteConstant.payload.length() < 1 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-016", "byte constant byte ceiling violated",
+    )
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CDescriptors(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Validate registered ordered fields and cases without name lookup." } }
+{
+  if program.recordDescriptors.count() != 1 or program.variantDescriptors.count() != 1 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-017", "record or variant descriptor table length changed",
+    )
+  }
+  let recordDescriptor = slideV2CRecordDescriptorAt(program.recordDescriptors, 0)
+  if recordDescriptor.recordId != 1 or recordDescriptor.fieldIds.count() != 3 or recordDescriptor.fieldTypeIds.count() != 3 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-018", "record descriptor shape changed",
+    )
+  }
+  if slideV2CIntAt(recordDescriptor.fieldIds, 0) != 1 or slideV2CIntAt(recordDescriptor.fieldIds, 1) != 2 or slideV2CIntAt(recordDescriptor.fieldIds, 2) != 3 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-018", "record fields are missing, reordered, or duplicated",
+    )
+  }
+  if slideV2CIntAt(recordDescriptor.fieldTypeIds, 0) != 13 or slideV2CIntAt(recordDescriptor.fieldTypeIds, 1) != 2 or slideV2CIntAt(recordDescriptor.fieldTypeIds, 2) != 6 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-019", "record field types changed",
+    )
+  }
+  let variantDescriptor = slideV2CVariantDescriptorAt(program.variantDescriptors, 0)
+  if variantDescriptor.variantId != 1 or variantDescriptor.caseIds.count() != 2 or variantDescriptor.payloadTypeIds.count() != 2 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-020", "variant descriptor shape changed",
+    )
+  }
+  if slideV2CIntAt(variantDescriptor.caseIds, 0) != 1 or slideV2CIntAt(variantDescriptor.caseIds, 1) != 2 or slideV2CIntAt(variantDescriptor.payloadTypeIds, 0) != 13 or slideV2CIntAt(variantDescriptor.payloadTypeIds, 1) != 4 {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-021", "variant case identities or types changed",
+    )
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CInstructionShape(
+  instruction: SLIDEV2CAggregateInstruction,
+  expectedResultId: Int,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Validate one exact typed V2-C fixture instruction." } }
+{
+  if instruction.resultId != expectedResultId {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-022", "SSA result identities are missing, reordered, or duplicated",
+    )
+  }
+  match expectedResultId {
+    0 => {
+      if instruction.opcodeId != 12 or instruction.typeId != 6 or instruction.operands.count() != 0 or instruction.immediate != 1 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-023", "text constant instruction changed")
+      }
+    }
+    1 => {
+      if instruction.opcodeId != 13 or instruction.typeId != 7 or instruction.operands.count() != 0 or instruction.immediate != 2 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-023", "byte constant instruction changed")
+      }
+    }
+    2 => {
+      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 3 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "first array element changed")
+      }
+    }
+    3 => {
+      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 5 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "second array element changed")
+      }
+    }
+    4 => {
+      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 8 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "third array element changed")
+      }
+    }
+    5 => {
+      if instruction.opcodeId != 14 or instruction.typeId != 10 or instruction.operands.count() != 3 or slideV2CIntAt(instruction.operands, 0) != 2 or slideV2CIntAt(instruction.operands, 1) != 3 or slideV2CIntAt(instruction.operands, 2) != 4 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-025", "array construction changed")
+      }
+    }
+    6 => {
+      if instruction.opcodeId != 15 or instruction.typeId != 1 or instruction.operands.count() != 1 or slideV2CIntAt(instruction.operands, 0) != 5 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-026", "aggregate length operation changed")
+      }
+    }
+    7 => {
+      if instruction.opcodeId != 16 or instruction.typeId != 13 or instruction.operands.count() != 2 or slideV2CIntAt(instruction.operands, 0) != 5 or slideV2CIntAt(instruction.operands, 1) != 2 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-027", "checked index operation changed")
+      }
+    }
+    8 => {
+      if instruction.opcodeId != 17 or instruction.typeId != 11 or instruction.operands.count() != 3 or slideV2CIntAt(instruction.operands, 0) != 7 or slideV2CIntAt(instruction.operands, 1) != 6 or slideV2CIntAt(instruction.operands, 2) != 0 or instruction.immediate != 1 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-028", "record construction changed")
+      }
+    }
+    9 => {
+      if instruction.opcodeId != 18 or instruction.typeId != 13 or instruction.operands.count() != 1 or slideV2CIntAt(instruction.operands, 0) != 8 or instruction.immediate != 1 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-029", "field projection changed")
+      }
+    }
+    10 => {
+      if instruction.opcodeId != 19 or instruction.typeId != 12 or instruction.operands.count() != 1 or slideV2CIntAt(instruction.operands, 0) != 9 or instruction.immediate != 1 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-030", "variant construction changed")
+      }
+    }
+    11 => {
+      if instruction.opcodeId != 20 or instruction.typeId != 13 or instruction.operands.count() != 1 or slideV2CIntAt(instruction.operands, 0) != 10 or instruction.immediate != 1 {
+        return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-031", "case projection changed")
+      }
+    }
+    _ => {
+      return refuseSLIDEV2CAggregate(
+        "SLIDE-V2C-AGGREGATE-032", "unknown or surplus aggregate instruction",
+      )
+    }
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CInstructions(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Validate the complete forward-only immutable aggregate instruction sequence." } }
+{
+  if program.instructions.count() != 12 or program.instructions.count() > program.limits.executionSteps {
+    return refuseSLIDEV2CAggregate(
+      "SLIDE-V2C-AGGREGATE-032", "instruction sequence length changed or exceeds budget",
+    )
+  }
+  mut i: Int = 0
+  while i < program.instructions.count() {
+    let decision = validateSLIDEV2CInstructionShape(
+      slideV2CAggregateInstructionAt(program.instructions, i), i,
+    )
+    check(decision.verdict) {
+      deny: { return decision }
+      ambig: { return decision }
+      if: {}
+    }
+    i = i + 1
+  }
+  return validatedSLIDEV2CAggregate()
+}
+
+pure flow validateSLIDEV2CAggregateProgram(
+  program: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CAggregateDecision
+contract { intent { "Validate every V2-C aggregate gate before exposing logical success." } }
+{
+  let registryDecision = validateSLIDEV2CRegistries(program)
+  check(registryDecision.verdict) {
+    deny: { return registryDecision }
+    ambig: { return registryDecision }
+    if: {}
+  }
+  let limitDecision = validateSLIDEV2CLimits(program)
+  check(limitDecision.verdict) {
+    deny: { return limitDecision }
+    ambig: { return limitDecision }
+    if: {}
+  }
+  let idDecision = validateSLIDEV2CIdTables(program)
+  check(idDecision.verdict) {
+    deny: { return idDecision }
+    ambig: { return idDecision }
+    if: {}
+  }
+  let constantDecision = validateSLIDEV2CConstants(program)
+  check(constantDecision.verdict) {
+    deny: { return constantDecision }
+    ambig: { return constantDecision }
+    if: {}
+  }
+  let descriptorDecision = validateSLIDEV2CDescriptors(program)
+  check(descriptorDecision.verdict) {
+    deny: { return descriptorDecision }
+    ambig: { return descriptorDecision }
+    if: {}
+  }
+  let instructionDecision = validateSLIDEV2CInstructions(program)
+  check(instructionDecision.verdict) {
+    deny: { return instructionDecision }
+    ambig: { return instructionDecision }
+    if: {}
+  }
+  return validatedSLIDEV2CAggregate()
+}

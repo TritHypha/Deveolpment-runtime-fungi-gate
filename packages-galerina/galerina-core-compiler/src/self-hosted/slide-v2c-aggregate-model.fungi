@@ -1,0 +1,149 @@
+@version 1
+/// @file: slide-v2c-aggregate-model.fungi
+/// @purpose: Materialize the bounded immutable-aggregate V2-C logical fixture.
+/// @status: Non-authorizing logical producer; canonical bytes and execution are later gates.
+
+record SLIDEV2CConstant {
+  constantId: Int
+  typeId: Int
+  encodingId: Int
+  payload: Bytes
+  utf8Decoded: String
+}
+
+record SLIDEV2CRecordDescriptor {
+  recordId: Int
+  fieldIds: Array<Int>
+  fieldTypeIds: Array<Int>
+}
+
+record SLIDEV2CVariantDescriptor {
+  variantId: Int
+  caseIds: Array<Int>
+  payloadTypeIds: Array<Int>
+}
+
+record SLIDEV2CAggregateInstruction {
+  resultId: Int
+  opcodeId: Int
+  typeId: Int
+  operands: Array<Int>
+  immediate: Int
+}
+
+record SLIDEV2CAggregateLimits {
+  canonicalBodyBytes: Int
+  textBytes: Int
+  byteBytes: Int
+  arrayElements: Int
+  recordFields: Int
+  variantCases: Int
+  aggregateDepth: Int
+  copiedBytes: Int
+  executionSteps: Int
+  effects: Int
+  capabilities: Int
+  memoryObjects: Int
+  hostCalls: Int
+  backEdges: Int
+}
+
+record SLIDEV2CAggregateProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  registrySetId: String
+  parentRegistryId: String
+  parentRegistryDigest: String
+  authoritySidecarId: String
+  authoritySidecarDigest: String
+  memoryProfileId: String
+  limits: SLIDEV2CAggregateLimits
+  typeIds: Array<Int>
+  opcodeIds: Array<Int>
+  constants: Array<SLIDEV2CConstant>
+  recordDescriptors: Array<SLIDEV2CRecordDescriptor>
+  variantDescriptors: Array<SLIDEV2CVariantDescriptor>
+  instructions: Array<SLIDEV2CAggregateInstruction>
+  effectIds: Array<Int>
+  capabilityIds: Array<Int>
+  memoryObjectIds: Array<Int>
+}
+
+pure flow slideV2CAggregateInstruction(
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> SLIDEV2CAggregateInstruction
+contract { intent { "Construct one typed immutable-aggregate instruction candidate." } }
+{
+  return {
+    resultId: resultId opcodeId: opcodeId typeId: typeId
+    operands: operands immediate: immediate
+  }
+}
+
+pure flow materializeSLIDEV2CAggregateProgram() -> SLIDEV2CAggregateProgram
+contract { intent { "Materialize the exact detached V2-C immutable-aggregate fixture." } }
+{
+  let limits: SLIDEV2CAggregateLimits = {
+    canonicalBodyBytes: 24576 textBytes: 256 byteBytes: 1024
+    arrayElements: 16 recordFields: 8 variantCases: 8
+    aggregateDepth: 4 copiedBytes: 4096 executionSteps: 96
+    effects: 0 capabilities: 0 memoryObjects: 0 hostCalls: 0 backEdges: 0
+  }
+  let textConstant: SLIDEV2CConstant = {
+    constantId: 1 typeId: 6 encodingId: 1
+    payload: "Galerina".encode() utf8Decoded: "Galerina"
+  }
+  let byteConstant: SLIDEV2CConstant = {
+    constantId: 2 typeId: 7 encodingId: 2
+    payload: Bytes.of(0, 1, 2, 255) utf8Decoded: ""
+  }
+  let fixtureRecord: SLIDEV2CRecordDescriptor = {
+    recordId: 1
+    fieldIds: Array.of(1, 2, 3)
+    fieldTypeIds: Array.of(13, 2, 6)
+  }
+  let fixtureVariant: SLIDEV2CVariantDescriptor = {
+    variantId: 1
+    caseIds: Array.of(1, 2)
+    payloadTypeIds: Array.of(13, 4)
+  }
+  let instructions = Array.of(
+    slideV2CAggregateInstruction(0, 12, 6, Array.empty(), 1),
+    slideV2CAggregateInstruction(1, 13, 7, Array.empty(), 2),
+    slideV2CAggregateInstruction(2, 1, 1, Array.empty(), 3),
+    slideV2CAggregateInstruction(3, 1, 1, Array.empty(), 5),
+    slideV2CAggregateInstruction(4, 1, 1, Array.empty(), 8),
+    slideV2CAggregateInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
+    slideV2CAggregateInstruction(6, 15, 1, Array.of(5), 0),
+    slideV2CAggregateInstruction(7, 16, 13, Array.of(5, 2), 0),
+    slideV2CAggregateInstruction(8, 17, 11, Array.of(7, 6, 0), 1),
+    slideV2CAggregateInstruction(9, 18, 13, Array.of(8), 1),
+    slideV2CAggregateInstruction(10, 19, 12, Array.of(9), 1),
+    slideV2CAggregateInstruction(11, 20, 13, Array.of(10), 1),
+  )
+  return {
+    formatMajor: 2 formatMinor: 1
+    semanticProfileId: "slide.semantic.executable-gir.v2"
+    registrySetId: "slide.registry.executable-gir.v2c"
+    parentRegistryId: "slide.registry.executable-gir.v2a"
+    parentRegistryDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
+    authoritySidecarId: "slide.capability.lease-broker.v2b"
+    authoritySidecarDigest: "1e232c3cc4790344ce62296a85a7a29e79d6f0cc6bc598b18f73530de4aedfda"
+    memoryProfileId: "slide.memory.safe-value.v1"
+    limits: limits
+    typeIds: Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
+    opcodeIds: Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+    constants: Array.of(textConstant, byteConstant)
+    recordDescriptors: Array.of(fixtureRecord)
+    variantDescriptors: Array.of(fixtureVariant)
+    instructions: instructions
+    effectIds: Array.empty()
+    capabilityIds: Array.empty()
+    memoryObjectIds: Array.empty()
+  }
+}
