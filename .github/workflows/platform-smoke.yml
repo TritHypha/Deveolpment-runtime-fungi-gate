@@ -1,0 +1,102 @@
+name: platform-smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  hosted-platforms:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows Server 2022 hosted proxy
+            runner: windows-2022
+            expected_os: windows
+          - name: macOS 14 arm64
+            runner: macos-14
+            expected_os: macos
+          - name: Ubuntu 24.04 x64
+            runner: ubuntu-24.04
+            expected_os: ubuntu
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+      - name: Install the pinned compiler floor
+        run: npm ci --prefix packages-galerina/galerina-core-compiler
+      - name: Prove platform-smoke refusal contracts
+        run: node --test scripts/tests/platform-smoke.test.mjs
+      - name: Run hermetic platform smoke
+        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }}
+
+  official-linux-containers:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Debian 12.15 x64
+            image: debian:12.15-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818
+            expected_os: debian
+          - name: Fedora 43 x64
+            image: fedora:43@sha256:762d73ba1c455232b0272c5d445a34f36c4b9f421cbc05ce8102552325b6a222
+            expected_os: fedora
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+      - name: Install the pinned compiler floor
+        run: npm ci --prefix packages-galerina/galerina-core-compiler
+      - name: Prove platform-smoke refusal contracts
+        run: node --test scripts/tests/platform-smoke.test.mjs
+      - name: Run hermetic platform smoke
+        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }}
+
+  # GitHub-hosted Windows is Windows Server, not Windows 11. This job stays
+  # visibly skipped until the owner supplies a runner with the exact labels.
+  windows-11-self-hosted:
+    if: ${{ vars.GALERINA_WINDOWS11_RUNNER == 'enabled' }}
+    runs-on: [self-hosted, Windows, X64, windows-11]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+      - run: node --test scripts/tests/platform-smoke.test.mjs
+      - run: node scripts/platform-smoke.mjs --json --expect-os windows
+
+  # No third-party Mint container is trusted as release evidence. An actual
+  # Linux Mint 22 runner can opt in without weakening that supply-chain rule.
+  linux-mint-22-self-hosted:
+    if: ${{ vars.GALERINA_MINT22_RUNNER == 'enabled' }}
+    runs-on: [self-hosted, Linux, X64, linux-mint-22]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+      - run: node --test scripts/tests/platform-smoke.test.mjs
+      - run: node scripts/platform-smoke.mjs --json --expect-os linuxmint

@@ -388,7 +388,8 @@ changing the pinned 157-currency table; its self-test is now 12/12.
 
 **Files:**
 
-- Modify: `.github/workflows/ci.yml`
+- Create: `.github/workflows/platform-smoke.yml` (the planned aggregate
+  `ci.yml` did not exist; preserve the independent convention/secret workflows)
 - Create: `scripts/platform-smoke.mjs`
 - Create: `scripts/tests/platform-smoke.test.mjs`
 - Create: `docs/reports/beta-v1-platform-matrix-2026-07-29.md`
@@ -401,26 +402,39 @@ changing the pinned 157-currency table; its self-test is now 12/12.
   Mint are executed where runners are available; missing external runners stay
   explicitly unverified.
 
-- [ ] **Step 1: Add RED platform contract tests**
+- [x] **Step 1: Add RED platform contract tests**
 
 Prove unsupported path separators, missing required binary, malformed platform
 identity, and empty test evidence all refuse.
 
-- [ ] **Step 2: Implement the smoke command without shell concatenation**
+- [x] **Step 2: Implement the smoke command without shell concatenation**
 
 Use argument arrays and direct child processes. Emit structured JSON with OS,
 architecture, Node version, command results, and redacted paths.
 
-- [ ] **Step 3: Run Windows 10 locally**
+- [x] **Step 3: Run Windows 10 locally**
 
 ```powershell
 node scripts/platform-smoke.mjs --json
 ```
 
-- [ ] **Step 4: Configure the remaining matrix**
+- [x] **Step 4: Configure the remaining matrix**
 
-Use Windows, macOS, and Ubuntu hosted jobs plus Debian, Fedora, and Mint
-container jobs. Keep the workflow read-only except normal build artifacts.
+Use Windows, macOS, and Ubuntu hosted jobs plus official Debian/Fedora
+containers. Require an exact self-hosted Mint runner rather than admitting an
+untrusted third-party image. Keep the workflow read-only except normal build
+artifacts.
+
+**Closed to the available evidence boundary 2026-07-29:** Windows 10.0.19045
+x64 is locally verified by six positive results: npm evidence, all 97 package
+manifests, portable paths, compiler build, strict `.fungi` check, and a
+91-byte Wasm module returning 42. GitHub-hosted Windows Server 2022, macOS 14,
+Ubuntu 24.04, and digest-pinned official Debian 12.15/Fedora 43 jobs are
+configured but remain unverified until a pushed runner executes them.
+GitHub-hosted Windows is not mislabeled as Windows 11. Exact Windows 11 and
+Linux Mint 22 jobs are opt-in/self-hosted and remain explicitly unverified;
+no third-party Mint container is admitted as evidence. See
+`docs/reports/beta-v1-platform-matrix-2026-07-29.md`.
 
 ### Task 8: Resolve signing design and prepare the offline owner ceremony
 

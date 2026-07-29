@@ -52,8 +52,9 @@ planning checkbox must never be used to imply that implementation exists.
   missing, duplicate, ambiguous, out-of-scope, and cross-ledger entries.
   Package readiness is now **97/97 (100%)**. The singular `test/` benchmark
   surface is counted, and `galerina-registry` now has a real four-case denial
-  suite instead of a no-test exemption. Tasks 3 through 6 are closed; Task 7
-  is the current platform/release-matrix tranche.
+  suite instead of a no-test exemption. Tasks 3 through 7 are closed to their
+  available evidence boundaries; Task 8 is the current offline-signing
+  tranche.
 - **Benchmark decision:** do not publish Wasm/Rust/Python/SLIDE comparison
   numbers until SLIDE has an executable backend. Historical Galerina
   benchmarks remain evidence only; the requested current and
@@ -144,8 +145,19 @@ planning checkbox must never be used to imply that implementation exists.
   found a Windows CRLF-only false drift in the currency twin generator; newline
   preservation is now regression-tested (12/12) and the pinned 157-currency
   table remains unchanged.
-- **Current safe boundary:** proceed to Task 7 platform/release-matrix closure,
-  then signing and the complete
+- **Task 7 platform matrix complete to available evidence:** the new hermetic
+  smoke has 5/5 fail-closed contract tests and six positive runtime gates.
+  Local Windows **10.0.19045 x64 is VERIFIED**: 97 package manifests,
+  compiler build, strict `.fungi` check, and a 91-byte Wasm module returning
+  42. Windows Server 2022, macOS 14, Ubuntu 24.04, and digest-pinned official
+  Debian 12.15/Fedora 43 jobs are configured but remain unverified until their
+  runners execute. Windows 11 and Linux Mint 22 are exact opt-in self-hosted
+  jobs; neither is falsely inferred from a proxy, and no third-party Mint image
+  is trusted. The JSON report excludes child output, arguments, working paths,
+  and environment values and refuses local-path or secret-shaped fields.
+  Evidence: `docs/reports/beta-v1-platform-matrix-2026-07-29.md`.
+- **Current safe boundary:** proceed to Task 8 offline-signing preflight and
+  owner walkthrough, then the complete
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
