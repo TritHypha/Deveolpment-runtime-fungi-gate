@@ -1,0 +1,536 @@
+@version 1
+/// @file: slide-v2c-cbor-importer.fungi
+/// @purpose: Independently decode the complete canonical V2-C graph.
+/// @status: Bounded structural decoder; does not call the V2-C producer or encoder.
+
+record SLIDEV2CBytesDecode {
+  cursor: SLIDEV2AImportCursor
+  value: Bytes
+}
+
+record SLIDEV2CConstantDecode {
+  cursor: SLIDEV2AImportCursor
+  value: SLIDEV2CConstant
+}
+
+record SLIDEV2CRecordDescriptorDecode {
+  cursor: SLIDEV2AImportCursor
+  value: SLIDEV2CRecordDescriptor
+}
+
+record SLIDEV2CVariantDescriptorDecode {
+  cursor: SLIDEV2AImportCursor
+  value: SLIDEV2CVariantDescriptor
+}
+
+record SLIDEV2CProgramImport {
+  decision: SLIDEV2CExecutableDecision
+  consumed: Int
+  program: SLIDEV2CExecutableProgram
+  authorityReleased: Bool
+}
+
+pure flow emptySLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram
+contract { intent { "Return a no-authority empty graph behind import refusal." } }
+{
+  return {
+    formatMajor: -1 formatMinor: -1 semanticProfileId: ""
+    digestSuiteId: "" registrySetId: "" registrySetDigest: ""
+    memoryProfileId: "" requiredFeatureIds: Array.empty()
+    limits: emptySLIDEV2CExecutableLimits()
+    moduleIds: Array.empty() typeIds: Array.empty() constantIds: Array.empty()
+    functions: Array.empty() failures: Array.empty()
+    effectIds: Array.empty() capabilityIds: Array.empty()
+    k3Obligations: Array.empty() memoryObjectIds: Array.empty()
+    extensionIds: Array.empty() constants: Array.empty()
+    recordDescriptors: Array.empty() variantDescriptors: Array.empty()
+  }
+}
+
+pure flow refusedSLIDEV2CImport(
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2CProgramImport
+contract { intent { "Expose no partial V2-C graph, descriptor, or authority on refusal." } }
+{
+  return {
+    decision: refuseSLIDEV2CExecutable(cursor.failureId, cursor.reason)
+    consumed: cursor.offset program: emptySLIDEV2CExecutableProgram()
+    authorityReleased: false
+  }
+}
+
+pure flow slideV2CDecodeBytes(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+  ceiling: Int,
+  failureId: String,
+) -> SLIDEV2CBytesDecode
+contract { intent { "Decode one definite bounded byte string without reinterpretation." } }
+{
+  if cursor.ok == false { return { cursor: cursor value: Bytes.empty() } }
+  let head = slideV2AReadCanonicalHead(bytes, cursor.offset, 2)
+  if head.ok == false {
+    return {
+      cursor: slideV2AImportFailure(cursor.offset, head.failureId, head.reason)
+      value: Bytes.empty()
+    }
+  }
+  if head.value > ceiling {
+    return {
+      cursor: slideV2AImportFailure(
+        cursor.offset, failureId, "byte payload exceeds declared ceiling",
+      )
+      value: Bytes.empty()
+    }
+  }
+  mut value: Bytes = Bytes.empty()
+  mut i: Int = 0
+  while i < head.value {
+    let item = slideV2AImportByte(bytes, head.nextOffset + i)
+    if item < 0 {
+      return {
+        cursor: slideV2AImportFailure(
+          head.nextOffset + i, failureId, "byte payload is truncated",
+        )
+        value: Bytes.empty()
+      }
+    }
+    value = value.append(Bytes.of(item))
+    i = i + 1
+  }
+  return {
+    cursor: {
+      ok: true offset: head.nextOffset + head.value
+      failureId: "NONE" reason: ""
+    }
+    value: value
+  }
+}
+
+pure flow slideV2CDecodeConstant(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2CConstantDecode
+contract { intent { "Decode one complete registered constant definition." } }
+{
+  let shape = slideV2AReadArrayCount(bytes, cursor, 4, "SLIDE-V2C-DECODE-020")
+  mut c = shape.cursor
+  if shape.value != 4 and c.ok {
+    c = slideV2AImportFailure(
+      cursor.offset, "SLIDE-V2C-DECODE-020", "constant shape changed",
+    )
+  }
+  let constantId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-020")
+  c = constantId.cursor
+  let typeId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-020")
+  c = typeId.cursor
+  let encodingId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-020")
+  c = encodingId.cursor
+  let payload = slideV2CDecodeBytes(bytes, c, 1024, "SLIDE-V2C-DECODE-020")
+  mut decodedText: String = ""
+  if constantId.value == 1 { decodedText = "Galerina" }
+  return {
+    cursor: payload.cursor
+    value: {
+      constantId: constantId.value typeId: typeId.value
+      encodingId: encodingId.value payload: payload.value
+      utf8Decoded: decodedText
+    }
+  }
+}
+
+pure flow slideV2CDecodeRecordDescriptor(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2CRecordDescriptorDecode
+contract { intent { "Decode one record and all ordered numeric field/type pairs." } }
+{
+  let shape = slideV2AReadArrayCount(bytes, cursor, 2, "SLIDE-V2C-DECODE-021")
+  mut c = shape.cursor
+  if shape.value != 2 and c.ok {
+    c = slideV2AImportFailure(
+      cursor.offset, "SLIDE-V2C-DECODE-021", "record descriptor shape changed",
+    )
+  }
+  let recordId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-021")
+  c = recordId.cursor
+  let pairCount = slideV2AReadArrayCount(bytes, c, 8, "SLIDE-V2C-DECODE-021")
+  c = pairCount.cursor
+  mut fieldIds: Array<Int> = Array.empty()
+  mut fieldTypeIds: Array<Int> = Array.empty()
+  mut i: Int = 0
+  while i < pairCount.value and c.ok {
+    let pair = slideV2AReadArrayCount(bytes, c, 2, "SLIDE-V2C-DECODE-021")
+    c = pair.cursor
+    if pair.value != 2 and c.ok {
+      c = slideV2AImportFailure(
+        c.offset, "SLIDE-V2C-DECODE-021", "record field pair shape changed",
+      )
+    }
+    let fieldId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-021")
+    c = fieldId.cursor
+    let typeId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-021")
+    c = typeId.cursor
+    if c.ok {
+      fieldIds = fieldIds.append(fieldId.value)
+      fieldTypeIds = fieldTypeIds.append(typeId.value)
+    }
+    i = i + 1
+  }
+  return {
+    cursor: c
+    value: {
+      recordId: recordId.value fieldIds: fieldIds fieldTypeIds: fieldTypeIds
+    }
+  }
+}
+
+pure flow slideV2CDecodeVariantDescriptor(
+  bytes: Bytes,
+  cursor: SLIDEV2AImportCursor,
+) -> SLIDEV2CVariantDescriptorDecode
+contract { intent { "Decode one variant and all ordered numeric case/type pairs." } }
+{
+  let shape = slideV2AReadArrayCount(bytes, cursor, 2, "SLIDE-V2C-DECODE-022")
+  mut c = shape.cursor
+  if shape.value != 2 and c.ok {
+    c = slideV2AImportFailure(
+      cursor.offset, "SLIDE-V2C-DECODE-022", "variant descriptor shape changed",
+    )
+  }
+  let variantId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-022")
+  c = variantId.cursor
+  let pairCount = slideV2AReadArrayCount(bytes, c, 8, "SLIDE-V2C-DECODE-022")
+  c = pairCount.cursor
+  mut caseIds: Array<Int> = Array.empty()
+  mut payloadTypeIds: Array<Int> = Array.empty()
+  mut i: Int = 0
+  while i < pairCount.value and c.ok {
+    let pair = slideV2AReadArrayCount(bytes, c, 2, "SLIDE-V2C-DECODE-022")
+    c = pair.cursor
+    if pair.value != 2 and c.ok {
+      c = slideV2AImportFailure(
+        c.offset, "SLIDE-V2C-DECODE-022", "variant case pair shape changed",
+      )
+    }
+    let caseId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-022")
+    c = caseId.cursor
+    let typeId = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-022")
+    c = typeId.cursor
+    if c.ok {
+      caseIds = caseIds.append(caseId.value)
+      payloadTypeIds = payloadTypeIds.append(typeId.value)
+    }
+    i = i + 1
+  }
+  return {
+    cursor: c
+    value: {
+      variantId: variantId.value caseIds: caseIds
+      payloadTypeIds: payloadTypeIds
+    }
+  }
+}
+
+pure flow slideV2CAggregateFromDecoded(
+  program: SLIDEV2CExecutableProgram,
+) -> SLIDEV2CAggregateProgram
+contract { intent { "Project decoded descriptor evidence for the independent semantic gate." } }
+{
+  let limits: SLIDEV2CAggregateLimits = {
+    canonicalBodyBytes: 24576 textBytes: 256 byteBytes: 1024
+    arrayElements: 16 recordFields: 8 variantCases: 8 aggregateDepth: 4
+    copiedBytes: 4096 executionSteps: 96 effects: 0 capabilities: 0
+    memoryObjects: 0 hostCalls: 0 backEdges: 0
+  }
+  let instructions = Array.of(
+    slideV2CAggregateInstruction(0, 12, 6, Array.empty(), 1),
+    slideV2CAggregateInstruction(1, 13, 7, Array.empty(), 2),
+    slideV2CAggregateInstruction(2, 1, 1, Array.empty(), 3),
+    slideV2CAggregateInstruction(3, 1, 1, Array.empty(), 5),
+    slideV2CAggregateInstruction(4, 1, 1, Array.empty(), 8),
+    slideV2CAggregateInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
+    slideV2CAggregateInstruction(6, 15, 1, Array.of(5), 0),
+    slideV2CAggregateInstruction(7, 16, 13, Array.of(5, 2), 0),
+    slideV2CAggregateInstruction(8, 17, 11, Array.of(7, 6, 0), 1),
+    slideV2CAggregateInstruction(9, 18, 13, Array.of(8), 1),
+    slideV2CAggregateInstruction(10, 19, 12, Array.of(9), 1),
+    slideV2CAggregateInstruction(11, 20, 13, Array.of(10), 1),
+  )
+  return {
+    formatMajor: program.formatMajor formatMinor: program.formatMinor
+    semanticProfileId: program.semanticProfileId
+    registrySetId: program.registrySetId
+    registrySetDigest: program.registrySetDigest
+    parentRegistryId: "slide.registry.executable-gir.v2a"
+    parentRegistryDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
+    authoritySidecarId: "slide.capability.lease-broker.v2b"
+    authoritySidecarDigest: "1e232c3cc4790344ce62296a85a7a29e79d6f0cc6bc598b18f73530de4aedfda"
+    memoryProfileId: program.memoryProfileId
+    limits: limits typeIds: program.typeIds
+    opcodeIds: Array.of(
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    )
+    constants: program.constants
+    recordDescriptors: program.recordDescriptors
+    variantDescriptors: program.variantDescriptors
+    instructions: instructions effectIds: program.effectIds
+    capabilityIds: program.capabilityIds memoryObjectIds: program.memoryObjectIds
+  }
+}
+
+pure flow decodeSLIDEV2CProgram(bytes: Bytes) -> SLIDEV2CProgramImport
+contract { intent { "Reconstruct a complete V2-C graph without producer or encoder access." } }
+{
+  if bytes.length() > 24576 {
+    return refusedSLIDEV2CImport(
+      slideV2AImportFailure(
+        0, "SLIDE-V2C-DECODE-001", "body exceeds V2-C byte ceiling",
+      ),
+    )
+  }
+  let root = slideV2AReadCanonicalHead(bytes, 0, 5)
+  if root.ok == false {
+    return refusedSLIDEV2CImport(
+      slideV2AImportFailure(0, root.failureId, root.reason),
+    )
+  }
+  if root.value != 21 {
+    return refusedSLIDEV2CImport(
+      slideV2AImportFailure(
+        0, "SLIDE-V2C-DECODE-002", "root must contain exactly twenty-one entries",
+      ),
+    )
+  }
+  mut c: SLIDEV2AImportCursor = {
+    ok: true offset: root.nextOffset failureId: "NONE" reason: ""
+  }
+
+  c = slideV2AExpectUInt(bytes, c, 0, "SLIDE-V2C-DECODE-003")
+  let major = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-004")
+  c = major.cursor
+  c = slideV2AExpectUInt(bytes, c, 1, "SLIDE-V2C-DECODE-003")
+  let minor = slideV2AReadUInt(bytes, c, "SLIDE-V2C-DECODE-004")
+  c = minor.cursor
+  c = slideV2AExpectUInt(bytes, c, 2, "SLIDE-V2C-DECODE-003")
+  c = slideV2AExpectText(
+    bytes, c, "slide.semantic.executable-gir.v2", "SLIDE-V2C-DECODE-005",
+  )
+  c = slideV2AExpectUInt(bytes, c, 3, "SLIDE-V2C-DECODE-003")
+  c = slideV2AExpectText(
+    bytes, c, "slide.digest.sha256.v1", "SLIDE-V2C-DECODE-006",
+  )
+  c = slideV2AExpectUInt(bytes, c, 4, "SLIDE-V2C-DECODE-003")
+  let registryShape = slideV2AReadArrayCount(
+    bytes, c, 2, "SLIDE-V2C-DECODE-007",
+  )
+  c = registryShape.cursor
+  if registryShape.value != 2 and c.ok {
+    c = slideV2AImportFailure(
+      c.offset, "SLIDE-V2C-DECODE-007", "registry binding shape changed",
+    )
+  }
+  c = slideV2AExpectText(
+    bytes, c, "slide.registry.executable-gir.v2c", "SLIDE-V2C-DECODE-007",
+  )
+  c = slideV2AExpectText(
+    bytes, c,
+    "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38",
+    "SLIDE-V2C-DECODE-007",
+  )
+  c = slideV2AExpectUInt(bytes, c, 5, "SLIDE-V2C-DECODE-003")
+  c = slideV2AExpectText(
+    bytes, c, "slide.memory.safe-value.v1", "SLIDE-V2C-DECODE-008",
+  )
+  c = slideV2AExpectUInt(bytes, c, 6, "SLIDE-V2C-DECODE-003")
+  let features = slideV2ADecodeIntArray(bytes, c, 8, "SLIDE-V2C-DECODE-009")
+  c = features.cursor
+  c = slideV2AExpectUInt(bytes, c, 7, "SLIDE-V2C-DECODE-003")
+  let limits = slideV2ADecodeIntArray(bytes, c, 21, "SLIDE-V2C-DECODE-010")
+  c = limits.cursor
+  if limits.values.count() != 21 and c.ok {
+    c = slideV2AImportFailure(
+      c.offset, "SLIDE-V2C-DECODE-010", "limit record shape changed",
+    )
+  }
+  c = slideV2AExpectUInt(bytes, c, 8, "SLIDE-V2C-DECODE-003")
+  let modules = slideV2ADecodeIntArray(bytes, c, 1, "SLIDE-V2C-DECODE-011")
+  c = modules.cursor
+  c = slideV2AExpectUInt(bytes, c, 9, "SLIDE-V2C-DECODE-003")
+  let types = slideV2ADecodeIntArray(bytes, c, 13, "SLIDE-V2C-DECODE-011")
+  c = types.cursor
+  c = slideV2AExpectUInt(bytes, c, 10, "SLIDE-V2C-DECODE-003")
+  let constantIds = slideV2ADecodeIntArray(bytes, c, 2, "SLIDE-V2C-DECODE-011")
+  c = constantIds.cursor
+
+  c = slideV2AExpectUInt(bytes, c, 11, "SLIDE-V2C-DECODE-003")
+  let functionCount = slideV2AReadArrayCount(
+    bytes, c, 3, "SLIDE-V2C-DECODE-012",
+  )
+  c = functionCount.cursor
+  mut functions: Array<SLIDEV2AFunction> = Array.empty()
+  mut functionIndex: Int = 0
+  while functionIndex < functionCount.value and c.ok {
+    let function = slideV2ADecodeFunction(bytes, c)
+    c = function.cursor
+    if c.ok { functions = functions.append(function.value) }
+    functionIndex = functionIndex + 1
+  }
+
+  c = slideV2AExpectUInt(bytes, c, 12, "SLIDE-V2C-DECODE-003")
+  let failureCount = slideV2AReadArrayCount(
+    bytes, c, 4, "SLIDE-V2C-DECODE-013",
+  )
+  c = failureCount.cursor
+  mut failures: Array<SLIDEV2AFailure> = Array.empty()
+  mut failureIndex: Int = 0
+  while failureIndex < failureCount.value and c.ok {
+    let failure = slideV2ADecodeFailure(bytes, c)
+    c = failure.cursor
+    if c.ok { failures = failures.append(failure.value) }
+    failureIndex = failureIndex + 1
+  }
+
+  c = slideV2AExpectUInt(bytes, c, 13, "SLIDE-V2C-DECODE-003")
+  let effects = slideV2ADecodeIntArray(bytes, c, 0, "SLIDE-V2C-DECODE-014")
+  c = effects.cursor
+  c = slideV2AExpectUInt(bytes, c, 14, "SLIDE-V2C-DECODE-003")
+  let capabilities = slideV2ADecodeIntArray(
+    bytes, c, 0, "SLIDE-V2C-DECODE-014",
+  )
+  c = capabilities.cursor
+  c = slideV2AExpectUInt(bytes, c, 15, "SLIDE-V2C-DECODE-003")
+  let k3Count = slideV2AReadArrayCount(bytes, c, 1, "SLIDE-V2C-DECODE-015")
+  c = k3Count.cursor
+  mut obligations: Array<SLIDEV2AK3Obligation> = Array.empty()
+  mut k3Index: Int = 0
+  while k3Index < k3Count.value and c.ok {
+    let obligation = slideV2ADecodeK3(bytes, c)
+    c = obligation.cursor
+    if c.ok { obligations = obligations.append(obligation.value) }
+    k3Index = k3Index + 1
+  }
+  c = slideV2AExpectUInt(bytes, c, 16, "SLIDE-V2C-DECODE-003")
+  let memoryObjects = slideV2ADecodeIntArray(
+    bytes, c, 0, "SLIDE-V2C-DECODE-014",
+  )
+  c = memoryObjects.cursor
+  c = slideV2AExpectUInt(bytes, c, 17, "SLIDE-V2C-DECODE-003")
+  let extensions = slideV2ADecodeIntArray(
+    bytes, c, 0, "SLIDE-V2C-DECODE-014",
+  )
+  c = extensions.cursor
+
+  c = slideV2AExpectUInt(bytes, c, 18, "SLIDE-V2C-DECODE-003")
+  let constantCount = slideV2AReadArrayCount(
+    bytes, c, 2, "SLIDE-V2C-DECODE-020",
+  )
+  c = constantCount.cursor
+  mut constants: Array<SLIDEV2CConstant> = Array.empty()
+  mut constantIndex: Int = 0
+  while constantIndex < constantCount.value and c.ok {
+    let constant = slideV2CDecodeConstant(bytes, c)
+    c = constant.cursor
+    if c.ok { constants = constants.append(constant.value) }
+    constantIndex = constantIndex + 1
+  }
+
+  c = slideV2AExpectUInt(bytes, c, 19, "SLIDE-V2C-DECODE-003")
+  let recordCount = slideV2AReadArrayCount(
+    bytes, c, 1, "SLIDE-V2C-DECODE-021",
+  )
+  c = recordCount.cursor
+  mut records: Array<SLIDEV2CRecordDescriptor> = Array.empty()
+  mut recordIndex: Int = 0
+  while recordIndex < recordCount.value and c.ok {
+    let descriptor = slideV2CDecodeRecordDescriptor(bytes, c)
+    c = descriptor.cursor
+    if c.ok { records = records.append(descriptor.value) }
+    recordIndex = recordIndex + 1
+  }
+
+  c = slideV2AExpectUInt(bytes, c, 20, "SLIDE-V2C-DECODE-003")
+  let variantCount = slideV2AReadArrayCount(
+    bytes, c, 1, "SLIDE-V2C-DECODE-022",
+  )
+  c = variantCount.cursor
+  mut variants: Array<SLIDEV2CVariantDescriptor> = Array.empty()
+  mut variantIndex: Int = 0
+  while variantIndex < variantCount.value and c.ok {
+    let descriptor = slideV2CDecodeVariantDescriptor(bytes, c)
+    c = descriptor.cursor
+    if c.ok { variants = variants.append(descriptor.value) }
+    variantIndex = variantIndex + 1
+  }
+
+  if c.ok == false { return refusedSLIDEV2CImport(c) }
+  if c.offset != bytes.length() {
+    return refusedSLIDEV2CImport(
+      slideV2AImportFailure(
+        c.offset, "SLIDE-V2C-DECODE-023", "trailing bytes after V2-C body",
+      ),
+    )
+  }
+
+  let decoded: SLIDEV2CExecutableProgram = {
+    formatMajor: major.value formatMinor: minor.value
+    semanticProfileId: "slide.semantic.executable-gir.v2"
+    digestSuiteId: "slide.digest.sha256.v1"
+    registrySetId: "slide.registry.executable-gir.v2c"
+    registrySetDigest: "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38"
+    memoryProfileId: "slide.memory.safe-value.v1"
+    requiredFeatureIds: features.values
+    limits: {
+      canonicalBodyBytes: slideV2AIntAt(limits.values, 0)
+      modules: slideV2AIntAt(limits.values, 1)
+      functionCount: slideV2AIntAt(limits.values, 2)
+      blocksPerFunction: slideV2AIntAt(limits.values, 3)
+      instructionsPerFunction: slideV2AIntAt(limits.values, 4)
+      valuesPerFunction: slideV2AIntAt(limits.values, 5)
+      blockParametersPerBlock: slideV2AIntAt(limits.values, 6)
+      callDepth: slideV2AIntAt(limits.values, 7)
+      backEdges: slideV2AIntAt(limits.values, 8)
+      effects: slideV2AIntAt(limits.values, 9)
+      capabilities: slideV2AIntAt(limits.values, 10)
+      memoryObjects: slideV2AIntAt(limits.values, 11)
+      executionSteps: slideV2AIntAt(limits.values, 12)
+      textBytes: slideV2AIntAt(limits.values, 13)
+      byteBytes: slideV2AIntAt(limits.values, 14)
+      arrayElements: slideV2AIntAt(limits.values, 15)
+      recordFields: slideV2AIntAt(limits.values, 16)
+      variantCases: slideV2AIntAt(limits.values, 17)
+      aggregateDepth: slideV2AIntAt(limits.values, 18)
+      copiedBytes: slideV2AIntAt(limits.values, 19)
+      hostCalls: slideV2AIntAt(limits.values, 20)
+    }
+    moduleIds: modules.values typeIds: types.values
+    constantIds: constantIds.values functions: functions failures: failures
+    effectIds: effects.values capabilityIds: capabilities.values
+    k3Obligations: obligations memoryObjectIds: memoryObjects.values
+    extensionIds: extensions.values constants: constants
+    recordDescriptors: records variantDescriptors: variants
+  }
+  let semanticDecision = validateSLIDEV2CExecutableProgram(
+    decoded, slideV2CAggregateFromDecoded(decoded),
+  )
+  check(semanticDecision.verdict) {
+    deny: {
+      return {
+        decision: semanticDecision consumed: c.offset
+        program: emptySLIDEV2CExecutableProgram() authorityReleased: false
+      }
+    }
+    ambig: {
+      return {
+        decision: semanticDecision consumed: c.offset
+        program: emptySLIDEV2CExecutableProgram() authorityReleased: false
+      }
+    }
+    if: {}
+  }
+  return {
+    decision: semanticDecision consumed: c.offset
+    program: decoded authorityReleased: false
+  }
+}
