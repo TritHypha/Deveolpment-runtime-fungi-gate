@@ -79,8 +79,13 @@ planning checkbox must never be used to imply that implementation exists.
 - **Completed:** local commit `6a10ae06` makes the runner cap caller work at
   the admitted 64-step ceiling and terminally refuses zero, undersized, and
   mid-execution budgets as `SLIDE-V2A-RUNTIME-015`. V2-A is 28/28.
-- **Current:** specify the first versioned effect/capability increment and its
-  no-ambient-authority host boundary.
+- **Completed (planning):** V2-B now specifies exact read-only database and
+  HTTPS request capabilities, lease-only broker access, Tower/Tri-Pipe
+  evidence roles, K3 admission, audit-before-success, budgets, failures,
+  mutations, and Galerina replace/rebuild/integrate boundaries in
+  `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`.
+- **Current:** freeze the V2-B machine descriptor and implement only its
+  capability-request/lease logical validators before adding host dispatch.
 - **Next:** add memory increments without widening
   frozen R1 or authorizing host access.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
@@ -101,7 +106,8 @@ planning checkbox must never be used to imply that implementation exists.
   `../../triLowLevel-v2/18-R1-REGISTRY-V1.md`, and
   `../../triLowLevel-v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md`;
   V2-A numeric IDs and ceilings:
-  `../../triLowLevel-v2/20-V2-A-REGISTRY-V2.md`.
+  `../../triLowLevel-v2/20-V2-A-REGISTRY-V2.md`; first effect/capability
+  increment: `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.
