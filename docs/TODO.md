@@ -70,7 +70,7 @@ planning checkbox must never be used to imply that implementation exists.
   exposes no partial graph on refusal, runs semantic admission, and binds the
   pinned v2 domain-separated digest. V2-A focused evidence is 25/25. Report:
   `docs/reports/slide-v2a-independent-import-2026-07-29.md`.
-- **Completed (uncommitted checkpoint):** `slide-v2a-runtime.fungi`
+- **Completed:** local commit `95fac461` adds `slide-v2a-runtime.fungi`, which
   instruction-drives only independently decoded/admitted records through the
   pure call, Boolean branch, typed join, checked Int32 and exhaustive K3 exits.
   It preserves success, denial, unresolved, two overflow paths, malformed
@@ -88,6 +88,8 @@ planning checkbox must never be used to imply that implementation exists.
   over-size skips at the logical checkpoint and 4,088 files with zero
   over-size skips after canonical encoding. The independent-import
   post-commit refresh indexes 4,091 files with zero over-size skips.
+  The validated-runtime post-commit refresh indexes 4,093 files with zero
+  over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
