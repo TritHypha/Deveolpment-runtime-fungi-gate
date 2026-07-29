@@ -1,7 +1,7 @@
 /**
  * Crypto-agility part 1 — the crypto-suite register reader.
  *
- * Pins that the register loads, that the THREE domains are present, and — the security
+ * Pins that the register loads, that the FOUR domains are present, and — the security
  * point — that the fail-closed predicates deny the right things: only the active suite may
  * sign, a retired/planned/unknown suite may not, and a verify-only suite keeps verifying.
  */
@@ -31,11 +31,12 @@ const REG = loadCryptoSuites(ROOT);
 const GOV = "governance-signature";
 const AUDIT = "audit-attestation";
 const BRIDGE = "bridge-manifest";
+const REGISTRY = "registry-index";
 
 // ── structure ───────────────────────────────────────────────────────────────
-test("the register loads and carries the three domain-separated families", () => {
+test("the register loads and carries the four domain-separated families", () => {
   const domains = listDomains(REG);
-  assert.deepEqual(domains.sort(), [AUDIT, BRIDGE, GOV].sort());
+  assert.deepEqual(domains.sort(), [AUDIT, BRIDGE, GOV, REGISTRY].sort());
 });
 
 test("governance-signature carries v1, v2, v3 with the right statuses", () => {
@@ -96,6 +97,25 @@ test("bridge-manifest carries the classical + hybrid suites, both active and ver
   assert.equal(getSignerSymbol(REG, BRIDGE, "Ed25519+ML-DSA-65"), "signManifestHybrid");
   assert.equal(getVerifierSymbol(REG, BRIDGE, "Ed25519+ML-DSA-65"), "verifyAttestationHybrid");
   assert.equal(isSuiteSignable(REG, BRIDGE, "unknown"), false);
+});
+
+test("registry-index retires v1 signing while retaining v1 verification and activates hybrid v2", () => {
+  assert.deepEqual(
+    listSuites(REG, REGISTRY),
+    ["galerina-registry-index/v1", "galerina-registry-index/v2"],
+  );
+  assert.equal(getDomain(REG, REGISTRY).context, "galerina.registry.index.sig.v2");
+  assert.equal(isSuiteSignable(REG, REGISTRY, "galerina-registry-index/v1"), false);
+  assert.equal(isSuiteVerifiable(REG, REGISTRY, "galerina-registry-index/v1"), true);
+  assert.equal(isSuiteSignable(REG, REGISTRY, "galerina-registry-index/v2"), true);
+  assert.equal(
+    getSignerSymbol(REG, REGISTRY, "galerina-registry-index/v2"),
+    "signRegistryIndexHybrid",
+  );
+  assert.equal(
+    getVerifierSymbol(REG, REGISTRY, "galerina-registry-index/v2"),
+    "verifyRegistryIndex",
+  );
 });
 
 // ── cross-cutting invariant: an active suite must be able to sign AND verify ───

@@ -3,9 +3,11 @@
 The Galerina certified package registry is the canonical source of governance-reviewed,
 cryptographically-signed packages for the Galerina platform.
 
-> **⚠️ Scaffold (Phase 28).** The package manifests here are **declarative stubs pending full
-> resolver wiring** (see Status). The guarantees described below are the **intended design** — they
-> are NOT yet actively enforced or signed, so do not treat them as live controls.
+> **⚠️ Empty certified registry.** The two package manifests are declarative,
+> unreviewed stubs with no package bytes behind them. The registry-index builder,
+> hybrid signer, verifier, revocation check, and denial tests are implemented,
+> but deliberately refuse these stubs. Do not treat either entry as a package or
+> a certification claim.
 
 ## Concept
 
@@ -48,4 +50,8 @@ packages/
 
 ## Status
 
-Phase 28 scaffold. Package manifests are declarative stubs pending full resolver wiring.
+The registry mechanism is implemented and fail-closed. Package population is
+blocked on real immutable package bytes, content hashes, package signatures,
+governance review, and the operational registry-authority delegation described
+in
+[`docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](../../docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md).

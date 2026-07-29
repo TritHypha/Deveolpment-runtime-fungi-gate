@@ -36,16 +36,36 @@ export interface RegistryEntry {
   readonly effects: readonly string[];
 }
 
-/** Detached Ed25519 signature by the REGISTRY AUTHORITY over registryIndexSigningInput(). */
-export interface RegistryIndexSignature {
+/** Historical v1 Ed25519 signature. Verify-only; never use for a new index. */
+export interface LegacyRegistryIndexSignature {
   readonly algorithm: "Ed25519";
   readonly keyId: string;             // the registry authority keyId (NOT a package keyId)
   readonly signature: string;         // base64
   readonly canon: "jcs";              // RFC 8785 canonical JSON
 }
 
+export const REGISTRY_INDEX_V2_CONTEXT = "galerina.registry.index.sig.v2" as const;
+
+/**
+ * v2 dual-signature envelope. Both components cover the same domain-separated
+ * bytes. This is a Galerina application envelope, not the still-draft IETF
+ * Composite ML-DSA encoding.
+ */
+export interface HybridRegistryIndexSignature {
+  readonly algorithm: "Ed25519+ML-DSA-65";
+  readonly keyId: string;
+  readonly ed25519Signature: string;
+  readonly mlDsa65Signature: string;
+  readonly canon: "jcs";
+  readonly context: typeof REGISTRY_INDEX_V2_CONTEXT;
+}
+
+export type RegistryIndexSignature =
+  | LegacyRegistryIndexSignature
+  | HybridRegistryIndexSignature;
+
 export interface RegistryIndex {
-  readonly schema: "galerina-registry-index/v1";
+  readonly schema: "galerina-registry-index/v1" | "galerina-registry-index/v2";
   readonly registry: string;          // registry identity (name or URL)
   readonly issuedAt: string;          // ISO-8601, caller-supplied (deterministic build)
   readonly entries: readonly RegistryEntry[];
@@ -74,6 +94,32 @@ export function registryIndexSigningInput(index: RegistryIndex): string {
   return canonicalJson(withoutSig);
 }
 
+/**
+ * Exact signature bytes. v2 binds the suite metadata and authority identity as
+ * well as the canonical payload; envelope fields cannot be relabelled later.
+ */
+export function registryIndexSignaturePreimage(index: RegistryIndex, keyId?: string): Uint8Array {
+  const canonical = registryIndexSigningInput(index);
+  if (index.schema === "galerina-registry-index/v1") {
+    return new TextEncoder().encode(canonical);
+  }
+  if (index.schema === "galerina-registry-index/v2") {
+    if (typeof keyId !== "string" || keyId.length === 0) {
+      throw new RegistryIndexError(
+        ERR_REGISTRY_INDEX_MALFORMED,
+        "A v2 signature preimage requires a non-empty authority keyId.",
+      );
+    }
+    return new TextEncoder().encode(
+      `${REGISTRY_INDEX_V2_CONTEXT}\0Ed25519+ML-DSA-65\0${keyId}\0jcs\0${canonical}`,
+    );
+  }
+  throw new RegistryIndexError(
+    ERR_REGISTRY_INDEX_MALFORMED,
+    `unsupported index schema '${String(index.schema)}'.`,
+  );
+}
+
 // ── build (unsigned, canonical) ──────────────────────────────────────────────
 /** Build an unsigned index with entries sorted by (name, version) for a stable catalog. */
 export function buildRegistryIndex(input: {
@@ -83,17 +129,69 @@ export function buildRegistryIndex(input: {
 }): RegistryIndex {
   const entries = [...input.entries].sort((a, b) =>
     a.name === b.name ? cmp(a.version, b.version) : cmp(a.name, b.name));
-  return { schema: "galerina-registry-index/v1", registry: input.registry, issuedAt: input.issuedAt, entries };
+  return { schema: "galerina-registry-index/v2", registry: input.registry, issuedAt: input.issuedAt, entries };
 }
 
 // ── sign (inject a sign fn; keeps the kernel crypto-agnostic) ────────────────
 /** A detached-signature producer over UTF-8 bytes → base64. */
 export type IndexSignFn = (message: Uint8Array) => string;
 
-/** Return a copy of the index carrying an Ed25519 signature by `keyId`. */
+/** Historical v1 signer. It refuses v2 rather than silently downgrading it. */
 export function signRegistryIndex(index: RegistryIndex, keyId: string, sign: IndexSignFn): RegistryIndex {
-  const message = new TextEncoder().encode(registryIndexSigningInput(index));
+  if (index.schema !== "galerina-registry-index/v1") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_MALFORMED,
+      "The Ed25519-only signer is verify-only legacy and cannot sign a v2 index.",
+    );
+  }
+  const message = registryIndexSignaturePreimage(index);
   return { ...index, signature: { algorithm: "Ed25519", keyId, signature: sign(message), canon: "jcs" } };
+}
+
+/** New-production signer: both callbacks must produce non-empty signatures. */
+export function signRegistryIndexHybrid(
+  index: RegistryIndex,
+  keyId: string,
+  signEd25519: IndexSignFn,
+  signMlDsa65: IndexSignFn,
+): RegistryIndex {
+  if (index.schema !== "galerina-registry-index/v2") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_MALFORMED,
+      "The hybrid signer only signs galerina-registry-index/v2.",
+    );
+  }
+  if (keyId.length === 0) {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_MALFORMED,
+      "The registry authority keyId must not be empty.",
+    );
+  }
+  const message = registryIndexSignaturePreimage(index, keyId);
+  const ed25519Signature = signEd25519(message);
+  const mlDsa65Signature = signMlDsa65(message);
+  if (
+    typeof ed25519Signature !== "string"
+    || ed25519Signature.length === 0
+    || typeof mlDsa65Signature !== "string"
+    || mlDsa65Signature.length === 0
+  ) {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_UNSIGNED,
+      "Both Ed25519 and ML-DSA-65 signatures are required.",
+    );
+  }
+  return {
+    ...index,
+    signature: {
+      algorithm: "Ed25519+ML-DSA-65",
+      keyId,
+      ed25519Signature,
+      mlDsa65Signature,
+      canon: "jcs",
+      context: REGISTRY_INDEX_V2_CONTEXT,
+    },
+  };
 }
 
 // ── verify (fail-closed) ─────────────────────────────────────────────────────
@@ -104,6 +202,11 @@ export function signRegistryIndex(index: RegistryIndex, keyId: string, sign: Ind
  * unverifiable central index is worthless.
  */
 export type IndexVerifier = (message: Uint8Array, signature: string, keyId: string) => boolean | "no-key";
+export interface HybridIndexVerifiers {
+  readonly ed25519: IndexVerifier;
+  readonly mlDsa65: IndexVerifier;
+}
+export type RegistryIndexVerifier = IndexVerifier | HybridIndexVerifiers;
 
 export class RegistryIndexError extends Error {
   readonly code: string;
@@ -120,10 +223,25 @@ export class RegistryIndexError extends Error {
  */
 export function verifyRegistryIndex(
   index: RegistryIndex,
-  verify: IndexVerifier,
+  verify: RegistryIndexVerifier,
   minIssuedAt?: string,
 ): "verified" {
-  const sig = index.signature;
+  if (index.schema === "galerina-registry-index/v2") {
+    return verifyRegistryIndexV2(index, verify, minIssuedAt);
+  }
+  if (index.schema !== "galerina-registry-index/v1") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_MALFORMED,
+      `unsupported index schema '${String(index.schema)}'.`,
+    );
+  }
+  const sig = index.signature as LegacyRegistryIndexSignature | undefined;
+  if (typeof verify !== "function") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_NO_KEY,
+      "The historical Ed25519 verifier is unavailable.",
+    );
+  }
   if (!sig || sig.algorithm !== "Ed25519" || typeof sig.signature !== "string" || sig.signature.length === 0) {
     throw new RegistryIndexError(
       ERR_REGISTRY_INDEX_UNSIGNED,
@@ -162,6 +280,92 @@ export function verifyRegistryIndex(
     );
   }
   return "verified";
+}
+
+function verifyRegistryIndexV2(
+  index: RegistryIndex,
+  verify: RegistryIndexVerifier,
+  minIssuedAt?: string,
+): "verified" {
+  const sig = index.signature;
+  if (
+    sig === undefined
+    || sig.algorithm !== "Ed25519+ML-DSA-65"
+    || sig.context !== REGISTRY_INDEX_V2_CONTEXT
+    || typeof sig.keyId !== "string"
+    || sig.keyId.length === 0
+    || typeof sig.ed25519Signature !== "string"
+    || sig.ed25519Signature.length === 0
+    || typeof sig.mlDsa65Signature !== "string"
+    || sig.mlDsa65Signature.length === 0
+  ) {
+    if (sig !== undefined && sig.algorithm !== "Ed25519+ML-DSA-65") {
+      throw new RegistryIndexError(
+        ERR_REGISTRY_INDEX_MALFORMED,
+        "A v2 index must carry the pinned Ed25519+ML-DSA-65 suite.",
+      );
+    }
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_UNSIGNED,
+      "A v2 index requires both component signatures and the pinned context.",
+    );
+  }
+  if (sig.canon !== "jcs") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_MALFORMED,
+      `unsupported signature canon '${sig.canon}' â€” only 'jcs' accepted.`,
+    );
+  }
+  if (
+    typeof verify === "function"
+    || typeof verify.ed25519 !== "function"
+    || typeof verify.mlDsa65 !== "function"
+  ) {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_NO_KEY,
+      "Both Ed25519 and ML-DSA-65 verifiers are required for a v2 index.",
+    );
+  }
+
+  const message = registryIndexSignaturePreimage(index, sig.keyId);
+  verifyComponent(message, sig.ed25519Signature, sig.keyId, verify.ed25519);
+  verifyComponent(message, sig.mlDsa65Signature, sig.keyId, verify.mlDsa65);
+  if (minIssuedAt !== undefined && !(index.issuedAt > minIssuedAt)) {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_STALE,
+      `index issuedAt '${index.issuedAt}' is not newer than the accepted floor '${minIssuedAt}' â€” possible rollback/replay; refused.`,
+    );
+  }
+  return "verified";
+}
+
+function verifyComponent(
+  message: Uint8Array,
+  signature: string,
+  keyId: string,
+  verify: IndexVerifier,
+): void {
+  let result: boolean | "no-key";
+  try {
+    result = verify(message, signature, keyId);
+  } catch {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_BAD_SIGNATURE,
+      `Registry index signature verifier rejected the component for keyId '${keyId}'.`,
+    );
+  }
+  if (result === "no-key") {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_NO_KEY,
+      `No public key registered for registry authority keyId '${keyId}' â€” cannot verify index; refused.`,
+    );
+  }
+  if (result !== true) {
+    throw new RegistryIndexError(
+      ERR_REGISTRY_INDEX_BAD_SIGNATURE,
+      `Registry index signature failed verification for keyId '${keyId}' â€” possible tampering; refused.`,
+    );
+  }
 }
 
 // ── lookup (fail-closed) ─────────────────────────────────────────────────────
@@ -238,7 +442,7 @@ export type AdmissionResult =
  */
 export function admitFromRegistry(
   index: RegistryIndex,
-  verify: IndexVerifier,
+  verify: RegistryIndexVerifier,
   q: CertifiedLookup,
   policy: RegistryPolicy,
   minIssuedAt?: string,

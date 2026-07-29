@@ -51,7 +51,7 @@ planning checkbox must never be used to imply that implementation exists.
   9/29), and its ledger parser refuses
   missing, duplicate, ambiguous, out-of-scope, and cross-ledger entries.
   Package readiness is now **97/97 (100%)**. The singular `test/` benchmark
-  surface is counted, and `galerina-registry` now has a real four-case denial
+  surface is counted, and `galerina-registry` now has a real six-case denial
   suite instead of a no-test exemption. Tasks 3 through 7 are closed to their
   available evidence boundaries; Task 8 is the current offline-signing
   tranche.
@@ -132,10 +132,11 @@ planning checkbox must never be used to imply that implementation exists.
   and the shared effect differential is green with its witnesses isolated from
   the separate audit-evidence obligation. TypeScript remains the live
   differential shadow; no retirement or push occurred.
-- **Task 6 package-readiness complete:** the registry package now runs 4/4
+- **Task 6 package-readiness complete:** the registry package now runs 6/6
   real CLI tests: empty registry, reviewed-but-unsigned package, live
-  placeholder catalog, and unknown-package/unsigned-index admission all end
-  in terminal refusal without publishing partial output. The obsolete
+  placeholder catalog, unknown-package/unsigned-index admission, a real
+  file-backed hybrid ceremony, and revoked-authority refusal all end in
+  verified success or terminal refusal without publishing partial output. The obsolete
   `packageNoTest` exemption is gone. The structural review gate requires a
   non-placeholder package-signature record; cryptographic verification remains
   the independent admission seam, and the central index is still unsigned
@@ -156,8 +157,21 @@ planning checkbox must never be used to imply that implementation exists.
   is trusted. The JSON report excludes child output, arguments, working paths,
   and environment values and refuses local-path or secret-shaped fields.
   Evidence: `docs/reports/beta-v1-platform-matrix-2026-07-29.md`.
-- **Current safe boundary:** proceed to Task 8 offline-signing preflight and
-  owner walkthrough, then the complete
+- **Task 8 signing engineering complete:** new registry indexes are
+  domain-separated v2 Ed25519+ML-DSA-65 application envelopes; both signatures
+  are mandatory and v1 is verify-only. App-kernel evidence is 127/127,
+  registry evidence 6/6, and the hermetic real-crypto proof 20/20. The
+  file-backed owner-format dry run signs, self-verifies both components,
+  writes, and independently verifies; a revoked key refuses before private
+  paths are read. The public walkthrough is
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; the independent
+  name/prefix/crypto prompt is
+  `docs/reports/PROMPT-low-level-language-name-prefix-and-crypto-review-2026-07-29.md`.
+- **Owner signing status: NOT READY.** The live registry has two unreviewed,
+  content-less stubs, and no separate operational registry key or
+  root-authorized delegation verifier exists. Do not use the cold root for
+  routine signing merely to clear the checkbox.
+- **Current safe boundary:** proceed to the complete
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
@@ -171,10 +185,11 @@ planning checkbox must never be used to imply that implementation exists.
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this
   owner-blocked until the owner names the corpus and permitted write scope.
-- **Signing:** private notes were inventoried without printing their contents.
-  The public, detailed offline walkthrough and disposable-key dry run remain
-  Task 8. Do not ask the owner to sign until every preflight and post-sign
-  verifier is green.
+- **Signing:** private notes were inventoried structurally without printing
+  values. The public walkthrough and disposable-key dry run are complete.
+  Do not ask the owner to sign until real reviewed packages and an
+  independently verified operational-key delegation make every remaining
+  preflight green.
 
 ### RD-0536 through RD-0555 intake checkpoint - 2026-07-29
 

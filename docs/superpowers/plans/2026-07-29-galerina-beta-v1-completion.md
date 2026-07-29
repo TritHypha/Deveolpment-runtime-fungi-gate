@@ -443,6 +443,10 @@ no third-party Mint container is admitted as evidence. See
 - Create: `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`
 - Create:
   `docs/reports/PROMPT-low-level-language-name-prefix-and-crypto-review-2026-07-29.md`
+- Modify: `packages-galerina/galerina-framework-app-kernel/src/registry-index.ts`
+- Modify: `packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs`
+- Modify: `scripts/registry-index-cli.mjs`
+- Modify: `governance/crypto-suites.json`
 - Modify only public-key, registry, or signature artifacts explicitly named by
   the walkthrough after the owner performs the ceremony.
 
@@ -455,28 +459,46 @@ no third-party Mint container is admitted as evidence. See
 - “Ready for owner” requires all pre-sign checks green and a dry run using
   disposable development keys.
 
-- [ ] **Step 1: Research primary sources**
+- [x] **Step 1: Research primary sources**
 
 Use current NIST standards, IETF/RFC material, official library documentation,
 and official platform support. Record dates and separate standards from
 implementation maturity.
 
-- [ ] **Step 2: Inspect offline note structure without disclosing values**
+- [x] **Step 2: Inspect offline note structure without disclosing values**
 
 Use only key type, public identifier, custody state, and filename metadata.
 Never copy values from `../notes/keys.md` or `../notes/*PRIVATE.md`.
 
-- [ ] **Step 3: Write and test the walkthrough**
+- [x] **Step 3: Write and test the walkthrough**
 
 Include preflight, offline ceremony, public-artifact return, verification,
 revocation/rotation, backup, rollback, and incident paths. Run the complete
 procedure with disposable keys and prove deliberate tamper and downgrade
 refuse.
 
-- [ ] **Step 4: Notify the owner**
+The source review found that the central registry index is still Ed25519-only.
+Before the dry run, add a domain-separated hybrid v2 envelope whose verifier
+requires both Ed25519 and ML-DSA-65. Keep the old v1 verifier for historical
+artifacts only; no new production signing may silently select it.
+
+- [x] **Step 4: Record the owner boundary**
 
 Say “ready for owner signing” only when the dry run, inventory, public artifact
 paths, and post-sign verification commands are all green.
+
+**Closed to the engineering boundary 2026-07-29:** the app-kernel package is
+127/127; the registry package is 6/6; the hermetic real-crypto CLI proof is
+20/20; and a disposable file-backed owner-format key signs, self-verifies both
+components, writes, and independently verifies. A known revoked key is refused
+before its private paths are read. New indexes are v2 hybrid
+Ed25519+ML-DSA-65 application envelopes with a fixed domain; v1 is
+verify-only. The detailed walkthrough and independent name/prefix/crypto review
+prompt are committed artifacts. Owner status is deliberately **NOT READY**:
+the live registry contains two content-less unreviewed stubs, and the separate
+operational registry authority has neither a declared key nor a root-authorized
+delegation format/verifier. These blockers do not prevent Task 9's remaining
+read-only close work.
 
 ### Task 9: Close Galerina beta-v1
 

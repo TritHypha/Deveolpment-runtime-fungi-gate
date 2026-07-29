@@ -1,10 +1,10 @@
 // B5a — signed central registry index. Real Ed25519 round-trip + every fail-closed path.
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { generateKeyPairSync, sign as edSign, verify as edVerify } from "node:crypto";
+import { createHmac, generateKeyPairSync, sign as edSign, verify as edVerify } from "node:crypto";
 import {
   buildRegistryIndex,
-  signRegistryIndex,
+  signRegistryIndexHybrid,
   verifyRegistryIndex,
   registryIndexSigningInput,
   lookupCertifiedPackage,
@@ -26,11 +26,20 @@ import {
 
 const AUTH_KEY = "registry-authority-2026";
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+const ML_TEST_SECRET = Buffer.from("registry-index-envelope-test-only");
 
 const signFn = (message) => edSign(null, message, privateKey).toString("base64");
-const verifier = (message, sigB64, keyId) => {
-  if (keyId !== AUTH_KEY) return "no-key";
-  return edVerify(null, message, publicKey, Buffer.from(sigB64, "base64"));
+const signMlDsaTestDouble = (message) =>
+  createHmac("sha256", ML_TEST_SECRET).update(message).digest("base64");
+const verifier = {
+  ed25519: (message, sigB64, keyId) => {
+    if (keyId !== AUTH_KEY) return "no-key";
+    return edVerify(null, message, publicKey, Buffer.from(sigB64, "base64"));
+  },
+  mlDsa65: (message, signature, keyId) => {
+    if (keyId !== AUTH_KEY) return "no-key";
+    return signature === signMlDsaTestDouble(message);
+  },
 };
 
 const ENTRIES = [
@@ -44,15 +53,15 @@ const ENTRIES = [
 ];
 
 const freshSigned = () =>
-  signRegistryIndex(
+  signRegistryIndexHybrid(
     buildRegistryIndex({ registry: "galerina-central", issuedAt: "2026-06-22T00:00:00Z", entries: ENTRIES }),
-    AUTH_KEY, signFn,
+    AUTH_KEY, signFn, signMlDsaTestDouble,
   );
 
 describe("B5a hardening — adversarial fail-closed (review wn8v30euh)", () => {
   it("REJECTS a truthy NON-BOOLEAN verifier return (fail-open fix: result !== true)", () => {
     for (const truthy of ["yes", 1, {}, []]) {
-      assert.throws(() => verifyRegistryIndex(freshSigned(), () => truthy),
+      assert.throws(() => verifyRegistryIndex(freshSigned(), { ...verifier, ed25519: () => truthy }),
         (e) => e instanceof RegistryIndexError && e.code === ERR_REGISTRY_INDEX_BAD_SIGNATURE,
         `truthy ${JSON.stringify(truthy)} must NOT admit`);
     }
@@ -71,8 +80,7 @@ describe("B5a hardening — adversarial fail-closed (review wn8v30euh)", () => {
     assert.throws(() => verifyRegistryIndex(tampered, verifier), (e) => e.code === ERR_REGISTRY_INDEX_MALFORMED);
   });
   it("REJECTS an unexpected (but validly-signed) schema — post-verify validation", () => {
-    const base = buildRegistryIndex({ registry: "r", issuedAt: "2026-06-22T00:00:00Z", entries: ENTRIES });
-    const wrong = signRegistryIndex({ ...base, schema: "totally-different/v9" }, AUTH_KEY, signFn);
+    const wrong = { ...freshSigned(), schema: "totally-different/v9" };
     assert.throws(() => verifyRegistryIndex(wrong, verifier), (e) => e.code === ERR_REGISTRY_INDEX_MALFORMED);
   });
   it("REFUSES a duplicate (name,version) entry — order must not decide facts", () => {
@@ -92,7 +100,7 @@ describe("B5a hardening — adversarial fail-closed (review wn8v30euh)", () => {
   });
 });
 
-describe("B5a registry index — build + sign + verify (real Ed25519)", () => {
+describe("B5a registry index — hybrid envelope logic (real Ed25519 + deterministic ML test witness)", () => {
   it("verifies a correctly signed index", () => {
     assert.equal(verifyRegistryIndex(freshSigned(), verifier), "verified");
   });
@@ -126,8 +134,12 @@ describe("B5a registry index — build + sign + verify (real Ed25519)", () => {
   });
 
   it("rejects when no public key is registered for the authority keyId (fail-closed)", () => {
-    const signed = signRegistryIndex(
-      buildRegistryIndex({ registry: "r", issuedAt: "t", entries: ENTRIES }), "unknown-authority", signFn);
+    const signed = signRegistryIndexHybrid(
+      buildRegistryIndex({ registry: "r", issuedAt: "t", entries: ENTRIES }),
+      "unknown-authority",
+      signFn,
+      signMlDsaTestDouble,
+    );
     assert.throws(() => verifyRegistryIndex(signed, verifier),
       (e) => e.code === ERR_REGISTRY_INDEX_NO_KEY);
   });

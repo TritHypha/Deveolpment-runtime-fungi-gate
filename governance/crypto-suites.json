@@ -4,7 +4,7 @@
   "purpose": "Central index of every Galerina signature SUITE: its id, algorithms, domain/context, status, and the signer + verifier bound to it. Mirror of the authoritative crypto-suite register (the source of truth); this file is kept reconciled to it so the runtime version-dispatch verifier and the conformance gate read one shared list.",
   "reconciledAtRef": "72e85535",
   "ironRule": "Retiring a suite means setting its status to verify-only-retired and KEEPING its verifier — never delete a verifier. A verifier verifies everything that suite ever signed; removing it makes historical artifacts fail admission.",
-  "envelopeScope": "Three domain-separated signing families (governance-signature, audit-attestation, bridge-manifest), deliberately cross-protocol-separated so one ML-DSA key cannot be confused between surfaces. Version-dispatch happens WITHIN each domain, never across.",
+  "envelopeScope": "Four domain-separated signing families (governance-signature, audit-attestation, bridge-manifest, registry-index), deliberately cross-protocol-separated so one ML-DSA key cannot be confused between surfaces. Version-dispatch happens WITHIN each domain, never across.",
   "statusVocabulary": {
     "active-for-signing": "production default; may sign new artifacts and verify existing ones",
     "verify-only-retired": "must NOT sign new artifacts; MUST keep verifying old ones (the iron rule)",
@@ -94,6 +94,31 @@
           "note": "Hybrid, required for tier-3 toxic-border admission. verifyAttestationHybrid verifies both halves (logical AND, no PQ downgrade).",
           "signer": "signManifestHybrid",
           "verifier": "verifyAttestationHybrid"
+        }
+      ]
+    },
+    {
+      "id": "registry-index",
+      "description": "Central certified-package registry index signature.",
+      "context": "galerina.registry.index.sig.v2",
+      "sourceModule": "registry-index.ts (galerina-framework-app-kernel)",
+      "note": "v2 is a Galerina application dual-signature envelope, not the still-draft IETF Composite ML-DSA encoding. Both components cover one NUL-separated preimage binding domain, suite, authority key id, canon tag, and canonical payload; verification is logical AND.",
+      "suites": [
+        {
+          "suiteId": "galerina-registry-index/v1",
+          "algorithms": ["ed25519"],
+          "status": "verify-only-retired",
+          "note": "Historical compatibility only. The v1 verifier remains under the iron rule; the legacy signer refuses v2 and the builder never emits v1.",
+          "signer": "signRegistryIndex (legacy v1 input only)",
+          "verifier": "verifyRegistryIndex"
+        },
+        {
+          "suiteId": "galerina-registry-index/v2",
+          "algorithms": ["ed25519", "ml-dsa-65"],
+          "status": "active-for-signing",
+          "note": "Production default. Both component signatures and the exact domain context are mandatory; missing, invalid, or downgraded envelopes fail closed.",
+          "signer": "signRegistryIndexHybrid",
+          "verifier": "verifyRegistryIndex"
         }
       ]
     }

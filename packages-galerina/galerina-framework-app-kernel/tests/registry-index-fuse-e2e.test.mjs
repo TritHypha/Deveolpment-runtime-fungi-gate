@@ -16,18 +16,25 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { existsSync } from "node:fs";
-import { generateKeyPairSync, sign as edSign, verify as edVerify } from "node:crypto";
-import { fusePackage, buildRegistryIndex, signRegistryIndex, admitFromRegistry } from "../dist/index.js";
+import { createHmac, generateKeyPairSync, sign as edSign, verify as edVerify } from "node:crypto";
+import { fusePackage, buildRegistryIndex, signRegistryIndexHybrid, admitFromRegistry } from "../dist/index.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const DEMO_DIR = join(here, "..", "..", "..", "examples", "fuse-demo", "my-custom-api-rest");
 
 const AUTH_KEY = "registry-authority-e2e";
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+const ML_TEST_SECRET = Buffer.from("registry-index-e2e-envelope-test-only");
 const signFn = (message) => edSign(null, message, privateKey).toString("base64");
+const signMlDsaTestDouble = (message) =>
+  createHmac("sha256", ML_TEST_SECRET).update(message).digest("base64");
 // Fail-closed verifier: an unknown authority keyId is "no-key" ⇒ the index is unverifiable ⇒ DENY.
-const verifier = (message, sigB64, keyId) =>
-  keyId !== AUTH_KEY ? "no-key" : edVerify(null, message, publicKey, Buffer.from(sigB64, "base64"));
+const verifier = {
+  ed25519: (message, sigB64, keyId) =>
+    keyId !== AUTH_KEY ? "no-key" : edVerify(null, message, publicKey, Buffer.from(sigB64, "base64")),
+  mlDsa65: (message, signature, keyId) =>
+    keyId !== AUTH_KEY ? "no-key" : signature === signMlDsaTestDouble(message),
+};
 
 const ISSUED_AT = "2026-07-15T00:00:00Z";           // caller-supplied — the module takes no wall-clock
 const POLICY = { allowedLevels: ["certified"], maxRiskRating: "low" };
@@ -51,7 +58,12 @@ const entryFor = (id, over = {}) => ({
   ...over,
 });
 const signedIndex = (entries) =>
-  signRegistryIndex(buildRegistryIndex({ registry: "galerina-central", issuedAt: ISSUED_AT, entries }), AUTH_KEY, signFn);
+  signRegistryIndexHybrid(
+    buildRegistryIndex({ registry: "galerina-central", issuedAt: ISSUED_AT, entries }),
+    AUTH_KEY,
+    signFn,
+    signMlDsaTestDouble,
+  );
 // The composition under test: the real gate, injected exactly as the loader's docs prescribe.
 const gateFor = (index, policy = POLICY) => (pkg) => admitFromRegistry(index, verifier, pkg, policy);
 
@@ -111,9 +123,11 @@ test("B5a e2e: an index TAMPERED after signing is REFUSED (signature covers the 
 
 test("B5a e2e: an index signed by an UNKNOWN authority is REFUSED (no-key ⇒ deny, not skip)", async () => {
   const id = await demoIdentity();
-  const wrongAuthority = signRegistryIndex(
+  const wrongAuthority = signRegistryIndexHybrid(
     buildRegistryIndex({ registry: "galerina-central", issuedAt: ISSUED_AT, entries: [entryFor(id)] }),
-    "some-other-authority", signFn,   // validly signed — but by a keyId the verifier does not trust
+    "some-other-authority",
+    signFn,
+    signMlDsaTestDouble,
   );
   await assert.rejects(
     () => fusePackage(DEMO_DIR, { allowUnsigned: true, warn: () => {}, registryCheck: gateFor(wrongAuthority) }),

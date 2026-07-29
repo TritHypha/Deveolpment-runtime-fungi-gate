@@ -115,7 +115,10 @@ act on and the default stops lying.
       `.mldsa.pub.b64` → `02B05DCC…7B56`. Verifiers should pin **bytes**, not just an id.
 - [ ] **Declare the operational key.** `key-inventory.mjs` reports `active=(not supplied)` and defaults
       `signer=` to the **cold root**. RD-0368's split plan says the registry authority must be a *new
-      operational key, never the cold root*. Owner decision.
+      operational key, never the cold root*. The 2026-07-29 registry-index review also found no
+      root-authorized delegation format or verifier, so this is an engineering gate as well as an
+      owner ceremony. See
+      [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md).
 - [ ] **Fix the `key-inventory.mjs` liveness rule** (§3) and add a `--self-test`.
 - [ ] **`6b4c9e43afc89c02`** — establish and record its purpose.
 - [ ] **Identify the signer of the one tracked `.lmanifest`** (`examples/fuse-demo/my-custom-api-rest/`).
