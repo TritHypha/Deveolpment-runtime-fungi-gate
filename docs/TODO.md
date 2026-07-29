@@ -384,6 +384,12 @@ planning checkbox must never be used to imply that implementation exists.
   with exit 1 because `MEMORY-GRAPH.json` is missing or stale; it wrote
   nothing. The owner action is now exact: confirm `958d1a5f` and authorize
   refreshing its external graph sidecar, or name a different candidate.
+- **Independent memory review prompt:** use
+  `docs/reports/PROMPT-memory-graph-authority-review-2026-07-29.md` for a
+  read-only second opinion. It separates corpus identity, integrity, freshness,
+  and external-write authority; forbids path disclosure or mutation; and asks
+  for both the immediate owner wording and a future path-independent selection
+  manifest.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
@@ -854,11 +860,17 @@ planning checkbox must never be used to imply that implementation exists.
   declarations refuse with `FUNGI-PARSE-003`. The frozen V2-E declaration
   identities are pinned exactly. Focused parser/GIR/R1 adapter evidence is
   137/137; compiler typecheck and build pass.
-- **Next:** implement the exact three-flow checked-source-to-V2-D adapter under
-  RED tests, accepting only the pinned declarations, signatures and body
-  shapes before materializing the frozen graph. Preserve the
-  bounded V2-E vector as permanent conformance evidence; do not widen or
-  silently reinterpret its canonical identity. No
+- **Completed — G4-A bounded adapter:** frozen V2-E flow 2 returns
+  `left + right`, while frozen V2-D function 2 returns `left + right + 1`
+  through the checked increment call. V2-E remains unchanged. A separately
+  named G4 fixture and `.fungi` adapter now validate its exact declarations,
+  signatures and complete nested GIR before materializing, exporting,
+  independently importing, and digest-binding the frozen 791-byte V2-D body.
+  Focused evidence is 12/12; every tested mutation releases zero
+  body/digests/authority. Report:
+  `docs/reports/slide-g4-checked-source-adapter-2026-07-29.md`.
+  **Next:** G4-B materialize-once candidate/refusal and G4-C immutable checked
+  snapshot with total trace. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.

@@ -1,0 +1,65 @@
+@version 1
+
+type SLIDEG4FixtureRecord {
+  selected: Int
+  length: Int
+  label: String
+}
+
+enum SLIDEG4FixtureVariant {
+  Selected
+  Missing
+}
+
+pure flow slide_g4_checked_increment(value: Int) -> Int
+contract { intent { "Apply the checked arithmetic used by the detached G4 fixture." } }
+{
+  return value + 1
+}
+
+pure flow slide_g4_k3_join(
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> Result<Int,String>
+contract { intent { "Preserve checked calls, Boolean control, a typed join, and all K3 exits." } }
+{
+  mut joined: Int = 0
+  if left >= 0 {
+    joined = slide_g4_checked_increment(left) + right
+  } else {
+    joined = slide_g4_checked_increment(right) + right
+  }
+  check(admission) {
+    deny: { return Err("SLIDE_PROBE_DENIED") }
+    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }
+    if: { return Ok(joined) }
+  }
+}
+
+pure flow slide_g4_guarded_memory(index: Int) -> Result<Int,String>
+contract { intent { "Read one immutable array only after a fail-closed bounds decision." } }
+{
+  let values: Array<Int> = [3, 5, 8]
+  if index < 0 or index >= 3 {
+    return Err("SLIDE_PROBE_BOUNDS")
+  }
+  let selected: Option<Int> = values.get(index)
+  match selected {
+    Some(value) => {
+      let item = SLIDEG4FixtureRecord {
+        selected: value
+        length: 3
+        label: "Galerina"
+      }
+      let state: SLIDEG4FixtureVariant = Selected
+      match state {
+        Selected => return Ok(item.selected)
+        Missing => return Err("SLIDE_PROBE_MISSING")
+        _ => return Err("SLIDE_PROBE_UNKNOWN")
+      }
+    }
+    None => return Err("SLIDE_PROBE_BOUNDS")
+    _ => return Err("SLIDE_PROBE_INVALID_OPTION")
+  }
+}

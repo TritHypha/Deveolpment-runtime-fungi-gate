@@ -1,0 +1,761 @@
+@version 1
+/// @file: slide-gfrontend-fixture-adapter.fungi
+/// @purpose: Derive the frozen V2-D body from one exact compiler-owned G4 source profile.
+/// @status: Bounded G4-A conformance seam; no general snapshot or authority.
+///
+/// This adapter consumes ParseResult, derives its own FlowEntry table, validates
+/// every declaration, signature, statement and expression used by the three-flow
+/// fixture, and only then materializes the already frozen V2-D program. Refusal
+/// releases no body, digest, target choice, native claim, or authority.
+
+record SLIDEG4FixtureCandidate {
+  decision: SLIDEV2DExecutableDecision
+  materialized: Bool
+  semanticBody: Bytes
+  semanticBodyDigest: String
+  semanticDigest: String
+  sourceFlowCount: Int
+  authorityReleased: Bool
+}
+
+pure flow emptySLIDEG4Expr() -> GIRExpr
+contract { intent { "Return a non-admissible expression sentinel." } }
+{
+  return { op: "missing", ty: "", value: "", kids: Array.empty() }
+}
+
+pure flow slideG4Leaf(
+  op: String,
+  ty: String,
+  value: String,
+) -> GIRExpr
+contract { intent { "Construct one typed expected leaf for exact comparison." } }
+{
+  return { op: op, ty: ty, value: value, kids: Array.empty() }
+}
+
+pure flow emptySLIDEG4Stmt() -> GIRStmt
+contract { intent { "Return a non-admissible statement sentinel." } }
+{
+  return {
+    op: "missing" name: "" name2: "" expr: Array.empty()
+    body: Array.empty() elseBody: Array.empty()
+  }
+}
+
+pure flow emptySLIDEG4Flow() -> FlowEntry
+contract { intent { "Return a non-admissible flow sentinel." } }
+{
+  return {
+    name: "" params: Array.empty() body: Array.empty() qualifier: ""
+    paramTypes: Array.empty() returnType: "" effects: Array.empty()
+  }
+}
+
+pure flow emptySLIDEG4Record() -> RecordDecl
+contract { intent { "Return a non-admissible record declaration sentinel." } }
+{
+  return { name: "", fields: Array.empty() }
+}
+
+pure flow emptySLIDEG4Field() -> RecordFieldDecl
+contract { intent { "Return a non-admissible record-field sentinel." } }
+{
+  return { name: "", typeName: "" }
+}
+
+pure flow emptySLIDEG4Enum() -> EnumDecl
+contract { intent { "Return a non-admissible enum declaration sentinel." } }
+{
+  return { name: "", cases: Array.empty() }
+}
+
+pure flow slideG4ExprAt(values: Array<GIRExpr>, position: Int) -> GIRExpr
+contract { intent { "Read an exact expression position or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Expr() }
+    _ => { return emptySLIDEG4Expr() }
+  }
+}
+
+pure flow slideG4StmtAt(values: Array<GIRStmt>, position: Int) -> GIRStmt
+contract { intent { "Read an exact statement position or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Stmt() }
+    _ => { return emptySLIDEG4Stmt() }
+  }
+}
+
+pure flow slideG4FlowAt(values: Array<FlowEntry>, position: Int) -> FlowEntry
+contract { intent { "Read an exact flow position or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Flow() }
+    _ => { return emptySLIDEG4Flow() }
+  }
+}
+
+pure flow slideG4RecordAt(values: Array<RecordDecl>, position: Int) -> RecordDecl
+contract { intent { "Read an exact record position or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Record() }
+    _ => { return emptySLIDEG4Record() }
+  }
+}
+
+pure flow slideG4FieldAt(
+  values: Array<RecordFieldDecl>,
+  position: Int,
+) -> RecordFieldDecl
+contract { intent { "Read an exact record field or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Field() }
+    _ => { return emptySLIDEG4Field() }
+  }
+}
+
+pure flow slideG4EnumAt(values: Array<EnumDecl>, position: Int) -> EnumDecl
+contract { intent { "Read an exact enum position or a refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return emptySLIDEG4Enum() }
+    _ => { return emptySLIDEG4Enum() }
+  }
+}
+
+pure flow slideG4StringAt(values: Array<String>, position: Int) -> String
+contract { intent { "Read an exact string position or an empty refusal sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return "" }
+    _ => { return "" }
+  }
+}
+
+pure flow slideG4CleanExprShell(
+  expr: GIRExpr,
+  expectedOp: String,
+  expectedType: String,
+  expectedValue: String,
+  expectedKids: Int,
+) -> Bool
+contract { intent { "Require an exact GIR expression shell." } }
+{
+  let identity: Bool = expr.op == expectedOp and expr.ty == expectedType
+  let shape: Bool = expr.value == expectedValue and expr.kids.count() == expectedKids
+  return identity and shape
+}
+
+pure flow slideG4CleanStmtShell(
+  stmt: GIRStmt,
+  expectedOp: String,
+  expectedName: String,
+  expectedName2: String,
+  expectedExprs: Int,
+  expectedBody: Int,
+  expectedElse: Int,
+) -> Bool
+contract { intent { "Require an exact GIR statement shell." } }
+{
+  let identity: Bool = stmt.op == expectedOp and stmt.name == expectedName
+  let binding: Bool = stmt.name2 == expectedName2
+  let shape: Bool = stmt.expr.count() == expectedExprs and stmt.body.count() == expectedBody and stmt.elseBody.count() == expectedElse
+  return identity and binding and shape
+}
+
+pure flow slideG4IsLoad(expr: GIRExpr, expectedName: String) -> Bool
+contract { intent { "Recognize one exact compiler-owned load." } }
+{
+  return slideG4CleanExprShell(expr, "load", "", expectedName, 0)
+}
+
+pure flow slideG4IsInt(expr: GIRExpr, expectedValue: String) -> Bool
+contract { intent { "Recognize one exact Int constant." } }
+{
+  return slideG4CleanExprShell(expr, "const", "Int", expectedValue, 0)
+}
+
+pure flow slideG4IsString(expr: GIRExpr, expectedValue: String) -> Bool
+contract { intent { "Recognize one exact String constant." } }
+{
+  return slideG4CleanExprShell(expr, "const", "String", expectedValue, 0)
+}
+
+pure flow slideG4IsBinary(
+  expr: GIRExpr,
+  expectedOpcode: String,
+  expectedType: String,
+  expectedLeft: GIRExpr,
+  expectedRight: GIRExpr,
+) -> Bool
+contract { intent { "Recognize one exact binary shell and supplied operands." } }
+{
+  if slideG4CleanExprShell(
+    expr, "binop", expectedType, expectedOpcode, 2,
+  ) == false {
+    return false
+  }
+  let left = slideG4ExprAt(expr.kids, 0)
+  let right = slideG4ExprAt(expr.kids, 1)
+  let leftIdentity: Bool = left.op == expectedLeft.op and left.ty == expectedLeft.ty and left.value == expectedLeft.value and left.kids.count() == expectedLeft.kids.count()
+  let rightIdentity: Bool = right.op == expectedRight.op and right.ty == expectedRight.ty and right.value == expectedRight.value and right.kids.count() == expectedRight.kids.count()
+  return leftIdentity and rightIdentity
+}
+
+pure flow slideG4IsCall1(
+  expr: GIRExpr,
+  expectedName: String,
+  expectedArg: GIRExpr,
+) -> Bool
+contract { intent { "Recognize one exact single-argument call." } }
+{
+  if slideG4CleanExprShell(expr, "call", "", expectedName, 1) == false {
+    return false
+  }
+  let arg = slideG4ExprAt(expr.kids, 0)
+  return arg.op == expectedArg.op and arg.ty == expectedArg.ty and arg.value == expectedArg.value and arg.kids.count() == expectedArg.kids.count()
+}
+
+pure flow slideG4IsReturnCall1(
+  stmt: GIRStmt,
+  callName: String,
+  argument: GIRExpr,
+) -> Bool
+contract { intent { "Recognize one exact terminal one-argument call." } }
+{
+  if slideG4CleanStmtShell(stmt, "ret", "", "", 1, 0, 0) == false {
+    return false
+  }
+  return slideG4IsCall1(slideG4ExprAt(stmt.expr, 0), callName, argument)
+}
+
+pure flow slideG4IsErrorReturn(stmt: GIRStmt, expectedText: String) -> Bool
+contract { intent { "Recognize one exact terminal Err(String)." } }
+{
+  return slideG4IsReturnCall1(
+    stmt, "Err", slideG4Leaf("const", "String", expectedText),
+  )
+}
+
+pure flow slideG4ExactSignature(
+  flowEntry: FlowEntry,
+  expectedName: String,
+  expectedParamCount: Int,
+  expectedReturn: String,
+) -> Bool
+contract { intent { "Require the common pure, effect-free signature shell." } }
+{
+  let identity: Bool = flowEntry.name == expectedName and flowEntry.qualifier == "pure"
+  let shape: Bool = flowEntry.params.count() == expectedParamCount and flowEntry.paramTypes.count() == expectedParamCount
+  let result: Bool = flowEntry.returnType == expectedReturn and flowEntry.effects.count() == 0
+  return identity and shape and result
+}
+
+pure flow slideG4ExactDeclarations(parsed: ParseResult) -> Bool
+contract { intent { "Pin the ordered G4 record and enum declarations." } }
+{
+  if parsed.recordDecls.count() != 1 or parsed.enumDecls.count() != 1 {
+    return false
+  }
+  let recordDecl = slideG4RecordAt(parsed.recordDecls, 0)
+  if recordDecl.name != "SLIDEG4FixtureRecord" or recordDecl.fields.count() != 3 {
+    return false
+  }
+  let selected = slideG4FieldAt(recordDecl.fields, 0)
+  let length = slideG4FieldAt(recordDecl.fields, 1)
+  let label = slideG4FieldAt(recordDecl.fields, 2)
+  let selectedExact: Bool = selected.name == "selected" and selected.typeName == "Int"
+  let lengthExact: Bool = length.name == "length" and length.typeName == "Int"
+  let labelExact: Bool = label.name == "label" and label.typeName == "String"
+  if selectedExact == false or lengthExact == false or labelExact == false {
+    return false
+  }
+  let enumDecl = slideG4EnumAt(parsed.enumDecls, 0)
+  let enumIdentity: Bool = enumDecl.name == "SLIDEG4FixtureVariant"
+  let enumShape: Bool = enumDecl.cases.count() == 2 and slideG4StringAt(enumDecl.cases, 0) == "Selected" and slideG4StringAt(enumDecl.cases, 1) == "Missing"
+  return enumIdentity and enumShape
+}
+
+pure flow slideG4ExactIncrementSignature(flowEntry: FlowEntry) -> Bool
+contract { intent { "Pin the checked-increment signature." } }
+{
+  let common = slideG4ExactSignature(
+    flowEntry, "slide_g4_checked_increment", 1, "Int",
+  )
+  let parameter: Bool = slideG4StringAt(flowEntry.params, 0) == "value" and slideG4StringAt(flowEntry.paramTypes, 0) == "Int"
+  return common and parameter
+}
+
+pure flow slideG4ExactJoinSignature(flowEntry: FlowEntry) -> Bool
+contract { intent { "Pin the K3 join signature." } }
+{
+  let common = slideG4ExactSignature(
+    flowEntry, "slide_g4_k3_join", 3, "Result<Int,String>",
+  )
+  let names: Bool = slideG4StringAt(flowEntry.params, 0) == "left" and slideG4StringAt(flowEntry.params, 1) == "right" and slideG4StringAt(flowEntry.params, 2) == "admission"
+  let types: Bool = slideG4StringAt(flowEntry.paramTypes, 0) == "Int" and slideG4StringAt(flowEntry.paramTypes, 1) == "Int" and slideG4StringAt(flowEntry.paramTypes, 2) == "Verdict"
+  return common and names and types
+}
+
+pure flow slideG4ExactMemorySignature(flowEntry: FlowEntry) -> Bool
+contract { intent { "Pin the guarded-memory signature." } }
+{
+  let common = slideG4ExactSignature(
+    flowEntry, "slide_g4_guarded_memory", 1, "Result<Int,String>",
+  )
+  let parameter: Bool = slideG4StringAt(flowEntry.params, 0) == "index" and slideG4StringAt(flowEntry.paramTypes, 0) == "Int"
+  return common and parameter
+}
+
+pure flow slideG4ExactIncrementBody(flowEntry: FlowEntry) -> Bool
+contract { intent { "Recognize only return value + 1." } }
+{
+  if flowEntry.body.count() != 1 { return false }
+  let ret = slideG4StmtAt(flowEntry.body, 0)
+  if slideG4CleanStmtShell(ret, "ret", "", "", 1, 0, 0) == false {
+    return false
+  }
+  let add = slideG4ExprAt(ret.expr, 0)
+  return slideG4IsBinary(
+    add, "add", "Int",
+    slideG4Leaf("load", "", "value"),
+    slideG4Leaf("const", "Int", "1"),
+  )
+}
+
+pure flow slideG4ExactJoinAssignment(
+  stmt: GIRStmt,
+  checkedOperand: String,
+) -> Bool
+contract { intent { "Recognize joined = checked_increment(operand) + right." } }
+{
+  if slideG4CleanStmtShell(stmt, "store", "joined", "", 1, 0, 0) == false {
+    return false
+  }
+  let add = slideG4ExprAt(stmt.expr, 0)
+  if slideG4CleanExprShell(add, "binop", "Int", "add", 2) == false {
+    return false
+  }
+  let checked = slideG4ExprAt(add.kids, 0)
+  let right = slideG4ExprAt(add.kids, 1)
+  let callExact = slideG4IsCall1(
+    checked, "slide_g4_checked_increment", slideG4Leaf("load", "", checkedOperand),
+  )
+  return callExact and slideG4IsLoad(right, "right")
+}
+
+pure flow slideG4ExactK3ErrorArm(
+  arm: GIRStmt,
+  expectedLabel: String,
+  expectedText: String,
+) -> Bool
+contract { intent { "Recognize one exact labelled, terminal K3 error arm." } }
+{
+  if slideG4CleanStmtShell(
+    arm, "k3_arm", expectedLabel, "", 0, 1, 0,
+  ) == false {
+    return false
+  }
+  return slideG4IsErrorReturn(slideG4StmtAt(arm.body, 0), expectedText)
+}
+
+pure flow slideG4ExactK3AllowArm(arm: GIRStmt) -> Bool
+contract { intent { "Recognize the exact K3 allowed return of joined." } }
+{
+  if slideG4CleanStmtShell(arm, "k3_arm", "if", "", 0, 1, 0) == false {
+    return false
+  }
+  return slideG4IsReturnCall1(
+    slideG4StmtAt(arm.body, 0), "Ok", slideG4Leaf("load", "", "joined"),
+  )
+}
+
+pure flow slideG4ExactJoinBody(flowEntry: FlowEntry) -> Bool
+contract { intent { "Pin checked calls, Boolean branch, typed join, and all K3 exits." } }
+{
+  if flowEntry.body.count() != 3 { return false }
+  let joined = slideG4StmtAt(flowEntry.body, 0)
+  if slideG4CleanStmtShell(joined, "store", "joined", "", 1, 0, 0) == false {
+    return false
+  }
+  if slideG4IsInt(slideG4ExprAt(joined.expr, 0), "0") == false {
+    return false
+  }
+
+  let branch = slideG4StmtAt(flowEntry.body, 1)
+  if slideG4CleanStmtShell(branch, "branch", "", "", 1, 1, 1) == false {
+    return false
+  }
+  let condition = slideG4ExprAt(branch.expr, 0)
+  let conditionExact = slideG4IsBinary(
+    condition, "ge", "Bool",
+    slideG4Leaf("load", "", "left"),
+    slideG4Leaf("const", "Int", "0"),
+  )
+  if conditionExact == false { return false }
+  if slideG4ExactJoinAssignment(
+    slideG4StmtAt(branch.body, 0), "left",
+  ) == false {
+    return false
+  }
+  if slideG4ExactJoinAssignment(
+    slideG4StmtAt(branch.elseBody, 0), "right",
+  ) == false {
+    return false
+  }
+
+  let gate = slideG4StmtAt(flowEntry.body, 2)
+  if slideG4CleanStmtShell(gate, "check_k3", "", "", 1, 3, 0) == false {
+    return false
+  }
+  if slideG4IsLoad(slideG4ExprAt(gate.expr, 0), "admission") == false {
+    return false
+  }
+  let denyExact = slideG4ExactK3ErrorArm(
+    slideG4StmtAt(gate.body, 0), "deny", "SLIDE_PROBE_DENIED",
+  )
+  let ambigExact = slideG4ExactK3ErrorArm(
+    slideG4StmtAt(gate.body, 1), "ambig", "SLIDE_PROBE_INDETERMINATE",
+  )
+  let allowExact = slideG4ExactK3AllowArm(slideG4StmtAt(gate.body, 2))
+  return denyExact and ambigExact and allowExact
+}
+
+pure flow slideG4ExactArrayStore(stmt: GIRStmt) -> Bool
+contract { intent { "Recognize values = [3, 5, 8] with no hidden edges." } }
+{
+  if slideG4CleanStmtShell(stmt, "store", "values", "", 1, 0, 0) == false {
+    return false
+  }
+  let array = slideG4ExprAt(stmt.expr, 0)
+  if slideG4CleanExprShell(array, "arrlit", "Array", "", 3) == false {
+    return false
+  }
+  let first: Bool = slideG4IsInt(slideG4ExprAt(array.kids, 0), "3")
+  let second: Bool = slideG4IsInt(slideG4ExprAt(array.kids, 1), "5")
+  let third: Bool = slideG4IsInt(slideG4ExprAt(array.kids, 2), "8")
+  return first and second and third
+}
+
+pure flow slideG4ExactBoundsBranch(stmt: GIRStmt) -> Bool
+contract { intent { "Recognize the terminal index < 0 OR index >= 3 bounds guard." } }
+{
+  if slideG4CleanStmtShell(stmt, "branch", "", "", 1, 1, 0) == false {
+    return false
+  }
+  let condition = slideG4ExprAt(stmt.expr, 0)
+  if slideG4CleanExprShell(condition, "binop", "Bool", "or", 2) == false {
+    return false
+  }
+  let lower = slideG4ExprAt(condition.kids, 0)
+  let upper = slideG4ExprAt(condition.kids, 1)
+  let lowerExact = slideG4IsBinary(
+    lower, "lt", "Bool",
+    slideG4Leaf("load", "", "index"),
+    slideG4Leaf("const", "Int", "0"),
+  )
+  let upperExact = slideG4IsBinary(
+    upper, "ge", "Bool",
+    slideG4Leaf("load", "", "index"),
+    slideG4Leaf("const", "Int", "3"),
+  )
+  let terminal = slideG4IsErrorReturn(
+    slideG4StmtAt(stmt.body, 0), "SLIDE_PROBE_BOUNDS",
+  )
+  return lowerExact and upperExact and terminal
+}
+
+pure flow slideG4ExactSelectedStore(stmt: GIRStmt) -> Bool
+contract { intent { "Recognize selected = values.get(index)." } }
+{
+  if slideG4CleanStmtShell(stmt, "store", "selected", "", 1, 0, 0) == false {
+    return false
+  }
+  let get = slideG4ExprAt(stmt.expr, 0)
+  if slideG4CleanExprShell(get, "call", "", "get", 2) == false {
+    return false
+  }
+  return slideG4IsLoad(slideG4ExprAt(get.kids, 0), "values") and slideG4IsLoad(slideG4ExprAt(get.kids, 1), "index")
+}
+
+pure flow slideG4ExactRecordStore(stmt: GIRStmt) -> Bool
+contract { intent { "Recognize the exact typed aggregate construction." } }
+{
+  if slideG4CleanStmtShell(stmt, "store", "item", "", 1, 0, 0) == false {
+    return false
+  }
+  let recordValue = slideG4ExprAt(stmt.expr, 0)
+  if slideG4CleanExprShell(
+    recordValue, "reclit", "SLIDEG4FixtureRecord",
+    "SLIDEG4FixtureRecord", 6,
+  ) == false {
+    return false
+  }
+  let selectedName = slideG4IsString(
+    slideG4ExprAt(recordValue.kids, 0), "selected",
+  )
+  let selectedValue = slideG4IsLoad(
+    slideG4ExprAt(recordValue.kids, 1), "value",
+  )
+  let lengthName = slideG4IsString(
+    slideG4ExprAt(recordValue.kids, 2), "length",
+  )
+  let lengthValue = slideG4IsInt(slideG4ExprAt(recordValue.kids, 3), "3")
+  let labelName = slideG4IsString(
+    slideG4ExprAt(recordValue.kids, 4), "label",
+  )
+  let labelValue = slideG4IsString(
+    slideG4ExprAt(recordValue.kids, 5), "Galerina",
+  )
+  return selectedName and selectedValue and lengthName and lengthValue and labelName and labelValue
+}
+
+pure flow slideG4ExactStateStore(stmt: GIRStmt) -> Bool
+contract { intent { "Recognize the exact typed Selected state construction." } }
+{
+  if slideG4CleanStmtShell(stmt, "store", "state", "", 1, 0, 0) == false {
+    return false
+  }
+  return slideG4IsLoad(slideG4ExprAt(stmt.expr, 0), "Selected")
+}
+
+pure flow slideG4ExactMatchErrorArm(
+  arm: GIRStmt,
+  expectedName: String,
+  expectedBinding: String,
+  expectedText: String,
+) -> Bool
+contract { intent { "Recognize one exact terminal match error arm." } }
+{
+  if slideG4CleanStmtShell(
+    arm, "arm", expectedName, expectedBinding, 0, 1, 0,
+  ) == false {
+    return false
+  }
+  return slideG4IsErrorReturn(slideG4StmtAt(arm.body, 0), expectedText)
+}
+
+pure flow slideG4ExactSelectedArm(arm: GIRStmt) -> Bool
+contract { intent { "Recognize Selected => Ok(item.selected)." } }
+{
+  if slideG4CleanStmtShell(arm, "arm", "Selected", "", 0, 1, 0) == false {
+    return false
+  }
+  let ret = slideG4StmtAt(arm.body, 0)
+  if slideG4CleanStmtShell(ret, "ret", "", "", 1, 0, 0) == false {
+    return false
+  }
+  let ok = slideG4ExprAt(ret.expr, 0)
+  if slideG4CleanExprShell(ok, "call", "", "Ok", 1) == false {
+    return false
+  }
+  let field = slideG4ExprAt(ok.kids, 0)
+  if slideG4CleanExprShell(field, "field", "", "selected", 1) == false {
+    return false
+  }
+  return slideG4IsLoad(slideG4ExprAt(field.kids, 0), "item")
+}
+
+pure flow slideG4ExactStateMatch(stmt: GIRStmt) -> Bool
+contract { intent { "Pin all enum match exits including the catch-all." } }
+{
+  if slideG4CleanStmtShell(stmt, "matche", "", "", 1, 3, 0) == false {
+    return false
+  }
+  if slideG4IsLoad(slideG4ExprAt(stmt.expr, 0), "state") == false {
+    return false
+  }
+  let selectedExact = slideG4ExactSelectedArm(slideG4StmtAt(stmt.body, 0))
+  let missingExact = slideG4ExactMatchErrorArm(
+    slideG4StmtAt(stmt.body, 1), "Missing", "", "SLIDE_PROBE_MISSING",
+  )
+  let unknownExact = slideG4ExactMatchErrorArm(
+    slideG4StmtAt(stmt.body, 2), "_", "", "SLIDE_PROBE_UNKNOWN",
+  )
+  return selectedExact and missingExact and unknownExact
+}
+
+pure flow slideG4ExactSomeArm(arm: GIRStmt) -> Bool
+contract { intent { "Pin the complete Some(value) aggregate and enum path." } }
+{
+  if slideG4CleanStmtShell(arm, "arm", "Some", "value", 0, 3, 0) == false {
+    return false
+  }
+  let recordExact = slideG4ExactRecordStore(slideG4StmtAt(arm.body, 0))
+  let stateExact = slideG4ExactStateStore(slideG4StmtAt(arm.body, 1))
+  let matchExact = slideG4ExactStateMatch(slideG4StmtAt(arm.body, 2))
+  return recordExact and stateExact and matchExact
+}
+
+pure flow slideG4ExactOptionMatch(stmt: GIRStmt) -> Bool
+contract { intent { "Pin Some, None, and catch-all Option exits." } }
+{
+  if slideG4CleanStmtShell(stmt, "matche", "", "", 1, 3, 0) == false {
+    return false
+  }
+  if slideG4IsLoad(slideG4ExprAt(stmt.expr, 0), "selected") == false {
+    return false
+  }
+  let someExact = slideG4ExactSomeArm(slideG4StmtAt(stmt.body, 0))
+  let noneExact = slideG4ExactMatchErrorArm(
+    slideG4StmtAt(stmt.body, 1), "None", "", "SLIDE_PROBE_BOUNDS",
+  )
+  let unknownExact = slideG4ExactMatchErrorArm(
+    slideG4StmtAt(stmt.body, 2), "_", "", "SLIDE_PROBE_INVALID_OPTION",
+  )
+  return someExact and noneExact and unknownExact
+}
+
+pure flow slideG4ExactMemoryBody(flowEntry: FlowEntry) -> Bool
+contract { intent { "Pin the complete guarded memory and aggregate body." } }
+{
+  if flowEntry.body.count() != 4 { return false }
+  let arrayExact = slideG4ExactArrayStore(slideG4StmtAt(flowEntry.body, 0))
+  let boundsExact = slideG4ExactBoundsBranch(slideG4StmtAt(flowEntry.body, 1))
+  let selectedExact = slideG4ExactSelectedStore(slideG4StmtAt(flowEntry.body, 2))
+  let matchExact = slideG4ExactOptionMatch(slideG4StmtAt(flowEntry.body, 3))
+  return arrayExact and boundsExact and selectedExact and matchExact
+}
+
+pure flow refuseSLIDEG4Fixture(
+  failureId: String,
+  detail: String,
+) -> SLIDEG4FixtureCandidate
+contract { intent { "Refuse G4 without partial bytes, digests, or authority." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    materialized: false
+    semanticBody: Bytes.empty()
+    semanticBodyDigest: ""
+    semanticDigest: ""
+    sourceFlowCount: 0
+    authorityReleased: false
+  }
+}
+
+pure flow adaptSLIDEG4CheckedFixture(
+  parsed: ParseResult,
+) -> SLIDEG4FixtureCandidate
+contract {
+  intent { "Derive exact V2-D bytes only from the complete bounded G4 compiler facts." }
+}
+{
+  if parsed.errors.count() != 0 {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-002", "self-hosted parsing did not complete cleanly",
+    )
+  }
+  let ambientFacts: Bool = parsed.imports.count() != 0 or parsed.policies.count() != 0 or parsed.guardDecls.count() != 0
+  if ambientFacts {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-003", "unsupported ambient declaration facts are present",
+    )
+  }
+  if slideG4ExactDeclarations(parsed) == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-003", "ordered record or enum declarations changed",
+    )
+  }
+
+  let flows = buildFlowTable(parsed.flows)
+  if parsed.flows.count() != 3 or flows.count() != 3 {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-003", "the bounded source must contain exactly three flows",
+    )
+  }
+  let increment = slideG4FlowAt(flows, 0)
+  let join = slideG4FlowAt(flows, 1)
+  let memory = slideG4FlowAt(flows, 2)
+  let signatures: Bool = slideG4ExactIncrementSignature(increment) and slideG4ExactJoinSignature(join) and slideG4ExactMemorySignature(memory)
+  if signatures == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-003", "ordered flow identities or signatures changed",
+    )
+  }
+  let bodies: Bool = slideG4ExactIncrementBody(increment) and slideG4ExactJoinBody(join) and slideG4ExactMemoryBody(memory)
+  if bodies == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-005", "checked source does not derive the frozen V2-D graph",
+    )
+  }
+
+  let program = materializeSLIDEV2DExecutableProgram()
+  let validation = validateSLIDEV2DExecutableProgram(program)
+  check(validation.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-005", "materialized V2-D graph failed semantic validation",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-005", "materialized V2-D graph validation was unresolved",
+      )
+    }
+    if: {}
+  }
+
+  let exported = exportSLIDEV2DCanonicalBody(program)
+  check(exported.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "canonical V2-D body export refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "canonical V2-D body export was unresolved",
+      )
+    }
+    if: {}
+  }
+  let binding = bindSLIDEV2DSemanticDigest(exported.bytes)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "independent V2-D import or digest binding refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4Fixture(
+        "SLIDE-GFRONT-007", "independent V2-D import or digest was unresolved",
+      )
+    }
+    if: {}
+  }
+  let exactBody: Bool = exported.byteLength == 791 and binding.bodyDigest == "b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38"
+  let exactSemantic: Bool = binding.semanticDigest == "a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4"
+  if exactBody == false or exactSemantic == false {
+    return refuseSLIDEG4Fixture(
+      "SLIDE-GFRONT-007", "canonical V2-D identity changed",
+    )
+  }
+  return {
+    decision: binding.decision
+    materialized: true
+    semanticBody: exported.bytes
+    semanticBodyDigest: binding.bodyDigest
+    semanticDigest: binding.semanticDigest
+    sourceFlowCount: flows.count()
+    authorityReleased: false
+  }
+}
