@@ -8,6 +8,7 @@ import {
   mkdirSync,
   writeFileSync,
   readFileSync,
+  existsSync,
   rmSync,
 } from "node:fs";
 import { join, dirname } from "node:path";
@@ -124,10 +125,10 @@ writeFileSync(
   join(covKb, "galerina-governance-rules.md"),
   "# Governance rules\n(no curated FUNGI codes yet)\n",
 );
-const runCoverage = (kbDir) => run(
+const runCoverage = (kbDir, args = ["codes", "--json"]) => run(
   "audit-coverage.mjs",
-  ["codes", "--json"],
-  { ...process.env, GALERINA_KB_DIR: kbDir },
+  args,
+  { ...process.env, GALERINA_KB_DIR: kbDir, SOURCE_DATE_EPOCH: "0" },
 );
 
 test("audit-coverage reports zero phantoms against a present empty registry", () => {
@@ -140,4 +141,23 @@ test("audit-coverage fails closed when the governance registry is absent", () =>
   const result = runCoverage(join(tmp, "no-such-kb"));
   assert.equal(result.status, 2, result.stdout + result.stderr);
   assert.match(result.stderr, /registry unreadable|Failing closed/i);
+});
+
+test("audit-coverage check refuses drift without rewriting governed output", () => {
+  const output = join(tmp, "build", "coverage", "coverage-codes.md");
+  const provenance = join(tmp, "build", "coverage", "provenance.json");
+  const generated = runCoverage(covKb, ["codes"]);
+  assert.equal(generated.status, 0, generated.stdout + generated.stderr);
+  assert.equal(existsSync(provenance), true);
+
+  writeFileSync(output, "drift\n");
+  const before = readFileSync(output, "utf8");
+  const refused = runCoverage(covKb, ["codes", "--check"]);
+  assert.notEqual(refused.status, 0, refused.stdout + refused.stderr);
+  assert.equal(readFileSync(output, "utf8"), before);
+
+  const restored = runCoverage(covKb, ["codes"]);
+  assert.equal(restored.status, 0, restored.stdout + restored.stderr);
+  const checked = runCoverage(covKb, ["codes", "--check"]);
+  assert.equal(checked.status, 0, checked.stdout + checked.stderr);
 });

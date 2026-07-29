@@ -233,6 +233,19 @@ planning checkbox must never be used to imply that implementation exists.
   legacy-compatible here and do not imply modern compiler parity. The package
   chain is green: 42 prototype checks and 11/11 Node tests. Rerun all 96
   governed packages before updating `version.json`.
+- **Task 9 aggregate and coverage-generator checkpoint:** the source-current
+  rerun passes all 96/96 governed packages with 8,524 counted tests, so
+  `version.json` was allowed to update. Generated-diff review then caught
+  `build/coverage/coverage-codes.md` claiming 731 codes while the canonical
+  index held 734: `audit-coverage.mjs` wrote a tracked report but was absent
+  from generator governance. A RED fixture proved `--check` neither existed
+  nor preserved drift. The audit now has a non-mutating drift check,
+  deterministic provenance that binds the external governance-registry
+  digest without publishing its path, and an exact policy contract;
+  phase-close checks rather than rewrites it. Focused evidence is 8/8 and the
+  complete scripts battery is 171/171; the complete generator contract is
+  14/14. Regenerate once after the source commit, then finish artifact
+  classification.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

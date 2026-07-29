@@ -12,11 +12,14 @@
 // + docs/Knowledge-Bases/galerina-governance-rules.md (the audit registry). Other dimensions register here
 // as their index + audit land (#217 capabilities, project graph, etc.).
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { extractCodes } from "./lib/codes.mjs";
+import { provenance } from "./lib/provenance.mjs";
 
 const ROOT = process.cwd();
 const asJson = process.argv.includes("--json");
+const check = process.argv.includes("--check");
 const soft = process.argv.includes("--soft"); // report-only (exit 0) — for run-phase-close wiring
 const dim = process.argv.find((a) => !a.startsWith("--") && a !== process.argv[0] && a !== process.argv[1]) ?? "codes";
 
@@ -116,6 +119,15 @@ lines.push("- #215 scanner is SRC-ONLY; doc/README-declared ownership is invisib
 lines.push("- Known false-dead pending const-id resolution: FUNGI-BOOL-BOUNDARY-001/002 (live via validateBoolBoundary).");
 lines.push(`\n## Coverage holes: ${gaps} · curation backlog: ${registryUncovered.length} · drift: ${docDrift.length} · R4-inline: ${inline.length} · RESERVED: ${dead.length}`);
 
+const reportBytes = lines.join("\n") + "\n";
+const provenanceBytes = JSON.stringify({
+  ...provenance("audit-coverage", ROOT),
+  externalInputs: [{
+    name: "galerina-governance-rules.md",
+    sha256: createHash("sha256").update(registryText).digest("hex"),
+  }],
+}, null, 2) + "\n";
+
 if (asJson) {
   console.log(JSON.stringify({
     dimension: "codes", totalCodes: codes.length, universalCoverage: "met (derived registry, by construction)",
@@ -126,9 +138,31 @@ if (asJson) {
   console.log(lines.join("\n"));
 }
 
-try {
-  mkdirSync(join(ROOT, "build/coverage"), { recursive: true });
-  writeFileSync(join(ROOT, "build/coverage/coverage-codes.md"), lines.join("\n") + "\n");
-} catch { /* non-fatal */ }
+const outputDir = join(ROOT, "build/coverage");
+const reportPath = join(outputDir, "coverage-codes.md");
+const provenancePath = join(outputDir, "provenance.json");
+
+if (check) {
+  let drift = false;
+  try {
+    drift = readFileSync(reportPath, "utf8") !== reportBytes
+      || readFileSync(provenancePath, "utf8") !== provenanceBytes;
+  } catch {
+    drift = true;
+  }
+  if (drift) {
+    console.error("audit-coverage --check: governed output or provenance is missing/stale; regenerate explicitly.");
+    process.exit(1);
+  }
+} else {
+  try {
+    mkdirSync(outputDir, { recursive: true });
+    writeFileSync(reportPath, reportBytes);
+    writeFileSync(provenancePath, provenanceBytes);
+  } catch (error) {
+    console.error(`audit-coverage: failed to publish governed output: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(2);
+  }
+}
 
 process.exit(soft ? 0 : Math.min(gaps, 250));

@@ -9,6 +9,32 @@
   },
   "toolExceptions": {},
   "generators": {
+    "scripts/audit-coverage.mjs": {
+      "inputs": [
+        "build/code-index/code-index.json",
+        "scripts/audit-coverage.mjs",
+        "scripts/lib/codes.mjs",
+        "scripts/lib/provenance.mjs"
+      ],
+      "outputs": [
+        "build/coverage/coverage-codes.md",
+        "build/coverage/provenance.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/audit-coverage.mjs",
+        "codes"
+      ],
+      "check": [
+        "node",
+        "scripts/audit-coverage.mjs",
+        "codes",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/code-index.mjs": {
       "inputs": [
         "packages-galerina",

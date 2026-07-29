@@ -496,7 +496,7 @@ run("lint:conventions", "node", ["scripts/lint-conventions.mjs", "--soft"]);
 // "Review the graphs and check against what we audit" — cross-checks the code-index (graph) against the
 // governance registry bidirectionally (blind spots · phantoms). Report-only (--soft) until the coverage
 // holes are triaged; emits build/coverage/coverage-codes.md. GRAPH THE AUDIT (owner 2026-06-22).
-run("coverage:codes", "node", ["scripts/audit-coverage.mjs", "codes", "--soft"]);
+run("coverage:codes", "node", ["scripts/audit-coverage.mjs", "codes", "--check", "--soft"]);
 
 // ── 5c-ii. Effect-vocabulary single source of truth (2026-07-01) ──
 // The compiler's effect tables (CANONICAL_EFFECTS · type-registry EFFECT_NAME_TO_FLAG · EFFECT_REGISTRY ·
