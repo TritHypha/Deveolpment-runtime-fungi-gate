@@ -2404,6 +2404,7 @@
         "governance",
         "naming",
         "provenance",
+        "diagnostics",
         "tier-floor",
         "teaching-corpus",
         "graph/index"
@@ -2873,6 +2874,7 @@
       "lint-conventions.mjs",
       "lint-fungi.mjs",
       "run-core-tests.cjs",
+      "run-phase-close.mjs",
       "run-proofs.mjs",
       "status.mjs",
       "brand-audit.mjs",
