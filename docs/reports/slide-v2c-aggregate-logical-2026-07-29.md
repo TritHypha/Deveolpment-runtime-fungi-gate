@@ -3,6 +3,7 @@
 **Date:** 2026-07-29
 **Scope:** detached logical records and fail-closed semantic validation
 **Local implementation commit:** `437a3987`
+**Registry binding commit:** `3de15ea8`
 
 ## Claim boundary
 
@@ -20,6 +21,8 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   semantics.
 - V2-C appends type IDs 10-13 and opcode IDs 12-20 without reinterpreting
   frozen V2-A or V2-B IDs.
+- The exact 1,866-byte LF-terminated registry descriptor is bound by SHA-256
+  `c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38`.
 - The model binds the frozen V2-A registry digest and V2-B sidecar descriptor
   digest as context, but the sidecar supplies no authority.
 - Exact finite ceilings cover canonical-body bytes, text bytes, raw bytes,
@@ -36,24 +39,26 @@ zero effects, capabilities, memory objects, host calls, and back edges.
 
 ## Mutation evidence
 
-The focused V2-C suite passes 17/17 and refuses:
+The focused V2-C suite passes 18/18 and refuses:
 
 1. format/profile drift;
-2. parent-registry digest drift;
-3. V2-B sidecar digest drift;
-4. a nonzero memory ceiling;
-5. capability identity injection;
-6. a type-table gap;
-7. text payload/UTF-8 evidence mismatch;
-8. raw-byte ceiling overflow;
-9. reordered record fields;
-10. changed variant payload types;
-11. replacement of the checked-index opcode;
-12. a dynamic field identity; and
-13. a surplus instruction.
+2. V2-C registry descriptor drift;
+3. parent-registry digest drift;
+4. V2-B sidecar digest drift;
+5. a nonzero memory ceiling;
+6. capability identity injection;
+7. a type-table gap;
+8. text payload/UTF-8 evidence mismatch;
+9. raw-byte ceiling overflow;
+10. reordered record fields;
+11. changed variant payload types;
+12. replacement of the checked-index opcode;
+13. a dynamic field identity; and
+14. a surplus instruction.
 
-The combined focused regression is 157/157 across frozen R1, V2-A, V2-B, and
-V2-C. Compiler TypeScript build also passes.
+Before the descriptor-binding test was appended, the combined focused
+regression was 157/157 across frozen R1, V2-A, V2-B, and V2-C. The updated
+V2-C-only suite is 18/18. Compiler TypeScript build also passes.
 
 ## What this replaces, rebuilds, and integrates
 

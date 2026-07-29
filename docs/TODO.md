@@ -121,8 +121,9 @@ planning checkbox must never be used to imply that implementation exists.
   frozen V2-A parent and V2-B sidecar context, appends dense type/opcode IDs,
   validates bounded text/bytes/array/record/variant/checked-index semantics,
   and retains zero effects, capabilities, memory, host calls, back edges, and
-  authority. Thirteen mutation classes refuse; focused V2-C evidence is
-  17/17 and the combined SLIDE regression is 157/157. Report:
+  authority. Follow-up commit `3de15ea8` binds the exact 1,866-byte registry
+  descriptor digest. Fourteen mutation classes refuse; focused V2-C evidence
+  is 18/18 (combined pre-binding regression 157/157). Report:
   `docs/reports/slide-v2c-aggregate-logical-2026-07-29.md`.
 - **Current:** freeze the V2-C registry descriptor and implement canonical
   21-key producer bytes plus an independent decoder. Separately replace
@@ -164,6 +165,9 @@ planning checkbox must never be used to imply that implementation exists.
   integrity or KB-link violations; Hardened Border 97/97; explicit Galerina
   memory graph clean; dev-tool index 97 packages / 124 tools / 40 proofs.
   Post-commit Myco indexes 4,105 files with zero over-size skips.
+- **Latest V2-C logical verification:** focused V2-C 18/18; combined
+  pre-binding SLIDE regression 157/157; TypeScript compiler build passes.
+  Post-checkpoint Myco indexes 4,109 files with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
