@@ -20,7 +20,15 @@ import { readFileSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-syntax-reference-links: --root requires a value.");
+  process.exit(2);
+}
+const ROOT = rootIndex >= 0
+  ? resolve(argv[rootIndex + 1])
+  : join(dirname(fileURLToPath(import.meta.url)), "..");
 const GALERINA = join(ROOT, "galerina.mjs");
 const DOCS = [
   "docs/language/fungi/SYNTAX-REFERENCE.md",

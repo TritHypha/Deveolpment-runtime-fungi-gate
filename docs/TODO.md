@@ -182,7 +182,19 @@ planning checkbox must never be used to imply that implementation exists.
   mapped code packages (38 floored), one clean committed-signed fixture, and
   269 stray Markdown files reported without release authority. Anti-neutering
   advisories are 4; tooling-contract gaps are 16.
-- **Next safe work:** close the remaining four anti-neutering gaps, then
+- **Task 8 fourth evidence group:** the syntax-reference gate proves dangling
+  Markdown links refuse and existing targets clear; the live reference set is
+  55/55. The syntax audit now declares report-only authority and proves a
+  malformed TypeScript source is found. Its live run exposed seven parser
+  diagnostics in `galerina-core-security/src/interim.fungi`: obsolete
+  anonymous-record syntax, reserved parameter `target`, and nonexistent
+  `U64`. The source now uses records, `target_`, current `Int`, and explicitly
+  redacts receipt fields before the governed audit sink. Strict checking is
+  3 flows/5 declarations with zero errors and zero governance warnings; the
+  full production syntax map is 180 Fungi + 453 TypeScript files with zero bad
+  files. Convention aggregation is proven red/green with hermetic children.
+  Anti-neutering advisories are 1; tooling-contract gaps are 14.
+- **Next safe work:** close the final `lint-fungi` anti-neutering gap, then
   repair/split the existing monolithic dev-tool
   fixture, then reconcile the remaining nineteen tooling dispositions. Task
   7's live orchestration close remains correctly red on one owner-only

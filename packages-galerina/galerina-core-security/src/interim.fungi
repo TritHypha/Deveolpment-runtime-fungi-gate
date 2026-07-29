@@ -26,14 +26,14 @@
 ;; ─── Types ───────────────────────────────────────────────────────────────────
 
 ;; ValidationReceipt — returned by pre_flight_check, passed to post_flight_cleanup
-;; Uses U64 tracking_id (monotonically incrementing, never a string — avoids taint risk)
-type ValidationReceipt = {
+;; Uses an Int tracking_id (monotonically incrementing, never a string — avoids taint risk)
+record ValidationReceipt {
   is_approved: Bool,
-  tracking_id: U64,
+  tracking_id: Int,
   fault_code: Int          ;; 0 = no fault; 3001 = secret breach; 3002 = permission violation; 3003 = size exceeded
 }
 
-type SinkScanResult = {
+record SinkScanResult {
   is_clean: Bool,
   matched_prefix: String
 }
@@ -54,21 +54,21 @@ type SinkScanResult = {
 
 ;; pre_flight_check — POSITIONAL call-site arguments (Stage A positional-only at call sites)
 ;;   Position 0: caller  — module identifier string
-;;   Position 1: target  — "module::function" destination signature
-;;   Position 2: payload_size_bytes — U64 inbound payload size counter
+;;   Position 1: target_ — "module::function" destination signature
+;;   Position 2: payload_size_bytes — non-negative Int inbound payload size counter
 
-pure flow pre_flight_check(caller: String, target: String, payload_size_bytes: U64) -> ValidationReceipt
+pure flow pre_flight_check(caller: String, target_: String, payload_size_bytes: Int) -> ValidationReceipt
 contract {
   intent { "Validate a cross-boundary call before execution — interim DSS proxy." }
 }
 {
   ;; Guard: reject empty caller/target (structural validation)
-  if String.is_empty(caller) || String.is_empty(target) {
+  if String.is_empty(caller) || String.is_empty(target_) {
     return ValidationReceipt { is_approved: false, tracking_id: 0, fault_code: 3002 }
   }
 
   ;; Size check: 4MB ceiling matches future DWI hard limit (I-001)
-  let max_payload_bytes: U64 = 4194304
+  let max_payload_bytes: Int = 4194304
   if payload_size_bytes > max_payload_bytes {
     return ValidationReceipt { is_approved: false, tracking_id: 0, fault_code: 3003 }
   }
@@ -76,7 +76,7 @@ contract {
   ;; Taint scan: pipe caller/target through SecretSinkMonitor
   ;; Prevents accidental credential leakage in call target strings (K-004)
   let callerClean = sink_monitor::scan(caller)
-  let targetClean = sink_monitor::scan(target)
+  let targetClean = sink_monitor::scan(target_)
   if !callerClean.is_clean || !targetClean.is_clean {
     return ValidationReceipt { is_approved: false, tracking_id: 0, fault_code: 3001 }
   }
@@ -99,9 +99,13 @@ contract {
   effects { audit.write }
 }
 {
+  ;; Receipt fields cross a governed audit boundary, so make the disclosure
+  ;; explicit instead of treating caller-provided values as trusted.
+  let auditTrackingId: redacted Int = redact(receipt.tracking_id)
+  let auditFaultCode: redacted Int = redact(receipt.fault_code)
   AuditLog.write("interim.boundary.completed", {
-    tracking_id: receipt.tracking_id,
-    fault_code: receipt.fault_code
+    tracking_id: auditTrackingId,
+    fault_code: auditFaultCode
   })
 }
 

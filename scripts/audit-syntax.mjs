@@ -7,6 +7,7 @@
 //   node scripts/audit-syntax.mjs            -> grouped report (by language) of every file with a parse error
 //   node scripts/audit-syntax.mjs --summary   -> one-line heartbeat for the periodic Stop hook
 //   node scripts/audit-syntax.mjs --json      -> machine-readable JSON
+//   node scripts/audit-syntax.mjs --root <dir> -> inspect a hermetic fixture
 //
 // HOW IT WORKS (a re-runnable TOKEN-SAVER — never spawns `galerina build`; there are 400+ .fungi):
 //   .fungi : parsed IN-PROCESS via the SHIPPED core-compiler parser (parseProgram), per-file try/catch.
@@ -18,15 +19,21 @@
 //
 // Informational only — exit 0 ALWAYS, handles missing dist / missing typescript gracefully (never blocks).
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative, dirname } from "node:path";
+import { join, relative, dirname, resolve } from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = process.cwd();
-const asJson = process.argv.includes("--json");
-const summaryOnly = process.argv.includes("--summary"); // one-line heartbeat for the periodic Stop hook
-const includeAll = process.argv.includes("--all");      // also scan the known non-prod corpora (examples/tests/drafts)
+const argv = process.argv.slice(2);
+const rootIndex = argv.indexOf("--root");
+if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+  console.error("audit-syntax: --root requires a value.");
+  process.exit(2);
+}
+const ROOT = rootIndex >= 0 ? resolve(argv[rootIndex + 1]) : process.cwd();
+const asJson = argv.includes("--json");
+const summaryOnly = argv.includes("--summary"); // one-line heartbeat for the periodic Stop hook
+const includeAll = argv.includes("--all");      // also scan the known non-prod corpora (examples/tests/drafts)
 
 // Vendored / generated / VCS noise — never scanned (matches audit-stray-docs.mjs).
 const SKIP_DIRS = new Set(["node_modules", "dist", "build", ".git", ".graph", ".pytest_cache", ".cache", "coverage", "out", "target", ".next", ".turbo"]);
@@ -169,6 +176,7 @@ const tsBadFiles = new Set(tsFindings.map((f) => f.rel)).size;
 if (asJson) {
   console.log(JSON.stringify({
     generated: "audit-syntax",
+    authority: "report-only",
     fungi: {
       scanned: fungiScanned,
       parserLoaded: parseProgram != null,
