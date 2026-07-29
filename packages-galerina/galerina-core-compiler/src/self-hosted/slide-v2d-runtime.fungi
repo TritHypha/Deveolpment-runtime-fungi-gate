@@ -1,0 +1,474 @@
+@version 1
+/// @file: slide-v2d-runtime.fungi
+/// @purpose: Instruction-drive only the independently admitted guarded V2-D graph.
+/// @status: Bounded reference runtime; no host effects, addresses, native claim, or authority.
+
+record SLIDEV2DRuntimeResult {
+  decision: SLIDEV2DExecutableDecision
+  status: String
+  value: Int
+  failureId: Int
+  steps: Int
+  copiedBytes: Int
+  aggregateDepth: Int
+  semanticMemoryBytes: Int
+  guardChecks: Int
+  guardedAccesses: Int
+  observedElements: Int
+  nativeCertificatePresent: Bool
+  authorityReleased: Bool
+}
+
+record SLIDEV2DRuntimeStore {
+  values: Array<Int>
+  failures: Array<Int>
+  defined: Array<Int>
+}
+
+pure flow emptySLIDEV2DRuntimeStore() -> SLIDEV2DRuntimeStore
+contract { intent { "Create a fixed no-address store with every SSA slot undefined." } }
+{
+  mut values: Array<Int> = Array.empty()
+  mut failures: Array<Int> = Array.empty()
+  mut defined: Array<Int> = Array.empty()
+  mut i: Int = 0
+  while i < 48 {
+    values = values.append(0)
+    failures = failures.append(0)
+    defined = defined.append(0)
+    i = i + 1
+  }
+  return { values: values failures: failures defined: defined }
+}
+
+pure flow slideV2DRuntimeStoreValue(
+  store: SLIDEV2DRuntimeStore,
+  resultId: Int,
+  value: Int,
+  failureId: Int,
+) -> SLIDEV2DRuntimeStore
+contract { intent { "Return a new bounded store with one immutable SSA result." } }
+{
+  mut values: Array<Int> = Array.empty()
+  mut failures: Array<Int> = Array.empty()
+  mut defined: Array<Int> = Array.empty()
+  mut i: Int = 0
+  while i < 48 {
+    if i == resultId {
+      values = values.append(value)
+      failures = failures.append(failureId)
+      defined = defined.append(1)
+    } else {
+      values = values.append(slideV2CIntAt(store.values, i))
+      failures = failures.append(slideV2CIntAt(store.failures, i))
+      defined = defined.append(slideV2CIntAt(store.defined, i))
+    }
+    i = i + 1
+  }
+  return { values: values failures: failures defined: defined }
+}
+
+pure flow slideV2DRuntimeRead(
+  store: SLIDEV2DRuntimeStore,
+  resultId: Int,
+) -> Int
+contract { intent { "Read one initialized scalar or return a terminal-only sentinel." } }
+{
+  if resultId < 0 or resultId >= 48 { return -2147483649 }
+  if slideV2CIntAt(store.defined, resultId) != 1 { return -2147483649 }
+  return slideV2CIntAt(store.values, resultId)
+}
+
+pure flow slideV2DRuntimeFailureAt(
+  store: SLIDEV2DRuntimeStore,
+  resultId: Int,
+) -> Int
+contract { intent { "Read the registered failure carried by one initialized result." } }
+{
+  if resultId < 0 or resultId >= 48 { return 4 }
+  if slideV2CIntAt(store.defined, resultId) != 1 { return 4 }
+  return slideV2CIntAt(store.failures, resultId)
+}
+
+pure flow refuseSLIDEV2DRuntime(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2DRuntimeResult
+contract { intent { "Terminate without fallback, partial accounting, observation, or authority." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    status: "REFUSED" value: 0 failureId: 4 steps: 0 copiedBytes: 0
+    aggregateDepth: 0 semanticMemoryBytes: 0 guardChecks: 0
+    guardedAccesses: 0 observedElements: 0
+    nativeCertificatePresent: false authorityReleased: false
+  }
+}
+
+pure flow executeSLIDEV2DWithAllBudgets(
+  body: Bytes,
+  checkedIndex: Int,
+  runtimeStepBudget: Int,
+  runtimeCopyBudget: Int,
+  runtimeDepthBudget: Int,
+  runtimeMemoryBudget: Int,
+  runtimeGuardBudget: Int,
+) -> SLIDEV2DRuntimeResult
+contract { intent { "Decode, admit, and instruction-drive one guarded object under exact caller budgets." } }
+{
+  let imported = decodeSLIDEV2DProgram(body)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2DRuntime(
+        imported.decision.failureId, imported.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2DRuntime(
+        "SLIDE-V2D-RUNTIME-001", "program admission was unresolved",
+      )
+    }
+    if: {}
+  }
+  if checkedIndex < -2147483648 or checkedIndex > 2147483647 {
+    return refuseSLIDEV2DRuntime(
+      "SLIDE-V2D-RUNTIME-002", "checked index is outside Int32",
+    )
+  }
+  if runtimeStepBudget < 1 or runtimeCopyBudget < 0 or runtimeDepthBudget < 0 or runtimeMemoryBudget < 0 or runtimeGuardBudget < 0 {
+    return refuseSLIDEV2DRuntime(
+      "SLIDE-V2D-RUNTIME-003", "one or more runtime budgets are absent",
+    )
+  }
+
+  mut stepBudget: Int = runtimeStepBudget
+  if stepBudget > imported.program.graphLimits.executionSteps {
+    stepBudget = imported.program.graphLimits.executionSteps
+  }
+  mut copyBudget: Int = runtimeCopyBudget
+  if copyBudget > imported.program.graphLimits.copiedBytes {
+    copyBudget = imported.program.graphLimits.copiedBytes
+  }
+  mut depthBudget: Int = runtimeDepthBudget
+  if depthBudget > imported.program.graphLimits.aggregateDepth {
+    depthBudget = imported.program.graphLimits.aggregateDepth
+  }
+  mut memoryBudget: Int = runtimeMemoryBudget
+  if memoryBudget > imported.program.memoryLimits.memoryBytes {
+    memoryBudget = imported.program.memoryLimits.memoryBytes
+  }
+  mut guardBudget: Int = runtimeGuardBudget
+  if guardBudget > imported.program.guards.count() {
+    guardBudget = imported.program.guards.count()
+  }
+  if stepBudget < 16 or copyBudget < 56 or depthBudget < 3 or memoryBudget < 12 or guardBudget < 1 {
+    return refuseSLIDEV2DRuntime(
+      "SLIDE-V2D-RUNTIME-004", "caller budgets cannot complete admitted graph",
+    )
+  }
+
+  let function = slideV2AFunctionAt(imported.program.functions, 2)
+  let block = slideV2ABlockAt(function.blocks, function.entryBlockId)
+  let object = slideV2DMemoryObjectAt(imported.program.memoryObjects, 0)
+  mut store = emptySLIDEV2DRuntimeStore()
+  mut arrayValues: Array<Int> = Array.empty()
+  mut recordValues: Array<Int> = Array.empty()
+  mut recordFailures: Array<Int> = Array.empty()
+  mut variantValue: Int = 0
+  mut variantFailure: Int = 4
+  mut copiedBytes: Int = 0
+  mut aggregateDepth: Int = 0
+  mut semanticMemoryBytes: Int = 0
+  mut guardChecks: Int = 0
+  mut guardedAccesses: Int = 0
+  mut observedElements: Int = 0
+  mut steps: Int = 0
+  mut i: Int = 0
+  while i < block.instructions.count() {
+    if steps >= stepBudget {
+      return refuseSLIDEV2DRuntime(
+        "SLIDE-V2D-RUNTIME-005", "runtime step budget exhausted",
+      )
+    }
+    let instruction = slideV2AInstructionAt(block.instructions, i)
+    match instruction.opcodeId {
+      12 => {
+        let constant = slideV2CConstantAt(
+          imported.program.constants, instruction.immediate - 1,
+        )
+        let added = constant.payload.length()
+        if copiedBytes + added > copyBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-006", "text exceeds runtime copy budget",
+          )
+        }
+        copiedBytes = copiedBytes + added
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, constant.payload.length(), 0,
+        )
+      }
+      13 => {
+        let constant = slideV2CConstantAt(
+          imported.program.constants, instruction.immediate - 1,
+        )
+        let added = constant.payload.length()
+        if copiedBytes + added > copyBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-006", "bytes exceed runtime copy budget",
+          )
+        }
+        copiedBytes = copiedBytes + added
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, constant.payload.length(), 0,
+        )
+      }
+      1 => {
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, checkedIndex, 0,
+        )
+      }
+      2 => {
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, instruction.immediate, 0,
+        )
+      }
+      14 => {
+        if depthBudget < 1 {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-007", "array exceeds depth budget",
+          )
+        }
+        let objectBytes = instruction.operands.count() * object.elementBytes
+        if objectBytes != object.extentElements * object.elementBytes or semanticMemoryBytes + objectBytes > memoryBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-008", "array disagrees with admitted memory plan",
+          )
+        }
+        if copiedBytes + objectBytes > copyBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-006", "array exceeds runtime copy budget",
+          )
+        }
+        mut built: Array<Int> = Array.empty()
+        mut operandIndex: Int = 0
+        while operandIndex < instruction.operands.count() {
+          let value = slideV2DRuntimeRead(
+            store, slideV2CIntAt(instruction.operands, operandIndex),
+          )
+          if value == -2147483649 {
+            return refuseSLIDEV2DRuntime(
+              "SLIDE-V2D-RUNTIME-009", "array operand is undefined",
+            )
+          }
+          built = built.append(value)
+          operandIndex = operandIndex + 1
+        }
+        arrayValues = built
+        semanticMemoryBytes = semanticMemoryBytes + objectBytes
+        copiedBytes = copiedBytes + objectBytes
+        aggregateDepth = 1
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, arrayValues.count(), 0,
+        )
+      }
+      15 => {
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, arrayValues.count(), 0,
+        )
+      }
+      21 => {
+        if guardChecks >= guardBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-010", "guard budget exhausted",
+          )
+        }
+        let index = slideV2DRuntimeRead(
+          store, slideV2CIntAt(instruction.operands, 1),
+        )
+        guardChecks = guardChecks + 1
+        if index < 0 or index >= arrayValues.count() {
+          store = slideV2DRuntimeStoreValue(
+            store, instruction.resultId, 0, instruction.immediate,
+          )
+        } else {
+          store = slideV2DRuntimeStoreValue(
+            store, instruction.resultId, 1, 0,
+          )
+        }
+      }
+      22 => {
+        let index = slideV2DRuntimeRead(
+          store, slideV2CIntAt(instruction.operands, 1),
+        )
+        let guardResultId = slideV2CIntAt(instruction.operands, 2)
+        let guardFailure = slideV2DRuntimeFailureAt(store, guardResultId)
+        match guardFailure {
+          0 => {
+            if slideV2DRuntimeRead(store, guardResultId) != 1 or index < 0 or index >= arrayValues.count() {
+              return refuseSLIDEV2DRuntime(
+                "SLIDE-V2D-RUNTIME-011", "guard token and runtime bounds disagree",
+              )
+            }
+            let observed = slideV2CIntAt(arrayValues, index)
+            guardedAccesses = guardedAccesses + 1
+            observedElements = observedElements + 1
+            store = slideV2DRuntimeStoreValue(
+              store, instruction.resultId, observed, 0,
+            )
+          }
+          4 => {
+            if index >= 0 and index < arrayValues.count() {
+              return refuseSLIDEV2DRuntime(
+                "SLIDE-V2D-RUNTIME-011", "failed guard contradicts runtime bounds",
+              )
+            }
+            store = slideV2DRuntimeStoreValue(
+              store, instruction.resultId, 0, 4,
+            )
+          }
+          _ => {
+            return refuseSLIDEV2DRuntime(
+              "SLIDE-V2D-RUNTIME-012", "unregistered guard failure",
+            )
+          }
+        }
+      }
+      4 => {
+        let left = slideV2DRuntimeRead(
+          store, slideV2CIntAt(instruction.operands, 0),
+        )
+        let right = slideV2DRuntimeRead(
+          store, slideV2CIntAt(instruction.operands, 1),
+        )
+        mut compared: Int = 0
+        if left >= right { compared = 1 }
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, compared, 0,
+        )
+      }
+      17 => {
+        if depthBudget < 2 {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-007", "record exceeds depth budget",
+          )
+        }
+        if copiedBytes + 20 > copyBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-006", "record exceeds runtime copy budget",
+          )
+        }
+        recordValues = Array.of(
+          slideV2DRuntimeRead(store, slideV2CIntAt(instruction.operands, 0)),
+          slideV2DRuntimeRead(store, slideV2CIntAt(instruction.operands, 1)),
+          slideV2DRuntimeRead(store, slideV2CIntAt(instruction.operands, 2)),
+        )
+        recordFailures = Array.of(
+          slideV2DRuntimeFailureAt(
+            store, slideV2CIntAt(instruction.operands, 0),
+          ),
+          0, 0,
+        )
+        copiedBytes = copiedBytes + 20
+        aggregateDepth = 2
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, 1, 0,
+        )
+      }
+      18 => {
+        let fieldIndex = instruction.immediate - 1
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId,
+          slideV2CIntAt(recordValues, fieldIndex),
+          slideV2CIntAt(recordFailures, fieldIndex),
+        )
+      }
+      19 => {
+        if depthBudget < 3 {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-007", "variant exceeds depth budget",
+          )
+        }
+        if copiedBytes + 12 > copyBudget {
+          return refuseSLIDEV2DRuntime(
+            "SLIDE-V2D-RUNTIME-006", "variant exceeds runtime copy budget",
+          )
+        }
+        variantValue = slideV2DRuntimeRead(
+          store, slideV2CIntAt(instruction.operands, 0),
+        )
+        variantFailure = slideV2DRuntimeFailureAt(
+          store, slideV2CIntAt(instruction.operands, 0),
+        )
+        copiedBytes = copiedBytes + 12
+        aggregateDepth = 3
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, instruction.immediate, 0,
+        )
+      }
+      20 => {
+        store = slideV2DRuntimeStoreValue(
+          store, instruction.resultId, variantValue, variantFailure,
+        )
+      }
+      _ => {
+        return refuseSLIDEV2DRuntime(
+          "SLIDE-V2D-RUNTIME-013", "unknown guarded runtime opcode",
+        )
+      }
+    }
+    steps = steps + 1
+    i = i + 1
+  }
+  if steps >= stepBudget or block.terminator.terminatorId != 4 {
+    return refuseSLIDEV2DRuntime(
+      "SLIDE-V2D-RUNTIME-014", "budget exhausted or admitted return absent",
+    )
+  }
+  steps = steps + 1
+  let resultId = slideV2CIntAt(block.terminator.operands, 0)
+  let failureId = slideV2DRuntimeFailureAt(store, resultId)
+  let resultValue = slideV2DRuntimeRead(store, resultId)
+  if semanticMemoryBytes != imported.program.memoryLimits.memoryBytes or guardChecks != imported.program.guards.count() {
+    return refuseSLIDEV2DRuntime(
+      "SLIDE-V2D-RUNTIME-015", "runtime accounting disagrees with admitted plan",
+    )
+  }
+  match failureId {
+    0 => {
+      return {
+        decision: imported.decision status: "SUCCEEDED"
+        value: resultValue failureId: 0 steps: steps copiedBytes: copiedBytes
+        aggregateDepth: aggregateDepth semanticMemoryBytes: semanticMemoryBytes
+        guardChecks: guardChecks guardedAccesses: guardedAccesses
+        observedElements: observedElements nativeCertificatePresent: false
+        authorityReleased: false
+      }
+    }
+    4 => {
+      return {
+        decision: imported.decision status: "FAILED"
+        value: 0 failureId: 4 steps: steps copiedBytes: copiedBytes
+        aggregateDepth: aggregateDepth semanticMemoryBytes: semanticMemoryBytes
+        guardChecks: guardChecks guardedAccesses: guardedAccesses
+        observedElements: observedElements nativeCertificatePresent: false
+        authorityReleased: false
+      }
+    }
+    _ => {
+      return refuseSLIDEV2DRuntime(
+        "SLIDE-V2D-RUNTIME-016", "unregistered failure reached return",
+      )
+    }
+  }
+}
+
+pure flow executeSLIDEV2DBytes(
+  body: Bytes,
+  checkedIndex: Int,
+) -> SLIDEV2DRuntimeResult
+contract { intent { "Execute V2-D only under its admitted finite ceilings." } }
+{
+  return executeSLIDEV2DWithAllBudgets(
+    body, checkedIndex, 112, 4096, 4, 12, 1,
+  )
+}
