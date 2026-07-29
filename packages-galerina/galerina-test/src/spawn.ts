@@ -40,8 +40,13 @@ export function runNode(
 ): SpawnOutcome {
   const live = opts.inheritStdio === true;
   const t0 = Date.now();
+  // A child launched by this harness is an independent test process, not a
+  // nested worker owned by the parent's node:test runner. Inheriting this
+  // marker can make Node suppress the child's suite while still exiting zero.
+  const { NODE_TEST_CONTEXT: _parentTestContext, ...childEnv } = process.env;
   const r = spawnSync(process.execPath, [...args], {
     cwd,
+    env: childEnv,
     encoding: "utf8",
     timeout: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
     stdio: live ? ["ignore", "inherit", "inherit"] : ["ignore", "pipe", "pipe"],

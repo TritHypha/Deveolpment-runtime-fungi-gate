@@ -8,7 +8,16 @@
 
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+  utimesSync,
+  readFileSync,
+} from "node:fs";
+import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -17,6 +26,7 @@ import {
   runE2e,
   runConformance,
   runFidelity,
+  runSlide,
   runAll,
   DEFAULT_E2E_EXAMPLES,
 } from "../dist/index.js";
@@ -46,6 +56,41 @@ const FAKE_CLI = [
 
 const PASSING_TEST = `import { test } from "node:test"; test("ok", () => {});\n`;
 
+function writeCompilerEvidence(root) {
+  const tracked = spawnSync(
+    "git",
+    [
+      "-C",
+      root,
+      "ls-files",
+      "-z",
+      "--",
+      "packages-galerina/galerina-core-compiler/src",
+      "packages-galerina/galerina-core-compiler/tests",
+    ],
+    { encoding: "utf8" },
+  );
+  assert.equal(tracked.status, 0, tracked.stderr);
+  const trackedInputs = tracked.stdout.split("\0").filter(Boolean).sort();
+  const hash = createHash("sha256");
+  for (const path of trackedInputs) {
+    hash.update(path);
+    hash.update("\0");
+    hash.update(readFileSync(join(root, path)));
+    hash.update("\0");
+  }
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/dist/build-evidence.json",
+    JSON.stringify({
+      schema: "galerina.compiler-build-evidence.v1",
+      algorithm: "sha256",
+      trackedInputs,
+      inputDigest: hash.digest("hex"),
+    }, null, 2) + "\n",
+  );
+}
+
 /** A tmp workspace with every fake target present + a built "compiler dist". */
 function fullWorkspace() {
   const root = mkdtempSync(join(tmpdir(), "fungi-test-full-"));
@@ -55,9 +100,20 @@ function fullWorkspace() {
   w(root, "galerina.mjs", FAKE_CLI);
   w(root, "tests/r6-corpus/r6-parity.test.mjs", PASSING_TEST);
   w(root, "packages-galerina/galerina-core-compiler/tests/fidelity-differential.test.mjs", PASSING_TEST);
+  w(root, "packages-galerina/galerina-core-compiler/tests/slide-green.test.mjs", PASSING_TEST);
+  w(root, "packages-galerina/galerina-core-compiler/src/index.ts", "export {};\n");
   w(root, "packages-galerina/galerina-core-compiler/dist/index.js", "export {};\n");
   w(root, "examples/good.fungi", "pure flow main() -> Int { return 0 }\n");
   w(root, "examples/bad.fungi", "pure flow main() -> Int { return 0 }\n");
+  const init = spawnSync("git", ["init", "--quiet"], { cwd: root, encoding: "utf8" });
+  assert.equal(init.status, 0, init.stderr);
+  const add = spawnSync(
+    "git",
+    ["add", "--", "packages-galerina/galerina-core-compiler/src", "packages-galerina/galerina-core-compiler/tests"],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.equal(add.status, 0, add.stderr);
+  writeCompilerEvidence(root);
   return root;
 }
 
@@ -166,20 +222,25 @@ test("runConformance: passes against a clean R6 corpus", async () => {
   assert.equal(res.kind, "conformance");
 });
 
-// NOTE: the failure DIRECTION of runConformance/runFidelity (a non-zero child →
-// ok:false) is NOT asserted here. Both spawn `node --test <corpus>`, and a
-// `node --test` child spawned from a `node --test` PARENT (this suite) has its
-// exit code swallowed to 0 — the same quirk scripts/tests/dev-tools-scripts.test.mjs
-// documents. It is verified standalone (parent = plain node), and the
-// exit-code-→-ok logic is identical to runUnit's, whose failure IS asserted
-// above with a plain-node child. The fail-CLOSED paths below need no spawn and
-// are reliable.
-
 test("runConformance: fail-closed when the corpus is absent", async () => {
   const root = bareWorkspace();
   const res = await runConformance({ rootDir: root });
   assert.equal(res.ok, false);
   assert.match(res.detail, /target not found/);
+});
+
+test("runConformance: propagates a failing corpus child", async () => {
+  const root = fullWorkspace();
+  const target = w(
+    root,
+    "tests/r6-corpus/red.test.mjs",
+    `import { test } from "node:test"; test("red", () => { throw new Error("expected"); });\n`,
+  );
+
+  const res = await runConformance({ rootDir: root, corpus: target });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
 });
 
 // ── fidelity ─────────────────────────────────────────────────────────────────
@@ -207,6 +268,165 @@ test("runFidelity: fail-closed when the differential target is absent", async ()
   assert.match(res.detail, /target not found/);
 });
 
+test("runFidelity: refuses tracked input drift even when its timestamp appears older", async () => {
+  const root = fullWorkspace();
+  const input = join(root, "packages-galerina/galerina-core-compiler/src/index.ts");
+  writeFileSync(input, "export const changedAfterBuild = true;\n");
+  const past = new Date(Date.now() - 60_000);
+  utimesSync(input, past, past);
+
+  const res = await runFidelity({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+  assert.match(res.detail, /evidence.*mismatch.*build the compiler/i);
+});
+
+test("runFidelity: refuses missing deterministic build evidence", async () => {
+  const root = fullWorkspace();
+  rmSync(
+    join(root, "packages-galerina/galerina-core-compiler/dist/build-evidence.json"),
+    { force: true },
+  );
+
+  const res = await runFidelity({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+  assert.match(res.detail, /build evidence.*missing/i);
+});
+
+test("runFidelity: refuses malformed deterministic build evidence", async () => {
+  const root = fullWorkspace();
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/dist/build-evidence.json",
+    "{}\n",
+  );
+
+  const res = await runFidelity({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.match(res.detail, /build evidence.*malformed/i);
+});
+
+test("runFidelity: refuses untracked compiler source/test inputs", async () => {
+  const root = fullWorkspace();
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/src/untracked.ts",
+    "export const hidden = true;\n",
+  );
+
+  const res = await runFidelity({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.match(res.detail, /untracked.*cannot be proven/i);
+});
+
+test("runFidelity: refuses when tracked-input freshness cannot be proven", async () => {
+  const root = fullWorkspace();
+  rmSync(join(root, ".git"), { recursive: true, force: true });
+
+  const res = await runFidelity({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+  assert.match(res.detail, /freshness cannot be proven/i);
+});
+
+test("runFidelity: propagates a failing differential child", async () => {
+  const root = fullWorkspace();
+  const target = w(
+    root,
+    "packages-galerina/galerina-core-compiler/tests/fidelity-red.test.mjs",
+    `import { test } from "node:test"; test("red", () => { throw new Error("expected"); });\n`,
+  );
+
+  const res = await runFidelity({ rootDir: root, target });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+});
+
+// ── SLIDE ────────────────────────────────────────────────────────────────────
+
+test("runSlide: refuses an empty in-repo corpus", async () => {
+  const root = fullWorkspace();
+  rmSync(
+    join(root, "packages-galerina/galerina-core-compiler/tests/slide-green.test.mjs"),
+    { force: true },
+  );
+
+  const res = await runSlide({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+  assert.match(res.detail, /empty SLIDE corpus/i);
+});
+
+test("runSlide: discovers only exact slide-*.test.mjs files", async () => {
+  const root = fullWorkspace();
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/tests/not-slide-red.test.mjs",
+    `import { test } from "node:test"; test("red", () => { throw new Error("must not run"); });\n`,
+  );
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/tests/slide-decoy.mjs",
+    `throw new Error("must not run");\n`,
+  );
+
+  const res = await runSlide({ rootDir: root });
+
+  assert.equal(res.ok, true, JSON.stringify(res));
+  assert.equal(res.counts?.tests, 1);
+});
+
+test("runSlide: propagates a failing SLIDE test", async () => {
+  const root = fullWorkspace();
+  w(
+    root,
+    "packages-galerina/galerina-core-compiler/tests/slide-red.test.mjs",
+    `import { test } from "node:test"; test("red", () => { throw new Error("expected"); });\n`,
+  );
+
+  const res = await runSlide({ rootDir: root });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+});
+
+test("runSlide: reports optional independent evidence as a separate child", async () => {
+  const root = fullWorkspace();
+  w(root, "independent-slide/tests/reference.test.mjs", PASSING_TEST);
+
+  const res = await runSlide({
+    rootDir: root,
+    independentRoot: "independent-slide",
+  });
+
+  assert.equal(res.ok, true, JSON.stringify(res));
+  assert.equal(res.children?.length, 1);
+  assert.equal(res.children[0].kind, "slide-independent");
+  assert.equal(res.children[0].ok, true);
+});
+
+test("runSlide: missing independent evidence fails the combined result", async () => {
+  const root = fullWorkspace();
+
+  const res = await runSlide({
+    rootDir: root,
+    independentRoot: "missing-independent-slide",
+  });
+
+  assert.equal(res.ok, false);
+  assert.equal(res.exitCode, 1);
+  assert.equal(res.children?.[0]?.kind, "slide-independent");
+  assert.equal(res.children?.[0]?.ok, false);
+});
+
 // ── all ──────────────────────────────────────────────────────────────────────
 
 test("runAll: aggregates green children into a single pass", async () => {
@@ -215,10 +435,11 @@ test("runAll: aggregates green children into a single pass", async () => {
   // repo's examples/, which don't exist in this tmp workspace).
   const res = await runAll({ rootDir: root, examples: ["examples/good.fungi"] });
   assert.equal(res.kind, "all");
-  assert.equal(res.ok, true);
+  assert.equal(res.ok, true, JSON.stringify(res));
   assert.equal(res.exitCode, 0);
-  assert.equal(res.children?.length, 4);
+  assert.equal(res.children?.length, 5);
   assert.ok(res.children.every((c) => c.ok));
+  assert.ok(res.children.some((c) => c.kind === "slide"));
 });
 
 test("runAll: a failing child fails the aggregate (exit 1)", async () => {

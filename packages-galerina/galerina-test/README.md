@@ -14,6 +14,7 @@ shipped tool** by spawning it, and reports its verdict as a structured
 | **e2e** | `node galerina.mjs check` / `build` | Example apps compile end-to-end through the real toolchain (parse → govern → emit → manifest). |
 | **conformance** | `tests/r6-corpus/r6-parity.test.mjs` | The R6 bootstrap corpus passes the Stage-A ≡ Stage-B parity gate. |
 | **fidelity** | `galerina-core-compiler/tests/fidelity-differential.test.mjs` | The 0014 differential: tree-walker ≡ bytecode-VM ≡ WASM, byte-exact. |
+| **slide** | exact `galerina-core-compiler/tests/slide-*.test.mjs` paths | The non-empty, countable Galerina-side SLIDE corpus passes without broad-directory inference. |
 
 ## Security posture
 
@@ -22,8 +23,13 @@ shipped tool** by spawning it, and reports its verdict as a structured
   null exit status (signal kill / timeout) is treated as failure, not success.
 - **Least capability.** Zero runtime dependencies. The package only spawns
   `node` subprocesses and reads the filesystem to locate targets.
-- **No reimplementation.** Verdicts come from the shipped tools' own exit codes;
-  count-parsing is best-effort and never overrides a verdict.
+- **No reimplementation.** Verdicts come from the shipped tools. The SLIDE lane
+  additionally requires parseable non-zero test counts; an exit-zero result
+  with absent or zero evidence is refused.
+- **Fresh compiler evidence.** The compiler build records a deterministic
+  SHA-256 digest over the exact Git-tracked `src/` and `tests/` input set.
+  Standalone fidelity recomputes it and refuses missing, malformed, untracked,
+  set-drifted, or content-mismatched evidence.
 
 ## Install / build
 
@@ -38,7 +44,7 @@ npm test            # node --test tests/*.test.mjs (against dist/)
 ## API
 
 ```ts
-import { runUnit, runE2e, runConformance, runFidelity, runAll } from "@galerina/test";
+import { runUnit, runE2e, runConformance, runFidelity, runSlide, runAll } from "@galerina/test";
 
 const res = await runAll({ core: true });   // CheckResult { kind:"all", ok, exitCode, children, … }
 if (!res.ok) process.exit(res.exitCode);
@@ -55,12 +61,13 @@ downstream consumer points `rootDir` at their own workspace.
 | `runE2e(opts)` | `examples: string[]`, `build` |
 | `runConformance(opts)` | `corpus` (override the R6 parity test path) |
 | `runFidelity(opts)` | `target` (override the differential test path) |
+| `runSlide(opts)` | `compilerPackage`; optional `independentRoot` produces a distinct `slide-independent` child result |
 | `runAll(opts)` | all of the above + `bailScope` (stop at first failing check) |
 
 ## CLI
 
 ```sh
-galerina-test [unit|e2e|conformance|fidelity|all] [flags]
+galerina-test [unit|e2e|conformance|fidelity|slide|all] [flags]
 
   --root <dir>     workspace root (default: auto-detected)
   --core           unit: only the SOT-core packages (fast)
@@ -80,7 +87,7 @@ src/types.ts     the CheckResult / *Options vocabulary
 src/paths.ts     fail-closed workspace-root resolution
 src/spawn.ts     the single child-spawn point (timeout + fail-closed exit handling)
 src/parse.ts     node:test count parsing (lifted from run-all-tests.cjs)
-src/runners.ts   runUnit / runE2e / runConformance / runFidelity / runAll
+src/runners.ts   runUnit / runE2e / runConformance / runFidelity / runSlide / runAll
 src/cli.ts       the `galerina-test` front door
 tests/           node:test suites (run against dist/)
 ```

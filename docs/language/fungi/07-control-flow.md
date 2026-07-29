@@ -17,8 +17,8 @@ Use the smallest construct that expresses the complete decision:
 
 | Decision shape | Preferred construct |
 |---|---|
-| One simple Boolean choice | `if` / `else` |
-| Two or more alternative conditions or outcomes | `match`, including a fail-closed `_ =>` arm |
+| One Boolean choice (and only a Boolean subject) | `if` / `else` |
+| Any other non-K3 decision, including two or more alternatives | exhaustive `match`, including a fail-closed `_ =>` arm |
 | A Kleene K3 `Verdict` deciding proceed, deny, or unresolved exit | exhaustive `check` |
 | A Boolean condition whose only purpose is refusal | `trap`, or an explicit typed error return |
 
@@ -26,6 +26,11 @@ Do not write two or more sequential `if` statements to simulate one
 multi-branch decision. Use `match` so the alternatives and default outcome are
 visible together. Separate `if` statements remain valid when the conditions are
 genuinely independent and more than one body is allowed to run.
+
+`if` is Boolean-only. It must not collapse a `Verdict`, result, option, enum, or
+other multi-state decision into true/false. Every non-Boolean decision is total:
+the `check` deny/ambiguous arms leave the current trust path, and the `match`
+`_ =>` arm is an explicit safe exit rather than an ignored fallthrough.
 
 `check` is not a shorter spelling of `if`. Its subject must be a `Verdict`, and
 all three arms are required:

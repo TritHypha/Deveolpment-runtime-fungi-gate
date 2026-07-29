@@ -1,9 +1,9 @@
 // @galerina/test — shared vocabulary for the consolidated Galerina test harness.
 //
-// One type model for the four check kinds a downstream app runs against a Galerina
+// One type model for the five check kinds a downstream app runs against a Galerina
 // workspace: per-package `unit` suites, `e2e` end-to-end compile of example apps,
-// `conformance` (the R6 Stage-A ≡ Stage-B parity gate) and `fidelity` (the 0014
-// tree-walker ≡ bytecode ≡ WASM differential).
+// `conformance` (the R6 Stage-A ≡ Stage-B parity gate), `fidelity` (the 0014
+// tree-walker ≡ bytecode ≡ WASM differential), and the exact `slide` corpus.
 //
 // Every runner returns a CheckResult — never a bare boolean — so a caller can
 // aggregate, render, or gate CI on it. Fail-closed is encoded in the shape: a
@@ -11,15 +11,19 @@
 // (missing target, timeout, signal kill) is `ok: false` with a non-zero exitCode.
 
 /** A single category of check the harness can run. */
-export type CheckKind = "unit" | "e2e" | "conformance" | "fidelity";
+export type CheckKind = "unit" | "e2e" | "conformance" | "fidelity" | "slide";
 
 /** Every check kind plus the `all` aggregate. */
 export type CheckScope = CheckKind | "all";
 
+/** Result-only identity for evidence produced by the independent SLIDE repository. */
+export type CheckResultKind = CheckScope | "slide-independent";
+
 /**
  * A node:test run summary parsed from a child's output. Any field may be `null`
- * when the underlying runner did not print that line. Parsing is best-effort and
- * NEVER gates the verdict — the child's EXIT CODE is the source of truth.
+ * when the underlying runner did not print that line. Most lanes report these
+ * counts as advisory; the SLIDE lane requires a parseable non-zero test count
+ * in addition to an exit-zero child.
  */
 export interface TestCounts {
   readonly tests: number | null;
@@ -29,7 +33,7 @@ export interface TestCounts {
 
 /** The verdict of one check (or the `all` aggregate). */
 export interface CheckResult {
-  readonly kind: CheckScope;
+  readonly kind: CheckResultKind;
   /** true ⟺ the check passed. Fail-closed: anything uncertain is `false`. */
   readonly ok: boolean;
   /** Process-style exit code: 0 on pass, non-zero on fail (default 1). */
@@ -83,6 +87,14 @@ export interface FidelityOptions extends HarnessOptions {
   readonly target?: string;
 }
 
+/** `slide` — exact Galerina-side SLIDE corpus plus optional independent evidence. */
+export interface SlideOptions extends HarnessOptions {
+  /** Override the compiler package path (absolute, or relative to rootDir). */
+  readonly compilerPackage?: string;
+  /** Optional independent SLIDE repository root. Its exact tests are a separate child result. */
+  readonly independentRoot?: string;
+}
+
 /** `e2e` — end-to-end compile of example apps through the shipped `galerina` CLI. */
 export interface E2eOptions extends HarnessOptions {
   /** Example entry flows to compile (absolute, or relative to rootDir). */
@@ -96,6 +108,7 @@ export interface AllOptions
   extends UnitOptions,
     ConformanceOptions,
     FidelityOptions,
+    SlideOptions,
     E2eOptions {
   /** Stop the aggregate at the first failing check. Default false (run all, report all). */
   readonly bailScope?: boolean;

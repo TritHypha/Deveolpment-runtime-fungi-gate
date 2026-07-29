@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // galerina-test — the harness front door.
 //
-//   galerina-test [unit|e2e|conformance|fidelity|all] [flags]
+//   galerina-test [unit|e2e|conformance|fidelity|slide|all] [flags]
 //
 // No subcommand runs `all`. An unknown subcommand exits non-zero (fail-closed).
 // The process exit code IS the harness verdict (0 pass, non-zero fail). In human
@@ -13,6 +13,7 @@ import {
   runConformance,
   runE2e,
   runFidelity,
+  runSlide,
   runUnit,
 } from "./runners.js";
 import type { AllOptions, CheckResult, CheckScope } from "./types.js";
@@ -22,6 +23,7 @@ const KINDS = new Set<CheckScope>([
   "e2e",
   "conformance",
   "fidelity",
+  "slide",
   "all",
 ]);
 
@@ -30,13 +32,14 @@ function usage(): void {
     `galerina-test — the consolidated Galerina test harness
 
 Usage:
-  galerina-test [unit|e2e|conformance|fidelity|all] [flags]
+  galerina-test [unit|e2e|conformance|fidelity|slide|all] [flags]
 
 Checks:
   unit          per-package node:test suites (scripts/run-all-tests.cjs)
   e2e           compile example apps end-to-end (galerina check|build)
   conformance   the R6 Stage-A ≡ Stage-B parity gate
   fidelity      the 0014 walker ≡ bytecode ≡ WASM differential
+  slide         exact compiler-owned SLIDE corpus
   all           every check (default)
 
 Flags:
@@ -135,6 +138,8 @@ function dispatch(scope: CheckScope, opts: AllOptions): Promise<CheckResult> {
       return runConformance(opts);
     case "fidelity":
       return runFidelity(opts);
+    case "slide":
+      return runSlide(opts);
     case "all":
       return runAll(opts);
   }
