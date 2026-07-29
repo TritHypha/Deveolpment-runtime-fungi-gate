@@ -270,11 +270,12 @@ planning checkbox must never be used to imply that implementation exists.
   and Node version while treating only `gitCommit` and `builtAt` as
   informational volatile fields: committing an artifact therefore cannot
   make that artifact stale when all stable output and provenance fields still
-  match. Nine focused tests, the live 14/14 generator contract, and the fresh
-  complete scripts battery (176/176) pass. The only direct generator check
-  currently red is the expected code-index content drift from these new source
-  files; regenerate after the source commit, then prove all fourteen direct
-  checks remain green after the artifact commit.
+  match. Generator outputs that embed the source time/commit reuse that same
+  validated snapshot during check. Source commit `13f3fb66` is followed by an
+  explicit complete regeneration: ten focused provenance/contract tests, the
+  live 14/14 generator contract, all fourteen direct drift checks, and the
+  complete scripts battery (177/177) pass. Publish the reviewed artifact set
+  separately, then repeat all fourteen direct checks at the new HEAD.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
