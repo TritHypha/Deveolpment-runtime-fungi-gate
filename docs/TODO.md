@@ -116,15 +116,25 @@ planning checkbox must never be used to imply that implementation exists.
   preserves the full Kleene K3 AND table across seven evidence shapes. Every
   success remains non-authorizing. Focused evidence is 62/62. Report:
   `docs/reports/slide-v2b-nonce-k3-reference-2026-07-29.md`.
-- **Current:** replace generic evidence fixtures with real versioned
+- **Completed:** local commit `437a3987` adds the first detached V2-C
+  immutable aggregate logical producer and fail-closed validator. It binds the
+  frozen V2-A parent and V2-B sidecar context, appends dense type/opcode IDs,
+  validates bounded text/bytes/array/record/variant/checked-index semantics,
+  and retains zero effects, capabilities, memory, host calls, back edges, and
+  authority. Thirteen mutation classes refuse; focused V2-C evidence is
+  17/17 and the combined SLIDE regression is 157/157. Report:
+  `docs/reports/slide-v2c-aggregate-logical-2026-07-29.md`.
+- **Current:** freeze the V2-C registry descriptor and implement canonical
+  21-key producer bytes plus an independent decoder. Separately replace
+  generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
-  audit-before-success seam. In parallel, begin the specified V2-C immutable
-  aggregate semantic increment; the reference CAS is not a crash-consistent
+  audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** complete detached V2-C strings/bytes/arrays/records/variants before
-  V2-D memory objects. No lease reference, broker opcode, host handle, or
-  dispatch may exist before real receipt authenticity, production nonce
-  state, broker isolation, and audit gates pass.
+- **Next:** independently reconstruct, digest, and instruction-drive the
+  detached V2-C aggregate graph, then add a second producer. V2-D memory stays
+  blocked. No lease reference, broker opcode, host handle, or dispatch may
+  exist before real receipt authenticity, production nonce state, broker
+  isolation, and audit gates pass.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity
