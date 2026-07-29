@@ -4,6 +4,8 @@
 **Status:** Proposed architecture; implementation has not started
 **Project boundary:** CTLL is an independent execution platform. Galerina is its
 first planned language frontend, not a required CTLL runtime dependency.
+**Live status and work order:**
+`ctll-v2-status-and-implementation-plan-2026-07-29.md`
 
 ## Decision
 

@@ -6,6 +6,11 @@ All notable changes to this app should be documented here.
 
 ### Added
 
+- Added the canonical CTLL v2 status and implementation ledger, separating
+  implemented foundations, specification-only work, owner/toolchain blockers,
+  not-started components, verification evidence and the ordered G0-G7 build
+  plan. Linked it from the repository and documentation entry points.
+
 - Added coverage-driven documentation reconciliation notes across architecture,
   requirements, tasks and package docs, including explicit warnings for
   photonic enum/code conflicts, webhook canonical contracts, Tri/Decision v0.2

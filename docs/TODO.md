@@ -6,6 +6,8 @@
 not started. CTLL is an independent platform and Galerina is its first planned
 frontend.
 
+- [x] Maintain the canonical done/not-done/blocker/implementation ledger in
+  `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
 - [x] Record the Galerina integration boundary and current-vs-proposed status in
   `docs/architecture/ctll-v2-integration-2026-07-29.md`.
 - [x] Scope Galerina's existing memory-safety claims to their implemented
@@ -50,6 +52,10 @@ frontend.
   frontend.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until CTLL release gates pass and the owner approves a transition.
+
+**Next safe work:** build the G1 capability-probe matrix and enumerate every AST
+fact still consumed after `emitGIR`; do not start LLVM, `.ctll` execution, or
+driver installation before the earlier semantic and owner gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

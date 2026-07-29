@@ -1,0 +1,320 @@
+# CTLL v2: Galerina Status and Implementation Plan
+
+- **Snapshot date:** 2026-07-29
+- **Branch:** `codex/ctll-v2-architecture`
+- **Status owner:** Galerina CTLL integration lane
+- **Canonical purpose:** answer what exists, what is specified only, what is
+  blocked, and what must be built next.
+
+This is the first document to read when checking CTLL work from the Galerina
+repository. Update it in the same commit whenever a CTLL status, gate, owner,
+dependency, or implementation phase changes.
+
+## 1. Current truth in one paragraph
+
+CTLL v2 is a proposed independent execution platform with Galerina as its first
+frontend. Its architecture, zero-trust rules, R1 executable-GIR subset,
+Galerina frontend receipt, memory profile, deterministic AOT graph, Linux
+driver boundary, and first vertical-slice recommendation are documented. CTLL
+code generation, `.ctll` packaging, native execution, the CTLL verifier,
+Tri-Fuse v2, the frontend adapter, driver CLI, and CTLL benchmarks do not yet
+exist. Galerina's current implemented execution paths remain the interpreter,
+bytecode/runtime tiers, and WebAssembly toolchain. CTLL must not be presented
+as shipped, benchmarked, memory-safe, deterministic, or production-ready.
+
+## 2. Status vocabulary
+
+| State | Meaning |
+|---|---|
+| `IMPLEMENTED-VERIFIED` | Code exists and the named verification evidence passed |
+| `IMPLEMENTED-PARTIAL` | Useful code exists, but it does not meet the CTLL boundary |
+| `SPECIFIED` | A reviewable contract/plan exists; no implementation claim |
+| `RECOMMENDED` | A default is documented but still awaits owner confirmation |
+| `BLOCKED-OWNER` | Implementation would choose owner-controlled policy or authority |
+| `BLOCKED-TOOLCHAIN` | The current `.fungi` toolchain cannot yet express or execute the required slice |
+| `NOT-STARTED` | No qualifying implementation exists |
+| `CURRENT-PRODUCTION` | Existing non-CTLL Galerina behavior remains the shipped path |
+
+Planning completion and implementation completion are deliberately separate.
+
+## 3. Status ledger
+
+| Area | State | What exists now | What remains |
+|---|---|---|---|
+| Product boundary | `SPECIFIED` | CTLL is independent; Galerina is the first adapter, not a runtime dependency | Prove with a second non-Galerina frontend |
+| CTLL name and extension | `SPECIFIED` | `.ctll` means **Compiled Tri Low Level**; collision screen documented | Public registration/legal review only after release maturity |
+| K3 semantics | `SPECIFIED` | Kleene K3 authority contract and total-exit rule documented | Publish one independent registry and executable conformance vectors |
+| `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
+| Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
+| R1 executable GIR contract | `SPECIFIED` | Deterministic-CBOR R1 schema, CFG, checked Int32, K3 terminator, failures, validation order, mutations | Implement canonical exporter, bounded importer, validator, and reference interpreter |
+| AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
+| Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
+| First fixture | `RECOMMENDED` | `ctll_k3_checked_add_v1` and ten differential vectors documented | Owner confirmation, then checked `.fungi` source and negative fixtures |
+| Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
+| Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
+| Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
+| LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
+| `.ctll` container/tooling | `NOT-STARTED` | Container and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
+| Tower Citizen adapter | `SPECIFIED` | Exact capability-receipt boundary documented | Implement adapter; no Boolean or origin-based authority |
+| Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
+| WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Keep supported; never use as a silent fallback from failed CTLL admission |
+| Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
+| Linux driver CLI | `NOT-STARTED` | Unprivileged planner/privileged helper architecture documented | Owner-select distro/package manager and disposable-VM policy |
+| CTLL native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select Linux isolation profile and implement only after admission is sound |
+| Non-Galerina frontend | `NOT-STARTED` | Public profile requirements documented | Select and implement the second minimal producer |
+| CTLL benchmarks | `NOT-STARTED` | Methodology and comparison targets documented | Benchmark only after equivalent native CTLL execution exists |
+
+## 4. Evidence behind the status
+
+### 4.1 Current GIR is useful but not detached executable GIR
+
+The current compiler exposes:
+
+- `GIRProgram`, `GIRFlow`, and a small `GIRExpr` union in
+  `packages-galerina/galerina-core-compiler/src/gir-emitter.ts`;
+- `emitGIR(...)` and `buildWATModuleFromGIR(...)`;
+- effect, capability, proof, tensor, execution-plan, entry-point, and hash
+  metadata.
+
+The current WAT path still reads `gir.ast` for constants, layouts, flow
+signatures, bodies, secret handling, and memory derivation. It also contains
+identity/minimal-body and walker-fallback paths. These are valid facts about
+the current WebAssembly implementation, but they fail the CTLL detached
+semantic boundary. CTLL work begins by removing the need for those paths, not
+by writing an LLVM emitter around them.
+
+### 4.2 No CTLL implementation is being claimed
+
+A source search outside documentation and generated build output found no
+implemented `.ctll` container, `ctll.semantic.*` profile, CTLL frontend receipt,
+or CTLL loader/runner surface. The sibling `triLowLevel-v2` directory is a
+planning set and is not currently its own Git repository.
+
+### 4.3 Control-flow hardening completed so far
+
+The audit evidence is
+`docs/reports/control-flow-standard-audit-2026-07-29.md`.
+
+Completed:
+
+- repeated alternative `if` dispatch converted to total `match`;
+- `_ =>` default arms retained;
+- validator rejection sentinels terminate before policy;
+- malformed Boolean wire values no longer silently become `false`;
+- invalid schema/profile/effect/type/qualifier values no longer inherit
+  permissive defaults;
+- 19 changed auth-service examples pass strict checking.
+
+Not completed:
+
+- compiler-enforced flow/block-aware lint for future code;
+- target-lowering parity proof for every `check` use;
+- CTLL-specific conformance fixtures.
+
+## 5. Architecture that implementation must preserve
+
+```text
+.fungi source
+  -> authoritative Galerina checks
+  -> canonical detached executable GIR
+  -> Galerina frontend receipt
+  -> independent TLL GIR/common-plan validation
+  -> Tri-Fuse proof/residual-gate plan
+  -> deterministic AOT action graph and untrusted CAS
+  -> verified target object
+  -> signed .ctll bundle
+  -> Tower capability receipt + Tri-Pipe route proposal
+  -> independent K3 admission
+  -> isolated runner with typed capability RPC and receipts
+```
+
+Required invariants:
+
+1. only K3 `ALLOW` authorizes protected work;
+2. `DENY`, `INDETERMINATE`, malformed, unsupported, and unclassified states
+   leave the current trust path;
+3. a compiler, signature, cache hit, route proposal, source-language label,
+   driver presence, or first-party origin is evidence—not authority;
+4. authenticated bytes are the bytes parsed and executed;
+5. no backend consults the source AST after the executable-GIR boundary;
+6. memory safety is a verified profile bound through the final artifact;
+7. Wasm is a separately admitted target, never an implicit fallback;
+8. project-owned executable logic is `.fungi`; `.gate` remains out of scope.
+
+## 6. Ownership and repository placement
+
+| Work | Owner/location |
+|---|---|
+| `.fungi` syntax, checking, source semantics | Galerina core compiler |
+| Executable GIR exporter/importer and Galerina reference interpreter | Galerina |
+| Galerina frontend receipt producer | Galerina adapter |
+| K3/common registries and CTLL contracts | Independent TLL project |
+| Independent GIR/receipt/common-plan verification | Independent TLL project |
+| Tri-Fuse v2 plan contract and implementation | Independent TLL, with Galerina conformance fixtures |
+| LLVM/OS integration | Restricted TLL host shims |
+| Tower Citizen/Tri-Pipe integration | Galerina-owned adapters to public TLL receipt contracts |
+| CTLL packager, admission, loader, runner, driver tools | Independent TLL project |
+
+TLL must build and validate its own fixtures without importing Galerina.
+
+## 7. Implementation plan
+
+### Phase G0 — owner and bootstrap decisions
+
+Required before implementation scaffolding chooses a platform:
+
+- first Linux distribution/architecture;
+- permitted minimal non-`.fungi` shims;
+- confirmation of `ctll_k3_checked_add_v1`;
+- confirmation of `ctll.memory.safe-value.v1`;
+- embedded versus digest-bound detached semantic archive;
+- separate repository timing;
+- signing-role/test-key custody;
+- whether the source-level control-flow lint may use the existing host compiler
+  as a recorded bootstrap exception.
+
+The complete question set is
+`../../../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
+
+### Phase G1 — compiler capability probes and RED fixtures
+
+Before implementing new lowering:
+
+1. add a negative fixture proving unsupported executable-GIR export refuses;
+2. probe current `Verdict`, exhaustive `check`, typed failure, and checked-Int
+   behavior across checker, interpreter, and current WAT/Wasm paths;
+3. record every missing semantic or lowering capability;
+4. create RED tests for AST independence, invalid fourth Verdict state,
+   overflow, DENY, and INDETERMINATE;
+5. implement no identity body, default constant, walker continuation, or
+   Boolean rewrite as a substitute.
+
+Exit gate: the test harness can distinguish unsupported, denied, unresolved,
+overflow, and successful execution.
+
+### Phase G2 — canonical executable GIR R1
+
+Implement the contract in
+`../../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`:
+
+1. canonical stable IDs and deterministic-CBOR bytes;
+2. R1 types, constants, functions, blocks, instructions, and terminators;
+3. checked Int32 and exhaustive K3 semantics;
+4. explicit failure records and safe-value memory-profile reference;
+5. bounded importer and validator;
+6. fresh-process reference interpreter;
+7. mutation corpus.
+
+Exit gate: the fixture round-trips and executes without source text, AST, parser
+state, WAT, or ambient registries.
+
+### Phase G3 — frontend receipt
+
+Implement
+`../../../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`:
+
+1. materialize canonical GIR and plan bytes once;
+2. bind source, compiler, check profile, registries, functions, memory,
+   effects, capabilities, imports, K3, failures, resources, and corpus;
+3. sign only with a development frontend-evidence role;
+4. independently re-derive every common plan in TLL;
+5. reject every digest, role, profile, or plan mismatch.
+
+Exit gate: a valid producer signature with a lying plan is still rejected.
+
+### Phase G4 — memory profile and Tri-Fuse
+
+1. implement the R1 no-address `safe-value` verifier;
+2. generate one Tri-Fuse entry for the fixture's K3 obligation;
+3. prove ALLOW specialization, DENY terminal specialization, and unresolved
+   residual/terminal behavior;
+4. verify gate dominance;
+5. mutation-kill removed/swapped gates and altered witnesses.
+
+Exit gate: unfused and fused reference results agree for values, failures,
+K3 outcomes, and receipts.
+
+### Phase G5 — deterministic native object
+
+After owner approval of toolchain and shims:
+
+1. build the complete-key action DAG and local untrusted CAS;
+2. lower the validated R1 plan through a pinned LLVM/LLD toolchain;
+3. verify pre-optimization IR, post-optimization IR, object, and final ELF;
+4. deny undeclared imports, raw pointers, guard loss, ABI drift, and unexpected
+   sections/relocations;
+5. prove clean, incremental, reordered, and parallel builds equivalent.
+
+Exit gate: native results equal Galerina, imported GIR, and fused reference
+results for every vector.
+
+### Phase G6 — container, admission, and isolated execution
+
+1. implement canonical `.ctll` packing and two decode/validation paths;
+2. bind semantic archive, plans, payload, target, memory, provenance, trust
+   roles, and lifecycle;
+3. implement inspect/verify/explain before run;
+4. compose Tower, Tri-Pipe, artifact, target, driver, isolation, freshness, and
+   nonce evidence with K3 AND;
+5. run only the exact admitted payload under budgets and typed capabilities.
+
+Exit gate: every mutated authority field refuses before native execution.
+
+### Phase G7 — independence, hardware, and measurement
+
+1. implement a second non-Galerina minimal frontend;
+2. implement Linux observation/driver resolution;
+3. add the privileged driver helper only in the approved disposable
+   environment;
+4. add optional Wasm CTLL payload/profile;
+5. run equivalent-work benchmarks against cached Wasm AOT, current Galerina,
+   native Rust, and CPython.
+
+Exit gate: publish raw reproducible results and decide whether CTLL justifies
+its additional format/verifier/runtime.
+
+## 8. Immediate next actions
+
+Safe work that does not require an owner choice:
+
+1. keep all CTLL documentation synchronized with this ledger;
+2. manufacture the G1 capability-probe matrix without changing production
+   behavior;
+3. enumerate the exact AST fields currently consumed after `emitGIR`;
+4. map those fields to the proposed R1 nodes and explicit unsupported exits;
+5. prepare negative fixture names and expected outcomes without assigning new
+   diagnostic codes;
+6. keep the current Wasm path green as the factual implementation baseline.
+
+Do not start LLVM, container signing, driver installation, or native execution
+before their earlier semantic and owner gates.
+
+## 9. Recorded local commits
+
+The current branch contains these CTLL-related checkpoints:
+
+| Commit | Scope |
+|---|---|
+| `29668017` | Define Galerina/CTLL v2 integration architecture |
+| `680695c4` | Standardize `.fungi` decision control flow |
+| `7316e0dd` | Apply total branch standard to examples |
+| `8b11b018` | Enforce verified total control flow across 19 services |
+| `c7947a89` | Specify the executable-GIR/frontend-receipt handoff |
+
+The corresponding Knowledge Base branch contains the canonical CTLL planning
+record and control-flow rules. None of these commits has been pushed by Codex.
+
+## 10. Maintenance checklist
+
+Every CTLL implementation commit must update:
+
+- this status ledger;
+- `docs/TODO.md`;
+- the relevant architecture/requirements document;
+- positive, negative, mutation, and differential evidence;
+- owner questions when a decision is exposed;
+- current-vs-proposed wording;
+- the project graph when tracked semantic structure changes.
+
+A completed checkbox must name evidence. A specification checkbox must never be
+used to imply code exists.

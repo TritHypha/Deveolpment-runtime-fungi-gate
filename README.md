@@ -194,6 +194,12 @@ Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519; ce
 intent  →  governed execution plan  →  coordinated compute  →  audit proof
 ```
 
+> **CTLL v2 status:** Compiled Tri Low Level is a specified forward target, not
+> an implemented backend. Galerina currently emits no `.ctll` artifact and has
+> no CTLL native runner or CTLL benchmark. The exact done/not-done ledger and
+> implementation sequence are maintained in
+> [`docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`](docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md).
+
 ### Package architecture
 
 94 package directories organised into **families by prefix**, with two hard rules at the boundaries.

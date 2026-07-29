@@ -864,6 +864,10 @@ The app package must remain deliberately small until a product domain is chosen.
   as an internal Galerina runtime package. Galerina must use a versioned public
   frontend adapter and CTLL must remain usable by conforming non-Galerina
   frontends.
+- CTLL implementation status, blockers, evidence, and the ordered work plan
+  must be maintained in
+  `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
+  Specification completion must not be reported as implementation completion.
 - A CTLL native artifact must not inherit a memory-safe label from Galerina,
   GIR, a compiler success, or the `.ctll` container. The adapter must emit an
   explicit memory plan and CTLL admission must verify a named memory profile,

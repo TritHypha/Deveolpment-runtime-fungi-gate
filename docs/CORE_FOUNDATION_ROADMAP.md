@@ -233,11 +233,14 @@ Before Galerina emits CTLL:
    execution.
 5. Clean and cached action-graph builds must be deterministic and equivalent.
 6. A non-Galerina fixture frontend must prove CTLL is independently usable.
-7. The current WebAssembly path remains the differential and fallback until an
-   explicit owner-approved transition.
+7. The current WebAssembly path remains the differential and separately
+   admitted alternative until an explicit owner-approved transition; it is
+   never an implicit fallback from a failed CTLL admission.
 
 Implementation for this lane is `.fungi`; `.gate` remains out of scope. See
-`docs/architecture/ctll-v2-integration-2026-07-29.md`.
+`docs/architecture/ctll-v2-integration-2026-07-29.md` and the canonical status
+ledger at
+`docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
 
 ## Near-Term Work Order
 
