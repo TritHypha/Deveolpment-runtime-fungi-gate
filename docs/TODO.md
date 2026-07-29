@@ -253,6 +253,8 @@ planning checkbox must never be used to imply that implementation exists.
   offsets; depth/copy/step exhaustion exposes no partial result. Adjacent
   frozen R1/V2-A/V2-B remains 117/117. Matrix:
   `docs/reports/slide-v2c-required-mutation-audit-2026-07-29.md`.
+  Post-exit Myco indexes 4,124 files with zero over-size skips; regenerated
+  project graph is 7,367 nodes / 7,621 edges.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
