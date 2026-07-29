@@ -468,7 +468,7 @@ contract { intent { "Lower a single body statement into a GIRStmt." } }
   // and the lowered arms in `body`. Each arm is a GIRStmt with op="arm", name=pattern,
   // body=lowered arm-body. The runtime iterates arms, evaluating subject==pattern.
   if kind == "match" {
-    mut subjectExprs: Array<Auto> = Array.empty()
+    mut subjectExprs: Array<GIRExpr> = Array.empty()
     let sOpt = firstExprOf(stmt)
     match sOpt {
       Some(se) => { subjectExprs = subjectExprs.append(lowerExpr(se)) }
@@ -496,7 +496,7 @@ contract { intent { "Lower a single body statement into a GIRStmt." } }
   }
 
   if kind == "check" {
-    mut subjectExprs: Array<Auto> = Array.empty()
+    mut subjectExprs: Array<GIRExpr> = Array.empty()
     let subjectOpt = firstExprOf(stmt)
     match subjectOpt {
       Some(subject) => { subjectExprs = subjectExprs.append(lowerExpr(subject)) }
@@ -579,9 +579,9 @@ record FlowEntry {
   // consumes these compiler-derived facts instead of accepting caller-supplied
   // preflight booleans or consulting the source AST.
   qualifier: String
-  paramTypes: Array<Auto>
+  paramTypes: Array<String>
   returnType: String
-  effects: Array<Auto>
+  effects: Array<String>
 }
 
 // Collect the ORDERED parameter names of a flow into an Array<String>.
@@ -602,7 +602,7 @@ contract { intent { "Extract each FlowParam's name into an ordered Array<String>
   return names
 }
 
-pure flow paramTypes(params: Array<FlowParam>) -> Array<Auto>
+pure flow paramTypes(params: Array<FlowParam>) -> Array<String>
 contract { intent { "Extract each FlowParam's declared type into an ordered array." } }
 {
   mut declaredTypes: Array<String> = Array.empty()

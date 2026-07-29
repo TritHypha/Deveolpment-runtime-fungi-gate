@@ -60,9 +60,11 @@ const REGISTRY = join(ROOT, "build", "code-registry", "registry.json");
 // Inlining them here would make this gate manufacture the very phantoms it measures — the same
 // self-ingestion trap that made a detector's own self-test fixtures read as real registrations.
 const BASELINE = Object.freeze({ phantom: 111 });
-const PHANTOM_BASELINE = Object.freeze(
-  JSON.parse(readFileSync(join(ROOT, "scripts", "baselines", "phantom-codes.json"), "utf8")).codes,
+const PHANTOM_POLICY = Object.freeze(
+  JSON.parse(readFileSync(join(ROOT, "scripts", "baselines", "phantom-codes.json"), "utf8")),
 );
+const PHANTOM_BASELINE = Object.freeze(PHANTOM_POLICY.codes);
+const PHANTOM_COUNT_EXCLUSIONS = Object.freeze(PHANTOM_POLICY.adjudicatedGrammarBlocked ?? []);
 // Note on FUNGI-FUEL-001 (2026-07-24): a genuine RESERVED code (RD-0314 fuel cap; KB registration held for
 // the post-ceremony batch), referenced in docs (docs=3) with no source emit. Because it is NAMED here (a
 // source reference), the registry classifies it as `ref`, NOT a doc-only `phantom` — so the phantom count
@@ -224,6 +226,15 @@ export function phantomSetDrift(entries, phantomBaselineList) {
   return { entered, left };
 }
 
+// Preserve the historical 111 count ratchet without pretending the two independently adjudicated,
+// grammar-blocked intent identities are new unreviewed drift. Count only PRESENT phantom entries that
+// are not in that named class. Membership remains the authority: a stale adjudication or an entrant
+// still fails phantomSetDrift in one of its two directions.
+export function effectivePhantomCount(entries, adjudicatedList) {
+  const adjudicated = new Set(adjudicatedList ?? []);
+  return (entries ?? []).filter((e) => e.status === "phantom" && !adjudicated.has(e.code)).length;
+}
+
 // A reserved code must be PRESENT in the registry and NOT `live`. promoted = a reserved code the registry now
 // marks live (the silent-promotion class). absent = a reserved code with no entry at all (the family's shape
 // changed → can't verify → fail-closed, never a silent no-op). Both are FUNGI-DRIFT-002 violations.
@@ -293,8 +304,19 @@ if (process.argv.includes("--self-test")) {
   ok(baselineBreach({ phantom: 2 }, Object.freeze({ phantom: 2 })).length === 0,
     "   CONTROL for that swap: the count check is genuinely blind to it (2 vs baseline 2 = silent) — the two checks are not redundant");
   ok(phantomSetDrift(undefined, PS).left.length === 2, "absent entries → every named phantom reads 'left' — a can't-read fails LOUDLY here too");
-  ok(PHANTOM_BASELINE.length === 111 && PHANTOM_BASELINE.every((c) => typeof c === "string" && c.length > 0),
-    "the real frozen phantom set loads from its JSON sidecar and holds 111 named codes (sidecar, NOT literals — a .json is outside code-index's scan extensions, so naming them cannot register them)");
+  ok(effectivePhantomCount([
+    ...atBase,
+    { code: "FUNGI-X-003", status: "phantom" },
+    { code: "FUNGI-X-004", status: "live" },
+  ], ["FUNGI-X-003", "FUNGI-X-004"]) === 2,
+  "the cheap count excludes only PRESENT, named grammar-blocked phantoms");
+  ok(effectivePhantomCount([...atBase, { code: "FUNGI-X-009", status: "phantom" }], ["FUNGI-X-003"]) === 3,
+    "an unadjudicated entrant still increases the cheap count");
+  ok(PHANTOM_BASELINE.length === PHANTOM_POLICY.count &&
+    PHANTOM_COUNT_EXCLUSIONS.length === 2 &&
+    PHANTOM_COUNT_EXCLUSIONS.every((c) => PHANTOM_BASELINE.includes(c)) &&
+    PHANTOM_BASELINE.every((c) => typeof c === "string" && c.length > 0),
+    "the real frozen phantom set and its named grammar-blocked class load coherently from the JSON sidecar");
   ok(reservedCodesOf(DEAD_RESERVED_SPEC).length === 13, "the real dead-reserved spec derives 13 codes (5 ASYNC + 1 BLOCK + 3 BYTE + 2 CHAR + 2 STRING) — the count DERIVES from the set");
 
   // A2 severity-completeness — a live FUNGI-* with no severity is a gap; ERR_* is scoped out by design.
@@ -351,7 +373,13 @@ for (const rel of docs) {
 }
 const gradeable = claims.filter((c) => KNOWN_COUNT_KEYS.includes(c.key));
 const drift = countDrift(claims, counts);
-const breach = baselineBreach(counts, BASELINE);
+const effectiveCounts = {
+  ...counts,
+  phantom: typeof counts.phantom === "number"
+    ? effectivePhantomCount(reg.entries, PHANTOM_COUNT_EXCLUSIONS)
+    : undefined,
+};
+const breach = baselineBreach(effectiveCounts, BASELINE);
 const sevGaps = severityIncomplete(reg.entries);
 const reserved = reservedDrift(reg.entries, reservedCodesOf(RESERVED_SPEC));
 const deadReserved = reservedCodesOf(DEAD_RESERVED_SPEC);
@@ -364,7 +392,7 @@ console.log(`  A1 surface: ${docs.length} markdown doc(s) scanned [root *.md + b
 for (const d of drift) console.log(`  ⚠ FUNGI-DRIFT-001 ${d.file}: states "${d.claimed} ${d.key}" but registry.counts.${d.key} = ${d.actual} (${d.form} form)`);
 if (drift.length === 0) console.log(`  ✅ A1: every gradeable count claim matches registry.counts (live=${counts.live} · total=${counts.total} · dead=${counts.dead} · phantom=${counts.phantom}).`);
 for (const b of breach) console.log(`  ⚠ FUNGI-DRIFT-002 counts.${b.key} = ${b.now} ${b.kind === "INCREASE" ? `> frozen baseline ${b.baseline} (shrink-only — a new drift entered the registry)` : "is MISSING from registry.counts"}`);
-if (breach.length === 0) console.log(`  ✅ A3: phantom=${counts.phantom}≤${BASELINE.phantom} (shrink-only count baseline holds).`);
+if (breach.length === 0) console.log(`  ✅ A3: phantom=${effectiveCounts.phantom} unadjudicated of ${counts.phantom} total ≤ ${BASELINE.phantom} (historical shrink-only count baseline holds; ${PHANTOM_COUNT_EXCLUSIONS.length} named grammar-blocked identities are membership-ratcheted).`);
 for (const c of deadSet.unlisted) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: a registry 'dead' code NOT in the named dead-reserved set — real drift entered, regardless of count (R&D 0182 A-PRIME).`);
 for (const c of deadSet.stale) console.log(`  ⚠ FUNGI-DRIFT-002 ${c}: named in the dead-reserved set but NO LONGER dead in the registry — remove the stale entry (no-stale-exceptions).`);
 if (deadSet.unlisted.length + deadSet.stale.length === 0) console.log(`  ✅ A3 dead-set: registry dead codes == the ${deadReserved.length} NAMED verified-reserved codes (membership check — count derives from the set; a promote+enter swap cannot mask it).`);

@@ -2,20 +2,20 @@
   "note": "RD-0528 evidence item (d) baseline — re-derived + gated by scripts/audit-compiler-stage-hashes.mjs. Emitter drift is legitimate; on a drift FAIL, review then re-run --update-baseline (expected) or investigate a .fungi change (unexpected).",
   "stages": {
     "lexer": {
-      "bytes": 6986,
-      "sha256": "1773e142dd607d4690bafc310c35affc1901c9bcba8751c6247337f8d7832066"
+      "bytes": 6994,
+      "sha256": "82119859d48a9d6cc627682a0643fb09cb3fb782414cb7d051b3fee52adcb4ba"
     },
     "parser": {
-      "bytes": 18833,
-      "sha256": "d71cc94ff5c01160b0e974d9b882d671476bd76b0faf00afead9ea4f0ff877be"
+      "bytes": 21122,
+      "sha256": "135751bd0297856f4c2fe86e53a5085c573b49f049e0bc749e9ad7a31b106166"
     },
     "gir-emitter": {
-      "bytes": 3930,
-      "sha256": "613d0cad86fd726c4a55ed8a12b8619f9d4540c9605f40c00fb1792d7fd684ee"
+      "bytes": 4420,
+      "sha256": "cfdc20bdb5ebfe1b8269c7df7150234d1eabe89c88660bd617d54c6ff78d4619"
     },
     "runtime": {
-      "bytes": 6400,
-      "sha256": "348ddd1657cd91258a4b5a96339ac16294e8f595aee38f1defd365f599a5e041"
+      "bytes": 7889,
+      "sha256": "1ba43b9107c6e9563b2e23f9bb98600c5dee9cb5c0612f10b914ccadbaa74cce"
     },
     "type-checker": {
       "bytes": 11901,

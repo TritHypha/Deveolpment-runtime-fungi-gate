@@ -87,7 +87,7 @@ record SLIDER1LogicalProgram {
 }
 
 record SLIDER1AdapterResult {
-  decision: Auto
+  decision: SLIDER1PreflightDecision
   materialized: Bool
   program: SLIDER1LogicalProgram
 }

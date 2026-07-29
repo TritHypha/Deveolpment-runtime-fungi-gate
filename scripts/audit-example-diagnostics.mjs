@@ -79,6 +79,7 @@ function categorize(why) {
   if (why.includes('no `expected_diagnostics` header')) return 'missing-header';
   if (why.includes('declares `none`')) {
     if (why.includes('TIER-001')) return 'tier-drift';
+    if (why.includes('VALUESTATE-009')) return 'audit-log-009';
     if (why.includes('VALUESTATE-006')) return 'redact-006';
     if (why.includes('VALUESTATE-008')) return 'untaint-008';
     if (why.includes('CONTEXT-001')) return 'context-001';
@@ -225,6 +226,7 @@ if (selfTest) {
     ['neg-wrong-code CAUGHT', verdict({ kind: 'codes', codes: S(['FUNGI-PII-001']) }, S(['FUNGI-TIER-001']), false).ok === false],
     ['missing-header CAUGHT', verdict({ kind: 'missing', codes: S([]) }, S([]), true).ok === false],
     ['categorize tier-drift', categorize('declares `none` but emitted FUNGI-TIER-001') === 'tier-drift'],
+    ['categorize audit-log split', categorize('declares `none` but emitted FUNGI-VALUESTATE-009') === 'audit-log-009'],
     ['categorize not-fired', categorize('expected X but did NOT emit X (got clean)') === 'diagnostic-not-fired'],
     ['categorize hidden-type', categorize('declares `none` but emitted FUNGI-TYPE-001') === 'hidden-type-governed'],
   ];

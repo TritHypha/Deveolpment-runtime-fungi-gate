@@ -2,7 +2,13 @@
  "note": "FROZEN NAMED SET of doc-only (phantom) diagnostic codes. Membership check, not a count — a leave+enter swap cannot mask a new phantom. Seeded from commit 28e13062 (the count-baseline 111). JSON on purpose: code-index.mjs scans .ts/.mjs/.cjs/.fungi/.md only, so listing codes here does NOT itself register them.",
  "rule": "ENTERED = a new doc-only code (fix the doc or implement the code). LEFT = a stale entry that must be REMOVED from this file. Neither is fixed by editing the number.",
  "seededFrom": "28e13062",
- "count": 111,
+ "adjudicationNote": "Board item 172 independently verified MUTATION-001 and STEP-001 as governance-intent identities blocked by absent self-hosted grammar productions. They are named membership-ratcheted exceptions; the unadjudicated count baseline remains 111.",
+ "count": 113,
+ "historicalUnadjudicatedCountBaseline": 111,
+ "adjudicatedGrammarBlocked": [
+  "FUNGI-MUTATION-001",
+  "FUNGI-STEP-001"
+ ],
  "codes": [
   "ERR_AMOUNT_TOO_LARGE",
   "ERR_EMPTY_RECORD_ID",
@@ -61,6 +67,7 @@
   "FUNGI-MODULE-003",
   "FUNGI-MODULE-004",
   "FUNGI-MODULE-006",
+  "FUNGI-MUTATION-001",
   "FUNGI-NETWORK-001",
   "FUNGI-NETWORK-002",
   "FUNGI-NETWORK-003",
@@ -95,6 +102,7 @@
   "FUNGI-STATE-003",
   "FUNGI-STATE-004",
   "FUNGI-STATE-005",
+  "FUNGI-STEP-001",
   "FUNGI-STORAGE-001",
   "FUNGI-SYNTAX-RLF-001",
   "FUNGI-TRACE-001",
