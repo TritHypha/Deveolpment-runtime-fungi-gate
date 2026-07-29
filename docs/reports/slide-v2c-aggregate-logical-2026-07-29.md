@@ -4,6 +4,7 @@
 **Scope:** detached logical records and fail-closed semantic validation
 **Local implementation commit:** `437a3987`
 **Registry binding commit:** `3de15ea8`
+**Executable integration commit:** `5ea92c78`
 
 ## Claim boundary
 
@@ -36,6 +37,13 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   reinterpreted as text.
 - All multi-way dispatch uses exhaustive `match`; every Verdict exit is an
   exhaustive `check`.
+- `slide-v2c-executable-model.fungi` embeds the two frozen V2-A functions
+  unchanged and appends function 3, whose 13 SSA instructions perform the
+  registered aggregate operations and terminate with an explicit typed return.
+- `slide-v2c-executable-validator.fungi` projects and revalidates the embedded
+  V2-A subgraph under the frozen V2-A validator, binds the complete descriptor
+  tables, and validates the aggregate function signature, authority surface,
+  instructions, operands, immediates, and no-fallthrough return.
 
 ## Mutation evidence
 
@@ -58,7 +66,11 @@ The focused V2-C suite passes 18/18 and refuses:
 
 Before the descriptor-binding test was appended, the combined focused
 regression was 157/157 across frozen R1, V2-A, V2-B, and V2-C. The updated
-V2-C-only suite is 18/18. Compiler TypeScript build also passes.
+aggregate-slice suite is 18/18. The complete executable-graph suite adds
+10/10, including embedded-parent mutation, capability injection, unchecked
+index, dynamic projection, descriptor divergence, surplus function, and
+fallthrough refusal. The two V2-C suites pass 28/28. Compiler TypeScript build
+also passes.
 
 ## What this replaces, rebuilds, and integrates
 
@@ -92,6 +104,6 @@ cannot select any of them as a fallback.
 
 ## Next safe boundary
 
-Freeze the exact V2-C registry descriptor, canonicalize all 21 root entries,
-and build an independent decoder that exposes neither a partial descriptor nor
-partial aggregate graph on refusal. V2-D memory remains blocked.
+Canonicalize all 21 root entries from the complete executable graph and build
+an independent decoder that exposes neither a partial descriptor nor partial
+aggregate graph on refusal. V2-D memory remains blocked.

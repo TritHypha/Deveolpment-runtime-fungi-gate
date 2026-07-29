@@ -125,8 +125,15 @@ planning checkbox must never be used to imply that implementation exists.
   descriptor digest. Fourteen mutation classes refuse; focused V2-C evidence
   is 18/18 (combined pre-binding regression 157/157). Report:
   `docs/reports/slide-v2c-aggregate-logical-2026-07-29.md`.
-- **Current:** freeze the V2-C registry descriptor and implement canonical
-  21-key producer bytes plus an independent decoder. Separately replace
+- **Completed:** local commit `5ea92c78` integrates the aggregate slice into a
+  complete logical executable graph: the two frozen V2-A functions are
+  independently revalidated and function 3 contains all registered aggregate
+  SSA operations plus an explicit typed return. Descriptor divergence,
+  parent drift, injected capability, unchecked index, dynamic projection,
+  fallthrough, and surplus-function mutations refuse. The complete-graph
+  suite is 10/10; both V2-C suites are 28/28.
+- **Current:** implement canonical 21-key producer bytes from the complete
+  graph plus an independent decoder. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
@@ -165,7 +172,8 @@ planning checkbox must never be used to imply that implementation exists.
   integrity or KB-link violations; Hardened Border 97/97; explicit Galerina
   memory graph clean; dev-tool index 97 packages / 124 tools / 40 proofs.
   Post-commit Myco indexes 4,105 files with zero over-size skips.
-- **Latest V2-C logical verification:** focused V2-C 18/18; combined
+- **Latest V2-C logical verification:** V2-C aggregate 18/18 and complete
+  executable graph 10/10; combined
   pre-binding SLIDE regression 157/157; TypeScript compiler build passes.
   Post-checkpoint Myco indexes 4,109 files with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
