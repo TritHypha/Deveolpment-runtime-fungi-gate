@@ -46,6 +46,7 @@ project/package graph tools.
 - Create: `scripts/lib/tooling-inventory.mjs`
 - Create: `scripts/audit-tooling-contract.mjs`
 - Create: `scripts/tests/tooling-contract.test.mjs`
+- Modify: `galerina.workspace.json`
 - Modify: `scripts/dev-tool-index.mjs`
 - Modify: `scripts/run-phase-close.mjs`
 
@@ -55,7 +56,8 @@ project/package graph tools.
   `discoverTooling(root): ToolingInventory`,
   `loadToolingPolicy(root): ToolingPolicy`, and
   `validateToolingContract(inventory, policy): ToolingViolation[]`.
-- `ToolingInventory` contains exact workspace packages, script tools,
+- `ToolingInventory` contains reconciled workspace/package-directory records,
+  script tools,
   package-test scripts, direct phase-close commands, CI commands, external
   fixture-test evidence, generators, and generated outputs.
 - `tooling-policy.json` records exceptions only. Unknown or unused exception
@@ -110,6 +112,17 @@ test("a package without a runnable test requires an exact exception", () => {
   assert.ok(validate(root).some((v) =>
     v.code === "TOOLING-PACKAGE-NO-TEST"));
 });
+
+test("an unregistered package directory is a blocking violation", () => {
+  const root = fixture({
+    "galerina.workspace.json": JSON.stringify({ packages: [] }),
+    "packages-galerina/hidden/package.json":
+      JSON.stringify({ name: "@galerina/hidden", scripts: { test: "node --test" } }),
+    "governance/tooling-policy.json": JSON.stringify(validEmptyPolicy()),
+  });
+  assert.ok(validate(root).some((v) =>
+    v.code === "TOOLING-PACKAGE-UNREGISTERED"));
+});
 ```
 
 - [ ] **Step 2: Run the focused test and verify RED**
@@ -140,7 +153,8 @@ export function discoverTooling(root) {
 
 export function validateToolingContract(inventory, policy) {
   const violations = [];
-  // Every workspace package: executable test or exact packageNoTest exception.
+  // Workspace declarations and actual package directories agree exactly.
+  // Every reconciled package: executable test or exact packageNoTest exception.
   // Every audit/lint: direct cadence, CI, registered fixture evidence, or exact
   // tool exception.
   // Every generator: exact outputs plus check/idempotence evidence.
@@ -170,6 +184,12 @@ Do not baseline undisposed audits. First derive real direct/CI/fixture
 coverage; add an exception only for a genuinely external, destructive, or
 timed operator path, with exact evidence and review condition.
 
+Register both currently unlisted package directories,
+`galerina-devtools-benchmarks` and `galerina-registry`, in
+`galerina.workspace.json`. The registry remains the sole initial no-test
+exception; the benchmark package is executable and must enter normal test
+discovery.
+
 - [ ] **Step 4: Make the tool index consume the shared inventory**
 
 Remove duplicate filename/source-string classification from
@@ -193,7 +213,7 @@ commands return non-zero. Do not mutate the live tree for the negative.
 - [ ] **Step 6: Commit**
 
 ```powershell
-git add -- governance/tooling-policy.json scripts/lib/tooling-inventory.mjs scripts/audit-tooling-contract.mjs scripts/tests/tooling-contract.test.mjs scripts/dev-tool-index.mjs scripts/run-phase-close.mjs
+git add -- galerina.workspace.json governance/tooling-policy.json scripts/lib/tooling-inventory.mjs scripts/audit-tooling-contract.mjs scripts/tests/tooling-contract.test.mjs scripts/dev-tool-index.mjs scripts/run-phase-close.mjs
 git commit -m "feat: govern complete tooling inventory"
 ```
 
@@ -214,8 +234,8 @@ git commit -m "feat: govern complete tooling inventory"
 - Add CLI flags:
   `--root <workspace>`, `--json`, `--list`, `--core`, `--bail`,
   `--emit-counts`.
-- A full run selects every workspace package except exact `packageNoTest`
-  policy entries.
+- A full run selects every reconciled, registered package except exact
+  `packageNoTest` policy entries.
 - JSON result:
 
 ```ts
@@ -234,7 +254,7 @@ type PackageTestRun = {
 - [ ] **Step 1: Write RED fixture tests for omitted and stale-build classes**
 
 ```js
-test("full discovery includes any workspace package with a test script", () => {
+test("full discovery includes any registered package with a test script", () => {
   const root = workspaceFixture({
     "packages-galerina/custom/package.json": JSON.stringify({
       name: "@galerina/custom",
@@ -276,7 +296,7 @@ node --test scripts/tests/run-all-tests.test.mjs
 Expected: the custom script is excluded, stale `dist/` bypasses the build, and
 an uncounted pass is accepted.
 
-- [ ] **Step 3: Replace regex suite discovery with workspace-policy discovery**
+- [ ] **Step 3: Replace regex suite discovery with reconciled-policy discovery**
 
 Delete `isRealSuite` and the smart direct-`node --test` dispatch. Always run
 the package's declared `npm test` command. On Windows invoke `npm.cmd`; on
@@ -314,7 +334,7 @@ the three files fail through process exit when any invariant throws.
 node scripts/run-all-tests.cjs --list
 ```
 
-Expected: 96 governed test-bearing packages; both
+Expected: 96 governed test-bearing packages from 97 registered packages; both
 `galerina-devtools-benchmarks` and `galerina-tools-myco` appear.
 
 - [ ] **Step 6: Run focused and package tests**

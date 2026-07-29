@@ -58,7 +58,9 @@ not compensate for an aggregate that omits it or reports failure as success.
 
 Discovery remains automatic:
 
-- packages come from `galerina.workspace.json`;
+- packages come from reconciling `galerina.workspace.json` with every
+  `packages-galerina/*/package.json`; an unregistered package directory or a
+  missing workspace target is a violation;
 - script tools come from tracked `scripts/*.mjs` and `scripts/*.cjs`;
 - package source and test files come from declared package roots;
 - generated outputs come from generator declarations; and
@@ -68,7 +70,8 @@ The derived inventory is compared with a small authoritative policy file.
 The policy records exceptions only; it does not hand-copy every discovered
 tool. Default rules are strict:
 
-- a workspace package must have a runnable, countable test suite;
+- every reconciled package must be registered in the workspace and have a
+  runnable, countable test suite;
 - an audit/lint must be blocking in a named cadence and have executable
   anti-neutering evidence;
 - a generator must have deterministic check/idempotence evidence and declared
@@ -101,8 +104,8 @@ not masquerade as a security failure.
 
 `run-all-tests.cjs` will:
 
-- discover from the workspace, not from a regex that recognises only selected
-  test-script spellings;
+- reconcile the workspace with actual package directories, not use a regex
+  that recognises only selected test-script spellings;
 - run every declared package test script, including benchmarks and Myco;
 - execute the package's real build/typecheck/test chain instead of bypassing
   it when `dist/` exists;
@@ -207,7 +210,8 @@ drift checks.
 
 The refactor is complete only when fresh evidence proves:
 
-1. every discovered workspace package is tested or governed as no-test;
+1. every package directory is registered, every workspace target exists, and
+   every reconciled package is tested or governed as no-test;
 2. every audit/lint is blocking in a declared tier and has live anti-neutering
    evidence, or has an exact reviewed exception;
 3. every generator is declared, executed, provenance-checked, and

@@ -33,6 +33,12 @@ planning checkbox must never be used to imply that implementation exists.
   `audit-gate-selftests.mjs` reports 13 audit/lint tools without executable
   anti-neutering evidence. The compiler package graph reports newly added
   SLIDE `.fungi` stages as orphans but still passes.
+- **Completed (plan correction):** reconciliation found 95 workspace entries
+  but 97 package directories. `galerina-devtools-benchmarks` and
+  `galerina-registry` are unregistered; a workspace-only inventory would
+  preserve the omission. The design now requires exact bidirectional
+  reconciliation, registers both packages, and keeps only the empty registry
+  as an explicit no-test exception.
 - **Completed (design):**
   `docs/superpowers/specs/2026-07-29-zero-trust-tooling-and-test-refactor-design.md`
   selects a derived inventory plus a small authoritative exception policy,
