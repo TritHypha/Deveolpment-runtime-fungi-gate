@@ -51,7 +51,8 @@ planning checkbox must never be used to imply that implementation exists.
 - **Completed:** designed the general executable-GIR successor as a new
   frontend-neutral v2 major. Frozen R1 bytes, IDs and semantics remain
   unchanged.
-- **Completed:** implemented the first V2-A frontend-neutral logical producer
+- **Completed:** local commit `b7998244` implements the first V2-A
+  frontend-neutral logical producer
   and semantic admission gate in
   `slide-v2a-logical-model.fungi` and `slide-v2a-validator.fungi`. It covers
   two typed functions, direct call, Boolean split, block-parameter join,
@@ -69,8 +70,8 @@ planning checkbox must never be used to imply that implementation exists.
   Frozen R1 remains 27/27. Regenerated project graph: 7,197 nodes / 7,461 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
-  124 tools, 40 proofs. Post-commit Myco refresh is pending this checkpoint's
-  local commit.
+  124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero
+  over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
