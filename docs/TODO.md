@@ -151,9 +151,14 @@ and bundle identity; Galerina is its first frontend.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
 - [ ] Prove frontend independence with at least one non-Galerina fixture
   frontend.
-- [ ] Locate and test the exact existing “3 x XOR” nesting mechanism named by
-  the owner. Preserve it only within its proven data/control domain; never use
-  binary/arithmetic XOR to collapse authority-bearing K3 Verdicts.
+- [x] Resolve the owner’s “3 x XOR” nesting recollection. RD-0395 and the live
+  cost-model evidence establish that compiled lexical nesting is erased; the
+  lexer-depth fix and arithmetic XOR are separate mechanisms. Tower Citizen’s
+  balanced-ternary XOR is type-separated from Verdict and must never aggregate
+  K3 authority (`xor(-1,-1)=+1`). A current four-deep Stage-A mutation probe
+  passes; retain a TODO for the exact historical `while -> if -> if -> while`
+  regression. Canonical decision:
+  `../../SLIDE/docs/NESTING-AND-XOR-DECISION.md`.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.
 
