@@ -17,6 +17,7 @@ function generatorFixture({
   outputs = ["build/declared.json", "build/provenance.json"],
   injectTimestamp = false,
   omitProvenance = false,
+  preexistingHidden = false,
 } = {}) {
   const root = mkdtempSync(join(tmpdir(), "generator-contract-"));
   const generator = "scripts/fake-generator.mjs";
@@ -62,6 +63,13 @@ for (const relativePath of writes) {
       },
     }, null, 2),
   );
+  if (preexistingHidden) {
+    write(
+      root,
+      "build/hidden.json",
+      JSON.stringify({ value: "stable" }, null, 2) + "\n",
+    );
+  }
   return { root, generator };
 }
 
@@ -78,6 +86,26 @@ test("an undeclared generated write is refused", async () => {
     const result = await verifyGenerator(root, generator);
     assert.deepEqual(result.unexpectedWrites, ["build/hidden.json"]);
     assert.equal(result.ok, false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("an undeclared same-byte rewrite is still refused", async () => {
+  const { root, generator } = generatorFixture({
+    outputs: ["build/declared.json", "build/provenance.json"],
+    writes: [
+      "build/declared.json",
+      "build/provenance.json",
+      "build/hidden.json",
+    ],
+    preexistingHidden: true,
+  });
+  try {
+    const result = await verifyGenerator(root, generator);
+    assert.equal(result.ok, false);
+    assert.equal(result.code, "GENERATOR-UNDECLARED-WRITE");
+    assert.deepEqual(result.unexpectedWrites, ["build/hidden.json"]);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

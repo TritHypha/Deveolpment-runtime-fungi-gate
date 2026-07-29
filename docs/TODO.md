@@ -193,11 +193,13 @@ planning checkbox must never be used to imply that implementation exists.
   also refuses artifact drift. Focused root-isolation and tamper tests are
   2/2; the combined affected suite is 23/23; the live generator audit passes
   2/2.
-- **Task 7 performance finding:** the exact whole-workspace before/after
-  snapshots took about 138 seconds for two live generators. Correctness is
-  intact, but phase-close cost will become excessive as the registry grows.
-  Optimize the snapshot implementation without weakening ignored/untracked
-  write detection before enabling the complete generator inventory.
+- **Task 7 snapshot hardening:** content hashes could detect changed bytes but
+  not an undeclared same-byte rewrite, and took about 138 seconds for two live
+  generators. The contract now compares file identity metadata including
+  nanosecond mtime/ctime plus size for the whole-tree mutation set, while
+  still comparing declared semantic output bytes directly. A planted
+  same-byte hidden rewrite now refuses. The affected suite is 24/24 and the
+  same live 2/2 audit completes in about 11.8 seconds.
 - **Task 7 remains incomplete:** ten named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base

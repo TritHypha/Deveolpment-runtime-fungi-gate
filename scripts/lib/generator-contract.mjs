@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   existsSync,
   readdirSync,
@@ -133,8 +132,11 @@ function walkFiles(root, directory = root, result = []) {
 function snapshot(root) {
   const files = new Map();
   for (const path of walkFiles(root).sort()) {
-    const bytes = readFileSync(join(root, path));
-    files.set(path, createHash("sha256").update(bytes).digest("hex"));
+    const metadata = statSync(join(root, path), { bigint: true });
+    files.set(
+      path,
+      `${metadata.size}:${metadata.mtimeNs}:${metadata.ctimeNs}`,
+    );
   }
   return files;
 }
