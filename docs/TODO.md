@@ -76,7 +76,7 @@ planning checkbox must never be used to imply that implementation exists.
   It preserves success, denial, unresolved, two overflow paths, malformed
   bytes, and invalid-fourth-Verdict refusal. V2-A is 27/27. Report:
   `docs/reports/slide-v2a-validated-runtime-2026-07-29.md`.
-- **Completed (uncommitted checkpoint):** the runner now caps caller work at
+- **Completed:** local commit `6a10ae06` makes the runner cap caller work at
   the admitted 64-step ceiling and terminally refuses zero, undersized, and
   mid-execution budgets as `SLIDE-V2A-RUNTIME-015`. V2-A is 28/28.
 - **Current:** specify the first versioned effect/capability increment and its
@@ -93,7 +93,7 @@ planning checkbox must never be used to imply that implementation exists.
   over-size skips after canonical encoding. The independent-import
   post-commit refresh indexes 4,091 files with zero over-size skips.
   The validated-runtime post-commit refresh indexes 4,093 files with zero
-  over-size skips.
+  over-size skips; the budget checkpoint retains that count.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
