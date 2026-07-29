@@ -71,7 +71,8 @@ const BASELINE_PATH = join(scriptDir, 'example-diagnostics-baseline.json');
 // message re-wording and emission order (the brittleness R&D rightly warned about with raw `why`),
 // while a genuine change of failure mode moves it. Derived from the stored `why`, so NO baseline
 // rewrite is needed: the existing file already holds everything required.
-const driftCodes = (why) => [...new Set((why ?? '').match(/FUNGI-[A-Z]+-\d+/g) ?? [])].sort().join(',');
+const DIAGNOSTIC_CODE_RE = /FUNGI-(?:[A-Z]+-)+\d+/g;
+const driftCodes = (why) => [...new Set((why ?? '').match(DIAGNOSTIC_CODE_RE) ?? [])].sort().join(',');
 const driftKey = (rel, category, why) => `${rel}\u0000${category}\u0000${driftCodes(why)}`;
 
 /** Coarse category for the burn-down worklist. */
@@ -137,7 +138,7 @@ export function proposedSetDrift(excludedDirNames, baseline) {
   return { unlisted, stale };
 }
 
-const CODE_RE = /FUNGI-[A-Z]+-\d+/g;
+const CODE_RE = DIAGNOSTIC_CODE_RE;
 const CLEAN_RE = /0 errors, 0 governance warnings/;
 const ADVISORY_RE = /\+(\d+)\s+FUNGI-\S+\s+advisory/; // the "hidden under plain" note
 
@@ -216,6 +217,7 @@ if (selfTest) {
   const cases = [
     ['parse none', parseExpectedText('/// expected_diagnostics: none').kind === 'none'],
     ['parse code', parseExpectedText('/// expected_diagnostics: FUNGI-TYPE-001').codes.has('FUNGI-TYPE-001')],
+    ['parse namespaced code', parseExpectedText('/// expected_diagnostics: FUNGI-HINT-COMPUTE-001').codes.has('FUNGI-HINT-COMPUTE-001')],
     ['parse missing', parseExpectedText('/// level: 1').kind === 'missing'],
     ['none+clean passes', verdict({ kind: 'none', codes: S([]) }, S([]), true).ok === true],
     ['none-that-errors CAUGHT', verdict({ kind: 'none', codes: S([]) }, S(['FUNGI-VALUESTATE-006']), false).ok === false],

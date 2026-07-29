@@ -234,9 +234,10 @@ test are green; all five affected package suites are green, including the
 compiler at 5,718/5,718. The global source-quality lint was then reduced from
 584 findings to zero without adding a whitelist entry. Its CRLF-offset and
 Galerina `;;` comment false negatives now have regression tests; real
-contract-placement and intent-syntax findings were repaired. Step 5 remains
-open only because the separate curriculum audit still carries 89 explicit
-known-drift rows. That debt is recorded in
+contract-placement and intent-syntax findings were repaired. The curriculum
+detector now accepts multi-part diagnostic codes and proves that case in its
+16/16 self-test; two false missing-header rows resolved, leaving 87 explicit
+known-drift rows. Step 5 remains open on that exact worklist. The debt is recorded in
 `docs/reports/fungi-corpus-adjudication-2026-07-29.md` and must be burned down,
 not baselined into this gate.
 

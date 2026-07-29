@@ -80,11 +80,15 @@ planning checkbox must never be used to imply that implementation exists.
   forms were migrated to current syntax. Network 192/192, security 15/15,
   unit-registry 7/7, corpus 0 implicit, and compiler-stage hashes are green.
 - **Task 3 still open:** `audit-example-diagnostics.mjs` is green only at an
-  explicit 89/233 known-drift worklist. Those examples remain beta-v1
+  explicit 87/233 known-drift worklist. Its diagnostic parser now recognizes
+  fail-closed multi-part codes such as `FUNGI-HINT-COMPUTE-001` and
+  `FUNGI-SYNTAX-LEGACY-001`; the detector self-test is 16/16. That stronger
+  identity resolved two false missing-header rows and exposed the exact
+  compute-hint codes on nine existing rows. Those examples remain beta-v1
   burn-down work and are not hidden in the now-empty corpus baseline. The
   generated unit registry was reconciled and its focused gate is 7/7; the
   source-rebuilt compiler is 5,718/5,718. The next safe work is to commit this
-  source-quality tranche and adjudicate the 89 curriculum rows.
+  detector correction and adjudicate the 87 curriculum rows.
 - **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this

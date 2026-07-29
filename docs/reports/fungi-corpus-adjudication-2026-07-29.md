@@ -12,10 +12,14 @@ source-quality chapter also reduced the global linter from 584 findings to
 zero without adding a whitelist entry. The separate curriculum-diagnostic
 inventory is not yet clean:
 
-- `audit-example-diagnostics.mjs` is green at its explicit 89/233 known-drift
+- `audit-example-diagnostics.mjs` is green at its explicit 87/233 known-drift
   worklist, with no new drift;
 
-The 89-row curriculum inventory remains beta-v1 blocking burn-down work. It
+The 87-row curriculum inventory remains beta-v1 blocking burn-down work. Its
+detector now recognizes multi-part codes such as
+`FUNGI-HINT-COMPUTE-001`; this resolved two false missing-header rows and
+made nine previously omitted hint codes part of their exact drift identity.
+The detector self-test is 16/16. The remaining inventory
 was not silenced or copied into the corpus baseline.
 
 ## Trust-boundary changes
