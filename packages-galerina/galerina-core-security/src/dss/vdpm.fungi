@@ -88,6 +88,7 @@ static VDPM_INITIAL_CAPABILITIES = 15728895
 // This is the canonical mapping. The Stage A compiler reads these constants
 // to compute policyResolutionDag (CBOR Tag 416) at compile time.
 
+// Map a declared effect name to its V_DPM capability bit
 pure flow capability_to_bitmask(effect: String) -> Int
 contract {
   intent { "Map a declared effect name to its V_DPM capability bit" }
@@ -121,6 +122,7 @@ contract {
 //
 // In the full DSS.wasm supervisor, this check happens inline in the WASI import broker.
 
+// O(1) V_DPM capability check — topology-first, then capability bits
 pure flow vdpm_check(vdpm: Int, effect: String) -> Bool
 contract {
   intent { "O(1) V_DPM capability check — topology-first, then capability bits" }
@@ -148,6 +150,7 @@ contract {
 // Monotonicity guarantee: Int.bitAnd with a keep_mask can ONLY clear bits.
 // keep_mask = MAX_UINT32 XOR clear_bits (complement computed as a constant).
 
+// Circuit breaker: clear network, storage, and AI capability bits
 pure flow vdpm_apply_circuit_breaker(vdpm: Int) -> Int
 contract {
   intent { "Circuit breaker: clear network, storage, and AI capability bits" }
@@ -163,6 +166,7 @@ contract {
   return Int.bitAnd(vdpm, keep_mask)
 }
 
+// Quarantine: set quarantine_engaged bit (bit 30) and clear all capability and topology bits
 pure flow vdpm_enter_quarantine(vdpm: Int) -> Int
 contract {
   intent { "Quarantine: set quarantine_engaged bit (bit 30) and clear all capability and topology bits" }
@@ -178,6 +182,7 @@ contract {
   return Int.bitOr(cleared, V_DPM.quarantine_engaged)
 }
 
+// Emergency mode: clear all capability and topology bits, set emergency_mode flag (bit 31)
 pure flow vdpm_enter_emergency(vdpm: Int) -> Int
 contract {
   intent { "Emergency mode: clear all capability and topology bits, set emergency_mode flag (bit 31)" }

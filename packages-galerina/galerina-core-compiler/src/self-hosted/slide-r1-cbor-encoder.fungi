@@ -19,6 +19,7 @@ record SLIDER1BodyExport {
   byteLength: Int
 }
 
+// Return a terminal refusal without releasing partial semantic bytes.
 pure flow refuseSLIDER1BodyExport(failureId: String, reasonText: String) -> SLIDER1BodyExport
 contract { intent { "Return a terminal refusal without releasing partial semantic bytes." } }
 {
@@ -32,6 +33,7 @@ contract { intent { "Return a terminal refusal without releasing partial semanti
   }
 }
 
+// Read one required integer or return a non-admissible sentinel.
 pure flow slideR1IntAt(values: Array<Int>, position: Int) -> Int
 contract { intent { "Read one required integer or return a non-admissible sentinel." } }
 {
@@ -43,6 +45,7 @@ contract { intent { "Read one required integer or return a non-admissible sentin
   }
 }
 
+// Read one required instruction or return a non-admissible sentinel.
 pure flow slideR1InstructionAt(
   values: Array<SLIDER1LogicalInstruction>,
   position: Int,
@@ -61,6 +64,7 @@ contract { intent { "Read one required instruction or return a non-admissible se
   }
 }
 
+// Read one required block or return a non-admissible sentinel.
 pure flow slideR1BlockAt(values: Array<SLIDER1LogicalBlock>, position: Int) -> SLIDER1LogicalBlock
 contract { intent { "Read one required block or return a non-admissible sentinel." } }
 {
@@ -84,6 +88,7 @@ contract { intent { "Read one required block or return a non-admissible sentinel
   }
 }
 
+// Read one required failure record or return a non-admissible sentinel.
 pure flow slideR1FailureAt(
   values: Array<SLIDER1LogicalFailure>,
   position: Int,
@@ -102,6 +107,7 @@ contract { intent { "Read one required failure record or return a non-admissible
   }
 }
 
+// Read one required K3 obligation or return a non-admissible sentinel.
 pure flow slideR1K3At(
   values: Array<SLIDER1LogicalK3Obligation>,
   position: Int,
@@ -126,6 +132,7 @@ contract { intent { "Read one required K3 obligation or return a non-admissible 
   }
 }
 
+// Compare bounded ordered integer identities without ignoring surplus values.
 pure flow slideR1ExactIntArray(actual: Array<Int>, expected: Array<Int>) -> Bool
 contract { intent { "Compare bounded ordered integer identities without ignoring surplus values." } }
 {
@@ -138,6 +145,7 @@ contract { intent { "Compare bounded ordered integer identities without ignoring
   return true
 }
 
+// Verify one typed instruction including all operands and its immediate.
 pure flow slideR1ExactInstruction(
   actual: SLIDER1LogicalInstruction,
   resultId: Int,
@@ -153,6 +161,7 @@ contract { intent { "Verify one typed instruction including all operands and its
   return identityOk and typeAndImmediateOk and slideR1ExactIntArray(actual.operands, operands)
 }
 
+// Verify one typed terminator and every explicit successor/value operand.
 pure flow slideR1ExactTerminator(
   actual: SLIDER1LogicalTerminator,
   terminatorId: Int,
@@ -163,6 +172,7 @@ contract { intent { "Verify one typed terminator and every explicit successor/va
   return actual.terminatorId == terminatorId and slideR1ExactIntArray(actual.operands, operands)
 }
 
+// Admit exactly the frozen typed-ID R1 semantic model before releasing bytes.
 pure flow slideR1ExactLogicalProgram(program: SLIDER1LogicalProgram) -> Bool
 contract { intent { "Admit exactly the frozen typed-ID R1 semantic model before releasing bytes." } }
 {
@@ -246,6 +256,7 @@ contract { intent { "Admit exactly the frozen typed-ID R1 semantic model before 
   return k3IdentityOk and k3EntryOk and k3ExitOk
 }
 
+// Encode one bounded canonical CBOR head or return an empty refusal sentinel.
 pure flow slideR1CBORHead(majorType: Int, value: Int) -> Bytes
 contract { intent { "Encode one bounded canonical CBOR head or return an empty refusal sentinel." } }
 {
@@ -258,12 +269,14 @@ contract { intent { "Encode one bounded canonical CBOR head or return an empty r
   return Bytes.of(majorType * 32 + 25, high, low)
 }
 
+// Encode one bounded unsigned integer with the shortest RFC 8949 representation.
 pure flow slideR1CBORUInt(value: Int) -> Bytes
 contract { intent { "Encode one bounded unsigned integer with the shortest RFC 8949 representation." } }
 {
   return slideR1CBORHead(0, value)
 }
 
+// Encode one definite-length UTF-8 CBOR text value.
 pure flow slideR1CBORText(value: String) -> Bytes
 contract { intent { "Encode one definite-length UTF-8 CBOR text value." } }
 {
@@ -273,6 +286,7 @@ contract { intent { "Encode one definite-length UTF-8 CBOR text value." } }
   return head.append(payload)
 }
 
+// Encode one definite-length array of bounded unsigned registry values.
 pure flow slideR1CBORIntArray(values: Array<Int>) -> Bytes
 contract { intent { "Encode one definite-length array of bounded unsigned registry values." } }
 {
@@ -285,6 +299,7 @@ contract { intent { "Encode one definite-length array of bounded unsigned regist
   return output
 }
 
+// Encode one typed five-field R1 instruction.
 pure flow slideR1CBORInstruction(value: SLIDER1LogicalInstruction) -> Bytes
 contract { intent { "Encode one typed five-field R1 instruction." } }
 {
@@ -297,6 +312,7 @@ contract { intent { "Encode one typed five-field R1 instruction." } }
   return output
 }
 
+// Encode one typed block with definite instruction and terminator arrays.
 pure flow slideR1CBORBlock(value: SLIDER1LogicalBlock) -> Bytes
 contract { intent { "Encode one typed block with definite instruction and terminator arrays." } }
 {
@@ -314,6 +330,7 @@ contract { intent { "Encode one typed block with definite instruction and termin
   return output
 }
 
+// Encode one five-field registered failure record.
 pure flow slideR1CBORFailure(value: SLIDER1LogicalFailure) -> Bytes
 contract { intent { "Encode one five-field registered failure record." } }
 {
@@ -323,6 +340,7 @@ contract { intent { "Encode one five-field registered failure record." } }
   return slideR1CBORIntArray(ids)
 }
 
+// Encode one six-field registered K3 obligation.
 pure flow slideR1CBORK3(value: SLIDER1LogicalK3Obligation) -> Bytes
 contract { intent { "Encode one six-field registered K3 obligation." } }
 {
@@ -333,6 +351,7 @@ contract { intent { "Encode one six-field registered K3 obligation." } }
   return slideR1CBORIntArray(ids)
 }
 
+// Release canonical deterministic CBOR only for the exact typed-ID R1 program.
 pure flow exportSLIDER1CanonicalBody(program: SLIDER1LogicalProgram) -> SLIDER1BodyExport
 contract { intent { "Release canonical deterministic CBOR only for the exact typed-ID R1 program." } }
 {

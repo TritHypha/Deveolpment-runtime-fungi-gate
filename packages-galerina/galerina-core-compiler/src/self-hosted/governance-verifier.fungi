@@ -80,6 +80,7 @@ contract {
 
 // ── Per-flow governance checks ────────────────────────────────
 
+// FUNGI-VAL-001/002: safety_critical flows must have audit.write and deterministic_execution.
 pure flow checkSafetyCritical(flowName: String, hasAudit: Bool, hasDeterministic: Bool) -> Array<Auto>
 contract {
   intent { "FUNGI-VAL-001/002: safety_critical flows must have audit.write and deterministic_execution." }
@@ -97,6 +98,7 @@ contract {
   return diags
 }
 
+// Secure flows should declare governance effects for traceability.
 pure flow checkSecureFlowGovernance(flowName: String, effectCount: Int) -> Array<Auto>
 contract {
   intent { "Secure flows should declare governance effects for traceability." }
@@ -112,6 +114,7 @@ contract {
 
 // ── Full governance verification pass ─────────────────────────
 
+// Run all governance checks across flows from the Stage B ParseResult.
 pure flow verifyGovernance(flows: Array<FlowDecl>) -> GovResult
 contract {
   intent { "Run all governance checks across flows from the Stage B ParseResult." }
@@ -242,6 +245,7 @@ contract {
 // The canonical .fungi implementation of FUNGI-GOV-004.
 // Stage A TypeScript in governance-verifier.ts is a bootstrap mirror of this logic.
 
+// Return true if a policy with the given name exists in the policies array.
 pure flow findPolicyExists(policies: Array<Auto>, name: String) -> Bool
 contract {
   intent { "Return true if a policy with the given name exists in the policies array." }
@@ -260,6 +264,7 @@ contract {
   return false
 }
 
+// Return true if the given effect is in the named policy's permitted_effects.
 pure flow effectIsPermitted(policies: Array<Auto>, policyName: String, effect: String) -> Bool
 contract {
   intent { "Return true if the given effect is in the named policy's permitted_effects." }
@@ -292,6 +297,7 @@ contract {
   return false
 }
 
+// FUNGI-GOV-004: verify declared effects ⊆ permitted_effects for each [conforms_to: X] contract.
 pure flow verifyDomainGuardConformance(flows: Array<FlowDecl>, policies: Array<Auto>) -> GovResult
 contract {
   intent { "FUNGI-GOV-004: verify declared effects ⊆ permitted_effects for each [conforms_to: X] contract." }
@@ -348,6 +354,7 @@ contract {
 
 // ── Body-governance verification pass ─────────────────────────
 
+// A secure flow must perform an audit call in its body (FUNGI-VAL-001).
 pure flow checkBodyGovernance(flows: Array<FlowDecl>) -> GovResult
 contract {
   intent { "A secure flow must perform an audit call in its body (FUNGI-VAL-001)." }

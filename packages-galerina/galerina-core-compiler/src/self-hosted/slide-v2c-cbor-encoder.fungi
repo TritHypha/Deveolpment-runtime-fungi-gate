@@ -13,6 +13,7 @@ record SLIDEV2CBodyExport {
   authorityReleased: Bool
 }
 
+// Refuse V2-C export without releasing partial bytes or authority.
 pure flow refuseSLIDEV2CBodyExport(
   failureId: String,
   detail: String,
@@ -25,6 +26,7 @@ contract { intent { "Refuse V2-C export without releasing partial bytes or autho
   }
 }
 
+// Encode one definite raw-byte payload.
 pure flow slideV2CCBORBytes(value: Bytes) -> Bytes
 contract { intent { "Encode one definite raw-byte payload." } }
 {
@@ -33,6 +35,7 @@ contract { intent { "Encode one definite raw-byte payload." } }
   return head.append(value)
 }
 
+// Encode all graph, aggregate, execution, and authority ceilings.
 pure flow slideV2CCBORLimits(value: SLIDEV2CExecutableLimits) -> Bytes
 contract { intent { "Encode all graph, aggregate, execution, and authority ceilings." } }
 {
@@ -49,6 +52,7 @@ contract { intent { "Encode all graph, aggregate, execution, and authority ceili
   )
 }
 
+// Encode one full registered constant definition.
 pure flow slideV2CCBORConstant(value: SLIDEV2CConstant) -> Bytes
 contract { intent { "Encode one full registered constant definition." } }
 {
@@ -60,6 +64,7 @@ contract { intent { "Encode one full registered constant definition." } }
   return output
 }
 
+// Encode one record ID and ordered numeric field/type pairs.
 pure flow slideV2CCBORRecordDescriptor(
   value: SLIDEV2CRecordDescriptor,
 ) -> Bytes
@@ -80,6 +85,7 @@ contract { intent { "Encode one record ID and ordered numeric field/type pairs."
   return output
 }
 
+// Encode one variant ID and ordered numeric case/type pairs.
 pure flow slideV2CCBORVariantDescriptor(
   value: SLIDEV2CVariantDescriptor,
 ) -> Bytes
@@ -100,6 +106,7 @@ contract { intent { "Encode one variant ID and ordered numeric case/type pairs."
   return output
 }
 
+// Release a complete 21-key V2-C body only after logical admission.
 pure flow exportSLIDEV2CCanonicalBody(
   program: SLIDEV2CExecutableProgram,
   aggregate: SLIDEV2CAggregateProgram,

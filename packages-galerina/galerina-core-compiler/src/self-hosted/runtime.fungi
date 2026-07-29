@@ -24,6 +24,7 @@ record TierDecision {
 
 // ── Tier selection logic ──────────────────────────────────────
 
+// Select the optimal execution tier for a flow given its governance properties.
 pure flow selectTier(qualifier: String, effectCount: Int, isIntegerOnly: Bool) -> TierDecision
 contract {
   intent { "Select the optimal execution tier for a flow given its governance properties." }
@@ -138,24 +139,28 @@ contract { intent { "Append all additions to base audit log." } }
   return result
 }
 
+// Build an Int runtime value.
 pure flow rtInt(n: Int) -> RtValue
 contract { intent { "Build an Int runtime value." } }
 {
   return { ty: "Int", i: n, b: false, s: "", tag: "", payload: Array.empty(), fields: Array.empty() }
 }
 
+// Build a Bool runtime value.
 pure flow rtBool(x: Bool) -> RtValue
 contract { intent { "Build a Bool runtime value." } }
 {
   return { ty: "Bool", i: 0, b: x, s: "", tag: "", payload: Array.empty(), fields: Array.empty() }
 }
 
+// Build an exact K3 Verdict runtime value; callers still face use-site validation.
 pure flow rtVerdict(x: Int) -> RtValue
 contract { intent { "Build an exact K3 Verdict runtime value; callers still face use-site validation." } }
 {
   return { ty: "Verdict", i: x, b: false, s: "", tag: "", payload: Array.empty(), fields: Array.empty() }
 }
 
+// Build a String runtime value.
 pure flow rtStr(x: String) -> RtValue
 contract { intent { "Build a String runtime value." } }
 {
@@ -800,6 +805,7 @@ contract { intent { "Evaluate a statement's single carried GIR expression, or In
   }
 }
 
+// Count exact K3 successor labels so missing and duplicate arms refuse.
 pure flow countK3Arm(arms: Array<GIRStmt>, label: String) -> Int
 contract { intent { "Count exact K3 successor labels so missing and duplicate arms refuse." } }
 {
@@ -819,6 +825,7 @@ contract { intent { "Count exact K3 successor labels so missing and duplicate ar
   return count
 }
 
+// Return the uniquely validated K3 successor for a label.
 pure flow findK3Arm(arms: Array<GIRStmt>, label: String) -> GIRStmt
 contract { intent { "Return the uniquely validated K3 successor for a label." } }
 {
@@ -1095,6 +1102,7 @@ record RunResult {
   auditLog: Array<AuditEntry>
 }
 
+// Run a flow-table program from an entry flow with positional args; return value + audit log.
 pure flow runProgram(flows: Array<FlowEntry>, entryName: String, args: Array<RtValue>) -> RunResult
 contract { intent { "Run a flow-table program from an entry flow with positional args; return value + audit log." } }
 {

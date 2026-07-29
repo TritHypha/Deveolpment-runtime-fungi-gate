@@ -16,6 +16,7 @@ record SLIDER1ReferenceResult {
   importFailureId: String
 }
 
+// Leave the execution path when structural byte admission is not ALLOW.
 pure flow refuseSLIDER1ReferenceImport(failureId: String) -> SLIDER1ReferenceResult
 contract { intent { "Leave the execution path when structural byte admission is not ALLOW." } }
 {
@@ -28,6 +29,7 @@ contract { intent { "Leave the execution path when structural byte admission is 
   }
 }
 
+// Return one declared typed R1 failure and no success value.
 pure flow failSLIDER1Reference(failureId: Int) -> SLIDER1ReferenceResult
 contract { intent { "Return one declared typed R1 failure and no success value." } }
 {
@@ -40,6 +42,7 @@ contract { intent { "Return one declared typed R1 failure and no success value."
   }
 }
 
+// Reference-execute the exact imported checked-add/K3 graph with total terminal outcomes.
 pure flow executeSLIDER1Imported(
   body: Bytes,
   left: Int,

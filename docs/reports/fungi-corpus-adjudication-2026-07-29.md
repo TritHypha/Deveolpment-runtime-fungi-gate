@@ -7,17 +7,16 @@ now checks every positive `.fungi` source it owns and accepts intentional
 negative fixtures only when an adjacent exact diagnostic contract agrees with
 the compiler result.
 
-This closes the old 29-file implicit exception list. It does **not** claim that
-the separate source-quality and curriculum-diagnostic inventories are clean:
+This closes the old 29-file implicit exception list. The follow-on
+source-quality chapter also reduced the global linter from 584 findings to
+zero without adding a whitelist entry. The separate curriculum-diagnostic
+inventory is not yet clean:
 
 - `audit-example-diagnostics.mjs` is green at its explicit 89/233 known-drift
   worklist, with no new drift;
-- `lint-fungi.mjs` still refuses 584 findings across 103 non-fixture files:
-  489 missing human comments, 86 missing contracts, and 9 missing contract
-  intents.
 
-Those two inventories remain beta-v1 blocking burn-down work. They were not
-silenced or copied into the corpus baseline.
+The 89-row curriculum inventory remains beta-v1 blocking burn-down work. It
+was not silenced or copied into the corpus baseline.
 
 ## Trust-boundary changes
 
@@ -37,6 +36,13 @@ silenced or copied into the corpus baseline.
 - The legacy core analyzer no longer injects an enabled binary target or the
   synthetic `LOProject` identity. Portable `.fungi` source cannot mint host
   target, driver, runtime, memory, secret, or environment authority.
+- The source-quality linter now computes exact offsets for LF and CRLF instead
+  of treating every line ending as one byte. It also recognizes Galerina's
+  attached `;;` human comments. Both behaviors have negative/control tests.
+- Existing exact contract intents were promoted into attached comments for
+  472 flows. The remaining legacy network contracts were moved out of flow
+  bodies and converted to current `intent { "..." }` syntax; nine DSS intents
+  were similarly migrated. No behavior or authority claim was added.
 
 ## Original 29-file adjudication
 

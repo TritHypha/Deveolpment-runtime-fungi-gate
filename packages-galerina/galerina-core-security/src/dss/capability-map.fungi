@@ -18,7 +18,7 @@ import "./vdpm.fungi"
 ;; This is the .fungi equivalent of capabilityToBitmask() in capability-types.ts.
 pure flow effectToBitmask(effect: String) -> Int
 contract {
-  intent "Map a declared effect name to its V_DPM capability bitmask"
+  intent { "Map a declared effect name to its V_DPM capability bitmask." }
   effects {}
 }
 {
@@ -44,7 +44,7 @@ contract {
 ;; Returns false if bit is 0 (capability cleared by emergency transition or denial).
 pure flow isCapabilityPermitted(vdpm: Int, effect: String) -> Bool
 contract {
-  intent "O(1) V_DPM capability check — is this effect permitted?"
+  intent { "Determine whether the current V_DPM state permits the requested effect." }
   effects {}
 }
 {

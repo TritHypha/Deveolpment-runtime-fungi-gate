@@ -252,6 +252,7 @@ contract {
 
 // â”€â”€ Token accessor helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
+// Safely read token value at pos; empty string when out of bounds.
 pure flow tokVal(tokens: Array<Token>, pos: Int) -> String
 contract { intent { "Safely read token value at pos; empty string when out of bounds." } }
 {
@@ -949,6 +950,7 @@ contract { intent { "Parse unary prefix operators ! and - over parsePrimary." } 
   return parsePrimaryWithMember(tokens, p)
 }
 
+// Left-associative * and / over parseUnary.
 pure flow parseMultiplicative(tokens: Array<Token>, pos: Int) -> ExprParse
 contract { intent { "Left-associative * and / over parseUnary." } }
 {
@@ -975,6 +977,7 @@ contract { intent { "Left-associative * and / over parseUnary." } }
   return { expr: left, nextPos: p }
 }
 
+// Left-associative + and - over parseMultiplicative.
 pure flow parseAdditive(tokens: Array<Token>, pos: Int) -> ExprParse
 contract { intent { "Left-associative + and - over parseMultiplicative." } }
 {
@@ -1001,6 +1004,7 @@ contract { intent { "Left-associative + and - over parseMultiplicative." } }
   return { expr: left, nextPos: p }
 }
 
+// Left-associative comparison operators over parseAdditive.
 pure flow parseComparison(tokens: Array<Token>, pos: Int) -> ExprParse
 contract { intent { "Left-associative comparison operators over parseAdditive." } }
 {
@@ -1057,12 +1061,14 @@ contract { intent { "Left-associative logical and/or over parseComparison." } }
   return { expr: left, nextPos: p }
 }
 
+// Parse a full expression by recursive descent from the lowest-precedence level.
 pure flow parseExpr(tokens: Array<Token>, pos: Int) -> ExprParse
 contract { intent { "Parse a full expression by recursive descent from the lowest-precedence level." } }
 {
   return parseLogical(tokens, pos)
 }
 
+// Build the [left, right] children array for a binary node.
 pure flow makePair(a: Expr, b: Expr) -> Array<Expr>
 contract { intent { "Build the [left, right] children array for a binary node." } }
 {
@@ -1789,6 +1795,7 @@ record EnumDeclParse {
   error: String
 }
 
+// Preserve one ordered record/type declaration as checked frontend facts.
 pure flow parseTopLevelRecordDecl(
   tokens: Array<Token>,
   keywordPos: Int,
@@ -1865,6 +1872,7 @@ contract { intent { "Preserve one ordered record/type declaration as checked fro
   }
 }
 
+// Preserve one ordered payload-free enum declaration as checked frontend facts.
 pure flow parseTopLevelEnumDecl(
   tokens: Array<Token>,
   keywordPos: Int,
@@ -1938,6 +1946,7 @@ contract { intent { "Preserve one ordered payload-free enum declaration as check
   }
 }
 
+// Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050).
 pure flow parseFlows(tokens: Array<Token>) -> ParseResult
 contract {
   intent { "Parse Galerina flow declarations from a token stream. Milestone 1: flow headers only. Fail-closed: malformed source reports FUNGI-PARSE-00x errors, never a silent skip (R&D 0050)." }

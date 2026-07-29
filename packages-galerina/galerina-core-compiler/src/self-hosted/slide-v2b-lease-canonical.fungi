@@ -12,6 +12,7 @@ record SLIDEV2BLeaseSigningEvidence {
   signingDigest: String
 }
 
+// Release no signing bytes or digest when lease canonicalization refuses.
 pure flow emptySLIDEV2BLeaseSigningEvidence(
   failureId: String,
   detail: String,
@@ -28,6 +29,7 @@ contract { intent { "Release no signing bytes or digest when lease canonicalizat
   }
 }
 
+// Encode a shortest-form bounded deterministic-CBOR head.
 pure flow slideV2BCBORHead(majorType: Int, value: Int) -> Bytes
 contract { intent { "Encode a shortest-form bounded deterministic-CBOR head." } }
 {
@@ -50,12 +52,14 @@ contract { intent { "Encode a shortest-form bounded deterministic-CBOR head." } 
   return Bytes.of(majorType * 32 + 26, byte3, byte2, byte1, byte0)
 }
 
+// Encode one bounded unsigned integer.
 pure flow slideV2BCBORUInt(value: Int) -> Bytes
 contract { intent { "Encode one bounded unsigned integer." } }
 {
   return slideV2BCBORHead(0, value)
 }
 
+// Encode one definite UTF-8 text value.
 pure flow slideV2BCBORText(value: String) -> Bytes
 contract { intent { "Encode one definite UTF-8 text value." } }
 {
@@ -65,6 +69,7 @@ contract { intent { "Encode one definite UTF-8 text value." } }
   return head.append(payload)
 }
 
+// Derive exact canonical lease signing bytes after unsigned-shape validation.
 pure flow deriveSLIDEV2BLeaseSigningEvidence(
   lease: SLIDEV2BLease,
   request: SLIDEV2BCapabilityRequest,

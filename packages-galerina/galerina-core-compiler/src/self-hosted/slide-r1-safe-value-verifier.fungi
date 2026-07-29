@@ -11,6 +11,7 @@ record SLIDER1MemoryDecision {
   satisfiedInvariantIds: Array<Int>
 }
 
+// Return a terminal denial without memory-profile authority.
 pure flow slideR1MemoryRefusal(
   failureId: String,
   detail: String,
@@ -26,12 +27,14 @@ contract { intent { "Return a terminal denial without memory-profile authority."
   }
 }
 
+// Name the semantic-layer safe-value invariants established by frozen R1.
 pure flow slideR1SafeValueInvariantIds() -> Array<Int>
 contract { intent { "Name the semantic-layer safe-value invariants established by frozen R1." } }
 {
   return Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 }
 
+// Require validated, bounded, effect-free, no-address R1 before semantic-memory admission.
 pure flow validateSLIDER1SafeValueProgram(
   program: SLIDER1DecodedProgram,
 ) -> SLIDER1MemoryDecision
@@ -138,6 +141,7 @@ contract {
   }
 }
 
+// Decode and validate exact R1 semantics before applying the safe-value semantic-memory gate.
 pure flow importAndValidateSLIDER1SafeValue(
   body: Bytes,
 ) -> SLIDER1MemoryDecision

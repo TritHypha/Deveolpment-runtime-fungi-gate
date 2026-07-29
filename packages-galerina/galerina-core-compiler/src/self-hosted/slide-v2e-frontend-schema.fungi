@@ -91,6 +91,7 @@ record SLIDEV2EFrontendEvidence {
   authorityReleased: Bool
 }
 
+// Return no plan digest for refused frontend evidence.
 pure flow emptySLIDEV2EPlans() -> SLIDEV2EPlanDigests
 contract { intent { "Return no plan digest for refused frontend evidence." } }
 {
@@ -101,6 +102,7 @@ contract { intent { "Return no plan digest for refused frontend evidence." } }
   }
 }
 
+// Return a non-admissible receipt sentinel with no authority.
 pure flow emptySLIDEV2EReceipt() -> SLIDEV2EFrontendReceipt
 contract { intent { "Return a non-admissible receipt sentinel with no authority." } }
 {
@@ -120,6 +122,7 @@ contract { intent { "Return a non-admissible receipt sentinel with no authority.
   }
 }
 
+// Refuse V2-E without partial source, mapping, receipt, or authority.
 pure flow refuseSLIDEV2EFrontendEvidence(
   failureId: String,
   detail: String,
@@ -134,6 +137,7 @@ contract { intent { "Refuse V2-E without partial source, mapping, receipt, or au
   }
 }
 
+// Return the exact normalized-source span for one frozen fixture flow.
 pure flow slideV2EFunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan
 contract { intent { "Return the exact normalized-source span for one frozen fixture flow." } }
 {
@@ -145,6 +149,7 @@ contract { intent { "Return the exact normalized-source span for one frozen fixt
   }
 }
 
+// Map every admitted instruction and terminator exactly once.
 pure flow materializeSLIDEV2ESourceMappings(
   program: SLIDEV2DExecutableProgram,
 ) -> Array<SLIDEV2ESourceMapEntry>
@@ -185,12 +190,14 @@ contract { intent { "Map every admitted instruction and terminator exactly once.
   return mappings
 }
 
+// Domain-bind one independently admitted canonical plan envelope.
 pure flow slideV2EPlanDigest(domainId: String, semanticBody: Bytes) -> String
 contract { intent { "Domain-bind one independently admitted canonical plan envelope." } }
 {
   return domainId.encode().append(Bytes.of(0)).append(semanticBody).sha256Hex()
 }
 
+// Derive nine distinct common-plan digests from exact admitted GIR bytes.
 pure flow deriveSLIDEV2EPlanDigests(
   semanticBody: Bytes,
 ) -> SLIDEV2EPlanDigests
@@ -227,6 +234,7 @@ contract { intent { "Derive nine distinct common-plan digests from exact admitte
   }
 }
 
+// Canonicalize one stable source-unit descriptor without ambient paths.
 pure flow slideV2ECBORSourceSet(
   source: SLIDEV2ESourceUnit,
 ) -> Bytes
@@ -241,6 +249,7 @@ contract { intent { "Canonicalize one stable source-unit descriptor without ambi
   return body
 }
 
+// Canonicalize the complete ordered source-map table.
 pure flow slideV2ECBORSourcemap(
   mappings: Array<SLIDEV2ESourceMapEntry>,
 ) -> Bytes
@@ -270,12 +279,14 @@ contract { intent { "Canonicalize the complete ordered source-map table." } }
   return body
 }
 
+// Hash canonical frontend evidence under an explicit domain.
 pure flow slideV2EDomainDigest(domainId: String, body: Bytes) -> String
 contract { intent { "Hash canonical frontend evidence under an explicit domain." } }
 {
   return domainId.encode().append(Bytes.of(0)).append(body).sha256Hex()
 }
 
+// Require every external evidence digest to have SHA-256 width.
 pure flow slideV2EAllExternalDigestsShaped(
   compilerArtifactDigest: String,
   diagnosticSetDigest: String,
@@ -293,6 +304,7 @@ contract { intent { "Require every external evidence digest to have SHA-256 widt
   return first and second and third and slideV2EIsCanonicalSHA256(environmentContractDigest)
 }
 
+// Accept exactly one lowercase 32-byte SHA-256 hexadecimal encoding.
 pure flow slideV2EIsCanonicalSHA256(value: String) -> Bool
 contract { intent { "Accept exactly one lowercase 32-byte SHA-256 hexadecimal encoding." } }
 {
@@ -301,6 +313,7 @@ contract { intent { "Accept exactly one lowercase 32-byte SHA-256 hexadecimal en
   return decoded.length() == 32 and decoded.toHex() == value
 }
 
+// Compare every external evidence claim to caller-owned expectations.
 pure flow slideV2EExternalEvidenceMatches(
   receipt: SLIDEV2EFrontendReceipt,
   expected: SLIDEV2EExternalEvidenceExpectation,

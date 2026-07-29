@@ -14,6 +14,7 @@ record SLIDEV2DWireDecision {
   authorityReleased: Bool
 }
 
+// Return the independently pinned 791-byte V2-D reference vector.
 pure flow slideV2DCanonicalReferenceBytes() -> Bytes
 contract { intent { "Return the independently pinned 791-byte V2-D reference vector." } }
 {
@@ -24,6 +25,7 @@ contract { intent { "Return the independently pinned 791-byte V2-D reference vec
   return Bytes.fromHex(part1 + part2 + part3 + part4)
 }
 
+// Refuse canonical admission without graph or runtime authority.
 pure flow refuseSLIDEV2DWire(
   failureId: String,
   detail: String,
@@ -39,6 +41,7 @@ contract { intent { "Refuse canonical admission without graph or runtime authori
   }
 }
 
+// Admit only the complete independently pinned first V2-D vector.
 pure flow validateSLIDEV2DCanonicalBody(
   candidate: Bytes,
 ) -> SLIDEV2DWireDecision

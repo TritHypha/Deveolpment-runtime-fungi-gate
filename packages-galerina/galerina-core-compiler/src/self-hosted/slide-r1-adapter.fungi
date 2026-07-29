@@ -92,18 +92,21 @@ record SLIDER1AdapterResult {
   program: SLIDER1LogicalProgram
 }
 
+// Expose the compiler-derived fixture identity for adapter differential tests.
 pure flow deriveSLIDER1FixtureName(flowEntry: R1CompilerFlow) -> String
 contract { intent { "Expose the compiler-derived fixture identity for adapter differential tests." } }
 {
   return flowEntry.name
 }
 
+// Return a non-admissible expression sentinel for bounded shape inspection.
 pure flow emptyR1Expr() -> R1InputExpr
 contract { intent { "Return a non-admissible expression sentinel for bounded shape inspection." } }
 {
   return { op: "missing", ty: "", value: "", kids: Array.empty() }
 }
 
+// Return a non-admissible statement sentinel for bounded shape inspection.
 pure flow emptyR1Stmt() -> R1InputStmt
 contract { intent { "Return a non-admissible statement sentinel for bounded shape inspection." } }
 {
@@ -117,6 +120,7 @@ contract { intent { "Return a non-admissible statement sentinel for bounded shap
   }
 }
 
+// Return the first expression or a non-admissible sentinel.
 pure flow firstR1Expr(exprs: Array<R1InputExpr>) -> R1InputExpr
 contract { intent { "Return the first expression or a non-admissible sentinel." } }
 {
@@ -128,6 +132,7 @@ contract { intent { "Return the first expression or a non-admissible sentinel." 
   }
 }
 
+// Return the first statement or a non-admissible sentinel.
 pure flow firstR1Stmt(stmts: Array<R1InputStmt>) -> R1InputStmt
 contract { intent { "Return the first statement or a non-admissible sentinel." } }
 {
@@ -139,6 +144,7 @@ contract { intent { "Return the first statement or a non-admissible sentinel." }
   }
 }
 
+// Count one exact K3 arm label.
 pure flow countR1Arm(arms: Array<R1InputStmt>, label: String) -> Int
 contract { intent { "Count one exact K3 arm label." } }
 {
@@ -158,6 +164,7 @@ contract { intent { "Count one exact K3 arm label." } }
   return count
 }
 
+// Return an exact labelled K3 arm after the caller validates uniqueness.
 pure flow findR1Arm(arms: Array<R1InputStmt>, label: String) -> R1InputStmt
 contract { intent { "Return an exact labelled K3 arm after the caller validates uniqueness." } }
 {
@@ -177,6 +184,7 @@ contract { intent { "Return an exact labelled K3 arm after the caller validates 
   return found
 }
 
+// Recognize one leaf load without coercion or hidden children.
 pure flow isR1Load(expr: R1InputExpr, expectedName: String) -> Bool
 contract { intent { "Recognize one leaf load without coercion or hidden children." } }
 {
@@ -184,6 +192,7 @@ contract { intent { "Recognize one leaf load without coercion or hidden children
   return exactIdentity and expr.ty == "" and expr.kids.count() == 0
 }
 
+// Recognize one exact string constant.
 pure flow isR1StringConst(expr: R1InputExpr, expectedValue: String) -> Bool
 contract { intent { "Recognize one exact string constant." } }
 {
@@ -192,6 +201,7 @@ contract { intent { "Recognize one exact string constant." } }
   return exactKind and exactValue
 }
 
+// Recognize an exact terminal Err(String) K3 arm.
 pure flow isR1ErrorArm(arm: R1InputStmt, expectedText: String) -> Bool
 contract { intent { "Recognize an exact terminal Err(String) K3 arm." } }
 {
@@ -213,6 +223,7 @@ contract { intent { "Recognize an exact terminal Err(String) K3 arm." } }
   return isR1StringConst(firstR1Expr(call.kids), expectedText)
 }
 
+// Recognize the exact terminal Ok(checked left + right) ALLOW arm.
 pure flow isR1AllowArm(arm: R1InputStmt) -> Bool
 contract { intent { "Recognize the exact terminal Ok(checked left + right) ALLOW arm." } }
 {
@@ -254,6 +265,7 @@ contract { intent { "Recognize the exact terminal Ok(checked left + right) ALLOW
   return leftOk and rightOk
 }
 
+// Return a string at an exact position or an empty refusal sentinel.
 pure flow r1StringAt(values: Array<String>, position: Int) -> String
 contract { intent { "Return a string at an exact position or an empty refusal sentinel." } }
 {
@@ -265,6 +277,7 @@ contract { intent { "Return a string at an exact position or an empty refusal se
   }
 }
 
+// Return a clearly non-materialized logical program for refusal results.
 pure flow emptySLIDER1LogicalProgram() -> SLIDER1LogicalProgram
 contract { intent { "Return a clearly non-materialized logical program for refusal results." } }
 {
@@ -286,6 +299,7 @@ contract { intent { "Return a clearly non-materialized logical program for refus
   }
 }
 
+// Materialize the closed logical R1 program after exact source-GIR validation.
 pure flow materializeSLIDER1Fixture() -> SLIDER1LogicalProgram
 contract { intent { "Materialize the closed logical R1 program after exact source-GIR validation." } }
 {
@@ -362,6 +376,7 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
   }
 }
 
+// Derive preflight facts from one compiler-owned GIR flow and materialize only the exact R1 fixture.
 pure flow adaptSLIDER1Fixture(flowEntry: R1CompilerFlow) -> SLIDER1AdapterResult
 contract {
   intent { "Derive preflight facts from one compiler-owned GIR flow and materialize only the exact R1 fixture." }

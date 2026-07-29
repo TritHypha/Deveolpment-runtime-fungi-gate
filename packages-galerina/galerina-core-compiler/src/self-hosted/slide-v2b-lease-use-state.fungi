@@ -27,6 +27,7 @@ record SLIDEV2BLeaseUseReservation {
   expectedGeneration: Int
 }
 
+// Materialize a non-usable state for terminal refusal records.
 pure flow emptySLIDEV2BLeaseUseState() -> SLIDEV2BLeaseUseState
 contract { intent { "Materialize a non-usable state for terminal refusal records." } }
 {
@@ -37,6 +38,7 @@ contract { intent { "Materialize a non-usable state for terminal refusal records
   }
 }
 
+// Refuse a lease-use proposal without releasing state or digest.
 pure flow refuseSLIDEV2BLeaseUseReservation(
   failureId: String,
   detail: String,
@@ -52,6 +54,7 @@ contract { intent { "Refuse a lease-use proposal without releasing state or dige
   }
 }
 
+// Bind the lease nonce to its registered digest domain.
 pure flow slideV2BLeaseNonceDigest(lease: SLIDEV2BLease) -> String
 contract { intent { "Bind the lease nonce to its registered digest domain." } }
 {
@@ -61,6 +64,7 @@ contract { intent { "Bind the lease nonce to its registered digest domain." } }
   return domainPrefix.append(lease.nonce.encode()).sha256Hex()
 }
 
+// Encode one exact lease-use state as deterministic CBOR.
 pure flow slideV2BLeaseUseStateCanonicalBytes(
   state: SLIDEV2BLeaseUseState,
 ) -> Bytes
@@ -80,6 +84,7 @@ contract { intent { "Encode one exact lease-use state as deterministic CBOR." } 
   return body
 }
 
+// Bind one canonical lease-use state to its registered digest domain.
 pure flow slideV2BLeaseUseStateDigest(
   state: SLIDEV2BLeaseUseState,
 ) -> String
@@ -93,6 +98,7 @@ contract { intent { "Bind one canonical lease-use state to its registered digest
   return domainPrefix.append(body).sha256Hex()
 }
 
+// Materialize deterministic unconsumed state for the reference fixture.
 pure flow materializeSLIDEV2BInitialLeaseUseState(
   lease: SLIDEV2BLease,
 ) -> SLIDEV2BLeaseUseFixture
@@ -108,6 +114,7 @@ contract { intent { "Materialize deterministic unconsumed state for the referenc
   return { state: state stateDigest: slideV2BLeaseUseStateDigest(state) }
 }
 
+// Propose one exact nonce/call transition without claiming atomic commit.
 pure flow proposeSLIDEV2BLeaseUseReservation(
   lease: SLIDEV2BLease,
   request: SLIDEV2BCapabilityRequest,

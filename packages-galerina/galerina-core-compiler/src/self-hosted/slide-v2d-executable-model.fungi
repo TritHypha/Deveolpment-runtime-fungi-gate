@@ -38,6 +38,7 @@ record SLIDEV2DExecutableProgram {
   authorityReleased: Bool
 }
 
+// Materialize frozen executable facts plus the V2-D guarded function.
 pure flow materializeSLIDEV2DExecutableProgram() -> SLIDEV2DExecutableProgram
 contract { intent { "Materialize frozen executable facts plus the V2-D guarded function." } }
 {

@@ -28,6 +28,7 @@ record SLIDEV2AEdgeBinding {
   store: SLIDEV2AValueStore
 }
 
+// Create a fixed no-address value store with every slot undefined.
 pure flow emptySLIDEV2AValueStore() -> SLIDEV2AValueStore
 contract { intent { "Create a fixed no-address value store with every slot undefined." } }
 {
@@ -42,6 +43,7 @@ contract { intent { "Create a fixed no-address value store with every slot undef
   return { values: values defined: defined }
 }
 
+// Return a new bounded store with one explicit SSA slot initialized.
 pure flow slideV2AStoreValue(
   store: SLIDEV2AValueStore,
   resultId: Int,
@@ -65,6 +67,7 @@ contract { intent { "Return a new bounded store with one explicit SSA slot initi
   return { values: values defined: defined }
 }
 
+// Read one initialized value or return a terminal-only sentinel.
 pure flow slideV2AStoreRead(
   store: SLIDEV2AValueStore,
   resultId: Int,
@@ -76,6 +79,7 @@ contract { intent { "Read one initialized value or return a terminal-only sentin
   return slideV2AIntAt(store.values, resultId)
 }
 
+// Compute checked Int32 addition without wrapping.
 pure flow slideV2ACheckedAdd(left: Int, right: Int) -> SLIDEV2AFunctionResult
 contract { intent { "Compute checked Int32 addition without wrapping." } }
 {
@@ -89,6 +93,7 @@ contract { intent { "Compute checked Int32 addition without wrapping." } }
   return { ok: true value: sum failureId: 0 steps: 1 }
 }
 
+// Terminate a V2-A invocation without executing a fallback.
 pure flow slideV2ARuntimeRefusal(
   failureId: String,
   reasonText: String,
@@ -104,6 +109,7 @@ contract { intent { "Terminate a V2-A invocation without executing a fallback." 
   }
 }
 
+// Instruction-drive the admitted pure V2-A callee.
 pure flow executeSLIDEV2ACallee(
   function: SLIDEV2AFunction,
   argument: Int,
@@ -158,6 +164,7 @@ contract { intent { "Instruction-drive the admitted pure V2-A callee." } }
   return { ok: true value: returned failureId: 0 steps: steps + 1 }
 }
 
+// Transfer exact typed edge arguments into target block-parameter slots.
 pure flow slideV2ABindEdge(
   source: SLIDEV2AValueStore,
   edge: SLIDEV2AEdge,
@@ -183,6 +190,7 @@ contract { intent { "Transfer exact typed edge arguments into target block-param
   return { ok: true store: bound }
 }
 
+// Decode, validate, and instruction-drive the V2-A entry function without fallback.
 pure flow executeSLIDEV2AWithBudget(
   body: Bytes,
   left: Int,
@@ -436,6 +444,7 @@ contract { intent { "Decode, validate, and instruction-drive the V2-A entry func
   }
 }
 
+// Execute V2-A under its exact admitted 64-step ceiling.
 pure flow executeSLIDEV2ABytes(
   body: Bytes,
   left: Int,

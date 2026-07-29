@@ -20,6 +20,7 @@ record SLIDER1WireDecision {
   bodySha256: String
 }
 
+// Return the independently pinned canonical R1 semantic-body vector.
 pure flow slideR1CanonicalReferenceBytes() -> Bytes
 contract { intent { "Return the independently pinned canonical R1 semantic-body vector." } }
 {
@@ -29,6 +30,7 @@ contract { intent { "Return the independently pinned canonical R1 semantic-body 
   return Bytes.fromHex(part1 + part2 + part3)
 }
 
+// Return a stable terminal refusal without interpreting unadmitted bytes.
 pure flow refuseSLIDER1Wire(
   failureId: String,
   reasonText: String,
@@ -49,6 +51,7 @@ contract { intent { "Return a stable terminal refusal without interpreting unadm
   }
 }
 
+// Admit only the exact bounded canonical SLIDE R1 semantic-body vector and reject all drift.
 pure flow validateSLIDER1CanonicalBody(candidate: Bytes) -> SLIDER1WireDecision
 contract {
   intent { "Admit only the exact bounded canonical SLIDE R1 semantic-body vector and reject all drift." }

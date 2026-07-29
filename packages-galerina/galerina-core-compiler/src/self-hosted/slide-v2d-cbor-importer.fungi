@@ -25,6 +25,7 @@ record SLIDEV2DProgramImport {
   authorityReleased: Bool
 }
 
+// Return inert graph ceilings behind import refusal.
 pure flow emptySLIDEV2DGraphLimits() -> SLIDEV2CExecutableLimits
 contract { intent { "Return inert graph ceilings behind import refusal." } }
 {
@@ -38,6 +39,7 @@ contract { intent { "Return inert graph ceilings behind import refusal." } }
   }
 }
 
+// Return inert semantic-memory ceilings behind refusal.
 pure flow emptySLIDEV2DMemoryLimits() -> SLIDEV2DMemoryLimits
 contract { intent { "Return inert semantic-memory ceilings behind refusal." } }
 {
@@ -49,6 +51,7 @@ contract { intent { "Return inert semantic-memory ceilings behind refusal." } }
   }
 }
 
+// Return a no-authority empty V2-D graph behind refusal.
 pure flow emptySLIDEV2DExecutableProgram() -> SLIDEV2DExecutableProgram
 contract { intent { "Return a no-authority empty V2-D graph behind refusal." } }
 {
@@ -72,6 +75,7 @@ contract { intent { "Return a no-authority empty V2-D graph behind refusal." } }
   }
 }
 
+// Expose no partial V2-D graph, memory plan, or authority.
 pure flow refusedSLIDEV2DImport(
   cursor: SLIDEV2AImportCursor,
 ) -> SLIDEV2DProgramImport
@@ -84,6 +88,7 @@ contract { intent { "Expose no partial V2-D graph, memory plan, or authority." }
   }
 }
 
+// Decode one exact no-address region descriptor.
 pure flow slideV2DDecodeRegion(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -116,6 +121,7 @@ contract { intent { "Decode one exact no-address region descriptor." } }
   }
 }
 
+// Decode one exact initialized owned memory object.
 pure flow slideV2DDecodeMemoryObject(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -161,6 +167,7 @@ contract { intent { "Decode one exact initialized owned memory object." } }
   }
 }
 
+// Decode one exact guard/access dominance descriptor.
 pure flow slideV2DDecodeGuard(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -200,6 +207,7 @@ contract { intent { "Decode one exact guard/access dominance descriptor." } }
   }
 }
 
+// Reconstruct complete V2-D semantics without producer or encoder access.
 pure flow decodeSLIDEV2DProgram(bytes: Bytes) -> SLIDEV2DProgramImport
 contract { intent { "Reconstruct complete V2-D semantics without producer or encoder access." } }
 {

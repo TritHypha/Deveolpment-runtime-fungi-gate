@@ -28,6 +28,7 @@ record SLIDEV2ESignedFrontendEvidence {
   authorityReleased: Bool
 }
 
+// Release no verified producer identity, digest, or authority after refusal.
 pure flow refuseSLIDEV2ESignedFrontendEvidence(
   failureId: String,
   detail: String,
@@ -42,6 +43,7 @@ contract { intent { "Release no verified producer identity, digest, or authority
   }
 }
 
+// Length-frame one bounded verifier-evidence field.
 pure flow slideV2EFrameVerifierEvidence(payload: Bytes) -> Bytes
 contract { intent { "Length-frame one bounded verifier-evidence field." } }
 {
@@ -56,6 +58,7 @@ contract { intent { "Length-frame one bounded verifier-evidence field." } }
   return Bytes.of(byte3, byte2, byte1, byte0).append(payload)
 }
 
+// Encode every K3 verifier outcome without a Boolean collapse.
 pure flow slideV2EVerifierVerdictText(verdict: Verdict) -> String
 contract { intent { "Encode every K3 verifier outcome without a Boolean collapse." } }
 {
@@ -66,6 +69,7 @@ contract { intent { "Encode every K3 verifier outcome without a Boolean collapse
   }
 }
 
+// Independently re-derive the host verifier's framed evidence digest.
 pure flow deriveSLIDEV2EVerifierEvidenceDigest(
   receipt: SLIDEV2EFrontendVerifierReceipt,
   productionPolicy: Bool,
@@ -115,6 +119,7 @@ contract { intent { "Independently re-derive the host verifier's framed evidence
   return bytes.sha256Hex()
 }
 
+// Bind exact typed hybrid-verifier evidence to an independently verified receipt.
 pure flow validateSLIDEV2EProducerSignatureEvidence(
   imported: SLIDEV2EReceiptImport,
   verifierReceipt: SLIDEV2EFrontendVerifierReceipt,

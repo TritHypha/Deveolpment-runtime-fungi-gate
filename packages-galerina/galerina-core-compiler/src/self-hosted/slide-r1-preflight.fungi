@@ -36,6 +36,7 @@ record SLIDER1PreflightDecision {
   memoryProfileId: String
 }
 
+// Return one stable, terminal refusal for an unsupported R1 export fact.
 pure flow refuseSLIDER1Preflight(
   failureId: String,
   failureClass: String,
@@ -56,6 +57,7 @@ contract {
   }
 }
 
+// Admit only the exact checked-Int32, exhaustive-K3 first R1 fixture shape.
 pure flow preflightSLIDER1(
   request: SLIDER1PreflightRequest,
 ) -> SLIDER1PreflightDecision

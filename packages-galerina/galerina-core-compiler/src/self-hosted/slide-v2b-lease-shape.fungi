@@ -47,6 +47,7 @@ record SLIDEV2BLeaseFixture {
   validationTime: Int
 }
 
+// Materialize one deterministic non-production lease-shape fixture.
 pure flow materializeSLIDEV2BLeaseFixture(
   capabilitySet: SLIDEV2BCapabilitySet,
 ) -> SLIDEV2BLeaseFixture
@@ -103,6 +104,7 @@ contract { intent { "Materialize one deterministic non-production lease-shape fi
   }
 }
 
+// Validate request-bound lease fields that precede signing.
 pure flow validateSLIDEV2BUnsignedLeaseShape(
   lease: SLIDEV2BLease,
   request: SLIDEV2BCapabilityRequest,
@@ -152,6 +154,7 @@ contract { intent { "Validate request-bound lease fields that precede signing." 
   }
 }
 
+// Validate bound lease/verifier shape while releasing no host authority.
 pure flow validateSLIDEV2BLeaseShape(
   lease: SLIDEV2BLease,
   request: SLIDEV2BCapabilityRequest,

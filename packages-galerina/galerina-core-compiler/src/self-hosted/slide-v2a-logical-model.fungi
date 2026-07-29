@@ -100,6 +100,7 @@ record SLIDEV2AProgram {
   extensionIds: Array<Int>
 }
 
+// Construct one explicit typed-control edge candidate.
 pure flow slideV2AEdge(
   targetBlockId: Int,
   arguments: Array<Int>,
@@ -109,6 +110,7 @@ contract { intent { "Construct one explicit typed-control edge candidate." } }
   return { targetBlockId: targetBlockId arguments: arguments }
 }
 
+// Construct one no-fallthrough V2-A terminator candidate.
 pure flow slideV2ATerminator(
   terminatorId: Int,
   operands: Array<Int>,
@@ -123,6 +125,7 @@ contract { intent { "Construct one no-fallthrough V2-A terminator candidate." } 
   }
 }
 
+// Construct one typed V2-A SSA instruction candidate.
 pure flow slideV2AInstruction(
   resultId: Int,
   opcodeId: Int,
@@ -141,6 +144,7 @@ contract { intent { "Construct one typed V2-A SSA instruction candidate." } }
   }
 }
 
+// Materialize the V2-A checked-add callee fixture.
 pure flow materializeSLIDEV2ACallee() -> SLIDEV2AFunction
 contract { intent { "Materialize the V2-A checked-add callee fixture." } }
 {
@@ -168,6 +172,7 @@ contract { intent { "Materialize the V2-A checked-add callee fixture." } }
   }
 }
 
+// Materialize calls, Boolean control, a typed join, and exhaustive K3 exits.
 pure flow materializeSLIDEV2AMain() -> SLIDEV2AFunction
 contract { intent { "Materialize calls, Boolean control, a typed join, and exhaustive K3 exits." } }
 {
@@ -276,6 +281,7 @@ contract { intent { "Materialize calls, Boolean control, a typed join, and exhau
   }
 }
 
+// Materialize the exact frontend-neutral V2-A logical conformance graph.
 pure flow materializeSLIDEV2AProgram() -> SLIDEV2AProgram
 contract { intent { "Materialize the exact frontend-neutral V2-A logical conformance graph." } }
 {

@@ -39,6 +39,7 @@ record TypeCheckResult {
 
 // ── Helpers ───────────────────────────────────────────────────
 
+// True when t names a type the Stage B checker knows (Int/Bool/String/Array).
 pure flow isKnownType(t: String) -> Bool
 contract {
   intent { "True when t names a type the Stage B checker knows (Int/Bool/String/Array)." }
@@ -370,6 +371,7 @@ contract { intent { "Return the diagnostics with the canonical Stage-A name + se
   return out
 }
 
+// FUNGI-TYPE-001: every parameter must name a known type.
 pure flow checkParams(flowName: String, params: Array<FlowParam>) -> Array<Auto>
 contract {
   intent { "FUNGI-TYPE-001: every parameter must name a known type." }
@@ -397,6 +399,7 @@ contract {
 
 // ── Full type-check pass ──────────────────────────────────────
 
+// Run Stage B type checks across all flows from the ParseResult.
 pure flow checkFlows(flows: Array<FlowDecl>) -> TypeCheckResult
 contract {
   intent { "Run Stage B type checks across all flows from the ParseResult." }
@@ -1214,6 +1217,7 @@ contract { intent { "True when a flow with this name is declared in the program.
   return false
 }
 
+// The declared parameter count of the flow with this name (0 when unknown — gate with flowExists).
 pure flow paramCountForFlow(flows: Array<FlowDecl>, name: String) -> Int
 contract { intent { "The declared parameter count of the flow with this name (0 when unknown — gate with flowExists)." } }
 {
@@ -1230,6 +1234,7 @@ contract { intent { "The declared parameter count of the flow with this name (0 
   return 0
 }
 
+// The declared type name of the index-th parameter of this flow (empty when absent).
 pure flow paramTypeAt(flows: Array<FlowDecl>, name: String, index: Int) -> String
 contract { intent { "The declared type name of the index-th parameter of this flow (empty when absent)." } }
 {
@@ -1255,6 +1260,7 @@ contract { intent { "The declared type name of the index-th parameter of this fl
   return ""
 }
 
+// The declared name of the index-th parameter of this flow (empty when absent).
 pure flow paramNameAt(flows: Array<FlowDecl>, name: String, index: Int) -> String
 contract { intent { "The declared name of the index-th parameter of this flow (empty when absent)." } }
 {
@@ -1789,6 +1795,7 @@ contract {
 // where target.kind must be "call" and target.value must be non-empty.
 // FUNGI-TYPE-007 — step target must be a valid flow call (not a literal/param).
 
+// FUNGI-TYPE-007: step target must be a flow call expression, not a literal or parameter reference.
 pure flow checkStepExpr(expr: Array<Auto>, env: Array<Auto>) -> Array<Auto>
 contract {
   intent { "FUNGI-TYPE-007: step target must be a flow call expression, not a literal or parameter reference." }

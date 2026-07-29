@@ -7,23 +7,25 @@
 /// Host floor (stays .ts): the crypto (mTLS chain verify, gateway-token signature), the string work
 /// (XFF trim, id charset regex), and the numeric page-limit clamp. This twin is the governed decision.
 
+// Return the explicit admission verdict.
 pure flow yes() -> Int
+contract { intent { "Return the explicit admission verdict." } }
 {
-  contract { intent "true / admit (+1)." }
   return 1
 }
 
+// Return the fail-closed denial verdict.
 pure flow no() -> Int
+contract { intent { "Return the fail-closed denial verdict." } }
 {
-  contract { intent "false / deny (-1) — the fail-closed default." }
   return 0 - 1
 }
 
 /// RD-0325: a proxy is trusted ONLY when it PROVED identity — a verified AND pinned mTLS client cert,
 /// or a verified signed gateway token. Source IP / header presence never confer trust (spoofable).
 pure flow proxyTrustVerdict(isMtls: Bool, mtlsVerified: Bool, mtlsPinned: Bool, isGatewayToken: Bool, tokenVerified: Bool) -> Int
+contract { intent { "Trust a proxy only after pinned mTLS or gateway-token verification; otherwise deny." } }
 {
-  contract { intent "Trust a proxy only on verified+pinned mTLS or a verified gateway token; else fail closed." }
   if isMtls == true {
     if mtlsVerified == true {
       if mtlsPinned == true { return 1 }
@@ -41,8 +43,8 @@ pure flow proxyTrustVerdict(isMtls: Bool, mtlsVerified: Bool, mtlsPinned: Bool, 
 /// non-blank; otherwise the socket peer is authoritative. Returns 1 to use forwarded, 0 for socket-peer
 /// (a forged/blank XFF, even under a trusted proxy, falls back to the socket peer — never to "").
 pure flow useForwardedAddress(proxyTrusted: Bool, forwardedNonBlank: Bool) -> Int
+contract { intent { "Use a forwarded address only when its proxy is trusted and its value is non-blank." } }
 {
-  contract { intent "Use X-Forwarded-For only if the proxy is trusted and the value is non-blank; else socket peer." }
   if proxyTrusted == true {
     if forwardedNonBlank == true { return 1 }
   }
@@ -53,8 +55,8 @@ pure flow useForwardedAddress(proxyTrusted: Bool, forwardedNonBlank: Bool) -> In
 /// absent resource from a present-but-forbidden one (the BOLA / object-enumeration oracle). Only `ok`
 /// is authorized; both other outcomes yield the SAME -1 denial (the host maps -1 to a uniform 404).
 pure flow uniformResourceAuthorized(isOk: Bool) -> Int
+contract { intent { "Authorize only an approved resource outcome and collapse all other outcomes to one denial." } }
 {
-  contract { intent "Authorize only 'ok'; not-found and forbidden collapse to one opaque denial." }
   if isOk == true { return 1 }
   return 0 - 1
 }
@@ -62,8 +64,8 @@ pure flow uniformResourceAuthorized(isOk: Bool) -> Int
 /// RD-0326: collapse user-unknown and bad-credentials into ONE generic denial — a caller cannot
 /// enumerate which accounts exist (the login / password-reset oracle). Only `ok` authenticates.
 pure flow uniformAuthAuthenticated(isOk: Bool) -> Int
+contract { intent { "Authenticate only an approved credential outcome and collapse all failures to one denial." } }
 {
-  contract { intent "Authenticate only 'ok'; user-unknown and bad-credentials collapse to one denial." }
   if isOk == true { return 1 }
   return 0 - 1
 }
@@ -72,8 +74,8 @@ pure flow uniformAuthAuthenticated(isOk: Bool) -> Int
 /// sequential db key is trivially guessable), and within the URL-safe alphabet. Fail-closed: any
 /// missing property rejects the id at the boundary.
 pure flow opaqueIdVerdict(longEnough: Bool, notPureNumeric: Bool, urlSafe: Bool) -> Int
+contract { intent { "Admit an opaque identifier only when all bounded non-enumerability checks pass." } }
 {
-  contract { intent "Accept an id only if long enough, non-numeric and URL-safe; else reject as guessable." }
   if longEnough == false { return 0 - 1 }
   if notPureNumeric == false { return 0 - 1 }
   if urlSafe == false { return 0 - 1 }
@@ -84,8 +86,8 @@ pure flow opaqueIdVerdict(longEnough: Bool, notPureNumeric: Bool, urlSafe: Bool)
 /// numeric clamp). Returns the branch: -1 = absent/invalid -> secure default; 0 = within bounds;
 /// 1 = exceeds max -> capped. Fail-closed: an absent or hostile limit never yields an unbounded walk.
 pure flow pageLimitBranch(validPositiveInt: Bool, exceedsMax: Bool) -> Int
+contract { intent { "Classify pagination as secure-default, bounded, or capped without permitting an unbounded walk." } }
 {
-  contract { intent "Classify a page-size request: invalid -> default, exceeds-max -> cap, else within-bounds." }
   if validPositiveInt == false { return 0 - 1 }
   if exceedsMax == true { return 1 }
   return 0

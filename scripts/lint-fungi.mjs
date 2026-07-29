@@ -150,7 +150,15 @@ function lintFile(abs, wl, findings) {
 
   // line offsets so a char index → line number
   const lineStart = [0];
-  for (let i = 0; i < lines.length; i++) lineStart.push(lineStart[i] + lines[i].length + 1);
+  for (let i = 0; i < lines.length; i++) {
+    const contentEnd = lineStart[i] + lines[i].length;
+    const lineEndingWidth = text.startsWith("\r\n", contentEnd)
+      ? 2
+      : text[contentEnd] === "\n"
+        ? 1
+        : 0;
+    lineStart.push(contentEnd + lineEndingWidth);
+  }
   const lineOf = (idx) => { let lo = 0, hi = lineStart.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (lineStart[m] <= idx) lo = m; else hi = m - 1; } return lo + 1; };
 
   const inlineAllow = (lineNo) => {
@@ -207,7 +215,11 @@ function lintFile(abs, wl, findings) {
       const t = lines[j].trim();
       if (t === "") break;                       // blank gap → not attached
       if (t.startsWith("//fungi:")) continue;      // generated provenance — not a human comment
-      if (t.startsWith("//")) { const c = t.slice(2).trim(); if (c !== "") { hasComment = true; } continue; }
+      if (t.startsWith("//") || t.startsWith(";;")) {
+        const c = t.slice(2).trim();
+        if (c !== "") hasComment = true;
+        continue;
+      }
       break;                                     // hit code → stop
     }
     if (!hasComment) add("FUNGI-LINT-COMMENT", flowLine, `flow "${name}" has no human comment (rule 1)`);

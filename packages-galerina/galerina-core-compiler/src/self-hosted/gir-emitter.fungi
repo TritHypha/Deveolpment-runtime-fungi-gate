@@ -62,6 +62,7 @@ record GIRModule {
 
 // ── GIR node construction ─────────────────────────────────────
 
+// Emit a GIR node for a single flow declaration.
 pure flow emitFlowGIRNode(flowName: String, qualifier: String, returnType: String, effectCount: Int, paramCount: Int) -> GIRNode
 contract {
   intent { "Emit a GIR node for a single flow declaration." }
@@ -143,6 +144,7 @@ contract {
 
 // ── GIR module emission ───────────────────────────────────────
 
+// Emit a GIR module from a Stage B ParseResult: a flow-decl node and an expression node per FlowDecl.
 pure flow emitGIRModule(flows: Array<FlowDecl>) -> GIRModule
 contract {
   intent { "Emit a GIR module from a Stage B ParseResult: a flow-decl node and an expression node per FlowDecl." }
@@ -602,6 +604,7 @@ contract { intent { "Extract each FlowParam's name into an ordered Array<String>
   return names
 }
 
+// Extract each FlowParam's declared type into an ordered array.
 pure flow paramTypes(params: Array<FlowParam>) -> Array<String>
 contract { intent { "Extract each FlowParam's declared type into an ordered array." } }
 {

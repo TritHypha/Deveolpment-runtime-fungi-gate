@@ -78,6 +78,7 @@ record SLIDEV2DMemoryProgram {
   authorityReleased: Bool
 }
 
+// Materialize one explicit guard and guarded immutable-array access.
 pure flow materializeSLIDEV2DGuardedFunction() -> SLIDEV2AFunction
 contract { intent { "Materialize one explicit guard and guarded immutable-array access." } }
 {
@@ -112,6 +113,7 @@ contract { intent { "Materialize one explicit guard and guarded immutable-array 
   }
 }
 
+// Materialize the exact bounded safe-value semantic-memory fixture.
 pure flow materializeSLIDEV2DMemoryProgram() -> SLIDEV2DMemoryProgram
 contract { intent { "Materialize the exact bounded safe-value semantic-memory fixture." } }
 {

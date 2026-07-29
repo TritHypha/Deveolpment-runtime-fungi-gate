@@ -6,15 +6,17 @@
 /// Map (stateful storage), the port int-range check, and the JSON-encoded scoped counter key. This
 /// checker-verified twin is the verdict fold over those already-computed facts — the governed decision.
 
+// Return the explicit inbound admission verdict.
 pure flow admit() -> Int
+contract { intent { "Return the explicit inbound admission verdict." } }
 {
-  contract { intent "The admit verdict (+1)." }
   return 1
 }
 
+// Return the fail-closed inbound denial verdict.
 pure flow deny() -> Int
+contract { intent { "Return the fail-closed inbound denial verdict." } }
 {
-  contract { intent "The deny verdict (-1) — deny-by-default." }
   return 0 - 1
 }
 
@@ -22,8 +24,8 @@ pure flow deny() -> Int
 /// DENY rule that matches wins; otherwise a matching ALLOW rule admits; otherwise the policy's
 /// defaultEffect decides (deny unless explicitly allow).
 pure flow inboundVerdict(portValid: Bool, hasDenyMatch: Bool, hasAllowMatch: Bool, defaultAllow: Bool) -> Int
+contract { intent { "Apply inbound policy in deny-first order and deny unless an explicit rule or admitted default allows." } }
 {
-  contract { intent "Admit an inbound request deny-by-default: deny-match wins, then allow-match, then defaultEffect." }
   if portValid == false { return 0 - 1 }
   if hasDenyMatch == true { return 0 - 1 }
   if hasAllowMatch == true { return 1 }
@@ -36,8 +38,8 @@ pure flow inboundVerdict(portValid: Bool, hasDenyMatch: Bool, hasAllowMatch: Boo
 /// bypassed); a fresh or expired window admits and resets; within the window, admit iff the count is
 /// still below the limit, else EXCEEDED.
 pure flow rateLimitVerdict(parseable: Bool, windowExpired: Bool, countBelowLimit: Bool) -> Int
+contract { intent { "Deny an unparseable rate limit, then admit only a fresh window or remaining bounded capacity." } }
 {
-  contract { intent "Rate-limit verdict; an unparseable limit is EXCEEDED (fail-closed), then window/count decide." }
   if parseable == false { return 0 - 1 }
   if windowExpired == true { return 1 }
   if countBelowLimit == true { return 1 }

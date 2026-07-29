@@ -29,12 +29,14 @@ record SLIDER1InstructionStep {
   result: SLIDER1ProgramExecutionResult
 }
 
+// Return an inert runtime value for missing lookup paths.
 pure flow emptySLIDER1RuntimeValue() -> SLIDER1RuntimeValue
 contract { intent { "Return an inert runtime value for missing lookup paths." } }
 {
   return { resultId: -1 typeId: -1 intValue: 0 failureId: 0 }
 }
 
+// Refuse execution without producing a semantic result.
 pure flow slideR1ProgramExecutionRefused(
   failureId: String,
 ) -> SLIDER1ProgramExecutionResult
@@ -49,6 +51,7 @@ contract { intent { "Refuse execution without producing a semantic result." } }
   }
 }
 
+// Return one declared typed R1 failure.
 pure flow slideR1ProgramExecutionFailed(
   failureId: Int,
 ) -> SLIDER1ProgramExecutionResult
@@ -63,6 +66,7 @@ contract { intent { "Return one declared typed R1 failure." } }
   }
 }
 
+// Return one successful R1 Int32 result.
 pure flow slideR1ProgramExecutionSucceeded(
   value: Int,
 ) -> SLIDER1ProgramExecutionResult
@@ -77,6 +81,7 @@ contract { intent { "Return one successful R1 Int32 result." } }
   }
 }
 
+// Resolve one executed SSA value by its validated result identity.
 pure flow slideR1RuntimeValueAt(
   values: Array<SLIDER1RuntimeValue>,
   resultId: Int,
@@ -99,6 +104,7 @@ contract { intent { "Resolve one executed SSA value by its validated result iden
   return found
 }
 
+// Convert one exact typed Verdict to its registered R1 integer representation.
 pure flow slideR1VerdictRuntimeValue(verdict: Verdict) -> Int
 contract { intent { "Convert one exact typed Verdict to its registered R1 integer representation." } }
 {
@@ -109,6 +115,7 @@ contract { intent { "Convert one exact typed Verdict to its registered R1 intege
   }
 }
 
+// Execute one previously validated registered R1 instruction.
 pure flow slideR1ExecuteDecodedInstruction(
   instruction: SLIDER1DecodedInstruction,
   values: Array<SLIDER1RuntimeValue>,
@@ -198,6 +205,7 @@ contract { intent { "Execute one previously validated registered R1 instruction.
   }
 }
 
+// Instruction-drive the validated closed R1 registry with bounded control dispatch.
 pure flow executeSLIDER1ValidatedProgram(
   program: SLIDER1DecodedProgram,
   left: Int,
@@ -288,6 +296,7 @@ contract {
   return finalResult
 }
 
+// Decode, validate, and instruction-drive canonical R1 bytes with no fallback path.
 pure flow executeSLIDER1ProgramBytes(
   body: Bytes,
   left: Int,

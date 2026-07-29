@@ -13,8 +13,8 @@
 
 /// vAnd — the K3 conjunction = numeric min. The worst (most-restrictive) operand wins (No-Coercion).
 pure flow vAnd(a: Int, b: Int) -> Int
+contract { intent { "Apply K3 conjunction by returning the most restrictive operand." } }
 {
-  contract { intent "K3 conjunction: min(a, b) — the worst operand wins, fail-closed." }
   if a < b { return a }
   return b
 }
@@ -24,8 +24,8 @@ pure flow vAnd(a: Int, b: Int) -> Int
 /// mirrors the .ts else-if order (garbage, then opt-in hard-deny, then throttle), so exactly one score
 /// branch degrades. The result is always <= +1, so it can only lower an admission verdict.
 pure flow telemetrySideSignal(healthDegrades: Bool, scorePresent: Bool, scoreGarbage: Bool, scoreHardDeny: Bool, scoreThrottle: Bool) -> Int
+contract { intent { "Map telemetry to a degrade-only K3 side-signal that cannot manufacture ALLOW." } }
 {
-  contract { intent "Map telemetry to a degrade-only K3 side-signal (<= +1): the worst of health and anomaly." }
   mut v: Int = 1
   if healthDegrades == true {
     v = vAnd(v, 0)

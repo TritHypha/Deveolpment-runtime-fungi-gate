@@ -14,6 +14,7 @@ record SLIDEV2DBodyExport {
   authorityReleased: Bool
 }
 
+// Refuse V2-D export without partial bytes, native claim, or authority.
 pure flow refuseSLIDEV2DBodyExport(
   failureId: String,
   detail: String,
@@ -27,6 +28,7 @@ contract { intent { "Refuse V2-D export without partial bytes, native claim, or 
   }
 }
 
+// Encode append-only graph, aggregate, memory, and forbidden-surface ceilings.
 pure flow slideV2DCBORLimits(
   graph: SLIDEV2CExecutableLimits,
   memory: SLIDEV2DMemoryLimits,
@@ -50,6 +52,7 @@ contract { intent { "Encode append-only graph, aggregate, memory, and forbidden-
   )
 }
 
+// Encode one definite bounded raw-byte value.
 pure flow slideV2DCBORBytes(value: Bytes) -> Bytes
 contract { intent { "Encode one definite bounded raw-byte value." } }
 {
@@ -58,6 +61,7 @@ contract { intent { "Encode one definite bounded raw-byte value." } }
   return prefix.append(value)
 }
 
+// Encode one full immutable constant definition.
 pure flow slideV2DCBORConstant(value: SLIDEV2CConstant) -> Bytes
 contract { intent { "Encode one full immutable constant definition." } }
 {
@@ -69,6 +73,7 @@ contract { intent { "Encode one full immutable constant definition." } }
   return output
 }
 
+// Encode one ordered registered record descriptor.
 pure flow slideV2DCBORRecord(
   value: SLIDEV2CRecordDescriptor,
 ) -> Bytes
@@ -89,6 +94,7 @@ contract { intent { "Encode one ordered registered record descriptor." } }
   return output
 }
 
+// Encode one ordered registered variant descriptor.
 pure flow slideV2DCBORVariant(
   value: SLIDEV2CVariantDescriptor,
 ) -> Bytes
@@ -109,6 +115,7 @@ contract { intent { "Encode one ordered registered variant descriptor." } }
   return output
 }
 
+// Encode one no-address region descriptor.
 pure flow slideV2DCBORRegion(value: SLIDEV2DRegion) -> Bytes
 contract { intent { "Encode one no-address region descriptor." } }
 {
@@ -120,6 +127,7 @@ contract { intent { "Encode one no-address region descriptor." } }
   )
 }
 
+// Encode one initialized owned memory-object descriptor.
 pure flow slideV2DCBORMemoryObject(value: SLIDEV2DMemoryObject) -> Bytes
 contract { intent { "Encode one initialized owned memory-object descriptor." } }
 {
@@ -132,6 +140,7 @@ contract { intent { "Encode one initialized owned memory-object descriptor." } }
   )
 }
 
+// Encode one exact guard/access dominance descriptor.
 pure flow slideV2DCBORGuard(value: SLIDEV2DGuard) -> Bytes
 contract { intent { "Encode one exact guard/access dominance descriptor." } }
 {
@@ -144,6 +153,7 @@ contract { intent { "Encode one exact guard/access dominance descriptor." } }
   )
 }
 
+// Release canonical V2-D bytes only after complete logical integration.
 pure flow exportSLIDEV2DCanonicalBody(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2DBodyExport

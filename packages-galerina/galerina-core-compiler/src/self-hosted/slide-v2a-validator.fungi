@@ -10,6 +10,7 @@ record SLIDEV2ADecision {
   detail: String
 }
 
+// Return one terminal V2-A validation refusal.
 pure flow slideV2ARefusal(
   failureId: String,
   detail: String,
@@ -24,6 +25,7 @@ contract { intent { "Return one terminal V2-A validation refusal." } }
   }
 }
 
+// Return V2-A semantic validation success.
 pure flow slideV2AAllowed() -> SLIDEV2ADecision
 contract { intent { "Return V2-A semantic validation success." } }
 {
@@ -35,6 +37,7 @@ contract { intent { "Return V2-A semantic validation success." } }
   }
 }
 
+// Read one integer or return a non-authoritative sentinel.
 pure flow slideV2AIntAt(values: Array<Int>, index: Int) -> Int
 contract { intent { "Read one integer or return a non-authoritative sentinel." } }
 {
@@ -46,12 +49,14 @@ contract { intent { "Read one integer or return a non-authoritative sentinel." }
   }
 }
 
+// Return an inert block parameter.
 pure flow emptySLIDEV2ABlockParameter() -> SLIDEV2ABlockParameter
 contract { intent { "Return an inert block parameter." } }
 {
   return { resultId: -1 typeId: -1 }
 }
 
+// Return an inert instruction.
 pure flow emptySLIDEV2AInstruction() -> SLIDEV2AInstruction
 contract { intent { "Return an inert instruction." } }
 {
@@ -61,18 +66,21 @@ contract { intent { "Return an inert instruction." } }
   }
 }
 
+// Return an inert control edge.
 pure flow emptySLIDEV2AEdge() -> SLIDEV2AEdge
 contract { intent { "Return an inert control edge." } }
 {
   return { targetBlockId: -1 arguments: Array.empty() }
 }
 
+// Return an inert terminator.
 pure flow emptySLIDEV2ATerminator() -> SLIDEV2ATerminator
 contract { intent { "Return an inert terminator." } }
 {
   return { terminatorId: -1 operands: Array.empty() edges: Array.empty() }
 }
 
+// Return an inert block.
 pure flow emptySLIDEV2ABlock() -> SLIDEV2ABlock
 contract { intent { "Return an inert block." } }
 {
@@ -84,6 +92,7 @@ contract { intent { "Return an inert block." } }
   }
 }
 
+// Return an inert function.
 pure flow emptySLIDEV2AFunction() -> SLIDEV2AFunction
 contract { intent { "Return an inert function." } }
 {
@@ -95,6 +104,7 @@ contract { intent { "Return an inert function." } }
   }
 }
 
+// Read one block parameter without inventing a value.
 pure flow slideV2ABlockParameterAt(
   values: Array<SLIDEV2ABlockParameter>,
   index: Int,
@@ -109,6 +119,7 @@ contract { intent { "Read one block parameter without inventing a value." } }
   }
 }
 
+// Read one instruction without inventing semantics.
 pure flow slideV2AInstructionAt(
   values: Array<SLIDEV2AInstruction>,
   index: Int,
@@ -123,6 +134,7 @@ contract { intent { "Read one instruction without inventing semantics." } }
   }
 }
 
+// Read one edge without inventing a target.
 pure flow slideV2AEdgeAt(
   values: Array<SLIDEV2AEdge>,
   index: Int,
@@ -137,6 +149,7 @@ contract { intent { "Read one edge without inventing a target." } }
   }
 }
 
+// Read one block without inventing control flow.
 pure flow slideV2ABlockAt(
   values: Array<SLIDEV2ABlock>,
   index: Int,
@@ -151,6 +164,7 @@ contract { intent { "Read one block without inventing control flow." } }
   }
 }
 
+// Read one function without an ambient registry fallback.
 pure flow slideV2AFunctionAt(
   values: Array<SLIDEV2AFunction>,
   index: Int,
@@ -165,6 +179,7 @@ contract { intent { "Read one function without an ambient registry fallback." } 
   }
 }
 
+// Admit only V2-A registered type identities.
 pure flow slideV2ATypeRegistered(typeId: Int) -> Bool
 contract { intent { "Admit only V2-A registered type identities." } }
 {
@@ -178,6 +193,7 @@ contract { intent { "Admit only V2-A registered type identities." } }
   }
 }
 
+// Require an exact declared V2-A failure identity.
 pure flow slideV2AFailureRegistered(
   failures: Array<SLIDEV2AFailure>,
   failureId: Int,
@@ -200,6 +216,7 @@ contract { intent { "Require an exact declared V2-A failure identity." } }
   return found
 }
 
+// Resolve a value only from the current explicit block scope.
 pure flow slideV2AValueTypeInBlock(
   graphBlock: SLIDEV2ABlock,
   resultId: Int,
@@ -222,6 +239,7 @@ contract { intent { "Resolve a value only from the current explicit block scope.
   return typeId
 }
 
+// Require every operand to be defined earlier in the same explicit block scope.
 pure flow slideV2AOperandsVisible(
   graphBlock: SLIDEV2ABlock,
   operands: Array<Int>,
@@ -244,6 +262,7 @@ contract { intent { "Require every operand to be defined earlier in the same exp
   return valid
 }
 
+// Count explicit incoming edges for reachability validation.
 pure flow slideV2AIncomingCount(
   blocks: Array<SLIDEV2ABlock>,
   targetBlockId: Int,
@@ -265,6 +284,7 @@ contract { intent { "Count explicit incoming edges for reachability validation."
   return count
 }
 
+// Require the exact closed V2-A semantic ceilings.
 pure flow validateSLIDEV2ALimits(limits: SLIDEV2ALimits) -> SLIDEV2ADecision
 contract { intent { "Require the exact closed V2-A semantic ceilings." } }
 {
@@ -289,6 +309,7 @@ contract { intent { "Require the exact closed V2-A semantic ceilings." } }
   return slideV2AAllowed()
 }
 
+// Validate the complete closed V2-A failure registry.
 pure flow validateSLIDEV2AFailures(
   failures: Array<SLIDEV2AFailure>,
 ) -> SLIDEV2ADecision
@@ -343,6 +364,7 @@ contract { intent { "Validate the complete closed V2-A failure registry." } }
   return slideV2AAllowed()
 }
 
+// Validate one registered typed V2-A instruction.
 pure flow validateSLIDEV2AInstruction(
   program: SLIDEV2AProgram,
   function: SLIDEV2AFunction,
@@ -432,6 +454,7 @@ contract { intent { "Validate one registered typed V2-A instruction." } }
   return slideV2AAllowed()
 }
 
+// Validate forward targets and exact typed block arguments.
 pure flow validateSLIDEV2AEdges(
   function: SLIDEV2AFunction,
   graphBlock: SLIDEV2ABlock,
@@ -471,6 +494,7 @@ contract { intent { "Validate forward targets and exact typed block arguments." 
   return slideV2AAllowed()
 }
 
+// Validate one total no-fallthrough V2-A terminator.
 pure flow validateSLIDEV2ATerminatorForBlock(
   function: SLIDEV2AFunction,
   graphBlock: SLIDEV2ABlock,
@@ -529,6 +553,7 @@ contract { intent { "Validate one total no-fallthrough V2-A terminator." } }
   return slideV2AAllowed()
 }
 
+// Validate one closed V2-A function, CFG, SSA and signature.
 pure flow validateSLIDEV2AFunction(
   program: SLIDEV2AProgram,
   function: SLIDEV2AFunction,
@@ -616,6 +641,7 @@ contract { intent { "Validate one closed V2-A function, CFG, SSA and signature."
   return slideV2AAllowed()
 }
 
+// Bind the one V2-A K3 obligation to its exact check and successors.
 pure flow validateSLIDEV2AK3(
   program: SLIDEV2AProgram,
 ) -> SLIDEV2ADecision
@@ -646,6 +672,7 @@ contract { intent { "Bind the one V2-A K3 obligation to its exact check and succ
   return slideV2AAllowed()
 }
 
+// Validate the complete closed V2-A logical graph before any execution or encoding authority.
 pure flow validateSLIDEV2AProgram(
   program: SLIDEV2AProgram,
 ) -> SLIDEV2ADecision

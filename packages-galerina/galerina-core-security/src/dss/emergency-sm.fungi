@@ -25,7 +25,7 @@ type EmergencyTransitionResult {
 ;; Leaves: secret.access, audit.write, database.write, shell.execute, native.call
 pure flow applyCircuitBreaker(vdpm: Int) -> EmergencyTransitionResult
 contract {
-  intent "Circuit breaker: clear network, storage, AI capability bits"
+  intent { "Apply the circuit breaker by monotonically clearing network, storage, and AI capability bits." }
   effects {}
 }
 {
@@ -50,7 +50,7 @@ contract {
 ;; Clears caps (0-7) + topology (8-12) + domain (20-23), sets quarantine_engaged (bit 30)
 pure flow applyQuarantine(vdpm: Int) -> EmergencyTransitionResult
 contract {
-  intent "Quarantine: clear all capabilities, set quarantine flag"
+  intent { "Enter quarantine by clearing governed capabilities and setting the quarantine flag." }
   effects {}
 }
 {
@@ -73,7 +73,7 @@ contract {
 ;; Clears caps (0-7) + topology (8-12) + domain (20-23), sets emergency_mode (bit 31)
 pure flow applyEmergencyMode(vdpm: Int) -> EmergencyTransitionResult
 contract {
-  intent "Emergency mode: clear all capabilities, set emergency flag"
+  intent { "Enter emergency mode by clearing governed capabilities and setting the emergency flag." }
   effects {}
 }
 {

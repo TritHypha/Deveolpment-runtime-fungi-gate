@@ -20,6 +20,7 @@ record SLIDEV2CRuntimeStore {
   defined: Array<Int>
 }
 
+// Create a fixed no-address store with every SSA slot undefined.
 pure flow emptySLIDEV2CRuntimeStore() -> SLIDEV2CRuntimeStore
 contract { intent { "Create a fixed no-address store with every SSA slot undefined." } }
 {
@@ -36,6 +37,7 @@ contract { intent { "Create a fixed no-address store with every SSA slot undefin
   return { values: values failures: failures defined: defined }
 }
 
+// Return a new bounded store with one immutable SSA result.
 pure flow slideV2CRuntimeStoreValue(
   store: SLIDEV2CRuntimeStore,
   resultId: Int,
@@ -63,6 +65,7 @@ contract { intent { "Return a new bounded store with one immutable SSA result." 
   return { values: values failures: failures defined: defined }
 }
 
+// Read one initialized scalar or return a terminal-only sentinel.
 pure flow slideV2CRuntimeRead(
   store: SLIDEV2CRuntimeStore,
   resultId: Int,
@@ -74,6 +77,7 @@ contract { intent { "Read one initialized scalar or return a terminal-only senti
   return slideV2CIntAt(store.values, resultId)
 }
 
+// Read the registered failure carried by one initialized result.
 pure flow slideV2CRuntimeFailureAt(
   store: SLIDEV2CRuntimeStore,
   resultId: Int,
@@ -85,6 +89,7 @@ contract { intent { "Read the registered failure carried by one initialized resu
   return slideV2CIntAt(store.failures, resultId)
 }
 
+// Terminate V2-C execution without fallback, partial result, or authority.
 pure flow refuseSLIDEV2CRuntime(
   failureId: String,
   detail: String,
@@ -98,6 +103,7 @@ contract { intent { "Terminate V2-C execution without fallback, partial result, 
   }
 }
 
+// Decode, admit, and instruction-drive immutable aggregates under all exact budgets.
 pure flow executeSLIDEV2CWithAllBudgets(
   body: Bytes,
   checkedIndex: Int,
@@ -383,6 +389,7 @@ contract { intent { "Decode, admit, and instruction-drive immutable aggregates u
   }
 }
 
+// Execute V2-C under caller step/copy and admitted depth ceilings.
 pure flow executeSLIDEV2CWithBudgets(
   body: Bytes,
   checkedIndex: Int,
@@ -396,6 +403,7 @@ contract { intent { "Execute V2-C under caller step/copy and admitted depth ceil
   )
 }
 
+// Execute V2-C under its admitted step and copy ceilings.
 pure flow executeSLIDEV2CBytes(
   body: Bytes,
   checkedIndex: Int,

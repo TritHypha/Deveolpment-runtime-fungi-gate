@@ -28,7 +28,7 @@ type DAGEdgeResult {
 ;; Stage B: validates against CBOR Tag 414 ExecutionDAG in manifest
 pure flow validateDAGEdge(vdpm: Int, fromFloor: String, toFloor: String) -> DAGEdgeResult
 contract {
-  intent "Validate a Tower floor transition and update dag_edge_valid bit"
+  intent { "Validate a Tower floor transition and update the DAG-edge-valid bit." }
   effects {}
 }
 {
@@ -49,7 +49,7 @@ contract {
 ;; Bit 8 is only valid for a single authorized transition — must be re-validated next call
 pure flow clearDAGEdge(vdpm: Int) -> Int
 contract {
-  intent "Clear dag_edge_valid (bit 8) after transition completes"
+  intent { "Clear the DAG-edge-valid bit after the authorized transition completes." }
   effects {}
 }
 {

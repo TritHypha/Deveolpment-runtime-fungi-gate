@@ -71,6 +71,7 @@ record SLIDEV2CAggregateProgram {
   memoryObjectIds: Array<Int>
 }
 
+// Construct one typed immutable-aggregate instruction candidate.
 pure flow slideV2CAggregateInstruction(
   resultId: Int,
   opcodeId: Int,
@@ -86,6 +87,7 @@ contract { intent { "Construct one typed immutable-aggregate instruction candida
   }
 }
 
+// Materialize the exact detached V2-C immutable-aggregate fixture.
 pure flow materializeSLIDEV2CAggregateProgram() -> SLIDEV2CAggregateProgram
 contract { intent { "Materialize the exact detached V2-C immutable-aggregate fixture." } }
 {

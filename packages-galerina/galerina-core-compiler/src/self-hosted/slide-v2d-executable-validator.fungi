@@ -11,6 +11,7 @@ record SLIDEV2DExecutableDecision {
   authorityReleased: Bool
 }
 
+// Refuse incomplete or altered V2-D executable integration.
 pure flow refuseSLIDEV2DExecutable(
   failureId: String,
   detail: String,
@@ -23,6 +24,7 @@ contract { intent { "Refuse incomplete or altered V2-D executable integration." 
   }
 }
 
+// Report complete logical V2-D integration without authority.
 pure flow validatedSLIDEV2DExecutable() -> SLIDEV2DExecutableDecision
 contract { intent { "Report complete logical V2-D integration without authority." } }
 {
@@ -34,6 +36,7 @@ contract { intent { "Report complete logical V2-D integration without authority.
   }
 }
 
+// Project only frozen V2-A functions into their exact validator.
 pure flow slideV2DProjectFrozenBase(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2AProgram
@@ -66,6 +69,7 @@ contract { intent { "Project only frozen V2-A functions into their exact validat
   }
 }
 
+// Project full executable facts into the exact V2-D memory validator.
 pure flow slideV2DProjectMemory(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2DMemoryProgram
@@ -89,6 +93,7 @@ contract { intent { "Project full executable facts into the exact V2-D memory va
   }
 }
 
+// Validate V2-D identities, graph ceilings, and table cardinality.
 pure flow validateSLIDEV2DExecutableMetadata(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2DExecutableDecision
@@ -143,6 +148,7 @@ contract { intent { "Validate V2-D identities, graph ceilings, and table cardina
   return validatedSLIDEV2DExecutable()
 }
 
+// Keep V2-C constants and aggregate descriptors exact.
 pure flow validateSLIDEV2DAggregateTables(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2DExecutableDecision
@@ -217,6 +223,7 @@ contract { intent { "Keep V2-C constants and aggregate descriptors exact." } }
   return validatedSLIDEV2DExecutable()
 }
 
+// Require frozen base, aggregate tables, and guarded memory plan to agree.
 pure flow validateSLIDEV2DExecutableProgram(
   program: SLIDEV2DExecutableProgram,
 ) -> SLIDEV2DExecutableDecision

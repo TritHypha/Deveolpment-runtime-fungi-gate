@@ -60,7 +60,12 @@ record LexError {
 //                 trap, step, evict, assimilate, policy, check
 // `deny`/`ambig` remain contextual labels inside check arms, matching lexer.ts.
 
-pure flow makeKeywordTable() -> Array<String> {
+// Build the exact active-keyword table shared with the differential lexer.
+pure flow makeKeywordTable() -> Array<String>
+contract {
+  intent { "Build the exact active-keyword table shared with the differential lexer." }
+}
+{
   return [
     "flow", "secure", "pure", "guarded", "fn", "route",
     "let", "mut", "readonly", "return", "if", "else", "match",
@@ -340,6 +345,7 @@ contract { intent { "Scan and validate a \\u{...} or \\uHHHH escape body; return
   }
 }
 
+// Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag, escErrFlag].
 pure flow scanString(source: String, startPos: Int, srcLen: Int) -> Array<String>
 contract {
   intent { "Scan a double-quoted string literal at startPos. Returns [unquotedValue, endPos, terminatedFlag, escErrFlag]." }
@@ -577,6 +583,7 @@ contract {
 
 // â”€â”€ Main lexer flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
+// Tokenise Galerina source in one source-length-bounded pass.
 guarded flow tokenize(source: String) -> TokenizeResult
 
 contract {

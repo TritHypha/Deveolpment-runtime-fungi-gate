@@ -96,18 +96,21 @@ record SLIDER1ProgramImport {
   program: SLIDER1DecodedProgram
 }
 
+// Return an inert instruction used only behind a refusal cursor.
 pure flow emptySLIDER1DecodedInstruction() -> SLIDER1DecodedInstruction
 contract { intent { "Return an inert instruction used only behind a refusal cursor." } }
 {
   return { resultId: -1 opcodeId: -1 typeId: -1 operands: [] immediate: -1 }
 }
 
+// Return an inert terminator used only behind a refusal cursor.
 pure flow emptySLIDER1DecodedTerminator() -> SLIDER1DecodedTerminator
 contract { intent { "Return an inert terminator used only behind a refusal cursor." } }
 {
   return { terminatorId: -1 operands: [] }
 }
 
+// Return an inert block used only behind a refusal cursor.
 pure flow emptySLIDER1DecodedBlock() -> SLIDER1DecodedBlock
 contract { intent { "Return an inert block used only behind a refusal cursor." } }
 {
@@ -118,6 +121,7 @@ contract { intent { "Return an inert block used only behind a refusal cursor." }
   }
 }
 
+// Return an inert failure used only behind a refusal cursor.
 pure flow emptySLIDER1DecodedFailure() -> SLIDER1DecodedFailure
 contract { intent { "Return an inert failure used only behind a refusal cursor." } }
 {
@@ -126,6 +130,7 @@ contract { intent { "Return an inert failure used only behind a refusal cursor."
   }
 }
 
+// Return an inert K3 obligation used only behind a refusal cursor.
 pure flow emptySLIDER1DecodedK3() -> SLIDER1DecodedK3
 contract { intent { "Return an inert K3 obligation used only behind a refusal cursor." } }
 {
@@ -135,6 +140,7 @@ contract { intent { "Return an inert K3 obligation used only behind a refusal cu
   }
 }
 
+// Return a no-authority program value for refused imports.
 pure flow emptySLIDER1DecodedProgram() -> SLIDER1DecodedProgram
 contract { intent { "Return a no-authority program value for refused imports." } }
 {
@@ -156,6 +162,7 @@ contract { intent { "Return a no-authority program value for refused imports." }
   }
 }
 
+// Create one typed program-import decision.
 pure flow slideR1ProgramDecision(
   verdict: Verdict,
   status: String,
@@ -171,6 +178,7 @@ contract { intent { "Create one typed program-import decision." } }
   }
 }
 
+// Decode one canonical unsigned field while retaining its value.
 pure flow slideR1ReadUInt(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -199,6 +207,7 @@ contract { intent { "Decode one canonical unsigned field while retaining its val
   }
 }
 
+// Decode one definite canonical array count under a hard local ceiling.
 pure flow slideR1ReadArrayCount(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -228,6 +237,7 @@ contract { intent { "Decode one definite canonical array count under a hard loca
   }
 }
 
+// Decode a bounded unsigned array into the operand field of an inert instruction carrier.
 pure flow slideR1DecodeIntArray(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -259,6 +269,7 @@ contract {
   }
 }
 
+// Decode one typed R1 instruction without assigning semantics.
 pure flow slideR1DecodeInstruction(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -294,6 +305,7 @@ contract { intent { "Decode one typed R1 instruction without assigning semantics
   }
 }
 
+// Decode one total R1 terminator without assigning control semantics.
 pure flow slideR1DecodeTerminator(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -317,6 +329,7 @@ contract { intent { "Decode one total R1 terminator without assigning control se
   }
 }
 
+// Decode one bounded R1 block into independently owned records.
 pure flow slideR1DecodeBlock(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -356,6 +369,7 @@ contract { intent { "Decode one bounded R1 block into independently owned record
   }
 }
 
+// Decode one declared R1 failure record.
 pure flow slideR1DecodeFailure(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -391,6 +405,7 @@ contract { intent { "Decode one declared R1 failure record." } }
   }
 }
 
+// Decode one K3 obligation without trusting successor meaning.
 pure flow slideR1DecodeK3(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -429,6 +444,7 @@ contract { intent { "Decode one K3 obligation without trusting successor meaning
   }
 }
 
+// Decode canonical SLIDE R1 bytes into an independent typed graph without semantic fix-up.
 pure flow decodeSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport
 contract {
   intent { "Decode canonical SLIDE R1 bytes into an independent typed graph without semantic fix-up." }
@@ -595,6 +611,7 @@ contract {
   }
 }
 
+// Read one decoded integer or return a no-authority sentinel.
 pure flow slideR1DecodedIntAt(values: Array<Int>, position: Int) -> Int
 contract { intent { "Read one decoded integer or return a no-authority sentinel." } }
 {
@@ -606,6 +623,7 @@ contract { intent { "Read one decoded integer or return a no-authority sentinel.
   }
 }
 
+// Read one decoded instruction or return an inert sentinel.
 pure flow slideR1DecodedInstructionAt(
   values: Array<SLIDER1DecodedInstruction>,
   position: Int,
@@ -620,6 +638,7 @@ contract { intent { "Read one decoded instruction or return an inert sentinel." 
   }
 }
 
+// Read one decoded block or return an inert sentinel.
 pure flow slideR1DecodedBlockAt(
   values: Array<SLIDER1DecodedBlock>,
   position: Int,
@@ -634,6 +653,7 @@ contract { intent { "Read one decoded block or return an inert sentinel." } }
   }
 }
 
+// Read one decoded failure or return an inert sentinel.
 pure flow slideR1DecodedFailureAt(
   values: Array<SLIDER1DecodedFailure>,
   position: Int,
@@ -648,6 +668,7 @@ contract { intent { "Read one decoded failure or return an inert sentinel." } }
   }
 }
 
+// Read one decoded K3 obligation or return an inert sentinel.
 pure flow slideR1DecodedK3At(
   values: Array<SLIDER1DecodedK3>,
   position: Int,
@@ -662,6 +683,7 @@ contract { intent { "Read one decoded K3 obligation or return an inert sentinel.
   }
 }
 
+// Return one terminal semantic-program refusal.
 pure flow slideR1ProgramRefusal(
   failureId: String,
   reasonText: String,
@@ -673,6 +695,7 @@ contract { intent { "Return one terminal semantic-program refusal." } }
   )
 }
 
+// Resolve one globally unique SSA value type without ambient registries.
 pure flow slideR1ProgramTypeOfValue(
   program: SLIDER1DecodedProgram,
   resultId: Int,
@@ -696,6 +719,7 @@ contract { intent { "Resolve one globally unique SSA value type without ambient 
   return foundType
 }
 
+// Return the first dense SSA result identity assigned to a block.
 pure flow slideR1ProgramBlockFirstResult(
   program: SLIDER1DecodedProgram,
   blockIndex: Int,
@@ -711,6 +735,7 @@ contract { intent { "Return the first dense SSA result identity assigned to a bl
   return first
 }
 
+// Require an operand to be entry-dominating or earlier in the same successor block.
 pure flow slideR1ProgramOperandVisible(
   program: SLIDER1DecodedProgram,
   blockIndex: Int,
@@ -732,6 +757,7 @@ contract {
   return fromEntry or fromLocal
 }
 
+// Check a failure reference against only the decoded failure table.
 pure flow slideR1ProgramHasFailure(
   program: SLIDER1DecodedProgram,
   failureId: Int,
@@ -749,6 +775,7 @@ contract { intent { "Check a failure reference against only the decoded failure 
   return found
 }
 
+// Validate one decoded instruction against the frozen registry, SSA visibility, and exact types.
 pure flow slideR1ValidateInstruction(
   program: SLIDER1DecodedProgram,
   blockIndex: Int,
@@ -865,6 +892,7 @@ contract {
   )
 }
 
+// Validate the complete frozen failure registry from decoded records.
 pure flow slideR1ValidateFailures(
   program: SLIDER1DecodedProgram,
 ) -> SLIDER1ImportDecision
@@ -918,6 +946,7 @@ contract { intent { "Validate the complete frozen failure registry from decoded 
   )
 }
 
+// Validate closed-registry CFG, SSA, types, failures, terminators, and K3 over decoded records only.
 pure flow validateSLIDER1DecodedProgram(
   program: SLIDER1DecodedProgram,
 ) -> SLIDER1ImportDecision
@@ -1078,6 +1107,7 @@ contract {
   )
 }
 
+// Decode and semantically validate R1 bytes; expose a program only after both gates allow.
 pure flow importAndValidateSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport
 contract {
   intent { "Decode and semantically validate R1 bytes; expose a program only after both gates allow." }

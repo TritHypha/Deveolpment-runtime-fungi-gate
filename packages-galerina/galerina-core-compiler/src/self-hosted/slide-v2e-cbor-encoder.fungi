@@ -15,6 +15,7 @@ record SLIDEV2EReceiptExport {
   authorityReleased: Bool
 }
 
+// Release no receipt bytes, digest, or authority after refusal.
 pure flow refuseSLIDEV2EReceiptExport(
   failureId: String,
   detail: String,
@@ -28,6 +29,7 @@ contract { intent { "Release no receipt bytes, digest, or authority after refusa
   }
 }
 
+// Encode one canonical CBOR Boolean.
 pure flow slideV2ECBORBool(value: Bool) -> Bytes
 contract { intent { "Encode one canonical CBOR Boolean." } }
 {
@@ -35,6 +37,7 @@ contract { intent { "Encode one canonical CBOR Boolean." } }
   return Bytes.of(244)
 }
 
+// Encode the exact bounded producer descriptor.
 pure flow slideV2ECBORProducer(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -50,6 +53,7 @@ contract { intent { "Encode the exact bounded producer descriptor." } }
   return body
 }
 
+// Encode source-set, diagnostic-set, and source-map digests.
 pure flow slideV2ECBORSources(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -62,6 +66,7 @@ contract { intent { "Encode source-set, diagnostic-set, and source-map digests."
   return body
 }
 
+// Encode exact frozen semantic archive identities.
 pure flow slideV2ECBORSemantics(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -78,6 +83,7 @@ contract { intent { "Encode exact frozen semantic archive identities." } }
   return body
 }
 
+// Encode all nine stated common-plan digests in fixed order.
 pure flow slideV2ECBORPlans(plans: SLIDEV2EPlanDigests) -> Bytes
 contract { intent { "Encode all nine stated common-plan digests in fixed order." } }
 {
@@ -94,6 +100,7 @@ contract { intent { "Encode all nine stated common-plan digests in fixed order."
   return body
 }
 
+// Encode bounded corpus and vector-set evidence digests.
 pure flow slideV2ECBORConformance(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -105,6 +112,7 @@ contract { intent { "Encode bounded corpus and vector-set evidence digests." } }
   return body
 }
 
+// Encode action-root, toolchain-lock, and environment-contract digests.
 pure flow slideV2ECBORReproducibility(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -117,6 +125,7 @@ contract { intent { "Encode action-root, toolchain-lock, and environment-contrac
   return body
 }
 
+// Encode the exact 14-key V2-E receipt body with ordered integer keys.
 pure flow slideV2ECanonicalReceiptBody(
   receipt: SLIDEV2EFrontendReceipt,
 ) -> Bytes
@@ -154,6 +163,7 @@ contract { intent { "Encode the exact 14-key V2-E receipt body with ordered inte
   return body
 }
 
+// Emit canonical producer evidence only after independent logical validation.
 pure flow exportSLIDEV2ECanonicalReceipt(
   evidence: SLIDEV2EFrontendEvidence,
   sourceText: String,

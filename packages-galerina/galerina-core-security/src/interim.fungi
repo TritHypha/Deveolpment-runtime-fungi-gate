@@ -57,6 +57,7 @@ record SinkScanResult {
 ;;   Position 1: target_ — "module::function" destination signature
 ;;   Position 2: payload_size_bytes — non-negative Int inbound payload size counter
 
+// Validate a cross-boundary call before execution — interim DSS proxy.
 pure flow pre_flight_check(caller: String, target_: String, payload_size_bytes: Int) -> ValidationReceipt
 contract {
   intent { "Validate a cross-boundary call before execution — interim DSS proxy." }
@@ -93,6 +94,7 @@ contract {
 ;; Simulates what the DSS does when it discards a DWI isolate and records
 ;; the execution outcome in DRCM Phase 5.
 
+// Record cross-boundary call completion to the audit trail — interim DSS proxy.
 secure flow post_flight_cleanup(receipt: ValidationReceipt) -> Void
 contract {
   intent { "Record cross-boundary call completion to the audit trail — interim DSS proxy." }
@@ -116,6 +118,7 @@ contract {
 ;; sliding-window scanner stored in DSS linear memory.
 ;; Until then, delegates to the TypeScript sink monitor.
 
+// Check a string payload for known secret prefix matches.
 pure flow scan(payload: String) -> SinkScanResult
 contract {
   intent { "Check a string payload for known secret prefix matches." }

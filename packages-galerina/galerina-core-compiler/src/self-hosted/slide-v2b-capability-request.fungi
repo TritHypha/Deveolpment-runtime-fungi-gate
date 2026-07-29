@@ -32,6 +32,7 @@ record SLIDEV2BCapabilityDecision {
   authorityReleased: Bool
 }
 
+// Refuse a V2-B request set without releasing host authority.
 pure flow refuseSLIDEV2BCapability(
   failureId: String,
   detail: String,
@@ -44,6 +45,7 @@ contract { intent { "Refuse a V2-B request set without releasing host authority.
   }
 }
 
+// Report structural validation while explicitly releasing no authority.
 pure flow validatedSLIDEV2BCapabilityShape() -> SLIDEV2BCapabilityDecision
 contract { intent { "Report structural validation while explicitly releasing no authority." } }
 {
@@ -54,6 +56,7 @@ contract { intent { "Report structural validation while explicitly releasing no 
   }
 }
 
+// Return an inert request behind a refusal boundary.
 pure flow emptySLIDEV2BCapabilityRequest() -> SLIDEV2BCapabilityRequest
 contract { intent { "Return an inert request behind a refusal boundary." } }
 {
@@ -65,6 +68,7 @@ contract { intent { "Return an inert request behind a refusal boundary." } }
   }
 }
 
+// Read one request without inventing a default capability.
 pure flow slideV2BCapabilityAt(
   requests: Array<SLIDEV2BCapabilityRequest>,
   index: Int,
@@ -79,6 +83,7 @@ contract { intent { "Read one request without inventing a default capability." }
   }
 }
 
+// Materialize the exact no-dispatch V2-B capability conformance set.
 pure flow materializeSLIDEV2BCapabilitySet() -> SLIDEV2BCapabilitySet
 contract { intent { "Materialize the exact no-dispatch V2-B capability conformance set." } }
 {
@@ -110,6 +115,7 @@ contract { intent { "Materialize the exact no-dispatch V2-B capability conforman
   }
 }
 
+// Validate one exact scoped V2-B capability request.
 pure flow validateSLIDEV2BCapabilityRequest(
   request: SLIDEV2BCapabilityRequest,
   expectedId: Int,
@@ -162,6 +168,7 @@ contract { intent { "Validate one exact scoped V2-B capability request." } }
   return validatedSLIDEV2BCapabilityShape()
 }
 
+// Validate the complete frozen request set while granting no lease or host authority.
 pure flow validateSLIDEV2BCapabilitySet(
   candidate: SLIDEV2BCapabilitySet,
 ) -> SLIDEV2BCapabilityDecision

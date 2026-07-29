@@ -3,6 +3,7 @@
 /// @purpose: Independently re-derive and validate bounded V2-E frontend evidence.
 /// @status: Logical verifier; signature and canonical receipt bytes remain separate gates.
 
+// Return a non-admissible source-unit sentinel.
 pure flow emptySLIDEV2ESourceUnit() -> SLIDEV2ESourceUnit
 contract { intent { "Return a non-admissible source-unit sentinel." } }
 {
@@ -12,6 +13,7 @@ contract { intent { "Return a non-admissible source-unit sentinel." } }
   }
 }
 
+// Return a non-admissible source-map sentinel.
 pure flow emptySLIDEV2ESourceMapEntry() -> SLIDEV2ESourceMapEntry
 contract { intent { "Return a non-admissible source-map sentinel." } }
 {
@@ -21,6 +23,7 @@ contract { intent { "Return a non-admissible source-map sentinel." } }
   }
 }
 
+// Read one source unit without inventing evidence.
 pure flow slideV2ESourceUnitAt(
   values: Array<SLIDEV2ESourceUnit>,
   index: Int,
@@ -35,6 +38,7 @@ contract { intent { "Read one source unit without inventing evidence." } }
   }
 }
 
+// Read one mapping without inventing source coverage.
 pure flow slideV2ESourceMapAt(
   values: Array<SLIDEV2ESourceMapEntry>,
   index: Int,
@@ -49,6 +53,7 @@ contract { intent { "Read one mapping without inventing source coverage." } }
   }
 }
 
+// Compare complete ordered source coverage without set coercion.
 pure flow slideV2ESourceMapsEqual(
   left: Array<SLIDEV2ESourceMapEntry>,
   right: Array<SLIDEV2ESourceMapEntry>,
@@ -69,6 +74,7 @@ contract { intent { "Compare complete ordered source coverage without set coerci
   return true
 }
 
+// Compare all nine independently re-derived common-plan digests.
 pure flow slideV2EPlansEqual(
   left: SLIDEV2EPlanDigests,
   right: SLIDEV2EPlanDigests,
@@ -87,6 +93,7 @@ contract { intent { "Compare all nine independently re-derived common-plan diges
   return graph and types and memory and effects and capabilities and imports and k3 and failures and resources
 }
 
+// Report verified frontend evidence without admission authority.
 pure flow validatedSLIDEV2EFrontendDecision() -> SLIDEV2DExecutableDecision
 contract { intent { "Report verified frontend evidence without admission authority." } }
 {
@@ -98,6 +105,7 @@ contract { intent { "Report verified frontend evidence without admission authori
   }
 }
 
+// Verify producer claims against exact source and independently imported V2-D semantics.
 pure flow validateSLIDEV2EFrontendEvidence(
   evidence: SLIDEV2EFrontendEvidence,
   sourceText: String,

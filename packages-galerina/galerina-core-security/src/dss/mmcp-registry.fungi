@@ -29,7 +29,7 @@ type MMCPEntry {
 ;; "write|secret" → (V_DPM.storage_write | V_DPM.secret_access) = 6
 pure flow parseViewMask(capMaskStr: String) -> Int
 contract {
-  intent "Convert a view() capability mask string to a V_DPM bitmask"
+  intent { "Convert a declared view capability mask into its V_DPM bitmask." }
   effects {}
 }
 {
@@ -49,7 +49,7 @@ contract {
 ;; Returns true if all required capability bits are set in vdpm
 pure flow isMMCPAccessPermitted(vdpm: Int, entry: MMCPEntry) -> Bool
 contract {
-  intent "Check if current V_DPM permits access to this MMCP"
+  intent { "Determine whether the current V_DPM state permits access to this MMCP." }
   effects {}
 }
 {

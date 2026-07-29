@@ -231,9 +231,12 @@ findings.
 Checkpoint 2026-07-29: the implicit baseline is empty; all 13 intentional
 negatives have exact adjacent ownership; the audit self-test and ownership
 test are green; all five affected package suites are green, including the
-compiler at 5,718/5,718. Step 5 remains open because the separate curriculum
-audit still carries 89 explicit known-drift rows and the global source-quality
-lint still refuses 584 findings across 103 files. Those debts are recorded in
+compiler at 5,718/5,718. The global source-quality lint was then reduced from
+584 findings to zero without adding a whitelist entry. Its CRLF-offset and
+Galerina `;;` comment false negatives now have regression tests; real
+contract-placement and intent-syntax findings were repaired. Step 5 remains
+open only because the separate curriculum audit still carries 89 explicit
+known-drift rows. That debt is recorded in
 `docs/reports/fungi-corpus-adjudication-2026-07-29.md` and must be burned down,
 not baselined into this gate.
 

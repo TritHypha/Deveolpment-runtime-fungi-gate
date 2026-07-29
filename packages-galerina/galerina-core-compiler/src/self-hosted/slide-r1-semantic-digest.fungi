@@ -10,6 +10,7 @@ record SLIDER1SemanticBinding {
   semanticDigest: String
 }
 
+// Return no digest evidence for a refused or unavailable semantic binding.
 pure flow emptySLIDER1SemanticBinding(
   decision: SLIDER1ImportDecision,
 ) -> SLIDER1SemanticBinding
@@ -23,6 +24,7 @@ contract { intent { "Return no digest evidence for a refused or unavailable sema
   }
 }
 
+// Validate canonical R1 semantics before hashing the exact domain-separated candidate bytes.
 pure flow bindSLIDER1SemanticDigest(
   body: Bytes,
 ) -> SLIDER1SemanticBinding

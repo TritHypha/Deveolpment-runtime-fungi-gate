@@ -12,6 +12,7 @@ record SLIDEV2ABodyExport {
   byteLength: Int
 }
 
+// Refuse V2-A export without releasing partial bytes.
 pure flow refuseSLIDEV2ABodyExport(
   failureId: String,
   reasonText: String,
@@ -28,6 +29,7 @@ contract { intent { "Refuse V2-A export without releasing partial bytes." } }
   }
 }
 
+// Encode a shortest-form bounded CBOR head.
 pure flow slideV2ACBORHead(majorType: Int, value: Int) -> Bytes
 contract { intent { "Encode a shortest-form bounded CBOR head." } }
 {
@@ -50,12 +52,14 @@ contract { intent { "Encode a shortest-form bounded CBOR head." } }
   return Bytes.of(majorType * 32 + 26, byte3, byte2, byte1, byte0)
 }
 
+// Encode one bounded unsigned integer.
 pure flow slideV2ACBORUInt(value: Int) -> Bytes
 contract { intent { "Encode one bounded unsigned integer." } }
 {
   return slideV2ACBORHead(0, value)
 }
 
+// Encode one signed Int32 with canonical CBOR integer semantics.
 pure flow slideV2ACBORInt(value: Int) -> Bytes
 contract { intent { "Encode one signed Int32 with canonical CBOR integer semantics." } }
 {
@@ -63,6 +67,7 @@ contract { intent { "Encode one signed Int32 with canonical CBOR integer semanti
   return slideV2ACBORHead(1, -1 - value)
 }
 
+// Encode definite UTF-8 text.
 pure flow slideV2ACBORText(value: String) -> Bytes
 contract { intent { "Encode definite UTF-8 text." } }
 {
@@ -72,6 +77,7 @@ contract { intent { "Encode definite UTF-8 text." } }
   return head.append(payload)
 }
 
+// Encode a definite array of unsigned registry identities.
 pure flow slideV2ACBORIntArray(values: Array<Int>) -> Bytes
 contract { intent { "Encode a definite array of unsigned registry identities." } }
 {
@@ -84,6 +90,7 @@ contract { intent { "Encode a definite array of unsigned registry identities." }
   return output
 }
 
+// Encode one typed block-parameter definition.
 pure flow slideV2ACBORBlockParameter(
   value: SLIDEV2ABlockParameter,
 ) -> Bytes
@@ -95,6 +102,7 @@ contract { intent { "Encode one typed block-parameter definition." } }
   return output
 }
 
+// Encode one five-field V2 instruction.
 pure flow slideV2ACBORInstruction(value: SLIDEV2AInstruction) -> Bytes
 contract { intent { "Encode one five-field V2 instruction." } }
 {
@@ -107,6 +115,7 @@ contract { intent { "Encode one five-field V2 instruction." } }
   return output
 }
 
+// Encode one explicit successor and its block arguments.
 pure flow slideV2ACBOREdge(value: SLIDEV2AEdge) -> Bytes
 contract { intent { "Encode one explicit successor and its block arguments." } }
 {
@@ -116,6 +125,7 @@ contract { intent { "Encode one explicit successor and its block arguments." } }
   return output
 }
 
+// Encode one total terminator and every successor.
 pure flow slideV2ACBORTerminator(value: SLIDEV2ATerminator) -> Bytes
 contract { intent { "Encode one total terminator and every successor." } }
 {
@@ -131,6 +141,7 @@ contract { intent { "Encode one total terminator and every successor." } }
   return output
 }
 
+// Encode one V2 block with parameters, instructions, and terminator.
 pure flow slideV2ACBORBlock(value: SLIDEV2ABlock) -> Bytes
 contract { intent { "Encode one V2 block with parameters, instructions, and terminator." } }
 {
@@ -156,6 +167,7 @@ contract { intent { "Encode one V2 block with parameters, instructions, and term
   return output
 }
 
+// Encode one complete typed V2 function.
 pure flow slideV2ACBORFunction(value: SLIDEV2AFunction) -> Bytes
 contract { intent { "Encode one complete typed V2 function." } }
 {
@@ -177,6 +189,7 @@ contract { intent { "Encode one complete typed V2 function." } }
   return output
 }
 
+// Encode one registered V2 failure.
 pure flow slideV2ACBORFailure(value: SLIDEV2AFailure) -> Bytes
 contract { intent { "Encode one registered V2 failure." } }
 {
@@ -185,6 +198,7 @@ contract { intent { "Encode one registered V2 failure." } }
   )
 }
 
+// Encode one exact three-successor K3 obligation.
 pure flow slideV2ACBORK3(value: SLIDEV2AK3Obligation) -> Bytes
 contract { intent { "Encode one exact three-successor K3 obligation." } }
 {
@@ -196,6 +210,7 @@ contract { intent { "Encode one exact three-successor K3 obligation." } }
   )
 }
 
+// Encode every V2-A declared semantic and execution ceiling.
 pure flow slideV2ACBORLimits(value: SLIDEV2ALimits) -> Bytes
 contract { intent { "Encode every V2-A declared semantic and execution ceiling." } }
 {
@@ -210,6 +225,7 @@ contract { intent { "Encode every V2-A declared semantic and execution ceiling."
   )
 }
 
+// Release canonical V2-A bytes only after complete logical admission.
 pure flow exportSLIDEV2ACanonicalBody(
   program: SLIDEV2AProgram,
 ) -> SLIDEV2ABodyExport

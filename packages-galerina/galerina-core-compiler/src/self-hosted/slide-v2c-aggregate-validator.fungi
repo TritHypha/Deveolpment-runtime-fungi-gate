@@ -11,6 +11,7 @@ record SLIDEV2CAggregateDecision {
   authorityReleased: Bool
 }
 
+// Refuse V2-C aggregate semantics without exposing authority.
 pure flow refuseSLIDEV2CAggregate(
   failureId: String,
   detail: String,
@@ -23,6 +24,7 @@ contract { intent { "Refuse V2-C aggregate semantics without exposing authority.
   }
 }
 
+// Report logical V2-C aggregate validation without authorizing execution.
 pure flow validatedSLIDEV2CAggregate() -> SLIDEV2CAggregateDecision
 contract { intent { "Report logical V2-C aggregate validation without authorizing execution." } }
 {
@@ -33,6 +35,7 @@ contract { intent { "Report logical V2-C aggregate validation without authorizin
   }
 }
 
+// Read one registered integer identity or return an invalid sentinel.
 pure flow slideV2CIntAt(values: Array<Int>, index: Int) -> Int
 contract { intent { "Read one registered integer identity or return an invalid sentinel." } }
 {
@@ -44,6 +47,7 @@ contract { intent { "Read one registered integer identity or return an invalid s
   }
 }
 
+// Return an inert constant behind a refusal boundary.
 pure flow emptySLIDEV2CConstant() -> SLIDEV2CConstant
 contract { intent { "Return an inert constant behind a refusal boundary." } }
 {
@@ -53,6 +57,7 @@ contract { intent { "Return an inert constant behind a refusal boundary." } }
   }
 }
 
+// Read one constant without inventing payload semantics.
 pure flow slideV2CConstantAt(
   values: Array<SLIDEV2CConstant>,
   index: Int,
@@ -67,12 +72,14 @@ contract { intent { "Read one constant without inventing payload semantics." } }
   }
 }
 
+// Return an inert record descriptor behind refusal.
 pure flow emptySLIDEV2CRecordDescriptor() -> SLIDEV2CRecordDescriptor
 contract { intent { "Return an inert record descriptor behind refusal." } }
 {
   return { recordId: -1 fieldIds: Array.empty() fieldTypeIds: Array.empty() }
 }
 
+// Read one record descriptor without dynamic field recovery.
 pure flow slideV2CRecordDescriptorAt(
   values: Array<SLIDEV2CRecordDescriptor>,
   index: Int,
@@ -87,12 +94,14 @@ contract { intent { "Read one record descriptor without dynamic field recovery."
   }
 }
 
+// Return an inert variant descriptor behind refusal.
 pure flow emptySLIDEV2CVariantDescriptor() -> SLIDEV2CVariantDescriptor
 contract { intent { "Return an inert variant descriptor behind refusal." } }
 {
   return { variantId: -1 caseIds: Array.empty() payloadTypeIds: Array.empty() }
 }
 
+// Read one variant descriptor without dynamic case recovery.
 pure flow slideV2CVariantDescriptorAt(
   values: Array<SLIDEV2CVariantDescriptor>,
   index: Int,
@@ -107,6 +116,7 @@ contract { intent { "Read one variant descriptor without dynamic case recovery."
   }
 }
 
+// Return an inert instruction behind refusal.
 pure flow emptySLIDEV2CAggregateInstruction() -> SLIDEV2CAggregateInstruction
 contract { intent { "Return an inert instruction behind refusal." } }
 {
@@ -116,6 +126,7 @@ contract { intent { "Return an inert instruction behind refusal." } }
   }
 }
 
+// Read one aggregate instruction without a default operation.
 pure flow slideV2CAggregateInstructionAt(
   values: Array<SLIDEV2CAggregateInstruction>,
   index: Int,
@@ -130,6 +141,7 @@ contract { intent { "Read one aggregate instruction without a default operation.
   }
 }
 
+// Compare complete byte sequences without prefix acceptance.
 pure flow slideV2CBytesEqual(left: Bytes, right: Bytes) -> Bool
 contract { intent { "Compare complete byte sequences without prefix acceptance." } }
 {
@@ -157,6 +169,7 @@ contract { intent { "Compare complete byte sequences without prefix acceptance."
   return equal
 }
 
+// Bind V2-C to the frozen parent and non-authorizing V2-B sidecar.
 pure flow validateSLIDEV2CRegistries(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -195,6 +208,7 @@ contract { intent { "Bind V2-C to the frozen parent and non-authorizing V2-B sid
   return validatedSLIDEV2CAggregate()
 }
 
+// Require exact finite aggregate ceilings and zero ambient authority.
 pure flow validateSLIDEV2CLimits(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -224,6 +238,7 @@ contract { intent { "Require exact finite aggregate ceilings and zero ambient au
   return validatedSLIDEV2CAggregate()
 }
 
+// Require dense append-only type and opcode identities.
 pure flow validateSLIDEV2CIdTables(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -255,6 +270,7 @@ contract { intent { "Require dense append-only type and opcode identities." } }
   return validatedSLIDEV2CAggregate()
 }
 
+// Validate exact bounded text and byte constants without host decoding.
 pure flow validateSLIDEV2CConstants(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -298,6 +314,7 @@ contract { intent { "Validate exact bounded text and byte constants without host
   return validatedSLIDEV2CAggregate()
 }
 
+// Validate registered ordered fields and cases without name lookup.
 pure flow validateSLIDEV2CDescriptors(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -338,6 +355,7 @@ contract { intent { "Validate registered ordered fields and cases without name l
   return validatedSLIDEV2CAggregate()
 }
 
+// Validate one exact typed V2-C fixture instruction.
 pure flow validateSLIDEV2CInstructionShape(
   instruction: SLIDEV2CAggregateInstruction,
   expectedResultId: Int,
@@ -419,6 +437,7 @@ contract { intent { "Validate one exact typed V2-C fixture instruction." } }
   return validatedSLIDEV2CAggregate()
 }
 
+// Validate the complete forward-only immutable aggregate instruction sequence.
 pure flow validateSLIDEV2CInstructions(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision
@@ -444,6 +463,7 @@ contract { intent { "Validate the complete forward-only immutable aggregate inst
   return validatedSLIDEV2CAggregate()
 }
 
+// Validate every V2-C aggregate gate before exposing logical success.
 pure flow validateSLIDEV2CAggregateProgram(
   program: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2CAggregateDecision

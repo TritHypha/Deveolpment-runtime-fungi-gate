@@ -3,6 +3,7 @@
 /// @purpose: Materialize bounded Galerina frontend evidence over frozen V2-D.
 /// @status: Logical producer only; no signature, native certificate, or authority.
 
+// Materialize one non-authorizing receipt only from exact source and admitted V2-D bytes.
 pure flow materializeSLIDEV2EFrontendEvidence(
   sourceText: String,
   compilerArtifactDigest: String,

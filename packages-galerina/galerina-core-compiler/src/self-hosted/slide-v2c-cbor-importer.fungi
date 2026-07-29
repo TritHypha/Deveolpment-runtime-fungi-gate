@@ -30,6 +30,7 @@ record SLIDEV2CProgramImport {
   authorityReleased: Bool
 }
 
+// Return a no-authority empty graph behind import refusal.
 pure flow emptySLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram
 contract { intent { "Return a no-authority empty graph behind import refusal." } }
 {
@@ -47,6 +48,7 @@ contract { intent { "Return a no-authority empty graph behind import refusal." }
   }
 }
 
+// Expose no partial V2-C graph, descriptor, or authority on refusal.
 pure flow refusedSLIDEV2CImport(
   cursor: SLIDEV2AImportCursor,
 ) -> SLIDEV2CProgramImport
@@ -59,6 +61,7 @@ contract { intent { "Expose no partial V2-C graph, descriptor, or authority on r
   }
 }
 
+// Decode one definite bounded byte string without reinterpretation.
 pure flow slideV2CDecodeBytes(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -107,6 +110,7 @@ contract { intent { "Decode one definite bounded byte string without reinterpret
   }
 }
 
+// Decode one complete registered constant definition.
 pure flow slideV2CDecodeConstant(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -139,6 +143,7 @@ contract { intent { "Decode one complete registered constant definition." } }
   }
 }
 
+// Decode one record and all ordered numeric field/type pairs.
 pure flow slideV2CDecodeRecordDescriptor(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -185,6 +190,7 @@ contract { intent { "Decode one record and all ordered numeric field/type pairs.
   }
 }
 
+// Decode one variant and all ordered numeric case/type pairs.
 pure flow slideV2CDecodeVariantDescriptor(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -232,6 +238,7 @@ contract { intent { "Decode one variant and all ordered numeric case/type pairs.
   }
 }
 
+// Project decoded descriptor evidence for the independent semantic gate.
 pure flow slideV2CAggregateFromDecoded(
   program: SLIDEV2CExecutableProgram,
 ) -> SLIDEV2CAggregateProgram
@@ -280,6 +287,7 @@ contract { intent { "Project decoded descriptor evidence for the independent sem
   }
 }
 
+// Reconstruct a complete V2-C graph without producer or encoder access.
 pure flow decodeSLIDEV2CProgram(bytes: Bytes) -> SLIDEV2CProgramImport
 contract { intent { "Reconstruct a complete V2-C graph without producer or encoder access." } }
 {

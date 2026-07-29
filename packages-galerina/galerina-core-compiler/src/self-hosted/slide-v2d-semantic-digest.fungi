@@ -12,6 +12,7 @@ record SLIDEV2DSemanticBinding {
   authorityReleased: Bool
 }
 
+// Release no digest or authority for refused V2-D semantics.
 pure flow emptySLIDEV2DSemanticBinding(
   decision: SLIDEV2DExecutableDecision,
 ) -> SLIDEV2DSemanticBinding
@@ -24,6 +25,7 @@ contract { intent { "Release no digest or authority for refused V2-D semantics."
   }
 }
 
+// Hash only exact independently decoded and admitted V2-D bytes.
 pure flow bindSLIDEV2DSemanticDigest(
   body: Bytes,
 ) -> SLIDEV2DSemanticBinding

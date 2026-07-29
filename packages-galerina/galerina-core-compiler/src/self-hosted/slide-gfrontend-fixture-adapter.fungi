@@ -18,12 +18,14 @@ record SLIDEG4FixtureCandidate {
   authorityReleased: Bool
 }
 
+// Return a non-admissible expression sentinel.
 pure flow emptySLIDEG4Expr() -> GIRExpr
 contract { intent { "Return a non-admissible expression sentinel." } }
 {
   return { op: "missing", ty: "", value: "", kids: Array.empty() }
 }
 
+// Construct one typed expected leaf for exact comparison.
 pure flow slideG4Leaf(
   op: String,
   ty: String,
@@ -34,6 +36,7 @@ contract { intent { "Construct one typed expected leaf for exact comparison." } 
   return { op: op, ty: ty, value: value, kids: Array.empty() }
 }
 
+// Return a non-admissible statement sentinel.
 pure flow emptySLIDEG4Stmt() -> GIRStmt
 contract { intent { "Return a non-admissible statement sentinel." } }
 {
@@ -43,6 +46,7 @@ contract { intent { "Return a non-admissible statement sentinel." } }
   }
 }
 
+// Return a non-admissible flow sentinel.
 pure flow emptySLIDEG4Flow() -> FlowEntry
 contract { intent { "Return a non-admissible flow sentinel." } }
 {
@@ -52,24 +56,28 @@ contract { intent { "Return a non-admissible flow sentinel." } }
   }
 }
 
+// Return a non-admissible record declaration sentinel.
 pure flow emptySLIDEG4Record() -> RecordDecl
 contract { intent { "Return a non-admissible record declaration sentinel." } }
 {
   return { name: "", fields: Array.empty() }
 }
 
+// Return a non-admissible record-field sentinel.
 pure flow emptySLIDEG4Field() -> RecordFieldDecl
 contract { intent { "Return a non-admissible record-field sentinel." } }
 {
   return { name: "", typeName: "" }
 }
 
+// Return a non-admissible enum declaration sentinel.
 pure flow emptySLIDEG4Enum() -> EnumDecl
 contract { intent { "Return a non-admissible enum declaration sentinel." } }
 {
   return { name: "", cases: Array.empty() }
 }
 
+// Read an exact expression position or a refusal sentinel.
 pure flow slideG4ExprAt(values: Array<GIRExpr>, position: Int) -> GIRExpr
 contract { intent { "Read an exact expression position or a refusal sentinel." } }
 {
@@ -81,6 +89,7 @@ contract { intent { "Read an exact expression position or a refusal sentinel." }
   }
 }
 
+// Read an exact statement position or a refusal sentinel.
 pure flow slideG4StmtAt(values: Array<GIRStmt>, position: Int) -> GIRStmt
 contract { intent { "Read an exact statement position or a refusal sentinel." } }
 {
@@ -92,6 +101,7 @@ contract { intent { "Read an exact statement position or a refusal sentinel." } 
   }
 }
 
+// Read an exact flow position or a refusal sentinel.
 pure flow slideG4FlowAt(values: Array<FlowEntry>, position: Int) -> FlowEntry
 contract { intent { "Read an exact flow position or a refusal sentinel." } }
 {
@@ -103,6 +113,7 @@ contract { intent { "Read an exact flow position or a refusal sentinel." } }
   }
 }
 
+// Read an exact record position or a refusal sentinel.
 pure flow slideG4RecordAt(values: Array<RecordDecl>, position: Int) -> RecordDecl
 contract { intent { "Read an exact record position or a refusal sentinel." } }
 {
@@ -114,6 +125,7 @@ contract { intent { "Read an exact record position or a refusal sentinel." } }
   }
 }
 
+// Read an exact record field or a refusal sentinel.
 pure flow slideG4FieldAt(
   values: Array<RecordFieldDecl>,
   position: Int,
@@ -128,6 +140,7 @@ contract { intent { "Read an exact record field or a refusal sentinel." } }
   }
 }
 
+// Read an exact enum position or a refusal sentinel.
 pure flow slideG4EnumAt(values: Array<EnumDecl>, position: Int) -> EnumDecl
 contract { intent { "Read an exact enum position or a refusal sentinel." } }
 {
@@ -139,6 +152,7 @@ contract { intent { "Read an exact enum position or a refusal sentinel." } }
   }
 }
 
+// Read an exact string position or an empty refusal sentinel.
 pure flow slideG4StringAt(values: Array<String>, position: Int) -> String
 contract { intent { "Read an exact string position or an empty refusal sentinel." } }
 {
@@ -150,6 +164,7 @@ contract { intent { "Read an exact string position or an empty refusal sentinel.
   }
 }
 
+// Require an exact GIR expression shell.
 pure flow slideG4CleanExprShell(
   expr: GIRExpr,
   expectedOp: String,
@@ -164,6 +179,7 @@ contract { intent { "Require an exact GIR expression shell." } }
   return identity and shape
 }
 
+// Require an exact GIR statement shell.
 pure flow slideG4CleanStmtShell(
   stmt: GIRStmt,
   expectedOp: String,
@@ -181,24 +197,28 @@ contract { intent { "Require an exact GIR statement shell." } }
   return identity and binding and shape
 }
 
+// Recognize one exact compiler-owned load.
 pure flow slideG4IsLoad(expr: GIRExpr, expectedName: String) -> Bool
 contract { intent { "Recognize one exact compiler-owned load." } }
 {
   return slideG4CleanExprShell(expr, "load", "", expectedName, 0)
 }
 
+// Recognize one exact Int constant.
 pure flow slideG4IsInt(expr: GIRExpr, expectedValue: String) -> Bool
 contract { intent { "Recognize one exact Int constant." } }
 {
   return slideG4CleanExprShell(expr, "const", "Int", expectedValue, 0)
 }
 
+// Recognize one exact String constant.
 pure flow slideG4IsString(expr: GIRExpr, expectedValue: String) -> Bool
 contract { intent { "Recognize one exact String constant." } }
 {
   return slideG4CleanExprShell(expr, "const", "String", expectedValue, 0)
 }
 
+// Recognize one exact binary shell and supplied operands.
 pure flow slideG4IsBinary(
   expr: GIRExpr,
   expectedOpcode: String,
@@ -220,6 +240,7 @@ contract { intent { "Recognize one exact binary shell and supplied operands." } 
   return leftIdentity and rightIdentity
 }
 
+// Recognize one exact single-argument call.
 pure flow slideG4IsCall1(
   expr: GIRExpr,
   expectedName: String,
@@ -234,6 +255,7 @@ contract { intent { "Recognize one exact single-argument call." } }
   return arg.op == expectedArg.op and arg.ty == expectedArg.ty and arg.value == expectedArg.value and arg.kids.count() == expectedArg.kids.count()
 }
 
+// Recognize one exact terminal one-argument call.
 pure flow slideG4IsReturnCall1(
   stmt: GIRStmt,
   callName: String,
@@ -247,6 +269,7 @@ contract { intent { "Recognize one exact terminal one-argument call." } }
   return slideG4IsCall1(slideG4ExprAt(stmt.expr, 0), callName, argument)
 }
 
+// Recognize one exact terminal Err(String).
 pure flow slideG4IsErrorReturn(stmt: GIRStmt, expectedText: String) -> Bool
 contract { intent { "Recognize one exact terminal Err(String)." } }
 {
@@ -255,6 +278,7 @@ contract { intent { "Recognize one exact terminal Err(String)." } }
   )
 }
 
+// Require the common pure, effect-free signature shell.
 pure flow slideG4ExactSignature(
   flowEntry: FlowEntry,
   expectedName: String,
@@ -269,6 +293,7 @@ contract { intent { "Require the common pure, effect-free signature shell." } }
   return identity and shape and result
 }
 
+// Pin the ordered G4 record and enum declarations.
 pure flow slideG4ExactDeclarations(parsed: ParseResult) -> Bool
 contract { intent { "Pin the ordered G4 record and enum declarations." } }
 {
@@ -294,6 +319,7 @@ contract { intent { "Pin the ordered G4 record and enum declarations." } }
   return enumIdentity and enumShape
 }
 
+// Pin the checked-increment signature.
 pure flow slideG4ExactIncrementSignature(flowEntry: FlowEntry) -> Bool
 contract { intent { "Pin the checked-increment signature." } }
 {
@@ -304,6 +330,7 @@ contract { intent { "Pin the checked-increment signature." } }
   return common and parameter
 }
 
+// Pin the K3 join signature.
 pure flow slideG4ExactJoinSignature(flowEntry: FlowEntry) -> Bool
 contract { intent { "Pin the K3 join signature." } }
 {
@@ -315,6 +342,7 @@ contract { intent { "Pin the K3 join signature." } }
   return common and names and types
 }
 
+// Pin the guarded-memory signature.
 pure flow slideG4ExactMemorySignature(flowEntry: FlowEntry) -> Bool
 contract { intent { "Pin the guarded-memory signature." } }
 {
@@ -325,6 +353,7 @@ contract { intent { "Pin the guarded-memory signature." } }
   return common and parameter
 }
 
+// Recognize only return value + 1.
 pure flow slideG4ExactIncrementBody(flowEntry: FlowEntry) -> Bool
 contract { intent { "Recognize only return value + 1." } }
 {
@@ -341,6 +370,7 @@ contract { intent { "Recognize only return value + 1." } }
   )
 }
 
+// Recognize joined = checked_increment(operand) + right.
 pure flow slideG4ExactJoinAssignment(
   stmt: GIRStmt,
   checkedOperand: String,
@@ -362,6 +392,7 @@ contract { intent { "Recognize joined = checked_increment(operand) + right." } }
   return callExact and slideG4IsLoad(right, "right")
 }
 
+// Recognize one exact labelled, terminal K3 error arm.
 pure flow slideG4ExactK3ErrorArm(
   arm: GIRStmt,
   expectedLabel: String,
@@ -377,6 +408,7 @@ contract { intent { "Recognize one exact labelled, terminal K3 error arm." } }
   return slideG4IsErrorReturn(slideG4StmtAt(arm.body, 0), expectedText)
 }
 
+// Recognize the exact K3 allowed return of joined.
 pure flow slideG4ExactK3AllowArm(arm: GIRStmt) -> Bool
 contract { intent { "Recognize the exact K3 allowed return of joined." } }
 {
@@ -388,6 +420,7 @@ contract { intent { "Recognize the exact K3 allowed return of joined." } }
   )
 }
 
+// Pin checked calls, Boolean branch, typed join, and all K3 exits.
 pure flow slideG4ExactJoinBody(flowEntry: FlowEntry) -> Bool
 contract { intent { "Pin checked calls, Boolean branch, typed join, and all K3 exits." } }
 {
@@ -439,6 +472,7 @@ contract { intent { "Pin checked calls, Boolean branch, typed join, and all K3 e
   return denyExact and ambigExact and allowExact
 }
 
+// Recognize values = [3, 5, 8] with no hidden edges.
 pure flow slideG4ExactArrayStore(stmt: GIRStmt) -> Bool
 contract { intent { "Recognize values = [3, 5, 8] with no hidden edges." } }
 {
@@ -455,6 +489,7 @@ contract { intent { "Recognize values = [3, 5, 8] with no hidden edges." } }
   return first and second and third
 }
 
+// Recognize the terminal index < 0 OR index >= 3 bounds guard.
 pure flow slideG4ExactBoundsBranch(stmt: GIRStmt) -> Bool
 contract { intent { "Recognize the terminal index < 0 OR index >= 3 bounds guard." } }
 {
@@ -483,6 +518,7 @@ contract { intent { "Recognize the terminal index < 0 OR index >= 3 bounds guard
   return lowerExact and upperExact and terminal
 }
 
+// Recognize selected = values.get(index).
 pure flow slideG4ExactSelectedStore(stmt: GIRStmt) -> Bool
 contract { intent { "Recognize selected = values.get(index)." } }
 {
@@ -496,6 +532,7 @@ contract { intent { "Recognize selected = values.get(index)." } }
   return slideG4IsLoad(slideG4ExprAt(get.kids, 0), "values") and slideG4IsLoad(slideG4ExprAt(get.kids, 1), "index")
 }
 
+// Recognize the exact typed aggregate construction.
 pure flow slideG4ExactRecordStore(stmt: GIRStmt) -> Bool
 contract { intent { "Recognize the exact typed aggregate construction." } }
 {
@@ -528,6 +565,7 @@ contract { intent { "Recognize the exact typed aggregate construction." } }
   return selectedName and selectedValue and lengthName and lengthValue and labelName and labelValue
 }
 
+// Recognize the exact typed Selected state construction.
 pure flow slideG4ExactStateStore(stmt: GIRStmt) -> Bool
 contract { intent { "Recognize the exact typed Selected state construction." } }
 {
@@ -537,6 +575,7 @@ contract { intent { "Recognize the exact typed Selected state construction." } }
   return slideG4IsLoad(slideG4ExprAt(stmt.expr, 0), "Selected")
 }
 
+// Recognize one exact terminal match error arm.
 pure flow slideG4ExactMatchErrorArm(
   arm: GIRStmt,
   expectedName: String,
@@ -553,6 +592,7 @@ contract { intent { "Recognize one exact terminal match error arm." } }
   return slideG4IsErrorReturn(slideG4StmtAt(arm.body, 0), expectedText)
 }
 
+// Recognize Selected => Ok(item.selected).
 pure flow slideG4ExactSelectedArm(arm: GIRStmt) -> Bool
 contract { intent { "Recognize Selected => Ok(item.selected)." } }
 {
@@ -574,6 +614,7 @@ contract { intent { "Recognize Selected => Ok(item.selected)." } }
   return slideG4IsLoad(slideG4ExprAt(field.kids, 0), "item")
 }
 
+// Pin all enum match exits including the catch-all.
 pure flow slideG4ExactStateMatch(stmt: GIRStmt) -> Bool
 contract { intent { "Pin all enum match exits including the catch-all." } }
 {
@@ -593,6 +634,7 @@ contract { intent { "Pin all enum match exits including the catch-all." } }
   return selectedExact and missingExact and unknownExact
 }
 
+// Pin the complete Some(value) aggregate and enum path.
 pure flow slideG4ExactSomeArm(arm: GIRStmt) -> Bool
 contract { intent { "Pin the complete Some(value) aggregate and enum path." } }
 {
@@ -605,6 +647,7 @@ contract { intent { "Pin the complete Some(value) aggregate and enum path." } }
   return recordExact and stateExact and matchExact
 }
 
+// Pin Some, None, and catch-all Option exits.
 pure flow slideG4ExactOptionMatch(stmt: GIRStmt) -> Bool
 contract { intent { "Pin Some, None, and catch-all Option exits." } }
 {
@@ -624,6 +667,7 @@ contract { intent { "Pin Some, None, and catch-all Option exits." } }
   return someExact and noneExact and unknownExact
 }
 
+// Pin the complete guarded memory and aggregate body.
 pure flow slideG4ExactMemoryBody(flowEntry: FlowEntry) -> Bool
 contract { intent { "Pin the complete guarded memory and aggregate body." } }
 {
@@ -635,6 +679,7 @@ contract { intent { "Pin the complete guarded memory and aggregate body." } }
   return arrayExact and boundsExact and selectedExact and matchExact
 }
 
+// Refuse G4 without partial bytes, digests, or authority.
 pure flow refuseSLIDEG4Fixture(
   failureId: String,
   detail: String,
@@ -652,6 +697,7 @@ contract { intent { "Refuse G4 without partial bytes, digests, or authority." } 
   }
 }
 
+// Derive exact V2-D bytes only from the complete bounded G4 compiler facts.
 pure flow adaptSLIDEG4CheckedFixture(
   parsed: ParseResult,
 ) -> SLIDEG4FixtureCandidate

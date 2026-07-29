@@ -11,6 +11,7 @@ record SLIDEV2ASemanticBinding {
   semanticDigest: String
 }
 
+// Release no digest for refused or unavailable V2 semantics.
 pure flow emptySLIDEV2ASemanticBinding(
   decision: SLIDEV2ADecision,
 ) -> SLIDEV2ASemanticBinding
@@ -25,6 +26,7 @@ contract { intent { "Release no digest for refused or unavailable V2 semantics."
   }
 }
 
+// Hash only the exact independently decoded and semantically admitted V2-A body.
 pure flow bindSLIDEV2ASemanticDigest(
   body: Bytes,
 ) -> SLIDEV2ASemanticBinding

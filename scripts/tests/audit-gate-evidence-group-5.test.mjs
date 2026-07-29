@@ -66,3 +66,57 @@ test("lint-fungi refuses an invalid flow and accepts a documented, contracted co
     assert.equal(controlReport.violations, 0, control.stdout);
   });
 });
+
+test("lint-fungi recognizes contracts and intents after CRLF line endings", () => {
+  withFixture("galerina-fungi-lint-crlf-", (root) => {
+    const sourcePath = "packages-galerina/probe/src/index.fungi";
+    const bodyPadding = Array.from(
+      { length: 300 },
+      () => "  if accept(true) { return true }",
+    );
+    write(root, sourcePath, [
+      "@version 1",
+      "// Return the first deterministic fixture verdict.",
+      "pure flow firstVerdict() -> Bool",
+      'contract { intent { "Return the first deterministic fixture verdict." } }',
+      "{",
+      ...bodyPadding,
+      "  return true",
+      "}",
+      "",
+      "// Return the second deterministic fixture verdict.",
+      "pure flow secondVerdict() -> Bool",
+      'contract { intent { "Return the second deterministic fixture verdict." } }',
+      "{",
+      "  return false",
+      "}",
+      "",
+    ].join("\r\n"));
+
+    const control = run(root);
+    assert.equal(control.status, 0, control.stdout + control.stderr);
+    const report = JSON.parse(control.stdout);
+    assert.equal(report.scanned, 1);
+    assert.equal(report.violations, 0, control.stdout);
+  });
+});
+
+test("lint-fungi recognizes an attached Galerina semicolon comment", () => {
+  withFixture("galerina-fungi-lint-semicolon-comment-", (root) => {
+    write(root, "packages-galerina/probe/src/index.fungi", [
+      "@version 1",
+      ";; Return a deterministic fixture verdict.",
+      "pure flow fixtureVerdict() -> Bool",
+      'contract { intent { "Return a deterministic fixture verdict." } }',
+      "{",
+      "  return true",
+      "}",
+      "",
+    ].join("\n"));
+
+    const control = run(root);
+    assert.equal(control.status, 0, control.stdout + control.stderr);
+    const report = JSON.parse(control.stdout);
+    assert.equal(report.violations, 0, control.stdout);
+  });
+});

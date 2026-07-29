@@ -14,6 +14,7 @@ record SLIDEV2DMemoryDecision {
   authorityReleased: Bool
 }
 
+// Refuse V2-D without exposing a partial plan or authority.
 pure flow refuseSLIDEV2DMemory(
   failureId: String,
   detail: String,
@@ -27,6 +28,7 @@ contract { intent { "Refuse V2-D without exposing a partial plan or authority." 
   }
 }
 
+// Report semantic memory-plan validation without a native claim.
 pure flow validatedSLIDEV2DMemory() -> SLIDEV2DMemoryDecision
 contract { intent { "Report semantic memory-plan validation without a native claim." } }
 {
@@ -38,6 +40,7 @@ contract { intent { "Report semantic memory-plan validation without a native cla
   }
 }
 
+// Return an inert region behind a refusal boundary.
 pure flow emptySLIDEV2DRegion() -> SLIDEV2DRegion
 contract { intent { "Return an inert region behind a refusal boundary." } }
 {
@@ -47,6 +50,7 @@ contract { intent { "Return an inert region behind a refusal boundary." } }
   }
 }
 
+// Read one region without inventing ownership semantics.
 pure flow slideV2DRegionAt(
   values: Array<SLIDEV2DRegion>,
   index: Int,
@@ -61,6 +65,7 @@ contract { intent { "Read one region without inventing ownership semantics." } }
   }
 }
 
+// Return an inert object behind a refusal boundary.
 pure flow emptySLIDEV2DMemoryObject() -> SLIDEV2DMemoryObject
 contract { intent { "Return an inert object behind a refusal boundary." } }
 {
@@ -71,6 +76,7 @@ contract { intent { "Return an inert object behind a refusal boundary." } }
   }
 }
 
+// Read one object without manufacturing memory evidence.
 pure flow slideV2DMemoryObjectAt(
   values: Array<SLIDEV2DMemoryObject>,
   index: Int,
@@ -85,6 +91,7 @@ contract { intent { "Read one object without manufacturing memory evidence." } }
   }
 }
 
+// Return an inert guard descriptor behind refusal.
 pure flow emptySLIDEV2DGuard() -> SLIDEV2DGuard
 contract { intent { "Return an inert guard descriptor behind refusal." } }
 {
@@ -94,6 +101,7 @@ contract { intent { "Return an inert guard descriptor behind refusal." } }
   }
 }
 
+// Read one guard without manufacturing dominance evidence.
 pure flow slideV2DGuardAt(
   values: Array<SLIDEV2DGuard>,
   index: Int,
@@ -108,6 +116,7 @@ contract { intent { "Read one guard without manufacturing dominance evidence." }
   }
 }
 
+// Return an inert block behind a V2-D refusal boundary.
 pure flow emptySLIDEV2DBlock() -> SLIDEV2ABlock
 contract { intent { "Return an inert block behind a V2-D refusal boundary." } }
 {
@@ -117,6 +126,7 @@ contract { intent { "Return an inert block behind a V2-D refusal boundary." } }
   }
 }
 
+// Read one guarded block without default executable semantics.
 pure flow slideV2DBlockAt(
   values: Array<SLIDEV2ABlock>,
   index: Int,
@@ -131,6 +141,7 @@ contract { intent { "Read one guarded block without default executable semantics
   }
 }
 
+// Return an inert instruction behind a V2-D refusal boundary.
 pure flow emptySLIDEV2DInstruction() -> SLIDEV2AInstruction
 contract { intent { "Return an inert instruction behind a V2-D refusal boundary." } }
 {
@@ -140,6 +151,7 @@ contract { intent { "Return an inert instruction behind a V2-D refusal boundary.
   }
 }
 
+// Read one instruction without default guard or access semantics.
 pure flow slideV2DInstructionAt(
   values: Array<SLIDEV2AInstruction>,
   index: Int,
@@ -154,6 +166,7 @@ contract { intent { "Read one instruction without default guard or access semant
   }
 }
 
+// Bind V2-D to the frozen V2-C semantic parent.
 pure flow validateSLIDEV2DRegistry(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -192,6 +205,7 @@ contract { intent { "Bind V2-D to the frozen V2-C semantic parent." } }
   return validatedSLIDEV2DMemory()
 }
 
+// Require exact finite resource ceilings and zero forbidden memory surfaces.
 pure flow validateSLIDEV2DLimits(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -221,6 +235,7 @@ contract { intent { "Require exact finite resource ceilings and zero forbidden m
   return validatedSLIDEV2DMemory()
 }
 
+// Require dense append-only V2-D type and opcode identities.
 pure flow validateSLIDEV2DIds(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -252,6 +267,7 @@ contract { intent { "Require dense append-only V2-D type and opcode identities."
   return validatedSLIDEV2DMemory()
 }
 
+// Validate ownership, initialization, layout, and checked extent arithmetic.
 pure flow validateSLIDEV2DRegionAndObject(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -313,6 +329,7 @@ contract { intent { "Validate ownership, initialization, layout, and checked ext
   return validatedSLIDEV2DMemory()
 }
 
+// Compare one complete V2-D instruction shape without prefix acceptance.
 pure flow slideV2DInstructionShapeMatches(
   instruction: SLIDEV2AInstruction,
   resultId: Int,
@@ -337,6 +354,7 @@ contract { intent { "Compare one complete V2-D instruction shape without prefix 
   return true
 }
 
+// Validate one exact guarded-access instruction.
 pure flow validateSLIDEV2DInstruction(
   instruction: SLIDEV2AInstruction,
   index: Int,
@@ -374,6 +392,7 @@ contract { intent { "Validate one exact guarded-access instruction." } }
   return validatedSLIDEV2DMemory()
 }
 
+// Validate the exact guard/access graph and dominance relation.
 pure flow validateSLIDEV2DGuardedFunction(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -416,6 +435,7 @@ contract { intent { "Validate the exact guard/access graph and dominance relatio
   return validatedSLIDEV2DMemory()
 }
 
+// Bind one guard to the exact object, index, access, and registered failure.
 pure flow validateSLIDEV2DGuardDescriptor(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision
@@ -440,6 +460,7 @@ contract { intent { "Bind one guard to the exact object, index, access, and regi
   return validatedSLIDEV2DMemory()
 }
 
+// Validate every V2-D semantic-memory gate without native or execution authority.
 pure flow validateSLIDEV2DMemoryProgram(
   program: SLIDEV2DMemoryProgram,
 ) -> SLIDEV2DMemoryDecision

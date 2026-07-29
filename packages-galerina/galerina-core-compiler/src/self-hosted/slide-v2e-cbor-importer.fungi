@@ -22,6 +22,7 @@ record SLIDEV2EReceiptImport {
   authorityReleased: Bool
 }
 
+// Release no partial receipt, digest, semantics, or authority.
 pure flow refuseSLIDEV2EReceiptImport(
   failureId: String,
   detail: String,
@@ -35,6 +36,7 @@ contract { intent { "Release no partial receipt, digest, semantics, or authority
   }
 }
 
+// Create one sticky V2-E canonical receipt refusal.
 pure flow slideV2EImportFailure(
   offset: Int,
   detail: String,
@@ -47,6 +49,7 @@ contract { intent { "Create one sticky V2-E canonical receipt refusal." } }
   }
 }
 
+// Decode bounded canonical UTF-8 text without replacement characters.
 pure flow slideV2EReadText(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -88,6 +91,7 @@ contract { intent { "Decode bounded canonical UTF-8 text without replacement cha
   }
 }
 
+// Decode only canonical CBOR false or true.
 pure flow slideV2EReadBool(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -122,6 +126,7 @@ contract { intent { "Decode only canonical CBOR false or true." } }
   }
 }
 
+// Consume one exact bounded canonical array head.
 pure flow slideV2EExpectArray(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -139,6 +144,7 @@ contract { intent { "Consume one exact bounded canonical array head." } }
   }
 }
 
+// Consume one exact registered text identity.
 pure flow slideV2EExpectText(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -153,6 +159,7 @@ contract { intent { "Consume one exact registered text identity." } }
   return decoded.cursor
 }
 
+// Consume one exact unsigned key or value.
 pure flow slideV2EExpectUInt(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -167,6 +174,7 @@ contract { intent { "Consume one exact unsigned key or value." } }
   return decoded.cursor
 }
 
+// Reconstruct the complete receipt from bounded shortest-form CBOR.
 pure flow decodeSLIDEV2ECanonicalReceipt(
   receiptBytes: Bytes,
 ) -> SLIDEV2EReceiptImport
@@ -335,6 +343,7 @@ contract { intent { "Reconstruct the complete receipt from bounded shortest-form
   }
 }
 
+// Verify decoded receipt claims by independently re-deriving source, map, and plans.
 pure flow verifySLIDEV2ECanonicalReceipt(
   receiptBytes: Bytes,
   sourceText: String,
@@ -494,6 +503,7 @@ contract { intent { "Verify decoded receipt claims by independently re-deriving 
   }
 }
 
+// Admit source only after fatal UTF-8 decode, then independently verify the receipt.
 pure flow verifySLIDEV2ECanonicalReceiptBytes(
   receiptBytes: Bytes,
   sourceBytes: Bytes,

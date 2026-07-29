@@ -30,6 +30,7 @@ record SLIDER1ImportDecision {
   consumed: Int
 }
 
+// Create one sticky bounded-import refusal cursor.
 pure flow slideR1ImportFailure(
   offset: Int,
   failureId: String,
@@ -40,6 +41,7 @@ contract { intent { "Create one sticky bounded-import refusal cursor." } }
   return { ok: false offset: offset failureId: failureId reason: reasonText }
 }
 
+// Read one byte as an integer or return the out-of-bounds sentinel.
 pure flow slideR1ImportByte(bytes: Bytes, offset: Int) -> Int
 contract { intent { "Read one byte as an integer or return the out-of-bounds sentinel." } }
 {
@@ -51,6 +53,7 @@ contract { intent { "Read one byte as an integer or return the out-of-bounds sen
   }
 }
 
+// Read one definite shortest-form CBOR head under the R1 16-bit ceiling.
 pure flow slideR1ReadCanonicalHead(
   bytes: Bytes,
   offset: Int,
@@ -133,6 +136,7 @@ contract { intent { "Read one definite shortest-form CBOR head under the R1 16-b
   }
 }
 
+// Consume one exact canonical head while preserving the first refusal.
 pure flow slideR1ExpectHead(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -154,6 +158,7 @@ contract { intent { "Consume one exact canonical head while preserving the first
   return { ok: true offset: read.nextOffset failureId: "NONE" reason: "" }
 }
 
+// Consume one exact canonical unsigned registry value.
 pure flow slideR1ExpectUInt(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -166,6 +171,7 @@ contract { intent { "Consume one exact canonical unsigned registry value." } }
   return slideR1ExpectHead(bytes, cursor, 0, expectedValue, failureId, reasonText)
 }
 
+// Consume one exact definite array boundary.
 pure flow slideR1ExpectArray(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -179,6 +185,7 @@ contract { intent { "Consume one exact definite array boundary." } }
   )
 }
 
+// Consume and byte-compare one exact bounded UTF-8 profile identity.
 pure flow slideR1ExpectText(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -217,6 +224,7 @@ contract { intent { "Consume and byte-compare one exact bounded UTF-8 profile id
   }
 }
 
+// Parse one fixed typed instruction and classify registry or operand drift.
 pure flow slideR1ExpectInstruction(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -250,6 +258,7 @@ contract { intent { "Parse one fixed typed instruction and classify registry or 
   )
 }
 
+// Parse one total terminator and classify K3 successor drift separately.
 pure flow slideR1ExpectTerminator(
   bytes: Bytes,
   cursor: SLIDER1ImportCursor,
@@ -285,6 +294,7 @@ contract { intent { "Parse one total terminator and classify K3 successor drift 
   return next
 }
 
+// Structurally admit only the frozen typed-ID R1 graph with canonical encoding and no suffix.
 pure flow validateSLIDER1StructuralBody(bytes: Bytes) -> SLIDER1ImportDecision
 contract {
   intent { "Structurally admit only the frozen typed-ID R1 graph with canonical encoding and no suffix." }

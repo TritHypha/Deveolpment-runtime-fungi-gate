@@ -32,6 +32,7 @@ record SLIDEV2BEvidenceShapeSet {
   receipts: Array<SLIDEV2BEvidenceShapeReceipt>
 }
 
+// Length-frame one bounded receipt digest field.
 pure flow slideV2BFrameBytes(payload: Bytes) -> Bytes
 contract { intent { "Length-frame one bounded receipt digest field." } }
 {
@@ -46,6 +47,7 @@ contract { intent { "Length-frame one bounded receipt digest field." } }
   return Bytes.of(byte3, byte2, byte1, byte0).append(payload)
 }
 
+// Encode one exhaustive K3 value for receipt evidence.
 pure flow slideV2BVerdictText(verdict: Verdict) -> String
 contract { intent { "Encode one exhaustive K3 value for receipt evidence." } }
 {
@@ -56,6 +58,7 @@ contract { intent { "Encode one exhaustive K3 value for receipt evidence." } }
   }
 }
 
+// Independently derive the reference atomic receipt evidence digest.
 pure flow slideV2BAtomicReceiptEvidenceDigest(
   receipt: SLIDEV2BAtomicStateReceipt,
 ) -> String
@@ -89,6 +92,7 @@ contract { intent { "Independently derive the reference atomic receipt evidence 
   return bytes.sha256Hex()
 }
 
+// Validate exact CAS receipt bindings without releasing a lease reference.
 pure flow validateSLIDEV2BAtomicStateReceipt(
   receipt: SLIDEV2BAtomicStateReceipt,
   reservation: SLIDEV2BLeaseUseReservation,
@@ -157,6 +161,7 @@ contract { intent { "Validate exact CAS receipt bindings without releasing a lea
   }
 }
 
+// Derive one non-authorizing evidence-shape digest.
 pure flow slideV2BEvidenceShapeDigest(
   receipt: SLIDEV2BEvidenceShapeReceipt,
 ) -> String
@@ -177,6 +182,7 @@ contract { intent { "Derive one non-authorizing evidence-shape digest." } }
   return bytes.sha256Hex()
 }
 
+// Materialize one deterministic non-production evidence-shape fixture.
 pure flow materializeSLIDEV2BEvidenceShape(
   kindId: Int,
   lease: SLIDEV2BLease,
@@ -199,6 +205,7 @@ contract { intent { "Materialize one deterministic non-production evidence-shape
   }
 }
 
+// Materialize six exact ALLOW evidence-shape fixtures.
 pure flow materializeSLIDEV2BEvidenceShapeSet(
   lease: SLIDEV2BLease,
   validationTime: Int,
@@ -217,6 +224,7 @@ contract { intent { "Materialize six exact ALLOW evidence-shape fixtures." } }
   }
 }
 
+// Read one evidence fixture after an exact count gate.
 pure flow slideV2BEvidenceShapeAt(
   values: Array<SLIDEV2BEvidenceShapeReceipt>,
   index: Int,
@@ -241,6 +249,7 @@ contract { intent { "Read one evidence fixture after an exact count gate." } }
   }
 }
 
+// Validate one bound evidence shape while preserving exact K3.
 pure flow validateSLIDEV2BEvidenceShape(
   receipt: SLIDEV2BEvidenceShapeReceipt,
   expectedKindId: Int,
@@ -278,6 +287,7 @@ contract { intent { "Validate one bound evidence shape while preserving exact K3
   }
 }
 
+// Compose two authority values using exact Kleene K3 AND.
 pure flow slideV2BK3And(left: Verdict, right: Verdict) -> Verdict
 contract { intent { "Compose two authority values using exact Kleene K3 AND." } }
 {
@@ -294,6 +304,7 @@ contract { intent { "Compose two authority values using exact Kleene K3 AND." } 
   }
 }
 
+// Compose seven validated reference evidence shapes without releasing authority.
 pure flow composeSLIDEV2BAdmissionEvidenceShapes(
   evidenceSet: SLIDEV2BEvidenceShapeSet,
   atomicReceipt: SLIDEV2BAtomicStateReceipt,

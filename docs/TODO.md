@@ -71,12 +71,20 @@ planning checkbox must never be used to imply that implementation exists.
   core-logic 53/53; core-tasks 7/7; app-kernel 120/120; benchmark 9/9.
   Full adjudication:
   `docs/reports/fungi-corpus-adjudication-2026-07-29.md`.
+- **Task 3 source-quality checkpoint:** `lint-fungi.mjs` is now 0 findings
+  across 103 non-fixture files, down from 584, with no whitelist expansion.
+  Existing exact intent text now supplies 472 attached human comments. A RED
+  fixture exposed the linter's CRLF offset error; the corrected gate counts
+  exact LF/CRLF widths and recognizes attached Galerina `;;` comments.
+  Eighteen real network contract-placement defects and nine DSS legacy intent
+  forms were migrated to current syntax. Network 192/192, security 15/15,
+  unit-registry 7/7, corpus 0 implicit, and compiler-stage hashes are green.
 - **Task 3 still open:** `audit-example-diagnostics.mjs` is green only at an
-  explicit 89/233 known-drift worklist, and `lint-fungi.mjs` refuses 584
-  findings across 103 non-fixture files (489 comment, 86 contract, 9 intent).
-  These remain beta-v1 burn-down work and are not hidden in the now-empty
-  corpus baseline. Next safe work is to classify and repair that source
-  quality debt before compiler-stage authority promotion.
+  explicit 89/233 known-drift worklist. Those examples remain beta-v1
+  burn-down work and are not hidden in the now-empty corpus baseline. The
+  generated unit registry was reconciled and its focused gate is 7/7; the
+  source-rebuilt compiler is 5,718/5,718. The next safe work is to commit this
+  source-quality tranche and adjudicate the 89 curriculum rows.
 - **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
   explicitly concludes that identity is not write authority. Merely pointing
   to RD-0582 does not authorize the external sidecar write; keep this

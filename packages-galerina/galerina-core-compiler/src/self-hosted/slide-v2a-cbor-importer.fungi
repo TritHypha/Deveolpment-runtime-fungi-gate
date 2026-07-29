@@ -74,6 +74,7 @@ record SLIDEV2AProgramImport {
   program: SLIDEV2AProgram
 }
 
+// Create one sticky V2-A import refusal.
 pure flow slideV2AImportFailure(
   offset: Int,
   failureId: String,
@@ -84,6 +85,7 @@ contract { intent { "Create one sticky V2-A import refusal." } }
   return { ok: false offset: offset failureId: failureId reason: reasonText }
 }
 
+// Read one byte or return an out-of-bounds sentinel.
 pure flow slideV2AImportByte(bytes: Bytes, offset: Int) -> Int
 contract { intent { "Read one byte or return an out-of-bounds sentinel." } }
 {
@@ -95,6 +97,7 @@ contract { intent { "Read one byte or return an out-of-bounds sentinel." } }
   }
 }
 
+// Read one definite shortest-form CBOR head under the signed-Int32 ceiling.
 pure flow slideV2AReadCanonicalHead(
   bytes: Bytes,
   offset: Int,
@@ -188,6 +191,7 @@ contract { intent { "Read one definite shortest-form CBOR head under the signed-
   }
 }
 
+// Decode one canonical unsigned integer.
 pure flow slideV2AReadUInt(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -209,6 +213,7 @@ contract { intent { "Decode one canonical unsigned integer." } }
   }
 }
 
+// Decode one canonical signed Int32.
 pure flow slideV2AReadInt(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -245,6 +250,7 @@ contract { intent { "Decode one canonical signed Int32." } }
   }
 }
 
+// Decode a definite array count under an explicit ceiling.
 pure flow slideV2AReadArrayCount(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -275,6 +281,7 @@ contract { intent { "Decode a definite array count under an explicit ceiling." }
   }
 }
 
+// Consume one exact unsigned value.
 pure flow slideV2AExpectUInt(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -290,6 +297,7 @@ contract { intent { "Consume one exact unsigned value." } }
   return read.cursor
 }
 
+// Consume and compare exact canonical UTF-8 text.
 pure flow slideV2AExpectText(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -320,6 +328,7 @@ contract { intent { "Consume and compare exact canonical UTF-8 text." } }
   }
 }
 
+// Decode one bounded array of unsigned registry identities.
 pure flow slideV2ADecodeIntArray(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -341,6 +350,7 @@ contract { intent { "Decode one bounded array of unsigned registry identities." 
   return { cursor: c values: values }
 }
 
+// Decode one block parameter.
 pure flow slideV2ADecodeBlockParameter(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -361,6 +371,7 @@ contract { intent { "Decode one block parameter." } }
   }
 }
 
+// Decode one typed instruction without assigning authority.
 pure flow slideV2ADecodeInstruction(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -390,6 +401,7 @@ contract { intent { "Decode one typed instruction without assigning authority." 
   }
 }
 
+// Decode one successor edge and its block arguments.
 pure flow slideV2ADecodeEdge(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -410,6 +422,7 @@ contract { intent { "Decode one successor edge and its block arguments." } }
   }
 }
 
+// Decode one no-fallthrough terminator.
 pure flow slideV2ADecodeTerminator(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -441,6 +454,7 @@ contract { intent { "Decode one no-fallthrough terminator." } }
   }
 }
 
+// Decode one bounded V2 block.
 pure flow slideV2ADecodeBlock(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -484,6 +498,7 @@ contract { intent { "Decode one bounded V2 block." } }
   }
 }
 
+// Decode one complete V2 function.
 pure flow slideV2ADecodeFunction(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -531,6 +546,7 @@ contract { intent { "Decode one complete V2 function." } }
   }
 }
 
+// Decode one registered failure record.
 pure flow slideV2ADecodeFailure(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -553,6 +569,7 @@ contract { intent { "Decode one registered failure record." } }
   }
 }
 
+// Decode one K3 obligation without trusting its successor meaning.
 pure flow slideV2ADecodeK3(
   bytes: Bytes,
   cursor: SLIDEV2AImportCursor,
@@ -577,6 +594,7 @@ contract { intent { "Decode one K3 obligation without trusting its successor mea
   }
 }
 
+// Return a no-authority program behind a refused import.
 pure flow emptySLIDEV2AProgram() -> SLIDEV2AProgram
 contract { intent { "Return a no-authority program behind a refused import." } }
 {
@@ -595,6 +613,7 @@ contract { intent { "Return a no-authority program behind a refused import." } }
   }
 }
 
+// Expose no partial graph when V2-A decoding refuses.
 pure flow refusedSLIDEV2AImport(
   cursor: SLIDEV2AImportCursor,
 ) -> SLIDEV2AProgramImport
@@ -607,6 +626,7 @@ contract { intent { "Expose no partial graph when V2-A decoding refuses." } }
   }
 }
 
+// Reconstruct canonical V2-A bytes without producer or encoder access.
 pure flow decodeSLIDEV2AProgram(bytes: Bytes) -> SLIDEV2AProgramImport
 contract { intent { "Reconstruct canonical V2-A bytes without producer or encoder access." } }
 {

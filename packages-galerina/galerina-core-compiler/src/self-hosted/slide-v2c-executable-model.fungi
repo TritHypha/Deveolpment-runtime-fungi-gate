@@ -52,6 +52,7 @@ record SLIDEV2CExecutableProgram {
   variantDescriptors: Array<SLIDEV2CVariantDescriptor>
 }
 
+// Materialize the V2-C aggregate operations as one detached executable function.
 pure flow materializeSLIDEV2CAggregateFunction(
   aggregate: SLIDEV2CAggregateProgram,
 ) -> SLIDEV2AFunction
@@ -92,6 +93,7 @@ contract { intent { "Materialize the V2-C aggregate operations as one detached e
   }
 }
 
+// Materialize frozen V2-A plus the registered V2-C aggregate function.
 pure flow materializeSLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram
 contract { intent { "Materialize frozen V2-A plus the registered V2-C aggregate function." } }
 {

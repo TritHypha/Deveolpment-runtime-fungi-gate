@@ -9,15 +9,17 @@
 /// allow-list) and the response-header construction. This checker-verified twin is the
 /// ordered fold over those already-computed booleans — the decision, not the plumbing.
 
+// Return the explicit CORS admission verdict.
 pure flow admit() -> Int
+contract { intent { "Return the explicit CORS admission verdict." } }
 {
-  contract { intent "The admit verdict (+1)." }
   return 1
 }
 
+// Return the fail-closed CORS denial verdict.
 pure flow deny() -> Int
+contract { intent { "Return the fail-closed CORS denial verdict." } }
 {
-  contract { intent "The deny verdict (-1) — deny-by-default." }
   return 0 - 1
 }
 
@@ -30,8 +32,8 @@ pure flow deny() -> Int
 ///   5. preflight        -> the requested method AND every requested header must be
 ///                          allowed, else DENY
 pure flow corsVerdict(hasOrigin: Bool, isNullOrigin: Bool, isWildcard: Bool, hasCredentials: Bool, isExactAllowlisted: Bool, isPreflight: Bool, preflightMethodAllowed: Bool, preflightHeadersAllowed: Bool) -> Int
+contract { intent { "Apply the ordered deny-by-default CORS checks and deny on the first failed condition." } }
 {
-  contract { intent "Fold the deny-by-default CORS checks in order; the first failure denies." }
   if hasOrigin == false { return 1 }
   if isNullOrigin == true { return 0 - 1 }
   if isWildcard == true {
