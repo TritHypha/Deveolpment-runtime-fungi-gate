@@ -199,15 +199,20 @@ planning checkbox must never be used to imply that implementation exists.
   mutable alias/FFI/unwind/effect/capability/host surfaces are zero. It
   explicitly reports no native certificate and no authority. V2-D is 30/30;
   combined V2-C/V2-D is 103/103.
-- **Current:** integrate the guarded function and memory tables into a complete
-  V2-D executable graph over an independently revalidated frozen V2-C parent.
-  Separately replace
+- **Completed:** local commit `5b98ccaf` integrates the guarded function,
+  frozen V2-C constant/record/variant tables, memory object IDs, and region/
+  object/guard descriptors into a complete three-function V2-D graph.
+  Frozen V2-A functions are independently revalidated; every altered base,
+  aggregate, memory, authority, or guard binding refuses. Integration is
+  14/14; total V2-D logical evidence is 44/44.
+- **Current:** implement deterministic canonical V2-D encoding over the
+  admitted 24-key graph. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** complete V2-D executable integration, then canonical
-  encoding/independent import/digest and detached guarded execution. Keep the
+- **Next:** independently pin/decode/digest the canonical V2-D body, then add
+  detached guarded execution. Keep the
   V2-E receipt/source-map lane
   independently gated before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may

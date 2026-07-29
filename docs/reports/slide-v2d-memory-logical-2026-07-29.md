@@ -2,6 +2,7 @@
 
 **Date:** 2026-07-29
 **Galerina implementation commit:** `cadbd66f`
+**Executable integration commit:** `5b98ccaf`
 **Registry descriptor:** 1,383 LF bytes
 **Registry SHA-256:** `a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648`
 
@@ -70,6 +71,11 @@ V2-D passes 30/30. Explicit refusals cover:
 
 The combined frozen V2-C plus V2-D focused suite passes 103/103.
 
+The executable integration suite adds 14/14. It independently revalidates the
+two frozen V2-A functions, retains the exact V2-C constant/record/variant
+tables, and binds them to the guarded V2-D function and memory descriptors.
+Total V2-D logical evidence is 44/44.
+
 ## Replacement and integration
 
 Nothing is removed at this checkpoint.
@@ -84,7 +90,5 @@ fallback.
 
 ## Next safe boundary
 
-Integrate the guarded function and memory tables into a complete V2-D
-executable graph over an independently revalidated frozen V2-C parent. Then
-add canonical encoding, independent import/digest, and detached guarded
-execution. LLVM/native work remains blocked.
+Add deterministic canonical encoding, independent import/digest, and detached
+guarded execution. LLVM/native work remains blocked.
