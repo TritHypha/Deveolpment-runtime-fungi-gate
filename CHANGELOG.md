@@ -5,13 +5,13 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
 ## [Unreleased]
 
 ### Security
-- **Hardened the self-hosted GIR boundary used by the CTLL R1 prerequisite.**
+- **Hardened the self-hosted GIR boundary used by the SLIDE R1 prerequisite.**
   Missing nested flows can no longer execute an empty sentinel and return
   `Int(0)`; missing or surplus call arguments now terminate. Self-hosted
   arithmetic is checked as Int32 with terminal range, overflow, and
   division-by-zero traps, including guard shapes that remain safe under eager
   Wasm Boolean evaluation.
-- **Closed malformed-K3 and checked-trap wrapping gaps found by the CTLL G1
+- **Closed malformed-K3 and checked-trap wrapping gaps found by the SLIDE G1
   vertical-slice probe.** Every declared Verdict input is now checked at the
   tree-walker and Wasm ABI boundary, with exact `check`/`prefilter` validation
   retained as defense in depth; forged fourth trits trap instead of inheriting
@@ -55,36 +55,36 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
   `21415420b447e219`, since the interim `ab46f4c7` root was lost; see RD-0368).
 
 ### Added
-- **Canonical typed-ID CTLL R1 semantic-body boundary.** The closed logical
-  fixture now exports from `.fungi` as a deterministic 277-byte RFC 8949 CBOR map with
+- **Canonical typed-ID SLIDE R1 semantic-body boundary.** The closed logical
+  fixture now exports from `.fungi` as a deterministic 282-byte RFC 8949 CBOR map with
   definite containers, ascending unsigned keys, shortest integers, and UTF-8
   text. A separately implemented `.fungi` reference-vector validator admits
-  only the exact body, rejects every one of 277 single-byte mutations plus
+  only the exact body, rejects every one of 282 single-byte mutations plus
   truncation/surplus input, and pins the non-authoritative body checksum
-  `sha256:19843a946cf68b2365cf661c278d52e4ca2b54a4230ae59e024205c0e583664d`.
+  `sha256:93a49e788c40df6b2f3887e0e2268bdef8954d20fad7e708e0e28dab253e0c17`.
   A second independent `.fungi` path structurally parses canonical CBOR and
   classifies key, opcode, type, failure, K3-successor, and suffix drift.
   A closed-profile `.fungi` executor then proves typed ALLOW, DENY,
   INDETERMINATE, and overflow results in a fresh process without fixture
   source/AST or WAT. General instruction-driven interpretation, the
-  domain-separated semantic digest, signed CTLL payload, and `.slide` bundle
-  remain open.
-- **Compiler-owned CTLL R1 logical adapter.** The self-hosted GIR `FlowEntry`
+  The SLIDE-domain semantic digest is independently pinned in tests and the
+  implementation report; signed SLIDE payload and `.slide` bundle remain open.
+- **Compiler-owned SLIDE R1 logical adapter.** The self-hosted GIR `FlowEntry`
   now carries derived signature/effect metadata. A new `.fungi` adapter
   validates the owner-confirmed fixture, derives the existing preflight
   request, and materializes one closed four-block logical R1 program only
   after ALLOW. It is not canonical CBOR, a digest-bound artifact, or a SLIDE
   bundle. Full compiler suite: 5,270/5,270.
-- **Self-hosted K3 handoff for the bounded CTLL fixture shape.** The `.fungi`
+- **Self-hosted K3 handoff for the bounded SLIDE fixture shape.** The `.fungi`
   lexer, parser, GIR emitter, and runtime now preserve `check` as one explicit
   `check_k3` node with exactly three labelled successors and exact
   DENY/INDETERMINATE/ALLOW dispatch. Generic return types are retained in full.
   This is an in-memory prerequisite, not canonical R1 serialization or SLIDE
   execution. Full compiler suite: 5,257/5,257.
-- **CTLL v2 G1 compiler capability probe.** Added a checked `.fungi` fixture,
+- **SLIDE v2 G1 compiler capability probe.** Added a checked `.fungi` fixture,
   standing walker/Wasm differential, exact post-GIR AST dependency inventory,
   and current-vs-proposed capability matrix. This is evidence for current
-  Galerina semantics, not a claim that canonical CTLL payload export or a
+  Galerina semantics, not a claim that canonical SLIDE payload export or a
   `.slide` bundle exists.
 - **`scripts/brand-audit.mjs`** — a binary-safe residual-brand + `@`-scope auditor. It reads every file
   as raw bytes (so NUL-containing files that `grep`/`ripgrep` skip as "binary" are still scanned) and

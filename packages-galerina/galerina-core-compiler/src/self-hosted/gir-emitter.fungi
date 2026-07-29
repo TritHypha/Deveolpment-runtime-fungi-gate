@@ -569,7 +569,7 @@ record FlowEntry {
   name: String
   params: Array<Auto>
   body: Array<Auto>
-  // Appended after the runtime-stable first three fields. The CTLL R1 adapter
+  // Appended after the runtime-stable first three fields. The SLIDE R1 adapter
   // consumes these compiler-derived facts instead of accepting caller-supplied
   // preflight booleans or consulting the source AST.
   qualifier: String

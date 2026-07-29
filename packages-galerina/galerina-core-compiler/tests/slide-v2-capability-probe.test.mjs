@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import * as L from "../dist/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const FIXTURE = join(HERE, "ctll-v2", "ctll-k3-checked-add-probe.fungi");
+const FIXTURE = join(HERE, "slide-v2", "slide-k3-checked-add-probe.fungi");
 
 async function loadProbe() {
   const source = await readFile(FIXTURE, "utf8");
@@ -28,26 +28,26 @@ function args(left, right, admission) {
   ]);
 }
 
-test("CTLL G1 probe: walker preserves typed K3 exits and checked addition", async () => {
+test("SLIDE G1 probe: walker preserves typed K3 exits and checked addition", async () => {
   const program = await loadProbe();
 
-  const denied = await L.executeFlow("ctllK3CheckedAddProbe", args(3, 4, -1), program.ast);
+  const denied = await L.executeFlow("slideK3CheckedAddProbe", args(3, 4, -1), program.ast);
   assert.equal(denied.audit.result, "ok");
   assert.equal(denied.value.__tag, "err");
-  assert.equal(denied.value.error.value, "CTLL_PROBE_DENIED");
+  assert.equal(denied.value.error.value, "SLIDE_PROBE_DENIED");
 
-  const unresolved = await L.executeFlow("ctllK3CheckedAddProbe", args(3, 4, 0), program.ast);
+  const unresolved = await L.executeFlow("slideK3CheckedAddProbe", args(3, 4, 0), program.ast);
   assert.equal(unresolved.audit.result, "ok");
   assert.equal(unresolved.value.__tag, "err");
-  assert.equal(unresolved.value.error.value, "CTLL_PROBE_INDETERMINATE");
+  assert.equal(unresolved.value.error.value, "SLIDE_PROBE_INDETERMINATE");
 
-  const allowed = await L.executeFlow("ctllK3CheckedAddProbe", args(3, 4, 1), program.ast);
+  const allowed = await L.executeFlow("slideK3CheckedAddProbe", args(3, 4, 1), program.ast);
   assert.equal(allowed.audit.result, "ok");
   assert.equal(allowed.value.__tag, "ok");
   assert.equal(allowed.value.value.value, 7);
 
   const overflow = await L.executeFlow(
-    "ctllK3CheckedAddProbe",
+    "slideK3CheckedAddProbe",
     args(2_147_483_647, 1, 1),
     program.ast,
   );
@@ -55,7 +55,7 @@ test("CTLL G1 probe: walker preserves typed K3 exits and checked addition", asyn
   assert.match(overflow.value.message, /IntegerOverflow/);
 });
 
-test("CTLL G1 probe: current WAT preserves K3, Result, checked add, and malformed-trit refusal", async () => {
+test("SLIDE G1 probe: current WAT preserves K3, Result, checked add, and malformed-trit refusal", async () => {
   const program = await loadProbe();
   const effects = L.checkEffects(program.flows, program.ast);
   const { gir } = L.emitGIR(program.ast, program.flows, effects);
@@ -78,7 +78,7 @@ test("CTLL G1 probe: current WAT preserves K3, Result, checked add, and malforme
       },
     },
   });
-  const run = module.instance.exports.ctllK3CheckedAddProbe;
+  const run = module.instance.exports.slideK3CheckedAddProbe;
   assert.equal(typeof run, "function");
 
   assert.ok(run(3, 4, -1) < -10_000);
@@ -89,13 +89,13 @@ test("CTLL G1 probe: current WAT preserves K3, Result, checked add, and malforme
   assert.throws(() => run(2_147_483_647, 1, 1), WebAssembly.RuntimeError);
 });
 
-test("CTLL G1 negative probe: emitted GIR cannot reproduce the body without the AST", async () => {
+test("SLIDE G1 negative probe: emitted GIR cannot reproduce the body without the AST", async () => {
   const program = await loadProbe();
   const effects = L.checkEffects(program.flows, program.ast);
   const { gir } = L.emitGIR(program.ast, program.flows, effects);
 
   // Deliberately invoke the JS surface without the TypeScript-required AST.
-  // This records the present boundary; CTLL must replace it with a hard refusal
+  // This records the present boundary; SLIDE must replace it with a hard refusal
   // or complete executable GIR, never rely on this legacy identity fallback.
   const detachedWat = L.renderWAT(
     L.buildWATModuleFromGIR(gir, new Map(), "wasm-standalone", undefined, true),

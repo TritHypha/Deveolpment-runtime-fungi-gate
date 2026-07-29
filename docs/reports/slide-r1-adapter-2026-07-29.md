@@ -1,8 +1,8 @@
-# CTLL R1 Compiler-Owned Adapter
+# SLIDE R1 Compiler-Owned Adapter
 
 - **Date:** 2026-07-29
-- **Branch:** `codex/ctll-v2-architecture`
-- **Scope:** the owner-confirmed `ctll_k3_checked_add_v1` fixture only
+- **Branch:** `codex/slide-v2-architecture`
+- **Scope:** the owner-confirmed `slide_k3_checked_add_v1` fixture only
 - **Result at this checkpoint:** exact compiler-owned internal GIR can be
   converted into a closed logical R1 program
 
@@ -11,7 +11,7 @@
 `buildFlowTable` now appends compiler-derived qualifier, ordered parameter
 types, return type, and declared effects to its existing runtime-stable
 `FlowEntry` fields. The new
-`src/self-hosted/ctll-r1-adapter.fungi` consumes that entry and:
+`src/self-hosted/slide-r1-adapter.fungi` consumes that entry and:
 
 1. validates the exact fixture identity, signature, empty effect set, and one
    complete body;
@@ -19,7 +19,7 @@ types, return type, and declared effects to its existing runtime-stable
    successor;
 3. validates exact terminal `Err` arms and exact
    `Ok(int32.add.checked(left,right))` source-GIR shape;
-4. derives every `CTLLR1PreflightRequest` field rather than accepting support
+4. derives every `SLIDER1PreflightRequest` field rather than accepting support
    booleans from a caller;
 5. invokes the existing `.fungi` preflight kernel;
 6. materializes a closed four-block logical R1 program only on K3 `ALLOW`.
@@ -65,19 +65,19 @@ format.
 
 Canonical body export and independent exact-vector validation were implemented
 after this adapter checkpoint. See
-`ctll-r1-canonical-body-2026-07-29.md`. It now includes registered typed IDs
+`slide-r1-canonical-body-2026-07-29.md`. It now includes registered typed IDs
 and an independent structural importer. Detached execution remains open.
 
 ## Verification
 
 ```text
-node --test tests/ctll-r1-adapter.test.mjs
+node --test tests/slide-r1-adapter.test.mjs
   PASS: 13 tests
 
 node --test \
-  tests/ctll-r1-preflight.test.mjs \
-  tests/ctll-r1-adapter.test.mjs \
-  tests/ctll-r1-selfhost-k3.test.mjs \
+  tests/slide-r1-preflight.test.mjs \
+  tests/slide-r1-adapter.test.mjs \
+  tests/slide-r1-selfhost-k3.test.mjs \
   tests/self-hosted-gir-body.test.mjs \
   tests/self-hosted-runtime.test.mjs \
   tests/self-hosted-bootstrap.test.mjs

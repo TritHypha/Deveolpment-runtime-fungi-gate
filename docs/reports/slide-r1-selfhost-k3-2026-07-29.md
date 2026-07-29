@@ -1,11 +1,11 @@
-# CTLL R1 Self-Hosted K3 Prerequisite
+# SLIDE R1 Self-Hosted K3 Prerequisite
 
 - **Date:** 2026-07-29
-- **Branch:** `codex/ctll-v2-architecture`
+- **Branch:** `codex/slide-v2-architecture`
 - **Scope:** Galerina's `.fungi` lexer, parser, internal GIR emitter, and GIR
   runtime
 - **Result:** the first fixture's K3 control shape now survives the
-  self-hosted in-memory pipeline; canonical CTLL R1 export still does not exist
+  self-hosted in-memory pipeline; canonical SLIDE R1 export still does not exist
 
 ## What was implemented
 
@@ -62,7 +62,7 @@ does not consult the original source AST during that execution.
 
 ## What this does not prove
 
-This is a prerequisite, not canonical CTLL R1:
+This is a prerequisite, not canonical SLIDE R1:
 
 - the self-hosted GIR records are not the proposed canonical CFG/SSA schema;
 - there are no stable numeric type, instruction, edge, K3, or failure IDs;
@@ -84,7 +84,7 @@ any WAT identity/default/walker fallback.
 
 ```text
 node --test \
-  tests/ctll-r1-selfhost-k3.test.mjs \
+  tests/slide-r1-selfhost-k3.test.mjs \
   tests/self-hosted-runtime.test.mjs \
   tests/self-hosted-i3-functional-corpus.test.mjs \
   tests/rd0528-fungi-ts-edge-differential.test.mjs

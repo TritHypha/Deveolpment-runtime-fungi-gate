@@ -1,18 +1,18 @@
-# CTLL v2: Galerina Status and Implementation Plan
+# SLIDE v2: Galerina Status and Implementation Plan
 
 - **Snapshot date:** 2026-07-29
-- **Branch:** `codex/ctll-v2-architecture`
-- **Status owner:** Galerina CTLL integration lane
+- **Branch:** `codex/slide-v2-architecture`
+- **Status owner:** Galerina SLIDE integration lane
 - **Canonical purpose:** answer what exists, what is specified only, what is
   blocked, and what must be built next.
 
-This is the first document to read when checking CTLL work from the Galerina
-repository. Update it in the same commit whenever a CTLL status, gate, owner,
+This is the first document to read when checking SLIDE work from the Galerina
+repository. Update it in the same commit whenever a SLIDE status, gate, owner,
 dependency, or implementation phase changes.
 
 ## 1. Current truth in one paragraph
 
-CTLL v2 is a proposed independent execution platform with Galerina as its first
+SLIDE v2 is a proposed independent execution platform with Galerina as its first
 frontend. Its architecture, zero-trust rules, R1 executable-GIR subset,
 Galerina frontend receipt, memory profile, deterministic AOT graph, Linux
 driver boundary, and first vertical-slice recommendation are documented. G1
@@ -24,7 +24,7 @@ kernel now rejects fifteen unsupported fixture-shape facts in a fixed order.
 The self-hosted `.fungi` stages preserve the bounded fixture's `check` as an
 explicit three-successor `check_k3` node and execute exact K3 plus checked
 Int32 semantics. A compiler-owned adapter derives the facts, materializes the
-closed typed-ID logical program, and now emits one 277-byte canonical CBOR
+closed typed-ID logical program, and now emits one 282-byte canonical CBOR
 semantic body. A separately implemented `.fungi` reference-vector validator
 rejects every byte mutation. A second independent `.fungi` importer parses
 canonical CBOR heads and classifies registry, opcode, type, operand, failure,
@@ -36,7 +36,7 @@ reconstructed general instruction graph. Imported-program reconstruction, SLIDE
 packaging, native execution, Tri-Fuse v2, the frontend receipt, driver CLI,
 and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
-bytecode/runtime tiers, and WebAssembly toolchain. CTLL must not be presented
+bytecode/runtime tiers, and WebAssembly toolchain. SLIDE must not be presented
 as shipped, benchmarked, memory-safe, deterministic, or production-ready.
 
 ## 2. Status vocabulary
@@ -44,13 +44,13 @@ as shipped, benchmarked, memory-safe, deterministic, or production-ready.
 | State | Meaning |
 |---|---|
 | `IMPLEMENTED-VERIFIED` | Code exists and the named verification evidence passed |
-| `IMPLEMENTED-PARTIAL` | Useful code exists, but it does not meet the CTLL boundary |
+| `IMPLEMENTED-PARTIAL` | Useful code exists, but it does not meet the SLIDE boundary |
 | `SPECIFIED` | A reviewable contract/plan exists; no implementation claim |
 | `RECOMMENDED` | A default is documented but still awaits owner confirmation |
 | `BLOCKED-OWNER` | Implementation would choose owner-controlled policy or authority |
 | `BLOCKED-TOOLCHAIN` | The current `.fungi` toolchain cannot yet express or execute the required slice |
 | `NOT-STARTED` | No qualifying implementation exists |
-| `CURRENT-PRODUCTION` | Existing non-CTLL Galerina behavior remains the shipped path |
+| `CURRENT-PRODUCTION` | Existing non-SLIDE Galerina behavior remains the shipped path |
 
 Planning completion and implementation completion are deliberately separate.
 
@@ -58,21 +58,21 @@ Planning completion and implementation completion are deliberately separate.
 
 | Area | State | What exists now | What remains |
 |---|---|---|---|
-| Product boundary | `SPECIFIED` | triLowLevel is the independent K3/core; SLIDE is the public engine/bundle; CTLL is its internal payload/profile; Galerina is the first adapter | Prove with a tiny audited second frontend |
+| Product boundary | `SPECIFIED` | triLowLevel is the independent K3/core; SLIDE is the single engine, versioned payload-profile, and bundle identity; Galerina is the first adapter | Prove with a tiny audited second frontend |
 | Public name and extension | `SPECIFIED` | SLIDE / `.slide` means **Substrate Layout Interconnect Deterministic Engine**; `.dml` rejected due active collisions | Legal/name review before public release; no v1 media-type registration |
 | K3 semantics | `IMPLEMENTED-PARTIAL` | Kleene K3 authority contract documented; current checker, walker, WAT paths, and bounded self-hosted internal GIR path preserve three states; invalid fourth states refuse | Publish one independent registry and executable conformance vectors |
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, structural importer, and fresh-process closed-profile reference execution | Reconstruct an independent program value and dispatch a general reference interpreter over checked CFG/SSA |
-| AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
+| AST independence | `NOT-STARTED` | None for the SLIDE boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory, fail-closed preflight, self-hosted `check_k3`, compiler-owned logical adapter, canonical body export, and exact-vector validation exist | Structurally import/validate, execute fresh-process, then add semantic serialized mutations |
 | First fixture | `IMPLEMENTED-PARTIAL` | Exact four-block typed-ID body, body checksum, whole-vector mutation kill, semantic importer mutations, and fresh-process typed outcome execution exist | Add reconstructed imported artifact and instruction-driven execution |
-| Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
+| Memory profile | `SPECIFIED` | `slide.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
 | LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
-| `.slide` container/tooling | `NOT-STARTED` | SLIDE container, internal CTLL payload/profile, and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
+| `.slide` container/tooling | `NOT-STARTED` | SLIDE container, versioned payload profiles, and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
 | Tower Citizen adapter | `SPECIFIED` | Exact capability-receipt boundary documented | Implement adapter; no Boolean or origin-based authority |
 | Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
 | WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Retain as optional compatibility/differential evidence after SLIDE; never silently fall back from failed admission |
@@ -80,7 +80,7 @@ Planning completion and implementation completion are deliberately separate.
 | Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
 | SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
 | Non-Galerina frontend | `NOT-STARTED` | Owner delegated a tiny audited reference frontend | Specify and implement the minimal producer |
-| SLIDE/CTLL benchmarks | `NOT-STARTED` | Security/TCB gates and weighted scorecard documented | Benchmark only after equivalent native execution exists |
+| SLIDE benchmarks | `NOT-STARTED` | Security/TCB gates and weighted scorecard documented | Benchmark only after equivalent native execution exists |
 
 ## 4. Evidence behind the status
 
@@ -99,18 +99,20 @@ the original AST separately and copies it into its internal `WATGIRInput.ast`,
 which is then read for constants, layouts, flow signatures, bodies, secret
 handling, and memory derivation. The no-AST path can still emit an identity
 body from summary metadata. These are valid facts about the current
-WebAssembly implementation, but they fail the CTLL detached semantic boundary.
+WebAssembly implementation, but they fail the SLIDE detached semantic boundary.
 The exact inventory and R1 mapping are recorded in
-`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`. CTLL work begins by
+`../reports/slide-v2-g1-capability-probe-2026-07-29.md`. SLIDE work begins by
 replacing those dependencies with complete validated R1 nodes, not by writing
 an LLVM emitter around them.
 
-### 4.2 No CTLL implementation is being claimed
+### 4.2 Only the bounded SLIDE R1 prototype is implemented
 
-A source search outside documentation and generated build output found no
-implemented `.slide` container, `ctll.semantic.*` profile, CTLL frontend receipt,
-or SLIDE loader/runner surface. The sibling `triLowLevel-v2` directory is a
-planning set and is not currently its own Git repository.
+Galerina now contains the bounded `slide.semantic.galerina-gir.v1` fixture
+adapter, canonical encoder, exact-vector validator, structural importer, and
+closed-profile reference executor. It does not contain an implemented
+`.slide` container, general SLIDE frontend receipt, general instruction-driven
+runtime, native loader, or production runner. The sibling `triLowLevel-v2`
+directory is a planning set and is not currently its own Git repository.
 
 ### 4.3 Control-flow hardening completed so far
 
@@ -131,12 +133,12 @@ Not completed:
 
 - compiler-enforced flow/block-aware lint for future code;
 - target-lowering parity proof for every `check` use;
-- canonical CTLL executable-GIR and serialized conformance fixtures.
+- canonical SLIDE executable-GIR and serialized conformance fixtures.
 
 ### 4.4 G1 capability probe
 
 The G1 evidence is
-`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`.
+`../reports/slide-v2-g1-capability-probe-2026-07-29.md`.
 
 Verified:
 
@@ -162,19 +164,19 @@ Verified:
   boundaries and traps overflow.
 
 This is implementation evidence for existing Galerina semantics, not evidence
-that CTLL R1 exists. The preflight's supplied facts are not attestations:
+that SLIDE R1 exists. The preflight's supplied facts are not attestations:
 the future compiler adapter must derive them from authoritative checked output
 and bind the decision to the exact materialized semantic bytes.
 
 The self-hosted handoff evidence is
-`../reports/ctll-r1-selfhost-k3-2026-07-29.md`. Its executable `FlowEntry`
+`../reports/slide-r1-selfhost-k3-2026-07-29.md`. Its executable `FlowEntry`
 records remain an internal in-memory GIR. The subsequent bounded canonical-body
-evidence is `../reports/ctll-r1-canonical-body-2026-07-29.md`: it proves one
+evidence is `../reports/slide-r1-canonical-body-2026-07-29.md`: it proves one
 exact CBOR representation and independent closed-profile byte admission, but
 not a general CFG/SSA importer or fresh-process reference artifact. Verification
 at the first byte checkpoint was 94/94 packages and 8,018 tests, including
 5,276 compiler tests. The follow-on typed-ID/importer checkpoint supersedes
-the 662-byte string-valued prototype with a 277-byte registry-valued body.
+the 662-byte string-valued prototype with a 282-byte registry-valued body.
 Current verification is 94/94 packages and 8,025 tests, including 5,283
 compiler tests.
 
@@ -189,7 +191,7 @@ compiler tests.
   -> Tri-Fuse proof/residual-gate plan
   -> deterministic AOT action graph and untrusted CAS
   -> verified target object
-  -> signed .slide bundle carrying the CTLL payload
+  -> signed .slide bundle carrying the SLIDE payload
   -> Tower capability receipt + Tri-Pipe route proposal
   -> independent K3 admission
   -> isolated runner with typed capability RPC and receipts
@@ -215,12 +217,12 @@ Required invariants:
 | `.fungi` syntax, checking, source semantics | Galerina core compiler |
 | Executable GIR exporter/importer and Galerina reference interpreter | Galerina |
 | Galerina frontend receipt producer | Galerina adapter |
-| K3/common registries and CTLL contracts | Independent TLL project |
+| K3/common registries and SLIDE contracts | Independent TLL project |
 | Independent GIR/receipt/common-plan verification | Independent TLL project |
 | Tri-Fuse v2 plan contract and implementation | Independent TLL, with Galerina conformance fixtures |
 | LLVM/OS integration | Restricted TLL host shims |
 | Tower Citizen/Tri-Pipe integration | Galerina-owned adapters to public TLL receipt contracts |
-| CTLL packager, admission, loader, runner, driver tools | Independent TLL project |
+| SLIDE packager, admission, loader, runner, driver tools | Independent TLL project |
 
 TLL must build and validate its own fixtures without importing Galerina.
 
@@ -259,16 +261,16 @@ Progress on 2026-07-29:
 - the positive `.fungi` fixture and walker/Wasm differential are implemented;
 - malformed Verdict and overflow/Result parity regressions pass;
 - every current post-GIR AST fact is inventoried and mapped to R1;
-- the no-AST identity fallback is exposed as a non-CTLL negative fact;
+- the no-AST identity fallback is exposed as a non-SLIDE negative fact;
 - a `.fungi` policy kernel now preflights the exact first-slice shape with
-  ordered `CTLL-R1-EXPORT-001..015` refusals and no Boolean/default fallback.
+  ordered `SLIDE-R1-EXPORT-001..015` refusals and no Boolean/default fallback.
 - the self-hosted `.fungi` lexer, parser, GIR emitter, and runtime now carry
   the bounded `check` as explicit three-way K3 control and checked Int32
   execution, while missing flows and arity mismatches terminate.
 
 The dedicated compiler-owned `.fungi` adapter derives those facts and
 materializes the exact four-block logical R1 fixture or refuses before legacy
-paths. Its `.fungi` encoder emits a 277-byte typed-ID canonical CBOR body. A
+paths. Its `.fungi` encoder emits a 282-byte typed-ID canonical CBOR body. A
 pinned-vector validator rejects all byte drift and a separate structural
 importer classifies canonicality, registry, opcode, type, failure, K3 edge,
 truncation, and suffix mutations. The fresh-process reference executor runs
@@ -352,18 +354,18 @@ Exit gate: every mutated authority field refuses before native execution.
 2. implement Linux observation/driver resolution;
 3. add the privileged driver helper only in the approved disposable
    environment;
-4. add optional Wasm CTLL payload/profile;
+4. add optional Wasm SLIDE payload/profile;
 5. run equivalent-work benchmarks against cached Wasm AOT, current Galerina,
    native Rust, and CPython.
 
-Exit gate: publish raw reproducible results and decide whether CTLL justifies
+Exit gate: publish raw reproducible results and decide whether SLIDE justifies
 its additional format/verifier/runtime.
 
 ## 8. Immediate next actions
 
 Safe work that does not require an owner choice:
 
-1. keep all CTLL documentation synchronized with this ledger;
+1. keep all SLIDE documentation synchronized with this ledger;
 2. make the structural importer reconstruct its own typed program value and
    finish the closed CFG/SSA validation stages;
 3. replace closed-profile semantic dispatch with instruction-driven reference
@@ -378,29 +380,29 @@ before their earlier semantic and owner gates.
 
 ## 9. Recorded local commits
 
-The current branch contains these CTLL-related checkpoints:
+The current branch contains these SLIDE-related checkpoints:
 
 | Commit | Scope |
 |---|---|
-| `29668017` | Define Galerina/CTLL v2 integration architecture |
+| `29668017` | Define Galerina/SLIDE v2 integration architecture |
 | `680695c4` | Standardize `.fungi` decision control flow |
 | `7316e0dd` | Apply total branch standard to examples |
 | `8b11b018` | Enforce verified total control flow across 19 services |
 | `c7947a89` | Specify the executable-GIR/frontend-receipt handoff |
-| `270ec5f1` | Add the canonical CTLL implementation ledger |
-| `0f2f7c6a` | Harden CTLL G1 runtime boundaries and add the capability probe |
-| `ab3de224` | Add the bounded CTLL R1 preflight kernel |
+| `270ec5f1` | Add the canonical SLIDE implementation ledger |
+| `0f2f7c6a` | Harden SLIDE G1 runtime boundaries and add the capability probe |
+| `ab3de224` | Add the bounded SLIDE R1 preflight kernel |
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |
 | `73338171` | Derive and materialize the compiler-owned logical R1 fixture |
 | `446d0ae6` | Serialize and independently pin the first canonical R1 body |
 | `bda13054` | Validate and fresh-process execute the typed-ID R1 profile |
 
-The corresponding Knowledge Base branch contains the canonical CTLL planning
+The corresponding Knowledge Base branch contains the canonical SLIDE planning
 record and control-flow rules. None of these commits has been pushed by Codex.
 
 ## 10. Maintenance checklist
 
-Every CTLL implementation commit must update:
+Every SLIDE implementation commit must update:
 
 - this status ledger;
 - `docs/TODO.md`;

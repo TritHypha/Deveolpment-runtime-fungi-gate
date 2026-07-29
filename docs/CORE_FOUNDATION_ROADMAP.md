@@ -217,30 +217,30 @@ ORM/CMS/admin UI
 production package registry
 ```
 
-## CTLL v2 Readiness Lane
+## SLIDE v2 Readiness Lane
 
-CTLL v2 is a proposed independent platform target, not a shortcut around the
+SLIDE v2 is a proposed independent platform target, not a shortcut around the
 Core Foundation phases and not an implemented Galerina backend.
 
-Before Galerina emits CTLL:
+Before Galerina emits a production `.slide` bundle or native SLIDE target:
 
 1. GIR must be detached and executable, with no backend recovery from the AST.
 2. GIR must carry explicit memory, failure, capability, effect, Kleene K3, and
    source-map semantics.
-3. The Galerina frontend receipt and CTLL semantic archive must be versioned and
+3. The Galerina frontend receipt and SLIDE semantic archive must be versioned and
    canonical.
-4. `ctll.memory.safe-value.v1` negative fixtures must fail closed before native
+4. `slide.memory.safe-value.v1` negative fixtures must fail closed before native
    execution.
 5. Clean and cached action-graph builds must be deterministic and equivalent.
-6. A non-Galerina fixture frontend must prove CTLL is independently usable.
+6. A non-Galerina fixture frontend must prove SLIDE is independently usable.
 7. The current WebAssembly path remains the differential and separately
    admitted alternative until an explicit owner-approved transition; it is
-   never an implicit fallback from a failed CTLL admission.
+   never an implicit fallback from a failed SLIDE admission.
 
 Implementation for this lane is `.fungi`; `.gate` remains out of scope. See
-`docs/architecture/ctll-v2-integration-2026-07-29.md` and the canonical status
+`docs/architecture/slide-v2-integration-2026-07-29.md` and the canonical status
 ledger at
-`docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
+`docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`.
 
 ## Near-Term Work Order
 

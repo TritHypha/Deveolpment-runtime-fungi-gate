@@ -16,22 +16,24 @@ Galerina is structured as a **Core-first product constellation**. The full speci
 
 ---
 
-## CTLL v2 Forward Target — specified, not implemented
+## SLIDE v2 Forward Target — bounded prototype, production path not implemented
 
-Compiled Tri Low Level (CTLL) v2 is a proposed independent execution platform.
-Galerina is its first planned frontend, but CTLL must not depend on Galerina at
+Substrate Layout Interconnect Deterministic Engine (SLIDE) v2 is a proposed independent execution platform.
+Galerina is its first planned frontend, but SLIDE must not depend on Galerina at
 runtime or treat Galerina origin as authority.
 
 The canonical checkpoint for what is done, what is specification-only, what is
 blocked, and what must be built next is:
 
-- `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`
-- `docs/architecture/ctll-v2-integration-2026-07-29.md`
+- `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`
+- `docs/architecture/slide-v2-integration-2026-07-29.md`
 
-No `.ctll` generator, CTLL verifier, native CTLL runner, Tri-Fuse v2
-implementation, or CTLL benchmark exists yet. The current interpreter,
-bytecode/runtime tiers, and WebAssembly toolchain remain the factual
-implemented paths.
+The bounded R1 prototype has an adapter, canonical encoder, exact-vector
+validator, structural importer, and closed-profile reference executor. No
+`.slide` generator, general SLIDE verifier/runtime, native SLIDE runner,
+Tri-Fuse v2 implementation, or SLIDE benchmark exists yet. The current
+interpreter, bytecode/runtime tiers, and WebAssembly toolchain remain the
+factual production-capable paths.
 
 ---
 

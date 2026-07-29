@@ -1,5 +1,5 @@
 @version 1
-/// @file: ctll-r1-reference-runtime.fungi
+/// @file: slide-r1-reference-runtime.fungi
 /// @purpose: Execute the closed typed-ID R1 profile only after structural byte admission.
 /// @status: Detached first-fixture reference executor; not a native or general GIR runtime.
 ///
@@ -8,7 +8,7 @@
 /// input. The structurally validated profile fixes the registered operation
 /// graph; this runtime supplies its executable semantics.
 
-record CTLLR1ReferenceResult {
+record SLIDER1ReferenceResult {
   status: String
   success: Bool
   value: Int
@@ -16,7 +16,7 @@ record CTLLR1ReferenceResult {
   importFailureId: String
 }
 
-pure flow refuseCTLLR1ReferenceImport(failureId: String) -> CTLLR1ReferenceResult
+pure flow refuseSLIDER1ReferenceImport(failureId: String) -> SLIDER1ReferenceResult
 contract { intent { "Leave the execution path when structural byte admission is not ALLOW." } }
 {
   return {
@@ -28,7 +28,7 @@ contract { intent { "Leave the execution path when structural byte admission is 
   }
 }
 
-pure flow failCTLLR1Reference(failureId: Int) -> CTLLR1ReferenceResult
+pure flow failSLIDER1Reference(failureId: Int) -> SLIDER1ReferenceResult
 contract { intent { "Return one declared typed R1 failure and no success value." } }
 {
   return {
@@ -40,30 +40,30 @@ contract { intent { "Return one declared typed R1 failure and no success value."
   }
 }
 
-pure flow executeCTLLR1Imported(
+pure flow executeSLIDER1Imported(
   body: Bytes,
   left: Int,
   right: Int,
   admission: Verdict,
-) -> CTLLR1ReferenceResult
+) -> SLIDER1ReferenceResult
 contract {
   intent { "Reference-execute the exact imported checked-add/K3 graph with total terminal outcomes." }
 }
 {
-  let imported = validateCTLLR1StructuralBody(body)
+  let imported = validateSLIDER1StructuralBody(body)
   if imported.verdict != Verdict.Allow {
-    return refuseCTLLR1ReferenceImport(imported.failureId)
+    return refuseSLIDER1ReferenceImport(imported.failureId)
   }
 
   check(admission) {
-    deny: { return failCTLLR1Reference(2) }
-    ambig: { return failCTLLR1Reference(3) }
+    deny: { return failSLIDER1Reference(2) }
+    ambig: { return failSLIDER1Reference(3) }
     if: {
       if right > 0 and left > 2147483647 - right {
-        return failCTLLR1Reference(1)
+        return failSLIDER1Reference(1)
       }
       if right < 0 and left < -2147483648 - right {
-        return failCTLLR1Reference(1)
+        return failSLIDER1Reference(1)
       }
       return {
         status: "OK"

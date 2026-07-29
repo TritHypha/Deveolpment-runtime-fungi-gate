@@ -1221,7 +1221,7 @@ record CheckArmsResult { arms: Array<Stmt>  nextPos: Int }
 
 // Parse contextual K3 arms from `check(subject) { deny: {...} ambig: {...} if: {...} }`.
 // Labels are retained exactly and in source order. Completeness, uniqueness, and
-// validity are enforced by the GIR runtime and the CTLL adapter, never inferred
+// validity are enforced by the GIR runtime and the SLIDE adapter, never inferred
 // by this syntax-only stage.
 pure flow parseCheckArms(tokens: Array<Token>, openBracePos: Int) -> CheckArmsResult
 contract { intent { "Parse all contextual check arms without collapsing K3 into Bool." } }

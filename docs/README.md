@@ -167,8 +167,8 @@ documentation lives in `../packages-galerina/galerina-core/`.
 
 ## Existing App And Workspace Docs
 
-- [CTLL v2 Status and Implementation Plan](architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md)
-- [CTLL v2 Integration Architecture](architecture/ctll-v2-integration-2026-07-29.md)
+- [SLIDE v2 Status and Implementation Plan](architecture/slide-v2-status-and-implementation-plan-2026-07-29.md)
+- [SLIDE v2 Integration Architecture](architecture/slide-v2-integration-2026-07-29.md)
 - [Requirements](REQUIREMENTS.md)
 - [Architecture](ARCHITECTURE.md)
 - [Security](SECURITY.md)

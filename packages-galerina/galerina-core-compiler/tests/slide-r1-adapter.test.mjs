@@ -25,10 +25,10 @@ async function loadStage(filename) {
 }
 
 async function loadAdapter() {
-  const preflight = await readFile(join(SELF_HOSTED, "ctll-r1-preflight.fungi"), "utf8");
-  const source = await readFile(join(SELF_HOSTED, "ctll-r1-adapter.fungi"), "utf8");
+  const preflight = await readFile(join(SELF_HOSTED, "slide-r1-preflight.fungi"), "utf8");
+  const source = await readFile(join(SELF_HOSTED, "slide-r1-adapter.fungi"), "utf8");
   const combined = `${preflight}\n${source.replace(/^@version 1\r?\n/, "")}`;
-  const parsed = parseProgram(combined, "ctll-r1-adapter-combined.fungi", {
+  const parsed = parseProgram(combined, "slide-r1-adapter-combined.fungi", {
     requireVersionHeader: true,
   });
   const parseErrors = parsed.diagnostics.filter(
@@ -88,7 +88,7 @@ async function buildFlow(source) {
 
 async function adaptFlow(flow) {
   return executeFlow(
-    "adaptCTLLR1Fixture",
+    "adaptSLIDER1Fixture",
     new Map([["flowEntry", flow]]),
     adapter.ast,
     adapter.flows,
@@ -110,26 +110,26 @@ function field(record, name) {
 }
 
 const SOURCE = `
-pure flow ctll_k3_checked_add_v1(
+pure flow slide_k3_checked_add_v1(
   left: Int,
   right: Int,
   admission: Verdict,
 ) -> Result<Int,String>
 {
   check(admission) {
-    deny: { return Err("CTLL_PROBE_DENIED") }
-    ambig: { return Err("CTLL_PROBE_INDETERMINATE") }
+    deny: { return Err("SLIDE_PROBE_DENIED") }
+    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }
     if: { return Ok(left + right) }
   }
 }
 `;
 
-describe("CTLL R1 compiler-owned adapter", () => {
+describe("SLIDE R1 compiler-owned adapter", () => {
   it("enriches FlowEntry with compiler-derived signature and effect facts", async () => {
     const flow = await buildFlow(SOURCE);
-    assert.equal(field(flow, "name").value, "ctll_k3_checked_add_v1");
+    assert.equal(field(flow, "name").value, "slide_k3_checked_add_v1");
     const derivedName = await executeFlow(
-      "deriveCTLLR1FixtureName",
+      "deriveSLIDER1FixtureName",
       new Map([["flowEntry", flow]]),
       adapter.ast,
       adapter.flows,
@@ -137,7 +137,7 @@ describe("CTLL R1 compiler-owned adapter", () => {
       undefined,
       { pureFastPath: false },
     );
-    assert.equal(derivedName.value.value, "ctll_k3_checked_add_v1");
+    assert.equal(derivedName.value.value, "slide_k3_checked_add_v1");
     assert.equal(field(flow, "qualifier").value, "pure");
     assert.deepEqual(
       field(flow, "paramTypes").items.map((value) => value.value),
@@ -164,9 +164,9 @@ describe("CTLL R1 compiler-owned adapter", () => {
     assert.equal(field(program, "formatMajor").value, 1);
     assert.equal(
       field(program, "semanticProfileId").value,
-      "ctll.semantic.galerina-gir.v1",
+      "slide.semantic.galerina-gir.v1",
     );
-    assert.equal(field(program, "fixtureName").value, "ctll_k3_checked_add_v1");
+    assert.equal(field(program, "fixtureName").value, "slide_k3_checked_add_v1");
     assert.deepEqual(
       field(program, "parameterTypeIds").items.map((value) => value.value),
       [1, 1, 2],
@@ -221,7 +221,7 @@ describe("CTLL R1 compiler-owned adapter", () => {
     const result = await adaptFlow(flow);
     assert.equal(
       field(field(result.value, "decision"), "failureId").value,
-      "CTLL-R1-EXPORT-008",
+      "SLIDE-R1-EXPORT-008",
     );
     assert.equal(field(result.value, "materialized").value, false);
   });
@@ -232,7 +232,7 @@ describe("CTLL R1 compiler-owned adapter", () => {
     const result = await adaptFlow(flow);
     assert.equal(
       field(field(result.value, "decision"), "failureId").value,
-      "CTLL-R1-EXPORT-011",
+      "SLIDE-R1-EXPORT-011",
     );
     assert.equal(field(result.value, "materialized").value, false);
   });
@@ -240,48 +240,48 @@ describe("CTLL R1 compiler-owned adapter", () => {
   for (const [name, mutate, expectedFailure] of [
     [
       "fixture identity",
-      (source) => source.replace("ctll_k3_checked_add_v1", "another_fixture"),
-      "CTLL-R1-EXPORT-001",
+      (source) => source.replace("slide_k3_checked_add_v1", "another_fixture"),
+      "SLIDE-R1-EXPORT-001",
     ],
     [
       "qualifier",
       (source) => source.replace("pure flow", "secure flow"),
-      "CTLL-R1-EXPORT-002",
+      "SLIDE-R1-EXPORT-002",
     ],
     [
       "left type",
       (source) => source.replace("left: Int", "left: String"),
-      "CTLL-R1-EXPORT-004",
+      "SLIDE-R1-EXPORT-004",
     ],
     [
       "admission type",
       (source) => source.replace("admission: Verdict", "admission: Bool"),
-      "CTLL-R1-EXPORT-006",
+      "SLIDE-R1-EXPORT-006",
     ],
     [
       "return type",
       (source) => source.replace("Result<Int,String>", "Int"),
-      "CTLL-R1-EXPORT-007",
+      "SLIDE-R1-EXPORT-007",
     ],
     [
       "K3 successor set",
       (source) =>
-        source.replace('    ambig: { return Err("CTLL_PROBE_INDETERMINATE") }\n', ""),
-      "CTLL-R1-EXPORT-008",
+        source.replace('    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }\n', ""),
+      "SLIDE-R1-EXPORT-008",
     ],
     [
       "checked operation",
       (source) => source.replace("left + right", "left - right"),
-      "CTLL-R1-EXPORT-009",
+      "SLIDE-R1-EXPORT-009",
     ],
     [
       "negative terminal",
       (source) =>
         source.replace(
-          'deny: { return Err("CTLL_PROBE_DENIED") }',
+          'deny: { return Err("SLIDE_PROBE_DENIED") }',
           "deny: { let observed: Int = 1 }",
         ),
-      "CTLL-R1-EXPORT-010",
+      "SLIDE-R1-EXPORT-010",
     ],
   ]) {
     it(`refuses a derived ${name} mismatch as ${expectedFailure}`, async () => {

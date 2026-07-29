@@ -860,31 +860,31 @@ The app package must remain deliberately small until a product domain is chosen.
   as normal unsafe application source style.
 - Future native ABI work must declare ownership, nullability, string encoding,
   allocator/free policy, blocking/thread-safety assumptions and error mapping.
-- CTLL v2 must be treated as an independent execution-platform integration, not
+- SLIDE v2 must be treated as an independent execution-platform integration, not
   as an internal Galerina runtime package. Galerina must use a versioned public
-  frontend adapter and CTLL must remain usable by conforming non-Galerina
+  frontend adapter and SLIDE must remain usable by conforming non-Galerina
   frontends.
-- CTLL implementation status, blockers, evidence, and the ordered work plan
+- SLIDE implementation status, blockers, evidence, and the ordered work plan
   must be maintained in
-  `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
+  `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`.
   Specification completion must not be reported as implementation completion.
-- A CTLL native artifact must not inherit a memory-safe label from Galerina,
-  GIR, a compiler success, or the `.ctll` container. The adapter must emit an
-  explicit memory plan and CTLL admission must verify a named memory profile,
+- A SLIDE native artifact must not inherit a memory-safe label from Galerina,
+  GIR, a compiler success, or the `.slide` container. The adapter must emit an
+  explicit memory plan and SLIDE admission must verify a named memory profile,
   proof/guard receipts, post-optimisation output and final-artifact binding.
-- The first Galerina CTLL profile must be safe-value only. Unsupported aliasing,
+- The first Galerina SLIDE profile must be safe-value only. Unsupported aliasing,
   raw-pointer, unchecked-bounds, lifetime, allocation, or cleanup semantics
   must fail at compile time rather than lower through an implicit unsafe path.
-- CTLL authority decisions must preserve Kleene K3 on binary hardware and must
+- SLIDE authority decisions must preserve Kleene K3 on binary hardware and must
   have an explicit typed terminal exit for `REJECT` and unresolved `UNKNOWN`.
-- CTLL action-cache hits, learned scheduling proposals, hardware observations,
+- SLIDE action-cache hits, learned scheduling proposals, hardware observations,
   manifests, and driver-package availability must be treated as evidence, not
   authority. Deterministic verification and current policy decide admission.
-- Linux driver acquisition for CTLL must use an unprivileged planning CLI and a
+- Linux driver acquisition for SLIDE must use an unprivileged planning CLI and a
   separate minimal privileged installer consuming a signed bounded plan.
   Distro-native signed package sources are required; arbitrary downloaded
   kernel modules are denied.
-- Galerina-side CTLL implementation must be written in `.fungi`. `.gate` is
+- Galerina-side SLIDE implementation must be written in `.fungi`. `.gate` is
   outside this workstream. Any unavoidable bootstrap shim requires an explicit
   boundary, reproducible build, least authority and an owner-approved removal
   plan.

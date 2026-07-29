@@ -101,7 +101,7 @@ async function run(source, args) {
     "runProgram",
     new Map([
       ["flows", table],
-      ["entryName", vStr("ctllK3CheckedAddProbe")],
+      ["entryName", vStr("slideK3CheckedAddProbe")],
       ["args", vList(args)],
     ]),
     runtime.ast,
@@ -146,21 +146,21 @@ function readTagged(value) {
 }
 
 const COMPLETE_SOURCE = `
-pure flow ctllK3CheckedAddProbe(
+pure flow slideK3CheckedAddProbe(
   left: Int,
   right: Int,
   admission: Verdict,
 ) -> Result<Int,String>
 {
   check(admission) {
-    deny: { return Err("CTLL_PROBE_DENIED") }
-    ambig: { return Err("CTLL_PROBE_INDETERMINATE") }
+    deny: { return Err("SLIDE_PROBE_DENIED") }
+    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }
     if: { return Ok(left + right) }
   }
 }
 `;
 
-describe("self-hosted K3 prerequisite for CTLL R1", () => {
+describe("self-hosted K3 prerequisite for SLIDE R1", () => {
   it("lexes check as a keyword while keeping arm labels contextual", async () => {
     const tokens = await tokenize("check(admission) { deny: {} ambig: {} if: {} }");
     const rows = tokens.items
@@ -208,8 +208,8 @@ describe("self-hosted K3 prerequisite for CTLL R1", () => {
 
   for (const [name, verdict, expectedTag, expectedPayload] of [
     ["ALLOW", 1, "Ok", 3],
-    ["DENY", -1, "Err", "CTLL_PROBE_DENIED"],
-    ["INDETERMINATE", 0, "Err", "CTLL_PROBE_INDETERMINATE"],
+    ["DENY", -1, "Err", "SLIDE_PROBE_DENIED"],
+    ["INDETERMINATE", 0, "Err", "SLIDE_PROBE_INDETERMINATE"],
   ]) {
     it(`executes the distinct ${name} successor`, async () => {
       const result = await run(COMPLETE_SOURCE, [rtInt(1), rtInt(2), rtVerdict(verdict)]);
@@ -240,7 +240,7 @@ describe("self-hosted K3 prerequisite for CTLL R1", () => {
 
   it("traps a missing K3 successor before executing any arm", async () => {
     const source = COMPLETE_SOURCE.replace(
-      '    ambig: { return Err("CTLL_PROBE_INDETERMINATE") }\n',
+      '    ambig: { return Err("SLIDE_PROBE_INDETERMINATE") }\n',
       "",
     );
     const result = await run(source, [rtInt(1), rtInt(2), rtVerdict(1)]);
@@ -260,7 +260,7 @@ describe("self-hosted K3 prerequisite for CTLL R1", () => {
 
   it("traps a DENY arm that does not leave the current flow", async () => {
     const source = COMPLETE_SOURCE.replace(
-      '    deny: { return Err("CTLL_PROBE_DENIED") }\n',
+      '    deny: { return Err("SLIDE_PROBE_DENIED") }\n',
       "    deny: { let observed: Int = 1 }\n",
     );
     const result = await run(source, [rtInt(1), rtInt(2), rtVerdict(-1)]);
@@ -284,10 +284,10 @@ describe("self-hosted K3 prerequisite for CTLL R1", () => {
     );
     const tagged = readTagged(unwrapRunValue(result));
     assert.equal(tagged.tag, "Err");
-    assert.equal(tagged.payload.fields.get("s").value, "CTLL_PROBE_DENIED");
+    assert.equal(tagged.payload.fields.get("s").value, "SLIDE_PROBE_DENIED");
   });
 
-  it("hard-traps missing and surplus CTLL entry evidence", async () => {
+  it("hard-traps missing and surplus SLIDE entry evidence", async () => {
     const missing = await run(
       COMPLETE_SOURCE,
       [rtInt(1), rtInt(2)],

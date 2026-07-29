@@ -17,9 +17,9 @@ import { decodeCBOR } from "../dist/manifest-generator.js";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SELF_HOSTED = join(HERE, "..", "src", "self-hosted");
 const EXPECTED_DIGEST =
-  "19843a946cf68b2365cf661c278d52e4ca2b54a4230ae59e024205c0e583664d";
+  "93a49e788c40df6b2f3887e0e2268bdef8954d20fad7e708e0e28dab253e0c17";
 const EXPECTED_SEMANTIC_DIGEST =
-  "2f3ee739c5882fb106bc4ff5d104f0dcf5eea55cdc295110681f22dbf5e7533f";
+  "e376c4654c667708662bc22350df955f85db3b22eb429657ad6d2c751aff5627";
 const execFileAsync = promisify(execFile);
 
 let encoder;
@@ -85,7 +85,7 @@ async function run(parsed, flowName, args = new Map()) {
 async function validate(value) {
   const result = await run(
     validator,
-    "validateCTLLR1CanonicalBody",
+    "validateSLIDER1CanonicalBody",
     new Map([["candidate", bytesValue(value)]]),
   );
   assert.equal(result.audit.result, "ok");
@@ -96,29 +96,29 @@ before(async () => {
   [encoder, validator, importer, referenceRuntime] = await Promise.all([
     loadCombined(
       [
-        "ctll-r1-preflight.fungi",
-        "ctll-r1-adapter.fungi",
-        "ctll-r1-cbor-encoder.fungi",
+        "slide-r1-preflight.fungi",
+        "slide-r1-adapter.fungi",
+        "slide-r1-cbor-encoder.fungi",
       ],
-      "ctll-r1-cbor-encoder-combined.fungi",
+      "slide-r1-cbor-encoder-combined.fungi",
     ),
-    readFile(join(SELF_HOSTED, "ctll-r1-cbor-validator.fungi"), "utf8").then(
-      (source) => parseChecked(source, "ctll-r1-cbor-validator.fungi"),
+    readFile(join(SELF_HOSTED, "slide-r1-cbor-validator.fungi"), "utf8").then(
+      (source) => parseChecked(source, "slide-r1-cbor-validator.fungi"),
     ),
-    readFile(join(SELF_HOSTED, "ctll-r1-cbor-importer.fungi"), "utf8").then(
-      (source) => parseChecked(source, "ctll-r1-cbor-importer.fungi"),
+    readFile(join(SELF_HOSTED, "slide-r1-cbor-importer.fungi"), "utf8").then(
+      (source) => parseChecked(source, "slide-r1-cbor-importer.fungi"),
     ),
     loadCombined(
-      ["ctll-r1-cbor-importer.fungi", "ctll-r1-reference-runtime.fungi"],
-      "ctll-r1-reference-runtime-combined.fungi",
+      ["slide-r1-cbor-importer.fungi", "slide-r1-reference-runtime.fungi"],
+      "slide-r1-reference-runtime-combined.fungi",
     ),
   ]);
 
-  const materialized = await run(encoder, "materializeCTLLR1Fixture");
+  const materialized = await run(encoder, "materializeSLIDER1Fixture");
   canonicalProgram = materialized.value;
   const exported = await run(
     encoder,
-    "exportCTLLR1CanonicalBody",
+    "exportSLIDER1CanonicalBody",
     new Map([["program", canonicalProgram]]),
   );
   canonicalBytes = field(exported.value, "bytes").value;
@@ -127,7 +127,7 @@ before(async () => {
 async function structurallyValidate(value) {
   const result = await run(
     importer,
-    "validateCTLLR1StructuralBody",
+    "validateSLIDER1StructuralBody",
     new Map([["bytes", bytesValue(value)]]),
   );
   assert.equal(result.audit.result, "ok");
@@ -142,23 +142,23 @@ function mutateSequence(source, sequence, relativeOffset, replacement) {
   return changed;
 }
 
-describe("CTLL R1 canonical CBOR semantic body", () => {
+describe("SLIDE R1 canonical CBOR semantic body", () => {
   it("emits deterministic typed bytes and binds the complete frozen logical model", async () => {
     const first = await run(
       encoder,
-      "exportCTLLR1CanonicalBody",
+      "exportSLIDER1CanonicalBody",
       new Map([["program", canonicalProgram]]),
     );
     const second = await run(
       encoder,
-      "exportCTLLR1CanonicalBody",
+      "exportSLIDER1CanonicalBody",
       new Map([["program", canonicalProgram]]),
     );
     const firstBytes = field(first.value, "bytes").value;
     const secondBytes = field(second.value, "bytes").value;
 
     assert.equal(field(first.value, "verdict").value, 1);
-    assert.equal(field(first.value, "byteLength").value, 277);
+    assert.equal(field(first.value, "byteLength").value, 282);
     assert.deepEqual(firstBytes, secondBytes);
     assert.equal(
       createHash("sha256").update(firstBytes).digest("hex"),
@@ -166,7 +166,7 @@ describe("CTLL R1 canonical CBOR semantic body", () => {
     );
     assert.equal(
       createHash("sha256")
-        .update(Buffer.from("ctll.gir.semantic.v1\0", "utf8"))
+        .update(Buffer.from("slide.gir.semantic.v1\0", "utf8"))
         .update(firstBytes)
         .digest("hex"),
       EXPECTED_SEMANTIC_DIGEST,
@@ -175,7 +175,7 @@ describe("CTLL R1 canonical CBOR semantic body", () => {
     const decoded = decodeCBOR(firstBytes);
     assert.equal(decoded.nextOffset, firstBytes.length);
     assert.equal(decoded.value["0"], 1);
-    assert.equal(decoded.value["2"], "ctll.semantic.galerina-gir.v1");
+    assert.equal(decoded.value["2"], "slide.semantic.galerina-gir.v1");
     assert.deepEqual(decoded.value["8"], [1, 1, 2]);
     assert.equal(decoded.value["10"], 0);
     assert.equal(decoded.value["11"].length, 4);
@@ -207,7 +207,7 @@ describe("CTLL R1 canonical CBOR semantic body", () => {
     for (const [value, hex] of cases) {
       const encoded = await run(
         encoder,
-        "ctllR1CBORUInt",
+        "slideR1CBORUInt",
         new Map([["value", { __tag: "int", value }]]),
       );
       assert.equal(Buffer.from(encoded.value.value).toString("hex"), hex);
@@ -215,7 +215,7 @@ describe("CTLL R1 canonical CBOR semantic body", () => {
 
     const refused = await run(
       encoder,
-      "ctllR1CBORUInt",
+      "slideR1CBORUInt",
       new Map([["value", { __tag: "int", value: 65536 }]]),
     );
     assert.equal(refused.value.value.length, 0);
@@ -225,26 +225,26 @@ describe("CTLL R1 canonical CBOR semantic body", () => {
     const changedFields = new Map(canonicalProgram.fields);
     changedFields.set("memoryProfileId", {
       __tag: "string",
-      value: "ctll.memory.unsafe.v1",
+      value: "slide.memory.unsafe.v1",
     });
     const changedProgram = { __tag: "record", fields: changedFields };
     const result = await run(
       encoder,
-      "exportCTLLR1CanonicalBody",
+      "exportSLIDER1CanonicalBody",
       new Map([["program", changedProgram]]),
     );
 
     assert.equal(field(result.value, "verdict").value, -1);
-    assert.equal(field(result.value, "failureId").value, "CTLL-R1-CBOR-001");
+    assert.equal(field(result.value, "failureId").value, "SLIDE-R1-CBOR-001");
     assert.equal(field(result.value, "bytes").value.length, 0);
   });
 });
 
-describe("independent CTLL R1 canonical-vector admission", () => {
+describe("independent SLIDE R1 canonical-vector admission", () => {
   it("admits the encoder output and publishes the independently pinned body checksum", async () => {
     const decision = await validate(canonicalBytes);
     assert.equal(field(decision, "verdict").value, 1);
-    assert.equal(field(decision, "consumed").value, 277);
+    assert.equal(field(decision, "consumed").value, 282);
     assert.equal(
       field(decision, "bodySha256").value,
       `sha256:${EXPECTED_DIGEST}`,
@@ -259,7 +259,7 @@ describe("independent CTLL R1 canonical-vector admission", () => {
       assert.equal(field(decision, "verdict").value, -1, `offset ${offset}`);
       assert.equal(
         field(decision, "failureId").value,
-        "CTLL-R1-CBOR-VALIDATE-004",
+        "SLIDE-R1-CBOR-VALIDATE-004",
         `offset ${offset}`,
       );
       assert.equal(
@@ -280,7 +280,7 @@ describe("independent CTLL R1 canonical-vector admission", () => {
       assert.equal(field(decision, "verdict").value, -1);
       assert.equal(
         field(decision, "failureId").value,
-        "CTLL-R1-CBOR-VALIDATE-002",
+        "SLIDE-R1-CBOR-VALIDATE-002",
       );
     }
 
@@ -291,17 +291,17 @@ describe("independent CTLL R1 canonical-vector admission", () => {
     assert.equal(field(decision, "verdict").value, -1);
     assert.equal(
       field(decision, "failureId").value,
-      "CTLL-R1-CBOR-VALIDATE-003",
+      "SLIDE-R1-CBOR-VALIDATE-003",
     );
   });
 });
 
-describe("independent structural CTLL R1 importer", () => {
+describe("independent structural SLIDE R1 importer", () => {
   it("parses and admits the complete canonical typed-ID graph", async () => {
     const decision = await structurallyValidate(canonicalBytes);
     assert.equal(field(decision, "verdict").value, 1);
     assert.equal(field(decision, "status").value, "IMPORTED");
-    assert.equal(field(decision, "consumed").value, 277);
+    assert.equal(field(decision, "consumed").value, 282);
   });
 
   it("rejects non-shortest and indefinite root encodings before semantics", async () => {
@@ -310,19 +310,19 @@ describe("independent structural CTLL R1 importer", () => {
     nonShortest[1] = 14;
     nonShortest.set(canonicalBytes.slice(1), 2);
     let decision = await structurallyValidate(nonShortest);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-003");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-003");
 
     const indefinite = canonicalBytes.slice();
     indefinite[0] = 0xbf;
     decision = await structurallyValidate(indefinite);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-004");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-004");
   });
 
   it("classifies duplicate/reordered keys, opcode drift, and K3 successor drift", async () => {
     const duplicateKey = canonicalBytes.slice();
     duplicateKey[3] = 0;
     let decision = await structurallyValidate(duplicateKey);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-011");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-011");
 
     const opcodeDrift = mutateSequence(
       canonicalBytes,
@@ -331,7 +331,7 @@ describe("independent structural CTLL R1 importer", () => {
       6,
     );
     decision = await structurallyValidate(opcodeDrift);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-022");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-022");
 
     const successorDrift = mutateSequence(
       canonicalBytes,
@@ -340,7 +340,7 @@ describe("independent structural CTLL R1 importer", () => {
       2,
     );
     decision = await structurallyValidate(successorDrift);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-034");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-034");
   });
 
   it("classifies missing failure records and rejects suffixes", async () => {
@@ -351,20 +351,20 @@ describe("independent structural CTLL R1 importer", () => {
       0x82,
     );
     let decision = await structurallyValidate(missingFailure);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-040");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-040");
 
     const suffixed = new Uint8Array(canonicalBytes.length + 1);
     suffixed.set(canonicalBytes);
     decision = await structurallyValidate(suffixed);
-    assert.equal(field(decision, "failureId").value, "CTLL-R1-IMPORT-044");
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-044");
   });
 });
 
-describe("detached CTLL R1 reference execution", () => {
+describe("detached SLIDE R1 reference execution", () => {
   async function executeReference(left, right, admission, body = canonicalBytes) {
     const result = await run(
       referenceRuntime,
-      "executeCTLLR1Imported",
+      "executeSLIDER1Imported",
       new Map([
         ["body", bytesValue(body)],
         ["left", { __tag: "int", value: left }],
@@ -401,12 +401,12 @@ describe("detached CTLL R1 reference execution", () => {
     const result = await executeReference(20, 22, 1, changed);
     assert.equal(field(result, "status").value, "IMPORT_REFUSED");
     assert.equal(field(result, "success").value, false);
-    assert.equal(field(result, "importFailureId").value, "CTLL-R1-IMPORT-004");
+    assert.equal(field(result, "importFailureId").value, "SLIDE-R1-IMPORT-004");
   });
 
   it("executes from canonical bytes in a fresh bootstrap process without fixture source or WAT", async () => {
-    const importerPath = join(SELF_HOSTED, "ctll-r1-cbor-importer.fungi");
-    const runtimePath = join(SELF_HOSTED, "ctll-r1-reference-runtime.fungi");
+    const importerPath = join(SELF_HOSTED, "slide-r1-cbor-importer.fungi");
+    const runtimePath = join(SELF_HOSTED, "slide-r1-reference-runtime.fungi");
     const distPath = join(HERE, "..", "dist", "index.js");
     const script = `
       import { readFile } from "node:fs/promises";
@@ -415,7 +415,7 @@ describe("detached CTLL R1 reference execution", () => {
       const runtime = await readFile(${JSON.stringify(runtimePath)}, "utf8");
       const parsed = parseProgram(
         importer + "\\n" + runtime.replace(/^@version 1\\\\r?\\\\n/, ""),
-        "fresh-ctll-r1-runtime.fungi",
+        "fresh-slide-r1-runtime.fungi",
         { requireVersionHeader: true },
       );
       const body = {
@@ -423,7 +423,7 @@ describe("detached CTLL R1 reference execution", () => {
         value: Uint8Array.from(Buffer.from(${JSON.stringify(Buffer.from(canonicalBytes).toString("hex"))}, "hex")),
       };
       const result = await executeFlow(
-        "executeCTLLR1Imported",
+        "executeSLIDER1Imported",
         new Map([
           ["body", body],
           ["left", { __tag: "int", value: 20 }],

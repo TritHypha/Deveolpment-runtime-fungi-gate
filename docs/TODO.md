@@ -11,38 +11,58 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
-Keep `../triLowLevel-v2/TODO.md` synchronized whenever the independent CTLL,
-SLIDE, registry, importer, runtime, or release plan changes. A completed
+Keep `../triLowLevel-v2/TODO.md` synchronized whenever the independent
+triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
+changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
-## CTLL v2 architecture lane — 2026-07-29
+### Current naming migration
+
+- **Owner decision:** CTLL / “Compiled Tri Low Level” is retired; the engine,
+  typed payload, R1 profile, registries, importer, runtime, receipts, and bundle
+  use **SLIDE**.
+- **Completed locally:** migrated active code, wire identities, tests, reports,
+  and triLowLevel-v2 plans from `CTLL/ctll` to `SLIDE/slide`.
+- **Stop gate:** no mixed active namespace, stale semantic-domain prefix, or
+  silently accepted former wire identity; historical naming evidence must be
+  labelled rather than rewritten as current truth.
+- **Verified so far:** regenerated the 282-byte canonical body and both pinned
+  digests; 72/72 focused SLIDE tests pass.
+- **Full verification:** compiler typecheck/build and 5,283/5,283 tests pass;
+  repository suite 94/94 packages and 8,025/8,025 tests passes; Myco indexes
+  4,076 files with zero oversize skips; graph is 7,148 nodes / 7,412 edges with
+  zero integrity violations, zero KB orphans/broken links, 97/97 border checks,
+  and a clean explicitly selected Galerina memory index.
+- **Next:** stage only the SLIDE migration, exclude the owner’s tri-regex audit
+  edit, verify the staged diff, and commit without pushing.
+
+## SLIDE v2 architecture lane — 2026-07-29
 
 **Status:** planning is complete enough for implementation and bounded G1
 compiler probing is active. The first `.fungi` R1 shape-preflight kernel fails
 closed across the frozen fixture facts. The self-hosted lexer/parser/GIR/runtime
 now also preserve an explicit three-successor K3 check and checked Int32
 behavior for the bounded fixture shape. The exact logical fixture now exports
-as a 277-byte canonical typed-ID CBOR semantic body. An independently pinned
+as a 282-byte canonical typed-ID CBOR semantic body. An independently pinned
 `.fungi` validator rejects every byte mutation, and a second `.fungi` importer
 parses canonical heads and classifies registry, opcode, failure, K3 successor,
 truncation, and suffix drift. A closed-profile `.fungi` reference executor now
 runs the admitted bytes in a fresh bootstrap process and preserves ALLOW,
 DENY, INDETERMINATE, and checked overflow as distinct typed outcomes. It is not
-yet a reconstructed general GIR interpreter, domain-separated semantic digest,
-signed payload, or production execution path. SLIDE is the independent public
-engine/container; Galerina is its first frontend and CTLL remains the compiled
-tri-low-level payload/profile.
+yet a reconstructed general GIR interpreter, signed payload, or production
+execution path. SLIDE is the independent engine, versioned payload-profile,
+and bundle identity; Galerina is its first frontend.
 
 - [x] Maintain the canonical done/not-done/blocker/implementation ledger in
-  `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
+  `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`.
 - [x] Record the Galerina integration boundary and current-vs-proposed status in
-  `docs/architecture/ctll-v2-integration-2026-07-29.md`.
+  `docs/architecture/slide-v2-integration-2026-07-29.md`.
 - [x] Scope Galerina's existing memory-safety claims to their implemented
   tree-walker, WebAssembly, value-semantics, and static-pool mechanisms.
-- [x] Require a verified CTLL memory profile and final-artifact binding rather
+- [x] Require a verified SLIDE memory profile and final-artifact binding rather
   than trusting the source-language or container label.
 - [x] Define deterministic action-DAG/CAS, Kleene K3, Tri-Fuse, Tower Citizen,
-  Tri-Pipe, and Linux driver boundaries in the CTLL v2 planning set.
+  Tri-Pipe, and Linux driver boundaries in the SLIDE v2 planning set.
 - [x] Record the `.fungi` control-flow standard: `match` for one decision with
   two or more alternatives; Verdict-based exits use exhaustive `check`;
   Boolean refusal guards use `trap` or a typed error return.
@@ -70,13 +90,13 @@ tri-low-level payload/profile.
 - [x] Draft the implementable R1 executable-GIR subset, validator order,
   mutation corpus, and exit gate in
   `../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`; implementation remains pending.
-- [x] Define and version the proposed public Galerina-to-CTLL frontend receipt
+- [x] Define and version the proposed public Galerina-to-SLIDE frontend receipt
   in `../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`.
 - [x] Owner-confirm the recommended checked-Int/exhaustive-K3 fixture in
   `../triLowLevel-v2/17-FIRST-VERTICAL-SLICE.md`.
 - [x] Add the first vertical-slice capability probe in `.fungi` and verify it
   across the current tree-walker and WAT/Wasm tiers. Evidence:
-  `docs/reports/ctll-v2-g1-capability-probe-2026-07-29.md`.
+  `docs/reports/slide-v2-g1-capability-probe-2026-07-29.md`.
 - [x] Inventory every AST fact still consumed after `emitGIR` and map it to
   proposed R1 nodes or an explicit unsupported exit.
 - [x] Harden current K3 runtime boundaries so an invalid fourth Verdict value
@@ -91,29 +111,29 @@ tri-low-level payload/profile.
 - [ ] Add a dedicated R1 export surface that refuses unsupported source rather
   than entering the current WAT identity/default/walker fallback.
 - [x] Implement the bounded `.fungi` R1 profile-preflight kernel for the first
-  fixture with ordered `CTLL-R1-EXPORT-001..015` refusal identities and
+  fixture with ordered `SLIDE-R1-EXPORT-001..015` refusal identities and
   malformed/missing fact tests. Evidence:
-  `docs/reports/ctll-r1-preflight-2026-07-29.md`. This is shape support
+  `docs/reports/slide-r1-preflight-2026-07-29.md`. This is shape support
   evidence, not admission authority or canonical export.
 - [x] Carry the bounded fixture's `check` through the self-hosted `.fungi`
   lexer, parser, internal GIR, and runtime as an explicit `check_k3` node with
   three labelled successors. Preserve complete generic return types and exact
   Verdict values. Evidence:
-  `docs/reports/ctll-r1-selfhost-k3-2026-07-29.md`.
-- [x] Remove self-hosted runtime fail-open defaults at the CTLL-relevant call
+  `docs/reports/slide-r1-selfhost-k3-2026-07-29.md`.
+- [x] Remove self-hosted runtime fail-open defaults at the SLIDE-relevant call
   boundary: missing nested flows and missing/surplus arguments now terminate;
   checked Int32 boundaries remain executable in the self-hosted Wasm form.
 - [x] Implement the compiler-owned `.fungi` R1 adapter for the frozen fixture.
   `FlowEntry` now carries derived signature/effect facts; exact supported GIR
   invokes the preflight and materializes a four-block logical R1 program,
   while structural or hidden-field mutations refuse. Evidence:
-  `docs/reports/ctll-r1-adapter-2026-07-29.md`.
+  `docs/reports/slide-r1-adapter-2026-07-29.md`.
 - [x] Export the exact frozen typed-ID logical program as deterministic RFC 8949 CBOR
   using definite containers, ascending unsigned map keys, shortest integers,
-  and UTF-8 text. Independently pin and validate the 277-byte vector in
-  `.fungi`; reject all 277 possible single-byte mutations, truncation, and
+  and UTF-8 text. Independently pin and validate the 282-byte vector in
+  `.fungi`; reject all 282 possible single-byte mutations, truncation, and
   surplus bytes. Evidence:
-  `docs/reports/ctll-r1-canonical-body-2026-07-29.md`.
+  `docs/reports/slide-r1-canonical-body-2026-07-29.md`.
 - [x] Implement a second `.fungi` structural importer that does not use the
   encoder or pinned vector. It parses canonical CBOR under a 4 KiB ceiling and
   gives distinct refusals for encoding, registry, opcode, type, operand,

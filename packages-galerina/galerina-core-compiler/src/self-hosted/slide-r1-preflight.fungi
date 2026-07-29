@@ -1,14 +1,14 @@
 @version 1
-/// @file: ctll-r1-preflight.fungi
+/// @file: slide-r1-preflight.fungi
 /// @purpose: Fail-closed preflight for the first detached executable-GIR R1 slice.
 /// @status: Executable policy kernel; canonical body export and CBOR remain unimplemented.
 ///
 /// A positive result is evidence that the supplied facts match the one frozen
-/// R1 fixture profile. It is not CTLL admission authority. The eventual adapter
+/// R1 fixture profile. It is not SLIDE admission authority. The eventual adapter
 /// must derive these facts from authoritative compiler output and bind them to
 /// the materialized semantic bytes.
 
-record CTLLR1PreflightRequest {
+record SLIDER1PreflightRequest {
   fixtureName: String
   qualifier: String
   parameterCount: Int
@@ -26,7 +26,7 @@ record CTLLR1PreflightRequest {
   failureCount: Int
 }
 
-record CTLLR1PreflightDecision {
+record SLIDER1PreflightDecision {
   verdict: Verdict
   status: String
   failureId: String
@@ -36,11 +36,11 @@ record CTLLR1PreflightDecision {
   memoryProfileId: String
 }
 
-pure flow refuseCTLLR1Preflight(
+pure flow refuseSLIDER1Preflight(
   failureId: String,
   failureClass: String,
   reasonText: String,
-) -> CTLLR1PreflightDecision
+) -> SLIDER1PreflightDecision
 contract {
   intent { "Return one stable, terminal refusal for an unsupported R1 export fact." }
 }
@@ -51,23 +51,23 @@ contract {
     failureId: failureId
     failureClass: failureClass
     reason: reasonText
-    semanticProfileId: "ctll.semantic.galerina-gir.v1"
-    memoryProfileId: "ctll.memory.safe-value.v1"
+    semanticProfileId: "slide.semantic.galerina-gir.v1"
+    memoryProfileId: "slide.memory.safe-value.v1"
   }
 }
 
-pure flow preflightCTLLR1(
-  request: CTLLR1PreflightRequest,
-) -> CTLLR1PreflightDecision
+pure flow preflightSLIDER1(
+  request: SLIDER1PreflightRequest,
+) -> SLIDER1PreflightDecision
 contract {
   intent { "Admit only the exact checked-Int32, exhaustive-K3 first R1 fixture shape." }
 }
 {
   match request.fixtureName {
-    "ctll_k3_checked_add_v1" => {}
+    "slide_k3_checked_add_v1" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-001",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-001",
         "UNSUPPORTED_FIXTURE",
         "fixture identity is outside the frozen R1 slice",
       )
@@ -77,8 +77,8 @@ contract {
   match request.qualifier {
     "pure" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-002",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-002",
         "UNSUPPORTED_QUALIFIER",
         "R1 admits only a pure function",
       )
@@ -88,8 +88,8 @@ contract {
   match request.parameterCount {
     3 => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-003",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-003",
         "SIGNATURE_MISMATCH",
         "R1 fixture requires exactly three parameters",
       )
@@ -99,8 +99,8 @@ contract {
   match request.leftType {
     "Int32" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-004",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-004",
         "TYPE_UNSUPPORTED",
         "left parameter must be Int32",
       )
@@ -110,8 +110,8 @@ contract {
   match request.rightType {
     "Int32" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-005",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-005",
         "TYPE_UNSUPPORTED",
         "right parameter must be Int32",
       )
@@ -121,8 +121,8 @@ contract {
   match request.admissionType {
     "Verdict" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-006",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-006",
         "TYPE_UNSUPPORTED",
         "admission parameter must be Verdict",
       )
@@ -132,8 +132,8 @@ contract {
   match request.resultType {
     "Result<Int32,FixtureFailure>" => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-007",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-007",
         "TYPE_UNSUPPORTED",
         "result must be the closed R1 fixture Result",
       )
@@ -143,8 +143,8 @@ contract {
   match request.hasExhaustiveK3 {
     true => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-008",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-008",
         "K3_NOT_TOTAL",
         "ALLOW, DENY, and INDETERMINATE successors are required",
       )
@@ -154,8 +154,8 @@ contract {
   match request.hasCheckedInt32 {
     true => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-009",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-009",
         "ARITHMETIC_UNSAFE",
         "wrapping or unclassified arithmetic is forbidden",
       )
@@ -165,8 +165,8 @@ contract {
   match request.hasExplicitTerminals {
     true => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-010",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-010",
         "CONTROL_FLOW_INCOMPLETE",
         "every reachable block requires an explicit terminal",
       )
@@ -176,8 +176,8 @@ contract {
   match request.hasCompleteBody {
     true => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-011",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-011",
         "BODY_INCOMPLETE",
         "summary, identity, default, and opaque bodies are forbidden",
       )
@@ -187,8 +187,8 @@ contract {
   match request.hasAstDependency {
     false => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-012",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-012",
         "AST_DEPENDENCY",
         "detached R1 may not consult the source AST",
       )
@@ -198,8 +198,8 @@ contract {
   match request.hasEffects {
     false => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-013",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-013",
         "EFFECT_UNSUPPORTED",
         "the first R1 slice is effect free",
       )
@@ -209,8 +209,8 @@ contract {
   match request.hasHostHandles {
     false => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-014",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-014",
         "HOST_HANDLE_FORBIDDEN",
         "R1 values may not contain host handles",
       )
@@ -220,8 +220,8 @@ contract {
   match request.failureCount {
     3 => {}
     _ => {
-      return refuseCTLLR1Preflight(
-        "CTLL-R1-EXPORT-015",
+      return refuseSLIDER1Preflight(
+        "SLIDE-R1-EXPORT-015",
         "FAILURE_SET_MISMATCH",
         "denied, unresolved, and arithmetic failures must be declared",
       )
@@ -234,7 +234,7 @@ contract {
     failureId: "NONE"
     failureClass: "NONE"
     reason: "exact R1 fixture facts accepted for body export"
-    semanticProfileId: "ctll.semantic.galerina-gir.v1"
-    memoryProfileId: "ctll.memory.safe-value.v1"
+    semanticProfileId: "slide.semantic.galerina-gir.v1"
+    memoryProfileId: "slide.memory.safe-value.v1"
   }
 }

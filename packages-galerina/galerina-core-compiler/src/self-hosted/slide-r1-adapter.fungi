@@ -1,10 +1,10 @@
 @version 1
-/// @file: ctll-r1-adapter.fungi
-/// @purpose: Derive the frozen CTLL R1 fixture from compiler-owned FlowEntry GIR.
+/// @file: slide-r1-adapter.fungi
+/// @purpose: Derive the frozen SLIDE R1 fixture from compiler-owned FlowEntry GIR.
 /// @status: Logical materialization only; canonical CBOR/digest/import are not implemented.
 ///
 /// The adapter accepts the self-hosted GIR emitter's enriched FlowEntry, derives
-/// every preflight fact, calls preflightCTLLR1, and materializes a closed logical
+/// every preflight fact, calls preflightSLIDER1, and materializes a closed logical
 /// R1 model only after ALLOW. It never accepts caller-provided support booleans.
 
 record R1InputExpr {
@@ -33,7 +33,7 @@ record R1CompilerFlow {
   effects: Array<String>
 }
 
-record CTLLR1LogicalInstruction {
+record SLIDER1LogicalInstruction {
   resultId: Int
   opcodeId: Int
   typeId: Int
@@ -41,18 +41,18 @@ record CTLLR1LogicalInstruction {
   immediate: Int
 }
 
-record CTLLR1LogicalTerminator {
+record SLIDER1LogicalTerminator {
   terminatorId: Int
   operands: Array<Int>
 }
 
-record CTLLR1LogicalBlock {
+record SLIDER1LogicalBlock {
   blockId: Int
-  instructions: Array<CTLLR1LogicalInstruction>
-  terminator: CTLLR1LogicalTerminator
+  instructions: Array<SLIDER1LogicalInstruction>
+  terminator: SLIDER1LogicalTerminator
 }
 
-record CTLLR1LogicalFailure {
+record SLIDER1LogicalFailure {
   failureId: Int
   classId: Int
   visibilityId: Int
@@ -60,7 +60,7 @@ record CTLLR1LogicalFailure {
   terminalActionId: Int
 }
 
-record CTLLR1LogicalK3Obligation {
+record SLIDER1LogicalK3Obligation {
   obligationId: Int
   subjectFunctionId: Int
   checkBlockId: Int
@@ -69,7 +69,7 @@ record CTLLR1LogicalK3Obligation {
   indeterminateBlockId: Int
 }
 
-record CTLLR1LogicalProgram {
+record SLIDER1LogicalProgram {
   formatMajor: Int
   formatMinor: Int
   semanticProfileId: String
@@ -81,18 +81,18 @@ record CTLLR1LogicalProgram {
   parameterTypeIds: Array<Int>
   resultTypeId: Int
   entryBlockId: Int
-  blocks: Array<CTLLR1LogicalBlock>
-  failures: Array<CTLLR1LogicalFailure>
-  k3Obligations: Array<CTLLR1LogicalK3Obligation>
+  blocks: Array<SLIDER1LogicalBlock>
+  failures: Array<SLIDER1LogicalFailure>
+  k3Obligations: Array<SLIDER1LogicalK3Obligation>
 }
 
-record CTLLR1AdapterResult {
+record SLIDER1AdapterResult {
   decision: Auto
   materialized: Bool
-  program: CTLLR1LogicalProgram
+  program: SLIDER1LogicalProgram
 }
 
-pure flow deriveCTLLR1FixtureName(flowEntry: R1CompilerFlow) -> String
+pure flow deriveSLIDER1FixtureName(flowEntry: R1CompilerFlow) -> String
 contract { intent { "Expose the compiler-derived fixture identity for adapter differential tests." } }
 {
   return flowEntry.name
@@ -265,7 +265,7 @@ contract { intent { "Return a string at an exact position or an empty refusal se
   }
 }
 
-pure flow emptyCTLLR1LogicalProgram() -> CTLLR1LogicalProgram
+pure flow emptySLIDER1LogicalProgram() -> SLIDER1LogicalProgram
 contract { intent { "Return a clearly non-materialized logical program for refusal results." } }
 {
   return {
@@ -286,10 +286,10 @@ contract { intent { "Return a clearly non-materialized logical program for refus
   }
 }
 
-pure flow materializeCTLLR1Fixture() -> CTLLR1LogicalProgram
+pure flow materializeSLIDER1Fixture() -> SLIDER1LogicalProgram
 contract { intent { "Materialize the closed logical R1 program after exact source-GIR validation." } }
 {
-  mut blocks: Array<CTLLR1LogicalBlock> = Array.empty()
+  mut blocks: Array<SLIDER1LogicalBlock> = Array.empty()
   blocks = blocks.append({
     blockId: 0
     instructions: [
@@ -324,7 +324,7 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
     terminator: { terminatorId: 2 operands: [8] }
   })
 
-  mut failures: Array<CTLLR1LogicalFailure> = Array.empty()
+  mut failures: Array<SLIDER1LogicalFailure> = Array.empty()
   failures = failures.append({
     failureId: 1 classId: 2 visibilityId: 1 retryId: 1 terminalActionId: 1
   })
@@ -334,7 +334,7 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
   failures = failures.append({
     failureId: 3 classId: 4 visibilityId: 1 retryId: 2 terminalActionId: 1
   })
-  mut obligations: Array<CTLLR1LogicalK3Obligation> = Array.empty()
+  mut obligations: Array<SLIDER1LogicalK3Obligation> = Array.empty()
   obligations = obligations.append({
     obligationId: 1
     subjectFunctionId: 1
@@ -347,11 +347,11 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
   return {
     formatMajor: 1
     formatMinor: 0
-    semanticProfileId: "ctll.semantic.galerina-gir.v1"
-    digestSuiteId: "ctll.digest.sha256.v1"
-    memoryProfileId: "ctll.memory.safe-value.v1"
-    fixtureName: "ctll_k3_checked_add_v1"
-    stableSymbolId: "ctll.fixture.k3-checked-add.v1"
+    semanticProfileId: "slide.semantic.galerina-gir.v1"
+    digestSuiteId: "slide.digest.sha256.v1"
+    memoryProfileId: "slide.memory.safe-value.v1"
+    fixtureName: "slide_k3_checked_add_v1"
+    stableSymbolId: "slide.fixture.k3-checked-add.v1"
     qualifierId: 1
     parameterTypeIds: [1, 1, 2]
     resultTypeId: 3
@@ -362,7 +362,7 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
   }
 }
 
-pure flow adaptCTLLR1Fixture(flowEntry: R1CompilerFlow) -> CTLLR1AdapterResult
+pure flow adaptSLIDER1Fixture(flowEntry: R1CompilerFlow) -> SLIDER1AdapterResult
 contract {
   intent { "Derive preflight facts from one compiler-owned GIR flow and materialize only the exact R1 fixture." }
 }
@@ -386,8 +386,8 @@ contract {
   let ambigArm: R1InputStmt = findR1Arm(arms, "ambig")
   let allowArm: R1InputStmt = findR1Arm(arms, "if")
 
-  let denyTerminal: Bool = isR1ErrorArm(denyArm, "CTLL_PROBE_DENIED")
-  let ambigTerminal: Bool = isR1ErrorArm(ambigArm, "CTLL_PROBE_INDETERMINATE")
+  let denyTerminal: Bool = isR1ErrorArm(denyArm, "SLIDE_PROBE_DENIED")
+  let ambigTerminal: Bool = isR1ErrorArm(ambigArm, "SLIDE_PROBE_INDETERMINATE")
   let allowTerminal: Bool = isR1AllowArm(allowArm)
   let exactBody: Bool = exactK3Set and denyTerminal and ambigTerminal and allowTerminal
 
@@ -414,7 +414,7 @@ contract {
   if denyTerminal { derivedFailureCount = derivedFailureCount + 1 }
   if ambigTerminal { derivedFailureCount = derivedFailureCount + 1 }
 
-  let request: CTLLR1PreflightRequest = {
+  let request: SLIDER1PreflightRequest = {
     fixtureName: flowEntry.name
     qualifier: flowEntry.qualifier
     parameterCount: flowEntry.params.count()
@@ -432,18 +432,18 @@ contract {
     failureCount: derivedFailureCount
   }
 
-  let decision = preflightCTLLR1(request)
+  let decision = preflightSLIDER1(request)
   if decision.verdict != Verdict.Allow {
     return {
       decision: decision
       materialized: false
-      program: emptyCTLLR1LogicalProgram()
+      program: emptySLIDER1LogicalProgram()
     }
   }
 
   return {
     decision: decision
     materialized: true
-    program: materializeCTLLR1Fixture()
+    program: materializeSLIDER1Fixture()
   }
 }

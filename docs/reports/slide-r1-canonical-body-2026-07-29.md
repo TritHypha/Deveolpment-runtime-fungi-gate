@@ -1,15 +1,15 @@
-# CTLL R1 Canonical Semantic Body
+# SLIDE R1 Canonical Semantic Body
 
 - **Date:** 2026-07-29
-- **Branch:** `codex/ctll-v2-architecture`
-- **Scope:** the single frozen `ctll_k3_checked_add_v1` R1 profile
+- **Branch:** `codex/slide-v2-architecture`
+- **Scope:** the single frozen `slide_k3_checked_add_v1` R1 profile
 - **Result:** canonical typed-ID semantic bytes, two independent validation
   paths, and fresh-process closed-profile reference execution exist
 
 ## Implemented boundary
 
-`src/self-hosted/ctll-r1-cbor-encoder.fungi` accepts the compiler-owned
-`CTLLR1LogicalProgram` only after revalidating every admitted field. Operations,
+`src/self-hosted/slide-r1-cbor-encoder.fungi` accepts the compiler-owned
+`SLIDER1LogicalProgram` only after revalidating every admitted field. Operations,
 types, terminators, failures, and K3 obligations use the frozen numeric
 registry in `../../../triLowLevel-v2/18-R1-REGISTRY-V1.md`; no operation meaning
 is carried by a free-form string. The encoder then emits deterministic RFC
@@ -25,26 +25,26 @@ is carried by a free-form string. The encoder then emits deterministic RFC
 - fixed block, terminator, failure, and K3-obligation arrays;
 - no partial bytes on refusal.
 
-The body is 277 bytes. Its non-authoritative bootstrap-floor body checksum is:
+The body is 282 bytes. Its non-authoritative bootstrap-floor body checksum is:
 
 ```text
-sha256:19843a946cf68b2365cf661c278d52e4ca2b54a4230ae59e024205c0e583664d
+sha256:93a49e788c40df6b2f3887e0e2268bdef8954d20fad7e708e0e28dab253e0c17
 ```
 
 SHA-256 is checked by Node's audited development/bootstrap crypto floor. It is
 not misrepresented as self-hosted `.fungi` cryptography. This plain body
 checksum is also not the R1 contract's domain-separated semantic digest
-(`SHA-256("ctll.gir.semantic.v1\0" || canonical_gir_bytes)`), which remains
+(`SHA-256("slide.gir.semantic.v1\0" || canonical_gir_bytes)`), which remains
 unimplemented as a bound `.fungi`/receipt field. The bootstrap test computes
 and pins that expected value as
-`sha256:2f3ee739c5882fb106bc4ff5d104f0dcf5eea55cdc295110681f22dbf5e7533f`.
+`sha256:e376c4654c667708662bc22350df955f85db3b22eb429657ad6d2c751aff5627`.
 The semantic encoder itself owns no signing or authority decision.
 
 ## Independent byte admission
 
-`src/self-hosted/ctll-r1-cbor-validator.fungi` does not import or call the
+`src/self-hosted/slide-r1-cbor-validator.fungi` does not import or call the
 encoder. It pins the accepted canonical vector independently and compares a
-candidate under an exact 277-byte bound.
+candidate under an exact 282-byte bound.
 
 For this one-program closed profile, exact-vector admission is stricter than a
 permissive generic decoder: any non-shortest representation, reordered or
@@ -53,7 +53,7 @@ truncation, or suffix differs from the pinned bytes and terminates with a
 stable refusal.
 
 The reference validator remains intentionally narrow. A second standalone
-implementation, `ctll-r1-cbor-importer.fungi`, does not import the encoder or
+implementation, `slide-r1-cbor-importer.fungi`, does not import the encoder or
 pinned vector. It parses shortest-form definite CBOR heads under a 4 KiB hard
 ceiling, validates all ordered keys and typed registry records, and classifies
 encoding, profile, opcode, type, operand, failure, K3-successor, truncation,
@@ -62,7 +62,7 @@ of an independently owned program record is the next boundary.
 
 ## Detached closed-profile execution
 
-`ctll-r1-reference-runtime.fungi` is combined only with the independent
+`slide-r1-reference-runtime.fungi` is combined only with the independent
 importer. It accepts body bytes plus the declared Int32/Int32/Verdict inputs.
 It executes nothing unless structural admission returns K3 ALLOW, then applies
 the frozen registered fixture semantics with total `check` exits and explicit
@@ -80,16 +80,16 @@ instruction records and dispatch over them.
 
 ## Fail-closed evidence
 
-`tests/ctll-r1-cbor.test.mjs` proves:
+`tests/slide-r1-cbor.test.mjs` proves:
 
 - two exports of the same materialized program are byte-identical;
-- an existing independent TypeScript CBOR decoder consumes all 277 bytes and
+- an existing independent TypeScript CBOR decoder consumes all 282 bytes and
   reconstructs the expected root fields, blocks, failures, and K3 obligation;
 - unsigned boundary values use shortest CBOR heads;
 - values above the deliberately bounded encoder range release no bytes;
 - a changed memory profile refuses and releases zero bytes;
 - the independent `.fungi` validator admits the canonical encoder output;
-- flipping one bit at each of all 277 byte positions refuses at the exact
+- flipping one bit at each of all 282 byte positions refuses at the exact
   mismatch offset;
 - empty, truncated, and surplus inputs terminate with distinct refusal IDs.
 - the structural importer separately refuses non-shortest and indefinite
@@ -104,15 +104,15 @@ instruction records and dispatch over them.
 Focused result:
 
 ```text
-node --test tests/ctll-r1-cbor.test.mjs
+node --test tests/slide-r1-cbor.test.mjs
   PASS: 13 tests
-  mutation positions: 277/277 refused
+  mutation positions: 282/282 refused
 ```
 
 Broader verification:
 
 ```text
-CTLL/self-hosted focused set
+SLIDE/self-hosted focused set
   PASS: 124 tests
 
 Galerina root suite
@@ -140,9 +140,9 @@ Myco
   failure records;
 - replace closed-profile execution with instruction-driven execution over the
   independently reconstructed program;
-- bind the validated body into the future frontend receipt and CTLL payload;
+- bind the validated body into the future frontend receipt and SLIDE payload;
 - implement `.slide` packaging, signing, admission, native lowering, and
   benchmarks only after the semantic gates pass.
 
 This checkpoint is real canonical serialization, but it is not yet detached
-executable GIR or an authority-bearing CTLL artifact.
+executable GIR or an authority-bearing SLIDE artifact.

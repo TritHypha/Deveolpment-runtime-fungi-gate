@@ -1,22 +1,22 @@
-# CTLL v2 and Galerina Integration Architecture
+# SLIDE v2 and Galerina Integration Architecture
 
 **Date:** 2026-07-29
 **Status:** Proposed architecture; bounded G1 compiler probes have started,
-while CTLL implementation remains absent
-**Project boundary:** CTLL is an independent execution platform. Galerina is its
-first planned language frontend, not a required CTLL runtime dependency.
+while SLIDE implementation remains absent
+**Project boundary:** SLIDE is an independent execution platform. Galerina is its
+first planned language frontend, not a required SLIDE runtime dependency.
 **Live status and work order:**
-`ctll-v2-status-and-implementation-plan-2026-07-29.md`
+`slide-v2-status-and-implementation-plan-2026-07-29.md`
 
 ## Decision
 
-Galerina may target Compiled Tri Low Level (CTLL) through a versioned frontend
+Galerina may target Substrate Layout Interconnect Deterministic Engine (SLIDE) through a versioned frontend
 adapter once both projects meet their independent conformance gates. The current
 Node-hosted and WebAssembly paths remain the factual implemented paths until
-CTLL passes those gates.
+SLIDE passes those gates.
 
 This record does not rename Galerina, turn Galerina into a systems language, or
-make CTLL part of Galerina Core.
+make SLIDE part of Galerina Core.
 
 ## Dependency direction
 
@@ -30,25 +30,25 @@ Galerina checks and governance proofs
 detached executable GIR + memory/failure/effect facts
     |
     v
-Galerina CTLL frontend adapter
+Galerina SLIDE frontend adapter
     |
     v
-CTLL semantic archive -> verified action DAG -> native artifact
+SLIDE semantic archive -> verified action DAG -> native artifact
 ```
 
-Other languages must be able to implement the public CTLL frontend contract
+Other languages must be able to implement the public SLIDE frontend contract
 without importing Galerina or translating through Galerina GIR.
 
 ## Non-negotiable integration gates
 
-1. **Kleene K3 is semantic, not hardware-dependent.** CTLL carries
+1. **Kleene K3 is semantic, not hardware-dependent.** SLIDE carries
    `REJECT (-1)`, `UNKNOWN (0)`, and `ALLOW (+1)` on ordinary binary silicon.
    Every authority-bearing collapse is explicit and `UNKNOWN` cannot become
    `ALLOW` by omission, cache state, prediction, timeout, or fallback.
 2. **Memory safety is a verified execution profile.** A `.slide` container,
-   CTLL payload,
+   SLIDE payload,
    memory-safe source-language label, or a successful compile is not proof of
-   native memory safety. Admission verifies the selected CTLL memory profile,
+   native memory safety. Admission verifies the selected SLIDE memory profile,
    its proof/guard receipts, and the final-artifact binding.
 3. **Fail-close has an explicit exit.** Every denied or unresolved admission,
    driver, capability, memory, cache, signature, or policy decision reaches a
@@ -70,7 +70,7 @@ without importing Galerina or translating through Galerina GIR.
 
 ### Detached executable GIR
 
-The CTLL adapter cannot consume a summary-only GIR. GIR must carry complete
+The SLIDE adapter cannot consume a summary-only GIR. GIR must carry complete
 executable bodies and explicit:
 
 - value and control-flow semantics;
@@ -84,17 +84,17 @@ No backend may recover missing semantics from the AST after the detached-GIR
 boundary.
 
 Current evidence is recorded in
-`../reports/ctll-v2-g1-capability-probe-2026-07-29.md`. It confirms that the
+`../reports/slide-v2-g1-capability-probe-2026-07-29.md`. It confirms that the
 existing WAT wrapper receives the original AST separately from `GIRProgram`
 and still needs it for complete body lowering. Without that AST, its legacy
-summary path can emit an identity body; CTLL must refuse that condition rather
+summary path can emit an identity body; SLIDE must refuse that condition rather
 than inherit the fallback.
 
 The bounded self-hosted prerequisite is recorded in
-`../reports/ctll-r1-selfhost-k3-2026-07-29.md`. Galerina's `.fungi`
+`../reports/slide-r1-selfhost-k3-2026-07-29.md`. Galerina's `.fungi`
 lexer/parser/internal-GIR/runtime chain now preserves one explicit
 three-successor K3 check and checked Int32 execution. The compiler-owned
-`.fungi` adapter in `../reports/ctll-r1-adapter-2026-07-29.md` now derives
+`.fungi` adapter in `../reports/slide-r1-adapter-2026-07-29.md` now derives
 signature/effect/body facts and materializes the exact four-block logical R1
 fixture or refuses. This narrows the adapter gap, but the logical records are
 not canonical R1 wire bytes and have no semantic digest or independent
@@ -104,10 +104,10 @@ validator.
 
 Galerina's current value-semantics, tree-walker, WebAssembly linear-memory, and
 static-pool safety claims are scoped to those paths. They do not automatically
-transfer to CTLL native output.
+transfer to SLIDE native output.
 
-The first Galerina CTLL adapter must target the strict
-`ctll.memory.safe-value.v1` profile. It must reject shared mutable aliases, raw
+The first Galerina SLIDE adapter must target the strict
+`slide.memory.safe-value.v1` profile. It must reject shared mutable aliases, raw
 pointers, unchecked indexing, unbounded pointer arithmetic, unmatched
 allocation/free, use after invalidation, and cleanup paths that are not
 deterministically represented. Any unsupported construct is a compile-time
@@ -125,18 +125,18 @@ The adapter must emit a frontend receipt containing at least:
 - determinism declaration;
 - conformance-suite result.
 
-Galerina diagnostic codes remain `FUNGI-*`/`GALERINA-*`. CTLL owns `TLL-*` and
-`CTLL-*`; the namespaces must not be reused across the project boundary.
+Galerina diagnostic codes remain `FUNGI-*`/`GALERINA-*`. SLIDE owns `TLL-*` and
+`SLIDE-*`; the namespaces must not be reused across the project boundary.
 
 ## Existing components
 
-| Component | CTLL v2 role |
+| Component | SLIDE v2 role |
 |---|---|
 | Tower Citizen | Bounded identity, workload, and authority lease at admission/runtime boundaries |
 | Tri-Pipe | Produces a typed candidate execution route and transports artifacts, evidence, events, and terminal outcomes; it does not admit its own proposal |
 | Tri-Fuse | Backend-neutral K3 obligation discharge: prove ALLOW/DENY or retain a residual runtime gate; it grants no deployment/runtime authority |
-| WAT emitters | Retained for the current WebAssembly target and differential oracle; not the CTLL-native core |
-| Machine Profile Bridge | Source of candidate observations only; CTLL admission independently verifies target facts |
+| WAT emitters | Retained for the current WebAssembly target and differential oracle; not the SLIDE-native core |
+| Machine Profile Bridge | Source of candidate observations only; SLIDE admission independently verifies target facts |
 
 Any later action-node fusion remains a separate proof-preserving build-graph
 optimization. It must not cross trust boundaries, side effects, failure exits,
@@ -145,7 +145,7 @@ nondeterministic operations.
 
 ## Linux-first driver path
 
-The planned `ctll-driver` command is unprivileged for observe, resolve, explain,
+The planned `slide-driver` command is unprivileged for observe, resolve, explain,
 fetch, verify, and plan operations. Installation is performed only by a small
 separate privileged helper consuming a signed, typed, bounded plan.
 
@@ -167,9 +167,9 @@ audited Node/native host shims that contain no project policy.
 
 ## Replacement rule
 
-CTLL becomes an eligible production target only after:
+SLIDE becomes an eligible production target only after:
 
-- the independent CTLL frontend conformance suite passes for a non-Galerina
+- the independent SLIDE frontend conformance suite passes for a non-Galerina
   fixture frontend;
 - the Galerina frontend passes the same suite;
 - memory-profile negative tests fail closed before native execution;

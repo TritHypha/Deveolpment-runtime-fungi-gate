@@ -1,20 +1,20 @@
-# CTLL v2 G1 Capability Probe
+# SLIDE v2 G1 Capability Probe
 
 - **Date:** 2026-07-29
-- **Branch:** `codex/ctll-v2-architecture`
-- **Scope:** current Galerina compiler behavior required by the proposed CTLL
+- **Branch:** `codex/slide-v2-architecture`
+- **Scope:** current Galerina compiler behavior required by the proposed SLIDE
   R1 vertical slice
 - **Result:** the source semantics are strong enough to begin a bounded R1
   exporter, but the current GIR is not detached executable GIR
 
-This report distinguishes current Galerina behavior from proposed CTLL
-behavior. Passing this probe does not create a `.ctll` container, CTLL
+This report distinguishes current Galerina behavior from proposed SLIDE
+behavior. Passing this probe does not create a `.slide` container, SLIDE
 validator, native backend, memory-safety proof, or benchmark result.
 
 ## 1. Probe fixture
 
 The source fixture is
-`packages-galerina/galerina-core-compiler/tests/ctll-v2/ctll-k3-checked-add-probe.fungi`.
+`packages-galerina/galerina-core-compiler/tests/slide-v2/slide-k3-checked-add-probe.fungi`.
 It combines:
 
 - `Verdict` input;
@@ -23,13 +23,13 @@ It combines:
 - checked `Int32` addition.
 
 The standing harness is
-`packages-galerina/galerina-core-compiler/tests/ctll-v2-capability-probe.test.mjs`.
+`packages-galerina/galerina-core-compiler/tests/slide-v2-capability-probe.test.mjs`.
 It exercises the fixture in the tree-walker and current WAT/Wasm tier and
 records the detached-GIR failure.
 
 ## 2. Capability matrix
 
-| Required fact | Frontend/checker | Tree-walker | Current WAT/Wasm | Detached CTLL R1 |
+| Required fact | Frontend/checker | Tree-walker | Current WAT/Wasm | Detached SLIDE R1 |
 |---|---|---|---|---|
 | `Verdict` is the decision type | Verified | Verified | Verified as an `i32` ABI value | Specified, not implemented |
 | Exhaustive ALLOW/DENY/INDETERMINATE dispatch | `FUNGI-CHECK-001/002` verified | Verified | Verified | Specified, not implemented |
@@ -43,12 +43,12 @@ records the detached-GIR failure.
 | Bounded importer and independent validator | No | No | No | Not implemented |
 | Fresh-process reference execution without parser/AST | No | No | No | Not implemented |
 | R1 failure registry identities | No; fixture uses probe strings | No | No | Contract only |
-| `ctll.memory.safe-value.v1` verification | No | No | No | Contract only |
+| `slide.memory.safe-value.v1` verification | No | No | No | Contract only |
 | Tri-Fuse v2 proof/residual plan | No | Existing WAT experiments are not v2 | Existing WAT experiments are not v2 | Contract only |
 
 The current WAT Result implementation uses host bridge functions. That is
 valid evidence for current Wasm parity, but those host handles are outside the
-R1 no-address/no-host-handle semantic profile and cannot be copied into CTLL.
+R1 no-address/no-host-handle semantic profile and cannot be copied into SLIDE.
 
 ## 3. Security defects exposed and closed
 
@@ -101,7 +101,7 @@ original AST as a separate argument and copies it into the internal
 The current no-AST legacy path can emit an identity body from
 `executionPlan`/parameter metadata. The negative probe demonstrates this by
 showing that the checked-add instruction disappears and `local.get $p0`
-remains. This is not executable-GIR export. A CTLL exporter must either emit
+remains. This is not executable-GIR export. A SLIDE exporter must either emit
 the complete R1 body or refuse; it must not reuse the identity/default/walker
 fallback.
 
@@ -115,11 +115,11 @@ npm.cmd run build
   PASS
 
 node packages-galerina/galerina-core-compiler/dist/cli.js check --strict \
-  packages-galerina/galerina-core-compiler/tests/ctll-v2
+  packages-galerina/galerina-core-compiler/tests/slide-v2
   PASS
 
 node --test \
-  packages-galerina/galerina-core-compiler/tests/ctll-v2-capability-probe.test.mjs \
+  packages-galerina/galerina-core-compiler/tests/slide-v2-capability-probe.test.mjs \
   packages-galerina/galerina-core-compiler/tests/check-construct.test.mjs \
   packages-galerina/galerina-core-compiler/tests/wat-k3-constructs.test.mjs \
   packages-galerina/galerina-core-compiler/tests/k3-operators.test.mjs \
@@ -150,9 +150,9 @@ Completed:
 - checked-trap/Result differential regression and hardening;
 - named-trap runtime, audit, propagation, and fast-tier enforcement;
 - exact post-GIR AST fact inventory;
-- current no-AST identity behavior exposed as non-CTLL;
+- current no-AST identity behavior exposed as non-SLIDE;
 - fail-closed `.fungi` preflight for the exact first-slice facts, with ordered
-  `CTLL-R1-EXPORT-001..015` refusal identities and missing-fact coverage.
+  `SLIDE-R1-EXPORT-001..015` refusal identities and missing-fact coverage.
 
 Still open before G1 exits:
 

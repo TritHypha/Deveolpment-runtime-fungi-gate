@@ -50,18 +50,18 @@ No boundary violations. All external imports are within the allowlist.
 - `src/governance-mode.ts`
 - `src/plugin-schema.ts`
 - `src/self-hosted/compiler.capabilities.fungi`
-- `src/self-hosted/ctll-r1-adapter.fungi`
-- `src/self-hosted/ctll-r1-cbor-encoder.fungi`
-- `src/self-hosted/ctll-r1-cbor-importer.fungi`
-- `src/self-hosted/ctll-r1-cbor-validator.fungi`
-- `src/self-hosted/ctll-r1-preflight.fungi`
-- `src/self-hosted/ctll-r1-reference-runtime.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/gir-emitter.fungi`
 - `src/self-hosted/governance-verifier.fungi`
 - `src/self-hosted/lexer.fungi`
 - `src/self-hosted/parser.fungi`
 - `src/self-hosted/runtime.fungi`
+- `src/self-hosted/slide-r1-adapter.fungi`
+- `src/self-hosted/slide-r1-cbor-encoder.fungi`
+- `src/self-hosted/slide-r1-cbor-importer.fungi`
+- `src/self-hosted/slide-r1-cbor-validator.fungi`
+- `src/self-hosted/slide-r1-preflight.fungi`
+- `src/self-hosted/slide-r1-reference-runtime.fungi`
 - `src/self-hosted/type-checker.fungi`
 
 ## Entry Points

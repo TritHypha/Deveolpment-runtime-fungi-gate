@@ -194,11 +194,13 @@ Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519; ce
 intent  →  governed execution plan  →  coordinated compute  →  audit proof
 ```
 
-> **CTLL v2 status:** Compiled Tri Low Level is a specified forward target, not
-> an implemented backend. Galerina currently emits no `.ctll` artifact and has
-> no CTLL native runner or CTLL benchmark. The exact done/not-done ledger and
+> **SLIDE v2 status:** Substrate Layout Interconnect Deterministic Engine is a
+> specified forward target with a bounded SLIDE R1 `.fungi` prototype, not an
+> implemented production backend. Galerina currently emits no `.slide` artifact
+> and has no general SLIDE runtime, native runner, or SLIDE benchmark. The exact
+> done/not-done ledger and
 > implementation sequence are maintained in
-> [`docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`](docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md).
+> [`docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`](docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md).
 
 ### Package architecture
 
