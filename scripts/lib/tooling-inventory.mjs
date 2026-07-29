@@ -202,16 +202,67 @@ function discoverRegisteredFixtureEvidence(root) {
   return evidence.sort((a, b) => a.tool.localeCompare(b.tool));
 }
 
+function discoverMetaGateEvidence(root, tools, registeredEvidence) {
+  const meta = registeredEvidence.find((entry) =>
+    entry.tool === "audit-gate-selftests.mjs");
+  if (!meta) return [];
+
+  const metaPath = join(root, "scripts", "audit-gate-selftests.mjs");
+  const metaTestPath = resolve(root, ...meta.test.split("/"));
+  if (!existsSync(metaPath) || !existsSync(metaTestPath)) return [];
+  const source = readText(metaPath);
+  const testSource = readText(metaTestPath);
+
+  // Credit transitive self-test execution only while the meta-gate itself is
+  // fixture-proven AND missing/vacuous proofs are blocking. A source string
+  // alone never disposes a tool; losing either fail-closed arm drops every
+  // transitive credit and makes the tooling contract red.
+  const missingBlocks =
+    /status:\s*"NO_SELFTEST",\s*violation:\s*true/.test(source);
+  const vacuousBlocks =
+    /status:\s*"SELFTEST_VACUOUS",\s*violation:\s*true/.test(source);
+  const cadenceAssertsZero =
+    testSource.includes("ZERO audit/lint proofs are missing, broken, or vacuous");
+  if (!missingBlocks || !vacuousBlocks || !cadenceAssertsZero) return [];
+
+  const alreadyRegistered = new Set(
+    registeredEvidence.map((entry) => entry.tool),
+  );
+  const evidence = [];
+  for (const tool of tools) {
+    if (tool.category !== "audit" && tool.category !== "lint") continue;
+    if (alreadyRegistered.has(tool.name)) continue;
+    const toolSource = readText(tool.path);
+    const declaresSelfTest =
+      toolSource.includes('"--self-test"')
+      || toolSource.includes("'--self-test'");
+    if (declaresSelfTest) {
+      evidence.push({
+        tool: tool.name,
+        test: meta.test,
+        via: "audit-gate-selftests.mjs",
+      });
+    }
+  }
+  return evidence.sort((a, b) => a.tool.localeCompare(b.tool));
+}
+
 export function discoverTooling(root) {
   const absoluteRoot = resolve(root);
   const errors = [];
+  const tools = discoverTools(absoluteRoot);
+  const registeredEvidence =
+    discoverRegisteredFixtureEvidence(absoluteRoot);
+  const metaGateEvidence =
+    discoverMetaGateEvidence(absoluteRoot, tools, registeredEvidence);
   return {
     root: absoluteRoot,
     packages: discoverPackages(absoluteRoot, errors),
-    tools: discoverTools(absoluteRoot),
+    tools,
     directPhaseClose: discoverPhaseCloseCommands(absoluteRoot),
     ciCommands: discoverCiCommands(absoluteRoot),
-    externalTests: discoverRegisteredFixtureEvidence(absoluteRoot),
+    externalTests: [...registeredEvidence, ...metaGateEvidence]
+      .sort((a, b) => a.tool.localeCompare(b.tool)),
     errors,
   };
 }

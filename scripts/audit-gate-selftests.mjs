@@ -14,16 +14,13 @@
 // For each `audit-*` / `lint-*` tool:
 //   • declares `--self-test` AND the run exits 0 with self-test evidence  → GUARDED (ok)
 //   • declares `--self-test` but the run EXITS NON-ZERO                   → SELFTEST_FAILS  (VIOLATION — blocking)
-//   • declares `--self-test` but exits 0 with NO self-test evidence       → SELFTEST_VACUOUS (advisory: flag looks ignored)
+//   • declares `--self-test` but exits 0 with NO self-test evidence       → SELFTEST_VACUOUS (VIOLATION — blocking)
 //   • its non-vacuity is proven by a FIXTURE TEST instead of a flag       → GUARDED_BY_TEST (ok; see SELFTEST_VIA_TEST)
-//   • declares NO `--self-test`                                          → NO_SELFTEST (advisory baseline — burn down)
+//   • declares NO `--self-test`                                          → NO_SELFTEST (VIOLATION — blocking)
 //
-// Enforcement is deliberately fail-closed-but-realistic (mirrors lint-conventions --soft):
-//   BLOCKING (exit = count): a DECLARED self-test that FAILS to pass. Zero false positives — if a gate
-//     claims a self-test, that self-test must be green, else the gate may already be neutered.
-//   ADVISORY (counted, listed, never gates): a tool with no self-test, or a self-test that ran green but
-//     produced no evidence. These are the burn-down baseline; a tool moving OUT of advisory is progress,
-//     and (future) a NEW audit/lint tool landing with no self-test can be made blocking once the baseline is 0.
+// Enforcement is fail-closed. The historical advisory baseline reached zero on 2026-07-29; a failed,
+// missing, or vacuous proof is now blocking. A new audit/lint gate cannot land green merely because it
+// has not yet supplied evidence that its detector fires.
 //
 // SAFETY: we only RUN `--self-test` on tools whose source contains the literal flag `"--self-test"` (so the
 // flag is actually wired), and NEVER on tools in NEVER_RUN (e.g. audit-mutation, which ignores unknown flags
@@ -52,9 +49,10 @@ const RUN_TIMEOUT_MS = 60000; // a single gate self-test that runs longer than t
 
 // Tools whose non-vacuity is proven by a hermetic FIXTURE TEST rather than a `--self-test` flag. Credited as
 // GUARDED_BY_TEST (honest) — but only after VERIFYING the referenced test still exists and references the tool
-// (a deleted/renamed proof drops the gate back to advisory, surfacing the loss; the map can't lie). Keep this
+// (a deleted/renamed proof drops the gate to a blocking violation; the map can't lie). Keep this
 // list justified — each entry is a real fixture in scripts/tests/ that runs the tool end-to-end in the cadence.
 const SELFTEST_VIA_TEST = {
+  "audit-gate-selftests.mjs":      { test: "scripts/tests/gate-selftests.test.mjs", proves: "cadence sweep proves every audit/lint proof is present, executable, and non-vacuous" },
   "audit-allowlist-sensitive.mjs": { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic malformed-policy refusal plus clean-policy control" },
   "audit-codes-full.mjs":          { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic security-code defect refusal plus empty-index control" },
   "audit-corpus-effect-names.mjs": { test: "scripts/tests/audit-gate-evidence-group-1.test.mjs", proves: "hermetic unknown teaching-effect refusal plus canonical-effect control" },
@@ -67,6 +65,7 @@ const SELFTEST_VIA_TEST = {
   "audit-syntax-reference-links.mjs": { test: "scripts/tests/audit-gate-evidence-group-4.test.mjs", proves: "hermetic dangling reference refusal plus existing-target control" },
   "audit-syntax.mjs":              { test: "scripts/tests/audit-gate-evidence-group-4.test.mjs", proves: "hermetic malformed TypeScript discovery plus clean report-only control" },
   "lint-conventions.mjs":          { test: "scripts/tests/audit-gate-evidence-group-4.test.mjs", proves: "hermetic child-violation aggregation plus all-clean control" },
+  "lint-fungi.mjs":                { test: "scripts/tests/audit-gate-evidence-group-5.test.mjs", proves: "hermetic invalid-flow refusal plus fully documented/contracted control" },
   "audit-mutation.mjs":            { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "hermetic KILL/SURVIVE/git-safety fixture (--config); never run via --self-test (it ignores unknown flags → would mutate real security source)" },
   "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
   "audit-doc-drift.mjs":          { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: living-doc stale count flagged; dated/-log exempt; missing-corpus fail-closed" },
@@ -91,15 +90,15 @@ export function classifyGate(name, { category, declaresSelfTest, viaTest, ran })
       reason: `non-vacuity proven by fixture test: ${viaTest}` };
   }
   if (!declaresSelfTest) {
-    return { name, category, status: "NO_SELFTEST", violation: false, advisory: true,
-      reason: "audit/lint gate declares no --self-test — a neutering of this detector would not be self-detected (burn-down baseline)" };
+    return { name, category, status: "NO_SELFTEST", violation: true, advisory: false,
+      reason: "audit/lint gate has no executable anti-neutering proof — missing evidence is fail-open" };
   }
   if (ran.exit !== 0) {
     return { name, category, status: "SELFTEST_FAILS", violation: true, advisory: false,
       reason: `--self-test exited ${ran.exit} — the gate's own self-test does not pass (a broken/neutered detector)` };
   }
   if (!ran.hasEvidence) {
-    return { name, category, status: "SELFTEST_VACUOUS", violation: false, advisory: true,
+    return { name, category, status: "SELFTEST_VACUOUS", violation: true, advisory: false,
       reason: "--self-test exited 0 but produced no self-test evidence — the flag may be silently ignored (exits green without proving anything)" };
   }
   return { name, category, status: "GUARDED", violation: false, advisory: false,
@@ -174,7 +173,7 @@ export function scan(scriptsDir = HERE) {
       ran = runSelfTest(scriptsDir, tool.name);
     }
     const r = classifyGate(tool.name, { category, declaresSelfTest: declares, viaTest, ran });
-    if (stale) r.note = stale; // a lost fixture proof is surfaced loudly on the (now-advisory) gate
+    if (stale) r.note = stale; // a lost fixture proof is surfaced on the now-blocking gate
     results.push(r);
   }
   return results;
@@ -192,22 +191,22 @@ function selfTest() {
     // BROKEN: wires --self-test but it FAILS (exit 1) → SELFTEST_FAILS (violation)
     mk("audit-fake-broken.mjs",
       `if (process.argv.includes("--self-test")) { console.log("[self-test] FAIL — fake broken"); process.exit(1); }\nprocess.exit(0);\n`);
-    // VACUOUS: contains the literal "--self-test" but IGNORES it — exits 0 with no self-test evidence → advisory
+    // VACUOUS: contains the literal "--self-test" but IGNORES it — blocking violation
     mk("audit-fake-vacuous.mjs",
       `// this tool claims a "--self-test" in source but never branches on it\nconsole.log("scanned 0 files");\nprocess.exit(0);\n`);
-    // NONE: no --self-test flag at all → NO_SELFTEST (advisory)
+    // NONE: no --self-test flag at all → blocking violation
     mk("audit-fake-none.mjs", `console.log("scanned 0 files");\nprocess.exit(0);\n`);
-    // A non-gate (util) with no self-test must be NOT_A_GATE (not advisory, not violation)
+    // A non-gate (util) with no self-test must be NOT_A_GATE.
     mk("util-fake-helper.mjs", `console.log("helper");\nprocess.exit(0);\n`);
 
     const byName = Object.fromEntries(scan(dir).map((r) => [r.name, r]));
     const checks = [
       ["good → GUARDED", byName["audit-fake-good.mjs"]?.status === "GUARDED"],
       ["broken → SELFTEST_FAILS (violation)", byName["audit-fake-broken.mjs"]?.status === "SELFTEST_FAILS" && byName["audit-fake-broken.mjs"]?.violation === true],
-      ["vacuous → SELFTEST_VACUOUS (advisory, not violation)", byName["audit-fake-vacuous.mjs"]?.status === "SELFTEST_VACUOUS" && byName["audit-fake-vacuous.mjs"]?.violation === false],
-      ["none → NO_SELFTEST (advisory)", byName["audit-fake-none.mjs"]?.status === "NO_SELFTEST" && byName["audit-fake-none.mjs"]?.advisory === true],
+      ["vacuous → SELFTEST_VACUOUS (violation)", byName["audit-fake-vacuous.mjs"]?.status === "SELFTEST_VACUOUS" && byName["audit-fake-vacuous.mjs"]?.violation === true],
+      ["none → NO_SELFTEST (violation)", byName["audit-fake-none.mjs"]?.status === "NO_SELFTEST" && byName["audit-fake-none.mjs"]?.violation === true],
       ["util → NOT_A_GATE", byName["util-fake-helper.mjs"]?.status === "NOT_A_GATE"],
-      ["exactly one violation across the fixture", scan(dir).filter((r) => r.violation).length === 1],
+      ["exactly three violations across the fixture", scan(dir).filter((r) => r.violation).length === 3],
     ];
     // (b) every SELFTEST_VIA_TEST credit must currently RESOLVE against the REAL repo (its fixture exists +
     //     still references the tool) — a renamed/deleted proof makes the credit dishonest, and this catches it.
@@ -240,19 +239,15 @@ if (asJson) {
   }, null, 2));
 } else {
   const line = (r) => {
-    const mark = r.violation ? "✗" : r.advisory ? "•" : "✓";
+    const mark = r.violation ? "✗" : "✓";
     return `${mark} ${r.name.padEnd(34)} [${r.status}] — ${r.reason}` + (r.note ? `\n     ⚠ ${r.note}` : "");
   };
   console.log("# Gate self-test integrity — run every audit/lint gate's --self-test and prove it is non-vacuous\n");
   for (const r of gates) console.log(line(r));
-  console.log(`\nGATES: ${gates.length} · GUARDED: ${guarded.length} · advisory (no/weak self-test): ${advisories.length} · VIOLATIONS: ${violations.length}`);
-  if (advisories.length) {
-    console.log(`\nAdvisory baseline (audit/lint gates without a proven --self-test) — burn down over time:`);
-    for (const r of advisories) console.log(`  • ${r.name} (${r.status})`);
-  }
+  console.log(`\nGATES: ${gates.length} · GUARDED: ${guarded.length} · VIOLATIONS: ${violations.length}`);
   console.log(violations.length === 0
-    ? "\n✅ every DECLARED gate self-test passes — no neutered detector."
-    : `\n❌ ${violations.length} gate self-test(s) FAIL — a detector may be neutered (fail-open disguised as green).`);
+    ? "\n✅ every audit/lint gate has executable, non-vacuous anti-neutering evidence."
+    : `\n❌ ${violations.length} audit/lint proof violation(s) — a detector may be missing, broken, or vacuous.`);
   console.log(`VIOLATIONS: ${violations.length}`);
 }
 

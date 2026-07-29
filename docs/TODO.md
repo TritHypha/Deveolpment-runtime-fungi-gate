@@ -194,9 +194,20 @@ planning checkbox must never be used to imply that implementation exists.
   full production syntax map is 180 Fungi + 453 TypeScript files with zero bad
   files. Convention aggregation is proven red/green with hermetic children.
   Anti-neutering advisories are 1; tooling-contract gaps are 14.
-- **Next safe work:** close the final `lint-fungi` anti-neutering gap, then
-  repair/split the existing monolithic dev-tool
-  fixture, then reconcile the remaining nineteen tooling dispositions. Task
+- **Task 8 anti-neutering floor closed:** `lint-fungi` now has a hermetic
+  invalid-flow refusal and a fully documented/contracted control. The live
+  meta-gate reports 79/79 audit/lint tools guarded, zero advisories, and zero
+  violations. Missing and vacuous proofs are now blocking; the old advisory
+  baseline cannot regrow. The tooling inventory credits transitive self-tests
+  only while the cadence-tested meta-gate retains both blocking arms. Its
+  fixture proves a self-test string alone remains uncovered and a hardened
+  meta-gate supplies the exact coverage edge. Live tooling contract: 97
+  packages, 147 tools, 60 phase-close commands, 29 CI commands, 80 executable
+  evidence edges, zero violations. No tool exception was added.
+- **Next safe work:** repair/split the existing monolithic dev-tool
+  fixture and fix the staged-new-file path-audit defect. All named tooling
+  dispositions are now reconciled; rerun their complete suite before closing
+  Task 8. Task
   7's live orchestration close remains correctly red on one owner-only
   memory-tree selection described below. Thirteen repository-output
   generators are live under the fail-closed contract; external

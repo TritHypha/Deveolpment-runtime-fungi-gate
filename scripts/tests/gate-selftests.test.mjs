@@ -22,10 +22,10 @@ test("gate-selftests: the meta-gate's own --self-test passes (it is itself non-v
   assert.equal(selfTest.status, 0, `meta-gate self-test failed:\n${selfTest.stdout}\n${selfTest.stderr}`);
 });
 
-test("gate-selftests: ZERO declared gate self-tests fail — no neutered detector (blocking)", () => {
+test("gate-selftests: ZERO audit/lint proofs are missing, broken, or vacuous", () => {
   const failing = sweep.results.filter((r) => r.violation);
   assert.equal(failing.length, 0,
-    `a DECLARED gate self-test does not pass — a fail-open disguised as green:\n${JSON.stringify(failing, null, 2)}`);
+    `an audit/lint gate lacks executable non-vacuity evidence:\n${JSON.stringify(failing, null, 2)}`);
 });
 
 test("gate-selftests: every audit/lint has executable anti-neutering evidence", () => {

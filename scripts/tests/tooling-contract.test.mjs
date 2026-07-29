@@ -76,12 +76,36 @@ function validate(root) {
 
 test("an undisposed audit is a blocking violation", () => {
   const root = fixture({
-    "scripts/audit-new-control.mjs": "process.exit(0);\n",
+    "scripts/audit-new-control.mjs":
+      'if (process.argv.includes("--self-test")) console.log("[self-test] PASS");\nprocess.exit(0);\n',
   });
 
   assert.ok(validate(root).some((violation) =>
     violation.code === "TOOLING-AUDIT-UNCOVERED"
     && violation.subject === "audit-new-control.mjs"));
+});
+
+test("a cadence-tested blocking meta-gate covers the self-tests it executes", () => {
+  const root = fixture({
+    "scripts/audit-covered-by-meta.mjs":
+      'if (process.argv.includes("--self-test")) console.log("[self-test] PASS");\nprocess.exit(0);\n',
+    "scripts/audit-gate-selftests.mjs": [
+      'const SELFTEST_VIA_TEST = {',
+      '  "audit-gate-selftests.mjs": { test: "scripts/tests/gate-selftests.test.mjs" },',
+      "};",
+      'const declaresSelfTest = (src) => src.includes(\'"--self-test"\');',
+      'const none = { status: "NO_SELFTEST", violation: true };',
+      'const vacuous = { status: "SELFTEST_VACUOUS", violation: true };',
+      "void SELFTEST_VIA_TEST;",
+      "void declaresSelfTest;",
+      "void none;",
+      "void vacuous;",
+    ].join("\n"),
+    "scripts/tests/gate-selftests.test.mjs":
+      'const tool = "audit-gate-selftests.mjs";\nconst required = "ZERO audit/lint proofs are missing, broken, or vacuous";\n',
+  });
+
+  assert.deepEqual(validate(root), []);
 });
 
 test("a phase-close command disposes the exact audit", () => {
