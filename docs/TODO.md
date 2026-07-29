@@ -223,17 +223,41 @@ planning checkbox must never be used to imply that implementation exists.
   is `a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4`;
   every structural or semantic refusal emits no body digest, semantic digest,
   or authority. Focused V2-D evidence is 65/65.
-- **Current:** implement detached guarded execution over only the imported
-  graph, with checked guard-before-observation and exact accounting.
-  Separately replace
+- **Completed:** local commit `59c8e582` instruction-drives only the imported
+  V2-D graph. Exact success is 16 steps, 56 copied bytes, depth 3, one
+  12-byte object, one guard, and one observation. Out-of-range inputs produce
+  registered failure 4 before observation; refusals erase all accounting.
+  Focused V2-D evidence is 71/71, including a fresh-process run without
+  producer, encoder, AST, WAT, or Wasm.
+- **Completed:** independent SLIDE local commit `4557a1b` adds a zero-dependency
+  canonical CBOR validator and guarded runtime. It refuses all 791 byte
+  mutations and differentially agrees with Galerina across eleven
+  success/failure/budget cases. Independent SLIDE evidence is 13/13.
+- **Completed:** local commit `a9903387` closes the explicitly named V2-D
+  semantic-memory negative matrix with 69/69 direct tests. It covers frozen
+  parent/registry drift, every declared ceiling and forbidden surface,
+  region/object lifetime and ownership, checked extent arithmetic, alignment,
+  mutability/initialization/sensitivity, and removed, moved, duplicated, or
+  misbound guards. Every refusal exposes zero semantic memory, zero guards,
+  no native certificate, and no authority. The complete V2-D suite is
+  111/111; frozen predecessor evidence remains 246/246.
+- **Completed:** the V2-D exit gate is satisfied by canonical independent
+  reconstruction, named fail-closed negatives, guard-before-observation
+  detached execution, exact semantic/runtime accounting, an independently
+  authored SLIDE validator/runtime, and unchanged frozen vectors. This is a
+  semantic-memory result only: it is not a native-code certificate, final
+  artifact binding, production authority, or permission to remove legacy
+  paths.
+- **Paused checkpoint (owner request):** V2-D is closed and locally committed;
+  no V2-E implementation has started. The next implementation boundary is the
+  independently gated V2-E frontend receipt/source-map lane.
+- **Parallel design lane:** replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** close the remaining runtime mutation/differential and independent
-  validator exit gates. Keep the
-  V2-E receipt/source-map lane
-  independently gated before any AST cut. No
+- **Next after resume:** specify and implement the V2-E receipt/source-map
+  lane independently before any AST cut. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.

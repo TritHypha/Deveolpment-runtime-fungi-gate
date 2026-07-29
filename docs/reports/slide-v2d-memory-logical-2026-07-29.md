@@ -6,6 +6,9 @@
 **Canonical producer commit:** `917bef9b`
 **Independent wire/import commit:** `8b137394`
 **Semantic binding commit:** `ed910667`
+**Detached runtime commit:** `59c8e582`
+**Independent SLIDE validator/runtime commit:** `4557a1b`
+**Named negative-matrix commit:** `a9903387`
 **Registry descriptor:** 1,383 LF bytes
 **Registry SHA-256:** `a0531c88fa07e5f2b4b2ff2b000cd351ea9abdc1a3cd9b5d87a5ffdd7de3c648`
 **Canonical body:** 791 bytes
@@ -16,9 +19,9 @@
 
 This checkpoint proves one bounded logical semantic-memory plan, a
 deterministic canonical producer, and independent canonical reconstruction.
-It does not prove detached guarded execution, native memory safety, LLVM
-guard preservation, final-artifact safety, containment, or execution
-authority.
+It does not prove native memory safety, LLVM guard preservation,
+final-artifact safety, containment, or execution authority. The full named
+negative-matrix audit and V2-D semantic exit gate are now complete.
 
 Every success reports:
 
@@ -62,21 +65,27 @@ and no authority.
 
 ## Mutation evidence
 
-V2-D passes 30/30. Explicit refusals cover:
+The first logical slice passed 30/30. The completed direct named matrix now
+passes 69/69 and explicitly refuses:
 
 - registry and frozen-parent drift;
 - a forged native-certificate claim;
 - memory, heap, pointer, free, shared-alias, FFI, effect, and capability
   surfaces;
 - type-table gaps;
-- missing/duplicate regions and objects;
+- missing/surplus regions and missing/duplicate objects;
 - cleanup, ownership, extent, alignment, multiplication, mutability,
   initialization, and sensitivity drift;
-- removed/reordered/misbound guards and accesses;
+- removed, moved, duplicated, or misbound guards and accesses;
 - changed registered failure or dominance relation; and
 - return fallthrough.
 
-The combined frozen V2-C plus V2-D focused suite passes 103/103.
+The exact profile has one region, one object, and one guard, so a pure record
+reordering is not representable. Cardinality-changing surplus/duplicate
+mutations cover the corresponding parser/validator boundary without inventing
+a multi-record semantic profile.
+
+The combined frozen V2-C plus initial V2-D focused suite passed 103/103.
 
 The executable integration suite adds 14/14. It independently revalidates the
 two frozen V2-A functions, retains the exact V2-C constant/record/variant
@@ -100,6 +109,22 @@ independent structural and semantic admission under the registered v2 domain.
 Structural and semantic refusals expose no body digest, semantic digest, or
 authority. Total focused V2-D evidence is 65/65.
 
+The detached runtime adds 6/6 tests. It executes the admitted guarded graph in
+16 steps with 56 copied bytes, depth 3, 12 semantic memory bytes, and one
+guard. A failed guard produces failure 4 before any element observation.
+Every refusal exposes zero runtime accounting and no authority. Total focused
+V2-D evidence is 71/71.
+
+Independent SLIDE implements its own bounded canonical CBOR reader, semantic
+memory/guard checks, and guarded executor with no Galerina dependency. It
+refuses all 791 byte mutations and matches Galerina for eleven
+success/failure/budget cases. The independent repository passes 13/13.
+
+The direct 69/69 matrix brings the complete Galerina V2-D suite to 111/111.
+The adjacent frozen R1/V2-A/V2-B/V2-C suites remain 246/246. The invalid
+fourth-Verdict refusal is inherited frozen R1/V2-A evidence because V2-D
+function 3 accepts an `Int32` index and has no Verdict input.
+
 ## Replacement and integration
 
 Nothing is removed at this checkpoint.
@@ -112,8 +137,28 @@ The current AST, WAT/Wasm, runtime, database/network, Tower Citizen, Tri-Pipe,
 and V2-B components remain. A failed V2-D path cannot select any of them as a
 fallback.
 
+## Exit adjudication
+
+The V2-D exit gate is satisfied:
+
+1. canonical bytes independently reconstruct the complete graph and memory
+   plan;
+2. required named mutations terminate without partial semantics or authority;
+3. detached execution checks the guard and emits registered failure 4 before
+   any element observation;
+4. semantic and runtime accounting agree exactly;
+5. independent SLIDE validation/execution agrees across eleven cases; and
+6. frozen predecessor vectors remain unchanged.
+
+This closes the semantic-memory increment only. It does not prove
+post-optimization guard preservation, final native-artifact binding, hostile
+FFI/handle safety, runtime isolation, production authority, or permission to
+remove the AST/WAT/Wasm paths.
+
 ## Next safe boundary
 
-Add detached guarded execution with exact guard-before-observation and memory
-accounting, then close the second-validator/differential gate. LLVM/native
-work remains blocked.
+V2-E must bind producer-specific frontend receipt and source-map evidence
+outside frontend-neutral semantic identity before any Galerina AST cut.
+LLVM/native implementation may be planned after this semantic gate, but no
+native safety or replacement claim is valid until post-optimization and
+final-artifact verification gates exist.
