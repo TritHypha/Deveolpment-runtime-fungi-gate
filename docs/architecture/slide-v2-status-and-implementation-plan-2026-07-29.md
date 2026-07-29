@@ -296,6 +296,13 @@ the bounded no-address subset, and labels the result
 memory-capable opcodes, and malformed bodies. This is defence-in-depth evidence
 for reference execution only; it is not a native memory-safety certificate.
 See `../reports/slide-r1-safe-value-semantic-gate-2026-07-29.md`.
+
+R1 remains permanently frozen. The general successor is specified as the new
+frontend-neutral `slide.semantic.executable-gir.v2` major in
+`../../../triLowLevel-v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md`. It adds
+functions, block parameters, SSA, K3, failures, effects/capabilities, memory
+objects, limits, compatibility rules, and the bounded V2-A implementation
+slice without changing any R1 byte or identity.
 The current refusal names are stable within the preflight contract but are not
 frozen numeric registry entries. G1 is therefore
 `IMPLEMENTED-PARTIAL`, not complete.
@@ -386,10 +393,9 @@ its additional format/verifier/runtime.
 Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
-2. retain the frozen R1 fixture as a conformance baseline and widen registries
-   only through explicit versioned additions;
-3. implement the `slide.memory.safe-value.v1` negative corpus and verifier
-   boundary before native work;
+2. retain frozen R1 as a permanent conformance baseline;
+3. implement the V2-A two-function/call/join slice from the versioned general
+   executable-GIR successor;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.

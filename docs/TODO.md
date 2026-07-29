@@ -48,8 +48,11 @@ planning checkbox must never be used to imply that implementation exists.
   native certificate is absent. Altered profile, unknown/memory-capable
   opcode, and malformed-body fixtures refuse. Focused evidence: 27/27; report:
   `docs/reports/slide-r1-safe-value-semantic-gate-2026-07-29.md`.
-- **Next:** broaden the frozen registry toward general executable GIR and add
-  explicit memory objects/guards before extending the safe-value claim.
+- **Completed:** designed the general executable-GIR successor as a new
+  frontend-neutral v2 major. Frozen R1 bytes, IDs and semantics remain
+  unchanged.
+- **Next:** implement the bounded V2-A two-function/call/join slice while
+  retaining R1 byte and digest invariants.
 - **Verification:** compiler typecheck/build and 5,297/5,297 tests pass.
   Regenerated project graph: 7,181 nodes / 7,445 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
@@ -59,8 +62,9 @@ planning checkbox must never be used to imply that implementation exists.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
-  `../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`, and
-  `../../triLowLevel-v2/18-R1-REGISTRY-V1.md`.
+  `../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`,
+  `../../triLowLevel-v2/18-R1-REGISTRY-V1.md`, and
+  `../../triLowLevel-v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.

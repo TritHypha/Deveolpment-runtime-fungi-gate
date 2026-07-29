@@ -111,6 +111,11 @@ profile/opcode/malformed candidates refuse. It intentionally emits
 `SEMANTIC_MEMORY_VALIDATED`, not a native `MEMORY_SAFE` certificate; the
 post-lowering, final-artifact, FFI/handle, and isolation gates remain open.
 
+Generalization proceeds through the new frontend-neutral
+`slide.semantic.executable-gir.v2` major, never by widening R1. The V2-A slice
+adds two functions, typed calls, jumps and block parameters while keeping the
+R1 body and digests pinned.
+
 ### Memory contract
 
 Galerina's current value-semantics, tree-walker, WebAssembly linear-memory, and
