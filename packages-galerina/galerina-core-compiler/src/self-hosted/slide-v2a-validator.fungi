@@ -268,7 +268,7 @@ contract { intent { "Count explicit incoming edges for reachability validation."
 pure flow validateSLIDEV2ALimits(limits: SLIDEV2ALimits) -> SLIDEV2ADecision
 contract { intent { "Require the exact closed V2-A semantic ceilings." } }
 {
-  if limits.canonicalBodyBytes != 16384 or limits.functionCount != 2 {
+  if limits.canonicalBodyBytes != 16384 or limits.modules != 1 or limits.functionCount != 2 {
     return slideV2ARefusal("SLIDE-V2A-PROGRAM-002", "root ceilings changed")
   }
   if limits.blocksPerFunction != 8 or limits.instructionsPerFunction != 32 {
@@ -654,14 +654,20 @@ contract { intent { "Validate the complete closed V2-A logical graph before any 
   if program.formatMajor != 2 or program.formatMinor != 0 or program.semanticProfileId != "slide.semantic.executable-gir.v2" {
     return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "format or semantic profile changed")
   }
-  if program.digestSuiteId != "slide.digest.sha256.v1" or program.registrySetId != "slide.registry.executable-gir.v2a" or program.memoryProfileId != "slide.memory.safe-value.v1" {
+  if program.digestSuiteId != "slide.digest.sha256.v1" or program.registrySetId != "slide.registry.executable-gir.v2a" or program.registrySetDigest != "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327" or program.memoryProfileId != "slide.memory.safe-value.v1" {
     return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "digest, registry, or memory profile changed")
   }
   if program.requiredFeatureIds.count() != 4 or slideV2AIntAt(program.requiredFeatureIds, 0) != 1 or slideV2AIntAt(program.requiredFeatureIds, 1) != 2 or slideV2AIntAt(program.requiredFeatureIds, 2) != 3 or slideV2AIntAt(program.requiredFeatureIds, 3) != 4 {
     return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "required feature set changed")
   }
-  if program.memoryObjectCount != 0 {
-    return slideV2ARefusal("SLIDE-V2A-PROGRAM-013", "V2-A contains memory objects")
+  if program.moduleIds.count() != 1 or slideV2AIntAt(program.moduleIds, 0) != 1 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "module table changed")
+  }
+  if program.typeIds.count() != 5 or slideV2AIntAt(program.typeIds, 0) != 1 or slideV2AIntAt(program.typeIds, 1) != 2 or slideV2AIntAt(program.typeIds, 2) != 3 or slideV2AIntAt(program.typeIds, 3) != 4 or slideV2AIntAt(program.typeIds, 4) != 5 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-001", "type table changed")
+  }
+  if program.constantIds.count() != 0 or program.effectIds.count() != 0 or program.capabilityIds.count() != 0 or program.memoryObjectIds.count() != 0 or program.extensionIds.count() != 0 {
+    return slideV2ARefusal("SLIDE-V2A-PROGRAM-013", "V2-A contains undeclared authority, memory, constants, or extensions")
   }
   let limitDecision = validateSLIDEV2ALimits(program.limits)
   check(limitDecision.verdict) {

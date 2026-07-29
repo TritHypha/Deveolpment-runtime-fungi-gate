@@ -64,6 +64,7 @@ record SLIDEV2AK3Obligation {
 
 record SLIDEV2ALimits {
   canonicalBodyBytes: Int
+  modules: Int
   functionCount: Int
   blocksPerFunction: Int
   instructionsPerFunction: Int
@@ -83,13 +84,20 @@ record SLIDEV2AProgram {
   semanticProfileId: String
   digestSuiteId: String
   registrySetId: String
+  registrySetDigest: String
   memoryProfileId: String
   requiredFeatureIds: Array<Int>
   limits: SLIDEV2ALimits
+  moduleIds: Array<Int>
+  typeIds: Array<Int>
+  constantIds: Array<Int>
   functions: Array<SLIDEV2AFunction>
   failures: Array<SLIDEV2AFailure>
+  effectIds: Array<Int>
+  capabilityIds: Array<Int>
   k3Obligations: Array<SLIDEV2AK3Obligation>
-  memoryObjectCount: Int
+  memoryObjectIds: Array<Int>
+  extensionIds: Array<Int>
 }
 
 pure flow slideV2AEdge(
@@ -273,6 +281,7 @@ contract { intent { "Materialize the exact frontend-neutral V2-A logical conform
 {
   let limits: SLIDEV2ALimits = {
     canonicalBodyBytes: 16384
+    modules: 1
     functionCount: 2
     blocksPerFunction: 8
     instructionsPerFunction: 32
@@ -311,12 +320,19 @@ contract { intent { "Materialize the exact frontend-neutral V2-A logical conform
     semanticProfileId: "slide.semantic.executable-gir.v2"
     digestSuiteId: "slide.digest.sha256.v1"
     registrySetId: "slide.registry.executable-gir.v2a"
+    registrySetDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
     memoryProfileId: "slide.memory.safe-value.v1"
     requiredFeatureIds: Array.of(1, 2, 3, 4)
     limits: limits
+    moduleIds: Array.of(1)
+    typeIds: Array.of(1, 2, 3, 4, 5)
+    constantIds: Array.empty()
     functions: Array.of(materializeSLIDEV2ACallee(), materializeSLIDEV2AMain())
     failures: Array.of(arithmetic, denied, unresolved, inputRejected)
+    effectIds: Array.empty()
+    capabilityIds: Array.empty()
     k3Obligations: Array.of(obligation)
-    memoryObjectCount: 0
+    memoryObjectIds: Array.empty()
+    extensionIds: Array.empty()
   }
 }

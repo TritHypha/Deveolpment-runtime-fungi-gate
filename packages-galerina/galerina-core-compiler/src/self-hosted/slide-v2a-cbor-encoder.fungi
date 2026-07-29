@@ -1,0 +1,317 @@
+@version 1
+/// @file: slide-v2a-cbor-encoder.fungi
+/// @purpose: Encode only a semantically admitted V2-A graph as deterministic RFC 8949 CBOR.
+/// @status: Producer-side canonical encoder; independent decoding and digest binding are separate.
+
+record SLIDEV2ABodyExport {
+  verdict: Verdict
+  status: String
+  failureId: String
+  reason: String
+  bytes: Bytes
+  byteLength: Int
+}
+
+pure flow refuseSLIDEV2ABodyExport(
+  failureId: String,
+  reasonText: String,
+) -> SLIDEV2ABodyExport
+contract { intent { "Refuse V2-A export without releasing partial bytes." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: "REFUSED"
+    failureId: failureId
+    reason: reasonText
+    bytes: Bytes.empty()
+    byteLength: 0
+  }
+}
+
+pure flow slideV2ACBORHead(majorType: Int, value: Int) -> Bytes
+contract { intent { "Encode a shortest-form bounded CBOR head." } }
+{
+  if majorType < 0 or majorType > 7 or value < 0 or value > 2147483647 {
+    return Bytes.empty()
+  }
+  if value < 24 { return Bytes.of(majorType * 32 + value) }
+  if value < 256 { return Bytes.of(majorType * 32 + 24, value) }
+  if value < 65536 {
+    let high: Int = value / 256
+    let low: Int = value - high * 256
+    return Bytes.of(majorType * 32 + 25, high, low)
+  }
+  let byte3: Int = value / 16777216
+  let remainder3: Int = value - byte3 * 16777216
+  let byte2: Int = remainder3 / 65536
+  let remainder2: Int = remainder3 - byte2 * 65536
+  let byte1: Int = remainder2 / 256
+  let byte0: Int = remainder2 - byte1 * 256
+  return Bytes.of(majorType * 32 + 26, byte3, byte2, byte1, byte0)
+}
+
+pure flow slideV2ACBORUInt(value: Int) -> Bytes
+contract { intent { "Encode one bounded unsigned integer." } }
+{
+  return slideV2ACBORHead(0, value)
+}
+
+pure flow slideV2ACBORInt(value: Int) -> Bytes
+contract { intent { "Encode one signed Int32 with canonical CBOR integer semantics." } }
+{
+  if value >= 0 { return slideV2ACBORHead(0, value) }
+  return slideV2ACBORHead(1, -1 - value)
+}
+
+pure flow slideV2ACBORText(value: String) -> Bytes
+contract { intent { "Encode definite UTF-8 text." } }
+{
+  let payload: Bytes = value.encode()
+  let head: Bytes = slideV2ACBORHead(3, payload.length())
+  if head.isEmpty() { return Bytes.empty() }
+  return head.append(payload)
+}
+
+pure flow slideV2ACBORIntArray(values: Array<Int>) -> Bytes
+contract { intent { "Encode a definite array of unsigned registry identities." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, values.count())
+  mut i: Int = 0
+  while i < values.count() {
+    output = output.append(slideV2ACBORUInt(slideV2AIntAt(values, i)))
+    i = i + 1
+  }
+  return output
+}
+
+pure flow slideV2ACBORBlockParameter(
+  value: SLIDEV2ABlockParameter,
+) -> Bytes
+contract { intent { "Encode one typed block-parameter definition." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 2)
+  output = output.append(slideV2ACBORUInt(value.resultId))
+  output = output.append(slideV2ACBORUInt(value.typeId))
+  return output
+}
+
+pure flow slideV2ACBORInstruction(value: SLIDEV2AInstruction) -> Bytes
+contract { intent { "Encode one five-field V2 instruction." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 5)
+  output = output.append(slideV2ACBORUInt(value.resultId))
+  output = output.append(slideV2ACBORUInt(value.opcodeId))
+  output = output.append(slideV2ACBORUInt(value.typeId))
+  output = output.append(slideV2ACBORIntArray(value.operands))
+  output = output.append(slideV2ACBORInt(value.immediate))
+  return output
+}
+
+pure flow slideV2ACBOREdge(value: SLIDEV2AEdge) -> Bytes
+contract { intent { "Encode one explicit successor and its block arguments." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 2)
+  output = output.append(slideV2ACBORUInt(value.targetBlockId))
+  output = output.append(slideV2ACBORIntArray(value.arguments))
+  return output
+}
+
+pure flow slideV2ACBORTerminator(value: SLIDEV2ATerminator) -> Bytes
+contract { intent { "Encode one total terminator and every successor." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 3)
+  output = output.append(slideV2ACBORUInt(value.terminatorId))
+  output = output.append(slideV2ACBORIntArray(value.operands))
+  output = output.append(slideV2ACBORHead(4, value.edges.count()))
+  mut e: Int = 0
+  while e < value.edges.count() {
+    output = output.append(slideV2ACBOREdge(slideV2AEdgeAt(value.edges, e)))
+    e = e + 1
+  }
+  return output
+}
+
+pure flow slideV2ACBORBlock(value: SLIDEV2ABlock) -> Bytes
+contract { intent { "Encode one V2 block with parameters, instructions, and terminator." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 4)
+  output = output.append(slideV2ACBORUInt(value.blockId))
+  output = output.append(slideV2ACBORHead(4, value.parameters.count()))
+  mut p: Int = 0
+  while p < value.parameters.count() {
+    output = output.append(
+      slideV2ACBORBlockParameter(slideV2ABlockParameterAt(value.parameters, p)),
+    )
+    p = p + 1
+  }
+  output = output.append(slideV2ACBORHead(4, value.instructions.count()))
+  mut i: Int = 0
+  while i < value.instructions.count() {
+    output = output.append(
+      slideV2ACBORInstruction(slideV2AInstructionAt(value.instructions, i)),
+    )
+    i = i + 1
+  }
+  output = output.append(slideV2ACBORTerminator(value.terminator))
+  return output
+}
+
+pure flow slideV2ACBORFunction(value: SLIDEV2AFunction) -> Bytes
+contract { intent { "Encode one complete typed V2 function." } }
+{
+  mut output: Bytes = slideV2ACBORHead(4, 9)
+  output = output.append(slideV2ACBORUInt(value.functionId))
+  output = output.append(slideV2ACBORUInt(value.qualifierId))
+  output = output.append(slideV2ACBORIntArray(value.parameterTypes))
+  output = output.append(slideV2ACBORUInt(value.resultTypeId))
+  output = output.append(slideV2ACBORIntArray(value.declaredEffectIds))
+  output = output.append(slideV2ACBORIntArray(value.requestedCapabilityIds))
+  output = output.append(slideV2ACBORUInt(value.entryBlockId))
+  output = output.append(slideV2ACBORHead(4, value.blocks.count()))
+  mut b: Int = 0
+  while b < value.blocks.count() {
+    output = output.append(slideV2ACBORBlock(slideV2ABlockAt(value.blocks, b)))
+    b = b + 1
+  }
+  output = output.append(slideV2ACBORUInt(value.limitRef))
+  return output
+}
+
+pure flow slideV2ACBORFailure(value: SLIDEV2AFailure) -> Bytes
+contract { intent { "Encode one registered V2 failure." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(value.failureId, value.classId, value.retryId, value.actionId),
+  )
+}
+
+pure flow slideV2ACBORK3(value: SLIDEV2AK3Obligation) -> Bytes
+contract { intent { "Encode one exact three-successor K3 obligation." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      value.obligationId, value.functionId, value.checkBlockId,
+      value.allowBlockId, value.denyBlockId, value.indeterminateBlockId,
+    ),
+  )
+}
+
+pure flow slideV2ACBORLimits(value: SLIDEV2ALimits) -> Bytes
+contract { intent { "Encode every V2-A declared semantic and execution ceiling." } }
+{
+  return slideV2ACBORIntArray(
+    Array.of(
+      value.canonicalBodyBytes, value.modules, value.functionCount,
+      value.blocksPerFunction, value.instructionsPerFunction,
+      value.valuesPerFunction, value.blockParametersPerBlock, value.callDepth,
+      value.backEdges, value.effects, value.capabilities, value.memoryObjects,
+      value.executionSteps,
+    ),
+  )
+}
+
+pure flow exportSLIDEV2ACanonicalBody(
+  program: SLIDEV2AProgram,
+) -> SLIDEV2ABodyExport
+contract { intent { "Release canonical V2-A bytes only after complete logical admission." } }
+{
+  let decision = validateSLIDEV2AProgram(program)
+  check(decision.verdict) {
+    deny: {
+      return refuseSLIDEV2ABodyExport(decision.failureId, decision.detail)
+    }
+    ambig: {
+      return refuseSLIDEV2ABodyExport(
+        "SLIDE-V2A-CBOR-001", "semantic admission was unresolved",
+      )
+    }
+    if: {}
+  }
+
+  mut body: Bytes = slideV2ACBORHead(5, 18)
+  body = body.append(slideV2ACBORUInt(0)).append(slideV2ACBORUInt(program.formatMajor))
+  body = body.append(slideV2ACBORUInt(1)).append(slideV2ACBORUInt(program.formatMinor))
+  body = body.append(slideV2ACBORUInt(2)).append(slideV2ACBORText(program.semanticProfileId))
+  body = body.append(slideV2ACBORUInt(3)).append(slideV2ACBORText(program.digestSuiteId))
+
+  body = body.append(slideV2ACBORUInt(4)).append(slideV2ACBORHead(4, 2))
+  body = body.append(slideV2ACBORText(program.registrySetId))
+  body = body.append(slideV2ACBORText(program.registrySetDigest))
+
+  body = body.append(slideV2ACBORUInt(5)).append(slideV2ACBORText(program.memoryProfileId))
+  body = body.append(slideV2ACBORUInt(6)).append(slideV2ACBORIntArray(program.requiredFeatureIds))
+  body = body.append(slideV2ACBORUInt(7)).append(slideV2ACBORLimits(program.limits))
+  body = body.append(slideV2ACBORUInt(8)).append(slideV2ACBORIntArray(program.moduleIds))
+  body = body.append(slideV2ACBORUInt(9)).append(slideV2ACBORIntArray(program.typeIds))
+  body = body.append(slideV2ACBORUInt(10)).append(slideV2ACBORIntArray(program.constantIds))
+
+  body = body.append(slideV2ACBORUInt(11))
+  body = body.append(slideV2ACBORHead(4, program.functions.count()))
+  mut f: Int = 0
+  while f < program.functions.count() {
+    body = body.append(slideV2ACBORFunction(slideV2AFunctionAt(program.functions, f)))
+    f = f + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(12))
+  body = body.append(slideV2ACBORHead(4, program.failures.count()))
+  mut failureIndex: Int = 0
+  while failureIndex < program.failures.count() {
+    let failure = program.failures.get(failureIndex)
+    match failure {
+      Some(value) => { body = body.append(slideV2ACBORFailure(value)) }
+      None => {
+        return refuseSLIDEV2ABodyExport(
+          "SLIDE-V2A-CBOR-002", "failure table changed during encoding",
+        )
+      }
+      _ => {
+        return refuseSLIDEV2ABodyExport(
+          "SLIDE-V2A-CBOR-002", "failure table is malformed",
+        )
+      }
+    }
+    failureIndex = failureIndex + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(13)).append(slideV2ACBORIntArray(program.effectIds))
+  body = body.append(slideV2ACBORUInt(14)).append(slideV2ACBORIntArray(program.capabilityIds))
+
+  body = body.append(slideV2ACBORUInt(15))
+  body = body.append(slideV2ACBORHead(4, program.k3Obligations.count()))
+  mut k: Int = 0
+  while k < program.k3Obligations.count() {
+    let obligation = program.k3Obligations.get(k)
+    match obligation {
+      Some(value) => { body = body.append(slideV2ACBORK3(value)) }
+      None => {
+        return refuseSLIDEV2ABodyExport(
+          "SLIDE-V2A-CBOR-003", "K3 table changed during encoding",
+        )
+      }
+      _ => {
+        return refuseSLIDEV2ABodyExport(
+          "SLIDE-V2A-CBOR-003", "K3 table is malformed",
+        )
+      }
+    }
+    k = k + 1
+  }
+
+  body = body.append(slideV2ACBORUInt(16)).append(slideV2ACBORIntArray(program.memoryObjectIds))
+  body = body.append(slideV2ACBORUInt(17)).append(slideV2ACBORIntArray(program.extensionIds))
+
+  if body.length() > program.limits.canonicalBodyBytes {
+    return refuseSLIDEV2ABodyExport(
+      "SLIDE-V2A-CBOR-004", "canonical body exceeds the admitted byte ceiling",
+    )
+  }
+  return {
+    verdict: Verdict.Allow
+    status: "EXPORTED"
+    failureId: "NONE"
+    reason: "canonical SLIDE V2-A semantic body exported"
+    bytes: body
+    byteLength: body.length()
+  }
+}

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,9 +18,11 @@ const MODEL_PATH = join(
   "slide-v2a-logical-model.fungi",
 );
 const VALIDATOR_PATH = join(SELF_HOSTED, "slide-v2a-validator.fungi");
+const ENCODER_PATH = join(SELF_HOSTED, "slide-v2a-cbor-encoder.fungi");
 
 let parsed;
 let program;
+let canonicalBytes;
 
 function field(record, name) {
   assert.equal(record.__tag, "record");
@@ -82,14 +85,17 @@ async function validate(value) {
 }
 
 before(async () => {
-  const [modelSource, validatorSource] = await Promise.all([
+  const [modelSource, validatorSource, encoderSource] = await Promise.all([
     readFile(MODEL_PATH, "utf8"),
     readFile(VALIDATOR_PATH, "utf8"),
+    readFile(ENCODER_PATH, "utf8"),
   ]);
   const source =
     modelSource +
     "\n" +
-    validatorSource.replace(/^@version 1\r?\n/, "");
+    validatorSource.replace(/^@version 1\r?\n/, "") +
+    "\n" +
+    encoderSource.replace(/^@version 1\r?\n/, "");
   parsed = parseProgram(source, "slide-v2a-logical-model.fungi", {
     requireVersionHeader: true,
   });
@@ -106,6 +112,13 @@ before(async () => {
   const result = await run("materializeSLIDEV2AProgram");
   assert.equal(result.audit.result, "ok");
   program = result.value;
+  const exported = await run(
+    "exportSLIDEV2ACanonicalBody",
+    new Map([["program", program]]),
+  );
+  assert.equal(exported.audit.result, "ok");
+  assert.equal(field(exported.value, "verdict").value, 1);
+  canonicalBytes = field(exported.value, "bytes").value;
 });
 
 describe("SLIDE executable GIR V2-A logical model", () => {
@@ -119,7 +132,11 @@ describe("SLIDE executable GIR V2-A logical model", () => {
       field(program, "registrySetId").value,
       "slide.registry.executable-gir.v2a",
     );
-    assert.equal(field(program, "memoryObjectCount").value, 0);
+    assert.equal(field(program, "memoryObjectIds").items.length, 0);
+    assert.equal(
+      field(program, "registrySetDigest").value,
+      "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327",
+    );
   });
 
   it("materializes two typed functions with a call and block-parameter join", () => {
@@ -162,6 +179,35 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     assert.equal(field(decision, "verdict").value, 1);
     assert.equal(field(decision, "status").value, "VALIDATED");
     assert.equal(field(decision, "failureId").value, "NONE");
+  });
+
+  it("exports deterministic canonical bytes only after semantic admission", async () => {
+    const second = await run(
+      "exportSLIDEV2ACanonicalBody",
+      new Map([["program", program]]),
+    );
+    assert.equal(field(second.value, "verdict").value, 1);
+    assert.deepEqual(field(second.value, "bytes").value, canonicalBytes);
+    assert.equal(field(second.value, "byteLength").value, 540);
+    assert.equal(canonicalBytes.length, 540);
+    assert.equal(canonicalBytes[0], 0xb2);
+    assert.equal(
+      createHash("sha256").update(canonicalBytes).digest("hex"),
+      "ee143f6de55eab66e7e2d6f23ab03816337165d771f8645040ba60ff06976a07",
+    );
+  });
+
+  it("releases no partial bytes when the graph is not admitted", async () => {
+    const candidate = clone(program);
+    candidate.fields.set("memoryObjectIds", arrayValue([intValue(1)]));
+    const result = await run(
+      "exportSLIDEV2ACanonicalBody",
+      new Map([["program", candidate]]),
+    );
+    assert.equal(field(result.value, "verdict").value, -1);
+    assert.equal(field(result.value, "status").value, "REFUSED");
+    assert.equal(field(result.value, "byteLength").value, 0);
+    assert.equal(field(result.value, "bytes").value.length, 0);
   });
 
   const mutations = [
@@ -245,7 +291,7 @@ describe("SLIDE executable GIR V2-A logical model", () => {
     [
       "memory object injection",
       (candidate) => {
-        candidate.fields.set("memoryObjectCount", intValue(1));
+        candidate.fields.set("memoryObjectIds", arrayValue([intValue(1)]));
       },
       "SLIDE-V2A-PROGRAM-013",
     ],

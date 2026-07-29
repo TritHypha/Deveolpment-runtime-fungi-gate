@@ -60,14 +60,19 @@ planning checkbox must never be used to imply that implementation exists.
   and zero effects/capabilities/memory. Ten hostile graph mutations fail
   closed; focused evidence is 14/14. Report:
   `docs/reports/slide-v2a-logical-admission-2026-07-29.md`.
-- **Current:** define and implement canonical V2-A encoding/import so the
-  semantic gate receives independently decoded bytes rather than the producer
-  object.
+- **Completed (uncommitted checkpoint):** corrected the pre-freeze root to
+  carry the registry descriptor digest and every critical module/type/
+  constant/effect/capability/memory/extension table, then emitted a pinned
+  540-byte canonical V2-A body. Report:
+  `docs/reports/slide-v2a-canonical-producer-2026-07-29.md`.
+- **Current:** implement independent V2-A decoding so the semantic gate
+  receives reconstructed candidate records rather than the producer object.
 - **Next:** bind a domain-separated V2 semantic digest and add the
   instruction-driven V2-A executor; then add budget/effect/capability/memory
   increments without widening frozen R1.
-- **Verification:** compiler typecheck/build and 5,311/5,311 tests pass.
-  Frozen R1 remains 27/27. Regenerated project graph: 7,197 nodes / 7,461 edges, zero integrity
+- **Verification:** compiler typecheck/build and 5,313/5,313 tests pass.
+  Frozen R1 remains 27/27; V2-A is 16/16. Regenerated project graph:
+  7,204 nodes / 7,466 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero
