@@ -2,12 +2,15 @@
 
 ## CTLL v2 architecture lane — 2026-07-29
 
-**Status:** planning is complete enough for owner decisions and bounded G1
-compiler probing is active. The first `.fungi` R1 shape-preflight kernel now
-fails closed across the frozen fixture facts, but canonical body export,
-deterministic CBOR, import, validation, and detached execution do not exist.
-CTLL remains an independent platform and Galerina is its first planned
-frontend.
+**Status:** planning is complete enough for implementation and bounded G1
+compiler probing is active. The first `.fungi` R1 shape-preflight kernel fails
+closed across the frozen fixture facts. The self-hosted lexer/parser/GIR/runtime
+now also preserve an explicit three-successor K3 check and checked Int32
+behavior for the bounded fixture shape. These are prerequisites only:
+canonical body export, deterministic CBOR, import, independent validation, and
+serialized detached execution do not exist. SLIDE is the independent public
+engine/container; Galerina is its first frontend and CTLL remains the compiled
+tri-low-level payload/profile.
 
 - [x] Maintain the canonical done/not-done/blocker/implementation ledger in
   `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
@@ -37,8 +40,10 @@ frontend.
 - [x] Restore deterministic generation for
   `../ZTF-Knowledge-Bases/build/kb-index/KB-INDEX.md` and refresh it from the
   same live corpus as the category index.
-- [ ] Owner: answer the blocking decisions in
-  `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
+- [x] Record the owner's 2026-07-29 decisions in
+  `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`: Debian/Ubuntu x86-64 first,
+  audited policy-free bootstrap shims, fixture/profile confirmation,
+  Apache-2.0, SLIDE naming, and fail-closed migration boundaries.
 - [ ] Finish detached executable GIR: full bodies, control flow, memory,
   failure, effect, capability, K3-collapse, and source-map semantics.
 - [x] Draft the implementable R1 executable-GIR subset, validator order,
@@ -46,7 +51,7 @@ frontend.
   `../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`; implementation remains pending.
 - [x] Define and version the proposed public Galerina-to-CTLL frontend receipt
   in `../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`.
-- [ ] Owner-confirm the recommended checked-Int/exhaustive-K3 fixture in
+- [x] Owner-confirm the recommended checked-Int/exhaustive-K3 fixture in
   `../triLowLevel-v2/17-FIRST-VERTICAL-SLICE.md`.
 - [x] Add the first vertical-slice capability probe in `.fungi` and verify it
   across the current tree-walker and WAT/Wasm tiers. Evidence:
@@ -69,19 +74,31 @@ frontend.
   malformed/missing fact tests. Evidence:
   `docs/reports/ctll-r1-preflight-2026-07-29.md`. This is shape support
   evidence, not admission authority or canonical export.
+- [x] Carry the bounded fixture's `check` through the self-hosted `.fungi`
+  lexer, parser, internal GIR, and runtime as an explicit `check_k3` node with
+  three labelled successors. Preserve complete generic return types and exact
+  Verdict values. Evidence:
+  `docs/reports/ctll-r1-selfhost-k3-2026-07-29.md`.
+- [x] Remove self-hosted runtime fail-open defaults at the CTLL-relevant call
+  boundary: missing nested flows and missing/surplus arguments now terminate;
+  checked Int32 boundaries remain executable in the self-hosted Wasm form.
 - [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
   altered K3 successors, missing failure records, and non-canonical bytes.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
 - [ ] Prove frontend independence with at least one non-Galerina fixture
   frontend.
+- [ ] Locate and test the exact existing “3 x XOR” nesting mechanism named by
+  the owner. Preserve it only within its proven data/control domain; never use
+  binary/arithmetic XOR to collapse authority-bearing K3 Verdicts.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
-  path until CTLL release gates pass and the owner approves a transition.
+  path until SLIDE release gates pass and a transition is explicitly recorded.
 
-**Next safe work:** connect the bounded preflight to a compiler-owned adapter
-that derives—not accepts—its facts, and make the adapter either produce the
-complete fixture body or refuse before every legacy identity/default/walker
-fallback. Do not start LLVM, `.ctll` execution, or driver installation before
-the earlier semantic and owner gates.
+**Next safe work:** implement a dedicated `.fungi` R1 adapter over checked
+self-hosted structures. It must derive—not accept—the preflight facts and
+either materialize the complete bounded body or refuse before every legacy
+identity/default/walker fallback. Then bind that result to canonical semantic
+bytes and add serialized mutations. Do not start LLVM, `.slide` execution, or
+driver installation before the earlier semantic gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

@@ -11,13 +11,13 @@
 
 | Metric | Count |
 |---|---|
-| Files | 20 |
+| Files | 21 |
 | Internal edges | 0 |
 | External dependencies | 6 |
 | ├─ Node core | 6 |
 | ├─ Workspace (@galerina/*) | 0 |
 | └─ Third-party | 0 |
-| Orphan files | 20 |
+| Orphan files | 21 |
 
 ## External Dependencies (the Border)
 
@@ -45,6 +45,7 @@ No boundary violations. All external imports are within the allowlist.
 - `src/build-chart.mjs`
 - `src/build-native.mjs`
 - `src/chart.mjs`
+- `src/compare-chart.mjs`
 - `src/compare.mjs`
 - `src/diagnostic-runner.mjs`
 - `src/galerina-runner.mjs`

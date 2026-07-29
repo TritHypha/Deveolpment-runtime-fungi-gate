@@ -10,9 +10,9 @@
  * The contract (R&D 0232, accepted):
  *   - VALID inputs  → value-parity: `.ts` value === `.fungi` value, neither faults.
  *   - ERROR edges   → fault-parity: BOTH fault. `.ts` faults by RETURNING a `runtimeError`-tagged value
- *                     (the async walker; NOT a throw) — measured, not assumed. `.fungi` faults by returning
- *                     an `Err`-tagged RtValue (Galerina has no exceptions, so a returned Err is the faithful
- *                     no-throw model of the `.ts` trap). A subset-twin must fault where its `.ts` faults.
+ *                     (the async walker; NOT a throw) — measured, not assumed. `.fungi` faults through a
+ *                     hard terminal trap for arithmetic invariants, or an `Err`-tagged value for an explicit
+ *                     subset refusal. A subset-twin must fault where its `.ts` faults.
  *
  * Both sides run the SAME source: `.ts` via the production interpreter (executeFlow over the user AST +
  * parser-extracted flows); `.fungi` via the self-hosted pipeline (tokenize → parseFlows → buildFlowTable →
@@ -82,7 +82,11 @@ async function fungiExec(src, flowName, argNums) {
   const args = [];
   for (const n of argNums) args.push(await rtInt(n));
   const run = await executeFlow("runProgram", new Map([["flows", table], ["entryName", vStr(flowName)], ["args", { __tag: "list", items: args }]]), rt.ast, rt.flows, undefined, undefined, { pureFastPath: false });
-  const rv = (run.value ?? run).fields.get("retVal");
+  const runValue = run.value ?? run;
+  if (TS_FAULT_TAGS.has(runValue?.__tag)) {
+    return { faulted: true, ty: runValue.__tag, tag: runValue.__tag, i: 0 };
+  }
+  const rv = runValue.fields.get("retVal");
   const f = (rv.value ?? rv).fields;
   const ty = f.get("ty").value, tag = f.get("tag").value, i = f.get("i").value;
   return { faulted: ty === "tag" && tag === "Err", ty, tag, i };
@@ -102,9 +106,10 @@ const VALID = [
 // gate today, which is the point (this gate is what forces the harden).
 const ERROR_EDGE = [
   { label: "div-by-zero 10/0", src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d", names: ["a", "b"], args: [10, 0] },
-  // missing ENTRY flow: call a flow the program doesn't define. .ts → runtimeError value, .fungi → Err
-  // (runProgram hardened, step 1b 4cba01d1). Measured both fault this session.
+  // Missing ENTRY flow remains a typed subset refusal; arithmetic invariants
+  // and a missing nested callee are hard terminal traps. All satisfy fault parity.
   { label: "missing entry flow (call undefined)", src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "nope", names: [], args: [] },
+  { label: "missing nested callee", src: `pure flow main() -> Int { return nope() }`, entry: "main", names: [], args: [] },
 ];
 
 describe("RD-0528 .fungi ≡ .ts edge-differential — VALID inputs: value-parity", () => {

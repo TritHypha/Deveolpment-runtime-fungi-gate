@@ -260,9 +260,12 @@ async function execValue(source, entryName, argNums) {
     rt.ast, rt.flows, undefined, undefined, { pureFastPath: false },
   );
   const rec = runRes.value ?? runRes;
+  if (rec.__tag === "runtimeError") {
+    return { faulted: true, ty: "runtimeError", i: 0, b: false, s: rec.message, tag: "" };
+  }
   const rv = rec.fields.get("retVal");
   const f = (rv.value ?? rv).fields;
-  return { ty: f.get("ty").value, i: f.get("i").value, b: f.get("b").value, s: f.get("s").value, tag: f.get("tag").value };
+  return { faulted: false, ty: f.get("ty").value, i: f.get("i").value, b: f.get("b").value, s: f.get("s").value, tag: f.get("tag").value };
 }
 
 // ── The corpus (measured 2026-07-22) ───────────────────────────────────────────
@@ -619,13 +622,16 @@ const RUNTIME_EXEC = [
 // plausible wrong value. R&D bridge 0222 MEASURED that the .ts interpreter faults here (div0 -> null,
 // missing-flow -> runtimeError) while the .fungi returned 0/sentinel — a parity regression where the
 // .fungi twin was LESS safe than its own .ts. Harden-first (R&D 0222 step 1):
-//   ✅ div0 + unknown-binop -> Err-tagged fault (applyBinop hardened, R&D 0222 step 1).
-//   ✅ missing ENTRY flow -> Err (runProgram hardened, R&D 0222 step 1b). NOTE: the cross-flow CALL
-//      path (a `call` to a nonexistent flow INSIDE a body, evalGIRExpr) is a separate remaining sub-case
-//      — no tranche-8 edge exercises it yet; tracked for a later increment.
+//   ✅ div0 -> hard terminal trap; unknown-binop -> Err-tagged subset refusal.
+//   ✅ missing ENTRY flow -> Err (runProgram hardened, R&D 0222 step 1b).
+//   ✅ missing nested callee -> hard terminal trap; no empty-flow/Int(0) sentinel execution.
+//   ✅ entry and nested call arity -> exact; missing/surplus arguments hard-trap.
 const RUNTIME_EXEC_EDGES = [
-  { label: "div-by-zero -> fail-closed Err (hardened, R&D 0222)",              src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "tag", value: "Err" },
+  { label: "div-by-zero -> hard terminal trap",                                src: `pure flow d(a: Int, b: Int) -> Int { return a / b }`, entry: "d",    args: [10, 0], field: "faulted", value: true },
   { label: "missing entry flow -> fail-closed Err (hardened, R&D 0222 step 1b)", src: `pure flow x() -> Int { return 1 }`,                   entry: "nope", args: [],      field: "tag", value: "Err" },
+  { label: "missing nested callee -> hard terminal trap",                       src: `pure flow x() -> Int { return nope() }`,              entry: "x",    args: [],      field: "faulted", value: true },
+  { label: "missing entry argument -> hard terminal trap",                      src: `pure flow x(a: Int) -> Int { return a }`,              entry: "x",    args: [],      field: "faulted", value: true },
+  { label: "surplus entry argument -> hard terminal trap",                      src: `pure flow x() -> Int { return 1 }`,                    entry: "x",    args: [7],     field: "faulted", value: true },
 ];
 
 describe("RD-0528 I-3 functional corpus (tranche 8: runtime exec-VALUE) — buildFlowTable -> runProgram (parse -> exec)", () => {
@@ -636,9 +642,9 @@ describe("RD-0528 I-3 functional corpus (tranche 8: runtime exec-VALUE) — buil
     });
   }
   for (const c of RUNTIME_EXEC_EDGES) {
-    it(`pins soft-edge (${JSON.stringify(c.value)}): ${c.label}`, async () => {
+    it(`pins fail-closed edge (${JSON.stringify(c.value)}): ${c.label}`, async () => {
       const v = await execValue(c.src, c.entry, c.args);
-      assert.equal(v[c.field], c.value, `soft-edge behavior changed (was ${JSON.stringify(c.value)}): ${JSON.stringify(v)}`);
+      assert.equal(v[c.field], c.value, `failure behavior changed (was ${JSON.stringify(c.value)}): ${JSON.stringify(v)}`);
     });
   }
 });

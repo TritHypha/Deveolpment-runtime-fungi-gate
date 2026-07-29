@@ -57,7 +57,8 @@ record LexError {
 // â”€â”€ Active keywords â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Must stay in sync with lexer.ts V1_ACTIVE_KEYWORDS
 // v2.2 additions: guard, access, gate, static, bitfield, governed, view,
-//                 trap, step, evict, assimilate, policy
+//                 trap, step, evict, assimilate, policy, check
+// `deny`/`ambig` remain contextual labels inside check arms, matching lexer.ts.
 
 pure flow makeKeywordTable() -> Array<String> {
   return [
@@ -69,7 +70,8 @@ pure flow makeKeywordTable() -> Array<String> {
     "contract", "emit", "emits", "event", "effects",
     "with", "intent", "governance", "compute", "target",
     "guard", "access", "gate", "static", "bitfield",
-    "governed", "view", "trap", "step", "evict", "assimilate", "policy"
+    "governed", "view", "trap", "step", "evict", "assimilate", "policy",
+    "check"
   ]
 }
 

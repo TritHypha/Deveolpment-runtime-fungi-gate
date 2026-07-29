@@ -399,6 +399,13 @@ flowchart LR
   T_audit_tier_boundary_mjs --> C_tier_floor
   T_audit_tier_boundary_mjs --> C_source_hygiene
   T_audit_tier_boundary_mjs --> C_graph_index
+  T_audit_twin_differential_mjs["audit-twin-differential.mjs"]
+  T_audit_twin_differential_mjs --> C_effects
+  T_audit_twin_differential_mjs --> C_gate_wiring
+  T_audit_twin_differential_mjs --> C_diagnostics
+  T_audit_twin_differential_mjs --> C_tier_floor
+  T_audit_twin_differential_mjs --> C_teaching_corpus
+  T_audit_twin_differential_mjs --> C_graph_index
   T_audit_twin_emit_parity_mjs["audit-twin-emit-parity.mjs"]
   T_audit_twin_emit_parity_mjs --> C_gate_wiring
   T_audit_twin_emit_parity_mjs --> C_diagnostics
@@ -463,7 +470,6 @@ flowchart LR
   T_graph_all_mjs --> C_graph_index
   T_memory_graph_mjs["memory-graph.mjs"]
   T_memory_graph_mjs --> C_diagnostics
-  T_memory_graph_mjs --> C_source_hygiene
   T_memory_graph_mjs --> C_graph_index
   T_ts_retirement_graph_mjs["ts-retirement-graph.mjs"]
   T_ts_retirement_graph_mjs --> C_signing_fusion

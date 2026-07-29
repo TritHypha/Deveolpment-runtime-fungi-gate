@@ -74,17 +74,17 @@ contract {
 // source → lex → parse → emit GIR → EXECUTE, all in Galerina.
 //
 // Supported GIR:
-//   GIRExpr op: "const" | "load" | "binop" | "unop" (call/unknown → 0)
-//   GIRStmt op: "store" | "ret" | "branch" | "loop" | "eval"
-// Values are Int/Bool. The environment is an append-only assoc list of
+//   GIRExpr op: "const" | "load" | "binop" | "unop" | "call"
+//   GIRStmt op: "store" | "ret" | "branch" | "loop" | "eval" | "check_k3"
+// Values include Int/Bool/Verdict. The environment is an append-only assoc list of
 // Bindings; envLookup returns the most-recent binding for a name (so a
 // later `store` shadows an earlier one). Cross-flow `call` evaluation is
-// resolved against a flow table threaded through the evaluator; an empty
-// table makes a `call` evaluate to 0 (preserving the no-table behavior).
+// resolved against a flow table threaded through the evaluator. A missing
+// callee or arity mismatch is a hard terminal fault, never a default value.
 // ════════════════════════════════════════════════════════════
 
 record RtValue {
-  ty: String                // "Int" | "Bool" | "String" | "tag" | "record" | "list"
+  ty: String                // "Int" | "Bool" | "Verdict" | "String" | "tag" | "record" | "list"
   i: Int
   b: Bool
   s: String                 // ty=="String": the string value
@@ -148,6 +148,12 @@ pure flow rtBool(x: Bool) -> RtValue
 contract { intent { "Build a Bool runtime value." } }
 {
   return { ty: "Bool", i: 0, b: x, s: "", tag: "", payload: Array.empty(), fields: Array.empty() }
+}
+
+pure flow rtVerdict(x: Int) -> RtValue
+contract { intent { "Build an exact K3 Verdict runtime value; callers still face use-site validation." } }
+{
+  return { ty: "Verdict", i: x, b: false, s: "", tag: "", payload: Array.empty(), fields: Array.empty() }
 }
 
 pure flow rtStr(x: String) -> RtValue
@@ -239,19 +245,81 @@ contract { intent { "Append a name→value binding to the environment." } }
 
 // Apply a binary opcode to two runtime values.
 pure flow applyBinop(op: String, a: RtValue, b: RtValue) -> RtValue
-contract { intent { "Evaluate a GIR binop opcode over two runtime values." } }
+contract { intent { "Evaluate a GIR binop with fail-closed Int32 arithmetic." } }
 {
+  let maxI32: Int = 2147483647
+  let minI32: Int = -2147483647 - 1
+
   if op == "add" {
-    if a.ty == "String" { return rtStr(a.s + b.s) }
+    if a.ty == "String" {
+      trap b.ty != "String" : ERR_GIR_TYPE
+      return rtStr(a.s + b.s)
+    }
+    trap a.ty != "Int" or b.ty != "Int" : ERR_GIR_TYPE
+    trap a.i < minI32 or a.i > maxI32 : ERR_I32_RANGE
+    trap b.i < minI32 or b.i > maxI32 : ERR_I32_RANGE
+    // Do not encode these as `sign-test and checked-bound-expression`: the
+    // Wasm target evaluates both operands of `and`, so an inactive bound can
+    // itself overflow before the sign test rejects that path.
+    if b.i > 0 {
+      trap a.i > maxI32 - b.i : ERR_I32_OVERFLOW
+    }
+    else {
+      if b.i < 0 {
+        trap a.i < minI32 - b.i : ERR_I32_OVERFLOW
+      }
+    }
     return rtInt(a.i + b.i)
   }
-  if op == "sub" { return rtInt(a.i - b.i) }
-  if op == "mul" { return rtInt(a.i * b.i) }
+  if op == "sub" {
+    trap a.ty != "Int" or b.ty != "Int" : ERR_GIR_TYPE
+    trap a.i < minI32 or a.i > maxI32 : ERR_I32_RANGE
+    trap b.i < minI32 or b.i > maxI32 : ERR_I32_RANGE
+    if b.i > 0 {
+      trap a.i < minI32 + b.i : ERR_I32_OVERFLOW
+    }
+    else {
+      if b.i < 0 {
+        trap a.i > maxI32 + b.i : ERR_I32_OVERFLOW
+      }
+    }
+    return rtInt(a.i - b.i)
+  }
+  if op == "mul" {
+    trap a.ty != "Int" or b.ty != "Int" : ERR_GIR_TYPE
+    trap a.i < minI32 or a.i > maxI32 : ERR_I32_RANGE
+    trap b.i < minI32 or b.i > maxI32 : ERR_I32_RANGE
+    if a.i == 0 or b.i == 0 { return rtInt(0) }
+    // Select the sign quadrant before evaluating its division bound. This
+    // prevents eager target evaluation from touching a hazardous inactive
+    // expression such as MIN_I32 / -1.
+    if a.i > 0 {
+      if b.i > 0 {
+        trap a.i > maxI32 / b.i : ERR_I32_OVERFLOW
+      }
+      else {
+        trap b.i < minI32 / a.i : ERR_I32_OVERFLOW
+      }
+    }
+    else {
+      if b.i > 0 {
+        trap a.i < minI32 / b.i : ERR_I32_OVERFLOW
+      }
+      else {
+        trap b.i < maxI32 / a.i : ERR_I32_OVERFLOW
+      }
+    }
+    let product: Int = a.i * b.i
+    return rtInt(product)
+  }
   if op == "div" {
-    // Fail-CLOSED on div-by-zero: return an Err-tagged fault, mirroring the .ts reference
-    // (interpreter.ts div0 -> null fault). Returning rtInt(0) here was a silent wrong value —
-    // a parity regression where the .fungi twin was LESS safe than its own .ts (R&D bridge 0222).
-    if b.i == 0 { return rtTag("Err", rtStr("division by zero")) }
+    // Division faults are hard terminal traps so a caller cannot handle an
+    // arithmetic invariant failure as ordinary Result data.
+    trap a.ty != "Int" or b.ty != "Int" : ERR_GIR_TYPE
+    trap a.i < minI32 or a.i > maxI32 : ERR_I32_RANGE
+    trap b.i < minI32 or b.i > maxI32 : ERR_I32_RANGE
+    trap b.i == 0 : ERR_DIV_BY_ZERO
+    trap a.i == minI32 and b.i == -1 : ERR_I32_OVERFLOW
     return rtInt(a.i / b.i)
   }
   // Equality is type-aware: Bool values carry their payload in `.b` (with `.i`
@@ -624,7 +692,13 @@ contract { intent { "Recursively evaluate a GIR expression node to an Int/Bool r
     }
 
     let entry: FlowEntry = lookupFlow(flows, expr.value)
+    // A missing nested callee used to execute the empty lookup sentinel and return
+    // the evaluator's default Int(0). That is a plausible-value fail-open.
+    trap entry.name == "" : ERR_MISSING_FLOW
     let params: Array<Auto> = entry.params
+    // Positional calls are exact: neither absent parameters nor ignored surplus
+    // arguments may be converted into an executable environment.
+    trap params.count() != argVals.count() : ERR_ARGUMENT_COUNT
     mut calleeEnv: Array<Binding> = Array.empty()
     mut pi: Int = 0
     while pi < params.count() and pi < argVals.count() {
@@ -726,6 +800,51 @@ contract { intent { "Evaluate a statement's single carried GIR expression, or In
   }
 }
 
+pure flow countK3Arm(arms: Array<GIRStmt>, label: String) -> Int
+contract { intent { "Count exact K3 successor labels so missing and duplicate arms refuse." } }
+{
+  mut count: Int = 0
+  mut i: Int = 0
+  while i < arms.count() {
+    let armOpt = arms.get(i)
+    match armOpt {
+      Some(arm) => {
+        if arm.name == label { count = count + 1 }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return count
+}
+
+pure flow findK3Arm(arms: Array<GIRStmt>, label: String) -> GIRStmt
+contract { intent { "Return the uniquely validated K3 successor for a label." } }
+{
+  mut found: GIRStmt = GIRStmt {
+    op: "k3_arm",
+    name: "missing",
+    name2: "",
+    expr: Array.empty(),
+    body: Array.empty(),
+    elseBody: Array.empty()
+  }
+  mut i: Int = 0
+  while i < arms.count() {
+    let armOpt = arms.get(i)
+    match armOpt {
+      Some(arm) => {
+        if arm.name == label { found = arm }
+      }
+      None => {}
+      _ => {}
+    }
+    i = i + 1
+  }
+  return found
+}
+
 // Execute a GIR statement list, threading the environment. Stops early on `ret`.
 pure flow execGIRBody(stmts: Array<GIRStmt>, env: Array<Binding>, flows: Array<FlowEntry>) -> ExecResult
 contract { intent { "Execute a GIR statement body; thread the env, short-circuit on return. Collects audit entries from effect calls." } }
@@ -756,12 +875,14 @@ contract { intent { "Execute a GIR statement body; thread the env, short-circuit
           // Intercept effect calls BEFORE general eval so we can record them.
           // Current intercepted effects: AuditLog.write, audit.write
           let evalExpr: Array<GIRExpr> = s.expr
+          mut handledEffect: Bool = false
           let exprOpt = evalExpr.get(0)
           match exprOpt {
             Some(ex) => {
               // Check if this is an AuditLog.write or audit.write call
               let isAuditWrite: Bool = ex.op == "call" and (ex.value == "write")
               if isAuditWrite {
+                handledEffect = true
                 // Evaluate the argument to get the message
                 mut msgVal: RtValue = rtStr("")
                 let msgKidsOpt = ex.kids.get(1)  // first kid is receiver, second is message arg
@@ -787,7 +908,9 @@ contract { intent { "Execute a GIR statement body; thread the env, short-circuit
             None => {}
             _ => {}
           }
-          let ignored: RtValue = evalFirst(s.expr, curEnv, flows)
+          if handledEffect == false {
+            let ignored: RtValue = evalFirst(s.expr, curEnv, flows)
+          }
         }
 
         if op == "branch" {
@@ -804,6 +927,44 @@ contract { intent { "Execute a GIR statement body; thread the env, short-circuit
           if sub.returned {
             returned = true
             retVal = sub.retVal
+          }
+        }
+
+        if op == "check_k3" {
+          let arms: Array<GIRStmt> = s.body
+          trap s.expr.count() != 1 : ERR_K3_GIR_SHAPE
+          trap arms.count() != 3 : ERR_K3_ARM_SET
+          trap countK3Arm(arms, "deny") != 1 : ERR_K3_ARM_SET
+          trap countK3Arm(arms, "ambig") != 1 : ERR_K3_ARM_SET
+          trap countK3Arm(arms, "if") != 1 : ERR_K3_ARM_SET
+
+          let verdict: RtValue = evalFirst(s.expr, curEnv, flows)
+          trap verdict.ty != "Verdict" : ERR_K3_SUBJECT_TYPE
+          let exactVerdict: Bool = verdict.i == -1 or verdict.i == 0 or verdict.i == 1
+          trap exactVerdict == false : ERR_K3_INVALID_VALUE
+
+          mut selectedLabel: String = "ambig"
+          let verdictIndex: Int = verdict.i + 1
+          match verdictIndex {
+            0 => { selectedLabel = "deny" }
+            1 => { selectedLabel = "ambig" }
+            2 => { selectedLabel = "if" }
+            _ => { trap true : ERR_K3_INVALID_VALUE }
+          }
+
+          let selected: GIRStmt = findK3Arm(arms, selectedLabel)
+          let k3Sub: ExecResult = execGIRBody(selected.body, curEnv, flows)
+          curEnv = k3Sub.env
+          auditEntries = mergeAuditLog(auditEntries, k3Sub.auditLog)
+          // A negative/unresolved authority arm must leave this flow. Merely
+          // running an arm and then continuing after the protected check would
+          // turn a syntactically exhaustive decision into fail-open control.
+          if selectedLabel != "if" {
+            trap k3Sub.returned == false : ERR_K3_NON_TERMINAL
+          }
+          if k3Sub.returned {
+            returned = true
+            retVal = k3Sub.retVal
           }
         }
 
@@ -945,6 +1106,10 @@ contract { intent { "Run a flow-table program from an entry flow with positional
     return { retVal: rtTag("Err", rtStr("no such flow")), auditLog: Array.empty() }
   }
   let params: Array<Auto> = entry.params
+  // Entry invocation follows the same exact-arity rule as nested calls. Without
+  // this guard, a missing binding could later resolve through the legacy Int(0)
+  // sentinel and surplus evidence would be silently discarded.
+  trap params.count() != args.count() : ERR_ARGUMENT_COUNT
   mut env: Array<Binding> = Array.empty()
   mut i: Int = 0
   while i < params.count() and i < args.count() {

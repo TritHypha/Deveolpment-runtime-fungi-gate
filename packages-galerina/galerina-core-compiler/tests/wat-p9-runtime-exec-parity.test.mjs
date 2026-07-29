@@ -49,6 +49,21 @@ contract { intent { "P9 R3 driver: build a flow table from source and run its ma
     Err(e) => { return -1 }
   }
 }
+
+pure flow runtimeAddProbe(a: Int, b: Int) -> Int {
+  let result: RtValue = applyBinop("add", rtInt(a), rtInt(b))
+  return result.i
+}
+
+pure flow runtimeSubProbe(a: Int, b: Int) -> Int {
+  let result: RtValue = applyBinop("sub", rtInt(a), rtInt(b))
+  return result.i
+}
+
+pure flow runtimeMulProbe(a: Int, b: Int) -> Int {
+  let result: RtValue = applyBinop("mul", rtInt(a), rtInt(b))
+  return result.i
+}
 `;
 const SRC = "@version 1\n" + strip("lexer.fungi") + "\n" + strip("parser.fungi") + "\n"
   + strip("gir-emitter.fungi") + "\n" + strip("runtime.fungi") + "\n" + DRIVER;
@@ -86,6 +101,15 @@ async function runWasm(input) {
   return Number(wasmCtx.instance.exports.runtimeProbe(srcH));
 }
 
+async function runWasmArithmetic(exportName, left, right) {
+  if (wasmCtx === null) {
+    await runWasm("@version 1\npure flow main() -> Int { return 0 }");
+  }
+  const target = wasmCtx.instance.exports[exportName];
+  assert.equal(typeof target, "function", `${exportName} admitted + exported`);
+  return Number(target(left, right));
+}
+
 const H = "pure flow main() -> Int\ncontract { intent { \"x\" } }\n";
 // {source, expected} — expected is what a CORRECT runtime yields; the WASM must equal the interpreter AND
 // this value. Every arithmetic case flexes the opcode string-match path (gir-emitter opcodeOf).
@@ -117,4 +141,23 @@ describe("P9 R3 · runtime stage: runProgram EXEC-value parity (Stage-A interpre
     assert.equal(i, 7, "interpreter computes 3+4=7");
     assert.equal(w, 7, "WASM computes 3+4=7 — pre-fix opcodeOf handle-match returned 'unknown' ⇒ applyBinop ⇒ 0");
   });
+
+  it("checked Int32 boundary guards remain executable after self-hosted Wasm lowering", async () => {
+    assert.equal(await runWasmArithmetic("runtimeAddProbe", 2147483647, 0), 2147483647);
+    assert.equal(await runWasmArithmetic("runtimeSubProbe", -2147483648, 0), -2147483648);
+    assert.equal(await runWasmArithmetic("runtimeMulProbe", -2147483648, 1), -2147483648);
+  });
+
+  for (const [name, target, left, right] of [
+    ["addition overflow", "runtimeAddProbe", 2147483647, 1],
+    ["subtraction underflow", "runtimeSubProbe", -2147483648, 1],
+    ["multiplication overflow", "runtimeMulProbe", -2147483648, -1],
+  ]) {
+    it(`${name} remains a terminal Wasm trap`, async () => {
+      await assert.rejects(
+        () => runWasmArithmetic(target, left, right),
+        /unreachable|overflow/i,
+      );
+    });
+  }
 });

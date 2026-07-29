@@ -1217,6 +1217,81 @@ contract { intent { "Parse match arms { pat => { body } ... } from the opening b
   return { arms: arms, nextPos: endPos }
 }
 
+record CheckArmsResult { arms: Array<Stmt>  nextPos: Int }
+
+// Parse contextual K3 arms from `check(subject) { deny: {...} ambig: {...} if: {...} }`.
+// Labels are retained exactly and in source order. Completeness, uniqueness, and
+// validity are enforced by the GIR runtime and the CTLL adapter, never inferred
+// by this syntax-only stage.
+pure flow parseCheckArms(tokens: Array<Token>, openBracePos: Int) -> CheckArmsResult
+contract { intent { "Parse all contextual check arms without collapsing K3 into Bool." } }
+{
+  let total: Int = tokens.count()
+  mut arms: Array<Stmt> = Array.empty()
+  mut endPos: Int = openBracePos
+
+  if eTokVal(tokens, openBracePos) == "{" {
+    mut p: Int = openBracePos + 1
+    mut scanning: Bool = true
+
+    while scanning and p < total {
+      p = skipNewlines(tokens, p)
+      match eTokVal(tokens, p) {
+        "}" => {
+          p = p + 1
+          scanning = false
+        }
+        "" => {
+          scanning = false
+        }
+        _ => {
+          let label: String = eTokVal(tokens, p)
+          p = skipNewlines(tokens, p + 1)
+
+          // Preserve malformed punctuation as an invalid label so a later
+          // stage must refuse; do not repair a missing colon.
+          mut retainedLabel: String = label
+          match eTokVal(tokens, p) {
+            ":" => { p = skipNewlines(tokens, p + 1) }
+            _ => { retainedLabel = "invalid:" + label }
+          }
+
+          match eTokVal(tokens, p) {
+            "{" => {
+              let armBlock: BlockParse = parseBlock(tokens, p + 1)
+              let armStmt: Stmt = {
+                kind: "checkArm",
+                name: retainedLabel,
+                typeName: "",
+                expr: Array.empty(),
+                body: armBlock.stmts,
+                elseBody: Array.empty()
+              }
+              arms = arms.append(armStmt)
+              p = armBlock.nextPos
+            }
+            _ => {
+              let invalidArm: Stmt = {
+                kind: "checkArm",
+                name: "invalid:" + label,
+                typeName: "",
+                expr: Array.empty(),
+                body: Array.empty(),
+                elseBody: Array.empty()
+              }
+              arms = arms.append(invalidArm)
+              p = p + 1
+            }
+          }
+        }
+      }
+    }
+    endPos = p
+  }
+
+  return { arms: arms, nextPos: endPos }
+}
+
 // Parse a single statement beginning at `pos`. EVERY expression position is
 // routed through the real parseExpr and the cursor is advanced to its nextPos.
 pure flow parseStmt(tokens: Array<Token>, pos: Int) -> StmtParse
@@ -1406,6 +1481,23 @@ contract { intent { "Parse one statement; dispatch on the leading token kind/val
     let armsResult: MatchArmsResult = parseMatchArms(tokens, matchBlockStart)
     let matchStmt: Stmt = { kind: "match", name: "", typeName: "", expr: [subjParse.expr], body: armsResult.arms, elseBody: Array.empty() }
     return { stmt: matchStmt, nextPos: armsResult.nextPos }
+  }
+
+  // K3 decision: the subject remains a Verdict expression and all three
+  // contextual successors stay structurally distinct.
+  if isKw(tokens, pos, "check") {
+    let subject: ExprParse = parseExpr(tokens, pos + 1)
+    let checkBlockStart: Int = skipNewlines(tokens, subject.nextPos)
+    let checkArms: CheckArmsResult = parseCheckArms(tokens, checkBlockStart)
+    let checkStmt: Stmt = {
+      kind: "check",
+      name: "",
+      typeName: "",
+      expr: [subject.expr],
+      body: checkArms.arms,
+      elseBody: Array.empty()
+    }
+    return { stmt: checkStmt, nextPos: checkArms.nextPos }
   }
 
   let assignTarget: Bool = isIdent(tokens, pos) and isOpSym(tokens, pos + 1, "=")
@@ -2019,19 +2111,10 @@ contract {
         mut returnType: String = ""
         if tokVal(tokens, p) == "->" {
           p = p + 1
-          returnType = tokVal(tokens, p)
-          p = p + 1
-          // Skip generic type parameter < T, U > if present.
-          if eTokVal(tokens, p) == "<" {
-            p = p + 1
-            mut genDepth: Int = 1
-            while genDepth > 0 and p < total {
-              let gv: String = eTokVal(tokens, p)
-              if gv == "<" { genDepth = genDepth + 1 }
-              if gv == ">" { genDepth = genDepth - 1 }
-              p = p + 1
-            }
-          }
+          // Preserve the complete generic return type. The old base-only value
+          // made Result<Int,String> indistinguishable from every other Result.
+          returnType = readTypeName(tokens, p)
+          p = typeEndPos(tokens, p)
         }
 
         // Effects and domain guard: extract from contract block.

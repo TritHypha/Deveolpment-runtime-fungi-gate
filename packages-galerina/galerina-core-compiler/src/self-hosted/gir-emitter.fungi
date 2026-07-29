@@ -191,7 +191,8 @@ contract {
 //   (lowerStmt) were developed as two halves and merged here.
 //
 // GIRExpr op : "const" | "load" | "binop" | "call" (| "unknown")
-// GIRStmt op : "store" | "ret" | "branch" | "loop" | "eval" (| "unknown")
+// GIRStmt op : "store" | "ret" | "branch" | "loop" | "eval" |
+//              "check_k3" | "k3_arm" (| "unknown")
 // ════════════════════════════════════════════════════════════
 
 record GIRExpr {
@@ -353,8 +354,8 @@ contract { intent { "Recursively lower a parser Expr AST node into a GIRExpr." }
 
 // ── GIR statement node ────────────────────────────────────────
 record GIRStmt {
-  op: String               // "store" | "ret" | "branch" | "loop" | "eval" | "matche" | "arm"
-  name: String             // store: target binding; arm: pattern name ("Some"/"Ok"/int/string/"_")
+  op: String               // includes "check_k3"; its body contains "k3_arm" successors
+  name: String             // store target, match pattern, or K3 arm label
   name2: String            // arm: optional payload-binding name for constructor patterns (e.g. "x" in Some(x))
   expr: Array<GIRExpr>     // 0/1 element: lowered init/return/cond/eval/matche-subject value
   body: Array<GIRStmt>     // branch/loop/arm: lowered nested block (then-block or arm body); matche: arms
@@ -486,6 +487,48 @@ contract { intent { "Lower a single body statement into a GIRStmt." } }
       mai = mai + 1
     }
     return { op: "matche", name: "", name2: "", expr: subjectExprs, body: loweredArms, elseBody: Array.empty() }
+  }
+
+  if kind == "check" {
+    mut subjectExprs: Array<Auto> = Array.empty()
+    let subjectOpt = firstExprOf(stmt)
+    match subjectOpt {
+      Some(subject) => { subjectExprs = subjectExprs.append(lowerExpr(subject)) }
+      None => {}
+      _ => {}
+    }
+
+    let sourceArms: Array<Stmt> = stmt.body
+    mut loweredArms: Array<GIRStmt> = Array.empty()
+    mut ci: Int = 0
+    while ci < sourceArms.count() {
+      let armOpt = sourceArms.get(ci)
+      match armOpt {
+        Some(arm) => {
+          let armNode: GIRStmt = {
+            op: "k3_arm",
+            name: arm.name,
+            name2: "",
+            expr: Array.empty(),
+            body: lowerBody(arm.body),
+            elseBody: Array.empty()
+          }
+          loweredArms = loweredArms.append(armNode)
+        }
+        None => {}
+        _ => {}
+      }
+      ci = ci + 1
+    }
+
+    return {
+      op: "check_k3",
+      name: "",
+      name2: "",
+      expr: subjectExprs,
+      body: loweredArms,
+      elseBody: Array.empty()
+    }
   }
 
   return { op: "unknown", name: "", name2: "", expr: Array.empty(), body: Array.empty(), elseBody: Array.empty() }

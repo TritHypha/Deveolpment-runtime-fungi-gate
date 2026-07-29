@@ -5,6 +5,12 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
 ## [Unreleased]
 
 ### Security
+- **Hardened the self-hosted GIR boundary used by the CTLL R1 prerequisite.**
+  Missing nested flows can no longer execute an empty sentinel and return
+  `Int(0)`; missing or surplus call arguments now terminate. Self-hosted
+  arithmetic is checked as Int32 with terminal range, overflow, and
+  division-by-zero traps, including guard shapes that remain safe under eager
+  Wasm Boolean evaluation.
 - **Closed malformed-K3 and checked-trap wrapping gaps found by the CTLL G1
   vertical-slice probe.** Every declared Verdict input is now checked at the
   tree-walker and Wasm ABI boundary, with exact `check`/`prefilter` validation
@@ -49,10 +55,17 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
   `21415420b447e219`, since the interim `ab46f4c7` root was lost; see RD-0368).
 
 ### Added
+- **Self-hosted K3 handoff for the bounded CTLL fixture shape.** The `.fungi`
+  lexer, parser, GIR emitter, and runtime now preserve `check` as one explicit
+  `check_k3` node with exactly three labelled successors and exact
+  DENY/INDETERMINATE/ALLOW dispatch. Generic return types are retained in full.
+  This is an in-memory prerequisite, not canonical R1 serialization or SLIDE
+  execution. Full compiler suite: 5,257/5,257.
 - **CTLL v2 G1 compiler capability probe.** Added a checked `.fungi` fixture,
   standing walker/Wasm differential, exact post-GIR AST dependency inventory,
   and current-vs-proposed capability matrix. This is evidence for current
-  Galerina semantics, not a claim that executable GIR or `.ctll` exists.
+  Galerina semantics, not a claim that canonical CTLL payload export or a
+  `.slide` bundle exists.
 - **`scripts/brand-audit.mjs`** — a binary-safe residual-brand + `@`-scope auditor. It reads every file
   as raw bytes (so NUL-containing files that `grep`/`ripgrep` skip as "binary" are still scanned) and
   substring-matches every form (`@spore`, `/spore`, `sporeX`, case variants), enumerating every

@@ -21,10 +21,14 @@ walker/Wasm differential now pass, and three current-tier fail-open
 representations found during the probe and full-suite verification were
 closed, including previously ignored named traps. A `.fungi` R1 preflight
 kernel now rejects fifteen unsupported fixture-shape facts in a fixed order.
-It consumes supplied facts and therefore is not an authoritative adapter,
-exporter, verifier, or admission decision. Detached executable GIR, CTLL code
-generation, `.ctll` packaging, native execution, the CTLL verifier, Tri-Fuse
-v2, the frontend adapter, driver CLI, and CTLL benchmarks do not yet exist.
+The self-hosted `.fungi` stages now preserve the bounded fixture's `check` as
+an explicit three-successor `check_k3` node and execute exact K3 plus checked
+Int32 semantics. That internal record graph is not canonical or serialized
+R1. The preflight consumes supplied facts and therefore is not an
+authoritative adapter, exporter, verifier, or admission decision. Detached
+canonical executable GIR, SLIDE packaging, native execution, the independent
+verifier, Tri-Fuse v2, the frontend adapter, driver CLI, and benchmarks do not
+yet exist.
 Galerina's current implemented execution paths remain the interpreter,
 bytecode/runtime tiers, and WebAssembly toolchain. CTLL must not be presented
 as shipped, benchmarked, memory-safe, deterministic, or production-ready.
@@ -48,29 +52,29 @@ Planning completion and implementation completion are deliberately separate.
 
 | Area | State | What exists now | What remains |
 |---|---|---|---|
-| Product boundary | `SPECIFIED` | CTLL is independent; Galerina is the first adapter, not a runtime dependency | Prove with a second non-Galerina frontend |
-| CTLL name and extension | `SPECIFIED` | `.ctll` means **Compiled Tri Low Level**; collision screen documented | Public registration/legal review only after release maturity |
-| K3 semantics | `IMPLEMENTED-PARTIAL` | Kleene K3 authority contract documented; current checker, walker, and WAT paths pass three-state and invalid-fourth-state probes | Publish one independent registry and CTLL executable conformance vectors |
+| Product boundary | `SPECIFIED` | triLowLevel is the independent K3/core; SLIDE is the public engine/bundle; CTLL is its internal payload/profile; Galerina is the first adapter | Prove with a tiny audited second frontend |
+| Public name and extension | `SPECIFIED` | SLIDE / `.slide` means **Substrate Layout Interconnect Deterministic Engine**; `.dml` rejected due active collisions | Legal/name review before public release; no v1 media-type registration |
+| K3 semantics | `IMPLEMENTED-PARTIAL` | Kleene K3 authority contract documented; current checker, walker, WAT paths, and bounded self-hosted internal GIR path preserve three states; invalid fourth states refuse | Publish one independent registry and executable conformance vectors |
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `SPECIFIED` | Deterministic-CBOR R1 schema, CFG, checked Int32, K3 terminator, failures, validation order, mutations | Implement canonical exporter, bounded importer, validator, and reference interpreter |
 | AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
-| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory and a fail-closed `.fungi` shape-preflight kernel exist | Derive facts inside a dedicated R1 adapter, export the complete body or refuse, then add serialized mutation fixtures |
-| First fixture | `IMPLEMENTED-PARTIAL` | Recommended `ctll_k3_checked_add_v1` design, ten vectors, checked `.fungi` capability probe, and fifteen ordered preflight refusals exist | Owner-confirm stable public fixture identity; export canonical R1 and add negative artifacts |
+| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory, fail-closed shape preflight, and bounded self-hosted `check_k3` handoff exist | Derive facts inside a dedicated R1 adapter, export the complete canonical body or refuse, then add serialized mutation fixtures |
+| First fixture | `IMPLEMENTED-PARTIAL` | Owner-confirmed `ctll_k3_checked_add_v1` design, ten vectors, checked `.fungi` capability probe, and fifteen ordered preflight refusals exist | Export canonical R1 and add negative artifacts |
 | Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
 | LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
-| `.ctll` container/tooling | `NOT-STARTED` | Container and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
+| `.slide` container/tooling | `NOT-STARTED` | SLIDE container, internal CTLL payload/profile, and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
 | Tower Citizen adapter | `SPECIFIED` | Exact capability-receipt boundary documented | Implement adapter; no Boolean or origin-based authority |
 | Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
-| WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Keep supported; never use as a silent fallback from failed CTLL admission |
+| WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Retain as optional compatibility/differential evidence after SLIDE; never silently fall back from failed admission |
 | Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
-| Linux driver CLI | `NOT-STARTED` | Unprivileged planner/privileged helper architecture documented | Owner-select distro/package manager and disposable-VM policy |
-| CTLL native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select Linux isolation profile and implement only after admission is sound |
-| Non-Galerina frontend | `NOT-STARTED` | Public profile requirements documented | Select and implement the second minimal producer |
-| CTLL benchmarks | `NOT-STARTED` | Methodology and comparison targets documented | Benchmark only after equivalent native CTLL execution exists |
+| Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
+| SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
+| Non-Galerina frontend | `NOT-STARTED` | Owner delegated a tiny audited reference frontend | Specify and implement the minimal producer |
+| SLIDE/CTLL benchmarks | `NOT-STARTED` | Security/TCB gates and weighted scorecard documented | Benchmark only after equivalent native execution exists |
 
 ## 4. Evidence behind the status
 
@@ -98,8 +102,8 @@ an LLVM emitter around them.
 ### 4.2 No CTLL implementation is being claimed
 
 A source search outside documentation and generated build output found no
-implemented `.ctll` container, `ctll.semantic.*` profile, CTLL frontend receipt,
-or CTLL loader/runner surface. The sibling `triLowLevel-v2` directory is a
+implemented `.slide` container, `ctll.semantic.*` profile, CTLL frontend receipt,
+or SLIDE loader/runner surface. The sibling `triLowLevel-v2` directory is a
 planning set and is not currently its own Git repository.
 
 ### 4.3 Control-flow hardening completed so far
@@ -143,11 +147,24 @@ Verified:
 - the `.fungi` preflight kernel accepts only the exact frozen fixture facts and
   returns a stable refusal identity for each of fifteen unsupported shapes,
   including missing critical body evidence.
+- the self-hosted lexer/parser/GIR/runtime preserves the fixture's K3 decision
+  as one `check_k3` with exactly three labelled successors;
+- the self-hosted runtime terminally refuses malformed K3, forged Verdict,
+  missing nested flow, arity mismatch, Int32 range/overflow, and division by
+  zero instead of manufacturing plausible values;
+- the self-hosted Wasm differential executes valid checked arithmetic
+  boundaries and traps overflow.
 
 This is implementation evidence for existing Galerina semantics, not evidence
 that CTLL R1 exists. The preflight's supplied facts are not attestations:
 the future compiler adapter must derive them from authoritative checked output
 and bind the decision to the exact materialized semantic bytes.
+
+The self-hosted handoff evidence is
+`../reports/ctll-r1-selfhost-k3-2026-07-29.md`. Its executable `FlowEntry`
+records are an internal in-memory GIR, not the proposed canonical CFG/SSA
+schema, deterministic CBOR, independent import format, or fresh-process
+reference artifact.
 
 ## 5. Architecture that implementation must preserve
 
@@ -160,7 +177,7 @@ and bind the decision to the exact materialized semantic bytes.
   -> Tri-Fuse proof/residual-gate plan
   -> deterministic AOT action graph and untrusted CAS
   -> verified target object
-  -> signed .ctll bundle
+  -> signed .slide bundle carrying the CTLL payload
   -> Tower capability receipt + Tri-Pipe route proposal
   -> independent K3 admission
   -> isolated runner with typed capability RPC and receipts
@@ -199,17 +216,12 @@ TLL must build and validate its own fixtures without importing Galerina.
 
 ### Phase G0 — owner and bootstrap decisions
 
-Required before implementation scaffolding chooses a platform:
-
-- first Linux distribution/architecture;
-- permitted minimal non-`.fungi` shims;
-- confirmation of `ctll_k3_checked_add_v1`;
-- confirmation of `ctll.memory.safe-value.v1`;
-- embedded versus digest-bound detached semantic archive;
-- separate repository timing;
-- signing-role/test-key custody;
-- whether the source-level control-flow lint may use the existing host compiler
-  as a recorded bootstrap exception.
+**Resolved 2026-07-29.** Debian/Ubuntu x86-64 is first; Windows 10/macOS may
+host audited Node/native development shims; the fixture and memory profile are
+confirmed; the first `.slide` profile embeds canonical GIR; Apache-2.0 and
+separate signing roles are selected. The owner is arranging the independent
+repository. Project semantics and policy remain `.fungi`, with explicit
+retirement gates for policy-free shims.
 
 The complete question set is
 `../../../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
@@ -238,12 +250,16 @@ Progress on 2026-07-29:
 - the no-AST identity fallback is exposed as a non-CTLL negative fact;
 - a `.fungi` policy kernel now preflights the exact first-slice shape with
   ordered `CTLL-R1-EXPORT-001..015` refusals and no Boolean/default fallback.
+- the self-hosted `.fungi` lexer, parser, GIR emitter, and runtime now carry
+  the bounded `check` as explicit three-way K3 control and checked Int32
+  execution, while missing flows and arity mismatches terminate.
 
 Remaining: make a dedicated compiler-owned R1 adapter derive those preflight
-facts, emit the complete body or explicitly refuse before all legacy paths,
-then create serialized negative/mutation artifacts and registered R1 failure
-records. The current refusal names are stable within the preflight contract but
-are not frozen numeric registry entries. G1 is therefore
+facts from checked structures, translate the internal body into the canonical
+R1 schema or explicitly refuse before all legacy paths, then create serialized
+negative/mutation artifacts and registered R1 failure records. The current
+refusal names are stable within the preflight contract but are not frozen
+numeric registry entries. G1 is therefore
 `IMPLEMENTED-PARTIAL`, not complete.
 
 ### Phase G2 — canonical executable GIR R1
@@ -290,7 +306,7 @@ K3 outcomes, and receipts.
 
 ### Phase G5 — deterministic native object
 
-After owner approval of toolchain and shims:
+Under the approved minimal-shim policy:
 
 1. build the complete-key action DAG and local untrusted CAS;
 2. lower the validated R1 plan through a pinned LLVM/LLD toolchain;
@@ -304,7 +320,7 @@ results for every vector.
 
 ### Phase G6 — container, admission, and isolated execution
 
-1. implement canonical `.ctll` packing and two decode/validation paths;
+1. implement canonical `.slide` packing and two decode/validation paths;
 2. bind semantic archive, plans, payload, target, memory, provenance, trust
    roles, and lifecycle;
 3. implement inspect/verify/explain before run;

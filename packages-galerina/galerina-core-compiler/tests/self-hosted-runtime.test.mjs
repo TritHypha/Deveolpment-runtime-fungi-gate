@@ -218,10 +218,23 @@ describe("runtime.fungi — GIR evaluator (S7)", () => {
     assert.equal((await ne(false, false)).b, false);
   });
 
-  it("integer div / ne / ge (div-by-zero yields 0 by design)", async () => {
+  it("integer div / ne / ge; div-by-zero is a hard terminal trap", async () => {
     const bin = (op, ty, x, y) => runGIR([gStmt({ op: "ret", expr: [gExpr("binop", ty, op, [constI(x), constI(y)])] })]);
     assert.equal((await bin("div", "Int", 20, 4)).i, 5);
-    assert.equal((await bin("div", "Int", 5, 0)).i, 0);
+    const divZero = await executeFlow(
+      "runGIRBody",
+      new Map([
+        ["stmts", vList([gStmt({ op: "ret", expr: [gExpr("binop", "Int", "div", [constI(5), constI(0)])] })])],
+        ["env", vList([])],
+      ]),
+      program.ast,
+      program.flows,
+      undefined,
+      undefined,
+      { pureFastPath: false },
+    );
+    assert.equal(divZero.value.__tag, "runtimeError");
+    assert.match(divZero.value.message, /ERR_DIV_BY_ZERO/);
     assert.equal((await bin("ne", "Bool", 3, 4)).b, true);
     assert.equal((await bin("ge", "Bool", 5, 5)).b, true);
     assert.equal((await bin("gt", "Bool", 4, 9)).b, false);
@@ -240,6 +253,9 @@ async function runProgram(table, entryName, args) {
     program.ast, program.flows, undefined, undefined, { pureFastPath: false }, undefined, undefined,
   );
   const runResult = r.value ?? r;
+  if (runResult.__tag === "runtimeError") {
+    return { ty: "runtimeError", message: runResult.message };
+  }
   // runProgram returns RunResult { retVal, auditLog } — extract retVal
   const v = runResult.fields?.get("retVal") ?? runResult;
   return { ty: v.fields.get("ty").value, i: v.fields.get("i").value, b: v.fields.get("b").value };
@@ -276,10 +292,24 @@ describe("runtime.fungi — runProgram (cross-flow call)", () => {
     assert.equal((await runProgram([fib], "fib", [rtIntArg(10)])).i, 55);
   });
 
-  it("missing callee resolves to Int 0 (empty sentinel entry)", async () => {
+  it("missing nested callee hard-traps instead of executing the empty sentinel", async () => {
     const main = flowEntry("main", [], [
       gStmt({ op: "ret", expr: [gExpr("call", "Int", "nope", [])] }),
     ]);
-    assert.equal((await runProgram([main], "main", [])).i, 0);
+    const result = await runProgram([main], "main", []);
+    assert.equal(result.ty, "runtimeError");
+    assert.match(result.message, /ERR_MISSING_FLOW/);
+  });
+
+  it("entry invocation hard-traps missing and surplus arguments", async () => {
+    const identity = flowEntry("identity", ["x"], [
+      gStmt({ op: "ret", expr: [gExpr("load", "", "x")] }),
+    ]);
+    const missing = await runProgram([identity], "identity", []);
+    const surplus = await runProgram([identity], "identity", [rtIntArg(1), rtIntArg(2)]);
+    assert.equal(missing.ty, "runtimeError");
+    assert.match(missing.message, /ERR_ARGUMENT_COUNT/);
+    assert.equal(surplus.ty, "runtimeError");
+    assert.match(surplus.message, /ERR_ARGUMENT_COUNT/);
   });
 });

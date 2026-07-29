@@ -4,8 +4,8 @@
     "packages": 97,
     "testBearing": 96,
     "tests": 7876,
-    "devTools": 123,
-    "auditTools": 75,
+    "devTools": 124,
+    "auditTools": 76,
     "toolsInCadence": 57,
     "proofs": 40
   },
@@ -203,11 +203,11 @@
     {
       "name": "galerina-tools-myco",
       "kind": "tools",
-      "description": "grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Galerina's owned d",
+      "description": "grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-",
       "tests": 29,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 12,
+      "files": 14,
       "deps": []
     },
     {
@@ -300,7 +300,7 @@
       "tests": 5113,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 100,
+      "files": 101,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
@@ -580,7 +580,7 @@
       "tests": null,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 20,
+      "files": 21,
       "deps": []
     },
     {
@@ -1967,6 +1967,21 @@
       ]
     },
     {
+      "name": "audit-twin-differential.mjs",
+      "category": "audit",
+      "purpose": "run BOTH engines over ONE corpus and compare what they EMIT.",
+      "selfTest": true,
+      "inCadence": false,
+      "concerns": [
+        "effects",
+        "gate-wiring",
+        "diagnostics",
+        "tier-floor",
+        "teaching-corpus",
+        "graph/index"
+      ]
+    },
+    {
       "name": "audit-twin-emit-parity.mjs",
       "category": "audit",
       "purpose": "twin-emitted ⊆ type-checker-emitted (fail-closed)",
@@ -2136,11 +2151,10 @@
       "name": "memory-graph.mjs",
       "category": "graph",
       "purpose": "index the auto-memory (MEMORY.md + topic files) as a tag/link GRAPH.",
-      "selfTest": false,
+      "selfTest": true,
       "inCadence": false,
       "concerns": [
         "diagnostics",
-        "source-hygiene",
         "graph/index"
       ]
     },
@@ -2768,6 +2782,7 @@
       "audit-sink-canonicality.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
@@ -2852,6 +2867,7 @@
       "audit-stray-docs.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-twin-differential.mjs",
       "audit-wasm-validate.mjs",
       "fix-logicn-brand.mjs",
       "graph-all.mjs",
@@ -2922,6 +2938,7 @@
       "audit-sink-canonicality.mjs",
       "audit-syntax-reference-links.mjs",
       "audit-syntax.mjs",
+      "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
       "audit-u2-version-floor.mjs",
       "gen-unit-registry.mjs",
@@ -3117,7 +3134,6 @@
       "audit-tier-boundary.mjs",
       "fix-logicn-brand.mjs",
       "graph-all.mjs",
-      "memory-graph.mjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
@@ -3170,6 +3186,7 @@
       "audit-oblivious.mjs",
       "audit-perf-hotpath.mjs",
       "audit-tier-boundary.mjs",
+      "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
       "license-rollout.mjs"
     ],
@@ -3189,6 +3206,7 @@
       "audit-selfhost-readiness.mjs",
       "audit-silent-overwrite.mjs",
       "audit-sink-canonicality.mjs",
+      "audit-twin-differential.mjs",
       "galerina-new.mjs",
       "gen-contract-registry.mjs",
       "kb-index.mjs",
@@ -3217,6 +3235,7 @@
       "audit-percent-evidence.mjs",
       "audit-selfhosted-dead-flows.mjs",
       "audit-stage-execution.mjs",
+      "audit-twin-differential.mjs",
       "audit-wasm-validate.mjs",
       "audit-wasmtime-presence.mjs",
       "audit-wat-emitter-mutation.mjs",
@@ -3317,6 +3336,7 @@
       "audit-syntax-reference-links.mjs",
       "audit-syntax.mjs",
       "audit-tier-boundary.mjs",
+      "audit-twin-differential.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wat-emitter-mutation.mjs",
       "audit-web-stub-guard.mjs",

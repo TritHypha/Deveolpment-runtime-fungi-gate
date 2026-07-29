@@ -45,7 +45,8 @@ without importing Galerina or translating through Galerina GIR.
    `REJECT (-1)`, `UNKNOWN (0)`, and `ALLOW (+1)` on ordinary binary silicon.
    Every authority-bearing collapse is explicit and `UNKNOWN` cannot become
    `ALLOW` by omission, cache state, prediction, timeout, or fallback.
-2. **Memory safety is a verified execution profile.** A `.ctll` container, a
+2. **Memory safety is a verified execution profile.** A `.slide` container,
+   CTLL payload,
    memory-safe source-language label, or a successful compile is not proof of
    native memory safety. Admission verifies the selected CTLL memory profile,
    its proof/guard receipts, and the final-artifact binding.
@@ -88,6 +89,13 @@ existing WAT wrapper receives the original AST separately from `GIRProgram`
 and still needs it for complete body lowering. Without that AST, its legacy
 summary path can emit an identity body; CTLL must refuse that condition rather
 than inherit the fallback.
+
+The bounded self-hosted prerequisite is recorded in
+`../reports/ctll-r1-selfhost-k3-2026-07-29.md`. Galerina's `.fungi`
+lexer/parser/internal-GIR/runtime chain now preserves one explicit
+three-successor K3 check and checked Int32 execution. This narrows the adapter
+gap, but the internal records are not the canonical R1 CFG/SSA schema and have
+no deterministic serialization or independent validator.
 
 ### Memory contract
 
@@ -150,8 +158,9 @@ New Galerina-side implementation for this work is written in `.fungi`.
 `.gate` work is excluded from this architecture phase. If the current bootstrap
 toolchain cannot execute a required `.fungi` stage, the host shim must be
 minimal, separately identified, capability-bounded, reproducibly built, and
-scheduled for replacement. The owner must approve the bootstrap boundary before
-implementation.
+scheduled for replacement. The owner approved this policy on 2026-07-29:
+Debian/Ubuntu x86-64 is first production; Windows 10/macOS development may use
+audited Node/native host shims that contain no project policy.
 
 ## Replacement rule
 

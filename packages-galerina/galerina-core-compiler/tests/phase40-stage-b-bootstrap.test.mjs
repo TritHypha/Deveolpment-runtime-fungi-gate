@@ -149,10 +149,10 @@ describe("Phase 40: lexer.fungi executes (Stage B tokenizer)", () => {
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
 
-  it("makeKeywordTable() returns 52 keywords (v2.2)", async () => {
+  it("makeKeywordTable() returns 53 keywords (v2.2 + check)", async () => {
     const r = await executeFlow("makeKeywordTable", new Map(), prog.ast, prog.flows);
     assert.equal(r.value.__tag, "list");
-    assert.equal(r.value.items?.length, 52, `expected 52 keywords (v2.2), got ${r.value.items?.length}`);
+    assert.equal(r.value.items?.length, 53, `expected 53 keywords (v2.2 + check), got ${r.value.items?.length}`);
   });
 
   it("makeKeywordTable() includes 'flow'", async () => {
@@ -161,6 +161,7 @@ describe("Phase 40: lexer.fungi executes (Stage B tokenizer)", () => {
     assert.ok(words.includes("flow"), "keyword 'flow' must be in table");
     assert.ok(words.includes("contract"), "keyword 'contract' must be in table");
     assert.ok(words.includes("effects"), "keyword 'effects' must be in table");
+    assert.ok(words.includes("check"), "keyword 'check' must be in table");
   });
 
   it("scanWord extracts identifier from source string", async () => {
