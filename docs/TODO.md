@@ -261,7 +261,15 @@ planning checkbox must never be used to imply that implementation exists.
   isolated fixture proves a markerless twin cannot partially update the
   TypeScript output. Its built-in evidence is 10/10, the focused fixture is
   1/1, the combined affected suite is 31/31, and the live audit passes 8/8.
-- **Task 7 remains incomplete:** four named root generators plus explicit
+- **Task 7 ninth live generator:** `gen-roadmap-subway.mjs` now honors one
+  selected root, derives both complete marker-owned documents before
+  mutation, refuses missing/duplicated/misordered markers, preserves each
+  target's newline convention, and treats the SVG plus provenance as
+  first-class checked outputs. Dirty-tree state is no longer embedded in the
+  generated block merely because generation ran. Its built-in evidence is
+  23/23 including 11 driven controls, the isolated fixture is 1/1, the
+  combined affected suite is 32/32, and the live audit passes 9/9.
+- **Task 7 remains incomplete:** three named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or
