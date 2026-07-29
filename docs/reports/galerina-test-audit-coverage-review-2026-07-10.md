@@ -7,7 +7,14 @@
 > run passes 96/96 with 8,524 counted tests. The root runner no longer bypasses
 > declared package chains when `dist/` exists and refuses empty, uncountable,
 > incomplete, or failed runs. All 79 discovered audit/lint gates now have
-> executable anti-neutering evidence. The full product suite is still not
+> executable anti-neutering evidence. Task 10 evidence includes all 16
+> requested package suites, 96/96 packages with 8,524 tests, Galerina SLIDE
+> 477/477, and the separately executed independent SLIDE suite 30/30.
+> Generated freshness is now decided by exact non-mutating generator checks,
+> not unreliable filesystem mtimes; its RED/GREEN proof brings the scripts
+> battery to 179/179. Strict phase-close and exhaustive runs pass every child
+> except the fail-closed, owner-only four-way memory-tree selection. The full
+> product suite is still not
 > claimed as a CI job; that historical owner-gated finding remains open unless
 > separately changed and evidenced. Current implementation evidence and
 > residuals are maintained in `docs/TODO.md`; the historical analysis below is

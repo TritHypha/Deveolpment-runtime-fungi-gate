@@ -114,9 +114,10 @@ export function gitCommit(root = process.cwd()) {
  * A reproducible `builtAt` so the provenance sidecar stops byte-churning on every regen (#133).
  * Precedence: SOURCE_DATE_EPOCH (reproducible-builds convention, as in generate-sbom.mjs) → the HEAD
  * commit date (deterministic given the commit `gitCommit` already records) → wall-clock (non-git fallback).
- * `builtAt` is INFORMATIONAL — audit-provenance.mjs keys freshness on file mtimes and stamping on
- * `gitCommit`, never on this field — so pinning it changes nothing a gate reads. A real source change
- * still moves the commit + `gitCommit`.
+ * `builtAt` is INFORMATIONAL — audit-provenance.mjs keys freshness on exact
+ * generator checks and validates the stamp structurally, never compares this
+ * field to wall-clock time. A real source change still changes generated
+ * semantics or the source snapshot recorded on the next publication.
  */
 export function builtAtStamp(root = process.cwd()) {
   const sde = process.env.SOURCE_DATE_EPOCH;

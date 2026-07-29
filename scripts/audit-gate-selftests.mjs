@@ -69,7 +69,7 @@ const SELFTEST_VIA_TEST = {
   "audit-mutation.mjs":            { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "hermetic KILL/SURVIVE/git-safety fixture (--config); never run via --self-test (it ignores unknown flags → would mutate real security source)" },
   "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-code-catalog.test.mjs", proves: "isolated fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
   "audit-doc-drift.mjs":          { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: living-doc stale count flagged; dated/-log exempt; missing-corpus fail-closed" },
-  "audit-provenance.mjs":         { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: stamped+fresh clean; source-newer→STALE; missing-sidecar→UNSTAMPED" },
+  "audit-provenance.mjs":         { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: stamped+semantic-current clean; mtime-only change clean; content drift→STALE; missing-sidecar→UNSTAMPED" },
   "audit-effect-canonicality.mjs":{ test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: bitmask⊄canonical detected + REAL-repo single-source regression guard" },
   "audit-muted-diagnostics.mjs":  { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: un-allowlisted mode-gated SECURITY mute detected + REAL-repo regression guard" },
 };

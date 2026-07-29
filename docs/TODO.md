@@ -300,6 +300,31 @@ planning checkbox must never be used to imply that implementation exists.
   `graph:all` remains correctly red only because four memory trees exist and
   no owner-authorized selection is recorded. Do not infer or choose one by
   size. Commit the ratchet shrink, regenerate, and rerun both strict tiers.
+- **Task 10 strict-tier and provenance checkpoint:** after the shrink-only
+  corpus repair, both `phase-close` and `exhaustive` pass every child except
+  the same `graph:all` memory-selection refusal. The exhaustive extra full
+  package run is green at 96/96. Tooling contract is 97 packages / 147 tools /
+  zero violations; generator contract is 14/14; audit/lint evidence is 79/79;
+  graph integrity is 7,661 nodes / 7,937 edges / 45 dependency edges / zero
+  violations; artifact drift is clean. A separate provenance run exposed a
+  false timestamp authority: unchanged source touched or restored after a
+  generated file was labelled stale even though the generator's exact check
+  passed. A RED fixture now distinguishes mtime-only change from semantic
+  content drift. `audit-provenance` validates the complete producer stamp and
+  delegates freshness to each non-mutating generator check; mtime-only change
+  stays current, actual drift refuses, and missing/malformed/source-unbound
+  provenance still refuses. Focused evidence is 40/40 and the complete
+  scripts battery is 179/179.
+- **Task 10 independent SLIDE checkpoint:** the sibling repository's complete
+  `npm.cmd test` and explicit V2-C frontend/conformance + V2-D + V2-E command
+  each pass 30/30 across four exact files. This is independent evidence; it
+  does not borrow Galerina's 477/477 result and grants no release authority.
+- **Current / next safe boundary:** commit the provenance source/test/ledger
+  checkpoint, regenerate all governed artifacts from that source commit,
+  publish the reviewed outputs separately, and repeat all fourteen direct
+  checks plus provenance/artifact gates. Then write the 11-requirement
+  completion matrix. Full requirement 9 remains owner-blocked only on an
+  explicit memory-tree choice; all four candidates stay denied meanwhile.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

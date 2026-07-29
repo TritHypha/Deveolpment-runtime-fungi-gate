@@ -139,7 +139,7 @@ test("kb-index: --code lists only the doc mentioning the code", () => {
   assert.ok(out.includes("alpha.md") && !out.includes("beta.md"));
 });
 
-// ── BLD-003 audit-provenance: a tmp tree proves stamped+fresh vs STALE vs UNSTAMPED (code-index artifact) ──
+// ── BLD-003 audit-provenance: semantic freshness, not checkout/touch mtimes (code-index artifact) ──
 // Repointed 2026-07-17 from kb-index to code-index: kb-index was REMOVED from audit-provenance's ARTIFACTS when
 // build/kb-index/ was untracked + gitignored (it indexed the PRIVATE sibling KB and leaked -PRIVATE doc titles
 // into public Galerina). The STALE / UNSTAMPED / fresh DETECTION is artifact-agnostic, so the coverage moves to
@@ -150,16 +150,33 @@ const provRepo = join(tmp7, "repo");
 mkdirSync(join(provRepo, "build", "code-index"), { recursive: true });
 mkdirSync(join(provRepo, "scripts"), { recursive: true }); // an in-repo source of code-index (EXT counts .mjs)
 writeFileSync(join(provRepo, "scripts", "a.mjs"), "// a\n");
-writeFileSync(join(provRepo, "build", "code-index", "code-index.json"), JSON.stringify({ symbols: [] }));
-writeFileSync(join(provRepo, "build", "code-index", "provenance.json"), JSON.stringify({ tool: "code-index", gitCommit: "abc1234", builtAt: "x" }));
+for (const args of [
+  ["init"],
+  ["config", "user.email", "fixture@example.invalid"],
+  ["config", "user.name", "Fixture"],
+  ["add", "."],
+  ["commit", "-m", "fixture"],
+]) {
+  const result = spawnSync("git", args, { cwd: provRepo, encoding: "utf8" });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+}
+const generated = spawnSync(process.execPath, [join(SCRIPTS, "code-index.mjs")], {
+  cwd: provRepo,
+  encoding: "utf8",
+});
+assert.equal(generated.status, 0, generated.stdout + generated.stderr);
 const prov = () => JSON.parse(spawnSync(process.execPath, [join(SCRIPTS, "audit-provenance.mjs"), "--json"], { cwd: provRepo, encoding: "utf8" }).stdout);
 const ciFindings = (j) => j.findings.filter((f) => f.name === "code-index");
 
 test("provenance: a stamped + fresh artifact has no finding", () => {
   assert.equal(ciFindings(prov()).length, 0);
 });
-test("provenance: a source newer than the artifact → STALE", () => {
+test("provenance: a newer source mtime with identical semantics stays current", () => {
   utimesSync(join(provRepo, "scripts", "a.mjs"), new Date(Date.now() + 1e6), new Date(Date.now() + 1e6));
+  assert.equal(ciFindings(prov()).length, 0);
+});
+test("provenance: source content drift refused by the generator → STALE", () => {
+  writeFileSync(join(provRepo, "scripts", "a.mjs"), "// FUNGI-FIXTURE-001\n");
   assert.ok(ciFindings(prov()).some((f) => f.issue === "STALE"));
 });
 test("provenance: a missing sidecar → UNSTAMPED", () => {
