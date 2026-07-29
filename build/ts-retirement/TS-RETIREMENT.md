@@ -4,12 +4,14 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 
 | Retirement path | Count | Deletes via |
 |---|--:|---|
-| Twinned (.fungi beside it) | 24 | → #143 R4 authority flips (twin proven differential — authority: .ts, R4 pending, 0 flipped) |
+| Twinned (.fungi beside it) | 24 | → #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle) |
 | Compiler core | 97 | → bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1) |
 | Bounded-TCB floor | 16 | → NEVER (bounded-TCB floor by ruling: crypto primitives, host seams, pure-algorithm devtools) |
 | Migration program | 326 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
 
-`.fungi` in src trees: 98 across 95 packages · finder drift: 0
+Authority ledgers: 5 compiler + 9 governed = 14 authoritative twins.
+
+`.fungi` in src trees: 101 across 95 packages · finder drift: 0
 
 ## Twinned .ts (the #143 flip queue)
 - packages-galerina/galerina-core-compiler/src/effect-checker.ts

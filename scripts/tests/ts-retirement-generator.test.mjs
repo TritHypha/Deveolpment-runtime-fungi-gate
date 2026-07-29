@@ -39,19 +39,19 @@ function command(root, executable, args) {
 }
 
 /**
- * Create two tracked TypeScript files, one with an exact same-package Fungi
- * twin, so the expected retirement partition is hand-derived.
+ * Create three tracked TypeScript files, two with exact same-package Fungi
+ * twins, and bind one compiler plus one governed twin in the authority ledgers.
  */
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "ts-retirement-generator-"));
   write(
     root,
-    "packages-galerina/galerina-example/src/secret-gate.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
     "export const gate = true;\n",
   );
   write(
     root,
-    "packages-galerina/galerina-example/src/secret-gate.fungi",
+    "packages-galerina/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi",
     "pure flow gate() -> Bool { return true }\n",
   );
   write(
@@ -59,8 +59,41 @@ function fixture() {
     "packages-galerina/galerina-core-compiler/src/compiler.ts",
     "export const compiler = true;\n",
   );
+  write(
+    root,
+    "packages-galerina/galerina-core-compiler/src/parser.ts",
+    "export const parse = true;\n",
+  );
+  write(
+    root,
+    "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+    "pure flow parse() -> Bool { return true }\n",
+  );
+  write(
+    root,
+    "docs/security/rd0528-compiler-authoritative-stages.json",
+    JSON.stringify({
+      twins: [{
+        dir: "packages-galerina/galerina-core-compiler/src/self-hosted",
+        file: "parser.fungi",
+      }],
+    }),
+  );
+  write(
+    root,
+    "docs/security/rd0361-authoritative-twins.json",
+    JSON.stringify({
+      twins: [{
+        dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+        file: "secret-gate.fungi",
+      }],
+    }),
+  );
   assert.equal(command(root, "git", ["init"]).status, 0);
-  assert.equal(command(root, "git", ["add", "--", "packages-galerina"]).status, 0);
+  assert.equal(
+    command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
+    0,
+  );
   return root;
 }
 
@@ -89,9 +122,16 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
     const generated = run(root);
     assert.equal(generated.status, 0, generated.stderr);
     const graph = JSON.parse(readFileSync(jsonPath, "utf8"));
-    assert.equal(graph.totals.ts, 2);
-    assert.equal(graph.totals.twinned, 1);
+    assert.equal(graph.totals.ts, 3);
+    assert.equal(graph.totals.twinned, 2);
     assert.equal(graph.totals.compilerCore, 1);
+    assert.equal(graph.totals.compilerAuthoritativeFlips, 1);
+    assert.equal(graph.totals.governedAuthoritativeFlips, 1);
+    assert.equal(graph.totals.authoritativeFlips, 2);
+    assert.equal(graph.totals.compilerStageTotal, 1);
+    assert.equal(graph.totals.compilerDifferential, 0);
+    assert.equal(graph.totals.governedTwinTotal, 1);
+    assert.equal(graph.totals.governedDifferential, 0);
     assert.equal(run(root, ["--check"]).status, 0);
 
     writeFileSync(markdown, "tampered\n");
@@ -102,3 +142,106 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+const INVALID_AUTHORITIES = [
+  {
+    name: "missing source",
+    prepare(root) {
+      write(
+        root,
+        "docs/security/rd0361-authoritative-twins.json",
+        JSON.stringify({
+          twins: [{
+            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+            file: "missing.fungi",
+          }],
+        }),
+      );
+    },
+  },
+  {
+    name: "duplicate source",
+    prepare(root) {
+      const entry = {
+        dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+        file: "secret-gate.fungi",
+      };
+      write(
+        root,
+        "docs/security/rd0361-authoritative-twins.json",
+        JSON.stringify({ twins: [entry, entry] }),
+      );
+    },
+  },
+  {
+    name: "source outside governed twin directories",
+    prepare(root) {
+      write(
+        root,
+        "packages-galerina/galerina-example/src/self-hosted/orphan.fungi",
+        "pure flow orphan() -> Bool { return false }\n",
+      );
+      write(
+        root,
+        "docs/security/rd0361-authoritative-twins.json",
+        JSON.stringify({
+          twins: [{
+            dir: "packages-galerina/galerina-example/src/self-hosted",
+            file: "orphan.fungi",
+          }],
+        }),
+      );
+    },
+  },
+  {
+    name: "ambiguous parent path",
+    prepare(root) {
+      write(
+        root,
+        "docs/security/rd0361-authoritative-twins.json",
+        JSON.stringify({
+          twins: [{
+            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted/..",
+            file: "secret-gate.fungi",
+          }],
+        }),
+      );
+    },
+  },
+  {
+    name: "cross-ledger duplicate",
+    prepare(root) {
+      write(
+        root,
+        "docs/security/rd0528-compiler-authoritative-stages.json",
+        JSON.stringify({
+          twins: [{
+            dir: "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
+            file: "secret-gate.fungi",
+          }],
+        }),
+      );
+    },
+  },
+];
+
+for (const invalid of INVALID_AUTHORITIES) {
+  test(`ts-retirement refuses authority ledger ${invalid.name}`, () => {
+    const root = fixture();
+    try {
+      invalid.prepare(root);
+      assert.equal(
+        command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
+        0,
+      );
+      const result = run(root);
+      assert.notEqual(result.status, 0);
+      assert.match(
+        `${result.stdout}\n${result.stderr}`,
+        /authority|ledger|missing|duplicate|twinned|path|canonical/i,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+}

@@ -69,6 +69,32 @@ const workspace = readJSON(join(ROOT, "galerina.workspace.json")) || {};
 const wsPackages = Array.isArray(workspace.packages) ? workspace.packages : [];
 const version = readJSON(join(ROOT, "version.json")) || {};
 const testCounts = version.testCountByPackage || {};
+const retirement = readJSON(
+  join(ROOT, "build", "ts-retirement", "ts-retirement.json"),
+);
+const authorityCounts = (() => {
+  const totals = retirement?.totals;
+  const fields = [
+    "compilerStageTotal",
+    "compilerAuthoritativeFlips",
+    "compilerDifferential",
+    "governedTwinTotal",
+    "governedAuthoritativeFlips",
+    "governedDifferential",
+  ];
+  if (
+    !totals
+    || fields.some((field) =>
+      !Number.isInteger(totals[field]) || totals[field] < 0)
+    || totals.compilerAuthoritativeFlips + totals.compilerDifferential
+      !== totals.compilerStageTotal
+    || totals.governedAuthoritativeFlips + totals.governedDifferential
+      !== totals.governedTwinTotal
+  ) {
+    return { available: false };
+  }
+  return { available: true, ...totals };
+})();
 
 // family bucket from the package directory-name head
 const FAMILY = {
@@ -111,14 +137,20 @@ const rows = wsPackages.map((rel) => {
   const abs = join(ROOT, rel);
   const dir = basename(rel);
   const pkg = readJSON(join(abs, "package.json"));
-  const testsDir = join(abs, "tests");
-  const hasTestsDir = existsSync(testsDir);
+  const testDirs = ["tests", "test"]
+    .map((name) => join(abs, name))
+    .filter((path) => isDir(path));
+  const hasTestsDir = testDirs.length > 0;
   return {
     dir, name: pkg?.name || dir, family: familyOf(dir),
     onDisk: isDir(abs), hasPkg: !!pkg, private: pkg?.private === true,
     version: pkg?.version || null,
     testScript: !!pkg?.scripts?.test, buildScript: !!pkg?.scripts?.build,
-    hasTestsDir, testFiles: hasTestsDir ? countTestFiles(testsDir) : 0,
+    hasTestsDir,
+    testFiles: testDirs.reduce(
+      (count, testsDir) => count + countTestFiles(testsDir),
+      0,
+    ),
     recordedCount: Object.prototype.hasOwnProperty.call(testCounts, dir) ? testCounts[dir] : null,
   };
 });
@@ -131,7 +163,13 @@ const gapsFor = (r) => {
   if (!r.testScript) g.push("no-test-script");
   if (r.testScript && !r.hasTestsDir) g.push("test-script-but-no-tests-dir");
   if (r.hasTestsDir && r.testFiles === 0) g.push("tests-dir-empty");
-  if (r.testScript && r.testFiles > 0 && r.recordedCount == null) g.push("tested-but-not-in-counts");
+  if (
+    r.testScript
+    && r.testFiles > 0
+    && (!Number.isInteger(r.recordedCount) || r.recordedCount <= 0)
+  ) {
+    g.push("tested-but-no-positive-count");
+  }
   return g;
 };
 for (const r of rows) r.gaps = gapsFor(r);
@@ -314,6 +352,43 @@ const TRACKING_REGISTRY = [
   { item: "TritMesh / .hypha / TritMeshQL",      state: "post-v1",       detail: "the NEXT project (database on Galerina); RD-0293/0294/0306/0312 designs" },
   { item: "myco",                                state: "shipped",       detail: "v0.1.3 (graph-indexed grep replacement, own subproject; Apache-2.0): ReDoS regex-guard + per-edge word-boundary fix with wordBoundaryExcluded reporting (no silent narrowing); owned Galerina mirror galerina-tools-myco synced to upstream e5e0e25 (src+tests byte-identical, 23/23); npm publish 🔒 outward" },
 ];
+// Authority is measured from the generated retirement ledger, never copied into
+// this hand-maintained registry. Missing or malformed evidence stays visible and
+// cannot silently preserve an older, more favourable count.
+TRACKING_REGISTRY[0] = authorityCounts.available
+  ? {
+      item: "Execution-cutover (RD-0361)",
+      state: authorityCounts.governedDifferential === 0 ? "shipped" : "building",
+      detail:
+        `${authorityCounts.governedTwinTotal}/${authorityCounts.governedTwinTotal} governed twins checker-clean; `
+        + `0 shadow · ${authorityCounts.governedDifferential} differential · `
+        + `${authorityCounts.governedAuthoritativeFlips} authoritative. `
+        + "Authority counts are derived from the fail-closed governed ledger.",
+    }
+  : {
+      item: "Execution-cutover (RD-0361)",
+      state: "build-pending",
+      detail: "AUTHORITY EVIDENCE UNAVAILABLE — refusing to publish a stale count.",
+    };
+TRACKING_REGISTRY.splice(
+  1,
+  0,
+  authorityCounts.available
+    ? {
+        item: "Compiler authority (RD-0528)",
+        state: authorityCounts.compilerDifferential === 0 ? "shipped" : "building",
+        detail:
+          `${authorityCounts.compilerStageTotal}/${authorityCounts.compilerStageTotal} canonical stages at R3; `
+          + `${authorityCounts.compilerDifferential} differential · `
+          + `${authorityCounts.compilerAuthoritativeFlips} authoritative. `
+          + "Authority counts are derived from the fail-closed compiler ledger.",
+      }
+    : {
+        item: "Compiler authority (RD-0528)",
+        state: "build-pending",
+        detail: "AUTHORITY EVIDENCE UNAVAILABLE — refusing to publish a stale count.",
+      },
+);
 // ── EVIDENCE BINDING (RULING 1, R&D-blessed 2026-07-17) ──────────────────────────────────
 // A published number that cannot move in response to evidence is not a measurement, it is a
 // slogan. Every QUANTIFIED row above must therefore declare HOW its number is known. Exactly
@@ -578,6 +653,17 @@ if (SELF_TEST) {
   const html = renderAuditHtml(audit);
   for (const t of ["Zero-Trust thesis", "Build progress", "Tracking registry"]) ok(html.includes(t), `rendered artifact contains the "${t}" heading`);
   ok(html.includes(esc0(TRACKING_REGISTRY[0].item)), "rendered artifact contains a real Tracking-registry row");
+  ok(
+    gapsFor({
+      onDisk: true,
+      hasPkg: true,
+      testScript: true,
+      hasTestsDir: true,
+      testFiles: 1,
+      recordedCount: 0,
+    }).includes("tested-but-no-positive-count"),
+    "a runnable-looking package with no positive recorded test count is refused",
+  );
   // Tracking registry is ALWAYS status-ordered (owner rule): the emitted ranks must be non-decreasing.
   const reg = audit.sections.find((s) => s.key === "tracking-registry").rows;
   const ranks = reg.map((r) => statusRank(r.state));

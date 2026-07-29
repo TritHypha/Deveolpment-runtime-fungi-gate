@@ -16,6 +16,56 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Galerina-first beta-v1 completion checkpoint - 2026-07-29
+
+- **Owner sequence (binding):** finish Galerina beta-v1 first; resume
+  independent SLIDE only after that gate is green; begin literal `.ts` and
+  `node_modules` retirement only after executable SLIDE is integrated.
+  `.gate` stays late/on hold.
+- **Meaning of "100% `.fungi`" at the beta-v1 gate:** the seven canonical
+  compiler stages and all twenty-nine governed decision twins must be
+  authoritative `.fungi` specifications with live differential shadows.
+  TypeScript remains the declared bootstrap/differential/host/devtool layer
+  until SLIDE integration. Deleting it earlier would make the build
+  non-runnable and is forbidden.
+- **Measured starting state:** component readiness is 95/97 (97.94%);
+  463 tracked package-source `.ts` files partition into 24 twinned, 97
+  compiler-core, 16 declared floor, and 326 migration-program files. The live
+  authority audits—not the stale percentage prose—report compiler 5
+  authoritative + 2 differential, and governed twins 9 authoritative + 20
+  differential. The `.fungi` corpus gate has 29 implicit known-failure entries
+  that must be repaired or converted to explicit owned negative fixtures; the
+  global baseline must reach zero.
+- **SLIDE pause point sealed:** local commit `fe648ea6` adds the bounded G4-C
+  immutable snapshot and instruction-total trace, removes its dead coarse
+  mapper, and passes source lint 0, corpus no-new-breakage, focused 7/7, build,
+  and the full compiler package 5,717/5,717. No general frontend, native
+  backend, or authority is claimed. Work continues on branch
+  `codex/galerina-beta-v1-completion`.
+- **Canonical executable plan:**
+  `docs/superpowers/plans/2026-07-29-galerina-beta-v1-completion.md`.
+  Task 2 is complete: generated percentages now derive test and authority
+  facts from live inventories/ledgers. Focused verification is 8/8; the
+  retirement report distinguishes 24 same-stem pairs from authority
+  inventories (compiler 5/7; governed 9/29), and its ledger parser refuses
+  missing, duplicate, ambiguous, out-of-scope, and cross-ledger entries.
+  Package readiness is now honestly 96/97 (98.97%): the singular `test/`
+  benchmark surface is counted, and only `galerina-registry` remains open
+  because it has no real denial test. Current work moves to Task 3: remove the
+  29-entry implicit `.fungi` known-failure baseline.
+- **Benchmark decision:** do not publish Wasm/Rust/Python/SLIDE comparison
+  numbers until SLIDE has an executable backend. Historical Galerina
+  benchmarks remain evidence only; the requested current and
+  earliest-archive comparison charts move to the post-SLIDE gate.
+- **Memory authority:** RD-0582 strongly identifies corpus `958d1a5f` but
+  explicitly concludes that identity is not write authority. Merely pointing
+  to RD-0582 does not authorize the external sidecar write; keep this
+  owner-blocked until the owner names the corpus and permitted write scope.
+- **Signing:** private notes were inventoried without printing their contents.
+  The public, detailed offline walkthrough and disposable-key dry run remain
+  Task 8. Do not ask the owner to sign until every preflight and post-sign
+  verifier is green.
+
 ### RD-0536 through RD-0555 intake checkpoint - 2026-07-29
 
 - **Completed (source-verified intake):**

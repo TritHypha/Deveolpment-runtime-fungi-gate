@@ -6,13 +6,19 @@
     "compilerCore": 97,
     "floor": 16,
     "program": 326,
-    "fungiInSrc": 98,
+    "fungiInSrc": 101,
     "packages": 95,
     "finderDrift": 0,
-    "authoritativeFlips": 0
+    "compilerAuthoritativeFlips": 5,
+    "governedAuthoritativeFlips": 9,
+    "authoritativeFlips": 14,
+    "compilerStageTotal": 7,
+    "compilerDifferential": 2,
+    "governedTwinTotal": 29,
+    "governedDifferential": 20
   },
   "retirementPaths": {
-    "twinned": "→ #143 R4 authority flips (twin proven differential — authority: .ts, R4 pending, 0 flipped)",
+    "twinned": "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",
     "compilerCore": "→ bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1)",
     "floor": "→ NEVER (bounded-TCB floor by ruling: crypto primitives, host seams, pure-algorithm devtools)",
     "program": "→ the #38 migration codemod program (owner-gated re-sign ceremony)"
@@ -56,7 +62,7 @@
     "galerina-core-compiler": {
       "ts": 104,
       "twinned": 7,
-      "fungi": 53
+      "fungi": 56
     },
     "galerina-core-compute": {
       "ts": 1,

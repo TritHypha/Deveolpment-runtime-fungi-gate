@@ -2,15 +2,15 @@
   "generatedBy": "scripts/component-health.mjs --audit-html",
   "provenance": {
     "available": true,
-    "branch": "main",
-    "sha": "9235e385",
+    "branch": "codex/galerina-beta-v1-completion",
+    "sha": "fe648ea6",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
-  "shipReadinessPct": 97.9381443298969,
+  "shipReadinessPct": 98.96907216494846,
   "ztAvg": 78,
   "buildAvg": 75,
-  "trackingRegistryCount": 20,
+  "trackingRegistryCount": 21,
   "sections": [
     {
       "key": "zero-trust-thesis",
@@ -303,7 +303,12 @@
         {
           "item": "Execution-cutover (RD-0361)",
           "state": "building",
-          "detail": "execution column COMPLETE · 29/29 DIFFERENTIAL · 0 shadow (R0 build→R1 #105-admit→R3 ≡ the real .ts decider; string-verdict twins LABEL-verified; secret-gate over a REAL Array<SecretPresence> via RD-0389 record-ABI; kernel auth gate 6 closed as the FIRST string-ARG twin; S4 transport-FSM joined 2026-07-16 night as the 29th — 4 pure δ projections ≡ transportStep, 192 pts + INV pins) · ★ 2026-07-18: R4 T1 tranche FLIPPED to AUTHORITATIVE on the owner's nod (the FIRST trust-root authority flip — 4 authoritative: synchronization-gate · power-governor · cold-boot · audit-egress; recorded in the authority ledger docs/security/rd0361-authoritative-twins.json, RED-on-regression + missing-target enforced by audit-kernel-fungi-twins.mjs + self-tested; the .ts is a differential shadow, shadow-bake in progress). Column now 0 shadow · 25 differential · 4 authoritative. Every one of the 29 differentials is anti-neuter-proven non-vacuous (SEC-002 52/52). T2–T5 each need their own evidence pack + owner nod"
+          "detail": "29/29 governed twins checker-clean; 0 shadow · 20 differential · 9 authoritative. Authority counts are derived from the fail-closed governed ledger."
+        },
+        {
+          "item": "Compiler authority (RD-0528)",
+          "state": "building",
+          "detail": "7/7 canonical stages at R3; 2 differential · 5 authoritative. Authority counts are derived from the fail-closed compiler ledger."
         },
         {
           "item": "Value-unit types (RD-0349)",
