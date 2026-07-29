@@ -106,8 +106,11 @@ Planning completion and implementation completion are deliberately separate.
 | Memory profile | `IMPLEMENTED-PARTIAL` | V2-D semantic exit complete and bounded V2-E source/receipt binding complete; initialized immutable 12-byte object, checked extent arithmetic, guard dominance, canonical independent import/digest/runtime; no native claim | Add post-optimization audit, final-artifact binding, and hostile FFI/handle corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
+| Deterministic fault simulation | `SPECIFIED` | RD-0536-0555 intake fixes a canonical-seed/replay/positive-control evidence contract | Implement after isolated runner/broker; inject scheduler, broker, nonce/idempotency, cache, process, disk, network and audit faults without reject-all vacuity |
 | LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
 | `.slide` container/tooling | `NOT-STARTED` | SLIDE container, versioned payload profiles, and trust-role specification only | Implement two decode/validation paths, pack/inspect/verify/explain tools |
+| Bounded host-queue ABI | `SPECIFIED` | First profile is fixed-layout bounded SPSC with explicit region/lifetime/epoch/role/layout/ordering facts | Implement only after runner/capability seam; add target memory-model, corruption, wrap, stale-epoch, borrow-lifetime and overrun tests before any lock-free claim |
+| Transaction outcome identity | `SPECIFIED` | Intake requires distinct not-committed, committed, outcome-unknown and rejected results; current retry guard is compile-time only | Define broker registry and durable reconciliation/idempotency receipts; prove crash-between-commit-and-ack and duplicate-delivery behavior |
 | Tower Citizen adapter | `SPECIFIED` | Exact capability-receipt boundary documented | Implement adapter; no Boolean or origin-based authority |
 | Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
 | WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Retain as optional compatibility/differential evidence after SLIDE; never silently fall back from failed admission |
@@ -464,7 +467,9 @@ results for every vector.
 3. implement inspect/verify/explain before run;
 4. compose Tower, Tri-Pipe, artifact, target, driver, isolation, freshness, and
    nonce evidence with K3 AND;
-5. run only the exact admitted payload under budgets and typed capabilities.
+5. run only the exact admitted payload under budgets and typed capabilities;
+6. preserve typed transaction outcomes across the broker boundary, including
+   outcome-unknown as a non-retriable reconciliation state.
 
 Exit gate: every mutated authority field refuses before native execution.
 
@@ -475,7 +480,10 @@ Exit gate: every mutated authority field refuses before native execution.
 3. add the privileged driver helper only in the approved disposable
    environment;
 4. add optional Wasm SLIDE payload/profile;
-5. run equivalent-work benchmarks against cached Wasm AOT, current Galerina,
+5. add seeded deterministic fault replay with a known-good control for the
+   runner, broker, transaction state, cache, process, disk and audit seams;
+6. add the first admitted fixed-layout bounded SPSC host-queue profile;
+7. run equivalent-work benchmarks against cached Wasm AOT, current Galerina,
    native Rust, and CPython.
 
 Exit gate: publish raw reproducible results and decide whether SLIDE justifies

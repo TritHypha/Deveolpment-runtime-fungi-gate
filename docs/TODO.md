@@ -16,6 +16,33 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### RD-0536 through RD-0555 intake checkpoint - 2026-07-29
+
+- **Completed (source-verified intake):**
+  `docs/reports/rd0536-rd0555-source-verified-intake-2026-07-29.md`
+  adjudicates all twenty digest-screened records against current source. The
+  supplied transcript subdirectory does not exist; the complete range was
+  found at the Knowledge Base root.
+- **Corrections:** Wasmtime 47.0.2 is genuinely pinned in `dss-host`, but the
+  screened talk is not proof of the engine's current security posture.
+  `COMMIT_OUTCOME_UNKNOWN` does not exist; current Galerina has draft
+  idempotency design and a compile-time no-retry-on-unsafe-mutation guard, not
+  a durable outcome-unknown runtime contract. LLVM/native lowering remains
+  `NOT-STARTED` and gated behind detached semantics, memory/Tri-Fuse evidence,
+  the deterministic action graph, and a selected pinned toolchain.
+- **Accepted planning deltas:** add an explicit typed
+  `NotCommitted`/`Committed`/`OutcomeUnknown`/`Rejected` broker result; a
+  canonical seeded fault-simulation/replay harness with a known-good control;
+  generic LDAP-style injection negatives; and an independently admitted,
+  fixed-layout bounded host-queue ABI beginning with SPSC. Do not bundle a
+  browser engine into the SLIDE core/TCB.
+- **Current implementation order unchanged:** G4-C immutable checked snapshot
+  and instruction-level total trace remains next. The new simulation,
+  transaction, and host-queue work follows the isolated broker/runner seams
+  and does not authorize LLVM, native output, component cuts, or cache use.
+- **Synchronized plan:** `../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`,
+  `../SLIDE/TODO.md`, and `../../triLowLevel-v2/TODO.md`.
+
 ### Final acceptance request checkpoint - 2026-07-29
 
 - **Added to the canonical plan:** Task 11 in
