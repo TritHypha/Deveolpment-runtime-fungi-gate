@@ -137,7 +137,7 @@ node --test \
 
 npm.cmd test
   (from packages-galerina/galerina-core-compiler)
-  PASS: 5,205 tests
+  PASS: 5,225 tests
 ```
 
 ## 6. G1 disposition
@@ -150,16 +150,20 @@ Completed:
 - checked-trap/Result differential regression and hardening;
 - named-trap runtime, audit, propagation, and fast-tier enforcement;
 - exact post-GIR AST fact inventory;
-- current no-AST identity behavior exposed as non-CTLL.
+- current no-AST identity behavior exposed as non-CTLL;
+- fail-closed `.fungi` preflight for the exact first-slice facts, with ordered
+  `CTLL-R1-EXPORT-001..015` refusal identities and missing-fact coverage.
 
 Still open before G1 exits:
 
-- create a dedicated executable-GIR R1 export surface whose unsupported result
-  is an explicit refusal rather than the legacy WAT identity path;
+- connect the preflight to a compiler-owned adapter that derives its facts,
+  then create a dedicated executable-GIR R1 export surface whose unsupported
+  result is an explicit refusal rather than the legacy WAT identity path;
 - add serialized mutation fixtures for invalid Verdict encoding, altered
   K3 edges, wrapping arithmetic, missing failures, and non-canonical bytes;
 - distinguish unsupported, denied, unresolved, arithmetic, and internal
-  failures with stable R1 failure records;
+  failures with registered R1 failure records; the preflight refusal names are
+  stable policy outcomes, not yet the numeric executable failure registry;
 - prove the importer/reference interpreter in a fresh process.
 
 Those remaining items cross into G2 implementation. They must use the R1

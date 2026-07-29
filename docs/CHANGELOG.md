@@ -6,6 +6,13 @@ All notable changes to this app should be documented here.
 
 ### Added
 
+- Added a `.fungi`-first, fail-closed CTLL R1 preflight policy kernel for the
+  frozen `ctll_k3_checked_add_v1` shape. It uses total `match` exits, K3
+  decisions, and fifteen ordered `CTLL-R1-EXPORT-*` refusal identities, with
+  focused tests for every unsupported fact and a missing critical field. The
+  kernel explicitly does not claim canonical body export, CBOR, or admission
+  authority.
+
 - Added the canonical CTLL v2 status and implementation ledger, separating
   implemented foundations, specification-only work, owner/toolchain blockers,
   not-started components, verification evidence and the ordered G0-G7 build

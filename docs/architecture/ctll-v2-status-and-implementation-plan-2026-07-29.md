@@ -19,10 +19,13 @@ driver boundary, and first vertical-slice recommendation are documented. G1
 compiler probing has started: a checked-add/K3 `.fungi` fixture and standing
 walker/Wasm differential now pass, and three current-tier fail-open
 representations found during the probe and full-suite verification were
-closed, including previously ignored named traps. Detached executable GIR, CTLL
-code generation, `.ctll` packaging, native execution, the CTLL verifier,
-Tri-Fuse v2, the frontend adapter, driver CLI, and CTLL benchmarks do not yet
-exist. Galerina's current implemented execution paths remain the interpreter,
+closed, including previously ignored named traps. A `.fungi` R1 preflight
+kernel now rejects fifteen unsupported fixture-shape facts in a fixed order.
+It consumes supplied facts and therefore is not an authoritative adapter,
+exporter, verifier, or admission decision. Detached executable GIR, CTLL code
+generation, `.ctll` packaging, native execution, the CTLL verifier, Tri-Fuse
+v2, the frontend adapter, driver CLI, and CTLL benchmarks do not yet exist.
+Galerina's current implemented execution paths remain the interpreter,
 bytecode/runtime tiers, and WebAssembly toolchain. CTLL must not be presented
 as shipped, benchmarked, memory-safe, deterministic, or production-ready.
 
@@ -53,8 +56,8 @@ Planning completion and implementation completion are deliberately separate.
 | R1 executable GIR contract | `SPECIFIED` | Deterministic-CBOR R1 schema, CFG, checked Int32, K3 terminator, failures, validation order, mutations | Implement canonical exporter, bounded importer, validator, and reference interpreter |
 | AST independence | `NOT-STARTED` | None for the CTLL boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
-| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory recorded | Add the dedicated R1 export-refusal surface and serialized mutation fixtures |
-| First fixture | `IMPLEMENTED-PARTIAL` | Recommended `ctll_k3_checked_add_v1` design, ten vectors, and checked `.fungi` capability probe exist | Owner-confirm stable public fixture identity; export canonical R1 and add negative artifacts |
+| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory and a fail-closed `.fungi` shape-preflight kernel exist | Derive facts inside a dedicated R1 adapter, export the complete body or refuse, then add serialized mutation fixtures |
+| First fixture | `IMPLEMENTED-PARTIAL` | Recommended `ctll_k3_checked_add_v1` design, ten vectors, checked `.fungi` capability probe, and fifteen ordered preflight refusals exist | Owner-confirm stable public fixture identity; export canonical R1 and add negative artifacts |
 | Memory profile | `SPECIFIED` | `ctll.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
@@ -136,10 +139,15 @@ Verified:
 - named traps now terminate and audit in the tree-walker, propagate through
   nested flows, and cannot be bypassed by a pure fast tier;
 - the current GIR cannot reproduce the fixture body without the separately
-  supplied AST.
+  supplied AST;
+- the `.fungi` preflight kernel accepts only the exact frozen fixture facts and
+  returns a stable refusal identity for each of fifteen unsupported shapes,
+  including missing critical body evidence.
 
 This is implementation evidence for existing Galerina semantics, not evidence
-that CTLL R1 exists.
+that CTLL R1 exists. The preflight's supplied facts are not attestations:
+the future compiler adapter must derive them from authoritative checked output
+and bind the decision to the exact materialized semantic bytes.
 
 ## 5. Architecture that implementation must preserve
 
@@ -227,11 +235,16 @@ Progress on 2026-07-29:
 - the positive `.fungi` fixture and walker/Wasm differential are implemented;
 - malformed Verdict and overflow/Result parity regressions pass;
 - every current post-GIR AST fact is inventoried and mapped to R1;
-- the no-AST identity fallback is exposed as a non-CTLL negative fact.
+- the no-AST identity fallback is exposed as a non-CTLL negative fact;
+- a `.fungi` policy kernel now preflights the exact first-slice shape with
+  ordered `CTLL-R1-EXPORT-001..015` refusals and no Boolean/default fallback.
 
-Remaining: introduce the dedicated R1 export surface with explicit unsupported
-refusal, then create serialized negative/mutation artifacts and stable R1
-failure records. G1 is therefore `IMPLEMENTED-PARTIAL`, not complete.
+Remaining: make a dedicated compiler-owned R1 adapter derive those preflight
+facts, emit the complete body or explicitly refuse before all legacy paths,
+then create serialized negative/mutation artifacts and registered R1 failure
+records. The current refusal names are stable within the preflight contract but
+are not frozen numeric registry entries. G1 is therefore
+`IMPLEMENTED-PARTIAL`, not complete.
 
 ### Phase G2 — canonical executable GIR R1
 
@@ -319,11 +332,14 @@ its additional format/verifier/runtime.
 Safe work that does not require an owner choice:
 
 1. keep all CTLL documentation synchronized with this ledger;
-2. define the dedicated R1 exporter API so unsupported source refuses without
-   entering the legacy identity/default/walker path;
-3. implement the bounded R1 profile preflight for the single probe fixture;
-4. prepare serialized negative fixture names and expected outcomes without
-   assigning new diagnostic codes;
+2. define and implement the dedicated R1 adapter API so it derives authoritative
+   facts and unsupported source refuses without entering the legacy
+   identity/default/walker path;
+3. connect the implemented bounded R1 preflight kernel to that adapter without
+   treating its supplied fields as attestations;
+4. prepare serialized negative fixture names and expected outcomes, retaining
+   the preflight refusal namespace separately from the future numeric failure
+   registry;
 5. keep the current Wasm path green as the factual implementation baseline.
 
 Do not start LLVM, container signing, driver installation, or native execution
@@ -341,6 +357,7 @@ The current branch contains these CTLL-related checkpoints:
 | `8b11b018` | Enforce verified total control flow across 19 services |
 | `c7947a89` | Specify the executable-GIR/frontend-receipt handoff |
 | `270ec5f1` | Add the canonical CTLL implementation ledger |
+| `0f2f7c6a` | Harden CTLL G1 runtime boundaries and add the capability probe |
 
 The corresponding Knowledge Base branch contains the canonical CTLL planning
 record and control-flow rules. None of these commits has been pushed by Codex.

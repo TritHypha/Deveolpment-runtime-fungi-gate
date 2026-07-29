@@ -1,0 +1,240 @@
+@version 1
+/// @file: ctll-r1-preflight.fungi
+/// @purpose: Fail-closed preflight for the first detached executable-GIR R1 slice.
+/// @status: Executable policy kernel; canonical body export and CBOR remain unimplemented.
+///
+/// A positive result is evidence that the supplied facts match the one frozen
+/// R1 fixture profile. It is not CTLL admission authority. The eventual adapter
+/// must derive these facts from authoritative compiler output and bind them to
+/// the materialized semantic bytes.
+
+record CTLLR1PreflightRequest {
+  fixtureName: String
+  qualifier: String
+  parameterCount: Int
+  leftType: String
+  rightType: String
+  admissionType: String
+  resultType: String
+  hasExhaustiveK3: Bool
+  hasCheckedInt32: Bool
+  hasExplicitTerminals: Bool
+  hasCompleteBody: Bool
+  hasAstDependency: Bool
+  hasEffects: Bool
+  hasHostHandles: Bool
+  failureCount: Int
+}
+
+record CTLLR1PreflightDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  failureClass: String
+  reason: String
+  semanticProfileId: String
+  memoryProfileId: String
+}
+
+pure flow refuseCTLLR1Preflight(
+  failureId: String,
+  failureClass: String,
+  reasonText: String,
+) -> CTLLR1PreflightDecision
+contract {
+  intent { "Return one stable, terminal refusal for an unsupported R1 export fact." }
+}
+{
+  return {
+    verdict: Verdict.Deny
+    status: "REFUSED"
+    failureId: failureId
+    failureClass: failureClass
+    reason: reasonText
+    semanticProfileId: "ctll.semantic.galerina-gir.v1"
+    memoryProfileId: "ctll.memory.safe-value.v1"
+  }
+}
+
+pure flow preflightCTLLR1(
+  request: CTLLR1PreflightRequest,
+) -> CTLLR1PreflightDecision
+contract {
+  intent { "Admit only the exact checked-Int32, exhaustive-K3 first R1 fixture shape." }
+}
+{
+  match request.fixtureName {
+    "ctll_k3_checked_add_v1" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-001",
+        "UNSUPPORTED_FIXTURE",
+        "fixture identity is outside the frozen R1 slice",
+      )
+    }
+  }
+
+  match request.qualifier {
+    "pure" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-002",
+        "UNSUPPORTED_QUALIFIER",
+        "R1 admits only a pure function",
+      )
+    }
+  }
+
+  match request.parameterCount {
+    3 => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-003",
+        "SIGNATURE_MISMATCH",
+        "R1 fixture requires exactly three parameters",
+      )
+    }
+  }
+
+  match request.leftType {
+    "Int32" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-004",
+        "TYPE_UNSUPPORTED",
+        "left parameter must be Int32",
+      )
+    }
+  }
+
+  match request.rightType {
+    "Int32" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-005",
+        "TYPE_UNSUPPORTED",
+        "right parameter must be Int32",
+      )
+    }
+  }
+
+  match request.admissionType {
+    "Verdict" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-006",
+        "TYPE_UNSUPPORTED",
+        "admission parameter must be Verdict",
+      )
+    }
+  }
+
+  match request.resultType {
+    "Result<Int32,FixtureFailure>" => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-007",
+        "TYPE_UNSUPPORTED",
+        "result must be the closed R1 fixture Result",
+      )
+    }
+  }
+
+  match request.hasExhaustiveK3 {
+    true => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-008",
+        "K3_NOT_TOTAL",
+        "ALLOW, DENY, and INDETERMINATE successors are required",
+      )
+    }
+  }
+
+  match request.hasCheckedInt32 {
+    true => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-009",
+        "ARITHMETIC_UNSAFE",
+        "wrapping or unclassified arithmetic is forbidden",
+      )
+    }
+  }
+
+  match request.hasExplicitTerminals {
+    true => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-010",
+        "CONTROL_FLOW_INCOMPLETE",
+        "every reachable block requires an explicit terminal",
+      )
+    }
+  }
+
+  match request.hasCompleteBody {
+    true => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-011",
+        "BODY_INCOMPLETE",
+        "summary, identity, default, and opaque bodies are forbidden",
+      )
+    }
+  }
+
+  match request.hasAstDependency {
+    false => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-012",
+        "AST_DEPENDENCY",
+        "detached R1 may not consult the source AST",
+      )
+    }
+  }
+
+  match request.hasEffects {
+    false => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-013",
+        "EFFECT_UNSUPPORTED",
+        "the first R1 slice is effect free",
+      )
+    }
+  }
+
+  match request.hasHostHandles {
+    false => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-014",
+        "HOST_HANDLE_FORBIDDEN",
+        "R1 values may not contain host handles",
+      )
+    }
+  }
+
+  match request.failureCount {
+    3 => {}
+    _ => {
+      return refuseCTLLR1Preflight(
+        "CTLL-R1-EXPORT-015",
+        "FAILURE_SET_MISMATCH",
+        "denied, unresolved, and arithmetic failures must be declared",
+      )
+    }
+  }
+
+  return {
+    verdict: Verdict.Allow
+    status: "SUPPORTED"
+    failureId: "NONE"
+    failureClass: "NONE"
+    reason: "exact R1 fixture facts accepted for body export"
+    semanticProfileId: "ctll.semantic.galerina-gir.v1"
+    memoryProfileId: "ctll.memory.safe-value.v1"
+  }
+}

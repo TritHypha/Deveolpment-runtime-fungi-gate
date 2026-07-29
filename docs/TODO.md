@@ -3,8 +3,11 @@
 ## CTLL v2 architecture lane — 2026-07-29
 
 **Status:** planning is complete enough for owner decisions and bounded G1
-compiler probing has started. CTLL itself is not implemented. It remains an
-independent platform and Galerina is its first planned frontend.
+compiler probing is active. The first `.fungi` R1 shape-preflight kernel now
+fails closed across the frozen fixture facts, but canonical body export,
+deterministic CBOR, import, validation, and detached execution do not exist.
+CTLL remains an independent platform and Galerina is its first planned
+frontend.
 
 - [x] Maintain the canonical done/not-done/blocker/implementation ledger in
   `docs/architecture/ctll-v2-status-and-implementation-plan-2026-07-29.md`.
@@ -61,6 +64,11 @@ independent platform and Galerina is its first planned frontend.
   `.gate` work in this lane.
 - [ ] Add a dedicated R1 export surface that refuses unsupported source rather
   than entering the current WAT identity/default/walker fallback.
+- [x] Implement the bounded `.fungi` R1 profile-preflight kernel for the first
+  fixture with ordered `CTLL-R1-EXPORT-001..015` refusal identities and
+  malformed/missing fact tests. Evidence:
+  `docs/reports/ctll-r1-preflight-2026-07-29.md`. This is shape support
+  evidence, not admission authority or canonical export.
 - [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
   altered K3 successors, missing failure records, and non-canonical bytes.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
@@ -69,8 +77,9 @@ independent platform and Galerina is its first planned frontend.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until CTLL release gates pass and the owner approves a transition.
 
-**Next safe work:** define the bounded R1 exporter/preflight surface for the
-single checked fixture, with explicit unsupported refusal and no legacy body
+**Next safe work:** connect the bounded preflight to a compiler-owned adapter
+that derives—not accepts—its facts, and make the adapter either produce the
+complete fixture body or refuse before every legacy identity/default/walker
 fallback. Do not start LLVM, `.ctll` execution, or driver installation before
 the earlier semantic and owner gates.
 
