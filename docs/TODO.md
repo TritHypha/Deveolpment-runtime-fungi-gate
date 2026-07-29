@@ -1,5 +1,20 @@
 # TODO
 
+## Continuity rule
+
+Update this file periodically during implementation, not only at the end of a
+session. Every checkpoint must record:
+
+- completed work and its local commit/evidence;
+- current work and the next safe boundary;
+- stop conditions, blockers, owner questions, and deliberate deferrals;
+- the authoritative architecture and report paths needed to resume without
+  guessing.
+
+Keep `../triLowLevel-v2/TODO.md` synchronized whenever the independent CTLL,
+SLIDE, registry, importer, runtime, or release plan changes. A completed
+planning checkbox must never be used to imply that implementation exists.
+
 ## CTLL v2 architecture lane — 2026-07-29
 
 **Status:** planning is complete enough for implementation and bounded G1
