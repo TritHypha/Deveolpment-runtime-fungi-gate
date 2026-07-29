@@ -109,7 +109,7 @@ planning checkbox must never be used to imply that implementation exists.
   returns typed K3, and performs no key discovery or authority decision.
   Focused evidence is 35/35. Report:
   `docs/reports/slide-v2b-canonical-crypto-verifier-2026-07-29.md`.
-- **Completed (awaiting local checkpoint commit):** `.fungi` now proposes an
+- **Completed:** local commit `ac2a7183` makes `.fungi` propose an
   exact canonical nonce/call transition; a bounded Galerina reference CAS
   independently decodes both states and permits exactly one of sixteen
   competing one-call commits; `.fungi` revalidates its typed receipt and
@@ -152,7 +152,7 @@ planning checkbox must never be used to imply that implementation exists.
   packages and 8,129/8,129 tests; graph 7,291 nodes / 7,547 edges; zero
   integrity or KB-link violations; Hardened Border 97/97; explicit Galerina
   memory graph clean; dev-tool index 97 packages / 124 tools / 40 proofs.
-  Post-commit Myco refresh remains required.
+  Post-commit Myco indexes 4,105 files with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

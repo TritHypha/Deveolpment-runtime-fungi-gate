@@ -76,10 +76,12 @@ Next gates:
 
 Verification evidence:
 
+- local implementation commit: `ac2a7183` (not pushed);
 - compiler package: 5,387/5,387 tests;
 - repository: 94/94 packages and 8,129/8,129 tests;
 - project graph: 7,291 nodes / 7,547 edges, zero integrity violations;
 - KB graph: zero orphans and zero broken links;
 - Hardened Border: 97/97;
 - explicitly selected Galerina memory graph: clean; and
-- dev-tool index: 97 packages / 124 tools / 40 proofs.
+- dev-tool index: 97 packages / 124 tools / 40 proofs; and
+- post-commit Myco: 4,105 indexed files, zero over-size skips.
