@@ -1,0 +1,201 @@
+@version 1
+/// @file: slide-v2b-lease-use-state.fungi
+/// @purpose: Propose a bound V2-B nonce/call state transition before host compare-and-swap.
+/// @status: Pure non-authorizing proposal; does not claim atomicity or release a lease reference.
+
+record SLIDEV2BLeaseUseState {
+  schemaId: String
+  leaseId: String
+  nonceDigest: String
+  generation: Int
+  callsConsumed: Int
+  requestBytesConsumed: Int
+  expiresAt: Int
+  statusId: Int
+}
+
+record SLIDEV2BLeaseUseFixture {
+  state: SLIDEV2BLeaseUseState
+  stateDigest: String
+}
+
+record SLIDEV2BLeaseUseReservation {
+  decision: SLIDEV2BCapabilityDecision
+  priorStateDigest: String
+  nextState: SLIDEV2BLeaseUseState
+  nextStateDigest: String
+  expectedGeneration: Int
+}
+
+pure flow emptySLIDEV2BLeaseUseState() -> SLIDEV2BLeaseUseState
+contract { intent { "Materialize a non-usable state for terminal refusal records." } }
+{
+  return {
+    schemaId: "" leaseId: "" nonceDigest: ""
+    generation: 0 callsConsumed: 0 requestBytesConsumed: 0
+    expiresAt: 0 statusId: 0
+  }
+}
+
+pure flow refuseSLIDEV2BLeaseUseReservation(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2BLeaseUseReservation
+contract { intent { "Refuse a lease-use proposal without releasing state or digest." } }
+{
+  return {
+    decision: refuseSLIDEV2BCapability(failureId, detail)
+    priorStateDigest: ""
+    nextState: emptySLIDEV2BLeaseUseState()
+    nextStateDigest: ""
+    expectedGeneration: 0
+  }
+}
+
+pure flow slideV2BLeaseNonceDigest(lease: SLIDEV2BLease) -> String
+contract { intent { "Bind the lease nonce to its registered digest domain." } }
+{
+  let domainPrefix = Bytes.fromHex(
+    "736c6964652e6361706162696c6974792e6c656173652d6e6f6e63652e76326200",
+  )
+  return domainPrefix.append(lease.nonce.encode()).sha256Hex()
+}
+
+pure flow slideV2BLeaseUseStateCanonicalBytes(
+  state: SLIDEV2BLeaseUseState,
+) -> Bytes
+contract { intent { "Encode one exact lease-use state as deterministic CBOR." } }
+{
+  mut body: Bytes = slideV2BCBORHead(4, 8)
+  body = body.append(
+    slideV2BCBORText("slide.capability.lease-use-state.v2b"),
+  )
+  body = body.append(slideV2BCBORText(state.leaseId))
+  body = body.append(slideV2BCBORText(state.nonceDigest))
+  body = body.append(slideV2BCBORUInt(state.generation))
+  body = body.append(slideV2BCBORUInt(state.callsConsumed))
+  body = body.append(slideV2BCBORUInt(state.requestBytesConsumed))
+  body = body.append(slideV2BCBORUInt(state.expiresAt))
+  body = body.append(slideV2BCBORUInt(state.statusId))
+  return body
+}
+
+pure flow slideV2BLeaseUseStateDigest(
+  state: SLIDEV2BLeaseUseState,
+) -> String
+contract { intent { "Bind one canonical lease-use state to its registered digest domain." } }
+{
+  let body = slideV2BLeaseUseStateCanonicalBytes(state)
+  if body.isEmpty() or body.length() > 1024 { return "" }
+  let domainPrefix = Bytes.fromHex(
+    "736c6964652e6361706162696c6974792e6c656173652d7573652d73746174652e76326200",
+  )
+  return domainPrefix.append(body).sha256Hex()
+}
+
+pure flow materializeSLIDEV2BInitialLeaseUseState(
+  lease: SLIDEV2BLease,
+) -> SLIDEV2BLeaseUseFixture
+contract { intent { "Materialize deterministic unconsumed state for the reference fixture." } }
+{
+  let state: SLIDEV2BLeaseUseState = {
+    schemaId: "slide.capability.lease-use-state.v2b"
+    leaseId: lease.leaseId
+    nonceDigest: slideV2BLeaseNonceDigest(lease)
+    generation: 0 callsConsumed: 0 requestBytesConsumed: 0
+    expiresAt: lease.expiresAt statusId: 1
+  }
+  return { state: state stateDigest: slideV2BLeaseUseStateDigest(state) }
+}
+
+pure flow proposeSLIDEV2BLeaseUseReservation(
+  lease: SLIDEV2BLease,
+  request: SLIDEV2BCapabilityRequest,
+  verifierReceipt: SLIDEV2BCryptoVerifierReceipt,
+  state: SLIDEV2BLeaseUseState,
+  expectedStateDigest: String,
+  expectedGeneration: Int,
+  requestBytes: Int,
+  validationTime: Int,
+) -> SLIDEV2BLeaseUseReservation
+contract { intent { "Propose one exact nonce/call transition without claiming atomic commit." } }
+{
+  let leaseDecision = validateSLIDEV2BLeaseShape(
+    lease, request, verifierReceipt, validationTime,
+  )
+  check(leaseDecision.verdict) {
+    deny: {
+      return refuseSLIDEV2BLeaseUseReservation(
+        leaseDecision.failureId, leaseDecision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2BLeaseUseReservation(
+        "SLIDE-V2B-STATE-001", "lease evidence was unresolved",
+      )
+    }
+    if: {}
+  }
+  if state.schemaId != "slide.capability.lease-use-state.v2b" or state.leaseId != lease.leaseId or state.expiresAt != lease.expiresAt {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-002", "state schema, lease, or expiry binding changed",
+    )
+  }
+  let nonceDigest = slideV2BLeaseNonceDigest(lease)
+  if nonceDigest.length() != 64 or state.nonceDigest != nonceDigest {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-003", "state nonce digest does not bind the lease nonce",
+    )
+  }
+  if state.generation < 0 or state.callsConsumed < 0 or state.requestBytesConsumed < 0 or state.statusId < 1 or state.statusId > 2 {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-004", "state counters or status are invalid",
+    )
+  }
+  let priorStateDigest = slideV2BLeaseUseStateDigest(state)
+  if expectedStateDigest.length() != 64 or priorStateDigest.length() != 64 or expectedStateDigest != priorStateDigest {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-005", "expected state digest is absent, malformed, or stale",
+    )
+  }
+  if expectedGeneration < 0 or expectedGeneration != state.generation {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-006", "expected generation is stale or malformed",
+    )
+  }
+  if state.statusId != 1 or state.callsConsumed >= lease.maxCalls {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-007", "lease nonce/call budget is already consumed",
+    )
+  }
+  if requestBytes < 1 or requestBytes > lease.maxRequestBytes or state.requestBytesConsumed > lease.maxRequestBytes - requestBytes {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-008", "request-byte reservation exceeds the lease ceiling",
+    )
+  }
+
+  let nextState: SLIDEV2BLeaseUseState = {
+    schemaId: state.schemaId leaseId: state.leaseId nonceDigest: state.nonceDigest
+    generation: state.generation + 1
+    callsConsumed: state.callsConsumed + 1
+    requestBytesConsumed: state.requestBytesConsumed + requestBytes
+    expiresAt: state.expiresAt statusId: 2
+  }
+  let nextStateDigest = slideV2BLeaseUseStateDigest(nextState)
+  if nextStateDigest.length() != 64 {
+    return refuseSLIDEV2BLeaseUseReservation(
+      "SLIDE-V2B-STATE-009", "next-state digest could not be derived",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "RESERVATION_PROPOSED" failureId: "NONE"
+      detail: "state transition proposed; atomic commit and authority remain absent"
+      authorityReleased: false
+    }
+    priorStateDigest: priorStateDigest
+    nextState: nextState
+    nextStateDigest: nextStateDigest
+    expectedGeneration: expectedGeneration
+  }
+}

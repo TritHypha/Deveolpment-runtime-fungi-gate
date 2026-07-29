@@ -241,6 +241,13 @@ export type {
   SLIDEV2BCryptoVerifierPolicy,
   SLIDEV2BCryptoVerifierReceipt,
 } from "./slide-v2b-crypto-verifier.js";
+export { SLIDEV2BAtomicStateReference } from "./slide-v2b-atomic-state-reference.js";
+export type {
+  SLIDEV2BAtomicReservationCandidate,
+  SLIDEV2BAtomicStateReceipt,
+  SLIDEV2BAtomicStateRecord,
+  SLIDEV2BAtomicStateVerdict,
+} from "./slide-v2b-atomic-state-reference.js";
 export {
   FUNGI_HW_001,
   FUNGI_HW_002,

@@ -11,13 +11,13 @@
 
 | Metric | Count |
 |---|---|
-| Files | 120 |
-| Internal edges | 274 |
+| Files | 123 |
+| Internal edges | 275 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
 | └─ Third-party | 3 |
-| Orphan files | 29 |
+| Orphan files | 31 |
 
 ## External Dependencies (the Border)
 
@@ -72,9 +72,11 @@ No boundary violations. All external imports are within the allowlist.
 - `src/self-hosted/slide-v2a-runtime.fungi`
 - `src/self-hosted/slide-v2a-semantic-digest.fungi`
 - `src/self-hosted/slide-v2a-validator.fungi`
+- `src/self-hosted/slide-v2b-admission-composition.fungi`
 - `src/self-hosted/slide-v2b-capability-request.fungi`
 - `src/self-hosted/slide-v2b-lease-canonical.fungi`
 - `src/self-hosted/slide-v2b-lease-shape.fungi`
+- `src/self-hosted/slide-v2b-lease-use-state.fungi`
 - `src/self-hosted/type-checker.fungi`
 
 ## Entry Points

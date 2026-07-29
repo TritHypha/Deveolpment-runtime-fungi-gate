@@ -109,12 +109,21 @@ planning checkbox must never be used to imply that implementation exists.
   returns typed K3, and performs no key discovery or authority decision.
   Focused evidence is 35/35. Report:
   `docs/reports/slide-v2b-canonical-crypto-verifier-2026-07-29.md`.
-- **Current:** implement atomic nonce/replay and call-budget state plus
-  independent all-evidence K3 composition. The Galerina TypeScript crypto
-  floor is reference/bootstrap evidence, not the independent SLIDE verifier.
-- **Next:** only after those gates pass may any
-  lease reference, broker opcode, host handle, or host dispatch exist;
-  then add the versioned memory increment without widening frozen R1.
+- **Completed (awaiting local checkpoint commit):** `.fungi` now proposes an
+  exact canonical nonce/call transition; a bounded Galerina reference CAS
+  independently decodes both states and permits exactly one of sixteen
+  competing one-call commits; `.fungi` revalidates its typed receipt and
+  preserves the full Kleene K3 AND table across seven evidence shapes. Every
+  success remains non-authorizing. Focused evidence is 62/62. Report:
+  `docs/reports/slide-v2b-nonce-k3-reference-2026-07-29.md`.
+- **Current:** replace generic evidence fixtures with real versioned
+  artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
+  audit-before-success seam. The reference CAS is not a crash-consistent
+  production nonce store.
+- **Next:** add the versioned memory-object increment without widening frozen
+  R1; no lease reference, broker opcode, host handle, or dispatch may exist
+  before real receipt authenticity, production nonce state, broker isolation,
+  and audit gates pass.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity
@@ -139,6 +148,11 @@ planning checkbox must never be used to imply that implementation exists.
   zero integrity or KB-link violations; Hardened Border 97/97; explicit
   Galerina memory graph clean; dev-tool index 97 packages / 124 tools /
   40 proofs. Post-commit Myco indexes 4,101 files with zero over-size skips.
+- **Latest nonce/K3 verification:** compiler 5,387/5,387; repository 94/94
+  packages and 8,129/8,129 tests; graph 7,291 nodes / 7,547 edges; zero
+  integrity or KB-link violations; Hardened Border 97/97; explicit Galerina
+  memory graph clean; dev-tool index 97 packages / 124 tools / 40 proofs.
+  Post-commit Myco refresh remains required.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

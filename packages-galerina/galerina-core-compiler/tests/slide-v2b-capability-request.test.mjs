@@ -13,6 +13,7 @@ import {
   checkTypes,
   executeFlow,
   parseProgram,
+  SLIDEV2BAtomicStateReference,
   verifySLIDEV2BHybridLeaseSignature,
 } from "../dist/index.js";
 
@@ -38,6 +39,20 @@ const LEASE_CANONICAL_SOURCE = join(
   "self-hosted",
   "slide-v2b-lease-canonical.fungi",
 );
+const LEASE_USE_STATE_SOURCE = join(
+  HERE,
+  "..",
+  "src",
+  "self-hosted",
+  "slide-v2b-lease-use-state.fungi",
+);
+const ADMISSION_COMPOSITION_SOURCE = join(
+  HERE,
+  "..",
+  "src",
+  "self-hosted",
+  "slide-v2b-admission-composition.fungi",
+);
 
 let parsed;
 let capabilitySet;
@@ -47,6 +62,10 @@ let hybridCandidate;
 let hybridPolicy;
 let hybridSigningInput;
 let hybridMLSecretKey;
+let hybridFungiReceipt;
+let leaseUseFixture;
+let evidenceShapeSet;
+let initialStateCanonicalBytes;
 
 function field(record, name) {
   assert.equal(record.__tag, "record");
@@ -122,14 +141,85 @@ async function deriveLeaseSigningEvidence(
   return result.value;
 }
 
+async function proposeLeaseUseReservation({
+  lease = field(leaseFixture, "lease"),
+  request = field(leaseFixture, "request"),
+  receipt = hybridFungiReceipt,
+  state = field(leaseUseFixture, "state"),
+  expectedStateDigest = field(leaseUseFixture, "stateDigest"),
+  expectedGeneration = intValue(0),
+  requestBytes = intValue(128),
+  validationTime = field(leaseFixture, "validationTime"),
+} = {}) {
+  const result = await run(
+    "proposeSLIDEV2BLeaseUseReservation",
+    new Map([
+      ["lease", lease],
+      ["request", request],
+      ["verifierReceipt", receipt],
+      ["state", state],
+      ["expectedStateDigest", expectedStateDigest],
+      ["expectedGeneration", expectedGeneration],
+      ["requestBytes", requestBytes],
+      ["validationTime", validationTime],
+    ]),
+  );
+  assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
+  return result.value;
+}
+
+function atomicReceiptValue(receipt) {
+  return recordValue({
+    schemaId: stringValue(receipt.schemaId),
+    storeId: stringValue(receipt.storeId),
+    leaseId: stringValue(receipt.leaseId),
+    nonceDigest: stringValue(receipt.nonceDigest),
+    priorStateDigest: stringValue(receipt.priorStateDigest),
+    nextStateDigest: stringValue(receipt.nextStateDigest),
+    priorGeneration: intValue(receipt.priorGeneration),
+    nextGeneration: intValue(receipt.nextGeneration),
+    proposedCallNumber: intValue(receipt.proposedCallNumber),
+    verdict: { __tag: "verdict", value: receipt.verdict },
+    committedAt: intValue(receipt.committedAt),
+    evidenceDigest: stringValue(receipt.evidenceDigest),
+  });
+}
+
+async function composeEvidenceShapes({
+  evidence = evidenceShapeSet,
+  atomicReceipt,
+  reservation,
+} = {}) {
+  const result = await run(
+    "composeSLIDEV2BAdmissionEvidenceShapes",
+    new Map([
+      ["evidenceSet", evidence],
+      ["atomicReceipt", atomicReceipt],
+      ["reservation", reservation],
+      ["lease", field(leaseFixture, "lease")],
+      ["expectedStoreId", stringValue("slide.reference.atomic-store.v2b")],
+      ["validationTime", field(leaseFixture, "validationTime")],
+    ]),
+  );
+  assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
+  return result.value;
+}
+
 before(async () => {
   const requestSource = await readFile(SOURCE, "utf8");
   const leaseSource = await readFile(LEASE_SOURCE, "utf8");
   const leaseCanonicalSource = await readFile(LEASE_CANONICAL_SOURCE, "utf8");
+  const leaseUseStateSource = await readFile(LEASE_USE_STATE_SOURCE, "utf8");
+  const admissionCompositionSource = await readFile(
+    ADMISSION_COMPOSITION_SOURCE,
+    "utf8",
+  );
   const source = [
     requestSource,
     leaseSource.replace(/^@version 1\r?\n/, ""),
     leaseCanonicalSource.replace(/^@version 1\r?\n/, ""),
+    leaseUseStateSource.replace(/^@version 1\r?\n/, ""),
+    admissionCompositionSource.replace(/^@version 1\r?\n/, ""),
   ].join("\n");
   parsed = parseProgram(source, SOURCE, { requireVersionHeader: true });
   assert.deepEqual(
@@ -189,6 +279,43 @@ before(async () => {
     revokedKeyIds: new Set(),
     verifiedAt: 1001,
   };
+  const hybridReceipt = await verifySLIDEV2BHybridLeaseSignature(
+    hybridCandidate,
+    hybridPolicy,
+  );
+  hybridFungiReceipt = recordValue({
+    schemaId: stringValue(hybridReceipt.schemaId),
+    verifierId: stringValue(hybridReceipt.verifierId),
+    signatureSuiteId: intValue(hybridReceipt.signatureSuiteId),
+    signerRoleId: intValue(hybridReceipt.signerRoleId),
+    keyId: stringValue(hybridReceipt.keyId),
+    signedBytesDigest: stringValue(hybridReceipt.signedBytesDigest),
+    signatureDigest: stringValue(hybridReceipt.signatureDigest),
+    verdict: { __tag: "verdict", value: hybridReceipt.verdict },
+    verifiedAt: intValue(hybridReceipt.verifiedAt),
+    evidenceDigest: stringValue(hybridReceipt.evidenceDigest),
+  });
+  const stateResult = await run(
+    "materializeSLIDEV2BInitialLeaseUseState",
+    new Map([["lease", field(leaseFixture, "lease")]]),
+  );
+  assert.equal(stateResult.audit.result, "ok");
+  leaseUseFixture = stateResult.value;
+  const initialStateCanonicalResult = await run(
+    "slideV2BLeaseUseStateCanonicalBytes",
+    new Map([["state", field(leaseUseFixture, "state")]]),
+  );
+  assert.equal(initialStateCanonicalResult.audit.result, "ok");
+  initialStateCanonicalBytes = initialStateCanonicalResult.value.value;
+  const evidenceResult = await run(
+    "materializeSLIDEV2BEvidenceShapeSet",
+    new Map([
+      ["lease", field(leaseFixture, "lease")],
+      ["validationTime", field(leaseFixture, "validationTime")],
+    ]),
+  );
+  assert.equal(evidenceResult.audit.result, "ok");
+  evidenceShapeSet = evidenceResult.value;
 });
 
 describe("SLIDE V2-B capability request shape", () => {
@@ -611,6 +738,443 @@ describe("SLIDE V2-B independent hybrid cryptographic verifier", () => {
       field(decision, "failureId").value,
       "SLIDE-V2B-LEASE-011",
     );
+    assert.equal(field(decision, "authorityReleased").value, false);
+  });
+});
+
+describe("SLIDE V2-B lease-use state proposal", () => {
+  it("proposes one exact transition while releasing no authority", async () => {
+    const initialState = field(leaseUseFixture, "state");
+    const canonicalResult = await run(
+      "slideV2BLeaseUseStateCanonicalBytes",
+      new Map([["state", initialState]]),
+    );
+    assert.equal(canonicalResult.audit.result, "ok");
+    assert.equal(canonicalResult.value.value.length, 135);
+    assert.equal(
+      field(initialState, "nonceDigest").value,
+      "cf3ecc0f8b7b2c0a380d1aa0da7560ca143262acc6cb7c8f05709dd55b96f3ed",
+    );
+    assert.equal(
+      field(leaseUseFixture, "stateDigest").value,
+      "15e5b121b6a00d97f0dc1b99f86b7af7fc3e46c86c19369ff6f185212c15001b",
+    );
+    const independentlyDerived = createHash("sha256")
+      .update("slide.capability.lease-use-state.v2b\0", "utf8")
+      .update(canonicalResult.value.value)
+      .digest("hex");
+    assert.equal(
+      independentlyDerived,
+      field(leaseUseFixture, "stateDigest").value,
+    );
+    const reservation = await proposeLeaseUseReservation();
+    const decision = field(reservation, "decision");
+    const nextState = field(reservation, "nextState");
+    assert.equal(field(decision, "verdict").value, 1);
+    assert.equal(field(decision, "status").value, "RESERVATION_PROPOSED");
+    assert.equal(field(decision, "authorityReleased").value, false);
+    assert.equal(field(reservation, "priorStateDigest").value.length, 64);
+    assert.equal(field(reservation, "nextStateDigest").value.length, 64);
+    assert.notEqual(
+      field(reservation, "priorStateDigest").value,
+      field(reservation, "nextStateDigest").value,
+    );
+    assert.equal(field(nextState, "generation").value, 1);
+    assert.equal(field(nextState, "callsConsumed").value, 1);
+    assert.equal(field(nextState, "requestBytesConsumed").value, 128);
+    assert.equal(field(nextState, "statusId").value, 2);
+  });
+
+  const mutations = [
+    [
+      "state lease drift",
+      ({ state }) => state.fields.set("leaseId", stringValue("other-lease")),
+      "SLIDE-V2B-STATE-002",
+    ],
+    [
+      "nonce drift",
+      ({ state }) =>
+        state.fields.set(
+          "nonceDigest",
+          stringValue(
+            "abababababababababababababababababababababababababababababababab",
+          ),
+        ),
+      "SLIDE-V2B-STATE-003",
+    ],
+    [
+      "negative generation",
+      ({ state }) => state.fields.set("generation", intValue(-1)),
+      "SLIDE-V2B-STATE-004",
+    ],
+    [
+      "stale expected digest",
+      ({ expectedStateDigest }) => {
+        expectedStateDigest.value =
+          "abababababababababababababababababababababababababababababababab";
+      },
+      "SLIDE-V2B-STATE-005",
+    ],
+    [
+      "stale expected generation",
+      ({ expectedGeneration }) => {
+        expectedGeneration.value = 1;
+      },
+      "SLIDE-V2B-STATE-006",
+    ],
+    [
+      "zero request bytes",
+      ({ requestBytes }) => {
+        requestBytes.value = 0;
+      },
+      "SLIDE-V2B-STATE-008",
+    ],
+    [
+      "oversize request bytes",
+      ({ requestBytes }) => {
+        requestBytes.value = 4097;
+      },
+      "SLIDE-V2B-STATE-008",
+    ],
+  ];
+
+  for (const [name, mutate, expectedFailure] of mutations) {
+    it(`fails closed for ${name}`, async () => {
+      const state = structuredClone(field(leaseUseFixture, "state"));
+      const expectedStateDigest = structuredClone(
+        field(leaseUseFixture, "stateDigest"),
+      );
+      const expectedGeneration = intValue(0);
+      const requestBytes = intValue(128);
+      mutate({
+        state,
+        expectedStateDigest,
+        expectedGeneration,
+        requestBytes,
+      });
+      const reservation = await proposeLeaseUseReservation({
+        state,
+        expectedStateDigest,
+        expectedGeneration,
+        requestBytes,
+      });
+      const decision = field(reservation, "decision");
+      assert.equal(field(decision, "verdict").value, -1);
+      assert.equal(field(decision, "authorityReleased").value, false);
+      assert.equal(field(decision, "failureId").value, expectedFailure);
+      assert.equal(field(reservation, "priorStateDigest").value, "");
+      assert.equal(field(reservation, "nextStateDigest").value, "");
+      assert.equal(field(field(reservation, "nextState"), "statusId").value, 0);
+    });
+  }
+
+  it("refuses a replay of the proposed terminal next state", async () => {
+    const first = await proposeLeaseUseReservation();
+    const replay = await proposeLeaseUseReservation({
+      state: field(first, "nextState"),
+      expectedStateDigest: field(first, "nextStateDigest"),
+      expectedGeneration: intValue(1),
+    });
+    const decision = field(replay, "decision");
+    assert.equal(field(decision, "verdict").value, -1);
+    assert.equal(field(decision, "failureId").value, "SLIDE-V2B-STATE-007");
+    assert.equal(field(decision, "authorityReleased").value, false);
+  });
+});
+
+describe("SLIDE V2-B reference atomic state commit", () => {
+  const storeId = "slide.reference.atomic-store.v2b";
+
+  function initialRecord() {
+    const state = field(leaseUseFixture, "state");
+    return {
+      leaseId: field(state, "leaseId").value,
+      nonceDigest: field(state, "nonceDigest").value,
+      stateDigest: field(leaseUseFixture, "stateDigest").value,
+      generation: field(state, "generation").value,
+      callsConsumed: field(state, "callsConsumed").value,
+      requestBytesConsumed: field(state, "requestBytesConsumed").value,
+      expiresAt: field(state, "expiresAt").value,
+      statusId: field(state, "statusId").value,
+      canonicalBytes: initialStateCanonicalBytes,
+    };
+  }
+
+  async function candidateFor(reservation) {
+    const state = field(leaseUseFixture, "state");
+    const nextState = field(reservation, "nextState");
+    const canonicalResult = await run(
+      "slideV2BLeaseUseStateCanonicalBytes",
+      new Map([["state", nextState]]),
+    );
+    assert.equal(canonicalResult.audit.result, "ok");
+    return {
+      schemaId: "slide.capability.lease-use-reservation.v2b",
+      storeId,
+      leaseId: field(state, "leaseId").value,
+      nonceDigest: field(state, "nonceDigest").value,
+      priorStateDigest: field(reservation, "priorStateDigest").value,
+      nextStateDigest: field(reservation, "nextStateDigest").value,
+      priorGeneration: field(state, "generation").value,
+      nextGeneration: field(nextState, "generation").value,
+      proposedCallNumber: field(nextState, "callsConsumed").value,
+      commitTime: 1050,
+      nextStateCanonicalBytes: canonicalResult.value.value,
+    };
+  }
+
+  it("commits exactly the proposed digest/generation and releases no authority", async () => {
+    const reservation = await proposeLeaseUseReservation();
+    const candidate = await candidateFor(reservation);
+    const store = new SLIDEV2BAtomicStateReference(storeId, [initialRecord()]);
+    const receipt = store.reserve(candidate);
+    assert.equal(receipt.verdict, 1);
+    assert.equal(receipt.schemaId, "slide.atomic-state-receipt.v1");
+    assert.equal(receipt.authorityReleased, false);
+    assert.equal(receipt.evidenceDigest.length, 64);
+    const stored = store.inspect(candidate.leaseId);
+    assert.equal(stored.leaseId, candidate.leaseId);
+    assert.equal(stored.nonceDigest, candidate.nonceDigest);
+    assert.equal(stored.stateDigest, candidate.nextStateDigest);
+    assert.equal(stored.generation, candidate.nextGeneration);
+    assert.equal(stored.callsConsumed, candidate.proposedCallNumber);
+    assert.deepEqual(stored.canonicalBytes, candidate.nextStateCanonicalBytes);
+  });
+
+  it("allows exactly one of sixteen competing one-call reservations", async () => {
+    const reservation = await proposeLeaseUseReservation();
+    const candidate = await candidateFor(reservation);
+    const store = new SLIDEV2BAtomicStateReference(storeId, [initialRecord()]);
+    const receipts = await Promise.all(
+      Array.from({ length: 16 }, async () => store.reserve(candidate)),
+    );
+    assert.equal(receipts.filter((receipt) => receipt.verdict === 1).length, 1);
+    assert.equal(receipts.filter((receipt) => receipt.verdict === -1).length, 15);
+    assert.equal(receipts.filter((receipt) => receipt.verdict === 0).length, 0);
+    assert.ok(receipts.every((receipt) => receipt.authorityReleased === false));
+  });
+
+  it("returns INDETERMINATE for absent store state", async () => {
+    const reservation = await proposeLeaseUseReservation();
+    const candidate = await candidateFor(reservation);
+    const store = new SLIDEV2BAtomicStateReference(storeId, []);
+    const receipt = store.reserve(candidate);
+    assert.equal(receipt.verdict, 0);
+    assert.equal(receipt.authorityReleased, false);
+  });
+
+  const mutations = [
+    ["wrong store", (candidate) => ({ ...candidate, storeId: "other-store" })],
+    [
+      "wrong nonce",
+      (candidate) => ({
+        ...candidate,
+        nonceDigest:
+          "abababababababababababababababababababababababababababababababab",
+      }),
+    ],
+    [
+      "stale prior digest",
+      (candidate) => ({
+        ...candidate,
+        priorStateDigest:
+          "abababababababababababababababababababababababababababababababab",
+      }),
+    ],
+    [
+      "non-advancing digest",
+      (candidate) => ({
+        ...candidate,
+        nextStateDigest: candidate.priorStateDigest,
+      }),
+    ],
+    [
+      "skipped generation",
+      (candidate) => ({
+        ...candidate,
+        nextGeneration: candidate.nextGeneration + 1,
+      }),
+    ],
+    [
+      "wrong call number",
+      (candidate) => ({
+        ...candidate,
+        proposedCallNumber: candidate.proposedCallNumber + 1,
+      }),
+    ],
+    [
+      "tampered next-state bytes",
+      (candidate) => {
+        const bytes = candidate.nextStateCanonicalBytes.slice();
+        bytes[bytes.length - 1] ^= 1;
+        return { ...candidate, nextStateCanonicalBytes: bytes };
+      },
+    ],
+    [
+      "surplus next-state bytes",
+      (candidate) => ({
+        ...candidate,
+        nextStateCanonicalBytes: Uint8Array.from([
+          ...candidate.nextStateCanonicalBytes,
+          0,
+        ]),
+      }),
+    ],
+  ];
+
+  for (const [name, mutate] of mutations) {
+    it(`fails closed for ${name}`, async () => {
+      const reservation = await proposeLeaseUseReservation();
+      const store = new SLIDEV2BAtomicStateReference(storeId, [initialRecord()]);
+      const receipt = store.reserve(mutate(await candidateFor(reservation)));
+      assert.equal(receipt.verdict, -1);
+      assert.equal(receipt.authorityReleased, false);
+      assert.deepEqual(store.inspect(initialRecord().leaseId), initialRecord());
+    });
+  }
+});
+
+describe("SLIDE V2-B typed receipt K3 composition", () => {
+  const storeId = "slide.reference.atomic-store.v2b";
+
+  async function committedFixture({ seedStore = true } = {}) {
+    const reservation = await proposeLeaseUseReservation();
+    const state = field(leaseUseFixture, "state");
+    const initial = {
+      leaseId: field(state, "leaseId").value,
+      nonceDigest: field(state, "nonceDigest").value,
+      stateDigest: field(leaseUseFixture, "stateDigest").value,
+      generation: field(state, "generation").value,
+      callsConsumed: field(state, "callsConsumed").value,
+      requestBytesConsumed: field(state, "requestBytesConsumed").value,
+      expiresAt: field(state, "expiresAt").value,
+      statusId: field(state, "statusId").value,
+      canonicalBytes: initialStateCanonicalBytes,
+    };
+    const store = new SLIDEV2BAtomicStateReference(
+      storeId,
+      seedStore ? [initial] : [],
+    );
+    const nextState = field(reservation, "nextState");
+    const canonicalResult = await run(
+      "slideV2BLeaseUseStateCanonicalBytes",
+      new Map([["state", nextState]]),
+    );
+    assert.equal(canonicalResult.audit.result, "ok");
+    const receipt = store.reserve({
+      schemaId: "slide.capability.lease-use-reservation.v2b",
+      storeId,
+      leaseId: initial.leaseId,
+      nonceDigest: initial.nonceDigest,
+      priorStateDigest: field(reservation, "priorStateDigest").value,
+      nextStateDigest: field(reservation, "nextStateDigest").value,
+      priorGeneration: initial.generation,
+      nextGeneration: field(nextState, "generation").value,
+      proposedCallNumber: field(nextState, "callsConsumed").value,
+      commitTime: 1050,
+      nextStateCanonicalBytes: canonicalResult.value.value,
+    });
+    return { reservation, receipt };
+  }
+
+  it("composes seven exact ALLOW shapes but still releases no authority", async () => {
+    const { reservation, receipt } = await committedFixture();
+    const decision = await composeEvidenceShapes({
+      atomicReceipt: atomicReceiptValue(receipt),
+      reservation,
+    });
+    assert.equal(field(decision, "verdict").value, 1);
+    assert.equal(field(decision, "status").value, "EVIDENCE_SHAPES_COMPOSED");
+    assert.equal(field(decision, "authorityReleased").value, false);
+  });
+
+  it("preserves the exact Kleene K3 AND truth table", async () => {
+    const expected = new Map([
+      ["-1,-1", -1],
+      ["-1,0", -1],
+      ["-1,1", -1],
+      ["0,-1", -1],
+      ["0,0", 0],
+      ["0,1", 0],
+      ["1,-1", -1],
+      ["1,0", 0],
+      ["1,1", 1],
+    ]);
+    for (const [key, value] of expected) {
+      const [left, right] = key.split(",").map(Number);
+      const result = await run(
+        "slideV2BK3And",
+        new Map([
+          ["left", { __tag: "verdict", value: left }],
+          ["right", { __tag: "verdict", value: right }],
+        ]),
+      );
+      assert.equal(result.audit.result, "ok", `${key}: ${JSON.stringify(result.audit)}`);
+      assert.equal(result.value.value, value, key);
+    }
+  });
+
+  for (const verdict of [-1, 0]) {
+    it(`preserves evidence-shape Verdict ${verdict} as a terminal composition`, async () => {
+      const { reservation, receipt } = await committedFixture();
+      const evidence = structuredClone(evidenceShapeSet);
+      const replacementResult = await run(
+        "materializeSLIDEV2BEvidenceShape",
+        new Map([
+          ["kindId", intValue(3)],
+          ["lease", field(leaseFixture, "lease")],
+          ["validationTime", field(leaseFixture, "validationTime")],
+          ["verdict", { __tag: "verdict", value: verdict }],
+        ]),
+      );
+      assert.equal(replacementResult.audit.result, "ok");
+      field(evidence, "receipts").items[2] = replacementResult.value;
+      const decision = await composeEvidenceShapes({
+        evidence,
+        atomicReceipt: atomicReceiptValue(receipt),
+        reservation,
+      });
+      assert.equal(field(decision, "verdict").value, verdict);
+      assert.equal(field(decision, "authorityReleased").value, false);
+    });
+  }
+
+  it("preserves an absent atomic state as terminal INDETERMINATE", async () => {
+    const { reservation, receipt } = await committedFixture({
+      seedStore: false,
+    });
+    assert.equal(receipt.verdict, 0);
+    const decision = await composeEvidenceShapes({
+      atomicReceipt: atomicReceiptValue(receipt),
+      reservation,
+    });
+    assert.equal(field(decision, "verdict").value, 0);
+    assert.equal(field(decision, "status").value, "EVIDENCE_COMPOSITION_UNRESOLVED");
+    assert.equal(field(decision, "authorityReleased").value, false);
+  });
+
+  it("fails closed for a changed atomic receipt digest", async () => {
+    const { reservation, receipt } = await committedFixture();
+    const atomicReceipt = atomicReceiptValue(receipt);
+    atomicReceipt.fields.set("evidenceDigest", stringValue("00"));
+    const decision = await composeEvidenceShapes({
+      atomicReceipt,
+      reservation,
+    });
+    assert.equal(field(decision, "verdict").value, -1);
+    assert.equal(field(decision, "authorityReleased").value, false);
+  });
+
+  it("fails closed for a swapped evidence kind", async () => {
+    const { reservation, receipt } = await committedFixture();
+    const evidence = structuredClone(evidenceShapeSet);
+    field(evidence, "receipts").items[0].fields.set("kindId", intValue(2));
+    const decision = await composeEvidenceShapes({
+      evidence,
+      atomicReceipt: atomicReceiptValue(receipt),
+      reservation,
+    });
+    assert.equal(field(decision, "verdict").value, -1);
     assert.equal(field(decision, "authorityReleased").value, false);
   });
 });

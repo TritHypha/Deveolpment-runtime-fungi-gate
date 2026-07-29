@@ -1,0 +1,365 @@
+@version 1
+/// @file: slide-v2b-admission-composition.fungi
+/// @purpose: Validate typed V2-B atomic/evidence receipt shapes and compose exact K3.
+/// @status: Non-authorizing reference composition; no broker lease reference or host dispatch.
+
+record SLIDEV2BAtomicStateReceipt {
+  schemaId: String
+  storeId: String
+  leaseId: String
+  nonceDigest: String
+  priorStateDigest: String
+  nextStateDigest: String
+  priorGeneration: Int
+  nextGeneration: Int
+  proposedCallNumber: Int
+  verdict: Verdict
+  committedAt: Int
+  evidenceDigest: String
+}
+
+record SLIDEV2BEvidenceShapeReceipt {
+  schemaId: String
+  kindId: Int
+  subjectDigest: String
+  verdict: Verdict
+  observedAt: Int
+  expiresAt: Int
+  evidenceDigest: String
+}
+
+record SLIDEV2BEvidenceShapeSet {
+  receipts: Array<SLIDEV2BEvidenceShapeReceipt>
+}
+
+pure flow slideV2BFrameBytes(payload: Bytes) -> Bytes
+contract { intent { "Length-frame one bounded receipt digest field." } }
+{
+  let length = payload.length()
+  if length < 0 or length > 2147483647 { return Bytes.empty() }
+  let byte3: Int = length / 16777216
+  let remainder3: Int = length - byte3 * 16777216
+  let byte2: Int = remainder3 / 65536
+  let remainder2: Int = remainder3 - byte2 * 65536
+  let byte1: Int = remainder2 / 256
+  let byte0: Int = remainder2 - byte1 * 256
+  return Bytes.of(byte3, byte2, byte1, byte0).append(payload)
+}
+
+pure flow slideV2BVerdictText(verdict: Verdict) -> String
+contract { intent { "Encode one exhaustive K3 value for receipt evidence." } }
+{
+  check(verdict) {
+    deny: { return "-1" }
+    ambig: { return "0" }
+    if: { return "1" }
+  }
+}
+
+pure flow slideV2BAtomicReceiptEvidenceDigest(
+  receipt: SLIDEV2BAtomicStateReceipt,
+) -> String
+contract { intent { "Independently derive the reference atomic receipt evidence digest." } }
+{
+  mut bytes: Bytes = slideV2BFrameBytes(
+    Bytes.fromHex(
+      "736c6964652e61746f6d69632d73746174652d726563656970742e763100",
+    ),
+  )
+  bytes = bytes.append(slideV2BFrameBytes(receipt.storeId.encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.leaseId.encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.nonceDigest.encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.priorStateDigest.encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.nextStateDigest.encode()))
+  bytes = bytes.append(
+    slideV2BFrameBytes(receipt.priorGeneration.toString().encode()),
+  )
+  bytes = bytes.append(
+    slideV2BFrameBytes(receipt.nextGeneration.toString().encode()),
+  )
+  bytes = bytes.append(
+    slideV2BFrameBytes(receipt.proposedCallNumber.toString().encode()),
+  )
+  bytes = bytes.append(
+    slideV2BFrameBytes(slideV2BVerdictText(receipt.verdict).encode()),
+  )
+  bytes = bytes.append(
+    slideV2BFrameBytes(receipt.committedAt.toString().encode()),
+  )
+  return bytes.sha256Hex()
+}
+
+pure flow validateSLIDEV2BAtomicStateReceipt(
+  receipt: SLIDEV2BAtomicStateReceipt,
+  reservation: SLIDEV2BLeaseUseReservation,
+  lease: SLIDEV2BLease,
+  expectedStoreId: String,
+  expectedCommitTime: Int,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Validate exact CAS receipt bindings without releasing a lease reference." } }
+{
+  check(reservation.decision.verdict) {
+    deny: { return reservation.decision }
+    ambig: { return reservation.decision }
+    if: {}
+  }
+  if receipt.schemaId != "slide.atomic-state-receipt.v1" or expectedStoreId.length() < 1 or receipt.storeId != expectedStoreId {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-ATOMIC-001", "atomic receipt schema or store identity changed",
+    )
+  }
+  if receipt.leaseId != lease.leaseId or receipt.nonceDigest != slideV2BLeaseNonceDigest(lease) {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-ATOMIC-002", "atomic receipt lease or nonce binding changed",
+    )
+  }
+  if receipt.priorStateDigest != reservation.priorStateDigest or receipt.nextStateDigest != reservation.nextStateDigest or receipt.priorGeneration != reservation.expectedGeneration or receipt.nextGeneration != reservation.expectedGeneration + 1 {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-ATOMIC-003", "atomic receipt does not bind the proposed state transition",
+    )
+  }
+  if receipt.proposedCallNumber != reservation.nextState.callsConsumed or receipt.committedAt != expectedCommitTime or receipt.committedAt >= lease.expiresAt {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-ATOMIC-004", "atomic receipt call number or commit time changed",
+    )
+  }
+  let expectedEvidenceDigest = slideV2BAtomicReceiptEvidenceDigest(receipt)
+  if receipt.evidenceDigest.length() != 64 or expectedEvidenceDigest.length() != 64 or receipt.evidenceDigest != expectedEvidenceDigest {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-ATOMIC-005", "atomic receipt evidence digest is invalid",
+    )
+  }
+  check(receipt.verdict) {
+    deny: {
+      return {
+        verdict: Verdict.Deny status: "ATOMIC_COMMIT_DENIED"
+        failureId: "SLIDE-V2B-ATOMIC-006"
+        detail: "atomic compare-and-swap denied the transition"
+        authorityReleased: false
+      }
+    }
+    ambig: {
+      return {
+        verdict: Verdict.Unknown status: "ATOMIC_COMMIT_UNRESOLVED"
+        failureId: "SLIDE-V2B-ATOMIC-007"
+        detail: "atomic compare-and-swap evidence is unavailable"
+        authorityReleased: false
+      }
+    }
+    if: {
+      return {
+        verdict: Verdict.Allow status: "ATOMIC_RECEIPT_VALIDATED"
+        failureId: "NONE"
+        detail: "atomic receipt validated; broker authority remains absent"
+        authorityReleased: false
+      }
+    }
+  }
+}
+
+pure flow slideV2BEvidenceShapeDigest(
+  receipt: SLIDEV2BEvidenceShapeReceipt,
+) -> String
+contract { intent { "Derive one non-authorizing evidence-shape digest." } }
+{
+  mut bytes: Bytes = slideV2BFrameBytes(
+    Bytes.fromHex(
+      "736c6964652e61646d697373696f6e2d65766964656e63652d73686170652e76326200",
+    ),
+  )
+  bytes = bytes.append(slideV2BFrameBytes(receipt.kindId.toString().encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.subjectDigest.encode()))
+  bytes = bytes.append(
+    slideV2BFrameBytes(slideV2BVerdictText(receipt.verdict).encode()),
+  )
+  bytes = bytes.append(slideV2BFrameBytes(receipt.observedAt.toString().encode()))
+  bytes = bytes.append(slideV2BFrameBytes(receipt.expiresAt.toString().encode()))
+  return bytes.sha256Hex()
+}
+
+pure flow materializeSLIDEV2BEvidenceShape(
+  kindId: Int,
+  lease: SLIDEV2BLease,
+  validationTime: Int,
+  verdict: Verdict,
+) -> SLIDEV2BEvidenceShapeReceipt
+contract { intent { "Materialize one deterministic non-production evidence-shape fixture." } }
+{
+  let draft: SLIDEV2BEvidenceShapeReceipt = {
+    schemaId: "slide.admission-evidence-shape.v2b"
+    kindId: kindId subjectDigest: lease.artifactSemanticDigest
+    verdict: verdict observedAt: validationTime expiresAt: lease.expiresAt
+    evidenceDigest: ""
+  }
+  return {
+    schemaId: draft.schemaId kindId: draft.kindId
+    subjectDigest: draft.subjectDigest verdict: draft.verdict
+    observedAt: draft.observedAt expiresAt: draft.expiresAt
+    evidenceDigest: slideV2BEvidenceShapeDigest(draft)
+  }
+}
+
+pure flow materializeSLIDEV2BEvidenceShapeSet(
+  lease: SLIDEV2BLease,
+  validationTime: Int,
+) -> SLIDEV2BEvidenceShapeSet
+contract { intent { "Materialize six exact ALLOW evidence-shape fixtures." } }
+{
+  return {
+    receipts: Array.of(
+      materializeSLIDEV2BEvidenceShape(1, lease, validationTime, Verdict.Allow),
+      materializeSLIDEV2BEvidenceShape(2, lease, validationTime, Verdict.Allow),
+      materializeSLIDEV2BEvidenceShape(3, lease, validationTime, Verdict.Allow),
+      materializeSLIDEV2BEvidenceShape(4, lease, validationTime, Verdict.Allow),
+      materializeSLIDEV2BEvidenceShape(5, lease, validationTime, Verdict.Allow),
+      materializeSLIDEV2BEvidenceShape(6, lease, validationTime, Verdict.Allow),
+    )
+  }
+}
+
+pure flow slideV2BEvidenceShapeAt(
+  values: Array<SLIDEV2BEvidenceShapeReceipt>,
+  index: Int,
+) -> SLIDEV2BEvidenceShapeReceipt
+contract { intent { "Read one evidence fixture after an exact count gate." } }
+{
+  let value = values.get(index)
+  match value {
+    Some(receipt) => { return receipt }
+    None => {
+      return {
+        schemaId: "" kindId: 0 subjectDigest: "" verdict: Verdict.Deny
+        observedAt: 0 expiresAt: 0 evidenceDigest: ""
+      }
+    }
+    _ => {
+      return {
+        schemaId: "" kindId: 0 subjectDigest: "" verdict: Verdict.Deny
+        observedAt: 0 expiresAt: 0 evidenceDigest: ""
+      }
+    }
+  }
+}
+
+pure flow validateSLIDEV2BEvidenceShape(
+  receipt: SLIDEV2BEvidenceShapeReceipt,
+  expectedKindId: Int,
+  lease: SLIDEV2BLease,
+  validationTime: Int,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Validate one bound evidence shape while preserving exact K3." } }
+{
+  if receipt.schemaId != "slide.admission-evidence-shape.v2b" or receipt.kindId != expectedKindId {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-K3-001", "evidence schema or kind changed",
+    )
+  }
+  if receipt.subjectDigest != lease.artifactSemanticDigest or receipt.subjectDigest.length() != 64 {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-K3-002", "evidence does not bind the admitted artifact",
+    )
+  }
+  if receipt.observedAt > validationTime or validationTime >= receipt.expiresAt or receipt.expiresAt > lease.expiresAt {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-K3-003", "evidence freshness window is invalid",
+    )
+  }
+  let expectedDigest = slideV2BEvidenceShapeDigest(receipt)
+  if receipt.evidenceDigest.length() != 64 or expectedDigest.length() != 64 or receipt.evidenceDigest != expectedDigest {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-K3-004", "evidence shape digest is invalid",
+    )
+  }
+  return {
+    verdict: receipt.verdict status: "EVIDENCE_SHAPE_VALIDATED"
+    failureId: "NONE"
+    detail: "evidence shape validated; authenticity and authority remain absent"
+    authorityReleased: false
+  }
+}
+
+pure flow slideV2BK3And(left: Verdict, right: Verdict) -> Verdict
+contract { intent { "Compose two authority values using exact Kleene K3 AND." } }
+{
+  check(left) {
+    deny: { return Verdict.Deny }
+    ambig: {
+      check(right) {
+        deny: { return Verdict.Deny }
+        ambig: { return Verdict.Unknown }
+        if: { return Verdict.Unknown }
+      }
+    }
+    if: { return right }
+  }
+}
+
+pure flow composeSLIDEV2BAdmissionEvidenceShapes(
+  evidenceSet: SLIDEV2BEvidenceShapeSet,
+  atomicReceipt: SLIDEV2BAtomicStateReceipt,
+  reservation: SLIDEV2BLeaseUseReservation,
+  lease: SLIDEV2BLease,
+  expectedStoreId: String,
+  validationTime: Int,
+) -> SLIDEV2BCapabilityDecision
+contract { intent { "Compose seven validated reference evidence shapes without releasing authority." } }
+{
+  if evidenceSet.receipts.count() != 6 {
+    return refuseSLIDEV2BCapability(
+      "SLIDE-V2B-K3-005", "exactly six non-atomic evidence shapes are required",
+    )
+  }
+  let one = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 0), 1, lease, validationTime,
+  )
+  let two = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 1), 2, lease, validationTime,
+  )
+  let three = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 2), 3, lease, validationTime,
+  )
+  let four = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 3), 4, lease, validationTime,
+  )
+  let five = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 4), 5, lease, validationTime,
+  )
+  let six = validateSLIDEV2BEvidenceShape(
+    slideV2BEvidenceShapeAt(evidenceSet.receipts, 5), 6, lease, validationTime,
+  )
+  let atomicDecision = validateSLIDEV2BAtomicStateReceipt(
+    atomicReceipt, reservation, lease, expectedStoreId, validationTime,
+  )
+  let composed12 = slideV2BK3And(one.verdict, two.verdict)
+  let composed123 = slideV2BK3And(composed12, three.verdict)
+  let composed1234 = slideV2BK3And(composed123, four.verdict)
+  let composed12345 = slideV2BK3And(composed1234, five.verdict)
+  let composed123456 = slideV2BK3And(composed12345, six.verdict)
+  let composedAll = slideV2BK3And(composed123456, atomicDecision.verdict)
+  check(composedAll) {
+    deny: {
+      return {
+        verdict: Verdict.Deny status: "EVIDENCE_COMPOSITION_DENIED"
+        failureId: "SLIDE-V2B-K3-006"
+        detail: "at least one validated evidence shape denied"
+        authorityReleased: false
+      }
+    }
+    ambig: {
+      return {
+        verdict: Verdict.Unknown status: "EVIDENCE_COMPOSITION_UNRESOLVED"
+        failureId: "SLIDE-V2B-K3-007"
+        detail: "at least one validated evidence shape is unresolved"
+        authorityReleased: false
+      }
+    }
+    if: {
+      return {
+        verdict: Verdict.Allow status: "EVIDENCE_SHAPES_COMPOSED"
+        failureId: "NONE"
+        detail: "reference evidence shapes composed; broker authority remains absent"
+        authorityReleased: false
+      }
+    }
+  }
+}
