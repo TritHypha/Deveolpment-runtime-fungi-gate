@@ -25,13 +25,14 @@ planning checkbox must never be used to imply that implementation exists.
   `packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi`
   decodes canonical fields into importer-owned typed program records (local
   commit `bc5bd9d7`).
-- **Completed, pending checkpoint commit:** the independent semantic gate now
+- **Completed:** local commit `3cd1f3d2` adds the independent semantic gate,
+  semantic binder, and decoded-program runtime. The gate
   validates the closed registry, dense block/SSA identities, dominance,
   opcode shapes/types, failures, terminators, CFG successors, and K3
   obligation. `slide-r1-program-runtime.fungi` instruction-drives only the
   validated reconstructed graph and matches the prior oracle across K3 and
   checked-Int32 outcomes.
-- **Completed, pending checkpoint commit:** the `.fungi` semantic binder
+- **Completed:** the `.fungi` semantic binder
   computes
   `SHA-256("slide.gir.semantic.v1\0" || canonical_body)` only after both
   import gates allow, and releases no digest on refusal. Focused evidence:
@@ -47,7 +48,8 @@ planning checkbox must never be used to imply that implementation exists.
   Regenerated project graph: 7,176 nodes / 7,441 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
-  124 tools, 40 proofs.
+  124 tools, 40 proofs. Post-commit Myco refresh indexes 4,080 files with zero
+  over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,

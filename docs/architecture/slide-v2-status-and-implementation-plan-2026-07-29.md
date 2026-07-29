@@ -31,10 +31,13 @@ canonical CBOR heads and classifies registry, opcode, type, operand, failure,
 K3-successor, and suffix drift without consulting the encoder or vector.
 A closed-profile `.fungi` reference executor runs only admitted bytes in a
 fresh process and proves distinct success, denial, unresolved, and arithmetic
-failure results. It executes the frozen registered profile rather than a
-reconstructed general instruction graph. Imported-program reconstruction, SLIDE
-packaging, native execution, Tri-Fuse v2, the frontend receipt, driver CLI,
-and benchmarks do not yet exist.
+failure results. A second layer now reconstructs the frozen typed program,
+validates its closed registry, blocks, SSA identities/dominance, types,
+failures, terminators, K3 successors/obligation, binds its domain-separated
+semantic digest, and instruction-drives the admitted records in a fresh
+process. This is still a frozen four-block profile, not general executable GIR.
+SLIDE packaging, native execution, Tri-Fuse v2, the frontend receipt, driver
+CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
 bytecode/runtime tiers, and WebAssembly toolchain. SLIDE must not be presented
 as shipped, benchmarked, memory-safe, deterministic, or production-ready.
@@ -63,11 +66,11 @@ Planning completion and implementation completion are deliberately separate.
 | K3 semantics | `IMPLEMENTED-PARTIAL` | Kleene K3 authority contract documented; current checker, walker, WAT paths, and bounded self-hosted internal GIR path preserve three states; invalid fourth states refuse | Publish one independent registry and executable conformance vectors |
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
-| R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, structural importer, and fresh-process closed-profile reference execution | Reconstruct an independent program value and dispatch a general reference interpreter over checked CFG/SSA |
-| AST independence | `NOT-STARTED` | None for the SLIDE boundary | Remove every post-GIR AST lookup and prove fresh-process execution |
+| R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
+| AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
-| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential passes; exact AST dependency inventory, fail-closed preflight, self-hosted `check_k3`, compiler-owned logical adapter, canonical body export, and exact-vector validation exist | Structurally import/validate, execute fresh-process, then add semantic serialized mutations |
-| First fixture | `IMPLEMENTED-PARTIAL` | Exact four-block typed-ID body, body checksum, whole-vector mutation kill, semantic importer mutations, and fresh-process typed outcome execution exist | Add reconstructed imported artifact and instruction-driven execution |
+| G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
+| First fixture | `IMPLEMENTED-VERIFIED` | Exact four-block body, pinned checksum/semantic digest, whole-vector mutation kill, reconstructed validation, semantic mutations, K3/Int32 parity, fourth-Verdict trap, and fresh-process instruction dispatch | Retain as a frozen conformance fixture while the registry generalizes |
 | Memory profile | `SPECIFIED` | `slide.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
@@ -109,8 +112,10 @@ an LLVM emitter around them.
 
 Galerina now contains the bounded `slide.semantic.galerina-gir.v1` fixture
 adapter, canonical encoder, exact-vector validator, structural importer, and
-closed-profile reference executor. It does not contain an implemented
-`.slide` container, general SLIDE frontend receipt, general instruction-driven
+closed-profile differential executor. It also contains an importer-owned typed
+program reconstruction, closed-registry semantic validator, domain-separated
+digest binder, and instruction-driven reference runtime. It does not contain
+an implemented `.slide` container, general SLIDE frontend receipt, general GIR
 runtime, native loader, or production runner. The sibling `triLowLevel-v2`
 directory is a planning set and is not currently its own Git repository.
 
@@ -276,9 +281,13 @@ importer classifies canonicality, registry, opcode, type, failure, K3 edge,
 truncation, and suffix mutations. The fresh-process reference executor runs
 the admitted closed profile without source/AST/WAT. A second importer layer now
 reconstructs an independently owned typed program from the canonical bytes
-(16/16 focused tests) without calling the encoder or fixed structural-admission
-flow. Remaining: drive general CFG/SSA validation and instruction-driven
-execution from that value.
+(local commit `bc5bd9d7`) without calling the encoder or fixed
+structural-admission flow. The next checkpoint (`3cd1f3d2`) validates the
+closed CFG/SSA/type/failure/K3 contract, computes the registered
+domain-separated semantic digest, and instruction-drives only the admitted
+records. Focused evidence is 25/25; compiler evidence is 5,295/5,295.
+Remaining: generalize the registry, implement memory/budget/capability
+semantics, and prove a second frontend.
 The current refusal names are stable within the preflight contract but are not
 frozen numeric registry entries. G1 is therefore
 `IMPLEMENTED-PARTIAL`, not complete.
@@ -369,13 +378,12 @@ its additional format/verifier/runtime.
 Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
-2. make the structural importer reconstruct its own typed program value and
-   finish the closed CFG/SSA validation stages;
-3. replace closed-profile semantic dispatch with instruction-driven reference
-   execution over the reconstructed record;
-4. add serialized semantic negative fixtures and expected outcomes, retaining
-   the preflight refusal namespace separately from the future numeric failure
-   registry;
+2. retain the frozen R1 fixture as a conformance baseline and widen registries
+   only through explicit versioned additions;
+3. implement the `slide.memory.safe-value.v1` negative corpus and verifier
+   boundary before native work;
+4. preserve the unresolved historic nesting-source question without
+   overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.
 
 Do not start LLVM, container signing, driver installation, or native execution
@@ -393,6 +401,8 @@ The current branch contains these SLIDE-related checkpoints:
 | `8b11b018` | Enforce verified total control flow across 19 services |
 | `c7947a89` | Specify the executable-GIR/frontend-receipt handoff |
 | `270ec5f1` | Add the canonical SLIDE implementation ledger |
+| `bc5bd9d7` | Reconstruct importer-owned typed SLIDE R1 programs |
+| `3cd1f3d2` | Validate, hash, and instruction-drive admitted R1 programs |
 | `0f2f7c6a` | Harden SLIDE G1 runtime boundaries and add the capability probe |
 | `ab3de224` | Add the bounded SLIDE R1 preflight kernel |
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |

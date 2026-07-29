@@ -98,8 +98,11 @@ three-successor K3 check and checked Int32 execution. The compiler-owned
 signature/effect/body facts and materializes the exact four-block logical R1
 fixture or refuses. The encoder now emits a 282-byte canonical typed-ID body;
 an exact-vector validator, separate structural importer, and importer-owned
-typed-program decoder consume it without the AST or encoder object. General
-CFG/SSA validation, instruction-driven execution, and signed frontend evidence
+typed-program decoder consume it without the AST or encoder object. The frozen
+four-block profile now passes independent closed-registry
+CFG/SSA/type/failure/K3 validation, domain-separated semantic binding, and
+instruction-driven fresh-process execution. General executable GIR, memory,
+budget/capability semantics, a second frontend, and signed frontend evidence
 remain open.
 
 ### Memory contract
