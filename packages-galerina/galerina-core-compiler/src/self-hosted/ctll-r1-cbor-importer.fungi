@@ -1,0 +1,397 @@
+@version 1
+/// @file: ctll-r1-cbor-importer.fungi
+/// @purpose: Independently parse and structurally validate the frozen typed-ID R1 CBOR body.
+/// @status: Bounded closed-profile importer; reference execution remains separate.
+///
+/// This implementation does not import the encoder or its pinned byte vector.
+/// It parses canonical CBOR heads, validates every container boundary and
+/// registered field, classifies semantic drift, and rejects trailing bytes.
+
+record CTLLR1ImportCursor {
+  ok: Bool
+  offset: Int
+  failureId: String
+  reason: String
+}
+
+record CTLLR1HeadRead {
+  ok: Bool
+  value: Int
+  nextOffset: Int
+  failureId: String
+  reason: String
+}
+
+record CTLLR1ImportDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  reason: String
+  consumed: Int
+}
+
+pure flow ctllR1ImportFailure(
+  offset: Int,
+  failureId: String,
+  reasonText: String,
+) -> CTLLR1ImportCursor
+contract { intent { "Create one sticky bounded-import refusal cursor." } }
+{
+  return { ok: false offset: offset failureId: failureId reason: reasonText }
+}
+
+pure flow ctllR1ImportByte(bytes: Bytes, offset: Int) -> Int
+contract { intent { "Read one byte as an integer or return the out-of-bounds sentinel." } }
+{
+  let item = bytes.getInt(offset)
+  match item {
+    Some(value) => { return value }
+    None => { return -1 }
+    _ => { return -1 }
+  }
+}
+
+pure flow ctllR1ReadCanonicalHead(
+  bytes: Bytes,
+  offset: Int,
+  expectedMajor: Int,
+) -> CTLLR1HeadRead
+contract { intent { "Read one definite shortest-form CBOR head under the R1 16-bit ceiling." } }
+{
+  let first: Int = ctllR1ImportByte(bytes, offset)
+  if first < 0 {
+    return {
+      ok: false value: -1 nextOffset: offset
+      failureId: "CTLL-R1-IMPORT-001" reason: "truncated CBOR head"
+    }
+  }
+  mut major: Int = 0
+  if first >= 32 { major = 1 }
+  if first >= 64 { major = 2 }
+  if first >= 96 { major = 3 }
+  if first >= 128 { major = 4 }
+  if first >= 160 { major = 5 }
+  if first >= 192 { major = 6 }
+  if first >= 224 { major = 7 }
+  let additional: Int = first - major * 32
+  if major != expectedMajor {
+    return {
+      ok: false value: -1 nextOffset: offset
+      failureId: "CTLL-R1-IMPORT-002" reason: "unexpected CBOR major type"
+    }
+  }
+  if additional < 24 {
+    return {
+      ok: true value: additional nextOffset: offset + 1
+      failureId: "NONE" reason: ""
+    }
+  }
+  if additional == 24 {
+    let value8: Int = ctllR1ImportByte(bytes, offset + 1)
+    if value8 < 0 {
+      return {
+        ok: false value: -1 nextOffset: offset
+        failureId: "CTLL-R1-IMPORT-001" reason: "truncated one-byte CBOR value"
+      }
+    }
+    if value8 < 24 {
+      return {
+        ok: false value: -1 nextOffset: offset
+        failureId: "CTLL-R1-IMPORT-003" reason: "non-shortest CBOR integer or length"
+      }
+    }
+    return {
+      ok: true value: value8 nextOffset: offset + 2
+      failureId: "NONE" reason: ""
+    }
+  }
+  if additional == 25 {
+    let high: Int = ctllR1ImportByte(bytes, offset + 1)
+    let low: Int = ctllR1ImportByte(bytes, offset + 2)
+    if high < 0 or low < 0 {
+      return {
+        ok: false value: -1 nextOffset: offset
+        failureId: "CTLL-R1-IMPORT-001" reason: "truncated two-byte CBOR value"
+      }
+    }
+    let value16: Int = high * 256 + low
+    if value16 < 256 {
+      return {
+        ok: false value: -1 nextOffset: offset
+        failureId: "CTLL-R1-IMPORT-003" reason: "non-shortest CBOR integer or length"
+      }
+    }
+    return {
+      ok: true value: value16 nextOffset: offset + 3
+      failureId: "NONE" reason: ""
+    }
+  }
+  return {
+    ok: false value: -1 nextOffset: offset
+    failureId: "CTLL-R1-IMPORT-004"
+    reason: "indefinite, 32-bit, 64-bit, or reserved CBOR head is outside R1"
+  }
+}
+
+pure flow ctllR1ExpectHead(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  major: Int,
+  expectedValue: Int,
+  failureId: String,
+  reasonText: String,
+) -> CTLLR1ImportCursor
+contract { intent { "Consume one exact canonical head while preserving the first refusal." } }
+{
+  if cursor.ok == false { return cursor }
+  let read = ctllR1ReadCanonicalHead(bytes, cursor.offset, major)
+  if read.ok == false {
+    return ctllR1ImportFailure(cursor.offset, read.failureId, read.reason)
+  }
+  if read.value != expectedValue {
+    return ctllR1ImportFailure(cursor.offset, failureId, reasonText)
+  }
+  return { ok: true offset: read.nextOffset failureId: "NONE" reason: "" }
+}
+
+pure flow ctllR1ExpectUInt(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  expectedValue: Int,
+  failureId: String,
+  reasonText: String,
+) -> CTLLR1ImportCursor
+contract { intent { "Consume one exact canonical unsigned registry value." } }
+{
+  return ctllR1ExpectHead(bytes, cursor, 0, expectedValue, failureId, reasonText)
+}
+
+pure flow ctllR1ExpectArray(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  expectedCount: Int,
+  failureId: String,
+) -> CTLLR1ImportCursor
+contract { intent { "Consume one exact definite array boundary." } }
+{
+  return ctllR1ExpectHead(
+    bytes, cursor, 4, expectedCount, failureId, "unexpected R1 array length",
+  )
+}
+
+pure flow ctllR1ExpectText(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  expectedText: String,
+  failureId: String,
+  reasonText: String,
+) -> CTLLR1ImportCursor
+contract { intent { "Consume and byte-compare one exact bounded UTF-8 profile identity." } }
+{
+  if cursor.ok == false { return cursor }
+  let expected: Bytes = expectedText.encode()
+  let head = ctllR1ReadCanonicalHead(bytes, cursor.offset, 3)
+  if head.ok == false {
+    return ctllR1ImportFailure(cursor.offset, head.failureId, head.reason)
+  }
+  if head.value != expected.length() {
+    return ctllR1ImportFailure(cursor.offset, failureId, reasonText)
+  }
+  mut i: Int = 0
+  while i < expected.length() {
+    let actualByte: Int = ctllR1ImportByte(bytes, head.nextOffset + i)
+    let expectedByte: Int = ctllR1ImportByte(expected, i)
+    if actualByte < 0 {
+      return ctllR1ImportFailure(
+        head.nextOffset + i, "CTLL-R1-IMPORT-001", "truncated UTF-8 text",
+      )
+    }
+    if actualByte != expectedByte {
+      return ctllR1ImportFailure(head.nextOffset + i, failureId, reasonText)
+    }
+    i = i + 1
+  }
+  return {
+    ok: true offset: head.nextOffset + expected.length()
+    failureId: "NONE" reason: ""
+  }
+}
+
+pure flow ctllR1ExpectInstruction(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> CTLLR1ImportCursor
+contract { intent { "Parse one fixed typed instruction and classify registry or operand drift." } }
+{
+  mut next = ctllR1ExpectArray(bytes, cursor, 5, "CTLL-R1-IMPORT-020")
+  next = ctllR1ExpectUInt(bytes, next, resultId, "CTLL-R1-IMPORT-021", "SSA result identity mismatch")
+  next = ctllR1ExpectUInt(bytes, next, opcodeId, "CTLL-R1-IMPORT-022", "opcode registry identity mismatch")
+  next = ctllR1ExpectUInt(bytes, next, typeId, "CTLL-R1-IMPORT-023", "instruction type identity mismatch")
+  next = ctllR1ExpectArray(bytes, next, operands.count(), "CTLL-R1-IMPORT-024")
+  mut i: Int = 0
+  while i < operands.count() {
+    let item = operands.get(i)
+    mut expected: Int = -1
+    match item {
+      Some(value) => { expected = value }
+      None => {}
+      _ => {}
+    }
+    next = ctllR1ExpectUInt(bytes, next, expected, "CTLL-R1-IMPORT-025", "instruction operand mismatch")
+    i = i + 1
+  }
+  return ctllR1ExpectUInt(
+    bytes, next, immediate, "CTLL-R1-IMPORT-026", "instruction immediate mismatch",
+  )
+}
+
+pure flow ctllR1ExpectTerminator(
+  bytes: Bytes,
+  cursor: CTLLR1ImportCursor,
+  terminatorId: Int,
+  operands: Array<Int>,
+  k3: Bool,
+) -> CTLLR1ImportCursor
+contract { intent { "Parse one total terminator and classify K3 successor drift separately." } }
+{
+  mut next = ctllR1ExpectArray(bytes, cursor, 2, "CTLL-R1-IMPORT-030")
+  next = ctllR1ExpectUInt(
+    bytes, next, terminatorId, "CTLL-R1-IMPORT-031", "terminator registry identity mismatch",
+  )
+  next = ctllR1ExpectArray(bytes, next, operands.count(), "CTLL-R1-IMPORT-032")
+  mut i: Int = 0
+  while i < operands.count() {
+    let item = operands.get(i)
+    mut expected: Int = -1
+    match item {
+      Some(value) => { expected = value }
+      None => {}
+      _ => {}
+    }
+    mut mismatchId: String = "CTLL-R1-IMPORT-033"
+    mut mismatchReason: String = "terminator operand mismatch"
+    if k3 and i > 0 {
+      mismatchId = "CTLL-R1-IMPORT-034"
+      mismatchReason = "K3 successor identity or ordering mismatch"
+    }
+    next = ctllR1ExpectUInt(bytes, next, expected, mismatchId, mismatchReason)
+    i = i + 1
+  }
+  return next
+}
+
+pure flow validateCTLLR1StructuralBody(bytes: Bytes) -> CTLLR1ImportDecision
+contract {
+  intent { "Structurally admit only the frozen typed-ID R1 graph with canonical encoding and no suffix." }
+}
+{
+  if bytes.length() > 4096 {
+    return {
+      verdict: Verdict.Deny status: "REFUSED" failureId: "CTLL-R1-IMPORT-005"
+      reason: "R1 body exceeds the hard byte ceiling" consumed: 0
+    }
+  }
+  mut c: CTLLR1ImportCursor = { ok: true offset: 0 failureId: "NONE" reason: "" }
+  c = ctllR1ExpectHead(bytes, c, 5, 14, "CTLL-R1-IMPORT-010", "root map must contain exactly 14 entries")
+
+  c = ctllR1ExpectUInt(bytes, c, 0, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-012", "unsupported format major")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 0, "CTLL-R1-IMPORT-012", "unsupported format minor")
+  c = ctllR1ExpectUInt(bytes, c, 2, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectText(bytes, c, "ctll.semantic.galerina-gir.v1", "CTLL-R1-IMPORT-013", "semantic profile mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 3, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectText(bytes, c, "ctll.digest.sha256.v1", "CTLL-R1-IMPORT-014", "digest suite mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 4, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectText(bytes, c, "ctll.memory.safe-value.v1", "CTLL-R1-IMPORT-015", "memory profile mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 5, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectText(bytes, c, "ctll_k3_checked_add_v1", "CTLL-R1-IMPORT-016", "fixture identity mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 6, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectText(bytes, c, "ctll.fixture.k3-checked-add.v1", "CTLL-R1-IMPORT-017", "stable symbol mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 7, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-018", "qualifier registry mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 8, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-019")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-023", "left parameter type mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-023", "right parameter type mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 2, "CTLL-R1-IMPORT-023", "admission parameter type mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 9, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 3, "CTLL-R1-IMPORT-023", "result type mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 10, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectUInt(bytes, c, 0, "CTLL-R1-IMPORT-035", "entry block mismatch")
+
+  c = ctllR1ExpectUInt(bytes, c, 11, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectArray(bytes, c, 4, "CTLL-R1-IMPORT-036")
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-036")
+  c = ctllR1ExpectUInt(bytes, c, 0, "CTLL-R1-IMPORT-037", "entry block identity mismatch")
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-038")
+  c = ctllR1ExpectInstruction(bytes, c, 0, 1, 1, [], 0)
+  c = ctllR1ExpectInstruction(bytes, c, 1, 1, 1, [], 1)
+  c = ctllR1ExpectInstruction(bytes, c, 2, 1, 2, [], 2)
+  c = ctllR1ExpectTerminator(bytes, c, 1, [2, 1, 2, 3], true)
+
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-036")
+  c = ctllR1ExpectUInt(bytes, c, 1, "CTLL-R1-IMPORT-037", "allow block identity mismatch")
+  c = ctllR1ExpectArray(bytes, c, 2, "CTLL-R1-IMPORT-038")
+  c = ctllR1ExpectInstruction(bytes, c, 3, 2, 1, [0, 1], 0)
+  c = ctllR1ExpectInstruction(bytes, c, 4, 3, 3, [3], 0)
+  c = ctllR1ExpectTerminator(bytes, c, 2, [4], false)
+
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-036")
+  c = ctllR1ExpectUInt(bytes, c, 2, "CTLL-R1-IMPORT-037", "deny block identity mismatch")
+  c = ctllR1ExpectArray(bytes, c, 2, "CTLL-R1-IMPORT-038")
+  c = ctllR1ExpectInstruction(bytes, c, 5, 4, 4, [], 2)
+  c = ctllR1ExpectInstruction(bytes, c, 6, 5, 3, [5], 0)
+  c = ctllR1ExpectTerminator(bytes, c, 2, [6], false)
+
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-036")
+  c = ctllR1ExpectUInt(bytes, c, 3, "CTLL-R1-IMPORT-037", "indeterminate block identity mismatch")
+  c = ctllR1ExpectArray(bytes, c, 2, "CTLL-R1-IMPORT-038")
+  c = ctllR1ExpectInstruction(bytes, c, 7, 4, 4, [], 3)
+  c = ctllR1ExpectInstruction(bytes, c, 8, 5, 3, [7], 0)
+  c = ctllR1ExpectTerminator(bytes, c, 2, [8], false)
+
+  c = ctllR1ExpectUInt(bytes, c, 12, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectArray(bytes, c, 3, "CTLL-R1-IMPORT-040")
+  c = ctllR1ExpectArray(bytes, c, 5, "CTLL-R1-IMPORT-040")
+  for expected in [1, 2, 1, 1, 1] {
+    c = ctllR1ExpectUInt(bytes, c, expected, "CTLL-R1-IMPORT-041", "arithmetic failure record mismatch")
+  }
+  c = ctllR1ExpectArray(bytes, c, 5, "CTLL-R1-IMPORT-040")
+  for expected in [2, 3, 1, 2, 1] {
+    c = ctllR1ExpectUInt(bytes, c, expected, "CTLL-R1-IMPORT-041", "denial failure record mismatch")
+  }
+  c = ctllR1ExpectArray(bytes, c, 5, "CTLL-R1-IMPORT-040")
+  for expected in [3, 4, 1, 2, 1] {
+    c = ctllR1ExpectUInt(bytes, c, expected, "CTLL-R1-IMPORT-041", "unresolved failure record mismatch")
+  }
+
+  c = ctllR1ExpectUInt(bytes, c, 13, "CTLL-R1-IMPORT-011", "root key order mismatch")
+  c = ctllR1ExpectArray(bytes, c, 1, "CTLL-R1-IMPORT-042")
+  c = ctllR1ExpectArray(bytes, c, 6, "CTLL-R1-IMPORT-042")
+  for expected in [1, 1, 0, 1, 2, 3] {
+    c = ctllR1ExpectUInt(bytes, c, expected, "CTLL-R1-IMPORT-043", "K3 obligation mismatch")
+  }
+
+  if c.ok == false {
+    return {
+      verdict: Verdict.Deny status: "REFUSED" failureId: c.failureId
+      reason: c.reason consumed: c.offset
+    }
+  }
+  if c.offset != bytes.length() {
+    return {
+      verdict: Verdict.Deny status: "REFUSED" failureId: "CTLL-R1-IMPORT-044"
+      reason: "trailing bytes after complete R1 body" consumed: c.offset
+    }
+  }
+  return {
+    verdict: Verdict.Allow status: "IMPORTED" failureId: "NONE"
+    reason: "canonical typed-ID R1 structure admitted" consumed: c.offset
+  }
+}

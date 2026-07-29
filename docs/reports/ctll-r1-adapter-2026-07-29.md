@@ -57,16 +57,16 @@ authority; independent validation is still required.
 - serialized mutation artifacts;
 - a `.slide` bundle, signature, admission, native code, or benchmark.
 
-The logical program currently uses frozen operation strings. They are an
-inspectable intermediate proof of complete shape, not the R1 wire format.
+At this checkpoint the logical program used frozen operation strings. The
+subsequent typed-ID checkpoint replaced them; they are not in the current wire
+format.
 
 ## Subsequent boundary
 
 Canonical body export and independent exact-vector validation were implemented
 after this adapter checkpoint. See
-`ctll-r1-canonical-body-2026-07-29.md`. The operation strings remain frozen
-payload values, so the structural typed-ID importer and detached executor are
-still open.
+`ctll-r1-canonical-body-2026-07-29.md`. It now includes registered typed IDs
+and an independent structural importer. Detached execution remains open.
 
 ## Verification
 

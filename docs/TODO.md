@@ -7,11 +7,14 @@ compiler probing is active. The first `.fungi` R1 shape-preflight kernel fails
 closed across the frozen fixture facts. The self-hosted lexer/parser/GIR/runtime
 now also preserve an explicit three-successor K3 check and checked Int32
 behavior for the bounded fixture shape. The exact logical fixture now exports
-as a 662-byte canonical CBOR semantic body, and an independently pinned
-`.fungi` validator rejects every single-byte mutation, truncation, and surplus
-data. This is a closed-profile byte gate, not yet a general bounded importer,
-typed-ID registry, fresh-process interpreter, signed payload, or detached
-execution path. SLIDE is the independent public
+as a 277-byte canonical typed-ID CBOR semantic body. An independently pinned
+`.fungi` validator rejects every byte mutation, and a second `.fungi` importer
+parses canonical heads and classifies registry, opcode, failure, K3 successor,
+truncation, and suffix drift. A closed-profile `.fungi` reference executor now
+runs the admitted bytes in a fresh bootstrap process and preserves ALLOW,
+DENY, INDETERMINATE, and checked overflow as distinct typed outcomes. It is not
+yet a reconstructed general GIR interpreter, domain-separated semantic digest,
+signed payload, or production execution path. SLIDE is the independent public
 engine/container; Galerina is its first frontend and CTLL remains the compiled
 tri-low-level payload/profile.
 
@@ -90,12 +93,19 @@ tri-low-level payload/profile.
   invokes the preflight and materializes a four-block logical R1 program,
   while structural or hidden-field mutations refuse. Evidence:
   `docs/reports/ctll-r1-adapter-2026-07-29.md`.
-- [x] Export the exact frozen logical program as deterministic RFC 8949 CBOR
+- [x] Export the exact frozen typed-ID logical program as deterministic RFC 8949 CBOR
   using definite containers, ascending unsigned map keys, shortest integers,
-  and UTF-8 text. Independently pin and validate the 662-byte vector in
-  `.fungi`; reject all 662 possible single-byte mutations, truncation, and
+  and UTF-8 text. Independently pin and validate the 277-byte vector in
+  `.fungi`; reject all 277 possible single-byte mutations, truncation, and
   surplus bytes. Evidence:
   `docs/reports/ctll-r1-canonical-body-2026-07-29.md`.
+- [x] Implement a second `.fungi` structural importer that does not use the
+  encoder or pinned vector. It parses canonical CBOR under a 4 KiB ceiling and
+  gives distinct refusals for encoding, registry, opcode, type, operand,
+  K3-successor, failure-record, and trailing-byte drift.
+- [x] Execute the structurally admitted closed profile in a fresh bootstrap
+  process with no fixture source, AST, WAT, Wasm, or ambient registry input.
+  Prove typed success, denied, unresolved, overflow, and import-refused exits.
 - [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
   altered K3 successors, and missing failure records. Raw canonical-byte
   mutation coverage exists; semantic importer mutations remain open.
@@ -108,11 +118,11 @@ tri-low-level payload/profile.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.
 
-**Next safe work:** replace the frozen operation strings with registered typed
-wire IDs, implement a structurally independent bounded importer (not just the
-closed-profile exact-vector validator), and execute imported R1 in a fresh
-process without source, AST, WAT, or ambient registries. Add semantic mutations
-for altered K3 successors and failure records. Do not start LLVM, `.slide`
+**Next safe work:** make the structural importer reconstruct its own typed
+program value, run general CFG/SSA checks over that record, and compute the
+contract's domain-separated semantic digest. Keep the current executor
+explicitly closed-profile until it dispatches over reconstructed instructions.
+Do not start LLVM, `.slide`
 execution, or driver installation before those semantic gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.

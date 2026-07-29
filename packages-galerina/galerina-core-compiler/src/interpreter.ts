@@ -1058,7 +1058,7 @@ const STD_METHOD_NAMES = new Set([
   // Money
   "amount", "currency", "add", "subtract", "multiply", "divideBy",
   // Bytes
-  "toHex", "toBase64", "equals", "decode", "sha256", "sha256Hex",
+  "toHex", "toBase64", "equals", "decode", "sha256", "sha256Hex", "getInt",
   // String extended — named format (Phase 9A-3)
   "format",
   // Char

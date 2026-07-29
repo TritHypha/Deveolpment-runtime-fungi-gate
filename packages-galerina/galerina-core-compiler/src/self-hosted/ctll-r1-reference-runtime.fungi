@@ -1,0 +1,77 @@
+@version 1
+/// @file: ctll-r1-reference-runtime.fungi
+/// @purpose: Execute the closed typed-ID R1 profile only after structural byte admission.
+/// @status: Detached first-fixture reference executor; not a native or general GIR runtime.
+///
+/// Tests combine this file only with the independent importer. It has no
+/// source, AST, lexer, parser, adapter, WAT, Wasm, cache, or ambient registry
+/// input. The structurally validated profile fixes the registered operation
+/// graph; this runtime supplies its executable semantics.
+
+record CTLLR1ReferenceResult {
+  status: String
+  success: Bool
+  value: Int
+  failureId: Int
+  importFailureId: String
+}
+
+pure flow refuseCTLLR1ReferenceImport(failureId: String) -> CTLLR1ReferenceResult
+contract { intent { "Leave the execution path when structural byte admission is not ALLOW." } }
+{
+  return {
+    status: "IMPORT_REFUSED"
+    success: false
+    value: 0
+    failureId: 0
+    importFailureId: failureId
+  }
+}
+
+pure flow failCTLLR1Reference(failureId: Int) -> CTLLR1ReferenceResult
+contract { intent { "Return one declared typed R1 failure and no success value." } }
+{
+  return {
+    status: "FAILED"
+    success: false
+    value: 0
+    failureId: failureId
+    importFailureId: "NONE"
+  }
+}
+
+pure flow executeCTLLR1Imported(
+  body: Bytes,
+  left: Int,
+  right: Int,
+  admission: Verdict,
+) -> CTLLR1ReferenceResult
+contract {
+  intent { "Reference-execute the exact imported checked-add/K3 graph with total terminal outcomes." }
+}
+{
+  let imported = validateCTLLR1StructuralBody(body)
+  if imported.verdict != Verdict.Allow {
+    return refuseCTLLR1ReferenceImport(imported.failureId)
+  }
+
+  check(admission) {
+    deny: { return failCTLLR1Reference(2) }
+    ambig: { return failCTLLR1Reference(3) }
+    if: {
+      if right > 0 and left > 2147483647 - right {
+        return failCTLLR1Reference(1)
+      }
+      if right < 0 and left < -2147483648 - right {
+        return failCTLLR1Reference(1)
+      }
+      return {
+        status: "OK"
+        success: true
+        value: left + right
+        failureId: 0
+        importFailureId: "NONE"
+      }
+    }
+  }
+}

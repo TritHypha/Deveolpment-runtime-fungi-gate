@@ -1160,6 +1160,7 @@ class TypeChecker {
         if (receiverType === "Bytes") {
           if (method === "length" || method === "size") return "Int";
           if (method === "isEmpty") return "Bool";
+          if (method === "getInt") return "Option<Int>";
           if (method === "toHex" || method === "toBase64" || method === "sha256Hex") return "String";
           if (method === "sha256") return "Bytes";
           if (method === "decode" || method === "toString") return "Result";

@@ -2158,6 +2158,12 @@ function bytesMethod(
         ? mkSome({ __tag: "byte", value: buf[idx]! })
         : FUNGI_NONE;
     }
+    case "getInt": {
+      const idx = numVal(args[0] ?? { __tag: "int", value: -1 });
+      return idx >= 0 && idx < buf.length
+        ? mkSome({ __tag: "int", value: buf[idx]! })
+        : FUNGI_NONE;
+    }
 
     case "slice": {
       const start = numVal(args[0] ?? { __tag: "int", value: 0 });

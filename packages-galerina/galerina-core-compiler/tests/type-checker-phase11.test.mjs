@@ -432,17 +432,19 @@ flow test() -> Bool {
 
 describe("inferType — extended stdlib method coverage", () => {
   it("inferType works for Bytes receiver methods (no spurious type errors)", () => {
-    // A binding declared as Int assigned the result of calling a size method
-    // We can't directly call methods without a receiver in test source, so test
-    // that existing code paths don't introduce regressions.
     const result = parseAndCheck(`
 flow test(b: Bytes) -> Int {
-  return 42
+  let item: Option<Int> = b.getInt(0)
+  match item {
+    Some(value) => { return value }
+    None => { return -1 }
+    _ => { return -1 }
+  }
 }
 `);
     assert.ok(
-      !hasDiag(result, "FUNGI-TYPE-001"),
-      `Unexpected type error for Bytes parameter`,
+      !result.diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+      `Unexpected Bytes.getInt type error: ${JSON.stringify(result.diagnostics)}`,
     );
   });
 

@@ -168,21 +168,43 @@ describe("CTLL R1 compiler-owned adapter", () => {
     );
     assert.equal(field(program, "fixtureName").value, "ctll_k3_checked_add_v1");
     assert.deepEqual(
-      field(program, "parameterTypes").items.map((value) => value.value),
-      ["Int32", "Int32", "Verdict"],
+      field(program, "parameterTypeIds").items.map((value) => value.value),
+      [1, 1, 2],
     );
-    assert.equal(field(program, "resultType").value, "Result<Int32,FixtureFailure>");
+    assert.equal(field(program, "resultTypeId").value, 3);
     assert.equal(field(program, "blocks").items.length, 4);
-    assert.equal(
-      field(field(program, "blocks").items[0], "terminator").value,
-      "check_k3(v2,allow=1,deny=2,indeterminate=3)",
+    const entry = field(program, "blocks").items[0];
+    assert.deepEqual(
+      field(entry, "instructions").items.map((instruction) => [
+        field(instruction, "resultId").value,
+        field(instruction, "opcodeId").value,
+        field(instruction, "typeId").value,
+        field(instruction, "immediate").value,
+      ]),
+      [
+        [0, 1, 1, 0],
+        [1, 1, 1, 1],
+        [2, 1, 2, 2],
+      ],
+    );
+    const terminator = field(entry, "terminator");
+    assert.equal(field(terminator, "terminatorId").value, 1);
+    assert.deepEqual(
+      field(terminator, "operands").items.map((value) => value.value),
+      [2, 1, 2, 3],
     );
     assert.deepEqual(
-      field(program, "failures").items.map((value) => value.value),
+      field(program, "failures").items.map((failure) => [
+        field(failure, "failureId").value,
+        field(failure, "classId").value,
+        field(failure, "visibilityId").value,
+        field(failure, "retryId").value,
+        field(failure, "terminalActionId").value,
+      ]),
       [
-        "CTLL_FAILURE_ARITHMETIC",
-        "CTLL_FAILURE_POLICY_DENIED",
-        "CTLL_FAILURE_POLICY_UNRESOLVED",
+        [1, 2, 1, 1, 1],
+        [2, 3, 1, 2, 1],
+        [3, 4, 1, 2, 1],
       ],
     );
   });

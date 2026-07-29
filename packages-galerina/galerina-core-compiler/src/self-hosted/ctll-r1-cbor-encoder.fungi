@@ -1,17 +1,14 @@
 @version 1
 /// @file: ctll-r1-cbor-encoder.fungi
-/// @purpose: Emit the frozen CTLL R1 logical program as canonical RFC 8949 CBOR.
+/// @purpose: Emit the frozen typed-ID CTLL R1 program as canonical RFC 8949 CBOR.
 /// @status: Semantic-body encoder; digesting, signing, and .slide wrapping remain separate.
 ///
-/// The body is a 14-entry map with unsigned integer keys in ascending order:
-///   0 format major, 1 format minor, 2 semantic profile, 3 digest suite,
-///   4 memory profile, 5 fixture name, 6 stable symbol, 7 qualifier,
-///   8 parameter types, 9 result type, 10 entry block, 11 blocks,
-///   12 failures, 13 K3 obligations.
-///
-/// A block is the fixed array [block-id, name, operations, terminator].
-/// All containers use definite lengths and all integers use their shortest form.
-/// The closed R1 profile is deliberately bounded; this is not a general CBOR API.
+/// Root keys 0..13 are ascending and fixed. A block is
+/// [block-id, instructions, terminator], an instruction is
+/// [result-id, opcode-id, type-id, operands, immediate], and a terminator is
+/// [terminator-id, operands]. Failure and K3 obligation records are fixed
+/// numeric arrays. No instruction, type, failure, or edge meaning is carried
+/// by a free-form operation string.
 
 record CTLLR1BodyExport {
   verdict: Verdict
@@ -35,14 +32,32 @@ contract { intent { "Return a terminal refusal without releasing partial semanti
   }
 }
 
-pure flow ctllR1TextAt(values: Array<String>, position: Int) -> String
-contract { intent { "Read one required text value or return a non-admissible sentinel." } }
+pure flow ctllR1IntAt(values: Array<Int>, position: Int) -> Int
+contract { intent { "Read one required integer or return a non-admissible sentinel." } }
 {
   let item = values.get(position)
   match item {
     Some(value) => { return value }
-    None => { return "" }
-    _ => { return "" }
+    None => { return -1 }
+    _ => { return -1 }
+  }
+}
+
+pure flow ctllR1InstructionAt(
+  values: Array<CTLLR1LogicalInstruction>,
+  position: Int,
+) -> CTLLR1LogicalInstruction
+contract { intent { "Read one required instruction or return a non-admissible sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => {
+      return { resultId: -1 opcodeId: -1 typeId: -1 operands: Array.empty() immediate: -1 }
+    }
+    _ => {
+      return { resultId: -1 opcodeId: -1 typeId: -1 operands: Array.empty() immediate: -1 }
+    }
   }
 }
 
@@ -53,40 +68,103 @@ contract { intent { "Read one required block or return a non-admissible sentinel
   match item {
     Some(value) => { return value }
     None => {
-      return { blockId: -1 name: "" operations: Array.empty() terminator: "" }
+      return {
+        blockId: -1
+        instructions: Array.empty()
+        terminator: { terminatorId: -1 operands: Array.empty() }
+      }
     }
     _ => {
-      return { blockId: -1 name: "" operations: Array.empty() terminator: "" }
+      return {
+        blockId: -1
+        instructions: Array.empty()
+        terminator: { terminatorId: -1 operands: Array.empty() }
+      }
     }
   }
 }
 
-pure flow ctllR1ExactBlock(
-  logicalBlock: CTLLR1LogicalBlock,
-  expectedId: Int,
-  expectedName: String,
-  expectedTerminator: String,
-  expectedOperations: Array<String>,
-) -> Bool
-contract { intent { "Verify a block without accepting hidden or surplus operations." } }
+pure flow ctllR1FailureAt(
+  values: Array<CTLLR1LogicalFailure>,
+  position: Int,
+) -> CTLLR1LogicalFailure
+contract { intent { "Read one required failure record or return a non-admissible sentinel." } }
 {
-  if logicalBlock.blockId != expectedId { return false }
-  if logicalBlock.name != expectedName { return false }
-  if logicalBlock.terminator != expectedTerminator { return false }
-  if logicalBlock.operations.count() != expectedOperations.count() { return false }
-
-  mut i: Int = 0
-  while i < expectedOperations.count() {
-    if ctllR1TextAt(logicalBlock.operations, i) != ctllR1TextAt(expectedOperations, i) {
-      return false
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => {
+      return { failureId: -1 classId: -1 visibilityId: -1 retryId: -1 terminalActionId: -1 }
     }
+    _ => {
+      return { failureId: -1 classId: -1 visibilityId: -1 retryId: -1 terminalActionId: -1 }
+    }
+  }
+}
+
+pure flow ctllR1K3At(
+  values: Array<CTLLR1LogicalK3Obligation>,
+  position: Int,
+) -> CTLLR1LogicalK3Obligation
+contract { intent { "Read one required K3 obligation or return a non-admissible sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => {
+      return {
+        obligationId: -1 subjectFunctionId: -1 checkBlockId: -1
+        allowBlockId: -1 denyBlockId: -1 indeterminateBlockId: -1
+      }
+    }
+    _ => {
+      return {
+        obligationId: -1 subjectFunctionId: -1 checkBlockId: -1
+        allowBlockId: -1 denyBlockId: -1 indeterminateBlockId: -1
+      }
+    }
+  }
+}
+
+pure flow ctllR1ExactIntArray(actual: Array<Int>, expected: Array<Int>) -> Bool
+contract { intent { "Compare bounded ordered integer identities without ignoring surplus values." } }
+{
+  if actual.count() != expected.count() { return false }
+  mut i: Int = 0
+  while i < expected.count() {
+    if ctllR1IntAt(actual, i) != ctllR1IntAt(expected, i) { return false }
     i = i + 1
   }
   return true
 }
 
+pure flow ctllR1ExactInstruction(
+  actual: CTLLR1LogicalInstruction,
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> Bool
+contract { intent { "Verify one typed instruction including all operands and its immediate." } }
+{
+  let identityOk: Bool = actual.resultId == resultId and actual.opcodeId == opcodeId
+  let typeAndImmediateOk: Bool = actual.typeId == typeId and actual.immediate == immediate
+  return identityOk and typeAndImmediateOk and ctllR1ExactIntArray(actual.operands, operands)
+}
+
+pure flow ctllR1ExactTerminator(
+  actual: CTLLR1LogicalTerminator,
+  terminatorId: Int,
+  operands: Array<Int>,
+) -> Bool
+contract { intent { "Verify one typed terminator and every explicit successor/value operand." } }
+{
+  return actual.terminatorId == terminatorId and ctllR1ExactIntArray(actual.operands, operands)
+}
+
 pure flow ctllR1ExactLogicalProgram(program: CTLLR1LogicalProgram) -> Bool
-contract { intent { "Admit exactly the frozen R1 semantic model before any byte is released." } }
+contract { intent { "Admit exactly the frozen typed-ID R1 semantic model before releasing bytes." } }
 {
   if program.formatMajor != 1 or program.formatMinor != 0 { return false }
   if program.semanticProfileId != "ctll.semantic.galerina-gir.v1" { return false }
@@ -94,60 +172,78 @@ contract { intent { "Admit exactly the frozen R1 semantic model before any byte 
   if program.memoryProfileId != "ctll.memory.safe-value.v1" { return false }
   if program.fixtureName != "ctll_k3_checked_add_v1" { return false }
   if program.stableSymbolId != "ctll.fixture.k3-checked-add.v1" { return false }
-  if program.qualifier != "PURE" { return false }
-  if program.entryBlockId != 0 { return false }
-  if program.resultType != "Result<Int32,FixtureFailure>" { return false }
-
-  if program.parameterTypes.count() != 3 { return false }
-  if ctllR1TextAt(program.parameterTypes, 0) != "Int32" { return false }
-  if ctllR1TextAt(program.parameterTypes, 1) != "Int32" { return false }
-  if ctllR1TextAt(program.parameterTypes, 2) != "Verdict" { return false }
-
-  if program.failures.count() != 3 { return false }
-  if ctllR1TextAt(program.failures, 0) != "CTLL_FAILURE_ARITHMETIC" { return false }
-  if ctllR1TextAt(program.failures, 1) != "CTLL_FAILURE_POLICY_DENIED" { return false }
-  if ctllR1TextAt(program.failures, 2) != "CTLL_FAILURE_POLICY_UNRESOLVED" { return false }
-
-  if program.k3Obligations.count() != 1 { return false }
-  if ctllR1TextAt(program.k3Obligations, 0) != "ctll.obligation.fixture-admission.v1" {
-    return false
-  }
-
+  if program.qualifierId != 1 { return false }
+  if ctllR1ExactIntArray(program.parameterTypeIds, [1, 1, 2]) == false { return false }
+  if program.resultTypeId != 3 or program.entryBlockId != 0 { return false }
   if program.blocks.count() != 4 { return false }
+
   let entry = ctllR1BlockAt(program.blocks, 0)
   let allow = ctllR1BlockAt(program.blocks, 1)
   let deny = ctllR1BlockAt(program.blocks, 2)
-  let indeterminate = ctllR1BlockAt(program.blocks, 3)
+  let unresolved = ctllR1BlockAt(program.blocks, 3)
+  if entry.blockId != 0 or entry.instructions.count() != 3 { return false }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(entry.instructions, 0), 0, 1, 1, [], 0) == false {
+    return false
+  }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(entry.instructions, 1), 1, 1, 1, [], 1) == false {
+    return false
+  }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(entry.instructions, 2), 2, 1, 2, [], 2) == false {
+    return false
+  }
+  if ctllR1ExactTerminator(entry.terminator, 1, [2, 1, 2, 3]) == false { return false }
 
-  let entryOk: Bool = ctllR1ExactBlock(
-    entry,
-    0,
-    "entry",
-    "check_k3(v2,allow=1,deny=2,indeterminate=3)",
-    ["v0=param.Int32.left", "v1=param.Int32.right", "v2=param.Verdict.admission"],
-  )
-  let allowOk: Bool = ctllR1ExactBlock(
-    allow,
-    1,
-    "allow",
-    "return(v4)",
-    ["v3=int32.add.checked(v0,v1)", "v4=result.ok(v3)"],
-  )
-  let denyOk: Bool = ctllR1ExactBlock(
-    deny,
-    2,
-    "deny",
-    "return(v6)",
-    ["v5=failure.POLICY_DENIED", "v6=result.err(v5)"],
-  )
-  let indeterminateOk: Bool = ctllR1ExactBlock(
-    indeterminate,
-    3,
-    "indeterminate",
-    "return(v8)",
-    ["v7=failure.POLICY_UNRESOLVED", "v8=result.err(v7)"],
-  )
-  return entryOk and allowOk and denyOk and indeterminateOk
+  if allow.blockId != 1 or allow.instructions.count() != 2 { return false }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(allow.instructions, 0), 3, 2, 1, [0, 1], 0) == false {
+    return false
+  }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(allow.instructions, 1), 4, 3, 3, [3], 0) == false {
+    return false
+  }
+  if ctllR1ExactTerminator(allow.terminator, 2, [4]) == false { return false }
+
+  if deny.blockId != 2 or deny.instructions.count() != 2 { return false }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(deny.instructions, 0), 5, 4, 4, [], 2) == false {
+    return false
+  }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(deny.instructions, 1), 6, 5, 3, [5], 0) == false {
+    return false
+  }
+  if ctllR1ExactTerminator(deny.terminator, 2, [6]) == false { return false }
+
+  if unresolved.blockId != 3 or unresolved.instructions.count() != 2 { return false }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(unresolved.instructions, 0), 7, 4, 4, [], 3) == false {
+    return false
+  }
+  if ctllR1ExactInstruction(ctllR1InstructionAt(unresolved.instructions, 1), 8, 5, 3, [7], 0) == false {
+    return false
+  }
+  if ctllR1ExactTerminator(unresolved.terminator, 2, [8]) == false { return false }
+
+  if program.failures.count() != 3 { return false }
+  let arithmetic = ctllR1FailureAt(program.failures, 0)
+  let denied = ctllR1FailureAt(program.failures, 1)
+  let indeterminate = ctllR1FailureAt(program.failures, 2)
+  let arithmeticOk: Bool = arithmetic.failureId == 1 and arithmetic.classId == 2
+  let deniedOk: Bool = denied.failureId == 2 and denied.classId == 3
+  let unresolvedOk: Bool = indeterminate.failureId == 3 and indeterminate.classId == 4
+  if arithmeticOk == false or deniedOk == false or unresolvedOk == false { return false }
+  if arithmetic.visibilityId != 1 or arithmetic.retryId != 1 or arithmetic.terminalActionId != 1 {
+    return false
+  }
+  if denied.visibilityId != 1 or denied.retryId != 2 or denied.terminalActionId != 1 {
+    return false
+  }
+  if indeterminate.visibilityId != 1 or indeterminate.retryId != 2 or indeterminate.terminalActionId != 1 {
+    return false
+  }
+
+  if program.k3Obligations.count() != 1 { return false }
+  let k3 = ctllR1K3At(program.k3Obligations, 0)
+  let k3IdentityOk: Bool = k3.obligationId == 1 and k3.subjectFunctionId == 1
+  let k3EntryOk: Bool = k3.checkBlockId == 0 and k3.allowBlockId == 1
+  let k3ExitOk: Bool = k3.denyBlockId == 2 and k3.indeterminateBlockId == 3
+  return k3IdentityOk and k3EntryOk and k3ExitOk
 }
 
 pure flow ctllR1CBORHead(majorType: Int, value: Int) -> Bytes
@@ -157,7 +253,6 @@ contract { intent { "Encode one bounded canonical CBOR head or return an empty r
   if value < 0 or value > 65535 { return Bytes.empty() }
   if value < 24 { return Bytes.of(majorType * 32 + value) }
   if value < 256 { return Bytes.of(majorType * 32 + 24, value) }
-
   let high: Int = value / 256
   let low: Int = value - high * 256
   return Bytes.of(majorType * 32 + 25, high, low)
@@ -178,54 +273,73 @@ contract { intent { "Encode one definite-length UTF-8 CBOR text value." } }
   return head.append(payload)
 }
 
-pure flow ctllR1CBORTextArray(values: Array<String>) -> Bytes
-contract { intent { "Encode one bounded definite-length array of text values in source order." } }
+pure flow ctllR1CBORIntArray(values: Array<Int>) -> Bytes
+contract { intent { "Encode one definite-length array of bounded unsigned registry values." } }
 {
-  let head: Bytes = ctllR1CBORHead(4, values.count())
-  if head.isEmpty() { return Bytes.empty() }
-  mut output: Bytes = head
+  mut output: Bytes = ctllR1CBORHead(4, values.count())
   mut i: Int = 0
   while i < values.count() {
-    let item: Bytes = ctllR1CBORText(ctllR1TextAt(values, i))
-    if item.isEmpty() { return Bytes.empty() }
-    output = output.append(item)
+    output = output.append(ctllR1CBORUInt(ctllR1IntAt(values, i)))
     i = i + 1
   }
   return output
 }
 
-pure flow ctllR1CBORBlock(logicalBlock: CTLLR1LogicalBlock) -> Bytes
-contract { intent { "Encode one fixed four-field R1 block array." } }
+pure flow ctllR1CBORInstruction(value: CTLLR1LogicalInstruction) -> Bytes
+contract { intent { "Encode one typed five-field R1 instruction." } }
 {
-  mut output: Bytes = ctllR1CBORHead(4, 4)
-  output = output.append(ctllR1CBORUInt(logicalBlock.blockId))
-  output = output.append(ctllR1CBORText(logicalBlock.name))
-  output = output.append(ctllR1CBORTextArray(logicalBlock.operations))
-  output = output.append(ctllR1CBORText(logicalBlock.terminator))
+  mut output: Bytes = ctllR1CBORHead(4, 5)
+  output = output.append(ctllR1CBORUInt(value.resultId))
+  output = output.append(ctllR1CBORUInt(value.opcodeId))
+  output = output.append(ctllR1CBORUInt(value.typeId))
+  output = output.append(ctllR1CBORIntArray(value.operands))
+  output = output.append(ctllR1CBORUInt(value.immediate))
   return output
 }
 
-pure flow ctllR1CBORBlocks(blocks: Array<CTLLR1LogicalBlock>) -> Bytes
-contract { intent { "Encode the bounded ordered R1 block array." } }
+pure flow ctllR1CBORBlock(value: CTLLR1LogicalBlock) -> Bytes
+contract { intent { "Encode one typed block with definite instruction and terminator arrays." } }
 {
-  mut output: Bytes = ctllR1CBORHead(4, blocks.count())
+  mut output: Bytes = ctllR1CBORHead(4, 3)
+  output = output.append(ctllR1CBORUInt(value.blockId))
+  output = output.append(ctllR1CBORHead(4, value.instructions.count()))
   mut i: Int = 0
-  while i < blocks.count() {
-    output = output.append(ctllR1CBORBlock(ctllR1BlockAt(blocks, i)))
+  while i < value.instructions.count() {
+    output = output.append(ctllR1CBORInstruction(ctllR1InstructionAt(value.instructions, i)))
     i = i + 1
   }
+  output = output.append(ctllR1CBORHead(4, 2))
+  output = output.append(ctllR1CBORUInt(value.terminator.terminatorId))
+  output = output.append(ctllR1CBORIntArray(value.terminator.operands))
   return output
+}
+
+pure flow ctllR1CBORFailure(value: CTLLR1LogicalFailure) -> Bytes
+contract { intent { "Encode one five-field registered failure record." } }
+{
+  let ids: Array<Int> = [
+    value.failureId, value.classId, value.visibilityId, value.retryId, value.terminalActionId
+  ]
+  return ctllR1CBORIntArray(ids)
+}
+
+pure flow ctllR1CBORK3(value: CTLLR1LogicalK3Obligation) -> Bytes
+contract { intent { "Encode one six-field registered K3 obligation." } }
+{
+  let ids: Array<Int> = [
+    value.obligationId, value.subjectFunctionId, value.checkBlockId,
+    value.allowBlockId, value.denyBlockId, value.indeterminateBlockId
+  ]
+  return ctllR1CBORIntArray(ids)
 }
 
 pure flow exportCTLLR1CanonicalBody(program: CTLLR1LogicalProgram) -> CTLLR1BodyExport
-contract {
-  intent { "Release canonical deterministic CBOR only for the exact frozen R1 logical program." }
-}
+contract { intent { "Release canonical deterministic CBOR only for the exact typed-ID R1 program." } }
 {
   if ctllR1ExactLogicalProgram(program) == false {
     return refuseCTLLR1BodyExport(
       "CTLL-R1-CBOR-001",
-      "logical program is outside the frozen canonical R1 profile",
+      "logical program is outside the frozen typed-ID R1 profile",
     )
   }
 
@@ -237,19 +351,40 @@ contract {
   body = body.append(ctllR1CBORUInt(4)).append(ctllR1CBORText(program.memoryProfileId))
   body = body.append(ctllR1CBORUInt(5)).append(ctllR1CBORText(program.fixtureName))
   body = body.append(ctllR1CBORUInt(6)).append(ctllR1CBORText(program.stableSymbolId))
-  body = body.append(ctllR1CBORUInt(7)).append(ctllR1CBORText(program.qualifier))
-  body = body.append(ctllR1CBORUInt(8)).append(ctllR1CBORTextArray(program.parameterTypes))
-  body = body.append(ctllR1CBORUInt(9)).append(ctllR1CBORText(program.resultType))
+  body = body.append(ctllR1CBORUInt(7)).append(ctllR1CBORUInt(program.qualifierId))
+  body = body.append(ctllR1CBORUInt(8)).append(ctllR1CBORIntArray(program.parameterTypeIds))
+  body = body.append(ctllR1CBORUInt(9)).append(ctllR1CBORUInt(program.resultTypeId))
   body = body.append(ctllR1CBORUInt(10)).append(ctllR1CBORUInt(program.entryBlockId))
-  body = body.append(ctllR1CBORUInt(11)).append(ctllR1CBORBlocks(program.blocks))
-  body = body.append(ctllR1CBORUInt(12)).append(ctllR1CBORTextArray(program.failures))
-  body = body.append(ctllR1CBORUInt(13)).append(ctllR1CBORTextArray(program.k3Obligations))
+
+  body = body.append(ctllR1CBORUInt(11))
+  body = body.append(ctllR1CBORHead(4, program.blocks.count()))
+  mut blockIndex: Int = 0
+  while blockIndex < program.blocks.count() {
+    body = body.append(ctllR1CBORBlock(ctllR1BlockAt(program.blocks, blockIndex)))
+    blockIndex = blockIndex + 1
+  }
+
+  body = body.append(ctllR1CBORUInt(12))
+  body = body.append(ctllR1CBORHead(4, program.failures.count()))
+  mut failureIndex: Int = 0
+  while failureIndex < program.failures.count() {
+    body = body.append(ctllR1CBORFailure(ctllR1FailureAt(program.failures, failureIndex)))
+    failureIndex = failureIndex + 1
+  }
+
+  body = body.append(ctllR1CBORUInt(13))
+  body = body.append(ctllR1CBORHead(4, program.k3Obligations.count()))
+  mut k3Index: Int = 0
+  while k3Index < program.k3Obligations.count() {
+    body = body.append(ctllR1CBORK3(ctllR1K3At(program.k3Obligations, k3Index)))
+    k3Index = k3Index + 1
+  }
 
   return {
     verdict: Verdict.Allow
     status: "EXPORTED"
     failureId: "NONE"
-    reason: "canonical CTLL R1 semantic body exported"
+    reason: "canonical typed-ID CTLL R1 semantic body exported"
     bytes: body
     byteLength: body.length()
   }

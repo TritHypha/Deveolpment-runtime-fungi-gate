@@ -33,11 +33,40 @@ record R1CompilerFlow {
   effects: Array<String>
 }
 
+record CTLLR1LogicalInstruction {
+  resultId: Int
+  opcodeId: Int
+  typeId: Int
+  operands: Array<Int>
+  immediate: Int
+}
+
+record CTLLR1LogicalTerminator {
+  terminatorId: Int
+  operands: Array<Int>
+}
+
 record CTLLR1LogicalBlock {
   blockId: Int
-  name: String
-  operations: Array<String>
-  terminator: String
+  instructions: Array<CTLLR1LogicalInstruction>
+  terminator: CTLLR1LogicalTerminator
+}
+
+record CTLLR1LogicalFailure {
+  failureId: Int
+  classId: Int
+  visibilityId: Int
+  retryId: Int
+  terminalActionId: Int
+}
+
+record CTLLR1LogicalK3Obligation {
+  obligationId: Int
+  subjectFunctionId: Int
+  checkBlockId: Int
+  allowBlockId: Int
+  denyBlockId: Int
+  indeterminateBlockId: Int
 }
 
 record CTLLR1LogicalProgram {
@@ -48,13 +77,13 @@ record CTLLR1LogicalProgram {
   memoryProfileId: String
   fixtureName: String
   stableSymbolId: String
-  qualifier: String
-  parameterTypes: Array<String>
-  resultType: String
+  qualifierId: Int
+  parameterTypeIds: Array<Int>
+  resultTypeId: Int
   entryBlockId: Int
   blocks: Array<CTLLR1LogicalBlock>
-  failures: Array<String>
-  k3Obligations: Array<String>
+  failures: Array<CTLLR1LogicalFailure>
+  k3Obligations: Array<CTLLR1LogicalK3Obligation>
 }
 
 record CTLLR1AdapterResult {
@@ -247,9 +276,9 @@ contract { intent { "Return a clearly non-materialized logical program for refus
     memoryProfileId: ""
     fixtureName: ""
     stableSymbolId: ""
-    qualifier: ""
-    parameterTypes: Array.empty()
-    resultType: ""
+    qualifierId: 0
+    parameterTypeIds: Array.empty()
+    resultTypeId: 0
     entryBlockId: -1
     blocks: Array.empty()
     failures: Array.empty()
@@ -263,27 +292,56 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
   mut blocks: Array<CTLLR1LogicalBlock> = Array.empty()
   blocks = blocks.append({
     blockId: 0
-    name: "entry"
-    operations: ["v0=param.Int32.left", "v1=param.Int32.right", "v2=param.Verdict.admission"]
-    terminator: "check_k3(v2,allow=1,deny=2,indeterminate=3)"
+    instructions: [
+      { resultId: 0 opcodeId: 1 typeId: 1 operands: Array.empty() immediate: 0 },
+      { resultId: 1 opcodeId: 1 typeId: 1 operands: Array.empty() immediate: 1 },
+      { resultId: 2 opcodeId: 1 typeId: 2 operands: Array.empty() immediate: 2 }
+    ]
+    terminator: { terminatorId: 1 operands: [2, 1, 2, 3] }
   })
   blocks = blocks.append({
     blockId: 1
-    name: "allow"
-    operations: ["v3=int32.add.checked(v0,v1)", "v4=result.ok(v3)"]
-    terminator: "return(v4)"
+    instructions: [
+      { resultId: 3 opcodeId: 2 typeId: 1 operands: [0, 1] immediate: 0 },
+      { resultId: 4 opcodeId: 3 typeId: 3 operands: [3] immediate: 0 }
+    ]
+    terminator: { terminatorId: 2 operands: [4] }
   })
   blocks = blocks.append({
     blockId: 2
-    name: "deny"
-    operations: ["v5=failure.POLICY_DENIED", "v6=result.err(v5)"]
-    terminator: "return(v6)"
+    instructions: [
+      { resultId: 5 opcodeId: 4 typeId: 4 operands: Array.empty() immediate: 2 },
+      { resultId: 6 opcodeId: 5 typeId: 3 operands: [5] immediate: 0 }
+    ]
+    terminator: { terminatorId: 2 operands: [6] }
   })
   blocks = blocks.append({
     blockId: 3
-    name: "indeterminate"
-    operations: ["v7=failure.POLICY_UNRESOLVED", "v8=result.err(v7)"]
-    terminator: "return(v8)"
+    instructions: [
+      { resultId: 7 opcodeId: 4 typeId: 4 operands: Array.empty() immediate: 3 },
+      { resultId: 8 opcodeId: 5 typeId: 3 operands: [7] immediate: 0 }
+    ]
+    terminator: { terminatorId: 2 operands: [8] }
+  })
+
+  mut failures: Array<CTLLR1LogicalFailure> = Array.empty()
+  failures = failures.append({
+    failureId: 1 classId: 2 visibilityId: 1 retryId: 1 terminalActionId: 1
+  })
+  failures = failures.append({
+    failureId: 2 classId: 3 visibilityId: 1 retryId: 2 terminalActionId: 1
+  })
+  failures = failures.append({
+    failureId: 3 classId: 4 visibilityId: 1 retryId: 2 terminalActionId: 1
+  })
+  mut obligations: Array<CTLLR1LogicalK3Obligation> = Array.empty()
+  obligations = obligations.append({
+    obligationId: 1
+    subjectFunctionId: 1
+    checkBlockId: 0
+    allowBlockId: 1
+    denyBlockId: 2
+    indeterminateBlockId: 3
   })
 
   return {
@@ -294,13 +352,13 @@ contract { intent { "Materialize the closed logical R1 program after exact sourc
     memoryProfileId: "ctll.memory.safe-value.v1"
     fixtureName: "ctll_k3_checked_add_v1"
     stableSymbolId: "ctll.fixture.k3-checked-add.v1"
-    qualifier: "PURE"
-    parameterTypes: ["Int32", "Int32", "Verdict"]
-    resultType: "Result<Int32,FixtureFailure>"
+    qualifierId: 1
+    parameterTypeIds: [1, 1, 2]
+    resultTypeId: 3
     entryBlockId: 0
     blocks: blocks
-    failures: ["CTLL_FAILURE_ARITHMETIC", "CTLL_FAILURE_POLICY_DENIED", "CTLL_FAILURE_POLICY_UNRESOLVED"]
-    k3Obligations: ["ctll.obligation.fixture-admission.v1"]
+    failures: failures
+    k3Obligations: obligations
   }
 }
 
