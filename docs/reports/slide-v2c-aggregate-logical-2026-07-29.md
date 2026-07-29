@@ -11,14 +11,16 @@
 **Semantic binding commit:** `7d753041`
 **Pre-freeze semantic correction:** `398157da`
 **Bounded reference runtime commit:** `be91ce01`
+**Independent SLIDE frontend commit:** `2496af3`
+**Mutation/depth closure commit:** `756d54a0`
 
 ## Claim boundary
 
 This checkpoint proves one bounded logical aggregate fixture, corrected
 canonical V2-C bytes, independent import and semantic binding, and
 instruction-driven fresh-process reference execution. It does not prove
-native memory safety, a second producer, source-map parity, a broker, or
-production authority.
+native memory safety, a general frontend, a V2-E frontend receipt/source map,
+a broker, or production authority.
 
 Every successful decision reports `authorityReleased: false`. The fixture has
 zero effects, capabilities, memory objects, host calls, and back edges.
@@ -84,6 +86,13 @@ zero effects, capabilities, memory objects, host calls, and back edges.
   refuses without partial values, counts, or authority.
 - Pinned bytes execute in a fresh process without the producer, source AST,
   WAT, or Wasm.
+- The independent `SLIDE` repository's zero-dependency reference frontend
+  parses symbolic functions, blocks, SSA values, constants, aggregates, and
+  K3 exits, assigns registered IDs, and independently encodes the exact
+  corrected body. It imports neither Galerina's model/encoder nor the pinned
+  bytes/hash.
+- Galerina's producer-free importer admits that second-producer body and the
+  bounded runtime executes it. SLIDE evidence is 8/8.
 
 ## Pre-freeze correction
 
@@ -139,10 +148,17 @@ count, reordered root keys, and an unknown decoded aggregate opcode. Every
 refusal exposes empty function/constant/descriptor tables and no authority.
 The four non-vector V2-C suites pass 42/42.
 
-The bounded runtime suite adds 6/6: three checked-index successes, registered
+The bounded runtime suite adds 7/7: three checked-index successes, registered
 out-of-range failure, exact and exhausted budgets, caller-budget capping,
-malformed/truncated/suffixed refusal, and fresh-process execution. Corrected
-V2-C evidence is 54/54. Adjacent frozen R1/V2-A/V2-B regression is 117/117.
+aggregate-depth exhaustion, malformed/truncated/suffixed refusal, and
+fresh-process execution. Before the expanded logical-mutation closure,
+corrected V2-C evidence was 55/55. Adjacent frozen R1/V2-A/V2-B regression is
+117/117.
+
+The exit audit extends the logical mutation suite and adds executable
+aggregate-depth exhaustion. Current V2-C evidence is 73/73; adjacent frozen
+R1/V2-A/V2-B remains 117/117. The complete mapping is in
+`slide-v2c-required-mutation-audit-2026-07-29.md`.
 
 ## What this replaces, rebuilds, and integrates
 
@@ -157,7 +173,8 @@ Galerina must rebuild:
 
 Independent SLIDE must still build:
 
-- a second non-Galerina producer.
+- a general frontend beyond the bounded V2-C conformance slice; and
+- the independent V2-E frontend-receipt verifier.
 
 Only after those gates pass may the primary path cut:
 
@@ -170,8 +187,21 @@ The current interpreter, WAT/Wasm, database/network adapters, Tower Citizen,
 Tri-Pipe, and V2-B reference gates remain in place. Failed V2-C admission
 cannot select any of them as a fallback.
 
+## Source-map boundary
+
+Source spans are frontend-specific evidence and cannot enter the
+frontend-neutral V2-C body or semantic digest. Aggregate source-map parity
+belongs in the separately bound V2-E frontend receipt. It remains a gate
+before Galerina removes post-GIR AST recovery, but it does not block V2-D.
+
+## Exit
+
+All V2-C exit conditions are now satisfied: independent decoding, detached
+fresh-process execution, required mutations, executable copy/depth/step
+budgets, frozen-vector invariance, and a second non-Galerina producer.
+
 ## Next safe boundary
 
-Build a genuinely independent second producer and prove conforming aggregate
-output, then close aggregate source-map and required-mutation parity. V2-D
-memory remains blocked.
+Begin V2-D safe-value memory objects, guards, and limits. Native and LLVM work
+remain blocked. No Galerina AST/Wasm cut is authorized until the later V2-E
+receipt/source-map and remaining integration gates pass.

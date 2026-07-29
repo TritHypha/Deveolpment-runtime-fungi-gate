@@ -170,15 +170,36 @@ planning checkbox must never be used to imply that implementation exists.
   exposes no partial counts, values, or authority on refusal. Pinned bytes
   execute in a fresh process without a producer, AST, WAT, or Wasm. Corrected
   V2-C evidence is 54/54; adjacent R1/V2-A/V2-B regression is 117/117.
-- **Current:** build the genuinely independent second V2-C producer and
-  aggregate source-map parity. Separately replace
+- **Completed:** independent SLIDE commit `2496af3` adds a zero-dependency
+  bootstrap/reference frontend that derives the V2-C graph and canonical CBOR
+  from symbolic non-Galerina source. It emits the exact corrected 732-byte
+  body, which Galerina's producer-free importer admits and runtime executes.
+  SLIDE cross-project evidence is 8/8 and includes independence, malformed/
+  duplicate/surplus refusal, semantic drift, exact-vector identity, and
+  no-fallback execution.
+- **Corrected boundary:** source maps are producer-specific V2-E frontend
+  receipt evidence; putting them into V2-C would violate frontend-neutral
+  semantic identity. Source-map parity still blocks removal of Galerina's AST
+  recovery path but does not block V2-D.
+- **Completed:** local commit `756d54a0` closes the required V2-C mutation
+  matrix and makes aggregate depth an executable caller budget capped by the
+  admitted ceiling. Explicit rows now cover overlong UTF-8, every aggregate
+  ceiling, missing/duplicate/reordered descriptors/constants, all critical ID
+  families, field/case type and dynamic-ID drift, checked-index failure,
+  step/copy/depth exhaustion, forbidden authority/resource injection,
+  no-partial import, inherited invalid Verdict, frozen vectors, and the second
+  producer. V2-C is 73/73; adjacent R1/V2-A/V2-B is 117/117. All V2-C exit
+  conditions are satisfied.
+- **Current:** design and implement V2-D safe-value memory
+  objects/guards/limits. Separately replace
   generic V2-B evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
   audit-before-success seam. The reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** add a second minimal frontend that produces the conforming
-  aggregate fixture, then close source-map and full required-mutation parity.
-  V2-D memory stays blocked. No lease reference, broker opcode, host handle, or dispatch may
+- **Next:** implement the smallest V2-D no-address memory-plan increment and
+  independent negative corpus. Keep the V2-E receipt/source-map lane
+  independently gated before any AST cut. No
+  lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
@@ -221,6 +242,17 @@ planning checkbox must never be used to imply that implementation exists.
   fresh-process execution without producer/AST/WAT/Wasm. Adjacent frozen
   R1/V2-A/V2-B suites pass 117/117. Post-runtime Myco indexes 4,123 files
   with zero over-size skips.
+- **Latest independent-producer verification:** SLIDE commit `2496af3`
+  independently derives the exact 732-byte body from symbolic source with no
+  Galerina dependency. Its local and Galerina cross-conformance suites pass
+  8/8. Exact fixture and general bounded raw-byte semantics are tested as
+  distinct fail-closed gates.
+- **Latest V2-C exit verification:** 73/73 across logical, executable,
+  producer, exact-vector, structural importer, semantic digest, and bounded
+  runtime suites. The independent vector rejects mutations at all 732 byte
+  offsets; depth/copy/step exhaustion exposes no partial result. Adjacent
+  frozen R1/V2-A/V2-B remains 117/117. Matrix:
+  `docs/reports/slide-v2c-required-mutation-audit-2026-07-29.md`.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
@@ -234,6 +266,8 @@ planning checkbox must never be used to imply that implementation exists.
   `../../triLowLevel-v2/23-V2-B-NONCE-STATE-AND-K3-GATE.md`; next detached
   aggregate increment:
   `../../triLowLevel-v2/24-V2-C-IMMUTABLE-AGGREGATE-INCREMENT.md`.
+  V2-C mutation/exit audit:
+  `docs/reports/slide-v2c-required-mutation-audit-2026-07-29.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.

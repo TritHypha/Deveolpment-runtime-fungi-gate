@@ -100,7 +100,7 @@ Planning completion and implementation completion are deliberately separate.
 | Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
 | Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
 | SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
-| Non-Galerina frontend | `NOT-STARTED` | Owner delegated a tiny audited reference frontend | Specify and implement the minimal producer |
+| Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE commit `2496af3` derives and emits the exact V2-C fixture from symbolic source with no Galerina dependency; cross-project evidence 8/8 | Widen beyond the conformance slice before claiming general frontend/platform independence |
 | SLIDE benchmarks | `NOT-STARTED` | Security/TCB gates and weighted scorecard documented | Benchmark only after equivalent native execution exists |
 
 ## 4. Evidence behind the status
@@ -320,7 +320,8 @@ compiler evidence is 5,297/5,297.
 The first generalization increment is now implemented as V2-A logical records,
 semantic admission, canonical encoding, independent import, digest binding,
 instruction-driven execution, and runner-side budget enforcement. Remaining:
-memory/effect/capability increments and a second frontend.
+memory/effect/capability increments and a general frontend beyond the now
+implemented independent V2-C conformance producer.
 
 The follow-on safe-value gate walks the admitted R1 registry again, admits only
 the bounded no-address subset, and labels the result
