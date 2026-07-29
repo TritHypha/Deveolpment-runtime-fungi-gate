@@ -244,7 +244,16 @@ planning checkbox must never be used to imply that implementation exists.
   not deleted, while RD-0581 adds a partial named-component inventory and
   makes the one-canonical-K3-binding obligation explicit. Re-verify every
   cited Galerina source fact before acting; preserve both untracked KB files.
-- **Task 7 remains incomplete:** six named root generators plus explicit
+- **Task 7 seventh live generator:** `generate-sbom.mjs` now writes required
+  provenance, derives normal-run time from `SOURCE_DATE_EPOCH` or Git commit
+  evidence, and refuses a non-Git/no-epoch invocation rather than introducing
+  wall-clock churn. `--check` compares both exact outputs without writing, and
+  repository-relative output resolution refuses `..` escape. The default
+  `build/sbom/` artifacts remain explicitly untracked under the existing
+  `.gitignore` rule, but provenance is still mandatory. Its 22 built-in
+  detector checks remain green, the isolated missing/tamper/escape suite is
+  2/2, the combined affected suite is 30/30, and the live audit passes 7/7.
+- **Task 7 remains incomplete:** five named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or

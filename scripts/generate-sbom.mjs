@@ -26,15 +26,17 @@
 //   (4) NO PATH LEAKS — all recorded paths are repo-relative POSIX. A writer-side guard (the
 //       ZT-17 lesson) scans the serialized document and REFUSES to write if any absolute
 //       local path pattern is present.
-//   (5) NO DEPENDENCIES, NO NETWORK, NO MONKEYPATCHING — node:* imports only; reads the tree,
-//       writes one file. Testability comes from dependency-injection seams (rootDir + clock
-//       parameters), never from reassigning globals.
+//   (5) NO NETWORK, NO MONKEYPATCHING — runtime code uses node:* plus the shared local
+//       provenance helper; it reads the tree and writes only the declared SBOM and provenance
+//       files. Testability comes from dependency-injection seams (rootDir + clock parameters),
+//       never from reassigning globals.
 //
 // Usage (run from the repo root):
 //   node scripts/generate-sbom.mjs                        → write build/sbom/sbom.json
 //   node scripts/generate-sbom.mjs --out <file>           → write elsewhere (repo-relative)
 //   node scripts/generate-sbom.mjs --root <dir>           → treat <dir> as the repo root
 //   node scripts/generate-sbom.mjs --print                → print the SBOM to stdout, write nothing
+//   node scripts/generate-sbom.mjs --check                → refuse missing/stale outputs, write nothing
 //   node scripts/generate-sbom.mjs --self-test            → prove the detectors + determinism
 //   SOURCE_DATE_EPOCH=<secs> node scripts/generate-sbom.mjs → byte-reproducible output
 //
@@ -51,10 +53,15 @@ import {
   rmSync,
   realpathSync,
 } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
+import {
+  builtAtStamp,
+  gitCommit,
+  provenance,
+} from "./lib/provenance.mjs";
 
 const SCRIPT_NAME = "generate-sbom.mjs";
 const SCRIPT_VERSION = "1.0.0";
@@ -561,18 +568,69 @@ export function serializeBom(bom) {
 
 function usage() {
   process.stderr.write(
-    `usage: node scripts/${SCRIPT_NAME} [--out <file>] [--root <dir>] [--print] [--self-test]\n`,
+    `usage: node scripts/${SCRIPT_NAME} [--out <file>] [--root <dir>] [--check|--print|--self-test]\n`,
   );
 }
 
-export function runGenerate({ rootDir, outRel, print, sourceDateEpoch, now, log = (m) => process.stderr.write(m + "\n") }) {
+/**
+ * Resolve one output beneath the selected repository root.
+ *
+ * @param {string} rootDir selected repository root
+ * @param {string} outRel requested output path
+ */
+function resolveOutput(rootDir, outRel) {
+  if (typeof outRel !== "string" || outRel.length === 0 || isAbsolute(outRel)) {
+    throw new Error("output must be a non-empty repository-relative path");
+  }
+  const root = resolve(rootDir);
+  const output = resolve(root, outRel);
+  const rel = relative(root, output);
+  if (rel === "" || rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel)) {
+    throw new Error("output must remain beneath the selected repository root");
+  }
+  return output;
+}
+
+export function runGenerate({
+  rootDir,
+  outRel,
+  print,
+  check = false,
+  sourceDateEpoch,
+  now,
+  log = (m) => process.stderr.write(m + "\n"),
+}) {
   // Guard: refuse to "succeed" against a directory that is not a repo root (fail-closed
   // against silently emitting an empty SBOM from the wrong cwd).
   if (!existsSync(join(rootDir, "package.json")) || !existsSync(join(rootDir, PKG_ROOT))) {
     log(`ERROR: "${toPosix(outRel)}" not generated: root does not look like the repo root (need package.json + ${PKG_ROOT}/) — run from the repo root or pass --root`);
     return 1;
   }
-  const { bom, errors, warnings } = collectSbom({ rootDir, sourceDateEpoch, now });
+  if (print && check) {
+    log("ERROR: --print and --check are mutually exclusive — fail-closed");
+    return 1;
+  }
+  let outAbs;
+  try {
+    outAbs = resolveOutput(rootDir, outRel);
+  } catch (error) {
+    log(`ERROR: ${error instanceof Error ? error.message : String(error)} — fail-closed`);
+    return 1;
+  }
+  if (
+    (sourceDateEpoch === undefined || sourceDateEpoch === "")
+    && now === undefined
+    && gitCommit(rootDir) === null
+  ) {
+    log("ERROR: deterministic timestamp requires SOURCE_DATE_EPOCH or a Git commit — fail-closed");
+    return 1;
+  }
+  const deterministicNow = now ?? (() => new Date(builtAtStamp(rootDir)));
+  const { bom, errors, warnings } = collectSbom({
+    rootDir,
+    sourceDateEpoch,
+    now: deterministicNow,
+  });
   for (const w of warnings) log(`WARN: ${w}`);
   if (bom === null) {
     for (const e of errors) log(`ERROR: ${e}`);
@@ -580,14 +638,32 @@ export function runGenerate({ rootDir, outRel, print, sourceDateEpoch, now, log 
     return 1;
   }
   const text = serializeBom(bom);
+  const provenanceText = JSON.stringify(
+    provenance("generate-sbom", rootDir),
+    null,
+    2,
+  ) + "\n";
+  const provenancePath = join(dirname(outAbs), "provenance.json");
   // Writer-side guard: never persist an absolute local path (ZT-17 class).
   assertNoPathLeak(text);
   if (print) {
     process.stdout.write(text);
+  } else if (check) {
+    const stale = [
+      [outAbs, text],
+      [provenancePath, provenanceText],
+    ].filter(([path, bytes]) =>
+      !existsSync(path) || readFileSync(path, "utf8") !== bytes);
+    if (stale.length > 0) {
+      log(
+        `${SCRIPT_NAME}: ${stale.length} missing or stale output(s) — no files written`,
+      );
+      return 1;
+    }
   } else {
-    const outAbs = join(rootDir, ...toPosix(outRel).split("/"));
     mkdirSync(dirname(outAbs), { recursive: true });
     writeFileSync(outAbs, text, "utf8");
+    writeFileSync(provenancePath, provenanceText, "utf8");
   }
   const complete = bom.metadata.properties.find((p) => p.name === "galerina:sbom:complete").value;
   const digest = bom.metadata.properties.find((p) => p.name === "galerina:sbom:content-digest").value;
@@ -595,7 +671,8 @@ export function runGenerate({ rootDir, outRel, print, sourceDateEpoch, now, log 
     `${SCRIPT_NAME}: ${bom.components.length} components (+1 root), ${bom.dependencies.length} dependency records, complete=${complete}, ${warnings.length} warning(s)`,
   );
   log(`${SCRIPT_NAME}: content-digest ${digest}`);
-  if (!print) log(`${SCRIPT_NAME}: wrote ${toPosix(outRel)}`);
+  if (check) log(`${SCRIPT_NAME}: outputs are current`);
+  else if (!print) log(`${SCRIPT_NAME}: wrote ${toPosix(outRel)} + provenance.json`);
   return 0;
 }
 
@@ -885,12 +962,14 @@ if (isMain) {
   let outRel = DEFAULT_OUT;
   let rootDir = process.cwd();
   let print = false;
+  let check = false;
   let selfTest = false;
   let bad = false;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === "--self-test") selfTest = true;
     else if (a === "--print") print = true;
+    else if (a === "--check") check = true;
     else if (a === "--out" && argv[i + 1] !== undefined) outRel = argv[(i += 1)];
     else if (a === "--root" && argv[i + 1] !== undefined) rootDir = argv[(i += 1)];
     else if (a === "--help" || a === "-h") {
@@ -913,6 +992,7 @@ if (isMain) {
       rootDir,
       outRel,
       print,
+      check,
       sourceDateEpoch: process.env.SOURCE_DATE_EPOCH,
     }),
   );

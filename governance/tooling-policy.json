@@ -160,6 +160,31 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/generate-sbom.mjs": {
+      "inputs": [
+        "package-lock.json",
+        "package.json",
+        "packages-galerina",
+        "scripts/generate-sbom.mjs",
+        "scripts/lib/provenance.mjs"
+      ],
+      "outputs": [
+        "build/sbom/provenance.json",
+        "build/sbom/sbom.json"
+      ],
+      "tracked": false,
+      "generate": [
+        "node",
+        "scripts/generate-sbom.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/generate-sbom.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/ts-retirement-graph.mjs": {
       "inputs": [
         "packages-galerina",
