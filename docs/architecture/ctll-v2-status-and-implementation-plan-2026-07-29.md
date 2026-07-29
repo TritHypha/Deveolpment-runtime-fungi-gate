@@ -393,6 +393,7 @@ The current branch contains these CTLL-related checkpoints:
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |
 | `73338171` | Derive and materialize the compiler-owned logical R1 fixture |
 | `446d0ae6` | Serialize and independently pin the first canonical R1 body |
+| `bda13054` | Validate and fresh-process execute the typed-ID R1 profile |
 
 The corresponding Knowledge Base branch contains the canonical CTLL planning
 record and control-flow rules. None of these commits has been pushed by Codex.
