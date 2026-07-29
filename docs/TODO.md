@@ -253,7 +253,15 @@ planning checkbox must never be used to imply that implementation exists.
   `.gitignore` rule, but provenance is still mandatory. Its 22 built-in
   detector checks remain green, the isolated missing/tamper/escape suite is
   2/2, the combined affected suite is 30/30, and the live audit passes 7/7.
-- **Task 7 remains incomplete:** five named root generators plus explicit
+- **Task 7 eighth live generator:** `gen-unit-registry.mjs` now honors one
+  selected root and preflights the pinned ISO snapshot, the complete
+  self-hosted type-checker twin, and exactly one ordered currency marker pair
+  before any output write. `--check` compares the generated TypeScript, whole
+  marker-owned `.fungi` twin, and required provenance without mutation. An
+  isolated fixture proves a markerless twin cannot partially update the
+  TypeScript output. Its built-in evidence is 10/10, the focused fixture is
+  1/1, the combined affected suite is 31/31, and the live audit passes 8/8.
+- **Task 7 remains incomplete:** four named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or

@@ -24,14 +24,51 @@
 // hash-pinned: the bytes cannot drift without tripping law 1 first, and the
 // structural assertions below fail closed on any parse surprise.
 //
-// Usage: node scripts/gen-unit-registry.mjs [--check] [--self-test]
+// Usage: node scripts/gen-unit-registry.mjs [--root <dir>] [--check|--self-test]
 // =============================================================================
-import { readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { createHash } from "node:crypto";
-import { join, dirname } from "node:path";
+import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { provenance } from "./lib/provenance.mjs";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+/**
+ * Parse one repository root and one mode. Every unknown, duplicate, or
+ * incomplete argument refuses before the pinned input is read.
+ */
+function parseArgs(argv) {
+  let root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  let rootSeen = false;
+  let mode = "generate";
+  let modeSeen = false;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--root") {
+      if (rootSeen || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
+        throw new Error("unit-registry: --root requires exactly one path");
+      }
+      root = resolve(argv[++i]);
+      rootSeen = true;
+      continue;
+    }
+    if (arg === "--check" || arg === "--self-test") {
+      if (modeSeen) throw new Error("unit-registry: select exactly one mode");
+      mode = arg.slice(2);
+      modeSeen = true;
+      continue;
+    }
+    throw new Error(`unit-registry: unknown argument ${arg}`);
+  }
+  return { root, mode };
+}
+
+const OPTIONS = parseArgs(process.argv.slice(2));
+const ROOT = OPTIONS.root;
 const SNAPSHOT = join(ROOT, "data", "iso-4217", "list-one-2026-07-16.xml");
 const OUT = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "unit-registry.generated.ts");
 // #124 — the self-hosted type-checker twin validates Money<CCY> IN-LANGUAGE (FUNGI-TYPE-032). Its
@@ -40,6 +77,7 @@ const OUT = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "un
 const TWIN = join(ROOT, "packages-galerina", "galerina-core-compiler", "src", "self-hosted", "type-checker.fungi");
 const TWIN_MARK_OPEN = "  // <generated:currency-set>";
 const TWIN_MARK_CLOSE = "  // </generated:currency-set>";
+const PROVENANCE = join(ROOT, "build", "unit-registry", "provenance.json");
 
 // ── the pin (law 1 + law 3). A snapshot swap trips this before a single byte is parsed.
 const SNAPSHOT_PIN = "838dfb991648cf36df939edd5fe3811737962b75a32252847d239cedd1e291c9";
@@ -176,7 +214,15 @@ export function renderFungiCurrencySet(codes) {
 export function injectFungiRegion(twinSrc, region) {
   const openAt = twinSrc.indexOf(TWIN_MARK_OPEN);
   const closeAt = twinSrc.indexOf(TWIN_MARK_CLOSE);
-  if (openAt < 0 || closeAt < 0 || closeAt < openAt) {
+  const duplicateOpen = twinSrc.indexOf(TWIN_MARK_OPEN, openAt + TWIN_MARK_OPEN.length);
+  const duplicateClose = twinSrc.indexOf(TWIN_MARK_CLOSE, closeAt + TWIN_MARK_CLOSE.length);
+  if (
+    openAt < 0
+    || closeAt < 0
+    || closeAt < openAt
+    || duplicateOpen >= 0
+    || duplicateClose >= 0
+  ) {
     throw new Error(`type-checker.fungi: currency-set markers missing/malformed (open@${openAt}, close@${closeAt}) — cannot inject.`);
   }
   return twinSrc.slice(0, openAt + TWIN_MARK_OPEN.length) + "\n" + region + "\n" + twinSrc.slice(closeAt);
@@ -186,7 +232,15 @@ export function injectFungiRegion(twinSrc, region) {
 export function extractFungiRegion(twinSrc) {
   const openAt = twinSrc.indexOf(TWIN_MARK_OPEN);
   const closeAt = twinSrc.indexOf(TWIN_MARK_CLOSE);
-  if (openAt < 0 || closeAt < 0 || closeAt < openAt) return null;
+  const duplicateOpen = twinSrc.indexOf(TWIN_MARK_OPEN, openAt + TWIN_MARK_OPEN.length);
+  const duplicateClose = twinSrc.indexOf(TWIN_MARK_CLOSE, closeAt + TWIN_MARK_CLOSE.length);
+  if (
+    openAt < 0
+    || closeAt < 0
+    || closeAt < openAt
+    || duplicateOpen >= 0
+    || duplicateClose >= 0
+  ) return null;
   return twinSrc.slice(openAt + TWIN_MARK_OPEN.length, closeAt).replace(/\r\n/g, "\n").replace(/^\n|\n$/g, "");
 }
 
@@ -256,55 +310,56 @@ function selfTest() {
 
 // ── main ─────────────────────────────────────────────────────────────────────
 
-const argv = process.argv.slice(2);
-if (argv.includes("--self-test")) selfTest();
+if (OPTIONS.mode === "self-test") selfTest();
 
 const { table, text } = generate();
 const fungiRegion = renderFungiCurrencySet(table.codes); // #124 — the twin's in-language currency set
+let twinSrc;
+try {
+  twinSrc = readFileSync(TWIN, "utf8");
+} catch {
+  console.error(`❌ ${TWIN} is MISSING — cannot derive the twin currency set.`);
+  process.exit(1);
+}
+let expectedTwin;
+try {
+  expectedTwin = injectFungiRegion(twinSrc, fungiRegion);
+} catch (error) {
+  console.error(error instanceof Error ? `❌ ${error.message}` : `❌ ${String(error)}`);
+  process.exit(1);
+}
+const provenanceText = JSON.stringify(
+  provenance("gen-unit-registry", ROOT),
+  null,
+  2,
+) + "\n";
 
-if (argv.includes("--check")) {
-  // Law 2: the drift gate. Regenerate-and-diff — BOTH the TS table AND the twin's currency-set region.
-  let current = "";
-  try { current = readFileSync(OUT, "utf8"); } catch {
-    console.error(`❌ ${OUT} is MISSING — run: node scripts/gen-unit-registry.mjs`);
-    process.exit(1);
-  }
-  if (current.replace(/\r\n/g, "\n") !== text.replace(/\r\n/g, "\n")) {
-    console.error("❌ UNIT REGISTRY DRIFT — the generated table does not match the pinned snapshot.\n" +
-      "   Someone hand-edited the table or swapped the snapshot. Both are findings.\n" +
-      "   Regenerate with: node scripts/gen-unit-registry.mjs");
-    process.exit(1);
-  }
-  // #124: the self-hosted twin's currency set is generated from the SAME snapshot — it must not drift either.
-  let twinSrc = "";
-  try { twinSrc = readFileSync(TWIN, "utf8"); } catch {
-    console.error(`❌ ${TWIN} is MISSING — cannot check the twin currency set.`);
-    process.exit(1);
-  }
-  const twinNow = extractFungiRegion(twinSrc);
-  if (twinNow === null) {
-    console.error("❌ type-checker.fungi: <generated:currency-set> markers missing — cannot check the twin currency set.");
-    process.exit(1);
-  }
-  if (twinNow !== fungiRegion) {
-    console.error("❌ TWIN CURRENCY-SET DRIFT — type-checker.fungi's isKnownCurrency set does not match the pinned snapshot.\n" +
-      "   The self-hosted twin's currency validation has drifted from MONEY_UNIT_TAGS (a false-differential risk).\n" +
-      "   Regenerate with: node scripts/gen-unit-registry.mjs");
+if (OPTIONS.mode === "check") {
+  const expected = new Map([
+    [OUT, text],
+    [TWIN, expectedTwin],
+    [PROVENANCE, provenanceText],
+  ]);
+  const stale = [...expected.entries()]
+    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
+  if (stale.length > 0) {
+    console.error(
+      `❌ UNIT REGISTRY DRIFT — missing or stale output(s): ${stale.join(", ")}. No files written.`,
+    );
     process.exit(1);
   }
   console.log(`✅ unit registry + twin currency-set in sync with ${SNAPSHOT_NAME} (${table.codes.length} currencies, pin ${SNAPSHOT_PIN.slice(0, 12)}…)`);
   process.exit(0);
 }
 
+mkdirSync(dirname(OUT), { recursive: true });
+mkdirSync(dirname(PROVENANCE), { recursive: true });
 writeFileSync(OUT, text);
 // #124: inject the same currency set into the self-hosted twin (isKnownCurrency), so it validates Money<CCY>
 // in-language from the ONE source of truth. Marker-delimited — only the between-markers span is rewritten.
-let twinSrc = "";
-try { twinSrc = readFileSync(TWIN, "utf8"); } catch {
-  console.error(`❌ ${TWIN} is MISSING — cannot inject the twin currency set.`);
-  process.exit(1);
-}
-writeFileSync(TWIN, injectFungiRegion(twinSrc, fungiRegion));
+writeFileSync(TWIN, expectedTwin);
+writeFileSync(PROVENANCE, provenanceText);
 const byReason = {};
 for (const r of table.excluded.values()) byReason[r] = (byReason[r] ?? 0) + 1;
 console.log(`✅ unit registry generated — ${table.codes.length} currencies from ${SNAPSHOT_NAME}`);

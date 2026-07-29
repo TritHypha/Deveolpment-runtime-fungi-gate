@@ -160,6 +160,31 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/gen-unit-registry.mjs": {
+      "inputs": [
+        "data/iso-4217/list-one-2026-07-16.xml",
+        "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+        "scripts/gen-unit-registry.mjs",
+        "scripts/lib/provenance.mjs"
+      ],
+      "outputs": [
+        "build/unit-registry/provenance.json",
+        "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
+        "packages-galerina/galerina-core-compiler/src/unit-registry.generated.ts"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/gen-unit-registry.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/gen-unit-registry.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/generate-sbom.mjs": {
       "inputs": [
         "package-lock.json",
