@@ -269,9 +269,18 @@ planning checkbox must never be used to imply that implementation exists.
   generated block merely because generation ran. Its built-in evidence is
   23/23 including 11 driven controls, the isolated fixture is 1/1, the
   combined affected suite is 32/32, and the live audit passes 9/9.
+- **Task 7 project-graph generation:** the new
+  `project-graph-generator.mjs` runs the core CLI only against a temporary
+  output directory, requires the exact four-file child set plus non-empty
+  nodes and edges, and publishes or checks those four artifacts with required
+  provenance only after successful validation. The core graph command now
+  honors a validated `SOURCE_DATE_EPOCH`; normal interactive runs retain their
+  existing current-time default. The core CLI package is 21/21 after a source
+  rebuild, the isolated wrapper fixture is 1/1, the combined affected suite is
+  33/33, and the live audit passes 10/10.
 - **Task 7 remains incomplete:** three named root generators plus explicit
-  project/package graph generation remain undeclared. Next resume: adapt the
-  simple generators incrementally, then handle the external knowledge-base
+  package-graph generation remain undeclared. Next resume: handle the dynamic
+  package output set, then the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or
   hidden exception.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and

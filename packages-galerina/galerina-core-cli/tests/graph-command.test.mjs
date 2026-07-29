@@ -36,7 +36,15 @@ describe("Galerina graph command", () => {
       "utf8",
     );
 
-    const result = await runCli(["graph", "--out", "graph-out"], cwd);
+    const priorEpoch = process.env.SOURCE_DATE_EPOCH;
+    process.env.SOURCE_DATE_EPOCH = "1700000000";
+    let result;
+    try {
+      result = await runCli(["graph", "--out", "graph-out"], cwd);
+    } finally {
+      if (priorEpoch === undefined) delete process.env.SOURCE_DATE_EPOCH;
+      else process.env.SOURCE_DATE_EPOCH = priorEpoch;
+    }
     const graph = JSON.parse(
       await readFile(join(cwd, "graph-out", "galerina-devtools-project-graph.json"), "utf8"),
     );
@@ -51,6 +59,7 @@ describe("Galerina graph command", () => {
     );
 
     assert.equal(result.ok, true);
+    assert.equal(graph.generatedAt, "2023-11-14T22:13:20.000Z");
     assert.equal(graph.nodes.some((node) => node.id === "package:galerina-core"), true);
     assert.equal(
       graph.nodes.some((node) => node.id === "doc:AGENTS.md"),

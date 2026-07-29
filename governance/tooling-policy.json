@@ -247,6 +247,42 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/project-graph-generator.mjs": {
+      "inputs": [
+        "AGENTS.md",
+        "docs",
+        "examples",
+        "galerina.mjs",
+        "galerina.workspace.json",
+        "governance",
+        "packages-galerina",
+        "proofs",
+        "scripts",
+        "subprojects",
+        "tests",
+        "tools",
+        "version.json"
+      ],
+      "outputs": [
+        "build/graph/Galerina_GRAPH_REPORT.md",
+        "build/graph/galerina-ai-map.md",
+        "build/graph/galerina-devtools-project-graph.html",
+        "build/graph/galerina-devtools-project-graph.json",
+        "build/graph/provenance.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/project-graph-generator.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/project-graph-generator.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/ts-retirement-graph.mjs": {
       "inputs": [
         "packages-galerina",

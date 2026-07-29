@@ -87,6 +87,7 @@ build/*.dot
 # the json is rebuilt by `graph` — `graph query/explain/path` print "run graph first" if absent).
 # KEEP the small human/AI nav docs (Galerina_GRAPH_REPORT.md, galerina-ai-map.md — AGENTS.md points to them).
 build/graph/*.json
+!build/graph/provenance.json
 build/graph/*.html
 build/graph/*.dot
 

@@ -48,9 +48,11 @@ export async function runGraphCommand(context: CliContext): Promise<CliResult> {
   const workspace = parseWorkspaceConfig(await readFile(workspacePath, "utf8"));
   const graphWorkspace = toProjectGraphWorkspace(workspace);
   const files = await collectProjectGraphFiles(context.cwd, workspace);
+  const generatedAt = resolveGraphGeneratedAt();
   const graph = createWorkspaceProjectGraph({
     workspace: graphWorkspace,
     files,
+    ...(generatedAt === undefined ? {} : { generatedAt }),
   });
   const paths = createGraphOutputPaths(context.cwd, outputDirectory);
   const manifest = createDefaultProjectGraphOutputManifest(
@@ -82,6 +84,29 @@ export async function runGraphCommand(context: CliContext): Promise<CliResult> {
       `Edges: ${graph.edges.length}`,
     ],
   };
+}
+
+/**
+ * Honor the reproducible-build timestamp when supplied. Ordinary interactive
+ * graph runs retain the graph library's current-time default.
+ */
+function resolveGraphGeneratedAt(): string | undefined {
+  const epoch = process.env["SOURCE_DATE_EPOCH"];
+  if (epoch === undefined || epoch === "") {
+    return undefined;
+  }
+  if (!/^\d+$/.test(epoch)) {
+    throw new Error("SOURCE_DATE_EPOCH must contain integer seconds.");
+  }
+  const milliseconds = Number(epoch) * 1000;
+  if (!Number.isSafeInteger(milliseconds)) {
+    throw new Error("SOURCE_DATE_EPOCH is outside the supported range.");
+  }
+  const date = new Date(milliseconds);
+  if (!Number.isFinite(date.getTime())) {
+    throw new Error("SOURCE_DATE_EPOCH is not a valid timestamp.");
+  }
+  return date.toISOString();
 }
 
 async function runGraphQueryCommand(context: CliContext): Promise<CliResult> {
