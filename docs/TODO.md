@@ -327,12 +327,24 @@ planning checkbox must never be used to imply that implementation exists.
   --quiet --check` plus both index `--check` commands; its header no longer
   falsely says the now-blocking runner always exits zero. Focused runner
   evidence is 6/6. Generation remains a separately reviewed operation.
-- **Current / next safe boundary:** commit the provenance source/test/ledger
-  and non-mutating-runner checkpoint, regenerate all governed artifacts,
-  publish the reviewed outputs separately, and repeat all fourteen direct
-  checks plus provenance/artifact gates. Then write the 11-requirement
-  completion matrix. Full requirement 9 remains owner-blocked only on an
-  explicit memory-tree choice; all four candidates stay denied meanwhile.
+- **Task 10 final completion audit:** the evidence matrix, architecture,
+  removed/rebuilt/open lists, exact commands, residual warnings, local commit
+  anchors, and four memory candidate IDs are recorded in
+  `docs/reports/zero-trust-tooling-refactor-completion-2026-07-29.md`.
+  Complete scripts evidence is now 180/180. Post-publication generator checks
+  are 14/14; provenance and artifact drift are green. Strict phase-close is
+  correctly non-authorizing at 82/83 and exhaustive at 83/84, with
+  `graph:all` the only failure. Direct graph evidence is 5/6: project,
+  integrity, KB, package, and dev-tool pass; memory selection alone refuses.
+  Both runs leave the worktree unchanged.
+- **Current owner-only blocker / next safe boundary:** identify the intended
+  memory directory for `--dir` or `MEMORY_DIR`; candidates are `ab9db789`
+  (144 files), `958d1a5f` (84), `5d51bdc9` (2), and `b508ab8a` (45).
+  Do not choose by size, recency, or apparent contents. Once authorized, run
+  the selected memory check, `graph-all --check`, strict phase-close, and
+  exhaustive, then mark completion requirement 9 green. Until that decision,
+  the documented implementation is complete but the release gate stays
+  closed.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
