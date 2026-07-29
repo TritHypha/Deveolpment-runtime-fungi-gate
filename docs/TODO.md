@@ -125,6 +125,16 @@ planning checkbox must never be used to imply that implementation exists.
   ownership), then Tasks 6-8. Task 8 must close the 21 named tooling
   dispositions before phase-close may authorize. Generator policy remains
   deliberately inactive until its Task 7 RED/GREEN contract.
+- **Preserved working state:** the live close refreshed `AGENTS.md` and
+  generated code-index, code-registry, coverage, dev-tool-index, and graph
+  outputs. They remain deliberately uncommitted for Task 9's deterministic
+  two-run regeneration/review; do not discard or mix them into hand-authored
+  changes.
+- **New tooling defect queued:** `audit-path-leak.mjs` fails closed when a
+  staged path is newly added but also emits `git show HEAD:<new-path>` fatals
+  and can report a stale HEAD-only leak until the commit exists. It did not
+  false-green and the post-commit full scan is green, but Task 8 must add a
+  staged-new-file fixture and remove the noisy/stale fallback.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side
