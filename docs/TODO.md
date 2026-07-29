@@ -157,7 +157,19 @@ planning checkbox must never be used to imply that implementation exists.
 - **Next safe work:** resume at Task 7 (generator/index/report/provenance
   governance), then Task 8. Task 8 must close the 21 named tooling
   dispositions before phase-close may authorize. Generator policy remains
-  deliberately inactive until its Task 7 RED/GREEN contract.
+  deliberately inactive until its Task 7 live declarations are complete.
+- **Task 7 partial checkpoint:** the generator contract core now has a
+  test-first explicit `generate` command (it cannot be inferred from
+  `--check`), canonical policy validation, exact fixture write-set checking,
+  second-run semantic idempotence, required-provenance refusal, and a
+  non-mutating check-command gate. The RED import failure and four behavior
+  failures were observed; the focused suite is now 4/4. This is infrastructure
+  only: `governance/tooling-policy.json` still declares zero live generators,
+  `audit-generator-contract.mjs` does not yet exist, and no legacy generator
+  has yet gained its required non-writing deterministic mode. Next resume:
+  inventory exact inputs/outputs for every Task 7 generator, adapt the simple
+  generators first, then handle external memory output and graph-all's dynamic
+  package boundary set without using a wildcard or hidden exception.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
   generated code-index, code-registry, coverage, dev-tool-index, and graph
   outputs. They remain deliberately uncommitted for Task 9's deterministic

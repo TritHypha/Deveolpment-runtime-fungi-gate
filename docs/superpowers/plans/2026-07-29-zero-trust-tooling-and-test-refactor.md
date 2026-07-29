@@ -757,11 +757,17 @@ type GeneratorPolicy = {
   readonly inputs: readonly string[];
   readonly outputs: readonly string[];
   readonly tracked: boolean;
+  readonly generate: readonly string[];
   readonly check: readonly string[];
   readonly provenance: "required" | "embedded" | "not-applicable";
   readonly tier: "phase-close" | "exhaustive";
 };
 ```
+
+`generate` is explicit rather than inferred from `check`: several current
+tools generate with no flag, some require `--write`, and some are
+orchestrators. Inferring one command from the other would silently execute the
+wrong mode.
 
 - Cover at minimum:
   `code-index.mjs`, `dev-tool-index.mjs`, `gen-code-registry.mjs`,
