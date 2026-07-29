@@ -55,6 +55,15 @@ All notable changes to Galerina are documented here (format: [Keep a Changelog](
   `21415420b447e219`, since the interim `ab46f4c7` root was lost; see RD-0368).
 
 ### Added
+- **Canonical CTLL R1 semantic-body boundary.** The closed logical fixture now
+  exports from `.fungi` as a deterministic 662-byte RFC 8949 CBOR map with
+  definite containers, ascending unsigned keys, shortest integers, and UTF-8
+  text. A separately implemented `.fungi` reference-vector validator admits
+  only the exact body, rejects every one of 662 single-byte mutations plus
+  truncation/surplus input, and pins the non-authoritative body checksum
+  `sha256:3086e47d7a14c711e60b8581fffb554ee1a755f8481df42ac3cac9b8da0a3f6a`.
+  This is not yet the structural importer, fresh-process interpreter, signed
+  CTLL payload, or `.slide` bundle.
 - **Compiler-owned CTLL R1 logical adapter.** The self-hosted GIR `FlowEntry`
   now carries derived signature/effect metadata. A new `.fungi` adapter
   validates the owner-confirmed fixture, derives the existing preflight

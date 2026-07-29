@@ -6,6 +6,13 @@ All notable changes to this app should be documented here.
 
 ### Added
 
+- Added the first canonical CTLL R1 semantic-body implementation: a `.fungi`
+  encoder for the exact frozen fixture and a separately pinned `.fungi`
+  reference-vector validator. The 662-byte body is deterministic RFC 8949
+  CBOR; all single-byte mutations, truncation, and surplus bytes refuse.
+  Structural import, registered typed instruction IDs, and detached execution
+  remain open.
+
 - Added a `.fungi`-first, fail-closed CTLL R1 preflight policy kernel for the
   frozen `ctll_k3_checked_add_v1` shape. It uses total `match` exits, K3
   decisions, and fifteen ordered `CTLL-R1-EXPORT-*` refusal identities, with

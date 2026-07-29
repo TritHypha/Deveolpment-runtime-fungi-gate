@@ -3,8 +3,8 @@
 - **Date:** 2026-07-29
 - **Branch:** `codex/ctll-v2-architecture`
 - **Scope:** the owner-confirmed `ctll_k3_checked_add_v1` fixture only
-- **Result:** exact compiler-owned internal GIR can be converted into a closed
-  logical R1 program; canonical bytes and detached execution do not exist yet
+- **Result at this checkpoint:** exact compiler-owned internal GIR can be
+  converted into a closed logical R1 program
 
 ## Implemented boundary
 
@@ -46,7 +46,7 @@ property of this bounded compiler seam rather than a caller assertion.
 Nevertheless, the compiler remains an evidence producer, not admission
 authority; independent validation is still required.
 
-## What is not implemented
+## What was not implemented at this checkpoint
 
 - deterministic CBOR;
 - semantic digest computation;
@@ -59,6 +59,14 @@ authority; independent validation is still required.
 
 The logical program currently uses frozen operation strings. They are an
 inspectable intermediate proof of complete shape, not the R1 wire format.
+
+## Subsequent boundary
+
+Canonical body export and independent exact-vector validation were implemented
+after this adapter checkpoint. See
+`ctll-r1-canonical-body-2026-07-29.md`. The operation strings remain frozen
+payload values, so the structural typed-ID importer and detached executor are
+still open.
 
 ## Verification
 
@@ -79,6 +87,6 @@ npm.cmd test
   PASS: typecheck, build, 5,270 tests
 ```
 
-The next sound step is a deterministic, typed R1 byte encoder plus an
-independent bounded decoder/validator. The logical model must not be treated
-as serialized authority while that gate remains open.
+The next step recorded here was completed by the canonical-body checkpoint.
+Neither report claims a signed payload, structural general importer, or
+detached executable authority.

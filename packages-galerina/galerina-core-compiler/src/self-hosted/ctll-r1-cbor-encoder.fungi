@@ -1,0 +1,256 @@
+@version 1
+/// @file: ctll-r1-cbor-encoder.fungi
+/// @purpose: Emit the frozen CTLL R1 logical program as canonical RFC 8949 CBOR.
+/// @status: Semantic-body encoder; digesting, signing, and .slide wrapping remain separate.
+///
+/// The body is a 14-entry map with unsigned integer keys in ascending order:
+///   0 format major, 1 format minor, 2 semantic profile, 3 digest suite,
+///   4 memory profile, 5 fixture name, 6 stable symbol, 7 qualifier,
+///   8 parameter types, 9 result type, 10 entry block, 11 blocks,
+///   12 failures, 13 K3 obligations.
+///
+/// A block is the fixed array [block-id, name, operations, terminator].
+/// All containers use definite lengths and all integers use their shortest form.
+/// The closed R1 profile is deliberately bounded; this is not a general CBOR API.
+
+record CTLLR1BodyExport {
+  verdict: Verdict
+  status: String
+  failureId: String
+  reason: String
+  bytes: Bytes
+  byteLength: Int
+}
+
+pure flow refuseCTLLR1BodyExport(failureId: String, reasonText: String) -> CTLLR1BodyExport
+contract { intent { "Return a terminal refusal without releasing partial semantic bytes." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: "REFUSED"
+    failureId: failureId
+    reason: reasonText
+    bytes: Bytes.empty()
+    byteLength: 0
+  }
+}
+
+pure flow ctllR1TextAt(values: Array<String>, position: Int) -> String
+contract { intent { "Read one required text value or return a non-admissible sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => { return "" }
+    _ => { return "" }
+  }
+}
+
+pure flow ctllR1BlockAt(values: Array<CTLLR1LogicalBlock>, position: Int) -> CTLLR1LogicalBlock
+contract { intent { "Read one required block or return a non-admissible sentinel." } }
+{
+  let item = values.get(position)
+  match item {
+    Some(value) => { return value }
+    None => {
+      return { blockId: -1 name: "" operations: Array.empty() terminator: "" }
+    }
+    _ => {
+      return { blockId: -1 name: "" operations: Array.empty() terminator: "" }
+    }
+  }
+}
+
+pure flow ctllR1ExactBlock(
+  logicalBlock: CTLLR1LogicalBlock,
+  expectedId: Int,
+  expectedName: String,
+  expectedTerminator: String,
+  expectedOperations: Array<String>,
+) -> Bool
+contract { intent { "Verify a block without accepting hidden or surplus operations." } }
+{
+  if logicalBlock.blockId != expectedId { return false }
+  if logicalBlock.name != expectedName { return false }
+  if logicalBlock.terminator != expectedTerminator { return false }
+  if logicalBlock.operations.count() != expectedOperations.count() { return false }
+
+  mut i: Int = 0
+  while i < expectedOperations.count() {
+    if ctllR1TextAt(logicalBlock.operations, i) != ctllR1TextAt(expectedOperations, i) {
+      return false
+    }
+    i = i + 1
+  }
+  return true
+}
+
+pure flow ctllR1ExactLogicalProgram(program: CTLLR1LogicalProgram) -> Bool
+contract { intent { "Admit exactly the frozen R1 semantic model before any byte is released." } }
+{
+  if program.formatMajor != 1 or program.formatMinor != 0 { return false }
+  if program.semanticProfileId != "ctll.semantic.galerina-gir.v1" { return false }
+  if program.digestSuiteId != "ctll.digest.sha256.v1" { return false }
+  if program.memoryProfileId != "ctll.memory.safe-value.v1" { return false }
+  if program.fixtureName != "ctll_k3_checked_add_v1" { return false }
+  if program.stableSymbolId != "ctll.fixture.k3-checked-add.v1" { return false }
+  if program.qualifier != "PURE" { return false }
+  if program.entryBlockId != 0 { return false }
+  if program.resultType != "Result<Int32,FixtureFailure>" { return false }
+
+  if program.parameterTypes.count() != 3 { return false }
+  if ctllR1TextAt(program.parameterTypes, 0) != "Int32" { return false }
+  if ctllR1TextAt(program.parameterTypes, 1) != "Int32" { return false }
+  if ctllR1TextAt(program.parameterTypes, 2) != "Verdict" { return false }
+
+  if program.failures.count() != 3 { return false }
+  if ctllR1TextAt(program.failures, 0) != "CTLL_FAILURE_ARITHMETIC" { return false }
+  if ctllR1TextAt(program.failures, 1) != "CTLL_FAILURE_POLICY_DENIED" { return false }
+  if ctllR1TextAt(program.failures, 2) != "CTLL_FAILURE_POLICY_UNRESOLVED" { return false }
+
+  if program.k3Obligations.count() != 1 { return false }
+  if ctllR1TextAt(program.k3Obligations, 0) != "ctll.obligation.fixture-admission.v1" {
+    return false
+  }
+
+  if program.blocks.count() != 4 { return false }
+  let entry = ctllR1BlockAt(program.blocks, 0)
+  let allow = ctllR1BlockAt(program.blocks, 1)
+  let deny = ctllR1BlockAt(program.blocks, 2)
+  let indeterminate = ctllR1BlockAt(program.blocks, 3)
+
+  let entryOk: Bool = ctllR1ExactBlock(
+    entry,
+    0,
+    "entry",
+    "check_k3(v2,allow=1,deny=2,indeterminate=3)",
+    ["v0=param.Int32.left", "v1=param.Int32.right", "v2=param.Verdict.admission"],
+  )
+  let allowOk: Bool = ctllR1ExactBlock(
+    allow,
+    1,
+    "allow",
+    "return(v4)",
+    ["v3=int32.add.checked(v0,v1)", "v4=result.ok(v3)"],
+  )
+  let denyOk: Bool = ctllR1ExactBlock(
+    deny,
+    2,
+    "deny",
+    "return(v6)",
+    ["v5=failure.POLICY_DENIED", "v6=result.err(v5)"],
+  )
+  let indeterminateOk: Bool = ctllR1ExactBlock(
+    indeterminate,
+    3,
+    "indeterminate",
+    "return(v8)",
+    ["v7=failure.POLICY_UNRESOLVED", "v8=result.err(v7)"],
+  )
+  return entryOk and allowOk and denyOk and indeterminateOk
+}
+
+pure flow ctllR1CBORHead(majorType: Int, value: Int) -> Bytes
+contract { intent { "Encode one bounded canonical CBOR head or return an empty refusal sentinel." } }
+{
+  if majorType < 0 or majorType > 7 { return Bytes.empty() }
+  if value < 0 or value > 65535 { return Bytes.empty() }
+  if value < 24 { return Bytes.of(majorType * 32 + value) }
+  if value < 256 { return Bytes.of(majorType * 32 + 24, value) }
+
+  let high: Int = value / 256
+  let low: Int = value - high * 256
+  return Bytes.of(majorType * 32 + 25, high, low)
+}
+
+pure flow ctllR1CBORUInt(value: Int) -> Bytes
+contract { intent { "Encode one bounded unsigned integer with the shortest RFC 8949 representation." } }
+{
+  return ctllR1CBORHead(0, value)
+}
+
+pure flow ctllR1CBORText(value: String) -> Bytes
+contract { intent { "Encode one definite-length UTF-8 CBOR text value." } }
+{
+  let payload: Bytes = value.encode()
+  let head: Bytes = ctllR1CBORHead(3, payload.length())
+  if head.isEmpty() { return Bytes.empty() }
+  return head.append(payload)
+}
+
+pure flow ctllR1CBORTextArray(values: Array<String>) -> Bytes
+contract { intent { "Encode one bounded definite-length array of text values in source order." } }
+{
+  let head: Bytes = ctllR1CBORHead(4, values.count())
+  if head.isEmpty() { return Bytes.empty() }
+  mut output: Bytes = head
+  mut i: Int = 0
+  while i < values.count() {
+    let item: Bytes = ctllR1CBORText(ctllR1TextAt(values, i))
+    if item.isEmpty() { return Bytes.empty() }
+    output = output.append(item)
+    i = i + 1
+  }
+  return output
+}
+
+pure flow ctllR1CBORBlock(logicalBlock: CTLLR1LogicalBlock) -> Bytes
+contract { intent { "Encode one fixed four-field R1 block array." } }
+{
+  mut output: Bytes = ctllR1CBORHead(4, 4)
+  output = output.append(ctllR1CBORUInt(logicalBlock.blockId))
+  output = output.append(ctllR1CBORText(logicalBlock.name))
+  output = output.append(ctllR1CBORTextArray(logicalBlock.operations))
+  output = output.append(ctllR1CBORText(logicalBlock.terminator))
+  return output
+}
+
+pure flow ctllR1CBORBlocks(blocks: Array<CTLLR1LogicalBlock>) -> Bytes
+contract { intent { "Encode the bounded ordered R1 block array." } }
+{
+  mut output: Bytes = ctllR1CBORHead(4, blocks.count())
+  mut i: Int = 0
+  while i < blocks.count() {
+    output = output.append(ctllR1CBORBlock(ctllR1BlockAt(blocks, i)))
+    i = i + 1
+  }
+  return output
+}
+
+pure flow exportCTLLR1CanonicalBody(program: CTLLR1LogicalProgram) -> CTLLR1BodyExport
+contract {
+  intent { "Release canonical deterministic CBOR only for the exact frozen R1 logical program." }
+}
+{
+  if ctllR1ExactLogicalProgram(program) == false {
+    return refuseCTLLR1BodyExport(
+      "CTLL-R1-CBOR-001",
+      "logical program is outside the frozen canonical R1 profile",
+    )
+  }
+
+  mut body: Bytes = ctllR1CBORHead(5, 14)
+  body = body.append(ctllR1CBORUInt(0)).append(ctllR1CBORUInt(program.formatMajor))
+  body = body.append(ctllR1CBORUInt(1)).append(ctllR1CBORUInt(program.formatMinor))
+  body = body.append(ctllR1CBORUInt(2)).append(ctllR1CBORText(program.semanticProfileId))
+  body = body.append(ctllR1CBORUInt(3)).append(ctllR1CBORText(program.digestSuiteId))
+  body = body.append(ctllR1CBORUInt(4)).append(ctllR1CBORText(program.memoryProfileId))
+  body = body.append(ctllR1CBORUInt(5)).append(ctllR1CBORText(program.fixtureName))
+  body = body.append(ctllR1CBORUInt(6)).append(ctllR1CBORText(program.stableSymbolId))
+  body = body.append(ctllR1CBORUInt(7)).append(ctllR1CBORText(program.qualifier))
+  body = body.append(ctllR1CBORUInt(8)).append(ctllR1CBORTextArray(program.parameterTypes))
+  body = body.append(ctllR1CBORUInt(9)).append(ctllR1CBORText(program.resultType))
+  body = body.append(ctllR1CBORUInt(10)).append(ctllR1CBORUInt(program.entryBlockId))
+  body = body.append(ctllR1CBORUInt(11)).append(ctllR1CBORBlocks(program.blocks))
+  body = body.append(ctllR1CBORUInt(12)).append(ctllR1CBORTextArray(program.failures))
+  body = body.append(ctllR1CBORUInt(13)).append(ctllR1CBORTextArray(program.k3Obligations))
+
+  return {
+    verdict: Verdict.Allow
+    status: "EXPORTED"
+    failureId: "NONE"
+    reason: "canonical CTLL R1 semantic body exported"
+    bytes: body
+    byteLength: body.length()
+  }
+}

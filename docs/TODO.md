@@ -6,9 +6,12 @@
 compiler probing is active. The first `.fungi` R1 shape-preflight kernel fails
 closed across the frozen fixture facts. The self-hosted lexer/parser/GIR/runtime
 now also preserve an explicit three-successor K3 check and checked Int32
-behavior for the bounded fixture shape. These are prerequisites only:
-canonical body export, deterministic CBOR, import, independent validation, and
-serialized detached execution do not exist. SLIDE is the independent public
+behavior for the bounded fixture shape. The exact logical fixture now exports
+as a 662-byte canonical CBOR semantic body, and an independently pinned
+`.fungi` validator rejects every single-byte mutation, truncation, and surplus
+data. This is a closed-profile byte gate, not yet a general bounded importer,
+typed-ID registry, fresh-process interpreter, signed payload, or detached
+execution path. SLIDE is the independent public
 engine/container; Galerina is its first frontend and CTLL remains the compiled
 tri-low-level payload/profile.
 
@@ -87,8 +90,15 @@ tri-low-level payload/profile.
   invokes the preflight and materializes a four-block logical R1 program,
   while structural or hidden-field mutations refuse. Evidence:
   `docs/reports/ctll-r1-adapter-2026-07-29.md`.
+- [x] Export the exact frozen logical program as deterministic RFC 8949 CBOR
+  using definite containers, ascending unsigned map keys, shortest integers,
+  and UTF-8 text. Independently pin and validate the 662-byte vector in
+  `.fungi`; reject all 662 possible single-byte mutations, truncation, and
+  surplus bytes. Evidence:
+  `docs/reports/ctll-r1-canonical-body-2026-07-29.md`.
 - [ ] Add serialized R1 mutation fixtures for malformed Verdict, overflow,
-  altered K3 successors, missing failure records, and non-canonical bytes.
+  altered K3 successors, and missing failure records. Raw canonical-byte
+  mutation coverage exists; semantic importer mutations remain open.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
 - [ ] Prove frontend independence with at least one non-Galerina fixture
   frontend.
@@ -98,10 +108,12 @@ tri-low-level payload/profile.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.
 
-**Next safe work:** encode the implemented logical R1 fixture as deterministic
-typed bytes, then build a bounded independent decoder/validator and serialized
-mutations. Bind the exact materialized bytes to the decision. Do not start
-LLVM, `.slide` execution, or driver installation before those semantic gates.
+**Next safe work:** replace the frozen operation strings with registered typed
+wire IDs, implement a structurally independent bounded importer (not just the
+closed-profile exact-vector validator), and execute imported R1 in a fresh
+process without source, AST, WAT, or ambient registries. Add semantic mutations
+for altered K3 successors and failure records. Do not start LLVM, `.slide`
+execution, or driver installation before those semantic gates.
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
 Live per-item state also lives in the in-session task board + `../ZTF-Knowledge-Bases/coordination/` (main↔R&D).

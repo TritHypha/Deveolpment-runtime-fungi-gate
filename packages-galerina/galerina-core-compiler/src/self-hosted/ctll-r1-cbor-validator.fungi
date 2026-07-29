@@ -1,0 +1,121 @@
+@version 1
+/// @file: ctll-r1-cbor-validator.fungi
+/// @purpose: Independently validate the frozen CTLL R1 canonical semantic-body vector.
+/// @status: Closed-profile reference validator; not a general-purpose CBOR decoder.
+///
+/// This file does not import or call the encoder. The accepted bytes are pinned
+/// independently as a reviewable canonical vector. For a one-program frozen
+/// profile, exact vector admission rejects non-shortest integers, indefinite
+/// containers, reordered/duplicate keys, invalid UTF-8, hidden fields, changed
+/// graph semantics, truncation, and trailing bytes with one bounded comparison.
+
+record CTLLR1WireDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  reason: String
+  mismatchOffset: Int
+  consumed: Int
+  expectedLength: Int
+  bodySha256: String
+}
+
+pure flow ctllR1CanonicalReferenceBytes() -> Bytes
+contract { intent { "Return the independently pinned canonical R1 semantic-body vector." } }
+{
+  let part1: String = "ae0001010002781d63746c6c2e73656d616e7469632e67616c6572696e612d6769722e7631037563746c6c2e6469676573742e7368613235362e763104781963746c6c2e6d656d6f72792e736166652d76616c75652e7631057663746c6c5f6b335f636865636b65645f6164645f763106781e63746c6c2e666978747572652e6b332d636865636b65642d6164642e7631076450555245088365496e74333265496e743332675665726469637409781c526573756c743c496e7433322c466978747572654661696c7572653e0a000b84840065656e747279837376303d706172616d2e496e7433322e6c656674"
+  let part2: String = "7476313d706172616d2e496e7433322e7269676874781a76323d706172616d2e566572646963742e61646d697373696f6e782b636865636b5f6b332876322c616c6c6f773d312c64656e793d322c696e64657465726d696e6174653d3329840165616c6c6f7782781b76333d696e7433322e6164642e636865636b65642876302c7631297076343d726573756c742e6f6b287633296a72657475726e2876342984026464656e7982781876353d6661696c7572652e504f4c4943595f44454e4945447176363d726573756c742e657272287635296a72657475726e2876362984036d696e64657465726d696e617465"
+  let part3: String = "82781c76373d6661696c7572652e504f4c4943595f554e5245534f4c5645447176383d726573756c742e657272287637296a72657475726e287638290c837743544c4c5f4641494c5552455f41524954484d45544943781a43544c4c5f4641494c5552455f504f4c4943595f44454e494544781e43544c4c5f4641494c5552455f504f4c4943595f554e5245534f4c5645440d81782463746c6c2e6f626c69676174696f6e2e666978747572652d61646d697373696f6e2e7631"
+  return Bytes.fromHex(part1 + part2 + part3)
+}
+
+pure flow refuseCTLLR1Wire(
+  failureId: String,
+  reasonText: String,
+  mismatchOffset: Int,
+  consumed: Int,
+) -> CTLLR1WireDecision
+contract { intent { "Return a stable terminal refusal without interpreting unadmitted bytes." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: "REFUSED"
+    failureId: failureId
+    reason: reasonText
+    mismatchOffset: mismatchOffset
+    consumed: consumed
+    expectedLength: 662
+    bodySha256: ""
+  }
+}
+
+pure flow validateCTLLR1CanonicalBody(candidate: Bytes) -> CTLLR1WireDecision
+contract {
+  intent { "Admit only the exact bounded canonical CTLL R1 semantic-body vector and reject all drift." }
+}
+{
+  let expected: Bytes = ctllR1CanonicalReferenceBytes()
+  if expected.length() != 662 {
+    return refuseCTLLR1Wire(
+      "CTLL-R1-CBOR-VALIDATE-001",
+      "internal canonical reference is unavailable or corrupt",
+      -1,
+      0,
+    )
+  }
+
+  if candidate.length() < expected.length() {
+    return refuseCTLLR1Wire(
+      "CTLL-R1-CBOR-VALIDATE-002",
+      "canonical body is truncated",
+      candidate.length(),
+      candidate.length(),
+    )
+  }
+  if candidate.length() > expected.length() {
+    return refuseCTLLR1Wire(
+      "CTLL-R1-CBOR-VALIDATE-003",
+      "canonical body contains trailing or surplus bytes",
+      expected.length(),
+      expected.length(),
+    )
+  }
+
+  mut i: Int = 0
+  while i < expected.length() {
+    let actualItem = candidate.get(i)
+    let expectedItem = expected.get(i)
+    mut same: Bool = false
+    match actualItem {
+      Some(actualByte) => {
+        match expectedItem {
+          Some(expectedByte) => { same = actualByte == expectedByte }
+          None => {}
+          _ => {}
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    if same == false {
+      return refuseCTLLR1Wire(
+        "CTLL-R1-CBOR-VALIDATE-004",
+        "canonical body differs from the admitted R1 semantic vector",
+        i,
+        i,
+      )
+    }
+    i = i + 1
+  }
+
+  return {
+    verdict: Verdict.Allow
+    status: "ADMITTED"
+    failureId: "NONE"
+    reason: "exact canonical CTLL R1 semantic body admitted"
+    mismatchOffset: -1
+    consumed: expected.length()
+    expectedLength: expected.length()
+    bodySha256: "sha256:3086e47d7a14c711e60b8581fffb554ee1a755f8481df42ac3cac9b8da0a3f6a"
+  }
+}
