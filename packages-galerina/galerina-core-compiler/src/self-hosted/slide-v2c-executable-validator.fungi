@@ -1,0 +1,313 @@
+@version 1
+/// @file: slide-v2c-executable-validator.fungi
+/// @purpose: Validate that V2-C extends the complete frozen V2-A graph without reinterpretation.
+/// @status: Logical integration gate; success releases no runtime or host authority.
+
+record SLIDEV2CExecutableDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEV2CExecutable(
+  failureId: String,
+  detail: String,
+) -> SLIDEV2CExecutableDecision
+contract { intent { "Refuse an incomplete or altered V2-C executable graph." } }
+{
+  return {
+    verdict: Verdict.Deny status: "REFUSED" failureId: failureId
+    detail: detail authorityReleased: false
+  }
+}
+
+pure flow validatedSLIDEV2CExecutable() -> SLIDEV2CExecutableDecision
+contract { intent { "Report complete logical V2-C graph validation without authority." } }
+{
+  return {
+    verdict: Verdict.Allow status: "LOGICAL_EXECUTABLE_VALIDATED"
+    failureId: "NONE" detail: "frozen V2-A plus V2-C aggregate function validated"
+    authorityReleased: false
+  }
+}
+
+pure flow emptySLIDEV2CExecutableLimits() -> SLIDEV2CExecutableLimits
+contract { intent { "Return inert limits behind refusal." } }
+{
+  return {
+    canonicalBodyBytes: 0 modules: 0 functionCount: 0 blocksPerFunction: 0
+    instructionsPerFunction: 0 valuesPerFunction: 0
+    blockParametersPerBlock: 0 callDepth: 0 backEdges: 0 effects: 0
+    capabilities: 0 memoryObjects: 0 executionSteps: 0 textBytes: 0
+    byteBytes: 0 arrayElements: 0 recordFields: 0 variantCases: 0
+    aggregateDepth: 0 copiedBytes: 0 hostCalls: 0
+  }
+}
+
+pure flow slideV2CProjectFrozenBase(
+  program: SLIDEV2CExecutableProgram,
+) -> SLIDEV2AProgram
+contract { intent { "Project only the first two functions into the exact frozen V2-A contract." } }
+{
+  let limits: SLIDEV2ALimits = {
+    canonicalBodyBytes: 16384 modules: 1 functionCount: 2
+    blocksPerFunction: 8 instructionsPerFunction: 32 valuesPerFunction: 48
+    blockParametersPerBlock: 4 callDepth: 2 backEdges: 0 effects: 0
+    capabilities: 0 memoryObjects: 0 executionSteps: 64
+  }
+  return {
+    formatMajor: 2 formatMinor: 0
+    semanticProfileId: program.semanticProfileId
+    digestSuiteId: program.digestSuiteId
+    registrySetId: "slide.registry.executable-gir.v2a"
+    registrySetDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
+    memoryProfileId: program.memoryProfileId
+    requiredFeatureIds: Array.of(1, 2, 3, 4)
+    limits: limits
+    moduleIds: program.moduleIds
+    typeIds: Array.of(1, 2, 3, 4, 5)
+    constantIds: Array.empty()
+    functions: Array.of(
+      slideV2AFunctionAt(program.functions, 0),
+      slideV2AFunctionAt(program.functions, 1),
+    )
+    failures: program.failures
+    effectIds: program.effectIds
+    capabilityIds: program.capabilityIds
+    k3Obligations: program.k3Obligations
+    memoryObjectIds: program.memoryObjectIds
+    extensionIds: program.extensionIds
+  }
+}
+
+pure flow validateSLIDEV2CExecutableMetadata(
+  program: SLIDEV2CExecutableProgram,
+) -> SLIDEV2CExecutableDecision
+contract { intent { "Validate exact V2-C identities, tables, and resource ceilings." } }
+{
+  if program.formatMajor != 2 or program.formatMinor != 1 or program.semanticProfileId != "slide.semantic.executable-gir.v2" or program.digestSuiteId != "slide.digest.sha256.v1" {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-001", "format, profile, or digest suite changed",
+    )
+  }
+  if program.registrySetId != "slide.registry.executable-gir.v2c" or program.registrySetDigest != "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38" or program.memoryProfileId != "slide.memory.safe-value.v1" {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-002", "registry or safe-value binding changed",
+    )
+  }
+  if program.requiredFeatureIds.count() != 5 or slideV2CIntAt(program.requiredFeatureIds, 4) != 5 or program.moduleIds.count() != 1 or slideV2CIntAt(program.moduleIds, 0) != 1 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-003", "feature or module table changed",
+    )
+  }
+  if program.typeIds.count() != 13 or program.constantIds.count() != 2 or slideV2CIntAt(program.constantIds, 0) != 1 or slideV2CIntAt(program.constantIds, 1) != 2 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-004", "type or constant identity table changed",
+    )
+  }
+  if program.functions.count() != 3 or program.failures.count() != 4 or program.k3Obligations.count() != 1 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-005", "function, failure, or K3 table length changed",
+    )
+  }
+  if program.effectIds.count() != 0 or program.capabilityIds.count() != 0 or program.memoryObjectIds.count() != 0 or program.extensionIds.count() != 0 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-006", "authority, memory, or extension identity injected",
+    )
+  }
+  let limits = program.limits
+  if limits.canonicalBodyBytes != 24576 or limits.modules != 1 or limits.functionCount != 3 or limits.blocksPerFunction != 8 or limits.instructionsPerFunction != 32 or limits.valuesPerFunction != 48 or limits.blockParametersPerBlock != 4 or limits.callDepth != 2 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-007", "graph or call ceiling changed",
+    )
+  }
+  if limits.backEdges != 0 or limits.effects != 0 or limits.capabilities != 0 or limits.memoryObjects != 0 or limits.hostCalls != 0 or limits.executionSteps != 96 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-008", "execution or authority ceiling changed",
+    )
+  }
+  if limits.textBytes != 256 or limits.byteBytes != 1024 or limits.arrayElements != 16 or limits.recordFields != 8 or limits.variantCases != 8 or limits.aggregateDepth != 4 or limits.copiedBytes != 4096 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-009", "aggregate ceiling changed",
+    )
+  }
+  return validatedSLIDEV2CExecutable()
+}
+
+pure flow slideV2CInstructionMatches(
+  instruction: SLIDEV2AInstruction,
+  resultId: Int,
+  opcodeId: Int,
+  typeId: Int,
+  operands: Array<Int>,
+  immediate: Int,
+) -> Bool
+contract { intent { "Compare one complete instruction without default fields." } }
+{
+  if instruction.resultId != resultId or instruction.opcodeId != opcodeId or instruction.typeId != typeId or instruction.immediate != immediate or instruction.operands.count() != operands.count() {
+    return false
+  }
+  mut equal: Bool = true
+  mut i: Int = 0
+  while i < operands.count() {
+    if slideV2CIntAt(instruction.operands, i) != slideV2CIntAt(operands, i) {
+      equal = false
+    }
+    i = i + 1
+  }
+  return equal
+}
+
+pure flow validateSLIDEV2CAggregateFunction(
+  program: SLIDEV2CExecutableProgram,
+) -> SLIDEV2CExecutableDecision
+contract { intent { "Validate the exact executable aggregate function and total return." } }
+{
+  let function = slideV2AFunctionAt(program.functions, 2)
+  if function.functionId != 3 or function.qualifierId != 1 or function.parameterTypes.count() != 0 or function.resultTypeId != 13 or function.declaredEffectIds.count() != 0 or function.requestedCapabilityIds.count() != 0 or function.entryBlockId != 0 or function.blocks.count() != 1 or function.limitRef != 1 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-010", "aggregate function signature or authority changed",
+    )
+  }
+  let block = slideV2ABlockAt(function.blocks, 0)
+  if block.blockId != 0 or block.parameters.count() != 0 or block.instructions.count() != 13 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-011", "aggregate block shape changed",
+    )
+  }
+  let expectedOpcodes = Array.of(12, 13, 1, 1, 1, 14, 15, 16, 4, 17, 18, 19, 20)
+  let expectedTypes = Array.of(6, 7, 1, 1, 1, 10, 1, 13, 2, 11, 13, 12, 13)
+  mut i: Int = 0
+  while i < block.instructions.count() {
+    let instruction = slideV2AInstructionAt(block.instructions, i)
+    if instruction.resultId != i or instruction.opcodeId != slideV2CIntAt(expectedOpcodes, i) or instruction.typeId != slideV2CIntAt(expectedTypes, i) {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-012", "aggregate opcode, type, or SSA identity changed",
+      )
+    }
+    i = i + 1
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 5), 5, 14, 10, Array.of(2, 3, 4), 0) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 7), 7, 16, 13, Array.of(5, 2), 0) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-013", "array construction or checked index changed",
+    )
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 9), 9, 17, 11, Array.of(7, 8, 0), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 10), 10, 18, 13, Array.of(9), 1) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-014", "record construction or projection changed",
+    )
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 11), 11, 19, 12, Array.of(10), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 12), 12, 20, 13, Array.of(11), 1) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-015", "variant construction or projection changed",
+    )
+  }
+  if block.terminator.terminatorId != 4 or block.terminator.operands.count() != 1 or slideV2CIntAt(block.terminator.operands, 0) != 12 or block.terminator.edges.count() != 0 {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-016", "aggregate function return changed or gained fallthrough",
+    )
+  }
+  return validatedSLIDEV2CExecutable()
+}
+
+pure flow validateSLIDEV2CExecutableProgram(
+  program: SLIDEV2CExecutableProgram,
+  aggregate: SLIDEV2CAggregateProgram,
+) -> SLIDEV2CExecutableDecision
+contract { intent { "Require frozen base, aggregate descriptors, and executable function to agree." } }
+{
+  let metadataDecision = validateSLIDEV2CExecutableMetadata(program)
+  check(metadataDecision.verdict) {
+    deny: { return metadataDecision }
+    ambig: { return metadataDecision }
+    if: {}
+  }
+  let baseDecision = validateSLIDEV2AProgram(slideV2CProjectFrozenBase(program))
+  check(baseDecision.verdict) {
+    deny: {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-017", "embedded frozen V2-A graph changed",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-017", "embedded frozen V2-A graph is unresolved",
+      )
+    }
+    if: {}
+  }
+  let aggregateDecision = validateSLIDEV2CAggregateProgram(aggregate)
+  check(aggregateDecision.verdict) {
+    deny: {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-018", "aggregate descriptor slice changed",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-018", "aggregate descriptor slice is unresolved",
+      )
+    }
+    if: {}
+  }
+  if program.constants.count() != aggregate.constants.count() or program.recordDescriptors.count() != aggregate.recordDescriptors.count() or program.variantDescriptors.count() != aggregate.variantDescriptors.count() {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-019", "executable descriptor tables do not match the admitted aggregate slice",
+    )
+  }
+  let programText = slideV2CConstantAt(program.constants, 0)
+  let aggregateText = slideV2CConstantAt(aggregate.constants, 0)
+  let programBytes = slideV2CConstantAt(program.constants, 1)
+  let aggregateBytes = slideV2CConstantAt(aggregate.constants, 1)
+  if programText.constantId != aggregateText.constantId or programText.typeId != aggregateText.typeId or programText.encodingId != aggregateText.encodingId or programText.utf8Decoded != aggregateText.utf8Decoded or slideV2CBytesEqual(programText.payload, aggregateText.payload) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-019", "executable text constant differs from the admitted aggregate slice",
+    )
+  }
+  if programBytes.constantId != aggregateBytes.constantId or programBytes.typeId != aggregateBytes.typeId or programBytes.encodingId != aggregateBytes.encodingId or programBytes.utf8Decoded != aggregateBytes.utf8Decoded or slideV2CBytesEqual(programBytes.payload, aggregateBytes.payload) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-019", "executable byte constant differs from the admitted aggregate slice",
+    )
+  }
+  let programRecord = slideV2CRecordDescriptorAt(program.recordDescriptors, 0)
+  let aggregateRecord = slideV2CRecordDescriptorAt(aggregate.recordDescriptors, 0)
+  if programRecord.recordId != aggregateRecord.recordId or programRecord.fieldIds.count() != aggregateRecord.fieldIds.count() or programRecord.fieldTypeIds.count() != aggregateRecord.fieldTypeIds.count() {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-019", "executable record descriptor differs from the admitted aggregate slice",
+    )
+  }
+  mut fieldIndex: Int = 0
+  while fieldIndex < aggregateRecord.fieldIds.count() {
+    if slideV2CIntAt(programRecord.fieldIds, fieldIndex) != slideV2CIntAt(aggregateRecord.fieldIds, fieldIndex) or slideV2CIntAt(programRecord.fieldTypeIds, fieldIndex) != slideV2CIntAt(aggregateRecord.fieldTypeIds, fieldIndex) {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-019", "executable record fields differ from the admitted aggregate slice",
+      )
+    }
+    fieldIndex = fieldIndex + 1
+  }
+  let programVariant = slideV2CVariantDescriptorAt(program.variantDescriptors, 0)
+  let aggregateVariant = slideV2CVariantDescriptorAt(aggregate.variantDescriptors, 0)
+  if programVariant.variantId != aggregateVariant.variantId or programVariant.caseIds.count() != aggregateVariant.caseIds.count() or programVariant.payloadTypeIds.count() != aggregateVariant.payloadTypeIds.count() {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-019", "executable variant descriptor differs from the admitted aggregate slice",
+    )
+  }
+  mut caseIndex: Int = 0
+  while caseIndex < aggregateVariant.caseIds.count() {
+    if slideV2CIntAt(programVariant.caseIds, caseIndex) != slideV2CIntAt(aggregateVariant.caseIds, caseIndex) or slideV2CIntAt(programVariant.payloadTypeIds, caseIndex) != slideV2CIntAt(aggregateVariant.payloadTypeIds, caseIndex) {
+      return refuseSLIDEV2CExecutable(
+        "SLIDE-V2C-EXECUTABLE-019", "executable variant cases differ from the admitted aggregate slice",
+      )
+    }
+    caseIndex = caseIndex + 1
+  }
+  let functionDecision = validateSLIDEV2CAggregateFunction(program)
+  check(functionDecision.verdict) {
+    deny: { return functionDecision }
+    ambig: { return functionDecision }
+    if: {}
+  }
+  return validatedSLIDEV2CExecutable()
+}

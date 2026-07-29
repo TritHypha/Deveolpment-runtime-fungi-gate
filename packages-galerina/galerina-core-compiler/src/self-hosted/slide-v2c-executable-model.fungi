@@ -1,0 +1,134 @@
+@version 1
+/// @file: slide-v2c-executable-model.fungi
+/// @purpose: Integrate the V2-C aggregate slice into a complete executable GIR graph.
+/// @status: Logical producer; canonical encoding, import, digest, and execution are separate.
+
+record SLIDEV2CExecutableLimits {
+  canonicalBodyBytes: Int
+  modules: Int
+  functionCount: Int
+  blocksPerFunction: Int
+  instructionsPerFunction: Int
+  valuesPerFunction: Int
+  blockParametersPerBlock: Int
+  callDepth: Int
+  backEdges: Int
+  effects: Int
+  capabilities: Int
+  memoryObjects: Int
+  executionSteps: Int
+  textBytes: Int
+  byteBytes: Int
+  arrayElements: Int
+  recordFields: Int
+  variantCases: Int
+  aggregateDepth: Int
+  copiedBytes: Int
+  hostCalls: Int
+}
+
+record SLIDEV2CExecutableProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  digestSuiteId: String
+  registrySetId: String
+  registrySetDigest: String
+  memoryProfileId: String
+  requiredFeatureIds: Array<Int>
+  limits: SLIDEV2CExecutableLimits
+  moduleIds: Array<Int>
+  typeIds: Array<Int>
+  constantIds: Array<Int>
+  functions: Array<SLIDEV2AFunction>
+  failures: Array<SLIDEV2AFailure>
+  effectIds: Array<Int>
+  capabilityIds: Array<Int>
+  k3Obligations: Array<SLIDEV2AK3Obligation>
+  memoryObjectIds: Array<Int>
+  extensionIds: Array<Int>
+  constants: Array<SLIDEV2CConstant>
+  recordDescriptors: Array<SLIDEV2CRecordDescriptor>
+  variantDescriptors: Array<SLIDEV2CVariantDescriptor>
+}
+
+pure flow materializeSLIDEV2CAggregateFunction(
+  aggregate: SLIDEV2CAggregateProgram,
+) -> SLIDEV2AFunction
+contract { intent { "Materialize the V2-C aggregate operations as one detached executable function." } }
+{
+  let instructions = Array.of(
+    slideV2AInstruction(0, 12, 6, Array.empty(), 1),
+    slideV2AInstruction(1, 13, 7, Array.empty(), 2),
+    slideV2AInstruction(2, 1, 1, Array.empty(), 3),
+    slideV2AInstruction(3, 1, 1, Array.empty(), 5),
+    slideV2AInstruction(4, 1, 1, Array.empty(), 8),
+    slideV2AInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
+    slideV2AInstruction(6, 15, 1, Array.of(5), 0),
+    slideV2AInstruction(7, 16, 13, Array.of(5, 2), 0),
+    slideV2AInstruction(8, 4, 2, Array.of(6, 2), 0),
+    slideV2AInstruction(9, 17, 11, Array.of(7, 8, 0), 1),
+    slideV2AInstruction(10, 18, 13, Array.of(9), 1),
+    slideV2AInstruction(11, 19, 12, Array.of(10), 1),
+    slideV2AInstruction(12, 20, 13, Array.of(11), 1),
+  )
+  let block: SLIDEV2ABlock = {
+    blockId: 0
+    parameters: Array.empty()
+    instructions: instructions
+    terminator: slideV2ATerminator(4, Array.of(12), Array.empty())
+  }
+  return {
+    functionId: 3
+    qualifierId: 1
+    parameterTypes: Array.empty()
+    resultTypeId: 13
+    declaredEffectIds: Array.empty()
+    requestedCapabilityIds: Array.empty()
+    entryBlockId: 0
+    blocks: Array.of(block)
+    limitRef: 1
+  }
+}
+
+pure flow materializeSLIDEV2CExecutableProgram() -> SLIDEV2CExecutableProgram
+contract { intent { "Materialize frozen V2-A plus the registered V2-C aggregate function." } }
+{
+  let base = materializeSLIDEV2AProgram()
+  let aggregate = materializeSLIDEV2CAggregateProgram()
+  let limits: SLIDEV2CExecutableLimits = {
+    canonicalBodyBytes: 24576 modules: 1 functionCount: 3
+    blocksPerFunction: 8 instructionsPerFunction: 32 valuesPerFunction: 48
+    blockParametersPerBlock: 4 callDepth: 2 backEdges: 0 effects: 0
+    capabilities: 0 memoryObjects: 0 executionSteps: 96
+    textBytes: 256 byteBytes: 1024 arrayElements: 16 recordFields: 8
+    variantCases: 8 aggregateDepth: 4 copiedBytes: 4096 hostCalls: 0
+  }
+  return {
+    formatMajor: 2 formatMinor: 1
+    semanticProfileId: "slide.semantic.executable-gir.v2"
+    digestSuiteId: "slide.digest.sha256.v1"
+    registrySetId: aggregate.registrySetId
+    registrySetDigest: aggregate.registrySetDigest
+    memoryProfileId: aggregate.memoryProfileId
+    requiredFeatureIds: Array.of(1, 2, 3, 4, 5)
+    limits: limits
+    moduleIds: Array.of(1)
+    typeIds: aggregate.typeIds
+    constantIds: Array.of(1, 2)
+    functions: Array.of(
+      slideV2AFunctionAt(base.functions, 0),
+      slideV2AFunctionAt(base.functions, 1),
+      materializeSLIDEV2CAggregateFunction(aggregate),
+    )
+    failures: base.failures
+    effectIds: Array.empty()
+    capabilityIds: Array.empty()
+    k3Obligations: base.k3Obligations
+    memoryObjectIds: Array.empty()
+    extensionIds: Array.empty()
+    constants: aggregate.constants
+    recordDescriptors: aggregate.recordDescriptors
+    variantDescriptors: aggregate.variantDescriptors
+  }
+}
