@@ -22,7 +22,8 @@ planning checkbox must never be used to imply that implementation exists.
   typed payload, R1 profile, registries, importer, runtime, receipts, and bundle
   use **SLIDE**.
 - **Completed locally:** migrated active code, wire identities, tests, reports,
-  and triLowLevel-v2 plans from `CTLL/ctll` to `SLIDE/slide`.
+  and triLowLevel-v2 plans from `CTLL/ctll` to `SLIDE/slide` in commit
+  `db93fae5`.
 - **Stop gate:** no mixed active namespace, stale semantic-domain prefix, or
   silently accepted former wire identity; historical naming evidence must be
   labelled rather than rewritten as current truth.
@@ -33,8 +34,11 @@ planning checkbox must never be used to imply that implementation exists.
   4,076 files with zero oversize skips; graph is 7,148 nodes / 7,412 edges with
   zero integrity violations, zero KB orphans/broken links, 97/97 border checks,
   and a clean explicitly selected Galerina memory index.
-- **Next:** stage only the SLIDE migration, exclude the owner’s tri-regex audit
-  edit, verify the staged diff, and commit without pushing.
+- **Commit state:** migration committed locally on
+  `codex/slide-v2-architecture`; nothing pushed. The owner’s tri-regex audit
+  edit remains unstaged and untouched.
+- **Next:** resume the detached general-GIR implementation from the canonical
+  SLIDE v2 status ledger.
 
 ## SLIDE v2 architecture lane — 2026-07-29
 
