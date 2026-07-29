@@ -65,7 +65,7 @@ planning checkbox must never be used to imply that implementation exists.
   constant/effect/capability/memory/extension table, then emitted a pinned
   540-byte canonical V2-A body. Report:
   `docs/reports/slide-v2a-canonical-producer-2026-07-29.md`.
-- **Completed (uncommitted checkpoint):** independent `.fungi` decoding now
+- **Completed:** local commit `7f9e335e` adds independent `.fungi` decoding that
   reconstructs all 18 critical root fields without the producer/encoder,
   exposes no partial graph on refusal, runs semantic admission, and binds the
   pinned v2 domain-separated digest. V2-A focused evidence is 25/25. Report:
@@ -81,7 +81,8 @@ planning checkbox must never be used to imply that implementation exists.
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,086 files with zero
   over-size skips at the logical checkpoint and 4,088 files with zero
-  over-size skips after canonical encoding.
+  over-size skips after canonical encoding. The independent-import
+  post-commit refresh indexes 4,091 files with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
