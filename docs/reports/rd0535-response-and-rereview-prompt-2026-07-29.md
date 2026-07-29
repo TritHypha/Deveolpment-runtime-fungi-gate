@@ -102,13 +102,21 @@ components:
   receipt-producing Tower Citizen, and backend-neutral witnessed Tri-Fuse.
   Its cited Galerina facts must be re-verified at source before implementation.
 
-The generator-governance chapter now has six live generators. Fresh evidence
-at Galerina commit `d80b9474` is:
+The generator-governance chapter now has eleven live generators. Fresh
+evidence through Galerina commit `f5b76ec3` is:
 
-- the affected Task 7 suite passes 28/28;
+- the focused generator fixture suite passes 22/22 and the package-graph core
+  package passes 27/27;
 - the contract-registry anti-vacuous self-test finds 1,331 contracts;
-- the live generator audit passes 6/6 after exact declared-write,
+- the live generator audit passes 11/11 after exact declared-write,
   provenance, second-run idempotence, and non-mutating-check verification;
+- package-graph governance preflights all 97 registered packages before
+  publishing any output, enumerates all 195 outputs without a wildcard, and
+  makes the underlying CLI check non-mutating. Its live preflight exposed a
+  real `.mjs` resolution defect and 15 unexplained ownership sets; the
+  extension bug is regression-tested and the ownership sets are now explicit.
+  One dormant benchmark sampler remains visibly justified as an allowed
+  orphan rather than being counted as live;
 - the tooling-contract audit deliberately remains red on the same 21 named
   Task 8 dispositions. That red is tracked work, not a release-green claim;
 - generated Task 9 outputs remain a separate unstaged working set and were
@@ -157,7 +165,7 @@ Answer the response, not merely the original review:
    diff. Check exact SLIDE corpus discovery, empty/uncountable refusal, child
    exit propagation, NODE_TEST_CONTEXT removal, compiler asset ownership, and
    deterministic compiler build evidence.
-   Also inspect current Galerina commit d80b9474 and independent SLIDE commit
+   Also inspect current Galerina commit f5b76ec3 and independent SLIDE commit
    8a28199. Never infer that unstaged generated artifacts belong to the manual
    commit.
 6. Try to falsify the build-evidence contract: missing evidence, malformed
@@ -175,10 +183,13 @@ Answer the response, not merely the original review:
    proposed architecture, experiments, blocked work, and rejected ideas. Do
    not infer native safety, performance, admission, or twenty-year
    compatibility from test counts.
-9. Try to falsify the six live generator contracts. Confirm exact declared
+9. Try to falsify the eleven live generator contracts. Confirm exact declared
    write sets, provenance, second-run semantic idempotence, and non-mutating
-   check modes. Reconcile the intentional 21-tool Task 8 red set; do not call
-   the phase close green while it remains.
+   check modes. For package graphs, verify all 97 registered package sets, all
+   195 explicit outputs, `.mjs` internal-edge resolution, no partial
+   publication, and the one visible dormant-sampler exception. Reconcile the
+   intentional 21-tool Task 8 red set; do not call the phase close green while
+   it remains.
 10. Re-evaluate RD-0580/RD-0581 against current Galerina source. Distinguish
     “cut from the future mandatory path” from physical deletion. Test the
     claimed K3 duplication, Tower/Tri-Pipe authority shapes, Tri-Fuse backend
