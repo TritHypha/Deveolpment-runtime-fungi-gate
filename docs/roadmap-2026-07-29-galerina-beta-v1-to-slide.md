@@ -63,8 +63,9 @@ flowchart LR
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
 | Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,748/5,748 tests |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 59/59 mutation anchors green |
-| Governed decision authority | 🟦 | 15/29 authoritative after the 6/6 app-kernel tranche; 14 remain differential in tower-citizen, core runtime, sentinel I/O and network |
-| Governed authority hash integrity | 🟩 | 15/15 current ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
+| Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
+| Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
+| Governed mutation non-vacuity | 🟩 | Full catalog 59/59 killed, zero survivors, zero dirty targets |
 
 ## Active Galerina work
 
@@ -81,8 +82,9 @@ remain running differential shadows; no `.ts` retirement has started.
 
 The remaining sequence is:
 
-1. Complete governed `.fungi` authority from the top of the dependency chain.
-2. Finish the remaining beta-v1 feature work in `docs/TODO.md`.
+1. Close package readiness and the remaining beta-v1 feature work in
+   `docs/TODO.md`.
+2. Complete platform smoke, signing preflight and release-surface checks.
 3. Run all Galerina graph, test, audit, provenance and generator tools.
 4. Fix every in-scope finding; do not whitelist or suppress unexplained
    failures.

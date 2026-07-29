@@ -121,9 +121,18 @@ planning checkbox must never be used to imply that implementation exists.
   re-pinned, and the verifier now reports 15/15 authoritative ledger entries
   green. The verifier is wired into phase-close, so future hash, admission,
   ledger-shape, or ambient-import drift is blocking.
-- **Current safe boundary:** proceed to Task 5's governed `.fungi` authority
-  with the tower-citizen tranche next, then core runtime, sentinel I/O and
-  network. After that, finish the remaining beta-v1 feature tasks and complete
+- **Task 5 governed-authority complete:** the remaining tower-citizen 4,
+  core-runtime 1, sentinel-I/O 2 and core-network 7 candidates each cleared
+  their own check, real execution differential, negative failure corpus,
+  targeted mutation, deterministic hash, signed #105 admission and
+  ambient-authority boundary before promotion. The live authority audit is
+  now **0 shadow, 0 differential, 29 authoritative**. The ledger verifier is
+  **29/29**, the full mutation catalog is **59/59 killed with zero survivors**,
+  and the shared effect differential is green with its witnesses isolated from
+  the separate audit-evidence obligation. TypeScript remains the live
+  differential shadow; no retirement or push occurred.
+- **Current safe boundary:** proceed to Task 6 package readiness and release
+  surface closure, then platform/signing and the complete
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.

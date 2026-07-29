@@ -317,17 +317,17 @@ remain non-authorizing and outside this denominator.
 
 Use `audit-kernel-fungi-twins.mjs` output; do not copy counts from prose.
 
-- [ ] **Step 2: Process one dependency tranche at a time**
+- [x] **Step 2: Process one dependency tranche at a time**
 
 For each tranche, run check, differential, mutation, hash, admission, and
 negative failure-path evidence before editing the ledger.
 
-- [ ] **Step 3: Reject incomplete tranches**
+- [x] **Step 3: Reject incomplete tranches**
 
 A single missing candidate, unsupported platform dependency, unexplained
 diagnostic, or non-killed mutation keeps that candidate differential.
 
-- [ ] **Step 4: Verify 29/29 authority**
+- [x] **Step 4: Verify 29/29 authority**
 
 ```powershell
 node scripts/audit-kernel-fungi-twins.mjs
