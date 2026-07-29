@@ -135,6 +135,40 @@ describe("gir-emitter.fungi — buildFlowTable (cross-flow table for the runtime
     assert.deepEqual(table[0].params, []);
     assert.equal(table[0].body[0].op, "ret");
   });
+
+  it("parses the frozen V2-E source into three complete compiler-owned flows", async () => {
+    const source = readFileSync(join(__dir, "fixtures", "slide-v2e-source.fungi"), "utf8");
+    const table = await flowTable(source);
+
+    assert.deepEqual(
+      table.map((entry) => entry.name),
+      [
+        "slide_v2e_checked_increment",
+        "slide_v2e_k3_join",
+        "slide_v2e_guarded_memory",
+      ],
+    );
+    const guarded = table[2];
+    assert.deepEqual(guarded.body.map((entry) => entry.op), [
+      "store",
+      "branch",
+      "store",
+      "matche",
+    ]);
+    assert.equal(guarded.body[1].expr[0].value, "or");
+    assert.equal(guarded.body[1].expr[0].ty, "Bool");
+    assert.deepEqual(
+      guarded.body[3].body.map((arm) => arm.name),
+      ["Some", "None", "_"],
+    );
+    assert.equal(guarded.body[3].body[0].body[0].expr[0].op, "reclit");
+    assert.equal(
+      guarded.body[3].body[0].body[0].expr[0].value,
+      "SLIDEV2EFixtureRecord",
+    );
+    assert.equal(guarded.body[3].body[0].body[1].op, "store");
+    assert.equal(guarded.body[3].body[0].body[2].op, "matche");
+  });
 });
 
 describe("gir-emitter.fungi — expression lowering (real lowerExpr inside statements)", () => {
@@ -160,6 +194,29 @@ describe("gir-emitter.fungi — expression lowering (real lowerExpr inside state
     assert.equal(call.expr[0].op, "call");
     assert.equal(call.expr[0].value, "f");
     assert.equal(call.expr[0].kids.length, 2);
+  });
+
+  it("logical and/or remain explicit Bool GIR operations", async () => {
+    const out = await emit([
+      stmt({
+        kind: "return",
+        expr: [
+          expr("binary", "or", "", [
+            expr("binary", "<", "", [expr("name", "index"), expr("lit", "0", "Int")]),
+            expr("binary", ">=", "", [expr("name", "index"), expr("lit", "3", "Int")]),
+          ]),
+        ],
+      }),
+      stmt({
+        kind: "return",
+        expr: [expr("binary", "and", "", [expr("name", "left"), expr("name", "right")])],
+      }),
+    ]);
+
+    assert.deepEqual(out.map((entry) => [entry.expr[0].value, entry.expr[0].ty]), [
+      ["or", "Bool"],
+      ["and", "Bool"],
+    ]);
   });
 
   it("unary neg over a literal lowers to unop with one lowered kid", async () => {

@@ -41,7 +41,12 @@ async function tokenize(src) {
 }
 function readExpr(n) {
   const x = n.value ?? n;
-  return { kind: x.fields.get("kind").value, value: x.fields.get("value").value, children: x.fields.get("children").items.map(readExpr) };
+  return {
+    kind: x.fields.get("kind").value,
+    value: x.fields.get("value").value,
+    litType: x.fields.get("litType").value,
+    children: x.fields.get("children").items.map(readExpr),
+  };
 }
 function readStmt(n) {
   const x = n.value ?? n;
@@ -155,5 +160,71 @@ describe("parser.fungi grammar — if/else", () => {
     assert.equal(inner.kind, "if");
     assert.equal(inner.body.length, 1);
     assert.equal(inner.elseBody.length, 1);
+  });
+});
+
+describe("parser.fungi grammar — typed record construction", () => {
+  it("consumes the complete typed record expression without closing its parent block", async () => {
+    const stmts = await bodyOf(`pure flow f(value: Int) -> Int {
+      let item = ExampleRecord {
+        selected: value
+        length: 3
+        label: "Galerina"
+      }
+      return item.selected
+    }`);
+
+    assert.deepEqual(stmts.map((stmt) => stmt.kind), ["let", "return"]);
+    const record = stmts[0].expr[0];
+    assert.equal(record.kind, "record-lit");
+    assert.equal(record.value, "ExampleRecord");
+    assert.equal(record.litType, "ExampleRecord");
+    assert.deepEqual(
+      record.children.filter((_, index) => index % 2 === 0).map((field) => field.value),
+      ["selected", "length", "label"],
+    );
+  });
+
+  it("keeps nested match arms after a typed record constructor inside an outer arm", async () => {
+    const stmts = await bodyOf(`pure flow f(selected: Option<Int>) -> Result<Int,String> {
+      match selected {
+        Some(value) => {
+          let item = ExampleRecord { selected: value }
+          match Selected {
+            Selected => { return Ok(item.selected) }
+            Missing => { return Err("missing") }
+            _ => { return Err("unknown") }
+          }
+        }
+        None => { return Err("none") }
+        _ => { return Err("invalid") }
+      }
+    }`);
+
+    assert.equal(stmts.length, 1);
+    assert.equal(stmts[0].kind, "match");
+    assert.deepEqual(stmts[0].body.map((arm) => arm.body.length), [2, 1, 1]);
+    assert.equal(stmts[0].body[0].body[0].kind, "let");
+    assert.equal(stmts[0].body[0].body[1].kind, "match");
+  });
+});
+
+describe("parser.fungi grammar — terminal match arms", () => {
+  it("parses unbraced return arms without consuming the enclosing block", async () => {
+    const stmts = await bodyOf(`pure flow f(state: State) -> Result<Int,String> {
+      match state {
+        Selected => return Ok(1)
+        Missing => return Err("missing")
+        _ => return Err("unknown")
+      }
+      return Err("after")
+    }`);
+
+    assert.deepEqual(stmts.map((stmt) => stmt.kind), ["match", "return"]);
+    assert.deepEqual(stmts[0].body.map((arm) => arm.body.length), [1, 1, 1]);
+    assert.deepEqual(
+      stmts[0].body.map((arm) => arm.body[0].kind),
+      ["return", "return", "return"],
+    );
   });
 });

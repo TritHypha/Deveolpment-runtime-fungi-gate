@@ -277,8 +277,23 @@ planning checkbox must never be used to imply that implementation exists.
   GIR plus producer evidence without post-GIR AST recovery. First inventory
   every existing parse/type/effect/GIR handoff and write the exact
   keep/rebuild/replace/cut matrix before widening the frozen V2-E vector.
-- **Next:** implement the smallest general checked-source adapter and
-  producer-independent receipt-validation seam under RED tests. Preserve the
+- **Completed (planning):**
+  `../../triLowLevel-v2/27-GENERAL-GALERINA-FRONTEND-HANDOFF.md` records the
+  G3.1 trust chain and exact current seams. The critical gap is explicit:
+  V2-E binds the pinned source beside the pinned V2-D body, but the body is not
+  yet derived from the compiler-owned flow table. Tower stub success and
+  Tri-Pipe availability/fallback behavior are also forbidden as SLIDE
+  evidence.
+- **Completed — G3.1 parser/GIR floor:** the self-hosted parser now consumes
+  typed record constructors as one expression, supports canonical unbraced
+  terminal `match` arms without swallowing the enclosing block, and the
+  self-hosted GIR preserves logical `and`/`or` as typed Boolean operations.
+  The real 1,492-byte V2-E source now parses with zero self-hosted errors into
+  all three complete compiler-owned flow entries. Focused parser/GIR/R1
+  adapter evidence is 133/133; compiler typecheck and build pass.
+- **Next:** preserve the V2-E record/enum declarations as compiler-owned
+  snapshot facts, then implement the exact three-flow source-to-V2-D adapter
+  under RED tests. Preserve the
   bounded V2-E vector as permanent conformance evidence; do not widen or
   silently reinterpret its canonical identity. No
   lease reference, broker opcode, host handle, or dispatch may

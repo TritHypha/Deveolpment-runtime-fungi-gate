@@ -394,6 +394,38 @@ Exit gate: a valid producer signature with a lying plan is still rejected.
 The gate is satisfied for the bounded V2-D fixture. It releases no execution
 authority and removes no AST, WAT/Wasm, runtime, or host component.
 
+### Phase G3.1 — checked-source derivation — active
+
+The source trace found a necessary distinction: V2-E binds the pinned source
+and pinned V2-D body, but the current V2-D materializer does not derive that
+body from the compiler-owned flow table. G3.1 must close this link before the
+frontend can be called general.
+
+Implementation contract:
+`../../../triLowLevel-v2/27-GENERAL-GALERINA-FRONTEND-HANDOFF.md`.
+
+1. seal a bounded, versioned compiler-owned checked snapshot;
+2. preserve declarations, checked bodies, K3/failure/memory facts and exact
+   source spans without retaining an AST;
+3. derive the frozen V2-D graph and lowering trace from that snapshot in
+   `.fungi`;
+4. prove the derived canonical body remains byte-identical to the 791-byte
+   vector;
+5. route only adapter-derived bytes and mappings into V2-E; and
+6. terminally refuse unsupported or incomplete facts without selecting a
+   legacy backend.
+
+First implemented floor: the self-hosted parser now consumes typed record
+constructors and unbraced terminal match arms without losing enclosing block
+structure; self-hosted GIR preserves logical `and`/`or` instead of emitting
+`unknown`. The frozen V2-E source now yields three complete compiler-owned
+flow entries with zero self-hosted parse errors. Declaration facts,
+source spans, the exact V2-D adapter, and the public seam remain open.
+
+Exit gate: checked source produces the detached semantic body and receipt
+through one materialize-once seam, and independent SLIDE verifies and executes
+them without source, AST, producer, encoder, WAT or Wasm.
+
 ### Phase G4 — memory profile and Tri-Fuse
 
 1. retain the completed R1 no-address and V2-D bounded safe-value semantic
@@ -452,8 +484,9 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. preserve bounded V2-E as frozen conformance evidence and integrate the
-   receipt through the general Galerina frontend without post-GIR AST recovery;
+3. implement G3.1 checked-source derivation under
+   `27-GENERAL-GALERINA-FRONTEND-HANDOFF.md`, preserving bounded V2-E as a
+   frozen vector and refusing rather than falling back;
 4. separately replace generic V2-B evidence shapes with real receipt adapters;
 5. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;

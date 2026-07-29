@@ -217,6 +217,8 @@ contract { intent { "Map a source binary operator to its GIR opcode." } }
     ">"  => { return "gt" }
     "<=" => { return "le" }
     ">=" => { return "ge" }
+    "and" => { return "and" }
+    "or"  => { return "or" }
     _    => { return "unknown" }
   }
 }
@@ -236,6 +238,8 @@ contract { intent { "Result type of a binop opcode: arithmetic Int, comparison B
     "gt"  => { return "Bool" }
     "le"  => { return "Bool" }
     "ge"  => { return "Bool" }
+    "and" => { return "Bool" }
+    "or"  => { return "Bool" }
     _     => { return "" }
   }
 }
@@ -329,7 +333,9 @@ contract { intent { "Recursively lower a parser Expr AST node into a GIRExpr." }
       }
       ri = ri + 1
     }
-    return { op: "reclit", ty: "Record", value: "", kids: kids }
+    mut recordType: String = expr.value
+    if recordType == "" { recordType = "Record" }
+    return { op: "reclit", ty: recordType, value: expr.value, kids: kids }
   }
 
   // R2: array literal — `[1, 2, 3]` → op:"arrlit", kids:[lowered elements]

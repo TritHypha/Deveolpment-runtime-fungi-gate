@@ -656,6 +656,31 @@ contract { intent { "Parse a primary expression: literal, name, call, or ( group
           if eTokVal(tokens, p + 1) == "(" {
             return parseCallArgs(tokens, p + 1, tok.value)
           }
+          // Typed record construction: `TypeName { field: value, ... }`.
+          // The earlier parser returned only the `TypeName` identifier and
+          // left the `{ ... }` tokens to parseBlock. The record's `}` then
+          // looked like the enclosing block terminator, truncating nested
+          // match arms and leaking a later `}` to the top level. Consume the
+          // complete constructor here and retain its declared type identity.
+          // A following control-flow block (`if condition { ... }` or
+          // `match Subject { ... }`) is not a constructor: require either an
+          // empty record or the exact first-field `identifier :` shape.
+          let recordOpen: Int = skipNewlines(tokens, p + 1)
+          let firstField: Int = skipNewlines(tokens, recordOpen + 1)
+          let emptyRecord: Bool = eTokVal(tokens, firstField) == "}"
+          let namedField: Bool = isIdent(tokens, firstField) and eTokVal(tokens, firstField + 1) == ":"
+          if eTokVal(tokens, recordOpen) == "{" and (emptyRecord or namedField) {
+            let recordParse: ExprParse = parseRecordLiteral(tokens, recordOpen + 1)
+            return {
+              expr: {
+                kind: "record-lit",
+                value: tok.value,
+                litType: tok.value,
+                children: recordParse.expr.children
+              },
+              nextPos: recordParse.nextPos
+            }
+          }
           // Member access / method call: identifier.field or identifier.method(args)
           // Handle by returning the name here, then the parseUnary caller chains dots
           // via parseMemberChain (see below).
@@ -1195,15 +1220,34 @@ contract { intent { "Parse match arms { pat => { body } ... } from the opening b
           p = skipNewlines(tokens, p)
           if eTokVal(tokens, p) == "=>" { p = p + 1 }
           p = skipNewlines(tokens, p)
+          mut armBody: Array<Stmt> = Array.empty()
+          mut armParsed: Bool = false
           if eTokVal(tokens, p) == "{" {
             let armBlk: BlockParse = parseBlock(tokens, p + 1)
             p = armBlk.nextPos
+            armBody = armBlk.stmts
+            armParsed = armBlk.closed
+          }
+          else {
+            // Canonical compact arms may carry one terminal statement without
+            // braces: `Selected => return Ok(value)`. The old parser advanced
+            // by one token, then reinterpreted the remainder as new patterns,
+            // eventually consuming the enclosing flow brace. Parse exactly
+            // one real statement and require forward cursor progress.
+            let single: StmtParse = parseStmt(tokens, p)
+            if single.nextPos > p {
+              armBody = armBody.append(single.stmt)
+              p = single.nextPos
+              armParsed = true
+            }
+          }
+          if armParsed {
             mut patExpr: Expr = { kind: "lit", value: "true", litType: "Bool", children: Array.empty() }
             if mpat != "_" {
               patExpr = { kind: "lit", value: mpat, litType: "Int", children: Array.empty() }
             }
             // typeName carries the optional binding name for constructor patterns
-            let armStmt: Stmt = { kind: "if", name: mpat, typeName: bindingName, expr: [patExpr], body: armBlk.stmts, elseBody: Array.empty() }
+            let armStmt: Stmt = { kind: "if", name: mpat, typeName: bindingName, expr: [patExpr], body: armBody, elseBody: Array.empty() }
             arms = arms.append(armStmt)
           }
           else {
