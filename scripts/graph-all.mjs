@@ -1,117 +1,139 @@
 #!/usr/bin/env node
-// graph-all.mjs — run EVERY Galerina graph-related dev tool in one shot. THIS is "run graph".
+// graph-all.mjs — fail-closed orchestrator for every Galerina graph surface.
+// Version: 2.0.0 · Task 7 generator governance.
 //
-// "run graph" / the `graph` command historically ran ONLY the project graph. There are in fact
-// SIX distinct graph tools; this runs them all so "the graphs" stay current together, and it is the
-// SINGLE SOURCE OF TRUTH for what "run graph" means — run-phase-close §5 delegates its whole graph
-// phase to this script, so the on-demand command and the Stop cadence can never drift apart again:
-//   1. PROJECT graph       -> build/graph/          (the project knowledge graph; the `graph` CLI)
-//   2. GRAPH INTEGRITY     -> validates the graph (1) just generated (RD-0121: generate-then-VALIDATE
-//                             — dangling edges / cycles / corruption fail-closed; skips cleanly when
-//                             the generated artifact is absent, e.g. a build-free checkout)
-//   3. KB graph            -> build/kb-graph/        (doc cross-refs; the orphan/broken-link signal the
-//                             stray-docs audit reads — must be fresh for that audit)
-//   4. PACKAGE graph       -> per-package .graph/ + the Hardened Border `--check` across EVERY package
-//                             (catches a new external dependency / border drift — a security gate)
-//   5. MEMORY graph        -> .claude memory health   (dangling [[links]] / orphans / dupes)
-//   6. DEV-TOOL index/graph-> build/dev-tool-index/   (packages + dev tools: coverage + gaps)
-//
-// Pure INDEXES (code-index, code-registry, kb-index) are a DIFFERENT family — token-saver indexes the
-// audits read, not graphs — and stay in run-phase-close's own §5a step, NOT here.
-//
-// Informational: ALWAYS exits 0 (like run-phase-close). Drift/violation counts are REPORTED, not fatal
-// — committing the regenerated build/graph + .graph/ evidence is what makes drift diff-visible; the
-// ENFORCING graph-integrity + Hardened-Border gates live in lint-conventions / CI.
-//   node scripts/graph-all.mjs           run all six graph tools
-//   node scripts/graph-all.mjs --quiet   summary only
+// Generate mode updates the five derived graph/index surfaces and validates
+// project-graph integrity. Check mode routes every generator to its
+// non-mutating check. The external KB and memory trees must be selected
+// explicitly or resolve unambiguously; no child refusal is informational.
 import { spawnSync } from "node:child_process";
-import { readdirSync, existsSync } from "node:fs";
-import { join, dirname, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// cwd-independence. Every path below — the readdirSync of packages-galerina AND every spawned child's
-// relative script path — assumed process.cwd() == repo root. Run from anywhere else and step 4 hard-crashed
-// on ENOENT ('scandir .../packages-galerina') while steps 1-3 silently exited 1: a cron, a CI job, or a
-// Stop-hook invoked from another directory would have hit exactly that. Anchor to THIS file's location and
-// chdir once, so where the caller launched it stops mattering. (graph-all is only ever run as a script — an
-// orchestrator of top-level spawnSync — so a one-time chdir here has no import-side-effect surface.)
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-process.chdir(ROOT);
-
-const quiet = process.argv.includes("--quiet");
-const node = process.execPath;
-const run = (args) => spawnSync(node, args, { encoding: "utf8" });
-const log = (s) => { if (!quiet) console.log(s); };
-const first = (out, re, dflt = "?") => ((out ?? "").match(re) ?? [])[1] ?? dflt;
-
-// 1. project graph
-log("── 1/6 project graph (build/graph/) ──");
-const g1 = run(["packages-galerina/galerina-core-cli/dist/index.js", "graph", "--out", "build/graph"]);
-const nodes = first(g1.stdout, /Nodes:\s*(\d+)/);
-const edges = first(g1.stdout, /Edges:\s*(\d+)/);
-log(`   project graph: ${nodes} nodes / ${edges} edges (exit ${g1.status})`);
-
-// 2. graph integrity — validate what (1) just generated (RD-0121: generate then VALIDATE)
-log("── 2/6 graph integrity (validate build/graph/) ──");
-const g2 = run(["scripts/audit-graph-integrity.mjs"]);
-// Reads the child's `SKIPPED:` token, not its prose. This line used to be
-//     /nothing to validate|not present/.test(g2.stdout)
-// — a regex over an ENGLISH LOG STRING, because the child's skip and its ran-and-clean were otherwise
-// identical (both `VIOLATIONS: 0`, both exit 0). That made a sentence into a protocol: reword the child's
-// log — a tidy-up, a typo fix — and this silently starts reporting a skip as "0 violation(s)". Nothing in
-// either file said the string was load-bearing. The child now emits a distinct SKIPPED line + exit 3.
-const skipped = /^SKIPPED:\s*(.+)$/m.exec(g2.stdout ?? "");
-const integrity = skipped ? `SKIPPED — ${skipped[1].trim()}` : `${first(g2.stdout, /TOTAL:\s*(\d+)/)} violation(s)`;
-log(`   graph integrity: ${integrity} (exit ${g2.status})`);
-
-// 3. kb graph
-log("── 3/6 kb graph (build/kb-graph/) ──");
-// --all writes json+dot+report to the CLI's hardcoded build/kb-graph/. The CLI writes NOTHING
-// without an output flag (cli.ts: `if (!doJson && !doDot && !doReport) return`), so the prior
-// "--out build/kb-graph" (an unrecognised arg) printed the summary but silently regenerated NO
-// artifacts — leaving kb-report.md + the stray-docs audit's input stale for days.
-const g3 = run(["packages-galerina/galerina-devtools-kb-graph/dist/cli.js", "--all"]);
-const orphans = first(g3.stdout, /Orphans:\s*(\d+)/);
-const broken = first(g3.stdout, /Stale:\s*(\d+)/);
-log(`   kb graph: ${orphans} orphans / ${broken} broken links (exit ${g3.status})`);
-
-// 4. package graph — Hardened Border --check across every package
-log("── 4/6 package graph — Hardened Border --check (all packages) ──");
-let pass = 0, fail = 0;
-const drifted = [];
-const root = "packages-galerina";
-for (const name of readdirSync(root)) {
-  const pkg = join(root, name);
-  if (!existsSync(join(pkg, "package.json"))) continue;
-  const r = run(["packages-galerina/galerina-devtools-package-graph/dist/cli.js", "--scope", pkg, "--check"]);
-  if (r.status === 0) pass++;
-  else { fail++; drifted.push(name); }
+function parseArgs(argv) {
+  let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+  let kbDir = null;
+  let memoryDir = null;
+  let check = false;
+  let quiet = false;
+  const seen = new Set();
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--root" || arg === "--kb-dir" || arg === "--memory-dir") {
+      if (seen.has(arg) || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
+        throw new Error(`graph-all: ${arg} requires exactly one path`);
+      }
+      seen.add(arg);
+      const value = resolve(argv[++i]);
+      if (arg === "--root") root = value;
+      if (arg === "--kb-dir") kbDir = value;
+      if (arg === "--memory-dir") memoryDir = value;
+      continue;
+    }
+    if (arg === "--check" && !check) {
+      check = true;
+      continue;
+    }
+    if (arg === "--quiet" && !quiet) {
+      quiet = true;
+      continue;
+    }
+    throw new Error(`graph-all: unknown or duplicate argument ${arg}`);
+  }
+  return {
+    root,
+    kbDir: kbDir
+      || (process.env.GALERINA_KB_DIR ? resolve(process.env.GALERINA_KB_DIR) : null)
+      || resolve(root, "..", "ZTF-Knowledge-Bases"),
+    memoryDir: memoryDir
+      || (process.env.MEMORY_DIR ? resolve(process.env.MEMORY_DIR) : null),
+    check,
+    quiet,
+  };
 }
-log(`   Hardened Border: ${pass} PASS / ${fail} FAIL${fail ? " (border drift): " + drifted.join(", ") : ""}`);
 
-// 5. memory graph — .claude memory health
-log("── 5/6 memory graph (.claude memory health) ──");
-const g5 = run(["scripts/memory-graph.mjs"]);
-// memory-graph FAILS CLOSED (exit 2) when more than one memory dir carries a MEMORY.md and nothing says
-// which is yours (8f017543 — it used to pick the most populated, which on a multi-project box reports a
-// clean bill of health for a tree nobody asked about). That is a REFUSAL, not a crash, and it arrives on
-// stderr — so `first(stdout, /HEALTH:/)` finds nothing and falls back to "?", printing a refusal as a
-// missing number while the sweep still exits 0. That is exactly the skip-reads-as-a-result defect this
-// file already fixed for step 2 above, reintroduced through a different child. Name it, with the reason.
-// (No path is passed here on purpose: graph-all cannot know which tree is the caller's, and hardcoding
-// one would bake a machine path into a tracked file. A caller who knows sets MEMORY_DIR, which the child
-// honours and spawnSync inherits.)
-const memCandidates = (g5.stderr ?? "").match(/^memory-graph:\s*(\d+) memory dirs/m);
-const memory = g5.status === 2
-  ? `REFUSED — ${memCandidates ? `${memCandidates[1]} candidate memory dirs, none chosen` : "see stderr"}; set MEMORY_DIR or pass --dir`
-  : first(g5.stdout, /HEALTH:\s*(.+)/).trim();
-log(`   memory graph: ${memory} (exit ${g5.status})`);
+let options;
+try {
+  options = parseArgs(process.argv.slice(2));
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
 
-// 6. dev-tool index/graph — packages + dev tools coverage
-log("── 6/6 dev-tool index/graph (build/dev-tool-index/) ──");
-const g6 = run(["scripts/dev-tool-index.mjs"]);
-const devtools = first(g6.stdout, /dev-tool-index:\s*(.+?)(?:\s+→|\s+->|\n|$)/).trim();
-log(`   dev-tool index: ${devtools} (exit ${g6.status})`);
+const node = process.execPath;
+const mode = options.check ? "check" : "generate";
+const children = [
+  {
+    name: "project graph",
+    args: [
+      "scripts/project-graph-generator.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "graph integrity",
+    args: ["scripts/audit-graph-integrity.mjs"],
+  },
+  {
+    name: "KB graph",
+    args: [
+      "scripts/kb-graph-generator.mjs",
+      "--root", options.root,
+      "--kb-dir", options.kbDir,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "package graph",
+    args: [
+      "scripts/package-graph-generator.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "memory graph",
+    args: [
+      "scripts/memory-graph.mjs",
+      ...(options.memoryDir === null ? [] : ["--dir", options.memoryDir]),
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "dev-tool index",
+    args: [
+      "scripts/dev-tool-index.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--generator-check"] : []),
+    ],
+  },
+];
 
-console.log(`graph-all: project ${nodes}n/${edges}e · integrity ${integrity} · kb ${orphans} orphans/${broken} broken · border ${pass} pass/${fail} drift${fail ? " [" + drifted.join(",") + "]" : ""} · memory ${memory} · dev-tools ${devtools}`);
-process.exit(0); // informational — never fatal
+const results = [];
+for (const child of children) {
+  const result = spawnSync(node, child.args, {
+    cwd: options.root,
+    encoding: "utf8",
+    env: { ...process.env, GALERINA_KB_DIR: options.kbDir },
+  });
+  const status = result.error || result.signal || result.status !== 0
+    ? result.status ?? 1
+    : 0;
+  results.push({ ...child, status, stdout: result.stdout ?? "", stderr: result.stderr ?? "" });
+  if (!options.quiet) {
+    console.log(`${status === 0 ? "PASS" : "FAIL"} ${child.name} (${mode}; exit ${status})`);
+  }
+}
+
+const failed = results.filter((result) => result.status !== 0);
+if (failed.length > 0) {
+  for (const result of failed) {
+    const detail = `${result.stderr}\n${result.stdout}`.trim();
+    console.error(`graph-all: ${result.name} refused with exit ${result.status}${detail ? `\n${detail}` : ""}`);
+  }
+  console.error(`graph-all: FAIL ${children.length - failed.length}/${children.length} ${mode} children passed`);
+  process.exit(1);
+}
+
+console.log(`graph-all: PASS ${children.length}/${children.length} ${mode} children passed`);

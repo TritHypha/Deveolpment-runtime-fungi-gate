@@ -166,12 +166,12 @@ planning checkbox must never be used to imply that implementation exists.
   added to hide them. A live close after the fixes passed 80/82 checks; its
   second red was only the path gate correctly reading the still-uncommitted
   old line from `HEAD`, and clears when this repo-relative fix is staged.
-- **Next safe work:** continue Task 7 at the three external-boundary/root
-  orchestration cases (`kb-index.mjs`, `memory-graph.mjs`, `graph-all.mjs`),
-  then Task 8. Task 8 must close the 21 named tooling dispositions before
-  phase-close may authorize. Eleven repository-contained generators are now
-  live under the fail-closed generator contract; external inputs/outputs must
-  not be false-greened by pretending they are repository-local.
+- **Next safe work:** begin Task 8's 21 named tooling dispositions. Task 7
+  implementation is complete; its live orchestration close remains correctly
+  red on one owner-only memory-tree selection described below. Thirteen
+  repository-output generators are live under the fail-closed contract;
+  external inputs/outputs are separately bound rather than false-greened as
+  repository-local.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
@@ -312,12 +312,21 @@ planning checkbox must never be used to imply that implementation exists.
   missing/tamper/source-drift fixture is 1/1 and the existing
   negative/control self-test remains 15/15. This is external-output evidence,
   deliberately not miscounted among the 12 repository-output generators.
-- **Task 7 remains incomplete:** `graph-all.mjs` is the final case. It
-  currently returns success even when a child fails, generates a KB graph
-  through a core CLI with no non-mutating check, and can invoke the memory
-  graph without an explicit tree. Add a governed KB-graph wrapper, give the
-  orchestrator explicit generate/check modes and selected external inputs,
-  and propagate every child refusal.
+- **Task 7 KB graph + orchestration:** `kb-graph-generator.mjs` now normalizes
+  external paths to `kb/...`, replaces filesystem mtime with a fixed
+  non-authorizing representation field, binds the complete external corpus
+  digest in provenance, and checks four exact ignored outputs without writing.
+  Its isolated fixture is 1/1, the live core package is 31/31, and the
+  repository generator audit is 13/13. `graph-all.mjs` is now a fail-closed
+  orchestrator rather than an always-zero informational wrapper: it has strict
+  root/KB/memory selection, explicit generate/check child modes, runs all six
+  children for complete evidence, aggregates failures, and exits nonzero if
+  any child refuses. Its injected child-failure fixture is 1/1.
+- **Task 7 owner-only live close:** read-only `graph-all --check` passes 5/6
+  children and refuses the memory child because four candidate trees carry
+  `MEMORY.md` (dir IDs `ab9db789`, `958d1a5f`, `5d51bdc9`, `b508ab8a`) and no
+  fact identifies the Galerina tree. Set one exact `MEMORY_DIR`/`--memory-dir`
+  before claiming the live orchestration green. This does not block Task 8.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
   generated code-index, code-registry, coverage, dev-tool-index, project
   graph, and all 195 package-graph outputs. They remain deliberately

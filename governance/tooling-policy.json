@@ -274,6 +274,31 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/kb-graph-generator.mjs": {
+      "inputs": [
+        "packages-galerina/galerina-devtools-kb-graph",
+        "scripts/kb-graph-generator.mjs",
+        "scripts/lib/provenance.mjs"
+      ],
+      "outputs": [
+        "build/kb-graph/kb-graph.dot",
+        "build/kb-graph/kb-graph.json",
+        "build/kb-graph/kb-report.md",
+        "build/kb-graph/provenance.json"
+      ],
+      "tracked": false,
+      "generate": [
+        "node",
+        "scripts/kb-graph-generator.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/kb-graph-generator.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/package-graph-generator.mjs": {
       "inputs": [
         "galerina.workspace.json",
