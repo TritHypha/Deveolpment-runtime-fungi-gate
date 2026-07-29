@@ -1,7 +1,7 @@
-// Fixture-tree tests for the dev-tool scripts (code-index · gen-code-registry · audit-coverage).
-// Subprocess + crafted tmp workspace = tests the REAL end-to-end behavior without refactoring the scripts.
-// Locks the review-wn8v30euh scanner fixes: trailing-letter, const-id emit, multi-line throw, comment/
-// type-decl exclusion, and the conservative dead-detection.
+// Fixture-tree tests for the remaining dev-tool scripts. Code-index,
+// gen-code-registry, and audit-coverage have an isolated setup in
+// dev-tools-code-catalog.test.mjs so a refused generator cannot abort every
+// unrelated fixture before the test runner reports it.
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, utimesSync } from "node:fs";
@@ -11,104 +11,6 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const SCRIPTS = join(dirname(fileURLToPath(import.meta.url)), "..");
-
-// ── fixture workspace: one crafted diagnostics file under a fake package ──
-const tmp = mkdtempSync(join(tmpdir(), "fungi-devtools-"));
-after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* best effort */ } });
-const src = join(tmp, "packages-galerina", "fx", "src");
-mkdirSync(src, { recursive: true });
-writeFileSync(join(src, "diag.ts"), [
-  `export const FUNGI_FX_001 = { code: "FUNGI-FX-001", name: "FxDefinedNeverUsed", severity: "error" };`,
-  `export const ERR_FX_THING = "ERR_FX_THING";`,
-  `export const ERR_FX_THROWN = "ERR_FX_THROWN";`,
-  `export function emitInline(d){`,
-  `  d.push({`,
-  `    code: "FUNGI-FX-002",`,
-  `    name: "FxInline",`,
-  `    severity: "warning",`,
-  `  });`,
-  `}`,
-  `export function emitViaConst(){ return { ok: false, code: ERR_FX_THING, reason: "x" }; }`,
-  `export function emitThrow(){`,
-  `  throw new FxError(`,
-  `    ERR_FX_THROWN,`,
-  `    "boom",`,
-  `  );`,
-  `}`,
-  `// a comment mentioning FUNGI-FX-099 must be a ref, not an emit/def`,
-  `export const FUNGI_FX_005 = { code: "FUNGI-FX-005", name: "FxFive", severity: "error" };`,
-  `export const FUNGI_FX_005B = { code: "FUNGI-FX-005B", name: "FxFiveB", severity: "error" };`,
-  `export interface FxShape { readonly code: "FUNGI-FX-050"; }`,
-  `export function useFive(d){ d.push({ ...FUNGI_FX_005 }); d.push({ ...FUNGI_FX_005B }); }`,
-].join("\n") + "\n");
-
-const run = (script, args = []) => spawnSync(process.execPath, [join(SCRIPTS, script), ...args], { cwd: tmp, encoding: "utf8" });
-run("code-index.mjs");
-run("gen-code-registry.mjs");
-const idx = JSON.parse(readFileSync(join(tmp, "build", "code-index", "code-index.json"), "utf8"));
-const byCode = Object.fromEntries(idx.map((c) => [c.code, c]));
-const reg = JSON.parse(readFileSync(join(tmp, "build", "code-registry", "registry.json"), "utf8"));
-const status = Object.fromEntries(reg.entries.map((e) => [e.code, e.status]));
-const emits = (c) => (byCode[c]?.emits || []).length;
-const defs = (c) => (byCode[c]?.defs || []).length;
-
-test("code-index: trailing-letter suffix kept distinct (005 vs 005B both indexed)", () => {
-  assert.ok(byCode["FUNGI-FX-005"], "FUNGI-FX-005 indexed");
-  assert.ok(byCode["FUNGI-FX-005B"], "FUNGI-FX-005B indexed distinctly (not truncated to 005)");
-});
-
-test("code-index: const-identifier emit resolved (code: ERR_FX_THING)", () => {
-  assert.ok(emits("ERR_FX_THING") > 0, "ERR_FX_THING emitted via a const-id `code:` reference");
-});
-
-test("code-index: multi-line `throw new FxError(\\n ERR_FX_THROWN,…)` resolved", () => {
-  assert.ok(emits("ERR_FX_THROWN") > 0, "ERR_FX_THROWN emitted via the windowed constructor throw");
-});
-
-test("code-index: inline push emit (FUNGI-FX-002)", () => {
-  assert.ok(emits("FUNGI-FX-002") > 0);
-});
-
-test("code-index: a comment mention is a ref, NOT an emit/def (FUNGI-FX-099)", () => {
-  const c = byCode["FUNGI-FX-099"];
-  assert.ok(c, "still indexed (as a ref)");
-  assert.equal(emits("FUNGI-FX-099"), 0);
-  assert.equal(defs("FUNGI-FX-099"), 0);
-});
-
-test("code-index: a TS type position is NOT an emit/def (readonly code: FUNGI-FX-050)", () => {
-  assert.equal(emits("FUNGI-FX-050"), 0);
-  assert.equal(defs("FUNGI-FX-050"), 0);
-});
-
-test("gen-code-registry: defined-AND-unreferenced is DEAD (FUNGI-FX-001)", () => {
-  assert.equal(status["FUNGI-FX-001"], "dead", "FUNGI-FX-001 is defined but never used → RESERVED");
-});
-
-test("gen-code-registry: const-emitted codes are LIVE, not dead (ERR_FX_THING/THROWN)", () => {
-  assert.notEqual(status["ERR_FX_THING"], "dead");
-  assert.notEqual(status["ERR_FX_THROWN"], "dead");
-});
-
-// audit-coverage resolves the governance-rules registry from GALERINA_KB_DIR (sibling ZTF-Knowledge-Bases by
-// default — the KB migrated out of docs/Knowledge-Bases). A present-but-empty registry makes the cross-check
-// RUN and find no phantom → 0 holes; an ABSENT registry must FAIL CLOSED, not silently report "0 phantom / clean".
-const covKb = join(tmp, "kb-fixture");
-mkdirSync(covKb, { recursive: true });
-writeFileSync(join(covKb, "galerina-governance-rules.md"), "# Governance rules\n(no curated FUNGI codes yet)\n");
-const runCov = (env) => spawnSync(process.execPath, [join(SCRIPTS, "audit-coverage.mjs"), "codes", "--json"],
-  { cwd: tmp, encoding: "utf8", env: { ...process.env, ...env } });
-
-test("audit-coverage: with a curated registry present, a clean fixture has 0 phantoms", () => {
-  const j = JSON.parse(runCov({ GALERINA_KB_DIR: covKb }).stdout);
-  assert.equal(j.holes, 0, "no registry phantoms when the curated registry lists no absent codes");
-});
-
-test("audit-coverage: FAIL-CLOSED (exit 2) when the governance-rules registry is absent (no silent 0-phantom)", () => {
-  const r = runCov({ GALERINA_KB_DIR: join(tmp, "no-such-kb") });
-  assert.equal(r.status, 2, "a missing registry fails closed — must NOT fail-open to 0 holes");
-  assert.match(r.stderr, /registry unreadable|Failing closed/i, "the blind spot is loud on stderr");
-});
 
 // ── DOC-004 doc↔source drift: a second fixture (version.json authority + crafted docs) ──
 const tmp2 = mkdtempSync(join(tmpdir(), "fungi-docdrift-"));

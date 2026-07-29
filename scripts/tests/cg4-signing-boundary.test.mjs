@@ -14,7 +14,6 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const isWin = process.platform === "win32";
 
 const tmp = mkdtempSync(join(tmpdir(), "fungi-cg4-"));
 after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* best effort */ } });
@@ -41,7 +40,7 @@ function makePkg(name, effectsClause) {
 function build(dir) {
   // cwd = ROOT so the dev signing key/env of the repo is used (same as real builds).
   return spawnSync("node", [join(ROOT, "galerina.mjs"), "build", "--package", dir],
-    { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+    { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: false });
 }
 
 test("CG-4: lenient build of a production-violating package mints NO manifest (loudly)", () => {

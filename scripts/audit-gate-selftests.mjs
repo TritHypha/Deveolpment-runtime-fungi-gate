@@ -67,7 +67,7 @@ const SELFTEST_VIA_TEST = {
   "lint-conventions.mjs":          { test: "scripts/tests/audit-gate-evidence-group-4.test.mjs", proves: "hermetic child-violation aggregation plus all-clean control" },
   "lint-fungi.mjs":                { test: "scripts/tests/audit-gate-evidence-group-5.test.mjs", proves: "hermetic invalid-flow refusal plus fully documented/contracted control" },
   "audit-mutation.mjs":            { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "hermetic KILL/SURVIVE/git-safety fixture (--config); never run via --self-test (it ignores unknown flags → would mutate real security source)" },
-  "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
+  "audit-coverage.mjs":           { test: "scripts/tests/dev-tools-code-catalog.test.mjs", proves: "isolated fixture: curated-registry present→0 phantoms; absent→fail-closed exit 2" },
   "audit-doc-drift.mjs":          { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: living-doc stale count flagged; dated/-log exempt; missing-corpus fail-closed" },
   "audit-provenance.mjs":         { test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: stamped+fresh clean; source-newer→STALE; missing-sidecar→UNSTAMPED" },
   "audit-effect-canonicality.mjs":{ test: "scripts/tests/dev-tools-scripts.test.mjs", proves: "fixture: bitmask⊄canonical detected + REAL-repo single-source regression guard" },

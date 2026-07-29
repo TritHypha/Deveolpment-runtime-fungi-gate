@@ -12,7 +12,6 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const SCRIPTS = join(dirname(fileURLToPath(import.meta.url)), "..");
-const isWin = process.platform === "win32";
 
 const tmp = mkdtempSync(join(tmpdir(), "fungi-corpus-effects-"));
 after(() => { try { rmSync(tmp, { recursive: true, force: true }); } catch { /* best effort */ } });
@@ -52,7 +51,7 @@ function fungi(rel, effectsClause) {
 
 function run() {
   return spawnSync("node", [join(SCRIPTS, "audit-corpus-effect-names.mjs"), "--root", tmp, "--json"],
-    { encoding: "utf8", timeout: 60_000, shell: isWin });
+    { encoding: "utf8", timeout: 60_000, shell: false });
 }
 
 test("clean corpus (canonical + keyword form + broad alias + tests/ fixtures) passes", () => {

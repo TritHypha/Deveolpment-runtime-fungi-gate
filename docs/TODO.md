@@ -160,9 +160,10 @@ planning checkbox must never be used to imply that implementation exists.
   independence-without-shortcuts are genuine gaps. No held canon file was
   changed. The candidate-by-candidate evidence and owner gates are recorded
   in `docs/reports/rd0577-zt-sir-canon-diff-2026-07-29.md`.
-- **Current:** Tasks 2-7 are complete. Task 8 is reducing two independently
-  measured red sets: executable audit/lint anti-neutering gaps and uncovered
-  tooling dispositions. Its first three-gate fixture group proves
+- **Completed (Task 8):** Tasks 2-8 are complete. Task 8 reduced both
+  independently measured red sets to zero: executable audit/lint
+  anti-neutering gaps and uncovered tooling dispositions. Its first
+  three-gate fixture group proves
   `audit-allowlist-sensitive`, `audit-codes-full`, and
   `audit-corpus-effect-names` fire on planted defects and clear on controls.
   The second group proves diagnostic-name collisions, non-seam kernel host
@@ -204,11 +205,20 @@ planning checkbox must never be used to imply that implementation exists.
   meta-gate supplies the exact coverage edge. Live tooling contract: 97
   packages, 147 tools, 60 phase-close commands, 29 CI commands, 80 executable
   evidence edges, zero violations. No tool exception was added.
-- **Next safe work:** repair/split the existing monolithic dev-tool
-  fixture and fix the staged-new-file path-audit defect. All named tooling
-  dispositions are now reconciled; rerun their complete suite before closing
-  Task 8. Task
-  7's live orchestration close remains correctly red on one owner-only
+- **Task 8 fixture isolation and final verification:** the code-index,
+  code-registry, and coverage fixtures now live in
+  `scripts/tests/dev-tools-code-catalog.test.mjs`; they create and validate
+  their own Git-backed source corpus, assert child exit status before reading
+  outputs, and prove present/missing governance in seven tests. The remaining
+  dev-tool fixture no longer loses unrelated tests when a generator refuses.
+  Unsafe Windows `shell: true` Git invocations were also removed from the
+  CG-4 and corpus-effect fixtures. A fresh complete `scripts/tests/*.test.mjs`
+  run passes 170/170 with zero failures, skips, or deprecation warnings.
+  `audit-gate-selftests --self-test` and the live tooling contract remain
+  green.
+- **Next safe work:** perform Task 9's deterministic generated-artifact
+  refresh and review as a separate commit; do not mix its reserved output set
+  into Task 8. Task 7's live orchestration close remains correctly red on one owner-only
   memory-tree selection described below. Thirteen repository-output
   generators are live under the fail-closed contract; external
   inputs/outputs are separately bound rather than false-greened as
@@ -386,13 +396,11 @@ planning checkbox must never be used to imply that implementation exists.
   re-review prompt's eight committed machine paths were also replaced with
   workspace-relative paths; after exact staging the full audit is the
   acceptance check for this commit.
-- **Existing monolithic fixture debt confirmed:** direct execution of
-  `scripts/tests/dev-tools-scripts.test.mjs` aborts during top-level setup
-  because its old code-registry fixture does not create the now-required
-  living-document marker surface, then reads an output the refused generator
-  correctly did not publish. The focused code-registry generator fixture is
-  green; Task 8 must split or repair this monolith so child refusal is asserted
-  before output reads and one obsolete setup cannot erase all later evidence.
+- **Existing monolithic fixture debt resolved:** code-catalog generator setup
+  was split into `scripts/tests/dev-tools-code-catalog.test.mjs`, made
+  Git-backed and non-vacuous, and guarded by child-status assertions before
+  generated output reads. The focused plus remaining dev-tool fixtures pass
+  46/46; the complete scripts test battery passes 170/170.
 - **Stop gates:** do not describe the current aggregate or phase-close as a
   security verdict; do not baseline unexplained tools/assets; do not let timed
   benchmark measurements authorize a release; do not conflate Galerina-side

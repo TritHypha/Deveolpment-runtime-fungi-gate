@@ -136,6 +136,29 @@ memory generator. Fresh evidence through Galerina commit `497b02e9` is:
 Independent SLIDE code at commit `8a28199` remains 30/30 from four separately named
 suites. Neither repository branch was pushed.
 
+## Task 8 chapter answer: audit evidence and fixture isolation
+
+The previously intentional Task 8 red set is now closed rather than
+allowlisted. Current fresh evidence is:
+
+- all 79 discovered audit/lint gates have executable anti-neutering evidence;
+  missing, broken, and vacuous self-tests are blocking conditions;
+- the shared tooling contract reconciles 97 packages, 147 tools, 60
+  phase-close commands, 29 CI commands, and 80 executable evidence edges with
+  zero violations and no new exception;
+- the staged-path audit evaluates the candidate Git index and separately
+  checks differing worktree bytes, including staged-new, dirty, deleted, and
+  clean controls;
+- code-index, code-registry, and coverage setup is isolated in a seven-test
+  Git-backed fixture. Child refusal is asserted before generated outputs are
+  read, so one failed generator cannot suppress unrelated tests;
+- a fresh run of every `scripts/tests/*.test.mjs` file passes 170/170 with
+  zero failures, skips, or Windows shell deprecation warnings.
+
+This closes Task 8 only. It does not make the owner-unselected memory tree
+authoritative, does not turn report-only audits into release gates, and does
+not pre-authorize the separate Task 9 generated-artifact refresh.
+
 ## Prompt for the RD-0535 reviewer
 
 ```text
@@ -203,15 +226,24 @@ Answer the response, not merely the original review:
    195 explicit outputs, `.mjs` internal-edge resolution, no partial
    publication, and the one visible dormant-sampler exception. Reconcile the
    external KB corpus digests, memory source digest, all-six child coverage,
-   and nonzero child-refusal propagation. Reconcile the intentional 21-tool
-   Task 8 red set; do not call the phase close green while it remains, and do
-   not choose one of four memory trees by file count.
-10. Re-evaluate RD-0580/RD-0581 against current Galerina source. Distinguish
+   and nonzero child-refusal propagation. Do not choose one of four memory
+   trees by file count.
+10. Attempt to falsify the claimed Task 8 closure. Re-run every
+    `scripts/tests/*.test.mjs` file and require exactly 170 passing tests with
+    zero failures/skips. Inspect the 79/79 audit/lint proof map and prove that
+    missing or vacuous evidence blocks. Remove or neuter one fixture mapping
+    in a disposable copy and confirm refusal. Inspect the seven-test
+    code-catalog fixture for Git-backed, non-vacuous setup and status-before-
+    output-read behavior. Exercise staged-new, dirty, deleted, and clean path
+    plans. Reconcile 97 packages, 147 tools, 60 phase-close commands, 29 CI
+    commands, and 80 executable evidence edges without accepting exceptions
+    invented by this chapter.
+11. Re-evaluate RD-0580/RD-0581 against current Galerina source. Distinguish
     “cut from the future mandatory path” from physical deletion. Test the
     claimed K3 duplication, Tower/Tri-Pipe authority shapes, Tri-Fuse backend
     coupling, and WAT AST dependency. Treat either handover as advisory until
     its facts reproduce.
-11. Give findings first, ordered by severity, with exact file/line evidence.
+12. Give findings first, ordered by severity, with exact file/line evidence.
    Record your coverage and instrument limitations. If the response is wrong,
    say so plainly; if a prior RD-0535 measurement is now stale, distinguish
    historical accuracy from current accuracy.
