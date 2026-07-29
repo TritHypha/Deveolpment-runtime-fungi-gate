@@ -291,3 +291,84 @@ test("rebuild guard: committed-signed skipped when stale; placeholder rebuilds; 
   assert.notEqual(readFileSync(sealedMan, "utf8"), beforeSealed,
     "forced rebuild mints a fresh (locally signed) manifest");
 });
+
+test("rebuild guard: --strict refuses a failed child and clears after the source is fixed", () => {
+  const repo = join(tmp, "rebuild-strict");
+  const good = makePkg(repo, "strict-good", {});
+  const broken = makePkg(repo, "strict-broken", {});
+  writeFileSync(
+    join(broken, "src", "index.fungi"),
+    "@version 1\nthis is not valid fungi\n",
+  );
+
+  const rebuild = (...extra) =>
+    spawnSync(
+      "node",
+      [
+        join(SCRIPTS, "rebuild-fusable-packages.mjs"),
+        "--root",
+        repo,
+        ...extra,
+      ],
+      { encoding: "utf8", timeout: 240_000, shell: false },
+    );
+
+  const informational = rebuild();
+  assert.equal(
+    informational.status,
+    0,
+    "the editor-hook default remains explicitly non-authorizing",
+  );
+  assert.match(
+    informational.stdout,
+    /1 failed/,
+    "informational output must still disclose the failed child",
+  );
+
+  const refused = rebuild("--strict");
+  assert.equal(
+    refused.status,
+    1,
+    "--strict must refuse when any package build fails",
+  );
+  assert.match(refused.stdout, /1 failed/, "strict refusal names the failure");
+
+  writeFileSync(
+    join(broken, "src", "index.fungi"),
+    readFileSync(join(good, "src", "index.fungi"), "utf8"),
+  );
+  const green = rebuild("--strict");
+  assert.equal(green.status, 0, green.stderr || green.stdout);
+  assert.match(green.stdout, /0 failed/, "strict clean control is explicit");
+});
+
+test("rebuild guard: strict CLI refuses skipped, unknown, duplicate, and missing-root authority", () => {
+  const run = (args, env = process.env) =>
+    spawnSync(
+      "node",
+      [join(SCRIPTS, "rebuild-fusable-packages.mjs"), ...args],
+      { encoding: "utf8", timeout: 30_000, shell: false, env },
+    );
+
+  assert.equal(run(["--unknown"]).status, 2, "unknown options must refuse");
+  assert.equal(run(["--strict", "--strict"]).status, 2, "duplicates must refuse");
+  assert.equal(run(["--root"]).status, 2, "a missing root path must refuse");
+  const emptyRoot = join(tmp, "rebuild-strict-empty");
+  mkdirSync(emptyRoot, { recursive: true });
+  assert.equal(
+    run(["--root", emptyRoot, "--strict"]).status,
+    1,
+    "an empty discovery surface cannot release strict build authority",
+  );
+
+  const skipped = run(
+    ["--strict"],
+    { ...process.env, GALERINA_SKIP_FUSE_REBUILD: "1" },
+  );
+  assert.equal(
+    skipped.status,
+    1,
+    "an environment skip cannot release strict build authority",
+  );
+  assert.match(skipped.stdout, /strict mode refuses skipped authority/);
+});

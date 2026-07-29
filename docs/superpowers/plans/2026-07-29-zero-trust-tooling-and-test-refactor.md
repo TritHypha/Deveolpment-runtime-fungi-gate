@@ -1146,7 +1146,7 @@ completion authority.
 - Generated artifacts are reviewed and committed separately from source fixes.
 - Never push.
 
-- [ ] **Step 1: Make the package/fuse rebuild result authorizing**
+- [x] **Step 1: Make the package/fuse rebuild result authorizing**
 
 Add a tested `--strict` mode to
 `scripts/rebuild-fusable-packages.mjs`. The mode returns non-zero for any
@@ -1154,6 +1154,12 @@ failed, timed-out, signalled, or indeterminate child build while retaining
 the existing non-authorizing informational default for editor hooks. Prove
 failure and clean-control directions in a temporary fixture. Do not use
 `--force` against ceremony-signed packages in the final acceptance run.
+
+Completed 2026-07-29: a focused subprocess test first reproduced the false
+zero exit, then proved strict refusal and repaired-source control. The full
+signed-fixture guard is 11/11, including skipped-environment, unknown,
+duplicate, and missing-root refusal. A live `--strict` sweep found two fresh,
+two explained non-Fungi skips, one ceremony-signed lock, and zero failures.
 
 - [ ] **Step 2: Run every governed graph surface**
 

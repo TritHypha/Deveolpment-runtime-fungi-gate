@@ -10,9 +10,11 @@
 // of a turn ("≈ end of chapter"), BEFORE the phase-close tests — so anything
 // that fuses a package consumes the current build.
 //
-// Informational — never blocks the session (always exits 0).
+// Informational by default — never blocks the editor/session hook.
+// `--strict` is the authorizing final-build mode: a failed/indeterminate
+// child or empty discovery surface returns non-zero.
 // Skip with:  GALERINA_SKIP_FUSE_REBUILD=1
-// Run manually:  node scripts/rebuild-fusable-packages.mjs [--force] [--root <dir>]
+// Run manually:  node scripts/rebuild-fusable-packages.mjs [--strict] [--force] [--root <dir>]
 //   --root  operate on a different tree (fixture testing); default = repo root.
 //
 // Signed detection (#21 unification, 2026-07-10): discovery + protection come
@@ -28,25 +30,56 @@
 
 import { spawnSync } from "node:child_process";
 import { readdirSync, statSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { findFusablePackages } from "./lib/signed-lmanifest.mjs";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const argv = process.argv.slice(2);
-const rootIdx = argv.indexOf("--root");
-const ROOT = rootIdx >= 0 && argv[rootIdx + 1] ? argv[rootIdx + 1] : REPO;
+let customRoot = false;
+let ROOT = REPO;
+let FORCE = false;
+let STRICT = false;
+const seen = new Set();
+for (let index = 0; index < argv.length; index += 1) {
+  const argument = argv[index];
+  if (argument === "--root") {
+    if (seen.has(argument)
+        || index + 1 >= argv.length
+        || argv[index + 1].startsWith("--")) {
+      console.error("fuse-rebuild: --root requires exactly one path");
+      process.exit(2);
+    }
+    seen.add(argument);
+    ROOT = resolve(argv[++index]);
+    customRoot = true;
+    continue;
+  }
+  if (argument === "--force" || argument === "--strict") {
+    if (seen.has(argument)) {
+      console.error(`fuse-rebuild: duplicate argument ${argument}`);
+      process.exit(2);
+    }
+    seen.add(argument);
+    if (argument === "--force") FORCE = true;
+    if (argument === "--strict") STRICT = true;
+    continue;
+  }
+  console.error(`fuse-rebuild: unknown argument ${argument}`);
+  process.exit(2);
+}
 const isWin = process.platform === "win32";
 // Cascade guard override (owner-directed 2026-07-01, forwarding approved
 // 2026-07-02): a committed ceremony-signed package is NEVER auto-rebuilt —
 // replacing its offline-ceremony .lmanifest with a locally minted UNSIGNED one
 // makes the fuse loader fail-close (FUNGI-FUSE-UNSIGNED). --force overrides
 // for the deliberate pre-re-sign rebuild — LOUDLY, naming each bypass.
-const FORCE = argv.includes("--force");
-
 if (process.env.GALERINA_SKIP_FUSE_REBUILD === "1") {
-  console.log("⏭️  fuse-rebuild skipped (GALERINA_SKIP_FUSE_REBUILD=1)");
-  process.exit(0);
+  console.log(
+    "⏭️  fuse-rebuild skipped (GALERINA_SKIP_FUSE_REBUILD=1)"
+    + (STRICT ? " — strict mode refuses skipped authority" : ""),
+  );
+  process.exit(STRICT ? 1 : 0);
 }
 
 const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "build", ".graph"]);
@@ -71,7 +104,7 @@ function newestFungi(dir, depth = 0) {
 }
 
 // --root fixtures are scanned directly; the real repo scans its two package roots.
-const baseDirs = rootIdx >= 0
+const baseDirs = customRoot
   ? [ROOT]
   : [join(ROOT, "packages-galerina"), join(ROOT, "examples")];
 const packages = findFusablePackages(baseDirs, { gitRoot: ROOT });
@@ -129,4 +162,10 @@ for (const pkg of packages) {
 const head = `🔁 fuse-rebuild: ${rebuilt} rebuilt · ${fresh} fresh · ${skipped} skipped · ${lockedSigned} signed-locked · ${failed} failed` +
   (packages.length === 0 ? " (no fusable packages)" : "");
 console.log(details.length ? `${head}\n   ${details.join("\n   ")}` : head);
-process.exit(0); // informational — never block
+if (STRICT && packages.length === 0) {
+  console.error(
+    "fuse-rebuild: strict mode refuses an empty package discovery surface",
+  );
+  process.exit(1);
+}
+process.exit(STRICT && failed > 0 ? 1 : 0);

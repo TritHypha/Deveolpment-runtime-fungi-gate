@@ -35,6 +35,15 @@ planning checkbox must never be used to imply that implementation exists.
   execution waits until the implementation chapter is complete and the exact
   memory tree is authorized. This checkpoint is not evidence that the
   remaining SLIDE implementation already exists.
+- **Strict rebuild prerequisite complete:** `rebuild-fusable-packages.mjs`
+  now has an authorizing `--strict` mode. A focused RED test first proved that
+  a real failed child still returned zero; GREEN now refuses failed,
+  indeterminate, skipped-by-environment, empty-discovery, duplicate, and
+  unknown command states while preserving the explicitly informational editor
+  default. The full signed-fixture guard is 11/11. The live strict sweep is
+  `0 rebuilt / 2 fresh / 2 explained non-Fungi skips / 1 ceremony-signed
+  lock / 0 failed`. The complete scripts suite is now 182/182; the tooling
+  contract remains 97 packages / 147 tools / zero violations.
 
 ### Active zero-trust tooling/test refactor checkpoint — 2026-07-29
 
