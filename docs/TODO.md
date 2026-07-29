@@ -42,10 +42,16 @@ planning checkbox must never be used to imply that implementation exists.
 - **Current:** reconstruct the exact historic nesting regression if its source
   can be located; otherwise retain the already verified minimal four-deep
   regression and record the evidence limitation.
-- **Next:** begin safe-value memory negative fixtures, then broaden the frozen
-  registry toward general executable GIR.
-- **Verification:** compiler typecheck/build and 5,295/5,295 tests pass.
-  Regenerated project graph: 7,176 nodes / 7,441 edges, zero integrity
+- **Completed, pending checkpoint commit:** the `.fungi`
+  `slide-r1-safe-value-verifier.fungi` gate admits only the validated,
+  bounded, effect-free no-address R1 subset and explicitly reports that a
+  native certificate is absent. Altered profile, unknown/memory-capable
+  opcode, and malformed-body fixtures refuse. Focused evidence: 27/27; report:
+  `docs/reports/slide-r1-safe-value-semantic-gate-2026-07-29.md`.
+- **Next:** broaden the frozen registry toward general executable GIR and add
+  explicit memory objects/guards before extending the safe-value claim.
+- **Verification:** compiler typecheck/build and 5,297/5,297 tests pass.
+  Regenerated project graph: 7,181 nodes / 7,445 edges, zero integrity
   violations; KB graph: zero orphans/broken links; Hardened Border: 97/97;
   explicit Galerina memory graph: clean; dev-tool index: 97 packages,
   124 tools, 40 proofs. Post-commit Myco refresh indexes 4,080 files with zero

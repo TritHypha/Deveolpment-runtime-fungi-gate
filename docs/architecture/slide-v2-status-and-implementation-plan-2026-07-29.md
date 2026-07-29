@@ -71,7 +71,7 @@ Planning completion and implementation completion are deliberately separate.
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
 | First fixture | `IMPLEMENTED-VERIFIED` | Exact four-block body, pinned checksum/semantic digest, whole-vector mutation kill, reconstructed validation, semantic mutations, K3/Int32 parity, fourth-Verdict trap, and fresh-process instruction dispatch | Retain as a frozen conformance fixture while the registry generalizes |
-| Memory profile | `SPECIFIED` | `slide.memory.safe-value.v1` invariants and R1 no-address subset documented | Implement verifier, guard plan, post-optimization audit, and negative corpus |
+| Memory profile | `IMPLEMENTED-PARTIAL` | `slide.memory.safe-value.v1` contract plus a frozen-R1 semantic-memory gate and profile/opcode/malformed negative fixtures | Add general memory objects/guards, post-optimization audit, final-artifact binding, hostile FFI/handle corpus, and independent verification |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
 | LLVM/native lowering | `NOT-STARTED` | Research and dependency direction only | Owner-select toolchain; implement restricted shim, verifier, object emission, and inspection |
@@ -285,9 +285,17 @@ reconstructs an independently owned typed program from the canonical bytes
 structural-admission flow. The next checkpoint (`3cd1f3d2`) validates the
 closed CFG/SSA/type/failure/K3 contract, computes the registered
 domain-separated semantic digest, and instruction-drives only the admitted
-records. Focused evidence is 25/25; compiler evidence is 5,295/5,295.
+records. Focused evidence is 25/25; after the semantic-memory checkpoint,
+compiler evidence is 5,297/5,297.
 Remaining: generalize the registry, implement memory/budget/capability
 semantics, and prove a second frontend.
+
+The follow-on safe-value gate walks the admitted R1 registry again, admits only
+the bounded no-address subset, and labels the result
+`SEMANTIC_MEMORY_VALIDATED`. It refuses altered profiles, unknown or
+memory-capable opcodes, and malformed bodies. This is defence-in-depth evidence
+for reference execution only; it is not a native memory-safety certificate.
+See `../reports/slide-r1-safe-value-semantic-gate-2026-07-29.md`.
 The current refusal names are stable within the preflight contract but are not
 frozen numeric registry entries. G1 is therefore
 `IMPLEMENTED-PARTIAL`, not complete.

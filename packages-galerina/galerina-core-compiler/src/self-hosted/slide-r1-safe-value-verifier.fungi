@@ -1,0 +1,163 @@
+@version 1
+/// @file: slide-r1-safe-value-verifier.fungi
+/// @purpose: Verify the frozen R1 semantic graph against the no-address safe-value subset.
+/// @status: Semantic-memory gate only; not a native memory-safety certificate.
+
+record SLIDER1MemoryDecision {
+  verdict: Verdict
+  status: String
+  failureId: String
+  detail: String
+  satisfiedInvariantIds: Array<Int>
+}
+
+pure flow slideR1MemoryRefusal(
+  failureId: String,
+  detail: String,
+) -> SLIDER1MemoryDecision
+contract { intent { "Return a terminal denial without memory-profile authority." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: "MEMORY_REFUSED"
+    failureId: failureId
+    detail: detail
+    satisfiedInvariantIds: Array.empty()
+  }
+}
+
+pure flow slideR1SafeValueInvariantIds() -> Array<Int>
+contract { intent { "Name the semantic-layer safe-value invariants established by frozen R1." } }
+{
+  return Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+}
+
+pure flow validateSLIDER1SafeValueProgram(
+  program: SLIDER1DecodedProgram,
+) -> SLIDER1MemoryDecision
+contract {
+  intent { "Require validated, bounded, effect-free, no-address R1 before semantic-memory admission." }
+}
+{
+  if program.memoryProfileId != "slide.memory.safe-value.v1" {
+    return slideR1MemoryRefusal(
+      "SLIDE-R1-MEMORY-001", "unsupported or absent memory profile",
+    )
+  }
+
+  let semantic = validateSLIDER1DecodedProgram(program)
+  check(semantic.verdict) {
+    deny: {
+      return slideR1MemoryRefusal(
+        "SLIDE-R1-MEMORY-002", "semantic program did not validate",
+      )
+    }
+    ambig: {
+      return slideR1MemoryRefusal(
+        "SLIDE-R1-MEMORY-002", "semantic program validation is unresolved",
+      )
+    }
+    if: {}
+  }
+
+  // R1 has no address, aggregate, index, allocation, deallocation, call, FFI,
+  // effect, or concurrency opcode. This total registry walk is retained even
+  // though the semantic validator currently checks the same frozen set: a
+  // future semantic-registry addition must not silently inherit this profile.
+  mut blockIndex: Int = 0
+  mut definitionCount: Int = 0
+  while blockIndex < program.blocks.count() {
+    let block = slideR1DecodedBlockAt(program.blocks, blockIndex)
+    mut instructionIndex: Int = 0
+    while instructionIndex < block.instructions.count() {
+      let instruction = slideR1DecodedInstructionAt(
+        block.instructions, instructionIndex,
+      )
+
+      match instruction.typeId {
+        1 => {}
+        2 => {}
+        3 => {}
+        4 => {}
+        _ => {
+          return slideR1MemoryRefusal(
+            "SLIDE-R1-MEMORY-003", "type is outside the no-address registry",
+          )
+        }
+      }
+
+      match instruction.opcodeId {
+        1 => {}
+        2 => {
+          if instruction.operands.count() != 2 {
+            return slideR1MemoryRefusal(
+              "SLIDE-R1-MEMORY-004", "checked arithmetic lost its exact operand shape",
+            )
+          }
+        }
+        3 => {}
+        4 => {}
+        5 => {}
+        _ => {
+          return slideR1MemoryRefusal(
+            "SLIDE-R1-MEMORY-005", "opcode may introduce an unverified memory operation",
+          )
+        }
+      }
+      definitionCount = definitionCount + 1
+      instructionIndex = instructionIndex + 1
+    }
+
+    match block.terminator.terminatorId {
+      1 => {}
+      2 => {}
+      _ => {
+        return slideR1MemoryRefusal(
+          "SLIDE-R1-MEMORY-006", "terminator is outside the bounded no-address registry",
+        )
+      }
+    }
+    blockIndex = blockIndex + 1
+  }
+
+  // Exact closed-profile ceilings are semantic input for this checkpoint.
+  // Native stack/heap/output budgets and post-optimisation guard evidence are
+  // deliberately NOT claimed here and remain release stop gates.
+  if program.blocks.count() != 4 or definitionCount != 9 {
+    return slideR1MemoryRefusal(
+      "SLIDE-R1-MEMORY-007", "closed reference execution ceilings changed",
+    )
+  }
+
+  return {
+    verdict: Verdict.Allow
+    status: "SEMANTIC_MEMORY_VALIDATED"
+    failureId: "NONE"
+    detail: "no-address safe-value semantic subset; native certificate absent"
+    satisfiedInvariantIds: slideR1SafeValueInvariantIds()
+  }
+}
+
+pure flow importAndValidateSLIDER1SafeValue(
+  body: Bytes,
+) -> SLIDER1MemoryDecision
+contract {
+  intent { "Decode and validate exact R1 semantics before applying the safe-value semantic-memory gate." }
+}
+{
+  let imported = importAndValidateSLIDER1Program(body)
+  check(imported.decision.verdict) {
+    deny: {
+      return slideR1MemoryRefusal(
+        "SLIDE-R1-MEMORY-008", "canonical or semantic import refused",
+      )
+    }
+    ambig: {
+      return slideR1MemoryRefusal(
+        "SLIDE-R1-MEMORY-008", "canonical or semantic import unresolved",
+      )
+    }
+    if: {}
+  }
+  return validateSLIDER1SafeValueProgram(imported.program)
+}

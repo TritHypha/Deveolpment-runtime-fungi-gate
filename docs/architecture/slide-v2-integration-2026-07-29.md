@@ -105,6 +105,12 @@ instruction-driven fresh-process execution. General executable GIR, memory,
 budget/capability semantics, a second frontend, and signed frontend evidence
 remain open.
 
+The first safe-value implementation checkpoint is semantic-only: the frozen
+no-address registry is revalidated after semantic admission and altered
+profile/opcode/malformed candidates refuse. It intentionally emits
+`SEMANTIC_MEMORY_VALIDATED`, not a native `MEMORY_SAFE` certificate; the
+post-lowering, final-artifact, FFI/handle, and isolation gates remain open.
+
 ### Memory contract
 
 Galerina's current value-semantics, tree-walker, WebAssembly linear-memory, and

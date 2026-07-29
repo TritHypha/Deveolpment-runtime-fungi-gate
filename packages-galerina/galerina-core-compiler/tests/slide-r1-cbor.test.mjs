@@ -27,6 +27,7 @@ let validator;
 let importer;
 let programImporter;
 let semanticBinding;
+let memoryVerifier;
 let programRuntime;
 let referenceRuntime;
 let canonicalProgram;
@@ -102,6 +103,7 @@ before(async () => {
     importer,
     programImporter,
     semanticBinding,
+    memoryVerifier,
     programRuntime,
     referenceRuntime,
   ] =
@@ -134,6 +136,14 @@ before(async () => {
         "slide-r1-semantic-digest.fungi",
       ],
       "slide-r1-semantic-digest-combined.fungi",
+    ),
+    loadCombined(
+      [
+        "slide-r1-cbor-importer.fungi",
+        "slide-r1-program-importer.fungi",
+        "slide-r1-safe-value-verifier.fungi",
+      ],
+      "slide-r1-safe-value-verifier-combined.fungi",
     ),
     loadCombined(
       [
@@ -208,6 +218,16 @@ async function bindSemanticDigest(value) {
   const result = await run(
     semanticBinding,
     "bindSLIDER1SemanticDigest",
+    new Map([["body", bytesValue(value)]]),
+  );
+  assert.equal(result.audit.result, "ok");
+  return result.value;
+}
+
+async function validateSafeValue(value) {
+  const result = await run(
+    memoryVerifier,
+    "importAndValidateSLIDER1SafeValue",
     new Map([["body", bytesValue(value)]]),
   );
   assert.equal(result.audit.result, "ok");
@@ -706,6 +726,54 @@ describe("SLIDE R1 domain-separated semantic binding", () => {
       "SLIDE-R1-PROGRAM-001",
     );
     assert.equal(field(binding, "semanticDigest").value, "");
+  });
+});
+
+describe("SLIDE R1 safe-value semantic-memory gate", () => {
+  it("admits only the bounded no-address semantic subset without claiming native safety", async () => {
+    const decision = await validateSafeValue(canonicalBytes);
+    assert.equal(
+      field(decision, "verdict").value,
+      1,
+      `${field(decision, "failureId").value}: ${field(decision, "detail").value}`,
+    );
+    assert.equal(
+      field(decision, "status").value,
+      "SEMANTIC_MEMORY_VALIDATED",
+    );
+    assert.equal(field(decision, "failureId").value, "NONE");
+    assert.deepEqual(
+      field(decision, "satisfiedInvariantIds").items.map((item) => item.value),
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    );
+    assert.match(field(decision, "detail").value, /native certificate absent/);
+  });
+
+  it("denies altered profiles, memory-capable opcodes, and malformed bodies before memory admission", async () => {
+    const alteredProfile = mutateSequence(
+      canonicalBytes,
+      Buffer.from("slide.memory.safe-value.v1", "utf8"),
+      0,
+      "x".charCodeAt(0),
+    );
+    let decision = await validateSafeValue(alteredProfile);
+    assert.equal(field(decision, "verdict").value, -1);
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-MEMORY-008");
+    assert.equal(field(decision, "satisfiedInvariantIds").items.length, 0);
+
+    const unknownOpcode = mutateSequence(
+      canonicalBytes,
+      [0x85, 0x03, 0x02, 0x01, 0x82, 0x00, 0x01, 0x00],
+      2,
+      6,
+    );
+    decision = await validateSafeValue(unknownOpcode);
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-MEMORY-008");
+
+    const malformed = canonicalBytes.slice();
+    malformed[0] = 0xbf;
+    decision = await validateSafeValue(malformed);
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-MEMORY-008");
   });
 });
 
