@@ -47,7 +47,11 @@ admits the candidate without producer/encoder access, then binds the exact
 body to the v2 semantic domain. A bounded reference runtime now
 instruction-drives the decoded call/branch/join/checked-add/K3 graph and typed
 exits under an enforced caller-capped 64-step ceiling. It still replaces no
-current production component.
+current production component. V2-B now validates three exact
+database/HTTPS/audit request shapes and one request-bound lease plus a typed
+cryptographic-verifier receipt. Both gates explicitly release no authority;
+canonical signing bytes, real signature verification, replay state, K3
+composition, broker isolation, and dispatch remain absent.
 SLIDE packaging, native execution, Tri-Fuse v2, the frontend receipt, driver
 CLI, and benchmarks do not yet exist.
 Galerina's current implemented execution paths remain the interpreter,
@@ -80,7 +84,7 @@ Planning completion and implementation completion are deliberately separate.
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
 | V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, budget enforcement, and instruction-driven call/branch/join/K3 execution | Versioned effect/capability and memory increments |
-| V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact database/HTTPS/audit resource descriptors plus a `.fungi` request-set shape gate that binds scope/ceilings and explicitly releases no authority; lease-only broker, Tower/Tri-Pipe roles, K3 admission and migration are specified | Implement lease shape and typed cryptographic-verifier receipt binding before K3 composition or broker dispatch |
+| V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact database/HTTPS/audit descriptors and request-set gate; request-bound lease and typed verifier-receipt shape validation; all success states explicitly release no authority | Define canonical signing bytes, perform real independent cryptographic verification, enforce nonce/replay state, compose all admission evidence with K3, then build the isolated broker |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
 | G1 compiler probe | `IMPLEMENTED-PARTIAL` | Checked `.fungi` source plus walker/Wasm differential; exact AST inventory; preflight; `check_k3`; adapter; canonical export; independent import, validation, digest and execution all exist | Close the remaining historic nesting evidence gap and start memory negatives |
@@ -422,8 +426,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. specify the first V2 effect/capability increment and its lease-only host
-   boundary;
+3. implement canonical V2-B lease signing bytes and an independent
+   cryptographic verifier without accepting a Boolean authority shortcut;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.

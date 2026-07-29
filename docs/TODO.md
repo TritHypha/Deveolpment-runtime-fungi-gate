@@ -91,10 +91,21 @@ planning checkbox must never be used to imply that implementation exists.
   `SHAPE_VALIDATED`, and always keeps `authorityReleased: false`. Focused
   evidence is 7/7. Report:
   `docs/reports/slide-v2b-capability-shape-2026-07-29.md`.
-- **Current:** implement lease shape plus typed cryptographic-verifier receipt
-  binding; never accept a Boolean “signature valid” fact.
-- **Next:** add memory increments without widening
-  frozen R1 or authorizing host access.
+- **Completed (awaiting local checkpoint commit):**
+  `slide-v2b-lease-shape.fungi` validates exact request/artifact/resource,
+  identity, chronology, ceiling, Tower/Tri-Pipe receipt, issuer-role, suite,
+  canonical signed-byte digest, and typed cryptographic-verifier receipt
+  bindings. It exhaustively refuses verifier `DENY` and `INDETERMINATE`;
+  success is only `LEASE_SHAPE_VALIDATED` with `authorityReleased: false`.
+  Eleven hostile lease mutations fail closed; combined focused evidence is
+  19/19. Report:
+  `docs/reports/slide-v2b-lease-shape-2026-07-29.md`.
+- **Current:** define canonical lease signing bytes and the independently owned
+  cryptographic-verifier adapter. Shape validation is not signature
+  verification and must never be promoted into admission.
+- **Next:** add nonce/replay state and K3 admission composition before any
+  lease reference, broker opcode, host handle, or host dispatch can exist;
+  then add the versioned memory increment without widening frozen R1.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity
@@ -106,11 +117,13 @@ planning checkbox must never be used to imply that implementation exists.
   post-commit refresh indexes 4,091 files with zero over-size skips.
   The validated-runtime post-commit refresh indexes 4,093 files with zero
   over-size skips; the budget checkpoint retains that count.
-- **Latest V2-B verification:** compiler 5,332/5,332 across 1,179 suites;
-  graph 7,242 nodes / 7,501 edges; zero integrity or KB-link violations;
+- **Latest V2-B verification:** compiler 5,344/5,344; repository 94/94
+  packages and 8,086/8,086 tests; graph 7,249 nodes / 7,507 edges; zero
+  integrity or KB-link violations;
   Hardened Border 97/97; explicit memory graph clean; dev-tool index
-  97 packages / 124 tools / 40 proofs. Post-commit Myco indexes 4,096 files
-  with zero over-size skips.
+  97 packages / 124 tools / 40 proofs. The prior request-shape post-commit
+  Myco index contains 4,096 files with zero over-size skips; refresh after
+  the lease checkpoint commit is still required.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
