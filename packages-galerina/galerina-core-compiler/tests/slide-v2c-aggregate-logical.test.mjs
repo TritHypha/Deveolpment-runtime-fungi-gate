@@ -145,7 +145,7 @@ describe("SLIDE V2-C immutable aggregate logical gate", () => {
       field(program, "instructions").items.map(
         (instruction) => field(instruction, "opcodeId").value,
       ),
-      [12, 13, 1, 1, 1, 14, 15, 16, 17, 18, 19, 20],
+      [12, 13, 2, 2, 2, 14, 15, 16, 17, 18, 19, 20],
     );
     assert.equal(field(program, "effectIds").items.length, 0);
     assert.equal(field(program, "capabilityIds").items.length, 0);

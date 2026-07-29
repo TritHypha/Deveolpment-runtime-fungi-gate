@@ -246,9 +246,9 @@ contract { intent { "Project decoded descriptor evidence for the independent sem
   let instructions = Array.of(
     slideV2CAggregateInstruction(0, 12, 6, Array.empty(), 1),
     slideV2CAggregateInstruction(1, 13, 7, Array.empty(), 2),
-    slideV2CAggregateInstruction(2, 1, 1, Array.empty(), 3),
-    slideV2CAggregateInstruction(3, 1, 1, Array.empty(), 5),
-    slideV2CAggregateInstruction(4, 1, 1, Array.empty(), 8),
+    slideV2CAggregateInstruction(2, 2, 1, Array.empty(), 3),
+    slideV2CAggregateInstruction(3, 2, 1, Array.empty(), 5),
+    slideV2CAggregateInstruction(4, 2, 1, Array.empty(), 8),
     slideV2CAggregateInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
     slideV2CAggregateInstruction(6, 15, 1, Array.of(5), 0),
     slideV2CAggregateInstruction(7, 16, 13, Array.of(5, 2), 0),
@@ -336,7 +336,7 @@ contract { intent { "Reconstruct a complete V2-C graph without producer or encod
   )
   c = slideV2AExpectText(
     bytes, c,
-    "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38",
+    "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66",
     "SLIDE-V2C-DECODE-007",
   )
   c = slideV2AExpectUInt(bytes, c, 5, "SLIDE-V2C-DECODE-003")
@@ -478,7 +478,7 @@ contract { intent { "Reconstruct a complete V2-C graph without producer or encod
     semanticProfileId: "slide.semantic.executable-gir.v2"
     digestSuiteId: "slide.digest.sha256.v1"
     registrySetId: "slide.registry.executable-gir.v2c"
-    registrySetDigest: "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38"
+    registrySetDigest: "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66"
     memoryProfileId: "slide.memory.safe-value.v1"
     requiredFeatureIds: features.values
     limits: {

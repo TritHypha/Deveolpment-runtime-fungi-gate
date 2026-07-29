@@ -121,12 +121,12 @@ describe("SLIDE V2-C complete executable logical graph", () => {
       field(block, "instructions").items.map(
         (instruction) => field(instruction, "opcodeId").value,
       ),
-      [12, 13, 1, 1, 1, 14, 15, 16, 4, 17, 18, 19, 20],
+      [12, 13, 1, 2, 2, 2, 14, 15, 16, 4, 17, 18, 19, 20],
     );
     assert.equal(field(field(block, "terminator"), "terminatorId").value, 4);
     assert.deepEqual(
       field(field(block, "terminator"), "operands").items.map((value) => value.value),
-      [12],
+      [13],
     );
   });
 
@@ -147,13 +147,18 @@ describe("SLIDE V2-C complete executable logical graph", () => {
       "SLIDE-V2C-EXECUTABLE-010",
     ],
     [
+      "parameter index drift",
+      (candidate) => field(blockAt(functionAt(candidate, 2), 0), "instructions").items[2].fields.set("immediate", intValue(1)),
+      "SLIDE-V2C-EXECUTABLE-013",
+    ],
+    [
       "unchecked aggregate index",
-      (candidate) => field(blockAt(functionAt(candidate, 2), 0), "instructions").items[7].fields.set("opcodeId", intValue(99)),
+      (candidate) => field(blockAt(functionAt(candidate, 2), 0), "instructions").items[8].fields.set("opcodeId", intValue(99)),
       "SLIDE-V2C-EXECUTABLE-012",
     ],
     [
       "dynamic record projection",
-      (candidate) => field(blockAt(functionAt(candidate, 2), 0), "instructions").items[10].fields.set("immediate", intValue(2)),
+      (candidate) => field(blockAt(functionAt(candidate, 2), 0), "instructions").items[11].fields.set("immediate", intValue(2)),
       "SLIDE-V2C-EXECUTABLE-014",
     ],
     [

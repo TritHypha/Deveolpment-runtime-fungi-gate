@@ -104,7 +104,7 @@ describe("SLIDE V2-C canonical producer", () => {
     assert.equal(canonicalBytes[0], 0xb5);
     assert.equal(field(second, "byteLength").value, canonicalBytes.length);
     assert.equal(field(second, "authorityReleased").value, false);
-    assert.equal(canonicalBytes.length, 725);
+    assert.equal(canonicalBytes.length, 732);
     assert.ok(canonicalBytes.length < 24576);
   });
 
@@ -113,14 +113,14 @@ describe("SLIDE V2-C canonical producer", () => {
     assert.ok(text.includes("slide.registry.executable-gir.v2c"));
     assert.ok(
       text.includes(
-        "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38",
+        "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66",
       ),
     );
     assert.ok(text.includes("Galerina"));
     const digest = createHash("sha256").update(canonicalBytes).digest("hex");
     assert.equal(
       digest,
-      "aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3",
+      "bb15c49cfed356e7bbf059f29605028291bdeacfa2e24343672343289f88fe24",
     );
   });
 

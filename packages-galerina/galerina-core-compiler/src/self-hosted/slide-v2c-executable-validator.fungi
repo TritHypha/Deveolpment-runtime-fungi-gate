@@ -92,7 +92,7 @@ contract { intent { "Validate exact V2-C identities, tables, and resource ceilin
       "SLIDE-V2C-EXECUTABLE-001", "format, profile, or digest suite changed",
     )
   }
-  if program.registrySetId != "slide.registry.executable-gir.v2c" or program.registrySetDigest != "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38" or program.memoryProfileId != "slide.memory.safe-value.v1" {
+  if program.registrySetId != "slide.registry.executable-gir.v2c" or program.registrySetDigest != "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66" or program.memoryProfileId != "slide.memory.safe-value.v1" {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-002", "registry or safe-value binding changed",
     )
@@ -166,19 +166,19 @@ pure flow validateSLIDEV2CAggregateFunction(
 contract { intent { "Validate the exact executable aggregate function and total return." } }
 {
   let function = slideV2AFunctionAt(program.functions, 2)
-  if function.functionId != 3 or function.qualifierId != 1 or function.parameterTypes.count() != 0 or function.resultTypeId != 13 or function.declaredEffectIds.count() != 0 or function.requestedCapabilityIds.count() != 0 or function.entryBlockId != 0 or function.blocks.count() != 1 or function.limitRef != 1 {
+  if function.functionId != 3 or function.qualifierId != 1 or function.parameterTypes.count() != 1 or slideV2CIntAt(function.parameterTypes, 0) != 1 or function.resultTypeId != 13 or function.declaredEffectIds.count() != 0 or function.requestedCapabilityIds.count() != 0 or function.entryBlockId != 0 or function.blocks.count() != 1 or function.limitRef != 1 {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-010", "aggregate function signature or authority changed",
     )
   }
   let block = slideV2ABlockAt(function.blocks, 0)
-  if block.blockId != 0 or block.parameters.count() != 0 or block.instructions.count() != 13 {
+  if block.blockId != 0 or block.parameters.count() != 0 or block.instructions.count() != 14 {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-011", "aggregate block shape changed",
     )
   }
-  let expectedOpcodes = Array.of(12, 13, 1, 1, 1, 14, 15, 16, 4, 17, 18, 19, 20)
-  let expectedTypes = Array.of(6, 7, 1, 1, 1, 10, 1, 13, 2, 11, 13, 12, 13)
+  let expectedOpcodes = Array.of(12, 13, 1, 2, 2, 2, 14, 15, 16, 4, 17, 18, 19, 20)
+  let expectedTypes = Array.of(6, 7, 1, 1, 1, 1, 10, 1, 13, 2, 11, 13, 12, 13)
   mut i: Int = 0
   while i < block.instructions.count() {
     let instruction = slideV2AInstructionAt(block.instructions, i)
@@ -189,22 +189,37 @@ contract { intent { "Validate the exact executable aggregate function and total 
     }
     i = i + 1
   }
-  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 5), 5, 14, 10, Array.of(2, 3, 4), 0) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 7), 7, 16, 13, Array.of(5, 2), 0) == false {
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 0), 0, 12, 6, Array.empty(), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 1), 1, 13, 7, Array.empty(), 2) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 2), 2, 1, 1, Array.empty(), 0) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-013", "constant or function-parameter instruction changed",
+    )
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 3), 3, 2, 1, Array.empty(), 3) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 4), 4, 2, 1, Array.empty(), 5) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 5), 5, 2, 1, Array.empty(), 8) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-013", "array element constant instruction changed",
+    )
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 6), 6, 14, 10, Array.of(3, 4, 5), 0) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 8), 8, 16, 13, Array.of(6, 2), 0) == false {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-013", "array construction or checked index changed",
     )
   }
-  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 9), 9, 17, 11, Array.of(7, 8, 0), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 10), 10, 18, 13, Array.of(9), 1) == false {
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 7), 7, 15, 1, Array.of(6), 0) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 9), 9, 4, 2, Array.of(7, 2), 0) == false {
+    return refuseSLIDEV2CExecutable(
+      "SLIDE-V2C-EXECUTABLE-013", "length or bounds comparison changed",
+    )
+  }
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 10), 10, 17, 11, Array.of(8, 9, 0), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 11), 11, 18, 13, Array.of(10), 1) == false {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-014", "record construction or projection changed",
     )
   }
-  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 11), 11, 19, 12, Array.of(10), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 12), 12, 20, 13, Array.of(11), 1) == false {
+  if slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 12), 12, 19, 12, Array.of(11), 1) == false or slideV2CInstructionMatches(slideV2AInstructionAt(block.instructions, 13), 13, 20, 13, Array.of(12), 1) == false {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-015", "variant construction or projection changed",
     )
   }
-  if block.terminator.terminatorId != 4 or block.terminator.operands.count() != 1 or slideV2CIntAt(block.terminator.operands, 0) != 12 or block.terminator.edges.count() != 0 {
+  if block.terminator.terminatorId != 4 or block.terminator.operands.count() != 1 or slideV2CIntAt(block.terminator.operands, 0) != 13 or block.terminator.edges.count() != 0 {
     return refuseSLIDEV2CExecutable(
       "SLIDE-V2C-EXECUTABLE-016", "aggregate function return changed or gained fallthrough",
     )

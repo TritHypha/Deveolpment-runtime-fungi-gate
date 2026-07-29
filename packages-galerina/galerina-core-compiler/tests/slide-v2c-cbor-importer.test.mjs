@@ -81,7 +81,7 @@ describe("independent structural SLIDE V2-C import", () => {
   it("reconstructs the complete executable graph and aggregate descriptors", async () => {
     const imported = await decode(canonicalBytes);
     assert.equal(field(field(imported, "decision"), "verdict").value, 1);
-    assert.equal(field(imported, "consumed").value, 725);
+    assert.equal(field(imported, "consumed").value, 732);
     assert.equal(field(imported, "authorityReleased").value, false);
     const program = field(imported, "program");
     assert.equal(field(program, "functions").items.length, 3);
@@ -107,7 +107,7 @@ describe("independent structural SLIDE V2-C import", () => {
     }],
     ["unknown aggregate opcode", () => {
       const value = canonicalBytes.slice();
-      const sequence = [0x85, 0x07, 0x10, 0x0d, 0x82, 0x05, 0x02, 0x00];
+      const sequence = [0x85, 0x08, 0x10, 0x0d, 0x82, 0x06, 0x02, 0x00];
       let found = -1;
       for (let i = 0; i <= value.length - sequence.length; i += 1) {
         if (sequence.every((byte, j) => value[i + j] === byte)) {

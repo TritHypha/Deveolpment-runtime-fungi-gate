@@ -60,28 +60,29 @@ contract { intent { "Materialize the V2-C aggregate operations as one detached e
   let instructions = Array.of(
     slideV2AInstruction(0, 12, 6, Array.empty(), 1),
     slideV2AInstruction(1, 13, 7, Array.empty(), 2),
-    slideV2AInstruction(2, 1, 1, Array.empty(), 3),
-    slideV2AInstruction(3, 1, 1, Array.empty(), 5),
-    slideV2AInstruction(4, 1, 1, Array.empty(), 8),
-    slideV2AInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
-    slideV2AInstruction(6, 15, 1, Array.of(5), 0),
-    slideV2AInstruction(7, 16, 13, Array.of(5, 2), 0),
-    slideV2AInstruction(8, 4, 2, Array.of(6, 2), 0),
-    slideV2AInstruction(9, 17, 11, Array.of(7, 8, 0), 1),
-    slideV2AInstruction(10, 18, 13, Array.of(9), 1),
-    slideV2AInstruction(11, 19, 12, Array.of(10), 1),
-    slideV2AInstruction(12, 20, 13, Array.of(11), 1),
+    slideV2AInstruction(2, 1, 1, Array.empty(), 0),
+    slideV2AInstruction(3, 2, 1, Array.empty(), 3),
+    slideV2AInstruction(4, 2, 1, Array.empty(), 5),
+    slideV2AInstruction(5, 2, 1, Array.empty(), 8),
+    slideV2AInstruction(6, 14, 10, Array.of(3, 4, 5), 0),
+    slideV2AInstruction(7, 15, 1, Array.of(6), 0),
+    slideV2AInstruction(8, 16, 13, Array.of(6, 2), 0),
+    slideV2AInstruction(9, 4, 2, Array.of(7, 2), 0),
+    slideV2AInstruction(10, 17, 11, Array.of(8, 9, 0), 1),
+    slideV2AInstruction(11, 18, 13, Array.of(10), 1),
+    slideV2AInstruction(12, 19, 12, Array.of(11), 1),
+    slideV2AInstruction(13, 20, 13, Array.of(12), 1),
   )
   let block: SLIDEV2ABlock = {
     blockId: 0
     parameters: Array.empty()
     instructions: instructions
-    terminator: slideV2ATerminator(4, Array.of(12), Array.empty())
+    terminator: slideV2ATerminator(4, Array.of(13), Array.empty())
   }
   return {
     functionId: 3
     qualifierId: 1
-    parameterTypes: Array.empty()
+    parameterTypes: Array.of(1)
     resultTypeId: 13
     declaredEffectIds: Array.empty()
     requestedCapabilityIds: Array.empty()

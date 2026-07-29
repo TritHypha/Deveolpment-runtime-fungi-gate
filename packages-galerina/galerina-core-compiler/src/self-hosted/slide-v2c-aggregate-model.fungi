@@ -116,9 +116,9 @@ contract { intent { "Materialize the exact detached V2-C immutable-aggregate fix
   let instructions = Array.of(
     slideV2CAggregateInstruction(0, 12, 6, Array.empty(), 1),
     slideV2CAggregateInstruction(1, 13, 7, Array.empty(), 2),
-    slideV2CAggregateInstruction(2, 1, 1, Array.empty(), 3),
-    slideV2CAggregateInstruction(3, 1, 1, Array.empty(), 5),
-    slideV2CAggregateInstruction(4, 1, 1, Array.empty(), 8),
+    slideV2CAggregateInstruction(2, 2, 1, Array.empty(), 3),
+    slideV2CAggregateInstruction(3, 2, 1, Array.empty(), 5),
+    slideV2CAggregateInstruction(4, 2, 1, Array.empty(), 8),
     slideV2CAggregateInstruction(5, 14, 10, Array.of(2, 3, 4), 0),
     slideV2CAggregateInstruction(6, 15, 1, Array.of(5), 0),
     slideV2CAggregateInstruction(7, 16, 13, Array.of(5, 2), 0),
@@ -131,7 +131,7 @@ contract { intent { "Materialize the exact detached V2-C immutable-aggregate fix
     formatMajor: 2 formatMinor: 1
     semanticProfileId: "slide.semantic.executable-gir.v2"
     registrySetId: "slide.registry.executable-gir.v2c"
-    registrySetDigest: "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38"
+    registrySetDigest: "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66"
     parentRegistryId: "slide.registry.executable-gir.v2a"
     parentRegistryDigest: "991257bbf4d6d352d3108e27cd423c22e9bf11394571cecb509bc5e8a74df327"
     authoritySidecarId: "slide.capability.lease-broker.v2b"

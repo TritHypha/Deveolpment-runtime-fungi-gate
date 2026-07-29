@@ -172,7 +172,7 @@ contract { intent { "Bind V2-C to the frozen parent and non-authorizing V2-B sid
       "SLIDE-V2C-AGGREGATE-002", "registry identity changed",
     )
   }
-  if program.registrySetDigest != "c373bd6c12a7e3602a45c608fd0997e2227a703c73ac75c4270539552877bd38" {
+  if program.registrySetDigest != "366c36a35ee5493bd59c2329783c33ccbb15055288b1a361d2a16b58a9b0aa66" {
     return refuseSLIDEV2CAggregate(
       "SLIDE-V2C-AGGREGATE-033", "V2-C registry descriptor digest changed",
     )
@@ -361,17 +361,17 @@ contract { intent { "Validate one exact typed V2-C fixture instruction." } }
       }
     }
     2 => {
-      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 3 {
+      if instruction.opcodeId != 2 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 3 {
         return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "first array element changed")
       }
     }
     3 => {
-      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 5 {
+      if instruction.opcodeId != 2 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 5 {
         return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "second array element changed")
       }
     }
     4 => {
-      if instruction.opcodeId != 1 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 8 {
+      if instruction.opcodeId != 2 or instruction.typeId != 1 or instruction.operands.count() != 0 or instruction.immediate != 8 {
         return refuseSLIDEV2CAggregate("SLIDE-V2C-AGGREGATE-024", "third array element changed")
       }
     }

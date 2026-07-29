@@ -85,7 +85,7 @@ describe("SLIDE V2-C domain-separated semantic binding", () => {
     assert.equal(field(field(binding, "decision"), "verdict").value, 1);
     assert.equal(
       field(binding, "bodyDigest").value,
-      "aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3",
+      "bb15c49cfed356e7bbf059f29605028291bdeacfa2e24343672343289f88fe24",
     );
     const expectedSemantic = createHash("sha256")
       .update(Buffer.from("slide.gir.semantic.v2\0", "utf8"))
@@ -93,7 +93,7 @@ describe("SLIDE V2-C domain-separated semantic binding", () => {
       .digest("hex");
     assert.equal(
       expectedSemantic,
-      "b1b531eecca3d8e4670b3691edceea9322251dae00e164d638e3f8e20e484bb9",
+      "7e89c7c807a04a600a46343f95c1ecfb358e3c1806817f052c950dd1c4d5155c",
     );
     assert.equal(field(binding, "semanticDigest").value, expectedSemantic);
     assert.equal(field(binding, "domainId").value, "slide.gir.semantic.v2");

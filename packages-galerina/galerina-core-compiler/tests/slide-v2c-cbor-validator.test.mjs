@@ -69,14 +69,14 @@ before(async () => {
 
 describe("independent SLIDE V2-C canonical-vector admission", () => {
   it("pins the complete body length and checksum without the producer", async () => {
-    assert.equal(canonicalBytes.length, 725);
+    assert.equal(canonicalBytes.length, 732);
     assert.equal(
       createHash("sha256").update(canonicalBytes).digest("hex"),
-      "aa6ecf62b9d54167682569a817e8313ce391e51ce649b5025df750f237b72fe3",
+      "bb15c49cfed356e7bbf059f29605028291bdeacfa2e24343672343289f88fe24",
     );
     const decision = await validate(canonicalBytes);
     assert.equal(field(decision, "verdict").value, 1);
-    assert.equal(field(decision, "consumed").value, 725);
+    assert.equal(field(decision, "consumed").value, 732);
     assert.equal(field(decision, "authorityReleased").value, false);
   });
 
