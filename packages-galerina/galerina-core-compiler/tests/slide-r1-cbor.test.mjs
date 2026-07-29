@@ -25,6 +25,7 @@ const execFileAsync = promisify(execFile);
 let encoder;
 let validator;
 let importer;
+let programImporter;
 let referenceRuntime;
 let canonicalProgram;
 let canonicalBytes;
@@ -93,7 +94,8 @@ async function validate(value) {
 }
 
 before(async () => {
-  [encoder, validator, importer, referenceRuntime] = await Promise.all([
+  [encoder, validator, importer, programImporter, referenceRuntime] =
+    await Promise.all([
     loadCombined(
       [
         "slide-r1-preflight.fungi",
@@ -107,6 +109,13 @@ before(async () => {
     ),
     readFile(join(SELF_HOSTED, "slide-r1-cbor-importer.fungi"), "utf8").then(
       (source) => parseChecked(source, "slide-r1-cbor-importer.fungi"),
+    ),
+    loadCombined(
+      [
+        "slide-r1-cbor-importer.fungi",
+        "slide-r1-program-importer.fungi",
+      ],
+      "slide-r1-program-importer-combined.fungi",
     ),
     loadCombined(
       ["slide-r1-cbor-importer.fungi", "slide-r1-reference-runtime.fungi"],
@@ -128,6 +137,16 @@ async function structurallyValidate(value) {
   const result = await run(
     importer,
     "validateSLIDER1StructuralBody",
+    new Map([["bytes", bytesValue(value)]]),
+  );
+  assert.equal(result.audit.result, "ok");
+  return result.value;
+}
+
+async function decodeProgram(value) {
+  const result = await run(
+    programImporter,
+    "decodeSLIDER1Program",
     new Map([["bytes", bytesValue(value)]]),
   );
   assert.equal(result.audit.result, "ok");
@@ -357,6 +376,111 @@ describe("independent structural SLIDE R1 importer", () => {
     suffixed.set(canonicalBytes);
     decision = await structurallyValidate(suffixed);
     assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-044");
+  });
+});
+
+describe("independently reconstructed SLIDE R1 typed program", () => {
+  it("materializes every root table from canonical bytes without the encoder object", async () => {
+    const imported = await decodeProgram(canonicalBytes);
+    const decision = field(imported, "decision");
+    const program = field(imported, "program");
+
+    assert.equal(field(decision, "verdict").value, 1);
+    assert.equal(field(decision, "status").value, "DECODED");
+    assert.equal(field(decision, "consumed").value, 282);
+    assert.equal(field(program, "formatMajor").value, 1);
+    assert.equal(field(program, "formatMinor").value, 0);
+    assert.equal(
+      field(program, "semanticProfileId").value,
+      "slide.semantic.galerina-gir.v1",
+    );
+    assert.equal(
+      field(program, "memoryProfileId").value,
+      "slide.memory.safe-value.v1",
+    );
+    assert.deepEqual(
+      field(program, "parameterTypeIds").items.map((item) => item.value),
+      [1, 1, 2],
+    );
+    assert.equal(field(program, "resultTypeId").value, 3);
+    assert.equal(field(program, "entryBlockId").value, 0);
+    assert.equal(field(program, "blocks").items.length, 4);
+    assert.equal(field(program, "failures").items.length, 3);
+    assert.equal(field(program, "k3Obligations").items.length, 1);
+  });
+
+  it("reconstructs instruction, terminator, failure, and K3 fields from bytes", async () => {
+    const imported = await decodeProgram(canonicalBytes);
+    const program = field(imported, "program");
+    const blocks = field(program, "blocks").items;
+    const entry = blocks[0];
+    const allow = blocks[1];
+    const entryInstructions = field(entry, "instructions").items;
+    const allowInstructions = field(allow, "instructions").items;
+
+    assert.equal(field(entry, "blockId").value, 0);
+    assert.deepEqual(
+      entryInstructions.map((instruction) => [
+        field(instruction, "resultId").value,
+        field(instruction, "opcodeId").value,
+        field(instruction, "typeId").value,
+        field(instruction, "immediate").value,
+      ]),
+      [
+        [0, 1, 1, 0],
+        [1, 1, 1, 1],
+        [2, 1, 2, 2],
+      ],
+    );
+    assert.deepEqual(
+      field(field(entry, "terminator"), "operands").items.map(
+        (item) => item.value,
+      ),
+      [2, 1, 2, 3],
+    );
+    assert.deepEqual(
+      field(allowInstructions[0], "operands").items.map((item) => item.value),
+      [0, 1],
+    );
+
+    const failures = field(program, "failures").items;
+    assert.deepEqual(
+      failures.map((failure) => [
+        field(failure, "failureId").value,
+        field(failure, "classId").value,
+        field(failure, "retryId").value,
+      ]),
+      [
+        [1, 2, 1],
+        [2, 3, 2],
+        [3, 4, 2],
+      ],
+    );
+
+    const obligation = field(program, "k3Obligations").items[0];
+    assert.deepEqual(
+      [
+        "obligationId",
+        "functionId",
+        "checkBlockId",
+        "allowBlockId",
+        "denyBlockId",
+        "indeterminateBlockId",
+      ].map((name) => field(obligation, name).value),
+      [1, 1, 0, 1, 2, 3],
+    );
+  });
+
+  it("refuses malformed canonical structure before exposing a partial program", async () => {
+    const changed = canonicalBytes.slice();
+    changed[0] = 0xbf;
+    const imported = await decodeProgram(changed);
+    const decision = field(imported, "decision");
+    const program = field(imported, "program");
+
+    assert.equal(field(decision, "verdict").value, -1);
+    assert.equal(field(decision, "failureId").value, "SLIDE-R1-IMPORT-004");
+    assert.equal(field(program, "blocks").items.length, 0);
   });
 });
 

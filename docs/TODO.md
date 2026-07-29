@@ -11,10 +11,34 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
-Keep `../triLowLevel-v2/TODO.md` synchronized whenever the independent
+Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
+
+### Active SLIDE implementation checkpoint — 2026-07-29
+
+- **Completed:** 282-byte canonical R1 export, exact-vector admission,
+  independent structural admission, closed-profile fresh-process reference
+  execution, SLIDE naming migration, and nesting/XOR adjudication.
+- **Completed:** the first verified reconstruction checkpoint in
+  `packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-program-importer.fungi`
+  decodes canonical fields into importer-owned typed program records. Focused
+  evidence: 16/16 tests; report:
+  `docs/reports/slide-r1-program-reconstruction-2026-07-29.md`.
+- **Current:** implement closed-registry CFG, SSA, type, failure, terminator,
+  and K3 validation over only the reconstructed value. `DECODED` grants no
+  execution authority.
+- **Next:** semantic mutation fixtures, then instruction-driven reference
+  execution over the validated program.
+- **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
+  container-signing, or driver work before semantic and memory validation.
+- **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
+  `../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`, and
+  `../../triLowLevel-v2/18-R1-REGISTRY-V1.md`.
+- **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
+  records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
+- **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.
 
 ### Current naming migration
 

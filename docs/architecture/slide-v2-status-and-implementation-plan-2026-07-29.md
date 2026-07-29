@@ -274,8 +274,11 @@ paths. Its `.fungi` encoder emits a 282-byte typed-ID canonical CBOR body. A
 pinned-vector validator rejects all byte drift and a separate structural
 importer classifies canonicality, registry, opcode, type, failure, K3 edge,
 truncation, and suffix mutations. The fresh-process reference executor runs
-the admitted closed profile without source/AST/WAT. Remaining: reconstruct an
-independent graph value and drive general CFG/SSA validation/execution from it.
+the admitted closed profile without source/AST/WAT. A second importer layer now
+reconstructs an independently owned typed program from the canonical bytes
+(16/16 focused tests) without calling the encoder or fixed structural-admission
+flow. Remaining: drive general CFG/SSA validation and instruction-driven
+execution from that value.
 The current refusal names are stable within the preflight contract but are not
 frozen numeric registry entries. G1 is therefore
 `IMPLEMENTED-PARTIAL`, not complete.

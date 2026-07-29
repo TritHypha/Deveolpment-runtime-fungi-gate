@@ -1,8 +1,8 @@
 # SLIDE v2 and Galerina Integration Architecture
 
 **Date:** 2026-07-29
-**Status:** Proposed architecture; bounded G1 compiler probes have started,
-while SLIDE implementation remains absent
+**Status:** Proposed production architecture with a bounded, implemented
+Galerina-side SLIDE R1 reconstruction checkpoint; no production SLIDE backend
 **Project boundary:** SLIDE is an independent execution platform. Galerina is its
 first planned language frontend, not a required SLIDE runtime dependency.
 **Live status and work order:**
@@ -96,9 +96,11 @@ lexer/parser/internal-GIR/runtime chain now preserves one explicit
 three-successor K3 check and checked Int32 execution. The compiler-owned
 `.fungi` adapter in `../reports/slide-r1-adapter-2026-07-29.md` now derives
 signature/effect/body facts and materializes the exact four-block logical R1
-fixture or refuses. This narrows the adapter gap, but the logical records are
-not canonical R1 wire bytes and have no semantic digest or independent
-validator.
+fixture or refuses. The encoder now emits a 282-byte canonical typed-ID body;
+an exact-vector validator, separate structural importer, and importer-owned
+typed-program decoder consume it without the AST or encoder object. General
+CFG/SSA validation, instruction-driven execution, and signed frontend evidence
+remain open.
 
 ### Memory contract
 
@@ -180,6 +182,9 @@ SLIDE becomes an eligible production target only after:
   is never a silent fallback inside a failed native admission.
 
 ## Planning sources
+
+The living replace/remove/integrate matrix is
+`../../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`.
 
 - `../../../triLowLevel-v2/00-CHARTER.md`
 - `../../../triLowLevel-v2/10-MEMORY-SAFETY-PROFILES.md`

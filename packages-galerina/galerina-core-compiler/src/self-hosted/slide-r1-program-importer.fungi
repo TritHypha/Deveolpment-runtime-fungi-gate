@@ -1,0 +1,596 @@
+@version 1
+/// @file: slide-r1-program-importer.fungi
+/// @purpose: Reconstruct an independently owned typed SLIDE R1 program from canonical bytes.
+/// @status: Closed-registry R1 decoder and semantic validator; no encoder or AST dependency.
+///
+/// This module is combined with slide-r1-cbor-importer.fungi for its bounded
+/// canonical-CBOR primitives. It does not call the exact-vector validator or
+/// the fixed structural admission flow. Every numeric program field is read
+/// from the candidate bytes into records owned by this module.
+
+record SLIDER1DecodedInstruction {
+  resultId: Int
+  opcodeId: Int
+  typeId: Int
+  operands: Array<Int>
+  immediate: Int
+}
+
+record SLIDER1DecodedTerminator {
+  terminatorId: Int
+  operands: Array<Int>
+}
+
+record SLIDER1DecodedBlock {
+  blockId: Int
+  instructions: Array<SLIDER1DecodedInstruction>
+  terminator: SLIDER1DecodedTerminator
+}
+
+record SLIDER1DecodedFailure {
+  failureId: Int
+  classId: Int
+  visibilityId: Int
+  retryId: Int
+  actionId: Int
+}
+
+record SLIDER1DecodedK3 {
+  obligationId: Int
+  functionId: Int
+  checkBlockId: Int
+  allowBlockId: Int
+  denyBlockId: Int
+  indeterminateBlockId: Int
+}
+
+record SLIDER1DecodedProgram {
+  formatMajor: Int
+  formatMinor: Int
+  semanticProfileId: String
+  digestSuiteId: String
+  memoryProfileId: String
+  fixtureName: String
+  stableSymbolId: String
+  qualifierId: Int
+  parameterTypeIds: Array<Int>
+  resultTypeId: Int
+  entryBlockId: Int
+  blocks: Array<SLIDER1DecodedBlock>
+  failures: Array<SLIDER1DecodedFailure>
+  k3Obligations: Array<SLIDER1DecodedK3>
+}
+
+record SLIDER1UIntDecode {
+  cursor: SLIDER1ImportCursor
+  value: Int
+}
+
+record SLIDER1InstructionDecode {
+  cursor: SLIDER1ImportCursor
+  value: SLIDER1DecodedInstruction
+}
+
+record SLIDER1TerminatorDecode {
+  cursor: SLIDER1ImportCursor
+  value: SLIDER1DecodedTerminator
+}
+
+record SLIDER1BlockDecode {
+  cursor: SLIDER1ImportCursor
+  value: SLIDER1DecodedBlock
+}
+
+record SLIDER1FailureDecode {
+  cursor: SLIDER1ImportCursor
+  value: SLIDER1DecodedFailure
+}
+
+record SLIDER1K3Decode {
+  cursor: SLIDER1ImportCursor
+  value: SLIDER1DecodedK3
+}
+
+record SLIDER1ProgramImport {
+  decision: SLIDER1ImportDecision
+  program: SLIDER1DecodedProgram
+}
+
+pure flow emptySLIDER1DecodedInstruction() -> SLIDER1DecodedInstruction
+contract { intent { "Return an inert instruction used only behind a refusal cursor." } }
+{
+  return { resultId: -1 opcodeId: -1 typeId: -1 operands: [] immediate: -1 }
+}
+
+pure flow emptySLIDER1DecodedTerminator() -> SLIDER1DecodedTerminator
+contract { intent { "Return an inert terminator used only behind a refusal cursor." } }
+{
+  return { terminatorId: -1 operands: [] }
+}
+
+pure flow emptySLIDER1DecodedBlock() -> SLIDER1DecodedBlock
+contract { intent { "Return an inert block used only behind a refusal cursor." } }
+{
+  return {
+    blockId: -1
+    instructions: []
+    terminator: emptySLIDER1DecodedTerminator()
+  }
+}
+
+pure flow emptySLIDER1DecodedFailure() -> SLIDER1DecodedFailure
+contract { intent { "Return an inert failure used only behind a refusal cursor." } }
+{
+  return {
+    failureId: -1 classId: -1 visibilityId: -1 retryId: -1 actionId: -1
+  }
+}
+
+pure flow emptySLIDER1DecodedK3() -> SLIDER1DecodedK3
+contract { intent { "Return an inert K3 obligation used only behind a refusal cursor." } }
+{
+  return {
+    obligationId: -1 functionId: -1 checkBlockId: -1
+    allowBlockId: -1 denyBlockId: -1 indeterminateBlockId: -1
+  }
+}
+
+pure flow emptySLIDER1DecodedProgram() -> SLIDER1DecodedProgram
+contract { intent { "Return a no-authority program value for refused imports." } }
+{
+  return {
+    formatMajor: -1
+    formatMinor: -1
+    semanticProfileId: ""
+    digestSuiteId: ""
+    memoryProfileId: ""
+    fixtureName: ""
+    stableSymbolId: ""
+    qualifierId: -1
+    parameterTypeIds: []
+    resultTypeId: -1
+    entryBlockId: -1
+    blocks: []
+    failures: []
+    k3Obligations: []
+  }
+}
+
+pure flow slideR1ProgramDecision(
+  verdict: Verdict,
+  status: String,
+  failureId: String,
+  reasonText: String,
+  consumed: Int,
+) -> SLIDER1ImportDecision
+contract { intent { "Create one typed program-import decision." } }
+{
+  return {
+    verdict: verdict status: status failureId: failureId
+    reason: reasonText consumed: consumed
+  }
+}
+
+pure flow slideR1ReadUInt(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+  failureId: String,
+  reasonText: String,
+) -> SLIDER1UIntDecode
+contract { intent { "Decode one canonical unsigned field while retaining its value." } }
+{
+  if cursor.ok == false { return { cursor: cursor value: -1 } }
+  let read = slideR1ReadCanonicalHead(bytes, cursor.offset, 0)
+  if read.ok == false {
+    return {
+      cursor: slideR1ImportFailure(cursor.offset, read.failureId, read.reason)
+      value: -1
+    }
+  }
+  if read.value < 0 {
+    return {
+      cursor: slideR1ImportFailure(cursor.offset, failureId, reasonText)
+      value: -1
+    }
+  }
+  return {
+    cursor: { ok: true offset: read.nextOffset failureId: "NONE" reason: "" }
+    value: read.value
+  }
+}
+
+pure flow slideR1ReadArrayCount(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+  ceiling: Int,
+  failureId: String,
+  reasonText: String,
+) -> SLIDER1UIntDecode
+contract { intent { "Decode one definite canonical array count under a hard local ceiling." } }
+{
+  if cursor.ok == false { return { cursor: cursor value: -1 } }
+  let read = slideR1ReadCanonicalHead(bytes, cursor.offset, 4)
+  if read.ok == false {
+    return {
+      cursor: slideR1ImportFailure(cursor.offset, read.failureId, read.reason)
+      value: -1
+    }
+  }
+  if read.value > ceiling {
+    return {
+      cursor: slideR1ImportFailure(cursor.offset, failureId, reasonText)
+      value: -1
+    }
+  }
+  return {
+    cursor: { ok: true offset: read.nextOffset failureId: "NONE" reason: "" }
+    value: read.value
+  }
+}
+
+pure flow slideR1DecodeIntArray(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+  ceiling: Int,
+  failureId: String,
+) -> SLIDER1InstructionDecode
+contract {
+  intent { "Decode a bounded unsigned array into the operand field of an inert instruction carrier." }
+}
+{
+  let countRead = slideR1ReadArrayCount(
+    bytes, cursor, ceiling, failureId, "integer-array count exceeds R1 ceiling",
+  )
+  mut c: SLIDER1ImportCursor = countRead.cursor
+  mut values: Array<Int> = Array.empty()
+  mut i: Int = 0
+  while i < countRead.value and c.ok {
+    let item = slideR1ReadUInt(bytes, c, failureId, "invalid unsigned array item")
+    c = item.cursor
+    if c.ok { values = values.append(item.value) }
+    i = i + 1
+  }
+  return {
+    cursor: c
+    value: {
+      resultId: -1 opcodeId: -1 typeId: -1
+      operands: values immediate: -1
+    }
+  }
+}
+
+pure flow slideR1DecodeInstruction(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+) -> SLIDER1InstructionDecode
+contract { intent { "Decode one typed R1 instruction without assigning semantics." } }
+{
+  let shape = slideR1ReadArrayCount(
+    bytes, cursor, 5, "SLIDE-R1-DECODE-020", "instruction record is oversized",
+  )
+  mut c: SLIDER1ImportCursor = shape.cursor
+  if shape.value != 5 and c.ok {
+    c = slideR1ImportFailure(cursor.offset, "SLIDE-R1-DECODE-020", "instruction record must contain five fields")
+  }
+  let resultRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-021", "invalid result identity")
+  c = resultRead.cursor
+  let opcodeRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-022", "invalid opcode identity")
+  c = opcodeRead.cursor
+  let typeRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-023", "invalid instruction type identity")
+  c = typeRead.cursor
+  let operandRead = slideR1DecodeIntArray(bytes, c, 8, "SLIDE-R1-DECODE-024")
+  c = operandRead.cursor
+  let immediateRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-026", "invalid instruction immediate")
+  c = immediateRead.cursor
+  return {
+    cursor: c
+    value: {
+      resultId: resultRead.value
+      opcodeId: opcodeRead.value
+      typeId: typeRead.value
+      operands: operandRead.value.operands
+      immediate: immediateRead.value
+    }
+  }
+}
+
+pure flow slideR1DecodeTerminator(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+) -> SLIDER1TerminatorDecode
+contract { intent { "Decode one total R1 terminator without assigning control semantics." } }
+{
+  let shape = slideR1ReadArrayCount(
+    bytes, cursor, 2, "SLIDE-R1-DECODE-030", "terminator record is oversized",
+  )
+  mut c: SLIDER1ImportCursor = shape.cursor
+  if shape.value != 2 and c.ok {
+    c = slideR1ImportFailure(cursor.offset, "SLIDE-R1-DECODE-030", "terminator record must contain two fields")
+  }
+  let idRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-031", "invalid terminator identity")
+  c = idRead.cursor
+  let operandRead = slideR1DecodeIntArray(bytes, c, 8, "SLIDE-R1-DECODE-032")
+  c = operandRead.cursor
+  return {
+    cursor: c
+    value: { terminatorId: idRead.value operands: operandRead.value.operands }
+  }
+}
+
+pure flow slideR1DecodeBlock(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+) -> SLIDER1BlockDecode
+contract { intent { "Decode one bounded R1 block into independently owned records." } }
+{
+  let shape = slideR1ReadArrayCount(
+    bytes, cursor, 3, "SLIDE-R1-DECODE-036", "block record is oversized",
+  )
+  mut c: SLIDER1ImportCursor = shape.cursor
+  if shape.value != 3 and c.ok {
+    c = slideR1ImportFailure(cursor.offset, "SLIDE-R1-DECODE-036", "block record must contain three fields")
+  }
+  let idRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-037", "invalid block identity")
+  c = idRead.cursor
+  let countRead = slideR1ReadArrayCount(
+    bytes, c, 32, "SLIDE-R1-DECODE-038", "instruction count exceeds R1 ceiling",
+  )
+  c = countRead.cursor
+  mut instructions: Array<SLIDER1DecodedInstruction> = Array.empty()
+  mut i: Int = 0
+  while i < countRead.value and c.ok {
+    let decoded = slideR1DecodeInstruction(bytes, c)
+    c = decoded.cursor
+    if c.ok { instructions = instructions.append(decoded.value) }
+    i = i + 1
+  }
+  let terminatorRead = slideR1DecodeTerminator(bytes, c)
+  c = terminatorRead.cursor
+  return {
+    cursor: c
+    value: {
+      blockId: idRead.value
+      instructions: instructions
+      terminator: terminatorRead.value
+    }
+  }
+}
+
+pure flow slideR1DecodeFailure(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+) -> SLIDER1FailureDecode
+contract { intent { "Decode one declared R1 failure record." } }
+{
+  let shape = slideR1ReadArrayCount(
+    bytes, cursor, 5, "SLIDE-R1-DECODE-040", "failure record is oversized",
+  )
+  mut c: SLIDER1ImportCursor = shape.cursor
+  if shape.value != 5 and c.ok {
+    c = slideR1ImportFailure(cursor.offset, "SLIDE-R1-DECODE-040", "failure record must contain five fields")
+  }
+  let idRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-041", "invalid failure identity")
+  c = idRead.cursor
+  let classRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-041", "invalid failure class")
+  c = classRead.cursor
+  let visibilityRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-041", "invalid failure visibility")
+  c = visibilityRead.cursor
+  let retryRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-041", "invalid failure retry policy")
+  c = retryRead.cursor
+  let actionRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-041", "invalid failure action")
+  c = actionRead.cursor
+  return {
+    cursor: c
+    value: {
+      failureId: idRead.value
+      classId: classRead.value
+      visibilityId: visibilityRead.value
+      retryId: retryRead.value
+      actionId: actionRead.value
+    }
+  }
+}
+
+pure flow slideR1DecodeK3(
+  bytes: Bytes,
+  cursor: SLIDER1ImportCursor,
+) -> SLIDER1K3Decode
+contract { intent { "Decode one K3 obligation without trusting successor meaning." } }
+{
+  let shape = slideR1ReadArrayCount(
+    bytes, cursor, 6, "SLIDE-R1-DECODE-042", "K3 obligation is oversized",
+  )
+  mut c: SLIDER1ImportCursor = shape.cursor
+  if shape.value != 6 and c.ok {
+    c = slideR1ImportFailure(cursor.offset, "SLIDE-R1-DECODE-042", "K3 obligation must contain six fields")
+  }
+  let obligationRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid obligation identity")
+  c = obligationRead.cursor
+  let functionRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid function identity")
+  c = functionRead.cursor
+  let checkRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid check block")
+  c = checkRead.cursor
+  let allowRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid allow block")
+  c = allowRead.cursor
+  let denyRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid deny block")
+  c = denyRead.cursor
+  let unresolvedRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-043", "invalid indeterminate block")
+  c = unresolvedRead.cursor
+  return {
+    cursor: c
+    value: {
+      obligationId: obligationRead.value
+      functionId: functionRead.value
+      checkBlockId: checkRead.value
+      allowBlockId: allowRead.value
+      denyBlockId: denyRead.value
+      indeterminateBlockId: unresolvedRead.value
+    }
+  }
+}
+
+pure flow decodeSLIDER1Program(bytes: Bytes) -> SLIDER1ProgramImport
+contract {
+  intent { "Decode canonical SLIDE R1 bytes into an independent typed graph without semantic fix-up." }
+}
+{
+  if bytes.length() > 4096 {
+    return {
+      decision: slideR1ProgramDecision(
+        Verdict.Deny, "REFUSED", "SLIDE-R1-DECODE-005",
+        "R1 body exceeds the hard byte ceiling", 0,
+      )
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+
+  mut c: SLIDER1ImportCursor = { ok: true offset: 0 failureId: "NONE" reason: "" }
+  let rootRead = slideR1ReadCanonicalHead(bytes, c.offset, 5)
+  if rootRead.ok == false {
+    return {
+      decision: slideR1ProgramDecision(
+        Verdict.Deny, "REFUSED", rootRead.failureId, rootRead.reason, c.offset,
+      )
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+  if rootRead.value != 14 {
+    return {
+      decision: slideR1ProgramDecision(
+        Verdict.Deny, "REFUSED", "SLIDE-R1-DECODE-010",
+        "root map must contain exactly fourteen entries", c.offset,
+      )
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+  c = { ok: true offset: rootRead.nextOffset failureId: "NONE" reason: "" }
+
+  c = slideR1ExpectUInt(bytes, c, 0, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let majorRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-012", "invalid format major")
+  c = majorRead.cursor
+  c = slideR1ExpectUInt(bytes, c, 1, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let minorRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-012", "invalid format minor")
+  c = minorRead.cursor
+
+  c = slideR1ExpectUInt(bytes, c, 2, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  c = slideR1ExpectText(
+    bytes, c, "slide.semantic.galerina-gir.v1",
+    "SLIDE-R1-DECODE-013", "semantic profile mismatch",
+  )
+  c = slideR1ExpectUInt(bytes, c, 3, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  c = slideR1ExpectText(
+    bytes, c, "slide.digest.sha256.v1",
+    "SLIDE-R1-DECODE-014", "digest suite mismatch",
+  )
+  c = slideR1ExpectUInt(bytes, c, 4, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  c = slideR1ExpectText(
+    bytes, c, "slide.memory.safe-value.v1",
+    "SLIDE-R1-DECODE-015", "memory profile mismatch",
+  )
+  c = slideR1ExpectUInt(bytes, c, 5, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  c = slideR1ExpectText(
+    bytes, c, "slide_k3_checked_add_v1",
+    "SLIDE-R1-DECODE-016", "fixture identity mismatch",
+  )
+  c = slideR1ExpectUInt(bytes, c, 6, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  c = slideR1ExpectText(
+    bytes, c, "slide.fixture.k3-checked-add.v1",
+    "SLIDE-R1-DECODE-017", "stable symbol mismatch",
+  )
+
+  c = slideR1ExpectUInt(bytes, c, 7, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let qualifierRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-018", "invalid qualifier identity")
+  c = qualifierRead.cursor
+  c = slideR1ExpectUInt(bytes, c, 8, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let parameterRead = slideR1DecodeIntArray(bytes, c, 8, "SLIDE-R1-DECODE-019")
+  c = parameterRead.cursor
+  c = slideR1ExpectUInt(bytes, c, 9, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let resultRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-023", "invalid result type identity")
+  c = resultRead.cursor
+  c = slideR1ExpectUInt(bytes, c, 10, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let entryRead = slideR1ReadUInt(bytes, c, "SLIDE-R1-DECODE-035", "invalid entry block identity")
+  c = entryRead.cursor
+
+  c = slideR1ExpectUInt(bytes, c, 11, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let blockCountRead = slideR1ReadArrayCount(
+    bytes, c, 16, "SLIDE-R1-DECODE-036", "block count exceeds R1 ceiling",
+  )
+  c = blockCountRead.cursor
+  mut blocks: Array<SLIDER1DecodedBlock> = Array.empty()
+  mut blockIndex: Int = 0
+  while blockIndex < blockCountRead.value and c.ok {
+    let decoded = slideR1DecodeBlock(bytes, c)
+    c = decoded.cursor
+    if c.ok { blocks = blocks.append(decoded.value) }
+    blockIndex = blockIndex + 1
+  }
+
+  c = slideR1ExpectUInt(bytes, c, 12, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let failureCountRead = slideR1ReadArrayCount(
+    bytes, c, 16, "SLIDE-R1-DECODE-040", "failure count exceeds R1 ceiling",
+  )
+  c = failureCountRead.cursor
+  mut failures: Array<SLIDER1DecodedFailure> = Array.empty()
+  mut failureIndex: Int = 0
+  while failureIndex < failureCountRead.value and c.ok {
+    let decoded = slideR1DecodeFailure(bytes, c)
+    c = decoded.cursor
+    if c.ok { failures = failures.append(decoded.value) }
+    failureIndex = failureIndex + 1
+  }
+
+  c = slideR1ExpectUInt(bytes, c, 13, "SLIDE-R1-DECODE-011", "root key order mismatch")
+  let k3CountRead = slideR1ReadArrayCount(
+    bytes, c, 16, "SLIDE-R1-DECODE-042", "K3 obligation count exceeds R1 ceiling",
+  )
+  c = k3CountRead.cursor
+  mut obligations: Array<SLIDER1DecodedK3> = Array.empty()
+  mut k3Index: Int = 0
+  while k3Index < k3CountRead.value and c.ok {
+    let decoded = slideR1DecodeK3(bytes, c)
+    c = decoded.cursor
+    if c.ok { obligations = obligations.append(decoded.value) }
+    k3Index = k3Index + 1
+  }
+
+  if c.ok == false {
+    return {
+      decision: slideR1ProgramDecision(
+        Verdict.Deny, "REFUSED", c.failureId, c.reason, c.offset,
+      )
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+  if c.offset != bytes.length() {
+    return {
+      decision: slideR1ProgramDecision(
+        Verdict.Deny, "REFUSED", "SLIDE-R1-DECODE-044",
+        "trailing bytes after complete R1 body", c.offset,
+      )
+      program: emptySLIDER1DecodedProgram()
+    }
+  }
+
+  return {
+    decision: slideR1ProgramDecision(
+      Verdict.Allow, "DECODED", "NONE",
+      "canonical R1 bytes reconstructed into a typed program", c.offset,
+    )
+    program: {
+      formatMajor: majorRead.value
+      formatMinor: minorRead.value
+      semanticProfileId: "slide.semantic.galerina-gir.v1"
+      digestSuiteId: "slide.digest.sha256.v1"
+      memoryProfileId: "slide.memory.safe-value.v1"
+      fixtureName: "slide_k3_checked_add_v1"
+      stableSymbolId: "slide.fixture.k3-checked-add.v1"
+      qualifierId: qualifierRead.value
+      parameterTypeIds: parameterRead.value.operands
+      resultTypeId: resultRead.value
+      entryBlockId: entryRead.value
+      blocks: blocks
+      failures: failures
+      k3Obligations: obligations
+    }
+  }
+}
