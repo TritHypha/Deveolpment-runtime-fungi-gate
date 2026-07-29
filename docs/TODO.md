@@ -118,12 +118,13 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/reports/slide-v2b-nonce-k3-reference-2026-07-29.md`.
 - **Current:** replace generic evidence fixtures with real versioned
   artifact/Tower/Tri-Pipe/target adapters and specify the isolated broker plus
-  audit-before-success seam. The reference CAS is not a crash-consistent
+  audit-before-success seam. In parallel, begin the specified V2-C immutable
+  aggregate semantic increment; the reference CAS is not a crash-consistent
   production nonce store.
-- **Next:** add the versioned memory-object increment without widening frozen
-  R1; no lease reference, broker opcode, host handle, or dispatch may exist
-  before real receipt authenticity, production nonce state, broker isolation,
-  and audit gates pass.
+- **Next:** complete detached V2-C strings/bytes/arrays/records/variants before
+  V2-D memory objects. No lease reference, broker opcode, host handle, or
+  dispatch may exist before real receipt authenticity, production nonce
+  state, broker isolation, and audit gates pass.
 - **Verification:** compiler typecheck/build and 5,325/5,325 tests pass.
   Frozen R1 remains 27/27; V2-A is 28/28. Regenerated project graph:
   7,235 nodes / 7,495 edges, zero integrity
@@ -162,6 +163,10 @@ planning checkbox must never be used to imply that implementation exists.
   V2-A numeric IDs and ceilings:
   `../../triLowLevel-v2/20-V2-A-REGISTRY-V2.md`; first effect/capability
   increment: `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`.
+  Nonce/K3 gate:
+  `../../triLowLevel-v2/23-V2-B-NONCE-STATE-AND-K3-GATE.md`; next detached
+  aggregate increment:
+  `../../triLowLevel-v2/24-V2-C-IMMUTABLE-AGGREGATE-INCREMENT.md`.
 - **Integration map:** `../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
   records each Galerina keep/rebuild/integrate/optional/cut-after-gate action.
 - **Owner questions:** `../../SLIDE/QUESTIONS-FOR-OWNER.md`.

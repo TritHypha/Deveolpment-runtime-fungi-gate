@@ -83,7 +83,7 @@ Planning completion and implementation completion are deliberately separate.
 | `.fungi` control-flow standard | `IMPLEMENTED-PARTIAL` | Standard documented; 19 auth-service examples strict-check with 0 errors/0 governance warnings | Add a flow/block-aware compiler lint; bootstrap language decision is open |
 | Existing Galerina GIR | `IMPLEMENTED-PARTIAL` | `GIRProgram`, `GIRFlow`, `GIRExpr`, hashes, effects, plans, and metadata exist | Replace summary/partial bodies with detached executable semantics |
 | R1 executable GIR contract | `IMPLEMENTED-PARTIAL` | Exact typed-ID export, vector validator, independent reconstruction, closed-registry CFG/SSA/type/failure/K3 validation, semantic digest, and instruction-driven fresh-process execution | Generalize functions, CFG, memory, budgets, effects and capabilities without an AST/default fallback |
-| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A logical records, semantic admission, registry binding, canonical body, independent typed import, hostile byte mutations, digest, budget enforcement, and instruction-driven call/branch/join/K3 execution | Versioned effect/capability and memory increments |
+| V2 executable GIR | `IMPLEMENTED-PARTIAL` | V2-A detached graph/runtime plus non-authorizing V2-B capability/lease/nonce evidence reference | Implement detached V2-C immutable aggregates, then V2-D memory; integrate real V2-B receipt/broker adapters separately |
 | V2-B effect/capability | `IMPLEMENTED-PARTIAL` | Exact request/lease/canonical-signing gates; reference hybrid verifier; pure nonce transition; single-process reference CAS with independent state decode; typed receipt validation; exhaustive seven-input K3 shape composition; all success remains non-authorizing | Real producer/verifier adapters, independent crypto and crash-consistent nonce store, isolated broker, audit-before-success, then authority integration |
 | AST independence | `IMPLEMENTED-PARTIAL` | Frozen R1 fixture decodes, validates, hashes and executes in a fresh process without source, AST, encoder, WAT or Wasm | Remove every post-GIR AST lookup for the general Galerina frontend |
 | Galerina frontend receipt | `SPECIFIED` | Canonical materialize-once receipt and verification algorithm documented | Implement producer plus independent TLL re-derivation/verification |
@@ -426,8 +426,8 @@ Safe work that does not require an owner choice:
 
 1. keep all SLIDE documentation synchronized with this ledger;
 2. retain frozen R1 as a permanent conformance baseline;
-3. replace generic V2-B evidence shapes with real receipt adapters and specify
-   the isolated broker/audit-before-success implementation seam;
+3. begin detached V2-C immutable aggregates while separately replacing generic
+   V2-B evidence shapes with real receipt adapters;
 4. preserve the unresolved historic nesting-source question without
    overstating the current minimal regression;
 5. keep the current Wasm path green as the factual implementation baseline.
