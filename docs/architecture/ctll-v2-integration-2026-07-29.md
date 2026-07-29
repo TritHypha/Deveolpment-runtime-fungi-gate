@@ -112,12 +112,13 @@ Galerina diagnostic codes remain `FUNGI-*`/`GALERINA-*`. CTLL owns `TLL-*` and
 | Component | CTLL v2 role |
 |---|---|
 | Tower Citizen | Bounded identity, workload, and authority lease at admission/runtime boundaries |
-| Tri-Pipe | Typed, backpressured transport of artifacts, evidence, events, and terminal outcomes |
-| Tri-Fuse | Deterministic fusion of compatible action-graph nodes after proof-preserving equivalence checks |
+| Tri-Pipe | Produces a typed candidate execution route and transports artifacts, evidence, events, and terminal outcomes; it does not admit its own proposal |
+| Tri-Fuse | Backend-neutral K3 obligation discharge: prove ALLOW/DENY or retain a residual runtime gate; it grants no deployment/runtime authority |
 | WAT emitters | Retained for the current WebAssembly target and differential oracle; not the CTLL-native core |
 | Machine Profile Bridge | Source of candidate observations only; CTLL admission independently verifies target facts |
 
-Tri-Fuse must not fuse across trust boundaries, side effects, failure exits,
+Any later action-node fusion remains a separate proof-preserving build-graph
+optimization. It must not cross trust boundaries, side effects, failure exits,
 memory-profile boundaries, K3 collapse points, audit obligations, or
 nondeterministic operations.
 
@@ -152,8 +153,9 @@ CTLL becomes an eligible production target only after:
 - memory-profile negative tests fail closed before native execution;
 - post-optimisation and final-artifact verification bind to admission evidence;
 - deterministic clean and cached builds produce equivalent artifacts;
-- the current WebAssembly path remains available as a differential and fallback
-  until an explicit retirement decision.
+- the current WebAssembly path remains available as a differential and
+  separately admitted alternative until an explicit retirement decision; it
+  is never a silent fallback inside a failed native admission.
 
 ## Planning sources
 
@@ -163,4 +165,7 @@ CTLL becomes an eligible production target only after:
 - `../../../triLowLevel-v2/12-LINUX-DRIVER-CLI.md`
 - `../../../triLowLevel-v2/13-INDEPENDENT-PLATFORM.md`
 - `../../../triLowLevel-v2/14-IMPLEMENTATION-BLUEPRINT.md`
+- `../../../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`
+- `../../../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`
+- `../../../triLowLevel-v2/17-FIRST-VERTICAL-SLICE.md`
 - `../../../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`

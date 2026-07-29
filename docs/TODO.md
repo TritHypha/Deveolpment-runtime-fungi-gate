@@ -36,7 +36,13 @@ frontend.
   `../triLowLevel-v2/QUESTIONS-FOR-OWNER.md`.
 - [ ] Finish detached executable GIR: full bodies, control flow, memory,
   failure, effect, capability, K3-collapse, and source-map semantics.
-- [ ] Define and version the public Galerina-to-CTLL frontend receipt.
+- [x] Draft the implementable R1 executable-GIR subset, validator order,
+  mutation corpus, and exit gate in
+  `../triLowLevel-v2/15-EXECUTABLE-GIR-V1.md`; implementation remains pending.
+- [x] Define and version the proposed public Galerina-to-CTLL frontend receipt
+  in `../triLowLevel-v2/16-GALERINA-FRONTEND-RECEIPT.md`.
+- [ ] Owner-confirm the recommended checked-Int/exhaustive-K3 fixture in
+  `../triLowLevel-v2/17-FIRST-VERTICAL-SLICE.md`.
 - [ ] Implement the first vertical slice in `.fungi`; do not add `.gate` work
   in this lane.
 - [ ] Build memory-profile negative fixtures before enabling native execution.
