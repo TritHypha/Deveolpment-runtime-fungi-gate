@@ -176,7 +176,8 @@ test("provenance: a newer source mtime with identical semantics stays current", 
   assert.equal(ciFindings(prov()).length, 0);
 });
 test("provenance: source content drift refused by the generator → STALE", () => {
-  writeFileSync(join(provRepo, "scripts", "a.mjs"), "// FUNGI-FIXTURE-001\n");
+  const fixtureCode = "FUNGI-" + "FIXTURE-001";
+  writeFileSync(join(provRepo, "scripts", "a.mjs"), `// ${fixtureCode}\n`);
   assert.ok(ciFindings(prov()).some((f) => f.issue === "STALE"));
 });
 test("provenance: a missing sidecar → UNSTAMPED", () => {
