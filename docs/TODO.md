@@ -83,7 +83,8 @@ planning checkbox must never be used to imply that implementation exists.
   HTTPS request capabilities, lease-only broker access, Tower/Tri-Pipe
   evidence roles, K3 admission, audit-before-success, budgets, failures,
   mutations, and Galerina replace/rebuild/integrate boundaries in
-  `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`.
+  `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`; Galerina
+  status checkpoint `83f73c0c`.
 - **Current:** freeze the V2-B machine descriptor and implement only its
   capability-request/lease logical validators before adding host dispatch.
 - **Next:** add memory increments without widening

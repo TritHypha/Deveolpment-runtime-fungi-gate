@@ -451,6 +451,7 @@ The current branch contains these SLIDE-related checkpoints:
 | `7f9e335e` | Independently decode, validate, and bind canonical V2-A bytes |
 | `95fac461` | Instruction-drive the independently admitted V2-A graph |
 | `6a10ae06` | Enforce caller-capped V2-A execution budgets |
+| `83f73c0c` | Specify the V2-B lease-only effect/capability boundary |
 | `0f2f7c6a` | Harden SLIDE G1 runtime boundaries and add the capability probe |
 | `ab3de224` | Add the bounded SLIDE R1 preflight kernel |
 | `66c39b31` | Carry exact K3 through the self-hosted GIR/runtime |
