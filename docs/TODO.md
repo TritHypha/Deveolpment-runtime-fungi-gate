@@ -85,7 +85,7 @@ planning checkbox must never be used to imply that implementation exists.
   mutations, and Galerina replace/rebuild/integrate boundaries in
   `../../triLowLevel-v2/21-V2-B-EFFECT-CAPABILITY-INCREMENT.md`; Galerina
   status checkpoint `83f73c0c`.
-- **Completed (uncommitted checkpoint):** froze the V2-B capability and three
+- **Completed:** local commit `97fcf116` freezes the V2-B capability and three
   resource descriptors, then implemented a `.fungi` request-set shape gate.
   It binds exact database/HTTPS/audit scope and ceilings, reports
   `SHAPE_VALIDATED`, and always keeps `authorityReleased: false`. Focused
@@ -109,7 +109,8 @@ planning checkbox must never be used to imply that implementation exists.
 - **Latest V2-B verification:** compiler 5,332/5,332 across 1,179 suites;
   graph 7,242 nodes / 7,501 edges; zero integrity or KB-link violations;
   Hardened Border 97/97; explicit memory graph clean; dev-tool index
-  97 packages / 124 tools / 40 proofs.
+  97 packages / 124 tools / 40 proofs. Post-commit Myco indexes 4,096 files
+  with zero over-size skips.
 - **Stop gates:** no encoder/AST/default graph fallback; no LLVM, native,
   container-signing, or driver work before semantic and memory validation.
 - **Plan/data:** `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`,
