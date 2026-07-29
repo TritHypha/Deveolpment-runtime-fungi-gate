@@ -14,14 +14,19 @@
 //         node scripts/gen-contract-registry.mjs --self-test (anti-vacuous: prove it extracts a contract)
 // =============================================================================
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { join, dirname, relative } from "node:path";
+import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
+import { provenance } from "./lib/provenance.mjs";
 
 /** Resolve current git SHA (short), or "unknown" when not in a git repo / git unavailable. */
-function gitSha() {
+function gitSha(root) {
   try {
-    return execSync("git rev-parse --short HEAD", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    return execFileSync(
+      "git",
+      ["rev-parse", "--short", "HEAD"],
+      { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
   } catch {
     return "unknown";
   }
@@ -33,12 +38,16 @@ function gitSha() {
  * commit date (deterministic given the commit the `sha` field already pins) → wall-clock (non-git fallback).
  * A real source change still moves `sha` + the commit date, so legitimate regens still differ.
  */
-function deterministicTimestamp() {
+function deterministicTimestamp(root) {
   const sde = process.env.SOURCE_DATE_EPOCH;
   let epoch = sde && /^\d+$/.test(sde) ? Number(sde) : NaN;
   if (!Number.isFinite(epoch)) {
     try {
-      epoch = Number(execSync("git show -s --format=%ct HEAD", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim());
+      epoch = Number(execFileSync(
+        "git",
+        ["show", "-s", "--format=%ct", "HEAD"],
+        { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+      ).trim());
     } catch {
       epoch = NaN;
     }
@@ -46,7 +55,41 @@ function deterministicTimestamp() {
   return Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString() : new Date().toISOString();
 }
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+/**
+ * Parse one explicit repository root and one generator mode. Unknown,
+ * duplicated, or incomplete arguments refuse instead of selecting ambient
+ * authority accidentally.
+ */
+function parseArgs(argv) {
+  let root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  let rootSeen = false;
+  let mode = "generate";
+  let modeSeen = false;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--root") {
+      if (rootSeen || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
+        throw new Error("contract-registry: --root requires exactly one path");
+      }
+      root = resolve(argv[++i]);
+      rootSeen = true;
+      continue;
+    }
+    if (arg === "--check" || arg === "--self-test") {
+      if (modeSeen) {
+        throw new Error("contract-registry: select exactly one mode");
+      }
+      mode = arg.slice(2);
+      modeSeen = true;
+      continue;
+    }
+    throw new Error(`contract-registry: unknown argument ${arg}`);
+  }
+  return { root, mode };
+}
+
+const OPTIONS = parseArgs(process.argv.slice(2));
+const ROOT = OPTIONS.root;
 const COMPILER = join(ROOT, "packages-galerina/galerina-core-compiler/dist/index.js");
 const OUT_DIR = join(ROOT, "docs/contract-registry");
 const SKIP = new Set(["node_modules", "dist", "build", ".git", ".graph", ".galerina"]);
@@ -164,7 +207,7 @@ function render({ rows, files, parsed, parseFail }) {
 }
 
 // ── modes ──
-if (process.argv.includes("--self-test")) {
+if (OPTIONS.mode === "self-test") {
   const { rows } = await collect();
   const sample = rows.find((r) => r.name === "admitVerdict" && r.file.includes("registry-index"));
   const ok = rows.length > 100 && sample && sample.intent.length > 0 && sample.qualifier === "pure";
@@ -173,12 +216,9 @@ if (process.argv.includes("--self-test")) {
 }
 
 const data = await collect();
-const sha = gitSha();
-const generatedAt = deterministicTimestamp();
+const sha = gitSha(ROOT);
+const generatedAt = deterministicTimestamp(ROOT);
 const md = render(data);
-// --check compares only the human doc (md), NOT the json — the json embeds `sha` (generation-HEAD),
-// which differs from the post-commit HEAD. `generatedAt` is now deterministic per commit (#133), so the
-// only cross-commit variance left is `sha`. The stale check is: "does a re-run produce the same flow list?"
 const jsonPayload = {
   generatedBy: "gen-contract-registry.mjs",
   generatedAt,
@@ -187,24 +227,30 @@ const jsonPayload = {
   parsed: data.parsed,
   rows: data.rows,
 };
-const json = JSON.stringify(jsonPayload, null, 2);
+const json = JSON.stringify(jsonPayload, null, 2) + "\n";
+const provenanceJson = JSON.stringify(
+  provenance("gen-contract-registry", ROOT),
+  null,
+  2,
+) + "\n";
 const mdPath = join(OUT_DIR, "CONTRACT_REGISTRY.md");
 const jsonPath = join(OUT_DIR, "contract-registry.json");
+const provenancePath = join(OUT_DIR, "provenance.json");
 
-if (process.argv.includes("--check")) {
-  // Stale check: re-generate and compare only the Markdown (deterministic given the same source).
-  // The JSON's `sha` reflects generation-HEAD (differs after commit), so we compare only the flow list length + md.
-  const stale = !existsSync(mdPath) || readFileSync(mdPath, "utf8") !== md;
-  if (stale) {
-    console.log("❌ contract-registry: on-disk doc is STALE — run `node scripts/gen-contract-registry.mjs`");
+if (OPTIONS.mode === "check") {
+  const expected = new Map([
+    [mdPath, md],
+    [jsonPath, json],
+    [provenancePath, provenanceJson],
+  ]);
+  const stale = [...expected.entries()]
+    .filter(([path, bytes]) => !existsSync(path) || readFileSync(path, "utf8") !== bytes)
+    .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
+  if (stale.length > 0) {
+    console.log(
+      `❌ contract-registry: missing or stale output(s): ${stale.join(", ")} — run \`node scripts/gen-contract-registry.mjs\``,
+    );
     process.exit(1);
-  }
-  // Also verify the JSON sha field matches HEAD (catches a re-run that was never committed).
-  let onDiskSha = "unknown";
-  try { onDiskSha = JSON.parse(readFileSync(jsonPath, "utf8")).sha ?? "unknown"; } catch { /* absent */ }
-  if (onDiskSha !== sha && sha !== "unknown") {
-    console.log(`⚠  contract-registry: JSON was generated at ${onDiskSha}, HEAD is ${sha} — consider regenerating`);
-    // Warning only, not a failure — the Markdown is the normative artifact.
   }
   console.log(`✅ contract-registry: up to date (${data.rows.length} contracts, sha ${sha})`);
   process.exit(0);
@@ -213,4 +259,5 @@ if (process.argv.includes("--check")) {
 if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(mdPath, md);
 writeFileSync(jsonPath, json);
+writeFileSync(provenancePath, provenanceJson);
 console.log(`✅ contract-registry: ${data.rows.length} contracts across ${data.parsed} .fungi → docs/contract-registry/CONTRACT_REGISTRY.md + .json (sha ${sha})`);

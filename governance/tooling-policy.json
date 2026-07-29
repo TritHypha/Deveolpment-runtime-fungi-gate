@@ -97,6 +97,33 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/gen-contract-registry.mjs": {
+      "inputs": [
+        "docs",
+        "examples",
+        "packages-galerina",
+        "scripts/gen-contract-registry.mjs",
+        "scripts/lib/provenance.mjs",
+        "tests"
+      ],
+      "outputs": [
+        "docs/contract-registry/CONTRACT_REGISTRY.md",
+        "docs/contract-registry/contract-registry.json",
+        "docs/contract-registry/provenance.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/gen-contract-registry.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/gen-contract-registry.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/gen-status-blocks.mjs": {
       "inputs": [
         "AGENTS.md",

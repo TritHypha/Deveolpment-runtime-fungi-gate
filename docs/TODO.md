@@ -222,7 +222,26 @@ planning checkbox must never be used to imply that implementation exists.
   hand-derived twin/compiler partition. Its focused test is 1/1, the live
   self-test is 4/4, the combined affected suite is 27/27, and the live audit
   passes 5/5 in about 30.6 seconds.
-- **Task 7 remains incomplete:** seven named root generators plus explicit
+- **Task 7 sixth live generator:** `gen-contract-registry.mjs` now takes one
+  fail-closed `--root`, derives parser-authoritative Markdown, JSON, and
+  required provenance for that selected root, and makes `--check` compare all
+  three exact artifacts without writing. Its isolated fixture keeps the
+  generator harness separate from the selected corpus, proves one
+  hand-derived contract, and refuses machine-artifact and provenance
+  tampering. The focused test is 1/1, the live anti-vacuous self-test finds
+  1,331 contracts, the combined affected suite is 28/28, and the live audit
+  passes 6/6.
+- **New architecture handover intake:** the owner-supplied
+  `SLIDE/docs/NESTING-AND-XOR-DECISION.md` is consistent with the recorded
+  K3/XOR boundary and retains the exact historical
+  `while -> if -> if -> while` mutation regression. The two supplied root
+  paths for RD-0580/RD-0581 resolve under `ZTF-Knowledge-Bases/`; both are
+  advisory, read-only handovers rather than implementation authority.
+  RD-0580 reiterates that WAT/Wasm is demoted only after replacement evidence,
+  not deleted, while RD-0581 adds a partial named-component inventory and
+  makes the one-canonical-K3-binding obligation explicit. Re-verify every
+  cited Galerina source fact before acting; preserve both untracked KB files.
+- **Task 7 remains incomplete:** six named root generators plus explicit
   project/package graph generation remain undeclared. Next resume: adapt the
   simple generators incrementally, then handle the external knowledge-base
   output and `graph-all`'s dynamic package boundary set without a wildcard or
