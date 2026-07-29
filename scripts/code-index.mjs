@@ -10,9 +10,10 @@
 import { readdirSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { extractCodes, CODE_TEST, familyOf, nsOf } from "./lib/codes.mjs";
-import { writeProvenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
+import { provenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 
 const ROOT = process.cwd();
+const CHECK = process.argv.includes("--check");
 const SCAN = ["packages-galerina", "docs", "scripts"].map((d) => join(ROOT, d));
 const OUT = join(ROOT, "build", "code-index");
 const EXT = /\.(ts|mjs|cjs|fungi|md)$/;
@@ -30,6 +31,29 @@ function walk(dir) {
     else if (EXT.test(d.name) && !d.name.endsWith(".d.ts")) out.push(p);
   }
   return out;
+}
+
+/**
+ * Write generated content, or compare it without writing in `--check` mode.
+ * Missing or byte-drifted output leaves the process non-zero.
+ */
+function emitOutput(path, content) {
+  if (!CHECK) {
+    writeFileSync(path, content);
+    return;
+  }
+  let actual;
+  try {
+    actual = readFileSync(path, "utf8");
+  } catch {
+    console.error(`code-index: missing generated output ${relative(ROOT, path).replace(/\\/g, "/")}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (actual !== content) {
+    console.error(`code-index: generated output drift ${relative(ROOT, path).replace(/\\/g, "/")}`);
+    process.exitCode = 1;
+  }
 }
 
 const idx = new Map(); // code -> { occ:[{file,line,role}], names:Set, sevs:Set }
@@ -226,8 +250,8 @@ const codes = [...idx.entries()]
   };
 }).sort((a, b) => a.code.localeCompare(b.code));
 
-mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, "code-index.json"), JSON.stringify(codes, null, 2));
+if (!CHECK) mkdirSync(OUT, { recursive: true });
+emitOutput(join(OUT, "code-index.json"), JSON.stringify(codes, null, 2));
 
 // markdown (browsable map): grouped by family
 const byFam = new Map();
@@ -242,8 +266,11 @@ for (const fam of [...byFam.keys()].sort()) {
   }
   md.push("");
 }
-writeFileSync(join(OUT, "CODE_INDEX.md"), md.join("\n"));
-writeProvenance(OUT, "code-index"); // BLD-003 / #216
+emitOutput(join(OUT, "CODE_INDEX.md"), md.join("\n"));
+emitOutput(
+  join(OUT, "provenance.json"),
+  JSON.stringify(provenance("code-index", ROOT), null, 2) + "\n",
+);
 
 // stdout summary (concise — don't pull the whole index into context)
 const nNoDef = codes.filter((c) => c.defs.length === 0 && c.emits.length > 0).length;
@@ -252,4 +279,4 @@ const srcCodes = codes.filter((c) => !c.docOnly);
 const docOnly = codes.filter((c) => c.docOnly);
 console.log(`code-index: ${codes.length} total = ${srcCodes.length} src-real + ${docOnly.length} doc-only/phantom · ${srcCodes.filter((c) => c.namespace === "FUNGI").length} FUNGI-src, ${srcCodes.filter((c) => c.namespace === "ERR").length} ERR-src · ${[...byFam.keys()].length} families`);
 console.log(`  inline (emit, no exported const): ${nNoDef}   defined-but-never-emitted/tested: ${nDeadDef}   doc-only/phantom codes: ${docOnly.length}`);
-console.log(`  -> build/code-index/CODE_INDEX.md + code-index.json`);
+console.log(`  -> ${CHECK ? "checked" : "wrote"} build/code-index/CODE_INDEX.md + code-index.json + provenance.json`);

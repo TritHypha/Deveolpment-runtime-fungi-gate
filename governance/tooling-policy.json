@@ -8,5 +8,30 @@
     }
   },
   "toolExceptions": {},
-  "generators": {}
+  "generators": {
+    "scripts/code-index.mjs": {
+      "inputs": [
+        "packages-galerina",
+        "docs",
+        "scripts"
+      ],
+      "outputs": [
+        "build/code-index/CODE_INDEX.md",
+        "build/code-index/code-index.json",
+        "build/code-index/provenance.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/code-index.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/code-index.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    }
+  }
 }

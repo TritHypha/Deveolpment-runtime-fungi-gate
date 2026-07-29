@@ -284,6 +284,12 @@ if (!options.json) console.log("══ Galerina phase-close cadence ══");
 run("tests:core", "node", ["scripts/run-all-tests.cjs", "--core"]);
 run("audit:tooling-contract", "node", ["scripts/audit-tooling-contract.mjs"]);
 run(
+  "audit:generator-contract",
+  "node",
+  ["scripts/audit-generator-contract.mjs", "--tier", options.tier],
+  { timeout: 600_000 },
+);
+run(
   "tests:benchmark-integrity",
   "npm",
   ["test"],

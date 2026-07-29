@@ -172,13 +172,24 @@ planning checkbox must never be used to imply that implementation exists.
   `--check`), canonical policy validation, exact fixture write-set checking,
   second-run semantic idempotence, required-provenance refusal, and a
   non-mutating check-command gate. The RED import failure and four behavior
-  failures were observed; the focused suite is now 4/4. This is infrastructure
-  only: `governance/tooling-policy.json` still declares zero live generators,
-  `audit-generator-contract.mjs` does not yet exist, and no legacy generator
-  has yet gained its required non-writing deterministic mode. Next resume:
-  inventory exact inputs/outputs for every Task 7 generator, adapt the simple
-  generators first, then handle external memory output and graph-all's dynamic
-  package boundary set without using a wildcard or hidden exception.
+  failures were observed before the core reached 4/4.
+- **Task 7 first live generator:** `audit-generator-contract.mjs` now refuses
+  empty/vacuous policy, propagates an undeclared child write, aggregates exact
+  child results, and has a hermetic negative/control `--self-test`.
+  `code-index.mjs --check` compares its JSON, Markdown, and provenance bytes
+  without writing; a focused fixture proves missing and tampered output both
+  refuse. Live policy declares its three scan roots and three exact outputs.
+  The combined Task 7 suite is 9/9, the audit self-test passes both directions,
+  and the live audit passes 1/1 after two deterministic generations plus a
+  non-mutating check. Phase-close now invokes the generator audit with its
+  selected tier; the tooling contract is 12/12 and confirms the new audit is
+  disposed rather than increasing the intentional uncovered-tool red set
+  (still 21, owned by Task 8).
+- **Task 7 remains incomplete:** eleven named root generators plus explicit
+  project/package graph generation remain undeclared. Next resume: adapt the
+  simple generators incrementally, then handle the external knowledge-base
+  output and `graph-all`'s dynamic package boundary set without a wildcard or
+  hidden exception.
 - **Preserved working state:** the live close refreshed `AGENTS.md` and
   generated code-index, code-registry, coverage, dev-tool-index, and graph
   outputs. They remain deliberately uncommitted for Task 9's deterministic
