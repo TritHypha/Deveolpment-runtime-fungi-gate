@@ -1,0 +1,610 @@
+@version 1
+/// @file: slide-gfrontend-public-candidate.fungi
+/// @purpose: Materialize one bounded G4 semantic body plus independently verified frontend receipt.
+/// @status: G4-B bounded public seam; producer evidence and authority remain absent.
+
+record SLIDEG4FrontendCandidate {
+  decision: SLIDEV2DExecutableDecision
+  materialized: Bool
+  semanticBody: Bytes
+  semanticDigest: String
+  frontendReceiptBody: Bytes
+  frontendReceiptDigest: String
+  producerEvidencePresent: Bool
+  authorityReleased: Bool
+}
+
+pure flow refuseSLIDEG4FrontendCandidate(
+  failureId: String,
+  detail: String,
+) -> SLIDEG4FrontendCandidate
+contract { intent { "Refuse the public G4 seam without any partial artifact or authority." } }
+{
+  return {
+    decision: refuseSLIDEV2DExecutable(failureId, detail)
+    materialized: false semanticBody: Bytes.empty() semanticDigest: ""
+    frontendReceiptBody: Bytes.empty() frontendReceiptDigest: ""
+    producerEvidencePresent: false authorityReleased: false
+  }
+}
+
+pure flow slideG4SourceExact(sourceText: String) -> Bool
+contract { intent { "Pin the normalized G4 source bytes without ambient path identity." } }
+{
+  let bytes = sourceText.encode()
+  if bytes.length() != 1641 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+    return false
+  }
+  return bytes.sha256Hex() == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+}
+
+pure flow slideG4FunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan
+contract { intent { "Return the exact normalized G4 source span for one function." } }
+{
+  match functionId {
+    1 => { return { startByte: 142, endByte: 310 } }
+    2 => { return { startByte: 310, endByte: 835 } }
+    3 => { return { startByte: 835, endByte: 1641 } }
+    _ => { return { startByte: 0, endByte: 0 } }
+  }
+}
+
+pure flow materializeSLIDEG4SourceMappings(
+  program: SLIDEV2DExecutableProgram,
+) -> Array<SLIDEV2ESourceMapEntry>
+contract { intent { "Map every frozen V2-D instruction and terminator to one exact G4 function span." } }
+{
+  mut mappings: Array<SLIDEV2ESourceMapEntry> = Array.empty()
+  mut mapId: Int = 1
+  mut functionIndex: Int = 0
+  while functionIndex < program.functions.count() {
+    let function = slideV2AFunctionAt(program.functions, functionIndex)
+    let span = slideG4FunctionSpan(function.functionId)
+    if span.endByte <= span.startByte { return Array.empty() }
+    mut blockIndex: Int = 0
+    while blockIndex < function.blocks.count() {
+      let block = slideV2ABlockAt(function.blocks, blockIndex)
+      mut instructionIndex: Int = 0
+      while instructionIndex < block.instructions.count() {
+        let instruction = slideV2AInstructionAt(
+          block.instructions, instructionIndex,
+        )
+        mappings = mappings.append({
+          mapId: mapId functionId: function.functionId blockId: block.blockId
+          nodeKindId: 1 nodeId: instruction.resultId sourceUnitId: 1
+          startByte: span.startByte endByte: span.endByte
+        })
+        mapId = mapId + 1
+        instructionIndex = instructionIndex + 1
+      }
+      mappings = mappings.append({
+        mapId: mapId functionId: function.functionId blockId: block.blockId
+        nodeKindId: 2 nodeId: block.terminator.terminatorId sourceUnitId: 1
+        startByte: span.startByte endByte: span.endByte
+      })
+      mapId = mapId + 1
+      blockIndex = blockIndex + 1
+    }
+    functionIndex = functionIndex + 1
+  }
+  return mappings
+}
+
+pure flow materializeSLIDEG4FrontendEvidence(
+  sourceText: String,
+  fixture: SLIDEG4FixtureCandidate,
+  expected: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EFrontendEvidence
+contract { intent { "Bind exact G4 source, semantic bytes, maps, plans, and caller-owned external expectations." } }
+{
+  if slideG4SourceExact(sourceText) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-001", "raw G4 source bytes or edition refused",
+    )
+  }
+  check(fixture.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        fixture.decision.failureId, fixture.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-005", "bounded source-to-semantic derivation unresolved",
+      )
+    }
+    if: {}
+  }
+  if fixture.materialized == false or fixture.semanticBody.length() != 791 or fixture.authorityReleased {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-005", "bounded semantic candidate is incomplete",
+    )
+  }
+  if slideV2EAllExternalDigestsShaped(
+    expected.compilerArtifactDigest, expected.diagnosticSetDigest,
+    expected.corpusDigest, expected.vectorSetDigest,
+    expected.buildActionRootDigest, expected.toolchainLockDigest,
+    expected.environmentContractDigest,
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "external evidence digest shape refused",
+    )
+  }
+
+  let imported = decodeSLIDEV2DProgram(fixture.semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "semantic body import refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "semantic body import unresolved",
+      )
+    }
+    if: {}
+  }
+  let sourceBytes = sourceText.encode()
+  let source: SLIDEV2ESourceUnit = {
+    sourceUnitId: 1 logicalName: "fixtures/slide-g4-checked-source.fungi"
+    sourceText: sourceText sourceByteLength: sourceBytes.length()
+    sourceBytesDigest: sourceBytes.sha256Hex()
+  }
+  let mappings = materializeSLIDEG4SourceMappings(imported.program)
+  if mappings.count() != 40 {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-006", "complete G4 source mapping was not derived",
+    )
+  }
+  let sourceSetBytes = slideV2ECBORSourceSet(source)
+  let sourceMapBytes = slideV2ECBORSourcemap(mappings)
+  if sourceSetBytes.isEmpty() or sourceMapBytes.isEmpty() {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-006", "canonical G4 source evidence unavailable",
+    )
+  }
+  let receipt: SLIDEV2EFrontendReceipt = {
+    receiptMajor: 1 receiptMinor: 0
+    receiptProfileId: "slide.frontend.galerina.g4.fixture.v1"
+    receiptRoleId: "FRONTEND_EVIDENCE"
+    digestSuiteId: "slide.digest.sha256.v1"
+    producerId: "galerina.frontend.reference"
+    producerVersion: "1.0.0-beta.2"
+    compilerArtifactDigest: expected.compilerArtifactDigest
+    frontendProfileId: "galerina.frontend.slide.g4.fixture"
+    sourceLanguageEdition: "fungi.v1"
+    authoritativeCheckProfileId: "galerina.check.bounded-shape.v1"
+    sourceSetDigest: slideV2EDomainDigest(
+      "slide.frontend.source-set.v1", sourceSetBytes,
+    )
+    diagnosticSetDigest: expected.diagnosticSetDigest
+    sourceMapDigest: slideV2EDomainDigest(
+      "slide.frontend.source-map.v1", sourceMapBytes,
+    )
+    semanticArchiveMediaType: "application/vnd.slide.executable-gir+cbor"
+    semanticBodyDigest: fixture.semanticBodyDigest
+    semanticDigest: fixture.semanticDigest
+    semanticProfileId: imported.program.semanticProfileId
+    registrySetId: imported.program.registrySetId
+    registrySetDigest: imported.program.registrySetDigest
+    memoryProfileId: imported.program.memoryProfileId
+    plans: deriveSLIDEV2EPlanDigests(fixture.semanticBody)
+    corpusDigest: expected.corpusDigest
+    vectorSetDigest: expected.vectorSetDigest
+    buildActionRootDigest: expected.buildActionRootDigest
+    toolchainLockDigest: expected.toolchainLockDigest
+    environmentContractDigest: expected.environmentContractDigest
+    deterministic: true nativeCertificatePresent: false
+    authorityReleased: false
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "G4_FRONTEND_EVIDENCE_MATERIALIZED"
+      failureId: "NONE"
+      detail: "bounded source, semantics, mappings, and plans materialized"
+      authorityReleased: false
+    }
+    materialized: true receipt: receipt sourceUnits: Array.of(source)
+    sourceMappings: mappings authorityReleased: false
+  }
+}
+
+pure flow validateSLIDEG4FrontendEvidence(
+  evidence: SLIDEV2EFrontendEvidence,
+  sourceText: String,
+  semanticBody: Bytes,
+  expected: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EFrontendEvidence
+contract { intent { "Independently re-derive the bounded G4 source, semantic, map, plan, and external bindings." } }
+{
+  if evidence.materialized == false or evidence.authorityReleased {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "producer evidence is incomplete or authorizing",
+    )
+  }
+  if slideG4SourceExact(sourceText) == false or evidence.sourceUnits.count() != 1 {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-001", "independent G4 source validation refused",
+    )
+  }
+  let source = slideV2ESourceUnitAt(evidence.sourceUnits, 0)
+  let sourceBytes = sourceText.encode()
+  let sourceExact: Bool = source.sourceUnitId == 1 and source.logicalName == "fixtures/slide-g4-checked-source.fungi" and source.sourceText == sourceText and source.sourceByteLength == 1641 and source.sourceBytesDigest == sourceBytes.sha256Hex()
+  if sourceExact == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-001", "source-unit binding mismatch",
+    )
+  }
+
+  let imported = decodeSLIDEV2DProgram(semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "independent semantic import refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "independent semantic import unresolved",
+      )
+    }
+    if: {}
+  }
+  let binding = bindSLIDEV2DSemanticDigest(semanticBody)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "independent semantic digest refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EFrontendEvidence(
+        "SLIDE-GFRONT-007", "independent semantic digest unresolved",
+      )
+    }
+    if: {}
+  }
+  let receipt = evidence.receipt
+  let identity: Bool = receipt.receiptMajor == 1 and receipt.receiptMinor == 0 and receipt.receiptProfileId == "slide.frontend.galerina.g4.fixture.v1" and receipt.receiptRoleId == "FRONTEND_EVIDENCE" and receipt.digestSuiteId == "slide.digest.sha256.v1"
+  let producer: Bool = receipt.producerId == "galerina.frontend.reference" and receipt.producerVersion == "1.0.0-beta.2" and receipt.frontendProfileId == "galerina.frontend.slide.g4.fixture"
+  let checks: Bool = receipt.sourceLanguageEdition == "fungi.v1" and receipt.authoritativeCheckProfileId == "galerina.check.bounded-shape.v1"
+  if identity == false or producer == false or checks == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "G4 receipt identity or producer profile refused",
+    )
+  }
+  let expectedSourceSet = slideV2EDomainDigest(
+    "slide.frontend.source-set.v1", slideV2ECBORSourceSet(source),
+  )
+  let expectedMappings = materializeSLIDEG4SourceMappings(imported.program)
+  let expectedSourceMap = slideV2EDomainDigest(
+    "slide.frontend.source-map.v1", slideV2ECBORSourcemap(expectedMappings),
+  )
+  let sourcesExact: Bool = receipt.sourceSetDigest == expectedSourceSet and receipt.sourceMapDigest == expectedSourceMap and slideV2ESourceMapsEqual(evidence.sourceMappings, expectedMappings)
+  if expectedMappings.count() != 40 or sourcesExact == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-006", "source map or complete coverage mismatch",
+    )
+  }
+  let semanticIdentity: Bool = receipt.semanticArchiveMediaType == "application/vnd.slide.executable-gir+cbor" and receipt.semanticBodyDigest == binding.bodyDigest and receipt.semanticDigest == binding.semanticDigest
+  let profiles: Bool = receipt.semanticProfileId == imported.program.semanticProfileId and receipt.registrySetId == imported.program.registrySetId and receipt.registrySetDigest == imported.program.registrySetDigest and receipt.memoryProfileId == imported.program.memoryProfileId
+  if semanticIdentity == false or profiles == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "semantic receipt binding mismatch",
+    )
+  }
+  if slideV2EPlansEqual(
+    receipt.plans, deriveSLIDEV2EPlanDigests(semanticBody),
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "common-plan receipt binding mismatch",
+    )
+  }
+  let externalShaped = slideV2EAllExternalDigestsShaped(
+    expected.compilerArtifactDigest, expected.diagnosticSetDigest,
+    expected.corpusDigest, expected.vectorSetDigest,
+    expected.buildActionRootDigest, expected.toolchainLockDigest,
+    expected.environmentContractDigest,
+  )
+  if externalShaped == false or slideV2EExternalEvidenceMatches(
+    receipt, expected,
+  ) == false {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-008", "caller-owned external expectations mismatch",
+    )
+  }
+  if receipt.deterministic == false or receipt.nativeCertificatePresent or receipt.authorityReleased {
+    return refuseSLIDEV2EFrontendEvidence(
+      "SLIDE-GFRONT-010", "determinism, native, or authority invariant changed",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "G4_FRONTEND_EVIDENCE_VALIDATED"
+      failureId: "NONE"
+      detail: "bounded source, semantic body, map, plans, and expectations agree"
+      authorityReleased: false
+    }
+    materialized: true receipt: receipt sourceUnits: evidence.sourceUnits
+    sourceMappings: evidence.sourceMappings authorityReleased: false
+  }
+}
+
+pure flow exportSLIDEG4CanonicalReceipt(
+  evidence: SLIDEV2EFrontendEvidence,
+  sourceText: String,
+  semanticBody: Bytes,
+  expected: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EReceiptExport
+contract { intent { "Export the bounded G4 receipt only after independent logical validation." } }
+{
+  let validated = validateSLIDEG4FrontendEvidence(
+    evidence, sourceText, semanticBody, expected,
+  )
+  check(validated.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptExport(
+        validated.decision.failureId, validated.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptExport(
+        "SLIDE-GFRONT-008", "G4 receipt validation unresolved",
+      )
+    }
+    if: {}
+  }
+  let body = slideV2ECanonicalReceiptBody(validated.receipt)
+  if body.isEmpty() or body.length() > 8192 {
+    return refuseSLIDEV2EReceiptExport(
+      "SLIDE-GFRONT-008", "canonical G4 receipt unavailable or over ceiling",
+    )
+  }
+  let receiptDigest = slideV2EDomainDigest(
+    "slide.frontend.galerina.g4.fixture.v1", body,
+  )
+  if receiptDigest.length() != 64 {
+    return refuseSLIDEV2EReceiptExport(
+      "SLIDE-GFRONT-008", "G4 receipt digest primitive unavailable",
+    )
+  }
+  return {
+    verdict: Verdict.Allow status: "G4_CANONICAL_FRONTEND_RECEIPT"
+    failureId: "NONE" detail: "bounded non-authorizing receipt emitted"
+    bytes: body byteLength: body.length() receiptDigest: receiptDigest
+    semanticDigest: validated.receipt.semanticDigest authorityReleased: false
+  }
+}
+
+pure flow verifySLIDEG4CanonicalReceipt(
+  receiptBytes: Bytes,
+  sourceText: String,
+  semanticBody: Bytes,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEV2EReceiptImport
+contract { intent { "Decode and independently verify the complete bounded G4 receipt." } }
+{
+  let decoded = decodeSLIDEV2ECanonicalReceipt(receiptBytes)
+  check(decoded.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-008", "canonical G4 receipt decode refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-008", "canonical G4 receipt decode unresolved",
+      )
+    }
+    if: {}
+  }
+  if slideG4SourceExact(sourceText) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-001", "independent raw G4 source refused",
+    )
+  }
+  let receipt = decoded.receipt
+  let identity: Bool = receipt.receiptMajor == 1 and receipt.receiptMinor == 0 and receipt.receiptProfileId == "slide.frontend.galerina.g4.fixture.v1" and receipt.receiptRoleId == "FRONTEND_EVIDENCE" and receipt.digestSuiteId == "slide.digest.sha256.v1"
+  let producer: Bool = receipt.producerId == "galerina.frontend.reference" and receipt.producerVersion == "1.0.0-beta.2" and receipt.frontendProfileId == "galerina.frontend.slide.g4.fixture"
+  let checks: Bool = receipt.sourceLanguageEdition == "fungi.v1" and receipt.authoritativeCheckProfileId == "galerina.check.bounded-shape.v1"
+  if identity == false or producer == false or checks == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded G4 receipt identity refused",
+    )
+  }
+  let sourceBytes = sourceText.encode()
+  let source: SLIDEV2ESourceUnit = {
+    sourceUnitId: 1 logicalName: "fixtures/slide-g4-checked-source.fungi"
+    sourceText: sourceText sourceByteLength: sourceBytes.length()
+    sourceBytesDigest: sourceBytes.sha256Hex()
+  }
+  let expectedSourceSet = slideV2EDomainDigest(
+    "slide.frontend.source-set.v1", slideV2ECBORSourceSet(source),
+  )
+  if receipt.sourceSetDigest != expectedSourceSet {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded source-set binding mismatch",
+    )
+  }
+  let imported = decodeSLIDEV2DProgram(semanticBody)
+  check(imported.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-007", "independent semantic import refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-007", "independent semantic import unresolved",
+      )
+    }
+    if: {}
+  }
+  let binding = bindSLIDEV2DSemanticDigest(semanticBody)
+  check(binding.decision.verdict) {
+    deny: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-007", "independent semantic digest refused",
+      )
+    }
+    ambig: {
+      return refuseSLIDEV2EReceiptImport(
+        "SLIDE-GFRONT-007", "independent semantic digest unresolved",
+      )
+    }
+    if: {}
+  }
+  let mappings = materializeSLIDEG4SourceMappings(imported.program)
+  let expectedSourceMap = slideV2EDomainDigest(
+    "slide.frontend.source-map.v1", slideV2ECBORSourcemap(mappings),
+  )
+  if mappings.count() != 40 or receipt.sourceMapDigest != expectedSourceMap {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded source-map binding mismatch",
+    )
+  }
+  let semanticIdentity: Bool = receipt.semanticArchiveMediaType == "application/vnd.slide.executable-gir+cbor" and receipt.semanticBodyDigest == binding.bodyDigest and receipt.semanticDigest == binding.semanticDigest
+  let profiles: Bool = receipt.semanticProfileId == imported.program.semanticProfileId and receipt.registrySetId == imported.program.registrySetId and receipt.registrySetDigest == imported.program.registrySetDigest and receipt.memoryProfileId == imported.program.memoryProfileId
+  if semanticIdentity == false or profiles == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded semantic binding mismatch",
+    )
+  }
+  if slideV2EPlansEqual(
+    receipt.plans, deriveSLIDEV2EPlanDigests(semanticBody),
+  ) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded common-plan binding mismatch",
+    )
+  }
+  let externalShaped = slideV2EAllExternalDigestsShaped(
+    expectedExternalEvidence.compilerArtifactDigest,
+    expectedExternalEvidence.diagnosticSetDigest,
+    expectedExternalEvidence.corpusDigest,
+    expectedExternalEvidence.vectorSetDigest,
+    expectedExternalEvidence.buildActionRootDigest,
+    expectedExternalEvidence.toolchainLockDigest,
+    expectedExternalEvidence.environmentContractDigest,
+  )
+  if externalShaped == false or slideV2EExternalEvidenceMatches(
+    receipt, expectedExternalEvidence,
+  ) == false {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded external expectations mismatch",
+    )
+  }
+  if receipt.deterministic == false or receipt.nativeCertificatePresent or receipt.authorityReleased {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-010", "decoded native or authority invariant changed",
+    )
+  }
+  let receiptDigest = slideV2EDomainDigest(
+    "slide.frontend.galerina.g4.fixture.v1", receiptBytes,
+  )
+  if receiptDigest.length() != 64 {
+    return refuseSLIDEV2EReceiptImport(
+      "SLIDE-GFRONT-008", "decoded receipt digest unavailable",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "G4_FRONTEND_RECEIPT_VERIFIED"
+      failureId: "NONE"
+      detail: "bounded canonical receipt independently agrees"
+      authorityReleased: false
+    }
+    consumed: decoded.consumed receipt: receipt receiptDigest: receiptDigest
+    semanticDigest: binding.semanticDigest authorityReleased: false
+  }
+}
+
+pure flow materializeSLIDEG4FrontendCandidate(
+  parsed: ParseResult,
+  sourceText: String,
+  expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation,
+) -> SLIDEG4FrontendCandidate
+contract { intent { "Return semantic and receipt bytes once, or one empty fail-closed refusal." } }
+{
+  let fixture = adaptSLIDEG4CheckedFixture(parsed)
+  check(fixture.decision.verdict) {
+    deny: {
+      return refuseSLIDEG4FrontendCandidate(
+        fixture.decision.failureId, fixture.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4FrontendCandidate(
+        "SLIDE-GFRONT-005", "bounded source derivation unresolved",
+      )
+    }
+    if: {}
+  }
+  let evidence = materializeSLIDEG4FrontendEvidence(
+    sourceText, fixture, expectedExternalEvidence,
+  )
+  check(evidence.decision.verdict) {
+    deny: {
+      return refuseSLIDEG4FrontendCandidate(
+        evidence.decision.failureId, evidence.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4FrontendCandidate(
+        "SLIDE-GFRONT-008", "frontend evidence materialization unresolved",
+      )
+    }
+    if: {}
+  }
+  let exported = exportSLIDEG4CanonicalReceipt(
+    evidence, sourceText, fixture.semanticBody, expectedExternalEvidence,
+  )
+  check(exported.verdict) {
+    deny: {
+      return refuseSLIDEG4FrontendCandidate(
+        exported.failureId, exported.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4FrontendCandidate(
+        "SLIDE-GFRONT-008", "frontend receipt export unresolved",
+      )
+    }
+    if: {}
+  }
+  let verified = verifySLIDEG4CanonicalReceipt(
+    exported.bytes, sourceText, fixture.semanticBody,
+    expectedExternalEvidence,
+  )
+  check(verified.decision.verdict) {
+    deny: {
+      return refuseSLIDEG4FrontendCandidate(
+        verified.decision.failureId, verified.decision.detail,
+      )
+    }
+    ambig: {
+      return refuseSLIDEG4FrontendCandidate(
+        "SLIDE-GFRONT-008", "frontend receipt verification unresolved",
+      )
+    }
+    if: {}
+  }
+  if verified.receiptDigest != exported.receiptDigest or verified.semanticDigest != fixture.semanticDigest {
+    return refuseSLIDEG4FrontendCandidate(
+      "SLIDE-GFRONT-008", "producer and independent receipt identities disagree",
+    )
+  }
+  return {
+    decision: {
+      verdict: Verdict.Allow status: "G4_FRONTEND_CANDIDATE"
+      failureId: "NONE"
+      detail: "semantic and receipt bytes independently agree"
+      authorityReleased: false
+    }
+    materialized: true semanticBody: fixture.semanticBody
+    semanticDigest: fixture.semanticDigest
+    frontendReceiptBody: exported.bytes
+    frontendReceiptDigest: exported.receiptDigest
+    producerEvidencePresent: false authorityReleased: false
+  }
+}

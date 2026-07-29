@@ -869,8 +869,13 @@ planning checkbox must never be used to imply that implementation exists.
   Focused evidence is 12/12; every tested mutation releases zero
   body/digests/authority. Report:
   `docs/reports/slide-g4-checked-source-adapter-2026-07-29.md`.
-  **Next:** G4-B materialize-once candidate/refusal and G4-C immutable checked
-  snapshot with total trace. No
+  **Completed — bounded G4-B:** the public `.fungi` seam now returns the exact
+  semantic body/digest plus a distinct canonical G4 receipt/body digest, or
+  one empty refusal. It independently decodes and re-derives source, 40
+  mappings, nine plans, external expectations and semantic bindings before
+  returning; focused evidence is 5/5. Producer evidence and authority remain
+  absent. **Next:** G4-C immutable checked snapshot with instruction-level
+  total lowering trace. No
   lease reference, broker opcode, host handle, or dispatch may
   exist before real receipt authenticity, production nonce state, broker
   isolation, and audit gates pass.

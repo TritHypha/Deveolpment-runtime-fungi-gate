@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-29
 
-**Status:** G4-A bounded adapter implemented; G4-B/G4-C remain open
+**Status:** G4-A and bounded G4-B implemented; G4-C remains open
 
 **Authority released:** no
 
@@ -103,9 +103,31 @@ This is G4-A, not a general frontend snapshot:
   Tri-Pipe dispatch; and
 - it grants no component-removal or native-output permission.
 
-G4-B must add the materialize-once public candidate/refusal seam. G4-C must
-replace this bounded shape recognition with the versioned immutable checked
-snapshot and total lowering trace defined in the canonical handoff contract.
+## G4-B public candidate checkpoint
+
+The bounded materialize-once seam is now implemented in
+`src/self-hosted/slide-gfrontend-public-candidate.fungi`, with tests in
+`tests/slide-gfrontend-public-candidate.test.mjs`.
+
+It returns either:
+
+- semantic body + semantic digest + canonical frontend receipt body + receipt
+  digest, with producer evidence absent and authority false; or
+- one refusal with all four artifact fields empty.
+
+The receipt reuses the V2-E field schema but not the frozen V2-E identity. It
+uses the distinct profile/digest domain
+`slide.frontend.galerina.g4.fixture.v1`, binds the exact 1,641-byte G4 source,
+three G4 function spans, 40 instruction/terminator mappings, nine common-plan
+digests, caller-owned external expectations, and the frozen V2-D semantic
+identity. The seam decodes and independently re-derives the canonical receipt
+before returning it. Truncation, suffix, mid-body mutation, source/fact
+disagreement, and malformed external evidence all refuse without partial
+outputs. Focused evidence is **5/5**.
+
+G4-C must replace bounded shape recognition and coarse function-span mapping
+with the versioned immutable checked snapshot and instruction-level total
+lowering trace defined in the canonical handoff contract.
 
 ## Separate release-gate blocker
 
