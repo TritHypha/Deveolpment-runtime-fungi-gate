@@ -4,9 +4,9 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8681,
-    "devTools": 134,
-    "auditTools": 79,
-    "toolsInCadence": 61,
+    "devTools": 135,
+    "auditTools": 80,
+    "toolsInCadence": 62,
     "proofs": 40
   },
   "packages": [
@@ -207,7 +207,7 @@
       "tests": 52,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 14,
+      "files": 15,
       "deps": []
     },
     {
@@ -1812,6 +1812,21 @@
       ]
     },
     {
+      "name": "audit-remote-shell-install.mjs",
+      "category": "audit",
+      "purpose": "refuse unverified remote content piped into interpreters.",
+      "selfTest": true,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "coverage",
+        "diagnostics",
+        "doc-drift",
+        "web-stub",
+        "graph/index"
+      ]
+    },
+    {
       "name": "audit-report-blind-consumers.mjs",
       "category": "audit",
       "purpose": "(no header description)",
@@ -2878,6 +2893,7 @@
       "audit-gscm.mjs",
       "audit-name-collisions.mjs",
       "audit-production-blockers.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-runtime-coverage.mjs",
       "audit-stage-execution.mjs",
       "audit-stray-docs.mjs",
@@ -2927,6 +2943,7 @@
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-report-blind-consumers.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-selfhosted-dead-flows.mjs",
@@ -3017,6 +3034,7 @@
       "audit-private-doc-leak.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-scratchdir-hygiene.mjs",
       "audit-selfhost-readiness.mjs",
       "audit-signed-fixture-drift.mjs",
@@ -3146,6 +3164,7 @@
       "audit-private-doc-leak.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-report-blind-consumers.mjs",
       "audit-route-overlap.mjs",
       "audit-runtime-coverage.mjs",
@@ -3222,6 +3241,7 @@
       "audit-private-doc-leak.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-stage-execution.mjs",
       "audit-stray-docs.mjs",
       "audit-syntax-reference-links.mjs",
@@ -3480,6 +3500,7 @@
     "web-stub": [
       "audit-emitter-completeness.mjs",
       "audit-kernel-floor.mjs",
+      "audit-remote-shell-install.mjs",
       "audit-wasm-validate.mjs",
       "audit-wasmtime-presence.mjs",
       "audit-wat-emitter-mutation.mjs",

@@ -973,18 +973,18 @@ Provides:
 grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token-precise, and instant on repeat searches.
 
 Provides:
-- FileId
-- FileRecord
-- TermCounts
-- SearchGraph
-- nameTermsOf
-- INDEX_DIR
-- INDEX_FILE
-- IndexMeta
-- VERSION
-- IndexOptions
-- IndexStats
-- DEFAULT_INDEX_OPTIONS
+- MAX_INDEX_PATH_LENGTH
+- MAX_INDEX_TERM_LENGTH
+- MAX_INDEX_FILES
+- MAX_INDEX_TERMS_PER_FILE
+- MAX_INDEX_TERM_EDGES
+- MAX_INDEX_BYTES
+- IndexLimits
+- DEFAULT_INDEX_LIMITS
+- StoredFile
+- StoredIndex
+- isCanonicalIndexPath
+- validateStoredIndex
 
 ## galerina-devtools-benchmarks
 

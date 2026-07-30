@@ -338,6 +338,13 @@ flowchart LR
   T_audit_reference_doc_drift_mjs --> C_gate_wiring
   T_audit_reference_doc_drift_mjs --> C_diagnostics
   T_audit_reference_doc_drift_mjs --> C_doc_drift
+  T_audit_remote_shell_install_mjs["audit-remote-shell-install.mjs"]
+  T_audit_remote_shell_install_mjs --> C_signing_fusion
+  T_audit_remote_shell_install_mjs --> C_coverage
+  T_audit_remote_shell_install_mjs --> C_diagnostics
+  T_audit_remote_shell_install_mjs --> C_doc_drift
+  T_audit_remote_shell_install_mjs --> C_web_stub
+  T_audit_remote_shell_install_mjs --> C_graph_index
   T_audit_report_blind_consumers_mjs["audit-report-blind-consumers.mjs"]
   T_audit_report_blind_consumers_mjs --> C_signing_fusion
   T_audit_report_blind_consumers_mjs --> C_diagnostics

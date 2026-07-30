@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-remote-shell-install.mjs — refuse unverified remote content piped into interpreters.
 /**
  * Refuse documentation or source that pipes remotely downloaded content directly into
  * a command interpreter. Transport security is not publisher identity, content identity,
