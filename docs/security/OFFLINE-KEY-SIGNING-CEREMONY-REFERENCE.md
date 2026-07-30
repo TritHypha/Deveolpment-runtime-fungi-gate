@@ -7,7 +7,7 @@ authoritative owner action is published in
 `OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. A command appearing here is not
 permission or readiness to run it.
 
-**Status on 2026-07-30: READY FOR OPERATIONAL REGISTRY-INDEX SIGNING ONLY.**
+**Status on 2026-07-30: CEREMONY COMPLETE — NO CURRENT SIGNING ACTION.**
 
 The root-to-operational delegation, deterministic artifact hasher, strict
 manifest reader and disposable-key dry run are green. The false live auth and
@@ -19,8 +19,9 @@ delegation, which independently passed hybrid signature, serial-floor,
 active-window, exact-role, revocation and operational-public-pin checks. The
 operational key then hybrid-signed the auth manifest; it independently verified
 and is the sole live entry. The public-only builder produced exactly one
-unsigned index entry. The live action page therefore authorizes only the final
-operational registry-index signature; publication remains locked.
+unsigned index entry. The returned operational hybrid-signed index independently
+verified, matched that rebuild exactly and refused all seven mutation cases.
+The live action page authorizes no further signing action for this artifact.
 
 The independently verified public pins are:
 
@@ -147,7 +148,7 @@ Primary references:
 | Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
 | Real auth-manifest signing act | verified at `2026-07-30T16:30:19.180Z`; live file SHA-256 `0A1621374BE4CC7E28BF81FEECC19CFC29E2DD5A680417FA7F7E9E145CD60C1C` | ready |
 | Public-only live index build | one entry at `2026-07-30T16:33:10.307Z`; SHA-256 `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383` | ready |
-| Real registry-index signing act | not yet performed | **operational signature next** |
+| Real registry-index signing act | verified under `f3172a48372bfb23`; exact tracked SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`; 7/7 returned-artifact mutations refuse | ready |
 
 The unsigned candidate records provenance and does not create authority. The
 separate live manifest is authoritative only because its package bytes,
@@ -520,7 +521,10 @@ Tell the owner **“READY FOR OWNER SIGNING”** only when:
 - public artifact paths and the previous `issuedAt` floor are recorded;
 - the source commit is clean and all terminal project gates are green.
 
-Until then, report **“NOT READY”** with the failing gates. At the current
-2026-07-30 checkpoint, custody, authority delegation, package signature/live
-admission and the exact public-only one-entry build are green. The final
-hybrid index signature and independent public verification are absent.
+Until then, report **“NOT READY”** with the failing gates. Those signing
+preconditions were satisfied on 2026-07-30. The returned hybrid index now
+independently verifies, matches the exact public-only rebuild, has tracked
+SHA-256
+`DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`,
+and refuses all seven returned-artifact mutations. Report **“PRODUCTION
+REGISTRY SIGNING COMPLETE”** and authorize no repeat signing act.

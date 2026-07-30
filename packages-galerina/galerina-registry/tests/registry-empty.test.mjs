@@ -37,6 +37,7 @@ const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "..", "..");
 const GIT_ATTRIBUTES = join(REPOSITORY_ROOT, ".gitattributes");
 const REGISTRY_CLI = join(REPOSITORY_ROOT, "scripts", "registry-index-cli.mjs");
 const LIVE_REGISTRY = join(PACKAGE_ROOT, "packages");
+const LIVE_SIGNED_INDEX = join(PACKAGE_ROOT, "registry-index-v2.json");
 const LIVE_AUTH_MANIFEST = join(
   LIVE_REGISTRY,
   "@galerina",
@@ -96,6 +97,7 @@ const AUTH_PACKAGE_FILES = [
   "tsconfig.json",
 ];
 const FIXED_ISSUED_AT = "2026-08-01T00:00:00.000Z";
+const LIVE_INDEX_ISSUED_AT = "2026-07-30T16:33:10.307Z";
 const ROOT_KEY_ID = "registry-root-disposable-1";
 const OPERATIONAL_KEY_ID = "registry-operational-disposable-1";
 const compilerRequire = createRequire(join(
@@ -609,6 +611,11 @@ test("the owner-approved auth package is live only under the exact public author
     /^packages-galerina\/galerina-registry\/\*\*\/package\.galerina\.yaml text eol=lf$/mu,
     "hybrid-signed manifest bytes must remain LF-stable across platforms",
   );
+  assert.match(
+    readFileSync(GIT_ATTRIBUTES, "utf8"),
+    /^packages-galerina\/galerina-registry\/registry-index-v2\.json text eol=lf$/mu,
+    "hybrid-signed index bytes must remain LF-stable across platforms",
+  );
   assert.equal(
     existsSync(
       join(
@@ -676,9 +683,9 @@ test("the owner-approved auth package is live only under the exact public author
       "--root-key-id", "21415420b447e219",
       "--operational-ed25519-pubkey", LIVE_OPERATIONAL_ED_PUBLIC,
       "--operational-mldsa65-pubkey", LIVE_OPERATIONAL_ML_PUBLIC,
-      "--authority-at", FIXED_ISSUED_AT,
+      "--authority-at", LIVE_INDEX_ISSUED_AT,
       "--min-delegation-serial", "0",
-      "--issued-at", FIXED_ISSUED_AT,
+      "--issued-at", LIVE_INDEX_ISSUED_AT,
       "--out", output,
     ]);
     assert.equal(result.status, 0, result.stdout + result.stderr);
@@ -689,6 +696,33 @@ test("the owner-approved auth package is live only under the exact public author
     assert.equal(index.entries[0].version, "1.0.0-beta.2");
     assert.equal(index.entries[0].sourceHash, artifact.hash);
     assert.equal(index.entries[0].keyId, "f3172a48372bfb23");
+
+    const verifyResult = runRegistryCli([
+      "verify",
+      "--in", LIVE_SIGNED_INDEX,
+      "--ed25519-pubkey", LIVE_OPERATIONAL_ED_PUBLIC,
+      "--mldsa65-pubkey", LIVE_OPERATIONAL_ML_PUBLIC,
+      "--key-id", "f3172a48372bfb23",
+      "--min-issued-at", "2026-07-30T16:33:10.306Z",
+    ]);
+    assert.equal(
+      verifyResult.status,
+      0,
+      verifyResult.stdout + verifyResult.stderr,
+    );
+
+    const signedIndexBytes = readFileSync(LIVE_SIGNED_INDEX);
+    assert.equal(
+      createHash("sha256").update(signedIndexBytes).digest("hex"),
+      "dcf80aa0717debf8beb837584fdc053e24891c0d1224fb4735900e68fc1aaf06",
+    );
+    const signedIndex = JSON.parse(signedIndexBytes.toString("utf8"));
+    const { signature, ...signedPayload } = signedIndex;
+    assert.deepEqual(signedPayload, index);
+    assert.equal(signature.algorithm, "Ed25519+ML-DSA-65");
+    assert.equal(signature.keyId, "f3172a48372bfb23");
+    assert.equal(typeof signature.ed25519Signature, "string");
+    assert.equal(typeof signature.mlDsa65Signature, "string");
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }

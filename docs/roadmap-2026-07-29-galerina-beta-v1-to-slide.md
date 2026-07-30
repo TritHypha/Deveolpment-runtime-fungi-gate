@@ -26,8 +26,8 @@ flowchart LR
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
-    F["🟥 Beta-v1 release gate<br/>index verification + rotation integration"]
-    G["🟩 Registry admission green<br/>auth signed · live · one-entry build"]
+    F["🟥 Beta-v1 release gate<br/>automatic rotation integration"]
+    G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
@@ -61,7 +61,7 @@ flowchart LR
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |
-| Production registry signing | 🟥 | Root delegation, auth signature/admission and the fixed one-entry public build are verified; the final hybrid index signature and independent verification remain absent |
+| Production registry signing | 🟩 | Exact one-entry index hybrid-signed by `f3172a48372bfb23`, independently verified and mutation-tested; SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06` |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -96,9 +96,8 @@ The remaining sequence is:
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
-3. Have the owner hybrid-sign only the fixed one-entry registry index, then
-   independently verify the returned public artifact before publication or a
-   green production-signing claim.
+3. **Completed:** owner hybrid signature, independent public verification,
+   exact payload reconciliation and 7/7 returned-artifact mutation refusals.
 4. Complete the existing Tower Citizen automatic operational-key rotation path
    for Galerina beta v1: StateSerializer epoch awareness, real custody
    execution, delegation integration, gated canary/drain/fallback, and
@@ -154,10 +153,9 @@ package and therefore no registry claim. Auth retains a technically reviewed,
 owner-approved unsigned 18-file candidate as provenance. The separately
 hybrid-signed manifest independently verifies and is now the sole live entry.
 
-This makes package admission green without making the release green. The
-root-signed delegation, hybrid auth-manifest signature and successful
-public-only one-entry build are complete. Production still requires the final
-offline index signature and independent public verification.
+This makes package admission and production registry signing green without
+making the beta release green. The root-signed delegation, hybrid auth
+manifest, public-only build and exact hybrid-signed index independently verify.
 Two verified offline custody copies in separate physical locations were
 owner-confirmed on 2026-07-30. The first public-only export refused before key
 decoding because the wrong file shape was selected. The complete hybrid
@@ -181,8 +179,12 @@ verified at `2026-07-30T16:30:19.180Z` and has SHA-256
 The public-only one-entry index built at `2026-07-30T16:33:10.307Z` has
 SHA-256
 `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
-The live walkthrough now authorizes only the final signature over that fixed
-index.
+The returned signed index is byte-identical at
+`packages-galerina/galerina-registry/registry-index-v2.json`. Its SHA-256 is
+`DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`;
+both signature components verify, its signed payload exactly matches the
+public-only rebuild, and 7/7 tampered copies refuse. The live walkthrough now
+records completion and authorizes no further signing action.
 
 ## Binding package topology
 

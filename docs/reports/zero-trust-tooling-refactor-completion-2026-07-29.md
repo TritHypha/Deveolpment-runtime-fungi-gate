@@ -9,8 +9,9 @@
 **Release verdict:** **NOT COMPLETE / NON-AUTHORIZING**
 
 The tooling refactor and discoverable local verification are complete to the
-current evidence boundary. Galerina beta-v1 is not released because the live
-registry is not ready for the offline signing act. The former external-memory
+current evidence boundary. Galerina beta-v1 is not released because automatic
+operational-key rotation integration remains open; production registry signing
+is now green. The former external-memory
 write question is closed by rejecting that architecture: private memory is
 not a build input, and its beta inspection tool is ephemeral, read-only,
 bounded, injection-aware, and non-authorizing.
@@ -217,7 +218,7 @@ or release a key. A future persistent SLIDE index must be immutable,
 encrypted, hybrid-signed, anti-rollback, lease-bounded, independently
 re-opened, and source-rederivable.
 
-### Offline registry signing — package admitted, final index signature pending
+### Offline registry signing — complete and independently verified
 
 The hybrid v2 mechanism is green:
 
@@ -234,15 +235,17 @@ The hybrid v2 mechanism is green:
 - fail-closed package-manifest signing and public verification CLI; and
 - a disposable file-backed root→operational→manifest ceremony.
 
-Production is still **NON-AUTHORIZING** because the fixed one-entry registry
-index has not yet been hybrid-signed and independently verified. The preceding
-gates are complete:
+Production registry signing is **GREEN**. The complete evidence chain is:
 
 - auth's re-derived 18-file candidate remains unsigned provenance;
 - its separately hybrid-signed live manifest independently verifies;
 - the separately custodied operational public bundle and root-signed
   delegation are admitted; and
-- the live public-only build produces exactly one index entry.
+- the live public-only build produces exactly one index entry;
+- the returned hybrid-signed index verifies under operational key
+  `f3172a48372bfb23`; and
+- its payload exactly matches the public rebuild and 7/7 tampered copies
+  refuse.
 
 Two verified encrypted operational-key custody copies in separate physical
 locations were owner-confirmed on 2026-07-30. That closes custody only; it does
@@ -277,8 +280,13 @@ manifest, and has SHA-256
 The public-only builder produced exactly one unsigned entry at
 `2026-07-30T16:33:10.307Z`, SHA-256
 `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
-The live walkthrough now authorizes only the final operational signature over
-that fixed index.
+The returned public signed index is tracked byte-identically at
+`packages-galerina/galerina-registry/registry-index-v2.json`. Its SHA-256 is
+`DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`.
+Both signature components verify under operational key `f3172a48372bfb23`,
+the signed payload exactly equals the public-only rebuild, and seven
+returned-artifact mutations all refuse. The live walkthrough now records
+completion and authorizes no further signing action.
 
 Production Zero-Trust also requires automatic operational-key rotation.
 Galerina beta v1 completes the current Tower Citizen append-only
@@ -347,8 +355,9 @@ check modes and the final strict/exhaustive cadences then passed. The detection
 and repair are retained as evidence that generated freshness gates are not
 vacuous.
 
-These tool gates are authorizing for the evidence they cover. They do not
-authorize the beta-v1 release or the owner's offline signing act: the live
-registry preflight remains not ready for the reasons above.
+These tool gates are authorizing for the evidence they cover. The owner
+signing act and production registry signing are complete. They do not
+authorize the beta-v1 release because automatic operational-key rotation
+integration remains open.
 
 No changes in this work were pushed.

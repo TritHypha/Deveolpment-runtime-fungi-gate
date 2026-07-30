@@ -27,6 +27,7 @@ entry or emits a partial index.
 ## Structure
 
 ```text
+registry-index-v2.json             # verified one-entry hybrid-signed index
 packages/                         # live owner-approved manifests
   @galerina/
     auth/
@@ -54,7 +55,7 @@ npm-style nested dependency forest.
 8. The owner hybrid-signs the index offline; independently verify it before
    publication.
 
-The one current owner action is documented in
+The completed owner ceremony record is documented in
 [`docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](../../docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md).
 Locked later commands are kept separately in
 [`docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](../../docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).
@@ -75,5 +76,8 @@ The artifact hasher, strict manifest reader, root delegation, manifest
 verification, index builder/signer/verifier, revocation checks and denial tests
 are implemented. The auth manifest is root-delegated, hybrid-signed,
 independently verified and live. A public-only build produces exactly one
-unsigned index entry. Production publication remains blocked until that index
-is hybrid-signed offline and independently verified.
+unsigned index entry. The byte-identical hybrid-signed index independently
+verifies under operational key `f3172a48372bfb23`; its SHA-256 is
+`dcf80aa0717debf8beb837584fdc053e24891c0d1224fb4735900e68fc1aaf06`.
+Production registry signing is complete. Distribution remains subject to the
+separate release and automatic-rotation gates.

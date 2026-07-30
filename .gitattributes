@@ -16,6 +16,7 @@ build/dev-tool-index/*  text eol=lf
 # Hybrid-signed registry manifests have public byte pins. Preserve identical
 # bytes across Windows, macOS and Linux checkouts.
 packages-galerina/galerina-registry/**/package.galerina.yaml text eol=lf
+packages-galerina/galerina-registry/registry-index-v2.json text eol=lf
 
 # ── Benchmark result artifacts (written LF by the runner/snapshot scripts). Pin eol=lf so the committed
 #    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
