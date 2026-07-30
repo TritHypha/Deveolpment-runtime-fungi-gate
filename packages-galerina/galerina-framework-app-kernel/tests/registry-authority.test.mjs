@@ -19,16 +19,18 @@ import {
   REGISTRY_DELEGATION_V1_CONTEXT,
   RegistryAuthorityError,
   buildRegistryAuthorityDelegation,
+  signRegistryPackageManifest,
   registryAuthorityDelegationPreimage,
   signRegistryAuthorityDelegation,
   buildRegistryIndex,
   signRegistryIndexHybrid,
   verifyRegistryAuthorityDelegation,
   verifyRegistryIndexUnderDelegation,
+  verifyRegistryPackageManifestUnderDelegation,
 } from "../dist/index.js";
 
 const ROOT_KEY_ID = "21415420b447e219";
-const OPERATIONAL_KEY_ID = "942d6b2726b0a991";
+const OPERATIONAL_KEY_ID = "registry-operational-test-1";
 const { privateKey: rootPrivateKey, publicKey: rootPublicKey } =
   generateKeyPairSync("ed25519");
 
@@ -113,7 +115,7 @@ test("delegation preimage domain-separates the root signature", () => {
   );
   assert.match(
     preimage,
-    /"keyId":"942d6b2726b0a991"/,
+    /"keyId":"registry-operational-test-1"/,
   );
 });
 
@@ -337,5 +339,141 @@ test("registry index verification is bound to the delegated operational key", ()
       options,
     ),
     (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+  );
+});
+
+const manifestSign = (prefix, message) =>
+  Buffer.from(`${prefix}:${fingerprint(message)}`).toString("base64");
+
+const unsignedPackageManifest = () => ({
+  schema: "galerina-package-manifest/v1",
+  name: "@galerina/auth",
+  version: "1.0.0-beta.2",
+  hash: `sha256:${"a".repeat(64)}`,
+  keyId: OPERATIONAL_KEY_ID,
+  governance: {
+    reviewed: true,
+    reviewedBy: "disposable-test-reviewer",
+    reviewedAt: "2026-07-30T10:00:00.000Z",
+  },
+});
+
+const signedPackageManifest = () =>
+  signRegistryPackageManifest(
+    unsignedPackageManifest(),
+    OPERATIONAL_KEY_ID,
+    (message) => manifestSign("manifest-ed25519", message),
+    (message) => manifestSign("manifest-ml-dsa-65", message),
+  );
+
+const verifyManifest = {
+  ed25519: (message, signature, keyId) =>
+    keyId === OPERATIONAL_KEY_ID
+      ? signature === manifestSign("manifest-ed25519", message)
+      : "no-key",
+  mlDsa65: (message, signature, keyId) =>
+    keyId === OPERATIONAL_KEY_ID
+      ? signature === manifestSign("manifest-ml-dsa-65", message)
+      : "no-key",
+};
+
+const packageManifestOptions = (overrides = {}) => ({
+  authority: {
+    expectedRootKeyId: ROOT_KEY_ID,
+    at: "2026-08-01T00:00:00.000Z",
+    minSerial: 0,
+    isRevoked: () => false,
+    verifyRoot,
+    ...overrides.authority,
+  },
+  operationalPublicKeyFingerprints: {
+    ed25519: unsigned().operational.ed25519PublicKeySha256,
+    mlDsa65: unsigned().operational.mlDsa65PublicKeySha256,
+    ...overrides.operationalPublicKeyFingerprints,
+  },
+  verifyManifest: overrides.verifyManifest ?? verifyManifest,
+});
+
+test("package manifest verification is bound to delegated operational authority", () => {
+  assert.equal(
+    verifyRegistryPackageManifestUnderDelegation(
+      signedPackageManifest(),
+      signed(),
+      packageManifestOptions(),
+    ),
+    "verified",
+  );
+});
+
+test("delegated package manifest refuses fingerprint and signer substitution", () => {
+  assert.throws(
+    () => verifyRegistryPackageManifestUnderDelegation(
+      signedPackageManifest(),
+      signed(),
+      packageManifestOptions({
+        operationalPublicKeyFingerprints: {
+          mlDsa65: "0".repeat(64),
+        },
+      }),
+    ),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+  );
+
+  for (const patch of [
+    { keyId: "different-operational-key" },
+    { signerKeyId: "different-operational-key" },
+  ]) {
+    assert.throws(
+      () => verifyRegistryPackageManifestUnderDelegation(
+        { ...signedPackageManifest(), ...patch },
+        signed(),
+        packageManifestOptions(),
+      ),
+      (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+    );
+  }
+});
+
+test("delegated package manifest requires role, active serial, and non-revoked key", () => {
+  const indexOnlyDelegation = signRegistryAuthorityDelegation(
+    buildRegistryAuthorityDelegation({
+      ...unsigned(),
+      roles: ["registry-index.sign"],
+    }),
+    (message) => cryptoSign(null, message, rootPrivateKey).toString("base64"),
+    (message) => Buffer.from(
+      `root-ml-dsa-65:${fingerprint(message)}`,
+    ).toString("base64"),
+  );
+
+  assert.throws(
+    () => verifyRegistryPackageManifestUnderDelegation(
+      signedPackageManifest(),
+      indexOnlyDelegation,
+      packageManifestOptions(),
+    ),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_ROLE,
+  );
+  assert.throws(
+    () => verifyRegistryPackageManifestUnderDelegation(
+      signedPackageManifest(),
+      signed(),
+      packageManifestOptions({
+        authority: { minSerial: 1 },
+      }),
+    ),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_STALE,
+  );
+  assert.throws(
+    () => verifyRegistryPackageManifestUnderDelegation(
+      signedPackageManifest(),
+      signed(),
+      packageManifestOptions({
+        authority: {
+          isRevoked: (keyId) => keyId === OPERATIONAL_KEY_ID,
+        },
+      }),
+    ),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_REVOKED,
   );
 });

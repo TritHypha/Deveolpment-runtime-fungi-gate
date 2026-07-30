@@ -13,6 +13,11 @@ import {
   type RegistryIndexVerifier,
   verifyRegistryIndex,
 } from "./registry-index.js";
+import {
+  type RegistryManifestVerifiers,
+  type RegistryPackageManifest,
+  verifyRegistryPackageManifest,
+} from "./registry-package-manifest.js";
 
 export const REGISTRY_DELEGATION_V1_CONTEXT =
   "galerina.registry.delegation.sig.v1" as const;
@@ -423,6 +428,60 @@ export interface DelegatedRegistryIndexVerification {
   };
   readonly verifyIndex: RegistryIndexVerifier;
   readonly minIndexIssuedAt?: string;
+}
+
+export interface DelegatedRegistryPackageManifestVerification {
+  readonly authority: Omit<
+    RegistryAuthorityVerification,
+    "requiredRoles"
+  >;
+  readonly operationalPublicKeyFingerprints: {
+    readonly ed25519: string;
+    readonly mlDsa65: string;
+  };
+  readonly verifyManifest: RegistryManifestVerifiers;
+}
+
+/**
+ * Verify the complete root -> operational authority -> package-manifest chain.
+ * Both the index entry key and signature identity are pinned to the same
+ * operational authority so a valid signature cannot be relabelled.
+ */
+export function verifyRegistryPackageManifestUnderDelegation(
+  manifest: RegistryPackageManifest,
+  delegation: RegistryAuthorityDelegation,
+  options: DelegatedRegistryPackageManifestVerification,
+): "verified" {
+  verifyRegistryAuthorityDelegation(delegation, {
+    ...options.authority,
+    requiredRoles: ["package-manifest.sign"],
+  });
+  const fingerprints = options.operationalPublicKeyFingerprints;
+  if (
+    fingerprints.ed25519
+      !== delegation.operational.ed25519PublicKeySha256
+    || fingerprints.mlDsa65
+      !== delegation.operational.mlDsa65PublicKeySha256
+  ) {
+    throw new RegistryAuthorityError(
+      ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+      "Operational public-key bytes do not match the root-authorized fingerprints.",
+    );
+  }
+  if (
+    manifest.keyId !== delegation.operational.keyId
+    || manifest.signerKeyId !== delegation.operational.keyId
+  ) {
+    throw new RegistryAuthorityError(
+      ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+      "Package manifest is not signed by the delegated operational authority.",
+    );
+  }
+  return verifyRegistryPackageManifest(
+    manifest,
+    options.verifyManifest,
+    delegation.operational.keyId,
+  );
 }
 
 /**
