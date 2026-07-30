@@ -338,8 +338,9 @@ const RD0361_T1 = [
 ];
 
 // ── RD-0361 T2 (Memory tranche): the sentinel-memory differentials must also be non-vacuous ────────────
-// Same anti-neuter pattern as T1, extended to the four sentinel-memory twins that carry an execution-cutover
-// differential (trit-buffer-guard is shadow-only, no differential to guard). Each mutant plants a fail-open
+// Same anti-neuter pattern as T1, extended to the sentinel-memory twins that carry an execution-cutover
+// differential (trit-buffer-guard is shadow-only, no differential to guard). Alignment and bounds are
+// separate mutants because both decisions share memory-validator.fungi. Each mutant plants a fail-open
 // in the twin's `.fungi` fold; its rd0361-*-execution differential rebuilds the WASM and KILLS it.
 const RD0361_T2_MEMORY = [
   {
@@ -350,6 +351,15 @@ const RD0361_T2_MEMORY = [
     cwd: "packages-galerina/galerina-core-sentinel-memory",
     test: ["node", "--test", "tests/rd0361-memory-validator-execution.test.mjs"],
     desc: "RD-0361 T2 — memory-validator isAligned inverted (an UNALIGNED ptr would pass the alignment gate); the execution-cutover differential must catch WASM != real .ts",
+  },
+  {
+    id: "rd0361-t2-memvalidator-bounds",
+    file: "packages-galerina/galerina-core-sentinel-memory/src/self-hosted/memory-validator.fungi",
+    find: "ptr > capacity || len > capacity - ptr",
+    replace: "ptr > capacity || len > capacity",
+    cwd: "packages-galerina/galerina-core-sentinel-memory",
+    test: ["node", "--test", "tests/rd0361-memory-validator-execution.test.mjs"],
+    desc: "RD-0361 T2 — memory-validator extent comparison drops ptr from the remaining-capacity calculation, so an out-of-bounds range can pass; the execution-cutover differential must catch WASM != real .ts",
   },
   {
     id: "rd0361-t2-poolalloc-exhaust",

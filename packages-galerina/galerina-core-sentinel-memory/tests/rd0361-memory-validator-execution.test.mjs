@@ -15,6 +15,12 @@ const COMPILER = join(HERE, "..", "..", "galerina-core-compiler", "dist", "index
 const TWIN = join(HERE, "..", "src", "self-hosted", "memory-validator.fungi");
 
 const refIsAligned = (ptr, align) => ptr >= 0 && ptr % align === 0;
+const refIsInBounds = (ptr, len, capacity) =>
+  ptr >= 0 &&
+  len >= 0 &&
+  capacity >= 0 &&
+  ptr <= capacity &&
+  len <= capacity - ptr;
 const refAlignUp = (n, align) => { const r = n % align; return r === 0 ? n : n + align - r; };
 const ALIGNS = [1, 2, 4, 8, 16];
 
@@ -37,11 +43,23 @@ test("RD-0361 Memory · memory-validator: R0 build → R1 #105-admit → R3 WASM
   const att = L.signWasm(asm.wasm, kp.privateKeyPem, "dev");
   const { instance } = await L.admitAndInstantiate({ wasm: asm.wasm, attestation: att, policy: { requireSigned: true, publicKeyPem: kp.publicKeyPem }, host });
   const X = instance.exports;
-  for (const f of ["isAligned", "alignUp"]) assert.equal(typeof X[f], "function", `${f} admitted + exported (R1)`);
+  for (const f of ["isAligned", "isInBounds", "alignUp"]) assert.equal(typeof X[f], "function", `${f} admitted + exported (R1)`);
 
   // R3 differential — the pure Int/Bool folds, exhaustive over a grid.
   for (let ptr = -3; ptr <= 33; ptr++) for (const a of ALIGNS)
     assert.equal(!!X.isAligned(ptr, a), refIsAligned(ptr, a), `isAligned(${ptr},${a})`);
   for (let n = 0; n <= 40; n++) for (const a of ALIGNS)
     assert.equal(X.alignUp(n, a), refAlignUp(n, a), `alignUp(${n},${a})`);
+  for (let ptr = -2; ptr <= 20; ptr++) {
+    for (let len = -2; len <= 20; len++) {
+      for (let capacity = 0; capacity <= 16; capacity++) {
+        assert.equal(
+          !!X.isInBounds(ptr, len, capacity),
+          refIsInBounds(ptr, len, capacity),
+          `isInBounds(${ptr},${len},${capacity})`,
+        );
+      }
+    }
+  }
+  assert.equal(!!X.isInBounds(2_147_483_647, 1, 2_147_483_647), false);
 });

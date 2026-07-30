@@ -38,12 +38,23 @@ contract {
 // The bounds admit DECISION, fail-closed: "ok" or the trap code "LSM-BOUNDS-001" (mirrors
 // MemoryValidator.assertInBounds). Subtraction after ptr <= capacity avoids an overflow-prone ptr+len
 // admission calculation. The backend must preserve checked integer semantics.
+pure flow isInBounds(ptr: Int, len: Int, capacity: Int) -> Bool
+contract {
+  intent { "Overflow-safe bounds predicate for [ptr, ptr+len) inside [0, capacity)." }
+}
+{
+  if ptr < 0 || len < 0 || capacity < 0 || ptr > capacity || len > capacity - ptr {
+    return false
+  }
+  return true
+}
+
 pure flow checkInBounds(ptr: Int, len: Int, capacity: Int) -> String
 contract {
   intent { "Fail-closed bounds check: 'ok' iff [ptr, ptr+len) lies fully inside [0, capacity), else 'LSM-BOUNDS-001'." }
 }
 {
-  if ptr < 0 || len < 0 || capacity < 0 || ptr > capacity || len > capacity - ptr {
+  if isInBounds(ptr, len, capacity) == false {
     return "LSM-BOUNDS-001"
   }
   return "ok"
