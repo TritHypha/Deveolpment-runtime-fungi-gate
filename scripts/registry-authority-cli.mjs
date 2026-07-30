@@ -72,12 +72,38 @@ function decodeCanonicalBase64(value, label) {
 }
 
 function readSigningEnvironment(path) {
+  const bytes = readFileSync(path);
+  if (
+    bytes.includes(0)
+    || (bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf)
+    || (bytes[0] === 0xff && bytes[1] === 0xfe)
+    || (bytes[0] === 0xfe && bytes[1] === 0xff)
+  ) {
+    throw new Error(
+      "REFUSED: signing environment must be UTF-8 without a byte-order mark.",
+    );
+  }
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error(
+      "REFUSED: signing environment must be UTF-8 without a byte-order mark.",
+    );
+  }
   const fields = new Map();
-  for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
+  for (const [index, line] of text.split(/\r?\n/).entries()) {
     if (line.trim().length === 0 || line.trimStart().startsWith("#")) continue;
     const match = /^([A-Z0-9_]+)=(.*)$/.exec(line);
-    if (!match || fields.has(match[1])) {
-      throw new Error("REFUSED: signing environment is malformed or repeats a field.");
+    if (!match) {
+      throw new Error(
+        `REFUSED: signing environment contains a malformed record at line ${index + 1}; private values not shown.`,
+      );
+    }
+    if (fields.has(match[1])) {
+      throw new Error(
+        `REFUSED: signing environment repeats '${match[1]}' at line ${index + 1}; private values not shown.`,
+      );
     }
     fields.set(match[1], match[2].trim());
   }
@@ -296,6 +322,42 @@ async function selfTest() {
 async function main() {
   if (args.includes("--self-test")) process.exit(await selfTest());
   const mode = args[0];
+
+  if (mode === "inspect-environment") {
+    const keyId = arg("--operational-key-id");
+    const envPath = process.env.GALERINA_REGISTRY_SIGNING_ENV_PATH;
+    if (!keyId || !envPath) {
+      throw new Error(
+        "REFUSED: inspect-environment requires --operational-key-id and GALERINA_REGISTRY_SIGNING_ENV_PATH.",
+      );
+    }
+    const fields = readSigningEnvironment(envPath);
+    if (fields.get("GALERINA_SIGNING_KEY_ID") !== keyId) {
+      throw new Error(
+        "REFUSED: signing environment key ID does not match the expected operational key.",
+      );
+    }
+    if (fields.get("GALERINA_SIGNING_ALGORITHM") !== "hybrid-ed25519-mldsa65") {
+      throw new Error(
+        "REFUSED: signing environment is not hybrid-ed25519-mldsa65.",
+      );
+    }
+    for (const name of [
+      "GALERINA_SIGNING_PRIVATE_KEY_B64",
+      "GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64",
+    ]) {
+      if (!fields.get(name)) {
+        throw new Error(
+          `REFUSED: signing environment lacks required field '${name}'.`,
+        );
+      }
+    }
+    console.log(
+      `STRUCTURE OK: canonical UTF-8 signing environment has ${fields.size} unique fields for expected keyId '${keyId}'; private values not shown.`,
+    );
+    process.exit(0);
+  }
+
   const decider = await loadDecider();
 
   if (mode === "export-public") {
@@ -479,7 +541,7 @@ async function main() {
     process.exit(0);
   }
 
-  throw new Error("REFUSED: mode must be export-public, draft, sign, verify, or --self-test.");
+  throw new Error("REFUSED: mode must be inspect-environment, export-public, draft, sign, verify, or --self-test.");
 }
 
 main().catch((error) => {

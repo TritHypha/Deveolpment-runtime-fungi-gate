@@ -229,3 +229,180 @@ test("legacy Ed25519 operational files explain that a new hybrid key is required
     rmSync(temp, { recursive: true, force: true });
   }
 });
+
+test("authority CLI inspects canonical signing structure without exposing private values", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-inspect-valid-"));
+  try {
+    const keyId = "operational-inspection";
+    const secretMarker = "PRIVATE-MARKER-MUST-NOT-APPEAR";
+    const signingEnv = join(temp, "operational.env");
+    writeFileSync(signingEnv, [
+      "# disposable structural-inspection fixture",
+      `GALERINA_SIGNING_KEY_ID=${keyId}`,
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      "GALERINA_SIGNING_KEY_CREATED=2026-07-30T10:00:00.000Z",
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${secretMarker}`,
+      "",
+    ].join("\n"));
+
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", keyId,
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.match(
+      result.stdout,
+      /STRUCTURE OK: canonical UTF-8 signing environment has 5 unique fields/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
+    assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("authority CLI identifies non-UTF-8 signing structure without exposing contents", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-inspect-encoding-"));
+  try {
+    const secretMarker = "PRIVATE-UTF16-MARKER-MUST-NOT-APPEAR";
+    const signingEnv = join(temp, "operational.env");
+    writeFileSync(
+      signingEnv,
+      Buffer.from([
+        "GALERINA_SIGNING_KEY_ID=operational-inspection",
+        "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+        `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}`,
+        `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${secretMarker}`,
+        "",
+      ].join("\r\n"), "utf16le"),
+    );
+
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", "operational-inspection",
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /REFUSED: signing environment must be UTF-8 without a byte-order mark/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
+    assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("authority CLI refuses a UTF-8 byte-order mark without exposing contents", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-inspect-bom-"));
+  try {
+    const secretMarker = "PRIVATE-BOM-MARKER-MUST-NOT-APPEAR";
+    const signingEnv = join(temp, "operational.env");
+    const content = Buffer.from([
+      "GALERINA_SIGNING_KEY_ID=operational-inspection",
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${secretMarker}`,
+      "",
+    ].join("\n"), "utf8");
+    writeFileSync(
+      signingEnv,
+      Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), content]),
+    );
+
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", "operational-inspection",
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /REFUSED: signing environment must be UTF-8 without a byte-order mark/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
+    assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("authority CLI reports repeated signing field by name without exposing values", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-inspect-repeat-"));
+  try {
+    const secretMarker = "PRIVATE-REPEAT-MARKER-MUST-NOT-APPEAR";
+    const signingEnv = join(temp, "operational.env");
+    writeFileSync(signingEnv, [
+      "GALERINA_SIGNING_KEY_ID=operational-inspection",
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}`,
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}-duplicate`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${secretMarker}`,
+      "",
+    ].join("\n"));
+
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", "operational-inspection",
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /REFUSED: signing environment repeats 'GALERINA_SIGNING_PRIVATE_KEY_B64' at line 4/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
+    assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("authority CLI reports malformed signing record by line without exposing contents", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-inspect-malformed-"));
+  try {
+    const secretMarker = "PRIVATE-MALFORMED-MARKER-MUST-NOT-APPEAR";
+    const signingEnv = join(temp, "operational.env");
+    writeFileSync(signingEnv, [
+      "GALERINA_SIGNING_KEY_ID=operational-inspection",
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      `THIS LINE HAS NO EQUALS ${secretMarker}`,
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${secretMarker}`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${secretMarker}`,
+      "",
+    ].join("\n"));
+
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", "operational-inspection",
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /REFUSED: signing environment contains a malformed record at line 3; private values not shown/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
+    assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});

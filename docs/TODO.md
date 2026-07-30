@@ -18,7 +18,7 @@ planning checkbox must never be used to imply that implementation exists.
 
 ### Terminal fixed-point checkpoint - 2026-07-30
 
-- **Fresh root aggregate:** **98/98 packages and 8,632 tests** pass.
+- **Fresh root aggregate:** **98/98 packages and 8,637 tests** pass.
 - **Fresh graph/generator evidence:** all five repository-owned graph surfaces
   generate and pass exact check mode; all fourteen declared generator
   contracts pass their isolated fixed-point tests.
@@ -34,7 +34,7 @@ planning checkbox must never be used to imply that implementation exists.
   zero-trust thesis **78%**, build progress **75%**, and the tracking registry
   contains **21** items. These are evidence meters, not release authorization.
 - **Fresh unified harness:** all five lanes pass in one invocation: unit
-  **8,632**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  **8,637**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
   the Galerina SLIDE-adapter corpus **496/496**.
 - **Fresh audit inventory:** all **80/80** audit/lint gates have executable
   refusal/control evidence; the tooling contract sees 98 packages and 151
@@ -43,8 +43,11 @@ planning checkbox must never be used to imply that implementation exists.
   constructions pass, with the declared unsigned-spore residual still reported
   as open risk. Its strict production single-file audit passes on the canonical
   pure-transform pattern.
-- **Current:** review and commit the generated fixed point and continuity
-  documents without staging unrelated files.
+- **Current:** the first owner-run operational public export refused before
+  key decoding because the signing-environment parser found malformed or
+  repeated structure. Public export is locked. The live owner chart now
+  authorizes only the non-secret `inspect-environment` check; the owner should
+  return its single `STRUCTURE OK:` or `REFUSED:` line and no private data.
 - **Release stop condition:** Galerina beta v1 and owner signing remain
   **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
   auth remains an unapproved and unsigned candidate outside it. Operational
@@ -128,9 +131,9 @@ planning checkbox must never be used to imply that implementation exists.
   repository.
 - **Fresh doc guards:** private-doc leak self-test and live scan are green,
   path-leak self-test and live scan are green, and doc/source drift reports
-  zero violations at the current 98-package/8,632-test baseline.
+  zero violations at the current 98-package/8,637-test baseline.
 - **Current:** the complete generated graph/code/coverage/component-health
-  dependency chain is refreshed. Root tests are 98/98 packages and 8,632
+  dependency chain is refreshed. Root tests are 98/98 packages and 8,637
   tests; strict/exhaustive phase-close are 83/83 and 84/84.
 - **Next safe boundary:** commit the generated evidence and this continuity
   checkpoint, then rerun exact non-mutating drift/leak checks over the final
@@ -164,17 +167,40 @@ planning checkbox must never be used to imply that implementation exists.
   private files as data, checks their internal key IDs and never prints private
   fields. Both root halves are mandatory; an Ed25519-only root or operational
   file is refused. Disposable evidence is 9/9.
-- **Owner action chart:** the one action authorized now is in
+- **Implemented after the first real export refusal:** `inspect-environment`
+  validates canonical UTF-8/no-BOM encoding, unique `NAME=value` records, the
+  expected operational identity, hybrid suite, and presence of both private
+  fields without decoding or printing either value or the private path.
+  Focused tests cover success, UTF-16 and UTF-8-BOM rejection, malformed and
+  duplicate-field diagnosis, and value/path non-disclosure.
+- **Owner action chart:** the one action authorized now is the structural
+  inspection in
   `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. Later commands and
   custody boundaries are locked separately in
   `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
+- **Binding rotation requirement (owner, 2026-07-30):** production Zero-Trust
+  uses automatic operational-key rotation. Reuse the existing
+  `galerina-tower-citizen` append-only epoch/Triple-Lock protocol; do not create
+  a second rotation system. Its canonical design is
+  `docs/architecture/audit-key-rotation-triple-lock-design-2026-07-10.md`.
+  The trigger proposes, readiness and K3 gates decide, the old key remains
+  available through canary/drain, and failed verification falls back and
+  revokes the candidate. The cold root remains an offline
+  recovery/authorization ceremony.
+- **Rotation integration still open:** the Tower Citizen decision core and
+  Sentinel Egress epoch verification exist; StateSerializer epoch awareness,
+  real custody execution, registry operational-delegation integration, and
+  automatic package/index signer orchestration do not. The current ceremony is
+  the initial operational bootstrap and does not satisfy automatic rotation by
+  itself.
 - **Completed:** cryptographic manifest/delegation verification is integrated
   into the file-backed registry builder. The false live auth and healthcare
   stubs are removed; the real auth source is a reviewed content-addressed
   candidate outside the signable live tree.
-- **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Do not ask
-  the owner to mount either real private file until the live unsigned-index
-  build and all repository gates are green.
+- **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Do not
+  retry public export or ask the owner to mount the root private file until the
+  operational environment passes structural inspection and the live chart
+  explicitly advances one operation.
 
 ### Governed-memory and Wasmtime-oracle checkpoint - 2026-07-30
 
@@ -236,7 +262,7 @@ planning checkbox must never be used to imply that implementation exists.
   verifier, native backend, production runner, and narrow `.fungi` Wasm
   compatibility engine are not implemented by this beta-safe migration.
 - **Broad close evidence:** the complete aggregate passes **98/98 packages,
-  8,632 tests**; all fourteen declared generator contracts and all five graph
+  8,637 tests**; all fourteen declared generator contracts and all five graph
   surfaces are green; strict phase-close passes **83/83** and exhaustive
   passes **84/84**, including its 98/98 package child.
 - **Current release boundary:** repository verification is green. Beta-v1 and

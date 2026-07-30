@@ -3,7 +3,7 @@
   "totals": {
     "packages": 98,
     "testBearing": 98,
-    "tests": 8632,
+    "tests": 8637,
     "devTools": 133,
     "auditTools": 79,
     "toolsInCadence": 61,
@@ -184,7 +184,7 @@
       "name": "galerina-registry",
       "kind": "registry",
       "description": "Signed package registry entries for the Galerina platform. Empty until the owner signing ceremony (registry wa",
-      "tests": 28,
+      "tests": 33,
       "hasTestScript": true,
       "border": "PASS",
       "files": 0,

@@ -60,9 +60,9 @@ flowchart LR
 |---|---:|---|
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
-| Delegated package-manifest admission | 🟩 | Registry 28/28; app-kernel 149/149; disposable root→operational→manifest chain only |
+| Delegated package-manifest admission | 🟩 | Registry 33/33; app-kernel 149/149; disposable root→operational→manifest chain only |
 | Live registry population | 🟨 | False stubs removed; auth is a 63,281-byte unapproved/unsigned candidate; live tree empty |
-| Production registry signing | 🟥 | Two-location custody owner-confirmed; owner approval, valid operational public/delegation chain and signing act absent |
+| Production registry signing | 🟥 | Two-location custody owner-confirmed; first public export refused on environment structure before key decoding; metadata-only inspection is current; automatic operational rotation must reuse the incomplete Tower Citizen Triple-Lock path |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -94,26 +94,32 @@ The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the registry population changes.
-2. Publicly re-derive and admit the operational bundle; owner-review the
-   content-addressed auth candidate; root-sign its delegation; and hybrid-sign
-   the complete package manifest. Two-location operational-key custody is
-   already owner-confirmed.
-3. Move only the independently verified auth manifest into the live tree and
+2. Resolve the operational environment's encoding/record-structure refusal
+   through the non-secret inspection mode. Only after the live owner chart
+   advances should the public bundle be re-derived and admitted, the
+   content-addressed auth candidate be owner-reviewed, its delegation be
+   root-signed, and its complete package manifest be hybrid-signed.
+   Two-location operational-key custody is already owner-confirmed.
+3. Complete the existing Tower Citizen automatic operational-key rotation
+   path for registry/package/index authority: StateSerializer epoch awareness,
+   real custody execution, delegation integration, gated canary/drain/fallback,
+   and automatic orchestration. The offline root remains manual.
+4. Move only the independently verified auth manifest into the live tree and
    require the unsigned live-index build to pass.
-4. Ask the owner to perform the offline index signing act only after the
+5. Ask the owner to perform the offline index signing act only after the
    walkthrough reports `READY FOR OWNER SIGNING`.
-5. Resume independent SLIDE implementation only after the Galerina beta-v1
+6. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,632 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,637 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 19 signing refusal codes without a direct
 test mention, and 34 cross-package relative imports.
 
-The fresh unified lane totals are unit 8,632, end-to-end 4/4, conformance
+The fresh unified lane totals are unit 8,637, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
 meta-gate covers all 80/80 discovered audit/lint gates with non-vacuous
 refusal/control evidence; the tooling contract reports 98 packages and 151
@@ -155,7 +161,10 @@ Production still requires an exact valid operational public bundle,
 root-signed delegation, owner approval/signature of the auth manifest, a
 successful live unsigned build, and the final offline index-signing act.
 Two verified offline custody copies in separate physical locations were
-owner-confirmed on 2026-07-30.
+owner-confirmed on 2026-07-30. The first public-only export then refused before
+key decoding because the signing environment was malformed or repeated a
+field. Public export remains locked while the live walkthrough authorizes only
+a metadata-only UTF-8/record-structure inspection.
 
 ## Binding package topology
 

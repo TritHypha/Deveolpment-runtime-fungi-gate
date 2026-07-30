@@ -36,7 +36,7 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>98/98 · 8,632 tests"]:::green
+    P["Package readiness<br/>98/98 · 8,637 tests"]:::green
     A["Audit proof<br/>80/80 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
     X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
@@ -83,22 +83,22 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **98/98 packages and 8,632 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,637 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,632 |
+  | Unit | 8,637 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
   | Galerina SLIDE-adapter corpus | 496/496 |
 
-- The independent scripts suite passes **208/208**.
+- The strict phase-close tooling lane passes **229/229**.
 - The compiler package passes **5,748/5,748**.
 - App-kernel passes **149/149**, including delegated hybrid package-manifest
   verification.
-- Registry passes **28/28**, including exact artifact re-derivation, complete
+- Registry passes **33/33**, including exact artifact re-derivation, complete
   public authority, mixed-tree poisoning and the unsigned auth candidate.
 - Auth passes **59/59** and its exact 18-file source/test candidate digest
   re-derives.
@@ -122,7 +122,7 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
   directly without `--soft`.
 - The fresh audit meta-gate accounts for **80/80** audit/lint gates with
   executable refusal/control evidence; the tooling contract reports 98
-  packages, 151 tools and zero violations.
+  packages, 133 indexed dev tools and zero violations.
 - The security devtool's 29-case construction-audit self-test passes, all nine
   live constructions hold at their declared evidence tier, and its strict
   production single-file audit passes on the canonical pure-transform pattern.
@@ -133,7 +133,7 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 - The WAT emitter mutation audit killed **3/3** independent arithmetic
   mutants.
 - Mutation targets were restored exactly; no `.bak` residue remains.
-- Graph integrity is structurally clean at **8,192 nodes, 8,476 edges**, with
+- Graph integrity is structurally clean at **8,237 nodes, 8,534 edges**, with
   no dangling edge, duplicate identity, or dependency cycle.
 - Package Hardened Borders pass **98/98**.
 - Diagnostic conformance reports 345 code/name pairs and zero violations.
@@ -243,6 +243,20 @@ The live signing act is **NOT READY** because:
 Two verified encrypted operational-key custody copies in separate physical
 locations were owner-confirmed on 2026-07-30. That closes custody only; it does
 not admit the public bundle or authorize delegation, package or index signing.
+The first public-only export refused before key decoding because the signing
+environment contained malformed/repeated structure. Public export is locked.
+The live walkthrough now permits only `inspect-environment`, whose disposable
+tests prove UTF-16/BOM, malformed-record and duplicate-field refusal without
+printing private values or the private path.
+
+Production Zero-Trust also requires automatic operational-key rotation. The
+existing Tower Citizen append-only epoch/Triple-Lock protocol is the canonical
+path: readiness, staged separate custody, triple lock, atomic switch,
+forward/backward/continuity canary, drain, fallback, revocation and retirement.
+Its decision core and Sentinel Egress epoch verification exist. StateSerializer
+epoch awareness, custody execution, registry delegation integration and
+automatic package/index signer orchestration remain release-blocking. The cold
+root remains an offline recovery/authorization ceremony.
 
 The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine
@@ -284,7 +298,7 @@ After the complete fourteen-generator fixed point:
 - strict phase-close passes **83/83**;
 - exhaustive phase-close passes **84/84**;
 - exhaustive's additional package child passes **98/98** package commands;
-- the root aggregate contains **8,632 tests**;
+- the root aggregate contains **8,637 tests**;
 - graph-all passes all **5/5** repository-owned graph surfaces;
 - the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
   are killed.

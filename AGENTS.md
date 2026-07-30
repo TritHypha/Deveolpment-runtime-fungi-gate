@@ -78,7 +78,7 @@ intent → governed execution plan → coordinated compute → audit proof
 > **Current beta-v1 checkpoint (2026-07-30):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
 > and green (`galerina-core-compiler` 5,748/5,748; whole suite 98/98 packages,
-> 8,588 tests, zero failures). All seven canonical `.fungi` compiler stages
+> 8,637 tests, zero failures). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
