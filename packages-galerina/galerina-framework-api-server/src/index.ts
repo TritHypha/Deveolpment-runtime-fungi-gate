@@ -19,13 +19,15 @@
  *      only +1/ALLOW (e.g. a fully-validated, pinned, fresh-revocation client cert)
  *      authenticates the channel; 0/−1 deny. A verified channel authenticates in
  *      lieu of a bearer token (mutual-TLS semantics); it does not relax any other
- *      gate. There are two ways to supply it, in precedence order:
+ *      gate. There are two ways to supply it:
  *        a. an explicit `resolveChannelVerdict` hook (advanced / custom transports);
  *        b. the built-in `tls` mode — pass key/cert (+ optional `ca`, `pinnedDigests`,
  *           `checkRevocation`, …) and the adapter stands up an HTTPS server, reads the
  *           peer cert via `getPeerCertificate(true)`, maps the Node TLS library's
  *           outcomes into a `CertGateInput`, calls the shipped `certGate`, and sets
  *           `channelVerdict = decision.verdict`.
+ *      When both are configured, the custom result is an ADDITIONAL factor: it cannot
+ *      override or rescue a certificate failure. `undefined` means no additional opinion.
  *      Both are unset by default → no channel verdict is supplied → the adapter behaves
  *      exactly as before, leaving admission entirely to the kernel's own auth gate. A
  *      throwing resolver / unreadable cert factor DENIES (fail-closed).
@@ -134,17 +136,18 @@ export interface CreateApiServerOptions {
    * the channel verdict from the peer certificate via the shipped S1 cert-gate. Unset →
    * a plain `node:http` server (legacy, unchanged). See {@link ApiServerTlsOptions}.
    *
-   * Precedence: an explicit `resolveChannelVerdict` (below), if supplied, OVERRIDES the
-   * built-in cert-gate resolver (the `tls` server is still created, but you provide the
-   * verdict). With `tls` set and no `resolveChannelVerdict`, the cert-gate resolver is used.
+   * When `resolveChannelVerdict` is also supplied, both factors are composed fail-closed:
+   * any DENY denies, any INDETERMINATE prevents admission, and only two ALLOW verdicts
+   * admit. A custom `undefined` means no additional opinion and leaves the certificate
+   * verdict unchanged. The custom resolver can never replace or rescue the certificate gate.
    */
   readonly tls?: ApiServerTlsOptions;
   /**
    * OPTIONAL resolver for the TLSTP S1 channel/identity verdict. Given the raw request
    * (e.g. its TLS socket's peer certificate), return a K3 `Verdict` that the kernel folds
-   * into admission, FAIL-CLOSED (only +1/ALLOW admits; 0/−1 deny). This is the manual
-   * escape hatch; for standard mTLS prefer the `tls` option above, which wires this to
-   * `certGate` for you.
+   * into admission, FAIL-CLOSED (only +1/ALLOW admits; 0/−1 deny). Without `tls`, this
+   * supplies the channel verdict. With `tls`, it is an additional fail-closed policy
+   * factor composed with the built-in certificate gate.
    *
    * This is the live end-to-end channel-verdict path: transport → cert-gate →
    * `channelVerdict` → kernel `decideAtBoundary` fold. The kernel folds it in its auth
@@ -156,7 +159,8 @@ export interface CreateApiServerOptions {
    *
    * Fail-closed contract: if the resolver THROWS, the channel is DENIED (−1) — it is never
    * silently downgraded to the header path. Returning `undefined` is the explicit "no
-   * opinion → defer to the kernel's auth path" signal (distinct from throwing).
+   * opinion → defer to the kernel's auth path" signal when TLS is absent, or "no
+   * additional opinion" when TLS supplies the certificate verdict.
    */
   readonly resolveChannelVerdict?: (req: http.IncomingMessage) => Verdict | undefined;
 }
@@ -397,6 +401,40 @@ function makeCertGateResolver(
   };
 }
 
+/**
+ * Compose the mandatory certificate verdict with an optional custom policy verdict.
+ * `undefined` is neutral only for the custom factor. Invalid runtime values deny, so a
+ * JavaScript caller cannot bypass the typed contract by returning an out-of-domain number.
+ */
+function composeTlsAndCustomVerdicts(
+  certResolver: (req: http.IncomingMessage) => Verdict,
+  customResolver: (req: http.IncomingMessage) => Verdict | undefined,
+): (req: http.IncomingMessage) => Verdict {
+  return (req) => {
+    const certVerdict = certResolver(req);
+    const customVerdict = customResolver(req);
+    const certIsValid =
+      certVerdict === Verdict.ALLOW ||
+      certVerdict === Verdict.INDETERMINATE ||
+      certVerdict === Verdict.DENY;
+    const customIsValid =
+      customVerdict === undefined ||
+      customVerdict === Verdict.ALLOW ||
+      customVerdict === Verdict.INDETERMINATE ||
+      customVerdict === Verdict.DENY;
+
+    if (!certIsValid || !customIsValid) return Verdict.DENY;
+    if (certVerdict === Verdict.DENY || customVerdict === Verdict.DENY) return Verdict.DENY;
+    if (
+      certVerdict === Verdict.INDETERMINATE ||
+      customVerdict === Verdict.INDETERMINATE
+    ) {
+      return Verdict.INDETERMINATE;
+    }
+    return Verdict.ALLOW;
+  };
+}
+
 /** Map `ApiServerTlsOptions` into Node `https.ServerOptions`. Named options take precedence
  *  over the generic `secureContextOptions` bag; mTLS defaults are fail-closed (see the type). */
 function buildSecureContext(tlsOpts: ApiServerTlsOptions): https.ServerOptions {
@@ -420,15 +458,18 @@ export function createApiServer(opts: CreateApiServerOptions): http.Server {
   const maxBodyBytes =
     opts.maxBodyBytes !== undefined ? opts.maxBodyBytes : DEFAULT_MAX_BODY_BYTES;
 
-  // Resolve the channel-verdict resolver. Precedence: an explicit resolveChannelVerdict
-  // wins (advanced escape hatch); otherwise, if TLS is configured, derive the cert-gate
-  // resolver; otherwise none (plain-http legacy path — kernel header auth, unchanged).
+  // TLS certificate admission is mandatory whenever TLS is configured. A custom resolver
+  // is an additional factor, never a replacement. With neither configured, preserve the
+  // plain-HTTP kernel-auth path.
   const resolveChannelVerdict: ((req: http.IncomingMessage) => Verdict | undefined) | undefined =
-    opts.resolveChannelVerdict !== undefined
-      ? opts.resolveChannelVerdict
-      : opts.tls !== undefined
-        ? makeCertGateResolver(opts.tls)
-        : undefined;
+    opts.tls !== undefined
+      ? opts.resolveChannelVerdict !== undefined
+        ? composeTlsAndCustomVerdicts(
+            makeCertGateResolver(opts.tls),
+            opts.resolveChannelVerdict,
+          )
+        : makeCertGateResolver(opts.tls)
+      : opts.resolveChannelVerdict;
 
   const onRequest = (req: http.IncomingMessage, res: http.ServerResponse): void => {
     void handleRequest(kernel, maxBodyBytes, resolveChannelVerdict, req, res);

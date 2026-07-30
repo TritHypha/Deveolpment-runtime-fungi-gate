@@ -24,6 +24,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { createAppKernel } from "../../galerina-framework-app-kernel/dist/index.js";
+import { Verdict } from "../../galerina-tower-citizen/dist/index.js";
 import { createApiServer, listen } from "../dist/index.js";
 
 const FIX = path.join(path.dirname(fileURLToPath(import.meta.url)), "fixtures", "tls");
@@ -57,11 +58,12 @@ function buildSecureKernel(ran) {
 }
 
 /** Spin up a TLS api-server with the given extra `tls` options merged over the base identity. */
-async function withTlsServer(tlsExtra, fn) {
+async function withTlsServer(tlsExtra, fn, serverExtra = {}) {
   const ran = { value: false };
   const server = createApiServer({
     kernel: buildSecureKernel(ran),
     tls: { key: SERVER_KEY, cert: SERVER_CERT, ca: CA_CERT, ...tlsExtra },
+    ...serverExtra,
   });
   const { port } = await listen(server, 0);
   try {
@@ -188,5 +190,65 @@ test("(bonus) a THROWING revocation check → 401 (unknown → 0 → DENY), hand
       assert.equal(res.status, 401);
       assert.equal(ran.value, false);
     },
+  );
+});
+
+test("(composition) custom ALLOW cannot rescue a missing client certificate", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, {});
+      assert.equal(res.status, 401);
+      assert.equal(ran.value, false);
+    },
+    { resolveChannelVerdict: () => Verdict.ALLOW },
+  );
+});
+
+test("(composition) valid certificate and custom ALLOW admit", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, { clientKey: CLIENT_GOOD_KEY, clientCert: CLIENT_GOOD_CERT });
+      assert.equal(res.status, 200);
+      assert.equal(ran.value, true);
+    },
+    { resolveChannelVerdict: () => Verdict.ALLOW },
+  );
+});
+
+test("(composition) custom DENY rejects an otherwise valid certificate", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, { clientKey: CLIENT_GOOD_KEY, clientCert: CLIENT_GOOD_CERT });
+      assert.equal(res.status, 401);
+      assert.equal(ran.value, false);
+    },
+    { resolveChannelVerdict: () => Verdict.DENY },
+  );
+});
+
+test("(composition) custom undefined leaves a valid certificate verdict unchanged", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, { clientKey: CLIENT_GOOD_KEY, clientCert: CLIENT_GOOD_CERT });
+      assert.equal(res.status, 200);
+      assert.equal(ran.value, true);
+    },
+    { resolveChannelVerdict: () => undefined },
+  );
+});
+
+test("(composition) out-of-domain custom verdict denies", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, { clientKey: CLIENT_GOOD_KEY, clientCert: CLIENT_GOOD_CERT });
+      assert.equal(res.status, 401);
+      assert.equal(ran.value, false);
+    },
+    { resolveChannelVerdict: () => 7 },
   );
 });
