@@ -62,9 +62,9 @@
   "license": "Apache-2.0",
   "galerinaVendor": {
     "upstream": "subprojects/myco (github.com/TritHypha/myco)",
-    "upstreamCommit": "889f89f9f6a86e07b60b101c3aac9e38075768d1",
-    "syncedAt": "2026-07-28",
-    "contains": "v0.2.1 path scoping, complete narrowing evidence, and killable per-regex worker deadlines",
+    "upstreamCommit": "810058c6af9345b9ae6c965d04a19c75d44ffda0",
+    "syncedAt": "2026-07-30",
+    "contains": "v0.2.1 behavior plus the bounded closed persisted-index contract, root containment, canonical persistence ordering, and hostile-index regressions",
     "rule": "MIRROR SOURCE — do not edit src/ here. Fix upstream, then re-vendor. Package-specific documentation and metadata may describe Galerina/TLL boundaries."
   },
   "devDependencies": {
