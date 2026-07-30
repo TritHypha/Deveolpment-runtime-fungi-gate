@@ -15,6 +15,8 @@ const KEY_ID = "0123456789abcdef";
 const CONTEXTS = {
   root: "galerina.registry.delegation.sig.v1",
   operational: "galerina.registry.index.sig.v2",
+  packageManifest: "galerina.registry.package.manifest.sig.v1",
+  rotation: "galerina.registry.rotation.proof.v1",
 };
 
 function canonicalBase64(bytes) {
@@ -46,7 +48,12 @@ function fixture(role) {
 }
 
 describe("registry public verifier", () => {
-  for (const role of ["root", "operational"]) {
+  for (const role of [
+    "root",
+    "operational",
+    "packageManifest",
+    "rotation",
+  ]) {
     it(`verifies both ${role} signature halves with the admitted context`, () => {
       const value = fixture(role);
       const verifier = createRegistryPublicVerifiers(value.input);

@@ -35,6 +35,10 @@ import {
   type AdmittedRegistryRotationCandidate,
   type AdmittedRegistryRotationIndex,
 } from "./registry-rotation-authority.js";
+import {
+  isProductionAdmittedRegistryGeneration,
+  type PersistedRegistryGeneration,
+} from "./registry-generation-store.js";
 
 export interface AdvanceRegistryRotationOptions {
   readonly process: RotationProcess;
@@ -345,9 +349,14 @@ export function advanceRegistryRotation(
 }
 
 export interface AdvanceRegistryRotationStateOptions
-  extends Omit<AdvanceRegistryRotationOptions, "process"> {
+  extends Omit<
+    AdvanceRegistryRotationOptions,
+    "process" | "verifyForwardProbe"
+  > {
   readonly state: RegistryRotationState;
   readonly admittedIndex: AdmittedRegistryRotationIndex;
+  readonly candidateGeneration: PersistedRegistryGeneration;
+  readonly verifyForwardProbe: (generationId: string) => boolean;
 }
 
 export interface RegistryRotationStateOutcome
@@ -369,15 +378,32 @@ export function advanceRegistryRotationState(
     "drained",
     "retired",
   ].includes(options.state.process.phase);
-  const candidateFactsValid = candidateAlreadyAccepted
-    ? options.receipt.delegationSerial
-        === options.state.acceptedDelegationSerial
-      && options.admittedIndex.issuedAt
-        === options.state.acceptedIndexIssuedAt
-    : options.receipt.delegationSerial
-        > options.state.acceptedDelegationSerial
-      && Date.parse(options.admittedIndex.issuedAt)
-        > Date.parse(options.state.acceptedIndexIssuedAt);
+  const generationFactsValid =
+    isProductionAdmittedRegistryGeneration(options.candidateGeneration)
+    && options.candidateGeneration.delegationSerial
+      === options.receipt.delegationSerial
+    && options.candidateGeneration.operationalKeyId
+      === options.receipt.keyId
+    && options.candidateGeneration.indexIssuedAt
+      === options.admittedIndex.issuedAt
+    && options.candidateGeneration.generation.index.entries.length
+      === options.admittedIndex.entryCount;
+  const candidateFactsValid = generationFactsValid
+    && (
+      candidateAlreadyAccepted
+        ? options.receipt.delegationSerial
+            === options.state.acceptedDelegationSerial
+          && options.admittedIndex.issuedAt
+            === options.state.acceptedIndexIssuedAt
+          && options.candidateGeneration.generationId
+            === options.state.acceptedGenerationId
+        : options.receipt.delegationSerial
+            > options.state.acceptedDelegationSerial
+          && Date.parse(options.admittedIndex.issuedAt)
+            > Date.parse(options.state.acceptedIndexIssuedAt)
+          && options.candidateGeneration.generationId
+            !== options.state.acceptedGenerationId
+    );
   if (
     !isRestoredRegistryRotationState(options.state)
     || !isAdmittedRegistryRotationCandidate(options.receipt)
@@ -389,7 +415,7 @@ export function advanceRegistryRotationState(
       state: options.state,
       decision: decideAtBoundary(Verdict.DENY, options.onDiagnostic),
       reasons: [
-        "DENY: production rotation state or candidate artifact identity is unauthenticated, stale, or mismatched",
+        "DENY: production rotation state or candidate generation identity is unauthenticated, stale, or mismatched",
       ],
     };
   }
@@ -397,6 +423,9 @@ export function advanceRegistryRotationState(
   const outcome = advanceRegistryRotation({
     ...options,
     process: options.state.process,
+    verifyForwardProbe: () => options.verifyForwardProbe(
+      options.candidateGeneration.generationId,
+    ),
   });
   if (outcome.process === options.state.process) {
     return {
@@ -418,6 +447,8 @@ export function advanceRegistryRotationState(
         options.receipt.delegationSerial,
       acceptedIndexIssuedAt:
         options.admittedIndex.issuedAt,
+      acceptedGenerationId:
+        options.candidateGeneration.generationId,
     }
     : {
       ...options.state,

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import {
+  readFileSync,
+  readdirSync,
+} from "node:fs";
 import { describe, it } from "node:test";
 
 import {
@@ -18,11 +21,22 @@ import {
 const ROOT_KEY_ID = "21415420b447e219";
 const OPERATIONAL_KEY_ID = "f3172a48372bfb23";
 const RING_KEY = new Uint8Array(32).fill(0x73);
+const generationDirectory = new URL(
+  "../../../packages-galerina/galerina-registry/generations/",
+  import.meta.url,
+);
+const generationFiles = readdirSync(generationDirectory).filter(
+  (name) => /^registry-generation-[0-9a-f]{64}\.json$/u.test(name),
+);
+assert.equal(generationFiles.length, 1);
+const ACCEPTED_GENERATION_ID = generationFiles[0]
+  .slice("registry-generation-".length, -".json".length);
 
 function restoredProductionState(
   keyId = OPERATIONAL_KEY_ID,
   acceptedDelegationSerial = 1,
   acceptedIndexIssuedAt = "2026-07-30T16:33:10.307Z",
+  acceptedGenerationId = ACCEPTED_GENERATION_ID,
 ) {
   const governanceRoot = new URL("../../../governance/", import.meta.url);
   const ed25519PublicKeyPem = readFileSync(
@@ -57,6 +71,7 @@ function restoredProductionState(
     indexIssuedAtFloor: "1970-01-01T00:00:00.000Z",
     acceptedDelegationSerial,
     acceptedIndexIssuedAt,
+    acceptedGenerationId,
   }, RING_KEY);
   return restoreRegistryRotationCheckpoint(
     checkpoint,
@@ -67,6 +82,7 @@ function restoredProductionState(
       minIndexIssuedAtFloor: "1970-01-01T00:00:00.000Z",
       minAcceptedDelegationSerial: acceptedDelegationSerial,
       minAcceptedIndexIssuedAt: acceptedIndexIssuedAt,
+      expectedAcceptedGenerationId: acceptedGenerationId,
     },
   );
 }
@@ -90,6 +106,7 @@ describe("production registry runtime", () => {
     assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
     assert.equal(runtime.delegationSerial, 1);
     assert.equal(runtime.indexIssuedAt, "2026-07-30T16:33:10.307Z");
+    assert.equal(runtime.generationId, null);
     assert.deepEqual(
       runtime.admit(
         {
@@ -143,6 +160,7 @@ describe("production registry runtime", () => {
       rotationState: state,
     });
     assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
+    assert.equal(runtime.generationId, ACCEPTED_GENERATION_ID);
 
     await assert.rejects(loadProductionRegistryFromRotationState({
       expectedRootKeyId: ROOT_KEY_ID,
@@ -165,6 +183,15 @@ describe("production registry runtime", () => {
         OPERATIONAL_KEY_ID,
         1,
         "2026-07-30T16:34:00.000Z",
+      ),
+    }));
+    await assert.rejects(loadProductionRegistryFromRotationState({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: restoredProductionState(
+        OPERATIONAL_KEY_ID,
+        1,
+        "2026-07-30T16:33:10.307Z",
+        "f".repeat(64),
       ),
     }));
   });

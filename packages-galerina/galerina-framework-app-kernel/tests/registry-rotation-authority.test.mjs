@@ -5,6 +5,12 @@ import {
   generateKeyPairSync,
   sign as edSign,
 } from "node:crypto";
+import {
+  mkdtemp,
+  rm,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
   ml_dsa65 as mlDsa65,
@@ -15,9 +21,11 @@ import {
   admitRegistryRotationIndex,
   advanceRegistryRotation,
   advanceRegistryRotationState,
+  buildRegistryGeneration,
   buildRegistryIndex,
   buildRegistryAuthorityDelegation,
   isAdmittedRegistryRotationCandidate,
+  persistRegistryGeneration,
   signRegistryAuthorityDelegation,
   signRegistryIndexHybrid,
   stageAdmittedRegistryRotationCandidate,
@@ -40,6 +48,9 @@ const ROTATION_CONTEXT = new TextEncoder().encode(
 );
 const INDEX_CONTEXT = new TextEncoder().encode(
   "galerina.registry.index.sig.v2",
+);
+const MANIFEST_CONTEXT = new TextEncoder().encode(
+  "galerina.registry.package.manifest.sig.v1",
 );
 const RING_KEY = new Uint8Array(32).fill(0x71);
 
@@ -83,6 +94,17 @@ function hybridKey(keyId) {
         mlDsa65: Buffer.from(
           mlDsa65.sign(message, mlSecret, {
             context: INDEX_CONTEXT,
+          }),
+        ).toString("base64"),
+      };
+    },
+    signManifest(message) {
+      return {
+        ed25519: Buffer.from(edSign(null, message, privateKey))
+          .toString("base64"),
+        mlDsa65: Buffer.from(
+          mlDsa65.sign(message, mlSecret, {
+            context: MANIFEST_CONTEXT,
           }),
         ).toString("base64"),
       };
@@ -161,6 +183,31 @@ function signedCandidateIndex(candidate) {
   );
 }
 
+function unsignedCandidateManifest() {
+  return {
+    schema: "galerina-package-manifest/v1",
+    name: "@galerina/example",
+    version: "1.0.0",
+    registry: "galerina-central",
+    artifactProfile: "galerina-flat-package-tree/v1",
+    artifactFiles: ["LICENSE", "src/index.fungi"],
+    capabilities: [],
+    effects: [],
+    installScript: null,
+    hash: `sha256:${"4".repeat(64)}`,
+    publisher: "galerina-owner-governance",
+    keyId: "1111111111111111",
+    signerKeyId: "1111111111111111",
+    certificationLevel: "verified",
+    riskRating: "low",
+    governance: {
+      reviewed: true,
+      reviewedBy: "galerina-owner-governance",
+      reviewedAt: "2026-08-01T00:00:00.000Z",
+    },
+  };
+}
+
 function restoreState(process, facts = {}) {
   const state = {
     process,
@@ -168,6 +215,7 @@ function restoreState(process, facts = {}) {
     indexIssuedAtFloor: "1970-01-01T00:00:00.000Z",
     acceptedDelegationSerial: 1,
     acceptedIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+    acceptedGenerationId: "0".repeat(64),
     ...facts,
   };
   return restoreRegistryRotationCheckpoint(
@@ -179,6 +227,7 @@ function restoreState(process, facts = {}) {
       minIndexIssuedAtFloor: state.indexIssuedAtFloor,
       minAcceptedDelegationSerial: state.acceptedDelegationSerial,
       minAcceptedIndexIssuedAt: state.acceptedIndexIssuedAt,
+      expectedAcceptedGenerationId: state.acceptedGenerationId,
     },
   );
 }
@@ -442,10 +491,38 @@ describe("registry rotation root authority", () => {
     assert.equal(failed.process.ring.epochs[1].status, "revoked");
   });
 
-  it("requires an authenticated checkpoint between every production phase and advances exact artifact identity after canary", () => {
+  it("refuses production rotation until a platform durability adapter is admitted", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "galerina-rotation-"));
+    try {
     const value = fixture();
     const oldKey = hybridKey("1111111111111111");
-    const candidateIndex = signedCandidateIndex(value.candidate);
+    const generation = buildRegistryGeneration({
+      delegationSerial: 2,
+      operationalPublicBundle: value.candidate.publicBundle,
+      unsignedManifests: [unsignedCandidateManifest()],
+      registry: "galerina-central",
+      issuedAt: "2026-08-02T00:00:00.000Z",
+      custody: {
+        signHybrid(keyId, message, role) {
+          if (keyId !== CANDIDATE_ID) return null;
+          return role === "package-manifest"
+            ? value.candidate.signManifest(message)
+            : value.candidate.signIndex(message);
+        },
+      },
+    });
+    const candidateIndex = generation.index;
+    const candidateGeneration = await persistRegistryGeneration({
+      directory,
+      generation,
+      verify: {
+        expectedDelegationSerial: 2,
+        publicBundle: value.candidate.publicBundle,
+        minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+      },
+      directoryDurabilityBarrier: async () => true,
+      durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+    });
     const custodyKeys = new Map([
       [oldKey.publicBundle.keyId, oldKey],
       [value.candidate.publicBundle.keyId, value.candidate],
@@ -467,9 +544,9 @@ describe("registry rotation root authority", () => {
       fileRef: `custody://registry/${oldKey.publicBundle.keyId}`,
       createdTick: 1,
     });
-    let state = restoreState(beginRotation(ring));
-    let receipt = admitRegistryRotationCandidate(value.options);
-    let admittedIndex = admitRegistryRotationIndex({
+    const state = restoreState(beginRotation(ring));
+    const receipt = admitRegistryRotationCandidate(value.options);
+    const admittedIndex = admitRegistryRotationIndex({
       receipt,
       publicBundle: value.candidate.publicBundle,
       index: candidateIndex,
@@ -516,65 +593,28 @@ describe("registry rotation root authority", () => {
       retirePolicy: { mode: "destroy-private" },
       retireTick: 5,
       verifyCurrentChain: () => true,
-      verifyForwardProbe: () => true,
+      verifyForwardProbe: (generationId) =>
+        generationId === candidateGeneration.generationId,
       verifyBackwardSample: () => true,
+      candidateGeneration,
     };
 
-    for (const phase of [
-      "ready",
-      "staged",
-      "locked",
-      "switched",
-      "verified",
-      "drained",
-      "retired",
-    ]) {
-      const outcome = advanceRegistryRotationState({
-        ...common,
-        state,
-        receipt,
-        admittedIndex,
-      });
-      assert.equal(outcome.decision.authorized, true);
-      assert.equal(outcome.state.process.phase, phase);
-
-      const unpersistedRetry = advanceRegistryRotationState({
-        ...common,
-        state: outcome.state,
-        receipt,
-        admittedIndex,
-      });
-      assert.equal(unpersistedRetry.decision.authorized, false);
-      assert.equal(unpersistedRetry.state, outcome.state);
-
-      state = restoreState(outcome.state.process, {
-        delegationSerialFloor: outcome.state.delegationSerialFloor,
-        indexIssuedAtFloor: outcome.state.indexIssuedAtFloor,
-        acceptedDelegationSerial:
-          outcome.state.acceptedDelegationSerial,
-        acceptedIndexIssuedAt: outcome.state.acceptedIndexIssuedAt,
-      });
-      receipt = admitRegistryRotationCandidate({
-        ...value.options,
-        minDelegationSerial: state.delegationSerialFloor,
-      });
-      admittedIndex = admitRegistryRotationIndex({
-        receipt,
-        publicBundle: value.candidate.publicBundle,
-        index: candidateIndex,
-        minIndexIssuedAt: state.indexIssuedAtFloor,
-      });
+    const outcome = advanceRegistryRotationState({
+      ...common,
+      state,
+      receipt,
+      admittedIndex,
+    });
+    assert.equal(outcome.decision.authorized, false);
+    assert.equal(outcome.state, state);
+    assert.equal(outcome.state.process.phase, "idle");
+    assert.equal(outcome.state.acceptedGenerationId, "0".repeat(64));
+    assert.match(
+      outcome.reasons.join(" "),
+      /candidate generation identity is unauthenticated/u,
+    );
+    } finally {
+      await rm(directory, { recursive: true, force: true });
     }
-
-    assert.equal(state.acceptedDelegationSerial, 2);
-    assert.equal(
-      state.acceptedIndexIssuedAt,
-      "2026-08-02T00:00:00.000Z",
-    );
-    assert.equal(state.delegationSerialFloor, 1);
-    assert.equal(
-      state.indexIssuedAtFloor,
-      "2026-07-30T16:33:10.307Z",
-    );
   });
 });

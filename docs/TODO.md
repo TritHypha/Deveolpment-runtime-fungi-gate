@@ -16,6 +16,51 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Read-only independent review and documentation checkpoint - 2026-07-30
+
+- **Owner direction:** reconcile the live Galerina and Knowledge Base
+  documentation before independent review. The five review subjects are
+  Galerina, independent SLIDE, predecessor `triLowLevel-v2`, the separate
+  GATE v3/ASCII graph project, and the Knowledge Base authority corpus.
+- **Review boundary:** reviewers may inspect and run read-only/check-mode
+  commands. They may write only their named report under the Knowledge Base
+  `ai-reviews/reports/` directory. They may not edit source, generate into a
+  repository, commit, push, sign, rotate keys, read private material, or
+  convert advisory research into authority.
+- **Research boundary:** each review includes source-backed deep research for
+  unbuilt areas and for implemented mechanisms that are non-standard or
+  project-specific. It must assess the combined R&D, Tri -1/K3 and zero-trust
+  construction, distinguish borrowed foundations from Galerina/SLIDE
+  composition, and propose falsification evidence rather than promotional
+  claims.
+- **Fresh focused evidence after handover preparation:** Tower Citizen passes
+  **492/492** and app-kernel passes **165/165**. Immutable generation identity,
+  host-evidence-vs-verified runtime branding, authenticated
+  accepted-generation binding and exact production loading are implemented.
+  No platform-adapter digest is production-admitted, so the controller
+  structurally refuses every current durability receipt. Admitted
+  platform-specific durability adapters, crash/fault recovery evidence and
+  the production custody adapter remain open.
+- **Housekeeping rule:** historical R&D and old measured checkpoints remain
+  intact and labelled by their evidence date. Only live TODO, roadmap,
+  completion and continuity records are updated to the current boundary.
+- **Completed handovers:** the Knowledge Base now contains one read-only
+  review protocol, five repository-specific deep-research prompts, five fixed
+  report destinations, and three owner briefs covering deterministic AOT
+  graph/cache, VPEG, and the remaining Galerina/SLIDE concepts with keyword
+  glossaries. `triLowLevel-v2` is explicitly reviewed as predecessor and
+  supersession evidence, not current authority.
+- **Fresh documentation/graph evidence:** the KB index self-test passes **5/5**
+  and generated category/flat indexes cover **1,661** source documents.
+  Housekeeping caught the category index scanning its own generated Markdown;
+  a RED self-test reproduced the self-reference, the source corpus now
+  excludes that output, and two complete generations are byte-identical
+  **4/4**. Galerina graph-all passes **5/5 generate** and **5/5 check** after
+  the documentation change.
+- **Current safe boundary:** commit the scoped KB and Galerina documentation
+  chapter locally, then resume the content-addressed registry-generation slice
+  without waiting for the independent reports.
+
 ### Full-auto Galerina -> SLIDE -> `.fungi` retirement checkpoint - 2026-07-30
 
 - **Owner direction:** continue autonomously through Galerina beta v1,
@@ -33,11 +78,11 @@ planning checkbox must never be used to imply that implementation exists.
   retaining its safety gate: never delete the only working compiler or count
   an unexecuted `.fungi` twin as a conversion.
 - **Fresh measured start:** `audit-selfhost-readiness --json` reports 95 code
-  packages, 451 `.ts`, 101 `.fungi`, 2 fully `.fungi`, 50 pure-logic
+  packages, 459 `.ts`, 101 `.fungi`, 2 fully `.fungi`, 50 pure-logic
   convertible-now packages and 38 floored packages. The retirement finder
-  reconciles 465 tracked package-source `.ts` paths. The post-SLIDE topology
-  gate is correctly red on one nested package identity and 95 package-local
-  `node_modules` trees.
+  reconciles 473 tracked package-source `.ts` paths and 484 total tracked
+  package `.ts` paths. The post-SLIDE topology gate is correctly red on one
+  nested package identity and 95 package-local `node_modules` trees.
 - **Subprojects decision:** the former `subprojects/dss-host` was already
   migrated to the flat development-only
   `galerina-devtools-wasmtime-oracle`. The residual `subprojects` directory
@@ -46,7 +91,7 @@ planning checkbox must never be used to imply that implementation exists.
   authority until its documented replacement gate passes.
 - **Completed this continuation:** the first strict retirement slice is
   implemented test-first. `ts-retirement-graph --terminal-check --json`
-  enumerates all 478 tracked package `.ts` paths (465 under `src`) and exits 1
+  enumerates all 484 tracked package `.ts` paths (473 under `src`) and exits 1
   until the exact set is empty; moving a file outside `src` cannot hide it.
   RED was 0/2 and GREEN is 8/8 with generator fixed-point and self-test green.
 - **Completed registry consumption slice:** production now has one canonical
@@ -75,13 +120,47 @@ planning checkbox must never be used to imply that implementation exists.
   MAC-valid but structurally impossible rings now refuse. Fresh full evidence:
   Tower Citizen **490/490**, app-kernel **158/158**, Sentinel State **20/20**
   and Sentinel Egress **34/34**.
-- **Current work:** build the production activation adapter that re-signs all
-  admitted package manifests under the candidate, verifies the resulting
-  candidate index, and crash-safely publishes the complete artifact set
-  through least-authority custody. No real owner key operation is authorized.
-- **Current owner questions:** none. A future real operational rotation
-  ceremony remains an owner custody act, but implementation and disposable-key
-  verification proceed without it.
+- **Completed content-addressed generation core:** the candidate builder
+  re-signs every admitted manifest, signs the corresponding index, verifies
+  exact one-to-one correspondence, derives the domain-separated SHA-256
+  generation identity, writes a same-directory exclusive staging file,
+  flushes and re-opens it, publishes by an exclusive hard link, and refuses
+  mutation, stale time, mixed keys, duplicate identities, existing-different
+  bytes, malformed review/index times, unsafe package-relative artifact paths,
+  executable install scripts and an unproved directory-durability barrier. A
+  verified re-open
+  receipt is deliberately distinct from a host durability-evidence receipt.
+  No platform-adapter digest is production-admitted yet, so the production
+  rotation controller structurally refuses every current receipt even if its
+  callback reports `true`. The authenticated Tower checkpoint now MAC-binds
+  the exact accepted generation ID, and the production loader reads only that
+  immutable
+  generation; the legacy loose index remains bootstrap/recovery input only.
+  The committed current generation is reproducibly checked by
+  `npm run registry:generation:check`. Fresh focused evidence: Tower Citizen
+  **492/492**, app-kernel **165/165**.
+- **Current work:** implement and admit the least-authority platform
+  durability adapters (Windows 10/11, Linux families and macOS), then execute
+  crash/fault injection at every write, flush, publication, checkpoint,
+  canary, fallback and custody boundary. The generic adapter refuses unless
+  the host proves its directory durability barrier; no owner private key is
+  required or authorized for these disposable-key tests.
+- **Parallel package-analysis lane:** external AIs may now produce read-only,
+  evidence-labelled conversion dossiers using
+  `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`.
+  Batch 01 assigns eight self-contained packages in
+  `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`.
+  Source translation remains locked until the executable SLIDE package ABI,
+  effects boundary and differential harness are frozen.
+- **Owner-custody question, non-blocking for implementation:** the ignored
+  repository-root `.env.galerina-signing` file still exists (5,944 bytes,
+  last modified 2026-07-30 11:36) after the owner reported removal of the
+  extra online operational-key copy. Its contents and identity were
+  deliberately not inspected. The owner must confirm whether it is an
+  intentionally retained non-production key or remove it through the custody
+  process. Reviewers and automation must not open or delete it.
+- A future real operational rotation ceremony remains an owner custody act,
+  but implementation and disposable-key verification proceed without it.
 
 ### Terminal fixed-point checkpoint - 2026-07-30
 

@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8637,
-    "devTools": 133,
+    "devTools": 134,
     "auditTools": 79,
     "toolsInCadence": 61,
     "proofs": 40
@@ -554,7 +554,7 @@
       "tests": 149,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 18,
+      "files": 20,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"
@@ -2355,6 +2355,19 @@
       ]
     },
     {
+      "name": "registry-generation-cli.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "diagnostics",
+        "graph/index"
+      ]
+    },
+    {
       "name": "registry-index-cli.mjs",
       "category": "index",
       "purpose": "registry-index-cli — walkthrough §3 signer/verifier CLI for the certified",
@@ -2935,6 +2948,7 @@
       "gen-unit-registry.mjs",
       "kb-index.mjs",
       "registry-authority-cli.mjs",
+      "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
@@ -3029,6 +3043,7 @@
       "gen-contract-registry.mjs",
       "kb-index.mjs",
       "registry-authority-cli.mjs",
+      "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
       "run-all-tests.cjs",
       "run-core-tests.cjs",
@@ -3155,6 +3170,7 @@
       "gen-contract-registry.mjs",
       "gen-unit-registry.mjs",
       "registry-authority-cli.mjs",
+      "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
@@ -3273,6 +3289,7 @@
       "project-graph-generator.mjs",
       "gen-contract-registry.mjs",
       "registry-authority-cli.mjs",
+      "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
       "lint-fungi.mjs",
       "run-phase-close.mjs",

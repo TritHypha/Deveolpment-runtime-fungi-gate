@@ -9,9 +9,13 @@
 **Release verdict:** **NOT COMPLETE / NON-AUTHORIZING**
 
 The tooling refactor and discoverable local verification are complete to the
-current evidence boundary. Galerina beta-v1 is not released because automatic
-operational-key rotation integration remains open; production registry signing
-is now green. The former external-memory
+current evidence boundary. Galerina beta-v1 is not released because
+platform-specific production activation of a complete automatically rotated
+registry generation remains open. The automatic rotation safety/control core,
+production registry signing, content-addressed generation core and
+checkpoint-bound production loader are green; admitted platform durability
+and crash/fault evidence are not. The
+former external-memory
 write question is closed by rejecting that architecture: private memory is
 not a build input, and its beta inspection tool is ephemeral, read-only,
 bounded, injection-aware, and non-authorizing.
@@ -42,7 +46,10 @@ flowchart LR
     U["Unified harness<br/>5/5 lanes"]:::green
     X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
     M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
-    R["Registry mechanism green<br/>owner approval/signing absent"]:::amber
+    R["Production registry signing<br/>owner ceremony complete"]:::green
+    ROT["Automatic rotation control<br/>K3 · hybrid proof · restart state"]:::green
+    GEN["Content-addressed generation<br/>ID · evidence receipt · exact load"]:::green
+    ACT["Platform activation<br/>durability adapters · crash recovery"]:::red
     B{"Galerina beta-v1<br/>release authorization"}:::red
     L["Independent SLIDE<br/>executable backend"]:::blue
     V["VPEG research<br/>non-production"]:::blue
@@ -50,12 +57,11 @@ flowchart LR
 
     S --> C --> K --> P --> A --> U --> X --> B
     M --> X
-    R --> B
+    R --> ROT --> GEN --> ACT --> B
     B --> L --> Q
     L --> V
 
     classDef green fill:#166534,color:#fff,stroke:#22c55e,stroke-width:2px;
-    classDef amber fill:#854d0e,color:#fff,stroke:#facc15,stroke-width:2px;
     classDef red fill:#7f1d1d,color:#fff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#fff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#fff,stroke:#9ca3af,stroke-width:2px;
@@ -97,13 +103,17 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - The strict phase-close tooling lane passes **229/229**.
 - The compiler package passes **5,748/5,748**.
-- App-kernel passes **149/149**, including delegated hybrid package-manifest
-  verification.
+- App-kernel passed **149/149** at the original delegated
+  package-manifest-admission checkpoint. The committed automatic-rotation
+  control checkpoint passes **158/158**. The active immutable-generation,
+  durable-receipt, checkpoint-binding and exact-production-load core passes
+  **165/165** focused app-kernel tests.
 - Registry passes **35/35**, including exact artifact re-derivation, complete
   public authority, mixed-tree poisoning and the unsigned auth candidate.
 - Auth passes **59/59** and its exact 18-file source/test candidate digest
   re-derives.
-- Tower Citizen passes **476/476**.
+- Tower Citizen passes **492/492**, including accepted-generation checkpoint
+  binding and all four registry signature domains.
 - Myco passes **52/52**.
 - Tri-Pipe passes **24/24**.
 - Tri-Regex passes **34/34**.
@@ -289,17 +299,35 @@ returned-artifact mutations all refuse. The live walkthrough now records
 completion and authorizes no further signing action.
 
 Production Zero-Trust also requires automatic operational-key rotation.
-Galerina beta v1 completes the current Tower Citizen append-only
-epoch/Triple-Lock path: readiness, staged separate custody, triple lock, atomic
-switch, forward/backward/continuity canary, drain, fallback, revocation and
-retirement. Its decision core and Sentinel Egress epoch verification exist.
-StateSerializer epoch awareness, custody execution, registry delegation
-integration and automatic package/index signer orchestration remain
-release-blocking. After beta, the reusable mechanism is rebuilt in independent
-SLIDE `.fungi`, while Tower Citizen becomes the Galerina policy adapter.
-Galerina, SLIDE and third-party trust domains never share roots, operational
-keys or epochs. The cold root remains an offline recovery/authorization
-ceremony.
+Galerina's Tower Citizen/app-kernel control core now implements the
+append-only epoch/Triple-Lock path: trigger-only proposal, root-admitted
+candidate, readiness, M-of-N decision, switch, forward/backward/continuity
+canary, drain, fallback, revocation and private retirement. Authenticated
+restart state is required between phases, MAC-binds epoch and key identity,
+preserves rollback floors and advances accepted delegation/index identity
+only after a clean canary. Production loading independently checks the active
+epoch, exact accepted artifacts and a pinned signed revocation snapshot.
+
+The generic production-activation data plane now re-signs a complete manifest
+set under disposable candidate keys, builds its matching candidate index,
+derives a domain-separated generation ID, publishes and re-opens bounded
+canonical bytes, refuses malformed review/index times, unsafe artifact paths
+and executable install scripts, distinguishes verification from host
+durability evidence,
+binds the authenticated checkpoint schema to the accepted generation, and
+makes production load that exact ID. It refuses mixed identity, duplicate,
+stale, mutated, existing-different and non-durable inputs. No durability
+adapter digest is production-admitted yet, so a forged callback `true` cannot
+advance the production controller. App-kernel is **165/165** and Tower Citizen
+is **492/492**. The remaining release blocker is the admitted
+least-authority Windows/Linux/macOS durability adapters and crash/fault matrix
+through write, flush, link, checkpoint, canary, fallback and custody. No real
+owner-key operation is authorized for this work.
+
+After beta, the reusable mechanism is rebuilt in independent SLIDE `.fungi`,
+while Tower Citizen becomes the Galerina policy adapter. Galerina, SLIDE and
+third-party trust domains never share roots, operational keys or epochs. The
+cold root remains an offline recovery/authorization ceremony.
 
 The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine
@@ -356,8 +384,9 @@ and repair are retained as evidence that generated freshness gates are not
 vacuous.
 
 These tool gates are authorizing for the evidence they cover. The owner
-signing act and production registry signing are complete. They do not
-authorize the beta-v1 release because automatic operational-key rotation
-integration remains open.
+signing act, production registry signing and automatic rotation control core
+are complete. They do not authorize the beta-v1 release because durable
+content-addressed generation activation and its crash/platform evidence remain
+open.
 
 No changes in this work were pushed.

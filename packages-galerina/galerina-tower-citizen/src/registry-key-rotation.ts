@@ -17,6 +17,7 @@ import type {
 import { verifyRing } from "./key-rotation.js";
 
 const KEY_ID = /^[0-9a-f]{16}$/;
+const GENERATION_ID = /^[0-9a-f]{64}$/;
 const TRANSITION_CONTEXT = "galerina.registry.rotation.transition.v1";
 const CHALLENGE_CONTEXT = "galerina.registry.rotation.challenge.v1";
 const restoredRotationStates = new WeakSet<object>();
@@ -70,6 +71,7 @@ export interface RegistryRotationState {
   readonly indexIssuedAtFloor: string;
   readonly acceptedDelegationSerial: number;
   readonly acceptedIndexIssuedAt: string;
+  readonly acceptedGenerationId: string;
 }
 
 export interface RegistryRotationCheckpoint {
@@ -84,6 +86,7 @@ export interface RegistryRotationRollbackFloors {
   readonly minIndexIssuedAtFloor: string;
   readonly minAcceptedDelegationSerial: number;
   readonly minAcceptedIndexIssuedAt: string;
+  readonly expectedAcceptedGenerationId: string;
 }
 
 function validTick(value: number): boolean {
@@ -134,6 +137,7 @@ function stateWellFormed(
     || !canonicalInstant(state.acceptedIndexIssuedAt)
     || Date.parse(state.acceptedIndexIssuedAt)
       <= Date.parse(state.indexIssuedAtFloor)
+    || !GENERATION_ID.test(state.acceptedGenerationId)
     || !Array.isArray(state.process.log)
     || state.process.log.length > 1_024
     || state.process.log.some(
@@ -286,6 +290,7 @@ export function restoreRegistryRotationCheckpoint(
     || !Number.isSafeInteger(floors.minAcceptedDelegationSerial)
     || floors.minAcceptedDelegationSerial < 1
     || !canonicalInstant(floors.minAcceptedIndexIssuedAt)
+    || !GENERATION_ID.test(floors.expectedAcceptedGenerationId)
     || state.process.ring.epochs.length < floors.minEpochId
     || state.delegationSerialFloor < floors.minDelegationSerialFloor
     || Date.parse(state.indexIssuedAtFloor)
@@ -294,6 +299,8 @@ export function restoreRegistryRotationCheckpoint(
       < floors.minAcceptedDelegationSerial
     || Date.parse(state.acceptedIndexIssuedAt)
       < Date.parse(floors.minAcceptedIndexIssuedAt)
+    || state.acceptedGenerationId
+      !== floors.expectedAcceptedGenerationId
   ) {
     throw new TypeError("registry rotation checkpoint is below an accepted rollback floor");
   }

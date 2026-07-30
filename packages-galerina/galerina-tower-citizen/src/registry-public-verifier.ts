@@ -9,11 +9,14 @@ const KEY_ID = /^[0-9a-f]{16}$/;
 const CONTEXT = Object.freeze({
   root: new TextEncoder().encode("galerina.registry.delegation.sig.v1"),
   operational: new TextEncoder().encode("galerina.registry.index.sig.v2"),
+  packageManifest: new TextEncoder().encode(
+    "galerina.registry.package.manifest.sig.v1",
+  ),
   rotation: new TextEncoder().encode("galerina.registry.rotation.proof.v1"),
 });
 
 export interface RegistryPublicVerifierInput {
-  readonly role: "root" | "operational" | "rotation";
+  readonly role: "root" | "operational" | "packageManifest" | "rotation";
   readonly keyId: string;
   readonly ed25519PublicKeyPem: string;
   readonly mlDsa65PublicKey: Uint8Array;
@@ -74,6 +77,7 @@ export function createRegistryPublicVerifiers(
   if (
     input.role !== "root"
     && input.role !== "operational"
+    && input.role !== "packageManifest"
     && input.role !== "rotation"
   ) {
     throw new TypeError("Registry signing role is not admitted.");

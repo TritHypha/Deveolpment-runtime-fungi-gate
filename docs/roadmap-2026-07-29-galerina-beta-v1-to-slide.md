@@ -27,18 +27,19 @@ flowchart LR
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
-    X["🟥 Production rotation activation<br/>custody adapter · package/index atomic publish"]
+    Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
+    X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
     F["🟥 Beta-v1 release gate<br/>terminal fixed-point rerun"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
-    T["🟦 Package retirement<br/>465 tracked source .ts → 0<br/>95 node_modules → 0"]
+    T["🟦 Package retirement<br/>473 tracked source .ts → 0<br/>484 all tracked .ts → 0<br/>95 node_modules → 0"]
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> X --> F --> H --> I --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
     Z --> E
     G --> P
     H --> M
@@ -49,7 +50,7 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Z green;
+    class A,B,C,D,E,G,R,Y,Z green;
     class X,F red;
     class H,I,T,M blue;
     class P green;
@@ -65,10 +66,11 @@ flowchart LR
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |
 | Production registry signing | 🟩 | Exact one-entry index hybrid-signed by `f3172a48372bfb23`, independently verified and mutation-tested; SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06` |
-| Default production registry consumption | 🟩 | Canonical read-only loader verifies the live root delegation and both operational signature halves before lookup; production revocation comes from one pinned, signed, immutable snapshot; signed index issuance replaces caller-selected wall time; exact accepted artifacts and active epoch must match. Tower 490/490, app-kernel 158/158, registry 35/35, auth 59/59 |
+| Default production registry consumption | 🟩 | Canonical read-only loader verifies the live root delegation and both operational signature halves before lookup; production revocation comes from one pinned, signed, immutable snapshot; signed index issuance replaces caller-selected wall time; the active epoch and checkpoint-selected generation ID must match. Tower 492/492, app-kernel 165/165, registry 35/35, auth 59/59 |
 | Epoch-aware state integrity | 🟩 | Snapshot v2 MAC-binds epoch/key identity; authenticated ring + custody commitment selects active/retired verification keys and refuses unknown/revoked/substituted authority. Sentinel State 20/20; Tower 483/483 |
-| Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a candidate hybrid-signed index and migrated entry identities are verified before admission; accepted delegation/index identity advances only after canary. Disposable-key evidence passes; Tower 490/490 and app-kernel 158/158 |
-| Production custody and artifact activation | 🟥 | The least-authority custody contract and disposable executor exist, but no owner-key operation has been performed and the filesystem/HSM custody adapter plus crash-safe atomic publication of re-signed package manifests and the candidate index remain to be built and verified |
+| Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
+| Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
+| Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor and generic fail-closed durability seam exist. The production controller admits no current adapter digest and therefore refuses even a caller callback returning `true`. The platform findings are recorded in `docs/architecture/registry-generation-platform-durability-2026-07-30.md`. Release remains blocked on admitted Windows 10/11, Linux-family and macOS durability adapters plus crash/fault evidence across write, flush, link, checkpoint, canary, fallback and retirement. No owner-key operation is required for that engineering evidence |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -110,21 +112,26 @@ The remaining sequence is:
    readiness/Triple-Lock/canary/drain/fallback/private-retire orchestration,
    authenticated restart after every phase, and exact accepted-artifact
    anti-rollback state. The offline root remains manual.
-5. Complete the production activation adapter: re-sign every admitted package
-   manifest under the candidate, build and verify its candidate index, publish
-   the artifact set crash-safely/atomically through least-authority custody,
-   and prove recovery before any real owner-key rotation is authorized.
+5. **Completed generic core:** re-sign every admitted package manifest under
+   the candidate, build and verify its candidate index, derive the
+   domain-separated generation identity, publish/re-open an immutable
+   generation behind a required durability barrier, bind authenticated
+   accepted state to its exact identity, and load production only by that ID.
+   **Still required:** admitted platform durability adapters and crash/fault
+   proof through least-authority custody before any real owner-key rotation is
+   authorized.
    After beta, rebuild the reusable lifecycle mechanism in independent SLIDE
    `.fungi`; Tower Citizen remains the Galerina policy adapter and trust
    domains/keys remain separate.
 6. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 7. Switch packages in dependency order from TypeScript execution to verified
-   `.fungi`/SLIDE execution. The fresh starting ratchets are 451 `.ts` files
-   reported by the self-host readiness inventory, 465 tracked package-source
-   `.ts` files in the retirement graph, one nested native package and 95
-   package-local `node_modules` trees. The terminal gates require all four
-   debts to reach zero without hiding or renaming a member.
+   `.fungi`/SLIDE execution. The fresh current ratchets are 459 implementation
+   `.ts` files reported by the self-host readiness inventory, 473 tracked
+   package-source `.ts` files and 484 total tracked package `.ts` paths in the
+   retirement graph, one nested native package and 95 package-local
+   `node_modules` trees. The terminal gates require every debt to reach zero
+   without hiding or renaming a member.
 8. Run the full governed benchmark and both requested charts only after the
    independent SLIDE backend executes equivalent workloads.
 

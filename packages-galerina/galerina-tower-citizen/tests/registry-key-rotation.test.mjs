@@ -260,6 +260,7 @@ describe("registry rotation cryptographic adapter", () => {
       indexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
       acceptedDelegationSerial: 3,
       acceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+      acceptedGenerationId: "a".repeat(64),
     }, RING_KEY);
     const restored = restoreRegistryRotationCheckpoint(
       checkpoint,
@@ -270,11 +271,13 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
         minAcceptedDelegationSerial: 3,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
       },
     );
     assert.equal(restored.process.phase, "idle");
     assert.equal(restored.delegationSerialFloor, 2);
     assert.equal(restored.acceptedDelegationSerial, 3);
+    assert.equal(restored.acceptedGenerationId, "a".repeat(64));
     assert.equal(Object.isFrozen(restored), true);
 
     assert.throws(() => restoreRegistryRotationCheckpoint(
@@ -286,6 +289,7 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
         minAcceptedDelegationSerial: 3,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
       },
     ));
     assert.throws(() => restoreRegistryRotationCheckpoint(
@@ -297,6 +301,7 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
         minAcceptedDelegationSerial: 3,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
       },
     ));
     assert.throws(() => restoreRegistryRotationCheckpoint(
@@ -308,6 +313,7 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
         minAcceptedDelegationSerial: 3,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
       },
     ));
     assert.throws(() => restoreRegistryRotationCheckpoint(
@@ -319,6 +325,7 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-02T00:00:00.000Z",
         minAcceptedDelegationSerial: 3,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
       },
     ));
     assert.throws(() => restoreRegistryRotationCheckpoint(
@@ -330,6 +337,19 @@ describe("registry rotation cryptographic adapter", () => {
         minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
         minAcceptedDelegationSerial: 4,
         minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "a".repeat(64),
+      },
+    ));
+    assert.throws(() => restoreRegistryRotationCheckpoint(
+      checkpoint,
+      RING_KEY,
+      {
+        minEpochId: 1,
+        minDelegationSerialFloor: 2,
+        minIndexIssuedAtFloor: "2026-07-01T00:00:00.000Z",
+        minAcceptedDelegationSerial: 3,
+        minAcceptedIndexIssuedAt: "2026-08-01T00:00:00.000Z",
+        expectedAcceptedGenerationId: "b".repeat(64),
       },
     ));
   });

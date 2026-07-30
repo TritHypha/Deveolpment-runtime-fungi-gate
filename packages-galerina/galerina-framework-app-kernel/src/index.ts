@@ -24,3 +24,5 @@ export * from "./registry-package-manifest.js";
 export * from "./registry-runtime.js";
 export * from "./registry-rotation-authority.js";
 export * from "./registry-rotation-controller.js";
+export * from "./registry-generation.js";
+export * from "./registry-generation-store.js";

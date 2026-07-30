@@ -60,10 +60,10 @@ and Windows PowerShell-compatible commands.
 
 Recorded 2026-07-30 from executable repository tools:
 
-- `audit-selfhost-readiness --json`: 95 code packages, 451 `.ts`, 101
+- `audit-selfhost-readiness --json`: 95 code packages, 459 `.ts`, 101
   `.fungi`, 2 fully `.fungi`, 50 pure-logic packages convertible now and 38
   packages with declared floors.
-- `ts-retirement-graph --self-test`: 465 tracked package-source `.ts` files,
+- `ts-retirement-graph --self-test`: 473 tracked package-source `.ts` files,
   exact corpus partition and authority-ledger reconciliation pass.
 - `audit-flat-package-topology`: 99 canonical identities, one named nested
   native package debt and 95 package-local `node_modules` trees.
@@ -100,7 +100,7 @@ retirement state.
   failed because `--terminal-check` was ignored and returned success.
 - [x] Prove the test fails against the current report-only inventory, then
   close this first physical-path slice. Fresh GREEN: focused retirement
-  evidence 8/8; live terminal refusal names 478 tracked package `.ts` paths
+  evidence 8/8; live terminal refusal names 484 tracked package `.ts` paths
   (465 under `src`) and returns exit 1.
 - [ ] Add strict `--check` and `--post-slide` profiles. The terminal profile
   requires zero package `.ts`, zero nested package identities, zero package

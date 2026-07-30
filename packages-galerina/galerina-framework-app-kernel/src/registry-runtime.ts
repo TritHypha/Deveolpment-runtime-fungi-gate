@@ -11,6 +11,7 @@ import {
   verifyRegistryIndexUnderDelegation,
   type RegistryAuthorityDelegation,
 } from "./registry-authority.js";
+import { loadRegistryGeneration } from "./registry-generation-store.js";
 import {
   activeEpoch,
   createRegistryPublicVerifiers,
@@ -101,6 +102,7 @@ export interface ProductionRegistryOptions {
   readonly expectedAcceptedArtifacts?: {
     readonly delegationSerial: number;
     readonly indexIssuedAt: string;
+    readonly generationId: string;
   };
 }
 
@@ -114,6 +116,7 @@ export interface ProductionRegistryRuntime {
   readonly operationalKeyId: string;
   readonly delegationSerial: number;
   readonly indexIssuedAt: string;
+  readonly generationId: string | null;
   admit(
     lookup: CertifiedLookup,
     policy: RegistryPolicy,
@@ -314,22 +317,30 @@ async function loadProductionRegistryFromRoot(
     readonly useSignedIndexIssuedAt?: boolean;
   },
 ): Promise<ProductionRegistryRuntime> {
-  const { fs, crypto } = await loadNode();
+  const { fs, crypto, url } = await loadNode();
   const governanceRoot = new URL("governance/", repositoryRoot);
   const registryRoot = new URL(
     "packages-galerina/galerina-registry/",
     repositoryRoot,
   );
-  const index = parseObject<RegistryIndex>(
-    readBoundedFile(
-      fs,
-      new URL("registry-index-v2.json", registryRoot),
-      MAX_INDEX_BYTES,
-      "production registry index",
-    ),
-    "production registry index",
-  );
-  const indexKeyId = index.signature?.keyId;
+  const generationId =
+    options.expectedAcceptedArtifacts?.generationId ?? null;
+  let index: RegistryIndex | null = null;
+  let indexKeyId: string | undefined;
+  if (generationId === null) {
+    index = parseObject<RegistryIndex>(
+      readBoundedFile(
+        fs,
+        new URL("registry-index-v2.json", registryRoot),
+        MAX_INDEX_BYTES,
+        "bootstrap registry index",
+      ),
+      "bootstrap registry index",
+    );
+    indexKeyId = index.signature?.keyId;
+  } else {
+    indexKeyId = options.expectedOperationalEpoch?.keyId;
+  }
   if (typeof indexKeyId !== "string" || indexKeyId.length === 0) {
     throw new RegistryRuntimeError(
       ERR_REGISTRY_RUNTIME_AUTHORITY,
@@ -428,6 +439,39 @@ async function loadProductionRegistryFromRoot(
     mlDsa65PublicKey: operationalFacts.mlDsa65PublicKey,
   }) as HybridIndexVerifiers;
 
+  if (generationId !== null) {
+    try {
+      const persisted = await loadRegistryGeneration({
+        directory: url.fileURLToPath(
+          new URL("generations/", registryRoot),
+        ),
+        generationId,
+        verify: {
+          expectedDelegationSerial: delegation.serial,
+          publicBundle: {
+            keyId: indexKeyId,
+            ed25519PublicKeyPem:
+              operationalFacts.ed25519PublicKeyPem,
+            mlDsa65PublicKey:
+              operationalFacts.mlDsa65PublicKey,
+          },
+          minIndexIssuedAt: options.minIndexIssuedAt,
+        },
+      });
+      index = persisted.generation.index;
+    } catch {
+      throw new RegistryRuntimeError(
+        ERR_REGISTRY_RUNTIME_AUTHORITY,
+        "Authenticated registry generation is unavailable or invalid.",
+      );
+    }
+  }
+  if (index === null) {
+    throw new RegistryRuntimeError(
+      ERR_REGISTRY_RUNTIME_AUTHORITY,
+      "Registry index authority could not be resolved.",
+    );
+  }
   verifyRegistryIndexUnderDelegation(index, delegation, {
     authority: {
       expectedRootKeyId: options.expectedRootKeyId,
@@ -452,6 +496,8 @@ async function loadProductionRegistryFromRoot(
         !== options.expectedAcceptedArtifacts.delegationSerial
       || index.issuedAt
         !== options.expectedAcceptedArtifacts.indexIssuedAt
+      || generationId
+        !== options.expectedAcceptedArtifacts.generationId
     )
   ) {
     throw new RegistryRuntimeError(
@@ -467,6 +513,7 @@ async function loadProductionRegistryFromRoot(
     operationalKeyId: delegation.operational.keyId,
     delegationSerial: delegation.serial,
     indexIssuedAt: index.issuedAt,
+    generationId,
     admit(
       lookup: CertifiedLookup,
       policy: RegistryPolicy,
@@ -562,6 +609,8 @@ export async function loadProductionRegistry(
         options.rotationState.acceptedDelegationSerial,
       indexIssuedAt:
         options.rotationState.acceptedIndexIssuedAt,
+      generationId:
+        options.rotationState.acceptedGenerationId,
     },
   });
 }
