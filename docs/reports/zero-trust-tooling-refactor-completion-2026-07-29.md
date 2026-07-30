@@ -41,7 +41,7 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>98/98 · 8,680 tests"]:::green
+    P["Package readiness<br/>98/98 · 8,681 tests"]:::green
     A["Audit proof<br/>80/80 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
     X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
@@ -90,12 +90,12 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **98/98 packages and 8,680 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,681 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,680 |
+  | Unit | 8,681 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
@@ -370,7 +370,7 @@ After the complete fourteen-generator fixed point:
 - strict phase-close passes **83/83**;
 - exhaustive phase-close passes **84/84**;
 - exhaustive's additional package child passes **98/98** package commands;
-- the root aggregate contains **8,680 tests**;
+- the root aggregate contains **8,681 tests**;
 - graph-all passes all **5/5** repository-owned graph surfaces;
 - the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
   are killed.

@@ -14,6 +14,12 @@ External/AI proposals must complete the companion
 `../../../ZTF-Knowledge-Bases/ai-reviews/ZERO-TRUST-ADOPTION-SCORE.md` gate
 after R&D and before architectural adoption.
 
+The review is now closed over the exact ten source-report hashes. Full
+finding-ID coverage, individual dimension scores, `PENDING` proposals and
+hard vetoes are recorded in
+`../../../ZTF-Knowledge-Bases/ai-reviews/INDEPENDENT-REVIEW-ZERO-TRUST-SCORECARD-2026-07-30.md`.
+No aggregate reviewer-quality score is used.
+
 ## Review timing
 
 The independent reports under the Knowledge Base `ai-reviews/reports/`
@@ -95,15 +101,20 @@ than implementation authority.
 
 ## Package conversion consequence
 
-External AIs can safely prepare read-only per-package dossiers now. Actual
-source translation remains locked until the executable SLIDE ABI, effects
-boundary and differential harness are frozen. The coordinating artifacts are:
+External AIs can safely prepare read-only per-package dossiers and separately
+assigned quarantined candidate translations now. Galerina integration remains
+locked until the executable SLIDE ABI, effects boundary and differential
+harness are frozen. The coordinating artifacts are:
 
 - `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`;
-- `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`.
+- `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`; and
+- `../../../Galerina-Fungi-Package-Staging/`.
 
-This separation allows parallel analysis without creating incompatible
-`.fungi` dialects or silently weakening current security exits.
+The external staging root permits one flat top-level package/plugin candidate
+per assigned AI, forbids npm-style nested dependency trees, and keeps all
+candidate outputs non-authorizing. The coordinator reference
+`galerina-substrate-math` passes current plain and strict frontend checks but
+still lacks executable SLIDE parity and mutation evidence.
 
 ## Current release verdict
 

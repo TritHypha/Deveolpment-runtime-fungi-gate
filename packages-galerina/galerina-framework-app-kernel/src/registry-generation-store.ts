@@ -54,14 +54,23 @@ export interface PersistedRegistryGeneration
   readonly durabilityAdapterDigest: string;
 }
 
+export interface RegistryGenerationDurabilityAdapter {
+  readonly adapterId: string;
+  readonly sourceDigest: string;
+  flushDirectory(directory: string): Promise<boolean>;
+}
+
+export interface RegistryGenerationHostEvidenceAdapterOptions {
+  readonly adapterId: string;
+  readonly sourceDigest: string;
+  readonly flushDirectory: (directory: string) => Promise<boolean>;
+}
+
 export interface RegistryGenerationStoreOptions {
   readonly directory: string;
   readonly generation: RegistryGeneration;
   readonly verify: VerifyRegistryGenerationOptions;
-  readonly directoryDurabilityBarrier: (
-    directory: string,
-  ) => Promise<boolean>;
-  readonly durabilityAdapterDigest: string;
+  readonly durabilityAdapter: RegistryGenerationDurabilityAdapter;
   readonly maxBytes?: number;
 }
 
@@ -74,10 +83,14 @@ export interface RegistryGenerationLoadOptions {
 
 const MAX_GENERATION_BYTES = 32 * 1_048_576;
 const ADAPTER_DIGEST = /^sha256:[0-9a-f]{64}$/;
+const ADAPTER_ID = /^galerina\.[a-z0-9]+(?:[.-][a-z0-9]+)*\.v[1-9][0-9]*$/;
 const PRODUCTION_ADMITTED_DURABILITY_ADAPTERS =
   new Set<string>();
+const issuedDurabilityAdapters = new WeakSet<object>();
+const productionDurabilityAdapters = new WeakSet<object>();
 const verifiedReceipts = new WeakSet<object>();
 const durableReceipts = new WeakSet<object>();
+const productionReceipts = new WeakSet<object>();
 const dynImport = (specifier: string): Promise<unknown> =>
   (Function("s", "return import(s)") as
     (value: string) => Promise<unknown>)(specifier);
@@ -283,15 +296,66 @@ function makeReceipt(
 
 function makeDurableReceipt(
   verified: VerifiedRegistryGeneration,
-  durabilityAdapterDigest: string,
+  durabilityAdapter: RegistryGenerationDurabilityAdapter,
 ): PersistedRegistryGeneration {
   const receipt = Object.freeze({
     ...verified,
-    durabilityAdapterDigest,
+    durabilityAdapterDigest: durabilityAdapter.sourceDigest,
   });
   verifiedReceipts.add(receipt);
   durableReceipts.add(receipt);
+  if (productionDurabilityAdapters.has(durabilityAdapter)) {
+    productionReceipts.add(receipt);
+  }
   return receipt;
+}
+
+export function createRegistryGenerationHostEvidenceAdapter(
+  options: RegistryGenerationHostEvidenceAdapterOptions,
+): RegistryGenerationDurabilityAdapter {
+  if (
+    typeof options !== "object"
+    || options === null
+    || !ADAPTER_ID.test(options.adapterId)
+    || !ADAPTER_DIGEST.test(options.sourceDigest)
+    || typeof options.flushDirectory !== "function"
+  ) {
+    throw new TypeError(
+      "registry generation host-evidence adapter is malformed",
+    );
+  }
+  const flushDirectory = options.flushDirectory;
+  const adapter = Object.freeze({
+    adapterId: options.adapterId,
+    sourceDigest: options.sourceDigest,
+    async flushDirectory(directory: string): Promise<boolean> {
+      return await flushDirectory(directory);
+    },
+  });
+  issuedDurabilityAdapters.add(adapter);
+  return adapter;
+}
+
+async function proveDirectoryDurability(
+  adapter: RegistryGenerationDurabilityAdapter,
+  directory: string,
+): Promise<boolean> {
+  if (
+    typeof adapter !== "object"
+    || adapter === null
+    || !issuedDurabilityAdapters.has(adapter)
+    || !ADAPTER_ID.test(adapter.adapterId)
+    || !ADAPTER_DIGEST.test(adapter.sourceDigest)
+  ) {
+    throw new TypeError(
+      "registry generation durability adapter is not an issued capability",
+    );
+  }
+  try {
+    return await adapter.flushDirectory(directory) === true;
+  } catch {
+    return false;
+  }
 }
 
 export function isVerifiedRegistryGeneration(
@@ -315,6 +379,7 @@ export function isProductionAdmittedRegistryGeneration(
   value: unknown,
 ): value is PersistedRegistryGeneration {
   return isPersistedRegistryGeneration(value)
+    && productionReceipts.has(value)
     && PRODUCTION_ADMITTED_DURABILITY_ADAPTERS.has(
       value.durabilityAdapterDigest,
     );
@@ -365,9 +430,13 @@ export async function persistRegistryGeneration(
   options: RegistryGenerationStoreOptions,
 ): Promise<PersistedRegistryGeneration> {
   const maxBytes = sizeBound(options.maxBytes);
-  if (!ADAPTER_DIGEST.test(options.durabilityAdapterDigest)) {
+  if (
+    typeof options.durabilityAdapter !== "object"
+    || options.durabilityAdapter === null
+    || !issuedDurabilityAdapters.has(options.durabilityAdapter)
+  ) {
     throw new TypeError(
-      "registry generation durability adapter digest is malformed",
+      "registry generation durability adapter is not an issued capability",
     );
   }
   verifyRegistryGeneration(options.generation, options.verify);
@@ -390,12 +459,10 @@ export async function persistRegistryGeneration(
       verify: options.verify,
       maxBytes,
     });
-    let durable = false;
-    try {
-      durable = await options.directoryDurabilityBarrier(directory) === true;
-    } catch {
-      durable = false;
-    }
+    const durable = await proveDirectoryDurability(
+      options.durabilityAdapter,
+      directory,
+    );
     if (!durable) {
       throw new TypeError(
         "registry generation directory durability was not proven",
@@ -403,7 +470,7 @@ export async function persistRegistryGeneration(
     }
     return makeDurableReceipt(
       existing,
-      options.durabilityAdapterDigest,
+      options.durabilityAdapter,
     );
   } catch (error) {
     if (errorCode(error) !== "ENOENT") {
@@ -449,12 +516,10 @@ export async function persistRegistryGeneration(
         verify: options.verify,
         maxBytes,
       });
-      let durable = false;
-      try {
-        durable = await options.directoryDurabilityBarrier(directory) === true;
-      } catch {
-        durable = false;
-      }
+      const durable = await proveDirectoryDurability(
+        options.durabilityAdapter,
+        directory,
+      );
       if (!durable) {
         throw new TypeError(
           "registry generation directory durability was not proven",
@@ -462,7 +527,7 @@ export async function persistRegistryGeneration(
       }
       return makeDurableReceipt(
         existing,
-        options.durabilityAdapterDigest,
+        options.durabilityAdapter,
       );
     }
     await fs.chmod(finalPath, 0o444);
@@ -472,12 +537,10 @@ export async function persistRegistryGeneration(
       verify: options.verify,
       maxBytes,
     });
-    let durable = false;
-    try {
-      durable = await options.directoryDurabilityBarrier(directory) === true;
-    } catch {
-      durable = false;
-    }
+    const durable = await proveDirectoryDurability(
+      options.durabilityAdapter,
+      directory,
+    );
     if (!durable) {
       throw new TypeError(
         "registry generation directory durability was not proven",
@@ -485,7 +548,7 @@ export async function persistRegistryGeneration(
     }
     const durableReceipt = makeDurableReceipt(
       reopened,
-      options.durabilityAdapterDigest,
+      options.durabilityAdapter,
     );
     completed = true;
     return durableReceipt;

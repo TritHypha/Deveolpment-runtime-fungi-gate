@@ -3,7 +3,7 @@
   "totals": {
     "packages": 98,
     "testBearing": 98,
-    "tests": 8680,
+    "tests": 8681,
     "devTools": 134,
     "auditTools": 79,
     "toolsInCadence": 61,
@@ -551,7 +551,7 @@
       "name": "galerina-framework-app-kernel",
       "kind": "framework",
       "description": "Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default rout",
-      "tests": 168,
+      "tests": 169,
       "hasTestScript": true,
       "border": "PASS",
       "files": 20,

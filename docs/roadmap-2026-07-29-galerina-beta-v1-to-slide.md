@@ -122,6 +122,9 @@ The remaining sequence is:
    domain-separated generation identity, publish/re-open an immutable
    generation behind a required durability barrier, bind authenticated
    accepted state to its exact identity, and load production only by that ID.
+   Persistence now requires a module-branded adapter object; the public
+   host-evidence factory cannot mint the separate production brand, and a
+   copied digest plus structurally similar callback is refused.
    **Still required:** admitted platform durability adapters and crash/fault
    proof through least-authority custody before any real owner-key rotation is
    authorized.
@@ -145,7 +148,7 @@ The remaining sequence is:
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,680 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,681 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 0 signing refusal codes without a direct
@@ -153,7 +156,7 @@ test mention, and 34 cross-package relative imports. The signing inventory is
 now closed at 51/51 directly mentioned refusals with specific negative/control
 witnesses.
 
-The fresh unified lane totals are unit 8,680, end-to-end 4/4, conformance
+The fresh unified lane totals are unit 8,681, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
 meta-gate covers all 80/80 discovered audit/lint gates with non-vacuous
 refusal/control evidence; the tooling contract reports 98 packages and 151

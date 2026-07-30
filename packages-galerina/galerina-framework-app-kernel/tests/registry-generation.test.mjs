@@ -22,6 +22,7 @@ import {
 
 import {
   buildRegistryGeneration,
+  createRegistryGenerationHostEvidenceAdapter,
   isPersistedRegistryGeneration,
   isProductionAdmittedRegistryGeneration,
   isVerifiedRegistryGeneration,
@@ -34,6 +35,7 @@ import {
 } from "../dist/index.js";
 
 const KEY_ID = "bbbbbbbbbbbbbbbb";
+const HOST_EVIDENCE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CONTEXTS = Object.freeze({
   "package-manifest": new TextEncoder().encode(
     "galerina.registry.package.manifest.sig.v1",
@@ -109,6 +111,14 @@ function builtFixture() {
     custody: key.custody,
   });
   return { key, generation };
+}
+
+function hostEvidenceAdapter(flushDirectory) {
+  return createRegistryGenerationHostEvidenceAdapter({
+    adapterId: "galerina.test.host-evidence.v1",
+    sourceDigest: HOST_EVIDENCE_DIGEST,
+    flushDirectory,
+  });
 }
 
 describe("content-addressed registry generation", () => {
@@ -254,16 +264,15 @@ describe("content-addressed registry generation", () => {
         minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
       };
       let barriers = 0;
-      const directoryDurabilityBarrier = async () => {
+      const durabilityAdapter = hostEvidenceAdapter(async () => {
         barriers += 1;
         return true;
-      };
+      });
       const receipt = await persistRegistryGeneration({
         directory,
         generation,
         verify,
-        directoryDurabilityBarrier,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter,
       });
       assert.equal(isPersistedRegistryGeneration(receipt), true);
       assert.equal(
@@ -294,8 +303,7 @@ describe("content-addressed registry generation", () => {
         directory,
         generation,
         verify,
-        directoryDurabilityBarrier,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter,
       });
       assert.equal(idempotent.generationId, receipt.generationId);
       assert.equal(isPersistedRegistryGeneration(idempotent), true);
@@ -323,8 +331,7 @@ describe("content-addressed registry generation", () => {
         directory,
         generation,
         verify,
-        directoryDurabilityBarrier: async () => true,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
       }));
       await rm(join(directory, fileName));
 
@@ -332,8 +339,7 @@ describe("content-addressed registry generation", () => {
         directory,
         generation,
         verify,
-        directoryDurabilityBarrier: async () => false,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter: hostEvidenceAdapter(async () => false),
       }));
       await assert.rejects(() => loadRegistryGeneration({
         directory,
@@ -345,8 +351,7 @@ describe("content-addressed registry generation", () => {
         directory,
         generation,
         verify,
-        directoryDurabilityBarrier: async () => true,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
       });
       await chmod(receipt.path, 0o666);
       await writeFile(receipt.path, "{}");
@@ -373,8 +378,7 @@ describe("content-addressed registry generation", () => {
         directory: ".",
         generation,
         verify,
-        directoryDurabilityBarrier: async () => true,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
       }));
 
       const real = join(parent, "real");
@@ -393,11 +397,33 @@ describe("content-addressed registry generation", () => {
         directory: linked,
         generation,
         verify,
-        directoryDurabilityBarrier: async () => true,
-        durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
       }));
     } finally {
       await rm(parent, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a structurally forged host-evidence adapter", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "galerina-generation-"));
+    try {
+      const { key, generation } = builtFixture();
+      await assert.rejects(() => persistRegistryGeneration({
+        directory,
+        generation,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+        durabilityAdapter: {
+          adapterId: "galerina.test.host-evidence.v1",
+          sourceDigest: HOST_EVIDENCE_DIGEST,
+          flushDirectory: async () => true,
+        },
+      }), /durability adapter is not an issued capability/);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
     }
   });
 });

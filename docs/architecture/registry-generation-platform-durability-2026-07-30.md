@@ -2,7 +2,7 @@
 
 Date: 2026-07-30
 
-Status: researched boundary; no production adapter admitted
+Status: host-evidence capability sealed; no production adapter admitted
 
 Policy: verify rather than assume; fail closed
 
@@ -18,6 +18,15 @@ This separation is deliberate. A caller-supplied callback returning `true`
 does not prove that file data and the new directory entry survived a crash.
 It therefore cannot change authenticated production authority.
 
+The first implementation hardening is complete: persistence no longer accepts
+a structural callback plus a caller-selected digest. It accepts only a
+module-branded adapter object. The public factory can issue non-production
+host-evidence adapters for engineering tests, but it cannot mint the separate
+private production brand. Receipts retain that provenance in private
+`WeakSet` state. Copying an admitted digest and reconstructing the public
+object shape cannot create a production receipt. The production adapter set
+remains empty.
+
 ## Required persistence sequence
 
 1. Validate and canonicalize the complete registry generation.
@@ -32,6 +41,14 @@ It therefore cannot change authenticated production authority.
 
 Failure or uncertainty at any step leaves the prior accepted generation in
 authority.
+
+The final platform adapter may need to own steps 3–6 as one indivisible
+primitive rather than merely implement step 6. This is especially important
+on Windows, where the measured Node directory-handle path is unavailable and
+`MoveFileEx` with `MOVEFILE_WRITE_THROUGH` changes the publication primitive
+from POSIX hard-link-plus-directory-`fsync` semantics. A production adapter
+must report one closed result for the complete platform sequence; a generic
+callback after a Node publication is insufficient.
 
 ## Platform findings
 
@@ -72,6 +89,15 @@ through the Node filesystem API and calling the file-handle `sync()` operation
 was measured to fail with `EPERM`. The current Node-only seam therefore cannot
 prove Windows directory-entry durability and is not production-admitted.
 
+`MoveFileEx` documents `MOVEFILE_WRITE_THROUGH` and does not replace an
+existing destination unless `MOVEFILE_REPLACE_EXISTING` is supplied. This is
+a viable native candidate for exclusive publication, but the documentation's
+strongest explicit flush statement discusses copy-and-delete moves. Galerina
+therefore does not infer a complete same-volume crash guarantee from the API
+name. The adapter needs real NTFS/ReFS crash testing, local-volume rejection
+for unsupported/network filesystems, and exact last-error propagation before
+admission.
+
 Sources:
 [Microsoft `FlushFileBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers),
 [Microsoft `CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/FileAPI/nf-fileapi-createfilea)
@@ -91,6 +117,32 @@ following exist:
   or the new complete generation, never a mixture;
 - Windows 10/11, Debian/Ubuntu, Fedora/Mint and macOS evidence;
 - an independent security review and an explicit governed digest admission.
+
+The production implementation must be in-process. A spawned CLI, writable
+sidecar, shell command or PowerShell bridge is not admitted to the registry
+authority path. During the Node bootstrap period, the narrow candidate is a
+zero-dependency native module with an authoritative `.fungi` contract and a
+bounded bootstrap implementation. Its source, built binary, ABI, target
+triple and loader path must all be content-bound. SLIDE later replaces that
+bootstrap with the same contract rather than preserving a language-specific
+trusted component.
+
+## Zero-trust adoption score
+
+Status: `PENDING`
+
+The object-capability seal is adopted because its negative/control evidence is
+complete and it grants no production authority. The native cross-platform
+adapter proposal is not scored yet: filesystem support matrices, binary
+provenance, hostile-loader tests and power-loss evidence are incomplete.
+
+Hard vetoes:
+
+- any external process or sidecar obtains publication authority;
+- a digest alone can forge adapter identity;
+- a network/unknown filesystem is silently treated as local durable storage;
+- a failed, unsupported or non-Boolean platform result authorizes;
+- the adapter publishes before exact bytes and signatures are verified.
 
 ## Current consequence
 

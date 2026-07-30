@@ -138,13 +138,18 @@ planning checkbox must never be used to imply that implementation exists.
   generation; the legacy loose index remains bootstrap/recovery input only.
   The committed current generation is reproducibly checked by
   `npm run registry:generation:check`. Fresh focused evidence: Tower Citizen
-  **492/492**, app-kernel **165/165**.
-- **Current work:** implement and admit the least-authority platform
-  durability adapters (Windows 10/11, Linux families and macOS), then execute
-  crash/fault injection at every write, flush, publication, checkpoint,
-  canary, fallback and custody boundary. The generic adapter refuses unless
-  the host proves its directory durability barrier; no owner private key is
-  required or authorized for these disposable-key tests.
+  **492/492**, app-kernel **169/169**.
+- **Current work:** the durability seam now accepts only module-issued
+  object-capability adapters; a copied digest plus a caller callback is
+  rejected and host-evidence receipts cannot become production receipts.
+  App-kernel passes **169/169** with the new counterfeit-adapter refusal.
+  Next implement the least-authority in-process platform adapters (Windows
+  10/11, Linux families and macOS), then execute crash/fault injection at
+  every write, flush, publication, checkpoint, canary, fallback and custody
+  boundary. Research showed the adapter may need to own the complete
+  file-barrier/exclusive-publication/directory-barrier sequence rather than a
+  post-publication callback. No sidecar/shell/PowerShell authority is admitted
+  and no owner private key is required for disposable-key engineering tests.
 - **Parallel package-analysis lane:** external AIs may now produce read-only,
   evidence-labelled conversion dossiers using
   `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`.
@@ -166,13 +171,19 @@ planning checkbox must never be used to imply that implementation exists.
   were deliberately not inspected. The owner must confirm whether it is an
   intentionally retained non-production key or remove it through the custody
   process. Reviewers and automation must not open or delete it.
-- **Independent-review adjudication:** the first Galerina/SLIDE review pass is
+- **Independent-review adjudication:** the Galerina/SLIDE/GATE/TLL/KB
+  ten-report review pass is complete and
   reconciled in
   `docs/reports/independent-review-adjudication-2026-07-30.md`. The reports
   were written against the pre-`1c20cd5c` dirty checkpoint, so missing
   generation persistence/state-binding findings are historical rather than
   current. Their remaining platform, detached-GIR and release-receipt
   findings stay open. The refusal-code coverage finding is now closed.
+  The Knowledge Base scorecard binds all ten exact report hashes, covers every
+  named finding, publishes all ten scoring dimensions only for R&D-complete
+  recommendations, marks incomplete work `PENDING`, and hard-vetoes unsafe
+  authority constructions:
+  `../ZTF-Knowledge-Bases/ai-reviews/INDEPENDENT-REVIEW-ZERO-TRUST-SCORECARD-2026-07-30.md`.
 - **AI/R&D adoption gate:** every reviewer suggestion is advisory until it is
   reconciled in the Knowledge Base adjudication ledger and evaluated by
   `../ZTF-Knowledge-Bases/ai-reviews/ZERO-TRUST-ADOPTION-SCORE.md`. Incomplete
@@ -184,7 +195,7 @@ planning checkbox must never be used to imply that implementation exists.
 
 ### Terminal fixed-point checkpoint - 2026-07-30
 
-- **Fresh root aggregate:** **98/98 packages and 8,680 tests** pass.
+- **Fresh root aggregate:** **98/98 packages and 8,681 tests** pass.
 - **Fresh graph/generator evidence:** all five repository-owned graph surfaces
   generate and pass exact check mode; all fourteen declared generator
   contracts pass their isolated fixed-point tests.
@@ -200,7 +211,7 @@ planning checkbox must never be used to imply that implementation exists.
   zero-trust thesis **78%**, build progress **75%**, and the tracking registry
   contains **21** items. These are evidence meters, not release authorization.
 - **Fresh unified harness:** all five lanes pass in one invocation: unit
-  **8,680**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  **8,681**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
   the Galerina SLIDE-adapter corpus **496/496**.
 - **Fresh audit inventory:** all **80/80** audit/lint gates have executable
   refusal/control evidence; the tooling contract sees 98 packages and 151
@@ -326,9 +337,9 @@ planning checkbox must never be used to imply that implementation exists.
   repository.
 - **Fresh doc guards:** private-doc leak self-test and live scan are green,
   path-leak self-test and live scan are green, and doc/source drift reports
-  zero violations at the current 98-package/8,680-test baseline.
+  zero violations at the current 98-package/8,681-test baseline.
 - **Current:** the complete generated graph/code/coverage/component-health
-  dependency chain is refreshed. Root tests are 98/98 packages and 8,680
+  dependency chain is refreshed. Root tests are 98/98 packages and 8,681
   tests; strict/exhaustive phase-close are 83/83 and 84/84.
 - **Current safe boundary:** admit and commit the exact returned signed index,
   its public verification regression, regenerated graphs and continuity
@@ -473,7 +484,7 @@ planning checkbox must never be used to imply that implementation exists.
   verifier, native backend, production runner, and narrow `.fungi` Wasm
   compatibility engine are not implemented by this beta-safe migration.
 - **Broad close evidence:** the complete aggregate passes **98/98 packages,
-  8,680 tests**; all fourteen declared generator contracts and all five graph
+  8,681 tests**; all fourteen declared generator contracts and all five graph
   surfaces are green; strict phase-close passes **83/83** and exhaustive
   passes **84/84**, including its 98/98 package child.
 - **Current release boundary:** repository verification is green. The live

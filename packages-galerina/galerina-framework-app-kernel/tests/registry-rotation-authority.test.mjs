@@ -24,6 +24,7 @@ import {
   buildRegistryGeneration,
   buildRegistryIndex,
   buildRegistryAuthorityDelegation,
+  createRegistryGenerationHostEvidenceAdapter,
   isAdmittedRegistryRotationCandidate,
   persistRegistryGeneration,
   signRegistryAuthorityDelegation,
@@ -520,8 +521,11 @@ describe("registry rotation root authority", () => {
         publicBundle: value.candidate.publicBundle,
         minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
       },
-      directoryDurabilityBarrier: async () => true,
-      durabilityAdapterDigest: `sha256:${"a".repeat(64)}`,
+      durabilityAdapter: createRegistryGenerationHostEvidenceAdapter({
+        adapterId: "galerina.test.host-evidence.v1",
+        sourceDigest: `sha256:${"a".repeat(64)}`,
+        flushDirectory: async () => true,
+      }),
     });
     const custodyKeys = new Map([
       [oldKey.publicBundle.keyId, oldKey],
