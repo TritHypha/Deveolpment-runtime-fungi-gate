@@ -3,16 +3,16 @@
 // registry-index-cli — walkthrough §3 signer/verifier CLI for the certified
 // package registry index (#72 / Phase-28).
 //
-// Thin, single-witness binding of real files to the SHIPPED decider
-// (galerina-framework-app-kernel/dist/registry-index.js). This tool contains NO
-// verification logic of its own: build/sign/verify all route through
-// buildRegistryIndex / signRegistryIndex / verifyRegistryIndex / admitFromRegistry.
+// File-backed binding of exact flat-package bytes and public authority files to
+// the SHIPPED app-kernel deciders. Cryptographic policy remains in app-kernel;
+// this tool performs strict file parsing, artifact hashing, public-key loading,
+// and literal verifier adaptation before routing through those deciders.
 //
 // FAIL-CLOSED REVIEW GATE (the #72 walkthrough's blocker 2, encoded as mechanism):
 // an entry is signable ONLY on positive evidence — governance.reviewed === true,
-// reviewedBy/reviewedAt present, a real sha256 content hash, a non-placeholder
-// package-signature record, and the authority fields
-// (publisher/keyId/certificationLevel/riskRating). A stub manifest
+// reviewedBy/reviewedAt present, a re-derived sha256 artifact hash, a verified
+// hybrid package signature, an active root delegation, exact operational
+// public-key fingerprints, and the authority fields. A stub manifest
 // ("Pending governance review", hash "sha256:pending") is structurally
 // un-signable: build/sign REFUSE with per-manifest reasons. Signing an index of
 // stubs would convert "unverified" into "authoritatively asserted" — this tool
@@ -25,8 +25,13 @@
 // (docs/security/galerina-72-signed-registry-index-walkthrough.md §4).
 //
 // Modes:
-//   build  --out <file> [--issued-at <iso>] [--registry-dir <dir>] [--registry <id>]
-//   sign   --out <file> [--issued-at <iso>] [--registry-dir <dir>] [--registry <id>]
+//   build/sign --out <file> --workspace-packages-dir <dir>
+//          --delegation <json> --root-pubkey <pem>
+//          --root-mldsa65-pubkey <base64-file> --root-key-id <id>
+//          --operational-ed25519-pubkey <pem>
+//          --operational-mldsa65-pubkey <base64-file>
+//          --authority-at <iso> --min-delegation-serial <n>
+//          [--issued-at <iso>] [--registry-dir <dir>] [--registry <id>]
 //          (re-builds from the manifests — the manifest tree is the single source
 //           of truth; there is no sign-an-arbitrary-file mode by design)
 //   verify --in <file> --ed25519-pubkey <pem-path>
@@ -34,7 +39,15 @@
 //   --self-test   hermetic: fixtures + ephemeral keys, no repo/file-system state
 // =============================================================================
 
-import { readFileSync, writeFileSync, readdirSync, statSync, mkdtempSync, rmSync } from "node:fs";
+import {
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -48,44 +61,165 @@ import {
   sign as edSign,
   verify as edVerify,
 } from "node:crypto";
+import {
+  REGISTRY_ARTIFACT_PROFILE,
+  hashFlatPackageArtifact,
+} from "./lib/registry-package-artifact.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_REGISTRY_DIR = join(ROOT, "packages-galerina", "galerina-registry", "packages");
-const DECIDER_PATH = join(ROOT, "packages-galerina", "galerina-framework-app-kernel", "dist", "registry-index.js");
+const DECIDER_PATH = join(
+  ROOT,
+  "packages-galerina",
+  "galerina-framework-app-kernel",
+  "dist",
+  "index.js",
+);
 const COMPILER_PACKAGE = join(ROOT, "packages-galerina", "galerina-core-compiler", "package.json");
 const REVOCATION_GATE_PATH = join(ROOT, "governance", "revocation-registry.mjs");
 
 const CERT_LEVELS = ["uncertified", "community", "verified", "certified", "enterprise", "regulated"];
 const RISK_RATINGS = ["low", "medium", "high", "critical"];
 const SHA256_RE = /^sha256:[0-9a-f]{64}$/;
+const TOP_LEVEL_FIELDS = new Set([
+  "schema",
+  "name",
+  "version",
+  "registry",
+  "description",
+  "artifactProfile",
+  "artifactFiles",
+  "capabilities",
+  "effects",
+  "targets",
+  "installScript",
+  "hash",
+  "signature",
+  "publisher",
+  "keyId",
+  "signerKeyId",
+  "certificationLevel",
+  "riskRating",
+  "governance",
+]);
+const LIST_FIELDS = new Set([
+  "artifactFiles",
+  "capabilities",
+  "effects",
+  "targets",
+]);
+const GOVERNANCE_FIELDS = new Set([
+  "reviewed",
+  "reviewedBy",
+  "reviewedAt",
+  "notes",
+  "complianceFramework",
+]);
 
 // ── minimal manifest reader (only the package.galerina.yaml shape; no yaml dep) ──
+function parseScalar(value, lineNumber) {
+  const text = value.trim();
+  if (text === "null") return null;
+  if (text === "true") return true;
+  if (text === "false") return false;
+  if (text.startsWith("\"")) {
+    try {
+      const parsed = JSON.parse(text);
+      if (typeof parsed !== "string") throw new Error("not a string");
+      return parsed;
+    } catch {
+      throw new Error(
+        `REFUSED: manifest line ${lineNumber} has an invalid quoted scalar.`,
+      );
+    }
+  }
+  if (/^'(?:[^']|'')*'$/u.test(text)) {
+    return text.slice(1, -1).replaceAll("''", "'");
+  }
+  if (/^[A-Za-z0-9@._:+/-]+$/u.test(text)) return text;
+  throw new Error(
+    `REFUSED: manifest line ${lineNumber} has a non-literal scalar.`,
+  );
+}
+
 export function parseManifest(text) {
-  const out = { capabilities: [], effects: [], governance: {} };
-  const scalar = (v) => {
-    const t = v.trim();
-    if (t === "null" || t === "") return null;
-    if (t === "true") return true;
-    if (t === "false") return false;
-    return t.replace(/^["']/, "").replace(/["']$/, "");
-  };
+  if (typeof text !== "string") {
+    throw new Error("REFUSED: package manifest must be UTF-8 text.");
+  }
+  const out = { governance: {} };
+  const seenTop = new Set();
+  const seenGovernance = new Set();
   let listKey = null;
   let inGovernance = false;
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.replace(/\s+#.*$/, "");
-    if (!line.trim() || line.trim().startsWith("#")) continue;
-    const listItem = line.match(/^\s+-\s+(.+)$/);
-    if (listItem && listKey) { out[listKey].push(scalar(listItem[1])); continue; }
-    const govKey = inGovernance && line.match(/^\s{2,}([A-Za-z][\w-]*):\s*(.*)$/);
-    if (govKey && !line.match(/^\S/)) { out.governance[govKey[1]] = scalar(govKey[2]); continue; }
-    const top = line.match(/^([A-Za-z][\w-]*):\s*(.*)$/);
-    if (top) {
-      const [, key, val] = top;
-      inGovernance = key === "governance";
-      listKey = val.trim() === "" && !inGovernance ? key : null;
-      if (listKey && out[listKey] === undefined) out[listKey] = [];
-      if (!listKey && !inGovernance) out[key] = scalar(val);
+  for (const [offset, raw] of text.split(/\r?\n/u).entries()) {
+    const lineNumber = offset + 1;
+    if (raw.trim().length === 0 || raw.trimStart().startsWith("#")) continue;
+    if (raw.includes("\t") || /\s+#/u.test(raw)) {
+      throw new Error(
+        `REFUSED: manifest line ${lineNumber} uses ambiguous whitespace or an inline comment.`,
+      );
     }
+    const listItem = /^ {2}- (.+)$/u.exec(raw);
+    if (listItem !== null) {
+      if (listKey === null) {
+        throw new Error(
+          `REFUSED: manifest line ${lineNumber} has an unowned list item.`,
+        );
+      }
+      out[listKey].push(parseScalar(listItem[1], lineNumber));
+      continue;
+    }
+    const governanceField =
+      /^ {2}([A-Za-z][A-Za-z0-9]*): (.+)$/u.exec(raw);
+    if (governanceField !== null) {
+      const key = governanceField[1];
+      if (!inGovernance || !GOVERNANCE_FIELDS.has(key)) {
+        throw new Error(
+          `REFUSED: manifest line ${lineNumber} has an unsupported nested field.`,
+        );
+      }
+      if (seenGovernance.has(key)) {
+        throw new Error(`REFUSED: manifest repeats governance.${key}.`);
+      }
+      seenGovernance.add(key);
+      out.governance[key] = parseScalar(governanceField[2], lineNumber);
+      continue;
+    }
+    const top = /^([A-Za-z][A-Za-z0-9]*):(?: (.*))?$/u.exec(raw);
+    if (top === null) {
+      throw new Error(
+        `REFUSED: manifest line ${lineNumber} is outside the admitted YAML subset.`,
+      );
+    }
+    const key = top[1];
+    const value = top[2];
+    if (!TOP_LEVEL_FIELDS.has(key)) {
+      throw new Error(`REFUSED: manifest has unsupported field '${key}'.`);
+    }
+    if (seenTop.has(key)) {
+      throw new Error(`REFUSED: manifest repeats top-level field '${key}'.`);
+    }
+    seenTop.add(key);
+    inGovernance = key === "governance";
+    listKey = null;
+    if (inGovernance) {
+      if (value !== undefined && value.length > 0) {
+        throw new Error("REFUSED: governance must be a nested mapping.");
+      }
+      continue;
+    }
+    if (LIST_FIELDS.has(key)) {
+      if (value !== undefined && value.length > 0) {
+        throw new Error(`REFUSED: manifest ${key} must be a block list.`);
+      }
+      out[key] = [];
+      listKey = key;
+      continue;
+    }
+    if (value === undefined || value.length === 0) {
+      throw new Error(`REFUSED: manifest scalar '${key}' is missing.`);
+    }
+    out[key] = parseScalar(value, lineNumber);
   }
   return out;
 }
@@ -94,62 +228,165 @@ export function parseManifest(text) {
 export function reviewGate(manifest, path) {
   const reasons = [];
   const g = manifest.governance ?? {};
+  if (manifest.schema !== "galerina-package-manifest/v1") {
+    reasons.push("schema is not galerina-package-manifest/v1");
+  }
   if (g.reviewed !== true) reasons.push("governance.reviewed is not true (deny-by-default: unreviewed)");
   if (!g.reviewedBy) reasons.push("governance.reviewedBy is missing/null");
   if (!g.reviewedAt) reasons.push("governance.reviewedAt is missing/null");
   if (!manifest.name) reasons.push("name is missing");
   if (!manifest.version) reasons.push("version is missing");
+  if (!manifest.registry) reasons.push("registry is missing");
+  if (manifest.artifactProfile !== REGISTRY_ARTIFACT_PROFILE) {
+    reasons.push(`artifactProfile is not ${REGISTRY_ARTIFACT_PROFILE}`);
+  }
+  if (!Array.isArray(manifest.artifactFiles) || manifest.artifactFiles.length === 0) {
+    reasons.push("artifactFiles is missing/empty");
+  }
   if (!SHA256_RE.test(String(manifest.hash ?? ""))) reasons.push(`hash '${manifest.hash}' is not a real sha256:<64-hex> content hash`);
   if (
     typeof manifest.signature !== "string"
-    || manifest.signature.trim().length === 0
-    || manifest.signature.startsWith("placeholder")
+    || !manifest.signature.startsWith("galerina-hybrid-v1.")
   ) {
-    reasons.push("signature is missing/null/placeholder (FUNGI-PKG-005: unsigned package entry)");
+    reasons.push("signature is missing or not a hybrid package envelope (FUNGI-PKG-005)");
   }
   if (!manifest.publisher) reasons.push("publisher (authority-asserted) is missing");
   if (!manifest.keyId) reasons.push("keyId (expected manifest-signing key) is missing");
+  if (!manifest.signerKeyId) reasons.push("signerKeyId is missing");
   if (!CERT_LEVELS.includes(manifest.certificationLevel)) reasons.push(`certificationLevel '${manifest.certificationLevel}' is not one of ${CERT_LEVELS.join("|")}`);
   if (!RISK_RATINGS.includes(manifest.riskRating)) reasons.push(`riskRating '${manifest.riskRating}' is not one of ${RISK_RATINGS.join("|")}`);
   if (manifest.installScript !== null && manifest.installScript !== undefined) reasons.push("installScript is declared (FUNGI-PKG-004: denied)");
+  for (const field of ["artifactFiles", "capabilities", "effects"]) {
+    const values = manifest[field];
+    if (
+      !Array.isArray(values)
+      || values.some((value) => typeof value !== "string" || value.length === 0)
+      || new Set(values).size !== values.length
+    ) {
+      reasons.push(`${field} must be a duplicate-free string list`);
+    }
+  }
   return { ok: reasons.length === 0, path, reasons };
 }
 
 function collectManifests(registryDir) {
   const found = [];
   const walk = (dir) => {
-    for (const name of readdirSync(dir)) {
-      const p = join(dir, name);
-      if (statSync(p).isDirectory()) walk(p);
-      else if (name === "package.galerina.yaml") found.push(p);
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name);
+      const stats = lstatSync(path);
+      if (stats.isSymbolicLink()) {
+        throw new Error(
+          `REFUSED: registry tree contains a symlink or reparse point: ${path}`,
+        );
+      }
+      if (stats.isDirectory()) walk(path);
+      else if (entry.name === "package.galerina.yaml") found.push(path);
     }
   };
   walk(registryDir);
   return found.sort();
 }
 
-export function buildFromDir(decider, registryDir, registryId, issuedAt) {
+export async function buildFromDir(
+  decider,
+  registryDir,
+  registryId,
+  issuedAt,
+  options = undefined,
+) {
   const manifests = collectManifests(registryDir);
   if (manifests.length === 0) throw new Error(`REFUSED: no package.galerina.yaml manifests under ${registryDir} — an empty certified index is not a thing (#72).`);
-  const gates = manifests.map((p) => ({ p, m: parseManifest(readFileSync(p, "utf8")) })).map(({ p, m }) => ({ m, gate: reviewGate(m, p) }));
+  const gates = manifests.map((path) => {
+    try {
+      const manifest = parseManifest(readFileSync(path, "utf8"));
+      return { manifest, gate: reviewGate(manifest, path) };
+    } catch (error) {
+      throw new Error(`${String(error.message)} Path: ${path}`);
+    }
+  });
   const refused = gates.filter((x) => !x.gate.ok);
   if (refused.length > 0) {
     const detail = refused.map((x) => `  ${x.gate.path}\n${x.gate.reasons.map((r) => `    - ${r}`).join("\n")}`).join("\n");
     throw new Error(`REFUSED: ${refused.length} of ${gates.length} manifest(s) fail the review gate (fail-closed — signing a stub catalog converts "unverified" into "authoritatively asserted"):\n${detail}`);
   }
-  const entries = gates.map(({ m }) => ({
-    name: m.name, version: m.version, sourceHash: m.hash, publisher: m.publisher, keyId: m.keyId,
-    certificationLevel: m.certificationLevel, riskRating: m.riskRating,
-    capabilities: m.capabilities ?? [], effects: m.effects ?? [],
-  }));
+  if (
+    typeof options !== "object"
+    || options === null
+    || typeof options.workspacePackagesDir !== "string"
+    || typeof options.delegation !== "object"
+    || options.delegation === null
+    || typeof options.authority !== "object"
+    || options.authority === null
+    || typeof options.operationalPublicKeyFingerprints !== "object"
+    || options.operationalPublicKeyFingerprints === null
+    || typeof options.verifyManifest !== "object"
+    || options.verifyManifest === null
+  ) {
+    throw new Error(
+      "REFUSED: build requires the workspace package root and complete public root-to-operational authority inputs.",
+    );
+  }
+  const entries = [];
+  for (const { manifest } of gates) {
+    if (manifest.registry !== registryId) {
+      throw new Error(
+        `REFUSED: manifest registry '${manifest.registry}' does not match '${registryId}'.`,
+      );
+    }
+    const artifact = hashFlatPackageArtifact({
+      workspacePackagesDir: options.workspacePackagesDir,
+      packageName: manifest.name,
+      artifactProfile: manifest.artifactProfile,
+      artifactFiles: manifest.artifactFiles,
+    });
+    if (artifact.hash !== manifest.hash) {
+      throw new Error(
+        `REFUSED: artifact digest does not match signed manifest for '${manifest.name}'.`,
+      );
+    }
+    decider.verifyRegistryPackageManifestUnderDelegation(
+      manifest,
+      options.delegation,
+      {
+        authority: options.authority,
+        operationalPublicKeyFingerprints:
+          options.operationalPublicKeyFingerprints,
+        verifyManifest: options.verifyManifest,
+      },
+    );
+    entries.push({
+      name: manifest.name,
+      version: manifest.version,
+      sourceHash: manifest.hash,
+      publisher: manifest.publisher,
+      keyId: manifest.keyId,
+      certificationLevel: manifest.certificationLevel,
+      riskRating: manifest.riskRating,
+      capabilities: manifest.capabilities ?? [],
+      effects: manifest.effects ?? [],
+    });
+  }
   return decider.buildRegistryIndex({ registry: registryId, issuedAt, entries });
 }
 
 const sha256hex = (s) => createHash("sha256").update(s).digest("hex");
 
 function arg(args, name, fallback) {
-  const i = args.indexOf(name);
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : fallback;
+  const positions = [];
+  for (let index = 0; index < args.length; index += 1) {
+    if (args[index] === name) positions.push(index);
+  }
+  if (positions.length === 0) return fallback;
+  if (positions.length !== 1) {
+    throw new Error(`REFUSED: command line repeats '${name}'.`);
+  }
+  const position = positions[0];
+  const value = args[position + 1];
+  if (value === undefined || value.startsWith("--")) {
+    throw new Error(`REFUSED: command-line option '${name}' lacks a value.`);
+  }
+  return value;
 }
 
 async function loadDecider() {
@@ -221,6 +458,157 @@ const mlDsaOptions = (decider) => ({
   context: new TextEncoder().encode(decider.REGISTRY_INDEX_V2_CONTEXT),
 });
 
+const delegationMlDsaOptions = (decider) => ({
+  context: new TextEncoder().encode(decider.REGISTRY_DELEGATION_V1_CONTEXT),
+});
+
+const manifestMlDsaOptions = (decider) => ({
+  context: new TextEncoder().encode(
+    decider.REGISTRY_PACKAGE_MANIFEST_V1_CONTEXT,
+  ),
+});
+
+function publicEd25519(path, label) {
+  const key = createPublicKey(readFileSync(path, "utf8"));
+  if (key.asymmetricKeyType !== "ed25519") {
+    throw new Error(`REFUSED: ${label} is not an Ed25519 public key.`);
+  }
+  return key;
+}
+
+async function loadBuildAuthority(args, decider) {
+  const names = [
+    "--workspace-packages-dir",
+    "--delegation",
+    "--root-pubkey",
+    "--root-mldsa65-pubkey",
+    "--root-key-id",
+    "--operational-ed25519-pubkey",
+    "--operational-mldsa65-pubkey",
+    "--authority-at",
+    "--min-delegation-serial",
+  ];
+  const values = new Map(
+    names.map((name) => [name, arg(args, name, null)]),
+  );
+  const present = names.filter((name) => values.get(name) !== null);
+  if (present.length === 0) return undefined;
+  const missing = names.filter((name) => values.get(name) === null);
+  if (missing.length > 0) {
+    throw new Error(
+      `REFUSED: build authority is incomplete; missing ${missing.join(", ")}.`,
+    );
+  }
+
+  const minSerialText = values.get("--min-delegation-serial");
+  if (!/^(?:0|[1-9][0-9]*)$/u.test(minSerialText)) {
+    throw new Error(
+      "REFUSED: --min-delegation-serial must be a non-negative decimal integer.",
+    );
+  }
+  const minSerial = Number(minSerialText);
+  if (!Number.isSafeInteger(minSerial)) {
+    throw new Error(
+      "REFUSED: --min-delegation-serial exceeds the safe integer domain.",
+    );
+  }
+
+  const rootKeyId = values.get("--root-key-id");
+  const rootEd = publicEd25519(
+    values.get("--root-pubkey"),
+    "offline-root classical public key",
+  );
+  const operationalEd = publicEd25519(
+    values.get("--operational-ed25519-pubkey"),
+    "operational classical public key",
+  );
+  const mlDsa65 = await loadMlDsa65();
+  const rootMl = decodeBase64KeyFile(
+    values.get("--root-mldsa65-pubkey"),
+    mlDsa65.lengths.publicKey,
+    "offline-root ML-DSA-65 public key",
+  );
+  const operationalMl = decodeBase64KeyFile(
+    values.get("--operational-mldsa65-pubkey"),
+    mlDsa65.lengths.publicKey,
+    "operational ML-DSA-65 public key",
+  );
+  let delegation;
+  try {
+    delegation = JSON.parse(
+      readFileSync(values.get("--delegation"), "utf8"),
+    );
+  } catch {
+    throw new Error(
+      "REFUSED: signed registry delegation is not valid JSON.",
+    );
+  }
+
+  const revocation = await import(pathToFileURL(REVOCATION_GATE_PATH).href);
+  revocation.assertRegistryTrustworthy(ROOT);
+  const isRevoked = (keyId) => revocation.isKeyRevoked(keyId, ROOT);
+  const rootMlOptions = delegationMlDsaOptions(decider);
+  const manifestMlOptions = manifestMlDsaOptions(decider);
+  const operationalKeyId = delegation?.operational?.keyId;
+  const edDer = operationalEd.export({ type: "spki", format: "der" });
+  const fingerprints = {
+    ed25519: createHash("sha256").update(edDer).digest("hex"),
+    mlDsa65: createHash("sha256").update(operationalMl).digest("hex"),
+  };
+
+  return {
+    workspacePackagesDir: values.get("--workspace-packages-dir"),
+    delegation,
+    authority: {
+      expectedRootKeyId: rootKeyId,
+      at: values.get("--authority-at"),
+      minSerial,
+      isRevoked,
+      verifyRoot: {
+        ed25519: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? edVerify(
+              null,
+              message,
+              rootEd,
+              Buffer.from(signature, "base64"),
+            )
+            : "no-key",
+        mlDsa65: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? mlDsa65.verify(
+              Buffer.from(signature, "base64"),
+              message,
+              rootMl,
+              rootMlOptions,
+            )
+            : "no-key",
+      },
+    },
+    operationalPublicKeyFingerprints: fingerprints,
+    verifyManifest: {
+      ed25519: (message, signature, keyId) =>
+        keyId === operationalKeyId
+          ? edVerify(
+            null,
+            message,
+            operationalEd,
+            Buffer.from(signature, "base64"),
+          )
+          : "no-key",
+      mlDsa65: (message, signature, keyId) =>
+        keyId === operationalKeyId
+          ? mlDsa65.verify(
+            Buffer.from(signature, "base64"),
+            message,
+            operationalMl,
+            manifestMlOptions,
+          )
+          : "no-key",
+    },
+  };
+}
+
 async function assertKeyNotRevoked(keyId) {
   const revocation = await import(pathToFileURL(REVOCATION_GATE_PATH).href);
   revocation.assertRegistryTrustworthy(ROOT);
@@ -230,27 +618,44 @@ async function assertKeyNotRevoked(keyId) {
 }
 
 // ── self-test (hermetic: temp dir + ephemeral in-memory keys) ────────────────
-const APPROVED_YAML = (name, hashHex, keyId) => `name: "${name}"
-version: "1.0.0"
-registry: "https://registry.galerina.dev"
-capabilities:
-  - audit.write
-effects:
-  - audit.write
-installScript: null
-hash: "sha256:${hashHex}"
-signature: "fixture-package-signature-${keyId}"
-publisher: "galerina-governance"
-keyId: "${keyId}"
-certificationLevel: "certified"
-riskRating: "low"
-governance:
-  reviewed: true
-  reviewedBy: "governance-authority"
-  reviewedAt: "2026-07-18T00:00:00Z"
-`;
-const STUB_YAML = `name: "@galerina/stub"
+function selfTestManifestYaml(manifest) {
+  return [
+    `schema: ${JSON.stringify(manifest.schema)}`,
+    `name: ${JSON.stringify(manifest.name)}`,
+    `version: ${JSON.stringify(manifest.version)}`,
+    `registry: ${JSON.stringify(manifest.registry)}`,
+    `artifactProfile: ${JSON.stringify(manifest.artifactProfile)}`,
+    "artifactFiles:",
+    ...manifest.artifactFiles.map((value) => `  - ${JSON.stringify(value)}`),
+    "capabilities:",
+    ...manifest.capabilities.map((value) => `  - ${JSON.stringify(value)}`),
+    "effects:",
+    ...manifest.effects.map((value) => `  - ${JSON.stringify(value)}`),
+    "installScript: null",
+    `hash: ${JSON.stringify(manifest.hash)}`,
+    `signature: ${JSON.stringify(manifest.signature)}`,
+    `publisher: ${JSON.stringify(manifest.publisher)}`,
+    `keyId: ${JSON.stringify(manifest.keyId)}`,
+    `signerKeyId: ${JSON.stringify(manifest.signerKeyId)}`,
+    `certificationLevel: ${JSON.stringify(manifest.certificationLevel)}`,
+    `riskRating: ${JSON.stringify(manifest.riskRating)}`,
+    "governance:",
+    `  reviewed: ${manifest.governance.reviewed ? "true" : "false"}`,
+    `  reviewedBy: ${JSON.stringify(manifest.governance.reviewedBy)}`,
+    `  reviewedAt: ${JSON.stringify(manifest.governance.reviewedAt)}`,
+    "",
+  ].join("\n");
+}
+
+const STUB_YAML = `schema: "galerina-package-manifest/v1"
+name: "@galerina/stub"
 version: "0.1.0"
+registry: "test-registry"
+artifactProfile: "galerina-flat-package-tree/v1"
+artifactFiles:
+  - "package.json"
+capabilities:
+effects:
 installScript: null
 hash: "sha256:pending"
 signature: null
@@ -272,11 +677,165 @@ async function selfTest() {
     const forged = generateKeyPairSync("ed25519");
     const mlKeys = mlDsa65.keygen(randomBytes(32));
     const forgedMlKeys = mlDsa65.keygen(randomBytes(32));
+    const rootKeys = generateKeyPairSync("ed25519");
+    const rootMlKeys = mlDsa65.keygen(randomBytes(32));
     const mlOptions = mlDsaOptions(decider);
     const KEY_ID = "test-authority-1";
-    const H1 = "a".repeat(64), H2 = "b".repeat(64);
-    const { mkdirSync } = await import("node:fs");
+    const ROOT_KEY_ID = "test-root-1";
     const put = (rel, text) => { const p = join(tmp, rel); mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, text); return p; };
+    const workspace = join(tmp, "packages-galerina");
+    mkdirSync(workspace);
+    const packageArtifact = (name, directory, index) => {
+      const packageRoot = join(workspace, directory);
+      mkdirSync(join(packageRoot, "src"), { recursive: true });
+      writeFileSync(
+        join(packageRoot, "package.json"),
+        `${JSON.stringify({ name, version: "1.0.0" }, null, 2)}\n`,
+      );
+      writeFileSync(join(packageRoot, "LICENSE"), "Apache-2.0\n");
+      writeFileSync(
+        join(packageRoot, "src", "index.ts"),
+        `export const fixture = ${index};\n`,
+      );
+      const artifactFiles = ["LICENSE", "package.json", "src/index.ts"];
+      return {
+        artifactFiles,
+        ...hashFlatPackageArtifact({
+          workspacePackagesDir: workspace,
+          packageName: name,
+          artifactProfile: REGISTRY_ARTIFACT_PROFILE,
+          artifactFiles,
+        }),
+      };
+    };
+    const firstArtifact = packageArtifact("@g/a", "package-a", 1);
+    const secondArtifact = packageArtifact("@g/b", "package-b", 2);
+    const H1 = firstArtifact.hash.slice("sha256:".length);
+    const H2 = secondArtifact.hash.slice("sha256:".length);
+    const operationalEdDer =
+      publicKey.export({ type: "spki", format: "der" });
+    const delegation = decider.signRegistryAuthorityDelegation(
+      decider.buildRegistryAuthorityDelegation({
+        registry: "test-registry",
+        serial: 1,
+        issuedAt: "2026-07-18T00:00:00.000Z",
+        notBefore: "2026-07-18T00:00:00.000Z",
+        notAfter: "2027-07-18T00:00:00.000Z",
+        rootKeyId: ROOT_KEY_ID,
+        operational: {
+          keyId: KEY_ID,
+          algorithm: "Ed25519+ML-DSA-65",
+          ed25519PublicKeySha256:
+            createHash("sha256").update(operationalEdDer).digest("hex"),
+          mlDsa65PublicKeySha256:
+            createHash("sha256").update(mlKeys.publicKey).digest("hex"),
+        },
+        roles: ["package-manifest.sign", "registry-index.sign"],
+      }),
+      (message) =>
+        edSign(null, message, rootKeys.privateKey).toString("base64"),
+      (message) => Buffer.from(
+        mlDsa65.sign(
+          message,
+          rootMlKeys.secretKey,
+          delegationMlDsaOptions(decider),
+        ),
+      ).toString("base64"),
+    );
+    const manifestFor = (name, artifact) =>
+      decider.signRegistryPackageManifest(
+        {
+          schema: "galerina-package-manifest/v1",
+          name,
+          version: "1.0.0",
+          registry: "test-registry",
+          artifactProfile: REGISTRY_ARTIFACT_PROFILE,
+          artifactFiles: artifact.artifactFiles,
+          capabilities: ["audit.write"],
+          effects: ["audit.write"],
+          installScript: null,
+          hash: artifact.hash,
+          publisher: "galerina-governance",
+          keyId: KEY_ID,
+          certificationLevel: "certified",
+          riskRating: "low",
+          governance: {
+            reviewed: true,
+            reviewedBy: "governance-authority",
+            reviewedAt: "2026-07-18T00:00:00.000Z",
+          },
+        },
+        KEY_ID,
+        (message) =>
+          edSign(null, message, privateKey).toString("base64"),
+        (message) => Buffer.from(
+          mlDsa65.sign(
+            message,
+            mlKeys.secretKey,
+            manifestMlDsaOptions(decider),
+          ),
+        ).toString("base64"),
+      );
+    const firstYaml = selfTestManifestYaml(
+      manifestFor("@g/a", firstArtifact),
+    );
+    const secondYaml = selfTestManifestYaml(
+      manifestFor("@g/b", secondArtifact),
+    );
+    const buildOptions = {
+      workspacePackagesDir: workspace,
+      delegation,
+      authority: {
+        expectedRootKeyId: ROOT_KEY_ID,
+        at: "2026-08-01T00:00:00.000Z",
+        minSerial: 0,
+        isRevoked: () => false,
+        verifyRoot: {
+          ed25519: (message, signature, keyId) =>
+            keyId === ROOT_KEY_ID
+              ? edVerify(
+                null,
+                message,
+                rootKeys.publicKey,
+                Buffer.from(signature, "base64"),
+              )
+              : "no-key",
+          mlDsa65: (message, signature, keyId) =>
+            keyId === ROOT_KEY_ID
+              ? mlDsa65.verify(
+                Buffer.from(signature, "base64"),
+                message,
+                rootMlKeys.publicKey,
+                delegationMlDsaOptions(decider),
+              )
+              : "no-key",
+        },
+      },
+      operationalPublicKeyFingerprints: {
+        ed25519: delegation.operational.ed25519PublicKeySha256,
+        mlDsa65: delegation.operational.mlDsa65PublicKeySha256,
+      },
+      verifyManifest: {
+        ed25519: (message, signature, keyId) =>
+          keyId === KEY_ID
+            ? edVerify(
+              null,
+              message,
+              publicKey,
+              Buffer.from(signature, "base64"),
+            )
+            : "no-key",
+        mlDsa65: (message, signature, keyId) =>
+          keyId === KEY_ID
+            ? mlDsa65.verify(
+              Buffer.from(signature, "base64"),
+              message,
+              mlKeys.publicKey,
+              manifestMlDsaOptions(decider),
+            )
+            : "no-key",
+      },
+    };
 
     // T1 — the gate REFUSES the live stub shape with per-field reasons
     const stubGate = reviewGate(parseManifest(STUB_YAML), "stub");
@@ -285,19 +844,41 @@ async function selfTest() {
     ok("gate refuses missing authority fields", stubGate.reasons.some((r) => r.includes("publisher")));
 
     // T2 — build over approved-only manifests: deterministic + sorted
-    put("good/@g/a/package.galerina.yaml", APPROVED_YAML("@g/a", H1, "pkgkey-1"));
-    put("good/@g/b/package.galerina.yaml", APPROVED_YAML("@g/b", H2, "pkgkey-2"));
+    put("good/@g/a/package.galerina.yaml", firstYaml);
+    put("good/@g/b/package.galerina.yaml", secondYaml);
     const issuedAt = "2026-07-18T12:00:00Z";
-    const idx1 = buildFromDir(decider, join(tmp, "good"), "test-registry", issuedAt);
-    const idx2 = buildFromDir(decider, join(tmp, "good"), "test-registry", issuedAt);
+    const idx1 = await buildFromDir(
+      decider,
+      join(tmp, "good"),
+      "test-registry",
+      issuedAt,
+      buildOptions,
+    );
+    const idx2 = await buildFromDir(
+      decider,
+      join(tmp, "good"),
+      "test-registry",
+      issuedAt,
+      buildOptions,
+    );
     ok("build is deterministic (byte-equal)", decider.registryIndexSigningInput(idx1) === decider.registryIndexSigningInput(idx2));
     ok("entries sorted by name", idx1.entries[0].name === "@g/a" && idx1.entries.length === 2);
 
     // T3 — build REFUSES when any stub is present (fail-closed, not skip-and-continue)
-    put("mixed/@g/a/package.galerina.yaml", APPROVED_YAML("@g/a", H1, "pkgkey-1"));
+    put("mixed/@g/a/package.galerina.yaml", firstYaml);
     put("mixed/@g/stub/package.galerina.yaml", STUB_YAML);
     let refusedMixed = false;
-    try { buildFromDir(decider, join(tmp, "mixed"), "test-registry", issuedAt); } catch (e) { refusedMixed = /REFUSED: 1 of 2/.test(String(e.message)); }
+    try {
+      await buildFromDir(
+        decider,
+        join(tmp, "mixed"),
+        "test-registry",
+        issuedAt,
+        buildOptions,
+      );
+    } catch (e) {
+      refusedMixed = /REFUSED: 1 of 2/.test(String(e.message));
+    }
     ok("build refuses a mixed tree (one stub poisons the act)", refusedMixed);
 
     // T4 — hybrid sign + self-verify through the decider (both witnesses required)
@@ -350,9 +931,9 @@ async function selfTest() {
     ok("forked-but-signed package → HASH_MISMATCH refusal", forkedPkg.ok === false && forkedPkg.code === decider.ERR_REGISTRY_HASH_MISMATCH);
     const unlisted = decider.admitFromRegistry(signed, verifier, { name: "@g/evil", version: "1.0.0", sourceHash: "sha256:" + H1 }, policy);
     ok("unlisted package → PACKAGE_UNKNOWN refusal", unlisted.ok === false && unlisted.code === decider.ERR_REGISTRY_PACKAGE_UNKNOWN);
-    const wrongSigner = decider.admitFromRegistry(signed, verifier, { name: "@g/a", version: "1.0.0", sourceHash: "sha256:" + H1, keyId: "not-pkgkey-1" }, policy);
+    const wrongSigner = decider.admitFromRegistry(signed, verifier, { name: "@g/a", version: "1.0.0", sourceHash: "sha256:" + H1, keyId: "not-test-authority-1" }, policy);
     ok("package signed by un-pinned keyId → KEYID_MISMATCH refusal", wrongSigner.ok === false && wrongSigner.code === decider.ERR_REGISTRY_KEYID_MISMATCH);
-    const admitted = decider.admitFromRegistry(signed, verifier, { name: "@g/a", version: "1.0.0", sourceHash: "sha256:" + H1, keyId: "pkgkey-1" }, policy);
+    const admitted = decider.admitFromRegistry(signed, verifier, { name: "@g/a", version: "1.0.0", sourceHash: "sha256:" + H1, keyId: KEY_ID }, policy);
     ok("genuine package admits", admitted.ok === true);
 
     // T8 — unsigned index → UNSIGNED; rollback floor → STALE
@@ -401,10 +982,23 @@ async function main() {
     const out = arg(args, "--out", null);
     if (!out) { console.error(`usage: registry-index-cli ${mode} --out <file> [--issued-at <iso>] [--registry-dir <dir>]`); process.exit(2); }
     let index;
+    let buildAuthority;
     try {
-      index = buildFromDir(decider, registryDir, registryId, issuedAt);
+      buildAuthority = await loadBuildAuthority(args, decider);
+      index = await buildFromDir(
+        decider,
+        registryDir,
+        registryId,
+        issuedAt,
+        buildAuthority,
+      );
     } catch (e) {
-      console.error(String(e.message));
+      const detail = String(e.message);
+      console.error(
+        detail.startsWith("REFUSED:")
+          ? detail
+          : `REFUSED (${e.code ?? "ERR"}): ${detail}`,
+      );
       process.exit(1);
     }
     if (mode === "sign") {
@@ -415,6 +1009,12 @@ async function main() {
       const explicitPathsPresent = Boolean(keyPath || mlPrivatePath);
       if (!keyId || (signingEnvPath && explicitPathsPresent) || (!signingEnvPath && (!keyPath || !mlPrivatePath))) {
         console.error("REFUSED: sign requires GALERINA_SIGNING_KEY_ID plus exactly one private-input mode: GALERINA_REGISTRY_SIGNING_ENV_PATH, or both GALERINA_REGISTRY_SIGNING_KEY_PEM_PATH + GALERINA_REGISTRY_MLDSA65_PRIVATE_KEY_B64_PATH (see docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md).");
+        process.exit(1);
+      }
+      if (keyId !== buildAuthority.delegation.operational.keyId) {
+        console.error(
+          "REFUSED: index signer must be the exact delegated operational authority.",
+        );
         process.exit(1);
       }
       await assertKeyNotRevoked(keyId);
