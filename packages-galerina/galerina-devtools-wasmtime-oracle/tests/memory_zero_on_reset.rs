@@ -1,6 +1,6 @@
-//! DSS.wasm sidecar F4 (memory half) — pooled linear memory is ZEROED on reuse across tasks.
+//! DSS.wasm oracle fixture F4 (memory half) — pooled linear memory is ZEROED on reuse across tasks.
 //!
-//! DRCM F4: the pooling instance allocator reuses linear memory between tasks, so the sidecar must
+//! DRCM F4: the pooling instance allocator reuses linear memory between tasks, so the oracle must
 //! guarantee zero-on-reset — task N+1 must NEVER observe task N's residue. This is a containment
 //! property to PROVE, not assume ("don't assume it"). We force the strongest case: a pool with a
 //! SINGLE memory slot, so a second instance is guaranteed to reuse the first's backing memory. If the

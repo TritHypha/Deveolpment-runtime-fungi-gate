@@ -30,19 +30,51 @@ planning checkbox must never be used to imply that implementation exists.
   build dependency. Beta tooling will become ephemeral and read-only; a future
   persistent SLIDE graph must use immutable encrypted generations, hybrid
   signed receipts, anti-rollback, and narrow query/write leases.
-- **Wasmtime decision:** preserve the useful fuel, differential, reset, and
-  attestation evidence, but remove the pre-SLIDE production-sidecar framing.
-  Move `subprojects/dss-host` to the single flat development package
+- **Wasmtime migration complete at the focused boundary:** preserved the fuel,
+  differential, reset, and attestation evidence while removing the pre-SLIDE
+  production-sidecar framing. The 14 tracked files moved from
+  `subprojects/dss-host` to the single flat development package
   `packages-galerina/galerina-devtools-wasmtime-oracle`.
+- **Fresh focused evidence:** the no-sidecar/injection/layout suite is 8/8;
+  memory-graph self-test is 6/6; all eight Rust oracle tests pass after explicit
+  fixture generation; Wasmtime-presence self-test and flat topology are green.
+  The old generated Cargo cache was preserved outside the repository without
+  reading it.
+- **Spatial/index hardening complete at the beta boundary:** RED tests proved
+  that non-finite, fractional, unsafe-integer, invalid-alignment, and
+  overflow-prone requests could escape the old JavaScript predicates, and that
+  one identity in both external indexes was silently precedence-resolved.
+  `MemoryValidator` now validates safe integer domains and uses
+  subtraction-based bounds; its `.fungi` twin mirrors the overflow-safe extent
+  decision; the read-only index now refuses cross-index identity collisions.
+  The `.fungi` decision is independently executed over 8,993 bounded-grid
+  cases plus the signed-i32 edge, all 29 authority hashes re-derive, and the
+  expanded security mutation catalog kills 60/60 mutants. Focused Sentinel
+  Memory evidence is 39/39 and memory-graph evidence is 5/5.
+- **Eight-pillar expansion:** governed memory now separates spatial, temporal,
+  initialization/type, concurrency, authority, custody, deterministic
+  resource, and provenance/index safety. The authenticated index is designed
+  as the strongest connective security map but remains non-authoritative.
+- **Independent review:** eight self-contained prompts are under
+  `docs/research-prompts/sidecar-and-wasmtime/`.
 - **Current:** design and executable plan are recorded at
   `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
   and
   `docs/superpowers/plans/2026-07-30-governed-memory-and-wasmtime-oracle.md`.
-  Next: land red no-sidecar/injection/layout tests, then migrate the tool and
-  package.
+  Project/package/KB/code/dev-tool graphs and indexes have been regenerated.
+  Next: update the active roadmap/completion records and run broad verification.
 - **Non-claims:** the encrypted persistent graph, complete SLIDE memory
   verifier, native backend, and production runner are not implemented by this
   beta-safe migration.
+- **Broad close evidence:** the complete aggregate passes **98/98 packages,
+  8,588 tests**; all fourteen declared generators reach a fixed point;
+  graph-all passes **5/5**; strict phase-close passes **85/85**; exhaustive
+  passes **86/86**, including its 98/98 package child in 356.1 seconds.
+- **Current release boundary:** repository verification is green. Beta-v1 and
+  the owner's offline signing act remain non-authorizing because the live
+  registry contains unreviewed content-less stubs and lacks the independently
+  verified root-to-operational delegation path. Do not ask the owner to sign
+  until the existing walkthrough reports `READY FOR OWNER SIGNING`.
 
 ### Galerina-first beta-v1 completion checkpoint - 2026-07-29
 
@@ -278,7 +310,8 @@ planning checkbox must never be used to imply that implementation exists.
   adjudicates all twenty digest-screened records against current source. The
   supplied transcript subdirectory does not exist; the complete range was
   found at the Knowledge Base root.
-- **Corrections:** Wasmtime 47.0.2 is genuinely pinned in `dss-host`, but the
+- **Corrections:** Wasmtime 47.0.2 is genuinely pinned in the development-only
+  Wasmtime oracle (migrated from the former `dss-host`), but the
   screened talk is not proof of the engine's current security posture.
   `COMMIT_OUTCOME_UNKNOWN` does not exist; current Galerina has draft
   idempotency design and a compile-time no-retry-on-unsafe-mutation guard, not
@@ -1717,7 +1750,11 @@ Full-auto loop (main). Commits below, NONE pushed (owner pushes). Each landed co
 
 Full-auto loop (main); owner away for the tail. Commits below, NONE pushed (owner pushes).
 
-- **DSS.wasm sidecar at un-gated CEILING** (`subprojects/dss-host`, native Rust wasmtime TCB): M0 fuel · M1 386-pt V_DPM differential+laws through REAL wasmtime (U10 engine-transfer closed) · F4 pooled zero-on-reset · **F3 #173 attestation re-verify** (`ade43cd3`; ed25519-dalek per owner ruling; INTEROP + 4 tamper-reject proven, 5/5). No open HIGH. F7 / collapse-conformance / U2 batched for a later Phase-5 sprint (owner-gated).
+- **Historical DSS.wasm sidecar ceiling — SUPERSEDED 2026-07-30:** the former
+  `subprojects/dss-host` Rust work proved M0 fuel, M1 386-point V_DPM
+  differential/laws, F4 pooled zero-on-reset and F3 attestation re-verification.
+  Its evidence now lives in the flat development-only Wasmtime oracle; it is
+  not a production TCB or future authority path.
 - **RD-0528 compiler self-hosting I-1** — the 7 self-hosted stages get their OWN authority track (PROPOSAL; each flip owner-gated at I-4, SEPARATE from the kernel sentinel ledger): (a) R3 byte-parity re-verified **512/512**; (d) `scripts/gather-compiler-stage-hashes.mjs` — 7 build-clean + #105-admitted, deterministic sha256; ledger `docs/security/rd0528-compiler-authoritative-stages.json` (empty `twins`) + gate `scripts/audit-compiler-stage-twins.mjs` wired into phase-close; (c) **mutation-kill 7/7** in SEC-002 (`RD0528_COMPILER`, **59/59 killed · VIOLATIONS 0**); evidence pack `docs/security/rd0528-compiler-stages-evidence-pack.md`. **Prereqs NOT pre-empted:** I-2 bootstrap-seed (owner's steer: pin the current Stage-A WASM at a commit + trust register) · I-3 oracle.
 - **RD-0528 I-3 functional corpus tranche 1** (`ef246e01`) — owner ruled I-3 = FUNCTIONAL correctness, NOT `.ts`-intermediate identity. `tests/self-hosted-i3-functional-corpus.test.mjs`: NON-VACUOUS (4 must-pass + 6 must-fail with exact MEASURED codes) over the self-hosted lex→parse→typecheck pipeline, **11/11**. Findings routed to R&D (`#0048`/`#0049`): the self-hosted compiler has NO WAT/WASM backend (bootstrap fixpoint blocked) · `parser.fungi` never reports parse errors → pipeline fails OPEN on 3/6 malformed inputs.
 - **#141 report-blind consumers → baseline 0** (`a5a779f9` signing-path gather-t1/t2 · `20f98252` +6 audit/bench): every `assembleWAT` consumer now gates on `valid && diagnostics.length===0` before using `.wasm` — the unfaithful-STUB fail-open class is now impossible to introduce silently (a new one = a VIOLATION, exit 1). Detector **0 violations / 0 baselined**, self-test 15/15; twin sha256 unchanged (signing path preserved).

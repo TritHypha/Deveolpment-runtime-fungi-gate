@@ -1,10 +1,10 @@
-//! F3 — per-module admission re-verify (materialise-once, DP-RD-0247). The Rust sidecar re-verifies a
+//! F3 — per-module admission re-verify (materialise-once, DP-RD-0247). The independent oracle re-verifies a
 //! module's `#173` attestation BEFORE instantiating; it never trusts "Node already checked". This
 //! mirrors the fail-closed chain of `galerina-core-runtime-wasm/src/wasm-runtime.ts` `verifyWasm`,
 //! against the byte-identical `#173` pre-image the TS side signs.
 //!
 //! Crypto: `ed25519-dalek` (pure-Rust, owner-ruled bridge 0045). The F2 hybrid ML-DSA-65 half lands on
-//! this same seam later (a second verify AND-ed in) — no C/asm re-enters the TCB.
+//! this same seam later (a second verify AND-ed in).
 
 use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 use sha2::{Digest, Sha256};
@@ -31,7 +31,7 @@ pub fn wasm_hash_hex(wasm: &[u8]) -> String {
 }
 
 /// A module admission attestation (the TS `WasmAttestation`). `signature` is the RAW 64-byte Ed25519
-/// value (`ieee-p1363`); the caller decodes any base64/transport encoding before this TCB boundary.
+/// value (`ieee-p1363`); the caller decodes any base64/transport encoding before this oracle boundary.
 pub struct Attestation {
     pub sha256: String,
     pub signature: Option<Vec<u8>>,

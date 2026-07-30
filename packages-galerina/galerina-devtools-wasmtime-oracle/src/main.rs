@@ -1,4 +1,4 @@
-//! dss-host — the native Wasmtime sidecar TCB for Galerina's DSS.wasm (`#102`-`#106`).
+//! Development-only independent Wasmtime execution oracle for Galerina.
 //!
 //! Zero-trust by construction. This is **Milestone 0**: the toolchain + the fail-closed fuel
 //! discipline (U3), proven before any DSS supervisor module is ever loaded. Nothing here trusts a
@@ -8,7 +8,7 @@
 //! Requirements this embedder must uphold (galerina-deterministic-runtime-containment.md +
 //! bridges #0039/#0040), wired in as later milestones — recorded here so they are not forgotten:
 //!   - F2  hybrid ML-DSA-65 + Ed25519 attestation verification at THIS border (post-quantum floor;
-//!         owner-ruled 2026-07-22). The production TCB must not be classical-only.
+//!         owner-ruled 2026-07-22). This remains differential evidence only.
 //!   - F3  re-verify attestation per module Rust-side (hash + signature over the #173 domain
 //!         preimage). Never "Node already checked" — materialise-once is the escape (DP-RD-0247).
 //!   - F4  zero-on-reset linear memory + V_DPM re-init per task (pooling allocator; don't assume it).
@@ -85,6 +85,6 @@ fn main() -> Result<()> {
         }
     }
 
-    println!("dss-host Milestone 0: fuel discipline proven (U3 fail-closed) — wasmtime embedder ready.");
+    println!("Galerina Wasmtime oracle: fuel discipline proven (U3 fail-closed); no production authority released.");
     Ok(())
 }

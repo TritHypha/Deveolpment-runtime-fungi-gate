@@ -1,15 +1,15 @@
 # Galerina Graph Report
 
 Workspace: Galerina-app
-Generated: 2026-07-30T02:14:58.000Z
+Generated: 2026-07-30T05:23:54.000Z
 
 ## Summary
 
-- Packages: 97
-- Documents: 3759
+- Packages: 98
+- Documents: 4054
 - Types/interfaces: 2725
 - Functions: 1287
-- Relationships: 8174
+- Relationships: 8476
 
 ## Package Nodes
 
@@ -110,6 +110,7 @@ Generated: 2026-07-30T02:14:58.000Z
 - galerina-devtools-project-graph (packages-galerina/galerina-devtools-project-graph/README.md)
 - galerina-devtools-provenance (packages-galerina/galerina-devtools-provenance/package.json)
 - galerina-devtools-security (packages-galerina/galerina-devtools-security/package.json)
+- galerina-devtools-wasmtime-oracle (packages-galerina/galerina-devtools-wasmtime-oracle/README.md)
 
 ## High-Signal Questions
 

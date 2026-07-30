@@ -46,8 +46,8 @@
       "file": "memory-validator.fungi",
       "dir": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted",
       "tranche": "T2",
-      "surface": "pointer-alignment gate (isAligned: ptr % align == 0)",
-      "sha256": "5cf14bbff6684be2775ff7c8fcea590bf4eaa94688c391ba48c0017c477c5239",
+      "surface": "pointer-alignment plus subtraction-based overflow-safe extent gate",
+      "sha256": "780066215a5107254ffd1968a50b57c2f4bea399962a61f443748426153aaeda",
       "evidencePack": "docs/security/rd0361-t2-r4-evidence-pack.md",
       "ownerNod": "2026-07-22 — owner 'unlock R4 flip (#143) — GO!'; T2 Memory assembled + flipped by main under that authorization (pack a–e cleared)",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete post-bake)"

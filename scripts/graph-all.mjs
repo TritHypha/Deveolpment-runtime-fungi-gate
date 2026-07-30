@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-// graph-all.mjs — fail-closed orchestrator for every Galerina graph surface.
-// Version: 2.0.0 · Task 7 generator governance.
+// graph-all.mjs — fail-closed orchestrator for repository-owned Galerina graph surfaces.
+// Version: 3.0.0 · governed-memory migration.
 //
-// Generate mode updates the five derived graph/index surfaces and validates
-// project-graph integrity. Check mode routes every generator to its
-// non-mutating check. The external KB and memory trees must be selected
-// explicitly or resolve unambiguously; no child refusal is informational.
+// Personal/agent memory is deliberately excluded: it is private untrusted
+// development data, not a reproducible build input. Use memory-graph.mjs
+// explicitly for a read-only ephemeral query or health check.
 import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,13 +12,12 @@ import { fileURLToPath } from "node:url";
 function parseArgs(argv) {
   let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   let kbDir = null;
-  let memoryDir = null;
   let check = false;
   let quiet = false;
   const seen = new Set();
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
-    if (arg === "--root" || arg === "--kb-dir" || arg === "--memory-dir") {
+    if (arg === "--root" || arg === "--kb-dir") {
       if (seen.has(arg) || i + 1 >= argv.length || argv[i + 1].startsWith("--")) {
         throw new Error(`graph-all: ${arg} requires exactly one path`);
       }
@@ -27,7 +25,6 @@ function parseArgs(argv) {
       const value = resolve(argv[++i]);
       if (arg === "--root") root = value;
       if (arg === "--kb-dir") kbDir = value;
-      if (arg === "--memory-dir") memoryDir = value;
       continue;
     }
     if (arg === "--check" && !check) {
@@ -45,8 +42,6 @@ function parseArgs(argv) {
     kbDir: kbDir
       || (process.env.GALERINA_KB_DIR ? resolve(process.env.GALERINA_KB_DIR) : null)
       || resolve(root, "..", "ZTF-Knowledge-Bases"),
-    memoryDir: memoryDir
-      || (process.env.MEMORY_DIR ? resolve(process.env.MEMORY_DIR) : null),
     check,
     quiet,
   };
@@ -89,14 +84,6 @@ const children = [
     args: [
       "scripts/package-graph-generator.mjs",
       "--root", options.root,
-      ...(options.check ? ["--check"] : []),
-    ],
-  },
-  {
-    name: "memory graph",
-    args: [
-      "scripts/memory-graph.mjs",
-      ...(options.memoryDir === null ? [] : ["--dir", options.memoryDir]),
       ...(options.check ? ["--check"] : []),
     ],
   },

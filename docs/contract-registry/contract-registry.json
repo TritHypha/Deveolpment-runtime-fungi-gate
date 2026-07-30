@@ -1,8 +1,8 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-07-30T02:14:58.000Z",
-  "sha": "86aa2f65",
-  "contracts": 1418,
+  "generatedAt": "2026-07-30T05:23:54.000Z",
+  "sha": "cdd6189c",
+  "contracts": 1419,
   "parsed": 511,
   "rows": [
     {
@@ -9733,6 +9733,14 @@
       "signature": "pure flow checkAligned(ptr: Int, align: Int) -> String",
       "effects": [],
       "intent": "Fail-closed alignment check: 'ok' iff ptr is a non-negative multiple of align, else 'LSM-ALIGN-001'."
+    },
+    {
+      "file": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted/memory-validator.fungi",
+      "name": "isInBounds",
+      "qualifier": "pure",
+      "signature": "pure flow isInBounds(ptr: Int, len: Int, capacity: Int) -> Bool",
+      "effects": [],
+      "intent": "Overflow-safe bounds predicate for [ptr, ptr+len) inside [0, capacity)."
     },
     {
       "file": "packages-galerina/galerina-core-sentinel-memory/src/self-hosted/memory-validator.fungi",

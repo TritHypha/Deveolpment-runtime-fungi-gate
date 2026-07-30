@@ -395,7 +395,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dss-host"
+name = "galerina-wasmtime-oracle"
 version = "0.1.0"
 dependencies = [
  "anyhow",

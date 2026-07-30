@@ -3,7 +3,7 @@
 // export-corpus-differential.mjs — RD-0529 A1 (part 1 of 2): the GENERAL-corpus engine differential.
 // =============================================================================
 // R&D finding #1 (measured): the corpus WASM executes on V8 (742 WebAssembly.instantiate sites), but
-// wasmtime is an execution oracle ONLY in the dss-host DSS-supervisor suite (M1 — one 1218B module).
+// Wasmtime was initially an execution oracle only in the DSS-supervisor suite (M1 — one 1218B module).
 // So "WASM is the production path, wasmtime tomorrow" has NO corpus-level wasmtime conformance behind it.
 //
 // A1 closes that with a THREE-way differential over a general corpus: interp ≡ V8 ≡ wasmtime, result AND
@@ -30,7 +30,7 @@ import { pathToFileURL, fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(HERE, "..", "..", "..");           // tools -> dss-host -> subprojects -> repo root
+const ROOT = resolve(HERE, "..", "..", "..");           // tools -> oracle package -> packages-galerina -> repo root
 const COMPILER = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
 const OUT = join(HERE, "..", "fixtures", "corpus");
 if (!existsSync(COMPILER)) { console.error(`compiler dist not built: ${COMPILER}\n  run the workspace build first.`); process.exit(1); }

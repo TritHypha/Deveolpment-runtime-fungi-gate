@@ -13,10 +13,10 @@
 // is the SECOND engine the RD-0529 conformance harnesses (A1 corpus differential · A2 float/NaN/trap ·
 // A3 fuel) execute against. That second engine is reachable two ways in this tree:
 //   1. the `wasmtime` CLI on PATH (`wasmtime --version`), or
-//   2. the Rust `subprojects/dss-host` harness, which links the `wasmtime` crate (get_typed_func /
-//      Linker) — the exact path M1 proved 386 DSS points through. Buildable == cargo present AND the
-//      dss-host crate still declares `wasmtime`.
-// Either surface satisfies the harnesses, so AVAILABLE = (CLI on PATH) OR (cargo + dss-host wasmtime crate).
+//   2. the flat development-only `galerina-devtools-wasmtime-oracle` package, which links the
+//      `wasmtime` crate (get_typed_func / Linker). Buildable == cargo present AND the oracle crate
+//      still declares `wasmtime`.
+// Either surface satisfies the harnesses, so AVAILABLE = (CLI on PATH) OR (cargo + oracle crate).
 //
 // PROFILE-AWARE, fail-closed where it counts:
 //   · certified / CI profile  (env CI truthy, or GALERINA_CERTIFIED=1): wasmtime ABSENT ⟹ EXIT 1 (FAIL).
@@ -61,7 +61,7 @@ function decideWasmtimeGate({ cliPresent, harnessBuildable, profile }) {
   const available = Boolean(cliPresent || harnessBuildable);
   const engines = [];
   if (cliPresent) engines.push("wasmtime CLI on PATH");
-  if (harnessBuildable) engines.push("dss-host Rust harness (wasmtime crate)");
+  if (harnessBuildable) engines.push("Galerina Wasmtime oracle crate");
 
   if (available) {
     return {
@@ -77,7 +77,7 @@ function decideWasmtimeGate({ cliPresent, harnessBuildable, profile }) {
   }
   return {
     available, profile, exitCode: 0, level: "warn",
-    summary: "wasmtime ABSENT (dev profile) — WASM→wasmtime conformance SKIPPED; this FAILS under CI. Install the wasmtime CLI, or a Rust+cargo toolchain for the dss-host harness.",
+    summary: "wasmtime ABSENT (dev profile) — WASM→wasmtime conformance SKIPPED; this FAILS under CI. Install the wasmtime CLI, or a Rust+cargo toolchain for the Galerina Wasmtime oracle.",
   };
 }
 
@@ -90,7 +90,7 @@ function probeCli() {
   } catch { return false; }
 }
 function probeHarness() {
-  // The wasmtime Rust oracle is buildable iff cargo exists AND the dss-host crate still declares wasmtime.
+  // The Rust oracle is buildable iff cargo exists AND its flat package still declares wasmtime.
   // Cheap presence proxy — no `cargo build` (that is A1's job; if it then fails to compile it goes red loudly,
   // which is exactly NOT a silent skip). A missing declaration means the crate was removed → no wasmtime path.
   let cargoOk = false;
@@ -99,7 +99,12 @@ function probeHarness() {
     cargoOk = c.status === 0 && /cargo/i.test((c.stdout || "") + (c.stderr || ""));
   } catch { cargoOk = false; }
   if (!cargoOk) return false;
-  const toml = join(ROOT, "subprojects", "dss-host", "Cargo.toml");
+  const toml = join(
+    ROOT,
+    "packages-galerina",
+    "galerina-devtools-wasmtime-oracle",
+    "Cargo.toml",
+  );
   if (!existsSync(toml)) return false;
   try { return /^\s*wasmtime\s*=/m.test(readFileSync(toml, "utf8")); } catch { return false; }
 }
@@ -125,8 +130,8 @@ function selfTest() {
   const harnessOnly = D({ cliPresent: false, harnessBuildable: true, profile: "certified" });
   const both = D({ cliPresent: true, harnessBuildable: true, profile: "dev" });
   checks.push(["CLI present (no harness) → AVAILABLE, exit 0 even under CI", cliOnly.available && cliOnly.exitCode === 0]);
-  checks.push(["★ harness-only present (no CLI) → AVAILABLE, exit 0 — the Rust wasmtime oracle counts (M1's path)", harnessOnly.available && harnessOnly.exitCode === 0]);
-  checks.push(["both present → AVAILABLE, names both engines", both.available && /CLI/.test(both.summary) && /Rust/.test(both.summary)]);
+  checks.push(["★ harness-only present (no CLI) → AVAILABLE, exit 0 — the Wasmtime oracle counts", harnessOnly.available && harnessOnly.exitCode === 0]);
+  checks.push(["both present → AVAILABLE, names both engines", both.available && /CLI/.test(both.summary) && /oracle/.test(both.summary)]);
 
   // Profile detection — CI truthiness is a value test, not a presence test (set-but-false ⟹ dev).
   checks.push(["profile: CI=true → certified", detectProfile({ CI: "true" }) === "certified"]);
@@ -166,7 +171,7 @@ const icon = verdict.level === "ok" ? "✅" : verdict.level === "warn" ? "⚠️
 console.log(`\n  wasmtime-presence — is the second execution engine (wasmtime) actually reachable? [profile=${profile}]\n`);
 // Report which engine actually ran/would run — the anti-"0 ran reads as green" line.
 console.log(`    wasmtime CLI on PATH ............ ${cliPresent ? "PRESENT" : "absent"}`);
-console.log(`    dss-host Rust harness (crate) .. ${harnessBuildable ? "BUILDABLE (cargo + wasmtime declared)" : "absent (no cargo, or crate undeclared)"}`);
+console.log(`    Galerina Wasmtime oracle ...... ${harnessBuildable ? "BUILDABLE (cargo + wasmtime declared)" : "absent (no cargo, or crate undeclared)"}`);
 console.log(`  ${icon} ${verdict.summary}`);
 if (verdict.level === "warn") {
   console.log(`     (set CI=1 or GALERINA_CERTIFIED=1 to make this a hard FAIL — that is the certified posture.)`);

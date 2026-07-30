@@ -448,6 +448,8 @@
         "packages-galerina/galerina-devtools-provenance/.graph/package-graph.json",
         "packages-galerina/galerina-devtools-security/.graph/BOUNDARY.md",
         "packages-galerina/galerina-devtools-security/.graph/package-graph.json",
+        "packages-galerina/galerina-devtools-wasmtime-oracle/.graph/BOUNDARY.md",
+        "packages-galerina/galerina-devtools-wasmtime-oracle/.graph/package-graph.json",
         "packages-galerina/galerina-docs/.graph/BOUNDARY.md",
         "packages-galerina/galerina-docs/.graph/package-graph.json",
         "packages-galerina/galerina-ext-bridge-bitnet/.graph/BOUNDARY.md",

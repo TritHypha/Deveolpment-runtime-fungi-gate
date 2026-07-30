@@ -1,0 +1,10 @@
+{
+  "packageName": "@galerina/devtools-wasmtime-oracle",
+  "allowedExternal": [
+    "node:crypto",
+    "node:fs",
+    "node:path",
+    "node:url"
+  ],
+  "note": "Development-only oracle boundary. The tracked JavaScript fixture exporters may use only Node built-ins; Rust crate dependencies are independently pinned by Cargo.lock and vetted through deny.toml. No @galerina runtime, production authority, network, or secret dependency is admitted."
+}

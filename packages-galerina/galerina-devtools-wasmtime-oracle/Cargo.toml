@@ -1,5 +1,5 @@
 [package]
-name = "dss-host"
+name = "galerina-wasmtime-oracle"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,13 +7,13 @@ edition = "2024"
 anyhow = "1.0.104"
 wasmtime = "47.0.2"
 # F3 admission re-verify (owner-ruled, bridge 0045). Pure-Rust — pairs with the coming pure-Rust
-# ml-dsa for the F2 hybrid = one coherent crypto stack, no C/asm re-entering the TCB. Cargo.lock is
+# ml-dsa for the F2 hybrid = one coherent crypto stack. Cargo.lock is
 # the exact pin (cargo-deny/vet). verify_admission takes RAW signature bytes, so base64 stays test-only.
 ed25519-dalek = "2"
 sha2 = "0.10"
 
 [dev-dependencies]
-# Test-only: parse the M1 fixture + base64-decode the attestation. NOT runtime deps — the production
-# sidecar surface stays anyhow + wasmtime + ed25519-dalek + sha2.
+# Test-only: parse the M1 fixture + base64-decode the attestation. These do not
+# expand the oracle's executable dependency surface.
 serde_json = "1"
 base64 = "0.22"

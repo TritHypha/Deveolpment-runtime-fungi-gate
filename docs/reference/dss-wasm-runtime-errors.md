@@ -24,9 +24,11 @@ mapped to exactly one stable `FUNGI-*` code and — for a trap — folded into a
 **Galerina, not Wasmtime**, so a program written against it keeps working across engine upgrades — the seam
 that lets the engine be replaced underneath without breaking a single `.fungi` program's error handling.
 
-> **Rule (enforced at `#102`):** `dss-host` never returns a `wasmtime::Error`/`Trap` to a caller. It
-> classifies it into a code below, emits the AuditEvent, then returns the code. An engine error it cannot
-> classify is itself a fault (fail-closed) → `FUNGI-INV-003` (host-supervisor execution failure), never leaked.
+> **Superseded host note (2026-07-30):** the former `dss-host` production
+> sidecar is now a development-only Wasmtime oracle. A future target-neutral
+> admitted executor—not the oracle—must classify backend errors into the typed
+> codes below, emit the required audit evidence, and fail closed on any
+> unclassified engine error. Raw backend errors never cross the language seam.
 
 ---
 

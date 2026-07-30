@@ -1,6 +1,6 @@
-// graph-all.test.mjs — proves explicit external selection, child-mode routing,
-// complete child coverage, and fail-closed exit propagation.
-// Version: 1.0.0 · Task 7 generator governance.
+// graph-all.test.mjs — proves repository-owned child-mode routing, complete
+// child coverage, and fail-closed exit propagation without a private sidecar.
+// Version: 2.0.0 · governed-memory migration.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -25,13 +25,11 @@ function write(root, relativePath, content) {
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "graph-all-root-"));
   const kb = mkdtempSync(join(tmpdir(), "graph-all-kb-"));
-  const memory = mkdtempSync(join(tmpdir(), "graph-all-memory-"));
   const children = [
     "project-graph-generator.mjs",
     "audit-graph-integrity.mjs",
     "kb-graph-generator.mjs",
     "package-graph-generator.mjs",
-    "memory-graph.mjs",
     "dev-tool-index.mjs",
   ];
   for (const name of children) {
@@ -41,15 +39,14 @@ function fixture() {
       if (process.env.FAIL_CHILD === ${JSON.stringify(name)}) process.exit(7);
     `);
   }
-  return { root, kb, memory };
+  return { root, kb };
 }
 
-function run(root, kb, memory, args = [], failChild = "") {
+function run(root, kb, args = [], failChild = "") {
   return spawnSync(process.execPath, [
     SCRIPT,
     "--root", root,
     "--kb-dir", kb,
-    "--memory-dir", memory,
     ...args,
   ], {
     encoding: "utf8",
@@ -57,24 +54,23 @@ function run(root, kb, memory, args = [], failChild = "") {
   });
 }
 
-test("graph-all routes all six checks and propagates a child refusal", () => {
-  const { root, kb, memory } = fixture();
+test("graph-all routes all five repository checks and propagates a child refusal", () => {
+  const { root, kb } = fixture();
   try {
-    const passed = run(root, kb, memory, ["--check"]);
+    const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");
-    assert.equal(calls.trim().split(/\r?\n/).length, 6);
+    assert.equal(calls.trim().split(/\r?\n/).length, 5);
     assert.match(calls, /project-graph-generator\.mjs .*--check/);
     assert.match(calls, /kb-graph-generator\.mjs .*--kb-dir .*--check/);
     assert.match(calls, /package-graph-generator\.mjs .*--check/);
-    assert.match(calls, /memory-graph\.mjs .*--dir .*--check/);
+    assert.doesNotMatch(calls, /memory-graph\.mjs/);
     assert.match(calls, /dev-tool-index\.mjs .*--generator-check/);
 
     writeFileSync(join(root, "calls.log"), "");
     const refused = run(
       root,
       kb,
-      memory,
       ["--check"],
       "package-graph-generator.mjs",
     );
@@ -82,12 +78,23 @@ test("graph-all routes all six checks and propagates a child refusal", () => {
     assert.match(refused.stderr, /package graph.*exit 7/i);
     assert.equal(
       readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/).length,
-      6,
+      5,
       "the orchestrator aggregates all child results instead of stopping before evidence is complete",
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
     rmSync(kb, { recursive: true, force: true });
-    rmSync(memory, { recursive: true, force: true });
+  }
+});
+
+test("graph-all refuses the retired --memory-dir release-gate argument", () => {
+  const { root, kb } = fixture();
+  try {
+    const refused = run(root, kb, ["--memory-dir", root]);
+    assert.notEqual(refused.status, 0);
+    assert.match(refused.stderr, /unknown.*--memory-dir/i);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(kb, { recursive: true, force: true });
   }
 });

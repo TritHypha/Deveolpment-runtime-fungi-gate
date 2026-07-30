@@ -39,7 +39,7 @@ Current repository source and tests remain the operational authority.
 | 0540 | Wasm/host boundary and interning | `ALREADY-BOUND` | The planned capability broker and host ABI already require narrow typed calls. Batching/interning is an optimization only and must preserve identical authorization, limits, failures, and receipts. |
 | 0541 | Wasm startup snapshots | `ALREADY-BOUND` | Galerina already requires verified startup artefact bundles rather than raw memory dumps. A snapshot is an untrusted cache object bound to the complete action key and is safe to delete or bypass. |
 | 0542 | Wasm/WASI mechanics | `ALREADY-BOUND` | SLIDE has no ambient native authority. Optional Wasm remains separately selected and admitted; failed SLIDE admission never falls through to Wasm/WASI. |
-| 0543 | Wasmtime security/correctness | `CORRECTED` | `subprojects/dss-host/Cargo.toml` really pins `wasmtime = "47.0.2"`. That makes version/CVE/configuration tracking relevant to the optional Wasm TCB. A digest-screened talk does not itself verify the engine's current threat posture. |
+| 0543 | Wasmtime security/correctness | `CORRECTED` | The development-only `packages-galerina/galerina-devtools-wasmtime-oracle/Cargo.toml` pins `wasmtime = "47.0.2"`. That makes version/CVE/configuration tracking relevant to optional-Wasm differential evidence. A digest-screened talk does not itself verify the engine's current threat posture. The former production-sidecar framing was superseded 2026-07-30. |
 | 0544 | Wasm internals | `CONTEXT-ONLY` | No new contract or implementation follows. Existing optional-Wasm and host/guest boundary plans cover the useful background. |
 | 0545 | Terraform | `NO-ADOPTION` | Out of the current Galerina/SLIDE implementation scope. |
 | 0546 | Algebra course | `NO-ADOPTION` | No transcribed equation is adopted. Maths used by the project must be independently derived and tested. |
@@ -57,7 +57,8 @@ Current repository source and tests remain the operational authority.
 
 ### Wasmtime is pinned, but the transcript is not the proof
 
-`subprojects/dss-host/Cargo.toml:8` pins Wasmtime 47.0.2. The optional Wasm path
+`packages-galerina/galerina-devtools-wasmtime-oracle/Cargo.toml` pins Wasmtime
+47.0.2. The optional Wasm comparison path
 therefore needs exact dependency, configuration, vulnerability-response, and
 differential evidence. The R&D row's word `VERIFIED` is too broad: the local
 pin is verified; the transcript's security claims are still third-party,

@@ -1,0 +1,48 @@
+{
+  "name": "@galerina/devtools-wasmtime-oracle",
+  "version": "1.0.0-beta.2",
+  "description": "Development-only independent Wasmtime differential oracle for Galerina's optional Wasm target.",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "test:fixtures": "node tools/export-differential-fixture.mjs && node tools/export-corpus-differential.mjs",
+    "test": "node --test tests/oracle-package.test.mjs",
+    "test:rust": "npm run test:fixtures && cargo test --locked",
+    "build": "cargo build --locked",
+    "audit:supply-chain": "cargo deny check"
+  },
+  "packageGraph": {
+    "roots": [
+      "src",
+      "tools"
+    ],
+    "extensions": [
+      ".rs",
+      ".mjs"
+    ],
+    "entryPoints": [
+      "src/main.rs",
+      "src/lib.rs",
+      "tools/export-corpus-differential.mjs",
+      "tools/export-differential-fixture.mjs"
+    ],
+    "allowOrphans": [
+      {
+        "path": "src/admission.rs",
+        "reason": "Rust module ownership is declared by `pub mod admission`; the JavaScript-oriented boundary scanner does not parse Rust module declarations."
+      }
+    ]
+  },
+  "galerinaOracle": {
+    "schemaVersion": 1,
+    "productionAuthority": false,
+    "runtimeAuthority": false,
+    "memoryAuthority": false,
+    "purpose": [
+      "differential-execution",
+      "fuel-exhaustion",
+      "memory-reset",
+      "attestation-refusal"
+    ]
+  }
+}

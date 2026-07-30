@@ -22,6 +22,26 @@ memory validity
   = Galerina governed memory
 ```
 
+The contract is measured as eight independent pillars. A product claim passes
+only when every enabled pillar has its own executable evidence:
+
+| Pillar | Required guarantee | Example terminal refusal |
+|---|---|---|
+| 1. Spatial safety | Bounds, alignment, extent arithmetic, object/layout identity | out-of-bounds, misaligned, or wrong-layout access |
+| 2. Temporal safety | Generation, lifetime, move, destruction, stale-handle rejection | use-after-move/free/generation |
+| 3. Initialization and type safety | No uninitialized observation, invalid representation, confused variant, or unchecked cast | uninitialized/type/representation mismatch |
+| 4. Concurrency safety | Declared sharing, race freedom, deterministic atomics/queues, role and epoch binding | conflicting access or stale queue epoch |
+| 5. Authority safety | K3, capability, lease, subject, operation, and resource scope all bind the access | `DENY`, `INDETERMINATE`, surplus, stale, or missing lease |
+| 6. Confidential custody | Sealed backing, transient decrypt, wipe, key epoch, quarantine, no plaintext spill | custody unavailable, rollback, spill, or wipe failure |
+| 7. Deterministic resource safety | Bounded bytes, objects, graph work, recursion, queue depth, allocation, and failure cost | admitted ceiling exhausted |
+| 8. Provenance and index safety | Authenticated identity/generation/content/influence graph, injection separation, anti-rollback | unindexed, poisoned, stale, conflicting, or unauthenticated evidence |
+
+No pillar borrows another pillar's pass. A bounds-safe read can still be
+unauthorized; an authorized read can still expose plaintext; encrypted bytes
+can still be stale or poisoned; and an authenticated index entry can still
+describe an unsafe object. The final access gate composes all applicable
+pillar verdicts through typed K3 and releases only exact `ALLOW`.
+
 Galerina may accurately claim a broader governed-memory contract than
 languages whose memory-safety guarantee does not also cover capabilities,
 provenance, encrypted custody, or fail-closed resource policy. It must not
@@ -77,7 +97,7 @@ developer. Privileged runtime adapters are separately packaged, narrowly
 capability-scoped, independently verified, and remain outside ordinary
 `.fungi` authority.
 
-## Decision 2: four inseparable memory layers
+## Decision 2: eight pillars, grouped into four implementation layers
 
 ### A. Validity
 
@@ -141,6 +161,37 @@ Every memory plan binds maximum regions, objects, bytes, nesting, graph nodes,
 edges, work steps, allocation operations, queue depth, and failure behavior.
 Unbounded allocation or traversal is not admitted. Exhaustion is observable as
 a registered terminal failure.
+
+### The index as the strongest connective control
+
+Indexing is not treated as an optional performance cache. The admitted index
+is the connective evidence layer that makes the other seven pillars
+inspectable without becoming their authority.
+
+For every protected object, value, code shape, document, package, driver, and
+derived graph node, it can bind:
+
+- canonical identity, type/layout, generation, state, and content digest;
+- owner, producer, signer, source artifact, and derivation recipe;
+- region, lifetime, alias/share state, custody/key epoch, and resource budget;
+- capabilities and operations that may be requested—not automatically
+  granted;
+- inbound/outbound dependency and influence edges;
+- the exact compiler/SLIDE/final-artifact receipts that reverified it;
+- quarantine, revocation, supersession, and anti-rollback history;
+- which human, compiler, or AI decision consumed it and what claim it
+  influenced.
+
+This makes the index a tamper-evident security map and forensic ledger as well
+as a topological/VPEG accelerator. It can prove that an object is missing,
+stale, conflicting, unverified, unexpectedly influential, or outside its
+admitted graph before the underlying bytes are opened.
+
+The index still cannot mint authority. It proposes a bounded evidence set; the
+independent memory, capability, custody, and execution verifiers reopen exact
+bytes and decide. A corrupted or unavailable index therefore causes terminal
+refusal or a slower full re-derivation from admitted source—not an unsafe
+fallback and not trust in the index.
 
 ## Decision 3: profiles may remove overhead, never core safety
 

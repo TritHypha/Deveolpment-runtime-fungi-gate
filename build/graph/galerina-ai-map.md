@@ -1617,3 +1617,7 @@ Provides:
 - checkPathSandbox
 - isPathEscape
 - PATH_SANDBOX_TEST_VECTORS
+
+## galerina-devtools-wasmtime-oracle
+
+Development-only independent Wasmtime differential oracle for Galerina's optional Wasm target.

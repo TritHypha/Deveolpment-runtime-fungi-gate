@@ -3,7 +3,7 @@
 //! `tools/export-corpus-differential.mjs` compiles a seed of pure Galerina flows, runs each under the
 //! Stage-A INTERPRETER and under V8, asserts interp ≡ V8 (values AND fail-closed traps), and emits a
 //! fixture: per program the `.wasm` bytes + each call's args + the agreed expected {value | trap}. This
-//! harness re-runs every call through Wasmtime — the production embedder — and asserts wasmtime matches
+//! harness re-runs every call through Wasmtime — an independent engine — and asserts wasmtime matches
 //! the fixture. A pass is the THREE-way agreement the DSS supervisor's M1 harness proved for ONE module,
 //! now over a general corpus with arbitrary signatures:
 //!     interpreter  ===  V8  ===  wasmtime          (result bit-equal, and fail-closed traps identical)

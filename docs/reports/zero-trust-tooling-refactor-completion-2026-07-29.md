@@ -9,16 +9,18 @@
 **Release verdict:** **NOT COMPLETE / NON-AUTHORIZING**
 
 The tooling refactor and discoverable local verification are complete to the
-current evidence boundary. Galerina beta-v1 is not released: the external
-memory graph lacks owner write authority, and the live registry is not ready
-for the offline signing act.
+current evidence boundary. Galerina beta-v1 is not released because the live
+registry is not ready for the offline signing act. The former external-memory
+write question is closed by rejecting that architecture: private memory is
+not a build input, and its beta inspection tool is ephemeral, read-only,
+bounded, injection-aware, and non-authorizing.
 
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 
 | Meter | Result | Meaning |
 |---|---:|---|
-| Package/test ship readiness | **100%** | All 97 registered packages have governed, non-empty test evidence |
+| Package/test ship readiness | **100%** | All 98 registered packages have governed, non-empty test evidence |
 | Zero-trust thesis | **78%** | Asserted architecture-progress meter; not a release verdict |
 | Build progress | **75%** | Asserted implementation-progress meter; not a release verdict |
 
@@ -34,11 +36,11 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>97/97 · 8,587 tests"]:::green
+    P["Package readiness<br/>98/98 · 8,588 tests"]:::green
     A["Audit proof<br/>80/80 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
-    X["Final generated fixed point<br/>roadmap · provenance · reports"]:::amber
-    M["External memory graph<br/>write authority absent"]:::red
+    X["Final generated fixed point<br/>85/85 strict · 86/86 exhaustive"]:::green
+    M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
     R["Live registry signing<br/>stubs + no delegation"]:::red
     B{"Galerina beta-v1<br/>release authorization"}:::red
     L["Independent SLIDE<br/>executable backend"]:::blue
@@ -46,7 +48,7 @@ flowchart LR
     Q["Cross-runtime benchmark<br/>deferred"]:::grey
 
     S --> C --> K --> P --> A --> U --> X --> B
-    M --> B
+    M --> X
     R --> B
     B --> L --> Q
     L --> V
@@ -58,9 +60,8 @@ flowchart LR
     classDef grey fill:#374151,color:#fff,stroke:#9ca3af,stroke-width:2px;
 ```
 
-Green means freshly verified. Amber means repository-local finalization remains
-in progress. Red means a release-authorizing prerequisite is absent. Blue is
-future SLIDE work and cannot lend evidence to Galerina.
+Green means freshly verified. Red means a release-authorizing prerequisite is
+absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 ## What has been completed
 
@@ -80,14 +81,14 @@ future SLIDE work and cannot lend evidence to Galerina.
 
 ### Packages, tests and developer tools
 
-- Workspace/package reconciliation covers all 97 direct children governed by
+- Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **97/97 packages and 8,587 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,588 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,587 |
+  | Unit | 8,588 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
@@ -101,6 +102,12 @@ future SLIDE work and cannot lend evidence to Galerina.
 - Tri-Pipe passes **24/24**.
 - Tri-Regex passes **34/34**.
 - TritSocket passes **11/11**.
+- The development-only Wasmtime oracle package passes its Node wrapper and all
+  **8/8** internal Rust tests; it grants no production or memory authority.
+- Sentinel Memory passes **39/39**, including hostile non-finite,
+  fractional, unsafe-integer, invalid-alignment, and overflow requests.
+- The external-memory reader passes **5/5** injection/identity tests and
+  **6/6** self-tests without creating a sidecar.
 
 ### Audits and anti-neutering
 
@@ -108,13 +115,14 @@ future SLIDE work and cannot lend evidence to Galerina.
   evidence.
 - Every one of the 34 audit/lint tools outside phase-close was executed
   directly without `--soft`.
-- The security mutation catalog killed **59/59** mutants.
+- The security mutation catalog killed **60/60** mutants, including distinct
+  alignment and overflow-safe extent weakenings.
 - The WAT emitter mutation audit killed **3/3** independent arithmetic
   mutants.
 - Mutation targets were restored exactly; no `.bak` residue remains.
-- Graph integrity is structurally clean at **7,896 nodes, 8,174 edges**, with
+- Graph integrity is structurally clean at **8,192 nodes, 8,476 edges**, with
   no dangling edge, duplicate identity, or dependency cycle.
-- Package Hardened Borders pass **97/97**.
+- Package Hardened Borders pass **98/98**.
 - Diagnostic conformance reports 345 code/name pairs and zero violations.
 - Diagnostic documentation agrees for all 203 codes present in both source and
   the canonical Knowledge Base.
@@ -173,26 +181,27 @@ acceptance definition uses `.fungi` authority at the governed decision
 boundary; literal TypeScript retirement was explicitly deferred until
 executable SLIDE integration.
 
-## Two blocking release conditions
+## Release conditions
 
-### 1. External memory graph — owner authority required
+### External memory graph — closed without granting write authority
 
-The graph family is **5/6**:
+The repository-owned graph family is **5/5**:
 
 - project graph: pass;
 - graph integrity: pass;
 - Knowledge Base graph: pass;
 - package graph: pass;
-- dev-tool graph: pass;
-- memory graph: refused.
+- dev-tool graph: pass.
 
-Four external directories contain a `MEMORY.md`. RD-0582 strongly identifies
-candidate ID `958d1a5f`, but explicitly says identity is not write authority.
-No tool may create or refresh that directory's `MEMORY-GRAPH.json` until the
-owner gives that narrow permission. The private absolute path does not need to
-be printed or committed.
+Personal/agent memory is excluded from clean-build authority. The former
+plaintext `MEMORY-GRAPH.json` sidecar is rejected rather than permissioned.
+`memory-graph.mjs` can derive an ephemeral untrusted envelope or perform a
+read-only health check, but it cannot write, grant authority, select a tool,
+or release a key. A future persistent SLIDE index must be immutable,
+encrypted, hybrid-signed, anti-rollback, lease-bounded, independently
+re-opened, and source-rederivable.
 
-### 2. Offline registry signing — not ready
+### Offline registry signing — not ready
 
 The hybrid v2 mechanism is green:
 
@@ -243,17 +252,19 @@ measured. Historical files remain evidence only.
 
 ## Terminal fixed-point status
 
-After the roadmap repair and complete fourteen-generator fixed point:
+After the complete fourteen-generator fixed point:
 
-- strict phase-close is **83/84**;
-- exhaustive phase-close is **84/85**;
-- exhaustive's additional package child passed **97/97** package commands in
-  **319.9 seconds**;
-- every repository-local child is green;
-- both cadences return non-zero solely because `graph:all` propagates the
-  unauthorized external memory-graph refusal.
+- strict phase-close passes **85/85**;
+- exhaustive phase-close passes **86/86**;
+- exhaustive's additional package child passes **98/98** package commands in
+  **356.1 seconds**;
+- the root aggregate contains **8,588 tests**;
+- graph-all passes all **5/5** repository-owned graph surfaces;
+- the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
+  are killed.
 
-This is the intended fail-closed result. The project must not suppress the
-memory child or relabel the non-zero cadence as an authorizing release.
+These tool gates are authorizing for the evidence they cover. They do not
+authorize the beta-v1 release or the owner's offline signing act: the live
+registry preflight remains not ready for the reasons above.
 
 No changes in this work were pushed.

@@ -461,17 +461,17 @@ try {
   }
 } catch { /* non-fatal if no manifests */ }
 
-// ── 5. Full graph drift check — graph-all.mjs runs the ENTIRE graph family (the single source of truth
-//   for "run graph", so on-demand and this cadence can't drift): project graph (build/graph) +
-//   graph-integrity validation + kb graph (build/kb-graph; the orphan/broken-link signal the stray-docs
-//   audit below reads) + per-package Hardened Border --check + memory graph (.claude health) +
-//   dev-tool index/graph. Add/remove graph tools THERE, not here. ──
+// ── 5. Full repository graph drift check — graph-all.mjs runs the reproducible
+//   graph family: project graph, graph-integrity validation, KB graph,
+//   per-package Hardened Border checks, and the dev-tool index/graph.
+//   Personal/agent memory is untrusted external data, never a clean-build or
+//   release-gate dependency; memory-graph.mjs is an explicit read-only aid. ──
 run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check"]);
 
 // ── 5a. Code index + derived registry — the INDEXES the audits read (a DIFFERENT family from the
 //        graphs in graph:all above). Phase-close verifies their exact current
 //        bytes and refuses drift; generation is a separate reviewed operation.
-//        memory-graph + dev-tool-index remain inside graph:all. ──
+//        dev-tool-index remains inside graph:all. ──
 run("code-index", "node", ["scripts/code-index.mjs", "--check"]);
 run("code-registry", "node", ["scripts/gen-code-registry.mjs", "--check"]);
 // FUNGI-TYPE twin-parity (RD-0412): the self-hosted type-checker twin must only emit codes the real
@@ -778,7 +778,7 @@ run("flowparam-fidelity", "node", ["scripts/audit-flowparam-fidelity.mjs"]);
 // wasmtime-presence — RD-0529 A4: the second execution engine (wasmtime) must be REACHABLE, not
 //   silently absent. Closes the wat-phase26:81 fail-open (a `wasmtime --version` probe ending in
 //   `assert.ok(true)` — "0 wasmtime tests ran" reads identical to "all pass"). AVAILABLE = wasmtime CLI
-//   on PATH OR the dss-host Rust harness (cargo + the wasmtime crate — M1's proven oracle path). Profile-
+//   on PATH OR the flat Wasmtime oracle package (cargo + the pinned crate). Profile-
 //   aware + fail-closed where it counts: under CI / GALERINA_CERTIFIED=1 an absent engine EXITS 1 so the
 //   coming A1/A2/A3 wasmtime conformance harnesses cannot be silently skipped; the dev profile loud-skips
 //   (exit 0, warned) and always names which engine would run. Self-tested truth table (absent⟹FAIL under

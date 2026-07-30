@@ -3,7 +3,7 @@
 //! The Node differential test (galerina-core-security/tests/dss-supervisor-wasm-differential.test.mjs)
 //! proves the DSS supervisor's decision core, run under Node's `WebAssembly`, equals the Stage-A
 //! interpreter over a 386-point V_DPM state x effect matrix. This harness closes the engine-transfer
-//! gap (U10): it feeds the SAME module and the SAME matrix through Wasmtime — the production embedder —
+//! gap (U10): it feeds the SAME module and the SAME matrix through Wasmtime — the independent oracle —
 //! and asserts every verdict still equals the interpreter's. A pass is a THREE-way agreement:
 //!     interpreter  ===  Node-WebAssembly  ===  wasmtime
 //!

@@ -1,5 +1,5 @@
 // rd0361-memory-validator-execution.test.mjs — RD-0361 (Memory): the memory-validator `.fungi` twin
-// EXECUTES; its pure alignment/round-up arithmetic is proven EQUAL to the MemoryValidator spec.
+// EXECUTES; its pure alignment/bounds/round-up arithmetic is proven EQUAL to the MemoryValidator spec.
 //   R0 build → WASM (the whole module, incl. the String-verdict flows) · R1 sign + #105-admit · R3 differential.
 // The Int/Bool folds (isAligned, alignUp) are differential-checked exhaustively over a grid; the String-verdict
 // flows (checkAligned/checkInBounds — "ok"/"LSM-*") compile at R0 but need WASM string marshalling to
@@ -24,7 +24,7 @@ const refIsInBounds = (ptr, len, capacity) =>
 const refAlignUp = (n, align) => { const r = n % align; return r === 0 ? n : n + align - r; };
 const ALIGNS = [1, 2, 4, 8, 16];
 
-test("RD-0361 Memory · memory-validator: R0 build → R1 #105-admit → R3 WASM ≡ alignment/round-up spec", async () => {
+test("RD-0361 Memory · memory-validator: R0 build → R1 #105-admit → R3 WASM ≡ alignment/bounds/round-up spec", async () => {
   assert.ok(existsSync(COMPILER), "core-compiler dist not built — run the full suite first");
   const L = await import(pathToFileURL(COMPILER).href);
 

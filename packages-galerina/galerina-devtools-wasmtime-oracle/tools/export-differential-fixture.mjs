@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // export-differential-fixture.mjs — emit the DSS.wasm Milestone-1 differential fixture for the
-// Rust/wasmtime harness (subprojects/dss-host), from the SAME build + Stage-A oracle the Node
+// Rust/Wasmtime oracle package, from the SAME build + Stage-A oracle the Node
 // differential test uses (galerina-core-security/tests/dss-supervisor-wasm-differential.test.mjs):
 //   fixtures/supervisor.wasm        — the DSS supervisor module (bytes) the test admits + instantiates
 //   fixtures/interned-strings.json  — [{handle,value}] the Rust host seeds so `__str_eq` is faithful
@@ -18,7 +18,7 @@ import { dirname, join, resolve } from "node:path";
 import { createPublicKey } from "node:crypto";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(HERE, "..", "..", "..");        // tools -> dss-host -> subprojects -> repo root
+const ROOT = resolve(HERE, "..", "..", "..");        // tools -> oracle package -> packages-galerina -> repo root
 const COMPILER = join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js");
 const DSS = join(ROOT, "packages-galerina", "galerina-core-security", "src", "dss");
 const OUT = join(HERE, "..", "fixtures");
@@ -119,7 +119,7 @@ const meta = { generated_by: "tools/export-differential-fixture.mjs", source: "d
 writeFileSync(join(OUT, "matrix.json"), JSON.stringify({ meta, points }, null, 2) + "\n");
 
 // ── F3 fixture: a Node-signed admission attestation over supervisor.wasm + the raw Ed25519 public
-//    key, so the Rust sidecar (dss-host) can re-verify the #173 signature INDEPENDENTLY (Node
+//    key, so the Rust oracle can re-verify the #173 signature INDEPENDENTLY (Node
 //    signWasm ≡ Rust verify — the F3 per-module re-verify). Ephemeral dev keypair per run; never a real key.
 const kp = L.generateRunnerKeypair();
 const att = L.signWasm(asm.wasm, kp.privateKeyPem, "dev"); // { sha256, signature(b64), profile }

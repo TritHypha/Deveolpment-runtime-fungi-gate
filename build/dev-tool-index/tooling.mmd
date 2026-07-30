@@ -485,6 +485,7 @@ flowchart LR
   T_gen_status_blocks_mjs --> C_graph_index
   T_graph_all_mjs["graph-all.mjs"]
   T_graph_all_mjs --> C_governance
+  T_graph_all_mjs --> C_package_border
   T_graph_all_mjs --> C_source_hygiene
   T_graph_all_mjs --> C_graph_index
   T_kb_graph_generator_mjs["kb-graph-generator.mjs"]
@@ -494,7 +495,9 @@ flowchart LR
   T_kb_graph_generator_mjs --> C_source_hygiene
   T_kb_graph_generator_mjs --> C_graph_index
   T_memory_graph_mjs["memory-graph.mjs"]
+  T_memory_graph_mjs --> C_signing_fusion
   T_memory_graph_mjs --> C_diagnostics
+  T_memory_graph_mjs --> C_teaching_corpus
   T_memory_graph_mjs --> C_graph_index
   T_package_graph_generator_mjs["package-graph-generator.mjs"]
   T_package_graph_generator_mjs --> C_signing_fusion

@@ -25,16 +25,18 @@ flowchart LR
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
-    E["🟨 Final fixed point<br/>documents · provenance · phase close"]
-    F["🟥 Beta-v1 release gate<br/>memory authority + signing blockers"]
+    E["🟩 Final fixed point<br/>85/85 strict · 86/86 exhaustive"]
+    F["🟥 Beta-v1 release gate<br/>offline signing not ready"]
     G["🟥 Offline signing ceremony<br/>NOT READY — live stubs/delegation"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
     P["🟦 Flat Galerina package resolver<br/>one canonical package instance"]
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
+    Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> F --> G --> H --> I --> J
+    Z --> E
     F --> P
     H --> M
     M --> I
@@ -44,8 +46,7 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D green;
-    class E amber;
+    class A,B,C,D,E,Z green;
     class F,G red;
     class H,I,P,M blue;
     class J grey;
@@ -65,10 +66,10 @@ flowchart LR
 | Focused compiler tests | 🟩 | Effect checker 68/68; governance verifier 121/121 at this tranche |
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
 | Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,748/5,748 tests |
-| Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 59/59 mutation anchors green |
+| Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 60/60 mutation anchors green |
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
 | Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
-| Governed mutation non-vacuity | 🟩 | Full catalog 59/59 killed, zero survivors, zero dirty targets |
+| Governed mutation non-vacuity | 🟩 | Full catalog 60/60 killed, zero survivors, zero dirty targets |
 
 ## Active Galerina work
 
@@ -87,23 +88,36 @@ The remaining sequence is:
 
 1. Commit the current generated fixed point after one final strict and
    exhaustive verification pass.
-2. Keep the memory graph closed until the owner explicitly authorizes the
-   external sidecar write for the selected corpus.
-3. Replace the two live registry stubs with real reviewed package bytes,
+2. Replace the two live registry stubs with real reviewed package bytes,
    implement and independently verify root-authorized operational-key
    delegation, then rerun the signing preflight.
-4. Ask the owner to perform the offline signing act only after the walkthrough
+3. Ask the owner to perform the offline signing act only after the walkthrough
    reports `READY FOR OWNER SIGNING`.
-5. Resume independent SLIDE implementation only after the Galerina beta-v1
+4. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
-gates are clean, 59/59 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 97/97 packages with 8,587 tests, and the unified
+gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
+killed, the root aggregate is 98/98 packages with 8,588 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 19 signing refusal codes without a direct
 test mention, and 34 cross-package relative imports.
+
+The governed-memory review now defines eight independent pillars: spatial,
+temporal, initialization/type, concurrency, authority, confidential custody,
+deterministic resource, and provenance/index safety. The beta memory reader is
+read-only and non-authorizing; it refuses injection controls, malformed or
+unbounded corpora, graph-health faults, and one identity appearing in both hot
+and archive indexes. A plaintext persistent sidecar is not part of the build.
+The Wasmtime code formerly under `subprojects/dss-host` is now a single flat,
+development-only differential oracle package and cannot acquire runtime,
+production, or memory authority.
+
+The terminal verification checkpoint is now green: strict phase-close passes
+85/85, exhaustive passes 86/86, graph-all passes 5/5, and the exhaustive
+package lane passes 98/98 in 356.1 seconds. These results authorize their
+evidence surfaces, not the offline signing ceremony or beta-v1 release.
 
 ## Binding package topology
 
@@ -208,4 +222,5 @@ equivalent optimized forms.
 
 No new owner-only question blocks the current curriculum/compiler chapter.
 Existing future questions remain in `../SLIDE/QUESTIONS-FOR-OWNER.md`,
-including the exact memory-graph write authority and offline signing roles.
+including offline signing roles. No memory-graph write authority is requested:
+the plaintext sidecar design has been rejected.

@@ -1,5 +1,22 @@
 # RD-0361 T2 (Memory) tranche — R4 authority-flip evidence pack
 
+> ## Bounds-hardening addendum — 2026-07-30
+>
+> The authoritative `memory-validator.fungi` now exposes `isInBounds` as an
+> overflow-safe Boolean decision using `len <= capacity - ptr` only after
+> rejecting negative values and `ptr > capacity`. Its execution-cutover test
+> compares admitted WASM with the TypeScript reference over 8,993 bounded-grid
+> cases plus the signed-i32 overflow edge. A distinct fail-open mutation drops
+> `ptr` from the remaining-capacity calculation; the full security mutation
+> run kills that mutant and all other **60/60** mutants.
+>
+> The TypeScript shadow also refuses non-finite, fractional, unsafe-integer,
+> invalid-alignment, and overflow-prone requests. Sentinel Memory is **39/39**.
+> `gather-t2-twin-hashes.mjs` then rebuilt all five modules: **5/5** R0-clean,
+> signed, #105-admitted, and the memory-validator module has no host imports.
+> The intentional source change moved that one pin to the value below; no
+> other T2 hash moved.
+>
 > ## Hash-integrity addendum — 2026-07-29
 >
 > The new executable ledger verifier
@@ -28,7 +45,7 @@ This pack satisfies the **R4 unlock protocol** (the same five items the T1 pack 
 
 | Twin | Package (`src/self-hosted/…`) | Surface |
 |---|---|---|
-| `memory-validator` | `galerina-core-sentinel-memory` | pointer-alignment gate (`isAligned`: `ptr % align == 0`) |
+| `memory-validator` | `galerina-core-sentinel-memory` | pointer alignment plus overflow-safe extent gate |
 | `pool-allocation-guard` | `galerina-core-sentinel-memory` | pool-exhaustion admission (LSM-POOL-EXHAUSTED) |
 | `pool-policy` | `galerina-core-sentinel-memory` | pool block-size policy floor (`blockBytes`) |
 | `segmentation-guard` | `galerina-core-sentinel-memory` | cross-segment access guard (LSM-SEGV) |
@@ -60,7 +77,7 @@ Each twin's execution-cutover differential asserts the **WASM verdict === the re
 
 | Twin | bytes | sha256 |
 |---|---|---|
-| `memory-validator` | 298 | `5cf14bbff6684be2775ff7c8fcea590bf4eaa94688c391ba48c0017c477c5239` |
+| `memory-validator` | 334 | `780066215a5107254ffd1968a50b57c2f4bea399962a61f443748426153aaeda` |
 | `pool-allocation-guard` | 246 | `1b85e0ff9dba897fb42acafbb5110e3f4a766fa94d3f2d17fd0dac46311d207c` |
 | `pool-policy` | 171 | `f4657aac19cee85a13b99e4d86fb335afa8b73713dead202b7084af0f6efa370` |
 | `segmentation-guard` | 147 | `8f9e5860c5e6117dce4205b674dcbecc42c123d07d395b51dbba63245b31a195` |

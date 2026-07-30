@@ -1,4 +1,4 @@
-//! F3 — the sidecar re-verifies a module's #173 attestation BEFORE instantiating (interop + tamper).
+//! F3 — the oracle re-verifies a module's #173 attestation BEFORE instantiating (interop + tamper).
 //!
 //! Proves both halves of closing the admission gap:
 //!   (a) INTEROP  — a Node `signWasm` attestation verifies in Rust, and ONLY then does the module load.
@@ -9,7 +9,7 @@
 //!   fixtures/supervisor.wasm · fixtures/attestation.json {sha256, signature(b64), profile, publicKeyRawB64}.
 
 use base64::Engine as _; // brings the `.decode()` method into scope without shadowing wasmtime::Engine
-use dss_host::admission::{verify_admission, AdmissionPolicy, Attestation};
+use galerina_wasmtime_oracle::admission::{verify_admission, AdmissionPolicy, Attestation};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use wasmtime::{Caller, Config, Engine, Linker, Module, Store};

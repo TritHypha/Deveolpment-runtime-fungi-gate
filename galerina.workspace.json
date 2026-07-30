@@ -99,7 +99,8 @@
         "packages-galerina/galerina-devtools-pci",
         "packages-galerina/galerina-devtools-project-graph",
         "packages-galerina/galerina-devtools-provenance",
-        "packages-galerina/galerina-devtools-security"
+        "packages-galerina/galerina-devtools-security",
+        "packages-galerina/galerina-devtools-wasmtime-oracle"
     ],
     "defaultPackage": "packages-galerina/galerina-framework-example-app",
     "languagePackage": "packages-galerina/galerina-core",
