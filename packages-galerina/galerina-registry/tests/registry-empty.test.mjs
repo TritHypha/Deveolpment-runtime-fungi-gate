@@ -36,6 +36,33 @@ const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "..", "..");
 const REGISTRY_CLI = join(REPOSITORY_ROOT, "scripts", "registry-index-cli.mjs");
 const LIVE_REGISTRY = join(PACKAGE_ROOT, "packages");
+const AUTH_CANDIDATE = join(
+  PACKAGE_ROOT,
+  "candidates",
+  "@galerina",
+  "auth",
+  "package.galerina.yaml",
+);
+const AUTH_PACKAGE_FILES = [
+  "LICENSE",
+  "README.md",
+  "package-lock.json",
+  "package.json",
+  "src/authorization.ts",
+  "src/bearer.ts",
+  "src/channel.ts",
+  "src/compose.ts",
+  "src/credential.ts",
+  "src/index.ts",
+  "src/verdict.ts",
+  "tests/authorization.test.mjs",
+  "tests/bearer.test.mjs",
+  "tests/channel.test.mjs",
+  "tests/compose.test.mjs",
+  "tests/credential.test.mjs",
+  "tests/kernel-integration.test.mjs",
+  "tsconfig.json",
+];
 const FIXED_ISSUED_AT = "2026-08-01T00:00:00.000Z";
 const ROOT_KEY_ID = "registry-root-disposable-1";
 const OPERATIONAL_KEY_ID = "registry-operational-disposable-1";
@@ -528,6 +555,47 @@ test("the live placeholder catalog remains un-signable", () => {
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
+});
+
+test("the auth candidate binds the reviewed source set but grants no authority", () => {
+  assert.equal(
+    existsSync(
+      join(
+        LIVE_REGISTRY,
+        "@galerina",
+        "healthcare",
+        "package.galerina.yaml",
+      ),
+    ),
+    false,
+    "a nonexistent healthcare package must not have a live registry claim",
+  );
+  assert.equal(
+    existsSync(
+      join(LIVE_REGISTRY, "@galerina", "auth", "package.galerina.yaml"),
+    ),
+    false,
+    "an owner-unapproved auth candidate must not be live/signable",
+  );
+  const candidate = parseTestManifest(readFileSync(AUTH_CANDIDATE, "utf8"));
+  assert.equal(candidate.name, "@galerina/auth");
+  assert.equal(candidate.version, "1.0.0-beta.2");
+  assert.equal(candidate.artifactProfile, REGISTRY_ARTIFACT_PROFILE);
+  assert.deepEqual(candidate.artifactFiles, AUTH_PACKAGE_FILES);
+  assert.deepEqual(candidate.capabilities, ["clock.read", "crypto.verify"]);
+  assert.deepEqual(candidate.effects, ["clock.read", "crypto.verify"]);
+  assert.equal(candidate.governance.reviewed, false);
+  assert.equal(candidate.governance.reviewedBy, null);
+  assert.equal(candidate.governance.reviewedAt, null);
+  assert.equal(candidate.signerKeyId, null);
+  assert.equal(candidate.signature, null);
+  const artifact = hashFlatPackageArtifact({
+    workspacePackagesDir: join(REPOSITORY_ROOT, "packages-galerina"),
+    packageName: "@galerina/auth",
+    artifactProfile: candidate.artifactProfile,
+    artifactFiles: candidate.artifactFiles,
+  });
+  assert.equal(candidate.hash, artifact.hash);
 });
 
 test("the real admission seam self-test uses cryptographic package evidence", () => {

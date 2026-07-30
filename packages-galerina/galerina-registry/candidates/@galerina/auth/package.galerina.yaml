@@ -1,0 +1,42 @@
+schema: "galerina-package-manifest/v1"
+name: "@galerina/auth"
+version: "1.0.0-beta.2"
+registry: "https://registry.galerina.dev"
+artifactProfile: "galerina-flat-package-tree/v1"
+artifactFiles:
+  - "LICENSE"
+  - "README.md"
+  - "package-lock.json"
+  - "package.json"
+  - "src/authorization.ts"
+  - "src/bearer.ts"
+  - "src/channel.ts"
+  - "src/compose.ts"
+  - "src/credential.ts"
+  - "src/index.ts"
+  - "src/verdict.ts"
+  - "tests/authorization.test.mjs"
+  - "tests/bearer.test.mjs"
+  - "tests/channel.test.mjs"
+  - "tests/compose.test.mjs"
+  - "tests/credential.test.mjs"
+  - "tests/kernel-integration.test.mjs"
+  - "tsconfig.json"
+capabilities:
+  - "clock.read"
+  - "crypto.verify"
+effects:
+  - "clock.read"
+  - "crypto.verify"
+installScript: null
+hash: "sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4eaee86"
+publisher: null
+keyId: null
+signerKeyId: null
+certificationLevel: "uncertified"
+riskRating: "high"
+signature: null
+governance:
+  reviewed: false
+  reviewedBy: null
+  reviewedAt: null
