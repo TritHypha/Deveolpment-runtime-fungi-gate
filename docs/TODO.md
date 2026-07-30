@@ -667,6 +667,21 @@ planning checkbox must never be used to imply that implementation exists.
   components plus the root, 98 dependency records, and the same content digest,
   now with **zero warnings**. Publish the source/lockfile hygiene commit before
   the final two-pass evidence regeneration.
+- **Task 10 install-script supply-chain close:** the governed core-chain build
+  exposed npm's unreviewed lifecycle-script warning for the compiler's native
+  `argon2@0.44.0` dependency and a separate Node deprecation caused by
+  `shell: true`. The builder now invokes npm's JavaScript CLI through the
+  current Node executable on Windows (ordinary `npm` on POSIX), never a command
+  shell; its self-test covers both platforms and a full 13-package
+  `--trace-deprecation` rebuild is warning-free. Registry verification reports
+  48/48 dependency signatures valid and 14 provenance attestations, including
+  Argon2. Root `.npmrc` now enforces `strict-allow-scripts=true`, compiler
+  `allowScripts` admits only exact `argon2@0.44.0`, and npm reports no pending
+  scripts. `audit-node-dependencies` now refuses absent strict mode, missing,
+  name-only, and stale approvals (12/12 self-test), and the audit is a blocking
+  phase-close child. The native dependency remains scheduled for replacement
+  by the RD-0345 portable PHC/WASM path; no blanket or future-version authority
+  was granted.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

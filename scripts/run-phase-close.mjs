@@ -360,6 +360,11 @@ run("lint:cast-hygiene", "node", ["scripts/audit-cast-hygiene.mjs"]);
 // (forked-but-validly-signed package → HASH_MISMATCH) holds. Signing the REAL index stays an owner ceremony.
 run("registry-index:selftest", "node", ["scripts/registry-index-cli.mjs", "--self-test"]);
 
+// Dependency install scripts execute with the developer/CI account's authority. The node-floor
+// audit blocks unreviewed, name-only, or stale lifecycle-script approvals and requires npm strict
+// mode; the one admitted native dependency is pinned to its reviewed exact version.
+run("audit:node-floor", "node", ["scripts/audit-node-dependencies.mjs"]);
+
 // ── 1c. Goal acceptance tests (T-006/007/008) ──
 const goalsDir = join(ROOT, "tests", "goals");
 if (existsSync(goalsDir)) {

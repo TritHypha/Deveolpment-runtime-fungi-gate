@@ -142,6 +142,10 @@ test("malformed governance-diff JSON is an explicit failed result", () => {
 test("live phase-close checks generated evidence without rewriting it", () => {
   assert.match(
     runnerSource,
+    /run\("audit:node-floor", "node", \["scripts\/audit-node-dependencies\.mjs"\]\)/,
+  );
+  assert.match(
+    runnerSource,
     /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check"\]\)/,
   );
   assert.match(

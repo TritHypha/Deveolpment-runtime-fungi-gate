@@ -14,12 +14,38 @@
 //   default target: galerina-core-compiler  (the chain the CG-4 / signed-fixture gates need)
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { join, dirname, resolve, basename } from "node:path";
+import { join, dirname, resolve, basename, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PKG_DIR = join(ROOT, "packages-galerina");
-const IS_WIN = process.platform === "win32";
+
+export function packageManagerInvocation(
+  platform = process.platform,
+  execPath = process.execPath,
+  env = process.env,
+  pathExists = existsSync,
+) {
+  if (platform !== "win32") {
+    return { command: "npm", argsPrefix: [] };
+  }
+  const candidates = [
+    env.npm_execpath,
+    join(dirname(execPath), "node_modules", "npm", "bin", "npm-cli.js"),
+  ];
+  const npmCli = candidates.find(
+    (candidate) =>
+      typeof candidate === "string" &&
+      isAbsolute(candidate) &&
+      pathExists(candidate),
+  );
+  if (npmCli === undefined) {
+    throw new Error(
+      "build-core-chain: npm-cli.js was not found at an admitted absolute path; refusing shell fallback.",
+    );
+  }
+  return { command: execPath, argsPrefix: [npmCli] };
+}
 
 /**
  * DERIVE the packages whose dist/ the gate suite actually needs, by reading the gates.
@@ -67,12 +93,29 @@ function selfTest() {
     "helper-not-a-gate.mjs": 'join(ROOT, "packages-galerina", "galerina-should-be-ignored", "dist")',
   };
   const got = deriveGateSubjects("/x", () => Object.keys(FIX), (p) => FIX[basename(p)]);
+  const windowsNpm = packageManagerInvocation(
+    "win32",
+    "C:\\Program Files\\nodejs\\node.exe",
+    {},
+    (candidate) => candidate.endsWith("npm-cli.js"),
+  );
+  const posixNpm = packageManagerInvocation("linux");
   const checks = [
     ["LITERAL form is seen (…/packages-galerina/<pkg>/dist/…)", got.includes("galerina-core-compiler")],
     ["JOIN form is seen (join(ROOT,'packages-galerina','<pkg>','dist')) — the one that broke CI", got.includes("galerina-devtools-package-graph")],
     ["a gate needing no build contributes nothing", !got.includes("audit-none")],
     ["non-gate files are NOT scanned (surface is audit-*/lint-* only)", !got.includes("galerina-should-be-ignored")],
     ["result is deterministic + sorted", got.join() === [...got].sort().join()],
+    [
+      "Windows resolves npm-cli.js through Node without a command shell",
+      windowsNpm.command.endsWith("node.exe") &&
+        windowsNpm.argsPrefix.length === 1 &&
+        windowsNpm.argsPrefix[0].endsWith("npm-cli.js"),
+    ],
+    [
+      "POSIX resolves npm directly without a command shell",
+      posixNpm.command === "npm" && posixNpm.argsPrefix.length === 0,
+    ],
   ];
   let ok = true;
   for (const [name, pass] of checks) { console.log(`  ${pass ? "✅" : "❌"} ${name}`); if (!pass) ok = false; }
@@ -147,16 +190,20 @@ for (const r of roots) toposort(join(PKG_DIR, r));
 console.log(`  build-core-chain: ${order.length} package(s), leaves first:`);
 for (const a of order) console.log(`    - ${nodes.get(a).name}`);
 
-function run(cmd, args, cwd) {
-  // shell:true on Windows so `npm` resolves to npm.cmd; plain exec on CI (linux).
-  execFileSync(cmd, args, { cwd, stdio: "inherit", shell: IS_WIN });
+function runNpm(args, cwd) {
+  const invocation = packageManagerInvocation();
+  execFileSync(
+    invocation.command,
+    [...invocation.argsPrefix, ...args],
+    { cwd, stdio: "inherit", shell: false, windowsHide: true },
+  );
 }
 
 for (const absDir of order) {
   const info = nodes.get(absDir);
   console.log(`\n  ── ${info.name} ──`);
-  run("npm", ["install", "--no-audit", "--no-fund"], absDir);
-  if (info.hasBuild) run("npm", ["run", "build"], absDir);
+  runNpm(["install", "--no-audit", "--no-fund"], absDir);
+  if (info.hasBuild) runNpm(["run", "build"], absDir);
   else console.log("    (no build script — install only)");
 }
 console.log(`\n  ✅ build-core-chain complete (${order.length} package(s) built/installed).`);

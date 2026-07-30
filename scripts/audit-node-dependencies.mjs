@@ -29,7 +29,7 @@
 //
 // Zero-dep; mirrors scripts/audit-example-diagnostics.mjs house style.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { builtinModules } from 'node:module';
@@ -85,8 +85,75 @@ function collectPackageJsons(dir) {
 // A dep is single-source-pinned iff all its owners declare one identical version string.
 const hasDrift = (versions) => new Set(versions).size > 1;
 
+export function hasStrictInstallScriptPolicy(npmrc) {
+  return /^\s*strict-allow-scripts\s*=\s*true\s*$/mu.test(npmrc);
+}
+
+function packageNameFromLockKey(key) {
+  const marker = 'node_modules/';
+  const index = key.lastIndexOf(marker);
+  if (index < 0) return undefined;
+  const tail = key.slice(index + marker.length);
+  if (/^@[^/]+\/[^/]+$/u.test(tail) || /^[^/@][^/]*$/u.test(tail)) {
+    return tail;
+  }
+  return undefined;
+}
+
+export function installScriptPolicyViolations(pkg, lock) {
+  const violations = [];
+  const approvals =
+    pkg?.allowScripts !== null &&
+    typeof pkg?.allowScripts === 'object' &&
+    !Array.isArray(pkg.allowScripts)
+      ? pkg.allowScripts
+      : {};
+  const required = new Set();
+  const packages =
+    lock?.packages !== null &&
+    typeof lock?.packages === 'object' &&
+    !Array.isArray(lock.packages)
+      ? lock.packages
+      : {};
+
+  for (const [key, entry] of Object.entries(packages)) {
+    if (entry?.hasInstallScript !== true) continue;
+    const name = packageNameFromLockKey(key);
+    const version = entry?.version;
+    if (name === undefined || typeof version !== 'string' || version.length === 0) {
+      violations.push(`install-script lock entry '${key}' lacks an exact package name/version`);
+      continue;
+    }
+    const exact = `${name}@${version}`;
+    required.add(exact);
+    if (approvals[exact] === true) continue;
+    if (approvals[exact] === false || approvals[name] === false) continue;
+    if (approvals[name] === true) {
+      violations.push(`${name}: name-only install-script approval is forbidden; pin '${exact}'`);
+    } else {
+      violations.push(`${exact}: install script is not explicitly approved or denied`);
+    }
+  }
+
+  for (const [approval, verdict] of Object.entries(approvals)) {
+    if (verdict !== true) continue;
+    if (!required.has(approval)) {
+      violations.push(`${approval}: approval is unpinned, stale, or has no locked install script`);
+    }
+  }
+  return violations;
+}
+
 // --self-test: the detectors must fire (off-floor dep + pin drift) and pass the allowed classes.
 if (selfTest) {
+  const installLock = {
+    packages: {
+      "node_modules/argon2": {
+        version: "0.44.0",
+        hasInstallScript: true,
+      },
+    },
+  };
   const checks = [
     ['off-floor dep flagged', !NODE_FLOOR.has('left-pad') && !isInternal('left-pad', '^1') && !BUILTINS.has('left-pad')],
     ['floor dep allowed', NODE_FLOOR.has('typescript')],
@@ -95,6 +162,32 @@ if (selfTest) {
     ['node builtin ignored', BUILTINS.has('node:crypto')],
     ['pin drift detected', hasDrift(['^1.3.0', '^1.4.0'])],
     ['pin consistent ok', !hasDrift(['^1.3.0', '^1.3.0'])],
+    ['strict install-script config detected', hasStrictInstallScriptPolicy('strict-allow-scripts=true\n')],
+    [
+      'exact install-script version approval admitted',
+      installScriptPolicyViolations(
+        { allowScripts: { 'argon2@0.44.0': true } },
+        installLock,
+      ).length === 0,
+    ],
+    [
+      'missing install-script approval refused',
+      installScriptPolicyViolations({}, installLock).length > 0,
+    ],
+    [
+      'name-only install-script approval refused',
+      installScriptPolicyViolations(
+        { allowScripts: { argon2: true } },
+        installLock,
+      ).length > 0,
+    ],
+    [
+      'stale install-script approval refused',
+      installScriptPolicyViolations(
+        { allowScripts: { 'argon2@0.43.0': true } },
+        installLock,
+      ).length > 0,
+    ],
   ];
   let bad = 0;
   for (const [name, pass] of checks) { console.log(`  ${pass ? 'ok  ' : 'FAIL'} ${name}`); if (!pass) bad++; }
@@ -105,6 +198,14 @@ if (selfTest) {
 // dep name -> Array<{ pkg: rel path, version: string }>
 const external = new Map();
 const files = collectPackageJsons(root);
+const installPolicyFindings = [];
+const npmrcPath = join(root, '.npmrc');
+const npmrc = existsSync(npmrcPath) ? readFileSync(npmrcPath, 'utf8') : '';
+if (!hasStrictInstallScriptPolicy(npmrc)) {
+  installPolicyFindings.push(
+    '.npmrc: strict-allow-scripts=true is required so unreviewed lifecycle scripts fail closed',
+  );
+}
 for (const abs of files) {
   const rel = relative(root, abs).replace(/\\/g, '/');
   let pkg;
@@ -117,6 +218,21 @@ for (const abs of files) {
       if (!external.has(name)) external.set(name, []);
       external.get(name).push({ pkg: rel, version: String(version) });
     }
+  }
+  const lockPath = join(dirname(abs), 'package-lock.json');
+  let lock = { packages: {} };
+  if (existsSync(lockPath)) {
+    try {
+      lock = JSON.parse(readFileSync(lockPath, 'utf8'));
+    } catch (error) {
+      installPolicyFindings.push(
+        `${relative(root, lockPath).replace(/\\/g, '/')}: malformed lockfile (${error.message})`,
+      );
+      continue;
+    }
+  }
+  for (const finding of installScriptPolicyViolations(pkg, lock)) {
+    installPolicyFindings.push(`${rel}: ${finding}`);
   }
 }
 
@@ -170,6 +286,12 @@ if (buildDrift.length) {
     const laggards = owners.filter((e) => e.version !== versionsOf(name)[0]);
     console.log(`     ${name}: ${versionsOf(name).join(' vs ')} — align to the majority pin when convenient (${laggards.length} laggard pkg; needs an install+build to verify).`);
   }
+}
+if (installPolicyFindings.length) {
+  red = true;
+  console.log(`\nINSTALL-SCRIPT POLICY: ${installPolicyFindings.length} violation(s):`);
+  for (const finding of installPolicyFindings) console.log(`  ${finding}`);
+  console.log('  -> require strict mode and exact version approvals/denials; blanket or stale approvals are refused.');
 }
 if (red) process.exit(1);
 console.log(`\n✅ external floor clean — every dep on the floor (${floorUsed.length}), crypto/runtime primitives single-source pinned, no reach-through (gated by hardened-border).`);

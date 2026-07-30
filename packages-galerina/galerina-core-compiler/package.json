@@ -83,6 +83,9 @@
   "engines": {
     "node": ">=18"
   },
+  "allowScripts": {
+    "argon2@0.44.0": true
+  },
   "dependencies": {
     "@galerina/core-network": "file:../galerina-core-network",
     "@galerina/core-runtime-wasm": "file:../galerina-core-runtime-wasm",
