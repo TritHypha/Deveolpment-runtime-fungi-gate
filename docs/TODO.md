@@ -44,9 +44,13 @@ planning checkbox must never be used to imply that implementation exists.
   was empty and untracked and has been removed. The oracle remains as
   independent differential evidence with no production/runtime/memory
   authority until its documented replacement gate passes.
-- **Current work:** make the retirement inventory an authorizing,
-  non-gameable path ledger; then close default signed-registry consumption and
-  disposable-key automatic rotation before resuming independent SLIDE.
+- **Current work:** the first strict retirement slice is implemented
+  test-first. `ts-retirement-graph --terminal-check --json` now enumerates all
+  478 tracked package `.ts` paths (465 under `src`) and exits 1 until the exact
+  set is empty; moving a file outside `src` cannot hide it. RED was 0/2 and
+  GREEN is 8/8 with generator fixed-point and self-test green. Next, extend
+  the ledger with unexecuted `.fungi` and admitted-bridge ownership, then close
+  default signed-registry consumption and disposable-key automatic rotation.
 - **Current owner questions:** none. A future real operational rotation
   ceremony remains an owner custody act, but implementation and disposable-key
   verification proceed without it.

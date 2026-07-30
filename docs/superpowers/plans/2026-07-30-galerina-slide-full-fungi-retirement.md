@@ -95,9 +95,13 @@ a release failure.
 execution authority, declared floor, replacement owner, evidence status and
 retirement state.
 
-- [ ] Write a failing hermetic test proving a renamed, ignored, unexecuted or
-  newly introduced `.ts` file cannot reduce the measured debt.
-- [ ] Prove the test fails against the current report-only inventory.
+- [x] Write a failing hermetic test proving a renamed or newly introduced
+  tracked `.ts` file cannot reduce the measured debt. Fresh RED: 2/2 tests
+  failed because `--terminal-check` was ignored and returned success.
+- [x] Prove the test fails against the current report-only inventory, then
+  close this first physical-path slice. Fresh GREEN: focused retirement
+  evidence 8/8; live terminal refusal names 478 tracked package `.ts` paths
+  (465 under `src`) and returns exit 1.
 - [ ] Add strict `--check` and `--post-slide` profiles. The terminal profile
   requires zero package `.ts`, zero nested package identities, zero package
   `node_modules`, no unexecuted `.fungi`, and no unowned host bridge.

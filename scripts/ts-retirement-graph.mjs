@@ -36,6 +36,8 @@ const ROOT = ROOT_INDEX >= 0 && process.argv[ROOT_INDEX + 1]
   : DEFAULT_ROOT;
 const OUT = join(ROOT, "build", "ts-retirement");
 const CHECK = process.argv.includes("--check");
+const JSON_OUT = process.argv.includes("--json");
+const TERMINAL_CHECK = process.argv.includes("--terminal-check");
 
 // The bounded-TCB FLOOR (census handover §2): these stay .ts/native forever by ruling — crypto
 // primitives, host seams, pure-algorithm devtools. A floor .ts is not "unfinished"; it is the TCB.
@@ -154,6 +156,12 @@ export function buildRetirementGraph(root = ROOT) {
     root,
     "packages-galerina/*/src/**/*.fungi",
   ).filter((p) => scope.test(p));
+  const allTrackedTsPaths = findTrackedAt(
+    root,
+    "packages-galerina/**/*.ts",
+  )
+    .filter((path) => path.startsWith("packages-galerina/"))
+    .sort();
   const pkgOf = (p) => p.split("/")[1];
   const stem = (p) => basename(p).replace(/\.(ts|fungi)$/, "");
   // twin key = package + stem: secret-gate.fungi twins secret-gate.ts IN THE SAME PACKAGE.
@@ -230,8 +238,11 @@ export function buildRetirementGraph(root = ROOT) {
   for (const f of fungi) (perPackage[pkgOf(f)] ??= { ts: 0, twinned: 0, fungi: 0 }).fungi++;
   return {
     generated: "ts-retirement-graph",
+    terminalReady: allTrackedTsPaths.length === 0,
+    allTrackedTsPaths,
     totals: {
       ts: ts.length,
+      allTrackedTs: allTrackedTsPaths.length,
       twinned,
       compilerCore,
       floor,
@@ -282,8 +293,24 @@ if (process.argv.includes("--self-test")) {
 
 const g = buildRetirementGraph();
 const t = g.totals;
+if (JSON_OUT) {
+  console.log(JSON.stringify(g, null, 2));
+  if (TERMINAL_CHECK && !g.terminalReady) process.exitCode = 1;
+  process.exit(process.exitCode ?? 0);
+}
+if (TERMINAL_CHECK) {
+  if (!g.terminalReady) {
+    console.error(
+      `ts-retirement: terminal refusal — ${t.allTrackedTs} tracked package TypeScript path(s) remain`,
+    );
+    for (const path of g.allTrackedTsPaths) console.error(`  ${path}`);
+    process.exit(1);
+  }
+  console.log("ts-retirement: terminal package TypeScript gate GREEN (0 tracked paths)");
+  process.exit(0);
+}
 const md = [
-  `# .ts retirement graph (${t.ts} tracked .ts in package src)`,
+  `# .ts retirement graph (${t.allTrackedTs} tracked package .ts; ${t.ts} in src)`,
   ``,
   `Regenerate: \`node scripts/ts-retirement-graph.mjs\` (graph-all 7/7). The % audit reads these numbers LIVE.`,
   ``,
@@ -295,6 +322,8 @@ const md = [
   `| Migration program | ${t.program} | ${g.retirementPaths.program} |`,
   ``,
   `Authority ledgers: ${t.compilerAuthoritativeFlips} compiler + ${t.governedAuthoritativeFlips} governed = ${t.authoritativeFlips} authoritative twins.`,
+  ``,
+  `Terminal physical retirement: ${g.terminalReady ? "GREEN" : `OPEN — ${t.allTrackedTs} tracked package TypeScript paths remain`}.`,
   ``,
   `\`.fungi\` in src trees: ${t.fungiInSrc} across ${t.packages} packages · finder drift: ${t.finderDrift === -1 ? "n/a (myco unavailable)" : t.finderDrift}`,
   ``,
