@@ -238,9 +238,11 @@ The live signing act is **NOT READY** because:
 - the live registry is intentionally empty;
 - no valid separately custodied operational public bundle and real
   root-signed delegation is present;
-- two verified encrypted offline operational-key copies in separate physical
-  locations are not evidenced; and
 - the live unsigned-index and owner signing acts therefore cannot run.
+
+Two verified encrypted operational-key custody copies in separate physical
+locations were owner-confirmed on 2026-07-30. That closes custody only; it does
+not admit the public bundle or authorize delegation, package or index signing.
 
 The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine

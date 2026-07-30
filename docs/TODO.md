@@ -49,11 +49,10 @@ planning checkbox must never be used to imply that implementation exists.
   **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
   auth remains an unapproved and unsigned candidate outside it. Operational
   hybrid key `f3172a48372bfb23` is minted, but its independently re-derived and
-  admitted public bundle, separate-location custody evidence and root
-  delegation,
-  owner-approved hybrid package manifest, two verified encrypted offline
-  copies in separate physical locations, successful live unsigned-index build,
-  and final offline index-signing act are still absent.
+  admitted public bundle and root delegation, owner-approved hybrid package
+  manifest, successful live unsigned-index build, and final offline
+  index-signing act are still absent. Two encrypted custody copies in separate
+  physical locations were owner-confirmed as verified on 2026-07-30.
 - **SLIDE stop condition:** independent SLIDE implementation and the
   Wasm/Rust/Python comparison remain deferred until the Galerina beta-v1 release
   gate authorizes and SLIDE has an executable backend.

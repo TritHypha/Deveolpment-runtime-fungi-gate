@@ -62,7 +62,7 @@ flowchart LR
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 28/28; app-kernel 149/149; disposable root→operational→manifest chain only |
 | Live registry population | 🟨 | False stubs removed; auth is a 63,281-byte unapproved/unsigned candidate; live tree empty |
-| Production registry signing | 🟥 | Owner approval, valid operational public/delegation chain, two-location custody and signing act absent |
+| Production registry signing | 🟥 | Two-location custody owner-confirmed; owner approval, valid operational public/delegation chain and signing act absent |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -94,9 +94,10 @@ The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the registry population changes.
-2. Owner-review the content-addressed auth candidate, establish two-location
-   offline operational-key custody, root-sign its delegation, and hybrid-sign
-   the complete package manifest.
+2. Publicly re-derive and admit the operational bundle; owner-review the
+   content-addressed auth candidate; root-sign its delegation; and hybrid-sign
+   the complete package manifest. Two-location operational-key custody is
+   already owner-confirmed.
 3. Move only the independently verified auth manifest into the live tree and
    require the unsigned live-index build to pass.
 4. Ask the owner to perform the offline index signing act only after the
@@ -151,9 +152,10 @@ fields remain false/null and it stays outside the live tree.
 
 This makes the implementation green without making the release green.
 Production still requires an exact valid operational public bundle,
-root-signed delegation, two verified offline custody copies in separate
-physical locations, owner approval/signature of the auth manifest, a successful
-live unsigned build, and the final offline index-signing act.
+root-signed delegation, owner approval/signature of the auth manifest, a
+successful live unsigned build, and the final offline index-signing act.
+Two verified offline custody copies in separate physical locations were
+owner-confirmed on 2026-07-30.
 
 ## Binding package topology
 

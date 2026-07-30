@@ -129,7 +129,7 @@ Primary references:
 | Auth governance approval and manifest signature | candidate remains reviewed:false with null authority fields | **owner-blocked** |
 | Operational registry authority | `f3172a48372bfb23` minted; both public filenames exist locally; independent re-derivation/admission still required | **owner-blocked** |
 | Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
-| Operational-key custody | two verified encrypted offline copies in separate physical locations not evidenced | **owner-blocked** |
+| Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
 
 The dry run proves the mechanism. The technical auth review proves a candidate
@@ -233,9 +233,9 @@ pins only.
 
 ### 5.1 Exact authority-delegation procedure
 
-**Do not sign the delegation yet.** The operational key is now known, but
-two verified encrypted custody copies in separate physical locations and the
-live-package approval gates must be evidenced first.
+**Do not sign the delegation yet.** Operational-key custody is now
+owner-confirmed. The live chart has promoted only public re-export; the
+live-package approval and delegation-signing gates remain locked.
 
 The dedicated operational hybrid key has already been minted as
 `f3172a48372bfb23`. Do not run `keygen --hybrid` again unless intentionally
@@ -466,4 +466,5 @@ Until then, report **“NOT READY”** with the failing gates. On 2026-07-29 the
 correct report remains **NOT READY**. At the 2026-07-30 checkpoint, the
 mechanism and candidate byte identity are green, but owner
 approval/signature, the valid operational public/delegation chain,
-two-location custody evidence, and the final live build are absent.
+and the final live build are absent. Two-location operational-key custody was
+owner-confirmed on 2026-07-30.

@@ -35,12 +35,12 @@ The earlier structural blockers have been corrected in engineering:
    implemented; and
 4. a non-empty signature can no longer substitute for cryptographic proof.
 
-The remaining blockers are owner authority and custody facts:
+The remaining blockers are owner authority and public-chain facts:
 
 - confirm the auth candidate's declared powers, risk and certification;
 - use a valid separately custodied operational hybrid key;
-- maintain two verified encrypted offline copies in separate physical
-  locations;
+- preserve the two verified encrypted offline copies in separate physical
+  locations owner-confirmed on 2026-07-30;
 - root-sign and independently verify its time-bounded delegation;
 - complete and hybrid-sign the auth manifest;
 - move only that verified manifest into the live tree;
