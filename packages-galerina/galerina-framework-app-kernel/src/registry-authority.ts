@@ -46,9 +46,10 @@ export interface RegistryOperationalAuthority {
 }
 
 export interface RegistryDelegationRootSignature {
-  readonly algorithm: "Ed25519";
+  readonly algorithm: "Ed25519+ML-DSA-65";
   readonly keyId: string;
-  readonly signature: string;
+  readonly ed25519Signature: string;
+  readonly mlDsa65Signature: string;
   readonly canon: "jcs";
   readonly context: typeof REGISTRY_DELEGATION_V1_CONTEXT;
 }
@@ -83,13 +84,18 @@ export type RegistryRootVerifier = (
   keyId: string,
 ) => boolean | "no-key";
 
+export interface RegistryRootVerifiers {
+  readonly ed25519: RegistryRootVerifier;
+  readonly mlDsa65: RegistryRootVerifier;
+}
+
 export interface RegistryAuthorityVerification {
   readonly expectedRootKeyId: string;
   readonly at: string;
   readonly minSerial?: number;
   readonly requiredRoles?: readonly string[];
   readonly isRevoked: (keyId: string) => boolean;
-  readonly verifyRoot: RegistryRootVerifier;
+  readonly verifyRoot: RegistryRootVerifiers;
 }
 
 export class RegistryAuthorityError extends Error {
@@ -222,27 +228,36 @@ export function registryAuthorityDelegationPreimage(
   }
   validateUnsignedFields(delegation);
   return new TextEncoder().encode(
-    `${REGISTRY_DELEGATION_V1_CONTEXT}\0Ed25519\0${delegation.rootKeyId}\0jcs\0${signingInput(delegation)}`,
+    `${REGISTRY_DELEGATION_V1_CONTEXT}\0Ed25519+ML-DSA-65\0${delegation.rootKeyId}\0jcs\0${signingInput(delegation)}`,
   );
 }
 
 export function signRegistryAuthorityDelegation(
   delegation: RegistryAuthorityDelegation,
-  signRoot: (message: Uint8Array) => string,
+  signRootEd25519: (message: Uint8Array) => string,
+  signRootMlDsa65: (message: Uint8Array) => string,
 ): RegistryAuthorityDelegation {
-  const signature = signRoot(registryAuthorityDelegationPreimage(delegation));
-  if (typeof signature !== "string" || signature.length === 0) {
+  const message = registryAuthorityDelegationPreimage(delegation);
+  const ed25519Signature = signRootEd25519(message);
+  const mlDsa65Signature = signRootMlDsa65(message);
+  if (
+    typeof ed25519Signature !== "string"
+    || ed25519Signature.length === 0
+    || typeof mlDsa65Signature !== "string"
+    || mlDsa65Signature.length === 0
+  ) {
     throw new RegistryAuthorityError(
       ERR_REGISTRY_DELEGATION_UNSIGNED,
-      "The offline root signature must be non-empty.",
+      "Both offline-root signature components must be non-empty.",
     );
   }
   return {
     ...delegation,
     rootSignature: {
-      algorithm: "Ed25519",
+      algorithm: "Ed25519+ML-DSA-65",
       keyId: delegation.rootKeyId,
-      signature,
+      ed25519Signature,
+      mlDsa65Signature,
       canon: "jcs",
       context: REGISTRY_DELEGATION_V1_CONTEXT,
     },
@@ -276,15 +291,17 @@ export function verifyRegistryAuthorityDelegation(
   const signature = delegation.rootSignature;
   if (
     signature === undefined
-    || signature.algorithm !== "Ed25519"
+    || signature.algorithm !== "Ed25519+ML-DSA-65"
     || signature.canon !== "jcs"
     || signature.context !== REGISTRY_DELEGATION_V1_CONTEXT
-    || typeof signature.signature !== "string"
-    || signature.signature.length === 0
+    || typeof signature.ed25519Signature !== "string"
+    || signature.ed25519Signature.length === 0
+    || typeof signature.mlDsa65Signature !== "string"
+    || signature.mlDsa65Signature.length === 0
   ) {
     throw new RegistryAuthorityError(
       ERR_REGISTRY_DELEGATION_UNSIGNED,
-      "Delegation requires the pinned offline-root Ed25519 signature envelope.",
+      "Delegation requires the pinned offline-root Ed25519+ML-DSA-65 envelope.",
     );
   }
   if (
@@ -306,31 +323,30 @@ export function verifyRegistryAuthorityDelegation(
     );
   }
 
-  let rootResult: boolean | "no-key";
-  try {
-    rootResult = options.verifyRoot(
-      registryAuthorityDelegationPreimage(delegation),
-      signature.signature,
-      signature.keyId,
-    );
-  } catch {
-    throw new RegistryAuthorityError(
-      ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
-      "The root signature verifier rejected the delegation.",
-    );
-  }
-  if (rootResult === "no-key") {
+  if (
+    typeof options.verifyRoot !== "object"
+    || options.verifyRoot === null
+    || typeof options.verifyRoot.ed25519 !== "function"
+    || typeof options.verifyRoot.mlDsa65 !== "function"
+  ) {
     throw new RegistryAuthorityError(
       ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
-      "The locally pinned root public key is unavailable.",
+      "Both pinned offline-root public-key verifiers are required.",
     );
   }
-  if (rootResult !== true) {
-    throw new RegistryAuthorityError(
-      ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
-      "Delegation root signature verification failed.",
-    );
-  }
+  const rootMessage = registryAuthorityDelegationPreimage(delegation);
+  verifyRootComponent(
+    rootMessage,
+    signature.ed25519Signature,
+    signature.keyId,
+    options.verifyRoot.ed25519,
+  );
+  verifyRootComponent(
+    rootMessage,
+    signature.mlDsa65Signature,
+    signature.keyId,
+    options.verifyRoot.mlDsa65,
+  );
 
   const at = parseCanonicalInstant(options.at, "at");
   const notBefore = Date.parse(delegation.notBefore);
@@ -365,6 +381,35 @@ export function verifyRegistryAuthorityDelegation(
     }
   }
   return "verified";
+}
+
+function verifyRootComponent(
+  message: Uint8Array,
+  signature: string,
+  keyId: string,
+  verifier: RegistryRootVerifier,
+): void {
+  let result: boolean | "no-key";
+  try {
+    result = verifier(message, signature, keyId);
+  } catch {
+    throw new RegistryAuthorityError(
+      ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
+      `The root signature verifier rejected a component for keyId '${keyId}'.`,
+    );
+  }
+  if (result === "no-key") {
+    throw new RegistryAuthorityError(
+      ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+      `A pinned root public key is unavailable for keyId '${keyId}'.`,
+    );
+  }
+  if (result !== true) {
+    throw new RegistryAuthorityError(
+      ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
+      `Root signature verification failed for keyId '${keyId}'.`,
+    );
+  }
 }
 
 export interface DelegatedRegistryIndexVerification {

@@ -18,12 +18,15 @@ planning checkbox must never be used to imply that implementation exists.
 
 ### Registry signing authority checkpoint - 2026-07-30
 
-- **Exact key selection:** offline root `21415420b447e219`
-  (`galerina-signing-key-21415420b447e219.env`) signs only the operational
-  delegation. Operational hybrid key `942d6b2726b0a991`
-  (`.env.galerina-signing-942d6b2726b0a991`) signs reviewed package manifests
-  and the registry index. Superseded/stale key files are explicitly excluded.
-- **Implemented:** `registry-authority.ts` provides a closed two-role,
+- **Corrected key selection:** hybrid offline root `21415420b447e219`
+  (`galerina-signing-key-21415420b447e219.env`) hybrid-signs only the
+  operational delegation. `942d6b2726b0a991` and `53de6be4d53a33b2` are
+  Ed25519-only and cannot be registry-v2 authorities. A new dedicated
+  Ed25519+ML-DSA-65 operational key must be minted; its generated ID will sign
+  reviewed package manifests and the registry index. Audit, superseded and
+  stale key files are explicitly excluded.
+- **Implemented:** `registry-authority.ts` provides a hybrid-root-signed,
+  closed two-role,
   time-bounded, revocation-aware and rollback-resistant root delegation. It
   binds the Ed25519 and ML-DSA-65 public-key fingerprints. Delegated index
   verification requires those exact public bytes and operational key ID.
@@ -33,7 +36,8 @@ planning checkbox must never be used to imply that implementation exists.
 - **Implemented:** `scripts/registry-authority-cli.mjs` provides public export,
   unsigned draft, root signing and independent verification modes. It parses
   private files as data, checks their internal key IDs and never prints private
-  fields. Disposable evidence is 9/9; focused decider evidence is 18/18.
+  fields. Both root halves are mandatory; an Ed25519-only root or operational
+  file is refused. Disposable evidence is 9/9.
 - **Owner walkthrough:** exact commands and custody boundaries are in
   `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`.
 - **Current:** integrate cryptographic manifest verification into the

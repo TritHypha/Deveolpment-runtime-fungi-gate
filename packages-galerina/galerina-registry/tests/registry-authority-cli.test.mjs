@@ -64,11 +64,13 @@ test("file-backed disposable ceremony enforces distinct root and operational key
     const rootId = "root-file-backed";
     const operationalId = "operational-file-backed";
     const root = generateKeyPairSync("ed25519");
+    const rootMl = mlDsa65.keygen(randomBytes(32));
     const operationalEd = generateKeyPairSync("ed25519");
     const operationalMl = mlDsa65.keygen(randomBytes(32));
     const rootEnv = join(temp, "root.env");
     const operationalEnv = join(temp, "operational.env");
     const rootPublic = join(temp, "root.pub.pem");
+    const rootMlPublic = join(temp, "root.mldsa.pub.b64");
     const operationalEdPublic = join(temp, "operational.pub.pem");
     const operationalMlPublic = join(temp, "operational.mldsa.pub.b64");
     const draft = join(temp, "delegation.unsigned.json");
@@ -78,7 +80,9 @@ test("file-backed disposable ceremony enforces distinct root and operational key
       operationalEd.privateKey.export({ type: "pkcs8", format: "pem" });
     writeFileSync(rootEnv, [
       `GALERINA_SIGNING_KEY_ID=${rootId}`,
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
       `GALERINA_SIGNING_PRIVATE_KEY_B64=${Buffer.from(rootPrivatePem).toString("base64")}`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${Buffer.from(rootMl.secretKey).toString("base64")}`,
       "",
     ].join("\n"));
     writeFileSync(operationalEnv, [
@@ -91,6 +95,10 @@ test("file-backed disposable ceremony enforces distinct root and operational key
     writeFileSync(
       rootPublic,
       root.publicKey.export({ type: "spki", format: "pem" }),
+    );
+    writeFileSync(
+      rootMlPublic,
+      Buffer.from(rootMl.publicKey).toString("base64"),
     );
 
     const exported = run([
@@ -133,6 +141,7 @@ test("file-backed disposable ceremony enforces distinct root and operational key
       "verify",
       "--in", signed,
       "--root-pubkey", rootPublic,
+      "--root-mldsa65-pubkey", rootMlPublic,
       "--root-key-id", rootId,
       "--at", "2026-08-01T00:00:00.000Z",
       "--min-serial", "0",
@@ -184,6 +193,38 @@ test("root signing refuses a revoked delegated key before reading root private m
     assert.match(result.stderr, /keyId '8eecf4187ebc9341' is revoked/);
     assert.doesNotMatch(result.stderr, /ENOENT/);
     assert.equal(existsSync(output), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("legacy Ed25519 operational files explain that a new hybrid key is required", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-legacy-"));
+  try {
+    const legacy = generateKeyPairSync("ed25519");
+    const legacyId = "legacy-ed25519-only";
+    const legacyEnv = join(temp, "legacy.env");
+    const legacyPrivatePem =
+      legacy.privateKey.export({ type: "pkcs8", format: "pem" });
+    writeFileSync(legacyEnv, [
+      `GALERINA_SIGNING_KEY_ID=${legacyId}`,
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${Buffer.from(legacyPrivatePem).toString("base64")}`,
+      "",
+    ].join("\n"));
+    const result = run([
+      "export-public",
+      "--operational-key-id", legacyId,
+      "--ed25519-out", join(temp, "must-not-exist.pem"),
+      "--mldsa65-out", join(temp, "must-not-exist.b64"),
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: legacyEnv,
+    });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /legacy Ed25519-only.*mint a new dedicated hybrid operational key/i,
+    );
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }

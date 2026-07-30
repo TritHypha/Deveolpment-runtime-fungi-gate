@@ -84,25 +84,34 @@ function readSigningEnvironment(path) {
   return fields;
 }
 
-function readRootPrivate(path, expectedKeyId) {
+async function readRootPrivate(path, expectedKeyId) {
   const fields = readSigningEnvironment(path);
   const keyId = fields.get("GALERINA_SIGNING_KEY_ID");
-  const privateB64 = fields.get("GALERINA_SIGNING_PRIVATE_KEY_B64");
+  const algorithm = fields.get("GALERINA_SIGNING_ALGORITHM");
+  const edB64 = fields.get("GALERINA_SIGNING_PRIVATE_KEY_B64");
+  const mlB64 = fields.get("GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64");
   if (keyId !== expectedKeyId) {
     throw new Error(
       `REFUSED: root environment keyId '${String(keyId)}' does not match expected root '${expectedKeyId}'.`,
     );
   }
-  if (!privateB64) {
-    throw new Error("REFUSED: root environment lacks its Ed25519 private field.");
+  if (algorithm !== "hybrid-ed25519-mldsa65" || !edB64 || !mlB64) {
+    throw new Error(
+      "REFUSED: the registry root must contain the complete hybrid-ed25519-mldsa65 key; an Ed25519-only root delegation is a prohibited downgrade.",
+    );
   }
-  const privateKey = createPrivateKey(
-    decodeCanonicalBase64(privateB64, "root Ed25519 private key").toString("utf8"),
+  const edPrivate = createPrivateKey(
+    decodeCanonicalBase64(edB64, "root Ed25519 private key").toString("utf8"),
   );
-  if (privateKey.asymmetricKeyType !== "ed25519") {
+  if (edPrivate.asymmetricKeyType !== "ed25519") {
     throw new Error("REFUSED: root private key is not Ed25519.");
   }
-  return privateKey;
+  const mlDsa65 = await loadMlDsa65();
+  const mlPrivate = decodeCanonicalBase64(mlB64, "root ML-DSA-65 private key");
+  if (mlPrivate.length !== mlDsa65.lengths.secretKey) {
+    throw new Error("REFUSED: root ML-DSA-65 private key has the wrong length.");
+  }
+  return { edPrivate, mlPrivate: new Uint8Array(mlPrivate), mlDsa65 };
 }
 
 async function readOperationalPrivate(path, expectedKeyId) {
@@ -113,11 +122,19 @@ async function readOperationalPrivate(path, expectedKeyId) {
       `REFUSED: operational environment keyId '${String(keyId)}' does not match expected operational key '${expectedKeyId}'.`,
     );
   }
-  if (fields.get("GALERINA_SIGNING_ALGORITHM") !== "hybrid-ed25519-mldsa65") {
-    throw new Error("REFUSED: operational signing suite is not hybrid-ed25519-mldsa65.");
-  }
+  const algorithm = fields.get("GALERINA_SIGNING_ALGORITHM");
   const edB64 = fields.get("GALERINA_SIGNING_PRIVATE_KEY_B64");
   const mlB64 = fields.get("GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64");
+  if (!algorithm && edB64 && !mlB64) {
+    throw new Error(
+      "REFUSED: this is a legacy Ed25519-only signer; mint a new dedicated hybrid operational key with `node galerina.mjs keygen --hybrid` rather than relabelling or extending the old identity.",
+    );
+  }
+  if (algorithm !== "hybrid-ed25519-mldsa65") {
+    throw new Error(
+      `REFUSED: operational signing suite '${String(algorithm)}' is not hybrid-ed25519-mldsa65.`,
+    );
+  }
   if (!edB64 || !mlB64) {
     throw new Error("REFUSED: operational environment lacks one or both private halves.");
   }
@@ -151,6 +168,10 @@ function publicFacts(edPublicPem, mlPublicBytes) {
   };
 }
 
+const delegationMlDsaOptions = (decider) => ({
+  context: new TextEncoder().encode(decider.REGISTRY_DELEGATION_V1_CONTEXT),
+});
+
 async function assertNotRevoked(keyId) {
   const revocation = await import(pathToFileURL(REVOCATION_GATE_PATH).href);
   revocation.assertRegistryTrustworthy(ROOT);
@@ -165,6 +186,7 @@ async function selfTest() {
   const checks = [];
   const check = (name, condition) => checks.push({ name, pass: condition === true });
   const rootKeys = generateKeyPairSync("ed25519");
+  const rootMlKeys = mlDsa65.keygen(randomBytes(32));
   const operationalEd = generateKeyPairSync("ed25519");
   const operationalMl = mlDsa65.keygen(randomBytes(32));
   const rootId = "root-disposable";
@@ -194,18 +216,40 @@ async function selfTest() {
   const signed = decider.signRegistryAuthorityDelegation(
     draft,
     (message) => edSign(null, message, rootKeys.privateKey).toString("base64"),
+    (message) => Buffer.from(
+      mlDsa65.sign(
+        message,
+        rootMlKeys.secretKey,
+        delegationMlDsaOptions(decider),
+      ),
+    ).toString("base64"),
   );
-  check("root signature exists", signed.rootSignature.signature.length > 0);
+  check(
+    "root signature exists",
+    signed.rootSignature.ed25519Signature.length > 0
+      && signed.rootSignature.mlDsa65Signature.length > 0,
+  );
   const verification = {
     expectedRootKeyId: rootId,
     at: "2026-08-01T00:00:00.000Z",
     minSerial: 0,
     requiredRoles: ["package-manifest.sign", "registry-index.sign"],
     isRevoked: () => false,
-    verifyRoot: (message, signature, keyId) =>
-      keyId === rootId
-        ? edVerify(null, message, rootKeys.publicKey, Buffer.from(signature, "base64"))
-        : "no-key",
+    verifyRoot: {
+      ed25519: (message, signature, keyId) =>
+        keyId === rootId
+          ? edVerify(null, message, rootKeys.publicKey, Buffer.from(signature, "base64"))
+          : "no-key",
+      mlDsa65: (message, signature, keyId) =>
+        keyId === rootId
+          ? mlDsa65.verify(
+            Buffer.from(signature, "base64"),
+            message,
+            rootMlKeys.publicKey,
+            delegationMlDsaOptions(decider),
+          )
+          : "no-key",
+    },
   };
   check("root-signed delegation verifies", decider.verifyRegistryAuthorityDelegation(signed, verification) === "verified");
   let wrongOperational = false;
@@ -336,22 +380,44 @@ async function main() {
       throw new Error("REFUSED: draft lacks an operational signing identity.");
     }
     await assertNotRevoked(draft.operational.keyId);
-    const rootPrivate = readRootPrivate(envPath, rootKeyId);
+    const rootPrivate = await readRootPrivate(envPath, rootKeyId);
+    const rootMlOptions = delegationMlDsaOptions(decider);
     const signed = decider.signRegistryAuthorityDelegation(
       draft,
-      (message) => edSign(null, message, rootPrivate).toString("base64"),
+      (message) =>
+        edSign(null, message, rootPrivate.edPrivate).toString("base64"),
+      (message) => Buffer.from(
+        rootPrivate.mlDsa65.sign(
+          message,
+          rootPrivate.mlPrivate,
+          rootMlOptions,
+        ),
+      ).toString("base64"),
     );
-    const rootPublic = createPublicKey(rootPrivate);
+    const rootPublic = createPublicKey(rootPrivate.edPrivate);
+    const rootMlPublic =
+      rootPrivate.mlDsa65.getPublicKey(rootPrivate.mlPrivate);
     decider.verifyRegistryAuthorityDelegation(signed, {
       expectedRootKeyId: rootKeyId,
       at: draft.notBefore,
       minSerial: 0,
       requiredRoles: ["package-manifest.sign", "registry-index.sign"],
       isRevoked: () => false,
-      verifyRoot: (message, signature, keyId) =>
-        keyId === rootKeyId
-          ? edVerify(null, message, rootPublic, Buffer.from(signature, "base64"))
-          : "no-key",
+      verifyRoot: {
+        ed25519: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? edVerify(null, message, rootPublic, Buffer.from(signature, "base64"))
+            : "no-key",
+        mlDsa65: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? rootPrivate.mlDsa65.verify(
+              Buffer.from(signature, "base64"),
+              message,
+              rootMlPublic,
+              rootMlOptions,
+            )
+            : "no-key",
+      },
     });
     writeFileSync(output, JSON.stringify(signed, null, 2) + "\n");
     console.log(`ROOT-SIGNED delegation -> ${output} (private material not shown).`);
@@ -361,11 +427,12 @@ async function main() {
   if (mode === "verify") {
     const input = arg("--in");
     const rootPublicPath = arg("--root-pubkey");
+    const rootMlPublicPath = arg("--root-mldsa65-pubkey");
     const rootKeyId = arg("--root-key-id");
     const at = arg("--at");
     const minSerial = Number(arg("--min-serial", "0"));
-    if (!input || !rootPublicPath || !rootKeyId || !at) {
-      throw new Error("REFUSED: verify requires signed input, root public key, root key ID, and verification instant.");
+    if (!input || !rootPublicPath || !rootMlPublicPath || !rootKeyId || !at) {
+      throw new Error("REFUSED: verify requires signed input, both root public keys, root key ID, and verification instant.");
     }
     await assertNotRevoked(rootKeyId);
     const delegation = JSON.parse(readFileSync(input, "utf8"));
@@ -377,16 +444,36 @@ async function main() {
     }
     await assertNotRevoked(delegation.operational.keyId);
     const rootPublic = createPublicKey(readFileSync(rootPublicPath, "utf8"));
+    const mlDsa65 = await loadMlDsa65();
+    const rootMlPublic = decodeCanonicalBase64(
+      readFileSync(rootMlPublicPath, "utf8").trim(),
+      "root ML-DSA-65 public key",
+    );
+    if (rootMlPublic.length !== mlDsa65.lengths.publicKey) {
+      throw new Error("REFUSED: root ML-DSA-65 public key has the wrong length.");
+    }
+    const rootMlOptions = delegationMlDsaOptions(decider);
     decider.verifyRegistryAuthorityDelegation(delegation, {
       expectedRootKeyId: rootKeyId,
       at,
       minSerial,
       requiredRoles: ["package-manifest.sign", "registry-index.sign"],
       isRevoked: () => false,
-      verifyRoot: (message, signature, keyId) =>
-        keyId === rootKeyId
-          ? edVerify(null, message, rootPublic, Buffer.from(signature, "base64"))
-          : "no-key",
+      verifyRoot: {
+        ed25519: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? edVerify(null, message, rootPublic, Buffer.from(signature, "base64"))
+            : "no-key",
+        mlDsa65: (message, signature, keyId) =>
+          keyId === rootKeyId
+            ? mlDsa65.verify(
+              Buffer.from(signature, "base64"),
+              message,
+              rootMlPublic,
+              rootMlOptions,
+            )
+            : "no-key",
+      },
     });
     console.log(`VERIFIED delegation serial ${delegation.serial} for operational keyId '${delegation.operational.keyId}'.`);
     process.exit(0);

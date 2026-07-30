@@ -15,6 +15,7 @@ import {
   ERR_REGISTRY_DELEGATION_REVOKED,
   ERR_REGISTRY_DELEGATION_ROLE,
   ERR_REGISTRY_DELEGATION_STALE,
+  ERR_REGISTRY_DELEGATION_UNSIGNED,
   REGISTRY_DELEGATION_V1_CONTEXT,
   RegistryAuthorityError,
   buildRegistryAuthorityDelegation,
@@ -52,17 +53,30 @@ const unsigned = () =>
   });
 
 const signed = () =>
-  signRegistryAuthorityDelegation(unsigned(), (message) =>
-    cryptoSign(null, message, rootPrivateKey).toString("base64"));
-
-const verifyRoot = (message, signature, keyId) => {
-  if (keyId !== ROOT_KEY_ID) return "no-key";
-  return cryptoVerify(
-    null,
-    message,
-    rootPublicKey,
-    Buffer.from(signature, "base64"),
+  signRegistryAuthorityDelegation(
+    unsigned(),
+    (message) => cryptoSign(null, message, rootPrivateKey).toString("base64"),
+    (message) => Buffer.from(
+      `root-ml-dsa-65:${fingerprint(message)}`,
+    ).toString("base64"),
   );
+
+const verifyRoot = {
+  ed25519: (message, signature, keyId) => {
+    if (keyId !== ROOT_KEY_ID) return "no-key";
+    return cryptoVerify(
+      null,
+      message,
+      rootPublicKey,
+      Buffer.from(signature, "base64"),
+    );
+  },
+  mlDsa65: (message, signature, keyId) =>
+    keyId === ROOT_KEY_ID
+      ? signature === Buffer.from(
+        `root-ml-dsa-65:${fingerprint(message)}`,
+      ).toString("base64")
+      : "no-key",
 };
 
 const verify = (delegation, overrides = {}) =>
@@ -82,6 +96,7 @@ test("root-signed operational delegation verifies with the two exact signing rol
     "package-manifest.sign",
     "registry-index.sign",
   ]);
+  assert.equal(delegation.rootSignature.algorithm, "Ed25519+ML-DSA-65");
   assert.equal(delegation.operational.keyId, OPERATIONAL_KEY_ID);
   assert.equal(verify(delegation), "verified");
 });
@@ -93,7 +108,7 @@ test("delegation preimage domain-separates the root signature", () => {
   assert.match(
     preimage,
     new RegExp(
-      `^${REGISTRY_DELEGATION_V1_CONTEXT}\\u0000Ed25519\\u0000${ROOT_KEY_ID}\\u0000jcs\\u0000`,
+      `^${REGISTRY_DELEGATION_V1_CONTEXT}\\u0000Ed25519\\+ML-DSA-65\\u0000${ROOT_KEY_ID}\\u0000jcs\\u0000`,
     ),
   );
   assert.match(
@@ -130,7 +145,12 @@ test("root pin mismatch and unavailable root refuse the delegation", () => {
     (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
   );
   assert.throws(
-    () => verify(signed(), { verifyRoot: () => "no-key" }),
+    () => verify(signed(), {
+      verifyRoot: {
+        ...verifyRoot,
+        ed25519: () => "no-key",
+      },
+    }),
     (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
   );
 });
@@ -207,14 +227,51 @@ test("malformed dates, validity inversion, and malformed fingerprints are refuse
 
 test("throwing and truthy non-boolean verifiers cannot authorize", () => {
   assert.throws(
-    () => verify(signed(), { verifyRoot: () => {
-      throw new Error("adapter failure");
-    } }),
+    () => verify(signed(), {
+      verifyRoot: {
+        ...verifyRoot,
+        ed25519: () => {
+          throw new Error("adapter failure");
+        },
+      },
+    }),
     (error) => error.code === ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
   );
   assert.throws(
-    () => verify(signed(), { verifyRoot: () => ({ ok: true }) }),
+    () => verify(signed(), {
+      verifyRoot: {
+        ...verifyRoot,
+        mlDsa65: () => ({ ok: true }),
+      },
+    }),
     (error) => error.code === ERR_REGISTRY_DELEGATION_BAD_SIGNATURE,
+  );
+});
+
+test("missing or downgraded root signature halves cannot authorize delegation", () => {
+  const delegation = signed();
+  assert.throws(
+    () => verify({
+      ...delegation,
+      rootSignature: {
+        ...delegation.rootSignature,
+        mlDsa65Signature: "",
+      },
+    }),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_UNSIGNED,
+  );
+  assert.throws(
+    () => verify({
+      ...delegation,
+      rootSignature: {
+        algorithm: "Ed25519",
+        keyId: ROOT_KEY_ID,
+        signature: delegation.rootSignature.ed25519Signature,
+        canon: "jcs",
+        context: REGISTRY_DELEGATION_V1_CONTEXT,
+      },
+    }),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_UNSIGNED,
   );
 });
 
