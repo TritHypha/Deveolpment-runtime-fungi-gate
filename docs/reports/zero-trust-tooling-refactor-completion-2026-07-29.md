@@ -36,10 +36,10 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>98/98 · 8,588 tests"]:::green
+    P["Package readiness<br/>98/98 · 8,632 tests"]:::green
     A["Audit proof<br/>80/80 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
-    X["Final generated fixed point<br/>85/85 strict · 86/86 exhaustive"]:::green
+    X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
     M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
     R["Registry mechanism green<br/>owner approval/signing absent"]:::amber
     B{"Galerina beta-v1<br/>release authorization"}:::red
@@ -83,12 +83,12 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **98/98 packages and 8,588 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,632 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,588 |
+  | Unit | 8,632 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
@@ -120,6 +120,14 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
   evidence.
 - Every one of the 34 audit/lint tools outside phase-close was executed
   directly without `--soft`.
+- The fresh audit meta-gate accounts for **80/80** audit/lint gates with
+  executable refusal/control evidence; the tooling contract reports 98
+  packages, 151 tools and zero violations.
+- The security devtool's 29-case construction-audit self-test passes, all nine
+  live constructions hold at their declared evidence tier, and its strict
+  production single-file audit passes on the canonical pure-transform pattern.
+  The unsigned-spore authenticity limitation remains an explicit open risk,
+  not a green claim.
 - The security mutation catalog killed **60/60** mutants, including distinct
   alignment and overflow-safe extent weakenings.
 - The WAT emitter mutation audit killed **3/3** independent arithmetic
@@ -271,14 +279,21 @@ measured. Historical files remain evidence only.
 
 After the complete fourteen-generator fixed point:
 
-- strict phase-close passes **85/85**;
-- exhaustive phase-close passes **86/86**;
-- exhaustive's additional package child passes **98/98** package commands in
-  **356.1 seconds**;
-- the root aggregate contains **8,588 tests**;
+- strict phase-close passes **83/83**;
+- exhaustive phase-close passes **84/84**;
+- exhaustive's additional package child passes **98/98** package commands;
+- the root aggregate contains **8,632 tests**;
 - graph-all passes all **5/5** repository-owned graph surfaces;
 - the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
   are killed.
+
+The first strict close correctly failed on stale generated code-index output.
+After dependency-ordered regeneration, the next strict close correctly exposed
+the derived coverage report as stale. Regenerating that report produced
+750/750 catalogued codes and zero actionable coverage holes; both independent
+check modes and the final strict/exhaustive cadences then passed. The detection
+and repair are retained as evidence that generated freshness gates are not
+vacuous.
 
 These tool gates are authorizing for the evidence they cover. They do not
 authorize the beta-v1 release or the owner's offline signing act: the live

@@ -16,6 +16,46 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Terminal fixed-point checkpoint - 2026-07-30
+
+- **Fresh root aggregate:** **98/98 packages and 8,632 tests** pass.
+- **Fresh graph/generator evidence:** all five repository-owned graph surfaces
+  generate and pass exact check mode; all fourteen declared generator
+  contracts pass their isolated fixed-point tests.
+- **Fresh phase-close evidence:** strict phase-close passes **83/83** and
+  exhaustive passes **84/84**, including its additional **98/98** all-package
+  child. The first strict runs correctly detected stale code-index and coverage
+  outputs; the dependency chain was regenerated and both independent check
+  modes and the complete cadence then passed.
+- **Fresh build evidence:** strict fusable rebuild reports **0 failed**, two
+  artifacts already fresh, two intentionally skipped, and the ceremony-signed
+  `greeting` manifest locked against automatic replacement.
+- **Fresh measured roadmap:** package/test ship readiness is **100%**,
+  zero-trust thesis **78%**, build progress **75%**, and the tracking registry
+  contains **21** items. These are evidence meters, not release authorization.
+- **Fresh unified harness:** all five lanes pass in one invocation: unit
+  **8,632**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  the Galerina SLIDE-adapter corpus **496/496**.
+- **Fresh audit inventory:** all **80/80** audit/lint gates have executable
+  refusal/control evidence; the tooling contract sees 98 packages and 151
+  tools with zero violations; all 14/14 exhaustive generator contracts pass.
+  The security devtool's 29-case conformance self-test and nine live
+  constructions pass, with the declared unsigned-spore residual still reported
+  as open risk. Its strict production single-file audit passes on the canonical
+  pure-transform pattern.
+- **Current:** review and commit the generated fixed point and continuity
+  documents without staging unrelated files.
+- **Release stop condition:** Galerina beta v1 and owner signing remain
+  **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
+  auth remains an unapproved and unsigned candidate outside it. A valid
+  separately custodied operational public bundle and root delegation,
+  owner-approved hybrid package manifest, two verified encrypted offline
+  copies in separate physical locations, successful live unsigned-index build,
+  and final offline index-signing act are still absent.
+- **SLIDE stop condition:** independent SLIDE implementation and the
+  Wasm/Rust/Python comparison remain deferred until the Galerina beta-v1 release
+  gate authorizes and SLIDE has an executable backend.
+
 ### Live registry artifact admission checkpoint - 2026-07-30
 
 - **Architecture recorded:** the binding design and executable plan are
@@ -87,12 +127,13 @@ planning checkbox must never be used to imply that implementation exists.
   repository.
 - **Fresh doc guards:** private-doc leak self-test and live scan are green,
   path-leak self-test and live scan are green, and doc/source drift reports
-  zero violations at the current 98-package/8,588-test baseline.
-- **Current:** commit the Galerina continuity documents, then regenerate every
-  declared output and execute the full graph/audit/test/phase-close matrix.
-- **Next safe boundary:** update this TODO, roadmap and completion report only
-  from the new terminal evidence; the prior 8,588 aggregate remains historical
-  until that rerun completes.
+  zero violations at the current 98-package/8,632-test baseline.
+- **Current:** the complete generated graph/code/coverage/component-health
+  dependency chain is refreshed. Root tests are 98/98 packages and 8,632
+  tests; strict/exhaustive phase-close are 83/83 and 84/84.
+- **Next safe boundary:** commit the generated evidence and this continuity
+  checkpoint, then rerun exact non-mutating drift/leak checks over the final
+  documentation state.
 - **Signing stop condition:** this work uses disposable fixtures only.
   Production signing remains forbidden until the unsigned live registry,
   broad gates, independent public verification, and the offline walkthrough
@@ -122,11 +163,10 @@ planning checkbox must never be used to imply that implementation exists.
   file is refused. Disposable evidence is 9/9.
 - **Owner walkthrough:** exact commands and custody boundaries are in
   `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`.
-- **Current:** integrate cryptographic manifest verification into the
-  file-backed registry builder, replace the live `@galerina/auth` placeholder
-  with a reviewed content-addressed artifact, and remove the nonexistent
-  `@galerina/healthcare` stub from the live signable tree without fabricating a
-  package.
+- **Completed:** cryptographic manifest/delegation verification is integrated
+  into the file-backed registry builder. The false live auth and healthcare
+  stubs are removed; the real auth source is a reviewed content-addressed
+  candidate outside the signable live tree.
 - **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Do not ask
   the owner to mount either real private file until the live unsigned-index
   build and all repository gates are green.
@@ -191,14 +231,15 @@ planning checkbox must never be used to imply that implementation exists.
   verifier, native backend, production runner, and narrow `.fungi` Wasm
   compatibility engine are not implemented by this beta-safe migration.
 - **Broad close evidence:** the complete aggregate passes **98/98 packages,
-  8,588 tests**; all fourteen declared generators reach a fixed point;
-  graph-all passes **5/5**; strict phase-close passes **85/85**; exhaustive
-  passes **86/86**, including its 98/98 package child in 356.1 seconds.
+  8,632 tests**; all fourteen declared generator contracts and all five graph
+  surfaces are green; strict phase-close passes **83/83** and exhaustive
+  passes **84/84**, including its 98/98 package child.
 - **Current release boundary:** repository verification is green. Beta-v1 and
   the owner's offline signing act remain non-authorizing because the live
-  registry contains unreviewed content-less stubs and lacks the independently
-  verified root-to-operational delegation path. Do not ask the owner to sign
-  until the existing walkthrough reports `READY FOR OWNER SIGNING`.
+  registry is intentionally empty, auth remains unapproved/unsigned outside
+  it, and the production root-to-operational delegation/custody/signing
+  evidence is absent. Do not ask the owner to sign until the existing
+  walkthrough reports `READY FOR OWNER SIGNING`.
 
 ### Galerina-first beta-v1 completion checkpoint - 2026-07-29
 

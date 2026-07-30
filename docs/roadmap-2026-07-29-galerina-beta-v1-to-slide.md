@@ -25,7 +25,7 @@ flowchart LR
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
-    E["🟩 Final fixed point<br/>85/85 strict · 86/86 exhaustive"]
+    E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
     F["🟥 Beta-v1 release gate<br/>owner signing not ready"]
     G["🟨 Registry admission green<br/>auth candidate · live tree empty"]
     H["🟦 Independent SLIDE<br/>executable backend"]
@@ -92,8 +92,8 @@ remain running differential shadows; no `.ts` retirement has started.
 
 The remaining sequence is:
 
-1. Regenerate and rerun the complete graph/audit/test/strict/exhaustive fixed
-   point after the live registry implementation change.
+1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
+   reproducible while the registry population changes.
 2. Owner-review the content-addressed auth candidate, establish two-location
    offline operational-key custody, root-sign its delegation, and hybrid-sign
    the complete package manifest.
@@ -106,11 +106,17 @@ The remaining sequence is:
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,588 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,632 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 19 signing refusal codes without a direct
 test mention, and 34 cross-package relative imports.
+
+The fresh unified lane totals are unit 8,632, end-to-end 4/4, conformance
+10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
+meta-gate covers all 80/80 discovered audit/lint gates with non-vacuous
+refusal/control evidence; the tooling contract reports 98 packages and 151
+tools with zero violations.
 
 The governed-memory review now defines eight independent pillars: spatial,
 temporal, initialization/type, concurrency, authority, confidential custody,
@@ -123,9 +129,12 @@ development-only differential oracle package and cannot acquire runtime,
 production, or memory authority.
 
 The terminal verification checkpoint is now green: strict phase-close passes
-85/85, exhaustive passes 86/86, graph-all passes 5/5, and the exhaustive
-package lane passes 98/98 in 356.1 seconds. These results authorize their
-evidence surfaces, not the offline signing ceremony or beta-v1 release.
+83/83, exhaustive passes 84/84, graph-all passes 5/5, all fourteen generator
+contracts pass, and the exhaustive package lane passes 98/98. The strict
+cadence first caught stale code-index and coverage outputs; after explicit
+dependency-ordered regeneration, their check modes and the complete cadence
+passed. These results authorize their evidence surfaces, not the offline
+signing ceremony or beta-v1 release.
 
 ## Registry admission checkpoint
 

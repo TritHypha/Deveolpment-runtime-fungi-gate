@@ -1205,12 +1205,17 @@ node scripts/run-phase-close.mjs --tier exhaustive
 npm.cmd run audit
 ```
 
-Run the final command in
-`packages-galerina/galerina-devtools-security`. Run the benchmark truth audit
-in Step 8 after fresh measurements exist. The audit meta-gate must execute or
-fixture-prove every discovered audit/lint program; the strict/exhaustive
-cadence must run every declared live enforcement command. Publish the
-machine-readable inventory mapping each audit to its live cadence,
+Run the first five commands at the repository root. In
+`packages-galerina/galerina-devtools-security`, run
+`npm.cmd run conformance:selftest` followed by `npm.cmd run conformance` for
+the package-wide construction audit. Its `npm.cmd run audit` script is
+intentionally a single-file wrapper and must be invoked as
+`npm.cmd run audit -- <file.fungi> [options]`; invoking it without a target is
+a usage error and is not a repository-wide audit. Run the benchmark truth
+audit in Step 8 after fresh measurements exist. The audit meta-gate must
+execute or fixture-prove every discovered audit/lint program; the
+strict/exhaustive cadence must run every declared live enforcement command.
+Publish the machine-readable inventory mapping each audit to its live cadence,
 non-vacuity self-test, or hermetic fixture proof. An undisposed program is a
 failure, not an exception added during close.
 
