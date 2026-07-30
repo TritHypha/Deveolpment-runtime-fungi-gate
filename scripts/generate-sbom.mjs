@@ -294,7 +294,7 @@ export function collectSbom({ rootDir, sourceDateEpoch, now }) {
   let dirs = [];
   if (existsSync(pkgRootAbs)) {
     dirs = readdirSync(pkgRootAbs, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
+      .filter((d) => d.isDirectory() && !d.name.startsWith("."))
       .map((d) => d.name)
       .sort();
   } else {
@@ -744,9 +744,15 @@ function runSelfTest() {
 
   // 1) happy path: components, purls, hex hashes, graph edges, complete=true
   happy();
+  write("packages-galerina/.metadata/README.md", "scanner metadata, not a package");
   {
-    const { bom, errors } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
+    const { bom, errors, warnings } = collectSbom({ rootDir: base, sourceDateEpoch: "0" });
     check("happy: no errors", errors.length === 0, errors.join(" | "));
+    check(
+      "happy: hidden metadata directories are not treated as packages",
+      !warnings.some((warning) => warning.includes("packages-galerina/.metadata/package.json")),
+      warnings.join(" | "),
+    );
     const refs = bom === null ? [] : bom.components.map((c) => c["bom-ref"]);
     check(
       "happy: first+third party components present",

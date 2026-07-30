@@ -644,6 +644,29 @@ planning checkbox must never be used to imply that implementation exists.
   `.fungi` authority changes, run status/roadmap before the final
   code-index/code-registry/coverage refresh, and rerun strict close. The memory
   graph remains closed pending exact owner authorization.
+- **Task 10 strict/exhaustive fixed-point evidence:** follow-up repair commit
+  `ee87d85f` removes the last R4 stale reference; direct R4 evidence is 20/20
+  with signed admission and zero ambient imports. Two complete generator
+  passes reach a stable fixed point and the independent contract is 14/14.
+  Strict close is 82/83 and exhaustive is 83/84. Every child is green except
+  the same external memory-graph authorization refusal; exhaustive
+  `tests:all-packages` passes 97/97 in 319.0 seconds. Governance diff is
+  neutral at the follow-up commit, tooling is 208/208, and the generated
+  percentage evidence reports ZT thesis 78%, build 75%, and 21 tracked
+  registry items. Before publishing generated evidence, repair or explicitly
+  adjudicate the SBOM's fifteen lockfile/manifest hygiene warnings, rerun the
+  SBOM and its contract, then run the remaining strict rebuild and terminal
+  evidence lanes.
+- **Task 10 SBOM hygiene close:** the hidden `.myco` metadata directory was
+  incorrectly treated as a package candidate. A RED self-test reproduced the
+  false warning; the deterministic walker now excludes hidden directories and
+  the complete self-test is green. Eleven affected package lockfiles were
+  regenerated offline with npm's canonical lockfile writer, removing fourteen
+  duplicate sibling-package keys and stale extraneous records without changing
+  the resolved third-party inventory. The live SBOM remains complete at 169
+  components plus the root, 98 dependency records, and the same content digest,
+  now with **zero warnings**. Publish the source/lockfile hygiene commit before
+  the final two-pass evidence regeneration.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
