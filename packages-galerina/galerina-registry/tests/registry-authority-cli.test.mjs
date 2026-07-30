@@ -1,0 +1,190 @@
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { generateKeyPairSync, randomBytes } from "node:crypto";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import test from "node:test";
+
+const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "..", "..");
+const AUTHORITY_CLI = join(
+  REPOSITORY_ROOT,
+  "scripts",
+  "registry-authority-cli.mjs",
+);
+const compilerRequire = createRequire(join(
+  REPOSITORY_ROOT,
+  "packages-galerina",
+  "galerina-core-compiler",
+  "package.json",
+));
+const mlDsaModulePath =
+  compilerRequire.resolve("@noble/post-quantum/ml-dsa.js");
+const { ml_dsa65: mlDsa65 } =
+  await import(pathToFileURL(mlDsaModulePath).href);
+
+function run(args, env = process.env) {
+  return spawnSync(process.execPath, [AUTHORITY_CLI, ...args], {
+    cwd: REPOSITORY_ROOT,
+    encoding: "utf8",
+    env,
+    timeout: 30_000,
+    windowsHide: true,
+  });
+}
+
+test("authority CLI disposable-key ceremony covers export, draft, sign, and verify", () => {
+  const result = run(["--self-test"]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /registry-authority-cli self-test: 9\/9/);
+  assert.match(result.stdout, /wrong operational key id refused/);
+  assert.match(result.stdout, /tampered delegation refused/);
+});
+
+test("authority CLI publishes no artifact without complete explicit arguments", () => {
+  const output = join(PACKAGE_ROOT, "must-not-exist-delegation.json");
+  const result = run(["draft", "--out", output]);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stderr, /REFUSED:/);
+  assert.equal(existsSync(output), false);
+});
+
+test("file-backed disposable ceremony enforces distinct root and operational keys", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-ceremony-"));
+  try {
+    const rootId = "root-file-backed";
+    const operationalId = "operational-file-backed";
+    const root = generateKeyPairSync("ed25519");
+    const operationalEd = generateKeyPairSync("ed25519");
+    const operationalMl = mlDsa65.keygen(randomBytes(32));
+    const rootEnv = join(temp, "root.env");
+    const operationalEnv = join(temp, "operational.env");
+    const rootPublic = join(temp, "root.pub.pem");
+    const operationalEdPublic = join(temp, "operational.pub.pem");
+    const operationalMlPublic = join(temp, "operational.mldsa.pub.b64");
+    const draft = join(temp, "delegation.unsigned.json");
+    const signed = join(temp, "delegation.json");
+    const rootPrivatePem = root.privateKey.export({ type: "pkcs8", format: "pem" });
+    const operationalPrivatePem =
+      operationalEd.privateKey.export({ type: "pkcs8", format: "pem" });
+    writeFileSync(rootEnv, [
+      `GALERINA_SIGNING_KEY_ID=${rootId}`,
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${Buffer.from(rootPrivatePem).toString("base64")}`,
+      "",
+    ].join("\n"));
+    writeFileSync(operationalEnv, [
+      `GALERINA_SIGNING_KEY_ID=${operationalId}`,
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      `GALERINA_SIGNING_PRIVATE_KEY_B64=${Buffer.from(operationalPrivatePem).toString("base64")}`,
+      `GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=${Buffer.from(operationalMl.secretKey).toString("base64")}`,
+      "",
+    ].join("\n"));
+    writeFileSync(
+      rootPublic,
+      root.publicKey.export({ type: "spki", format: "pem" }),
+    );
+
+    const exported = run([
+      "export-public",
+      "--operational-key-id", operationalId,
+      "--ed25519-out", operationalEdPublic,
+      "--mldsa65-out", operationalMlPublic,
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: operationalEnv,
+    });
+    assert.equal(exported.status, 0, exported.stdout + exported.stderr);
+
+    const drafted = run([
+      "draft",
+      "--root-key-id", rootId,
+      "--operational-key-id", operationalId,
+      "--ed25519-pubkey", operationalEdPublic,
+      "--mldsa65-pubkey", operationalMlPublic,
+      "--serial", "1",
+      "--issued-at", "2026-07-30T10:00:00.000Z",
+      "--not-before", "2026-07-30T10:00:00.000Z",
+      "--not-after", "2027-07-30T10:00:00.000Z",
+      "--out", draft,
+    ]);
+    assert.equal(drafted.status, 0, drafted.stdout + drafted.stderr);
+
+    const rootSigned = run([
+      "sign",
+      "--in", draft,
+      "--out", signed,
+      "--root-key-id", rootId,
+    ], {
+      ...process.env,
+      GALERINA_ROOT_SIGNING_ENV_PATH: rootEnv,
+    });
+    assert.equal(rootSigned.status, 0, rootSigned.stdout + rootSigned.stderr);
+
+    const verified = run([
+      "verify",
+      "--in", signed,
+      "--root-pubkey", rootPublic,
+      "--root-key-id", rootId,
+      "--at", "2026-08-01T00:00:00.000Z",
+      "--min-serial", "0",
+    ]);
+    assert.equal(verified.status, 0, verified.stdout + verified.stderr);
+    const artifact = JSON.parse(readFileSync(signed, "utf8"));
+    assert.equal(artifact.rootKeyId, rootId);
+    assert.equal(artifact.operational.keyId, operationalId);
+    assert.deepEqual(artifact.roles, [
+      "package-manifest.sign",
+      "registry-index.sign",
+    ]);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("root signing refuses a revoked delegated key before reading root private material", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-revoked-"));
+  try {
+    const draft = join(temp, "revoked-operational-draft.json");
+    const output = join(temp, "must-not-exist.json");
+    writeFileSync(draft, JSON.stringify({
+      schema: "galerina-registry-delegation/v1",
+      registry: "https://registry.galerina.dev",
+      serial: 1,
+      issuedAt: "2026-07-30T10:00:00.000Z",
+      notBefore: "2026-07-30T10:00:00.000Z",
+      notAfter: "2027-07-30T10:00:00.000Z",
+      rootKeyId: "disposable-root",
+      operational: {
+        keyId: "8eecf4187ebc9341",
+        algorithm: "Ed25519+ML-DSA-65",
+        ed25519PublicKeySha256: "a".repeat(64),
+        mlDsa65PublicKeySha256: "b".repeat(64),
+      },
+      roles: ["package-manifest.sign", "registry-index.sign"],
+    }));
+    const result = run([
+      "sign",
+      "--in", draft,
+      "--out", output,
+      "--root-key-id", "disposable-root",
+    ], {
+      ...process.env,
+      GALERINA_ROOT_SIGNING_ENV_PATH: join(temp, "missing-root-private.env"),
+    });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /keyId '8eecf4187ebc9341' is revoked/);
+    assert.doesNotMatch(result.stderr, /ENOENT/);
+    assert.equal(existsSync(output), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});

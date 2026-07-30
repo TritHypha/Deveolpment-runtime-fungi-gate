@@ -1,16 +1,51 @@
 # Galerina offline registry-index signing walkthrough
 
-**Status on 2026-07-29: NOT READY FOR THE OWNER SIGNING ACT.**
+**Status on 2026-07-30: NOT READY FOR THE OWNER SIGNING ACT.**
 
-The cryptographic implementation and disposable-key dry run are green. The
-live registry is not signable because its two entries are unreviewed,
-content-less stubs. A separate operational registry authority and its
-root-authorized delegation record also do not yet exist. Do not substitute the
-cold trust root for routine registry signing merely to remove that blocker.
+The root-to-operational delegation implementation and disposable-key dry run
+are green. The live registry is still not signable because its two entries are
+unreviewed, content-less stubs. The real operational public bundle and
+root-signed delegation record do not yet exist in the public repository. Do
+not substitute the cold trust root for routine registry signing merely to
+remove that blocker.
 
 This procedure is for the owner/trust custodian. An automated agent may build
 and test the tooling, but must never read, copy, source, print, or use private
 key values.
+
+## 0. Exact keys — no substitutions
+
+These identifiers and filenames are the owner-recorded metadata. This document
+does not contain either private value.
+
+| Purpose | Exact key ID | Exact private filename | What it may sign |
+|---|---|---|---|
+| Offline registry trust root | `21415420b447e219` | `galerina-signing-key-21415420b447e219.env` | The operational registry delegation only |
+| Operational hybrid registry signer | `942d6b2726b0a991` | `.env.galerina-signing-942d6b2726b0a991` | Reviewed package manifests and the registry index |
+
+The tracked public verifier for the root is
+`governance/signing-key-21415420b447e219.pub.pem`.
+
+The following files are **not** selected:
+
+- `galerina-signing-key-cd01346961d88e94.env` — superseded development key;
+- `.env.galerina-signing-0091172baff1b6b0` — oldest stale/disposable key.
+
+The ceremony tools compare the requested key ID with
+`GALERINA_SIGNING_KEY_ID` inside the private file and refuse a mismatch. A
+filename match alone is not authority.
+
+The signing chain is:
+
+```text
+21415420b447e219 (offline root)
+  └─ signs one time-bounded delegation for 942d6b2726b0a991
+       ├─ signs reviewed package manifests
+       └─ signs galerina-registry-index/v2
+```
+
+Never point `registry-index-cli.mjs` at the root file. Never use the
+operational file to sign its own delegation.
 
 ## 1. What is being signed
 
@@ -55,15 +90,17 @@ Primary references:
 
 | Gate | Current evidence | State |
 |---|---|---|
-| v2 hybrid app-kernel envelope | 127/127 package tests | ready |
+| v2 hybrid app-kernel envelope and authority chain | 145/145 app-kernel tests; 18/18 new focused authority/manifest tests | ready |
 | Hermetic signer/admission self-test | 20/20, real Ed25519 + ML-DSA-65 | ready |
+| Root-to-operational delegation decider | time, role, fingerprint, revocation and rollback checks | ready |
+| Authority ceremony CLI | 9/9 disposable-key checks | ready |
 | File-backed sign then public-key verify | disposable ceremony fixture | ready |
 | Missing/tampered/downgraded signature refusal | tested | ready |
 | Signed revocation-registry check before key use | tested, including known-revoked refusal | ready |
 | Live registry manifests | two `sha256:pending`, unsigned, `reviewed: false` stubs | **blocked** |
 | Reviewable package bytes | absent for both stubs | **blocked** |
-| Operational registry authority | not declared | **blocked** |
-| Root-signed operational delegation format and verifier | no implementation found | **blocked** |
+| Operational registry authority | exact key selected; public bundle not yet exported | **owner-blocked** |
+| Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
 
 The dry run proves the mechanism. It does not convert placeholder package
@@ -153,6 +190,77 @@ Confirm the public halves and authority records are the reviewed bytes. Record
 their SHA-256 digests in the offline ceremony log. The log contains public
 pins only.
 
+### 5.1 Exact authority-delegation procedure
+
+**Do not run this yet.** It is documented now so the owner knows exactly which
+file will be requested when the live-package gates become green.
+
+First use the operational file
+`.env.galerina-signing-942d6b2726b0a991` to export public material only:
+
+```powershell
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\.env.galerina-signing-942d6b2726b0a991"
+
+node scripts/registry-authority-cli.mjs export-public `
+  --operational-key-id 942d6b2726b0a991 `
+  --ed25519-out <offline-staging>\signing-key-942d6b2726b0a991.pub.pem `
+  --mldsa65-out <offline-staging>\signing-key-942d6b2726b0a991.mldsa.pub.b64
+
+Remove-Item Env:GALERINA_REGISTRY_SIGNING_ENV_PATH
+```
+
+Inspect and record the SHA-256 hashes of both public files. Then create the
+unsigned delegation draft. Serial `1` is correct only if no earlier accepted
+delegation exists; otherwise use a value strictly greater than the recorded
+serial floor.
+
+```powershell
+node scripts/registry-authority-cli.mjs draft `
+  --root-key-id 21415420b447e219 `
+  --operational-key-id 942d6b2726b0a991 `
+  --ed25519-pubkey <offline-staging>\signing-key-942d6b2726b0a991.pub.pem `
+  --mldsa65-pubkey <offline-staging>\signing-key-942d6b2726b0a991.mldsa.pub.b64 `
+  --serial <strictly-newer-positive-integer> `
+  --issued-at <canonical-utc-iso-with-milliseconds> `
+  --not-before <canonical-utc-iso-with-milliseconds> `
+  --not-after <canonical-utc-iso-with-milliseconds> `
+  --out <offline-staging>\registry-delegation-v1.unsigned.json
+```
+
+Review the draft. It must name only the roles `package-manifest.sign` and
+`registry-index.sign`. It must pin both public-key fingerprints.
+
+Only now mount the offline root file
+`galerina-signing-key-21415420b447e219.env`. The root signs the delegation and
+nothing else:
+
+```powershell
+$env:GALERINA_ROOT_SIGNING_ENV_PATH = "<offline-key-directory>\galerina-signing-key-21415420b447e219.env"
+
+node scripts/registry-authority-cli.mjs sign `
+  --in <offline-staging>\registry-delegation-v1.unsigned.json `
+  --out <offline-staging>\registry-delegation-v1.json `
+  --root-key-id 21415420b447e219
+
+Remove-Item Env:GALERINA_ROOT_SIGNING_ENV_PATH
+```
+
+Unmount the root material before restoring network access. Independently
+verify the public delegation against the tracked root verifier:
+
+```powershell
+node scripts/registry-authority-cli.mjs verify `
+  --in <offline-staging>\registry-delegation-v1.json `
+  --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
+  --root-key-id 21415420b447e219 `
+  --at <instant-inside-the-delegation-window> `
+  --min-serial <previous-accepted-serial>
+```
+
+Any ID mismatch, public-key fingerprint mismatch, invalid window, stale serial,
+revocation, tamper, missing role, or non-literal verifier success is a terminal
+refusal.
+
 ## 6. Signing act
 
 Do this only after every gate in section 4 is green and the project report says
@@ -164,8 +272,8 @@ does not print its values.
 
 ```powershell
 Set-Location <clean-galerina-checkout>
-$env:GALERINA_SIGNING_KEY_ID = "<reviewed-operational-registry-key-id>"
-$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<absolute-offline-private-env-path>"
+$env:GALERINA_SIGNING_KEY_ID = "942d6b2726b0a991"
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\.env.galerina-signing-942d6b2726b0a991"
 
 node scripts/registry-index-cli.mjs sign `
   --registry-dir packages-galerina/galerina-registry/packages `

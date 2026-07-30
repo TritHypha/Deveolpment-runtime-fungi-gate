@@ -16,6 +16,35 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Registry signing authority checkpoint - 2026-07-30
+
+- **Exact key selection:** offline root `21415420b447e219`
+  (`galerina-signing-key-21415420b447e219.env`) signs only the operational
+  delegation. Operational hybrid key `942d6b2726b0a991`
+  (`.env.galerina-signing-942d6b2726b0a991`) signs reviewed package manifests
+  and the registry index. Superseded/stale key files are explicitly excluded.
+- **Implemented:** `registry-authority.ts` provides a closed two-role,
+  time-bounded, revocation-aware and rollback-resistant root delegation. It
+  binds the Ed25519 and ML-DSA-65 public-key fingerprints. Delegated index
+  verification requires those exact public bytes and operational key ID.
+- **Implemented:** `registry-package-manifest.ts` defines the mandatory hybrid
+  package-manifest envelope. Missing, partial, downgraded, tampered,
+  non-boolean, unknown-key and signer-mismatch paths fail closed.
+- **Implemented:** `scripts/registry-authority-cli.mjs` provides public export,
+  unsigned draft, root signing and independent verification modes. It parses
+  private files as data, checks their internal key IDs and never prints private
+  fields. Disposable evidence is 9/9; focused decider evidence is 18/18.
+- **Owner walkthrough:** exact commands and custody boundaries are in
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`.
+- **Current:** integrate cryptographic manifest verification into the
+  file-backed registry builder, replace the live `@galerina/auth` placeholder
+  with a reviewed content-addressed artifact, and remove the nonexistent
+  `@galerina/healthcare` stub from the live signable tree without fabricating a
+  package.
+- **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Do not ask
+  the owner to mount either real private file until the live unsigned-index
+  build and all repository gates are green.
+
 ### Governed-memory and Wasmtime-oracle checkpoint - 2026-07-30
 
 - **Accepted direction:** Galerina manages memory for the developer; ordinary

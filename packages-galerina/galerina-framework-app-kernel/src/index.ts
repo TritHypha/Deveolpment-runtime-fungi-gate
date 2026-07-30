@@ -12,3 +12,9 @@ export * from "./fuse-loader.js";
 // Slice (Fuse B5a): the signed central registry index — a tamper-evident certified-package
 //   catalog the resolver consults before admission (verify → lookup → policy, fail-closed).
 export * from "./registry-index.js";
+// Offline root -> operational registry authority delegation. This binds both
+// operational public-key fingerprints and the only two admitted signing roles.
+export * from "./registry-authority.js";
+// Operational authority -> package manifest. Both signature components cover
+// source identity, powers, governance facts, and the delegated signer keyId.
+export * from "./registry-package-manifest.js";
