@@ -139,8 +139,7 @@ function loadTrustAnchor(rootDir) {
   return d.registrySigningRootKeyId;
 }
 
-export function assertRegistryTrustworthy(rootDir = ".") {
-  const data = loadRegistry(rootDir);
+function assertRegistryObjectTrustworthy(data, rootDir = ".") {
   if (data === null) return { present: false, signed: false, valid: false };
 
   const pin = loadTrustAnchor(rootDir); // throws if the anchor file is malformed
@@ -173,4 +172,54 @@ export function assertRegistryTrustworthy(rootDir = ".") {
     throw new Error(`revocation registry signature INVALID (tampered, or wrong key) — keyId ${keyId}`);
   }
   return { present: true, signed: true, valid: true, keyId, pinned: pin !== null && keyId === pin };
+}
+
+export function assertRegistryTrustworthy(rootDir = ".") {
+  return assertRegistryObjectTrustworthy(loadRegistry(rootDir), rootDir);
+}
+
+/**
+ * Read, validate and pin one immutable production revocation snapshot.
+ *
+ * The file is read exactly once; the same in-memory object is structurally
+ * checked and signature-verified, avoiding a verify-then-reread seam. Missing,
+ * unsigned, unpinned, malformed, duplicate or non-append-only input throws.
+ */
+export function loadTrustedRevocationSnapshot(rootDir = ".") {
+  const data = loadRegistry(rootDir);
+  const trust = assertRegistryObjectTrustworthy(data, rootDir);
+  if (
+    data === null
+    || trust.present !== true
+    || trust.signed !== true
+    || trust.valid !== true
+    || trust.pinned !== true
+    || data.schemaVersion !== 1
+    || data.appendOnly !== true
+  ) {
+    throw new Error("revocation registry is not a pinned, signed, append-only v1 snapshot");
+  }
+  const keyIds = [];
+  const seen = new Set();
+  for (const entry of data.revoked) {
+    if (
+      typeof entry !== "object"
+      || entry === null
+      || typeof entry.keyId !== "string"
+      || !/^[0-9a-f]{16}$/.test(entry.keyId)
+      || seen.has(entry.keyId)
+    ) {
+      throw new Error("revocation registry contains a malformed or duplicate keyId");
+    }
+    seen.add(entry.keyId);
+    keyIds.push(entry.keyId);
+  }
+  const frozenKeyIds = Object.freeze(keyIds);
+  return Object.freeze({
+    signerKeyId: trust.keyId,
+    keyIds: frozenKeyIds,
+    isRevoked(keyId) {
+      return typeof keyId === "string" && seen.has(keyId);
+    },
+  });
 }

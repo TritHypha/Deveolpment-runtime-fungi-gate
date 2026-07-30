@@ -181,25 +181,31 @@ least-authority custody provider.
 - [x] Write failing snapshot tests for missing epoch, unknown epoch,
   active/retiring verification, revoked epoch, rollback, key substitution and
   ambiguous two-key success.
-- [ ] Write failing orchestration tests using disposable keys for every phase,
+- [x] Write failing orchestration tests using disposable keys for every phase,
   crash/restart boundary, expired delegation, failed canary, failed drain,
   fallback and candidate revocation.
 - [x] Implement epoch-aware serialization without serializing private key
   material or accepting a caller-selected verifier.
-- [ ] Implement the custody and registry adapters. Triggers propose only;
+- [x] Implement the custody and registry decision adapters. Triggers propose only;
   Triple-Lock K3 gates decide; `UNKNOWN` exits without switching.
-- [ ] Prove automatic rotation with disposable keys, then rerun all Tower
+- [x] Prove automatic rotation with disposable keys, then rerun all Tower
   Citizen, Sentinel State/Egress and registry suites.
-- [ ] Update rotation architecture, TODO, roadmap and completion evidence;
+- [x] Update rotation architecture, TODO, roadmap and completion evidence;
   commit without performing a real owner ceremony.
 
-**State epoch checkpoint 2026-07-30:** Snapshot v2 binds `keyEpoch` and `keyId`
+**Automatic-control checkpoint 2026-07-30:** Snapshot v2 binds `keyEpoch` and `keyId`
 into the MAC. Tower's adapter verifies the MACed ring, permits active/retired
 symmetric epochs only, resolves exact custody bytes, and re-derives their
 domain-separated commitment. Missing, substituted, revoked, asymmetric,
 tampered or throwing inputs return no authority. Sentinel State 20/20 and
-Tower Citizen 483/483 pass. Automatic asymmetric registry rotation remains
-open below this checkpoint.
+Tower Citizen 490/490 and app-kernel 158/158 pass. The automatic controller
+requires a freshly authenticated checkpoint between every phase, verifies a
+root-admitted candidate and candidate-signed index, and advances the exact
+accepted delegation/index identity only after canary. The remaining Task-3
+deployment slice is a production custody/publisher implementation that
+re-signs all package manifests and crash-safely activates the complete
+candidate artifact set; disposable custody is evidence, not owner-key
+authorization.
 
 ### Task 4: Close Galerina beta v1 at a fresh fixed point
 

@@ -9,6 +9,7 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { createHmac } from "node:crypto";
 import {
   Verdict, GOV_3VL_DIAGNOSTIC,
   createKeyRing, verifyRing, activeEpoch, epochForVerification,
@@ -39,6 +40,18 @@ const vote = (signer, v = Verdict.ALLOW) => ({ signer, verdict: v });
 const twoVotes = [vote("owner"), vote("re-verifier")];
 const goodTransition = (head) => ({ fromEpoch: 1, toEpoch: 2, atTick: 300, prevChainHead: head, macOld: "m1", macNew: "m2" });
 
+function remac(epochs) {
+  const canonical = JSON.stringify(epochs.map((e) => [
+    e.epochId, e.keyId, e.keyKind, e.keyCommit, e.fileRef,
+    e.createdTick, e.retiredTick, e.status,
+  ]));
+  const headMac = createHmac("sha256", RING_KEY)
+    .update("galerina-key-ring-v1\n")
+    .update(canonical)
+    .digest("hex");
+  return { epochs, headMac };
+}
+
 // ── Step 1: the append-only ring ──────────────────────────────────────────────
 
 describe("key-ring — append-only, monotone, MAC'd head", () => {
@@ -62,6 +75,46 @@ describe("key-ring — append-only, monotone, MAC'd head", () => {
     const forged = { ...ring, epochs: [{ ...ring.epochs[0], keyCommit: COMMIT_3 }] };
     assert.equal(verifyRing(forged, RING_KEY), false);
   });
+  it("MAC-valid rings with unknown enum values or impossible ticks fail structural verification", () => {
+    const ring = createKeyRing(RING_KEY, genesis);
+    const epoch = ring.epochs[0];
+    const malformed = [
+      { ...epoch, keyKind: "mystery" },
+      { ...epoch, status: "enabled" },
+      { ...epoch, createdTick: -1 },
+      { ...epoch, retiredTick: 99 },
+      { ...epoch, keyId: 7 },
+      { ...epoch, fileRef: null },
+    ];
+    for (const candidate of malformed) {
+      assert.equal(verifyRing(remac([candidate]), RING_KEY), false);
+    }
+  });
+  it("MAC-valid ring refuses multiple staged candidates and backwards lifecycle time", () => {
+    const ring = createKeyRing(RING_KEY, genesis);
+    const epochs = [
+      { ...ring.epochs[0] },
+      {
+        epochId: 2, keyId: "candidate-2", keyKind: "asymmetric",
+        keyCommit: COMMIT_2, fileRef: "vault/e2.key",
+        createdTick: 200, retiredTick: null, status: "staged",
+      },
+      {
+        epochId: 3, keyId: "candidate-3", keyKind: "asymmetric",
+        keyCommit: COMMIT_3, fileRef: "vault/e3.key",
+        createdTick: 300, retiredTick: null, status: "staged",
+      },
+    ];
+    assert.equal(verifyRing(remac(epochs), RING_KEY), false);
+    assert.equal(verifyRing(remac([
+      { ...ring.epochs[0], status: "retired", retiredTick: 99 },
+      {
+        epochId: 2, keyId: "candidate-2", keyKind: "asymmetric",
+        keyCommit: COMMIT_2, fileRef: "vault/e2.key",
+        createdTick: 200, retiredTick: null, status: "active",
+      },
+    ]), RING_KEY), false);
+  });
   it("stage appends epoch 2 as staged; ring stays valid; original ring untouched", () => {
     const ring = createKeyRing(RING_KEY, genesis);
     const staged = stageEpoch(ring, RING_KEY, cand2);
@@ -69,6 +122,13 @@ describe("key-ring — append-only, monotone, MAC'd head", () => {
     assert.equal(staged.epochs[1].status, "staged");
     assert.equal(verifyRing(staged, RING_KEY), true);
     assert.equal(ring.epochs.length, 1); // append never overwrites
+  });
+  it("creation and transition ticks are non-negative, monotone integers", () => {
+    assert.throws(() => createKeyRing(RING_KEY, { ...genesis, createdTick: -1 }));
+    const ring = createKeyRing(RING_KEY, genesis);
+    assert.throws(() => stageEpoch(ring, RING_KEY, { ...cand2, createdTick: 99 }));
+    const staged = stageEpoch(ring, RING_KEY, cand2);
+    assert.throws(() => switchActive(staged, RING_KEY, 199));
   });
   it("key REUSE is rejected: same commit / same keyId / same fileRef each throw", () => {
     const ring = createKeyRing(RING_KEY, genesis);

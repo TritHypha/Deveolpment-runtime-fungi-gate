@@ -64,11 +64,21 @@ planning checkbox must never be used to imply that implementation exists.
   custody bytes and checks their domain-separated commitments. Unknown,
   revoked, substituted, asymmetric, weak, tampered and throwing paths refuse.
   Fresh complete evidence: Sentinel State **20/20**, Tower Citizen **483/483**.
-- **Current work:** complete the asymmetric operational-registry half of Task
-  3 with disposable keys: pre-authorized candidate delegation, trigger-only
-  scheduler, readiness/Triple-Lock/canary/drain/fallback orchestration, then
-  bind registry freshness floors to its authenticated epoch state. No real
-  owner key operation is performed by this work.
+- **Completed automatic-rotation control core:** a pre-authorized candidate,
+  trigger-only scheduler, readiness/Triple-Lock/switch/canary/drain/fallback
+  controller and private-retire seam now execute with disposable hybrid keys.
+  Every production phase requires a newly authenticated checkpoint. The state
+  binds both prior exclusive rollback floors and the exact accepted
+  delegation/index identity; that identity advances only after a clean
+  post-switch canary. The canonical loader independently requires those exact
+  artifacts, the active epoch, and the pinned signed revocation snapshot.
+  MAC-valid but structurally impossible rings now refuse. Fresh full evidence:
+  Tower Citizen **490/490**, app-kernel **158/158**, Sentinel State **20/20**
+  and Sentinel Egress **34/34**.
+- **Current work:** build the production activation adapter that re-signs all
+  admitted package manifests under the candidate, verifies the resulting
+  candidate index, and crash-safely publishes the complete artifact set
+  through least-authority custody. No real owner key operation is authorized.
 - **Current owner questions:** none. A future real operational rotation
   ceremony remains an owner custody act, but implementation and disposable-key
   verification proceed without it.
@@ -134,7 +144,9 @@ planning checkbox must never be used to imply that implementation exists.
   independently verified hybrid-signed auth manifest and an independently
   verified hybrid-signed one-entry index. Production registry signing is
   green. Automatic operational-key rotation integration remains a beta-v1
-  release gate. Two encrypted custody copies in separate physical locations
+  release gate. The automatic safety/control core is green; production
+  custody plus crash-safe atomic package/index activation remains red. Two
+  encrypted custody copies in separate physical locations
   were owner-confirmed as verified on 2026-07-30.
 - **SLIDE/retirement sequence:** independent SLIDE implementation starts after
   the Galerina beta-v1 release gate authorizes. Literal package `.ts` and npm
@@ -283,12 +295,14 @@ planning checkbox must never be used to imply that implementation exists.
   available through canary/drain, and failed verification falls back and
   revokes the candidate. The cold root remains an offline recovery and
   authorization ceremony.
-- **Rotation integration still open:** the Tower Citizen decision core and
-  Sentinel Egress epoch verification exist; StateSerializer epoch awareness,
-  real custody execution, registry operational-delegation integration, and
-  automatic package/index signer orchestration do not. The current ceremony is
-  the initial operational bootstrap and does not satisfy automatic rotation by
-  itself.
+- **Rotation integration checkpoint:** Tower Citizen decision and hybrid proof,
+  Sentinel Egress/State epoch verification, root-delegation candidate
+  admission, one-phase-at-a-time orchestration, authenticated restart,
+  candidate-index admission and exact accepted-artifact anti-rollback state
+  are built and disposable-key verified. Still open: production custody and
+  crash-safe atomic activation of the complete re-signed package-manifest plus
+  candidate-index set. The initial ceremony does not satisfy that deployment
+  adapter by itself.
 - **Completed:** cryptographic manifest/delegation verification is integrated
   into the file-backed registry builder. The false live auth and healthcare
   stubs are removed. The reviewed auth candidate remains non-authorizing

@@ -11,6 +11,7 @@ import { generateKeyPairSync } from "node:crypto";
 import {
   isKeyRevoked,
   loadRevokedKeyIds,
+  loadTrustedRevocationSnapshot,
   signRegistryObject,
   verifyRegistryObject,
 } from "../../governance/revocation-registry.mjs";
@@ -41,6 +42,15 @@ test("registry loads as a Set containing the revoked id", () => {
   const revoked = loadRevokedKeyIds(ROOT);
   assert.ok(revoked instanceof Set, "returns a Set");
   assert.ok(revoked.has("8eecf4187ebc9341"), "contains the compromised key");
+});
+
+test("production snapshot is pinned, signed, immutable, and read-once admitted", () => {
+  const snapshot = loadTrustedRevocationSnapshot(ROOT);
+  assert.equal(snapshot.signerKeyId, "21415420b447e219");
+  assert.equal(snapshot.isRevoked("8eecf4187ebc9341"), true);
+  assert.equal(snapshot.isRevoked("f3172a48372bfb23"), false);
+  assert.equal(Object.isFrozen(snapshot), true);
+  assert.equal(Object.isFrozen(snapshot.keyIds), true);
 });
 
 // ── Tamper-evidence (self-signature) ──────────────────────────────────────
@@ -119,4 +129,26 @@ test("v2: malformed trust-anchor.json → fail closed (does not silently drop pi
   writeFileSync(join(d, "governance", "revocations.json"),
     JSON.stringify({ schemaVersion: 1, revoked: [] }, null, 2));
   assert.throws(() => assertRegistryTrustworthy(d));
+});
+
+test("production snapshot rejects a signed registry with duplicate authority records", () => {
+  const { publicKey, privateKey } = ephemeralKey();
+  const d = pinnedRoot("rootkey");
+  writeFileSync(join(d, "governance", "signing-key-rootkey.pub.pem"), publicKey);
+  const signed = signReg({
+    schemaVersion: 1,
+    appendOnly: true,
+    revoked: [
+      { keyId: "8eecf4187ebc9341" },
+      { keyId: "8eecf4187ebc9341" },
+    ],
+  }, privateKey, "rootkey");
+  writeFileSync(
+    join(d, "governance", "revocations.json"),
+    JSON.stringify(signed, null, 2) + "\n",
+  );
+  assert.throws(
+    () => loadTrustedRevocationSnapshot(d),
+    /malformed or duplicate/,
+  );
 });

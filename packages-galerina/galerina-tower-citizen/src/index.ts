@@ -222,6 +222,28 @@ export type {
   TowerSnapshotKeyProvider,
 } from "./snapshot-key-provider.js";
 
+export {
+  buildRegistryRotationTransition,
+  createRegistryRotationContext,
+  registryRotationKeyCommit,
+  registryRotationPublicKeyFingerprints,
+  registryRotationTriggerVerdict,
+  isRestoredRegistryRotationState,
+  restoreRegistryRotationCheckpoint,
+  sealRegistryRotationCheckpoint,
+} from "./registry-key-rotation.js";
+export type {
+  RegistryRotationContextOptions,
+  RegistryRotationCustody,
+  RegistryRotationHybridSignature,
+  RegistryRotationPublicBundle,
+  RegistryRotationPublicKeyFingerprints,
+  RegistryRotationCheckpoint,
+  RegistryRotationRollbackFloors,
+  RegistryRotationState,
+  RegistryRotationTrigger,
+} from "./registry-key-rotation.js";
+
 // ── Plugin manifest (RD-0236 #10) — signed plugin-metadata + hash-vs-bytes verification at load ──
 export {
   canonicalPluginManifestString, pluginManifestHash, artifactBytesHash,

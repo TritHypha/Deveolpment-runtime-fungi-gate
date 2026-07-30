@@ -11,7 +11,13 @@ import {
   verifyRegistryIndexUnderDelegation,
   type RegistryAuthorityDelegation,
 } from "./registry-authority.js";
-import { createRegistryPublicVerifiers } from "@galerina/tower-citizen";
+import {
+  activeEpoch,
+  createRegistryPublicVerifiers,
+  isRestoredRegistryRotationState,
+  registryRotationKeyCommit,
+  type RegistryRotationState,
+} from "@galerina/tower-citizen";
 
 interface NodeStats {
   readonly size: number;
@@ -39,16 +45,25 @@ interface NodeCrypto {
   createPublicKey(pem: string): NodePublicKey;
 }
 
+interface NodeUrl {
+  fileURLToPath(url: URL): string;
+}
+
 const dynImport = (specifier: string): Promise<unknown> =>
   (Function("s", "return import(s)") as
     (value: string) => Promise<unknown>)(specifier);
 
-async function loadNode(): Promise<{ fs: NodeFs; crypto: NodeCrypto }> {
-  const [fs, crypto] = await Promise.all([
+async function loadNode(): Promise<{
+  fs: NodeFs;
+  crypto: NodeCrypto;
+  url: NodeUrl;
+}> {
+  const [fs, crypto, url] = await Promise.all([
     dynImport("node:fs") as Promise<NodeFs>,
     dynImport("node:crypto") as Promise<NodeCrypto>,
+    dynImport("node:url") as Promise<NodeUrl>,
   ]);
-  return { fs, crypto };
+  return { fs, crypto, url };
 }
 
 const MAX_INDEX_BYTES = 1_048_576;
@@ -79,6 +94,19 @@ export interface ProductionRegistryOptions {
   readonly minDelegationSerial: number;
   readonly minIndexIssuedAt: string;
   readonly isRevoked: (keyId: string) => boolean;
+  readonly expectedOperationalEpoch?: {
+    readonly keyId: string;
+    readonly keyCommit: string;
+  };
+  readonly expectedAcceptedArtifacts?: {
+    readonly delegationSerial: number;
+    readonly indexIssuedAt: string;
+  };
+}
+
+export interface RotationBoundProductionRegistryOptions {
+  readonly expectedRootKeyId: string;
+  readonly rotationState: RegistryRotationState;
 }
 
 export interface ProductionRegistryRuntime {
@@ -282,7 +310,9 @@ function deepFreeze(value: unknown): void {
 
 async function loadProductionRegistryFromRoot(
   repositoryRoot: URL,
-  options: ProductionRegistryOptions,
+  options: ProductionRegistryOptions & {
+    readonly useSignedIndexIssuedAt?: boolean;
+  },
 ): Promise<ProductionRegistryRuntime> {
   const { fs, crypto } = await loadNode();
   const governanceRoot = new URL("governance/", repositoryRoot);
@@ -363,6 +393,28 @@ async function loadProductionRegistryFromRoot(
     governanceRoot,
     indexKeyId,
   );
+  if (options.expectedOperationalEpoch !== undefined) {
+    const epoch = options.expectedOperationalEpoch;
+    let commit: string;
+    try {
+      commit = registryRotationKeyCommit({
+        keyId: indexKeyId,
+        ed25519PublicKeyPem: operationalFacts.ed25519PublicKeyPem,
+        mlDsa65PublicKey: operationalFacts.mlDsa65PublicKey,
+      });
+    } catch {
+      throw new RegistryRuntimeError(
+        ERR_REGISTRY_RUNTIME_AUTHORITY,
+        "Operational registry public bundle cannot be bound to its rotation epoch.",
+      );
+    }
+    if (epoch.keyId !== indexKeyId || epoch.keyCommit !== commit) {
+      throw new RegistryRuntimeError(
+        ERR_REGISTRY_RUNTIME_AUTHORITY,
+        "Operational registry authority does not match the authenticated active epoch.",
+      );
+    }
+  }
   const verifyRoot = createRegistryPublicVerifiers({
     role: "root",
     keyId: options.expectedRootKeyId,
@@ -380,7 +432,9 @@ async function loadProductionRegistryFromRoot(
     authority: {
       expectedRootKeyId: options.expectedRootKeyId,
       verifyRoot,
-      at: options.at,
+      at: options.useSignedIndexIssuedAt === true
+        ? index.issuedAt
+        : options.at,
       minSerial: options.minDelegationSerial,
       isRevoked: options.isRevoked,
     },
@@ -391,6 +445,20 @@ async function loadProductionRegistryFromRoot(
     verifyIndex,
     minIndexIssuedAt: options.minIndexIssuedAt,
   });
+  if (
+    options.expectedAcceptedArtifacts !== undefined
+    && (
+      delegation.serial
+        !== options.expectedAcceptedArtifacts.delegationSerial
+      || index.issuedAt
+        !== options.expectedAcceptedArtifacts.indexIssuedAt
+    )
+  ) {
+    throw new RegistryRuntimeError(
+      ERR_REGISTRY_RUNTIME_AUTHORITY,
+      "Canonical registry artifacts do not match the authenticated accepted artifact identity.",
+    );
+  }
   deepFreeze(index);
   deepFreeze(delegation);
 
@@ -418,7 +486,11 @@ async function loadProductionRegistryFromRoot(
   });
 }
 
-export async function loadProductionRegistry(
+/**
+ * Bootstrap/recovery entry for constructing the first authenticated rotation
+ * checkpoint. Normal production callers must use loadProductionRegistry.
+ */
+export async function loadRegistryForBootstrap(
   options: ProductionRegistryOptions,
 ): Promise<ProductionRegistryRuntime> {
   return loadProductionRegistryFromRoot(
@@ -426,3 +498,73 @@ export async function loadProductionRegistry(
     options,
   );
 }
+
+/**
+ * Preferred production entry: freshness floors and active operational identity
+ * come from a successfully authenticated rotation checkpoint, not loose caller
+ * scalars. Delegation time is checked against the hybrid-signed index issuance
+ * instant; revocation is read once from the pinned, signed canonical register.
+ */
+export async function loadProductionRegistry(
+  options: RotationBoundProductionRegistryOptions,
+): Promise<ProductionRegistryRuntime> {
+  if (!isRestoredRegistryRotationState(options.rotationState)) {
+    throw new RegistryRuntimeError(
+      ERR_REGISTRY_RUNTIME_AUTHORITY,
+      "Production registry requires an authenticated restored rotation state.",
+    );
+  }
+  const epoch = activeEpoch(options.rotationState.process.ring);
+  if (epoch === null || epoch.keyKind !== "asymmetric") {
+    throw new RegistryRuntimeError(
+      ERR_REGISTRY_RUNTIME_AUTHORITY,
+      "Authenticated rotation state has no active asymmetric operational epoch.",
+    );
+  }
+  const repositoryRoot = new URL("../../../", import.meta.url);
+  const { url } = await loadNode();
+  let revocations: {
+    readonly isRevoked: (keyId: string) => boolean;
+  };
+  try {
+    const moduleUrl = new URL(
+      "governance/revocation-registry.mjs",
+      repositoryRoot,
+    );
+    const module = await dynImport(moduleUrl.href) as {
+      loadTrustedRevocationSnapshot(rootDir: string): {
+        readonly isRevoked: (keyId: string) => boolean;
+      };
+    };
+    revocations = module.loadTrustedRevocationSnapshot(
+      url.fileURLToPath(repositoryRoot),
+    );
+  } catch {
+    throw new RegistryRuntimeError(
+      ERR_REGISTRY_RUNTIME_AUTHORITY,
+      "Pinned production revocation authority is unavailable or invalid.",
+    );
+  }
+  return loadProductionRegistryFromRoot(repositoryRoot, {
+    expectedRootKeyId: options.expectedRootKeyId,
+    at: "",
+    minDelegationSerial:
+      options.rotationState.delegationSerialFloor,
+    minIndexIssuedAt: options.rotationState.indexIssuedAtFloor,
+    isRevoked: revocations.isRevoked,
+    useSignedIndexIssuedAt: true,
+    expectedOperationalEpoch: {
+      keyId: epoch.keyId,
+      keyCommit: epoch.keyCommit,
+    },
+    expectedAcceptedArtifacts: {
+      delegationSerial:
+        options.rotationState.acceptedDelegationSerial,
+      indexIssuedAt:
+        options.rotationState.acceptedIndexIssuedAt,
+    },
+  });
+}
+
+export const loadProductionRegistryFromRotationState =
+  loadProductionRegistry;

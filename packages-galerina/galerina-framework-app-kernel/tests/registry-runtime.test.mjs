@@ -1,10 +1,75 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 
-import { loadProductionRegistry } from "../dist/registry-runtime.js";
+import {
+  loadRegistryForBootstrap,
+  loadProductionRegistry,
+  loadProductionRegistryFromRotationState,
+} from "../dist/registry-runtime.js";
+import {
+  beginRotation,
+  createKeyRing,
+  registryRotationKeyCommit,
+  restoreRegistryRotationCheckpoint,
+  sealRegistryRotationCheckpoint,
+} from "../../galerina-tower-citizen/dist/index.js";
 
 const ROOT_KEY_ID = "21415420b447e219";
 const OPERATIONAL_KEY_ID = "f3172a48372bfb23";
+const RING_KEY = new Uint8Array(32).fill(0x73);
+
+function restoredProductionState(
+  keyId = OPERATIONAL_KEY_ID,
+  acceptedDelegationSerial = 1,
+  acceptedIndexIssuedAt = "2026-07-30T16:33:10.307Z",
+) {
+  const governanceRoot = new URL("../../../governance/", import.meta.url);
+  const ed25519PublicKeyPem = readFileSync(
+    new URL(`signing-key-${OPERATIONAL_KEY_ID}.pub.pem`, governanceRoot),
+    "utf8",
+  );
+  const mlDsa65PublicKey = Buffer.from(
+    readFileSync(
+      new URL(
+        `signing-key-${OPERATIONAL_KEY_ID}.mldsa.pub.b64`,
+        governanceRoot,
+      ),
+      "utf8",
+    ).trim(),
+    "base64",
+  );
+  const keyCommit = registryRotationKeyCommit({
+    keyId: OPERATIONAL_KEY_ID,
+    ed25519PublicKeyPem,
+    mlDsa65PublicKey,
+  });
+  const ring = createKeyRing(RING_KEY, {
+    keyId,
+    keyKind: "asymmetric",
+    keyCommit,
+    fileRef: `custody://registry/${keyId}`,
+    createdTick: 1,
+  });
+  const checkpoint = sealRegistryRotationCheckpoint({
+    process: beginRotation(ring),
+    delegationSerialFloor: 0,
+    indexIssuedAtFloor: "1970-01-01T00:00:00.000Z",
+    acceptedDelegationSerial,
+    acceptedIndexIssuedAt,
+  }, RING_KEY);
+  return restoreRegistryRotationCheckpoint(
+    checkpoint,
+    RING_KEY,
+    {
+      minEpochId: 1,
+      minDelegationSerialFloor: 0,
+      minIndexIssuedAtFloor: "1970-01-01T00:00:00.000Z",
+      minAcceptedDelegationSerial: acceptedDelegationSerial,
+      minAcceptedIndexIssuedAt: acceptedIndexIssuedAt,
+    },
+  );
+}
 
 function productionOptions(overrides = {}) {
   return {
@@ -19,7 +84,7 @@ function productionOptions(overrides = {}) {
 
 describe("production registry runtime", () => {
   it("loads the canonical signed index through its root delegation before admission", async () => {
-    const runtime = await loadProductionRegistry(productionOptions());
+    const runtime = await loadRegistryForBootstrap(productionOptions());
 
     assert.equal(runtime.rootKeyId, ROOT_KEY_ID);
     assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
@@ -67,7 +132,40 @@ describe("production registry runtime", () => {
     ];
 
     for (const options of denied) {
-      await assert.rejects(loadProductionRegistry(options));
+      await assert.rejects(loadRegistryForBootstrap(options));
     }
+  });
+
+  it("binds production loading to authenticated rotation floors and active identity", async () => {
+    const state = restoredProductionState();
+    const runtime = await loadProductionRegistry({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: state,
+    });
+    assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
+
+    await assert.rejects(loadProductionRegistryFromRotationState({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: { ...state },
+    }));
+    await assert.rejects(loadProductionRegistryFromRotationState({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: restoredProductionState("eeeeeeeeeeeeeeee"),
+    }));
+    await assert.rejects(loadProductionRegistryFromRotationState({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: restoredProductionState(
+        OPERATIONAL_KEY_ID,
+        2,
+      ),
+    }));
+    await assert.rejects(loadProductionRegistryFromRotationState({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: restoredProductionState(
+        OPERATIONAL_KEY_ID,
+        1,
+        "2026-07-30T16:34:00.000Z",
+      ),
+    }));
   });
 });

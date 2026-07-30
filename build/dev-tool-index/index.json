@@ -502,7 +502,7 @@
       "tests": 476,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 36,
+      "files": 37,
       "deps": [
         "@galerina/inference-bridge-contract",
         "@galerina/substrate-math"
@@ -554,7 +554,7 @@
       "tests": 149,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 16,
+      "files": 18,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"

@@ -125,6 +125,10 @@ function isWellFormedCommit(commit: string): boolean {
   return /[1-9a-f]/i.test(commit); // not all zeros
 }
 
+function isNonNegativeSafeInteger(value: unknown): value is number {
+  return Number.isSafeInteger(value) && (value as number) >= 0;
+}
+
 /**
  * Create a ring with its genesis epoch (epochId 1, active). Hard-errors on a
  * weak ring-MAC key or malformed genesis — a ring that starts broken must not exist.
@@ -142,6 +146,12 @@ export function createKeyRing(
   if (genesis.keyId === "" || genesis.fileRef === "") {
     throw new Error("createKeyRing: genesis keyId/fileRef must be non-empty — fail-closed");
   }
+  if (
+    (genesis.keyKind !== "symmetric" && genesis.keyKind !== "asymmetric")
+    || !isNonNegativeSafeInteger(genesis.createdTick)
+  ) {
+    throw new Error("createKeyRing: genesis kind/tick is malformed — fail-closed");
+  }
   const epochs: KeyEpoch[] = [{
     epochId: 1, keyId: genesis.keyId, keyKind: genesis.keyKind, keyCommit: genesis.keyCommit,
     fileRef: genesis.fileRef, createdTick: genesis.createdTick, retiredTick: null, status: "active",
@@ -156,21 +166,49 @@ export function createKeyRing(
  */
 export function verifyRing(ring: KeyRing, ringMacKey: Uint8Array): boolean {
   if (isWeakRingKey(ringMacKey)) return false;
-  if (!ring || !Array.isArray(ring.epochs) || ring.epochs.length === 0) return false;
-  if (!macEqual(ring.headMac, ringMac(ringMacKey, ring.epochs))) return false;
+  if (
+    !ring
+    || !Array.isArray(ring.epochs)
+    || ring.epochs.length === 0
+    || typeof ring.headMac !== "string"
+    || !/^[0-9a-f]{64}$/.test(ring.headMac)
+  ) return false;
   const seenId = new Set<string>(); const seenCommit = new Set<string>(); const seenFile = new Set<string>();
-  let active = 0;
+  let active = 0; let staged = 0; let priorCreatedTick = -1;
   for (let i = 0; i < ring.epochs.length; i++) {
     const e = ring.epochs[i]!;
+    if (typeof e !== "object" || e === null) return false;
     if (e.epochId !== i + 1) return false;                       // monotone, gap-free, rollback-proof
+    if (
+      (e.keyKind !== "symmetric" && e.keyKind !== "asymmetric")
+      || !["staged", "active", "retired", "revoked"].includes(e.status)
+      || typeof e.keyId !== "string"
+      || typeof e.fileRef !== "string"
+      || !isNonNegativeSafeInteger(e.createdTick)
+      || e.createdTick <= priorCreatedTick
+    ) return false;
     if (!isWellFormedCommit(e.keyCommit)) return false;
     if (e.keyId === "" || e.fileRef === "") return false;
     if (seenId.has(e.keyId) || seenCommit.has(e.keyCommit.toLowerCase()) || seenFile.has(e.fileRef)) return false;
     seenId.add(e.keyId); seenCommit.add(e.keyCommit.toLowerCase()); seenFile.add(e.fileRef);
+    priorCreatedTick = e.createdTick;
     if (e.status === "active") active += 1;
-    if ((e.status === "retired" || e.status === "revoked") && e.retiredTick === null) return false;
+    if (e.status === "staged") staged += 1;
+    if (e.status === "retired" || e.status === "revoked") {
+      if (
+        !isNonNegativeSafeInteger(e.retiredTick)
+        || e.retiredTick < e.createdTick
+      ) return false;
+    } else if (e.retiredTick !== null) {
+      return false;
+    }
   }
-  return active === 1;
+  if (active !== 1 || staged > 1) return false;
+  try {
+    return macEqual(ring.headMac, ringMac(ringMacKey, ring.epochs));
+  } catch {
+    return false;
+  }
 }
 
 /** The single active (signing) epoch, or null on a malformed ring. */
@@ -208,6 +246,14 @@ export function stageEpoch(
   }
   if (!isWellFormedCommit(candidate.keyCommit)) throw new Error("stageEpoch: candidate keyCommit malformed — fail-closed");
   if (candidate.keyId === "" || candidate.fileRef === "") throw new Error("stageEpoch: candidate keyId/fileRef must be non-empty");
+  const last = ring.epochs[ring.epochs.length - 1]!;
+  if (
+    (candidate.keyKind !== "symmetric" && candidate.keyKind !== "asymmetric")
+    || !isNonNegativeSafeInteger(candidate.createdTick)
+    || candidate.createdTick <= last.createdTick
+  ) {
+    throw new Error("stageEpoch: candidate kind/tick is malformed or non-monotone — fail-closed");
+  }
   for (const e of ring.epochs) {
     if (e.keyId === candidate.keyId) throw new Error("stageEpoch: keyId reuse — fail-closed (no rollback to an old key)");
     if (e.keyCommit.toLowerCase() === candidate.keyCommit.toLowerCase()) {
@@ -215,7 +261,6 @@ export function stageEpoch(
     }
     if (e.fileRef === candidate.fileRef) throw new Error("stageEpoch: fileRef collision — old and new keys must live in SEPARATE files");
   }
-  const last = ring.epochs[ring.epochs.length - 1]!;
   const epochs = [...ring.epochs, {
     epochId: last.epochId + 1, keyId: candidate.keyId, keyKind: candidate.keyKind,
     keyCommit: candidate.keyCommit, fileRef: candidate.fileRef, createdTick: candidate.createdTick,
@@ -234,6 +279,11 @@ export function switchActive(ring: KeyRing, ringMacKey: Uint8Array, atTick: numb
   const staged = ring.epochs.filter((e) => e.status === "staged");
   const act = activeEpoch(ring);
   if (staged.length !== 1 || !act) throw new Error("switchActive: need exactly one staged candidate and one active epoch");
+  if (
+    !isNonNegativeSafeInteger(atTick)
+    || atTick < act.createdTick
+    || atTick < staged[0]!.createdTick
+  ) throw new Error("switchActive: transition tick is malformed or before an admitted epoch");
   const epochs = ring.epochs.map((e): KeyEpoch => {
     if (e.status === "active") return { ...e, status: "retired", retiredTick: atTick };
     if (e.status === "staged") return { ...e, status: "active" };
@@ -254,6 +304,11 @@ export function fallbackSwitch(ring: KeyRing, ringMacKey: Uint8Array, atTick: nu
   if (!act) throw new Error("fallbackSwitch: no active epoch");
   const prev = ring.epochs.find((e) => e.epochId === act.epochId - 1 && e.status === "retired");
   if (!prev) throw new Error("fallbackSwitch: no retired predecessor to fall back to");
+  if (
+    !isNonNegativeSafeInteger(atTick)
+    || atTick < act.createdTick
+    || atTick < (prev.retiredTick ?? 0)
+  ) throw new Error("fallbackSwitch: transition tick is malformed or backwards");
   const epochs = ring.epochs.map((e): KeyEpoch => {
     if (e.epochId === act.epochId) return { ...e, status: "revoked", retiredTick: atTick };
     if (e.epochId === prev.epochId) return { ...e, status: "active", retiredTick: null };
@@ -268,6 +323,11 @@ export function markRevoked(ring: KeyRing, ringMacKey: Uint8Array, epochId: numb
   const e = ring.epochs.find((x) => x.epochId === epochId);
   if (!e) throw new Error("markRevoked: unknown epoch — fail-closed");
   if (e.status !== "retired") throw new Error("markRevoked: only a retired epoch can be revoked (forward-only)");
+  if (
+    !isNonNegativeSafeInteger(atTick)
+    || atTick < e.createdTick
+    || atTick < (e.retiredTick ?? 0)
+  ) throw new Error("markRevoked: transition tick is malformed or backwards");
   const epochs = ring.epochs.map((x): KeyEpoch =>
     x.epochId === epochId ? { ...x, status: "revoked", retiredTick: x.retiredTick ?? atTick } : x,
   );

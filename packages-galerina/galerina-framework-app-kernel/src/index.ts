@@ -22,3 +22,5 @@ export * from "./registry-package-manifest.js";
 // mechanics and accepted epoch floors, never an index object or filesystem
 // path; the runtime opens and verifies the canonical public artifacts itself.
 export * from "./registry-runtime.js";
+export * from "./registry-rotation-authority.js";
+export * from "./registry-rotation-controller.js";
