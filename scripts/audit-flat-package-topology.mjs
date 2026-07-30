@@ -13,6 +13,7 @@ import {
   readFileSync,
   readdirSync,
 } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -220,8 +221,30 @@ async function main() {
   const postSlide = process.argv.includes("--post-slide");
   const selfTest = process.argv.includes("--self-test");
   if (selfTest) {
-    const result = await import("./tests/audit-flat-package-topology.test.mjs");
-    void result;
+    const testPath = join(
+      ROOT,
+      "scripts",
+      "tests",
+      "audit-flat-package-topology.test.mjs",
+    );
+    const child = spawnSync(process.execPath, ["--test", testPath], {
+      cwd: ROOT,
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    process.stdout.write(child.stdout || "");
+    process.stderr.write(child.stderr || "");
+    if (child.error !== undefined) {
+      console.error(`flat-package topology self-test could not start: ${child.error.message}`);
+      process.exitCode = 2;
+    } else if (child.signal !== null) {
+      console.error(`flat-package topology self-test ended by signal ${child.signal}`);
+      process.exitCode = 2;
+    } else if (child.status !== 0) {
+      process.exitCode = typeof child.status === "number" ? child.status : 2;
+    } else {
+      console.log("flat-package topology self-test: PASS");
+    }
     return;
   }
 

@@ -39,12 +39,12 @@ test("component health counts the benchmark package's governed test/ surface", (
     (row) => row.item === "Execution-cutover (RD-0361)",
   );
   assert.ok(governed);
-  assert.match(governed.detail, /20 differential/);
-  assert.match(governed.detail, /9 authoritative/);
+  assert.match(governed.detail, /0 differential/);
+  assert.match(governed.detail, /29 authoritative/);
   const compiler = tracking.rows.find(
     (row) => row.item === "Compiler authority (RD-0528)",
   );
   assert.ok(compiler);
-  assert.match(compiler.detail, /2 differential/);
-  assert.match(compiler.detail, /5 authoritative/);
+  assert.match(compiler.detail, /0 differential/);
+  assert.match(compiler.detail, /7 authoritative/);
 });

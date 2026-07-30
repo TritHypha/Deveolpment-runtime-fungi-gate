@@ -542,6 +542,13 @@ Run every direct graph, audit, generator, and package test required by the
 tooling contract, fix all reproduced issues, and repeat from the first command
 after the last fix.
 
+**Checkpoint 2026-07-30:** this step is in progress. The root aggregate is
+97/97 packages and 8,587 tests; the five-lane `galerina-test` harness is green;
+the scripts battery is 208/208 after fixing its two reproduced verifier
+defects; and all 80 audit/lint gates have executable non-vacuity evidence.
+Every graph lane is green except the deliberately refused memory graph, which
+still lacks the exact external-corpus write authority required by Step 1.
+
 - [ ] **Step 3: Publish no cross-runtime benchmark**
 
 Preserve historical Galerina benchmark evidence only. The owner explicitly

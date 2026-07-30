@@ -175,6 +175,21 @@ planning checkbox must never be used to imply that implementation exists.
   graphs/tests/audits/generators close. The live
   colour-coded sequence and the binding flat package topology are recorded in
   `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+- **Task 9 terminal checkpoint (2026-07-30):** graph generation and check mode
+  are green for project, integrity, Knowledge Base, package, and dev-tool
+  indexes; the memory graph alone refuses because four candidate external
+  corpora exist and no write authority has been granted. The direct
+  RD-0160/0161, RD-0166/0167, RD-0168, and TypeScript-retirement graphs are
+  green. The complete root aggregate is **97/97 packages, 8,587 tests, zero
+  failures**. The unified `galerina-test all --json` harness independently
+  passes all five lanes: unit 8,587, e2e 4/4, conformance 10/10, fidelity 9/9,
+  and the exact SLIDE-adapter corpus 496/496. The independent scripts suite
+  initially exposed a stale authority-count assertion and an unsettled
+  top-level-await self-test; both root causes are fixed. Fresh evidence is
+  **208/208 scripts tests** and **80/80 audit/lint gates with executable
+  anti-neutering evidence**. Phase-close, exhaustive audits, rebuild,
+  percentage evidence, roadmap regeneration, and allowed historical
+  Galerina-only benchmark evidence remain in progress.
 - **Flat-package topology ratchet:** the new audit and 6/6 anti-neutering tests
   enforce unique canonical identities and reject new nested native packages.
   Current measured debt is 95 pre-SLIDE `node_modules` trees plus the one
