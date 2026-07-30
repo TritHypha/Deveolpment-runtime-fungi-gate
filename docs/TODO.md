@@ -57,15 +57,24 @@ planning checkbox must never be used to imply that implementation exists.
   as the strongest connective security map but remains non-authoritative.
 - **Independent review:** eight self-contained prompts are under
   `docs/research-prompts/sidecar-and-wasmtime/`.
+- **Owner-approved future compatibility engine (2026-07-30):** keep the
+  present beta execution and independent-oracle paths for now. After Galerina
+  beta and executable SLIDE prerequisites, rebuild
+  `galerina-core-runtime-wasm` in place as a narrowly admitted `.fungi`
+  decoder, validator, governed reference interpreter, capability linker, and
+  SLIDE lowering seam. This is explicitly not a general-purpose engine and
+  does not authorize removal of the current path.
 - **Current:** design and executable plan are recorded at
   `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
   and
   `docs/superpowers/plans/2026-07-30-governed-memory-and-wasmtime-oracle.md`.
+  The approved post-beta compatibility-engine plan is
+  `docs/superpowers/plans/2026-07-30-narrow-fungi-wasm-compatibility-engine.md`.
   Project/package/KB/code/dev-tool graphs and indexes have been regenerated.
   Next: update the active roadmap/completion records and run broad verification.
 - **Non-claims:** the encrypted persistent graph, complete SLIDE memory
-  verifier, native backend, and production runner are not implemented by this
-  beta-safe migration.
+  verifier, native backend, production runner, and narrow `.fungi` Wasm
+  compatibility engine are not implemented by this beta-safe migration.
 - **Broad close evidence:** the complete aggregate passes **98/98 packages,
   8,588 tests**; all fourteen declared generators reach a fixed point;
   graph-all passes **5/5**; strict phase-close passes **85/85**; exhaustive

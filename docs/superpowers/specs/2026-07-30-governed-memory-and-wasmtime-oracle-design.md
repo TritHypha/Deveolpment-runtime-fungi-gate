@@ -42,12 +42,10 @@ can still be stale or poisoned; and an authenticated index entry can still
 describe an unsafe object. The final access gate composes all applicable
 pillar verdicts through typed K3 and releases only exact `ALLOW`.
 
-Galerina may accurately claim a broader governed-memory contract than
-languages whose memory-safety guarantee does not also cover capabilities,
-provenance, encrypted custody, or fail-closed resource policy. It must not
-claim that Rust is memory-unsafe. Safe Rust provides strong spatial and
-temporal safety; `unsafe` and FFI retain explicit proof obligations, while
-authority and data-custody policy are separate concerns.
+Public claims describe only the Galerina contract and its measured evidence.
+They do not use another language, runtime, or product as the claim boundary.
+Technical dependency, conformance, and independent-oracle records may name the
+actual implementation used so that evidence remains reproducible.
 
 ## Current facts
 
@@ -294,7 +292,7 @@ On threat, the system denies reads and writes, wipes transient plaintext and
 keys, preserves only encrypted evidence, revokes the epoch, and requires clean
 reattestation. Cache or graph availability never justifies a fallback.
 
-## Decision 6: Wasmtime is a development oracle, not a production sidecar
+## Decision 6: retain the current compatibility path for beta
 
 `subprojects/dss-host` is migrated to the single flat package:
 
@@ -317,12 +315,98 @@ The words “sidecar TCB” and “production host” are removed from its activ
 contract. Historical reports remain historical but must point to this
 superseding decision.
 
-The package remains Rust because engine independence is the purpose of the
-oracle. That does not violate the `.fungi` product direction: it is a
-development-only external comparator, not an authoritative Galerina
-implementation. When SLIDE has an executable backend, its evidence is used in
-the same differential matrix. Wasmtime can be retired only if its independent
-compatibility value reaches zero and the recorded removal gate passes.
+The package remains an independently implemented development comparator for
+the beta. It is not an authoritative Galerina implementation and it is not
+removed merely because a replacement has been planned. When SLIDE has an
+executable backend, its evidence is added to the same differential matrix.
+The comparator can be retired only after the recorded removal gate passes.
+
+## Decision 7: build a narrowly admitted `.fungi` Wasm compatibility engine
+
+Owner approval on 2026-07-30 authorizes a future independent compatibility
+engine written in `.fungi`. It does **not** authorize cloning every feature of
+a general-purpose engine and it does not change the Galerina-beta sequence.
+
+The implementation evolves the existing single flat package:
+
+```text
+packages-galerina/galerina-core-runtime-wasm/
+```
+
+No second nested runtime package or dependency tree is created. During
+migration the current package remains operational. Its TypeScript/bootstrap
+implementation is removed only after the `.fungi` implementation satisfies
+the replacement gate.
+
+The admitted surface is a versioned closed profile derived from the modules
+Galerina actually emits:
+
+```text
+attested binary
+  -> bounded canonical decoder
+  -> galerina.wasm.profile.v1 structural and opcode admission
+  -> complete type/stack validator
+  -> capability/import admission
+  -> checked compatibility IR
+  -> governed reference interpreter
+  -> SLIDE lowering and execution
+```
+
+Every section, type, instruction, feature, import, export, limit, or encoding
+outside the frozen profile terminates with a registered refusal. Unknown does
+not mean ignored. Custom sections are rejected unless the profile names their
+exact schema, maximum size, and whether they are covered by attestation.
+
+The first executable implementation is a deterministic reference interpreter,
+not an optimizer. It establishes the semantic oracle for traps, integer and
+floating-point behavior, structured control flow, memory bounds, resource
+fuel, and host calls. SLIDE lowering is added only after the reference lane is
+green, and its result must remain differential-equivalent to the checked
+interpreter.
+
+The memory boundary uses the governed-memory contract:
+
+- values belong to a flow region unless explicitly transferred to the global
+  vault;
+- every normal return, terminal refusal, trap, cancellation, and resource
+  exhaustion path closes the region;
+- secret material is wiped before a region is released;
+- stale generation-tagged handles refuse;
+- imports receive only exact, lease-bound capabilities;
+- the engine exposes no ambient filesystem, process, network, database,
+  clock, randomness, device, or dynamic-code authority;
+- decoded strings, names, custom metadata, and graph/index material remain
+  bounded untrusted data and never become commands.
+
+The profile census, known-invalid emitter fixtures, fixed-record layout, and
+Decimal lowering must be resolved before `galerina.wasm.profile.v1` is frozen.
+The frozen profile is generated from a checked corpus, then independently
+audited for completeness and surplus surface.
+
+### Replacement gate
+
+The current compatibility execution path can be removed only when all of the
+following are true:
+
+1. Galerina beta-v1 acceptance is complete.
+2. SLIDE has an executable, independently tested backend.
+3. `galerina.wasm.profile.v1` is frozen from a fully valid admitted corpus.
+4. The `.fungi` decoder rejects malformed, non-canonical, oversized, unknown,
+   truncated, duplicate, and surplus inputs.
+5. Structural, type-stack, import, export, memory, and resource validation is
+   exhaustive for the admitted profile.
+6. The reference interpreter and SLIDE lane agree across positive, terminal,
+   hostile, mutation, fuzz, and platform corpora.
+7. Flow cleanup and vault-transfer evidence covers every exit and trap class.
+8. All Galerina graphs, tests, audits, generated builds, provenance gates, and
+   release evidence are green without the old execution path.
+9. Windows 10/11, macOS, Debian/Ubuntu, Fedora, and Mint evidence is current.
+10. A separately reviewed local commit removes the old path; no removal is
+    bundled into an unrelated migration.
+
+Until all ten conditions pass, the old path remains available in its existing
+bounded role. Planning a replacement is not evidence that replacement has
+occurred.
 
 ## Flat-package and dependency rules
 
@@ -344,6 +428,9 @@ compatibility value reaches zero and the recorded removal gate passes.
 | DSS/production-sidecar wording | Remove | Independent development oracle only |
 | Fuel, differential, reset, attestation tests | Keep and relabel | Oracle evidence |
 | Wasm as mandatory production bridge | Keep temporarily, later make optional | SLIDE admitted executor becomes primary after its gates |
+| Current platform-provided Wasm execution | Retain for beta | Replace only after the narrow `.fungi` engine passes the ten-part replacement gate |
+| `galerina-core-runtime-wasm` TypeScript/bootstrap implementation | Retain during migration | Rebuild inside the same flat package as admitted `.fungi`; remove old files only after parity and release evidence |
+| General-purpose Wasm feature surface | Do not adopt | Frozen `galerina.wasm.profile.v1`; every surplus feature refuses |
 | External plaintext `MEMORY-GRAPH.json` | Remove from active design | Ephemeral read-only beta tool; encrypted immutable SLIDE graph later |
 | Private memory corpus in `graph:all` | Remove | Repository-owned graphs only |
 | Manual/raw developer memory | Never introduce | Compiler/runtime-managed governed values |
@@ -368,7 +455,9 @@ The beta-safe migration is complete when:
     rerun.
 
 This acceptance does not claim that the post-SLIDE encrypted graph or complete
-governed-memory runtime is implemented.
+governed-memory runtime is implemented. It also does not claim that the narrow
+`.fungi` compatibility engine exists; that work is governed by Decision 7 and
+its separate implementation plan.
 
 ## Primary standards and implementation references
 
@@ -378,10 +467,10 @@ governed-memory runtime is implemented.
   <https://csrc.nist.gov/pubs/fips/203/final>
 - NIST FIPS 204, ML-DSA:
   <https://csrc.nist.gov/pubs/fips/204/final>
-- Rust ownership:
-  <https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html>
-- Rust safe/unsafe boundary:
-  <https://doc.rust-lang.org/nomicon/safe-unsafe-meaning.html>
+- WebAssembly core specification:
+  <https://webassembly.github.io/spec/core/>
+- WebAssembly validation algorithm:
+  <https://webassembly.github.io/spec/core/appendix/algorithm.html>
 - Current Galerina integration map:
   `../../../../SLIDE/docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`
 - Flat package contract:

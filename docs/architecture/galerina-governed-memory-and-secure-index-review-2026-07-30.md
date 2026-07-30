@@ -24,9 +24,9 @@ The honest current statement is:
 > source/runtime checks. The complete eight-pillar governed-memory guarantee is
 > a SLIDE integration target, not a shipped end-to-end proof.
 
-The intended future statement can be stronger than conventional
-memory-validity claims because it combines validity, authority, custody,
-resources, and provenance. It must not say that Rust is memory-unsafe.
+The intended future statement combines validity, authority, custody,
+resources, and provenance. It remains a Galerina evidence claim and does not
+use another product as its boundary.
 
 ## Why eight pillars
 
@@ -178,7 +178,7 @@ is not the persistent production index.
 
 ## Developer experience
 
-Ordinary `.fungi` should feel closer to Python than Zig/C in memory mechanics:
+Ordinary `.fungi` exposes managed memory mechanics:
 
 - create typed values;
 - pass or return them;
@@ -193,6 +193,33 @@ no general “trust me” mode.
 
 Privileged adapters are isolated packages with closed capabilities and
 independent tests. They do not make ordinary application code unsafe.
+
+## Narrow `.fungi` Wasm compatibility engine
+
+Owner approval on 2026-07-30 keeps the present beta path while authorizing a
+future replacement inside the existing flat
+`galerina-core-runtime-wasm` package. The replacement is not a
+general-purpose engine. It admits only a frozen profile derived from valid
+Galerina-emitted modules:
+
+```text
+attested bytes
+  -> bounded canonical decode
+  -> closed profile check
+  -> complete stack/type validation
+  -> exact capability linking
+  -> governed reference interpretation
+  -> SLIDE lowering
+```
+
+Only the checked representation may reach execution or SLIDE. Raw and merely
+decoded modules carry no authority. Unknown sections, instructions, imports,
+encodings, limits, or features terminate. The old path remains until the
+post-SLIDE replacement gate, hostile corpus, flow-cleanup evidence,
+cross-platform evidence, and complete Galerina close are green.
+
+The executable plan is
+`../superpowers/plans/2026-07-30-narrow-fungi-wasm-compatibility-engine.md`.
 
 ## Closed-network profile
 
@@ -222,29 +249,25 @@ second unsafe language.
 7. Build the encrypted immutable index and influence receipts.
 8. Bind optimized/final artifacts back to the verified plan.
 9. Add the isolated runner/broker and deterministic fault replay.
-10. Run second-frontend, cross-platform, differential, mutation, and benchmark
+10. Freeze `galerina.wasm.profile.v1`, build its `.fungi` reference engine,
+    and lower its checked representation to SLIDE.
+11. Run second-frontend, cross-platform, differential, mutation, and benchmark
     gates before changing the public claim.
 
 ## Claim gate
 
-Do not publish “Galerina is more memory-safe than Rust” until the complete
-eight-pillar conformance suite is executable across supported targets.
+Do not publish an unqualified memory-safety or security-superiority claim.
+Every public claim must name the Galerina property being measured, the profile
+and targets covered, and the current executable evidence.
 
 A defensible future form is:
 
 > Galerina combines memory validity with capability-bound access,
 > confidential custody, deterministic resource limits, and authenticated
-> provenance/index evidence. These are additional governed security
-> properties, not a claim that Safe Rust lacks memory safety.
+> provenance/index evidence under its published governed-memory profile.
 
 ## Primary references
 
-- Rust ownership:
-  <https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html>
-- Rust safe/unsafe boundary:
-  <https://doc.rust-lang.org/nomicon/safe-unsafe-meaning.html>
-- Rust undefined behavior reference:
-  <https://doc.rust-lang.org/reference/behavior-considered-undefined.html>
 - NIST SP 800-207, Zero Trust Architecture:
   <https://csrc.nist.gov/pubs/sp/800/207/final>
 - NIST FIPS 203, ML-KEM:
