@@ -200,6 +200,18 @@ export {
 } from "./capability-grant.js";
 export type { CapabilityGrant, SignedCapabilityGrant } from "./capability-grant.js";
 
+// Concrete public-only hybrid verification for the registry trust chain.
+// Callers provide public bytes and policy, never a callback that can invent
+// cryptographic truth.
+export {
+  createRegistryPublicVerifiers,
+} from "./registry-public-verifier.js";
+export type {
+  RegistryPublicVerifier,
+  RegistryPublicVerifierInput,
+  RegistryPublicVerifiers,
+} from "./registry-public-verifier.js";
+
 // ── Plugin manifest (RD-0236 #10) — signed plugin-metadata + hash-vs-bytes verification at load ──
 export {
   canonicalPluginManifestString, pluginManifestHash, artifactBytesHash,

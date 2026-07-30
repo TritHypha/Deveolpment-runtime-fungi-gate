@@ -18,3 +18,7 @@ export * from "./registry-authority.js";
 // Operational authority -> package manifest. Both signature components cover
 // source identity, powers, governance facts, and the delegated signer keyId.
 export * from "./registry-package-manifest.js";
+// Default production registry consumption. Callers provide pinned verifier
+// mechanics and accepted epoch floors, never an index object or filesystem
+// path; the runtime opens and verifies the canonical public artifacts itself.
+export * from "./registry-runtime.js";

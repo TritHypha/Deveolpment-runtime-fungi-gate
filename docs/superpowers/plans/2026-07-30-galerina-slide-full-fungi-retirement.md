@@ -120,24 +120,37 @@ retirement state.
   `packages-galerina/galerina-framework-app-kernel/src/index.ts`
 - Create:
   `packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs`
-- Modify: `packages-galerina/galerina-registry/package.fungi.json`
+- Create:
+  `packages-galerina/galerina-tower-citizen/src/registry-public-verifier.ts`
+- Create:
+  `packages-galerina/galerina-tower-citizen/tests/registry-public-verifier.test.mjs`
 
 **Produces:** the canonical signed `registry-index-v2.json` is the default
 runtime source, loaded by exact path and bytes, verified under the active
 root-signed operational delegation, freshness floor, hybrid public keys and
 revocation state before any package lookup.
 
-- [ ] Write failing tests for default signed-index consumption and refusal of
+- [x] Write failing tests for default signed-index consumption and refusal of
   missing, unsigned, stale, malformed, symlinked, substituted-key, downgraded,
-  rollback and payload-divergent artifacts.
-- [ ] Prove the tests fail because production currently requires caller
+  rollback and payload-divergent artifacts. Loader, flat-artifact, registry
+  ceremony and verifier suites jointly own these cases; no single permissive
+  fixture is treated as the proof.
+- [x] Prove the tests fail because production currently requires caller
   injection and `admitFromRegistry` has no production caller.
-- [ ] Implement the smallest read-only loader. It never searches parent paths,
+- [x] Implement the smallest read-only loader. It never searches parent paths,
   downloads, falls back to an unsigned index or treats a parse success as
-  admission.
-- [ ] Run app-kernel, registry, auth, package-border and registry-authority
+  admission. The cryptographic verifier is concrete Tower Citizen code; a
+  caller cannot inject a callback that invents signature truth.
+- [x] Run app-kernel, registry, auth, package-border and registry-authority
   suites plus mutation checks.
-- [ ] Record the default-consumption evidence and commit.
+- [x] Record the default-consumption evidence and commit.
+
+**Verified 2026-07-30:** Tower Citizen 480/480, app-kernel 151/151,
+registry 35/35, auth 59/59, Hardened Border 98/98, authority CLI 9/9 and
+registry-index CLI 20/20. The live root `21415420b447e219` delegation and
+operational `f3172a48372bfb23` index were verified from their public artifacts.
+Freshness time and rollback floors remain explicit policy inputs until Task 3
+binds them to authenticated epoch state.
 
 ### Task 3: Add epoch-aware state and automatic operational-key rotation
 
