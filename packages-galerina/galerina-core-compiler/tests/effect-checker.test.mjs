@@ -64,6 +64,44 @@ effects [database.write] {
   });
 });
 
+describe("Effect Checker - native member and invocation distinction", () => {
+  it("does not infer native.call from a Native-prefixed enum member", () => {
+    const { effectResults } = parseAndCheck(`
+enum NativeDiagnosticSeverity { Warning, Error }
+
+pure flow selectSeverity() -> NativeDiagnosticSeverity {
+  return NativeDiagnosticSeverity.Error
+}
+`);
+    assert.equal(
+      effectErrors(effectResults).length,
+      0,
+      "A static enum member read is data, not a native invocation",
+    );
+    assert.ok(
+      effectResults.every((result) => !result.observedEffects.includes("native.call")),
+      "Native-prefixed enum members must not observe native.call",
+    );
+  });
+
+  it("continues to infer native.call from an actual Native-prefixed invocation", () => {
+    const { effectResults } = parseAndCheck(`
+pure flow callNativeBridge() -> Void {
+  NativeBridge.invoke()
+  return
+}
+`);
+    assert.ok(
+      hasEffectDiag(effectResults, "FUNGI-EFFECT-003"),
+      "An actual Native-prefixed invocation must remain forbidden in a pure flow",
+    );
+    assert.ok(
+      effectResults.some((result) => result.observedEffects.includes("native.call")),
+      "An actual Native-prefixed invocation must observe native.call",
+    );
+  });
+});
+
 describe("Effect Checker - Clock.now registry parity", () => {
   it("recognizes Clock.now as clock.read in the authoritative effect pass", () => {
     const { effectResults } = parseAndCheck(`

@@ -584,16 +584,19 @@ const EFFECT_CALL_PATTERNS: ReadonlyMap<RegExp, string> = new Map([
   [/\w+Payments\.\w+/, "payment.charge"],
   // Desktop / host
   [/\bHost\.\w+/, "desktop.user.read"],
-  // Native / FFI
-  [/\bNative\w+\.\w+/, "native.call"],
 ]);
+
+// Native-prefixed static members are also used for enum variants and record data
+// (for example NativeDiagnosticSeverity.Error). Only an invocation may cross the
+// FFI boundary; a member read is not authority evidence.
+const NATIVE_CALL_PATTERN = /\bNative\w+\.\w+/;
 
 /**
  * Tracks the number of legacy regex patterns remaining in EFFECT_CALL_PATTERNS.
  * Used by tests to monitor migration progress toward STDLIB_CAPABILITY_MAP.
  * Target: 0 (all patterns migrated). Phase 20 goal.
  */
-export const LEGACY_EFFECT_CALL_PATTERNS_COUNT = EFFECT_CALL_PATTERNS.size;
+export const LEGACY_EFFECT_CALL_PATTERNS_COUNT = EFFECT_CALL_PATTERNS.size + 1;
 
 /**
  * Effects whose evidence is intentionally not a call-pattern observation.
@@ -633,13 +636,14 @@ const NON_CALL_OBSERVED_EFFECTS: ReadonlySet<string> = new Set([
  * registered operations such as Clock.now satisfy the stdlib pass while
  * remaining invisible to declared-effect reconciliation.
  */
-function inferEffectsForCallText(callText: string): readonly string[] {
+function inferEffectsForCallText(callText: string, isInvocation: boolean): readonly string[] {
   const registered = inferEffectsForOperation(callText);
   if (registered.length > 0) return registered;
 
   for (const [pattern, effect] of EFFECT_CALL_PATTERNS) {
     if (pattern.test(callText)) return [effect];
   }
+  if (isInvocation && NATIVE_CALL_PATTERN.test(callText)) return ["native.call"];
   return [];
 }
 
@@ -1443,7 +1447,7 @@ function inferEffectsFromNode(node: AstNode): Set<string> {
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, aliasMap)) {
         const callText = buildCallText(n, aliasMap);
-        for (const effect of inferEffectsForCallText(callText)) {
+        for (const effect of inferEffectsForCallText(callText, n.kind === "callExpr")) {
           effects.add(effect);
         }
       }
@@ -1473,7 +1477,7 @@ function inferEffectCallLocations(node: AstNode): Map<string, SourceLocation> {
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, aliasMap)) {
         const callText = buildCallText(n, aliasMap);
-        for (const effect of inferEffectsForCallText(callText)) {
+        for (const effect of inferEffectsForCallText(callText, n.kind === "callExpr")) {
           if (!locations.has(effect) && n.location !== undefined) {
             locations.set(effect, n.location);
           }
@@ -1521,7 +1525,7 @@ function collectFnHelperEffects(flowNode: AstNode): Map<string, SourceLocation |
     if (n.kind === "callExpr" || n.kind === "memberExpr") {
       if (!isShadowedStdlibReceiver(rootReceiverRaw(n), localBindings, noAliases)) {
         const callText = buildCallText(n);
-        for (const effect of inferEffectsForCallText(callText)) {
+        for (const effect of inferEffectsForCallText(callText, n.kind === "callExpr")) {
           if (!effects.has(effect)) {
             effects.set(effect, n.location);
           }
