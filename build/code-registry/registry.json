@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 737,
+  "total": 750,
   "counts": {
     "ref": 202,
     "inline": 175,
     "phantom": 113,
-    "live": 134,
+    "live": 147,
     "referenced": 100,
     "dead": 13
   },
@@ -947,6 +947,102 @@
       "docs": 0
     },
     {
+      "code": "ERR_REGISTRY_DELEGATION_BAD_SIGNATURE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 5,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_KEY_MISMATCH",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 7,
+      "tests": 7,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_MALFORMED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 4,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_NOT_ACTIVE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_REVOKED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_ROLE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_STALE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_DELEGATION_UNSIGNED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 3,
+      "docs": 0
+    },
+    {
       "code": "ERR_REGISTRY_DUPLICATE",
       "family": "ERR_*",
       "namespace": "ERR",
@@ -1040,6 +1136,66 @@
       "defs": 1,
       "emits": 1,
       "tests": 2,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_MANIFEST_BAD_SIGNATURE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 5,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_MANIFEST_KEY_MISMATCH",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_MANIFEST_MALFORMED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 1,
+      "tests": 3,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_MANIFEST_NO_KEY",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 2,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_MANIFEST_UNSIGNED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 2,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -7049,7 +7205,7 @@
       "defs": 1,
       "emits": 2,
       "tests": 14,
-      "docs": 2
+      "docs": 1
     },
     {
       "code": "FUNGI-PKG-003",
@@ -7081,7 +7237,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 10,
-      "docs": 3
+      "docs": 2
     },
     {
       "code": "FUNGI-PKG-005",

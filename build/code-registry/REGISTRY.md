@@ -14,7 +14,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 134 | emitted with an exported constant |
+| live | 147 | emitted with an exported constant |
 | inline | 175 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
@@ -424,7 +424,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
 | FUNGI-EFFECT-906 | ref | — | — |
 
-### ERR_* (108)
+### ERR_* (121)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -506,6 +506,14 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_PAYLOAD_TOO_LARGE | phantom | — | — |
 | ERR_PLAN_NOT_PREFLIGHTED | inline | — | — |
 | ERR_REGISTRY | ref | — | — |
+| ERR_REGISTRY_DELEGATION_BAD_SIGNATURE | live | — | — |
+| ERR_REGISTRY_DELEGATION_KEY_MISMATCH | live | — | — |
+| ERR_REGISTRY_DELEGATION_MALFORMED | live | — | — |
+| ERR_REGISTRY_DELEGATION_NOT_ACTIVE | live | — | — |
+| ERR_REGISTRY_DELEGATION_REVOKED | live | — | — |
+| ERR_REGISTRY_DELEGATION_ROLE | live | — | — |
+| ERR_REGISTRY_DELEGATION_STALE | live | — | — |
+| ERR_REGISTRY_DELEGATION_UNSIGNED | live | — | — |
 | ERR_REGISTRY_DUPLICATE | live | — | — |
 | ERR_REGISTRY_HASH_MISMATCH | live | — | — |
 | ERR_REGISTRY_INDEX_BAD_SIGNATURE | live | — | — |
@@ -514,6 +522,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_REGISTRY_INDEX_STALE | live | — | — |
 | ERR_REGISTRY_INDEX_UNSIGNED | live | — | — |
 | ERR_REGISTRY_KEYID_MISMATCH | live | — | — |
+| ERR_REGISTRY_MANIFEST_BAD_SIGNATURE | live | — | — |
+| ERR_REGISTRY_MANIFEST_KEY_MISMATCH | live | — | — |
+| ERR_REGISTRY_MANIFEST_MALFORMED | live | — | — |
+| ERR_REGISTRY_MANIFEST_NO_KEY | live | — | — |
+| ERR_REGISTRY_MANIFEST_UNSIGNED | live | — | — |
 | ERR_REGISTRY_PACKAGE_UNKNOWN | live | — | — |
 | ERR_REGISTRY_POLICY_DENIED | live | — | — |
 | ERR_REGISTRY_VERSION_UNKNOWN | live | — | — |

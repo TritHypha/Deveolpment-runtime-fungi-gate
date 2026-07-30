@@ -1,9 +1,9 @@
 # Coverage cross-check — dimension: codes (#218 / std #1 universal coverage)
 
-Index: code-index.json (737 codes) · Derived registry: build/code-registry (ALL codes, by construction) · Curated: galerina-governance-rules.md (79 FUNGI codes).
+Index: code-index.json (750 codes) · Derived registry: build/code-registry (ALL codes, by construction) · Curated: galerina-governance-rules.md (79 FUNGI codes).
 
 ## Universal coverage (anchor std #1)
-- 737/737 codes catalogued in the DERIVED registry by construction → NO ORPHANS ✓
+- 750/750 codes catalogued in the DERIVED registry by construction → NO ORPHANS ✓
 
 ## Coverage HOLES (actionable — exit code)
 - REGISTRY-PHANTOM (curated governance-rules.md lists a code absent from source — stale): 0

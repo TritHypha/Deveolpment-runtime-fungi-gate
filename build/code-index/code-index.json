@@ -17,7 +17,7 @@
       "ref packages-galerina/galerina-ext-bridge-cpp/src/addon-loader.ts:96",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:58",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:63",
-      "doc docs/TODO.md:2166"
+      "doc docs/TODO.md:2331"
     ]
   },
   {
@@ -39,7 +39,7 @@
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:53",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:68",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:74",
-      "doc docs/TODO.md:2165"
+      "doc docs/TODO.md:2330"
     ]
   },
   {
@@ -107,7 +107,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/compiled-policy.test.mjs:56",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:146",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:152",
-      "doc docs/TODO.md:2486"
+      "doc docs/TODO.md:2651"
     ]
   },
   {
@@ -322,7 +322,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:114",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:120",
-      "doc docs/TODO.md:2483"
+      "doc docs/TODO.md:2648"
     ]
   },
   {
@@ -544,8 +544,8 @@
       "emit packages-galerina/galerina-tower-citizen/src/hybrid-engine.ts:1085",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:53",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:113",
-      "doc docs/TODO.md:2079",
-      "doc docs/TODO.md:2453"
+      "doc docs/TODO.md:2244",
+      "doc docs/TODO.md:2618"
     ]
   },
   {
@@ -567,8 +567,8 @@
       "ref packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:52",
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:81",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:96",
-      "doc docs/TODO.md:2079",
-      "doc docs/TODO.md:2473"
+      "doc docs/TODO.md:2244",
+      "doc docs/TODO.md:2638"
     ]
   },
   {
@@ -1028,7 +1028,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/governance-hardening.test.mjs:38",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:136",
       "doc docs/reports/galerina-ground-up-security-architectural-audit-report.md:625",
-      "doc docs/TODO.md:2484"
+      "doc docs/TODO.md:2649"
     ]
   },
   {
@@ -1565,6 +1565,255 @@
     ]
   },
   {
+    "code": "ERR_REGISTRY_DELEGATION_BAD_SIGNATURE",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 11,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:27"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:401",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:413"
+    ],
+    "tests": 5,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:27",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:28",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:401",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:402",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:413",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:414",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:11",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:139",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:236",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:240",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:249"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_KEY_MISMATCH",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 23,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:29"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:316",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:337",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:407",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:466",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:475",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:508",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:520"
+    ],
+    "tests": 7,
+    "refs": 8,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:29",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:30",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:316",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:317",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:337",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:338",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:407",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:408",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:466",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:467",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:475",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:476",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:508",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:509",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:520",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:521",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:12",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:147",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:156",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:330",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:341",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:419",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:432"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_MALFORMED",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 7,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:31"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:123"
+    ],
+    "tests": 4,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:31",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:32",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:123",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:13",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:188",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:195",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:225"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_NOT_ACTIVE",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 7,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:33"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:360"
+    ],
+    "tests": 3,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:33",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:34",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:360",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:361",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:14",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:163",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:167"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_REVOKED",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 9,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:35"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:279",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:325"
+    ],
+    "tests": 3,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:35",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:36",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:279",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:280",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:325",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:326",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:15",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:177",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:477"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_ROLE",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 7,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:37"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:382"
+    ],
+    "tests": 3,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:37",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:38",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:382",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:383",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:16",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:199",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:455"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_STALE",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 7,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:39"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:371"
+    ],
+    "tests": 3,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:39",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:40",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:371",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:372",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:17",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:206",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:465"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_DELEGATION_UNSIGNED",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 9,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:25"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:254",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:307"
+    ],
+    "tests": 3,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:25",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:26",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:254",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:255",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:307",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts:308",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:18",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:263",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-authority.test.mjs:276"
+    ]
+  },
+  {
     "code": "ERR_REGISTRY_DUPLICATE",
     "namespace": "ERR",
     "family": "ERR_*",
@@ -1613,7 +1862,7 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-fuse-e2e.test.mjs:87",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:19",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:164",
-      "ref scripts/registry-index-cli.mjs:350"
+      "ref scripts/registry-index-cli.mjs:931"
     ]
   },
   {
@@ -1656,10 +1905,10 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:16",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:65",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:133",
-      "ref scripts/registry-index-cli.mjs:320",
-      "ref scripts/registry-index-cli.mjs:325",
-      "ref scripts/registry-index-cli.mjs:328",
-      "ref scripts/registry-index-cli.mjs:344"
+      "ref scripts/registry-index-cli.mjs:901",
+      "ref scripts/registry-index-cli.mjs:906",
+      "ref scripts/registry-index-cli.mjs:909",
+      "ref scripts/registry-index-cli.mjs:925"
     ]
   },
   {
@@ -1717,7 +1966,7 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:23",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:80",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:84",
-      "ref scripts/registry-index-cli.mjs:377"
+      "ref scripts/registry-index-cli.mjs:958"
     ]
   },
   {
@@ -1756,7 +2005,7 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index-hybrid.test.mjs:102",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:15",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:144",
-      "ref scripts/registry-index-cli.mjs:345"
+      "ref scripts/registry-index-cli.mjs:926"
     ]
   },
   {
@@ -1790,7 +2039,7 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:72",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:74",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:99",
-      "ref scripts/registry-index-cli.mjs:362"
+      "ref scripts/registry-index-cli.mjs:943"
     ]
   },
   {
@@ -1830,8 +2079,8 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:14",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:125",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:199",
-      "ref scripts/registry-index-cli.mjs:360",
-      "ref scripts/registry-index-cli.mjs:366"
+      "ref scripts/registry-index-cli.mjs:941",
+      "ref scripts/registry-index-cli.mjs:947"
     ]
   },
   {
@@ -1857,7 +2106,151 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi:81",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:20",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:168",
-      "ref scripts/registry-index-cli.mjs:354"
+      "ref scripts/registry-index-cli.mjs:935"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_MANIFEST_BAD_SIGNATURE",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 11,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:21"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:180",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:192"
+    ],
+    "tests": 5,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:21",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:22",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:180",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:181",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:192",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:193",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:6",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:101",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:149",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:152",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:159"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_MANIFEST_KEY_MISMATCH",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 6,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:25"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:206"
+    ],
+    "tests": 2,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:25",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:26",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:206",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:207",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:7",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:133"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_MANIFEST_MALFORMED",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 7,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:19"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:57"
+    ],
+    "tests": 3,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:19",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:20",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:57",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:58",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:8",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:124",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:171"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_MANIFEST_NO_KEY",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 8,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:23"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:186",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:226"
+    ],
+    "tests": 2,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:23",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:24",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:186",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:187",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:226",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:227",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:9",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:140"
+    ]
+  },
+  {
+    "code": "ERR_REGISTRY_MANIFEST_UNSIGNED",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 9,
+    "docOnly": false,
+    "defs": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:17"
+    ],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:132",
+      "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:215"
+    ],
+    "tests": 3,
+    "refs": 3,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "def packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:17",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:18",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:132",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:133",
+      "emit packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:215",
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts:216",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:10",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:123",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-package-manifest.test.mjs:175"
     ]
   },
   {
@@ -1889,7 +2282,7 @@
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:17",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:156",
       "test packages-galerina/galerina-framework-app-kernel/tests/registry-index.test.mjs:203",
-      "ref scripts/registry-index-cli.mjs:352",
+      "ref scripts/registry-index-cli.mjs:933",
       "test scripts/tests/codes.test.mjs:26"
     ]
   },
@@ -2364,7 +2757,7 @@
       "doc docs/paper/defensive-papers/dp-rd-0271-secure-by-omission-contract-field-defaults.md:62",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:96",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:35",
-      "doc docs/TODO.md:2040"
+      "doc docs/TODO.md:2205"
     ]
   },
   {
@@ -2433,7 +2826,7 @@
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:63",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:73",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:84",
-      "doc docs/TODO.md:1583"
+      "doc docs/TODO.md:1748"
     ]
   },
   {
@@ -2746,7 +3139,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:68",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:77",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:107",
-      "doc docs/TODO.md:2465",
+      "doc docs/TODO.md:2630",
       "ref scripts/audit-import-governance.mjs:20"
     ]
   },
@@ -2768,7 +3161,7 @@
     "allSites": [
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:137",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:81",
-      "doc docs/TODO.md:2467"
+      "doc docs/TODO.md:2632"
     ]
   },
   {
@@ -2920,7 +3313,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/index.ts:1986",
       "def packages-galerina/galerina-core-compiler/src/index.ts:2002",
-      "doc docs/TODO.md:1988"
+      "doc docs/TODO.md:2153"
     ]
   },
   {
@@ -2944,7 +3337,7 @@
     ],
     "allSites": [
       "def packages-galerina/galerina-core-compiler/src/index.ts:2013",
-      "doc docs/TODO.md:1899"
+      "doc docs/TODO.md:2064"
     ]
   },
   {
@@ -3063,8 +3456,8 @@
       "def packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:102",
-      "doc docs/TODO.md:2310",
-      "doc docs/TODO.md:2324"
+      "doc docs/TODO.md:2475",
+      "doc docs/TODO.md:2489"
     ]
   },
   {
@@ -4233,8 +4626,8 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/cli.ts:583",
-      "doc docs/TODO.md:2311",
-      "doc docs/TODO.md:2315"
+      "doc docs/TODO.md:2476",
+      "doc docs/TODO.md:2480"
     ]
   },
   {
@@ -5888,7 +6281,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:47",
-      "doc docs/TODO.md:1598",
+      "doc docs/TODO.md:1763",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
       "ref scripts/audit-artifact-drift.mjs:172",
@@ -6543,7 +6936,7 @@
       "doc docs/patterns/applications/01-crud-resource.md:94",
       "doc docs/reference/effects.md:67",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:16",
-      "doc docs/TODO.md:1705",
+      "doc docs/TODO.md:1870",
       "ref scripts/audit-corpus-effect-names.mjs:15",
       "ref scripts/audit-corpus-effect-names.mjs:17",
       "ref scripts/audit-muted-diagnostics.mjs:46",
@@ -6733,7 +7126,7 @@
       "doc docs/reference/effects.md:438",
       "doc docs/reference/effects.md:447",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:193",
-      "doc docs/TODO.md:2255",
+      "doc docs/TODO.md:2420",
       "ref scripts/audit-codes-full.mjs:90",
       "ref scripts/audit-codes-full.mjs:93",
       "ref scripts/audit-corpus-effect-names.mjs:134",
@@ -7432,7 +7825,7 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:46",
       "doc docs/reference/dss-wasm-runtime-errors.md:50",
       "doc docs/reference/dss-wasm-runtime-errors.md:87",
-      "doc docs/TODO.md:1686",
+      "doc docs/TODO.md:1851",
       "ref scripts/audit-artifact-drift.mjs:68"
     ]
   },
@@ -7686,7 +8079,7 @@
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:155",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:158",
       "doc docs/architecture/gate-cutset-version-gating-decision-2026-07-11.md:42",
-      "doc docs/TODO.md:2137"
+      "doc docs/TODO.md:2302"
     ]
   },
   {
@@ -7721,7 +8114,7 @@
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
-      "doc docs/TODO.md:2141"
+      "doc docs/TODO.md:2306"
     ]
   },
   {
@@ -7880,7 +8273,7 @@
       "doc docs/examples/README.md:124",
       "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:194",
-      "doc docs/TODO.md:1701",
+      "doc docs/TODO.md:1866",
       "ref scripts/audit-mutation.mjs:626",
       "ref scripts/audit-mutation.mjs:630",
       "ref scripts/audit-muted-diagnostics.mjs:49",
@@ -8008,8 +8401,8 @@
       "doc docs/language/fungi/05-bindings-taint-privacy.md:268",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:18",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:36",
-      "doc docs/TODO.md:2354",
-      "doc docs/TODO.md:2411"
+      "doc docs/TODO.md:2519",
+      "doc docs/TODO.md:2576"
     ]
   },
   {
@@ -8132,7 +8525,7 @@
       "doc docs/examples/README.md:133",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:93",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:101",
-      "doc docs/TODO.md:1591",
+      "doc docs/TODO.md:1756",
       "ref scripts/audit-code-catalog-coverage.mjs:92",
       "ref scripts/audit-diagnostic-code-collisions.mjs:76"
     ]
@@ -8240,7 +8633,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:15",
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1720",
-      "doc docs/TODO.md:1591"
+      "doc docs/TODO.md:1756"
     ]
   },
   {
@@ -8727,7 +9120,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1092",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1095",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1096",
-      "doc docs/TODO.md:2192"
+      "doc docs/TODO.md:2357"
     ]
   },
   {
@@ -8916,8 +9309,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1907",
       "doc docs/examples/README.md:19",
       "doc docs/examples/README.md:132",
-      "doc docs/TODO.md:1998",
-      "doc docs/TODO.md:2003",
+      "doc docs/TODO.md:2163",
+      "doc docs/TODO.md:2168",
       "ref scripts/audit-codes-full.mjs:50",
       "ref scripts/audit-muted-diagnostics.mjs:53"
     ]
@@ -8962,7 +9355,7 @@
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:5",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:12",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:34",
-      "doc docs/TODO.md:162"
+      "doc docs/TODO.md:327"
     ]
   },
   {
@@ -9174,7 +9567,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:49",
       "doc docs/roadmap-2026-07-15.md:111",
-      "doc docs/TODO.md:1562"
+      "doc docs/TODO.md:1727"
     ]
   },
   {
@@ -9237,7 +9630,7 @@
       "emit packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:56",
       "ref packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:57",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:39",
-      "doc docs/TODO.md:2456"
+      "doc docs/TODO.md:2621"
     ]
   },
   {
@@ -10666,8 +11059,8 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:51",
       "doc docs/reference/dss-wasm-runtime-errors.md:83",
       "doc docs/reports/slide-v2-g1-capability-probe-2026-07-29.md:73",
-      "doc docs/TODO.md:1444",
-      "doc docs/TODO.md:1783"
+      "doc docs/TODO.md:1609",
+      "doc docs/TODO.md:1948"
     ]
   },
   {
@@ -10725,7 +11118,7 @@
       "doc packages-galerina/galerina-core-compiler/TODO.md:18",
       "ref packages-galerina/galerina-devtools-wasmtime-oracle/tools/export-corpus-differential.mjs:116",
       "doc docs/reference/dss-wasm-runtime-errors.md:43",
-      "doc docs/TODO.md:1729"
+      "doc docs/TODO.md:1894"
     ]
   },
   {
@@ -10880,7 +11273,7 @@
       "doc docs/examples/README.md:18",
       "doc docs/examples/README.md:144",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
-      "doc docs/TODO.md:2048"
+      "doc docs/TODO.md:2213"
     ]
   },
   {
@@ -11344,7 +11737,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:392",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:393",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:398",
-      "doc docs/TODO.md:2296"
+      "doc docs/TODO.md:2461"
     ]
   },
   {
@@ -11879,9 +12272,9 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
-      "doc docs/TODO.md:1870",
-      "doc docs/TODO.md:2036",
-      "doc docs/TODO.md:2148"
+      "doc docs/TODO.md:2035",
+      "doc docs/TODO.md:2201",
+      "doc docs/TODO.md:2313"
     ]
   },
   {
@@ -12356,7 +12749,7 @@
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:38",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:109",
-      "doc docs/TODO.md:1598"
+      "doc docs/TODO.md:1763"
     ]
   },
   {
@@ -12435,8 +12828,8 @@
       "doc docs/architecture/self-hosting-readiness-2026-07-09.md:135",
       "doc docs/examples/README.md:91",
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:42",
-      "doc docs/TODO.md:2315",
-      "doc docs/TODO.md:2407"
+      "doc docs/TODO.md:2480",
+      "doc docs/TODO.md:2572"
     ]
   },
   {
@@ -13455,9 +13848,9 @@
       "doc docs/language/fungi/07-control-flow.md:318",
       "doc docs/language/fungi/README.md:78",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:1599",
-      "doc docs/TODO.md:1701",
-      "doc docs/TODO.md:1724",
+      "doc docs/TODO.md:1764",
+      "doc docs/TODO.md:1866",
+      "doc docs/TODO.md:1889",
       "ref scripts/audit-syntax.mjs:4",
       "ref scripts/rebuild-fusable-packages.mjs:133"
     ]
@@ -13536,7 +13929,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:111",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:115",
       "doc docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md:428",
-      "doc docs/TODO.md:1250"
+      "doc docs/TODO.md:1415"
     ]
   },
   {
@@ -13633,7 +14026,7 @@
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:59",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:90",
-      "doc docs/TODO.md:1516"
+      "doc docs/TODO.md:1681"
     ]
   },
   {
@@ -13697,7 +14090,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/affine-passport-typestate-0111.test.mjs:36",
       "doc docs/reference/value-states.md:118",
       "doc docs/reference/value-states.md:134",
-      "doc docs/TODO.md:2423"
+      "doc docs/TODO.md:2588"
     ]
   },
   {
@@ -14733,7 +15126,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:22",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:26",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:143",
-      "doc packages-galerina/galerina-registry/README.md:45",
+      "doc packages-galerina/galerina-registry/README.md:62",
       "ref scripts/audit-mutation.mjs:539"
     ]
   },
@@ -14741,7 +15134,7 @@
     "code": "FUNGI-PKG-002",
     "namespace": "FUNGI",
     "family": "PKG",
-    "occurrences": 29,
+    "occurrences": 28,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:553"
@@ -14752,7 +15145,7 @@
     ],
     "tests": 14,
     "refs": 6,
-    "docs": 2,
+    "docs": 1,
     "names": [
       "UNTRUSTED_REGISTRY"
     ],
@@ -14787,8 +15180,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:62",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:67",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:153",
-      "doc packages-galerina/galerina-registry/README.md:20",
-      "doc packages-galerina/galerina-registry/README.md:46"
+      "doc packages-galerina/galerina-registry/README.md:63"
     ]
   },
   {
@@ -14857,7 +15249,7 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:86",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:134",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:162",
-      "doc packages-galerina/galerina-registry/README.md:47",
+      "doc packages-galerina/galerina-registry/README.md:64",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:195"
     ]
   },
@@ -14865,7 +15257,7 @@
     "code": "FUNGI-PKG-004",
     "namespace": "FUNGI",
     "family": "PKG",
-    "occurrences": 22,
+    "occurrences": 21,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:573"
@@ -14875,7 +15267,7 @@
     ],
     "tests": 10,
     "refs": 4,
-    "docs": 3,
+    "docs": 2,
     "names": [
       "INSTALL_SCRIPT_DENIED"
     ],
@@ -14901,10 +15293,9 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:35",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:44",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:148",
-      "doc packages-galerina/galerina-registry/README.md:19",
-      "doc packages-galerina/galerina-registry/README.md:48",
+      "doc packages-galerina/galerina-registry/README.md:65",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:196",
-      "ref scripts/registry-index-cli.mjs:114"
+      "ref scripts/registry-index-cli.mjs:258"
     ]
   },
   {
@@ -14959,9 +15350,9 @@
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:101",
       "fungi packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi:137",
       "test packages-galerina/galerina-framework-app-kernel/tests/rd0361-packages-execution-cutover.test.mjs:167",
-      "doc packages-galerina/galerina-registry/README.md:49",
+      "doc packages-galerina/galerina-registry/README.md:66",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:199",
-      "ref scripts/registry-index-cli.mjs:108"
+      "ref scripts/registry-index-cli.mjs:251"
     ]
   },
   {
@@ -15219,10 +15610,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:113",
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:117",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:71",
-      "doc docs/TODO.md:2180",
-      "doc docs/TODO.md:2311",
-      "doc docs/TODO.md:2326",
-      "doc docs/TODO.md:2341"
+      "doc docs/TODO.md:2345",
+      "doc docs/TODO.md:2476",
+      "doc docs/TODO.md:2491",
+      "doc docs/TODO.md:2506"
     ]
   },
   {
@@ -15317,9 +15708,9 @@
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:62",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:102",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:129",
-      "doc docs/TODO.md:2141",
-      "doc docs/TODO.md:2514",
-      "doc docs/TODO.md:2521",
+      "doc docs/TODO.md:2306",
+      "doc docs/TODO.md:2679",
+      "doc docs/TODO.md:2686",
       "ref scripts/audit-muted-diagnostics.mjs:44",
       "ref scripts/code-index.mjs:108",
       "ref scripts/kb-index.mjs:9",
@@ -16653,7 +17044,7 @@
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:31",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:86",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:139",
-      "doc docs/TODO.md:2402"
+      "doc docs/TODO.md:2567"
     ]
   },
   {
@@ -16919,8 +17310,8 @@
       "doc docs/patterns/applications/08-secrets.md:14",
       "doc docs/patterns/applications/08-secrets.md:38",
       "doc docs/reference/value-states.md:93",
-      "doc docs/TODO.md:2293",
-      "doc docs/TODO.md:2420",
+      "doc docs/TODO.md:2458",
+      "doc docs/TODO.md:2585",
       "ref scripts/audit-muted-diagnostics.mjs:42"
     ]
   },
@@ -17143,7 +17534,7 @@
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:12",
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:30",
       "doc docs/examples/Level-7-AI/358-ai-secure-string-in-ai/notes.md:5",
-      "doc docs/TODO.md:157"
+      "doc docs/TODO.md:322"
     ]
   },
   {
@@ -17505,7 +17896,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:39",
-      "doc docs/TODO.md:1598"
+      "doc docs/TODO.md:1763"
     ]
   },
   {
@@ -18393,7 +18784,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:89",
       "doc docs/roadmap-2026-07-15.md:158",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:2037",
+      "doc docs/TODO.md:2202",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:194",
       "ref scripts/audit-fungi-corpus-check.mjs:267",
@@ -18419,7 +18810,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:137",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:2038"
+      "doc docs/TODO.md:2203"
     ]
   },
   {
@@ -18453,7 +18844,7 @@
       "test packages-galerina/galerina-core-compiler/tests/version-header.test.mjs:69",
       "doc docs/examples/README.md:19",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:37",
-      "doc docs/TODO.md:2041"
+      "doc docs/TODO.md:2206"
     ]
   },
   {
@@ -18859,7 +19250,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:64"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:70"
     ]
   },
   {
@@ -18901,8 +19292,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tenant-isolation.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:55",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:57",
-      "doc docs/TODO.md:1847",
-      "doc docs/TODO.md:1977"
+      "doc docs/TODO.md:2012",
+      "doc docs/TODO.md:2142"
     ]
   },
   {
@@ -19144,7 +19535,7 @@
       "doc docs/reference/effects.md:91",
       "doc docs/reference/effects.md:163",
       "doc docs/roadmap-2026-07-25-cycle2.md:100",
-      "doc docs/TODO.md:1600",
+      "doc docs/TODO.md:1765",
       "ref scripts/audit-example-diagnostics.mjs:230",
       "ref scripts/audit-example-diagnostics.mjs:232",
       "ref scripts/audit-twin-differential.mjs:26",
@@ -21904,7 +22295,7 @@
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:557",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:558",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:1701",
+      "doc docs/TODO.md:1866",
       "ref scripts/audit-codes-full.mjs:91",
       "ref scripts/audit-diagnostic-code-collisions.mjs:179",
       "ref scripts/audit-examples-vs-declared.mjs:94",
@@ -22385,7 +22776,7 @@
       "doc docs/patterns/applications/11-audit-trails.md:120",
       "doc docs/reference/value-states.md:56",
       "doc docs/reference/value-states.md:128",
-      "doc docs/TODO.md:2382",
+      "doc docs/TODO.md:2547",
       "ref scripts/audit-mutation.mjs:205",
       "ref scripts/audit-mutation.mjs:212",
       "ref scripts/audit-reference-doc-drift.mjs:65"
@@ -22662,7 +23053,7 @@
       "doc docs/reference/value-states.md:131",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
-      "doc docs/TODO.md:2421",
+      "doc docs/TODO.md:2586",
       "ref scripts/audit-example-diagnostics.mjs:9",
       "ref scripts/audit-example-diagnostics.mjs:225",
       "ref scripts/audit-muted-diagnostics.mjs:63"
@@ -22819,7 +23210,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
       "doc docs/roadmap-2026-07-25-cycle2.md:102",
-      "doc docs/TODO.md:1600",
+      "doc docs/TODO.md:1765",
       "ref scripts/audit-codes-full.mjs:53",
       "ref scripts/audit-muted-diagnostics.mjs:55"
     ]
@@ -22908,7 +23299,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
       "doc docs/roadmap-2026-07-24.md:16",
-      "doc docs/TODO.md:1659"
+      "doc docs/TODO.md:1824"
     ]
   },
   {
@@ -23081,7 +23472,7 @@
       "doc docs/language/fungi/03-effects-and-capabilities.md:65",
       "doc docs/reference/effects.md:148",
       "doc docs/reference/effects.md:149",
-      "doc docs/TODO.md:1599",
+      "doc docs/TODO.md:1764",
       "ref scripts/audit-example-diagnostics.mjs:125"
     ]
   },
@@ -23202,7 +23593,7 @@
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5782",
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5798",
       "doc docs/roadmap-2026-07-25-cycle2.md:79",
-      "doc docs/TODO.md:1600",
+      "doc docs/TODO.md:1765",
       "ref scripts/audit-diagnostic-code-collisions.mjs:56"
     ]
   },
@@ -23220,7 +23611,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/TODO.md:2390"
+      "doc docs/TODO.md:2555"
     ]
   },
   {
