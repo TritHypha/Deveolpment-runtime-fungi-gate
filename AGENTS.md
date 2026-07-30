@@ -75,12 +75,14 @@ intent → governed execution plan → coordinated compute → audit proof
 | 5 | Type + Effect Checker | Complete (Stage-A) |
 | 6 | IR (GIR) + Target Planner + WAT emitter | Complete (Stage-A) |
 
-> **Stage-A status (2026-07-17):** the full pipeline lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT
-> is shipped and green (`galerina-core-compiler` at 4,732; whole suite 93/93 · 7,393 tests · 0 fail on a clean checkout). The remaining
-> frontier is **Stage-B self-hosting WASM byte-parity** (lexer `tokenize` and the whole parser ladder up to its
-> entry point `parseFlows` reach it today — 53 differential tests, recursive AST readback, no new ABI; the
-> type-checker / governance-verifier / gir-emitter stages do not) and the **real
-> `DSS.wasm`** Wasmtime runtime (#102–106, still a stub). See `../ZTF-Knowledge-Bases/galerina-roadmap-and-percent-audit-2026-06-23.md`.
+> **Current beta-v1 checkpoint (2026-07-30):** the full pipeline
+> lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
+> and green (`galerina-core-compiler` 5,748/5,748; whole suite 97/97 packages,
+> 8,587 tests, zero failures). All seven canonical `.fungi` compiler stages
+> are authoritative specifications, with TypeScript retained as the executing
+> differential/bootstrap layer. Literal `.ts` retirement and the independent
+> executable SLIDE backend remain later gates; see
+> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 
 ## Grammar — Current v0.1 Flow Forms
 
@@ -167,7 +169,7 @@ FUNGI-MEMORY-*    memory model (001–008 defined)
 ```
 
 See `../ZTF-Knowledge-Bases/compiler-diagnostics.md` for the spec catalog, and `build/code-registry/REGISTRY.md`
-for the LIVE generated catalog — <!-- registry:counts.live -->133 live codes of <!-- registry:counts.total -->734 total
+for the LIVE generated catalog — <!-- registry:counts.live -->134 live codes of <!-- registry:counts.total -->737 total
 (auto-stamped by `gen-code-registry.mjs`; do NOT hand-edit these numbers — they regenerate from the registry). **Conventions are binding**
 (`galerina-diagnostic-code-conventions.md`): `name` is `UPPER_SNAKE`, `severity` is lowercase `error|warning|info`,
 one-code-one-fault, one owner per code, emit via an exported constant. Enforced by the umbrella gate
