@@ -6,9 +6,11 @@ The root-to-operational delegation, deterministic artifact hasher, strict
 manifest reader and disposable-key dry run are green. The false live auth and
 healthcare stubs have been removed. The live registry is intentionally empty;
 the real `@galerina/auth` bytes are recorded only as an unapproved, unsigned
-candidate. A valid operational public bundle and root-signed delegation record
-do not yet exist in the public repository. Do not substitute the cold trust
-root for routine registry signing merely to remove that blocker.
+candidate. Operational hybrid key `f3172a48372bfb23` has now been minted and
+both public filenames exist locally, but its public bundle has not completed
+independent admission and no root-signed delegation record exists. Do not
+substitute the cold trust root for routine registry signing merely to remove
+that blocker.
 
 This procedure is for the owner/trust custodian. An automated agent may build
 and test the tooling, but must never read, copy, source, print, or use private
@@ -25,7 +27,7 @@ existing identity.
 | Purpose | Exact key ID | Exact private filename | What it may sign |
 |---|---|---|---|
 | Offline hybrid registry trust root | `21415420b447e219` | `galerina-signing-key-21415420b447e219.env` | The hybrid operational registry delegation only |
-| Operational hybrid registry signer | **Not minted yet — use the ID emitted by `keygen --hybrid`** | After verified custody copy: `env.galerina-registry-signing-<NEW_HYBRID_REGISTRY_KEY_ID>` | Reviewed package manifests and the registry index |
+| Operational hybrid registry signer | `f3172a48372bfb23` | `env.galerina-registry-signing-f3172a48372bfb23` | Reviewed package manifests and the registry index |
 
 The tracked public verifier for the root is
 `governance/signing-key-21415420b447e219.pub.pem`; its tracked ML-DSA-65
@@ -52,7 +54,7 @@ The signing chain is:
 
 ```text
 21415420b447e219 (offline root)
-  └─ hybrid-signs one time-bounded delegation for <NEW_HYBRID_REGISTRY_KEY_ID>
+  └─ hybrid-signs one time-bounded delegation for f3172a48372bfb23
        ├─ signs reviewed package manifests
        └─ signs galerina-registry-index/v2
 ```
@@ -118,7 +120,7 @@ Primary references:
 | Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
 | Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
 | Auth governance approval and manifest signature | candidate remains reviewed:false with null authority fields | **owner-blocked** |
-| Operational registry authority | exact key selected; public bundle not yet exported | **owner-blocked** |
+| Operational registry authority | `f3172a48372bfb23` minted; both public filenames exist locally; independent re-derivation/admission still required | **owner-blocked** |
 | Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
 | Operational-key custody | two verified encrypted offline copies in separate physical locations not evidenced | **owner-blocked** |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
@@ -191,12 +193,12 @@ node scripts/registry-index-cli.mjs --self-test
 node scripts/registry-index-cli.mjs build `
   --registry-dir packages-galerina/galerina-registry/packages `
   --workspace-packages-dir packages-galerina `
-  --delegation <offline-staging>/registry-delegation.json `
+  --delegation <offline-staging>/registry-delegation-v1.json `
   --root-pubkey governance/signing-key-21415420b447e219.pub.pem `
   --root-mldsa65-pubkey governance/signing-key-21415420b447e219.mldsa.pub.b64 `
   --root-key-id 21415420b447e219 `
-  --operational-ed25519-pubkey <offline-staging>/signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
-  --operational-mldsa65-pubkey <offline-staging>/signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64 `
+  --operational-ed25519-pubkey <offline-staging>/signing-key-f3172a48372bfb23.pub.pem `
+  --operational-mldsa65-pubkey <offline-staging>/signing-key-f3172a48372bfb23.mldsa.pub.b64 `
   --authority-at <canonical-verification-utc-iso-with-milliseconds> `
   --min-delegation-serial <last-accepted-serial-floor> `
   --issued-at <strictly-newer-utc-iso> `
@@ -224,39 +226,41 @@ pins only.
 
 ### 5.1 Exact authority-delegation procedure
 
-**Do not run this yet.** It is documented now so the owner knows exactly which
-file will be requested when the live-package gates become green.
+**Do not sign the delegation yet.** The operational key is now known, but
+two verified encrypted custody copies in separate physical locations and the
+live-package approval gates must be evidenced first.
 
-On an air-gapped machine, create a new empty ceremony directory outside every
-repository and mint a dedicated hybrid key. Do not run this in the Galerina
-working tree because the command writes `.env.galerina-signing` in the current
-directory.
+The dedicated operational hybrid key has already been minted as
+`f3172a48372bfb23`. Do not run `keygen --hybrid` again unless intentionally
+abandoning this identity and restarting the ceremony with a newly reviewed
+key. The historical minting command was:
 
 ```powershell
 Set-Location <new-empty-offline-ceremony-directory>
 node <clean-galerina-tools>\galerina.mjs keygen --hybrid
 ```
 
-The command prints `<NEW_HYBRID_REGISTRY_KEY_ID>` and creates:
+For the selected ceremony, that command printed `f3172a48372bfb23` and
+created:
 
 - `.env.galerina-signing` containing both private halves;
-- `governance\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem`;
-- `governance\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64`.
+- `governance\signing-key-f3172a48372bfb23.pub.pem`;
+- `governance\signing-key-f3172a48372bfb23.mldsa.pub.b64`.
 
 Copy the private file to encrypted offline custody as
-`env.galerina-registry-signing-<NEW_HYBRID_REGISTRY_KEY_ID>`, verify the copy
-is readable, and retain the generated public files. Do not destroy the working
-copy until the custody copy has been verified.
+`env.galerina-registry-signing-f3172a48372bfb23`, verify the copy is readable,
+and retain the generated public files. Do not destroy the working copy until
+both required custody copies have been verified.
 
 Use the new private file to independently re-derive public material:
 
 ```powershell
-$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-<NEW_HYBRID_REGISTRY_KEY_ID>"
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-f3172a48372bfb23"
 
 node scripts/registry-authority-cli.mjs export-public `
-  --operational-key-id <NEW_HYBRID_REGISTRY_KEY_ID> `
-  --ed25519-out <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
-  --mldsa65-out <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64
+  --operational-key-id f3172a48372bfb23 `
+  --ed25519-out <offline-staging>\signing-key-f3172a48372bfb23.pub.pem `
+  --mldsa65-out <offline-staging>\signing-key-f3172a48372bfb23.mldsa.pub.b64
 
 Remove-Item Env:GALERINA_REGISTRY_SIGNING_ENV_PATH
 ```
@@ -269,9 +273,9 @@ serial floor.
 ```powershell
 node scripts/registry-authority-cli.mjs draft `
   --root-key-id 21415420b447e219 `
-  --operational-key-id <NEW_HYBRID_REGISTRY_KEY_ID> `
-  --ed25519-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
-  --mldsa65-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64 `
+  --operational-key-id f3172a48372bfb23 `
+  --ed25519-pubkey <offline-staging>\signing-key-f3172a48372bfb23.pub.pem `
+  --mldsa65-pubkey <offline-staging>\signing-key-f3172a48372bfb23.mldsa.pub.b64 `
   --serial <strictly-newer-positive-integer> `
   --issued-at <canonical-utc-iso-with-milliseconds> `
   --not-before <canonical-utc-iso-with-milliseconds> `
@@ -325,8 +329,8 @@ does not print its values.
 
 ```powershell
 Set-Location <clean-galerina-checkout>
-$env:GALERINA_SIGNING_KEY_ID = "<NEW_HYBRID_REGISTRY_KEY_ID>"
-$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-<NEW_HYBRID_REGISTRY_KEY_ID>"
+$env:GALERINA_SIGNING_KEY_ID = "f3172a48372bfb23"
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-f3172a48372bfb23"
 
 node scripts/registry-index-cli.mjs sign `
   --registry-dir packages-galerina/galerina-registry/packages `
@@ -336,8 +340,8 @@ node scripts/registry-index-cli.mjs sign `
   --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
   --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
   --root-key-id 21415420b447e219 `
-  --operational-ed25519-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
-  --operational-mldsa65-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64 `
+  --operational-ed25519-pubkey <offline-staging>\signing-key-f3172a48372bfb23.pub.pem `
+  --operational-mldsa65-pubkey <offline-staging>\signing-key-f3172a48372bfb23.mldsa.pub.b64 `
   --authority-at <instant-inside-the-delegation-window> `
   --min-delegation-serial <previous-accepted-serial> `
   --issued-at <strictly-newer-utc-iso> `
@@ -372,9 +376,9 @@ environment. Do not move private material.
 ```powershell
 node scripts/registry-index-cli.mjs verify `
   --in <public-staging>/registry-index-v2.json `
-  --ed25519-pubkey <public-authority>/signing-key-<id>.pub.pem `
-  --mldsa65-pubkey <public-authority>/signing-key-<id>.mldsa.pub.b64 `
-  --key-id <reviewed-operational-registry-key-id> `
+  --ed25519-pubkey <public-authority>/signing-key-f3172a48372bfb23.pub.pem `
+  --mldsa65-pubkey <public-authority>/signing-key-f3172a48372bfb23.mldsa.pub.b64 `
+  --key-id f3172a48372bfb23 `
   --min-issued-at <previous-accepted-issued-at>
 
 Get-FileHash <public-staging>/registry-index-v2.json -Algorithm SHA256

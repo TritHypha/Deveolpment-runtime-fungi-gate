@@ -47,8 +47,10 @@ planning checkbox must never be used to imply that implementation exists.
   documents without staging unrelated files.
 - **Release stop condition:** Galerina beta v1 and owner signing remain
   **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
-  auth remains an unapproved and unsigned candidate outside it. A valid
-  separately custodied operational public bundle and root delegation,
+  auth remains an unapproved and unsigned candidate outside it. Operational
+  hybrid key `f3172a48372bfb23` is minted, but its independently re-derived and
+  admitted public bundle, separate-location custody evidence and root
+  delegation,
   owner-approved hybrid package manifest, two verified encrypted offline
   copies in separate physical locations, successful live unsigned-index build,
   and final offline index-signing act are still absent.
@@ -144,10 +146,12 @@ planning checkbox must never be used to imply that implementation exists.
 - **Corrected key selection:** hybrid offline root `21415420b447e219`
   (`galerina-signing-key-21415420b447e219.env`) hybrid-signs only the
   operational delegation. `942d6b2726b0a991` and `53de6be4d53a33b2` are
-  Ed25519-only and cannot be registry-v2 authorities. A new dedicated
-  Ed25519+ML-DSA-65 operational key must be minted; its generated ID will sign
-  reviewed package manifests and the registry index. Audit, superseded and
-  stale key files are explicitly excluded.
+  Ed25519-only and cannot be registry-v2 authorities. Dedicated operational
+  Ed25519+ML-DSA-65 key `f3172a48372bfb23` has now been minted as
+  `env.galerina-registry-signing-f3172a48372bfb23`; after independent public
+  re-derivation, custody and root delegation it may sign reviewed package
+  manifests and the registry index. Audit, superseded and stale key files are
+  explicitly excluded.
 - **Implemented:** `registry-authority.ts` provides a hybrid-root-signed,
   closed two-role,
   time-bounded, revocation-aware and rollback-resistant root delegation. It
