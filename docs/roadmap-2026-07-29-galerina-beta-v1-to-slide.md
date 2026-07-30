@@ -26,8 +26,8 @@ flowchart LR
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
-    F["🟥 Beta-v1 release gate<br/>auth manifest signing next"]
-    G["🟨 Registry admission green<br/>auth approved · unsigned · live tree empty"]
+    F["🟥 Beta-v1 release gate<br/>index verification + rotation integration"]
+    G["🟩 Registry admission green<br/>auth signed · live · one-entry build"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
@@ -35,9 +35,9 @@ flowchart LR
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> F --> G --> H --> I --> J
+    A --> B --> C --> D --> E --> G --> F --> H --> I --> J
     Z --> E
-    F --> P
+    G --> P
     H --> M
     M --> I
 
@@ -46,9 +46,8 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,Z green;
+    class A,B,C,D,E,G,Z green;
     class F red;
-    class G amber;
     class H,I,M blue;
     class P green;
     class J grey;
@@ -61,8 +60,8 @@ flowchart LR
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
-| Live registry population | 🟨 | False stubs removed; auth's 63,281-byte source identity and owner approval are recorded; candidate remains unsigned and outside the empty live tree |
-| Production registry signing | 🟥 | Serial-1 root delegation is hybrid-verified and pins the exact operational key/roles; the real auth signature, live build and index signature remain absent |
+| Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |
+| Production registry signing | 🟥 | Root delegation, auth signature/admission and the fixed one-entry public build are verified; the final hybrid index signature and independent verification remain absent |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -93,24 +92,21 @@ remain running differential shadows; no `.ts` retirement has started.
 The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
-   reproducible while the registry population changes.
-2. Root-sign the prepared serial-1, 90-day delegation on the offline owner
-   machine. Its two closed roles and both operational public-key fingerprints
-   are already public-only verified. Two-location operational-key custody,
-   owner approval of the content-addressed auth facts, and removal of the extra
-   online private working copy are complete.
-3. Complete the existing Tower Citizen automatic operational-key rotation path
+   reproducible while the final registry artifact changes.
+2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
+   signature, independent manifest verification, live admission, and exact
+   one-entry public-only index build.
+3. Have the owner hybrid-sign only the fixed one-entry registry index, then
+   independently verify the returned public artifact before publication or a
+   green production-signing claim.
+4. Complete the existing Tower Citizen automatic operational-key rotation path
    for Galerina beta v1: StateSerializer epoch awareness, real custody
    execution, delegation integration, gated canary/drain/fallback, and
    automatic orchestration. The offline root remains manual. After beta,
    rebuild the reusable lifecycle mechanism in independent SLIDE `.fungi` and
    retain Tower Citizen as the Galerina policy adapter; trust domains and keys
    remain separate.
-4. Move only the independently verified auth manifest into the live tree and
-   require the unsigned live-index build to pass.
-5. Ask the owner to perform the offline index signing act only after the
-   walkthrough reports `READY FOR OWNER SIGNING`.
-6. Resume independent SLIDE implementation only after the Galerina beta-v1
+5. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
@@ -154,14 +150,14 @@ exact length-framed digest, and verify both hybrid manifest signatures through
 an active root-signed operational delegation.
 
 The former auth and healthcare live stubs are gone. Healthcare has no canonical
-package and therefore no registry claim. Auth has a technically reviewed and
-owner-approved 18-file candidate whose digest re-derives. Its signer and
-signature remain null and it stays outside the live tree.
+package and therefore no registry claim. Auth retains a technically reviewed,
+owner-approved unsigned 18-file candidate as provenance. The separately
+hybrid-signed manifest independently verifies and is now the sole live entry.
 
-This makes the implementation green without making the release green.
-Production still requires the root-signed delegation, hybrid auth-manifest
-signature, successful live unsigned build, and final offline index-signing
-act.
+This makes package admission green without making the release green. The
+root-signed delegation, hybrid auth-manifest signature and successful
+public-only one-entry build are complete. Production still requires the final
+offline index signature and independent public verification.
 Two verified offline custody copies in separate physical locations were
 owner-confirmed on 2026-07-30. The first public-only export refused before key
 decoding because the wrong file shape was selected. The complete hybrid
@@ -174,16 +170,19 @@ ML-DSA-65 SHA-256
 both match the repository candidates byte-for-byte. The extra online private
 working copy has been removed; both custody copies remain offline. The live
 repository now admits both public verifier files as non-authorizing material.
-The authority CLI validates their exact identities and closed roles, and now
-also signs and independently verifies reviewed package manifests without
-exposing private values. A disposable root→operational→manifest ceremony
-passes end to end; repeated authority arguments and an approval time later
-than the verification instant refuse. Cold root `21415420b447e219` has signed
-the serial-1 delegation for operational key `f3172a48372bfb23`. Both hybrid
-signature halves, serial floor, active window, exact roles, revocation state
-and operational public-key pins independently verify. The live walkthrough now
-authorizes only the offline operational signature over the reviewed auth
-candidate.
+The authority CLI validates their exact identities and closed roles, and
+signs and independently verifies reviewed package manifests without exposing
+private values. Cold root `21415420b447e219` signed the serial-1 delegation
+for operational key `f3172a48372bfb23`; both hybrid signature halves, serial
+floor, active window, exact roles, revocation state and operational public-key
+pins independently verify. The operational auth manifest independently
+verified at `2026-07-30T16:30:19.180Z` and has SHA-256
+`0A1621374BE4CC7E28BF81FEECC19CFC29E2DD5A680417FA7F7E9E145CD60C1C`.
+The public-only one-entry index built at `2026-07-30T16:33:10.307Z` has
+SHA-256
+`15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
+The live walkthrough now authorizes only the final signature over that fixed
+index.
 
 ## Binding package topology
 

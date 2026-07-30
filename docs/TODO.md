@@ -58,16 +58,24 @@ planning checkbox must never be used to imply that implementation exists.
   auth package facts. Cold root `21415420b447e219` has now signed the serial-1
   90-day delegation. The public delegation independently passed hybrid
   signature, current-window, serial-floor, exact-role, revocation and both
-  operational-public-pin checks. The live owner chart now authorizes only the
-  offline operational signature over the reviewed auth candidate.
+  operational-public-pin checks. Operational key `f3172a48372bfb23` then
+  hybrid-signed `@galerina/auth` version `1.0.0-beta.2`. The returned public
+  manifest independently verified at `2026-07-30T16:30:19.180Z`, is
+  byte-identical to the admitted live file, and has SHA-256
+  `0A1621374BE4CC7E28BF81FEECC19CFC29E2DD5A680417FA7F7E9E145CD60C1C`.
+  A public-only build re-opened that live tree and produced exactly one
+  unsigned entry at `2026-07-30T16:33:10.307Z`, SHA-256
+  `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
+  The live owner chart now authorizes only the final offline operational
+  signature over that fixed one-entry index.
 - **Release stop condition:** Galerina beta v1 and owner signing remain
-  **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
-  auth remains an approved but unsigned candidate outside it. Operational
-  hybrid key `f3172a48372bfb23` is minted and its independently re-derived
-  public bundle and root-signed delegation are admitted, but the hybrid
-  package signature, successful live unsigned-index build, and final offline
-  index-signing act are still absent. Two encrypted custody copies in separate
-  physical locations were owner-confirmed as verified on 2026-07-30.
+  **NOT READY / NON-AUTHORIZING**. The live registry now contains exactly one
+  independently verified hybrid-signed auth manifest, and its public-only
+  one-entry unsigned index build succeeds. Production signing remains red
+  until the owner returns the hybrid-signed fixed index and it independently
+  verifies. Automatic operational-key rotation integration also remains a
+  beta-v1 release gate. Two encrypted custody copies in separate physical
+  locations were owner-confirmed as verified on 2026-07-30.
 - **SLIDE stop condition:** independent SLIDE implementation and the
   Wasm/Rust/Python comparison remain deferred until the Galerina beta-v1 release
   gate authorizes and SLIDE has an executable backend.
@@ -111,17 +119,18 @@ planning checkbox must never be used to imply that implementation exists.
   expired/stale/revoked authority, and one bad manifest beside a good manifest
   all refuse without publishing an index.
 - **Completed:** the false live auth and healthcare stubs are removed.
-  `@galerina/auth` is now an owner-approved but unsigned candidate outside the
-  signable tree. Its 18-file, 63,281-byte source/test artifact re-derives
-  as
+  `@galerina/auth` retains its owner-approved unsigned candidate as provenance
+  and now has one independently verified hybrid-signed live manifest. Its
+  18-file, 63,281-byte source/test artifact re-derives as
   `sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4eaee86`.
   Generated graph/build output is intentionally outside that source identity.
 - **Power review:** the candidate declares only `clock.read` and
   `crypto.verify`. The former placeholder powers `secret.read`, `audit.write`
   and `network.outbound` were not factual for this package and were removed.
   Owner review, reviewer, time, publisher and expected operational key are
-  recorded; signer and signature remain null, so approval alone creates no
-  package authority.
+  recorded in the provenance candidate. That unsigned record creates no
+  authority; the separate live manifest is admitted only because both hybrid
+  signature components and the complete delegation chain verify.
 - **Fresh package evidence:** auth is **59/59**; registry is **35/35**; package
   border is **98/98**; licence, effect, private-doc/path leak and overclaim
   audits have zero violations/blockers. The topology and node-floor gates are
@@ -148,13 +157,13 @@ planning checkbox must never be used to imply that implementation exists.
 - **Current:** the complete generated graph/code/coverage/component-health
   dependency chain is refreshed. Root tests are 98/98 packages and 8,637
   tests; strict/exhaustive phase-close are 83/83 and 84/84.
-- **Next safe boundary:** commit the package-manifest ceremony mechanism,
-  approved input, unsigned delegation and continuity evidence; then the owner
-  root-signs only that delegation on the offline machine.
-- **Signing stop condition:** this work uses disposable fixtures only.
-  Production signing remains forbidden until the unsigned live registry,
-  broad gates, independent public verification, and the offline walkthrough
-  all report ready.
+- **Current safe boundary:** commit the signed live manifest, exact
+  public-authority regression, regenerated graphs and updated continuity
+  evidence. Then the owner may hybrid-sign only the fixed one-entry registry
+  index described by the live walkthrough.
+- **Signing stop condition:** package admission and the public-only live build
+  are verified. Production publication remains forbidden until the returned
+  signed index independently verifies and the release gates report green.
 
 ### Registry signing authority checkpoint - 2026-07-30
 
@@ -190,13 +199,15 @@ planning checkbox must never be used to imply that implementation exists.
   fields without decoding or printing either value or the private path.
   Focused tests cover success, UTF-16 and UTF-8-BOM rejection, malformed and
   duplicate-field diagnosis, and value/path non-disclosure.
-- **Owner action chart:** operational auth-manifest signing is the only
+- **Owner action chart:** final operational registry-index signing is the only
   authorized owner command now. Root `21415420b447e219` signed
   `governance/registry-delegation-f3172a48372bfb23-v1.json`: serial 1, active
   `2026-07-30T15:45:00.000Z` through `2026-10-28T15:45:00.000Z`, and only
   `package-manifest.sign` plus `registry-index.sign`. Follow only
-  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; live promotion, index
-  construction/signing and unrelated custody material remain locked.
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. Root delegation, auth
+  manifest signing/admission, and the fixed public-only one-entry build are
+  complete; publication and green status remain locked pending independent
+  verification of the returned signed index.
 - **Binding rotation requirement (owner, 2026-07-30):** production Zero-Trust
   uses automatic operational-key rotation. Galerina beta v1 completes the
   existing `galerina-tower-citizen` append-only epoch/Triple-Lock path. After
@@ -218,14 +229,14 @@ planning checkbox must never be used to imply that implementation exists.
   itself.
 - **Completed:** cryptographic manifest/delegation verification is integrated
   into the file-backed registry builder. The false live auth and healthcare
-  stubs are removed; the real auth source is a reviewed content-addressed
-  candidate outside the signable live tree.
+  stubs are removed. The reviewed auth candidate remains non-authorizing
+  provenance; its independently verified hybrid-signed counterpart is the
+  sole live entry.
 - **Stop condition:** production remains **NOT SIGNED / NON-AUTHORIZING**.
-  Custody, public export, admitted public bytes, owner approval, manifest
-  ceremony tooling and the unsigned delegation are verified. The offline root
-  may now sign only that delegation. The operational key, auth signature, live
-  move/build and index signature remain locked until the returned public
-  delegation independently verifies.
+  Custody, public export, admitted public bytes, owner approval, root
+  delegation, auth signature/admission, and the one-entry public-only build
+  are verified. Only the final operational index signature and its independent
+  verification remain open in this signing sequence.
 
 ### Governed-memory and Wasmtime-oracle checkpoint - 2026-07-30
 
@@ -290,12 +301,12 @@ planning checkbox must never be used to imply that implementation exists.
   8,637 tests**; all fourteen declared generator contracts and all five graph
   surfaces are green; strict phase-close passes **83/83** and exhaustive
   passes **84/84**, including its 98/98 package child.
-- **Current release boundary:** repository verification is green. Beta-v1 and
-  the owner's offline signing act remain non-authorizing because the live
-  registry is intentionally empty and auth remains approved but unsigned
-  outside it. Custody and public admission are verified; the production
-  root-to-operational signature and later package/index signatures are absent.
-  The live walkthrough now authorizes the root-delegation signature only.
+- **Current release boundary:** repository verification is green. The live
+  registry contains one verified hybrid-signed auth package and the public-only
+  one-entry index build succeeds. Beta-v1 remains non-authorizing pending the
+  final operational index signature, independent public verification, and the
+  separately recorded automatic-rotation integration. The live walkthrough
+  authorizes only that fixed registry-index signing act.
 
 ### Galerina-first beta-v1 completion checkpoint - 2026-07-29
 

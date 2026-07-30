@@ -7,20 +7,20 @@ authoritative owner action is published in
 `OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. A command appearing here is not
 permission or readiness to run it.
 
-**Status on 2026-07-30: READY FOR OPERATIONAL AUTH-MANIFEST SIGNING ONLY.**
+**Status on 2026-07-30: READY FOR OPERATIONAL REGISTRY-INDEX SIGNING ONLY.**
 
 The root-to-operational delegation, deterministic artifact hasher, strict
 manifest reader and disposable-key dry run are green. The false live auth and
-healthcare stubs have been removed. The live registry is intentionally empty;
-the real `@galerina/auth` bytes and owner approval are recorded in an unsigned
-candidate. Operational hybrid key `f3172a48372bfb23` has been minted and both
-public halves were independently exported and admitted. They match the
-repository candidates byte-for-byte. Cold root `21415420b447e219` signed the
-serial-1 delegation for operational key `f3172a48372bfb23`; it independently
-passed hybrid signature, serial-floor, active-window, exact-role, revocation
-and operational-public-pin checks. The live action page therefore authorizes
-only operational signing of the reviewed auth candidate; live promotion and
-index signing remain locked.
+healthcare stubs have been removed. The real `@galerina/auth` bytes and owner
+approval remain in an unsigned provenance candidate. Operational hybrid key
+`f3172a48372bfb23` has been minted and both public halves were independently
+exported and admitted. Cold root `21415420b447e219` signed its serial-1
+delegation, which independently passed hybrid signature, serial-floor,
+active-window, exact-role, revocation and operational-public-pin checks. The
+operational key then hybrid-signed the auth manifest; it independently verified
+and is the sole live entry. The public-only builder produced exactly one
+unsigned index entry. The live action page therefore authorizes only the final
+operational registry-index signature; publication remains locked.
 
 The independently verified public pins are:
 
@@ -139,16 +139,19 @@ Primary references:
 | File-backed sign then public-key verify | disposable ceremony fixture | ready |
 | Missing/tampered/downgraded signature refusal | tested | ready |
 | Signed revocation-registry check before key use | tested, including known-revoked refusal | ready |
-| Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
+| Live registry manifests | exactly one independently verified hybrid-signed `@galerina/auth` manifest | ready |
 | Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
-| Auth governance approval and manifest signature | exact package facts are owner-approved; signer and signature remain null | **signature blocked** |
+| Auth governance approval and manifest signature | unsigned provenance plus independently verified hybrid-signed live manifest | ready |
 | Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; serial-1 root delegation verified | ready |
 | Root-signed operational delegation format and verifier | serial-1, 90-day public delegation passes hybrid signature, serial, role, revocation, window and key-pin checks | ready |
 | Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
-| Real auth-manifest signing act | not yet performed | **operational signature next** |
+| Real auth-manifest signing act | verified at `2026-07-30T16:30:19.180Z`; live file SHA-256 `0A1621374BE4CC7E28BF81FEECC19CFC29E2DD5A680417FA7F7E9E145CD60C1C` | ready |
+| Public-only live index build | one entry at `2026-07-30T16:33:10.307Z`; SHA-256 `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383` | ready |
+| Real registry-index signing act | not yet performed | **operational signature next** |
 
-The dry run proves the mechanism. The technical auth review proves a candidate
-source identity; it does not create governance approval or a signature.
+The unsigned candidate records provenance and does not create authority. The
+separate live manifest is authoritative only because its package bytes,
+governance facts, complete delegation chain and both hybrid signatures verify.
 
 ## 3. Non-negotiable custody rules
 
@@ -227,11 +230,12 @@ node scripts/registry-index-cli.mjs build `
   --out <offline-staging>/unsigned-index.json
 ```
 
-The final command must currently refuse because the live tree is empty. When
-the owner-approved hybrid-signed auth manifest eventually enters the live
-tree, the same command must verify the complete public authority chain and
-artifact before it succeeds. Inspect the unsigned index and reconcile every
-entry against the reviewed package record before exposing any private key.
+The command now succeeds and must produce exactly one entry. The independently
+reproduced fixed build uses `issuedAt` `2026-07-30T16:33:10.307Z` and has
+SHA-256
+`15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
+Reconcile that entry against the reviewed package record before exposing any
+private key.
 
 Confirm the private-key directory is not a repository:
 
@@ -248,12 +252,12 @@ pins only.
 
 ### 5.1 Exact authority-delegation procedure
 
-The live action page now authorizes the root signature over the exact prepared
-serial-1 delegation only. Operational-key custody is owner-confirmed,
-independent public export matches the admitted repository verifiers, the extra
-online private working copy is removed, and the auth package facts are
-owner-approved. Package and index signing remain locked until the returned
-delegation independently verifies.
+This subsection records the completed authority-delegation procedure. The
+serial-1 delegation independently verifies; operational-key custody is
+owner-confirmed, the public export matches the admitted repository verifiers,
+and the extra online private working copy is removed. Do not repeat this
+procedure for the current act. The live action page now authorizes only the
+fixed registry-index signature.
 
 The dedicated operational hybrid key has already been minted as
 `f3172a48372bfb23`. Do not run `keygen --hybrid` again unless intentionally
@@ -516,9 +520,7 @@ Tell the owner **“READY FOR OWNER SIGNING”** only when:
 - public artifact paths and the previous `issuedAt` floor are recorded;
 - the source commit is clean and all terminal project gates are green.
 
-Until then, report **“NOT READY”** with the failing gates. On 2026-07-29 the
-correct report remains **NOT READY**. At the 2026-07-30 checkpoint, the
-mechanism and candidate byte identity are green, but owner
-approval/signature, the valid operational public/delegation chain,
-and the final live build are absent. Two-location operational-key custody was
-owner-confirmed on 2026-07-30.
+Until then, report **“NOT READY”** with the failing gates. At the current
+2026-07-30 checkpoint, custody, authority delegation, package signature/live
+admission and the exact public-only one-entry build are green. The final
+hybrid index signature and independent public verification are absent.

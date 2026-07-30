@@ -53,7 +53,7 @@
 | `galerina-db-opensearch` | db | 25 | PASS | 0 | Galerina OpenSearch adapter contract placeholder. |
 | `galerina-db-postgres` | db | 24 | PASS | 0 | Galerina PostgreSQL adapter contract placeholder. |
 | `galerina-db-sqlite` | db | 21 | PASS | 0 | Galerina SQLite adapter contract placeholder. |
-| `galerina-registry` | registry | 33 | PASS | 0 | Signed package registry entries for the Galerina platform. Empty until the owner signing ceremony (registry wa |
+| `galerina-registry` | registry | 33 | PASS | 0 | Hybrid-signed, governance-reviewed package registry entries for Galerina. The live tree contains only independ |
 | `galerina-tools-benchmark` | tools | 9 | PASS | 0 | Galerina benchmark and diagnostics contracts for logic, compute targets, fallback behaviour and safe reporting |
 | `galerina-tools-myco` | tools | 52 | PASS | 0 | grep, but it grows a graph â€” a graph-indexed search tool for file contents and filenames. Smart-case, token- |
 | `galerina-web` | web | 25 | PASS | 0 | Galerina browser-safe web package umbrella contracts. |

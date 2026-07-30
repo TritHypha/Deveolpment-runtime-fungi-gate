@@ -21,7 +21,7 @@ open a `*.env` or any `*_PRIVATE_KEY_B64`.
 | key id | algorithm | private half | public half in `governance/` | role |
 |---|---|---|---|---|
 | `21415420b447e219` | **hybrid** Ed25519 + ML-DSA-65 | owner, offline archive (hash-verified) | ✅ `.pub.pem` + `.mldsa.pub.b64` | **trust-anchor root** |
-| `f3172a48372bfb23` | **hybrid** Ed25519 + ML-DSA-65 | two verified offline custody copies; extra online working copy removed | ✅ `.pub.pem` + `.mldsa.pub.b64`, independently hash-verified and admitted | operational registry signer; root-delegated by serial 1 for the closed package-manifest/index roles through `2026-10-28T15:45:00.000Z` |
+| `f3172a48372bfb23` | **hybrid** Ed25519 + ML-DSA-65 | two verified offline custody copies; extra online working copy removed | ✅ `.pub.pem` + `.mldsa.pub.b64`, independently hash-verified and admitted | operational registry signer; root-delegated by serial 1 for the closed package-manifest/index roles through `2026-10-28T15:45:00.000Z`; auth manifest signed and admitted; fixed one-entry index signature pending |
 | `ab46f4c7e2797b9b` | Ed25519 | **LOST** | ✅ | superseded root (the loss that forced RD-0368) |
 | `8eecf4187ebc9341` | Ed25519 | leaked | ✅ | **REVOKED** — private key committed to git at `cb5036d` |
 | `cd01346961d88e94` | Ed25519 | **committed to KB git** (`7ec0af0`, deliberate escrow) | ✅ | escrowed dev key |
@@ -121,7 +121,9 @@ act on and the default stops lying.
       `21415420b447e219` signed the admitted serial-1, 90-day delegation. The
       returned public artifact independently passed both hybrid signature
       checks, serial floor `0`, active-window, exact closed-role, revocation and
-      operational-public-pin verification on 2026-07-30. The live owner action is
+      operational-public-pin verification on 2026-07-30. The operational auth
+      manifest and exact one-entry public build have also independently
+      verified. The live owner action is now the final index signature:
       [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md);
       later commands are separately locked in
       [`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](./OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).

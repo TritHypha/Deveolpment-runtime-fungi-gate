@@ -1357,7 +1357,7 @@ Provides:
 
 ## galerina-registry
 
-Signed package registry entries for the Galerina platform. Empty until the owner signing ceremony (registry walkthrough §4) — do not add entries manually. Populated by the registry-index-cli.mjs signing flow after governance review.
+Hybrid-signed, governance-reviewed package registry entries for Galerina. The live tree contains only independently admitted manifests and refuses builds without complete public authority evidence.
 
 ## galerina-governance-telemetry
 

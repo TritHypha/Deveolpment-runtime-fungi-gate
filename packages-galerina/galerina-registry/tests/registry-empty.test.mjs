@@ -34,14 +34,46 @@ import {
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "..", "..");
+const GIT_ATTRIBUTES = join(REPOSITORY_ROOT, ".gitattributes");
 const REGISTRY_CLI = join(REPOSITORY_ROOT, "scripts", "registry-index-cli.mjs");
 const LIVE_REGISTRY = join(PACKAGE_ROOT, "packages");
+const LIVE_AUTH_MANIFEST = join(
+  LIVE_REGISTRY,
+  "@galerina",
+  "auth",
+  "package.galerina.yaml",
+);
 const AUTH_CANDIDATE = join(
   PACKAGE_ROOT,
   "candidates",
   "@galerina",
   "auth",
   "package.galerina.yaml",
+);
+const LIVE_DELEGATION = join(
+  REPOSITORY_ROOT,
+  "governance",
+  "registry-delegation-f3172a48372bfb23-v1.json",
+);
+const LIVE_ROOT_ED_PUBLIC = join(
+  REPOSITORY_ROOT,
+  "governance",
+  "signing-key-21415420b447e219.pub.pem",
+);
+const LIVE_ROOT_ML_PUBLIC = join(
+  REPOSITORY_ROOT,
+  "governance",
+  "signing-key-21415420b447e219.mldsa.pub.b64",
+);
+const LIVE_OPERATIONAL_ED_PUBLIC = join(
+  REPOSITORY_ROOT,
+  "governance",
+  "signing-key-f3172a48372bfb23.pub.pem",
+);
+const LIVE_OPERATIONAL_ML_PUBLIC = join(
+  REPOSITORY_ROOT,
+  "governance",
+  "signing-key-f3172a48372bfb23.mldsa.pub.b64",
 );
 const AUTH_PACKAGE_FILES = [
   "LICENSE",
@@ -553,7 +585,7 @@ test("one bad manifest poisons a multi-package build", () =>
     assert.equal(existsSync(fixture.output), false);
   }));
 
-test("the live placeholder catalog remains un-signable", () => {
+test("the live catalog refuses to build without explicit authority evidence", () => {
   const temp = mkdtempSync(join(tmpdir(), "galerina-live-registry-"));
   try {
     const output = join(temp, "index.json");
@@ -571,7 +603,12 @@ test("the live placeholder catalog remains un-signable", () => {
   }
 });
 
-test("the owner-approved auth candidate binds source but remains unsigned and non-live", () => {
+test("the owner-approved auth package is live only under the exact public authority chain", () => {
+  assert.match(
+    readFileSync(GIT_ATTRIBUTES, "utf8"),
+    /^packages-galerina\/galerina-registry\/\*\*\/package\.galerina\.yaml text eol=lf$/mu,
+    "hybrid-signed manifest bytes must remain LF-stable across platforms",
+  );
   assert.equal(
     existsSync(
       join(
@@ -585,12 +622,18 @@ test("the owner-approved auth candidate binds source but remains unsigned and no
     "a nonexistent healthcare package must not have a live registry claim",
   );
   assert.equal(
-    existsSync(
-      join(LIVE_REGISTRY, "@galerina", "auth", "package.galerina.yaml"),
-    ),
-    false,
-    "an unsigned auth candidate must not be live/signable",
+    existsSync(LIVE_AUTH_MANIFEST),
+    true,
+    "the independently verified hybrid-signed auth manifest must be live",
   );
+  const live = parseTestManifest(readFileSync(LIVE_AUTH_MANIFEST, "utf8"));
+  assert.equal(live.name, "@galerina/auth");
+  assert.equal(live.version, "1.0.0-beta.2");
+  assert.equal(live.keyId, "f3172a48372bfb23");
+  assert.equal(live.signerKeyId, "f3172a48372bfb23");
+  assert.match(live.signature, /^galerina-hybrid-v1\./u);
+  assert.equal(live.governance.reviewed, true);
+
   const candidate = parseTestManifest(readFileSync(AUTH_CANDIDATE, "utf8"));
   assert.equal(candidate.name, "@galerina/auth");
   assert.equal(candidate.version, "1.0.0-beta.2");
@@ -615,6 +658,40 @@ test("the owner-approved auth candidate binds source but remains unsigned and no
     artifactFiles: candidate.artifactFiles,
   });
   assert.equal(candidate.hash, artifact.hash);
+  assert.equal(live.hash, artifact.hash);
+  assert.deepEqual(live.artifactFiles, candidate.artifactFiles);
+  assert.deepEqual(live.capabilities, candidate.capabilities);
+  assert.deepEqual(live.effects, candidate.effects);
+
+  const temp = mkdtempSync(join(tmpdir(), "galerina-live-authority-"));
+  try {
+    const output = join(temp, "index.json");
+    const result = runRegistryCli([
+      "build",
+      "--registry-dir", LIVE_REGISTRY,
+      "--workspace-packages-dir", join(REPOSITORY_ROOT, "packages-galerina"),
+      "--delegation", LIVE_DELEGATION,
+      "--root-pubkey", LIVE_ROOT_ED_PUBLIC,
+      "--root-mldsa65-pubkey", LIVE_ROOT_ML_PUBLIC,
+      "--root-key-id", "21415420b447e219",
+      "--operational-ed25519-pubkey", LIVE_OPERATIONAL_ED_PUBLIC,
+      "--operational-mldsa65-pubkey", LIVE_OPERATIONAL_ML_PUBLIC,
+      "--authority-at", FIXED_ISSUED_AT,
+      "--min-delegation-serial", "0",
+      "--issued-at", FIXED_ISSUED_AT,
+      "--out", output,
+    ]);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const index = JSON.parse(readFileSync(output, "utf8"));
+    assert.equal(index.schema, "galerina-registry-index/v2");
+    assert.equal(index.entries.length, 1);
+    assert.equal(index.entries[0].name, "@galerina/auth");
+    assert.equal(index.entries[0].version, "1.0.0-beta.2");
+    assert.equal(index.entries[0].sourceHash, artifact.hash);
+    assert.equal(index.entries[0].keyId, "f3172a48372bfb23");
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
 });
 
 test("the real admission seam self-test uses cryptographic package evidence", () => {

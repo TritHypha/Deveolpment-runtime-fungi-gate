@@ -217,7 +217,7 @@ or release a key. A future persistent SLIDE index must be immutable,
 encrypted, hybrid-signed, anti-rollback, lease-bounded, independently
 re-opened, and source-rederivable.
 
-### Offline registry signing — root delegation verified
+### Offline registry signing — package admitted, final index signature pending
 
 The hybrid v2 mechanism is green:
 
@@ -234,13 +234,15 @@ The hybrid v2 mechanism is green:
 - fail-closed package-manifest signing and public verification CLI; and
 - a disposable file-backed root→operational→manifest ceremony.
 
-Production is still **NON-AUTHORIZING** because:
+Production is still **NON-AUTHORIZING** because the fixed one-entry registry
+index has not yet been hybrid-signed and independently verified. The preceding
+gates are complete:
 
-- auth's re-derived 18-file candidate is owner-approved but not hybrid-signed;
-- the live registry is intentionally empty;
-- the valid separately custodied operational public bundle and root-signed
-  delegation are admitted, but the real package signature is not yet present;
-- the live unsigned-index and owner signing acts therefore cannot run.
+- auth's re-derived 18-file candidate remains unsigned provenance;
+- its separately hybrid-signed live manifest independently verifies;
+- the separately custodied operational public bundle and root-signed
+  delegation are admitted; and
+- the live public-only build produces exactly one index entry.
 
 Two verified encrypted operational-key custody copies in separate physical
 locations were owner-confirmed on 2026-07-30. That closes custody only; it does
@@ -267,8 +269,16 @@ public artifact independently verified under both root signature halves at
 current revocation state and both operational public-key pins. Its file
 SHA-256 is
 `EE6B01E7AE0460D2811BBCEABF7962FDDA55ED907CA512C05C82BCE5EE1810AC`.
-The live walkthrough now authorizes only the operational signature over the
-reviewed auth candidate.
+Operational key `f3172a48372bfb23` hybrid-signed `@galerina/auth` version
+`1.0.0-beta.2`. The returned public manifest independently verified at
+`2026-07-30T16:30:19.180Z`, is byte-identical to the sole admitted live
+manifest, and has SHA-256
+`0A1621374BE4CC7E28BF81FEECC19CFC29E2DD5A680417FA7F7E9E145CD60C1C`.
+The public-only builder produced exactly one unsigned entry at
+`2026-07-30T16:33:10.307Z`, SHA-256
+`15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
+The live walkthrough now authorizes only the final operational signature over
+that fixed index.
 
 Production Zero-Trust also requires automatic operational-key rotation.
 Galerina beta v1 completes the current Tower Citizen append-only

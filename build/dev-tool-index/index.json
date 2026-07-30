@@ -183,7 +183,7 @@
     {
       "name": "galerina-registry",
       "kind": "registry",
-      "description": "Signed package registry entries for the Galerina platform. Empty until the owner signing ceremony (registry wa",
+      "description": "Hybrid-signed, governance-reviewed package registry entries for Galerina. The live tree contains only independ",
       "tests": 33,
       "hasTestScript": true,
       "border": "PASS",

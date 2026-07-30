@@ -3,11 +3,10 @@
 The Galerina registry is the fail-closed source of governance-reviewed,
 content-addressed and hybrid-signed package identities.
 
-> **Empty live registry.** `packages/` intentionally contains no manifest.
-> An empty live registry cannot produce an index. The technically reviewed and
-> owner-approved `@galerina/auth` source identity is under `candidates/`; it is
-> unsigned and cannot enter the live builder. No healthcare package exists, so
-> no healthcare or compliance manifest is claimed.
+> **One admitted live package.** `packages/` contains only the independently
+> verified hybrid-signed `@galerina/auth` manifest. The unsigned reviewed
+> source record remains under `candidates/` for provenance. No healthcare
+> package exists, so no healthcare or compliance manifest is claimed.
 
 ## Admission contract
 
@@ -28,11 +27,14 @@ entry or emits a partial index.
 ## Structure
 
 ```text
-packages/                         # live owner-approved manifests; empty
+packages/                         # live owner-approved manifests
+  @galerina/
+    auth/
+      package.galerina.yaml       # verified hybrid-signed authority
 candidates/
   @galerina/
     auth/
-      package.galerina.yaml       # technical evidence; not live authority
+      package.galerina.yaml       # unsigned reviewed source/provenance record
 ```
 
 The package bytes exist exactly once as direct children of
@@ -71,6 +73,7 @@ Locked later commands are kept separately in
 
 The artifact hasher, strict manifest reader, root delegation, manifest
 verification, index builder/signer/verifier, revocation checks and denial tests
-are implemented. The auth facts are technically reviewed and owner-approved,
-but production population remains blocked until the prepared root delegation
-and complete manifest are hybrid-signed and independently verified.
+are implemented. The auth manifest is root-delegated, hybrid-signed,
+independently verified and live. A public-only build produces exactly one
+unsigned index entry. Production publication remains blocked until that index
+is hybrid-signed offline and independently verified.
