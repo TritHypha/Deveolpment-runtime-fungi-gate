@@ -57,23 +57,11 @@
       "cause": "type-mismatch"
     },
     {
-      "file": "docs/examples/Level-3-Effects/107-pure-flow-calls-effectful-flow/example.fungi",
-      "cause": "undefined-call"
-    },
-    {
       "file": "docs/examples/Level-3-Effects/109-local-fn-pure-helper/example.fungi",
       "cause": "undefined-call"
     },
     {
       "file": "docs/examples/Level-4-Security/170-constant-time-comparison/example.fungi",
-      "cause": "undefined-call"
-    },
-    {
-      "file": "docs/examples/Level-6-Compute/301-compute-target-best/example.fungi",
-      "cause": "undefined-call"
-    },
-    {
-      "file": "docs/examples/Level-6-Compute/303-compute-gpu-explicit/example.fungi",
       "cause": "undefined-call"
     },
     {
@@ -90,14 +78,6 @@
     },
     {
       "file": "docs/examples/Level-6-Compute/320-statistics-stdlib/example.fungi",
-      "cause": "undefined-call"
-    },
-    {
-      "file": "docs/examples/Level-7-AI/364-ai-effect-propagation/example.fungi",
-      "cause": "undefined-call"
-    },
-    {
-      "file": "docs/examples/Level-8-Targets/404-target-wasm/example.fungi",
       "cause": "undefined-call"
     }
   ]

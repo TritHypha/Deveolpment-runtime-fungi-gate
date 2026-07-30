@@ -11,7 +11,7 @@ record Patient {
 }
 
 record RiskScore {
-  value: Decimal
+  value: Int
 }
 
 secure flow scorePatient(readonly patient: Patient) -> ScorePatientResult

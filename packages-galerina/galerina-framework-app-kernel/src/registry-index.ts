@@ -217,6 +217,19 @@ export class RegistryIndexError extends Error {
   }
 }
 
+function isLiteralVerificationSuccess(
+  result: boolean | "no-key",
+): result is true {
+  return result === true;
+}
+
+function isStrictlyNewerThanFloor(
+  issuedAt: string,
+  minIssuedAt: string | undefined,
+): boolean {
+  return minIssuedAt === undefined || issuedAt > minIssuedAt;
+}
+
 /**
  * Throws RegistryIndexError (fail-closed) unless the index carries a real, verifiable signature.
  * @param minIssuedAt optional ISO-8601 floor — the index MUST be strictly newer (rollback/replay defense).
@@ -263,7 +276,7 @@ export function verifyRegistryIndex(
   }
   // FAIL-CLOSED: ONLY a literal `true` admits. A truthy non-boolean verifier return (a raw crypto-lib
   // result, a thin wrapper) must NOT pass — was `if (!result)`, which admitted any truthy value.
-  if (result !== true) {
+  if (!isLiteralVerificationSuccess(result)) {
     throw new RegistryIndexError(
       ERR_REGISTRY_INDEX_BAD_SIGNATURE,
       `Registry index signature failed verification for keyId '${sig.keyId}' — possible tampering; refused.`,
@@ -273,7 +286,7 @@ export function verifyRegistryIndex(
   if (index.schema !== "galerina-registry-index/v1") {
     throw new RegistryIndexError(ERR_REGISTRY_INDEX_MALFORMED, `unsupported index schema '${index.schema}'.`);
   }
-  if (minIssuedAt !== undefined && !(index.issuedAt > minIssuedAt)) {
+  if (!isStrictlyNewerThanFloor(index.issuedAt, minIssuedAt)) {
     throw new RegistryIndexError(
       ERR_REGISTRY_INDEX_STALE,
       `index issuedAt '${index.issuedAt}' is not newer than the accepted floor '${minIssuedAt}' — possible rollback/replay; refused.`,
@@ -330,7 +343,7 @@ function verifyRegistryIndexV2(
   const message = registryIndexSignaturePreimage(index, sig.keyId);
   verifyComponent(message, sig.ed25519Signature, sig.keyId, verify.ed25519);
   verifyComponent(message, sig.mlDsa65Signature, sig.keyId, verify.mlDsa65);
-  if (minIssuedAt !== undefined && !(index.issuedAt > minIssuedAt)) {
+  if (!isStrictlyNewerThanFloor(index.issuedAt, minIssuedAt)) {
     throw new RegistryIndexError(
       ERR_REGISTRY_INDEX_STALE,
       `index issuedAt '${index.issuedAt}' is not newer than the accepted floor '${minIssuedAt}' â€” possible rollback/replay; refused.`,
@@ -360,7 +373,7 @@ function verifyComponent(
       `No public key registered for registry authority keyId '${keyId}' â€” cannot verify index; refused.`,
     );
   }
-  if (result !== true) {
+  if (!isLiteralVerificationSuccess(result)) {
     throw new RegistryIndexError(
       ERR_REGISTRY_INDEX_BAD_SIGNATURE,
       `Registry index signature failed verification for keyId '${keyId}' â€” possible tampering; refused.`,

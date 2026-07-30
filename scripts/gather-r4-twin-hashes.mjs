@@ -295,8 +295,6 @@ for (const candidate of selected) {
       ),
     );
     const assembly = await L.assembleWAT(wat);
-    const assemblyFaithful =
-      assembly.valid === true && assembly.diagnostics.length === 0;
 
     let bytes = null;
     let sha256 = null;
@@ -306,7 +304,7 @@ for (const candidate of selected) {
     let ledgerHashMatches = null;
     let error = null;
 
-    if (!assemblyFaithful) {
+    if (!assembly.valid || assembly.diagnostics.length > 0) {
       error =
         "unfaithful assembly: " +
         assembly.diagnostics.map((diagnostic) => diagnostic.message).join("; ");

@@ -10,16 +10,16 @@ record User {
   name: String
 }
 
-pure flow example(user: Option<User>) -> Void {
+pure flow example(user: Option<User>) -> String {
   match user {
 
     Some(value) =>
-      print(value.name)
+      return value.name
 
     None =>
-      print("Missing")
+      return "Missing"
 
     _ =>
-      print("Unknown")
+      return "Unknown"
   }
 }

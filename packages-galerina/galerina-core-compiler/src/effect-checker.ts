@@ -806,31 +806,38 @@ export function checkFlowEffects(
 
     for (const effect of observedEffects) {
       if (!declared.has(effect)) {
-        const code = effect === "pii.read"
-          ? "FUNGI-PII-001"
-          : effect === "phi.read" || effect === "phi.write"
-            ? "FUNGI-PHI-001"
-            : "FUNGI-EFFECT-001";
-        const name = effect === "pii.read"
-          ? "PII_AUTHORITY_MISSING"
-          : effect === "phi.read" || effect === "phi.write"
-            ? "PHI_AUTHORITY_MISSING"
-            : "UNDECLARED_EFFECT";
         // Task 4: point to the specific call expression that requires the effect
         const callLocation = effectCallLocations.get(effect) ?? flow.location;
         // Task 5: suggestedCode is the complete contract.effects block with all merged effects
         const suggestedContractBlock = mergedEffects.length > 0
           ? buildContractEffectsBlock(mergedEffects)
           : "";
-        diagnostics.push({
-          code,
-          name,
+        const detail = {
           severity: "error",
           message: `${qualifierLabel} "${flow.name}" uses effect "${effect}" which is not declared.`,
           location: callLocation,
           suggestedFix: `Add "${effect}" to the effects declaration: effects [${mergedEffects.join(", ")}]`,
           suggestedCode: suggestedContractBlock,
-        });
+        } as const;
+        if (effect === "pii.read") {
+          diagnostics.push({
+            code: "FUNGI-PII-001",
+            name: "PII_AUTHORITY_MISSING",
+            ...detail,
+          });
+        } else if (effect === "phi.read" || effect === "phi.write") {
+          diagnostics.push({
+            code: "FUNGI-PHI-001",
+            name: "PHI_AUTHORITY_MISSING",
+            ...detail,
+          });
+        } else {
+          diagnostics.push({
+            code: "FUNGI-EFFECT-001",
+            name: "UNDECLARED_EFFECT",
+            ...detail,
+          });
+        }
       }
     }
 
@@ -841,19 +848,25 @@ export function checkFlowEffects(
         && !NON_CALL_OBSERVED_EFFECTS.has(effect)
         && !hasTransitiveEffect(flow.name, effect, allFlows, callGraph, new Set())
       ) {
-        const auditEvidenceMissing = effect === "audit.write";
-        diagnostics.push({
-          code: auditEvidenceMissing ? "FUNGI-AUDIT-001" : "FUNGI-EFFECT-007",
-          name: auditEvidenceMissing ? "AUDIT_EVIDENCE_MISSING" : "OVERDECLARED_EFFECT",
-          severity: auditEvidenceMissing ? "error" : "warning",
-          message: auditEvidenceMissing
-            ? `${qualifierLabel} "${flow.name}" declares audit.write but produces no audit evidence.`
-            : `${qualifierLabel} "${flow.name}" declares effect "${effect}" but no matching operation was observed.`,
-          location: flow.location,
-          suggestedFix: auditEvidenceMissing
-            ? `Call AuditLog.write on every terminal path, or remove audit.write when no audit obligation exists.`
-            : `Remove "${effect}" from the effects declaration if it is not required.`,
-        });
+        if (effect === "audit.write") {
+          diagnostics.push({
+            code: "FUNGI-AUDIT-001",
+            name: "AUDIT_EVIDENCE_MISSING",
+            severity: "error",
+            message: `${qualifierLabel} "${flow.name}" declares audit.write but produces no audit evidence.`,
+            location: flow.location,
+            suggestedFix: `Call AuditLog.write on every terminal path, or remove audit.write when no audit obligation exists.`,
+          });
+        } else {
+          diagnostics.push({
+            code: "FUNGI-EFFECT-007",
+            name: "OVERDECLARED_EFFECT",
+            severity: "warning",
+            message: `${qualifierLabel} "${flow.name}" declares effect "${effect}" but no matching operation was observed.`,
+            location: flow.location,
+            suggestedFix: `Remove "${effect}" from the effects declaration if it is not required.`,
+          });
+        }
       }
     }
   }

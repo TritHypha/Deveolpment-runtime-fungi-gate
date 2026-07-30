@@ -10,7 +10,7 @@ secure flow fetchRate(baseCurrency: String) -> FetchRateResult
 
 contract {
   types {
-    type FetchRateResult = Result<Decimal, RateError>
+    type FetchRateResult = Result<Int, RateError>
   }
 
   intent {
@@ -23,7 +23,7 @@ contract {
 }
 {
   unsafe let rawResponse = http.get("https://rates.example.com/" + baseCurrency)?
-  let rate: Decimal = json.decode(rawResponse)?
+  let rate: Int = json.decode(rawResponse)?
   return Ok(rate)
 }
 

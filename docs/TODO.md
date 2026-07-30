@@ -607,6 +607,27 @@ planning checkbox must never be used to imply that implementation exists.
   and external-write authority; forbids path disclosure or mutation; and asks
   for both the immediate owner wording and a future path-independent selection
   manifest.
+- **Task 10 post-review phase-close repair checkpoint (2026-07-30):** a fresh
+  root aggregate is green at 97/97 packages and 8,587 tests; the unified
+  harness passes unit 8,587, e2e 4/4, conformance 10/10, fidelity 9/9, and the
+  independent SLIDE adapter corpus 496/496. The complete scripts battery is
+  208/208 and its audit/lint meta-gate is 80/80. The first renewed strict close
+  found twelve repairable repository defects plus expected generated drift:
+  stale effect diagnostic construction defeated exact twin-parity inspection;
+  two hybrid registry security predicates were duplicated and therefore
+  ambiguous to mutation anchoring; the R4 report hid a refusal predicate behind
+  a derived Boolean; five curriculum/examples used noncanonical effects or
+  widened unfinished Decimal lowering debt; and the WASM validation ratchet
+  retained five repaired invalid modules. The source now exposes literal
+  diagnostic identities, single-sources both v1/v2 verifier/replay predicates,
+  uses the direct assembly refusal, restores canonical examples, and shrinks
+  the WASM invalid baseline 25 -> 20. Focused gates are green: twin type 23 and
+  effect 9 with no false diffs, mutation anchors 59/59, report blind-consumer
+  zero, WAT-lowering zero new violations, WASM-validation zero new invalid,
+  curriculum 232/232, compiler 5,748/5,748, app-kernel 127/127, and the core
+  package 42 prototype + 11 Node tests. Next: publish this source-only repair
+  commit, execute both real mutation kills, regenerate all fourteen governed
+  outputs against that stable HEAD, then rerun strict and exhaustive close.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,

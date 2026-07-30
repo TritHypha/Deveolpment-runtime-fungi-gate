@@ -20,13 +20,13 @@ enum ArithmeticBenchmarkError {
 /// @purpose Deterministic local benchmark that repeatedly adds i then increments i.
 /// @input Int threshold
 /// @output Result<ArithmeticBenchmarkReport, ArithmeticBenchmarkError>
-/// @effects [runtime.clock, runtime.metrics]
+/// @effects [clock.read, telemetry.read]
 secure flow runArithmeticThresholdBenchmark(
 threshold: Int
 ) -> Result<ArithmeticBenchmarkReport, ArithmeticBenchmarkError>
 contract {
   intent { "Measure a deterministic arithmetic loop with explicit runtime metrics." }
-  effects { runtime.clock, runtime.metrics }
+  effects { clock.read, telemetry.read }
 }
 {
   if threshold <= 0 {

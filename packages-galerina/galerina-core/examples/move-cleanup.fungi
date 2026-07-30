@@ -19,7 +19,7 @@ enum ConnectionError {
 secure flow closeConnection(conn: Connection) -> Result<Void, ConnectionError>
 contract {
   intent { "Close one admitted connection and return the terminal result." }
-  effects { network.close }
+  effects { network.external }
 }
 {
   let result: Result<Void, ConnectionError> = performClose(conn.host, conn.port)
@@ -30,7 +30,7 @@ contract {
 secure flow connectAndClose(host: String, port: Int) -> Result<Void, ConnectionError>
 contract {
   intent { "Open one admitted connection and close it before returning." }
-  effects { network.external, network.close }
+  effects { network.external }
 }
 {
   let conn: Connection = Connection { host: host, port: port }
