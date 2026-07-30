@@ -352,7 +352,8 @@ for (const candidate of selected) {
 
     const clean =
       r0Errors === 0 &&
-      assemblyFaithful &&
+      assembly.valid &&
+      assembly.diagnostics.length === 0 &&
       ambientImports.length === 0 &&
       ledgerHashMatches !== false &&
       admitted;
@@ -361,7 +362,8 @@ for (const candidate of selected) {
       r0Errors,
       bytes,
       sha256,
-      assemblyFaithful,
+      assemblyFaithful:
+        assembly.valid && assembly.diagnostics.length === 0,
       imports,
       ambientImports,
       ledgerHashMatches,

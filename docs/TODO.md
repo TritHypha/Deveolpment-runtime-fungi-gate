@@ -628,6 +628,22 @@ planning checkbox must never be used to imply that implementation exists.
   package 42 prototype + 11 Node tests. Next: publish this source-only repair
   commit, execute both real mutation kills, regenerate all fourteen governed
   outputs against that stable HEAD, then rerun strict and exhaustive close.
+- **Task 10 renewed strict-close review:** source repair commit `869abca6`
+  is local-only. Both shared registry mutants are killed independently and
+  restore their target clean. The first post-regeneration strict run passes
+  79 gates and identifies four reds: the expected owner-only memory graph;
+  code-index ordering drift because later status/roadmap writers move indexed
+  documentation; one R4 refactor residue still referenced the removed
+  `assemblyFaithful` Boolean; and governance diff correctly classifies the
+  example migration from nonexistent effects to canonical `clock.read`,
+  `telemetry.read`, and `network.external` as authority expansion. The
+  authority change is explicitly accepted here: retaining unrecognized effect
+  names would falsely claim enforcement that does not exist. All affected
+  flows remain `secure`, declare their real canonical effects, and receive no
+  implicit authority. Fix the R4 residue, publish this review without further
+  `.fungi` authority changes, run status/roadmap before the final
+  code-index/code-registry/coverage refresh, and rerun strict close. The memory
+  graph remains closed pending exact owner authorization.
 - **Task 7 partial checkpoint:** the generator contract core now has a
   test-first explicit `generate` command (it cannot be inferred from
   `--check`), canonical policy validation, exact fixture write-set checking,
