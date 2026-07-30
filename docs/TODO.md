@@ -150,6 +150,17 @@ planning checkbox must never be used to imply that implementation exists.
   file-barrier/exclusive-publication/directory-barrier sequence rather than a
   post-publication callback. No sidecar/shell/PowerShell authority is admitted
   and no owner private key is required for disposable-key engineering tests.
+- **Transcript-corpus R&D addendum:** the owner-supplied RD-0584--RD-0599
+  corpus has been source-bound and adjudicated in
+  `../SLIDE/docs/research/TRANSCRIPT-CORPUS-RD0584-RD0599-ADJUDICATION-2026-07-30.md`.
+  Its receipt-bound seeded deterministic-simulation recommendation is adopted
+  as a required falsification harness for the registry state machine. Each
+  replay must bind its seed, logical schedule, fault-model version, explored
+  budget, adapter/source digest and expected invariant, with a known-good
+  control and planted faults. This evidence cannot substitute for real
+  Windows/Linux/macOS filesystem, crash and power-loss evidence; unknown,
+  uncovered or exhausted simulations remain fail-closed
+  `INDETERMINATE`.
 - **Parallel package-analysis lane:** external AIs may now produce read-only,
   evidence-labelled conversion dossiers using
   `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`.

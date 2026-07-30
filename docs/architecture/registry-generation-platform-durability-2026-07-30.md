@@ -127,6 +127,31 @@ triple and loader path must all be content-bound. SLIDE later replaces that
 bootstrap with the same contract rather than preserving a language-specific
 trusted component.
 
+## Deterministic simulation role
+
+A canonical seeded deterministic simulator is required for the registry
+activation state machine. It must control logical time and scheduling and
+inject bounded faults at every write, flush, close, publication, re-open,
+verification, checkpoint, canary, fallback and custody boundary. The fault
+model must include short writes, reordered or refused operations, collisions,
+process termination and restart. Every run must emit a replay receipt binding
+the seed, simulator and adapter/source digests, fault-model version, explored
+budget, expected invariant and observed terminal state. A known-good control
+and deliberately planted faults are required so a passing harness cannot be
+mistaken for evidence that the fault injector did nothing.
+
+The only admissible simulated terminal authority is the prior complete
+generation or the new complete generation. Mixed, unauthenticated, uncovered
+or budget-exhausted outcomes are `INDETERMINATE` and fail the release gate.
+Simulation output is evidence about the declared state-machine model; it
+cannot prove that a real filesystem, controller or storage device honoured a
+physical durability barrier. Production admission therefore still requires
+the platform-specific crash and power-loss evidence listed above.
+
+The source-bound research adjudication and its zero-trust scores are recorded
+in
+[`SLIDE/docs/research/TRANSCRIPT-CORPUS-RD0584-RD0599-ADJUDICATION-2026-07-30.md`](../../../SLIDE/docs/research/TRANSCRIPT-CORPUS-RD0584-RD0599-ADJUDICATION-2026-07-30.md).
+
 ## Zero-trust adoption score
 
 Status: `PENDING`
