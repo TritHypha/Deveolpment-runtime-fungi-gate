@@ -178,13 +178,13 @@ switch, triple verification, drain, fallback, revoke and retire against real
 registry delegation/public artifacts. Private-key operations remain behind a
 least-authority custody provider.
 
-- [ ] Write failing snapshot tests for missing epoch, unknown epoch,
+- [x] Write failing snapshot tests for missing epoch, unknown epoch,
   active/retiring verification, revoked epoch, rollback, key substitution and
   ambiguous two-key success.
 - [ ] Write failing orchestration tests using disposable keys for every phase,
   crash/restart boundary, expired delegation, failed canary, failed drain,
   fallback and candidate revocation.
-- [ ] Implement epoch-aware serialization without serializing private key
+- [x] Implement epoch-aware serialization without serializing private key
   material or accepting a caller-selected verifier.
 - [ ] Implement the custody and registry adapters. Triggers propose only;
   Triple-Lock K3 gates decide; `UNKNOWN` exits without switching.
@@ -192,6 +192,14 @@ least-authority custody provider.
   Citizen, Sentinel State/Egress and registry suites.
 - [ ] Update rotation architecture, TODO, roadmap and completion evidence;
   commit without performing a real owner ceremony.
+
+**State epoch checkpoint 2026-07-30:** Snapshot v2 binds `keyEpoch` and `keyId`
+into the MAC. Tower's adapter verifies the MACed ring, permits active/retired
+symmetric epochs only, resolves exact custody bytes, and re-derives their
+domain-separated commitment. Missing, substituted, revoked, asymmetric,
+tampered or throwing inputs return no authority. Sentinel State 20/20 and
+Tower Citizen 483/483 pass. Automatic asymmetric registry rotation remains
+open below this checkpoint.
 
 ### Task 4: Close Galerina beta v1 at a fresh fixed point
 

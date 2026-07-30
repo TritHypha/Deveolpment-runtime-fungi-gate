@@ -58,10 +58,17 @@ planning checkbox must never be used to imply that implementation exists.
   inject a verifier that returns `true`. Fresh evidence: Tower Citizen
   **480/480**, app-kernel **151/151**, registry **35/35**, auth **59/59**,
   Hardened Border **98/98**, authority CLI **9/9**, index CLI **20/20**.
-- **Current work:** Task 3 in the binding plan—bind registry verification and
-  serialized state to the existing authenticated key-ring epochs, then
-  implement automatic operational-key rotation with disposable keys. This
-  removes caller-selected freshness authority before beta close.
+- **Task 3 checkpoint:** Sentinel State snapshots are now v2 and MAC-bind the
+  non-secret key epoch and key identity. Tower's provider verifies the
+  append-only ring, selects active/retired symmetric epochs, resolves exact
+  custody bytes and checks their domain-separated commitments. Unknown,
+  revoked, substituted, asymmetric, weak, tampered and throwing paths refuse.
+  Fresh complete evidence: Sentinel State **20/20**, Tower Citizen **483/483**.
+- **Current work:** complete the asymmetric operational-registry half of Task
+  3 with disposable keys: pre-authorized candidate delegation, trigger-only
+  scheduler, readiness/Triple-Lock/canary/drain/fallback orchestration, then
+  bind registry freshness floors to its authenticated epoch state. No real
+  owner key operation is performed by this work.
 - **Current owner questions:** none. A future real operational rotation
   ceremony remains an owner custody act, but implementation and disposable-key
   verification proceed without it.

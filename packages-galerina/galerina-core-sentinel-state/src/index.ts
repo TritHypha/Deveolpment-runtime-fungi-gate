@@ -5,6 +5,11 @@
 
 export { SecurityTrap, HardenedBorderViolation } from "./errors.js";
 export { StateSerializer } from "./state-serializer.js";
-export type { Snapshot } from "./state-serializer.js";
+export type {
+  Snapshot,
+  SnapshotKeyHandle,
+  SnapshotKeyProvider,
+  StateSerializerOptions,
+} from "./state-serializer.js";
 export { AtomicWriter } from "./atomic-writer.js";
 export { ColdBootOrchestrator } from "./cold-boot.js";

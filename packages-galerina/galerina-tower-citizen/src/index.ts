@@ -212,6 +212,16 @@ export type {
   RegistryPublicVerifiers,
 } from "./registry-public-verifier.js";
 
+export {
+  createSnapshotKeyProvider,
+  snapshotKeyCommit,
+} from "./snapshot-key-provider.js";
+export type {
+  SnapshotEpochKeyHandle,
+  SnapshotKeyProviderOptions,
+  TowerSnapshotKeyProvider,
+} from "./snapshot-key-provider.js";
+
 // ── Plugin manifest (RD-0236 #10) — signed plugin-metadata + hash-vs-bytes verification at load ──
 export {
   canonicalPluginManifestString, pluginManifestHash, artifactBytesHash,

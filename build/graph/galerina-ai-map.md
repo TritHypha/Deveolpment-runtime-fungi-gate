@@ -1165,6 +1165,9 @@ Provides:
 - SecurityTrap
 - HardenedBorderViolation
 - Snapshot
+- SnapshotKeyHandle
+- SnapshotKeyProvider
+- StateSerializerOptions
 - StateSerializer
 
 ## galerina-core-sentinel-time
