@@ -11,9 +11,9 @@
  * Fixtures (committed under tests/fixtures/tls/, generated once with openssl — see
  * tests/fixtures/tls/gen-certs.sh):
  *   - ca.crt ................ the trusted CA the server validates client certs against
- *   - server.key/.crt ....... the server's own TLS identity (CN/SAN 127.0.0.1)
- *   - client-good.key/.crt .. signed by ca.crt  → Node sets socket.authorized === true
- *   - client-untrusted.* .... signed by a DIFFERENT (untrusted) CA → socket.authorized === false
+ *   - TEST-ONLY-server.key + server.crt ........ disposable server identity
+ *   - TEST-ONLY-client-good.key + client-good.crt ... trusted disposable client
+ *   - TEST-ONLY-client-untrusted.key + client-untrusted.crt ... untrusted control
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -30,13 +30,13 @@ import { createApiServer, listen } from "../dist/index.js";
 const FIX = path.join(path.dirname(fileURLToPath(import.meta.url)), "fixtures", "tls");
 const read = (f) => fs.readFileSync(path.join(FIX, f));
 
-const SERVER_KEY = read("server.key");
+const SERVER_KEY = read("TEST-ONLY-server.key");
 const SERVER_CERT = read("server.crt");
 const CA_CERT = read("ca.crt");
 const CLIENT_GOOD_CERT = read("client-good.crt");
-const CLIENT_GOOD_KEY = read("client-good.key");
+const CLIENT_GOOD_KEY = read("TEST-ONLY-client-good.key");
 const CLIENT_UNTRUSTED_CERT = read("client-untrusted.crt");
-const CLIENT_UNTRUSTED_KEY = read("client-untrusted.key");
+const CLIENT_UNTRUSTED_KEY = read("TEST-ONLY-client-untrusted.key");
 
 /** A pin is sha256 over the leaf cert's DER bytes — EXACTLY what the adapter computes from
  *  getPeerCertificate(true).raw. Deriving it from the fixture keeps the test self-consistent. */
