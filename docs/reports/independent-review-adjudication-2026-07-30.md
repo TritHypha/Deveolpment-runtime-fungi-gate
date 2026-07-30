@@ -2,10 +2,17 @@
 
 Date: 2026-07-30
 
-Status: first Galerina/SLIDE review pass reconciled
+Status: ten-report Galerina/SLIDE/GATE/TLL/KB review pass reconciled
 
 Policy: reviewer reports are advisory evidence; source and fresh execution
 decide implementation state
+
+The cross-repository finding ledger and dependency order are recorded in
+`../../../ZTF-Knowledge-Bases/ai-reviews/INDEPENDENT-REVIEW-ADJUDICATION-2026-07-30.md`.
+This in-repository report remains the Galerina release-facing view.
+External/AI proposals must complete the companion
+`../../../ZTF-Knowledge-Bases/ai-reviews/ZERO-TRUST-ADOPTION-SCORE.md` gate
+after R&D and before architectural adoption.
 
 ## Review timing
 
@@ -32,7 +39,7 @@ no platform durability adapter, so the release conclusion remains red.
 | Public status contained local custody metadata | Accepted, corrected | Exact local file size and timestamp were removed from the public TODO. Key contents remain unread and private |
 | Every release-critical tool needs anti-neuter/freshness evidence | Accepted, open | The existing audit meta-gate is strong but the terminal release receipt must bind tool subject, source snapshot, control/mutation evidence and output |
 | Production might accept legacy v1 index | Already closed; test gap fixed | `verifyRegistryIndexUnderDelegation` already hard-refuses every schema except v2 and requires the hybrid envelope. A direct v1 downgrade-refusal assertion now preserves that boundary |
-| Nineteen signing refusal codes lacked direct test mention | Accepted, open | Build one negative or mutation witness per release-relevant refusal code; do not mark a code covered merely because an aggregate suite is green |
+| Nineteen signing refusal codes lacked direct test mention | Accepted, fixed | The recon now reports 51/51 signing-path refusal codes with direct test mention. Each formerly uncovered code has a specific negative/control witness; fault injection also exposed and fixed the pre-emptive compiler import that made the hybrid-verifier-unavailable diagnostic unreachable |
 | Canonical-string correspondence was the only generation equality check | Accepted, fixed | Generation verification now performs field-wise entry/list equality and canonical-byte equality |
 | One nested package remains | Accepted, tracked | Keep the shrink-only ratchet and retire it with the flat-package/Node dependency cutover |
 
@@ -55,6 +62,37 @@ VPEG and the Neural Shape Engine remain experimental. Learned or cached
 proposals may reduce search, but cannot grant authority, change semantics,
 collapse K3 or bypass deterministic re-derivation.
 
+The additional SLIDE/predecessor findings add four explicit prerequisites:
+
+1. move the live V2 GIR contracts out of the uncommitted predecessor and into
+   a committed SLIDE authority path before archiving the predecessor;
+2. bind every profile claim to its exact executable envelope and source-set
+   digest;
+3. add an ordinary action-cache control to the VPEG experiment so graph reuse
+   is not compared only with “no reuse”; and
+4. close the historical `while -> if -> if -> while` mutation-propagation
+   regression in Galerina and share it with SLIDE.
+
+The digest-suite agility finding is accepted as a versioned shared-contract
+migration. It must not be “fixed” by loosening the current canonical digest
+regex: old/new decoding, downgrade refusal and fixture migration are required.
+
+## Adjacent-project consequences
+
+GATE v3 remains outside the beta authority path and `.gate` remains late/on
+hold. Before any future integration, its fail-open unknown registry-type path,
+untrusted default `check`, port-name-derived K3 shape, missing resource
+ceilings, unsigned registry generation and incomplete semantic fingerprint
+must close at the public seam.
+
+The Knowledge Base review found a producer-side private-index gap and stale
+diagnostic branding. The KB generator now excludes private-classified sources
+before reading/indexing them, the five review prompts use portable workspace
+placeholders, and the current authority model uses `FUNGI-SEC-014`. A
+machine-readable authority/supersession snapshot and generation-mismatch gate
+remain open; until they exist, lexical retrieval is evidence discovery rather
+than implementation authority.
+
 ## Package conversion consequence
 
 External AIs can safely prepare read-only per-package dossiers now. Actual
@@ -71,6 +109,6 @@ This separation allows parallel analysis without creating incompatible
 
 Galerina beta v1 remains non-authorizing. The current principal engineering
 blocker is admitted cross-platform registry-generation durability plus
-crash/fault evidence. Detached GIR, refusal-code witnesses and pinned
-release-receipt work also remain before the terminal release gate. No new
-owner-key ceremony is required for these engineering tasks.
+crash/fault evidence. Detached GIR and pinned release-receipt work also remain
+before the terminal release gate. No new owner-key ceremony is required for
+these engineering tasks.

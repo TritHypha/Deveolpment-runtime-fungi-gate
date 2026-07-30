@@ -2,9 +2,9 @@
 
 Date: 2026-07-30
 
-Phase: read-only conversion dossiers
+Phase: read-only dossiers plus separately assigned external candidate translations
 
-Implementation authorization: not yet granted
+Galerina integration authorization: not yet granted
 
 ## Purpose
 
@@ -14,9 +14,13 @@ use
 `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`
 once per assigned package.
 
-This batch does not authorize source edits. The executable SLIDE package ABI,
-host-effect boundary and differential harness are not yet frozen. Translating
-against an assumed ABI would create rework and could erase security semantics.
+This batch does not authorize Galerina source edits. A separately assigned AI
+may write one candidate only under the external
+`Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/` quarantine,
+following that workspace's handover and flat-topology audit. The executable
+SLIDE package ABI, host-effect boundary and differential harness are not yet
+frozen, so such a candidate is syntax/parity preparation rather than an
+integrated or executable replacement.
 
 ## Batch assignments
 
@@ -33,6 +37,12 @@ against an assumed ABI would create rework and could erase security semantics.
 
 Each package has one assigned reviewer and one named report. Reviewers must not
 share an editable worktree or edit a shared/generated file.
+
+The coordinator-authored reference candidate is
+`Galerina-Fungi-Package-Staging/packages-galerina/galerina-substrate-math/`.
+It passes current plain and strict Galerina frontend checks, but remains
+`PENDING` because executable SLIDE parity and mutation evidence do not yet
+exist.
 
 ## Why these are dossiers rather than translations
 
@@ -67,5 +77,6 @@ Batch preparation is complete only when all eight named dossiers:
 - list exact SLIDE blockers without silently inventing them;
 - identify any defensible paper/falsification opportunity.
 
-No dossier changes package completion percentages. Only executed, independently
-verified `.fungi` behavior can do that.
+No dossier or quarantined candidate changes package completion percentages.
+Only executed, independently verified and admitted `.fungi` behavior can do
+that.

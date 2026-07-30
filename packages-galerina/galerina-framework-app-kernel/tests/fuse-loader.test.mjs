@@ -41,9 +41,9 @@ test("registryCheck DENY refuses the fuse even for an otherwise-admissible packa
     () => fusePackage(DEMO_DIR, {
       allowUnsigned: true,
       warn: () => {},
-      registryCheck: () => ({ ok: false, code: "ERR_REGISTRY_PACKAGE_UNKNOWN", reason: "not in the certified index" }),
+      registryCheck: () => ({ ok: false, reason: "not in the certified index" }),
     }),
-    /ERR_REGISTRY_PACKAGE_UNKNOWN|central registry refused/,
+    /FUNGI-FUSE-REGISTRY-DENIED.*central registry refused/,
   );
 });
 
@@ -83,8 +83,61 @@ test("the built demo package fuses (allowUnsigned: placeholder-signed) and invok
   assert.deepEqual([...component.capabilities], ["network.inbound"]);
   // The demo's main() returns the HTTP status 200 directly (pure governed flow).
   assert.equal(component.invoke("main"), 200);
+  assert.throws(
+    () => component.invoke("not-an-export"),
+    /FUNGI-FUSE-NO-EXPORT/,
+    "the valid component control must still refuse an export absent from its closed surface",
+  );
   // allowUnsigned must WARN that it admitted an unsigned manifest.
   assert.ok(lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED-ALLOWED")), "expected an unsigned-allowed warning");
+});
+
+test("missing package descriptor refuses with FUNGI-FUSE-NO-PACKAGE and preserves the valid control", async () => {
+  const { root, pkg } = copyDemo();
+  try {
+    const control = await fusePackage(pkg, { allowUnsigned: true, warn: () => {} });
+    assert.equal(control.invoke("main"), 200, "the unchanged package must remain the non-vacuous control");
+
+    rmSync(join(pkg, "package.fungi.json"));
+    await assert.rejects(
+      () => fusePackage(pkg, { allowUnsigned: true, warn: () => {} }),
+      /FUNGI-FUSE-NO-PACKAGE/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("missing manifest refuses with FUNGI-FUSE-NO-MANIFEST and preserves the valid control", async () => {
+  const { root, pkg } = copyDemo();
+  try {
+    const control = await fusePackage(pkg, { allowUnsigned: true, warn: () => {} });
+    assert.equal(control.invoke("main"), 200, "the unchanged package must remain the non-vacuous control");
+
+    rmSync(join(pkg, "dist", "my-custom-api-rest.lmanifest.json"));
+    await assert.rejects(
+      () => fusePackage(pkg, { allowUnsigned: true, warn: () => {} }),
+      /FUNGI-FUSE-NO-MANIFEST/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("malformed sidecar refuses with FUNGI-FUSE-BAD-SIDECAR and preserves the valid control", async () => {
+  const { root, pkg } = copyDemo();
+  try {
+    const control = await fusePackage(pkg, { allowUnsigned: true, warn: () => {} });
+    assert.equal(control.invoke("main"), 200, "the unchanged sidecar must remain the non-vacuous control");
+
+    writeFileSync(join(pkg, "dist", "my-custom-api-rest.fuse.json"), "{");
+    await assert.rejects(
+      () => fusePackage(pkg, { allowUnsigned: true, warn: () => {} }),
+      /FUNGI-FUSE-BAD-SIDECAR/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 // ── 2 — a tampered .wasm (hash ≠ signed descriptor) is rejected, fail-closed ──
@@ -174,6 +227,14 @@ test("a real Ed25519-signed manifest is verified; tampering the body is rejected
     const component = await fusePackage(pkg, { governanceDir: govDir, warn });
     assert.equal(component.invoke("main"), 200);
     assert.ok(!lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
+
+    writeFileSync(join(govDir, `signing-key-${keyId}.pub.pem`), "not a public key");
+    await assert.rejects(
+      () => fusePackage(pkg, { governanceDir: govDir, warn: () => {} }),
+      /FUNGI-FUSE-SIG-ERROR/,
+      "a malformed verifier key must fail closed instead of degrading to unsigned",
+    );
+    writeFileSync(join(govDir, `signing-key-${keyId}.pub.pem`), publicKey);
 
     // Now TAMPER the signed body (flip a field) without re-signing → verification fails.
     const tampered = JSON.parse(readFileSync(manifestPath, "utf8"));

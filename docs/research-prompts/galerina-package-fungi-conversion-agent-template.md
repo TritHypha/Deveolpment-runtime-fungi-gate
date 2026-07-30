@@ -6,19 +6,26 @@ Use this template once per direct child of
 `<WORKSPACE>/Galerina/packages-galerina`.
 Replace every `<PACKAGE>` placeholder before giving it to an AI.
 
-## Current permitted phase: read-only conversion dossier
+## Current permitted phase: dossier plus external quarantined candidate
 
 SLIDE does not yet provide the frozen executable package ABI, host-effect
 boundary and differential harness required to replace a TypeScript runtime.
-Therefore the AI must not edit source yet. It may inspect the repository and
+Therefore the AI must not edit Galerina source. It may inspect the repository,
 write exactly one dossier:
 
 `<WORKSPACE>/ZTF-Knowledge-Bases/ai-reviews/reports/package-conversion-<PACKAGE>.md`
 
-All Galerina, SLIDE, triLowLevel-v2 and Knowledge Base source is read-only.
+and, only when separately assigned, write one candidate under:
+
+`<WORKSPACE>/Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/`
+
+The candidate assignment is governed by the staging workspace's
+`HANDOVER.md`, `STAGING-RULES.md` and `AI-ASSIGNMENT-TEMPLATE.md`. All
+Galerina, SLIDE, triLowLevel-v2 and Knowledge Base source remains read-only.
 Do not install dependencies, regenerate indexes/graphs/builds, change lock
 files, commit, push, sign, rotate keys, open private documents or read any
-`.env` file. Do not describe a planned `.fungi` translation as implemented.
+`.env` file. Do not describe a staged `.fungi` candidate as integrated,
+executable or an implemented replacement.
 
 ## Subject
 
@@ -92,10 +99,13 @@ Answer with file/line evidence and label each conclusion `VERIFIED`,
 9. Recommend a dependency-order tranche. State which upstream `.fungi`/SLIDE
    contracts must freeze before this package can execute and which downstream
    packages it would unblock.
-10. Propose the exact future file layout in the same package directory. Do not
-    create it. Include `.fungi` sources, retained differential fixtures,
-    generated artifacts and deletion gates for `.ts`, package-local
-    `node_modules` and obsolete Wasm/Rust/sidecar material.
+10. Propose the exact future file layout in the same Galerina package
+    directory. Do not create it there. If separately assigned a quarantined
+    candidate, create only the matching top-level peer directory in
+    `Galerina-Fungi-Package-Staging/packages-galerina/`. Include `.fungi`
+    sources, retained differential fixtures, generated artifacts and deletion
+    gates for `.ts`, package-local `node_modules` and obsolete
+    Wasm/Rust/sidecar material.
 11. Define the terminal equivalence proof: observable outputs, diagnostics,
     K3 decisions, effects/capabilities, resource limits, timing/determinism
     expectations and security refusals that must match or deliberately
@@ -122,9 +132,11 @@ Answer with file/line evidence and label each conclusion `VERIFIED`,
 
 ## Later implementation authorization
 
-Actual translation is permitted only after the coordinating Galerina branch
-records the frozen SLIDE package ABI and assigns one isolated branch/worktree
-for this package. At that point:
+Import into Galerina, execution claims and TypeScript retirement are permitted
+only after the coordinating Galerina branch records the frozen SLIDE package
+ABI and assigns one isolated branch/worktree for this package. Quarantined
+candidate authoring may occur earlier under the external staging rules, but
+cannot authorize any of those actions. At the integration point:
 
 - do not edit root/shared indexes, registries, package inventories, lock files
   or generated graphs;

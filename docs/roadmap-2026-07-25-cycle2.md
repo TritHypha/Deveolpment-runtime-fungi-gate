@@ -152,9 +152,9 @@ Ordering is a dependency chain, not a preference.
 3. **#170** — rebuild the VAL-001 rename properly scoped: twin emit + intent line · 4 consumer sites with
    `VAL-001`-for-`safety_critical` kept as the discriminating control · KB registration marked TWIN-ONLY.
 4. **GOV-005 taxonomy reconcile** (owner-authorised) → gov-verifier 6th flip under doc-08 §5a.
-5. **#168** — 19 of 20 signing refusals unproven. Next lock `MANIFEST-NONCANONICAL`, with its own control.
-   *Recon is shared; assertions are not* — a shared harness can drive twenty codes but cannot invent
-   twenty discriminators. The recon map (`audit-signing-refusal-recon.mjs`, report-only) ranks the queue.
+5. ✅ **#168** — all 20 originally unproven signing refusals now have their own
+   negative/control witness; the recon map reports 51/51 directly mentioned
+   signing-path codes and zero gaps.
 6. **#171 — DIAG shape, settled asymmetric.** `.ts` full construction (registry becomes an import, not a
    parse — kills emit-form and code-shape blindness together); twins literal `name:` + exact-match gate.
    Explicit deliverable: **C1c graduates advisory → gating**.

@@ -31,8 +31,13 @@ import {
   manifestSigCanon,
   serializeManifestCBOR,
   decodeCBOR,
+  resolveCompilerVersion,
 } from "../dist/manifest-generator.js";
 import { sign as cryptoSign, verify as cryptoVerify, generateKeyPairSync, createPublicKey, createPrivateKey } from "node:crypto";
+import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 // ---------------------------------------------------------------------------
 // Minimal valid inputs (shapes per src/parser.ts FlowMeta / SourceLocation)
@@ -100,6 +105,29 @@ describe("manifest-generator: sourceFile presence", () => {
       Object.prototype.hasOwnProperty.call(bodyOf(m), "sourceFile"),
       "sourceFile must live in the manifest body (the signing target)",
     );
+  });
+});
+
+describe("manifest-generator: compiler-version provenance", () => {
+  it("resolves the shipped compiler version and refuses an unstamped module copy", async () => {
+    assert.match(resolveCompilerVersion(), /^\d+\.\d+\.\d+/);
+
+    const root = mkdtempSync(join(tmpdir(), "galerina-manifest-version-"));
+    try {
+      const dist = join(root, "dist");
+      mkdirSync(dist, { recursive: true });
+      cpSync(join(import.meta.dirname, "..", "dist", "manifest-generator.js"), join(dist, "manifest-generator.js"));
+      cpSync(join(import.meta.dirname, "..", "dist", "capability-types.js"), join(dist, "capability-types.js"));
+      writeFileSync(join(root, "package.json"), JSON.stringify({ type: "module" }));
+
+      const isolated = await import(pathToFileURL(join(dist, "manifest-generator.js")).href);
+      assert.throws(
+        () => isolated.resolveCompilerVersion(),
+        /FUNGI-MANIFEST-VERSION-UNAVAILABLE/,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

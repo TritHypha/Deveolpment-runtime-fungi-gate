@@ -32,6 +32,7 @@ flowchart LR
     F["🟥 Beta-v1 release gate<br/>terminal fixed-point rerun"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
+    Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
     T["🟦 Package retirement<br/>473 tracked source .ts → 0<br/>484 all tracked .ts → 0<br/>95 node_modules → 0"]
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
@@ -43,6 +44,8 @@ flowchart LR
     Z --> E
     G --> P
     H --> M
+    E --> Q
+    Q --> I
     M --> I
 
     classDef green fill:#166534,color:#ffffff,stroke:#22c55e,stroke-width:2px;
@@ -52,6 +55,7 @@ flowchart LR
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z green;
     class X,F red;
+    class Q amber;
     class H,I,T,M blue;
     class P green;
     class J grey;
@@ -79,11 +83,12 @@ flowchart LR
 | Sensitive-data lessons | 🟩 | PII, PHI, audit-evidence and protected-response examples now emit their exact fail-closed diagnostics |
 | Focused compiler tests | 🟩 | Effect checker 68/68; governance verifier 121/121 at this tranche |
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
-| Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,748/5,748 tests |
+| Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,750/5,750 tests |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 60/60 mutation anchors green |
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
 | Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
 | Governed mutation non-vacuity | 🟩 | Full catalog 60/60 killed, zero survivors, zero dirty targets |
+| External flat `.fungi` candidate lane | 🟨 | `../Galerina-Fungi-Package-Staging` has a binding handover, AI assignment template and topology audit. The `galerina-substrate-math` reference passes plain and strict frontend checks, but is deliberately non-authorizing until SLIDE execution, parity, mutation and admission gates pass |
 
 ## Active Galerina work
 
@@ -132,18 +137,23 @@ The remaining sequence is:
    retirement graph, one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
    without hiding or renaming a member.
+   External AIs may prepare flat, quarantined candidates in parallel, one
+   direct peer package each. They may not create npm-style nested plugin
+   trees, edit Galerina, or claim replacement completion.
 8. Run the full governed benchmark and both requested charts only after the
    independent SLIDE backend executes equivalent workloads.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,637 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,680 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
-nodes, 42 stale negative examples, 19 signing refusal codes without a direct
-test mention, and 34 cross-package relative imports.
+nodes, 42 stale negative examples, 0 signing refusal codes without a direct
+test mention, and 34 cross-package relative imports. The signing inventory is
+now closed at 51/51 directly mentioned refusals with specific negative/control
+witnesses.
 
-The fresh unified lane totals are unit 8,637, end-to-end 4/4, conformance
+The fresh unified lane totals are unit 8,680, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
 meta-gate covers all 80/80 discovered audit/lint gates with non-vacuous
 refusal/control evidence; the tooling contract reports 98 packages and 151

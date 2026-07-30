@@ -150,8 +150,16 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/research-prompts/galerina-package-fungi-conversion-agent-template.md`.
   Batch 01 assigns eight self-contained packages in
   `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`.
-  Source translation remains locked until the executable SLIDE package ABI,
-  effects boundary and differential harness are frozen.
+  They may also be separately assigned one candidate translation under the
+  external `../Galerina-Fungi-Package-Staging/packages-galerina/<PACKAGE>/`
+  quarantine. That workspace enforces one flat top-level copy of every
+  package/plugin, forbids npm-style nested dependencies, and keeps Galerina,
+  SLIDE and KB read-only. The coordinator reference
+  `galerina-substrate-math` passes plain and strict frontend checks with zero
+  errors/warnings plus the topology audit; executable parity, mutation
+  evidence, admission and TypeScript retirement remain blocked. Galerina
+  source translation/integration remains locked until the executable SLIDE
+  package ABI, effects boundary and differential harness are frozen.
 - **Owner-custody question, non-blocking for implementation:** an ignored
   repository-root signing environment may remain after the owner reported
   removal of the extra online operational-key copy. Its contents and identity
@@ -163,14 +171,20 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/reports/independent-review-adjudication-2026-07-30.md`. The reports
   were written against the pre-`1c20cd5c` dirty checkpoint, so missing
   generation persistence/state-binding findings are historical rather than
-  current. Their remaining platform, detached-GIR, release-receipt and
-  refusal-code coverage findings stay open.
+  current. Their remaining platform, detached-GIR and release-receipt
+  findings stay open. The refusal-code coverage finding is now closed.
+- **AI/R&D adoption gate:** every reviewer suggestion is advisory until it is
+  reconciled in the Knowledge Base adjudication ledger and evaluated by
+  `../ZTF-Knowledge-Bases/ai-reviews/ZERO-TRUST-ADOPTION-SCORE.md`. Incomplete
+  research is `PENDING`, not given an optimistic percentage; any hard veto
+  (including graph/model/cache output acquiring authority) overrides a
+  weighted average.
 - A future real operational rotation ceremony remains an owner custody act,
   but implementation and disposable-key verification proceed without it.
 
 ### Terminal fixed-point checkpoint - 2026-07-30
 
-- **Fresh root aggregate:** **98/98 packages and 8,637 tests** pass.
+- **Fresh root aggregate:** **98/98 packages and 8,680 tests** pass.
 - **Fresh graph/generator evidence:** all five repository-owned graph surfaces
   generate and pass exact check mode; all fourteen declared generator
   contracts pass their isolated fixed-point tests.
@@ -186,7 +200,7 @@ planning checkbox must never be used to imply that implementation exists.
   zero-trust thesis **78%**, build progress **75%**, and the tracking registry
   contains **21** items. These are evidence meters, not release authorization.
 - **Fresh unified harness:** all five lanes pass in one invocation: unit
-  **8,637**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  **8,680**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
   the Galerina SLIDE-adapter corpus **496/496**.
 - **Fresh audit inventory:** all **80/80** audit/lint gates have executable
   refusal/control evidence; the tooling contract sees 98 packages and 151
@@ -312,9 +326,9 @@ planning checkbox must never be used to imply that implementation exists.
   repository.
 - **Fresh doc guards:** private-doc leak self-test and live scan are green,
   path-leak self-test and live scan are green, and doc/source drift reports
-  zero violations at the current 98-package/8,637-test baseline.
+  zero violations at the current 98-package/8,680-test baseline.
 - **Current:** the complete generated graph/code/coverage/component-health
-  dependency chain is refreshed. Root tests are 98/98 packages and 8,637
+  dependency chain is refreshed. Root tests are 98/98 packages and 8,680
   tests; strict/exhaustive phase-close are 83/83 and 84/84.
 - **Current safe boundary:** admit and commit the exact returned signed index,
   its public verification regression, regenerated graphs and continuity
@@ -459,7 +473,7 @@ planning checkbox must never be used to imply that implementation exists.
   verifier, native backend, production runner, and narrow `.fungi` Wasm
   compatibility engine are not implemented by this beta-safe migration.
 - **Broad close evidence:** the complete aggregate passes **98/98 packages,
-  8,637 tests**; all fourteen declared generator contracts and all five graph
+  8,680 tests**; all fourteen declared generator contracts and all five graph
   surfaces are green; strict phase-close passes **83/83** and exhaustive
   passes **84/84**, including its 98/98 package child.
 - **Current release boundary:** repository verification is green. The live
@@ -550,7 +564,7 @@ planning checkbox must never be used to imply that implementation exists.
   green.
 - **Fresh verification boundary:** compiler typecheck/build is green; the
   curriculum audit is **232/232**, zero known drift and zero new regression.
-  The post-tranche full compiler package is **5,748/5,748**. The diagnostic
+  The post-tranche full compiler package is **5,750/5,750**. The diagnostic
   namespace gate initially refused unregistered `FUNGI-GOV-025`; registering
   `GOV-025`, `SECRET-007`, and `TYPE-034` in the canonical Knowledge Base
   restored the full green without an allowlist entry.
@@ -653,7 +667,7 @@ planning checkbox must never be used to imply that implementation exists.
   backup residue. Enforced audits are green. Report-only tools exposed work
   that remains visible rather than being counted as release success:
   **132** module-wide unlowered WAT nodes (**74** on the live run path),
-  **42** stale negative teaching examples, **19** signing-path refusal codes
+  **42** stale negative teaching examples, **0** signing-path refusal codes
   with no direct test mention, **34** cross-package relative imports, and
   self-host readiness of **101 `.fungi` / 449 `.ts` files (18%)** across 95
   code packages. The beta-v1 meaning of “100% `.fungi`” remains the governed
@@ -1986,7 +2000,7 @@ single indivisible verified unit; tick-slicing is the worse fail-open). **Order:
 | #165 | P0 | **Catalog self-ingestion sweep** (follow-on to #164; one instance FIXED in `6e5a5f14`). `code-index.mjs` reads source with line-shaped regexes and cannot tell an instrument from its subject. Three known instances: `audit-artifact-drift` ingests its OWN output from `build/code-registry/**` (the parked phantom ratchet) · `code-index` ingested **my collision detector's self-test fixtures** as real registrations, fabricating `GUARD_UNKNOWN_CAPABILITY`/`SOMETHING_ELSE` onto `FUNGI-GOV-005` — the exact code the pending rename targets · positional-emit blindness (#164). **Unswept:** (a) whether any of the other 119 dev tools poison the catalog the same way — I fixed mine only; (b) the **6-line name-capture window bleeds names across diagnostics** (`code-index.mjs:179`) — demonstrated inside my file, unmeasured in real source; (c) `FUNGI-GOV-008` reads `ref`, which is exactly the status the positional blindness fabricates, so it is NOT yet trustworthy as a free slot — verify at source before minting into it. Matters because this catalog is the **tiebreaker for code-collision adjudications** and the basis of ratchet baselines. Proposed direction (asked of R&D in `0393`): real parse, or at minimum skip strings/templates, rather than a sixth regex. | ⏳ MAIN; R&D asked |
 | #166 | P0 | **Catalog the signing-path code families** (blocked on #164/#165 by design). Measured `b11b2eba` via `audit-code-catalog-coverage.mjs`: **80 real codes absent from the registry, 51 on the signing path** — `FUNGI-FUSE-*` **34** (not the 6/10 either session first estimated), `FUNGI-MANIFEST-*` **15** (tamper · unsigned · revoked-key · noncanonical · PQ-required — **a family neither session had named**, because both instruments were pointed at the compiler and these live in `galerina.mjs`/`manifest-generator.ts`), `FUNGI-REVOCATION-*` 2. R&D ruling (0392) concurred: give them their own catalog section with their convention documented, and **do NOT renumber signing-path refusals to fit the numeric scheme**. NOT built yet on purpose — a section generated by an index that cannot see these codes is just another hand-maintained list. Sequencing: fix the index (#164) → the section falls out of it. The false "no orphans" claim is already killed and the counts are derived, so nothing is currently lying. | ⏳ MAIN; after #164 |
 | #167 | P0 | ✅ **OWNER RULED 2026-07-25 — option (b): the twin's rules are legitimate and each gets a code named for its own subject.** The governance twin is NOT a mis-numbered copy of the `.ts` checks; it is its own subject and mints its own codes. Rename is UNBLOCKED — but sequenced BEHIND #169, because minting twin-only codes with no emit-parity gate on that surface lands exactly the "invisible missing check" R&D stopped the first attempt over. The `.ts` GOV-002/GOV-004 checks the twin lacks remain a separate, still-tracked gap: ruling (b) says the twin's rules are its own, NOT that the `.ts` checks are unnecessary. Original fork, for provenance: **GOV rename BLOCKED on an owner fork — do not mint tokens.** R&D 0394 stopped it for a stronger reason than instrument-trust: the twin has **no equivalent of `.ts` GOV-002 or GOV-004**, so the shared code number is currently the *only* thing linking them — renaming converts a **visible collision** into an **invisible missing check**. I measured the twin's GOV-004 sites (`governance-verifier.fungi:313` "declares conforms_to X but no policy found" · `:325` "effect not permitted by policy"): **two different rules, neither of them `.ts`'s DENIED_TARGET_SELECTED**. So it is not one mis-numbered check — it is two twin rules squatting a code whose `.ts` meaning is unimplemented there. **`Sir,` the fork:** is the end-state that the twin IMPLEMENTS the `.ts` checks (⇒ mint nothing; renumber the twin's rules out of the way and build the checks), or that the twin's rules are legitimate and need their own codes (⇒ name each for its own subject)? Token choice is downstream of that. Rename must ship WITH a tracked differential-gap entry (red-able row, not a doc line) or it is a net loss of information. | 🔴 OWNER fork |
-| #168 | P0 | **Execution-prove the untested signing-path refusals — 1 of 20 done.** R&D 0396 measured 20 of 51 signing refusals with ZERO test mention; the open question on both sides was whether they FIRE, which needs execution. `FUNGI-FUSE-UNSIGNED-DENIED` **PROVEN** by execution + mutation-killed regression lock (`7b284294`) — and it deserved one beyond coverage: `galerina.mjs:1083` records that this exact override was ONCE dead code and an unsigned package WAS admitted under production. Needed no fixture, no build, no key material ⇒ **the rest are drivable too**. Remaining 19, ranked: (1) `MANIFEST-NONCANONICAL` — guards the DP-RD-0247 authenticated-bytes≠executed-bytes surface, needs a non-canonical CBOR fixture; (2) `MANIFEST-REVOKED-KEY` + both `REVOCATION-*` — need registry state, **not key bytes**, so still main-side; (3) remaining `FUSE-*`, several posture/flag-reachable like this one. Open to R&D (`0399`): one-per-tick with a control each, vs one harness for all 20 — a shared harness risks one blind spot serving twenty claims. **Do NOT read 1 proven as the class proven.** | ⏳ MAIN; R&D asked |
+| #168 | P0 | ✅ **Execution-prove the untested signing-path refusals — 20 of 20 done; recon now reports 51/51 with direct test mention.** Each formerly uncovered refusal now has its own real discriminator and valid control across the fuse loader, bundled CLI, compiler provenance resolver, classical signing path and hybrid signing path. The completed matrix covers malformed/missing/non-canonical/versioned manifests, missing verifier keys, legacy CBOR, revoked/unsigned/untrustworthy registries, package ACL under-declaration, missing fuse artifacts/exports, registry denial, signature errors and compiler-verifier unavailability. Fault injection exposed and fixed one real ordering bug: the global compiler import previously pre-empted `FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE` with a raw module-load error. `audit-signing-refusal-recon.mjs` now measures **0** codes without direct test mention; its 5/5 two-way self-test remains required. | ✅ DONE 2026-07-30 |
 | #169 | P0 | 🔴 **`audit-twin-emit-parity` does not cover the governance twin — build that FIRST.** Measured this tick: the gate covers the **type** twin (23 codes) and **effect** twin (9 codes) only. `governance-verifier.fungi` is **not in it at all**, so it can emit a code `.ts` never emits and nothing says a word. **This is the mechanism behind the whole week's findings** — GOV-004's two twin-only rules, VAL-001's stray use, the missing GOV-002/GOV-004 checks: not bad luck, no gate on that surface. Consequence for sequencing: minting `VAL-012` or the GOV codes today lands twin-only codes with **no gate to record them as differentials** — the "invisible missing check" R&D stopped the GOV rename over. Proposed: extend emit-parity to the governance twin BEFORE either rename, so differentials are mechanical, not a KB paragraph. Put to R&D in `0401`. | ⏳ MAIN; R&D asked |
 | #170 | P1 | **VAL-001 rename — REVERTED, re-scope before rebuilding.** R&D 0398 adjudicated it (twin's `checkSafetyCritical` matches `.ts` VAL-001 exactly ⇒ keeps the code; `checkBodyGovernance` is the outlier and moves). Built it with the free VAL-family slot **012** (enumerated across 5,661 tracked files, both repos, control-guarded); C1c went 6→5. ⚠ written here as a bare slot number ON PURPOSE: spelling it as a full `FUNGI-` code made the registry index it as a real doc-only registration, which is what turned `audit-artifact-drift` red on 2026-07-25. A code that has not been minted must not be written in the form that means "minted". **But the consumers include the i3 functional corpus — flip evidence** — plus 2 self-hosted pipeline tests and a twin test. Both of us had called it "mechanical". Reverted clean rather than edit flip evidence mid-tick. Real unit: twin emit + intent line · 4 consumer sites restated with **`VAL-001`-for-`safety_critical` kept as the discriminating control** · KB registration marked TWIN-ONLY · one commit · R&D §5a. Sequenced behind #169. | ⏳ MAIN |
 | #171 | P1 | **DIAG shape — SETTLED asymmetric (R&D 0400, measured).** My "generate `.fungi` constants" lean was principle without measurement; R&D priced it: **0 imports and 0 top-level constants across all 8 twins**, so a separate generated constants file needs a cross-file mechanism the twins don't use (a language change riding on a diagnostics fix), and generating INTO the twins puts a generator inside hash-pinned authoritative stages. ⟹ **`.ts` side: full `DIAG` construction** (registry becomes an import, not a parse — kills emit-form AND code-shape blindness at once). **Twin side: literal `name:` + EXACT-MATCH gate** against the constructed side; registry stays single-source. Principle retained with its price: *construction beats a gate as a tiebreaker between similar-cost options, not as a licence to buy a language change.* Re-open trigger (recorded, not promised): the twins gaining a constant mechanism for their own reasons. **Explicit deliverable of this increment: C1c graduates advisory → gating**, because `name:` makes the false-positive test mechanical (same subject at two positions carries the same name). | ⏳ MAIN; sequenced |

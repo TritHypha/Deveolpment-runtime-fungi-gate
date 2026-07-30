@@ -51,8 +51,28 @@ function trackedFiles() {
     .filter((f) => !f.startsWith("build/") && !f.includes("node_modules/") && !f.endsWith(".d.ts"));
 }
 const isTestFile = (f) => /(^|\/)tests?\//.test(f) || /\.test\.mjs$/.test(f);
+const SELFTEST_TESTED = ["FUNGI", "FUSE", "SELFTEST", "TESTED"].join("-");
+const SELFTEST_UNTESTED = ["FUNGI", "FUSE", "SELFTEST", "UNTESTED"].join("-");
 
 /** Build the map. Returns derived data — no number downstream is ever hand-typed. */
+function observeSource(file, src, sites, tested) {
+  const lines = src.split("\n");
+  lines.forEach((line, i) => {
+    for (const m of line.matchAll(CODE_RE)) {
+      const code = m[0];
+      if (isPlaceholder(code)) continue;
+      if (isTestFile(file)) {
+        tested.add(code);
+        continue;
+      }
+      if (!sites.has(code)) {
+        const ctx = lines.slice(Math.max(0, i - 12), i + 2).join("\n");
+        sites.set(code, { file, line: i + 1, ctx });
+      }
+    }
+  });
+}
+
 export function reconnoitre() {
   const files = trackedFiles();
   const sites = new Map();   // code -> {file,line,context}  (first NON-test site = the emit site)
@@ -62,19 +82,7 @@ export function reconnoitre() {
     let src;
     try { src = readFileSync(join(ROOT, f), "utf8"); } catch { absent++; continue; }
     scanned++;
-    const lines = src.split("\n");
-    lines.forEach((line, i) => {
-      for (const m of line.matchAll(CODE_RE)) {
-        const code = m[0];
-        if (isPlaceholder(code)) continue;
-        if (isTestFile(f)) { tested.add(code); continue; }
-        if (!sites.has(code)) {
-          // A window, because the guard that decides the refusal usually sits ABOVE the emit.
-          const ctx = lines.slice(Math.max(0, i - 12), i + 2).join("\n");
-          sites.set(code, { file: f, line: i + 1, ctx });
-        }
-      }
-    });
+    observeSource(f, src, sites, tested);
   }
   const rows = [...sites].map(([code, s]) => ({
     code,
@@ -94,17 +102,38 @@ function selfTest() {
   const ok = (c, what) => { checks += 1; if (!c) fails.push(what); };
   const r = reconnoitre();
   const by = (code) => r.rows.find((x) => x.code === code);
+  const fixtureSites = new Map();
+  const fixtureTested = new Set();
+  observeSource(
+    "src/selftest.ts",
+    [
+      `throw new Error('${SELFTEST_TESTED}');`,
+      `throw new Error('${SELFTEST_UNTESTED}');`,
+    ].join("\n"),
+    fixtureSites,
+    fixtureTested,
+  );
+  observeSource(
+    "tests/selftest.test.mjs",
+    `assert.match(error, /${SELFTEST_TESTED}/);`,
+    fixtureSites,
+    fixtureTested,
+  );
 
   ok(!r.vacuous, "recon must not be vacuous (files enumerated, read, and codes found)");
   ok(by("FUNGI-FUSE-UNSIGNED-DENIED")?.tested === true,
     "CONTROL(+): the code I proved and locked last tick must read as TESTED — if it doesn't, test-detection is broken");
-  ok(by("FUNGI-MANIFEST-REVOKED-KEY")?.tested === false,
-    "CONTROL(-): a known-untested code must read as UNTESTED — if it doesn't, everything reads tested and the map is useless");
+  ok(fixtureSites.has(SELFTEST_TESTED),
+    "CONTROL(source): the synthetic source refusal must be observed");
+  ok(fixtureTested.has(SELFTEST_TESTED),
+    "CONTROL(+): the synthetic directly tested refusal must read as TESTED");
+  ok(!fixtureTested.has(SELFTEST_UNTESTED),
+    "CONTROL(-): a source-only synthetic refusal must remain UNTESTED");
   ok(r.rows.every((x) => !isPlaceholder(x.code)), "illustrative placeholders must not pad the map");
   ok(r.rows.length > 20, "the map must cover the family, not a handful");
 
   console.log(fails.length === 0
-    ? `  ✅ self-test ${checks - fails.length}/${checks} — controls hold in BOTH directions (a known-tested and a known-untested code)`
+    ? `  ✅ self-test ${checks - fails.length}/${checks} — controls hold in BOTH directions (real positive plus synthetic tested/untested pair)`
     : `  ❌ self-test FAILED:\n     - ${fails.join("\n     - ")}`);
   return fails.length === 0 ? 0 : 1;
 }
@@ -123,5 +152,10 @@ console.log(`  ${"code".padEnd(38)} ${"test?".padEnd(6)} hint (heuristic)`);
 for (const x of r.rows) {
   console.log(`  ${x.code.padEnd(38)} ${(x.tested ? "yes" : "NO").padEnd(6)} ${x.hint}`);
 }
-console.log(`\n  Next lock (board #168): drive ONE code, with its OWN control. A shared harness can drive`);
-console.log(`  twenty codes but cannot invent twenty discriminators — recon shared, assertions never.`);
+if (untested.length === 0) {
+  console.log(`\n  Coverage checkpoint: every discovered signing-path refusal has a direct test mention.`);
+  console.log(`  Recon remains report-only; the per-code negative/control witnesses carry the assurance.`);
+} else {
+  console.log(`\n  Next lock (board #168): drive ONE code, with its OWN control. A shared harness can drive`);
+  console.log(`  twenty codes but cannot invent twenty discriminators — recon shared, assertions never.`);
+}

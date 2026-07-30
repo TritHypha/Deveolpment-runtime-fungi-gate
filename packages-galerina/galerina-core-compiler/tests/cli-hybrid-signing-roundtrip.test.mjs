@@ -20,6 +20,7 @@ import { spawnSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { decodeCBOR, encodeCBOR } from "../dist/manifest-generator.js";
 
 const REPO = join(import.meta.dirname, "..", "..", "..");
 const CLI = join(REPO, "galerina.mjs");
@@ -27,6 +28,18 @@ const CLI = join(REPO, "galerina.mjs");
 const run = (args, env, dir) =>
   spawnSync("node", [CLI, ...args], { cwd: dir, encoding: "utf8", env: { ...process.env, ...env } });
 const out = (r) => (r.stdout ?? "") + (r.stderr ?? "");
+
+function nonCanonicalTopLevelMap(bytes) {
+  const first = bytes[0];
+  assert.notEqual(first, undefined, "the authoritative CBOR must not be empty");
+  assert.equal(first >> 5, 5, "the authoritative CBOR must start with a map");
+  const additional = first & 0x1f;
+  assert.ok(additional < 24, "fixture expects the top-level map to use the shortest inline length");
+  return Buffer.concat([
+    Buffer.from([(5 << 5) | 24, additional]),
+    bytes.subarray(1),
+  ]);
+}
 
 // A PURE flow: returns an Int, declares no effects → the compute body fuses cleanly and the manifest
 // signs over the governance facts (no `unreachable` effect stubs needed). Keeps the round-trip about
@@ -71,6 +84,67 @@ test("hybrid CLI round-trip: certified build emits a v2 both-half manifest, veri
     assert.match(vout, /Ed25519/, "verify output names the classical (Ed25519) half");
     assert.match(vout, /ML-DSA-65/, "verify output names the post-quantum (ML-DSA-65) half");
     assert.match(vout, /both halves/, "verify confirms both halves were checked");
+
+    const cborPath = join(dir, "build", "answer.lmanifest");
+    const canonicalCbor = readFileSync(cborPath);
+    const decoded = decodeCBOR(new Uint8Array(canonicalCbor)).value;
+    const edPublicPath = join(dir, "governance", `signing-key-${sig.keyId}.pub.pem`);
+    const mlPublicPath = join(dir, "governance", `signing-key-${sig.keyId}.mldsa.pub.b64`);
+    const edPublic = readFileSync(edPublicPath);
+    const mlPublic = readFileSync(mlPublicPath);
+
+    rmSync(cborPath);
+    const verifyMissing = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyMissing.status, 1);
+    assert.match(out(verifyMissing), /FUNGI-MANIFEST-MISSING/);
+    writeFileSync(cborPath, canonicalCbor);
+
+    writeFileSync(cborPath, Buffer.from([0xff]));
+    const verifyInvalid = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyInvalid.status, 1);
+    assert.match(out(verifyInvalid), /FUNGI-MANIFEST-INVALID/);
+    writeFileSync(cborPath, canonicalCbor);
+
+    writeFileSync(cborPath, nonCanonicalTopLevelMap(canonicalCbor));
+    const verifyNonCanonical = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyNonCanonical.status, 1);
+    assert.match(out(verifyNonCanonical), /FUNGI-MANIFEST-NONCANONICAL/);
+    writeFileSync(cborPath, canonicalCbor);
+
+    writeFileSync(
+      cborPath,
+      Buffer.from(encodeCBOR({ ...decoded, schemaVersion: "fungi.manifest.v999" })),
+    );
+    const verifyVersion = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyVersion.status, 1);
+    assert.match(out(verifyVersion), /FUNGI-MANIFEST-VERSION/);
+    writeFileSync(cborPath, canonicalCbor);
+
+    rmSync(edPublicPath);
+    rmSync(mlPublicPath);
+    const verifyMissingPublic = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyMissingPublic.status, 1);
+    assert.match(out(verifyMissingPublic), /FUNGI-MANIFEST-PUBKEY-MISSING/);
+    writeFileSync(edPublicPath, edPublic);
+    writeFileSync(mlPublicPath, mlPublic);
+
+    const revocationsPath = join(dir, "governance", "revocations.json");
+    writeFileSync(
+      revocationsPath,
+      JSON.stringify({ schemaVersion: 1, revoked: [] }, null, 2),
+    );
+    const verifyUnsignedRevocations = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyUnsignedRevocations.status, 0, out(verifyUnsignedRevocations));
+    assert.match(out(verifyUnsignedRevocations), /FUNGI-REVOCATION-UNSIGNED/);
+
+    writeFileSync(
+      revocationsPath,
+      JSON.stringify({ schemaVersion: 1, revoked: [{ keyId: sig.keyId }] }, null, 2),
+    );
+    const verifyRevoked = run(["verify", "answer.fungi"], {}, dir);
+    assert.equal(verifyRevoked.status, 1);
+    assert.match(out(verifyRevoked), /FUNGI-MANIFEST-REVOKED-KEY/);
+    rmSync(revocationsPath);
 
     // ── (5) flip a byte of the manifest BODY (a signed field) and re-verify → FAIL CLOSED. ──
     // The signature is left intact; mutating any signed body field breaks the re-derived bodyHash, so

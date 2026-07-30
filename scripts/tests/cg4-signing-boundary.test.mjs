@@ -64,6 +64,15 @@ test("CG-4: a clean package still mints its manifest + fusion descriptor", () =>
   assert.ok(existsSync(join(dir, "dist", "cg4-clean.fuse.json")), "fusion descriptor minted");
 });
 
+test("CG-4: an under-declared package ACL refuses signing with FUNGI-FUSE-ACL-UNDERDECLARED", () => {
+  const dir = makePkg("cg4-underdeclared", "network.outbound");
+  const r = build(dir);
+  assert.notEqual(r.status, 0, "an effect absent from the package ACL must refuse signing");
+  assert.match(r.stdout + r.stderr, /FUNGI-FUSE-ACL-UNDERDECLARED/);
+  assert.ok(!existsSync(join(dir, "dist", "cg4-underdeclared.lmanifest")));
+  assert.ok(!existsSync(join(dir, "dist", "cg4-underdeclared.fuse.json")));
+});
+
 test("CG-4: deny-only eval.execute blocks even the lenient build outright (integrity set)", () => {
   const dir = makePkg("cg4-denyonly", "eval.execute");
   const r = build(dir);

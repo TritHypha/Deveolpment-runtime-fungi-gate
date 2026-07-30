@@ -845,7 +845,11 @@ Baseline comparison (governance-cost):
     process.exit(r.status ?? 0);
   }
 
-  const m = await import(compilerPath);
+  // `fuse` owns its compiler dependency at the hybrid-verifier boundary below.
+  // Importing it here first made FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE
+  // unreachable: a missing verifier crashed as an unlabelled module-load error
+  // before the fail-closed fuse catch could run.
+  const m = command === "fuse" ? undefined : await import(compilerPath);
 
   // ── //fungi: whole-app refresh helpers (R&D 0045 — `deps --all` and the build auto-refresh) ──────
   // Recursively collect every .fungi source under a root (skipping build/vendor dirs), then run a
