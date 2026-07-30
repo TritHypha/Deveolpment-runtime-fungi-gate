@@ -3,7 +3,7 @@
 **Evidence date:** 2026-07-30
 
 **Package version:** `1.0.0-beta.2`
-**Decision:** technically reviewed candidate; not governance-approved, signed,
+**Decision:** technically reviewed and owner-approved candidate; not signed,
 certified or live.
 
 ## Outcome
@@ -20,9 +20,11 @@ digest:      sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4ea
 
 The candidate manifest is outside the live signable tree at
 `packages-galerina/galerina-registry/candidates/@galerina/auth/`.
-Its governance approval, reviewer, review instant, publisher, signing identity
-and signature remain null/false. The live registry is empty and therefore
-terminally refuses index construction.
+Its owner governance record now names `galerina-owner-governance`, approval
+instant `2026-07-30T15:45:00.000Z`, publisher
+`galerina-owner-governance`, and expected operational key
+`f3172a48372bfb23`. Its signer identity and signature remain null. The live
+registry is empty and therefore terminally refuses index construction.
 
 The former healthcare manifest was removed. There is no canonical healthcare
 package, so retaining that stub would have asserted an identity and compliance
@@ -95,7 +97,7 @@ artifact digest and requires a new review and signature.
 | `node scripts/audit-import-governance.mjs` | 511 `.fungi` files parsed; plugin grants complete |
 | `node scripts/audit-private-doc-leak.mjs` | **0 violations** |
 | `node scripts/audit-path-leak.mjs` | **0 violations** |
-| `npm.cmd --prefix packages-galerina/galerina-registry test` | **28/28 pass**, including candidate hash re-derivation and no-live-claim checks |
+| `npm.cmd --prefix packages-galerina/galerina-registry test` | **35/35 pass**, including candidate hash re-derivation, owner-approved-but-unsigned isolation, disposable manifest signing, and future-review refusal |
 
 The flat-topology tool still reports 95 pre-SLIDE package-local
 `node_modules` trees and one explicitly deferred nested native package. Those
@@ -104,15 +106,14 @@ candidate review.
 
 ## Authority still required
 
-Moving this manifest live requires all of the following owner acts:
+Moving this manifest live still requires all of the following acts:
 
-1. confirm the exact package review facts;
-2. create/use a valid offline-custodied hybrid operational registry key;
-3. hybrid-sign an active root delegation for that key;
-4. fill the governance and signing identities with exact public facts;
-5. hybrid-sign the complete manifest;
-6. independently verify both root and manifest signature components; and
-7. only then move the manifest into the live `packages/` tree.
+1. hybrid-sign the prepared active root delegation for the already-custodied
+   operational key;
+2. independently verify both root signature components and public-key pins;
+3. hybrid-sign the complete owner-approved manifest;
+4. independently verify both manifest signature components; and
+5. only then move the manifest into the live `packages/` tree.
 
 No private key is needed for repository-local builds or tests, and none was
 read to produce this report.

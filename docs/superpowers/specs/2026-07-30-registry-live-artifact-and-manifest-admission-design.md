@@ -43,8 +43,9 @@ It does not:
 - read, copy, print or use a real private key;
 - certify an artifact merely because its tests pass;
 - manufacture an owner governance approval or timestamp;
-- make the rejected `700265bb65c412b1` or `f3172a48372bfb23` identities
-  production authorities;
+- make rejected `700265bb65c412b1` a production authority, or grant selected
+  operational identity `f3172a48372bfb23` authority merely because its public
+  files are present;
 - produce a real root delegation or signed registry index;
 - create a nested dependency store or copy package dependencies below another
   package;

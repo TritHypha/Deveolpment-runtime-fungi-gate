@@ -4,8 +4,8 @@ The Galerina registry is the fail-closed source of governance-reviewed,
 content-addressed and hybrid-signed package identities.
 
 > **Empty live registry.** `packages/` intentionally contains no manifest.
-> An empty live registry cannot produce an index. The technically reviewed
-> `@galerina/auth` source identity is under `candidates/`; it is unapproved,
+> An empty live registry cannot produce an index. The technically reviewed and
+> owner-approved `@galerina/auth` source identity is under `candidates/`; it is
 > unsigned and cannot enter the live builder. No healthcare package exists, so
 > no healthcare or compliance manifest is claimed.
 
@@ -71,5 +71,6 @@ Locked later commands are kept separately in
 
 The artifact hasher, strict manifest reader, root delegation, manifest
 verification, index builder/signer/verifier, revocation checks and denial tests
-are implemented. Production population remains owner-blocked; technical review
-does not create governance authority.
+are implemented. The auth facts are technically reviewed and owner-approved,
+but production population remains blocked until the prepared root delegation
+and complete manifest are hybrid-signed and independently verified.

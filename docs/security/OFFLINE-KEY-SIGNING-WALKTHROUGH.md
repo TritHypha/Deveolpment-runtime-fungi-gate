@@ -1,41 +1,55 @@
 # Galerina offline registry signing — DO NOW
 
-**Current state: CUSTODY, STRUCTURE, PUBLIC EXPORT AND PUBLIC-BUNDLE ADMISSION
-VERIFIED. The extra online private working copy has been removed. There is no
-owner action now.**
+**Current state: READY FOR ROOT DELEGATION SIGNING ONLY.**
 
-This is the live owner-action page. It contains only what to do now. Historical
-work and later ceremony commands are deliberately kept out of this page.
+This page contains one current owner operation. It does not mix completed
+steps or later commands into the action chart.
 
 ## Current action chart
 
-| Order | State | What to do now | Completion evidence | CLI now |
-|---:|:---:|---|---|---|
-| 1 | 🟨 **WAIT** | Keep both verified custody copies offline. Codex is preparing the final unsigned delegation and package-approval evidence. | The live chart is updated only after the engineering gates pass. | **None** |
-| 2 | 🟥 **LOCKED** | Removing either custody copy, delegation signing, root mounting, package-manifest signing, live registry build, and index signing. | This page must move exactly one owner operation into 🟩 **DO NOW** before any command is run. | **Do not run** |
+| Order | State | What to do now | Completion evidence |
+|---:|:---:|---|---|
+| 1 | 🟩 **DO NOW** | On an offline machine, use root key `21415420b447e219` to sign the prepared serial-1 delegation for operational key `f3172a48372bfb23`. | `governance/registry-delegation-f3172a48372bfb23-v1.json` is created and the CLI reports `ROOT-SIGNED delegation`. |
+| 2 | 🟥 **LOCKED** | Package-manifest signing, moving auth live, live-index building, index signing, and roadmap green status. | This page advances only after the returned public delegation independently verifies. |
 
-## Do this now
+## Run this now
 
-No command. Keep the two verified custody copies offline and do not reconnect
-or mount either one. Filesystem deletion does not prove physical erasure of
-residual SSD cells; full-disk encryption is the control for residual blocks.
+Use a clean copy of the current Galerina commit on an offline Windows machine.
+Keep the root private file on the offline archive; do not copy it into the
+repository. Replace only `<offline-root-file>` with its actual mounted path.
 
-## Key separation — reference only
+```powershell
+Set-Location <clean-galerina-checkout>
 
-| Purpose | Key ID | Public filenames | Current use |
-|---|---|---|---|
-| Offline trust root | `21415420b447e219` | `signing-key-21415420b447e219.pub.pem` and `signing-key-21415420b447e219.mldsa.pub.b64` | No action now |
-| Operational registry signer | `f3172a48372bfb23` | `signing-key-f3172a48372bfb23.pub.pem` and `signing-key-f3172a48372bfb23.mldsa.pub.b64` | Public export verified; private working copy removed |
+$env:GALERINA_ROOT_SIGNING_ENV_PATH = "<offline-root-file>"
+try {
+  node scripts/registry-authority-cli.mjs sign `
+    --in governance/registry-delegation-f3172a48372bfb23-v1.unsigned.json `
+    --out governance/registry-delegation-f3172a48372bfb23-v1.json `
+    --root-key-id 21415420b447e219
 
-The root public filenames above are already correct. Do not replace a
-`--root-*` value with the operational key. Do not run `keygen --hybrid` again.
+  if ($LASTEXITCODE -ne 0) {
+    throw "STOP: root delegation signing refused."
+  }
+}
+finally {
+  Remove-Item Env:GALERINA_ROOT_SIGNING_ENV_PATH -ErrorAction SilentlyContinue
+}
+```
+
+Stop after that command. Do not run a command from the ceremony reference.
+Return only the public file
+`governance/registry-delegation-f3172a48372bfb23-v1.json` and the CLI status;
+never return, paste, inspect, or transmit the private environment.
 
 ## Hard stop
 
-Do not remove either verified custody copy or either public file. Do not run
-any `registry-authority-cli.mjs` or `registry-index-cli.mjs` mode, mount the
-root private key, draft/sign a delegation, or sign a package/index yet.
+Do not mount the operational key yet. Do not sign the auth manifest or registry
+index, and do not move the candidate into the live registry tree. Those steps
+remain locked until this delegation is independently verified against both
+tracked root public halves, serial floor `0`, the two closed roles, the
+revocation state, and the active time window.
 
-The locked engineering reference is
-`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`. Do not follow commands from it
-until this live page explicitly promotes one operation to 🟩 **DO NOW**.
+The engineering reference is
+`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`. It is not the live instruction
+page.

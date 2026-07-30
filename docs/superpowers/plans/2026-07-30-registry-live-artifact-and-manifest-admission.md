@@ -22,14 +22,17 @@ registry CLI, Galerina graph/audit/generator tooling.
   non-literal or unverifiable evidence refuses.
 - Never read, copy, print, stage, commit or use a real private key.
 - Use disposable generated keys for every executable signing test.
-- Do not use `700265bb65c412b1` or `f3172a48372bfb23` as production authority.
+- Do not use rejected key `700265bb65c412b1`. Later owner authority selected
+  operational key `f3172a48372bfb23`; its public material remains
+  non-authorizing until the offline root signs the exact admitted delegation.
 - Do not infer the exact root key ID from an abbreviated or mistyped value.
 - Every package exists once as a direct child of `packages-galerina/`; no
   nested dependency forest or copied dependency instance is created.
 - A technical review is not owner governance approval.
 - One invalid registry entry poisons the complete build; no partial output.
-- Preserve all unrelated and user-owned files, including the rejected
-  untracked public-key artifact.
+- Preserve all unrelated and user-owned files. The independently re-derived
+  public halves for `f3172a48372bfb23` are now reviewed and tracked verifier
+  material; they are not private and do not authorize by presence.
 - `.fungi` `if` is Boolean-only; use exhaustive `check` for K3 and exhaustive
   `match` for other decisions. No new `.fungi` syntax is introduced here.
 - Private-document primary headings end exactly with ` - PRIVATE`; marking
@@ -392,8 +395,9 @@ git commit -m "docs(registry): replace false package stubs"
 
 - Private heading format is exactly `# <title> - PRIVATE`.
 - The shortened owner message is not recorded as a different root key ID.
-- Production signing remains owner-blocked pending the exact valid offline
-  operational chain.
+- Production signing remains owner-blocked pending the real root signature,
+  package-manifest signature and registry-index signature. The selected
+  operational public chain and owner-approved package facts are exact.
 - SLIDE Shape Memory remains design/schema-only and paused behind the
   Galerina-first gate.
 

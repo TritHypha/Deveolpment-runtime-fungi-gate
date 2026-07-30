@@ -30,13 +30,13 @@ effects:
   - "crypto.verify"
 installScript: null
 hash: "sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4eaee86"
-publisher: null
-keyId: null
+publisher: "galerina-owner-governance"
+keyId: "f3172a48372bfb23"
 signerKeyId: null
 certificationLevel: "uncertified"
 riskRating: "high"
 signature: null
 governance:
-  reviewed: false
-  reviewedBy: null
-  reviewedAt: null
+  reviewed: true
+  reviewedBy: "galerina-owner-governance"
+  reviewedAt: "2026-07-30T15:45:00.000Z"

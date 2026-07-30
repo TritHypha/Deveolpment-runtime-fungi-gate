@@ -145,6 +145,7 @@ function createFixture({
   serial = 1,
   notBefore = "2026-07-30T00:00:00.000Z",
   notAfter = "2027-07-30T00:00:00.000Z",
+  reviewedAt = "2026-07-30T00:00:00.000Z",
 } = {}) {
   const temp = mkdtempSync(join(tmpdir(), "galerina-registry-chain-"));
   const registryRoot = join(temp, "registry");
@@ -254,7 +255,7 @@ function createFixture({
         governance: {
           reviewed: true,
           reviewedBy: "disposable-review-authority",
-          reviewedAt: "2026-07-30T00:00:00.000Z",
+          reviewedAt,
         },
       },
       operationalKeyId,
@@ -364,6 +365,19 @@ test("a valid disposable root-to-package chain builds one unsigned index", () =>
     assert.equal(index.signature, undefined);
     assert.equal(index.entries.length, 1);
     assert.equal(index.entries[0].name, "@galerina/example");
+  }));
+
+test("a cryptographically valid future-dated governance review is refused", () =>
+  withFixture({
+    reviewedAt: "2026-08-02T00:00:00.000Z",
+  }, (fixture) => {
+    const result = runBuild(fixture);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /governance\.reviewedAt is later than authority-at/,
+    );
+    assert.equal(existsSync(fixture.output), false);
   }));
 
 test("missing public authority inputs and duplicate manifest facts refuse", async (t) => {
@@ -557,7 +571,7 @@ test("the live placeholder catalog remains un-signable", () => {
   }
 });
 
-test("the auth candidate binds the reviewed source set but grants no authority", () => {
+test("the owner-approved auth candidate binds source but remains unsigned and non-live", () => {
   assert.equal(
     existsSync(
       join(
@@ -575,7 +589,7 @@ test("the auth candidate binds the reviewed source set but grants no authority",
       join(LIVE_REGISTRY, "@galerina", "auth", "package.galerina.yaml"),
     ),
     false,
-    "an owner-unapproved auth candidate must not be live/signable",
+    "an unsigned auth candidate must not be live/signable",
   );
   const candidate = parseTestManifest(readFileSync(AUTH_CANDIDATE, "utf8"));
   assert.equal(candidate.name, "@galerina/auth");
@@ -584,9 +598,14 @@ test("the auth candidate binds the reviewed source set but grants no authority",
   assert.deepEqual(candidate.artifactFiles, AUTH_PACKAGE_FILES);
   assert.deepEqual(candidate.capabilities, ["clock.read", "crypto.verify"]);
   assert.deepEqual(candidate.effects, ["clock.read", "crypto.verify"]);
-  assert.equal(candidate.governance.reviewed, false);
-  assert.equal(candidate.governance.reviewedBy, null);
-  assert.equal(candidate.governance.reviewedAt, null);
+  assert.equal(candidate.publisher, "galerina-owner-governance");
+  assert.equal(candidate.keyId, "f3172a48372bfb23");
+  assert.equal(candidate.governance.reviewed, true);
+  assert.equal(candidate.governance.reviewedBy, "galerina-owner-governance");
+  assert.equal(
+    candidate.governance.reviewedAt,
+    "2026-07-30T15:45:00.000Z",
+  );
   assert.equal(candidate.signerKeyId, null);
   assert.equal(candidate.signature, null);
   const artifact = hashFlatPackageArtifact({

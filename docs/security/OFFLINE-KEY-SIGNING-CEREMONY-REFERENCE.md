@@ -7,17 +7,18 @@ authoritative owner action is published in
 `OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. A command appearing here is not
 permission or readiness to run it.
 
-**Status on 2026-07-30: NOT READY FOR THE OWNER SIGNING ACT.**
+**Status on 2026-07-30: READY FOR THE ROOT-DELEGATION SIGNATURE ONLY.**
 
 The root-to-operational delegation, deterministic artifact hasher, strict
 manifest reader and disposable-key dry run are green. The false live auth and
 healthcare stubs have been removed. The live registry is intentionally empty;
-the real `@galerina/auth` bytes are recorded only as an unapproved, unsigned
-candidate. Operational hybrid key `f3172a48372bfb23` has now been minted and
-both public halves were independently exported. They match the repository
-candidates byte-for-byte, but the public bundle has not completed admission
-and no root-signed delegation record exists. Do not substitute the cold trust
-root for routine registry signing merely to remove that blocker.
+the real `@galerina/auth` bytes and owner approval are recorded in an unsigned
+candidate. Operational hybrid key `f3172a48372bfb23` has been minted and both
+public halves were independently exported and admitted. They match the
+repository candidates byte-for-byte. The serial-1 unsigned delegation is
+prepared, but no root-signed delegation record exists. The live action page
+therefore authorizes only that root signature; package and index signing remain
+locked.
 
 The independently verified public pins are:
 
@@ -138,9 +139,9 @@ Primary references:
 | Signed revocation-registry check before key use | tested, including known-revoked refusal | ready |
 | Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
 | Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
-| Auth governance approval and manifest signature | candidate remains reviewed:false with null authority fields | **owner-blocked** |
-| Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; root delegation remains absent | **owner-blocked** |
-| Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
+| Auth governance approval and manifest signature | exact package facts are owner-approved; signer and signature remain null | **signature blocked** |
+| Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; root delegation input is ready | **root signature next** |
+| Root-signed operational delegation format and verifier | implemented; serial-1, 90-day unsigned input prepared; real delegation not yet signed | **root signature next** |
 | Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
 
@@ -245,10 +246,12 @@ pins only.
 
 ### 5.1 Exact authority-delegation procedure
 
-**Do not sign the delegation yet.** Operational-key custody is now
-owner-confirmed. Independent public export matches the admitted repository
-verifiers, and the extra online private working copy is removed. The
-live-package approval and delegation-signing gates remain locked.
+The live action page now authorizes the root signature over the exact prepared
+serial-1 delegation only. Operational-key custody is owner-confirmed,
+independent public export matches the admitted repository verifiers, the extra
+online private working copy is removed, and the auth package facts are
+owner-approved. Package and index signing remain locked until the returned
+delegation independently verifies.
 
 The dedicated operational hybrid key has already been minted as
 `f3172a48372bfb23`. Do not run `keygen --hybrid` again unless intentionally
@@ -351,6 +354,42 @@ does not print its values.
 Set-Location <clean-galerina-checkout>
 $env:GALERINA_SIGNING_KEY_ID = "f3172a48372bfb23"
 $env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.slide-hybrid-f3172a48372bfb23"
+
+node scripts/registry-authority-cli.mjs sign-manifest `
+  --in packages-galerina\galerina-registry\candidates\@galerina\auth\package.galerina.yaml `
+  --out <offline-staging>\auth.package.galerina.yaml `
+  --workspace-packages-dir packages-galerina `
+  --delegation governance\registry-delegation-f3172a48372bfb23-v1.json `
+  --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
+  --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
+  --root-key-id 21415420b447e219 `
+  --operational-ed25519-pubkey governance\signing-key-f3172a48372bfb23.pub.pem `
+  --operational-mldsa65-pubkey governance\signing-key-f3172a48372bfb23.mldsa.pub.b64 `
+  --operational-key-id f3172a48372bfb23 `
+  --authority-at <instant-inside-the-delegation-window> `
+  --min-delegation-serial <previous-accepted-serial>
+
+node scripts/registry-authority-cli.mjs verify-manifest `
+  --in <offline-staging>\auth.package.galerina.yaml `
+  --workspace-packages-dir packages-galerina `
+  --delegation governance\registry-delegation-f3172a48372bfb23-v1.json `
+  --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
+  --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
+  --root-key-id 21415420b447e219 `
+  --operational-ed25519-pubkey governance\signing-key-f3172a48372bfb23.pub.pem `
+  --operational-mldsa65-pubkey governance\signing-key-f3172a48372bfb23.mldsa.pub.b64 `
+  --operational-key-id f3172a48372bfb23 `
+  --authority-at <same-instant-inside-the-delegation-window> `
+  --min-delegation-serial <previous-accepted-serial>
+
+New-Item `
+  -ItemType Directory `
+  -Force `
+  -Path packages-galerina\galerina-registry\packages\@galerina\auth |
+  Out-Null
+Copy-Item `
+  -LiteralPath <offline-staging>\auth.package.galerina.yaml `
+  -Destination packages-galerina\galerina-registry\packages\@galerina\auth\package.galerina.yaml
 
 node scripts/registry-index-cli.mjs sign `
   --registry-dir packages-galerina/galerina-registry/packages `

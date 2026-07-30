@@ -98,7 +98,7 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 - The compiler package passes **5,748/5,748**.
 - App-kernel passes **149/149**, including delegated hybrid package-manifest
   verification.
-- Registry passes **33/33**, including exact artifact re-derivation, complete
+- Registry passes **35/35**, including exact artifact re-derivation, complete
   public authority, mixed-tree poisoning and the unsigned auth candidate.
 - Auth passes **59/59** and its exact 18-file source/test candidate digest
   re-derives.
@@ -217,7 +217,7 @@ or release a key. A future persistent SLIDE index must be immutable,
 encrypted, hybrid-signed, anti-rollback, lease-bounded, independently
 re-opened, and source-rederivable.
 
-### Offline registry signing — not ready
+### Offline registry signing — root delegation ready
 
 The hybrid v2 mechanism is green:
 
@@ -230,14 +230,16 @@ The hybrid v2 mechanism is green:
 - deterministic bounded flat-package hashing;
 - strict duplicate-refusing manifest parsing;
 - operational public-key fingerprint binding; and
-- root-delegated dual package-manifest verification.
+- root-delegated dual package-manifest verification;
+- fail-closed package-manifest signing and public verification CLI; and
+- a disposable file-backed root→operational→manifest ceremony.
 
-The live signing act is **NOT READY** because:
+Production is still **NON-AUTHORIZING** because:
 
-- auth's re-derived 18-file candidate is not owner-approved or hybrid-signed;
+- auth's re-derived 18-file candidate is owner-approved but not hybrid-signed;
 - the live registry is intentionally empty;
-- no valid separately custodied operational public bundle and real
-  root-signed delegation is present;
+- the valid separately custodied operational public bundle is admitted, but
+  its real root-signed delegation is not yet present;
 - the live unsigned-index and owner signing acts therefore cannot run.
 
 Two verified encrypted operational-key custody copies in separate physical
@@ -254,9 +256,12 @@ ML-DSA-65 SHA-256
 `1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`.
 The extra online private working copy has been removed; the two verified
 custody copies remain offline. Both public verifier files are admitted as
-non-authorizing repository material; the authority CLI validates their exact
-identities and closed roles. The live walkthrough exposes no owner command
-while final unsigned-delegation and package-approval evidence is prepared.
+non-authorizing repository material. The authority CLI validates their exact
+identities and closed roles, re-hashes reviewed package bytes, refuses future
+approval times and repeated authority fields, and self-verifies both manifest
+signature components before writing. The owner-approved auth input and
+serial-1, 90-day unsigned delegation are prepared. The live walkthrough now
+authorizes only the offline root signature over that exact delegation.
 
 Production Zero-Trust also requires automatic operational-key rotation.
 Galerina beta v1 completes the current Tower Citizen append-only
@@ -275,7 +280,7 @@ The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine
 registry signer to clear this status. The current owner instruction is always
 published in `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; it currently
-contains no command. Later commands remain locked in
+contains only the root-delegation signing command. Later commands remain locked in
 `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
 
 ## Formal SLIDE R&D terminology

@@ -65,6 +65,9 @@ import {
   REGISTRY_ARTIFACT_PROFILE,
   hashFlatPackageArtifact,
 } from "./lib/registry-package-artifact.mjs";
+import {
+  assertReviewAtOrBefore,
+} from "./lib/registry-package-manifest-yaml.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_REGISTRY_DIR = join(ROOT, "packages-galerina", "galerina-registry", "packages");
@@ -329,6 +332,7 @@ export async function buildFromDir(
   }
   const entries = [];
   for (const { manifest } of gates) {
+    assertReviewAtOrBefore(manifest, options.authority.at);
     if (manifest.registry !== registryId) {
       throw new Error(
         `REFUSED: manifest registry '${manifest.registry}' does not match '${registryId}'.`,

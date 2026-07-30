@@ -26,8 +26,8 @@ flowchart LR
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
-    F["🟥 Beta-v1 release gate<br/>owner signing not ready"]
-    G["🟨 Registry admission green<br/>auth candidate · live tree empty"]
+    F["🟥 Beta-v1 release gate<br/>root delegation signing next"]
+    G["🟨 Registry admission green<br/>auth approved · unsigned · live tree empty"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
@@ -60,9 +60,9 @@ flowchart LR
 |---|---:|---|
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
-| Delegated package-manifest admission | 🟩 | Registry 33/33; app-kernel 149/149; disposable root→operational→manifest chain only |
-| Live registry population | 🟨 | False stubs removed; auth is a 63,281-byte unapproved/unsigned candidate; live tree empty |
-| Production registry signing | 🟥 | Two-location custody, five-field structure, public export and non-authorizing public-bundle admission verified; extra online private copy removed; final unsigned delegation/package approval are current; signing remains locked |
+| Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
+| Live registry population | 🟨 | False stubs removed; auth's 63,281-byte source identity and owner approval are recorded; candidate remains unsigned and outside the empty live tree |
+| Production registry signing | 🟥 | Package sign/verify CLI and disposable full-chain proof are green; serial-1 unsigned delegation is pinned and ready; the offline root signature, real auth signature, live build and index signature are still absent |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -94,13 +94,11 @@ The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the registry population changes.
-2. Prepare the final unsigned delegation and package-approval evidence now
-   that the independently hashed public bundle is admitted and the extra
-   online private working copy has been removed. Only after the live owner
-   chart advances should the
-   content-addressed auth candidate be owner-reviewed, its delegation be
-   root-signed, and its complete package manifest be hybrid-signed.
-   Two-location operational-key custody is already owner-confirmed.
+2. Root-sign the prepared serial-1, 90-day delegation on the offline owner
+   machine. Its two closed roles and both operational public-key fingerprints
+   are already public-only verified. Two-location operational-key custody,
+   owner approval of the content-addressed auth facts, and removal of the extra
+   online private working copy are complete.
 3. Complete the existing Tower Citizen automatic operational-key rotation path
    for Galerina beta v1: StateSerializer epoch awareness, real custody
    execution, delegation integration, gated canary/drain/fallback, and
@@ -156,14 +154,14 @@ exact length-framed digest, and verify both hybrid manifest signatures through
 an active root-signed operational delegation.
 
 The former auth and healthcare live stubs are gone. Healthcare has no canonical
-package and therefore no registry claim. Auth has a technically reviewed
-18-file candidate whose digest re-derives, but all owner governance/signature
-fields remain false/null and it stays outside the live tree.
+package and therefore no registry claim. Auth has a technically reviewed and
+owner-approved 18-file candidate whose digest re-derives. Its signer and
+signature remain null and it stays outside the live tree.
 
 This makes the implementation green without making the release green.
-Production still requires an exact valid operational public bundle,
-root-signed delegation, owner approval/signature of the auth manifest, a
-successful live unsigned build, and the final offline index-signing act.
+Production still requires the root-signed delegation, hybrid auth-manifest
+signature, successful live unsigned build, and final offline index-signing
+act.
 Two verified offline custody copies in separate physical locations were
 owner-confirmed on 2026-07-30. The first public-only export refused before key
 decoding because the wrong file shape was selected. The complete hybrid
@@ -175,10 +173,14 @@ ML-DSA-65 SHA-256
 `1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`;
 both match the repository candidates byte-for-byte. The extra online private
 working copy has been removed; both custody copies remain offline. The live
-repository now admits both public verifier files as non-authorizing material,
-and the authority CLI validates their exact identities and closed roles. The
-live walkthrough exposes no owner command while final unsigned-delegation and
-package-approval evidence is prepared.
+repository now admits both public verifier files as non-authorizing material.
+The authority CLI validates their exact identities and closed roles, and now
+also signs and independently verifies reviewed package manifests without
+exposing private values. A disposable root→operational→manifest ceremony
+passes end to end; repeated authority arguments and an approval time later
+than the verification instant refuse. The owner-approved auth input and
+serial-1 unsigned delegation are prepared. The live walkthrough now authorizes
+only the offline root-delegation signature.
 
 ## Binding package topology
 

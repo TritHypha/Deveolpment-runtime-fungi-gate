@@ -19,6 +19,15 @@ import {
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  REGISTRY_ARTIFACT_PROFILE,
+  hashFlatPackageArtifact,
+} from "./lib/registry-package-artifact.mjs";
+import {
+  assertReviewAtOrBefore,
+  parseManifest,
+  stringifyManifest,
+} from "./lib/registry-package-manifest-yaml.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DECIDER_PATH = join(
@@ -42,8 +51,19 @@ const REVOCATION_GATE_PATH = join(
 
 const args = process.argv.slice(2);
 const arg = (name, fallback = undefined) => {
-  const index = args.indexOf(name);
-  return index >= 0 && index + 1 < args.length ? args[index + 1] : fallback;
+  const positions = [];
+  for (let index = 0; index < args.length; index += 1) {
+    if (args[index] === name) positions.push(index);
+  }
+  if (positions.length === 0) return fallback;
+  if (positions.length !== 1) {
+    throw new Error(`REFUSED: command line repeats '${name}'.`);
+  }
+  const value = args[positions[0] + 1];
+  if (value === undefined || value.startsWith("--")) {
+    throw new Error(`REFUSED: command-line option '${name}' lacks a value.`);
+  }
+  return value;
 };
 const sha256 = (bytes) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -198,12 +218,286 @@ const delegationMlDsaOptions = (decider) => ({
   context: new TextEncoder().encode(decider.REGISTRY_DELEGATION_V1_CONTEXT),
 });
 
+const manifestMlDsaOptions = (decider) => ({
+  context: new TextEncoder().encode(
+    decider.REGISTRY_PACKAGE_MANIFEST_V1_CONTEXT,
+  ),
+});
+
 async function assertNotRevoked(keyId) {
   const revocation = await import(pathToFileURL(REVOCATION_GATE_PATH).href);
   revocation.assertRegistryTrustworthy(ROOT);
   if (revocation.isKeyRevoked(keyId, ROOT)) {
     throw new Error(`REFUSED: keyId '${keyId}' is revoked.`);
   }
+}
+
+function duplicateFreeStrings(value, label, { empty = true } = {}) {
+  if (
+    !Array.isArray(value)
+    || (!empty && value.length === 0)
+    || value.some((item) => typeof item !== "string" || item.length === 0)
+    || new Set(value).size !== value.length
+  ) {
+    throw new Error(
+      `REFUSED: ${label} must be a duplicate-free${empty ? "" : " non-empty"} string list.`,
+    );
+  }
+}
+
+function assertManifestReady(
+  manifest,
+  operationalKeyId,
+  signed,
+  authorityAt,
+) {
+  if (manifest.schema !== "galerina-package-manifest/v1") {
+    throw new Error("REFUSED: package manifest schema is not admitted.");
+  }
+  for (const field of ["name", "version", "registry", "publisher"]) {
+    if (typeof manifest[field] !== "string" || manifest[field].length === 0) {
+      throw new Error(`REFUSED: package manifest ${field} is missing.`);
+    }
+  }
+  if (manifest.artifactProfile !== REGISTRY_ARTIFACT_PROFILE) {
+    throw new Error("REFUSED: package manifest artifact profile is not admitted.");
+  }
+  duplicateFreeStrings(manifest.artifactFiles, "artifactFiles", {
+    empty: false,
+  });
+  duplicateFreeStrings(manifest.capabilities, "capabilities");
+  duplicateFreeStrings(manifest.effects, "effects");
+  if (
+    manifest.targets !== undefined
+    && !Array.isArray(manifest.targets)
+  ) {
+    throw new Error("REFUSED: targets must be a block list when present.");
+  }
+  if (manifest.targets !== undefined) {
+    duplicateFreeStrings(manifest.targets, "targets");
+  }
+  if (manifest.installScript !== null) {
+    throw new Error("REFUSED: registry package install scripts are denied.");
+  }
+  if (!/^sha256:[0-9a-f]{64}$/u.test(String(manifest.hash))) {
+    throw new Error("REFUSED: package manifest lacks a canonical artifact digest.");
+  }
+  if (manifest.keyId !== operationalKeyId) {
+    throw new Error(
+      "REFUSED: package manifest keyId is not the delegated operational key.",
+    );
+  }
+  if (
+    ![
+      "uncertified",
+      "community",
+      "verified",
+      "certified",
+      "enterprise",
+      "regulated",
+    ].includes(manifest.certificationLevel)
+  ) {
+    throw new Error("REFUSED: package manifest certification level is not admitted.");
+  }
+  if (!["low", "medium", "high", "critical"].includes(manifest.riskRating)) {
+    throw new Error("REFUSED: package manifest risk rating is not admitted.");
+  }
+  const governance = manifest.governance;
+  if (
+    typeof governance !== "object"
+    || governance === null
+    || governance.reviewed !== true
+    || typeof governance.reviewedBy !== "string"
+    || governance.reviewedBy.length === 0
+  ) {
+    throw new Error(
+      "REFUSED: package manifest lacks positive owner governance review.",
+    );
+  }
+  assertReviewAtOrBefore(manifest, authorityAt);
+  if (signed) {
+    if (
+      manifest.signerKeyId !== operationalKeyId
+      || typeof manifest.signature !== "string"
+      || manifest.signature.length === 0
+    ) {
+      throw new Error(
+        "REFUSED: signed package manifest lacks the delegated signing identity or signature.",
+      );
+    }
+  } else if (
+    manifest.signerKeyId !== null
+    || manifest.signature !== null
+  ) {
+    throw new Error(
+      "REFUSED: unsigned package approval must have null signerKeyId and signature.",
+    );
+  }
+}
+
+async function loadManifestAuthority(decider) {
+  const input = arg("--in");
+  const output = arg("--out");
+  const workspacePackagesDir = arg("--workspace-packages-dir");
+  const delegationPath = arg("--delegation");
+  const rootEdPath = arg("--root-pubkey");
+  const rootMlPath = arg("--root-mldsa65-pubkey");
+  const rootKeyId = arg("--root-key-id");
+  const operationalEdPath = arg("--operational-ed25519-pubkey");
+  const operationalMlPath = arg("--operational-mldsa65-pubkey");
+  const operationalKeyId = arg("--operational-key-id");
+  const authorityAt = arg("--authority-at");
+  const minSerialText = arg("--min-delegation-serial");
+  if (
+    !input
+    || !workspacePackagesDir
+    || !delegationPath
+    || !rootEdPath
+    || !rootMlPath
+    || !rootKeyId
+    || !operationalEdPath
+    || !operationalMlPath
+    || !operationalKeyId
+    || !authorityAt
+    || minSerialText === undefined
+  ) {
+    throw new Error(
+      "REFUSED: package-manifest operation requires input, workspace, delegation, both root public files, both operational public files, both key IDs, authority instant, and serial floor.",
+    );
+  }
+  if (
+    !/^(?:0|[1-9][0-9]*)$/u.test(minSerialText)
+    || !Number.isSafeInteger(Number(minSerialText))
+  ) {
+    throw new Error(
+      "REFUSED: minimum delegation serial must be a safe non-negative integer.",
+    );
+  }
+  await assertNotRevoked(rootKeyId);
+  await assertNotRevoked(operationalKeyId);
+
+  const mlDsa65 = await loadMlDsa65();
+  const rootEd = createPublicKey(readFileSync(rootEdPath, "utf8"));
+  if (rootEd.asymmetricKeyType !== "ed25519") {
+    throw new Error("REFUSED: offline-root classical public key is not Ed25519.");
+  }
+  const rootMl = decodeCanonicalBase64(
+    readFileSync(rootMlPath, "utf8").trim(),
+    "offline-root ML-DSA-65 public key",
+  );
+  const operationalMl = decodeCanonicalBase64(
+    readFileSync(operationalMlPath, "utf8").trim(),
+    "operational ML-DSA-65 public key",
+  );
+  if (
+    rootMl.length !== mlDsa65.lengths.publicKey
+    || operationalMl.length !== mlDsa65.lengths.publicKey
+  ) {
+    throw new Error("REFUSED: one or more ML-DSA-65 public keys has the wrong length.");
+  }
+  const operationalFacts = publicFacts(
+    readFileSync(operationalEdPath, "utf8"),
+    operationalMl,
+  );
+  let delegation;
+  try {
+    delegation = JSON.parse(readFileSync(delegationPath, "utf8"));
+  } catch {
+    throw new Error("REFUSED: signed registry delegation is not valid JSON.");
+  }
+  if (delegation.operational?.keyId !== operationalKeyId) {
+    throw new Error(
+      "REFUSED: delegation operational identity does not match the expected key.",
+    );
+  }
+  if (
+    delegation.operational.ed25519PublicKeySha256
+      !== operationalFacts.ed25519PublicKeySha256
+    || delegation.operational.mlDsa65PublicKeySha256
+      !== operationalFacts.mlDsa65PublicKeySha256
+  ) {
+    throw new Error(
+      "REFUSED: operational public files do not match the root delegation pins.",
+    );
+  }
+  const revocation = await import(pathToFileURL(REVOCATION_GATE_PATH).href);
+  revocation.assertRegistryTrustworthy(ROOT);
+  const rootMlOptions = delegationMlDsaOptions(decider);
+  const authority = {
+    expectedRootKeyId: rootKeyId,
+    at: authorityAt,
+    minSerial: Number(minSerialText),
+    requiredRoles: ["package-manifest.sign"],
+    isRevoked: (keyId) => revocation.isKeyRevoked(keyId, ROOT),
+    verifyRoot: {
+      ed25519: (message, signature, keyId) =>
+        keyId === rootKeyId
+          ? edVerify(
+            null,
+            message,
+            rootEd,
+            Buffer.from(signature, "base64"),
+          )
+          : "no-key",
+      mlDsa65: (message, signature, keyId) =>
+        keyId === rootKeyId
+          ? mlDsa65.verify(
+            Buffer.from(signature, "base64"),
+            message,
+            rootMl,
+            rootMlOptions,
+          )
+          : "no-key",
+    },
+  };
+  decider.verifyRegistryAuthorityDelegation(delegation, authority);
+  const manifest = parseManifest(readFileSync(input, "utf8"));
+  const artifact = hashFlatPackageArtifact({
+    workspacePackagesDir,
+    packageName: manifest.name,
+    artifactProfile: manifest.artifactProfile,
+    artifactFiles: manifest.artifactFiles,
+  });
+  if (artifact.hash !== manifest.hash) {
+    throw new Error(
+      "REFUSED: package artifact digest does not match the reviewed manifest.",
+    );
+  }
+  const manifestMlOptions = manifestMlDsaOptions(decider);
+  const verifyManifest = {
+    ed25519: (message, signature, keyId) =>
+      keyId === operationalKeyId
+        ? edVerify(
+          null,
+          message,
+          operationalFacts.edPublic,
+          Buffer.from(signature, "base64"),
+        )
+        : "no-key",
+    mlDsa65: (message, signature, keyId) =>
+      keyId === operationalKeyId
+        ? mlDsa65.verify(
+          Buffer.from(signature, "base64"),
+          message,
+          operationalMl,
+          manifestMlOptions,
+        )
+        : "no-key",
+  };
+  return {
+    input,
+    output,
+    manifest,
+    artifact,
+    delegation,
+    authority,
+    operationalFacts,
+    operationalKeyId,
+    operationalMl,
+    mlDsa65,
+    manifestMlOptions,
+    verifyManifest,
+  };
 }
 
 async function selfTest() {
@@ -378,6 +672,96 @@ async function main() {
     process.exit(0);
   }
 
+  if (mode === "sign-manifest" || mode === "verify-manifest") {
+    const context = await loadManifestAuthority(decider);
+    const isVerification = mode === "verify-manifest";
+    assertManifestReady(
+      context.manifest,
+      context.operationalKeyId,
+      isVerification,
+      context.authority.at,
+    );
+    if (isVerification) {
+      decider.verifyRegistryPackageManifestUnderDelegation(
+        context.manifest,
+        context.delegation,
+        {
+          authority: context.authority,
+          operationalPublicKeyFingerprints: {
+            ed25519: context.operationalFacts.ed25519PublicKeySha256,
+            mlDsa65: context.operationalFacts.mlDsa65PublicKeySha256,
+          },
+          verifyManifest: context.verifyManifest,
+        },
+      );
+      console.log(
+        `VERIFIED package manifest '${context.manifest.name}' version '${context.manifest.version}' for operational keyId '${context.operationalKeyId}'.`,
+      );
+      process.exit(0);
+    }
+
+    const envPath = process.env.GALERINA_REGISTRY_SIGNING_ENV_PATH;
+    if (!context.output || !envPath) {
+      throw new Error(
+        "REFUSED: sign-manifest requires --out and GALERINA_REGISTRY_SIGNING_ENV_PATH.",
+      );
+    }
+    const loaded = await readOperationalPrivate(
+      envPath,
+      context.operationalKeyId,
+    );
+    const privateMlPublic = loaded.mlDsa65.getPublicKey(loaded.mlPrivate);
+    const privateFacts = publicFacts(
+      createPublicKey(loaded.edPrivate).export({
+        type: "spki",
+        format: "pem",
+      }),
+      privateMlPublic,
+    );
+    if (
+      privateFacts.ed25519PublicKeySha256
+        !== context.operationalFacts.ed25519PublicKeySha256
+      || privateFacts.mlDsa65PublicKeySha256
+        !== context.operationalFacts.mlDsa65PublicKeySha256
+    ) {
+      throw new Error(
+        "REFUSED: operational private key does not match the delegated public verifier files.",
+      );
+    }
+    const signed = decider.signRegistryPackageManifest(
+      context.manifest,
+      context.operationalKeyId,
+      (message) =>
+        edSign(null, message, loaded.edPrivate).toString("base64"),
+      (message) => Buffer.from(
+        loaded.mlDsa65.sign(
+          message,
+          loaded.mlPrivate,
+          context.manifestMlOptions,
+        ),
+      ).toString("base64"),
+    );
+    const serialized = stringifyManifest(signed);
+    const reparsed = parseManifest(serialized);
+    decider.verifyRegistryPackageManifestUnderDelegation(
+      reparsed,
+      context.delegation,
+      {
+        authority: context.authority,
+        operationalPublicKeyFingerprints: {
+          ed25519: context.operationalFacts.ed25519PublicKeySha256,
+          mlDsa65: context.operationalFacts.mlDsa65PublicKeySha256,
+        },
+        verifyManifest: context.verifyManifest,
+      },
+    );
+    writeFileSync(context.output, serialized);
+    console.log(
+      `SIGNED package manifest '${signed.name}' version '${signed.version}' for operational keyId '${context.operationalKeyId}' (both components self-verified; private material not shown).`,
+    );
+    process.exit(0);
+  }
+
   if (mode === "draft") {
     const output = arg("--out");
     const rootKeyId = arg("--root-key-id");
@@ -541,7 +925,7 @@ async function main() {
     process.exit(0);
   }
 
-  throw new Error("REFUSED: mode must be inspect-environment, export-public, draft, sign, verify, or --self-test.");
+  throw new Error("REFUSED: mode must be inspect-environment, export-public, sign-manifest, verify-manifest, draft, sign, verify, or --self-test.");
 }
 
 main().catch((error) => {

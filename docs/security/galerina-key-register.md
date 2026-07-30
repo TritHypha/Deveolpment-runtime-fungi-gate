@@ -118,7 +118,8 @@ act on and the default stops lying.
       `f3172a48372bfb23` has two verified offline custody copies. Its independent
       public pins match the `governance/` candidates: Ed25519
       `D27C56FC…59167D4`; ML-DSA-65 `1C97131F…5C427D2`. It remains unauthorized
-      until the cold root signs the admitted delegation. The live owner action is
+      until the cold root signs the admitted serial-1, 90-day delegation now
+      prepared in `governance/`. The live owner action is
       [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md);
       later commands are separately locked in
       [`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](./OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).

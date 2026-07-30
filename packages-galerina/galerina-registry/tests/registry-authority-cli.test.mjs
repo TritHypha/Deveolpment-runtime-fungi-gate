@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 import { generateKeyPairSync, randomBytes } from "node:crypto";
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
@@ -13,6 +14,10 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import test from "node:test";
+import {
+  REGISTRY_ARTIFACT_PROFILE,
+  hashFlatPackageArtifact,
+} from "../../../scripts/lib/registry-package-artifact.mjs";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "..", "..");
@@ -154,6 +159,141 @@ test("file-backed disposable ceremony enforces distinct root and operational key
       "package-manifest.sign",
       "registry-index.sign",
     ]);
+
+    const workspace = join(temp, "packages-galerina");
+    const packageRoot = join(workspace, "fixture-package");
+    mkdirSync(join(packageRoot, "src"), { recursive: true });
+    writeFileSync(
+      join(packageRoot, "package.json"),
+      `${JSON.stringify({
+        name: "@galerina/fixture",
+        version: "1.0.0",
+      }, null, 2)}\n`,
+    );
+    writeFileSync(join(packageRoot, "LICENSE"), "Apache-2.0\n");
+    writeFileSync(
+      join(packageRoot, "src", "index.ts"),
+      "export const fixture = true;\n",
+    );
+    const artifactFiles = ["LICENSE", "package.json", "src/index.ts"];
+    const packageArtifact = hashFlatPackageArtifact({
+      workspacePackagesDir: workspace,
+      packageName: "@galerina/fixture",
+      artifactProfile: REGISTRY_ARTIFACT_PROFILE,
+      artifactFiles,
+    });
+    const unsignedManifest = join(temp, "package.unsigned.galerina.yaml");
+    const signedManifest = join(temp, "package.galerina.yaml");
+    writeFileSync(unsignedManifest, [
+      'schema: "galerina-package-manifest/v1"',
+      'name: "@galerina/fixture"',
+      'version: "1.0.0"',
+      'registry: "https://registry.galerina.dev"',
+      `artifactProfile: "${REGISTRY_ARTIFACT_PROFILE}"`,
+      "artifactFiles:",
+      ...artifactFiles.map((path) => `  - "${path}"`),
+      "capabilities:",
+      '  - "crypto.verify"',
+      "effects:",
+      '  - "crypto.verify"',
+      "installScript: null",
+      `hash: "${packageArtifact.hash}"`,
+      'publisher: "galerina-owner-governance"',
+      `keyId: "${operationalId}"`,
+      "signerKeyId: null",
+      'certificationLevel: "verified"',
+      'riskRating: "high"',
+      "signature: null",
+      "governance:",
+      "  reviewed: true",
+      '  reviewedBy: "galerina-owner-governance"',
+      '  reviewedAt: "2026-07-30T10:30:00.000Z"',
+      "",
+    ].join("\n"));
+
+    const manifestSigned = run([
+      "sign-manifest",
+      "--in", unsignedManifest,
+      "--out", signedManifest,
+      "--workspace-packages-dir", workspace,
+      "--delegation", signed,
+      "--root-pubkey", rootPublic,
+      "--root-mldsa65-pubkey", rootMlPublic,
+      "--root-key-id", rootId,
+      "--operational-ed25519-pubkey", operationalEdPublic,
+      "--operational-mldsa65-pubkey", operationalMlPublic,
+      "--authority-at", "2026-08-01T00:00:00.000Z",
+      "--min-delegation-serial", "0",
+      "--operational-key-id", operationalId,
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: operationalEnv,
+    });
+    assert.equal(
+      manifestSigned.status,
+      0,
+      manifestSigned.stdout + manifestSigned.stderr,
+    );
+    assert.match(manifestSigned.stdout, /SIGNED package manifest/);
+    assert.equal(existsSync(signedManifest), true);
+
+    const manifestVerified = run([
+      "verify-manifest",
+      "--in", signedManifest,
+      "--workspace-packages-dir", workspace,
+      "--delegation", signed,
+      "--root-pubkey", rootPublic,
+      "--root-mldsa65-pubkey", rootMlPublic,
+      "--root-key-id", rootId,
+      "--operational-ed25519-pubkey", operationalEdPublic,
+      "--operational-mldsa65-pubkey", operationalMlPublic,
+      "--authority-at", "2026-08-01T00:00:00.000Z",
+      "--min-delegation-serial", "0",
+      "--operational-key-id", operationalId,
+    ]);
+    assert.equal(
+      manifestVerified.status,
+      0,
+      manifestVerified.stdout + manifestVerified.stderr,
+    );
+    assert.match(
+      manifestVerified.stdout,
+      /VERIFIED package manifest '@galerina\/fixture' version '1\.0\.0'/,
+    );
+
+    const futureApproval = join(temp, "package.future-approval.yaml");
+    const futureOutput = join(temp, "must-not-exist-future-approval.yaml");
+    writeFileSync(
+      futureApproval,
+      readFileSync(unsignedManifest, "utf8").replace(
+        "2026-07-30T10:30:00.000Z",
+        "2026-08-02T00:00:00.000Z",
+      ),
+    );
+    const futureResult = run([
+      "sign-manifest",
+      "--in", futureApproval,
+      "--out", futureOutput,
+      "--workspace-packages-dir", workspace,
+      "--delegation", signed,
+      "--root-pubkey", rootPublic,
+      "--root-mldsa65-pubkey", rootMlPublic,
+      "--root-key-id", rootId,
+      "--operational-ed25519-pubkey", operationalEdPublic,
+      "--operational-mldsa65-pubkey", operationalMlPublic,
+      "--authority-at", "2026-08-01T00:00:00.000Z",
+      "--min-delegation-serial", "0",
+      "--operational-key-id", operationalId,
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: operationalEnv,
+    });
+    assert.equal(futureResult.status, 1, futureResult.stdout + futureResult.stderr);
+    assert.match(
+      futureResult.stderr,
+      /REFUSED: governance\.reviewedAt is later than authority-at/,
+    );
+    assert.equal(existsSync(futureOutput), false);
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
@@ -402,6 +542,36 @@ test("authority CLI reports malformed signing record by line without exposing co
     );
     assert.doesNotMatch(result.stdout + result.stderr, new RegExp(secretMarker));
     assert.doesNotMatch(result.stdout + result.stderr, /operational\.env/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("authority CLI refuses repeated command-line authority fields", () => {
+  const temp = mkdtempSync(join(tmpdir(), "galerina-authority-repeat-arg-"));
+  try {
+    const keyId = "operational-repeat-arg";
+    const signingEnv = join(temp, "operational.env");
+    writeFileSync(signingEnv, [
+      `GALERINA_SIGNING_KEY_ID=${keyId}`,
+      "GALERINA_SIGNING_ALGORITHM=hybrid-ed25519-mldsa65",
+      "GALERINA_SIGNING_PRIVATE_KEY_B64=disposable",
+      "GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64=disposable",
+      "",
+    ].join("\n"));
+    const result = run([
+      "inspect-environment",
+      "--operational-key-id", keyId,
+      "--operational-key-id", "substituted-key",
+    ], {
+      ...process.env,
+      GALERINA_REGISTRY_SIGNING_ENV_PATH: signingEnv,
+    });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(
+      result.stderr,
+      /REFUSED: command line repeats '--operational-key-id'/,
+    );
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
