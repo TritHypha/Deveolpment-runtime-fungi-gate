@@ -21,7 +21,7 @@ open a `*.env` or any `*_PRIVATE_KEY_B64`.
 | key id | algorithm | private half | public half in `governance/` | role |
 |---|---|---|---|---|
 | `21415420b447e219` | **hybrid** Ed25519 + ML-DSA-65 | owner, offline archive (hash-verified) | ✅ `.pub.pem` + `.mldsa.pub.b64` | **trust-anchor root** |
-| `f3172a48372bfb23` | **hybrid** Ed25519 + ML-DSA-65 | two verified offline custody copies; extra online working copy removed | ✅ `.pub.pem` + `.mldsa.pub.b64`, independently hash-verified and admitted | operational registry signer; **not authorized until root-delegated** |
+| `f3172a48372bfb23` | **hybrid** Ed25519 + ML-DSA-65 | two verified offline custody copies; extra online working copy removed | ✅ `.pub.pem` + `.mldsa.pub.b64`, independently hash-verified and admitted | operational registry signer; root-delegated by serial 1 for the closed package-manifest/index roles through `2026-10-28T15:45:00.000Z` |
 | `ab46f4c7e2797b9b` | Ed25519 | **LOST** | ✅ | superseded root (the loss that forced RD-0368) |
 | `8eecf4187ebc9341` | Ed25519 | leaked | ✅ | **REVOKED** — private key committed to git at `cb5036d` |
 | `cd01346961d88e94` | Ed25519 | **committed to KB git** (`7ec0af0`, deliberate escrow) | ✅ | escrowed dev key |
@@ -114,12 +114,14 @@ act on and the default stops lying.
 - [ ] **Record the anchor pins.** Both recompute and match, but are recorded nowhere:
       `signing-key-21415420b447e219.pub.pem` → `8A39AD34…6627A`;
       `.mldsa.pub.b64` → `02B05DCC…7B56`. Verifiers should pin **bytes**, not just an id.
-- [ ] **Authorize the declared operational key.** Hybrid operational candidate
+- [x] **Authorize the declared operational key.** Hybrid operational key
       `f3172a48372bfb23` has two verified offline custody copies. Its independent
       public pins match the `governance/` candidates: Ed25519
-      `D27C56FC…59167D4`; ML-DSA-65 `1C97131F…5C427D2`. It remains unauthorized
-      until the cold root signs the admitted serial-1, 90-day delegation now
-      prepared in `governance/`. The live owner action is
+      `D27C56FC…59167D4`; ML-DSA-65 `1C97131F…5C427D2`. Cold root
+      `21415420b447e219` signed the admitted serial-1, 90-day delegation. The
+      returned public artifact independently passed both hybrid signature
+      checks, serial floor `0`, active-window, exact closed-role, revocation and
+      operational-public-pin verification on 2026-07-30. The live owner action is
       [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md);
       later commands are separately locked in
       [`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](./OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).

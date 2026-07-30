@@ -217,7 +217,7 @@ or release a key. A future persistent SLIDE index must be immutable,
 encrypted, hybrid-signed, anti-rollback, lease-bounded, independently
 re-opened, and source-rederivable.
 
-### Offline registry signing — root delegation ready
+### Offline registry signing — root delegation verified
 
 The hybrid v2 mechanism is green:
 
@@ -238,8 +238,8 @@ Production is still **NON-AUTHORIZING** because:
 
 - auth's re-derived 18-file candidate is owner-approved but not hybrid-signed;
 - the live registry is intentionally empty;
-- the valid separately custodied operational public bundle is admitted, but
-  its real root-signed delegation is not yet present;
+- the valid separately custodied operational public bundle and root-signed
+  delegation are admitted, but the real package signature is not yet present;
 - the live unsigned-index and owner signing acts therefore cannot run.
 
 Two verified encrypted operational-key custody copies in separate physical
@@ -260,8 +260,15 @@ non-authorizing repository material. The authority CLI validates their exact
 identities and closed roles, re-hashes reviewed package bytes, refuses future
 approval times and repeated authority fields, and self-verifies both manifest
 signature components before writing. The owner-approved auth input and
-serial-1, 90-day unsigned delegation are prepared. The live walkthrough now
-authorizes only the offline root signature over that exact delegation.
+serial-1, 90-day delegation were prepared. Cold root `21415420b447e219`
+signed the delegation for operational key `f3172a48372bfb23`. The returned
+public artifact independently verified under both root signature halves at
+`2026-07-30T16:09:14.442Z`, with serial floor `0`, the exact two closed roles,
+current revocation state and both operational public-key pins. Its file
+SHA-256 is
+`EE6B01E7AE0460D2811BBCEABF7962FDDA55ED907CA512C05C82BCE5EE1810AC`.
+The live walkthrough now authorizes only the operational signature over the
+reviewed auth candidate.
 
 Production Zero-Trust also requires automatic operational-key rotation.
 Galerina beta v1 completes the current Tower Citizen append-only

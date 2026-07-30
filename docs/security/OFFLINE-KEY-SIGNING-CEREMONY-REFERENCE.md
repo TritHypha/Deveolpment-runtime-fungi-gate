@@ -7,7 +7,7 @@ authoritative owner action is published in
 `OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. A command appearing here is not
 permission or readiness to run it.
 
-**Status on 2026-07-30: READY FOR THE ROOT-DELEGATION SIGNATURE ONLY.**
+**Status on 2026-07-30: READY FOR OPERATIONAL AUTH-MANIFEST SIGNING ONLY.**
 
 The root-to-operational delegation, deterministic artifact hasher, strict
 manifest reader and disposable-key dry run are green. The false live auth and
@@ -15,10 +15,12 @@ healthcare stubs have been removed. The live registry is intentionally empty;
 the real `@galerina/auth` bytes and owner approval are recorded in an unsigned
 candidate. Operational hybrid key `f3172a48372bfb23` has been minted and both
 public halves were independently exported and admitted. They match the
-repository candidates byte-for-byte. The serial-1 unsigned delegation is
-prepared, but no root-signed delegation record exists. The live action page
-therefore authorizes only that root signature; package and index signing remain
-locked.
+repository candidates byte-for-byte. Cold root `21415420b447e219` signed the
+serial-1 delegation for operational key `f3172a48372bfb23`; it independently
+passed hybrid signature, serial-floor, active-window, exact-role, revocation
+and operational-public-pin checks. The live action page therefore authorizes
+only operational signing of the reviewed auth candidate; live promotion and
+index signing remain locked.
 
 The independently verified public pins are:
 
@@ -133,17 +135,17 @@ Primary references:
 | Hermetic signer/admission self-test | 20/20, real Ed25519 + ML-DSA-65 | ready |
 | Root-to-operational delegation decider | time, role, fingerprint, revocation and rollback checks | ready |
 | Deterministic flat-package artifact identity | 10/10 path, byte, topology, symlink and resource-limit checks | ready |
-| Authority ceremony and live-builder CLI | 28/28 registry tests; 9/9 internal authority checks | ready |
+| Authority ceremony and live-builder CLI | 35/35 focused registry tests; 9/9 internal authority checks | ready |
 | File-backed sign then public-key verify | disposable ceremony fixture | ready |
 | Missing/tampered/downgraded signature refusal | tested | ready |
 | Signed revocation-registry check before key use | tested, including known-revoked refusal | ready |
 | Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
 | Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
 | Auth governance approval and manifest signature | exact package facts are owner-approved; signer and signature remain null | **signature blocked** |
-| Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; root delegation input is ready | **root signature next** |
-| Root-signed operational delegation format and verifier | implemented; serial-1, 90-day unsigned input prepared; real delegation not yet signed | **root signature next** |
+| Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; serial-1 root delegation verified | ready |
+| Root-signed operational delegation format and verifier | serial-1, 90-day public delegation passes hybrid signature, serial, role, revocation, window and key-pin checks | ready |
 | Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
-| Real owner signing act | deliberately not performed | **owner-blocked** |
+| Real auth-manifest signing act | not yet performed | **operational signature next** |
 
 The dry run proves the mechanism. The technical auth review proves a candidate
 source identity; it does not create governance approval or a signature.

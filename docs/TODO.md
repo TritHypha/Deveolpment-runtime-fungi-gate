@@ -55,15 +55,17 @@ planning checkbox must never be used to imply that implementation exists.
   custody copies remain offline. Both public verifier files are admitted as
   non-authorizing repository material and the authority CLI validates their
   exact identities and closed roles. Owner approval is recorded for the exact
-  auth package facts, the serial-1 unsigned delegation is prepared with a
-  90-day window, and the live owner chart now authorizes only its offline root
-  signature.
+  auth package facts. Cold root `21415420b447e219` has now signed the serial-1
+  90-day delegation. The public delegation independently passed hybrid
+  signature, current-window, serial-floor, exact-role, revocation and both
+  operational-public-pin checks. The live owner chart now authorizes only the
+  offline operational signature over the reviewed auth candidate.
 - **Release stop condition:** Galerina beta v1 and owner signing remain
   **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
   auth remains an approved but unsigned candidate outside it. Operational
   hybrid key `f3172a48372bfb23` is minted and its independently re-derived
-  public bundle is admitted, but the root-signed delegation, hybrid package
-  signature, successful live unsigned-index build, and final offline
+  public bundle and root-signed delegation are admitted, but the hybrid
+  package signature, successful live unsigned-index build, and final offline
   index-signing act are still absent. Two encrypted custody copies in separate
   physical locations were owner-confirmed as verified on 2026-07-30.
 - **SLIDE stop condition:** independent SLIDE implementation and the
@@ -188,15 +190,13 @@ planning checkbox must never be used to imply that implementation exists.
   fields without decoding or printing either value or the private path.
   Focused tests cover success, UTF-16 and UTF-8-BOM rejection, malformed and
   duplicate-field diagnosis, and value/path non-disclosure.
-- **Owner action chart:** root-delegation signing is the only authorized owner
-  command now. The prepared public input is
-  `governance/registry-delegation-f3172a48372bfb23-v1.unsigned.json`: serial 1,
-  active `2026-07-30T15:45:00.000Z` through
-  `2026-10-28T15:45:00.000Z`, and only `package-manifest.sign` plus
-  `registry-index.sign`. Follow only
-  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; later commands and custody
-  boundaries remain locked in
-  `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
+- **Owner action chart:** operational auth-manifest signing is the only
+  authorized owner command now. Root `21415420b447e219` signed
+  `governance/registry-delegation-f3172a48372bfb23-v1.json`: serial 1, active
+  `2026-07-30T15:45:00.000Z` through `2026-10-28T15:45:00.000Z`, and only
+  `package-manifest.sign` plus `registry-index.sign`. Follow only
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; live promotion, index
+  construction/signing and unrelated custody material remain locked.
 - **Binding rotation requirement (owner, 2026-07-30):** production Zero-Trust
   uses automatic operational-key rotation. Galerina beta v1 completes the
   existing `galerina-tower-citizen` append-only epoch/Triple-Lock path. After

@@ -26,7 +26,7 @@ flowchart LR
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
-    F["🟥 Beta-v1 release gate<br/>root delegation signing next"]
+    F["🟥 Beta-v1 release gate<br/>auth manifest signing next"]
     G["🟨 Registry admission green<br/>auth approved · unsigned · live tree empty"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
@@ -62,7 +62,7 @@ flowchart LR
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟨 | False stubs removed; auth's 63,281-byte source identity and owner approval are recorded; candidate remains unsigned and outside the empty live tree |
-| Production registry signing | 🟥 | Package sign/verify CLI and disposable full-chain proof are green; serial-1 unsigned delegation is pinned and ready; the offline root signature, real auth signature, live build and index signature are still absent |
+| Production registry signing | 🟥 | Serial-1 root delegation is hybrid-verified and pins the exact operational key/roles; the real auth signature, live build and index signature remain absent |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -178,9 +178,12 @@ The authority CLI validates their exact identities and closed roles, and now
 also signs and independently verifies reviewed package manifests without
 exposing private values. A disposable root→operational→manifest ceremony
 passes end to end; repeated authority arguments and an approval time later
-than the verification instant refuse. The owner-approved auth input and
-serial-1 unsigned delegation are prepared. The live walkthrough now authorizes
-only the offline root-delegation signature.
+than the verification instant refuse. Cold root `21415420b447e219` has signed
+the serial-1 delegation for operational key `f3172a48372bfb23`. Both hybrid
+signature halves, serial floor, active window, exact roles, revocation state
+and operational public-key pins independently verify. The live walkthrough now
+authorizes only the offline operational signature over the reviewed auth
+candidate.
 
 ## Binding package topology
 
