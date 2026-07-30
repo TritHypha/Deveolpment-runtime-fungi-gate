@@ -52,8 +52,10 @@ npm-style nested dependency forest.
 8. The owner hybrid-signs the index offline; independently verify it before
    publication.
 
-The exact custody and command boundary is documented in
+The one current owner action is documented in
 [`docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](../../docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md).
+Locked later commands are kept separately in
+[`docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](../../docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).
 
 ## Diagnostic codes
 

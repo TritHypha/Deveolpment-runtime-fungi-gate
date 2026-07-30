@@ -1,9 +1,12 @@
 # Galerina #72 — signed central registry index
 
 This issue-specific page is retained as a stable historical link. The current
-operator procedure is:
+owner action is:
 
 [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md)
+
+Later ceremony commands are non-authorizing reference material in
+[`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](./OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).
 
 ## Current state — 2026-07-30
 

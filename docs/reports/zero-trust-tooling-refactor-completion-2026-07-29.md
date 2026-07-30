@@ -244,9 +244,9 @@ The live signing act is **NOT READY** because:
 
 The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine
-registry signer to clear this status. Follow
-`docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md` only after every preflight
-row is green and the project explicitly reports `READY FOR OWNER SIGNING`.
+registry signer to clear this status. The single current owner action is always
+published in `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; later commands
+remain locked in `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
 
 ## Formal SLIDE R&D terminology
 

@@ -165,8 +165,10 @@ planning checkbox must never be used to imply that implementation exists.
   private files as data, checks their internal key IDs and never prints private
   fields. Both root halves are mandatory; an Ed25519-only root or operational
   file is refused. Disposable evidence is 9/9.
-- **Owner walkthrough:** exact commands and custody boundaries are in
-  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`.
+- **Owner action chart:** the one action authorized now is in
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. Later commands and
+  custody boundaries are locked separately in
+  `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
 - **Completed:** cryptographic manifest/delegation verification is integrated
   into the file-backed registry builder. The false live auth and healthcare
   stubs are removed; the real auth source is a reviewed content-addressed
@@ -392,8 +394,10 @@ planning checkbox must never be used to imply that implementation exists.
   registry evidence 6/6, and the hermetic real-crypto proof 20/20. The
   file-backed owner-format dry run signs, self-verifies both components,
   writes, and independently verifies; a revoked key refuses before private
-  paths are read. The public walkthrough is
-  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; the independent
+  paths are read. The live owner-action chart is
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; the locked ceremony
+  reference is
+  `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`; the independent
   name/prefix/crypto prompt is
   `docs/reports/PROMPT-low-level-language-name-prefix-and-crypto-review-2026-07-29.md`.
 - **Owner signing status: NOT READY.** The live registry has two unreviewed,
@@ -467,7 +471,8 @@ planning checkbox must never be used to imply that implementation exists.
   to RD-0582 does not authorize the external sidecar write; keep this
   owner-blocked until the owner names the corpus and permitted write scope.
 - **Signing:** private notes were inventoried structurally without printing
-  values. The public walkthrough and disposable-key dry run are complete.
+  values. The live owner-action chart, locked ceremony reference and
+  disposable-key dry run are complete.
   Do not ask the owner to sign until real reviewed packages and an
   independently verified operational-key delegation make every remaining
   preflight green.
