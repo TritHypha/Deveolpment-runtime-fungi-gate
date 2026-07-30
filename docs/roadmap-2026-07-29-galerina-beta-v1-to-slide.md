@@ -7,7 +7,7 @@ Policy: zero trust, verify rather than assume, fail closed
 This is the live high-level roadmap. It records measured gates rather than an
 invented completion percentage. The detailed execution checklist remains
 `docs/TODO.md`; the implementation plan remains
-`docs/superpowers/plans/2026-07-29-galerina-beta-v1-completion.md`.
+`docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`.
 
 ## Status legend
 
@@ -29,13 +29,14 @@ flowchart LR
     F["🟥 Beta-v1 release gate<br/>automatic rotation integration"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
-    I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
-    J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
+    I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
+    T["🟦 Package retirement<br/>465 tracked source .ts → 0<br/>95 node_modules → 0"]
+    J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> F --> H --> I --> J
+    A --> B --> C --> D --> E --> G --> F --> H --> I --> T --> J
     Z --> E
     G --> P
     H --> M
@@ -48,7 +49,7 @@ flowchart LR
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,Z green;
     class F red;
-    class H,I,M blue;
+    class H,I,T,M blue;
     class P green;
     class J grey;
 ```
@@ -107,6 +108,14 @@ The remaining sequence is:
    remain separate.
 5. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
+6. Switch packages in dependency order from TypeScript execution to verified
+   `.fungi`/SLIDE execution. The fresh starting ratchets are 451 `.ts` files
+   reported by the self-host readiness inventory, 465 tracked package-source
+   `.ts` files in the retirement graph, one nested native package and 95
+   package-local `node_modules` trees. The terminal gates require all four
+   debts to reach zero without hiding or renaming a member.
+7. Run the full governed benchmark and both requested charts only after the
+   independent SLIDE backend executes equivalent workloads.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
@@ -274,16 +283,17 @@ content-addressable output storage in Bazel, unique content-derived store
 identities in Nix, and e-graph/fixpoint techniques for retaining and extracting
 equivalent optimized forms.
 
-## Deliberate holds
+## Sequenced holds
 
 - The internal benchmark harness and chart generator are integrity-tested, but
   no new Wasm/Rust/Python/Galerina/SLIDE comparison or chart is published until
   SLIDE has an executable backend and the same workloads can be measured.
-- Literal TypeScript and `node_modules` retirement remains after executable
-  SLIDE integration.
+- Literal package TypeScript and `node_modules` retirement is now an explicit
+  terminal goal, sequenced after executable SLIDE integration and performed
+  one admitted package edge at a time.
 - `.gate` remains late in the sequence to avoid rework.
 - Independent SLIDE implementation starts after Galerina beta v1 is fully
-  closed.
+  closed; it is no longer a post-session deferral.
 
 ## Owner questions
 

@@ -16,6 +16,41 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Full-auto Galerina -> SLIDE -> `.fungi` retirement checkpoint - 2026-07-30
+
+- **Owner direction:** continue autonomously through Galerina beta v1,
+  executable independent SLIDE, complete package `.ts` -> `.fungi`
+  conversion, flat-package/npm retirement, the terminal graph/test/audit/build
+  fixed point and the final benchmark/charts. Never push.
+- **Corrected security constraint:** zero trust, not zero Rust. Rust or another
+  implementation language gains no trust from its language and is not removed
+  merely by name. It may remain only in a pinned, bounded, independently
+  verified role with no undeclared production, runtime, memory or policy
+  authority.
+- **Binding execution plan:**
+  `docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`.
+  It supersedes the earlier hold on post-beta SLIDE/retirement work while
+  retaining its safety gate: never delete the only working compiler or count
+  an unexecuted `.fungi` twin as a conversion.
+- **Fresh measured start:** `audit-selfhost-readiness --json` reports 95 code
+  packages, 451 `.ts`, 101 `.fungi`, 2 fully `.fungi`, 50 pure-logic
+  convertible-now packages and 38 floored packages. The retirement finder
+  reconciles 465 tracked package-source `.ts` paths. The post-SLIDE topology
+  gate is correctly red on one nested package identity and 95 package-local
+  `node_modules` trees.
+- **Subprojects decision:** the former `subprojects/dss-host` was already
+  migrated to the flat development-only
+  `galerina-devtools-wasmtime-oracle`. The residual `subprojects` directory
+  was empty and untracked and has been removed. The oracle remains as
+  independent differential evidence with no production/runtime/memory
+  authority until its documented replacement gate passes.
+- **Current work:** make the retirement inventory an authorizing,
+  non-gameable path ledger; then close default signed-registry consumption and
+  disposable-key automatic rotation before resuming independent SLIDE.
+- **Current owner questions:** none. A future real operational rotation
+  ceremony remains an owner custody act, but implementation and disposable-key
+  verification proceed without it.
+
 ### Terminal fixed-point checkpoint - 2026-07-30
 
 - **Fresh root aggregate:** **98/98 packages and 8,637 tests** pass.
@@ -79,9 +114,11 @@ planning checkbox must never be used to imply that implementation exists.
   green. Automatic operational-key rotation integration remains a beta-v1
   release gate. Two encrypted custody copies in separate physical locations
   were owner-confirmed as verified on 2026-07-30.
-- **SLIDE stop condition:** independent SLIDE implementation and the
-  Wasm/Rust/Python comparison remain deferred until the Galerina beta-v1 release
-  gate authorizes and SLIDE has an executable backend.
+- **SLIDE/retirement sequence:** independent SLIDE implementation starts after
+  the Galerina beta-v1 release gate authorizes. Literal package `.ts` and npm
+  retirement then proceeds behind per-package execution/parity/mutation gates.
+  The Wasm/Rust/Python comparison remains deferred only until SLIDE has an
+  executable backend and equivalent benchmark workloads.
 
 ### Live registry artifact admission checkpoint - 2026-07-30
 
