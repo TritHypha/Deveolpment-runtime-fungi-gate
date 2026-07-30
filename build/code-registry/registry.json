@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 734,
+  "total": 737,
   "counts": {
-    "ref": 206,
-    "inline": 169,
+    "ref": 202,
+    "inline": 175,
     "phantom": 113,
-    "live": 133,
+    "live": 134,
     "referenced": 100,
     "dead": 13
   },
@@ -978,9 +978,9 @@
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 2,
-      "tests": 4,
-      "docs": 1
+      "emits": 4,
+      "tests": 9,
+      "docs": 0
     },
     {
       "code": "ERR_REGISTRY_INDEX_MALFORMED",
@@ -990,9 +990,9 @@
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 2,
-      "tests": 3,
-      "docs": 1
+      "emits": 10,
+      "tests": 7,
+      "docs": 0
     },
     {
       "code": "ERR_REGISTRY_INDEX_NO_KEY",
@@ -1002,9 +1002,9 @@
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 1,
-      "tests": 3,
-      "docs": 1
+      "emits": 4,
+      "tests": 5,
+      "docs": 0
     },
     {
       "code": "ERR_REGISTRY_INDEX_STALE",
@@ -1014,9 +1014,9 @@
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 2,
+      "emits": 3,
       "tests": 4,
-      "docs": 2
+      "docs": 0
     },
     {
       "code": "ERR_REGISTRY_INDEX_UNSIGNED",
@@ -1026,8 +1026,8 @@
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 1,
-      "tests": 4,
+      "emits": 3,
+      "tests": 8,
       "docs": 0
     },
     {
@@ -1738,13 +1738,17 @@
       "code": "FUNGI-AUDIT-001",
       "family": "AUDIT",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
-      "severities": [],
+      "status": "inline",
+      "names": [
+        "AUDIT_EVIDENCE_MISSING"
+      ],
+      "severities": [
+        "error"
+      ],
       "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 7
+      "emits": 1,
+      "tests": 1,
+      "docs": 9
     },
     {
       "code": "FUNGI-AUDIT-002",
@@ -3427,7 +3431,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 76,
+      "tests": 80,
       "docs": 51
     },
     {
@@ -3459,8 +3463,8 @@
       ],
       "defs": 0,
       "emits": 3,
-      "tests": 47,
-      "docs": 17
+      "tests": 48,
+      "docs": 18
     },
     {
       "code": "FUNGI-EFFECT-004",
@@ -3526,7 +3530,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 15,
+      "tests": 20,
       "docs": 0
     },
     {
@@ -3586,7 +3590,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 35,
+      "tests": 37,
       "docs": 8
     },
     {
@@ -3963,7 +3967,7 @@
       "defs": 0,
       "emits": 2,
       "tests": 34,
-      "docs": 8
+      "docs": 7
     },
     {
       "code": "FUNGI-GOV-003",
@@ -3979,7 +3983,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 60,
-      "docs": 27
+      "docs": 25
     },
     {
       "code": "FUNGI-GOV-004",
@@ -3992,7 +3996,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 12,
+      "tests": 14,
       "docs": 4
     },
     {
@@ -4007,9 +4011,9 @@
         "warning"
       ],
       "defs": 1,
-      "emits": 1,
-      "tests": 13,
-      "docs": 11
+      "emits": 2,
+      "tests": 17,
+      "docs": 12
     },
     {
       "code": "FUNGI-GOV-006",
@@ -4293,6 +4297,22 @@
       "defs": 1,
       "emits": 1,
       "tests": 10,
+      "docs": 4
+    },
+    {
+      "code": "FUNGI-GOV-025",
+      "family": "GOV",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "PROTECTED_EGRESS_AUTHORITY_MISSING"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 7,
       "docs": 4
     },
     {
@@ -5825,7 +5845,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "FUNGI-MODULE-006",
@@ -6325,7 +6345,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 23,
-      "docs": 13
+      "docs": 14
     },
     {
       "code": "FUNGI-PARSE-002",
@@ -6823,12 +6843,14 @@
       "code": "FUNGI-PHI-001",
       "family": "PHI",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PHI_AUTHORITY_MISSING"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
-      "tests": 0,
+      "emits": 1,
+      "tests": 1,
       "docs": 1
     },
     {
@@ -6907,12 +6929,14 @@
       "code": "FUNGI-PII-001",
       "family": "PII",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "PII_AUTHORITY_MISSING"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
-      "tests": 0,
+      "emits": 1,
+      "tests": 3,
       "docs": 3
     },
     {
@@ -7208,7 +7232,7 @@
       ],
       "defs": 1,
       "emits": 2,
-      "tests": 38,
+      "tests": 39,
       "docs": 18
     },
     {
@@ -7575,7 +7599,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 7,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-RES-002",
@@ -7914,7 +7938,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 45,
-      "docs": 34
+      "docs": 31
     },
     {
       "code": "FUNGI-SECRET-002",
@@ -7978,7 +8002,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 45,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "FUNGI-SECRET-006",
@@ -7993,6 +8017,22 @@
       "emits": 1,
       "tests": 5,
       "docs": 0
+    },
+    {
+      "code": "FUNGI-SECRET-007",
+      "family": "SECRET",
+      "namespace": "FUNGI",
+      "status": "inline",
+      "names": [
+        "SECRET_SENT_TO_MODEL"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
     },
     {
       "code": "FUNGI-SECRET-999",
@@ -8138,7 +8178,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 17,
-      "docs": 1
+      "docs": 5
     },
     {
       "code": "FUNGI-STEP-001",
@@ -8289,8 +8329,8 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 25,
-      "docs": 7
+      "tests": 26,
+      "docs": 8
     },
     {
       "code": "FUNGI-SUBSTRATE-002",
@@ -8498,7 +8538,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 10,
-      "docs": 4
+      "docs": 5
     },
     {
       "code": "FUNGI-SYNTAX-013",
@@ -8696,13 +8736,15 @@
       "code": "FUNGI-TARGET-001",
       "family": "TARGET",
       "namespace": "FUNGI",
-      "status": "ref",
-      "names": [],
+      "status": "inline",
+      "names": [
+        "COMPUTE_TARGET_FALLBACK_MISSING"
+      ],
       "severities": [],
       "defs": 0,
-      "emits": 0,
-      "tests": 0,
-      "docs": 8
+      "emits": 1,
+      "tests": 4,
+      "docs": 10
     },
     {
       "code": "FUNGI-TENANT-001",
@@ -8962,8 +9004,8 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 234,
-      "docs": 18
+      "tests": 236,
+      "docs": 23
     },
     {
       "code": "FUNGI-TYPE-002",
@@ -8987,7 +9029,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 95,
-      "docs": 11
+      "docs": 8
     },
     {
       "code": "FUNGI-TYPE-003",
@@ -9019,7 +9061,7 @@
       "defs": 0,
       "emits": 16,
       "tests": 137,
-      "docs": 18
+      "docs": 19
     },
     {
       "code": "FUNGI-TYPE-005",
@@ -9486,6 +9528,22 @@
       "docs": 1
     },
     {
+      "code": "FUNGI-TYPE-034",
+      "family": "TYPE",
+      "namespace": "FUNGI",
+      "status": "inline",
+      "names": [
+        "GOVERNANCE_QUALIFIER_MISMATCH"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 0,
+      "emits": 1,
+      "tests": 7,
+      "docs": 3
+    },
+    {
       "code": "FUNGI-TYPE-099",
       "family": "TYPE",
       "namespace": "FUNGI",
@@ -9653,7 +9711,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 124,
+      "tests": 126,
       "docs": 33
     },
     {
@@ -9702,7 +9760,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 60,
-      "docs": 14
+      "docs": 15
     },
     {
       "code": "FUNGI-VALUESTATE-007",
@@ -9734,7 +9792,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 31,
-      "docs": 7
+      "docs": 11
     },
     {
       "code": "FUNGI-VALUESTATE-009",
@@ -9749,8 +9807,8 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 18,
-      "docs": 0
+      "tests": 22,
+      "docs": 1
     },
     {
       "code": "FUNGI-VALUESTATE-011",

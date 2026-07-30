@@ -9,7 +9,7 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 | Bounded-TCB floor | 16 | → NEVER (bounded-TCB floor by ruling: crypto primitives, host seams, pure-algorithm devtools) |
 | Migration program | 326 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
 
-Authority ledgers: 5 compiler + 9 governed = 14 authoritative twins.
+Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
 `.fungi` in src trees: 101 across 95 packages · finder drift: 0
 

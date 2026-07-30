@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-07-29T16:42:31.000Z",
-  "sha": "e0069e62",
-  "contracts": 1331,
-  "parsed": 507,
+  "generatedAt": "2026-07-30T02:14:58.000Z",
+  "sha": "86aa2f65",
+  "contracts": 1418,
+  "parsed": 511,
   "rows": [
     {
       "file": "docs/examples/Level-1-Basics/001-pure-flow/example.fungi",
@@ -110,7 +110,7 @@
       "file": "docs/examples/Level-1-Basics/013-match-option/example.fungi",
       "name": "example",
       "qualifier": "pure",
-      "signature": "pure flow example(user: Option<User>) -> Void",
+      "signature": "pure flow example(user: Option<User>) -> String",
       "effects": [],
       "intent": ""
     },
@@ -283,6 +283,14 @@
       "intent": ""
     },
     {
+      "file": "docs/examples/Level-2-Types/062-invalid-redacted-email/example.fungi",
+      "name": "invalidRedactedEmail",
+      "qualifier": "pure",
+      "signature": "pure flow invalidRedactedEmail(email: protected Email) -> redacted Email",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "docs/examples/Level-2-Types/063-option-some/example.fungi",
       "name": "example",
       "qualifier": "pure",
@@ -335,6 +343,14 @@
       "name": "example",
       "qualifier": "pure",
       "signature": "pure flow example() -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/Level-2-Types/070-auto-invalid/example.fungi",
+      "name": "missingAutoInitializer",
+      "qualifier": "pure",
+      "signature": "pure flow missingAutoInitializer() -> Int",
       "effects": [],
       "intent": ""
     },
@@ -459,6 +475,14 @@
       "intent": ""
     },
     {
+      "file": "docs/examples/Level-2-Types/086-protected-not-redacted/example.fungi",
+      "name": "protectedNeedsRedaction",
+      "qualifier": "pure",
+      "signature": "pure flow protectedNeedsRedaction(email: protected Email) -> redacted Email",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "docs/examples/Level-2-Types/087-protected-email-audit/example.fungi",
       "name": "example",
       "qualifier": "secure",
@@ -497,10 +521,7 @@
       "name": "handlePatients",
       "qualifier": "secure",
       "signature": "secure flow handlePatients(readonly request: Request) -> HandlePatientsResult",
-      "effects": [
-        "database.write",
-        "audit.write"
-      ],
+      "effects": [],
       "intent": ""
     },
     {
@@ -660,18 +681,19 @@
     {
       "file": "docs/examples/Level-3-Effects/102-guarded-database-write/example.fungi",
       "name": "saveOrder",
-      "qualifier": "guarded",
-      "signature": "guarded flow saveOrder(order: Order) -> SaveOrderResult",
+      "qualifier": "secure",
+      "signature": "secure flow saveOrder(order: Order) -> SaveOrderResult",
       "effects": [
-        "database.write"
+        "database.write",
+        "audit.write"
       ],
       "intent": "Persist a customer order to the database and return the generated order ID."
     },
     {
       "file": "docs/examples/Level-3-Effects/103-guarded-network-outbound/example.fungi",
       "name": "fetchRate",
-      "qualifier": "guarded",
-      "signature": "guarded flow fetchRate(baseCurrency: String) -> FetchRateResult",
+      "qualifier": "secure",
+      "signature": "secure flow fetchRate(baseCurrency: String) -> FetchRateResult",
       "effects": [
         "network.outbound"
       ],
@@ -707,6 +729,16 @@
     },
     {
       "file": "docs/examples/Level-3-Effects/107-pure-flow-calls-effectful-flow/example.fungi",
+      "name": "fetchRate",
+      "qualifier": "secure",
+      "signature": "secure flow fetchRate(baseCurrency: String) -> FetchRateResult",
+      "effects": [
+        "network.outbound"
+      ],
+      "intent": "Fetch the current exchange rate from an admitted external service."
+    },
+    {
+      "file": "docs/examples/Level-3-Effects/107-pure-flow-calls-effectful-flow/example.fungi",
       "name": "buildPriceQuote",
       "qualifier": "pure",
       "signature": "pure flow buildPriceQuote(orderId: OrderId) -> Money<GBP>",
@@ -715,9 +747,19 @@
     },
     {
       "file": "docs/examples/Level-3-Effects/108-guarded-flow-calls-effectful-flow/example.fungi",
+      "name": "fetchRate",
+      "qualifier": "secure",
+      "signature": "secure flow fetchRate(baseCurrency: String) -> FetchRateResult",
+      "effects": [
+        "network.outbound"
+      ],
+      "intent": "Fetch the current exchange rate from an admitted external service."
+    },
+    {
+      "file": "docs/examples/Level-3-Effects/108-guarded-flow-calls-effectful-flow/example.fungi",
       "name": "buildPriceQuote",
-      "qualifier": "guarded",
-      "signature": "guarded flow buildPriceQuote(orderId: OrderId) -> BuildPriceQuoteResult",
+      "qualifier": "secure",
+      "signature": "secure flow buildPriceQuote(orderId: OrderId) -> BuildPriceQuoteResult",
       "effects": [
         "network.outbound"
       ],
@@ -759,7 +801,7 @@
       "effects": [
         "database.write"
       ],
-      "intent": "Process an order — BUG: local fn tries to declare its own effects, which is forbidden. In v1-current, fn declarations cannot carry any effects syntax. 'with effects [...]' was removed and triggers FUNGI-SYNTAX-LEGACY-001. Effects authority must be declared at the flow level."
+      "intent": "Process an order while demonstrating that a local fn cannot declare its own effects."
     },
     {
       "file": "docs/examples/Level-3-Effects/113-secure-flow-with-effects/example.fungi",
@@ -785,20 +827,22 @@
     {
       "file": "docs/examples/Level-3-Effects/115-effect-propagation-through-call/example.fungi",
       "name": "saveOrder",
-      "qualifier": "guarded",
-      "signature": "guarded flow saveOrder(order: Order) -> SaveOrderResult",
+      "qualifier": "secure",
+      "signature": "secure flow saveOrder(order: Order) -> SaveOrderResult",
       "effects": [
-        "database.write"
+        "database.write",
+        "audit.write"
       ],
       "intent": "Persist an order to the database and return the generated order ID."
     },
     {
       "file": "docs/examples/Level-3-Effects/115-effect-propagation-through-call/example.fungi",
       "name": "processOrder",
-      "qualifier": "guarded",
-      "signature": "guarded flow processOrder(order: Order) -> ProcessOrderResult",
+      "qualifier": "secure",
+      "signature": "secure flow processOrder(order: Order) -> ProcessOrderResult",
       "effects": [
-        "database.write"
+        "database.write",
+        "audit.write"
       ],
       "intent": "Process an order by delegating to saveOrder — inherits its database.write effect."
     },
@@ -847,6 +891,16 @@
         "network"
       ],
       "intent": "Fetch exchange rate — BUG: effect name 'network' is a broad alias; use 'network.outbound'."
+    },
+    {
+      "file": "docs/examples/Level-3-Effects/120-effect-summary-example/example.fungi",
+      "name": "fetchRate",
+      "qualifier": "secure",
+      "signature": "secure flow fetchRate(baseCurrency: String) -> FetchRateResult",
+      "effects": [
+        "network.outbound"
+      ],
+      "intent": "Fetch the current exchange rate from an admitted external service."
     },
     {
       "file": "docs/examples/Level-3-Effects/120-effect-summary-example/example.fungi",
@@ -948,6 +1002,14 @@
       "signature": "pure flow example(patientId: protected PatientId) -> redacted PatientId",
       "effects": [],
       "intent": "Demonstrate redaction: convert a protected PatientId into a redacted PatientId for safe audit logging."
+    },
+    {
+      "file": "docs/examples/Level-4-Security/160-protected-not-redacted/example.fungi",
+      "name": "protectedCannotClaimRedacted",
+      "qualifier": "pure",
+      "signature": "pure flow protectedCannotClaimRedacted(email: protected Email) -> redacted Email",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "docs/examples/Level-4-Security/161-safe-audit-log/example.fungi",
@@ -1068,7 +1130,6 @@
       "qualifier": "secure",
       "signature": "secure flow processUserEmail(request: Request) -> ProcessUserEmailResult",
       "effects": [
-        "database.write",
         "audit.write"
       ],
       "intent": "Demonstrate the canonical unsafe -> validate -> protected -> redact -> audit trust chain."
@@ -1165,10 +1226,11 @@
     {
       "file": "docs/examples/Level-5-Governance/201-intent-basic/example.fungi",
       "name": "saveOrder",
-      "qualifier": "guarded",
-      "signature": "guarded flow saveOrder(order: Order) -> SaveOrderResult",
+      "qualifier": "secure",
+      "signature": "secure flow saveOrder(order: Order) -> SaveOrderResult",
       "effects": [
-        "database.write"
+        "database.write",
+        "audit.write"
       ],
       "intent": "Save a customer order."
     },
@@ -1199,7 +1261,7 @@
       "qualifier": "secure",
       "signature": "secure flow runFraudModel(input: FraudInput) -> RunFraudModelResult",
       "effects": [
-        "database.write",
+        "ai.inference",
         "audit.write"
       ],
       "intent": "Score a transaction for fraud risk — execution is restricted to local hardware only."
@@ -1210,6 +1272,7 @@
       "qualifier": "secure",
       "signature": "secure flow runFraudModel(input: FraudInput) -> RunFraudModelResult",
       "effects": [
+        "ai.inference",
         "audit.write"
       ],
       "intent": "Score a transaction for fraud risk on-premises only — BUG: remote compute target violates governance policy."
@@ -1229,7 +1292,7 @@
       "file": "docs/examples/Level-5-Governance/207-protected-data-sharing-missing-authority/example.fungi",
       "name": "sendReferral",
       "qualifier": "secure",
-      "signature": "secure flow sendReferral(patient: PatientRecord) -> SendReferralResult",
+      "signature": "secure flow sendReferral(patient: protected PatientRecord) -> SendReferralResult",
       "effects": [
         "network.outbound",
         "audit.write"
@@ -1243,7 +1306,8 @@
       "signature": "secure flow deletePatient(rawPatientId: protected PatientId) -> DeletePatientResult",
       "effects": [
         "database.write",
-        "audit.write"
+        "audit.write",
+        "clock.read"
       ],
       "intent": "Delete a patient record with a mandatory full audit trail including timestamp."
     },
@@ -1264,6 +1328,7 @@
       "signature": "secure flow runFraudModel(input: FraudInput) -> RunFraudModelResult",
       "effects": [
         "database.write",
+        "ai.inference",
         "audit.write"
       ],
       "intent": "Score a payment transaction for fraud risk on approved hardware only."
@@ -1298,7 +1363,8 @@
       "effects": [
         "database.write",
         "network.outbound",
-        "audit.write"
+        "audit.write",
+        "clock.read"
       ],
       "intent": "Create a new patient record from a validated NHS registration request with full governance controls."
     },
@@ -1363,6 +1429,7 @@
       "signature": "secure flow lookupPatient(readonly request: Request) -> LookupPatientResult",
       "effects": [
         "database.read",
+        "pii.read",
         "audit.write"
       ],
       "intent": "Return a patient record to an authorised actor. Protect internal error detail."
@@ -1419,7 +1486,7 @@
       "signature": "secure flow processPayment(readonly request: Request) -> ProcessPaymentResult",
       "effects": [
         "database.write",
-        "network.outbound",
+        "payment.charge",
         "audit.write"
       ],
       "intent": "Process a payment. Full tracing and latency measurement required. PII must not appear in logs."
@@ -1431,6 +1498,7 @@
       "signature": "secure flow getPatientProfile(readonly request: Request) -> PatientProfileResult",
       "effects": [
         "database.read",
+        "pii.read",
         "audit.write"
       ],
       "intent": "Return a patient profile to an authorised clinical actor. Protect email and NHS number."
@@ -1530,10 +1598,12 @@
     {
       "file": "docs/examples/Level-6-Compute/301-compute-target-best/example.fungi",
       "name": "embedText",
-      "qualifier": "pure",
-      "signature": "pure flow embedText(text: String) -> Tensor<Float32,[1,768]>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow embedText(text: String) -> Tensor<Float32,[1,768]>",
+      "effects": [
+        "ai.inference"
+      ],
+      "intent": "Create a local embedding using the best admitted accelerator."
     },
     {
       "file": "docs/examples/Level-6-Compute/302-compute-deny-remote/example.fungi",
@@ -1549,10 +1619,12 @@
     {
       "file": "docs/examples/Level-6-Compute/303-compute-gpu-explicit/example.fungi",
       "name": "processImage",
-      "qualifier": "pure",
-      "signature": "pure flow processImage(pixels: Tensor<Float32,[3,224,224]>) -> Tensor<Float32,[1000]>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow processImage(pixels: Tensor<Float32,[3,224,224]>) -> Tensor<Float32,[1000]>",
+      "effects": [
+        "ai.inference"
+      ],
+      "intent": "Classify an admitted image on a GPU with a CPU fallback."
     },
     {
       "file": "docs/examples/Level-6-Compute/304-tensor-basic/example.fungi",
@@ -1565,8 +1637,8 @@
     {
       "file": "docs/examples/Level-6-Compute/305-tensor-dynamic-shape/example.fungi",
       "name": "runModel",
-      "qualifier": "guarded",
-      "signature": "guarded flow runModel(input: Tensor<Float32,DynamicShape>) -> Tensor<Float32,DynamicShape>",
+      "qualifier": "secure",
+      "signature": "secure flow runModel(input: Tensor<Float32,DynamicShape>) -> Tensor<Float32,DynamicShape>",
       "effects": [
         "ai.inference"
       ],
@@ -1644,8 +1716,8 @@
     {
       "file": "docs/examples/Level-6-Compute/314-compute-npu-ai-inference/example.fungi",
       "name": "classifyText",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyText(text: String) -> ClassifyTextResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyText(text: String) -> ClassifyTextResult",
       "effects": [
         "ai.inference"
       ],
@@ -1739,8 +1811,8 @@
     {
       "file": "docs/examples/Level-7-AI/351-embedding-flow/example.fungi",
       "name": "embedText",
-      "qualifier": "guarded",
-      "signature": "guarded flow embedText(text: String) -> EmbedTextResult",
+      "qualifier": "secure",
+      "signature": "secure flow embedText(text: String) -> EmbedTextResult",
       "effects": [
         "ai.inference"
       ],
@@ -1768,8 +1840,8 @@
     {
       "file": "docs/examples/Level-7-AI/354-ai-batch-inference/example.fungi",
       "name": "batchClassify",
-      "qualifier": "guarded",
-      "signature": "guarded flow batchClassify(texts: Array<String>) -> BatchClassifyResult",
+      "qualifier": "secure",
+      "signature": "secure flow batchClassify(texts: Array<String>) -> BatchClassifyResult",
       "effects": [
         "ai.inference"
       ],
@@ -1799,8 +1871,8 @@
     {
       "file": "docs/examples/Level-7-AI/357-tensor-model-input-output/example.fungi",
       "name": "project",
-      "qualifier": "guarded",
-      "signature": "guarded flow project(input: Tensor<Float32,[Batch,768]>) -> ProjectResult",
+      "qualifier": "secure",
+      "signature": "secure flow project(input: Tensor<Float32,[Batch,768]>) -> ProjectResult",
       "effects": [
         "ai.inference"
       ],
@@ -1809,18 +1881,19 @@
     {
       "file": "docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi",
       "name": "classifyWithSecret",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyWithSecret(apiKey: SecureString, text: String) -> ClassifyWithSecretResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyWithSecret(text: String) -> ClassifyWithSecretResult",
       "effects": [
-        "ai.inference"
+        "ai.inference",
+        "secret.read"
       ],
       "intent": "Classify text — demonstrates illegal SecureString exposure to an AI model."
     },
     {
       "file": "docs/examples/Level-7-AI/359-embedding-with-fallback/example.fungi",
       "name": "embed",
-      "qualifier": "guarded",
-      "signature": "guarded flow embed(text: String) -> EmbedResult",
+      "qualifier": "secure",
+      "signature": "secure flow embed(text: String) -> EmbedResult",
       "effects": [
         "ai.inference"
       ],
@@ -1840,10 +1913,10 @@
     {
       "file": "docs/examples/Level-7-AI/361-ai-any-tensor/example.fungi",
       "name": "loadDynamic",
-      "qualifier": "guarded",
-      "signature": "guarded flow loadDynamic() -> LoadDynamicResult",
+      "qualifier": "secure",
+      "signature": "secure flow loadDynamic() -> LoadDynamicResult",
       "effects": [
-        "ai.inference"
+        "inference.load"
       ],
       "intent": "Load a dynamically registered model returning an AnyTensor with no static shape."
     },
@@ -1869,11 +1942,21 @@
     },
     {
       "file": "docs/examples/Level-7-AI/364-ai-effect-propagation/example.fungi",
-      "name": "pureWrapper",
-      "qualifier": "pure",
-      "signature": "pure flow pureWrapper(text: String) -> Label",
+      "name": "classifyText",
+      "qualifier": "secure",
+      "signature": "secure flow classifyText(text: String) -> Label",
+      "effects": [
+        "ai.inference"
+      ],
+      "intent": "Classify text locally using an admitted model."
+    },
+    {
+      "file": "docs/examples/Level-7-AI/364-ai-effect-propagation/example.fungi",
+      "name": "wrapperMissingAiEffect",
+      "qualifier": "guarded",
+      "signature": "guarded flow wrapperMissingAiEffect(text: String) -> Label",
       "effects": [],
-      "intent": ""
+      "intent": "Call the classifier but deliberately omit the propagated ai.inference effect."
     },
     {
       "file": "docs/examples/Level-7-AI/365-ai-summary-flow/example.fungi",
@@ -1917,8 +2000,8 @@
     {
       "file": "docs/examples/Level-7-AI/368-signed-attestation/example.fungi",
       "name": "classifyMessage",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyMessage(message: String) -> ClassifyMessageResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyMessage(message: String) -> ClassifyMessageResult",
       "effects": [
         "ai.inference"
       ],
@@ -1927,8 +2010,8 @@
     {
       "file": "docs/examples/Level-7-AI/369-ai-classification-flow/example.fungi",
       "name": "classifyInput",
-      "qualifier": "guarded",
-      "signature": "guarded flow classifyInput(readonly request: Request) -> ClassifyInputResult",
+      "qualifier": "secure",
+      "signature": "secure flow classifyInput(readonly request: Request) -> ClassifyInputResult",
       "effects": [
         "ai.inference",
         "audit.write"
@@ -1938,8 +2021,8 @@
     {
       "file": "docs/examples/Level-8-Targets/401-target-cpu/example.fungi",
       "name": "runOnCpu",
-      "qualifier": "guarded",
-      "signature": "guarded flow runOnCpu(input: Tensor<Float32,[1,128]>) -> RunOnCpuResult",
+      "qualifier": "secure",
+      "signature": "secure flow runOnCpu(input: Tensor<Float32,[1,128]>) -> RunOnCpuResult",
       "effects": [
         "ai.inference"
       ],
@@ -1948,8 +2031,8 @@
     {
       "file": "docs/examples/Level-8-Targets/402-target-gpu/example.fungi",
       "name": "runOnGpu",
-      "qualifier": "guarded",
-      "signature": "guarded flow runOnGpu(input: Tensor<Float32,[Batch,224,224,3]>) -> RunOnGpuResult",
+      "qualifier": "secure",
+      "signature": "secure flow runOnGpu(input: Tensor<Float32,[Batch,224,224,3]>) -> RunOnGpuResult",
       "effects": [
         "ai.inference"
       ],
@@ -1958,8 +2041,8 @@
     {
       "file": "docs/examples/Level-8-Targets/403-target-npu/example.fungi",
       "name": "runOnNpu",
-      "qualifier": "guarded",
-      "signature": "guarded flow runOnNpu(input: Tensor<Float32,[1,768]>) -> RunOnNpuResult",
+      "qualifier": "secure",
+      "signature": "secure flow runOnNpu(input: Tensor<Float32,[1,768]>) -> RunOnNpuResult",
       "effects": [
         "ai.inference"
       ],
@@ -1968,16 +2051,18 @@
     {
       "file": "docs/examples/Level-8-Targets/404-target-wasm/example.fungi",
       "name": "runInBrowser",
-      "qualifier": "pure",
-      "signature": "pure flow runInBrowser(input: Tensor<Float32,[1,128]>) -> Tensor<Float32,[1,64]>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow runInBrowser(input: Tensor<Float32,[1,128]>) -> Tensor<Float32,[1,64]>",
+      "effects": [
+        "ai.inference"
+      ],
+      "intent": "Run admitted model inference in a browser-compatible Wasm target."
     },
     {
       "file": "docs/examples/Level-8-Targets/405-target-photonic/example.fungi",
       "name": "runPhotonic",
-      "qualifier": "guarded",
-      "signature": "guarded flow runPhotonic(input: Tensor<Float32,[Batch,512]>) -> RunPhotonicResult",
+      "qualifier": "secure",
+      "signature": "secure flow runPhotonic(input: Tensor<Float32,[Batch,512]>) -> RunPhotonicResult",
       "effects": [
         "ai.inference"
       ],
@@ -1986,8 +2071,8 @@
     {
       "file": "docs/examples/Level-8-Targets/406-target-quantum/example.fungi",
       "name": "runQuantumOptimiser",
-      "qualifier": "guarded",
-      "signature": "guarded flow runQuantumOptimiser(params: Tensor<Float32,[64]>) -> RunQuantumOptimiserResult",
+      "qualifier": "secure",
+      "signature": "secure flow runQuantumOptimiser(params: Tensor<Float32,[64]>) -> RunQuantumOptimiserResult",
       "effects": [
         "ai.inference"
       ],
@@ -1996,8 +2081,8 @@
     {
       "file": "docs/examples/Level-8-Targets/407-target-best-prefer/example.fungi",
       "name": "runWithBest",
-      "qualifier": "guarded",
-      "signature": "guarded flow runWithBest(input: Tensor<Float32,[1,256]>) -> RunWithBestResult",
+      "qualifier": "secure",
+      "signature": "secure flow runWithBest(input: Tensor<Float32,[1,256]>) -> RunWithBestResult",
       "effects": [
         "ai.inference"
       ],
@@ -2006,8 +2091,8 @@
     {
       "file": "docs/examples/Level-8-Targets/408-target-deny-remote/example.fungi",
       "name": "runLocal",
-      "qualifier": "guarded",
-      "signature": "guarded flow runLocal(input: Tensor<Float32,[1,512]>) -> RunLocalResult",
+      "qualifier": "secure",
+      "signature": "secure flow runLocal(input: Tensor<Float32,[1,512]>) -> RunLocalResult",
       "effects": [
         "ai.inference"
       ],
@@ -2016,8 +2101,8 @@
     {
       "file": "docs/examples/Level-8-Targets/409-target-deny-list/example.fungi",
       "name": "runStrictLocal",
-      "qualifier": "guarded",
-      "signature": "guarded flow runStrictLocal(input: Tensor<Float32,[1,256]>) -> RunStrictLocalResult",
+      "qualifier": "secure",
+      "signature": "secure flow runStrictLocal(input: Tensor<Float32,[1,256]>) -> RunStrictLocalResult",
       "effects": [
         "ai.inference"
       ],
@@ -2026,8 +2111,8 @@
     {
       "file": "docs/examples/Level-8-Targets/410-adaptive-runtime/example.fungi",
       "name": "runAdaptive",
-      "qualifier": "guarded",
-      "signature": "guarded flow runAdaptive(input: Tensor<Float32,[Batch,512]>) -> RunAdaptiveResult",
+      "qualifier": "secure",
+      "signature": "secure flow runAdaptive(input: Tensor<Float32,[Batch,512]>) -> RunAdaptiveResult",
       "effects": [
         "ai.inference"
       ],
@@ -2047,8 +2132,8 @@
     {
       "file": "docs/examples/Level-8-Targets/412-target-photonic-with-fallback/example.fungi",
       "name": "runOptical",
-      "qualifier": "guarded",
-      "signature": "guarded flow runOptical(input: Tensor<Float32,[Batch,1024]>) -> RunOpticalResult",
+      "qualifier": "secure",
+      "signature": "secure flow runOptical(input: Tensor<Float32,[Batch,1024]>) -> RunOpticalResult",
       "effects": [
         "ai.inference"
       ],
@@ -2057,8 +2142,8 @@
     {
       "file": "docs/examples/Level-8-Targets/413-target-quantum-simulation/example.fungi",
       "name": "runQuantumSim",
-      "qualifier": "guarded",
-      "signature": "guarded flow runQuantumSim(params: Tensor<Float32,[128]>) -> RunQuantumSimResult",
+      "qualifier": "secure",
+      "signature": "secure flow runQuantumSim(params: Tensor<Float32,[128]>) -> RunQuantumSimResult",
       "effects": [
         "ai.inference"
       ],
@@ -2067,8 +2152,8 @@
     {
       "file": "docs/examples/Level-8-Targets/414-target-no-fallback-invalid/example.fungi",
       "name": "runNoFallback",
-      "qualifier": "guarded",
-      "signature": "guarded flow runNoFallback(input: Tensor<Float32,[1,512]>) -> RunNoFallbackResult",
+      "qualifier": "secure",
+      "signature": "secure flow runNoFallback(input: Tensor<Float32,[1,512]>) -> RunNoFallbackResult",
       "effects": [
         "ai.inference"
       ],
@@ -2088,10 +2173,12 @@
     {
       "file": "docs/examples/Level-8-Targets/416-target-fallback-missing/example.fungi",
       "name": "runModel",
-      "qualifier": "pure",
-      "signature": "pure flow runModel(input: Tensor<Float32,[1,128]>) -> Tensor<Float32,[1,10]>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow runModel(input: Tensor<Float32,[1,128]>) -> Tensor<Float32,[1,10]>",
+      "effects": [
+        "ai.inference"
+      ],
+      "intent": "Demonstrate that a non-CPU compute target requires a deterministic fallback."
     },
     {
       "file": "docs/examples/Level-9-Enterprise/451-healthcare-patient-create/example.fungi",
@@ -2147,7 +2234,9 @@
       "name": "readPatientRecord",
       "qualifier": "secure",
       "signature": "secure flow readPatientRecord(readonly request: Request) -> ReadPatientRecordResult",
-      "effects": [],
+      "effects": [
+        "database.read"
+      ],
       "intent": "Read a patient record — demonstrates missing pii.read effect declaration."
     },
     {
@@ -2155,7 +2244,9 @@
       "name": "readHealthRecord",
       "qualifier": "secure",
       "signature": "secure flow readHealthRecord(readonly request: Request) -> ReadHealthRecordResult",
-      "effects": [],
+      "effects": [
+        "database.read"
+      ],
       "intent": "Read a HIPAA health record — demonstrates missing phi.read effect declaration."
     },
     {
@@ -2188,7 +2279,6 @@
       "signature": "secure flow sendReferral(readonly request: Request) -> SendReferralResult",
       "effects": [
         "pii.read",
-        "database.write",
         "database.read",
         "network.outbound",
         "audit.write"
@@ -2228,22 +2318,11 @@
       "signature": "secure flow emailPatientMismatch(readonly request: Request) -> EmailPatientMismatchResult",
       "effects": [
         "pii.read",
-        "network.outbound",
-        "audit.write"
-      ],
-      "intent": "Send appointment reminder to patient"
-    },
-    {
-      "file": "docs/examples/Level-9-Enterprise/464-enterprise-supply-chain/example.fungi",
-      "name": "exportAnalytics",
-      "qualifier": "secure",
-      "signature": "secure flow exportAnalytics(readonly request: Request) -> ExportAnalyticsResult",
-      "effects": [
         "database.read",
         "network.outbound",
         "audit.write"
       ],
-      "intent": "Export anonymised analytics to approved partner"
+      "intent": "Send appointment reminder to patient"
     },
     {
       "file": "docs/examples/Level-9-Enterprise/465-enterprise-summary/example.fungi",
@@ -2274,7 +2353,8 @@
       "qualifier": "secure",
       "signature": "secure flow getProfile(readonly request: Request) -> GetProfileResult",
       "effects": [
-        "database.read"
+        "database.read",
+        "pii.read"
       ],
       "intent": "Return patient profile â€” demonstrates protected value in response body without policy."
     },
@@ -2285,6 +2365,7 @@
       "signature": "secure flow getPatient(readonly request: Request) -> GetPatientResult",
       "effects": [
         "database.read",
+        "pii.read",
         "audit.write"
       ],
       "intent": "Return a patient profile to an authorised actor."
@@ -2295,8 +2376,7 @@
       "qualifier": "secure",
       "signature": "secure flow initiatePayment(readonly request: Request) -> InitiatePaymentResult",
       "effects": [
-        "database.write",
-        "network.outbound",
+        "payment.charge",
         "audit.write"
       ],
       "intent": "Initiate a governed payment transfer with full audit trail."
@@ -2308,6 +2388,7 @@
       "signature": "secure flow searchPatients(readonly request: Request) -> SearchPatientsResult",
       "effects": [
         "database.read",
+        "pii.read",
         "audit.write"
       ],
       "intent": "Search patient records for authorised clinical staff. Returns de-identified results. Full records require separate access."
@@ -2363,6 +2444,18 @@
       "signature": "pure flow simulationStep(massKg: Decimal, velocityMs: Decimal, forceN: Decimal, displacementM: Decimal) -> Decimal",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "docs/examples/Level-9-Enterprise/Proposed-464-enterprise-supply-chain/example.fungi",
+      "name": "exportAnalytics",
+      "qualifier": "secure",
+      "signature": "secure flow exportAnalytics(readonly request: Request) -> ExportAnalyticsResult",
+      "effects": [
+        "database.read",
+        "network.outbound",
+        "audit.write"
+      ],
+      "intent": "Export anonymised analytics to approved partner"
     },
     {
       "file": "docs/examples/Level-9-Enterprise/Proposed-473-scoped-vault-request/example.fungi",
@@ -4345,7 +4438,7 @@
       "qualifier": "pure",
       "signature": "pure flow makeKeywordTable() -> Array<String>",
       "effects": [],
-      "intent": "Scan a word from source at startPos. Returns [word, endPos] as strings."
+      "intent": "Build the exact active-keyword table shared with the differential lexer."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -4962,6 +5055,526 @@
       "signature": "pure flow runProgram(flows: Array<FlowEntry>, entryName: String, args: Array<RtValue>) -> RunResult",
       "effects": [],
       "intent": "Run a flow-table program from an entry flow with positional args; return value + audit log."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "emptySLIDEG4CheckedSnapshot",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4CheckedSnapshot() -> SLIDEG4CheckedSnapshot",
+      "effects": [],
+      "intent": "Return a non-authorizing empty snapshot for terminal refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "refuseSLIDEG4CheckedSnapshot",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEG4CheckedSnapshot(failureId: String, detail: String) -> SLIDEG4CheckedSnapshotResult",
+      "effects": [],
+      "intent": "Refuse snapshot sealing without releasing partial checked facts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4SnapshotSourceExact",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4SnapshotSourceExact(sourceText: String) -> Bool",
+      "effects": [],
+      "intent": "Pin the bounded raw source bytes before any checked fact is sealed."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4SnapshotTokensBounded",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4SnapshotTokensBounded(tokens: Array<Token>) -> Bool",
+      "effects": [],
+      "intent": "Require monotonic lexer byte ranges covering the exact bounded source."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4SnapshotTokensEqual",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4SnapshotTokensEqual(left: Array<Token>, right: Array<Token>) -> Bool",
+      "effects": [],
+      "intent": "Compare every lexer fact so caller-supplied tokens cannot disagree with source bytes."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4SnapshotTokensMatchSource",
+      "qualifier": "guarded",
+      "signature": "guarded flow slideG4SnapshotTokensMatchSource(tokens: Array<Token>, sourceText: String) -> Bool",
+      "effects": [],
+      "intent": "Re-lex the bound bytes and require exact token identity before sealing."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4TraceEntry",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4TraceEntry(mapId: Int, functionId: Int, blockId: Int, nodeKindId: Int, nodeId: Int, startByte: Int, endByte: Int) -> SLIDEV2ESourceMapEntry",
+      "effects": [],
+      "intent": "Construct one exact bounded instruction or terminator source mapping."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "materializeSLIDEG4CheckedTrace",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEG4CheckedTrace() -> Array<SLIDEV2ESourceMapEntry>",
+      "effects": [],
+      "intent": "Materialize the complete instruction-level trace for the exact G4 fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "sealSLIDEG4CheckedSnapshot",
+      "qualifier": "guarded",
+      "signature": "guarded flow sealSLIDEG4CheckedSnapshot(tokens: Array<Token>, parsed: ParseResult, sourceText: String) -> SLIDEG4CheckedSnapshotResult",
+      "effects": [],
+      "intent": "Seal exact compiler facts without retaining the source AST or selecting a backend."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4SnapshotDeclarationsExact",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4SnapshotDeclarationsExact(snapshot: SLIDEG4CheckedSnapshot) -> Bool",
+      "effects": [],
+      "intent": "Independently validate the ordered declaration facts in a sealed snapshot."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "slideG4CheckedSnapshotExact",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4CheckedSnapshotExact(snapshot: SLIDEG4CheckedSnapshot) -> Bool",
+      "effects": [],
+      "intent": "Validate every bounded snapshot identity, fact, limit, and trace without ambient state."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
+      "name": "adaptSLIDEG4CheckedSnapshot",
+      "qualifier": "pure",
+      "signature": "pure flow adaptSLIDEG4CheckedSnapshot(snapshot: SLIDEG4CheckedSnapshot) -> SLIDEG4FixtureCandidate",
+      "effects": [],
+      "intent": "Materialize frozen V2-D only from an independently validated immutable snapshot."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Expr",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Expr() -> GIRExpr",
+      "effects": [],
+      "intent": "Return a non-admissible expression sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4Leaf",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4Leaf(op: String, ty: String, value: String) -> GIRExpr",
+      "effects": [],
+      "intent": "Construct one typed expected leaf for exact comparison."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Stmt",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Stmt() -> GIRStmt",
+      "effects": [],
+      "intent": "Return a non-admissible statement sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Flow",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Flow() -> FlowEntry",
+      "effects": [],
+      "intent": "Return a non-admissible flow sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Record",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Record() -> RecordDecl",
+      "effects": [],
+      "intent": "Return a non-admissible record declaration sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Field",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Field() -> RecordFieldDecl",
+      "effects": [],
+      "intent": "Return a non-admissible record-field sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "emptySLIDEG4Enum",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDEG4Enum() -> EnumDecl",
+      "effects": [],
+      "intent": "Return a non-admissible enum declaration sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExprAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExprAt(values: Array<GIRExpr>, position: Int) -> GIRExpr",
+      "effects": [],
+      "intent": "Read an exact expression position or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4StmtAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4StmtAt(values: Array<GIRStmt>, position: Int) -> GIRStmt",
+      "effects": [],
+      "intent": "Read an exact statement position or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4FlowAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4FlowAt(values: Array<FlowEntry>, position: Int) -> FlowEntry",
+      "effects": [],
+      "intent": "Read an exact flow position or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4RecordAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4RecordAt(values: Array<RecordDecl>, position: Int) -> RecordDecl",
+      "effects": [],
+      "intent": "Read an exact record position or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4FieldAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4FieldAt(values: Array<RecordFieldDecl>, position: Int) -> RecordFieldDecl",
+      "effects": [],
+      "intent": "Read an exact record field or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4EnumAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4EnumAt(values: Array<EnumDecl>, position: Int) -> EnumDecl",
+      "effects": [],
+      "intent": "Read an exact enum position or a refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4StringAt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4StringAt(values: Array<String>, position: Int) -> String",
+      "effects": [],
+      "intent": "Read an exact string position or an empty refusal sentinel."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4CleanExprShell",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4CleanExprShell(expr: GIRExpr, expectedOp: String, expectedType: String, expectedValue: String, expectedKids: Int) -> Bool",
+      "effects": [],
+      "intent": "Require an exact GIR expression shell."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4CleanStmtShell",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4CleanStmtShell(stmt: GIRStmt, expectedOp: String, expectedName: String, expectedName2: String, expectedExprs: Int, expectedBody: Int, expectedElse: Int) -> Bool",
+      "effects": [],
+      "intent": "Require an exact GIR statement shell."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsLoad",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsLoad(expr: GIRExpr, expectedName: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact compiler-owned load."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsInt",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsInt(expr: GIRExpr, expectedValue: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact Int constant."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsString",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsString(expr: GIRExpr, expectedValue: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact String constant."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsBinary",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsBinary(expr: GIRExpr, expectedOpcode: String, expectedType: String, expectedLeft: GIRExpr, expectedRight: GIRExpr) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact binary shell and supplied operands."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsCall1",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsCall1(expr: GIRExpr, expectedName: String, expectedArg: GIRExpr) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact single-argument call."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsReturnCall1",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsReturnCall1(stmt: GIRStmt, callName: String, argument: GIRExpr) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact terminal one-argument call."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4IsErrorReturn",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4IsErrorReturn(stmt: GIRStmt, expectedText: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact terminal Err(String)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactSignature",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactSignature(flowEntry: FlowEntry, expectedName: String, expectedParamCount: Int, expectedReturn: String) -> Bool",
+      "effects": [],
+      "intent": "Require the common pure, effect-free signature shell."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactDeclarations",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactDeclarations(parsed: ParseResult) -> Bool",
+      "effects": [],
+      "intent": "Pin the ordered G4 record and enum declarations."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactIncrementSignature",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactIncrementSignature(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Pin the checked-increment signature."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactJoinSignature",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactJoinSignature(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Pin the K3 join signature."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactMemorySignature",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactMemorySignature(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Pin the guarded-memory signature."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactIncrementBody",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactIncrementBody(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Recognize only return value + 1."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactJoinAssignment",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactJoinAssignment(stmt: GIRStmt, checkedOperand: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize joined = checked_increment(operand) + right."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactK3ErrorArm",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactK3ErrorArm(arm: GIRStmt, expectedLabel: String, expectedText: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact labelled, terminal K3 error arm."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactK3AllowArm",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactK3AllowArm(arm: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize the exact K3 allowed return of joined."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactJoinBody",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactJoinBody(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Pin checked calls, Boolean branch, typed join, and all K3 exits."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactArrayStore",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactArrayStore(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize values = [3, 5, 8] with no hidden edges."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactBoundsBranch",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactBoundsBranch(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize the terminal index < 0 OR index >= 3 bounds guard."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactSelectedStore",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactSelectedStore(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize selected = values.get(index)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactRecordStore",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactRecordStore(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize the exact typed aggregate construction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactStateStore",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactStateStore(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize the exact typed Selected state construction."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactMatchErrorArm",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactMatchErrorArm(arm: GIRStmt, expectedName: String, expectedBinding: String, expectedText: String) -> Bool",
+      "effects": [],
+      "intent": "Recognize one exact terminal match error arm."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactSelectedArm",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactSelectedArm(arm: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Recognize Selected => Ok(item.selected)."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactStateMatch",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactStateMatch(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Pin all enum match exits including the catch-all."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactSomeArm",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactSomeArm(arm: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Pin the complete Some(value) aggregate and enum path."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactOptionMatch",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactOptionMatch(stmt: GIRStmt) -> Bool",
+      "effects": [],
+      "intent": "Pin Some, None, and catch-all Option exits."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "slideG4ExactMemoryBody",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4ExactMemoryBody(flowEntry: FlowEntry) -> Bool",
+      "effects": [],
+      "intent": "Pin the complete guarded memory and aggregate body."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "refuseSLIDEG4Fixture",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEG4Fixture(failureId: String, detail: String) -> SLIDEG4FixtureCandidate",
+      "effects": [],
+      "intent": "Refuse G4 without partial bytes, digests, or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
+      "name": "adaptSLIDEG4CheckedFixture",
+      "qualifier": "pure",
+      "signature": "pure flow adaptSLIDEG4CheckedFixture(parsed: ParseResult) -> SLIDEG4FixtureCandidate",
+      "effects": [],
+      "intent": "Derive exact V2-D bytes only from the complete bounded G4 compiler facts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "refuseSLIDEG4FrontendCandidate",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDEG4FrontendCandidate(failureId: String, detail: String) -> SLIDEG4FrontendCandidate",
+      "effects": [],
+      "intent": "Refuse the public G4 seam without any partial artifact or authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "slideG4SourceExact",
+      "qualifier": "pure",
+      "signature": "pure flow slideG4SourceExact(sourceText: String) -> Bool",
+      "effects": [],
+      "intent": "Pin the normalized G4 source bytes without ambient path identity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "materializeSLIDEG4FrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEG4FrontendEvidence(sourceText: String, checkedSnapshot: SLIDEG4CheckedSnapshot, fixture: SLIDEG4FixtureCandidate, expected: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EFrontendEvidence",
+      "effects": [],
+      "intent": "Bind exact G4 source, semantic bytes, maps, plans, and caller-owned external expectations."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "validateSLIDEG4FrontendEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDEG4FrontendEvidence(evidence: SLIDEV2EFrontendEvidence, sourceText: String, checkedSnapshot: SLIDEG4CheckedSnapshot, semanticBody: Bytes, expected: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EFrontendEvidence",
+      "effects": [],
+      "intent": "Independently re-derive the bounded G4 source, semantic, map, plan, and external bindings."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "exportSLIDEG4CanonicalReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow exportSLIDEG4CanonicalReceipt(evidence: SLIDEV2EFrontendEvidence, sourceText: String, checkedSnapshot: SLIDEG4CheckedSnapshot, semanticBody: Bytes, expected: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EReceiptExport",
+      "effects": [],
+      "intent": "Export the bounded G4 receipt only after independent logical validation."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "verifySLIDEG4CanonicalReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow verifySLIDEG4CanonicalReceipt(receiptBytes: Bytes, sourceText: String, checkedSnapshot: SLIDEG4CheckedSnapshot, semanticBody: Bytes, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEV2EReceiptImport",
+      "effects": [],
+      "intent": "Decode and independently verify the complete bounded G4 receipt."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
+      "name": "materializeSLIDEG4FrontendCandidate",
+      "qualifier": "pure",
+      "signature": "pure flow materializeSLIDEG4FrontendCandidate(checkedSnapshot: SLIDEG4CheckedSnapshot, sourceText: String, expectedExternalEvidence: SLIDEV2EExternalEvidenceExpectation) -> SLIDEG4FrontendCandidate",
+      "effects": [],
+      "intent": "Return semantic and receipt bytes once, or one empty fail-closed refusal."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-r1-adapter.fungi",
@@ -8356,6 +8969,30 @@
       "intent": "FUNGI-TYPE-007: step target must be a flow call expression, not a literal or parameter reference."
     },
     {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",
+      "name": "slide_g4_checked_increment",
+      "qualifier": "pure",
+      "signature": "pure flow slide_g4_checked_increment(value: Int) -> Int",
+      "effects": [],
+      "intent": "Apply the checked arithmetic used by the detached G4 fixture."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",
+      "name": "slide_g4_k3_join",
+      "qualifier": "pure",
+      "signature": "pure flow slide_g4_k3_join(left: Int, right: Int, admission: Verdict) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Preserve checked calls, Boolean control, a typed join, and all K3 exits."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",
+      "name": "slide_g4_guarded_memory",
+      "qualifier": "pure",
+      "signature": "pure flow slide_g4_guarded_memory(index: Int) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Read one immutable array only after a fail-closed bounds decision."
+    },
+    {
       "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-v2e-source.fungi",
       "name": "slide_v2e_checked_increment",
       "qualifier": "pure",
@@ -8431,20 +9068,9 @@
     },
     {
       "file": "packages-galerina/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
-      "name": "runComputeMixThroughputBenchmark",
-      "qualifier": "secure",
-      "signature": "secure flow runComputeMixThroughputBenchmark(targetMs: Int, requestedOperations: Int, warmupMs: Int, batchSize: Int, bufferSize: Int, seed: UInt32) -> Result<ComputeMixBenchmarkReport,ComputeMixBenchmarkError>",
-      "effects": [
-        "runtime.clock",
-        "runtime.metrics"
-      ],
-      "intent": ""
-    },
-    {
-      "file": "packages-galerina/galerina-core-logic/examples/compute-mix-throughput-benchmark.fungi",
-      "name": "main",
-      "qualifier": "secure",
-      "signature": "secure flow main() -> Result<Void,Error>",
+      "name": "computeMixRequestAllowed",
+      "qualifier": "pure",
+      "signature": "pure flow computeMixRequestAllowed(request: ComputeMixBenchmarkRequest) -> Bool",
       "effects": [],
       "intent": ""
     },
@@ -8454,7 +9080,7 @@
       "qualifier": "pure",
       "signature": "pure flow vAnd(a: Int, b: Int) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Apply K3 conjunction by returning the most restrictive operand."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/admission-feedback.fungi",
@@ -8462,7 +9088,7 @@
       "qualifier": "pure",
       "signature": "pure flow telemetrySideSignal(healthDegrades: Bool, scorePresent: Bool, scoreGarbage: Bool, scoreHardDeny: Bool, scoreThrottle: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Map telemetry to a degrade-only K3 side-signal that cannot manufacture ALLOW."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/b8-admission.fungi",
@@ -8574,7 +9200,7 @@
       "qualifier": "pure",
       "signature": "pure flow admit() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the explicit CORS admission verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/cors-policy.fungi",
@@ -8582,7 +9208,7 @@
       "qualifier": "pure",
       "signature": "pure flow deny() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the fail-closed CORS denial verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/cors-policy.fungi",
@@ -8590,7 +9216,7 @@
       "qualifier": "pure",
       "signature": "pure flow corsVerdict(hasOrigin: Bool, isNullOrigin: Bool, isWildcard: Bool, hasCredentials: Bool, isExactAllowlisted: Bool, isPreflight: Bool, preflightMethodAllowed: Bool, preflightHeadersAllowed: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Apply the ordered deny-by-default CORS checks and deny on the first failed condition."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8598,7 +9224,7 @@
       "qualifier": "pure",
       "signature": "pure flow yes() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the explicit admission verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8606,7 +9232,7 @@
       "qualifier": "pure",
       "signature": "pure flow no() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the fail-closed denial verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8614,7 +9240,7 @@
       "qualifier": "pure",
       "signature": "pure flow proxyTrustVerdict(isMtls: Bool, mtlsVerified: Bool, mtlsPinned: Bool, isGatewayToken: Bool, tokenVerified: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Trust a proxy only after pinned mTLS or gateway-token verification; otherwise deny."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8622,7 +9248,7 @@
       "qualifier": "pure",
       "signature": "pure flow useForwardedAddress(proxyTrusted: Bool, forwardedNonBlank: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Use a forwarded address only when its proxy is trusted and its value is non-blank."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8630,7 +9256,7 @@
       "qualifier": "pure",
       "signature": "pure flow uniformResourceAuthorized(isOk: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Authorize only an approved resource outcome and collapse all other outcomes to one denial."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8638,7 +9264,7 @@
       "qualifier": "pure",
       "signature": "pure flow uniformAuthAuthenticated(isOk: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Authenticate only an approved credential outcome and collapse all failures to one denial."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8646,7 +9272,7 @@
       "qualifier": "pure",
       "signature": "pure flow opaqueIdVerdict(longEnough: Bool, notPureNumeric: Bool, urlSafe: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Admit an opaque identifier only when all bounded non-enumerability checks pass."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/defensive-controls.fungi",
@@ -8654,7 +9280,7 @@
       "qualifier": "pure",
       "signature": "pure flow pageLimitBranch(validPositiveInt: Bool, exceedsMax: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Classify pagination as secure-default, bounded, or capped without permitting an unbounded walk."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/egress-guard.fungi",
@@ -8694,7 +9320,7 @@
       "qualifier": "pure",
       "signature": "pure flow admit() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the explicit inbound admission verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/inbound-guard.fungi",
@@ -8702,7 +9328,7 @@
       "qualifier": "pure",
       "signature": "pure flow deny() -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Return the fail-closed inbound denial verdict."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/inbound-guard.fungi",
@@ -8710,7 +9336,7 @@
       "qualifier": "pure",
       "signature": "pure flow inboundVerdict(portValid: Bool, hasDenyMatch: Bool, hasAllowMatch: Bool, defaultAllow: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Apply inbound policy in deny-first order and deny unless an explicit rule or admitted default allows."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/inbound-guard.fungi",
@@ -8718,7 +9344,7 @@
       "qualifier": "pure",
       "signature": "pure flow rateLimitVerdict(parseable: Bool, windowExpired: Bool, countBelowLimit: Bool) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Deny an unparseable rate limit, then admit only a fresh window or remaining bounded capacity."
     },
     {
       "file": "packages-galerina/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi",
@@ -8774,7 +9400,7 @@
       "qualifier": "pure",
       "signature": "pure flow effectToBitmask(effect: String) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Map a declared effect name to its V_DPM capability bitmask."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/capability-map.fungi",
@@ -8782,7 +9408,7 @@
       "qualifier": "pure",
       "signature": "pure flow isCapabilityPermitted(vdpm: Int, effect: String) -> Bool",
       "effects": [],
-      "intent": ""
+      "intent": "Determine whether the current V_DPM state permits the requested effect."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/dag-validator.fungi",
@@ -8790,7 +9416,7 @@
       "qualifier": "pure",
       "signature": "pure flow validateDAGEdge(vdpm: Int, fromFloor: String, toFloor: String) -> DAGEdgeResult",
       "effects": [],
-      "intent": ""
+      "intent": "Validate a Tower floor transition and update the DAG-edge-valid bit."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/dag-validator.fungi",
@@ -8798,7 +9424,7 @@
       "qualifier": "pure",
       "signature": "pure flow clearDAGEdge(vdpm: Int) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Clear the DAG-edge-valid bit after the authorized transition completes."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/dss-supervisor.fungi",
@@ -8847,7 +9473,7 @@
       "qualifier": "pure",
       "signature": "pure flow applyCircuitBreaker(vdpm: Int) -> EmergencyTransitionResult",
       "effects": [],
-      "intent": ""
+      "intent": "Apply the circuit breaker by monotonically clearing network, storage, and AI capability bits."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/emergency-sm.fungi",
@@ -8855,7 +9481,7 @@
       "qualifier": "pure",
       "signature": "pure flow applyQuarantine(vdpm: Int) -> EmergencyTransitionResult",
       "effects": [],
-      "intent": ""
+      "intent": "Enter quarantine by clearing governed capabilities and setting the quarantine flag."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/emergency-sm.fungi",
@@ -8863,7 +9489,7 @@
       "qualifier": "pure",
       "signature": "pure flow applyEmergencyMode(vdpm: Int) -> EmergencyTransitionResult",
       "effects": [],
-      "intent": ""
+      "intent": "Enter emergency mode by clearing governed capabilities and setting the emergency flag."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/epilogue-receipt.fungi",
@@ -8890,7 +9516,7 @@
       "qualifier": "pure",
       "signature": "pure flow parseViewMask(capMaskStr: String) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Convert a declared view capability mask into its V_DPM bitmask."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/mmcp-registry.fungi",
@@ -8898,7 +9524,7 @@
       "qualifier": "pure",
       "signature": "pure flow isMMCPAccessPermitted(vdpm: Int, entry: MMCPEntry) -> Bool",
       "effects": [],
-      "intent": ""
+      "intent": "Determine whether the current V_DPM state permits access to this MMCP."
     },
     {
       "file": "packages-galerina/galerina-core-security/src/dss/trap-handler.fungi",
@@ -9277,12 +9903,36 @@
       "intent": "Fail-closed drift gate: deny if unsynced, or if |drift| exceeds the stability envelope; else allow."
     },
     {
+      "file": "packages-galerina/galerina-core-tasks/examples/tasks.fungi",
+      "name": "reportsTaskName",
+      "qualifier": "pure",
+      "signature": "pure flow reportsTaskName() -> String",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-tasks/examples/tasks.fungi",
+      "name": "buildApiDependency",
+      "qualifier": "pure",
+      "signature": "pure flow buildApiDependency() -> String",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-tasks/examples/tasks.fungi",
+      "name": "taskOutputRoot",
+      "qualifier": "pure",
+      "signature": "pure flow taskOutputRoot(taskName: String) -> String",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-galerina/galerina-core/examples/ai-context.fungi",
       "name": "main",
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Print the AI-context demonstration greeting."
     },
     {
       "file": "packages-galerina/galerina-core/examples/api-orders.fungi",
@@ -9300,10 +9950,10 @@
       "qualifier": "secure",
       "signature": "secure flow runArithmeticThresholdBenchmark(threshold: Int) -> Result<ArithmeticBenchmarkReport,ArithmeticBenchmarkError>",
       "effects": [
-        "runtime.clock",
-        "runtime.metrics"
+        "clock.read",
+        "telemetry.read"
       ],
-      "intent": ""
+      "intent": "Measure a deterministic arithmetic loop with explicit runtime metrics."
     },
     {
       "file": "packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.fungi",
@@ -9311,13 +9961,37 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
+      "intent": "Run the arithmetic-threshold benchmark and print its report."
+    },
+    {
+      "file": "packages-galerina/galerina-core/examples/boot.fungi",
+      "name": "defaultBootPolicy",
+      "qualifier": "pure",
+      "signature": "pure flow defaultBootPolicy() -> BootPolicy",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core/examples/boot.fungi",
+      "name": "hardwareUsable",
+      "qualifier": "pure",
+      "signature": "pure flow hardwareUsable(admission: HardwareAdmission) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core/examples/boot.fungi",
+      "name": "targetAllowed",
+      "qualifier": "pure",
+      "signature": "pure flow targetAllowed(targetName: String, admission: HardwareAdmission) -> Bool",
+      "effects": [],
       "intent": ""
     },
     {
       "file": "packages-galerina/galerina-core/examples/borrow-scope.fungi",
       "name": "peekFirstByte",
       "qualifier": "pure",
-      "signature": "pure flow peekFirstByte() -> Option<UInt8>",
+      "signature": "pure flow peekFirstByte(buf: Buffer) -> Option<UInt8>",
       "effects": [],
       "intent": ""
     },
@@ -9335,7 +10009,7 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Initialize a browser form only after host capability admission."
     },
     {
       "file": "packages-galerina/galerina-core/examples/compute-block.fungi",
@@ -9355,20 +10029,9 @@
     },
     {
       "file": "packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.fungi",
-      "name": "runComputeMixThroughputBenchmark",
-      "qualifier": "secure",
-      "signature": "secure flow runComputeMixThroughputBenchmark(targetMs: Int, warmupMs: Int, batchSize: Int) -> Result<ComputeMixBenchmarkReport,ComputeMixBenchmarkError>",
-      "effects": [
-        "runtime.clock",
-        "runtime.metrics"
-      ],
-      "intent": ""
-    },
-    {
-      "file": "packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.fungi",
-      "name": "main",
-      "qualifier": "secure",
-      "signature": "secure flow main() -> Result<Void,Error>",
+      "name": "validateComputeMixRequest",
+      "qualifier": "pure",
+      "signature": "pure flow validateComputeMixRequest(request: ComputeMixBenchmarkRequest) -> Result<ComputeMixBenchmarkRequest,ComputeMixBenchmarkError>",
       "effects": [],
       "intent": ""
     },
@@ -9393,21 +10056,9 @@
     },
     {
       "file": "packages-galerina/galerina-core/examples/four-digit-guess-benchmark.fungi",
-      "name": "guessFourDigitCode",
-      "qualifier": "secure",
-      "signature": "secure flow guessFourDigitCode(maxAttempts: Int) -> Result<FourDigitGuessReport,FourDigitGuessError>",
-      "effects": [
-        "runtime.clock",
-        "runtime.random",
-        "runtime.metrics"
-      ],
-      "intent": ""
-    },
-    {
-      "file": "packages-galerina/galerina-core/examples/four-digit-guess-benchmark.fungi",
-      "name": "main",
-      "qualifier": "secure",
-      "signature": "secure flow main() -> Result<Void,Error>",
+      "name": "validateFourDigitGuessRequest",
+      "qualifier": "pure",
+      "signature": "pure flow validateFourDigitGuessRequest(request: FourDigitGuessRequest) -> Result<FourDigitGuessRequest,FourDigitGuessError>",
       "effects": [],
       "intent": ""
     },
@@ -9425,7 +10076,7 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Print the canonical Galerina greeting."
     },
     {
       "file": "packages-galerina/galerina-core/examples/json-decode.fungi",
@@ -9433,7 +10084,7 @@
       "qualifier": "secure",
       "signature": "secure flow decodeOrder(req: Request) -> Result<CreateOrderRequest,ApiError>",
       "effects": [],
-      "intent": ""
+      "intent": "Decode a typed order request from an admitted request body."
     },
     {
       "file": "packages-galerina/galerina-core/examples/logic-review-scale.fungi",
@@ -9447,17 +10098,21 @@
       "file": "packages-galerina/galerina-core/examples/move-cleanup.fungi",
       "name": "closeConnection",
       "qualifier": "secure",
-      "signature": "secure flow closeConnection() -> Result<Void,ConnectionError>",
-      "effects": [],
-      "intent": ""
+      "signature": "secure flow closeConnection(conn: Connection) -> Result<Void,ConnectionError>",
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Close one admitted connection and return the terminal result."
     },
     {
       "file": "packages-galerina/galerina-core/examples/move-cleanup.fungi",
       "name": "connectAndClose",
       "qualifier": "secure",
       "signature": "secure flow connectAndClose(host: String, port: Int) -> Result<Void,ConnectionError>",
-      "effects": [],
-      "intent": ""
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Open one admitted connection and close it before returning."
     },
     {
       "file": "packages-galerina/galerina-core/examples/option.fungi",
@@ -9483,7 +10138,7 @@
       "effects": [
         "network.outbound"
       ],
-      "intent": ""
+      "intent": "Enrich an order through three admitted outbound services."
     },
     {
       "file": "packages-galerina/galerina-core/examples/payment-webhook.fungi",
@@ -9493,7 +10148,7 @@
       "effects": [
         "network.inbound"
       ],
-      "intent": ""
+      "intent": "Dispatch one host-verified payment webhook by admitted event type."
     },
     {
       "file": "packages-galerina/galerina-core/examples/photonic-plan.fungi",
@@ -9506,18 +10161,22 @@
     {
       "file": "packages-galerina/galerina-core/examples/reject-use-after-move.fungi",
       "name": "sendPayload",
-      "qualifier": "flow",
-      "signature": "flow sendPayload() -> Result<Void,String>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow sendPayload(p: Payload) -> Result<Void,String>",
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Transmit one payload through the admitted external network effect."
     },
     {
       "file": "packages-galerina/galerina-core/examples/reject-use-after-move.fungi",
-      "name": "demonstrateUseAfterMove",
-      "qualifier": "flow",
-      "signature": "flow demonstrateUseAfterMove() -> Result<Void,String>",
-      "effects": [],
-      "intent": ""
+      "name": "demonstrateLegacyFilename",
+      "qualifier": "secure",
+      "signature": "secure flow demonstrateLegacyFilename() -> Result<Void,String>",
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Prove the legacy use-after-move filename now teaches value semantics."
     },
     {
       "file": "packages-galerina/galerina-core/examples/result.fungi",
@@ -9541,7 +10200,7 @@
       "qualifier": "secure",
       "signature": "secure flow completeOrder(order: Order) -> Result<Order,OrderError>",
       "effects": [],
-      "intent": ""
+      "intent": "Complete stock, payment, and dispatch as one governed order operation."
     },
     {
       "file": "packages-galerina/galerina-core/examples/source-map-error.fungi",
@@ -9570,16 +10229,28 @@
     {
       "file": "packages-galerina/galerina-core/examples/value-semantics-ownership.fungi",
       "name": "sendPayload",
-      "qualifier": "flow",
-      "signature": "flow sendPayload() -> Result<Void,String>",
-      "effects": [],
-      "intent": ""
+      "qualifier": "secure",
+      "signature": "secure flow sendPayload(p: Payload) -> Result<Void,String>",
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Transmit one payload through the admitted external network effect."
     },
     {
       "file": "packages-galerina/galerina-core/examples/value-semantics-ownership.fungi",
       "name": "demonstrateValueSemantics",
-      "qualifier": "flow",
-      "signature": "flow demonstrateValueSemantics() -> Result<Void,String>",
+      "qualifier": "secure",
+      "signature": "secure flow demonstrateValueSemantics() -> Result<Void,String>",
+      "effects": [
+        "network.external"
+      ],
+      "intent": "Demonstrate that a value remains readable after a value-parameter call."
+    },
+    {
+      "file": "packages-galerina/galerina-core/examples/workers.fungi",
+      "name": "orderAction",
+      "qualifier": "pure",
+      "signature": "pure flow orderAction(order: OrderEvent) -> String",
       "effects": [],
       "intent": ""
     },
@@ -10182,6 +10853,46 @@
       "intent": ""
     },
     {
+      "file": "packages-galerina/galerina-framework-app-kernel/examples/job.fungi",
+      "name": "mayRetryVideoJob",
+      "qualifier": "pure",
+      "signature": "pure flow mayRetryVideoJob(job: VideoJob) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/examples/security-policy.fungi",
+      "name": "allowApiMethod",
+      "qualifier": "pure",
+      "signature": "pure flow allowApiMethod(method: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/examples/security-policy.fungi",
+      "name": "allowInboundPort",
+      "qualifier": "pure",
+      "signature": "pure flow allowInboundPort(port: Int) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/examples/security-policy.fungi",
+      "name": "allowFileAccess",
+      "qualifier": "pure",
+      "signature": "pure flow allowFileAccess(path: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/examples/security-policy.fungi",
+      "name": "allowShell",
+      "qualifier": "pure",
+      "signature": "pure flow allowShell(command: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/fuse-admission.fungi",
       "name": "descriptorVerdict",
       "qualifier": "pure",
@@ -10427,7 +11138,7 @@
       "qualifier": "pure",
       "signature": "pure flow addDecimal(a: Decimal, b: Decimal) -> Decimal",
       "effects": [],
-      "intent": ""
+      "intent": "Add two decimal values and print the deterministic result."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/decimal-sum.fungi",
@@ -10435,7 +11146,7 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Add two decimal values and print the deterministic result."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/hello-world.fungi",
@@ -10443,15 +11154,15 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Print the app-kernel smoke-test greeting."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/json-return.fungi",
       "name": "responsePayload",
-      "qualifier": "secure",
-      "signature": "secure flow responsePayload() -> Json",
+      "qualifier": "pure",
+      "signature": "pure flow responsePayload() -> Json",
       "effects": [],
-      "intent": ""
+      "intent": "Decode and print one deterministic JSON response payload."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/json-return.fungi",
@@ -10459,7 +11170,7 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Decode and print one deterministic JSON response payload."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/sum.fungi",
@@ -10467,7 +11178,7 @@
       "qualifier": "pure",
       "signature": "pure flow add(a: Int, b: Int) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Add two integers and print the deterministic result."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/sum.fungi",
@@ -10475,15 +11186,15 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Add two integers and print the deterministic result."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/vector-function.fungi",
-      "name": "vector",
+      "name": "vectorTotal",
       "qualifier": "pure",
-      "signature": "pure flow vector() -> Int",
+      "signature": "pure flow vectorTotal(input: Int) -> Int",
       "effects": [],
-      "intent": ""
+      "intent": "Run the portable vector-placement smoke fixture."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/tests/vector-function.fungi",
@@ -10491,7 +11202,7 @@
       "qualifier": "secure",
       "signature": "secure flow main() -> Result<Void,Error>",
       "effects": [],
-      "intent": ""
+      "intent": "Run the portable vector-placement smoke fixture."
     },
     {
       "file": "packages-galerina/galerina-framework-example-app/packages/greeting/src/index.fungi",
@@ -10516,6 +11227,22 @@
       "signature": "pure flow greeting() -> Int",
       "effects": [],
       "intent": "Return the HTTP 200 status for the hello-world greeting served at GET /hello."
+    },
+    {
+      "file": "packages-galerina/galerina-tools-benchmark/examples/benchmark.config.fungi",
+      "name": "defaultBenchmarkRequest",
+      "qualifier": "pure",
+      "signature": "pure flow defaultBenchmarkRequest() -> BenchmarkRequest",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-tools-benchmark/examples/benchmark.config.fungi",
+      "name": "benchmarkRequestAllowed",
+      "qualifier": "pure",
+      "signature": "pure flow benchmarkRequestAllowed(request: BenchmarkRequest) -> Bool",
+      "effects": [],
+      "intent": ""
     },
     {
       "file": "packages-galerina/galerina-tower-citizen/src/self-hosted/governance-decisions.fungi",
@@ -10928,7 +11655,7 @@
       "file": "tests/owasp/owasp-all-pass.fungi",
       "name": "deleteClinicalRecord",
       "qualifier": "secure",
-      "signature": "secure flow deleteClinicalRecord(patientId: PatientId) -> MutationResult",
+      "signature": "secure flow deleteClinicalRecord(patientId: String) -> MutationResult",
       "effects": [
         "database.write",
         "audit.write"

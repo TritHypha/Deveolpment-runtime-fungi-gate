@@ -93,9 +93,11 @@ flowchart LR
   T_audit_compiler_stage_hashes_mjs --> C_naming
   T_audit_compiler_stage_hashes_mjs --> C_doc_drift
   T_audit_compiler_stage_twins_mjs["audit-compiler-stage-twins.mjs"]
+  T_audit_compiler_stage_twins_mjs --> C_effects
   T_audit_compiler_stage_twins_mjs --> C_governance
-  T_audit_compiler_stage_twins_mjs --> C_source_hygiene
+  T_audit_compiler_stage_twins_mjs --> C_gate_wiring
   T_audit_compiler_stage_twins_mjs --> C_doc_drift
+  T_audit_compiler_stage_twins_mjs --> C_graph_index
   T_audit_compiler_stage_twins_mjs --> C_proofs
   T_audit_corpus_effect_names_mjs["audit-corpus-effect-names.mjs"]
   T_audit_corpus_effect_names_mjs --> C_effects
@@ -162,6 +164,10 @@ flowchart LR
   T_audit_examples_vs_declared_mjs --> C_gate_wiring
   T_audit_examples_vs_declared_mjs --> C_diagnostics
   T_audit_examples_vs_declared_mjs --> C_teaching_corpus
+  T_audit_flat_package_topology_mjs["audit-flat-package-topology.mjs"]
+  T_audit_flat_package_topology_mjs --> C_signing_fusion
+  T_audit_flat_package_topology_mjs --> C_coverage
+  T_audit_flat_package_topology_mjs --> C_graph_index
   T_audit_flowparam_fidelity_mjs["audit-flowparam-fidelity.mjs"]
   T_audit_flowparam_fidelity_mjs --> C_sinks_taint
   T_audit_flowparam_fidelity_mjs --> C_diagnostics
@@ -634,6 +640,11 @@ flowchart LR
   T_gather_compiler_stage_hashes_mjs --> C_gate_wiring
   T_gather_compiler_stage_hashes_mjs --> C_diagnostics
   T_gather_compiler_stage_hashes_mjs --> C_graph_index
+  T_gather_r4_twin_hashes_mjs["gather-r4-twin-hashes.mjs"]
+  T_gather_r4_twin_hashes_mjs --> C_effects
+  T_gather_r4_twin_hashes_mjs --> C_signing_fusion
+  T_gather_r4_twin_hashes_mjs --> C_doc_drift
+  T_gather_r4_twin_hashes_mjs --> C_graph_index
   T_gather_t1_twin_hashes_mjs["gather-t1-twin-hashes.mjs"]
   T_gather_t1_twin_hashes_mjs --> C_effects
   T_gather_t1_twin_hashes_mjs --> C_signing_fusion
@@ -682,6 +693,8 @@ flowchart LR
   T_package_usage_mjs --> C_diagnostics
   T_package_usage_mjs --> C_package_border
   T_package_usage_mjs --> C_graph_index
+  T_platform_smoke_mjs["platform-smoke.mjs"]
+  T_platform_smoke_mjs --> C_diagnostics
   T_rd_absorb_mjs["rd-absorb.mjs"]
   T_rd_absorb_mjs --> C_source_hygiene
   T_rd_absorb_mjs --> C_doc_drift

@@ -9,13 +9,13 @@
     "fungiInSrc": 101,
     "packages": 95,
     "finderDrift": 0,
-    "compilerAuthoritativeFlips": 5,
-    "governedAuthoritativeFlips": 9,
-    "authoritativeFlips": 14,
+    "compilerAuthoritativeFlips": 7,
+    "governedAuthoritativeFlips": 29,
+    "authoritativeFlips": 36,
     "compilerStageTotal": 7,
-    "compilerDifferential": 2,
+    "compilerDifferential": 0,
     "governedTwinTotal": 29,
-    "governedDifferential": 20
+    "governedDifferential": 0
   },
   "retirementPaths": {
     "twinned": "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",

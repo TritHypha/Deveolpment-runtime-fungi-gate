@@ -14,9 +14,9 @@ Provides:
 - Decision
 - ArithmeticBenchmarkReport
 - ArithmeticBenchmarkError
+- BootPolicy
+- HardwareAdmission
 - Buffer
-- inspectBuffer
-- ContactFormData
 
 ## galerina-core-runtime-wasm
 
@@ -149,8 +149,7 @@ Provides:
 Galerina multi-state logic concepts including Tri, Decision, BoolBoundary and Omni logic.
 
 Provides:
-- ComputeMixBenchmarkReport
-- ComputeMixBenchmarkError
+- ComputeMixBenchmarkRequest
 - BoolBoundaryContext
 - BoolBoundaryResult
 - FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED
@@ -161,6 +160,7 @@ Provides:
 - boolDiagnosticFailedClosed
 - boolDiagnosticUnknownReason
 - boolDiagnosticInvalidInput
+- boolDiagnosticMissingBoundaryName
 
 ## galerina-core-vector
 
@@ -853,6 +853,7 @@ Provides:
 Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default route policy resolver. The fusion host for protocol/capability packages.
 
 Provides:
+- VideoJob
 - canonicalJson
 - FuseDescriptor
 - FusedComponent
@@ -864,7 +865,6 @@ Provides:
 - buildCapabilityImports
 - CompositionMember
 - CapabilitySource
-- CompositionPlan
 
 ## galerina-framework-api-server
 
@@ -955,6 +955,7 @@ Provides:
 Galerina benchmark and diagnostics contracts for logic, compute targets, fallback behaviour and safe reporting.
 
 Provides:
+- BenchmarkRequest
 - BenchmarkMode
 - BenchmarkTrigger
 - BenchmarkTarget
@@ -966,7 +967,6 @@ Provides:
 - BenchmarkScores
 - BenchmarkReport
 - BenchmarkSubmitPayload
-- DEFAULT_BENCHMARK_CONFIG
 
 ## galerina-tools-myco
 

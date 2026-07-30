@@ -3,11 +3,11 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "fe648ea6",
+    "sha": "86aa2f65",
     "detached": false,
     "dirty": true
   },
-  "shipReadinessPct": 98.96907216494846,
+  "shipReadinessPct": 100,
   "ztAvg": 78,
   "buildAvg": 75,
   "trackingRegistryCount": 21,
@@ -122,7 +122,7 @@
         },
         {
           "label": "Type checker / Effect checker",
-          "pct": 100,
+          "pct": 97,
           "status": null,
           "live": false,
           "evidence": {
@@ -156,7 +156,8 @@
               "FUNGI-TYPE-026",
               "FUNGI-TYPE-030",
               "FUNGI-TYPE-032",
-              "FUNGI-TYPE-033"
+              "FUNGI-TYPE-033",
+              "FUNGI-TYPE-034"
             ]
           }
         },
@@ -246,6 +247,16 @@
       "avg": null,
       "rows": [
         {
+          "item": "Execution-cutover (RD-0361)",
+          "state": "shipped",
+          "detail": "29/29 governed twins checker-clean; 0 shadow · 0 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
+        },
+        {
+          "item": "Compiler authority (RD-0528)",
+          "state": "shipped",
+          "detail": "7/7 canonical stages at R3; 0 differential · 7 authoritative. Authority counts are derived from the fail-closed compiler ledger."
+        },
+        {
           "item": "Twin corpus + 6 sentinels",
           "state": "shipped",
           "detail": "29 pure .fungi verdict twins checker-clean across 10 governed dirs (execution is RD-0361)"
@@ -299,16 +310,6 @@
           "item": "myco",
           "state": "shipped",
           "detail": "v0.1.3 (graph-indexed grep replacement, own subproject; Apache-2.0): ReDoS regex-guard + per-edge word-boundary fix with wordBoundaryExcluded reporting (no silent narrowing); owned Galerina mirror galerina-tools-myco synced to upstream e5e0e25 (src+tests byte-identical, 23/23); npm publish 🔒 outward"
-        },
-        {
-          "item": "Execution-cutover (RD-0361)",
-          "state": "building",
-          "detail": "29/29 governed twins checker-clean; 0 shadow · 20 differential · 9 authoritative. Authority counts are derived from the fail-closed governed ledger."
-        },
-        {
-          "item": "Compiler authority (RD-0528)",
-          "state": "building",
-          "detail": "7/7 canonical stages at R3; 2 differential · 5 authoritative. Authority counts are derived from the fail-closed compiler ledger."
         },
         {
           "item": "Value-unit types (RD-0349)",

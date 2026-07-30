@@ -12,7 +12,7 @@
 </style>
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="202" y="34" text-anchor="end" class="title">Where the project is</text>
-<text x="220" y="34" class="sub">v1.0.0-beta.2 · 96 packages · 8524 tests · ship-readiness 97.9% · Zero-Trust thesis avg 78% · build avg 75%</text>
+<text x="220" y="34" class="sub">v1.0.0-beta.2 · 97 packages · 8587 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
 <text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers; exact build identity is in build/component-health/provenance.json</text>
 <text x="202" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="202" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
@@ -20,9 +20,9 @@
 <circle cx="220" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="220" y="80" text-anchor="middle" class="stn">lexer</text>
 <text x="220" y="120" text-anchor="middle" class="sub">authoritative</text>
-<circle cx="368.33333333333337" cy="96" r="6.5" fill="var(--paper)" stroke="#c8102e" stroke-width="2.75"/>
+<circle cx="368.33333333333337" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="368.33333333333337" y="80" text-anchor="middle" class="stn">parser</text>
-<text x="368.33333333333337" y="120" text-anchor="middle" class="sub">differential</text>
+<text x="368.33333333333337" y="120" text-anchor="middle" class="sub">authoritative</text>
 <circle cx="516.6666666666667" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="516.6666666666667" y="80" text-anchor="middle" class="stn">type-checker</text>
 <text x="516.6666666666667" y="120" text-anchor="middle" class="sub">authoritative</text>
@@ -32,15 +32,15 @@
 <circle cx="813.3333333333334" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="813.3333333333334" y="80" text-anchor="middle" class="stn">gir-emitter</text>
 <text x="813.3333333333334" y="120" text-anchor="middle" class="sub">authoritative</text>
-<circle cx="961.6666666666666" cy="96" r="6.5" fill="var(--paper)" stroke="#c8102e" stroke-width="2.75"/>
+<circle cx="961.6666666666666" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="961.6666666666666" y="80" text-anchor="middle" class="stn">governance-verifier</text>
-<text x="961.6666666666666" y="120" text-anchor="middle" class="sub">differential</text>
+<text x="961.6666666666666" y="120" text-anchor="middle" class="sub">authoritative</text>
 <circle cx="1110" cy="96" r="6.5" fill="#c8102e" stroke="#c8102e" stroke-width="2.75"/>
 <text x="1110" y="80" text-anchor="middle" class="stn">runtime</text>
 <text x="1110" y="120" text-anchor="middle" class="sub">authoritative</text>
 <text x="202" y="174" text-anchor="end" class="line-name" fill="#b8860b">Kernel cutover</text>
 <text x="202" y="188" text-anchor="end" class="sub">RD-0361 · sentinel twins</text>
-<line x1="220" y1="170" x2="428" y2="170" stroke="#b8860b" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+<line x1="220" y1="170" x2="948" y2="170" stroke="#b8860b" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
 <circle cx="220" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
 <circle cx="246" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
 <circle cx="272" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
@@ -50,7 +50,27 @@
 <circle cx="376" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
 <circle cx="402" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
 <circle cx="428" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
-<text x="450" y="174" class="sub">9 authoritative in the ledger · the differential remainder has no ledger denominator (not counted here)</text>
+<circle cx="454" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="480" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="506" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="532" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="558" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="584" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="610" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="636" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="662" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="688" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="714" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="740" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="766" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="792" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="818" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="844" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="870" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="896" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="922" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<circle cx="948" cy="170" r="6.5" fill="#b8860b" stroke="#b8860b" stroke-width="2.75"/>
+<text x="970" y="174" class="sub">29 authoritative in the ledger · the differential remainder has no ledger denominator (not counted here)</text>
 <line x1="220" y1="246" x2="1110" y2="246" stroke="var(--rule)" stroke-width="1"/>
 <line x1="220" y1="242" x2="220" y2="250" stroke="var(--rule)" stroke-width="1"/>
 <text x="220" y="236" text-anchor="middle" class="sub">0%</text>
@@ -133,9 +153,9 @@
 <text x="1156" y="610" class="sub">asserted</text>
 <text x="202" y="636" text-anchor="end" class="stn">Type checker / Effect checker</text>
 <line x1="220" y1="632" x2="1110" y2="632" stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="2 4"/>
-<line x1="220" y1="632" x2="1110" y2="632" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
-<circle cx="1110" cy="632" r="6.5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2.75"/>
-<text x="1123" y="636" class="pct">100%</text>
+<line x1="220" y1="632" x2="1083.3" y2="632" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+<circle cx="1083.3" cy="632" r="6.5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2.75"/>
+<text x="1096.3" y="636" class="pct">97%</text>
 <text x="202" y="662" text-anchor="end" class="stn">WAT emitter</text>
 <line x1="220" y1="658" x2="1110" y2="658" stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="2 4"/>
 <line x1="220" y1="658" x2="1012.1" y2="658" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
@@ -179,41 +199,43 @@
 <text x="259.7" y="818" class="pct">3%</text>
 <text x="292.7" y="818" class="sub">asserted</text>
 <text x="202" y="854" text-anchor="end" class="line-name" fill="#1c5ea8">Tracking registry</text>
-<text x="202" y="868" text-anchor="end" class="sub">20 named workstreams</text>
-<text x="220" y="854" class="stn">shipped (11)</text>
+<text x="202" y="868" text-anchor="end" class="sub">21 named workstreams</text>
+<text x="220" y="854" class="stn">shipped (13)</text>
 <circle cx="220" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="878" class="sub">Twin corpus + 6 sentinels</text>
+<text x="232" y="878" class="sub">Execution-cutover (RD-0361)</text>
 <circle cx="665" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="878" class="sub">Hardening / residency (RD-0358)</text>
+<text x="677" y="878" class="sub">Compiler authority (RD-0528)</text>
 <circle cx="220" cy="894" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="898" class="sub">Epistemic trust-trit (RD-0337)</text>
+<text x="232" y="898" class="sub">Twin corpus + 6 sentinels</text>
 <circle cx="665" cy="894" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="898" class="sub">Hallmark open types (RD-0353 H1)</text>
+<text x="677" y="898" class="sub">Hardening / residency (RD-0358)</text>
 <circle cx="220" cy="914" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="918" class="sub">CANONICAL_EFFECTS registry (RD-0341)</text>
+<text x="232" y="918" class="sub">Epistemic trust-trit (RD-0337)</text>
 <circle cx="665" cy="914" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="918" class="sub">Contract Registry (RD-0359)</text>
+<text x="677" y="918" class="sub">Hallmark open types (RD-0353 H1)</text>
 <circle cx="220" cy="934" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="938" class="sub">Workspace package families</text>
+<text x="232" y="938" class="sub">CANONICAL_EFFECTS registry (RD-0341)</text>
 <circle cx="665" cy="934" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="938" class="sub">Devtools audit suite</text>
+<text x="677" y="938" class="sub">Contract Registry (RD-0359)</text>
 <circle cx="220" cy="954" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="958" class="sub">Signing-key custody</text>
+<text x="232" y="958" class="sub">Workspace package families</text>
 <circle cx="665" cy="954" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="958" class="sub">ZTF-KB path-leak guard</text>
+<text x="677" y="958" class="sub">Devtools audit suite</text>
 <circle cx="220" cy="974" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="978" class="sub">myco</text>
-<text x="220" y="1008" class="stn">building (5)</text>
-<circle cx="220" cy="1028" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="1032" class="sub">Execution-cutover (RD-0361)</text>
-<circle cx="665" cy="1028" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="1032" class="sub">Value-unit types (RD-0349)</text>
+<text x="232" y="978" class="sub">Signing-key custody</text>
+<circle cx="665" cy="974" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="978" class="sub">ZTF-KB path-leak guard</text>
+<circle cx="220" cy="994" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="232" y="998" class="sub">myco</text>
+<text x="220" y="1028" class="stn">building (4)</text>
 <circle cx="220" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="1052" class="sub">Package Standard + pub ladder</text>
+<text x="232" y="1052" class="sub">Value-unit types (RD-0349)</text>
 <circle cx="665" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="677" y="1052" class="sub">Security-infra designs (×4)</text>
+<text x="677" y="1052" class="sub">Package Standard + pub ladder</text>
 <circle cx="220" cy="1068" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="232" y="1072" class="sub">RD-0363/0364/0365 wiring (R&amp;D done)</text>
+<text x="232" y="1072" class="sub">Security-infra designs (×4)</text>
+<circle cx="665" cy="1068" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="677" y="1072" class="sub">RD-0363/0364/0365 wiring (R&amp;D done)</text>
 <text x="220" y="1102" class="stn">post-v1 (4)</text>
 <circle cx="220" cy="1122" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
 <text x="232" y="1126" class="sub">Self-hosting Stages 3–6</text>

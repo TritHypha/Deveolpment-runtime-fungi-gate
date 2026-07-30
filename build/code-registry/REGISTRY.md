@@ -14,12 +14,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 133 | emitted with an exported constant |
-| inline | 169 | emitted, NO exported constant (R4 — Stage F) |
+| live | 134 | emitted with an exported constant |
+| inline | 175 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 206 | referenced only (no def/emit) |
+| ref | 202 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -133,7 +133,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-AUDIT-001 | ref | — | — |
+| FUNGI-AUDIT-001 | inline | AUDIT_EVIDENCE_MISSING | error |
 | FUNGI-AUDIT-002 | phantom | — | — |
 | FUNGI-AUDIT-003 | inline | — | — |
 | FUNGI-AUDIT-004 | phantom | — | — |
@@ -624,7 +624,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-GEN-TEST-005 | ref | — | — |
 
-### GOV (31)
+### GOV (32)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -652,6 +652,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-GOV-022 | inline | DOMAIN_GUARD_POLICY_VIOLATION | — |
 | FUNGI-GOV-023 | inline | PHYSICAL_HARDENING_ON_LOW_RISK_FLOW | — |
 | FUNGI-GOV-024 | live | SANDBOX_REQUIRED_BUT_UNAVAILABLE | warning |
+| FUNGI-GOV-025 | live | PROTECTED_EGRESS_AUTHORITY_MISSING | error |
 | FUNGI-GOV-3V | ref | — | — |
 | FUNGI-GOV-3VL-001 | live | INDETERMINATE_COLLAPSED_TO_DENY | warning |
 | FUNGI-GOV-3VL-003 | inline | WILDCARD_OVER_DENY_ON_VERDICT_MATCH | error |
@@ -1011,7 +1012,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-PHI-001 | ref | — | — |
+| FUNGI-PHI-001 | inline | PHI_AUTHORITY_MISSING | — |
 
 ### PHOTONIC (6)
 
@@ -1028,7 +1029,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-PII-001 | ref | — | — |
+| FUNGI-PII-001 | inline | PII_AUTHORITY_MISSING | — |
 
 ### PIPELINE (5)
 
@@ -1215,7 +1216,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SEC-021 | live | PROTOTYPE_MUTATION_PROHIBITED | error |
 | FUNGI-SEC-PATCH-001 | phantom | — | — |
 
-### SECRET (7)
+### SECRET (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1225,6 +1226,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SECRET-004 | inline | SECRET_DEPENDENT_BRANCH | warning |
 | FUNGI-SECRET-005 | inline | SECRET_SENT_TO_NETWORK | error |
 | FUNGI-SECRET-006 | inline | SECRET_CROSSES_FLOW_BOUNDARY | — |
+| FUNGI-SECRET-007 | inline | SECRET_SENT_TO_MODEL | error |
 | FUNGI-SECRET-999 | ref | — | — |
 
 ### SOURCE (1)
@@ -1333,7 +1335,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| FUNGI-TARGET-001 | ref | — | — |
+| FUNGI-TARGET-001 | inline | COMPUTE_TARGET_FALLBACK_MISSING | — |
 
 ### TENANT (3)
 
@@ -1386,7 +1388,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TRI-004 | live | UNKNOWN_LEAKED | error |
 | FUNGI-TRI-005 | live | MALFORMED_UNKNOWN_REASON | error |
 
-### TYPE (34)
+### TYPE (35)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1422,6 +1424,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TYPE-031 | referenced | TENSOR_DIMENSION_MISMATCH | error |
 | FUNGI-TYPE-032 | inline | INVALID_CURRENCY_TAG | error |
 | FUNGI-TYPE-033 | inline | CONDITION_NOT_BOOL | error |
+| FUNGI-TYPE-034 | inline | GOVERNANCE_QUALIFIER_MISMATCH | error |
 | FUNGI-TYPE-099 | ref | WRONG_NAME | — |
 | FUNGI-TYPE-903 | ref | — | — |
 
