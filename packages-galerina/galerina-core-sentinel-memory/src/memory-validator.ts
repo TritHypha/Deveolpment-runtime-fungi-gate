@@ -10,15 +10,27 @@ import { SecurityTrap } from "./errors.js";
 /** 128-bit alignment, in bytes. */
 export const ALIGN_BYTES = 16;
 
+function isSafeNonNegativeInteger(value: number): boolean {
+  return Number.isSafeInteger(value) && value >= 0;
+}
+
+function isValidAlignment(value: number): boolean {
+  return Number.isSafeInteger(value) && value > 0;
+}
+
 export class MemoryValidator {
   /** True if `ptr` is a non-negative multiple of `align` (default 16). */
   static isAligned(ptr: number, align: number = ALIGN_BYTES): boolean {
-    return ptr >= 0 && Number.isInteger(ptr) && ptr % align === 0;
+    return (
+      isSafeNonNegativeInteger(ptr) &&
+      isValidAlignment(align) &&
+      ptr % align === 0
+    );
   }
 
   /** Trap unless `ptr` is a non-negative multiple of `align` (default 16). */
   static assertAligned(ptr: number, align: number = ALIGN_BYTES): void {
-    if (ptr < 0 || ptr % align !== 0) {
+    if (!MemoryValidator.isAligned(ptr, align)) {
       throw new SecurityTrap(
         "LSM-ALIGN-001",
         `pointer ${ptr} is not ${align}-byte (128-bit) aligned`,
@@ -28,16 +40,36 @@ export class MemoryValidator {
 
   /** Trap unless [ptr, ptr+len) lies fully inside [0, capacity). */
   static assertInBounds(ptr: number, len: number, capacity: number): void {
-    if (ptr < 0 || len < 0 || ptr + len > capacity) {
+    if (
+      !isSafeNonNegativeInteger(ptr) ||
+      !isSafeNonNegativeInteger(len) ||
+      !isSafeNonNegativeInteger(capacity) ||
+      ptr > capacity ||
+      len > capacity - ptr
+    ) {
       throw new SecurityTrap(
         "LSM-BOUNDS-001",
-        `access [${ptr}, ${ptr + len}) is out of bounds for capacity ${capacity}`,
+        `access ptr=${ptr} len=${len} is out of bounds for capacity ${capacity}`,
       );
     }
   }
 
   /** Round `n` up to the next multiple of `align` (default 16). */
   static alignUp(n: number, align: number = ALIGN_BYTES): number {
-    return Math.ceil(n / align) * align;
+    if (!isSafeNonNegativeInteger(n) || !isValidAlignment(align)) {
+      throw new SecurityTrap(
+        "LSM-ALIGN-001",
+        `cannot align unsafe integer ${n} to ${align} bytes`,
+      );
+    }
+    const remainder = n % align;
+    const delta = remainder === 0 ? 0 : align - remainder;
+    if (n > Number.MAX_SAFE_INTEGER - delta) {
+      throw new SecurityTrap(
+        "LSM-ALIGN-001",
+        `aligned result for ${n} at ${align} bytes exceeds the safe integer range`,
+      );
+    }
+    return n + delta;
   }
 }
