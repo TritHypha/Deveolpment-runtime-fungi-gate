@@ -23,16 +23,16 @@ invented completion percentage. The detailed execution checklist remains
 flowchart LR
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
-    C["🟦 Governed .fungi authority<br/>and beta-v1 features"]
-    D["🟦 Full devtools close<br/>graphs, tests, audits, generators"]
-    E["🟦 Rebuild and publish<br/>all generated evidence"]
-    F["🟦 Beta-v1 release gate<br/>100% required checks green"]
-    G["🟦 Offline signing ceremony<br/>owner action after preflight"]
+    C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
+    D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
+    E["🟨 Final fixed point<br/>documents · provenance · phase close"]
+    F["🟥 Beta-v1 release gate<br/>memory authority + signing blockers"]
+    G["🟥 Offline signing ceremony<br/>NOT READY — live stubs/delegation"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
     P["🟦 Flat Galerina package resolver<br/>one canonical package instance"]
-    M["🟦 Deterministic shape memory<br/>hashed graph fragments + dynamic holes"]
+    M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
 
     A --> B --> C --> D --> E --> F --> G --> H --> I --> J
     F --> P
@@ -41,10 +41,13 @@ flowchart LR
 
     classDef green fill:#166534,color:#ffffff,stroke:#22c55e,stroke-width:2px;
     classDef amber fill:#854d0e,color:#ffffff,stroke:#facc15,stroke-width:2px;
+    classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B green;
-    class C,D,E,F,G,H,I,P,M blue;
+    class A,B,C,D green;
+    class E amber;
+    class F,G red;
+    class H,I,P,M blue;
     class J grey;
 ```
 
@@ -82,19 +85,25 @@ remain running differential shadows; no `.ts` retirement has started.
 
 The remaining sequence is:
 
-1. Close package readiness and the remaining beta-v1 feature work in
-   `docs/TODO.md`.
-2. Complete platform smoke, signing preflight and release-surface checks.
-3. Run all Galerina graph, test, audit, provenance and generator tools.
-4. Fix every in-scope finding; do not whitelist or suppress unexplained
-   failures.
-5. Regenerate the complete build, package indexes, graphs, reports, manifests,
-   SBOM and provenance evidence.
-6. Run the devtool completion audit and update the final roadmap manually from
-   its measured evidence.
-7. Run Galerina's internal benchmark suite and publish its chart.
-8. Complete the offline signing walkthrough and ask the owner to act only when
-   every signing preflight is green.
+1. Commit the current generated fixed point after one final strict and
+   exhaustive verification pass.
+2. Keep the memory graph closed until the owner explicitly authorizes the
+   external sidecar write for the selected corpus.
+3. Replace the two live registry stubs with real reviewed package bytes,
+   implement and independently verify root-authorized operational-key
+   delegation, then rerun the signing preflight.
+4. Ask the owner to perform the offline signing act only after the walkthrough
+   reports `READY FOR OWNER SIGNING`.
+5. Resume independent SLIDE implementation only after the Galerina beta-v1
+   release gate is authorizing.
+
+The terminal audit pass has executed every discovered audit/lint tool. Enforced
+gates are clean, 59/59 security mutants and 3/3 WAT arithmetic mutants are
+killed, the root aggregate is 97/97 packages with 8,587 tests, and the unified
+test harness is green across all five lanes. Report-only inventories remain
+roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
+nodes, 42 stale negative examples, 19 signing refusal codes without a direct
+test mention, and 34 cross-package relative imports.
 
 ## Binding package topology
 
@@ -137,25 +146,33 @@ Rules:
 - current `node_modules` and TypeScript bootstrap dependencies are not removed
   until executable SLIDE integration supplies their verified replacement.
 
-## SLIDE deterministic shape memory
+## SLIDE VPEG and dual-engine research
 
 Status: 🟦 design candidate; not yet an executable SLIDE feature.
 
-The proposed Fabric-style engine can precompute a deterministic memory of fixed
-component “shapes” at install, first boot and admitted update:
+The canonical engineering object is a **Verified Parametric Execution Graph
+(`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
+schema, interface, artifact, or diagram label.
+
+The proposed dual-engine system can precompute verified fixed graph structure
+at install, first boot, and admitted update:
 
 1. Canonicalize admitted package, plugin, contract, target, driver and policy
    manifests.
 2. Build the dependency and lowering graph and topologically order it.
-3. Split it into fixed graph fragments and explicitly typed dynamic holes.
-4. Hash each fixed fragment together with all authority-bearing inputs.
-5. Verify, optimize and store reusable lowering/proof fragments.
-6. At runtime, reuse only exact verified fragments and compute the dynamic
-   holes.
-7. On any missing or mismatched input, invalidate the fragment and rebuild it
-   through the full verifier.
+3. Extract Semantic VPEGs and target-specific Target VPEGs, with every changing
+   value or state transition represented by an explicitly typed parameter.
+4. Hash each VPEG together with all authority-bearing inputs.
+5. Let the Neural Shape Engine propose exact, near, composite, or new
+   candidates inside a bounded non-authorizing lane.
+6. Let the deterministic Shape Fabric independently re-derive semantics,
+   validate proofs and admit or refuse each candidate.
+7. At runtime, reuse only admitted VPEG structure and compute all dynamic
+   parameters, guards, loop conditions and effects.
+8. On any missing, stale, ambiguous or mismatched input, invalidate the VPEG
+   and rebuild it through the full verifier.
 
-A shape key must bind at least:
+A VPEG identity must bind at least:
 
 - source/component and dependency hashes;
 - SLIDE/compiler/optimizer version and deterministic profile;
@@ -164,10 +181,11 @@ A shape key must bind at least:
 - effects, K3 authority, governance policy and security rules;
 - optimization recipe and proof/receipt schema.
 
-The memory is a performance mechanism, never authority. A learned model may
-rank already-admitted optimization candidates, but it must not create
-semantics, bypass proof, grant capabilities or decide whether stale output is
-safe. Final selection remains deterministic and independently verifiable.
+The VPEG store is a performance mechanism, never authority. The Neural Shape
+Engine may discover or synthesize proposals, but neural confidence cannot
+create semantics, bypass proof, grant capabilities, collapse K3, or decide
+whether stale output is safe. Final admission remains deterministic,
+fail-closed and independently verifiable.
 
 The composition is new, but its foundations are established: persistent
 incremental object caching in LLVM ThinLTO, declared-input action hashes and
@@ -177,8 +195,9 @@ equivalent optimized forms.
 
 ## Deliberate holds
 
-- Wasm/Rust/Python versus SLIDE performance claims remain deferred until SLIDE
-  has an executable backend and the same workloads can be measured.
+- The internal benchmark harness and chart generator are integrity-tested, but
+  no new Wasm/Rust/Python/Galerina/SLIDE comparison or chart is published until
+  SLIDE has an executable backend and the same workloads can be measured.
 - Literal TypeScript and `node_modules` retirement remains after executable
   SLIDE integration.
 - `.gate` remains late in the sequence to avoid rework.

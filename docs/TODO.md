@@ -190,6 +190,43 @@ planning checkbox must never be used to imply that implementation exists.
   anti-neutering evidence**. Phase-close, exhaustive audits, rebuild,
   percentage evidence, roadmap regeneration, and allowed historical
   Galerina-only benchmark evidence remain in progress.
+- **Task 9 complete audit inventory checkpoint (2026-07-30):** all 34
+  audit/lint tools outside the phase-close umbrella were executed directly
+  without `--soft`. All 80/80 audit/lint gates have non-vacuous refusal and
+  control evidence. The full security mutation catalog killed **59/59**
+  mutants and the independent WAT emitter mutation audit killed **3/3**
+  arithmetic mutants; both restored their exact source targets and left no
+  backup residue. Enforced audits are green. Report-only tools exposed work
+  that remains visible rather than being counted as release success:
+  **132** module-wide unlowered WAT nodes (**74** on the live run path),
+  **42** stale negative teaching examples, **19** signing-path refusal codes
+  with no direct test mention, **34** cross-package relative imports, and
+  self-host readiness of **101 `.fungi` / 449 `.ts` files (18%)** across 95
+  code packages. The beta-v1 meaning of “100% `.fungi`” remains the governed
+  authority boundary described above; literal `.ts` retirement is still
+  post-executable-SLIDE work.
+- **Task 9 percentage and roadmap checkpoint (2026-07-30):** the live audit
+  reports **ship readiness 100%**, **ZT thesis 78%**, and **build 75%**. Ship
+  readiness is package/test readiness, not whole-product completion. The
+  roadmap now uses the formal **Verified Parametric Execution Graph (`VPEG`)**
+  term. “Shape shadow” is non-normative explanatory language only and must not
+  appear as a schema, interface, artifact, subsystem, or diagram label.
+  Runtime-comparison benchmarks remain deliberately deferred until executable
+  SLIDE exists.
+- **Current final-close boundary:** a strict phase-close rerun found roadmap
+  drift plus the known memory refusal. The roadmap was regenerated and its
+  four outputs now pass exact drift checks. Re-run strict and exhaustive from
+  this fixed point; the only acceptable remaining red is the unauthorized
+  external memory sidecar. Owner signing remains **NOT READY** because the
+  live catalog contains two content-less stubs and no independently verified
+  operational-key delegation.
+- **Final cadence evidence (2026-07-30):** after the roadmap repair and the
+  complete fourteen-generator fixed point, strict phase-close is **83/84** and
+  exhaustive is **84/85**. Exhaustive's added package child passed **97/97**
+  package commands in **319.9 seconds**. Every repository-local child is
+  green; both cadences return non-zero solely because `graph:all` correctly
+  propagates the unauthorized external memory-graph refusal. This is verified
+  non-authorizing behavior, not a test failure to suppress.
 - **Flat-package topology ratchet:** the new audit and 6/6 anti-neutering tests
   enforce unique canonical identities and reject new nested native packages.
   Current measured debt is 95 pre-SLIDE `node_modules` trees plus the one

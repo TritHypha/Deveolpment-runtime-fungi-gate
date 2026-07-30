@@ -548,6 +548,11 @@ the scripts battery is 208/208 after fixing its two reproduced verifier
 defects; and all 80 audit/lint gates have executable non-vacuity evidence.
 Every graph lane is green except the deliberately refused memory graph, which
 still lacks the exact external-corpus write authority required by Step 1.
+After the final roadmap repair and fourteen-generator fixed point, strict
+phase-close is 83/84 and exhaustive is 84/85. Exhaustive's additional package
+child passed 97/97 commands in 319.9 seconds. The sole red child in both
+cadences is the same unauthorized external memory graph; every repository-local
+child is green.
 
 - [ ] **Step 3: Publish no cross-runtime benchmark**
 

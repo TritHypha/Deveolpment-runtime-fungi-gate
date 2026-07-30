@@ -1,227 +1,259 @@
-# Zero-Trust Tooling and Test Refactor — Completion Evidence
+# Galerina beta-v1 zero-trust tooling close
 
-**Date:** 2026-07-29  
-**Branch:** `codex/slide-v2-architecture`  
-**Push status:** local commits only; no push performed  
-**Verdict:** implementation and all discoverable verification are complete;
-the full exit gate remains **non-authorizing** on one genuine owner-only
-memory-tree selection.
+**Evidence date:** 2026-07-30
 
-## Architecture
+**Branch:** `codex/galerina-beta-v1-completion`
+
+**Repository action:** local commits only; nothing pushed
+
+**Release verdict:** **NOT COMPLETE / NON-AUTHORIZING**
+
+The tooling refactor and discoverable local verification are complete to the
+current evidence boundary. Galerina beta-v1 is not released: the external
+memory graph lacks owner write authority, and the live registry is not ready
+for the offline signing act.
+
+Package readiness reaching 100% does not mean the whole product is complete.
+The live percentage audit separately reports:
+
+| Meter | Result | Meaning |
+|---|---:|---|
+| Package/test ship readiness | **100%** | All 97 registered packages have governed, non-empty test evidence |
+| Zero-trust thesis | **78%** | Asserted architecture-progress meter; not a release verdict |
+| Build progress | **75%** | Asserted implementation-progress meter; not a release verdict |
+
+Seventeen of nineteen percentage rows remain explicitly hand-typed assertions.
+Only one row is live-measured and one is a measured ladder. The audit prevents
+new unevidenced percentages and prevents evidenced rows from returning to
+assertion-only status.
+
+## Architecture and current state
 
 ```mermaid
 flowchart LR
-    S["Galerina source<br/>97 registered packages"]:::green
-    P["Authoritative policy<br/>exceptions + generators + tiers"]:::green
-    I["Derived inventory<br/>packages · tools · assets"]:::green
-    T["Build-current test runner<br/>96 test-bearing packages"]:::green
-    G["Isolated generator verifier<br/>14 declared contracts"]:::green
-    A["Audit proof floor<br/>79/79 anti-neutering proofs"]:::green
-    H["galerina-test<br/>unit · e2e · R6 · fidelity · SLIDE"]:::green
-    C{"Strict phase-close<br/>fail closed"}:::amber
-    GR["Project · KB · package ·<br/>integrity · dev-tool graphs"]:::green
-    M["Memory graph<br/>4 candidates; no authority"]:::red
-    IS["Independent SLIDE<br/>V2-C · V2-D · V2-E frontend"]:::blue
+    S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
+    C["Compiler authority<br/>7/7 .fungi stages"]:::green
+    K["Governed decisions<br/>29/29 .fungi authority"]:::green
+    P["Package readiness<br/>97/97 · 8,587 tests"]:::green
+    A["Audit proof<br/>80/80 non-vacuous gates"]:::green
+    U["Unified harness<br/>5/5 lanes"]:::green
+    X["Final generated fixed point<br/>roadmap · provenance · reports"]:::amber
+    M["External memory graph<br/>write authority absent"]:::red
+    R["Live registry signing<br/>stubs + no delegation"]:::red
+    B{"Galerina beta-v1<br/>release authorization"}:::red
+    L["Independent SLIDE<br/>executable backend"]:::blue
+    V["VPEG research<br/>non-production"]:::blue
+    Q["Cross-runtime benchmark<br/>deferred"]:::grey
 
-    S --> I
-    P --> I
-    I --> T
-    I --> G
-    I --> A
-    T --> H
-    G --> C
-    A --> C
-    H --> C
-    C --> GR
-    C --> M
-    IS -. "separate evidence; never borrowed" .-> C
+    S --> C --> K --> P --> A --> U --> X --> B
+    M --> B
+    R --> B
+    B --> L --> Q
+    L --> V
 
-    classDef green fill:#d9ead3,stroke:#38761d,color:#000;
-    classDef amber fill:#fff2cc,stroke:#bf9000,color:#000;
-    classDef red fill:#f4cccc,stroke:#990000,color:#000;
-    classDef blue fill:#cfe2f3,stroke:#0b5394,color:#000;
+    classDef green fill:#166534,color:#fff,stroke:#22c55e,stroke-width:2px;
+    classDef amber fill:#854d0e,color:#fff,stroke:#facc15,stroke-width:2px;
+    classDef red fill:#7f1d1d,color:#fff,stroke:#f87171,stroke-width:2px;
+    classDef blue fill:#1e3a8a,color:#fff,stroke:#60a5fa,stroke-width:2px;
+    classDef grey fill:#374151,color:#fff,stroke:#9ca3af,stroke-width:2px;
 ```
 
-Green means implemented and freshly verified. Amber means the orchestrator is
-working correctly but cannot authorize while a child is red. Red is the
-deliberate fail-closed memory-selection refusal. Blue is evidence owned by the
-independent SLIDE repository, not Galerina.
+Green means freshly verified. Amber means repository-local finalization remains
+in progress. Red means a release-authorizing prerequisite is absent. Blue is
+future SLIDE work and cannot lend evidence to Galerina.
 
-## What this refactor cut
+## What has been completed
 
-- Workspace-only package discovery that omitted real package directories.
-- Omission of benchmarks and Myco from the root aggregate.
-- Passing against a stale pre-existing `dist/`.
-- Empty or unparseable test output being counted as success.
-- A phase-close parent that returned zero after a failed child.
-- Audit/lint tools with no executable anti-neutering proof.
-- Compiler package graphs that reported unexplained SLIDE/Fungi orphans but
-  still passed.
-- A Galerina SLIDE result being mistaken for independent SLIDE evidence.
-- Generator verification that wrote into the repository under test.
-- Timestamp-based generated freshness, where checkout or `touch` could create
-  a false stale verdict.
-- Phase-close graph/catalog commands that silently regenerated the evidence
-  while judging it.
+### Language and governed authority
 
-## What was rebuilt or added in Galerina
+- All seven canonical compiler-stage `.fungi` specifications are authoritative.
+- All twenty-nine governed decision twins are authoritative `.fungi`
+  specifications.
+- The TypeScript implementations remain differential/bootstrap shadows. No
+  `.ts` file is removed before executable SLIDE integration supplies the
+  replacement runtime and host boundary.
+- The implicit `.fungi` known-failure baseline is zero.
+- The admitted curriculum is 232/232 with zero known diagnostic drift.
+- `.fungi` source quality is clean across 103 governed non-fixture files.
+- K3 authority remains explicit; no Boolean coercion or arithmetic XOR grants
+  authority.
 
-- Bidirectional reconciliation of all 97 package directories and workspace
-  entries, with one exact reason-bearing no-test exception.
-- A build-current root runner covering all 96 runnable packages, including
-  benchmark integrity and Myco.
-- Standard `typecheck -> build -> node --test` chains for TypeScript devtools
-  and `galerina-test`.
-- Strict `phase-close` and `exhaustive` tiers with real child exit, timeout,
-  signal, malformed-result, and report-only handling.
-- A shared tooling inventory and policy contract covering 147 tools.
-- Executable anti-neutering evidence for all 79 audit/lint gates.
-- Exact compiler `entryPoints`, `loadedAssets`, and reason-bearing orphan
-  ownership; the compiler boundary has zero unexplained orphans.
-- A distinct non-vacuous Galerina `slide` lane and a separately named optional
-  independent child.
-- Fourteen declared generator contracts with isolated output redirection,
-  undeclared-write refusal, semantic idempotence, provenance validation, and
-  non-mutating drift checks.
-- Semantic code-index/code-registry provenance checks that validate the
-  complete producer stamp and refuse real content drift without trusting
-  mtimes.
-- Non-mutating phase-close checks for graphs, code index, and code registry.
-- Current generated indexes, registries, graphs, reports, provenance, SBOM,
-  status, unit data, and package boundaries.
+### Packages, tests and developer tools
 
-## Beta-v1 curriculum follow-on checkpoint
+- Workspace/package reconciliation covers all 97 direct children governed by
+  the package inventory.
+- The root build-current aggregate passes **97/97 packages and 8,587 tests**.
+- The unified `galerina-test all --json` run passes:
 
-The completion matrix below records the earlier tooling-refactor close. The
-subsequent Galerina-first beta-v1 pass is still active and does not inherit a
-completion claim from that close.
+  | Lane | Fresh result |
+  |---|---:|
+  | Unit | 8,587 |
+  | End-to-end build | 4/4 |
+  | Conformance | 10/10 |
+  | Fidelity | 9/9 |
+  | Galerina SLIDE-adapter corpus | 496/496 |
 
-- Curriculum diagnostic drift is **zero**: all **232/232** admitted examples
-  honor their exact contract, reduced from 87 by source and checker repairs.
-- Root `check --strict-governance` is a read-only production-policy check. It
-  runs effect, secure-tier, and value-state enforcement without creating build
-  or signing output.
-- Effect inference now uses the structured operation registry in the
-  authoritative pass, observes governed clocks, model aliases, service and
-  payment adapters, and helper-function effects, and does not mislabel
-  explicit PII/PHI or separately verified vault authority as overdeclared.
-- Focused fresh evidence: effect checker **68/68**; governance verifier
-  **121/121**; combined type/value-state
-  checker **174/174**; CEC **243/243**; full compiler **5,727/5,727**.
-  Curriculum evidence is fresh at 232/232 and detector self-test 16/16; the
-  post-tranche compiler package is now fresh at **5,748/5,748**. Root close
-  evidence still requires the later complete devtools rerun.
-- Wasm/Rust/Python/SLIDE comparison remains deliberately deferred until SLIDE
-  has an executable backend.
+- The independent scripts suite passes **208/208**.
+- The compiler package passes **5,748/5,748**.
+- App-kernel passes **127/127**.
+- Tower Citizen passes **476/476**.
+- Myco passes **52/52**.
+- Tri-Pipe passes **24/24**.
+- Tri-Regex passes **34/34**.
+- TritSocket passes **11/11**.
 
-## Eleven-requirement completion matrix
+### Audits and anti-neutering
 
-| # | Requirement | Status | Fresh evidence |
-|---:|---|---|---|
-| 1 | Reconcile packages; test or govern every package | **PASS** | 97 registered directories; 96 runnable; one exact empty-registry exception |
-| 2 | Dispose every audit/lint and prove anti-neutering | **PASS** | tooling contract: 97 packages / 147 tools / 0 violations; gate proofs 79/79 |
-| 3 | Declare, execute, provenance-check, and drift-check every generator | **PASS** | generator contract 14/14; direct checks 14/14; provenance 0 violations |
-| 4 | Pass every requested devtools, test, and Myco suite | **PASS** | 16/16 package commands; intelligence trace-deprecation rerun 21/21 |
-| 5 | Include benchmarks and Myco in accurate root counts | **PASS** | 96/96 packages; 8,524 tests; benchmarks 3/3; Myco 52/52 |
-| 6 | Propagate planted child failures | **PASS** | root, harness, phase-close, graph, generator, and convention fixtures all prove refusal/control directions |
-| 7 | Remove unexplained compiler SLIDE/self-hosted orphans | **PASS** | package-graph 25/25; 148 compiler files; zero unexplained orphans |
-| 8 | Make Galerina SLIDE non-vacuous and include it in `all` | **PASS** | Galerina SLIDE 477/477 from 25 exact files; `all` five/five |
-| 9 | Pass strict/exhaustive, graphs, provenance, and independent SLIDE | **OWNER-BLOCKED** | phase-close 82/83 and exhaustive 83/84; only `graph:all` fails because memory selection is unknown; independent SLIDE 30/30 |
-| 10 | Publish current generated artifacts and living counts | **PASS** | 14/14 direct post-publication checks; artifact drift 0; provenance 0; 96/96 and 8,524 living counts |
-| 11 | Keep all three ledgers explicit about replacement and residual work | **PASS** | `Galerina/docs/TODO.md`, `SLIDE/TODO.md`, and `triLowLevel-v2/TODO.md` synchronized |
+- All 80 discovered audit/lint gates have executable refusal and control
+  evidence.
+- Every one of the 34 audit/lint tools outside phase-close was executed
+  directly without `--soft`.
+- The security mutation catalog killed **59/59** mutants.
+- The WAT emitter mutation audit killed **3/3** independent arithmetic
+  mutants.
+- Mutation targets were restored exactly; no `.bak` residue remains.
+- Graph integrity is structurally clean at **7,896 nodes, 8,174 edges**, with
+  no dangling edge, duplicate identity, or dependency cycle.
+- Package Hardened Borders pass **97/97**.
+- Diagnostic conformance reports 345 code/name pairs and zero violations.
+- Diagnostic documentation agrees for all 203 codes present in both source and
+  the canonical Knowledge Base.
+- Generator contracts pass **14/14** with isolated output, deterministic
+  fixed-point checks and provenance validation.
+- SBOM evidence covers 169 components plus the root, 98 dependency records and
+  zero hygiene warnings.
+- Exact install-script policy is fail-closed: strict mode is enabled and only
+  `argon2@0.44.0` is approved. Registry-signature audit verified 48 package
+  signatures and 14 attestations, including Argon2 provenance.
 
-## Fresh final verification
+### Platforms
 
-- Requested package-local commands: **16/16**.
-- Root build-current aggregate: **96/96 packages, 8,524 tests**.
-- Galerina harness: unit **8,524**; e2e build **4/4**; conformance
-  **10/10**; fidelity **9/9**; SLIDE **477/477**; `all` **5/5** children.
-- Complete tooling scripts: **180/180** after the non-mutating phase-close
-  regression was added.
-- Generator policy: **14/14** isolated contracts and **14/14** direct checks.
-- Audit/lint proof floor: **79/79**, zero violations or advisories.
-- Graph integrity: **7,661 nodes, 7,937 edges, 45 dependency edges, zero
-  violations**.
-- Independent SLIDE: complete command **30/30** and explicit four-file
-  V2-C/V2-D/V2-E/frontend command **30/30**.
-- Strict phase-close: **82/83**; exhaustive: **83/84**. Both are correctly
-  `FAIL`, non-authorizing, with only `graph:all` red.
-- Graph family: **5/6**. Project, integrity, KB, package, and dev-tool graphs
-  pass. Memory graph refuses.
+- Windows 10.0.19045 x64 is locally verified.
+- Windows Server 2022, macOS 14, Ubuntu 24.04, Debian 12.15 and Fedora 43 jobs
+  are configured but unverified until their runners execute.
+- Exact Windows 11 and Mint 22 verification remains self-hosted and
+  unverified; no proxy platform is relabelled as evidence.
 
-## Genuine owner-only blocker
+## What the design cuts
 
-Four discovered memory directories contain `MEMORY.md`, and none is
-authorized as the selected corpus:
+- Workspace-only discovery that omitted real package directories.
+- Stale `dist/` reuse being counted as a fresh build.
+- Empty, malformed, timed-out, signalled or uncountable test output being
+  counted as success.
+- Parent phase gates returning zero after a failed blocking child.
+- Audit/lint tools without executable anti-neutering proof.
+- Timestamp-only generated-artifact freshness.
+- Generators writing into the repository while judging their own output.
+- Unexplained compiler graph orphans.
+- Ambient package dependency forests as the future Galerina package model.
+- Implicit fallback, unknown-to-allow collapse and neural authority.
+- Treating Galerina's SLIDE-adapter tests as evidence for independent SLIDE.
+- Publishing Wasm/Rust/Python/SLIDE performance claims before SLIDE executes.
+- Using “shape shadow” as a formal architecture or artifact name.
 
-| Candidate ID | Files |
-|---|---:|
-| `ab9db789` | 144 |
-| `958d1a5f` | 84 |
-| `5d51bdc9` | 2 |
-| `b508ab8a` | 45 |
+## What remains in Galerina
 
-The owner must identify the intended directory path for `--dir <path>` or
-`MEMORY_DIR`. File count, recency, and apparent content are not authority.
-Until then the memory graph remains unavailable and the overall gate remains
-closed.
+The enforced gates are green, but report-only audits intentionally expose
+unfinished work:
 
-### Follow-up authority audit
+| Work inventory | Current evidence | Required disposition |
+|---|---:|---|
+| Module-wide WAT nodes the emitter refuses | 132, including 74 on a live run path | Lower or retain as an explicit fail-closed beta limitation |
+| Stale negative teaching examples | 42 | Repair compiler support or re-adjudicate the lesson without weakening its contract |
+| Signing-path refusal codes with no direct test mention | 19 | Drive one refusal plus its own control per code |
+| Cross-package relative imports | 34 | Replace with declared canonical peer-package imports |
+| Pre-SLIDE package-local `node_modules` trees | 95 | Remove only after executable SLIDE package resolution exists |
+| Deferred nested native package | 1 | Flatten after executable SLIDE integration |
+| `.fungi`/`.ts` source-file mix | 101 / 449 across 95 code packages | Do not confuse with governed-authority completion; literal `.ts` retirement is post-SLIDE |
+| Diagnostic full-audit warnings | 78 | Work through exported identities, direct tests, severity adjudication and dead definitions without inventing authority |
+| Real code tokens outside numeric-tail catalog | 80, including 51 on signing path | Extend the catalog/index shape before claiming complete coverage |
 
-The completed session bridge contains older, explicit project-identification
-evidence:
+These are not silently converted into release-pass claims. The beta-v1
+acceptance definition uses `.fungi` authority at the governed decision
+boundary; literal TypeScript retirement was explicitly deferred until
+executable SLIDE integration.
 
-- `_session-bridge/done/0440-...md` (R&D → main) says the most-populated
-  `ab9db789` tree was wrong and identifies `958d1a5f` as “this project's
-  memory” at 77 files.
-- `_session-bridge/done/0441-...md` (main → R&D) accepts that measurement,
-  records `958d1a5f` at 78 files, and says the real tree was regression-checked.
-- committed fail-close change `8f017543` records the same asking-session
-  distinction.
+## Two blocking release conditions
 
-That is useful identity evidence, but it is not silently promoted over the
-newer canonical owner-question ledger, which deliberately requires the owner
-to provide the exact path. A read-only 2026-07-29 check matched the current
-`958d1a5f` path internally by its SHA-256 dir ID, disclosed no path, and
-returned exit 1: `MEMORY-GRAPH.json` is missing or stale. The check wrote
-nothing.
+### 1. External memory graph — owner authority required
 
-Therefore the remaining authorization is now precise: confirm whether
-`958d1a5f` is the intended tree and authorize refreshing its external
-`MEMORY-GRAPH.json`. An old agent-to-agent handover is not sufficient authority
-for that external write.
+The graph family is **5/6**:
 
-After that one decision:
+- project graph: pass;
+- graph integrity: pass;
+- Knowledge Base graph: pass;
+- package graph: pass;
+- dev-tool graph: pass;
+- memory graph: refused.
 
-1. regenerate the selected external graph sidecar;
-2. run the selected memory graph in check mode;
-3. rerun `graph-all --check`;
-4. rerun strict phase-close and exhaustive;
-5. record the owner-selected corpus without exposing a private absolute path;
-6. only then mark requirement 9 PASS.
+Four external directories contain a `MEMORY.md`. RD-0582 strongly identifies
+candidate ID `958d1a5f`, but explicitly says identity is not write authority.
+No tool may create or refresh that directory's `MEMORY-GRAPH.json` until the
+owner gives that narrow permission. The private absolute path does not need to
+be printed or committed.
 
-## Open work outside this refactor's completed implementation
+### 2. Offline registry signing — not ready
 
-- Resume the general checked-source-to-V2-D adapter from
-  `../triLowLevel-v2/27-GENERAL-GALERINA-FRONTEND-HANDOFF.md` after the exit
-  gate is authorized.
-- Keep `.gate` on hold; no fallback or implicit integration was added.
-- The historical full-product-suite CI decision remains open; local exhaustive
-  evidence is not relabelled as CI.
-- Code-catalog coverage remains explicitly partial: 80 real code tokens are
-  outside the current numeric-tail catalog, including 51 on signing paths.
-  The generator reports this; it does not claim absence means unregistered.
-- SBOM generation reports 15 hygiene warnings: one non-package `.myco`
-  directory and duplicate JSON keys in fourteen package lockfiles. Those
-  lockfile warnings are not consumed by the current SBOM dependency model,
-  but should be repaired in a separately regression-gated lockfile task.
+The hybrid v2 mechanism is green:
 
-## Local commit anchors
+- Ed25519 plus ML-DSA-65, both required;
+- domain-separated signed bytes;
+- v1 verify-only;
+- strict replay floor;
+- downgrade, tamper, revocation and malformed-input refusal;
+- disposable-key ceremony proof.
 
-- `d6ba88cb` — semantic generated freshness.
-- `eaca171f` — keep the hostile provenance fixture out of the real catalog.
-- `ceeff3f5` — publish semantic provenance evidence.
-- `29b8a47c` — make phase-close graph/catalog checks non-mutating.
-- `b58c959e` — publish the non-mutating exit-gate evidence.
+The live signing act is **NOT READY** because:
 
-No commit in this work was pushed.
+- both live registry entries are content-less, unreviewed stubs;
+- reviewable package bytes are absent;
+- no separate operational registry authority is declared;
+- no root-authorized operational-key delegation format and verifier exists.
+
+The owner should not use the cold root to clear this status. Follow
+`docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md` only after every preflight
+row is green and the project explicitly reports `READY FOR OWNER SIGNING`.
+
+## Formal SLIDE R&D terminology
+
+The engineering term for the reusable fixed structure is **Verified
+Parametric Execution Graph (`VPEG`)**:
+
+- **Semantic VPEG:** frontend-neutral GIR, typed parameters, effects,
+  capabilities, guards and proof obligations.
+- **Target VPEG:** one admitted lowering bound to a complete target, ABI,
+  driver, policy and artifact identity.
+- **Neural Shape Engine:** bounded, non-authorizing candidate discovery and
+  synthesis.
+- **Deterministic Shape Fabric:** authoritative re-derivation, verification,
+  admission and refusal.
+
+“Shape shadow” is descriptive talk only. It must not become a schema name,
+interface, artifact, subsystem, or diagram label. Neural output never grants
+authority, collapses K3, patches executable bytes, or bypasses independent
+verification.
+
+## Benchmark decision
+
+The benchmark package, integrity tests, noise gate and chart renderer are
+available and tested. No fresh cross-runtime chart is published in this close.
+The owner explicitly directed that Wasm/Rust/Python/Galerina/SLIDE comparison
+wait until SLIDE has an executable backend and identical workloads can be
+measured. Historical files remain evidence only.
+
+## Terminal fixed-point status
+
+After the roadmap repair and complete fourteen-generator fixed point:
+
+- strict phase-close is **83/84**;
+- exhaustive phase-close is **84/85**;
+- exhaustive's additional package child passed **97/97** package commands in
+  **319.9 seconds**;
+- every repository-local child is green;
+- both cadences return non-zero solely because `graph:all` propagates the
+  unauthorized external memory-graph refusal.
+
+This is the intended fail-closed result. The project must not suppress the
+memory child or relabel the non-zero cadence as an authorizing release.
+
+No changes in this work were pushed.
