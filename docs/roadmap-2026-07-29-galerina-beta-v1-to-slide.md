@@ -26,12 +26,12 @@ flowchart LR
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     E["🟩 Final fixed point<br/>85/85 strict · 86/86 exhaustive"]
-    F["🟥 Beta-v1 release gate<br/>offline signing not ready"]
-    G["🟥 Offline signing ceremony<br/>NOT READY — live stubs/delegation"]
+    F["🟥 Beta-v1 release gate<br/>owner signing not ready"]
+    G["🟨 Registry admission green<br/>auth candidate · live tree empty"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     I["🟦 Galerina → SLIDE integration<br/>then retire replaced Wasm/TS paths"]
     J["⬜ Cross-runtime benchmark<br/>SLIDE vs Wasm/Rust/Python"]
-    P["🟦 Flat Galerina package resolver<br/>one canonical package instance"]
+    P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
@@ -47,8 +47,10 @@ flowchart LR
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,Z green;
-    class F,G red;
-    class H,I,P,M blue;
+    class F red;
+    class G amber;
+    class H,I,M blue;
+    class P green;
     class J grey;
 ```
 
@@ -57,6 +59,10 @@ flowchart LR
 | Area | State | Evidence |
 |---|---:|---|
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
+| Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
+| Delegated package-manifest admission | 🟩 | Registry 28/28; app-kernel 149/149; disposable root→operational→manifest chain only |
+| Live registry population | 🟨 | False stubs removed; auth is a 63,281-byte unapproved/unsigned candidate; live tree empty |
+| Production registry signing | 🟥 | Owner approval, valid operational public/delegation chain, two-location custody and signing act absent |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -86,14 +92,16 @@ remain running differential shadows; no `.ts` retirement has started.
 
 The remaining sequence is:
 
-1. Commit the current generated fixed point after one final strict and
-   exhaustive verification pass.
-2. Replace the two live registry stubs with real reviewed package bytes,
-   implement and independently verify root-authorized operational-key
-   delegation, then rerun the signing preflight.
-3. Ask the owner to perform the offline signing act only after the walkthrough
-   reports `READY FOR OWNER SIGNING`.
-4. Resume independent SLIDE implementation only after the Galerina beta-v1
+1. Regenerate and rerun the complete graph/audit/test/strict/exhaustive fixed
+   point after the live registry implementation change.
+2. Owner-review the content-addressed auth candidate, establish two-location
+   offline operational-key custody, root-sign its delegation, and hybrid-sign
+   the complete package manifest.
+3. Move only the independently verified auth manifest into the live tree and
+   require the unsigned live-index build to pass.
+4. Ask the owner to perform the offline index signing act only after the
+   walkthrough reports `READY FOR OWNER SIGNING`.
+5. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
@@ -118,6 +126,25 @@ The terminal verification checkpoint is now green: strict phase-close passes
 85/85, exhaustive passes 86/86, graph-all passes 5/5, and the exhaustive
 package lane passes 98/98 in 356.1 seconds. These results authorize their
 evidence surfaces, not the offline signing ceremony or beta-v1 release.
+
+## Registry admission checkpoint
+
+The registry mechanism no longer trusts a path supplied by a manifest or a
+non-empty signature string. A live entry must resolve one direct
+`packages-galerina/` child, declare a sorted bounded file set, re-derive its
+exact length-framed digest, and verify both hybrid manifest signatures through
+an active root-signed operational delegation.
+
+The former auth and healthcare live stubs are gone. Healthcare has no canonical
+package and therefore no registry claim. Auth has a technically reviewed
+18-file candidate whose digest re-derives, but all owner governance/signature
+fields remain false/null and it stays outside the live tree.
+
+This makes the implementation green without making the release green.
+Production still requires an exact valid operational public bundle,
+root-signed delegation, two verified offline custody copies in separate
+physical locations, owner approval/signature of the auth manifest, a successful
+live unsigned build, and the final offline index-signing act.
 
 ## Binding package topology
 

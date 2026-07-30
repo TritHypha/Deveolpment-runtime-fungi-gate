@@ -2,12 +2,13 @@
 
 **Status on 2026-07-30: NOT READY FOR THE OWNER SIGNING ACT.**
 
-The root-to-operational delegation implementation and disposable-key dry run
-are green. The live registry is still not signable because its two entries are
-unreviewed, content-less stubs. The real operational public bundle and
-root-signed delegation record do not yet exist in the public repository. Do
-not substitute the cold trust root for routine registry signing merely to
-remove that blocker.
+The root-to-operational delegation, deterministic artifact hasher, strict
+manifest reader and disposable-key dry run are green. The false live auth and
+healthcare stubs have been removed. The live registry is intentionally empty;
+the real `@galerina/auth` bytes are recorded only as an unapproved, unsigned
+candidate. A valid operational public bundle and root-signed delegation record
+do not yet exist in the public repository. Do not substitute the cold trust
+root for routine registry signing merely to remove that blocker.
 
 This procedure is for the owner/trust custodian. An automated agent may build
 and test the tooling, but must never read, copy, source, print, or use private
@@ -106,21 +107,24 @@ Primary references:
 
 | Gate | Current evidence | State |
 |---|---|---|
-| v2 hybrid app-kernel envelope and authority chain | 146/146 app-kernel tests; hybrid-root downgrade refusal included | ready |
+| v2 hybrid app-kernel envelope and authority chain | 149/149 app-kernel tests; hybrid-root downgrade refusal included | ready |
 | Hermetic signer/admission self-test | 20/20, real Ed25519 + ML-DSA-65 | ready |
 | Root-to-operational delegation decider | time, role, fingerprint, revocation and rollback checks | ready |
-| Authority ceremony CLI | 11/11 registry-package tests; 9/9 internal authority checks | ready |
+| Deterministic flat-package artifact identity | 10/10 path, byte, topology, symlink and resource-limit checks | ready |
+| Authority ceremony and live-builder CLI | 28/28 registry tests; 9/9 internal authority checks | ready |
 | File-backed sign then public-key verify | disposable ceremony fixture | ready |
 | Missing/tampered/downgraded signature refusal | tested | ready |
 | Signed revocation-registry check before key use | tested, including known-revoked refusal | ready |
-| Live registry manifests | two `sha256:pending`, unsigned, `reviewed: false` stubs | **blocked** |
-| Reviewable package bytes | absent for both stubs | **blocked** |
+| Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
+| Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
+| Auth governance approval and manifest signature | candidate remains reviewed:false with null authority fields | **owner-blocked** |
 | Operational registry authority | exact key selected; public bundle not yet exported | **owner-blocked** |
 | Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
+| Operational-key custody | two verified encrypted offline copies in separate physical locations not evidenced | **owner-blocked** |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
 
-The dry run proves the mechanism. It does not convert placeholder package
-claims into facts.
+The dry run proves the mechanism. The technical auth review proves a candidate
+source identity; it does not create governance approval or a signature.
 
 ## 3. Non-negotiable custody rules
 
@@ -168,9 +172,10 @@ All of the following must be true at one reviewed commit:
 - The last accepted `issuedAt` floor is recorded and the new timestamp is
   strictly newer.
 
-The current `@galerina/auth` and `@galerina/healthcare` files fail the first
-five gates. They must be replaced by manifests for real packages or removed;
-editing `sha256:pending` by hand is not a remedy.
+The nonexistent healthcare claim has been removed. The auth candidate satisfies
+the engineering byte/hash review but remains outside the live tree until the
+owner verifies its powers/risk facts, records governance approval, and signs
+the complete manifest through the valid delegated operational key.
 
 ## 5. Owner preflight on the offline machine
 
@@ -185,13 +190,24 @@ npm.cmd --prefix packages-galerina/galerina-registry test
 node scripts/registry-index-cli.mjs --self-test
 node scripts/registry-index-cli.mjs build `
   --registry-dir packages-galerina/galerina-registry/packages `
+  --workspace-packages-dir packages-galerina `
+  --delegation <offline-staging>/registry-delegation.json `
+  --root-pubkey governance/signing-key-21415420b447e219.pub.pem `
+  --root-mldsa65-pubkey governance/signing-key-21415420b447e219.mldsa.pub.b64 `
+  --root-key-id 21415420b447e219 `
+  --operational-ed25519-pubkey <offline-staging>/signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
+  --operational-mldsa65-pubkey <offline-staging>/signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64 `
+  --authority-at <canonical-verification-utc-iso-with-milliseconds> `
+  --min-delegation-serial <last-accepted-serial-floor> `
   --issued-at <strictly-newer-utc-iso> `
   --out <offline-staging>/unsigned-index.json
 ```
 
-The final command must currently refuse. When it eventually succeeds, inspect
-the unsigned index and reconcile every entry against the reviewed package
-record before exposing any private key.
+The final command must currently refuse because the live tree is empty. When
+the owner-approved hybrid-signed auth manifest eventually enters the live
+tree, the same command must verify the complete public authority chain and
+artifact before it succeeds. Inspect the unsigned index and reconcile every
+entry against the reviewed package record before exposing any private key.
 
 Confirm the private-key directory is not a repository:
 
@@ -314,7 +330,16 @@ $env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-
 
 node scripts/registry-index-cli.mjs sign `
   --registry-dir packages-galerina/galerina-registry/packages `
+  --workspace-packages-dir packages-galerina `
   --registry "https://registry.galerina.dev" `
+  --delegation <offline-staging>\registry-delegation-v1.json `
+  --root-pubkey governance\signing-key-21415420b447e219.pub.pem `
+  --root-mldsa65-pubkey governance\signing-key-21415420b447e219.mldsa.pub.b64 `
+  --root-key-id 21415420b447e219 `
+  --operational-ed25519-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.pub.pem `
+  --operational-mldsa65-pubkey <offline-staging>\signing-key-<NEW_HYBRID_REGISTRY_KEY_ID>.mldsa.pub.b64 `
+  --authority-at <instant-inside-the-delegation-window> `
+  --min-delegation-serial <previous-accepted-serial> `
   --issued-at <strictly-newer-utc-iso> `
   --out <offline-staging>/registry-index-v2.json
 
@@ -324,13 +349,18 @@ Remove-Item Env:GALERINA_SIGNING_KEY_ID
 
 The tool:
 
-1. rebuilds from reviewed manifests rather than signing an arbitrary file;
-2. validates the signed revocation registry and checks the key id before
+1. strictly parses each reviewed manifest and re-hashes its exact declared
+   flat-package bytes;
+2. verifies the root delegation, both public-key fingerprints and both
+   package-manifest signatures;
+3. rebuilds from those verified manifests rather than signing an arbitrary
+   file;
+4. validates the signed revocation registry and checks the key id before
    loading private material;
-3. requires both private halves and the pinned algorithm;
-4. signs the domain-separated canonical preimage;
-5. derives both public halves and verifies both signatures;
-6. writes only after successful self-verification.
+5. requires both private halves and the pinned algorithm;
+6. signs the domain-separated canonical preimage;
+7. derives both public halves and verifies both signatures;
+8. writes only after successful self-verification.
 
 There is no `--force` or Ed25519-only production mode.
 
@@ -409,13 +439,20 @@ reviewed.
 
 Tell the owner **“READY FOR OWNER SIGNING”** only when:
 
-- real package bytes and reviewed manifests exist;
+- the auth candidate's powers, risk and certification facts have owner
+  approval and the complete manifest is hybrid-signed;
 - the unsigned live-index build succeeds without exceptions;
-- operational key delegation is implemented and independently verified;
+- the operational public bundle and root-signed delegation are independently
+  verified;
+- two encrypted offline operational-key custody copies in separate physical
+  locations have been read-back verified;
 - all disposable-key positive, tamper, downgrade, rollback, and revocation
   tests pass;
 - public artifact paths and the previous `issuedAt` floor are recorded;
 - the source commit is clean and all terminal project gates are green.
 
 Until then, report **“NOT READY”** with the failing gates. On 2026-07-29 the
-correct report is **NOT READY**.
+correct report remains **NOT READY**. At the 2026-07-30 checkpoint, the
+mechanism and candidate byte identity are green, but owner
+approval/signature, the valid operational public/delegation chain,
+two-location custody evidence, and the final live build are absent.

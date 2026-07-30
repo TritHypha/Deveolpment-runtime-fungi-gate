@@ -5,45 +5,59 @@ operator procedure is:
 
 [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md)
 
-## Current state — 2026-07-29
+## Current state — 2026-07-30
 
 | Surface | State |
 |---|---|
 | Index builder | emits `galerina-registry-index/v2` |
 | New-production signature | Ed25519 + ML-DSA-65, both mandatory |
-| Domain separation | `galerina.registry.index.sig.v2` |
+| Package artifact identity | deterministic bounded flat-package tree |
+| Package manifest | strict parser plus complete hybrid verification |
+| Root delegation | role/time/revocation/fingerprint/rollback verified |
 | Historical v1 | verify-only; no builder default or silent downgrade |
-| Signer CLI | built; self-verifies both components before writing |
+| Signer CLI | re-hashes and verifies authority before reading private material |
 | Disposable ceremony | green |
 | Revocation handling | signed revocation registry validated before key use |
-| Live registry | two unreviewed, unsigned, content-less stubs |
-| Operational registry authority | not declared or root-delegated |
+| Live registry | empty; empty index refuses |
+| Auth candidate | 18-file digest re-derived; unapproved and unsigned |
+| Healthcare claim | removed because no canonical package exists |
+| Operational registry authority | real public bundle/delegation absent |
 | Owner signing | **NOT READY** |
 
-The former Ed25519-only design warning is resolved in code. The original two
-structural blockers remain:
+The earlier structural blockers have been corrected in engineering:
 
-1. there are no real package bytes behind the two registry stubs, so there is
-   nothing honest to hash, review, certify, or sign;
-2. the zero-trust design calls for a separate operational registry key, but
-   the repository has no root-authorized delegation format or verifier for it.
+1. the false content-less stubs are no longer live;
+2. real auth source/test bytes have a deterministic candidate identity;
+3. root-to-operational delegation and public-key fingerprint verification are
+   implemented; and
+4. a non-empty signature can no longer substitute for cryptographic proof.
 
-The cold root must not become a routine registry signer just because the
-operational delegation mechanism is absent.
+The remaining blockers are owner authority and custody facts:
 
-The fail-closed CLI deliberately refuses:
+- confirm the auth candidate's declared powers, risk and certification;
+- use a valid separately custodied operational hybrid key;
+- maintain two verified encrypted offline copies in separate physical
+  locations;
+- root-sign and independently verify its time-bounded delegation;
+- complete and hybrid-sign the auth manifest;
+- move only that verified manifest into the live tree;
+- produce a clean unsigned live index; and
+- run the offline index signing and independent public verification acts.
+
+The fail-closed CLI refuses:
 
 - an empty registry;
 - one bad entry in an otherwise good tree;
-- `sha256:pending`;
-- missing/placeholder package signatures;
-- unreviewed manifests;
+- an unknown/duplicate/ambiguous manifest fact;
+- a missing, non-canonical, traversing, symlinked or oversized artifact;
+- a content-hash mismatch;
+- missing/fake/partial package signatures;
+- substituted public keys or a tampered delegation;
+- missing roles, inactive windows, stale serials and revoked authorities;
 - missing either index-signature component;
-- tampered content or signatures;
-- v2 algorithm downgrade;
-- unknown or revoked authority keys;
+- v2 algorithm downgrade; and
 - stale/rollback `issuedAt` values.
 
-Do not sign the current stubs. A valid signature over false or unreviewable
-claims is worse than an absent index because it converts “unknown” into an
-authority assertion.
+Do not sign the candidate until the complete owner review and delegation
+preflight is green. A valid signature over an unapproved claim is worse than
+an absent index because it converts unknown into an authority assertion.

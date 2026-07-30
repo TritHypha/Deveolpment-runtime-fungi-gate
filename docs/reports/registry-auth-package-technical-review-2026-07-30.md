@@ -1,7 +1,8 @@
 # `@galerina/auth` package technical review
 
-**Evidence date:** 2026-07-30  
-**Package version:** `1.0.0-beta.2`  
+**Evidence date:** 2026-07-30
+
+**Package version:** `1.0.0-beta.2`
 **Decision:** technically reviewed candidate; not governance-approved, signed,
 certified or live.
 

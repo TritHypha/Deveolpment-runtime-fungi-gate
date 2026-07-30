@@ -16,6 +16,88 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Live registry artifact admission checkpoint - 2026-07-30
+
+- **Architecture recorded:** the binding design and executable plan are
+  `docs/superpowers/specs/2026-07-30-registry-live-artifact-and-manifest-admission-design.md`
+  and
+  `docs/superpowers/plans/2026-07-30-registry-live-artifact-and-manifest-admission.md`.
+  They require one canonical direct child of `packages-galerina`, one sorted
+  declared file set, deterministic byte framing, a hybrid manifest envelope,
+  and an independently verified root-to-operational delegation.
+- **Completed and committed:** local commit `4b7c7dff` adds
+  `verifyRegistryPackageManifestUnderDelegation`. It verifies the closed
+  `package-manifest.sign` role, delegation serial/revocation/time policy,
+  both operational public-key fingerprints, both manifest key identifiers,
+  and the existing hybrid manifest signatures before returning `verified`.
+- **Fresh focused evidence:** the registry-authority suite is **15/15** and
+  the complete app-kernel suite is **149/149**, with typecheck and build
+  green. Disposable tests no longer use an identifier that could be confused
+  with a historical real key.
+- **Completed and committed:** local commit `cfda555c` implements
+  `scripts/lib/registry-package-artifact.mjs`. Fresh evidence is **10/10**:
+  the fixed independently derived digest, exact-byte and path mutations,
+  creation-order independence, empty/unsorted/duplicate declarations,
+  non-canonical/absolute/traversing paths, missing/directory/symlink files,
+  4,096-file, 16-MiB-file, 64-MiB-total and 512-byte-path ceilings, duplicate
+  direct identities, and nested-only/symlink package roots all admit or refuse
+  as designed.
+- **Completed and committed:** local commit `299d8b1b` replaces the old
+  non-empty-signature structural gate with strict YAML-subset parsing,
+  re-derived flat-package bytes, exact registry identity, both operational
+  public-key fingerprints, a live root delegation, and both package-manifest
+  signature witnesses. It also pins index signing to that delegated
+  operational identity.
+- **Fresh integration evidence:** registry is **27/27**, its hermetic CLI
+  self-test is **20/20**, and the complete app-kernel remains **149/149**.
+  Missing public halves, repeated manifest/CLI facts, content changes, fake or
+  partial signatures, key substitution, delegation tampering, missing role,
+  expired/stale/revoked authority, and one bad manifest beside a good manifest
+  all refuse without publishing an index.
+- **Completed:** the false live auth and healthcare stubs are removed.
+  `@galerina/auth` is now an explicitly unapproved/unsigned candidate outside
+  the signable tree. Its 18-file, 63,281-byte source/test artifact re-derives
+  as
+  `sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4eaee86`.
+  Generated graph/build output is intentionally outside that source identity.
+- **Power review:** the candidate declares only `clock.read` and
+  `crypto.verify`. The former placeholder powers `secret.read`, `audit.write`
+  and `network.outbound` were not factual for this package and were removed.
+  Governance reviewed/reviewer/time, publisher, signer and signature remain
+  false/null; technical review creates no authority.
+- **Fresh package evidence:** auth is **59/59**; registry is **28/28**; package
+  border is **98/98**; licence, effect, private-doc/path leak and overclaim
+  audits have zero violations/blockers. The topology and node-floor gates are
+  green with the already-declared post-SLIDE debt still visible.
+- **Report:** exact scope, hash, power adjudication, commands and owner boundary
+  are recorded in
+  `docs/reports/registry-auth-package-technical-review-2026-07-30.md`.
+- **Documentation checkpoint complete:** the exact public-authority CLI,
+  custody gates and `NOT READY` threshold are updated in both signing
+  walkthroughs; the roadmap and completion diagram now separate green
+  mechanism, amber population work and red owner release authority.
+- **Cross-repository continuity:** SLIDE local commit `9b7ceac` records the
+  Galerina-first pause and has fresh independent evidence **30/30**. Knowledge
+  Base commits `8b48001` and `912257f` update the public registry architecture
+  and normalize all **79/79** tracked `*-PRIVATE.md` primary headings to end
+  exactly ` - PRIVATE`; every normalization changed only one H1 line.
+- **Private classification rule:** `AGENTS.md` now binds both the
+  `-PRIVATE.md` filename and `# <title> - PRIVATE` H1 convention while stating
+  that neither makes private content safe to publish or commit to a public
+  repository.
+- **Fresh doc guards:** private-doc leak self-test and live scan are green,
+  path-leak self-test and live scan are green, and doc/source drift reports
+  zero violations at the current 98-package/8,588-test baseline.
+- **Current:** commit the Galerina continuity documents, then regenerate every
+  declared output and execute the full graph/audit/test/phase-close matrix.
+- **Next safe boundary:** update this TODO, roadmap and completion report only
+  from the new terminal evidence; the prior 8,588 aggregate remains historical
+  until that rerun completes.
+- **Signing stop condition:** this work uses disposable fixtures only.
+  Production signing remains forbidden until the unsigned live registry,
+  broad gates, independent public verification, and the offline walkthrough
+  all report ready.
+
 ### Registry signing authority checkpoint - 2026-07-30
 
 - **Corrected key selection:** hybrid offline root `21415420b447e219`

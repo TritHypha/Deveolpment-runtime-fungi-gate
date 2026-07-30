@@ -177,6 +177,11 @@ one-code-one-fault, one owner per code, emit via an exported constant. Enforced 
 
 ## Important Rules
 
+- A private document uses both the `-PRIVATE.md` filename marker and a primary
+  heading whose final text is exactly ` - PRIVATE`, for example
+  `# Registry custody record - PRIVATE`. The heading is a classification
+  marker, not a custody control: private content remains outside public
+  repositories, generated indexes, logs, prompts and commits.
 - Do not use `safe flow`, `unsafe flow`, or `guard flow` in `.fungi` examples.
 - `mut name: Type = value` — not `let mut`.
 - Use `FUNGI-CATEGORY-NNN` for all new diagnostic codes; do not extend `Galerina_COMPILER_*`.

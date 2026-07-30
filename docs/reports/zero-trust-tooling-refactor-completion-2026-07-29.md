@@ -41,7 +41,7 @@ flowchart LR
     U["Unified harness<br/>5/5 lanes"]:::green
     X["Final generated fixed point<br/>85/85 strict · 86/86 exhaustive"]:::green
     M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
-    R["Live registry signing<br/>stubs + no delegation"]:::red
+    R["Registry mechanism green<br/>owner approval/signing absent"]:::amber
     B{"Galerina beta-v1<br/>release authorization"}:::red
     L["Independent SLIDE<br/>executable backend"]:::blue
     V["VPEG research<br/>non-production"]:::blue
@@ -96,7 +96,12 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - The independent scripts suite passes **208/208**.
 - The compiler package passes **5,748/5,748**.
-- App-kernel passes **127/127**.
+- App-kernel passes **149/149**, including delegated hybrid package-manifest
+  verification.
+- Registry passes **28/28**, including exact artifact re-derivation, complete
+  public authority, mixed-tree poisoning and the unsigned auth candidate.
+- Auth passes **59/59** and its exact 18-file source/test candidate digest
+  re-derives.
 - Tower Citizen passes **476/476**.
 - Myco passes **52/52**.
 - Tri-Pipe passes **24/24**.
@@ -152,6 +157,9 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 - Audit/lint tools without executable anti-neutering proof.
 - Timestamp-only generated-artifact freshness.
 - Generators writing into the repository while judging their own output.
+- Registry manifests choosing an arbitrary filesystem package path.
+- A non-empty package signature being treated as cryptographic evidence.
+- False live registry identities for packages that do not exist.
 - Unexplained compiler graph orphans.
 - Ambient package dependency forests as the future Galerina package model.
 - Implicit fallback, unknown-to-allow collapse and neural authority.
@@ -210,16 +218,25 @@ The hybrid v2 mechanism is green:
 - v1 verify-only;
 - strict replay floor;
 - downgrade, tamper, revocation and malformed-input refusal;
-- disposable-key ceremony proof.
+- disposable-key ceremony proof;
+- deterministic bounded flat-package hashing;
+- strict duplicate-refusing manifest parsing;
+- operational public-key fingerprint binding; and
+- root-delegated dual package-manifest verification.
 
 The live signing act is **NOT READY** because:
 
-- both live registry entries are content-less, unreviewed stubs;
-- reviewable package bytes are absent;
-- no separate operational registry authority is declared;
-- no root-authorized operational-key delegation format and verifier exists.
+- auth's re-derived 18-file candidate is not owner-approved or hybrid-signed;
+- the live registry is intentionally empty;
+- no valid separately custodied operational public bundle and real
+  root-signed delegation is present;
+- two verified encrypted offline operational-key copies in separate physical
+  locations are not evidenced; and
+- the live unsigned-index and owner signing acts therefore cannot run.
 
-The owner should not use the cold root to clear this status. Follow
+The nonexistent healthcare stub was removed rather than converted into a
+package/compliance claim. The owner should not use the cold root as the routine
+registry signer to clear this status. Follow
 `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md` only after every preflight
 row is green and the project explicitly reports `READY FOR OWNER SIGNING`.
 
