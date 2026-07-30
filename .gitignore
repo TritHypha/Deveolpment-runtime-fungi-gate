@@ -32,11 +32,13 @@ packages-galerina/galerina-devtools-benchmarks/nbody-out.json
 # machine alongside the gitignored private key — build artifacts, not source). Ignored so
 # the auto-committer never publishes a per-machine dev key.
 **/governance/signing-key-*.pub.pem
-# EXCEPT hybrid ceremony trust anchors (keygen --hybrid): these are the committed public
-# root, pinned in governance/trust-anchor.json, and always paired with a .mldsa.pub.b64
-# (which is never ignored). A dev key is Ed25519-only and never has a .mldsa sibling.
+# EXCEPT admitted hybrid ceremony authorities (keygen --hybrid): these are committed public
+# verifiers and always paired with a .mldsa.pub.b64 (which is never ignored). The root is
+# pinned in governance/trust-anchor.json; an operational verifier gains authority only from
+# a valid root-signed delegation. A dev key is Ed25519-only and has no .mldsa sibling.
 # Add one negation line per minted anchor — see docs/security/galerina-34-offline-key-ceremony-runbook.md.
 !**/governance/signing-key-21415420b447e219.pub.pem
+!**/governance/signing-key-f3172a48372bfb23.pub.pem
 # ── Build / test scratch (do not commit) ──
 test-output.txt
 **/*.pdb

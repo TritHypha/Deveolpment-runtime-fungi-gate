@@ -243,26 +243,40 @@ The live signing act is **NOT READY** because:
 Two verified encrypted operational-key custody copies in separate physical
 locations were owner-confirmed on 2026-07-30. That closes custody only; it does
 not admit the public bundle or authorize delegation, package or index signing.
-The first public-only export refused before key decoding because the signing
-environment contained malformed/repeated structure. Public export is locked.
-The live walkthrough now permits only `inspect-environment`, whose disposable
-tests prove UTF-16/BOM, malformed-record and duplicate-field refusal without
-printing private values or the private path.
+The first public-only export refused before key decoding because the wrong file
+shape was selected. The complete hybrid environment, custodied as
+`env.slide-hybrid-f3172a48372bfb23`, then passed `inspect-environment` as
+canonical UTF-8 with five unique fields and the expected operational key ID,
+without printing private values or its path. Its independently exported public
+halves match the repository candidates byte-for-byte: Ed25519 SHA-256
+`D27C56FC2E5C7E6BEA5FE7A24BDC318887F1E8FD69FE458DBD4E1FA6B59167D4` and
+ML-DSA-65 SHA-256
+`1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`.
+The extra online private working copy has been removed; the two verified
+custody copies remain offline. Both public verifier files are admitted as
+non-authorizing repository material; the authority CLI validates their exact
+identities and closed roles. The live walkthrough exposes no owner command
+while final unsigned-delegation and package-approval evidence is prepared.
 
-Production Zero-Trust also requires automatic operational-key rotation. The
-existing Tower Citizen append-only epoch/Triple-Lock protocol is the canonical
-path: readiness, staged separate custody, triple lock, atomic switch,
-forward/backward/continuity canary, drain, fallback, revocation and retirement.
-Its decision core and Sentinel Egress epoch verification exist. StateSerializer
-epoch awareness, custody execution, registry delegation integration and
-automatic package/index signer orchestration remain release-blocking. The cold
-root remains an offline recovery/authorization ceremony.
+Production Zero-Trust also requires automatic operational-key rotation.
+Galerina beta v1 completes the current Tower Citizen append-only
+epoch/Triple-Lock path: readiness, staged separate custody, triple lock, atomic
+switch, forward/backward/continuity canary, drain, fallback, revocation and
+retirement. Its decision core and Sentinel Egress epoch verification exist.
+StateSerializer epoch awareness, custody execution, registry delegation
+integration and automatic package/index signer orchestration remain
+release-blocking. After beta, the reusable mechanism is rebuilt in independent
+SLIDE `.fungi`, while Tower Citizen becomes the Galerina policy adapter.
+Galerina, SLIDE and third-party trust domains never share roots, operational
+keys or epochs. The cold root remains an offline recovery/authorization
+ceremony.
 
 The nonexistent healthcare stub was removed rather than converted into a
 package/compliance claim. The owner should not use the cold root as the routine
-registry signer to clear this status. The single current owner action is always
-published in `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; later commands
-remain locked in `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
+registry signer to clear this status. The current owner instruction is always
+published in `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`; it currently
+contains no command. Later commands remain locked in
+`docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
 
 ## Formal SLIDE R&D terminology
 

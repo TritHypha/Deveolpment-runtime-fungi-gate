@@ -1,5 +1,20 @@
 # DESIGN — Key rotation: the triple-lock, fail-closed, phased, append-only design (#28 / D2)
 
+## Target ownership update — 2026-07-30
+
+The reusable frontend-neutral lifecycle mechanism will be rebuilt in the
+independent SLIDE repository after Galerina beta v1. Tower Citizen remains the
+current Galerina decision authority and later becomes the Galerina policy
+adapter. Galerina, SLIDE and every third party retain separate roots,
+operational keys, epochs and policies; no transition carries authority across
+domains.
+
+The binding target design is
+`../../../SLIDE/docs/superpowers/specs/2026-07-30-slide-key-lifecycle-and-rotation-boundary-design.md`.
+This is a placement decision, not an implementation claim. The current Tower
+Citizen path remains the behavioural oracle until differential migration gates
+pass.
+
 **Status:** **BUILDING (owner-unlocked 2026-07-10: "unlock this now and build as priority").** Steps 1–3 BUILT (`tower-citizen/src/key-rotation.ts`, commit `456c3120`, 55 tests — ring + all gates + phase machine, zero key material, DI seams fail-closed) with the ratified defaults: M=2 quorum floor · readiness-gated trigger · decision core in tower-citizen · DESTROY-default retire policy (revoke-then-archive selectable, revocation-first enforced). Step 4a BUILT (`sentinel-egress`, commit `9bfdeccc`, 13 tests — epoch MAC-bound into batches, `adoptEpoch` forward-only switch, `verifyChainEpochAware` per-epoch keys, revoked refused, old epochs verify forever). **Step 4b (StateSerializer epoch-awareness) next. Step 5 (custody execution — real key bytes) remains OWNER-GATED.** Decision-1 resolved → both keys, sequenced (attestation first, then the HMAC-ledger asymmetric anchor, §5 step 6).
 
 **Owner constraints (verbatim intent):**
@@ -196,7 +211,10 @@ Each step is a pure module + an exhaustive test suite (every failure mode → ab
 1. **~~Confirm the key identity.~~ RESOLVED (2026-07-10) → BOTH, sequenced.** The design targets *both* key systems, in order: **(1) the asymmetric attestation key first** (hybrid Ed25519 + ML-DSA-65 — the ~30-min mint; destroy-safe: destroy the old private half after drain, keep the public half forever), then **(2) the symmetric audit-HMAC ledger** via build-plan **step 6** (the asymmetric anchor over each epoch's chain-head, which gives even the HMAC ledger a destroy-safe "remove the old key" story). Until that anchor exists, the HMAC key is **cold-retained, never destroyed**. Attestation rotation ships first because it is destroy-safe today; the HMAC-ledger anchor follows.
 2. **Quorum M** for Lock C / the drain witness (default M=2: you + one independent re-verifier). Second signer = a second custody holder, or a separately-implemented re-verification module?
 3. **Rotation trigger cadence** for "automatic" — time (per N days), volume (per N batches), or on-demand only? (The trigger only proposes; the **readiness gate** decides *when* — deferring until quiescent — and the phase gates decide *whether*.) What counts as a "good time to rotate" for R1/R3 — is there a maintenance window, and how do we detect an audit run is mid-flight vs at a safe checkpoint?
-4. **Placement** — decision module in `tower-citizen` (alongside `quorum.ts`/`lease.ts`) vs a new `core-sentinel-*`; key-material execution in a new owner-gated `galerina-ext-key-custody`?
+4. **~~Placement.~~ RESOLVED 2026-07-30** — the generic lifecycle mechanism
+   belongs to independent SLIDE; Tower Citizen remains the Galerina policy
+   adapter and current behavioural oracle. Private material remains in
+   domain-local custody providers and never enters the generic core.
 5. **Canary window size** N for Phase 3 (default: a small fixed N clean batches before drain is allowed to start).
 6. **Retire policy** (§3.4) — **DESTROY** the old private half (default, safest) or **REVOKE-then-ARCHIVE** it (a hedge against the ~30-min re-mint, safe *only with* revocation)?
 

@@ -43,11 +43,20 @@ planning checkbox must never be used to imply that implementation exists.
   constructions pass, with the declared unsigned-spore residual still reported
   as open risk. Its strict production single-file audit passes on the canonical
   pure-transform pattern.
-- **Current:** the first owner-run operational public export refused before
-  key decoding because the signing-environment parser found malformed or
-  repeated structure. Public export is locked. The live owner chart now
-  authorizes only the non-secret `inspect-environment` check; the owner should
-  return its single `STRUCTURE OK:` or `REFUSED:` line and no private data.
+- **Current:** the complete hybrid environment for operational key
+  `f3172a48372bfb23`, now custodied as
+  `env.slide-hybrid-f3172a48372bfb23`, passed the non-secret structural check.
+  Its public halves were independently exported and matched the repository
+  candidates byte-for-byte: Ed25519 SHA-256
+  `D27C56FC2E5C7E6BEA5FE7A24BDC318887F1E8FD69FE458DBD4E1FA6B59167D4`;
+  ML-DSA-65 SHA-256
+  `1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`.
+  The extra online private working copy has been removed and both verified
+  custody copies remain offline. Both public verifier files are admitted as
+  non-authorizing repository material and the authority CLI validates their
+  exact identities and closed roles. The live owner chart exposes no owner
+  command while the final unsigned delegation and package-approval evidence
+  are prepared.
 - **Release stop condition:** Galerina beta v1 and owner signing remain
   **NOT READY / NON-AUTHORIZING**. The live registry is intentionally empty;
   auth remains an unapproved and unsigned candidate outside it. Operational
@@ -149,8 +158,8 @@ planning checkbox must never be used to imply that implementation exists.
   (`galerina-signing-key-21415420b447e219.env`) hybrid-signs only the
   operational delegation. `942d6b2726b0a991` and `53de6be4d53a33b2` are
   Ed25519-only and cannot be registry-v2 authorities. Dedicated operational
-  Ed25519+ML-DSA-65 key `f3172a48372bfb23` has now been minted as
-  `env.galerina-registry-signing-f3172a48372bfb23`; after independent public
+  Ed25519+ML-DSA-65 key `f3172a48372bfb23` has now been minted and custodied as
+  `env.slide-hybrid-f3172a48372bfb23`; after independent public
   re-derivation, custody and root delegation it may sign reviewed package
   manifests and the registry index. Audit, superseded and stale key files are
   explicitly excluded.
@@ -173,20 +182,24 @@ planning checkbox must never be used to imply that implementation exists.
   fields without decoding or printing either value or the private path.
   Focused tests cover success, UTF-16 and UTF-8-BOM rejection, malformed and
   duplicate-field diagnosis, and value/path non-disclosure.
-- **Owner action chart:** the one action authorized now is the structural
-  inspection in
-  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. Later commands and
-  custody boundaries are locked separately in
+- **Owner action chart:** no owner command is authorized now. Keep both custody
+  copies offline and follow only
+  `docs/security/OFFLINE-KEY-SIGNING-WALKTHROUGH.md`. Later commands and custody
+  boundaries are locked separately in
   `docs/security/OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`.
 - **Binding rotation requirement (owner, 2026-07-30):** production Zero-Trust
-  uses automatic operational-key rotation. Reuse the existing
-  `galerina-tower-citizen` append-only epoch/Triple-Lock protocol; do not create
-  a second rotation system. Its canonical design is
-  `docs/architecture/audit-key-rotation-triple-lock-design-2026-07-10.md`.
+  uses automatic operational-key rotation. Galerina beta v1 completes the
+  existing `galerina-tower-citizen` append-only epoch/Triple-Lock path. After
+  beta, the reusable mechanism is rebuilt in independent SLIDE `.fungi`, and
+  Tower Citizen becomes the Galerina policy adapter. Galerina, SLIDE and third
+  parties use separate trust domains and never share keys or epochs. The
+  current and target designs are
+  `docs/architecture/audit-key-rotation-triple-lock-design-2026-07-10.md` and
+  `../../SLIDE/docs/superpowers/specs/2026-07-30-slide-key-lifecycle-and-rotation-boundary-design.md`.
   The trigger proposes, readiness and K3 gates decide, the old key remains
   available through canary/drain, and failed verification falls back and
-  revokes the candidate. The cold root remains an offline
-  recovery/authorization ceremony.
+  revokes the candidate. The cold root remains an offline recovery and
+  authorization ceremony.
 - **Rotation integration still open:** the Tower Citizen decision core and
   Sentinel Egress epoch verification exist; StateSerializer epoch awareness,
   real custody execution, registry operational-delegation integration, and
@@ -197,10 +210,12 @@ planning checkbox must never be used to imply that implementation exists.
   into the file-backed registry builder. The false live auth and healthcare
   stubs are removed; the real auth source is a reviewed content-addressed
   candidate outside the signable live tree.
-- **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Do not
-  retry public export or ask the owner to mount the root private file until the
-  operational environment passes structural inspection and the live chart
-  explicitly advances one operation.
+- **Stop condition:** status remains **NOT READY FOR OWNER SIGNING**. Custody,
+  structure, public export and removal of the extra online private working copy
+  are verified; the public bundle is admitted but still carries no authority.
+  No owner command is currently authorized. Do not remove either custody copy,
+  mount the root private file, sign a delegation, or sign a package/index until
+  the live chart explicitly advances one operation.
 
 ### Governed-memory and Wasmtime-oracle checkpoint - 2026-07-30
 

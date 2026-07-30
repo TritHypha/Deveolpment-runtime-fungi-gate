@@ -14,10 +14,22 @@ manifest reader and disposable-key dry run are green. The false live auth and
 healthcare stubs have been removed. The live registry is intentionally empty;
 the real `@galerina/auth` bytes are recorded only as an unapproved, unsigned
 candidate. Operational hybrid key `f3172a48372bfb23` has now been minted and
-both public filenames exist locally, but its public bundle has not completed
-independent admission and no root-signed delegation record exists. Do not
-substitute the cold trust root for routine registry signing merely to remove
-that blocker.
+both public halves were independently exported. They match the repository
+candidates byte-for-byte, but the public bundle has not completed admission
+and no root-signed delegation record exists. Do not substitute the cold trust
+root for routine registry signing merely to remove that blocker.
+
+The independently verified public pins are:
+
+- Ed25519: `D27C56FC2E5C7E6BEA5FE7A24BDC318887F1E8FD69FE458DBD4E1FA6B59167D4`;
+- ML-DSA-65: `1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`.
+
+These public pins identify bytes; they do not authorize the operational key.
+Root delegation remains mandatory.
+
+The extra online private working copy was removed on 2026-07-30 after the two
+offline custody copies and both independently exported public halves were
+verified. Filesystem deletion is not claimed as physical SSD erasure.
 
 This procedure is for the owner/trust custodian. An automated agent may build
 and test the tooling, but must never read, copy, source, print, or use private
@@ -34,7 +46,7 @@ existing identity.
 | Purpose | Exact key ID | Exact private filename | What it may sign |
 |---|---|---|---|
 | Offline hybrid registry trust root | `21415420b447e219` | `galerina-signing-key-21415420b447e219.env` | The hybrid operational registry delegation only |
-| Operational hybrid registry signer | `f3172a48372bfb23` | `env.galerina-registry-signing-f3172a48372bfb23` | Reviewed package manifests and the registry index |
+| Operational hybrid registry signer | `f3172a48372bfb23` | `env.slide-hybrid-f3172a48372bfb23` | Reviewed package manifests and the registry index |
 
 The tracked public verifier for the root is
 `governance/signing-key-21415420b447e219.pub.pem`; its tracked ML-DSA-65
@@ -127,7 +139,7 @@ Primary references:
 | Live registry manifests | empty by design; empty index terminally refuses | ready mechanism / no release content |
 | Reviewable package bytes | `@galerina/auth` 18-file digest re-derives; nonexistent healthcare claim removed | ready technical evidence |
 | Auth governance approval and manifest signature | candidate remains reviewed:false with null authority fields | **owner-blocked** |
-| Operational registry authority | `f3172a48372bfb23` minted; both public filenames exist locally; independent re-derivation/admission still required | **owner-blocked** |
+| Operational registry authority | `f3172a48372bfb23` minted; independent public export matches both admitted repository verifier files; root delegation remains absent | **owner-blocked** |
 | Root-signed operational delegation format and verifier | implemented; real delegation not yet signed | **owner-blocked** |
 | Operational-key custody | two verified encrypted offline copies in separate physical locations owner-confirmed 2026-07-30 | ready |
 | Real owner signing act | deliberately not performed | **owner-blocked** |
@@ -234,7 +246,8 @@ pins only.
 ### 5.1 Exact authority-delegation procedure
 
 **Do not sign the delegation yet.** Operational-key custody is now
-owner-confirmed. The live chart has promoted only public re-export; the
+owner-confirmed. Independent public export matches the admitted repository
+verifiers, and the extra online private working copy is removed. The
 live-package approval and delegation-signing gates remain locked.
 
 The dedicated operational hybrid key has already been minted as
@@ -255,14 +268,14 @@ created:
 - `governance\signing-key-f3172a48372bfb23.mldsa.pub.b64`.
 
 Copy the private file to encrypted offline custody as
-`env.galerina-registry-signing-f3172a48372bfb23`, verify the copy is readable,
+`env.slide-hybrid-f3172a48372bfb23`, verify the copy is readable,
 and retain the generated public files. Do not destroy the working copy until
 both required custody copies have been verified.
 
 Use the new private file to independently re-derive public material:
 
 ```powershell
-$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-f3172a48372bfb23"
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.slide-hybrid-f3172a48372bfb23"
 
 node scripts/registry-authority-cli.mjs export-public `
   --operational-key-id f3172a48372bfb23 `
@@ -337,7 +350,7 @@ does not print its values.
 ```powershell
 Set-Location <clean-galerina-checkout>
 $env:GALERINA_SIGNING_KEY_ID = "f3172a48372bfb23"
-$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.galerina-registry-signing-f3172a48372bfb23"
+$env:GALERINA_REGISTRY_SIGNING_ENV_PATH = "<offline-key-directory>\env.slide-hybrid-f3172a48372bfb23"
 
 node scripts/registry-index-cli.mjs sign `
   --registry-dir packages-galerina/galerina-registry/packages `

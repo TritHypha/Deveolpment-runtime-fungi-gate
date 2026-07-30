@@ -62,7 +62,7 @@ flowchart LR
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 33/33; app-kernel 149/149; disposable root→operational→manifest chain only |
 | Live registry population | 🟨 | False stubs removed; auth is a 63,281-byte unapproved/unsigned candidate; live tree empty |
-| Production registry signing | 🟥 | Two-location custody owner-confirmed; first public export refused on environment structure before key decoding; metadata-only inspection is current; automatic operational rotation must reuse the incomplete Tower Citizen Triple-Lock path |
+| Production registry signing | 🟥 | Two-location custody, five-field structure, public export and non-authorizing public-bundle admission verified; extra online private copy removed; final unsigned delegation/package approval are current; signing remains locked |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -94,16 +94,20 @@ The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the registry population changes.
-2. Resolve the operational environment's encoding/record-structure refusal
-   through the non-secret inspection mode. Only after the live owner chart
-   advances should the public bundle be re-derived and admitted, the
+2. Prepare the final unsigned delegation and package-approval evidence now
+   that the independently hashed public bundle is admitted and the extra
+   online private working copy has been removed. Only after the live owner
+   chart advances should the
    content-addressed auth candidate be owner-reviewed, its delegation be
    root-signed, and its complete package manifest be hybrid-signed.
    Two-location operational-key custody is already owner-confirmed.
-3. Complete the existing Tower Citizen automatic operational-key rotation
-   path for registry/package/index authority: StateSerializer epoch awareness,
-   real custody execution, delegation integration, gated canary/drain/fallback,
-   and automatic orchestration. The offline root remains manual.
+3. Complete the existing Tower Citizen automatic operational-key rotation path
+   for Galerina beta v1: StateSerializer epoch awareness, real custody
+   execution, delegation integration, gated canary/drain/fallback, and
+   automatic orchestration. The offline root remains manual. After beta,
+   rebuild the reusable lifecycle mechanism in independent SLIDE `.fungi` and
+   retain Tower Citizen as the Galerina policy adapter; trust domains and keys
+   remain separate.
 4. Move only the independently verified auth manifest into the live tree and
    require the unsigned live-index build to pass.
 5. Ask the owner to perform the offline index signing act only after the
@@ -161,10 +165,20 @@ Production still requires an exact valid operational public bundle,
 root-signed delegation, owner approval/signature of the auth manifest, a
 successful live unsigned build, and the final offline index-signing act.
 Two verified offline custody copies in separate physical locations were
-owner-confirmed on 2026-07-30. The first public-only export then refused before
-key decoding because the signing environment was malformed or repeated a
-field. Public export remains locked while the live walkthrough authorizes only
-a metadata-only UTF-8/record-structure inspection.
+owner-confirmed on 2026-07-30. The first public-only export refused before key
+decoding because the wrong file shape was selected. The complete hybrid
+environment was then selected and passed the metadata-only structural gate as
+canonical UTF-8 with five unique fields and the expected key ID. Independent
+public export produced Ed25519 SHA-256
+`D27C56FC2E5C7E6BEA5FE7A24BDC318887F1E8FD69FE458DBD4E1FA6B59167D4` and
+ML-DSA-65 SHA-256
+`1C97131FB9D8DA2A6081CEEC6D5712251573B4DA22EB0509E7915A2035C427D2`;
+both match the repository candidates byte-for-byte. The extra online private
+working copy has been removed; both custody copies remain offline. The live
+repository now admits both public verifier files as non-authorizing material,
+and the authority CLI validates their exact identities and closed roles. The
+live walkthrough exposes no owner command while final unsigned-delegation and
+package-approval evidence is prepared.
 
 ## Binding package topology
 
