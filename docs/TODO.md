@@ -11,6 +11,47 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
+### Security and R&D cross-project checkpoint - 2026-07-30
+
+- **Completed:** Galerina's vendored Myco now treats its persisted index as a
+  hostile optional cache. Parent traversal, absolute/backslash paths,
+  symlink-root escape, oversized bytes/collections, duplicate records,
+  invalid counts and non-canonical persistence are refused. Fresh evidence is
+  Myco **69/69** plus typecheck; exact upstream source commit is pinned.
+- **Completed:** the API transport no longer lets a custom channel resolver
+  replace certificate admission. TLS and custom verdicts compose as separate
+  K3 factors; missing certificate + custom ALLOW refuses. Fresh package
+  evidence is **22/22**.
+- **Completed:** disposable TLS private halves are explicitly named
+  `TEST-ONLY-*` and documented as public fixture vectors with no custody or
+  production identity.
+- **Completed:** all remote-download-to-shell guidance was removed. The new
+  phase-close audit has planted negative/control evidence, reports zero live
+  findings and raises the audit/lint meta-gate to **81/81** guarded tools.
+- **Completed in independent SLIDE:** the formerly untracked live V2 contract
+  and Galerina handoff are repository-owned and digest-checked. Contract
+  integrity **5/5** and full SLIDE **35/35** pass.
+- **Completed staging intake review:** all four flat external candidates were
+  inspected without copying or editing the staging tree. The audit proves only
+  topology/identity. Strict frontend checks now pass for substrate-math,
+  target-gpu, target-wasm and target-native after a compiler regression was
+  fixed test-first: `NativeDiagnosticSeverity.Error` had been misclassified as
+  `native.call`, while a real `NativeBridge.invoke()` remains privileged.
+  Compiler effect tests are **70/70** and the full compiler package exits
+  green. Every candidate remains quarantined because executable parity,
+  mutation, package admission and SLIDE ABI evidence are incomplete.
+- **R&D adjudication:**
+  `docs/reports/security-and-rd-cross-project-adjudication-2026-07-30.md`.
+- **TriRegex next slice:** independent NFA/table/certificate invariant
+  verification plus seeded replay is scored adoptable. Implementation is not
+  started because the standalone upstream tree contains uncommitted owner
+  work and the package's mirror contract forbids Galerina-first edits.
+- **Still pending:** Myco content-verified evidence tiers, full digest-suite
+  migration, GATE v3 hostile-boundary fixes, and platform durability/crash
+  recovery. The external candidates must not be copied into Galerina before
+  their individual dossiers and executable parity are complete. Cache,
+  graph and neural output remains non-authorizing.
+
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
@@ -231,9 +272,8 @@ planning checkbox must never be used to imply that implementation exists.
   constructions pass, with the declared unsigned-spore residual still reported
   as open risk. Its strict production single-file audit passes on the canonical
   pure-transform pattern.
-- **Current:** the complete hybrid environment for operational key
-  `f3172a48372bfb23`, now custodied as
-  `env.slide-hybrid-f3172a48372bfb23`, passed the non-secret structural check.
+- **Current:** the complete hybrid environment for operational key `f31…`,
+  now held in offline custody, passed the non-secret structural check.
   Its public halves were independently exported and matched the repository
   candidates byte-for-byte: Ed25519 SHA-256
   `D27C56FC2E5C7E6BEA5FE7A24BDC318887F1E8FD69FE458DBD4E1FA6B59167D4`;
@@ -246,7 +286,7 @@ planning checkbox must never be used to imply that implementation exists.
   auth package facts. Cold root `21415420b447e219` has now signed the serial-1
   90-day delegation. The public delegation independently passed hybrid
   signature, current-window, serial-floor, exact-role, revocation and both
-  operational-public-pin checks. Operational key `f3172a48372bfb23` then
+  operational-public-pin checks. Operational key `f31…` then
   hybrid-signed `@galerina/auth` version `1.0.0-beta.2`. The returned public
   manifest independently verified at `2026-07-30T16:30:19.180Z`, is
   byte-identical to the admitted live file, and has SHA-256
@@ -255,7 +295,7 @@ planning checkbox must never be used to imply that implementation exists.
   unsigned entry at `2026-07-30T16:33:10.307Z`, SHA-256
   `15D531566E9FB71F152E34BD9C4C62D4D6FAE15DB0309CBCFA0834BE2E020383`.
   The returned hybrid-signed index independently verified under operational
-  key `f3172a48372bfb23`, its payload exactly equals that public rebuild, and
+  key `f31…`, its payload exactly equals that public rebuild, and
   its SHA-256 is
   `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`.
   Seven returned-artifact mutations all refuse. The live owner chart now
@@ -366,8 +406,8 @@ planning checkbox must never be used to imply that implementation exists.
   (`galerina-signing-key-21415420b447e219.env`) hybrid-signs only the
   operational delegation. `942d6b2726b0a991` and `53de6be4d53a33b2` are
   Ed25519-only and cannot be registry-v2 authorities. Dedicated operational
-  Ed25519+ML-DSA-65 key `f3172a48372bfb23` has now been minted and custodied as
-  `env.slide-hybrid-f3172a48372bfb23`; after independent public
+  Ed25519+ML-DSA-65 key `f31…` has now been minted and placed in offline
+  custody; after independent public
   re-derivation, custody and root delegation it may sign reviewed package
   manifests and the registry index. Audit, superseded and stale key files are
   explicitly excluded.

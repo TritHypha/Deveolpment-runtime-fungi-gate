@@ -252,8 +252,7 @@ Production registry signing is **GREEN**. The complete evidence chain is:
 - the separately custodied operational public bundle and root-signed
   delegation are admitted; and
 - the live public-only build produces exactly one index entry;
-- the returned hybrid-signed index verifies under operational key
-  `f3172a48372bfb23`; and
+- the returned hybrid-signed index verifies under operational key `f31…`; and
 - its payload exactly matches the public rebuild and 7/7 tampered copies
   refuse.
 
@@ -261,8 +260,8 @@ Two verified encrypted operational-key custody copies in separate physical
 locations were owner-confirmed on 2026-07-30. That closes custody only; it does
 not admit the public bundle or authorize delegation, package or index signing.
 The first public-only export refused before key decoding because the wrong file
-shape was selected. The complete hybrid environment, custodied as
-`env.slide-hybrid-f3172a48372bfb23`, then passed `inspect-environment` as
+shape was selected. The complete hybrid environment for `f31…` then passed
+`inspect-environment` as
 canonical UTF-8 with five unique fields and the expected operational key ID,
 without printing private values or its path. Its independently exported public
 halves match the repository candidates byte-for-byte: Ed25519 SHA-256
@@ -276,13 +275,13 @@ identities and closed roles, re-hashes reviewed package bytes, refuses future
 approval times and repeated authority fields, and self-verifies both manifest
 signature components before writing. The owner-approved auth input and
 serial-1, 90-day delegation were prepared. Cold root `21415420b447e219`
-signed the delegation for operational key `f3172a48372bfb23`. The returned
+signed the delegation for operational key `f31…`. The returned
 public artifact independently verified under both root signature halves at
 `2026-07-30T16:09:14.442Z`, with serial floor `0`, the exact two closed roles,
 current revocation state and both operational public-key pins. Its file
 SHA-256 is
 `EE6B01E7AE0460D2811BBCEABF7962FDDA55ED907CA512C05C82BCE5EE1810AC`.
-Operational key `f3172a48372bfb23` hybrid-signed `@galerina/auth` version
+Operational key `f31…` hybrid-signed `@galerina/auth` version
 `1.0.0-beta.2`. The returned public manifest independently verified at
 `2026-07-30T16:30:19.180Z`, is byte-identical to the sole admitted live
 manifest, and has SHA-256
@@ -293,7 +292,7 @@ The public-only builder produced exactly one unsigned entry at
 The returned public signed index is tracked byte-identically at
 `packages-galerina/galerina-registry/registry-index-v2.json`. Its SHA-256 is
 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06`.
-Both signature components verify under operational key `f3172a48372bfb23`,
+Both signature components verify under operational key `f31…`,
 the signed payload exactly equals the public-only rebuild, and seven
 returned-artifact mutations all refuse. The live walkthrough now records
 completion and authorizes no further signing action.

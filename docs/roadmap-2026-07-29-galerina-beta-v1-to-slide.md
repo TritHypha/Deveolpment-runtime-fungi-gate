@@ -69,7 +69,7 @@ flowchart LR
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |
-| Production registry signing | 🟩 | Exact one-entry index hybrid-signed by `f3172a48372bfb23`, independently verified and mutation-tested; SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06` |
+| Production registry signing | 🟩 | Exact one-entry index hybrid-signed by operational key `f31…`, independently verified and mutation-tested; SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06` |
 | Default production registry consumption | 🟩 | Canonical read-only loader verifies the live root delegation and both operational signature halves before lookup; production revocation comes from one pinned, signed, immutable snapshot; signed index issuance replaces caller-selected wall time; the active epoch and checkpoint-selected generation ID must match. Tower 492/492, app-kernel 165/165, registry 35/35, auth 59/59 |
 | Epoch-aware state integrity | 🟩 | Snapshot v2 MAC-binds epoch/key identity; authenticated ring + custody commitment selects active/retired verification keys and refuses unknown/revoked/substituted authority. Sentinel State 20/20; Tower 483/483 |
 | Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
@@ -81,14 +81,18 @@ flowchart LR
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
 | Hardware fallback | 🟩 | Non-CPU targets without explicit fallback fail with `FUNGI-TARGET-001` |
 | Sensitive-data lessons | 🟩 | PII, PHI, audit-evidence and protected-response examples now emit their exact fail-closed diagnostics |
-| Focused compiler tests | 🟩 | Effect checker 68/68; governance verifier 121/121 at this tranche |
+| Focused compiler tests | 🟩 | Effect checker 70/70; governance verifier 121/121 at this tranche. Static `Native*` enum members remain pure while actual `Native*` invocations still require `native.call` |
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
-| Full compiler package | 🟩 | Fresh post-curriculum typecheck/build and 5,750/5,750 tests |
+| Full compiler package | 🟩 | Fresh typecheck/build and full package test command exit 0 after the native-member regression fix |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 60/60 mutation anchors green |
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
 | Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
 | Governed mutation non-vacuity | 🟩 | Full catalog 60/60 killed, zero survivors, zero dirty targets |
-| External flat `.fungi` candidate lane | 🟨 | `../Galerina-Fungi-Package-Staging` has a binding handover, AI assignment template and topology audit. The `galerina-substrate-math` reference passes plain and strict frontend checks, but is deliberately non-authorizing until SLIDE execution, parity, mutation and admission gates pass |
+| Hostile Myco index boundary | 🟩 | Closed bounded records, root containment, pre-parse byte ceiling, canonical order and traversal/symlink/duplicate/budget negatives; 69/69 plus typecheck |
+| TLS/custom channel composition | 🟩 | Certificate admission is mandatory; custom policy is an additional K3 factor and cannot rescue certificate failure; API server 22/22 |
+| Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
+| SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |
+| External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates were inspected in place and all now pass the strict frontend. The topology audit is green, but target-gpu/native/wasm dossiers and executable parity remain incomplete; substrate-math is a reference/floor package. Nothing has been copied or admitted |
 
 ## Active Galerina work
 
@@ -211,7 +215,7 @@ repository now admits both public verifier files as non-authorizing material.
 The authority CLI validates their exact identities and closed roles, and
 signs and independently verifies reviewed package manifests without exposing
 private values. Cold root `21415420b447e219` signed the serial-1 delegation
-for operational key `f3172a48372bfb23`; both hybrid signature halves, serial
+for operational key `f31…`; both hybrid signature halves, serial
 floor, active window, exact roles, revocation state and operational public-key
 pins independently verify. The operational auth manifest independently
 verified at `2026-07-30T16:30:19.180Z` and has SHA-256

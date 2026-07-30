@@ -148,7 +148,7 @@ revocation state before any package lookup.
 **Verified 2026-07-30:** Tower Citizen 480/480, app-kernel 151/151,
 registry 35/35, auth 59/59, Hardened Border 98/98, authority CLI 9/9 and
 registry-index CLI 20/20. The live root `21415420b447e219` delegation and
-operational `f3172a48372bfb23` index were verified from their public artifacts.
+operational `f31…` index were verified from their public artifacts.
 Freshness time and rollback floors remain explicit policy inputs until Task 3
 binds them to authenticated epoch state.
 

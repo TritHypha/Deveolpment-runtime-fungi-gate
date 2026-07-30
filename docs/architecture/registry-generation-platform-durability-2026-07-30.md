@@ -148,9 +148,9 @@ cannot prove that a real filesystem, controller or storage device honoured a
 physical durability barrier. Production admission therefore still requires
 the platform-specific crash and power-loss evidence listed above.
 
-The source-bound research adjudication and its zero-trust scores are recorded
-in
-[`SLIDE/docs/research/TRANSCRIPT-CORPUS-RD0584-RD0599-ADJUDICATION-2026-07-30.md`](../../../SLIDE/docs/research/TRANSCRIPT-CORPUS-RD0584-RD0599-ADJUDICATION-2026-07-30.md).
+The source-bound research adjudication and its zero-trust scores are maintained
+in the independent SLIDE repository's transcript-corpus adjudication. This
+public document does not depend on a machine-local sibling-repository path.
 
 ## Zero-trust adoption score
 

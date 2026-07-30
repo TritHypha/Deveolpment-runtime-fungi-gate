@@ -23,7 +23,7 @@ registry CLI, Galerina graph/audit/generator tooling.
 - Never read, copy, print, stage, commit or use a real private key.
 - Use disposable generated keys for every executable signing test.
 - Do not use rejected key `700265bb65c412b1`. Later owner authority selected
-  operational key `f3172a48372bfb23`; its public material remains
+  operational key `f31…`; its public material remains
   non-authorizing until the offline root signs the exact admitted delegation.
 - Do not infer the exact root key ID from an abbreviated or mistyped value.
 - Every package exists once as a direct child of `packages-galerina/`; no
@@ -31,7 +31,7 @@ registry CLI, Galerina graph/audit/generator tooling.
 - A technical review is not owner governance approval.
 - One invalid registry entry poisons the complete build; no partial output.
 - Preserve all unrelated and user-owned files. The independently re-derived
-  public halves for `f3172a48372bfb23` are now reviewed and tracked verifier
+  public halves for `f31…` are now reviewed and tracked verifier
   material; they are not private and do not authorize by presence.
 - `.fungi` `if` is Boolean-only; use exhaustive `check` for K3 and exhaustive
   `match` for other decisions. No new `.fungi` syntax is introduced here.

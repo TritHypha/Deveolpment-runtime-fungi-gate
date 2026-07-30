@@ -23,7 +23,7 @@ The candidate manifest is outside the live signable tree at
 Its owner governance record now names `galerina-owner-governance`, approval
 instant `2026-07-30T15:45:00.000Z`, publisher
 `galerina-owner-governance`, and expected operational key
-`f3172a48372bfb23`. Its signer identity and signature remain null. The live
+`f31…`. Its signer identity and signature remain null. The live
 registry is empty and therefore terminally refuses index construction.
 
 The former healthcare manifest was removed. There is no canonical healthcare

@@ -44,7 +44,7 @@ It does not:
 - certify an artifact merely because its tests pass;
 - manufacture an owner governance approval or timestamp;
 - make rejected `700265bb65c412b1` a production authority, or grant selected
-  operational identity `f3172a48372bfb23` authority merely because its public
+  operational identity `f31…` authority merely because its public
   files are present;
 - produce a real root delegation or signed registry index;
 - create a nested dependency store or copy package dependencies below another
