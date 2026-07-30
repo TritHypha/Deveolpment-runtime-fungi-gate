@@ -16,6 +16,34 @@ triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
 changes. A completed
 planning checkbox must never be used to imply that implementation exists.
 
+### Governed-memory and Wasmtime-oracle checkpoint - 2026-07-30
+
+- **Accepted direction:** Galerina manages memory for the developer; ordinary
+  `.fungi` receives no raw-pointer/manual-free escape hatch. The portable
+  contract combines validity, K3/capability authority, encrypted custody, and
+  deterministic resource ceilings.
+- **Injection boundary:** document, memory, graph, model, package, and plugin
+  content is untrusted data. Retrieved text cannot grant authority, select
+  tools/paths, invoke commands, release keys, or alter policy.
+- **External sidecar decision:** the plaintext external
+  `MEMORY-GRAPH.json` design is rejected. Personal/agent memory is not a clean
+  build dependency. Beta tooling will become ephemeral and read-only; a future
+  persistent SLIDE graph must use immutable encrypted generations, hybrid
+  signed receipts, anti-rollback, and narrow query/write leases.
+- **Wasmtime decision:** preserve the useful fuel, differential, reset, and
+  attestation evidence, but remove the pre-SLIDE production-sidecar framing.
+  Move `subprojects/dss-host` to the single flat development package
+  `packages-galerina/galerina-devtools-wasmtime-oracle`.
+- **Current:** design and executable plan are recorded at
+  `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
+  and
+  `docs/superpowers/plans/2026-07-30-governed-memory-and-wasmtime-oracle.md`.
+  Next: land red no-sidecar/injection/layout tests, then migrate the tool and
+  package.
+- **Non-claims:** the encrypted persistent graph, complete SLIDE memory
+  verifier, native backend, and production runner are not implemented by this
+  beta-safe migration.
+
 ### Galerina-first beta-v1 completion checkpoint - 2026-07-29
 
 - **Owner sequence (binding):** finish Galerina beta-v1 first; resume
