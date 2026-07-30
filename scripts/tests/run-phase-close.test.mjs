@@ -150,6 +150,10 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
   assert.match(
     runnerSource,
+    /run\("remote-shell-install", "node", \["scripts\/audit-remote-shell-install\.mjs"\]\)/,
+  );
+  assert.match(
+    runnerSource,
     /run\("code-index", "node", \["scripts\/code-index\.mjs", "--check"\]\)/,
   );
   assert.match(

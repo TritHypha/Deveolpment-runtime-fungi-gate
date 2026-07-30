@@ -329,10 +329,8 @@ describe("CLI compatibility — galerina check", () => {
 describe("CLI compatibility — platform awareness", () => {
   it("documents PowerShell curl alias difference (Windows-specific)", () => {
     // On Windows, `curl` is aliased to Invoke-WebRequest — flags like -fsSL don't work.
-    // Galerina install scripts must use platform-specific syntax:
-    //   Linux/macOS: curl -fsSL https://galerina.io/install.sh | bash
-    //   Windows:     iwr https://galerina.io/install.ps1 | iex
-    //   Universal:   npm install -g @galerina/cli
+    // Galerina install guidance must use platform-specific package managers or
+    // version-pinned downloads whose digest/signature is verified before execution.
     if (isWin) {
       // Confirm the alias exists — if cmd.exe 'where curl' returns nothing or
       // PowerShell resolves to Invoke-WebRequest, install docs must warn about -fsSL.

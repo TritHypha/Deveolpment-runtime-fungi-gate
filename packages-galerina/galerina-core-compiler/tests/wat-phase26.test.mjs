@@ -87,7 +87,7 @@ describe("Phase 26A: wasm-standalone build emits WAT + valid WASM", () => {
     } else {
       console.log(`  [26A] wasmtime not found on PATH (informational — not a hard requirement)`);
       console.log(`  [26A] Install: winget install BytecodeAlliance.wasmtime  (Windows)`);
-      console.log(`  [26A] Install: curl https://wasmtime.dev/install.sh -sSf | bash  (macOS/Linux)`);
+      console.log(`  [26A] Install: brew install wasmtime (macOS), or use a verified pinned release (Linux)`);
       console.log(`  [26A] To execute once installed: wasmtime build/wasm/output.wasm`);
     }
     // Not a hard requirement — pass regardless

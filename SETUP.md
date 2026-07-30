@@ -72,15 +72,21 @@ winget install BytecodeAlliance.Wasmtime
 
 **Ubuntu / Debian:**
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
+sudo apt-get update
+sudo apt-get install -y nodejs npm
+node --version
 ```
 
 **Fedora / RHEL:**
 ```bash
-curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
 sudo dnf install -y nodejs
+node --version
 ```
+
+If the distribution package is older than Node.js 18, obtain a version-pinned archive
+from <https://nodejs.org/en/download>, verify it against the release's signed
+`SHASUMS256.txt`, then install the verified bytes. Do not pipe a remote installer into
+a shell: TLS delivery alone does not establish publisher or content identity.
 
 **Arch:**
 ```bash
@@ -117,9 +123,10 @@ galerina --help
 
 ### Optional — wasmtime
 
-```bash
-curl https://wasmtime.dev/install.sh -sSf | bash
-```
+Use a distribution package where available, or download a version-pinned archive from
+<https://github.com/bytecodealliance/wasmtime/releases> and verify its published digest
+before extraction. The external runtime is compatibility tooling, not an admitted
+Galerina authority.
 
 ---
 
@@ -132,13 +139,9 @@ curl https://wasmtime.dev/install.sh -sSf | bash
 brew install node
 ```
 
-**Via nvm** (if you need multiple Node versions):
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc   # or ~/.zshrc on zsh
-nvm install 20
-nvm use 20
-```
+If you need multiple Node versions, use an already-installed version manager or a
+version-pinned, locally inspected checkout. Do not execute its installer directly from
+a network pipe.
 
 ### Step 2 — Clone and link
 
@@ -158,8 +161,6 @@ galerina --help
 
 ```bash
 brew install wasmtime
-# or:
-curl https://wasmtime.dev/install.sh -sSf | bash
 ```
 
 ---

@@ -579,6 +579,11 @@ run("signed:fixtures", "node", ["scripts/audit-signed-fixture-drift.mjs"]);
 //   project-graph reordered-token bug) or sit within Levenshtein 1 (typo-twin), unless allowlisted with a
 //   resolution in governance/name-registry.json. Exit = violation count.
 run("path:leak", "node", ["scripts/audit-path-leak.mjs"]);
+// remote-shell-install — dependency/bootstrap guidance is a toxic supply-chain border.
+// Refuse curl/wget/iwr content piped directly into a shell or expression interpreter.
+// Downloads must be version-pinned and have publisher/content identity verified before
+// inspection or execution. The gate carries a planted-defect self-test.
+run("remote-shell-install", "node", ["scripts/audit-remote-shell-install.mjs"]);
 // private-doc-leak — RD-0453 enforcement (2026-07-17): no TRACKED public file may NAME a never-public
 //   `-PRIVATE.md` KB doc. The kb-index generator once indexed a never-public doc's TITLE + terms digest into
 //   tracked build/kb-index/ (caught pre-push); gitignoring closed that vector, this gate closes the CLASS so a

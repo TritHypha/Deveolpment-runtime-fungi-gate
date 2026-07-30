@@ -1047,7 +1047,8 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
       } else {
         process.stdout.write(`[info] wasmtime not found on PATH.\n`);
         process.stdout.write(`[info] To install wasmtime, visit: https://wasmtime.dev\n`);
-        process.stdout.write(`[info]   macOS/Linux: curl https://wasmtime.dev/install.sh -sSf | bash\n`);
+        process.stdout.write(`[info]   macOS:      brew install wasmtime\n`);
+        process.stdout.write(`[info]   Linux:      install a distribution package or a version-pinned, digest-verified release\n`);
         process.stdout.write(`[info]   Windows:    winget install BytecodeAlliance.wasmtime\n`);
         process.stdout.write(`[info] To execute (once installed): wasmtime ${wasmOutPath}\n`);
         process.stdout.write(`[info] WAT file is at: ${watOutPath} (run wat2wasm manually if needed)\n`);
@@ -1064,7 +1065,8 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
       } else {
         process.stdout.write(`[info] Install wat2wasm (https://github.com/WebAssembly/wabt) and wasmtime (https://wasmtime.dev) to assemble and run.\n`);
         process.stdout.write(`[info]   wasmtime install: winget install BytecodeAlliance.wasmtime  (Windows)\n`);
-        process.stdout.write(`[info]   wasmtime install: curl https://wasmtime.dev/install.sh -sSf | bash  (macOS/Linux)\n`);
+        process.stdout.write(`[info]   wasmtime install: brew install wasmtime  (macOS)\n`);
+        process.stdout.write(`[info]   wasmtime install: use a distribution package or verified pinned release  (Linux)\n`);
       }
     }
   }).catch((err: unknown) => {
