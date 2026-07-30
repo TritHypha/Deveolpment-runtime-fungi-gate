@@ -152,13 +152,19 @@ planning checkbox must never be used to imply that implementation exists.
   `docs/research-prompts/galerina-package-fungi-conversion-batch-01.md`.
   Source translation remains locked until the executable SLIDE package ABI,
   effects boundary and differential harness are frozen.
-- **Owner-custody question, non-blocking for implementation:** the ignored
-  repository-root `.env.galerina-signing` file still exists (5,944 bytes,
-  last modified 2026-07-30 11:36) after the owner reported removal of the
-  extra online operational-key copy. Its contents and identity were
-  deliberately not inspected. The owner must confirm whether it is an
+- **Owner-custody question, non-blocking for implementation:** an ignored
+  repository-root signing environment may remain after the owner reported
+  removal of the extra online operational-key copy. Its contents and identity
+  were deliberately not inspected. The owner must confirm whether it is an
   intentionally retained non-production key or remove it through the custody
   process. Reviewers and automation must not open or delete it.
+- **Independent-review adjudication:** the first Galerina/SLIDE review pass is
+  reconciled in
+  `docs/reports/independent-review-adjudication-2026-07-30.md`. The reports
+  were written against the pre-`1c20cd5c` dirty checkpoint, so missing
+  generation persistence/state-binding findings are historical rather than
+  current. Their remaining platform, detached-GIR, release-receipt and
+  refusal-code coverage findings stay open.
 - A future real operational rotation ceremony remains an owner custody act,
   but implementation and disposable-key verification proceed without it.
 

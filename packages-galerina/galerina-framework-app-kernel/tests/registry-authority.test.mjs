@@ -340,6 +340,23 @@ test("registry index verification is bound to the delegated operational key", ()
     ),
     (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
   );
+  assert.throws(
+    () => verifyRegistryIndexUnderDelegation(
+      {
+        ...index,
+        schema: "galerina-registry-index/v1",
+        signature: {
+          algorithm: "Ed25519",
+          keyId: OPERATIONAL_KEY_ID,
+          signature: index.signature.ed25519Signature,
+          canon: "jcs",
+        },
+      },
+      signed(),
+      options,
+    ),
+    (error) => error.code === ERR_REGISTRY_DELEGATION_KEY_MISMATCH,
+  );
 });
 
 const manifestSign = (prefix, message) =>

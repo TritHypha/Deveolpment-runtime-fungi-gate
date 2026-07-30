@@ -225,6 +225,34 @@ function compareManifest(
       : 0;
 }
 
+function stringListsEqual(
+  left: readonly string[],
+  right: readonly string[],
+): boolean {
+  return left.length === right.length
+    && left.every((value, index) => value === right[index]);
+}
+
+function registryEntriesEqual(
+  left: readonly RegistryEntry[],
+  right: readonly RegistryEntry[],
+): boolean {
+  return left.length === right.length
+    && left.every((entry, index) => {
+      const expected = right[index];
+      return expected !== undefined
+        && entry.name === expected.name
+        && entry.version === expected.version
+        && entry.sourceHash === expected.sourceHash
+        && entry.publisher === expected.publisher
+        && entry.keyId === expected.keyId
+        && entry.certificationLevel === expected.certificationLevel
+        && entry.riskRating === expected.riskRating
+        && stringListsEqual(entry.capabilities, expected.capabilities)
+        && stringListsEqual(entry.effects, expected.effects);
+    });
+}
+
 function signPair(
   custody: RegistryGenerationCustody,
   keyId: string,
@@ -332,6 +360,7 @@ export function verifyRegistryGeneration(
   if (
     generation.index.signature?.keyId
       !== generation.operationalKeyId
+    || !registryEntriesEqual(generation.index.entries, entries)
     || canonicalJson(generation.index.entries)
       !== canonicalJson(entries)
   ) {
