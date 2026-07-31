@@ -1,16 +1,16 @@
 # TODO
 
-### Independent SLIDE Shape Lab E05 synchronization - 2026-07-31
+### Independent SLIDE research and evidence synchronization - 2026-07-31
 
 - **Completed outside Galerina:** bounded graph-responsive features, packed
   128x64x32 Tri-1 N2, exact 32-recipe grammar, proposal-only N1/N2/N3 and a
   shared same-implementation current-B0 byte verifier across
   B0/BA/B1/B2/N1/N2/N3.
-- **Adversarial-review closure:** Claude-08 and SEC-05 findings were converted
+- **Adversarial-review closure:** Claude-08, SEC-05 and SEC-06 findings were converted
   into bounded diagnostics/XML, strict typed-array admission, exact prototype
   and data-descriptor checks, universal semantic/cycle re-derivation, honest
   receipt labels, inactive hybrid-evidence schema, atlas identity/key mutation
-  tests and a paired-statistics sidecar. Source verification is 226/226, V2
+  tests and a paired-statistics sidecar. Current source verification is 228/228, V2
   contract 15/15, schemas 19/19 and modules 62/62.
 - **Fresh evidence:** clean SLIDE source `151b316`; E05 uses 99 paired samples
   of 50 operations. Evidence digest
@@ -27,7 +27,18 @@
   bytes. The 5.000x density result is not total residency or a speed claim.
 - **Evidence boundary:** current evidence is internally consistent and
   self-hashed only. It has no independent verifier or evidence-authority
-  signature and therefore remains amber.
+  signature; K3 verdict is `0` even when `internal_consistency` is `1`, so it
+  remains amber.
+- **Neural microengine boundary:** `NSE-Reflex` is the implemented N1 proposal
+  role; `NSE-Micro` is its proposed cache-admitted L1/L2-targeted profile, not
+  a third authority engine. Total code, features, activations, scratch,
+  proposal and verifier cache pressure have not been measured. E11 remains
+  open and no cache-residency claim is allowed. `NSE-Synthesis` is the larger
+  N2 proposal tier.
+- **Paper handovers:** six independent-review prompts now cover B1, B2 and N3,
+  with one repository-aware local-Claude version and one self-contained online
+  AI version for each lane. All require ordinary maths, separate Tri-1/K3
+  maths, zero-trust scoring, primary-source research and alternatives.
 - **Galerina effect:** none yet. The final reports and SVG are experimental
   evidence, not permission to activate SLIDE, retire TypeScript/npm/Wasm, or
   publish an external-runtime comparison.
