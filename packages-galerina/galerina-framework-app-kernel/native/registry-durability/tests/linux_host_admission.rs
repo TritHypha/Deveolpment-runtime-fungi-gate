@@ -1,6 +1,7 @@
 use galerina_registry_durability_native::{
-    admit_measured_linux_host, parse_linux_mountinfo_line, select_linux_mount_for_target,
-    LinuxHostProbeVerdict, LinuxStorageKind, MeasuredLinuxHost,
+    admit_measured_linux_host, correlate_linux_host_observation, parse_linux_mountinfo_line,
+    select_linux_mount_for_target, LinuxHostObservation, LinuxHostProbeVerdict, LinuxStorageKind,
+    MeasuredLinuxHost, BTRFS_SUPER_MAGIC, EXT4_SUPER_MAGIC, XFS_SUPER_MAGIC,
 };
 
 fn direct(filesystem: &str) -> MeasuredLinuxHost {
@@ -18,6 +19,90 @@ fn direct(filesystem: &str) -> MeasuredLinuxHost {
         device_major: 8,
         device_minor: 1,
         mount_id: 42,
+    }
+}
+
+fn mount(filesystem: &str) -> galerina_registry_durability_native::LinuxMountInfo {
+    parse_linux_mountinfo_line(&format!(
+        "42 1 8:1 / / rw,relatime - {filesystem} /dev/sda1 rw"
+    ))
+    .unwrap()
+}
+
+#[test]
+fn exact_mount_statfs_and_sysfs_correlation_reaches_only_the_pure_candidate() {
+    for (filesystem, statfs_magic) in [
+        ("ext4", EXT4_SUPER_MAGIC),
+        ("xfs", XFS_SUPER_MAGIC),
+        ("btrfs", BTRFS_SUPER_MAGIC),
+    ] {
+        let mount = mount(filesystem);
+        let measured = correlate_linux_host_observation(LinuxHostObservation {
+            target_is_absolute: true,
+            target_is_direct_directory: true,
+            symbolic_ancestor_present: false,
+            mount_before: mount.clone(),
+            mount_after: mount,
+            statfs_magic,
+            stat_device_major: 8,
+            stat_device_minor: 1,
+            storage_kind: LinuxStorageKind::DirectLocalBlock,
+            sysfs_chain_complete: true,
+        });
+        assert!(
+            matches!(
+                admit_measured_linux_host(measured),
+                LinuxHostProbeVerdict::Candidate(_)
+            ),
+            "{filesystem}"
+        );
+    }
+}
+
+#[test]
+fn incomplete_or_mismatched_linux_observations_refuse() {
+    let mount = mount("ext4");
+    let baseline = LinuxHostObservation {
+        target_is_absolute: true,
+        target_is_direct_directory: true,
+        symbolic_ancestor_present: false,
+        mount_before: mount.clone(),
+        mount_after: mount,
+        statfs_magic: EXT4_SUPER_MAGIC,
+        stat_device_major: 8,
+        stat_device_minor: 1,
+        storage_kind: LinuxStorageKind::DirectLocalBlock,
+        sysfs_chain_complete: true,
+    };
+    let mut changed_mount = baseline.mount_after.clone();
+    changed_mount.mount_id = 43;
+    let cases = [
+        LinuxHostObservation {
+            sysfs_chain_complete: false,
+            ..baseline.clone()
+        },
+        LinuxHostObservation {
+            statfs_magic: 0,
+            ..baseline.clone()
+        },
+        LinuxHostObservation {
+            stat_device_major: 9,
+            ..baseline.clone()
+        },
+        LinuxHostObservation {
+            mount_after: changed_mount,
+            ..baseline.clone()
+        },
+        LinuxHostObservation {
+            storage_kind: LinuxStorageKind::Virtual,
+            ..baseline
+        },
+    ];
+    for observation in cases {
+        assert!(matches!(
+            admit_measured_linux_host(correlate_linux_host_observation(observation)),
+            LinuxHostProbeVerdict::Deny(_)
+        ));
     }
 }
 

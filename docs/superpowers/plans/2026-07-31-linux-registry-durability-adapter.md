@@ -41,9 +41,10 @@ The pure model and parser may be completed on Windows. Linux syscalls and
 storage claims require the Ubuntu host. No result changes the empty production
 adapter allow-list.
 
-Current partial evidence: the closed pure facts model and bounded ASCII
-`mountinfo` row parser/deepest-component selector pass 4/4 on Windows. The
+Current partial evidence: the closed pure facts model, bounded ASCII
+`mountinfo` row parser/deepest-component selector and exact filesystem-magic/
+device correlation pass 6/6 on Windows. The
 parser refuses malformed/unknown escapes, controls, non-canonical paths,
 ambiguous separators/access modes, surplus fields, oversized rows and duplicate
-deepest mounts. `statfs`, sysfs device-chain correlation and live Linux input
+deepest mounts. Live `statfs`, sysfs device-chain measurement and Linux input
 remain unimplemented, so the third checkbox remains open.

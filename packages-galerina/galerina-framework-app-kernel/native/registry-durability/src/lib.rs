@@ -131,6 +131,55 @@ pub struct LinuxMountInfoError {
     code: &'static str,
 }
 
+pub const EXT4_SUPER_MAGIC: u64 = 0x0000_EF53;
+pub const XFS_SUPER_MAGIC: u64 = 0x5846_5342;
+pub const BTRFS_SUPER_MAGIC: u64 = 0x9123_683E;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LinuxHostObservation {
+    pub target_is_absolute: bool,
+    pub target_is_direct_directory: bool,
+    pub symbolic_ancestor_present: bool,
+    pub mount_before: LinuxMountInfo,
+    pub mount_after: LinuxMountInfo,
+    pub statfs_magic: u64,
+    pub stat_device_major: u32,
+    pub stat_device_minor: u32,
+    pub storage_kind: LinuxStorageKind,
+    pub sysfs_chain_complete: bool,
+}
+
+pub fn correlate_linux_host_observation(observation: LinuxHostObservation) -> MeasuredLinuxHost {
+    let expected_magic = match observation.mount_before.filesystem.as_str() {
+        "ext4" => Some(EXT4_SUPER_MAGIC),
+        "xfs" => Some(XFS_SUPER_MAGIC),
+        "btrfs" => Some(BTRFS_SUPER_MAGIC),
+        _ => None,
+    };
+    let mount_namespace_stable = observation.mount_before == observation.mount_after;
+    let device_identity_stable = observation.mount_before.device_major
+        == observation.stat_device_major
+        && observation.mount_before.device_minor == observation.stat_device_minor
+        && observation.mount_after.device_major == observation.stat_device_major
+        && observation.mount_after.device_minor == observation.stat_device_minor
+        && observation.mount_before.mount_id == observation.mount_after.mount_id;
+    MeasuredLinuxHost {
+        facts_complete: observation.sysfs_chain_complete,
+        target_is_absolute: observation.target_is_absolute,
+        target_is_direct_directory: observation.target_is_direct_directory,
+        symbolic_ancestor_present: observation.symbolic_ancestor_present,
+        filesystem: observation.mount_before.filesystem,
+        storage_kind: observation.storage_kind,
+        mount_read_write: observation.mount_before.read_write && observation.mount_after.read_write,
+        mount_namespace_stable,
+        filesystem_magic_matches: expected_magic == Some(observation.statfs_magic),
+        device_identity_stable,
+        device_major: observation.stat_device_major,
+        device_minor: observation.stat_device_minor,
+        mount_id: observation.mount_after.mount_id,
+    }
+}
+
 impl LinuxMountInfoError {
     pub fn code(&self) -> &'static str {
         self.code

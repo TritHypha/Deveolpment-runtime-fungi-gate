@@ -111,7 +111,8 @@ intent → governed execution plan → coordinated compute → audit proof
 > signed-host admission and the named platform evidence remain mandatory.
 >
 > **Linux preparation:** the platform-neutral Linux facts gate and bounded
-> `mountinfo` parser/deepest-component selector pass 4/4 on Windows. This is
+> `mountinfo` parser, deepest-component selector and pure statfs/device
+> correlation pass 6/6 on Windows. This is
 > pure model evidence only. Live `statfs`/sysfs correlation, retained-handle
 > publication and Ubuntu crash/recovery evidence remain unexecuted and must not
 > be inferred from these tests.

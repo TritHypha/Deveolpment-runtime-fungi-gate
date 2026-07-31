@@ -536,11 +536,12 @@ current remediated source, measurements and assurance boundary.
   relabelled as bare-host durability. No owner decision or key action is
   currently required.
 - **Linux adapter preparation checkpoint (2026-07-31):** the platform-neutral
-  facts gate and bounded `mountinfo` row/deepest-mount parser pass **4/4** on
+  facts gate, bounded `mountinfo` row/deepest-mount parser and exact
+  filesystem-magic/device correlation pass **6/6** on
   Windows. Only complete stable direct-local ext4/XFS/Btrfs facts can reach a
   candidate; Device Mapper, RAID, network, overlay, removable, virtual,
   unknown, read-only, symbolic and ambiguous inputs refuse. This is pure model
-  evidence, not a Linux probe. Live `statfs`/sysfs correlation, retained-handle
+  evidence, not a Linux probe. Live `statfs`/sysfs measurement, retained-handle
   publication and every crash/reboot/power-loss row remain open for Ubuntu.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent

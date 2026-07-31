@@ -20,8 +20,9 @@ production adapter or claim filesystem durability. Later commits will add the
 Linux host/filesystem gate, retained-handle publication primitive,
 process-termination matrix and controlled reboot recovery procedure here.
 
-The native crate also contains a platform-neutral 4/4 Linux fact-admission and
-bounded `mountinfo` parser matrix. Ubuntu must rerun it, but the result remains
+The native crate also contains a platform-neutral 6/6 Linux fact-admission,
+bounded `mountinfo` parser and pure filesystem/device-correlation matrix.
+Ubuntu must rerun it, but the result remains
 pure-model evidence until live `statfs` and sysfs identities are correlated.
 
 Docker and virtual machines may run the portability lane, but their results

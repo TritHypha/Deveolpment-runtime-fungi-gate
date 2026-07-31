@@ -107,13 +107,14 @@ bare-host candidate evidence from Docker/VM portability evidence. The Ubuntu
 row remains unexecuted and red until that handover returns; no result is
 inferred from the Windows host.
 
-Before that handover, the platform-neutral Linux facts gate and bounded
-`mountinfo` parser/deepest-component selector were implemented and pass **4/4**
+Before that handover, the platform-neutral Linux facts gate, bounded
+`mountinfo` parser/deepest-component selector and exact filesystem-magic/device
+correlation were implemented and pass **6/6**
 on Windows. They admit only complete stable read-write direct-local
 ext4/XFS/Btrfs facts and refuse mapped, RAID, network, overlay, removable,
 virtual, unknown, symbolic, malformed and ambiguous inputs. This reduces the
 Ubuntu discovery surface but is not a Linux host or durability result. Live
-`statfs`/sysfs correlation and retained-handle publication remain open.
+`statfs`/sysfs measurement and retained-handle publication remain open.
 
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:

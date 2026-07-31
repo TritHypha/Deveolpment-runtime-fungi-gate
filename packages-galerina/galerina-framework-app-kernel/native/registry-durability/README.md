@@ -74,9 +74,10 @@ device on exact lowercase ext4, XFS or Btrfs and refuses Device Mapper, RAID,
 network, overlay, removable, virtual and unknown storage. A bounded
 `/proc/self/mountinfo` row parser and deepest component-boundary selector reject
 malformed escapes, controls, non-canonical paths, ambiguous access/separators,
-surplus fields, oversized rows and duplicate deepest mounts. Pure evidence is
-4/4 on Windows; no Linux host fact or durability result is inferred. Live
-`statfs`, sysfs correlation and retained-handle operations await the Ubuntu
+surplus fields, oversized rows and duplicate deepest mounts. Exact filesystem
+magic and device identities must also correlate across before/after records.
+Pure evidence is 6/6 on Windows; no Linux host fact or durability result is
+inferred. Live `statfs`, sysfs measurement and retained-handle operations await the Ubuntu
 Desktop handover.
 
 ## Verification

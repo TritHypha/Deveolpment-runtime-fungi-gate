@@ -70,9 +70,11 @@ read-write, direct-local block-device facts on exact ext4, XFS or Btrfs can
 reach `CANDIDATE`. Device Mapper, RAID, network, overlay, removable, virtual,
 unknown, symbolic, malformed and ambiguous cases refuse. The parser rejects
 unknown escapes, decoded controls, non-canonical paths, ambiguous access modes,
-surplus fields, oversized rows and duplicate deepest mounts. The matrix is
-4/4 on Windows and is deliberately only model evidence. Live `statfs`, sysfs
-device-chain correlation and Linux durability operations remain unexecuted.
+surplus fields, oversized rows and duplicate deepest mounts. Exact filesystem
+magic and major/minor observations must correlate with identical before/after
+mount records. The matrix is 6/6 on Windows and is deliberately only model
+evidence. Live `statfs`, sysfs device-chain measurement and Linux durability
+operations remain unexecuted.
 
 ### macOS
 
