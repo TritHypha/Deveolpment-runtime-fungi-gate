@@ -22,6 +22,7 @@ invented completion percentage. The detailed execution checklist remains
 
 ```mermaid
 flowchart TB
+    AI["🟩 RD-0634-0641 adjudication<br/>B1 null · N3 cost · E11 · prior art"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
@@ -60,8 +61,9 @@ flowchart TB
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
     AB --> AH
-    AG --> AE --> I
-    AG --> AF --> I
+    AG --> AI --> AH
+    AI --> AE --> I
+    AI --> AF --> I
     E --> K --> Q
     E --> S --> L --> H
     Q --> I
@@ -72,7 +74,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI green;
     class X,F red;
     class Q,W,AA,AB,AC amber;
     class H,I,T,AE,AF,AH blue;
@@ -133,6 +135,9 @@ flowchart TB
 | Shape Lab E05 final matched experiment | 🟨 | Remediated SLIDE source `151b316`; graph-responsive N2, exact recipe grammar, fixed N3 cascade and B0/BA/B1/B2/N1/N2/N3 common verifier are executable. Across 99 paired samples × 50 operations, medians are B0 486,060 ns/op, BA 462,480, exact VPEG B1 459,644, B2 1,893,364, N1 912,636, N2 747,348 and N3 1,859,756. Exact paired analysis finds B1 versus BA indeterminate (Hodges–Lehmann −2,379 ns/op; 95% bootstrap CI −4,612 to 1,338; p=0.159069651881237845), while B1 is a candidate faster than B0 in this run (HL −24,823; CI −26,162 to −23,612; p=0.000000000000022890). RD-0623 confirms the arithmetic but records that B0 performs one extra candidate build and that fixed B0→BA→B1 order may bias timing. This establishes neither VPEG advantage over BA nor production/external-runtime performance. Evidence digests are `sha256:684ac1d8f3d2613af82a4fdf95dd3bf9bcb2863fdd8402a020b9b8f35d6d4f8f` and comparison `sha256:ab3c33c7c732e6aa3984f068967060e0f51a3a391a1e62fe8c903d56d7235010` |
 | Shape Lab adversarial-review closure | 🟨 | Claude-08, SEC-05 and SEC-06 were adjudicated into bounded diagnostics/XML, strict typed-array admission, exact prototype/data-descriptor checks, current semantic re-derivation, universal cycle enforcement, honest receipts, hybrid-evidence schema, atlas identity/key mutation coverage, exact paired statistics and the authority-verdict correction. Current source verification is 228/228 tests, 15/15 V2 contract files, 19/19 schemas and 62/62 modules. Files may be internally consistent, but self-hash-only evidence returns K3 `0`; no evidence authority has signed it, so the lane stays amber |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
+| RD-0634 through RD-0638 AI-research5 adjudication | 🟩 | Current B1 is mechanism-equivalent to BA and remains an exact-atlas/null control; typed-hole VPEG needs a BA-miss/VPEG-hit fixture. Current N3 is additive assurance work and not a fast path. Patent separation remains technical rather than legal clearance; independent translation validation is the next D1 direction. E11 retains all proposed controls and uses corrected E04 timings |
+| RD-0639 through RD-0641 learned-compiler/TVM prior art | 🟩 | Primary LLVM/Apache TVM sources confirm learned heuristics, ranking-plus-measurement and fixed-width store features are established. Adopt only as bounded Shape Lab comparators: frozen proposal identity, secret-reduced features, explicit budgets, deterministic D1 re-admission and total-path cost. No external tuner, prediction or hardware timing receives semantic authority |
+| Knowledge Base close | 🟩 | Local KB commit `c55417b` includes the July corpus, security reviews and RD-0634 through RD-0641; its tree had no unmerged or interrupted operation and was clean. No push occurred |
 
 ## Active Galerina work
 

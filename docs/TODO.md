@@ -2,6 +2,27 @@
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
+- **Knowledge Base reconciled:** local KB commit `c55417b` records the complete
+  July research corpus, security reviews, AI-research5 adjudication and
+  RD-0634 through RD-0641. The KB tree was clean with no unmerged operation at
+  this checkpoint; nothing was pushed.
+- **B1/N3 correction:** current E05 B1 uses the same complete identity and
+  immutable-store mechanism as BA, so it remains an exact-atlas/null control.
+  Current N3 is additive assurance work, not a latency fast path. Typed-hole
+  VPEG value requires a BA-miss/VPEG-hit fixture; no verifier may be removed.
+- **NSE-Micro E11 remains research-only:** use the corrected E04 medians and
+  retain exact/rule/tree/prototype/int8/two-bit/five-trit/LUT/compiled-kernel/
+  specialist/B0-race controls. Add a bounded ranker and secret-reduced feature
+  ablation from RD-0639 through RD-0641. Measure the entire hot path and D1
+  admission, not model inference alone.
+- **Prior-art boundary:** learned compiler heuristics, TVM-style cost models
+  and per-store performance features are established techniques. SLIDE's
+  defensible work is the proposal quarantine, identity/budget closure,
+  independent deterministic admission and measured assurance cost. No
+  external tuner or hardware result grants Galerina authority.
+- **Galerina effect:** none yet. These records update the future backend design
+  only; package `.ts`, Node/Wasm paths and staged `.fungi` candidates retain
+  their existing gates until an executable SLIDE contract proves replacement.
 - **Completed outside Galerina:** bounded graph-responsive features, packed
   128x64x32 Tri-1 N2, exact 32-recipe grammar, proposal-only N1/N2/N3 and a
   shared same-implementation current-B0 byte verifier across
