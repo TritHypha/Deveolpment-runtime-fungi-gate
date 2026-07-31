@@ -1,0 +1,61 @@
+@version 1
+/// @file: registry-durability-admission.fungi
+/// @purpose: Pure decision contract for a source-bound native registry-durability candidate.
+///   CANDIDATE means evidence may proceed to review; it never means production admission.
+/// @status: checker-verified contract; native platform adapters and production admission remain unbuilt.
+
+pure flow hostStorageVerdict(
+  volumeKind: String,
+  network: Bool,
+  removable: Bool,
+  overlay: Bool,
+  virtualStorage: Bool
+) -> String
+contract {
+  intent { "Refuse every non-local, removable, overlay, virtual or unknown storage host fact." }
+}
+{
+  if network == true {
+    return "DENY"
+  }
+  if removable == true {
+    return "DENY"
+  }
+  if overlay == true {
+    return "DENY"
+  }
+  if virtualStorage == true {
+    return "DENY"
+  }
+  match volumeKind {
+    "fixed-local" => return "HOST_CANDIDATE"
+    _ => return "DENY"
+  }
+}
+
+pure flow durabilityCandidateVerdict(
+  descriptorValid: Bool,
+  evidenceComplete: Bool,
+  hostVerdict: String,
+  identityMatches: Bool
+) -> String
+contract {
+  intent { "Advance only a complete source-bound candidate; no result from this flow can admit production." }
+}
+{
+  if descriptorValid == false {
+    return "DENY"
+  }
+  if evidenceComplete == false {
+    return "DENY"
+  }
+  match hostVerdict {
+    "HOST_CANDIDATE" => {
+      if identityMatches == true {
+        return "CANDIDATE"
+      }
+      return "DENY"
+    }
+    _ => return "DENY"
+  }
+}

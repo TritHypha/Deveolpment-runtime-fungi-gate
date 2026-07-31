@@ -6,6 +6,9 @@ import {
   type RegistryGeneration,
   type VerifyRegistryGenerationOptions,
 } from "./registry-generation.js";
+import {
+  PRODUCTION_ADMITTED_REGISTRY_DURABILITY_DIGESTS,
+} from "./registry-durability-admission.js";
 
 interface NodeStats {
   readonly dev: number;
@@ -84,8 +87,9 @@ export interface RegistryGenerationLoadOptions {
 const MAX_GENERATION_BYTES = 32 * 1_048_576;
 const ADAPTER_DIGEST = /^sha256:[0-9a-f]{64}$/;
 const ADAPTER_ID = /^galerina\.[a-z0-9]+(?:[.-][a-z0-9]+)*\.v[1-9][0-9]*$/;
-const PRODUCTION_ADMITTED_DURABILITY_ADAPTERS =
-  new Set<string>();
+const PRODUCTION_ADMITTED_DURABILITY_ADAPTERS = new Set<string>(
+  PRODUCTION_ADMITTED_REGISTRY_DURABILITY_DIGESTS,
+);
 const issuedDurabilityAdapters = new WeakSet<object>();
 const productionDurabilityAdapters = new WeakSet<object>();
 const verifiedReceipts = new WeakSet<object>();

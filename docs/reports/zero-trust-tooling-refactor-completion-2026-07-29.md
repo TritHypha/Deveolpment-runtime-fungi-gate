@@ -28,6 +28,13 @@ exploration. The pure `.fungi` terminal fold is checker-clean; app-kernel is
 **180/180**. This closes the model prerequisite only. It does not admit a
 native adapter or prove physical durability on Windows, Linux or macOS.
 
+The native pre-admission shape is also closed: platform, architecture, target,
+filesystem, fixed loader location and source/contract/binary/toolchain/build
+identities must match exact plain records; hostile storage facts refuse.
+Complete evidence reaches `CANDIDATE` only. The immutable production digest
+list is still empty, and app-kernel passes **186/186**. Binary loader proof and
+real platform adapters remain release-blocking.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

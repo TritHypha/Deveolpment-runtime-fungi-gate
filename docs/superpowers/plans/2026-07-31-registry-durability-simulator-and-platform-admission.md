@@ -49,7 +49,7 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   Boolean-only `if`, K3 `check` and exhaustive `match` as applicable.
 - [x] Add a deterministic matrix runner proving control and planted-fault
   cases execute and that no mixed generation can authorize.
-- [ ] Define the source-bound native adapter ABI and empty admission ledger.
+- [x] Define the source-bound native adapter ABI and empty admission ledger.
 - [ ] Add loader/provenance and host/filesystem refusal tests before any
   platform implementation can be considered.
 - [ ] Run focused app-kernel tests, mutation/security gates and the complete

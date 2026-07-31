@@ -71,6 +71,16 @@ session. Every checkpoint must record:
   and app-kernel passes **180/180**. Simulator receipts remain structurally
   unable to authorize production. Native adapter ABI/provenance work and real
   Windows/Linux/macOS crash/power-loss evidence remain open.
+- **Native durability pre-admission checkpoint (2026-07-31):** a closed
+  platform/architecture/target/filesystem descriptor now binds source,
+  contract, binary, toolchain, build recipe and all required evidence digests.
+  Host facts refuse network, removable, overlay, virtual and unknown storage;
+  inherited/accessor/extra/unsorted/mismatched inputs also refuse. Even a
+  complete match yields only `CANDIDATE`. The single immutable production
+  digest list remains empty and drives the store's internal allow-set.
+  App-kernel passes **186/186** and the paired `.fungi` decision contract is
+  check-clean. Actual binary loader/provenance verification and platform
+  adapters remain open.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

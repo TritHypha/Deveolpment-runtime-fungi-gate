@@ -128,6 +128,27 @@ triple and loader path must all be content-bound. SLIDE later replaces that
 bootstrap with the same contract rather than preserving a language-specific
 trusted component.
 
+### Implemented pre-admission contract
+
+The app-kernel now has a closed
+`galerina-registry-durability-adapter/v1` descriptor and
+`galerina.registry.durability.abi.v1` candidate gate. It binds platform,
+architecture, target triple, filesystem allow-list, fixed loader path, binary
+format, source/contract/binary/toolchain/build-recipe digests and five
+evidence digests. Plain own data fields are required: inherited, accessor,
+extra, missing, malformed, unsorted or mismatched records refuse.
+
+Measured host facts separately refuse network, removable, overlay, virtual
+and unknown storage. A fully formed, locally matching record reaches only
+`CANDIDATE`; it cannot mint the private production adapter brand. The one
+production digest list is exported, immutable and empty, and the persistence
+store derives its internal allow-set from that exact list. The paired `.fungi`
+candidate fold is checker-clean. App-kernel is **186/186**.
+
+This closes schema and decision-shape work, not hostile-loader proof. Binary
+re-hashing, loader race/substitution tests, native implementation and physical
+platform evidence remain required before the empty list can change.
+
 ## Deterministic simulation role
 
 A canonical seeded deterministic simulator is required for the registry
