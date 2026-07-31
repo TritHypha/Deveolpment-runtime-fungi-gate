@@ -35,6 +35,14 @@ Complete evidence reaches `CANDIDATE` only. The immutable production digest
 list is still empty, and app-kernel passes **186/186**. Binary loader proof and
 real platform adapters remain release-blocking.
 
+The first native implementation slice is narrower than an adapter: a
+zero-dependency Rust Windows host probe passes **4/4** focused tests and
+classifies the current temporary directory as fixed local NTFS. It refuses
+relative/unavailable paths, reparse targets and ancestors, non-fixed drives,
+remote-storage capability and non-NTFS/ReFS filesystems. This result cannot
+mint a production receipt and includes no write, publication, barrier, reboot
+or power-loss evidence. The empty production allow-list is unchanged.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

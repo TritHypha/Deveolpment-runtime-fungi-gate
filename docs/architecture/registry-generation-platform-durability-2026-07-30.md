@@ -149,6 +149,29 @@ This closes schema and decision-shape work, not hostile-loader proof. Binary
 re-hashing, loader race/substitution tests, native implementation and physical
 platform evidence remain required before the empty list can change.
 
+### Implemented Windows host-probe candidate
+
+The zero-dependency Rust crate under
+`galerina-framework-app-kernel/native/registry-durability` now implements only
+the Windows host-classification precursor. It calls the documented Windows
+volume APIs directly, requires an absolute existing directory, refuses a
+reparse point at the target or any existing ancestor, requires a fixed local
+drive, admits only NTFS/ReFS and refuses the remote-storage capability flag.
+Non-Windows builds return a closed denial.
+
+Fresh focused evidence is **4/4** tests on the Windows 10 development host. A
+test added for a reparse ancestor first failed against the target-only check,
+then passed after every existing ancestor was inspected. The live temp-volume
+observation reached `CANDIDATE` for fixed local NTFS.
+
+This result is non-authorizing. It opens no write handle, loads no production
+binary, publishes nothing, executes no file or metadata barrier and supplies
+no reboot or power-loss evidence. The path preflight also cannot close a
+namespace TOCTOU by itself; the eventual adapter must operate on retained
+least-authority handles and bind its loaded image to the admitted descriptor.
+The production digest list therefore remains empty. DP-RD-0600 records the
+general rule: host classification is not persistence proof.
+
 ## Deterministic simulation role
 
 A canonical seeded deterministic simulator is required for the registry
@@ -204,8 +227,8 @@ public document does not depend on a machine-local sibling-repository path.
 
 ## Zero-trust adoption score
 
-Status: deterministic simulator `ADOPT-WITH-CONTROLS`; native adapter
-`PENDING`
+Status: deterministic simulator `ADOPT-WITH-CONTROLS`; Windows host probe
+`ADOPT-WITH-CONTROLS` as non-authorizing telemetry; native adapter `PENDING`
 
 The object-capability seal is adopted because its negative/control evidence is
 complete and it grants no production authority. The deterministic simulator
@@ -216,9 +239,11 @@ structurally non-authorizing. The decision is **ADOPT-WITH-CONTROLS**: keep the
 model bounded, preserve anti-vacuity controls and never substitute it for
 physical host evidence.
 
-The native cross-platform adapter proposal is not scored yet: filesystem
-support matrices, binary provenance, hostile-loader tests and power-loss
-evidence are incomplete.
+The Windows host probe scores **7.7/10** for its strictly non-authorizing
+role: it has strong authority separation and refusal coverage but no loader,
+write, barrier, crash or power-loss evidence. The native cross-platform
+adapter proposal is not scored yet: filesystem support matrices, binary
+provenance, hostile-loader tests and power-loss evidence are incomplete.
 
 Hard vetoes:
 

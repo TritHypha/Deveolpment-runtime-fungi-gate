@@ -50,8 +50,15 @@ Windows, Linux and macOS crash semantics. The repository will contain:
 - [x] Add a deterministic matrix runner proving control and planted-fault
   cases execute and that no mixed generation can authorize.
 - [x] Define the source-bound native adapter ABI and empty admission ledger.
+- [x] Add and test a zero-dependency Windows host-probe candidate that refuses
+  relative/unavailable paths, reparse targets/ancestors, non-fixed drives,
+  remote-storage capability and non-NTFS/ReFS filesystems. Its result is
+  explicitly non-authorizing; 4/4 focused Rust tests pass on the Windows 10
+  development host.
 - [ ] Add loader/provenance and host/filesystem refusal tests before any
-  platform implementation can be considered.
+  platform persistence implementation can be considered. Host classification
+  is now tested; binary re-hashing, retained-handle loading and substitution
+  resistance remain open.
 - [ ] Run focused app-kernel tests, mutation/security gates and the complete
   Galerina fixed point.
 - [ ] Update TODO, roadmap, completion report and Knowledge Base evidence with
@@ -68,3 +75,8 @@ Windows, Linux and macOS crash semantics. The repository will contain:
 
 An absent row, unsupported filesystem, network share, virtual/overlay storage
 or unknown device is a refusal, not a portability assumption.
+
+The current Windows evidence is deliberately smaller than the production row:
+the native probe observed a fixed local NTFS candidate and passed 4/4 focused
+tests, including reparse-ancestor refusal. It performs no write, publication,
+barrier or loader operation and supplies no crash or power-loss evidence.

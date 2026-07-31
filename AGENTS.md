@@ -83,6 +83,13 @@ intent → governed execution plan → coordinated compute → audit proof
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
 > `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+>
+> **Registry durability checkpoint (2026-07-31):** the production native
+> adapter allow-list remains empty. A zero-dependency Windows host probe passes
+> 4/4 focused Rust tests and measures only fixed local NTFS/ReFS candidate
+> facts while refusing reparse ancestry and unsupported storage. It is
+> non-authorizing and supplies no write, loader, barrier, reboot or power-loss
+> proof. Do not infer production durability from this probe.
 
 ## Grammar — Current v0.1 Flow Forms
 

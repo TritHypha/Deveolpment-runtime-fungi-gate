@@ -81,6 +81,16 @@ session. Every checkpoint must record:
   App-kernel passes **186/186** and the paired `.fungi` decision contract is
   check-clean. Actual binary loader/provenance verification and platform
   adapters remain open.
+- **Windows durability host-probe checkpoint (2026-07-31):** a
+  zero-dependency Rust candidate now measures only absolute direct directories
+  on fixed local NTFS/ReFS and refuses target/ancestor reparse points,
+  unavailable paths, remote drives, remote-storage capability and unlisted
+  filesystems. Focused evidence is **4/4** on the Windows 10 development host;
+  the live temp volume measured fixed local NTFS. This is non-authorizing
+  telemetry: it performs no write, publish, barrier, loader, restart or
+  physical crash operation. Production admission remains empty. Next is the
+  content-bound binary loader/provenance verifier, then retained-handle native
+  persistence and real Windows/Linux/macOS crash matrices.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

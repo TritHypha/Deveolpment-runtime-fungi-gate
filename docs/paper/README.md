@@ -3,7 +3,7 @@
 This folder holds Galerina's publishable scholarly artifacts, consolidated 2026-07-09 from
 `docs/scientific-papers/`, the ZTF KB `defensive-publications/`, and the root `Galerina-ScientificPapers/` stray:
 
-- [`defensive-papers/`](defensive-papers/) — all **44** defensive-publication notes (timestamped prior-art records, novelty *disclaimed*; several are design-stage disclosures, marked as such)
+- [`defensive-papers/`](defensive-papers/) — all **45** defensive-publication notes (timestamped prior-art records, novelty *disclaimed*; several are design-stage disclosures, marked as such)
 - [`scientific-papers/`](scientific-papers/) — eprint-shaped drafts (currently **8**): 1 superseded measured-negative draft + **7** harness-backed construction disclosures (novelty disclaimed; 3 added 2026-07-16, 4 added 2026-07-22)
 
 **Read the standard before adding anything here.**
@@ -50,6 +50,12 @@ Any document in this folder follows the conventions below. These are good-practi
 ---
 
 ## 3. Index of the corpus
+
+### Defensive publication added 2026-07-30
+
+| Document | Tier | Summary |
+|---|---|---|
+| [`dp-rd-0600-host-classification-is-not-persistence-proof.md`](defensive-papers/dp-rd-0600-host-classification-is-not-persistence-proof.md) | **defensive-pub** | **DP-RD-0600** — a bounded host/filesystem probe is a deny-capable preflight, never persistence authority. The two-stage construction keeps binary/ABI provenance, retained handles, write/barrier/exclusive-publication/re-open and real crash evidence behind a separate admitted primitive. The zero-dependency Windows probe is 4/4; it measures only fixed local NTFS/ReFS candidate facts and leaves production admission empty. |
 
 ### Defensive publications (`defensive-papers/`) — formerly `docs/scientific-papers/`
 
