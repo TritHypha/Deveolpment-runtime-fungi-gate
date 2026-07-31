@@ -3,6 +3,17 @@
 Status: host, directory-barrier and generation-publication candidates;
 non-authorizing
 
+The RD-0601 first-production-profile proof is also implemented. An optimized
+`registry-durability-static-profile` executable calls this crate through a
+compile-time link and reports the SHA-256 identities of the exact embedded
+adapter source and authoritative `.fungi` contract, the closed ABI, release
+profile, absence of fault injection and absence of an external adapter loader.
+The repository verifier independently re-hashes both sources and the resulting
+executable, then repeats the run from a directory containing a hostile decoy
+`registry-durability.node`; the result must remain byte-identical. The receipt
+is deliberately `productionAuthorizing: false`: signing the host and completing
+the named platform crash/reboot/power-loss matrices remain separate gates.
+
 This zero-dependency Rust crate measures whether a Windows directory is on a
 fixed local NTFS or ReFS volume. It is a deliberately narrow precursor to a
 registry durability adapter. A `Candidate` verdict means only that the path
@@ -66,6 +77,7 @@ cargo fmt --check
 cargo test --locked
 cargo test --locked --all-features
 cargo build --locked --release
+node ../../../../scripts/verify-registry-static-profile.mjs
 ```
 
 The focused test suite covers the pure filesystem/drive matrix, the live local

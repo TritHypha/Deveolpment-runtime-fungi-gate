@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8705,
-    "devTools": 135,
+    "devTools": 136,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -2398,6 +2398,16 @@
       ]
     },
     {
+      "name": "verify-registry-static-profile.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion"
+      ]
+    },
+    {
       "name": "lint-conventions.mjs",
       "category": "lint",
       "purpose": "TASK-ENV-001: the umbrella convention linter (owner 2026-06-22, STRICT).",
@@ -3191,6 +3201,7 @@
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
+      "verify-registry-static-profile.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
       "component-health.mjs",

@@ -10,10 +10,16 @@ crate-type = ["rlib", "cdylib"]
 
 [features]
 fault-injection = []
+static-profile-proof = []
 
 [[bin]]
 name = "registry-durability-fault-worker"
 path = "src/bin/registry-durability-fault-worker.rs"
 required-features = ["fault-injection"]
+
+[[bin]]
+name = "registry-durability-static-profile"
+path = "src/bin/registry-durability-static-profile.rs"
+required-features = ["static-profile-proof"]
 
 [dependencies]

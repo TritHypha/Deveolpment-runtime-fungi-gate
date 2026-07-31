@@ -2,6 +2,8 @@
 
 Date: 2026-07-31
 Branch: `codex/galerina-beta-v1-completion`
+Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
+package lane **98/98** with **8,735** unit tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -30,8 +32,9 @@ flowchart TB
     E["🟩 Final fixed point<br/>84/84 strict · 85/85 exhaustive"]
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
+    SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
-    F["🟥 Beta-v1 release gate<br/>terminal fixed-point rerun"]
+    F["🟥 Beta-v1 release admission<br/>cross-platform crash and power-loss evidence"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
@@ -57,7 +60,7 @@ flowchart TB
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> TG --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> X --> F --> H --> I --> TG --> T --> J
     Z --> E
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
@@ -75,13 +78,23 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI,SI green;
     class X,F red;
     class Q,W,AA,AB,AC,AH,TG amber;
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
 ```
+
+The diagram is dependency-ordered, not a claim that all research waits for the
+release path. Galerina's repository-local fixed point is green. Beta release
+admission remains red because a simulator, process-kill test or one Windows 10
+NTFS host cannot prove Windows 11, Linux, macOS, reboot or physical power-loss
+semantics. RD-0601 has removed the impossible content-bound N-API/path-loader
+task: the first production profile will statically link the admitted adapter
+into the signed host. Its repository-local proof is now implemented and
+independently re-hashed; signed-host admission and platform evidence remain
+open. The closed content-bound SLIDE linker is the later modular replacement.
 
 ## Verified progress
 
@@ -97,8 +110,8 @@ flowchart TB
 | Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
 | Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
 | Deterministic activation fault model | 🟩 | Seed-ordered fifteen-boundary simulator, canonical replay receipt, control plus planted-fault matrix, budget/unreachable/ambiguous-input refusal and checker-clean `.fungi` terminal fold are implemented. App-kernel 180/180. Simulation is deliberately non-authorizing and cannot replace platform crash evidence |
-| Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on content-bound executable loading, hostile parent-namespace resistance, Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
-| Native executable-loader identity | 🟥 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. A post-load hash is too late because initialization may already have run. RD-0601 selects a statically linked first production profile and a closed content-bound SLIDE linker as the modular successor. Pathname loading remains development-only; implementation and cross-platform proof remain red, but no owner adjudication is pending |
+| Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on the statically linked signed-host proof, hostile parent-namespace resistance, and Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
+| Native executable identity | 🟨 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. RD-0601 therefore selects a statically linked first profile and a closed content-bound SLIDE linker as its modular successor. The optimized static-profile binary now binds the embedded adapter source, authoritative `.fungi` contract, ABI and release profile; an independent Node verifier re-hashes those sources and the executable, and a hostile external `.node` decoy cannot change its result. The proof is non-authorizing until the host executable is signed and the named platform matrices pass. Pathname loading remains development-only; no owner adjudication is pending |
 | RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
 | RD-0623 B1/B0 and Tri-1 deep audit | 🟩 | Independent raw-sample arithmetic reproduces both n=99 paired comparisons and the five-trit maths. Source inspection shows B0 pays for one candidate semantic build before the same two common verifier builds; B1 replaces only that candidate build with exact reuse. Fixed lane order remains a possible confound. The comparison proves bounded reuse pressure, not VPEG advantage over BA and not a packed Tri-1 speed result |
 | RD-0624 neuromorphic patent proximity | 🟩 | Preliminary claim-element engineering screen finds low current proximity between input-dependent fixed-topology proposal-only N2/deterministic VPEG and the asserted dynamic spiking neuron/synapse array claims. Learned neural-subgraph extraction/implantation, dynamic neural topology, spiking delays/refractory state and actuator loops are stop-and-review triggers. This is not legal clearance; formal FTO remains a public-production gate |
@@ -158,7 +171,9 @@ remain running differential shadows; no `.ts` retirement has started.
 The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
-   reproducible while the final registry artifact changes.
+   reproducible while the final registry artifact changes. Current fresh
+   evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
+   with 8,735 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
@@ -177,9 +192,14 @@ The remaining sequence is:
    Persistence now requires a module-branded adapter object; the public
    host-evidence factory cannot mint the separate production brand, and a
    copied digest plus structurally similar callback is refused.
-   **Still required:** admitted platform durability adapters and crash/fault
-   proof through least-authority custody before any real owner-key rotation is
-   authorized.
+   **Completed non-authorizing proof:** the RD-0601 statically linked profile
+   binds the exact adapter source, authoritative `.fungi` contract, ABI and
+   release build without an external `.node` loader. Its executable is
+   independently re-hashed and a hostile loader decoy cannot alter the result.
+   **Still required:** signed-host and admitted platform durability adapters
+   and Windows 10/11, Debian/Ubuntu, Fedora/Mint and macOS crash/reboot/
+   power-loss evidence through least-authority custody before any real
+   owner-key rotation is authorized.
    After beta, rebuild the reusable lifecycle mechanism in independent SLIDE
    `.fungi`; Tower Citizen remains the Galerina policy adapter and trust
    domains/keys remain separate.

@@ -4,6 +4,7 @@
 ///   CANDIDATE means evidence may proceed to review; it never means production admission.
 /// @status: checker-verified contract; native platform adapters and production admission remain unbuilt.
 
+/// Classify measured storage conservatively; every non-direct or unknown host exits denied.
 pure flow hostStorageVerdict(
   volumeKind: String,
   network: Bool,
@@ -33,6 +34,7 @@ contract {
   }
 }
 
+/// Fold complete descriptor, evidence, host and identity facts into a non-authorizing candidate.
 pure flow durabilityCandidateVerdict(
   descriptorValid: Bool,
   evidenceComplete: Bool,
@@ -58,4 +60,50 @@ contract {
     }
     _ => return "DENY"
   }
+}
+
+/// Admit only the exact release-linked proof shape while preserving non-authorizing status.
+pure flow staticLinkProfileVerdict(
+  evidenceComplete: Bool,
+  schemaMatches: Bool,
+  sourceMatches: Bool,
+  contractMatches: Bool,
+  abiMatches: Bool,
+  releaseBuild: Bool,
+  staticallyLinked: Bool,
+  externalLoaderPresent: Bool,
+  faultInjectionPresent: Bool
+) -> String
+contract {
+  intent { "Keep static-link proof non-authorizing and refuse every incomplete, substituted, dynamic, debug or fault-enabled profile." }
+}
+{
+  if evidenceComplete == false {
+    return "INDETERMINATE"
+  }
+  if schemaMatches == false {
+    return "DENY"
+  }
+  if sourceMatches == false {
+    return "DENY"
+  }
+  if contractMatches == false {
+    return "DENY"
+  }
+  if abiMatches == false {
+    return "DENY"
+  }
+  if releaseBuild == false {
+    return "DENY"
+  }
+  if staticallyLinked == false {
+    return "DENY"
+  }
+  if externalLoaderPresent == true {
+    return "DENY"
+  }
+  if faultInjectionPresent == true {
+    return "DENY"
+  }
+  return "CANDIDATE_NON_AUTHORIZING"
 }

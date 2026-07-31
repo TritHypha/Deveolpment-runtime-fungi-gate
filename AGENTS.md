@@ -78,18 +78,18 @@ intent → governed execution plan → coordinated compute → audit proof
 > **Current beta-v1 checkpoint (2026-07-31):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
 > and green (`galerina-core-compiler` 5,752/5,752; whole suite 98/98 packages,
-> 8,705 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
+> 8,735 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
 > `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 >
 > **Registry durability checkpoint (2026-07-31):** the production native
-> adapter allow-list remains empty. A zero-dependency Windows host probe passes
-> 4/4 focused Rust tests and measures only fixed local NTFS/ReFS candidate
-> facts while refusing reparse ancestry and unsupported storage. It is
-> non-authorizing and supplies no write, loader, barrier, reboot or power-loss
-> proof. Do not infer production durability from this probe.
+> adapter allow-list remains empty. The zero-dependency Windows candidate
+> passes 7/7 focused host/barrier/publication tests and a separate 7/7
+> process-termination boundary matrix on this Windows 10 NTFS host. It remains
+> non-authorizing and supplies no kernel-crash, reboot or power-loss proof. Do
+> not infer production durability from this evidence.
 >
 > A separate non-executing artifact inspector passes 7/7 and binds one
 > fixed-path, single-link PE/ELF/Mach-O candidate to its architecture and exact
@@ -100,8 +100,15 @@ intent → governed execution plan → coordinated compute → audit proof
 > **Loader constraint:** do not implement pre-hash + `process.dlopen(path)` +
 > post-hash as production authority. Standard executable loading is path-based;
 > Windows `LoadLibraryExW` requires `hFile=NULL`, so module initialization can
-> precede a post-load identity check. Continue non-authorizing syscall evidence
-> while the linked-runtime / narrowed-trust / SLIDE-order decision is open.
+> precede a post-load identity check. RD-0601 resolves the choice: use a
+> statically linked first profile and later replace it with the closed
+> content-bound SLIDE linker.
+>
+> The optimized static-profile proof and independent verifier are implemented.
+> They bind the exact embedded adapter source, authoritative `.fungi` contract,
+> ABI, release profile and executable digest, and prove that a hostile external
+> `.node` decoy cannot change the result. The receipt is non-authorizing;
+> signed-host admission and the named platform evidence remain mandatory.
 >
 > The native Windows durability candidate is 7/7: on this Windows 10
 > fixed-local NTFS host, the direct-directory `FlushFileBuffers` call and

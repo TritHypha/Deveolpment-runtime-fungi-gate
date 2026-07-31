@@ -258,6 +258,30 @@ addon. The current choices are a linked-in trusted runtime primitive, an
 explicitly narrowed OS/code-signing/ACL trust claim, or a change to the
 Galerina-before-SLIDE release order. None is silently selected here.
 
+### Implemented statically linked profile proof
+
+RD-0601 selects the linked-runtime option for beta v1. The optimized
+`registry-durability-static-profile` executable calls the adapter through the
+Rust link graph rather than importing a `.node` pathname. The linked crate
+embeds the exact adapter source and authoritative `.fungi` contract, computes
+their SHA-256 identities, binds the closed ABI and refuses debug,
+fault-injection, dynamic-loader or substituted claims.
+
+`scripts/verify-registry-static-profile.mjs` is a second implementation of the
+source/contract hashes. It builds the release profile, requires one direct
+regular executable under the release directory, compares every closed output
+field, hashes the resulting executable and repeats execution from a polluted
+working directory containing a hostile `registry-durability.node` decoy. The
+two results must be byte-identical.
+
+This proves the adapter is part of the measured release binary and does not
+depend on a later mutable adapter pathname. It does not prove that the
+operating system launched an independently authenticated host executable,
+does not sign that executable, and does not prove filesystem durability. The
+emitted receipt therefore says `productionAuthorizing: false`; the production
+digest set stays empty until signed-host admission and the named platform
+crash/reboot/power-loss matrices are complete.
+
 The detailed evidence and independent-review prompt are
 `docs/research/registry-native-loader-content-identity-limit-2026-07-31.md`
 and

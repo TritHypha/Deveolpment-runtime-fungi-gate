@@ -522,10 +522,19 @@ current remediated source, measurements and assurance boundary.
   Native initialization can therefore execute before a post-load identity
   check; pre/post hashes do not prove authenticated bytes equal executed
   bytes. Dynamic path loading scores **4.6/10 / REJECT for production
-  authority** under the current threat model. The independent review prompt is
-  ready. Continue non-authorizing syscall/recovery implementation while the
-  eventual linked-runtime versus narrowed-threat versus SLIDE-order decision
-  remains an owner architecture question.
+  authority** under the current threat model. RD-0601 resolves the architecture
+  question: use a statically linked first production profile, then replace it
+  with the closed content-bound SLIDE linker. The optimized static-profile
+  harness and independent Node verifier are implemented. Exact embedded Rust
+  source, authoritative `.fungi` contract, ABI, release profile and absence of
+  an external loader are checked; a hostile `.node` decoy cannot affect the
+  result. The receipt remains explicitly non-authorizing until the host is
+  signed and the platform crash/reboot/power-loss matrices are complete.
+- **Current native execution task:** extend the same closed adapter contract to
+  a real Ubuntu Desktop host lane, then the remaining named platforms. Docker
+  and virtual-machine results are useful portability evidence but cannot be
+  relabelled as bare-host durability. No owner decision or key action is
+  currently required.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

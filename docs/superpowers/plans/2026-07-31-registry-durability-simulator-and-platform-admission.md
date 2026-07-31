@@ -78,15 +78,21 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   compares stable open-handle metadata, validates PE/ELF/Mach-O architecture
   markers and re-derives the exact binary digest. Focused evidence is 7/7 and
   its `.fungi` terminal contract is 0 errors/0 warnings.
-- [ ] Add the actual content-bound N-API loader/export proof and retained-handle
-  substitution resistance before any platform persistence implementation can
-  be considered. The inspector returns only `CANDIDATE`, never executes bytes
-  and cannot prove ABI behavior. Primary-source review found the standard
-  dynamic-loader route cannot meet exact-handle execution on Windows:
-  `LoadLibraryExW` requires `hFile=NULL`. Do not implement pre-hash/path-load/
-  post-hash as authority; continue syscall evidence while owner adjudicates a
-  linked runtime, narrowed OS-trust boundary or changed SLIDE release order.
-- [ ] Run focused app-kernel tests, mutation/security gates and the complete
+- [x] Implement the RD-0601 statically linked first-production-profile proof.
+  The proof must call the adapter through a compile-time link, embed and hash
+  the exact adapter source plus authoritative `.fungi` contract, bind the ABI
+  and build profile, state that no external adapter loader is present, and
+  refuse any substituted evidence. It remains non-authorizing until the signed
+  host executable and required platform crash matrices are admitted. A
+  content-bound N-API loader is deliberately not a task: primary-source review
+  proved the standard path cannot meet exact-handle execution on Windows
+  because `LoadLibraryExW` requires `hFile=NULL`. Do not implement pre-hash/
+  path-load/post-hash authority. SLIDE's closed content-bound linker remains
+  the modular successor after Galerina beta v1.
+- [x] Add hostile tests proving that an external `.node` file, changed claimed
+  digest, changed ABI, debug/fault build and malformed receipt cannot become
+  linked-profile evidence.
+- [x] Run focused app-kernel tests, mutation/security gates and the complete
   Galerina fixed point.
 - [ ] Update TODO, roadmap, completion report and Knowledge Base evidence with
   exact implemented versus unverified boundaries.
