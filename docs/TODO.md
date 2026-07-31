@@ -2,27 +2,41 @@
 
 ### Independent SLIDE Shape Lab E05 synchronization - 2026-07-31
 
-- **Completed outside Galerina:** bounded 128-byte graph features, packed
+- **Completed outside Galerina:** bounded graph-responsive features, packed
   128x64x32 Tri-1 N2, exact 32-recipe grammar, proposal-only N1/N2/N3 and a
-  shared current-B0 verifier across B0/BA/B1/B2/N1/N2/N3.
-- **Fresh evidence:** clean SLIDE source `8d4a0aa`; complete SLIDE 205/205,
-  V2 contract 15/15, 17 schemas, 2,450 artifact checks, 2,100 component checks
-  and 4,900 verifier comparisons. Evidence digest
-  `sha256:530a97704c4b308e2a9ddaf068b5cfed7e239a9a2461073dfc3faf156b7731e0`.
-- **Performance:** B0 457,498 ns/op; BA 448,478; B1 440,738; B2 1,887,394;
-  N1 865,368; N2 694,192; N3 1,675,196. Exact VPEG is the fastest final
-  lane by a narrow 1.038x over B0; all neural lanes remain slower.
+  shared same-implementation current-B0 byte verifier across
+  B0/BA/B1/B2/N1/N2/N3.
+- **Adversarial-review closure:** Claude-08 and SEC-05 findings were converted
+  into bounded diagnostics/XML, strict typed-array admission, exact prototype
+  and data-descriptor checks, universal semantic/cycle re-derivation, honest
+  receipt labels, inactive hybrid-evidence schema, atlas identity/key mutation
+  tests and a paired-statistics sidecar. Source verification is 226/226, V2
+  contract 15/15, schemas 19/19 and modules 62/62.
+- **Fresh evidence:** clean SLIDE source `151b316`; E05 uses 99 paired samples
+  of 50 operations. Evidence digest
+  `sha256:684ac1d8f3d2613af82a4fdf95dd3bf9bcb2863fdd8402a020b9b8f35d6d4f8f`;
+  comparison digest
+  `sha256:ab3c33c7c732e6aa3984f068967060e0f51a3a391a1e62fe8c903d56d7235010`.
+- **Performance:** B0 486,060 ns/op; BA 462,480; B1 459,644; B2 1,893,364;
+  N1 912,636; N2 747,348; N3 1,859,756. B1 versus BA is indeterminate
+  (Hodges–Lehmann -2,379 ns/op; 95% bootstrap CI -4,612 to 1,338;
+  p=0.159069651881237845). B1 is a candidate faster than B0 in this run
+  (HL -24,823; CI -26,162 to -23,612; p=0.000000000000022890). No general
+  VPEG speedup or production claim follows.
 - **Representation:** N2's 10,240 ternary weight bytes pack to exactly 2,048
   bytes. The 5.000x density result is not total residency or a speed claim.
+- **Evidence boundary:** current evidence is internally consistent and
+  self-hashed only. It has no independent verifier or evidence-authority
+  signature and therefore remains amber.
 - **Galerina effect:** none yet. The final reports and SVG are experimental
   evidence, not permission to activate SLIDE, retire TypeScript/npm/Wasm, or
   publish an external-runtime comparison.
 - **Authoritative paths:** `../SLIDE/docs/reports/`,
   `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg` and
   `../SLIDE/research/shape-lab/results/e05-final-shape-latest.*`.
-- **Next:** independent local-Claude review, then continue the general
-  executable SLIDE backend and only later the Galerina integration gate. No
-  owner-only blocker.
+- **Next:** continue the general executable SLIDE backend and only later the
+  Galerina integration gate. An independent evidence authority and verifier
+  remain future gates; no owner-only decision blocks the experiment itself.
 
 ## Continuity rule
 
@@ -35,12 +49,15 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
 guessing.
 
-### Shape Lab E04 packed and learned controls synchronization - 2026-07-31
+### Shape Lab E04 pre-review checkpoint - 2026-07-31
+
+This section is retained as historical evidence. The first section records the
+current remediated source, measurements and assurance boundary.
 
 - **Implemented outside Galerina:** canonical five-trit packing; matched 64x32
   int8 and packed Tri-1 reflex models; bounded rule, prototype, energy and
   cascade proposals; aggregate work/memory budgets; non-authorizing capsules;
-  and independent current-B0 verification.
+  and same-implementation current-B0 verification.
 - **Fresh evidence:** complete SLIDE 181/181, focused E04 18/18, fifteen
   schemas parse, and 6,300 exact checks verify. Clean measured source is
   `f9bc3f6`; evidence digest is
@@ -61,15 +78,17 @@ guessing.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E04-PACKED-LEARNED-CONTROLS-COMPLETION-REPORT.md`
   and `../SLIDE/research/shape-lab/results/e04-packed-learned-latest.*`.
-- **Current work:** bounded E05/N2 NSE-Synthesis. Final engine reports, final
-  measured SVG and the comprehensive local-Claude prompt wait for N2 evidence.
-  No owner-only blocker.
+- **Superseded checkpoint:** E05 and its independent review are now complete;
+  the first section of this TODO carries the current evidence and next gate.
 
-### Shape Lab E03 exact typed-boundary checkpoint - 2026-07-31
+### Shape Lab E03 pre-review typed-boundary checkpoint - 2026-07-31
+
+This section is retained as historical evidence. The first section records the
+current remediated source, measurements and assurance boundary.
 
 - **Implemented outside Galerina:** deterministic fixed/dynamic/indeterminate
   analysis, exact value-free plan identity, planner ownership, ephemeral
-  signed-32-bit/Boolean/K3 binding validation and the B3 independent-B0 lane.
+  signed-32-bit/Boolean/K3 binding validation and the B3 current-B0 lane.
 - **Measured evidence:** clean SLIDE source `3fa32fe`; 4,200 exact checks on a
   32-fixed/2-residual graph. B0 866,983 ns/op; BA 734,593; B1 716,544; B2
   48,603,963; exact B3 5,594,192; renamed-family B3 79,920,639. Exact B3 is
@@ -88,8 +107,8 @@ guessing.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E03-TYPED-BOUNDARY-CHECKPOINT-REPORT.md` and
   `../SLIDE/research/shape-lab/results/e03-typed-boundary-latest.*`.
-- **Current work:** E04 is now complete and retained; E05/N2 is next. No
-  owner-only blocker.
+- **Superseded checkpoint:** E04 and E05 are now complete and retained; the
+  first section of this TODO carries the current evidence and next gate.
 
 ### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
 
@@ -114,9 +133,8 @@ guessing.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E02-STRUCTURAL-RETRIEVAL-COMPLETION-REPORT.md`
   and `../SLIDE/research/shape-lab/results/e02-structural-latest.*`.
-- **Next independent chapter:** E03 typed-parameter boundary discovery. It
-  must compare reusable verified work with B0, BA, B1 and B2 and preserve all
-  `MATCH`, `MISS` and `INDETERMINATE` outcomes. There is no owner-only blocker.
+- **Completed successor:** E03, E04 and E05 now preserve B0, BA, B1 and B2 as
+  controls. The first section of this TODO carries the current evidence.
 
 ### Shape Lab E01 roadmap synchronization - 2026-07-31
 
@@ -137,9 +155,8 @@ guessing.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E01-DURABLE-ATLAS-COMPLETION-REPORT.md`,
   `../SLIDE/research/shape-lab/results/e01-durable-latest.*` and this roadmap.
-- **Next independent chapter:** specify E02 bounded deterministic structural
-  candidate retrieval. It remains proposal-only until exact reconstruction
-  and the B0/action-cache/E01 controls pass. There is no owner-only blocker.
+- **Completed successor:** bounded E02 through E05 are now retained as
+  non-authorizing experiments. The first section carries the current gate.
 
 ### Pause boundary - 2026-07-31
 
