@@ -325,6 +325,64 @@ pure flow guarded(score: Int) -> Int {
   });
 });
 
+describe("Symbol resolver — for-in bindings", () => {
+  it("binds the iteration variable in the where guard and loop body", () => {
+    const { ast } = parse(`
+pure flow sumPositive(xs: Array<Int>) -> Int {
+  mut total: Int = 0
+  for value in xs where value > 0 {
+    total = total + value
+  }
+  return total
+}
+`);
+    const result = resolveSymbols(ast);
+    const undeclared = result.diagnostics.filter((d) => d.code === "FUNGI-NAME-001");
+    assert.deepEqual(
+      undeclared,
+      [],
+      `for-in binding should resolve, got: ${undeclared.map((d) => d.message).join("; ")}`,
+    );
+  });
+
+  it("does not leak the iteration variable after the loop", () => {
+    const { ast } = parse(`
+pure flow leak(xs: Array<Int>) -> Int {
+  for value in xs {
+    let observed = value
+  }
+  return value
+}
+`);
+    const result = resolveSymbols(ast);
+    assert.ok(
+      result.diagnostics.some(
+        (d) => d.code === "FUNGI-NAME-001" && d.message.includes("'value'"),
+      ),
+      "the loop binding must not escape its loop scope",
+    );
+  });
+
+  it("still reports a genuine typo inside the loop", () => {
+    const { ast } = parse(`
+pure flow typo(xs: Array<Int>) -> Int {
+  mut total: Int = 0
+  for value in xs {
+    total = total + vaule
+  }
+  return total
+}
+`);
+    const result = resolveSymbols(ast);
+    assert.ok(
+      result.diagnostics.some(
+        (d) => d.code === "FUNGI-NAME-001" && d.message.includes("'vaule'"),
+      ),
+      "a typo inside the loop must remain a fail-closed diagnostic",
+    );
+  });
+});
+
 // ── Symbol resolver integration ───────────────────────────────────────────────
 
 describe("Symbol resolver — imported value names do not emit FUNGI-NAME-001", () => {

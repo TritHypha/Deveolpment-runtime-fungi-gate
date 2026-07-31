@@ -38,7 +38,6 @@ const COMPILER_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");      
 const REPO_ROOT = join(COMPILER_ROOT, "..", "..");                               // repo root (holds galerina.mjs)
 const INTERNAL_CLI = join(COMPILER_ROOT, "dist", "cli.js");
 const BUNDLED_CLI = join(REPO_ROOT, "galerina.mjs");
-const isWin = process.platform === "win32";
 const PER_BUILD_MS = 120_000;
 
 const tmpRoot = mkdtempSync(join(tmpdir(), "fungi-sbm-"));
@@ -138,8 +137,8 @@ function mintedManifest(dir) {
 
 /** Internal CLI builds a DIRECTORY (not a bare file). extraArgs e.g. ["--production"]. */
 function buildInternal(dir, extraArgs = []) {
-  return spawnSync("node", [INTERNAL_CLI, "build", ...extraArgs, dir],
-    { cwd: REPO_ROOT, encoding: "utf8", timeout: PER_BUILD_MS, shell: isWin });
+  return spawnSync(process.execPath, [INTERNAL_CLI, "build", ...extraArgs, dir],
+    { cwd: REPO_ROOT, encoding: "utf8", timeout: PER_BUILD_MS, shell: false });
 }
 
 /** Bundled CLI accepts a bare file path; cwd = the isolated dir so its dev key + build/
@@ -148,8 +147,8 @@ function buildBundled(dir) {
   // Scrub any inherited production profile so auto-provisioning stays enabled.
   const env = { ...process.env };
   delete env.GALERINA_PROFILE;
-  return spawnSync("node", [BUNDLED_CLI, "build", "case.fungi"],
-    { cwd: dir, encoding: "utf8", timeout: PER_BUILD_MS, shell: isWin, env });
+  return spawnSync(process.execPath, [BUNDLED_CLI, "build", "case.fungi"],
+    { cwd: dir, encoding: "utf8", timeout: PER_BUILD_MS, shell: false, env });
 }
 
 // entry × mode grid. Each entry is [label, runner].

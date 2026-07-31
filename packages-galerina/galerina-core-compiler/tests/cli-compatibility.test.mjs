@@ -356,7 +356,13 @@ describe("CLI compatibility — platform awareness", () => {
   });
 
   it("npm is available (required for npm install -g @galerina/cli)", () => {
-    const r = spawnSync("npm", ["--version"], { encoding: "utf8", shell: isWin, timeout: 5000 });
+    const npmEntry = process.env.npm_execpath;
+    assert.ok(npmEntry, "npm_execpath must identify the npm CLI under npm test");
+    const r = spawnSync(process.execPath, [npmEntry, "--version"], {
+      encoding: "utf8",
+      shell: false,
+      timeout: 5000,
+    });
     assert.ok(r.status === 0 || r.error === undefined, "npm should be available");
   });
 

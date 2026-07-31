@@ -42,8 +42,17 @@ the current branch.
   `galerina-target-native` is absent on this branch. The staged file passes the
   current strict frontend with zero errors and zero governance warnings.
 - **Still quarantined:** none of the four staged candidates has executable
-  SLIDE parity. Target GPU and target native also lack both candidate-status
-  and test dossiers; target Wasm lacks its test plan and parity vectors.
+  SLIDE parity or governed admission. GPU, native and Wasm now have complete
+  status/vector/plan dossiers, and the audit refuses missing or empty dossier
+  parts. A dossier is evidence to review; it is not execution authority.
+- **Confirmed and fixed in staging:** diagnostic report builders no longer
+  discard accumulated diagnostics. Indexed paths are preserved, impossible
+  `Array.get` misses trap, unknown enum states trap, and manifest exports must
+  name real declared flows.
+- **Confirmed and fixed in the compiler:** `for x in xs` parsed and executed
+  but its resolver failed to bind `x`. A lexical resolver scope plus three
+  RED-before-GREEN tests now prove correct visibility, non-leakage and typo
+  preservation.
 - **Architecture conflict resolved:** the 16-file “floor” is a bounded
   bootstrap TCB, not a permanent TypeScript exemption. It may retire only
   after an independently admitted SLIDE replacement carries equivalent
@@ -54,6 +63,7 @@ the current branch.
 | Check | Result |
 |---|---|
 | Staging topology audit | PASS |
+| Staging audit planted controls | 10/10 |
 | `galerina-substrate-math/src/index.fungi --strict-types` | 0 errors, 0 warnings |
 | `galerina-target-gpu/src/index.fungi --strict-types` | 0 errors, 0 warnings |
 | `galerina-target-native/src/index.fungi --strict-types` | 0 errors, 0 warnings |
@@ -192,9 +202,9 @@ check is green.
 | Candidate | Frontend | Dossier | Execution/parity | Decision |
 |---|---|---|---|---|
 | `galerina-substrate-math` | green | status + vectors + plan present | no executable SLIDE parity | retain as reference only |
-| `galerina-target-gpu` | green | missing status, vectors and plan | absent | quarantine |
-| `galerina-target-native` | green | missing status, vectors and plan | absent | quarantine |
-| `galerina-target-wasm` | green | status present; vectors and plan missing | absent | quarantine |
+| `galerina-target-gpu` | green | status + vectors + plan present | absent | quarantine |
+| `galerina-target-native` | green | status + vectors + plan present | absent | quarantine |
+| `galerina-target-wasm` | green | status + vectors + plan present | absent | quarantine |
 
 Nothing is copied into Galerina until the package contract is executable and
 the candidate passes syntax, governance/effects, parity, negative controls,
@@ -225,10 +235,9 @@ scoring standard.
 ## Resume point
 
 1. Keep all four external candidates quarantined.
-2. Strengthen the staging audit so missing dossier evidence cannot produce an
-   undifferentiated PASS.
-3. Freeze the executable SLIDE package contract.
-4. Reconcile candidates in dependency order through the governed migration
+2. Keep the dossier-complete staging audit and its planted controls green.
+3. Complete the executable SLIDE package contract.
+4. Execute and reconcile candidates in dependency order through the governed migration
    lane.
 5. Run the complete benchmark once SLIDE executes identical workloads; then
    regenerate `latest.json`, report and both requested charts together.

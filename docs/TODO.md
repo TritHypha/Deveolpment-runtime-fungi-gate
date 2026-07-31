@@ -11,6 +11,64 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
+### RD-0601 through RD-0608 reconciliation checkpoint - 2026-07-31
+
+- **Completed:** the owner-approved design and executable chapter plan are
+  committed at
+  `docs/superpowers/specs/2026-07-31-rd-reconciliation-vpeg-and-fungi-repair-design.md`
+  and
+  `docs/superpowers/plans/2026-07-31-rd-reconciliation-vpeg-and-fungi-repair.md`.
+- **Completed first-party R&D:** eight primary-source Knowledge Base records
+  now cover content-bound/static execution, detached GIR and a second
+  frontend, exact VPEG/action-cache controls, the Neural Shape Engine sandbox,
+  encrypted immutable indexes, cross-platform durable generations,
+  digest-suite agility, and signed offline hardware/driver admission.
+- **Maths and scores:** every record has explicit equations, falsification
+  thresholds, a ten-dimension zero-trust score, hard-veto check, and
+  scientific-paper review. The requested seven-column table is
+  `../ZTF-Knowledge-Bases/rd-program-2026-07-31-vpeg-slide-and-platform-foundations-MANIFEST.md`.
+- **Architecture decisions:** canonical detached GIR becomes the sole semantic
+  SLIDE input; a statically linked first production profile precedes a closed
+  content-bound SLIDE linker; pathname loading remains development-only.
+  VPEG and Neural Shape Engine remain `EXPERIMENT-ONLY`.
+- **Experiment correction:** an ordinary exact whole-action cache is now a
+  mandatory comparator beside full rebuild, exact VPEG, deterministic
+  structural retrieval, and learned proposals. No graph/neural speed claim is
+  valid without it.
+- **Independent-review handoff:** project-aware and no-repository prompts are
+  under `../ZTF-Knowledge-Bases/ai-reviews/prompts/06-*` and `07-*`; both
+  require primary research, shown maths, alternatives, hard-veto scoring, and
+  out-of-scope findings.
+- **Completed Fungi repair:** the external audit now requires a complete,
+  non-empty candidate dossier; rejects unknown candidate schemas, empty match
+  arms and manifest/source export drift; and has 10/10 planted controls. GPU,
+  native and Wasm candidates now carry status, parity vectors and test plans.
+  Their report builders preserve diagnostics, indexed paths, exhaustive enum
+  refusal and impossible-array-miss traps. All four staged files pass the
+  strict frontend. They remain quarantined because executable parity and
+  governed admission are absent.
+- **Completed compiler repair:** `for x in xs` now creates a lexical resolver
+  scope for `x`. Three RED-before-GREEN tests prove visibility in `where` and
+  the loop body, non-leakage after the loop and preservation of genuine typo
+  diagnostics. The complete compiler package is 5,755/5,755.
+- **Completed test-boundary repair:** three Windows test seams no longer pass
+  fixed `node`/`npm` argument arrays through `shell: true`. Their direct,
+  no-shell regression subset is 47/47 without `DEP0190`.
+- **Executable Shape Lab:** SLIDE now has bounded full-rebuild, action-cache,
+  exact-VPEG and proposal-only NSE-Reflex lanes with deterministic re-
+  verification, poisoned-entry quarantine and identical artifact evidence.
+  The status SVG is `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg`.
+- **Measured decision:** on the first 2,000-iteration synthetic experiment,
+  action cache and exact VPEG reduced lab overhead relative to full rebuild;
+  NSE-Reflex was slower after proposal and verification. VPEG continues;
+  NSE-Reflex remains `EXPERIMENT-ONLY`. This is not a general backend or an
+  external-runtime benchmark.
+- **Current work:** finish fresh repository verification, generated-index
+  reconciliation and separate local commits. Then extend the hostile corpus
+  and durable immutable atlas before any production integration.
+- **Owner blockers:** none. Offline signing is complete; no signing action is
+  requested. Private identifiers remain excluded from public R&D.
+
 ### Independent SLIDE prepared-executor benchmark checkpoint - 2026-07-31
 
 - **Completed independently:** SLIDE admits the exact V2-D body once into a

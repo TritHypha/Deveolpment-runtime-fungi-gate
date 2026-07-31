@@ -510,6 +510,31 @@ class SymbolResolver {
         return;
       }
 
+      case "forEachStmt": {
+        // `for value in collection where guard { body }`: the collection is evaluated
+        // in the OUTER scope, then the iteration variable is visible to both the
+        // optional guard and the body. Keep the binding in one nested loop scope so
+        // it cannot leak after the statement. The interpreter and WAT emitter have
+        // implemented this binding for years; without the resolver case, the
+        // governed pipeline falsely emitted FUNGI-NAME-001 for valid loop code.
+        const collection = node.children?.[0];
+        const body = node.children?.[1];
+        const whereGuard = node.children?.[2];
+        if (collection !== undefined) this.walkNode(collection, "normal");
+
+        this.pushScope();
+        // Never invent a fallback binding name for a malformed AST. The parser owns
+        // the missing-name diagnostic; the resolver must not turn that state into a
+        // plausible symbol that downstream checks could accidentally accept.
+        if (typeof node.value === "string" && node.value.length > 0) {
+          this.declareInCurrentScope(node.value, node);
+        }
+        if (whereGuard !== undefined) this.walkNode(whereGuard, "normal");
+        if (body !== undefined) this.walkNode(body, "normal");
+        this.popScope();
+        return;
+      }
+
       case "ensureDecl":
         // 0040/#70: inside an `invariant { ensure … }` clause the magic `result` symbol (the
         // flow's output value) is in scope — an output post-condition. Scope it to JUST the

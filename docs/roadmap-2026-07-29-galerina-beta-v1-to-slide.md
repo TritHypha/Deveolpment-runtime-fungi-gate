@@ -1,6 +1,6 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-07-29  
+Date: 2026-07-31
 Branch: `codex/galerina-beta-v1-completion`  
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -80,9 +80,11 @@ flowchart LR
 | Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
 | Deterministic activation fault model | 🟩 | Seed-ordered fifteen-boundary simulator, canonical replay receipt, control plus planted-fault matrix, budget/unreachable/ambiguous-input refusal and checker-clean `.fungi` terminal fold are implemented. App-kernel 180/180. Simulation is deliberately non-authorizing and cannot replace platform crash evidence |
 | Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on content-bound executable loading, hostile parent-namespace resistance, Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
-| Native executable-loader identity | 🟥 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. A post-load hash is too late because initialization may already have run. Dynamic path loading is rejected for production authority under the current threat model. A linked-runtime, explicitly narrowed OS-trust boundary, or changed SLIDE release order requires owner adjudication; platform syscall/recovery work can continue meanwhile |
+| Native executable-loader identity | 🟥 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. A post-load hash is too late because initialization may already have run. RD-0601 selects a statically linked first production profile and a closed content-bound SLIDE linker as the modular successor. Pathname loading remains development-only; implementation and cross-platform proof remain red, but no owner adjudication is pending |
+| RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
+| Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
 | Hardware fallback | 🟩 | Non-CPU targets without explicit fallback fail with `FUNGI-TARGET-001` |
@@ -101,7 +103,8 @@ flowchart LR
 | Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
 | Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
-| External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates were inspected in place and all genuinely pass the per-file strict frontend. The source issue log is adjudicated in `docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md`. Target GPU/native lack status and test dossiers; target Wasm lacks vectors/plan; all lack executable parity. Substrate Math is reference-only under the bounded bootstrap floor. Nothing has been copied or admitted |
+| Shape Lab VPEG/NSE experiment | 🟨 | Full rebuild, ordinary action cache, exact VPEG and proposal-only NSE-Reflex execute through one deterministic verifier. Seven focused tests cover canonical bytes, failure edges, semantic distinction, byte equality, poisoned-entry quarantine and proposal non-authority. In the first 2,000-iteration synthetic run, action cache and exact VPEG beat rebuild; NSE was slower. It remains experiment-only. This is not the general backend |
+| External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
 
@@ -287,7 +290,8 @@ Rules:
 
 ## SLIDE VPEG and dual-engine research
 
-Status: 🟦 design candidate; not yet an executable SLIDE feature.
+Status: 🟨 primary-source R&D plus a bounded executable lab seed complete; not
+yet a production SLIDE backend or admitted Galerina feature.
 
 The canonical engineering object is a **Verified Parametric Execution Graph
 (`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
@@ -326,6 +330,28 @@ create semantics, bypass proof, grant capabilities, collapse K3, or decide
 whether stale output is safe. Final admission remains deterministic,
 fail-closed and independently verifiable.
 
+The first executable comparison includes these deterministic lanes before a
+neural result can count:
+
+1. full deterministic rebuild;
+2. an ordinary exact whole-action cache;
+3. exact VPEG fragment reuse with complete validation; and
+4. deterministic structural retrieval plus full reconstruction.
+
+The ordinary action cache is the null hypothesis. Without it, the experiment
+can only prove that reuse beats rebuilding.
+
+The 2026-07-31 Shape Lab seed now executes full rebuild (`B0`), ordinary
+action cache (`BA`), exact VPEG (`B1`) and NSE-Reflex proposal (`N1`) lanes.
+Every lane passes through deterministic exact verification and emits the same
+artifact digest. Same-key/different-byte atlas entries are quarantined. In the
+first 2,000-iteration synthetic run, `BA` and `B1` reduced lab overhead versus
+`B0`, while `N1` was slower than rebuilding after proposal and verification.
+Therefore VPEG proceeds, while NSE remains `EXPERIMENT-ONLY` and gains no
+authority. The 8-byte number is model parameters only, not total cache
+residency. Evidence is under `../SLIDE/research/shape-lab/results/`; the status
+diagram is `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg`.
+
 The composition is new, but its foundations are established: persistent
 incremental object caching in LLVM ThinLTO, declared-input action hashes and
 content-addressable output storage in Bazel, unique content-derived store
@@ -351,7 +377,10 @@ equivalent optimized forms.
 
 ## Owner questions
 
-No new owner-only question blocks the current curriculum/compiler chapter.
-Existing future questions remain in `../SLIDE/QUESTIONS-FOR-OWNER.md`,
-including offline signing roles. No memory-graph write authority is requested:
-the plaintext sidecar design has been rejected.
+No owner-only question blocks this chapter. Offline signing is complete and no
+signing command is authorized. The loader direction, detached-GIR seam,
+VPEG/action-cache controls, Neural Shape Engine sandbox, secure index,
+durability, digest agility, and driver-manifest direction are engineering
+decisions recorded in RD-0601 through RD-0608. New questions go in
+`../SLIDE/QUESTIONS-FOR-OWNER.md` only when evidence cannot resolve a genuine
+owner decision.

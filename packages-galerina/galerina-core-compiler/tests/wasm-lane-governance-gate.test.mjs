@@ -29,7 +29,6 @@ import { spawnSync } from "node:child_process";
 
 const COMPILER_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const INTERNAL_CLI = join(COMPILER_ROOT, "dist", "cli.js");
-const isWin = process.platform === "win32";
 const PER_BUILD_MS = 120_000;
 
 const tmpRoot = mkdtempSync(join(tmpdir(), "fungi-wasm-gov-"));
@@ -79,8 +78,8 @@ function stage(label, src) {
 }
 
 function buildWasm(dir, target) {
-  return spawnSync("node", [INTERNAL_CLI, "build", `--target=${target}`, dir],
-    { cwd: COMPILER_ROOT, encoding: "utf8", timeout: PER_BUILD_MS, shell: isWin });
+  return spawnSync(process.execPath, [INTERNAL_CLI, "build", `--target=${target}`, dir],
+    { cwd: COMPILER_ROOT, encoding: "utf8", timeout: PER_BUILD_MS, shell: false });
 }
 
 const wasmWritten = (dir) => existsSync(join(dir, "build", "wasm", "output.wasm"));
