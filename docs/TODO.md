@@ -1,5 +1,29 @@
 # TODO
 
+### Independent SLIDE Shape Lab E05 synchronization - 2026-07-31
+
+- **Completed outside Galerina:** bounded 128-byte graph features, packed
+  128x64x32 Tri-1 N2, exact 32-recipe grammar, proposal-only N1/N2/N3 and a
+  shared current-B0 verifier across B0/BA/B1/B2/N1/N2/N3.
+- **Fresh evidence:** clean SLIDE source `8d4a0aa`; complete SLIDE 205/205,
+  V2 contract 15/15, 17 schemas, 2,450 artifact checks, 2,100 component checks
+  and 4,900 verifier comparisons. Evidence digest
+  `sha256:530a97704c4b308e2a9ddaf068b5cfed7e239a9a2461073dfc3faf156b7731e0`.
+- **Performance:** B0 457,498 ns/op; BA 448,478; B1 440,738; B2 1,887,394;
+  N1 865,368; N2 694,192; N3 1,675,196. Exact VPEG is the fastest final
+  lane by a narrow 1.038x over B0; all neural lanes remain slower.
+- **Representation:** N2's 10,240 ternary weight bytes pack to exactly 2,048
+  bytes. The 5.000x density result is not total residency or a speed claim.
+- **Galerina effect:** none yet. The final reports and SVG are experimental
+  evidence, not permission to activate SLIDE, retire TypeScript/npm/Wasm, or
+  publish an external-runtime comparison.
+- **Authoritative paths:** `../SLIDE/docs/reports/`,
+  `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg` and
+  `../SLIDE/research/shape-lab/results/e05-final-shape-latest.*`.
+- **Next:** independent local-Claude review, then continue the general
+  executable SLIDE backend and only later the Galerina integration gate. No
+  owner-only blocker.
+
 ## Continuity rule
 
 Update this file periodically during implementation, not only at the end of a

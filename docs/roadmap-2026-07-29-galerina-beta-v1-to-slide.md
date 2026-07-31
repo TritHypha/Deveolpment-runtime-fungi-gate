@@ -45,7 +45,7 @@ flowchart TB
     V["🟩 Shape Lab E02<br/>bounded structural retrieval · 136/136 · measured"]
     W["🟨 Shape Lab E03 checkpoint<br/>exact + renamed typed boundary · measured slower"]
     AA["🟨 Shape Lab E04<br/>packed + learned controls · 181/181 · measured slower"]
-    AB["🟦 Shape Lab E05<br/>bounded N2 NSE-Synthesis · not built"]
+    AB["🟨 Shape Lab E05 complete<br/>N2 + N3 + common verifier · measured slower"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
@@ -65,8 +65,8 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V green;
     class X,F red;
-    class Q,W,AA amber;
-    class H,I,T,AB blue;
+    class Q,W,AA,AB amber;
+    class H,I,T blue;
     class P green;
     class J grey;
 ```
@@ -113,7 +113,8 @@ flowchart TB
 | Shape Lab E01 durable atlas | 🟩 | SLIDE `5ad5e98`; measured implementation `8c869e0af5121bb21de6cbf95ebb8ffcf763b1dd`. The bounded pre-created single-link log has exact length/digest frames, AES-256-GCM payloads, mandatory Ed25519 + ML-DSA-65 generation/commit signatures, append+flush publication, full contiguous-chain recovery, caller-owned minimum anchors, historical key/byte immutability and current graph/target/policy/proof/epoch replay. Every pre-commit byte prefix serves no successor. Focused 22/22, complete SLIDE 116/116 and ten schemas parse. Across 525 exact-byte checks, medians were B0 193,028 ns/op, process-local B1 92,376 ns/op and durable restart 1,526,072 ns/op. E01 was 7.91x the tiny rebuild cost, so this is verified R&D recovery evidence, not a speedup or production storage claim |
 | Shape Lab E02 structural retrieval | 🟩 | SLIDE source `2df87f1feed26bb5b4568eac4dd4a7f827d1024b`. Topology bucketing, semantic colour refinement and a non-recursive exact labelled-graph bijection preserve operation, type, effect, capability, failure, attribute, role and edge semantics. The index is capped and immutable; exhaustion is typed `INDETERMINATE`; B2 recompiles the current graph and never serves prior artifact bytes. Complete SLIDE 136/136 and eleven schemas parse. Across 5,600 exact artifact checks, B2 produced 700 MATCH, 350 MISS and 350 INDETERMINATE outcomes. Median B2 was 1,039,045 ns/op versus B0 164,718 ns/op: 6.308x cost, so E02 is retained as verified negative-performance evidence and a deterministic control, not a speedup or production admission claim |
 | Shape Lab E03 typed-boundary checkpoint | 🟨 | Clean SLIDE source `3fa32fe`; deterministic fixed/dynamic/indeterminate analysis, immutable value-free plans, ephemeral i32/Boolean/K3 bindings and B3 independent-B0 comparison are executable. Across 4,200 exact checks on a 32-fixed/2-residual graph, medians were B0 866,983 ns/op, BA 734,593, B1 716,544, B2 48,603,963, exact B3 5,594,192 and renamed-family B3 79,920,639. The renamed family passes fresh B2 mapping and descriptor/partition re-derivation while sharing one canonical shape-plan digest. Injection-shaped/missing/duplicate/wrong-type bindings refuse and values are not retained. Amber because exact B3 is 6.452x B0 and renamed B3 is 92.182x, with no finite break-even; no Galerina authority is granted |
-| Shape Lab E04 packed and learned controls | 🟨 | Clean SLIDE source `f9bc3f6`; canonical five-trit packing, matched 64x32 int8/Tri-1 reflex models, bounded prototype/energy/cascade proposal lanes and independent current-B0 verification are executable. Complete SLIDE 181/181, focused E04 18/18, 15 schemas and 6,300 exact checks pass. Weight storage falls 2,048 to 410 bytes, but prepacked Tri-1 inference is 24,921 ns/op versus int8 at 5,203. B0 is 147,739; the fastest verified proposer is prototype at 319,402 (2.162x B0). All proposal paths are slower, remain non-authorizing and gain no Galerina integration or package-retirement authority. E05/N2 remains blue/unbuilt |
+| Shape Lab E04 packed and learned controls | 🟨 | Clean SLIDE source `f9bc3f6`; canonical five-trit packing, matched 64x32 int8/Tri-1 reflex models, bounded prototype/energy/cascade proposal lanes and independent current-B0 verification are executable. Complete SLIDE 181/181, focused E04 18/18, 15 schemas and 6,300 exact checks pass. Weight storage falls 2,048 to 410 bytes, but prepacked Tri-1 inference is 24,921 ns/op versus int8 at 5,203. B0 is 147,739; the fastest verified proposer is prototype at 319,402 (2.162x B0). All proposal paths are slower, remain non-authorizing and gain no Galerina integration or package-retirement authority. E05 now supplies the retained final matched experiment |
+| Shape Lab E05 final matched experiment | 🟨 | Clean SLIDE source `8d4a0aa`; deterministic 128-byte graph features, packed 128x64x32 N2, exact 32-recipe grammar, fixed N3 cascade and B0/BA/B1/B2/N1/N2/N3 common current-B0 verification are executable. Complete SLIDE 205/205, V2 contract 15/15, 17 schemas, 2,450 artifact checks, 2,100 component checks and 4,900 verifier comparisons pass. B0 is 457,498 ns/op; BA 448,478; B1 440,738; B2 1,887,394; N1 865,368; N2 694,192; N3 1,675,196. N2 packs 10,240 weight bytes to 2,048 (5.000x density) but no neural lane wins. E05 remains amber, proposal-only and outside Galerina/package authority |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
