@@ -1,6 +1,6 @@
 {
   "tool": "gen-code-registry",
-  "gitCommit": "745ff5beb3dacf9ae89ff35927d225fa77fe3837",
-  "builtAt": "2026-07-31T03:28:21.000Z",
+  "gitCommit": "88c7593245ec3d19540da2766fd8921951f8adc9",
+  "builtAt": "2026-07-31T07:12:27.000Z",
   "node": "v24.18.0"
 }
