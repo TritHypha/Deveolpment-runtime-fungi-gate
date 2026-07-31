@@ -26,3 +26,4 @@ export * from "./registry-rotation-authority.js";
 export * from "./registry-rotation-controller.js";
 export * from "./registry-generation.js";
 export * from "./registry-generation-store.js";
+export * from "./registry-activation-simulator.js";

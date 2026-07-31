@@ -1,0 +1,49 @@
+@version 1
+/// @file: registry-activation-terminal.fungi
+/// @purpose: Pure fail-closed authority fold for the deterministic registry-activation model.
+///   Host simulation supplies bounded Boolean evidence and the K3 canary token; this surface
+///   cannot perform I/O, mint a persistence receipt, admit an adapter or alter a checkpoint.
+/// @status: checker-verified contract; the TypeScript simulator remains the temporary executing
+///   bootstrap until independent SLIDE can execute and differentially verify this flow.
+
+pure flow k3CanaryOutcome(verdict: String) -> String
+contract {
+  intent { "Fold an exact K3 canary token without coercion; only allow advances and every unknown token is indeterminate." }
+}
+{
+  match verdict {
+    "allow" => return "CANARY_ALLOW"
+    "deny" => return "CANARY_DENY"
+    "indeterminate" => return "CANARY_INDETERMINATE"
+    _ => return "CANARY_INDETERMINATE"
+  }
+}
+
+pure flow terminalAuthority(
+  acceptedCandidate: Bool,
+  priorComplete: Bool,
+  candidateComplete: Bool,
+  mixedBytesObserved: Bool,
+  evidenceUnknown: Bool
+) -> String
+contract {
+  intent { "Select only the prior complete or newly accepted complete generation; mixed or unknown evidence exits indeterminate." }
+}
+{
+  if mixedBytesObserved == true {
+    return "INDETERMINATE"
+  }
+  if evidenceUnknown == true {
+    return "INDETERMINATE"
+  }
+  if acceptedCandidate == true {
+    if candidateComplete == true {
+      return "NEW_COMPLETE"
+    }
+    return "INDETERMINATE"
+  }
+  if priorComplete == true {
+    return "PRIOR_COMPLETE"
+  }
+  return "INDETERMINATE"
+}

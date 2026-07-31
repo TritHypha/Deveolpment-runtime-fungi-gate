@@ -20,6 +20,14 @@ write question is closed by rejecting that architecture: private memory is
 not a build input, and its beta inspection tool is ephemeral, read-only,
 bounded, injection-aware, and non-authorizing.
 
+The repository-local deterministic crash model is now complete. Its
+seed-ordered matrix covers fifteen activation boundaries, binds the complete
+schedule and evidence identity into canonical replay receipts, includes a
+known-good control and planted faults, and refuses exhausted or malformed
+exploration. The pure `.fungi` terminal fold is checker-clean; app-kernel is
+**180/180**. This closes the model prerequisite only. It does not admit a
+native adapter or prove physical durability on Windows, Linux or macOS.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

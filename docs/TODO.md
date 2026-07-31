@@ -61,6 +61,16 @@ session. Every checkpoint must record:
   (compiler **5,752**). Tooling inventory is **98 packages / 153 tools / 0
   violations**. Cross-runtime benchmark publication remains deferred until
   the independent SLIDE backend executes equivalent admitted workloads.
+- **Registry crash-model checkpoint (2026-07-31):** the deterministic
+  activation simulator now binds a seed, fifteen-boundary logical schedule,
+  fault-model version, simulator/adapter/source digests, generation IDs,
+  budget, planted faults and observed terminal state into a canonical replay
+  receipt. The matrix proves its known-good control and one planted fault at
+  every boundary execute; malformed, ambiguous, accessor-backed, unreachable
+  and exhausted inputs refuse. A paired `.fungi` terminal fold is check-clean,
+  and app-kernel passes **180/180**. Simulator receipts remain structurally
+  unable to authorize production. Native adapter ABI/provenance work and real
+  Windows/Linux/macOS crash/power-loss evidence remain open.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

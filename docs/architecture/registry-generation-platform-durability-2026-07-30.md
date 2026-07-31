@@ -2,7 +2,8 @@
 
 Date: 2026-07-30
 
-Status: host-evidence capability sealed; no production adapter admitted
+Status: host-evidence capability sealed; deterministic simulator implemented;
+no production adapter admitted
 
 Policy: verify rather than assume; fail closed
 
@@ -148,18 +149,55 @@ cannot prove that a real filesystem, controller or storage device honoured a
 physical durability barrier. Production admission therefore still requires
 the platform-specific crash and power-loss evidence listed above.
 
+### Implemented deterministic evidence
+
+`registry-activation-simulator.ts` now executes a closed, seed-ordered model
+across fifteen named boundaries: write, file flush, close, publication order,
+exclusive publication, re-open, verification, directory flush, stage
+checkpoint, key switch, canary, fallback, acceptance checkpoint, drain and
+custody retirement.
+
+The canonical replay receipt binds the seed, fault-model version, simulator,
+adapter and source digests, prior/candidate generation identities, exploration
+budget, exact planted fault schedule, executed boundaries, logical ticks,
+terminal state and invariant. Extra input fields, accessors, duplicate or
+out-of-order faults, boundary/fault mismatches and unreachable fallback
+schedules refuse. An exhausted budget or failed fallback grants no authority.
+The matrix uses the seed to order every planted boundary scenario, includes a
+known-good control and requires all fifteen planted faults to execute.
+
+The paired `.fungi` contract
+`src/self-hosted/registry-activation-terminal.fungi` is checker-clean and
+contains only the pure terminal fold. It uses `match` for the K3 canary token
+and Boolean `if` for Boolean evidence. It cannot perform I/O, mint a receipt,
+admit an adapter or change a checkpoint. The TypeScript model remains a
+temporary executing bootstrap until independent SLIDE executes this contract.
+
+Fresh evidence is app-kernel **180/180**, including eleven focused simulator
+tests. Simulator receipts fail the production persistence-brand check even
+when a caller copies their fields and adds a durability digest.
+
 The source-bound research adjudication and its zero-trust scores are maintained
 in the independent SLIDE repository's transcript-corpus adjudication. This
 public document does not depend on a machine-local sibling-repository path.
 
 ## Zero-trust adoption score
 
-Status: `PENDING`
+Status: deterministic simulator `ADOPT-WITH-CONTROLS`; native adapter
+`PENDING`
 
 The object-capability seal is adopted because its negative/control evidence is
-complete and it grants no production authority. The native cross-platform
-adapter proposal is not scored yet: filesystem support matrices, binary
-provenance, hostile-loader tests and power-loss evidence are incomplete.
+complete and it grants no production authority. The deterministic simulator
+scores **8.85/10**: authority 10, fail-close/K3 9, integrity 8, memory/data 8,
+injection/supply chain 9, determinism 9, resource/recovery 9, compatibility 8,
+evidence 9 and benefit/cost 8. No hard veto fires because its receipt is
+structurally non-authorizing. The decision is **ADOPT-WITH-CONTROLS**: keep the
+model bounded, preserve anti-vacuity controls and never substitute it for
+physical host evidence.
+
+The native cross-platform adapter proposal is not scored yet: filesystem
+support matrices, binary provenance, hostile-loader tests and power-loss
+evidence are incomplete.
 
 Hard vetoes:
 
