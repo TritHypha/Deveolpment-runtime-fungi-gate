@@ -1,6 +1,6 @@
 # Galerina beta-v1 zero-trust tooling close
 
-**Evidence date:** 2026-07-30
+**Evidence date:** 2026-07-31
 
 **Branch:** `codex/galerina-beta-v1-completion`
 
@@ -116,10 +116,10 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>98/98 · 8,705 tests"]:::green
+    P["Package readiness<br/>98/98 · 8,735 tests"]:::green
     A["Audit proof<br/>81/81 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
-    X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
+    X["Final generated fixed point<br/>84/84 strict · 85/85 exhaustive"]:::green
     M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
     R["Production registry signing<br/>owner ceremony complete"]:::green
     ROT["Automatic rotation control<br/>K3 · hybrid proof · restart state"]:::green
@@ -165,18 +165,18 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **98/98 packages and 8,705 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,735 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,705 |
+  | Unit | 8,735 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
   | Galerina SLIDE-adapter corpus | 496/496 |
 
-- The strict phase-close tooling lane passes **229/229**.
+- The strict phase-close tooling child passes **265/265**.
 - The compiler package passes **5,752/5,752**.
 - App-kernel passed **149/149** at the original delegated
   package-manifest-admission checkpoint. The committed automatic-rotation
@@ -467,21 +467,20 @@ together after executable SLIDE provides equivalent workloads.
 
 After the complete fourteen-generator fixed point:
 
-- strict phase-close passes **83/83**;
-- exhaustive phase-close passes **84/84**;
+- strict phase-close passes **84/84**;
+- exhaustive phase-close passes **85/85**;
 - exhaustive's additional package child passes **98/98** package commands;
-- the root aggregate contains **8,705 tests**;
+- the root aggregate contains **8,735 tests**;
 - graph-all passes all **5/5** repository-owned graph surfaces;
 - the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
   are killed.
 
-The first strict close correctly failed on stale generated code-index output.
-After dependency-ordered regeneration, the next strict close correctly exposed
-the derived coverage report as stale. Regenerating that report produced
-750/750 catalogued codes and zero actionable coverage holes; both independent
-check modes and the final strict/exhaustive cadences then passed. The detection
-and repair are retained as evidence that generated freshness gates are not
-vacuous.
+The first current strict close correctly failed on stale generated code-index
+line addresses after the synchronized TODO expansion. Regeneration retained
+the exact 753-code set; direct check mode, strict and exhaustive cadences then
+passed. The detection and repair are retained as evidence that generated
+freshness gates are not vacuous. The unified harness independently passed all
+five lanes, and focused automatic rotation evidence passed 62/62.
 
 These tool gates are authorizing for the evidence they cover. The owner
 signing act, production registry signing and automatic rotation control core

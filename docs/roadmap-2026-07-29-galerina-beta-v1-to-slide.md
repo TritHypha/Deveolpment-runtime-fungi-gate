@@ -27,7 +27,7 @@ flowchart TB
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
-    E["🟩 Final fixed point<br/>83/83 strict · 84/84 exhaustive"]
+    E["🟩 Final fixed point<br/>84/84 strict · 85/85 exhaustive"]
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
@@ -208,7 +208,7 @@ The remaining sequence is:
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,705 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,735 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 0 signing refusal codes without a direct
@@ -216,7 +216,7 @@ test mention, and 34 cross-package relative imports. The signing inventory is
 now closed at 51/51 directly mentioned refusals with specific negative/control
 witnesses.
 
-The fresh unified lane totals are unit 8,705, end-to-end 4/4, conformance
+The fresh unified lane totals are unit 8,735, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
 meta-gate covers all 81/81 discovered audit/lint gates with non-vacuous
 refusal/control evidence. The tooling contract reports 98 packages and 153
@@ -234,13 +234,14 @@ development-only differential oracle package and cannot acquire runtime,
 production, or memory authority.
 
 The terminal verification checkpoint is now green: strict phase-close passes
-83/83, exhaustive passes 84/84, graph-all passes 5/5, all fourteen generator
+84/84, exhaustive passes 85/85, graph-all passes 5/5, all fourteen generator
 contracts pass, and the exhaustive package lane passes 98/98. A separate
 canonical-count run rebuilt the same declared package chains and recorded
-8,705 tests with zero failures. The strict
-cadence first caught stale code-index and coverage outputs; after explicit
-dependency-ordered regeneration, their check modes and the complete cadence
-passed. These results authorize their evidence surfaces, not the offline
+8,735 tests with zero failures. The strict cadence first caught stale
+code-index line-address evidence; after explicit dependency-ordered
+regeneration retained the exact 753-code set, its check mode and the complete
+cadence passed. Focused automatic key-rotation evidence is 62/62. These
+results authorize their evidence surfaces, not the offline
 signing ceremony or beta-v1 release.
 
 ## Registry admission checkpoint

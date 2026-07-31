@@ -224,16 +224,25 @@ authorization.
 - Modify:
   `docs/reports/zero-trust-tooling-refactor-completion-2026-07-29.md`
 
-- [ ] Run strict and exhaustive phase-close, all five graph tools, all
+- [x] Run strict and exhaustive phase-close, all five graph tools, all
   discovered test tools, all discovered audit/lint tools, generator fixed
-  points, strict fusable rebuild and the unified five-lane harness.
-- [ ] Fix every product, test, tool, generator or stale-evidence failure at
+  points, strict fusable rebuild and the unified five-lane harness. Fresh
+  evidence: strict 84/84, exhaustive 85/85 with 98/98 package commands,
+  graph generation/check 5/5, strict rebuild 0 failed and unified harness
+  5/5 (8,735 unit tests plus 4/4, 10/10, 9/9 and 496/496).
+- [x] Fix every product, test, tool, generator or stale-evidence failure at
   root cause; never disable or reclassify a red gate to obtain green.
-- [ ] Confirm no production path uses a caller-injected unsigned registry and
-  automatic rotation passes disposable-key end-to-end evidence.
-- [ ] Regenerate graphs, code/dev-tool/KB/package indexes, coverage, SBOM,
-  provenance, component health and roadmap measurements.
-- [ ] Commit the beta close. Do not push.
+  The first strict run caught only stale code-index line-address evidence;
+  regeneration retained the exact 753-code set and the next full run passed.
+- [x] Confirm no production path uses a caller-injected unsigned registry and
+  automatic rotation passes disposable-key end-to-end evidence. Focused
+  key-ring/Triple-Lock/registry-rotation evidence is 62/62.
+- [x] Regenerate graphs, code/dev-tool/KB/package indexes, coverage, SBOM,
+  provenance, component health and roadmap measurements. SBOM is complete at
+  170 components plus root, 99 dependency records and zero warnings.
+- [x] Commit the verified beta fixed-point checkpoint locally. Do not push.
+  This closes repository verification only; beta release authority remains
+  red on the named production platform-activation evidence.
 
 ### Task 5: Make independent SLIDE executable
 

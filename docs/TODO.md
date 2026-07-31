@@ -444,7 +444,7 @@ current remediated source, measurements and assurance boundary.
   exhaustive run. Generator contracts are **14/14**, graph-all is **5/5**,
   security reports zero findings, and the all-package lane is **98/98**.
   The separate fail-closed canonical-count run then rebuilt every declared
-  package test chain and recorded **8,705 tests, 0 fail** in `version.json`
+  package test chain and recorded **8,735 tests, 0 fail** in `version.json`
   (compiler **5,752**). Tooling inventory is **98 packages / 153 tools / 0
   violations**. Cross-runtime benchmark publication remains deferred until
   the independent SLIDE backend executes equivalent admitted workloads.
@@ -730,17 +730,17 @@ planning checkbox must never be used to imply that implementation exists.
 - A future real operational rotation ceremony remains an owner custody act,
   but implementation and disposable-key verification proceed without it.
 
-### Terminal fixed-point checkpoint - 2026-07-30
+### Terminal fixed-point checkpoint - 2026-07-31
 
-- **Fresh root aggregate:** **98/98 packages and 8,705 tests** pass.
+- **Fresh root aggregate:** **98/98 packages and 8,735 tests** pass.
 - **Fresh graph/generator evidence:** all five repository-owned graph surfaces
   generate and pass exact check mode; all fourteen declared generator
   contracts pass their isolated fixed-point tests.
-- **Fresh phase-close evidence:** strict phase-close passes **83/83** and
-  exhaustive passes **84/84**, including its additional **98/98** all-package
-  child. The first strict runs correctly detected stale code-index and coverage
-  outputs; the dependency chain was regenerated and both independent check
-  modes and the complete cadence then passed.
+- **Fresh phase-close evidence:** strict phase-close passes **84/84** and
+  exhaustive passes **85/85**, including its additional **98/98** all-package
+  child in 413.0 seconds. The first strict run correctly detected stale
+  code-index line-address evidence; regeneration retained the exact 753-code
+  set, and both direct check mode and complete cadence then passed.
 - **Fresh build evidence:** strict fusable rebuild reports **0 failed**, two
   artifacts already fresh, two intentionally skipped, and the ceremony-signed
   `greeting` manifest locked against automatic replacement.
@@ -748,13 +748,16 @@ planning checkbox must never be used to imply that implementation exists.
   zero-trust thesis **78%**, build progress **75%**, and the tracking registry
   contains **21** items. These are evidence meters, not release authorization.
 - **Fresh unified harness:** all five lanes pass in one invocation: unit
-  **8,705**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  **8,735**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
   the Galerina SLIDE-adapter corpus **496/496**.
 - **Fresh audit inventory:** all **81/81** audit/lint gates have executable
   refusal/control evidence; the tooling contract sees 98 packages and 153
   governed tools with zero violations, while the generated developer-tool
   index records 135 developer tools (80 audit-class); all 14/14 exhaustive
   generator contracts pass.
+  Focused automatic-rotation evidence is **62/62**, including authenticated
+  crash/restart state, rollback floors, substituted-key/custody refusal and a
+  real disposable hybrid transition through the existing phase machine.
   The security devtool's 29-case conformance self-test and nine live
   constructions pass, with the declared unsigned-spore residual still reported
   as open risk. Its strict production single-file audit passes on the canonical
@@ -873,10 +876,10 @@ planning checkbox must never be used to imply that implementation exists.
   `-PRIVATE.md` filename and `# <title> - PRIVATE` H1 convention while stating
   that neither makes private content safe to publish or commit to a public
   repository.
-- **Fresh doc guards:** private-doc leak self-test and live scan are green,
+- **Historical signing-time doc guards:** private-doc leak self-test and live scan are green,
   path-leak self-test and live scan are green, and doc/source drift reports
-  zero violations at the current 98-package/8,681-test baseline.
-- **Current:** the complete generated graph/code/coverage/component-health
+  zero violations at the then-current 98-package/8,681-test baseline.
+- **Historical signing-time state:** the complete generated graph/code/coverage/component-health
   dependency chain is refreshed. Root tests are 98/98 packages and 8,681
   tests; strict/exhaustive phase-close are 83/83 and 84/84.
 - **Current safe boundary:** admit and commit the exact returned signed index,
@@ -1010,7 +1013,7 @@ planning checkbox must never be used to imply that implementation exists.
   decoder, validator, governed reference interpreter, capability linker, and
   SLIDE lowering seam. This is explicitly not a general-purpose engine and
   does not authorize removal of the current path.
-- **Current:** design and executable plan are recorded at
+- **Recorded design state:** design and executable plan are recorded at
   `docs/superpowers/specs/2026-07-30-governed-memory-and-wasmtime-oracle-design.md`
   and
   `docs/superpowers/plans/2026-07-30-governed-memory-and-wasmtime-oracle.md`.
@@ -1021,11 +1024,11 @@ planning checkbox must never be used to imply that implementation exists.
 - **Non-claims:** the encrypted persistent graph, complete SLIDE memory
   verifier, native backend, production runner, and narrow `.fungi` Wasm
   compatibility engine are not implemented by this beta-safe migration.
-- **Broad close evidence:** the complete aggregate passes **98/98 packages,
+- **Historical migration-close evidence:** the complete aggregate passed **98/98 packages,
   8,681 tests**; all fourteen declared generator contracts and all five graph
   surfaces are green; strict phase-close passes **83/83** and exhaustive
   passes **84/84**, including its 98/98 package child.
-- **Current release boundary:** repository verification is green. The live
+- **Historical release boundary at that checkpoint:** repository verification was green. The live
   registry contains one verified hybrid-signed auth package and a verified
   hybrid-signed one-entry index. Beta-v1 remains non-authorizing pending the
   separately recorded automatic-rotation integration. The live walkthrough
