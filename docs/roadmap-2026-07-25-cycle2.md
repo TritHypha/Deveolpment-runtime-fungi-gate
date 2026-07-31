@@ -230,7 +230,7 @@ are rebaselined.
 
 **No percentage claimed:** Stage-B self-hosting — WASM execution (P9) · B8 governed HTTP transport (TLSTP).
 
-**Tracking registry (21):** shipped 13 · building 4 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (21):** shipped 12 · building 5 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 

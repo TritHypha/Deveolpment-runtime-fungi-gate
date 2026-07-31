@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "02895415",
+    "sha": "5eac0928",
     "detached": false,
     "dirty": true
   },
@@ -247,11 +247,6 @@
       "avg": null,
       "rows": [
         {
-          "item": "Execution-cutover (RD-0361)",
-          "state": "shipped",
-          "detail": "29/29 governed twins checker-clean; 0 shadow · 0 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
-        },
-        {
           "item": "Compiler authority (RD-0528)",
           "state": "shipped",
           "detail": "7/7 canonical stages at R3; 0 differential · 7 authoritative. Authority counts are derived from the fail-closed compiler ledger."
@@ -310,6 +305,11 @@
           "item": "myco",
           "state": "shipped",
           "detail": "v0.1.3 (graph-indexed grep replacement, own subproject; Apache-2.0): ReDoS regex-guard + per-edge word-boundary fix with wordBoundaryExcluded reporting (no silent narrowing); owned Galerina mirror galerina-tools-myco synced to upstream e5e0e25 (src+tests byte-identical, 23/23); npm publish 🔒 outward"
+        },
+        {
+          "item": "Execution-cutover (RD-0361)",
+          "state": "building",
+          "detail": "32/32 governed twins checker-clean; 0 shadow · 3 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
         },
         {
           "item": "Value-unit types (RD-0349)",

@@ -39,8 +39,10 @@ const CHECK = process.argv.includes("--check");
 const JSON_OUT = process.argv.includes("--json");
 const TERMINAL_CHECK = process.argv.includes("--terminal-check");
 
-// The bounded-TCB FLOOR (census handover §2): these stay .ts/native forever by ruling — crypto
-// primitives, host seams, pure-algorithm devtools. A floor .ts is not "unfinished"; it is the TCB.
+// The bounded bootstrap-TCB FLOOR (census handover §2): these remain .ts/native
+// until an independently admitted SLIDE-native replacement can carry the same
+// host/crypto/algorithm contract. They are not "unfinished" beta work, but they
+// are not a permanent TypeScript exemption either.
 const FLOOR_PACKAGES = new Set(["galerina-substrate-math", "galerina-devtools-graph-algorithms", "galerina-core-security"]);
 const COMPILER_AUTHORITY_LEDGER =
   "docs/security/rd0528-compiler-authoritative-stages.json";
@@ -261,7 +263,7 @@ export function buildRetirementGraph(root = ROOT) {
     retirementPaths: {
       twinned: "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",
       compilerCore: "→ bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1)",
-      floor: "→ NEVER (bounded-TCB floor by ruling: crypto primitives, host seams, pure-algorithm devtools)",
+      floor: "→ post-beta admitted SLIDE replacement (bounded bootstrap TCB until equivalent crypto/host/algorithm evidence exists)",
       program: "→ the #38 migration codemod program (owner-gated re-sign ceremony)",
     },
     perPackage, twinnedPairs,
@@ -277,6 +279,8 @@ if (process.argv.includes("--self-test")) {
     : `graph finder covers the tracked corpus (drift=${g.totals.finderDrift})`);
   ok(g.twinnedPairs.includes("packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts"), "known twin pair detected: secret-gate.ts ↔ secret-gate.fungi");
   ok(g.totals.twinned + g.totals.compilerCore + g.totals.floor + g.totals.program === g.totals.ts, "buckets partition the corpus exactly (twinned + compiler-core + floor + program == total)");
+  ok(!g.retirementPaths.floor.includes("NEVER") && g.retirementPaths.floor.includes("SLIDE"),
+    "bounded bootstrap floor has an admitted-SLIDE retirement path rather than a permanent TypeScript exemption");
   ok(
     g.totals.authoritativeFlips
       === g.totals.compilerAuthoritativeFlips
@@ -361,6 +365,6 @@ console.log(
   + `authority ${t.authoritativeFlips}/${t.compilerStageTotal + t.governedTwinTotal} `
   + `(${t.compilerAuthoritativeFlips}/${t.compilerStageTotal} compiler + `
   + `${t.governedAuthoritativeFlips}/${t.governedTwinTotal} governed) · `
-  + `${t.compilerCore} compiler-core (fixpoint) · ${t.floor} floor (stays) · `
+  + `${t.compilerCore} compiler-core (fixpoint) · ${t.floor} bootstrap floor (retires after admitted SLIDE replacement) · `
   + `${t.program} migration (#38) · ${t.fungiInSrc} .fungi in src`,
 );

@@ -15,7 +15,6 @@ function tryExec(cmd, args) {
     return execFileSync(cmd, args, {
       encoding: "utf8", stdio: ["ignore", "pipe", "ignore"],
       timeout: 8000,
-      shell: process.platform === "win32", // needed on Windows for PATH-resolved commands
     });
   } catch {
     return null;

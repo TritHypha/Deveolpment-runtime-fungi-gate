@@ -428,6 +428,31 @@ The owner explicitly directed that Wasm/Rust/Python/Galerina/SLIDE comparison
 wait until SLIDE has an executable backend and identical workloads can be
 measured. Historical files remain evidence only.
 
+The 2026-07-31 staging-log review hardened that hold into executable policy.
+The benchmark-integrity self-test now passes 15/15 and refuses:
+
+- comparator measurements with no admitted Galerina subject;
+- active catalog entries missing from `latest.json`;
+- duplicate or unregistered result entries;
+- diagnostic/standalone evidence entering the publication set; and
+- source-bearing benchmark directories absent from every declared catalog.
+
+The framework-pipeline subject had become `nodejs: null` after the App Kernel
+correctly stopped treating an Authorization header as proof. Its benchmark now
+supplies an explicit admitted K3 channel verdict; a focused 10-request probe
+and package test reach the handler without restoring the weaker fallback.
+GPU/toolchain probes also execute argv directly and no longer pass external
+commands through a Windows shell.
+
+Stale-report plus catalog completeness is green. The full publication audit
+remains intentionally red for two historical subject-absence rows:
+`spectral-norm` awaits an executable SLIDE subject and the stored
+`framework-pipeline` row predates the repair. A partial benchmark run is not
+used for publication; filtered runs now write a separate
+`<benchmark>-latest.json`, and only an unfiltered run may replace
+`latest.json`. The full result set, report and charts will be regenerated
+together after executable SLIDE provides equivalent workloads.
+
 ## Terminal fixed-point status
 
 After the complete fourteen-generator fixed point:

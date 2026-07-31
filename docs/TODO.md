@@ -11,6 +11,53 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
+### External Fungi staging issues and benchmark integrity checkpoint - 2026-07-31
+
+- **Completed:** every claim in
+  `../Galerina-Fungi-Package-Staging/TRANSLATION-ISSUES-LOG.md` was checked
+  against the current branch and recorded in
+  `docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md`.
+  The external tree was inspected in place and remains untrusted,
+  non-authorizing and unmodified by this checkpoint.
+- **Completed:** all four staged `.fungi` files genuinely pass the current
+  per-file strict frontend with zero errors/warnings. The log’s file-path
+  no-op and false `native.call` findings are stale; a directory now refuses
+  with `FUNGI-BACKEND-001` and exit 1.
+- **Completed:** the benchmark integrity audit now refuses measured comparator
+  output when the admitted Galerina subject is absent. Its self-test is
+  **15/15** and also proves active-result catalog completeness plus
+  source-directory admission. `gate-cache` is explicitly standalone;
+  diagnostic directories are explicitly non-publication; ignored PDB-only
+  `tmf-container` is not a runnable surface.
+- **Completed:** the App Kernel framework benchmark now supplies an explicit
+  admitted K3 channel verdict after the header-presence fallback was tightened.
+  The focused executable probe reaches **10/10** handlers and a durable package
+  test protects the seam. No weaker header-presence authorization was restored.
+- **Completed:** GPU capability probes no longer invoke PATH-resolved commands
+  through a shell. The package test runs the probe under
+  `--throw-deprecation`; the package now passes **6/6** test files.
+- **Completed architecture correction:** the 16-file TypeScript floor is a
+  bounded bootstrap TCB. It is not a permanent exemption and retires only
+  after an independently admitted SLIDE replacement proves equivalent
+  crypto/host/algorithm behavior. The retirement finder’s self-test enforces
+  this wording. Fresh totals are **477** implementation `.ts`, **491** tracked
+  package `.ts`, 26 twinned, 97 compiler bootstrap, 16 bootstrap floor and 338
+  migration-program paths, with finder drift 0.
+- **Current publication state:** stale-report plus catalog completeness is
+  green. The full live benchmark-integrity audit intentionally refuses two
+  historical subject-absence rows: `spectral-norm` has no executable SLIDE
+  subject, and the stored `framework-pipeline` row predates the repaired
+  identity input. Filtered `--benchmark` runs now write
+  `<benchmark>-latest.json`; only an unfiltered full run may replace the
+  publication `latest.json`.
+- **Integrated close complete:** retirement/code/status/roadmap/percent/tool/
+  graph artifacts were regenerated in dependency order. Strict phase-close
+  passes every blocking gate, including graph 5/5, code-index 640, tooling
+  238 and benchmark-integrity 60. The terminal benchmark remains deferred.
+- **Candidate blockers:** target GPU and target native lack status, vectors and
+  test plans; target Wasm lacks vectors and a test plan; all four lack
+  executable SLIDE parity. None may be copied or admitted yet.
+
 ### Security and R&D cross-project checkpoint - 2026-07-30
 
 - **Completed:** Galerina's vendored Myco now treats its persisted index as a

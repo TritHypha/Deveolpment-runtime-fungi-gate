@@ -371,7 +371,10 @@
     "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts",
     "packages-galerina/galerina-framework-app-kernel/src/index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-activation-simulator.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-durability-artifact.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-generation.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
@@ -492,13 +495,13 @@
     "packages-galerina/galerina-web/src/index.ts"
   ],
   "totals": {
-    "ts": 474,
-    "allTrackedTs": 488,
-    "twinned": 24,
+    "ts": 477,
+    "allTrackedTs": 491,
+    "twinned": 26,
     "compilerCore": 97,
     "floor": 16,
-    "program": 337,
-    "fungiInSrc": 101,
+    "program": 338,
+    "fungiInSrc": 104,
     "packages": 95,
     "finderDrift": 0,
     "compilerAuthoritativeFlips": 7,
@@ -506,13 +509,13 @@
     "authoritativeFlips": 36,
     "compilerStageTotal": 7,
     "compilerDifferential": 0,
-    "governedTwinTotal": 29,
-    "governedDifferential": 0
+    "governedTwinTotal": 32,
+    "governedDifferential": 3
   },
   "retirementPaths": {
     "twinned": "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",
     "compilerCore": "→ bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1)",
-    "floor": "→ NEVER (bounded-TCB floor by ruling: crypto primitives, host seams, pure-algorithm devtools)",
+    "floor": "→ post-beta admitted SLIDE replacement (bounded bootstrap TCB until equivalent crypto/host/algorithm evidence exists)",
     "program": "→ the #38 migration codemod program (owner-gated re-sign ceremony)"
   },
   "perPackage": {
@@ -857,9 +860,9 @@
       "fungi": 0
     },
     "galerina-framework-app-kernel": {
-      "ts": 14,
-      "twinned": 4,
-      "fungi": 6
+      "ts": 17,
+      "twinned": 6,
+      "fungi": 9
     },
     "galerina-governance-telemetry": {
       "ts": 3,
@@ -1013,6 +1016,8 @@
     "packages-galerina/galerina-core-sentinel-state/src/cold-boot.ts",
     "packages-galerina/galerina-core-sentinel-time/src/synchronization-gate.ts",
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-durability-artifact.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/route-defaults.ts",
     "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",

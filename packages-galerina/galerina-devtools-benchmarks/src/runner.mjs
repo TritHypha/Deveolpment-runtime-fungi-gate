@@ -1,6 +1,6 @@
 import { spawnSync, execSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf } from "./throughput-units.mjs";
 
@@ -17,7 +17,7 @@ const resultsDir  = join(__dirname, "..", "results");
 //   → gives stable throughput measurement.
 //
 // Rule of thumb: passiveCallCount × execMs < 1000ms (keep passive < 1s total)
-const BENCHMARKS = [
+export const BENCHMARKS = [
   { id: "compute-mix",          dir: "compute-mix",          galerinaOpsPerRun: 50000, timeBased: true, passiveCallCount: 3  },
   { id: "arithmetic-threshold", dir: "arithmetic-threshold", galerinaOpsPerRun: null,                   passiveCallCount: 3  },
   { id: "six-digit-guess",      dir: "six-digit-guess",      galerinaOpsPerRun: null,                   passiveCallCount: 3  },
@@ -282,6 +282,15 @@ async function runBenchmark(bench) {
 // Good for CI and development feedback. Use without --quick for publication numbers.
 export const QUICK_MODE = process.argv.includes("--quick");
 
+export function publicationOutputName(filter) {
+  if (filter === "diagnostic") return null;
+  if (filter === null) return "latest.json";
+  if (!BENCHMARKS.some((benchmark) => benchmark.id === filter)) {
+    throw new Error(`REFUSED: unknown benchmark filter '${filter}'`);
+  }
+  return `${filter}-latest.json`;
+}
+
 async function main() {
   const filterIdx = process.argv.indexOf("--benchmark");
   const filter    = filterIdx >= 0 ? process.argv[filterIdx+1] : null;
@@ -296,9 +305,12 @@ async function main() {
     console.log(JSON.stringify(r, null, 2));
   }
 
-  const outPath = join(resultsDir, "latest.json");
-  writeFileSync(outPath, JSON.stringify(all, null, 2));
-  console.log(`\nResults: ${outPath}`);
+  const outputName = publicationOutputName(filter);
+  if (outputName !== null) {
+    const outPath = join(resultsDir, outputName);
+    writeFileSync(outPath, JSON.stringify(all, null, 2));
+    console.log(`\nResults: ${outPath}`);
+  }
 
   // ── Unit-alignment assertion ───────────────────────────────────────────────
   // Every comparable benchmark must report ONE unit across all runtimes; the three
@@ -361,4 +373,6 @@ async function main() {
   }
 }
 
-main().catch(e => { console.error(e); process.exitCode=1; });
+const IS_MAIN = process.argv[1] !== undefined
+  && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (IS_MAIN) main().catch(e => { console.error(e); process.exitCode=1; });

@@ -26,15 +26,20 @@
 // This encodes, as a fail-closed tool, the discipline "work-equivalence BEFORE any
 // cross-runtime ratio". A ratio nobody can attribute to equal work is never citable.
 //
+//   (C) SUBJECT/CATALOG COMPLETENESS — a measured comparator without the
+//       admitted Galerina subject, a missing/duplicate/unregistered result, or
+//       an invisible source directory blocks publication.
+//
 // Usage: node src/audit-benchmark-integrity.mjs [--json] [--self-test]
 //        exit 0 = clean · exit 3 = findings (gate use) · exit 2 = inputs missing
 // =============================================================================
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { benchmarkSpec, isComparable, metricClassOf } from "./throughput-units.mjs";
 import { WORK_EQUIVALENCE } from "./work-equivalence.mjs";
+import { BENCHMARKS } from "./runner.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -43,6 +48,19 @@ const ROOT = join(HERE, "..");
 // compares a Galerina lane against. A ratio only exists if ≥1 of these ran.
 const NATIVE = new Set(["rustAvx512", "rustAvx2", "rust", "cpp", "nodejs", "python", "denoWebGpu"]);
 const GALERINA = new Set(["wasm", "galerinaGoverned", "galerinaManifest", "galerinaPassive"]);
+// These benchmarks execute the Galerina-owned subject directly in the Node
+// lane rather than through the language runtime lanes above. The closed set is
+// deliberate: an unknown benchmark defaults to requiring a Galerina runtime
+// subject and cannot silently appoint a comparator as its subject.
+const NODE_SUBJECT_BENCHMARKS = new Set([
+  "spore-container",
+  "framework-pipeline",
+  "http-throughput",
+  "naming-check",
+  "context-receipt",
+  "intelligence-search",
+  "provenance-trace",
+]);
 // Above this governed-vs-native slowdown, "the interpreter is just slow" stops being
 // a credible explanation (the tree-walker's honest worst on work-equivalent lanes is
 // ~4000×). Beyond it, non-work-equivalence is the likelier cause → CRITICAL not HIGH.
@@ -53,8 +71,104 @@ const tput = (r) => {
   if (typeof r.normThroughput === "number") return r.normThroughput;
   return r.galerinaOpsPerSecond ?? r.warmCallsPerSecond ?? r.operationsPerSecond
       ?? r.additionsPerSecond ?? r.attemptsPerSecond ?? r.iterationsPerSecond
-      ?? r.callsPerSecond ?? r.runsPerSecond ?? null;
+      ?? r.callsPerSecond ?? r.runsPerSecond ?? r.requestsPerSecond
+      ?? r.nodeRaw_reqPerSec ?? r.filesPerSecond ?? r.receiptsPerSecond
+      ?? r.queriesPerSecond ?? null;
 };
+
+const subjectLanesFor = (benchmark) =>
+  NODE_SUBJECT_BENCHMARKS.has(benchmark) ? new Set(["nodejs"]) : GALERINA;
+
+const NON_PUBLICATION_DIRECTORIES = new Set([
+  "diagnostic",
+  "gate-cache",
+  "governance-violation",
+  "logging-throughput",
+  "resource-exhaustion",
+  "toxic-input",
+]);
+
+const duplicates = (values) => {
+  const seen = new Set();
+  const repeated = new Set();
+  for (const value of values) {
+    if (seen.has(value)) repeated.add(value);
+    seen.add(value);
+  }
+  return [...repeated];
+};
+
+export function catalogFindings({
+  resultIds,
+  activeIds,
+  activeDirectories = activeIds,
+  sourceDirectories,
+  nonPublicationDirectories = [],
+  nonPublicationIds = nonPublicationDirectories,
+}) {
+  const findings = [];
+  const results = new Set(resultIds);
+  const active = new Set(activeIds);
+  const admittedDirectories = new Set([...activeDirectories, ...nonPublicationDirectories]);
+
+  for (const duplicate of duplicates(activeIds)) {
+    findings.push({
+      benchmark: duplicate,
+      code: "benchmark-catalog-duplicate",
+      severity: "HIGH",
+      detail: `${duplicate} appears more than once in the active benchmark catalog`,
+    });
+  }
+  for (const duplicate of duplicates(resultIds)) {
+    findings.push({
+      benchmark: duplicate,
+      code: "benchmark-result-duplicate",
+      severity: "HIGH",
+      detail: `${duplicate} appears more than once in results/latest.json`,
+    });
+  }
+  for (const id of active) {
+    if (!results.has(id)) {
+      findings.push({
+        benchmark: id,
+        code: "benchmark-result-missing",
+        severity: "HIGH",
+        detail: `${id} is active in the runner catalog but absent from results/latest.json`,
+      });
+    }
+  }
+  for (const id of results) {
+    if (!active.has(id)) {
+      findings.push({
+        benchmark: id,
+        code: "benchmark-result-unregistered",
+        severity: "HIGH",
+        detail: `${id} appears in results/latest.json but is not active in the runner catalog`,
+      });
+    }
+  }
+  for (const id of nonPublicationIds) {
+    if (results.has(id)) {
+      findings.push({
+        benchmark: id,
+        code: "non-publication-benchmark-published",
+        severity: "HIGH",
+        detail: `${id} is diagnostic/standalone evidence and must not appear in results/latest.json`,
+      });
+    }
+  }
+  for (const directory of sourceDirectories) {
+    if (!admittedDirectories.has(directory)) {
+      findings.push({
+        benchmark: directory,
+        code: "benchmark-directory-unregistered",
+        severity: "HIGH",
+        detail: `${directory} contains benchmark source but is absent from both active and non-publication catalogs`,
+      });
+    }
+  }
+  return findings;
+}
 
 // ── pure classification (self-tested) ────────────────────────────────────────
 
@@ -73,9 +187,15 @@ export function classifyBenchmark(entry) {
   const rt = {};
   for (const k of Object.keys(results)) rt[k] = tput(results[k]);
 
-  const nativeRates = [...NATIVE].map((n) => rt[n]).filter((x) => x != null && x > 0);
-  const galerinaLanes = [...GALERINA].filter((g) => rt[g] != null && rt[g] > 0);
-  const shown = nativeRates.length > 0 && galerinaLanes.length > 0;
+  const subjectLanes = subjectLanesFor(id);
+  const subjectRates = [...subjectLanes].map((lane) => rt[lane]).filter((x) => x != null && x > 0);
+  const nativeRates = [...NATIVE]
+    .filter((lane) => !subjectLanes.has(lane))
+    .map((lane) => rt[lane])
+    .filter((x) => x != null && x > 0);
+  const observedRates = Object.values(rt).filter((x) => x != null && x > 0);
+  const subjectPresent = subjectRates.length > 0;
+  const shown = nativeRates.length > 0 && subjectPresent;
 
   const mc = metricClassOf(id);
   const spec = benchmarkSpec(id);
@@ -90,6 +210,13 @@ export function classifyBenchmark(entry) {
   else category = "uncertified";                                     // cpu/gpu, shown, not yet certified
 
   const findings = [];
+  if (observedRates.length > 0 && !subjectPresent) {
+    findings.push({
+      code: "benchmark-subject-absent",
+      severity: "HIGH",
+      detail: `${id} has measured comparator output but none of its admitted subject lanes ran; publication is incomplete`,
+    });
+  }
   if (shown && category === "uncertified") {
     const bestNative = Math.max(...nativeRates);
     const gov = rt.galerinaGoverned;
@@ -101,7 +228,15 @@ export function classifyBenchmark(entry) {
         + (slower != null ? ` [governed ${fmtX(slower)} vs best native — do NOT publish as a ratio]` : ""),
     });
   }
-  return { benchmark: id, shown, category, metricClass: mc, findings };
+  return {
+    benchmark: id,
+    shown,
+    subjectPresent,
+    subjectLanes: [...subjectLanes],
+    category,
+    metricClass: mc,
+    findings,
+  };
 }
 
 function fmtX(r) {
@@ -178,10 +313,79 @@ if (process.argv.includes("--self-test")) {
         "fibonacci-recursive → uncertified cpu lane = INFO backlog (not blocking)");
 
   // a benchmark with NO native lane (only Galerina) is NOT shown cross-runtime → no finding.
-  const noNative = classifyBenchmark({ benchmark: "framework-pipeline", results: {
+  const noNative = classifyBenchmark({ benchmark: "compute-mix", results: {
     galerinaGoverned: { normThroughput: 100 }, wasm: { normThroughput: 200 },
   }});
   check(!noNative.shown && noNative.findings.length === 0, "no native lane → not-shown → no finding");
+
+  // The inverse axis is not equivalent: comparator results with no admitted
+  // subject must block publication rather than disappear into "not-shown".
+  const noSubject = classifyBenchmark({ benchmark: "spectral-norm", results: {
+    rust: { normThroughput: 100 }, nodejs: { normThroughput: 50 },
+  }});
+  check(
+    !noSubject.shown
+      && noSubject.findings.some((finding) =>
+        finding.code === "benchmark-subject-absent" && finding.severity === "HIGH"),
+    "native/comparator lanes with no benchmark subject → HIGH finding",
+  );
+
+  const missingCatalogEntry = catalogFindings({
+    resultIds: ["kept"],
+    activeIds: ["kept", "missing"],
+    sourceDirectories: ["kept", "missing"],
+    nonPublicationIds: [],
+  });
+  check(
+    missingCatalogEntry.some((finding) =>
+      finding.code === "benchmark-result-missing" && finding.benchmark === "missing"),
+    "active catalog entry absent from latest results → HIGH finding",
+  );
+
+  const invisibleSource = catalogFindings({
+    resultIds: ["kept"],
+    activeIds: ["kept"],
+    sourceDirectories: ["kept", "unregistered"],
+    nonPublicationIds: [],
+  });
+  check(
+    invisibleSource.some((finding) =>
+      finding.code === "benchmark-directory-unregistered" && finding.benchmark === "unregistered"),
+    "source-bearing benchmark directory absent from every catalog → HIGH finding",
+  );
+
+  const duplicateCatalog = catalogFindings({
+    resultIds: ["kept"],
+    activeIds: ["kept", "kept"],
+    sourceDirectories: ["kept"],
+  });
+  check(
+    duplicateCatalog.some((finding) => finding.code === "benchmark-catalog-duplicate"),
+    "duplicate active benchmark catalog entry → HIGH finding",
+  );
+
+  const unexpectedResult = catalogFindings({
+    resultIds: ["kept", "surplus"],
+    activeIds: ["kept"],
+    sourceDirectories: ["kept"],
+  });
+  check(
+    unexpectedResult.some((finding) =>
+      finding.code === "benchmark-result-unregistered" && finding.benchmark === "surplus"),
+    "unregistered latest-results entry → HIGH finding",
+  );
+
+  const leakedDiagnostic = catalogFindings({
+    resultIds: ["kept", "diagnostic-only"],
+    activeIds: ["kept", "diagnostic-only"],
+    sourceDirectories: ["kept"],
+    nonPublicationIds: ["diagnostic-only"],
+  });
+  check(
+    leakedDiagnostic.some((finding) =>
+      finding.code === "non-publication-benchmark-published" && finding.benchmark === "diagnostic-only"),
+    "diagnostic/standalone evidence in publication results → HIGH finding",
+  );
 
   // normalize() ignores EOL + trailing ws (so staleness compares content, not Windows checkout artifacts).
   check(normalize("a \r\nb\t\n\n") === normalize("a\nb\n"), "normalize collapses EOL + trailing ws");
@@ -200,17 +404,41 @@ if (process.argv.includes("--self-test")) {
 
 // ── main ─────────────────────────────────────────────────────────────────────
 const asJson = process.argv.includes("--json");
-// --stale-only runs Check A alone (report freshness). Wired into phase-close NOW (R&D 2026-07-17): a
-// report behind its data is a pure integrity defect and must block, whereas the Check-B ratio/admission
-// gate waits until the per-metric-table restructure lands (so it doesn't red-gate mid-adjudication).
+// --stale-only runs report freshness plus catalog completeness. Wired into
+// phase-close now: these checks do not require executable SLIDE. Subject-lane
+// and ratio admission remain in the full audit so the historical comparator
+// set can stay blocked without falsifying the current code-close cadence.
 const staleOnly = process.argv.includes("--stale-only");
 const latestPath = join(ROOT, "results", "latest.json");
 const reportPath = join(ROOT, "report.md");
+const benchmarksPath = join(ROOT, "benchmarks");
 
 if (!existsSync(latestPath)) { console.error("no results/latest.json — run `npm run run` first"); process.exit(2); }
 const data = JSON.parse(readFileSync(latestPath, "utf8"));
 
 const findings = [];
+try {
+  const sourceExtensions = /\.(?:c|cpp|fungi|go|js|mjs|py|rs|ts|wat)$/i;
+  const sourceDirectories = readdirSync(benchmarksPath, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => readdirSync(join(benchmarksPath, entry.name), { withFileTypes: true })
+      .some((child) => child.isFile() && sourceExtensions.test(child.name)))
+    .map((entry) => entry.name);
+  findings.push(...catalogFindings({
+    resultIds: data.map((entry) => entry.benchmark),
+    activeIds: BENCHMARKS.map((entry) => entry.id),
+    activeDirectories: BENCHMARKS.map((entry) => entry.dir),
+    sourceDirectories,
+    nonPublicationDirectories: [...NON_PUBLICATION_DIRECTORIES],
+  }));
+} catch (error) {
+  findings.push({
+    benchmark: "(catalog)",
+    code: "benchmark-catalog-read-failed",
+    severity: "HIGH",
+    detail: `benchmark catalog/directory audit failed closed: ${error.message}`,
+  });
+}
 
 // ── Check A: report staleness ────────────────────────────────────────────────
 let staleStatus = "n/a";
@@ -233,13 +461,14 @@ if (!existsSync(reportPath)) {
   }
 }
 
-// --stale-only: gate on report freshness alone (Check A), skip the ratio/admission gate for now.
+// --stale-only: gate report freshness plus catalog completeness, but skip
+// subject-lane and ratio admission until the executable SLIDE comparison exists.
 if (staleOnly) {
-  const stale = findings.filter((f) => f.benchmark === "(report)");
+  const stale = findings;
   if (asJson) console.log(JSON.stringify({ staleStatus, findings: stale }, null, 1));
   else console.log(stale.length
-    ? `benchmark report STALE (${staleStatus}) — regenerate: node src/compare.mjs > report.md`
-    : "benchmark report fresh ✓");
+    ? `benchmark publication surface refused (${stale.length} report/catalog finding(s))`
+    : "benchmark report fresh and catalog complete ✓");
   process.exit(stale.length ? 3 : 0);
 }
 
@@ -274,6 +503,6 @@ if (asJson) {
   for (const f of findings) console.log(`    ${f.severity === "CRITICAL" ? "⛔" : f.severity === "HIGH" ? "⚠" : "·"} ${f.severity} ${f.benchmark}: ${f.detail}`);
   console.log(blocking.length === 0
     ? "  verdict: clean — report fresh · governance has no native column · memory ranked by bytes/op · no uncertified ratio published ✓"
-    : `  verdict: ${blocking.length} blocking finding(s) — the report is stale or a per-metric structural invariant is violated ✗`);
+    : `  verdict: ${blocking.length} blocking finding(s) — publication integrity is incomplete ✗`);
 }
 process.exit(blocking.length === 0 ? 0 : 3);

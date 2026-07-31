@@ -36,6 +36,7 @@ function freshReq() {
     method: "POST", path: "/orders",
     headers: { authorization: "Bearer t", "content-type": "application/json" },
     body: BODY, query: {}, requestId: "r", receivedAt: 0,
+    channelVerdict: 1, // admitted upstream identity proof; header presence alone must never authorize
   };
 }
 

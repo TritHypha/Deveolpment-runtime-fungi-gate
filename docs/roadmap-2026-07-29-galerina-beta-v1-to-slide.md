@@ -33,8 +33,9 @@ flowchart LR
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
+    K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
-    T["🟦 Package retirement<br/>473 tracked source .ts → 0<br/>484 all tracked .ts → 0<br/>95 node_modules → 0"]
+    T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
@@ -44,7 +45,7 @@ flowchart LR
     Z --> E
     G --> P
     H --> M
-    E --> Q
+    E --> K --> Q
     Q --> I
     M --> I
 
@@ -53,7 +54,7 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z green;
+    class A,B,C,D,E,G,R,Y,Z,K green;
     class X,F red;
     class Q amber;
     class H,I,T,M blue;
@@ -94,7 +95,8 @@ flowchart LR
 | TLS/custom channel composition | 🟩 | Certificate admission is mandatory; custom policy is an additional K3 factor and cannot rescue certificate failure; API server 22/22 |
 | Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
 | SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |
-| External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates were inspected in place and all now pass the strict frontend. The topology audit is green, but target-gpu/native/wasm dossiers and executable parity remain incomplete; substrate-math is a reference/floor package. Nothing has been copied or admitted |
+| Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
+| External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates were inspected in place and all genuinely pass the per-file strict frontend. The source issue log is adjudicated in `docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md`. Target GPU/native lack status and test dossiers; target Wasm lacks vectors/plan; all lack executable parity. Substrate Math is reference-only under the bounded bootstrap floor. Nothing has been copied or admitted |
 
 ## Active Galerina work
 
@@ -140,10 +142,10 @@ The remaining sequence is:
 6. Resume independent SLIDE implementation only after the Galerina beta-v1
    release gate is authorizing.
 7. Switch packages in dependency order from TypeScript execution to verified
-   `.fungi`/SLIDE execution. The fresh current ratchets are 459 implementation
-   `.ts` files reported by the self-host readiness inventory, 473 tracked
-   package-source `.ts` files and 484 total tracked package `.ts` paths in the
-   retirement graph, one nested native package and 95 package-local
+   `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
+   implementation `.ts` files and 491 tracked package `.ts` paths: 26
+   twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 338 governed
+   migration-program paths, plus one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
    without hiding or renaming a member.
    External AIs may prepare flat, quarantined candidates in parallel, one
@@ -327,7 +329,10 @@ equivalent optimized forms.
 
 - The internal benchmark harness and chart generator are integrity-tested, but
   no new Wasm/Rust/Python/Galerina/SLIDE comparison or chart is published until
-  SLIDE has an executable backend and the same workloads can be measured.
+  SLIDE has an executable backend and the same workloads can be measured. The
+  stale-report/catalog gate is green; the full publication audit deliberately
+  remains red for two historical subject-absence rows until the complete
+  equivalent-work run replaces `latest.json`.
 - Literal package TypeScript and `node_modules` retirement is now an explicit
   terminal goal, sequenced after executable SLIDE integration and performed
   one admitted package edge at a time.
