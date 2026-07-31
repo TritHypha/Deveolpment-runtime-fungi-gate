@@ -31,7 +31,7 @@ flowchart LR
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
     F["🟥 Beta-v1 release gate<br/>terminal fixed-point rerun"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>executable backend"]
+    H["🟦 Independent SLIDE<br/>general executable backend"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
@@ -40,13 +40,15 @@ flowchart LR
     T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
-    M["🟦 VPEG research<br/>verified fixed graph + typed parameters"]
+    M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
+    U["🟨 Shape Lab E01<br/>encrypted hybrid-signed durable atlas"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
     Z --> E
     G --> P
-    H --> M
+    L --> M --> U
+    U --> I
     E --> K --> Q
     E --> S --> L --> H
     Q --> I
@@ -57,10 +59,10 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M green;
     class X,F red;
-    class Q amber;
-    class H,I,T,M blue;
+    class Q,U amber;
+    class H,I,T blue;
     class P green;
     class J grey;
 ```
@@ -103,7 +105,8 @@ flowchart LR
 | Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
 | Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
-| Shape Lab VPEG/NSE experiment | 🟨 | Full rebuild, ordinary action cache, exact VPEG and proposal-only NSE-Reflex execute through one deterministic verifier. Seven focused tests cover canonical bytes, failure edges, semantic distinction, byte equality, poisoned-entry quarantine and proposal non-authority. In the first 2,000-iteration synthetic run, action cache and exact VPEG beat rebuild; NSE was slower. It remains experiment-only. This is not the general backend |
+| Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |
+| Shape Lab E01 durable atlas | 🟨 | SLIDE checkpoint `d606125`: the Windows probe proved file flush is available while directory `fsync` is not (`EPERM`), so rename-based durability is not claimed. A pre-created append-only log now has bounded length/digest frames, every-byte tail-truncation evidence, AES-256-GCM encrypted payloads and mandatory Ed25519 + ML-DSA-65 generation/commit signatures. Focused crypto/frame evidence is 8/8. Append+flush publication, chain recovery, minimum rollback anchor, restart lookup and the durable benchmark remain active |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
@@ -148,9 +151,13 @@ The remaining sequence is:
    `.fungi`; Tower Citizen remains the Galerina policy adapter and trust
    domains/keys remain separate.
 6. **Bounded non-production work resumed under the owner's full-auto
-   direction:** independent SLIDE now has an immutable prepared V2-D executor
-   and exact clean/prepared benchmark. Galerina production native activation
-   remains red; no loader, rotation or package authority was bypassed.
+   direction:** independent SLIDE now has an immutable prepared V2-D executor,
+   an exact clean/prepared benchmark, completed E00 F01-F20/S0-S8 evidence and
+   the first E01 durable-atlas slices. The current E01 log frames and encrypted
+   hybrid-signed envelopes remain non-authorizing until append/flush recovery,
+   rollback anchoring, restart re-admission and the crash matrix pass. Galerina
+   production native activation remains red; no loader, rotation or package
+   authority was bypassed.
 7. Switch packages in dependency order from TypeScript execution to verified
    `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
    implementation `.ts` files and 491 tracked package `.ts` paths: 26
@@ -290,8 +297,8 @@ Rules:
 
 ## SLIDE VPEG and dual-engine research
 
-Status: 🟨 primary-source R&D plus a bounded executable lab seed complete; not
-yet a production SLIDE backend or admitted Galerina feature.
+Status: 🟨 E00 bounded executable lab complete and E01 durable-atlas work
+active; not yet a production SLIDE backend or admitted Galerina feature.
 
 The canonical engineering object is a **Verified Parametric Execution Graph
 (`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
@@ -341,16 +348,33 @@ neural result can count:
 The ordinary action cache is the null hypothesis. Without it, the experiment
 can only prove that reuse beats rebuilding.
 
-The 2026-07-31 Shape Lab seed now executes full rebuild (`B0`), ordinary
-action cache (`BA`), exact VPEG (`B1`) and NSE-Reflex proposal (`N1`) lanes.
-Every lane passes through deterministic exact verification and emits the same
-artifact digest. Same-key/different-byte atlas entries are quarantined. In the
-first 2,000-iteration synthetic run, `BA` and `B1` reduced lab overhead versus
-`B0`, while `N1` was slower than rebuilding after proposal and verification.
-Therefore VPEG proceeds, while NSE remains `EXPERIMENT-ONLY` and gains no
-authority. The 8-byte number is model parameters only, not total cache
-residency. Evidence is under `../SLIDE/research/shape-lab/results/`; the status
-diagram is `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg`.
+The 2026-07-31 Shape Lab now executes full rebuild (`B0`), ordinary action
+cache (`BA`), exact VPEG (`B1`) and NSE-Reflex proposal (`N1`) lanes. E00 adds
+bounded raw-byte intake, F01-F20 hostile/control evidence, exact S0-S8 stage
+coverage, target/driver derivation, typed parameters, child-DAG closure,
+proposal quarantine and complete matched-result validation. Every graph
+fixture replays byte-identically through the public decoder and independent
+sample counting agrees with the result records. Focused E00 evidence is 47/47.
+
+E01 is now active rather than merely planned. The first committed slices use
+a pre-created append-only log because this Windows host cannot flush directory
+metadata through Node. Length/digest-framed generations survive every tested
+tail truncation without granting partial authority. Atlas payloads are
+AES-256-GCM encrypted; generation and commit records require both Ed25519 and
+ML-DSA-65 verification. Tests use ephemeral keys and read no owner material.
+The focused durable-atlas suite is 8/8 and complete independent SLIDE is
+102/102, but E01 remains amber until append/flush recovery, minimum-anchor
+rollback defence, restart/current-context re-admission and its measured
+benchmark close.
+
+The first 2,000-iteration synthetic run remains valid historical evidence:
+`BA` and `B1` reduced lab overhead versus `B0`, while `N1` was slower after
+proposal and verification. VPEG therefore proceeds; NSE remains
+`EXPERIMENT-ONLY` and gains no authority. The 8-byte number is model parameters
+only, not total cache residency. Evidence is under
+`../SLIDE/research/shape-lab/`; the standalone engineering diagrams are
+`../SLIDE/docs/n1-neural-shape-engine-engineering.svg` and
+`../SLIDE/docs/b1-vpeg-atlas-engineering.svg`.
 
 The composition is new, but its foundations are established: persistent
 incremental object caching in LLVM ThinLTO, declared-input action hashes and
