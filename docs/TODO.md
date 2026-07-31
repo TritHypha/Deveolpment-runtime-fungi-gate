@@ -11,6 +11,30 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
 guessing.
 
+### Shape Lab E03 exact typed-boundary checkpoint - 2026-07-31
+
+- **Implemented outside Galerina:** deterministic fixed/dynamic/indeterminate
+  analysis, exact value-free plan identity, planner ownership, ephemeral
+  signed-32-bit/Boolean/K3 binding validation and the B3 independent-B0 lane.
+- **Measured evidence:** clean SLIDE source `f636522`; 3,500 exact checks on a
+  32-fixed/2-residual graph. B0 884,371 ns/op; BA 765,330; B1 749,736; B2
+  49,452,914; B3 5,059,071. B3 is 5.721x B0 and has no finite measured
+  break-even. MATCH/MISS/INDETERMINATE are 700/7/7.
+- **Security result:** descriptors close type, representation, lifetime,
+  mutability, alias, persistence, bounds, effects, capabilities, resources and
+  terminal failure. Current values are checked and then absent from plans,
+  receipts and evidence. Injection-shaped strings and wrong/missing/duplicate
+  bindings refuse.
+- **Not green/general:** current planner reuse is exact-graph. A structurally
+  renamed graph family has not yet proved one shared canonical plan; B3 is
+  slower than B0/BA/B1. This remains amber experiment-only evidence and has no
+  Galerina package or execution authority.
+- **Authoritative paths:**
+  `../SLIDE/research/shape-lab/E03-TYPED-BOUNDARY-CHECKPOINT-REPORT.md` and
+  `../SLIDE/research/shape-lab/results/e03-typed-boundary-latest.*`.
+- **Current work:** name-independent canonical slots or a completely verified
+  B2 mapping for E03, then repeat the matched benchmark. No owner-only blocker.
+
 ### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
 
 - **Completed outside Galerina:** independent SLIDE commits through

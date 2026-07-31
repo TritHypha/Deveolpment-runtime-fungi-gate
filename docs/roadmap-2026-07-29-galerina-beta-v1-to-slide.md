@@ -43,13 +43,14 @@ flowchart TB
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
     U["🟩 Shape Lab E01<br/>bounded durable atlas · 22/22 · measured"]
     V["🟩 Shape Lab E02<br/>bounded structural retrieval · 136/136 · measured"]
+    W["🟨 Shape Lab E03 checkpoint<br/>exact typed boundary · measured slower · H3 open"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
     Z --> E
     G --> P
-    L --> M --> U --> V
-    V --> I
+    L --> M --> U --> V --> W
+    W --> I
     E --> K --> Q
     E --> S --> L --> H
     Q --> I
@@ -62,7 +63,7 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V green;
     class X,F red;
-    class Q amber;
+    class Q,W amber;
     class H,I,T blue;
     class P green;
     class J grey;
@@ -109,6 +110,7 @@ flowchart TB
 | Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |
 | Shape Lab E01 durable atlas | 🟩 | SLIDE `5ad5e98`; measured implementation `8c869e0af5121bb21de6cbf95ebb8ffcf763b1dd`. The bounded pre-created single-link log has exact length/digest frames, AES-256-GCM payloads, mandatory Ed25519 + ML-DSA-65 generation/commit signatures, append+flush publication, full contiguous-chain recovery, caller-owned minimum anchors, historical key/byte immutability and current graph/target/policy/proof/epoch replay. Every pre-commit byte prefix serves no successor. Focused 22/22, complete SLIDE 116/116 and ten schemas parse. Across 525 exact-byte checks, medians were B0 193,028 ns/op, process-local B1 92,376 ns/op and durable restart 1,526,072 ns/op. E01 was 7.91x the tiny rebuild cost, so this is verified R&D recovery evidence, not a speedup or production storage claim |
 | Shape Lab E02 structural retrieval | 🟩 | SLIDE source `2df87f1feed26bb5b4568eac4dd4a7f827d1024b`. Topology bucketing, semantic colour refinement and a non-recursive exact labelled-graph bijection preserve operation, type, effect, capability, failure, attribute, role and edge semantics. The index is capped and immutable; exhaustion is typed `INDETERMINATE`; B2 recompiles the current graph and never serves prior artifact bytes. Complete SLIDE 136/136 and eleven schemas parse. Across 5,600 exact artifact checks, B2 produced 700 MATCH, 350 MISS and 350 INDETERMINATE outcomes. Median B2 was 1,039,045 ns/op versus B0 164,718 ns/op: 6.308x cost, so E02 is retained as verified negative-performance evidence and a deterministic control, not a speedup or production admission claim |
+| Shape Lab E03 exact typed-boundary checkpoint | 🟨 | Clean SLIDE source `f636522`; deterministic fixed/dynamic/indeterminate analysis, immutable value-free exact plans, ephemeral i32/Boolean/K3 binding checks and B3 independent-B0 comparison are executable. Across 3,500 exact checks on a 32-fixed/2-residual graph, medians were B0 884,371 ns/op, BA 765,330, B1 749,736, B2 49,452,914 and B3 5,059,071. B3 is 5.721x B0 with no finite measured break-even. Injection-shaped/missing/duplicate/wrong-type bindings refuse and values are not retained. Amber because structurally renamed graphs do not yet share one canonical plan and performance is negative; no Galerina authority is granted |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
@@ -302,8 +304,9 @@ Rules:
 ## SLIDE VPEG and dual-engine research
 
 Status: 🟩 E00, bounded E01 durable-atlas and bounded E02 structural
-retrieval experiments are complete; none is a production SLIDE backend or
-admitted Galerina feature.
+retrieval experiments are complete; 🟨 E03 has a measured exact-graph
+checkpoint but structurally renamed-family reuse remains open. None is a
+production SLIDE backend or admitted Galerina feature.
 
 The canonical engineering object is a **Verified Parametric Execution Graph
 (`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
@@ -381,6 +384,13 @@ the current graph and compares it independently with B0. It never serves old
 artifact bytes. Across 5,600 exact checks, median B2 cost was 6.308x B0, so its
 speed hypothesis failed. The implementation remains as the mandatory control
 for E03/E04 rather than being deleted or promoted.
+
+E03's exact-graph checkpoint proves a bounded fixed/dynamic/indeterminate
+partition, immutable value-free plan, ephemeral typed binding validation and
+current B0 artifact equality. On a 32-fixed/2-residual graph, B3 cost 5.721x
+B0 and had no finite break-even. This is retained negative evidence. E03 stays
+amber because one canonical plan has not yet been proved across a structurally
+renamed graph family; it grants no integration or package-retirement authority.
 
 The provenance-bound matched E01 run performed 525 exact-byte checks. Median
 costs were B0 rebuild 193,028 ns/op, process-local B1 92,376 ns/op and durable
