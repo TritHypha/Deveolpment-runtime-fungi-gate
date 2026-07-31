@@ -29,6 +29,49 @@ session. Every checkpoint must record:
   generations. Do not begin package admission, TypeScript removal,
   NSE-Synthesis, or an external-runtime benchmark before those gates close.
 
+### RD-0609 through RD-0615 intake checkpoint - 2026-07-31
+
+- **Reviewed without starting the paused implementation chapter:** the
+  Knowledge Base transcript manifest and all seven pre-transcript
+  adjudications were checked against the live Galerina, SLIDE and external
+  staging trees. RD-0614 remains a partial source read and every external
+  claim remains non-authoritative until primary-source verification.
+- **Maths independently rechecked:** the constrained byte domain contains 94
+  values, eliminates 63.28125% per byte and reduces the eight-byte space by
+  3,026.19x. A 500-item queue growing by 900 items/minute saturates in 33.33
+  seconds, 72x earlier than the illustrative 40-minute crash.
+- **Already covered:** Galerina requires positive `maxInFlight`, finite retry
+  attempts, bounded quarantine, pipeline time/memory budgets, safe 429
+  responses, unknown-version refusal and dead-letter policies. External
+  staging already requires one flat `@galerina/<name>` identity, rejects
+  duplicates, symlinks/reparse points and nested package stores. Neither
+  Galerina nor SLIDE has a `.gitmodules` file.
+- **New Galerina contract delta:** `BackpressurePolicy` currently admits
+  `onSaturation: "block"` with no finite per-block timeout. The whole-pipeline
+  timeout is not an equivalent resource bound. Before
+  `galerina-data-pipeline` receives an executable `.fungi` parity candidate,
+  add a positive finite saturation-block timeout for the block arm, refuse a
+  missing/invalid value, and add focused negative/control tests. Preserve the
+  existing 20/20 package baseline until that deliberate contract change.
+- **New future assurance delta:** the planned Z3 leg must expose distinct
+  `SAT`, `UNSAT`, `UNKNOWN`, `TIMEOUT` and `RESOURCE_EXHAUSTED` outcomes.
+  Only `UNSAT` may support "proved absent"; every incomplete outcome folds
+  fail-closed at an authority boundary. This does not authorize adding the
+  currently owner-gated solver dependency.
+- **Deliberately not adopted:** do not query a public package registry during
+  candidate admission to look for name collisions. Galerina's closed scoped
+  identity, signed registry authority and exact provenance are the security
+  boundary; a network lookup would add mutable external state. RD-0612 and
+  RD-0614 remain supporting decision records, not npm/submodule designs to
+  copy. RD-0615 has no technical disposition.
+- **Paper decision:** no new paper. The mechanisms are established practice;
+  the K3 mappings are useful synthesis but have no new executed,
+  named-machine result.
+- **Owner blockers:** none. Resume remains F01-F20 and immutable atlas
+  generations; implement the data-pipeline delta before that package's
+  translation contract freezes, and bind the solver outcome rule when the Z3
+  dependency gate is eventually opened.
+
 ### RD-0601 through RD-0608 reconciliation checkpoint - 2026-07-31
 
 - **Completed:** the owner-approved design and executable chapter plan are
