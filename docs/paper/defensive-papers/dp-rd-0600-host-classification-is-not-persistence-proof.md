@@ -96,7 +96,8 @@ authority-confusion fault.
 
 ## Executable evidence and honest limits
 
-The Windows host-probe crate is dependency-free and has four focused tests:
+The Windows native experiment crate is dependency-free. Its first four focused
+tests cover host classification:
 
 - pure admission admits fixed NTFS/ReFS and refuses remote, remote-storage and
   unlisted filesystem facts;
@@ -114,11 +115,26 @@ A fifth native test now requires `CreateFileW` directory-handle acquisition,
 NTFS directory. It passes. This is API-acceptance evidence on one host, not a
 crash or power-loss durability claim.
 
-This evidence does **not** cover an in-process binary loader, a write or flush,
-exclusive publication, reboot, power loss, Linux, macOS, ReFS, or a Windows 11
-host. The path checks also remain susceptible to namespace TOCTOU if reused as
-authority; the production design must operate on retained handles rather than
-trusting this preflight result.
+Two further tests exercise a complete non-authorizing publication candidate
+and malformed input refusal. The candidate creates a same-directory staging
+file exclusively with no sharing, writes bounded bytes, flushes and checks the
+file handle, closes, calls `MoveFileExW(MOVEFILE_WRITE_THROUGH)` without
+replacement, re-opens without sharing or following a reparse point, requires
+one link and stable open-handle volume/file identity, reads exact bytes and
+performs the native directory barrier. An exact existing single-link
+generation is idempotent; existing-different and hard-linked destinations
+refuse. The hard-link case was a planted RED regression before the handle
+identity rule was added. Current native evidence is **7/7**.
+Failure after uncertainty does not delete by pathname: the candidate may leave
+a non-authoritative staging orphan so a later reclaimer can require exact
+handle identity rather than race an attacker-controlled replacement.
+
+This evidence does **not** cover an in-process binary loader, process kill,
+reboot, power loss, Linux, macOS, ReFS, or a Windows 11 host. The Win32 rename
+step is still path-addressed after the staging handle closes, and the parent
+directory is not retained as a relative publication root. A hostile namespace
+rename/substitution race therefore remains open. The candidate cannot issue a
+production receipt.
 
 A separate non-executing artifact inspector now has **7/7** focused tests. It
 checks the descriptor-fixed path and all symbolic ancestors/components,
@@ -164,7 +180,7 @@ telemetry only**:
 | Determinism | 8 | Pure matrix is deterministic; live host facts vary by machine |
 | Recovery/durability | 3 | No write, barrier, crash or power-loss evidence |
 | Compatibility | 7 | Windows probe builds elsewhere but denies; other platform probes absent |
-| Test/falsification evidence | 8 | Red/green reparse regression plus four focused tests |
+| Test/falsification evidence | 8 | Red/green reparse and hard-link regressions plus seven focused tests |
 | Benefit/cost | 9 | Small refusal surface with no authority grant |
 
 No adoption score is assigned to the production adapter because it does not
@@ -183,6 +199,8 @@ treated as persistence proof.
   [`GetVolumeInformationW`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
 - Microsoft,
   [`FlushFileBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers)
+- Microsoft,
+  [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 - Microsoft,
   [`MoveFileExW`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw)
 - Linux man-pages,

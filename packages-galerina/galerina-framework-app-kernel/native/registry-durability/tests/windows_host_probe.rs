@@ -2,8 +2,9 @@ use std::path::Path;
 
 use galerina_registry_durability_native::{
     admit_measured_windows_host, flush_windows_directory_candidate, probe_windows_host,
-    MeasuredWindowsHost, WindowsDirectoryFlushVerdict, WindowsHostProbeVerdict, DRIVE_FIXED,
-    DRIVE_REMOTE, FILE_SUPPORTS_REMOTE_STORAGE,
+    publish_windows_generation_candidate, MeasuredWindowsHost, WindowsDirectoryFlushVerdict,
+    WindowsGenerationPublicationVerdict, WindowsHostProbeVerdict, DRIVE_FIXED, DRIVE_REMOTE,
+    FILE_SUPPORTS_REMOTE_STORAGE,
 };
 
 fn measured(filesystem: &str) -> MeasuredWindowsHost {
@@ -123,4 +124,84 @@ fn live_fixed_local_directory_accepts_the_native_flush_barrier() {
             );
         }
     }
+}
+
+#[cfg(windows)]
+#[test]
+fn live_publication_is_exact_idempotent_and_collision_safe() {
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("clock must be available for a disposable publication path")
+        .as_nanos();
+    let root = std::env::temp_dir().join(format!(
+        "galerina-registry-publication-{}-{nonce}",
+        std::process::id(),
+    ));
+    fs::create_dir(&root).expect("disposable publication directory");
+    let generation_id = "a".repeat(64);
+    let expected = br#"{"schema":"galerina.registry.generation.v1"}"#;
+    let changed = br#"{"schema":"different"}"#;
+
+    assert!(matches!(
+        publish_windows_generation_candidate(&root, &generation_id, expected),
+        WindowsGenerationPublicationVerdict::Candidate { byte_length }
+            if byte_length == expected.len()
+    ));
+    assert_eq!(
+        fs::read(root.join(format!("registry-generation-{generation_id}.json")))
+            .expect("published generation"),
+        expected,
+    );
+    assert!(matches!(
+        publish_windows_generation_candidate(&root, &generation_id, expected),
+        WindowsGenerationPublicationVerdict::Candidate { byte_length }
+            if byte_length == expected.len()
+    ));
+    assert!(matches!(
+        publish_windows_generation_candidate(&root, &generation_id, changed),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
+    assert_eq!(
+        fs::read(root.join(format!("registry-generation-{generation_id}.json")))
+            .expect("unchanged generation"),
+        expected,
+    );
+    let linked_generation_id = "b".repeat(64);
+    fs::hard_link(
+        root.join(format!("registry-generation-{generation_id}.json")),
+        root.join(format!("registry-generation-{linked_generation_id}.json")),
+    )
+    .expect("disposable hard-link collision");
+    assert!(matches!(
+        publish_windows_generation_candidate(&root, &linked_generation_id, expected),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
+    fs::remove_dir_all(root).expect("disposable publication cleanup");
+}
+
+#[test]
+fn publication_refuses_malformed_identity_and_unbounded_bytes() {
+    assert!(matches!(
+        publish_windows_generation_candidate(Path::new("."), "not-a-generation", b"value"),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
+    assert!(matches!(
+        publish_windows_generation_candidate(Path::new("."), &"A".repeat(64), b"value"),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
+    assert!(matches!(
+        publish_windows_generation_candidate(Path::new("."), &"a".repeat(64), b""),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
+    assert!(matches!(
+        publish_windows_generation_candidate(
+            Path::new("."),
+            &"a".repeat(64),
+            &vec![0_u8; 16 * 1024 * 1024 + 1],
+        ),
+        WindowsGenerationPublicationVerdict::Deny(_)
+    ));
 }

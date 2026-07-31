@@ -66,8 +66,16 @@ Platform work continued without granting loader authority. The
 zero-dependency Rust candidate now opens an admitted direct Windows directory
 with `CreateFileW(GENERIC_WRITE, FILE_FLAG_BACKUP_SEMANTICS)`, requires
 `FlushFileBuffers` to succeed and checks handle close. The live Windows 10
-fixed-local NTFS test passes; native evidence is **5/5**. This proves API
+fixed-local NTFS test passed as the earlier **5/5** checkpoint. This proved API
 acceptance on one host, not crash or power-loss durability.
+
+The same candidate now also executes exclusive same-directory staging,
+write/file flush, checked close, no-replace write-through publication, exact
+no-sharing re-open with stable open-handle identity, single-link/reparse
+refusal and the native directory barrier. A planted hard-link destination
+first failed and now refuses. Native evidence is **7/7**. This remains
+non-authorizing until hostile parent-namespace behavior and real
+process-kill/reboot/power-loss matrices pass on the required platforms.
 
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:

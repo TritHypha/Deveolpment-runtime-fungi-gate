@@ -103,11 +103,11 @@ intent → governed execution plan → coordinated compute → audit proof
 > precede a post-load identity check. Continue non-authorizing syscall evidence
 > while the linked-runtime / narrowed-trust / SLIDE-order decision is open.
 >
-> The native Windows directory-barrier candidate is 5/5: on this Windows 10
-> fixed-local NTFS host, `CreateFileW` with directory semantics followed by
-> `FlushFileBuffers` and checked close succeeds. Treat this only as
-> syscall-acceptance evidence; crash/power-loss and production admission remain
-> open.
+> The native Windows durability candidate is 7/7: on this Windows 10
+> fixed-local NTFS host, the direct-directory `FlushFileBuffers` call and
+> exact, no-replace publication sequence succeed; hard-linked collisions
+> refuse. This is syscall-acceptance evidence only, not hostile
+> parent-namespace, crash or physical durability proof.
 
 ## Grammar — Current v0.1 Flow Forms
 

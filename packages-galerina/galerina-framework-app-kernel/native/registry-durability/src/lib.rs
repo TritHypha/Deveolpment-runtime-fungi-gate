@@ -50,6 +50,12 @@ pub enum WindowsDirectoryFlushVerdict {
     Deny(WindowsHostProbeError),
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum WindowsGenerationPublicationVerdict {
+    Candidate { byte_length: usize },
+    Deny(WindowsHostProbeError),
+}
+
 fn deny(code: &'static str, os_code: Option<u32>) -> WindowsHostProbeVerdict {
     WindowsHostProbeVerdict::Deny(WindowsHostProbeError { code, os_code })
 }
@@ -80,26 +86,66 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
 mod windows {
     use super::{
         admit_measured_windows_host, deny, MeasuredWindowsHost, WindowsDirectoryFlushVerdict,
-        WindowsHostProbeError, WindowsHostProbeVerdict,
+        WindowsGenerationPublicationVerdict, WindowsHostProbeError, WindowsHostProbeVerdict,
     };
     use std::ffi::c_void;
     use std::ffi::OsStr;
-    use std::fs;
+    use std::fs::{self, File, OpenOptions};
+    use std::io::{Read, Write};
     use std::os::windows::ffi::OsStrExt;
-    use std::path::{Component, Path};
+    use std::os::windows::fs::OpenOptionsExt;
+    use std::os::windows::io::{AsRawHandle, IntoRawHandle};
+    use std::path::{Component, Path, PathBuf};
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     const INVALID_FILE_ATTRIBUTES: u32 = u32::MAX;
     const INVALID_HANDLE_VALUE: *mut c_void = -1_isize as *mut c_void;
     const FILE_ATTRIBUTE_DIRECTORY: u32 = 0x0000_0010;
     const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0000_0400;
+    const FILE_FLAG_WRITE_THROUGH: u32 = 0x8000_0000;
+    const FILE_FLAG_OPEN_REPARSE_POINT: u32 = 0x0020_0000;
     const FILE_SHARE_READ: u32 = 0x0000_0001;
     const FILE_SHARE_WRITE: u32 = 0x0000_0002;
     const FILE_SHARE_DELETE: u32 = 0x0000_0004;
     const GENERIC_WRITE: u32 = 0x4000_0000;
     const OPEN_EXISTING: u32 = 3;
     const FILE_FLAG_BACKUP_SEMANTICS: u32 = 0x0200_0000;
+    const MOVEFILE_WRITE_THROUGH: u32 = 0x0000_0008;
+    const MAX_GENERATION_BYTES: usize = 16 * 1024 * 1024;
     const MAX_PATH_CHARS: usize = 32_768;
     const FILESYSTEM_NAME_CHARS: usize = 64;
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    struct FileTime {
+        low: u32,
+        high: u32,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    struct ByHandleFileInformation {
+        attributes: u32,
+        creation_time: FileTime,
+        last_access_time: FileTime,
+        last_write_time: FileTime,
+        volume_serial_number: u32,
+        file_size_high: u32,
+        file_size_low: u32,
+        number_of_links: u32,
+        file_index_high: u32,
+        file_index_low: u32,
+    }
+
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    struct OpenFileIdentity {
+        attributes: u32,
+        volume_serial_number: u32,
+        byte_length: u64,
+        number_of_links: u32,
+        file_index: u64,
+        last_write_time: FileTime,
+    }
 
     #[link(name = "kernel32")]
     extern "system" {
@@ -131,6 +177,15 @@ mod windows {
             file_name: *const u16,
             volume_path_name: *mut u16,
             buffer_length: u32,
+        ) -> i32;
+        fn GetFileInformationByHandle(
+            file: *mut c_void,
+            information: *mut ByHandleFileInformation,
+        ) -> i32;
+        fn MoveFileExW(
+            existing_file_name: *const u16,
+            new_file_name: *const u16,
+            flags: u32,
         ) -> i32;
     }
 
@@ -317,6 +372,237 @@ mod windows {
         }
         WindowsDirectoryFlushVerdict::Candidate
     }
+
+    fn publication_deny(
+        code: &'static str,
+        os_code: Option<u32>,
+    ) -> WindowsGenerationPublicationVerdict {
+        WindowsGenerationPublicationVerdict::Deny(WindowsHostProbeError { code, os_code })
+    }
+
+    fn io_code(error: &std::io::Error) -> Option<u32> {
+        error
+            .raw_os_error()
+            .and_then(|code| u32::try_from(code).ok())
+    }
+
+    fn generation_id_valid(generation_id: &str) -> bool {
+        generation_id.len() == 64
+            && generation_id
+                .bytes()
+                .all(|value| value.is_ascii_digit() || (b'a'..=b'f').contains(&value))
+    }
+
+    fn close_file(file: File) -> Result<(), u32> {
+        let handle = file.into_raw_handle().cast::<c_void>();
+        // SAFETY: ownership of the live handle moved out of File and into this
+        // function, so exactly one CloseHandle call is required.
+        if unsafe { CloseHandle(handle) } == 0 {
+            Err(last_error())
+        } else {
+            Ok(())
+        }
+    }
+
+    fn open_file_identity(file: &File) -> Result<Option<OpenFileIdentity>, u32> {
+        let mut information = ByHandleFileInformation {
+            attributes: 0,
+            creation_time: FileTime { low: 0, high: 0 },
+            last_access_time: FileTime { low: 0, high: 0 },
+            last_write_time: FileTime { low: 0, high: 0 },
+            volume_serial_number: 0,
+            file_size_high: 0,
+            file_size_low: 0,
+            number_of_links: 0,
+            file_index_high: 0,
+            file_index_low: 0,
+        };
+        // SAFETY: file owns a live handle and information is a writable
+        // BY_HANDLE_FILE_INFORMATION-compatible value for the call.
+        if unsafe {
+            GetFileInformationByHandle(file.as_raw_handle().cast::<c_void>(), &mut information)
+        } == 0
+        {
+            return Err(last_error());
+        }
+        if information.attributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT) != 0
+            || information.number_of_links != 1
+        {
+            return Ok(None);
+        }
+        Ok(Some(OpenFileIdentity {
+            attributes: information.attributes,
+            volume_serial_number: information.volume_serial_number,
+            byte_length: u64::from(information.file_size_high) << 32
+                | u64::from(information.file_size_low),
+            number_of_links: information.number_of_links,
+            file_index: u64::from(information.file_index_high) << 32
+                | u64::from(information.file_index_low),
+            last_write_time: information.last_write_time,
+        }))
+    }
+
+    fn read_exact_candidate(path: &Path, expected: &[u8]) -> Result<bool, u32> {
+        let mut file = OpenOptions::new()
+            .read(true)
+            .share_mode(0)
+            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+            .open(path)
+            .map_err(|error| io_code(&error).unwrap_or(1))?;
+        let before = match open_file_identity(&file)? {
+            Some(identity) => identity,
+            None => {
+                close_file(file)?;
+                return Ok(false);
+            }
+        };
+        if usize::try_from(before.byte_length).ok() != Some(expected.len()) {
+            close_file(file)?;
+            return Ok(false);
+        }
+        let mut observed = Vec::with_capacity(expected.len());
+        file.read_to_end(&mut observed)
+            .map_err(|error| io_code(&error).unwrap_or(1))?;
+        let after = open_file_identity(&file)?;
+        close_file(file)?;
+        Ok(after == Some(before) && observed == expected)
+    }
+
+    fn stage_path(directory: &Path, generation_id: &str) -> Result<PathBuf, ()> {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map_err(|_| ())?
+            .as_nanos();
+        Ok(directory.join(format!(
+            ".registry-generation-{generation_id}.{}-{nonce}.tmp",
+            std::process::id(),
+        )))
+    }
+
+    pub fn publish_generation(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+    ) -> WindowsGenerationPublicationVerdict {
+        if !generation_id_valid(generation_id)
+            || bytes.is_empty()
+            || bytes.len() > MAX_GENERATION_BYTES
+        {
+            return publication_deny("WINDOWS_PUBLICATION_INPUT_REFUSED", None);
+        }
+        if !matches!(probe(directory), WindowsHostProbeVerdict::Candidate(_)) {
+            return publication_deny("WINDOWS_PUBLICATION_HOST_NOT_CANDIDATE", None);
+        }
+        let final_path = directory.join(format!("registry-generation-{generation_id}.json"));
+        if final_path.exists() {
+            return match read_exact_candidate(&final_path, bytes) {
+                Ok(true)
+                    if matches!(
+                        flush_directory(directory),
+                        WindowsDirectoryFlushVerdict::Candidate
+                    ) =>
+                {
+                    WindowsGenerationPublicationVerdict::Candidate {
+                        byte_length: bytes.len(),
+                    }
+                }
+                Ok(_) => publication_deny("WINDOWS_PUBLICATION_COLLISION", None),
+                Err(code) => {
+                    publication_deny("WINDOWS_PUBLICATION_EXISTING_READ_REFUSED", Some(code))
+                }
+            };
+        }
+        let staging_path = match stage_path(directory, generation_id) {
+            Ok(path) => path,
+            Err(()) => return publication_deny("WINDOWS_PUBLICATION_NONCE_UNAVAILABLE", None),
+        };
+        let mut staging = match OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .share_mode(0)
+            .custom_flags(FILE_FLAG_WRITE_THROUGH)
+            .open(&staging_path)
+        {
+            Ok(file) => file,
+            Err(error) => {
+                return publication_deny("WINDOWS_PUBLICATION_STAGE_OPEN_REFUSED", io_code(&error));
+            }
+        };
+        let staged = (|| -> Result<(), (&'static str, Option<u32>)> {
+            staging
+                .write_all(bytes)
+                .map_err(|error| ("WINDOWS_PUBLICATION_WRITE_REFUSED", io_code(&error)))?;
+            staging
+                .flush()
+                .map_err(|error| ("WINDOWS_PUBLICATION_USER_FLUSH_REFUSED", io_code(&error)))?;
+            // SAFETY: staging owns a live file handle for the duration of the
+            // call. FlushFileBuffers is the required file-data barrier.
+            if unsafe { FlushFileBuffers(staging.as_raw_handle().cast::<c_void>()) } == 0 {
+                return Err(("WINDOWS_PUBLICATION_FILE_FLUSH_REFUSED", Some(last_error())));
+            }
+            let identity = open_file_identity(&staging)
+                .map_err(|code| ("WINDOWS_PUBLICATION_STAGE_STAT_REFUSED", Some(code)))?;
+            if identity.and_then(|value| usize::try_from(value.byte_length).ok())
+                != Some(bytes.len())
+            {
+                return Err(("WINDOWS_PUBLICATION_SHORT_WRITE", None));
+            }
+            Ok(())
+        })();
+        if let Err((code, os_code)) = staged {
+            drop(staging);
+            return publication_deny(code, os_code);
+        }
+        if let Err(code) = close_file(staging) {
+            return publication_deny("WINDOWS_PUBLICATION_STAGE_CLOSE_REFUSED", Some(code));
+        }
+
+        let staging_wide = match wide_nul(staging_path.as_os_str()) {
+            Some(value) => value,
+            None => return publication_deny("WINDOWS_PUBLICATION_STAGE_PATH_REFUSED", None),
+        };
+        let final_wide = match wide_nul(final_path.as_os_str()) {
+            Some(value) => value,
+            None => return publication_deny("WINDOWS_PUBLICATION_FINAL_PATH_REFUSED", None),
+        };
+        // SAFETY: both paths are NUL-terminated and remain alive. No replace
+        // flag is supplied, so an existing destination cannot be overwritten.
+        let moved = unsafe {
+            MoveFileExW(
+                staging_wide.as_ptr(),
+                final_wide.as_ptr(),
+                MOVEFILE_WRITE_THROUGH,
+            )
+        };
+        if moved == 0 {
+            let move_error = last_error();
+            return match read_exact_candidate(&final_path, bytes) {
+                Ok(true)
+                    if matches!(
+                        flush_directory(directory),
+                        WindowsDirectoryFlushVerdict::Candidate
+                    ) =>
+                {
+                    WindowsGenerationPublicationVerdict::Candidate {
+                        byte_length: bytes.len(),
+                    }
+                }
+                _ => publication_deny("WINDOWS_PUBLICATION_MOVE_REFUSED", Some(move_error)),
+            };
+        }
+
+        let reopened = read_exact_candidate(&final_path, bytes);
+        let directory_flushed = matches!(
+            flush_directory(directory),
+            WindowsDirectoryFlushVerdict::Candidate
+        );
+        if !matches!(reopened, Ok(true)) || !directory_flushed {
+            return publication_deny("WINDOWS_PUBLICATION_REOPEN_OR_BARRIER_REFUSED", None);
+        }
+        WindowsGenerationPublicationVerdict::Candidate {
+            byte_length: bytes.len(),
+        }
+    }
 }
 
 pub fn probe_windows_host(path: &Path) -> WindowsHostProbeVerdict {
@@ -340,6 +626,25 @@ pub fn flush_windows_directory_candidate(path: &Path) -> WindowsDirectoryFlushVe
     {
         let _ = path;
         WindowsDirectoryFlushVerdict::Deny(WindowsHostProbeError {
+            code: "WINDOWS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
+    }
+}
+
+pub fn publish_windows_generation_candidate(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+) -> WindowsGenerationPublicationVerdict {
+    #[cfg(windows)]
+    {
+        windows::publish_generation(directory, generation_id, bytes)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = (directory, generation_id, bytes);
+        WindowsGenerationPublicationVerdict::Deny(WindowsHostProbeError {
             code: "WINDOWS_PLATFORM_UNAVAILABLE",
             os_code: None,
         })

@@ -60,6 +60,14 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   FILE_FLAG_BACKUP_SEMANTICS)` -> `FlushFileBuffers` -> checked close. Native
   evidence is now 5/5. This is syscall-acceptance evidence only, not crash or
   power-loss proof.
+- [x] Exercise the bounded Windows publication sequence: exclusive
+  same-directory staging, file flush and checked close, no-replace
+  `MoveFileExW(MOVEFILE_WRITE_THROUGH)`, exact no-sharing re-open with
+  reparse/multi-link refusal and stable open-handle identity, then the native
+  directory barrier. A planted hard-link destination first failed and now
+  refuses. Native evidence is 7/7. The result is non-authorizing because
+  hostile parent-namespace races and real crash/power-loss behavior remain
+  unproved.
 - [x] Add a non-executing native-artifact inspector that materializes one
   fixed-path, single-link file, rejects symbolic ancestry, bounds bytes,
   compares stable open-handle metadata, validates PE/ELF/Mach-O architecture
@@ -90,7 +98,9 @@ Windows, Linux and macOS crash semantics. The repository will contain:
 An absent row, unsupported filesystem, network share, virtual/overlay storage
 or unknown device is a refusal, not a portability assumption.
 
-The current Windows evidence is deliberately smaller than the production row:
-the native probe observed a fixed local NTFS candidate and passed 4/4 focused
-tests, including reparse-ancestor refusal. It performs no write, publication,
-barrier or loader operation and supplies no crash or power-loss evidence.
+The current Windows evidence is deliberately smaller than the production row.
+The native experiment observed a fixed local NTFS candidate and passes 7/7
+focused tests, including reparse-ancestor and hard-link refusal, a directory
+barrier, and exact no-replace publication. It performs no executable load,
+does not retain a directory-relative publication root, and supplies no
+process-kill, reboot or power-loss evidence.

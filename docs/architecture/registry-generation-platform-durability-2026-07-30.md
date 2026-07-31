@@ -90,12 +90,26 @@ through the Node filesystem API and calling the file-handle `sync()` operation
 was measured to fail with `EPERM`. The current Node-only seam therefore cannot
 prove Windows directory-entry durability and is not production-admitted.
 
-The zero-dependency Rust candidate now performs the narrower native sequence:
+The zero-dependency Rust candidate first performed the narrower native sequence:
 host admission, `CreateFileW` with `GENERIC_WRITE` and
 `FILE_FLAG_BACKUP_SEMANTICS`, `FlushFileBuffers`, and checked close. The live
-test succeeds on the current fixed-local NTFS Windows 10 host, raising native
-evidence to **5/5**. This closes only “can the documented directory barrier be
-called successfully here?” It does not prove physical crash survival,
+test succeeds on the current fixed-local NTFS Windows 10 host.
+
+It now also exercises a non-authorizing complete publication candidate:
+exclusive same-directory staging with no sharing and write-through requested;
+write, user/file flush and checked close; `MoveFileExW` with
+`MOVEFILE_WRITE_THROUGH` and no replace flag; exact no-sharing re-open through
+`FILE_FLAG_OPEN_REPARSE_POINT`; open-handle rejection of reparse, directory
+and multi-link identities; stable volume/file identity across the exact read;
+and the native directory barrier. Existing exact single-link bytes are
+idempotent, while existing-different and hard-linked collisions refuse.
+Focused native evidence is now **7/7**.
+An uncertain failure deliberately leaves any staging orphan non-authoritative
+instead of deleting a pathname after handle close; a future reclaimer must
+prove the exact staging identity before removal.
+
+This closes only “were the documented calls accepted and exact bytes observed
+on this host?” It does not prove physical crash survival,
 write/publication ordering, ReFS, Windows 11 or a production loader.
 
 `MoveFileEx` documents `MOVEFILE_WRITE_THROUGH` and does not replace an
@@ -167,7 +181,7 @@ reparse point at the target or any existing ancestor, requires a fixed local
 drive, admits only NTFS/ReFS and refuses the remote-storage capability flag.
 Non-Windows builds return a closed denial.
 
-Fresh focused evidence is **5/5** tests on the Windows 10 development host. A
+Fresh focused evidence is **7/7** tests on the Windows 10 development host. A
 test added for a reparse ancestor first failed against the target-only check,
 then passed after every existing ancestor was inspected. The live temp-volume
 observation reached `CANDIDATE` for fixed local NTFS.
@@ -176,11 +190,19 @@ The fifth test opens that admitted direct directory natively and requires a
 successful `FlushFileBuffers` plus successful handle close. It passed. The
 result remains non-authorizing and is not relabelled as crash evidence.
 
-This result is non-authorizing. It opens no write handle, loads no production
-binary, publishes nothing, executes no file or metadata barrier and supplies
-no reboot or power-loss evidence. The path preflight also cannot close a
-namespace TOCTOU by itself; the eventual adapter must operate on retained
-least-authority handles and bind its loaded image to the admitted descriptor.
+The sixth and seventh tests exercise bounded generation publication and
+malformed-input refusal. The live test first exposed acceptance of an exact
+hard-linked destination; the implementation now opens with no sharing and
+reparse-point semantics, derives file identity from the live handle, requires
+one link and stable volume/file identity, and the planted hard-link collision
+refuses.
+
+This result is non-authorizing. It loads no production binary and supplies no
+process-kill, reboot or power-loss evidence. The path-addressed Win32
+publication also cannot close a hostile parent-directory rename race by
+itself; the eventual production primitive must bind retained least-authority
+handles or explicitly narrow and enforce that threat boundary, and must bind
+its loaded image to the admitted descriptor.
 The production digest list therefore remains empty. DP-RD-0600 records the
 general rule: host classification is not persistence proof.
 

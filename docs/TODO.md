@@ -98,6 +98,18 @@ session. Every checkpoint must record:
   live Windows 10 fixed-local NTFS test passes; native evidence is **5/5**.
   This proves syscall acceptance only. Publication ordering, reboot/power-loss,
   ReFS, Windows 11, loader identity and production admission remain open.
+- **Windows generation-publication checkpoint (2026-07-31):** the
+  zero-dependency Rust candidate now exercises exclusive same-directory
+  staging, write/file flush, checked close, no-replace
+  `MoveFileExW(MOVEFILE_WRITE_THROUGH)`, exact no-sharing re-open, stable
+  open-handle volume/file identity, single-link/reparse refusal and the native
+  directory barrier. A planted hard-link collision first failed and now
+  refuses. Native evidence is **7/7** on this Windows 10 NTFS host. This is
+  still non-authorizing: process-kill/reboot/power-loss, ReFS/Windows 11,
+  parent-directory rename resistance, executable-loader identity and governed
+  production admission remain open. Failure leaves a non-authoritative staging
+  orphan rather than racing a pathname deletion; an exact-identity orphan
+  reclaimer is also still required.
 - **Native artifact inspection checkpoint (2026-07-31):** the fixed-path
   non-executing inspector now refuses symbolic ancestry/components,
   multi-link files, missing/oversize/changed bytes, malformed containers,
