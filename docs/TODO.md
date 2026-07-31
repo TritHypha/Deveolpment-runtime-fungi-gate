@@ -16,24 +16,26 @@ guessing.
 - **Implemented outside Galerina:** deterministic fixed/dynamic/indeterminate
   analysis, exact value-free plan identity, planner ownership, ephemeral
   signed-32-bit/Boolean/K3 binding validation and the B3 independent-B0 lane.
-- **Measured evidence:** clean SLIDE source `f636522`; 3,500 exact checks on a
-  32-fixed/2-residual graph. B0 884,371 ns/op; BA 765,330; B1 749,736; B2
-  49,452,914; B3 5,059,071. B3 is 5.721x B0 and has no finite measured
-  break-even. MATCH/MISS/INDETERMINATE are 700/7/7.
+- **Measured evidence:** clean SLIDE source `3fa32fe`; 4,200 exact checks on a
+  32-fixed/2-residual graph. B0 866,983 ns/op; BA 734,593; B1 716,544; B2
+  48,603,963; exact B3 5,594,192; renamed-family B3 79,920,639. Exact B3 is
+  6.452x B0 and renamed B3 is 92.182x; neither has finite break-even.
+  MATCH/MISS/INDETERMINATE are 1,400/7/7.
 - **Security result:** descriptors close type, representation, lifetime,
   mutability, alias, persistence, bounds, effects, capabilities, resources and
   terminal failure. Current values are checked and then absent from plans,
   receipts and evidence. Injection-shaped strings and wrong/missing/duplicate
   bindings refuse.
-- **Not green/general:** current planner reuse is exact-graph. A structurally
-  renamed graph family has not yet proved one shared canonical plan; B3 is
-  slower than B0/BA/B1. This remains amber experiment-only evidence and has no
-  Galerina package or execution authority.
+- **H3 verified for the named corpus:** a renamed family passes fresh exact B2
+  mapping, descriptor and partition re-derivation and shares one canonical
+  shape-plan digest with a distinct current binding table.
+- **Still amber:** both B3 cases are slower than B0/BA/B1. This remains
+  experiment-only evidence and has no Galerina package or execution authority.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E03-TYPED-BOUNDARY-CHECKPOINT-REPORT.md` and
   `../SLIDE/research/shape-lab/results/e03-typed-boundary-latest.*`.
-- **Current work:** name-independent canonical slots or a completely verified
-  B2 mapping for E03, then repeat the matched benchmark. No owner-only blocker.
+- **Current work:** E04 packed and learned proposal controls with E02/E03 as
+  mandatory deterministic baselines. No owner-only blocker.
 
 ### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
 
