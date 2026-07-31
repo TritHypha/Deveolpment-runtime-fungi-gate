@@ -34,6 +34,8 @@ const ROOT = rootIndex >= 0
   : join(dirname(fileURLToPath(import.meta.url)), "..");
 const PKGDIR = join(ROOT, "packages-galerina");
 const JSON_OUT = argv.includes("--json");
+const CHECK = argv.includes("--check");
+const POST_SLIDE = argv.includes("--post-slide");
 
 // Runtime-stack order (the "start of the runtime down"); packages not listed sort after, alpha.
 const STACK_ORDER = [
@@ -99,10 +101,28 @@ const summary = { packages: rows.length, fungiFiles: totFungi, tsFiles: totTs,
   pctFungiFiles: Math.round((totFungi / (totFungi + totTs)) * 100),
   fullyFungi: rows.filter((r) => r.status === "FULLY-FUNGI").length,
   convertibleNow: convertible.length, flooredPackages: flooredPkgs.length };
+const violations = [];
+for (const row of rows) {
+  if (row.unreadable > 0) {
+    violations.push(`${row.pkg}: ${row.unreadable} unreadable source file(s)`);
+  }
+  if (POST_SLIDE && row.ts > 0) {
+    violations.push(`${row.pkg}: ${row.ts} TypeScript implementation file(s) remain`);
+  }
+}
+const ready = violations.length === 0;
 
 if (JSON_OUT) {
-  console.log(JSON.stringify({ authority: "report-only", summary, rows }, null, 2));
-  process.exit(0);
+  console.log(JSON.stringify({
+    authority: POST_SLIDE ? "post-slide-source-readiness-gate" : "report-only",
+    profile: POST_SLIDE ? "post-slide" : CHECK ? "check" : "report",
+    ready,
+    violations,
+    summary,
+    rows,
+  }, null, 2));
+  if ((CHECK || POST_SLIDE) && !ready) process.exitCode = 1;
+  process.exit(process.exitCode ?? 0);
 }
 
 console.log("\n  Self-hosting readiness — packages-galerina (runtime-stack order; the HONEST map, no deletion)\n");
@@ -122,6 +142,12 @@ if (convertible.length) {
   console.log(`\n  Convertible-now candidates (pure-logic .ts, no crypto/ffi/host/interop floor) — real .fungi migration targets:`);
   for (const r of convertible) console.log(`    ${r.pkg.replace(/^galerina-/, "")} (${r.ts} .ts)`);
 }
-console.log("\n  NOTE: this is a MAP, not a gate. 100%-.fungi requires the .fungi->WASM lowering complete (? / exhaustive-match)");
+console.log("\n  NOTE: report mode is a map; --check and --post-slide are fail-closed gates. 100%-.fungi requires the .fungi->WASM lowering complete (? / exhaustive-match)");
 console.log("        AND the crypto/host primitives self-hosted. Converting a FLOORED package now would delete a working");
+if ((CHECK || POST_SLIDE) && !ready) {
+  for (const violation of violations) console.error(`  FAIL: ${violation}`);
+  process.exitCode = 1;
+} else if (POST_SLIDE) {
+  console.log("  Self-hosting readiness: post-SLIDE source gate GREEN");
+}
 console.log("        primitive impl with no .fungi replacement — do not. Drive by this map. (audit-selfhost-readiness.mjs)\n");

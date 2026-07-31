@@ -102,12 +102,20 @@ retirement state.
   close this first physical-path slice. Fresh GREEN: focused retirement
   evidence 8/8; live terminal refusal names 484 tracked package `.ts` paths
   (465 under `src`) and returns exit 1.
-- [ ] Add strict `--check` and `--post-slide` profiles. The terminal profile
+- [x] Add strict `--check` and `--post-slide` profiles. The terminal profile
   requires zero package `.ts`, zero nested package identities, zero package
-  `node_modules`, no unexecuted `.fungi`, and no unowned host bridge.
-- [ ] Run focused tests, regenerate the ledger and record the exact starting
-  path set without changing its baseline to hide debt.
-- [ ] Commit the gate and synchronized roadmap/TODO checkpoint.
+  `node_modules`, no unexecuted `.fungi`, and no unowned host bridge. The
+  post-SLIDE authority ledger binds each source and evidence artifact by
+  SHA-256; older shadow-bake authority is reported but cannot authorize this
+  terminal profile.
+- [x] Run focused tests, regenerate the ledger and record the exact starting
+  path set without changing its baseline to hide debt. Fresh evidence is
+  16/16 focused tests and generator fixed point. Live debt is 491 tracked
+  package `.ts` paths (477 under `src`), 104/104 production `.fungi` sources
+  awaiting terminal re-admission, 31/31 detected production host boundaries
+  awaiting ownership, 95 `node_modules` trees and one nested native package.
+- [x] Commit the gate and synchronized roadmap/TODO checkpoint locally; never
+  push it from this worker.
 
 ### Task 2: Close the production registry consumption boundary
 

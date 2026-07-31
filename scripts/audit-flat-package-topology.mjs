@@ -17,13 +17,7 @@ import { spawnSync } from "node:child_process";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const PACKAGE_ROOT = join(ROOT, "packages-galerina");
-const BASELINE_PATH = join(
-  ROOT,
-  "scripts",
-  "flat-package-topology-baseline.json",
-);
+const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SKIP_RECURSIVE = new Set([
   ".git",
   ".graph",
@@ -142,16 +136,34 @@ function parseManifest(path, kind, packageRoot) {
   }
 }
 
-function walkForNativeManifests(dir, packageRoot, out, nodeModulesPaths) {
+function walkForNativeManifests(
+  dir,
+  packageRoot,
+  out,
+  nodeModulesPaths,
+  scanViolations,
+) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
+    if (entry.isSymbolicLink()) {
+      const rel = slash(relative(packageRoot, path));
+      if (entry.name === "node_modules") nodeModulesPaths.push(rel);
+      scanViolations.push(`package topology forbids symlink '${rel}'`);
+      continue;
+    }
     if (entry.isDirectory()) {
       if (entry.name === "node_modules") {
         nodeModulesPaths.push(slash(relative(packageRoot, path)));
         continue;
       }
       if (entry.name.startsWith(".") || SKIP_RECURSIVE.has(entry.name)) continue;
-      walkForNativeManifests(path, packageRoot, out, nodeModulesPaths);
+      walkForNativeManifests(
+        path,
+        packageRoot,
+        out,
+        nodeModulesPaths,
+        scanViolations,
+      );
       continue;
     }
     if (entry.isFile() && entry.name === "package.fungi.json") {
@@ -160,7 +172,7 @@ function walkForNativeManifests(dir, packageRoot, out, nodeModulesPaths) {
   }
 }
 
-export function scanWorkspace(packageRoot = PACKAGE_ROOT) {
+export function scanWorkspace(packageRoot = join(DEFAULT_ROOT, "packages-galerina")) {
   if (!existsSync(packageRoot)) {
     return {
       records: [],
@@ -173,6 +185,12 @@ export function scanWorkspace(packageRoot = PACKAGE_ROOT) {
   const nodeModulesPaths = [];
   const scanViolations = [];
   for (const entry of readdirSync(packageRoot, { withFileTypes: true })) {
+    if (entry.isSymbolicLink()) {
+      scanViolations.push(
+        `package topology forbids symlink '${slash(entry.name)}'`,
+      );
+      continue;
+    }
     if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
     const hostManifest = join(packageRoot, entry.name, "package.json");
     if (existsSync(hostManifest)) {
@@ -190,6 +208,7 @@ export function scanWorkspace(packageRoot = PACKAGE_ROOT) {
     packageRoot,
     records,
     nodeModulesPaths,
+    scanViolations,
   );
   for (const record of records) {
     if (record.parseError !== undefined && record.kind === "native") {
@@ -204,8 +223,13 @@ export function scanWorkspace(packageRoot = PACKAGE_ROOT) {
   };
 }
 
-function loadBaseline() {
-  const parsed = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+export function loadTopologyBaseline(root = DEFAULT_ROOT) {
+  const baselinePath = join(
+    root,
+    "scripts",
+    "flat-package-topology-baseline.json",
+  );
+  const parsed = JSON.parse(readFileSync(baselinePath, "utf8"));
   if (
     parsed?.schemaVersion !== 1
     || !Array.isArray(parsed?.legacyNestedNativeManifests)
@@ -218,17 +242,27 @@ function loadBaseline() {
 }
 
 async function main() {
-  const postSlide = process.argv.includes("--post-slide");
-  const selfTest = process.argv.includes("--self-test");
+  const argv = process.argv.slice(2);
+  const rootIndex = argv.indexOf("--root");
+  if (rootIndex >= 0 && (!argv[rootIndex + 1] || argv[rootIndex + 1].startsWith("--"))) {
+    console.error("flat-package topology: --root requires a value");
+    process.exitCode = 2;
+    return;
+  }
+  const root = rootIndex >= 0 ? resolve(argv[rootIndex + 1]) : DEFAULT_ROOT;
+  const packageRoot = join(root, "packages-galerina");
+  const postSlide = argv.includes("--post-slide");
+  const selfTest = argv.includes("--self-test");
+  const jsonOut = argv.includes("--json");
   if (selfTest) {
     const testPath = join(
-      ROOT,
+      root,
       "scripts",
       "tests",
       "audit-flat-package-topology.test.mjs",
     );
     const child = spawnSync(process.execPath, ["--test", testPath], {
-      cwd: ROOT,
+      cwd: root,
       encoding: "utf8",
       windowsHide: true,
     });
@@ -250,7 +284,7 @@ async function main() {
 
   let baseline;
   try {
-    baseline = loadBaseline();
+    baseline = loadTopologyBaseline(root);
   } catch (error) {
     console.error(
       `FAIL: ${error instanceof Error ? error.message : String(error)}`,
@@ -259,7 +293,7 @@ async function main() {
     return;
   }
 
-  const scan = scanWorkspace();
+  const scan = scanWorkspace(packageRoot);
   const result = analyzeTopologyRecords({
     records: scan.records,
     legacyNestedNativeManifests: baseline.legacyNestedNativeManifests,
@@ -268,6 +302,20 @@ async function main() {
   });
   const violations = [...scan.scanViolations, ...result.violations];
 
+  const evidence = {
+    authority: "topology-audit",
+    postSlide,
+    identityCount: result.identityCount,
+    deferredNested: result.deferredNested,
+    nodeModulesPaths: scan.nodeModulesPaths,
+    violations,
+    ready: violations.length === 0,
+  };
+  if (jsonOut) {
+    console.log(JSON.stringify(evidence, null, 2));
+    if (violations.length > 0) process.exitCode = 1;
+    return;
+  }
   console.log(
     `flat-package topology: ${result.identityCount} canonical identities; `
       + `${result.deferredNested.length} deferred nested native package(s); `

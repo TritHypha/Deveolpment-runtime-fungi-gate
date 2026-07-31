@@ -39,6 +39,7 @@ flowchart TB
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
+    TG["🟨 Terminal retirement authority gate<br/>16/16 adversarial · exact red debt"]
     T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
@@ -56,7 +57,7 @@ flowchart TB
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> TG --> T --> J
     Z --> E
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
@@ -76,7 +77,7 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI green;
     class X,F red;
-    class Q,W,AA,AB,AC,AH amber;
+    class Q,W,AA,AB,AC,AH,TG amber;
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
@@ -108,6 +109,7 @@ flowchart TB
 | SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
+| Terminal package-retirement authority gate | 🟨 | Implemented and deliberately red: 16/16 focused adversarial tests; 491 tracked package `.ts` paths, 104 production `.fungi` sources requiring exact source/evidence digest admission, 31 detected production host boundaries requiring ownership, 95 `node_modules` trees and one nested native package. R4 shadow-bake authority cannot silently authorize this terminal profile |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -304,12 +306,18 @@ packages-galerina/
 ```
 
 The pre-SLIDE ratchet is executable:
-`npm.cmd run audit:package-topology`. Fresh evidence records 98 canonical
+`npm.cmd run audit:package-topology`. Fresh evidence records 99 canonical
 identities, 95 package-local `node_modules` bootstrap trees, and one exact
 deferred nested native package (`galerina-framework-example-app/packages/greeting`).
 Any growth fails. The final `--post-slide` profile already refuses all 96 debt
 locations and becomes a required green gate after executable SLIDE integration.
-The resolver, lock, provenance and migration contract is detailed in
+The composite `ts-retirement-graph --post-slide` gate additionally requires
+zero tracked package TypeScript, terminal execution admission for every
+production `.fungi` source, and digest-bound ownership for every detected
+production host boundary. Its current 16/16 adversarial suite proves that
+renaming debt, unexecuted source, nested identities, dependency trees, unowned
+host bridges and substituted evidence all refuse. The resolver, lock,
+provenance and migration contract is detailed in
 `docs/architecture/flat-package-topology-and-post-slide-migration.md`.
 
 Rules:

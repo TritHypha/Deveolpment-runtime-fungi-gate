@@ -30,7 +30,7 @@ identity and content digest as a direct dependency.
 
 The fresh topology audit reports:
 
-- 98 canonical identities across the host and Galerina-native manifests;
+- 99 canonical identities across the host and Galerina-native manifests;
 - 95 package-local `node_modules` bootstrap trees;
 - one nested Galerina-native package:
   `galerina-framework-example-app/packages/greeting/package.fungi.json`.
@@ -54,7 +54,39 @@ For each dependency edge, the resolver must verify all of:
 6. the selected target, driver, memory model and SLIDE recipe are admitted;
 7. the package and every transitive edge have provenance receipts;
 8. no nested, shadowed, symlink-escaped, downloaded-at-runtime or alternate
-   package instance can participate.
+package instance can participate.
+
+## Terminal execution and host authority
+
+Flat placement is necessary but not sufficient. The terminal migration gate is
+`node scripts/ts-retirement-graph.mjs --post-slide`. It requires all of the
+following in one independently re-derived decision:
+
+1. zero tracked `packages-galerina/**/*.ts` paths;
+2. zero nested native package identities;
+3. zero package-local `node_modules` trees;
+4. every production `.fungi` source under a package `src/` tree admitted by
+   `docs/security/post-slide-execution-authority.json`;
+5. every remaining non-TypeScript/non-Fungi production runtime source, plus
+   each production `.fungi` source using `native.call`, owned as a host
+   boundary by that same ledger. This classification does not depend on
+   recognizing an import spelling, so an obfuscated or dynamic import cannot
+   evade ownership.
+
+Each terminal source or bridge record has an exact package owner, tranche or
+bounded boundary, closed authority state, source SHA-256, tracked evidence
+path and evidence SHA-256. The gate re-reads regular non-symlink files and
+checks both digests. Missing, untracked, stale, substituted, duplicated,
+mis-owned or schema-expanded entries refuse. The older R4 compiler and
+governed-twin ledgers remain valid shadow-bake history, but do not implicitly
+grant terminal post-SLIDE execution authority; terminal admission is a fresh
+and narrower claim.
+
+The current 16/16 focused adversarial evidence guards a measured red set of
+491 tracked package TypeScript paths, 104
+production `.fungi` sources awaiting terminal re-admission, 31 detected
+production host boundaries awaiting ownership, 95 `node_modules` trees and
+the one ratcheted nested package. These counts are debt, not exceptions.
 
 Unknown, missing, duplicate, conflicting or unverifiable state is a refusal.
 The resolver must not choose a "nearest" package, silently download a version,
@@ -131,6 +163,8 @@ retirement edge requires fresh executable evidence.
 npm.cmd run audit:package-topology:selftest
 npm.cmd run audit:package-topology
 node scripts/audit-flat-package-topology.mjs --post-slide
+node scripts/audit-selfhost-readiness.mjs --post-slide
+node scripts/ts-retirement-graph.mjs --post-slide
 ```
 
 Expected before SLIDE:

@@ -593,10 +593,10 @@ planning checkbox must never be used to imply that implementation exists.
   It supersedes the earlier hold on post-beta SLIDE/retirement work while
   retaining its safety gate: never delete the only working compiler or count
   an unexecuted `.fungi` twin as a conversion.
-- **Fresh measured start:** `audit-selfhost-readiness --json` reports 95 code
-  packages, 459 `.ts`, 101 `.fungi`, 2 fully `.fungi`, 50 pure-logic
+- **Fresh measured state:** `audit-selfhost-readiness --json` reports 95 code
+  packages, 463 implementation `.ts`, 104 `.fungi`, 2 fully `.fungi`, 50 pure-logic
   convertible-now packages and 38 floored packages. The retirement finder
-  reconciles 473 tracked package-source `.ts` paths and 484 total tracked
+  reconciles 477 tracked package-source `.ts` paths and 491 total tracked
   package `.ts` paths. The post-SLIDE topology gate is correctly red on one
   nested package identity and 95 package-local `node_modules` trees.
 - **Subprojects decision:** the former `subprojects/dss-host` was already
@@ -605,9 +605,19 @@ planning checkbox must never be used to imply that implementation exists.
   was empty and untracked and has been removed. The oracle remains as
   independent differential evidence with no production/runtime/memory
   authority until its documented replacement gate passes.
-- **Completed this continuation:** the first strict retirement slice is
+- **Completed strict retirement gate:** `ts-retirement-graph --post-slide`
+  composes physical retirement, source execution, host ownership and flat
+  topology into one refusal. Its exact authority ledger requires tracked,
+  regular non-symlink source/evidence files with matching SHA-256 digests and
+  exact owner/authority fields. Earlier R4 shadow-bake ledgers do not silently
+  authorize terminal execution. The measured red set is 491 package `.ts`,
+  104 production `.fungi` awaiting terminal re-admission, 31 detected
+  production host boundaries awaiting ownership, 95 `node_modules` trees and
+  one nested native package. Focused adversarial evidence is 16/16 and the
+  generated ledger is at a fixed point.
+- **Completed physical-path slice:** the first strict retirement slice is
   implemented test-first. `ts-retirement-graph --terminal-check --json`
-  enumerates all 484 tracked package `.ts` paths (473 under `src`) and exits 1
+  enumerates all 491 tracked package `.ts` paths (477 under `src`) and exits 1
   until the exact set is empty; moving a file outside `src` cannot hide it.
   RED was 0/2 and GREEN is 8/8 with generator fixed-point and self-test green.
 - **Completed registry consumption slice:** production now has one canonical

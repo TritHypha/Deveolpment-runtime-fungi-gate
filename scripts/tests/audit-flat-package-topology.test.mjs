@@ -1,7 +1,19 @@
 import assert from "node:assert/strict";
+import {
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 
-import { analyzeTopologyRecords } from "../audit-flat-package-topology.mjs";
+import {
+  analyzeTopologyRecords,
+  scanWorkspace,
+} from "../audit-flat-package-topology.mjs";
 
 const direct = (path, name, kind = "host") => ({ path, name, kind });
 
@@ -89,5 +101,27 @@ describe("flat Galerina package topology audit", () => {
 
     assert.ok(result.violations.some((v) => v.includes("post-SLIDE")));
     assert.ok(result.violations.some((v) => v.includes("node_modules")));
+  });
+
+  it("refuses a symlinked package subtree instead of following or ignoring it", () => {
+    const root = mkdtempSync(join(tmpdir(), "flat-topology-symlink-"));
+    const packageRoot = join(root, "packages-galerina");
+    const owner = join(packageRoot, "galerina-core");
+    const external = join(root, "external-package");
+    try {
+      mkdirSync(owner, { recursive: true });
+      mkdirSync(external, { recursive: true });
+      writeFileSync(
+        join(external, "package.fungi.json"),
+        JSON.stringify({ name: "escaped" }),
+      );
+      symlinkSync(external, join(owner, "linked"), "junction");
+
+      const scan = scanWorkspace(packageRoot);
+      assert.ok(scan.scanViolations.some((item) => item.includes("symlink")));
+      assert.ok(!scan.records.some((record) => record.name === "escaped"));
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

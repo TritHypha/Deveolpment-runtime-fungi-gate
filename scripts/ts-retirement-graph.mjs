@@ -20,9 +20,28 @@
 //
 //   node scripts/ts-retirement-graph.mjs              # regenerate build/ts-retirement/ + summary line
 //   node scripts/ts-retirement-graph.mjs --self-test  # finder coverage + a known twin pair + sum check
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, dirname, relative, resolve, basename } from "node:path";
+import { createHash } from "node:crypto";
+import {
+  lstatSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+  mkdirSync,
+} from "node:fs";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+} from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  analyzeTopologyRecords,
+  loadTopologyBaseline,
+  scanWorkspace,
+} from "./audit-flat-package-topology.mjs";
 import { findCorpus, findTrackedAt } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
 import {
   generatedOutputMatches,
@@ -31,6 +50,16 @@ import {
 
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT_INDEX = process.argv.indexOf("--root");
+if (
+  ROOT_INDEX >= 0
+  && (
+    !process.argv[ROOT_INDEX + 1]
+    || process.argv[ROOT_INDEX + 1].startsWith("--")
+  )
+) {
+  console.error("ts-retirement: --root requires a value");
+  process.exit(2);
+}
 const ROOT = ROOT_INDEX >= 0 && process.argv[ROOT_INDEX + 1]
   ? resolve(process.argv[ROOT_INDEX + 1])
   : DEFAULT_ROOT;
@@ -38,6 +67,7 @@ const OUT = join(ROOT, "build", "ts-retirement");
 const CHECK = process.argv.includes("--check");
 const JSON_OUT = process.argv.includes("--json");
 const TERMINAL_CHECK = process.argv.includes("--terminal-check");
+const POST_SLIDE = process.argv.includes("--post-slide");
 
 // The bounded bootstrap-TCB FLOOR (census handover §2): these remain .ts/native
 // until an independently admitted SLIDE-native replacement can carry the same
@@ -48,6 +78,8 @@ const COMPILER_AUTHORITY_LEDGER =
   "docs/security/rd0528-compiler-authoritative-stages.json";
 const GOVERNED_AUTHORITY_LEDGER =
   "docs/security/rd0361-authoritative-twins.json";
+const POST_SLIDE_AUTHORITY_LEDGER =
+  "docs/security/post-slide-execution-authority.json";
 const COMPILER_STAGE_FILES = new Set([
   "effect-checker.fungi",
   "gir-emitter.fungi",
@@ -70,6 +102,89 @@ const GOVERNED_TWIN_DIRS = [
   "packages-galerina/galerina-core-sentinel-state/src/self-hosted",
 ];
 
+const SOURCE_AUTHORITY_FIELDS = new Set([
+  "path", "ownerPackage", "tranche", "authority", "sourceSha256",
+  "evidencePath", "evidenceSha256",
+]);
+const HOST_AUTHORITY_FIELDS = new Set([
+  "path", "ownerPackage", "boundary", "authority", "sourceSha256",
+  "evidencePath", "evidenceSha256",
+]);
+const HOST_SOURCE_EXTENSION = /\.(?:[cm]?[jt]s|rs|fungi)$/;
+const HOST_BOUNDARY_PATTERN = /(?:\bnode:(?:fs|net|tls|dgram|child_process|os|crypto|worker_threads)\b|\bprocess\.(?:env|argv|cwd|platform|exit)\b|\b(?:dlopen|process\.dlopen|node-gyp)\b|\.node["']|\bnative\.call\b|\bstd::(?:fs|net|process)\b)/;
+
+function isRuntimeHostCandidate(path) {
+  if (
+    !HOST_SOURCE_EXTENSION.test(path)
+    || path.endsWith(".d.ts")
+    || /\.[cm]?ts$/.test(path)
+  ) return false;
+  if (/^test_/.test(basename(path))) return false;
+  if (
+    /\/(?:tests?|test-fixtures|fixtures|docs?|examples?|benchmarks?|scripts|results|coverage|dist)\//.test(path)
+    || /\.(?:test|spec)\.[cm]?[jt]s$/.test(path)
+  ) return false;
+  const segments = path.split("/");
+  return segments.length === 3
+    || segments[2] === "src"
+    || segments[2] === "host"
+    || segments[2] === "runtime";
+}
+
+function sha256(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+function packageOf(path) {
+  return path.split("/")[1] ?? "";
+}
+
+function trancheOf(pkg) {
+  if (pkg === "galerina-core-compiler") return "T0-compiler";
+  if (pkg === "galerina-framework-app-kernel" || pkg === "galerina-core-security") {
+    return "T1-trust-root";
+  }
+  if (
+    pkg.startsWith("galerina-core-")
+    || pkg === "galerina-tower-citizen"
+    || pkg === "galerina-tri-pipe"
+  ) return "T2-runtime-core";
+  return "T3-package-graph";
+}
+
+function readRegularFile(root, relativePath, label, violations) {
+  const absolute = join(root, relativePath);
+  try {
+    const stat = lstatSync(absolute);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      violations.push(`${label} is not a regular non-symlink file: ${relativePath}`);
+      return null;
+    }
+    const realRoot = realpathSync(root);
+    const realFile = realpathSync(absolute);
+    const containment = relative(realRoot, realFile);
+    if (
+      containment === ".."
+      || containment.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`)
+      || isAbsolute(containment)
+    ) {
+      violations.push(`${label} escapes the repository root: ${relativePath}`);
+      return null;
+    }
+    return readFileSync(absolute);
+  } catch (error) {
+    violations.push(`${label} is missing or unreadable: ${relativePath} (${error.message})`);
+    return null;
+  }
+}
+
+function exactFields(entry, expected) {
+  const actual = Object.keys(entry).sort();
+  const wanted = [...expected].sort();
+  return actual.length === wanted.length
+    && actual.every((field, index) => field === wanted[index]);
+}
+
 /**
  * Normalize one repository-relative ledger path and reject path ambiguity.
  *
@@ -85,14 +200,166 @@ function authorityRelativePath(value, label) {
   if (
     normalized.startsWith("/")
     || /^[A-Za-z]:/.test(normalized)
+    || normalized.includes(":")
+    || /[\0-\x1f\x7f]/.test(normalized)
     || segments.some((segment) =>
-      segment.length === 0 || segment === "." || segment === "..")
+      segment.length === 0
+      || segment === "."
+      || segment === ".."
+      || /[. ]$/.test(segment))
   ) {
     throw new Error(
       `authority ledger ${label} must be an unambiguous repository-relative path`,
     );
   }
   return normalized;
+}
+
+function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
+  const violations = [];
+  let ledger;
+  try {
+    ledger = JSON.parse(
+      readFileSync(join(root, POST_SLIDE_AUTHORITY_LEDGER), "utf8"),
+    );
+  } catch (error) {
+    return {
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations: [
+        `post-SLIDE authority ledger is missing or malformed: ${error.message}`,
+      ],
+    };
+  }
+  if (
+    ledger?.schemaVersion !== 1
+    || !Array.isArray(ledger.fungiSources)
+    || !Array.isArray(ledger.hostBridges)
+    || !exactFields(
+      ledger,
+      new Set(["schemaVersion", "fungiSources", "hostBridges"]),
+    )
+  ) {
+    return {
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations: [
+        "post-SLIDE authority ledger has an unknown or malformed schema",
+      ],
+    };
+  }
+
+  const validateEntries = ({
+    entries,
+    kind,
+    allowedPaths,
+    expectedFields,
+    expectedAuthority,
+  }) => {
+    const admitted = new Set();
+    const seen = new Set();
+    for (const [index, entry] of entries.entries()) {
+      const label = `${POST_SLIDE_AUTHORITY_LEDGER} ${kind}[${index}]`;
+      const violationStart = violations.length;
+      if (
+        !entry
+        || typeof entry !== "object"
+        || Array.isArray(entry)
+        || !exactFields(entry, expectedFields)
+      ) {
+        violations.push(`${label} has missing or unknown fields`);
+        continue;
+      }
+      let path;
+      let evidencePath;
+      try {
+        path = authorityRelativePath(entry.path, `${label}.path`);
+        evidencePath = authorityRelativePath(
+          entry.evidencePath,
+          `${label}.evidencePath`,
+        );
+      } catch (error) {
+        violations.push(error.message);
+        continue;
+      }
+      if (seen.has(path)) {
+        violations.push(`${label} duplicates ${path}`);
+        continue;
+      }
+      seen.add(path);
+      const owner = packageOf(path);
+      if (!allowedPaths.has(path)) {
+        violations.push(`${label} names stale or out-of-scope source ${path}`);
+      }
+      if (entry.ownerPackage !== owner || owner.length === 0) {
+        violations.push(`${label} has incorrect ownerPackage`);
+      }
+      if (entry.authority !== expectedAuthority) {
+        violations.push(`${label} has non-authorizing authority state`);
+      }
+      const descriptor = kind === "fungiSources"
+        ? entry.tranche
+        : entry.boundary;
+      if (typeof descriptor !== "string" || descriptor.length === 0) {
+        violations.push(`${label} has no bounded descriptor`);
+      }
+      if (!/^[a-f0-9]{64}$/.test(entry.sourceSha256)) {
+        violations.push(`${label} has malformed sourceSha256`);
+      }
+      if (!/^[a-f0-9]{64}$/.test(entry.evidenceSha256)) {
+        violations.push(`${label} has malformed evidenceSha256`);
+      }
+      if (!tracked.has(path)) {
+        violations.push(`${label} source is not tracked: ${path}`);
+      }
+      if (!tracked.has(evidencePath)) {
+        violations.push(`${label} evidence is not tracked: ${evidencePath}`);
+      }
+      const sourceBytes = readRegularFile(
+        root,
+        path,
+        `${label} source`,
+        violations,
+      );
+      const evidenceBytes = readRegularFile(
+        root,
+        evidencePath,
+        `${label} evidence`,
+        violations,
+      );
+      if (sourceBytes !== null && sha256(sourceBytes) !== entry.sourceSha256) {
+        violations.push(`${label} source digest does not match ${path}`);
+      }
+      if (
+        evidenceBytes !== null
+        && sha256(evidenceBytes) !== entry.evidenceSha256
+      ) {
+        violations.push(
+          `${label} evidence digest does not match ${evidencePath}`,
+        );
+      }
+      if (violations.length === violationStart) admitted.add(path);
+    }
+    return admitted;
+  };
+
+  return {
+    executedFungi: validateEntries({
+      entries: ledger.fungiSources,
+      kind: "fungiSources",
+      allowedPaths: fungiPaths,
+      expectedFields: SOURCE_AUTHORITY_FIELDS,
+      expectedAuthority: "executed",
+    }),
+    ownedHostBridges: validateEntries({
+      entries: ledger.hostBridges,
+      kind: "hostBridges",
+      allowedPaths: hostBridgePaths,
+      expectedFields: HOST_AUTHORITY_FIELDS,
+      expectedAuthority: "owned",
+    }),
+    violations,
+  };
 }
 
 /**
@@ -164,7 +431,30 @@ export function buildRetirementGraph(root = ROOT) {
   )
     .filter((path) => path.startsWith("packages-galerina/"))
     .sort();
-  const pkgOf = (p) => p.split("/")[1];
+  const trackedRepositoryFiles = new Set(findTrackedAt(root));
+  const allTrackedPackageFiles = [...trackedRepositoryFiles]
+    .filter((path) => path.startsWith("packages-galerina/"))
+    .sort();
+  const allTrackedFungiPaths = [...fungi].sort();
+  const allTrackedFungi = new Set(allTrackedFungiPaths);
+  const hostScanViolations = [];
+  const hostBridgePaths = allTrackedPackageFiles.filter((path) => {
+    if (!isRuntimeHostCandidate(path)) return false;
+    const bytes = readRegularFile(
+      root,
+      path,
+      "host-boundary scan source",
+      hostScanViolations,
+    );
+    if (bytes === null) return false;
+    // After TypeScript retirement, every non-Fungi runtime source is a host
+    // boundary regardless of whether a lexical import happens to reveal it.
+    // Fungi stays in the source ledger unless it explicitly crosses native.call.
+    return !path.endsWith(".fungi")
+      || HOST_BOUNDARY_PATTERN.test(bytes.toString("utf8"));
+  });
+  const hostBridges = new Set(hostBridgePaths);
+  const pkgOf = packageOf;
   const stem = (p) => basename(p).replace(/\.(ts|fungi)$/, "");
   // twin key = package + stem: secret-gate.fungi twins secret-gate.ts IN THE SAME PACKAGE.
   const twinKeys = new Set(fungi.map((f) => `${pkgOf(f)}::${stem(f)}`));
@@ -178,6 +468,12 @@ export function buildRetirementGraph(root = ROOT) {
     root,
     GOVERNED_AUTHORITY_LEDGER,
     fungiFiles,
+  );
+  const postSlideAuthority = loadPostSlideAuthority(
+    root,
+    trackedRepositoryFiles,
+    allTrackedFungi,
+    hostBridges,
   );
   for (const fungiPath of compilerAuthority) {
     if (governedAuthority.has(fungiPath)) {
@@ -215,6 +511,16 @@ export function buildRetirementGraph(root = ROOT) {
   const governedTwinTotal = fungi.filter((path) =>
     GOVERNED_TWIN_DIRS.some((dir) => path.startsWith(`${dir}/`))
   ).length;
+  // The earlier R4 ledgers authorize shadow-bake decisions, but the terminal
+  // profile deliberately does not inherit that authority. Post-SLIDE source
+  // must be re-admitted with its exact source and evidence digests here.
+  const executedFungi = postSlideAuthority.executedFungi;
+  const unexecutedFungiPaths = allTrackedFungiPaths.filter(
+    (path) => !executedFungi.has(path),
+  );
+  const unownedHostBridgePaths = hostBridgePaths.filter(
+    (path) => !postSlideAuthority.ownedHostBridges.has(path),
+  );
   if (compilerAuthoritativeFlips > compilerStageTotal) {
     throw new Error(
       "compiler authority ledger exceeds the discovered canonical stage set",
@@ -238,10 +544,95 @@ export function buildRetirementGraph(root = ROOT) {
     else program++;
   }
   for (const f of fungi) (perPackage[pkgOf(f)] ??= { ts: 0, twinned: 0, fungi: 0 }).fungi++;
+  const retirementLedger = allTrackedTsPaths.map((path) => {
+    const pkg = pkgOf(path);
+    const replacement = path.endsWith(".ts")
+      ? `${path.slice(0, -3)}.fungi`
+      : null;
+    const hasReplacement = replacement !== null
+      && allTrackedFungi.has(replacement);
+    const authoritative = hasReplacement && executedFungi.has(replacement);
+    return {
+      path,
+      package: pkg,
+      dependencyTranche: trancheOf(pkg),
+      fungiReplacement: hasReplacement ? replacement : null,
+      executionAuthority: authoritative ? "executed" : "none",
+      legacyShadowAuthority: hasReplacement && (
+        compilerAuthority.has(replacement)
+        || governedAuthority.has(replacement)
+      ),
+      declaredFloor: FLOOR_PACKAGES.has(pkg)
+        ? "bounded-bootstrap-floor"
+        : null,
+      replacementOwner: pkg,
+      evidenceStatus: authoritative
+        ? "authority-ledger-present"
+        : hasReplacement
+          ? "candidate-only-unexecuted"
+          : "replacement-absent",
+      retirementState: "physical-typescript-present",
+    };
+  });
+
+  const topologyViolations = [];
+  let topology = {
+    identityCount: 0,
+    deferredNested: [],
+    nodeModulesPaths: [],
+  };
+  try {
+    const baseline = loadTopologyBaseline(root);
+    const scan = scanWorkspace(join(root, "packages-galerina"));
+    const result = analyzeTopologyRecords({
+      records: scan.records,
+      legacyNestedNativeManifests: baseline.legacyNestedNativeManifests,
+      nodeModulesPaths: scan.nodeModulesPaths,
+      postSlide: true,
+    });
+    topology = {
+      identityCount: result.identityCount,
+      deferredNested: result.deferredNested,
+      nodeModulesPaths: scan.nodeModulesPaths,
+    };
+    topologyViolations.push(...scan.scanViolations, ...result.violations);
+  } catch (error) {
+    topologyViolations.push(
+      `post-SLIDE topology evidence is missing or malformed: ${error.message}`,
+    );
+  }
+
+  const postSlideViolations = [
+    ...hostScanViolations,
+    ...postSlideAuthority.violations,
+    ...topologyViolations,
+  ];
+  if (allTrackedTsPaths.length > 0) {
+    postSlideViolations.push(
+      `post-SLIDE retirement requires zero tracked package TypeScript paths; found ${allTrackedTsPaths.length}`,
+    );
+  }
+  for (const path of unexecutedFungiPaths) {
+    postSlideViolations.push(
+      `post-SLIDE retirement forbids unexecuted Fungi source '${path}'`,
+    );
+  }
+  for (const path of unownedHostBridgePaths) {
+    postSlideViolations.push(
+      `post-SLIDE retirement forbids unowned host bridge '${path}'`,
+    );
+  }
+  const postSlideReady = postSlideViolations.length === 0;
   return {
     generated: "ts-retirement-graph",
     terminalReady: allTrackedTsPaths.length === 0,
+    postSlideReady,
+    postSlideViolations,
     allTrackedTsPaths,
+    unexecutedFungiPaths,
+    unownedHostBridgePaths,
+    retirementLedger,
+    topology,
     totals: {
       ts: ts.length,
       allTrackedTs: allTrackedTsPaths.length,
@@ -259,6 +650,16 @@ export function buildRetirementGraph(root = ROOT) {
       compilerDifferential: compilerStageTotal - compilerAuthoritativeFlips,
       governedTwinTotal,
       governedDifferential: governedTwinTotal - governedAuthoritativeFlips,
+      allTrackedFungi: allTrackedFungiPaths.length,
+      executedFungi: executedFungi.size,
+      unexecutedFungi: unexecutedFungiPaths.length,
+      hostBridges: hostBridgePaths.length,
+      ownedHostBridges: postSlideAuthority.ownedHostBridges.size,
+      unownedHostBridges: unownedHostBridgePaths.length,
+      nestedNativePackages: topologyViolations.filter((item) =>
+        item.includes("nested native")
+      ).length,
+      nodeModulesTrees: topology.nodeModulesPaths.length,
     },
     retirementPaths: {
       twinned: "→ #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle)",
@@ -299,8 +700,24 @@ const g = buildRetirementGraph();
 const t = g.totals;
 if (JSON_OUT) {
   console.log(JSON.stringify(g, null, 2));
+  if (POST_SLIDE && !g.postSlideReady) process.exitCode = 1;
   if (TERMINAL_CHECK && !g.terminalReady) process.exitCode = 1;
   process.exit(process.exitCode ?? 0);
+}
+if (POST_SLIDE) {
+  if (!g.postSlideReady) {
+    console.error(
+      `ts-retirement: post-SLIDE refusal — ${g.postSlideViolations.length} violation(s)`,
+    );
+    for (const violation of g.postSlideViolations) {
+      console.error(`  ${violation}`);
+    }
+    process.exit(1);
+  }
+  console.log(
+    "ts-retirement: post-SLIDE gate GREEN (physical, execution, host and topology authority verified)",
+  );
+  process.exit(0);
 }
 if (TERMINAL_CHECK) {
   if (!g.terminalReady) {
@@ -328,6 +745,8 @@ const md = [
   `Authority ledgers: ${t.compilerAuthoritativeFlips} compiler + ${t.governedAuthoritativeFlips} governed = ${t.authoritativeFlips} authoritative twins.`,
   ``,
   `Terminal physical retirement: ${g.terminalReady ? "GREEN" : `OPEN — ${t.allTrackedTs} tracked package TypeScript paths remain`}.`,
+  ``,
+  `Post-SLIDE authority: ${g.postSlideReady ? "GREEN" : "OPEN"} — ${t.executedFungi}/${t.allTrackedFungi} production Fungi sources digest-admitted; ${t.ownedHostBridges}/${t.hostBridges} host boundaries owned; ${t.nodeModulesTrees} node_modules trees.`,
   ``,
   `\`.fungi\` in src trees: ${t.fungiInSrc} across ${t.packages} packages · finder drift: ${t.finderDrift === -1 ? "n/a (myco unavailable)" : t.finderDrift}`,
   ``,
