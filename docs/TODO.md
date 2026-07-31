@@ -110,6 +110,15 @@ session. Every checkpoint must record:
   production admission remain open. Failure leaves a non-authoritative staging
   orphan rather than racing a pathname deletion; an exact-identity orphan
   reclaimer is also still required.
+- **Windows process-termination checkpoint (2026-07-31):** a non-default
+  fault-injection build now pauses a disposable worker at seven exact
+  publication boundaries. The parent forcibly terminates a fresh worker at
+  each boundary and proves the prior generation remains exact while the
+  candidate is absent or exact, never partial. The boundary matrix is **7/7**
+  on Windows 10 NTFS; default builds omit the worker/observer seam and release
+  builds refuse the feature at compile time. This does not close kernel-crash,
+  reboot, controller-cache, physical-power-loss,
+  parent-namespace, ReFS/Windows 11 or other-platform evidence.
 - **Native artifact inspection checkpoint (2026-07-31):** the fixed-path
   non-executing inspector now refuses symbolic ancestry/components,
   multi-link files, missing/oversize/changed bytes, malformed containers,

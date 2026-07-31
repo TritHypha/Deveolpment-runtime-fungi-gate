@@ -68,6 +68,11 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   refuses. Native evidence is 7/7. The result is non-authorizing because
   hostile parent-namespace races and real crash/power-loss behavior remain
   unproved.
+- [x] Add a non-default disposable process-termination harness. It terminates
+  one fresh worker after each of seven named publication boundaries and
+  requires the prior generation to remain exact and the candidate to be absent
+  or exact. The matrix passes 7/7 on Windows 10 NTFS. The worker/observer seam
+  is not compiled into default builds and cannot mint authority.
 - [x] Add a non-executing native-artifact inspector that materializes one
   fixed-path, single-link file, rejects symbolic ancestry, bounds bytes,
   compares stable open-handle metadata, validates PE/ELF/Mach-O architecture

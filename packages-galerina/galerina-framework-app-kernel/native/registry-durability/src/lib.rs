@@ -1,5 +1,8 @@
 #![deny(unsafe_op_in_unsafe_fn)]
 
+#[cfg(all(feature = "fault-injection", not(debug_assertions)))]
+compile_error!("fault-injection is test-only and must not be compiled into an optimized build");
+
 use std::path::Path;
 
 pub const DRIVE_FIXED: u32 = 3;
@@ -479,11 +482,15 @@ mod windows {
         )))
     }
 
-    pub fn publish_generation(
+    fn publish_generation_observed<F>(
         directory: &Path,
         generation_id: &str,
         bytes: &[u8],
-    ) -> WindowsGenerationPublicationVerdict {
+        mut observe: F,
+    ) -> WindowsGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
         if !generation_id_valid(generation_id)
             || bytes.is_empty()
             || bytes.len() > MAX_GENERATION_BYTES
@@ -528,10 +535,12 @@ mod windows {
                 return publication_deny("WINDOWS_PUBLICATION_STAGE_OPEN_REFUSED", io_code(&error));
             }
         };
+        observe("stage-opened");
         let staged = (|| -> Result<(), (&'static str, Option<u32>)> {
             staging
                 .write_all(bytes)
                 .map_err(|error| ("WINDOWS_PUBLICATION_WRITE_REFUSED", io_code(&error)))?;
+            observe("bytes-written");
             staging
                 .flush()
                 .map_err(|error| ("WINDOWS_PUBLICATION_USER_FLUSH_REFUSED", io_code(&error)))?;
@@ -540,6 +549,7 @@ mod windows {
             if unsafe { FlushFileBuffers(staging.as_raw_handle().cast::<c_void>()) } == 0 {
                 return Err(("WINDOWS_PUBLICATION_FILE_FLUSH_REFUSED", Some(last_error())));
             }
+            observe("file-flushed");
             let identity = open_file_identity(&staging)
                 .map_err(|code| ("WINDOWS_PUBLICATION_STAGE_STAT_REFUSED", Some(code)))?;
             if identity.and_then(|value| usize::try_from(value.byte_length).ok())
@@ -556,6 +566,7 @@ mod windows {
         if let Err(code) = close_file(staging) {
             return publication_deny("WINDOWS_PUBLICATION_STAGE_CLOSE_REFUSED", Some(code));
         }
+        observe("stage-closed");
 
         let staging_wide = match wide_nul(staging_path.as_os_str()) {
             Some(value) => value,
@@ -590,18 +601,45 @@ mod windows {
                 _ => publication_deny("WINDOWS_PUBLICATION_MOVE_REFUSED", Some(move_error)),
             };
         }
+        observe("published");
 
         let reopened = read_exact_candidate(&final_path, bytes);
+        if !matches!(reopened, Ok(true)) {
+            return publication_deny("WINDOWS_PUBLICATION_REOPEN_REFUSED", None);
+        }
+        observe("reopened-verified");
         let directory_flushed = matches!(
             flush_directory(directory),
             WindowsDirectoryFlushVerdict::Candidate
         );
-        if !matches!(reopened, Ok(true)) || !directory_flushed {
-            return publication_deny("WINDOWS_PUBLICATION_REOPEN_OR_BARRIER_REFUSED", None);
+        if !directory_flushed {
+            return publication_deny("WINDOWS_PUBLICATION_BARRIER_REFUSED", None);
         }
+        observe("directory-flushed");
         WindowsGenerationPublicationVerdict::Candidate {
             byte_length: bytes.len(),
         }
+    }
+
+    pub fn publish_generation(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+    ) -> WindowsGenerationPublicationVerdict {
+        publish_generation_observed(directory, generation_id, bytes, |_| {})
+    }
+
+    #[cfg(feature = "fault-injection")]
+    pub fn publish_generation_fault_candidate<F>(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        observe: F,
+    ) -> WindowsGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
+        publish_generation_observed(directory, generation_id, bytes, observe)
     }
 }
 
@@ -644,6 +682,31 @@ pub fn publish_windows_generation_candidate(
     #[cfg(not(windows))]
     {
         let _ = (directory, generation_id, bytes);
+        WindowsGenerationPublicationVerdict::Deny(WindowsHostProbeError {
+            code: "WINDOWS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
+    }
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub fn publish_windows_generation_fault_candidate<F>(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+    observe: F,
+) -> WindowsGenerationPublicationVerdict
+where
+    F: FnMut(&'static str),
+{
+    #[cfg(windows)]
+    {
+        windows::publish_generation_fault_candidate(directory, generation_id, bytes, observe)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = (directory, generation_id, bytes, observe);
         WindowsGenerationPublicationVerdict::Deny(WindowsHostProbeError {
             code: "WINDOWS_PLATFORM_UNAVAILABLE",
             os_code: None,

@@ -8,4 +8,12 @@ publish = false
 [lib]
 crate-type = ["rlib", "cdylib"]
 
+[features]
+fault-injection = []
+
+[[bin]]
+name = "registry-durability-fault-worker"
+path = "src/bin/registry-durability-fault-worker.rs"
+required-features = ["fault-injection"]
+
 [dependencies]

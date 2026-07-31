@@ -129,6 +129,17 @@ Failure after uncertainty does not delete by pathname: the candidate may leave
 a non-authoritative staging orphan so a later reclaimer can require exact
 handle identity rather than race an attacker-controlled replacement.
 
+A non-default test feature also supplies a disposable worker and a
+non-authorizing boundary observer. Seven fresh processes are terminated after
+stage open, bytes written, file flush, stage close, publication, exact re-open
+and directory flush. After each termination, the prior generation remains
+exact and the candidate name is absent or exact, never partial. The matrix
+passes **7/7 boundaries** on the current Windows 10 NTFS host. The worker and
+observer API are absent from default builds, and an optimized build refuses
+the feature at compile time. This falsifies ordinary
+process-termination faults at the named boundaries; it does not simulate a
+kernel crash, reboot, controller cache or power loss.
+
 This evidence does **not** cover an in-process binary loader, process kill,
 reboot, power loss, Linux, macOS, ReFS, or a Windows 11 host. The Win32 rename
 step is still path-addressed after the staging handle closes, and the parent
@@ -168,7 +179,7 @@ tests succeeds unexpectedly:
 
 ## Zero-trust adoption score
 
-The host probe scores **7.7/10 — ADOPT-WITH-CONTROLS as non-authorizing
+The host probe scores **7.8/10 — ADOPT-WITH-CONTROLS as non-authorizing
 telemetry only**:
 
 | Dimension | Score | Reason |
@@ -180,7 +191,7 @@ telemetry only**:
 | Determinism | 8 | Pure matrix is deterministic; live host facts vary by machine |
 | Recovery/durability | 3 | No write, barrier, crash or power-loss evidence |
 | Compatibility | 7 | Windows probe builds elsewhere but denies; other platform probes absent |
-| Test/falsification evidence | 8 | Red/green reparse and hard-link regressions plus seven focused tests |
+| Test/falsification evidence | 9 | Red/green reparse and hard-link regressions, seven focused tests and a seven-boundary real process-termination matrix |
 | Benefit/cost | 9 | Small refusal surface with no authority grant |
 
 No adoption score is assigned to the production adapter because it does not

@@ -108,6 +108,12 @@ intent → governed execution plan → coordinated compute → audit proof
 > exact, no-replace publication sequence succeed; hard-linked collisions
 > refuse. This is syscall-acceptance evidence only, not hostile
 > parent-namespace, crash or physical durability proof.
+>
+> A non-default Windows fault build also passes a 7/7 process-termination
+> boundary matrix: prior authority remains exact and the candidate is absent
+> or exact. The worker/observer is absent from default builds, and optimized
+> builds refuse the feature. Do not relabel this as kernel-crash, reboot,
+> controller-cache or power-loss evidence.
 
 ## Grammar — Current v0.1 Flow Forms
 

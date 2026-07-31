@@ -108,6 +108,17 @@ An uncertain failure deliberately leaves any staging orphan non-authoritative
 instead of deleting a pathname after handle close; a future reclaimer must
 prove the exact staging identity before removal.
 
+A non-default fault-injection build now exposes only a deny-capable observation
+seam and disposable worker. Seven fresh workers pause after stage open, bytes
+written, file flush, stage close, publication, exact re-open and directory
+flush; the parent then terminates each process and verifies that the prior
+generation remains exact while the candidate is absent or exact, never
+partial. The **7/7 boundary process-termination matrix** passes on the current
+Windows 10 NTFS host. Default builds contain neither the worker nor observer
+API, and an optimized build with that feature is a compile-time error. This is
+process-kill evidence only, not kernel-crash, reboot,
+controller-cache or physical power-loss evidence.
+
 This closes only “were the documented calls accepted and exact bytes observed
 on this host?” It does not prove physical crash survival,
 write/publication ordering, ReFS, Windows 11 or a production loader.

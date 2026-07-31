@@ -64,6 +64,7 @@ From this directory:
 ```text
 cargo fmt --check
 cargo test --locked
+cargo test --locked --all-features
 cargo build --locked --release
 ```
 
@@ -73,6 +74,17 @@ when the host permits creation of a disposable directory link, the live
 directory `FlushFileBuffers` barrier, publication idempotence, an
 existing-different collision and a hard-link collision. Current evidence is
 7/7.
+
+The non-default `fault-injection` feature builds a disposable worker and an
+observer seam that cannot mint a receipt. The integration test starts a fresh
+worker for each of seven boundaries—stage open, bytes written, file flush,
+stage close, publication, exact re-open and directory flush—waits for that
+exact boundary, terminates the process, and then verifies the prior generation
+is unchanged and the candidate name is absent or contains the complete exact
+bytes. The seven-boundary process-termination matrix passes on the current
+Windows 10 NTFS host. Default builds do not compile this worker or observer
+API, and an optimized build with `fault-injection` enabled is rejected at
+compile time.
 
 ## Security boundary
 
@@ -96,6 +108,10 @@ the old-or-new invariant survives process kill, kernel crash, reboot or
 physical power loss. It also cannot close a hostile parent-directory rename
 race because Win32 publication remains path-addressed rather than relative to
 a retained directory handle.
+
+Process termination is stronger evidence than deterministic simulation but is
+not kernel-crash, reboot or physical power-loss evidence. It also cannot prove
+that controller caches honoured the requested barriers.
 
 No shell, PowerShell process, spawned CLI or writable sidecar is used by this
 crate.

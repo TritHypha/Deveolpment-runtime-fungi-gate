@@ -77,6 +77,14 @@ first failed and now refuses. Native evidence is **7/7**. This remains
 non-authorizing until hostile parent-namespace behavior and real
 process-kill/reboot/power-loss matrices pass on the required platforms.
 
+A non-default fault-injection build now pauses a disposable worker at seven
+exact publication boundaries. A parent test terminates one fresh process per
+boundary and verifies that prior authority remains byte-exact while the
+candidate name is absent or contains only the complete exact generation. This
+process-termination matrix passes **7/7 boundaries** on Windows 10 NTFS.
+Default builds do not compile the worker or observer seam. Kernel crash,
+reboot, controller-cache and physical power-loss evidence remain red.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 
