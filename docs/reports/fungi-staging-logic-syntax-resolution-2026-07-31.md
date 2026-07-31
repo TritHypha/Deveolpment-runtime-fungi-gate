@@ -55,6 +55,12 @@ The language discipline remains:
 4. shell-boundary regression subset: **47/47** with no `DEP0190`;
 5. independent SLIDE: **54/54**, plus the exact 15-file V2 contract.
 
+The final Galerina fixed-point run also passes every blocking phase-close gate:
+graph-all 5/5, current code index, current diagnostic registry, corpus check,
+security/provenance/path audits, generator contracts, WAT/Wasm checks, tooling
+tests and governance diff. Earlier stale generated surfaces were regenerated
+only through repository-owned tools and then rechecked before this result.
+
 Even when all four are green, executable differential parity, negative
 controls, mutation resistance, provenance, flat dependency admission and the
 governed package switch remain mandatory before adoption.
