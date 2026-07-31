@@ -33,6 +33,7 @@ flowchart TB
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
+    LI["🟨 Linux adapter preparation<br/>pure facts + mountinfo 4/4 · no live Linux claim"]
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
     F["🟥 Beta-v1 release admission<br/>cross-platform crash and power-loss evidence"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
@@ -60,7 +61,7 @@ flowchart TB
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> X --> F --> H --> I --> TG --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> LI --> X --> F --> H --> I --> TG --> T --> J
     Z --> E
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
@@ -80,7 +81,7 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI,SI green;
     class X,F red;
-    class Q,W,AA,AB,AC,AH,TG amber;
+    class Q,W,AA,AB,AC,AH,TG,LI amber;
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
@@ -112,6 +113,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | Deterministic activation fault model | 🟩 | Seed-ordered fifteen-boundary simulator, canonical replay receipt, control plus planted-fault matrix, budget/unreachable/ambiguous-input refusal and checker-clean `.fungi` terminal fold are implemented. App-kernel 180/180. Simulation is deliberately non-authorizing and cannot replace platform crash evidence |
 | Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on the statically linked signed-host proof, hostile parent-namespace resistance, and Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
 | Native executable identity | 🟨 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. RD-0601 therefore selects a statically linked first profile and a closed content-bound SLIDE linker as its modular successor. The optimized static-profile binary now binds the embedded adapter source, authoritative `.fungi` contract, ABI and release profile; an independent Node verifier re-hashes those sources and the executable, and a hostile external `.node` decoy cannot change its result. The proof is non-authorizing until the host executable is signed and the named platform matrices pass. Pathname loading remains development-only; no owner adjudication is pending |
+| Linux adapter preparation | 🟨 | A platform-neutral measured-facts gate and bounded `mountinfo` row/deepest-component selector pass 4/4 on Windows. Only complete stable read-write direct-local ext4/XFS/Btrfs facts can reach `CANDIDATE`; mapped/RAID/network/overlay/removable/virtual/unknown storage and malformed, ambiguous or changing inputs refuse. No Linux syscall or storage fact was executed here. Live `statfs`/sysfs correlation, retained-handle publication and Ubuntu crash/recovery evidence remain open in the repository-owned Ubuntu handover |
 | RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
 | RD-0623 B1/B0 and Tri-1 deep audit | 🟩 | Independent raw-sample arithmetic reproduces both n=99 paired comparisons and the five-trit maths. Source inspection shows B0 pays for one candidate semantic build before the same two common verifier builds; B1 replaces only that candidate build with exact reuse. Fixed lane order remains a possible confound. The comparison proves bounded reuse pressure, not VPEG advantage over BA and not a packed Tri-1 speed result |
 | RD-0624 neuromorphic patent proximity | 🟩 | Preliminary claim-element engineering screen finds low current proximity between input-dependent fixed-topology proposal-only N2/deterministic VPEG and the asserted dynamic spiking neuron/synapse array claims. Learned neural-subgraph extraction/implantation, dynamic neural topology, spiking delays/refractory state and actuator loops are stop-and-review triggers. This is not legal clearance; formal FTO remains a public-production gate |

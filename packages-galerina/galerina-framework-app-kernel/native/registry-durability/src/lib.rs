@@ -59,6 +59,283 @@ pub enum WindowsGenerationPublicationVerdict {
     Deny(WindowsHostProbeError),
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum LinuxStorageKind {
+    DirectLocalBlock,
+    DeviceMapper,
+    SoftwareRaid,
+    Network,
+    Overlay,
+    Removable,
+    Virtual,
+    Unknown,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MeasuredLinuxHost {
+    pub facts_complete: bool,
+    pub target_is_absolute: bool,
+    pub target_is_direct_directory: bool,
+    pub symbolic_ancestor_present: bool,
+    pub filesystem: String,
+    pub storage_kind: LinuxStorageKind,
+    pub mount_read_write: bool,
+    pub mount_namespace_stable: bool,
+    pub filesystem_magic_matches: bool,
+    pub device_identity_stable: bool,
+    pub device_major: u32,
+    pub device_minor: u32,
+    pub mount_id: u64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedLinuxHost {
+    pub filesystem: String,
+    pub device_major: u32,
+    pub device_minor: u32,
+    pub mount_id: u64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LinuxHostProbeError {
+    code: &'static str,
+}
+
+impl LinuxHostProbeError {
+    pub fn code(&self) -> &'static str {
+        self.code
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum LinuxHostProbeVerdict {
+    Candidate(AdmittedLinuxHost),
+    Deny(LinuxHostProbeError),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LinuxMountInfo {
+    pub mount_id: u64,
+    pub parent_id: u64,
+    pub device_major: u32,
+    pub device_minor: u32,
+    pub root: String,
+    pub mount_point: String,
+    pub filesystem: String,
+    pub mount_source: String,
+    pub read_write: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LinuxMountInfoError {
+    code: &'static str,
+}
+
+impl LinuxMountInfoError {
+    pub fn code(&self) -> &'static str {
+        self.code
+    }
+}
+
+fn mountinfo_error(code: &'static str) -> LinuxMountInfoError {
+    LinuxMountInfoError { code }
+}
+
+fn decode_mountinfo_field(field: &str) -> Result<String, LinuxMountInfoError> {
+    if field.is_empty() || field.len() > 2048 {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_FIELD_BOUNDS"));
+    }
+    let bytes = field.as_bytes();
+    let mut decoded = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] != b'\\' {
+            decoded.push(bytes[index]);
+            index += 1;
+            continue;
+        }
+        if index + 3 >= bytes.len() {
+            return Err(mountinfo_error("LINUX_MOUNTINFO_ESCAPE_MALFORMED"));
+        }
+        let escape = &bytes[index + 1..index + 4];
+        let value = match escape {
+            b"040" => b' ',
+            b"011" => b'\t',
+            b"012" => b'\n',
+            b"134" => b'\\',
+            _ => return Err(mountinfo_error("LINUX_MOUNTINFO_ESCAPE_UNKNOWN")),
+        };
+        if value.is_ascii_control() {
+            return Err(mountinfo_error("LINUX_MOUNTINFO_CONTROL_PATH"));
+        }
+        decoded.push(value);
+        index += 4;
+    }
+    String::from_utf8(decoded).map_err(|_| mountinfo_error("LINUX_MOUNTINFO_NOT_UTF8"))
+}
+
+fn is_canonical_absolute_linux_path(path: &str) -> bool {
+    if !path.starts_with('/') || path.contains('\0') || path.chars().any(char::is_control) {
+        return false;
+    }
+    if path == "/" {
+        return true;
+    }
+    if path.ends_with('/') {
+        return false;
+    }
+    path[1..]
+        .split('/')
+        .all(|component| !component.is_empty() && component != "." && component != "..")
+}
+
+pub fn parse_linux_mountinfo_line(line: &str) -> Result<LinuxMountInfo, LinuxMountInfoError> {
+    if line.is_empty() || line.len() > 4096 || line.contains(['\r', '\n', '\0']) || !line.is_ascii()
+    {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_LINE_BOUNDS"));
+    }
+    let fields: Vec<&str> = line.split_ascii_whitespace().collect();
+    if fields.len() < 10 || fields.len() > 64 {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_FIELD_COUNT"));
+    }
+    let separators: Vec<usize> = fields
+        .iter()
+        .enumerate()
+        .filter_map(|(index, field)| (*field == "-").then_some(index))
+        .collect();
+    if separators.len() != 1 {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_SEPARATOR_COUNT"));
+    }
+    let separator = separators[0];
+    if separator < 6 || fields.len() != separator + 4 {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_SHAPE"));
+    }
+    let mount_id = fields[0]
+        .parse::<u64>()
+        .map_err(|_| mountinfo_error("LINUX_MOUNTINFO_MOUNT_ID"))?;
+    let parent_id = fields[1]
+        .parse::<u64>()
+        .map_err(|_| mountinfo_error("LINUX_MOUNTINFO_PARENT_ID"))?;
+    if mount_id == 0 {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_MOUNT_ID"));
+    }
+    let (major, minor) = fields[2]
+        .split_once(':')
+        .ok_or_else(|| mountinfo_error("LINUX_MOUNTINFO_DEVICE_ID"))?;
+    let device_major = major
+        .parse::<u32>()
+        .map_err(|_| mountinfo_error("LINUX_MOUNTINFO_DEVICE_ID"))?;
+    let device_minor = minor
+        .parse::<u32>()
+        .map_err(|_| mountinfo_error("LINUX_MOUNTINFO_DEVICE_ID"))?;
+    let root = decode_mountinfo_field(fields[3])?;
+    let mount_point = decode_mountinfo_field(fields[4])?;
+    if !is_canonical_absolute_linux_path(&root) || !is_canonical_absolute_linux_path(&mount_point) {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_PATH_NOT_CANONICAL"));
+    }
+    let options: Vec<&str> = fields[5].split(',').collect();
+    if options.is_empty() || options.iter().any(|option| option.is_empty()) {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_OPTIONS_MALFORMED"));
+    }
+    let has_read_write = options.contains(&"rw");
+    let has_read_only = options.contains(&"ro");
+    if has_read_write == has_read_only {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_ACCESS_AMBIGUOUS"));
+    }
+    let filesystem = fields[separator + 1];
+    if filesystem.is_empty()
+        || filesystem.len() > 32
+        || !filesystem
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b'-'))
+    {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_FILESYSTEM_MALFORMED"));
+    }
+    let mount_source = decode_mountinfo_field(fields[separator + 2])?;
+    if fields[separator + 3].is_empty() {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_SUPER_OPTIONS_MALFORMED"));
+    }
+    Ok(LinuxMountInfo {
+        mount_id,
+        parent_id,
+        device_major,
+        device_minor,
+        root,
+        mount_point,
+        filesystem: filesystem.to_owned(),
+        mount_source,
+        read_write: has_read_write,
+    })
+}
+
+pub fn select_linux_mount_for_target<'a>(
+    records: &'a [LinuxMountInfo],
+    target: &str,
+) -> Result<&'a LinuxMountInfo, LinuxMountInfoError> {
+    if !is_canonical_absolute_linux_path(target) {
+        return Err(mountinfo_error("LINUX_TARGET_PATH_NOT_CANONICAL"));
+    }
+    let mut selected: Option<&LinuxMountInfo> = None;
+    for record in records {
+        let matches = record.mount_point == "/"
+            || target == record.mount_point
+            || target
+                .strip_prefix(&record.mount_point)
+                .is_some_and(|suffix| suffix.starts_with('/'));
+        if !matches {
+            continue;
+        }
+        match selected {
+            Some(current) if current.mount_point.len() == record.mount_point.len() => {
+                return Err(mountinfo_error("LINUX_MOUNTINFO_TARGET_AMBIGUOUS"));
+            }
+            Some(current) if current.mount_point.len() > record.mount_point.len() => {}
+            _ => selected = Some(record),
+        }
+    }
+    selected.ok_or_else(|| mountinfo_error("LINUX_MOUNTINFO_TARGET_UNMAPPED"))
+}
+
+fn linux_deny(code: &'static str) -> LinuxHostProbeVerdict {
+    LinuxHostProbeVerdict::Deny(LinuxHostProbeError { code })
+}
+
+pub fn admit_measured_linux_host(measured: MeasuredLinuxHost) -> LinuxHostProbeVerdict {
+    if !measured.facts_complete {
+        return linux_deny("LINUX_HOST_FACTS_INCOMPLETE");
+    }
+    if !measured.target_is_absolute || !measured.target_is_direct_directory {
+        return linux_deny("LINUX_PATH_NOT_ABSOLUTE_DIRECT_DIRECTORY");
+    }
+    if measured.symbolic_ancestor_present {
+        return linux_deny("LINUX_PATH_SYMBOLIC_ANCESTOR");
+    }
+    if measured.storage_kind != LinuxStorageKind::DirectLocalBlock {
+        return linux_deny("LINUX_STORAGE_KIND_NOT_ADMITTED");
+    }
+    if !measured.mount_read_write {
+        return linux_deny("LINUX_MOUNT_NOT_READ_WRITE");
+    }
+    if !measured.mount_namespace_stable {
+        return linux_deny("LINUX_MOUNT_NAMESPACE_CHANGED");
+    }
+    if !measured.filesystem_magic_matches {
+        return linux_deny("LINUX_FILESYSTEM_IDENTITY_MISMATCH");
+    }
+    if !measured.device_identity_stable || measured.device_major == 0 || measured.mount_id == 0 {
+        return linux_deny("LINUX_DEVICE_IDENTITY_UNAVAILABLE");
+    }
+    if !matches!(measured.filesystem.as_str(), "ext4" | "xfs" | "btrfs") {
+        return linux_deny("LINUX_FILESYSTEM_NOT_ADMITTED");
+    }
+    LinuxHostProbeVerdict::Candidate(AdmittedLinuxHost {
+        filesystem: measured.filesystem,
+        device_major: measured.device_major,
+        device_minor: measured.device_minor,
+        mount_id: measured.mount_id,
+    })
+}
+
 pub const STATIC_LINK_PROFILE_SCHEMA: &str = "galerina-registry-durability-static-link-profile/v1";
 pub const STATIC_LINK_PROFILE_ABI: &str = "galerina.registry.durability.abi.v1";
 

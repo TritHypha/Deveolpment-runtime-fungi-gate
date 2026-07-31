@@ -64,6 +64,16 @@ with every unsupported filesystem or error path refusing.
 Source:
 [Linux `fsync(2)` manual](https://www.man7.org/linux/man-pages/man2/fsync.2.html)
 
+Repository-local preparation now defines a closed pure Linux fact model and a
+bounded `mountinfo` row/deepest-component selector. Only complete, stable,
+read-write, direct-local block-device facts on exact ext4, XFS or Btrfs can
+reach `CANDIDATE`. Device Mapper, RAID, network, overlay, removable, virtual,
+unknown, symbolic, malformed and ambiguous cases refuse. The parser rejects
+unknown escapes, decoded controls, non-canonical paths, ambiguous access modes,
+surplus fields, oversized rows and duplicate deepest mounts. The matrix is
+4/4 on Windows and is deliberately only model evidence. Live `statfs`, sysfs
+device-chain correlation and Linux durability operations remain unexecuted.
+
 ### macOS
 
 Apple documents that ordinary `fsync` may not force a drive's own buffered

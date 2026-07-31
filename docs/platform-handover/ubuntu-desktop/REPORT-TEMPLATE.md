@@ -48,6 +48,7 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 | `cargo test --locked` | | UNVERIFIED | |
 | `cargo test --locked --all-features` | | UNVERIFIED | |
 | `cargo build --locked --release` | | UNVERIFIED | |
+| Pure Linux facts + `mountinfo` matrix (4 tests) | | UNVERIFIED | No live-host claim |
 
 ## Durability evidence
 

@@ -13,6 +13,7 @@ closed, preserve unrelated work, commit locally only and never push.
 3. Read:
    - `docs/architecture/registry-generation-platform-durability-2026-07-30.md`
    - `docs/superpowers/plans/2026-07-31-registry-durability-simulator-and-platform-admission.md`
+   - `docs/superpowers/plans/2026-07-31-linux-registry-durability-adapter.md`
    - `packages-galerina/galerina-framework-app-kernel/native/registry-durability/README.md`
 4. Confirm the intended branch and exact commit with `git status --short
    --branch` and `git rev-parse HEAD`. Do not silently switch, reset or clean a
@@ -30,6 +31,9 @@ Run only the static-link portability proof described in `RUNBOOK.md`. It must:
 - bind the ABI and release profile;
 - prove a hostile working-directory `.node` decoy cannot change the output;
 - report `productionAuthorizing: false`.
+
+Also rerun the pure Linux fact and `mountinfo` parser matrix. It proves parser
+and decision behavior only; do not convert it into a live-host claim.
 
 Stop and report rather than work around any refusal, digest mismatch, dirty
 source ambiguity, missing prerequisite or unexpected output field.

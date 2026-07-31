@@ -64,6 +64,7 @@ Then run the native crate's complete current verification:
 set -eu
 cd packages-galerina/galerina-framework-app-kernel/native/registry-durability
 cargo fmt --check
+cargo test --locked --test linux_host_admission
 cargo test --locked
 cargo test --locked --all-features
 cargo build --locked --release

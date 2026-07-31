@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: static-link portability lane ready; native Linux durability adapter and
-reboot/power-loss chapters not yet ready to execute
+Status: static-link portability and pure Linux admission/parser lanes ready;
+native Linux syscall adapter and reboot/power-loss chapters not yet ready
 
 This folder is the single handover point for running Galerina's Ubuntu Desktop
 evidence on a separately booted Linux host. A fresh Codex session should read
@@ -19,6 +19,10 @@ profile builds and independently verifies on Linux. It does not admit a
 production adapter or claim filesystem durability. Later commits will add the
 Linux host/filesystem gate, retained-handle publication primitive,
 process-termination matrix and controlled reboot recovery procedure here.
+
+The native crate also contains a platform-neutral 4/4 Linux fact-admission and
+bounded `mountinfo` parser matrix. Ubuntu must rerun it, but the result remains
+pure-model evidence until live `statfs` and sysfs identities are correlated.
 
 Docker and virtual machines may run the portability lane, but their results
 must be labelled `VIRTUAL_NON_AUTHORIZING`. Only a separately booted Ubuntu

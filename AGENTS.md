@@ -110,6 +110,12 @@ intent → governed execution plan → coordinated compute → audit proof
 > `.node` decoy cannot change the result. The receipt is non-authorizing;
 > signed-host admission and the named platform evidence remain mandatory.
 >
+> **Linux preparation:** the platform-neutral Linux facts gate and bounded
+> `mountinfo` parser/deepest-component selector pass 4/4 on Windows. This is
+> pure model evidence only. Live `statfs`/sysfs correlation, retained-handle
+> publication and Ubuntu crash/recovery evidence remain unexecuted and must not
+> be inferred from these tests.
+>
 > The native Windows durability candidate is 7/7: on this Windows 10
 > fixed-local NTFS host, the direct-directory `FlushFileBuffers` call and
 > exact, no-replace publication sequence succeed; hard-linked collisions
