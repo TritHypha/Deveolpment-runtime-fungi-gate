@@ -11,6 +11,24 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
+### Pause boundary - 2026-07-31
+
+- **Paused at a chapter boundary by owner direction.**
+- **Last complete fixed point:** committed Galerina `8455773a` passes every
+  blocking phase-close gate. This includes graph-all 5/5, current code index,
+  current diagnostic registry, complete Fungi corpus, security/provenance/path
+  audits, generator contracts, WAT/Wasm checks, tooling tests and governance
+  diff.
+- **Independent evidence:** committed SLIDE `bb66e3b` is 54/54 and its
+  repository-owned V2 contract is 15 files exact. Committed staging `d3b9d05`
+  is 10/10 plus a live dossier-complete quarantine audit PASS.
+- **No owner blocker:** there is no signing action or unresolved owner-only
+  decision at this boundary.
+- **Resume with one chapter only:** extend Shape Lab F01-F20 hostile/control
+  fixtures and mutation coverage, then build crash-safe immutable atlas
+  generations. Do not begin package admission, TypeScript removal,
+  NSE-Synthesis, or an external-runtime benchmark before those gates close.
+
 ### RD-0601 through RD-0608 reconciliation checkpoint - 2026-07-31
 
 - **Completed:** the owner-approved design and executable chapter plan are
