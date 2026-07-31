@@ -41,7 +41,7 @@ flowchart TB
     J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
-    U["🟨 Shape Lab E01<br/>encrypted hybrid-signed durable atlas"]
+    U["🟩 Shape Lab E01<br/>bounded durable atlas · 22/22 · measured"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
@@ -59,9 +59,9 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U green;
     class X,F red;
-    class Q,U amber;
+    class Q amber;
     class H,I,T blue;
     class P green;
     class J grey;
@@ -106,7 +106,7 @@ flowchart TB
 | Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
 | Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |
-| Shape Lab E01 durable atlas | 🟨 | SLIDE checkpoint `d606125`: the Windows probe proved file flush is available while directory `fsync` is not (`EPERM`), so rename-based durability is not claimed. A pre-created append-only log now has bounded length/digest frames, every-byte tail-truncation evidence, AES-256-GCM encrypted payloads and mandatory Ed25519 + ML-DSA-65 generation/commit signatures. Focused crypto/frame evidence is 8/8. Append+flush publication, chain recovery, minimum rollback anchor, restart lookup and the durable benchmark remain active |
+| Shape Lab E01 durable atlas | 🟩 | SLIDE `5ad5e98`; measured implementation `8c869e0af5121bb21de6cbf95ebb8ffcf763b1dd`. The bounded pre-created single-link log has exact length/digest frames, AES-256-GCM payloads, mandatory Ed25519 + ML-DSA-65 generation/commit signatures, append+flush publication, full contiguous-chain recovery, caller-owned minimum anchors, historical key/byte immutability and current graph/target/policy/proof/epoch replay. Every pre-commit byte prefix serves no successor. Focused 22/22, complete SLIDE 116/116 and ten schemas parse. Across 525 exact-byte checks, medians were B0 193,028 ns/op, process-local B1 92,376 ns/op and durable restart 1,526,072 ns/op. E01 was 7.91x the tiny rebuild cost, so this is verified R&D recovery evidence, not a speedup or production storage claim |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
@@ -153,11 +153,13 @@ The remaining sequence is:
 6. **Bounded non-production work resumed under the owner's full-auto
    direction:** independent SLIDE now has an immutable prepared V2-D executor,
    an exact clean/prepared benchmark, completed E00 F01-F20/S0-S8 evidence and
-   the first E01 durable-atlas slices. The current E01 log frames and encrypted
-   hybrid-signed envelopes remain non-authorizing until append/flush recovery,
-   rollback anchoring, restart re-admission and the crash matrix pass. Galerina
-   production native activation remains red; no loader, rotation or package
-   authority was bypassed.
+   a completed bounded E01 durable-atlas experiment. E01's encrypted
+   hybrid-signed append log, crash-prefix matrix, minimum-anchor recovery and
+   restart re-admission are green only inside Shape Lab. Multi-process writer
+   exclusion, portable filesystem adapters, production key/anchor custody,
+   rotation/revocation, storage exhaustion and physical-media evidence remain
+   unimplemented. Galerina production native activation remains red; no
+   loader, rotation or package authority was bypassed.
 7. Switch packages in dependency order from TypeScript execution to verified
    `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
    implementation `.ts` files and 491 tracked package `.ts` paths: 26
@@ -297,8 +299,8 @@ Rules:
 
 ## SLIDE VPEG and dual-engine research
 
-Status: 🟨 E00 bounded executable lab complete and E01 durable-atlas work
-active; not yet a production SLIDE backend or admitted Galerina feature.
+Status: 🟩 E00 and the bounded E01 durable-atlas experiment are complete;
+neither is a production SLIDE backend or admitted Galerina feature.
 
 The canonical engineering object is a **Verified Parametric Execution Graph
 (`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
@@ -356,16 +358,24 @@ proposal quarantine and complete matched-result validation. Every graph
 fixture replays byte-identically through the public decoder and independent
 sample counting agrees with the result records. Focused E00 evidence is 47/47.
 
-E01 is now active rather than merely planned. The first committed slices use
-a pre-created append-only log because this Windows host cannot flush directory
-metadata through Node. Length/digest-framed generations survive every tested
-tail truncation without granting partial authority. Atlas payloads are
-AES-256-GCM encrypted; generation and commit records require both Ed25519 and
-ML-DSA-65 verification. Tests use ephemeral keys and read no owner material.
-The focused durable-atlas suite is 8/8 and complete independent SLIDE is
-102/102, but E01 remains amber until append/flush recovery, minimum-anchor
-rollback defence, restart/current-context re-admission and its measured
-benchmark close.
+E01 is complete for its bounded non-production adapter. It uses a pre-created
+append-only log because this Windows host cannot flush directory metadata
+through Node. Length/digest-framed generations survive every tested tail
+truncation without granting partial authority. Atlas payloads are AES-256-GCM
+encrypted; generation and commit records require both Ed25519 and ML-DSA-65.
+Separate flushes, full-chain recovery, caller-owned minimum anchors,
+historical key/byte binding and current-context replay all fail closed. Tests
+use ephemeral keys and read no owner material. Focused evidence is 22/22,
+complete independent SLIDE is 116/116 and all ten schemas parse offline.
+
+The provenance-bound matched E01 run performed 525 exact-byte checks. Median
+costs were B0 rebuild 193,028 ns/op, process-local B1 92,376 ns/op and durable
+restart 1,526,072 ns/op. Full durable restart was 7.91x the tiny rebuild and
+16.52x process-local reuse. The result retains E01 as a security and larger-
+workload experiment but makes no speedup, backend or production-durability
+claim. The report and chart are
+`../SLIDE/research/shape-lab/E01-DURABLE-ATLAS-COMPLETION-REPORT.md` and
+`../SLIDE/research/shape-lab/results/e01-durable-latest.svg`.
 
 The first 2,000-iteration synthetic run remains valid historical evidence:
 `BA` and `B1` reduced lab overhead versus `B0`, while `N1` was slower after

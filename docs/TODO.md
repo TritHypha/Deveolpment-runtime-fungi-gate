@@ -9,7 +9,30 @@ session. Every checkpoint must record:
 - current work and the next safe boundary;
 - stop conditions, blockers, owner questions, and deliberate deferrals;
 - the authoritative architecture and report paths needed to resume without
-  guessing.
+guessing.
+
+### Shape Lab E01 roadmap synchronization - 2026-07-31
+
+- **Completed outside Galerina:** independent SLIDE commit `5ad5e98` closes
+  E01 for the bounded non-production atlas adapter. The measured source commit
+  is `8c869e0af5121bb21de6cbf95ebb8ffcf763b1dd`.
+- **Verified evidence:** durable focused 22/22, complete SLIDE 116/116, ten
+  offline schema parses and 525 matched exact-byte checks. B0 was 193,028
+  ns/op, process-local B1 92,376 ns/op and durable restart 1,526,072 ns/op.
+  The durable lane is 7.91x the tiny rebuild cost; no speedup claim is made.
+- **Galerina effect:** none yet. E01 is not a general executable backend,
+  package loader, registry authority or permission to remove TypeScript,
+  Node packages, Wasm or the development oracle.
+- **Still required before production use:** multi-process writer exclusion,
+  portable filesystem adapters, production key and minimum-anchor custody,
+  rotation/revocation, storage exhaustion/compaction and physical crash
+  evidence.
+- **Authoritative paths:**
+  `../SLIDE/research/shape-lab/E01-DURABLE-ATLAS-COMPLETION-REPORT.md`,
+  `../SLIDE/research/shape-lab/results/e01-durable-latest.*` and this roadmap.
+- **Next independent chapter:** specify E02 bounded deterministic structural
+  candidate retrieval. It remains proposal-only until exact reconstruction
+  and the B0/action-cache/E01 controls pass. There is no owner-only blocker.
 
 ### Pause boundary - 2026-07-31
 
