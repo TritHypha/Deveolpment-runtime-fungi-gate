@@ -20,7 +20,7 @@ invented completion percentage. The detailed execution checklist remains
 ## Current-state map
 
 ```mermaid
-flowchart LR
+flowchart TB
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
