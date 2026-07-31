@@ -94,7 +94,7 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   linked-profile evidence.
 - [x] Run focused app-kernel tests, mutation/security gates and the complete
   Galerina fixed point.
-- [ ] Update TODO, roadmap, completion report and Knowledge Base evidence with
+- [x] Update TODO, roadmap, completion report and Knowledge Base evidence with
   exact implemented versus unverified boundaries.
 
 ## Platform evidence still required

@@ -45,21 +45,20 @@ Complete evidence reaches `CANDIDATE` only. The immutable production digest
 list is still empty, and app-kernel passes **186/186**. Binary loader proof and
 real platform adapters remain release-blocking.
 
-The first native implementation slice is narrower than an adapter: a
-zero-dependency Rust Windows host probe passes **4/4** focused tests and
-classifies the current temporary directory as fixed local NTFS. It refuses
+The Windows native candidate now passes **7/7** focused host, barrier and
+publication tests on the current fixed-local NTFS development host. It refuses
 relative/unavailable paths, reparse targets and ancestors, non-fixed drives,
-remote-storage capability and non-NTFS/ReFS filesystems. This result cannot
-mint a production receipt and includes no write, publication, barrier, reboot
-or power-loss evidence. The empty production allow-list is unchanged.
+remote-storage capability, non-NTFS/ReFS filesystems and hard-linked
+destinations. This result cannot mint a production receipt and includes no
+kernel-crash, reboot or power-loss evidence. The empty production allow-list
+is unchanged.
 
 The next provenance slice is also non-authorizing. A fixed-path native artifact
 inspector passes **7/7**, including a red/green junction-ancestor regression.
 It materializes one bounded single-link file, compares stable open-handle
 metadata, verifies PE/ELF/Mach-O architecture markers and re-derives the exact
 binary digest without executing the candidate. App-kernel is **193/193** and
-the paired `.fungi` fold is **0 errors / 0 warnings**. Actual N-API
-export/ABI proof and content-bound loading remain open; the inspector cannot
+the paired `.fungi` fold is **0 errors / 0 warnings**. The inspector cannot
 create a production receipt.
 
 Primary-source loader research then found a genuine architecture boundary:
@@ -67,10 +66,16 @@ Node's public addon loader is filename-based, and Windows `LoadLibraryExW`
 requires its file-handle argument to be `NULL`. Native initialization may run
 before a post-load hash/file-ID check, so pre-hash + path load + post-hash is
 rejected for production authority (**4.6/10** under the zero-trust score).
-The production list remains empty. Platform syscall and recovery evidence can
-continue independently, but final beta authorization needs owner adjudication
-between a linked runtime, a narrowed OS/code-signing trust claim, or changing
-the Galerina-before-SLIDE release order.
+RD-0601 resolves the architecture choice without weakening that finding: beta
+v1 uses a statically linked first profile and SLIDE later supplies the closed
+content-bound linker. Galerina commit `d7038daf` implements the optimized
+non-authorizing proof. It embeds and hashes the exact adapter source and
+authoritative `.fungi` contract, binds the ABI and release profile, refuses
+debug/fault/dynamic/substituted claims, and is independently re-hashed by a
+Node verifier. Running beside a hostile `registry-durability.node` decoy cannot
+change the output. The receipt remains `productionAuthorizing: false`; signed
+host admission and real platform evidence remain open. No owner adjudication
+or signing action is pending.
 
 Platform work continued without granting loader authority. The
 zero-dependency Rust candidate now opens an admitted direct Windows directory
@@ -94,6 +99,13 @@ candidate name is absent or contains only the complete exact generation. This
 process-termination matrix passes **7/7 boundaries** on Windows 10 NTFS.
 Default builds do not compile the worker or observer seam. Kernel crash,
 reboot, controller-cache and physical power-loss evidence remain red.
+
+The Ubuntu Desktop handover is repository-owned under
+`docs/platform-handover/ubuntu-desktop/`. It fixes the return report/receipt
+names, preserves first failures, forbids evidence workarounds and distinguishes
+bare-host candidate evidence from Docker/VM portability evidence. The Ubuntu
+row remains unexecuted and red until that handover returns; no result is
+inferred from the Windows host.
 
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
