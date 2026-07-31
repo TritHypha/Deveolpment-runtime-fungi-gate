@@ -6,6 +6,16 @@
 
 **Repository action:** local commits only; nothing pushed
 
+## Independent prepared-executor benchmark addendum - 2026-07-31
+
+Independent SLIDE now has a bounded immutable V2-D prepared executor and a
+fail-closed clean/prepared benchmark. Exact evidence is recorded in
+`docs/reports/slide-prepared-executor-benchmark-2026-07-31.md`: 9 measured
+samples per lane, identical semantic checksums, 8,090.17 clean ops/s,
+170,103.91 prepared ops/s and 21.03x prepared/clean median throughput on the
+named Windows 10 host. This changes no Galerina production authority and does
+not satisfy the terminal cross-runtime benchmark gate.
+
 **Release verdict:** **NOT COMPLETE / NON-AUTHORIZING**
 
 The tooling refactor and discoverable local verification are complete to the

@@ -32,6 +32,8 @@ flowchart LR
     F["🟥 Beta-v1 release gate<br/>terminal fixed-point rerun"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>executable backend"]
+    S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
+    L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
@@ -46,6 +48,7 @@ flowchart LR
     G --> P
     H --> M
     E --> K --> Q
+    E --> S --> L --> H
     Q --> I
     M --> I
 
@@ -54,7 +57,7 @@ flowchart LR
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L green;
     class X,F red;
     class Q amber;
     class H,I,T,M blue;
@@ -96,6 +99,8 @@ flowchart LR
 | Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
 | SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |
 | Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
+| Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
+| Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates were inspected in place and all genuinely pass the per-file strict frontend. The source issue log is adjudicated in `docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md`. Target GPU/native lack status and test dossiers; target Wasm lacks vectors/plan; all lack executable parity. Substrate Math is reference-only under the bounded bootstrap floor. Nothing has been copied or admitted |
 
 ## Active Galerina work
@@ -139,8 +144,10 @@ The remaining sequence is:
    After beta, rebuild the reusable lifecycle mechanism in independent SLIDE
    `.fungi`; Tower Citizen remains the Galerina policy adapter and trust
    domains/keys remain separate.
-6. Resume independent SLIDE implementation only after the Galerina beta-v1
-   release gate is authorizing.
+6. **Bounded non-production work resumed under the owner's full-auto
+   direction:** independent SLIDE now has an immutable prepared V2-D executor
+   and exact clean/prepared benchmark. Galerina production native activation
+   remains red; no loader, rotation or package authority was bypassed.
 7. Switch packages in dependency order from TypeScript execution to verified
    `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
    implementation `.ts` files and 491 tracked package `.ts` paths: 26
@@ -327,9 +334,10 @@ equivalent optimized forms.
 
 ## Sequenced holds
 
-- The internal benchmark harness and chart generator are integrity-tested, but
-  no new Wasm/Rust/Python/Galerina/SLIDE comparison or chart is published until
-  SLIDE has an executable backend and the same workloads can be measured. The
+- A bounded SLIDE clean/prepared chart is now published as explicitly
+  non-authorizing development evidence for one exact V2-D workload. No new
+  Wasm/Rust/Python/Galerina/SLIDE comparison is published until general SLIDE
+  execution and the same cross-runtime workloads can be measured. The
   stale-report/catalog gate is green; the full publication audit deliberately
   remains red for two historical subject-absence rows until the complete
   equivalent-work run replaces `latest.json`.
@@ -337,8 +345,9 @@ equivalent optimized forms.
   terminal goal, sequenced after executable SLIDE integration and performed
   one admitted package edge at a time.
 - `.gate` remains late in the sequence to avoid rework.
-- Independent SLIDE implementation starts after Galerina beta v1 is fully
-  closed; it is no longer a post-session deferral.
+- Independent non-production SLIDE implementation is active. Galerina's
+  production activation gate stays red until its separate loader/durability
+  evidence closes.
 
 ## Owner questions
 

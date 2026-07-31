@@ -11,6 +11,35 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
   guessing.
 
+### Independent SLIDE prepared-executor benchmark checkpoint - 2026-07-31
+
+- **Completed independently:** SLIDE admits the exact V2-D body once into a
+  deeply immutable process-local prepared plan. Copied, proxied, deserialized,
+  forged and cross-module plans refuse; every call creates fresh SSA, memory,
+  guard, variant and accounting state. 791/791 byte mutations release no plan.
+- **Benchmark performed:** clean SLIDE commit `573670b` and clean Galerina
+  commit `745ff5be` are bound into the result. On Windows `10.0.19045` x64,
+  i9-9900K, Node `v24.18.0`, with 2 warmups, 9 samples and 2,048
+  operations/sample, all measured checksums are exact. Median throughput is
+  **8,090.17 ops/s** for decode+validate+execute and **170,103.91 ops/s** for
+  prepared execution: **21.03x** for this exact bounded workload.
+- **Evidence/report:** `../SLIDE/build/benchmarks/` and
+  `docs/reports/slide-prepared-executor-benchmark-2026-07-31.md`.
+- **Non-claim:** this is not a general SLIDE backend, native certificate,
+  production authority, package-removal gate, or terminal
+  Wasm/Rust/Python/SLIDE comparison. Galerina production activation remains
+  red; no content-bound loader or cross-platform crash evidence was inferred.
+- **Integrated verification:** post-documentation independent SLIDE is
+  **47/47**, the 15-file contract is exact, benchmark verification and chart
+  regeneration pass, and Galerina strict phase-close passes every blocking
+  gate. The stale-report/catalog audit is green. The full Galerina publication
+  audit remains deliberately red only for the two historical subject-absence
+  rows; this bounded result does not replace `latest.json`.
+- **Closure:** final documentation indexes and both repository diffs are
+  reviewed for separate local commits. Refresh both codebase indexes and run
+  the exact committed trees through their complete verification gates. Never
+  push.
+
 ### External Fungi staging issues and benchmark integrity checkpoint - 2026-07-31
 
 - **Completed:** every claim in

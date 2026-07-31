@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-29
 
-**Status:** G4-A and bounded G4-B implemented; G4-C remains open
+**Status:** bounded G4-A, G4-B and G4-C implemented; general widening remains open
 
 **Authority released:** no
 
@@ -90,7 +90,9 @@ allowed branch results are 6 and 7.
 
 ## Deliberate limits
 
-This is G4-A, not a general frontend snapshot:
+The original adapter is G4-A, not a general frontend snapshot. The later
+bounded G4-C snapshot closes immutable-fact and instruction-trace coverage for
+this exact fixture only:
 
 - it recognizes one exact bounded semantic shape;
 - it does not yet carry raw-source digest, edition identity, stable declaration
@@ -125,9 +127,11 @@ before returning it. Truncation, suffix, mid-body mutation, source/fact
 disagreement, and malformed external evidence all refuse without partial
 outputs. Focused evidence is **5/5**.
 
-G4-C must replace bounded shape recognition and coarse function-span mapping
-with the versioned immutable checked snapshot and instruction-level total
-lowering trace defined in the canonical handoff contract.
+G4-C now seals the versioned immutable checked snapshot and exact 40-node
+instruction-level lowering trace for the frozen fixture. It passes its focused
+7/7 suite and the full compiler package. Registry/profile widening beyond this
+one shape, a second general frontend and general executor integration remain
+open.
 
 ## Separate release-gate blocker
 
