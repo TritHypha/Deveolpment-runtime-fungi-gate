@@ -2,19 +2,25 @@
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
-- **Knowledge Base reconciled:** local KB commit `c55417b` records the complete
-  July research corpus, security reviews, AI-research5 adjudication and
-  RD-0634 through RD-0641. The KB tree was clean with no unmerged operation at
-  this checkpoint; nothing was pushed.
+- **Knowledge Base reconciled:** local KB commits through `2a5426a` record the
+  July corpus, security reviews, AI-research5 adjudication, RD-0634 through
+  RD-0642 and the detailed local E11 independent-review prompt. The KB tree is
+  clean with no unmerged operation; nothing was pushed.
 - **B1/N3 correction:** current E05 B1 uses the same complete identity and
   immutable-store mechanism as BA, so it remains an exact-atlas/null control.
   Current N3 is additive assurance work, not a latency fast path. Typed-hole
   VPEG value requires a BA-miss/VPEG-hit fixture; no verifier may be removed.
-- **NSE-Micro E11 remains research-only:** use the corrected E04 medians and
-  retain exact/rule/tree/prototype/int8/two-bit/five-trit/LUT/compiled-kernel/
-  specialist/B0-race controls. Add a bounded ranker and secret-reduced feature
-  ablation from RD-0639 through RD-0641. Measure the entire hot path and D1
-  admission, not model inference alone.
+- **NSE-Micro E11 is implemented and remains research-only:** all 14 approved
+  B0/exact/rule/linear/tree/prototype/int8/two-bit/five-trit/LUT/predecoded/
+  specialist/N2/N3-race lanes are retained. Closed proposal capsules and D1
+  feature/proposal re-derivation fail closed; accessors, proxies, overflow,
+  poisoning, substitution and evidence arithmetic have negative tests.
+- **E11 measured result:** clean source `4109202`; 42 cold/warm/polluted rows,
+  3,780 exact artifact checks, evidence `sha256:2d54…c6228`, K3 `0`, 135 N3
+  proposal stops, 135 completions and zero skipped D1 checks. Warm B0 is
+  155,660 ns/op, deterministic tree 615,520 and int8 737,950. No proposal arm
+  wins; code, runtime interference, counters, migration and residency remain
+  `INDETERMINATE`.
 - **Prior-art boundary:** learned compiler heuristics, TVM-style cost models
   and per-store performance features are established techniques. SLIDE's
   defensible work is the proposal quarantine, identity/budget closure,
@@ -51,11 +57,10 @@
   signature; K3 verdict is `0` even when `internal_consistency` is `1`, so it
   remains amber.
 - **Neural microengine boundary:** `NSE-Reflex` is the implemented N1 proposal
-  role; `NSE-Micro` is its proposed cache-admitted L1/L2-targeted profile, not
-  a third authority engine. Total code, features, activations, scratch,
-  proposal and verifier cache pressure have not been measured. E11 remains
-  open and no cache-residency claim is allowed. `NSE-Synthesis` is the larger
-  N2 proposal tier.
+  role; `NSE-Micro` is its L1/L2-targeted profile, not a third authority
+  engine. Exact known logical bytes are recorded, but the physical hot path is
+  unresolved. No cache-residency claim is allowed. `NSE-Synthesis` remains the
+  larger N2 proposal tier.
 - **Paper handovers:** six independent-review prompts now cover B1, B2 and N3,
   with one repository-aware local-Claude version and one self-contained online
   AI version for each lane. All require ordinary maths, separate Tri-1/K3
@@ -63,7 +68,10 @@
 - **Galerina effect:** none yet. The final reports and SVG are experimental
   evidence, not permission to activate SLIDE, retire TypeScript/npm/Wasm, or
   publish an external-runtime comparison.
-- **Authoritative paths:** `../SLIDE/docs/reports/`,
+- **Authoritative paths:** `../SLIDE/docs/reports/nse-micro-e11-experimental-implementation-report.md`,
+  `../SLIDE/research/shape-lab/results/e11-nse-micro-latest.*`,
+  `../ZTF-Knowledge-Bases/RD-0642-slide-nse-micro-e11-implementation-measurement-and-adjudication.md`,
+  `../SLIDE/docs/reports/`,
   `../SLIDE/docs/slide-vpeg-neural-shape-fabric.svg` and
   `../SLIDE/research/shape-lab/results/e05-final-shape-latest.*`.
 - **Next:** continue the general executable SLIDE backend and only later the

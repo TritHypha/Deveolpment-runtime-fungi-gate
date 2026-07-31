@@ -22,7 +22,7 @@ invented completion percentage. The detailed execution checklist remains
 
 ```mermaid
 flowchart TB
-    AI["🟩 RD-0634-0641 adjudication<br/>B1 null · N3 cost · E11 · prior art"]
+    AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
@@ -51,7 +51,7 @@ flowchart TB
     AC["🟨 Claude-08 + SEC-06 closure<br/>228/228 · self-hash K3=0"]
     AD["🟩 RD-0623/0624 deep audit<br/>B1 maths · Tri-1 split · patent screen"]
     AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
-    AH["🟦 NSE-Micro E11<br/>total L1/L2 hot-path evidence"]
+    AH["🟨 NSE-Micro E11 measured<br/>3,780 checks · no speed/residency win"]
     AE["🟦 SLIDE evidence + anchor activation<br/>offline authority · platform adapters"]
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
@@ -76,8 +76,8 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI green;
     class X,F red;
-    class Q,W,AA,AB,AC amber;
-    class H,I,T,AE,AF,AH blue;
+    class Q,W,AA,AB,AC,AH amber;
+    class H,I,T,AE,AF blue;
     class P green;
     class J grey;
 ```
@@ -102,7 +102,7 @@ flowchart TB
 | RD-0623 B1/B0 and Tri-1 deep audit | 🟩 | Independent raw-sample arithmetic reproduces both n=99 paired comparisons and the five-trit maths. Source inspection shows B0 pays for one candidate semantic build before the same two common verifier builds; B1 replaces only that candidate build with exact reuse. Fixed lane order remains a possible confound. The comparison proves bounded reuse pressure, not VPEG advantage over BA and not a packed Tri-1 speed result |
 | RD-0624 neuromorphic patent proximity | 🟩 | Preliminary claim-element engineering screen finds low current proximity between input-dependent fixed-topology proposal-only N2/deterministic VPEG and the asserted dynamic spiking neuron/synapse array claims. Learned neural-subgraph extraction/implantation, dynamic neural topology, spiking delays/refractory state and actuator loops are stop-and-review triggers. This is not legal clearance; formal FTO remains a public-production gate |
 | RD-0625 through RD-0631 baseline matrix | 🟩 | Every final lane now has a separate numbered record with ordinary maths, Tri-1/K3 applicability, zero-trust review, use decision and paper gate. B0 and BA remain controls; owner selected B1 VPEG for continued R&D; B2/N1/N2/N3 stay retained laboratories rather than current fast paths. Packed Tri-1 density is recorded only for N1/N2/N3 and is not presented as speed, energy or cache-residency evidence |
-| NSE-Micro L1/L2 profile | 🟦 | `NSE-Micro` is the cache-admitted physical profile of N1 `NSE-Reflex`, not a third neural authority tier. E04/E05 provide a compact executable seed but do not measure total hot-path residency. E11 must include code, streamed features, activations, scratch, capsule handling, verifier interference, hardware counters, migration and cache pollution before any L1/L2-resident claim |
+| NSE-Micro E11 profile | 🟨 | The complete 14-lane Node reference is implemented and measured: clean source `4109202`, 42 cold/warm/polluted rows and 3,780 exact checks. Warm B0 is 155,660 ns/op, tree 615,520 and int8 737,950; no proposal arm wins. N3/B0 records 135 stops, 135 completions and D1 skipped 0. Exact known logical bytes are recorded, while code, runtime interference, effective cache, counters, migration and physical residency stay `INDETERMINATE`. Retain as research; no production or L1/L2-resident claim |
 | B1/B2/N3 paper-review handovers | 🟩 | Six prompts exist: a repository-aware local-Claude and self-contained online-AI version for each lane. They require independent maths, separate Tri-1/K3 analysis, zero-trust score, primary-source research, null controls, alternatives and an honest paper-tier verdict |
 | SEC-06 evidence-verdict correction | 🟨 | Self-hash-only benchmark evidence now returns K3 `0` (`INDETERMINATE`) rather than `+1`; internal generation/rendering uses a complete separate internal-consistency record. Digest-consistent forged commit/platform labels cannot obtain an authority-positive verdict. Full SLIDE is 228/228; the local review is recorded, while the app-backed standard scan still awaits its bounded Start-scan setup action |
 | SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
@@ -137,7 +137,8 @@ flowchart TB
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 | RD-0634 through RD-0638 AI-research5 adjudication | 🟩 | Current B1 is mechanism-equivalent to BA and remains an exact-atlas/null control; typed-hole VPEG needs a BA-miss/VPEG-hit fixture. Current N3 is additive assurance work and not a fast path. Patent separation remains technical rather than legal clearance; independent translation validation is the next D1 direction. E11 retains all proposed controls and uses corrected E04 timings |
 | RD-0639 through RD-0641 learned-compiler/TVM prior art | 🟩 | Primary LLVM/Apache TVM sources confirm learned heuristics, ranking-plus-measurement and fixed-width store features are established. Adopt only as bounded Shape Lab comparators: frozen proposal identity, secret-reduced features, explicit budgets, deterministic D1 re-admission and total-path cost. No external tuner, prediction or hardware timing receives semantic authority |
-| Knowledge Base close | 🟩 | Local KB commit `c55417b` includes the July corpus, security reviews and RD-0634 through RD-0641; its tree had no unmerged or interrupted operation and was clean. No push occurred |
+| RD-0642 measured E11 adjudication | 🟩 | Re-derived representation/working-set maths, hostile-boundary evidence and the ten-dimension score are recorded. Weighted zero-trust architecture score is 8.65/10, but measured benefit is 2/10; decision remains experiment-only and worth a defensive/negative paper after cross-platform statistics |
+| Knowledge Base close | 🟩 | Local KB commit `2a5426a` includes RD-0642 and the detailed local independent-review prompt; its tree has no unmerged or interrupted operation and is clean. No push occurred |
 
 ## Active Galerina work
 
