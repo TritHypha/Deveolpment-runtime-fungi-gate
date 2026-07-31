@@ -41,8 +41,8 @@ flowchart LR
     S["Galerina source policy<br/>if=Bool · check=K3 · match=alternatives"]:::green
     C["Compiler authority<br/>7/7 .fungi stages"]:::green
     K["Governed decisions<br/>29/29 .fungi authority"]:::green
-    P["Package readiness<br/>98/98 · 8,681 tests"]:::green
-    A["Audit proof<br/>80/80 non-vacuous gates"]:::green
+    P["Package readiness<br/>98/98 · 8,705 tests"]:::green
+    A["Audit proof<br/>81/81 non-vacuous gates"]:::green
     U["Unified harness<br/>5/5 lanes"]:::green
     X["Final generated fixed point<br/>83/83 strict · 84/84 exhaustive"]:::green
     M["Governed memory/index floor<br/>read-only · non-authorizing"]:::green
@@ -90,19 +90,19 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 - Workspace/package reconciliation covers all 98 direct children governed by
   the package inventory.
-- The root build-current aggregate passes **98/98 packages and 8,681 tests**.
+- The root build-current aggregate passes **98/98 packages and 8,705 tests**.
 - The unified `galerina-test all --json` run passes:
 
   | Lane | Fresh result |
   |---|---:|
-  | Unit | 8,681 |
+  | Unit | 8,705 |
   | End-to-end build | 4/4 |
   | Conformance | 10/10 |
   | Fidelity | 9/9 |
   | Galerina SLIDE-adapter corpus | 496/496 |
 
 - The strict phase-close tooling lane passes **229/229**.
-- The compiler package passes **5,750/5,750**.
+- The compiler package passes **5,752/5,752**.
 - App-kernel passed **149/149** at the original delegated
   package-manifest-admission checkpoint. The committed automatic-rotation
   control checkpoint passes **158/158**. The active immutable-generation,
@@ -127,13 +127,14 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
 
 ### Audits and anti-neutering
 
-- All 80 discovered audit/lint gates have executable refusal and control
+- All 81 discovered audit/lint gates have executable refusal and control
   evidence.
 - Every one of the 34 audit/lint tools outside phase-close was executed
   directly without `--soft`.
-- The fresh audit meta-gate accounts for **80/80** audit/lint gates with
-  executable refusal/control evidence; the tooling contract reports 98
-  packages, 133 indexed dev tools and zero violations.
+- The fresh audit meta-gate accounts for **81/81** audit/lint gates with
+  executable refusal/control evidence. The tooling contract reports 98
+  packages and 153 governed tools with zero violations; the generated index
+  separately records 135 developer tools, including 80 audit-class tools.
 - The security devtool's 29-case construction-audit self-test passes, all nine
   live constructions hold at their declared evidence tier, and its strict
   production single-file audit passes on the canonical pure-transform pattern.
@@ -369,7 +370,7 @@ After the complete fourteen-generator fixed point:
 - strict phase-close passes **83/83**;
 - exhaustive phase-close passes **84/84**;
 - exhaustive's additional package child passes **98/98** package commands;
-- the root aggregate contains **8,681 tests**;
+- the root aggregate contains **8,705 tests**;
 - graph-all passes all **5/5** repository-owned graph surfaces;
 - the 29/29 authoritative governed hashes re-derive and 60/60 security mutants
   are killed.

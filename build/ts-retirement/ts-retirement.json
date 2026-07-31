@@ -372,8 +372,13 @@
     "packages-galerina/galerina-framework-app-kernel/src/index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-generation.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-rotation-authority.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-rotation-controller.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts",
     "packages-galerina/galerina-framework-app-kernel/src/route-defaults.ts",
     "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
     "packages-galerina/galerina-framework-app-kernel/src/types.ts",
@@ -414,6 +419,7 @@
     "packages-galerina/galerina-test/src/types.ts",
     "packages-galerina/galerina-tools-benchmark/src/index.ts",
     "packages-galerina/galerina-tools-myco/src/cli.ts",
+    "packages-galerina/galerina-tools-myco/src/graph/index-contract.ts",
     "packages-galerina/galerina-tools-myco/src/graph/model.ts",
     "packages-galerina/galerina-tools-myco/src/graph/store.ts",
     "packages-galerina/galerina-tools-myco/src/index.ts",
@@ -432,6 +438,7 @@
     "packages-galerina/galerina-tools-myco/tests/path-filter.test.ts",
     "packages-galerina/galerina-tools-myco/tests/regex-guard.test.ts",
     "packages-galerina/galerina-tools-myco/tests/search.test.ts",
+    "packages-galerina/galerina-tools-myco/tests/store.test.ts",
     "packages-galerina/galerina-tools-myco/tests/tokenize.test.ts",
     "packages-galerina/galerina-tools-myco/tests/version.test.ts",
     "packages-galerina/galerina-tools-myco/tests/walk-completeness.test.ts",
@@ -458,6 +465,9 @@
     "packages-galerina/galerina-tower-citizen/src/plugin-sandbox.ts",
     "packages-galerina/galerina-tower-citizen/src/precision-strategy.ts",
     "packages-galerina/galerina-tower-citizen/src/quorum.ts",
+    "packages-galerina/galerina-tower-citizen/src/registry-key-rotation.ts",
+    "packages-galerina/galerina-tower-citizen/src/registry-public-verifier.ts",
+    "packages-galerina/galerina-tower-citizen/src/snapshot-key-provider.ts",
     "packages-galerina/galerina-tower-citizen/src/substrate-erasure.ts",
     "packages-galerina/galerina-tower-citizen/src/substrate-model.ts",
     "packages-galerina/galerina-tower-citizen/src/substrate-snapshot.ts",
@@ -482,12 +492,12 @@
     "packages-galerina/galerina-web/src/index.ts"
   ],
   "totals": {
-    "ts": 465,
-    "allTrackedTs": 478,
+    "ts": 474,
+    "allTrackedTs": 488,
     "twinned": 24,
     "compilerCore": 97,
     "floor": 16,
-    "program": 328,
+    "program": 337,
     "fungiInSrc": 101,
     "packages": 95,
     "finderDrift": 0,
@@ -847,7 +857,7 @@
       "fungi": 0
     },
     "galerina-framework-app-kernel": {
-      "ts": 9,
+      "ts": 14,
       "twinned": 4,
       "fungi": 6
     },
@@ -922,12 +932,12 @@
       "fungi": 0
     },
     "galerina-tools-myco": {
-      "ts": 14,
+      "ts": 15,
       "twinned": 0,
       "fungi": 0
     },
     "galerina-tower-citizen": {
-      "ts": 30,
+      "ts": 33,
       "twinned": 1,
       "fungi": 4
     },

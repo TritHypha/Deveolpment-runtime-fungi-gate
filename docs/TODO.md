@@ -51,6 +51,16 @@ session. Every checkpoint must record:
   recovery. The external candidates must not be copied into Galerina before
   their individual dossiers and executable parity are complete. Cache,
   graph and neural output remains non-authorizing.
+- **Fresh exhaustive fixed point (2026-07-31):** after removing the retired
+  `subprojects/` input from four generator contracts and regenerating the code
+  index/registry in dependency order, all blocking gates pass in one
+  exhaustive run. Generator contracts are **14/14**, graph-all is **5/5**,
+  security reports zero findings, and the all-package lane is **98/98**.
+  The separate fail-closed canonical-count run then rebuilt every declared
+  package test chain and recorded **8,705 tests, 0 fail** in `version.json`
+  (compiler **5,752**). Tooling inventory is **98 packages / 153 tools / 0
+  violations**. Cross-runtime benchmark publication remains deferred until
+  the independent SLIDE backend executes equivalent admitted workloads.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
@@ -247,7 +257,7 @@ planning checkbox must never be used to imply that implementation exists.
 
 ### Terminal fixed-point checkpoint - 2026-07-30
 
-- **Fresh root aggregate:** **98/98 packages and 8,681 tests** pass.
+- **Fresh root aggregate:** **98/98 packages and 8,705 tests** pass.
 - **Fresh graph/generator evidence:** all five repository-owned graph surfaces
   generate and pass exact check mode; all fourteen declared generator
   contracts pass their isolated fixed-point tests.
@@ -263,11 +273,13 @@ planning checkbox must never be used to imply that implementation exists.
   zero-trust thesis **78%**, build progress **75%**, and the tracking registry
   contains **21** items. These are evidence meters, not release authorization.
 - **Fresh unified harness:** all five lanes pass in one invocation: unit
-  **8,681**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
+  **8,705**, end-to-end **4/4**, conformance **10/10**, fidelity **9/9**, and
   the Galerina SLIDE-adapter corpus **496/496**.
-- **Fresh audit inventory:** all **80/80** audit/lint gates have executable
-  refusal/control evidence; the tooling contract sees 98 packages and 151
-  tools with zero violations; all 14/14 exhaustive generator contracts pass.
+- **Fresh audit inventory:** all **81/81** audit/lint gates have executable
+  refusal/control evidence; the tooling contract sees 98 packages and 153
+  governed tools with zero violations, while the generated developer-tool
+  index records 135 developer tools (80 audit-class); all 14/14 exhaustive
+  generator contracts pass.
   The security devtool's 29-case conformance self-test and nine live
   constructions pass, with the declared unsigned-spore residual still reported
   as open risk. Its strict production single-file audit passes on the canonical

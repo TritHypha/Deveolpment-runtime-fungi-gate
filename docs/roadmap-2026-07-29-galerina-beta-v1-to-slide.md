@@ -83,7 +83,7 @@ flowchart LR
 | Sensitive-data lessons | 🟩 | PII, PHI, audit-evidence and protected-response examples now emit their exact fail-closed diagnostics |
 | Focused compiler tests | 🟩 | Effect checker 70/70; governance verifier 121/121 at this tranche. Static `Native*` enum members remain pure while actual `Native*` invocations still require `native.call` |
 | Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
-| Full compiler package | 🟩 | Fresh typecheck/build and full package test command exit 0 after the native-member regression fix |
+| Full compiler package | 🟩 | Fresh typecheck/build and 5,752/5,752 tests after the native-member regression fix |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 60/60 mutation anchors green |
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
 | Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
@@ -152,7 +152,7 @@ The remaining sequence is:
 
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
-killed, the root aggregate is 98/98 packages with 8,681 tests, and the unified
+killed, the root aggregate is 98/98 packages with 8,705 tests, and the unified
 test harness is green across all five lanes. Report-only inventories remain
 roadmap evidence rather than being relabelled as green gates: 132 unlowered WAT
 nodes, 42 stale negative examples, 0 signing refusal codes without a direct
@@ -160,11 +160,12 @@ test mention, and 34 cross-package relative imports. The signing inventory is
 now closed at 51/51 directly mentioned refusals with specific negative/control
 witnesses.
 
-The fresh unified lane totals are unit 8,681, end-to-end 4/4, conformance
+The fresh unified lane totals are unit 8,705, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
-meta-gate covers all 80/80 discovered audit/lint gates with non-vacuous
-refusal/control evidence; the tooling contract reports 98 packages and 151
-tools with zero violations.
+meta-gate covers all 81/81 discovered audit/lint gates with non-vacuous
+refusal/control evidence. The tooling contract reports 98 packages and 153
+governed tools with zero violations; the generated developer-tool index
+separately records 135 developer tools, including 80 audit-class tools.
 
 The governed-memory review now defines eight independent pillars: spatial,
 temporal, initialization/type, concurrency, authority, confidential custody,
@@ -178,7 +179,9 @@ production, or memory authority.
 
 The terminal verification checkpoint is now green: strict phase-close passes
 83/83, exhaustive passes 84/84, graph-all passes 5/5, all fourteen generator
-contracts pass, and the exhaustive package lane passes 98/98. The strict
+contracts pass, and the exhaustive package lane passes 98/98. A separate
+canonical-count run rebuilt the same declared package chains and recorded
+8,705 tests with zero failures. The strict
 cadence first caught stale code-index and coverage outputs; after explicit
 dependency-ordered regeneration, their check modes and the complete cadence
 passed. These results authorize their evidence surfaces, not the offline
