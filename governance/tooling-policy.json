@@ -94,7 +94,6 @@
         "packages-galerina",
         "proofs",
         "scripts",
-        "subprojects",
         "tests",
         "tools"
       ],
@@ -156,7 +155,6 @@
         "packages-galerina",
         "proofs",
         "scripts",
-        "subprojects",
         "tests",
         "tools",
         "version.json"
@@ -192,7 +190,6 @@
         "packages-galerina",
         "proofs",
         "scripts",
-        "subprojects",
         "tests",
         "tools",
         "version.json"
@@ -549,7 +546,6 @@
         "packages-galerina",
         "proofs",
         "scripts",
-        "subprojects",
         "tests",
         "tools",
         "version.json"

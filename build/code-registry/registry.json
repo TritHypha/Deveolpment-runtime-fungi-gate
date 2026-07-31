@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 750,
+  "total": 753,
   "counts": {
     "ref": 202,
     "inline": 175,
     "phantom": 113,
-    "live": 147,
+    "live": 150,
     "referenced": 100,
     "dead": 13
   },
@@ -967,7 +967,7 @@
       "severities": [],
       "defs": 1,
       "emits": 7,
-      "tests": 7,
+      "tests": 8,
       "docs": 0
     },
     {
@@ -1207,7 +1207,7 @@
       "severities": [],
       "defs": 1,
       "emits": 1,
-      "tests": 9,
+      "tests": 7,
       "docs": 0
     },
     {
@@ -1220,6 +1220,42 @@
       "defs": 1,
       "emits": 2,
       "tests": 5,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_RUNTIME_AUTHORITY",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 11,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_RUNTIME_IO",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 5,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "ERR_REGISTRY_RUNTIME_MALFORMED",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "live",
+      "names": [],
+      "severities": [],
+      "defs": 1,
+      "emits": 8,
+      "tests": 0,
       "docs": 0
     },
     {
@@ -3619,7 +3655,7 @@
       ],
       "defs": 0,
       "emits": 3,
-      "tests": 48,
+      "tests": 49,
       "docs": 18
     },
     {
@@ -4495,7 +4531,7 @@
         "warning"
       ],
       "defs": 1,
-      "emits": 1,
+      "emits": 2,
       "tests": 36,
       "docs": 11
     },
@@ -8034,7 +8070,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 3,
-      "docs": 2
+      "docs": 3
     },
     {
       "code": "FUNGI-SEC-020",
