@@ -11,6 +11,33 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
 guessing.
 
+### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
+
+- **Completed outside Galerina:** independent SLIDE commits through
+  `2df87f1` implement a bounded deterministic structural candidate index and
+  the B2 verification lane. The recorded evidence is bound to full source
+  commit `2df87f1feed26bb5b4568eac4dd4a7f827d1024b`.
+- **Verified evidence:** complete SLIDE 136/136, eleven offline schema parses
+  and 5,600 exact artifact checks. B2 produced 700 `MATCH`, 350 `MISS` and 350
+  bounded `INDETERMINATE` outcomes without serving stored artifact bytes.
+- **Measured result:** B0 median 164,718 ns/op; BA 274,917 ns/op; B1 271,614
+  ns/op; B2 1,039,045 ns/op. B2 cost 6.308x the small B0 rebuild, so the speed
+  hypothesis is falsified for E02. The implementation and negative evidence
+  are retained as the deterministic control for later experiments.
+- **Tri-1 maths:** 1 trit carries `log2(3) = 1.5849625` bits; five packed trits
+  fit in one byte (`3^5 = 243`, `3^6 = 729`). No packed-trit or neural speed,
+  density or security advantage was measured by E02. Those are separate E04
+  hypotheses and must pass binary and Tri-1 controls.
+- **Galerina effect:** none yet. E02 is non-authorizing research, not a package
+  execution backend and not permission to remove TypeScript, Node packages,
+  Wasm or any development oracle.
+- **Authoritative paths:**
+  `../SLIDE/research/shape-lab/E02-STRUCTURAL-RETRIEVAL-COMPLETION-REPORT.md`
+  and `../SLIDE/research/shape-lab/results/e02-structural-latest.*`.
+- **Next independent chapter:** E03 typed-parameter boundary discovery. It
+  must compare reusable verified work with B0, BA, B1 and B2 and preserve all
+  `MATCH`, `MISS` and `INDETERMINATE` outcomes. There is no owner-only blocker.
+
 ### Shape Lab E01 roadmap synchronization - 2026-07-31
 
 - **Completed outside Galerina:** independent SLIDE commit `5ad5e98` closes

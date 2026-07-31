@@ -42,13 +42,14 @@ flowchart TB
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
     U["🟩 Shape Lab E01<br/>bounded durable atlas · 22/22 · measured"]
+    V["🟩 Shape Lab E02<br/>bounded structural retrieval · 136/136 · measured"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
     Z --> E
     G --> P
-    L --> M --> U
-    U --> I
+    L --> M --> U --> V
+    V --> I
     E --> K --> Q
     E --> S --> L --> H
     Q --> I
@@ -59,7 +60,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V green;
     class X,F red;
     class Q amber;
     class H,I,T blue;
@@ -107,6 +108,7 @@ flowchart TB
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
 | Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |
 | Shape Lab E01 durable atlas | 🟩 | SLIDE `5ad5e98`; measured implementation `8c869e0af5121bb21de6cbf95ebb8ffcf763b1dd`. The bounded pre-created single-link log has exact length/digest frames, AES-256-GCM payloads, mandatory Ed25519 + ML-DSA-65 generation/commit signatures, append+flush publication, full contiguous-chain recovery, caller-owned minimum anchors, historical key/byte immutability and current graph/target/policy/proof/epoch replay. Every pre-commit byte prefix serves no successor. Focused 22/22, complete SLIDE 116/116 and ten schemas parse. Across 525 exact-byte checks, medians were B0 193,028 ns/op, process-local B1 92,376 ns/op and durable restart 1,526,072 ns/op. E01 was 7.91x the tiny rebuild cost, so this is verified R&D recovery evidence, not a speedup or production storage claim |
+| Shape Lab E02 structural retrieval | 🟩 | SLIDE source `2df87f1feed26bb5b4568eac4dd4a7f827d1024b`. Topology bucketing, semantic colour refinement and a non-recursive exact labelled-graph bijection preserve operation, type, effect, capability, failure, attribute, role and edge semantics. The index is capped and immutable; exhaustion is typed `INDETERMINATE`; B2 recompiles the current graph and never serves prior artifact bytes. Complete SLIDE 136/136 and eleven schemas parse. Across 5,600 exact artifact checks, B2 produced 700 MATCH, 350 MISS and 350 INDETERMINATE outcomes. Median B2 was 1,039,045 ns/op versus B0 164,718 ns/op: 6.308x cost, so E02 is retained as verified negative-performance evidence and a deterministic control, not a speedup or production admission claim |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
 ## Active Galerina work
@@ -299,8 +301,9 @@ Rules:
 
 ## SLIDE VPEG and dual-engine research
 
-Status: 🟩 E00 and the bounded E01 durable-atlas experiment are complete;
-neither is a production SLIDE backend or admitted Galerina feature.
+Status: 🟩 E00, bounded E01 durable-atlas and bounded E02 structural
+retrieval experiments are complete; none is a production SLIDE backend or
+admitted Galerina feature.
 
 The canonical engineering object is a **Verified Parametric Execution Graph
 (`VPEG`)**. “Shape shadow” is explanatory language only; it is not a subsystem,
@@ -351,7 +354,8 @@ The ordinary action cache is the null hypothesis. Without it, the experiment
 can only prove that reuse beats rebuilding.
 
 The 2026-07-31 Shape Lab now executes full rebuild (`B0`), ordinary action
-cache (`BA`), exact VPEG (`B1`) and NSE-Reflex proposal (`N1`) lanes. E00 adds
+cache (`BA`), exact VPEG (`B1`), bounded structural retrieval (`B2`) and
+NSE-Reflex proposal (`N1`) lanes. E00 adds
 bounded raw-byte intake, F01-F20 hostile/control evidence, exact S0-S8 stage
 coverage, target/driver derivation, typed parameters, child-DAG closure,
 proposal quarantine and complete matched-result validation. Every graph
@@ -367,6 +371,16 @@ Separate flushes, full-chain recovery, caller-owned minimum anchors,
 historical key/byte binding and current-context replay all fail closed. Tests
 use ephemeral keys and read no owner material. Focused evidence is 22/22,
 complete independent SLIDE is 116/116 and all ten schemas parse offline.
+
+E02 is complete for a bounded process-local structural index. Exact graph
+validation precedes topology bucketing, semantic colour refinement and a
+non-recursive labelled-bijection checker. Complete semantics and context are
+bound; caps close candidate, exact-check, refinement-work and accounted-memory
+budgets. B2 returns only `MATCH`, `MISS` or typed `INDETERMINATE`, recompiles
+the current graph and compares it independently with B0. It never serves old
+artifact bytes. Across 5,600 exact checks, median B2 cost was 6.308x B0, so its
+speed hypothesis failed. The implementation remains as the mandatory control
+for E03/E04 rather than being deleted or promoted.
 
 The provenance-bound matched E01 run performed 525 exact-byte checks. Median
 costs were B0 rebuild 193,028 ns/op, process-local B1 92,376 ns/op and durable
