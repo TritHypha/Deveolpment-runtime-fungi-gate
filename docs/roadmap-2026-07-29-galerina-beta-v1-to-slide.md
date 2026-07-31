@@ -47,14 +47,19 @@ flowchart TB
     W["🟨 Shape Lab E03 remediated<br/>typed boundary · value-free plan · measured slower"]
     AA["🟨 Shape Lab E04 remediated<br/>99 samples · packed density only"]
     AB["🟨 Shape Lab E05 remediated<br/>99 paired samples · exact VPEG candidate"]
-    AC["🟨 Claude-08 + SEC-05 closure<br/>226/226 · self-hash only"]
+    AC["🟨 Claude-08 + SEC-06 closure<br/>228/228 · self-hash K3=0"]
+    AD["🟩 RD-0623/0624 deep audit<br/>B1 maths · Tri-1 split · patent screen"]
+    AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
+    AE["🟦 SLIDE evidence + anchor activation<br/>offline authority · platform adapters"]
+    AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> X --> F --> H --> I --> T --> J
     Z --> E
     G --> P
-    L --> M --> U --> V --> W --> AA --> AB --> AC
-    AC --> I
+    L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
+    AG --> AE --> I
+    AG --> AF --> I
     E --> K --> Q
     E --> S --> L --> H
     Q --> I
@@ -65,10 +70,10 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG green;
     class X,F red;
     class Q,W,AA,AB,AC amber;
-    class H,I,T blue;
+    class H,I,T,AE,AF blue;
     class P green;
     class J grey;
 ```
@@ -90,6 +95,11 @@ flowchart TB
 | Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on content-bound executable loading, hostile parent-namespace resistance, Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
 | Native executable-loader identity | 🟥 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. A post-load hash is too late because initialization may already have run. RD-0601 selects a statically linked first production profile and a closed content-bound SLIDE linker as the modular successor. Pathname loading remains development-only; implementation and cross-platform proof remain red, but no owner adjudication is pending |
 | RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
+| RD-0623 B1/B0 and Tri-1 deep audit | 🟩 | Independent raw-sample arithmetic reproduces both n=99 paired comparisons and the five-trit maths. Source inspection shows B0 pays for one candidate semantic build before the same two common verifier builds; B1 replaces only that candidate build with exact reuse. Fixed lane order remains a possible confound. The comparison proves bounded reuse pressure, not VPEG advantage over BA and not a packed Tri-1 speed result |
+| RD-0624 neuromorphic patent proximity | 🟩 | Preliminary claim-element engineering screen finds low current proximity between fixed proposal-only N2/deterministic VPEG and the asserted dynamic spiking neuron/synapse array claims. Learned neural-subgraph extraction/implantation, dynamic neural topology, spiking delays/refractory state and actuator loops are stop-and-review triggers. This is not legal clearance; formal FTO remains a public-production gate |
+| RD-0625 through RD-0631 baseline matrix | 🟩 | Every final lane now has a separate numbered record with ordinary maths, Tri-1/K3 applicability, zero-trust review, use decision and paper gate. B0 and BA remain controls; owner selected B1 VPEG for continued R&D; B2/N1/N2/N3 stay retained laboratories rather than current fast paths. Packed Tri-1 density is recorded only for N1/N2/N3 and is not presented as speed, energy or cache-residency evidence |
+| SEC-06 evidence-verdict correction | 🟨 | Self-hash-only benchmark evidence now returns K3 `0` (`INDETERMINATE`) rather than `+1`; internal generation/rendering uses a complete separate internal-consistency record. Digest-consistent forged commit/platform labels cannot obtain an authority-positive verdict. Full SLIDE is 228/228; the local review is recorded, while the app-backed standard scan still awaits its bounded Start-scan setup action |
+| SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
@@ -116,7 +126,7 @@ flowchart TB
 | Shape Lab E02 structural retrieval | 🟩 | SLIDE source `2df87f1feed26bb5b4568eac4dd4a7f827d1024b`. Topology bucketing, semantic colour refinement and a non-recursive exact labelled-graph bijection preserve operation, type, effect, capability, failure, attribute, role and edge semantics. The index is capped and immutable; exhaustion is typed `INDETERMINATE`; B2 recompiles the current graph and never serves prior artifact bytes. Complete SLIDE 136/136 and eleven schemas parse. Across 5,600 exact artifact checks, B2 produced 700 MATCH, 350 MISS and 350 INDETERMINATE outcomes. Median B2 was 1,039,045 ns/op versus B0 164,718 ns/op: 6.308x cost, so E02 is retained as verified negative-performance evidence and a deterministic control, not a speedup or production admission claim |
 | Shape Lab E03 typed-boundary checkpoint | 🟨 | Remediated SLIDE source `151b316`; deterministic fixed/dynamic/indeterminate analysis, immutable value-free plans, ephemeral i32/Boolean/K3 bindings and same-implementation current-B0 byte comparison are executable. Fresh evidence is 7 samples × 100 operations and digest `sha256:03ee38692a6de5199d7819310a6757cc0a3367b2b19f143351fba064472bb906`. Exact prototype/prototype admission, canonical order, complete semantic re-derivation and typed-array snapshot intake now fail closed. The earlier negative-performance conclusion is unchanged; no independent-implementation, authenticated-evidence or Galerina-authority claim is made |
 | Shape Lab E04 packed and learned controls | 🟨 | Remediated SLIDE source `151b316`; canonical five-trit packing, matched 64×32 int8/Tri-1 controls and bounded prototype/energy/cascade proposal lanes end in same-implementation current-B0 byte verification. Complete SLIDE is 226/226 and all 19 schemas parse. Across 99 samples × 100 operations, medians are B0 148,769 ns/op, int8 inference 6,266, prepacked Tri-1 25,461, cold Tri-1 203,943, N0 rule 354,943, N1 int8 370,236, N1 Tri-1 390,171, prototype 364,081, energy 370,521 and cascade 413,207. Weight density remains useful, but no proposal lane wins; evidence digest `sha256:cff93495d42af8979dd197744d239bc926bea990d70a2900a036f86370d53d96` |
-| Shape Lab E05 final matched experiment | 🟨 | Remediated SLIDE source `151b316`; graph-responsive N2, exact recipe grammar, fixed N3 cascade and B0/BA/B1/B2/N1/N2/N3 common verifier are executable. Across 99 paired samples × 50 operations, medians are B0 486,060 ns/op, BA 462,480, exact VPEG B1 459,644, B2 1,893,364, N1 912,636, N2 747,348 and N3 1,859,756. Exact paired analysis finds B1 versus BA indeterminate (Hodges–Lehmann −2,379 ns/op; 95% bootstrap CI −4,612 to 1,338; p=0.159069651881237845), while B1 is a candidate faster than B0 in this run (HL −24,823; CI −26,162 to −23,612; p=0.000000000000022890). This does not establish a production or external-runtime advantage. Evidence digests are `sha256:684ac1d8f3d2613af82a4fdf95dd3bf9bcb2863fdd8402a020b9b8f35d6d4f8f` and comparison `sha256:ab3c33c7c732e6aa3984f068967060e0f51a3a391a1e62fe8c903d56d7235010` |
+| Shape Lab E05 final matched experiment | 🟨 | Remediated SLIDE source `151b316`; graph-responsive N2, exact recipe grammar, fixed N3 cascade and B0/BA/B1/B2/N1/N2/N3 common verifier are executable. Across 99 paired samples × 50 operations, medians are B0 486,060 ns/op, BA 462,480, exact VPEG B1 459,644, B2 1,893,364, N1 912,636, N2 747,348 and N3 1,859,756. Exact paired analysis finds B1 versus BA indeterminate (Hodges–Lehmann −2,379 ns/op; 95% bootstrap CI −4,612 to 1,338; p=0.159069651881237845), while B1 is a candidate faster than B0 in this run (HL −24,823; CI −26,162 to −23,612; p=0.000000000000022890). RD-0623 confirms the arithmetic but records that B0 performs one extra candidate build and that fixed B0→BA→B1 order may bias timing. This establishes neither VPEG advantage over BA nor production/external-runtime performance. Evidence digests are `sha256:684ac1d8f3d2613af82a4fdf95dd3bf9bcb2863fdd8402a020b9b8f35d6d4f8f` and comparison `sha256:ab3c33c7c732e6aa3984f068967060e0f51a3a391a1e62fe8c903d56d7235010` |
 | Shape Lab adversarial-review closure | 🟨 | Claude-08 and SEC-05 were adjudicated into bounded diagnostics/XML, strict typed-array admission, exact prototype/data-descriptor checks, current semantic re-derivation, universal cycle enforcement, honest receipts, hybrid-evidence schema, atlas identity/key mutation coverage and an exact paired-statistics sidecar. Fresh source verification is 226/226 tests, 15/15 V2 contract files, 19/19 schemas and 62/62 modules. Current files are internally consistent and self-hash only; no evidence authority has signed them, so the lane stays amber |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 
@@ -421,6 +431,22 @@ null-control result prevents a VPEG speed-advantage claim. N1, N2 and N3 are
 slower; their retained code is scientific negative evidence, not authority.
 The result and paired-statistics sidecar are self-hashed internal-consistency
 evidence only, not authenticated provenance.
+
+RD-0623 puts `B1_EXACT_VPEG_VS_B0_CURRENT` back into active R&D. B0 performs
+one candidate semantic build plus the two common verifier builds, while B1
+performs exact reuse plus those same two builds. The measured 5.43% candidate
+latency reduction is therefore evidence that one reuse avoids work, not that
+fragment VPEG beats the ordinary action cache. The next run must use a
+pre-registered counterbalanced schedule across fresh processes and bind that
+schedule into the newly approved authenticated SLIDE evidence envelope.
+
+RD-0624 separately screens the University of Tennessee NIDA/DANNA patent
+family. Current deterministic VPEG and fixed proposal-only N2 are technically
+distant from the inspected dynamic spiking neuron/synapse array claim
+clusters. Formal freedom-to-operate review remains mandatory before public
+production distribution, and learned neural-subgraph extraction/implantation,
+dynamic neural topology, spiking delay/refractory semantics or actuator loops
+trigger a fresh stop-and-review gate.
 
 The provenance-bound matched E01 run performed 525 exact-byte checks. Median
 costs were B0 rebuild 193,028 ns/op, process-local B1 92,376 ns/op and durable
