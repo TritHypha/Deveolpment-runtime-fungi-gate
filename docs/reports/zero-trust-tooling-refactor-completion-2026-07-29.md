@@ -52,6 +52,16 @@ the paired `.fungi` fold is **0 errors / 0 warnings**. Actual N-API
 export/ABI proof and content-bound loading remain open; the inspector cannot
 create a production receipt.
 
+Primary-source loader research then found a genuine architecture boundary:
+Node's public addon loader is filename-based, and Windows `LoadLibraryExW`
+requires its file-handle argument to be `NULL`. Native initialization may run
+before a post-load hash/file-ID check, so pre-hash + path load + post-hash is
+rejected for production authority (**4.6/10** under the zero-trust score).
+The production list remains empty. Platform syscall and recovery evidence can
+continue independently, but final beta authorization needs owner adjudication
+between a linked runtime, a narrowed OS/code-signing trust claim, or changing
+the Galerina-before-SLIDE release order.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

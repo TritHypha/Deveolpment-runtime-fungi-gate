@@ -101,6 +101,16 @@ session. Every checkpoint must record:
   N-API export/ABI proof, content-bound loading, retained-handle substitution
   resistance, native persistence operations and physical crash matrices are
   still open.
+- **Native executable-loader constraint (2026-07-31):** primary-source review
+  confirms Node `process.dlopen()` is filename-based and Windows
+  `LoadLibraryExW` requires its apparent file-handle parameter to be `NULL`.
+  Native initialization can therefore execute before a post-load identity
+  check; pre/post hashes do not prove authenticated bytes equal executed
+  bytes. Dynamic path loading scores **4.6/10 / REJECT for production
+  authority** under the current threat model. The independent review prompt is
+  ready. Continue non-authorizing syscall/recovery implementation while the
+  eventual linked-runtime versus narrowed-threat versus SLIDE-order decision
+  remains an owner architecture question.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

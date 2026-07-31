@@ -197,6 +197,27 @@ load-by-path race. Actual content-bound loading, ABI/export validation,
 retained-handle substitution resistance and production branding remain open.
 No result from the inspector enters the empty production digest list.
 
+### Executed-image identity constraint
+
+Primary documentation closes an assumption the design must not make. Node's
+public addon loader takes a filename. Windows `LoadLibraryExW` requires its
+`hFile` parameter to be `NULL`, so it cannot execute the exact file handle the
+inspector already hashed. Linux and macOS `dlopen` are also path interfaces.
+Native constructors/module initialization may execute before any post-load
+hash or file-ID comparison.
+
+Therefore pre-hash + path load + post-hash is **not** admitted as proof that
+authenticated bytes equal executed bytes. Windows data-file-exclusive mapping
+is useful for non-executing inspection but cannot initialize or expose a Node
+addon. The current choices are a linked-in trusted runtime primitive, an
+explicitly narrowed OS/code-signing/ACL trust claim, or a change to the
+Galerina-before-SLIDE release order. None is silently selected here.
+
+The detailed evidence and independent-review prompt are
+`docs/research/registry-native-loader-content-identity-limit-2026-07-31.md`
+and
+`docs/research-prompts/registry-native-loader-handle-identity-independent-review.md`.
+
 ## Deterministic simulation role
 
 A canonical seeded deterministic simulator is required for the registry

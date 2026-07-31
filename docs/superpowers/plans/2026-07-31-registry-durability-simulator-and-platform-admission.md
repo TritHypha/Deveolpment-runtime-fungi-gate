@@ -63,7 +63,11 @@ Windows, Linux and macOS crash semantics. The repository will contain:
 - [ ] Add the actual content-bound N-API loader/export proof and retained-handle
   substitution resistance before any platform persistence implementation can
   be considered. The inspector returns only `CANDIDATE`, never executes bytes
-  and cannot prove ABI behavior.
+  and cannot prove ABI behavior. Primary-source review found the standard
+  dynamic-loader route cannot meet exact-handle execution on Windows:
+  `LoadLibraryExW` requires `hFile=NULL`. Do not implement pre-hash/path-load/
+  post-hash as authority; continue syscall evidence while owner adjudicates a
+  linked runtime, narrowed OS-trust boundary or changed SLIDE release order.
 - [ ] Run focused app-kernel tests, mutation/security gates and the complete
   Galerina fixed point.
 - [ ] Update TODO, roadmap, completion report and Knowledge Base evidence with

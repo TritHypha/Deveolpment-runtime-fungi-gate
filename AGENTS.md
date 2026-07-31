@@ -96,6 +96,12 @@ intent → governed execution plan → coordinated compute → audit proof
 > digest. App-kernel is 193/193 and its `.fungi` fold is checker-clean. This
 > still does not prove N-API exports, load identity or persistence behavior;
 > the production allow-list remains empty.
+>
+> **Loader constraint:** do not implement pre-hash + `process.dlopen(path)` +
+> post-hash as production authority. Standard executable loading is path-based;
+> Windows `LoadLibraryExW` requires `hFile=NULL`, so module initialization can
+> precede a post-load identity check. Continue non-authorizing syscall evidence
+> while the linked-runtime / narrowed-trust / SLIDE-order decision is open.
 
 ## Grammar — Current v0.1 Flow Forms
 
