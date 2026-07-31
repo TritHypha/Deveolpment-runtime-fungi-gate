@@ -11,6 +11,36 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
 guessing.
 
+### Shape Lab E04 packed and learned controls synchronization - 2026-07-31
+
+- **Implemented outside Galerina:** canonical five-trit packing; matched 64x32
+  int8 and packed Tri-1 reflex models; bounded rule, prototype, energy and
+  cascade proposals; aggregate work/memory budgets; non-authorizing capsules;
+  and independent current-B0 verification.
+- **Fresh evidence:** complete SLIDE 181/181, focused E04 18/18, fifteen
+  schemas parse, and 6,300 exact checks verify. Clean measured source is
+  `f9bc3f6`; evidence digest is
+  `sha256:6ffb34018bd2d0d8019b096aaf76bfbc7106a10c8c90b837d52f5a133b622298`.
+- **Representation result:** 2,048 int8 weight bytes become 410 canonical
+  five-trit bytes, 4.995x smaller. Including biases, parameters are 2,176
+  versus 538 bytes. This is density evidence, not a cache-residency claim.
+- **Performance result:** int8 inference 5,203 ns/op; prepacked Tri-1 24,921;
+  cold Tri-1 123,481. B0 is 147,739; fastest complete verified proposer is
+  prototype at 319,402. Every learned/energy/cascade lane is slower than B0.
+- **Security result:** malformed/reserved packing, overflow, duplicate or
+  injection-shaped identities, proxy/forged models, stale context, unknown
+  candidate, semantic capsule forgery and aggregate exhaustion refuse or end
+  `INDETERMINATE`. Proposal output supplies no executable bytes or authority.
+- **Galerina effect:** none yet. E04 remains `EXPERIMENT-ONLY`; it is not a
+  package backend and grants no TypeScript, Node, Wasm or subproject retirement
+  authority.
+- **Authoritative paths:**
+  `../SLIDE/research/shape-lab/E04-PACKED-LEARNED-CONTROLS-COMPLETION-REPORT.md`
+  and `../SLIDE/research/shape-lab/results/e04-packed-learned-latest.*`.
+- **Current work:** bounded E05/N2 NSE-Synthesis. Final engine reports, final
+  measured SVG and the comprehensive local-Claude prompt wait for N2 evidence.
+  No owner-only blocker.
+
 ### Shape Lab E03 exact typed-boundary checkpoint - 2026-07-31
 
 - **Implemented outside Galerina:** deterministic fixed/dynamic/indeterminate
@@ -34,8 +64,8 @@ guessing.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E03-TYPED-BOUNDARY-CHECKPOINT-REPORT.md` and
   `../SLIDE/research/shape-lab/results/e03-typed-boundary-latest.*`.
-- **Current work:** E04 packed and learned proposal controls with E02/E03 as
-  mandatory deterministic baselines. No owner-only blocker.
+- **Current work:** E04 is now complete and retained; E05/N2 is next. No
+  owner-only blocker.
 
 ### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
 
