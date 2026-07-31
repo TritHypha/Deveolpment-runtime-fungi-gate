@@ -115,6 +115,17 @@ host. The path checks also remain susceptible to namespace TOCTOU if reused as
 authority; the production design must operate on retained handles rather than
 trusting this preflight result.
 
+A separate non-executing artifact inspector now has **7/7** focused tests. It
+checks the descriptor-fixed path and all symbolic ancestors/components,
+requires one regular single-link file, limits materialization to 16 MiB,
+compares open-handle metadata before and after reading, verifies the declared
+PE/ELF/Mach-O architecture marker and re-derives the exact binary digest. Its
+planted junction-ancestor test first failed and then passed after ancestor
+inspection was added. This closes a pre-execution substitution class only: an
+outer container marker does not prove N-API exports or behavior, and actual
+load-by-path identity remains unproved. The inspector therefore returns only a
+non-executed candidate.
+
 ## Falsification plan
 
 The construction should be rejected or remain non-authorizing if any of these
@@ -144,7 +155,7 @@ telemetry only**:
 | Authority separation | 10 | Candidate cannot mint production authority |
 | Fail-close behavior | 9 | Unsupported, unknown and non-Windows paths deny |
 | Input/namespace integrity | 8 | Closed checks and ancestor refusal; handle-level TOCTOU still open |
-| Supply-chain/provenance | 6 | Zero dependencies, but binary loader proof is not implemented |
+| Supply-chain/provenance | 7 | Zero dependencies and exact non-executing binary inspection; actual loader proof is not implemented |
 | Determinism | 8 | Pure matrix is deterministic; live host facts vary by machine |
 | Recovery/durability | 3 | No write, barrier, crash or power-loss evidence |
 | Compatibility | 7 | Windows probe builds elsewhere but denies; other platform probes absent |

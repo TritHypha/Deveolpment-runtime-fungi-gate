@@ -90,6 +90,12 @@ intent → governed execution plan → coordinated compute → audit proof
 > facts while refusing reparse ancestry and unsupported storage. It is
 > non-authorizing and supplies no write, loader, barrier, reboot or power-loss
 > proof. Do not infer production durability from this probe.
+>
+> A separate non-executing artifact inspector passes 7/7 and binds one
+> fixed-path, single-link PE/ELF/Mach-O candidate to its architecture and exact
+> digest. App-kernel is 193/193 and its `.fungi` fold is checker-clean. This
+> still does not prove N-API exports, load identity or persistence behavior;
+> the production allow-list remains empty.
 
 ## Grammar — Current v0.1 Flow Forms
 

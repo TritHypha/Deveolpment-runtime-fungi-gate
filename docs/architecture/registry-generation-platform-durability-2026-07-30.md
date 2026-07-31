@@ -172,6 +172,31 @@ least-authority handles and bind its loaded image to the admitted descriptor.
 The production digest list therefore remains empty. DP-RD-0600 records the
 general rule: host classification is not persistence proof.
 
+### Implemented non-executing artifact inspection
+
+`registry-durability-artifact.ts` now checks one descriptor-fixed native
+artifact without importing or executing it. It requires an absolute canonical
+package root, refuses symbolic/reparse-shaped ancestry and loader components,
+requires one regular single-link file, limits materialization to 16 MiB,
+compares file identity and metadata before and after the read, validates the
+declared PE/COFF, ELF or Mach-O architecture marker, and re-derives the exact
+SHA-256 digest.
+
+Focused evidence is **7/7**. The symlinked-ancestor falsification test first
+demonstrated that checking only the package root and descendants was
+insufficient; ancestor traversal was then added and the test passed. Other
+tests cover mutated bytes, malformed containers, wrong architecture,
+fixed-path absence, multi-link substitution, loader-component indirection and
+the materialization ceiling. App-kernel is **193/193**. The paired
+`registry-durability-artifact.fungi` terminal fold is checker-clean with
+**0 errors / 0 warnings** and only yields `CANDIDATE` or `DENY`.
+
+This is still not a loader. Container markers do not prove the claimed N-API
+exports or behavior, and a path preflight cannot close the final
+load-by-path race. Actual content-bound loading, ABI/export validation,
+retained-handle substitution resistance and production branding remain open.
+No result from the inspector enters the empty production digest list.
+
 ## Deterministic simulation role
 
 A canonical seeded deterministic simulator is required for the registry
@@ -227,8 +252,9 @@ public document does not depend on a machine-local sibling-repository path.
 
 ## Zero-trust adoption score
 
-Status: deterministic simulator `ADOPT-WITH-CONTROLS`; Windows host probe
-`ADOPT-WITH-CONTROLS` as non-authorizing telemetry; native adapter `PENDING`
+Status: deterministic simulator `ADOPT-WITH-CONTROLS`; Windows host probe and
+artifact inspector `ADOPT-WITH-CONTROLS` as non-authorizing evidence; native
+loader/adapter `PENDING`
 
 The object-capability seal is adopted because its negative/control evidence is
 complete and it grants no production authority. The deterministic simulator
@@ -242,8 +268,11 @@ physical host evidence.
 The Windows host probe scores **7.7/10** for its strictly non-authorizing
 role: it has strong authority separation and refusal coverage but no loader,
 write, barrier, crash or power-loss evidence. The native cross-platform
-adapter proposal is not scored yet: filesystem support matrices, binary
-provenance, hostile-loader tests and power-loss evidence are incomplete.
+artifact inspector scores **8.2/10** for its non-executing role: exact bytes,
+outer format, architecture, bounded materialization and namespace refusal are
+covered, but N-API exports, load identity and behavior are not. The native
+cross-platform adapter proposal is not scored yet: filesystem support
+matrices, content-bound loader evidence and power-loss evidence are incomplete.
 
 Hard vetoes:
 

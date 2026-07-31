@@ -55,10 +55,15 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   remote-storage capability and non-NTFS/ReFS filesystems. Its result is
   explicitly non-authorizing; 4/4 focused Rust tests pass on the Windows 10
   development host.
-- [ ] Add loader/provenance and host/filesystem refusal tests before any
-  platform persistence implementation can be considered. Host classification
-  is now tested; binary re-hashing, retained-handle loading and substitution
-  resistance remain open.
+- [x] Add a non-executing native-artifact inspector that materializes one
+  fixed-path, single-link file, rejects symbolic ancestry, bounds bytes,
+  compares stable open-handle metadata, validates PE/ELF/Mach-O architecture
+  markers and re-derives the exact binary digest. Focused evidence is 7/7 and
+  its `.fungi` terminal contract is 0 errors/0 warnings.
+- [ ] Add the actual content-bound N-API loader/export proof and retained-handle
+  substitution resistance before any platform persistence implementation can
+  be considered. The inspector returns only `CANDIDATE`, never executes bytes
+  and cannot prove ABI behavior.
 - [ ] Run focused app-kernel tests, mutation/security gates and the complete
   Galerina fixed point.
 - [ ] Update TODO, roadmap, completion report and Knowledge Base evidence with

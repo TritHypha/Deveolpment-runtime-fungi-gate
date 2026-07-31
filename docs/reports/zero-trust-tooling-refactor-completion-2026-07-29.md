@@ -43,6 +43,15 @@ remote-storage capability and non-NTFS/ReFS filesystems. This result cannot
 mint a production receipt and includes no write, publication, barrier, reboot
 or power-loss evidence. The empty production allow-list is unchanged.
 
+The next provenance slice is also non-authorizing. A fixed-path native artifact
+inspector passes **7/7**, including a red/green junction-ancestor regression.
+It materializes one bounded single-link file, compares stable open-handle
+metadata, verifies PE/ELF/Mach-O architecture markers and re-derives the exact
+binary digest without executing the candidate. App-kernel is **193/193** and
+the paired `.fungi` fold is **0 errors / 0 warnings**. Actual N-API
+export/ABI proof and content-bound loading remain open; the inspector cannot
+create a production receipt.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

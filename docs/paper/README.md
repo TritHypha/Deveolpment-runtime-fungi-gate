@@ -55,7 +55,7 @@ Any document in this folder follows the conventions below. These are good-practi
 
 | Document | Tier | Summary |
 |---|---|---|
-| [`dp-rd-0600-host-classification-is-not-persistence-proof.md`](defensive-papers/dp-rd-0600-host-classification-is-not-persistence-proof.md) | **defensive-pub** | **DP-RD-0600** — a bounded host/filesystem probe is a deny-capable preflight, never persistence authority. The two-stage construction keeps binary/ABI provenance, retained handles, write/barrier/exclusive-publication/re-open and real crash evidence behind a separate admitted primitive. The zero-dependency Windows probe is 4/4; it measures only fixed local NTFS/ReFS candidate facts and leaves production admission empty. |
+| [`dp-rd-0600-host-classification-is-not-persistence-proof.md`](defensive-papers/dp-rd-0600-host-classification-is-not-persistence-proof.md) | **defensive-pub** | **DP-RD-0600** — a bounded host/filesystem probe is a deny-capable preflight, never persistence authority. The two-stage construction keeps binary/ABI provenance, retained handles, write/barrier/exclusive-publication/re-open and real crash evidence behind a separate admitted primitive. The zero-dependency Windows probe is 4/4; the non-executing fixed-path artifact inspector is 7/7. Both leave production admission empty. |
 
 ### Defensive publications (`defensive-papers/`) — formerly `docs/scientific-papers/`
 

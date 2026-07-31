@@ -28,3 +28,4 @@ export * from "./registry-generation.js";
 export * from "./registry-generation-store.js";
 export * from "./registry-activation-simulator.js";
 export * from "./registry-durability-admission.js";
+export * from "./registry-durability-artifact.js";

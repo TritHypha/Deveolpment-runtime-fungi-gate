@@ -91,6 +91,16 @@ session. Every checkpoint must record:
   physical crash operation. Production admission remains empty. Next is the
   content-bound binary loader/provenance verifier, then retained-handle native
   persistence and real Windows/Linux/macOS crash matrices.
+- **Native artifact inspection checkpoint (2026-07-31):** the fixed-path
+  non-executing inspector now refuses symbolic ancestry/components,
+  multi-link files, missing/oversize/changed bytes, malformed containers,
+  wrong PE/ELF/Mach-O architecture and digest mismatch. A planted junction
+  ancestor first failed and now passes after the class fix. Focused evidence is
+  **7/7**, app-kernel is **193/193**, and the `.fungi` terminal contract is
+  **0 errors / 0 warnings**. This remains `CANDIDATE` evidence only. Actual
+  N-API export/ABI proof, content-bound loading, retained-handle substitution
+  resistance, native persistence operations and physical crash matrices are
+  still open.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

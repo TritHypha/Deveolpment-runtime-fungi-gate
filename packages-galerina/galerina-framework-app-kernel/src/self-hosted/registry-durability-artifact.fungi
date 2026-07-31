@@ -1,0 +1,46 @@
+@version 1
+/// File: registry-durability-artifact.fungi
+/// Purpose: Pure terminal fold for a materialized native durability artifact candidate.
+///   The host bootstrap supplies bounded evidence; this flow cannot read, load, execute,
+///   admit or grant production authority to a native artifact.
+/// Status: checker-verified contract; the TypeScript inspector is the temporary host-I/O
+///   bootstrap and a production adapter remains unbuilt.
+
+pure flow durabilityArtifactVerdict(
+  descriptorValid: Bool,
+  directSingleLinkPath: Bool,
+  identityStable: Bool,
+  boundedBytes: Bool,
+  containerVerdict: String,
+  digestMatches: Bool,
+  handleClosed: Bool
+) -> String
+contract {
+  intent { "Advance only an exact, stable, bounded and closed native artifact to non-executed candidate review." }
+}
+{
+  if descriptorValid == false {
+    return "DENY"
+  }
+  if directSingleLinkPath == false {
+    return "DENY"
+  }
+  if identityStable == false {
+    return "DENY"
+  }
+  if boundedBytes == false {
+    return "DENY"
+  }
+  if handleClosed == false {
+    return "DENY"
+  }
+  match containerVerdict {
+    "FORMAT_AND_ARCH_MATCH" => {
+      if digestMatches == true {
+        return "CANDIDATE"
+      }
+      return "DENY"
+    }
+    _ => return "DENY"
+  }
+}

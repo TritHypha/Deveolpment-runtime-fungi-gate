@@ -183,7 +183,7 @@ function stringArrayIsCanonical(
   return true;
 }
 
-function descriptorIsValid(
+export function isRegistryDurabilityAdapterDescriptor(
   value: unknown,
 ): value is RegistryDurabilityAdapterDescriptor {
   if (
@@ -274,7 +274,7 @@ export function assessRegistryDurabilityAdapterCandidate(
   descriptorValue: unknown,
   hostValue: unknown,
 ): RegistryDurabilityCandidateDecision {
-  if (!descriptorIsValid(descriptorValue)) {
+  if (!isRegistryDurabilityAdapterDescriptor(descriptorValue)) {
     return deny("ADAPTER_DESCRIPTOR_MALFORMED");
   }
   if (!hostIsValid(hostValue)) {
