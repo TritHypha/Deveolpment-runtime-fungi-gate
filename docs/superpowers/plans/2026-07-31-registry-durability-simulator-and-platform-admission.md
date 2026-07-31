@@ -55,6 +55,11 @@ Windows, Linux and macOS crash semantics. The repository will contain:
   remote-storage capability and non-NTFS/ReFS filesystems. Its result is
   explicitly non-authorizing; 4/4 focused Rust tests pass on the Windows 10
   development host.
+- [x] Prove that the native Windows directory-handle sequence is accepted on
+  the current host: candidate host gate -> `CreateFileW(GENERIC_WRITE,
+  FILE_FLAG_BACKUP_SEMANTICS)` -> `FlushFileBuffers` -> checked close. Native
+  evidence is now 5/5. This is syscall-acceptance evidence only, not crash or
+  power-loss proof.
 - [x] Add a non-executing native-artifact inspector that materializes one
   fixed-path, single-link file, rejects symbolic ancestry, bounds bytes,
   compares stable open-handle metadata, validates PE/ELF/Mach-O architecture

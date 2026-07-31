@@ -22,6 +22,13 @@ The Windows probe:
 - refuses a volume reporting `FILE_SUPPORTS_REMOTE_STORAGE`;
 - returns a bounded `Candidate` or `Deny` value without returning the path.
 
+The crate also has a non-authorizing Windows directory-barrier candidate. It
+first requires the host probe to return `Candidate`, opens the direct directory
+with `CreateFileW` using `GENERIC_WRITE` and
+`FILE_FLAG_BACKUP_SEMANTICS`, calls `FlushFileBuffers`, closes the handle and
+returns `Candidate` only when every call succeeds. On the current Windows 10
+fixed-local NTFS development host, this focused live test succeeds.
+
 The non-Windows build is total and always returns
 `WINDOWS_PLATFORM_UNAVAILABLE`.
 
@@ -36,8 +43,9 @@ cargo build --locked --release
 ```
 
 The focused test suite covers the pure filesystem/drive matrix, the live local
-Windows temp volume, malformed and unavailable paths, and a reparse-ancestor
-case when the host permits creation of a disposable directory link.
+Windows temp volume, malformed and unavailable paths, a reparse-ancestor case
+when the host permits creation of a disposable directory link, and the live
+directory `FlushFileBuffers` barrier. Current evidence is 5/5.
 
 ## Security boundary
 
@@ -50,6 +58,11 @@ write/flush/exclusive-publication/re-open/metadata-barrier sequence, and pass
 real crash and power-loss tests. Until then, the production adapter digest
 allow-list remains empty.
 
+The successful live directory barrier proves only that the documented calls
+were accepted on one Windows 10 NTFS host. It does not establish physical
+durability, device-cache truthfulness, write/publication ordering, ReFS
+behavior, Windows 11 behavior or recovery after a crash.
+
 No shell, PowerShell process, spawned CLI or writable sidecar is used by this
 crate.
 
@@ -59,6 +72,8 @@ crate.
 - [GetDriveTypeW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdrivetypew)
 - [GetVolumeInformationW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
 - [GetFileAttributesW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+- [CreateFileW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
+- [FlushFileBuffers](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers)
 
 The later publication primitive is separately constrained by
 `FlushFileBuffers`, exclusive namespace publication and physical durability

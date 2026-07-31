@@ -1,8 +1,9 @@
 use std::path::Path;
 
 use galerina_registry_durability_native::{
-    admit_measured_windows_host, probe_windows_host, MeasuredWindowsHost, WindowsHostProbeVerdict,
-    DRIVE_FIXED, DRIVE_REMOTE, FILE_SUPPORTS_REMOTE_STORAGE,
+    admit_measured_windows_host, flush_windows_directory_candidate, probe_windows_host,
+    MeasuredWindowsHost, WindowsDirectoryFlushVerdict, WindowsHostProbeVerdict, DRIVE_FIXED,
+    DRIVE_REMOTE, FILE_SUPPORTS_REMOTE_STORAGE,
 };
 
 fn measured(filesystem: &str) -> MeasuredWindowsHost {
@@ -107,4 +108,19 @@ fn live_probe_refuses_a_reparse_ancestor_when_the_host_can_create_one() {
         WindowsHostProbeVerdict::Deny(_)
     ));
     fs::remove_dir_all(&root).expect("disposable directory cleanup");
+}
+
+#[cfg(windows)]
+#[test]
+fn live_fixed_local_directory_accepts_the_native_flush_barrier() {
+    match flush_windows_directory_candidate(std::env::temp_dir().as_path()) {
+        WindowsDirectoryFlushVerdict::Candidate => {}
+        WindowsDirectoryFlushVerdict::Deny(error) => {
+            panic!(
+                "Windows directory flush barrier refused: {} ({:?})",
+                error.code(),
+                error.os_code(),
+            );
+        }
+    }
 }

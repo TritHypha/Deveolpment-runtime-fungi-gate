@@ -62,6 +62,13 @@ continue independently, but final beta authorization needs owner adjudication
 between a linked runtime, a narrowed OS/code-signing trust claim, or changing
 the Galerina-before-SLIDE release order.
 
+Platform work continued without granting loader authority. The
+zero-dependency Rust candidate now opens an admitted direct Windows directory
+with `CreateFileW(GENERIC_WRITE, FILE_FLAG_BACKUP_SEMANTICS)`, requires
+`FlushFileBuffers` to succeed and checks handle close. The live Windows 10
+fixed-local NTFS test passes; native evidence is **5/5**. This proves API
+acceptance on one host, not crash or power-loss durability.
+
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
 

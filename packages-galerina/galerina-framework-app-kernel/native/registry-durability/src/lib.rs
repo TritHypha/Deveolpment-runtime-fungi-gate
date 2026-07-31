@@ -44,6 +44,12 @@ pub enum WindowsHostProbeVerdict {
     Deny(WindowsHostProbeError),
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum WindowsDirectoryFlushVerdict {
+    Candidate,
+    Deny(WindowsHostProbeError),
+}
+
 fn deny(code: &'static str, os_code: Option<u32>) -> WindowsHostProbeVerdict {
     WindowsHostProbeVerdict::Deny(WindowsHostProbeError { code, os_code })
 }
@@ -72,20 +78,42 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
 
 #[cfg(windows)]
 mod windows {
-    use super::{admit_measured_windows_host, deny, MeasuredWindowsHost, WindowsHostProbeVerdict};
+    use super::{
+        admit_measured_windows_host, deny, MeasuredWindowsHost, WindowsDirectoryFlushVerdict,
+        WindowsHostProbeError, WindowsHostProbeVerdict,
+    };
+    use std::ffi::c_void;
     use std::ffi::OsStr;
     use std::fs;
     use std::os::windows::ffi::OsStrExt;
     use std::path::{Component, Path};
 
     const INVALID_FILE_ATTRIBUTES: u32 = u32::MAX;
+    const INVALID_HANDLE_VALUE: *mut c_void = -1_isize as *mut c_void;
     const FILE_ATTRIBUTE_DIRECTORY: u32 = 0x0000_0010;
     const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0000_0400;
+    const FILE_SHARE_READ: u32 = 0x0000_0001;
+    const FILE_SHARE_WRITE: u32 = 0x0000_0002;
+    const FILE_SHARE_DELETE: u32 = 0x0000_0004;
+    const GENERIC_WRITE: u32 = 0x4000_0000;
+    const OPEN_EXISTING: u32 = 3;
+    const FILE_FLAG_BACKUP_SEMANTICS: u32 = 0x0200_0000;
     const MAX_PATH_CHARS: usize = 32_768;
     const FILESYSTEM_NAME_CHARS: usize = 64;
 
     #[link(name = "kernel32")]
     extern "system" {
+        fn CloseHandle(object: *mut c_void) -> i32;
+        fn CreateFileW(
+            file_name: *const u16,
+            desired_access: u32,
+            share_mode: u32,
+            security_attributes: *mut c_void,
+            creation_disposition: u32,
+            flags_and_attributes: u32,
+            template_file: *mut c_void,
+        ) -> *mut c_void;
+        fn FlushFileBuffers(file: *mut c_void) -> i32;
         fn GetDriveTypeW(root_path_name: *const u16) -> u32;
         fn GetFileAttributesW(file_name: *const u16) -> u32;
         fn GetLastError() -> u32;
@@ -242,6 +270,53 @@ mod windows {
             volume_serial,
         })
     }
+
+    fn flush_deny(code: &'static str, os_code: Option<u32>) -> WindowsDirectoryFlushVerdict {
+        WindowsDirectoryFlushVerdict::Deny(WindowsHostProbeError { code, os_code })
+    }
+
+    pub fn flush_directory(path: &Path) -> WindowsDirectoryFlushVerdict {
+        if !matches!(probe(path), WindowsHostProbeVerdict::Candidate(_)) {
+            return flush_deny("WINDOWS_DIRECTORY_HOST_NOT_CANDIDATE", None);
+        }
+        let wide = match wide_nul(path.as_os_str()) {
+            Some(value) => value,
+            None => return flush_deny("WINDOWS_DIRECTORY_PATH_ENCODING_REFUSED", None),
+        };
+        // SAFETY: wide is NUL-terminated. Null security/template pointers are
+        // permitted, and the handle is checked before use.
+        let handle = unsafe {
+            CreateFileW(
+                wide.as_ptr(),
+                GENERIC_WRITE,
+                FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                std::ptr::null_mut(),
+                OPEN_EXISTING,
+                FILE_FLAG_BACKUP_SEMANTICS,
+                std::ptr::null_mut(),
+            )
+        };
+        if handle == INVALID_HANDLE_VALUE {
+            return flush_deny("WINDOWS_DIRECTORY_OPEN_REFUSED", Some(last_error()));
+        }
+        // SAFETY: handle was returned successfully by CreateFileW and remains
+        // open for this call.
+        let flush_ok = unsafe { FlushFileBuffers(handle) };
+        let flush_error = if flush_ok == 0 {
+            Some(last_error())
+        } else {
+            None
+        };
+        // SAFETY: handle is a live kernel handle owned by this function.
+        let close_ok = unsafe { CloseHandle(handle) };
+        if flush_error.is_some() {
+            return flush_deny("WINDOWS_DIRECTORY_FLUSH_REFUSED", flush_error);
+        }
+        if close_ok == 0 {
+            return flush_deny("WINDOWS_DIRECTORY_CLOSE_REFUSED", Some(last_error()));
+        }
+        WindowsDirectoryFlushVerdict::Candidate
+    }
 }
 
 pub fn probe_windows_host(path: &Path) -> WindowsHostProbeVerdict {
@@ -253,5 +328,20 @@ pub fn probe_windows_host(path: &Path) -> WindowsHostProbeVerdict {
     {
         let _ = path;
         deny("WINDOWS_PLATFORM_UNAVAILABLE", None)
+    }
+}
+
+pub fn flush_windows_directory_candidate(path: &Path) -> WindowsDirectoryFlushVerdict {
+    #[cfg(windows)]
+    {
+        windows::flush_directory(path)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = path;
+        WindowsDirectoryFlushVerdict::Deny(WindowsHostProbeError {
+            code: "WINDOWS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
     }
 }

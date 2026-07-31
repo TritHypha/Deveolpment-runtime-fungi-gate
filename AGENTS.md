@@ -102,6 +102,12 @@ intent → governed execution plan → coordinated compute → audit proof
 > Windows `LoadLibraryExW` requires `hFile=NULL`, so module initialization can
 > precede a post-load identity check. Continue non-authorizing syscall evidence
 > while the linked-runtime / narrowed-trust / SLIDE-order decision is open.
+>
+> The native Windows directory-barrier candidate is 5/5: on this Windows 10
+> fixed-local NTFS host, `CreateFileW` with directory semantics followed by
+> `FlushFileBuffers` and checked close succeeds. Treat this only as
+> syscall-acceptance evidence; crash/power-loss and production admission remain
+> open.
 
 ## Grammar — Current v0.1 Flow Forms
 

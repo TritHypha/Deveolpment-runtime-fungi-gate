@@ -91,6 +91,13 @@ session. Every checkpoint must record:
   physical crash operation. Production admission remains empty. Next is the
   content-bound binary loader/provenance verifier, then retained-handle native
   persistence and real Windows/Linux/macOS crash matrices.
+- **Windows native directory-barrier checkpoint (2026-07-31):** after a RED
+  missing-API test, the zero-dependency Rust candidate now requires admitted
+  host facts, opens the direct directory with `CreateFileW(GENERIC_WRITE,
+  FILE_FLAG_BACKUP_SEMANTICS)`, calls `FlushFileBuffers` and checks close. The
+  live Windows 10 fixed-local NTFS test passes; native evidence is **5/5**.
+  This proves syscall acceptance only. Publication ordering, reboot/power-loss,
+  ReFS, Windows 11, loader identity and production admission remain open.
 - **Native artifact inspection checkpoint (2026-07-31):** the fixed-path
   non-executing inspector now refuses symbolic ancestry/components,
   multi-link files, missing/oversize/changed bytes, malformed containers,

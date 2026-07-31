@@ -109,6 +109,11 @@ The reparse-ancestor test first exposed a real gap: checking only the final
 directory accepted an indirect ancestor. The implementation was then changed
 to inspect every existing ancestor, and the four-test suite passed.
 
+A fifth native test now requires `CreateFileW` directory-handle acquisition,
+`FlushFileBuffers` and handle close to succeed on the admitted live Windows 10
+NTFS directory. It passes. This is API-acceptance evidence on one host, not a
+crash or power-loss durability claim.
+
 This evidence does **not** cover an in-process binary loader, a write or flush,
 exclusive publication, reboot, power loss, Linux, macOS, ReFS, or a Windows 11
 host. The path checks also remain susceptible to namespace TOCTOU if reused as

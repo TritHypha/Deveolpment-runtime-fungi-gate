@@ -90,6 +90,14 @@ through the Node filesystem API and calling the file-handle `sync()` operation
 was measured to fail with `EPERM`. The current Node-only seam therefore cannot
 prove Windows directory-entry durability and is not production-admitted.
 
+The zero-dependency Rust candidate now performs the narrower native sequence:
+host admission, `CreateFileW` with `GENERIC_WRITE` and
+`FILE_FLAG_BACKUP_SEMANTICS`, `FlushFileBuffers`, and checked close. The live
+test succeeds on the current fixed-local NTFS Windows 10 host, raising native
+evidence to **5/5**. This closes only “can the documented directory barrier be
+called successfully here?” It does not prove physical crash survival,
+write/publication ordering, ReFS, Windows 11 or a production loader.
+
 `MoveFileEx` documents `MOVEFILE_WRITE_THROUGH` and does not replace an
 existing destination unless `MOVEFILE_REPLACE_EXISTING` is supplied. This is
 a viable native candidate for exclusive publication, but the documentation's
@@ -159,10 +167,14 @@ reparse point at the target or any existing ancestor, requires a fixed local
 drive, admits only NTFS/ReFS and refuses the remote-storage capability flag.
 Non-Windows builds return a closed denial.
 
-Fresh focused evidence is **4/4** tests on the Windows 10 development host. A
+Fresh focused evidence is **5/5** tests on the Windows 10 development host. A
 test added for a reparse ancestor first failed against the target-only check,
 then passed after every existing ancestor was inspected. The live temp-volume
 observation reached `CANDIDATE` for fixed local NTFS.
+
+The fifth test opens that admitted direct directory natively and requires a
+successful `FlushFileBuffers` plus successful handle close. It passed. The
+result remains non-authorizing and is not relabelled as crash evidence.
 
 This result is non-authorizing. It opens no write handle, loads no production
 binary, publishes nothing, executes no file or metadata barrier and supplies
