@@ -30,6 +30,14 @@
   as verified, Git-ignored bundles. Round two now returns five files: the four
   durability/report artifacts plus one functional Ubuntu receipt. No remote
   clone, old `2ceaf479...` result or renamed distribution receipt may substitute.
+- **Fresh local fixed point:** the first aggregate correctly exposed the
+  provenance-preserved zero-byte AI-16 artifact as an unmodelled KB-graph test
+  case. The test now admits only that exact known ID while every future empty
+  document still fails closed; the archived bytes and empty-file digest were
+  not changed. The repaired aggregate is **98/98 packages, 8,781 tests**.
+  Regenerated graphs/indexes pass **5/5**, strict phase-close passes **84/84**,
+  exhaustive passes **85/85**, security reports **31 files, 0 findings,
+  0 errors**, generator contracts are **14/14**, and tooling is **278** tests.
 
 ### SLIDE Verified Object Kernel foundation implemented - 2026-08-01
 

@@ -3,7 +3,7 @@
 Date: 2026-08-01
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,770** tests, graph **5/5**
+package lane **98/98** with **8,781** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -19,7 +19,9 @@ one elevated owner installation, so no linked host or production receipt is
 claimed. A real Windows 10 functional receipt passed 6/6 at clean commit
 `7c38414a...`, but later documentation commits make it a checkpoint rather than
 the final release receipt. Beta admission therefore correctly remains K3 `0` /
-`INCOMPLETE_EXTERNAL_EVIDENCE`.
+`INCOMPLETE_EXTERNAL_EVIDENCE`. The post-regeneration fixed point is strict
+84/84, exhaustive 85/85, graph 5/5, generator contracts 14/14, tooling 278,
+and security 31 files with zero findings or errors.
 
 Roadmap refresh: the owner selected Option 2, the small SLIDE Verified Object
 Kernel (`VOK`). KB RD-0657, SLIDE contract V2-H and a zero-dependency reference
