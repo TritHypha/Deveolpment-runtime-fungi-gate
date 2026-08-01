@@ -35,12 +35,13 @@ flowchart TB
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
     LI["🟨 Linux adapter preparation<br/>pure facts + mountinfo/correlation 6/6 · no live Linux claim"]
-    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 272/272 complete · UNVERIFIED"]
+    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 276/276 complete · UNVERIFIED"]
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
     F["🟥 Beta-v1 release admission<br/>cross-platform crash and power-loss evidence"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
+    SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
@@ -72,7 +73,7 @@ flowchart TB
     AI --> AE --> I
     AI --> AF --> I
     E --> K --> Q
-    E --> S --> L --> H
+    E --> S --> SC --> L --> H
     E --> O --> H
     Q --> I
     M --> I
@@ -83,7 +84,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,L,M,U,V,AD,AG,AI,SI,O green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,L,M,U,V,AD,AG,AI,SI,O green;
     class X,F red;
     class Q,W,AA,AB,AC,AH,TG,LI amber;
     class H,I,T,AE,AF blue;
@@ -107,8 +108,9 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | Area | State | Evidence |
 |---|---:|---|
 | SLIDE architecture reduction R&D | planned | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split, cut/merge/introduce decisions, security/memory/privacy/platform/package contracts, ordinary and Tri-1 maths, zero-trust scores and independent challenge prompts. The design remains non-authorizing pending owner adjudication and implementation evidence |
-| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused, 15/15 contract files and 272/272 complete, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
-| Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused, 15/15 contract files and 276/276 complete, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
+| V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
+| Protected working branch | 🟩 | Protected branches are active; this session keeps its new commits local and does not push |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |

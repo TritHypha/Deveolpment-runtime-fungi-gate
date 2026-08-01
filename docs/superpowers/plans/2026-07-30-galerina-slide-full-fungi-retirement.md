@@ -265,8 +265,12 @@ fixture frontend remains the non-Galerina conformance authority.
   checks and the explicit 28-file Galerina adapter corpus at 496/496.
 - [ ] Write failing conformance tests for a complete executable body,
   post-optimization semantic re-verification, final-artifact binding,
-  capability broker isolation, memory cleanup and deterministic clean/cached
-  equivalence.
+  capability broker isolation, native/physical memory cleanup and deterministic
+  clean/cached equivalence. **Partial 2026-08-01:** the independent V2-D
+  reference executor now proves bounded logical cleanup only: its private
+  per-call region closes in `finally`, clears 15 logical bindings and 12
+  admitted semantic bytes, refuses hostile nested accessors/proxies before
+  opening, and makes no physical-erasure or native-memory claim.
 - [ ] Implement the smallest executable vertical slice without learned or
   cached authority and without silently falling back to Wasm.
 - [ ] Add Windows, macOS, Debian/Ubuntu, Fedora and Mint build/run contracts;
@@ -275,14 +279,16 @@ fixture frontend remains the non-Galerina conformance authority.
   reference-profile evaluator for Windows x86-64, Ubuntu/Debian/Fedora/Mint
   x86-64/Arm64 and macOS x86-64/Arm64 plus a bounded Node-bootstrap
   observer/report CLI. The current Windows 10 evidence passes 17/17 focused,
-  15/15 contract files and 272/272 complete. Observation remains
+  15/15 contract files and 276/276 complete. Observation remains
   unauthenticated and intentionally reports execution evidence `UNVERIFIED`;
   native build/run and every other platform remain open.
 - [x] Run independent SLIDE plus Galerina frontend differential evidence. The
   independent subset is 41/41 and the Galerina-side corpus is 496/496.
 - [x] Update both repositories' ledgers and commit separately without pushing.
   Observer evidence is in local SLIDE commit `77d28e8`; Galerina roadmap and
-  Ubuntu handover synchronization is in local commit `f3059820`.
+  Ubuntu handover synchronization is in local commit `f3059820`. Logical
+  flow-region cleanup is in local SLIDE commit `497cb6c`; its Galerina ledger
+  synchronization remains in this phase-close documentation commit.
 
 ### Task 6: Build the flat native package resolver and root lock
 

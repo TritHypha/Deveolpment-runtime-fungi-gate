@@ -36,10 +36,20 @@
   shell, network, package manager, driver or cached fallback. Malformed,
   surplus, accessor and Proxy inputs refuse; reports are reconstructed and
   semantically revalidated. Current Windows 10 evidence is 17/17 focused,
-  15/15 contract files and 272/272 complete, while it remains unauthenticated,
+  15/15 contract files and 276/276 complete, while it remains unauthenticated,
   `UNVERIFIED` and non-authorizing. Native execution and all other OS rows
   remain unverified. See
   `../../SLIDE/docs/reports/reference-platform-contract-2026-08-01.md`.
+- **Independent V2-D logical cleanup implemented:** SLIDE commit `497cb6c`
+  owns SSA, array, record, variant and semantic-byte state in one private
+  per-call reference region and closes every opened region in `finally`.
+  Success and registered failure each report 15 cleared logical bindings and
+  12 cleared admitted semantic bytes; invalid plan/input/budget boundaries
+  report `NOT_OPENED`. Nested accessor and Proxy plan/budget inputs refuse
+  without invocation. This is explicitly `LOGICAL_REFERENCE_ONLY`, not native
+  or physical erasure, allocator control, hostile FFI/handle proof or Galerina
+  production memory authority. Fresh evidence is 15/15 focused, 41/41 frozen
+  independent and 496/496 across the exact 28 tracked Galerina adapter files.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
