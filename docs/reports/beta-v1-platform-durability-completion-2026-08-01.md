@@ -90,6 +90,14 @@ On Windows 10 x64, build 19045:
 - app-kernel — 203/203;
 - platform/release focused scripts — 13/13; and
 - clean functional smoke — 6/6, 98 packages, K3 `0`.
+- strict repository phase-close — 84/84 blocking gates;
+- repository security audit — 31 files, zero findings and zero errors;
+- graph aggregate — 5/5; and
+- tooling aggregate — 269 tests.
+
+The separate Codex Security workspace was opened for the native durability
+folder but did not start because its setup UI was not confirmed. It is pending,
+not green and not included in the counts above.
 
 ## External evidence still required
 

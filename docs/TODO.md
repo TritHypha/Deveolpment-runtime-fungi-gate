@@ -915,6 +915,16 @@ current remediated source, measurements and assurance boundary.
   until the signed static host (or the later content-bound SLIDE host) owns the
   native publication operation; do not mark a callback, CLI sidecar or digest-
   only record as production evidence.
+- **Strict fixed point after durability chapter:** the first run exposed stale
+  project/package/dev-tool graphs, stale code-index output and two intentional
+  hostile Windows-home test literals not labelled for the path-leak teaching
+  exception. The literals now carry the narrow audit marker, all governed
+  indexes were regenerated, and the complete rerun passes **84/84** blocking
+  gates. This includes graph **5/5**, security **31 files / 0 findings / 0
+  errors**, tooling **269 tests**, path-leak clean and governance diff accepted
+  with no authority widening. The independent Codex Security workspace was
+  opened for the native folder but did not start because its setup UI was not
+  confirmed; it remains pending and is not counted as a pass.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
