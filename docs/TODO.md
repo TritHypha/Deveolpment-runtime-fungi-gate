@@ -36,7 +36,7 @@
   shell, network, package manager, driver or cached fallback. Malformed,
   surplus, accessor and Proxy inputs refuse; reports are reconstructed and
   semantically revalidated. Current Windows 10 evidence is 17/17 focused,
-  15/15 contract files and 276/276 complete, while it remains unauthenticated,
+  15/15 contract files and 282/282 complete, while it remains unauthenticated,
   `UNVERIFIED` and non-authorizing. Native execution and all other OS rows
   remain unverified. See
   `../../SLIDE/docs/reports/reference-platform-contract-2026-08-01.md`.
@@ -50,12 +50,22 @@
   or physical erasure, allocator control, hostile FFI/handle proof or Galerina
   production memory authority. Fresh evidence is 15/15 focused, 41/41 frozen
   independent and 496/496 across the exact 28 tracked Galerina adapter files.
+- **Bounded post-optimization proof implemented:** independent SLIDE commit
+  `32a41e2` re-derives canonical V2-D and accepts an untrusted instruction
+  order only after exact 15-ID permutation and operand/guard dominance proof.
+  A genuinely changed order matches source execution and logical lifecycle
+  over all eleven current runtime rows. Hostile, incomplete, copied, forged
+  and cross-module schedules refuse without fallback. Focused evidence is
+  21/21; full SLIDE is 282/282. This is only a frozen pure-profile topological
+  scheduling proof, not general rewrite/effect equivalence, native lowering,
+  speed, artifact authority or a Galerina component-removal gate.
 - **Graph evidence boundary:** the repository-owned graph regenerated from
   4,603 scanned files at 8,418 nodes and 8,727 edges. A fresh moderate MCP
   request again returned its frozen 06:07 build at `f2820da4` rather than the
   current branch, supplied no expected-node count and is rejected as stale.
-  SLIDE's separate full index is exact at 3,669/3,669 nodes and commit
-  `5d90fba`; no Galerina conclusion uses the stale MCP graph.
+  SLIDE's last closed full index was exact at 3,669/3,669 nodes and commit
+  `5d90fba`; it will refresh again after the schedule chapter closes. No
+  Galerina conclusion uses the stale MCP graph.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 

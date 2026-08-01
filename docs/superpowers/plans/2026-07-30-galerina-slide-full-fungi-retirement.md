@@ -270,7 +270,10 @@ fixture frontend remains the non-Galerina conformance authority.
   reference executor now proves bounded logical cleanup only: its private
   per-call region closes in `finally`, clears 15 logical bindings and 12
   admitted semantic bytes, refuses hostile nested accessors/proxies before
-  opening, and makes no physical-erasure or native-memory claim.
+  opening, and makes no physical-erasure or native-memory claim. The first
+  post-optimization subcase is also green: a changed frozen V2-D schedule is
+  admitted only after exact permutation and dependency/guard dominance proof.
+  General rewrite/effect validation remains open.
 - [ ] Implement the smallest executable vertical slice without learned or
   cached authority and without silently falling back to Wasm.
 - [ ] Add Windows, macOS, Debian/Ubuntu, Fedora and Mint build/run contracts;
@@ -279,7 +282,7 @@ fixture frontend remains the non-Galerina conformance authority.
   reference-profile evaluator for Windows x86-64, Ubuntu/Debian/Fedora/Mint
   x86-64/Arm64 and macOS x86-64/Arm64 plus a bounded Node-bootstrap
   observer/report CLI. The current Windows 10 evidence passes 17/17 focused,
-  15/15 contract files and 276/276 complete. Observation remains
+  15/15 contract files and 282/282 complete. Observation remains
   unauthenticated and intentionally reports execution evidence `UNVERIFIED`;
   native build/run and every other platform remain open.
 - [x] Run independent SLIDE plus Galerina frontend differential evidence. The
@@ -288,7 +291,9 @@ fixture frontend remains the non-Galerina conformance authority.
   Observer evidence is in local SLIDE commit `77d28e8`; Galerina roadmap and
   Ubuntu handover synchronization is in local commit `f3059820`. Logical
   flow-region cleanup is in local SLIDE commit `497cb6c`; its Galerina ledger
-  synchronization remains in this phase-close documentation commit.
+  synchronization is committed. Schedule translation validation is in local
+  SLIDE commit `32a41e2`; this chapter records its bounded non-authorizing
+  scope without changing any Galerina production path.
 
 ### Task 6: Build the flat native package resolver and root lock
 
