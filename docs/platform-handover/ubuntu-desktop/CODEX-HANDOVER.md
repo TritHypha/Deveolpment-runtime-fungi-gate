@@ -9,7 +9,9 @@ fail closed, preserve unrelated work, commit locally only and never push.
 ## Required first checks
 
 1. Read `AGENTS.md` completely.
-2. Read this folder completely.
+2. Read this folder completely, including `TRANSFER-LOCAL-COMMITS.md`. If the
+   primary branches contain unpushed commits, use the verified bundles from
+   that document; a remote clone is not the same source identity.
 3. Read:
    - `docs/architecture/registry-generation-platform-durability-2026-07-30.md`
    - `docs/superpowers/plans/2026-07-31-registry-durability-simulator-and-platform-admission.md`

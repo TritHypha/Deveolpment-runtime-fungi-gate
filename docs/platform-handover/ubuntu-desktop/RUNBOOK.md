@@ -2,8 +2,10 @@
 
 ## Prerequisites
 
-- A separately cloned Galerina repository on Ubuntu Desktop.
-- A separately cloned SLIDE repository at the sibling path `../SLIDE`.
+- A separately cloned Galerina repository on Ubuntu Desktop, created from the
+  exact verified local bundle when the tested branch has unpushed commits.
+- A separately cloned SLIDE repository at the sibling path `../SLIDE`, created
+  from its exact verified local bundle under the same condition.
 - Git.
 - Node.js 20 or newer (the independent SLIDE bootstrap floor).
 - A Rust/Cargo toolchain capable of the repository lockfile.
