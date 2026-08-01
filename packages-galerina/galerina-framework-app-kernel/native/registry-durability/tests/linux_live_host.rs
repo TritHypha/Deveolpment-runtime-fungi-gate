@@ -8,6 +8,9 @@ use galerina_registry_durability_native::{
     LinuxHostProbeVerdict,
 };
 
+#[cfg(feature = "fault-injection")]
+use galerina_registry_durability_native::publish_linux_generation_fault_candidate;
+
 fn evidence_root() -> PathBuf {
     PathBuf::from(
         std::env::var_os("GALERINA_LINUX_EVIDENCE_DIRECTORY")
@@ -90,4 +93,33 @@ fn retained_handle_publication_refuses_symlink_and_hard_link_collisions() {
 
     fs::remove_dir_all(root).expect("disposable evidence cleanup");
     fs::remove_file(external).expect("external evidence cleanup");
+}
+
+#[cfg(feature = "fault-injection")]
+#[test]
+#[ignore = "requires the named Linux bare-host evidence directory"]
+fn retained_anchor_refuses_namespace_substitution_after_directory_barrier() {
+    let root = evidence_root().join(format!(".galerina-linux-namespace-{}", std::process::id()));
+    let moved = root.with_extension("moved");
+    fs::create_dir(&root).expect("disposable namespace directory");
+    let generation_id = "d".repeat(64);
+    let expected = br#"{"schema":"galerina.registry.generation.v1","namespace":true}"#;
+
+    let verdict =
+        publish_linux_generation_fault_candidate(&root, &generation_id, expected, |boundary| {
+            if boundary == "directory-flushed" {
+                fs::rename(&root, &moved).expect("controlled namespace substitution");
+            }
+        });
+    assert!(matches!(
+        verdict,
+        LinuxGenerationPublicationVerdict::Deny(error)
+            if error.code() == "LINUX_PUBLICATION_HOST_RECHECK_REFUSED"
+    ));
+    assert_eq!(
+        fs::read(moved.join(format!("registry-generation-{generation_id}.json")))
+            .expect("complete generation behind retained identity"),
+        expected
+    );
+    fs::remove_dir_all(moved).expect("disposable namespace cleanup");
 }

@@ -118,17 +118,20 @@ git commit -m "feat(registry): add closed durability evidence"
 
 **Interfaces:**
 - Produces: `LinuxPublicationFault::{ShortWrite,ZeroProgress,DiskFull,FileBarrier,Publish,Reopen,DirectoryBarrier,NamespaceChanged,ReadbackChanged}`.
+- Produces: test-only `linux_publication_fault_code(fault)` so every closed
+  injected-fault code is verifiable off Linux without fabricating live Linux
+  filesystem evidence.
 - Produces: `publish_linux_generation_injected_candidate(directory, generation_id, bytes, fault) -> LinuxGenerationPublicationVerdict`, compiled only with `fault-injection`.
 - Preserves: release `publish_linux_generation_candidate` and its exact no-fallback behavior.
 
-- [ ] **Step 1: Write failing pure refusal tests**
+- [x] **Step 1: Write failing pure refusal tests**
 
 For every fault, assert a stable denial code, no candidate receipt and one of:
 the final generation is absent or contains the complete expected bytes. Assert
 that short-write and zero-progress are distinct and that the operation never
 retries into unbounded work.
 
-- [ ] **Step 2: Run the fault test and verify RED**
+- [x] **Step 2: Run the fault test and verify RED**
 
 Run from the native crate:
 
@@ -139,7 +142,7 @@ cargo test --locked --all-features --test linux_fault_refusal
 Expected: compile failure because the fault enum and injected entry point do
 not exist.
 
-- [ ] **Step 3: Extract one bounded publication state machine**
+- [x] **Step 3: Extract one bounded publication state machine**
 
 Keep the platform syscall implementation private. Route the release entry
 through `LinuxPublicationFault::None`; route the test entry through exactly one
@@ -161,14 +164,14 @@ LINUX_READBACK_MISMATCH_REFUSED
 
 Do not delete uncertain pathnames after losing retained identity.
 
-- [ ] **Step 4: Add namespace and barrier hostile live cases**
+- [x] **Step 4: Add namespace and barrier hostile live cases**
 
 Extend the ignored live suite to retain the directory descriptor, substitute a
 public test namespace only after the boundary callback, and prove the anchor
 recheck denies. Verify a planted file-barrier and directory-barrier refusal
 cannot publish a candidate receipt.
 
-- [ ] **Step 5: Run Windows-available checks and prepare the Linux live run**
+- [x] **Step 5: Run Windows-available checks and prepare the Linux live run**
 
 Run:
 

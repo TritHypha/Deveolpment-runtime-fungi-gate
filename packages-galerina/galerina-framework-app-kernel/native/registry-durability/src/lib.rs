@@ -119,6 +119,39 @@ pub enum LinuxGenerationPublicationVerdict {
     Deny(LinuxHostProbeError),
 }
 
+#[cfg(feature = "fault-injection")]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[doc(hidden)]
+pub enum LinuxPublicationFault {
+    None,
+    ShortWrite,
+    ZeroProgress,
+    DiskFull,
+    FileBarrier,
+    Publish,
+    Reopen,
+    DirectoryBarrier,
+    NamespaceChanged,
+    ReadbackChanged,
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub const fn linux_publication_fault_code(fault: LinuxPublicationFault) -> Option<&'static str> {
+    match fault {
+        LinuxPublicationFault::None => None,
+        LinuxPublicationFault::ShortWrite => Some("LINUX_WRITE_SHORT_REFUSED"),
+        LinuxPublicationFault::ZeroProgress => Some("LINUX_WRITE_ZERO_PROGRESS_REFUSED"),
+        LinuxPublicationFault::DiskFull => Some("LINUX_DISK_FULL_REFUSED"),
+        LinuxPublicationFault::FileBarrier => Some("LINUX_FILE_BARRIER_REFUSED"),
+        LinuxPublicationFault::Publish => Some("LINUX_PUBLICATION_REFUSED"),
+        LinuxPublicationFault::Reopen => Some("LINUX_REOPEN_REFUSED"),
+        LinuxPublicationFault::DirectoryBarrier => Some("LINUX_DIRECTORY_BARRIER_REFUSED"),
+        LinuxPublicationFault::NamespaceChanged => Some("LINUX_NAMESPACE_CHANGED_REFUSED"),
+        LinuxPublicationFault::ReadbackChanged => Some("LINUX_READBACK_MISMATCH_REFUSED"),
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct LinuxMountInfo {
     pub mount_id: u64,
@@ -686,6 +719,8 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
     any(target_arch = "x86_64", target_arch = "aarch64")
 ))]
 mod linux {
+    #[cfg(feature = "fault-injection")]
+    use super::LinuxPublicationFault;
     use super::{
         admit_measured_linux_host, classify_linux_sysfs_observation,
         correlate_linux_host_observation, decode_linux_device_number, linux_deny,
@@ -1019,10 +1054,26 @@ mod linux {
         }
     }
 
+    #[cfg(not(feature = "fault-injection"))]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    enum LinuxPublicationFault {
+        None,
+        ShortWrite,
+        ZeroProgress,
+        DiskFull,
+        FileBarrier,
+        Publish,
+        Reopen,
+        DirectoryBarrier,
+        NamespaceChanged,
+        ReadbackChanged,
+    }
+
     fn publish_generation_observed<F>(
         directory: &Path,
         generation_id: &str,
         bytes: &[u8],
+        fault: LinuxPublicationFault,
         mut observe: F,
     ) -> LinuxGenerationPublicationVerdict
     where
@@ -1080,12 +1131,62 @@ mod linux {
             Err(_) => return publication_deny("LINUX_PUBLICATION_STAGE_OPEN_REFUSED"),
         };
         observe("stage-opened");
-        if stage.write_all(bytes).is_err() {
+        if matches!(fault, LinuxPublicationFault::ZeroProgress) {
             drop(stage);
             let _ = unlink_name(descriptor, &stage_name);
-            return publication_deny("LINUX_PUBLICATION_STAGE_WRITE_REFUSED");
+            return publication_deny("LINUX_WRITE_ZERO_PROGRESS_REFUSED");
+        }
+        if matches!(fault, LinuxPublicationFault::DiskFull) {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_DISK_FULL_REFUSED");
+        }
+        let write_limit = if matches!(fault, LinuxPublicationFault::ShortWrite) {
+            bytes.len().saturating_sub(1)
+        } else {
+            bytes.len()
+        };
+        let mut written = 0usize;
+        while written < write_limit {
+            let progress = match stage.write(&bytes[written..write_limit]) {
+                Ok(0) => {
+                    drop(stage);
+                    let _ = unlink_name(descriptor, &stage_name);
+                    return publication_deny("LINUX_WRITE_ZERO_PROGRESS_REFUSED");
+                }
+                Ok(value) => value,
+                Err(error) if error.raw_os_error() == Some(28) => {
+                    drop(stage);
+                    let _ = unlink_name(descriptor, &stage_name);
+                    return publication_deny("LINUX_DISK_FULL_REFUSED");
+                }
+                Err(_) => {
+                    drop(stage);
+                    let _ = unlink_name(descriptor, &stage_name);
+                    return publication_deny("LINUX_PUBLICATION_STAGE_WRITE_REFUSED");
+                }
+            };
+            let next = match written.checked_add(progress) {
+                Some(value) if value > written && value <= write_limit => value,
+                _ => {
+                    drop(stage);
+                    let _ = unlink_name(descriptor, &stage_name);
+                    return publication_deny("LINUX_WRITE_PROGRESS_INVALID_REFUSED");
+                }
+            };
+            written = next;
+        }
+        if written != bytes.len() {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_WRITE_SHORT_REFUSED");
         }
         observe("bytes-written");
+        if matches!(fault, LinuxPublicationFault::FileBarrier) {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_FILE_BARRIER_REFUSED");
+        }
         if stage.flush().is_err() || stage.sync_all().is_err() {
             drop(stage);
             let _ = unlink_name(descriptor, &stage_name);
@@ -1111,6 +1212,10 @@ mod linux {
         observe("file-flushed");
         drop(stage);
         observe("stage-closed");
+        if matches!(fault, LinuxPublicationFault::Publish) {
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_PUBLICATION_REFUSED");
+        }
         // SAFETY: both names are NUL-terminated and the atomic rename remains
         // relative to the same retained directory descriptor. RENAME_NOREPLACE
         // refuses rather than replacing an existing destination.
@@ -1136,14 +1241,26 @@ mod linux {
             };
         }
         observe("published");
+        if matches!(fault, LinuxPublicationFault::Reopen) {
+            return publication_deny("LINUX_REOPEN_REFUSED");
+        }
+        if matches!(fault, LinuxPublicationFault::ReadbackChanged) {
+            return publication_deny("LINUX_READBACK_MISMATCH_REFUSED");
+        }
         if !matches!(read_exact_at(descriptor, &final_name, bytes), Ok(true)) {
             return publication_deny("LINUX_PUBLICATION_REOPEN_REFUSED");
         }
         observe("reopened-verified");
+        if matches!(fault, LinuxPublicationFault::DirectoryBarrier) {
+            return publication_deny("LINUX_DIRECTORY_BARRIER_REFUSED");
+        }
         if anchor.directory.sync_all().is_err() {
             return publication_deny("LINUX_PUBLICATION_DIRECTORY_BARRIER_REFUSED");
         }
         observe("directory-flushed");
+        if matches!(fault, LinuxPublicationFault::NamespaceChanged) {
+            return publication_deny("LINUX_NAMESPACE_CHANGED_REFUSED");
+        }
         if !anchor_unchanged(&anchor) {
             return publication_deny("LINUX_PUBLICATION_HOST_RECHECK_REFUSED");
         }
@@ -1157,7 +1274,13 @@ mod linux {
         generation_id: &str,
         bytes: &[u8],
     ) -> LinuxGenerationPublicationVerdict {
-        publish_generation_observed(directory, generation_id, bytes, |_| {})
+        publish_generation_observed(
+            directory,
+            generation_id,
+            bytes,
+            LinuxPublicationFault::None,
+            |_| {},
+        )
     }
 
     #[cfg(feature = "fault-injection")]
@@ -1170,7 +1293,23 @@ mod linux {
     where
         F: FnMut(&'static str),
     {
-        publish_generation_observed(directory, generation_id, bytes, observe)
+        publish_generation_observed(
+            directory,
+            generation_id,
+            bytes,
+            LinuxPublicationFault::None,
+            observe,
+        )
+    }
+
+    #[cfg(feature = "fault-injection")]
+    pub fn publish_generation_injected_candidate(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        fault: LinuxPublicationFault,
+    ) -> LinuxGenerationPublicationVerdict {
+        publish_generation_observed(directory, generation_id, bytes, fault, |_| {})
     }
 }
 
@@ -1826,6 +1965,46 @@ where
     )))]
     {
         let _ = (directory, generation_id, bytes, observe);
+        #[cfg(target_os = "linux")]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_ABI_UNSUPPORTED",
+            })
+        }
+        #[cfg(not(target_os = "linux"))]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_PLATFORM_UNAVAILABLE",
+            })
+        }
+    }
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub fn publish_linux_generation_injected_candidate(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+    fault: LinuxPublicationFault,
+) -> LinuxGenerationPublicationVerdict {
+    #[cfg(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    ))]
+    {
+        linux::publish_generation_injected_candidate(directory, generation_id, bytes, fault)
+    }
+    #[cfg(not(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    )))]
+    {
+        let _ = (directory, generation_id, bytes, fault);
         #[cfg(target_os = "linux")]
         {
             LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
