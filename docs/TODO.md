@@ -216,6 +216,30 @@ current remediated source, measurements and assurance boundary.
   generations. Do not begin package admission, TypeScript removal,
   NSE-Synthesis, or an external-runtime benchmark before those gates close.
 
+### Post-pause Galerina fixed point - 2026-08-01
+
+- **Current committed fixed point:** Galerina `8a2bdcf6` includes the optimized
+  static registry-adapter profile plus the platform-neutral Linux facts,
+  bounded `mountinfo` parser and exact filesystem/device observation
+  correlation. The Linux model matrix is 6/6; no live Linux fact is inferred.
+- **Fresh complete phase-close:** every blocking child passes. This includes
+  `tests:core`, graph-all 5/5, generator contracts 14/14, 31-file security
+  audit with zero findings/errors, complete `.fungi` corpus and example
+  diagnostics, WAT/Wasm validation, canonical proofs, workspace pointers for
+  all 98 packages, and a neutral governance diff.
+- **Repository synchronization:** Knowledge Base `a8e525f` records the same
+  6/6 preparation boundary. The Galerina code graph was rebuilt at
+  `8a2bdcf6` with 20,919/20,919 expected nodes and the new correlation symbol
+  independently found after indexing.
+- **Environment boundary:** the Ubuntu Desktop handover is ready, but live
+  `statfs`/sysfs measurement, retained-handle publication and all Linux
+  crash/reboot/power-loss rows remain unexecuted until that host is available.
+- **Status-tool freshness debt:** `node scripts/status.mjs` derives test counts
+  live from `version.json`, but its date, milestone and `openTasks` prose are a
+  June historical snapshot. Treat this TODO and the beta-to-SLIDE roadmap as
+  current. Replace the status prose source with a bounded generated ledger;
+  do not merely hand-refresh another long free-text list.
+
 ### RD-0609 through RD-0615 intake checkpoint - 2026-07-31
 
 - **Reviewed without starting the paused implementation chapter:** the

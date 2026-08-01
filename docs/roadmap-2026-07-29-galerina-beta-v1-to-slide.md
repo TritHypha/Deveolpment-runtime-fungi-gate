@@ -266,6 +266,15 @@ cadence passed. Focused automatic key-rotation evidence is 62/62. These
 results authorize their evidence surfaces, not the offline
 signing ceremony or beta-v1 release.
 
+The later `8a2bdcf6` fixed point was freshly rechecked after the static-profile
+and Linux pure-correlation work. Every blocking phase-close child passed,
+including graph-all 5/5, fourteen generator contracts, workspace pointers for
+all 98 packages, the complete `.fungi` corpus/example lanes, WAT/Wasm checks,
+canonical proofs, a neutral governance diff and the security audit over 31
+files with zero findings or errors. This supersedes the earlier fixed-point
+commit for current local evidence, but it does not add any live Linux,
+crash/reboot/power-loss or production-admission claim.
+
 ## Registry admission checkpoint
 
 The registry mechanism no longer trusts a path supplied by a manifest or a

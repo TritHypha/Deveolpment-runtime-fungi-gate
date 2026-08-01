@@ -503,6 +503,17 @@ passed. The detection and repair are retained as evidence that generated
 freshness gates are not vacuous. The unified harness independently passed all
 five lanes, and focused automatic rotation evidence passed 62/62.
 
+### Later verification refresh - 2026-08-01
+
+Galerina `8a2bdcf6` is the later locally committed fixed point after the
+static-link profile and platform-neutral Linux observation-correlation work.
+A fresh strict phase-close run passes every blocking child: graph-all 5/5,
+fourteen generator contracts, all 98 workspace pointers, complete `.fungi`
+corpus and example diagnostics, WAT/Wasm validation, canonical proofs, neutral
+governance diff, and a 31-file security audit with zero findings/errors. The
+Linux model is 6/6 on Windows. No live Linux measurement, crash, reboot,
+power-loss or production-admission conclusion is drawn from that result.
+
 These tool gates are authorizing for the evidence they cover. The owner
 signing act, production registry signing and automatic rotation control core
 are complete. They do not authorize the beta-v1 release because durable
