@@ -8,6 +8,29 @@ use std::path::Path;
 pub const DRIVE_FIXED: u32 = 3;
 pub const DRIVE_REMOTE: u32 = 4;
 pub const FILE_SUPPORTS_REMOTE_STORAGE: u32 = 0x0000_0100;
+pub const PUBLICATION_BOUNDARY_IDS: [&str; 7] = [
+    "stage-opened",
+    "bytes-written",
+    "file-flushed",
+    "stage-closed",
+    "published",
+    "reopened-verified",
+    "directory-flushed",
+];
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WindowsRelease {
+    Windows10,
+    Windows11,
+    Unknown,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WindowsArchitecture {
+    X86_64,
+    Arm64,
+    Unknown,
+}
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct MeasuredWindowsHost {
@@ -15,6 +38,11 @@ pub struct MeasuredWindowsHost {
     pub filesystem: String,
     pub filesystem_flags: u32,
     pub volume_serial: u32,
+    pub release: WindowsRelease,
+    pub os_major: u32,
+    pub os_build: u32,
+    pub architecture: WindowsArchitecture,
+    pub native_process: bool,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -23,6 +51,11 @@ pub struct AdmittedWindowsHost {
     pub filesystem: String,
     pub filesystem_flags: u32,
     pub volume_serial: u32,
+    pub release: WindowsRelease,
+    pub os_major: u32,
+    pub os_build: u32,
+    pub architecture: WindowsArchitecture,
+    pub native_process: bool,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -57,6 +90,104 @@ pub enum WindowsDirectoryFlushVerdict {
 pub enum WindowsGenerationPublicationVerdict {
     Candidate { byte_length: usize },
     Deny(WindowsHostProbeError),
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MacosStorageKind {
+    DirectInternal,
+    Network,
+    DiskImage,
+    Removable,
+    Virtual,
+    Unknown,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MeasuredMacosHost {
+    pub facts_complete: bool,
+    pub operating_system: String,
+    pub architecture: String,
+    pub target_is_absolute: bool,
+    pub target_is_direct_directory: bool,
+    pub symbolic_ancestor_present: bool,
+    pub filesystem: String,
+    pub storage_kind: MacosStorageKind,
+    pub mount_is_local: bool,
+    pub mount_is_read_write: bool,
+    pub identity_stable: bool,
+    pub link_count: u64,
+    pub full_flush_available: bool,
+    pub device_id: u64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedMacosHost {
+    pub operating_system: String,
+    pub architecture: String,
+    pub filesystem: String,
+    pub storage_kind: MacosStorageKind,
+    pub link_count: u64,
+    pub device_id: u64,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MacosHostProbeError {
+    code: &'static str,
+    os_code: Option<i32>,
+}
+
+impl MacosHostProbeError {
+    pub fn code(&self) -> &'static str {
+        self.code
+    }
+
+    pub fn os_code(&self) -> Option<i32> {
+        self.os_code
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum MacosHostProbeVerdict {
+    Candidate(AdmittedMacosHost),
+    Deny(MacosHostProbeError),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum MacosGenerationPublicationVerdict {
+    Candidate { byte_length: usize },
+    Deny(MacosHostProbeError),
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[doc(hidden)]
+pub enum MacosPublicationFault {
+    None,
+    ShortWrite,
+    ZeroProgress,
+    DiskFull,
+    FullFlush,
+    Publish,
+    Reopen,
+    DirectoryBarrier,
+    NamespaceChanged,
+    ReadbackChanged,
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub const fn macos_publication_fault_code(fault: MacosPublicationFault) -> Option<&'static str> {
+    match fault {
+        MacosPublicationFault::None => None,
+        MacosPublicationFault::ShortWrite => Some("MACOS_WRITE_SHORT_REFUSED"),
+        MacosPublicationFault::ZeroProgress => Some("MACOS_WRITE_ZERO_PROGRESS_REFUSED"),
+        MacosPublicationFault::DiskFull => Some("MACOS_DISK_FULL_REFUSED"),
+        MacosPublicationFault::FullFlush => Some("MACOS_FULL_FLUSH_REFUSED"),
+        MacosPublicationFault::Publish => Some("MACOS_PUBLICATION_REFUSED"),
+        MacosPublicationFault::Reopen => Some("MACOS_REOPEN_REFUSED"),
+        MacosPublicationFault::DirectoryBarrier => Some("MACOS_DIRECTORY_BARRIER_REFUSED"),
+        MacosPublicationFault::NamespaceChanged => Some("MACOS_NAMESPACE_CHANGED_REFUSED"),
+        MacosPublicationFault::ReadbackChanged => Some("MACOS_READBACK_MISMATCH_REFUSED"),
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -691,6 +822,23 @@ fn deny(code: &'static str, os_code: Option<u32>) -> WindowsHostProbeVerdict {
 }
 
 pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHostProbeVerdict {
+    if !measured.native_process {
+        return deny("WINDOWS_PROCESS_ARCHITECTURE_TRANSLATED", None);
+    }
+    if measured.architecture != WindowsArchitecture::X86_64 {
+        return deny("WINDOWS_ARCHITECTURE_NOT_ADMITTED", None);
+    }
+    if measured.os_major != 10 {
+        return deny("WINDOWS_OS_MAJOR_NOT_ADMITTED", None);
+    }
+    let release_matches_build = match measured.release {
+        WindowsRelease::Windows10 => (10_240..22_000).contains(&measured.os_build),
+        WindowsRelease::Windows11 => measured.os_build >= 22_000,
+        WindowsRelease::Unknown => false,
+    };
+    if !release_matches_build {
+        return deny("WINDOWS_RELEASE_IDENTITY_MISMATCH", None);
+    }
     if measured.drive_type != DRIVE_FIXED {
         return deny("WINDOWS_VOLUME_NOT_FIXED_LOCAL", None);
     }
@@ -699,8 +847,6 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
     }
     let filesystem = if measured.filesystem.eq_ignore_ascii_case("NTFS") {
         "ntfs"
-    } else if measured.filesystem.eq_ignore_ascii_case("ReFS") {
-        "refs"
     } else {
         return deny("WINDOWS_FILESYSTEM_NOT_ADMITTED", None);
     };
@@ -709,6 +855,68 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
         filesystem: filesystem.to_owned(),
         filesystem_flags: measured.filesystem_flags,
         volume_serial: measured.volume_serial,
+        release: measured.release,
+        os_major: measured.os_major,
+        os_build: measured.os_build,
+        architecture: measured.architecture,
+        native_process: measured.native_process,
+    })
+}
+
+fn macos_deny(code: &'static str, os_code: Option<i32>) -> MacosHostProbeVerdict {
+    MacosHostProbeVerdict::Deny(MacosHostProbeError { code, os_code })
+}
+
+pub fn admit_measured_macos_host(measured: MeasuredMacosHost) -> MacosHostProbeVerdict {
+    if !measured.facts_complete {
+        return macos_deny("MACOS_HOST_FACTS_INCOMPLETE", None);
+    }
+    if measured.operating_system != "macos" {
+        return macos_deny("MACOS_PLATFORM_NOT_ADMITTED", None);
+    }
+    if measured.architecture != "arm64" {
+        return macos_deny("MACOS_ARCHITECTURE_NOT_ADMITTED", None);
+    }
+    if !measured.target_is_absolute || !measured.target_is_direct_directory {
+        return macos_deny("MACOS_PATH_NOT_ABSOLUTE_DIRECT_DIRECTORY", None);
+    }
+    if measured.symbolic_ancestor_present {
+        return macos_deny("MACOS_PATH_SYMBOLIC_ANCESTOR", None);
+    }
+    if measured.filesystem != "apfs" {
+        return macos_deny("MACOS_FILESYSTEM_NOT_ADMITTED", None);
+    }
+    if measured.storage_kind != MacosStorageKind::DirectInternal {
+        return macos_deny("MACOS_STORAGE_KIND_NOT_ADMITTED", None);
+    }
+    if !measured.mount_is_local {
+        return macos_deny("MACOS_MOUNT_NOT_LOCAL", None);
+    }
+    if !measured.mount_is_read_write {
+        return macos_deny("MACOS_MOUNT_NOT_READ_WRITE", None);
+    }
+    if !measured.identity_stable {
+        return macos_deny("MACOS_IDENTITY_UNSTABLE", None);
+    }
+    // This is the retained directory identity, not the generation file.
+    // APFS directory link counts are not a single-link invariant. Generation
+    // staging and reopen enforce exactly one link inside publication.
+    if measured.link_count == 0 {
+        return macos_deny("MACOS_LINK_COUNT_UNAVAILABLE", None);
+    }
+    if !measured.full_flush_available {
+        return macos_deny("MACOS_FULL_FLUSH_UNAVAILABLE", None);
+    }
+    if measured.device_id == 0 {
+        return macos_deny("MACOS_DEVICE_ID_UNAVAILABLE", None);
+    }
+    MacosHostProbeVerdict::Candidate(AdmittedMacosHost {
+        operating_system: measured.operating_system,
+        architecture: measured.architecture,
+        filesystem: measured.filesystem,
+        storage_kind: measured.storage_kind,
+        link_count: measured.link_count,
+        device_id: measured.device_id,
     })
 }
 
@@ -761,6 +969,7 @@ mod linux {
             flags: c_int,
             mode: u32,
         ) -> c_int;
+        fn unlinkat(directory_descriptor: c_int, path: *const c_char, flags: c_int) -> c_int;
         fn renameat2(
             old_directory_descriptor: c_int,
             old_path: *const c_char,
@@ -768,7 +977,6 @@ mod linux {
             new_path: *const c_char,
             flags: u32,
         ) -> c_int;
-        fn unlinkat(directory_descriptor: c_int, path: *const c_char, flags: c_int) -> c_int;
     }
 
     struct AnchoredLinuxDirectory {
@@ -1313,11 +1521,702 @@ mod linux {
     }
 }
 
+#[cfg(target_os = "macos")]
+mod macos {
+    use super::{
+        admit_measured_macos_host, MacosGenerationPublicationVerdict, MacosHostProbeError,
+        MacosHostProbeVerdict, MacosPublicationFault, MacosStorageKind, MeasuredMacosHost,
+    };
+    use std::ffi::{c_char, c_int, c_void, CStr, CString};
+    use std::fs::{self, File, Metadata};
+    use std::io::{self, Read, Write};
+    use std::os::fd::{AsRawFd, FromRawFd, RawFd};
+    use std::os::unix::fs::MetadataExt;
+    use std::path::{Component, Path};
+    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    const MAX_GENERATION_BYTES: usize = 16 * 1024 * 1024;
+    const MAX_PATH_BYTES: usize = 1024;
+    const O_WRONLY: c_int = 1;
+    const O_RDWR: c_int = 2;
+    const O_NOFOLLOW: c_int = 0x0000_0100;
+    const O_CREAT: c_int = 0x0000_0200;
+    const O_EXCL: c_int = 0x0000_0800;
+    const O_CLOEXEC: c_int = 0x0100_0000;
+    const RENAME_EXCL: u32 = 0x0000_0004;
+    const F_FULLFSYNC: c_int = 51;
+    const MNT_RDONLY: u32 = 0x0000_0001;
+    const MNT_REMOVABLE: u32 = 0x0000_0200;
+    const MNT_LOCAL: u32 = 0x0000_1000;
+    const MNT_SNAPSHOT: u32 = 0x4000_0000;
+    const EEXIST: i32 = 17;
+    const ENOSPC: i32 = 28;
+    const K_CF_STRING_ENCODING_UTF8: u32 = 0x0800_0100;
+
+    static NONCE: AtomicU64 = AtomicU64::new(1);
+
+    #[repr(C)]
+    struct StatFs {
+        block_size: u32,
+        io_size: i32,
+        blocks: u64,
+        blocks_free: u64,
+        blocks_available: u64,
+        files: u64,
+        files_free: u64,
+        filesystem_id: [i32; 2],
+        owner: u32,
+        filesystem_type: u32,
+        flags: u32,
+        filesystem_subtype: u32,
+        filesystem_name: [c_char; 16],
+        mounted_on: [c_char; MAX_PATH_BYTES],
+        mounted_from: [c_char; MAX_PATH_BYTES],
+        flags_extended: u32,
+        reserved: [u32; 7],
+    }
+
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    struct FileIdentity {
+        device: u64,
+        inode: u64,
+        links: u64,
+        byte_length: u64,
+    }
+
+    struct DirectoryAnchor {
+        directory: File,
+        path_metadata: Metadata,
+    }
+
+    #[link(name = "System")]
+    extern "C" {
+        fn fcntl(file_descriptor: c_int, command: c_int, ...) -> c_int;
+        fn fsync(file_descriptor: c_int) -> c_int;
+        fn openat(
+            directory_descriptor: c_int,
+            path: *const c_char,
+            flags: c_int,
+            mode: u32,
+        ) -> c_int;
+        fn renameatx_np(
+            from_directory: c_int,
+            from: *const c_char,
+            to_directory: c_int,
+            to: *const c_char,
+            flags: u32,
+        ) -> c_int;
+        fn statfs(path: *const c_char, buffer: *mut StatFs) -> c_int;
+    }
+
+    #[link(name = "DiskArbitration", kind = "framework")]
+    extern "C" {
+        fn DASessionCreate(allocator: *const c_void) -> *mut c_void;
+        fn DADiskCreateFromBSDName(
+            allocator: *const c_void,
+            session: *mut c_void,
+            name: *const c_char,
+        ) -> *mut c_void;
+        fn DADiskCopyDescription(disk: *mut c_void) -> *mut c_void;
+
+        static kDADiskDescriptionDeviceInternalKey: *const c_void;
+        static kDADiskDescriptionDeviceProtocolKey: *const c_void;
+        static kDADiskDescriptionMediaEjectableKey: *const c_void;
+        static kDADiskDescriptionMediaRemovableKey: *const c_void;
+        static kDADiskDescriptionVolumeNetworkKey: *const c_void;
+    }
+
+    #[link(name = "CoreFoundation", kind = "framework")]
+    extern "C" {
+        fn CFBooleanGetTypeID() -> usize;
+        fn CFBooleanGetValue(boolean: *const c_void) -> u8;
+        fn CFDictionaryGetValue(dictionary: *const c_void, key: *const c_void) -> *const c_void;
+        fn CFGetTypeID(value: *const c_void) -> usize;
+        fn CFRelease(value: *const c_void);
+        fn CFStringGetCString(
+            string: *const c_void,
+            buffer: *mut c_char,
+            buffer_size: isize,
+            encoding: u32,
+        ) -> u8;
+        fn CFStringGetTypeID() -> usize;
+    }
+
+    fn publication_deny(
+        code: &'static str,
+        os_code: Option<i32>,
+    ) -> MacosGenerationPublicationVerdict {
+        MacosGenerationPublicationVerdict::Deny(MacosHostProbeError { code, os_code })
+    }
+
+    fn io_code(error: &io::Error) -> Option<i32> {
+        error.raw_os_error()
+    }
+
+    fn generation_id_valid(generation_id: &str) -> bool {
+        generation_id.len() == 64
+            && generation_id
+                .bytes()
+                .all(|value| value.is_ascii_digit() || (b'a'..=b'f').contains(&value))
+    }
+
+    fn c_name(value: &str) -> Option<CString> {
+        if value.is_empty() || value.contains('/') || value.len() > 255 {
+            return None;
+        }
+        CString::new(value).ok()
+    }
+
+    fn absolute_c_path(path: &Path) -> Option<CString> {
+        use std::os::unix::ffi::OsStrExt;
+
+        if !path.is_absolute()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::CurDir))
+        {
+            return None;
+        }
+        CString::new(path.as_os_str().as_bytes()).ok()
+    }
+
+    fn file_identity(metadata: &Metadata) -> FileIdentity {
+        FileIdentity {
+            device: metadata.dev(),
+            inode: metadata.ino(),
+            links: metadata.nlink(),
+            byte_length: metadata.len(),
+        }
+    }
+
+    fn anchor_directory(path: &Path) -> Result<DirectoryAnchor, &'static str> {
+        let metadata = fs::symlink_metadata(path).map_err(|_| "MACOS_PATH_UNAVAILABLE")?;
+        if !metadata.is_dir() || metadata.file_type().is_symlink() {
+            return Err("MACOS_PATH_NOT_DIRECT_DIRECTORY");
+        }
+        let directory = File::open(path).map_err(|_| "MACOS_DIRECTORY_OPEN_REFUSED")?;
+        let descriptor_metadata = directory
+            .metadata()
+            .map_err(|_| "MACOS_DIRECTORY_STAT_REFUSED")?;
+        if file_identity(&metadata) != file_identity(&descriptor_metadata) {
+            return Err("MACOS_DIRECTORY_IDENTITY_MISMATCH");
+        }
+        Ok(DirectoryAnchor {
+            directory,
+            path_metadata: metadata,
+        })
+    }
+
+    fn anchor_unchanged(path: &Path, anchor: &DirectoryAnchor) -> bool {
+        let Ok(path_metadata) = fs::symlink_metadata(path) else {
+            return false;
+        };
+        let Ok(descriptor_metadata) = anchor.directory.metadata() else {
+            return false;
+        };
+        file_identity(&path_metadata) == file_identity(&anchor.path_metadata)
+            && file_identity(&descriptor_metadata) == file_identity(&anchor.path_metadata)
+            && !path_metadata.file_type().is_symlink()
+    }
+
+    fn has_symbolic_ancestor(path: &Path) -> Result<bool, ()> {
+        let mut ancestors = path
+            .ancestors()
+            .filter(|ancestor| !ancestor.as_os_str().is_empty())
+            .collect::<Vec<_>>();
+        ancestors.reverse();
+        for ancestor in ancestors {
+            let metadata = fs::symlink_metadata(ancestor).map_err(|_| ())?;
+            if metadata.file_type().is_symlink() {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
+
+    fn full_flush(file: &File) -> Result<(), i32> {
+        // SAFETY: file owns a live descriptor; F_FULLFSYNC takes no additional
+        // variadic argument and returns synchronously.
+        if unsafe { fcntl(file.as_raw_fd(), F_FULLFSYNC) } == 0 {
+            Ok(())
+        } else {
+            Err(io::Error::last_os_error().raw_os_error().unwrap_or(1))
+        }
+    }
+
+    fn directory_barrier(directory: &File) -> Result<(), i32> {
+        // SAFETY: directory owns a live retained descriptor. This is the
+        // namespace-metadata barrier; file data still requires F_FULLFSYNC.
+        if unsafe { fsync(directory.as_raw_fd()) } == 0 {
+            Ok(())
+        } else {
+            Err(io::Error::last_os_error().raw_os_error().unwrap_or(1))
+        }
+    }
+
+    fn openat_file(descriptor: RawFd, name: &CStr, flags: c_int, mode: u32) -> io::Result<File> {
+        // SAFETY: name is NUL-terminated and descriptor remains live. On
+        // success ownership of the returned descriptor moves into File.
+        let opened = unsafe { openat(descriptor, name.as_ptr(), flags, mode) };
+        if opened < 0 {
+            Err(io::Error::last_os_error())
+        } else {
+            // SAFETY: opened is a new owned descriptor returned by openat.
+            Ok(unsafe { File::from_raw_fd(opened) })
+        }
+    }
+
+    fn read_exact_at(
+        descriptor: RawFd,
+        name: &CStr,
+        expected: &[u8],
+    ) -> Result<Option<FileIdentity>, i32> {
+        let mut file = openat_file(descriptor, name, O_RDWR | O_CLOEXEC | O_NOFOLLOW, 0)
+            .map_err(|error| error.raw_os_error().unwrap_or(1))?;
+        let before = file
+            .metadata()
+            .map(|value| file_identity(&value))
+            .map_err(|error| error.raw_os_error().unwrap_or(1))?;
+        if before.links != 1 || before.byte_length != expected.len() as u64 {
+            return Ok(None);
+        }
+        let mut observed = Vec::with_capacity(expected.len());
+        file.read_to_end(&mut observed)
+            .map_err(|error| error.raw_os_error().unwrap_or(1))?;
+        full_flush(&file)?;
+        let after = file
+            .metadata()
+            .map(|value| file_identity(&value))
+            .map_err(|error| error.raw_os_error().unwrap_or(1))?;
+        if observed == expected && after == before {
+            Ok(Some(before))
+        } else {
+            Ok(None)
+        }
+    }
+
+    unsafe fn dictionary_boolean(dictionary: *const c_void, key: *const c_void) -> Option<bool> {
+        // SAFETY: caller supplies a live CFDictionary and a framework-owned key.
+        let value = unsafe { CFDictionaryGetValue(dictionary, key) };
+        if value.is_null() || unsafe { CFGetTypeID(value) } != unsafe { CFBooleanGetTypeID() } {
+            return None;
+        }
+        Some(unsafe { CFBooleanGetValue(value) } != 0)
+    }
+
+    unsafe fn dictionary_string(dictionary: *const c_void, key: *const c_void) -> Option<String> {
+        // SAFETY: caller supplies a live CFDictionary and a framework-owned key.
+        let value = unsafe { CFDictionaryGetValue(dictionary, key) };
+        if value.is_null() || unsafe { CFGetTypeID(value) } != unsafe { CFStringGetTypeID() } {
+            return None;
+        }
+        let mut buffer = [0_i8; 128];
+        if unsafe {
+            CFStringGetCString(
+                value,
+                buffer.as_mut_ptr(),
+                buffer.len() as isize,
+                K_CF_STRING_ENCODING_UTF8,
+            )
+        } == 0
+        {
+            return None;
+        }
+        // SAFETY: CFStringGetCString succeeded and guarantees NUL termination.
+        unsafe { CStr::from_ptr(buffer.as_ptr()) }
+            .to_str()
+            .ok()
+            .map(str::to_owned)
+    }
+
+    fn classify_storage(device: &CStr) -> (MacosStorageKind, bool) {
+        // SAFETY: framework constructors accept a null default allocator and a
+        // valid NUL-terminated BSD device name.
+        let session = unsafe { DASessionCreate(std::ptr::null()) };
+        if session.is_null() {
+            return (MacosStorageKind::Unknown, false);
+        }
+        let disk = unsafe { DADiskCreateFromBSDName(std::ptr::null(), session, device.as_ptr()) };
+        if disk.is_null() {
+            // SAFETY: session is a live CoreFoundation object owned here.
+            unsafe { CFRelease(session) };
+            return (MacosStorageKind::Unknown, false);
+        }
+        let description = unsafe { DADiskCopyDescription(disk) };
+        if description.is_null() {
+            // SAFETY: disk and session are live objects owned here.
+            unsafe {
+                CFRelease(disk);
+                CFRelease(session);
+            }
+            return (MacosStorageKind::Unknown, false);
+        }
+        // SAFETY: description is a live CFDictionary and all keys are
+        // framework-owned constants for the duration of these calls.
+        let facts = unsafe {
+            (
+                dictionary_boolean(description, kDADiskDescriptionVolumeNetworkKey),
+                dictionary_boolean(description, kDADiskDescriptionMediaRemovableKey),
+                dictionary_boolean(description, kDADiskDescriptionMediaEjectableKey),
+                dictionary_boolean(description, kDADiskDescriptionDeviceInternalKey),
+                dictionary_string(description, kDADiskDescriptionDeviceProtocolKey),
+            )
+        };
+        // SAFETY: all three objects are live and owned by this function.
+        unsafe {
+            CFRelease(description);
+            CFRelease(disk);
+            CFRelease(session);
+        }
+        let (Some(network), Some(removable), Some(ejectable), Some(internal), Some(protocol)) =
+            facts
+        else {
+            return (MacosStorageKind::Unknown, false);
+        };
+        let normalized = protocol.to_ascii_lowercase();
+        if network {
+            return (MacosStorageKind::Network, true);
+        }
+        if removable || ejectable {
+            return (MacosStorageKind::Removable, true);
+        }
+        if normalized.contains("disk image") {
+            return (MacosStorageKind::DiskImage, true);
+        }
+        if normalized.contains("virtual") || normalized.contains("virtio") {
+            return (MacosStorageKind::Virtual, true);
+        }
+        let admitted_protocol = ["nvme", "pci", "sata", "apple fabric"]
+            .iter()
+            .any(|candidate| normalized == *candidate);
+        if internal && admitted_protocol {
+            (MacosStorageKind::DirectInternal, true)
+        } else {
+            (MacosStorageKind::Unknown, true)
+        }
+    }
+
+    fn bounded_statfs(path: &Path) -> Result<(String, String, u32), ()> {
+        let path = absolute_c_path(path).ok_or(())?;
+        let mut buffer = std::mem::MaybeUninit::<StatFs>::zeroed();
+        // SAFETY: path is NUL-terminated and buffer points to writable memory.
+        if unsafe { statfs(path.as_ptr(), buffer.as_mut_ptr()) } != 0 {
+            return Err(());
+        }
+        // SAFETY: statfs returned success and initialized the complete value.
+        let buffer = unsafe { buffer.assume_init() };
+        // SAFETY: successful statfs produces NUL-terminated fixed buffers.
+        let filesystem = unsafe { CStr::from_ptr(buffer.filesystem_name.as_ptr()) }
+            .to_str()
+            .map_err(|_| ())?
+            .to_owned();
+        let device = unsafe { CStr::from_ptr(buffer.mounted_from.as_ptr()) }
+            .to_str()
+            .map_err(|_| ())?
+            .to_owned();
+        Ok((filesystem, device, buffer.flags))
+    }
+
+    pub fn probe(path: &Path) -> MacosHostProbeVerdict {
+        if absolute_c_path(path).is_none() {
+            return super::macos_deny("MACOS_PATH_NOT_ABSOLUTE_CANONICAL_INPUT", None);
+        }
+        let symbolic_ancestor_present = match has_symbolic_ancestor(path) {
+            Ok(value) => value,
+            Err(()) => return super::macos_deny("MACOS_PATH_ANCESTRY_UNAVAILABLE", None),
+        };
+        let before = match fs::symlink_metadata(path) {
+            Ok(value) if value.is_dir() && !value.file_type().is_symlink() => value,
+            _ => return super::macos_deny("MACOS_PATH_NOT_DIRECT_DIRECTORY", None),
+        };
+        let canonical = match fs::canonicalize(path) {
+            Ok(value) if value == path => value,
+            _ => return super::macos_deny("MACOS_PATH_CANONICALIZATION_REFUSED", None),
+        };
+        let (filesystem, device_name, mount_flags) = match bounded_statfs(&canonical) {
+            Ok(value) => value,
+            Err(()) => return super::macos_deny("MACOS_FILESYSTEM_FACTS_UNAVAILABLE", None),
+        };
+        let device_name = match CString::new(device_name) {
+            Ok(value) => value,
+            Err(_) => return super::macos_deny("MACOS_DEVICE_NAME_MALFORMED", None),
+        };
+        let (storage_kind, storage_facts_complete) = classify_storage(&device_name);
+        let architecture = if cfg!(target_arch = "aarch64") {
+            "arm64"
+        } else {
+            "unsupported"
+        };
+        let device_id = before.dev();
+        let after = match fs::symlink_metadata(&canonical) {
+            Ok(value) => value,
+            Err(_) => return super::macos_deny("MACOS_IDENTITY_RECHECK_UNAVAILABLE", None),
+        };
+        let storage_kind = if mount_flags & MNT_REMOVABLE != 0 {
+            MacosStorageKind::Removable
+        } else if mount_flags & MNT_SNAPSHOT != 0 {
+            MacosStorageKind::Virtual
+        } else {
+            storage_kind
+        };
+        admit_measured_macos_host(MeasuredMacosHost {
+            facts_complete: storage_facts_complete,
+            operating_system: "macos".to_owned(),
+            architecture: architecture.to_owned(),
+            target_is_absolute: true,
+            target_is_direct_directory: true,
+            symbolic_ancestor_present,
+            filesystem: filesystem.to_ascii_lowercase(),
+            storage_kind,
+            mount_is_local: mount_flags & MNT_LOCAL != 0,
+            mount_is_read_write: mount_flags & MNT_RDONLY == 0,
+            identity_stable: file_identity(&before) == file_identity(&after),
+            link_count: before.nlink(),
+            // The statically linked F_FULLFSYNC ABI is available in this
+            // module. A successful file-level call is still mandatory inside
+            // publication; unsupported filesystems fail there without fsync
+            // fallback.
+            full_flush_available: true,
+            device_id,
+        })
+    }
+
+    fn stage_name(generation_id: &str) -> Option<CString> {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .ok()?
+            .as_nanos();
+        let sequence = NONCE.fetch_add(1, Ordering::Relaxed);
+        c_name(&format!(
+            ".registry-generation-{generation_id}.{}-{nonce}-{sequence}.tmp",
+            std::process::id()
+        ))
+    }
+
+    fn publish_generation_observed<F>(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        fault: MacosPublicationFault,
+        mut observe: F,
+    ) -> MacosGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
+        if !generation_id_valid(generation_id)
+            || bytes.is_empty()
+            || bytes.len() > MAX_GENERATION_BYTES
+        {
+            return publication_deny("MACOS_PUBLICATION_INPUT_REFUSED", None);
+        }
+        let admitted_host = match probe(directory) {
+            MacosHostProbeVerdict::Candidate(value) => value,
+            MacosHostProbeVerdict::Deny(_) => {
+                return publication_deny("MACOS_PUBLICATION_HOST_NOT_CANDIDATE", None);
+            }
+        };
+        let anchor = match anchor_directory(directory) {
+            Ok(value) => value,
+            Err(code) => return publication_deny(code, None),
+        };
+        if anchor.path_metadata.dev() != admitted_host.device_id {
+            return publication_deny("MACOS_PUBLICATION_DEVICE_IDENTITY_CHANGED", None);
+        }
+        let descriptor = anchor.directory.as_raw_fd();
+        let final_name = match c_name(&format!("registry-generation-{generation_id}.json")) {
+            Some(value) => value,
+            None => return publication_deny("MACOS_FINAL_NAME_REFUSED", None),
+        };
+        match read_exact_at(descriptor, &final_name, bytes) {
+            Ok(Some(identity)) if identity.device == anchor.path_metadata.dev() => {
+                if directory_barrier(&anchor.directory).is_err()
+                    || !anchor_unchanged(directory, &anchor)
+                {
+                    return publication_deny("MACOS_DIRECTORY_BARRIER_REFUSED", None);
+                }
+                return MacosGenerationPublicationVerdict::Candidate {
+                    byte_length: bytes.len(),
+                };
+            }
+            Ok(Some(_)) | Ok(None) => {
+                return publication_deny("MACOS_PUBLICATION_COLLISION", None);
+            }
+            Err(EEXIST) => return publication_deny("MACOS_PUBLICATION_COLLISION", None),
+            Err(_) => {}
+        }
+
+        let stage_name = match stage_name(generation_id) {
+            Some(value) => value,
+            None => return publication_deny("MACOS_PUBLICATION_NONCE_UNAVAILABLE", None),
+        };
+        let mut stage = match openat_file(
+            descriptor,
+            &stage_name,
+            O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC | O_NOFOLLOW,
+            0o600,
+        ) {
+            Ok(value) => value,
+            Err(error) => {
+                return publication_deny("MACOS_STAGE_OPEN_REFUSED", io_code(&error));
+            }
+        };
+        observe("stage-opened");
+
+        if matches!(fault, MacosPublicationFault::ZeroProgress) {
+            drop(stage);
+            return publication_deny("MACOS_WRITE_ZERO_PROGRESS_REFUSED", None);
+        }
+        if matches!(fault, MacosPublicationFault::DiskFull) {
+            drop(stage);
+            return publication_deny("MACOS_DISK_FULL_REFUSED", None);
+        }
+        let write_bytes = if matches!(fault, MacosPublicationFault::ShortWrite) {
+            &bytes[..bytes.len().saturating_sub(1)]
+        } else {
+            bytes
+        };
+        if let Err(error) = stage.write_all(write_bytes) {
+            drop(stage);
+            return if error.raw_os_error() == Some(ENOSPC) {
+                publication_deny("MACOS_DISK_FULL_REFUSED", Some(ENOSPC))
+            } else {
+                publication_deny("MACOS_WRITE_REFUSED", io_code(&error))
+            };
+        }
+        observe("bytes-written");
+        if stage.flush().is_err() {
+            drop(stage);
+            return publication_deny("MACOS_USER_FLUSH_REFUSED", None);
+        }
+        if matches!(fault, MacosPublicationFault::FullFlush) || full_flush(&stage).is_err() {
+            drop(stage);
+            return publication_deny("MACOS_FULL_FLUSH_REFUSED", None);
+        }
+        let stage_identity = match stage.metadata() {
+            Ok(value) => file_identity(&value),
+            Err(error) => {
+                drop(stage);
+                return publication_deny("MACOS_STAGE_STAT_REFUSED", io_code(&error));
+            }
+        };
+        if stage_identity.device != anchor.path_metadata.dev()
+            || stage_identity.links != 1
+            || stage_identity.byte_length != bytes.len() as u64
+        {
+            drop(stage);
+            let code = if matches!(fault, MacosPublicationFault::ShortWrite) {
+                "MACOS_WRITE_SHORT_REFUSED"
+            } else {
+                "MACOS_STAGE_IDENTITY_REFUSED"
+            };
+            return publication_deny(code, None);
+        }
+        observe("file-flushed");
+        drop(stage);
+        observe("stage-closed");
+
+        if matches!(fault, MacosPublicationFault::Publish) {
+            return publication_deny("MACOS_PUBLICATION_REFUSED", None);
+        }
+        // SAFETY: both names are NUL-terminated and the no-replace rename is
+        // scoped to the same retained directory descriptor.
+        if unsafe {
+            renameatx_np(
+                descriptor,
+                stage_name.as_ptr(),
+                descriptor,
+                final_name.as_ptr(),
+                RENAME_EXCL,
+            )
+        } != 0
+        {
+            let error = io::Error::last_os_error();
+            return publication_deny("MACOS_PUBLICATION_RENAME_REFUSED", io_code(&error));
+        }
+        observe("published");
+        if matches!(fault, MacosPublicationFault::Reopen) {
+            return publication_deny("MACOS_REOPEN_REFUSED", None);
+        }
+        if matches!(fault, MacosPublicationFault::ReadbackChanged) {
+            return publication_deny("MACOS_READBACK_MISMATCH_REFUSED", None);
+        }
+        let reopened_identity = match read_exact_at(descriptor, &final_name, bytes) {
+            Ok(Some(value)) => value,
+            _ => return publication_deny("MACOS_REOPEN_REFUSED", None),
+        };
+        if reopened_identity != stage_identity {
+            return publication_deny("MACOS_READBACK_IDENTITY_MISMATCH_REFUSED", None);
+        }
+        observe("reopened-verified");
+        if matches!(fault, MacosPublicationFault::DirectoryBarrier) {
+            return publication_deny("MACOS_DIRECTORY_BARRIER_REFUSED", None);
+        }
+        if directory_barrier(&anchor.directory).is_err() {
+            return publication_deny("MACOS_DIRECTORY_BARRIER_REFUSED", None);
+        }
+        observe("directory-flushed");
+        if matches!(fault, MacosPublicationFault::NamespaceChanged) {
+            return publication_deny("MACOS_NAMESPACE_CHANGED_REFUSED", None);
+        }
+        if !anchor_unchanged(directory, &anchor) {
+            return publication_deny("MACOS_NAMESPACE_CHANGED_REFUSED", None);
+        }
+        MacosGenerationPublicationVerdict::Candidate {
+            byte_length: bytes.len(),
+        }
+    }
+
+    pub fn publish_generation(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+    ) -> MacosGenerationPublicationVerdict {
+        publish_generation_observed(
+            directory,
+            generation_id,
+            bytes,
+            MacosPublicationFault::None,
+            |_| {},
+        )
+    }
+
+    #[cfg(feature = "fault-injection")]
+    pub fn publish_generation_fault_candidate<F>(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        observe: F,
+    ) -> MacosGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
+        publish_generation_observed(
+            directory,
+            generation_id,
+            bytes,
+            MacosPublicationFault::None,
+            observe,
+        )
+    }
+
+    #[cfg(feature = "fault-injection")]
+    pub fn publish_generation_injected_candidate(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        fault: MacosPublicationFault,
+    ) -> MacosGenerationPublicationVerdict {
+        publish_generation_observed(directory, generation_id, bytes, fault, |_| {})
+    }
+}
+
 #[cfg(windows)]
 mod windows {
     use super::{
-        admit_measured_windows_host, deny, MeasuredWindowsHost, WindowsDirectoryFlushVerdict,
-        WindowsGenerationPublicationVerdict, WindowsHostProbeError, WindowsHostProbeVerdict,
+        admit_measured_windows_host, deny, MeasuredWindowsHost, WindowsArchitecture,
+        WindowsDirectoryFlushVerdict, WindowsGenerationPublicationVerdict, WindowsHostProbeError,
+        WindowsHostProbeVerdict, WindowsRelease,
     };
     use std::ffi::c_void;
     use std::ffi::OsStr;
@@ -1345,12 +2244,25 @@ mod windows {
     const MAX_GENERATION_BYTES: usize = 16 * 1024 * 1024;
     const MAX_PATH_CHARS: usize = 32_768;
     const FILESYSTEM_NAME_CHARS: usize = 64;
+    const IMAGE_FILE_MACHINE_UNKNOWN: u16 = 0;
+    const IMAGE_FILE_MACHINE_AMD64: u16 = 0x8664;
+    const IMAGE_FILE_MACHINE_ARM64: u16 = 0xaa64;
 
     #[repr(C)]
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     struct FileTime {
         low: u32,
         high: u32,
+    }
+
+    #[repr(C)]
+    struct OsVersionInfoW {
+        size: u32,
+        major: u32,
+        minor: u32,
+        build: u32,
+        platform_id: u32,
+        service_pack: [u16; 128],
     }
 
     #[repr(C)]
@@ -1392,6 +2304,7 @@ mod windows {
         ) -> *mut c_void;
         fn FlushFileBuffers(file: *mut c_void) -> i32;
         fn GetDriveTypeW(root_path_name: *const u16) -> u32;
+        fn GetCurrentProcess() -> *mut c_void;
         fn GetFileAttributesW(file_name: *const u16) -> u32;
         fn GetLastError() -> u32;
         fn GetVolumeInformationW(
@@ -1418,6 +2331,16 @@ mod windows {
             new_file_name: *const u16,
             flags: u32,
         ) -> i32;
+        fn IsWow64Process2(
+            process: *mut c_void,
+            process_machine: *mut u16,
+            native_machine: *mut u16,
+        ) -> i32;
+    }
+
+    #[link(name = "ntdll")]
+    extern "system" {
+        fn RtlGetVersion(version: *mut OsVersionInfoW) -> i32;
     }
 
     fn last_error() -> u32 {
@@ -1437,6 +2360,64 @@ mod windows {
 
     fn terminated_length(buffer: &[u16]) -> Option<usize> {
         buffer.iter().position(|unit| *unit == 0)
+    }
+
+    fn measured_os_identity(
+    ) -> Result<(WindowsRelease, u32, u32, WindowsArchitecture, bool), WindowsHostProbeError> {
+        let mut version = OsVersionInfoW {
+            size: std::mem::size_of::<OsVersionInfoW>() as u32,
+            major: 0,
+            minor: 0,
+            build: 0,
+            platform_id: 0,
+            service_pack: [0; 128],
+        };
+        // SAFETY: version is a writable OSVERSIONINFOW-compatible value whose
+        // size field is initialized for the duration of the call.
+        let status = unsafe { RtlGetVersion(&mut version) };
+        if status != 0 {
+            return Err(WindowsHostProbeError {
+                code: "WINDOWS_OS_IDENTITY_UNAVAILABLE",
+                os_code: Some(status as u32),
+            });
+        }
+        let release = if version.major == 10 && (10_240..22_000).contains(&version.build) {
+            WindowsRelease::Windows10
+        } else if version.major == 10 && version.build >= 22_000 {
+            WindowsRelease::Windows11
+        } else {
+            WindowsRelease::Unknown
+        };
+
+        let mut process_machine = IMAGE_FILE_MACHINE_UNKNOWN;
+        let mut native_machine = IMAGE_FILE_MACHINE_UNKNOWN;
+        // SAFETY: GetCurrentProcess returns the current process pseudo-handle;
+        // both machine pointers are writable for the duration of the call.
+        if unsafe {
+            IsWow64Process2(
+                GetCurrentProcess(),
+                &mut process_machine,
+                &mut native_machine,
+            )
+        } == 0
+        {
+            return Err(WindowsHostProbeError {
+                code: "WINDOWS_ARCHITECTURE_IDENTITY_UNAVAILABLE",
+                os_code: Some(last_error()),
+            });
+        }
+        let architecture = match native_machine {
+            IMAGE_FILE_MACHINE_AMD64 => WindowsArchitecture::X86_64,
+            IMAGE_FILE_MACHINE_ARM64 => WindowsArchitecture::Arm64,
+            _ => WindowsArchitecture::Unknown,
+        };
+        Ok((
+            release,
+            version.major,
+            version.build,
+            architecture,
+            process_machine == IMAGE_FILE_MACHINE_UNKNOWN,
+        ))
     }
 
     fn reparse_component(path: &Path) -> Result<bool, u32> {
@@ -1549,11 +2530,21 @@ mod windows {
             Ok(value) => value,
             Err(_) => return deny("WINDOWS_FILESYSTEM_NAME_NOT_UTF16", None),
         };
+        let (release, os_major, os_build, architecture, native_process) =
+            match measured_os_identity() {
+                Ok(value) => value,
+                Err(error) => return WindowsHostProbeVerdict::Deny(error),
+            };
         admit_measured_windows_host(MeasuredWindowsHost {
             drive_type,
             filesystem,
             filesystem_flags,
             volume_serial,
+            release,
+            os_major,
+            os_build,
+            architecture,
+            native_process,
         })
     }
 
@@ -2029,6 +3020,84 @@ pub fn probe_windows_host(path: &Path) -> WindowsHostProbeVerdict {
     {
         let _ = path;
         deny("WINDOWS_PLATFORM_UNAVAILABLE", None)
+    }
+}
+
+pub fn probe_macos_host(path: &Path) -> MacosHostProbeVerdict {
+    #[cfg(target_os = "macos")]
+    {
+        macos::probe(path)
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = path;
+        macos_deny("MACOS_PLATFORM_UNAVAILABLE", None)
+    }
+}
+
+pub fn publish_macos_generation_candidate(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+) -> MacosGenerationPublicationVerdict {
+    #[cfg(target_os = "macos")]
+    {
+        macos::publish_generation(directory, generation_id, bytes)
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (directory, generation_id, bytes);
+        MacosGenerationPublicationVerdict::Deny(MacosHostProbeError {
+            code: "MACOS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
+    }
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub fn publish_macos_generation_fault_candidate<F>(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+    observe: F,
+) -> MacosGenerationPublicationVerdict
+where
+    F: FnMut(&'static str),
+{
+    #[cfg(target_os = "macos")]
+    {
+        macos::publish_generation_fault_candidate(directory, generation_id, bytes, observe)
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (directory, generation_id, bytes, observe);
+        MacosGenerationPublicationVerdict::Deny(MacosHostProbeError {
+            code: "MACOS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
+    }
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub fn publish_macos_generation_injected_candidate(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+    fault: MacosPublicationFault,
+) -> MacosGenerationPublicationVerdict {
+    #[cfg(target_os = "macos")]
+    {
+        macos::publish_generation_injected_candidate(directory, generation_id, bytes, fault)
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (directory, generation_id, bytes, fault);
+        MacosGenerationPublicationVerdict::Deny(MacosHostProbeError {
+            code: "MACOS_PLATFORM_UNAVAILABLE",
+            os_code: None,
+        })
     }
 }
 

@@ -1,10 +1,14 @@
 use std::path::Path;
 
 use galerina_registry_durability_native::{
-    admit_measured_windows_host, flush_windows_directory_candidate, probe_windows_host,
-    publish_windows_generation_candidate, MeasuredWindowsHost, WindowsDirectoryFlushVerdict,
-    WindowsGenerationPublicationVerdict, WindowsHostProbeVerdict, DRIVE_FIXED, DRIVE_REMOTE,
+    admit_measured_windows_host, probe_windows_host, publish_windows_generation_candidate,
+    MeasuredWindowsHost, WindowsArchitecture, WindowsGenerationPublicationVerdict,
+    WindowsHostProbeVerdict, WindowsRelease, DRIVE_FIXED, DRIVE_REMOTE,
     FILE_SUPPORTS_REMOTE_STORAGE,
+};
+#[cfg(windows)]
+use galerina_registry_durability_native::{
+    flush_windows_directory_candidate, WindowsDirectoryFlushVerdict,
 };
 
 fn measured(filesystem: &str) -> MeasuredWindowsHost {
@@ -13,17 +17,26 @@ fn measured(filesystem: &str) -> MeasuredWindowsHost {
         filesystem: filesystem.to_owned(),
         filesystem_flags: 0,
         volume_serial: 1,
+        release: WindowsRelease::Windows10,
+        os_major: 10,
+        os_build: 19045,
+        architecture: WindowsArchitecture::X86_64,
+        native_process: true,
     }
 }
 
 #[test]
-fn pure_host_admission_accepts_only_fixed_ntfs_or_refs() {
+fn pure_host_admission_accepts_exact_windows_10_and_11_ntfs_identities() {
     assert!(matches!(
         admit_measured_windows_host(measured("NTFS")),
         WindowsHostProbeVerdict::Candidate(_)
     ));
+
+    let mut windows_11 = measured("NTFS");
+    windows_11.release = WindowsRelease::Windows11;
+    windows_11.os_build = 22631;
     assert!(matches!(
-        admit_measured_windows_host(measured("ReFS")),
+        admit_measured_windows_host(windows_11),
         WindowsHostProbeVerdict::Candidate(_)
     ));
 
@@ -41,12 +54,47 @@ fn pure_host_admission_accepts_only_fixed_ntfs_or_refs() {
         WindowsHostProbeVerdict::Deny(_)
     ));
 
-    for filesystem in ["FAT32", "exFAT", "CIFS", "unknown", ""] {
+    for filesystem in ["ReFS", "FAT32", "exFAT", "CIFS", "unknown", ""] {
         assert!(matches!(
             admit_measured_windows_host(measured(filesystem)),
             WindowsHostProbeVerdict::Deny(_)
         ));
     }
+
+    let mut mismatched_release = measured("NTFS");
+    mismatched_release.release = WindowsRelease::Windows11;
+    assert!(matches!(
+        admit_measured_windows_host(mismatched_release),
+        WindowsHostProbeVerdict::Deny(_)
+    ));
+
+    let mut unknown_release = measured("NTFS");
+    unknown_release.release = WindowsRelease::Unknown;
+    assert!(matches!(
+        admit_measured_windows_host(unknown_release),
+        WindowsHostProbeVerdict::Deny(_)
+    ));
+
+    let mut unknown_architecture = measured("NTFS");
+    unknown_architecture.architecture = WindowsArchitecture::Unknown;
+    assert!(matches!(
+        admit_measured_windows_host(unknown_architecture),
+        WindowsHostProbeVerdict::Deny(_)
+    ));
+
+    let mut unmeasured_arm64_profile = measured("NTFS");
+    unmeasured_arm64_profile.architecture = WindowsArchitecture::Arm64;
+    assert!(matches!(
+        admit_measured_windows_host(unmeasured_arm64_profile),
+        WindowsHostProbeVerdict::Deny(_)
+    ));
+
+    let mut translated_process = measured("NTFS");
+    translated_process.native_process = false;
+    assert!(matches!(
+        admit_measured_windows_host(translated_process),
+        WindowsHostProbeVerdict::Deny(_)
+    ));
 }
 
 #[test]
@@ -56,8 +104,15 @@ fn live_probe_is_total_and_never_invents_an_admitted_filesystem() {
     match verdict {
         WindowsHostProbeVerdict::Candidate(facts) => {
             assert_eq!(facts.drive_type, DRIVE_FIXED);
-            assert!(facts.filesystem == "ntfs" || facts.filesystem == "refs");
+            assert_eq!(facts.filesystem, "ntfs");
             assert_eq!(facts.filesystem_flags & FILE_SUPPORTS_REMOTE_STORAGE, 0,);
+            assert_eq!(facts.os_major, 10);
+            assert!(matches!(
+                facts.release,
+                WindowsRelease::Windows10 | WindowsRelease::Windows11
+            ));
+            assert_eq!(facts.architecture, WindowsArchitecture::X86_64);
+            assert!(facts.native_process);
         }
         WindowsHostProbeVerdict::Deny(error) => {
             panic!("local Windows test volume was refused: {}", error.code());
