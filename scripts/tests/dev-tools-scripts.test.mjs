@@ -397,6 +397,122 @@ test("status: a sibling PRODUCT audit (tritmeshql-*) is excluded from the galeri
   assert.ok(!/product-scope/.test(stOut), "tritmeshql audit is not selected as the galerina overall %");
 });
 
+const statusLedger = join(tmp11, "status-ledger.json");
+writeFileSync(statusLedger, JSON.stringify({
+  schema: "galerina.status-ledger.v1",
+  asOf: "2026-08-01",
+  milestone: "Fixture platform-admission closure",
+  roadmap: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
+  openGates: [
+    {
+      id: "PLATFORM-EVIDENCE",
+      summary: "Collect admitted cross-platform durability evidence.",
+      evidence: "docs/platform-handover/ubuntu-desktop/CODEX-HANDOVER.md",
+    },
+  ],
+}, null, 2) + "\n");
+const structuredStatus = spawnSync(process.execPath, [join(SCRIPTS, "status.mjs")], {
+  cwd: tmp11,
+  encoding: "utf8",
+  env: {
+    ...process.env,
+    GALERINA_KB_DIR: stKb,
+    GALERINA_STATUS_LEDGER: statusLedger,
+  },
+});
+
+test("status: a validated bounded ledger supplies current milestone, gate, date, and roadmap", () => {
+  assert.equal(structuredStatus.status, 0, structuredStatus.stderr);
+  assert.match(structuredStatus.stdout, /2026-08-01/);
+  assert.match(structuredStatus.stdout, /Fixture platform-admission closure/);
+  assert.match(structuredStatus.stdout, /\[PLATFORM-EVIDENCE\] Collect admitted cross-platform durability evidence\./);
+  assert.match(structuredStatus.stdout, /docs\/roadmap-2026-07-29-galerina-beta-v1-to-slide\.md/);
+  assert.doesNotMatch(structuredStatus.stdout, /SESSION CLOSE 2026-06-25/,
+    "historical version.json prose cannot re-enter the live status view");
+});
+
+const malformedStatusLedger = join(tmp11, "malformed-status-ledger.json");
+writeFileSync(malformedStatusLedger, JSON.stringify({
+  schema: "galerina.status-ledger.v1",
+  asOf: "2026-08-01",
+  milestone: "Malformed fixture",
+  roadmap: "../outside.md",
+  openGates: [],
+}) + "\n");
+const refusedStatus = spawnSync(process.execPath, [join(SCRIPTS, "status.mjs")], {
+  cwd: tmp11,
+  encoding: "utf8",
+  env: {
+    ...process.env,
+    GALERINA_KB_DIR: stKb,
+    GALERINA_STATUS_LEDGER: malformedStatusLedger,
+  },
+});
+
+test("status: malformed or traversal-bearing ledger input is refused without historical fallback", () => {
+  assert.notEqual(refusedStatus.status, 0, "malformed status authority must fail closed");
+  assert.match(refusedStatus.stderr, /REFUSED: status ledger/);
+  assert.doesNotMatch(refusedStatus.stdout, /SESSION CLOSE 2026-06-25/,
+    "refusal must not fall back to stale version.json prose");
+});
+
+const duplicateStatusLedger = join(tmp11, "duplicate-status-ledger.json");
+writeFileSync(duplicateStatusLedger, [
+  `{`,
+  `  "schema": "shadowed-value",`,
+  `  "schema": "galerina.status-ledger.v1",`,
+  `  "asOf": "2026-08-01",`,
+  `  "milestone": "Duplicate field fixture",`,
+  `  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",`,
+  `  "openGates": []`,
+  `}`,
+].join("\n") + "\n");
+const duplicateStatus = spawnSync(process.execPath, [join(SCRIPTS, "status.mjs")], {
+  cwd: tmp11,
+  encoding: "utf8",
+  env: { ...process.env, GALERINA_STATUS_LEDGER: duplicateStatusLedger },
+});
+
+test("status: duplicate JSON field names are refused instead of using last-write-wins", () => {
+  assert.notEqual(duplicateStatus.status, 0, "ambiguous status authority must fail closed");
+  assert.match(duplicateStatus.stderr, /REFUSED: status ledger.*duplicate|REFUSED: status ledger.*unique/i);
+});
+
+const escapedDuplicateStatusLedger = join(tmp11, "escaped-duplicate-status-ledger.json");
+writeFileSync(escapedDuplicateStatusLedger, [
+  `{`,
+  `  "schema": "shadowed-value",`,
+  `  "\\u0073chema": "galerina.status-ledger.v1",`,
+  `  "asOf": "2026-08-01",`,
+  `  "milestone": "Escaped duplicate field fixture",`,
+  `  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",`,
+  `  "openGates": []`,
+  `}`,
+].join("\n") + "\n");
+const escapedDuplicateStatus = spawnSync(process.execPath, [join(SCRIPTS, "status.mjs")], {
+  cwd: tmp11,
+  encoding: "utf8",
+  env: { ...process.env, GALERINA_STATUS_LEDGER: escapedDuplicateStatusLedger },
+});
+
+test("status: escaped duplicate JSON field names are refused before last-write-wins parsing", () => {
+  assert.notEqual(escapedDuplicateStatus.status, 0, "escaped ambiguous status authority must fail closed");
+  assert.match(escapedDuplicateStatus.stderr, /REFUSED: status ledger.*duplicate|REFUSED: status ledger.*unique/i);
+});
+
+const oversizedStatusLedger = join(tmp11, "oversized-status-ledger.json");
+writeFileSync(oversizedStatusLedger, " ".repeat(16_385));
+const oversizedStatus = spawnSync(process.execPath, [join(SCRIPTS, "status.mjs")], {
+  cwd: tmp11,
+  encoding: "utf8",
+  env: { ...process.env, GALERINA_STATUS_LEDGER: oversizedStatusLedger },
+});
+
+test("status: the status authority byte ceiling is enforced before JSON parsing", () => {
+  assert.notEqual(oversizedStatus.status, 0, "oversized status authority must fail closed");
+  assert.match(oversizedStatus.stderr, /REFUSED: status ledger.*16,?384 bytes/i);
+});
+
 const tmp12 = mkdtempSync(join(tmpdir(), "fungi-rdabsorb-"));
 after(() => { try { rmSync(tmp12, { recursive: true, force: true }); } catch { /* best effort */ } });
 const raDone = join(tmp12, "rnd", "_session-bridge", "done");

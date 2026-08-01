@@ -140,9 +140,12 @@ function summarise(name, out, ok, code) {
   const nodes = out.match(/Nodes:\s*(\d+)/);
   const edges = out.match(/Edges:\s*(\d+)/);
   if (nodes && edges) return `${nodes[1]} nodes / ${edges[1]} edges`;
-  // run-all-tests.js total row
-  const total = out.match(/(?:TOTAL|total)[^\d]*(\d[\d,]+)\b/);
-  if (total) return `${total[1]} tests pass`;
+  // run-all-tests.cjs owns the core aggregate TOTAL row. No other child may
+  // reinterpret an arbitrary debt/count sentence containing "total" as tests.
+  if (name === "tests:core") {
+    const total = out.match(/(?:TOTAL|total)[^\d]*(\d[\d,]+)\b/);
+    if (total) return `${total[1]} tests pass`;
+  }
   // R6 corpus parity gate
   if (name === "tests:r6-corpus") {
     const pass = out.match(/(?:^|\n)[^\n]*\bpass\s+(\d[\d,]*)/i);

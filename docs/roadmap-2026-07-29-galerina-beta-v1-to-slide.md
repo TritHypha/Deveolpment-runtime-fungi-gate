@@ -156,6 +156,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | RD-0639 through RD-0641 learned-compiler/TVM prior art | 🟩 | Primary LLVM/Apache TVM sources confirm learned heuristics, ranking-plus-measurement and fixed-width store features are established. Adopt only as bounded Shape Lab comparators: frozen proposal identity, secret-reduced features, explicit budgets, deterministic D1 re-admission and total-path cost. No external tuner, prediction or hardware timing receives semantic authority |
 | RD-0642 measured E11 adjudication | 🟩 | Re-derived representation/working-set maths, hostile-boundary evidence and the ten-dimension score are recorded. Weighted zero-trust architecture score is 8.65/10, but measured benefit is 2/10; decision remains experiment-only and worth a defensive/negative paper after cross-platform statistics |
 | Knowledge Base close | 🟩 | Local KB commit `2a5426a` includes RD-0642 and the detailed local independent-review prompt; its tree has no unmerged or interrupted operation and is clean. No push occurred |
+| Live status authority | 🟩 | `governance/status-ledger.json` replaces the June free-text `version.json.openTasks` snapshot for live navigation. The schema admits at most eight unique bounded gates and only existing canonical repository `docs/*.md` evidence. Fixed-buffer double reads plus descriptor pre/mid/post checks enforce 16,384 bytes before allocation/decode/parse; missing, malformed, traversal-bearing, literal-duplicate or escaped-duplicate authority is refused without historical fallback. It is informational and cannot authorize release or production activation. Status-focused tests are 7/7, the containing dev-tools fixture is 45/45, and the post-change phase-close passes every blocking child including security 31-file/zero-finding, graph 5/5, generators 14/14 and the complete tooling child |
 
 ## Active Galerina work
 
@@ -228,6 +229,21 @@ The remaining sequence is:
 8. Run the full governed benchmark and both requested charts only after the
    independent SLIDE backend executes equivalent workloads.
 
+The compact `node scripts/status.mjs` view is now generated from the bounded
+`governance/status-ledger.json` navigation authority. Its four live gates are
+platform durability, executable SLIDE, parity-proven flat `.fungi` package
+retirement, and the cross-platform matrix. The CLI exits non-zero when that
+ledger is missing, malformed, larger than 16,384 bytes, contains literal or
+escaped duplicate field names, changes across its bounded double read, or
+points outside existing repository docs; it never revives the
+historical June `version.json.openTasks` prose.
+
+The phase-close display no longer treats an arbitrary child sentence containing
+`total` as a test count. Only `tests:core` may consume the aggregate `TOTAL`
+row; ordinary Node test children use their terminal `pass`/`fail` summary. A
+fixture with `total debt: 999` and `pass 3` now reports `3 tests pass`, and the
+runner regression suite is 7/7.
+
 The terminal audit pass has executed every discovered audit/lint tool. Enforced
 gates are clean, 60/60 security mutants and 3/3 WAT arithmetic mutants are
 killed, the root aggregate is 98/98 packages with 8,735 tests, and the unified
@@ -241,9 +257,9 @@ witnesses.
 The fresh unified lane totals are unit 8,735, end-to-end 4/4, conformance
 10/10, fidelity 9/9, and Galerina SLIDE-adapter corpus 496/496. The audit
 meta-gate covers all 81/81 discovered audit/lint gates with non-vacuous
-refusal/control evidence. The tooling contract reports 98 packages and 153
+refusal/control evidence. The tooling contract reports 98 packages and 154
 governed tools with zero violations; the generated developer-tool index
-separately records 135 developer tools, including 80 audit-class tools.
+separately records 136 developer tools, including 80 audit-class tools.
 
 The governed-memory review now defines eight independent pillars: spatial,
 temporal, initialization/type, concurrency, authority, confidential custody,

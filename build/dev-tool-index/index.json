@@ -2507,8 +2507,9 @@
       "selfTest": false,
       "inCadence": false,
       "concerns": [
+        "signing/fusion",
+        "governance",
         "diagnostics",
-        "teaching-corpus",
         "source-hygiene",
         "doc-drift",
         "graph/index"
@@ -3206,6 +3207,7 @@
       "lint-fungi.mjs",
       "component-health.mjs",
       "run-all-tests.cjs",
+      "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
@@ -3324,6 +3326,7 @@
       "registry-index-cli.mjs",
       "lint-fungi.mjs",
       "run-phase-close.mjs",
+      "status.mjs",
       "debug-compiler-globs.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3465,7 +3468,6 @@
       "ts-retirement-graph.mjs",
       "lint-conventions.mjs",
       "run-phase-close.mjs",
-      "status.mjs",
       "migrate-fungi.mjs",
       "wat-invalid-triage.mjs"
     ],

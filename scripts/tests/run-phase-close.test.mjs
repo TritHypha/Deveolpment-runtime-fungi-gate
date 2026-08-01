@@ -120,6 +120,23 @@ test("a missing or malformed command result fails closed", () => {
   assert.match(report.results[0].detail, /spawn|status|missing/i);
 });
 
+test("a Node test child uses its final pass summary instead of an unrelated total", () => {
+  const root = fixture({
+    phaseClose: [{ name: "tests:tooling", command: ["node", "tooling.mjs"] }],
+  });
+  write(root, "tooling.mjs", [
+    `console.log("fixture total debt: 999");`,
+    `console.log("pass 3");`,
+    `console.log("fail 0");`,
+  ].join("\n") + "\n");
+
+  const result = run(root);
+
+  assert.equal(result.status, 0);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.results[0].detail, "3 tests pass");
+});
+
 test("malformed governance-diff JSON is an explicit failed result", () => {
   assert.equal(typeof resultApi.parseGovernanceDiff, "function");
 

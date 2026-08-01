@@ -229,8 +229,8 @@ absent. Blue is future SLIDE work and cannot lend evidence to Galerina.
   directly without `--soft`.
 - The fresh audit meta-gate accounts for **81/81** audit/lint gates with
   executable refusal/control evidence. The tooling contract reports 98
-  packages and 153 governed tools with zero violations; the generated index
-  separately records 135 developer tools, including 80 audit-class tools.
+  packages and 154 governed tools with zero violations; the generated index
+  separately records 136 developer tools, including 80 audit-class tools.
 - The security devtool's 29-case construction-audit self-test passes, all nine
   live constructions hold at their declared evidence tier, and its strict
   production single-file audit passes on the canonical pure-transform pattern.
@@ -513,6 +513,31 @@ corpus and example diagnostics, WAT/Wasm validation, canonical proofs, neutral
 governance diff, and a 31-file security audit with zero findings/errors. The
 Linux model is 6/6 on Windows. No live Linux measurement, crash, reboot,
 power-loss or production-admission conclusion is drawn from that result.
+
+The same 2026-08-01 working chapter closes the stale live-status surface.
+`governance/status-ledger.json` is now the bounded navigation authority for the
+status date, milestone, roadmap and open gates. `scripts/status.mjs` validates
+exact keys, a maximum of eight gates, unique canonical IDs, single-line field
+bounds, fixed-buffer double reads with descriptor pre/mid/post checks, a
+16,384-byte pre-allocation/decode/parse ceiling, literal/escaped unique JSON
+field names and existing repository-owned `docs/*.md` paths. Missing,
+malformed, duplicate-field, read-unstable, oversized or traversal-bearing input
+is refused with a non-zero exit and cannot fall back to
+the historical `version.json.openTasks` array. This ledger is informational;
+it cannot authorize a release, platform adapter or production key action.
+Focused status evidence is 7/7 and the complete dev-tools fixture is 45/45.
+A fresh post-change phase-close passes every blocking child: security scans 31
+files with zero findings/errors, graph-all is 5/5, generator contracts are
+14/14, the complete tooling child passes, code-index provenance is fresh and
+stamped, and all 98
+workspace pointers resolve.
+
+The same verification exposed and closed a presentation-only consistency bug:
+`run-phase-close.mjs` formerly allowed its broad `total` heuristic to relabel
+an unrelated child count as passed tests. The aggregate `TOTAL` parser is now
+restricted to `tests:core`; Node test children use their final `pass`/`fail`
+summary. A hostile fixture (`total debt: 999`, `pass 3`) now reports exactly
+`3 tests pass`; the runner regression suite passes 7/7.
 
 These tool gates are authorizing for the evidence they cover. The owner
 signing act, production registry signing and automatic rotation control core

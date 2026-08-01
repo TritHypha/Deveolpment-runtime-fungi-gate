@@ -1,0 +1,28 @@
+{
+  "schema": "galerina.status-ledger.v1",
+  "asOf": "2026-08-01",
+  "milestone": "Galerina beta-v1 platform durability and executable-backend closure before SLIDE-led TypeScript retirement",
+  "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
+  "openGates": [
+    {
+      "id": "PLATFORM-DURABILITY",
+      "summary": "Obtain admitted live filesystem, retained-handle, crash, reboot, and power-loss durability evidence.",
+      "evidence": "docs/platform-handover/ubuntu-desktop/CODEX-HANDOVER.md"
+    },
+    {
+      "id": "SLIDE-EXECUTABLE",
+      "summary": "Close the independent executable SLIDE package and backend contract before runtime retirement claims.",
+      "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
+    },
+    {
+      "id": "FUNGI-PACKAGE-RETIREMENT",
+      "summary": "Admit parity-proven flat .fungi packages before removing TypeScript or Node package execution paths.",
+      "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
+    },
+    {
+      "id": "PLATFORM-MATRIX",
+      "summary": "Record Windows, Debian or Ubuntu, Fedora or Mint, and macOS verification without inferring untested hosts.",
+      "evidence": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md"
+    }
+  ]
+}

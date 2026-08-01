@@ -339,7 +339,7 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 
 **Benchmarks (honest numbers).** WASM is the production path. Certified cross-runtime lanes measure **WASM at 30–59% of native Rust, memory ~0 B/op** (2026-07-18 refresh); WASM won 3 workloads outright in the last full truth-audited run (binary-trees · hardware-targets · fibonacci, 2026-07-12); governance tax measured at ~27.7% on the governed-flow view. Interpreter tiers are diagnostic (the WASM parity oracle), excluded from winning by the scoreboard standard. Lanes without work-equivalence carry **no** cross-runtime ratio. Canonical view: `npm run compare` §1.5 in `packages-galerina/galerina-devtools-benchmarks`.
 
-**Live status tools:** `node scripts/status.mjs` · `node scripts/component-health.mjs --table` (per-component readiness, Tests row sourced from `version.json`) · in-repo audit: [component-readiness-honest-audit-2026-07-10.md](docs/architecture/component-readiness-honest-audit-2026-07-10.md).
+**Live status tools:** `node scripts/status.mjs` (bounded `governance/status-ledger.json`; malformed, oversized, duplicate-field or traversal-bearing authority refuses without historical fallback) · `node scripts/component-health.mjs --table` (per-component readiness, Tests row sourced from `version.json`) · in-repo audit: [component-readiness-honest-audit-2026-07-10.md](docs/architecture/component-readiness-honest-audit-2026-07-10.md).
 
 ---
 

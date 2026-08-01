@@ -234,11 +234,30 @@ current remediated source, measurements and assurance boundary.
 - **Environment boundary:** the Ubuntu Desktop handover is ready, but live
   `statfs`/sysfs measurement, retained-handle publication and all Linux
   crash/reboot/power-loss rows remain unexecuted until that host is available.
-- **Status-tool freshness debt:** `node scripts/status.mjs` derives test counts
-  live from `version.json`, but its date, milestone and `openTasks` prose are a
-  June historical snapshot. Treat this TODO and the beta-to-SLIDE roadmap as
-  current. Replace the status prose source with a bounded generated ledger;
-  do not merely hand-refresh another long free-text list.
+- **Status-tool freshness debt closed in the current working chapter:**
+  `node scripts/status.mjs` now reads date, milestone, roadmap and at most eight
+  structured open gates from `governance/status-ledger.json`. Exact root/gate
+  keys, bounded single-line fields, canonical repository-owned `docs/*.md`
+  evidence paths and unique uppercase IDs are required. Missing, malformed or
+  traversal-bearing authority exits non-zero; fixed-buffer double reads with
+  descriptor pre/mid/post checks apply the 16,384-byte ceiling before
+  allocation/decode/JSON parsing, and literal or escaped duplicate JSON field
+  names are refused. It
+  cannot fall back to the June `version.json.openTasks` history. The ledger is
+  an informational navigation authority, not release or production admission
+  authority. Focused status tests pass 7/7 and the complete dev-tools fixture
+  file passes 45/45. A fresh
+  post-change phase-close passes every blocking child, including security
+  31-file/zero-finding, graph 5/5, generator contracts 14/14, the complete
+  tooling child,
+  fresh/stamped code-index provenance and all 98 workspace pointers.
+- **Phase-close summary consistency:** a fresh direct tooling run exposed that
+  the phase-close display could capture an unrelated child line containing the
+  word `total` and relabel that number as passed tests. `summarise()` now
+  reserves the aggregate `TOTAL` parser for `tests:core`; Node test children
+  use their final `pass`/`fail` summary. The regression test proves
+  `total debt: 999` plus `pass 3` reports exactly `3 tests pass` (7/7 runner
+  tests).
 
 ### RD-0609 through RD-0615 intake checkpoint - 2026-07-31
 
@@ -794,7 +813,7 @@ planning checkbox must never be used to imply that implementation exists.
 - **Fresh audit inventory:** all **81/81** audit/lint gates have executable
   refusal/control evidence; the tooling contract sees 98 packages and 153
   governed tools with zero violations, while the generated developer-tool
-  index records 135 developer tools (80 audit-class); all 14/14 exhaustive
+  index records 136 developer tools (80 audit-class); all 14/14 exhaustive
   generator contracts pass.
   Focused automatic-rotation evidence is **62/62**, including authenticated
   crash/restart state, rollback floors, substituted-key/custody refusal and a
