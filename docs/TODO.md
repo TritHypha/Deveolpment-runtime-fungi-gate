@@ -75,11 +75,11 @@
   permission or a component-removal gate.
 - **Graph evidence boundary:** the repository-owned graph regenerated with
   98 packages, 4,143 documents, 2,829 types/interfaces, 1,326 functions and
-  8,733 relationships. A fresh moderate MCP
-  request again returned its frozen 06:07 build at `f2820da4` rather than the
-  current branch, supplied no expected-node count and is rejected as stale.
-  SLIDE's closed full index is exact at 3,721/3,721 nodes and commit `59c31fc`.
-  No Galerina conclusion uses the stale MCP graph.
+  8,733 relationships. Fresh moderate Galerina indexing is exact at
+  20,989/20,989 nodes and 51,331/51,331 edges for commit `88f0625d`; the prior
+  frozen-index defect did not recur. Full SLIDE indexing is exact at
+  3,880/3,880 nodes and 8,018/8,018 edges for commit `7f9a8a1` and resolves all
+  five V2-F public functions.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
