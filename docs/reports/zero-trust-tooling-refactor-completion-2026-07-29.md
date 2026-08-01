@@ -103,18 +103,21 @@ reboot, controller-cache and physical power-loss evidence remain red.
 The Ubuntu Desktop handover is repository-owned under
 `docs/platform-handover/ubuntu-desktop/`. It fixes the return report/receipt
 names, preserves first failures, forbids evidence workarounds and distinguishes
-bare-host candidate evidence from Docker/VM portability evidence. The Ubuntu
-row remains unexecuted and red until that handover returns; no result is
-inferred from the Windows host.
+bare-host candidate evidence from Docker/VM portability evidence. The first
+Ubuntu return now proves optimized static-profile portability and reruns the
+earlier pure matrix on one Ubuntu 24.04 x86-64 ext4 host. Its required SLIDE
+observer JSON is absent and it ran no live durability path, so the aggregate
+handover and production row remain incomplete.
 
-Before that handover, the platform-neutral Linux facts gate, bounded
-`mountinfo` parser/deepest-component selector and exact filesystem-magic/device
-correlation were implemented and pass **6/6**
-on Windows. They admit only complete stable read-write direct-local
-ext4/XFS/Btrfs facts and refuse mapped, RAID, network, overlay, removable,
-virtual, unknown, symbolic, malformed and ambiguous inputs. This reduces the
-Ubuntu discovery surface but is not a Linux host or durability result. Live
-`statfs`/sysfs measurement and retained-handle publication remain open.
+The second-round source expands the platform-neutral Linux matrix to **10/10**
+on Windows: complete bounded `mountinfo`, deepest selection, Linux device
+number decoding, sysfs topology classification and exact filesystem/device
+correlation. A 64-bit Linux candidate now retains one directory descriptor,
+anchors `fstatfs`, stages exclusively, checks exact single-link identity,
+publishes atomically by no-replace `renameat2`, reopens exact bytes, barriers the directory
+and rechecks path/mount identity. Three live tests and a seven-boundary
+termination harness are written but deliberately ignored until explicitly run
+on Ubuntu. Source presence and off-platform tests do not prove Linux behavior.
 
 Package readiness reaching 100% does not mean the whole product is complete.
 The live percentage audit separately reports:
@@ -511,8 +514,10 @@ A fresh strict phase-close run passes every blocking child: graph-all 5/5,
 fourteen generator contracts, all 98 workspace pointers, complete `.fungi`
 corpus and example diagnostics, WAT/Wasm validation, canonical proofs, neutral
 governance diff, and a 31-file security audit with zero findings/errors. The
-Linux model is 6/6 on Windows. No live Linux measurement, crash, reboot,
-power-loss or production-admission conclusion is drawn from that result.
+Linux model at that commit is 6/6 on Windows. The current round-two chapter is
+10/10 for pure/refusal behavior and contains Linux-only candidate tests, but no
+live Linux measurement, crash, reboot, power-loss or production-admission
+conclusion is drawn until the second handover returns.
 
 The same 2026-08-01 working chapter closes the stale live-status surface.
 `governance/status-ledger.json` is now the bounded navigation authority for the

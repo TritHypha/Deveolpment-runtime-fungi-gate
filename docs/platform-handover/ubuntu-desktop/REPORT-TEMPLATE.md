@@ -64,18 +64,21 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 | Check | Exit code | Result | Notes |
 |---|---:|---|---|
 | `cargo fmt --check` | | UNVERIFIED | |
+| `cargo clippy --locked --all-targets --all-features -- -D warnings` | | UNVERIFIED | |
 | `cargo test --locked` | | UNVERIFIED | |
 | `cargo test --locked --all-features` | | UNVERIFIED | |
 | `cargo build --locked --release` | | UNVERIFIED | |
-| Pure Linux facts + `mountinfo`/correlation matrix (6 tests) | | UNVERIFIED | No live-host claim |
+| Pure Linux facts + parser/sysfs/correlation matrix (10 tests) | | UNVERIFIED | Pure model only |
+| Linux live-host/publication matrix (3 ignored tests, explicitly executed) | | UNVERIFIED | Named directory only |
+| Linux process-termination matrix (1 ignored test, 7 boundaries) | | UNVERIFIED | Not reboot/power loss |
 
 ## Durability evidence
 
 | Evidence | Status | Why |
 |---|---|---|
-| Linux host/filesystem gate | UNVERIFIED | Adapter chapter not yet implemented |
-| File + directory barriers | UNVERIFIED | Adapter chapter not yet implemented |
-| Process termination | UNVERIFIED | Recovery harness not yet implemented |
+| Linux host/filesystem gate | UNVERIFIED | Candidate source exists; record the live result |
+| File + directory barriers | UNVERIFIED | Record exact/idempotent and hostile-collision results |
+| Process termination | UNVERIFIED | Record all seven boundaries; not reboot/power loss |
 | Kernel crash | UNVERIFIED | Not run |
 | Controlled reboot | UNVERIFIED | Not run |
 | Physical power loss | UNVERIFIED | Not run |
@@ -87,7 +90,9 @@ fact. Do not omit a failed attempt when a later retry passes.
 
 ## Conclusion
 
-State only what the evidence proves. The initial portability chapter may say
-that the exact static-link proof and bounded SLIDE bootstrap suite reproduced
-on the named Ubuntu host. It must not claim native SLIDE execution, production
-admission or physical durability.
+State only what the evidence proves. The second chapter may say that the exact
+static-link proof, bounded SLIDE bootstrap suite, named live Linux candidate
+tests and process-termination matrix reproduced on the named Ubuntu host only
+when every corresponding row executed and passed. It must not claim native
+SLIDE execution, kernel-crash, reboot, physical-power-loss or production
+admission.

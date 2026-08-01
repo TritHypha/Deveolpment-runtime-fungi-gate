@@ -110,12 +110,15 @@ intent → governed execution plan → coordinated compute → audit proof
 > `.node` decoy cannot change the result. The receipt is non-authorizing;
 > signed-host admission and the named platform evidence remain mandatory.
 >
-> **Linux preparation:** the platform-neutral Linux facts gate and bounded
-> `mountinfo` parser, deepest-component selector and pure statfs/device
-> correlation pass 6/6 on Windows. This is
-> pure model evidence only. Live `statfs`/sysfs correlation, retained-handle
-> publication and Ubuntu crash/recovery evidence remain unexecuted and must not
-> be inferred from these tests.
+> **Linux preparation:** the platform-neutral Linux facts gate, bounded full
+> `mountinfo` parser, deepest-component selector, device-number decoder,
+> sysfs-classification model and pure statfs/device correlation pass 10/10 on
+> Windows. A GNU Linux x86-64/AArch64 candidate now uses retained-descriptor observation
+> and publication, with three live tests and a seven-boundary termination
+> harness explicitly ignored until the second Ubuntu run. This is source plus
+> off-platform model evidence only. The first Ubuntu return proved static-link
+> portability but omitted the SLIDE JSON and ran no live adapter. Linux-only
+> execution, reboot and power-loss evidence must not be inferred.
 >
 > The native Windows durability candidate is 7/7: on this Windows 10
 > fixed-local NTFS host, the direct-directory `FlushFileBuffers` call and

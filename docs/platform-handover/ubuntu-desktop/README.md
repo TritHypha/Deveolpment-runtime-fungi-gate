@@ -2,9 +2,9 @@
 
 Date: 2026-07-31
 
-Status: static-link portability, bounded SLIDE platform observation and pure
-Linux admission/parser lanes ready; native Linux syscall adapter and
-reboot/power-loss chapters not yet ready
+Status: initial static-link evidence returned; bounded SLIDE observation was
+missing; the live Linux candidate and process-termination harness are ready
+for a second run; reboot/power-loss chapters are not ready
 
 This folder is the single handover point for running Galerina's Ubuntu Desktop
 evidence on a separately booted Linux host. A fresh Codex session should read
@@ -15,18 +15,19 @@ the files in this order:
 3. `REPORT-TEMPLATE.md`
 4. `reports/README.md`
 
-The current runnable step proves that the statically linked registry adapter
-profile builds and independently verifies on Linux. It also runs the separate
-SLIDE repository's bounded Node-bootstrap platform observer and complete
-reference suite. Neither result admits a production adapter, proves native
-SLIDE execution or claims filesystem durability. Later commits will add the
-Linux host/filesystem gate, retained-handle publication primitive,
-process-termination matrix and controlled reboot recovery procedure here.
+The current runnable step repeats the statically linked registry-adapter proof
+at the new commit, runs the separate SLIDE repository's bounded Node-bootstrap
+platform observer, and executes the live Linux candidate. The latter retains
+one directory descriptor, correlates mountinfo, anchored `fstatfs` and sysfs,
+then exercises exact no-replace publication, hostile link refusal and a
+seven-boundary process-termination matrix. None of these results admits a
+production adapter, proves native SLIDE execution, kernel-crash behavior,
+reboot recovery or physical durability.
 
-The native crate also contains a platform-neutral 6/6 Linux fact-admission,
-bounded `mountinfo` parser and pure filesystem/device-correlation matrix.
-Ubuntu must rerun it, but the result remains
-pure-model evidence until live `statfs` and sysfs identities are correlated.
+The native crate's platform-neutral Linux matrix is now 10/10 on Windows. The
+first Ubuntu return independently reran the earlier 6/6 matrix and proved
+static-profile portability only. Round two must compile and execute the new
+Linux-only code; source presence is never execution evidence.
 
 Docker and virtual machines may run the portability lane, but their results
 must be labelled `VIRTUAL_NON_AUTHORIZING`. Only a separately booted Ubuntu

@@ -26,8 +26,8 @@ fail closed, preserve unrelated work, commit locally only and never push.
 
 ## Current executable scope
 
-Run the static-link portability proof and bounded SLIDE platform-observer suite
-described in `RUNBOOK.md`. They must:
+Run the repeated static-link proof, bounded SLIDE platform-observer suite and
+new live Linux candidate chapter described in `RUNBOOK.md`. They must:
 
 - build the optimized statically linked profile from the checked-out source;
 - independently re-hash the exact Rust source and authoritative `.fungi`
@@ -46,8 +46,11 @@ The SLIDE observer chapter must:
   independent SLIDE suite; and
 - remain bootstrap portability evidence, never native execution evidence.
 
-Also rerun the pure Linux fact and `mountinfo` parser matrix. It proves parser
-and decision behavior only; do not convert it into a live-host claim.
+Also rerun the expanded pure Linux fact/parser/sysfs matrix, then explicitly
+run the ignored live-host, retained-handle publication and seven-boundary
+process-termination tests against the one newly created named evidence
+directory. A live test proves only its observed candidate boundary; process
+termination remains weaker than kernel crash, reboot and power loss.
 
 Stop and report rather than work around any refusal, digest mismatch, dirty
 source ambiguity, missing prerequisite or unexpected output field.
@@ -68,7 +71,7 @@ source ambiguity, missing prerequisite or unexpected output field.
 Copy `REPORT-TEMPLATE.md` to this exact repository path:
 
 ```text
-docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-static-profile-YYYY-MM-DD-<12-char-commit>.md
+docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.md
 ```
 
 Replace the date and commit placeholder with the UTC run date and the first 12
@@ -80,9 +83,10 @@ only observed facts, include command exit codes and SHA-256 values, and leave
 every unexecuted row `UNVERIFIED`. This repository path is the handback to the
 primary Galerina session. Do not save the only copy elsewhere.
 
-If no source change was needed, commit only the report and raw receipt on the
-existing local work branch. If a source fix was required, use a separate local
-fix branch and record both the failing and passing commit IDs. Never push.
+If no source change was needed, commit only the report, raw static receipt and
+raw SLIDE receipt on the existing local work branch. If a source fix was
+required, use a separate local fix branch and record both the failing and
+passing commit IDs. Never push.
 Update `docs/TODO.md` and the live roadmap only after evidence is reproduced.
 Run the relevant checks before a local commit.
 

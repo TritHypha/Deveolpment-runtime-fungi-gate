@@ -1,8 +1,12 @@
 use galerina_registry_durability_native::{
-    admit_measured_linux_host, correlate_linux_host_observation, parse_linux_mountinfo_line,
-    select_linux_mount_for_target, LinuxHostObservation, LinuxHostProbeVerdict, LinuxStorageKind,
-    MeasuredLinuxHost, BTRFS_SUPER_MAGIC, EXT4_SUPER_MAGIC, XFS_SUPER_MAGIC,
+    admit_measured_linux_host, classify_linux_sysfs_observation, correlate_linux_host_observation,
+    decode_linux_device_number, parse_linux_mountinfo, parse_linux_mountinfo_line,
+    probe_linux_host, publish_linux_generation_candidate, select_linux_mount_for_target,
+    LinuxGenerationPublicationVerdict, LinuxHostObservation, LinuxHostProbeVerdict,
+    LinuxStorageKind, LinuxSysfsObservation, MeasuredLinuxHost, BTRFS_SUPER_MAGIC,
+    EXT4_SUPER_MAGIC, XFS_SUPER_MAGIC,
 };
+use std::path::Path;
 
 fn direct(filesystem: &str) -> MeasuredLinuxHost {
     MeasuredLinuxHost {
@@ -313,4 +317,140 @@ fn every_unknown_or_hostile_fact_refuses() {
             LinuxHostProbeVerdict::Candidate(_) => panic!("hostile Linux facts were admitted"),
         }
     }
+}
+
+#[test]
+fn complete_mountinfo_parser_is_bounded_and_closed() {
+    let rows = parse_linux_mountinfo(
+        b"1 0 8:1 / / rw - ext4 /dev/sda1 rw\n2 1 8:2 / /var rw - xfs /dev/sda2 rw\n",
+    )
+    .expect("bounded mountinfo document");
+    assert_eq!(rows.len(), 2);
+    assert_eq!(rows[1].mount_point, "/var");
+
+    for refused in [
+        Vec::new(),
+        b"1 0 8:1 / / rw - ext4 /dev/sda1 rw".to_vec(),
+        b"\n".to_vec(),
+        vec![b'x'; 1024 * 1024 + 1],
+    ] {
+        assert!(parse_linux_mountinfo(&refused).is_err());
+    }
+}
+
+#[test]
+fn linux_device_number_decode_matches_kernel_encoding() {
+    assert_eq!(decode_linux_device_number(0x0801), Some((8, 1)));
+    assert_eq!(decode_linux_device_number(0x0001_0302), Some((259, 2)));
+    assert_eq!(decode_linux_device_number(0), None);
+}
+
+#[test]
+fn sysfs_classification_refuses_every_unknown_topology() {
+    let direct = classify_linux_sysfs_observation(LinuxSysfsObservation {
+        canonical_device_path: "/sys/devices/pci0000:00/0000:00:01.0/nvme/nvme0/nvme0n1/nvme0n1p2"
+            .to_owned(),
+        removable: Some(false),
+        has_slaves: Some(false),
+    });
+    assert!(direct.facts_complete);
+    assert_eq!(direct.storage_kind, LinuxStorageKind::DirectLocalBlock);
+
+    for (path, removable, has_slaves, expected) in [
+        (
+            "/sys/devices/virtual/block/dm-0",
+            Some(false),
+            Some(true),
+            LinuxStorageKind::DeviceMapper,
+        ),
+        (
+            "/sys/devices/virtual/block/md0",
+            Some(false),
+            Some(true),
+            LinuxStorageKind::SoftwareRaid,
+        ),
+        (
+            "/sys/devices/pci0000:00/0000:00:01.0/nvme/nvme0/nvme0n1",
+            Some(true),
+            Some(false),
+            LinuxStorageKind::Removable,
+        ),
+        (
+            "/sys/devices/virtual/block/loop0",
+            Some(false),
+            Some(false),
+            LinuxStorageKind::Virtual,
+        ),
+    ] {
+        let result = classify_linux_sysfs_observation(LinuxSysfsObservation {
+            canonical_device_path: path.to_owned(),
+            removable,
+            has_slaves,
+        });
+        assert!(result.facts_complete, "{path}");
+        assert_eq!(result.storage_kind, expected, "{path}");
+    }
+
+    for observation in [
+        LinuxSysfsObservation {
+            canonical_device_path: "/outside/sysfs/device".to_owned(),
+            removable: Some(false),
+            has_slaves: Some(false),
+        },
+        LinuxSysfsObservation {
+            canonical_device_path: "/sys/devices/pci0000:00/device".to_owned(),
+            removable: None,
+            has_slaves: Some(false),
+        },
+        LinuxSysfsObservation {
+            canonical_device_path: "/sys/devices/pci0000:00/device".to_owned(),
+            removable: Some(false),
+            has_slaves: None,
+        },
+        LinuxSysfsObservation {
+            canonical_device_path: "/sys/devices/pci0000:00/device".to_owned(),
+            removable: Some(false),
+            has_slaves: Some(true),
+        },
+    ] {
+        let result = classify_linux_sysfs_observation(observation);
+        assert_eq!(result.storage_kind, LinuxStorageKind::Unknown);
+        assert!(!result.facts_complete);
+    }
+}
+
+#[cfg(not(target_os = "linux"))]
+#[test]
+fn live_linux_authority_is_explicitly_unavailable_off_linux() {
+    match probe_linux_host(Path::new(".")) {
+        LinuxHostProbeVerdict::Deny(error) => {
+            assert_eq!(error.code(), "LINUX_PLATFORM_UNAVAILABLE")
+        }
+        LinuxHostProbeVerdict::Candidate(_) => panic!("non-Linux host was admitted"),
+    }
+    match publish_linux_generation_candidate(Path::new("."), &"a".repeat(64), b"value") {
+        LinuxGenerationPublicationVerdict::Deny(error) => {
+            assert_eq!(error.code(), "LINUX_PLATFORM_UNAVAILABLE")
+        }
+        LinuxGenerationPublicationVerdict::Candidate { .. } => {
+            panic!("non-Linux publication was admitted")
+        }
+    }
+}
+
+#[cfg(all(feature = "fault-injection", not(target_os = "linux")))]
+#[test]
+fn linux_fault_surface_is_explicitly_unavailable_off_linux() {
+    use galerina_registry_durability_native::publish_linux_generation_fault_candidate;
+
+    assert!(matches!(
+        publish_linux_generation_fault_candidate(
+            Path::new("."),
+            &"a".repeat(64),
+            b"value",
+            |_| {}
+        ),
+        LinuxGenerationPublicationVerdict::Deny(error)
+            if error.code() == "LINUX_PLATFORM_UNAVAILABLE"
+    ));
 }

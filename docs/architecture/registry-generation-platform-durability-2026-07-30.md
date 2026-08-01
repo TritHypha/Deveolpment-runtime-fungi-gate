@@ -65,16 +65,24 @@ Source:
 [Linux `fsync(2)` manual](https://www.man7.org/linux/man-pages/man2/fsync.2.html)
 
 Repository-local preparation now defines a closed pure Linux fact model and a
-bounded `mountinfo` row/deepest-component selector. Only complete, stable,
+bounded complete `mountinfo` parser/deepest-component selector. Only complete, stable,
 read-write, direct-local block-device facts on exact ext4, XFS or Btrfs can
 reach `CANDIDATE`. Device Mapper, RAID, network, overlay, removable, virtual,
 unknown, symbolic, malformed and ambiguous cases refuse. The parser rejects
 unknown escapes, decoded controls, non-canonical paths, ambiguous access modes,
 surplus fields, oversized rows and duplicate deepest mounts. Exact filesystem
 magic and major/minor observations must correlate with identical before/after
-mount records. The matrix is 6/6 on Windows and is deliberately only model
-evidence. Live `statfs`, sysfs device-chain measurement and Linux durability
-operations remain unexecuted.
+mount records. Device-number decoding and sysfs topology classification bring
+the pure matrix to 10/10 on Windows and remain model evidence.
+
+The GNU Linux x86-64/AArch64 candidate is now source-complete for its narrow first lane. It
+retains the direct directory descriptor, anchors `fstatfs`, correlates bounded
+mountinfo and `/sys/dev/block`, creates an exclusive descriptor-relative stage,
+checks exact single-link identity, file-barriers it, publishes with no-replace
+`renameat2`, reopens exact bytes, barriers the containing
+directory and rechecks path/mount identity. The initial Ubuntu return proved
+only static-link portability; this live path and its seven-boundary termination
+harness remain unexecuted until round two. No production digest is admitted.
 
 ### macOS
 

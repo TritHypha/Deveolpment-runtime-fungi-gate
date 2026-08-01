@@ -297,9 +297,13 @@ current remediated source, measurements and assurance boundary.
   6/6 preparation boundary. The Galerina code graph was rebuilt at
   `8a2bdcf6` with 20,919/20,919 expected nodes and the new correlation symbol
   independently found after indexing.
-- **Environment boundary:** the Ubuntu Desktop handover is ready, but live
-  `statfs`/sysfs measurement, retained-handle publication and all Linux
-  crash/reboot/power-loss rows remain unexecuted until that host is available.
+- **Environment boundary:** the first Ubuntu Desktop return proves optimized
+  static-profile portability and reruns the earlier pure matrix, but omitted
+  the required SLIDE JSON and did not execute live durability. The live
+  `statfs`/sysfs gate, retained-handle publication, hostile-link tests and
+  seven-boundary process-termination harness are now implemented for a second
+  Ubuntu run. All Linux-only results remain unverified; reboot and power loss
+  remain later controlled chapters.
 - **Status-tool freshness debt closed in the current working chapter:**
   `node scripts/status.mjs` now reads date, milestone, roadmap and at most eight
   structured open gates from `governance/status-ledger.json`. Exact root/gate
@@ -639,19 +643,28 @@ current remediated source, measurements and assurance boundary.
   an external loader are checked; a hostile `.node` decoy cannot affect the
   result. The receipt remains explicitly non-authorizing until the host is
   signed and the platform crash/reboot/power-loss matrices are complete.
-- **Current native execution task:** extend the same closed adapter contract to
-  a real Ubuntu Desktop host lane, then the remaining named platforms. Docker
-  and virtual-machine results are useful portability evidence but cannot be
+- **Current native execution task:** run the second-round Linux candidate and
+  SLIDE observer on the real Ubuntu Desktop host, fix only evidence-backed
+  portability defects, then address the remaining named platforms. Docker and
+  virtual-machine results are useful portability evidence but cannot be
   relabelled as bare-host durability. No owner decision or key action is
   currently required.
-- **Linux adapter preparation checkpoint (2026-07-31):** the platform-neutral
-  facts gate, bounded `mountinfo` row/deepest-mount parser and exact
-  filesystem-magic/device correlation pass **6/6** on
-  Windows. Only complete stable direct-local ext4/XFS/Btrfs facts can reach a
-  candidate; Device Mapper, RAID, network, overlay, removable, virtual,
-  unknown, read-only, symbolic and ambiguous inputs refuse. This is pure model
-  evidence, not a Linux probe. Live `statfs`/sysfs measurement, retained-handle
-  publication and every crash/reboot/power-loss row remain open for Ubuntu.
+- **Linux adapter second-round checkpoint (2026-08-01):** the platform-neutral
+  facts gate, bounded complete `mountinfo` parser/deepest-mount selector,
+  device-number decoder, sysfs classification and exact filesystem/device
+  correlation pass **10/10** on Windows. A GNU Linux x86-64/AArch64 candidate
+  now retains the directory descriptor, anchors `fstatfs`, refuses incomplete/
+  virtual/mapped/RAID/removable facts, stages exclusively, checks exact
+  single-link identity, publishes atomically by no-replace `renameat2`,
+  reopens exact bytes, barriers the directory and rechecks path/mount identity.
+  Other Linux ABIs refuse. Native Clippy is warning-clean, App Kernel is
+  **193/193**, the native all-features suite is green, and a fresh strict
+  phase-close passes every blocking gate after deterministic graph/code-index
+  regeneration. Three ignored live tests and one seven-boundary kill test are
+  ready for explicit Ubuntu execution. They are not counted as passing here.
+  Missing SLIDE evidence, live compile/run,
+  short-write/disk-full/barrier faults, hostile namespace races, reboot and
+  physical power loss remain open; the production allow-list stays empty.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan

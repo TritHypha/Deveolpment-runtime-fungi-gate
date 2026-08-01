@@ -1,4 +1,4 @@
-# Ubuntu Desktop static-link portability runbook
+# Ubuntu Desktop Linux adapter candidate runbook
 
 ## Prerequisites
 
@@ -9,8 +9,9 @@
 - A Rust/Cargo toolchain capable of the repository lockfile.
 - No private signing keys in the repository or shell environment.
 
-This first chapter does not require `sudo`, Docker, a VM or a destructive
-reboot test.
+This second chapter does not require `sudo`, Docker, a VM or a destructive
+reboot test. It repeats the first chapter so evidence binds the new commit,
+then executes the live Linux candidate and process-termination matrix.
 
 ## Run now
 
@@ -35,7 +36,7 @@ Before running, derive the required return filenames:
 set -eu
 RUN_DATE="$(date -u +%F)"
 RUN_COMMIT="$(git rev-parse --short=12 HEAD)"
-RETURN_BASE="docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-static-profile-${RUN_DATE}-${RUN_COMMIT}"
+RETURN_BASE="docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-linux-adapter-${RUN_DATE}-${RUN_COMMIT}"
 test ! -e "${RETURN_BASE}.md"
 test ! -e "${RETURN_BASE}.receipt.json"
 test ! -e "${RETURN_BASE}.slide-platform.json"
@@ -101,11 +102,47 @@ Then run the native crate's complete current verification:
 set -eu
 cd packages-galerina/galerina-framework-app-kernel/native/registry-durability
 cargo fmt --check
+cargo clippy --locked --all-targets --all-features -- -D warnings
 cargo test --locked --test linux_host_admission
 cargo test --locked
 cargo test --locked --all-features
 cargo build --locked --release
 ```
+
+Create one new, exact, same-filesystem evidence directory. Do not substitute
+`/tmp`, a container mount, network storage, a symlink or a pre-existing path:
+
+```bash
+set -eu
+RUN_COMMIT="$(git -C ../../../../ rev-parse --short=12 HEAD)"
+EVIDENCE_DIRECTORY="$PWD/.galerina-linux-evidence-${RUN_COMMIT}"
+test ! -e "$EVIDENCE_DIRECTORY"
+mkdir --mode=700 "$EVIDENCE_DIRECTORY"
+export GALERINA_LINUX_EVIDENCE_DIRECTORY="$EVIDENCE_DIRECTORY"
+```
+
+Run the Linux-only tests explicitly. The exact ignored-test counts are part of
+the evidence; zero tests, a skip, a refusal, a hang or a missing boundary is a
+failure:
+
+```bash
+set -eu
+cargo test --locked --test linux_live_host -- --ignored --test-threads=1
+cargo test --locked --all-features --test linux_process_kill -- --ignored --test-threads=1
+unset GALERINA_LINUX_EVIDENCE_DIRECTORY
+rmdir "$EVIDENCE_DIRECTORY"
+```
+
+The first command must execute three tests: live host observation,
+exact/idempotent no-replace publication, and symlink/hard-link refusal. The
+second must execute one test that kills a fresh worker at all seven named
+boundaries and checks prior/candidate exactness. `rmdir` must succeed: a
+leftover stage or fixture is evidence to report, not something to delete
+recursively and hide.
+
+The live adapter is intentionally compiled only on GNU Linux x86-64 and
+AArch64. Any other ABI must return `LINUX_ABI_UNSUPPORTED`; do not broaden the
+compile predicate or substitute a guessed C structure layout during this run.
 
 On Linux, Windows-specific operations must return their explicit unavailable
 denial. A test skip, silent fallback, pathname loader or unexpected candidate
@@ -116,11 +153,8 @@ is a failure to investigate, not a portability success.
 Do not invent commands for the following. They will be added after the Linux
 adapter and recovery harness are reviewed and committed:
 
-- direct-local filesystem admission;
-- retained-directory-handle publication;
-- file and containing-directory durability barriers;
 - short-write, disk-full and barrier-refusal injection;
-- process-termination boundary matrix;
+- hostile parent-namespace race automation;
 - controlled reboot recovery;
 - physical power-loss recovery.
 

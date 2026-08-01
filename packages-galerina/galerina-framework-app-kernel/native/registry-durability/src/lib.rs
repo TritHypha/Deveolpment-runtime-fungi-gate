@@ -114,6 +114,12 @@ pub enum LinuxHostProbeVerdict {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub enum LinuxGenerationPublicationVerdict {
+    Candidate { byte_length: usize },
+    Deny(LinuxHostProbeError),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct LinuxMountInfo {
     pub mount_id: u64,
     pub parent_id: u64,
@@ -147,6 +153,77 @@ pub struct LinuxHostObservation {
     pub stat_device_minor: u32,
     pub storage_kind: LinuxStorageKind,
     pub sysfs_chain_complete: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LinuxSysfsObservation {
+    pub canonical_device_path: String,
+    pub removable: Option<bool>,
+    pub has_slaves: Option<bool>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct LinuxSysfsClassification {
+    pub storage_kind: LinuxStorageKind,
+    pub facts_complete: bool,
+}
+
+pub fn classify_linux_sysfs_observation(
+    observation: LinuxSysfsObservation,
+) -> LinuxSysfsClassification {
+    let path = observation.canonical_device_path.as_str();
+    let complete = observation.removable.is_some()
+        && observation.has_slaves.is_some()
+        && path.starts_with("/sys/devices/");
+    if !complete {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::Unknown,
+            facts_complete: false,
+        };
+    }
+    if path.contains("/virtual/block/dm-") {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::DeviceMapper,
+            facts_complete: true,
+        };
+    }
+    if path.contains("/virtual/block/md") {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::SoftwareRaid,
+            facts_complete: true,
+        };
+    }
+    if path.contains("/virtual/") {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::Virtual,
+            facts_complete: true,
+        };
+    }
+    if observation.removable == Some(true) {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::Removable,
+            facts_complete: true,
+        };
+    }
+    if observation.has_slaves != Some(false) {
+        return LinuxSysfsClassification {
+            storage_kind: LinuxStorageKind::Unknown,
+            facts_complete: false,
+        };
+    }
+    LinuxSysfsClassification {
+        storage_kind: LinuxStorageKind::DirectLocalBlock,
+        facts_complete: true,
+    }
+}
+
+pub fn decode_linux_device_number(device: u64) -> Option<(u32, u32)> {
+    if device == 0 {
+        return None;
+    }
+    let major = ((device >> 8) & 0x0000_0fff) | ((device >> 32) & 0xffff_f000);
+    let minor = (device & 0x0000_00ff) | ((device >> 12) & 0xffff_ff00);
+    Some((u32::try_from(major).ok()?, u32::try_from(minor).ok()?))
 }
 
 pub fn correlate_linux_host_observation(observation: LinuxHostObservation) -> MeasuredLinuxHost {
@@ -315,6 +392,31 @@ pub fn parse_linux_mountinfo_line(line: &str) -> Result<LinuxMountInfo, LinuxMou
         mount_source,
         read_write: has_read_write,
     })
+}
+
+pub fn parse_linux_mountinfo(input: &[u8]) -> Result<Vec<LinuxMountInfo>, LinuxMountInfoError> {
+    const MAX_MOUNTINFO_BYTES: usize = 1024 * 1024;
+    const MAX_MOUNTINFO_ROWS: usize = 4096;
+    if input.is_empty()
+        || input.len() > MAX_MOUNTINFO_BYTES
+        || input.last() != Some(&b'\n')
+        || !input.is_ascii()
+    {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_DOCUMENT_BOUNDS"));
+    }
+    let document = std::str::from_utf8(input)
+        .map_err(|_| mountinfo_error("LINUX_MOUNTINFO_DOCUMENT_NOT_UTF8"))?;
+    let mut records = Vec::new();
+    for line in document.lines() {
+        if line.is_empty() || records.len() >= MAX_MOUNTINFO_ROWS {
+            return Err(mountinfo_error("LINUX_MOUNTINFO_DOCUMENT_SHAPE"));
+        }
+        records.push(parse_linux_mountinfo_line(line)?);
+    }
+    if records.is_empty() {
+        return Err(mountinfo_error("LINUX_MOUNTINFO_DOCUMENT_SHAPE"));
+    }
+    Ok(records)
 }
 
 pub fn select_linux_mount_for_target<'a>(
@@ -575,6 +677,501 @@ pub fn admit_measured_windows_host(measured: MeasuredWindowsHost) -> WindowsHost
         filesystem_flags: measured.filesystem_flags,
         volume_serial: measured.volume_serial,
     })
+}
+
+#[cfg(all(
+    target_os = "linux",
+    target_env = "gnu",
+    target_pointer_width = "64",
+    any(target_arch = "x86_64", target_arch = "aarch64")
+))]
+mod linux {
+    use super::{
+        admit_measured_linux_host, classify_linux_sysfs_observation,
+        correlate_linux_host_observation, decode_linux_device_number, linux_deny,
+        parse_linux_mountinfo, select_linux_mount_for_target, AdmittedLinuxHost,
+        LinuxGenerationPublicationVerdict, LinuxHostObservation, LinuxHostProbeError,
+        LinuxHostProbeVerdict, LinuxMountInfo, LinuxStorageKind, LinuxSysfsObservation,
+    };
+    use std::ffi::{c_char, c_int, c_long, c_void, CString};
+    use std::fs::{self, File, Metadata, OpenOptions};
+    use std::io::{self, Read, Write};
+    use std::os::fd::{AsRawFd, FromRawFd, RawFd};
+    use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
+    use std::path::{Component, Path, PathBuf};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    const MAX_GENERATION_BYTES: usize = 16 * 1024 * 1024;
+    const O_WRONLY: c_int = 1;
+    const O_CREAT: c_int = 0o100;
+    const O_EXCL: c_int = 0o200;
+    const O_DIRECTORY: c_int = 0o200000;
+    const O_NOFOLLOW: c_int = 0o400000;
+    const O_CLOEXEC: c_int = 0o2000000;
+    const ENOENT: i32 = 2;
+    const EEXIST: i32 = 17;
+    const RENAME_NOREPLACE: u32 = 1;
+    const STATFS_OUTPUT_BYTES: usize = 256;
+
+    #[repr(C, align(16))]
+    struct LinuxStatFsBuffer {
+        bytes: [u8; STATFS_OUTPUT_BYTES],
+    }
+
+    unsafe extern "C" {
+        fn fstatfs(file_descriptor: c_int, output: *mut c_void) -> c_int;
+        fn openat(
+            directory_descriptor: c_int,
+            path: *const c_char,
+            flags: c_int,
+            mode: u32,
+        ) -> c_int;
+        fn renameat2(
+            old_directory_descriptor: c_int,
+            old_path: *const c_char,
+            new_directory_descriptor: c_int,
+            new_path: *const c_char,
+            flags: u32,
+        ) -> c_int;
+        fn unlinkat(directory_descriptor: c_int, path: *const c_char, flags: c_int) -> c_int;
+    }
+
+    struct AnchoredLinuxDirectory {
+        directory: File,
+        path: PathBuf,
+        device: u64,
+        inode: u64,
+        mount: LinuxMountInfo,
+        admitted: AdmittedLinuxHost,
+    }
+
+    fn publication_deny(code: &'static str) -> LinuxGenerationPublicationVerdict {
+        LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError { code })
+    }
+
+    fn generation_id_valid(generation_id: &str) -> bool {
+        generation_id.len() == 64
+            && generation_id
+                .bytes()
+                .all(|value| value.is_ascii_digit() || (b'a'..=b'f').contains(&value))
+    }
+
+    fn direct_directory_metadata(path: &Path) -> Result<Metadata, ()> {
+        let text = path.to_str().ok_or(())?;
+        if !super::is_canonical_absolute_linux_path(text) {
+            return Err(());
+        }
+        let mut current = PathBuf::from("/");
+        for component in path.components() {
+            match component {
+                Component::RootDir => continue,
+                Component::Normal(value) => current.push(value),
+                _ => return Err(()),
+            }
+            let metadata = fs::symlink_metadata(&current).map_err(|_| ())?;
+            if metadata.file_type().is_symlink() {
+                return Err(());
+            }
+        }
+        let metadata = fs::symlink_metadata(path).map_err(|_| ())?;
+        if !metadata.is_dir() || metadata.file_type().is_symlink() {
+            return Err(());
+        }
+        Ok(metadata)
+    }
+
+    fn read_mountinfo() -> Result<Vec<LinuxMountInfo>, ()> {
+        let input = fs::read("/proc/self/mountinfo").map_err(|_| ())?;
+        parse_linux_mountinfo(&input).map_err(|_| ())
+    }
+
+    fn statfs_magic(directory: &File) -> Result<u64, ()> {
+        let mut output = LinuxStatFsBuffer {
+            bytes: [0; STATFS_OUTPUT_BYTES],
+        };
+        // SAFETY: the supported GNU Linux ABIs place f_type in the first
+        // c_long. The aligned buffer is deliberately larger than statfs on
+        // the admitted x86-64 and AArch64 ABIs, and directory owns a live
+        // descriptor. No assumed Rust representation of the remaining C
+        // structure crosses this boundary.
+        if unsafe {
+            fstatfs(
+                directory.as_raw_fd(),
+                output.bytes.as_mut_ptr().cast::<c_void>(),
+            )
+        } != 0
+        {
+            return Err(());
+        }
+        // SAFETY: the buffer is aligned for c_long and successful fstatfs
+        // initialized at least its first field.
+        let filesystem_type = unsafe { output.bytes.as_ptr().cast::<c_long>().read() };
+        u64::try_from(filesystem_type).map_err(|_| ())
+    }
+
+    fn read_exact_flag(path: &Path) -> Option<bool> {
+        let metadata = fs::symlink_metadata(path).ok()?;
+        if !metadata.is_file() || metadata.file_type().is_symlink() || metadata.len() > 4 {
+            return None;
+        }
+        match fs::read(path).ok()?.as_slice() {
+            b"0\n" | b"0" => Some(false),
+            b"1\n" | b"1" => Some(true),
+            _ => None,
+        }
+    }
+
+    fn removable_flag(device_path: &Path) -> Option<bool> {
+        let mut current = Some(device_path);
+        for _ in 0..32 {
+            let directory = current?;
+            let flag = directory.join("removable");
+            match fs::symlink_metadata(&flag) {
+                Ok(_) => return read_exact_flag(&flag),
+                Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+                Err(_) => return None,
+            }
+            if directory == Path::new("/sys/devices") {
+                return None;
+            }
+            current = directory.parent();
+        }
+        None
+    }
+
+    fn slaves_flag(device_path: &Path) -> Option<bool> {
+        let slaves = device_path.join("slaves");
+        let metadata = fs::symlink_metadata(&slaves).ok()?;
+        if !metadata.is_dir() || metadata.file_type().is_symlink() {
+            return None;
+        }
+        let mut entries = fs::read_dir(slaves).ok()?;
+        match entries.next() {
+            None => Some(false),
+            Some(Ok(_)) => Some(true),
+            Some(Err(_)) => None,
+        }
+    }
+
+    fn classify_sysfs(major: u32, minor: u32) -> (LinuxStorageKind, bool) {
+        let link = PathBuf::from(format!("/sys/dev/block/{major}:{minor}"));
+        let link_metadata = match fs::symlink_metadata(&link) {
+            Ok(value) if value.file_type().is_symlink() => value,
+            _ => return (LinuxStorageKind::Unknown, false),
+        };
+        let _ = link_metadata;
+        let canonical = match fs::canonicalize(link) {
+            Ok(value) => value,
+            Err(_) => return (LinuxStorageKind::Unknown, false),
+        };
+        let canonical_text = match canonical.to_str() {
+            Some(value) => value.to_owned(),
+            None => return (LinuxStorageKind::Unknown, false),
+        };
+        let classification = classify_linux_sysfs_observation(LinuxSysfsObservation {
+            canonical_device_path: canonical_text,
+            removable: removable_flag(&canonical),
+            has_slaves: slaves_flag(&canonical),
+        });
+        (classification.storage_kind, classification.facts_complete)
+    }
+
+    fn open_directory(path: &Path) -> Result<File, ()> {
+        OpenOptions::new()
+            .read(true)
+            .custom_flags(O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+            .open(path)
+            .map_err(|_| ())
+    }
+
+    fn anchor_directory(path: &Path) -> Result<AnchoredLinuxDirectory, LinuxHostProbeVerdict> {
+        let before_metadata = direct_directory_metadata(path)
+            .map_err(|_| linux_deny("LINUX_PATH_INSPECTION_REFUSED"))?;
+        let target = path
+            .to_str()
+            .ok_or_else(|| linux_deny("LINUX_PATH_NOT_UTF8"))?;
+        let mountinfo_before =
+            read_mountinfo().map_err(|_| linux_deny("LINUX_MOUNTINFO_READ_REFUSED"))?;
+        let mount_before = select_linux_mount_for_target(&mountinfo_before, target)
+            .map_err(|_| linux_deny("LINUX_MOUNTINFO_TARGET_REFUSED"))?
+            .clone();
+        let directory =
+            open_directory(path).map_err(|_| linux_deny("LINUX_DIRECTORY_OPEN_REFUSED"))?;
+        let handle_metadata = directory
+            .metadata()
+            .map_err(|_| linux_deny("LINUX_DIRECTORY_STAT_REFUSED"))?;
+        if before_metadata.dev() != handle_metadata.dev()
+            || before_metadata.ino() != handle_metadata.ino()
+        {
+            return Err(linux_deny("LINUX_DIRECTORY_IDENTITY_CHANGED"));
+        }
+        let (major, minor) = decode_linux_device_number(handle_metadata.dev())
+            .ok_or_else(|| linux_deny("LINUX_DEVICE_IDENTITY_UNAVAILABLE"))?;
+        let magic = statfs_magic(&directory).map_err(|_| linux_deny("LINUX_STATFS_REFUSED"))?;
+        let (storage_kind, sysfs_chain_complete) = classify_sysfs(major, minor);
+        let mountinfo_after =
+            read_mountinfo().map_err(|_| linux_deny("LINUX_MOUNTINFO_READ_REFUSED"))?;
+        let mount_after = select_linux_mount_for_target(&mountinfo_after, target)
+            .map_err(|_| linux_deny("LINUX_MOUNTINFO_TARGET_REFUSED"))?
+            .clone();
+        let after_metadata = direct_directory_metadata(path)
+            .map_err(|_| linux_deny("LINUX_PATH_RECHECK_REFUSED"))?;
+        if after_metadata.dev() != handle_metadata.dev()
+            || after_metadata.ino() != handle_metadata.ino()
+        {
+            return Err(linux_deny("LINUX_DIRECTORY_IDENTITY_CHANGED"));
+        }
+        let measured = correlate_linux_host_observation(LinuxHostObservation {
+            target_is_absolute: true,
+            target_is_direct_directory: true,
+            symbolic_ancestor_present: false,
+            mount_before: mount_before.clone(),
+            mount_after,
+            statfs_magic: magic,
+            stat_device_major: major,
+            stat_device_minor: minor,
+            storage_kind,
+            sysfs_chain_complete,
+        });
+        match admit_measured_linux_host(measured) {
+            LinuxHostProbeVerdict::Candidate(admitted) => Ok(AnchoredLinuxDirectory {
+                directory,
+                path: path.to_path_buf(),
+                device: handle_metadata.dev(),
+                inode: handle_metadata.ino(),
+                mount: mount_before,
+                admitted,
+            }),
+            denied @ LinuxHostProbeVerdict::Deny(_) => Err(denied),
+        }
+    }
+
+    fn c_name(value: &str) -> Result<CString, ()> {
+        if value.is_empty() || value.len() > 255 || value.contains('/') {
+            return Err(());
+        }
+        CString::new(value).map_err(|_| ())
+    }
+
+    fn openat_file(directory: RawFd, name: &CString, flags: c_int, mode: u32) -> io::Result<File> {
+        // SAFETY: name is NUL-terminated, directory is a live retained
+        // descriptor, and ownership of a successful descriptor moves to File.
+        let descriptor = unsafe { openat(directory, name.as_ptr(), flags, mode) };
+        if descriptor < 0 {
+            return Err(io::Error::last_os_error());
+        }
+        // SAFETY: descriptor is newly returned and uniquely owned here.
+        Ok(unsafe { File::from_raw_fd(descriptor) })
+    }
+
+    fn unlink_name(directory: RawFd, name: &CString) -> bool {
+        // SAFETY: name and directory descriptor remain valid for the call.
+        (unsafe { unlinkat(directory, name.as_ptr(), 0) }) == 0
+    }
+
+    fn read_exact_at(directory: RawFd, name: &CString, expected: &[u8]) -> Result<bool, ()> {
+        let mut file = openat_file(directory, name, O_NOFOLLOW | O_CLOEXEC, 0).map_err(|_| ())?;
+        let before = file.metadata().map_err(|_| ())?;
+        if !before.is_file() || before.nlink() != 1 || before.len() != expected.len() as u64 {
+            return Ok(false);
+        }
+        let mut observed = Vec::with_capacity(expected.len());
+        file.read_to_end(&mut observed).map_err(|_| ())?;
+        let after = file.metadata().map_err(|_| ())?;
+        Ok(before.dev() == after.dev()
+            && before.ino() == after.ino()
+            && before.len() == after.len()
+            && before.nlink() == after.nlink()
+            && observed == expected)
+    }
+
+    fn anchor_unchanged(anchor: &AnchoredLinuxDirectory) -> bool {
+        let metadata = match direct_directory_metadata(&anchor.path) {
+            Ok(value) => value,
+            Err(()) => return false,
+        };
+        if metadata.dev() != anchor.device || metadata.ino() != anchor.inode {
+            return false;
+        }
+        let target = match anchor.path.to_str() {
+            Some(value) => value,
+            None => return false,
+        };
+        let records = match read_mountinfo() {
+            Ok(value) => value,
+            Err(()) => return false,
+        };
+        matches!(
+            select_linux_mount_for_target(&records, target),
+            Ok(observed) if observed == &anchor.mount
+        ) && anchor.admitted.device_major == anchor.mount.device_major
+            && anchor.admitted.device_minor == anchor.mount.device_minor
+            && anchor.admitted.mount_id == anchor.mount.mount_id
+    }
+
+    pub fn probe(path: &Path) -> LinuxHostProbeVerdict {
+        match anchor_directory(path) {
+            Ok(anchor) if anchor_unchanged(&anchor) => {
+                LinuxHostProbeVerdict::Candidate(anchor.admitted)
+            }
+            Ok(_) => linux_deny("LINUX_HOST_RECHECK_REFUSED"),
+            Err(verdict) => verdict,
+        }
+    }
+
+    fn publish_generation_observed<F>(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        mut observe: F,
+    ) -> LinuxGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
+        if !generation_id_valid(generation_id)
+            || bytes.is_empty()
+            || bytes.len() > MAX_GENERATION_BYTES
+        {
+            return publication_deny("LINUX_PUBLICATION_INPUT_REFUSED");
+        }
+        let anchor = match anchor_directory(directory) {
+            Ok(value) => value,
+            Err(_) => return publication_deny("LINUX_PUBLICATION_HOST_NOT_CANDIDATE"),
+        };
+        let descriptor = anchor.directory.as_raw_fd();
+        let final_name = match c_name(&format!("registry-generation-{generation_id}.json")) {
+            Ok(value) => value,
+            Err(()) => return publication_deny("LINUX_PUBLICATION_FINAL_NAME_REFUSED"),
+        };
+        match openat_file(descriptor, &final_name, O_NOFOLLOW | O_CLOEXEC, 0) {
+            Ok(_) => {
+                return match read_exact_at(descriptor, &final_name, bytes) {
+                    Ok(true)
+                        if anchor.directory.sync_all().is_ok() && anchor_unchanged(&anchor) =>
+                    {
+                        LinuxGenerationPublicationVerdict::Candidate {
+                            byte_length: bytes.len(),
+                        }
+                    }
+                    _ => publication_deny("LINUX_PUBLICATION_COLLISION"),
+                };
+            }
+            Err(error) if error.raw_os_error() == Some(ENOENT) => {}
+            Err(_) => return publication_deny("LINUX_PUBLICATION_EXISTING_OPEN_REFUSED"),
+        }
+        let nonce = match SystemTime::now().duration_since(UNIX_EPOCH) {
+            Ok(value) => value.as_nanos(),
+            Err(_) => return publication_deny("LINUX_PUBLICATION_NONCE_UNAVAILABLE"),
+        };
+        let stage_name = match c_name(&format!(
+            ".registry-generation-{generation_id}.{}-{nonce}.tmp",
+            std::process::id()
+        )) {
+            Ok(value) => value,
+            Err(()) => return publication_deny("LINUX_PUBLICATION_STAGE_NAME_REFUSED"),
+        };
+        let mut stage = match openat_file(
+            descriptor,
+            &stage_name,
+            O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC,
+            0o600,
+        ) {
+            Ok(value) => value,
+            Err(_) => return publication_deny("LINUX_PUBLICATION_STAGE_OPEN_REFUSED"),
+        };
+        observe("stage-opened");
+        if stage.write_all(bytes).is_err() {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_PUBLICATION_STAGE_WRITE_REFUSED");
+        }
+        observe("bytes-written");
+        if stage.flush().is_err() || stage.sync_all().is_err() {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_PUBLICATION_FILE_BARRIER_REFUSED");
+        }
+        let stage_metadata = match stage.metadata() {
+            Ok(value) => value,
+            Err(_) => {
+                drop(stage);
+                let _ = unlink_name(descriptor, &stage_name);
+                return publication_deny("LINUX_PUBLICATION_STAGE_STAT_REFUSED");
+            }
+        };
+        if !stage_metadata.is_file()
+            || stage_metadata.dev() != anchor.device
+            || stage_metadata.nlink() != 1
+            || stage_metadata.len() != bytes.len() as u64
+        {
+            drop(stage);
+            let _ = unlink_name(descriptor, &stage_name);
+            return publication_deny("LINUX_PUBLICATION_STAGE_IDENTITY_REFUSED");
+        }
+        observe("file-flushed");
+        drop(stage);
+        observe("stage-closed");
+        // SAFETY: both names are NUL-terminated and the atomic rename remains
+        // relative to the same retained directory descriptor. RENAME_NOREPLACE
+        // refuses rather than replacing an existing destination.
+        let renamed = unsafe {
+            renameat2(
+                descriptor,
+                stage_name.as_ptr(),
+                descriptor,
+                final_name.as_ptr(),
+                RENAME_NOREPLACE,
+            )
+        };
+        if renamed != 0 {
+            let code = io::Error::last_os_error().raw_os_error();
+            let _ = unlink_name(descriptor, &stage_name);
+            return match code {
+                Some(EEXIST)
+                    if matches!(read_exact_at(descriptor, &final_name, bytes), Ok(true)) =>
+                {
+                    publication_deny("LINUX_PUBLICATION_RACE_COLLISION")
+                }
+                _ => publication_deny("LINUX_PUBLICATION_RENAME_REFUSED"),
+            };
+        }
+        observe("published");
+        if !matches!(read_exact_at(descriptor, &final_name, bytes), Ok(true)) {
+            return publication_deny("LINUX_PUBLICATION_REOPEN_REFUSED");
+        }
+        observe("reopened-verified");
+        if anchor.directory.sync_all().is_err() {
+            return publication_deny("LINUX_PUBLICATION_DIRECTORY_BARRIER_REFUSED");
+        }
+        observe("directory-flushed");
+        if !anchor_unchanged(&anchor) {
+            return publication_deny("LINUX_PUBLICATION_HOST_RECHECK_REFUSED");
+        }
+        LinuxGenerationPublicationVerdict::Candidate {
+            byte_length: bytes.len(),
+        }
+    }
+
+    pub fn publish_generation(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+    ) -> LinuxGenerationPublicationVerdict {
+        publish_generation_observed(directory, generation_id, bytes, |_| {})
+    }
+
+    #[cfg(feature = "fault-injection")]
+    pub fn publish_generation_fault_candidate<F>(
+        directory: &Path,
+        generation_id: &str,
+        bytes: &[u8],
+        observe: F,
+    ) -> LinuxGenerationPublicationVerdict
+    where
+        F: FnMut(&'static str),
+    {
+        publish_generation_observed(directory, generation_id, bytes, observe)
+    }
 }
 
 #[cfg(windows)]
@@ -1132,6 +1729,115 @@ mod windows {
         F: FnMut(&'static str),
     {
         publish_generation_observed(directory, generation_id, bytes, observe)
+    }
+}
+
+pub fn probe_linux_host(path: &Path) -> LinuxHostProbeVerdict {
+    #[cfg(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    ))]
+    {
+        linux::probe(path)
+    }
+    #[cfg(not(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    )))]
+    {
+        let _ = path;
+        #[cfg(target_os = "linux")]
+        {
+            linux_deny("LINUX_ABI_UNSUPPORTED")
+        }
+        #[cfg(not(target_os = "linux"))]
+        {
+            linux_deny("LINUX_PLATFORM_UNAVAILABLE")
+        }
+    }
+}
+
+pub fn publish_linux_generation_candidate(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+) -> LinuxGenerationPublicationVerdict {
+    #[cfg(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    ))]
+    {
+        linux::publish_generation(directory, generation_id, bytes)
+    }
+    #[cfg(not(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    )))]
+    {
+        let _ = (directory, generation_id, bytes);
+        #[cfg(target_os = "linux")]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_ABI_UNSUPPORTED",
+            })
+        }
+        #[cfg(not(target_os = "linux"))]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_PLATFORM_UNAVAILABLE",
+            })
+        }
+    }
+}
+
+#[cfg(feature = "fault-injection")]
+#[doc(hidden)]
+pub fn publish_linux_generation_fault_candidate<F>(
+    directory: &Path,
+    generation_id: &str,
+    bytes: &[u8],
+    observe: F,
+) -> LinuxGenerationPublicationVerdict
+where
+    F: FnMut(&'static str),
+{
+    #[cfg(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    ))]
+    {
+        linux::publish_generation_fault_candidate(directory, generation_id, bytes, observe)
+    }
+    #[cfg(not(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    )))]
+    {
+        let _ = (directory, generation_id, bytes, observe);
+        #[cfg(target_os = "linux")]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_ABI_UNSUPPORTED",
+            })
+        }
+        #[cfg(not(target_os = "linux"))]
+        {
+            LinuxGenerationPublicationVerdict::Deny(LinuxHostProbeError {
+                code: "LINUX_PLATFORM_UNAVAILABLE",
+            })
+        }
     }
 }
 

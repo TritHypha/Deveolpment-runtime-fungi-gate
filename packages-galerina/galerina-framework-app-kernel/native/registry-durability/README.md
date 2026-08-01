@@ -68,17 +68,25 @@ reclaimer rather than risk deleting a raced object.
 The non-Windows build is total and always returns
 `WINDOWS_PLATFORM_UNAVAILABLE`.
 
-The Linux chapter currently stops before syscalls. A platform-neutral measured
-facts model admits only a complete, stable, read-write direct-local block
-device on exact lowercase ext4, XFS or Btrfs and refuses Device Mapper, RAID,
-network, overlay, removable, virtual and unknown storage. A bounded
-`/proc/self/mountinfo` row parser and deepest component-boundary selector reject
-malformed escapes, controls, non-canonical paths, ambiguous access/separators,
-surplus fields, oversized rows and duplicate deepest mounts. Exact filesystem
-magic and device identities must also correlate across before/after records.
-Pure evidence is 6/6 on Windows; no Linux host fact or durability result is
-inferred. Live `statfs`, sysfs measurement and retained-handle operations await the Ubuntu
-Desktop handover.
+The Linux candidate is now implemented but unexecuted. A platform-neutral
+measured-facts model admits only a complete, stable, read-write direct-local
+block device on exact lowercase ext4, XFS or Btrfs and refuses Device Mapper,
+RAID, network, overlay, removable, virtual and unknown storage. Bounded complete
+`/proc/self/mountinfo` parsing, deepest component-boundary selection, Linux
+device-number decoding and a closed sysfs-classification model reject malformed,
+surplus, symbolic, incomplete or changing facts. Pure evidence is 10/10 on
+Windows; this is not a live Linux claim.
+
+On a GNU Linux x86-64 or AArch64 build, the candidate opens and retains the direct directory,
+correlates its stable device/inode identity with before/after mountinfo,
+descriptor-anchored `fstatfs` and bounded `/sys/dev/block` facts, and then
+applies the same pure admission gate. Publication remains relative to that
+descriptor: exclusive `0600` staging, checked exact single-link identity, file
+barrier, atomic no-replace `renameat2`, exact single-link re-open,
+directory barrier and a final path/mount identity recheck. The Linux-only live
+and process-termination tests are ignored by default and require the explicitly
+named bare-host evidence directory. They have not yet executed; candidate
+source is not evidence.
 
 ## Verification
 
@@ -98,6 +106,13 @@ when the host permits creation of a disposable directory link, the live
 directory `FlushFileBuffers` barrier, publication idempotence, an
 existing-different collision and a hard-link collision. Current evidence is
 7/7.
+
+The initial Ubuntu Desktop run proves that the optimized static-link profile
+and the earlier six-test pure Linux matrix compile and pass on one Ubuntu 24.04
+x86-64 ext4 host. It does not prove the new Linux live source. The second
+handover must compile and run the 10-test pure matrix, three ignored live tests
+and ignored seven-boundary process-termination matrix. Missing, refused or
+skipped Linux evidence remains unverified.
 
 The non-default `fault-injection` feature builds a disposable worker and an
 observer seam that cannot mint a receipt. The integration test starts a fresh
@@ -137,8 +152,10 @@ Process termination is stronger evidence than deterministic simulation but is
 not kernel-crash, reboot or physical power-loss evidence. It also cannot prove
 that controller caches honoured the requested barriers.
 
-No shell, PowerShell process, spawned CLI or writable sidecar is used by this
-crate.
+No shell, PowerShell process, spawned CLI or writable sidecar is used by the
+production candidate. The non-default fault worker is test evidence only,
+cannot mint a receipt, is absent from default builds and is compile-refused in
+optimized builds.
 
 ## Primary platform references
 
