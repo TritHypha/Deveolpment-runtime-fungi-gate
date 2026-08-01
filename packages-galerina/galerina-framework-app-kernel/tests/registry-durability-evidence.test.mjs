@@ -166,7 +166,7 @@ describe("registry durability evidence", () => {
         boundaryIds: ["FILE_BARRIER", "FILE_BARRIER"],
       }),
       evidence("PROCESS_TERMINATION", {
-        operatingSystem: "C:\\Users\\owner",
+      operatingSystem: "C:\\Users\\owner", // path-leak-audit:allow -- hostile fixture
       }),
       evidence("PROCESS_TERMINATION", { verdict: 1 }),
       evidence("PROCESS_TERMINATION", { authorityReleased: true }),

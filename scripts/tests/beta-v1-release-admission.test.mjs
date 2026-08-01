@@ -232,7 +232,7 @@ test("dirty policy checkout, hard links, and local path leakage deny", () => {
     (f) => {
       const path = join(f.evidenceDirectory, "functional-ubuntu.json");
       const value = JSON.parse(readFileSync(path));
-      value.evidence[0].details = { cwd: "C:\\Users\\owner\\repo" };
+      value.evidence[0].details = { cwd: "C:\\Users\\owner\\repo" }; // path-leak-audit:allow -- hostile fixture
       writeFileSync(path, canonical(value));
     },
   ]) {

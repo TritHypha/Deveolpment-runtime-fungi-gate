@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 26 |
-| Internal edges | 38 |
+| Files | 30 |
+| Internal edges | 45 |
 | External dependencies | 2 |
 | ├─ Node core | 0 |
 | ├─ Workspace (@galerina/*) | 2 |
@@ -47,6 +47,8 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/registry-activation-terminal.fungi`
 - `src/self-hosted/registry-durability-admission.fungi`
 - `src/self-hosted/registry-durability-artifact.fungi`
+- `src/self-hosted/registry-durability-evidence.fungi`
+- `src/self-hosted/registry-durability-production-admission.fungi`
 - `src/self-hosted/registry-index.fungi`
 - `src/self-hosted/route-defaults.fungi`
 - `src/self-hosted/secret-gate.fungi`

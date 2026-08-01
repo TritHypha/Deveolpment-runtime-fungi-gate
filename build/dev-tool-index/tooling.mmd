@@ -752,6 +752,9 @@ flowchart LR
   T_verify_artifacts_mjs --> C_diagnostics
   T_verify_artifacts_mjs --> C_brand
   T_verify_artifacts_mjs --> C_graph_index
+  T_verify_platform_durability_evidence_mjs["verify-platform-durability-evidence.mjs"]
+  T_verify_platform_durability_evidence_mjs --> C_signing_fusion
+  T_verify_platform_durability_evidence_mjs --> C_diagnostics
   T_wat_invalid_triage_mjs["wat-invalid-triage.mjs"]
   T_wat_invalid_triage_mjs --> C_provenance
   T_wat_invalid_triage_mjs --> C_teaching_corpus

@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8770,
-    "devTools": 136,
+    "devTools": 138,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -554,7 +554,7 @@
       "tests": 193,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 26,
+      "files": 30,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"
@@ -2528,6 +2528,14 @@
       ]
     },
     {
+      "name": "beta-v1-release-admission.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": []
+    },
+    {
       "name": "brand-audit.mjs",
       "category": "util",
       "purpose": "binary-safe residual-brand + @-scope audit (dev tool)",
@@ -2874,6 +2882,17 @@
       ]
     },
     {
+      "name": "verify-platform-durability-evidence.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "diagnostics"
+      ]
+    },
+    {
       "name": "wat-invalid-triage.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -2998,7 +3017,8 @@
       "platform-smoke.mjs",
       "rebrand-tmf-to-spore.mjs",
       "repoint-kb-refs.mjs",
-      "verify-artifacts.mjs"
+      "verify-artifacts.mjs",
+      "verify-platform-durability-evidence.mjs"
     ],
     "package-border": [
       "audit-allowlist-sensitive.mjs",
@@ -3222,7 +3242,8 @@
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
       "rebuild-fusable-packages.mjs",
-      "verify-artifacts.mjs"
+      "verify-artifacts.mjs",
+      "verify-platform-durability-evidence.mjs"
     ],
     "doc-drift": [
       "audit-artifact-drift.mjs",
