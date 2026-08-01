@@ -63,9 +63,8 @@
   4,603 scanned files at 8,418 nodes and 8,727 edges. A fresh moderate MCP
   request again returned its frozen 06:07 build at `f2820da4` rather than the
   current branch, supplied no expected-node count and is rejected as stale.
-  SLIDE's last closed full index was exact at 3,669/3,669 nodes and commit
-  `5d90fba`; it will refresh again after the schedule chapter closes. No
-  Galerina conclusion uses the stale MCP graph.
+  SLIDE's closed full index is exact at 3,721/3,721 nodes and commit `59c31fc`.
+  No Galerina conclusion uses the stale MCP graph.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
