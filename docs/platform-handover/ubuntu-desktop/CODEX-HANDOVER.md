@@ -42,7 +42,7 @@ The SLIDE observer chapter must:
 - produce one closed local-self-observation JSON object;
 - keep `authenticated: false`, `executionEvidence: UNVERIFIED`,
   `authorityReleased: false` and `productionAuthorizing: false`;
-- pass the 15-file V2 contract check, observer/CLI focused tests and complete
+- pass the 16-file V2 contract check, observer/CLI focused tests and complete
   independent SLIDE suite; and
 - remain bootstrap portability evidence, never native execution evidence.
 
