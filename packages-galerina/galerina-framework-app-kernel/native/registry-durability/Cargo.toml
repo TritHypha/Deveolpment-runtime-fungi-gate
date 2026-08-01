@@ -11,6 +11,7 @@ crate-type = ["rlib", "cdylib"]
 [features]
 fault-injection = []
 static-profile-proof = []
+recovery-evidence = ["fault-injection"]
 
 [[bin]]
 name = "registry-durability-fault-worker"
@@ -21,5 +22,15 @@ required-features = ["fault-injection"]
 name = "registry-durability-static-profile"
 path = "src/bin/registry-durability-static-profile.rs"
 required-features = ["static-profile-proof"]
+
+[[bin]]
+name = "registry-durability-recovery-worker"
+path = "src/bin/registry-durability-recovery-worker.rs"
+required-features = ["recovery-evidence"]
+
+[[bin]]
+name = "registry-durability-recovery-verifier"
+path = "src/bin/registry-durability-recovery-verifier.rs"
+required-features = ["recovery-evidence"]
 
 [dependencies]

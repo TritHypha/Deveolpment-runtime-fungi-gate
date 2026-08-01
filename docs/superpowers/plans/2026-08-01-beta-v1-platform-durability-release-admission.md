@@ -269,19 +269,19 @@ git commit -m "feat(platform): verify Ubuntu durability evidence"
 - Produces: exact macOS denial codes and `MACOS_PLATFORM_UNAVAILABLE` off macOS.
 - Narrows first macOS profile to local APFS on Arm64 with successful `F_FULLFSYNC`.
 
-- [ ] **Step 1: Write failing pure macOS fact tests**
+- [x] **Step 1: Write failing pure macOS fact tests**
 
 Model exact platform, architecture, APFS, local/non-removable/non-network,
 single-link retained identity and full-flush availability. Refuse HFS+, FAT,
 SMB/NFS, disk images, removable, virtual, unknown and missing facts.
 
-- [ ] **Step 2: Verify RED on the current host**
+- [x] **Step 2: Verify RED on the current host**
 
 ```powershell
 cargo test --locked --test macos_host_admission
 ```
 
-- [ ] **Step 3: Implement the zero-dependency macOS profile**
+- [x] **Step 3: Implement the zero-dependency macOS profile**
 
 Use compile-time `cfg` and direct system ABI declarations. The operation owns
 exclusive staging, checked complete writes, `F_FULLFSYNC`, exclusive
@@ -289,14 +289,14 @@ publication, exact reopen, single-link identity, directory barrier and final
 identity recheck. If `F_FULLFSYNC` is absent, rejected or unsupported, return a
 closed denial; ordinary `fsync` is not a production fallback.
 
-- [ ] **Step 4: Extend the common process-termination boundaries**
+- [x] **Step 4: Extend the common process-termination boundaries**
 
 The macOS and Windows suites must use the same seven native boundary IDs and
 old-or-new exact oracle as Linux. Windows additionally tests Windows 11
 identity admission without inferring a live Windows 11 result and keeps ReFS
 denied until a separate live profile exists.
 
-- [ ] **Step 5: Run current-host complete native checks**
+- [x] **Step 5: Run current-host complete native checks**
 
 ```powershell
 cargo fmt --check
@@ -306,7 +306,7 @@ cargo test --locked --all-features
 cargo build --locked --release
 ```
 
-- [ ] **Step 6: Commit Task 4**
+- [x] **Step 6: Commit Task 4**
 
 ```powershell
 git add -- packages-galerina/galerina-framework-app-kernel/native/registry-durability/src/lib.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/macos_host_admission.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/macos_live_host.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/macos_process_kill.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/windows_host_probe.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/windows_process_kill.rs
@@ -331,19 +331,19 @@ git commit -m "feat(durability): add macOS and complete Windows profiles"
 - The worker can arm and stop; it cannot reboot, shut down or cut power.
 - The verifier is read-only except for writing one new result file by exclusive creation after verification.
 
-- [ ] **Step 1: Write failing protocol lifecycle tests**
+- [x] **Step 1: Write failing protocol lifecycle tests**
 
 Prove arm record canonicality, exact target/device identity, one boundary only,
 exclusive result creation, stale/duplicate replay refusal, old-or-new oracle,
 mixed-state refusal and inability to target a repository/home/system volume.
 
-- [ ] **Step 2: Run the protocol test and verify RED**
+- [x] **Step 2: Run the protocol test and verify RED**
 
 ```powershell
 cargo test --locked --all-features --test recovery_protocol
 ```
 
-- [ ] **Step 3: Implement the bounded worker and independent verifier**
+- [x] **Step 3: Implement the bounded worker and independent verifier**
 
 The worker receives only explicit arguments, validates the sacrificial marker
 created by the runbook, writes public experiment metadata, reaches one boundary
@@ -351,7 +351,7 @@ and exits with `ARMED_FOR_OPERATOR_ACTION`. It contains no reboot or power API.
 The verifier independently opens the prior, candidate, checkpoint and arm
 records, re-derives exact digests and emits `PRIOR`, `CANDIDATE` or `REFUSED`.
 
-- [ ] **Step 4: Write the operator runbook**
+- [x] **Step 4: Write the operator runbook**
 
 Require a clean disposable checkout, two verified backups, a dedicated
 sacrificial data volume, exact device/filesystem/controller recording and an
@@ -360,7 +360,7 @@ Recovery starts from a fresh boot and runs only the read-only verifier. Never
 suggest performing sudden power loss on the owner's primary Windows or Ubuntu
 development installation.
 
-- [ ] **Step 5: Verify and commit Task 5**
+- [x] **Step 5: Verify and commit Task 5**
 
 ```powershell
 cargo fmt --check
