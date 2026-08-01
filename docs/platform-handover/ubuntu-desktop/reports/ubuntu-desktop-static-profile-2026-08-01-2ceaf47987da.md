@@ -66,18 +66,15 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 
 ## Refusals and anomalies
 
-Two earlier attempts stopped fail-closed and remain in the repository evidence
-history:
+Two earlier attempts stopped fail-closed and remain disclosed in this report:
 
 1. At commit `a7a3dc0272ae252d79cfa783a42e700e51f540e7`,
    `rustc --version` and `cargo --version` each exited 127 with `command not
-   found`. No verifier command ran. The exact attempt is recorded in
-   `ubuntu-desktop-static-profile-2026-08-01-a7a3dc0272ae.md`.
+   found`. No verifier command ran.
 2. At commit `8e4c5c2661befadee8d0b6cc14cc0d7ea0bb232d`, Rust/Cargo
    1.97.1 accepted the version-4 lockfile, but the verifier exited 1 because
    the nested Cargo build exited 101 with "error: linker `cc` not found" and
-   `No such file or directory (os error 2)`. The attempt is recorded in
-   `ubuntu-desktop-static-profile-2026-08-01-8e4c5c2661be.md`.
+   `No such file or directory (os error 2)`.
 
 The owner then supplied the Ubuntu native build prerequisites. No dependency
 was installed by Codex and neither failed gate was bypassed.
