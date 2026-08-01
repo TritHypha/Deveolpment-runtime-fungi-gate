@@ -1,5 +1,25 @@
 # TODO
 
+### `.fungi` verified execution-object architecture selected - 2026-08-01
+
+- **Owner-approved R&D:** KB RD-0656 selects a Galerina-owned Verified
+  Execution Object (`VEO`) for the final `.fungi`/SLIDE runtime. A path,
+  package name, cache hit or caller record can request work but cannot grant
+  execution authority.
+- **Final seam:** one admission transaction owns the exact bytes and binds
+  complete action identity, dependencies, target/ABI/features, capabilities,
+  effects, policy/revocation epochs, crypto suites and provenance. Only the
+  runtime can mint the opaque admitted type; execution consumes that object
+  directly under W^X and emits a non-authorizing receipt.
+- **Bridge honesty:** the statically linked Node host remains a beta-v1
+  durability bridge. It must remain replaceable and must not define the final
+  `.fungi` public loader contract.
+- **Still to build:** VEO schema and type-state, canonical complete-input
+  encoder, independent machine-object verifier, anonymous W^X mapper,
+  capability-world linker, execution receipts, adversarial tests and the full
+  cross-platform matrix. Until those exist, VEO is selected architecture,
+  not production evidence.
+
 ### SLIDE DCTP reference implemented and negative benchmark retained - 2026-08-01
 
 - **Independent implementation:** SLIDE commits through `ab98c5b` add the

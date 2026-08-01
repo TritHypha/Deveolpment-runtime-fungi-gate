@@ -1,0 +1,39 @@
+diff --git a/node.gyp b/node.gyp
+--- a/node.gyp
++++ b/node.gyp
+@@ -104,6 +104,7 @@
+       'src/json_utils.cc',
+       'src/js_udp_wrap.cc',
+       'src/module_wrap.cc',
++      'src/galerina_registry_binding.cc',
+       'src/node.cc',
+       'src/node_api.cc',
+       'src/node_binding.cc',
+@@ -696,6 +697,8 @@
+         ['OS=="win"', {
+           'libraries': [
+             'Dbghelp.lib',
++            'deps/galerina_registry/galerina_registry_durability_native.lib',
++            'userenv.lib',
+             'winmm.lib',
+             'Ws2_32.lib',
+           ],
+diff --git a/lib/internal/bootstrap/realm.js b/lib/internal/bootstrap/realm.js
+--- a/lib/internal/bootstrap/realm.js
++++ b/lib/internal/bootstrap/realm.js
+@@ -169,4 +169,15 @@
+       mod = bindingObj[module] = getLinkedBinding(module);
+     return mod;
+   };
++
++  const getGalerinaLinkedBinding = process._linkedBinding;
++  ObjectDefineProperty(process, '_galerinaLinkedBinding', {
++    __proto__: null,
++    value: function _galerinaLinkedBinding() {
++      return getGalerinaLinkedBinding('galerina_registry_durability');
++    },
++    configurable: false,
++    enumerable: false,
++    writable: false,
++  });
+ }

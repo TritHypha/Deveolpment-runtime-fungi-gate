@@ -1,0 +1,13 @@
+{
+  "schema": "galerina.registry.static-host-source-manifest.v1",
+  "nodeVersion": "24.18.0",
+  "nodeSourceArchive": "node-v24.18.0.tar.gz",
+  "nodeSourceSha256": "c8348067b41d8739ec69fd4da615cd8995ad6a76eb53e84a7fa7291c8a477eb7",
+  "bindingName": "galerina_registry_durability",
+  "bindingSourceSha256": "4ec010ca2f421eb5d920d78256a08013daaaf553fe6a7aa94237a47a17fa7518",
+  "patchSha256": "47d618dbcf1b88cc9977a8ee83c66eea557dbf62d824ed644249e58c9e263894",
+  "rustAbiVersion": 1,
+  "externalAdapterLoaderPresent": false,
+  "childProcessPresent": false,
+  "productionAuthorizing": false
+}

@@ -20,6 +20,24 @@ the exact host-refusal checks and observed native operation passed. It does
 **not** prove restart or physical power-loss durability, and it cannot mint a
 Galerina production durability receipt.
 
+The beta static-host bridge now also has a fixed C ABI. It accepts an absolute
+directory, an exact lowercase generation ID and 1 byte-16 MiB of owned bytes;
+Rust independently re-derives the domain-separated ID before dispatching to
+the compiled platform implementation. Null pointers, invalid UTF-8, relative
+paths, length mismatch, identity mismatch, panics and unsupported platforms
+produce a closed denial record. The ABI always reports
+`production_authorizing = 0`.
+
+The pinned C++ linked-binding source is separately hash-bound and source
+audited. It has no `.node` loader, dynamic library lookup or child process,
+refuses shared buffers, copies and then clears the bounded input, and retains
+the exact successful receipt as per-isolate native object identity. The
+identity check is one-shot; copied, proxied, serialized, structurally equal or
+property-branded objects cannot pass. The binding and its exports are frozen.
+This source passes an isolated C++20 compile, but the complete custom Node host
+is not yet built: Node 24 requires the Visual Studio Clang/LLVM components.
+Consequently the bridge remains non-authorizing.
+
 ## Implemented boundary
 
 The Windows probe:
@@ -96,8 +114,19 @@ cargo fmt --check
 cargo test --locked
 cargo test --locked --all-features
 cargo build --locked --release
+cargo audit --file Cargo.lock
+cargo deny check
+grype dir:. --exclude './target/**' --fail-on high
+grype file:target/release/galerina_registry_durability_native.dll --fail-on high
 node ../../../../scripts/verify-registry-static-profile.mjs
 ```
+
+The 2026-08-01 candidate scan used `cargo-audit 0.22.2`, `cargo-deny
+0.20.2` and `grype 0.116.1`. RustSec reported no advisory in the one-package
+locked graph; the explicit Apache-2.0-only deny policy passed advisories,
+bans, licenses and sources; isolated Grype source and release-DLL scans
+reported no vulnerabilities. These are point-in-time scans, not permanent
+claims, and must be rerun for release admission.
 
 The focused test suite covers the pure filesystem/drive matrix, the live local
 Windows temp volume, malformed and unavailable paths, a reparse-ancestor case

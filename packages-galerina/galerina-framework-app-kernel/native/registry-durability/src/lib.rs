@@ -771,6 +771,316 @@ pub fn sha256(input: &[u8]) -> String {
     state.iter().map(|word| format!("{word:08x}")).collect()
 }
 
+pub const MAX_PRODUCTION_GENERATION_BYTES: usize = 16 * 1_048_576;
+const PRODUCTION_GENERATION_ID_CONTEXT: &[u8] = b"galerina.registry.generation.v1\0";
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ValidatedProductionHostRequest {
+    pub directory: String,
+    pub generation_id: String,
+    pub byte_length: usize,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ProductionHostRequestVerdict {
+    Candidate(ValidatedProductionHostRequest),
+    Deny(&'static str),
+}
+
+impl ProductionHostRequestVerdict {
+    pub const fn denial_code(&self) -> Option<&'static str> {
+        match self {
+            Self::Candidate(_) => None,
+            Self::Deny(code) => Some(code),
+        }
+    }
+}
+
+pub fn production_host_generation_id(bytes: &[u8]) -> String {
+    let mut preimage = Vec::with_capacity(
+        PRODUCTION_GENERATION_ID_CONTEXT
+            .len()
+            .saturating_add(bytes.len()),
+    );
+    preimage.extend_from_slice(PRODUCTION_GENERATION_ID_CONTEXT);
+    preimage.extend_from_slice(bytes);
+    sha256(&preimage)
+}
+
+pub fn assess_production_host_request(
+    directory: &str,
+    generation_id: &str,
+    bytes: &[u8],
+) -> ProductionHostRequestVerdict {
+    if directory.contains('\0') {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_DIRECTORY_NUL");
+    }
+    if !Path::new(directory).is_absolute() {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_DIRECTORY_NOT_ABSOLUTE");
+    }
+    if generation_id.len() != 64
+        || !generation_id
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_GENERATION_ID_MALFORMED");
+    }
+    if bytes.is_empty() {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_GENERATION_EMPTY");
+    }
+    if bytes.len() > MAX_PRODUCTION_GENERATION_BYTES {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_GENERATION_TOO_LARGE");
+    }
+    if production_host_generation_id(bytes) != generation_id {
+        return ProductionHostRequestVerdict::Deny("PRODUCTION_HOST_GENERATION_ID_MISMATCH");
+    }
+    ProductionHostRequestVerdict::Candidate(ValidatedProductionHostRequest {
+        directory: directory.to_owned(),
+        generation_id: generation_id.to_owned(),
+        byte_length: bytes.len(),
+    })
+}
+
+pub const PRODUCTION_HOST_ABI_VERSION: u32 = 1;
+const MAX_PRODUCTION_DIRECTORY_BYTES: usize = 32_768;
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct GalerinaProductionHostResultV1 {
+    pub abi_version: u32,
+    pub verdict: i32,
+    pub os_code: i64,
+    pub byte_length: u64,
+    pub production_authorizing: u8,
+    pub reserved: [u8; 7],
+    pub reason: [u8; 96],
+    pub platform: [u8; 16],
+    pub generation_id: [u8; 64],
+    pub adapter_source_sha256: [u8; 64],
+}
+
+impl Default for GalerinaProductionHostResultV1 {
+    fn default() -> Self {
+        Self {
+            abi_version: PRODUCTION_HOST_ABI_VERSION,
+            verdict: -1,
+            os_code: 0,
+            byte_length: 0,
+            production_authorizing: 0,
+            reserved: [0; 7],
+            reason: [0; 96],
+            platform: [0; 16],
+            generation_id: [0; 64],
+            adapter_source_sha256: [0; 64],
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ProductionHostPublicationEvidence {
+    pub platform: &'static str,
+    pub generation_id: String,
+    pub byte_length: usize,
+    pub adapter_source_sha256: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ProductionHostPublicationVerdict {
+    Candidate(ProductionHostPublicationEvidence),
+    Deny {
+        code: &'static str,
+        os_code: Option<i64>,
+    },
+}
+
+fn production_host_deny(
+    code: &'static str,
+    os_code: Option<i64>,
+) -> ProductionHostPublicationVerdict {
+    ProductionHostPublicationVerdict::Deny { code, os_code }
+}
+
+pub fn publish_production_host_generation(
+    directory: &str,
+    generation_id: &str,
+    bytes: &[u8],
+) -> ProductionHostPublicationVerdict {
+    let validated = match assess_production_host_request(directory, generation_id, bytes) {
+        ProductionHostRequestVerdict::Candidate(value) => value,
+        ProductionHostRequestVerdict::Deny(code) => return production_host_deny(code, None),
+    };
+
+    #[cfg(windows)]
+    let platform_result = match publish_windows_generation_candidate(
+        Path::new(&validated.directory),
+        &validated.generation_id,
+        bytes,
+    ) {
+        WindowsGenerationPublicationVerdict::Candidate { byte_length } => {
+            Ok(("windows", byte_length))
+        }
+        WindowsGenerationPublicationVerdict::Deny(error) => {
+            Err((error.code(), error.os_code().map(i64::from)))
+        }
+    };
+
+    #[cfg(all(
+        target_os = "linux",
+        target_env = "gnu",
+        target_pointer_width = "64",
+        any(target_arch = "x86_64", target_arch = "aarch64")
+    ))]
+    let platform_result = match publish_linux_generation_candidate(
+        Path::new(&validated.directory),
+        &validated.generation_id,
+        bytes,
+    ) {
+        LinuxGenerationPublicationVerdict::Candidate { byte_length } => Ok(("linux", byte_length)),
+        LinuxGenerationPublicationVerdict::Deny(error) => Err((error.code(), None)),
+    };
+
+    #[cfg(target_os = "macos")]
+    let platform_result = match publish_macos_generation_candidate(
+        Path::new(&validated.directory),
+        &validated.generation_id,
+        bytes,
+    ) {
+        MacosGenerationPublicationVerdict::Candidate { byte_length } => Ok(("macos", byte_length)),
+        MacosGenerationPublicationVerdict::Deny(error) => {
+            Err((error.code(), error.os_code().map(i64::from)))
+        }
+    };
+
+    #[cfg(not(any(
+        windows,
+        target_os = "macos",
+        all(
+            target_os = "linux",
+            target_env = "gnu",
+            target_pointer_width = "64",
+            any(target_arch = "x86_64", target_arch = "aarch64")
+        )
+    )))]
+    let platform_result: Result<(&'static str, usize), (&'static str, Option<i64>)> =
+        Err(("PRODUCTION_HOST_PLATFORM_UNAVAILABLE", None));
+
+    match platform_result {
+        Ok((platform, byte_length)) if byte_length == validated.byte_length => {
+            ProductionHostPublicationVerdict::Candidate(ProductionHostPublicationEvidence {
+                platform,
+                generation_id: validated.generation_id,
+                byte_length,
+                adapter_source_sha256: sha256(ADAPTER_SOURCE_BYTES),
+            })
+        }
+        Ok(_) => production_host_deny("PRODUCTION_HOST_BYTE_LENGTH_MISMATCH", None),
+        Err((code, os_code)) => production_host_deny(code, os_code),
+    }
+}
+
+fn copy_result_field<const N: usize>(target: &mut [u8; N], value: &str) {
+    let count = target.len().min(value.len());
+    target[..count].copy_from_slice(&value.as_bytes()[..count]);
+}
+
+fn production_host_ffi_inner(
+    directory: &[u8],
+    generation_id: &[u8],
+    bytes: &[u8],
+) -> GalerinaProductionHostResultV1 {
+    let mut result = GalerinaProductionHostResultV1::default();
+    let directory = match std::str::from_utf8(directory) {
+        Ok(value) => value,
+        Err(_) => {
+            copy_result_field(&mut result.reason, "PRODUCTION_HOST_DIRECTORY_NOT_UTF8");
+            return result;
+        }
+    };
+    let generation_id = match std::str::from_utf8(generation_id) {
+        Ok(value) => value,
+        Err(_) => {
+            copy_result_field(
+                &mut result.reason,
+                "PRODUCTION_HOST_GENERATION_ID_MALFORMED",
+            );
+            return result;
+        }
+    };
+    match publish_production_host_generation(directory, generation_id, bytes) {
+        ProductionHostPublicationVerdict::Candidate(evidence) => {
+            result.verdict = 1;
+            result.byte_length = evidence.byte_length as u64;
+            copy_result_field(&mut result.platform, evidence.platform);
+            copy_result_field(&mut result.generation_id, &evidence.generation_id);
+            copy_result_field(
+                &mut result.adapter_source_sha256,
+                &evidence.adapter_source_sha256,
+            );
+        }
+        ProductionHostPublicationVerdict::Deny { code, os_code } => {
+            result.os_code = os_code.unwrap_or(0);
+            copy_result_field(&mut result.reason, code);
+        }
+    }
+    result
+}
+
+/// Publishes one exact registry generation through the platform adapter linked
+/// into this image.
+///
+/// # Safety
+///
+/// Each non-null input pointer must remain valid for its declared byte length
+/// for the duration of the call. `out_result` must point to writable storage
+/// for one `GalerinaProductionHostResultV1`.
+#[no_mangle]
+pub unsafe extern "C" fn galerina_registry_publish_generation_v1(
+    directory_ptr: *const u8,
+    directory_len: usize,
+    generation_id_ptr: *const u8,
+    generation_id_len: usize,
+    generation_bytes_ptr: *const u8,
+    generation_bytes_len: usize,
+    out_result: *mut GalerinaProductionHostResultV1,
+) -> i32 {
+    if out_result.is_null() {
+        return -2;
+    }
+    let mut early = GalerinaProductionHostResultV1::default();
+    if directory_ptr.is_null()
+        || generation_id_ptr.is_null()
+        || generation_bytes_ptr.is_null()
+        || directory_len == 0
+        || directory_len > MAX_PRODUCTION_DIRECTORY_BYTES
+        || generation_id_len != 64
+        || generation_bytes_len == 0
+        || generation_bytes_len > MAX_PRODUCTION_GENERATION_BYTES
+    {
+        copy_result_field(&mut early.reason, "PRODUCTION_HOST_ABI_INPUT_REFUSED");
+        unsafe { std::ptr::write(out_result, early) };
+        return -1;
+    }
+
+    let directory = unsafe { std::slice::from_raw_parts(directory_ptr, directory_len) };
+    let generation_id = unsafe { std::slice::from_raw_parts(generation_id_ptr, generation_id_len) };
+    let generation_bytes =
+        unsafe { std::slice::from_raw_parts(generation_bytes_ptr, generation_bytes_len) };
+    let outcome = std::panic::catch_unwind(|| {
+        production_host_ffi_inner(directory, generation_id, generation_bytes)
+    });
+    let result = match outcome {
+        Ok(value) => value,
+        Err(_) => {
+            let mut denied = GalerinaProductionHostResultV1::default();
+            copy_result_field(&mut denied.reason, "PRODUCTION_HOST_INTERNAL_REFUSAL");
+            denied
+        }
+    };
+    let status = result.verdict;
+    unsafe { std::ptr::write(out_result, result) };
+    status
+}
+
 pub fn embedded_static_link_profile() -> StaticLinkProfileEvidence {
     StaticLinkProfileEvidence {
         schema: STATIC_LINK_PROFILE_SCHEMA,
