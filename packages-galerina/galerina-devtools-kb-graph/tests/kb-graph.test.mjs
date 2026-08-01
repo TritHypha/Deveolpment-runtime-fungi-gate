@@ -46,10 +46,13 @@ describe("scanner — basic discovery", () => {
     }
   });
 
-  test("word counts are positive", () => {
-    for (const doc of scanResult.docs) {
-      assert.ok(doc.wordCount > 0, `${doc.id} has 0 words`);
-    }
+  test("word counts are positive except the exact provenance-preserved empty artifact", () => {
+    const emptyIds = scanResult.docs
+      .filter(doc => doc.wordCount === 0)
+      .map(doc => doc.id)
+      .sort();
+
+    assert.deepEqual(emptyIds, ["AI-16-empty-experiment-matrix-received-2026-08-01"]);
   });
 });
 
