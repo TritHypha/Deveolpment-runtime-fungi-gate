@@ -1,7 +1,7 @@
 # Independent review prompt: SLIDE deterministic shape memory
 
 > **Review intake completed 2026-07-29.** Three independent replies are stored
-> locally under `../../../Ai-research1/`. Their exact hashes and the adjudicated
+> byte-for-byte in the private KB raw-intake archive. Their exact hashes and the adjudicated
 > adopt/modify/reject record are in
 > `../../../SLIDE/docs/DETERMINISTIC-SHAPE-MEMORY-REVIEW-SYNTHESIS.md`.
 > The prompt remains below as the reusable review instrument; reviewer text is
