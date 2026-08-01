@@ -57,6 +57,16 @@ export interface PersistedRegistryGeneration
   readonly durabilityAdapterDigest: string;
 }
 
+export interface RegistryGenerationForwardProbe {
+  readonly schema: "galerina.registry.generation-forward-probe.v1";
+  readonly generationId: string;
+  readonly delegationSerial: number;
+  readonly operationalKeyId: string;
+  readonly indexIssuedAt: string;
+  readonly authorityReleased: false;
+  readonly productionAuthorizing: false;
+}
+
 export interface RegistryGenerationDurabilityAdapter {
   readonly adapterId: string;
   readonly sourceDigest: string;
@@ -95,6 +105,7 @@ const productionDurabilityAdapters = new WeakSet<object>();
 const verifiedReceipts = new WeakSet<object>();
 const durableReceipts = new WeakSet<object>();
 const productionReceipts = new WeakSet<object>();
+const forwardProbeReceipts = new WeakSet<object>();
 const dynImport = (specifier: string): Promise<unknown> =>
   (Function("s", "return import(s)") as
     (value: string) => Promise<unknown>)(specifier);
@@ -389,6 +400,25 @@ export function isProductionAdmittedRegistryGeneration(
     );
 }
 
+export function isRegistryGenerationForwardProbe(
+  value: unknown,
+  generationId: string,
+): value is RegistryGenerationForwardProbe {
+  return typeof value === "object"
+    && value !== null
+    && forwardProbeReceipts.has(value)
+    && (value as RegistryGenerationForwardProbe).generationId === generationId;
+}
+
+export function consumeRegistryGenerationForwardProbe(
+  value: unknown,
+  generationId: string,
+): value is RegistryGenerationForwardProbe {
+  if (!isRegistryGenerationForwardProbe(value, generationId)) return false;
+  forwardProbeReceipts.delete(value);
+  return true;
+}
+
 export async function loadRegistryGeneration(
   options: RegistryGenerationLoadOptions,
 ): Promise<VerifiedRegistryGeneration> {
@@ -416,6 +446,23 @@ export async function loadRegistryGeneration(
   }
   verifyRegistryGeneration(generation, options.verify);
   return makeReceipt(derivedId, filePath, generation);
+}
+
+export async function verifyRegistryGenerationForwardProbe(
+  options: RegistryGenerationLoadOptions,
+): Promise<RegistryGenerationForwardProbe> {
+  const verified = await loadRegistryGeneration(options);
+  const receipt = Object.freeze({
+    schema: "galerina.registry.generation-forward-probe.v1" as const,
+    generationId: verified.generationId,
+    delegationSerial: verified.delegationSerial,
+    operationalKeyId: verified.operationalKeyId,
+    indexIssuedAt: verified.indexIssuedAt,
+    authorityReleased: false as const,
+    productionAuthorizing: false as const,
+  });
+  forwardProbeReceipts.add(receipt);
+  return receipt;
 }
 
 function randomSuffix(): string {

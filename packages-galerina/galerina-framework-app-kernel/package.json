@@ -11,6 +11,7 @@
       "src/self-hosted/kernel.fungi",
       "src/self-hosted/package-admission.fungi",
       "src/self-hosted/registry-activation-terminal.fungi",
+      "src/self-hosted/registry-generation-forward-probe.fungi",
       "src/self-hosted/registry-durability-admission.fungi",
       "src/self-hosted/registry-durability-artifact.fungi",
       "src/self-hosted/registry-durability-evidence.fungi",

@@ -25,6 +25,7 @@ import {
   buildRegistryIndex,
   buildRegistryAuthorityDelegation,
   createRegistryGenerationHostEvidenceAdapter,
+  verifyRegistryGenerationForwardProbe,
   isAdmittedRegistryRotationCandidate,
   persistRegistryGeneration,
   signRegistryAuthorityDelegation,
@@ -527,6 +528,15 @@ describe("registry rotation root authority", () => {
         flushDirectory: async () => true,
       }),
     });
+    const forwardProbe = await verifyRegistryGenerationForwardProbe({
+      directory,
+      generationId: candidateGeneration.generationId,
+      verify: {
+        expectedDelegationSerial: 2,
+        publicBundle: value.candidate.publicBundle,
+        minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+      },
+    });
     const custodyKeys = new Map([
       [oldKey.publicBundle.keyId, oldKey],
       [value.candidate.publicBundle.keyId, value.candidate],
@@ -597,8 +607,7 @@ describe("registry rotation root authority", () => {
       retirePolicy: { mode: "destroy-private" },
       retireTick: 5,
       verifyCurrentChain: () => true,
-      verifyForwardProbe: (generationId) =>
-        generationId === candidateGeneration.generationId,
+      forwardProbe,
       verifyBackwardSample: () => true,
       candidateGeneration,
     };
@@ -616,6 +625,19 @@ describe("registry rotation root authority", () => {
     assert.match(
       outcome.reasons.join(" "),
       /candidate generation identity is unauthenticated/u,
+    );
+    const copiedProbeOutcome = advanceRegistryRotationState({
+      ...common,
+      forwardProbe: { ...forwardProbe },
+      state,
+      receipt,
+      admittedIndex,
+    });
+    assert.equal(copiedProbeOutcome.decision.authorized, false);
+    assert.equal(copiedProbeOutcome.state, state);
+    assert.match(
+      copiedProbeOutcome.reasons.join(" "),
+      /generation-bound forward probe receipt is unavailable/u,
     );
     } finally {
       await rm(directory, { recursive: true, force: true });

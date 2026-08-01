@@ -25,12 +25,15 @@ import {
   createRegistryGenerationHostEvidenceAdapter,
   isPersistedRegistryGeneration,
   isProductionAdmittedRegistryGeneration,
+  isRegistryGenerationForwardProbe,
   isVerifiedRegistryGeneration,
   loadRegistryGeneration,
   persistRegistryGeneration,
+  consumeRegistryGenerationForwardProbe,
   registryGenerationCanonicalJson,
   registryGenerationFileName,
   registryGenerationId,
+  verifyRegistryGenerationForwardProbe,
   verifyRegistryGeneration,
 } from "../dist/index.js";
 
@@ -122,6 +125,57 @@ function hostEvidenceAdapter(flushDirectory) {
 }
 
 describe("content-addressed registry generation", () => {
+  it("issues one exact generation-bound forward probe and refuses copies or reuse", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "galerina-forward-probe-"));
+    try {
+      const { key, generation } = builtFixture();
+      const generationId = await registryGenerationId(generation);
+      await persistRegistryGeneration({
+        directory,
+        generation,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
+      });
+      const probe = await verifyRegistryGenerationForwardProbe({
+        directory,
+        generationId,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+      });
+
+      assert.equal(isRegistryGenerationForwardProbe(probe, generationId), true);
+      assert.equal(
+        isRegistryGenerationForwardProbe({ ...probe }, generationId),
+        false,
+      );
+      assert.equal(
+        isRegistryGenerationForwardProbe(new Proxy(probe, {}), generationId),
+        false,
+      );
+      assert.equal(
+        isRegistryGenerationForwardProbe(probe, "0".repeat(64)),
+        false,
+      );
+      assert.equal(
+        consumeRegistryGenerationForwardProbe(probe, generationId),
+        true,
+      );
+      assert.equal(
+        consumeRegistryGenerationForwardProbe(probe, generationId),
+        false,
+      );
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
   it("re-signs every manifest, signs the index, and verifies exact correspondence", async () => {
     const { key, generation } = builtFixture();
     assert.equal(generation.delegationSerial, 2);

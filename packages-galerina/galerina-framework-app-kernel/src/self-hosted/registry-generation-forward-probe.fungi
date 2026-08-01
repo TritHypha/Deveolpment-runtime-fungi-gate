@@ -1,0 +1,36 @@
+@version 1
+/// @file: registry-generation-forward-probe.fungi
+/// @purpose: Pure fail-closed fold for one-use, generation-bound registry probes.
+///   Host code must independently re-open and verify the canonical generation before
+///   presenting these facts. This flow cannot read storage, mint a receipt or authorize
+///   a rotation by itself.
+/// @status: checker-verified authority contract; TypeScript is the temporary executing
+///   bootstrap until the native Galerina/SLIDE object path executes this flow.
+
+pure flow registryGenerationForwardProbe(
+  verificationVerdict: Verdict,
+  generationIdentityMatches: Bool,
+  probeUnused: Bool,
+  authorityReleased: Bool
+) -> Int
+contract {
+  intent { "Allow only a verified, exact, unused and non-authorizing forward-probe receipt." }
+}
+{
+  check(verificationVerdict) {
+    deny: { return -1 }
+    ambig: { return 0 }
+    if: {
+      if generationIdentityMatches == false {
+        return -1
+      }
+      if probeUnused == false {
+        return -1
+      }
+      if authorityReleased == true {
+        return -1
+      }
+      return 1
+    }
+  }
+}

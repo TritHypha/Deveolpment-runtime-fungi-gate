@@ -36,8 +36,10 @@ import {
   type AdmittedRegistryRotationIndex,
 } from "./registry-rotation-authority.js";
 import {
+  consumeRegistryGenerationForwardProbe,
   isProductionAdmittedRegistryGeneration,
   type PersistedRegistryGeneration,
+  type RegistryGenerationForwardProbe,
 } from "./registry-generation-store.js";
 import {
   registryDurabilityProfileMatchesRotation,
@@ -362,7 +364,7 @@ export interface AdvanceRegistryRotationStateOptions
   readonly candidateGeneration: PersistedRegistryGeneration;
   readonly durabilityProfile: ProductionRegistryDurabilityProfile;
   readonly acceptedCheckpointDigest: string;
-  readonly verifyForwardProbe: (generationId: string) => boolean;
+  readonly forwardProbe: RegistryGenerationForwardProbe;
 }
 
 export interface RegistryRotationStateOutcome
@@ -379,6 +381,19 @@ export interface RegistryRotationStateOutcome
 export function advanceRegistryRotationState(
   options: AdvanceRegistryRotationStateOptions,
 ): RegistryRotationStateOutcome {
+  const forwardProbeVerified = consumeRegistryGenerationForwardProbe(
+    options.forwardProbe,
+    options.candidateGeneration.generationId,
+  );
+  if (!forwardProbeVerified) {
+    return {
+      state: options.state,
+      decision: decideAtBoundary(Verdict.DENY, options.onDiagnostic),
+      reasons: [
+        "DENY: exact one-use generation-bound forward probe receipt is unavailable",
+      ],
+    };
+  }
   const candidateAlreadyAccepted = [
     "verified",
     "drained",
@@ -437,9 +452,7 @@ export function advanceRegistryRotationState(
   const outcome = advanceRegistryRotation({
     ...options,
     process: options.state.process,
-    verifyForwardProbe: () => options.verifyForwardProbe(
-      options.candidateGeneration.generationId,
-    ),
+    verifyForwardProbe: () => forwardProbeVerified,
   });
   if (outcome.process === options.state.process) {
     return {
