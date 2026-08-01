@@ -47,10 +47,10 @@ The SLIDE observer chapter must:
 - remain bootstrap portability evidence, never native execution evidence.
 
 Also rerun the expanded pure Linux fact/parser/sysfs matrix, then explicitly
-run the ignored live-host, retained-handle publication and seven-boundary
-process-termination tests against the one newly created named evidence
-directory. A live test proves only its observed candidate boundary; process
-termination remains weaker than kernel crash, reboot and power loss.
+run the ignored four-case live-host suite, nine-case injected-refusal suite and
+seven-boundary process-termination suite against the one newly created named
+evidence directory. A live test proves only its observed candidate boundary;
+process termination remains weaker than kernel crash, reboot and power loss.
 
 Stop and report rather than work around any refusal, digest mismatch, dirty
 source ambiguity, missing prerequisite or unexpected output field.
@@ -78,6 +78,10 @@ Replace the date and commit placeholder with the UTC run date and the first 12
 characters of the Galerina commit that was actually tested. Save the raw
 Galerina verifier JSON beside it as the same basename plus `.receipt.json` and
 the raw SLIDE observer JSON as the same basename plus `.slide-platform.json`.
+Save the closed native evidence receipt as the same basename plus
+`.native-evidence.json`. Run `scripts/verify-platform-durability-evidence.mjs`
+over all four files and preserve its exact non-authorizing decision in the
+human report.
 Record the independent SLIDE branch and full commit inside the report. Fill
 only observed facts, include command exit codes and SHA-256 values, and leave
 every unexecuted row `UNVERIFIED`. This repository path is the handback to the

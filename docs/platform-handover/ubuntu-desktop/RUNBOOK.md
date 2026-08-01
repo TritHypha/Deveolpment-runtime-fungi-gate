@@ -36,10 +36,12 @@ Before running, derive the required return filenames:
 set -eu
 RUN_DATE="$(date -u +%F)"
 RUN_COMMIT="$(git rev-parse --short=12 HEAD)"
-RETURN_BASE="docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-linux-adapter-${RUN_DATE}-${RUN_COMMIT}"
+REPO_ROOT="$PWD"
+RETURN_BASE="${REPO_ROOT}/docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-linux-adapter-${RUN_DATE}-${RUN_COMMIT}"
 test ! -e "${RETURN_BASE}.md"
 test ! -e "${RETURN_BASE}.receipt.json"
 test ! -e "${RETURN_BASE}.slide-platform.json"
+test ! -e "${RETURN_BASE}.native-evidence.json"
 ```
 
 Verify and record the sibling SLIDE identity before executing it:
@@ -60,7 +62,7 @@ cd ../SLIDE
 npm run contract:check
 node --test tests/reference-platform-observer.test.mjs tests/reference-platform-report-cli.test.mjs
 npm test
-node src/reference-platform-report-cli.mjs > "../Galerina/${RETURN_BASE}.slide-platform.json"
+node src/reference-platform-report-cli.mjs > "${RETURN_BASE}.slide-platform.json"
 ```
 
 The observer command must exit zero and its one JSON object must state
@@ -127,15 +129,18 @@ failure:
 
 ```bash
 set -eu
-cargo test --locked --test linux_live_host -- --ignored --test-threads=1
+cargo test --locked --all-features --test linux_live_host -- --ignored --test-threads=1
+cargo test --locked --all-features --test linux_fault_refusal -- --ignored --test-threads=1
 cargo test --locked --all-features --test linux_process_kill -- --ignored --test-threads=1
 unset GALERINA_LINUX_EVIDENCE_DIRECTORY
 rmdir "$EVIDENCE_DIRECTORY"
 ```
 
-The first command must execute three tests: live host observation,
+The first command must execute four tests: live host observation,
 exact/idempotent no-replace publication, and symlink/hard-link refusal. The
-second must execute one test that kills a fresh worker at all seven named
+fourth is hostile parent-namespace substitution. The second command must
+execute one test covering all nine deterministic injected refusals. The third
+must execute one test that kills a fresh worker at all seven named
 boundaries and checks prior/candidate exactness. `rmdir` must succeed: a
 leftover stage or fixture is evidence to report, not something to delete
 recursively and hide.
@@ -148,15 +153,86 @@ On Linux, Windows-specific operations must return their explicit unavailable
 denial. A test skip, silent fallback, pathname loader or unexpected candidate
 is a failure to investigate, not a portability success.
 
-## Not ready yet
+## Create the closed native receipt
 
-Do not invent commands for the following. They will be added after the Linux
-adapter and recovery harness are reviewed and committed:
+Only after every command above passes, return to the Galerina root and create
+the non-authorizing native receipt. This receipt records the observed round;
+its self-hash detects accidental mutation but is not authentication.
 
-- short-write, disk-full and barrier-refusal injection;
-- hostile parent-namespace race automation;
-- controlled reboot recovery;
-- physical power-loss recovery.
+```bash
+set -eu
+cd "$REPO_ROOT"
+export GALERINA_EVIDENCE_COMMIT="$(git rev-parse HEAD)"
+export SLIDE_EVIDENCE_COMMIT="$(git -C ../SLIDE rev-parse HEAD)"
+export GALERINA_EVIDENCE_ARCH="$(node -p 'process.arch')"
+export GALERINA_EVIDENCE_FILESYSTEM="$(findmnt -n -o FSTYPE -T .)"
+export GALERINA_NATIVE_RECEIPT="${RETURN_BASE}.native-evidence.json"
+case "$GALERINA_EVIDENCE_FILESYSTEM" in
+  ext4|xfs|btrfs) ;;
+  *) printf '%s\n' 'STOP: filesystem is not in the admitted Linux set' >&2; exit 1 ;;
+esac
+node --input-type=module <<'NODE'
+import { createHash } from "node:crypto";
+import { writeFileSync } from "node:fs";
+const base = {
+  schema: "galerina.platform-native-evidence.v1",
+  galerinaCommit: process.env.GALERINA_EVIDENCE_COMMIT,
+  slideCommit: process.env.SLIDE_EVIDENCE_COMMIT,
+  platform: "linux",
+  distributionId: "ubuntu",
+  architecture: process.env.GALERINA_EVIDENCE_ARCH,
+  filesystem: process.env.GALERINA_EVIDENCE_FILESYSTEM,
+  pureTests: 10,
+  liveTests: 4,
+  faultRefusals: 9,
+  processTerminationBoundaries: [
+    "stage-opened", "bytes-written", "file-flushed", "stage-closed",
+    "published", "reopened-verified", "directory-flushed",
+  ],
+  failedTests: 0,
+  skippedTests: 0,
+  controlledReboot: false,
+  controlledPowerLoss: false,
+  authenticated: false,
+  authorityReleased: false,
+  productionAuthorizing: false,
+};
+const canonical = `${JSON.stringify(base, null, 2)}\n`;
+const receipt = {
+  ...base,
+  selfSha256: createHash("sha256").update(canonical).digest("hex"),
+};
+writeFileSync(
+  process.env.GALERINA_NATIVE_RECEIPT,
+  `${JSON.stringify(receipt, null, 2)}\n`,
+  { encoding: "utf8", flag: "wx", mode: 0o600 },
+);
+NODE
+unset GALERINA_EVIDENCE_COMMIT SLIDE_EVIDENCE_COMMIT GALERINA_EVIDENCE_ARCH
+unset GALERINA_EVIDENCE_FILESYSTEM GALERINA_NATIVE_RECEIPT
+```
+
+Copy `REPORT-TEMPLATE.md` to `${RETURN_BASE}.md`, complete its human-readable
+rows using observed facts only, and replace the `{}` inside the final binding
+block with canonical pretty JSON containing the two full commits and the
+SHA-256 of all three receipt files. Do not record an absolute local path,
+credential, token, private key or secret-shaped field.
+
+Finally run the closed verifier:
+
+```bash
+node scripts/verify-platform-durability-evidence.mjs \
+  --report "${RETURN_BASE}.md" \
+  --static-receipt "${RETURN_BASE}.receipt.json" \
+  --platform-receipt "${RETURN_BASE}.slide-platform.json" \
+  --native-receipt "${RETURN_BASE}.native-evidence.json"
+```
+
+The only successful result is K3 `+1` with reason
+`UBUNTU_ROUND_TWO_COMPLETE`, evidence class `PROCESS_TERMINATION`, and all of
+`authenticated`, `authorityReleased` and `productionAuthorizing` false.
+Controlled reboot and controlled physical power loss remain unverified and
+must not be added to this round-two claim.
 
 No result from this runbook changes the production adapter allow-list.
 

@@ -11,6 +11,7 @@ ubuntu-desktop-static-profile-YYYY-MM-DD-<12-char-commit>.receipt.json
 ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.md
 ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.receipt.json
 ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.slide-platform.json
+ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.native-evidence.json
 ```
 
 The Markdown report is copied from `../REPORT-TEMPLATE.md`. The JSON file is

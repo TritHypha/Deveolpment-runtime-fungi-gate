@@ -69,7 +69,8 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 | `cargo test --locked --all-features` | | UNVERIFIED | |
 | `cargo build --locked --release` | | UNVERIFIED | |
 | Pure Linux facts + parser/sysfs/correlation matrix (10 tests) | | UNVERIFIED | Pure model only |
-| Linux live-host/publication matrix (3 ignored tests, explicitly executed) | | UNVERIFIED | Named directory only |
+| Linux live-host/publication matrix (4 ignored tests, explicitly executed) | | UNVERIFIED | Includes hostile namespace substitution |
+| Linux deterministic fault matrix (1 ignored test, 9 fault cases) | | UNVERIFIED | No candidate receipt on injected refusal |
 | Linux process-termination matrix (1 ignored test, 7 boundaries) | | UNVERIFIED | Not reboot/power loss |
 
 ## Durability evidence
@@ -96,3 +97,17 @@ tests and process-termination matrix reproduced on the named Ubuntu host only
 when every corresponding row executed and passed. It must not claim native
 SLIDE execution, kernel-crash, reboot, physical-power-loss or production
 admission.
+
+<!-- GALERINA_PLATFORM_DURABILITY_BINDING_BEGIN -->
+```json
+{
+  "schema": "galerina.platform-durability-report-binding.v1",
+  "galerinaCommit": "REPLACE_WITH_FULL_LOWERCASE_COMMIT",
+  "slideCommit": "REPLACE_WITH_FULL_LOWERCASE_COMMIT",
+  "staticReceiptSha256": "REPLACE_WITH_LOWERCASE_SHA256",
+  "platformReceiptSha256": "REPLACE_WITH_LOWERCASE_SHA256",
+  "nativeReceiptSha256": "REPLACE_WITH_LOWERCASE_SHA256",
+  "productionAuthorizing": false
+}
+```
+<!-- GALERINA_PLATFORM_DURABILITY_BINDING_END -->

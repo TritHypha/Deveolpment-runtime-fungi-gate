@@ -185,7 +185,7 @@ cargo test --locked --all-features
 Off Linux, live operations must return `LINUX_PLATFORM_UNAVAILABLE`; pure
 injection/accounting tests must still run. Do not infer the Ubuntu result.
 
-- [ ] **Step 6: Commit Task 2**
+- [x] **Step 6: Commit Task 2**
 
 ```powershell
 git add -- packages-galerina/galerina-framework-app-kernel/native/registry-durability/src/lib.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/linux_fault_refusal.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/linux_live_host.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/tests/linux_process_kill.rs packages-galerina/galerina-framework-app-kernel/native/registry-durability/Cargo.toml
@@ -207,7 +207,7 @@ git commit -m "feat(durability): close Linux refusal controls"
 - Produces CLI: `node scripts/verify-platform-durability-evidence.mjs --report <file> --static-receipt <file> --platform-receipt <file> --native-receipt <file>`.
 - Produces one canonical JSON decision with K3 `+1`, `0` or `-1`; only a complete current-commit evidence set can return `+1` for the Linux round-two gate.
 
-- [ ] **Step 1: Write failing fixture and forgery tests**
+- [x] **Step 1: Write failing fixture and forgery tests**
 
 Use temporary fixture paths. Prove valid public fixture admission and refuse:
 symlinks, hard links, paths outside the reports directory, stale commit,
@@ -215,13 +215,13 @@ report/receipt mismatch, omitted live test, zero executed tests, duplicate
 boundary, missing SLIDE row, authorizing child receipt, recomputed self-hash
 forgery and local-path/secret-shaped output.
 
-- [ ] **Step 2: Run focused test and verify RED**
+- [x] **Step 2: Run focused test and verify RED**
 
 ```powershell
 node --test scripts/tests/verify-platform-durability-evidence.test.mjs
 ```
 
-- [ ] **Step 3: Implement bounded stable-handle verification**
+- [x] **Step 3: Implement bounded stable-handle verification**
 
 Open every direct regular single-link file, enforce 1 MiB per file, read from
 the same handle, compare pre/post metadata, decode strict UTF-8 and validate a
@@ -229,7 +229,7 @@ closed schema. Recompute each SHA-256 and require one exact Galerina commit and
 one exact independent SLIDE commit. The verifier must not invoke Cargo, Node
 children, a shell or a callback.
 
-- [ ] **Step 4: Update the Ubuntu return contract**
+- [x] **Step 4: Update the Ubuntu return contract**
 
 Require four exact sibling files:
 
@@ -240,7 +240,7 @@ ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.slide-platform.json
 ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.native-evidence.json
 ```
 
-The native receipt records 10 pure tests, three live tests, nine deterministic
+The native receipt records 10 pure tests, four live tests, nine deterministic
 fault refusals and seven process-termination boundaries. Reboot and power loss
 remain explicitly unverified in this round.
 
