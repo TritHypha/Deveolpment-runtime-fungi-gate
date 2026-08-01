@@ -1,6 +1,6 @@
 # Data-Pipeline Block Timeout Implementation Plan
 
-**Status:** implemented and terminally verified; local commit pending
+**Status:** complete; implemented, terminally verified and committed locally
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -109,7 +109,7 @@ Run the governed generators, graph check, generator-contract audit,
 authoritative package-count run and strict/exhaustive phase-close. Fix rather
 than waive any failure.
 
-- [ ] **Step 4: Commit locally**
+- [x] **Step 4: Commit locally**
 
 Commit only the reviewed chapter files and generated evidence. Never push.
 
@@ -119,5 +119,6 @@ The package passes 22/22 with clean typecheck/build. The authoritative
 workspace pass is 98/98 packages and 8,755 tests. Graph check is 5/5,
 generator contracts are 14/14, and terminal exhaustive phase-close passes
 every blocking child, including the 31-file security audit with zero findings
-or errors and tooling 245/245. The local implementation commit is the final
-remaining bookkeeping action and does not change this verified tree.
+or errors and tooling 245/245. Local implementation commit `76448340` contains
+the reviewed code, tests, documentation and governed generated evidence; it
+was not pushed.
