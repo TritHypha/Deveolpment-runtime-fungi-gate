@@ -7,6 +7,11 @@ package lane **98/98** with **8,735** unit tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: independent SLIDE V2-F now emits, independently verifies and
+executes one bounded V2-D profile as direct import-free Wasm binary. The next
+measured chapter is a non-authorizing component benchmark; it is not the
+terminal cross-runtime comparison.
+
 This is the live high-level roadmap. It records measured gates rather than an
 invented completion percentage. The detailed execution checklist remains
 `docs/TODO.md`; the implementation plan remains
@@ -35,7 +40,7 @@ flowchart TB
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
     LI["🟨 Linux adapter preparation<br/>pure facts + mountinfo/correlation 6/6 · no live Linux claim"]
-    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 282/282 complete · UNVERIFIED"]
+    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 295/295 complete · UNVERIFIED"]
     X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
     F["🟥 Beta-v1 release admission<br/>cross-platform crash and power-loss evidence"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
@@ -43,6 +48,8 @@ flowchart TB
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
     ST["🟩 V2-D schedule translation proof<br/>changed order · exact permutation · no fallback"]
+    WF["🟩 V2-F direct Wasm compatibility<br/>GIR→binary · zero imports · branded execution"]
+    CB["🟦 V2-F component benchmark<br/>cold/warm phases · refusal cost · exact outputs"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
@@ -74,7 +81,8 @@ flowchart TB
     AI --> AE --> I
     AI --> AF --> I
     E --> K --> Q
-    E --> S --> SC --> ST --> H
+    E --> S --> SC --> ST --> WF --> CB --> H
+    ST --> H
     S --> L --> H
     E --> O --> H
     Q --> I
@@ -86,10 +94,10 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,L,M,U,V,AD,AG,AI,SI,O green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,L,M,U,V,AD,AG,AI,SI,O green;
     class X,F red;
     class Q,W,AA,AB,AC,AH,TG,LI amber;
-    class H,I,T,AE,AF blue;
+    class H,I,T,AE,AF,CB blue;
     class P green;
     class J grey;
     class AR blue;
@@ -110,9 +118,11 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | Area | State | Evidence |
 |---|---:|---|
 | SLIDE architecture reduction R&D | planned | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split, cut/merge/introduce decisions, security/memory/privacy/platform/package contracts, ordinary and Tri-1 maths, zero-trust scores and independent challenge prompts. The design remains non-authorizing pending owner adjudication and implementation evidence |
-| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused, 15/15 contract files and 282/282 complete, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused, 15/15 contract files and 295/295 complete, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
+| V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |
+| V2-F component benchmark | 🟦 planned next | Measure clean V2-D, prepared V2-D, schedule proof, scheduled execution, binary emission, closed verification, Wasm compile/instantiate, warm branded execution, cold end-to-end V2-F and fail-closed rejection separately. Every sample must verify exact semantic output and bind source/GIR/SLIDE/Galerina/host/Node identities; use counterbalanced ordering, warmups, multiple samples, medians and dispersion. This is diagnostic pre-native evidence, not the deferred SLIDE/Wasm/Rust/Python comparison |
 | Protected working branch | 🟩 | Protected branches are active; this session keeps its new commits local and does not push |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
@@ -218,17 +228,30 @@ The remaining sequence is:
    After beta, rebuild the reusable lifecycle mechanism in independent SLIDE
    `.fungi`; Tower Citizen remains the Galerina policy adapter and trust
    domains/keys remain separate.
-6. **Bounded non-production work resumed under the owner's full-auto
-   direction:** independent SLIDE now has an immutable prepared V2-D executor,
-   an exact clean/prepared benchmark, completed E00 F01-F20/S0-S8 evidence and
-   a completed bounded E01 durable-atlas experiment. E01's encrypted
+6. **Bounded non-production execution now includes V2-F:** independent SLIDE
+   has an immutable prepared V2-D executor, logical `finally` cleanup, a real
+   changed-order dependency proof and a direct import-free Wasm binary
+   compatibility adapter. The adapter independently verifies its closed module
+   shape before compiling only internally owned bytes, brands the exact
+   process-local instance and fails closed without WAT, AST, Galerina callback
+   or alternate-backend fallback. Exact evidence is V2-F 13/13, complete SLIDE
+   295/295, frozen independent 41/41 and Galerina adapter 496/496. Node/V8 is
+   still bootstrap compatibility; native/final-artifact authority remains
+   open. The same research lane also includes the exact clean/prepared
+   benchmark, completed E00 F01-F20/S0-S8 evidence and a completed bounded E01
+   durable-atlas experiment. E01's encrypted
    hybrid-signed append log, crash-prefix matrix, minimum-anchor recovery and
    restart re-admission are green only inside Shape Lab. Multi-process writer
    exclusion, portable filesystem adapters, production key/anchor custody,
    rotation/revocation, storage exhaustion and physical-media evidence remain
    unimplemented. Galerina production native activation remains red; no
    loader, rotation or package authority was bypassed.
-7. Switch packages in dependency order from TypeScript execution to verified
+7. **Next measured chapter:** implement the V2-F component benchmark with
+   separate cold preparation, warm execution, proof/verification and refusal
+   lanes. Record assurance overhead as well as throughput and preserve the
+   result as a pre-native baseline. Do not present it as terminal cross-runtime
+   or production performance evidence.
+8. Switch packages in dependency order from TypeScript execution to verified
    `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
    implementation `.ts` files and 491 tracked package `.ts` paths: 26
    twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 338 governed
@@ -238,7 +261,7 @@ The remaining sequence is:
    External AIs may prepare flat, quarantined candidates in parallel, one
    direct peer package each. They may not create npm-style nested plugin
    trees, edit Galerina, or claim replacement completion.
-8. Run the full governed benchmark and both requested charts only after the
+9. Run the full governed benchmark and both requested charts only after the
    independent SLIDE backend executes equivalent workloads.
 
 The compact `node scripts/status.mjs` view is now generated from the bounded
