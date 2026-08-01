@@ -7,6 +7,13 @@ package lane **98/98** with **8,770** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: RD-0654 validates and archives the new native cache/graph/
+Tri-1 research bundle. It promotes no production claim. The next experimental
+SLIDE chapter is a written Deterministic Cache-Tile Pipeline design using an
+L2-active/L3-staging hypothesis, bounded double buffering, explicit lane
+selection, secret-independent scheduling and mandatory D1. Implementation is
+held at written-design owner review.
+
 Roadmap refresh: independent SLIDE V2-G now performs Verified Ahead-of-Demand
 Execution for one bounded V2-D profile. The nine-lane component benchmark is
 implemented, independently re-verified and admitted by a separate governed
@@ -194,7 +201,8 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | RD-0642 measured E11 adjudication | 🟩 | Re-derived representation/working-set maths, hostile-boundary evidence and the ten-dimension score are recorded. Weighted zero-trust architecture score is 8.65/10, but measured benefit is 2/10; decision remains experiment-only and worth a defensive/negative paper after cross-platform statistics |
 | RD-0652 transcript verification | 🟩 | Transcripts 00114-00120 are archived and independently reconciled. Cache blocking/tiling is retained as the next bounded experiment; claimed generic cache latency, unsupported deterministic-AI metrics and specification-to-code proof substitution are refused. The current PutnamBench Lean denominator is 672, but 668/672 is 99.405%, not 98%; Mythos existence is first-party verified while capability remains separately gated. Research-corpus provenance hardening is designed but not yet implemented |
 | RD-0653 native R&D and Windows tools | 🟩 | AI-11 through AI-17 are archived with exact identities; derived reports are not counted independently and one zero-byte matrix is explicitly refused. MSVC, Windows SDK/WPT/WinDbg/Application Verifier, Ninja and Sysinternals are available; hyperfine 1.20.0 is locally built. The cache first pass remains K3 `0` without harness/raw evidence. B1's 10.74% median residual remains statistically indeterminate against BA, and the cited Tri-1 normalized memory-times-time result is corrected to 1.004635339 for one JavaScript lane |
-| Knowledge Base close | 🟩 | Local KB commit `2a5426a` includes RD-0642 and the detailed local independent-review prompt; its tree has no unmerged or interrupted operation and is clean. No push occurred |
+| RD-0654 native source/raw adjudication and DCTP design | 🟨 | Local KB commit `4073a35` archives the bundle as AI-18 and records the adjudication; its 29/29 original manifest records pass, and supplied executables were neither executed nor committed. Cache L1/L2 knees are one-session screening evidence while L3 remains unresolved. The graph result is renamed contiguous topological CSR because no tile scheduler ran and map/footprint confounders remain. Local SLIDE commit `7d68547` specifies an L2-active/L3-staging double-buffer experiment, twelve fair lanes, no secret-dependent scheduling, no silent fallback and D1 on every result. Owner written-design review is the implementation gate |
+| Knowledge Base close | 🟩 | Local KB commits through `4073a35` include RD-0654 and the redacted, hash-bound AI-18 research archive; its tree has no unmerged or interrupted operation and is clean. No push occurred |
 | Live status authority | 🟩 | `governance/status-ledger.json` replaces the June free-text `version.json.openTasks` snapshot for live navigation. The schema admits at most eight unique bounded gates and only existing canonical repository `docs/*.md` evidence. Fixed-buffer double reads plus descriptor pre/mid/post checks enforce 16,384 bytes before allocation/decode/parse; missing, malformed, traversal-bearing, literal-duplicate or escaped-duplicate authority is refused without historical fallback. It is informational and cannot authorize release or production activation. Status-focused tests are 7/7, the containing dev-tools fixture is 45/45, and the post-change phase-close passes every blocking child including security 31-file/zero-finding, graph 5/5, generators 14/14 and the complete tooling child |
 
 ## Active Galerina work

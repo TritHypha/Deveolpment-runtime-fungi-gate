@@ -1,5 +1,24 @@
 # TODO
 
+### SLIDE native R&D bundle and cache-tile design recorded - 2026-08-01
+
+- **Verified intake:** KB AI-18 preserves all received reports, Rust source and
+  textual/raw evidence with exact hashes. The four supplied executables were
+  excluded from Git and never executed. RD-0654 is the project adjudication,
+  committed locally as KB `4073a35`.
+- **No Galerina authority change:** one-session cache, graph and packed-Tri-1
+  results remain SLIDE research evidence. They do not authorize runtime output,
+  retire a Galerina package, alter `.fungi` authority or close the terminal
+  benchmark.
+- **DCTP direction:** independent SLIDE now has a written design for a bounded
+  Deterministic Cache-Tile Pipeline: canonical topological tiles, L2-active/
+  L3-staging hypothesis, double buffering, secret-independent schedule,
+  explicit no-silent-fallback lane selection and mandatory D1 verification.
+- **Current gate:** written-design owner review precedes test-first SLIDE
+  implementation. The design is committed locally as SLIDE `7d68547`.
+  Galerina integration remains later and no code dependency is added at this
+  checkpoint.
+
 ### Windows native research toolchain and RD-0653 recorded - 2026-08-01
 
 - **Available:** MSVC x64 19.44/19.51, Windows SDK/WPT/WinDbg/Application
