@@ -7,6 +7,13 @@ package lane **98/98** with **8,770** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the owner selected Option 2, the small SLIDE Verified Object
+Kernel (`VOK`). KB RD-0657, SLIDE contract V2-H and a zero-dependency reference
+now separate evidence, proposals, admitted objects, affine leases and receipts.
+The hostile VOK corpus is 9/9; complete SLIDE is 332/332 and contract integrity
+is 5/5 over 16 files. This is non-authorizing bootstrap evidence, not native
+`.fungi` VOK, production VEO execution or component-removal permission.
+
 Roadmap refresh: RD-0656 now selects the final `.fungi` Verified Execution
 Object loader contract after primary-source comparison. The runtime will own
 and execute the admitted bytes directly; Node remains a beta bridge rather
@@ -49,7 +56,7 @@ invented completion percentage. The detailed execution checklist remains
 
 ```mermaid
 flowchart TB
-    AR["SLIDE architecture R&D<br/>RD-0643-0650: DFE, VPEG, memory, platform"]
+    AR["SLIDE Verified Object Kernel<br/>RD-0657 · 9/9 hostile · reference-only"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
@@ -62,7 +69,7 @@ flowchart TB
     LI["🟨 Linux adapter round two<br/>implementation complete · current Ubuntu run pending"]
     NP["🟩 Native durability profiles<br/>Windows 10/11 · Linux · macOS APFS"]
     RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
-    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 304/304 complete · UNVERIFIED"]
+    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 332/332 complete · UNVERIFIED"]
     X["🟥 Production rotation activation<br/>ABI/source built · linked host toolchain pending"]
     F["🟨 Beta-v1 release admission<br/>verifier complete · external receipts pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
@@ -125,7 +132,7 @@ flowchart TB
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
-    class AR blue;
+    class AR green;
 ```
 
 The diagram is dependency-ordered, not a claim that all research waits for the
@@ -144,8 +151,9 @@ must own that operation before rotation can become yellow or green.
 
 | Area | State | Evidence |
 |---|---:|---|
-| SLIDE architecture reduction R&D | planned | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split, cut/merge/introduce decisions, security/memory/privacy/platform/package contracts, ordinary and Tri-1 maths, zero-trust scores and independent challenge prompts. The design remains non-authorizing pending owner adjudication and implementation evidence |
-| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused, 15/15 contract files and 304/304 complete, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
+| SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
+| SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 332/332 and contract integrity is 5/5 over 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 332/332, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
 | V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |

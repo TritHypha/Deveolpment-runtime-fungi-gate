@@ -1,5 +1,24 @@
 # TODO
 
+### SLIDE Verified Object Kernel foundation implemented - 2026-08-01
+
+- **Owner-selected architecture:** Option 2, the small SLIDE Verified Object
+  Kernel (`VOK`), is adopted in KB RD-0657 and SLIDE contract V2-H. It owns
+  canonical-object, admission-state, affine-lease and receipt mechanics only;
+  it does not absorb DFE, VPEG, NSE, Tri-Fuse, Tower Citizen or Tri-Pipe.
+- **Measured independent reference:** SLIDE passes 9/9 focused hostile VOK
+  tests, 332/332 complete tests across 19 suites and 5/5 contract-integrity
+  tests over 16 exact contract files. Every reference result is explicitly
+  `authorityReleased: false`.
+- **Galerina integration still open:** add generated closed-schema codecs,
+  generic affine admitted/lease types, exact K3 transitions and VEO binding in
+  `.fungi`. Repeated TypeScript brands/canonicalizers and the path-based loader
+  cannot be removed until native parity, hostile mutation and platform gates
+  pass.
+- **Priority order:** finish the current Ubuntu Linux round-two receipt; build
+  and link the production static host; then admit the complete external beta-v1
+  receipt matrix. The VOK reference does not turn any of those gates green.
+
 ### `.fungi` verified execution-object architecture selected - 2026-08-01
 
 - **Owner-approved R&D:** KB RD-0656 selects a Galerina-owned Verified
