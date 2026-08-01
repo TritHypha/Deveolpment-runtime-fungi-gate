@@ -1,0 +1,13 @@
+{
+  "schema": "galerina-registry-durability-static-link-proof/v1",
+  "verdict": "CANDIDATE",
+  "productionAuthorizing": false,
+  "platform": "linux",
+  "architecture": "x64",
+  "executableSha256": "0b24d8efa34415b828649c64cc8e0982cf8c6d65a06b2ebe87b4eebd55b1f937",
+  "adapterSourceSha256": "b1bd46c0e5fa868322a8fb9a8c3c82fa959e0cedf8d7620f92eed86dba362d15",
+  "fungiContractSha256": "6a478938e44ce00dc413e7916c34fb95f6bd75123218db8466e5678306b6f9ae",
+  "abi": "galerina.registry.durability.abi.v1",
+  "buildProfile": "release",
+  "pollutedWorkingDirectoryInvariant": true
+}
