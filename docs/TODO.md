@@ -1,5 +1,36 @@
 # TODO
 
+### Linked-host and release-gate checkpoint - 2026-08-01
+
+- **Caller Boolean removed:** the production rotation wrapper no longer accepts
+  a caller-selected `verifyForwardProbe`. It consumes one exact, module-branded,
+  generation-bound forward-probe receipt. Copies, Proxies, wrong generation IDs
+  and reuse refuse. The paired `.fungi` K3 fold is checker-clean and app-kernel
+  is **204/204**.
+- **Reproducible recipe pinned:** the Node 24.18.0 archive, pristine `node.gyp`
+  and realm preimages, source manifest, binding, patch, Cargo lock, Rust
+  compiler, release target/profile and official NASM 3.02 archive/executable
+  hashes are closed in `host-build-recipe.json`. Its hostile verifier passes
+  **3/3**; source and toolchain checks bring the focused host gate to **9/9**.
+- **Stale external tree refused:** the earlier extracted Node tree contained an
+  older binding and Rust library and is not a build input. A separate fresh
+  tree was extracted from the exact hash-pinned archive and the patch preflight
+  succeeds; no stale file was overwritten or deleted.
+- **Only current Windows prerequisite:** portable NASM 3.02 is present and
+  version/hash verified. Visual Studio Community 2026 still lacks
+  `VC.Llvm.Clang` and `VC.Llvm.ClangToolset`. Quiet modification correctly
+  stopped with installer code 5007 because this process is not elevated. The
+  current owner action is in
+  `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
+- **Current platform evidence:** the real Windows 10 functional generator
+  passed all six rows on clean commit `7c38414a...`; later documentation commits
+  make that observation deliberately non-final. Beta admission still returns
+  K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
+- **Ubuntu handover:** exact unpushed Galerina and SLIDE histories are available
+  as verified, Git-ignored bundles. Round two now returns five files: the four
+  durability/report artifacts plus one functional Ubuntu receipt. No remote
+  clone, old `2ceaf479...` result or renamed distribution receipt may substitute.
+
 ### SLIDE Verified Object Kernel foundation implemented - 2026-08-01
 
 - **Owner-selected architecture:** Option 2, the small SLIDE Verified Object
@@ -915,7 +946,7 @@ current remediated source, measurements and assurance boundary.
   single-link identity, publishes atomically by no-replace `renameat2`,
   reopens exact bytes, barriers the directory and rechecks path/mount identity.
   Other Linux ABIs refuse. Native Clippy is warning-clean, App Kernel is
-  **193/193**, the native all-features suite is green, and a fresh strict
+  **204/204**, the native all-features suite is green, and a fresh strict
   phase-close passes every blocking gate after deterministic graph/code-index
   regeneration. Three ignored live tests and one seven-boundary kill test are
   ready for explicit Ubuntu execution. They are not counted as passing here.
@@ -933,7 +964,8 @@ current remediated source, measurements and assurance boundary.
   debug-only controlled recovery protocol passes **6/6** for canonical arm,
   native system/home/repository-device refusal, replay, exact prior/candidate
   recovery and mixed-state denial. It contains no reboot or power API.
-  App-kernel remains **203/203** and the native default/all-feature/release
+  App-kernel is now **204/204** after adding the exact one-use forward-probe
+  receipt, and the native default/all-feature/release
   matrix is green on Windows 10. The clean local functional v2 smoke is **6/6**
   at commit `26f5755c...` with **98** packages and remains K3 `0`, public and
   non-authorizing.
@@ -954,6 +986,12 @@ current remediated source, measurements and assurance boundary.
   until the signed static host (or the later content-bound SLIDE host) owns the
   native publication operation; do not mark a callback, CLI sidecar or digest-
   only record as production evidence.
+- **Production forward-probe hardening (2026-08-01):** the production wrapper
+  now consumes one exact module-branded receipt created only after reopening,
+  canonicalizing, re-deriving and verifying the candidate generation. Copied,
+  proxied, wrong-generation and reused receipts fail closed. The low-level
+  Tower Citizen verification callback remains an internal composition seam;
+  it is no longer caller-selectable at the Galerina production boundary.
 - **Static-host toolchain preflight (2026-08-01):**
   `scripts/verify-registry-static-host-toolchain.mjs` now admits only an exact
   Windows Visual Studio instance containing both supported Clang components,
@@ -961,8 +999,10 @@ current remediated source, measurements and assurance boundary.
   parseable version. Accessor and hostile Proxy evidence refuse without reading
   accessor values or throwing. Its focused suite passes **4/4**. The current
   host returns
-  `STATIC_HOST_CLANG_COMPONENTS_ABSENT`; the earlier installer invocation made
-  no changes and was stopped. The owner-only current actions are isolated in
+  `STATIC_HOST_CLANG_COMPONENTS_ABSENT`. Portable official NASM 3.02 is now
+  present and hash/version verified. Visual Studio's quiet modification
+  refused with code 5007 because it requires an elevated process; no component
+  was inferred from the launcher exit. The owner-only current action is isolated in
   `docs/platform-handover/windows-static-host-toolchain/NOW.md`. A future
   `CANDIDATE` result remains explicitly non-authorizing and cannot make the
   rotation or release node green.

@@ -76,9 +76,11 @@ pin, patch, build recipe, binding and verification rules.
 
 ## Task 3 - Reproducible host construction
 
-- [ ] Add a manifest containing the exact Node version/archive digest,
-  Galerina patch digest, Rust target/profile, compiler/SDK identity and closed
-  build switches.
+- [x] Add a closed build recipe containing the exact Node version/archive and
+  pristine preimage digests, Galerina source-manifest/binding/patch digests,
+  NASM archive/executable digests, Cargo lock, Rust target/profile/compiler and
+  closed build switches. Exact Clang/SDK identity remains a generated build
+  receipt field because the required component is not installed.
 - [ ] Add a build tool that requires an already-present verified source tree;
   it may not silently download or accept an unpinned source directory.
 - [ ] Apply the patch only when every preimage hunk matches.
@@ -115,8 +117,8 @@ probe; current owner actions are separated into
   load and re-verify the exact published generation afterward.
 - [ ] Brand a production receipt only when the linked binding's native
   identity predicate succeeds and all host/profile identities match.
-- [ ] Remove caller `verifyForwardProbe` from the production rotation surface;
-  consume an exact generation-bound host probe receipt instead.
+- [x] Remove caller `verifyForwardProbe` from the production rotation surface;
+  consume an exact one-use generation-bound host probe receipt instead.
 - [ ] Keep the governed production digest list empty until signed-host and
   external evidence admission is complete.
 

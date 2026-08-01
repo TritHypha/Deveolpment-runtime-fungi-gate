@@ -1,29 +1,30 @@
 # Windows static-host toolchain — actions to do now
 
-Status: **manual prerequisite only; no production authority**.
+Status: **one elevated Visual Studio prerequisite remains; no production authority**.
 
 The Galerina preflight is fail-closed and currently reports
-`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. The earlier command-line installer
-attempt changed nothing. Do not run any command copied from an older ceremony
-or planning document.
+`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. Portable NASM 3.02 is already present;
+its official archive and executable hashes are pinned in the repository build
+recipe. Do not reinstall NASM or run a command copied from an older document.
 
 ## Do now
 
-1. Open **Visual Studio Installer** yourself.
-2. Choose **Modify** for the installed Visual Studio 2022 Community instance.
+1. Open **Visual Studio Installer** yourself and accept its administrator
+   elevation prompt.
+2. Choose **Modify** for the installed Visual Studio Community 2026 instance.
 3. Under **Individual components**, select both:
    - **C++ Clang Compiler for Windows**
      (`Microsoft.VisualStudio.Component.VC.Llvm.Clang`)
    - **MSBuild support for LLVM (clang-cl) toolset**
      (`Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset`)
 4. Apply the modification and let Visual Studio Installer finish.
-5. Obtain the Windows x64 NASM archive only from the official NASM site:
-   <https://www.nasm.us/pub/nasm/releasebuilds/3.02/win64/nasm-3.02-win64.zip>
-6. Extract it to a stable tools directory and add the directory containing
-   `nasm.exe` to the user or system `PATH`.
-7. Close and reopen PowerShell, change to the Galerina repository, and run only:
+5. After the Visual Studio modification finishes, close and reopen PowerShell,
+   change to the Galerina repository, and run only:
 
    ```powershell
+   $NasmDirectory = (Resolve-Path `
+     "..\external-git-projects\nasm-3.02-portable\nasm-3.02").Path
+   $env:PATH = "$NasmDirectory;$env:PATH"
    node scripts/verify-registry-static-host-toolchain.mjs
    ```
 
