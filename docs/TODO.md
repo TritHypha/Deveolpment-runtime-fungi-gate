@@ -31,11 +31,14 @@
   cross-platform evidence. Do not implement the newly proposed DFE component
   boundary until owner adjudication.
 - **Independent platform-contract progress:** SLIDE now has a test-first exact
-  reference-profile evaluator for Windows, Ubuntu/Debian/Fedora/Mint and
-  macOS. Malformed, surplus, accessor and Proxy observations refuse; profile
-  match cannot accept evidence or grant authority. Current Windows 10
-  Node-bootstrap evidence is 255/255, while native execution and all other OS
-  rows remain unverified. See
+  reference-profile evaluator plus a bounded Node-bootstrap observer/report
+  CLI for Windows, Ubuntu/Debian/Fedora/Mint and macOS. It reads no environment,
+  shell, network, package manager, driver or cached fallback. Malformed,
+  surplus, accessor and Proxy inputs refuse; reports are reconstructed and
+  semantically revalidated. Current Windows 10 evidence is 17/17 focused,
+  15/15 contract files and 272/272 complete, while it remains unauthenticated,
+  `UNVERIFIED` and non-authorizing. Native execution and all other OS rows
+  remain unverified. See
   `../../SLIDE/docs/reports/reference-platform-contract-2026-08-01.md`.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31

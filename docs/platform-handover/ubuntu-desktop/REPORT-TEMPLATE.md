@@ -10,6 +10,10 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 - Commit:
 - Working tree before run:
 - Working tree after run:
+- SLIDE branch:
+- SLIDE commit:
+- SLIDE working tree before run:
+- SLIDE working tree after run:
 
 ## Host facts
 
@@ -38,6 +42,21 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 - ABI:
 - Release profile verified:
 - Polluted-working-directory invariant:
+- `productionAuthorizing` value:
+
+## SLIDE bounded platform observation
+
+- Command:
+- Exit code:
+- Report SHA-256:
+- Contract check:
+- Focused observer/CLI tests:
+- Complete SLIDE tests:
+- Platform/profile:
+- Evidence kind:
+- `authenticated` value:
+- `executionEvidence` value:
+- `authorityReleased` value:
 - `productionAuthorizing` value:
 
 ## Native crate checks
@@ -69,5 +88,6 @@ fact. Do not omit a failed attempt when a later retry passes.
 ## Conclusion
 
 State only what the evidence proves. The initial portability chapter may say
-that the exact static-link proof reproduced on the named Ubuntu host. It must
-not claim production admission or physical durability.
+that the exact static-link proof and bounded SLIDE bootstrap suite reproduced
+on the named Ubuntu host. It must not claim native SLIDE execution, production
+admission or physical durability.

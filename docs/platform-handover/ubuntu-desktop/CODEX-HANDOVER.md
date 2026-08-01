@@ -3,8 +3,8 @@
 ## Objective
 
 Continue the repository-owned Ubuntu Desktop platform-evidence chapter without
-weakening Galerina's zero-trust boundary. Verify rather than assume, fail
-closed, preserve unrelated work, commit locally only and never push.
+weakening Galerina's or SLIDE's zero-trust boundary. Verify rather than assume,
+fail closed, preserve unrelated work, commit locally only and never push.
 
 ## Required first checks
 
@@ -20,10 +20,14 @@ closed, preserve unrelated work, commit locally only and never push.
    dirty tree.
 5. Record `uname`, `/etc/os-release`, architecture, Rust, Cargo, Node and Git
    versions. Do not treat a distribution label as filesystem evidence.
+6. Confirm a separate sibling SLIDE clone at `../SLIDE`, read its `README.md`
+   and `TODO.md`, and record its branch, exact commit and clean starting tree.
+   Do not substitute files copied from Galerina or `triLowLevel-v2`.
 
 ## Current executable scope
 
-Run only the static-link portability proof described in `RUNBOOK.md`. It must:
+Run the static-link portability proof and bounded SLIDE platform-observer suite
+described in `RUNBOOK.md`. They must:
 
 - build the optimized statically linked profile from the checked-out source;
 - independently re-hash the exact Rust source and authoritative `.fungi`
@@ -31,6 +35,16 @@ Run only the static-link portability proof described in `RUNBOOK.md`. It must:
 - bind the ABI and release profile;
 - prove a hostile working-directory `.node` decoy cannot change the output;
 - report `productionAuthorizing: false`.
+
+The SLIDE observer chapter must:
+
+- run from the exact sibling SLIDE commit recorded in the report;
+- produce one closed local-self-observation JSON object;
+- keep `authenticated: false`, `executionEvidence: UNVERIFIED`,
+  `authorityReleased: false` and `productionAuthorizing: false`;
+- pass the 15-file V2 contract check, observer/CLI focused tests and complete
+  independent SLIDE suite; and
+- remain bootstrap portability evidence, never native execution evidence.
 
 Also rerun the pure Linux fact and `mountinfo` parser matrix. It proves parser
 and decision behavior only; do not convert it into a live-host claim.
@@ -58,11 +72,13 @@ docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-static-profile-YYYY
 ```
 
 Replace the date and commit placeholder with the UTC run date and the first 12
-characters of the commit that was actually tested. Save the raw verifier JSON
-beside it as the same basename plus `.receipt.json`. Fill only observed facts,
-include command exit codes and SHA-256 values, and leave every unexecuted row
-`UNVERIFIED`. This repository path is the handback to the primary Galerina
-session. Do not save the only copy elsewhere.
+characters of the Galerina commit that was actually tested. Save the raw
+Galerina verifier JSON beside it as the same basename plus `.receipt.json` and
+the raw SLIDE observer JSON as the same basename plus `.slide-platform.json`.
+Record the independent SLIDE branch and full commit inside the report. Fill
+only observed facts, include command exit codes and SHA-256 values, and leave
+every unexecuted row `UNVERIFIED`. This repository path is the handback to the
+primary Galerina session. Do not save the only copy elsewhere.
 
 If no source change was needed, commit only the report and raw receipt on the
 existing local work branch. If a source fix was required, use a separate local

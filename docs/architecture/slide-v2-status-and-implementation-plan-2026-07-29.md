@@ -11,10 +11,11 @@ This is the first document to read when checking SLIDE work from the Galerina
 repository. Update it in the same commit whenever a SLIDE status, gate, owner,
 dependency, or implementation phase changes.
 
-**2026-08-01 live correction:** independent SLIDE now passes 255/255 tests and
+**2026-08-01 live correction:** independent SLIDE now passes 272/272 tests and
 has bounded prepared V2-D execution, V2-E receipt verification, B0/BA/VPEG/
 neural research benchmarks, and an exact non-authorizing reference-platform
-evaluator. These do not constitute a general/native backend. RD-0643 through
+evaluator plus bounded host observer/report CLI. These do not constitute a
+general/native backend. RD-0643 through
 RD-0650 propose a DFE architecture boundary that awaits owner adjudication;
 existing G3.1 and platform work may continue without treating DFE as built.
 
@@ -125,7 +126,7 @@ Planning completion and implementation completion are deliberately separate.
 | Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
 | WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Retain as optional compatibility/differential evidence after SLIDE; never silently fall back from failed admission |
 | Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
-| Reference platform contract | `IMPLEMENTED-PARTIAL` | Exact Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64 profile evaluator; malformed/accessor/proxy inputs refuse; current Windows 10 bootstrap suite 255/255 | Exact host observation/report tool, native execution and actual Windows 11/Linux/macOS runs; profile match remains non-authorizing and `UNVERIFIED` |
+| Reference platform contract | `IMPLEMENTED-PARTIAL` | Exact Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64 evaluator plus bounded Node-bootstrap observer/report CLI; no environment/shell/network/package-manager fallback; malformed/accessor/proxy inputs refuse; current Windows 10 evidence 17/17 focused, 15/15 contract files and 272/272 complete | Native execution and actual Windows 11/Linux/macOS runs; local observation remains unauthenticated, non-authorizing and `UNVERIFIED` |
 | Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
 | SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
 | Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE V2-C producer, zero-dependency V2-D validator/runtime, and zero-dependency V2-E canonical receipt verifier; complete independent suite 30/30 | Widen beyond the conformance slices before claiming general frontend/platform independence |

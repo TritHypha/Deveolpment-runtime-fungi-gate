@@ -3,8 +3,9 @@
 ## Prerequisites
 
 - A separately cloned Galerina repository on Ubuntu Desktop.
+- A separately cloned SLIDE repository at the sibling path `../SLIDE`.
 - Git.
-- Node.js 18 or newer.
+- Node.js 20 or newer (the independent SLIDE bootstrap floor).
 - A Rust/Cargo toolchain capable of the repository lockfile.
 - No private signing keys in the repository or shell environment.
 
@@ -37,6 +38,42 @@ RUN_COMMIT="$(git rev-parse --short=12 HEAD)"
 RETURN_BASE="docs/platform-handover/ubuntu-desktop/reports/ubuntu-desktop-static-profile-${RUN_DATE}-${RUN_COMMIT}"
 test ! -e "${RETURN_BASE}.md"
 test ! -e "${RETURN_BASE}.receipt.json"
+test ! -e "${RETURN_BASE}.slide-platform.json"
+```
+
+Verify and record the sibling SLIDE identity before executing it:
+
+```bash
+set -eu
+test -d ../SLIDE/.git
+git -C ../SLIDE status --short --branch
+git -C ../SLIDE rev-parse HEAD
+```
+
+A dirty SLIDE tree is a stop-and-report condition. From the SLIDE repository,
+run the exact contract, observer and complete reference suite:
+
+```bash
+set -eu
+cd ../SLIDE
+npm run contract:check
+node --test tests/reference-platform-observer.test.mjs tests/reference-platform-report-cli.test.mjs
+npm test
+node src/reference-platform-report-cli.mjs > "../Galerina/${RETURN_BASE}.slide-platform.json"
+```
+
+The observer command must exit zero and its one JSON object must state
+`platform: linux`, `distributionId: ubuntu`, `status: MATCH`,
+`evidenceKind: LOCAL_SELF_OBSERVATION`, `authenticated: false`,
+`executionEvidence: UNVERIFIED`, `authorityReleased: false` and
+`productionAuthorizing: false`. Any different, missing or surplus result is a
+stop-and-report condition. Compute and record the JSON file's SHA-256; do not
+paste raw os-release content into the observer evidence.
+
+Return to the Galerina root:
+
+```bash
+cd ../Galerina
 ```
 
 Copy `REPORT-TEMPLATE.md` to `${RETURN_BASE}.md`. Run the verifier again with

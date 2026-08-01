@@ -2,8 +2,9 @@
 
 Date: 2026-07-31
 
-Status: static-link portability and pure Linux admission/parser lanes ready;
-native Linux syscall adapter and reboot/power-loss chapters not yet ready
+Status: static-link portability, bounded SLIDE platform observation and pure
+Linux admission/parser lanes ready; native Linux syscall adapter and
+reboot/power-loss chapters not yet ready
 
 This folder is the single handover point for running Galerina's Ubuntu Desktop
 evidence on a separately booted Linux host. A fresh Codex session should read
@@ -15,8 +16,10 @@ the files in this order:
 4. `reports/README.md`
 
 The current runnable step proves that the statically linked registry adapter
-profile builds and independently verifies on Linux. It does not admit a
-production adapter or claim filesystem durability. Later commits will add the
+profile builds and independently verifies on Linux. It also runs the separate
+SLIDE repository's bounded Node-bootstrap platform observer and complete
+reference suite. Neither result admits a production adapter, proves native
+SLIDE execution or claims filesystem durability. Later commits will add the
 Linux host/filesystem gate, retained-handle publication primitive,
 process-termination matrix and controlled reboot recovery procedure here.
 
@@ -33,6 +36,7 @@ and custody gate passes.
 
 No private signing key is needed or permitted for this handover.
 
-Return the completed report and raw receipt in this repository under
-`docs/platform-handover/ubuntu-desktop/reports/`; do not leave the only copy in
-a terminal transcript or an untracked home-directory file.
+Return the completed report, raw Galerina receipt and raw SLIDE platform report
+in this repository under `docs/platform-handover/ubuntu-desktop/reports/`; do
+not leave the only copy in a terminal transcript or an untracked home-directory
+file.
