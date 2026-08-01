@@ -25,6 +25,10 @@
   SLIDE commit, workload, schema and receipt before consumption. This evidence
   grants no package removal, TypeScript/node_modules retirement, production,
   native or alternate-backend authority.
+- **Adapter plan is dependency-ordered:** hostile byte admission, independent
+  receipt/arithmetic verification, CLI/audit integration and only then full
+  devtools observation are specified in
+  `docs/superpowers/plans/2026-08-01-galerina-vade-benchmark-adapter.md`.
 - **Terminal comparison remains held:** do not publish SLIDE/Wasm/Rust/Python
   comparative claims until general native SLIDE execution can run equivalent
   workloads. Detailed evidence is in
