@@ -7,12 +7,13 @@ package lane **98/98** with **8,770** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap refresh: RD-0654 validates and archives the new native cache/graph/
-Tri-1 research bundle. It promotes no production claim. The next experimental
-SLIDE chapter is a written Deterministic Cache-Tile Pipeline design using an
-L2-active/L3-staging hypothesis, bounded double buffering, explicit lane
-selection, secret-independent scheduling and mandatory D1. Implementation is
-held at written-design owner review.
+Roadmap refresh: RD-0655 now records the implemented DCTP reference and its
+first twelve-lane measurement. Canonical tile plans, two-buffer ownership,
+cleanup, stable stage refusal and independent D1 are executable. The first
+performance point is negative: 302,025 amortized ns/op for DCTP no-prefetch
+versus 38,458 for complete-input BA. Node does not concurrently overlap staging
+and execution, and no physical cache/counter/thermal evidence exists. Retain
+the mechanism for native research; do not integrate it as a Galerina fast path.
 
 Roadmap refresh: independent SLIDE V2-G now performs Verified Ahead-of-Demand
 Execution for one bounded V2-D profile. The nine-lane component benchmark is
@@ -86,6 +87,7 @@ flowchart TB
     AD["🟩 RD-0623/0624 deep audit<br/>B1 maths · Tri-1 split · patent screen"]
     AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
     AH["🟨 NSE-Micro E11 measured<br/>3,780 checks · no speed/residency win"]
+    DCTP["🟩 DCTP reference measured<br/>1,188 outputs · 108 refusals<br/>correctness pass · performance point negative"]
     AE["🟦 SLIDE evidence + anchor activation<br/>offline authority · platform adapters"]
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
@@ -95,8 +97,8 @@ flowchart TB
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
     AB --> AH
-    AG --> AI --> AH
-    AI --> AE --> I
+    AG --> AI --> AH --> DCTP
+    AI --> DCTP --> AE --> I
     AI --> AF --> I
     E --> K --> Q
     E --> S --> SC --> ST --> WF --> CB --> GV --> H
@@ -201,8 +203,9 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | RD-0642 measured E11 adjudication | 🟩 | Re-derived representation/working-set maths, hostile-boundary evidence and the ten-dimension score are recorded. Weighted zero-trust architecture score is 8.65/10, but measured benefit is 2/10; decision remains experiment-only and worth a defensive/negative paper after cross-platform statistics |
 | RD-0652 transcript verification | 🟩 | Transcripts 00114-00120 are archived and independently reconciled. Cache blocking/tiling is retained as the next bounded experiment; claimed generic cache latency, unsupported deterministic-AI metrics and specification-to-code proof substitution are refused. The current PutnamBench Lean denominator is 672, but 668/672 is 99.405%, not 98%; Mythos existence is first-party verified while capability remains separately gated. Research-corpus provenance hardening is designed but not yet implemented |
 | RD-0653 native R&D and Windows tools | 🟩 | AI-11 through AI-17 are archived with exact identities; derived reports are not counted independently and one zero-byte matrix is explicitly refused. MSVC, Windows SDK/WPT/WinDbg/Application Verifier, Ninja and Sysinternals are available; hyperfine 1.20.0 is locally built. The cache first pass remains K3 `0` without harness/raw evidence. B1's 10.74% median residual remains statistically indeterminate against BA, and the cited Tri-1 normalized memory-times-time result is corrected to 1.004635339 for one JavaScript lane |
-| RD-0654 native source/raw adjudication and DCTP design | 🟨 | Local KB commit `4073a35` archives the bundle as AI-18 and records the adjudication; its 29/29 original manifest records pass, and supplied executables were neither executed nor committed. Cache L1/L2 knees are one-session screening evidence while L3 remains unresolved. The graph result is renamed contiguous topological CSR because no tile scheduler ran and map/footprint confounders remain. Local SLIDE commit `7d68547` specifies an L2-active/L3-staging double-buffer experiment, twelve fair lanes, no secret-dependent scheduling, no silent fallback and D1 on every result. Owner written-design review is the implementation gate |
-| Knowledge Base close | 🟩 | Local KB commits through `4073a35` include RD-0654 and the redacted, hash-bound AI-18 research archive; its tree has no unmerged or interrupted operation and is clean. No push occurred |
+| RD-0654 native source/raw adjudication and DCTP design | 🟩 | Local KB commit `4073a35` archives the bundle as AI-18 and records the adjudication; its 29/29 original manifest records pass, and supplied executables were neither executed nor committed. Cache L1/L2 knees are one-session screening evidence while L3 remains unresolved. The graph result is renamed contiguous topological CSR because no tile scheduler ran and map/footprint confounders remain. Local SLIDE commit `7d68547` specifies the approved experiment; RD-0655 supersedes its implementation gate |
+| RD-0655 DCTP implementation and first benchmark | 🟩 correctness / 🟨 performance | SLIDE commits through `ab98c5b` implement canonical exact tile plans, two-buffer scheduling/cleanup, secret-independent traces, no silent fallback, independent D1 and twelve measured lanes. Clean implementation `e0b824e` produced 1,188 exact outputs and 108 exact refusals. DCTP no-prefetch was 302,025 amortized ns/op versus BA 38,458, so the point direction is not better and the performance gate remains indeterminate. Node does not implement native concurrent overlap; physical cache, counter, energy, thermal, frequency and migration facts remain unavailable. No Galerina integration or removal authority follows |
+| Knowledge Base close | 🟩 | Local KB commits through `65dd551` include RD-0655 and the prior redacted, hash-bound AI-18 research archive; its tree has no unmerged or interrupted operation and is clean. No push occurred |
 | Live status authority | 🟩 | `governance/status-ledger.json` replaces the June free-text `version.json.openTasks` snapshot for live navigation. The schema admits at most eight unique bounded gates and only existing canonical repository `docs/*.md` evidence. Fixed-buffer double reads plus descriptor pre/mid/post checks enforce 16,384 bytes before allocation/decode/parse; missing, malformed, traversal-bearing, literal-duplicate or escaped-duplicate authority is refused without historical fallback. It is informational and cannot authorize release or production activation. Status-focused tests are 7/7, the containing dev-tools fixture is 45/45, and the post-change phase-close passes every blocking child including security 31-file/zero-finding, graph 5/5, generators 14/14 and the complete tooling child |
 
 ## Active Galerina work

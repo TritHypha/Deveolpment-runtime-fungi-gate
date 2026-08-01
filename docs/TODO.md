@@ -1,5 +1,27 @@
 # TODO
 
+### SLIDE DCTP reference implemented and negative benchmark retained - 2026-08-01
+
+- **Independent implementation:** SLIDE commits through `ab98c5b` add the
+  canonical closed DCTP plan, two-buffer tile-controlled executor, independent
+  B0/D1, twelve-lane harness, recorded evidence and implementation report.
+- **Correctness result:** the recorded clean `e0b824e` implementation run used
+  2 warmups, 9 counterbalanced samples and 12 operations/sample. It completed
+  1,188 exact output checks and 108 stable stage-refusal checks. D1 ran for
+  every completed DCTP candidate; no Galerina authority was released.
+- **Performance result:** DCTP no-prefetch measured 302,025 amortized ns/op;
+  complete-input BA measured 38,458 ns/op. The 263,567 ns/op delta is a
+  `NOT_BETTER_POINT_ESTIMATE`, so the first performance gate is not green.
+- **Boundary:** Node actively schedules and clears two buffers but does not
+  concurrently overlap staging and execution. L3 residency, PMU/TLB, energy,
+  thermal, frequency and migration remain `INDETERMINATE`.
+- **Adjudication:** KB commit `65dd551`, RD-0655, rates the bounded laboratory
+  architecture 8.09/10 and says retain for native research, not use as a
+  production fast path.
+- **No Galerina integration change:** this result removes no package, `.ts`
+  file, Wasm adapter or Node bootstrap seam. Native overlap, replicated
+  cross-platform evidence and an exact integration contract remain required.
+
 ### SLIDE native R&D bundle and cache-tile design recorded - 2026-08-01
 
 - **Verified intake:** KB AI-18 preserves all received reports, Rust source and
@@ -14,10 +36,10 @@
   Deterministic Cache-Tile Pipeline: canonical topological tiles, L2-active/
   L3-staging hypothesis, double buffering, secret-independent schedule,
   explicit no-silent-fallback lane selection and mandatory D1 verification.
-- **Current gate:** written-design owner review precedes test-first SLIDE
-  implementation. The design is committed locally as SLIDE `7d68547`.
-  Galerina integration remains later and no code dependency is added at this
-  checkpoint.
+- **Historical gate resolved:** the owner approved continued full-auto work;
+  the newer checkpoint records the bounded implementation and negative first
+  measurement. Galerina integration remains later and no code dependency was
+  added at this checkpoint.
 
 ### Windows native research toolchain and RD-0653 recorded - 2026-08-01
 
