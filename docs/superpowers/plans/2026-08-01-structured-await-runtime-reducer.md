@@ -1,6 +1,6 @@
 # Structured Await Runtime Reducer Implementation Plan
 
-**Status:** implementation and terminal verification complete; local close in progress
+**Status:** complete and locally committed; no push
 
 > **For agentic workers:** use the repository test-driven implementation and
 > verification workflows. Commit locally; never push.
@@ -32,5 +32,6 @@
       exhaustive gates: 98/98 packages, 8,770 tests, graph 5/5, generator
       contracts 14/14, security 31 files with zero findings/errors and
       exhaustive 85/85.
-- [ ] Refresh generated evidence and local KB indexes.
-- [ ] Commit reviewed Galerina and KB changes locally; do not push.
+- [x] Refresh generated evidence and local KB indexes.
+- [x] Commit reviewed changes locally: Galerina implementation `10945699` and
+      KB evidence `a40acec`; do not push.
