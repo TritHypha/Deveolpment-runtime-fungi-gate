@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8770,
-    "devTools": 138,
+    "devTools": 141,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -554,7 +554,7 @@
       "tests": 193,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 30,
+      "files": 31,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"
@@ -2398,6 +2398,44 @@
       ]
     },
     {
+      "name": "verify-registry-static-host-build-recipe.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "sinks/taint",
+        "signing/fusion",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "verify-registry-static-host-source.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "verify-registry-static-host-toolchain.mjs",
+      "category": "index",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "verify-registry-static-profile.mjs",
       "category": "index",
       "purpose": "(no header description)",
@@ -2997,6 +3035,7 @@
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
+      "verify-registry-static-host-source.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
       "run-core-tests.cjs",
@@ -3094,6 +3133,9 @@
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
+      "verify-registry-static-host-build-recipe.mjs",
+      "verify-registry-static-host-source.mjs",
+      "verify-registry-static-host-toolchain.mjs",
       "run-all-tests.cjs",
       "run-core-tests.cjs",
       "run-phase-close.mjs",
@@ -3222,6 +3264,9 @@
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
+      "verify-registry-static-host-build-recipe.mjs",
+      "verify-registry-static-host-source.mjs",
+      "verify-registry-static-host-toolchain.mjs",
       "verify-registry-static-profile.mjs",
       "lint-conventions.mjs",
       "lint-fungi.mjs",
@@ -3376,6 +3421,9 @@
       "kb-graph-generator.mjs",
       "gen-contract-registry.mjs",
       "kb-index.mjs",
+      "verify-registry-static-host-build-recipe.mjs",
+      "verify-registry-static-host-source.mjs",
+      "verify-registry-static-host-toolchain.mjs",
       "run-all-tests.cjs",
       "status.mjs",
       "bench-startup.mjs",
@@ -3406,6 +3454,7 @@
       "audit-papers-index.mjs",
       "audit-private-doc-leak.mjs",
       "audit-sink-canonicality.mjs",
+      "verify-registry-static-host-build-recipe.mjs",
       "check-gate-injection.mjs",
       "generate-sbom.mjs",
       "hardening-show-derived.mjs"

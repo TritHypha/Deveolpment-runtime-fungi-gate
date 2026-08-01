@@ -572,6 +572,20 @@ flowchart LR
   T_registry_index_cli_mjs --> C_diagnostics
   T_registry_index_cli_mjs --> C_doc_drift
   T_registry_index_cli_mjs --> C_graph_index
+  T_verify_registry_static_host_build_recipe_mjs["verify-registry-static-host-build-recipe.mjs"]
+  T_verify_registry_static_host_build_recipe_mjs --> C_sinks_taint
+  T_verify_registry_static_host_build_recipe_mjs --> C_signing_fusion
+  T_verify_registry_static_host_build_recipe_mjs --> C_source_hygiene
+  T_verify_registry_static_host_build_recipe_mjs --> C_graph_index
+  T_verify_registry_static_host_source_mjs["verify-registry-static-host-source.mjs"]
+  T_verify_registry_static_host_source_mjs --> C_signing_fusion
+  T_verify_registry_static_host_source_mjs --> C_diagnostics
+  T_verify_registry_static_host_source_mjs --> C_source_hygiene
+  T_verify_registry_static_host_source_mjs --> C_graph_index
+  T_verify_registry_static_host_toolchain_mjs["verify-registry-static-host-toolchain.mjs"]
+  T_verify_registry_static_host_toolchain_mjs --> C_signing_fusion
+  T_verify_registry_static_host_toolchain_mjs --> C_source_hygiene
+  T_verify_registry_static_host_toolchain_mjs --> C_graph_index
   T_verify_registry_static_profile_mjs["verify-registry-static-profile.mjs"]
   T_verify_registry_static_profile_mjs --> C_signing_fusion
   T_lint_conventions_mjs["lint-conventions.mjs"]
