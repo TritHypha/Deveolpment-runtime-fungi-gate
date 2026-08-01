@@ -1,5 +1,7 @@
 # Data-Pipeline Block Timeout Implementation Plan
 
+**Status:** implemented and terminally verified; local commit pending
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make every blocking data-pipeline saturation policy terminate after
@@ -32,22 +34,22 @@ phase-close tooling.
 - Consumes: `validateBackpressurePolicy(policy, path?)`
 - Produces: executable requirements for `blockTimeoutMs`
 
-- [ ] **Step 1: Update the valid blocking fixture**
+- [x] **Step 1: Update the valid blocking fixture**
 
 Set every valid `block` policy to include `blockTimeoutMs: 5_000`.
 
-- [ ] **Step 2: Add missing and invalid timeout tests**
+- [x] **Step 2: Add missing and invalid timeout tests**
 
 Assert that missing, zero, negative, fractional, non-finite and unsafe values
 produce exactly `Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_REQUIRED` at
 `backpressure.blockTimeoutMs`.
 
-- [ ] **Step 3: Add dead-field tests**
+- [x] **Step 3: Add dead-field tests**
 
 Assert that `fail` and `shed_oldest` with `blockTimeoutMs` produce exactly
 `Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_UNEXPECTED`.
 
-- [ ] **Step 4: Prove RED**
+- [x] **Step 4: Prove RED**
 
 Run `npm.cmd test` in
 `packages-galerina/galerina-data-pipeline`. The new assertions must fail
@@ -62,19 +64,19 @@ because the current validator neither requires nor refuses the field.
 - Produces: `BackpressurePolicy` discriminated union
 - Preserves: `validateBackpressurePolicy(policy, path?) -> readonly PipelineDiagnostic[]`
 
-- [ ] **Step 1: Replace the interface with the union from the design**
+- [x] **Step 1: Replace the interface with the union from the design**
 
 Use literal `block`, `shed_oldest` and `fail` arms. The non-blocking arm must
 declare `blockTimeoutMs?: never`.
 
-- [ ] **Step 2: Add the two fail-closed runtime checks**
+- [x] **Step 2: Add the two fail-closed runtime checks**
 
 When `onSaturation === "block"`, require
 `isPositiveSafeInteger(policy.blockTimeoutMs)`. When the mode is a known
 non-blocking arm, refuse an own timeout field. Leave unknown-mode reporting
 independent.
 
-- [ ] **Step 3: Prove GREEN**
+- [x] **Step 3: Prove GREEN**
 
 Run `npm.cmd test` in the package and require all tests, typecheck and build to
 pass without warnings.
@@ -91,17 +93,17 @@ pass without warnings.
 - Consumes: verified Task 2 behavior
 - Produces: current package usage and auditable project status
 
-- [ ] **Step 1: Document both valid policy shapes and non-claims**
+- [x] **Step 1: Document both valid policy shapes and non-claims**
 
 Show one bounded `block` example and one `fail` example. State that the package
 validates the contract but runtime enforcement remains a separate gate.
 
-- [ ] **Step 2: Update current status**
+- [x] **Step 2: Update current status**
 
 Mark the recorded data-pipeline contract delta complete and record exact
 focused evidence without changing platform or release authority.
 
-- [ ] **Step 3: Regenerate and verify**
+- [x] **Step 3: Regenerate and verify**
 
 Run the governed generators, graph check, generator-contract audit,
 authoritative package-count run and strict/exhaustive phase-close. Fix rather
@@ -110,3 +112,12 @@ than waive any failure.
 - [ ] **Step 4: Commit locally**
 
 Commit only the reviewed chapter files and generated evidence. Never push.
+
+## Completion evidence
+
+The package passes 22/22 with clean typecheck/build. The authoritative
+workspace pass is 98/98 packages and 8,755 tests. Graph check is 5/5,
+generator contracts are 14/14, and terminal exhaustive phase-close passes
+every blocking child, including the 31-file security audit with zero findings
+or errors and tooling 245/245. The local implementation commit is the final
+remaining bookkeeping action and does not change this verified tree.

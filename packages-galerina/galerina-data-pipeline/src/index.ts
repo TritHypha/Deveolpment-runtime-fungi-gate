@@ -28,10 +28,17 @@ export type SaturationBehaviour = "block" | "shed_oldest" | "fail";
 
 // The backpressure bound is what keeps an upstream burst from becoming an
 // out-of-memory crash; it is required on every stage.
-export interface BackpressurePolicy {
-  readonly maxInFlight: number;
-  readonly onSaturation: SaturationBehaviour;
-}
+export type BackpressurePolicy =
+  | {
+      readonly maxInFlight: number;
+      readonly onSaturation: "block";
+      readonly blockTimeoutMs: number;
+    }
+  | {
+      readonly maxInFlight: number;
+      readonly onSaturation: Exclude<SaturationBehaviour, "block">;
+      readonly blockTimeoutMs?: never;
+    };
 
 export interface CheckpointPolicy {
   readonly intervalItems: number;
@@ -147,6 +154,27 @@ export function validateBackpressurePolicy(
       "error",
       `Saturation behaviour "${String(policy.onSaturation)}" is not a known behaviour.`,
       `${path}.onSaturation`,
+    ));
+  }
+
+  if (policy.onSaturation === "block") {
+    if (!isPositiveSafeInteger(policy.blockTimeoutMs)) {
+      diagnostics.push(pipelineDiagnostic(
+        "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_REQUIRED",
+        "error",
+        "Blocking saturation requires a positive safe-integer blockTimeoutMs bound.",
+        `${path}.blockTimeoutMs`,
+      ));
+    }
+  } else if (
+    (policy.onSaturation === "fail" || policy.onSaturation === "shed_oldest")
+    && Object.hasOwn(policy, "blockTimeoutMs")
+  ) {
+    diagnostics.push(pipelineDiagnostic(
+      "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_UNEXPECTED",
+      "error",
+      "Non-blocking saturation must not declare an unused blockTimeoutMs field.",
+      `${path}.blockTimeoutMs`,
     ));
   }
 

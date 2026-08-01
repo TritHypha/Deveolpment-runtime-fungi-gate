@@ -3,7 +3,7 @@
   "totals": {
     "packages": 98,
     "testBearing": 98,
-    "tests": 8753,
+    "tests": 8755,
     "devTools": 136,
     "auditTools": 80,
     "toolsInCadence": 62,
@@ -84,7 +84,7 @@
       "name": "galerina-data-pipeline",
       "kind": "data",
       "description": "Galerina bounded streaming data pipeline, backpressure and checkpoint contracts.",
-      "tests": 20,
+      "tests": 22,
       "hasTestScript": true,
       "border": "PASS",
       "files": 1,

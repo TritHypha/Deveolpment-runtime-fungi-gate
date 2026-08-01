@@ -15,7 +15,7 @@ const codes = (diags) => diags.map((d) => d.code);
 const stage = (name, inputType, outputType) => ({
   name,
   transform: { name: `${name}-t`, inputType, outputType },
-  backpressure: { maxInFlight: 64, onSaturation: "block" },
+  backpressure: { maxInFlight: 64, onSaturation: "block", blockTimeoutMs: 5_000 },
 });
 
 const goodPipeline = {
@@ -33,12 +33,61 @@ describe("validateBackpressurePolicy — no bound, no pipeline", () => {
       codes(validateBackpressurePolicy({ maxInFlight: 8, onSaturation: "fail" })),
       [],
     );
+    assert.deepEqual(
+      codes(validateBackpressurePolicy({
+        maxInFlight: 8,
+        onSaturation: "block",
+        blockTimeoutMs: 5_000,
+      })),
+      [],
+    );
   });
 
   it("rejects zero, negative, NaN and fractional bounds", () => {
     for (const maxInFlight of [0, -1, Number.NaN, 1.5]) {
-      const diags = validateBackpressurePolicy({ maxInFlight, onSaturation: "block" });
+      const diags = validateBackpressurePolicy({
+        maxInFlight,
+        onSaturation: "block",
+        blockTimeoutMs: 5_000,
+      });
       assert.deepEqual(codes(diags), ["Galerina_DATA_PIPELINE_BACKPRESSURE_BOUND_REQUIRED"]);
+    }
+  });
+
+  it("requires a positive safe-integer timeout for the blocking arm", () => {
+    for (const blockTimeoutMs of [
+      undefined,
+      0,
+      -1,
+      1.5,
+      Number.NaN,
+      Number.POSITIVE_INFINITY,
+      Number.MAX_SAFE_INTEGER + 1,
+    ]) {
+      const policy = {
+        maxInFlight: 8,
+        onSaturation: "block",
+        ...(blockTimeoutMs === undefined ? {} : { blockTimeoutMs }),
+      };
+      const diagnostics = validateBackpressurePolicy(policy);
+      assert.deepEqual(codes(diagnostics), [
+        "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_REQUIRED",
+      ]);
+      assert.equal(diagnostics[0].path, "backpressure.blockTimeoutMs");
+    }
+  });
+
+  it("refuses dead block-timeout configuration on non-blocking arms", () => {
+    for (const onSaturation of ["fail", "shed_oldest"]) {
+      const diagnostics = validateBackpressurePolicy({
+        maxInFlight: 8,
+        onSaturation,
+        blockTimeoutMs: 5_000,
+      });
+      assert.deepEqual(codes(diagnostics), [
+        "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_UNEXPECTED",
+      ]);
+      assert.equal(diagnostics[0].path, "backpressure.blockTimeoutMs");
     }
   });
 
@@ -119,7 +168,7 @@ describe("validatePipelineDefinition — bounded stages, typed flow, budgets", (
       stages: [
         {
           ...stage("decode", "Bytes", "Event"),
-          backpressure: { maxInFlight: 0, onSaturation: "block" },
+          backpressure: { maxInFlight: 0, onSaturation: "block", blockTimeoutMs: 5_000 },
         },
       ],
     });

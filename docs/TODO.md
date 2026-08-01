@@ -1,5 +1,25 @@
 # TODO
 
+### Data-pipeline finite block-saturation contract complete - 2026-08-01
+
+- **Fail-close gap repaired:** `BackpressurePolicy` is now discriminated.
+  `block` requires a positive safe-integer `blockTimeoutMs`; `fail` and
+  `shed_oldest` refuse that inapplicable field instead of carrying dead
+  configuration. The whole-pipeline timeout is not inherited as a substitute.
+- **Developer contract:** TypeScript callers get the exact arm-specific shape,
+  while the runtime validator independently protects JavaScript and decoded
+  inputs with `Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_REQUIRED` and
+  `Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_UNEXPECTED` at the precise field path.
+- **Test-first evidence:** missing, zero, negative, fractional, non-finite and
+  unsafe-integer timeouts first failed, then passed after the minimal validator
+  change. The package is 22/22 with clean typecheck and build. The authoritative
+  workspace run is 98/98 packages and 8,755 tests with zero failures. Terminal
+  exhaustive phase-close passes every blocking gate, including security
+  31-file/zero-finding, graph 5/5, generator contracts 14/14 and tooling 245.
+- **Non-claim:** this closes policy admission only. Runtime scheduler timeout
+  enforcement and end-to-end cancellation remain separate executable gates;
+  no production, package-retirement or platform authority is released.
+
 ### Governed Galerina VADE benchmark adapter complete - 2026-08-01
 
 - **Exact authority boundary implemented:** package
