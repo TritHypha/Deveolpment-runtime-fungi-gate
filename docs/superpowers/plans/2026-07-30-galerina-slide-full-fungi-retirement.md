@@ -260,7 +260,9 @@ capability leases, deterministic resource ceilings, canonical artifact
 identity and terminal outcomes. Galerina is one frontend; the independent
 fixture frontend remains the non-Galerina conformance authority.
 
-- [ ] Re-run and pin the frozen R1 and V2-A through V2-E corpora.
+- [x] Re-run and pin the frozen R1 and V2-A through V2-E corpora. Fresh
+  evidence: 15-file contract integrity, 41/41 independent V2-C through V2-E
+  checks and the explicit 28-file Galerina adapter corpus at 496/496.
 - [ ] Write failing conformance tests for a complete executable body,
   post-optimization semantic re-verification, final-artifact binding,
   capability broker isolation, memory cleanup and deterministic clean/cached
@@ -276,8 +278,11 @@ fixture frontend remains the non-Galerina conformance authority.
   15/15 contract files and 272/272 complete. Observation remains
   unauthenticated and intentionally reports execution evidence `UNVERIFIED`;
   native build/run and every other platform remain open.
-- [ ] Run independent SLIDE plus Galerina frontend differential evidence.
-- [ ] Update both repositories' ledgers and commit separately without pushing.
+- [x] Run independent SLIDE plus Galerina frontend differential evidence. The
+  independent subset is 41/41 and the Galerina-side corpus is 496/496.
+- [x] Update both repositories' ledgers and commit separately without pushing.
+  Observer evidence is in local SLIDE commit `77d28e8`; Galerina roadmap and
+  Ubuntu handover synchronization is in local commit `f3059820`.
 
 ### Task 6: Build the flat native package resolver and root lock
 
