@@ -6,11 +6,17 @@
   "private": true,
   "type": "module",
   "packageGraph": {
+    "roots": [
+      "src",
+      "contracts",
+      "evidence"
+    ],
     "extensions": [
       ".ts",
       ".fungi",
       ".mjs",
-      ".js"
+      ".js",
+      ".json"
     ],
     "entryPoints": [
       "src/audit-benchmark-integrity.mjs",

@@ -132,7 +132,15 @@ function isPlainData(value, seen = new WeakSet()) {
   if (prototype !== (array ? Array.prototype : Object.prototype)) return false;
   seen.add(value);
   const descriptors = Object.getOwnPropertyDescriptors(value);
-  for (const key of Object.keys(descriptors)) {
+  const descriptorKeys = Object.keys(descriptors);
+  if (array) {
+    const dataKeys = descriptorKeys.filter((key) => key !== "length");
+    if (
+      dataKeys.length !== value.length
+      || dataKeys.some((key, index) => key !== String(index))
+    ) return false;
+  }
+  for (const key of descriptorKeys) {
     if (array && key === "length") continue;
     const descriptor = descriptors[key];
     if (!("value" in descriptor) || descriptor.get !== undefined || descriptor.set !== undefined) return false;

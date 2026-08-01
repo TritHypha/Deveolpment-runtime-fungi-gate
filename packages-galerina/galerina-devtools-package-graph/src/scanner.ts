@@ -144,7 +144,7 @@ function listSourceFiles(dir: string, extensions: readonly string[]): string[] {
     let s;
     try { s = statSync(full); } catch { continue; }
     if (s.isDirectory()) {
-      if (name === "node_modules" || name === "dist") continue;
+      if (name === "node_modules" || name === "dist" || name === ".myco") continue;
       out.push(...listSourceFiles(full, extensions));
     } else if (isSourceFile(name, extensions)) {
       out.push(full);

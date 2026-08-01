@@ -1,5 +1,47 @@
 # TODO
 
+### Governed Galerina VADE benchmark adapter complete - 2026-08-01
+
+- **Exact authority boundary implemented:** package
+  `galerina-devtools-benchmarks` owns a closed contract and exact historical
+  receipt for independent SLIDE commit `b5aab13`. The input path is location
+  only; Galerina pins the full receipt SHA-256, source/body/semantic identities,
+  workload, nine lanes, non-claims, platform/bootstrap labels and
+  `authorityReleased: false`.
+- **Hostile intake implemented:** one fixed file handle, regular single-link
+  identity, 1 MiB ceiling before allocation, size-plus-one read, device/inode/
+  size/link/timestamp stability, fatal UTF-8, explicit BOM refusal and
+  byte-for-byte canonical JSON. Empty, oversized, changing-identity, directory,
+  symbolic/hard-link, malformed encoding, trailing, reordered and duplicate-key
+  evidence refuses.
+- **Independent arithmetic implemented:** Galerina does not call SLIDE's
+  verifier as its oracle. It independently checks the closed receipt shape,
+  exact lane/order closure, positive safe samples, median/min/max/MAD/ops-per-
+  second and preparation/savings/assurance/break-even economics. Programmatic
+  Proxy/accessor inputs refuse without executing their traps.
+- **Devtools integration implemented:** `admit:slide-vade` emits only a bounded
+  reconstructed record. The package audit has a valid control and planted
+  comparison/authority failures. The unfiltered runner reports a separate
+  `slide-vade-evidence` child, never writes it to `results/latest.json`, and the
+  publication audit rejects that identity if it enters comparative results.
+- **Current fresh evidence:** adapter-focused 9/9, VADE audit 2/2, benchmark
+  package 19/19, truth audit green, package-graph 28/28, core aggregate 5/5
+  including 5,880 unit tests and independent SLIDE 496/496. Graph generation
+  and check are 5/5; generator contracts are 14/14; strict phase-close is
+  84/84; exhaustive phase-close is 85/85, including 98/98 package commands.
+  The authoritative post-close count is 98 packages and 8,753 tests with zero
+  failures. No verification action remains for this bounded adapter chapter.
+- **Security-review closure:** an adversarial programmatic probe proved that a
+  sparse `laneOrders` array could bypass `.every()` element checks. Plain-data
+  admission now refuses sparse arrays and array-owned side properties. The
+  regression test first failed and now passes. The hard-link attack fixture was
+  also isolated from canonical evidence so parallel audits cannot transiently
+  observe `nlink=2`; the complete benchmark package is stable across three
+  consecutive 23/23 runs.
+- **Non-claims retained:** this admits one historical Windows/Node component
+  receipt. It does not authorize production, native execution, package
+  retirement or the deferred SLIDE/Wasm/Rust/Python comparison.
+
 ### Independent SLIDE V2-G VADE measured - 2026-08-01
 
 - **Bounded mechanism complete outside Galerina:** SLIDE commits `dacc8af`,
@@ -20,14 +62,13 @@
 - **Fresh closure:** SLIDE contract 15/15 and full suite 304/304 across 19
   suites. Galerina's exact tracked adapter corpus remains 496/496 over 28
   files and its independent SLIDE invocation passes 304/304 over 42 files.
-- **Galerina status remains honest:** the full Galerina devtools benchmark does
-  not yet invoke V2-G. Next, implement a governed adapter that pins the exact
-  SLIDE commit, workload, schema and receipt before consumption. This evidence
-  grants no package removal, TypeScript/node_modules retirement, production,
-  native or alternate-backend authority.
-- **Adapter plan is dependency-ordered:** hostile byte admission, independent
-  receipt/arithmetic verification, CLI/audit integration and only then full
-  devtools observation are specified in
+- **Galerina status remains honest:** the governed adapter and separate
+  non-comparative full-run child are implemented. The evidence grants no
+  package removal, TypeScript/node_modules retirement, production, native or
+  alternate-backend authority.
+- **Adapter plan is complete:** hostile byte admission, independent receipt/
+  arithmetic verification, CLI/audit integration and full devtools observation
+  are specified and closed in
   `docs/superpowers/plans/2026-08-01-galerina-vade-benchmark-adapter.md`.
 - **Terminal comparison remains held:** do not publish SLIDE/Wasm/Rust/Python
   comparative claims until general native SLIDE execution can run equivalent

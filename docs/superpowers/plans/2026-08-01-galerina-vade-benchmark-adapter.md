@@ -1,7 +1,7 @@
 # Governed Galerina VADE benchmark adapter implementation plan
 
 **Date:** 2026-08-01  
-**Status:** approved next dependency-ordered chapter; implementation pending  
+**Status:** complete; implemented and terminally verified
 **Authority released:** no
 
 ## Goal
@@ -154,3 +154,17 @@ admits one historical Windows/Node component receipt. It does not establish a
 general SLIDE backend, Linux/macOS performance, native code, cryptographic
 evidence authentication, package parity, production authority or the deferred
 SLIDE/Wasm/Rust/Python comparison.
+
+## Implementation checkpoint
+
+Galerina commit `6ef42f04` implements Tasks 1-4 in the existing flat benchmark
+package. Focused adapter evidence is 9/9, its audit is 2/2, the benchmark
+package is 19/19, the truth audit is green, package graph is 28/28, the core
+aggregate is 5/5 with 5,880 unit tests and 496/496 independent SLIDE tests,
+graph generate/check is 5/5 and generator contracts are 14/14. Task 5 is
+complete: strict phase-close is 84/84, exhaustive is 85/85 including 98/98
+package commands, and the authoritative post-close count is 8,753 tests with
+zero failures. The final security review additionally rejects sparse arrays and
+array-owned side data and isolates the hard-link fixture from canonical
+evidence; three consecutive benchmark-package runs pass 23/23. All five tasks
+in this bounded plan are complete.

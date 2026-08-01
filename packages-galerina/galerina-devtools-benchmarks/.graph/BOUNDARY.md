@@ -5,16 +5,16 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`, `.mjs`, `.js`]
+**Scanned scope:** roots [`src`, `contracts`, `evidence`] · extensions [`.ts`, `.fungi`, `.mjs`, `.js`, `.json`]
 
 ## Summary
 
 | Metric | Count |
 |---|---|
-| Files | 21 |
-| Internal edges | 12 |
-| External dependencies | 6 |
-| ├─ Node core | 6 |
+| Files | 25 |
+| Internal edges | 14 |
+| External dependencies | 9 |
+| ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 0 |
 | └─ Third-party | 0 |
 | Orphan files | 0 |
@@ -23,11 +23,14 @@
 
 ### Node core
 - `node:child_process`
+- `node:crypto`
 - `node:fs`
+- `node:fs/promises`
 - `node:os`
 - `node:path`
 - `node:perf_hooks`
 - `node:url`
+- `node:util`
 
 ### Workspace (@galerina/*)
 _none_
@@ -43,6 +46,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 
 ## Entry Points
 - `src/audit-benchmark-integrity.mjs`
+- `src/audit-slide-vade.mjs`
 - `src/audit.mjs`
 - `src/bench-guard.mjs`
 - `src/build-chart.mjs`
@@ -55,10 +59,13 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/noise-gate.mjs`
 - `src/report.mjs`
 - `src/runner.mjs`
+- `src/slide-vade-adapter.mjs`
 - `src/snapshot.mjs`
 - `src/variance.mjs`
 
 ## Loaded Assets
+- `contracts/slide-v2g-vade-admission-v1.json`
+- `evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json`
 - `src/wasm-runner.mjs`
 
 ## Allowed Orphans

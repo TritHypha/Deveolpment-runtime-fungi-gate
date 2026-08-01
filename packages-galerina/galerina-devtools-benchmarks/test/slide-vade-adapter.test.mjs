@@ -77,8 +77,9 @@ test("the byte boundary refuses empty, oversized, directory, hard-link, BOM and 
   const directory = join(TEMP, "directory.json");
   mkdirSync(directory);
   assert.equal((await admitSlideVadeEvidence(directory)).verdict, -1);
+  const hardLinkSource = fresh("hard-link-source.json", readFileSync(EVIDENCE));
   const hardLink = join(TEMP, "hard-link.json");
-  linkSync(EVIDENCE, hardLink);
+  linkSync(hardLinkSource, hardLink);
   assert.equal((await admitSlideVadeEvidence(hardLink)).verdict, -1);
   rmSync(hardLink);
   assert.equal((await admitSlideVadeEvidence(fresh("bom.json", Buffer.from([0xef, 0xbb, 0xbf, 0x7b, 0x7d])))).verdict, -1);
@@ -173,6 +174,23 @@ test("programmatic verification refuses proxies and accessors before treating th
   Object.defineProperty(accessor, "benchmark", { enumerable: true, get: () => receipt.benchmark });
   assert.equal(verifySlideVadeReceipt(accessor, contract).verdict, -1);
   assert.equal((await admitSlideVadeEvidence(EVIDENCE, new Proxy({}, {}))).verdict, -1);
+});
+
+test("programmatic verification refuses sparse arrays and array-owned side data", async () => {
+  const receipt = JSON.parse(readFileSync(EVIDENCE, "utf8"));
+  const contract = await readSlideVadeContract();
+
+  const sparseOrders = clone(receipt);
+  sparseOrders.laneOrders = new Array(receipt.laneOrders.length);
+  assert.equal(verifySlideVadeReceipt(sparseOrders, contract).verdict, -1);
+
+  const sparseSamples = clone(receipt);
+  sparseSamples.lanes[0].samplesNs = new Array(receipt.config.samples);
+  assert.equal(verifySlideVadeReceipt(sparseSamples, contract).verdict, -1);
+
+  const sideData = clone(receipt);
+  sideData.laneOrders.extra = "not receipt data";
+  assert.equal(verifySlideVadeReceipt(sideData, contract).verdict, -1);
 });
 
 test("the direct-argv CLI emits only a bounded reconstructed result", () => {

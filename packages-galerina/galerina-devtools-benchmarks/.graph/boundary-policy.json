@@ -2,11 +2,14 @@
   "packageName": "@galerina/devtools-benchmarks",
   "allowedExternal": [
     "node:child_process",
+    "node:crypto",
     "node:fs",
+    "node:fs/promises",
     "node:os",
     "node:path",
     "node:perf_hooks",
-    "node:url"
+    "node:url",
+    "node:util"
   ],
-  "note": "Reviewed baseline (RD-0348 .mjs scanner-coverage fix). This package's source is .mjs, which the scanner's default extensions ([.ts,.fungi]) did not match — so the prior baseline was auto-generated over ZERO scanned files (an empty allowlist that passed vacuously). A packageGraph.extensions override in package.json now scans the .mjs, and this allowlist is the reviewed surface: node builtins only (child_process spawns the compared runtimes; fs/os/path/url/perf_hooks do I/O, platform detection, and timing) — no third-party, no @galerina reach-through. `--check` fails if a new external import appears."
+  "note": "Reviewed baseline (RD-0348 plus the 2026-08-01 governed VADE adapter). The package graph scans its JavaScript, Fungi and governed JSON assets. The allowlist remains Node builtins only: child_process spawns compared runtimes; crypto pins evidence bytes; fs and fs/promises provide bounded fixed-handle evidence and ordinary benchmark I/O; os/path/url/perf_hooks support platform detection, paths and timing; util rejects proxy-bearing programmatic input. There is no third-party or @galerina reach-through, and --check fails closed on any new external import."
 }

@@ -13,7 +13,7 @@ Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
 Terminal physical retirement: OPEN — 491 tracked package TypeScript paths remain.
 
-Post-SLIDE authority: OPEN — 0/104 production Fungi sources digest-admitted; 0/31 host boundaries owned; 95 node_modules trees.
+Post-SLIDE authority: OPEN — 0/104 production Fungi sources digest-admitted; 0/33 host boundaries owned; 95 node_modules trees.
 
 `.fungi` in src trees: 104 across 95 packages · finder drift: 0
 

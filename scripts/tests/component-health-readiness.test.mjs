@@ -28,7 +28,7 @@ test("component health counts the benchmark package's governed test/ surface", (
   assert.ok(benchmark, "benchmark package must be in the reconciled workspace");
   assert.equal(benchmark.testScript, true);
   assert.equal(benchmark.hasTestsDir, true);
-  assert.equal(benchmark.testFiles, 6);
+  assert.equal(benchmark.testFiles, 8);
   assert.deepEqual(benchmark.gaps, []);
 
   const tracking = report.percentAudit.sections.find(

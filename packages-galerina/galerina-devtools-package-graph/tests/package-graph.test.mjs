@@ -537,6 +537,22 @@ test("packageGraph config overrides scanned roots/extensions", () => {
   rmSync(root, { recursive: true, force: true });
 });
 
+test("configured JSON scans exclude generated .myco metadata from the source node set", () => {
+  const root = makeFixture({
+    "package.json": JSON.stringify({
+      name: "@galerina/json-assets",
+      packageGraph: { roots: ["src", "contracts"], extensions: [".mjs", ".json"] },
+    }),
+    "src/index.mjs": "export const ready = true;\n",
+    "src/.myco/index.json": "{}\n",
+    "contracts/admission.json": "{}\n",
+  });
+  const graph = buildGraph(scanPackage(root));
+  assert.ok(graph.nodes.includes("contracts/admission.json"));
+  assert.ok(!graph.nodes.some((node) => node.includes("/.myco/") || node.startsWith(".myco/")));
+  rmSync(root, { recursive: true, force: true });
+});
+
 test("scanned scope is reported even when zero files match (no silent empty border)", () => {
   const root = makeFixture({
     "package.json": JSON.stringify({ name: "@galerina/empty", packageGraph: { roots: ["does-not-exist"] } }),

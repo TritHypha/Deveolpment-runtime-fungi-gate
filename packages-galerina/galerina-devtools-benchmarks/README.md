@@ -92,6 +92,29 @@ Runs every benchmark across all available runtimes and writes results to `result
 
 ### Run a single benchmark
 
+The unfiltered runner also reports a separate `slide-vade-evidence` child. It
+admits one exact independent SLIDE V2-G receipt under Galerina's own closed
+contract and arithmetic verifier. This child is
+`NON_COMPARATIVE_COMPONENT_EVIDENCE`: it is never written into
+`results/latest.json`, never supplies a Galerina subject lane, and never acts
+as a work-equivalence certificate. A strict full run refuses missing or
+mismatched evidence; quick/developer observation may report explicit
+`INDETERMINATE` instead of inventing a green result.
+
+To inspect a receipt directly:
+
+```powershell
+npm.cmd run admit:slide-vade -- --input <receipt-path>
+npm.cmd run audit:slide-vade
+```
+
+Authority comes from the pinned bytes and contract, not the path. Admission
+requires a regular single-link stable file, a 1 MiB pre-allocation ceiling,
+fatal UTF-8, no BOM, canonical JSON, the exact receipt SHA-256, the exact SLIDE
+source commit and independent nine-lane summary/economics recomputation. The
+bounded CLI reconstructs its result and does not echo an input path, host
+exception, stack or receipt body on refusal.
+
 ```
 npm run run:compute-mix
 npm run run:arithmetic
@@ -217,6 +240,12 @@ src/
   galerina-runner.mjs       Galerina interpreter bridge (governed / manifest / passive)
   wasm-runner.mjs           Galerina→WASM bridge (.fungi → WAT → binary WASM → WebAssembly.instantiate)
   throughput-units.mjs      Normalises every runtime to one inner-ops/sec unit per benchmark
+  slide-vade-adapter.mjs    Exact-byte and independent V2-G receipt admission
+  audit-slide-vade.mjs      Non-comparative evidence classification/audit
+contracts/
+  slide-v2g-vade-admission-v1.json  Closed Galerina admission contract
+evidence/
+  slide-v2g-verified-ahead-of-demand-b5aab13.json  Exact admitted historical receipt
 results/
   latest.json               Written by `npm run run` (gitignored except .gitkeep)
 ```

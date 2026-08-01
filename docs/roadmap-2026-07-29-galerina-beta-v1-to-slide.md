@@ -3,14 +3,15 @@
 Date: 2026-08-01
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,735** unit tests, graph **5/5**
+package lane **98/98** with **8,753** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
 Roadmap refresh: independent SLIDE V2-G now performs Verified Ahead-of-Demand
 Execution for one bounded V2-D profile. The nine-lane component benchmark is
-implemented and independently re-verified; it is not the terminal cross-runtime
-comparison. Fresh closure evidence is 304/304 full SLIDE across 19 suites, 15
+implemented, independently re-verified and admitted by a separate governed
+Galerina adapter; it is not the terminal cross-runtime comparison. Fresh
+closure evidence is 304/304 full SLIDE across 19 suites, 15
 contract files, 496/496 across exactly 28 tracked Galerina adapter files and
 304/304 from Galerina's independent 42-file SLIDE invocation.
 
@@ -52,6 +53,7 @@ flowchart TB
     ST["🟩 V2-D schedule translation proof<br/>changed order · exact permutation · no fallback"]
     WF["🟩 V2-F direct Wasm compatibility<br/>GIR→binary · zero imports · branded execution"]
     CB["🟩 V2-G VADE component benchmark<br/>nine lanes · refusal cost · exact outputs"]
+    GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
@@ -83,7 +85,7 @@ flowchart TB
     AI --> AE --> I
     AI --> AF --> I
     E --> K --> Q
-    E --> S --> SC --> ST --> WF --> CB --> H
+    E --> S --> SC --> ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
     E --> O --> H
@@ -96,7 +98,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,L,M,U,V,AD,AG,AI,SI,O green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,AD,AG,AI,SI,O green;
     class X,F red;
     class Q,W,AA,AB,AC,AH,TG,LI amber;
     class H,I,T,AE,AF blue;
@@ -126,7 +128,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |
 | V2-G Verified Ahead-of-Demand Execution | 🟩 bounded measured evidence | SLIDE commits `dacc8af`, `bec6bd2` and `b5aab13` bind one exact prepared V2-D plan, verified schedule and direct import-free V2-F instance to a process-local capsule. Demand re-admits one signed-i32 value and has no clean, WAT, Galerina or alternate-backend fallback. Copied, forged, proxied, serialized and cross-module capsules refuse. Full SLIDE passes 304/304 across 19 suites; Galerina's exact adapter harness remains 496/496 and independently invokes SLIDE 304/304 |
 | V2-G component benchmark | 🟩 bounded measured evidence | Clean commit `b5aab13`, Windows 10 x64, i9-9900K, Node v24.18.0, seed 1511506913, 128 operations, two warmups and nine counterbalanced samples. Median per operation: preparation 802,357.03 ns, clean V2-D demand 206,293.75 ns, verified demand 1,564.84 ns, assurance cost over warm V2-F 1,166.41 ns; measured break-even four demands. Evidence is capped at 1 MiB, stable-handle read, canonical UTF-8/JSON and independently recomputed. It is non-authorizing process-local evidence, not the deferred SLIDE/Wasm/Rust/Python comparison |
-| Governed Galerina VADE benchmark adapter | 🟦 next integration gate | Pin the exact SLIDE commit, workload, benchmark schema and receipt digest before Galerina consumes V2-G evidence. The current full Galerina devtools benchmark does not yet exercise V2-G and no package-removal or production authority follows from the independent measurement |
+| Governed Galerina VADE benchmark adapter | 🟩 bounded admission | Galerina commit `6ef42f04` owns the exact receipt and a closed contract pinning SLIDE `b5aab13`, SHA-256, workload, platform/bootstrap labels, lane set and non-claims. A fixed-handle 1 MiB canonical reader refuses unstable, linked, ambiguous or alternate bytes. Galerina independently re-derives all nine lane summaries and economics. The CLI/audit reconstruct bounded results, and the full runner exposes only a separate non-comparative child outside `results/latest.json`. This grants no production, package-retirement or cross-runtime-comparison authority |
 | Protected working branch | 🟩 | Protected branches are active; this session keeps its new commits local and does not push |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
@@ -252,11 +254,12 @@ The remaining sequence is:
    rotation/revocation, storage exhaustion and physical-media evidence remain
    unimplemented. Galerina production native activation remains red; no
    loader, rotation or package authority was bypassed.
-7. **Next integration chapter:** implement a governed Galerina VADE benchmark
-   adapter that pins the exact SLIDE commit, workload, schema and receipt
-   digest. The independent V2-G benchmark is a pre-native baseline and does
-   not authorize production execution, component removal or the terminal
-   cross-runtime comparison.
+7. **Completed integration chapter:** the governed Galerina VADE benchmark
+   adapter pins the exact SLIDE commit, workload, schema and receipt digest,
+   independently recomputes the measured receipt, and exposes it only as a
+   non-comparative devtools child. The independent V2-G benchmark remains a
+   pre-native baseline and does not authorize production execution, component
+   removal or the terminal cross-runtime comparison.
 8. Switch packages in dependency order from TypeScript execution to verified
    `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
    implementation `.ts` files and 491 tracked package `.ts` paths: 26
@@ -316,7 +319,7 @@ The terminal verification checkpoint is now green: strict phase-close passes
 84/84, exhaustive passes 85/85, graph-all passes 5/5, all fourteen generator
 contracts pass, and the exhaustive package lane passes 98/98. A separate
 canonical-count run rebuilt the same declared package chains and recorded
-8,735 tests with zero failures. The strict cadence first caught stale
+8,753 tests with zero failures. The strict cadence first caught stale
 code-index line-address evidence; after explicit dependency-ordered
 regeneration retained the exact 753-code set, its check mode and the complete
 cadence passed. Focused automatic key-rotation evidence is 62/62. These

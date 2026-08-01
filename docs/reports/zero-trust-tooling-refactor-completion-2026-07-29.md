@@ -551,3 +551,39 @@ content-addressed generation activation and its crash/platform evidence remain
 open.
 
 No changes in this work were pushed.
+
+## Governed VADE evidence adapter addendum - 2026-08-01
+
+Galerina now admits the exact independent SLIDE V2-G component receipt through
+its own benchmark-devtools boundary. The adapter pins the complete receipt
+SHA-256, SLIDE commit `b5aab13`, source identities, workload, nine lanes,
+non-claims and host/bootstrap labels. It reads one regular single-link file
+through a fixed handle with a 1 MiB ceiling, size-plus-one overflow detection,
+pre/post identity and timestamp stability, fatal UTF-8, BOM refusal and exact
+canonical JSON.
+
+The parsed receipt is not trusted merely because the bytes match. Galerina
+independently re-derives lane closure, counterbalanced order, sample bounds,
+median/min/max/MAD/operations-per-second, savings, assurance cost and
+break-even. Proxy/accessor records cannot execute traps. The CLI reconstructs
+only the closed result algebra and never prints an input path, receipt body,
+host exception or stack on refusal.
+
+The full benchmark runner reports this as `slide-vade-evidence` with class
+`NON_COMPARATIVE_COMPONENT_EVIDENCE`. It is not written to
+`results/latest.json`, cannot satisfy a Galerina subject lane or
+work-equivalence certificate, and is explicitly rejected by the publication
+catalog if inserted there. Missing evidence refuses in strict/full mode and is
+only `INDETERMINATE` when developer observation explicitly requests that mode.
+
+Focused evidence is adapter 9/9, VADE audit 2/2, benchmark package 19/19,
+truth audit green, package graph 28/28, core aggregate 5/5 with 5,880 unit
+tests and 496/496 independent SLIDE tests, graph generate/check 5/5 and
+generator contracts 14/14. Terminal evidence is strict phase-close 84/84,
+exhaustive phase-close 85/85 with its 98/98 package lane, and an authoritative
+post-close count of 8,753 tests with zero failures. The final adversarial review
+also closed sparse-array admission in the exported in-memory verifier and
+removed a hard-link-fixture race against canonical evidence; the benchmark
+package then passed three consecutive 23/23 runs. This addendum does not claim
+native or production SLIDE, package retirement, or a SLIDE/Wasm/Rust/Python
+comparison.
