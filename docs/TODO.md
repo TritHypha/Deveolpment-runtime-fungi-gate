@@ -1,5 +1,36 @@
 # TODO
 
+### SLIDE architecture reduction research synchronized - 2026-08-01
+
+- **No Galerina implementation has been silently changed:** Knowledge Base
+  RD-0643 through RD-0650 are architecture candidates awaiting owner
+  adjudication. Current Galerina beta gates and evidence remain authoritative.
+- **Proposed integration boundary:** Galerina emits one detached checked GIR;
+  an independent GIR gate admits it to SLIDE's proposed Deterministic Fabric
+  Engine. Native/compatibility target adapters and independent artifact
+  validation precede the K3 publication gate.
+- **Future removals after parity:** direct AST-to-WAT production, remaining
+  package TypeScript, Node/npm runtime dependency and duplicate semantic paths.
+  None may be deleted before the executable `.fungi`/SLIDE replacement passes
+  lexer, parser, type/effect, emitter, graph, audit, test, generator,
+  reproducibility and recovery gates.
+- **Future Galerina additions:** managed flow-region memory with deterministic
+  flow exit, explicit vault escape, typed database/command/path/regex/plugin
+  seams, privacy/custody effects, cryptographic-suite agility and exact target
+  manifests. These are implementation prerequisites, not current claims.
+- **Package topology unchanged:** every first-party package exists once as a
+  top-level peer under `packages-galerina`; dependencies are exact manifest
+  edges, never nested package copies.
+- **Performance boundary:** build B0 and exact action-cache BA before attaching
+  VPEG. Typed-hole VPEG needs a BA-miss/VPEG-hit value fixture; B2/NSE/
+  NSE-Micro/N3 remain research-only under current negative evidence.
+- **Authoritative research:**
+  `../../ZTF-Knowledge-Bases/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`
+  plus RD-0643 through RD-0649 and the baseline-matrix manifest.
+- **Next safe work:** continue existing Galerina beta-v1 correctness and
+  cross-platform evidence. Do not implement the newly proposed DFE component
+  boundary until owner adjudication.
+
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
 - **Knowledge Base reconciled:** local KB commits through `2a5426a` record the

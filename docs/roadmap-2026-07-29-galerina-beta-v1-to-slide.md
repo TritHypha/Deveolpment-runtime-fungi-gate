@@ -1,6 +1,6 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-07-31
+Date: 2026-08-01
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
 package lane **98/98** with **8,735** unit tests, graph **5/5**
@@ -24,6 +24,7 @@ invented completion percentage. The detailed execution checklist remains
 
 ```mermaid
 flowchart TB
+    AR["SLIDE architecture R&D<br/>RD-0643-0650: DFE, VPEG, memory, platform"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
@@ -73,6 +74,7 @@ flowchart TB
     E --> S --> L --> H
     Q --> I
     M --> I
+    AI --> AR --> H
 
     classDef green fill:#166534,color:#ffffff,stroke:#22c55e,stroke-width:2px;
     classDef amber fill:#854d0e,color:#ffffff,stroke:#facc15,stroke-width:2px;
@@ -85,6 +87,7 @@ flowchart TB
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
+    class AR blue;
 ```
 
 The diagram is dependency-ordered, not a claim that all research waits for the
@@ -101,6 +104,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 
 | Area | State | Evidence |
 |---|---:|---|
+| SLIDE architecture reduction R&D | planned | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split, cut/merge/introduce decisions, security/memory/privacy/platform/package contracts, ordinary and Tri-1 maths, zero-trust scores and independent challenge prompts. The design remains non-authorizing pending owner adjudication and implementation evidence |
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
@@ -383,6 +387,38 @@ Rules:
   receipt;
 - current `node_modules` and TypeScript bootstrap dependencies are not removed
   until executable SLIDE integration supplies their verified replacement.
+
+## SLIDE architecture reduction checkpoint - 2026-08-01
+
+RD-0643 through RD-0650 have re-evaluated the whole proposed SLIDE/Galerina
+boundary against the expanded engineering standard. The candidate architecture
+formalises the **Deterministic Fabric Engine (`DFE`)** as the closed action-DAG,
+topological-scheduling, exact-product, invalidation and crash-publication
+coordinator. Shape Fabric is narrowed to deterministic reconstruction,
+proof/admission collaboration; VPEG is a typed immutable artifact rather than
+another engine; the Fragment Atlas remains a hostile process-local library.
+
+The adoption sequence is deliberately evidence-ordered: detached GIR and its
+independent admission, then DFE/B0, exact BA and crash-safe publication, then
+flow-region memory and typed security/privacy seams, then native adapters, and
+only then typed-hole VPEG. B2, NSE, NSE-Micro and N3 remain preserved research
+arms. Current evidence does not admit any of them as a production fast path.
+
+The architecture proposes retiring direct AST-to-WAT production, Node/npm
+runtime authority, external index/memory sidecars, automatic driver download
+inside compiler/runtime, raw/manual ordinary memory and cached/learned policy
+authority. Those paths are not removed until executable replacements and
+parity evidence close. Tower Citizen and Tri-Pipe remain Galerina integration
+adapters; Tri-Fuse remains a proof-backed compiler pass.
+
+The detailed cut/merge/introduce table, fourteen-criterion review, vertical
+architecture diagram, sequencing and zero-trust score are in
+`../../ZTF-Knowledge-Bases/RD-0650-slide-architecture-synthesis-cut-merge-introduce-and-adoption-table.md`.
+Repository-aware prompt 19 and repository-blind prompt 20 independently
+challenge the design with primary-source research, ordinary/Tri-1 maths,
+security attacks, alternatives and falsification. The new boundary remains
+blue/planned pending owner adjudication; it does not change the verified
+Galerina fixed point.
 
 ## SLIDE VPEG and dual-engine research
 
