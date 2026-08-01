@@ -1,5 +1,27 @@
 # TODO
 
+### Transcript verification and SLIDE cache-tiling correction absorbed - 2026-08-01
+
+- **RD-0652 reconciled:** transcripts 00114-00120 are archived and adjudicated
+  in the Knowledge Base with source and normalized archive hashes. Generic L2
+  latency is no longer usable as named-host evidence.
+- **NSE-Micro boundary:** E11 remains an implemented negative experiment. The
+  next SLIDE lane must tile and measure the complete admitted hot path, not just
+  model bytes: code, weights, graph/features, activations, scratch, capsule,
+  runtime, verifier overlap and alignment. Hardware counters, effective cache,
+  migration and thermal behavior remain required before a residency claim.
+- **Corrected public claims:** 672 is the current PutnamBench Lean denominator,
+  while 668/672 equals 99.405%, not 98%. Mythos existence is first-party
+  verified, but capability claims are not inherited from existence. Formal
+  proof, energy minima and learned proposals remain non-authorizing without
+  admitted specifications and independent evidence.
+- **Open hardening design:** the Knowledge Base research intake still needs
+  fail-close duplicate/derived-source identity, AI-origin labels, quantitative
+  denominator closure and authenticated receipts. Similarity and watermark
+  signals may request review only. This is not yet a Galerina runtime package.
+- **Requested research:**
+  `../../ZTF-Knowledge-Bases/MOST-WANTED-RESEARCH-SUBJECTS-2026-08-01.md`.
+
 ### Structured Await deterministic runtime reducer complete - 2026-08-01
 
 - **Architecture selected:** RD-0651 rejects `Promise.race`/abort signalling as
