@@ -86,8 +86,11 @@ function walkMd(dir, out) {
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return out; }
   for (const e of entries) {
-    if (e.isDirectory()) { if (!KB_SKIP.has(e.name)) walkMd(join(dir, e.name), out); }
-    else if (e.isFile() && e.name.endsWith(".md")) out.push(join(dir, e.name));
+    if (e.isDirectory()) {
+      if (!KB_SKIP.has(e.name) && !/-private$/i.test(e.name)) walkMd(join(dir, e.name), out);
+    } else if (e.isFile() && e.name.endsWith(".md") && !/-private\.md$/i.test(e.name)) {
+      out.push(join(dir, e.name));
+    }
   }
   return out;
 }

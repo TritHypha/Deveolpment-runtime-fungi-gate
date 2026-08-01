@@ -80,3 +80,49 @@ test("kb index binds and checks one explicit external corpus without writing", (
     rmSync(kb, { recursive: true, force: true });
   }
 });
+
+test("kb index excludes private documents and private directories from every output", () => {
+  const root = mkdtempSync(join(tmpdir(), "kb-index-private-root-"));
+  const kb = mkdtempSync(join(tmpdir(), "kb-index-private-corpus-"));
+  const privateDoc = `owner-notes-${["PRIVATE", "md"].join(".")}`;
+  const json = join(root, "build/kb-index/kb-index.json");
+  const markdown = join(root, "build/kb-index/KB-INDEX.md");
+  const provenance = join(root, "build/kb-index/provenance.json");
+  try {
+    write(root, "README.md", "# Fixture repository\n");
+    write(kb, "public.md", "# Public control\nPUBLIC-CONTROL-001\n");
+    write(kb, privateDoc, "# Owner notes - PRIVATE\nPRIVATE-FILE-SECRET-001\n");
+    write(kb, "raw-intake-PRIVATE/manuscript.md", "# Private manuscript\nPRIVATE-DIRECTORY-SECRET-001\n");
+    assert.equal(spawnSync("git", ["init"], { cwd: root }).status, 0);
+    assert.equal(spawnSync("git", ["add", "--", "."], { cwd: root }).status, 0);
+
+    const generated = run(root, kb);
+    assert.equal(generated.status, 0, generated.stderr);
+
+    const machineText = readFileSync(json, "utf8");
+    const markdownText = readFileSync(markdown, "utf8");
+    const machine = JSON.parse(machineText);
+    const stamp = JSON.parse(readFileSync(provenance, "utf8"));
+    assert.equal(machine.docCount, 2);
+    assert.equal(stamp.externalDocumentCount, 1);
+    assert.match(machineText, /kb\/public\.md/);
+    assert.match(markdownText, /kb\/public\.md/);
+    for (const forbidden of [
+      privateDoc,
+      "raw-intake-PRIVATE",
+      "PRIVATE-FILE-SECRET-001",
+      "PRIVATE-DIRECTORY-SECRET-001",
+    ]) {
+      assert.doesNotMatch(machineText, new RegExp(forbidden));
+      assert.doesNotMatch(markdownText, new RegExp(forbidden));
+    }
+
+    write(kb, privateDoc, "# Changed private notes - PRIVATE\nPRIVATE-FILE-SECRET-002\n");
+    write(kb, "raw-intake-PRIVATE/manuscript.md", "# Changed private manuscript\nPRIVATE-DIRECTORY-SECRET-002\n");
+    const privateMutation = run(root, kb, ["--check"]);
+    assert.equal(privateMutation.status, 0, privateMutation.stderr);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(kb, { recursive: true, force: true });
+  }
+});
