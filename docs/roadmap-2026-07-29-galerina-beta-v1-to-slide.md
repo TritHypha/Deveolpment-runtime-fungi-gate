@@ -56,10 +56,12 @@ flowchart TB
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
-     LI["🟨 Linux adapter round two<br/>candidate built · pure 10/10 · Ubuntu live run pending"]
+    LI["🟨 Linux adapter round two<br/>implementation complete · current Ubuntu run pending"]
+    NP["🟩 Native durability profiles<br/>Windows 10/11 · Linux · macOS APFS"]
+    RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
     O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 304/304 complete · UNVERIFIED"]
-    X["🟥 Production rotation activation<br/>platform durability adapters · crash matrix"]
-    F["🟥 Beta-v1 release admission<br/>cross-platform crash and power-loss evidence"]
+    X["🟥 Production rotation activation<br/>static in-process host seam still absent"]
+    F["🟨 Beta-v1 release admission<br/>verifier complete · external receipts pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
@@ -92,7 +94,7 @@ flowchart TB
     AF["🟦 Patent counsel FTO gate<br/>before public production release"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> LI --> X --> F --> H --> I --> TG --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> I --> TG --> T --> J
     Z --> E --> SA
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
@@ -114,9 +116,9 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,AD,AG,AI,SI,O,SA green;
-    class X,F red;
-    class Q,W,AA,AB,AC,AH,TG,LI amber;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,AD,AG,AI,SI,O,SA,NP,RP green;
+    class X red;
+    class Q,W,AA,AB,AC,AH,TG,LI,F amber;
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
@@ -124,14 +126,16 @@ flowchart TB
 ```
 
 The diagram is dependency-ordered, not a claim that all research waits for the
-release path. Galerina's repository-local fixed point is green. Beta release
-admission remains red because a simulator, process-kill test or one Windows 10
-NTFS host cannot prove Windows 11, Linux, macOS, reboot or physical power-loss
-semantics. RD-0601 has removed the impossible content-bound N-API/path-loader
-task: the first production profile will statically link the admitted adapter
-into the signed host. Its repository-local proof is now implemented and
-independently re-hashed; signed-host admission and platform evidence remain
-open. The closed content-bound SLIDE linker is the later modular replacement.
+release path. Galerina's repository-local functional fixed point is green. The
+beta release verifier is implemented and therefore yellow while its seven exact
+current-commit platform receipts and authenticated durability composition are
+absent. Native Windows/Linux/macOS candidates and the safe recovery protocol
+are implemented, but an unexecuted host is never coloured green as evidence.
+Production rotation remains the one red implementation node: standard Node
+cannot provide the required statically linked in-process native publication
+seam, and the rejected pathname-loaded addon/caller-callback paths are not
+being restored. The first signed static host or the content-bound SLIDE host
+must own that operation before rotation can become yellow or green.
 
 ## Verified progress
 
@@ -157,9 +161,10 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
 | Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
 | Deterministic activation fault model | 🟩 | Seed-ordered fifteen-boundary simulator, canonical replay receipt, control plus planted-fault matrix, budget/unreachable/ambiguous-input refusal and checker-clean `.fungi` terminal fold are implemented. App-kernel 180/180. Simulation is deliberately non-authorizing and cannot replace platform crash evidence |
-| Production custody and artifact activation | 🟥 | The least-authority custody contract, disposable executor, generic fail-closed durability seam, fifteen-boundary simulator and closed native-adapter descriptor/host gate exist. The zero-dependency Windows candidate is 7/7: host refusal, a live native directory `FlushFileBuffers`, and exclusive no-replace generation publication with exact stable-handle re-read plus hard-link refusal succeed on this Windows 10 NTFS host. A separate seven-boundary process-termination matrix is 7/7: prior authority stays exact and candidate bytes are absent or exact. The fault worker/observer is absent from default builds. A non-executing artifact inspector also passes 7/7 and binds fixed-path single-link bytes to PE/ELF/Mach-O architecture plus SHA-256. All remain non-authorizing. The production digest list remains empty. Release remains blocked on the statically linked signed-host proof, hostile parent-namespace resistance, and Windows 10/11 + Linux + macOS kernel/reboot/power-loss matrices |
+| Production custody and artifact activation | 🟥 | The least-authority custody contract, hybrid-root production profile, pre-transition rotation binding, native Windows/Linux/macOS candidates and controlled recovery protocol are implemented. Windows 10 passes 7/7 native/profile plus seven process-termination boundaries; app-kernel is 203/203. The debug-only recovery lane passes 6/6, has no reboot/power API, independently refuses the repository/home/system device, and permits only exact prior or candidate state. External platform and sacrificial-host rows remain absent. The red implementation blocker is narrower and explicit: the Node generation store cannot turn its caller callback into production authority, while standard pathname-loaded addons cannot satisfy the pre-load code-identity contract. The production digest list stays empty until a signed statically linked host or content-bound SLIDE host owns publication |
 | Native executable identity | 🟨 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. RD-0601 therefore selects a statically linked first profile and a closed content-bound SLIDE linker as its modular successor. The optimized static-profile binary now binds the embedded adapter source, authoritative `.fungi` contract, ABI and release profile; an independent Node verifier re-hashes those sources and the executable, and a hostile external `.node` decoy cannot change its result. The proof is non-authorizing until the host executable is signed and the named platform matrices pass. Pathname loading remains development-only; no owner adjudication is pending |
-| Linux adapter preparation | 🟨 | The first Ubuntu return proves optimized static-profile portability and reran the earlier pure 6/6 matrix, but its required SLIDE JSON is absent and no live durability path ran. The repository now has a 10/10 pure gate plus a fail-closed GNU Linux x86-64/AArch64 candidate using a retained directory descriptor, descriptor-anchored `fstatfs`, bounded mountinfo/sysfs correlation, exclusive exact staging, atomic no-replace `renameat2`, exact reopen, directory barrier, link-collision tests and a seven-boundary termination harness. Other Linux ABIs refuse. Windows preflight is green: native Clippy, all-features tests, App Kernel 193/193 and the complete strict phase-close pass. Linux-only compile/execution is still unverified until round two; short-write/disk-full/barrier injection, hostile namespace races, reboot and power loss remain open. The production allow-list is empty |
+| Linux adapter preparation | 🟨 | Repository implementation is complete: 10/10 pure facts, a retained-directory GNU Linux x86-64/AArch64 adapter, nine stable injected-refusal classes, hostile namespace-change checks, exact no-replace publication and seven process-termination boundaries. Other ABIs fail closed. Native default/all-feature/release and App Kernel 203/203 are green on Windows. The returned Ubuntu `2ceaf479...` evidence predates this live adapter and cannot be relabelled; current-commit Ubuntu live/fault/process execution is the only remaining round-two requirement. Controlled reboot and power loss are separate sacrificial-host rows |
+| Beta-v1 platform admission | 🟨 | The v2 functional receipt, exact seven-OS policy, immutable digest-pinned evidence reader and final release verifier are implemented. A clean Windows 10 build 19045 run at `26f5755c...` passes 6/6 with 98 packages and remains K3 `0`, non-authorizing. Windows 11, Ubuntu, Debian, Fedora, Mint and macOS current-commit receipts plus the authenticated repository/durability composition are absent, so the verifier correctly returns incomplete external evidence rather than green |
 | RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
 | RD-0623 B1/B0 and Tri-1 deep audit | 🟩 | Independent raw-sample arithmetic reproduces both n=99 paired comparisons and the five-trit maths. Source inspection shows B0 pays for one candidate semantic build before the same two common verifier builds; B1 replaces only that candidate build with exact reuse. Fixed lane order remains a possible confound. The comparison proves bounded reuse pressure, not VPEG advantage over BA and not a packed Tri-1 speed result |
 | RD-0624 neuromorphic patent proximity | 🟩 | Preliminary claim-element engineering screen finds low current proximity between input-dependent fixed-topology proposal-only N2/deterministic VPEG and the asserted dynamic spiking neuron/synapse array claims. Learned neural-subgraph extraction/implantation, dynamic neural topology, spiking delays/refractory state and actuator loops are stop-and-review triggers. This is not legal clearance; formal FTO remains a public-production gate |

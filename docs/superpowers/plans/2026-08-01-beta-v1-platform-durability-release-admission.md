@@ -498,7 +498,7 @@ only bounded public JSON evidence; no private keys or production signatures.
 
 ```powershell
 node --test scripts/tests/platform-smoke.test.mjs scripts/tests/beta-v1-release-admission.test.mjs
-node scripts/platform-smoke.mjs --json --expect-os windows
+node scripts/platform-smoke.mjs --json --expect-os windows-10
 git add -- scripts/platform-smoke.mjs scripts/tests/platform-smoke.test.mjs scripts/beta-v1-release-admission.mjs scripts/tests/beta-v1-release-admission.test.mjs governance/beta-v1-platform-policy.json .github/workflows/platform-smoke.yml governance/status-ledger.json
 git commit -m "feat(release): add beta-v1 platform admission"
 ```
@@ -518,7 +518,7 @@ git commit -m "feat(release): add beta-v1 platform admission"
 - Consumes exact receipts returned by each platform handover.
 - Produces one final release-admission receipt and updated factual roadmap.
 
-- [ ] **Step 1: Run the current Windows 10 implementation matrix**
+- [x] **Step 1: Run the current Windows 10 implementation matrix**
 
 Run native default/all-feature/release checks, Windows live and process-kill
 tests, app-kernel tests and local functional smoke. Record the exact Windows 10
@@ -550,7 +550,7 @@ npm.cmd run phase-close:exhaustive
 Also run every graph, audit, test and generator tool listed by the dev-tool
 index, regenerate the full build/package indexes, and rerun the security scan.
 
-- [ ] **Step 5: Update documents from measured facts**
+- [x] **Step 5: Update documents from measured facts**
 
 Set Linux green only after its exact verifier passes. Set production rotation
 and beta-v1 green only after their exact final verifier returns `+1`. If code is

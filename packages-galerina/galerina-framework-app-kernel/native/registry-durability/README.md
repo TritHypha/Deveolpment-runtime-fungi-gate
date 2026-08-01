@@ -1,7 +1,7 @@
 # Registry durability native experiments
 
-Status: host, directory-barrier and generation-publication candidates;
-non-authorizing
+Status: Windows/Linux/macOS host, publication, fault and recovery-evidence
+candidates; non-authorizing
 
 The RD-0601 first-production-profile proof is also implemented. An optimized
 `registry-durability-static-profile` executable calls this crate through a
@@ -14,12 +14,11 @@ executable, then repeats the run from a directory containing a hostile decoy
 is deliberately `productionAuthorizing: false`: signing the host and completing
 the named platform crash/reboot/power-loss matrices remain separate gates.
 
-This zero-dependency Rust crate measures whether a Windows directory is on a
-fixed local NTFS or ReFS volume. It is a deliberately narrow precursor to a
-registry durability adapter. A `Candidate` verdict means only that the path
-passed the implemented host-refusal checks. It does **not** prove that a write,
-publication, metadata barrier, restart or physical power-loss sequence is
-durable, and it cannot mint a Galerina production durability receipt.
+This zero-dependency Rust crate implements deliberately narrow Windows, GNU
+Linux and macOS durability candidates. A `Candidate` verdict means only that
+the exact host-refusal checks and observed native operation passed. It does
+**not** prove restart or physical power-loss durability, and it cannot mint a
+Galerina production durability receipt.
 
 ## Implemented boundary
 
@@ -114,6 +113,21 @@ handover must compile and run the 10-test pure matrix, three ignored live tests
 and ignored seven-boundary process-termination matrix. Missing, refused or
 skipped Linux evidence remains unverified.
 
+The macOS profile is independently implemented for native Arm64 on direct,
+internal, non-removable, non-network APFS. It requires `F_FULLFSYNC` for the
+generation file, exclusive same-directory staging/publication, exact
+single-link reopen/readback, a directory barrier and a final namespace recheck.
+Ordinary file `fsync` is not a fallback. The pure profile and off-host refusal
+tests pass on Windows, and Apple Arm64 cross-target Clippy/check passes. Those
+facts do not replace a live Apple Arm64 APFS run, fault matrix or process-
+termination matrix.
+
+The Windows profile now distinguishes native Windows 10 and Windows 11 facts
+and admits only native x64 on fixed local NTFS. Translated processes, Arm64,
+ReFS and unknown identities remain denied. The current Windows 10 NTFS host
+passes the seven live/profile cases and the seven-boundary process-termination
+matrix; no Windows 11 live result is inferred.
+
 The non-default `fault-injection` feature builds a disposable worker and an
 observer seam that cannot mint a receipt. The integration test starts a fresh
 worker for each of seven boundaries—stage open, bytes written, file flush,
@@ -156,6 +170,19 @@ No shell, PowerShell process, spawned CLI or writable sidecar is used by the
 production candidate. The non-default fault worker is test evidence only,
 cannot mint a receipt, is absent from default builds and is compile-refused in
 optimized builds.
+
+The separate non-default `recovery-evidence` feature adds a controlled reboot/
+power-loss worker and an independent old-or-new verifier. It is debug-only,
+inherits the fault-injection restriction and is compile-refused in optimized
+builds. The worker can arm one of the same seven boundaries and wait; it has no
+reboot, shutdown or power-control API. Before arming live evidence it
+independently refuses a target on the repository, home or system device. The
+verifier is read-only except for exclusive creation of one result record and
+refuses replay, copied/changed arm state, partial candidate bytes and ambiguous
+checkpoints. The protocol suite passes 6/6. Actual reboot and power-loss rows
+remain external sacrificial-host evidence and are never inferred from the
+protocol tests. See
+`docs/platform-handover/durability-recovery/RUNBOOK.md`.
 
 ## Primary platform references
 

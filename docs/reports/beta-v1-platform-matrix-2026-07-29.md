@@ -1,17 +1,20 @@
 # Galerina beta-v1 developer platform matrix
 
-Date: 2026-07-29  
-Scope: developer build/check/Wasm smoke, not production SLIDE/native certification
+Date: 2026-08-01
+Scope: beta-v1 functional portability plus separately labelled native
+durability implementation; not production admission
 
 ## Result
 
-Only Windows 10 is locally verified at this checkpoint. The remaining rows are
-configured for independent execution, but are not called verified until their
-own runner returns a complete positive `galerina.platform-smoke.v1` record.
+Only Windows 10 is locally verified at the current commit. The remaining rows
+are configured for independent execution, but are not called verified until
+their own runner returns a complete `galerina.platform.functional-evidence.v2`
+record. Functional success is K3 `0` and non-authorizing; it does not claim
+native or physical durability.
 
 | Platform | Execution surface | State | Evidence |
 |---|---|---:|---|
-| Windows 10 x64 | owner workstation, build 19045 | **VERIFIED** | 6/6 smoke checks; 97 packages; compiler build; strict `.fungi`; Wasm `add(19,23) = 42`, 91 bytes |
+| Windows 10 x64 | owner workstation, build 19045 | **VERIFIED** | Clean commit `26f5755c...`; 6/6 smoke checks; 98 packages; compiler build; strict `.fungi`; Wasm result 42, 91 bytes |
 | Windows 11 x64 | exact self-hosted runner | **UNVERIFIED / CONFIGURED** | opt-in job requires `windows-11` label and `GALERINA_WINDOWS11_RUNNER=enabled` |
 | Windows Server 2022 x64 | GitHub-hosted proxy | **UNVERIFIED / CONFIGURED** | useful Windows portability signal; explicitly not Windows 11 proof |
 | macOS 14 arm64 | GitHub-hosted | **UNVERIFIED / CONFIGURED** | `macos-14`, Node 20 |
@@ -34,7 +37,7 @@ Run from the repository root:
 
 ```powershell
 node --test scripts/tests/platform-smoke.test.mjs
-node scripts/platform-smoke.mjs --json --expect-os windows
+node scripts/platform-smoke.mjs --json --expect-os windows-10
 ```
 
 The command uses direct child-process argument arrays and never shell
@@ -64,7 +67,7 @@ terminal refusal.
 Command:
 
 ```text
-node scripts/platform-smoke.mjs --json --expect-os windows
+node scripts/platform-smoke.mjs --json --expect-os windows-10
 ```
 
 Admitted identity and result:
@@ -73,11 +76,31 @@ Admitted identity and result:
 Windows 10.0.19045 x64
 Node v24.18.0
 npm 11.16.0
-97 package manifests
+98 package manifests
 6/6 evidence rows passed
 Wasm result 42; 91-byte module
 ```
 
-No external matrix run has occurred from this unpushed local branch. Therefore
-this document does not yet claim Windows 11, macOS, Ubuntu, Debian, Fedora, or
-Mint compatibility as verified.
+The result is `FUNCTIONAL_PORTABILITY`, verdict `0`,
+`authenticated: false`, `authorityReleased: false` and
+`productionAuthorizing: false`.
+
+## Native durability implementation
+
+| Profile | Repository implementation | Live evidence at current commit |
+|---|---:|---:|
+| Windows 10 x64, local NTFS | **COMPLETE** | 7/7 native/profile plus seven-boundary process termination pass |
+| Windows 11 x64, local NTFS | **COMPLETE** | **PENDING exact Windows 11 host** |
+| GNU Linux x64/Arm64, direct ext4 | **COMPLETE** | **PENDING current Ubuntu round two**; returned `2ceaf479...` evidence predates this adapter |
+| macOS Arm64, internal APFS | **COMPLETE** | **PENDING exact Apple Arm64 APFS host**; cross-target compilation is not live evidence |
+| Controlled reboot/power loss | **PROTOCOL COMPLETE** | **PENDING sacrificial hosts/volumes** |
+
+The recovery worker cannot reboot or cut power and optimized builds refuse its
+feature. The independent verifier permits only exact `PRIOR` or exact
+`CANDIDATE`, writes one exclusive public result and refuses replay or mixed
+state. These controls make external experiments reproducible; they do not make
+an unexecuted experiment green.
+
+No complete external seven-OS matrix has returned from this unpushed branch.
+The beta-v1 release verifier therefore remains K3 `0`; Windows 11, macOS,
+Ubuntu, Debian, Fedora and Mint are not relabelled as verified.

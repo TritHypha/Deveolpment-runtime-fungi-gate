@@ -883,6 +883,38 @@ current remediated source, measurements and assurance boundary.
   Missing SLIDE evidence, live compile/run,
   short-write/disk-full/barrier faults, hostile namespace races, reboot and
   physical power loss remain open; the production allow-list stays empty.
+- **Platform durability implementation checkpoint (2026-08-01):** Linux now
+  has nine explicit injected-refusal classes and hostile namespace-change
+  coverage; the current Windows 10 native matrix passes **7/7** plus the exact
+  seven-boundary process-termination test. The first macOS profile admits only
+  native Arm64, direct internal APFS with mandatory file `F_FULLFSYNC`, exact
+  single-link reopen, directory barrier and final namespace recheck. Its pure
+  vocabulary passes **4/4**, off-host refusal passes **2/2**, and Apple Arm64
+  cross-target Clippy/check is green; no APFS live result is inferred. The
+  debug-only controlled recovery protocol passes **6/6** for canonical arm,
+  native system/home/repository-device refusal, replay, exact prior/candidate
+  recovery and mixed-state denial. It contains no reboot or power API.
+  App-kernel remains **203/203** and the native default/all-feature/release
+  matrix is green on Windows 10. The clean local functional v2 smoke is **6/6**
+  at commit `26f5755c...` with **98** packages and remains K3 `0`, public and
+  non-authorizing.
+- **External durability evidence still required:** rerun the current Ubuntu
+  round-two handover (the returned `2ceaf479...` report predates the live Linux
+  adapter), then run exact Windows 11 and macOS live profiles. Controlled reboot
+  and physical-power-loss experiments require a separate sacrificial host and
+  volume under `docs/platform-handover/durability-recovery/RUNBOOK.md`; never
+  use this development volume. The platform release verifier is implemented,
+  but the seven current-commit functional receipts and authenticated recovery
+  composition are not present, so beta release remains K3 `0`.
+- **Production rotation implementation blocker:** the hybrid-root production
+  profile and pre-transition identity gate are implemented, but the Node
+  generation store deliberately cannot mint a production receipt from its
+  caller-supplied directory-flush callback. No standard Node API provides the
+  required statically linked in-process Rust seam, and a pathname-loaded addon
+  would reintroduce the rejected pre-load identity race. Keep rotation closed
+  until the signed static host (or the later content-bound SLIDE host) owns the
+  native publication operation; do not mark a callback, CLI sidecar or digest-
+  only record as production evidence.
 
 Keep `../../triLowLevel-v2/TODO.md` synchronized whenever the independent
 triLowLevel core, SLIDE engine, registry, importer, runtime, or release plan
