@@ -213,6 +213,16 @@ test("absent external execution remains K3 indeterminate and non-authorizing", (
   }
 });
 
+test("an absent governance policy denies rather than becoming incomplete evidence", () => {
+  const fixture = makeFixture();
+  try {
+    rmSync(fixture.policyPath);
+    assert.throws(() => verify(fixture), /BETA_RELEASE_POLICY_UNAVAILABLE/u);
+  } finally {
+    rmSync(fixture.root, { recursive: true });
+  }
+});
+
 test("dirty policy checkout, hard links, and local path leakage deny", () => {
   for (const action of [
     (f) => {

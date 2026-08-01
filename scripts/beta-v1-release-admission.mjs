@@ -119,7 +119,11 @@ function exactObject(value, keys, code) {
   return value;
 }
 
-function readStableDirectFile(path, parentDirectory) {
+function readStableDirectFile(
+  path,
+  parentDirectory,
+  unavailableCode = "BETA_RELEASE_FILE_UNAVAILABLE",
+) {
   const parent = realpathSync(parentDirectory);
   const candidate = resolve(path);
   if (dirname(candidate) !== parent) refuse("BETA_RELEASE_PATH_SCOPE_REFUSED");
@@ -127,7 +131,7 @@ function readStableDirectFile(path, parentDirectory) {
   try {
     before = lstatSync(candidate, { bigint: true });
   } catch {
-    refuse("BETA_RELEASE_FILE_UNAVAILABLE");
+    refuse(unavailableCode);
   }
   if (
     !before.isFile()
@@ -350,7 +354,11 @@ function validateRepositoryEvidence(value, commit) {
 function verifyBetaV1ReleaseFilesStrict(options) {
   if (options?.cleanPolicyCheckout !== true) refuse("BETA_RELEASE_POLICY_DIRTY");
   const policyDirectory = dirname(resolve(options.policyPath));
-  const policyBytes = readStableDirectFile(options.policyPath, policyDirectory);
+  const policyBytes = readStableDirectFile(
+    options.policyPath,
+    policyDirectory,
+    "BETA_RELEASE_POLICY_UNAVAILABLE",
+  );
   const policy = validatePolicy(canonicalJson(policyBytes, "BETA_RELEASE_POLICY_FORMAT"));
   const seenFiles = new Set();
   for (const row of policy.functional) {
