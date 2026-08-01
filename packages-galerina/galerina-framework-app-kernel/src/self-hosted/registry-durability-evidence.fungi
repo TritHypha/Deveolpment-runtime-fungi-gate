@@ -1,0 +1,41 @@
+@version 1
+/// @file: registry-durability-evidence.fungi
+/// @purpose: Pure terminal fold for closed registry-durability evidence.
+/// @status: Evidence remains non-authorizing; production admission is separate.
+
+/// Preserve K3 refusal and keep complete evidence non-authorizing at this layer.
+pure flow registryDurabilityEvidenceTerminal(
+  evidenceVerdict: Verdict,
+  shapeValid: Bool,
+  claimWithinClass: Bool,
+  policyMatches: Bool,
+  authorityReleased: Bool,
+  productionAuthorizing: Bool
+) -> Int
+contract {
+  intent { "Refuse malformed or escalated durability evidence and never release production authority." }
+}
+{
+  check(evidenceVerdict) {
+    deny: { return -1 }
+    ambig: { return 0 }
+    if: {
+      if shapeValid == false {
+        return -1
+      }
+      if claimWithinClass == false {
+        return -1
+      }
+      if policyMatches == false {
+        return -1
+      }
+      if authorityReleased == true {
+        return -1
+      }
+      if productionAuthorizing == true {
+        return -1
+      }
+      return 0
+    }
+  }
+}

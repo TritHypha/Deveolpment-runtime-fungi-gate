@@ -13,6 +13,7 @@
       "src/self-hosted/registry-activation-terminal.fungi",
       "src/self-hosted/registry-durability-admission.fungi",
       "src/self-hosted/registry-durability-artifact.fungi",
+      "src/self-hosted/registry-durability-evidence.fungi",
       "src/self-hosted/registry-index.fungi",
       "src/self-hosted/route-defaults.fungi",
       "src/self-hosted/secret-gate.fungi"

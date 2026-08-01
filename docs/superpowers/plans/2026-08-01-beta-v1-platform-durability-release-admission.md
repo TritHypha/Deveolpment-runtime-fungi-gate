@@ -40,7 +40,7 @@
 - Produces: `verifyRegistryDurabilityEvidence(value: unknown, policy: RegistryDurabilityEvidencePolicy): VerifiedRegistryDurabilityEvidence`.
 - Produces: `isVerifiedRegistryDurabilityEvidence(value: unknown): boolean` backed by a module-private `WeakSet`.
 
-- [ ] **Step 1: Write the failing closed-schema and claim-ceiling tests**
+- [x] **Step 1: Write the failing closed-schema and claim-ceiling tests**
 
 Add tests that construct each of the six exact evidence classes and prove:
 
@@ -56,7 +56,7 @@ non-canonical digest, unsafe count, local-path-shaped string and class escalatio
 A `PROCESS_TERMINATION` record claiming `powerLoss: "PASS"` must refuse with
 `REGISTRY_DURABILITY_EVIDENCE_CLASS_ESCALATION_REFUSED`.
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run:
 
@@ -68,7 +68,7 @@ node --test packages-galerina/galerina-framework-app-kernel/tests/registry-durab
 Expected: module import failure because `registry-durability-evidence.ts` does
 not exist.
 
-- [ ] **Step 3: Implement the minimal verifier and `.fungi` terminal fold**
+- [x] **Step 3: Implement the minimal verifier and `.fungi` terminal fold**
 
 Use a closed class order:
 
@@ -89,16 +89,16 @@ verified wrapper remains K3 `0` and non-authorizing; only the later composition
 gate can issue a production capability. The `.fungi` fold must map incomplete
 or contradictory evidence to `_=>` and emit no I/O effect.
 
-- [ ] **Step 4: Run focused and package tests and verify GREEN**
+- [x] **Step 4: Run focused and package tests and verify GREEN**
 
 Run:
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
-node scripts/check-fungi.mjs packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-evidence.fungi
+node galerina.mjs check packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-evidence.fungi --strict-governance
 ```
 
-- [ ] **Step 5: Commit Task 1**
+- [x] **Step 5: Commit Task 1**
 
 ```powershell
 git add -- packages-galerina/galerina-framework-app-kernel/src/registry-durability-evidence.ts packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-evidence.fungi packages-galerina/galerina-framework-app-kernel/tests/registry-durability-evidence.test.mjs packages-galerina/galerina-framework-app-kernel/src/index.ts packages-galerina/galerina-framework-app-kernel/package.json
@@ -419,7 +419,7 @@ evidence returns `Verdict.INDETERMINATE`; neither calls the forward probe.
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
-node scripts/check-fungi.mjs packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi
+node galerina.mjs check packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi --strict-governance
 ```
 
 - [ ] **Step 6: Commit Task 6**
