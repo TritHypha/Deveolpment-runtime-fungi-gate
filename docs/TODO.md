@@ -36,7 +36,7 @@
   shell, network, package manager, driver or cached fallback. Malformed,
   surplus, accessor and Proxy inputs refuse; reports are reconstructed and
   semantically revalidated. Current Windows 10 evidence is 17/17 focused,
-  15/15 contract files and 282/282 complete, while it remains unauthenticated,
+  15/15 contract files and 295/295 complete, while it remains unauthenticated,
   `UNVERIFIED` and non-authorizing. Native execution and all other OS rows
   remain unverified. See
   `../../SLIDE/docs/reports/reference-platform-contract-2026-08-01.md`.
@@ -56,11 +56,26 @@
   A genuinely changed order matches source execution and logical lifecycle
   over all eleven current runtime rows. Hostile, incomplete, copied, forged
   and cross-module schedules refuse without fallback. Focused evidence is
-  21/21; full SLIDE is 282/282. This is only a frozen pure-profile topological
+  21/21; full SLIDE is now 295/295 after the separately bounded V2-F slice.
+  This is only a frozen pure-profile topological
   scheduling proof, not general rewrite/effect equivalence, native lowering,
   speed, artifact authority or a Galerina component-removal gate.
 - **Graph evidence boundary:** the repository-owned graph regenerated from
-  4,603 scanned files at 8,418 nodes and 8,727 edges. A fresh moderate MCP
+- **Bounded V2-F compatibility executor implemented:** independent SLIDE
+  commit `bb81c75` lowers the exact admitted V2-D checked-index body directly
+  to canonical Wasm binary with no WAT, AST recovery or Galerina callback. A
+  separately written parser requires the exact closed section/code shape,
+  zero imports, one internal memory page and one export before Node
+  WebAssembly compilation. Only the exact process-local branded artifact can
+  execute; copied, parsed, forged, proxied and cross-module artifacts refuse.
+  Fresh evidence is 13/13 V2-F, 18/18 focused V2-D/V2-F, 295/295 full SLIDE,
+  15 contract files, 41/41 frozen independent and 496/496 across exactly 28
+  tracked Galerina adapter files. This is bootstrap compatibility evidence,
+  not native/final-artifact/isolation authority, package retirement, fallback
+  permission or a component-removal gate.
+- **Graph evidence boundary:** the repository-owned graph regenerated with
+  98 packages, 4,143 documents, 2,829 types/interfaces, 1,326 functions and
+  8,733 relationships. A fresh moderate MCP
   request again returned its frozen 06:07 build at `f2820da4` rather than the
   current branch, supplied no expected-node count and is rejected as stale.
   SLIDE's closed full index is exact at 3,721/3,721 nodes and commit `59c31fc`.

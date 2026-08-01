@@ -11,12 +11,14 @@ This is the first document to read when checking SLIDE work from the Galerina
 repository. Update it in the same commit whenever a SLIDE status, gate, owner,
 dependency, or implementation phase changes.
 
-**2026-08-01 live correction:** independent SLIDE now passes 282/282 tests and
+**2026-08-01 live correction:** independent SLIDE now passes 295/295 tests and
 has bounded prepared V2-D execution with explicit logical flow-region cleanup,
-V2-E receipt verification, B0/BA/VPEG/neural research benchmarks, and an exact
-non-authorizing reference-platform evaluator plus bounded host observer/report
-CLI. These do not constitute a
-general/native backend. RD-0643 through
+V2-E receipt verification, a bounded direct V2-D-to-Wasm binary compatibility
+executor, B0/BA/VPEG/neural research benchmarks, and an exact non-authorizing
+reference-platform evaluator plus bounded host observer/report CLI. V2-F has
+zero imports and no WAT/AST/Galerina callback, but Node/V8 remains its
+bootstrap compatibility TCB. These do not constitute a general/native
+backend. RD-0643 through
 RD-0650 propose a DFE architecture boundary that awaits owner adjudication;
 existing G3.1 and platform work may continue without treating DFE as built.
 
@@ -75,7 +77,12 @@ binds a 1,492-byte normalized source and all 40 executable nodes, re-derives
 nine plan commitments, checks caller-owned external evidence, and verifies
 non-authorizing Ed25519 + ML-DSA-65 producer evidence. Galerina passes 117/117
 focused V2-E tests; independent SLIDE passes 17/17. The complete Galerina
-SLIDE regression surface passes 477/477 and independent SLIDE passes 30/30.
+SLIDE regression surface now passes 496/496 across exactly 28 tracked files;
+the frozen independent V2-C-through-V2-E corpus passes 41/41. V2-F directly
+emits, independently verifies and executes the frozen V2-D body as one
+canonical import-free Wasm module under a process-local brand; its 13 tests
+and the complete 295/295 SLIDE suite pass. Node/V8 remains a bootstrap
+compatibility dependency, not execution authority.
 SLIDE packaging, native execution, Tri-Fuse v2, the general Galerina frontend
 handoff and driver CLI do not yet exist. Bounded reference and Shape Lab
 benchmarks exist, but they are non-authorizing and cannot support a native or
@@ -117,6 +124,7 @@ Planning completion and implementation completion are deliberately separate.
 | First fixture | `IMPLEMENTED-VERIFIED` | Exact four-block body, pinned checksum/semantic digest, whole-vector mutation kill, reconstructed validation, semantic mutations, K3/Int32 parity, fourth-Verdict trap, and fresh-process instruction dispatch | Retain as a frozen conformance fixture while the registry generalizes |
 | Memory profile | `IMPLEMENTED-PARTIAL` | V2-D semantic exit complete and bounded V2-E source/receipt binding complete; initialized immutable 12-byte object, checked extent arithmetic, guard dominance, canonical independent import/digest/runtime. Independent commit `497cb6c` adds a private reference flow region that closes in `finally`, reports 15 cleared logical bindings and 12 admitted semantic bytes, and refuses hostile nested accessors/proxies before opening; no native or physical-erasure claim | Add general post-optimization audit, final-artifact binding, native/physical memory guarantees, and hostile FFI/handle corpus |
 | Post-optimization translation validation | `IMPLEMENTED-PARTIAL` | Independent commit `32a41e2` admits a genuinely changed frozen V2-D order only after exact instruction permutation and SSA/guard dominance proof. It matches all eleven current runtime/lifecycle rows; copied, forged, hostile and cross-module schedules refuse without fallback | Generalize to registered rewrite/effect classes, independent semantics and final artifacts before any optimizer or native authority |
+| V2-F direct Wasm compatibility | `IMPLEMENTED-PARTIAL` | Independent commit `bb81c75` emits the frozen admitted V2-D body directly to a canonical import-free Wasm binary, independently verifies sections/code identity and executes only the exact internally branded Node WebAssembly artifact. All 15 instructions and seven differential Int32 vectors pass; copied, parsed, forged, proxied and cross-module artifacts refuse. Evidence is 13/13 V2-F, 18/18 focused, 295/295 full SLIDE, 41/41 frozen independent and 496/496 exact Galerina adapter | General GIR profiles, target-neutral executor integration, isolation, native/final-artifact verification and production host contract. It removes no current component |
 | Tri-Fuse v2 | `SPECIFIED` | Role corrected to backend-neutral K3 proof/residual-gate planning | Implement proof validation, dominance checks, mutation tests, and backend gates |
 | Deterministic AOT graph/CAS | `SPECIFIED` | Complete-key, topological DAG, untrusted-cache, and challenge rules documented | Implement and prove clean/incremental/parallel byte equivalence |
 | Deterministic fault simulation | `SPECIFIED` | RD-0536-0555 intake fixes a canonical-seed/replay/positive-control evidence contract | Implement after isolated runner/broker; inject scheduler, broker, nonce/idempotency, cache, process, disk, network and audit faults without reject-all vacuity |
@@ -128,10 +136,10 @@ Planning completion and implementation completion are deliberately separate.
 | Tri-Pipe adapter | `SPECIFIED` | Candidate-route role documented | Implement route receipt; proposal cannot admit itself |
 | WAT/Wasm path | `CURRENT-PRODUCTION` | Current compiler/WAT/Wasm pipeline and differential value remain | Retain as optional compatibility/differential evidence after SLIDE; never silently fall back from failed admission |
 | Hardware/driver model | `SPECIFIED` | Observation manifest, Driver Knowledge Library, present-but-unusable state | Implement observation and resolution after core semantic slice |
-| Reference platform contract | `IMPLEMENTED-PARTIAL` | Exact Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64 evaluator plus bounded Node-bootstrap observer/report CLI; no environment/shell/network/package-manager fallback; malformed/accessor/proxy inputs refuse; current Windows 10 evidence 17/17 focused, 15/15 contract files and 282/282 complete | Native execution and actual Windows 11/Linux/macOS runs; local observation remains unauthenticated, non-authorizing and `UNVERIFIED` |
+| Reference platform contract | `IMPLEMENTED-PARTIAL` | Exact Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64 evaluator plus bounded Node-bootstrap observer/report CLI; no environment/shell/network/package-manager fallback; malformed/accessor/proxy inputs refuse; current Windows 10 evidence 17/17 focused, 15/15 contract files and 295/295 complete | Native execution and actual Windows 11/Linux/macOS runs; local observation remains unauthenticated, non-authorizing and `UNVERIFIED` |
 | Linux driver CLI | `NOT-STARTED` | Owner selected Debian/Ubuntu `apt`/`dpkg`, disposable-VM-first, no third-party repository or DKMS v1 path | Implement unprivileged `slide-driver` planner, then separately authorize helper work |
 | SLIDE native runner | `NOT-STARTED` | Isolation, capability RPC, budgets, and receipt requirements documented | Select exact Debian/Ubuntu isolation profile and implement only after admission is sound |
-| Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE V2-C producer, zero-dependency V2-D validator/runtime with bounded logical cleanup and schedule translation proof, and zero-dependency V2-E canonical receipt verifier; complete independent suite 282/282 and frozen six-file corpus 41/41 | Widen beyond the conformance slices before claiming general frontend/platform independence |
+| Non-Galerina frontend | `IMPLEMENTED-PARTIAL` | Independent SLIDE V2-C producer, zero-dependency V2-D validator/runtime with bounded logical cleanup and schedule translation proof, zero-dependency V2-E canonical receipt verifier, and bounded direct V2-F Wasm compatibility executor; complete independent suite 295/295 and frozen six-file corpus 41/41 | Widen beyond the conformance slices before claiming general frontend/platform independence |
 | SLIDE benchmarks | `IMPLEMENTED-PARTIAL` | Bounded V2-D clean/prepared and Shape Lab B0/BA/B1/B2/N1/N2/N3/E11 evidence with exact verification and explicit non-authority labels | Equivalent native execution, authenticated evidence, cross-platform runs and only then the external-runtime comparison |
 
 ## 4. Evidence behind the status

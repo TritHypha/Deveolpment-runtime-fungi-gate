@@ -10,7 +10,9 @@ Policy: zero trust, verify rather than assume, fail closed
 Roadmap refresh: independent SLIDE V2-F now emits, independently verifies and
 executes one bounded V2-D profile as direct import-free Wasm binary. The next
 measured chapter is a non-authorizing component benchmark; it is not the
-terminal cross-runtime comparison.
+terminal cross-runtime comparison. Fresh closure evidence is 13/13 V2-F,
+18/18 focused V2-D/V2-F, 295/295 full SLIDE, 15 contract files, 41/41 frozen
+independent and 496/496 across exactly 28 tracked Galerina adapter files.
 
 This is the live high-level roadmap. It records measured gates rather than an
 invented completion percentage. The detailed execution checklist remains

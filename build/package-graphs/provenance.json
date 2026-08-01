@@ -1,6 +1,6 @@
 {
   "tool": "package-graph-generator",
-  "gitCommit": "a2fc06d64ebe53130c1ea55a585d470cbca1037c",
-  "builtAt": "2026-08-01T09:04:20.000Z",
+  "gitCommit": "f4cf908d561adf6a18235c23d8ea4986902d3878",
+  "builtAt": "2026-08-01T10:09:50.000Z",
   "node": "v24.18.0"
 }

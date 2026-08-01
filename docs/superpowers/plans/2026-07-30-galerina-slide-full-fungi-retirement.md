@@ -274,15 +274,20 @@ fixture frontend remains the non-Galerina conformance authority.
   post-optimization subcase is also green: a changed frozen V2-D schedule is
   admitted only after exact permutation and dependency/guard dominance proof.
   General rewrite/effect validation remains open.
-- [ ] Implement the smallest executable vertical slice without learned or
-  cached authority and without silently falling back to Wasm.
+- [x] Implement the smallest executable vertical slice without learned or
+  cached authority and without silently falling back after refusal. V2-F
+  directly lowers the exact admitted V2-D body to import-free Wasm binary,
+  independently verifies the closed binary shape and executes only its exact
+  process-local branded Node WebAssembly artifact. It uses no WAT, AST or
+  Galerina callback and grants no native, production or package-retirement
+  authority.
 - [ ] Add Windows, macOS, Debian/Ubuntu, Fedora and Mint build/run contracts;
   locally execute Windows and retain unexecuted platforms as CI-unverified.
   **Partial 2026-08-01:** independent SLIDE now has an exact non-authorizing
   reference-profile evaluator for Windows x86-64, Ubuntu/Debian/Fedora/Mint
   x86-64/Arm64 and macOS x86-64/Arm64 plus a bounded Node-bootstrap
   observer/report CLI. The current Windows 10 evidence passes 17/17 focused,
-  15/15 contract files and 282/282 complete. Observation remains
+  15/15 contract files and 295/295 complete. Observation remains
   unauthenticated and intentionally reports execution evidence `UNVERIFIED`;
   native build/run and every other platform remain open.
 - [x] Run independent SLIDE plus Galerina frontend differential evidence. The
@@ -293,7 +298,11 @@ fixture frontend remains the non-Galerina conformance authority.
   flow-region cleanup is in local SLIDE commit `497cb6c`; its Galerina ledger
   synchronization is committed. Schedule translation validation is in local
   SLIDE commit `32a41e2`; this chapter records its bounded non-authorizing
-  scope without changing any Galerina production path.
+  scope without changing any Galerina production path. Direct V2-F binary
+  compatibility is in SLIDE commit `bb81c75`; fresh closure evidence is 13/13
+  V2-F, 18/18 focused V2-D/V2-F, 295/295 full SLIDE, 41/41 frozen independent
+  and 496/496 across exactly 28 tracked Galerina adapter files. It removes no
+  Galerina component.
 
 ### Task 6: Build the flat native package resolver and root lock
 
