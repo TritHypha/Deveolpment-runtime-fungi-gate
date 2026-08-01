@@ -105,6 +105,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | Area | State | Evidence |
 |---|---:|---|
 | SLIDE architecture reduction R&D | planned | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split, cut/merge/introduce decisions, security/memory/privacy/platform/package contracts, ordinary and Tri-1 maths, zero-trust scores and independent challenge prompts. The design remains non-authorizing pending owner adjudication and implementation evidence |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles now cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. Hostile missing/surplus/accessor/Proxy observations refuse. Current Windows 10 Node-bootstrap suite passes 255/255, but execution evidence remains explicitly `UNVERIFIED`; native and all other platform runs remain open |
 | Protected working branch | 🟩 | Local branch exists; commits are local and have not been pushed |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |

@@ -30,6 +30,13 @@
 - **Next safe work:** continue existing Galerina beta-v1 correctness and
   cross-platform evidence. Do not implement the newly proposed DFE component
   boundary until owner adjudication.
+- **Independent platform-contract progress:** SLIDE now has a test-first exact
+  reference-profile evaluator for Windows, Ubuntu/Debian/Fedora/Mint and
+  macOS. Malformed, surplus, accessor and Proxy observations refuse; profile
+  match cannot accept evidence or grant authority. Current Windows 10
+  Node-bootstrap evidence is 255/255, while native execution and all other OS
+  rows remain unverified. See
+  `../../SLIDE/docs/reports/reference-platform-contract-2026-08-01.md`.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 

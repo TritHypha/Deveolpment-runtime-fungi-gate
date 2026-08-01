@@ -269,6 +269,11 @@ fixture frontend remains the non-Galerina conformance authority.
   cached authority and without silently falling back to Wasm.
 - [ ] Add Windows, macOS, Debian/Ubuntu, Fedora and Mint build/run contracts;
   locally execute Windows and retain unexecuted platforms as CI-unverified.
+  **Partial 2026-08-01:** independent SLIDE now has an exact non-authorizing
+  reference-profile evaluator for Windows x86-64, Ubuntu/Debian/Fedora/Mint
+  x86-64/Arm64 and macOS x86-64/Arm64. The current Windows 10 Node-bootstrap
+  suite passes 255/255, but the evaluator intentionally reports execution
+  evidence `UNVERIFIED`; native build/run and every other platform remain open.
 - [ ] Run independent SLIDE plus Galerina frontend differential evidence.
 - [ ] Update both repositories' ledgers and commit separately without pushing.
 
