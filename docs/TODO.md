@@ -1,5 +1,35 @@
 # TODO
 
+### Independent SLIDE V2-G VADE measured - 2026-08-01
+
+- **Bounded mechanism complete outside Galerina:** SLIDE commits `dacc8af`,
+  `bec6bd2` and `b5aab13` fully prepare the exact V2-D checked-index profile
+  before demand and re-admit one signed-i32 hole through a same-module branded
+  capsule. Copied, forged, proxied, serialized and cross-module capsules and
+  invalid demand values terminate without fallback.
+- **Fresh measured result:** clean SLIDE commit `b5aab13`, Windows 10 x64,
+  i9-9900K, Node v24.18.0, 128 operations, two warmups and nine samples.
+  Median per operation is 802,357.03 ns preparation, 206,293.75 ns clean
+  demand and 1,564.84 ns verified demand; measured break-even is four demands.
+  Receipt SHA-256 is
+  `4F0871EACD0F0E3F5D69C5545802ADFF317B0231FCF995C5B8C73DBCF8E0B564`.
+- **Hostile evidence hardened:** the benchmark file boundary is limited to
+  1 MiB before allocation, fixed-handle/stability checked, fatal UTF-8 and
+  BOM-free, exact canonical JSON, and fully re-derived. Duplicate-key,
+  oversized and arithmetic/identity-forged evidence refuses.
+- **Fresh closure:** SLIDE contract 15/15 and full suite 304/304 across 19
+  suites. Galerina's exact tracked adapter corpus remains 496/496 over 28
+  files and its independent SLIDE invocation passes 304/304 over 42 files.
+- **Galerina status remains honest:** the full Galerina devtools benchmark does
+  not yet invoke V2-G. Next, implement a governed adapter that pins the exact
+  SLIDE commit, workload, schema and receipt before consumption. This evidence
+  grants no package removal, TypeScript/node_modules retirement, production,
+  native or alternate-backend authority.
+- **Terminal comparison remains held:** do not publish SLIDE/Wasm/Rust/Python
+  comparative claims until general native SLIDE execution can run equivalent
+  workloads. Detailed evidence is in
+  `../../SLIDE/docs/reports/v2g-verified-ahead-of-demand-completion-2026-08-01.md`.
+
 ### SLIDE architecture reduction research synchronized - 2026-08-01
 
 - **No Galerina implementation has been silently changed:** Knowledge Base
