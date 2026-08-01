@@ -1,5 +1,22 @@
 # TODO
 
+### Windows native research toolchain and RD-0653 recorded - 2026-08-01
+
+- **Available:** MSVC x64 19.44/19.51, Windows SDK/WPT/WinDbg/Application
+  Verifier 10.0.28000.2526, Ninja 1.13.2 and Sysinternals Suite. Hyperfine
+  1.20.0 is locally built from locked source. Executable CMake is 4.3.1;
+  downloaded CMake 4.4.2 remains source-only.
+- **No benchmark promotion:** the received cache table lacks its harness, raw
+  samples, affinity, clock/thermal and counter evidence. RD-0653 keeps it K3
+  `0` and uses it only to design the native rerun.
+- **Corrections:** B1's `10.74%` median residual is statistically
+  indeterminate against BA; the cited packed-Tri-1 normalized
+  memory-times-time product is `1.004635339` for one JavaScript lane. Neither
+  is a production or native-performance claim.
+- **Boundary:** the tools support future SLIDE research and Galerina hostile
+  platform testing; they do not alter `.fungi` authority, release admission or
+  package-retirement status.
+
 ### Transcript verification and SLIDE cache-tiling correction absorbed - 2026-08-01
 
 - **RD-0652 reconciled:** transcripts 00114-00120 are archived and adjudicated
