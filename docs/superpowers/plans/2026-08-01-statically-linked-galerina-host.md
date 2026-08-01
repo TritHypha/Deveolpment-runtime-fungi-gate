@@ -97,6 +97,16 @@ passes an isolated C++20 syntax compile; this does not substitute for a full
 linked-host build. OpenSSL assembly also requires NASM; production will not
 silently select `openssl-no-asm` merely to clear this gate.
 
+The read-only preflight is now implemented at
+`scripts/verify-registry-static-host-toolchain.mjs` and passes its focused
+**4/4** tests, including accessor/Proxy refusal without side effects. It
+requires direct absolute compiler/assembler paths and exact
+version shapes, returns only `CANDIDATE` or `REFUSED`, and is always
+non-authorizing. The current host refuses with
+`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. The installer is never invoked by this
+probe; current owner actions are separated into
+`docs/platform-handover/windows-static-host-toolchain/NOW.md`.
+
 ## Task 4 - App-kernel production integration
 
 - [ ] Add a production persistence entry point distinct from

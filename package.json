@@ -29,6 +29,8 @@
     "audit:percent-history": "node scripts/audit-percent-history.mjs",
     "audit:governance-algebra": "node tools/verify-governance-algebra.mjs",
     "audit:governance-algebra:selftest": "node tools/verify-governance-algebra.mjs --self-test",
+    "audit:registry-static-host-toolchain": "node scripts/verify-registry-static-host-toolchain.mjs",
+    "audit:registry-static-host-toolchain:selftest": "node --test scripts/tests/registry-static-host-toolchain.test.mjs",
     "registry:generation": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs build-current",
     "registry:generation:check": "npm --prefix packages-galerina/galerina-framework-app-kernel run build && node scripts/registry-generation-cli.mjs check-current"
   },

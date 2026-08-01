@@ -935,6 +935,18 @@ current remediated source, measurements and assurance boundary.
   until the signed static host (or the later content-bound SLIDE host) owns the
   native publication operation; do not mark a callback, CLI sidecar or digest-
   only record as production evidence.
+- **Static-host toolchain preflight (2026-08-01):**
+  `scripts/verify-registry-static-host-toolchain.mjs` now admits only an exact
+  Windows Visual Studio instance containing both supported Clang components,
+  a direct absolute `clang.exe`, and a direct absolute NASM executable with a
+  parseable version. Accessor and hostile Proxy evidence refuse without reading
+  accessor values or throwing. Its focused suite passes **4/4**. The current
+  host returns
+  `STATIC_HOST_CLANG_COMPONENTS_ABSENT`; the earlier installer invocation made
+  no changes and was stopped. The owner-only current actions are isolated in
+  `docs/platform-handover/windows-static-host-toolchain/NOW.md`. A future
+  `CANDIDATE` result remains explicitly non-authorizing and cannot make the
+  rotation or release node green.
 - **Strict fixed point after durability chapter:** the first run exposed stale
   project/package/dev-tool graphs, stale code-index output and two intentional
   hostile Windows-home test literals not labelled for the path-leak teaching
