@@ -30,3 +30,4 @@ export * from "./registry-activation-simulator.js";
 export * from "./registry-durability-admission.js";
 export * from "./registry-durability-artifact.js";
 export * from "./registry-durability-evidence.js";
+export * from "./registry-durability-production-admission.js";

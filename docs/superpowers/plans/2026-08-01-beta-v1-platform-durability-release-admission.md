@@ -244,7 +244,7 @@ The native receipt records 10 pure tests, four live tests, nine deterministic
 fault refusals and seven process-termination boundaries. Reboot and power loss
 remain explicitly unverified in this round.
 
-- [ ] **Step 5: Verify and commit Task 3**
+- [x] **Step 5: Verify and commit Task 3**
 
 ```powershell
 node --test scripts/tests/verify-platform-durability-evidence.test.mjs scripts/tests/platform-smoke.test.mjs
@@ -388,7 +388,7 @@ git commit -m "feat(durability): add controlled recovery protocol"
 - Extends `AdvanceRegistryRotationStateOptions` with exact `durabilityProfile` and refuses before state advancement when it is missing or mismatched.
 - Keeps `PRODUCTION_ADMITTED_REGISTRY_DURABILITY_DIGESTS` empty until a governed evidence manifest is committed and offline-authorized.
 
-- [ ] **Step 1: Write failing composition and no-authority tests**
+- [x] **Step 1: Write failing composition and no-authority tests**
 
 Assert that copied objects, digest-only claims, self-hash-only evidence,
 incomplete class ladders, mixed OS/profile identities, stale evidence,
@@ -396,7 +396,7 @@ revocation, missing offline authorization and a simulated receipt all refuse.
 Assert the complete disposable chain advances exactly one rotation phase and
 never widens authority on failure.
 
-- [ ] **Step 2: Run focused tests and verify RED**
+- [x] **Step 2: Run focused tests and verify RED**
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-framework-app-kernel run build
@@ -405,20 +405,27 @@ node --test packages-galerina/galerina-framework-app-kernel/tests/registry-durab
 
 - [ ] **Step 3: Implement private production composition**
 
+The hybrid-root-verified private profile and its complete identity binding are
+implemented. The remaining sub-step is intentionally not checked: no Node
+callback or pathname-loaded adapter may be upgraded into a native production
+receipt. Completion requires the statically linked in-process native-host seam;
+until then the Node generation store remains host evidence only and rotation
+fails closed before its forward probe.
+
 Verify source, contract, binary, ABI, build recipe, host profile, all evidence
 digests, authority window and revocation before issuing a private brand. Do not
 accept a caller-provided adapter callback. The Node generation store remains
 host evidence only; a production receipt must originate from the statically
 linked native host and pass the production admission verifier.
 
-- [ ] **Step 4: Bind rotation before any state transition**
+- [x] **Step 4: Bind rotation before any state transition**
 
 Require the production durability profile to match candidate generation ID,
 operational key, delegation serial, index issuance, platform profile and
 accepted checkpoint. A mismatch returns `Verdict.DENY`; incomplete external
 evidence returns `Verdict.INDETERMINATE`; neither calls the forward probe.
 
-- [ ] **Step 5: Verify package and `.fungi` authority**
+- [x] **Step 5: Verify package and `.fungi` authority**
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test

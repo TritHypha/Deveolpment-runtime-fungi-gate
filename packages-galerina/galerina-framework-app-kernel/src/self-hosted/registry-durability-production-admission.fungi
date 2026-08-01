@@ -1,0 +1,44 @@
+@version 1
+/// @file: registry-durability-production-admission.fungi
+/// @purpose: Fail-closed terminal fold for root-verified durability profiles.
+/// @status: A profile is a bound prerequisite, never general production authority.
+
+pure flow registryDurabilityProductionAdmission(
+  evidenceVerdict: Verdict,
+  evidenceComplete: Bool,
+  identitiesMatch: Bool,
+  authorityActive: Bool,
+  authorityRevoked: Bool,
+  ed25519Verified: Bool,
+  mlDsa65Verified: Bool
+) -> Int
+contract {
+  intent { "Issue no durability profile unless complete evidence and both pinned root components agree." }
+}
+{
+  check(evidenceVerdict) {
+    deny: { return -1 }
+    ambig: { return 0 }
+    if: {
+      if evidenceComplete == false {
+        return -1
+      }
+      if identitiesMatch == false {
+        return -1
+      }
+      if authorityActive == false {
+        return -1
+      }
+      if authorityRevoked == true {
+        return -1
+      }
+      if ed25519Verified == false {
+        return -1
+      }
+      if mlDsa65Verified == false {
+        return -1
+      }
+      return 1
+    }
+  }
+}

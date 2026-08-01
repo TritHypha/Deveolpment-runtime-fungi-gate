@@ -39,6 +39,10 @@ import {
   isProductionAdmittedRegistryGeneration,
   type PersistedRegistryGeneration,
 } from "./registry-generation-store.js";
+import {
+  registryDurabilityProfileMatchesRotation,
+  type ProductionRegistryDurabilityProfile,
+} from "./registry-durability-production-admission.js";
 
 export interface AdvanceRegistryRotationOptions {
   readonly process: RotationProcess;
@@ -356,6 +360,8 @@ export interface AdvanceRegistryRotationStateOptions
   readonly state: RegistryRotationState;
   readonly admittedIndex: AdmittedRegistryRotationIndex;
   readonly candidateGeneration: PersistedRegistryGeneration;
+  readonly durabilityProfile: ProductionRegistryDurabilityProfile;
+  readonly acceptedCheckpointDigest: string;
   readonly verifyForwardProbe: (generationId: string) => boolean;
 }
 
@@ -409,6 +415,14 @@ export function advanceRegistryRotationState(
     || !isAdmittedRegistryRotationCandidate(options.receipt)
     || !isAdmittedRegistryRotationIndex(options.admittedIndex)
     || options.receipt.keyId !== options.admittedIndex.keyId
+    || !registryDurabilityProfileMatchesRotation({
+      profile: options.durabilityProfile,
+      candidateGeneration: options.candidateGeneration,
+      receipt: options.receipt,
+      admittedIndex: options.admittedIndex,
+      acceptedCheckpointDigest: options.acceptedCheckpointDigest,
+      authorityAt: options.authorityAt,
+    })
     || !candidateFactsValid
   ) {
     return {
