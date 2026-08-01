@@ -494,7 +494,7 @@ Windows 10, Windows 11 and Mint self-hosted labels. Add explicit Debian,
 Fedora and Ubuntu receipts without treating containers as durability. Upload
 only bounded public JSON evidence; no private keys or production signatures.
 
-- [ ] **Step 6: Verify and commit Task 7**
+- [x] **Step 6: Verify and commit Task 7**
 
 ```powershell
 node --test scripts/tests/platform-smoke.test.mjs scripts/tests/beta-v1-release-admission.test.mjs
