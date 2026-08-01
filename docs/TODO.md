@@ -50,6 +50,12 @@
   or physical erasure, allocator control, hostile FFI/handle proof or Galerina
   production memory authority. Fresh evidence is 15/15 focused, 41/41 frozen
   independent and 496/496 across the exact 28 tracked Galerina adapter files.
+- **Graph evidence boundary:** the repository-owned graph regenerated from
+  4,603 scanned files at 8,418 nodes and 8,727 edges. A fresh moderate MCP
+  request again returned its frozen 06:07 build at `f2820da4` rather than the
+  current branch, supplied no expected-node count and is rejected as stale.
+  SLIDE's separate full index is exact at 3,669/3,669 nodes and commit
+  `5d90fba`; no Galerina conclusion uses the stale MCP graph.
 
 ### Independent SLIDE research and evidence synchronization - 2026-07-31
 
