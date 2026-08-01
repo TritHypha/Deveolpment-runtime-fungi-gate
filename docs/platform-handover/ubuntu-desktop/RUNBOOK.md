@@ -44,7 +44,26 @@ test ! -e "${RETURN_BASE}.md"
 test ! -e "${RETURN_BASE}.receipt.json"
 test ! -e "${RETURN_BASE}.slide-platform.json"
 test ! -e "${RETURN_BASE}.native-evidence.json"
+test ! -e "${RETURN_BASE}.functional.json"
 ```
+
+Before creating any other returned file, run the real beta functional smoke
+from the clean Galerina tree:
+
+```bash
+set -eu
+node --test scripts/tests/platform-smoke.test.mjs
+node scripts/platform-smoke.mjs --json --expect-os ubuntu \
+  > "${RETURN_BASE}.functional.json"
+```
+
+The functional file must be one canonical
+`galerina.platform.functional-evidence.v2` object for the exact Galerina
+commit. It must contain the six ordered evidence rows, `status: PASS`, an
+empty `criticalWarnings` array, `cleanWorkingTree: true`,
+`evidenceClass: FUNCTIONAL_PORTABILITY`, K3 verdict `0`, and all authority
+fields false. This receipt is beta portability evidence only; it is not a
+durability receipt and does not authorize production.
 
 Verify and record the sibling SLIDE identity before executing it:
 
@@ -237,6 +256,10 @@ Controlled reboot and controlled physical power loss remain unverified and
 must not be added to this round-two claim.
 
 No result from this runbook changes the production adapter allow-list.
+
+Return the `.functional.json` file beside the four durability files. The final
+beta policy may reference those exact dated bytes after independently hashing
+them; never rename another distribution's record to fill the Ubuntu row.
 
 If any expected statement is false, stop at that point and follow the failure
 policy in `CODEX-HANDOVER.md`. Do not continue merely to collect a green-looking

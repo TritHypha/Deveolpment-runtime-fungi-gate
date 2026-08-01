@@ -82,7 +82,7 @@ Galerina tree.
 
 ## Return path
 
-Return these four files without editing them:
+Return these five files without editing them:
 
 ```text
 Galerina/docs/platform-handover/ubuntu-desktop/reports/
@@ -90,6 +90,7 @@ Galerina/docs/platform-handover/ubuntu-desktop/reports/
   ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.receipt.json
   ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.slide-platform.json
   ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.native-evidence.json
+  ubuntu-desktop-linux-adapter-YYYY-MM-DD-<12-char-commit>.functional.json
 ```
 
 If anything fails, return the Markdown report containing the exact command,

@@ -81,7 +81,8 @@ characters of the Galerina commit that was actually tested. Save the raw
 Galerina verifier JSON beside it as the same basename plus `.receipt.json` and
 the raw SLIDE observer JSON as the same basename plus `.slide-platform.json`.
 Save the closed native evidence receipt as the same basename plus
-`.native-evidence.json`. Run `scripts/verify-platform-durability-evidence.mjs`
+`.native-evidence.json`. Save the beta functional portability receipt as the
+same basename plus `.functional.json`. Run `scripts/verify-platform-durability-evidence.mjs`
 over all four files and preserve its exact non-authorizing decision in the
 human report.
 Record the independent SLIDE branch and full commit inside the report. Fill
@@ -89,8 +90,8 @@ only observed facts, include command exit codes and SHA-256 values, and leave
 every unexecuted row `UNVERIFIED`. This repository path is the handback to the
 primary Galerina session. Do not save the only copy elsewhere.
 
-If no source change was needed, commit only the report, raw static receipt and
-raw SLIDE receipt on the existing local work branch. If a source fix was
+If no source change was needed, commit only the report and four raw JSON
+receipts on the existing local work branch. If a source fix was
 required, use a separate local fix branch and record both the failing and
 passing commit IDs. Never push.
 Update `docs/TODO.md` and the live roadmap only after evidence is reproduced.

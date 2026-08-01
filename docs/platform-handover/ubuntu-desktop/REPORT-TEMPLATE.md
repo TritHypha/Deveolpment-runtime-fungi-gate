@@ -44,6 +44,19 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 - Polluted-working-directory invariant:
 - `productionAuthorizing` value:
 
+## Beta functional portability
+
+- Command:
+- Exit code:
+- Receipt SHA-256:
+- Platform-smoke refusal tests:
+- Six ordered evidence rows:
+- Critical warnings:
+- Clean working tree at observation:
+- `verdict` value:
+- `authorityReleased` value:
+- `productionAuthorizing` value:
+
 ## SLIDE bounded platform observation
 
 - Command:
