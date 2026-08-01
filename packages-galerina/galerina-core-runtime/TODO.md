@@ -15,10 +15,12 @@ runtime work.
 [x] Define checked execution contract
 [x] Define compiled execution contract
 [x] Define runtime effect dispatch contract
-[ ] Define Structured Await scope and scheduler contract
-[ ] Define cancellation propagation contract
-[ ] Define timeout enforcement contract
+[x] Define Structured Await scope and deterministic scheduler-reducer contract
+[x] Define cancellation request/acknowledged-termination propagation contract
+[x] Define timeout enforcement decision contract with deadline equality
 [ ] Define stream backpressure runtime contract
+[ ] Add isolated hard-termination adapter for untrusted/non-cooperative work
+[ ] Authenticate task-event and termination receipts at the host boundary
 [ ] Define runtime memory policy contract
 [ ] Define Node-hosted runtime adapter contract
 [ ] Define host-runtime overhead report contract

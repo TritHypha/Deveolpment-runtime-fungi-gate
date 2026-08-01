@@ -1,5 +1,33 @@
 # TODO
 
+### Structured Await deterministic runtime reducer complete - 2026-08-01
+
+- **Architecture selected:** RD-0651 rejects `Promise.race`/abort signalling as
+  termination authority and selects a syntax-neutral event reducer. It reads no
+  clock, executes no callback and emits only bounded start/cancel/terminal
+  decisions for one admitted `galerina.runtime.await.v1` plan.
+- **Fail-close behavior implemented:** 1..1024 unique bounded task IDs, positive
+  safe-integer timeout, `maxInFlight <= task count`, exact closed completion
+  policies, immutable reconstructed state, process-local state branding,
+  monotonic elapsed time and duplicate/unknown/contradictory/post-terminal
+  event refusal.
+- **Cancellation honesty:** timeout equality takes precedence over a task
+  result. Pending tasks close immediately, but a started task remains live until
+  the host acknowledges success, failure or cancellation. A scope stays
+  `cancelling` and emits no terminal receipt while any started task is live.
+  First-result/first-success winner identity is retained explicitly.
+- **Test-first evidence:** the new test file first failed on the missing runtime
+  export. A second RED pass exposed missing winner identity and the incorrect
+  treatment of an unsolicited task cancellation; both are repaired. Strict
+  typecheck/build and the runtime package pass 44/44. The authoritative
+  workspace passes 98/98 packages and 8,770 tests. Strict phase-close is 84/84;
+  exhaustive is 85/85, including security 31 files with zero findings/errors,
+  graph 5/5, generator contracts 14/14 and tooling 245.
+- **Non-claims/open gates:** no in-process signal is claimed to stop arbitrary
+  work. Isolated hard termination, authenticated event/termination receipts,
+  stream queue/backpressure enforcement, frontend lowering and platform
+  evidence remain separate gates.
+
 ### Data-pipeline finite block-saturation contract complete - 2026-08-01
 
 - **Fail-close gap repaired:** `BackpressurePolicy` is now discriminated.

@@ -1,4 +1,4 @@
-# .ts retirement graph (491 tracked package .ts; 477 in src)
+# .ts retirement graph (491 tracked package .ts; 478 in src)
 
 Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit reads these numbers LIVE.
 
@@ -7,7 +7,7 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 | Twinned (.fungi beside it) | 26 | → #143 R4 authority ledger (checked .fungi authority or retained .ts differential oracle) |
 | Compiler core | 97 | → bootstrap fixpoint (the .fungi stages are compiled BY this .ts — retires last, post-v1) |
 | Bounded-TCB floor | 16 | → post-beta admitted SLIDE replacement (bounded bootstrap TCB until equivalent crypto/host/algorithm evidence exists) |
-| Migration program | 338 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
+| Migration program | 339 | → the #38 migration codemod program (owner-gated re-sign ceremony) |
 
 Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 

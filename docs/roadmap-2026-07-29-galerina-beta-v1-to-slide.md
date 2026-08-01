@@ -3,7 +3,7 @@
 Date: 2026-08-01
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,755** tests, graph **5/5**
+package lane **98/98** with **8,770** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -13,7 +13,9 @@ implemented, independently re-verified and admitted by a separate governed
 Galerina adapter; it is not the terminal cross-runtime comparison. Fresh
 closure evidence is 304/304 full SLIDE across 19 suites, 15
 contract files, 496/496 across exactly 28 tracked Galerina adapter files and
-304/304 from Galerina's independent 42-file SLIDE invocation.
+304/304 from Galerina's independent 42-file SLIDE invocation. Galerina now also
+has a terminally verified, syntax-neutral Structured Await reducer for bounded
+plans; this does not yet supply the isolated host executor or stream scheduler.
 
 This is the live high-level roadmap. It records measured gates rather than an
 invented completion percentage. The detailed execution checklist remains
@@ -54,6 +56,7 @@ flowchart TB
     WF["🟩 V2-F direct Wasm compatibility<br/>GIR→binary · zero imports · branded execution"]
     CB["🟩 V2-G VADE component benchmark<br/>nine lanes · refusal cost · exact outputs"]
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
+    SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
@@ -77,7 +80,7 @@ flowchart TB
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> SI --> LI --> X --> F --> H --> I --> TG --> T --> J
-    Z --> E
+    Z --> E --> SA
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
     AB --> AH
@@ -98,7 +101,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,AD,AG,AI,SI,O green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,AD,AG,AI,SI,O,SA green;
     class X,F red;
     class Q,W,AA,AB,AC,AH,TG,LI amber;
     class H,I,T,AE,AF blue;
@@ -130,6 +133,7 @@ open. The closed content-bound SLIDE linker is the later modular replacement.
 | V2-G component benchmark | 🟩 bounded measured evidence | Clean commit `b5aab13`, Windows 10 x64, i9-9900K, Node v24.18.0, seed 1511506913, 128 operations, two warmups and nine counterbalanced samples. Median per operation: preparation 802,357.03 ns, clean V2-D demand 206,293.75 ns, verified demand 1,564.84 ns, assurance cost over warm V2-F 1,166.41 ns; measured break-even four demands. Evidence is capped at 1 MiB, stable-handle read, canonical UTF-8/JSON and independently recomputed. It is non-authorizing process-local evidence, not the deferred SLIDE/Wasm/Rust/Python comparison |
 | Governed Galerina VADE benchmark adapter | 🟩 bounded admission | Galerina commit `6ef42f04` owns the exact receipt and a closed contract pinning SLIDE `b5aab13`, SHA-256, workload, platform/bootstrap labels, lane set and non-claims. A fixed-handle 1 MiB canonical reader refuses unstable, linked, ambiguous or alternate bytes. Galerina independently re-derives all nine lane summaries and economics. The CLI/audit reconstruct bounded results, and the full runner exposes only a separate non-comparative child outside `results/latest.json`. This grants no production, package-retirement or cross-runtime-comparison authority |
 | Data-pipeline blocking saturation | 🟩 contract verified | `block` now requires an explicit positive safe-integer `blockTimeoutMs`; `fail` and `shed_oldest` refuse that dead field. The TypeScript union and runtime validator agree; focused package evidence is 22/22, the workspace is 98/98 with 8,755 tests, and exhaustive phase-close passes every blocking gate. This closes configuration admission only; scheduler enforcement and cancellation remain separate executable gates |
+| Structured Await deterministic reducer | 🟩 bounded contract terminally verified | RD-0651 selects a bounded syntax-neutral reducer instead of treating an in-process abort signal as termination authority. Closed plan admission, immutable branded state, all/first-success/first-result policies, deadline precedence, `maxInFlight`, cancellation acknowledgement, winner identity and hostile state/event refusal pass strict typecheck/build and 44/44 package tests. The fixed point is 98/98 packages and 8,770 tests; strict is 84/84, exhaustive 85/85, security 31 files with zero findings/errors, graph 5/5, generator contracts 14/14 and tooling 245. Isolated hard termination, authenticated receipts, stream backpressure, frontend lowering and platform evidence remain separate open gates |
 | Protected working branch | 🟩 | Protected branches are active; this session keeps its new commits local and does not push |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |

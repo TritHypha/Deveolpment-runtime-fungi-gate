@@ -6868,12 +6868,12 @@
     ]
   },
   "totals": {
-    "ts": 477,
+    "ts": 478,
     "allTrackedTs": 491,
     "twinned": 26,
     "compilerCore": 97,
     "floor": 16,
-    "program": 338,
+    "program": 339,
     "fungiInSrc": 104,
     "packages": 95,
     "finderDrift": 0,
@@ -6981,7 +6981,7 @@
       "fungi": 0
     },
     "galerina-core-runtime": {
-      "ts": 1,
+      "ts": 2,
       "twinned": 0,
       "fungi": 1
     },

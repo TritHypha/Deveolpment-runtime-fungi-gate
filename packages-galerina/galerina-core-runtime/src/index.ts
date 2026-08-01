@@ -1,5 +1,7 @@
 export type RuntimeMode = "checked" | "compiled";
 
+export * from "./structured-await.js";
+
 export type RuntimeEnvironment =
   | "development"
   | "test"

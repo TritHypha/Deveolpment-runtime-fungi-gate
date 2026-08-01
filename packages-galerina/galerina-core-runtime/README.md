@@ -238,6 +238,41 @@ The runtime may use futures, tasks, schedulers or polling internally, but those
 types should remain package/runtime author APIs rather than the default Galerina
 developer model.
 
+### Deterministic reducer reference
+
+The beta reference now admits a closed `galerina.runtime.await.v1` plan and
+reduces explicit task/time events into start, cancel and terminal commands. The
+plan requires 1..1024 unique task IDs, a positive safe-integer timeout and a
+finite `maxInFlight` no greater than task count. Completion is one of:
+
+```text
+all + cancel_remaining
+all + wait_for_all
+first_success
+first_result
+```
+
+The reducer is syntax-neutral, reads no clock and executes no callback. Its
+state and commands are reconstructed immutable values, and runtime state is
+process-local branded so copied or forged snapshots cannot advance.
+
+The load-bearing cancellation rule is:
+
+```text
+cancellation requested != task terminated
+```
+
+On timeout, explicit cancellation, a winning race or cancel-on-error, pending
+tasks are closed and running tasks receive cancel commands. The scope remains
+`cancelling` until every started task acknowledges a terminal state. Only then
+does the reducer emit a terminal command. Deadline equality belongs to the
+timeout, so a result observed exactly at `timeoutMs` cannot win the race.
+
+This does not claim that an in-process signal forcibly stops arbitrary work.
+Untrusted or non-cooperative execution still requires a separately admitted
+isolated host adapter and authenticated termination acknowledgement. Stream
+queue/backpressure enforcement is also a separate runtime chapter.
+
 ## Controlled Recovery
 
 `galerina-core-runtime` should distinguish item/data failures from system/runtime failures.

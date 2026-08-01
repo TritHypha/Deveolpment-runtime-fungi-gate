@@ -14,7 +14,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 150 | emitted with an exported constant |
+| live | 165 | emitted with an exported constant |
 | inline | 175 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
@@ -424,7 +424,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
 | FUNGI-EFFECT-906 | ref | — | — |
 
-### ERR_* (124)
+### ERR_* (139)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -534,6 +534,21 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_REGISTRY_RUNTIME_MALFORMED | live | — | — |
 | ERR_REGISTRY_VERSION_UNKNOWN | live | — | — |
 | ERR_REPEAT_THRESHOLD | ref | — | — |
+| ERR_RUNTIME_AWAIT_COMPLETION | live | — | — |
+| ERR_RUNTIME_AWAIT_CONCURRENCY | live | — | — |
+| ERR_RUNTIME_AWAIT_EVENT | live | — | — |
+| ERR_RUNTIME_AWAIT_PLAN_SHAPE | live | — | — |
+| ERR_RUNTIME_AWAIT_PLAN_VERSION | live | — | — |
+| ERR_RUNTIME_AWAIT_SCOPE_ID | live | — | — |
+| ERR_RUNTIME_AWAIT_STATE | live | — | — |
+| ERR_RUNTIME_AWAIT_TASKS | live | — | — |
+| ERR_RUNTIME_AWAIT_TASK_DUPLICATE | live | — | — |
+| ERR_RUNTIME_AWAIT_TASK_ID | live | — | — |
+| ERR_RUNTIME_AWAIT_TASK_STATE | live | — | — |
+| ERR_RUNTIME_AWAIT_TERMINAL_STATE | live | — | — |
+| ERR_RUNTIME_AWAIT_TIMEOUT | live | — | — |
+| ERR_RUNTIME_AWAIT_TIME_REGRESSION | live | — | — |
+| ERR_RUNTIME_AWAIT_UNKNOWN_TASK | live | — | — |
 | ERR_SCHEMA | ref | — | — |
 | ERR_SIZE_EXCEEDED | ref | — | — |
 | ERR_SOME_CODE | ref | — | — |

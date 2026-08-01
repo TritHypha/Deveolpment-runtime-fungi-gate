@@ -46,6 +46,10 @@ never-started tasks cancelled. The scope remains `cancelling` until all started
 tasks acknowledge a terminal state. Only then may the requested terminal
 outcome be published.
 
+Deadline equality has precedence over a result event. `elapsedMs >= timeoutMs`
+therefore selects `timed_out`; the event may acknowledge that its task stopped,
+but it cannot turn the expired scope into success.
+
 An isolated host adapter will later perform hard termination. This reference
 reducer grants no in-process callback or `AbortSignal` hard-stop claim.
 
