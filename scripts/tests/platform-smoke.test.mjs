@@ -4,10 +4,80 @@ import test from "node:test";
 import {
   assertNoSensitiveOutput,
   assertPlatformIdentity,
+  buildFunctionalPlatformEvidence,
+  classifyOperatingSystem,
   normalizePortableRelativePath,
   requireExecutable,
   validateEvidence,
 } from "../platform-smoke.mjs";
+
+test("Windows client, server, Linux distributions, and macOS remain distinct", () => {
+  assert.equal(classifyOperatingSystem({
+    platform: "win32",
+    release: "10.0.19045",
+    windowsProductType: "client",
+  }), "windows-10");
+  assert.equal(classifyOperatingSystem({
+    platform: "win32",
+    release: "10.0.22631",
+    windowsProductType: "client",
+  }), "windows-11");
+  assert.equal(classifyOperatingSystem({
+    platform: "win32",
+    release: "10.0.20348",
+    windowsProductType: "server",
+  }), "windows-server-2022");
+  assert.equal(classifyOperatingSystem({ platform: "linux", distributionId: "ubuntu" }), "ubuntu");
+  assert.equal(classifyOperatingSystem({ platform: "darwin" }), "macos");
+  assert.throws(
+    () => classifyOperatingSystem({ platform: "win32", release: "10.0.22631" }),
+    /PLATFORM-SMOKE-WINDOWS-EDITION-UNKNOWN/u,
+  );
+});
+
+test("functional evidence v2 remains K3-neutral, public, and closed to six rows", () => {
+  const rows = [
+    "npm-binary",
+    "workspace-discovery",
+    "portable-path-contract",
+    "compiler-build",
+    "strict-fungi-check",
+    "wasm-execution",
+  ].map((name) => ({ name, status: "passed", durationMs: 1 }));
+  const report = buildFunctionalPlatformEvidence({
+    repositoryCommit: "a".repeat(40),
+    operatingSystem: "windows-10",
+    runnerClass: "local-unclassified",
+    platformIdentity: { os: "win32", architecture: "x64" },
+    distribution: { id: "windows", version: "10.0.19045" },
+    nodeVersion: "v20.19.0",
+    cleanWorkingTree: true,
+    evidence: rows,
+  });
+  assert.equal(report.schema, "galerina.platform.functional-evidence.v2");
+  assert.equal(report.evidenceClass, "FUNCTIONAL_PORTABILITY");
+  assert.equal(report.verdict, 0);
+  assert.equal(report.status, "PASS");
+  assert.equal(report.authenticated, false);
+  assert.equal(report.authorityReleased, false);
+  assert.equal(report.productionAuthorizing, false);
+  assert.equal(report.evidence.length, 6);
+  assert.deepEqual(report.criticalWarnings, []);
+  assert.equal(Object.isFrozen(report), true);
+  assert.throws(
+    () => buildFunctionalPlatformEvidence({
+      repositoryCommit: "a".repeat(40),
+      operatingSystem: "windows-10",
+      runnerClass: "local-unclassified",
+      platformIdentity: { os: "win32", architecture: "x64" },
+      distribution: { id: "windows", version: "10.0.19045" },
+      nodeVersion: "v20.19.0",
+      cleanWorkingTree: false,
+      evidence: rows,
+    }),
+    /PLATFORM-SMOKE-WORKTREE-DIRTY/u,
+  );
+});
 
 test("portable repository paths refuse foreign separators, traversal, and absolutes", () => {
   assert.equal(

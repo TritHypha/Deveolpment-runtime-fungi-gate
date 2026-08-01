@@ -1,0 +1,54 @@
+{
+  "schema": "galerina.beta-v1.platform-policy.v1",
+  "releaseId": "beta-v1",
+  "targetRepositoryCommit": "44ea2c23f6326c2c3079de3aa081c6e68e26abe6",
+  "functional": [
+    {
+      "operatingSystem": "windows-10",
+      "receiptFile": "functional-windows-10.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "windows-11",
+      "receiptFile": "functional-windows-11.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "ubuntu",
+      "receiptFile": "functional-ubuntu.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "debian",
+      "receiptFile": "functional-debian.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "fedora",
+      "receiptFile": "functional-fedora.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "linuxmint",
+      "receiptFile": "functional-linuxmint.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "operatingSystem": "macos",
+      "receiptFile": "functional-macos.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "minimumProductionDurabilityProfiles": 1,
+  "durabilityProfiles": [
+    {
+      "operatingSystem": "windows-10",
+      "receiptFile": "durability-windows-10.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "repositoryEvidence": {
+    "receiptFile": "repository-fixed-point.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

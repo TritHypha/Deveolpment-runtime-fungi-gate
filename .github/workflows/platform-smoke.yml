@@ -18,7 +18,7 @@ jobs:
         include:
           - name: Windows Server 2022 hosted proxy
             runner: windows-2022
-            expected_os: windows
+            expected_os: windows-server-2022
           - name: macOS 14 arm64
             runner: macos-14
             expected_os: macos
@@ -38,7 +38,12 @@ jobs:
       - name: Prove platform-smoke refusal contracts
         run: node --test scripts/tests/platform-smoke.test.mjs
       - name: Run hermetic platform smoke
-        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }}
+        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }} > functional-${{ matrix.expected_os }}.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: functional-${{ matrix.expected_os }}
+          path: functional-${{ matrix.expected_os }}.json
+          if-no-files-found: error
 
   official-linux-containers:
     name: ${{ matrix.name }}
@@ -67,7 +72,12 @@ jobs:
       - name: Prove platform-smoke refusal contracts
         run: node --test scripts/tests/platform-smoke.test.mjs
       - name: Run hermetic platform smoke
-        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }}
+        run: node scripts/platform-smoke.mjs --json --expect-os ${{ matrix.expected_os }} > functional-${{ matrix.expected_os }}.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: functional-${{ matrix.expected_os }}
+          path: functional-${{ matrix.expected_os }}.json
+          if-no-files-found: error
 
   # GitHub-hosted Windows is Windows Server, not Windows 11. This job stays
   # visibly skipped until the owner supplies a runner with the exact labels.
@@ -83,7 +93,31 @@ jobs:
           cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
       - run: npm ci --prefix packages-galerina/galerina-core-compiler
       - run: node --test scripts/tests/platform-smoke.test.mjs
-      - run: node scripts/platform-smoke.mjs --json --expect-os windows
+      - run: node scripts/platform-smoke.mjs --json --expect-os windows-11 > functional-windows-11.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: functional-windows-11
+          path: functional-windows-11.json
+          if-no-files-found: error
+
+  windows-10-self-hosted:
+    if: ${{ vars.GALERINA_WINDOWS10_RUNNER == 'enabled' }}
+    runs-on: [self-hosted, Windows, X64, windows-10]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
+      - run: npm ci --prefix packages-galerina/galerina-core-compiler
+      - run: node --test scripts/tests/platform-smoke.test.mjs
+      - run: node scripts/platform-smoke.mjs --json --expect-os windows-10 > functional-windows-10.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: functional-windows-10
+          path: functional-windows-10.json
+          if-no-files-found: error
 
   # No third-party Mint container is trusted as release evidence. An actual
   # Linux Mint 22 runner can opt in without weakening that supply-chain rule.
@@ -99,4 +133,9 @@ jobs:
           cache-dependency-path: packages-galerina/galerina-core-compiler/package-lock.json
       - run: npm ci --prefix packages-galerina/galerina-core-compiler
       - run: node --test scripts/tests/platform-smoke.test.mjs
-      - run: node scripts/platform-smoke.mjs --json --expect-os linuxmint
+      - run: node scripts/platform-smoke.mjs --json --expect-os linuxmint > functional-linuxmint.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: functional-linuxmint
+          path: functional-linuxmint.json
+          if-no-files-found: error

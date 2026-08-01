@@ -13,6 +13,14 @@ const STRICT_FIXTURE = "examples/wasm-hello-world/greet.fungi";
 const ALLOWED_PLATFORMS = new Set(["win32", "darwin", "linux"]);
 const ALLOWED_ARCHITECTURES = new Set(["x64", "arm64"]);
 const COMMAND_TIMEOUT_MS = 120_000;
+const FUNCTIONAL_ROWS = Object.freeze([
+  "npm-binary",
+  "workspace-discovery",
+  "portable-path-contract",
+  "compiler-build",
+  "strict-fungi-check",
+  "wasm-execution",
+]);
 
 function refusal(code, message) {
   return new Error(`${code}: ${message}`);
@@ -54,6 +62,40 @@ export function assertPlatformIdentity(os, architecture) {
     throw refusal("PLATFORM-SMOKE-ARCH-UNKNOWN", `unsupported architecture identity '${architecture}'`);
   }
   return { os, architecture };
+}
+
+export function classifyOperatingSystem(facts) {
+  if (facts?.platform === "darwin") return "macos";
+  if (facts?.platform === "linux") {
+    if (["ubuntu", "debian", "fedora", "linuxmint"].includes(facts.distributionId)) {
+      return facts.distributionId;
+    }
+    throw refusal(
+      "PLATFORM-SMOKE-DISTRIBUTION-UNKNOWN",
+      "Linux distribution is outside the closed beta-v1 set",
+    );
+  }
+  if (facts?.platform !== "win32") {
+    throw refusal("PLATFORM-SMOKE-PLATFORM-UNKNOWN", "platform is outside the closed set");
+  }
+  if (facts.windowsProductType !== "client" && facts.windowsProductType !== "server") {
+    throw refusal(
+      "PLATFORM-SMOKE-WINDOWS-EDITION-UNKNOWN",
+      "Windows client/server identity is unavailable",
+    );
+  }
+  const match = /^10\.0\.(\d+)$/u.exec(facts.release ?? "");
+  const build = match === null ? Number.NaN : Number.parseInt(match[1], 10);
+  if (!Number.isSafeInteger(build)) {
+    throw refusal("PLATFORM-SMOKE-WINDOWS-RELEASE-MALFORMED", "Windows build is malformed");
+  }
+  if (facts.windowsProductType === "server") {
+    if (build === 20348) return "windows-server-2022";
+    throw refusal("PLATFORM-SMOKE-WINDOWS-SERVER-UNKNOWN", "Windows Server build is not admitted");
+  }
+  if (build >= 22_000) return "windows-11";
+  if (build >= 10_240 && build <= 19_045) return "windows-10";
+  throw refusal("PLATFORM-SMOKE-WINDOWS-CLIENT-UNKNOWN", "Windows client build is not admitted");
 }
 
 export function requireExecutable(name, probe) {
@@ -106,6 +148,51 @@ export function assertNoSensitiveOutput(serialized) {
     throw refusal("PLATFORM-SMOKE-OUTPUT-SECRET", "structured output contains a secret-shaped field");
   }
   return serialized;
+}
+
+export function buildFunctionalPlatformEvidence(input) {
+  if (!/^[0-9a-f]{40}$/u.test(input?.repositoryCommit ?? "")) {
+    throw refusal("PLATFORM-SMOKE-COMMIT-MALFORMED", "repository commit is unavailable");
+  }
+  if (input.cleanWorkingTree !== true) {
+    throw refusal("PLATFORM-SMOKE-WORKTREE-DIRTY", "platform evidence requires a clean tree");
+  }
+  if (!["container", "hosted-vm", "local-unclassified", "self-hosted"].includes(input.runnerClass)) {
+    throw refusal("PLATFORM-SMOKE-RUNNER-CLASS", "runner class is outside the closed set");
+  }
+  const evidence = validateEvidence(input.evidence);
+  if (
+    evidence.length !== FUNCTIONAL_ROWS.length
+    || evidence.some((row, index) => row.name !== FUNCTIONAL_ROWS[index])
+  ) {
+    throw refusal(
+      "PLATFORM-SMOKE-EVIDENCE-CLOSURE",
+      "functional evidence must contain the exact ordered six-row contract",
+    );
+  }
+  const ownedEvidence = Object.freeze(evidence.map((row) => Object.freeze({ ...row })));
+  const report = Object.freeze({
+    schema: "galerina.platform.functional-evidence.v2",
+    evidenceClass: "FUNCTIONAL_PORTABILITY",
+    verdict: 0,
+    status: "PASS",
+    repositoryCommit: input.repositoryCommit,
+    operatingSystem: input.operatingSystem,
+    runnerClass: input.runnerClass,
+    platform: Object.freeze({
+      ...input.platformIdentity,
+      distribution: Object.freeze({ ...input.distribution }),
+      nodeVersion: input.nodeVersion,
+    }),
+    cleanWorkingTree: true,
+    criticalWarnings: Object.freeze([]),
+    evidence: ownedEvidence,
+    authenticated: false,
+    authorityReleased: false,
+    productionAuthorizing: false,
+  });
+  assertNoSensitiveOutput(JSON.stringify(report));
+  return report;
 }
 
 function runProcess(command, args, timeout = COMMAND_TIMEOUT_MS) {
@@ -221,6 +308,55 @@ function readDistributionIdentity() {
   return { id: id.toLowerCase(), version };
 }
 
+function readWindowsProductType() {
+  if (process.platform !== "win32") return undefined;
+  const result = requirePassedProcess(
+    "windows-product-type",
+    runProcess("reg.exe", [
+      "query",
+      "HKLM\\SYSTEM\\CurrentControlSet\\Control\\ProductOptions",
+      "/v",
+      "ProductType",
+    ], 15_000),
+  );
+  const match = String(result.stdout).match(
+    /ProductType\s+REG_SZ\s+(WinNT|ServerNT|LanmanNT)/iu,
+  );
+  if (match?.[1] === "WinNT") return "client";
+  if (match?.[1] === "ServerNT" || match?.[1] === "LanmanNT") return "server";
+  throw refusal(
+    "PLATFORM-SMOKE-WINDOWS-EDITION-UNKNOWN",
+    "Windows ProductType could not be classified",
+  );
+}
+
+function repositoryIdentity() {
+  const commitResult = requirePassedProcess(
+    "git-rev-parse",
+    runProcess("git", ["rev-parse", "HEAD"], 15_000),
+  );
+  const repositoryCommit = String(commitResult.stdout).trim();
+  if (!/^[0-9a-f]{40}$/u.test(repositoryCommit)) {
+    throw refusal("PLATFORM-SMOKE-COMMIT-MALFORMED", "Git returned a malformed commit");
+  }
+  const status = requirePassedProcess(
+    "git-status",
+    runProcess("git", ["status", "--porcelain=v1", "--untracked-files=all"], 15_000),
+  );
+  return {
+    repositoryCommit,
+    cleanWorkingTree: String(status.stdout).trim().length === 0,
+  };
+}
+
+function closedRunnerClass() {
+  if (process.env.RUNNER_ENVIRONMENT === "self-hosted") return "self-hosted";
+  if (process.env.GITHUB_ACTIONS === "true") {
+    return existsSync("/.dockerenv") ? "container" : "hosted-vm";
+  }
+  return "local-unclassified";
+}
+
 async function executeWasmProbe() {
   const compilerUrl = pathToFileURL(repositoryPath(`${COMPILER_DIRECTORY}/dist/index.js`)).href;
   const compiler = await import(`${compilerUrl}?platform-smoke=${Date.now()}`);
@@ -278,12 +414,19 @@ function parseArguments(argv) {
 export async function runPlatformSmoke({ expectedOs } = {}) {
   const identity = assertPlatformIdentity(platform(), arch());
   const distribution = readDistributionIdentity();
-  if (expectedOs !== undefined && distribution.id !== expectedOs) {
+  const operatingSystem = classifyOperatingSystem({
+    platform: identity.os,
+    distributionId: distribution.id,
+    release: release(),
+    windowsProductType: readWindowsProductType(),
+  });
+  if (expectedOs !== undefined && operatingSystem !== expectedOs) {
     throw refusal(
       "PLATFORM-SMOKE-DISTRIBUTION-MISMATCH",
-      `expected '${expectedOs}' but admitted '${distribution.id}'`,
+      `expected '${expectedOs}' but admitted '${operatingSystem}'`,
     );
   }
+  const repository = repositoryIdentity();
 
   const npm = npmInvocation();
   const evidence = [];
@@ -333,17 +476,15 @@ export async function runPlatformSmoke({ expectedOs } = {}) {
   evidence.push(await timedEvidence("wasm-execution", () => executeWasmProbe()));
   validateEvidence(evidence);
 
-  const report = {
-    schemaVersion: "galerina.platform-smoke.v1",
-    verdict: "passed",
-    platform: {
-      ...identity,
-      distribution,
-      nodeVersion: process.version,
-    },
+  const report = buildFunctionalPlatformEvidence({
+    ...repository,
+    operatingSystem,
+    runnerClass: closedRunnerClass(),
+    platformIdentity: identity,
+    distribution,
+    nodeVersion: process.version,
     evidence,
-  };
-  assertNoSensitiveOutput(JSON.stringify(report));
+  });
   return report;
 }
 
@@ -355,7 +496,7 @@ async function main() {
       console.log(JSON.stringify(report, null, 2));
     } else {
       console.log(
-        `Galerina platform smoke: ${report.verdict} — ${report.platform.distribution.id} `
+        `Galerina platform smoke: ${report.status} — ${report.operatingSystem} `
         + `${report.platform.architecture}, ${report.evidence.length} checks`,
       );
     }
@@ -363,8 +504,9 @@ async function main() {
     const message = error instanceof Error ? error.message : String(error);
     const code = message.match(/PLATFORM-SMOKE-[A-Z-]+/)?.[0] ?? "PLATFORM-SMOKE-REFUSED";
     const refused = JSON.stringify({
-      schemaVersion: "galerina.platform-smoke.v1",
-      verdict: "refused",
+      schema: "galerina.platform.functional-evidence.v2",
+      verdict: -1,
+      status: "REFUSED",
       code,
     });
     assertNoSensitiveOutput(refused);

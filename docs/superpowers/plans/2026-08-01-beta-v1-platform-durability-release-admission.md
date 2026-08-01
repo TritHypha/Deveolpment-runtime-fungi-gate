@@ -432,7 +432,7 @@ npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
 node galerina.mjs check packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi --strict-governance
 ```
 
-- [ ] **Step 6: Commit Task 6**
+- [x] **Step 6: Commit Task 6**
 
 ```powershell
 git add -- packages-galerina/galerina-framework-app-kernel/src/registry-durability-production-admission.ts packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi packages-galerina/galerina-framework-app-kernel/tests/registry-durability-production-admission.test.mjs packages-galerina/galerina-framework-app-kernel/src/registry-generation-store.ts packages-galerina/galerina-framework-app-kernel/src/registry-rotation-controller.ts packages-galerina/galerina-framework-app-kernel/src/index.ts packages-galerina/galerina-framework-app-kernel/package.json
@@ -457,7 +457,7 @@ git commit -m "feat(rotation): bind production durability admission"
 - Release verifier consumes stable direct files and emits `galerina.beta-v1.release-admission.v1`.
 - Policy requires Windows 10, Windows 11, Ubuntu, Debian, Fedora, Linux Mint and macOS rows.
 
-- [ ] **Step 1: Write failing policy and release tests**
+- [x] **Step 1: Write failing policy and release tests**
 
 Use public synthetic receipts to prove the complete seven-OS matrix admits.
 Refuse a missing OS, proxy substitution, duplicated OS, wrong architecture,
@@ -465,13 +465,13 @@ stale commit, dirty tree, skipped test, critical warning, path/secret leak,
 missing durability profile, mixed evidence identity and recomputed self-hash
 forgery.
 
-- [ ] **Step 2: Run focused tests and verify RED**
+- [x] **Step 2: Run focused tests and verify RED**
 
 ```powershell
 node --test scripts/tests/platform-smoke.test.mjs scripts/tests/beta-v1-release-admission.test.mjs
 ```
 
-- [ ] **Step 3: Implement v2 functional evidence**
+- [x] **Step 3: Implement v2 functional evidence**
 
 Preserve the six real smoke operations. Add exact schema, repository commit,
 clean-source fact, runner class and K3 non-authority. No child output,
@@ -479,7 +479,7 @@ arguments, current working directory or environment value may enter the
 receipt. An exact Windows Server hosted row is useful evidence but cannot fill
 the Windows 11 policy slot.
 
-- [ ] **Step 4: Implement final release composition**
+- [x] **Step 4: Implement final release composition**
 
 Read the policy and every evidence file by stable handle with size limits.
 Independently recompute platform coverage, durability coverage, phase-close
@@ -487,7 +487,7 @@ receipts, graph/generator receipts and release-build identity. Return `+1`
 only for the exact complete matrix, `0` for absent external execution and `-1`
 for malformed, contradictory or failed evidence.
 
-- [ ] **Step 5: Update hosted and self-hosted jobs**
+- [x] **Step 5: Update hosted and self-hosted jobs**
 
 Keep hosted Ubuntu/macOS/Windows Server jobs as functional evidence. Keep exact
 Windows 10, Windows 11 and Mint self-hosted labels. Add explicit Debian,
