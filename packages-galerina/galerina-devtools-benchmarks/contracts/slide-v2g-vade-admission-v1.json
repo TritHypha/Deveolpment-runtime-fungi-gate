@@ -1,0 +1,45 @@
+{
+  "schema": "galerina.slide.vade.admission.v1",
+  "receiptSchemaVersion": 1,
+  "benchmark": "slide-v2g-verified-ahead-of-demand",
+  "status": "MEASURED",
+  "receiptSha256": "4f0871eacd0f0e3f5d69c5545802adff317b0231fcf995c5b8c73dbcf8e0b564",
+  "slideCommit": "b5aab13d59d59195cfd1c4bee25bcc663060bad4",
+  "sourceBodyDigest": "b744e3076e99404e5cc424f89939236b1377f8515970d3077b0fc18eefe78e38",
+  "sourceSemanticDigest": "a762d59c1552e6b3c8be45fd202b9767e52dbdfbd8684a6ea0b3cb2e029932f4",
+  "inputDigest": "ca20f576c92bd797b7c825e068207ce2097f4b98a98d871bd842bc194f16b7a6",
+  "semanticChecksum": "3fdc0c9091962dc931fd95b8c4058728bea7aa77fa710627d7b01daa173bd009",
+  "refusalChecksum": "02b4c2e85c5f660ea8b8ac447deff30cd3423d11c9da0d70327cb4f61a21ab1f",
+  "capsuleDigest": "39a23dfc7737bd59e0f014e19d29c242517ff27766e7cd5f3194022b48248349",
+  "config": {
+    "seed": 1511506913,
+    "operations": 128,
+    "warmups": 2,
+    "samples": 9
+  },
+  "laneIds": [
+    "V2D_CLEAN_DEMAND",
+    "V2D_PREPARED_DEMAND",
+    "V2F_DIRECT_EMIT",
+    "V2F_BINARY_VERIFY",
+    "V2F_COMPILE_INSTANTIATE",
+    "V2G_PREPARE",
+    "V2F_WARM_DEMAND",
+    "V2G_VERIFIED_DEMAND",
+    "V2G_REFUSAL"
+  ],
+  "nonClaims": [
+    "bounded process-local V2-G compatibility profile",
+    "not production or native authority",
+    "not terminal cross-runtime publication"
+  ],
+  "platform": {
+    "platform": "win32",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+    "node": "v24.18.0",
+    "hostClass": "NODE_WEBASSEMBLY_BOOTSTRAP_COMPATIBILITY"
+  },
+  "authorityReleased": false
+}

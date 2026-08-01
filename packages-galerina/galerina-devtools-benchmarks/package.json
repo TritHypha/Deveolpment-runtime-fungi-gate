@@ -14,6 +14,7 @@
     ],
     "entryPoints": [
       "src/audit-benchmark-integrity.mjs",
+      "src/audit-slide-vade.mjs",
       "src/audit.mjs",
       "src/bench-guard.mjs",
       "src/build-chart.mjs",
@@ -26,10 +27,13 @@
       "src/noise-gate.mjs",
       "src/report.mjs",
       "src/runner.mjs",
+      "src/slide-vade-adapter.mjs",
       "src/snapshot.mjs",
       "src/variance.mjs"
     ],
     "loadedAssets": [
+      "contracts/slide-v2g-vade-admission-v1.json",
+      "evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json",
       "src/wasm-runner.mjs"
     ],
     "allowOrphans": [
@@ -59,11 +63,14 @@
     "variance": "node src/variance.mjs",
     "noise-gate": "node src/noise-gate.mjs",
     "noise-gate:selftest": "node src/noise-gate.mjs --self-test",
+    "admit:slide-vade": "node src/slide-vade-adapter.mjs",
     "build:native": "node src/build-native.mjs",
     "test": "node --test test/*.test.mjs",
-    "audit": "node --expose-gc src/audit.mjs",
+    "audit": "node src/audit-slide-vade.mjs && node --expose-gc src/audit.mjs",
+    "audit:slide-vade": "node src/audit-slide-vade.mjs",
+    "audit:slide-vade:selftest": "node src/audit-slide-vade.mjs --self-test",
     "snapshot": "node src/snapshot.mjs",
-    "bench": "node --expose-gc src/runner.mjs --quick && node src/compare.mjs && node --expose-gc src/audit.mjs",
+    "bench": "node --expose-gc src/runner.mjs --quick && node src/compare.mjs && npm run audit",
     "run:diagnostic": "node src/diagnostic-runner.mjs",
     "run:diagnostic-suite": "node --expose-gc src/runner.mjs --diagnostic",
     "run:fault-injection": "node src/diagnostic-runner.mjs --benchmark toxic-input --benchmark governance-violation",

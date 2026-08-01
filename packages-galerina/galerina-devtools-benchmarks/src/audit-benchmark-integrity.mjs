@@ -87,6 +87,10 @@ const NON_PUBLICATION_DIRECTORIES = new Set([
   "resource-exhaustion",
   "toxic-input",
 ]);
+const NON_PUBLICATION_IDS = new Set([
+  ...NON_PUBLICATION_DIRECTORIES,
+  "slide-vade-evidence",
+]);
 
 const duplicates = (values) => {
   const seen = new Set();
@@ -430,6 +434,7 @@ try {
     activeDirectories: BENCHMARKS.map((entry) => entry.dir),
     sourceDirectories,
     nonPublicationDirectories: [...NON_PUBLICATION_DIRECTORIES],
+    nonPublicationIds: [...NON_PUBLICATION_IDS],
   }));
 } catch (error) {
   findings.push({

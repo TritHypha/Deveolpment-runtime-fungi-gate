@@ -1,12 +1,20 @@
 import { spawnSync, execSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { types as utilTypes } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf } from "./throughput-units.mjs";
+import { admitSlideVadeEvidence } from "./slide-vade-adapter.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const benchDir   = join(__dirname, "..", "benchmarks");
 const resultsDir  = join(__dirname, "..", "results");
+const DEFAULT_SLIDE_VADE_EVIDENCE = join(
+  __dirname,
+  "..",
+  "evidence",
+  "slide-v2g-verified-ahead-of-demand-b5aab13.json",
+);
 
 // opsPerRun: how many operations the Galerina .fungi benchmark does per flow call.
 // Used to normalise runsPerSecond → ops/second for fair comparison.
@@ -282,6 +290,58 @@ async function runBenchmark(bench) {
 // Good for CI and development feedback. Use without --quick for publication numbers.
 export const QUICK_MODE = process.argv.includes("--quick");
 
+export function slideVadeInputFromArgs(args) {
+  const positions = [];
+  args.forEach((argument, index) => {
+    if (argument === "--slide-vade-input") positions.push(index);
+  });
+  if (positions.length === 0) return null;
+  const index = positions[0];
+  const value = args[index + 1];
+  if (
+    positions.length !== 1
+    || typeof value !== "string"
+    || value.length === 0
+    || value.startsWith("--")
+  ) throw new Error("REFUSED: GALERINA-SLIDE-VADE-ARGV-001");
+  return value;
+}
+
+function slideVadeObservationOptions(options) {
+  if (
+    options === null
+    || typeof options !== "object"
+    || Array.isArray(options)
+    || utilTypes.isProxy(options)
+    || Object.getPrototypeOf(options) !== Object.prototype
+    || Object.getOwnPropertySymbols(options).length !== 0
+  ) return null;
+  const descriptors = Object.getOwnPropertyDescriptors(options);
+  const keys = Object.keys(descriptors);
+  if (keys.some((key) => !["inputPath", "observational"].includes(key))) return null;
+  if (keys.some((key) => !("value" in descriptors[key]))) return null;
+  const inputPath = descriptors.inputPath?.value ?? DEFAULT_SLIDE_VADE_EVIDENCE;
+  const observational = descriptors.observational?.value ?? false;
+  if (typeof inputPath !== "string" || typeof observational !== "boolean") return null;
+  return { inputPath, observational };
+}
+
+export async function runSlideVadeObservation(options = {}) {
+  const admittedOptions = slideVadeObservationOptions(options);
+  const result = admittedOptions === null
+    ? await admitSlideVadeEvidence("")
+    : await admitSlideVadeEvidence(admittedOptions.inputPath, {
+      observational: admittedOptions.observational,
+    });
+  return Object.freeze({
+    child: "slide-vade-evidence",
+    evidenceClass: "NON_COMPARATIVE_COMPONENT_EVIDENCE",
+    comparative: false,
+    workEquivalenceCertificate: false,
+    ...result,
+  });
+}
+
 export function publicationOutputName(filter) {
   if (filter === "diagnostic") return null;
   if (filter === null) return "latest.json";
@@ -297,6 +357,20 @@ async function main() {
   const toRun     = filter ? BENCHMARKS.filter(b=>b.id===filter) : BENCHMARKS;
   if (QUICK_MODE) console.log("⚡ Quick mode: 3s compute-mix, reduced iteration counts");
   const all       = [];
+
+  if (filter === null) {
+    const requestedEvidence = slideVadeInputFromArgs(process.argv.slice(2));
+    const slideVade = await runSlideVadeObservation({
+      inputPath: requestedEvidence ?? DEFAULT_SLIDE_VADE_EVIDENCE,
+      observational: QUICK_MODE,
+    });
+    console.log("\n=== slide-vade-evidence (non-comparative component evidence) ===");
+    console.log(JSON.stringify(slideVade, null, 2));
+    if (!QUICK_MODE && slideVade.verdict !== 1) {
+      process.exitCode = 1;
+      return;
+    }
+  }
 
   for (const b of toRun) {
     console.log(`\n=== ${b.id} ===`);
