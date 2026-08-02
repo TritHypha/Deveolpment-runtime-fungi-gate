@@ -29,8 +29,8 @@ runtime work.
 [ ] Define AI compute plan runtime hook contract
 [x] Implement RD-0660 `.fungi` nine-gate VOK authority fold
 [x] Implement RD-0660 bounded unsafe-free native VOK handle table
-[ ] Verify native VOK forged/stale/replay/context/capacity hostile corpus
-[ ] Benchmark native VOK against null and simpler checked-map baselines
+[x] Verify native VOK forged/stale/replay/context/capacity hostile corpus
+[x] Benchmark native VOK against null and simpler checked-map baselines
 [ ] Add verified OS CSPRNG and opaque VM-resource adapters after table evidence
 [ ] Add owned-byte W^X VEO execution only after the preceding gates pass
 [x] Define runtime error format

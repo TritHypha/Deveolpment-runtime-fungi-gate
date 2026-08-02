@@ -56,13 +56,16 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 5 - parity, hostile assurance and benchmark
 
-- [ ] Add a deterministic native vector runner or fixture so Rust and `.fungi`
+- [x] Add a deterministic native vector runner or fixture so Rust and `.fungi`
   results are compared rather than merely tested separately.
-- [ ] Run mutation/security checks against the native and `.fungi` surfaces.
-- [ ] Add a bounded benchmark with at least 99 samples comparing VOK mint/open/
+- [x] Run hostile field mutation plus Cargo deny/audit and Grype security checks
+  against the native boundary; the separate app-backed scan remains pending its
+  Start-scan acknowledgement and is not counted as evidence.
+- [x] Add a bounded benchmark with at least 99 samples comparing VOK mint/open/
   consume with a null baseline and a simpler checked map; report medians,
   dispersion and honest overhead without a speed claim.
-- [ ] Record that deterministic test nonces are not production entropy.
+- [x] Record that deterministic test/benchmark nonces are not production
+  entropy.
 
 ## Task 6 - documentation, generated artifacts and fixed point
 

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Native VOK authority table benchmark</title>
+  <desc id="desc">Grouped bars show medians from three 99-sample Windows runs. Null owned value medians are 43, 60 and 42 nanoseconds; checked tree medians are 87, 109 and 86; VOK affine cycle medians are 512, 738 and 514.</desc>
+  <rect width="1200" height="760" fill="#0b1220"/>
+  <text x="70" y="55" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Native VOK authority table · 99-sample medians</text>
+  <text x="70" y="88" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="17">Windows 10 · i9-9900K · Balanced power plan · ns/op · lower is better</text>
+
+  <g stroke="#334155" stroke-width="1">
+    <line x1="110" y1="610" x2="1130" y2="610"/>
+    <line x1="110" y1="480" x2="1130" y2="480"/>
+    <line x1="110" y1="350" x2="1130" y2="350"/>
+    <line x1="110" y1="220" x2="1130" y2="220"/>
+    <line x1="110" y1="90" x2="1130" y2="90"/>
+  </g>
+  <g fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="end">
+    <text x="98" y="616">0</text>
+    <text x="98" y="486">200</text>
+    <text x="98" y="356">400</text>
+    <text x="98" y="226">600</text>
+    <text x="98" y="96">800</text>
+  </g>
+
+  <!-- Null owned value: 43, 60, 42 -->
+  <rect x="205" y="582.05" width="58" height="27.95" rx="5" fill="#64748b"/>
+  <rect x="270" y="571" width="58" height="39" rx="5" fill="#94a3b8"/>
+  <rect x="335" y="582.7" width="58" height="27.3" rx="5" fill="#cbd5e1"/>
+  <!-- Checked tree: 87, 109, 86 -->
+  <rect x="500" y="553.45" width="58" height="56.55" rx="5" fill="#1d4ed8"/>
+  <rect x="565" y="539.15" width="58" height="70.85" rx="5" fill="#3b82f6"/>
+  <rect x="630" y="554.1" width="58" height="55.9" rx="5" fill="#60a5fa"/>
+  <!-- VOK affine: 512, 738, 514 -->
+  <rect x="795" y="277.2" width="58" height="332.8" rx="5" fill="#c2410c"/>
+  <rect x="860" y="130.3" width="58" height="479.7" rx="5" fill="#f97316"/>
+  <rect x="925" y="275.9" width="58" height="334.1" rx="5" fill="#fb923c"/>
+
+  <g fill="#e2e8f0" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">
+    <text x="234" y="574">43</text><text x="299" y="563">60</text><text x="364" y="574">42</text>
+    <text x="529" y="545">87</text><text x="594" y="531">109</text><text x="659" y="546">86</text>
+    <text x="824" y="269">512</text><text x="889" y="122">738</text><text x="954" y="268">514</text>
+  </g>
+  <g fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="18" font-weight="600" text-anchor="middle">
+    <text x="299" y="650">Null owned value</text>
+    <text x="594" y="650">Checked tree</text>
+    <text x="889" y="650">VOK affine cycle</text>
+  </g>
+
+  <text x="600" y="704" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">Within each lane: Run 1 · Run 2 · Run 3 from left to right</text>
+  <text x="1130" y="730" fill="#64748b" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">Laboratory evidence · no production speed claim</text>
+</svg>

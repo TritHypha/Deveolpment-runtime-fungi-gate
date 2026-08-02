@@ -126,6 +126,23 @@ Node/V8 behavior must not define Galerina source meaning, and benchmarks from
 this path must be labelled as prototype runner or host-runtime overhead rather
 than native Galerina compiler performance.
 
+## Native VOK authority floor
+
+The experimental native Verified Object Kernel authority floor lives under
+`native/vok-authority` inside this package. It is not a nested Galerina plugin
+and has no runtime dependency. The `.fungi` asset owns the nine-gate K3
+decision; the unsafe-free native crate owns only bounded opaque table mechanics.
+
+Current evidence covers exact native/`.fungi` parity for all 19,683 K3 vectors,
+private affine admitted/lease types, current-context and generation checks,
+bounded exact nonce history, eager revocation, terminal value-only receipts and
+a 99-sample three-lane benchmark. See
+`../../docs/reports/native-vok-authority-table-2026-08-02.md`.
+
+This is unlinked research infrastructure. It has no OS CSPRNG adapter, opaque
+VM-resource bridge, hostile-memory isolation, physical-erasure proof or W^X
+execution path. It cannot set `authority_released` true.
+
 See `../../../ZTF-Knowledge-Bases/node-hosted-runtime-roadmap.md`.
 
 Core runtime zones:

@@ -1,0 +1,25 @@
+# Fail-closed supply-chain policy for the unlinked native VOK authority floor.
+# Widen only after a recorded license and source review.
+
+[graph]
+all-features = true
+
+[advisories]
+version = 2
+yanked = "deny"
+
+[licenses]
+version = 2
+allow = [
+  "Apache-2.0",
+]
+confidence-threshold = 1.0
+
+[bans]
+multiple-versions = "deny"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
