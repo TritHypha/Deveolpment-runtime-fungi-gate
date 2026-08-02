@@ -1,6 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Galerina source participates in cross-platform compiler and SLIDE receipt
+# identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
+*.fungi text eol=lf
+
 # Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.
 scripts/hooks/* text eol=lf
 

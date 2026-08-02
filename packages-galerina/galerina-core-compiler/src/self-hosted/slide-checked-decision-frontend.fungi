@@ -23,6 +23,7 @@ record SLIDECheckedDecisionFrontendReceipt {
   languageEdition: Int
   packageId: String
   profileId: String
+  sourceNormalization: String
   sourceByteLength: Int
   sourceDigest: String
   flowName: String
@@ -69,7 +70,8 @@ contract { intent { "Return no partial checked-decision receipt after refusal." 
 {
   return {
     schema: "" frontendId: "" frontendVersion: "" languageEdition: 0
-    packageId: "" profileId: "" sourceByteLength: 0 sourceDigest: ""
+    packageId: "" profileId: "" sourceNormalization: ""
+    sourceByteLength: 0 sourceDigest: ""
     flowName: "" parameters: [] returnType: "" k3Sensitive: false
     semanticTokenDigest: "" mappings: [] decisionGraphCanonical: ""
     decisionGraphDigest: "" instructionCount: 0 diagnosticDigest: ""
@@ -168,7 +170,7 @@ contract { intent { "Validate a bounded candidate without releasing execution au
       "SLIDE-CDFRONT-003", "package, profile, or flow identity refused",
     )
   }
-  if receipt.sourceByteLength < 1 or receipt.sourceByteLength > 1048576 or receipt.sourceDigest.length() != 64 or receipt.semanticTokenDigest.length() != 64 {
+  if receipt.sourceNormalization != "UTF8_LF_V1" or receipt.sourceByteLength < 1 or receipt.sourceByteLength > 1048576 or receipt.sourceDigest.length() != 64 or receipt.semanticTokenDigest.length() != 64 {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-004", "source identity or bound refused",
     )

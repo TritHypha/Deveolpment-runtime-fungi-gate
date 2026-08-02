@@ -35,6 +35,8 @@ describe("checked decision frontend .fungi contract", () => {
       assert.ok(source.includes(surface), `missing ${surface}`);
     }
     assert.match(source, /check\(verdict\)/u);
+    assert.match(source, /sourceNormalization:\s*String/u);
+    assert.match(source, /receipt\.sourceNormalization\s*!=\s*"UTF8_LF_V1"/u);
     assert.doesNotMatch(
       source,
       /\bif\s+(?:verdict|[A-Za-z][A-Za-z0-9_]*\.verdict)\b/u,
@@ -50,6 +52,10 @@ describe("checked decision frontend .fungi contract", () => {
       descriptor.packageGraph.loadedAssets.includes(
         "src/self-hosted/slide-checked-decision-frontend.fungi",
       ),
+    );
+    assert.match(
+      readFileSync(join(PACKAGE_ROOT, "..", "..", ".gitattributes"), "utf8"),
+      /^\*\.fungi\s+text\s+eol=lf$/mu,
     );
   });
 });
