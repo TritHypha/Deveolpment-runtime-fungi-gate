@@ -191,8 +191,8 @@ const BUILT_IN_TYPES: ReadonlySet<string> = new Set([
   // Error types
   "Error", "ApiError", "EmailError", "PaymentError", "ValidationError", "WebhookError",
   "DecodeError", "ParseError",
-  // Branded types
-  "Brand",
+  // Branded and runtime-minted authority types
+  "Brand", "Authority",
   // ── Security types ───────────────────────────────────────────────────────
   "Hash", "Signature", "Secret",
   // ── AI / ML types ────────────────────────────────────────────────────────
@@ -275,6 +275,7 @@ const GENERIC_ARITY: ReadonlyMap<string, number> = new Map([
   ["Tensor",       2],  // Tensor<ElementType, Shape> — see galerina-tensor-arity-decision.md
   ["ReadOnlyView", 1],  // ReadOnlyView<T>
   ["Brand",        2],  // Brand<T, "Name">
+  ["Authority",    1],  // Authority<"domain.tag.v1"> — opaque runtime-minted authority
   ["Embedding",    1],  // Embedding<768> — dimensioned embedding vector
   ["Secret",       1],  // Secret<ApiKey> — parameterised secret wrapper
 ]);
@@ -295,6 +296,7 @@ const GENERIC_EXAMPLES: ReadonlyMap<string, string> = new Map([
   ["Tensor",       "Tensor<Float32, [Batch, Features]>"],
   ["ReadOnlyView", "ReadOnlyView<T>"],
   ["Brand",        "Brand<String, \"MyType\">"],
+  ["Authority",    "Authority<\"domain.authority.v1\">"],
   ["Embedding",    "Embedding<768>"],
   ["Secret",       "Secret<ApiKey>"],
 ]);
@@ -311,6 +313,7 @@ const GENERIC_EXAMPLES: ReadonlyMap<string, string> = new Map([
 type GenericArgKind = "type" | "tag" | "shape" | "dim";
 const GENERIC_ARG_KINDS: ReadonlyMap<string, readonly GenericArgKind[]> = new Map([
   ["Brand",     ["type", "tag"]],        // Brand<T, Tag> — nominal identity tag (bare or quoted)
+  ["Authority", ["tag"]],                // Authority<Tag> — opaque runtime authority identity
   ["Tensor",    ["type", "shape"]],      // Tensor<Elem, [d0, d1, ...]> — shape literal
   ["Vector",    ["type", "dim"]],        // Vector<Elem, N> — dimension (numeric or named)
   ["Matrix",    ["type", "dim", "dim"]], // Matrix<Elem, R, C> — row/col dimensions
