@@ -1,5 +1,24 @@
 # TODO
 
+### Portable SLIDE VEO execution floor green - 2026-08-02
+
+- **Direct canonical execution:** SLIDE now executes the complete admitted
+  V2-C registry directly from canonical GIR. This path adds no second portable
+  bytecode, Wasm translation, profile allow-list or fallback interpreter.
+- **VOK remains the authority boundary:** entrypoint facts are independently
+  re-derived before closed evidence, all eight K3 gates and one affine lease.
+  The terminal receipt binds object/admission/input/result identities and
+  remains `referenceOnly: true`, `authorityReleased: false`.
+- **Fresh evidence:** focused portable VEO/V2-C/VOK tests **18/18**; complete
+  SLIDE **385/385** across 28 suites; contract integrity **17/17**; local
+  Claude-08/SEC-06 security closure verdict `+1` with 38 findings closed.
+- **Honest boundary:** this makes the portable V2-C floor green, not the
+  general backend. Effects, general memory, package ABI/imports/resources,
+  serialized `.slide`, production authentication, native targets and external
+  platforms remain open. Package conversion remains excluded and unchanged.
+- **SLIDE evidence:** commit `365665a` and
+  `docs/reports/portable-veo-backend-completion-2026-08-02.md`.
+
 ### Bounded verification orchestration complete - 2026-08-02
 
 - **Runaway-process control closed:** the Claude Stop hook is status-only; one
