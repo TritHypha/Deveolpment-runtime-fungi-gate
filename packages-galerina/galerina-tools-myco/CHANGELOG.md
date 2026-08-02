@@ -14,6 +14,15 @@ that the silence was the defect, not the narrowing.
 
 ### Security
 
+- Enforce the fixed term-edge ceiling symmetrically while building and saving,
+  not only while reading. An over-ceiling tree now fails early with
+  `MYCO-INDEX-TOO-LARGE`, names the narrower-root remedy, and cannot leave an
+  index the reader must reject.
+- Distinguish an absent index from an existing rejected index. Status and search
+  no longer misreport corrupt, incompatible or over-limit cache artifacts as a
+  reassuring first run.
+- Treat only `ENOENT` as absence. Permission, invalid-path and other filesystem
+  failures are rejected evidence and cannot be relabelled as a first run.
 - Refuse a persisted file record unless its path is a canonical non-empty
   POSIX-relative path. Parent, dot, empty, backslash, POSIX-absolute,
   Windows-drive and UNC forms invalidate the complete index.
@@ -30,6 +39,8 @@ that the silence was the defect, not the narrowing.
 
 ### Changed
 
+- Track the total file-to-term edge count incrementally so each indexed file can
+  be checked in constant time against the persistence contract.
 - Persist file and term records in canonical lexical order.
 - Replace the “always fresh” claim with the precise contract: the default fast
   refresh is metadata-fresh, not content-identity proof. Security-sensitive

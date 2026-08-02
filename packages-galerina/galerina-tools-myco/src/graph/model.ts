@@ -46,6 +46,11 @@ export class SearchGraph {
   // NAME index (derived): a term appearing in a file's path -> file ids.
   private readonly names = new Map<string, Set<FileId>>();
 
+  // Running count of file-to-term edges. The persisted-index contract bounds
+  // this quantity, so it must be available before serialization becomes the
+  // expensive and unsafe place where an over-limit graph is discovered.
+  private edges = 0;
+
   private nextId: FileId = 0;
 
   // ---- construction -------------------------------------------------------
@@ -78,6 +83,7 @@ export class SearchGraph {
       }
       bucket.set(id, count);
     }
+    this.edges += counts.size;
     this.indexName(record);
     return id;
   }
@@ -89,6 +95,7 @@ export class SearchGraph {
 
     const counts = this.forward.get(id);
     if (counts) {
+      this.edges -= counts.size;
       for (const term of counts.keys()) {
         const bucket = this.inverted.get(term);
         if (!bucket) continue;
@@ -138,6 +145,10 @@ export class SearchGraph {
 
   termCount(): number {
     return this.inverted.size;
+  }
+
+  termEdgeCount(): number {
+    return this.edges;
   }
 
   // The forward edges of a file node (its term counts) — used to persist.

@@ -1,5 +1,69 @@
 # TODO
 
+### Myco symmetric index-ceiling and refusal-state closure - 2026-08-02
+
+- **Upstream-first fix complete:** upstream Myco commit `a48d2c3...` and the
+  Galerina mirror now enforce the same fixed term-edge ceiling during build,
+  save and load. An over-ceiling tree exits with
+  `MYCO-INDEX-TOO-LARGE` before writing an unusable cache.
+- **Absence is exact:** only `ENOENT` means absent. Corrupt, incompatible,
+  over-budget, invalid-path, permission and other I/O failures are rejected and
+  cannot be presented as a reassuring first run.
+- **Fresh evidence:** upstream no-emit typecheck/build and **78/78** tests pass;
+  the Galerina mirror typecheck/build and **80/80** tests pass. Sequential runs
+  returned to the same one pre-existing Node process.
+- **Root cache:** the repository-parent cache is 42,585,553 bytes (40.61 MiB),
+  SHA-256 `a3e06520...`, is explicitly `REFUSED` with exit 2, remains on disk
+  and was not deleted. Individual repository indexes remain usable.
+- **Still open:** a bounded sharded large-tree design. Raising the fixed ceiling
+  or hiding partial coverage is not an acceptable workaround.
+- **Report:**
+  `docs/reports/myco-index-ceiling-mirror-completion-2026-08-02.md`; KB RD-0678.
+
+### Verified native-operation R&D ruling - 2026-08-02
+
+- **Decision:** RD-0680 adopts compiler-derived, independently reverified
+  native operations admitted through VOK. Application developers keep
+  flow-owned values and receive no raw-pointer, manual-free, unchecked-index,
+  thread-safety-override or generic-layout-cast authority.
+- **Terms kept distinct:** `unsafe let` remains the untrusted-boundary-data
+  label; Hallmarks can carry typed assay results but names grant no authority;
+  VOK binds exact proof, object, target, policy and lifecycle to one affine
+  execution lease.
+- **Five mechanisms mapped:** checked-index elimination, definite
+  initialisation, disjoint parallel regions, exact iterator cardinality and
+  typed zero-copy layout are eligible only behind their individual proof and
+  safe-peer gates.
+- **Current gap recorded:** the live `unsafe block` detector is scanner-level
+  and checks `reason` on the opening line. It does not yet independently prove
+  fallback, approval, lifetime, final-object or memory obligations, so it is
+  non-authorizing and no raw-pointer lowering is implied.
+- **Evidence:** KB RD-0680 and the RD-0674..0680 rolling adjudication table. Two
+  owner-approved visual frames have a provenance/hash receipt in the KB.
+
+### Round 3 clean-slate package-translation handover - 2026-08-02
+
+- **Concurrent staging intake detected:** the fresh external directory now
+  contains another AI's quarantined batch report, corpus ledger, issue/question
+  logs and one `.fungi` candidate. It accounts for 8 of a 15-file target across
+  sentinel-time and sentinel-power, produces two package dossiers, one candidate
+  source and 19 unexecuted vectors. Nothing was copied into Galerina.
+- **Rules frozen:** `if` is Bool-only; K3 uses exhaustive `check`; other
+  multi-way decisions use exhaustive `match`; `_ =>` exits; nesting targets two
+  and may not exceed seven; host or syntax uncertainty becomes a named
+  `BLOCKED_*`, never invented code.
+- **Measured candidate evidence:** the one sentinel-time candidate passes a
+  strict frontend check with four flows and zero warnings; sentinel-power
+  correctly wrote no extension where the governed twin already covers the
+  decision surface. This is frontend evidence only: executed vectors remain 0.
+- **Intake blockers:** the batch read only 1 of 22 required references, was
+  produced while source and sandbox changed concurrently, and records unresolved
+  numeric-domain, overflow, fault-code, finiteness and unknown-tier semantics.
+  Re-freeze against the current commit and complete required reading before any
+  candidate intake.
+- **Authority:** staged candidates remain evidence only until strict frontend,
+  semantic parity, mutation, SLIDE execution and package admission all pass.
+
 ### App-kernel linked production seam implementation green - 2026-08-02
 
 - **Native brand now reaches app-kernel safely:** the app-kernel requires a

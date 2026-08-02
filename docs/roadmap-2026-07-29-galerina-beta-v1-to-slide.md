@@ -238,6 +238,28 @@ invented completion percentage. The detailed execution checklist remains
 `docs/TODO.md`; the implementation plan remains
 `docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`.
 
+## Tooling and verified-native-operation checkpoint - 2026-08-02
+
+- **Myco is green at its bounded contract:** upstream and vendored writer,
+  reader and CLI agree on the fixed term-edge ceiling and typed
+  `ok | absent | rejected` result. Only `ENOENT` is absence. Fresh evidence is
+  **78/78 upstream** and **80/80 Galerina mirror**, with typecheck/build green.
+  The 40.61 MiB repository-parent cache is inert, explicitly refused and left
+  on disk; bounded sharding remains future work.
+- **Native optimisation is architecture-green, production-red:** KB RD-0680
+  defines compiler-derived Verified Native Operations through VOK. It keeps
+  `unsafe let`, Hallmarks and memory authority separate and maps five candidate
+  mechanisms to explicit proofs and safe peers. The general native backend,
+  multi-platform evidence and full `unsafe block` proof contract remain open.
+- **Round 3 conversion assistance has one quarantined candidate:** the external
+  clean-slate handover uses flat peer packages, strict decision forms and a
+  finite deterministic retry deck. Its concurrent batch accounts for 8/15
+  target TypeScript files across two sentinel packages, writes one `.fungi`
+  candidate, passes one frontend check and executes 0 of 19 vectors. Only 1/22
+  required references was read, source moved during work and five semantic
+  questions remain; re-freeze and full intake are mandatory. Nothing is
+  integrated or authorizing.
+
 ## Status legend
 
 - 🟩 verified at the named checkpoint
@@ -465,7 +487,7 @@ table is navigation, not authority.
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
 | Governed authority hash integrity | 🟩 | 29/29 ledger entries re-derived, signed, #105-admitted and limited to the closed stdlib import ABI; phase-close blocks drift |
 | Governed mutation non-vacuity | 🟩 | Full catalog 60/60 killed, zero survivors, zero dirty targets |
-| Hostile Myco index boundary | 🟩 | Closed bounded records, root containment, pre-parse byte ceiling, canonical order and traversal/symlink/duplicate/budget negatives; 69/69 plus typecheck |
+| Hostile Myco index boundary | 🟩 | Closed bounded records, symmetric writer/reader term-edge ceiling, ENOENT-only absence, typed rejected state, root containment, pre-parse byte ceiling, canonical order and traversal/symlink/duplicate/budget negatives; upstream 78/78 and Galerina mirror 80/80 plus typecheck/build. The 40.61 MiB parent cache is explicitly refused and left on disk; bounded sharding remains future work |
 | TLS/custom channel composition | 🟩 | Certificate admission is mandatory; custom policy is an additional K3 factor and cannot rescue certificate failure; API server 22/22 |
 | Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
 | SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |

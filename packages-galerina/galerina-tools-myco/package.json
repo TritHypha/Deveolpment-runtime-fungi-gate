@@ -62,9 +62,9 @@
   "license": "Apache-2.0",
   "galerinaVendor": {
     "upstream": "subprojects/myco (github.com/TritHypha/myco)",
-    "upstreamCommit": "810058c6af9345b9ae6c965d04a19c75d44ffda0",
-    "syncedAt": "2026-07-30",
-    "contains": "v0.2.1 behavior plus the bounded closed persisted-index contract, root containment, canonical persistence ordering, and hostile-index regressions",
+    "upstreamCommit": "a48d2c3b5c508ce35346a4dd7aac0278606d10f6",
+    "syncedAt": "2026-08-02",
+    "contains": "v0.2.1 behavior plus the bounded closed persisted-index contract, symmetric writer/reader term-edge ceilings, typed absent-versus-rejected load outcomes with ENOENT-only absence, early over-ceiling refusal, root containment, canonical persistence ordering, and hostile-index regressions",
     "rule": "MIRROR SOURCE — do not edit src/ here. Fix upstream, then re-vendor. Package-specific documentation and metadata may describe Galerina/TLL boundaries."
   },
   "devDependencies": {

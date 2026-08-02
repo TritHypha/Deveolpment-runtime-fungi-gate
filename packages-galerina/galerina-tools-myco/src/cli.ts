@@ -17,7 +17,8 @@ import * as path from "node:path";
 
 import { buildIndex, DEFAULT_INDEX_OPTIONS } from "./ingest/indexer.ts";
 import type { IndexOptions } from "./ingest/indexer.ts";
-import { loadGraph } from "./graph/store.ts";
+import { loadGraph, loadGraphOutcome } from "./graph/store.ts";
+import type { SaveOutcome } from "./graph/store.ts";
 import { buildPathFilter } from "./query/path-filter.ts";
 import { search, searchFile, isError, detectRegexIntent } from "./query/search.ts";
 import type { MatchMode, SearchOptions, SearchOutcome } from "./query/search.ts";
@@ -114,7 +115,7 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
     return 2;
   }
   const started = process.hrtime.bigint();
-  const { stats, skippedLargePaths, skippedVendoredDirs } = await buildIndex(root, index);
+  const { stats, saved, skippedLargePaths, skippedVendoredDirs } = await buildIndex(root, index);
   const ms = Number(process.hrtime.bigint() - started) / 1e6;
   // Informational output → stdout. stderr is reserved for real errors (which all
   // exit non-zero), so a consumer can treat any stderr output — or a non-zero exit —
@@ -126,6 +127,7 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
       `${stats.skippedLarge} over-size skipped) ` +
       `in ${ms.toFixed(0)}ms\n`,
   );
+  noteSaveOutcome(saved);
   // No silent caps: name the files that fell outside the index, so a search that
   // returns nothing is never mistaken for "not present" (DESIGN §8/§10).
   if (skippedLargePaths.length > 0) {
@@ -146,8 +148,26 @@ async function cmdIndex(root: string, index: IndexOptions): Promise<number> {
   return 0;
 }
 
+function noteSaveOutcome(saved: SaveOutcome): void {
+  if (saved.written) return;
+  process.stdout.write(
+    `myco: note — index NOT cached: ${saved.edges.toLocaleString()} term edges `
+      + `exceeds the ${saved.limit.toLocaleString()} ceiling. Results are correct, `
+      + `but every run re-indexes from scratch. Index a narrower root to restore caching.\n`,
+  );
+}
+
 async function cmdStatus(root: string): Promise<number> {
-  const loaded = await loadGraph(root);
+  const outcome = await loadGraphOutcome(root);
+  if (outcome.status === "rejected") {
+    process.stderr.write(
+      `index at ${path.join(root, ".myco")} exists but was REFUSED `
+        + `(over a contract limit, corrupt, or an incompatible format) — `
+        + `delete it and run: myco index\n`,
+    );
+    return 2;
+  }
+  const loaded = outcome.status === "ok" ? outcome : null;
   if (!loaded) {
     process.stderr.write(`no index at ${path.join(root, ".myco")} — run: myco index\n`);
     return 2;
@@ -240,12 +260,20 @@ async function cmdSearch(
       }
       graph = loaded.graph;
     } else {
-      if ((await loadGraph(root)) === null) {
+      const prior = await loadGraphOutcome(root);
+      if (prior.status === "rejected") {
+        process.stdout.write(
+          `myco: existing index at ${path.join(path.resolve(root), ".myco")} was REFUSED `
+            + `(over a contract limit, corrupt, or an incompatible format) — re-indexing…\n`,
+        );
+      }
+      if (prior.status === "absent") {
         // Informational note → stdout (stderr is errors only).
         process.stdout.write(`myco: indexing ${path.resolve(root)} (first run)…\n`);
       }
       const built = await buildIndex(root, iOpts);
       graph = built.graph;
+      if (!values["json"]) noteSaveOutcome(built.saved);
       // Surface an over-size skip even on the search path — otherwise an oversized file
       // silently misses and a zero-result reads as "absent" (the recurring "we keep
       // missing things" failure). Informational → stdout: a skip is not a failure.

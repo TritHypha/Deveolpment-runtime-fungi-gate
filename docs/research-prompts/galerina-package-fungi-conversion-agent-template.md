@@ -36,6 +36,7 @@ Package directory:
 Cross-check:
 
 - `Galerina/docs/TODO.md`
+- `../ZTF-Knowledge-Bases/galerina-fungi-translation-decision-map.md`
 - `Galerina/docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 - `Galerina/docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`
 - `Galerina/docs/architecture/slide-v2-integration-2026-07-29.md`
@@ -55,17 +56,21 @@ Treat generated evidence as potentially stale until its check mode passes.
    explicit fail-closed exit `_=>`.
 3. Only exact K3 ALLOW `+1` authorizes. INDETERMINATE `0` and DENY `-1` never
    authorize.
-4. Developer-managed raw pointers and manual frees are not admitted. Values
+4. Target at most two nested executable control-flow bodies. Depth 3 through 7
+   requires a dossier reason; depth 8 is refused and must be extracted into a
+   focused `fn` or named `flow`. Never flatten a security/effect border merely
+   to meet the style target.
+5. Developer-managed raw pointers and manual frees are not admitted. Values
    are flow-owned unless deliberately placed in the governed Global Vault;
    flow-local values must become unreachable/erased at the flow boundary.
-5. Every package/plugin is one direct child of `packages-galerina`. Dependencies
+6. Every package/plugin is one direct child of `packages-galerina`. Dependencies
    are references to those top-level packages. Never reproduce an npm-style
    nested dependency tree and never add package-local dependency copies.
-6. Do not add a sidecar to the trusted path. Temporary compatibility/oracle
+7. Do not add a sidecar to the trusted path. Temporary compatibility/oracle
    components must remain explicitly non-authorizing.
-7. Language, framework and vendor names confer no trust. Verify concrete
+8. Language, framework and vendor names confer no trust. Verify concrete
    bytes, schemas, effects, capabilities, provenance and runtime behavior.
-8. Preserve the existing package name and public contract unless evidence
+9. Preserve the existing package name and public contract unless evidence
    proves a governed migration is required.
 
 ## Dossier questions
