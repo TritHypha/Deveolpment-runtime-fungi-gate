@@ -129,6 +129,7 @@ function run(name, cmd, args, {
   inheritSuiteLease = false,
 } = {}) {
   const t0 = Date.now();
+  console.error(`PHASE-CLOSE START ${name}`);
   const childEnv = nonAuthorizingChildEnv();
   const admittedChildEnv = inheritSuiteLease
     ? suiteLease.childEnvironment(childEnv)
@@ -174,6 +175,7 @@ function run(name, cmd, args, {
       cleanupAttempted: r.owned?.cleanupAttempted === true,
     },
   });
+  console.error(`PHASE-CLOSE END ${name} ${ok ? "PASS" : "FAIL"} ${ms}ms`);
   return { ok, out, code };
 }
 

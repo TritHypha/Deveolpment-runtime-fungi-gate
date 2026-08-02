@@ -77,6 +77,19 @@ test("one failed child makes phase-close exit non-zero", () => {
   });
 });
 
+test("each phase-close child has an observable start and end heartbeat", () => {
+  const root = fixture({
+    phaseClose: [{ name: "visible-gate", command: ["node", "visible.mjs"] }],
+  });
+  write(root, "visible.mjs", "process.exit(0);\n");
+
+  const result = run(root);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stderr, /PHASE-CLOSE START visible-gate/);
+  assert.match(result.stderr, /PHASE-CLOSE END visible-gate PASS/);
+});
+
 test("--report-only cannot describe a failed run as green", () => {
   const root = fixture({
     phaseClose: [{ name: "red", command: ["node", "red.mjs"] }],
