@@ -218,6 +218,10 @@ AuditLog.write({
 })
 ```
 
+For the distinction between untrusted values, assayed domain types and bounded
+native execution authority, see the
+[Verified native operation boundary worked example](VERIFIED-NATIVE-OPERATION-BOUNDARY.md).
+
 ```
 Unsafe → Protected → Redacted → Audit
 ```

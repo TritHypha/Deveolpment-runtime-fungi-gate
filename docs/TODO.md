@@ -40,6 +40,11 @@
   non-authorizing and no raw-pointer lowering is implied.
 - **Evidence:** KB RD-0680 and the RD-0674..0680 rolling adjudication table. Two
   owner-approved visual frames have a provenance/hash receipt in the KB.
+- **Worked example complete:**
+  `docs/examples/VERIFIED-NATIVE-OPERATION-BOUNDARY.md` separates current
+  checked `.fungi` forms from the planned internal VOK protocol and maps one
+  bounded-index scenario without inventing application syntax or claiming a
+  general native backend.
 
 ### Round 3 clean-slate package-translation handover - 2026-08-02
 
@@ -48,10 +53,12 @@
   logs and one `.fungi` candidate. It accounts for 8 of a 15-file target across
   sentinel-time and sentinel-power, produces two package dossiers, one candidate
   source and 19 unexecuted vectors. Nothing was copied into Galerina.
-- **Rules frozen:** `if` is Bool-only; K3 uses exhaustive `check`; other
-  multi-way decisions use exhaustive `match`; `_ =>` exits; nesting targets two
-  and may not exceed seven; host or syntax uncertainty becomes a named
-  `BLOCKED_*`, never invented code.
+- **Rules frozen:** type is decided before terminality. `if` is Bool-only;
+  `check` is typed-`Verdict`-only and all three arms are terminal when it gates
+  authority;
+  terminal; `Int`-encoded trits and all other alternatives use exhaustive
+  `match`; `_ =>` exits; nesting targets two and may not exceed seven; host or
+  syntax uncertainty becomes a named `BLOCKED_*`, never invented code.
 - **Measured candidate evidence:** the one sentinel-time candidate passes a
   strict frontend check with four flows and zero warnings; sentinel-power
   correctly wrote no extension where the governed twin already covers the

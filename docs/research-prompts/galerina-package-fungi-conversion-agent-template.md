@@ -37,6 +37,7 @@ Cross-check:
 
 - `Galerina/docs/TODO.md`
 - `../ZTF-Knowledge-Bases/galerina-fungi-translation-decision-map.md`
+- `Galerina/docs/examples/VERIFIED-NATIVE-OPERATION-BOUNDARY.md`
 - `Galerina/docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
 - `Galerina/docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`
 - `Galerina/docs/architecture/slide-v2-integration-2026-07-29.md`
@@ -51,9 +52,14 @@ Treat generated evidence as potentially stale until its check mode passes.
 
 1. Galerina source authority is `.fungi`; TypeScript is a temporary executable
    bootstrap/differential oracle.
-2. `if` is for Boolean facts only. Use `check` for K3/Tri -1 verdicts and
-   `match` for two or more alternatives. Every non-ALLOW boundary has an
-   explicit fail-closed exit `_=>`.
+2. Type comes first and terminality comes second. `if` is for proven Boolean
+   facts only. `check` is Verdict-only and must carry all K3/Tri -1 arms; at an
+   authority boundary it is one terminal construct, so each arm returns or
+   traps (the `if:` arm may call the admitted continuation and return its typed
+   result). Use exhaustive `match` for `Int`, `Option`, `Result`, enums and
+   every other non-Verdict alternative. An `Int` containing `+1`, `0` or
+   `0 - 1` is not a `Verdict` and must not be fed to `check`. Every unknown,
+   malformed and non-ALLOW boundary has an explicit fail-closed exit `_=>`.
 3. Only exact K3 ALLOW `+1` authorizes. INDETERMINATE `0` and DENY `-1` never
    authorize.
 4. Target at most two nested executable control-flow bodies. Depth 3 through 7

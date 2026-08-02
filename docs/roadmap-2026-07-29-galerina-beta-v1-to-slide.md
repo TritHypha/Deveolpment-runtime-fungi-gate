@@ -251,6 +251,10 @@ invented completion percentage. The detailed execution checklist remains
   `unsafe let`, Hallmarks and memory authority separate and maps five candidate
   mechanisms to explicit proofs and safe peers. The general native backend,
   multi-platform evidence and full `unsafe block` proof contract remain open.
+  The public worked example under
+  `docs/examples/VERIFIED-NATIVE-OPERATION-BOUNDARY.md` now makes the current
+  source/future authority split explicit and gives translators a type-first,
+  terminal-authority control-flow rule.
 - **Round 3 conversion assistance has one quarantined candidate:** the external
   clean-slate handover uses flat peer packages, strict decision forms and a
   finite deterministic retry deck. Its concurrent batch accounts for 8/15
