@@ -3,6 +3,7 @@
 /// @purpose: Fail-closed terminal fold for root-verified durability profiles.
 /// @status: A profile is a bound prerequisite, never general production authority.
 
+// Admit one bound durability profile only after complete hybrid-root evidence.
 pure flow registryDurabilityProductionAdmission(
   evidenceVerdict: Verdict,
   evidenceComplete: Bool,

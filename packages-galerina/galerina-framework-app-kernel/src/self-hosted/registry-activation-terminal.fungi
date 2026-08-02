@@ -6,6 +6,7 @@
 /// @status: checker-verified contract; the TypeScript simulator remains the temporary executing
 ///   bootstrap until independent SLIDE can execute and differentially verify this flow.
 
+// Map the closed K3 canary vocabulary to one explicit terminal outcome.
 pure flow k3CanaryOutcome(verdict: String) -> String
 contract {
   intent { "Fold an exact K3 canary token without coercion; only allow advances and every unknown token is indeterminate." }
@@ -19,6 +20,7 @@ contract {
   }
 }
 
+// Select a complete generation only when mixed and unknown evidence are absent.
 pure flow terminalAuthority(
   acceptedCandidate: Bool,
   priorComplete: Bool,

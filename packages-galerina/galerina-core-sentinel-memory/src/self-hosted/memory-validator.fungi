@@ -49,6 +49,7 @@ contract {
   return true
 }
 
+// Convert the overflow-safe predicate into the stable fail-closed memory diagnostic token.
 pure flow checkInBounds(ptr: Int, len: Int, capacity: Int) -> String
 contract {
   intent { "Fail-closed bounds check: 'ok' iff [ptr, ptr+len) lies fully inside [0, capacity), else 'LSM-BOUNDS-001'." }

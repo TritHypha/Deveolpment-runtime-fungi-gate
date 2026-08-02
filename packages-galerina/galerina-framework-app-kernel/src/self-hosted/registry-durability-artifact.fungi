@@ -6,6 +6,7 @@
 /// Status: checker-verified contract; the TypeScript inspector is the temporary host-I/O
 ///   bootstrap and a production adapter remains unbuilt.
 
+// Reduce bounded host evidence to a non-executing native-artifact candidate verdict.
 pure flow durabilityArtifactVerdict(
   descriptorValid: Bool,
   directSingleLinkPath: Bool,

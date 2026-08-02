@@ -7,6 +7,7 @@
 /// @status: checker-verified authority contract; TypeScript is the temporary executing
 ///   bootstrap until the native Galerina/SLIDE object path executes this flow.
 
+// Fold a one-use exact-object probe while refusing any pre-released authority.
 pure flow registryGenerationForwardProbe(
   verificationVerdict: Verdict,
   exactObjectIdentityMatches: Bool,
