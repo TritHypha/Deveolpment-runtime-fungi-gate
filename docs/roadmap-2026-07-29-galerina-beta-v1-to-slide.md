@@ -8,6 +8,17 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the first canonical serialized `.slide` object is green for
+the bounded V2-C reference profile. It is a 188-byte fixed binary identity
+envelope plus exact GIR, capped at 1 MiB. Descriptor and GIR identities cover
+every byte before semantic re-admission, current target/policy/verifier
+matching, eight K3 gates and one affine VOK lease. No JSON manifest, second
+bytecode, path loader or fallback runtime is present. Fresh evidence is 5/5
+bundle-specific, 28/28 composed, 390/390 complete across 29 suites and 18/18
+contract files. Production authentication, package/dependency roots, effects,
+general memory, resources, native evidence and platforms remain blue; package
+conversion is unchanged.
+
 Roadmap refresh: SLIDE now has a green portable execution floor for the
 complete admitted V2-C registry. Canonical GIR executes directly through VOK;
 there is no second portable bytecode, Wasm translation, profile allow-list or
@@ -216,6 +227,7 @@ flowchart TB
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
+    SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
     ST["🟩 V2-D schedule translation proof<br/>changed order · exact permutation · no fallback"]
@@ -267,7 +279,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> H
+    E --> S --> SC --> ST --> PV --> SB --> H
     ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
@@ -281,7 +293,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB green;
     class X,TG red;
     class Q,LI,F,AT amber;
     class H,AL,T,HB,FD,AE,AF blue;

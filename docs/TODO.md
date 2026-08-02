@@ -1,5 +1,23 @@
 # TODO
 
+### Canonical reference `.slide` object floor green - 2026-08-02
+
+- **Real serialized object:** SLIDE now packages exact canonical GIR inside a
+  fixed 188-byte identity envelope. It contains no JSON manifest, second
+  portable bytecode, path lookup or fallback runtime.
+- **Admission remains independent:** exact length, artifact,
+  target/policy/verifier, GIR and descriptor identities are checked before
+  semantic re-admission, eight K3 gates and one affine VOK lease.
+- **Fresh evidence:** bundle **5/5**, composed floor **28/28**, complete SLIDE
+  **390/390** across 29 suites and closed V2 contract **18/18**.
+- **Still open:** production signing/epochs, dependency/package roots, effects,
+  general memory, ABI/resources, native objects and external platforms. This
+  is not production-ledger authority and does not change package-conversion
+  debt.
+- **Evidence:** SLIDE report
+  `docs/reports/reference-slide-bundle-completion-2026-08-02.md` and KB
+  RD-0669.
+
 ### Portable SLIDE VEO execution floor green - 2026-08-02
 
 - **Direct canonical execution:** SLIDE now executes the complete admitted
