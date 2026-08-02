@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8831,
-    "devTools": 145,
+    "devTools": 146,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -2277,6 +2277,7 @@
       "inCadence": false,
       "concerns": [
         "signing/fusion",
+        "governance",
         "provenance",
         "coverage",
         "diagnostics",
@@ -2669,6 +2670,18 @@
         "naming",
         "source-hygiene",
         "graph/index"
+      ]
+    },
+    {
+      "name": "flat-package-root-lock.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "governance",
+        "diagnostics"
       ]
     },
     {
@@ -3093,6 +3106,7 @@
       "brand-audit.mjs",
       "build-core-chain.mjs",
       "emit-doc-wat.mjs",
+      "flat-package-root-lock.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
@@ -3330,6 +3344,7 @@
       "build-process-warden.mjs",
       "check-gate-injection.mjs",
       "emit-doc-wat.mjs",
+      "flat-package-root-lock.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3440,6 +3455,7 @@
       "kb-graph-generator.mjs",
       "package-graph-generator.mjs",
       "project-graph-generator.mjs",
+      "ts-retirement-graph.mjs",
       "gen-contract-registry.mjs",
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
@@ -3450,6 +3466,7 @@
       "beta-v1-release-admission.mjs",
       "debug-compiler-globs.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "flat-package-root-lock.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "hardening-show-derived.mjs",

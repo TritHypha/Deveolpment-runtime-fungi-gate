@@ -518,6 +518,7 @@ flowchart LR
   T_project_graph_generator_mjs --> C_graph_index
   T_ts_retirement_graph_mjs["ts-retirement-graph.mjs"]
   T_ts_retirement_graph_mjs --> C_signing_fusion
+  T_ts_retirement_graph_mjs --> C_governance
   T_ts_retirement_graph_mjs --> C_provenance
   T_ts_retirement_graph_mjs --> C_coverage
   T_ts_retirement_graph_mjs --> C_diagnostics
@@ -678,6 +679,10 @@ flowchart LR
   T_export_slide_checked_decision_receipt_mjs --> C_naming
   T_export_slide_checked_decision_receipt_mjs --> C_source_hygiene
   T_export_slide_checked_decision_receipt_mjs --> C_graph_index
+  T_flat_package_root_lock_mjs["flat-package-root-lock.mjs"]
+  T_flat_package_root_lock_mjs --> C_signing_fusion
+  T_flat_package_root_lock_mjs --> C_governance
+  T_flat_package_root_lock_mjs --> C_diagnostics
   T_fungi_astshape_mjs["fungi-astshape.mjs"]
   T_fungi_astshape_mjs --> C_secrets_privacy
   T_gather_compiler_stage_hashes_mjs["gather-compiler-stage-hashes.mjs"]

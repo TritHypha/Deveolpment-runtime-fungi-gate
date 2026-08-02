@@ -1,5 +1,27 @@
 # TODO
 
+### Independent SLIDE V2-B effect broker floor green - 2026-08-03
+
+- Independent SLIDE now owns a bounded process-local broker protocol for one
+  exact read-only database request or HTTPS fetch. Complete eight-gate K3 VOK
+  admission and one nonce-bound affine lease occur before dispatch.
+- Request/response bytes and resource/schema/artifact/context identities are
+  exact and bounded. The protected response is released only after a matching
+  append-only audit `ALLOW` receipt; every non-ALLOW or malformed path refuses
+  without fallback.
+- Fresh SLIDE evidence is 8/8 broker tests, 22/22 focused broker/VOK/contract,
+  398/398 complete tests across 30 suites with concurrency one, 19/19 contract
+  files and stable Node process count 1 before/after.
+- The green claim is only the independent reference-broker floor. Executable
+  V2-B GIR opcodes 9-11, authenticated isolated production providers,
+  crash-consistent nonce state, platform receipts and production authority
+  remain open, so the Independent SLIDE tile stays blue.
+- Package conversion remains owner-reviewed and unchanged at the current
+  recorded roadmap count. This chapter grants no source deletion, package
+  admission or terminal-retirement authority.
+- Report: SLIDE
+  `docs/reports/independent-v2b-effect-broker-completion-2026-08-03.md`.
+
 ### Myco symmetric index-ceiling and refusal-state closure - 2026-08-02
 
 - **Upstream-first fix complete:** upstream Myco commit `a48d2c3...` and the
