@@ -82,11 +82,14 @@ governed-twin ledgers remain valid shadow-bake history, but do not implicitly
 grant terminal post-SLIDE execution authority; terminal admission is a fresh
 and narrower claim.
 
-The current 16/16 focused adversarial evidence guards a measured red set of
-491 tracked package TypeScript paths, 104
-production `.fungi` sources awaiting terminal re-admission, 31 detected
-production host boundaries awaiting ownership, 95 `node_modules` trees and
-the one ratcheted nested package. These counts are debt, not exceptions.
+The verifier implementation is complete. Fresh current evidence passes 9/9
+top-level adversarial tests with 36 assertions; the earlier 16/16 focused run
+remains a historical checkpoint. The current measured admission debt is 494
+tracked package TypeScript paths, 109 production `.fungi` sources awaiting
+terminal re-admission, 36 detected production host boundaries awaiting
+ownership, 95 `node_modules` trees and the one ratcheted nested package. These
+counts are debt, not exceptions. A green verifier and a red terminal admission
+are deliberately separate states.
 
 Unknown, missing, duplicate, conflicting or unverifiable state is a refusal.
 The resolver must not choose a "nearest" package, silently download a version,

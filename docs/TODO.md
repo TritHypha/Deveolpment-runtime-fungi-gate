@@ -41,10 +41,16 @@
 
 ### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
 
+- **Status split approved:** the retirement verifier implementation is green;
+  terminal retirement admission is red. The green state means the gate exists
+  and passes its hostile fixtures. It does not mean any package is retired.
+- **Verifier evidence:** fresh execution passes 9/9 top-level adversarial tests
+  with 36 assertions. The earlier 16/16 focused result remains a historical
+  checkpoint; neither result is replaced by the outstanding-debt count.
 - **Current owner priority:** close the reusable, fail-closed per-package
   Galerina -> SLIDE execution switch, then retire packages in dependency order.
-  The terminal retirement gate is the final verifier; it must not be weakened
-  or made green by exemptions.
+  The completed verifier must not be weakened. Terminal admission cannot become
+  green through exemptions, percentages, fallback or manually asserted state.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **494** tracked package TypeScript paths,
   **109** unexecuted production `.fungi` sources, **36** unowned production
@@ -54,16 +60,26 @@
   **9/9 top-level adversarial tests with 36 assertions**. It refuses hidden or
   moved TypeScript, unexecuted Fungi, nested packages, dependency forests,
   unowned host bridges and stale/substituted execution evidence.
-- **Binding dependency order:** ordinary checked package source -> complete
-  Galerina frontend snapshot/receipt -> independent SLIDE validation -> VOK
-  admitted object and affine lease -> typed execution/audit receipt -> exact
-  per-package authority-ledger entry -> TypeScript/oracle retirement. A failed
-  SLIDE path has no Wasm, walker, Node, cache or driver fallback.
+- **Binding dependency order:** Galerina -> SLIDE execution switch -> exact
+  `.fungi` admission ledger -> package conversion -> host-boundary ownership ->
+  flat dependency tooling -> final terminal retirement admission. Within each
+  package, ordinary checked source -> complete Galerina frontend
+  snapshot/receipt -> independent SLIDE validation -> VOK admitted object and
+  affine lease -> typed execution/audit receipt -> exact per-package
+  authority-ledger entry -> TypeScript/oracle retirement. A failed SLIDE path
+  has no Wasm, walker, Node, cache or driver fallback.
+- **Workstream visibility:** (1) execution switch: not admitted; (2) ledger:
+  109 Fungi entries required and the ledger is empty; (3) conversion: 494
+  tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
+  remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
+  identity remain; (6) terminal admission: refused until all five predecessor
+  rows independently reach zero/complete.
 - **Separation of milestones:** proving the reusable switch turns the
   Galerina-to-SLIDE integration tile green. Converting all packages, removing
   the 95 dependency trees and flattening the nested greeting package are the
   package-retirement programme. Only after every measured debt reaches zero
-  may the terminal retirement gate become green.
+  may terminal retirement admission become green; the verifier is already
+  green and remains continuously enforced throughout the migration.
 - **Candidate boundary:** the four files in the first external staging tree
   remain static, non-authorizing candidates. Strict frontend acceptance and a
   complete dossier are not executable parity or governed admission. The fresh

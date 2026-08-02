@@ -9,13 +9,14 @@ Policy: zero trust, verify rather than assume, fail closed
 
 Roadmap refresh: the execution-switch and terminal-retirement boundaries were
 reconciled against the live gate on 2026-08-02. The terminal verifier itself
-is healthy (**9/9 top-level adversarial tests, 36 assertions**) and remains
-yellow because its refusal is correct. Current exact debt is 494 tracked
-package `.ts` paths, 109 unexecuted `.fungi` sources, 36 unowned host
-boundaries, 95 package-local `node_modules` trees and one nested package. The
-authority ledger is empty. Green requires the reusable Galerina -> SLIDE/VOK
-package switch first, followed by dependency-ordered package retirement; no
-exception, fallback or renamed debt is permitted.
+is implemented and green (**9/9 top-level adversarial tests, 36 assertions**;
+historical focused checkpoint 16/16). Terminal retirement admission is a
+separate red state because current exact debt is 494 tracked package `.ts`
+paths, 109 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
+package-local `node_modules` trees and one nested package. The authority ledger
+is empty. Admission requires the reusable Galerina -> SLIDE/VOK package switch
+first, followed by dependency-ordered package retirement; no exception,
+fallback or renamed debt is permitted.
 
 Roadmap refresh: the benchmark publication model now explains every workload
 row rather than leaving score direction and placement implicit. `✅` means
@@ -181,9 +182,13 @@ flowchart TB
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
+    RV["🟩 Retirement verifier implemented<br/>9/9 top-level adversarial · 36 assertions<br/>historical checkpoint 16/16"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
-    TG["🟨 Terminal retirement authority gate<br/>9/9 adversarial · 36 assertions<br/>exact red debt"]
-    T["🟦 Package retirement<br/>494 tracked package .ts → 0<br/>109 .fungi need execution · 95 node_modules → 0"]
+    AL["🟦 .fungi admission ledger<br/>109 execution/source/evidence entries"]
+    T["🟦 Package conversion<br/>494 tracked package .ts → 0"]
+    HB["🟦 Host-boundary ownership<br/>36 detected boundaries → 0 unowned"]
+    FD["🟦 Flat dependency tooling<br/>95 node_modules + 1 nested identity → 0"]
+    TG["🟥 Terminal retirement admission<br/>all exact debts must be zero<br/>no exemptions or fallback"]
     J["⬜ Next transition benchmark<br/>Galerina/SLIDE vs frozen Galerina/Wasm<br/>exact admitted pairs only"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
@@ -202,7 +207,8 @@ flowchart TB
     AF["🟦 Patent counsel FTO gate<br/>UK · US · EPO/UPC scope fixed<br/>counsel review pending"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> I --> TG --> T --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> I --> AL --> T --> HB --> FD --> TG --> J
+    E --> RV --> TG
     Z --> E --> SA
     G --> P
     L --> M --> U --> V --> W --> AA --> AB --> AC --> SP --> AD --> AG
@@ -225,10 +231,10 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP green;
-    class X red;
-    class Q,AC,TG,LI,F,AT amber;
-    class H,I,T,AE,AF blue;
+    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV green;
+    class X,TG red;
+    class Q,AC,LI,F,AT amber;
+    class H,I,AL,T,HB,FD,AE,AF blue;
     class P green;
     class J grey;
     class AR green;
@@ -248,6 +254,24 @@ exists and passes its local exact-binary and hostile-decoy boundary tests. The
 rejected pathname-loaded addon/caller-callback paths are not restored. It
 cannot become green until app-kernel integration, signed-host admission and
 the complete external durability/platform evidence are present.
+
+### Terminal-retirement control board
+
+The owner-approved operating model is **dependency-first execution with
+workstream-level visibility**. A later row may be researched or prepared, but
+it cannot claim admission or authorize deletion before every earlier row has
+closed. Counts are independently re-derived by the terminal verifier; this
+table is navigation, not authority.
+
+| Order | Workstream | State | Current evidence/debt | Green condition |
+|---:|---|---:|---|---|
+| 0 | Retirement verifier implementation | 🟩 | 9/9 top-level adversarial tests, 36 assertions; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
+| 1 | Galerina → SLIDE execution switch | 🟦 | No ordinary and K3-sensitive package pair has terminal execution authority | Both profiles complete checked-source → SLIDE → VOK → typed-receipt positive and hostile paths with no fallback |
+| 2 | `.fungi` admission ledger | 🟦 | 109 production `.fungi` sources require exact admission; ledger currently empty | Every production source has tracked exact source/evidence digests, package ownership and a verified execution receipt |
+| 3 | Package conversion | 🟦 | 494 tracked package TypeScript paths remain | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
+| 4 | Host-boundary ownership | 🟦 | 36 detected production host boundaries are unowned | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit replacement or retention decision |
+| 5 | Flat dependency tooling | 🟦 | 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero package-local dependency trees and zero nested package identities |
+| 6 | Terminal retirement admission | 🟥 | Refused because rows 1-5 remain open | All exact debts are zero, all predecessor receipts verify, and the unchanged terminal verifier independently returns admitted |
 
 ## Verified progress
 
@@ -291,7 +315,8 @@ the complete external durability/platform evidence are present.
 | SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
-| Terminal package-retirement authority gate | 🟨 | Implemented and deliberately red: fresh self-test **9/9 top-level adversarial tests with 36 assertions**; 494 tracked package `.ts` paths, 109 production `.fungi` sources requiring exact execution/source/evidence admission, 36 detected production host boundaries requiring ownership, 95 `node_modules` trees and one nested native package remain. The authority ledger is empty; R4 shadow-bake authority cannot silently authorize this terminal profile |
+| Retirement verifier implementation | 🟩 | Complete and unchanged: fresh self-test **9/9 top-level adversarial tests with 36 assertions** passes. The earlier 16/16 focused checkpoint remains historical evidence. The verifier independently refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
+| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. Clear dependency-first: Galerina→SLIDE execution switch → exact `.fungi` admission ledger → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 494 tracked package `.ts` paths, 109 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. The authority ledger is empty; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -549,8 +574,9 @@ The pre-SLIDE ratchet is executable:
 `npm.cmd run audit:package-topology`. Fresh evidence records 99 canonical
 identities, 95 package-local `node_modules` bootstrap trees, and one exact
 deferred nested native package (`galerina-framework-example-app/packages/greeting`).
-Any growth fails. The final `--post-slide` profile already refuses all 96 debt
-locations and becomes a required green gate after executable SLIDE integration.
+Any growth fails. The final `--post-slide` verifier already refuses all 96 debt
+locations and is green as an implemented control; terminal admission remains
+red until executable SLIDE integration and every exact debt closure complete.
 The composite `ts-retirement-graph --post-slide` gate additionally requires
 zero tracked package TypeScript, terminal execution admission for every
 production `.fungi` source, and digest-bound ownership for every detected
