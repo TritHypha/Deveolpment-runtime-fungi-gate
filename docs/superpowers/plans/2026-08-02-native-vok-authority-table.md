@@ -34,12 +34,13 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 3 - bounded mint table
 
-- [ ] Write RED tests for invalid capacity/byte ceilings, malformed tags,
+- [x] Write RED tests for invalid capacity/byte ceilings, malformed tags,
   missing or repeated nonces, non-all-positive gates and capacity exhaustion.
-- [ ] Implement fixed-capacity slots, free-list, no-wrap generation and
-  per-table/per-object nonce validation.
-- [ ] Exhaustively test all `3^8 = 6,561` admission vectors; one mints.
-- [ ] Verify no ordinary evidence/proposal/receipt type enters the mint API;
+- [x] Implement fixed-capacity slots, deterministic free-list, private initial
+  generation and per-table/per-object nonce validation. Generation transitions
+  and overflow retirement remain Task 4.
+- [x] Exhaustively test all `3^8 = 6,561` admission vectors; one mints.
+- [x] Verify no ordinary evidence/proposal/receipt type enters the mint API;
   commit the slice.
 
 ## Task 4 - affine lease and revocation state machine

@@ -1,12 +1,15 @@
 #![forbid(unsafe_code)]
 
+use std::collections::BTreeSet;
 use std::fmt;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
 pub const MAX_AUTHORITY_TAG_BYTES: usize = 96;
+pub const MAX_TABLE_CAPACITY: usize = 65_536;
+pub const MAX_OBJECT_BYTES_LIMIT: usize = 64 * 1024 * 1024;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(i8)]
 pub enum Trit {
     Refuse = -1,
@@ -136,6 +139,49 @@ pub struct AuthorityContext {
     revocation_epoch: u64,
 }
 
+pub struct MintRequest {
+    tag: AuthorityTag,
+    context: AuthorityContext,
+    gates: [Trit; 8],
+    bytes: Vec<u8>,
+}
+
+impl fmt::Debug for MintRequest {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("MintRequest")
+            .field("tag", &self.tag)
+            .field("context", &self.context)
+            .field("gates", &self.gates)
+            .field("bytes", &"REDACTED")
+            .finish()
+    }
+}
+
+impl Drop for MintRequest {
+    fn drop(&mut self) {
+        self.bytes.fill(0);
+        self.bytes.clear();
+    }
+}
+
+impl MintRequest {
+    #[must_use]
+    pub fn new(
+        tag: AuthorityTag,
+        context: AuthorityContext,
+        gates: [Trit; 8],
+        bytes: Vec<u8>,
+    ) -> Self {
+        Self {
+            tag,
+            context,
+            gates,
+            bytes,
+        }
+    }
+}
+
 impl AuthorityContext {
     #[must_use]
     pub const fn new(
@@ -220,10 +266,7 @@ impl AuthorityContext {
 /// fn require_sync<T: Sync>() {}
 /// require_sync::<AdmittedObjectHandle>();
 /// ```
-#[expect(
-    dead_code,
-    reason = "Task 3 consumes every opaque identity field during exact table lookup"
-)]
+#[must_use = "dropping an admitted handle cannot authorize execution"]
 pub struct AdmittedObjectHandle {
     table_nonce: [u8; 16],
     slot: usize,
@@ -236,6 +279,16 @@ pub struct AdmittedObjectHandle {
 impl fmt::Debug for AdmittedObjectHandle {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("AdmittedObjectHandle(REDACTED)")
+    }
+}
+
+impl Drop for AdmittedObjectHandle {
+    fn drop(&mut self) {
+        self.table_nonce.fill(0);
+        self.slot = usize::MAX;
+        self.generation = u64::MAX;
+        self.object_nonce.fill(0);
+        self.tag.0.clear();
     }
 }
 
@@ -276,10 +329,7 @@ impl fmt::Debug for AdmittedObjectHandle {
 /// fn require_sync<T: Sync>() {}
 /// require_sync::<LeaseHandle>();
 /// ```
-#[expect(
-    dead_code,
-    reason = "Task 3 consumes every opaque identity field during exact table lookup"
-)]
+#[must_use = "dropping a lease cannot produce an execution receipt"]
 pub struct LeaseHandle {
     table_nonce: [u8; 16],
     slot: usize,
@@ -292,6 +342,222 @@ pub struct LeaseHandle {
 impl fmt::Debug for LeaseHandle {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("LeaseHandle(REDACTED)")
+    }
+}
+
+impl Drop for LeaseHandle {
+    fn drop(&mut self) {
+        self.table_nonce.fill(0);
+        self.slot = usize::MAX;
+        self.generation = u64::MAX;
+        self.object_nonce.fill(0);
+        self.tag.0.clear();
+    }
+}
+
+#[expect(
+    dead_code,
+    reason = "Task 4 consumes tag and context during exact lease admission"
+)]
+struct AdmittedEntry {
+    object_nonce: [u8; 16],
+    tag: AuthorityTag,
+    context: AuthorityContext,
+    bytes: Vec<u8>,
+}
+
+impl AdmittedEntry {
+    fn clear(&mut self) {
+        self.object_nonce.fill(0);
+        self.bytes.fill(0);
+        self.bytes.clear();
+    }
+}
+
+struct Slot {
+    generation: u64,
+    admitted: Option<AdmittedEntry>,
+}
+
+pub struct AuthorityTable<N: NonceSource> {
+    nonce_source: N,
+    table_nonce: [u8; 16],
+    seen_nonces: BTreeSet<[u8; 16]>,
+    current_context: AuthorityContext,
+    byte_ceiling: usize,
+    slots: Vec<Slot>,
+    free_slots: Vec<usize>,
+    live_count: usize,
+    thread_marker: PhantomData<Rc<()>>,
+}
+
+impl<N: NonceSource> AuthorityTable<N> {
+    pub fn new(
+        capacity: usize,
+        byte_ceiling: usize,
+        current_context: AuthorityContext,
+        mut nonce_source: N,
+    ) -> Result<Self, VokFailure> {
+        if capacity == 0 || capacity > MAX_TABLE_CAPACITY {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CAPACITY_INVALID"));
+        }
+        if byte_ceiling == 0 || byte_ceiling > MAX_OBJECT_BYTES_LIMIT {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_BYTE_CEILING_INVALID"));
+        }
+
+        let table_nonce = nonce_source.next_nonce().map_err(Self::nonce_error)?;
+        if table_nonce == [0; 16] {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_NONCE_ZERO"));
+        }
+
+        let mut seen_nonces = BTreeSet::new();
+        seen_nonces.insert(table_nonce);
+        let slots = (0..capacity)
+            .map(|_| Slot {
+                generation: 0,
+                admitted: None,
+            })
+            .collect();
+        let free_slots = (0..capacity).rev().collect();
+        Ok(Self {
+            nonce_source,
+            table_nonce,
+            seen_nonces,
+            current_context,
+            byte_ceiling,
+            slots,
+            free_slots,
+            live_count: 0,
+            thread_marker: PhantomData,
+        })
+    }
+
+    /// Mints only from the typed, closed request surface.
+    ///
+    /// A Boolean, score, evidence record or receipt cannot substitute for the
+    /// complete request.
+    ///
+    /// ```compile_fail
+    /// use galerina_vok_authority::{AuthorityContext, AuthorityTable, NonceFailure, NonceSource};
+    /// struct Source;
+    /// impl NonceSource for Source {
+    ///     fn next_nonce(&mut self) -> Result<[u8; 16], NonceFailure> { Ok([1; 16]) }
+    /// }
+    /// let mut table = AuthorityTable::new(
+    ///     1,
+    ///     1,
+    ///     AuthorityContext::new([1; 32], [2; 32], [3; 32], 0, 0),
+    ///     Source,
+    /// ).unwrap();
+    /// table.mint_admitted(true).unwrap();
+    /// ```
+    pub fn mint_admitted(
+        &mut self,
+        mut request: MintRequest,
+    ) -> Result<AdmittedObjectHandle, VokFailure> {
+        if request.bytes.is_empty() {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_OBJECT_EMPTY"));
+        }
+        if request.bytes.len() > self.byte_ceiling {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_OBJECT_TOO_LARGE"));
+        }
+        if request.context != self.current_context {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CONTEXT_MISMATCH"));
+        }
+
+        let gate_outcome = request
+            .gates
+            .into_iter()
+            .min()
+            .expect("the fixed admission gate array is nonempty");
+        if gate_outcome != Trit::Admit {
+            return Err(VokFailure::new(gate_outcome, "VOK_ADMISSION_GATES_BLOCKED"));
+        }
+
+        let slot_index = self
+            .free_slots
+            .last()
+            .copied()
+            .ok_or_else(|| VokFailure::new(Trit::Unknown, "VOK_CAPACITY_EXHAUSTED"))?;
+        match self.slots.get(slot_index) {
+            Some(slot) if slot.admitted.is_none() => {}
+            _ => return Err(VokFailure::new(Trit::Refuse, "VOK_TABLE_INVARIANT")),
+        }
+        let object_nonce = self.next_unique_nonce()?;
+        let popped = self.free_slots.pop();
+        if popped != Some(slot_index) {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_TABLE_INVARIANT"));
+        }
+        let slot = self
+            .slots
+            .get_mut(slot_index)
+            .expect("the private free-list contains only constructed slots");
+
+        let handle_tag = request.tag.clone();
+        let entry_tag = request.tag.clone();
+        let entry_context = request.context.clone();
+        let entry_bytes = std::mem::take(&mut request.bytes);
+        let handle = AdmittedObjectHandle {
+            table_nonce: self.table_nonce,
+            slot: slot_index,
+            generation: slot.generation,
+            object_nonce,
+            tag: handle_tag,
+            thread_marker: PhantomData,
+        };
+        slot.admitted = Some(AdmittedEntry {
+            object_nonce,
+            tag: entry_tag,
+            context: entry_context,
+            bytes: entry_bytes,
+        });
+        self.live_count += 1;
+        Ok(handle)
+    }
+
+    #[must_use]
+    pub const fn live_len(&self) -> usize {
+        self.live_count
+    }
+
+    fn next_unique_nonce(&mut self) -> Result<[u8; 16], VokFailure> {
+        let nonce = self.nonce_source.next_nonce().map_err(Self::nonce_error)?;
+        if nonce == [0; 16] {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_NONCE_ZERO"));
+        }
+        if !self.seen_nonces.insert(nonce) {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_NONCE_REPEATED"));
+        }
+        Ok(nonce)
+    }
+
+    fn nonce_error(error: NonceFailure) -> VokFailure {
+        VokFailure::new(Trit::Refuse, error.failure_id())
+    }
+}
+
+impl<N: NonceSource> fmt::Debug for AuthorityTable<N> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("AuthorityTable")
+            .field("capacity", &self.slots.len())
+            .field("live_count", &self.live_count)
+            .field("authority_material", &"REDACTED")
+            .finish()
+    }
+}
+
+impl<N: NonceSource> Drop for AuthorityTable<N> {
+    fn drop(&mut self) {
+        for slot in &mut self.slots {
+            if let Some(entry) = &mut slot.admitted {
+                entry.clear();
+            }
+            slot.admitted = None;
+        }
+        self.table_nonce.fill(0);
+        self.seen_nonces.clear();
+        self.live_count = 0;
     }
 }
 

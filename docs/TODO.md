@@ -15,10 +15,12 @@
   all 19,683 nine-gate vectors and authorizes exactly one. Malformed trits
   refuse; core-runtime is 47/47.
 - **Still non-authorizing:** no native handle, mint, lease, revocation or
-  execution authority has been released. The unsafe-free native crate now has
-  closed trits, exact tag/context values, injected nonce failures and opaque
-  non-Clone/non-Send handles with redacted debug output. It has no table or mint
-  method. Next action is the observed-RED bounded mint-table slice.
+  execution authority has been linked or released to Galerina applications.
+  The unsafe-free native crate now has a bounded private mint table: all 6,561
+  eight-gate K3 vectors were checked, exactly one mints, and invalid bounds,
+  context, capacity and missing/zero/repeated nonces fail closed. Owned request
+  bytes and opaque-handle debug are redacted/logically cleared. Lease,
+  revocation and execution remain absent; those are the next observed-RED slice.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
