@@ -12,14 +12,14 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 1 - `.fungi` nine-gate decision surface
 
-- [ ] Add a failing loaded-asset test for
+- [x] Add a failing loaded-asset test for
   `src/self-hosted/vok-authority-admission.fungi`.
-- [ ] Add failing truth-table tests for `vokAuthorityVerdict` and its exact
+- [x] Add failing truth-table tests for `vokAuthorityVerdict` and its exact
   `min` behavior, including malformed trits and every single `0/-1` gate.
-- [ ] Implement the smallest `.fungi` `vAnd`/nine-input fold using flat exits
+- [x] Implement the smallest `.fungi` `vAnd`/nine-input fold using flat exits
   and the project coding standard.
-- [ ] Compile and execute it through the governed compiler path.
-- [ ] Add the source to `packageGraph.loadedAssets` and commit the slice.
+- [x] Compile and execute it through the governed compiler path.
+- [x] Add the source to `packageGraph.loadedAssets` and commit the slice.
 
 ## Task 2 - native crate skeleton and opaque types
 

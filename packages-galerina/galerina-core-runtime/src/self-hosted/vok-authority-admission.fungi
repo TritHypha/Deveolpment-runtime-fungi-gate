@@ -1,0 +1,57 @@
+@version 1
+/// @file: vok-authority-admission.fungi
+/// @purpose: Define the K3 decision surface for native VOK admission plus live-handle resolution.
+/// @status: Pure decision twin only; native slot storage and production authority remain unavailable.
+
+// Invalid trit representations are contradictions, never an extension of the
+// authority domain. This keeps host decoder mistakes on the fail-close path.
+pure flow normalizeVOKTrit(value: Int) -> Int
+contract { intent { "Accept only the closed K3 domain {-1,0,+1}; malformed values refuse." } }
+{
+  if value < 0 - 1 or value > 1 { return 0 - 1 }
+  return value
+}
+
+// K3 conjunction is numeric minimum over the closed balanced-ternary domain.
+pure flow vokVAnd(left: Int, right: Int) -> Int
+contract { intent { "Compose two normalized VOK gates using fail-close K3 minimum." } }
+{
+  if left < right { return left }
+  return right
+}
+
+// Eight admission facts remain independent of the ninth live-handle fact.
+// Exactly the all-positive vector returns +1; any unknown or contradiction
+// remains visible as 0/-1 for the host boundary to refuse at `_=>`.
+pure flow vokAuthorityVerdict(
+  identity: Int,
+  provenance: Int,
+  targetGate: Int,
+  effectsGate: Int,
+  policyGate: Int,
+  revocation: Int,
+  validation: Int,
+  memory: Int,
+  liveHandle: Int,
+) -> Int
+contract { intent { "Fold eight VOK admission gates and one live-handle gate; only nine +1 values authorize." } }
+{
+  let g1 = normalizeVOKTrit(identity)
+  let g2 = normalizeVOKTrit(provenance)
+  let g3 = normalizeVOKTrit(targetGate)
+  let g4 = normalizeVOKTrit(effectsGate)
+  let g5 = normalizeVOKTrit(policyGate)
+  let g6 = normalizeVOKTrit(revocation)
+  let g7 = normalizeVOKTrit(validation)
+  let g8 = normalizeVOKTrit(memory)
+  let g9 = normalizeVOKTrit(liveHandle)
+
+  let a1 = vokVAnd(g1, g2)
+  let a2 = vokVAnd(a1, g3)
+  let a3 = vokVAnd(a2, g4)
+  let a4 = vokVAnd(a3, g5)
+  let a5 = vokVAnd(a4, g6)
+  let a6 = vokVAnd(a5, g7)
+  let a7 = vokVAnd(a6, g8)
+  return vokVAnd(a7, g9)
+}

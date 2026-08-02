@@ -10,9 +10,13 @@
   native Rust floor owns slots, generations, injected nonces, exact
   context/epoch checks and affine state transitions. OS randomness, opaque VM
   resource transfer and W^X execution stay separate later adapters.
-- **Current state:** planning evidence only. No native handle, mint, lease,
-  revocation or execution authority has been released. Next action is the
-  observed-RED `.fungi` loaded-asset/truth-table test slice.
+- **K3 decision slice implemented:** the tracked `.fungi` asset passes its
+  observed-RED loaded-asset gate, compiles to Wasm, matches numeric minimum for
+  all 19,683 nine-gate vectors and authorizes exactly one. Malformed trits
+  refuse; core-runtime is 47/47.
+- **Still non-authorizing:** no native handle, mint, lease, revocation or
+  execution authority has been released. Next action is the observed-RED
+  unsafe-free native crate/opaque-type slice.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
