@@ -1,0 +1,15 @@
+{
+  "schema": "galerina.benchmark.slide-transition.v1",
+  "archiveDirectory": "2026-08-02_galerina-wasm-before-slide",
+  "archiveResultsSha256": "abc564389dd98e8da68a57afedcc57c6b4733e5b20d34ba3423e73f0acb77567",
+  "measuredGalerinaCommit": "54c15058988ab6a178ce014a2c1fed36f5a7fd63",
+  "baseline": {
+    "product": "Galerina/Wasm",
+    "lane": "wasm"
+  },
+  "candidate": {
+    "product": "Galerina/SLIDE",
+    "lane": "slide"
+  },
+  "authorityReleased": false
+}
