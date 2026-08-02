@@ -1,6 +1,6 @@
 # Beta-v1 Cryptographic Release Evidence Report
 
-**Date:** 2026-08-02  
+**Date:** 2026-08-02
 **Implementation commit:** `26932b3c`
 
 ## Outcome
