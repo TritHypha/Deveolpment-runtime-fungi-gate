@@ -37,7 +37,8 @@ and custody gate passes.
 
 No private signing key is needed or permitted for this handover.
 
-Return the completed report, raw Galerina receipt and raw SLIDE platform report
-in this repository under `docs/platform-handover/ubuntu-desktop/reports/`; do
-not leave the only copy in a terminal transcript or an untracked home-directory
-file.
+Return the completed report and all four raw JSON files—the Galerina static
+receipt, SLIDE platform observation, closed native evidence and functional
+portability receipt—in this repository under
+`docs/platform-handover/ubuntu-desktop/reports/`; do not leave the only copy in
+a terminal transcript or an untracked home-directory file.
