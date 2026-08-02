@@ -47,5 +47,5 @@ authority.
 - [x] Run core-runtime and relevant Galerina graph/security/phase-close gates.
 - [x] Update README, TODO, architecture, report and vertical roadmap with the
   exact completed and still-open boundaries.
-- [ ] Regenerate governed indexes/graphs/status as required, inspect for
+- [x] Regenerate governed indexes/graphs/status as required, inspect for
   secrets and stale claims, commit locally and never push.

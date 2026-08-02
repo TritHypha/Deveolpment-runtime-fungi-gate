@@ -78,7 +78,7 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
   audits, security scan and strict/exhaustive phase-close.
 - [x] Review for secrets, private paths, full nonessential key IDs, generated
   drift and any `authorityReleased: true` claim.
-- [ ] Commit Galerina and KB separately; never push.
+- [x] Commit Galerina and KB separately; never push.
 
 ## Later gates after this baseline
 
