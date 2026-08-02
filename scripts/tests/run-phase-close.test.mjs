@@ -71,6 +71,10 @@ test("one failed child makes phase-close exit non-zero", () => {
   assert.equal(report.verdict, "FAIL");
   assert.deepEqual(report.failed, ["red"]);
   assert.equal(report.results[1].exitCode, 7);
+  assert.deepEqual(report.results[0].processControl, {
+    ownedTree: true,
+    cleanupAttempted: false,
+  });
 });
 
 test("--report-only cannot describe a failed run as green", () => {
@@ -161,6 +165,11 @@ test("malformed governance-diff JSON is an explicit failed result", () => {
 });
 
 test("live phase-close checks generated evidence without rewriting it", () => {
+  assert.doesNotMatch(
+    runnerSource,
+    /spawnSync\(/,
+    "every phase-close child must use the owned process-tree boundary",
+  );
   assert.match(
     runnerSource,
     /run\("audit:node-floor", "node", \["scripts\/audit-node-dependencies\.mjs"\]\)/,

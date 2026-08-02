@@ -4,7 +4,6 @@
 
 "use strict";
 
-const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
@@ -16,6 +15,7 @@ const {
   npmTestInvocation,
   parseTestConcurrency,
 } = require("./lib/test-runner-policy.cjs");
+const { runOwnedProcessSync } = require("./lib/owned-process-tree.cjs");
 
 const DEFAULT_ROOT = path.join(__dirname, "..");
 const CORE = Object.freeze([
@@ -102,10 +102,9 @@ function runNpmTest(directory, testScript, testConcurrency) {
   delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
   const common = {
     cwd: directory,
-    encoding: "utf8",
     env: childEnv,
-    shell: false,
-    timeout: TIMEOUT_MS,
+    timeoutMs: TIMEOUT_MS,
+    maxOutputBytes: 64 * 1024 * 1024,
     windowsHide: true,
   };
   const invocation = npmTestInvocation({
@@ -115,7 +114,11 @@ function runNpmTest(directory, testScript, testConcurrency) {
     concurrency: testConcurrency,
   });
   return {
-    child: spawnSync(invocation.command, invocation.args, common),
+    child: runOwnedProcessSync({
+      command: invocation.command,
+      args: invocation.args,
+      ...common,
+    }),
     boundedNodeTest: invocation.boundedNodeTest,
   };
 }
@@ -123,6 +126,9 @@ function runNpmTest(directory, testScript, testConcurrency) {
 function failureFor(child, counts) {
   if (child.error?.code === "ETIMEDOUT") {
     return ["TEST-TIMEOUT", `Package test exceeded ${TIMEOUT_MS}ms.`];
+  }
+  if (child.error?.code === "OWNED-PROCESS-TREE-CLEANUP-REFUSED") {
+    return ["TEST-TREE-CLEANUP-REFUSED", child.error.message];
   }
   if (child.error) {
     return ["TEST-SPAWN-ERROR", child.error.message];
@@ -179,6 +185,10 @@ function runPackage(record, testConcurrency) {
     fail: counts.fail,
     built: child.error === undefined && child.status !== null,
     boundedNodeTest: invocation.boundedNodeTest,
+    processControl: {
+      ownedTree: child.owned !== null && child.owned.spawnError === null,
+      cleanupAttempted: child.owned?.cleanupAttempted === true,
+    },
     durationMs,
     ...(failure === null
       ? {}

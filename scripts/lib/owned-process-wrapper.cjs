@@ -1,0 +1,33 @@
+"use strict";
+
+const { runOwnedProcess } = require("./owned-process-tree.cjs");
+
+const chunks = [];
+let bytes = 0;
+
+process.stdin.on("data", (chunk) => {
+  bytes += chunk.length;
+  if (bytes > 1024 * 1024) {
+    process.stderr.write("OWNED_PROCESS_WRAPPER_INPUT_LIMIT\n");
+    process.exit(126);
+  }
+  chunks.push(chunk);
+});
+
+process.stdin.on("end", async () => {
+  let request;
+  try {
+    request = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  } catch {
+    process.stderr.write("OWNED_PROCESS_WRAPPER_INPUT_MALFORMED\n");
+    process.exit(126);
+  }
+  try {
+    const result = await runOwnedProcess({ ...request, env: process.env });
+    process.stdout.write(`${JSON.stringify(result)}\n`);
+    process.exit(0);
+  } catch (error) {
+    process.stderr.write(`OWNED_PROCESS_WRAPPER_REFUSED ${error.code || "UNKNOWN"}\n`);
+    process.exit(126);
+  }
+});

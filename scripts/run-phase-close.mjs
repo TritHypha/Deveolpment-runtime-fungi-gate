@@ -19,14 +19,15 @@
 // Benchmarks are intentionally EXCLUDED (multi-minute) — run on demand.
 // =============================================================================
 
-import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseGovernanceDiff } from "./lib/phase-close-result.mjs";
 import suiteLeaseModule from "./lib/suite-run-lease.cjs";
+import ownedProcessModule from "./lib/owned-process-tree.cjs";
 
 const { acquireSuiteLease } = suiteLeaseModule;
+const { runOwnedProcessSync } = ownedProcessModule;
 
 function parseArguments(argv) {
   const parsed = {
@@ -113,6 +114,14 @@ try {
 }
 process.once("exit", () => { suiteLease.release(); });
 
+function nonAuthorizingChildEnv() {
+  const childEnv = { ...process.env };
+  delete childEnv.NODE_TEST_CONTEXT;
+  delete childEnv.GALERINA_SUITE_LEASE_NONCE;
+  delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
+  return childEnv;
+}
+
 function run(name, cmd, args, {
   cwd = ROOT,
   okCodes = [0],
@@ -120,10 +129,7 @@ function run(name, cmd, args, {
   inheritSuiteLease = false,
 } = {}) {
   const t0 = Date.now();
-  const childEnv = { ...process.env };
-  delete childEnv.NODE_TEST_CONTEXT;
-  delete childEnv.GALERINA_SUITE_LEASE_NONCE;
-  delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
+  const childEnv = nonAuthorizingChildEnv();
   const admittedChildEnv = inheritSuiteLease
     ? suiteLease.childEnvironment(childEnv)
     : childEnv;
@@ -133,12 +139,13 @@ function run(name, cmd, args, {
     executable = process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe";
     executableArgs = ["/d", "/s", "/c", "npm.cmd", ...args];
   }
-  const r = spawnSync(executable, executableArgs, {
+  const r = runOwnedProcessSync({
+    command: executable,
+    args: executableArgs,
     cwd,
-    encoding: "utf8",
     env: admittedChildEnv,
-    shell: false,
-    timeout,
+    timeoutMs: timeout,
+    maxOutputBytes: 64 * 1024 * 1024,
     windowsHide: true,
   });
   const ms = Date.now() - t0;
@@ -162,6 +169,10 @@ function run(name, cmd, args, {
     exitCode: typeof code === "number" ? code : null,
     signal: r.signal ?? null,
     detail,
+    processControl: {
+      ownedTree: r.owned !== null && r.owned.spawnError === null,
+      cleanupAttempted: r.owned?.cleanupAttempted === true,
+    },
   });
   return { ok, out, code };
 }
@@ -210,6 +221,10 @@ function finish() {
     exitCode: result.exitCode ?? result.code ?? (result.ok === true ? 0 : 1),
     signal: result.signal ?? null,
     detail: result.detail ?? "missing result detail",
+    processControl: result.processControl ?? {
+      ownedTree: false,
+      cleanupAttempted: false,
+    },
   }));
   const failed = normalizedResults.filter((result) => !result.ok);
   const verdict = failed.length === 0
@@ -349,17 +364,14 @@ if (existsSync(patternsDir)) {
   let patternOk = true;
   const patternDetails = [];
   for (const f of patternFiles) {
-    const res = spawnSync(
-      process.execPath,
-      [galerinaMjs, "check", join(patternsDir, f)],
-      {
-        cwd: ROOT,
-        encoding: "utf8",
-        shell: false,
-        timeout: 30000,
-        windowsHide: true,
-      },
-    );
+    const res = runOwnedProcessSync({
+      command: process.execPath,
+      args: [galerinaMjs, "check", join(patternsDir, f)],
+      cwd: ROOT,
+      env: nonAuthorizingChildEnv(),
+      timeoutMs: 30_000,
+      windowsHide: true,
+    });
     const passed = res.status === 0;
     if (!passed) { patternOk = false; patternDetails.push(`${f}: FAIL`); }
   }
@@ -878,18 +890,28 @@ run("proofs:canonical", "node", ["scripts/run-proofs.mjs", "--canonical-only"]);
 // Reference: galerina-governed-design-synthesis.md change-class table.
 try {
   // Check if HEAD~1 exists (might not on first commit)
-  const gitCheck = spawnSync("git", ["rev-parse", "--verify", "HEAD~1"],
-    { cwd: ROOT, encoding: "utf8", shell: false, windowsHide: true });
+  const gitCheck = runOwnedProcessSync({
+    command: "git",
+    args: ["rev-parse", "--verify", "HEAD~1"],
+    cwd: ROOT,
+    env: nonAuthorizingChildEnv(),
+    timeoutMs: 30_000,
+    windowsHide: true,
+  });
   if (gitCheck.status === 0) {
-    const diffResult = spawnSync(process.execPath,
-      ["packages-galerina/galerina-core-compiler/dist/cli.js", "diff", "HEAD~1", "--json"],
-      {
-        cwd: ROOT,
-        encoding: "utf8",
-        shell: false,
-        timeout: 30000,
-        windowsHide: true,
-      });
+    const diffResult = runOwnedProcessSync({
+      command: process.execPath,
+      args: [
+        "packages-galerina/galerina-core-compiler/dist/cli.js",
+        "diff",
+        "HEAD~1",
+        "--json",
+      ],
+      cwd: ROOT,
+      env: nonAuthorizingChildEnv(),
+      timeoutMs: 30_000,
+      windowsHide: true,
+    });
     const parsed = parseGovernanceDiff(diffResult.stdout || "", diffResult);
     results.push({
       name: "governance:diff",

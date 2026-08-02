@@ -112,6 +112,10 @@ test("an existing dist directory never bypasses the declared test and build chai
   assert.match(result.stderr, /END galerina-build-current.*pass/);
   assert.equal(report.results[0].built, true);
   assert.equal(report.results[0].tests, 1);
+  assert.deepEqual(report.results[0].processControl, {
+    ownedTree: true,
+    cleanupAttempted: false,
+  });
 });
 
 test("a caller may lower but never raise the test concurrency ceiling", () => {
