@@ -68,33 +68,33 @@
 - **Evidence:**
   `docs/reports/windows-static-linked-host-build-2026-08-02.md`.
 
-### Native VOK authority table - current chapter - 2026-08-02
+### Native VOK authority and bounded W^X floor - current chapter - 2026-08-02
 
 - **R&D/design complete:** KB RD-0660 and the Galerina design/implementation
   plan select an opaque typed handle over a private bounded generational table
   inside `galerina-core-runtime`; no new top-level or nested plugin package is
   introduced.
-- **Implementation order:** `.fungi` owns the nine-gate K3 fold; an unsafe-free
-  native Rust floor owns slots, generations, injected nonces, exact
-  context/epoch checks and affine state transitions. OS randomness, opaque VM
-  resource transfer and W^X execution stay separate later adapters.
+- **Implementation order:** `.fungi` owns the nine-gate K3 fold; the native
+  Rust authority crate owns slots, generations, injected nonces, exact
+  context/epoch checks and affine state transitions. RD-0662 adds a private OS
+  CSPRNG/W^X module for one closed 16-byte return-value profile. `unsafe` is
+  denied everywhere else and no separately depend-able executor remains.
 - **K3 decision slice implemented:** the tracked `.fungi` asset passes its
   observed-RED loaded-asset gate, compiles to Wasm, matches numeric minimum for
   all 19,683 nine-gate vectors and authorizes exactly one. Malformed trits
-  refuse; core-runtime is 47/47.
-- **Still non-authorizing:** the unsafe-free native crate has a bounded private
-  mint/lease/revocation table but no execution authority is linked or released
-  to Galerina applications. All 6,561
+  refuse; core-runtime is 50/50.
+- **Linked bounded evidence:** the authority crate remains unable to expose
+  private object bytes, raw handles or a safe executor bypass. All 6,561
   eight-gate K3 vectors were checked, exactly one mints, and invalid bounds,
   context, capacity and missing/zero/repeated nonces fail closed. Owned request
   bytes and opaque-handle debug are redacted/logically cleared. Lease,
-  revocation and terminal value-only receipts now pass 21 hostile/unit checks,
-  12 compile-fail contracts and all 19,683 nine-gate K3 vectors. Nonce history
-  is hard-bounded and generation overflow retires capacity. This crate remains
-  unable to execute bytes or release authority. Native/`.fungi` parity,
-  mutation/security checks and bounded benchmark evidence are complete; OS
-  CSPRNG, opaque VM transfer, hostile-memory isolation, physical erasure, W^X
-  execution and independent platforms remain open.
+  revocation, private adapter and terminal receipts now pass 30 hostile/unit checks,
+  14 compile-fail contracts and all 19,683 nine-gate K3 vectors. Nonce history
+  is hard-bounded and generation overflow retires capacity. A live Windows
+  receipt returns `42` only after RW-to-RX transition and a page query proving
+  executable/not-writable; every result remains non-authorizing. Opaque VM
+  transfer, general VEO lowering, hostile-memory isolation, physical erasure
+  and independent live Linux/macOS evidence remain open.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
@@ -114,11 +114,12 @@
   its serializable records.
 - **Fresh repository fixed point:** the governed count-writing runner passes
   98/98 packages and 8,830 tests; the core compiler contributes 5,781 tests.
-- **Still open and non-authorizing:** no native mint table, unguessable
-  slot/generation resolution, revocation lookup, W^X loader or cross-platform
-  hostile runtime evidence exists. Unknown-return inference also remains a
-  compiler-wide deferred-type boundary; it cannot mint a native handle because
-  that runtime mechanism does not yet exist. `authorityReleased` remains false.
+- **Superseded runtime status:** RD-0660 and RD-0662 now supply the bounded
+  native mint table, unguessable slot/generation resolution, eager revocation
+  and closed-profile W^X floor described in the current chapter above.
+  Unknown-return inference, opaque VM-resource transfer, the general VEO
+  loader, hostile-memory isolation and independent live Linux/macOS evidence
+  remain separate non-authorizing gates. `authorityReleased` remains false.
 
 ### Repository security policies aligned - 2026-08-02
 

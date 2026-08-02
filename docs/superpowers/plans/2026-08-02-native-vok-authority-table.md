@@ -72,19 +72,21 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 - [x] Update core-runtime README/TODO, root TODO, architecture and vertical
   roadmap with implemented and still-open boundaries.
 - [x] Update RD-0660 evidence checkboxes and the rolling R&D table.
-- [ ] Regenerate code index, registry, package graphs, dev-tool index, status,
+- [x] Regenerate code index, registry, package graphs, dev-tool index, status,
   roadmap, percent audit and governed test counts in canonical order.
-- [ ] Run focused tests, core-runtime, compiler, aggregate packages, graphs,
+- [x] Run focused tests, core-runtime, compiler, aggregate packages, graphs,
   audits, security scan and strict/exhaustive phase-close.
-- [ ] Review for secrets, private paths, full nonessential key IDs, generated
+- [x] Review for secrets, private paths, full nonessential key IDs, generated
   drift and any `authorityReleased: true` claim.
 - [ ] Commit Galerina and KB separately; never push.
 
-## Production gates intentionally left open
+## Later gates after this baseline
 
-- verified OS CSPRNG adapters on Windows, Linux and macOS;
+- verified OS CSPRNG adapters on Windows, Linux and macOS - closed for the
+  bounded floor by RD-0662; independent live Linux/macOS evidence remains;
 - opaque Galerina VM/Wasm-component resource transfer;
 - process isolation / memory-integrity evidence under the hostile-memory model;
 - physical erasure evidence;
-- native owned-byte W^X VEO execution; and
+- bounded native owned-byte W^X execution - closed by RD-0662; general VEO
+  object/linker execution remains open; and
 - independent cross-platform reproduction.

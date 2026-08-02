@@ -38,11 +38,15 @@ production-capable paths.
 
 Galerina's first native Verified Object Kernel authority floor is implemented
 inside `galerina-core-runtime/native/vok-authority`. The `.fungi` side owns the
-nine-gate K3 decision, while the unsafe-free native crate owns bounded opaque
-handle, generation, nonce, context, revocation and receipt mechanics. Exact
-native/`.fungi` parity covers all 19,683 K3 vectors. The floor is not linked to
-application execution and has no OS CSPRNG, opaque VM-resource bridge,
-hostile-memory isolation or W^X loader, so it releases no production authority.
+nine-gate K3 decision. The native crate owns bounded opaque handles,
+generation, nonce, context, revocation and receipts plus a private OS module
+for CSPRNG and one closed W^X return-value profile. `unsafe` is denied outside
+that private module; there is no separately depend-able executor API. Exact
+native/`.fungi` parity covers all 19,683 K3 vectors. Current Windows evidence
+proves RX/not-W at the call boundary. This
+does not yet link an opaque Galerina VM resource or implement general VEO/GIR
+lowering, hostile-memory isolation, physical erasure or independent live
+Linux/macOS admission, so it releases no production authority.
 
 ---
 

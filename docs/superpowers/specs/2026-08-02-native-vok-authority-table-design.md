@@ -1,8 +1,12 @@
 # Native VOK Authority Table Design
 
 **Date:** 2026-08-02
-**Status:** approved architecture, implementation pending
+**Status:** baseline implemented; extended by the RD-0662 W^X floor
 **R&D:** `ZTF-Knowledge-Bases/RD-0660-native-vok-authority-table.md`
+
+The non-goals and exit evidence below describe this completed baseline chapter.
+RD-0662 later adds one private W^X/OS module in the same crate: `unsafe` remains
+denied outside that module and the public handle/table surface remains safe.
 
 ## Goal
 

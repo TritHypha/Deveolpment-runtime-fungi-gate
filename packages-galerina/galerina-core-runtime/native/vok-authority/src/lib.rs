@@ -1,14 +1,18 @@
-#![forbid(unsafe_code)]
+#![deny(unsafe_code)]
 
 use std::collections::BTreeSet;
 use std::fmt;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
+#[allow(unsafe_code)]
+mod native;
+
 pub const MAX_AUTHORITY_TAG_BYTES: usize = 96;
 pub const MAX_TABLE_CAPACITY: usize = 65_536;
 pub const MAX_OBJECT_BYTES_LIMIT: usize = 64 * 1024 * 1024;
 pub const MAX_NONCE_HISTORY: usize = 262_145;
+pub const RETURN_U64_OBJECT_BYTES: usize = native::OBJECT_BYTES;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(i8)]
@@ -99,6 +103,19 @@ pub trait NonceSource {
     fn next_nonce(&mut self) -> Result<[u8; 16], NonceFailure>;
 }
 
+/// Production nonce source backed by the supported host operating system.
+///
+/// The source has no deterministic fallback. An unavailable or malformed OS
+/// result refuses table construction or the current affine transition.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct OsNonceSource;
+
+impl NonceSource for OsNonceSource {
+    fn next_nonce(&mut self) -> Result<[u8; 16], NonceFailure> {
+        native::os_random_16().map_err(|error| NonceFailure::new(error.failure_id()))
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthorityTag(String);
 
@@ -180,6 +197,32 @@ impl MintRequest {
             gates,
             bytes,
         }
+    }
+
+    /// Constructs the only executable semantic object admitted by the bounded
+    /// native floor. Through this typed constructor callers provide data,
+    /// never machine instructions. Bytes supplied through the generic request
+    /// constructor still pass the same private exact-format parser.
+    ///
+    /// The private native executor cannot be imported or called directly:
+    ///
+    /// ```compile_fail
+    /// use galerina_vok_authority::native;
+    /// ```
+    pub fn new_return_u64(
+        tag: AuthorityTag,
+        context: AuthorityContext,
+        gates: [Trit; 8],
+        value: u64,
+    ) -> Result<Self, VokFailure> {
+        let target = native::current_target()
+            .ok_or_else(|| VokFailure::new(Trit::Refuse, "VOK_NATIVE_TARGET_UNSUPPORTED"))?;
+        Ok(Self::new(
+            tag,
+            context,
+            gates,
+            native::encode_return_u64_object(value, target).to_vec(),
+        ))
     }
 }
 
@@ -402,6 +445,75 @@ pub struct VokReceipt {
     terminal_outcome: Trit,
     policy_epoch: u64,
     revocation_epoch: u64,
+}
+
+/// Terminal evidence for one bounded native execution.
+///
+/// This ordinary value cannot be converted back into a lease and never
+/// releases authority.
+///
+/// ```compile_fail
+/// use galerina_vok_authority::{LeaseHandle, VokExecutionReceipt};
+/// fn require_lease(_: LeaseHandle) {}
+/// fn replay(receipt: VokExecutionReceipt) { require_lease(receipt); }
+/// ```
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct VokExecutionReceipt {
+    tag: String,
+    byte_length: usize,
+    value: u64,
+    terminal_outcome: Trit,
+    policy_epoch: u64,
+    revocation_epoch: u64,
+    executable_at_call: bool,
+    writable_at_call: bool,
+}
+
+impl VokExecutionReceipt {
+    #[must_use]
+    pub fn tag(&self) -> &str {
+        &self.tag
+    }
+
+    #[must_use]
+    pub const fn byte_length(&self) -> usize {
+        self.byte_length
+    }
+
+    #[must_use]
+    pub const fn value(&self) -> u64 {
+        self.value
+    }
+
+    #[must_use]
+    pub const fn terminal_outcome(&self) -> Trit {
+        self.terminal_outcome
+    }
+
+    #[must_use]
+    pub const fn policy_epoch(&self) -> u64 {
+        self.policy_epoch
+    }
+
+    #[must_use]
+    pub const fn revocation_epoch(&self) -> u64 {
+        self.revocation_epoch
+    }
+
+    #[must_use]
+    pub const fn executable_at_call(&self) -> bool {
+        self.executable_at_call
+    }
+
+    #[must_use]
+    pub const fn writable_at_call(&self) -> bool {
+        self.writable_at_call
+    }
+
+    #[must_use]
+    pub const fn authority_released(&self) -> bool {
+        false
+    }
 }
 
 impl VokReceipt {
@@ -680,6 +792,46 @@ impl<N: NonceSource> AuthorityTable<N> {
         };
         self.clear_and_advance_slot(slot_index);
         Ok(receipt)
+    }
+
+    /// Consumes one exact lease through the bounded native W^X profile.
+    ///
+    /// Success and failure both terminally clear the private slot. The native
+    /// adapter accepts only the closed semantic object; no raw-code or path
+    /// fallback is available through this method.
+    pub fn execute_lease(
+        &mut self,
+        lease: LeaseHandle,
+        current_context: &AuthorityContext,
+    ) -> Result<VokExecutionReceipt, VokFailure> {
+        let slot_index = self.validate_lease_handle(&lease)?;
+        if current_context != &self.current_context {
+            self.clear_and_advance_slot(slot_index);
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CONTEXT_MISMATCH"));
+        }
+
+        let result = {
+            let slot = self
+                .slots
+                .get(slot_index)
+                .expect("validated private slot remains present in a flow-local table");
+            let entry = slot
+                .lease
+                .as_ref()
+                .expect("validated private slot remains leased until execution");
+            native::execute(&entry.bytes).map(|evidence| VokExecutionReceipt {
+                tag: entry.tag.as_str().to_owned(),
+                byte_length: entry.bytes.len(),
+                value: evidence.value(),
+                terminal_outcome: Trit::Admit,
+                policy_epoch: entry.context.policy_epoch,
+                revocation_epoch: entry.context.revocation_epoch,
+                executable_at_call: evidence.executable_at_call(),
+                writable_at_call: evidence.writable_at_call(),
+            })
+        };
+        self.clear_and_advance_slot(slot_index);
+        result.map_err(|error| VokFailure::new(Trit::Refuse, error.failure_id()))
     }
 
     pub fn advance_context(

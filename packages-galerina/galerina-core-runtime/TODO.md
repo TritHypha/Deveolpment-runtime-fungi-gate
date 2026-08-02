@@ -28,11 +28,15 @@ runtime work.
 [ ] Define verified fast path execution signature and invalidation contract
 [ ] Define AI compute plan runtime hook contract
 [x] Implement RD-0660 `.fungi` nine-gate VOK authority fold
-[x] Implement RD-0660 bounded unsafe-free native VOK handle table
+[x] Implement RD-0660 bounded safe VOK handle-table API
 [x] Verify native VOK forged/stale/replay/context/capacity hostile corpus
 [x] Benchmark native VOK against null and simpler checked-map baselines
-[ ] Add verified OS CSPRNG and opaque VM-resource adapters after table evidence
-[ ] Add owned-byte W^X VEO execution only after the preceding gates pass
+[x] Add verified Windows/Linux/macOS OS CSPRNG adapters after table evidence
+[x] Add bounded closed-profile owned-byte W^X execution floor (RD-0662)
+[ ] Add opaque Galerina VM/component-resource transfer to the bounded native floor
+[ ] Extend the bounded floor into the general RD-0656 VEO object/linker profile
+[ ] Obtain independent live Linux and macOS W^X/entropy receipts
+[ ] Prove hostile-memory isolation/integrity and physical-erasure policy
 [x] Define runtime error format
 [ ] Define target fallback runtime contract
 [ ] Define runtime resource budget contract for CPU, wall time, memory, recursion, loops, tasks, network, tools and accelerator work

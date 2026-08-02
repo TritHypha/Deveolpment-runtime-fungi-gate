@@ -32,18 +32,20 @@ non-comparative and non-authorizing. This closes the current Galerina benchmark
 chapter; it does not close the deferred terminal SLIDE/Wasm/Rust/Python
 comparison.
 
-Roadmap refresh: the native `.fungi` VOK authority chapter now includes the
-source type/use-state boundary and an unlinked unsafe-free table inside the
-existing `galerina-core-runtime` package. The `.fungi` and native nine-gate
-folds agree for all 19,683 vectors. Native evidence is 21 hostile/unit tests,
-12 compile-fail contracts and core-runtime 49/49; exact handle fields,
-generation, context, bounded nonce history, revocation and value-only receipts
-fail closed. Three 99-sample Windows benchmark runs measure the full affine
-cycle at 5.89-6.77x the simpler checked-tree median and 11.91-12.30x the owned-
-value median; host power-state sensitivity prevents an absolute speed claim.
-OS CSPRNG, opaque VM transfer, hostile-memory isolation, physical erasure, W^X
-execution and independent platforms remain open. The lane therefore stays
-amber and releases no production authority or component removal.
+Roadmap refresh: the bounded native VOK authority floor is now linked end to
+end inside `galerina-core-runtime`. The authority table consumes an affine
+lease into its private OS CSPRNG/W^X module; `unsafe` is denied outside that
+module and no safe executor bypass crate remains. The `.fungi` and native
+nine-gate folds still agree for all 19,683 vectors. Fresh evidence is 30 native
+hostile/unit tests, 14 compile-fail contracts and
+core-runtime 50/50. A live Windows x86-64 receipt returns `42` only after the
+page is queried executable and not writable; it releases no authority. The
+closed 16-byte profile permits no caller machine instructions, imports,
+relocations or path fallback. Linux x64/Arm64 and macOS x64/Arm64 source targets
+compile, but opaque Galerina VM transfer, hostile-memory isolation, physical
+erasure, general VEO lowering and independent live Linux/macOS evidence remain
+separate roadmap gates. The bounded floor is green; production authority and
+component removal remain denied.
 
 Roadmap refresh: bounded Shape Lab E03, E04 and E05 are now green as completed
 experiments, not green as production features. A reproducibility defect was
@@ -140,7 +142,7 @@ invented completion percentage. The detailed execution checklist remains
 ```mermaid
 flowchart TB
     AR["SLIDE Verified Object Kernel<br/>RD-0657 · 9/9 hostile · reference-only"]
-    AT["🟨 Native VOK authority floor<br/>K3 parity 19,683/19,683 · unlinked · W^X open"]
+    AT["🟩 Native VOK W^X floor<br/>19,683/19,683 · linked · Windows RX/not-W"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
@@ -241,7 +243,7 @@ the complete external durability/platform evidence are present.
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 347/347 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
-| Native `.fungi` VOK authority boundary | 🟨 source and unlinked native floor implemented | `Authority<Tag>` retains bounded exact source use state. The unsafe-free native table passes 21 hostile/unit tests, 12 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A three-run 99-sample Windows benchmark records the complete affine cycle without a speed claim. OS CSPRNG, opaque VM transfer, hostile-memory isolation, physical erasure, W^X execution and independent platform evidence remain open, so this is amber and non-authorizing |
+| Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 347/347, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
@@ -311,7 +313,7 @@ the complete external durability/platform evidence are present.
 | RD-0653 native R&D and Windows tools | 🟩 | AI-11 through AI-17 are archived with exact identities; derived reports are not counted independently and one zero-byte matrix is explicitly refused. MSVC, Windows SDK/WPT/WinDbg/Application Verifier, Ninja and Sysinternals are available; hyperfine 1.20.0 is locally built. The cache first pass remains K3 `0` without harness/raw evidence. B1's 10.74% median residual remains statistically indeterminate against BA, and the cited Tri-1 normalized memory-times-time result is corrected to 1.004635339 for one JavaScript lane |
 | RD-0654 native source/raw adjudication and DCTP design | 🟩 | Local KB commit `4073a35` archives the bundle as AI-18 and records the adjudication; its 29/29 original manifest records pass, and supplied executables were neither executed nor committed. Cache L1/L2 knees are one-session screening evidence while L3 remains unresolved. The graph result is renamed contiguous topological CSR because no tile scheduler ran and map/footprint confounders remain. Local SLIDE commit `7d68547` specifies the approved experiment; RD-0655 supersedes its implementation gate |
 | RD-0655 DCTP implementation and first benchmark | 🟩 correctness / 🟨 performance | SLIDE commits through `ab98c5b` implement canonical exact tile plans, two-buffer scheduling/cleanup, secret-independent traces, no silent fallback, independent D1 and twelve measured lanes. Clean implementation `e0b824e` produced 1,188 exact outputs and 108 exact refusals. DCTP no-prefetch was 302,025 amortized ns/op versus BA 38,458, so the point direction is not better and the performance gate remains indeterminate. Node does not implement native concurrent overlap; physical cache, counter, energy, thermal, frequency and migration facts remain unavailable. No Galerina integration or removal authority follows |
-| RD-0656 `.fungi` Verified Execution Object | 🟩 architecture / 🟥 implementation | Primary-source review covers CAS/action identity, OCI descriptors, frozen lockfiles, capability runtimes, Wasmtime's trusted-precompile warning, seL4/capDL, TUF, SLSA, fs-verity, W^X and OWASP injection controls. The selected final loader accepts only a runtime-minted opaque object over owned exact bytes and complete input/capability/policy identity; it never reopens a pathname. Eight mandatory K3 gates admit only the all-`+1` vector (`1/3^8 = 1/6,561`). Node remains an explicitly temporary beta bridge. VEO code, independent validation and platform evidence remain unbuilt, so no release authority follows |
+| RD-0656 `.fungi` Verified Execution Object | 🟩 architecture / 🟩 bounded floor / 🟥 general backend | Primary-source review covers CAS/action identity, OCI descriptors, frozen lockfiles, capability runtimes, Wasmtime's trusted-precompile warning, seL4/capDL, TUF, SLSA, fs-verity, W^X and OWASP injection controls. RD-0662 implements the first linked closed profile: runtime-private owned bytes, exact target, no raw code/path/import/relocation intake, affine lease, OS entropy and RW-to-RX execution with a non-authorizing receipt. Eight mandatory K3 gates still admit only the all-`+1` vector (`1/3^8 = 1/6,561`). General GIR/object lowering, independent object validation, component resources and independent live platforms remain unbuilt, so no release authority follows |
 | Knowledge Base close | 🟩 | Local KB commits through `65dd551` include RD-0655 and the prior redacted, hash-bound AI-18 research archive; its tree has no unmerged or interrupted operation and is clean. No push occurred |
 | Live status authority | 🟩 | `governance/status-ledger.json` replaces the June free-text `version.json.openTasks` snapshot for live navigation. The schema admits at most eight unique bounded gates and only existing canonical repository `docs/*.md` evidence. Fixed-buffer double reads plus descriptor pre/mid/post checks enforce 16,384 bytes before allocation/decode/parse; missing, malformed, traversal-bearing, literal-duplicate or escaped-duplicate authority is refused without historical fallback. It is informational and cannot authorize release or production activation. Status-focused tests are 7/7, the containing dev-tools fixture is 45/45, and the post-change phase-close passes every blocking child including security 31-file/zero-finding, graph 5/5, generators 14/14 and the complete tooling child |
 

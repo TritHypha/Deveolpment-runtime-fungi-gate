@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-01T14:34:22.000Z",
-  "sha": "10945699",
-  "contracts": 1425,
-  "parsed": 514,
+  "generatedAt": "2026-08-02T10:45:11.000Z",
+  "sha": "78f541bb",
+  "contracts": 1431,
+  "parsed": 519,
   "rows": [
     {
       "file": "docs/examples/Level-1-Basics/001-pure-flow/example.fungi",
@@ -9395,6 +9395,30 @@
       "intent": "Deny-by-default passive-plan replay admission: ALLOW only if signature+hash, current authority, freshness, target binding, and step/qualifier containment ALL hold (RD-0363 2)."
     },
     {
+      "file": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
+      "name": "normalizeVOKTrit",
+      "qualifier": "pure",
+      "signature": "pure flow normalizeVOKTrit(value: Int) -> Int",
+      "effects": [],
+      "intent": "Accept only the closed K3 domain {-1,0,+1}; malformed values refuse."
+    },
+    {
+      "file": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
+      "name": "vokVAnd",
+      "qualifier": "pure",
+      "signature": "pure flow vokVAnd(left: Int, right: Int) -> Int",
+      "effects": [],
+      "intent": "Compose two normalized VOK gates using fail-close K3 minimum."
+    },
+    {
+      "file": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
+      "name": "vokAuthorityVerdict",
+      "qualifier": "pure",
+      "signature": "pure flow vokAuthorityVerdict(identity: Int, provenance: Int, targetGate: Int, effectsGate: Int, policyGate: Int, revocation: Int, validation: Int, memory: Int, liveHandle: Int) -> Int",
+      "effects": [],
+      "intent": "Fold eight VOK admission gates and one live-handle gate; only nine +1 values authorize."
+    },
+    {
       "file": "packages-galerina/galerina-core-security/src/dss/capability-map.fungi",
       "name": "effectToBitmask",
       "qualifier": "pure",
@@ -11083,6 +11107,30 @@
       "signature": "pure flow durabilityArtifactVerdict(descriptorValid: Bool, directSingleLinkPath: Bool, identityStable: Bool, boundedBytes: Bool, containerVerdict: String, digestMatches: Bool, handleClosed: Bool) -> String",
       "effects": [],
       "intent": "Advance only an exact, stable, bounded and closed native artifact to non-executed candidate review."
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-evidence.fungi",
+      "name": "registryDurabilityEvidenceTerminal",
+      "qualifier": "pure",
+      "signature": "pure flow registryDurabilityEvidenceTerminal(evidenceVerdict: Verdict, shapeValid: Bool, claimWithinClass: Bool, policyMatches: Bool, authorityReleased: Bool, productionAuthorizing: Bool) -> Int",
+      "effects": [],
+      "intent": "Refuse malformed or escalated durability evidence and never release production authority."
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
+      "name": "registryDurabilityProductionAdmission",
+      "qualifier": "pure",
+      "signature": "pure flow registryDurabilityProductionAdmission(evidenceVerdict: Verdict, evidenceComplete: Bool, identitiesMatch: Bool, authorityActive: Bool, authorityRevoked: Bool, ed25519Verified: Bool, mlDsa65Verified: Bool) -> Int",
+      "effects": [],
+      "intent": "Issue no durability profile unless complete evidence and both pinned root components agree."
+    },
+    {
+      "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-generation-forward-probe.fungi",
+      "name": "registryGenerationForwardProbe",
+      "qualifier": "pure",
+      "signature": "pure flow registryGenerationForwardProbe(verificationVerdict: Verdict, exactObjectIdentityMatches: Bool, probeUnused: Bool, authorityReleased: Bool) -> Int",
+      "effects": [],
+      "intent": "Allow only a verified, exact, unused and non-authorizing forward-probe receipt."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-index.fungi",

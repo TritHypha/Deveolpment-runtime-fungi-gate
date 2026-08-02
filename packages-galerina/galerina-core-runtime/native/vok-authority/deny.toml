@@ -1,4 +1,4 @@
-# Fail-closed supply-chain policy for the unlinked native VOK authority floor.
+# Fail-closed supply-chain policy for the linked native VOK authority floor.
 # Widen only after a recorded license and source review.
 
 [graph]

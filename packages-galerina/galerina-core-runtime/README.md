@@ -129,19 +129,27 @@ than native Galerina compiler performance.
 ## Native VOK authority floor
 
 The experimental native Verified Object Kernel authority floor lives under
-`native/vok-authority` inside this package. It is not a nested Galerina plugin
-and has no runtime dependency. The `.fungi` asset owns the nine-gate K3
-decision; the unsafe-free native crate owns only bounded opaque table mechanics.
+`native/vok-authority` inside this package. It is an internal implementation
+module, not a nested Galerina plugin. The `.fungi` asset owns the nine-gate K3
+decision; the authority crate owns the bounded opaque table and keeps its
+audited OS adapter private. `unsafe` is denied crate-wide and allowed only in
+that private platform module, so no separately depend-able safe executor can
+bypass the affine lease.
 
 Current evidence covers exact native/`.fungi` parity for all 19,683 K3 vectors,
 private affine admitted/lease types, current-context and generation checks,
-bounded exact nonce history, eager revocation, terminal value-only receipts and
-a 99-sample three-lane benchmark. See
+bounded exact nonce history, eager revocation, terminal value-only receipts,
+OS CSPRNG adapters and one closed 16-byte execution profile. On the current
+Windows x86-64 host, a live receipt proves the generated page was executable
+and not writable immediately before its one call. See
 `../../docs/reports/native-vok-authority-table-2026-08-02.md`.
 
-This is unlinked research infrastructure. It has no OS CSPRNG adapter, opaque
-VM-resource bridge, hostile-memory isolation, physical-erasure proof or W^X
-execution path. It cannot set `authority_released` true.
+This is a linked bounded native floor, not the general VEO backend. Caller
+bytes cannot describe machine instructions, imports, relocations, constructors
+or paths; the adapter emits one fixed return-value stub and never requests
+RWX. Opaque Galerina VM-resource transfer, hostile-memory isolation, physical-
+erasure proof, general GIR/object lowering and independent live Linux/macOS
+receipts remain open. No receipt can set `authority_released` true.
 
 See `../../../ZTF-Knowledge-Bases/node-hosted-runtime-roadmap.md`.
 

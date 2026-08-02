@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "79e2c034",
+    "sha": "78f541bb",
     "detached": false,
     "dirty": true
   },
@@ -310,7 +310,7 @@
         {
           "item": "Execution-cutover (RD-0361)",
           "state": "building",
-          "detail": "32/32 governed twins checker-clean; 0 shadow · 3 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
+          "detail": "36/36 governed twins checker-clean; 0 shadow · 7 differential · 29 authoritative. Authority counts are derived from the fail-closed governed ledger."
         },
         {
           "item": "Value-unit types (RD-0349)",

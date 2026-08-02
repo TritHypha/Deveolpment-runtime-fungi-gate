@@ -46,6 +46,16 @@ fn mint_request(gates: [Trit; 8], bytes: Vec<u8>) -> MintRequest {
     )
 }
 
+fn return_u64_request(value: u64) -> MintRequest {
+    MintRequest::new_return_u64(
+        AuthorityTag::parse("slide.vok.execute.v1").expect("canonical test tag"),
+        context(7, 3, 5),
+        all_admit(),
+        value,
+    )
+    .expect("supported test architecture")
+}
+
 fn all_admit() -> [Trit; 8] {
     [Trit::Admit; 8]
 }
@@ -570,4 +580,74 @@ fn native_nine_gate_fold_matches_all_k3_vectors() {
         }
     }
     assert_eq!(authorizing, 1);
+}
+
+#[test]
+fn operating_system_nonce_source_is_linked_and_nonzero() {
+    let mut source = OsNonceSource;
+    let first = source
+        .next_nonce()
+        .expect("supported host OS CSPRNG must provide a nonce");
+    let second = source
+        .next_nonce()
+        .expect("supported host OS CSPRNG must remain available");
+    assert_ne!(first, [0; 16]);
+    assert_ne!(second, [0; 16]);
+    assert_ne!(first, second);
+}
+
+#[test]
+fn admitted_object_executes_once_and_returns_only_terminal_evidence() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = table
+        .mint_admitted(return_u64_request(42))
+        .expect("closed object admission");
+    let lease = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("affine lease");
+    let stale = duplicate_lease(&lease);
+
+    let receipt = table
+        .execute_lease(lease, &context(7, 3, 5))
+        .expect("bounded W^X execution");
+    assert_eq!(receipt.tag(), "slide.vok.execute.v1");
+    assert_eq!(receipt.byte_length(), RETURN_U64_OBJECT_BYTES);
+    assert_eq!(receipt.value(), 42);
+    assert_eq!(receipt.terminal_outcome(), Trit::Admit);
+    assert!(receipt.executable_at_call());
+    assert!(!receipt.writable_at_call());
+    assert!(!receipt.authority_released());
+    assert_eq!(table.live_len(), 0);
+
+    let error = table
+        .execute_lease(stale, &context(7, 3, 5))
+        .expect_err("stale execution lease must refuse");
+    assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+}
+
+#[test]
+fn malformed_execution_and_context_drift_are_terminal() {
+    let mut malformed_table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut malformed_table);
+    let lease = malformed_table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("lease malformed private bytes");
+    let error = malformed_table
+        .execute_lease(lease, &context(7, 3, 5))
+        .expect_err("malformed object must refuse");
+    assert_eq!(error.failure_id(), "VOK_NATIVE_OBJECT_LENGTH");
+    assert_eq!(malformed_table.live_len(), 0);
+
+    let mut drift_table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = drift_table
+        .mint_admitted(return_u64_request(7))
+        .expect("closed object admission");
+    let lease = drift_table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("lease before context drift");
+    let error = drift_table
+        .execute_lease(lease, &context(7, 4, 5))
+        .expect_err("context drift must refuse");
+    assert_eq!(error.failure_id(), "VOK_CONTEXT_MISMATCH");
+    assert_eq!(drift_table.live_len(), 0);
 }
