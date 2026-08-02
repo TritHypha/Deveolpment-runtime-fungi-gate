@@ -2675,6 +2675,28 @@ class TypeChecker {
       }
     }
 
+    // RD-0659: an Authority tag is a closed runtime identity, not display text.
+    // Keep it ASCII and length-bounded so confusable, empty, path-shaped or
+    // unbounded tags cannot enter the authority namespace.
+    if (base === "Authority" && args.length === 1) {
+      const rawTag = (args[0] ?? "").trim();
+      const quoted =
+        rawTag.length >= 2 &&
+        ((rawTag.startsWith('"') && rawTag.endsWith('"')) ||
+          (rawTag.startsWith("'") && rawTag.endsWith("'")));
+      const tag = quoted ? rawTag.slice(1, -1) : rawTag;
+      if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(tag)) {
+        this.diagnostics.push(makeTCDiag(
+          "FUNGI-TYPE-035",
+          "INVALID_AUTHORITY_TAG",
+          "Authority tags must be 1..128 ASCII characters using letters, digits, dot, underscore, colon or hyphen.",
+          location,
+          'Use a stable domain tag such as Authority<"slide.vok.lease.v1">.',
+          'Authority<"slide.vok.lease.v1">',
+        ));
+      }
+    }
+
     // Recursively check each TYPE-kind argument. A generic's non-type positions
     // (nominal tags, shape literals, dimensions) are declared in GENERIC_ARG_KINDS and
     // are never type references — that table is the single source of truth, replacing

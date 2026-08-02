@@ -385,6 +385,16 @@ export const FUNGI_TYPE_017 = { code: "FUNGI-TYPE-017", name: "QUANTIZED_PRECISI
 export const FUNGI_TYPE_018 = { code: "FUNGI-TYPE-018", name: "INVALID_RUNTIME_TARGET_TYPE", severity: "error", message: "This type cannot exist in the selected compute target." } as const;
 export const FUNGI_TYPE_019 = { code: "FUNGI-TYPE-019", name: "UNKNOWN_SYMBOL", severity: "error", message: "Symbol is not defined in the current scope." } as const;
 
+/** FUNGI-TYPE-035: Authority<Tag> used an empty, non-ASCII, unbounded or unsupported identity tag. */
+export const FUNGI_TYPE_035 = {
+  code: "FUNGI-TYPE-035",
+  name: "INVALID_AUTHORITY_TAG",
+  severity: "error" as const,
+  message: "Authority tags must be 1..128 ASCII characters using letters, digits, dot, underscore, colon or hyphen.",
+  why: "Authority tags participate in runtime type identity. Ambiguous, confusable or unbounded tags could make admission and diagnostics disagree.",
+  suggestedFix: "Use a stable domain tag such as Authority<\"slide.vok.lease.v1\">.",
+} as const;
+
 // FUNGI-TYPE-030/031 — Tensor element type and dimension checking (Phase 18D)
 
 /** FUNGI-TYPE-030: Tensor operations received mismatched element types. */

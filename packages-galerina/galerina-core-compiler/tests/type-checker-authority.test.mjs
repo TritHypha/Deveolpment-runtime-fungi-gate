@@ -30,4 +30,12 @@ pure flow transfer(lease: Lease) -> Lease { return lease }
       codes('type Lease = Authority<String, "slide.vok.lease.v1">').includes("FUNGI-TYPE-009"),
     );
   });
+
+  it("refuses an empty authority tag", () => {
+    assert.ok(codes('type Lease = Authority<"">').includes("FUNGI-TYPE-035"));
+  });
+
+  it("refuses a non-ASCII authority tag", () => {
+    assert.ok(codes('type Lease = Authority<"slide.vok.léase.v1">').includes("FUNGI-TYPE-035"));
+  });
 });
