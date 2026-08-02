@@ -38,4 +38,29 @@ pure flow transfer(lease: Lease) -> Lease { return lease }
   it("refuses a non-ASCII authority tag", () => {
     assert.ok(codes('type Lease = Authority<"slide.vok.léase.v1">').includes("FUNGI-TYPE-035"));
   });
+  it("refuses transfer between distinct authority tags", () => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+type AdmittedObject = Authority<"slide.vok.admitted-object.v1">
+pure flow confuse(lease: Lease) -> AdmittedObject { return lease }
+`).includes("FUNGI-TYPE-008"));
+  });
+
+  it("refuses direct transfer between distinct authority tags", () => {
+    assert.ok(codes(`
+pure flow confuse(
+  lease: Authority<"slide.vok.lease.v1">,
+) -> Authority<"slide.vok.admitted-object.v1"> { return lease }
+`).includes("FUNGI-TYPE-008"));
+  });
+
+  it("refuses construction from an ordinary value", () => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+pure flow forge() -> Lease {
+  let lease: Lease = "forged"
+  return lease
+}
+`).includes("FUNGI-TYPE-002"));
+  });
 });

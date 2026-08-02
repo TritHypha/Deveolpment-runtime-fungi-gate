@@ -464,6 +464,13 @@ function isAssignmentCompatible(declared: string, inferred: string): boolean {
   else if (nInferred.startsWith("redacted ")) nInferred = nInferred.slice(9).trim();
   if (declared === nInferred) return true;
 
+  // Authority tags are nominal security boundaries. Generic-base compatibility
+  // must never erase the tag and make Authority<"a"> assignable to
+  // Authority<"b">. Exact equality above is the only admitted direct match.
+  if (declared.startsWith("Authority<") || nInferred.startsWith("Authority<")) {
+    return false;
+  }
+
   // Strip generic args for comparison
   const declaredBase = declared.split("<")[0]?.trim() ?? declared;
   const inferredBase = nInferred.split("<")[0]?.trim() ?? nInferred;

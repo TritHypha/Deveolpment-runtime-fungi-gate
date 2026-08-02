@@ -1,0 +1,27 @@
+@version 1
+/// @file: slide-vok-authority-types.fungi
+/// @purpose: Define the first compiler-enforced authority boundary for the independent SLIDE VOK.
+/// @status: Source and use-state contract only; minting and native enforcement remain unavailable.
+
+// Opaque authority values are transferable exactly once and cannot be persisted.
+// These aliases do not mint authority and are not authorization receipts.
+type SlideVOKAdmittedObject = Authority<"slide.vok.admitted-object.v1">
+type SlideVOKLease = Authority<"slide.vok.lease.v1">
+
+// Serializable records carry identity and evidence only. They never contain an
+// Authority value, so decoding a record cannot manufacture native authority.
+record SlideVOKEvidenceReference {
+  schemaId: String
+  actionId: String
+  objectId: String
+  policyEpoch: String
+  revocationEpoch: String
+}
+
+record SlideVOKReceipt {
+  schemaId: String
+  actionId: String
+  objectId: String
+  resultDigest: String
+  authorityReleased: Bool
+}

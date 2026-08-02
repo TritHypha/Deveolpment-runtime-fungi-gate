@@ -37,6 +37,7 @@
       "src/self-hosted/slide-r1-reference-runtime.fungi",
       "src/self-hosted/slide-r1-safe-value-verifier.fungi",
       "src/self-hosted/slide-r1-semantic-digest.fungi",
+      "src/self-hosted/slide-vok-authority-types.fungi",
       "src/self-hosted/slide-v2a-cbor-encoder.fungi",
       "src/self-hosted/slide-v2a-cbor-importer.fungi",
       "src/self-hosted/slide-v2a-logical-model.fungi",
