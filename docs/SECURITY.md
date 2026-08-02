@@ -1,10 +1,12 @@
 
----
+# Galerina documentation and application-security policy
 
-# `docs/SECURITY.md`
-
-```md
-# Security
+This policy inherits the repository-root `SECURITY.md` without exception. It
+applies to `docs/` and defines the application-facing security design. A
+conflict, omission or softer statement here cannot weaken the root policy and
+must fail closed until adjudicated. The word "should" below identifies a
+planned or not-yet-enforced control; it is not an accepted risk, implemented
+protection or permission to bypass a root invariant.
 
 ## Security Summary
 
@@ -16,7 +18,7 @@ direction.
 
 ## Core Rules
 
-- Treat everything as untrusted by default within reason. External input,
+- Treat everything that crosses a named trust boundary as untrusted. External input,
   dependency output, generated AI content, cached data, network data, database
   data, uploaded files, environment-derived values, headers, cookies, tokens,
   runtime metadata and build artifacts must earn trust through validation,
@@ -166,7 +168,10 @@ cross-user responses and hardware trust decisions must not be cached freely.
 
 ## Environment Variables
 
-Real environment variables should be stored in `.env`.
+Runtime configuration may be supplied through a local `.env` file only in an
+explicitly admitted development or deployment profile. The file and every
+environment-derived value remain untrusted input; production private keys and
+offline signing material must not be stored there.
 
 Example variables should be stored in `.env.example`.
 

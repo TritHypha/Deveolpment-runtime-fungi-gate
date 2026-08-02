@@ -12,7 +12,10 @@ const MANIFEST_KEYS = Object.freeze([
   "bindingName",
   "bindingSourceSha256",
   "patchSha256",
+  "histogramPreimageSha256",
+  "compatibilityPatchSha256",
   "rustAbiVersion",
+  "windowsSystemLibraries",
   "externalAdapterLoaderPresent",
   "childProcessPresent",
   "productionAuthorizing",
@@ -101,10 +104,11 @@ export async function verifyRegistryStaticHostSource(options) {
   if (canonical === null || resolve(canonical) !== hostDirectory) {
     stop("STATIC_HOST_DIRECTORY_REFUSED");
   }
-  const [manifestBytes, bindingBytes, patchBytes] = await Promise.all([
+  const [manifestBytes, bindingBytes, patchBytes, compatibilityPatchBytes] = await Promise.all([
     readDirect(join(hostDirectory, "host-source-manifest.json")),
     readDirect(join(hostDirectory, "galerina_registry_binding.cc")),
     readDirect(join(hostDirectory, "node-v24.18.0-galerina-host.patch")),
+    readDirect(join(hostDirectory, "node-v24.18.0-clang22-histogram.patch")),
   ]);
   const manifestText = decode(manifestBytes);
   let manifest;
@@ -124,7 +128,14 @@ export async function verifyRegistryStaticHostSource(options) {
     || manifest.bindingName !== "galerina_registry_durability"
     || !SHA256.test(manifest.bindingSourceSha256)
     || !SHA256.test(manifest.patchSha256)
+    || manifest.histogramPreimageSha256
+      !== "ee2fff097bcdf1458931e27023bed08a6b00806b98bfd44261e88e8b547a4ebc"
+    || !SHA256.test(manifest.compatibilityPatchSha256)
     || manifest.rustAbiVersion !== 1
+    || !Array.isArray(manifest.windowsSystemLibraries)
+    || manifest.windowsSystemLibraries.length !== 2
+    || manifest.windowsSystemLibraries[0] !== "ntdll.lib"
+    || manifest.windowsSystemLibraries[1] !== "userenv.lib"
     || manifest.externalAdapterLoaderPresent !== false
     || manifest.childProcessPresent !== false
     || manifest.productionAuthorizing !== false
@@ -132,10 +143,12 @@ export async function verifyRegistryStaticHostSource(options) {
   if (
     digest(bindingBytes) !== manifest.bindingSourceSha256
     || digest(patchBytes) !== manifest.patchSha256
+    || digest(compatibilityPatchBytes) !== manifest.compatibilityPatchSha256
   ) stop("STATIC_HOST_SOURCE_DIGEST_MISMATCH");
 
   const binding = decode(bindingBytes);
   const patch = decode(patchBytes);
+  const compatibilityPatch = decode(compatibilityPatchBytes);
   if (
     /process\.dlopen|LoadLibrary|dlopen\s*\(|\.node(?:['"\s)]|$)|child_process|\bspawn\s*\(|\bsystem\s*\(/i
       .test(binding)
@@ -160,12 +173,24 @@ export async function verifyRegistryStaticHostSource(options) {
   for (const required of [
     "src/galerina_registry_binding.cc",
     "galerina_registry_durability_native.lib",
+    "ntdll.lib",
+    "userenv.lib",
     "ObjectDefineProperty(process, '_galerinaLinkedBinding'",
     "getGalerinaLinkedBinding('galerina_registry_durability')",
     "configurable: false",
     "writable: false",
   ]) {
     if (!patch.includes(required)) stop("STATIC_HOST_PATCH_CONTRACT_REFUSED");
+  }
+  for (const required of [
+    "deps/histogram/src/hdr_histogram.c",
+    "-    uint32_t leading_zero = 0;",
+    "+    unsigned long leading_zero = 0;",
+    "_BitScanReverse64(&leading_zero, value);",
+  ]) {
+    if (!compatibilityPatch.includes(required)) {
+      stop("STATIC_HOST_COMPATIBILITY_PATCH_CONTRACT_REFUSED");
+    }
   }
   return Object.freeze({
     schema: "galerina.registry.static-host-source-verification.v1",
@@ -174,6 +199,7 @@ export async function verifyRegistryStaticHostSource(options) {
     nodeSourceSha256: manifest.nodeSourceSha256,
     bindingName: manifest.bindingName,
     rustAbiVersion: manifest.rustAbiVersion,
+    windowsSystemLibraries: Object.freeze([...manifest.windowsSystemLibraries]),
     externalAdapterLoaderPresent: false,
     childProcessPresent: false,
     productionAuthorizing: false,

@@ -28,12 +28,21 @@ blocked, and what must be built next is:
 - `docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md`
 - `docs/architecture/slide-v2-integration-2026-07-29.md`
 
-The bounded R1 prototype has an adapter, canonical encoder, exact-vector
-validator, structural importer, and closed-profile reference executor. No
-`.slide` generator, general SLIDE verifier/runtime, native SLIDE runner,
-Tri-Fuse v2 implementation, or SLIDE benchmark exists yet. The current
-interpreter, bytecode/runtime tiers, and WebAssembly toolchain remain the
-factual production-capable paths.
+Independent SLIDE now has bounded reference executors, Shape Lab experiments,
+VADE preparation, VPEG/NSE research surfaces and benchmark evidence. These are
+research implementations, not a general `.slide` generator, production SLIDE
+runtime or native final backend. Tri-Fuse v2, the general verifier/runtime and
+cross-platform executable backend remain open. The existing interpreter,
+bytecode/runtime tiers and WebAssembly toolchain therefore remain the factual
+production-capable paths.
+
+Galerina's first native Verified Object Kernel authority floor is implemented
+inside `galerina-core-runtime/native/vok-authority`. The `.fungi` side owns the
+nine-gate K3 decision, while the unsafe-free native crate owns bounded opaque
+handle, generation, nonce, context, revocation and receipt mechanics. Exact
+native/`.fungi` parity covers all 19,683 K3 vectors. The floor is not linked to
+application execution and has no OS CSPRNG, opaque VM-resource bridge,
+hostile-memory isolation or W^X loader, so it releases no production authority.
 
 ---
 

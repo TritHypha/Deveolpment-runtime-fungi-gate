@@ -23,6 +23,7 @@ test("exact closed linked-host recipe remains non-authorizing", async () => {
     nodeVersion: "24.18.0",
     rustTarget: "x86_64-pc-windows-msvc",
     rustProfile: "release",
+    windowsSystemLibraries: ["ntdll.lib", "userenv.lib"],
     opensslAssemblyRequired: true,
     productionAuthorizing: false,
   });
@@ -34,10 +35,13 @@ test("substitution, debug features, no-assembly and surplus fields refuse", asyn
   for (const candidate of [
     { ...valid, nodeSourceSha256: "0".repeat(64) },
     { ...valid, nodeGypPreimageSha256: "0".repeat(64) },
+    { ...valid, histogramPreimageSha256: "0".repeat(64) },
     { ...valid, bindingSourceSha256: "0".repeat(64) },
+    { ...valid, compatibilityPatchSha256: "0".repeat(64) },
     { ...valid, nasmExecutableSha256: "0".repeat(64) },
     { ...valid, rustProfile: "debug" },
     { ...valid, rustFeatures: ["fault-injection"] },
+    { ...valid, windowsSystemLibraries: ["userenv.lib"] },
     { ...valid, opensslAssemblyRequired: false },
     { ...valid, externalAdapterLoaderPresent: true },
     { ...valid, extra: true },
@@ -47,6 +51,15 @@ test("substitution, debug features, no-assembly and surplus fields refuse", asyn
       /STATIC_HOST_BUILD_RECIPE_REFUSED/u,
     );
   }
+});
+
+test("Clang 22 histogram compatibility input and patch are exact", async () => {
+  const valid = await recipe();
+  assert.equal(
+    valid.histogramPreimageSha256,
+    "ee2fff097bcdf1458931e27023bed08a6b00806b98bfd44261e88e8b547a4ebc",
+  );
+  assert.match(valid.compatibilityPatchSha256, /^[0-9a-f]{64}$/u);
 });
 
 test("accessors and hostile proxies refuse without invoking caller code", async () => {

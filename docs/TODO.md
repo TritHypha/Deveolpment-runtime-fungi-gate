@@ -1,5 +1,26 @@
 # TODO
 
+### Windows static linked-host candidate - current chapter - 2026-08-02
+
+- **Toolchain verified:** owner and independent preflights both return a
+  non-authorizing `CANDIDATE` for Visual Studio 18.8, Clang 22.1.3 and NASM
+  3.02.
+- **Linked build complete:** exact Node 24.18.0 plus the Galerina binding and
+  release Rust static library produce one `node.exe`. The source-pinned Clang
+  compatibility patch and exact `ntdll.lib`/`userenv.lib` set are covered by
+  6/6 focused recipe/source tests.
+- **Host boundary verified:** stock Node lacks the accessor; the exact
+  candidate passes 2/2 integration tests for binary identity, immutable
+  accessor, frozen binding, hostile `.node` decoy, exact publication,
+  byte-for-byte reopen and one-use receipt identity. PE inspection finds no
+  external Galerina adapter import.
+- **Still non-authorizing:** candidate SHA-256 `5ef40608…60c1` is evidence,
+  not an allow-list entry. Implement the reproducible fresh-tree build command
+  and app-kernel linked-receipt entry point; keep the production executable
+  digest set empty until signed-host and external platform/durability admission.
+- **Evidence:**
+  `docs/reports/windows-static-linked-host-build-2026-08-02.md`.
+
 ### Native VOK authority table - current chapter - 2026-08-02
 
 - **R&D/design complete:** KB RD-0660 and the Galerina design/implementation
@@ -14,17 +35,19 @@
   observed-RED loaded-asset gate, compiles to Wasm, matches numeric minimum for
   all 19,683 nine-gate vectors and authorizes exactly one. Malformed trits
   refuse; core-runtime is 47/47.
-- **Still non-authorizing:** no native handle, mint, lease, revocation or
-  execution authority has been linked or released to Galerina applications.
-  The unsafe-free native crate now has a bounded private mint table: all 6,561
+- **Still non-authorizing:** the unsafe-free native crate has a bounded private
+  mint/lease/revocation table but no execution authority is linked or released
+  to Galerina applications. All 6,561
   eight-gate K3 vectors were checked, exactly one mints, and invalid bounds,
   context, capacity and missing/zero/repeated nonces fail closed. Owned request
   bytes and opaque-handle debug are redacted/logically cleared. Lease,
   revocation and terminal value-only receipts now pass 21 hostile/unit checks,
   12 compile-fail contracts and all 19,683 nine-gate K3 vectors. Nonce history
   is hard-bounded and generation overflow retires capacity. This crate remains
-  unlinked and cannot execute bytes or release authority. Next action is native/
-  `.fungi` parity, mutation/security checks and bounded benchmark evidence.
+  unable to execute bytes or release authority. Native/`.fungi` parity,
+  mutation/security checks and bounded benchmark evidence are complete; OS
+  CSPRNG, opaque VM transfer, hostile-memory isolation, physical erasure, W^X
+  execution and independent platforms remain open.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
@@ -43,20 +66,22 @@
   type, value-state, effect and governance checks and contains no authority in
   its serializable records.
 - **Fresh repository fixed point:** the governed count-writing runner passes
-  98/98 packages and 8,807 tests; the core compiler contributes 5,781 tests.
+  98/98 packages and 8,814 tests; the core compiler contributes 5,781 tests.
 - **Still open and non-authorizing:** no native mint table, unguessable
   slot/generation resolution, revocation lookup, W^X loader or cross-platform
   hostile runtime evidence exists. Unknown-return inference also remains a
   compiler-wide deferred-type boundary; it cannot mint a native handle because
   that runtime mechanism does not yet exist. `authorityReleased` remains false.
 
-### SLIDE repository security policy closed - 2026-08-02
+### Repository security policies aligned - 2026-08-02
 
-- **Binding policy:** independent SLIDE now has root `SECURITY.md` version 1.0.
+- **Binding policy:** independent SLIDE now has root `SECURITY.md` version 1.1;
+  Galerina root policy is version 2.0 and its nested docs policy explicitly
+  inherits without weakening.
   It applies repository-wide and defines private disclosure, authority and
   complete admission, K3 fail-close behavior, hostile-memory/injection
   boundaries, proposal non-authority, control reachability, mutation evidence,
-  withdrawal and narrow exclusions.
+  withdrawal, narrow exclusions and the owner engineering-standard classes.
 - **Executable contract:** two policy tests first failed because the root file
   was absent and now pass. Fresh complete SLIDE verification is **336/336**
   across 19 suites; the V2 contract remains **16/16** and the bounded benchmark
@@ -94,7 +119,7 @@
   implemented translation validation, authenticated research publication,
   cross-platform reproduction and production integration.
 
-### Linked-host and release-gate checkpoint - 2026-08-01
+### Linked-host and release-gate checkpoint - updated 2026-08-02
 
 - **Caller Boolean removed:** the production rotation wrapper no longer accepts
   a caller-selected `verifyForwardProbe`. It consumes one exact, module-branded,
@@ -112,14 +137,10 @@
   older binding and Rust library and is not a build input. A separate fresh
   tree was extracted from the exact hash-pinned archive and the patch preflight
   succeeds; no stale file was overwritten or deleted.
-- **Only current Windows prerequisite:** portable NASM 3.02 is present and
-  version/hash verified. A fresh read-only inventory found complete Visual
-  Studio Community 2026 and 2022 instances, but neither registers
-  `VC.Llvm.Clang` or `VC.Llvm.ClangToolset`; the expected `clang.exe` and
-  `clang-cl.exe` paths are absent and neither executable is on `PATH`. The
-  preflight therefore correctly returns `STATIC_HOST_CLANG_COMPONENTS_ABSENT`.
-  No installer was launched. The current owner action is in
-  `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
+- **Windows prerequisite closed:** Visual Studio 18.8, Clang 22.1.3 and NASM
+  3.02 now pass the non-authorizing preflight. The linked release executable
+  builds and passes 2/2 exact-binary/decoy/receipt checks. There is no owner
+  installation action now; the candidate remains unsigned and non-authorizing.
 - **Current platform evidence:** the real Windows 10 functional generator
   passed all six rows on clean executable fixed point `f1e0871d...` (receipt
   SHA-256 `3B4EE284...3551`). This later documentation commit deliberately makes

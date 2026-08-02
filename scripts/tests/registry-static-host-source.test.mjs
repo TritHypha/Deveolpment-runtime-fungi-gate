@@ -30,6 +30,7 @@ test("closed host source is pinned and remains non-authorizing", async () => {
       "c8348067b41d8739ec69fd4da615cd8995ad6a76eb53e84a7fa7291c8a477eb7",
     bindingName: "galerina_registry_durability",
     rustAbiVersion: 1,
+    windowsSystemLibraries: ["ntdll.lib", "userenv.lib"],
     externalAdapterLoaderPresent: false,
     childProcessPresent: false,
     productionAuthorizing: false,
@@ -44,6 +45,7 @@ test("manifest drift and prohibited loader text refuse", async () => {
       "host-source-manifest.json",
       "galerina_registry_binding.cc",
       "node-v24.18.0-galerina-host.patch",
+      "node-v24.18.0-clang22-histogram.patch",
     ]) {
       await writeFile(
         join(temporary, name),

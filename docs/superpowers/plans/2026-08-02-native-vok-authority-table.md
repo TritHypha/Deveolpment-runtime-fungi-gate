@@ -69,9 +69,9 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 6 - documentation, generated artifacts and fixed point
 
-- [ ] Update core-runtime README/TODO, root TODO, architecture and vertical
+- [x] Update core-runtime README/TODO, root TODO, architecture and vertical
   roadmap with implemented and still-open boundaries.
-- [ ] Update RD-0660 evidence checkboxes and the rolling R&D table.
+- [x] Update RD-0660 evidence checkboxes and the rolling R&D table.
 - [ ] Regenerate code index, registry, package graphs, dev-tool index, status,
   roadmap, percent audit and governed test counts in canonical order.
 - [ ] Run focused tests, core-runtime, compiler, aggregate packages, graphs,

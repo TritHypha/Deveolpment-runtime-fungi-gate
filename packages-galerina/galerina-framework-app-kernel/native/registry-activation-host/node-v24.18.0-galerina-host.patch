@@ -9,11 +9,12 @@ diff --git a/node.gyp b/node.gyp
        'src/node.cc',
        'src/node_api.cc',
        'src/node_binding.cc',
-@@ -696,6 +697,8 @@
+@@ -696,6 +697,9 @@
          ['OS=="win"', {
            'libraries': [
              'Dbghelp.lib',
 +            'deps/galerina_registry/galerina_registry_durability_native.lib',
++            'ntdll.lib',
 +            'userenv.lib',
              'winmm.lib',
              'Ws2_32.lib',

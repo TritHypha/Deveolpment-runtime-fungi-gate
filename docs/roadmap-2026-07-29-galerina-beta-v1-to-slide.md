@@ -3,7 +3,7 @@
 Date: 2026-08-02
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,807** tests, graph **5/5**
+package lane **98/98** with **8,814** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -35,7 +35,7 @@ Fresh closure is SLIDE 336/336 across 19 suites, the 16-file contract, 20
 schemas, 8 result JSON files, 7 SVGs and four unauthenticated K3 `0` evidence
 verifiers.
 
-Roadmap refresh: SLIDE root `SECURITY.md` policy version 1.0 is now binding
+Roadmap refresh: SLIDE root `SECURITY.md` policy version 1.1 is now binding
 repository-wide. It adds the owner-confirmed private reporting route,
 authority/complete-admission definitions, K3 fail-close requirements,
 hostile-memory and injection boundaries, live-control/mutation assurance,
@@ -51,11 +51,14 @@ reuse refuse, the paired `.fungi` K3 fold is strict-clean, and app-kernel is
 204/204. A closed linked-host build recipe pins Node 24.18.0, its pristine
 preimages, the Galerina patch/binding, Cargo lock, Rust target/profile/compiler,
 NASM 3.02 and build switches; focused build/source/toolchain evidence is 9/9.
-Portable NASM is present. A fresh read-only inventory found complete Visual
-Studio Community 2026 and 2022 instances, but neither registers the two
-required LLVM components and the expected binaries are absent; one elevated
-owner installation is still required, so no linked host or production receipt
-is claimed. A real Windows 10 functional receipt passed 6/6 at clean commit
+Portable NASM is present. The owner-installed Visual Studio 18.8 Clang 22
+toolchain passes the non-authorizing preflight. The exact source now produces
+one linked release executable after a preimage-bound HdrHistogram type patch
+and explicit `ntdll.lib`/`userenv.lib` linkage. Stock Node lacks the accessor;
+the custom host passes 2/2 exact-binary, immutable-accessor, hostile-decoy,
+publication and one-use receipt checks. Its measured digest is evidence, not
+a production trust anchor; app-kernel integration and signed-host admission
+remain open. A real Windows 10 functional receipt passed 6/6 at clean commit
 `f1e0871d...`, but later documentation commits make it a checkpoint rather than
 the final release receipt. Beta admission therefore correctly remains K3 `0` /
 `INCOMPLETE_EXTERNAL_EVIDENCE`. The post-regeneration fixed point is strict
@@ -126,7 +129,7 @@ flowchart TB
     NP["🟩 Native durability profiles<br/>Windows 10/11 · Linux · macOS APFS"]
     RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
     O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 336/336 complete · UNVERIFIED"]
-    X["🟥 Production rotation activation<br/>ABI/source built · linked host toolchain pending"]
+    X["🟨 Production rotation activation<br/>linked candidate built · app-kernel admission pending"]
     F["🟨 Beta-v1 release admission<br/>verifier complete · external receipts pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
@@ -152,7 +155,7 @@ flowchart TB
     AA["🟩 Shape Lab E04 complete<br/>99 samples · density pass · speed fail"]
     AB["🟩 Shape Lab E05 complete<br/>99 paired · B1 vs BA indeterminate"]
     AC["🟨 Claude-08 + SEC-06 closure<br/>336/336 · self-hash K3=0"]
-    SP["🟩 SLIDE security policy v1.0<br/>repository-wide · 2/2 contract tests"]
+    SP["🟩 SLIDE security policy v1.1<br/>repository-wide · 2/2 contract tests"]
     AD["🟩 RD-0623/0624 deep audit<br/>B1 maths · Tri-1 split · patent screen"]
     AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
     AH["🟨 NSE-Micro E11 measured<br/>3,780 checks · no speed/residency win"]
@@ -198,18 +201,18 @@ beta release verifier is implemented and therefore yellow while its seven exact
 current-commit platform receipts and authenticated durability composition are
 absent. Native Windows/Linux/macOS candidates and the safe recovery protocol
 are implemented, but an unexecuted host is never coloured green as evidence.
-Production rotation remains the one red implementation node: standard Node
-cannot provide the required statically linked in-process native publication
-seam, and the rejected pathname-loaded addon/caller-callback paths are not
-being restored. The first signed static host or the content-bound SLIDE host
-must own that operation before rotation can become yellow or green.
+Production rotation is now amber: the statically linked in-process candidate
+exists and passes its local exact-binary and hostile-decoy boundary tests. The
+rejected pathname-loaded addon/caller-callback paths are not restored. It
+cannot become green until app-kernel integration, signed-host admission and
+the complete external durability/platform evidence are present.
 
 ## Verified progress
 
 | Area | State | Evidence |
 |---|---:|---|
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
-| SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.0 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal and narrow non-findings. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
+| SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 336/336 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
 | Native `.fungi` VOK authority boundary | 🟨 source and unlinked native floor implemented | `Authority<Tag>` retains bounded exact source use state. The unsafe-free native table passes 21 hostile/unit tests, 12 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A three-run 99-sample Windows benchmark records the complete affine cycle without a speed claim. OS CSPRNG, opaque VM transfer, hostile-memory isolation, physical erasure, W^X execution and independent platform evidence remain open, so this is amber and non-authorizing |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 336/336, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
@@ -231,8 +234,8 @@ must own that operation before rotation can become yellow or green.
 | Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
 | Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
 | Deterministic activation fault model | 🟩 | Seed-ordered fifteen-boundary simulator, canonical replay receipt, control plus planted-fault matrix, budget/unreachable/ambiguous-input refusal and checker-clean `.fungi` terminal fold are implemented. App-kernel 180/180. Simulation is deliberately non-authorizing and cannot replace platform crash evidence |
-| Production custody and artifact activation | 🟥 | The least-authority custody contract, hybrid-root production profile, pre-transition rotation binding, native Windows/Linux/macOS candidates and controlled recovery protocol are implemented. Windows 10 passes 7/7 native/profile plus seven process-termination boundaries; app-kernel is 204/204. The production wrapper now consumes an exact one-use persisted-object-bound forward-probe receipt rather than a caller-selected Boolean. It binds the canonical path plus generation, delegation, operational-key and index identities; copied, proxied, same bytes reopened elsewhere, mismatched and reused receipts refuse. The debug-only recovery lane passes 6/6, has no reboot/power API, independently refuses the repository/home/system device, and permits only exact prior or candidate state. The zero-dependency Rust C ABI re-derives the generation ID, catches panics and passes six focused hostile/publication tests; its result remains explicitly non-authorizing. External platform and sacrificial-host rows remain absent. The remaining red implementation gate is the complete linked-host build and app-kernel native receipt integration; the production digest list stays empty until that host or the later content-bound SLIDE host owns publication |
-| Native executable identity | 🟨 | Primary documentation confirms standard Node/Windows/Linux/macOS addon loaders are path-based; Windows `LoadLibraryExW` requires `hFile=NULL`. RD-0601 therefore selects a statically linked beta bridge and RD-0656 selects a Galerina-owned Verified Execution Object as its final modular successor. The closed build recipe pins the Node 24.18.0 archive and pristine preimages, Galerina patch/binding/source manifest, Cargo lock, Rust 1.96.1 target/profile, official NASM 3.02 archive/executable and build switches. Recipe/source/toolchain focused evidence is 9/9 and a fresh extracted source tree accepts the patch preflight; the stale earlier tree is refused and preserved. Portable NASM is present, but the preflight returns `STATIC_HOST_CLANG_COMPONENTS_ABSENT` until the two Visual Studio 2026 Clang components are installed from an elevated installer. The full Node host is not built, so no signed executable or authority is inferred |
+| Production custody and artifact activation | 🟨 | The least-authority custody contract, hybrid-root production profile, pre-transition rotation binding, native Windows/Linux/macOS candidates and controlled recovery protocol are implemented. Windows 10 passes 7/7 native/profile plus seven process-termination boundaries; app-kernel is 204/204. The production wrapper consumes an exact one-use persisted-object-bound forward-probe receipt rather than a caller-selected Boolean. The zero-dependency Rust C ABI re-derives the generation ID and the exact linked Windows candidate now builds and passes 2/2 host integration checks. External platform and sacrificial-host rows remain absent; app-kernel native-receipt integration and signed-host admission remain open. The production digest list stays empty, so no executable currently grants authority |
+| Native executable identity | 🟨 | Primary documentation confirms standard addon loaders are path-based, so RD-0601 selects a statically linked beta bridge and RD-0656 selects a Galerina-owned Verified Execution Object as its final successor. The recipe pins Node 24.18.0, all relevant pristine preimages, Galerina sources/patches, Cargo lock, Rust 1.96.1, NASM 3.02 and build switches. Visual Studio 18.8, Clang 22.1.3 and NASM 3.02 pass preflight. A preimage-bound Clang compatibility patch and exact Windows system-library set produce a release `node.exe`; stock Node lacks its accessor, the custom executable ignores a hostile `.node` decoy, publishes exact bytes and retains a one-use unforgeable receipt. Candidate SHA-256 `5ef40608…60c1` is build evidence only. No signed executable or production authority is inferred |
 | Linux adapter preparation | 🟨 | Repository implementation is complete: 10/10 pure facts, a retained-directory GNU Linux x86-64/AArch64 adapter, nine stable injected-refusal classes, hostile namespace-change checks, exact no-replace publication and seven process-termination boundaries. Other ABIs fail closed. Native default/all-feature/release and app-kernel 204/204 are green on Windows. The returned Ubuntu `2ceaf479...` evidence predates this live adapter and cannot be relabelled. The handover now transfers exact unpushed Galerina and SLIDE histories as verified Git bundles and requires five current outputs: four durability/report artifacts plus one functional Ubuntu receipt. Controlled reboot and power loss remain separate sacrificial-host rows |
 | Beta-v1 platform admission | 🟨 | The v2 functional receipt, exact seven-OS policy, immutable digest-pinned evidence reader and final release verifier are implemented. A real Windows 10 build 19045 run at clean executable fixed point `f1e0871d...` passes 6/6 and remains K3 `0`, non-authorizing; receipt SHA-256 is `3B4EE284...3551`, and this later documentation commit makes it a checkpoint rather than final admission evidence. Windows 11, current Ubuntu, Debian, Fedora, Mint and macOS receipts plus an authenticated production durability receipt and repository fixed-point composition are absent, so the verifier correctly returns `INCOMPLETE_EXTERNAL_EVIDENCE` rather than green |
 | RD-0601 through RD-0608 foundation research | 🟩 | Eight primary-source records, checked maths, ten-dimension zero-trust scores and a seven-column decision table are committed in the Knowledge Base. Detached GIR, linked execution, secure index, durable generations, digest agility and offline driver admission are adopt-with-controls directions. VPEG and Neural Shape Engine began as experiment-only; the executable lab evidence below retains VPEG and keeps NSE quarantined |
@@ -302,7 +305,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,807 unit tests.
+   with 8,814 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.

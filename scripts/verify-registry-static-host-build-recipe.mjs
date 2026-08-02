@@ -7,15 +7,18 @@ const KEYS = Object.freeze([
   "nodeSourceSha256",
   "nodeGypPreimageSha256",
   "realmPreimageSha256",
+  "histogramPreimageSha256",
   "sourceManifestSha256",
   "bindingSourceSha256",
   "patchSha256",
+  "compatibilityPatchSha256",
   "nasmArchiveSha256",
   "nasmExecutableSha256",
   "nasmVersion",
   "rustTarget",
   "rustProfile",
   "rustFeatures",
+  "windowsSystemLibraries",
   "rustcVersion",
   "rustcCommit",
   "cargoVersion",
@@ -34,9 +37,11 @@ const EXPECTED_DIGESTS = Object.freeze({
   nodeSourceSha256: "c8348067b41d8739ec69fd4da615cd8995ad6a76eb53e84a7fa7291c8a477eb7",
   nodeGypPreimageSha256: "6be40699da2d2211561997eed87313780bd6cd58ffce021d4e83cfa96580450d",
   realmPreimageSha256: "6b19b7e820c099e28748019277b1cfdcdf2f1167c4f937f2645072764d2ac421",
-  sourceManifestSha256: "da21ac6b47d349f9afdbb3ff1335a28ddb61e3461ab36a283a506f7dbd3bdb6e",
+  histogramPreimageSha256: "ee2fff097bcdf1458931e27023bed08a6b00806b98bfd44261e88e8b547a4ebc",
+  sourceManifestSha256: "2b6f0ab81770b54e1afc2bc799bd709eaed96be26e9ff2221717072679673a41",
   bindingSourceSha256: "4ec010ca2f421eb5d920d78256a08013daaaf553fe6a7aa94237a47a17fa7518",
-  patchSha256: "47d618dbcf1b88cc9977a8ee83c66eea557dbf62d824ed644249e58c9e263894",
+  patchSha256: "bc550c3012928746a6f0c158605e8b4249856aced14e4d28f0baaf314a366114",
+  compatibilityPatchSha256: "339a003f578d3a3dafe58810909470456f69ae8dd9fe934f7e518504a1e93b34",
   nasmArchiveSha256: "161d0bfaff53c2f9e9f3e69fd0672323ebabafd1268976a5cec11be92a19aee7",
   nasmExecutableSha256: "04ec2385879f7e1c45dbe76c4020970555de48eeb97c23f59620ede061328f51",
   cargoLockSha256: "01e924d977bb38901aa916c290b1158c578c339e3cd96706024a466947210c90",
@@ -105,6 +110,7 @@ export function verifyRegistryStaticHostBuildRecipe(value) {
     || recipe.rustTarget !== "x86_64-pc-windows-msvc"
     || recipe.rustProfile !== "release"
     || !exactArray(recipe.rustFeatures, [])
+    || !exactArray(recipe.windowsSystemLibraries, ["ntdll.lib", "userenv.lib"])
     || recipe.rustcVersion !== "1.96.1"
     || !COMMIT.test(recipe.rustcCommit)
     || recipe.rustcCommit !== "31fca3adb283cc9dfd56b49cdee9a96eb9c96ffd"
@@ -123,6 +129,7 @@ export function verifyRegistryStaticHostBuildRecipe(value) {
     nodeVersion: recipe.nodeVersion,
     rustTarget: recipe.rustTarget,
     rustProfile: recipe.rustProfile,
+    windowsSystemLibraries: Object.freeze([...recipe.windowsSystemLibraries]),
     opensslAssemblyRequired: true,
     productionAuthorizing: false,
   });

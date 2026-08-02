@@ -1,51 +1,21 @@
-# Windows static-host toolchain — actions to do now
+# Windows static-host toolchain - current action
 
-Status: **one elevated Visual Studio prerequisite remains; no production authority**.
+Status: **local toolchain and linked candidate build verified; no owner action
+is required now; no production authority**.
 
-The Galerina preflight is fail-closed and currently reports
-`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. A read-only 2026-08-02 inventory found
-complete Visual Studio Community 2026 and 2022 instances, but neither registers
-`Microsoft.VisualStudio.Component.VC.Llvm.Clang` or
-`Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset`; the expected LLVM
-binaries are absent and are not on `PATH`. Portable NASM 3.02 is already
-present; its official archive and executable hashes are pinned in the
-repository build recipe. Do not reinstall NASM or run a command copied from an
-older document.
+The owner-supplied preflight and an independent rerun both returned
+`CANDIDATE` with Visual Studio 18.8.12023.21, Clang 22.1.3 and NASM 3.02. The
+full release host now links successfully after two exact, source-pinned
+corrections. Its binary/accessor/decoy/one-use-receipt evidence is recorded in
+`docs/reports/windows-static-linked-host-build-2026-08-02.md`.
 
 ## Do now
 
-1. Open **Visual Studio Installer** yourself and accept its administrator
-   elevation prompt.
-2. Choose **Modify** for the installed Visual Studio Community 2026 instance.
-3. Under **Individual components**, select both:
-   - **C++ Clang Compiler for Windows**
-     (`Microsoft.VisualStudio.Component.VC.Llvm.Clang`)
-   - **MSBuild support for LLVM (clang-cl) toolset**
-     (`Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset`)
-4. Apply the modification and let Visual Studio Installer finish.
-5. After the Visual Studio modification finishes, close and reopen PowerShell,
-   change to the Galerina repository, and run only:
+Nothing. Do not reinstall or modify Visual Studio, LLVM, NASM or Rust for this
+chapter. Do not sign, copy or treat the local candidate executable as a
+release artifact.
 
-   ```powershell
-   $NasmDirectory = (Resolve-Path `
-     "..\external-git-projects\nasm-3.02-portable\nasm-3.02").Path
-   $env:PATH = "$NasmDirectory;$env:PATH"
-   node scripts/verify-registry-static-host-toolchain.mjs
-   ```
-
-## Expected result
-
-The command must print a JSON record with `"verdict":"CANDIDATE"` and
-`"productionAuthorizing":false`. `CANDIDATE` means only that a host build may
-start. It is not a signature, admission receipt, release result, or permission
-to enable production rotation.
-
-If the result is `REFUSED`, do not improvise or disable assembly, verification,
-or warnings. Return the complete public JSON result; the preflight never prints
-private key material.
-
-Microsoft's official component catalogue and Clang documentation identify the
-two component names and their expected Visual Studio LLVM path:
-
-- <https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=vs-2022>
-- <https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170>
+The next repository work is app-kernel receipt integration and reproducible
+fresh-tree construction. Production remains fail closed because the governed
+executable-digest set is empty and external platform/durability admission is
+incomplete.

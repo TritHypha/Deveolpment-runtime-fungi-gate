@@ -83,30 +83,25 @@ pin, patch, build recipe, binding and verification rules.
   receipt field because the required component is not installed.
 - [ ] Add a build tool that requires an already-present verified source tree;
   it may not silently download or accept an unpinned source directory.
-- [ ] Apply the patch only when every preimage hunk matches.
-- [ ] Build the Rust static library and then the custom Node executable with
+- [x] Apply the patches only when every pinned preimage and hunk matches.
+- [x] Build the Rust static library and then the custom Node executable with
   release assertions and fault injection absent.
-- [ ] Verify the final executable imports no external Galerina adapter and
+- [x] Verify the final executable imports no external Galerina adapter and
   that running from a polluted directory produces identical profile output.
-- [ ] Record the final executable digest as build evidence, never as a source
+- [x] Record the final executable digest as build evidence, never as a source
   constant.
 
-Current build prerequisite: Node 24 requires Visual Studio's supported
-Clang/LLVM toolset. The installed Visual Studio instances do not yet expose
-`Microsoft.VisualStudio.Component.VC.Llvm.Clang` and
-`Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset`. The binding itself
-passes an isolated C++20 syntax compile; this does not substitute for a full
-linked-host build. OpenSSL assembly also requires NASM; production will not
-silently select `openssl-no-asm` merely to clear this gate.
+The current Windows toolchain is Visual Studio 18.8.12023.21, Clang 22.1.3 and
+NASM 3.02. A full linked-host build now passes. OpenSSL assembly remained
+enabled; production did not silently select `openssl-no-asm`.
 
 The read-only preflight is now implemented at
 `scripts/verify-registry-static-host-toolchain.mjs` and passes its focused
 **4/4** tests, including accessor/Proxy refusal without side effects. It
 requires direct absolute compiler/assembler paths and exact
 version shapes, returns only `CANDIDATE` or `REFUSED`, and is always
-non-authorizing. The current host refuses with
-`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. The installer is never invoked by this
-probe; current owner actions are separated into
+non-authorizing. The current host preflight returns `CANDIDATE`. The installer
+is never invoked by this probe; current owner actions are separated into
 `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
 
 ## Task 4 - App-kernel production integration
