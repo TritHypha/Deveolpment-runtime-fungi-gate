@@ -23,6 +23,8 @@
   status is correctly `DEFERRED_NO_SLIDE_LANE`; VADE remains non-comparative.
 - **Fresh evidence:** benchmark package **39/39**, truth audit clean, report
   freshness clean and regression guard reports no attributable regression.
+  The post-commit repository aggregate passes **98/98 packages and 8,830
+  tests**.
 
 ### Full publication benchmark completed - 2026-08-02
 
@@ -111,7 +113,7 @@
   type, value-state, effect and governance checks and contains no authority in
   its serializable records.
 - **Fresh repository fixed point:** the governed count-writing runner passes
-  98/98 packages and 8,814 tests; the core compiler contributes 5,781 tests.
+  98/98 packages and 8,830 tests; the core compiler contributes 5,781 tests.
 - **Still open and non-authorizing:** no native mint table, unguessable
   slot/generation resolution, revocation lookup, W^X loader or cross-platform
   hostile runtime evidence exists. Unknown-return inference also remains a

@@ -3,7 +3,7 @@
 Date: 2026-08-02
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,814** tests, graph **5/5**
+package lane **98/98** with **8,830** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -333,7 +333,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,814 unit tests.
+   with 8,830 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
