@@ -63,6 +63,7 @@ export interface RegistryGenerationForwardProbe {
   readonly delegationSerial: number;
   readonly operationalKeyId: string;
   readonly indexIssuedAt: string;
+  readonly path: string;
   readonly authorityReleased: false;
   readonly productionAuthorizing: false;
 }
@@ -402,19 +403,28 @@ export function isProductionAdmittedRegistryGeneration(
 
 export function isRegistryGenerationForwardProbe(
   value: unknown,
-  generationId: string,
+  generation: VerifiedRegistryGeneration,
 ): value is RegistryGenerationForwardProbe {
   return typeof value === "object"
     && value !== null
     && forwardProbeReceipts.has(value)
-    && (value as RegistryGenerationForwardProbe).generationId === generationId;
+    && isVerifiedRegistryGeneration(generation)
+    && (value as RegistryGenerationForwardProbe).generationId
+      === generation.generationId
+    && (value as RegistryGenerationForwardProbe).delegationSerial
+      === generation.delegationSerial
+    && (value as RegistryGenerationForwardProbe).operationalKeyId
+      === generation.operationalKeyId
+    && (value as RegistryGenerationForwardProbe).indexIssuedAt
+      === generation.indexIssuedAt
+    && (value as RegistryGenerationForwardProbe).path === generation.path;
 }
 
 export function consumeRegistryGenerationForwardProbe(
   value: unknown,
-  generationId: string,
+  generation: VerifiedRegistryGeneration,
 ): value is RegistryGenerationForwardProbe {
-  if (!isRegistryGenerationForwardProbe(value, generationId)) return false;
+  if (!isRegistryGenerationForwardProbe(value, generation)) return false;
   forwardProbeReceipts.delete(value);
   return true;
 }
@@ -458,6 +468,7 @@ export async function verifyRegistryGenerationForwardProbe(
     delegationSerial: verified.delegationSerial,
     operationalKeyId: verified.operationalKeyId,
     indexIssuedAt: verified.indexIssuedAt,
+    path: verified.path,
     authorityReleased: false as const,
     productionAuthorizing: false as const,
   });

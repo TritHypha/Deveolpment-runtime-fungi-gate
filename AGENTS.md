@@ -75,10 +75,10 @@ intent → governed execution plan → coordinated compute → audit proof
 | 5 | Type + Effect Checker | Complete (Stage-A) |
 | 6 | IR (GIR) + Target Planner + WAT emitter | Complete (Stage-A) |
 
-> **Current beta-v1 checkpoint (2026-07-31):** the full pipeline
+> **Current beta-v1 checkpoint (2026-08-01):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
-> and green (`galerina-core-compiler` 5,752/5,752; whole suite 98/98 packages,
-> 8,735 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
+> and green (`galerina-core-compiler` 5,755/5,755; whole suite 98/98 packages,
+> 8,781 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
@@ -93,7 +93,7 @@ intent → governed execution plan → coordinated compute → audit proof
 >
 > A separate non-executing artifact inspector passes 7/7 and binds one
 > fixed-path, single-link PE/ELF/Mach-O candidate to its architecture and exact
-> digest. App-kernel is 193/193 and its `.fungi` fold is checker-clean. This
+> digest. App-kernel is 204/204 and its `.fungi` folds are checker-clean. This
 > still does not prove N-API exports, load identity or persistence behavior;
 > the production allow-list remains empty.
 >

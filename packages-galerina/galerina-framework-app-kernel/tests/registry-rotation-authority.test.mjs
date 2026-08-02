@@ -637,7 +637,7 @@ describe("registry rotation root authority", () => {
     assert.equal(copiedProbeOutcome.state, state);
     assert.match(
       copiedProbeOutcome.reasons.join(" "),
-      /generation-bound forward probe receipt is unavailable/u,
+      /persisted-object-bound forward probe receipt is unavailable/u,
     );
     } finally {
       await rm(directory, { recursive: true, force: true });

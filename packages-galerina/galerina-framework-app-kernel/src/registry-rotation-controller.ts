@@ -383,14 +383,14 @@ export function advanceRegistryRotationState(
 ): RegistryRotationStateOutcome {
   const forwardProbeVerified = consumeRegistryGenerationForwardProbe(
     options.forwardProbe,
-    options.candidateGeneration.generationId,
+    options.candidateGeneration,
   );
   if (!forwardProbeVerified) {
     return {
       state: options.state,
       decision: decideAtBoundary(Verdict.DENY, options.onDiagnostic),
       reasons: [
-        "DENY: exact one-use generation-bound forward probe receipt is unavailable",
+        "DENY: exact one-use persisted-object-bound forward probe receipt is unavailable",
       ],
     };
   }

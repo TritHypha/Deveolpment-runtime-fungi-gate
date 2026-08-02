@@ -4,9 +4,11 @@
 
 - **Caller Boolean removed:** the production rotation wrapper no longer accepts
   a caller-selected `verifyForwardProbe`. It consumes one exact, module-branded,
-  generation-bound forward-probe receipt. Copies, Proxies, wrong generation IDs
-  and reuse refuse. The paired `.fungi` K3 fold is checker-clean and app-kernel
-  is **204/204**.
+  persisted-object-bound forward-probe receipt. The receipt binds the canonical
+  path, generation ID, delegation serial, operational key and index issuance.
+  Copies, Proxies, an identical generation reopened from another directory,
+  wrong object facts and reuse refuse. The paired `.fungi` K3 fold is
+  checker-clean and app-kernel is **204/204**.
 - **Reproducible recipe pinned:** the Node 24.18.0 archive, pristine `node.gyp`
   and realm preimages, source manifest, binding, patch, Cargo lock, Rust
   compiler, release target/profile and official NASM 3.02 archive/executable
@@ -23,9 +25,9 @@
   current owner action is in
   `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
 - **Current platform evidence:** the real Windows 10 functional generator
-  passed all six rows on clean commit `7c38414a...`; later documentation commits
-  make that observation deliberately non-final. Beta admission still returns
-  K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
+  passed all six rows on clean executable fixed point `0353478a...`; subsequent
+  security/documentation commits deliberately make that observation non-final.
+  Beta admission still returns K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
 - **Ubuntu handover:** exact unpushed Galerina and SLIDE histories are available
   as verified, Git-ignored bundles. Round two now returns five files: the four
   durability/report artifacts plus one functional Ubuntu receipt. No remote
@@ -38,6 +40,12 @@
   Regenerated graphs/indexes pass **5/5**, strict phase-close passes **84/84**,
   exhaustive passes **85/85**, security reports **31 files, 0 findings,
   0 errors**, generator contracts are **14/14**, and tooling is **278** tests.
+- **VOK forward-probe security review:** all 11 diff/supporting files were
+  closed. One low-severity pre-production object-binding defect was fixed: the
+  probe now binds the canonical path, every signed generation identity fact and
+  the module-verified target receipt. Alternate-directory, copied/proxied target
+  and one-use hostile cases refuse; see
+  `docs/reports/vok-forward-probe-security-review-2026-08-01.md`.
 
 ### SLIDE Verified Object Kernel foundation implemented - 2026-08-01
 

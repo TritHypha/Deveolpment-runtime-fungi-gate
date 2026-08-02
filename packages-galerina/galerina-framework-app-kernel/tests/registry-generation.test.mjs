@@ -127,10 +127,13 @@ function hostEvidenceAdapter(flushDirectory) {
 describe("content-addressed registry generation", () => {
   it("issues one exact generation-bound forward probe and refuses copies or reuse", async () => {
     const directory = await mkdtemp(join(tmpdir(), "galerina-forward-probe-"));
+    const otherDirectory = await mkdtemp(
+      join(tmpdir(), "galerina-forward-probe-other-"),
+    );
     try {
       const { key, generation } = builtFixture();
       const generationId = await registryGenerationId(generation);
-      await persistRegistryGeneration({
+      const persisted = await persistRegistryGeneration({
         directory,
         generation,
         verify: {
@@ -140,6 +143,29 @@ describe("content-addressed registry generation", () => {
         },
         durabilityAdapter: hostEvidenceAdapter(async () => true),
       });
+      await persistRegistryGeneration({
+        directory: otherDirectory,
+        generation,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+        durabilityAdapter: hostEvidenceAdapter(async () => true),
+      });
+      const otherPathProbe = await verifyRegistryGenerationForwardProbe({
+        directory: otherDirectory,
+        generationId,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+      });
+      assert.equal(
+        consumeRegistryGenerationForwardProbe(otherPathProbe, persisted),
+        false,
+      );
       const probe = await verifyRegistryGenerationForwardProbe({
         directory,
         generationId,
@@ -150,29 +176,41 @@ describe("content-addressed registry generation", () => {
         },
       });
 
-      assert.equal(isRegistryGenerationForwardProbe(probe, generationId), true);
+      assert.equal(isRegistryGenerationForwardProbe(probe, persisted), true);
       assert.equal(
-        isRegistryGenerationForwardProbe({ ...probe }, generationId),
+        isRegistryGenerationForwardProbe({ ...probe }, persisted),
         false,
       );
       assert.equal(
-        isRegistryGenerationForwardProbe(new Proxy(probe, {}), generationId),
+        isRegistryGenerationForwardProbe(new Proxy(probe, {}), persisted),
         false,
       );
       assert.equal(
-        isRegistryGenerationForwardProbe(probe, "0".repeat(64)),
+        isRegistryGenerationForwardProbe(probe, { ...persisted }),
         false,
       );
       assert.equal(
-        consumeRegistryGenerationForwardProbe(probe, generationId),
+        isRegistryGenerationForwardProbe(probe, new Proxy(persisted, {})),
+        false,
+      );
+      assert.equal(
+        isRegistryGenerationForwardProbe(probe, {
+          ...persisted,
+          generationId: "0".repeat(64),
+        }),
+        false,
+      );
+      assert.equal(
+        consumeRegistryGenerationForwardProbe(probe, persisted),
         true,
       );
       assert.equal(
-        consumeRegistryGenerationForwardProbe(probe, generationId),
+        consumeRegistryGenerationForwardProbe(probe, persisted),
         false,
       );
     } finally {
       await rm(directory, { recursive: true, force: true });
+      await rm(otherDirectory, { recursive: true, force: true });
     }
   });
 
