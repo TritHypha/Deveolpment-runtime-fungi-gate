@@ -44,4 +44,4 @@ linked native host/VOK durability boundary and authenticated platform receipts.
 
 The canonical scan bundle is outside the repository at:
 
-`%LOCALAPPDATA%/Temp/codex-security-scans/Galerina/0353478a_20260802T004809+0100`
+`<local-temp>/codex-security-scans/Galerina/0353478a_20260802T004809+0100`
