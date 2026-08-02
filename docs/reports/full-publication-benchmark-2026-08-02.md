@@ -3,9 +3,11 @@
 Status: **PASS for the current Galerina benchmark contract**
 
 This report records the full, unfiltered publication-fidelity benchmark run.
-It does not promote the independent SLIDE laboratory evidence into a
-Wasm/Rust/Python comparison. That terminal comparison remains deferred until
-SLIDE has an executable backend and equivalent admitted workloads.
+It does not promote the independent SLIDE laboratory evidence into an
+executable-backend comparison. The exact result is now frozen as the old
+Galerina/Wasm baseline; the next admitted benchmark will compare
+Galerina/SLIDE against that archive after SLIDE has an executable backend and
+equivalent admitted workloads.
 
 ## Reproducibility record
 
@@ -80,5 +82,7 @@ does not pretend that absent historical lanes are comparable.
   `no build` or `not run`.
 - Repeat noisy movers under the variance/noise protocol before attributing a
   speed change to code.
-- Run the terminal independent SLIDE comparison only after its executable
-  backend and equivalent workload contract exist.
+- Run Galerina/SLIDE against the frozen Galerina/Wasm archive only after the
+  executable backend and equivalent workload contract exist. Broader
+  Rust/Python observations may remain contextual lanes, but they are not a
+  substitute for the requested product transition comparison.

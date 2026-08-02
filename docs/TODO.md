@@ -1,5 +1,29 @@
 # TODO
 
+### Interpreted benchmark report and SLIDE transition baseline - 2026-08-02
+
+- **Readable result semantics complete:** every generated cross-language row
+  now states whether higher/lower is better, the admitted winner, production
+  Galerina's place and a plain-language comment. Production Galerina means the
+  `Galerina/Wasm production` lane; the governed Stage-A interpreter stays a
+  separately labelled diagnostic and is not counted as another product.
+- **Tick meaning explicit:** `✅` means work-equivalent and unit-aligned for
+  cross-runtime ranking. It does not mean Galerina won. Unticked rows expose
+  observations without receiving an invented winner or product place.
+- **Memory scores corrected for presentation:** memory rows display heap
+  bytes/op and rank lower non-negative values. Their throughput is secondary
+  and no longer appears under a misleading lower-is-better heading.
+- **Old production baseline frozen:** exact archive
+  `2026-08-02_galerina-wasm-before-slide` pins the 29-workload result at
+  measured commit `54c15058...`; raw SHA-256 is `abc564...77567`.
+- **Next benchmark contract changed:** when an executable backend supplies a
+  real `slide` lane, the report will compare current Galerina/SLIDE with that
+  archived Galerina/Wasm lane only for matching admitted workload/unit pairs.
+  Missing, ambiguous, non-finite or mismatched rows receive no ratio. Current
+  status is correctly `DEFERRED_NO_SLIDE_LANE`; VADE remains non-comparative.
+- **Fresh evidence:** benchmark package **39/39**, truth audit clean, report
+  freshness clean and regression guard reports no attributable regression.
+
 ### Full publication benchmark completed - 2026-08-02
 
 - **Full run complete:** the unfiltered 29-workload suite exited `0` after a

@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 25 |
-| Internal edges | 14 |
+| Files | 29 |
+| Internal edges | 18 |
 | External dependencies | 9 |
 | ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 0 |
@@ -64,6 +64,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/variance.mjs`
 
 ## Loaded Assets
+- `contracts/galerina-slide-transition-v1.json`
 - `contracts/slide-v2g-vade-admission-v1.json`
 - `evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json`
 - `src/wasm-runner.mjs`

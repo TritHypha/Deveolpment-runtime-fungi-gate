@@ -7,6 +7,19 @@ package lane **98/98** with **8,814** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the benchmark publication model now explains every workload
+row rather than leaving score direction and placement implicit. `✅` means
+work-equivalent plus unit-aligned, not a Galerina win. Admitted rows name the
+winner and production Galerina place; memory rows display the lower-is-better
+heap bytes/op values that actually select their winner. Production Galerina is
+the generated Wasm lane, while the governed interpreter remains diagnostic.
+The exact 29-workload Wasm result is frozen as
+`2026-08-02_galerina-wasm-before-slide` (`sha256:abc564...77567`). The next
+executable-backend report is now contracted as current Galerina/SLIDE versus
+that archived Galerina/Wasm evidence. It remains
+`DEFERRED_NO_SLIDE_LANE` and releases no authority until a real admitted
+`slide` lane exists.
+
 Roadmap refresh: the full publication-fidelity benchmark has now run at
 Galerina `54c15058...` after rebuilding the core chain and native lanes. The
 unfiltered process completed 29 workloads, all 17 comparable workloads passed
@@ -155,11 +168,11 @@ flowchart TB
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
-    FB["🟩 Full Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>truth audit clean · two charts"]
+    FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
     TG["🟨 Terminal retirement authority gate<br/>16/16 adversarial · exact red debt"]
     T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
-    J["⬜ Terminal benchmark<br/>SLIDE vs Wasm/Rust/Python<br/>+ earliest equivalent archive"]
+    J["⬜ Next transition benchmark<br/>Galerina/SLIDE vs frozen Galerina/Wasm<br/>exact admitted pairs only"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
     U["🟩 Shape Lab E01<br/>bounded durable atlas · 22/22 · measured"]
@@ -280,7 +293,7 @@ the complete external durability/platform evidence are present.
 | Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
 | SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |
 | Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
-| Full Galerina publication benchmark | 🟩 | Galerina `54c15058...`, Windows 10 x64, Node 24.18.0, Python 3.14.6, Rust 1.96.1 and g++ 16.1.0. The unfiltered 29-workload run exited 0; 17/17 comparable units align, six cross-language checksum controls pass, the truth audit is clean and the regression guard finds no attributable regression. The current/latest-distinct chart and earliest/current chart are regenerated. The detached SLIDE child remains non-comparative and non-authorizing; the terminal independent SLIDE comparison is still deferred |
+| Full Galerina publication benchmark | 🟩 | Galerina `54c15058...`, Windows 10 x64, Node 24.18.0, Python 3.14.6, Rust 1.96.1 and g++ 16.1.0. The unfiltered 29-workload run exited 0; 17/17 comparable units align, six cross-language checksum controls pass, the truth audit is clean and the regression guard finds no attributable regression. The generated table now states direction, winner and production Galerina place per workload and defines `✅` as alignment rather than victory. Exact old production evidence is frozen at `2026-08-02_galerina-wasm-before-slide`; the next comparison is current Galerina/SLIDE versus that archive. Current status remains deferred because no production `slide` lane exists |
 | Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
 | Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |
