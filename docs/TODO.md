@@ -1,5 +1,28 @@
 # TODO
 
+### Canonical SLIDE V2-B effect GIR and `.slide` floor green - 2026-08-03
+
+- Independent SLIDE now parses a closed canonical effect GIR whose bytes select
+  exactly database read or HTTPS fetch. The host caller cannot substitute the
+  operation after admission.
+- Exact effect, capability, resource, function and instruction closure is
+  independently re-derived. The reference `.slide` bundle digest becomes the
+  broker artifact identity, and a protected response is released only after
+  all eight K3 gates plus exact audit `ALLOW`.
+- A prepare/execute TOCTOU defect found during implementation is closed:
+  mutable context and gate objects are now copied before the affine bundle
+  handle is returned. Later caller mutation cannot change admitted identity.
+- Fresh evidence is 20/20 effect/broker/bundle focused, 25/25 with contract
+  mutation checks, 405/405 complete SLIDE across 31 suites at concurrency one,
+  21/21 contracts, stable Node count 1 before/after and security closure `+1`
+  with authenticated evidence K3 `0`.
+- This greens the bounded canonical-effect-to-`.slide` floor, not production
+  admission or the general backend. Durable nonce authority, authenticated
+  isolated providers, package ABI/imports/resources, native/platform evidence
+  and owner-reviewed package conversion remain open and unchanged.
+- Report: SLIDE
+  `docs/reports/canonical-v2b-effect-gir-completion-2026-08-03.md`.
+
 ### Independent SLIDE V2-B effect broker floor green - 2026-08-03
 
 - Independent SLIDE now owns a bounded process-local broker protocol for one

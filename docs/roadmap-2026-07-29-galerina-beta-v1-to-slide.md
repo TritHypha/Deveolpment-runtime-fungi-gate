@@ -8,6 +8,20 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the bounded canonical V2-B effect-GIR-to-`.slide` floor is
+green. Independent SLIDE now parses exact deterministic-CBOR effect,
+capability, resource, function and instruction closure; canonical bytes select
+database read or HTTPS fetch, and the bundle digest is the broker artifact
+identity. All eight K3 gates and exact audit `ALLOW` precede response release.
+A tested prepare/execute TOCTOU defect was closed by owning context and gate
+values before returning the affine handle. Fresh evidence is 20/20 focused,
+25/25 with contract mutation checks, 405/405 complete across 31 suites and
+21/21 contract files, with Node count stable at one. This does not green the
+general backend: durable nonce authority, authenticated isolated providers,
+package ABI/imports/resources, general memory/native/platform evidence and
+production admission remain open. Package conversion counts and authority are
+unchanged.
+
 Roadmap refresh: the post-SLIDE production authority verifier is now green as
 an implementation control. Schema v3 consumes exact in-toto-shaped predicates
 inside the existing hybrid root-delegated repository-evidence envelope. It
@@ -300,6 +314,7 @@ flowchart TB
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     EB["🟩 Independent V2-B broker floor<br/>eight K3 gates · affine lease · audit-before-success<br/>398/398 · reference-only"]
+    EG["🟩 Canonical V2-B effect GIR floor<br/>bytes select operation · bundle-bound identity<br/>405/405 · reference-only"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
     ST["🟩 V2-D schedule translation proof<br/>changed order · exact permutation · no fallback"]
@@ -353,7 +368,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> SB --> EB --> H
+    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> H
     ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
@@ -367,7 +382,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,LS,FL,AV green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,LS,FL,AV green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -376,14 +391,14 @@ flowchart TB
     class AR green;
 ```
 
-The new green V2-B broker tile is a bounded independent protocol floor inside
-the still-blue general-backend programme. Exact database-read/HTTPS profiles,
-all eight K3 VOK gates, a nonce-bound affine lease, response ceilings and
-audit-before-success pass 398/398 complete SLIDE tests with bounded
-single-concurrency execution. It does not yet make effects executable from
-canonical GIR: opcodes 9-11, authenticated isolated providers,
-crash-consistent nonce state and production platform evidence remain open.
-No package-conversion or retirement authority changed.
+The green V2-B broker and effect-GIR tiles are bounded independent protocol
+floors inside the still-blue general-backend programme. Canonical bytes now
+select database read or HTTPS fetch, the reference `.slide` identity binds the
+artifact, and all eight K3 VOK gates plus audit-before-success are enforced.
+Fresh complete evidence is 405/405 at single concurrency. Authenticated
+isolated providers, crash-consistent nonce state, general package/memory/native
+semantics and production platform evidence remain open. No package-conversion
+or retirement authority changed.
 
 The patent architecture-trigger floor is green independently of the blue
 counsel gate. RD-0663 verifies the omitted Galerina neuromorphic package,
@@ -453,6 +468,7 @@ table is navigation, not authority.
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 367/367 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
 | Independent V2-B effect broker | 🟩 bounded reference floor | Exact database-read/HTTPS profiles bind resource, schema, artifact, nonce and context identities through all eight VOK gates and one affine lease. Protected response bytes are released only after a matching append-only audit ALLOW receipt; non-ALLOW, malformed, replay and hostile paths refuse without fallback. Fresh evidence is 8/8 focused, 22/22 broker/VOK/contract and 398/398 complete SLIDE with Node count stable at 1 before/after. Full GIR opcodes 9-11, authenticated isolated providers and production authority remain blue |
+| Canonical V2-B effect GIR and `.slide` floor | 🟩 bounded reference floor | Exact deterministic-CBOR bytes select database read or HTTPS fetch and close effect, capability, resource, function and instruction tables. The reference bundle digest becomes the broker artifact identity; owned context/gates close the tested prepare/execute TOCTOU seam. Fresh evidence is 20/20 focused, 25/25 with contract mutation checks, 405/405 complete across 31 suites and 21/21 contract files. Durable nonce authority, authenticated providers and the general backend remain blue |
 | Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 367/367, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
