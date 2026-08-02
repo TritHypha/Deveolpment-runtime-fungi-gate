@@ -1,7 +1,21 @@
 {
-  "schema": "galerina.beta-v1.platform-policy.v1",
+  "schema": "galerina.beta-v1.platform-policy.v2",
   "releaseId": "beta-v1",
   "targetRepositoryCommit": "44ea2c23f6326c2c3079de3aa081c6e68e26abe6",
+  "releaseEvidenceAuthority": {
+    "rootKeyId": "21415420b447e219",
+    "rootEd25519PublicKeyFile": "signing-key-21415420b447e219.pub.pem",
+    "rootEd25519PublicKeySha256": "8a39ad345e15264f968ac17286d89aac7257ee847a5f3b2be6b7d04f0bc6627a",
+    "rootMlDsa65PublicKeyFile": "signing-key-21415420b447e219.mldsa.pub.b64",
+    "rootMlDsa65PublicKeySha256": "02b05dcc6d01734e442e0f648e3cbe1a4aaea584eddb67d0eb35085cbffe7b56",
+    "operationalEd25519PublicKeyFile": "release-evidence-signing-key-beta-v1.pub.pem",
+    "operationalEd25519PublicKeySha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "operationalMlDsa65PublicKeyFile": "release-evidence-signing-key-beta-v1.mldsa.pub.b64",
+    "operationalMlDsa65PublicKeySha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "delegationFile": "release-evidence-delegation-beta-v1-v1.json",
+    "delegationSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "minimumDelegationSerial": 1
+  },
   "functional": [
     {
       "operatingSystem": "windows-10",
@@ -44,11 +58,23 @@
     {
       "operatingSystem": "windows-10",
       "receiptFile": "durability-windows-10.json",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "platform": {
+        "os": "win32",
+        "architecture": "x64",
+        "distribution": "windows",
+        "distributionVersion": "10"
+      },
+      "evidenceBundleFile": "durability-windows-10.raw.json",
+      "implementationFile": "registry-durability-native.bin",
+      "acceptedCheckpointFile": "registry-checkpoint.bin",
+      "controlledRebootFile": "registry-controlled-reboot.json",
+      "controlledPowerLossFile": "registry-controlled-power-loss.json"
     }
   ],
   "repositoryEvidence": {
     "receiptFile": "repository-fixed-point.json",
-    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "trackedTreeSha256": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 }

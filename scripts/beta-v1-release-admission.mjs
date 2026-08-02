@@ -13,13 +13,26 @@ import {
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { loadTrustedRevocationSnapshot } from "../governance/revocation-registry.mjs";
+import {
+  RELEASE_EVIDENCE_ROLE,
+  verifyReleaseEvidenceDelegation,
+  verifyReleaseEvidenceEnvelope,
+} from "./lib/beta-release-evidence-envelope.mjs";
+import {
+  validateDurabilityStatement,
+  validateRepositoryStatement,
+} from "./lib/beta-release-evidence-receipts.mjs";
+
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPOSITORY_ROOT = resolve(dirname(SCRIPT_PATH), "..");
 const MAX_FILE_BYTES = 1024 * 1024;
 const COMMIT = /^[0-9a-f]{40}$/u;
 const SHA256 = /^[0-9a-f]{64}$/u;
-const DIGEST = /^sha256:[0-9a-f]{64}$/u;
 const FILE_NAME = /^[a-z0-9][a-z0-9._-]{2,127}\.json$/u;
+const ARTIFACT_FILE_NAME = /^[a-z0-9][a-z0-9._-]{2,127}$/u;
+const PUBLIC_FILE_NAME = /^[a-z0-9][a-z0-9._-]{2,127}\.(?:pem|b64)$/u;
+const KEY_ID = /^[0-9a-f]{16}$/u;
 const REQUIRED_SYSTEMS = Object.freeze([
   "windows-10",
   "windows-11",
@@ -50,12 +63,44 @@ const POLICY_KEYS = Object.freeze([
   "durabilityProfiles",
   "functional",
   "minimumProductionDurabilityProfiles",
+  "releaseEvidenceAuthority",
   "releaseId",
   "repositoryEvidence",
   "schema",
   "targetRepositoryCommit",
 ]);
-const POLICY_ROW_KEYS = Object.freeze(["operatingSystem", "receiptFile", "sha256"]);
+const FUNCTIONAL_POLICY_ROW_KEYS = Object.freeze(["operatingSystem", "receiptFile", "sha256"]);
+const DURABILITY_POLICY_ROW_KEYS = Object.freeze([
+  "acceptedCheckpointFile",
+  "controlledPowerLossFile",
+  "controlledRebootFile",
+  "evidenceBundleFile",
+  "implementationFile",
+  "operatingSystem",
+  "platform",
+  "receiptFile",
+  "sha256",
+]);
+const POLICY_PLATFORM_KEYS = Object.freeze([
+  "architecture",
+  "distribution",
+  "distributionVersion",
+  "os",
+]);
+const AUTHORITY_KEYS = Object.freeze([
+  "delegationFile",
+  "delegationSha256",
+  "minimumDelegationSerial",
+  "operationalEd25519PublicKeyFile",
+  "operationalEd25519PublicKeySha256",
+  "operationalMlDsa65PublicKeyFile",
+  "operationalMlDsa65PublicKeySha256",
+  "rootEd25519PublicKeyFile",
+  "rootEd25519PublicKeySha256",
+  "rootKeyId",
+  "rootMlDsa65PublicKeyFile",
+  "rootMlDsa65PublicKeySha256",
+]);
 const FUNCTIONAL_KEYS = Object.freeze([
   "authenticated",
   "authorityReleased",
@@ -74,33 +119,6 @@ const FUNCTIONAL_KEYS = Object.freeze([
 ]);
 const PLATFORM_KEYS = Object.freeze(["architecture", "distribution", "nodeVersion", "os"]);
 const DISTRIBUTION_KEYS = Object.freeze(["id", "version"]);
-const DURABILITY_KEYS = Object.freeze([
-  "acceptedCheckpointDigest",
-  "authenticated",
-  "authorityReleased",
-  "evidenceClass",
-  "evidenceId",
-  "implementationDigest",
-  "operatingSystem",
-  "productionAuthorizing",
-  "repositoryCommit",
-  "schema",
-]);
-const REPOSITORY_KEYS = Object.freeze([
-  "authenticated",
-  "authorityReleased",
-  "failedChecks",
-  "generatorAll",
-  "graphAll",
-  "phaseClose",
-  "phaseCloseExhaustive",
-  "productionAuthorizing",
-  "releaseBuild",
-  "repositoryCommit",
-  "schema",
-  "securityScan",
-  "skippedChecks",
-]);
 
 function refuse(code) {
   throw new Error(code);
@@ -201,7 +219,7 @@ function sensitive(value) {
 function validatePolicy(value) {
   exactObject(value, POLICY_KEYS, "BETA_RELEASE_POLICY_MALFORMED");
   if (
-    value.schema !== "galerina.beta-v1.platform-policy.v1"
+    value.schema !== "galerina.beta-v1.platform-policy.v2"
     || value.releaseId !== "beta-v1"
     || !COMMIT.test(value.targetRepositoryCommit)
     || !Array.isArray(value.functional)
@@ -212,13 +230,15 @@ function validatePolicy(value) {
     || !Array.isArray(value.durabilityProfiles)
     || value.repositoryEvidence === null
     || typeof value.repositoryEvidence !== "object"
+    || value.releaseEvidenceAuthority === null
+    || typeof value.releaseEvidenceAuthority !== "object"
   ) {
     refuse("BETA_RELEASE_POLICY_MALFORMED");
   }
-  const validateRows = (rows, allowSubset) => {
+  const validateFunctionalRows = (rows) => {
     const systems = new Set();
     for (const row of rows) {
-      exactObject(row, POLICY_ROW_KEYS, "BETA_RELEASE_POLICY_MALFORMED");
+      exactObject(row, FUNCTIONAL_POLICY_ROW_KEYS, "BETA_RELEASE_POLICY_MALFORMED");
       if (
         !REQUIRED_SYSTEMS.includes(row.operatingSystem)
         || systems.has(row.operatingSystem)
@@ -229,20 +249,77 @@ function validatePolicy(value) {
       }
       systems.add(row.operatingSystem);
     }
-    if (!allowSubset && REQUIRED_SYSTEMS.some((system) => !systems.has(system))) {
+    if (REQUIRED_SYSTEMS.some((system) => !systems.has(system))) {
       refuse("BETA_RELEASE_POLICY_MALFORMED");
     }
   };
-  validateRows(value.functional, false);
-  validateRows(value.durabilityProfiles, true);
+  validateFunctionalRows(value.functional);
+  const durabilitySystems = new Set();
+  for (const row of value.durabilityProfiles) {
+    exactObject(row, DURABILITY_POLICY_ROW_KEYS, "BETA_RELEASE_POLICY_MALFORMED");
+    const platform = exactObject(
+      row.platform,
+      POLICY_PLATFORM_KEYS,
+      "BETA_RELEASE_POLICY_MALFORMED",
+    );
+    const artifactFiles = [
+      row.evidenceBundleFile,
+      row.implementationFile,
+      row.acceptedCheckpointFile,
+      row.controlledRebootFile,
+      row.controlledPowerLossFile,
+    ];
+    if (
+      !REQUIRED_SYSTEMS.includes(row.operatingSystem)
+      || durabilitySystems.has(row.operatingSystem)
+      || !FILE_NAME.test(row.receiptFile)
+      || !SHA256.test(row.sha256)
+      || artifactFiles.some((file) => !ARTIFACT_FILE_NAME.test(file))
+      || new Set(artifactFiles).size !== artifactFiles.length
+      || !["win32", "linux", "darwin"].includes(platform.os)
+      || !["x64", "arm64"].includes(platform.architecture)
+      || typeof platform.distribution !== "string"
+      || platform.distribution.length < 1
+      || platform.distribution.length > 64
+      || typeof platform.distributionVersion !== "string"
+      || platform.distributionVersion.length < 1
+      || platform.distributionVersion.length > 128
+    ) {
+      refuse("BETA_RELEASE_POLICY_MALFORMED");
+    }
+    durabilitySystems.add(row.operatingSystem);
+  }
   exactObject(
     value.repositoryEvidence,
-    ["receiptFile", "sha256"],
+    ["receiptFile", "sha256", "trackedTreeSha256"],
     "BETA_RELEASE_POLICY_MALFORMED",
   );
   if (
     !FILE_NAME.test(value.repositoryEvidence.receiptFile)
     || !SHA256.test(value.repositoryEvidence.sha256)
+    || !SHA256.test(value.repositoryEvidence.trackedTreeSha256)
+  ) {
+    refuse("BETA_RELEASE_POLICY_MALFORMED");
+  }
+  const authority = exactObject(
+    value.releaseEvidenceAuthority,
+    AUTHORITY_KEYS,
+    "BETA_RELEASE_POLICY_MALFORMED",
+  );
+  if (
+    !KEY_ID.test(authority.rootKeyId)
+    || !FILE_NAME.test(authority.delegationFile)
+    || !SHA256.test(authority.delegationSha256)
+    || !Number.isSafeInteger(authority.minimumDelegationSerial)
+    || authority.minimumDelegationSerial < 1
+    || !PUBLIC_FILE_NAME.test(authority.rootEd25519PublicKeyFile)
+    || !SHA256.test(authority.rootEd25519PublicKeySha256)
+    || !PUBLIC_FILE_NAME.test(authority.rootMlDsa65PublicKeyFile)
+    || !SHA256.test(authority.rootMlDsa65PublicKeySha256)
+    || !PUBLIC_FILE_NAME.test(authority.operationalEd25519PublicKeyFile)
+    || !SHA256.test(authority.operationalEd25519PublicKeySha256)
+    || !PUBLIC_FILE_NAME.test(authority.operationalMlDsa65PublicKeyFile)
+    || !SHA256.test(authority.operationalMlDsa65PublicKeySha256)
   ) {
     refuse("BETA_RELEASE_POLICY_MALFORMED");
   }
@@ -310,45 +387,108 @@ function validateFunctional(value, policyRow, commit) {
   });
 }
 
-function validateDurability(value, row, commit) {
-  exactObject(value, DURABILITY_KEYS, "BETA_RELEASE_DURABILITY_MALFORMED");
-  if (
-    value.schema !== "galerina.registry.durability.release-evidence.v1"
-    || value.operatingSystem !== row.operatingSystem
-    || value.repositoryCommit !== commit
-    || !DIGEST.test(value.evidenceId)
-    || !DIGEST.test(value.implementationDigest)
-    || !DIGEST.test(value.acceptedCheckpointDigest)
-    || value.evidenceClass !== "PRODUCTION_ADMISSION"
-    || value.authenticated !== true
-    || value.authorityReleased !== false
-    || value.productionAuthorizing !== false
-    || sensitive(value)
-  ) {
-    refuse("BETA_RELEASE_DURABILITY_REFUSED");
-  }
+function readPinnedFile(path, parentDirectory, expectedSha256) {
+  const bytes = readStableDirectFile(path, parentDirectory);
+  if (sha256(bytes) !== expectedSha256) refuse("BETA_RELEASE_RECEIPT_DIGEST_REFUSED");
+  return bytes;
 }
 
-function validateRepositoryEvidence(value, commit) {
-  exactObject(value, REPOSITORY_KEYS, "BETA_RELEASE_REPOSITORY_MALFORMED");
-  if (
-    value.schema !== "galerina.beta-v1.repository-evidence.v1"
-    || value.repositoryCommit !== commit
-    || value.phaseClose !== "PASS"
-    || value.phaseCloseExhaustive !== "PASS"
-    || value.graphAll !== "PASS"
-    || value.generatorAll !== "PASS"
-    || value.releaseBuild !== "PASS"
-    || value.securityScan !== "PASS"
-    || value.failedChecks !== 0
-    || value.skippedChecks !== 0
-    || value.authenticated !== true
-    || value.authorityReleased !== false
-    || value.productionAuthorizing !== false
-    || sensitive(value)
-  ) {
-    refuse("BETA_RELEASE_REPOSITORY_REFUSED");
+function decodePublicBytes(bytes, code) {
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    refuse(code);
   }
+  if (!text.endsWith("\n") || text.slice(0, -1).includes("\n")) refuse(code);
+  const encoded = text.slice(0, -1);
+  if (
+    encoded.length === 0
+    || encoded.length % 4 !== 0
+    || !/^[A-Za-z0-9+/]+={0,2}$/u.test(encoded)
+  ) {
+    refuse(code);
+  }
+  const decoded = Buffer.from(encoded, "base64");
+  if (decoded.toString("base64") !== encoded) refuse(code);
+  return decoded;
+}
+
+function loadAuthority(policy, policyDirectory, options) {
+  if (
+    typeof options.verificationTime !== "string"
+    || typeof options.isRevoked !== "function"
+  ) {
+    refuse("BETA_RELEASE_AUTHORITY_OPTIONS_REFUSED");
+  }
+  const authority = policy.releaseEvidenceAuthority;
+  const delegationBytes = readPinnedFile(
+    join(policyDirectory, authority.delegationFile),
+    policyDirectory,
+    authority.delegationSha256,
+  );
+  const rootEdBytes = readPinnedFile(
+    join(policyDirectory, authority.rootEd25519PublicKeyFile),
+    policyDirectory,
+    authority.rootEd25519PublicKeySha256,
+  );
+  const rootMlBytes = readPinnedFile(
+    join(policyDirectory, authority.rootMlDsa65PublicKeyFile),
+    policyDirectory,
+    authority.rootMlDsa65PublicKeySha256,
+  );
+  const operationalEdBytes = readPinnedFile(
+    join(policyDirectory, authority.operationalEd25519PublicKeyFile),
+    policyDirectory,
+    authority.operationalEd25519PublicKeySha256,
+  );
+  const operationalMlBytes = readPinnedFile(
+    join(policyDirectory, authority.operationalMlDsa65PublicKeyFile),
+    policyDirectory,
+    authority.operationalMlDsa65PublicKeySha256,
+  );
+  const delegation = canonicalJson(
+    delegationBytes,
+    "BETA_RELEASE_DELEGATION_FORMAT",
+  );
+  const operationalKeyId = delegation?.operational?.keyId;
+  const rootPublicBundle = {
+    keyId: authority.rootKeyId,
+    ed25519PublicKeyPem: new TextDecoder("utf-8", { fatal: true }).decode(rootEdBytes),
+    mlDsa65PublicKey: decodePublicBytes(rootMlBytes, "BETA_RELEASE_ROOT_KEY_FORMAT"),
+  };
+  const operationalPublicBundle = {
+    keyId: operationalKeyId,
+    ed25519PublicKeyPem: new TextDecoder("utf-8", { fatal: true }).decode(operationalEdBytes),
+    mlDsa65PublicKey: decodePublicBytes(
+      operationalMlBytes,
+      "BETA_RELEASE_OPERATIONAL_KEY_FORMAT",
+    ),
+  };
+  const verifiedDelegation = verifyReleaseEvidenceDelegation(delegation, {
+    releaseId: policy.releaseId,
+    expectedRootKeyId: authority.rootKeyId,
+    minimumSerial: authority.minimumDelegationSerial,
+    at: options.verificationTime,
+    rootPublicBundle,
+    operationalPublicBundle,
+    isRevoked: options.isRevoked,
+  });
+  return Object.freeze({
+    verifiedDelegation,
+    operationalPublicBundle,
+  });
+}
+
+function verifySignedStatement(value, role, authority, options) {
+  if (sensitive(value)) refuse("BETA_RELEASE_SENSITIVE_EVIDENCE_REFUSED");
+  return verifyReleaseEvidenceEnvelope(value, {
+    role,
+    at: options.verificationTime,
+    delegation: authority.verifiedDelegation,
+    operationalPublicBundle: authority.operationalPublicBundle,
+    isRevoked: options.isRevoked,
+  }).statement;
 }
 
 function verifyBetaV1ReleaseFilesStrict(options) {
@@ -360,6 +500,7 @@ function verifyBetaV1ReleaseFilesStrict(options) {
     "BETA_RELEASE_POLICY_UNAVAILABLE",
   );
   const policy = validatePolicy(canonicalJson(policyBytes, "BETA_RELEASE_POLICY_FORMAT"));
+  const authority = loadAuthority(policy, policyDirectory, options);
   const seenFiles = new Set();
   for (const row of policy.functional) {
     if (seenFiles.has(row.receiptFile)) refuse("BETA_RELEASE_POLICY_MALFORMED");
@@ -376,42 +517,74 @@ function verifyBetaV1ReleaseFilesStrict(options) {
     );
   }
   for (const row of policy.durabilityProfiles) {
-    if (seenFiles.has(row.receiptFile)) refuse("BETA_RELEASE_POLICY_MALFORMED");
-    seenFiles.add(row.receiptFile);
-    const bytes = readStableDirectFile(
+    const rowFiles = [
+      row.receiptFile,
+      row.evidenceBundleFile,
+      row.implementationFile,
+      row.acceptedCheckpointFile,
+      row.controlledRebootFile,
+      row.controlledPowerLossFile,
+    ];
+    if (rowFiles.some((file) => seenFiles.has(file))) {
+      refuse("BETA_RELEASE_POLICY_MALFORMED");
+    }
+    rowFiles.forEach((file) => seenFiles.add(file));
+    const bytes = readPinnedFile(
       join(options.evidenceDirectory, row.receiptFile),
       options.evidenceDirectory,
+      row.sha256,
     );
-    if (sha256(bytes) !== row.sha256) refuse("BETA_RELEASE_RECEIPT_DIGEST_REFUSED");
-    validateDurability(
-      canonicalJson(bytes, "BETA_RELEASE_DURABILITY_FORMAT"),
-      row,
-      policy.targetRepositoryCommit,
+    const envelope = canonicalJson(bytes, "BETA_RELEASE_DURABILITY_FORMAT");
+    const statement = verifySignedStatement(
+      envelope,
+      RELEASE_EVIDENCE_ROLE.DURABILITY,
+      authority,
+      options,
     );
+    const readArtifact = (file) => readStableDirectFile(
+      join(options.evidenceDirectory, file),
+      options.evidenceDirectory,
+    );
+    validateDurabilityStatement(statement, {
+      releaseId: policy.releaseId,
+      operatingSystem: row.operatingSystem,
+      platform: row.platform,
+      repositoryCommit: policy.targetRepositoryCommit,
+      evidenceBundleSha256: sha256(readArtifact(row.evidenceBundleFile)),
+      implementationSha256: sha256(readArtifact(row.implementationFile)),
+      acceptedCheckpointSha256: sha256(readArtifact(row.acceptedCheckpointFile)),
+      controlledRebootSha256: sha256(readArtifact(row.controlledRebootFile)),
+      controlledPowerLossSha256: sha256(readArtifact(row.controlledPowerLossFile)),
+    });
   }
   if (seenFiles.has(policy.repositoryEvidence.receiptFile)) {
     refuse("BETA_RELEASE_POLICY_MALFORMED");
   }
-  const repositoryBytes = readStableDirectFile(
+  const repositoryBytes = readPinnedFile(
     join(options.evidenceDirectory, policy.repositoryEvidence.receiptFile),
     options.evidenceDirectory,
+    policy.repositoryEvidence.sha256,
   );
-  if (sha256(repositoryBytes) !== policy.repositoryEvidence.sha256) {
-    refuse("BETA_RELEASE_RECEIPT_DIGEST_REFUSED");
-  }
-  validateRepositoryEvidence(
+  const repositoryStatement = verifySignedStatement(
     canonicalJson(repositoryBytes, "BETA_RELEASE_REPOSITORY_FORMAT"),
-    policy.targetRepositoryCommit,
+    RELEASE_EVIDENCE_ROLE.REPOSITORY,
+    authority,
+    options,
   );
+  validateRepositoryStatement(repositoryStatement, {
+    releaseId: policy.releaseId,
+    repositoryCommit: policy.targetRepositoryCommit,
+    trackedTreeSha256: policy.repositoryEvidence.trackedTreeSha256,
+  });
   return Object.freeze({
-    schema: "galerina.beta-v1.release-admission.v1",
+    schema: "galerina.beta-v1.release-admission.v2",
     releaseId: policy.releaseId,
     targetRepositoryCommit: policy.targetRepositoryCommit,
     verdict: 1,
     status: "ADMITTED",
     operatingSystems: Object.freeze([...REQUIRED_SYSTEMS]),
     productionDurabilityProfiles: policy.durabilityProfiles.length,
-    authenticated: false,
+    evidenceAuthentication: "HYBRID_ED25519_MLDSA65_VERIFIED",
     authorityReleased: false,
     productionAuthorizing: false,
   });
@@ -423,13 +596,13 @@ export function verifyBetaV1ReleaseFiles(options) {
   } catch (error) {
     if (error instanceof Error && error.message === "BETA_RELEASE_FILE_UNAVAILABLE") {
       return Object.freeze({
-        schema: "galerina.beta-v1.release-admission.v1",
+        schema: "galerina.beta-v1.release-admission.v2",
         releaseId: "beta-v1",
         verdict: 0,
         status: "INCOMPLETE_EXTERNAL_EVIDENCE",
         operatingSystems: Object.freeze([]),
         productionDurabilityProfiles: 0,
-        authenticated: false,
+        evidenceAuthentication: "UNAVAILABLE",
         authorityReleased: false,
         productionAuthorizing: false,
       });
@@ -469,9 +642,12 @@ function main() {
   const options = parseCli(process.argv.slice(2));
   const governancePolicy = resolve(REPOSITORY_ROOT, "governance", "beta-v1-platform-policy.json");
   if (options.policyPath !== governancePolicy) refuse("BETA_RELEASE_POLICY_PATH_REFUSED");
+  const revocations = loadTrustedRevocationSnapshot(REPOSITORY_ROOT);
   const result = verifyBetaV1ReleaseFiles({
     ...options,
     cleanPolicyCheckout: cleanCheckout(),
+    verificationTime: new Date().toISOString(),
+    isRevoked: (keyId) => revocations.isRevoked(keyId),
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   if (result.verdict !== 1) process.exitCode = 1;
