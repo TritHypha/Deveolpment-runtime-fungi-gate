@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import {
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   renameSync,
   rmSync,
   writeFileSync,
@@ -72,7 +73,7 @@ function sha256(content) {
   return createHash("sha256").update(content).digest("hex");
 }
 
-function postSlideFixture({ authorizeFungi = true } = {}) {
+function postSlideFixture({ authorizeFungi = true, candidateFungi = false } = {}) {
   const root = mkdtempSync(join(tmpdir(), "full-fungi-post-slide-"));
   const source = "pure flow value() -> Int { return 1 }\n";
   const evidence = "verified execution evidence\n";
@@ -100,8 +101,21 @@ function postSlideFixture({ authorizeFungi = true } = {}) {
   write(
     root,
     "docs/security/post-slide-execution-authority.json",
-    JSON.stringify({
-      schemaVersion: 1,
+    `${JSON.stringify({
+      schemaVersion: 2,
+      candidates: candidateFungi
+        ? [{
+          path: "packages-galerina/galerina-core/src/index.fungi",
+          ownerPackage: "galerina-core",
+          tranche: "core",
+          profileId: "galerina.package.test.v1",
+          state: "candidate",
+          sourceSha256: sha256(source),
+          graphSha256: "a".repeat(64),
+          evidencePath: "evidence/index.txt",
+          evidenceSha256: sha256(evidence),
+        }]
+        : [],
       fungiSources: authorizeFungi
         ? [{
           path: "packages-galerina/galerina-core/src/index.fungi",
@@ -114,7 +128,7 @@ function postSlideFixture({ authorizeFungi = true } = {}) {
         }]
         : [],
       hostBridges: [],
-    }),
+    }, null, 2)}\n`,
   );
   write(
     root,
@@ -203,19 +217,42 @@ test("moving TypeScript outside src cannot hide retirement debt", () => {
   }
 });
 
-test("post-SLIDE accepts only a fully authorized flat Fungi package", () => {
+test("post-SLIDE refuses text evidence claimed as production execution", () => {
   const root = postSlideFixture();
   try {
     const result = run(root, ["--post-slide", "--json"]);
-    assert.equal(result.status, 0, result.stderr);
+    assert.notEqual(result.status, 0);
     const evidence = JSON.parse(result.stdout);
-    assert.equal(evidence.postSlideReady, true);
-    assert.equal(evidence.totals.unexecutedFungi, 0);
+    assert.equal(evidence.postSlideReady, false);
+    assert.equal(evidence.totals.unexecutedFungi, 1);
     assert.equal(evidence.totals.unownedHostBridges, 0);
-    assert.deepEqual(evidence.postSlideViolations, []);
+    assert.ok(evidence.postSlideViolations.some(
+      (item) => item.includes("cryptographic execution-receipt verifier"),
+    ));
     const readiness = runSelfhost(root, ["--post-slide", "--json"]);
-    assert.equal(readiness.status, 0, readiness.stderr);
-    assert.equal(JSON.parse(readiness.stdout).ready, true);
+    assert.equal(readiness.status, 0);
+    const sourceOnly = JSON.parse(readiness.stdout);
+    assert.equal(sourceOnly.authority, "post-slide-source-readiness-gate");
+    assert.equal(sourceOnly.ready, true);
+    assert.notEqual(sourceOnly.authority, "post-slide-execution-authority");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("post-SLIDE records an exact candidate without counting it as executed", () => {
+  const root = postSlideFixture({ authorizeFungi: false, candidateFungi: true });
+  try {
+    const result = run(root, ["--post-slide", "--json"]);
+    assert.notEqual(result.status, 0);
+    const evidence = JSON.parse(result.stdout);
+    assert.equal(evidence.totals.candidateFungi, 1);
+    assert.deepEqual(evidence.candidateFungiPaths, [
+      "packages-galerina/galerina-core/src/index.fungi",
+    ]);
+    assert.equal(evidence.totals.executedFungi, 0);
+    assert.equal(evidence.totals.unexecutedFungi, 1);
+    assert.equal(evidence.postSlideReady, false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -291,7 +328,7 @@ test("post-SLIDE refuses a host bridge without digest-bound ownership", () => {
 });
 
 test("post-SLIDE refuses stale or substituted execution evidence", () => {
-  const root = postSlideFixture();
+  const root = postSlideFixture({ authorizeFungi: false, candidateFungi: true });
   try {
     write(root, "evidence/index.txt", "substituted evidence\n");
     assert.equal(command(root, "git", ["add", "-A"]).status, 0);
@@ -302,5 +339,47 @@ test("post-SLIDE refuses stale or substituted execution evidence", () => {
     assert.ok(evidence.postSlideViolations.some((item) => item.includes("evidence digest")));
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("post-SLIDE authority ledger requires bounded canonical JSON", () => {
+  const canonicalRoot = postSlideFixture({
+    authorizeFungi: false,
+    candidateFungi: true,
+  });
+  try {
+    const ledgerPath = join(
+      canonicalRoot,
+      "docs/security/post-slide-execution-authority.json",
+    );
+    const canonical = readFileSync(ledgerPath, "utf8");
+    writeFileSync(ledgerPath, `${canonical.trimEnd()}  \n`);
+    assert.equal(command(canonicalRoot, "git", ["add", "-A"]).status, 0);
+    const result = run(canonicalRoot, ["--post-slide", "--json"]);
+    assert.notEqual(result.status, 0);
+    const evidence = JSON.parse(result.stdout);
+    assert.ok(evidence.postSlideViolations.some(
+      (item) => item.includes("canonical JSON"),
+    ));
+  } finally {
+    rmSync(canonicalRoot, { recursive: true, force: true });
+  }
+
+  const oversizedRoot = postSlideFixture({ authorizeFungi: false });
+  try {
+    write(
+      oversizedRoot,
+      "docs/security/post-slide-execution-authority.json",
+      " ".repeat((1024 * 1024) + 1),
+    );
+    assert.equal(command(oversizedRoot, "git", ["add", "-A"]).status, 0);
+    const result = run(oversizedRoot, ["--post-slide", "--json"]);
+    assert.notEqual(result.status, 0);
+    const evidence = JSON.parse(result.stdout);
+    assert.ok(evidence.postSlideViolations.some(
+      (item) => item.includes("byte limit"),
+    ));
+  } finally {
+    rmSync(oversizedRoot, { recursive: true, force: true });
   }
 });

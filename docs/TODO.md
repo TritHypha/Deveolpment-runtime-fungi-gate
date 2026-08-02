@@ -67,8 +67,8 @@
 - **Status split approved:** the retirement verifier implementation is green;
   terminal retirement admission is red. The green state means the gate exists
   and passes its hostile fixtures. It does not mean any package is retired.
-- **Verifier evidence:** fresh execution passes 9/9 top-level adversarial tests
-  with 36 assertions. The earlier 16/16 focused result remains a historical
+- **Verifier evidence:** fresh execution passes **11/11** top-level adversarial
+  tests. The earlier 16/16 focused result remains a historical
   checkpoint; neither result is replaced by the outstanding-debt count.
 - **Current owner priority:** close the reusable, fail-closed per-package
   Galerina -> SLIDE execution switch, then retire packages in dependency order.
@@ -94,15 +94,26 @@
   do not yet bind a complete independently verified frontend receipt or
   instruction-total mapping. They cannot populate the production ledger,
   authorize retirement or turn the integration tile green.
+- **Ledger authority corrected:** schema v2 now separates exact, digest-checked
+  `candidates` from production `fungiSources` and `hostBridges`. A candidate is
+  never subtracted from execution debt. Both production arrays fail closed
+  until their typed cryptographic receipt verifiers exist; tracked text,
+  source-only readiness and reference VOK output cannot authorize execution.
+  The contract is documented in
+  `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **494** tracked package TypeScript paths,
   **109** unexecuted production `.fungi` sources, **36** unowned production
   host boundaries, **95** package-local `node_modules` trees and **1** nested
-  package identity. The execution-authority ledger remains deliberately empty.
+  package identity. The execution-authority ledger remains deliberately empty:
+  zero candidates, zero executed sources and zero owned bridges.
 - **Gate integrity freshly verified:** `audit:retirement:selftest` passes
-  **9/9 top-level adversarial tests with 36 assertions**. It refuses hidden or
+  **11/11 top-level adversarial tests**. It refuses hidden or
   moved TypeScript, unexecuted Fungi, nested packages, dependency forests,
-  unowned host bridges and stale/substituted execution evidence.
+  unowned host bridges, stale/substituted candidate evidence and plain text
+  falsely claimed as production execution authority. The ledger itself is
+  bounded to 1 MiB and must be exact canonical UTF-8 JSON; candidate source and
+  evidence files are each bounded to 16 MiB.
 - **Binding dependency order:** Galerina -> SLIDE execution switch -> exact
   `.fungi` admission ledger -> package conversion -> host-boundary ownership ->
   flat dependency tooling -> final terminal retirement admission. Within each
@@ -113,8 +124,9 @@
   has no Wasm, walker, Node, cache or driver fallback.
 - **Workstream visibility:** (1) execution switch: bounded G4 receipt floor and
   registered real-source decision floor verified, reusable checked-source
-  switch not admitted; (2) ledger:
-  109 Fungi entries required and the ledger is empty; (3) conversion: 494
+  switch not admitted; (2) ledger: schema-v2 candidate isolation is verified,
+  the production cryptographic receipt verifier remains to build, 109 Fungi
+  entries are required and all arrays are empty; (3) conversion: 494
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
   identity remain; (6) terminal admission: refused until all five predecessor

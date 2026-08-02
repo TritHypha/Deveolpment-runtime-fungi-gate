@@ -73,17 +73,21 @@ following in one independently re-derived decision:
    recognizing an import spelling, so an obfuscated or dynamic import cannot
    evade ownership.
 
-Each terminal source or bridge record has an exact package owner, tranche or
-bounded boundary, closed authority state, source SHA-256, tracked evidence
-path and evidence SHA-256. The gate re-reads regular non-symlink files and
-checks both digests. Missing, untracked, stale, substituted, duplicated,
-mis-owned or schema-expanded entries refuse. The older R4 compiler and
-governed-twin ledgers remain valid shadow-bake history, but do not implicitly
-grant terminal post-SLIDE execution authority; terminal admission is a fresh
-and narrower claim.
+Schema v2 separates `candidates` from the reserved production arrays. A
+candidate has an exact package owner, tranche, profile identity, source and
+graph SHA-256, tracked evidence path and evidence SHA-256. The gate re-reads
+regular non-symlink files and checks path containment and file digests, but a
+valid candidate remains unexecuted debt. Production `fungiSources` and
+`hostBridges` currently refuse every entry until typed cryptographic execution
+and ownership receipt verifiers exist. Missing, untracked, stale, substituted,
+duplicated, mis-owned or schema-expanded candidate entries also refuse. The
+older R4 compiler and governed-twin ledgers remain valid shadow-bake history,
+but do not implicitly grant terminal post-SLIDE execution authority; terminal
+admission is a fresh and narrower claim. The full contract is in
+`docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 
-The verifier implementation is complete. Fresh current evidence passes 9/9
-top-level adversarial tests with 36 assertions; the earlier 16/16 focused run
+The verifier implementation is complete. Fresh current evidence passes 11/11
+top-level adversarial tests; the earlier 16/16 focused run
 remains a historical checkpoint. The current measured admission debt is 494
 tracked package TypeScript paths, 109 production `.fungi` sources awaiting
 terminal re-admission, 36 detected production host boundaries awaiting

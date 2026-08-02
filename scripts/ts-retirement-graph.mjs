@@ -80,6 +80,8 @@ const GOVERNED_AUTHORITY_LEDGER =
   "docs/security/rd0361-authoritative-twins.json";
 const POST_SLIDE_AUTHORITY_LEDGER =
   "docs/security/post-slide-execution-authority.json";
+const AUTHORITY_LEDGER_MAX_BYTES = 1024 * 1024;
+const AUTHORITY_ARTIFACT_MAX_BYTES = 16 * 1024 * 1024;
 const COMPILER_STAGE_FILES = new Set([
   "effect-checker.fungi",
   "gir-emitter.fungi",
@@ -102,13 +104,9 @@ const GOVERNED_TWIN_DIRS = [
   "packages-galerina/galerina-core-sentinel-state/src/self-hosted",
 ];
 
-const SOURCE_AUTHORITY_FIELDS = new Set([
-  "path", "ownerPackage", "tranche", "authority", "sourceSha256",
-  "evidencePath", "evidenceSha256",
-]);
-const HOST_AUTHORITY_FIELDS = new Set([
-  "path", "ownerPackage", "boundary", "authority", "sourceSha256",
-  "evidencePath", "evidenceSha256",
+const SOURCE_CANDIDATE_FIELDS = new Set([
+  "path", "ownerPackage", "tranche", "profileId", "state",
+  "sourceSha256", "graphSha256", "evidencePath", "evidenceSha256",
 ]);
 const HOST_SOURCE_EXTENSION = /\.(?:[cm]?[jt]s|rs|fungi)$/;
 const HOST_BOUNDARY_PATTERN = /(?:\bnode:(?:fs|net|tls|dgram|child_process|os|crypto|worker_threads)\b|\bprocess\.(?:env|argv|cwd|platform|exit)\b|\b(?:dlopen|process\.dlopen|node-gyp)\b|\.node["']|\bnative\.call\b|\bstd::(?:fs|net|process)\b)/;
@@ -152,12 +150,24 @@ function trancheOf(pkg) {
   return "T3-package-graph";
 }
 
-function readRegularFile(root, relativePath, label, violations) {
+function readRegularFile(
+  root,
+  relativePath,
+  label,
+  violations,
+  maxBytes = Number.POSITIVE_INFINITY,
+) {
   const absolute = join(root, relativePath);
   try {
     const stat = lstatSync(absolute);
     if (!stat.isFile() || stat.isSymbolicLink()) {
       violations.push(`${label} is not a regular non-symlink file: ${relativePath}`);
+      return null;
+    }
+    if (stat.size > maxBytes) {
+      violations.push(
+        `${label} exceeds its ${maxBytes}-byte limit: ${relativePath}`,
+      );
       return null;
     }
     const realRoot = realpathSync(root);
@@ -215,15 +225,31 @@ function authorityRelativePath(value, label) {
   return normalized;
 }
 
-function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
+function loadPostSlideAuthority(root, tracked, fungiPaths) {
   const violations = [];
   let ledger;
+  const ledgerBytes = readRegularFile(
+    root,
+    POST_SLIDE_AUTHORITY_LEDGER,
+    "post-SLIDE authority ledger",
+    violations,
+    AUTHORITY_LEDGER_MAX_BYTES,
+  );
+  if (ledgerBytes === null) {
+    return {
+      candidateFungi: new Set(),
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations,
+    };
+  }
+  let ledgerText;
   try {
-    ledger = JSON.parse(
-      readFileSync(join(root, POST_SLIDE_AUTHORITY_LEDGER), "utf8"),
-    );
+    ledgerText = new TextDecoder("utf-8", { fatal: true }).decode(ledgerBytes);
+    ledger = JSON.parse(ledgerText);
   } catch (error) {
     return {
+      candidateFungi: new Set(),
       executedFungi: new Set(),
       ownedHostBridges: new Set(),
       violations: [
@@ -231,16 +257,28 @@ function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
       ],
     };
   }
+  if (ledgerText !== `${JSON.stringify(ledger, null, 2)}\n`) {
+    return {
+      candidateFungi: new Set(),
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations: [
+        "post-SLIDE authority ledger must use exact canonical JSON bytes",
+      ],
+    };
+  }
   if (
-    ledger?.schemaVersion !== 1
+    ledger?.schemaVersion !== 2
+    || !Array.isArray(ledger.candidates)
     || !Array.isArray(ledger.fungiSources)
     || !Array.isArray(ledger.hostBridges)
     || !exactFields(
       ledger,
-      new Set(["schemaVersion", "fungiSources", "hostBridges"]),
+      new Set(["schemaVersion", "candidates", "fungiSources", "hostBridges"]),
     )
   ) {
     return {
+      candidateFungi: new Set(),
       executedFungi: new Set(),
       ownedHostBridges: new Set(),
       violations: [
@@ -249,23 +287,17 @@ function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
     };
   }
 
-  const validateEntries = ({
-    entries,
-    kind,
-    allowedPaths,
-    expectedFields,
-    expectedAuthority,
-  }) => {
+  const validateCandidates = (entries) => {
     const admitted = new Set();
     const seen = new Set();
     for (const [index, entry] of entries.entries()) {
-      const label = `${POST_SLIDE_AUTHORITY_LEDGER} ${kind}[${index}]`;
+      const label = `${POST_SLIDE_AUTHORITY_LEDGER} candidates[${index}]`;
       const violationStart = violations.length;
       if (
         !entry
         || typeof entry !== "object"
         || Array.isArray(entry)
-        || !exactFields(entry, expectedFields)
+        || !exactFields(entry, SOURCE_CANDIDATE_FIELDS)
       ) {
         violations.push(`${label} has missing or unknown fields`);
         continue;
@@ -288,23 +320,29 @@ function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
       }
       seen.add(path);
       const owner = packageOf(path);
-      if (!allowedPaths.has(path)) {
+      if (!fungiPaths.has(path)) {
         violations.push(`${label} names stale or out-of-scope source ${path}`);
       }
       if (entry.ownerPackage !== owner || owner.length === 0) {
         violations.push(`${label} has incorrect ownerPackage`);
       }
-      if (entry.authority !== expectedAuthority) {
-        violations.push(`${label} has non-authorizing authority state`);
+      if (entry.state !== "candidate") {
+        violations.push(`${label} must remain in candidate state`);
       }
-      const descriptor = kind === "fungiSources"
-        ? entry.tranche
-        : entry.boundary;
-      if (typeof descriptor !== "string" || descriptor.length === 0) {
+      if (typeof entry.tranche !== "string" || entry.tranche.length === 0) {
         violations.push(`${label} has no bounded descriptor`);
+      }
+      if (
+        typeof entry.profileId !== "string"
+        || !/^galerina\.package\.[a-z0-9][a-z0-9.-]{0,95}$/.test(entry.profileId)
+      ) {
+        violations.push(`${label} has malformed profileId`);
       }
       if (!/^[a-f0-9]{64}$/.test(entry.sourceSha256)) {
         violations.push(`${label} has malformed sourceSha256`);
+      }
+      if (!/^[a-f0-9]{64}$/.test(entry.graphSha256)) {
+        violations.push(`${label} has malformed graphSha256`);
       }
       if (!/^[a-f0-9]{64}$/.test(entry.evidenceSha256)) {
         violations.push(`${label} has malformed evidenceSha256`);
@@ -320,12 +358,14 @@ function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
         path,
         `${label} source`,
         violations,
+        AUTHORITY_ARTIFACT_MAX_BYTES,
       );
       const evidenceBytes = readRegularFile(
         root,
         evidencePath,
         `${label} evidence`,
         violations,
+        AUTHORITY_ARTIFACT_MAX_BYTES,
       );
       if (sourceBytes !== null && sha256(sourceBytes) !== entry.sourceSha256) {
         violations.push(`${label} source digest does not match ${path}`);
@@ -343,21 +383,22 @@ function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
     return admitted;
   };
 
+  const candidateFungi = validateCandidates(ledger.candidates);
+  if (ledger.fungiSources.length > 0) {
+    violations.push(
+      "post-SLIDE production fungiSources require the unavailable cryptographic execution-receipt verifier",
+    );
+  }
+  if (ledger.hostBridges.length > 0) {
+    violations.push(
+      "post-SLIDE production hostBridges require the unavailable cryptographic ownership-receipt verifier",
+    );
+  }
+
   return {
-    executedFungi: validateEntries({
-      entries: ledger.fungiSources,
-      kind: "fungiSources",
-      allowedPaths: fungiPaths,
-      expectedFields: SOURCE_AUTHORITY_FIELDS,
-      expectedAuthority: "executed",
-    }),
-    ownedHostBridges: validateEntries({
-      entries: ledger.hostBridges,
-      kind: "hostBridges",
-      allowedPaths: hostBridgePaths,
-      expectedFields: HOST_AUTHORITY_FIELDS,
-      expectedAuthority: "owned",
-    }),
+    candidateFungi,
+    executedFungi: new Set(),
+    ownedHostBridges: new Set(),
     violations,
   };
 }
@@ -473,7 +514,6 @@ export function buildRetirementGraph(root = ROOT) {
     root,
     trackedRepositoryFiles,
     allTrackedFungi,
-    hostBridges,
   );
   for (const fungiPath of compilerAuthority) {
     if (governedAuthority.has(fungiPath)) {
@@ -515,6 +555,7 @@ export function buildRetirementGraph(root = ROOT) {
   // profile deliberately does not inherit that authority. Post-SLIDE source
   // must be re-admitted with its exact source and evidence digests here.
   const executedFungi = postSlideAuthority.executedFungi;
+  const candidateFungiPaths = [...postSlideAuthority.candidateFungi].sort();
   const unexecutedFungiPaths = allTrackedFungiPaths.filter(
     (path) => !executedFungi.has(path),
   );
@@ -629,6 +670,7 @@ export function buildRetirementGraph(root = ROOT) {
     postSlideReady,
     postSlideViolations,
     allTrackedTsPaths,
+    candidateFungiPaths,
     unexecutedFungiPaths,
     unownedHostBridgePaths,
     retirementLedger,
@@ -651,6 +693,7 @@ export function buildRetirementGraph(root = ROOT) {
       governedTwinTotal,
       governedDifferential: governedTwinTotal - governedAuthoritativeFlips,
       allTrackedFungi: allTrackedFungiPaths.length,
+      candidateFungi: candidateFungiPaths.length,
       executedFungi: executedFungi.size,
       unexecutedFungi: unexecutedFungiPaths.length,
       hostBridges: hostBridgePaths.length,
@@ -746,7 +789,7 @@ const md = [
   ``,
   `Terminal physical retirement: ${g.terminalReady ? "GREEN" : `OPEN — ${t.allTrackedTs} tracked package TypeScript paths remain`}.`,
   ``,
-  `Post-SLIDE authority: ${g.postSlideReady ? "GREEN" : "OPEN"} — ${t.executedFungi}/${t.allTrackedFungi} production Fungi sources digest-admitted; ${t.ownedHostBridges}/${t.hostBridges} host boundaries owned; ${t.nodeModulesTrees} node_modules trees.`,
+  `Post-SLIDE authority: ${g.postSlideReady ? "GREEN" : "OPEN"} — ${t.candidateFungi} non-authorizing candidate(s); ${t.executedFungi}/${t.allTrackedFungi} production Fungi sources cryptographically admitted; ${t.ownedHostBridges}/${t.hostBridges} host boundaries owned; ${t.nodeModulesTrees} node_modules trees.`,
   ``,
   `\`.fungi\` in src trees: ${t.fungiInSrc} across ${t.packages} packages · finder drift: ${t.finderDrift === -1 ? "n/a (myco unavailable)" : t.finderDrift}`,
   ``,

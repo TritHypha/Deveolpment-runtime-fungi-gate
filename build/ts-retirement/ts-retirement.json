@@ -742,6 +742,7 @@
     "packages-galerina/galerina-web-state/src/index.ts",
     "packages-galerina/galerina-web/src/index.ts"
   ],
+  "candidateFungiPaths": [],
   "unexecutedFungiPaths": [
     "packages-galerina/galerina-api-protocol-rest/src/index.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi",
@@ -6940,6 +6941,7 @@
     "governedTwinTotal": 36,
     "governedDifferential": 7,
     "allTrackedFungi": 109,
+    "candidateFungi": 0,
     "executedFungi": 0,
     "unexecutedFungi": 109,
     "hostBridges": 36,
