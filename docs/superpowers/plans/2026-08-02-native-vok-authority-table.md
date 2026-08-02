@@ -45,14 +45,14 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 4 - affine lease and revocation state machine
 
-- [ ] Write RED hostile tests for forged table/slot/generation/nonce/tag,
+- [x] Write RED hostile tests for forged table/slot/generation/nonce/tag,
   copied stale admitted handles, second lease, stale lease, wrong context,
   context regression and receipt replay.
-- [ ] Implement consume-by-value admitted-to-lease and lease-to-receipt
+- [x] Implement consume-by-value admitted-to-lease and lease-to-receipt
   transitions, advancing generation and nonce on each transition.
-- [ ] Implement monotonic context advance with eager revocation and logical
+- [x] Implement monotonic context advance with eager revocation and logical
   byte clearing; generation overflow retires the slot.
-- [ ] Exhaustively verify the combined `3^9 = 19,683` K3 state space and commit.
+- [x] Exhaustively verify the combined `3^9 = 19,683` K3 state space and commit.
 
 ## Task 5 - parity, hostile assurance and benchmark
 

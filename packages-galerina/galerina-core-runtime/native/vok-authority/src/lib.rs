@@ -8,6 +8,7 @@ use std::rc::Rc;
 pub const MAX_AUTHORITY_TAG_BYTES: usize = 96;
 pub const MAX_TABLE_CAPACITY: usize = 65_536;
 pub const MAX_OBJECT_BYTES_LIMIT: usize = 64 * 1024 * 1024;
+pub const MAX_NONCE_HISTORY: usize = 262_145;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(i8)]
@@ -224,6 +225,14 @@ impl AuthorityContext {
     pub const fn revocation_epoch(&self) -> u64 {
         self.revocation_epoch
     }
+
+    fn clear(&mut self) {
+        self.target_digest.fill(0);
+        self.policy_digest.fill(0);
+        self.verifier_digest.fill(0);
+        self.policy_epoch = u64::MAX;
+        self.revocation_epoch = u64::MAX;
+    }
 }
 
 /// Opaque, flow-local authority over an admitted object.
@@ -355,10 +364,6 @@ impl Drop for LeaseHandle {
     }
 }
 
-#[expect(
-    dead_code,
-    reason = "Task 4 consumes tag and context during exact lease admission"
-)]
 struct AdmittedEntry {
     object_nonce: [u8; 16],
     tag: AuthorityTag,
@@ -369,6 +374,8 @@ struct AdmittedEntry {
 impl AdmittedEntry {
     fn clear(&mut self) {
         self.object_nonce.fill(0);
+        self.tag.0.clear();
+        self.context.clear();
         self.bytes.fill(0);
         self.bytes.clear();
     }
@@ -377,12 +384,90 @@ impl AdmittedEntry {
 struct Slot {
     generation: u64,
     admitted: Option<AdmittedEntry>,
+    lease: Option<AdmittedEntry>,
+    retired: bool,
+}
+
+/// Terminal evidence is ordinary data and cannot be replayed as a lease.
+///
+/// ```compile_fail
+/// use galerina_vok_authority::{LeaseHandle, VokReceipt};
+/// fn require_lease(_: LeaseHandle) {}
+/// fn replay(receipt: VokReceipt) { require_lease(receipt); }
+/// ```
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct VokReceipt {
+    tag: String,
+    byte_length: usize,
+    terminal_outcome: Trit,
+    policy_epoch: u64,
+    revocation_epoch: u64,
+}
+
+impl VokReceipt {
+    #[must_use]
+    pub fn tag(&self) -> &str {
+        &self.tag
+    }
+
+    #[must_use]
+    pub const fn byte_length(&self) -> usize {
+        self.byte_length
+    }
+
+    #[must_use]
+    pub const fn terminal_outcome(&self) -> Trit {
+        self.terminal_outcome
+    }
+
+    #[must_use]
+    pub const fn policy_epoch(&self) -> u64 {
+        self.policy_epoch
+    }
+
+    #[must_use]
+    pub const fn revocation_epoch(&self) -> u64 {
+        self.revocation_epoch
+    }
+
+    #[must_use]
+    pub const fn authority_released(&self) -> bool {
+        false
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct RevocationSummary {
+    revoked: usize,
+    retired: usize,
+}
+
+impl RevocationSummary {
+    #[must_use]
+    pub const fn revoked(&self) -> usize {
+        self.revoked
+    }
+
+    #[must_use]
+    pub const fn retired(&self) -> usize {
+        self.retired
+    }
+}
+
+#[must_use]
+pub fn authority_verdict(admission_gates: [Trit; 8], live_handle: Trit) -> Trit {
+    admission_gates
+        .into_iter()
+        .chain([live_handle])
+        .min()
+        .expect("the fixed nine-gate VOK vector is nonempty")
 }
 
 pub struct AuthorityTable<N: NonceSource> {
     nonce_source: N,
     table_nonce: [u8; 16],
     seen_nonces: BTreeSet<[u8; 16]>,
+    nonce_history_limit: usize,
     current_context: AuthorityContext,
     byte_ceiling: usize,
     slots: Vec<Slot>,
@@ -416,6 +501,8 @@ impl<N: NonceSource> AuthorityTable<N> {
             .map(|_| Slot {
                 generation: 0,
                 admitted: None,
+                lease: None,
+                retired: false,
             })
             .collect();
         let free_slots = (0..capacity).rev().collect();
@@ -423,6 +510,7 @@ impl<N: NonceSource> AuthorityTable<N> {
             nonce_source,
             table_nonce,
             seen_nonces,
+            nonce_history_limit: MAX_NONCE_HISTORY,
             current_context,
             byte_ceiling,
             slots,
@@ -480,7 +568,7 @@ impl<N: NonceSource> AuthorityTable<N> {
             .copied()
             .ok_or_else(|| VokFailure::new(Trit::Unknown, "VOK_CAPACITY_EXHAUSTED"))?;
         match self.slots.get(slot_index) {
-            Some(slot) if slot.admitted.is_none() => {}
+            Some(slot) if slot.admitted.is_none() && slot.lease.is_none() && !slot.retired => {}
             _ => return Err(VokFailure::new(Trit::Refuse, "VOK_TABLE_INVARIANT")),
         }
         let object_nonce = self.next_unique_nonce()?;
@@ -515,12 +603,145 @@ impl<N: NonceSource> AuthorityTable<N> {
         Ok(handle)
     }
 
+    pub fn open_lease(
+        &mut self,
+        handle: AdmittedObjectHandle,
+        current_context: &AuthorityContext,
+    ) -> Result<LeaseHandle, VokFailure> {
+        let slot_index = self.validate_admitted_handle(&handle)?;
+        if current_context != &self.current_context {
+            self.clear_and_advance_slot(slot_index);
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CONTEXT_MISMATCH"));
+        }
+
+        let next_generation = match handle.generation.checked_add(1) {
+            Some(generation) => generation,
+            None => {
+                self.retire_slot(slot_index);
+                return Err(VokFailure::new(Trit::Refuse, "VOK_GENERATION_EXHAUSTED"));
+            }
+        };
+        let next_nonce = match self.next_unique_nonce() {
+            Ok(nonce) => nonce,
+            Err(error) => {
+                self.clear_and_advance_slot(slot_index);
+                return Err(error);
+            }
+        };
+
+        let slot = self
+            .slots
+            .get_mut(slot_index)
+            .expect("validated private slot remains present in a flow-local table");
+        let mut entry = slot
+            .admitted
+            .take()
+            .expect("validated private slot remains admitted until transition");
+        entry.object_nonce = next_nonce;
+        slot.generation = next_generation;
+        let lease = LeaseHandle {
+            table_nonce: self.table_nonce,
+            slot: slot_index,
+            generation: next_generation,
+            object_nonce: next_nonce,
+            tag: entry.tag.clone(),
+            thread_marker: PhantomData,
+        };
+        slot.lease = Some(entry);
+        Ok(lease)
+    }
+
+    pub fn consume_lease(
+        &mut self,
+        lease: LeaseHandle,
+        current_context: &AuthorityContext,
+        terminal_outcome: Trit,
+    ) -> Result<VokReceipt, VokFailure> {
+        let slot_index = self.validate_lease_handle(&lease)?;
+        if current_context != &self.current_context {
+            self.clear_and_advance_slot(slot_index);
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CONTEXT_MISMATCH"));
+        }
+
+        let slot = self
+            .slots
+            .get(slot_index)
+            .expect("validated private slot remains present in a flow-local table");
+        let entry = slot
+            .lease
+            .as_ref()
+            .expect("validated private slot remains leased until transition");
+        let receipt = VokReceipt {
+            tag: entry.tag.as_str().to_owned(),
+            byte_length: entry.bytes.len(),
+            terminal_outcome,
+            policy_epoch: entry.context.policy_epoch,
+            revocation_epoch: entry.context.revocation_epoch,
+        };
+        self.clear_and_advance_slot(slot_index);
+        Ok(receipt)
+    }
+
+    pub fn advance_context(
+        &mut self,
+        next_context: AuthorityContext,
+    ) -> Result<RevocationSummary, VokFailure> {
+        if next_context.policy_epoch < self.current_context.policy_epoch
+            || next_context.revocation_epoch < self.current_context.revocation_epoch
+        {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_CONTEXT_REGRESSION"));
+        }
+
+        let policy_changed = next_context.policy_digest != self.current_context.policy_digest;
+        let identity_changed = next_context.target_digest != self.current_context.target_digest
+            || next_context.verifier_digest != self.current_context.verifier_digest;
+        if (policy_changed && next_context.policy_epoch == self.current_context.policy_epoch)
+            || (identity_changed
+                && next_context.revocation_epoch == self.current_context.revocation_epoch)
+        {
+            return Err(VokFailure::new(
+                Trit::Refuse,
+                "VOK_CONTEXT_CHANGE_WITHOUT_EPOCH",
+            ));
+        }
+
+        if next_context == self.current_context {
+            return Ok(RevocationSummary {
+                revoked: 0,
+                retired: 0,
+            });
+        }
+
+        let active_slots: Vec<usize> = self
+            .slots
+            .iter()
+            .enumerate()
+            .filter_map(|(index, slot)| {
+                (slot.admitted.is_some() || slot.lease.is_some()).then_some(index)
+            })
+            .collect();
+        let mut retired = 0;
+        for slot_index in &active_slots {
+            if self.clear_and_advance_slot(*slot_index) {
+                retired += 1;
+            }
+        }
+        self.current_context = next_context;
+        Ok(RevocationSummary {
+            revoked: active_slots.len(),
+            retired,
+        })
+    }
+
     #[must_use]
     pub const fn live_len(&self) -> usize {
         self.live_count
     }
 
     fn next_unique_nonce(&mut self) -> Result<[u8; 16], VokFailure> {
+        if self.seen_nonces.len() >= self.nonce_history_limit {
+            return Err(VokFailure::new(Trit::Unknown, "VOK_NONCE_BUDGET_EXHAUSTED"));
+        }
         let nonce = self.nonce_source.next_nonce().map_err(Self::nonce_error)?;
         if nonce == [0; 16] {
             return Err(VokFailure::new(Trit::Refuse, "VOK_NONCE_ZERO"));
@@ -533,6 +754,102 @@ impl<N: NonceSource> AuthorityTable<N> {
 
     fn nonce_error(error: NonceFailure) -> VokFailure {
         VokFailure::new(Trit::Refuse, error.failure_id())
+    }
+
+    fn validate_admitted_handle(&self, handle: &AdmittedObjectHandle) -> Result<usize, VokFailure> {
+        if handle.table_nonce != self.table_nonce {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        }
+        let Some(slot) = self.slots.get(handle.slot) else {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        };
+        let Some(entry) = slot.admitted.as_ref() else {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        };
+        if slot.retired
+            || slot.lease.is_some()
+            || handle.generation != slot.generation
+            || handle.object_nonce != entry.object_nonce
+            || handle.tag != entry.tag
+            || entry.context != self.current_context
+        {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        }
+        Ok(handle.slot)
+    }
+
+    fn validate_lease_handle(&self, handle: &LeaseHandle) -> Result<usize, VokFailure> {
+        if handle.table_nonce != self.table_nonce {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        }
+        let Some(slot) = self.slots.get(handle.slot) else {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        };
+        let Some(entry) = slot.lease.as_ref() else {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        };
+        if slot.retired
+            || slot.admitted.is_some()
+            || handle.generation != slot.generation
+            || handle.object_nonce != entry.object_nonce
+            || handle.tag != entry.tag
+            || entry.context != self.current_context
+        {
+            return Err(VokFailure::new(Trit::Refuse, "VOK_HANDLE_MISMATCH"));
+        }
+        Ok(handle.slot)
+    }
+
+    fn clear_and_advance_slot(&mut self, slot_index: usize) -> bool {
+        let Some(slot) = self.slots.get_mut(slot_index) else {
+            return true;
+        };
+        let was_live = slot.admitted.is_some() || slot.lease.is_some();
+        if let Some(entry) = &mut slot.admitted {
+            entry.clear();
+        }
+        if let Some(entry) = &mut slot.lease {
+            entry.clear();
+        }
+        slot.admitted = None;
+        slot.lease = None;
+        if was_live {
+            self.live_count = self.live_count.saturating_sub(1);
+        }
+        match slot.generation.checked_add(1) {
+            Some(generation) => {
+                slot.generation = generation;
+                if !slot.retired && !self.free_slots.contains(&slot_index) {
+                    self.free_slots.push(slot_index);
+                }
+                false
+            }
+            None => {
+                slot.retired = true;
+                self.free_slots.retain(|index| *index != slot_index);
+                true
+            }
+        }
+    }
+
+    fn retire_slot(&mut self, slot_index: usize) {
+        let Some(slot) = self.slots.get_mut(slot_index) else {
+            return;
+        };
+        let was_live = slot.admitted.is_some() || slot.lease.is_some();
+        if let Some(entry) = &mut slot.admitted {
+            entry.clear();
+        }
+        if let Some(entry) = &mut slot.lease {
+            entry.clear();
+        }
+        slot.admitted = None;
+        slot.lease = None;
+        slot.retired = true;
+        self.free_slots.retain(|index| *index != slot_index);
+        if was_live {
+            self.live_count = self.live_count.saturating_sub(1);
+        }
     }
 }
 
@@ -553,7 +870,12 @@ impl<N: NonceSource> Drop for AuthorityTable<N> {
             if let Some(entry) = &mut slot.admitted {
                 entry.clear();
             }
+            if let Some(entry) = &mut slot.lease {
+                entry.clear();
+            }
             slot.admitted = None;
+            slot.lease = None;
+            slot.retired = true;
         }
         self.table_nonce.fill(0);
         self.seen_nonces.clear();

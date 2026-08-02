@@ -50,6 +50,47 @@ fn all_admit() -> [Trit; 8] {
     [Trit::Admit; 8]
 }
 
+fn table_with_nonces(
+    capacity: usize,
+    nonces: impl IntoIterator<Item = [u8; 16]>,
+) -> AuthorityTable<SequenceNonce> {
+    AuthorityTable::new(
+        capacity,
+        64,
+        context(7, 3, 5),
+        SequenceNonce::from_nonces(nonces),
+    )
+    .expect("valid hostile-test table")
+}
+
+fn mint_one(table: &mut AuthorityTable<SequenceNonce>) -> AdmittedObjectHandle {
+    table
+        .mint_admitted(mint_request(all_admit(), vec![1, 2, 3]))
+        .expect("valid admitted object")
+}
+
+fn duplicate_admitted(handle: &AdmittedObjectHandle) -> AdmittedObjectHandle {
+    AdmittedObjectHandle {
+        table_nonce: handle.table_nonce,
+        slot: handle.slot,
+        generation: handle.generation,
+        object_nonce: handle.object_nonce,
+        tag: handle.tag.clone(),
+        thread_marker: Default::default(),
+    }
+}
+
+fn duplicate_lease(handle: &LeaseHandle) -> LeaseHandle {
+    LeaseHandle {
+        table_nonce: handle.table_nonce,
+        slot: handle.slot,
+        generation: handle.generation,
+        object_nonce: handle.object_nonce,
+        tag: handle.tag.clone(),
+        thread_marker: Default::default(),
+    }
+}
+
 #[test]
 fn trit_accepts_only_the_closed_k3_domain() {
     assert_eq!(Trit::try_from(-1), Ok(Trit::Refuse));
@@ -319,4 +360,214 @@ fn fixed_capacity_exhaustion_is_unknown_and_does_not_request_more_entropy() {
     assert_eq!(error.outcome(), Trit::Unknown);
     assert_eq!(error.failure_id(), "VOK_CAPACITY_EXHAUSTED");
     assert_eq!(table.live_len(), 1);
+}
+
+#[test]
+fn every_private_admitted_handle_field_is_revalidated() {
+    for dimension in 0..5 {
+        let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+        let mut handle = mint_one(&mut table);
+        match dimension {
+            0 => handle.table_nonce[0] ^= 1,
+            1 => handle.slot = usize::MAX,
+            2 => handle.generation = handle.generation.wrapping_add(1),
+            3 => handle.object_nonce[0] ^= 1,
+            4 => handle.tag = AuthorityTag::parse("slide.vok.other.v1").expect("other valid tag"),
+            _ => unreachable!(),
+        }
+
+        let error = table
+            .open_lease(handle, &context(7, 3, 5))
+            .expect_err("forged admitted handle must refuse");
+        assert_eq!(error.outcome(), Trit::Refuse);
+        assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+        assert_eq!(table.live_len(), 1);
+    }
+}
+
+#[test]
+fn admitted_handle_is_affine_and_a_stale_duplicate_cannot_open_twice() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut table);
+    let stale = duplicate_admitted(&admitted);
+    let lease = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("first exact transition");
+    assert_eq!(format!("{lease:?}"), "LeaseHandle(REDACTED)");
+
+    let error = table
+        .open_lease(stale, &context(7, 3, 5))
+        .expect_err("stale duplicate must refuse");
+    assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+    assert_eq!(table.live_len(), 1);
+}
+
+#[test]
+fn every_private_lease_handle_field_is_revalidated() {
+    for dimension in 0..5 {
+        let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+        let admitted = mint_one(&mut table);
+        let mut lease = table
+            .open_lease(admitted, &context(7, 3, 5))
+            .expect("valid lease before hostile mutation");
+        match dimension {
+            0 => lease.table_nonce[0] ^= 1,
+            1 => lease.slot = usize::MAX,
+            2 => lease.generation = lease.generation.wrapping_add(1),
+            3 => lease.object_nonce[0] ^= 1,
+            4 => lease.tag = AuthorityTag::parse("slide.vok.other.v1").expect("other valid tag"),
+            _ => unreachable!(),
+        }
+
+        let error = table
+            .consume_lease(lease, &context(7, 3, 5), Trit::Admit)
+            .expect_err("forged lease handle must refuse");
+        assert_eq!(error.outcome(), Trit::Refuse);
+        assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+        assert_eq!(table.live_len(), 1);
+    }
+}
+
+#[test]
+fn lease_is_affine_and_receipt_is_terminal_value_only() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut table);
+    let lease = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("first exact transition");
+    let stale = duplicate_lease(&lease);
+    let receipt = table
+        .consume_lease(lease, &context(7, 3, 5), Trit::Admit)
+        .expect("terminal close");
+    assert_eq!(receipt.tag(), "slide.vok.execute.v1");
+    assert_eq!(receipt.byte_length(), 3);
+    assert_eq!(receipt.terminal_outcome(), Trit::Admit);
+    assert!(!receipt.authority_released());
+    assert_eq!(table.live_len(), 0);
+
+    let error = table
+        .consume_lease(stale, &context(7, 3, 5), Trit::Admit)
+        .expect_err("stale lease must refuse");
+    assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+}
+
+#[test]
+fn exact_current_context_is_required_for_both_affine_transitions() {
+    let mut open_table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut open_table);
+    let error = open_table
+        .open_lease(admitted, &context(8, 3, 5))
+        .expect_err("wrong open context must refuse");
+    assert_eq!(error.failure_id(), "VOK_CONTEXT_MISMATCH");
+    assert_eq!(open_table.live_len(), 0);
+
+    let mut close_table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut close_table);
+    let lease = close_table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect("first exact transition");
+    let error = close_table
+        .consume_lease(lease, &context(7, 4, 5), Trit::Admit)
+        .expect_err("wrong close context must refuse");
+    assert_eq!(error.failure_id(), "VOK_CONTEXT_MISMATCH");
+    assert_eq!(close_table.live_len(), 0);
+}
+
+#[test]
+fn lease_nonce_failure_revokes_the_now_unreachable_admission() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16]]);
+    let admitted = mint_one(&mut table);
+    let error = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect_err("missing transition nonce must fail closed");
+    assert_eq!(error.failure_id(), "VOK_TEST_NONCE_EXHAUSTED");
+    assert_eq!(table.live_len(), 0);
+}
+
+#[test]
+fn bounded_nonce_history_exhaustion_refuses_and_revokes_transition_state() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let admitted = mint_one(&mut table);
+    table.nonce_history_limit = 2;
+    let error = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect_err("nonce-history budget exhaustion must fail closed");
+    assert_eq!(error.outcome(), Trit::Unknown);
+    assert_eq!(error.failure_id(), "VOK_NONCE_BUDGET_EXHAUSTED");
+    assert_eq!(table.live_len(), 0);
+}
+
+#[test]
+fn context_advance_is_monotonic_and_eagerly_revokes_old_entries() {
+    let mut table = table_with_nonces(2, [[1; 16], [2; 16], [3; 16]]);
+    let old_handle = mint_one(&mut table);
+    let regression = table
+        .advance_context(context(7, 2, 5))
+        .expect_err("policy epoch regression must refuse");
+    assert_eq!(regression.failure_id(), "VOK_CONTEXT_REGRESSION");
+    assert_eq!(table.live_len(), 1);
+
+    let changed_without_epoch = table
+        .advance_context(context(8, 3, 5))
+        .expect_err("identity change without revocation epoch must refuse");
+    assert_eq!(
+        changed_without_epoch.failure_id(),
+        "VOK_CONTEXT_CHANGE_WITHOUT_EPOCH"
+    );
+    assert_eq!(table.live_len(), 1);
+
+    let summary = table
+        .advance_context(context(8, 4, 6))
+        .expect("strict epoch advance revokes older state");
+    assert_eq!(summary.revoked(), 1);
+    assert_eq!(summary.retired(), 0);
+    assert_eq!(table.live_len(), 0);
+    let error = table
+        .open_lease(old_handle, &context(8, 4, 6))
+        .expect_err("revoked old handle must refuse");
+    assert_eq!(error.failure_id(), "VOK_HANDLE_MISMATCH");
+}
+
+#[test]
+fn generation_overflow_retires_the_slot_instead_of_wrapping() {
+    let mut table = table_with_nonces(1, [[1; 16], [2; 16], [3; 16]]);
+    let mut admitted = mint_one(&mut table);
+    admitted.generation = u64::MAX;
+    table.slots[admitted.slot].generation = u64::MAX;
+
+    let error = table
+        .open_lease(admitted, &context(7, 3, 5))
+        .expect_err("generation exhaustion must refuse");
+    assert_eq!(error.failure_id(), "VOK_GENERATION_EXHAUSTED");
+    assert_eq!(table.live_len(), 0);
+    assert!(table.slots[0].retired);
+
+    let error = table
+        .mint_admitted(mint_request(all_admit(), vec![4]))
+        .expect_err("retired capacity cannot be reused");
+    assert_eq!(error.failure_id(), "VOK_CAPACITY_EXHAUSTED");
+}
+
+#[test]
+fn native_nine_gate_fold_matches_all_k3_vectors() {
+    let values = [Trit::Refuse, Trit::Unknown, Trit::Admit];
+    let mut authorizing = 0;
+    for ordinal in 0..3_usize.pow(9) {
+        let mut remainder = ordinal;
+        let mut vector = [Trit::Refuse; 9];
+        for gate in &mut vector {
+            *gate = values[remainder % 3];
+            remainder /= 3;
+        }
+        let expected = vector.iter().copied().min().expect("nine gates");
+        let actual = authority_verdict(
+            vector[..8].try_into().expect("eight admission gates"),
+            vector[8],
+        );
+        assert_eq!(actual, expected);
+        if actual == Trit::Admit {
+            authorizing += 1;
+        }
+    }
+    assert_eq!(authorizing, 1);
 }

@@ -28,7 +28,7 @@ runtime work.
 [ ] Define verified fast path execution signature and invalidation contract
 [ ] Define AI compute plan runtime hook contract
 [x] Implement RD-0660 `.fungi` nine-gate VOK authority fold
-[ ] Implement RD-0660 bounded unsafe-free native VOK handle table
+[x] Implement RD-0660 bounded unsafe-free native VOK handle table
 [ ] Verify native VOK forged/stale/replay/context/capacity hostile corpus
 [ ] Benchmark native VOK against null and simpler checked-map baselines
 [ ] Add verified OS CSPRNG and opaque VM-resource adapters after table evidence

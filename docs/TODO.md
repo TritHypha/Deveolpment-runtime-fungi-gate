@@ -20,7 +20,11 @@
   eight-gate K3 vectors were checked, exactly one mints, and invalid bounds,
   context, capacity and missing/zero/repeated nonces fail closed. Owned request
   bytes and opaque-handle debug are redacted/logically cleared. Lease,
-  revocation and execution remain absent; those are the next observed-RED slice.
+  revocation and terminal value-only receipts now pass 21 hostile/unit checks,
+  12 compile-fail contracts and all 19,683 nine-gate K3 vectors. Nonce history
+  is hard-bounded and generation overflow retires capacity. This crate remains
+  unlinked and cannot execute bytes or release authority. Next action is native/
+  `.fungi` parity, mutation/security checks and bounded benchmark evidence.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
