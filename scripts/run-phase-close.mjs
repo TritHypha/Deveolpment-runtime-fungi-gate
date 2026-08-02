@@ -23,6 +23,9 @@ import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseGovernanceDiff } from "./lib/phase-close-result.mjs";
+import suiteLeaseModule from "./lib/suite-run-lease.cjs";
+
+const { acquireSuiteLease } = suiteLeaseModule;
 
 function parseArguments(argv) {
   const parsed = {
@@ -86,10 +89,43 @@ const ROOT = options.root;
 const isWin = process.platform === "win32";
 const results = [];
 
-function run(name, cmd, args, { cwd = ROOT, okCodes = [0], timeout = 180000 } = {}) {
+let suiteLease;
+try {
+  suiteLease = acquireSuiteLease({ root: ROOT, commandClass: "phase-close" });
+} catch (error) {
+  const report = {
+    tool: "run-phase-close",
+    schemaVersion: 1,
+    root: ROOT,
+    tier: options.tier,
+    verdict: "REFUSED",
+    authorizing: false,
+    code: error.code || "SUITE-LEASE-REFUSED",
+    detail: error.message,
+    failed: [],
+    totals: { checks: 0, passed: 0, failed: 0 },
+    results: [],
+  };
+  if (options.json) console.log(JSON.stringify(report, null, 2));
+  else console.error(`run-phase-close: ${report.code} — ${report.detail}`);
+  process.exit(1);
+}
+process.once("exit", () => { suiteLease.release(); });
+
+function run(name, cmd, args, {
+  cwd = ROOT,
+  okCodes = [0],
+  timeout = 180000,
+  inheritSuiteLease = false,
+} = {}) {
   const t0 = Date.now();
   const childEnv = { ...process.env };
   delete childEnv.NODE_TEST_CONTEXT;
+  delete childEnv.GALERINA_SUITE_LEASE_NONCE;
+  delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
+  const admittedChildEnv = inheritSuiteLease
+    ? suiteLease.childEnvironment(childEnv)
+    : childEnv;
   let executable = cmd === "node" ? process.execPath : cmd;
   let executableArgs = args;
   if (isWin && cmd === "npm") {
@@ -99,7 +135,7 @@ function run(name, cmd, args, { cwd = ROOT, okCodes = [0], timeout = 180000 } = 
   const r = spawnSync(executable, executableArgs, {
     cwd,
     encoding: "utf8",
-    env: childEnv,
+    env: admittedChildEnv,
     shell: false,
     timeout,
     windowsHide: true,
@@ -284,7 +320,9 @@ try {
 if (!options.json) console.log("══ Galerina phase-close cadence ══");
 
 // ── 1. Core tests (SOT four) ──
-run("tests:core", "node", ["scripts/run-all-tests.cjs", "--core"]);
+run("tests:core", "node", ["scripts/run-all-tests.cjs", "--core"], {
+  inheritSuiteLease: true,
+});
 run("audit:tooling-contract", "node", ["scripts/audit-tooling-contract.mjs"]);
 run(
   "audit:generator-contract",
@@ -909,7 +947,7 @@ if (options.tier === "exhaustive") {
     "tests:all-packages",
     "node",
     ["scripts/run-all-tests.cjs", "--json"],
-    { timeout: 1_800_000 },
+    { timeout: 1_800_000, inheritSuiteLease: true },
   );
 }
 

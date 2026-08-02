@@ -1,6 +1,7 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import {
   existsSync,
   mkdirSync,
@@ -15,6 +16,8 @@ import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const RUNNER = join(TEST_DIR, "..", "run-all-tests.cjs");
+const require = createRequire(import.meta.url);
+const { acquireSuiteLease } = require("../lib/suite-run-lease.cjs");
 const roots = [];
 
 after(() => {
@@ -161,4 +164,27 @@ test("--emit-counts replaces stale package-count narrative with derived scope", 
     version.packageCountNote,
     "Derived from the complete governed package inventory: 1/1 test-bearing packages passed their declared build-current test chains; see testCountByPackage.",
   );
+});
+
+test("a held checkout lease refuses before a package child starts", () => {
+  const root = workspaceFixture("must-not-run", {
+    name: "@galerina/must-not-run",
+    scripts: { test: "node must-not-run.mjs" },
+  }, {
+    "must-not-run.mjs":
+      "import { writeFileSync } from 'node:fs'; writeFileSync('ran.txt', 'bad'); console.log('tests 1\\npass 1\\nfail 0');\n",
+  });
+  const lease = acquireSuiteLease({ root, commandClass: "phase-close" });
+
+  const result = run(root, "--json");
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.ok, false);
+  assert.equal(report.violations[0].code, "SUITE-LEASE-HELD");
+  assert.equal(
+    existsSync(join(root, "packages-galerina", "must-not-run", "ran.txt")),
+    false,
+  );
+  assert.equal(lease.release(), true);
 });

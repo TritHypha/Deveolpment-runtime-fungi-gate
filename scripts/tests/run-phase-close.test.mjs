@@ -1,7 +1,9 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -14,6 +16,8 @@ import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const RUNNER = join(TEST_DIR, "..", "run-phase-close.mjs");
+const require = createRequire(import.meta.url);
+const { acquireSuiteLease } = require("../lib/suite-run-lease.cjs");
 const RESULT_MODULE = new URL("../lib/phase-close-result.mjs", import.meta.url);
 const resultApi = await import(RESULT_MODULE).catch(() => ({}));
 const runnerSource = readFileSync(RUNNER, "utf8");
@@ -181,4 +185,25 @@ test("live phase-close checks generated evidence without rewriting it", () => {
     runnerSource,
     /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
   );
+});
+
+test("a held checkout lease refuses phase-close before any child starts", () => {
+  const root = fixture({
+    phaseClose: [{ name: "must-not-run", command: ["node", "must-not-run.mjs"] }],
+  });
+  write(
+    root,
+    "must-not-run.mjs",
+    "import { writeFileSync } from 'node:fs'; writeFileSync('ran.txt', 'bad');\n",
+  );
+  const lease = acquireSuiteLease({ root, commandClass: "all-tests" });
+
+  const result = run(root);
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.verdict, "REFUSED");
+  assert.equal(report.code, "SUITE-LEASE-HELD");
+  assert.equal(existsSync(join(root, "ran.txt")), false);
+  assert.equal(lease.release(), true);
 });

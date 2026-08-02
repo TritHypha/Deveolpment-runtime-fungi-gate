@@ -8,6 +8,10 @@ const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const {
+  acquireSuiteLease,
+  admitInheritedSuiteLease,
+} = require("./lib/suite-run-lease.cjs");
 
 const DEFAULT_ROOT = path.join(__dirname, "..");
 const CORE = Object.freeze([
@@ -82,6 +86,8 @@ function runNpmTest(directory) {
   // Inheriting this marker makes Node treat the package suite as recursive
   // and silently skip every file.
   delete childEnv.NODE_TEST_CONTEXT;
+  delete childEnv.GALERINA_SUITE_LEASE_NONCE;
+  delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
   const common = {
     cwd: directory,
     encoding: "utf8",
@@ -289,6 +295,37 @@ async function main() {
   } catch (error) {
     process.stderr.write(`run-all-tests: ${error.message}\n`);
     process.exit(3);
+  }
+
+  let suiteLease;
+  try {
+    const hasInheritedLease =
+      Object.hasOwn(process.env, "GALERINA_SUITE_LEASE_NONCE")
+      || Object.hasOwn(process.env, "GALERINA_SUITE_LEASE_ROOT_ID");
+    suiteLease = hasInheritedLease
+      ? admitInheritedSuiteLease({
+        root: options.root,
+        expectedCommandClass: "phase-close",
+      })
+      : acquireSuiteLease({ root: options.root, commandClass: "all-tests" });
+  } catch (error) {
+    const report = {
+      tool: "run-all-tests",
+      schemaVersion: 1,
+      ok: false,
+      root: options.root,
+      violations: [{
+        code: error.code || "SUITE-LEASE-REFUSED",
+        detail: error.message,
+      }],
+      results: [],
+    };
+    if (options.json) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    else process.stderr.write(`run-all-tests: ${report.violations[0].code} — ${error.message}\n`);
+    process.exit(1);
+  }
+  if (!suiteLease.inherited) {
+    process.once("exit", () => { suiteLease.release(); });
   }
 
   const inventoryModule = await import(pathToFileURL(
