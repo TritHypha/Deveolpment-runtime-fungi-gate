@@ -193,7 +193,10 @@
   SHA-256 `3B4EE284...3551`). This later documentation commit deliberately makes
   it non-final; beta admission remains K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
 - **Ubuntu handover:** exact unpushed Galerina and SLIDE histories are available
-  as verified, Git-ignored bundles. Round two must return five files: the four
+  as one two-bundle transfer set with a generated machine-checkable manifest.
+  The `134da79...` attempt correctly stopped before host observation because
+  the sibling SLIDE checkout was absent, so it supplies no Linux execution
+  evidence. Round two must return five files: the four
   durability/report artifacts plus one functional Ubuntu receipt. Those current
   files have not returned; no remote clone, old `2ceaf479...` result or renamed
   distribution receipt may substitute.

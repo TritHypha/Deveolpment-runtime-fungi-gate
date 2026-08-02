@@ -40,11 +40,32 @@ Get-FileHash -Algorithm SHA256 -LiteralPath @(
   (Join-Path $Transfer "Galerina-current.bundle"),
   (Join-Path $Transfer "SLIDE-current.bundle")
 )
+
+$GalerinaHash = (Get-FileHash -Algorithm SHA256 -LiteralPath `
+  (Join-Path $Transfer "Galerina-current.bundle")).Hash.ToLowerInvariant()
+$SlideHash = (Get-FileHash -Algorithm SHA256 -LiteralPath `
+  (Join-Path $Transfer "SLIDE-current.bundle")).Hash.ToLowerInvariant()
+$GalerinaHead = git rev-parse HEAD
+$SlideHead = git -C ..\SLIDE rev-parse HEAD
+$Manifest = @(
+  "# Galerina branch=$GalerinaBranch head=$GalerinaHead"
+  "$GalerinaHash  Galerina-current.bundle"
+  "# SLIDE branch=$SlideBranch head=$SlideHead"
+  "$SlideHash  SLIDE-current.bundle"
+)
+[System.IO.File]::WriteAllLines(
+  (Join-Path $Transfer "CURRENT-BUNDLE-MANIFEST.txt"),
+  $Manifest,
+  [System.Text.UTF8Encoding]::new($false)
+)
 ```
 
-Record the two hashes out of band and copy both bundle files to the Ubuntu
-Desktop computer. The bundle files are deliberately ignored by Git. Never add
-private keys, signing environments or custody material to the transfer folder.
+Record the two hashes out of band and copy both bundle files plus
+`CURRENT-BUNDLE-MANIFEST.txt` to the Ubuntu Desktop computer as one transfer
+set. The three generated files are deliberately ignored by Git. The manifest
+is a convenience copy, not an independent custody record; compare its two
+hashes with the values recorded out of band before using it. Never add private
+keys, signing environments or custody material to the transfer folder.
 
 ## On Ubuntu Desktop
 
@@ -56,6 +77,8 @@ set -eu
 TRANSFER_DIRECTORY="$PWD"
 test -f "$TRANSFER_DIRECTORY/Galerina-current.bundle"
 test -f "$TRANSFER_DIRECTORY/SLIDE-current.bundle"
+test -f "$TRANSFER_DIRECTORY/CURRENT-BUNDLE-MANIFEST.txt"
+sha256sum --check "$TRANSFER_DIRECTORY/CURRENT-BUNDLE-MANIFEST.txt"
 git bundle verify "$TRANSFER_DIRECTORY/Galerina-current.bundle"
 git bundle verify "$TRANSFER_DIRECTORY/SLIDE-current.bundle"
 

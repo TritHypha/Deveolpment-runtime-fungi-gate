@@ -10,17 +10,19 @@ failure, and cannot turn the roadmap green.
 
 ## Before the next Ubuntu session
 
-The Ubuntu computer must receive both current verified bundle files, not only a
-remote Galerina clone:
+The Ubuntu computer must receive one indivisible three-file transfer set, not
+only a remote Galerina clone:
 
 ```text
 Galerina-current.bundle
 SLIDE-current.bundle
+CURRENT-BUNDLE-MANIFEST.txt
 ```
 
 Create them on the Windows computer only after both worktrees are clean by
-following `TRANSFER-LOCAL-COMMITS.md`. Copy both files and their independently
-recorded SHA-256 values to Ubuntu. Private signing files are neither needed nor
+following `TRANSFER-LOCAL-COMMITS.md`. Copy all three files and the two
+independently recorded SHA-256 values to Ubuntu. Verify the manifest and both
+Git bundles before cloning. Private signing files are neither needed nor
 permitted.
 
 ## On Ubuntu
