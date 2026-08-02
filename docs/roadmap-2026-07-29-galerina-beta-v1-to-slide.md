@@ -69,7 +69,7 @@ E03 and every E04 proposal remain slower than B0. E05 B1 remains
 statistically indeterminate against BA, so no VPEG-specific speed or
 production claim is made. Authentication, native `.fungi`, independent
 verification and cross-platform repetition remain separate later gates.
-Fresh closure is SLIDE 363/363 across 23 suites, the 16-file contract, 21
+Fresh closure is SLIDE 367/367 across 24 suites, the 16-file contract, 21
 schemas, 9 result JSON files, 8 SVGs and six unauthenticated K3 `0` evidence
 verifiers.
 
@@ -166,7 +166,7 @@ flowchart TB
     LI["🟨 Linux adapter round two<br/>implementation complete · rerun transfer set ready"]
     NP["🟩 Native durability profiles<br/>Windows 10/11 · Linux · macOS APFS"]
     RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
-    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 363/363 complete · UNVERIFIED"]
+    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 367/367 complete · UNVERIFIED"]
     X["🟨 Production rotation activation<br/>linked candidate built · app-kernel admission pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
@@ -184,6 +184,7 @@ flowchart TB
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
     RV["🟩 Retirement verifier implemented<br/>9/9 top-level adversarial · 36 assertions<br/>historical checkpoint 16/16"]
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
+    RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · reference-only"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
     AL["🟦 .fungi admission ledger<br/>109 execution/source/evidence entries"]
     T["🟦 Package conversion<br/>494 tracked package .ts → 0"]
@@ -210,7 +211,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> G4I --> I --> AL --> T --> HB --> FD --> TG --> J
+    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -234,7 +235,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I green;
+    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP green;
     class X,TG red;
     class Q,AC,LI,F,AT amber;
     class H,I,AL,T,HB,FD,AE,AF blue;
@@ -257,6 +258,14 @@ the compiler fixture, Node reference runtime, absent producer authentication
 and `authorityReleased: false` cannot populate the production ledger or retire
 a package. General checked-source plus ordinary and K3-sensitive real-package
 profiles remain the integration condition.
+
+The registered real-source floor closes the source-identity/execution half of
+that condition without overstating it. Exact canonical sources from
+`core-sentinel-state` and `framework-app-kernel` execute all 4 ordinary and
+192 K3/Boolean vectors through VOK. Their source identity and execution are
+green, but they do not yet carry the independently re-derived frontend
+receipt and instruction-total mapping that G4 has. The reusable integration
+tile therefore remains blue and the production ledger remains empty.
 
 The diagram is dependency-ordered, not a claim that all research waits for the
 release path. Galerina's repository-local functional fixed point is green. The
@@ -284,7 +293,7 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 9/9 top-level adversarial tests, 36 assertions; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟦 | Bounded G4 source/receipt/V2-D/VOK floor passes 25/25 and complete SLIDE 363/363, but it is a reference-only compiler fixture; no ordinary and K3-sensitive real-package pair has terminal execution authority | Both real-package profiles complete checked-source → SLIDE → VOK → typed-receipt positive and hostile paths with no fallback |
+| 1 | Galerina → SLIDE execution switch | 🟦 | G4 source/receipt/V2-D/VOK passes 25/25; exact ordinary and K3 real-package source profiles pass 4/4 across 196 semantic vectors; complete SLIDE is 367/367. The real profiles still lack independently verified frontend receipts and remain reference-only | Both real-package profiles complete checked-source → SLIDE → VOK → typed-receipt positive and hostile paths with no fallback |
 | 2 | `.fungi` admission ledger | 🟦 | 109 production `.fungi` sources require exact admission; ledger currently empty | Every production source has tracked exact source/evidence digests, package ownership and a verified execution receipt |
 | 3 | Package conversion | 🟦 | 494 tracked package TypeScript paths remain | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary ownership | 🟦 | 36 detected production host boundaries are unowned | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit replacement or retention decision |
@@ -298,9 +307,9 @@ table is navigation, not authority.
 | Beta-v1 cryptographic release evidence | 🟨 implementation green; authority inputs pending | Policy v2, dedicated two-role root delegation verification, mandatory Ed25519 + ML-DSA-65 envelopes, closed durability/repository predicates and the data-only offline signer are implemented. Focused release/platform evidence passed 43/43 before the added root-delegation signer case. The tracked policy intentionally remains K3 `0` until the offline delegation, operational public bundle, seven functional receipts and controlled reboot/power-loss evidence exist; no production private key was used |
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
-| SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 363/363 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
+| SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 367/367 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
 | Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
-| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 363/363, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 367/367, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
 | V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |

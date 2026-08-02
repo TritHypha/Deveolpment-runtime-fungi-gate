@@ -78,12 +78,22 @@
   source, 1,752-byte receipt, 40-node map, V2-D semantics and nine plan
   commitments, then executes the guarded-memory profile through one VOK lease
   and typed terminal receipt. Focused evidence is 25/25; complete SLIDE is
-  363/363. Source/receipt/body mutation, evidence substitution, hostile intake,
+  367/367. Source/receipt/body mutation, evidence substitution, hostile intake,
   gate deny/unknown, replay and exhausted budgets refuse with no fallback.
 - **Why integration remains blue:** G4 is a frozen compiler conformance fixture
   and the runtime is reference-only. It is not an ordinary/K3 package pair,
   producer authentication, native execution or production ledger authority.
   The general checked-source frontend remains the next dependency.
+- **Real-source floor added:** canonical Git-blob identities for
+  `core-sentinel-state` `restoreVerdict` and `framework-app-kernel`
+  `registryDurabilityProductionAdmission` now execute through VOK. Both source
+  files pass strict checking with zero diagnostics; SLIDE passes 4/4 focused
+  tests covering 4 ordinary plus 192 exhaustive K3/Boolean vectors. VOK
+  evidence and terminal transcripts bind the exact executable graph digest.
+- **Remaining receipt gap:** those real-source profiles are reference-only and
+  do not yet bind a complete independently verified frontend receipt or
+  instruction-total mapping. They cannot populate the production ledger,
+  authorize retirement or turn the integration tile green.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **494** tracked package TypeScript paths,
   **109** unexecuted production `.fungi` sources, **36** unowned production
@@ -101,8 +111,9 @@
   affine lease -> typed execution/audit receipt -> exact per-package
   authority-ledger entry -> TypeScript/oracle retirement. A failed SLIDE path
   has no Wasm, walker, Node, cache or driver fallback.
-- **Workstream visibility:** (1) execution switch: bounded G4 floor verified,
-  reusable real-package switch not admitted; (2) ledger:
+- **Workstream visibility:** (1) execution switch: bounded G4 receipt floor and
+  registered real-source decision floor verified, reusable checked-source
+  switch not admitted; (2) ledger:
   109 Fungi entries required and the ledger is empty; (3) conversion: 494
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
@@ -120,7 +131,7 @@
   whole-corpus second-pass sandbox remains a separate quarantine programme.
 - **Current verification anchors:** Galerina's last complete fixed point is
   **98/98 packages, 8,831 tests**, strict **84/84**, exhaustive **85/85** and
-  graph **5/5**. Independent SLIDE freshly passes **363/363** across 23 suites
+  graph **5/5**. Independent SLIDE freshly passes **367/367** across 24 suites
   and its repository-owned V2 contract is **16/16 files**. These facts prove
   their existing surfaces only; they do not authorize package retirement.
 - **History rule:** lower dated sections are retained as chronological
