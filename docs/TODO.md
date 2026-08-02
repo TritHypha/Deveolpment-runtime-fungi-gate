@@ -108,6 +108,13 @@
 
 ### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
 
+- **Exact blocker report:**
+  [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
+  records the complete live compile/admission chain, the 243 fail-closed
+  post-SLIDE violations and the dependency order from 494 tracked TypeScript
+  paths, 110 unexecuted Fungi sources, 36 unowned host boundaries, 95
+  `node_modules` trees and one nested identity to zero. The older 491 count is
+  stale.
 - **Status split approved:** the retirement verifier implementation is green;
   terminal retirement admission is red. The green state means the gate exists
   and passes its hostile fixtures. It does not mean any package is retired.

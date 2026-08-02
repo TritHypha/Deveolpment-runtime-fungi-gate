@@ -13,9 +13,9 @@ Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
 Terminal physical retirement: OPEN — 494 tracked package TypeScript paths remain.
 
-Post-SLIDE authority: OPEN — 0 non-authorizing candidate(s); 0/109 production Fungi sources cryptographically admitted; 0/36 host boundaries owned; 95 node_modules trees.
+Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/110 production Fungi sources cryptographically admitted; 0/36 host boundaries owned; 95 node_modules trees.
 
-`.fungi` in src trees: 109 across 95 packages · finder drift: 0
+`.fungi` in src trees: 110 across 95 packages · finder drift: 0
 
 ## Twinned .ts (the #143 flip queue)
 - packages-galerina/galerina-core-compiler/src/effect-checker.ts

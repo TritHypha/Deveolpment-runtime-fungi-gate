@@ -108,6 +108,7 @@
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi'",
@@ -742,7 +743,10 @@
     "packages-galerina/galerina-web-state/src/index.ts",
     "packages-galerina/galerina-web/src/index.ts"
   ],
-  "candidateFungiPaths": [],
+  "candidateFungiPaths": [
+    "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+    "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi"
+  ],
   "unexecutedFungiPaths": [
     "packages-galerina/galerina-api-protocol-rest/src/index.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi",
@@ -752,6 +756,7 @@
     "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/runtime.fungi",
+    "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-fixture-adapter.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-public-candidate.fungi",
@@ -6930,7 +6935,7 @@
     "compilerCore": 97,
     "floor": 16,
     "program": 339,
-    "fungiInSrc": 109,
+    "fungiInSrc": 110,
     "packages": 95,
     "finderDrift": 0,
     "compilerAuthoritativeFlips": 7,
@@ -6940,10 +6945,10 @@
     "compilerDifferential": 0,
     "governedTwinTotal": 36,
     "governedDifferential": 7,
-    "allTrackedFungi": 109,
-    "candidateFungi": 0,
+    "allTrackedFungi": 110,
+    "candidateFungi": 2,
     "executedFungi": 0,
-    "unexecutedFungi": 109,
+    "unexecutedFungi": 110,
     "hostBridges": 36,
     "ownedHostBridges": 0,
     "unownedHostBridges": 36,
@@ -6995,7 +7000,7 @@
     "galerina-core-compiler": {
       "ts": 104,
       "twinned": 7,
-      "fungi": 57
+      "fungi": 58
     },
     "galerina-core-compute": {
       "ts": 1,
