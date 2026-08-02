@@ -104,8 +104,32 @@ test("an existing dist directory never bypasses the declared test and build chai
     "fresh",
   );
   const report = JSON.parse(result.stdout);
+  assert.deepEqual(report.controls, {
+    testConcurrency: 4,
+    processIsolation: "process",
+  });
+  assert.match(result.stderr, /START galerina-build-current.*ceiling 4/);
+  assert.match(result.stderr, /END galerina-build-current.*pass/);
   assert.equal(report.results[0].built, true);
   assert.equal(report.results[0].tests, 1);
+});
+
+test("a caller may lower but never raise the test concurrency ceiling", () => {
+  const root = workspaceFixture("bounded", {
+    name: "@galerina/bounded",
+    scripts: { test: "node --test tests/bounded.test.mjs" },
+  }, {
+    "tests/bounded.test.mjs":
+      "import test from 'node:test'; test('bounded', () => {});\n",
+  });
+
+  const lowered = run(root, "--json", "--test-concurrency", "2");
+  assert.equal(lowered.status, 0, lowered.stderr || lowered.stdout);
+  assert.equal(JSON.parse(lowered.stdout).controls.testConcurrency, 2);
+
+  const raised = run(root, "--json", "--test-concurrency", "5");
+  assert.equal(raised.status, 3);
+  assert.match(raised.stderr, /TEST-CONCURRENCY-INVALID|one through four/i);
 });
 
 test("a zero exit with no parseable non-zero test summary is refused", () => {

@@ -12,6 +12,10 @@ const {
   acquireSuiteLease,
   admitInheritedSuiteLease,
 } = require("./lib/suite-run-lease.cjs");
+const {
+  npmTestInvocation,
+  parseTestConcurrency,
+} = require("./lib/test-runner-policy.cjs");
 
 const DEFAULT_ROOT = path.join(__dirname, "..");
 const CORE = Object.freeze([
@@ -31,6 +35,7 @@ function parseArguments(argv) {
     core: false,
     bail: false,
     emitCounts: false,
+    testConcurrency: parseTestConcurrency(undefined),
     named: [],
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -52,6 +57,13 @@ function parseArguments(argv) {
       options.bail = true;
     } else if (argument === "--emit-counts") {
       options.emitCounts = true;
+    } else if (argument === "--test-concurrency") {
+      const value = argv[index + 1];
+      if (value === undefined || value.startsWith("--")) {
+        throw new Error("--test-concurrency requires an integer from one through four");
+      }
+      options.testConcurrency = parseTestConcurrency(value);
+      index += 1;
     } else if (argument.startsWith("--")) {
       throw new Error(`Unknown option: ${argument}`);
     } else {
@@ -80,7 +92,7 @@ function parseCounts(output) {
   };
 }
 
-function runNpmTest(directory) {
+function runNpmTest(directory, testScript, testConcurrency) {
   const childEnv = { ...process.env };
   // A runner invoked by node:test must start a new top-level test process.
   // Inheriting this marker makes Node treat the package suite as recursive
@@ -96,14 +108,16 @@ function runNpmTest(directory) {
     timeout: TIMEOUT_MS,
     windowsHide: true,
   };
-  if (process.platform === "win32") {
-    return spawnSync(
-      process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-      ["/d", "/s", "/c", "npm.cmd", "test"],
-      common,
-    );
-  }
-  return spawnSync("npm", ["test"], common);
+  const invocation = npmTestInvocation({
+    platform: process.platform,
+    commandShell: process.env.ComSpec,
+    testScript,
+    concurrency: testConcurrency,
+  });
+  return {
+    child: spawnSync(invocation.command, invocation.args, common),
+    boundedNodeTest: invocation.boundedNodeTest,
+  };
 }
 
 function failureFor(child, counts) {
@@ -141,14 +155,22 @@ function failureFor(child, counts) {
   return null;
 }
 
-function runPackage(record) {
+function runPackage(record, testConcurrency) {
   const started = Date.now();
-  const child = runNpmTest(record.absolutePath);
+  process.stderr.write(
+    `[run-all-tests] START ${record.subject} (test-file ceiling ${testConcurrency})\n`,
+  );
+  const invocation = runNpmTest(
+    record.absolutePath,
+    record.testScript,
+    testConcurrency,
+  );
+  const child = invocation.child;
   const durationMs = Date.now() - started;
   const output = `${child.stdout || ""}\n${child.stderr || ""}`;
   const counts = parseCounts(output);
   const failure = failureFor(child, counts);
-  return {
+  const result = {
     package: record.subject,
     status: failure === null ? "pass" : "fail",
     exitCode: typeof child.status === "number" ? child.status : 1,
@@ -156,12 +178,17 @@ function runPackage(record) {
     pass: counts.pass,
     fail: counts.fail,
     built: child.error === undefined && child.status !== null,
+    boundedNodeTest: invocation.boundedNodeTest,
     durationMs,
     ...(failure === null
       ? {}
       : { failureCode: failure[0], detail: failure[1] }),
     _output: output,
   };
+  process.stderr.write(
+    `[run-all-tests] END ${record.subject} (${result.status}, ${(durationMs / 1000).toFixed(1)}s)\n`,
+  );
+  return result;
 }
 
 function stablePackageRecords(inventory, policy, options) {
@@ -389,6 +416,10 @@ async function main() {
         tool: "run-all-tests",
         schemaVersion: 1,
         root: options.root,
+        controls: {
+          testConcurrency: options.testConcurrency,
+          processIsolation: "process",
+        },
         packages: selection.map((record) => record.subject),
       }, null, 2)}\n`);
     } else {
@@ -402,7 +433,7 @@ async function main() {
 
   const results = [];
   for (const record of selection) {
-    const result = runPackage(record);
+    const result = runPackage(record, options.testConcurrency);
     results.push(result);
     if (options.bail && result.status === "fail") break;
   }
@@ -437,6 +468,10 @@ async function main() {
     ok,
     root: options.root,
     scope,
+    controls: {
+      testConcurrency: options.testConcurrency,
+      processIsolation: "process",
+    },
     totals: {
       selected: selection.length,
       executed: results.length,
