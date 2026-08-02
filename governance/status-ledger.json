@@ -16,7 +16,7 @@
     },
     {
       "id": "PRODUCTION-ROTATION-NATIVE-SEAM",
-      "summary": "The root-verified durability profile is bound before rotation, but the Node host-evidence callback cannot become production authority; complete the statically linked in-process native receipt seam.",
+      "summary": "The statically linked in-process receipt seam is implemented and app-kernel-bound; return an offline-signed exact-host profile plus current platform and durability evidence before production activation.",
       "evidence": "docs/superpowers/plans/2026-08-01-beta-v1-platform-durability-release-admission.md"
     },
     {

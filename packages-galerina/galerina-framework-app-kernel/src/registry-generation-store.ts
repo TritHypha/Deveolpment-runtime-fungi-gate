@@ -9,6 +9,10 @@ import {
 import {
   PRODUCTION_ADMITTED_REGISTRY_DURABILITY_DIGESTS,
 } from "./registry-durability-admission.js";
+import {
+  isProductionRegistryDurabilityProfile,
+  type ProductionRegistryDurabilityProfile,
+} from "./registry-durability-production-admission.js";
 
 interface NodeStats {
   readonly dev: number;
@@ -41,6 +45,10 @@ interface NodePath {
   isAbsolute(path: string): boolean;
   join(...parts: string[]): string;
   resolve(path: string): string;
+}
+
+interface NodeProcess {
+  readonly execPath: string;
 }
 
 export interface VerifiedRegistryGeneration {
@@ -95,7 +103,37 @@ export interface RegistryGenerationLoadOptions {
   readonly maxBytes?: number;
 }
 
+export interface LinkedRegistryGenerationStoreOptions {
+  readonly directory: string;
+  readonly generation: RegistryGeneration;
+  readonly verify: VerifyRegistryGenerationOptions;
+  readonly durabilityProfile: ProductionRegistryDurabilityProfile;
+  readonly maxBytes?: number;
+}
+
+interface LinkedRegistryProductionHostReceipt {
+  readonly schema: "galerina.registry.production-host-result.v1";
+  readonly verdict: 1;
+  readonly reason: "NONE";
+  readonly platform: "windows" | "linux" | "macos";
+  readonly generationId: string;
+  readonly byteLength: number;
+  readonly adapterSourceSha256: string;
+  readonly hostKind: "STATIC_LINKED_NODE";
+  readonly productionAuthorizing: false;
+}
+
+interface LinkedRegistryProductionBinding {
+  publishGeneration(
+    directory: string,
+    generationId: string,
+    bytes: Uint8Array,
+  ): unknown | Promise<unknown>;
+  isReceipt(value: unknown): boolean;
+}
+
 const MAX_GENERATION_BYTES = 32 * 1_048_576;
+const MAX_LINKED_HOST_BYTES = 256 * 1_048_576;
 const ADAPTER_DIGEST = /^sha256:[0-9a-f]{64}$/;
 const ADAPTER_ID = /^galerina\.[a-z0-9]+(?:[.-][a-z0-9]+)*\.v[1-9][0-9]*$/;
 const PRODUCTION_ADMITTED_DURABILITY_ADAPTERS = new Set<string>(
@@ -106,6 +144,7 @@ const productionDurabilityAdapters = new WeakSet<object>();
 const verifiedReceipts = new WeakSet<object>();
 const durableReceipts = new WeakSet<object>();
 const productionReceipts = new WeakSet<object>();
+const linkedProductionReceipts = new WeakSet<object>();
 const forwardProbeReceipts = new WeakSet<object>();
 const dynImport = (specifier: string): Promise<unknown> =>
   (Function("s", "return import(s)") as
@@ -114,12 +153,130 @@ const dynImport = (specifier: string): Promise<unknown> =>
 async function loadNode(): Promise<{
   readonly fs: NodeFsPromises;
   readonly path: NodePath;
+  readonly process: NodeProcess & object;
 }> {
-  const [fs, path] = await Promise.all([
+  const [fs, path, processModule] = await Promise.all([
     dynImport("node:fs/promises") as Promise<NodeFsPromises>,
     dynImport("node:path") as Promise<NodePath>,
+    dynImport("node:process") as Promise<{ readonly default: NodeProcess & object }>,
   ]);
-  return { fs, path };
+  return { fs, path, process: processModule.default };
+}
+
+function hasExactFrozenDataShape(
+  value: object,
+  keys: readonly string[],
+  functionsAllowed = false,
+): boolean {
+  if (Object.getPrototypeOf(value) !== Object.prototype || !Object.isFrozen(value)) {
+    return false;
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const actual = Reflect.ownKeys(descriptors);
+  if (
+    actual.some((key) => typeof key !== "string")
+    || actual.length !== keys.length
+    || actual.map(String).sort().some((key, index) => key !== keys[index])
+  ) {
+    return false;
+  }
+  return Object.values(descriptors).every((descriptor) =>
+    descriptor.enumerable === true
+    && "value" in descriptor
+    && descriptor.get === undefined
+    && descriptor.set === undefined
+    && (functionsAllowed || typeof descriptor.value !== "function")
+  );
+}
+
+function linkedProductionBinding(
+  hostProcess: NodeProcess & object,
+): LinkedRegistryProductionBinding {
+  const descriptor = Object.getOwnPropertyDescriptor(
+    hostProcess,
+    "_galerinaLinkedBinding",
+  );
+  if (
+    descriptor === undefined
+    || descriptor.configurable !== false
+    || descriptor.enumerable !== false
+    || descriptor.writable !== false
+    || typeof descriptor.value !== "function"
+    || descriptor.get !== undefined
+    || descriptor.set !== undefined
+  ) {
+    throw new TypeError("statically linked registry host is unavailable");
+  }
+  let candidate: unknown;
+  try {
+    candidate = descriptor.value();
+  } catch {
+    throw new TypeError("statically linked registry host refused initialization");
+  }
+  if (
+    typeof candidate !== "object"
+    || candidate === null
+    || !hasExactFrozenDataShape(
+      candidate,
+      ["isReceipt", "publishGeneration"],
+      true,
+    )
+  ) {
+    throw new TypeError("statically linked registry host shape is malformed");
+  }
+  return candidate as LinkedRegistryProductionBinding;
+}
+
+async function sha256Typed(bytes: Uint8Array): Promise<string> {
+  let output: ArrayBuffer;
+  try {
+    const owned = new ArrayBuffer(bytes.byteLength);
+    new Uint8Array(owned).set(bytes);
+    output = await globalThis.crypto.subtle.digest("SHA-256", owned);
+  } catch {
+    throw new TypeError("statically linked registry host digest is unavailable");
+  }
+  return `sha256:${[...new Uint8Array(output)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+function linkedHostReceipt(
+  value: unknown,
+  expected: {
+    readonly platform: "windows" | "linux" | "macos";
+    readonly generationId: string;
+    readonly byteLength: number;
+    readonly adapterSourceSha256: string;
+  },
+): value is LinkedRegistryProductionHostReceipt {
+  if (
+    typeof value !== "object"
+    || value === null
+    || !hasExactFrozenDataShape(value, [
+      "adapterSourceSha256",
+      "byteLength",
+      "generationId",
+      "hostKind",
+      "platform",
+      "productionAuthorizing",
+      "reason",
+      "schema",
+      "verdict",
+    ])
+  ) {
+    return false;
+  }
+  const receipt = value as LinkedRegistryProductionHostReceipt;
+  return receipt.schema === "galerina.registry.production-host-result.v1"
+    && receipt.verdict === 1
+    && receipt.reason === "NONE"
+    && receipt.platform === expected.platform
+    && receipt.generationId === expected.generationId
+    && receipt.byteLength === expected.byteLength
+    && receipt.adapterSourceSha256 === expected.adapterSourceSha256
+    && receipt.hostKind === "STATIC_LINKED_NODE"
+    && receipt.productionAuthorizing === false;
 }
 
 function errorCode(error: unknown): string | undefined {
@@ -396,8 +553,11 @@ export function isProductionAdmittedRegistryGeneration(
 ): value is PersistedRegistryGeneration {
   return isPersistedRegistryGeneration(value)
     && productionReceipts.has(value)
-    && PRODUCTION_ADMITTED_DURABILITY_ADAPTERS.has(
-      value.durabilityAdapterDigest,
+    && (
+      linkedProductionReceipts.has(value)
+      || PRODUCTION_ADMITTED_DURABILITY_ADAPTERS.has(
+        value.durabilityAdapterDigest,
+      )
     );
 }
 
@@ -473,6 +633,100 @@ export async function verifyRegistryGenerationForwardProbe(
     productionAuthorizing: false as const,
   });
   forwardProbeReceipts.add(receipt);
+  return receipt;
+}
+
+export async function publishRegistryGenerationWithLinkedHost(
+  options: LinkedRegistryGenerationStoreOptions,
+): Promise<PersistedRegistryGeneration> {
+  const maxBytes = sizeBound(options.maxBytes);
+  if (!isProductionRegistryDurabilityProfile(options.durabilityProfile)) {
+    throw new TypeError("linked registry durability profile is not admitted");
+  }
+  verifyRegistryGeneration(options.generation, options.verify);
+  const canonical = registryGenerationCanonicalJson(options.generation);
+  const bytes = new TextEncoder().encode(canonical);
+  if (bytes.length < 1 || bytes.length > maxBytes) {
+    throw new TypeError("registry generation exceeds its fixed byte bound");
+  }
+  const generationId = await registryGenerationId(options.generation);
+  const profile = options.durabilityProfile;
+  if (
+    profile.generationId !== generationId
+    || profile.operationalKeyId !== options.generation.operationalKeyId
+    || profile.delegationSerial !== options.generation.delegationSerial
+    || profile.indexIssuedAt !== options.generation.index.issuedAt
+  ) {
+    throw new TypeError("linked registry generation profile identity is mismatched");
+  }
+
+  const { fs, path, process: hostProcess } = await loadNode();
+  const directory = await canonicalDirectory(fs, path, options.directory);
+  const executablePath = path.resolve(hostProcess.execPath);
+  let executableRealPath: string;
+  try {
+    executableRealPath = path.resolve(await fs.realpath(executablePath));
+  } catch {
+    throw new TypeError("statically linked registry host executable is unavailable");
+  }
+  if (!samePath(executablePath, executableRealPath)) {
+    throw new TypeError("statically linked registry host executable is indirect");
+  }
+  const executableBytes = await readBoundedRegularFile(
+    fs,
+    executablePath,
+    MAX_LINKED_HOST_BYTES,
+  );
+  if (await sha256Typed(executableBytes) !== profile.binaryDigest) {
+    throw new TypeError("statically linked registry host executable identity is mismatched");
+  }
+
+  const binding = linkedProductionBinding(hostProcess);
+  let nativeReceipt: unknown;
+  try {
+    nativeReceipt = await binding.publishGeneration(
+      directory,
+      generationId,
+      Uint8Array.from(bytes),
+    );
+  } catch {
+    throw new TypeError("statically linked registry host publication refused");
+  }
+  let branded = false;
+  let replayed = true;
+  try {
+    branded = binding.isReceipt(nativeReceipt) === true;
+    replayed = binding.isReceipt(nativeReceipt) === true;
+  } catch {
+    branded = false;
+    replayed = true;
+  }
+  if (!branded || replayed) {
+    throw new TypeError("statically linked registry host receipt brand refused");
+  }
+  if (!linkedHostReceipt(nativeReceipt, {
+    platform: profile.platform,
+    generationId,
+    byteLength: bytes.length,
+    adapterSourceSha256: profile.durabilityAdapterDigest.slice("sha256:".length),
+  })) {
+    throw new TypeError("statically linked registry host receipt identity is mismatched");
+  }
+
+  const reopened = await loadRegistryGeneration({
+    directory,
+    generationId,
+    verify: options.verify,
+    maxBytes,
+  });
+  const receipt = Object.freeze({
+    ...reopened,
+    durabilityAdapterDigest: profile.durabilityAdapterDigest,
+  });
+  verifiedReceipts.add(receipt);
+  durableReceipts.add(receipt);
+  productionReceipts.add(receipt);
+  linkedProductionReceipts.add(receipt);
   return receipt;
 }
 

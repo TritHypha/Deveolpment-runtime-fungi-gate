@@ -1,5 +1,23 @@
 # TODO
 
+### App-kernel linked production seam implementation green - 2026-08-02
+
+- **Native brand now reaches app-kernel safely:** the app-kernel requires a
+  hybrid-root-admitted private durability profile, hashes the exact running
+  executable, invokes only the non-configurable in-process binding, consumes
+  its receipt brand once and independently reopens the generation.
+- **No static allow-list or callback:** the empty production digest list stays
+  empty. Ordinary host-evidence adapters, pathname-loaded modules, copied
+  profiles and unbranded receipts cannot enter the linked production set.
+- **Fresh evidence:** registry-generation focused **10/10**; complete
+  app-kernel **206/206** across 14 suites; typecheck/build pass.
+- **Activation still external:** the earlier linked binary is not present for
+  a fresh real-host rerun. Offline-signed host admission and current platform/
+  durability receipts are still required before production rotation becomes
+  green.
+- **Report:**
+  `docs/reports/app-kernel-linked-production-seam-completion-2026-08-02.md`.
+
 ### Canonical reference `.slide` object floor green - 2026-08-02
 
 - **Real serialized object:** SLIDE now packages exact canonical GIR inside a

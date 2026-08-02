@@ -403,14 +403,16 @@ npm.cmd --prefix packages-galerina/galerina-framework-app-kernel run build
 node --test packages-galerina/galerina-framework-app-kernel/tests/registry-durability-production-admission.test.mjs
 ```
 
-- [ ] **Step 3: Implement private production composition**
+- [x] **Step 3: Implement private production composition**
 
 The hybrid-root-verified private profile and its complete identity binding are
-implemented. The remaining sub-step is intentionally not checked: no Node
-callback or pathname-loaded adapter may be upgraded into a native production
-receipt. Completion requires the statically linked in-process native-host seam;
-until then the Node generation store remains host evidence only and rotation
-fails closed before its forward probe.
+implemented. The app-kernel now invokes only the non-configurable in-process
+linked binding, re-hashes the exact running executable against the signed
+profile, consumes the native receipt brand once, checks the native adapter
+source identity, and reopens/verifies the generation before minting its private
+production-generation identity. No callback or pathname-loaded adapter can be
+upgraded into this receipt. The ordinary Node generation store remains host
+evidence only.
 
 Verify source, contract, binary, ABI, build recipe, host profile, all evidence
 digests, authority window and revocation before issuing a private brand. Do not

@@ -22,6 +22,7 @@ import {
 
 import {
   buildRegistryGeneration,
+  admitRegistryDurabilityProfile,
   createRegistryGenerationHostEvidenceAdapter,
   isPersistedRegistryGeneration,
   isProductionAdmittedRegistryGeneration,
@@ -29,11 +30,13 @@ import {
   isVerifiedRegistryGeneration,
   loadRegistryGeneration,
   persistRegistryGeneration,
+  publishRegistryGenerationWithLinkedHost,
   consumeRegistryGenerationForwardProbe,
   registryGenerationCanonicalJson,
   registryGenerationFileName,
   registryGenerationId,
   verifyRegistryGenerationForwardProbe,
+  verifyRegistryDurabilityEvidence,
   verifyRegistryGeneration,
 } from "../dist/index.js";
 
@@ -514,6 +517,150 @@ describe("content-addressed registry generation", () => {
           flushDirectory: async () => true,
         },
       }), /durability adapter is not an issued capability/);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("statically linked production generation seam", () => {
+  it("binds the exact running host, consumes its native brand once, and reopens exact bytes", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "galerina-linked-production-"));
+    try {
+      const { key, generation } = builtFixture();
+      const generationId = await registryGenerationId(generation);
+      const executableDigest = `sha256:${createHash("sha256")
+        .update(await readFile(process.execPath))
+        .digest("hex")}`;
+      const sourceDigest = `sha256:${"c".repeat(64)}`;
+      const repositoryCommit = "a".repeat(40);
+      const evidenceId = `sha256:${"1".repeat(64)}`;
+      const storageProfileDigest = `sha256:${"2".repeat(64)}`;
+      const verifiedEvidence = verifyRegistryDurabilityEvidence({
+        schema: "galerina.registry.durability.evidence.v1",
+        evidenceClass: "PRODUCTION_ADMISSION",
+        evidenceId,
+        repositoryCommit,
+        platform: "windows",
+        architecture: "x86_64",
+        operatingSystem: "windows-10",
+        filesystem: "ntfs",
+        storageProfileDigest,
+        implementationDigest: sourceDigest,
+        boundaryIds: ["DIRECTORY_BARRIER", "FILE_BARRIER", "PROCESS_TERMINATION"],
+        checks: {
+          controlledPowerLoss: "PASS",
+          controlledReboot: "PASS",
+          functionalPortability: "PASS",
+          nativeLive: "PASS",
+          processTermination: "PASS",
+          productionAdmission: "PASS",
+        },
+        authenticated: false,
+        authorityReleased: false,
+        productionAuthorizing: false,
+        verdict: 0,
+      }, {
+        expectedRepositoryCommit: repositoryCommit,
+        expectedPlatform: "windows",
+        expectedArchitecture: "x86_64",
+        expectedOperatingSystem: "windows-10",
+        requiredBoundaryIds: ["DIRECTORY_BARRIER", "FILE_BARRIER", "PROCESS_TERMINATION"],
+      });
+      const profile = admitRegistryDurabilityProfile({
+        schema: "galerina.registry.durability.production-manifest.v1",
+        adapterId: "galerina.registry.durability.windows.v1",
+        sourceDigest,
+        contractDigest: `sha256:${"4".repeat(64)}`,
+        binaryDigest: executableDigest,
+        buildRecipeDigest: `sha256:${"6".repeat(64)}`,
+        toolchainDigest: `sha256:${"7".repeat(64)}`,
+        evidenceId,
+        repositoryCommit,
+        platform: "windows",
+        architecture: "x86_64",
+        operatingSystem: "windows-10",
+        filesystem: "ntfs",
+        storageProfileDigest,
+        generationId,
+        operationalKeyId: KEY_ID,
+        delegationSerial: 2,
+        indexIssuedAt: generation.index.issuedAt,
+        acceptedCheckpointDigest: `sha256:${"8".repeat(64)}`,
+        notBefore: "2026-08-01T00:00:00.000Z",
+        notAfter: "2026-08-03T00:00:00.000Z",
+        rootSignature: {
+          algorithm: "Ed25519+ML-DSA-65",
+          keyId: "offline-root-v1",
+          ed25519Signature: "ed25519-test",
+          mlDsa65Signature: "mldsa65-test",
+          canon: "jcs",
+          context: "galerina.registry.durability.production.sig.v1",
+        },
+      }, verifiedEvidence, {
+        schema: "galerina.registry.durability.production-authority.v1",
+        expectedRootKeyId: "offline-root-v1",
+        expectedOperationalKeyId: KEY_ID,
+        at: "2026-08-02T12:00:00.000Z",
+        minDelegationSerial: 1,
+        isRevoked: () => false,
+        verifyRootEd25519: () => true,
+        verifyRootMlDsa65: () => true,
+      });
+
+      const nativeReceipts = new WeakSet();
+      const binding = Object.freeze({
+        publishGeneration: async (target, requestedId, bytes) => {
+          await writeFile(
+            join(target, registryGenerationFileName(requestedId)),
+            bytes,
+            { flag: "wx", mode: 0o444 },
+          );
+          const receipt = Object.freeze({
+            schema: "galerina.registry.production-host-result.v1",
+            verdict: 1,
+            reason: "NONE",
+            platform: "windows",
+            generationId: requestedId,
+            byteLength: bytes.length,
+            adapterSourceSha256: sourceDigest.slice("sha256:".length),
+            hostKind: "STATIC_LINKED_NODE",
+            productionAuthorizing: false,
+          });
+          nativeReceipts.add(receipt);
+          return receipt;
+        },
+        isReceipt: (receipt) => {
+          if (!nativeReceipts.has(receipt)) return false;
+          nativeReceipts.delete(receipt);
+          return true;
+        },
+      });
+      Object.defineProperty(process, "_galerinaLinkedBinding", {
+        value: Object.freeze(() => binding),
+        configurable: false,
+        enumerable: false,
+        writable: false,
+      });
+
+      const persisted = await publishRegistryGenerationWithLinkedHost({
+        directory,
+        generation,
+        verify: {
+          expectedDelegationSerial: 2,
+          publicBundle: key.publicBundle,
+          minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+        },
+        durabilityProfile: profile,
+      });
+      assert.equal(isPersistedRegistryGeneration(persisted), true);
+      assert.equal(isProductionAdmittedRegistryGeneration(persisted), true);
+      assert.equal(persisted.generationId, generationId);
+      assert.equal(persisted.durabilityAdapterDigest, sourceDigest);
+      assert.equal(
+        await readFile(join(directory, registryGenerationFileName(generationId)), "utf8"),
+        registryGenerationCanonicalJson(generation),
+      );
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
