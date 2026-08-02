@@ -1,5 +1,21 @@
 # TODO
 
+### SLIDE repository security policy closed - 2026-08-02
+
+- **Binding policy:** independent SLIDE now has root `SECURITY.md` version 1.0.
+  It applies repository-wide and defines private disclosure, authority and
+  complete admission, K3 fail-close behavior, hostile-memory/injection
+  boundaries, proposal non-authority, control reachability, mutation evidence,
+  withdrawal and narrow exclusions.
+- **Executable contract:** two policy tests first failed because the root file
+  was absent and now pass. Fresh complete SLIDE verification is **336/336**
+  across 19 suites; the V2 contract remains **16/16** and the bounded benchmark
+  verifier still reports `authorityReleased: false`.
+- **Honest remaining gate:** remote CI enforcement is not configured. The
+  detached Shape Lab evidence authority, independent semantic verifier,
+  native `.fungi` runtime and production durability remain separate open gates.
+  No accepted security risk or component-removal authority was created.
+
 ### SLIDE Shape Lab E03-E05 bounded closure - 2026-08-02
 
 - **Roadmap correction:** E03, E04 and E05 are green as completed bounded
@@ -20,7 +36,7 @@
 - **Documents:** SLIDE's E03/E04 reports, plans, README and TODO are current;
   E05 has a dedicated completion report. The roadmap now separates completed
   experiments from the still-amber authenticated-evidence review boundary.
-- **Fresh independent closure:** SLIDE 334/334 across 19 suites; V2 contract
+- **Fresh independent closure:** SLIDE 336/336 across 19 suites; V2 contract
   16 files; 20 schemas, 8 result JSON files and 7 result SVGs parse; all four
   E03-E05 evidence verifiers return internal consistency with unauthenticated
   K3 `0`.

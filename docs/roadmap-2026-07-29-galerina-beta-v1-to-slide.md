@@ -18,9 +18,18 @@ E03 and every E04 proposal remain slower than B0. E05 B1 remains
 statistically indeterminate against BA, so no VPEG-specific speed or
 production claim is made. Authentication, native `.fungi`, independent
 verification and cross-platform repetition remain separate later gates.
-Fresh closure is SLIDE 334/334 across 19 suites, the 16-file contract, 20
+Fresh closure is SLIDE 336/336 across 19 suites, the 16-file contract, 20
 schemas, 8 result JSON files, 7 SVGs and four unauthenticated K3 `0` evidence
 verifiers.
+
+Roadmap refresh: SLIDE root `SECURITY.md` policy version 1.0 is now binding
+repository-wide. It adds the owner-confirmed private reporting route,
+authority/complete-admission definitions, K3 fail-close requirements,
+hostile-memory and injection boundaries, live-control/mutation assurance,
+evidence withdrawal and narrow exclusions that cannot hide semantic forgery.
+Two executable policy-contract tests pass. Remote CI enforcement and every
+named production limitation remain open; policy text grants no runtime or
+release authority.
 
 Roadmap refresh: the production rotation wrapper now consumes a module-owned,
 one-use forward-probe receipt bound to the exact reopened generation; callers
@@ -102,7 +111,7 @@ flowchart TB
     LI["🟨 Linux adapter round two<br/>implementation complete · current Ubuntu run pending"]
     NP["🟩 Native durability profiles<br/>Windows 10/11 · Linux · macOS APFS"]
     RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
-    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 332/332 complete · UNVERIFIED"]
+    O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 336/336 complete · UNVERIFIED"]
     X["🟥 Production rotation activation<br/>ABI/source built · linked host toolchain pending"]
     F["🟨 Beta-v1 release admission<br/>verifier complete · external receipts pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
@@ -128,7 +137,8 @@ flowchart TB
     W["🟩 Shape Lab E03 complete<br/>typed boundary · value-free plan · negative speed"]
     AA["🟩 Shape Lab E04 complete<br/>99 samples · density pass · speed fail"]
     AB["🟩 Shape Lab E05 complete<br/>99 paired · B1 vs BA indeterminate"]
-    AC["🟨 Claude-08 + SEC-06 closure<br/>228/228 · self-hash K3=0"]
+    AC["🟨 Claude-08 + SEC-06 closure<br/>336/336 · self-hash K3=0"]
+    SP["🟩 SLIDE security policy v1.0<br/>repository-wide · 2/2 contract tests"]
     AD["🟩 RD-0623/0624 deep audit<br/>B1 maths · Tri-1 split · patent screen"]
     AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
     AH["🟨 NSE-Micro E11 measured<br/>3,780 checks · no speed/residency win"]
@@ -140,7 +150,7 @@ flowchart TB
     A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> I --> TG --> T --> J
     Z --> E --> SA
     G --> P
-    L --> M --> U --> V --> W --> AA --> AB --> AC --> AD --> AG
+    L --> M --> U --> V --> W --> AA --> AB --> AC --> SP --> AD --> AG
     AB --> AH
     AG --> AI --> AH --> DCTP
     AI --> DCTP --> AE --> I
@@ -159,7 +169,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AD,AG,AI,SI,O,SA,NP,RP green;
+    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,SP,AD,AG,AI,SI,O,SA,NP,RP green;
     class X red;
     class Q,AC,AH,TG,LI,F amber;
     class H,I,T,AE,AF blue;
@@ -185,8 +195,9 @@ must own that operation before rotation can become yellow or green.
 | Area | State | Evidence |
 |---|---:|---|
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
-| SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 332/332 and contract integrity is 5/5 over 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
-| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 332/332, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
+| SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.0 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal and narrow non-findings. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
+| SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 336/336 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
+| SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 336/336, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
 | V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |
@@ -245,7 +256,7 @@ must own that operation before rotation can become yellow or green.
 | Shape Lab E03 typed-boundary experiment | 🟩 | Complete bounded experiment at clean source `5e7895b...`: deterministic fixed/dynamic/indeterminate analysis, immutable value-free plans, ephemeral i32/Boolean/K3 bindings and same-implementation current-B0 byte recomputation. Seven samples × 100 operations produce 4,200 exact checks. B3 is 6.666x B0 and the renamed family is 92.344x B0, so the speed hypothesis fails and no finite break-even exists. Evidence is `sha256:4ed453f0c23e1f6e24fc1f615b7043c4e6b965f5b2696812393b10472c1ecaed`. Green means the experiment is closed; it grants no production authority |
 | Shape Lab E04 packed and learned controls | 🟩 | Complete bounded experiment at clean source `a77d761...`. Code-pinned publication dimensions require 99 samples × 100 operations and produced 29,700 exact score plus 59,400 exact artifact checks. Medians are B0 146,040 ns/op, int8 6,305, prepacked Tri-1 25,700, cold Tri-1 204,097, N0 rule 351,860, N1 int8 367,217, N1 Tri-1 386,457, prototype 357,813, energy 365,124 and cascade 408,792. Density passes; every complete proposal loses. Evidence is `sha256:7b3113b5d76ab5619a38836ddbb93848b10bc3cc05767abdfb5941e20dfb5ef0`. Green means the experiment is closed, not adopted |
 | Shape Lab E05 final matched experiment | 🟩 | Complete bounded experiment at clean source `51dd881...`. Code-pinned dimensions require 99 paired samples × 50 operations and produced 34,650 exact artifact plus 29,700 component checks. Medians are B0 479,692 ns/op, BA 454,554, B1 451,774, B2 1,876,484, N1 906,862, N2 743,706 and N3 1,847,004. B1 versus BA is indeterminate (HL −1,766.5; 95% interval −5,610 to 1,392; p=0.314879891037622408); B1 versus B0 is only a candidate under the documented extra-build/fixed-order limitation. Evidence is `sha256:70580b60cf39ed91abb4c172ef0d7af4f22b589e021f171563add81da61e7e72`; comparison `sha256:6ddb6a1226f9447188743619832bbdef516003225aa5b12ec3c3aa61973a3601`. Green means the experiment and report are closed; no VPEG-specific or production speed claim follows |
-| Shape Lab adversarial-review closure | 🟨 | Claude-08, SEC-05 and SEC-06 were adjudicated into bounded diagnostics/XML, strict typed-array admission, exact prototype/data-descriptor checks, current semantic re-derivation, universal cycle enforcement, honest receipts, hybrid-evidence schema, atlas identity/key mutation coverage, exact paired statistics and the authority-verdict correction. Current source verification is 228/228 tests, 15/15 V2 contract files, 19/19 schemas and 62/62 modules. Files may be internally consistent, but self-hash-only evidence returns K3 `0`; no evidence authority has signed it, so the lane stays amber |
+| Shape Lab adversarial-review closure | 🟨 | Claude-08, SEC-05 and SEC-06 were adjudicated into bounded diagnostics/XML, strict typed-array admission, exact prototype/data-descriptor checks, current semantic re-derivation, universal cycle enforcement, honest receipts, hybrid-evidence schema, atlas identity/key mutation coverage, exact paired statistics and the authority-verdict correction. Current source verification is 336/336 tests and 16/16 V2 contract files. Files may be internally consistent, but self-hash-only evidence returns K3 `0`; no evidence authority has signed it, so the lane stays amber |
 | External flat `.fungi` candidate lane | 🟨 | Four direct-peer candidates pass the per-file strict frontend. The staging audit now requires complete dossiers and has 10/10 controls. GPU/native/Wasm status, vectors and plans exist; their report builders now preserve diagnostics and fail closed on impossible array misses or unknown enum states. All still lack executable parity and governed admission. Substrate Math is reference-only. Nothing has been copied or admitted |
 | RD-0634 through RD-0638 AI-research5 adjudication | 🟩 | Current B1 is mechanism-equivalent to BA and remains an exact-atlas/null control; typed-hole VPEG needs a BA-miss/VPEG-hit fixture. Current N3 is additive assurance work and not a fast path. Patent separation remains technical rather than legal clearance; independent translation validation is the next D1 direction. E11 retains all proposed controls and uses corrected E04 timings |
 | RD-0639 through RD-0641 learned-compiler/TVM prior art | 🟩 | Primary LLVM/Apache TVM sources confirm learned heuristics, ranking-plus-measurement and fixed-width store features are established. Adopt only as bounded Shape Lab comparators: frozen proposal identity, secret-reduced features, explicit budgets, deterministic D1 re-admission and total-path cost. No external tuner, prediction or hardware timing receives semantic authority |
