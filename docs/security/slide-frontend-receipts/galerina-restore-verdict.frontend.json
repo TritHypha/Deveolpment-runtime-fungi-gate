@@ -1,0 +1,58 @@
+{
+  "schema": "galerina.slide.checked-decision-frontend.v1",
+  "frontendId": "@galerina/core-compiler",
+  "frontendVersion": "1.0.0-beta.2",
+  "languageEdition": 1,
+  "packageId": "@galerina/core-sentinel-state",
+  "profileId": "galerina.package.restore-verdict.v1",
+  "sourceNormalization": "UTF8_LF_V1",
+  "sourceByteLength": 1637,
+  "sourceDigest": "5040e0b1ff890f602b8629f6205cee95f4236c502a446579f9184f27d22cf996",
+  "flowName": "restoreVerdict",
+  "parameters": [
+    {
+      "index": 0,
+      "name": "snapshotPresent",
+      "typeName": "Bool"
+    },
+    {
+      "index": 1,
+      "name": "integrityOk",
+      "typeName": "Bool"
+    }
+  ],
+  "returnType": "Int",
+  "k3Sensitive": false,
+  "semanticTokenDigest": "90309269a864962421f8d75fd9f84933aa9c422e2dd7cb967f4270b6c1a9990a",
+  "mappings": [
+    {
+      "instructionId": 0,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 1536,
+      "endByte": 1580
+    },
+    {
+      "instructionId": 1,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 1583,
+      "endByte": 1623
+    },
+    {
+      "instructionId": 2,
+      "kind": "BOOLEAN_ALLOW",
+      "startByte": 1626,
+      "endByte": 1634
+    }
+  ],
+  "decisionGraphCanonical": "[\"BOOLEAN_ALL\",[0,1],1,-1]",
+  "decisionGraphDigest": "0f500db3c6f76bb849f4ba71eb3927d21f248cdf0e0e246af639c9663c9a607a",
+  "instructionCount": 3,
+  "diagnosticDigest": "a6a86c389af663aac2bd28e693aba7f46465dff21300bad06afdd9c9391b382e",
+  "memoryPlanDigest": "2bbd18a3a7b8563be53806d223b89e16449151af1cdd822c608e97a5e626851b",
+  "effectPlanDigest": "0f6f30c35c50c1c8253d6f279b111c8fa42612cbfd19f116217656f552447619",
+  "failurePlanDigest": "7ebd70e8660f90c93a7d5e16e831f2496b819492fcb79c4ff1177c70abdb7655",
+  "capabilityPlanDigest": "94aefe3b1fbbb5445ccb47a63260fea61e4fbc99f688ee1be3ec19e9764de433",
+  "producerGIRDigest": "d4ed4841f0d6a8806bb3354afaf32b8eb430702e19fc86086a018f2f13ba2fbc",
+  "deterministic": true,
+  "referenceOnly": true
+}

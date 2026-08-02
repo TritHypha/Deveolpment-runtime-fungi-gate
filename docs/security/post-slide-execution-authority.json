@@ -1,6 +1,29 @@
 {
   "schemaVersion": 2,
-  "candidates": [],
+  "candidates": [
+    {
+      "path": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
+      "ownerPackage": "galerina-core-sentinel-state",
+      "tranche": "T2-runtime-core",
+      "profileId": "galerina.package.restore-verdict.v1",
+      "state": "candidate",
+      "sourceSha256": "5040e0b1ff890f602b8629f6205cee95f4236c502a446579f9184f27d22cf996",
+      "graphSha256": "0f500db3c6f76bb849f4ba71eb3927d21f248cdf0e0e246af639c9663c9a607a",
+      "evidencePath": "docs/security/slide-frontend-receipts/galerina-restore-verdict.frontend.json",
+      "evidenceSha256": "ed87224ca519dc35f259e73c5ad38852ceaa3ac2841f285495f8a9736d4316a9"
+    },
+    {
+      "path": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/registry-durability-production-admission.fungi",
+      "ownerPackage": "galerina-framework-app-kernel",
+      "tranche": "T1-trust-root",
+      "profileId": "galerina.package.registry-durability-admission.v1",
+      "state": "candidate",
+      "sourceSha256": "3f8e1aac230aab1b390f080d3b4cc06d99e29ab362d9a684a1c3a57bc3a2d873",
+      "graphSha256": "8d0caca5a6eed4a71e1b6cece16386c94982b70e4b6983f1a21506cf418c95ab",
+      "evidencePath": "docs/security/slide-frontend-receipts/galerina-registry-durability-admission.frontend.json",
+      "evidenceSha256": "0e7e3719a0a4b4972edc453d2240890efcfb846bdd083115d740be23566931dc"
+    }
+  ],
   "fungiSources": [],
   "hostBridges": []
 }

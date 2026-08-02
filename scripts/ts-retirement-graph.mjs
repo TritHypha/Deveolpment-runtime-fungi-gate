@@ -108,6 +108,16 @@ const SOURCE_CANDIDATE_FIELDS = new Set([
   "path", "ownerPackage", "tranche", "profileId", "state",
   "sourceSha256", "graphSha256", "evidencePath", "evidenceSha256",
 ]);
+const CHECKED_DECISION_RECEIPT_FIELDS = new Set([
+  "schema", "frontendId", "frontendVersion", "languageEdition", "packageId",
+  "profileId", "sourceNormalization", "sourceByteLength", "sourceDigest",
+  "flowName", "parameters", "returnType", "k3Sensitive",
+  "semanticTokenDigest", "mappings", "decisionGraphCanonical",
+  "decisionGraphDigest", "instructionCount", "diagnosticDigest",
+  "memoryPlanDigest", "effectPlanDigest", "failurePlanDigest",
+  "capabilityPlanDigest", "producerGIRDigest", "deterministic",
+  "referenceOnly",
+]);
 const HOST_SOURCE_EXTENSION = /\.(?:[cm]?[jt]s|rs|fungi)$/;
 const HOST_BOUNDARY_PATTERN = /(?:\bnode:(?:fs|net|tls|dgram|child_process|os|crypto|worker_threads)\b|\bprocess\.(?:env|argv|cwd|platform|exit)\b|\b(?:dlopen|process\.dlopen|node-gyp)\b|\.node["']|\bnative\.call\b|\bstd::(?:fs|net|process)\b)/;
 
@@ -131,6 +141,54 @@ function isRuntimeHostCandidate(path) {
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function canonicalFungiSource(bytes, label, violations) {
+  try {
+    const decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    const normalized = decoded.replaceAll("\r\n", "\n");
+    if (normalized.includes("\r")) {
+      violations.push(`${label} contains a bare carriage return`);
+      return null;
+    }
+    return Buffer.from(normalized, "utf8");
+  } catch (error) {
+    violations.push(`${label} is not canonical UTF-8: ${error.message}`);
+    return null;
+  }
+}
+
+function checkedDecisionCandidateReceipt(bytes, label, violations) {
+  let text;
+  let receipt;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    receipt = JSON.parse(text);
+  } catch (error) {
+    violations.push(`${label} is not a checked-decision JSON receipt: ${error.message}`);
+    return null;
+  }
+  if (text !== `${JSON.stringify(receipt, null, 2)}\n`) {
+    violations.push(`${label} is not exact canonical JSON`);
+    return null;
+  }
+  if (
+    receipt === null
+    || typeof receipt !== "object"
+    || Array.isArray(receipt)
+    || !exactFields(receipt, CHECKED_DECISION_RECEIPT_FIELDS)
+    || receipt.schema !== "galerina.slide.checked-decision-frontend.v1"
+    || receipt.frontendId !== "@galerina/core-compiler"
+    || receipt.languageEdition !== 1
+    || receipt.sourceNormalization !== "UTF8_LF_V1"
+    || receipt.returnType !== "Int"
+    || receipt.deterministic !== true
+    || receipt.referenceOnly !== true
+  ) {
+    violations.push(`${label} has an unknown or malformed checked-decision schema`);
+    return null;
+  }
+  return receipt;
 }
 
 function packageOf(path) {
@@ -367,7 +425,13 @@ function loadPostSlideAuthority(root, tracked, fungiPaths) {
         violations,
         AUTHORITY_ARTIFACT_MAX_BYTES,
       );
-      if (sourceBytes !== null && sha256(sourceBytes) !== entry.sourceSha256) {
+      const canonicalSource = sourceBytes === null
+        ? null
+        : canonicalFungiSource(sourceBytes, `${label} source`, violations);
+      if (
+        canonicalSource !== null
+        && sha256(canonicalSource) !== entry.sourceSha256
+      ) {
         violations.push(`${label} source digest does not match ${path}`);
       }
       if (
@@ -377,6 +441,24 @@ function loadPostSlideAuthority(root, tracked, fungiPaths) {
         violations.push(
           `${label} evidence digest does not match ${evidencePath}`,
         );
+      }
+      const receipt = evidenceBytes === null
+        ? null
+        : checkedDecisionCandidateReceipt(
+          evidenceBytes,
+          `${label} evidence`,
+          violations,
+        );
+      if (
+        receipt !== null
+        && (
+          receipt.packageId !== `@galerina/${entry.ownerPackage.replace(/^galerina-/, "")}`
+          || receipt.profileId !== entry.profileId
+          || receipt.sourceDigest !== entry.sourceSha256
+          || receipt.decisionGraphDigest !== entry.graphSha256
+        )
+      ) {
+        violations.push(`${label} evidence does not bind the ledger identity`);
       }
       if (violations.length === violationStart) admitted.add(path);
     }

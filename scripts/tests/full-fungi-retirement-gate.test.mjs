@@ -73,14 +73,46 @@ function sha256(content) {
   return createHash("sha256").update(content).digest("hex");
 }
 
-function postSlideFixture({ authorizeFungi = true, candidateFungi = false } = {}) {
+function postSlideFixture({
+  authorizeFungi = true,
+  candidateFungi = false,
+  crlfSource = false,
+} = {}) {
   const root = mkdtempSync(join(tmpdir(), "full-fungi-post-slide-"));
   const source = "pure flow value() -> Int { return 1 }\n";
-  const evidence = "verified execution evidence\n";
+  const storedSource = crlfSource ? source.replaceAll("\n", "\r\n") : source;
+  const evidence = `${JSON.stringify({
+    schema: "galerina.slide.checked-decision-frontend.v1",
+    frontendId: "@galerina/core-compiler",
+    frontendVersion: "1.0.0-beta.2",
+    languageEdition: 1,
+    packageId: "@galerina/core",
+    profileId: "galerina.package.test.v1",
+    sourceNormalization: "UTF8_LF_V1",
+    sourceByteLength: Buffer.byteLength(source),
+    sourceDigest: sha256(source),
+    flowName: "value",
+    parameters: [{ index: 0, name: "admitted", typeName: "Bool" }],
+    returnType: "Int",
+    k3Sensitive: false,
+    semanticTokenDigest: "b".repeat(64),
+    mappings: [{ instructionId: 0, kind: "BOOLEAN_ALLOW", startByte: 0, endByte: 1 }],
+    decisionGraphCanonical: "[\"BOOLEAN_ALL\",[0],1,-1]",
+    decisionGraphDigest: "a".repeat(64),
+    instructionCount: 1,
+    diagnosticDigest: "c".repeat(64),
+    memoryPlanDigest: "d".repeat(64),
+    effectPlanDigest: "e".repeat(64),
+    failurePlanDigest: "f".repeat(64),
+    capabilityPlanDigest: "1".repeat(64),
+    producerGIRDigest: "2".repeat(64),
+    deterministic: true,
+    referenceOnly: true,
+  }, null, 2)}\n`;
   write(
     root,
     "packages-galerina/galerina-core/src/index.fungi",
-    source,
+    storedSource,
   );
   write(
     root,
@@ -253,6 +285,26 @@ test("post-SLIDE records an exact candidate without counting it as executed", ()
     assert.equal(evidence.totals.executedFungi, 0);
     assert.equal(evidence.totals.unexecutedFungi, 1);
     assert.equal(evidence.postSlideReady, false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("post-SLIDE candidate identity is stable across an admitted CRLF checkout", () => {
+  const root = postSlideFixture({
+    authorizeFungi: false,
+    candidateFungi: true,
+    crlfSource: true,
+  });
+  try {
+    const result = run(root, ["--post-slide", "--json"]);
+    assert.notEqual(result.status, 0);
+    const evidence = JSON.parse(result.stdout);
+    assert.equal(evidence.totals.candidateFungi, 1);
+    assert.equal(evidence.totals.executedFungi, 0);
+    assert.ok(!evidence.postSlideViolations.some(
+      (item) => item.includes("source digest does not match"),
+    ));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

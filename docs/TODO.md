@@ -1,5 +1,49 @@
 # TODO
 
+### Restart checkpoint - 2026-08-02
+
+- The compiler-derived checked-decision implementation and documentation are
+  complete and locally committed in SLIDE; KB adjudication RD-0667 is also
+  committed. Galerina's corresponding ledger/docs/generator changes are ready
+  for the local commit below.
+- Fresh evidence before the requested computer restart: SLIDE 379/379 across
+  27 suites; V2 contract 16/16; Galerina focused strict/exporter/retirement
+  evidence 18/18; retirement self-test 12/12; live ledger 2 candidates, 0
+  executed, 110 unexecuted; direct graph check 5/5 and code-index check pass.
+- The first governed phase-close found only generated `graph:all` and
+  `code-index` drift. Both were regenerated and their direct checks pass. The
+  confirmation phase-close was manually stopped at the owner's restart request
+  while running `graph:all --check`; it had emitted no failure summary.
+- **Resume command:** `npm.cmd run phase-close`. If green, run
+  `npm.cmd run phase-close:exhaustive`, update the fixed-point counts if they
+  changed, and commit only any reproducible generator output. Do not infer a
+  pass from the interrupted run.
+
+### Bounded compiler-derived Galerina -> SLIDE switch green - 2026-08-02
+
+- **Owner architecture decision implemented:** Galerina's real compiler emits a
+  canonical checked-decision receipt; SLIDE independently tokenizes and parses
+  the admitted source subset, re-derives maps/graphs/plans, requires exact
+  agreement, and only then executes through an eight-gate affine VOK lease.
+- **Reusable, not allow-listed:** two real package decisions plus one synthetic
+  three-input decision pass without a registered source/profile table. Focused
+  cross-repository evidence is **21/21**, covering **196** real semantic vectors,
+  8 synthetic vectors, every VOK gate in deny/unknown states, mutation, hostile
+  memory, copied handles and affine replay. Refusal has no fallback.
+- **Candidate ledger advanced safely:** the two real receipts are copied as
+  exact tracked evidence into schema v2. The audit validates canonical receipt
+  shape and cross-binds package, profile, canonical source and graph identity.
+  `UTF8_LF_V1` keeps candidate source identity stable across Windows and Linux;
+  evidence bytes remain exact and LF-pinned.
+- **Authority remains closed:** candidates are not executed-source authority.
+  The opaque producer GIR fact is bound but unauthenticated; native object
+  identity, producer authentication and the production cryptographic receipt
+  verifier remain required. Current ledger counts are 2 candidates, 0 executed
+  and 110 unexecuted `.fungi` sources.
+- **Next dependency:** widen the checked-decision grammar/package corpus where
+  useful, then build the independent production receipt verifier and native
+  object binding before promoting any candidate.
+
 ### RD-0661 patent-trigger review integrated - 2026-08-02
 
 - **Verified trigger:** `galerina-ai-neuromorphic` contains spike/event records,
@@ -80,20 +124,20 @@
   and typed terminal receipt. Focused evidence is 25/25; complete SLIDE is
   367/367. Source/receipt/body mutation, evidence substitution, hostile intake,
   gate deny/unknown, replay and exhausted budgets refuse with no fallback.
-- **Why integration remains blue:** G4 is a frozen compiler conformance fixture
-  and the runtime is reference-only. It is not an ordinary/K3 package pair,
-  producer authentication, native execution or production ledger authority.
-  The general checked-source frontend remains the next dependency.
+- **Superseded integration gap:** G4 remains a frozen compiler fixture, but the
+  later compiler-derived checked-decision switch now closes the reusable
+  ordinary/K3 frontend condition. Production authentication, native execution
+  and ledger authority remain separate and open.
 - **Real-source floor added:** canonical Git-blob identities for
   `core-sentinel-state` `restoreVerdict` and `framework-app-kernel`
   `registryDurabilityProductionAdmission` now execute through VOK. Both source
   files pass strict checking with zero diagnostics; SLIDE passes 4/4 focused
   tests covering 4 ordinary plus 192 exhaustive K3/Boolean vectors. VOK
   evidence and terminal transcripts bind the exact executable graph digest.
-- **Remaining receipt gap:** those real-source profiles are reference-only and
-  do not yet bind a complete independently verified frontend receipt or
-  instruction-total mapping. They cannot populate the production ledger,
-  authorize retirement or turn the integration tile green.
+- **Receipt gap closed at reference level:** the real profiles now bind complete
+  canonical frontend receipts, independently re-derived maps/graphs/plans and
+  typed VOK terminal receipts. They remain reference-only candidates and cannot
+  populate the production lane or authorize retirement.
 - **Ledger authority corrected:** schema v2 now separates exact, digest-checked
   `candidates` from production `fungiSources` and `hostBridges`. A candidate is
   never subtracted from execution debt. Both production arrays fail closed
@@ -103,10 +147,10 @@
   `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **494** tracked package TypeScript paths,
-  **109** unexecuted production `.fungi` sources, **36** unowned production
+  **110** unexecuted production `.fungi` sources, **36** unowned production
   host boundaries, **95** package-local `node_modules` trees and **1** nested
-  package identity. The execution-authority ledger remains deliberately empty:
-  zero candidates, zero executed sources and zero owned bridges.
+  package identity. The execution-authority ledger contains two exact
+  non-authorizing candidates, zero executed sources and zero owned bridges.
 - **Gate integrity freshly verified:** `audit:retirement:selftest` passes
   **11/11 top-level adversarial tests**. It refuses hidden or
   moved TypeScript, unexecuted Fungi, nested packages, dependency forests,
@@ -124,9 +168,10 @@
   has no Wasm, walker, Node, cache or driver fallback.
 - **Workstream visibility:** (1) execution switch: bounded G4 receipt floor and
   registered real-source decision floor verified, reusable checked-source
-  switch not admitted; (2) ledger: schema-v2 candidate isolation is verified,
-  the production cryptographic receipt verifier remains to build, 109 Fungi
-  entries are required and all arrays are empty; (3) conversion: 494
+  switch verified as a bounded reference; (2) ledger: schema-v2 candidate
+  isolation is verified, the production cryptographic receipt verifier remains
+  to build, 110 Fungi entries are required, two are candidates and zero are
+  executed; (3) conversion: 494
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
   identity remain; (6) terminal admission: refused until all five predecessor

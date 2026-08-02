@@ -1,0 +1,119 @@
+{
+  "schema": "galerina.slide.checked-decision-frontend.v1",
+  "frontendId": "@galerina/core-compiler",
+  "frontendVersion": "1.0.0-beta.2",
+  "languageEdition": 1,
+  "packageId": "@galerina/framework-app-kernel",
+  "profileId": "galerina.package.registry-durability-admission.v1",
+  "sourceNormalization": "UTF8_LF_V1",
+  "sourceByteLength": 1157,
+  "sourceDigest": "3f8e1aac230aab1b390f080d3b4cc06d99e29ab362d9a684a1c3a57bc3a2d873",
+  "flowName": "registryDurabilityProductionAdmission",
+  "parameters": [
+    {
+      "index": 0,
+      "name": "evidenceVerdict",
+      "typeName": "Verdict"
+    },
+    {
+      "index": 1,
+      "name": "evidenceComplete",
+      "typeName": "Bool"
+    },
+    {
+      "index": 2,
+      "name": "identitiesMatch",
+      "typeName": "Bool"
+    },
+    {
+      "index": 3,
+      "name": "authorityActive",
+      "typeName": "Bool"
+    },
+    {
+      "index": 4,
+      "name": "authorityRevoked",
+      "typeName": "Bool"
+    },
+    {
+      "index": 5,
+      "name": "ed25519Verified",
+      "typeName": "Bool"
+    },
+    {
+      "index": 6,
+      "name": "mlDsa65Verified",
+      "typeName": "Bool"
+    }
+  ],
+  "returnType": "Int",
+  "k3Sensitive": true,
+  "semanticTokenDigest": "eb0404eb98db01aaad53c45bc1af6fdc1b7562da25af3efc06688fdd0c8f2170",
+  "mappings": [
+    {
+      "instructionId": 0,
+      "kind": "K3_DENY",
+      "startByte": 674,
+      "endByte": 722
+    },
+    {
+      "instructionId": 1,
+      "kind": "K3_AMBIG",
+      "startByte": 736,
+      "endByte": 746
+    },
+    {
+      "instructionId": 2,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 763,
+      "endByte": 819
+    },
+    {
+      "instructionId": 3,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 826,
+      "endByte": 881
+    },
+    {
+      "instructionId": 4,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 888,
+      "endByte": 943
+    },
+    {
+      "instructionId": 5,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 950,
+      "endByte": 1005
+    },
+    {
+      "instructionId": 6,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 1012,
+      "endByte": 1067
+    },
+    {
+      "instructionId": 7,
+      "kind": "BOOLEAN_GUARD",
+      "startByte": 1074,
+      "endByte": 1129
+    },
+    {
+      "instructionId": 8,
+      "kind": "K3_ALLOW",
+      "startByte": 1136,
+      "endByte": 1144
+    }
+  ],
+  "decisionGraphCanonical": "[\"K3_GUARD_BOOLEAN_ALL\",0,[1,2,3,5,6],[4],1,0,-1]",
+  "decisionGraphDigest": "8d0caca5a6eed4a71e1b6cece16386c94982b70e4b6983f1a21506cf418c95ab",
+  "instructionCount": 9,
+  "diagnosticDigest": "a6a86c389af663aac2bd28e693aba7f46465dff21300bad06afdd9c9391b382e",
+  "memoryPlanDigest": "2bbd18a3a7b8563be53806d223b89e16449151af1cdd822c608e97a5e626851b",
+  "effectPlanDigest": "0f6f30c35c50c1c8253d6f279b111c8fa42612cbfd19f116217656f552447619",
+  "failurePlanDigest": "7ebd70e8660f90c93a7d5e16e831f2496b819492fcb79c4ff1177c70abdb7655",
+  "capabilityPlanDigest": "94aefe3b1fbbb5445ccb47a63260fea61e4fbc99f688ee1be3ec19e9764de433",
+  "producerGIRDigest": "04fb831fead6b47891139bd00184d4d26c3847f2af1c197a01e216e137b0500a",
+  "deterministic": true,
+  "referenceOnly": true
+}

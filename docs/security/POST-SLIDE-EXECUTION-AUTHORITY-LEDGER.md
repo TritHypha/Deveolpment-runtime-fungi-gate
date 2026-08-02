@@ -16,6 +16,12 @@ gate re-reads regular non-symlink files, re-derives both file digests and checks
 path containment, ownership, schema closure and duplicate identity. A valid
 candidate remains counted among `unexecutedFungi`.
 
+The source digest is over explicit `UTF8_LF_V1` bytes: malformed UTF-8 and bare
+carriage returns refuse, while a CRLF checkout is normalized to LF before
+hashing. This keeps one source identity across admitted Windows, macOS and Linux
+checkouts without accepting ambiguous text. Evidence artifacts remain exact
+byte-for-byte hashes and are never newline-normalized.
+
 The ledger is limited to 1 MiB and must be exact canonical UTF-8 JSON. Duplicate
 keys, alternative whitespace/key order, invalid UTF-8, symlinks and oversized
 input refuse before semantic validation. Each candidate source and evidence
@@ -53,9 +59,11 @@ driver or reference-interpreter fallback after refusal.
 
 ## Current measured state
 
-The tracked ledger contains zero candidates, zero production sources and zero
-production host bridges. The live post-SLIDE audit therefore remains red with
-494 tracked package TypeScript paths, 109 unexecuted `.fungi` sources, 36
+The tracked ledger contains two exact checked-decision candidates, zero
+production sources and zero production host bridges. Candidate receipt shape
+and its package/profile/source/graph bindings are re-verified, but candidate
+status remains non-authorizing. The live post-SLIDE audit therefore remains red
+with 494 tracked package TypeScript paths, 110 unexecuted `.fungi` sources, 36
 unowned host boundaries, 95 package-local `node_modules` trees and one nested
 package identity. Those are debts, not exemptions.
 

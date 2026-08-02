@@ -7,17 +7,25 @@ package lane **98/98** with **8,831** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Restart checkpoint: the checked-decision integration and its focused evidence
+are green. Generated graph/code-index drift was repaired and direct checks pass.
+The post-repair governed phase-close confirmation was stopped on the owner's
+restart request while still running; rerun phase-close then exhaustive before
+claiming a new Galerina whole-repository fixed point.
+
 Roadmap refresh: the execution-switch and terminal-retirement boundaries were
 reconciled against the live gate on 2026-08-02. The terminal verifier itself
 is implemented and green (**11/11 top-level adversarial tests**;
 historical focused checkpoint 16/16). Terminal retirement admission is a
 separate red state because current exact debt is 494 tracked package `.ts`
-paths, 109 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
+paths, 110 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
 package-local `node_modules` trees and one nested package. The authority ledger
-is empty. Schema v2 now isolates digest-checked, non-authorizing candidates and
+contains two non-authorizing candidates and zero production entries. Schema v2
+now isolates digest-checked candidates and
 refuses every production source or bridge entry until a typed cryptographic
-receipt verifier exists. Admission requires the reusable Galerina -> SLIDE/VOK package switch
-first, followed by dependency-ordered package retirement; no exception,
+receipt verifier exists. The bounded reusable Galerina -> SLIDE/VOK decision
+switch is green; production admission and dependency-ordered package retirement
+remain next. No exception,
 fallback or renamed debt is permitted.
 
 Roadmap refresh: the benchmark publication model now explains every workload
@@ -186,9 +194,9 @@ flowchart TB
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
     RV["🟩 Retirement verifier implemented<br/>11/11 top-level adversarial<br/>schema-v2 false-authority closure"]
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
-    RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · reference-only"]
-    I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
-    AL["🟦 .fungi admission ledger<br/>schema-v2 candidates isolated<br/>production receipt verifier open"]
+    RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · differential oracle"]
+    I["🟩 Galerina → SLIDE integration<br/>compiler-derived decision switch<br/>21/21 · reference-only"]
+    AL["🟦 .fungi admission ledger<br/>2 candidates · 0 production<br/>receipt verifier open"]
     T["🟦 Package conversion<br/>494 tracked package .ts → 0"]
     HB["🟦 Host-boundary ownership<br/>36 detected boundaries → 0 unowned"]
     FD["🟦 Flat dependency tooling<br/>95 node_modules + 1 nested identity → 0"]
@@ -237,10 +245,10 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP green;
+    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I green;
     class X,TG red;
     class Q,AC,LI,F,AT amber;
-    class H,I,AL,T,HB,FD,AE,AF blue;
+    class H,AL,T,HB,FD,AE,AF blue;
     class P green;
     class J grey;
     class AR green;
@@ -261,13 +269,14 @@ and `authorityReleased: false` cannot populate the production ledger or retire
 a package. General checked-source plus ordinary and K3-sensitive real-package
 profiles remain the integration condition.
 
-The registered real-source floor closes the source-identity/execution half of
-that condition without overstating it. Exact canonical sources from
-`core-sentinel-state` and `framework-app-kernel` execute all 4 ordinary and
-192 K3/Boolean vectors through VOK. Their source identity and execution are
-green, but they do not yet carry the independently re-derived frontend
-receipt and instruction-total mapping that G4 has. The reusable integration
-tile therefore remains blue and the production ledger remains empty.
+The compiler-derived checked-decision switch closes the bounded reusable
+integration condition. Exact canonical sources from `core-sentinel-state` and
+`framework-app-kernel`, plus an unregistered synthetic shape, are independently
+tokenized and mapped by SLIDE before all 4 ordinary, 192 K3/Boolean and 8
+synthetic vectors execute through VOK. The integration tile is green only for
+this bounded reference contract. The two ledger candidates remain unexecuted;
+producer authentication, native object identity and the production receipt
+verifier remain blue.
 
 The diagram is dependency-ordered, not a claim that all research waits for the
 release path. Galerina's repository-local functional fixed point is green. The
@@ -295,8 +304,8 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 11/11 top-level adversarial tests; schema-v2 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟦 | G4 source/receipt/V2-D/VOK passes 25/25; exact ordinary and K3 real-package source profiles pass 4/4 across 196 semantic vectors; complete SLIDE is 367/367. The real profiles still lack independently verified frontend receipts and remain reference-only | Both real-package profiles complete checked-source → SLIDE → VOK → typed-receipt positive and hostile paths with no fallback |
-| 2 | `.fungi` admission ledger | 🟦 | Schema v2 isolates exact non-authorizing candidates; plain text and source-only readiness cannot promote authority. Zero candidates and zero production entries are tracked; 109 production `.fungi` sources still require admission | Implement the typed cryptographic execution/ownership receipt verifier, then admit every production source with independently re-derived source, graph, frontend, VOK, platform, signature and provenance facts |
+| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived receipts plus independent SLIDE token/map/graph/plan derivation pass 21/21. Two real profiles cover 196 vectors and a third unregistered shape covers 8; VOK is affine and refusal has no fallback. This is reference-only | Keep the bounded switch green while widening admitted package semantics; production promotion stays in row 2 |
+| 2 | `.fungi` admission ledger | 🟦 | Schema v2 validates and cross-binds 2 exact non-authorizing frontend-receipt candidates; plain text and source-only readiness cannot promote authority. Zero production entries are tracked; 110 production `.fungi` sources still require admission | Implement the typed cryptographic execution/ownership receipt verifier, then admit every production source with independently re-derived source, graph, frontend, VOK, platform, signature and provenance facts |
 | 3 | Package conversion | 🟦 | 494 tracked package TypeScript paths remain | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary ownership | 🟦 | 36 detected production host boundaries are unowned | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit replacement or retention decision |
 | 5 | Flat dependency tooling | 🟦 | 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero package-local dependency trees and zero nested package identities |
@@ -345,7 +354,7 @@ table is navigation, not authority.
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **11/11 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v2 separates non-authorizing candidates, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
-| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. Clear dependency-first: Galerina→SLIDE execution switch → exact `.fungi` admission ledger → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 494 tracked package `.ts` paths, 109 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains zero candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
+| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 494 tracked package `.ts` paths, 110 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -463,7 +472,7 @@ The remaining sequence is:
    `.fungi`/SLIDE execution. The current retirement-graph ratchets are **480**
    implementation `.ts` files and **494** tracked package `.ts` paths: 28
    twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 339 governed
-   migration-program paths, plus 109 unexecuted `.fungi` sources, 36 unowned
+   migration-program paths, plus 110 unexecuted `.fungi` sources, 36 unowned
    host boundaries, one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
    without hiding, renaming or exempting a member.

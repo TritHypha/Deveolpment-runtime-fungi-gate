@@ -27,6 +27,9 @@ packages-galerina/galerina-registry/registry-index-v2.json text eol=lf
 docs/platform-handover/ubuntu-desktop/reports/*.receipt.json text eol=lf
 docs/platform-handover/ubuntu-desktop/reports/*.slide-platform.json text eol=lf
 
+# Checked-decision frontend receipts are exact-byte evidence artifacts.
+docs/security/slide-frontend-receipts/*.frontend.json text eol=lf
+
 # ── Benchmark result artifacts (written LF by the runner/snapshot scripts). Pin eol=lf so the committed
 #    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
 #    autocrlf; a saved run then diffs cleanly and the NEXT benchmark's real change is visible against it.
