@@ -1,5 +1,32 @@
 # TODO
 
+### Beta-v1 cryptographic release admission - 2026-08-02
+
+- **Implementation green:** policy v2, canonical hybrid envelopes, exact
+  two-role root delegation, closed durability/repository predicates and the
+  offline signer are implemented. Focused release/platform evidence passed
+  **43/43** before the delegation-signing CLI case was added; its complete
+  focused suite is included in the current fixed-point run.
+- **Removed trust shortcut:** durability and repository authority no longer
+  comes from `authenticated: true`, `PASS`, counters or other claimed
+  Booleans. Both Ed25519 and ML-DSA-65, role context, serial, time, revocation,
+  exact predicate and independently re-derived provenance must agree.
+- **Current state remains K3 `0`:** the tracked policy deliberately contains
+  zero digest placeholders and names absent operational public keys and a
+  missing root-signed delegation. This is the correct pre-ceremony state, not
+  an implementation failure.
+- **External work still required:** collect all seven exact current-commit
+  functional receipts; collect controlled reboot and controlled power-loss
+  durability artefacts on approved hosts; produce the complete repository
+  fixed point; then run the later offline ceremony.
+- **Owner action now:** none for signing. Keep root private material offline.
+  The present/future command split is in
+  `docs/security/BETA-V1-RELEASE-EVIDENCE-SIGNING-WALKTHROUGH.md`.
+- **Activation rule:** only public ceremony outputs return online. Replace the
+  matching policy placeholders from independently computed hashes, commit the
+  public fixed point, and require `beta-v1-release-admission.mjs` to derive
+  `ADMITTED`; never hand-edit a green receipt.
+
 ### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
 
 - **Current owner priority:** close the reusable, fail-closed per-package

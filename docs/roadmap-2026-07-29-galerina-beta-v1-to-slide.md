@@ -167,7 +167,7 @@ flowchart TB
     RP["🟩 Recovery experiment protocol<br/>debug-only · 6/6 · no power API"]
     O["🟩 Bounded SLIDE platform observer<br/>17/17 focused · 347/347 complete · UNVERIFIED"]
     X["🟨 Production rotation activation<br/>linked candidate built · app-kernel admission pending"]
-    F["🟨 Beta-v1 release admission<br/>verifier complete · external receipts pending"]
+    F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
@@ -237,8 +237,11 @@ flowchart TB
 The diagram is dependency-ordered, not a claim that all research waits for the
 release path. Galerina's repository-local functional fixed point is green. The
 beta release verifier is implemented and therefore yellow while its seven exact
-current-commit platform receipts and authenticated durability composition are
-absent. Native Windows/Linux/macOS candidates and the safe recovery protocol
+current-commit platform receipts, controlled recovery evidence and offline
+release-evidence ceremony are absent. Policy v2 no longer trusts an
+authentication Boolean: it requires a dedicated root delegation, both hybrid
+signature components, exact roles and independently re-derived provenance.
+Native Windows/Linux/macOS candidates and the safe recovery protocol
 are implemented, but an unexecuted host is never coloured green as evidence.
 Production rotation is now amber: the statically linked in-process candidate
 exists and passes its local exact-binary and hostile-decoy boundary tests. The
@@ -250,6 +253,7 @@ the complete external durability/platform evidence are present.
 
 | Area | State | Evidence |
 |---|---:|---|
+| Beta-v1 cryptographic release evidence | 🟨 implementation green; authority inputs pending | Policy v2, dedicated two-role root delegation verification, mandatory Ed25519 + ML-DSA-65 envelopes, closed durability/repository predicates and the data-only offline signer are implemented. Focused release/platform evidence passed 43/43 before the added root-delegation signer case. The tracked policy intentionally remains K3 `0` until the offline delegation, operational public bundle, seven functional receipts and controlled reboot/power-loss evidence exist; no production private key was used |
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 347/347 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |

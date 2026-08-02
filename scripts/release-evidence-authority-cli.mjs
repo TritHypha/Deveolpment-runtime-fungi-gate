@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {
+  createHash,
   createPrivateKey,
   createPublicKey,
   sign as signEd25519,
@@ -21,6 +22,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
   RELEASE_EVIDENCE_ROLE,
+  releaseEvidenceDelegationPreimage,
   releaseEvidenceStatementPreimage,
 } from "./lib/beta-release-evidence-envelope.mjs";
 import {
@@ -58,6 +60,7 @@ const ROLE = Object.freeze({
     predicateType: "https://galerina.dev/attestation/repository-fixed-point/v1",
   }),
 });
+const DELEGATION_CONTEXT = "galerina.release.evidence.delegation.sig.v1";
 
 function refuse(message) {
   throw new Error(`REFUSED: ${message}`);
@@ -194,15 +197,27 @@ function parseEnvironment(bytes, expectedKeyId) {
 
 function parseArgs(argv) {
   const mode = argv[0];
-  if (!Object.hasOwn({ "inspect-environment": true, "sign-statement": true }, mode ?? "")) {
-    refuse("mode must be inspect-environment or sign-statement.");
+  if (!Object.hasOwn({
+    "inspect-environment": true,
+    "sign-delegation": true,
+    "sign-statement": true,
+  }, mode ?? "")) {
+    refuse("mode must be inspect-environment, sign-delegation or sign-statement.");
   }
   const values = new Map();
   for (let index = 1; index < argv.length; index += 2) {
     const name = argv[index];
     const value = argv[index + 1];
     if (
-      !["--input", "--operational-key-id", "--output", "--role"].includes(name)
+      ![
+        "--input",
+        "--operational-ed25519-public",
+        "--operational-key-id",
+        "--operational-mldsa65-public",
+        "--output",
+        "--role",
+        "--root-key-id",
+      ].includes(name)
       || value === undefined
       || value.startsWith("--")
       || values.has(name)
@@ -211,8 +226,10 @@ function parseArgs(argv) {
     }
     values.set(name, value);
   }
-  const keyId = values.get("--operational-key-id");
-  if (!KEY_ID.test(keyId ?? "")) refuse("operational key ID is malformed.");
+  const keyId = mode === "sign-delegation"
+    ? values.get("--root-key-id")
+    : values.get("--operational-key-id");
+  if (!KEY_ID.test(keyId ?? "")) refuse("signing key ID is malformed.");
   if (mode === "inspect-environment" && values.size !== 1) {
     refuse("inspect-environment accepts only --operational-key-id.");
   }
@@ -221,6 +238,15 @@ function parseArgs(argv) {
     || ROLE[values.get("--role")] === undefined
   )) {
     refuse("sign-statement requires one admitted role, input, output and operational key ID.");
+  }
+  if (mode === "sign-delegation" && (
+    values.size !== 5
+    || values.get("--input") === undefined
+    || values.get("--output") === undefined
+    || values.get("--operational-ed25519-public") === undefined
+    || values.get("--operational-mldsa65-public") === undefined
+  )) {
+    refuse("sign-delegation requires input, output, root key ID and both operational public keys.");
   }
   return Object.freeze({ mode, keyId, values });
 }
@@ -307,11 +333,94 @@ function signStatement(statement, role, privateKey) {
   };
 }
 
+function readOperationalPublicFacts(edPath, mlPath) {
+  const edBytes = readStablePrivateFile(edPath);
+  const mlBytes = readStablePrivateFile(mlPath);
+  let edPublic;
+  try {
+    edPublic = createPublicKey(decodeUtf8(edBytes, "operational Ed25519 public key"));
+  } catch {
+    refuse("operational Ed25519 public key is malformed.");
+  }
+  if (edPublic.asymmetricKeyType !== "ed25519") {
+    refuse("operational classical public key is not Ed25519.");
+  }
+  const mlText = decodeUtf8(mlBytes, "operational ML-DSA-65 public key");
+  if (!mlText.endsWith("\n") || mlText.slice(0, -1).includes("\n")) {
+    refuse("operational ML-DSA-65 public key is not canonical.");
+  }
+  const mlPublic = decodeCanonicalBase64(
+    mlText.slice(0, -1),
+    "operational ML-DSA-65 public key",
+  );
+  if (mlPublic.length !== mlDsa65.lengths.publicKey) {
+    refuse("operational ML-DSA-65 public key has the wrong length.");
+  }
+  return Object.freeze({
+    ed25519Sha256: createHash("sha256").update(
+      edPublic.export({ type: "spki", format: "der" }),
+    ).digest("hex"),
+    mlDsa65Sha256: createHash("sha256").update(mlPublic).digest("hex"),
+  });
+}
+
+function signDelegation(base, privateKey, operationalFacts) {
+  if (
+    base?.rootKeyId !== privateKey.keyId
+    || base?.operational?.ed25519Sha256 !== operationalFacts.ed25519Sha256
+    || base?.operational?.mlDsa65Sha256 !== operationalFacts.mlDsa65Sha256
+  ) {
+    refuse("delegation does not bind the selected root and operational public keys.");
+  }
+  let message;
+  try {
+    message = releaseEvidenceDelegationPreimage(base);
+  } catch {
+    refuse("unsigned delegation is malformed or widens the admitted roles.");
+  }
+  const context = new TextEncoder().encode(DELEGATION_CONTEXT);
+  const ed25519Signature = signEd25519(null, message, privateKey.edPrivate);
+  const mlDsa65Signature = mlDsa65.sign(message, privateKey.mlPrivate, { context });
+  const edPublic = createPublicKey(privateKey.edPrivate);
+  const mlPublic = mlDsa65.getPublicKey(privateKey.mlPrivate);
+  if (
+    verifyEd25519(null, message, edPublic, ed25519Signature) !== true
+    || mlDsa65.verify(mlDsa65Signature, message, mlPublic, { context }) !== true
+  ) {
+    refuse("post-sign delegation verification failed.");
+  }
+  return {
+    ...base,
+    signature: {
+      algorithm: "hybrid-ed25519-mldsa65",
+      canon: "galerina-canonical-json-v1",
+      context: DELEGATION_CONTEXT,
+      keyId: privateKey.keyId,
+      ed25519Signature: Buffer.from(ed25519Signature).toString("base64"),
+      mlDsa65Signature: Buffer.from(mlDsa65Signature).toString("base64"),
+    },
+  };
+}
+
+function writeExclusiveJson(outputValue, outputPath) {
+  const output = resolve(outputPath);
+  try {
+    writeFileSync(output, `${JSON.stringify(outputValue, null, 2)}\n`, {
+      flag: "wx",
+      mode: 0o600,
+    });
+  } catch {
+    refuse("output must be a new, exclusive file in an existing directory.");
+  }
+}
+
 function main() {
   const options = parseArgs(process.argv.slice(2));
-  const environmentPath = process.env.GALERINA_RELEASE_EVIDENCE_SIGNING_ENV_PATH;
+  const environmentPath = options.mode === "sign-delegation"
+    ? process.env.GALERINA_RELEASE_EVIDENCE_ROOT_SIGNING_ENV_PATH
+    : process.env.GALERINA_RELEASE_EVIDENCE_SIGNING_ENV_PATH;
   if (typeof environmentPath !== "string" || environmentPath.length === 0) {
-    refuse("GALERINA_RELEASE_EVIDENCE_SIGNING_ENV_PATH is required.");
+    refuse("the mode-specific release-evidence signing environment path is required.");
   }
   const privateKey = parseEnvironment(
     readStablePrivateFile(environmentPath),
@@ -323,19 +432,26 @@ function main() {
     );
     return;
   }
+  if (options.mode === "sign-delegation") {
+    const base = readCanonicalStatement(options.values.get("--input"));
+    const operationalFacts = readOperationalPublicFacts(
+      options.values.get("--operational-ed25519-public"),
+      options.values.get("--operational-mldsa65-public"),
+    );
+    writeExclusiveJson(
+      signDelegation(base, privateKey, operationalFacts),
+      options.values.get("--output"),
+    );
+    process.stdout.write(
+      `ROOT-SIGNED release-evidence delegation with root keyId '${options.keyId}' (both components self-verified; private values not shown).\n`,
+    );
+    return;
+  }
   const roleName = options.values.get("--role");
   const statement = readCanonicalStatement(options.values.get("--input"));
   const role = validateRoleStatement(statement, roleName);
   const envelope = signStatement(statement, role, privateKey);
-  const output = resolve(options.values.get("--output"));
-  try {
-    writeFileSync(output, `${JSON.stringify(envelope, null, 2)}\n`, {
-      flag: "wx",
-      mode: 0o600,
-    });
-  } catch {
-    refuse("output must be a new, exclusive file in an existing directory.");
-  }
+  writeExclusiveJson(envelope, options.values.get("--output"));
   process.stdout.write(
     `SIGNED ${roleName} statement with keyId '${options.keyId}' (both components self-verified; private values not shown).\n`,
   );

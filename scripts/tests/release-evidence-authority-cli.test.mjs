@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import {
+  createHash,
+  createPublicKey,
   generateKeyPairSync,
   randomBytes,
 } from "node:crypto";
@@ -77,6 +79,7 @@ function run(args, envPath) {
     env: {
       ...process.env,
       GALERINA_RELEASE_EVIDENCE_SIGNING_ENV_PATH: envPath,
+      GALERINA_RELEASE_EVIDENCE_ROOT_SIGNING_ENV_PATH: envPath,
     },
   });
 }
@@ -143,6 +146,57 @@ test("refuses duplicate environment records, wrong roles and existing output", (
     ], value.envPath);
     assert.notEqual(occupied.status, 0);
     assert.match(occupied.stderr, /output/u);
+  } finally {
+    rmSync(value.directory, { recursive: true });
+  }
+});
+
+test("root-signs only the exact two-role delegation bound to supplied public keys", () => {
+  const value = fixture();
+  try {
+    const operationalEd = generateKeyPairSync("ed25519");
+    const operationalMl = mlDsa65.keygen(randomBytes(32));
+    const edFile = join(value.directory, "operational.pub.pem");
+    const mlFile = join(value.directory, "operational.mldsa.pub.b64");
+    const unsignedFile = join(value.directory, "delegation.unsigned.json");
+    const signedFile = join(value.directory, "delegation.json");
+    const edPem = operationalEd.publicKey.export({ type: "spki", format: "pem" }).toString();
+    const edDer = createPublicKey(edPem).export({ type: "spki", format: "der" });
+    writeFileSync(edFile, edPem, { flag: "wx" });
+    writeFileSync(
+      mlFile,
+      `${Buffer.from(operationalMl.publicKey).toString("base64")}\n`,
+      { flag: "wx" },
+    );
+    writeFileSync(unsignedFile, canonical({
+      schema: "galerina.release-evidence.delegation.v1",
+      releaseId: "beta-v1",
+      serial: 1,
+      issuedAt: "2026-08-02T10:00:00.000Z",
+      notBefore: "2026-08-02T10:00:00.000Z",
+      notAfter: "2026-08-03T10:00:00.000Z",
+      rootKeyId: KEY_ID,
+      operational: {
+        keyId: "4444444444444444",
+        ed25519Sha256: createHash("sha256").update(edDer).digest("hex"),
+        mlDsa65Sha256: createHash("sha256").update(operationalMl.publicKey).digest("hex"),
+        roles: ["durability-evidence.sign", "repository-evidence.sign"],
+      },
+    }), { flag: "wx" });
+
+    const result = run([
+      "sign-delegation",
+      "--input", unsignedFile,
+      "--output", signedFile,
+      "--root-key-id", KEY_ID,
+      "--operational-ed25519-public", edFile,
+      "--operational-mldsa65-public", mlFile,
+    ], value.envPath);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /ROOT-SIGNED/u);
+    const signed = JSON.parse(readFileSync(signedFile, "utf8"));
+    assert.equal(signed.signature.keyId, KEY_ID);
+    assert.equal(signed.signature.context, "galerina.release.evidence.delegation.sig.v1");
   } finally {
     rmSync(value.directory, { recursive: true });
   }

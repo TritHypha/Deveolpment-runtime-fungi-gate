@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8831,
-    "devTools": 141,
+    "devTools": 142,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -2571,7 +2571,9 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
-      "concerns": []
+      "concerns": [
+        "governance"
+      ]
     },
     {
       "name": "brand-audit.mjs",
@@ -2847,6 +2849,16 @@
         "signing/fusion",
         "governance",
         "graph/index"
+      ]
+    },
+    {
+      "name": "release-evidence-authority-cli.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion"
       ]
     },
     {
@@ -3287,6 +3299,7 @@
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
       "rebuild-fusable-packages.mjs",
+      "release-evidence-authority-cli.mjs",
       "verify-artifacts.mjs",
       "verify-platform-durability-evidence.mjs"
     ],
@@ -3393,6 +3406,7 @@
       "lint-fungi.mjs",
       "run-phase-close.mjs",
       "status.mjs",
+      "beta-v1-release-admission.mjs",
       "debug-compiler-globs.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",

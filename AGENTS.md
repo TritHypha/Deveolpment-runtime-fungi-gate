@@ -78,7 +78,7 @@ intent → governed execution plan → coordinated compute → audit proof
 > **Current beta-v1 checkpoint (2026-08-01):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
 > and green (`galerina-core-compiler` 5,755/5,755; whole suite 98/98 packages,
-> 8,814 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
+> 8,831 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
@@ -90,6 +90,14 @@ intent → governed execution plan → coordinated compute → audit proof
 > process-termination boundary matrix on this Windows 10 NTFS host. It remains
 > non-authorizing and supplies no kernel-crash, reboot or power-loss proof. Do
 > not infer production durability from this evidence.
+>
+> **Beta-v1 release-evidence checkpoint (2026-08-02):** policy v2 verifies a
+> dedicated root-signed two-role delegation plus both Ed25519 and ML-DSA-65
+> components on closed durability and repository statements. It independently
+> re-hashes the raw durability artefacts and never trusts an authentication or
+> success Boolean. Implementation is green; the tracked policy deliberately
+> remains K3 `0` until the offline delegation, operational public bundle and
+> complete external evidence exist. No production private key was used.
 >
 > A separate non-executing artifact inspector passes 7/7 and binds one
 > fixed-path, single-link PE/ELF/Mach-O candidate to its architecture and exact

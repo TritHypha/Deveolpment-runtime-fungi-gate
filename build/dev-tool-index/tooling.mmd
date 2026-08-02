@@ -636,6 +636,8 @@ flowchart LR
   T_bench_startup_mjs --> C_signing_fusion
   T_bench_startup_mjs --> C_source_hygiene
   T_bench_startup_mjs --> C_graph_index
+  T_beta_v1_release_admission_mjs["beta-v1-release-admission.mjs"]
+  T_beta_v1_release_admission_mjs --> C_governance
   T_brand_audit_mjs["brand-audit.mjs"]
   T_brand_audit_mjs --> C_signing_fusion
   T_brand_audit_mjs --> C_diagnostics
@@ -744,6 +746,8 @@ flowchart LR
   T_rebuild_fusable_packages_mjs --> C_signing_fusion
   T_rebuild_fusable_packages_mjs --> C_governance
   T_rebuild_fusable_packages_mjs --> C_graph_index
+  T_release_evidence_authority_cli_mjs["release-evidence-authority-cli.mjs"]
+  T_release_evidence_authority_cli_mjs --> C_signing_fusion
   T_relink_workspace_mjs["relink-workspace.mjs"]
   T_relink_workspace_mjs --> C_graph_index
   T_rename_package_mjs["rename-package.mjs"]

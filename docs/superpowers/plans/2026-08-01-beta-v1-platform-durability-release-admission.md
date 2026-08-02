@@ -454,7 +454,7 @@ git commit -m "feat(rotation): bind production durability admission"
 
 **Interfaces:**
 - Platform smoke emits `galerina.platform.functional-evidence.v2`, K3 `0`, non-authorizing, with exact OS/distribution/architecture and closed six-row functional evidence.
-- Release verifier consumes stable direct files and emits `galerina.beta-v1.release-admission.v1`.
+- Release verifier consumes stable direct files and emits `galerina.beta-v1.release-admission.v2`.
 - Policy requires Windows 10, Windows 11, Ubuntu, Debian, Fedora, Linux Mint and macOS rows.
 
 - [x] **Step 1: Write failing policy and release tests**
@@ -482,10 +482,13 @@ the Windows 11 policy slot.
 - [x] **Step 4: Implement final release composition**
 
 Read the policy and every evidence file by stable handle with size limits.
-Independently recompute platform coverage, durability coverage, phase-close
-receipts, graph/generator receipts and release-build identity. Return `+1`
-only for the exact complete matrix, `0` for absent external execution and `-1`
-for malformed, contradictory or failed evidence.
+Policy v2 verifies one dedicated, root-signed, serial/time/revocation-bounded
+two-role delegation and both Ed25519 and ML-DSA-65 components on each closed
+statement. Independently recompute platform coverage and every durability raw
+artefact digest; require the exact six-command repository fixed point. Return
+`+1` only for the exact complete matrix, `0` for absent ceremony/external
+execution and `-1` for malformed, contradictory, downgraded or forged
+evidence. No authentication or success Boolean establishes authority.
 
 - [x] **Step 5: Update hosted and self-hosted jobs**
 
@@ -534,7 +537,12 @@ approved sacrificial hosts. Every refusal remains recorded.
 
 Run `verify-platform-durability-evidence.mjs` on each durability set and
 `beta-v1-release-admission.mjs` on the complete matrix. Do not hand-edit a
-receipt or replace a failed row with prose.
+receipt or replace a failed row with prose. After the unsigned statements are
+final, follow
+`docs/security/BETA-V1-RELEASE-EVIDENCE-SIGNING-WALKTHROUGH.md`: perform the
+dedicated operational-key and root-delegation ceremony offline, return only
+public outputs, and replace the exact policy-v2 zero digest placeholders from
+independently computed hashes.
 
 - [ ] **Step 4: Run the complete repository fixed point**
 
