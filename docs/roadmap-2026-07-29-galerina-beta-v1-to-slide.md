@@ -8,6 +8,18 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: root verification orchestration is now bounded and green.
+The Claude Stop hook is child-free, one atomic checkout lease prevents
+overlapping root suites, standard Node tests are capped at four test-file
+workers, and a digest-bound Windows Job Object warden owns complete descendant
+trees. Focused control evidence is 26/26, the core aggregate is 4/4 packages
+and 5,918/5,918 tests, graph and code-index checks are current, and the first
+coherent post-fix phase-close passes 86/86 in 544 seconds. The compiler's
+subprocess-heavy burst peaked at 22 Node processes and returned to the one
+pre-existing process with no owned descendants. This closes the development
+runner accumulation defect only; it changes no package-conversion or external
+release state.
+
 Verification refresh: the interrupted restart run has been replaced by one
 uninterrupted 847.6-second exhaustive close with **87/87** blocking gates
 passed. The complete package aggregate is green; graph, code-index, benchmark
@@ -172,6 +184,7 @@ flowchart TB
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
+    BO["🟩 Bounded root orchestration<br/>one lease · four test workers<br/>owned process trees · 86/86"]
     E["🟩 Final fixed point<br/>84/84 strict · 85/85 exhaustive"]
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
@@ -224,7 +237,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -248,7 +261,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I green;
     class X,TG red;
     class Q,AC,LI,F,AT amber;
     class H,AL,T,HB,FD,AE,AF blue;

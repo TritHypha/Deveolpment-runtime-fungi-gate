@@ -1,5 +1,30 @@
 # TODO
 
+### Bounded verification orchestration complete - 2026-08-02
+
+- **Runaway-process control closed:** the Claude Stop hook is status-only; one
+  canonical checkout lease admits one root suite; standard Node tests have a
+  maximum four-file worker ceiling; and every child command crosses an owned
+  process-tree boundary.
+- **Windows tree ownership is native:** a zero-dependency Rust Job Object
+  warden creates the target suspended, assigns it before resume and closes the
+  complete tree on timeout or owner loss. Source, manifest, lockfile and local
+  binary are digest-bound; any absent or mismatched receipt refuses.
+- **Supervisor-aware lease fixed:** the first broad run safely exposed that
+  direct-parent-only lease validation rejected the legitimate warden chain.
+  The nested runner now verifies the original owner, nonce, checkout and exact
+  supervisor PID. A real cross-process Job Object test covers the boundary.
+- **Fresh evidence:** orchestration-focused tests **26/26**; core aggregate
+  **4/4 packages** and **5,918/5,918 tests**; graph **5/5**; code index current;
+  and one post-fix phase-close **86/86** in **544 seconds**. The compiler test
+  burst peaked at 22 Node processes, fell during execution and returned to the
+  single pre-existing process with zero owned descendants after completion.
+- **Next:** retain this bounded runner for the later exhaustive close. Package
+  conversion remains excluded from this chapter and receives no inferred
+  authority.
+- **Report:**
+  `docs/reports/bounded-test-orchestration-completion-2026-08-02.md`.
+
 ### Current verification and external-review checkpoint - 2026-08-02
 
 - **Repository aggregate green:** all **98/98** packages and **8,846/8,846**

@@ -52,10 +52,13 @@ derived lease under the operating-system temporary directory. Acquisition is
 an atomic directory creation. The record contains schema, normalized checkout
 identity, owner PID, start time, command class, and a random nonce.
 
-Nested `run-all-tests.cjs` is admitted only when its immediate parent PID is
-the recorded phase-close owner and its inherited nonce exactly matches the
-record. Missing, duplicated, malformed, mismatched, or pre-existing leases
-refuse. Normal exit removes the exact lease. A crash-stale lease is not
+Nested `run-all-tests.cjs` is admitted only when the recorded phase-close
+owner, inherited nonce, checkout identity and immediate verified supervisor
+PID all match. The native Windows warden or POSIX wrapper installs the
+supervisor PID into the inherited environment immediately before starting the
+target; package children have every lease field removed. Missing, duplicated,
+malformed, mismatched, or pre-existing leases refuse. Normal exit removes the
+exact lease. A crash-stale lease is not
 silently guessed away; recovery requires an explicit inspection/removal
 command naming the recorded checkout and owner.
 
@@ -81,11 +84,11 @@ an exact tree-targeting adapter; Linux/macOS use a dedicated process group.
 Unsupported or failed cleanup returns a distinct failed result. It never
 reports the child as closed merely because the direct shell exited.
 
-The first implementation may use the native platform command boundary only
-behind exact argument construction and hostile-path tests. A Windows Job
-Object remains the preferred final implementation when the helper can be
-shipped and independently verified without making tests depend on an
-uncontrolled installer.
+Windows uses a zero-dependency Rust warden that creates a Job Object with
+`KILL_ON_JOB_CLOSE`, creates the target suspended, assigns it before resume,
+and monitors both target and owner. Its source, Cargo inputs and generated
+binary are bound by a local SHA-256 receipt and any mismatch refuses. POSIX
+uses a dedicated process group with bounded TERM/KILL escalation.
 
 ## 4. Safety and compatibility rules
 
