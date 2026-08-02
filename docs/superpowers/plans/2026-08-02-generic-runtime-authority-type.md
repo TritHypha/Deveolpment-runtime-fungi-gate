@@ -370,7 +370,7 @@ Check for private paths, secrets, full operational key IDs, generated noise,
 `authorityReleased: true`, accidental resource/Passport changes and stale
 counts.
 
-- [ ] **Step 5: Commit Galerina and KB documentation separately**
+- [x] **Step 5: Commit Galerina and KB documentation separately**
 
 ```powershell
 git add -- build/code-registry/REGISTRY.md build/code-index/CODE_INDEX.md docs/language/fungi/SYNTAX-REFERENCE.md packages-galerina/galerina-core/docs/type-system.md packages-galerina/galerina-core/examples/examples-manifest.md docs/TODO.md docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md
