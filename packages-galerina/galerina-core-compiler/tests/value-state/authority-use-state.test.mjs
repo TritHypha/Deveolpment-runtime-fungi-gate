@@ -58,3 +58,47 @@ secure flow nestedDuplicate(lease: Lease) -> Bool {
 }`).includes("FUNGI-AFFINE-002"));
   });
 });
+
+describe("Authority<Tag> persistence boundary", () => {
+  const expectPersistenceRefusal = (statement) => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+secure flow persist(lease: Lease) -> Bool {
+  ${statement}
+  return true
+}`).includes("FUNGI-AFFINE-003"));
+  };
+
+  it("refuses JSON serialization", () => {
+    expectPersistenceRefusal("json.encode(lease)");
+  });
+
+  it("refuses a nested authority value at serialization", () => {
+    expectPersistenceRefusal("json.encode([lease])");
+  });
+
+  it("refuses database persistence", () => {
+    expectPersistenceRefusal("database.write(lease)");
+  });
+
+  it("refuses vault persistence", () => {
+    expectPersistenceRefusal("Vault.write(lease)");
+  });
+
+  it("refuses audit persistence", () => {
+    expectPersistenceRefusal("AuditLog.write(lease)");
+  });
+
+  it("does not treat a forbidden persistence attempt as a valid transfer", () => {
+    const result = codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+secure flow refuseThenTransfer(lease: Lease) -> Bool {
+  json.encode(lease)
+  consume.primary(lease)
+  consume.secondary(lease)
+  return true
+}`);
+    assert.ok(result.includes("FUNGI-AFFINE-003"));
+    assert.equal(result.filter((code) => code === "FUNGI-AFFINE-002").length, 1);
+  });
+});

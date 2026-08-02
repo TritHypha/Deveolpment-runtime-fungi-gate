@@ -335,6 +335,16 @@ export const FUNGI_AFFINE_002 = {
   suggestedFix: "Use the value produced by the first transfer, or obtain a fresh value from its runtime mint.",
 } as const;
 
+/** FUNGI-AFFINE-003: a generic Authority<Tag> crossed a serialization or persistent-storage boundary. */
+export const FUNGI_AFFINE_003 = {
+  code: "FUNGI-AFFINE-003",
+  name: "AUTHORITY_PERSISTENCE_FORBIDDEN",
+  severity: "error" as const,
+  message: "A runtime authority value cannot be serialized or persisted.",
+  why: "A copied handle representation is forgeable or replayable data, not live runtime authority.",
+  suggestedFix: "Store the non-authorizing object identity or receipt instead; keep the runtime handle process-local.",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Gate diagnostics — FUNGI-GATE-003 (RESERVED)
 //

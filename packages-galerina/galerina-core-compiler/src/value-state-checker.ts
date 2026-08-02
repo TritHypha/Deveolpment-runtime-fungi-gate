@@ -326,6 +326,21 @@ function isSerializationCall(node: AstNode): boolean {
   return /^(json\.encode|json\.stringify|toml\.encode|xml\.encode|serialize)$/.test(fullName);
 }
 
+/** Authority handles may move between runtime operations but never become persisted data. */
+function isAuthorityPersistenceCall(
+  node: AstNode,
+  aliasMap?: ReadonlyMap<string, string>,
+): boolean {
+  if (isSerializationCall(node)) return true;
+  const fullName = buildFullCallName(node, aliasMap).toLowerCase();
+  return (
+    /^(?:database|\w*db)\.(?:insert|update\w*|delete|write|upsert|add|index)$/.test(fullName) ||
+    /^(?:vault|cache|atlas|graph)\.(?:write|store|put|set|insert|upsert|add|index)$/.test(fullName) ||
+    /^(?:auditlog|audit|log)\.(?:write|log|append)$/.test(fullName) ||
+    /^(?:filesystem|file|fs)\.write\w*$/.test(fullName)
+  );
+}
+
 function isLogCall(node: AstNode): boolean {
   const methodName = node.value ?? "";
   // Standalone: print(...)
@@ -1172,6 +1187,23 @@ class ValueStateChecker {
     );
   }
 
+  /** Collect direct call arguments, recursing through data wrappers but not nested calls. */
+  private collectAuthorityArguments(node: AstNode): AstNode[] {
+    const authorityArguments: AstNode[] = [];
+    const collect = (candidate: AstNode): void => {
+      if (candidate.kind === "callExpr") return;
+      if (candidate.kind === "identifier" && (candidate.children ?? []).length === 0) {
+        if (this.lookupBinding(candidate.value ?? "")?.authorityType !== undefined) {
+          authorityArguments.push(candidate);
+        }
+        return;
+      }
+      for (const child of candidate.children ?? []) collect(child);
+    };
+    for (const child of node.children ?? []) collect(child);
+    return authorityArguments;
+  }
+
   // ── AST walker ───────────────────────────────────────────────────────────
 
   private walkNode(node: AstNode): void {
@@ -1653,18 +1685,26 @@ class ValueStateChecker {
     // RD-0659: every authority argument is a transfer in the first, borrow-free
     // authority profile. Nested call expressions own their own transfers; lists
     // and record-shaped arguments are traversed here so wrapping cannot duplicate.
-    const authorityArguments: AstNode[] = [];
-    const collectAuthorityArguments = (candidate: AstNode): void => {
-      if (candidate.kind === "callExpr") return;
-      if (candidate.kind === "identifier" && (candidate.children ?? []).length === 0) {
-        authorityArguments.push(candidate);
-        return;
+    const authorityArguments = this.collectAuthorityArguments(node);
+    if (authorityArguments.length > 0 && isAuthorityPersistenceCall(node, this.moduleAliases)) {
+      for (const argument of authorityArguments) {
+        const binding = this.lookupBinding(argument.value ?? "");
+        this.diagnostics.push(makeVSDiag(
+          "FUNGI-AFFINE-003",
+          "AUTHORITY_PERSISTENCE_FORBIDDEN",
+          `Authority value '${binding?.name ?? argument.value ?? "?"}' cannot cross a serialization or persistent-storage boundary.`,
+          node.location,
+          "Store the non-authorizing object identity or receipt instead; keep the runtime handle process-local.",
+          undefined,
+          binding?.declaredAt !== undefined
+            ? { relatedLocations: [{ message: "authority declared here", location: binding.declaredAt }] }
+            : undefined,
+        ));
       }
-      for (const child of candidate.children ?? []) collectAuthorityArguments(child);
-    };
-    for (const child of node.children ?? []) collectAuthorityArguments(child);
-    for (const argument of authorityArguments) {
-      this.consumeAuthorityBinding(argument.value ?? "", node.location);
+    } else {
+      for (const argument of authorityArguments) {
+        this.consumeAuthorityBinding(argument.value ?? "", node.location);
+      }
     }
 
     // C1: resolve `let x = Module` aliases so an aliased sink (`x.write`) is matched + gated, not missed.
