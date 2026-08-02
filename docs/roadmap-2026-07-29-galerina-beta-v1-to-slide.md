@@ -17,6 +17,13 @@ type/use-state slice only: native minting, slot/generation/revocation checks,
 W^X execution and cross-platform hostile runtime evidence remain amber, so no
 production authority or component removal is released.
 
+The next native chapter is now specified, not implemented. RD-0660 selects an
+opaque typed handle over a private bounded generational table inside the
+existing `galerina-core-runtime` package. The `.fungi` surface owns the K3
+decision; the native floor owns only slot/lifetime mechanics. OS CSPRNG, opaque
+VM-resource transfer, memory-isolation evidence and W^X execution remain open,
+so this planning increment does not change the amber status.
+
 Roadmap refresh: bounded Shape Lab E03, E04 and E05 are now green as completed
 experiments, not green as production features. A reproducibility defect was
 found and fixed: the official E04/E05 launchers could overwrite 99-sample
@@ -208,7 +215,7 @@ must own that operation before rotation can become yellow or green.
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.0 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal and narrow non-findings. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 336/336 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
-| Native `.fungi` VOK authority boundary | 🟨 source boundary implemented | `Authority<Tag>` now enforces bounded tags, exact tag identity, one-transfer use state, persistence refusal and ordinary-container refusal. The tracked VOK source contract passes 26/26 focused checks. Native mint-table, generation/revocation resolution, W^X execution and cross-platform hostile evidence remain open, so this is amber and non-authorizing |
+| Native `.fungi` VOK authority boundary | 🟨 source boundary implemented; native table specified | `Authority<Tag>` enforces bounded tags, exact tag identity, one-transfer use state, persistence refusal and ordinary-container refusal; its tracked source contract passes 26/26. RD-0660 now specifies the bounded opaque native table in `galerina-core-runtime`, but the table, OS nonce adapter, VM-resource bridge, generation/revocation runtime evidence, W^X execution and cross-platform hostile evidence remain open, so this is amber and non-authorizing |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 336/336, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |

@@ -1,5 +1,19 @@
 # TODO
 
+### Native VOK authority table - current chapter - 2026-08-02
+
+- **R&D/design complete:** KB RD-0660 and the Galerina design/implementation
+  plan select an opaque typed handle over a private bounded generational table
+  inside `galerina-core-runtime`; no new top-level or nested plugin package is
+  introduced.
+- **Implementation order:** `.fungi` owns the nine-gate K3 fold; an unsafe-free
+  native Rust floor owns slots, generations, injected nonces, exact
+  context/epoch checks and affine state transitions. OS randomness, opaque VM
+  resource transfer and W^X execution stay separate later adapters.
+- **Current state:** planning evidence only. No native handle, mint, lease,
+  revocation or execution authority has been released. Next action is the
+  observed-RED `.fungi` loaded-asset/truth-table test slice.
+
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
 - **Compiler contract implemented:** `Authority<Tag>` accepts exactly one
