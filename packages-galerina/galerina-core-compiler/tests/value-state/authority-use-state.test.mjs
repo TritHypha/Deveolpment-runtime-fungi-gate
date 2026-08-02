@@ -49,13 +49,13 @@ secure flow returnThenReuse(lease: Lease) -> Lease {
 }`).includes("FUNGI-AFFINE-002"));
   });
 
-  it("cannot hide a duplicate authority value in a nested list argument", () => {
+  it("cannot hide authority in a nested list argument", () => {
     assert.ok(codes(`
 type Lease = Authority<"slide.vok.lease.v1">
 secure flow nestedDuplicate(lease: Lease) -> Bool {
   consume.wrapper([lease, lease])
   return true
-}`).includes("FUNGI-AFFINE-002"));
+}`).includes("FUNGI-AFFINE-004"));
   });
 });
 
@@ -100,5 +100,34 @@ secure flow refuseThenTransfer(lease: Lease) -> Bool {
 }`);
     assert.ok(result.includes("FUNGI-AFFINE-003"));
     assert.equal(result.filter((code) => code === "FUNGI-AFFINE-002").length, 1);
+  });
+});
+
+describe("Authority<Tag> containment boundary", () => {
+  it("refuses an authority field in an ordinary record declaration", () => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+record Envelope { lease: Lease }
+`).includes("FUNGI-AFFINE-004"));
+  });
+
+  it("refuses an authority nested in a list binding", () => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+secure flow wrap(lease: Lease) -> Bool {
+  let envelope = [lease]
+  return true
+}
+`).includes("FUNGI-AFFINE-004"));
+  });
+
+  it("refuses an authority nested in a record literal", () => {
+    assert.ok(codes(`
+type Lease = Authority<"slide.vok.lease.v1">
+secure flow wrap(lease: Lease) -> Bool {
+  let envelope = { lease: lease }
+  return true
+}
+`).includes("FUNGI-AFFINE-004"));
   });
 });

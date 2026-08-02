@@ -345,6 +345,16 @@ export const FUNGI_AFFINE_003 = {
   suggestedFix: "Store the non-authorizing object identity or receipt instead; keep the runtime handle process-local.",
 } as const;
 
+/** FUNGI-AFFINE-004: a generic Authority<Tag> was nested in ordinary data. */
+export const FUNGI_AFFINE_004 = {
+  code: "FUNGI-AFFINE-004",
+  name: "AUTHORITY_CONTAINMENT_FORBIDDEN",
+  severity: "error" as const,
+  message: "A runtime authority value cannot be nested in an ordinary record, list, or payload.",
+  why: "Ordinary data containers are copyable and serializable, so containing a live handle would erase its affine authority boundary.",
+  suggestedFix: "Pass authority directly and store only non-authorizing identity or evidence in ordinary data.",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Gate diagnostics — FUNGI-GATE-003 (RESERVED)
 //

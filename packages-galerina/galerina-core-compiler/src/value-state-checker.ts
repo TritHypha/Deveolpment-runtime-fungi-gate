@@ -1204,6 +1204,26 @@ class ValueStateChecker {
     return authorityArguments;
   }
 
+  private emitAuthorityContainment(
+    authorityIdentifiers: readonly AstNode[],
+    location: SourceLocation | undefined,
+  ): void {
+    for (const identifier of authorityIdentifiers) {
+      const binding = this.lookupBinding(identifier.value ?? "");
+      this.diagnostics.push(makeVSDiag(
+        "FUNGI-AFFINE-004",
+        "AUTHORITY_CONTAINMENT_FORBIDDEN",
+        `Authority value '${binding?.name ?? identifier.value ?? "?"}' cannot be nested in an ordinary record, list, or payload.`,
+        location,
+        "Transfer the authority as a direct argument or return value; put only non-authorizing identity and evidence in data containers.",
+        undefined,
+        binding?.declaredAt !== undefined
+          ? { relatedLocations: [{ message: "authority declared here", location: binding.declaredAt }] }
+          : undefined,
+      ));
+    }
+  }
+
   // ── AST walker ───────────────────────────────────────────────────────────
 
   private walkNode(node: AstNode): void {
@@ -1254,6 +1274,23 @@ class ValueStateChecker {
       case "letDecl":
         this.handleLetDecl(node);
         break;
+
+      case "recordDecl": {
+        for (const field of node.children ?? []) {
+          if (field.kind !== "paramDecl") continue;
+          const fieldType = String(field.value ?? "").split(":").slice(1).join(":").trim();
+          if (!this.authorityTypes.has(fieldType)) continue;
+          this.diagnostics.push(makeVSDiag(
+            "FUNGI-AFFINE-004",
+            "AUTHORITY_CONTAINMENT_FORBIDDEN",
+            `Record '${node.value ?? "?"}' cannot contain authority field '${field.value ?? "?"}'.`,
+            field.location ?? node.location,
+            "Store a non-authorizing identity or evidence reference instead; pass live authority separately.",
+          ));
+        }
+        this.walkChildren(node);
+        break;
+      }
 
       case "mutDecl":
         this.handleMutDecl(node);
@@ -1469,6 +1506,9 @@ class ValueStateChecker {
     // unsafe or tainted binding (via a non-gate call), the new binding is tainted.
     // Phase 11B.2: user-defined gate functions also break the taint chain.
     const init = node.children?.[0];
+    if (init?.kind === "listLiteral") {
+      this.emitAuthorityContainment(this.collectAuthorityArguments(init), node.location);
+    }
     const movedAuthority =
       init?.kind === "identifier" ? this.lookupBinding(init.value ?? "")?.authorityType : undefined;
     if (init?.kind === "identifier" && movedAuthority !== undefined) {
@@ -1701,6 +1741,17 @@ class ValueStateChecker {
             : undefined,
         ));
       }
+    } else if (
+      authorityArguments.length > 0
+      && (
+        node.value === "#record"
+        || node.value === "#record-update"
+        || (node.children ?? []).some((child) =>
+          child.kind === "listLiteral"
+          || (child.kind === "callExpr" && (child.value === "#record" || child.value === "#record-update")))
+      )
+    ) {
+      this.emitAuthorityContainment(authorityArguments, node.location);
     } else {
       for (const argument of authorityArguments) {
         this.consumeAuthorityBinding(argument.value ?? "", node.location);
