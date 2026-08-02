@@ -1,7 +1,7 @@
 {
   "schema": "galerina.status-ledger.v1",
-  "asOf": "2026-08-01",
-  "milestone": "Galerina beta-v1 platform durability and executable-backend closure before SLIDE-led TypeScript retirement",
+  "asOf": "2026-08-02",
+  "milestone": "Fail-closed per-package Galerina-to-SLIDE execution before terminal TypeScript and dependency retirement",
   "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
   "openGates": [
     {
@@ -16,12 +16,12 @@
     },
     {
       "id": "SLIDE-EXECUTABLE",
-      "summary": "Close the independent executable SLIDE package and backend contract before runtime retirement claims.",
+      "summary": "Implement a reusable ordinary-package frontend handoff, independent SLIDE validation, VOK lease execution and typed receipt before any runtime retirement claim.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {
       "id": "FUNGI-PACKAGE-RETIREMENT",
-      "summary": "Admit parity-proven flat .fungi packages before removing TypeScript or Node package execution paths.",
+      "summary": "Current debt is 494 TypeScript paths, 109 unexecuted Fungi sources, 36 unowned host boundaries, 95 package-local dependency trees and one nested package; every item must reach zero through exact admission, never exemption.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {

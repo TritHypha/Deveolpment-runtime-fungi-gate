@@ -1,8 +1,8 @@
 {
- "stamp": "2026-07-30T02-46-12",
+ "stamp": "2026-08-02T13-38-44",
  "sinceLast": {
   "baseline": false,
-  "fromStamp": "2026-07-29T11-24-00",
+  "fromStamp": "2026-07-30T02-46-12",
   "rows": [
    {
     "key": "build-progress:AI Inference Tower (BitNet/Groq/NVFP4)",
@@ -78,8 +78,8 @@
    },
    {
     "key": "build-progress:Type checker / Effect checker",
-    "from": 100,
-    "to": 97,
+    "from": 97,
+    "to": 94,
     "deltaPp": -3
    },
    {
@@ -96,9 +96,9 @@
    },
    {
     "key": "topline:ship-readiness",
-    "from": 97.9,
+    "from": 100,
     "to": 100,
-    "deltaPp": 2.1
+    "deltaPp": 0
    },
    {
     "key": "topline:zt-avg",

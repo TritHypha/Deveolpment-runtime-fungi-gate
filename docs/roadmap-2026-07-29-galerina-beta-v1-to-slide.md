@@ -3,9 +3,19 @@
 Date: 2026-08-02
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,830** tests, graph **5/5**
+package lane **98/98** with **8,831** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: the execution-switch and terminal-retirement boundaries were
+reconciled against the live gate on 2026-08-02. The terminal verifier itself
+is healthy (**9/9 top-level adversarial tests, 36 assertions**) and remains
+yellow because its refusal is correct. Current exact debt is 494 tracked
+package `.ts` paths, 109 unexecuted `.fungi` sources, 36 unowned host
+boundaries, 95 package-local `node_modules` trees and one nested package. The
+authority ledger is empty. Green requires the reusable Galerina -> SLIDE/VOK
+package switch first, followed by dependency-ordered package retirement; no
+exception, fallback or renamed debt is permitted.
 
 Roadmap refresh: the benchmark publication model now explains every workload
 row rather than leaving score direction and placement implicit. `✅` means
@@ -172,8 +182,8 @@ flowchart TB
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
-    TG["🟨 Terminal retirement authority gate<br/>16/16 adversarial · exact red debt"]
-    T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
+    TG["🟨 Terminal retirement authority gate<br/>9/9 adversarial · 36 assertions<br/>exact red debt"]
+    T["🟦 Package retirement<br/>494 tracked package .ts → 0<br/>109 .fungi need execution · 95 node_modules → 0"]
     J["⬜ Next transition benchmark<br/>Galerina/SLIDE vs frozen Galerina/Wasm<br/>exact admitted pairs only"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
     M["🟩 Shape Lab E00<br/>F01-F20 · S0-S8 · VPEG/N1 quarantine"]
@@ -277,7 +287,7 @@ the complete external durability/platform evidence are present.
 | SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
-| Terminal package-retirement authority gate | 🟨 | Implemented and deliberately red: 16/16 focused adversarial tests; 491 tracked package `.ts` paths, 104 production `.fungi` sources requiring exact source/evidence digest admission, 31 detected production host boundaries requiring ownership, 95 `node_modules` trees and one nested native package. R4 shadow-bake authority cannot silently authorize this terminal profile |
+| Terminal package-retirement authority gate | 🟨 | Implemented and deliberately red: fresh self-test **9/9 top-level adversarial tests with 36 assertions**; 494 tracked package `.ts` paths, 109 production `.fungi` sources requiring exact execution/source/evidence admission, 36 detected production host boundaries requiring ownership, 95 `node_modules` trees and one nested native package remain. The authority ledger is empty; R4 shadow-bake authority cannot silently authorize this terminal profile |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -335,7 +345,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,830 unit tests.
+   with 8,831 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
@@ -392,12 +402,13 @@ The remaining sequence is:
    pre-native baseline and does not authorize production execution, component
    removal or the terminal cross-runtime comparison.
 8. Switch packages in dependency order from TypeScript execution to verified
-   `.fungi`/SLIDE execution. The fresh retirement-graph ratchets are 477
-   implementation `.ts` files and 491 tracked package `.ts` paths: 26
-   twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 338 governed
-   migration-program paths, plus one nested native package and 95 package-local
+   `.fungi`/SLIDE execution. The current retirement-graph ratchets are **480**
+   implementation `.ts` files and **494** tracked package `.ts` paths: 28
+   twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 339 governed
+   migration-program paths, plus 109 unexecuted `.fungi` sources, 36 unowned
+   host boundaries, one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
-   without hiding or renaming a member.
+   without hiding, renaming or exempting a member.
    External AIs may prepare flat, quarantined candidates in parallel, one
    direct peer package each. They may not create npm-style nested plugin
    trees, edit Galerina, or claim replacement completion.
@@ -539,7 +550,8 @@ locations and becomes a required green gate after executable SLIDE integration.
 The composite `ts-retirement-graph --post-slide` gate additionally requires
 zero tracked package TypeScript, terminal execution admission for every
 production `.fungi` source, and digest-bound ownership for every detected
-production host boundary. Its current 16/16 adversarial suite proves that
+production host boundary. Its current 9/9 top-level adversarial suite, with
+36 assertions, proves that
 renaming debt, unexecuted source, nested identities, dependency trees, unowned
 host bridges and substituted evidence all refuse. The resolver, lock,
 provenance and migration contract is detailed in

@@ -1,5 +1,43 @@
 # TODO
 
+### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
+
+- **Current owner priority:** close the reusable, fail-closed per-package
+  Galerina -> SLIDE execution switch, then retire packages in dependency order.
+  The terminal retirement gate is the final verifier; it must not be weakened
+  or made green by exemptions.
+- **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
+  reports `postSlideReady: false`: **494** tracked package TypeScript paths,
+  **109** unexecuted production `.fungi` sources, **36** unowned production
+  host boundaries, **95** package-local `node_modules` trees and **1** nested
+  package identity. The execution-authority ledger remains deliberately empty.
+- **Gate integrity freshly verified:** `audit:retirement:selftest` passes
+  **9/9 top-level adversarial tests with 36 assertions**. It refuses hidden or
+  moved TypeScript, unexecuted Fungi, nested packages, dependency forests,
+  unowned host bridges and stale/substituted execution evidence.
+- **Binding dependency order:** ordinary checked package source -> complete
+  Galerina frontend snapshot/receipt -> independent SLIDE validation -> VOK
+  admitted object and affine lease -> typed execution/audit receipt -> exact
+  per-package authority-ledger entry -> TypeScript/oracle retirement. A failed
+  SLIDE path has no Wasm, walker, Node, cache or driver fallback.
+- **Separation of milestones:** proving the reusable switch turns the
+  Galerina-to-SLIDE integration tile green. Converting all packages, removing
+  the 95 dependency trees and flattening the nested greeting package are the
+  package-retirement programme. Only after every measured debt reaches zero
+  may the terminal retirement gate become green.
+- **Candidate boundary:** the four files in the first external staging tree
+  remain static, non-authorizing candidates. Strict frontend acceptance and a
+  complete dossier are not executable parity or governed admission. The fresh
+  whole-corpus second-pass sandbox remains a separate quarantine programme.
+- **Current verification anchors:** Galerina's last complete fixed point is
+  **98/98 packages, 8,831 tests**, strict **84/84**, exhaustive **85/85** and
+  graph **5/5**. Independent SLIDE freshly passes **347/347** across 19 suites
+  and its repository-owned V2 contract is **16/16 files**. These facts prove
+  their existing surfaces only; they do not authorize package retirement.
+- **History rule:** lower dated sections are retained as chronological
+  evidence. Counts of 491/104/31 and a 16/16 retirement test label are older
+  checkpoints and are superseded for current navigation by this section.
+
 ### Interpreted benchmark report and SLIDE transition baseline - 2026-08-02
 
 - **Readable result semantics complete:** every generated cross-language row
@@ -23,7 +61,7 @@
   status is correctly `DEFERRED_NO_SLIDE_LANE`; VADE remains non-comparative.
 - **Fresh evidence:** benchmark package **39/39**, truth audit clean, report
   freshness clean and regression guard reports no attributable regression.
-  The post-commit repository aggregate passes **98/98 packages and 8,830
+  The post-commit repository aggregate passes **98/98 packages and 8,831
   tests**.
 
 ### Full publication benchmark completed - 2026-08-02
@@ -113,7 +151,7 @@
   type, value-state, effect and governance checks and contains no authority in
   its serializable records.
 - **Fresh repository fixed point:** the governed count-writing runner passes
-  98/98 packages and 8,830 tests; the core compiler contributes 5,781 tests.
+  98/98 packages and 8,831 tests; the core compiler contributes 5,781 tests.
 - **Superseded runtime status:** RD-0660 and RD-0662 now supply the bounded
   native mint table, unguessable slot/generation resolution, eager revocation
   and closed-profile W^X floor described in the current chapter above.
@@ -934,7 +972,7 @@ guessing.
   the exact committed trees through their complete verification gates. Never
   push.
 
-### External Fungi staging issues and benchmark integrity checkpoint - 2026-07-31
+### Historical external Fungi staging and benchmark-integrity checkpoint - 2026-07-31
 
 - **Completed:** every claim in
   `../Galerina-Fungi-Package-Staging/TRANSLATION-ISSUES-LOG.md` was checked
@@ -1249,7 +1287,7 @@ planning checkbox must never be used to imply that implementation exists.
   chapter locally, then resume the content-addressed registry-generation slice
   without waiting for the independent reports.
 
-### Full-auto Galerina -> SLIDE -> `.fungi` retirement checkpoint - 2026-07-30
+### Historical Galerina -> SLIDE -> `.fungi` retirement checkpoint - 2026-07-30
 
 - **Owner direction:** continue autonomously through Galerina beta v1,
   executable independent SLIDE, complete package `.ts` -> `.fungi`
@@ -1265,7 +1303,7 @@ planning checkbox must never be used to imply that implementation exists.
   It supersedes the earlier hold on post-beta SLIDE/retirement work while
   retaining its safety gate: never delete the only working compiler or count
   an unexecuted `.fungi` twin as a conversion.
-- **Fresh measured state:** `audit-selfhost-readiness --json` reports 95 code
+- **Measured at that checkpoint:** `audit-selfhost-readiness --json` reported 95 code
   packages, 463 implementation `.ts`, 104 `.fungi`, 2 fully `.fungi`, 50 pure-logic
   convertible-now packages and 38 floored packages. The retirement finder
   reconciles 477 tracked package-source `.ts` paths and 491 total tracked
@@ -1277,7 +1315,7 @@ planning checkbox must never be used to imply that implementation exists.
   was empty and untracked and has been removed. The oracle remains as
   independent differential evidence with no production/runtime/memory
   authority until its documented replacement gate passes.
-- **Completed strict retirement gate:** `ts-retirement-graph --post-slide`
+- **Completed strict retirement gate at that checkpoint:** `ts-retirement-graph --post-slide`
   composes physical retirement, source execution, host ownership and flat
   topology into one refusal. Its exact authority ledger requires tracked,
   regular non-symlink source/evidence files with matching SHA-256 digests and
