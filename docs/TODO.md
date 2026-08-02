@@ -1,5 +1,33 @@
 # TODO
 
+### SLIDE Shape Lab E03-E05 bounded closure - 2026-08-02
+
+- **Roadmap correction:** E03, E04 and E05 are green as completed bounded
+  experiments. Green does not grant Galerina, package, loader, execution or
+  production authority; those gates remain independently fail closed.
+- **Reproducibility defect closed:** the official SLIDE E04/E05 CLIs could
+  silently fall back to seven samples even though the remediated evidence
+  contract required 99. Code-pinned publication profiles and regression tests
+  now require 99 samples.
+- **Fresh evidence:** E03 clean source `5e7895b...`, 4,200 exact checks and
+  negative speed; E04 clean source `a77d761...`, 29,700 score plus 59,400
+  artifact checks and density-only success; E05 clean source `51dd881...`, 99
+  pairs, 34,650 artifact plus 29,700 component checks.
+- **Scientific verdict:** E05 B1 versus BA is `INDETERMINATE` (paired HL
+  -1,766.5 ns/op; 95% interval [-5,610, 1,392]); B1 versus B0 is only a
+  candidate under the known extra-build and fixed-order limitation. No
+  VPEG-specific speed claim is admitted.
+- **Documents:** SLIDE's E03/E04 reports, plans, README and TODO are current;
+  E05 has a dedicated completion report. The roadmap now separates completed
+  experiments from the still-amber authenticated-evidence review boundary.
+- **Fresh independent closure:** SLIDE 334/334 across 19 suites; V2 contract
+  16 files; 20 schemas, 8 result JSON files and 7 result SVGs parse; all four
+  E03-E05 evidence verifiers return internal consistency with unauthenticated
+  K3 `0`.
+- **Still later, not stale E03-E05 debt:** native `.fungi`, independently
+  implemented translation validation, authenticated research publication,
+  cross-platform reproduction and production integration.
+
 ### Linked-host and release-gate checkpoint - 2026-08-01
 
 - **Caller Boolean removed:** the production rotation wrapper no longer accepts
@@ -412,16 +440,16 @@
   receipt labels, inactive hybrid-evidence schema, atlas identity/key mutation
   tests and a paired-statistics sidecar. Current source verification is 228/228, V2
   contract 15/15, schemas 19/19 and modules 62/62.
-- **Fresh evidence:** clean SLIDE source `151b316`; E05 uses 99 paired samples
+- **Fresh evidence:** clean SLIDE source `51dd881`; E05 uses 99 paired samples
   of 50 operations. Evidence digest
-  `sha256:684ac1d8f3d2613af82a4fdf95dd3bf9bcb2863fdd8402a020b9b8f35d6d4f8f`;
+  `sha256:70580b60cf39ed91abb4c172ef0d7af4f22b589e021f171563add81da61e7e72`;
   comparison digest
-  `sha256:ab3c33c7c732e6aa3984f068967060e0f51a3a391a1e62fe8c903d56d7235010`.
-- **Performance:** B0 486,060 ns/op; BA 462,480; B1 459,644; B2 1,893,364;
-  N1 912,636; N2 747,348; N3 1,859,756. B1 versus BA is indeterminate
-  (Hodges–Lehmann -2,379 ns/op; 95% bootstrap CI -4,612 to 1,338;
-  p=0.159069651881237845). B1 is a candidate faster than B0 in this run
-  (HL -24,823; CI -26,162 to -23,612; p=0.000000000000022890). No general
+  `sha256:6ddb6a1226f9447188743619832bbdef516003225aa5b12ec3c3aa61973a3601`.
+- **Performance:** B0 479,692 ns/op; BA 454,554; B1 451,774; B2 1,876,484;
+  N1 906,862; N2 743,706; N3 1,847,004. B1 versus BA is indeterminate
+  (Hodges–Lehmann -1,766.5 ns/op; 95% bootstrap CI -5,610 to 1,392;
+  p=0.314879891037622408). B1 is a candidate faster than B0 in this run
+  (HL -26,245.5; CI -27,694 to -23,686; p=0.000000000000000006). No general
   VPEG speedup or production claim follows.
 - **Representation:** N2's 10,240 ternary weight bytes pack to exactly 2,048
   bytes. The 5.000x density result is not total residency or a speed claim.
@@ -462,25 +490,22 @@ session. Every checkpoint must record:
 - the authoritative architecture and report paths needed to resume without
 guessing.
 
-### Shape Lab E04 pre-review checkpoint - 2026-07-31
-
-This section is retained as historical evidence. The first section records the
-current remediated source, measurements and assurance boundary.
+### Shape Lab E04 bounded closure - refreshed 2026-08-02
 
 - **Implemented outside Galerina:** canonical five-trit packing; matched 64x32
   int8 and packed Tri-1 reflex models; bounded rule, prototype, energy and
   cascade proposals; aggregate work/memory budgets; non-authorizing capsules;
   and same-implementation current-B0 verification.
-- **Fresh evidence:** complete SLIDE 181/181, focused E04 18/18, fifteen
-  schemas parse, and 6,300 exact checks verify. Clean measured source is
-  `f9bc3f6`; evidence digest is
-  `sha256:6ffb34018bd2d0d8019b096aaf76bfbc7106a10c8c90b837d52f5a133b622298`.
+- **Fresh evidence:** code-pinned 99x100 publication dimensions produce 29,700
+  exact score and 59,400 artifact checks. Clean measured source is `a77d761`;
+  evidence digest is
+  `sha256:7b3113b5d76ab5619a38836ddbb93848b10bc3cc05767abdfb5941e20dfb5ef0`.
 - **Representation result:** 2,048 int8 weight bytes become 410 canonical
   five-trit bytes, 4.995x smaller. Including biases, parameters are 2,176
   versus 538 bytes. This is density evidence, not a cache-residency claim.
-- **Performance result:** int8 inference 5,203 ns/op; prepacked Tri-1 24,921;
-  cold Tri-1 123,481. B0 is 147,739; fastest complete verified proposer is
-  prototype at 319,402. Every learned/energy/cascade lane is slower than B0.
+- **Performance result:** int8 inference 6,305 ns/op; prepacked Tri-1 25,700;
+  cold Tri-1 204,097. B0 is 146,040; fastest complete proposer is rule at
+  351,860. Every learned/energy/cascade lane is slower than B0.
 - **Security result:** malformed/reserved packing, overflow, duplicate or
   injection-shaped identities, proxy/forged models, stale context, unknown
   candidate, semantic capsule forgery and aggregate exhaustion refuse or end
@@ -491,21 +516,18 @@ current remediated source, measurements and assurance boundary.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E04-PACKED-LEARNED-CONTROLS-COMPLETION-REPORT.md`
   and `../SLIDE/research/shape-lab/results/e04-packed-learned-latest.*`.
-- **Superseded checkpoint:** E05 and its independent review are now complete;
-  the first section of this TODO carries the current evidence and next gate.
+- **Closure:** E04 and successor E05 are complete bounded experiments. Neither
+  grants integration authority.
 
-### Shape Lab E03 pre-review typed-boundary checkpoint - 2026-07-31
-
-This section is retained as historical evidence. The first section records the
-current remediated source, measurements and assurance boundary.
+### Shape Lab E03 typed-boundary closure - refreshed 2026-08-02
 
 - **Implemented outside Galerina:** deterministic fixed/dynamic/indeterminate
   analysis, exact value-free plan identity, planner ownership, ephemeral
   signed-32-bit/Boolean/K3 binding validation and the B3 current-B0 lane.
-- **Measured evidence:** clean SLIDE source `3fa32fe`; 4,200 exact checks on a
-  32-fixed/2-residual graph. B0 866,983 ns/op; BA 734,593; B1 716,544; B2
-  48,603,963; exact B3 5,594,192; renamed-family B3 79,920,639. Exact B3 is
-  6.452x B0 and renamed B3 is 92.182x; neither has finite break-even.
+- **Measured evidence:** clean SLIDE source `5e7895b`; 4,200 exact checks on a
+  32-fixed/2-residual graph. B0 900,656 ns/op; BA 769,208; B1 728,038; B2
+  49,658,852; exact B3 6,004,209; renamed-family B3 83,169,771. Exact B3 is
+  6.666x B0 and renamed B3 is 92.344x; neither has finite break-even.
   MATCH/MISS/INDETERMINATE are 1,400/7/7.
 - **Security result:** descriptors close type, representation, lifetime,
   mutability, alias, persistence, bounds, effects, capabilities, resources and
@@ -515,13 +537,12 @@ current remediated source, measurements and assurance boundary.
 - **H3 verified for the named corpus:** a renamed family passes fresh exact B2
   mapping, descriptor and partition re-derivation and shares one canonical
   shape-plan digest with a distinct current binding table.
-- **Still amber:** both B3 cases are slower than B0/BA/B1. This remains
-  experiment-only evidence and has no Galerina package or execution authority.
+- **Closure:** both B3 cases are slower than B0/BA/B1. E03 is green only as a
+  completed experiment and has no Galerina package or execution authority.
 - **Authoritative paths:**
   `../SLIDE/research/shape-lab/E03-TYPED-BOUNDARY-CHECKPOINT-REPORT.md` and
   `../SLIDE/research/shape-lab/results/e03-typed-boundary-latest.*`.
-- **Superseded checkpoint:** E04 and E05 are now complete and retained; the
-  first section of this TODO carries the current evidence and next gate.
+- **Successors:** E04 and E05 are complete and retained bounded experiments.
 
 ### Shape Lab E02 bounded structural retrieval synchronization - 2026-07-31
 
