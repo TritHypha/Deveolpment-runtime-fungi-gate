@@ -3,9 +3,14 @@
 Status: **one elevated Visual Studio prerequisite remains; no production authority**.
 
 The Galerina preflight is fail-closed and currently reports
-`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. Portable NASM 3.02 is already present;
-its official archive and executable hashes are pinned in the repository build
-recipe. Do not reinstall NASM or run a command copied from an older document.
+`STATIC_HOST_CLANG_COMPONENTS_ABSENT`. A read-only 2026-08-02 inventory found
+complete Visual Studio Community 2026 and 2022 instances, but neither registers
+`Microsoft.VisualStudio.Component.VC.Llvm.Clang` or
+`Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset`; the expected LLVM
+binaries are absent and are not on `PATH`. Portable NASM 3.02 is already
+present; its official archive and executable hashes are pinned in the
+repository build recipe. Do not reinstall NASM or run a command copied from an
+older document.
 
 ## Do now
 

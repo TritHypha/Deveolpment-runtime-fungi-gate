@@ -14,10 +14,12 @@ reuse refuse, the paired `.fungi` K3 fold is strict-clean, and app-kernel is
 204/204. A closed linked-host build recipe pins Node 24.18.0, its pristine
 preimages, the Galerina patch/binding, Cargo lock, Rust target/profile/compiler,
 NASM 3.02 and build switches; focused build/source/toolchain evidence is 9/9.
-Portable NASM is present, but the required Visual Studio Clang components need
-one elevated owner installation, so no linked host or production receipt is
-claimed. A real Windows 10 functional receipt passed 6/6 at clean commit
-`7c38414a...`, but later documentation commits make it a checkpoint rather than
+Portable NASM is present. A fresh read-only inventory found complete Visual
+Studio Community 2026 and 2022 instances, but neither registers the two
+required LLVM components and the expected binaries are absent; one elevated
+owner installation is still required, so no linked host or production receipt
+is claimed. A real Windows 10 functional receipt passed 6/6 at clean commit
+`f1e0871d...`, but later documentation commits make it a checkpoint rather than
 the final release receipt. Beta admission therefore correctly remains K3 `0` /
 `INCOMPLETE_EXTERNAL_EVIDENCE`. The post-regeneration fixed point is strict
 84/84, exhaustive 85/85, graph 5/5, generator contracts 14/14, tooling 278,
@@ -259,7 +261,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,735 unit tests.
+   with 8,781 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.

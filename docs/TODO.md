@@ -19,19 +19,22 @@
   tree was extracted from the exact hash-pinned archive and the patch preflight
   succeeds; no stale file was overwritten or deleted.
 - **Only current Windows prerequisite:** portable NASM 3.02 is present and
-  version/hash verified. Visual Studio Community 2026 still lacks
-  `VC.Llvm.Clang` and `VC.Llvm.ClangToolset`. Quiet modification correctly
-  stopped with installer code 5007 because this process is not elevated. The
-  current owner action is in
+  version/hash verified. A fresh read-only inventory found complete Visual
+  Studio Community 2026 and 2022 instances, but neither registers
+  `VC.Llvm.Clang` or `VC.Llvm.ClangToolset`; the expected `clang.exe` and
+  `clang-cl.exe` paths are absent and neither executable is on `PATH`. The
+  preflight therefore correctly returns `STATIC_HOST_CLANG_COMPONENTS_ABSENT`.
+  No installer was launched. The current owner action is in
   `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
 - **Current platform evidence:** the real Windows 10 functional generator
   passed all six rows on clean executable fixed point `f1e0871d...` (receipt
   SHA-256 `3B4EE284...3551`). This later documentation commit deliberately makes
   it non-final; beta admission remains K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
 - **Ubuntu handover:** exact unpushed Galerina and SLIDE histories are available
-  as verified, Git-ignored bundles. Round two now returns five files: the four
-  durability/report artifacts plus one functional Ubuntu receipt. No remote
-  clone, old `2ceaf479...` result or renamed distribution receipt may substitute.
+  as verified, Git-ignored bundles. Round two must return five files: the four
+  durability/report artifacts plus one functional Ubuntu receipt. Those current
+  files have not returned; no remote clone, old `2ceaf479...` result or renamed
+  distribution receipt may substitute.
 - **Fresh local fixed point:** the first aggregate correctly exposed the
   provenance-preserved zero-byte AI-16 artifact as an unmodelled KB-graph test
   case. The test now admits only that exact known ID while every future empty
