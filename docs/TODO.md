@@ -25,9 +25,9 @@
   current owner action is in
   `docs/platform-handover/windows-static-host-toolchain/NOW.md`.
 - **Current platform evidence:** the real Windows 10 functional generator
-  passed all six rows on clean executable fixed point `0353478a...`; subsequent
-  security/documentation commits deliberately make that observation non-final.
-  Beta admission still returns K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
+  passed all six rows on clean executable fixed point `f1e0871d...` (receipt
+  SHA-256 `3B4EE284...3551`). This later documentation commit deliberately makes
+  it non-final; beta admission remains K3 `0` / `INCOMPLETE_EXTERNAL_EVIDENCE`.
 - **Ubuntu handover:** exact unpushed Galerina and SLIDE histories are available
   as verified, Git-ignored bundles. Round two now returns five files: the four
   durability/report artifacts plus one functional Ubuntu receipt. No remote
