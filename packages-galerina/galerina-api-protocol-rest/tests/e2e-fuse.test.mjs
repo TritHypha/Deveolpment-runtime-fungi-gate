@@ -42,16 +42,28 @@ test("the built REST adapter fuses (zero-touch auto-signed) and invoke('main') r
   // REALLY signed the manifest (Ed25519), so the loader VERIFIES it without allowUnsigned.
   // The developer never handled a key — yet fusion is from a verified, tamper-evident
   // manifest. (The unsigned/placeholder fail-closed floor is preserved in test 4.)
-  const component = await fusePackage(PKG_DIR, { warn });
+  const manifest = JSON.parse(readFileSync(join(PKG_DIR, "dist", `${PKG_NAME}.lmanifest.json`), "utf8"));
+  const keyId = manifest.governanceSignature?.keyId;
+  assert.equal(typeof keyId, "string", "the build must identify its signing key");
+  const admittedRoot = mkdtempSync(join(tmpdir(), "fungi-b3-admitted-root-"));
+  try {
+    cpSync(
+      join(PKG_DIR, "governance", `signing-key-${keyId}.pub.pem`),
+      join(admittedRoot, `signing-key-${keyId}.pub.pem`),
+    );
+    const component = await fusePackage(PKG_DIR, { governanceDir: admittedRoot, warn });
 
-  assert.equal(component.name, PKG_NAME);
-  assert.equal(component.seam, "protocol.inbound");
-  assert.deepEqual([...component.capabilities], ["network.inbound"]);
+    assert.equal(component.name, PKG_NAME);
+    assert.equal(component.seam, "protocol.inbound");
+    assert.deepEqual([...component.capabilities], ["network.inbound"]);
 
-  // main() runs the representative POST /orders request → 201 Created.
-  assert.equal(component.invoke("main"), 201);
-  // A verified manifest must NOT trip any unsigned path.
-  assert.ok(!lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
+    // main() runs the representative POST /orders request → 201 Created.
+    assert.equal(component.invoke("main"), 201);
+    // A verified manifest must NOT trip any unsigned path.
+    assert.ok(!lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
+  } finally {
+    rmSync(admittedRoot, { recursive: true, force: true });
+  }
 });
 
 // ── 2 — the full REST dispatch matrix routes correctly through the fused wasm ──

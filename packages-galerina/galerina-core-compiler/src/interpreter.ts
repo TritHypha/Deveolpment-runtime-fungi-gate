@@ -2381,6 +2381,14 @@ class Interpreter {
     if (isCheckedTrap(left)) return left;
     if (isCheckedTrap(right)) return right;
 
+    // Enum variants are represented as unresolved names until the enum runtime
+    // type is lifted. Compare their identity before numeric dispatch because an
+    // unresolved tag otherwise collides with the Verdict equality dispatch key.
+    if (left.__tag === "unresolved" && right.__tag === "unresolved") {
+      if (op === "==") return boolVal(left.name === right.name);
+      if (op === "!=") return boolVal(left.name !== right.name);
+    }
+
     // O(1) dispatch map — covers all common type × op × type combinations
     const dispatchFn = BINARY_DISPATCH.get(dispatchKey(left.__tag, op, right.__tag));
     if (dispatchFn !== undefined) return dispatchFn(left, right);
@@ -2934,8 +2942,11 @@ class Interpreter {
         const [guardExpr, guardBody] = children;
         if (guardExpr === undefined || guardBody === undefined) continue;
         const guardResult = await this.evalExpr(guardExpr);
-        const guardPasses = guardResult.__tag === "bool" ? guardResult.value : guardResult.__tag !== "void";
-        if (!guardPasses) continue;
+        if (guardResult.__tag === "runtimeError") return guardResult;
+        if (guardResult.__tag !== "bool") {
+          return { __tag: "runtimeError", message: `A match guard must evaluate to Bool, received '${guardResult.__tag}'` };
+        }
+        if (!guardResult.value) continue;
         this.pushScope();
         try {
           return await this.evalExpr(guardBody);

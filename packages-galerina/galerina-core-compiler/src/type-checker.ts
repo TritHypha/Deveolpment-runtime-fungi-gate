@@ -1633,7 +1633,13 @@ class TypeChecker {
             }
           }
         }
-        for (const child of node.children ?? []) this.walkNode(child);
+        for (const child of node.children ?? []) {
+          if (node.value === "#record" && child.kind === "identifier") {
+            for (const fieldValue of child.children ?? []) this.walkNode(fieldValue);
+          } else {
+            this.walkNode(child);
+          }
+        }
         return;
       }
 

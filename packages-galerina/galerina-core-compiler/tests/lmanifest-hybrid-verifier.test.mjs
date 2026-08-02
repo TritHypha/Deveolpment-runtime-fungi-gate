@@ -80,3 +80,14 @@ test("no Ed25519 public key for the signer ⇒ UNVERIFIABLE (treated as unsigned
     assert.equal(await verify(callInput(f, { keyId: "unknownkey00", signature: f.signature })), "unverifiable");
   } finally { rmSync(f.root, { recursive: true, force: true }); }
 });
+
+test("a hybrid package cannot supply the public keys used to admit itself", async () => {
+  const f = await fixture();
+  try {
+    const verify = makeLmanifestHybridVerifier();
+    assert.equal(
+      await verify(callInput(f, { governanceDir: undefined, packageDir: f.root })),
+      "unverifiable",
+    );
+  } finally { rmSync(f.root, { recursive: true, force: true }); }
+});

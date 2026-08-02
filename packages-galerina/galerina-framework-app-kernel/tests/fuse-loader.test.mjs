@@ -250,6 +250,38 @@ test("a real Ed25519-signed manifest is verified; tampering the body is rejected
   }
 });
 
+test("a package cannot supply the trust anchor used to admit its own signature", async () => {
+  const { root, pkg } = copyDemo();
+  try {
+    const { publicKey, privateKey } = generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    const keyId = "packageownedkey1";
+    const packageGovernance = join(pkg, "governance");
+    mkdirSync(packageGovernance, { recursive: true });
+    writeFileSync(join(packageGovernance, `signing-key-${keyId}.pub.pem`), publicKey);
+
+    const manifestPath = join(pkg, "dist", "my-custom-api-rest.lmanifest.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const { governanceSignature: _drop, ...withoutSig } = manifest;
+    const bytes = Buffer.from(JSON.stringify(withoutSig, null, 2));
+    const signature = cryptoSign(null, bytes, createPrivateKey(privateKey)).toString("base64");
+    writeFileSync(manifestPath, JSON.stringify({
+      ...withoutSig,
+      governanceSignature: { algorithm: "Ed25519", keyId, signature, signedAt: new Date().toISOString() },
+    }, null, 2));
+
+    await assert.rejects(
+      () => fusePackage(pkg, { requireSignature: true, warn: () => {} }),
+      /FUNGI-FUSE-(UNSIGNED|NO-PUBKEY|TRUST)/,
+      "only a caller-admitted external governance root may authorize a package",
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 // ── 5b — REVOCATION (audit fix): a validly-signed but REVOKED key is refused at the fuse gate ──
 test("a validly-signed manifest whose signing key is REVOKED is refused (fail-closed)", async () => {
   const { root, pkg } = copyDemo();

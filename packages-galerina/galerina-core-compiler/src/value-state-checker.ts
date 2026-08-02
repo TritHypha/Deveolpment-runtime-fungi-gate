@@ -1978,6 +1978,11 @@ class ValueStateChecker {
           },
         ));
       }
+      // A direct record literal stores each field value below an identifier
+      // label. Descend so that wrapper cannot hide a secret from this sink.
+      for (const child of node.children ?? []) {
+        this.checkArgForSecretNetwork(child, callName, location);
+      }
       return;
     }
     for (const child of node.children ?? []) {

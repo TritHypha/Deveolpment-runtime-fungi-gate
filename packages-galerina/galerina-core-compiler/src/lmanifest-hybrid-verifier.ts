@@ -33,19 +33,11 @@ export interface LmanifestHybridVerifierInput {
   readonly packageDir: string;
 }
 
-/** Resolve `<fileName>` in the governance dir, then walking up from the package dir's `governance/` (mirrors the loader). */
-function resolveGovernanceFile(fileName: string, governanceDir: string | undefined, packageDir: string): string | undefined {
-  const candidates: string[] = [];
-  if (governanceDir !== undefined) candidates.push(join(governanceDir, fileName));
-  let dir = packageDir;
-  for (let i = 0; i < 6; i++) {
-    candidates.push(join(dir, "governance", fileName));
-    const parent = join(dir, "..");
-    if (parent === dir) break;
-    dir = parent;
-  }
-  for (const c of candidates) if (existsSync(c)) return c;
-  return undefined;
+/** Resolve `<fileName>` only from the caller-admitted governance root. */
+function resolveGovernanceFile(fileName: string, governanceDir: string | undefined): string | undefined {
+  if (governanceDir === undefined) return undefined;
+  const candidate = join(governanceDir, fileName);
+  return existsSync(candidate) ? candidate : undefined;
 }
 
 /**
@@ -56,15 +48,15 @@ function resolveGovernanceFile(fileName: string, governanceDir: string | undefin
  */
 export function makeLmanifestHybridVerifier(): (input: LmanifestHybridVerifierInput) => Promise<LmanifestHybridVerdict> {
   return async (input: LmanifestHybridVerifierInput): Promise<LmanifestHybridVerdict> => {
-    const { keyId, signingInput, signature, governanceDir, packageDir } = input;
+    const { keyId, signingInput, signature, governanceDir } = input;
 
-    const edPath = resolveGovernanceFile(`signing-key-${keyId}.pub.pem`, governanceDir, packageDir);
+    const edPath = resolveGovernanceFile(`signing-key-${keyId}.pub.pem`, governanceDir);
     if (edPath === undefined) {
       // No public key at all for this signer ⇒ we cannot decide; treat as unsigned (the loader refuses it
       // under requireSignature). This is the classical no-pubkey case, not a present-but-unusable PQ key.
       return "unverifiable";
     }
-    const mlPath = resolveGovernanceFile(`signing-key-${keyId}.mldsa.pub.b64`, governanceDir, packageDir);
+    const mlPath = resolveGovernanceFile(`signing-key-${keyId}.mldsa.pub.b64`, governanceDir);
     if (mlPath === undefined) {
       // NO PQ DOWNGRADE: a v2 hybrid manifest with a missing ML-DSA public key must be a HARD deny, never
       // silently weakened to Ed25519-only / unsigned. Throw ⇒ the loader fails closed.

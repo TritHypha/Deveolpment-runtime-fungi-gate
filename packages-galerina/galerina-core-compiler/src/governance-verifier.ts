@@ -4149,16 +4149,6 @@ class GovernanceVerifier {
           return (n.children ?? []).some(walkForGrant);
         }
         hasGrant = walkForGrant(contractNode);
-        // Also accept: contract has child nodes at all (grant lines from the access block)
-        // The contract parser stores access { grant X } sub-blocks as children of contractDecl.
-        if (!hasGrant) {
-          // Broader check: any child with "grant" in its value
-          function walkForGrantBroad(n: AstNode): boolean {
-            if (typeof n.value === "string" && n.value.includes("grant")) return true;
-            return (n.children ?? []).some(walkForGrantBroad);
-          }
-          hasGrant = walkForGrantBroad(contractNode);
-        }
       }
 
       if (!hasGrant) {

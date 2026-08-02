@@ -132,8 +132,8 @@ function extractIdempotentFlag(flowNode: AstNode): boolean {
     c => c.kind === "identifier" && c.value === "resilience:block",
   );
   if (resBlock === undefined) return false;
-  return (resBlock.children ?? []).some(
-    c => c.kind === "identifier" && (c.value ?? "").includes("idempotent"),
+  return (resBlock.children ?? []).some((c) =>
+    c.kind === "identifier" && /\bidempotent\s*:\s*true\b/.test(c.value ?? ""),
   );
 }
 

@@ -1789,6 +1789,19 @@ contract {
     assert.ok(!hasDiag(result, "FUNGI-RES-001"), "No FUNGI-RES-001 when idempotent: true");
   });
 
+  it("emits FUNGI-RES-001 when idempotent is explicitly false", () => {
+    const result = parseAndVerify(`
+secure flow falseIdempotence(id: String) -> Result<String, String>
+contract {
+  intent { "Do not treat an explicit false flag as authority." }
+  effects { database.write, audit.write }
+  resilience { retry 3 times  idempotent: false }
+}
+{ return Ok(id) }
+`);
+    assert.ok(hasDiag(result, "FUNGI-RES-001"), "idempotent: false must not authorize mutation retries");
+  });
+
   it("no FUNGI-RES-001 for network-only flows (no mutation effects)", () => {
     const result = parseAndVerify(`
 secure flow networkRetry(url: String) -> Result<String, String>

@@ -160,10 +160,8 @@ export interface FusePackageOptions {
    */
   readonly requireSignature?: boolean;
   /**
-   * Directory holding `signing-key-<keyId>.pub.pem` public keys. Defaults to
-   * `<repo>/governance` relative to the package dir's two parents is NOT assumed —
-   * callers point this at their governance dir. When omitted, the loader looks for a
-   * `governance` dir beside the package and walks up a couple of levels.
+   * Caller-admitted directory holding `signing-key-<keyId>.pub.pem` public keys.
+   * It has no implicit default: package-relative keys are untrusted and ignored.
    */
   readonly governanceDir?: string;
   /** Override/extend the capability→host-import registry. Merged over the built-in registry. */
@@ -468,47 +466,32 @@ async function verifyManifestSignature(
   return "verified";
 }
 
-/** Find `signing-key-<keyId>.pub.pem` in the given governance dir, or walking up from the package. */
+/** Find `signing-key-<keyId>.pub.pem` only in the caller-admitted governance directory. */
 function resolvePublicKey(
   fs: NodeFs,
   path: NodePath,
   keyId: string,
   governanceDir: string | undefined,
-  packageDir: string,
+  _packageDir: string,
 ): string | undefined {
   const fileName = `signing-key-${keyId}.pub.pem`;
   const candidates: string[] = [];
   if (governanceDir !== undefined) candidates.push(path.join(governanceDir, fileName));
-  // Walk up a few levels looking for a `governance` directory beside the project root.
-  let dir = packageDir;
-  for (let i = 0; i < 6; i++) {
-    candidates.push(path.join(dir, "governance", fileName));
-    const parent = path.join(dir, "..");
-    if (parent === dir) break;
-    dir = parent;
-  }
   for (const c of candidates) {
     if (fs.existsSync(c)) return c; // perf-allow: loop-sync-io — app-fusion signing-key discovery, one-shot boot path; distinct candidate path per iteration
   }
   return undefined;
 }
 
-/** True if a `governance` dir with at least one `signing-key-*.pub.pem` is discoverable. */
+/** True if the caller-admitted governance directory contains a signing key. */
 function governanceKeysPresent(
   fs: NodeFs,
   path: NodePath,
   governanceDir: string | undefined,
-  packageDir: string,
+  _packageDir: string,
 ): boolean {
   const dirs: string[] = [];
   if (governanceDir !== undefined) dirs.push(governanceDir);
-  let dir = packageDir;
-  for (let i = 0; i < 6; i++) {
-    dirs.push(path.join(dir, "governance"));
-    const parent = path.join(dir, "..");
-    if (parent === dir) break;
-    dir = parent;
-  }
   for (const d of dirs) {
     try {
       if (fs.existsSync(d) && fs.readdirSync(d).some((f) => /^signing-key-.*\.pub\.pem$/.test(f))) return true; // perf-allow: loop-sync-io — app-fusion key-file discovery, one-shot boot scan; distinct dir per iteration

@@ -1105,6 +1105,10 @@ contract { effects { ai.inference } }
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let rec = { tok: key }\n  let r = http.post("u", rec)'));
     assert.ok(hasDiag(r, "FUNGI-SECRET-005"), `expected SECRET-002 for record-wrapped secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
+  it("a secret inside a DIRECT record literal sent to http.post → FUNGI-SECRET-005", () => {
+    const r = parseAndCheck(mk('  let key = secret.get("K")\n  let r = http.post("u", { tok: key })'));
+    assert.ok(hasDiag(r, "FUNGI-SECRET-005"), `expected SECRET-005 for a direct record field, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+  });
   it("a DOUBLY-derived secret (slice then concat) sent to http.post → FUNGI-SECRET-005", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let a = key.slice(0,8)\n  let b = a + "!"\n  let r = http.post("u", b)'));
     assert.ok(hasDiag(r, "FUNGI-SECRET-005"), `expected SECRET-002 for doubly-derived secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);

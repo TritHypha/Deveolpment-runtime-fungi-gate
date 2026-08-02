@@ -38,6 +38,11 @@ describe("plugin imports require an access { grant } contract (FUNGI-ASSIMILATE-
     assert.ok(has(r, CODE), `expected ${CODE} but got: [${r.diagnostics.map((d) => d.code).join(", ")}]`);
   });
 
+  it("the word grant in unrelated contract text does not satisfy the structured access grant", () => {
+    const r = verify(`@version 1\nimport plugin safe "./p.fungi" as P { contract { intent { "do not grant anything" } } }${flow}`);
+    assert.ok(has(r, CODE), `expected ${CODE} but got: [${r.diagnostics.map((d) => d.code).join(", ")}]`);
+  });
+
   it("grantless `import plugin assimilate` -> FUNGI-ASSIMILATE-003 (unchanged)", () => {
     const r = verify(`@version 1\nimport plugin assimilate "./q.fungi" as Q${flow}`);
     assert.ok(has(r, CODE), `expected ${CODE} but got: [${r.diagnostics.map((d) => d.code).join(", ")}]`);
