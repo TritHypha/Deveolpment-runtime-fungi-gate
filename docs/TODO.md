@@ -1,5 +1,17 @@
 # TODO
 
+### Counsel-ready FTO scope fixed - 2026-08-02
+
+- **Binding owner decision:** the initial professional FTO review covers the
+  United Kingdom, United States and EPO/UPC Europe.
+- **Expansion fails closed:** distribution, hosted operation or commercial
+  support in any additional jurisdiction requires a new jurisdiction-specific
+  review before that activity begins.
+- **Not green yet:** this decision fixes the review boundary only. It is not a
+  legal opinion, legal clearance or public-production authority. The roadmap
+  FTO gate remains blue until qualified counsel completes the review against
+  the then-current implementation and deployment plan.
+
 ### Beta-v1 cryptographic release admission - 2026-08-02
 
 - **Implementation green:** policy v2, canonical hybrid envelopes, exact

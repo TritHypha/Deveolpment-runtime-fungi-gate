@@ -199,7 +199,7 @@ flowchart TB
     AH["🟩 NSE-Micro E11 complete<br/>99 paired · 41,580 exact · speed negative"]
     DCTP["🟩 DCTP reference measured<br/>1,188 outputs · 108 refusals<br/>correctness pass · performance point negative"]
     AE["🟦 SLIDE evidence + anchor activation<br/>offline authority · platform adapters"]
-    AF["🟦 Patent counsel FTO gate<br/>before public production release"]
+    AF["🟦 Patent counsel FTO gate<br/>UK · US · EPO/UPC scope fixed<br/>counsel review pending"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
     A --> B --> C --> D --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> X --> F --> H --> I --> TG --> T --> J
@@ -738,9 +738,13 @@ family. Current deterministic VPEG and input-dependent fixed-topology,
 proposal-only N2 are technically
 distant from the inspected dynamic spiking neuron/synapse array claim
 clusters. Formal freedom-to-operate review remains mandatory before public
-production distribution, and learned neural-subgraph extraction/implantation,
-dynamic neural topology, spiking delay/refractory semantics or actuator loops
-trigger a fresh stop-and-review gate.
+production distribution. The owner-fixed initial counsel scope is the United
+Kingdom, United States and EPO/UPC Europe. Distribution, hosted operation or
+commercial support in any additional jurisdiction triggers a mandatory fresh
+jurisdiction-specific review before that activity begins. Learned
+neural-subgraph extraction/implantation, dynamic neural topology, spiking
+delay/refractory semantics or actuator loops trigger a fresh stop-and-review
+gate.
 
 The provenance-bound matched E01 run performed 525 exact-byte checks. Median
 costs were B0 rebuild 193,028 ns/op, process-local B1 92,376 ns/op and durable
