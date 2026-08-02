@@ -1,23 +1,34 @@
 # TODO
 
-### Restart checkpoint - 2026-08-02
+### Current verification and external-review checkpoint - 2026-08-02
 
-- The compiler-derived checked-decision implementation and documentation are
-  complete and locally committed in SLIDE; KB adjudication RD-0667 is also
-  committed. Galerina's corresponding ledger/docs/generator changes are ready
-  for the local commit below.
-- Fresh evidence before the requested computer restart: SLIDE 379/379 across
-  27 suites; V2 contract 16/16; Galerina focused strict/exporter/retirement
-  evidence 18/18; retirement self-test 12/12; live ledger 2 candidates, 0
-  executed, 110 unexecuted; direct graph check 5/5 and code-index check pass.
-- The first governed phase-close found only generated `graph:all` and
-  `code-index` drift. Both were regenerated and their direct checks pass. The
-  confirmation phase-close was manually stopped at the owner's restart request
-  while running `graph:all --check`; it had emitted no failure summary.
-- **Resume command:** `npm.cmd run phase-close`. If green, run
-  `npm.cmd run phase-close:exhaustive`, update the fixed-point counts if they
-  changed, and commit only any reproducible generator output. Do not infer a
-  pass from the interrupted run.
+- **Repository aggregate green:** all **98/98** packages and **8,846/8,846**
+  tests pass after the priority Claude TypeScript-sweep corrections. The core
+  compiler is **5,791/5,791**, app-kernel **205/205** and REST fuse evidence
+  **4/4**.
+- **Priority authority defects closed:** enum-variant equality no longer
+  collides with Verdict dispatch; record-literal values are checked by the
+  type/value-state passes; secret record fields cannot bypass network egress;
+  match guards require `Bool` and propagate traps; plugin grants and
+  `idempotent: true` use structured/exact recognition; package-owned
+  governance keys cannot become their own Ed25519 or hybrid trust roots.
+- **One supplied report was stale:** a new runtime regression confirms current
+  governance errors already make execution non-OK and return no value. No
+  weakening was made to manufacture a fix.
+- **Derived evidence fixed point:** graph check **5/5**, code-index check pass,
+  benchmark publication freshness has zero findings, and executable example
+  diagnostics are **232/232** with zero known or new drift.
+- **External sweep remains non-authorizing:** 80/195 severe reports were
+  independently adjudicated by the supplier (49 confirmed, 31 refuted). The
+  remaining **115 severe** and **438 medium/low** reports must be reproduced
+  against the current tree before they can become Galerina defects or closure
+  claims. Preserve unreachable-but-latent shapes in a separate register.
+- **Current chapter closed:** one uninterrupted **87/87 exhaustive** phase-close
+  passed in 847.6 seconds after the documentation and generated-evidence
+  refresh. It includes the complete package, security, tooling, compiler,
+  provenance, graph, example and benchmark-publication gates.
+- **Evidence report:**
+  `docs/reports/claude-ts-sweep-and-full-tooling-verification-2026-08-02.md`.
 
 ### Bounded compiler-derived Galerina -> SLIDE switch green - 2026-08-02
 
@@ -193,9 +204,10 @@
   remain static, non-authorizing candidates. Strict frontend acceptance and a
   complete dossier are not executable parity or governed admission. The fresh
   whole-corpus second-pass sandbox remains a separate quarantine programme.
-- **Current verification anchors:** Galerina's last complete fixed point is
-  **98/98 packages, 8,831 tests**, strict **84/84**, exhaustive **85/85** and
-  graph **5/5**. Independent SLIDE freshly passes **367/367** across 24 suites
+- **Current verification anchors:** Galerina's current package aggregate is
+  **98/98 packages, 8,846/8,846 tests**, graph **5/5** and exhaustive
+  phase-close **87/87**.
+  Independent SLIDE freshly passes **367/367** across 24 suites
   and its repository-owned V2 contract is **16/16 files**. These facts prove
   their existing surfaces only; they do not authorize package retirement.
 - **History rule:** lower dated sections are retained as chronological
@@ -223,10 +235,10 @@
   archived Galerina/Wasm lane only for matching admitted workload/unit pairs.
   Missing, ambiguous, non-finite or mismatched rows receive no ratio. Current
   status is correctly `DEFERRED_NO_SLIDE_LANE`; VADE remains non-comparative.
-- **Fresh evidence:** benchmark package **39/39**, truth audit clean, report
-  freshness clean and regression guard reports no attributable regression.
-  The post-commit repository aggregate passes **98/98 packages and 8,831
-  tests**.
+- **Benchmark-checkpoint evidence:** benchmark package **39/39**, truth audit
+  clean and regression guard reported no attributable regression. The package
+  aggregate at that frozen benchmark checkpoint was 98/98 and 8,831 tests;
+  the current aggregate is 98/98 and 8,846/8,846.
 
 ### Full publication benchmark completed - 2026-08-02
 
@@ -314,8 +326,9 @@
   pass after observed RED failures. The VOK source passes production parse,
   type, value-state, effect and governance checks and contains no authority in
   its serializable records.
-- **Fresh repository fixed point:** the governed count-writing runner passes
-  98/98 packages and 8,831 tests; the core compiler contributes 5,781 tests.
+- **Current repository fixed point:** the governed count-writing runner passes
+  98/98 packages and 8,846/8,846 tests; the core compiler contributes
+  5,791/5,791 tests.
 - **Superseded runtime status:** RD-0660 and RD-0662 now supply the bounded
   native mint table, unguessable slot/generation resolution, eager revocation
   and closed-profile W^X floor described in the current chapter above.

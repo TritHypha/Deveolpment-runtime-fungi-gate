@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-02T10:45:11.000Z",
-  "sha": "78f541bb",
-  "contracts": 1431,
-  "parsed": 519,
+  "generatedAt": "2026-08-02T19:18:38.000Z",
+  "sha": "c07c405a",
+  "contracts": 1437,
+  "parsed": 520,
   "rows": [
     {
       "file": "docs/examples/Level-1-Basics/001-pure-flow/example.fungi",
@@ -5055,6 +5055,54 @@
       "signature": "pure flow runProgram(flows: Array<FlowEntry>, entryName: String, args: Array<RtValue>) -> RunResult",
       "effects": [],
       "intent": "Run a flow-table program from an entry flow with positional args; return value + audit log."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionVerdictText",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionVerdictText(verdict: Verdict) -> String",
+      "effects": [],
+      "intent": "Preserve all K3 states in checked-decision diagnostics."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "emptySLIDECheckedDecisionFrontendReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow emptySLIDECheckedDecisionFrontendReceipt() -> SLIDECheckedDecisionFrontendReceipt",
+      "effects": [],
+      "intent": "Return no partial checked-decision receipt after refusal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "refuseSLIDECheckedDecisionFrontend",
+      "qualifier": "pure",
+      "signature": "pure flow refuseSLIDECheckedDecisionFrontend(failureId: String, detail: String) -> SLIDECheckedDecisionFrontendResult",
+      "effects": [],
+      "intent": "Fail closed without preserving partial receipt authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionParametersValid",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionParametersValid(parameters: Array<SLIDECheckedDecisionParameter>, k3Sensitive: Bool) -> Bool",
+      "effects": [],
+      "intent": "Require a closed ordered Bool/Verdict parameter surface."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionMappingsValid",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionMappingsValid(mappings: Array<SLIDECheckedDecisionMapEntry>, sourceByteLength: Int) -> Bool",
+      "effects": [],
+      "intent": "Require bounded monotonic instruction-to-source evidence."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "validateSLIDECheckedDecisionFrontendReceipt",
+      "qualifier": "pure",
+      "signature": "pure flow validateSLIDECheckedDecisionFrontendReceipt(receipt: SLIDECheckedDecisionFrontendReceipt) -> SLIDECheckedDecisionFrontendResult",
+      "effects": [],
+      "intent": "Validate a bounded candidate without releasing execution authority."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-gfrontend-checked-snapshot.fungi",

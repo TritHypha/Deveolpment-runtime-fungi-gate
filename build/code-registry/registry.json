@@ -3884,7 +3884,7 @@
       "defs": 0,
       "emits": 3,
       "tests": 49,
-      "docs": 18
+      "docs": 19
     },
     {
       "code": "FUNGI-EFFECT-004",
@@ -8018,7 +8018,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 7,
+      "tests": 9,
       "docs": 1
     },
     {
@@ -8421,7 +8421,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 45,
+      "tests": 47,
       "docs": 1
     },
     {
@@ -8749,7 +8749,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 26,
+      "tests": 27,
       "docs": 8
     },
     {
@@ -9853,7 +9853,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 20,
+      "tests": 22,
       "docs": 0
     },
     {

@@ -945,7 +945,7 @@
 > On a GPU this parallelises across thousands of threads. 🖥️ CPU = running on CPU; 🎮 GPU = real GPU dispatch.
 
 **GPU detected:** NVIDIA GeForce RTX 2060 (driver 610.74, 6144 MiB)
-**Compute toolchain:** NVIDIA GeForce RTX 2060 — GPU compute available.
+**Compute toolchain:** NVIDIA GeForce RTX 2060 present, but NO compute toolchain installed (CUDA/torch-cuda/Deno all absent). GPU cells = 'toolchain required'.
 **Deno WebGPU:** ✅ available — real GPU dispatch enabled (NVIDIA GeForce RTX 2060)
 **Galerina GPU backend:** `not-implemented` — gpu-plan.ts emits a WGSL skeleton only; no dispatch path (pending Phase 38).
 

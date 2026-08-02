@@ -2,16 +2,19 @@
 
 Date: 2026-08-02
 Branch: `codex/galerina-beta-v1-completion`
-Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,831** tests, graph **5/5**
+Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
+with **8,846/8,846** tests, graph **5/5**, code index current, benchmark
+publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Restart checkpoint: the checked-decision integration and its focused evidence
-are green. Generated graph/code-index drift was repaired and direct checks pass.
-The post-repair governed phase-close confirmation was stopped on the owner's
-restart request while still running; rerun phase-close then exhaustive before
-claiming a new Galerina whole-repository fixed point.
+Verification refresh: the interrupted restart run has been replaced by one
+uninterrupted 847.6-second exhaustive close with **87/87** blocking gates
+passed. The complete package aggregate is green; graph, code-index, benchmark
+publication and all 232 executable-example contracts pass directly. The first
+external TypeScript-sweep remediation tranche closed seven current authority
+defects and proved one supplied runtime claim stale. The unadjudicated external
+sweep remains a review queue, not confirmed debt.
 
 Roadmap refresh: the execution-switch and terminal-retirement boundaries were
 reconciled against the live gate on 2026-08-02. The terminal verifier itself
@@ -411,8 +414,8 @@ The remaining sequence is:
 
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
-   evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,831 unit tests.
+   direct evidence is exhaustive 87/87, graph 5/5 and package 98/98 with
+   8,846/8,846 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
