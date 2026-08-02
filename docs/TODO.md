@@ -1,5 +1,28 @@
 # TODO
 
+### RD-0661 patent-trigger review integrated - 2026-08-02
+
+- **Verified trigger:** `galerina-ai-neuromorphic` contains spike/event records,
+  scalar neuron/synapse counts and bounded plan/report validators. It has no
+  executor, delay/refractory state, addressable circuit array, dynamic topology,
+  neural-subgraph implantation, failure-control loop or actuator API.
+- **Mechanical boundary green:** the package is private, post-v1 and
+  non-executable. Its new TypeScript-AST architecture gate pins the absent
+  claim elements and execution APIs. Typecheck, build and all **18/18** package
+  tests pass.
+- **Register started:**
+  `docs/security/PATENT-AND-PROVENANCE-REGISTER.md` records the technical
+  element map, change triggers and all legal/provenance unknowns as
+  `INDETERMINATE`. A passing test is not legal clearance.
+- **Unsafe shared scanner quarantined:** the external RD-0661 regex detector
+  has verified fail-open, disclosure, resource-bound and containment defects.
+  It is research scratchpad evidence only and must not enter Galerina CI.
+- **Next technical work:** add narrow per-repository architecture tests for
+  other applicable `PAT-*` boundaries and complete their register entries.
+  Public production remains blocked on the separate qualified-counsel gate.
+- **R&D record:** KB RD-0663 contains the source recheck, corrected package
+  map, zero-trust scores and tool-hardening corpus.
+
 ### Counsel-ready FTO scope fixed - 2026-08-02
 
 - **Binding owner decision:** the initial professional FTO review covers the
@@ -51,6 +74,16 @@
   Galerina -> SLIDE execution switch, then retire packages in dependency order.
   The completed verifier must not be weakened. Terminal admission cannot become
   green through exemptions, percentages, fallback or manually asserted state.
+- **New bounded floor:** independent SLIDE now re-derives Galerina's exact G4
+  source, 1,752-byte receipt, 40-node map, V2-D semantics and nine plan
+  commitments, then executes the guarded-memory profile through one VOK lease
+  and typed terminal receipt. Focused evidence is 25/25; complete SLIDE is
+  363/363. Source/receipt/body mutation, evidence substitution, hostile intake,
+  gate deny/unknown, replay and exhausted budgets refuse with no fallback.
+- **Why integration remains blue:** G4 is a frozen compiler conformance fixture
+  and the runtime is reference-only. It is not an ordinary/K3 package pair,
+  producer authentication, native execution or production ledger authority.
+  The general checked-source frontend remains the next dependency.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **494** tracked package TypeScript paths,
   **109** unexecuted production `.fungi` sources, **36** unowned production
@@ -68,7 +101,8 @@
   affine lease -> typed execution/audit receipt -> exact per-package
   authority-ledger entry -> TypeScript/oracle retirement. A failed SLIDE path
   has no Wasm, walker, Node, cache or driver fallback.
-- **Workstream visibility:** (1) execution switch: not admitted; (2) ledger:
+- **Workstream visibility:** (1) execution switch: bounded G4 floor verified,
+  reusable real-package switch not admitted; (2) ledger:
   109 Fungi entries required and the ledger is empty; (3) conversion: 494
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
@@ -86,7 +120,7 @@
   whole-corpus second-pass sandbox remains a separate quarantine programme.
 - **Current verification anchors:** Galerina's last complete fixed point is
   **98/98 packages, 8,831 tests**, strict **84/84**, exhaustive **85/85** and
-  graph **5/5**. Independent SLIDE freshly passes **347/347** across 19 suites
+  graph **5/5**. Independent SLIDE freshly passes **363/363** across 23 suites
   and its repository-owned V2 contract is **16/16 files**. These facts prove
   their existing surfaces only; they do not authorize package retirement.
 - **History rule:** lower dated sections are retained as chronological
