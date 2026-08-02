@@ -1,5 +1,28 @@
 # TODO
 
+### Checked `.fungi` to canonical `.slide` compiler floor green - 2026-08-03
+
+- Independent SLIDE now lowers the admitted checked-decision subset of real
+  `.fungi` bytes into canonical V2-C GIR, independently re-admits the entry
+  signature, packages a reference `.slide` object and executes it through VOK.
+- Boolean and Verdict decisions retain total terminal structure, including
+  distinct K3 allow/deny/indeterminate paths. No Galerina TypeScript AST,
+  producer GIR, WAT emitter, runtime walker, caller graph or fallback enters
+  the route.
+- Two real Galerina fixtures plus two unregistered shapes compile
+  deterministically. Evidence covers 206 exact execution vectors, 5/5 focused
+  compiler tests and 410/410 complete SLIDE tests across 32 suites with Node
+  count stable at 1 before/after.
+- Refusal releases zero partial GIR or bundle bytes. The 21-file SLIDE contract
+  and security closure remain green; authenticated external evidence remains
+  K3 `0`.
+- This is a real bounded `.fungi -> GIR -> .slide -> VOK` path, not full package
+  compilation. General expressions, effects, memory, ABI/imports/resources,
+  production native/platform admission and owner-reviewed package conversion
+  remain open and unchanged.
+- Report: SLIDE
+  `docs/reports/checked-fungi-to-slide-completion-2026-08-03.md`.
+
 ### Canonical SLIDE V2-B effect GIR and `.slide` floor green - 2026-08-03
 
 - Independent SLIDE now parses a closed canonical effect GIR whose bytes select
