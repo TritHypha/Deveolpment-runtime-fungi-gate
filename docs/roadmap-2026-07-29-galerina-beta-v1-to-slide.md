@@ -7,6 +7,18 @@ package lane **98/98** with **8,814** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the full publication-fidelity benchmark has now run at
+Galerina `54c15058...` after rebuilding the core chain and native lanes. The
+unfiltered process completed 29 workloads, all 17 comparable workloads passed
+unit alignment, the checksum/truth audit passed and the regression guard found
+no attributable regression. The normal chart compares the latest distinct
+snapshot; a second chart is pinned to the earliest retained archive and
+accounts for all 29 current rows (23 shared, 1 added and 5
+present-but-unmeasured). The detached SLIDE VADE child remains audit-clean but
+non-comparative and non-authorizing. This closes the current Galerina benchmark
+chapter; it does not close the deferred terminal SLIDE/Wasm/Rust/Python
+comparison.
+
 Roadmap refresh: the native `.fungi` VOK authority chapter now includes the
 source type/use-state boundary and an unlinked unsafe-free table inside the
 existing `galerina-core-runtime` package. The `.fungi` and native nine-gate
@@ -143,6 +155,7 @@ flowchart TB
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
+    FB["🟩 Full Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>truth audit clean · two charts"]
     I["🟦 Galerina → SLIDE integration<br/>per-package .fungi execution switch"]
     TG["🟨 Terminal retirement authority gate<br/>16/16 adversarial · exact red debt"]
     T["🟦 Package retirement<br/>491 tracked package .ts → 0<br/>95 node_modules → 0"]
@@ -172,7 +185,8 @@ flowchart TB
     AG --> AI --> AH --> DCTP
     AI --> DCTP --> AE --> I
     AI --> AF --> I
-    E --> K --> Q
+    E --> K --> FB --> Q
+    FB --> J
     E --> S --> SC --> ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
@@ -186,7 +200,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,SP,AD,AG,AI,SI,O,SA,NP,RP green;
+    class A,B,C,D,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,SP,AD,AG,AI,SI,O,SA,NP,RP green;
     class X red;
     class Q,AC,AH,TG,LI,F,AT amber;
     class H,I,T,AE,AF blue;
@@ -266,6 +280,7 @@ the complete external durability/platform evidence are present.
 | Remote installer supply-chain gate | 🟩 | Zero download-to-shell findings; planted defect/control self-test; phase-close wired; audit/lint meta-gate 81/81 |
 | SLIDE V2 contract provenance | 🟩 | 15 exact live contract/handoff files moved into repository-owned SLIDE with a closed digest-suite manifest; integrity 5/5 and full SLIDE 35/35 |
 | Benchmark publication integrity | 🟩 | The audit self-test is 15/15; comparator-only output without its admitted Galerina subject is HIGH; active/latest duplicates, omissions, surplus entries, non-publication leakage and unregistered source directories refuse. GPU probes use direct argv without a shell. The focused framework subject reaches 10/10 handlers with an explicit admitted K3 identity verdict |
+| Full Galerina publication benchmark | 🟩 | Galerina `54c15058...`, Windows 10 x64, Node 24.18.0, Python 3.14.6, Rust 1.96.1 and g++ 16.1.0. The unfiltered 29-workload run exited 0; 17/17 comparable units align, six cross-language checksum controls pass, the truth audit is clean and the regression guard finds no attributable regression. The current/latest-distinct chart and earliest/current chart are regenerated. The detached SLIDE child remains non-comparative and non-authorizing; the terminal independent SLIDE comparison is still deferred |
 | Bounded independent SLIDE prepared executor | 🟩 | Exact V2-D bytes are fully admitted once into a deeply immutable process-local plan; every call recreates SSA/memory/guard/variant/accounting state. 791/791 byte mutations plus copied, proxied, forged and cross-module plans refuse. Independent SLIDE was 47/47 before measurement |
 | Bounded Shape Fabric benchmark | 🟩 | Clean SLIDE `573670b` and Galerina `745ff5be`; Windows 10.0.19045 x64, i9-9900K, Node v24.18.0; 2 warmups, 9 samples, 2,048 ops/sample; every checksum exact. Median clean 8,090.17 ops/s, prepared 170,103.91 ops/s, 21.03x. This is fixed V2-D reference evidence, not the terminal cross-runtime result |
 | Shape Lab E00 hostile corpus | 🟩 | SLIDE `80d79cd`: bounded raw-byte S0 intake, exact S1-S8 validation and literal F01-F20 coverage are complete. Hostile graph, policy, target, parameter, proposal, atlas and result mutations fail closed or reach their specifically admitted non-authorizing state. Focused evidence is 47/47; the complete independent SLIDE suite is 102/102. Nine schemas parse offline. This closes only the bounded E00 lab contract, not the general backend |

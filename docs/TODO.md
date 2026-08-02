@@ -1,5 +1,26 @@
 # TODO
 
+### Full publication benchmark completed - 2026-08-02
+
+- **Full run complete:** the unfiltered 29-workload suite exited `0` after a
+  fresh core-chain and native rebuild. All **17/17** comparable workloads pass
+  unit alignment; `governance-cost` remains explicitly internal-only and
+  excluded from cross-runtime claims.
+- **Truth gates green:** checksum identity passes for six cross-language
+  workloads, the truth audit is clean, the detached SLIDE VADE child is
+  `AUDIT_CLEAN` with `authorityReleased: false`, and the regression guard finds
+  no attributable regression.
+- **Charts current:** the normal two-view chart compares the current run with
+  the latest distinct snapshot. A second self-contained chart is pinned to the
+  earliest archive (`2026-06-17_extended`) and accounts for every current row:
+  23 shared, 1 added and 5 present-but-unmeasured.
+- **Evidence:**
+  `docs/reports/full-publication-benchmark-2026-08-02.md` and
+  `packages-galerina/galerina-devtools-benchmarks/results/`.
+- **Still deferred honestly:** this is Galerina's current Wasm/reference/native
+  benchmark, not the terminal independent SLIDE comparison. Do that only when
+  SLIDE has an executable backend and equivalent admitted workloads.
+
 ### Windows static linked-host candidate - current chapter - 2026-08-02
 
 - **Toolchain verified:** owner and independent preflights both return a
