@@ -1,0 +1,205 @@
+@version 1
+/// @file: slide-checked-decision-frontend.fungi
+/// @purpose: Define the closed receipt model for a bounded pure decision frontend.
+/// @status: Reference-candidate validation only; never execution or production authority.
+
+record SLIDECheckedDecisionParameter {
+  index: Int
+  name: String
+  typeName: String
+}
+
+record SLIDECheckedDecisionMapEntry {
+  instructionId: Int
+  kind: String
+  startByte: Int
+  endByte: Int
+}
+
+record SLIDECheckedDecisionFrontendReceipt {
+  schema: String
+  frontendId: String
+  frontendVersion: String
+  languageEdition: Int
+  packageId: String
+  profileId: String
+  sourceByteLength: Int
+  sourceDigest: String
+  flowName: String
+  parameters: Array<SLIDECheckedDecisionParameter>
+  returnType: String
+  k3Sensitive: Bool
+  semanticTokenDigest: String
+  mappings: Array<SLIDECheckedDecisionMapEntry>
+  decisionGraphCanonical: String
+  decisionGraphDigest: String
+  instructionCount: Int
+  diagnosticDigest: String
+  memoryPlanDigest: String
+  effectPlanDigest: String
+  failurePlanDigest: String
+  capabilityPlanDigest: String
+  producerGIRDigest: String
+  deterministic: Bool
+  referenceOnly: Bool
+}
+
+record SLIDECheckedDecisionFrontendResult {
+  verdict: Verdict
+  status: String
+  failureId: String
+  receipt: SLIDECheckedDecisionFrontendReceipt
+  authorityReleased: Bool
+}
+
+// Preserve all K3 states without Boolean coercion.
+pure flow slideCheckedDecisionVerdictText(verdict: Verdict) -> String
+contract { intent { "Preserve all K3 states in checked-decision diagnostics." } }
+{
+  check(verdict) {
+    deny: { return "-1" }
+    ambig: { return "0" }
+    if: { return "1" }
+  }
+}
+
+// Return an empty, permanently non-authorizing receipt after refusal.
+pure flow emptySLIDECheckedDecisionFrontendReceipt() -> SLIDECheckedDecisionFrontendReceipt
+contract { intent { "Return no partial checked-decision receipt after refusal." } }
+{
+  return {
+    schema: "" frontendId: "" frontendVersion: "" languageEdition: 0
+    packageId: "" profileId: "" sourceByteLength: 0 sourceDigest: ""
+    flowName: "" parameters: [] returnType: "" k3Sensitive: false
+    semanticTokenDigest: "" mappings: [] decisionGraphCanonical: ""
+    decisionGraphDigest: "" instructionCount: 0 diagnosticDigest: ""
+    memoryPlanDigest: "" effectPlanDigest: "" failurePlanDigest: ""
+    capabilityPlanDigest: "" producerGIRDigest: ""
+    deterministic: false referenceOnly: true
+  }
+}
+
+pure flow refuseSLIDECheckedDecisionFrontend(
+  failureId: String,
+  detail: String,
+) -> SLIDECheckedDecisionFrontendResult
+contract { intent { "Fail closed without preserving partial receipt authority." } }
+{
+  return {
+    verdict: Verdict.Deny
+    status: failureId + ":" + detail
+    failureId: failureId
+    receipt: emptySLIDECheckedDecisionFrontendReceipt()
+    authorityReleased: false
+  }
+}
+
+// Validate parameter order, identity and admitted scalar types.
+pure flow slideCheckedDecisionParametersValid(
+  parameters: Array<SLIDECheckedDecisionParameter>,
+  k3Sensitive: Bool,
+) -> Bool
+contract { intent { "Require a closed ordered Bool/Verdict parameter surface." } }
+{
+  if parameters.length() < 1 or parameters.length() > 64 { return false }
+  mut expected: Int = 0
+  for parameter in parameters {
+    if parameter.index != expected { return false }
+    if parameter.name.length() < 1 or parameter.name.length() > 64 {
+      return false
+    }
+    if parameter.typeName != "Bool" and parameter.typeName != "Verdict" {
+      return false
+    }
+    if parameter.typeName == "Verdict" and (k3Sensitive == false or expected != 0) {
+      return false
+    }
+    if parameter.typeName == "Bool" and k3Sensitive and expected == 0 {
+      return false
+    }
+    expected = expected + 1
+  }
+  return true
+}
+
+// Validate complete ordered source mappings without overlapping byte ranges.
+pure flow slideCheckedDecisionMappingsValid(
+  mappings: Array<SLIDECheckedDecisionMapEntry>,
+  sourceByteLength: Int,
+) -> Bool
+contract { intent { "Require bounded monotonic instruction-to-source evidence." } }
+{
+  if mappings.length() < 1 or mappings.length() > 512 { return false }
+  mut expected: Int = 0
+  mut previousEnd: Int = 0
+  for mapping in mappings {
+    if mapping.instructionId != expected { return false }
+    if mapping.kind.length() < 1 or mapping.kind.length() > 32 { return false }
+    if mapping.startByte < previousEnd or mapping.startByte < 0 {
+      return false
+    }
+    if mapping.endByte <= mapping.startByte or mapping.endByte > sourceByteLength {
+      return false
+    }
+    expected = expected + 1
+    previousEnd = mapping.endByte
+  }
+  return true
+}
+
+// Check the bounded candidate shape. Independent SLIDE re-derives all semantics.
+pure flow validateSLIDECheckedDecisionFrontendReceipt(
+  receipt: SLIDECheckedDecisionFrontendReceipt,
+) -> SLIDECheckedDecisionFrontendResult
+contract { intent { "Validate a bounded candidate without releasing execution authority." } }
+{
+  if receipt.schema != "galerina.slide.checked-decision-frontend.v1" {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-001", "unknown receipt schema",
+    )
+  }
+  if receipt.frontendId != "@galerina/core-compiler" or receipt.frontendVersion.length() < 1 or receipt.frontendVersion.length() > 64 or receipt.languageEdition != 1 {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-002", "frontend identity or edition refused",
+    )
+  }
+  if receipt.packageId.length() < 1 or receipt.packageId.length() > 80 or receipt.profileId.length() < 1 or receipt.profileId.length() > 80 or receipt.flowName.length() < 1 or receipt.flowName.length() > 80 {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-003", "package, profile, or flow identity refused",
+    )
+  }
+  if receipt.sourceByteLength < 1 or receipt.sourceByteLength > 1048576 or receipt.sourceDigest.length() != 64 or receipt.semanticTokenDigest.length() != 64 {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-004", "source identity or bound refused",
+    )
+  }
+  if receipt.returnType != "Int" or slideCheckedDecisionParametersValid(receipt.parameters, receipt.k3Sensitive) == false {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-005", "flow signature refused",
+    )
+  }
+  if slideCheckedDecisionMappingsValid(receipt.mappings, receipt.sourceByteLength) == false or receipt.instructionCount != receipt.mappings.length() {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-006", "source mapping refused",
+    )
+  }
+  if receipt.decisionGraphCanonical.length() < 2 or receipt.decisionGraphCanonical.length() > 4096 or receipt.decisionGraphDigest.length() != 64 {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-007", "decision graph refused",
+    )
+  }
+  if receipt.diagnosticDigest.length() != 64 or receipt.memoryPlanDigest.length() != 64 or receipt.effectPlanDigest.length() != 64 or receipt.failurePlanDigest.length() != 64 or receipt.capabilityPlanDigest.length() != 64 or receipt.producerGIRDigest.length() != 64 {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-008", "plan or producer evidence refused",
+    )
+  }
+  if receipt.deterministic == false or receipt.referenceOnly == false {
+    return refuseSLIDECheckedDecisionFrontend(
+      "SLIDE-CDFRONT-009", "determinism or reference boundary refused",
+    )
+  }
+  return {
+    verdict: Verdict.Allow status: "CHECKED_DECISION_FRONTEND_CANDIDATE"
+    failureId: "NONE" receipt: receipt authorityReleased: false
+  }
+}
