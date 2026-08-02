@@ -79,14 +79,14 @@ graph SHA-256, tracked evidence path and evidence SHA-256. The gate re-reads
 regular non-symlink files and checks path containment and file digests, but a
 valid candidate remains unexecuted debt. Production `fungiSources` and
 `hostBridges` currently refuse every entry until typed cryptographic execution
-and ownership receipt verifiers exist. Missing, untracked, stale, substituted,
+and ownership receipts verify. Missing, untracked, stale, substituted,
 duplicated, mis-owned or schema-expanded candidate entries also refuse. The
 older R4 compiler and governed-twin ledgers remain valid shadow-bake history,
 but do not implicitly grant terminal post-SLIDE execution authority; terminal
 admission is a fresh and narrower claim. The full contract is in
 `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 
-The verifier implementation is complete. Fresh current evidence passes 11/11
+The verifier implementation is complete. Fresh current evidence passes 12/12
 top-level adversarial tests; the earlier 16/16 focused run
 remains a historical checkpoint. The current measured admission debt is 494
 tracked package TypeScript paths, 110 production `.fungi` sources awaiting

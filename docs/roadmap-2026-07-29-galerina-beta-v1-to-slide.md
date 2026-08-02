@@ -8,6 +8,28 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the post-SLIDE production authority verifier is now green as
+an implementation control. Schema v3 consumes exact in-toto-shaped predicates
+inside the existing hybrid root-delegated repository-evidence envelope. It
+independently binds source, frontend, graph, compiler, GIR, SLIDE/VOK object,
+policy, affine lease, terminal execution, platform, repository commit,
+monotonic serial, time and revocation evidence; host receipts additionally
+bind least authority, capability, isolation, cleanup and retain/replace
+disposition. Both Ed25519 and ML-DSA-65 must verify. Focused evidence is 5/5
+plus the 12/12 retirement corpus. Production admission remains blue, not red:
+the tracked ledger deliberately has two non-authorizing candidates, zero
+signed sources and zero signed host boundaries, and the offline delegated
+public authority is not yet activated. Package conversion was not touched.
+
+Roadmap refresh: release evidence is now crypto-agile at its executable
+boundary. The governed register has a fifth, domain-separated
+`release-evidence` family; the live verifier dispatches by a versioned suite
+catalog and its conformance test prevents an unregistered implementation.
+Unknown/planned/schema-mismatched suites refuse. Future replacement uses a new
+schema where key shape changes, overlapping activation, receipt reissue and
+verify-only retirement of the old suite. No `.slide`, package or application
+semantic contract is tied to Ed25519 or ML-DSA-65.
+
 Roadmap refresh: flat dependency tooling is now split into a green reference
 control and blue physical retirement debt. One canonical root lock accounts
 for all 98 direct package peers, 45 exact internal edges, 138 external
@@ -81,15 +103,15 @@ sweep remains a review queue, not confirmed debt.
 
 Roadmap refresh: the execution-switch and terminal-retirement boundaries were
 reconciled against the live gate on 2026-08-02. The terminal verifier itself
-is implemented and green (**11/11 top-level adversarial tests**;
+is implemented and green (**12/12 top-level adversarial tests**;
 historical focused checkpoint 16/16). Terminal retirement admission is a
 separate red state because current exact debt is 494 tracked package `.ts`
 paths, 110 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
 package-local `node_modules` trees and one nested package. The authority ledger
-contains two non-authorizing candidates and zero production entries. Schema v2
-now isolates digest-checked candidates and
-refuses every production source or bridge entry until a typed cryptographic
-receipt verifier exists. The bounded reusable Galerina -> SLIDE/VOK decision
+contains two non-authorizing candidates and zero production entries. Schema v3
+isolates digest-checked candidates and admits a production source or boundary
+only after the implemented typed hybrid receipt verifier independently proves
+it. The bounded reusable Galerina -> SLIDE/VOK decision
 switch is green; production admission and dependency-ordered package retirement
 remain next. No exception,
 fallback or renamed debt is permitted.
@@ -262,13 +284,14 @@ flowchart TB
     Q["🟨 External candidate staging<br/>flat .fungi peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
-    RV["🟩 Retirement verifier implemented<br/>11/11 top-level adversarial<br/>schema-v2 false-authority closure"]
+    RV["🟩 Retirement verifier implemented<br/>12/12 top-level adversarial<br/>schema-v3 signed-authority closure"]
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
     RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · differential oracle"]
     I["🟩 Galerina → SLIDE integration<br/>compiler-derived decision switch<br/>21/21 · reference-only"]
-    AL["🟦 .fungi admission ledger<br/>2 candidates · 0 production<br/>receipt verifier open"]
+    AV["🟩 Signed post-SLIDE receipt verifier<br/>hybrid two-part signatures<br/>exact predicates · no fallback"]
+    AL["🟦 .fungi production admission<br/>2 candidates · 0 signed sources<br/>offline authority/evidence pending"]
     T["🟦 Package conversion<br/>494 tracked package .ts → 0"]
-    HB["🟦 Host-boundary ownership<br/>36 detected boundaries → 0 unowned"]
+    HB["🟦 Host-boundary production admission<br/>verifier green · 36 → 0 unowned"]
     FL["🟩 Flat package root-lock<br/>98 peers · 45 internal edges<br/>exact non-ambient resolver"]
     FD["🟦 Physical dependency retirement<br/>95 node_modules + 1 nested identity → 0"]
     TG["🟥 Terminal retirement admission<br/>all exact debts must be zero<br/>no exemptions or fallback"]
@@ -292,7 +315,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -317,7 +340,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,LS,FL green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,LS,FL,AV green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -347,8 +370,8 @@ integration condition. Exact canonical sources from `core-sentinel-state` and
 tokenized and mapped by SLIDE before all 4 ordinary, 192 K3/Boolean and 8
 synthetic vectors execute through VOK. The integration tile is green only for
 this bounded reference contract. The two ledger candidates remain unexecuted;
-producer authentication, native object identity and the production receipt
-verifier remain blue.
+producer authentication, native object identity and signed production receipt
+issuance remain blue; the receipt verifier itself is green.
 
 The diagram is dependency-ordered, not a claim that all research waits for the
 release path. Galerina's repository-local functional fixed point is green. The
@@ -375,11 +398,12 @@ table is navigation, not authority.
 
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
-| 0 | Retirement verifier implementation | 🟩 | 11/11 top-level adversarial tests; schema-v2 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
+| 0 | Retirement verifier implementation | 🟩 | 12/12 terminal adversarial tests; schema-v3 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
 | 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived receipts plus independent SLIDE token/map/graph/plan derivation pass 21/21. Two real profiles cover 196 vectors and a third unregistered shape covers 8; VOK is affine and refusal has no fallback. This is reference-only | Keep the bounded switch green while widening admitted package semantics; production promotion stays in row 2 |
-| 2 | `.fungi` admission ledger | 🟦 | Schema v2 validates and cross-binds 2 exact non-authorizing frontend-receipt candidates; plain text and source-only readiness cannot promote authority. Zero production entries are tracked; 110 production `.fungi` sources still require admission | Implement the typed cryptographic execution/ownership receipt verifier, then admit every production source with independently re-derived source, graph, frontend, VOK, platform, signature and provenance facts |
+| 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
+| 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 110 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
 | 3 | Package conversion | 🟦 | 494 tracked package TypeScript paths remain | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
-| 4 | Host-boundary ownership | 🟦 | 36 detected production host boundaries are unowned | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit replacement or retention decision |
+| 4 | Host-boundary production admission | 🟦 | The signed ownership verifier is green; all 36 detected production boundaries still lack signed receipts | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit signed replacement or retention decision |
 | 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
 | 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |
 | 7 | Terminal retirement admission | 🟥 | Refused because rows 1-6 remain open | All exact debts are zero, all predecessor receipts verify, and the unchanged terminal verifier independently returns admitted |
@@ -427,7 +451,7 @@ table is navigation, not authority.
 | SLIDE evidence and atlas owner authorities | 🟦 | Owner approved a separate authenticated SLIDE research-evidence authority and external production atlas-anchor custody. No private evidence key is generated on this host; no Galerina key reuse is inferred. Engineering must still implement the offline ceremony, embedding-authority-owned anchor contract and Windows/Linux/macOS durability/rollback/crash evidence before either claim activates |
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
-| Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **11/11 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v2 separates non-authorizing candidates, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
+| Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **12/12 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v3 separates non-authorizing candidates from hybrid-signed production lanes, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
 | Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 494 tracked package `.ts` paths, 110 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
@@ -692,7 +716,7 @@ red until executable SLIDE integration and every exact debt closure complete.
 The composite `ts-retirement-graph --post-slide` gate additionally requires
 zero tracked package TypeScript, terminal execution admission for every
 production `.fungi` source, and digest-bound ownership for every detected
-production host boundary. Its current 11/11 top-level adversarial suite proves
+production host boundary. Its current 12/12 top-level adversarial suite proves
 that renaming debt, unexecuted source, nested identities, dependency trees,
 unowned host bridges, substituted candidate evidence and plain text claimed as
 production execution all refuse. The resolver, lock,

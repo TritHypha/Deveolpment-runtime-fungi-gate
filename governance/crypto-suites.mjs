@@ -20,8 +20,8 @@
  *   - The iron rule: a "verify-only-retired" suite KEEPS its verifier, so it stays verifiable.
  *     isSuiteVerifiable() keys off "does a verifier symbol exist", never off signable status.
  *
- * Envelope scope: FOUR domain-separated families (governance-signature, audit-attestation,
- * bridge-manifest, registry-index). Dispatch happens WITHIN a domain — callers pass the
+ * Envelope scope: FIVE domain-separated families (governance-signature, audit-attestation,
+ * bridge-manifest, registry-index, release-evidence). Dispatch happens WITHIN a domain — callers pass the
  * domain id explicitly.
  */
 import { readFileSync, existsSync } from "node:fs";

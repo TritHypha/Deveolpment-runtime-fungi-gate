@@ -122,18 +122,18 @@
   8 synthetic vectors, every VOK gate in deny/unknown states, mutation, hostile
   memory, copied handles and affine replay. Refusal has no fallback.
 - **Candidate ledger advanced safely:** the two real receipts are copied as
-  exact tracked evidence into schema v2. The audit validates canonical receipt
+  exact tracked evidence into schema v3. The audit validates canonical receipt
   shape and cross-binds package, profile, canonical source and graph identity.
   `UTF8_LF_V1` keeps candidate source identity stable across Windows and Linux;
   evidence bytes remain exact and LF-pinned.
-- **Authority remains closed:** candidates are not executed-source authority.
-  The opaque producer GIR fact is bound but unauthenticated; native object
-  identity, producer authentication and the production cryptographic receipt
-  verifier remain required. Current ledger counts are 2 candidates, 0 executed
-  and 110 unexecuted `.fungi` sources.
+- **Production authority remains closed:** candidates are not executed-source
+  authority. The typed hybrid receipt verifier is implemented, but the opaque
+  producer GIR fact remains unauthenticated and no current signed native-object,
+  producer, platform or terminal evidence has been issued. Current ledger
+  counts are 2 candidates, 0 executed and 110 unexecuted `.fungi` sources.
 - **Next dependency:** widen the checked-decision grammar/package corpus where
-  useful, then build the independent production receipt verifier and native
-  object binding before promoting any candidate.
+  useful, complete native object/evidence production, then perform the offline
+  delegated signing ceremony before promoting any candidate.
 
 ### RD-0661 patent-trigger review integrated - 2026-08-02
 
@@ -219,6 +219,19 @@
 
 ### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
 
+- **Signed receipt verifier green:** schema v3 now verifies exact
+  root-delegated repository-role execution and host-ownership statements with
+  both Ed25519 and ML-DSA-65, current commit, serial floor, time, revocation and
+  independently re-read artifact identities. Focused evidence is **5/5**;
+  terminal hostile evidence is **12/12**. Production issuance remains blue at
+  0 signed sources and 0 signed boundaries. See
+  `docs/reports/post-slide-signed-authority-verifier-completion-2026-08-02.md`.
+- **Crypto replacement path green:** release evidence now has a versioned
+  executable suite dispatcher and a governed `release-evidence` register
+  domain. Unknown/planned suites refuse and executable/register status drift is
+  tested. A future suite uses overlap, receipt reissue and verify-only
+  retirement; package, predicate and `.slide` semantics remain unchanged.
+
 - **Exact blocker report:**
   [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
   records the complete live compile/admission chain, the 243 fail-closed
@@ -229,7 +242,7 @@
 - **Status split approved:** the retirement verifier implementation is green;
   terminal retirement admission is red. The green state means the gate exists
   and passes its hostile fixtures. It does not mean any package is retired.
-- **Verifier evidence:** fresh execution passes **11/11** top-level adversarial
+- **Verifier evidence:** fresh execution passes **12/12** top-level adversarial
   tests. The earlier 16/16 focused result remains a historical
   checkpoint; neither result is replaced by the outstanding-debt count.
 - **Current owner priority:** close the reusable, fail-closed per-package
@@ -256,11 +269,15 @@
   canonical frontend receipts, independently re-derived maps/graphs/plans and
   typed VOK terminal receipts. They remain reference-only candidates and cannot
   populate the production lane or authorize retirement.
-- **Ledger authority corrected:** schema v2 now separates exact, digest-checked
-  `candidates` from production `fungiSources` and `hostBridges`. A candidate is
-  never subtracted from execution debt. Both production arrays fail closed
-  until their typed cryptographic receipt verifiers exist; tracked text,
-  source-only readiness and reference VOK output cannot authorize execution.
+- **Ledger authority corrected:** schema v3 separates exact, digest-checked
+  `candidates` from hybrid-signed production `fungiSources` and `hostBridges`.
+  A candidate is never subtracted from execution debt. The typed verifier is
+  implemented: it re-derives the closed execution/ownership predicate and
+  requires both signature components, repository-role delegation, current
+  commit, monotonic serial, time, revocation and exact artifact hashes.
+  Production remains blue because no signed source or boundary receipts exist;
+  tracked text, source-only readiness and reference VOK output cannot authorize
+  execution.
   The contract is documented in
   `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
@@ -270,7 +287,7 @@
   package identity. The execution-authority ledger contains two exact
   non-authorizing candidates, zero executed sources and zero owned bridges.
 - **Gate integrity freshly verified:** `audit:retirement:selftest` passes
-  **11/11 top-level adversarial tests**. It refuses hidden or
+  **12/12 top-level adversarial tests**. It refuses hidden or
   moved TypeScript, unexecuted Fungi, nested packages, dependency forests,
   unowned host bridges, stale/substituted candidate evidence and plain text
   falsely claimed as production execution authority. The ledger itself is
@@ -286,9 +303,9 @@
   has no Wasm, walker, Node, cache or driver fallback.
 - **Workstream visibility:** (1) execution switch: bounded G4 receipt floor and
   registered real-source decision floor verified, reusable checked-source
-  switch verified as a bounded reference; (2) ledger: schema-v2 candidate
-  isolation is verified, the production cryptographic receipt verifier remains
-  to build, 110 Fungi entries are required, two are candidates and zero are
+  switch verified as a bounded reference; (2) ledger: schema-v3 candidate
+  isolation and the hybrid cryptographic verifier are green, while 110 signed
+  Fungi admissions are required, two entries are candidates and zero are
   executed; (3) conversion: 494
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested

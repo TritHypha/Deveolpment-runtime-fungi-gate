@@ -480,6 +480,32 @@ function loadAuthority(policy, policyDirectory, options) {
   });
 }
 
+/**
+ * Load the exact public beta-v1 release-evidence authority for another
+ * repository-owned verifier. This does not verify functional/durability
+ * receipts and never reads private material.
+ */
+export function loadBetaV1ReleaseEvidenceAuthority(options) {
+  if (
+    options === null
+    || typeof options !== "object"
+    || typeof options.policyPath !== "string"
+  ) refuse("BETA_RELEASE_AUTHORITY_OPTIONS_REFUSED");
+  const policyDirectory = dirname(resolve(options.policyPath));
+  const policyBytes = readStableDirectFile(
+    options.policyPath,
+    policyDirectory,
+    "BETA_RELEASE_POLICY_UNAVAILABLE",
+  );
+  const policy = validatePolicy(canonicalJson(policyBytes, "BETA_RELEASE_POLICY_FORMAT"));
+  const authority = loadAuthority(policy, policyDirectory, options);
+  return Object.freeze({
+    ...authority,
+    releaseId: policy.releaseId,
+    targetRepositoryCommit: policy.targetRepositoryCommit,
+  });
+}
+
 function verifySignedStatement(value, role, authority, options) {
   if (sensitive(value)) refuse("BETA_RELEASE_SENSITIVE_EVIDENCE_REFUSED");
   return verifyReleaseEvidenceEnvelope(value, {

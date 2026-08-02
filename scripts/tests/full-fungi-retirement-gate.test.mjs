@@ -134,7 +134,9 @@ function postSlideFixture({
     root,
     "docs/security/post-slide-execution-authority.json",
     `${JSON.stringify({
-      schemaVersion: 2,
+      schemaVersion: 3,
+      minimumReceiptSerial: 1,
+      verificationTime: null,
       candidates: candidateFungi
         ? [{
           path: "packages-galerina/galerina-core/src/index.fungi",
@@ -259,7 +261,7 @@ test("post-SLIDE refuses text evidence claimed as production execution", () => {
     assert.equal(evidence.totals.unexecutedFungi, 1);
     assert.equal(evidence.totals.unownedHostBridges, 0);
     assert.ok(evidence.postSlideViolations.some(
-      (item) => item.includes("cryptographic execution-receipt verifier"),
+      (item) => item.includes("requires one canonical verificationTime"),
     ));
     const readiness = runSelfhost(root, ["--post-slide", "--json"]);
     assert.equal(readiness.status, 0);
@@ -415,6 +417,24 @@ test("post-SLIDE authority ledger requires bounded canonical JSON", () => {
     ));
   } finally {
     rmSync(canonicalRoot, { recursive: true, force: true });
+  }
+
+  const duplicateRoot = postSlideFixture({ authorizeFungi: false });
+  try {
+    write(
+      duplicateRoot,
+      "docs/security/post-slide-execution-authority.json",
+      '{"schemaVersion":3,"schemaVersion":3,"minimumReceiptSerial":1,"verificationTime":null,"candidates":[],"fungiSources":[],"hostBridges":[]}\n',
+    );
+    assert.equal(command(duplicateRoot, "git", ["add", "-A"]).status, 0);
+    const result = run(duplicateRoot, ["--post-slide", "--json"]);
+    assert.notEqual(result.status, 0);
+    const evidence = JSON.parse(result.stdout);
+    assert.ok(evidence.postSlideViolations.some(
+      (item) => item.includes("repeats decoded key"),
+    ));
+  } finally {
+    rmSync(duplicateRoot, { recursive: true, force: true });
   }
 
   const oversizedRoot = postSlideFixture({ authorizeFungi: false });

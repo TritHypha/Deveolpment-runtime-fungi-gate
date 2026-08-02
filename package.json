@@ -23,7 +23,7 @@
     "audit:package-root-lock": "node scripts/flat-package-root-lock.mjs --check --json",
     "audit:package-root-lock:selftest": "node --test scripts/tests/flat-package-root-lock.test.mjs scripts/tests/flat-package-root-lock.integration.test.mjs",
     "audit:retirement": "node scripts/ts-retirement-graph.mjs --check",
-    "audit:retirement:selftest": "node --test scripts/tests/full-fungi-retirement-gate.test.mjs",
+    "audit:retirement:selftest": "node --test scripts/tests/full-fungi-retirement-gate.test.mjs scripts/tests/post-slide-authority-receipts.test.mjs",
     "audit:retirement:post-slide": "node scripts/ts-retirement-graph.mjs --post-slide",
     "audit:selfhost": "node scripts/audit-selfhost-readiness.mjs --check",
     "audit:imports": "node scripts/audit-import-governance.mjs",

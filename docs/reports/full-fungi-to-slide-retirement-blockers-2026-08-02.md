@@ -148,13 +148,14 @@ Still required:
 - isolated execution, least-authority capability RPC and typed termination,
   crash, timeout and audit receipts.
 
-### 5. Typed production execution and host-ownership receipt verifiers
+### 5. Typed production execution and host-ownership receipt admission
 
 [`docs/security/post-slide-execution-authority.json`](../security/post-slide-execution-authority.json)
-deliberately keeps both production arrays closed. The two current entries are
-only checked-decision candidates. They remain among the 110 unexecuted sources.
+uses schema v3. The cryptographic verifier is implemented and green, while the
+production arrays remain empty. The two current entries are checked-decision
+candidates only and remain among the 110 unexecuted sources.
 
-The production verifier must independently bind:
+The implemented verifier independently binds:
 
 - canonical package identity, exact source path/bytes/digest and graph;
 - authenticated frontend producer and complete checked frontend receipt;
@@ -164,7 +165,12 @@ The production verifier must independently bind:
 - repository commit, fixed-point provenance, freshness and revocation state.
 
 A Boolean such as `passed: true`, a self-hash, strict-source acceptance or a
-reference transcript must never populate production authority.
+reference transcript cannot populate production authority. Both hybrid
+signature components, the delegated repository role, time, serial, revocation,
+current repository commit and every exact artifact digest must agree. What
+remains is to generate the complete per-source/per-boundary evidence, perform
+the offline authority ceremony and enter verified receipts—not to invent a
+replacement verifier.
 
 ### 6. Flat native package resolver and one root lock
 

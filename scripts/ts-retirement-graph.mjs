@@ -45,8 +45,13 @@ import {
 import { findCorpus, findTrackedAt } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
 import {
   generatedOutputMatches,
+  gitCommit,
   provenance,
 } from "./lib/provenance.mjs";
+import { loadTrustedRevocationSnapshot } from "../governance/revocation-registry.mjs";
+import { loadBetaV1ReleaseEvidenceAuthority } from "./beta-v1-release-admission.mjs";
+import { verifyPostSlideAuthorityLedgerEntries } from "./lib/post-slide-authority-ledger.mjs";
+import { parseStrictJsonObject } from "./lib/flat-package-root-lock.mjs";
 
 const DEFAULT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ROOT_INDEX = process.argv.indexOf("--root");
@@ -283,7 +288,7 @@ function authorityRelativePath(value, label) {
   return normalized;
 }
 
-function loadPostSlideAuthority(root, tracked, fungiPaths) {
+function loadPostSlideAuthority(root, tracked, fungiPaths, hostBridgePaths) {
   const violations = [];
   let ledger;
   const ledgerBytes = readRegularFile(
@@ -304,7 +309,7 @@ function loadPostSlideAuthority(root, tracked, fungiPaths) {
   let ledgerText;
   try {
     ledgerText = new TextDecoder("utf-8", { fatal: true }).decode(ledgerBytes);
-    ledger = JSON.parse(ledgerText);
+    ledger = parseStrictJsonObject(ledgerText, "post-SLIDE authority ledger");
   } catch (error) {
     return {
       candidateFungi: new Set(),
@@ -326,13 +331,23 @@ function loadPostSlideAuthority(root, tracked, fungiPaths) {
     };
   }
   if (
-    ledger?.schemaVersion !== 2
+    ledger?.schemaVersion !== 3
+    || !Number.isSafeInteger(ledger.minimumReceiptSerial)
+    || ledger.minimumReceiptSerial < 1
+    || !(ledger.verificationTime === null || typeof ledger.verificationTime === "string")
     || !Array.isArray(ledger.candidates)
     || !Array.isArray(ledger.fungiSources)
     || !Array.isArray(ledger.hostBridges)
     || !exactFields(
       ledger,
-      new Set(["schemaVersion", "candidates", "fungiSources", "hostBridges"]),
+      new Set([
+        "schemaVersion",
+        "minimumReceiptSerial",
+        "verificationTime",
+        "candidates",
+        "fungiSources",
+        "hostBridges",
+      ]),
     )
   ) {
     return {
@@ -466,23 +481,105 @@ function loadPostSlideAuthority(root, tracked, fungiPaths) {
   };
 
   const candidateFungi = validateCandidates(ledger.candidates);
-  if (ledger.fungiSources.length > 0) {
-    violations.push(
-      "post-SLIDE production fungiSources require the unavailable cryptographic execution-receipt verifier",
-    );
-  }
-  if (ledger.hostBridges.length > 0) {
-    violations.push(
-      "post-SLIDE production hostBridges require the unavailable cryptographic ownership-receipt verifier",
-    );
+  if (ledger.fungiSources.length === 0 && ledger.hostBridges.length === 0) {
+    if (ledger.verificationTime !== null) {
+      violations.push(
+        "post-SLIDE empty production authority ledger must have verificationTime null",
+      );
+    }
+    return {
+      candidateFungi,
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations,
+    };
   }
 
-  return {
-    candidateFungi,
-    executedFungi: new Set(),
-    ownedHostBridges: new Set(),
-    violations,
-  };
+  let verificationTime;
+  try {
+    const milliseconds = Date.parse(ledger.verificationTime);
+    if (
+      !Number.isFinite(milliseconds)
+      || new Date(milliseconds).toISOString() !== ledger.verificationTime
+    ) throw new Error("non-canonical verification time");
+    verificationTime = ledger.verificationTime;
+  } catch {
+    violations.push(
+      "post-SLIDE production authority ledger requires one canonical verificationTime",
+    );
+    return {
+      candidateFungi,
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations,
+    };
+  }
+
+  try {
+    const revocations = loadTrustedRevocationSnapshot(root);
+    const authority = loadBetaV1ReleaseEvidenceAuthority({
+      policyPath: join(root, "governance", "beta-v1-platform-policy.json"),
+      verificationTime,
+      isRevoked: (keyId) => revocations.isRevoked(keyId),
+    });
+    const repositoryCommit = gitCommit(root);
+    if (
+      repositoryCommit === null
+      || authority.targetRepositoryCommit !== repositoryCommit
+    ) {
+      throw new Error("release-evidence authority does not bind the current repository commit");
+    }
+    const verified = verifyPostSlideAuthorityLedgerEntries({
+      authority: {
+        verifiedDelegation: authority.verifiedDelegation,
+        operationalPublicBundle: authority.operationalPublicBundle,
+        verificationTime,
+        minimumReceiptSerial: ledger.minimumReceiptSerial,
+        isRevoked: (keyId) => revocations.isRevoked(keyId),
+      },
+      fungiSources: ledger.fungiSources,
+      hostBridges: ledger.hostBridges,
+      repositoryCommit,
+      trackedPaths: tracked,
+      readArtifact: (path) => {
+        const artifactViolations = [];
+        const bytes = readRegularFile(
+          root,
+          path,
+          "post-SLIDE signed authority artifact",
+          artifactViolations,
+          AUTHORITY_ARTIFACT_MAX_BYTES,
+        );
+        if (bytes === null || artifactViolations.length > 0) {
+          throw new Error(artifactViolations.join("; "));
+        }
+        return Uint8Array.from(bytes);
+      },
+    });
+    const executedFungi = new Set(verified.fungiSources);
+    const ownedHostBridges = new Set(verified.hostBridges);
+    for (const path of executedFungi) {
+      if (!fungiPaths.has(path)) {
+        throw new Error(`signed Fungi receipt names stale or out-of-scope source ${path}`);
+      }
+    }
+    for (const path of ownedHostBridges) {
+      if (!hostBridgePaths.has(path)) {
+        throw new Error(`signed host receipt names stale or out-of-scope boundary ${path}`);
+      }
+    }
+    return { candidateFungi, executedFungi, ownedHostBridges, violations };
+  } catch (error) {
+    violations.push(
+      `post-SLIDE signed production authority refused: ${error.message}`,
+    );
+    return {
+      candidateFungi,
+      executedFungi: new Set(),
+      ownedHostBridges: new Set(),
+      violations,
+    };
+  }
 }
 
 /**
@@ -596,6 +693,7 @@ export function buildRetirementGraph(root = ROOT) {
     root,
     trackedRepositoryFiles,
     allTrackedFungi,
+    hostBridges,
   );
   for (const fungiPath of compilerAuthority) {
     if (governedAuthority.has(fungiPath)) {

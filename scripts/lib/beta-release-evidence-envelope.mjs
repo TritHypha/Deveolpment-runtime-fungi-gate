@@ -27,6 +27,10 @@ const MAX_STRING_BYTES = 64 * 1024;
 const CANON = "galerina-canonical-json-v1";
 const ALGORITHM = "hybrid-ed25519-mldsa65";
 const DELEGATION_CONTEXT = "galerina.release.evidence.delegation.sig.v1";
+const VERIFIABLE_SUITE_STATUSES = new Set([
+  "active-for-signing",
+  "verify-only-retired",
+]);
 
 export const RELEASE_EVIDENCE_ROLE = Object.freeze({
   DURABILITY: "durability-evidence.sign",
@@ -231,7 +235,7 @@ function canonicalInstant(value, code) {
   return instant;
 }
 
-function publicBundleFacts(bundle, code) {
+function hybridV1PublicBundleFacts(bundle, code) {
   if (
     bundle === null
     || typeof bundle !== "object"
@@ -281,7 +285,7 @@ function decodeSignature(value, expectedLength, code) {
   return bytes;
 }
 
-function verifyHybrid(message, signature, facts, context, code) {
+function verifyHybridV1(message, signature, facts, context, code) {
   exactObject(signature, SIGNATURE_KEYS, code);
   if (
     signature.algorithm !== ALGORITHM
@@ -316,6 +320,52 @@ function verifyHybrid(message, signature, facts, context, code) {
     refuse(code);
   }
   if (!edValid || !mlValid) refuse(code);
+}
+
+const CRYPTO_SUITE_HANDLERS = new Map([[
+  ALGORITHM,
+  Object.freeze({
+    suiteId: ALGORITHM,
+    status: "active-for-signing",
+    delegationSchema: "galerina.release-evidence.delegation.v1",
+    envelopeSchema: "galerina.release-evidence.envelope.v1",
+    publicBundleFacts: hybridV1PublicBundleFacts,
+    verifySignature: verifyHybridV1,
+  }),
+]]);
+
+function cryptoSuiteForSignature(signature, code) {
+  if (
+    signature === null
+    || typeof signature !== "object"
+    || Array.isArray(signature)
+    || types.isProxy(signature)
+    || Object.getPrototypeOf(signature) !== Object.prototype
+  ) refuse(code);
+  const descriptor = Object.getOwnPropertyDescriptor(signature, "algorithm");
+  if (
+    descriptor === undefined
+    || descriptor.enumerable !== true
+    || !("value" in descriptor)
+    || descriptor.get !== undefined
+    || descriptor.set !== undefined
+    || typeof descriptor.value !== "string"
+  ) refuse(code);
+  const suite = CRYPTO_SUITE_HANDLERS.get(descriptor.value);
+  if (suite === undefined || !VERIFIABLE_SUITE_STATUSES.has(suite.status)) {
+    refuse(code);
+  }
+  return suite;
+}
+
+export function releaseEvidenceCryptoSuiteCatalog() {
+  return Object.freeze([...CRYPTO_SUITE_HANDLERS.values()].map((suite) =>
+    Object.freeze({
+      suiteId: suite.suiteId,
+      status: suite.status,
+      delegationSchema: suite.delegationSchema,
+      envelopeSchema: suite.envelopeSchema,
+    })));
 }
 
 function validateDelegationBase(value) {
@@ -415,11 +465,18 @@ export function verifyReleaseEvidenceDelegation(delegation, options) {
   ) {
     refuse("RELEASE_EVIDENCE_DELEGATION_REVOKED");
   }
-  const root = publicBundleFacts(
+  const suite = cryptoSuiteForSignature(
+    signature,
+    "RELEASE_EVIDENCE_DELEGATION_SIGNATURE_REFUSED",
+  );
+  if (base.schema !== suite.delegationSchema) {
+    refuse("RELEASE_EVIDENCE_DELEGATION_SIGNATURE_REFUSED");
+  }
+  const root = suite.publicBundleFacts(
     options.rootPublicBundle,
     "RELEASE_EVIDENCE_ROOT_KEY_REFUSED",
   );
-  const operational = publicBundleFacts(
+  const operational = suite.publicBundleFacts(
     options.operationalPublicBundle,
     "RELEASE_EVIDENCE_OPERATIONAL_KEY_REFUSED",
   );
@@ -431,7 +488,7 @@ export function verifyReleaseEvidenceDelegation(delegation, options) {
   ) {
     refuse("RELEASE_EVIDENCE_KEY_BINDING_REFUSED");
   }
-  verifyHybrid(
+  suite.verifySignature(
     releaseEvidenceDelegationPreimage(base),
     signature,
     root,
@@ -448,6 +505,7 @@ export function verifyReleaseEvidenceDelegation(delegation, options) {
     notAfter: base.notAfter,
     ed25519Sha256: operational.ed25519Sha256,
     mlDsa65Sha256: operational.mlDsa65Sha256,
+    cryptoSuiteId: suite.suiteId,
   });
   VERIFIED_DELEGATIONS.add(verified);
   return verified;
@@ -491,7 +549,17 @@ export function verifyReleaseEvidenceEnvelope(envelope, options) {
   )) {
     refuse("RELEASE_EVIDENCE_ENVELOPE_REVOKED");
   }
-  const operational = publicBundleFacts(
+  const suite = cryptoSuiteForSignature(
+    complete.signature,
+    "RELEASE_EVIDENCE_ENVELOPE_SIGNATURE_REFUSED",
+  );
+  if (
+    complete.schema !== suite.envelopeSchema
+    || suite.suiteId !== options.delegation.cryptoSuiteId
+  ) {
+    refuse("RELEASE_EVIDENCE_ENVELOPE_SIGNATURE_REFUSED");
+  }
+  const operational = suite.publicBundleFacts(
     options.operationalPublicBundle,
     "RELEASE_EVIDENCE_OPERATIONAL_KEY_REFUSED",
   );
@@ -504,7 +572,7 @@ export function verifyReleaseEvidenceEnvelope(envelope, options) {
   }
   const context = ROLE_CONTEXT[options.role];
   if (context === undefined) refuse("RELEASE_EVIDENCE_ROLE_REFUSED");
-  verifyHybrid(
+  suite.verifySignature(
     releaseEvidenceStatementPreimage(complete.statement, options.role),
     complete.signature,
     operational,
@@ -518,5 +586,6 @@ export function verifyReleaseEvidenceEnvelope(envelope, options) {
     role: options.role,
     keyId: operational.keyId,
     delegationSerial: options.delegation.serial,
+    cryptoSuiteId: suite.suiteId,
   });
 }

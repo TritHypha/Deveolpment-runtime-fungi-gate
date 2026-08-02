@@ -12,6 +12,7 @@ import { pathToFileURL } from "node:url";
 
 import {
   RELEASE_EVIDENCE_ROLE,
+  releaseEvidenceCryptoSuiteCatalog,
   releaseEvidenceDelegationPreimage,
   releaseEvidenceStatementPreimage,
   verifyReleaseEvidenceDelegation,
@@ -29,6 +30,15 @@ const { ml_dsa65: mlDsa65 } = await import(
 );
 
 const AT = "2026-08-02T12:00:00.000Z";
+
+test("release evidence publishes a versioned replaceable crypto-suite boundary", () => {
+  assert.deepEqual(releaseEvidenceCryptoSuiteCatalog(), [{
+    suiteId: "hybrid-ed25519-mldsa65",
+    status: "active-for-signing",
+    delegationSchema: "galerina.release-evidence.delegation.v1",
+    envelopeSchema: "galerina.release-evidence.envelope.v1",
+  }]);
+});
 
 function hybridKey(keyId) {
   const ed = generateKeyPairSync("ed25519");
@@ -183,7 +193,17 @@ test("a statement requires a root-delegated two-component role signature", () =>
   assert.equal(Object.isFrozen(verified.statement), true);
   assert.equal(verified.role, RELEASE_EVIDENCE_ROLE.REPOSITORY);
   assert.equal(verified.keyId, value.operational.keyId);
+  assert.equal(verified.cryptoSuiteId, "hybrid-ed25519-mldsa65");
   assert.equal(Object.isFrozen(verified), true);
+});
+
+test("an unknown future suite cannot enter through algorithm relabelling", () => {
+  const value = fixture();
+  value.delegation.signature.algorithm = "galerina.release-evidence.future.v2";
+  assert.throws(
+    () => verifyDelegation(value),
+    /RELEASE_EVIDENCE_DELEGATION_SIGNATURE_REFUSED/u,
+  );
 });
 
 test("delegation rejects either forged signature component", () => {

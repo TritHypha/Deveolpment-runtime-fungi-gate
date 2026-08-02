@@ -1,5 +1,7 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
+  "minimumReceiptSerial": 1,
+  "verificationTime": null,
   "candidates": [
     {
       "path": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",

@@ -1,7 +1,7 @@
 /**
  * Crypto-agility part 1 — the crypto-suite register reader.
  *
- * Pins that the register loads, that the FOUR domains are present, and — the security
+ * Pins that the register loads, that the FIVE domains are present, and — the security
  * point — that the fail-closed predicates deny the right things: only the active suite may
  * sign, a retired/planned/unknown suite may not, and a verify-only suite keeps verifying.
  */
@@ -24,6 +24,7 @@ import {
   securityFindings,
   openDecisions,
 } from "../../governance/crypto-suites.mjs";
+import { releaseEvidenceCryptoSuiteCatalog } from "../../scripts/lib/beta-release-evidence-envelope.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const REG = loadCryptoSuites(ROOT);
@@ -32,11 +33,12 @@ const GOV = "governance-signature";
 const AUDIT = "audit-attestation";
 const BRIDGE = "bridge-manifest";
 const REGISTRY = "registry-index";
+const RELEASE = "release-evidence";
 
 // ── structure ───────────────────────────────────────────────────────────────
-test("the register loads and carries the four domain-separated families", () => {
+test("the register loads and carries the five domain-separated families", () => {
   const domains = listDomains(REG);
-  assert.deepEqual(domains.sort(), [AUDIT, BRIDGE, GOV, REGISTRY].sort());
+  assert.deepEqual(domains.sort(), [AUDIT, BRIDGE, GOV, REGISTRY, RELEASE].sort());
 });
 
 test("governance-signature carries v1, v2, v3 with the right statuses", () => {
@@ -116,6 +118,28 @@ test("registry-index retires v1 signing while retaining v1 verification and acti
     getVerifierSymbol(REG, REGISTRY, "galerina-registry-index/v2"),
     "verifyRegistryIndex",
   );
+});
+
+test("release evidence keeps current signing replaceable and future suites non-authorizing", () => {
+  assert.deepEqual(
+    listSuites(REG, RELEASE),
+    ["hybrid-ed25519-mldsa65", "galerina.release-evidence.future.v2"],
+  );
+  assert.equal(isSuiteSignable(REG, RELEASE, "hybrid-ed25519-mldsa65"), true);
+  assert.equal(isSuiteVerifiable(REG, RELEASE, "hybrid-ed25519-mldsa65"), true);
+  assert.equal(isSuiteSignable(REG, RELEASE, "galerina.release-evidence.future.v2"), false);
+  assert.equal(isSuiteVerifiable(REG, RELEASE, "galerina.release-evidence.future.v2"), false);
+});
+
+test("the executable release-evidence dispatcher is a subset of the governed register", () => {
+  const runtime = releaseEvidenceCryptoSuiteCatalog();
+  assert.ok(runtime.length > 0);
+  for (const suite of runtime) {
+    const governed = getSuite(REG, RELEASE, suite.suiteId);
+    assert.ok(governed, `runtime suite ${suite.suiteId} is not governed`);
+    assert.equal(governed.status, suite.status);
+    assert.equal(isSuiteVerifiable(REG, RELEASE, suite.suiteId), true);
+  }
 });
 
 // ── cross-cutting invariant: an active suite must be able to sign AND verify ───
