@@ -325,6 +325,16 @@ export {
   type SinkRequirement,
 } from "./value-state-checker.js";
 
+/** FUNGI-AFFINE-002: a generic Authority<Tag> binding was transferred more than once. */
+export const FUNGI_AFFINE_002 = {
+  code: "FUNGI-AFFINE-002",
+  name: "AUTHORITY_CONSUMED_TWICE",
+  severity: "error" as const,
+  message: "A runtime authority value was already transferred and cannot be used again.",
+  why: "Reusing an admitted object or lease could replay authority after its one valid transfer.",
+  suggestedFix: "Use the value produced by the first transfer, or obtain a fresh value from its runtime mint.",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Gate diagnostics — FUNGI-GATE-003 (RESERVED)
 //

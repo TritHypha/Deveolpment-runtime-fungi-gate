@@ -818,10 +818,30 @@ interface BindingInfo {
   readonly embeddingDerived?: boolean;
   /** NET-NEW 0111: current passport typestate stage (Raw=0..Sealed=3) for a Passport-typed value. */
   readonly passportStage?: PassportStageV;
+  /** RD-0659: exact named Authority<Tag> alias carried by this binding. */
+  readonly authorityType?: string;
   /** NET-NEW 0111: affine — true once this passport has been consumed at an authority sink. */
   readonly consumed?: boolean;
   /** NET-NEW 0111: where it was first consumed (Rust-style related location). */
   readonly consumedAt?: SourceLocation;
+}
+
+/** Collect named aliases whose direct RHS is Authority<Tag>. */
+function collectAuthorityTypes(ast: AstNode): ReadonlySet<string> {
+  const authorityTypes = new Set<string>();
+
+  const visit = (node: AstNode): void => {
+    if (node.kind === "typeDecl" && node.value !== undefined) {
+      const rhs = node.children?.[0];
+      if (rhs?.kind === "typeRef" && /^Authority\s*</.test(rhs.value ?? "")) {
+        authorityTypes.add(node.value.trim());
+      }
+    }
+    for (const child of node.children ?? []) visit(child);
+  };
+
+  visit(ast);
+  return authorityTypes;
 }
 
 function parseBindingValue(value: string): BindingInfo {
@@ -1054,6 +1074,8 @@ class ValueStateChecker {
   private readonly userGates: ReadonlySet<string>;
   // Phase 4.3: user-defined flow names (collected from *flowDecl nodes)
   private readonly userFlows: ReadonlySet<string>;
+  // RD-0659: opt-in aliases backed by Authority<Tag>.
+  private readonly authorityTypes: ReadonlySet<string>;
   // R&D 0093: the flow-kind currently being walked, so registerParamBinding knows whether
   // a bare param sits at a posture-gated entry boundary (secure/guarded → boundary-untrusted).
   private currentFlowKind: string | undefined;
@@ -1066,10 +1088,12 @@ class ValueStateChecker {
   constructor(
     userGates: ReadonlySet<string> = new Set(),
     userFlows: ReadonlySet<string> = new Set(),
+    authorityTypes: ReadonlySet<string> = new Set(),
     mode: "production" | "development" = "development",
   ) {
     this.userGates = userGates;
     this.userFlows = userFlows;
+    this.authorityTypes = authorityTypes;
     this.mode = mode;
   }
 
@@ -1122,6 +1146,30 @@ class ValueStateChecker {
         return;
       }
     }
+  }
+
+  /** Move one authority binding. Unknown/non-authority names are inert. */
+  private consumeAuthorityBinding(name: string, at: SourceLocation | undefined): void {
+    const binding = this.lookupBinding(name);
+    if (binding?.authorityType === undefined) return;
+    if (binding.consumed === true) {
+      this.diagnostics.push(makeVSDiag(
+        "FUNGI-AFFINE-002",
+        "AUTHORITY_CONSUMED_TWICE",
+        `Authority value '${binding.name}' of type '${binding.authorityType}' was already transferred and cannot be used again.`,
+        at,
+        `Use the value produced by the first transfer, or obtain a fresh '${binding.authorityType}' from its runtime mint.`,
+        undefined,
+        binding.consumedAt !== undefined
+          ? { relatedLocations: [{ message: "first transferred here", location: binding.consumedAt }] }
+          : undefined,
+      ));
+      return;
+    }
+    this.updateBinding(
+      name,
+      at !== undefined ? { consumed: true, consumedAt: at } : { consumed: true },
+    );
   }
 
   // ── AST walker ───────────────────────────────────────────────────────────
@@ -1182,6 +1230,15 @@ class ValueStateChecker {
       case "assignStmt":
         this.handleAssignStmt(node);
         break;
+
+      case "returnStmt": {
+        const returned = node.children?.[0];
+        if (returned?.kind === "identifier") {
+          this.consumeAuthorityBinding(returned.value ?? "", node.location);
+        }
+        this.walkChildren(node);
+        break;
+      }
 
       case "trapDecl":
         // VSC-002 (owner decision A, 2026-06-16): `trap` does NOT declassify — it is a runtime
@@ -1346,6 +1403,7 @@ class ValueStateChecker {
     }
 
     const locField = node.location !== undefined ? { declaredAt: node.location } : {};
+    const authorityField = this.authorityTypes.has(typeName) ? { authorityType: typeName } : {};
     // NET-NEW 0111: a Passport-typed param enters at Raw (stage 0) — the most restricted stage.
     const passportField: { passportStage?: PassportStageV } = /Passport/i.test(typeName) ? { passportStage: 0 } : {};
 
@@ -1356,7 +1414,7 @@ class ValueStateChecker {
     const untrusted = isTaintedParam
       || (sourceFromOrigin !== undefined && isUntrustedSourceFromOrigin(sourceFromOrigin));
     if (untrusted) {
-      this.registerBinding({ name, safetyPrefix: "unsafe", typeName, ...locField, ...passportField });
+      this.registerBinding({ name, safetyPrefix: "unsafe", typeName, ...locField, ...passportField, ...authorityField });
     } else if (this.currentFlowKind === "secureFlowDecl" || this.currentFlowKind === "guardedFlowDecl" || this.currentFlowKind === "governedFlowDecl") {
       // R&D 0093 "34B hole": a BARE param at a posture-gated entry boundary (secure/guarded
       // flow) is untrusted-until-gated. `boundary-untrusted` is inert everywhere EXCEPT a
@@ -1364,9 +1422,9 @@ class ValueStateChecker {
       // param-trusted-by-default fail-open at the secure/guarded tier without the false
       // positives of a full taint flip (string-concat / VS-004 stays clean). `pure`/plain
       // `flow` stay trusted-by-default (non-breaking).
-      this.registerBinding({ name, safetyPrefix: "boundary-untrusted", typeName, ...locField, ...passportField });
+      this.registerBinding({ name, safetyPrefix: "boundary-untrusted", typeName, ...locField, ...passportField, ...authorityField });
     } else {
-      this.registerBinding({ name, safetyPrefix: undefined, typeName, ...locField, ...passportField });
+      this.registerBinding({ name, safetyPrefix: undefined, typeName, ...locField, ...passportField, ...authorityField });
     }
   }
 
@@ -1379,6 +1437,14 @@ class ValueStateChecker {
     // unsafe or tainted binding (via a non-gate call), the new binding is tainted.
     // Phase 11B.2: user-defined gate functions also break the taint chain.
     const init = node.children?.[0];
+    const movedAuthority =
+      init?.kind === "identifier" ? this.lookupBinding(init.value ?? "")?.authorityType : undefined;
+    if (init?.kind === "identifier" && movedAuthority !== undefined) {
+      this.consumeAuthorityBinding(init.value ?? "", node.location);
+    }
+    const declaredAuthority = this.authorityTypes.has(info.typeName) ? info.typeName : undefined;
+    const authorityType = declaredAuthority ?? movedAuthority;
+    const authorityField = authorityType !== undefined ? { authorityType } : {};
     const taintField: { tainted?: boolean; taintSource?: string } = {};
     if (init !== undefined && info.safetyPrefix !== "unsafe") {
       // unsafe bindings already have safetyPrefix tracking; we only need taint
@@ -1461,7 +1527,7 @@ class ValueStateChecker {
       }
     }
     if (passportField.passportStage === undefined && /Passport/i.test(info.typeName)) passportField.passportStage = 0;
-    this.registerBinding({ ...info, ...locField, ...taintField, ...secretField, ...embeddingField, ...passportField });
+    this.registerBinding({ ...info, ...locField, ...taintField, ...secretField, ...embeddingField, ...passportField, ...authorityField });
     // Walk the init expression
     if (init !== undefined) this.walkNode(init);
   }
@@ -1584,6 +1650,23 @@ class ValueStateChecker {
   // ── Call expression rules ────────────────────────────────────────────────
 
   private handleCallExpr(node: AstNode): void {
+    // RD-0659: every authority argument is a transfer in the first, borrow-free
+    // authority profile. Nested call expressions own their own transfers; lists
+    // and record-shaped arguments are traversed here so wrapping cannot duplicate.
+    const authorityArguments: AstNode[] = [];
+    const collectAuthorityArguments = (candidate: AstNode): void => {
+      if (candidate.kind === "callExpr") return;
+      if (candidate.kind === "identifier" && (candidate.children ?? []).length === 0) {
+        authorityArguments.push(candidate);
+        return;
+      }
+      for (const child of candidate.children ?? []) collectAuthorityArguments(child);
+    };
+    for (const child of node.children ?? []) collectAuthorityArguments(child);
+    for (const argument of authorityArguments) {
+      this.consumeAuthorityBinding(argument.value ?? "", node.location);
+    }
+
     // C1: resolve `let x = Module` aliases so an aliased sink (`x.write`) is matched + gated, not missed.
     const sinkName = buildFullCallName(node, this.moduleAliases);
     const isAuditLog = sinkName === "AuditLog.write";
@@ -2402,7 +2485,8 @@ export function checkValueStates(
   const userGates = collectUserGates(ast);
   // Phase 4.3: collect user-defined flow names for inter-flow call-site warnings
   const userFlows = collectUserFlows(ast);
-  const checker = new ValueStateChecker(userGates, userFlows, mode);
+  const authorityTypes = collectAuthorityTypes(ast);
+  const checker = new ValueStateChecker(userGates, userFlows, authorityTypes, mode);
   checker.check(ast);
   const result = checker.getResult();
   // FUNGI-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
