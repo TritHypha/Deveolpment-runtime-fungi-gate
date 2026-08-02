@@ -130,7 +130,7 @@
   boundaries, proposal non-authority, control reachability, mutation evidence,
   withdrawal, narrow exclusions and the owner engineering-standard classes.
 - **Executable contract:** two policy tests first failed because the root file
-  was absent and now pass. Fresh complete SLIDE verification is **336/336**
+  was absent and now pass. Fresh complete SLIDE verification is **347/347**
   across 19 suites; the V2 contract remains **16/16** and the bounded benchmark
   verifier still reports `authorityReleased: false`.
 - **Honest remaining gate:** remote CI enforcement is not configured. The
@@ -158,10 +158,10 @@
 - **Documents:** SLIDE's E03/E04 reports, plans, README and TODO are current;
   E05 has a dedicated completion report. The roadmap now separates completed
   experiments from the still-amber authenticated-evidence review boundary.
-- **Fresh independent closure:** SLIDE 336/336 across 19 suites; V2 contract
-  16 files; 20 schemas, 8 result JSON files and 7 result SVGs parse; all four
-  E03-E05 evidence verifiers return internal consistency with unauthenticated
-  K3 `0`.
+- **Fresh independent closure:** SLIDE 347/347 across 19 suites; V2 contract
+  16 files; 21 schemas, 9 result JSON files and 8 result SVGs parse; all six
+  E03-E05 plus E11 base/comparison evidence verifiers return internal
+  consistency with unauthenticated K3 `0`.
 - **Still later, not stale E03-E05 debt:** native `.fungi`, independently
   implemented translation validation, authenticated research publication,
   cross-platform reproduction and production integration.
@@ -314,7 +314,9 @@
 - **RD-0652 reconciled:** transcripts 00114-00120 are archived and adjudicated
   in the Knowledge Base with source and normalized archive hashes. Generic L2
   latency is no longer usable as named-host evidence.
-- **NSE-Micro boundary:** E11 remains an implemented negative experiment. The
+- **NSE-Micro boundary:** E11 is a completed bounded negative experiment. Its
+  99 paired samples contain 41,580 exact checks and family-wise-controlled
+  paired analysis; no proposal lane beats B0. The
   next SLIDE lane must tile and measure the complete admitted hot path, not just
   model bytes: code, weights, graph/features, activations, scratch, capsule,
   runtime, verifier overlap and alignment. Hardware counters, effective cache,
@@ -550,12 +552,14 @@
   specialist/N2/N3-race lanes are retained. Closed proposal capsules and D1
   feature/proposal re-derivation fail closed; accessors, proxies, overflow,
   poisoning, substitution and evidence arithmetic have negative tests.
-- **E11 measured result:** clean source `4109202`; 42 cold/warm/polluted rows,
-  3,780 exact artifact checks, evidence `sha256:2d54…c6228`, K3 `0`, 135 N3
-  proposal stops, 135 completions and zero skipped D1 checks. Warm B0 is
-  155,660 ns/op, deterministic tree 615,520 and int8 737,950. No proposal arm
-  wins; code, runtime interference, counters, migration and residency remain
-  `INDETERMINATE`.
+- **E11 measured result:** clean source `d0f3a5e`; 42 cold/warm/polluted rows,
+  99 paired samples, 41,580 exact artifact checks, evidence `sha256:a4a0…52fd`,
+  comparison evidence `sha256:44da…1bd`, K3 `0`, 1,485 N3 proposal stops,
+  1,485 completions and zero skipped D1 checks. Warm B0 is 155,830 ns/op,
+  deterministic tree 621,590 and int8 759,810. Exact paired analysis finds no
+  proposal win; predecoded Tri-1 versus int8 is indeterminate. Code, runtime
+  interference, counters, migration and residency remain `INDETERMINATE` for
+  a successor native/tiled experiment.
 - **Prior-art boundary:** learned compiler heuristics, TVM-style cost models
   and per-store performance features are established techniques. SLIDE's
   defensible work is the proposal quarantine, identity/budget closure,
