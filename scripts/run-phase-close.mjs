@@ -9,9 +9,10 @@
 //   4. DevTools audits   (naming sweep + provenance directory audit)
 //   5. Graph/index drift (non-mutating generated-evidence checks)
 //
-// Wired as a Stop hook in .claude/settings.json — runs at the end of every
-// response. Blocking mode exits non-zero on any failed child; --report-only
-// is the explicit non-authorizing diagnostic mode.
+// Explicit-only root command. The Stop hook runs phase-close-hook.mjs, which
+// reports lease state without starting tests. Blocking mode exits non-zero on
+// any failed child; --report-only is the explicit non-authorizing diagnostic
+// mode.
 //
 // Skip with:  GALERINA_SKIP_PHASE_CLOSE=1   (env)   — e.g. for rapid iteration.
 // Run manually:  node scripts/run-phase-close.mjs

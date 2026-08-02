@@ -12,8 +12,8 @@
           },
           {
             "type": "command",
-            "command": "node scripts/run-phase-close.mjs",
-            "description": "Full phase-close cadence at the end of every stage: core tests + devtools tests + security/naming audit sweep + provenance audit + full graph re-index. Always exits 0 (informational). Set GALERINA_SKIP_PHASE_CLOSE=1 to skip during rapid iteration. Benchmarks are intentionally NOT included (multi-minute) — run `npm run run` in galerina-devtools-benchmarks on demand."
+            "command": "node scripts/phase-close-hook.mjs",
+            "description": "Bounded status-only heartbeat. Full phase-close is explicit-only so Stop events and parallel AI sessions cannot start overlapping package-process trees. Run `npm run phase-close` or `npm run phase-close:exhaustive` deliberately when ready."
           },
           {
             "type": "command",
