@@ -21,12 +21,12 @@
     },
     {
       "id": "SLIDE-EXECUTABLE",
-      "summary": "Implement a reusable ordinary-package frontend handoff, independent SLIDE validation, VOK lease execution and typed receipt before any runtime retirement claim.",
+      "summary": "The reusable bounded frontend handoff, independent validation, VOK lease and canonical .slide floor are implemented; general effects, memory, package ABI/import/resource and production-authentication profiles remain open.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {
       "id": "FUNGI-PACKAGE-RETIREMENT",
-      "summary": "Current debt is 494 TypeScript paths, 109 unexecuted Fungi sources, 36 unowned host boundaries, 95 package-local dependency trees and one nested package; every item must reach zero through exact admission, never exemption.",
+      "summary": "The 98-peer deterministic root lock and exact non-ambient resolver are implemented. Current debt is 494 TypeScript paths, 110 unexecuted Fungi sources, 36 unowned host boundaries, 95 package-local dependency trees and one nested package; every item must reach zero through exact admission, never exemption.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {

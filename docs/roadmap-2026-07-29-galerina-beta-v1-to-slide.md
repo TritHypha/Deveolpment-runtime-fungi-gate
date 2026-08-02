@@ -8,6 +8,17 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: flat dependency tooling is now split into a green reference
+control and blue physical retirement debt. One canonical root lock accounts
+for all 98 direct package peers, 45 exact internal edges, 138 external
+bootstrap edges and two development-only version drifts. Its process-local
+verified resolver permits only a caller-declared direct peer and performs no
+ambient parent, child, cache, registry, network or `node_modules` lookup.
+Focused/live evidence is 7/7 and governed generator contracts are 15/15. The
+lock remains explicitly non-authorizing; 95 local dependency trees and one
+nested native package still prevent terminal retirement. Package conversion
+was not changed.
+
 Roadmap refresh: the app-kernel linked production-generation seam is now green
 as an implementation control. A private hybrid-root-admitted durability
 profile must bind the exact running executable; app-kernel then consumes the
@@ -258,7 +269,8 @@ flowchart TB
     AL["🟦 .fungi admission ledger<br/>2 candidates · 0 production<br/>receipt verifier open"]
     T["🟦 Package conversion<br/>494 tracked package .ts → 0"]
     HB["🟦 Host-boundary ownership<br/>36 detected boundaries → 0 unowned"]
-    FD["🟦 Flat dependency tooling<br/>95 node_modules + 1 nested identity → 0"]
+    FL["🟩 Flat package root-lock<br/>98 peers · 45 internal edges<br/>exact non-ambient resolver"]
+    FD["🟦 Physical dependency retirement<br/>95 node_modules + 1 nested identity → 0"]
     TG["🟥 Terminal retirement admission<br/>all exact debts must be zero<br/>no exemptions or fallback"]
     J["⬜ Next transition benchmark<br/>Galerina/SLIDE vs frozen Galerina/Wasm<br/>exact admitted pairs only"]
     P["🟩 Flat artifact resolver<br/>exact paths · bytes · limits"]
@@ -280,7 +292,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -305,7 +317,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,LS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,LS,FL green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -368,8 +380,9 @@ table is navigation, not authority.
 | 2 | `.fungi` admission ledger | 🟦 | Schema v2 validates and cross-binds 2 exact non-authorizing frontend-receipt candidates; plain text and source-only readiness cannot promote authority. Zero production entries are tracked; 110 production `.fungi` sources still require admission | Implement the typed cryptographic execution/ownership receipt verifier, then admit every production source with independently re-derived source, graph, frontend, VOK, platform, signature and provenance facts |
 | 3 | Package conversion | 🟦 | 494 tracked package TypeScript paths remain | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary ownership | 🟦 | 36 detected production host boundaries are unowned | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit replacement or retention decision |
-| 5 | Flat dependency tooling | 🟦 | 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero package-local dependency trees and zero nested package identities |
-| 6 | Terminal retirement admission | 🟥 | Refused because rows 1-5 remain open | All exact debts are zero, all predecessor receipts verify, and the unchanged terminal verifier independently returns admitted |
+| 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
+| 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |
+| 7 | Terminal retirement admission | 🟥 | Refused because rows 1-6 remain open | All exact debts are zero, all predecessor receipts verify, and the unchanged terminal verifier independently returns admitted |
 
 ## Verified progress
 
@@ -390,6 +403,7 @@ table is navigation, not authority.
 | Data-pipeline blocking saturation | 🟩 contract verified | `block` now requires an explicit positive safe-integer `blockTimeoutMs`; `fail` and `shed_oldest` refuse that dead field. The TypeScript union and runtime validator agree; focused package evidence is 22/22, the workspace is 98/98 with 8,755 tests, and exhaustive phase-close passes every blocking gate. This closes configuration admission only; scheduler enforcement and cancellation remain separate executable gates |
 | Structured Await deterministic reducer | 🟩 bounded contract terminally verified | RD-0651 selects a bounded syntax-neutral reducer instead of treating an in-process abort signal as termination authority. Closed plan admission, immutable branded state, all/first-success/first-result policies, deadline precedence, `maxInFlight`, cancellation acknowledgement, winner identity and hostile state/event refusal pass strict typecheck/build and 44/44 package tests. The fixed point is 98/98 packages and 8,770 tests; strict is 84/84, exhaustive 85/85, security 31 files with zero findings/errors, graph 5/5, generator contracts 14/14 and tooling 245. Isolated hard termination, authenticated receipts, stream backpressure, frontend lowering and platform evidence remain separate open gates |
 | Protected working branch | 🟩 | Protected branches are active; this session keeps its new commits local and does not push |
+| Flat package root-lock and resolver | 🟩 reference control | One canonical non-authorizing lock binds all 98 direct peers, 45 exact internal edges, 138 external bootstrap edges, two development-version drifts and a complete dependency-first order. Intake is Git-tracked, bounded, stable, path-contained and duplicate-key strict. Resolution requires an opaque verified handle and one caller-declared peer; it never searches ambient package trees. Focused/live tests pass 7/7 and the governed generator suite passes 15/15. Physical removal of 95 `node_modules` trees and one nested identity remains blue |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
 | Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |

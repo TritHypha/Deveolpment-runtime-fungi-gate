@@ -239,6 +239,29 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/flat-package-root-lock.mjs": {
+      "inputs": [
+        "packages-galerina",
+        "scripts/flat-package-root-lock.mjs",
+        "scripts/lib/flat-package-root-lock.mjs"
+      ],
+      "outputs": [
+        "governance/flat-package-root-lock.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/flat-package-root-lock.mjs",
+        "--write"
+      ],
+      "check": [
+        "node",
+        "scripts/flat-package-root-lock.mjs",
+        "--check"
+      ],
+      "provenance": "embedded",
+      "tier": "phase-close"
+    },
     "scripts/generate-sbom.mjs": {
       "inputs": [
         "package-lock.json",

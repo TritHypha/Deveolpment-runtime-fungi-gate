@@ -1,0 +1,3244 @@
+{
+  "schema": "galerina.flat-package-root-lock.v1",
+  "assurance": "REFERENCE_NON_AUTHORIZING",
+  "authorityReleased": false,
+  "packages": [
+    {
+      "identity": "@galerina/ai",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ai",
+      "contentDigest": "bf4dffe2c89ecacdd54731ed4b399f6f9abb2679220ac93863e800f9b9d053cc",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "7d6933ca2b1f360a2b48607c7405f4f9686cc39f3f46c92773929d9a1e3d5045"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ai-agent",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ai-agent",
+      "contentDigest": "56513292786c4837aaa2ee159b612fd3d257d81c4448ad3e8f116416b557be06",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "92c442f928e1496ff9b68ba8aa3c76bd809342ab5e610020696727fde38124f8"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ai-lowbit",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ai-lowbit",
+      "contentDigest": "693d7556b3bcf5765785a00ee4cf5ef182f612aecb9bacb5c05b60929322dcc7",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "6494e1cd9a4a0205d90a4d8b745241a42b6066132b2b3f294b9049c66b290cb6"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ai-neural",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ai-neural",
+      "contentDigest": "8323ca831852e259c6c3c5b2aaef32ff55a112c5f7246c4dd2c6ad7dd11790cf",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "c8682e327605b656c0f57d2f51f22b437535ab45e7ab63fbe07bf2517f7335d4"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ai-neuromorphic",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ai-neuromorphic",
+      "contentDigest": "24753b59c0282b7b4b1dbb642c066ecc86ccf5e53cf1c38d80515e65c7ae90ca",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "763d2b762d9dd502eeac0681770cdf46ba5fa5df28ae84ed4d37b37b635c1148"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/api-protocol-rest",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-api-protocol-rest",
+      "contentDigest": "8dad44557b791c55959e3c350322fab1cdde06ca523a4e9ce817c432d80943e8",
+      "manifestDigests": [
+        {
+          "path": "package.fungi.json",
+          "digest": "021446c9b4ce1accc23b3550b72552d70abf5ce3c59b7524cee1e38fa37c499f"
+        },
+        {
+          "path": "package.json",
+          "digest": "e5ddcd6d67ff5e63b2495e2eb315a21e77b27268350fc9b46429096144ec0a1a"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "identity": "@galerina/auth",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-auth",
+      "contentDigest": "9c0cb9704b965437322c60d461c0deb00805d446a983f209d1abf1e473e5a4c5",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "0a9a80c2e791c3dc4c35df7de449309f833b64e5a4dc247217cac960805b40f1"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-network",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-network"
+        },
+        {
+          "identity": "@galerina/framework-app-kernel",
+          "scope": "development",
+          "specifier": "file:../galerina-framework-app-kernel"
+        },
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core",
+      "contentDigest": "12afe42f5b8c5beaf5eebe932844fd434680d2f0670b13aee348025e27a61189",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ff6ad48786afbf407e89425ce7d86c6da960f3d3d3870dd27191c69f46a8de15"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.9.3"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-cli",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-cli",
+      "contentDigest": "17389ddc1ead1c477108497e182ed53c6a807446ff86b911b321d065d4cdbcd3",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "01f7ea18efcc8223313f693da79466b1081595013cf1004790a123e5c026ca46"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-compiler",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-compiler",
+      "contentDigest": "6793ebe9e88bdff27702a7353838e5f1de9d41ba1d2926b55787ba1be989850a",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "19204583a9566c8f2bfedcf9e8b800f0e34e66ccc5a3b2ad21feb5cd3d820165"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-network",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-network"
+        },
+        {
+          "identity": "@galerina/core-runtime-wasm",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-runtime-wasm"
+        },
+        {
+          "identity": "@galerina/core-security",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-security"
+        },
+        {
+          "identity": "@galerina/devtools-graph-algorithms",
+          "scope": "runtime",
+          "specifier": "file:../galerina-devtools-graph-algorithms"
+        },
+        {
+          "identity": "@galerina/substrate-math",
+          "scope": "runtime",
+          "specifier": "file:../galerina-substrate-math"
+        },
+        {
+          "identity": "@noble/post-quantum",
+          "scope": "runtime",
+          "specifier": "^0.6.1"
+        },
+        {
+          "identity": "argon2",
+          "scope": "runtime",
+          "specifier": "^0.44.0"
+        },
+        {
+          "identity": "bcryptjs",
+          "scope": "runtime",
+          "specifier": "^3.0.3"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        },
+        {
+          "identity": "wabt",
+          "scope": "runtime",
+          "specifier": "^1.0.39"
+        },
+        {
+          "identity": "wat-wasm",
+          "scope": "runtime",
+          "specifier": "^1.0.43"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-compute",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-compute",
+      "contentDigest": "be8de978f41c090de5c538a67926b23b84819f2e48401a978bea7ff12e523e8b",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "bd23104e3dd9be9fadc909296f7fee169cfd8d2403c270eab95e0532a0a8b75e"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-config",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-config",
+      "contentDigest": "bc4596ed09acad0b474ecdc901d6ef589c3cca2f76313b5267f1db251b81f0de",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "05192a70766809e87b158a52b6bfeffaccd53c1bee2fbc43a66169f86c59cf55"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-economics",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-economics",
+      "contentDigest": "685a18534eaa007c40e0c07cf9f1c2b84ba013aaa9d0e2d6dc0dc6fdbc9f8824",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "9fe9a1dcd098f1ff456dd1ccd7659adedb9832964e9d7ae12fc5d1ad03e23c0d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-logic",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-logic",
+      "contentDigest": "40b45cb1acff039b14fc44cc0098cb46cf7125c3faf3144145c3631dc1db855e",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "8579d40e77ca01ce616153787a1e2797b02c42ba108bd6889ad76423f89ee2c9"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-network",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-network",
+      "contentDigest": "f2dd7557f27d7085508cc454731778bb602f67da20568084e364d91493e3bb11",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "2a160786926e0a94fde7596f5def13fa4b9d2900cfe17d95ed95663419ede63a"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-photonic",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-photonic",
+      "contentDigest": "533eb5e092243546ddee0c12c9efa0d7ae9c1676bc2b5a6a0256bb32f3ddb09a",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "8329b638bd9bea8501bd9b1530dafaddd2c19ba002b452b3c7656f51ec400ced"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-reports",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-reports",
+      "contentDigest": "e12dbb0435db66cc28b5080eacb509b5c0f738dc50d2bf9075c7e64ef015fdc2",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "51422c247cce31ecbea1e876619d23cf784e2dec12b52fbe957c97796aa14e39"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-runtime",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-runtime",
+      "contentDigest": "f2c69d8b0ca09ce32365345077364f47307d67f1e7b7c26626ef4b6e7027d29d",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ee7c77166e817fc0d1d65dba58720fd81bcac50382cb0eb78735779be700211f"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-runtime-wasm",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-runtime-wasm",
+      "contentDigest": "d5c5f2a6050372437ad8a82dd98c800812a8102d920814f921bb221d9969368e",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "5b4d32b1aee7df345fd78635e4ec12242629fcca4d5760ced0a93e3d1e58224c"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-runtime",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-runtime"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-security",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-security",
+      "contentDigest": "0215c8c90b69dc5a9a46d512c912e7ea1eef2f85de9cfea8836dbaf6585129fb",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "db80ebd2c8a6c09b0b0a4e9c002f3d01a865bc7ddeb9583892b9dc958c69a085"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-egress",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-egress",
+      "contentDigest": "b0bbd031e06f71a995d4806868b2341fff667cb1bb3581de5ab4d78c0db4f107",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "cda959a2f8178453a606e0857933fd4571e03a8adaa7f6534f98faf732871d86"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-io",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-io",
+      "contentDigest": "9cc768b5e14d2fae3f0a0f117240e85b95390527d87f6876c089396684ed1726",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "878913cd3be8149356bf1fbf4ce57b844213922cdc7b4e2c53ca55adefb7874d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-memory",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-memory",
+      "contentDigest": "1de1a973319d7c521adc7d7dff9abde0bab6dff78f22f759b72cee81254e3ba0",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "71a52117e18e44a7dfbb0834a2b1455b4a1952b7016c66b518a4fc02f9f5a6c7"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-power",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-power",
+      "contentDigest": "dabf33fb041725e6e6583dcec281e256d58e31adde66593b74035700147d8301",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "f1a0cf849598ca7db5bd6913d58ab4c06b2ba0f4b0efd497435a72be82a82f40"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-state",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-state",
+      "contentDigest": "5c43bc3dd244214e37f54b47825d3d22246209dfd2467446762493d275af78c8",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ea54b75386827339034e922d0e263451f0d246a82737771f2b98a0407a39f26c"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-sentinel-time",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-sentinel-time",
+      "contentDigest": "d039bd68fc8c414ba931618679c425ed9c298c5d20d0f16ca3966d6c929f2670",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "0b68d2ca5f89f741b2b11410f2e6b36cae845570625f25d59653211dd3aa8583"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-tasks",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-tasks",
+      "contentDigest": "d2e688c23ad39bca2af35a3ca1d083eddae3c0d41c781034369f1d74ce2ac0ac",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "09b3c25754e6dc3b0ac256d199d43e5e519a0e8a56d23be354432f946d0798e1"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/devtools-project-graph",
+          "scope": "runtime",
+          "specifier": "file:../galerina-devtools-project-graph"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/core-vector",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-core-vector",
+      "contentDigest": "8b50fa7baa00ba10e219c98a1512c653cb619cbb10a34415219eda0f836c86b4",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "600b00c855003114cca1ec4e9fc20c9f454faa4f731899634391f945bdc92ecd"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/cpu-kernels",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-cpu-kernels",
+      "contentDigest": "12612467b3fd963b5afc84cd15cdf473f5e0969d350f40fceafbd6eedcc96049",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "bb783d6da6cefc49097f4830d084dd40995f9e29bd156319fc764d82e89205eb"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data",
+      "contentDigest": "b7b7f62532f3384f5face11a01fbf3bc3f397fabc16c5ce7ecfb58964296860f",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "231618776e1cf0378a7950997dba0833930cc2514f7a80630b2be64b9d321d47"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-archive",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-archive",
+      "contentDigest": "c2173e4988d201da79c239aef3448f6f2c6b87531dfc6ed95d31f9f54ecc2acd",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "bc2ad8beb192597c64cee993419636dd374fa2ed991477d365e25661caac35d4"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-database",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-database",
+      "contentDigest": "c735e95afedbfb99ae530757f4f9f47b8421fb956eb069f4d347defadae7ef5b",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "7f1ec553c76ef7dd56faa89dbdc658ff4dbc0b49d404165a4a8da94ecc5f54f1"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-db",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-db",
+      "contentDigest": "27080be34e23f843d92238312219de2d4f9df1dbdc99ff862ffffe627e50e558",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "a001333805b125ad4b2db260062ddf78a1b2aaa5a64d7eb63c873a8cb1f9764c"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-html",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-html",
+      "contentDigest": "5316c52edf6049c726b08e74ede706172803426e9c2677de40fcb79220b15550",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "35f32c09f7bf630bb1b27c09c6b15f66c00487036427a995b41a7926166f8e7f"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-json",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-json",
+      "contentDigest": "152b49a42c5433387e8f0e3a84eb6e5d24b00550a89008d22fa4e4dfd0c0be99",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "a12bc8e156edc36fea82d52fc24152a83a4ae57ff6ac179aa89e44fede3e66f3"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-model",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-model",
+      "contentDigest": "4fa35bdf4e08a5c8564c07bba12dcc28c9bcdf8ecbaa724160066cb416e40b9e",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "2d87411734551b3df556e4c53ade7a454fb3e704dce98d920c03e2bcf8a80ea2"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-pipeline",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-pipeline",
+      "contentDigest": "cf472f99aea695ccb4941c9c1d01126525e37d436862982c71a2f1a070799b30",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "91b9f59d5f7c345870e1b43f8f50606da8edcb2ffd546fd50414ba9ff4fde2fc"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-query",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-query",
+      "contentDigest": "05952b45b76b81d0576902f6fdea7510e4d304c553a3a68b9f745bb1bb7612d6",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "4dd97ec4902544f2f974c5ee47173c0d9a750e202208aad4ca7297e87af76f4c"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-reports",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-reports",
+      "contentDigest": "c5e73e3e9be3eeca1eee86f660b26fc7138a0e3686f1a91d1f509a9b24495cfd",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "4ff8cbd51b52749b19a2344e42d4f4ca33bdf59032d0d84271a41ddef85c685b"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-response",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-response",
+      "contentDigest": "05616d38ae1dd9d203b8cc634981121f7c846bc0dc4ce3e673b093d0e78b0f2f",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "385a65bab0696f123efb0c2912d27b0d513c0cb4f3ee1164049476886d733136"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/data-search",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-data-search",
+      "contentDigest": "3bbc0ecb87215678d1cda01a46366d3262587d4e48a337970d9705f7d0241a4a",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "8683e7cb8b31a32bc04d62f3d456266ba14c38753a9804847a209ffeb72a755d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/db-firestore",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-db-firestore",
+      "contentDigest": "f50ee35b522f8173dbf6a6c819b9b6d70cd5d3818dcf884a09e42bcfcabf28ca",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "6d469001e56ec3ca12c4ce1289866c58bd5de0e2516e473b498445a42f0f8465"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/db-mysql",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-db-mysql",
+      "contentDigest": "fc13472025f7729c18bbfd469f2898156f08f84d421cc077cd4349c12eeea136",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "2e0a0e39491052dce0e0ade54765bac3b6f8fa09c9c68a8ceacf77abd56a9647"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/db-opensearch",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-db-opensearch",
+      "contentDigest": "f9bb4a7c45bbab2d24852983679311d136a23b7da4b0b6b012bb301edb1fc5fb",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "120837636a44d42631c44f3ccf2f3105df3610de6833cdab0c792a3903f729ac"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/db-postgres",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-db-postgres",
+      "contentDigest": "54f403ef77f6365c9dc551ec98407eb1f23133cd8e5e61cac4b5504926e506a1",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "af3b363015204dd437732182d465458aec4acb6337e828ac1e75959d20810f35"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/db-sqlite",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-db-sqlite",
+      "contentDigest": "3c9ccaa6c9613ecbb4f556c5aca74c1829131344cca02fa46483fe72e73065b9",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "8b83569b2eb46c8fa6400533377f6c14bec7a8fd5639c981dc0d9c2bc6a74d77"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-benchmarks",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-benchmarks",
+      "contentDigest": "0d337d31c0424047c570799b85dcd1ffadbe1e7e20bef10d9c0e2880e4e6a57d",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "a66a82e09dd35abb10a6896ce483fb696e5a2bff067a3ac53b340da68329f136"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-context",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-context",
+      "contentDigest": "fe1df350ac9cf756e8a4939fe5412042c9dacc7a163f556cd4f9818bcb95db3c",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "69cc682caa2008f3e01cf44e1c8bea39be3516598e957c2367605273ca4453ba"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@galerina/devtools-security",
+          "scope": "runtime",
+          "specifier": "file:../galerina-devtools-security"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-flowgraph",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-flowgraph",
+      "contentDigest": "552fec88dfd515b45b832228fd223d021dce55cc90e9ac2c710a9f10517a8b54",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "41f6b8b60de7cf840afdfd96827fa2d6e5f3b3bb17e7c4bedaf14f196cded5dc"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-fungi-scan",
+      "version": "1.0.0-beta.1",
+      "directory": "galerina-devtools-fungi-scan",
+      "contentDigest": "7ca9c14221d0e2bb0ed86de6d701d8174151f6f4b8b30b0815588a23baa3fa71",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "e879b051c8193d098b6fa1df8407507173406c1680376d962d4729f904ddf88e"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-graph-algorithms",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-graph-algorithms",
+      "contentDigest": "57fd92ab78855ef1324ee06f3b7f5147d72ef1c45439b0a6a1ae443d4e946897",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "65d8aba2c263f0c4eab1b03be894a4b614971b5772847648a5e2960879b77ee4"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-graph-project",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-graph-project",
+      "contentDigest": "95a2630aebb795849524e20e80458ffc739a297fc822804a5bee2748b78816b6",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "32a79c43ec56461a783ccd2c13ea31107103bff02fc3d093bfee7704141a27ea"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/devtools-project-graph",
+          "scope": "runtime",
+          "specifier": "file:../galerina-devtools-project-graph"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-intelligence",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-intelligence",
+      "contentDigest": "08f9c28e851a159afa37454e3cb118e4177160c33a86ce78d9d76053bcfc94b4",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "67e09037c8f8c66e1b08b86c77209bdfc448d01825232c8c3c1c42086a0cad56"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-kb-graph",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-kb-graph",
+      "contentDigest": "63cde1f5059f7fb07fdfdc91a2841df037f1d5353c9e922f4ac1abdc19db7810",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ccf07d9d81ba94ffb8e486a8ee422e9373cbceaa4c9242fdfe4c22a327a59698"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-naming",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-naming",
+      "contentDigest": "a2df6719864103da6ce926c9a117ef0dd6357ea1e85ccd55c27b57382a7a7144",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "332bb04ab8d6091b698c4446b786e7d86013526a7d8cb5b64b3721636b19837d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-package-graph",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-package-graph",
+      "contentDigest": "83bb9af57f94bb140a4d54f2756562abfc3b3bc6d528a989f131c7b5f3ceb716",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "81c202288612aa36ef2138bc798916d0fd8272329b9c3aa609ad0e3acfbdd05e"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-pci",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-pci",
+      "contentDigest": "bd2438bd4a1f1e0b8d114ed9dd7fb9ea96ec55b4810c6590b34ad461c7b27b5f",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ecef205771032cd9ff044d902a6acb3f8381a1a598ad1f45ee7a980628b6ffa2"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-project-graph",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-project-graph",
+      "contentDigest": "75638b0c21c4062dfd8cbca74b5f2a16025124aee5f2c12c04c4920985e5ee37",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "21fb6690167f11d772b1168572d3a7f05a7b9204f7b58946c33970ed4f96412c"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-provenance",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-provenance",
+      "contentDigest": "b60810edba60d30bce1317abac31c0ba78221d704cda679b5336fcfbd622f013",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "c75e33794634316090eb484a528f2b297d7fabbd1c06146209139bcd867194a2"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-security",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-security",
+      "contentDigest": "a9385fe1613c350f6057b8d83f706abe77f13fcb6037f7308e1bb19f0ce6addb",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "66bca699fbbab38e8f44f8241dbabd8327a6a435cffb7938730979fda1c423d7"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-compiler",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-compiler"
+        },
+        {
+          "identity": "@galerina/core-economics",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-economics"
+        },
+        {
+          "identity": "@galerina/devtools-pci",
+          "scope": "runtime",
+          "specifier": "file:../galerina-devtools-pci"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/devtools-wasmtime-oracle",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-devtools-wasmtime-oracle",
+      "contentDigest": "a36598fa8b681bae391f4eb12afc6fb8ecfb87812615eb1968e96b5eeeb20077",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "f9172f1445f1f271715cf3ca5db8ad5b12aef89d610c055f98878cbb39bf22b4"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "identity": "@galerina/docs",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-docs",
+      "contentDigest": "dcc4630b4889e1b7008f8826ab152ed686e15de4414ef3740202123ebbbf8210",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "f5a2daea46b16ff7abfd1d086cc91269e247c5f256304753a4d85a95c95dd427"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/framework-app-kernel",
+          "scope": "runtime",
+          "specifier": "file:../galerina-framework-app-kernel"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-bridge-bitnet",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-bridge-bitnet",
+      "contentDigest": "98934b1a0ce525e68a01b278819676259eab77ffe70a510725680c257c21b97c",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "c68e7d99c7cafb773d029922e541338c05d6ec08ffd3398219177f0b41e80c27"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-bridge-cpp",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-bridge-cpp",
+      "contentDigest": "cc735a15c8814b8b712e7648b42136cbb5f2a172cc6fc2b6686ebff3a9c50f71",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "9d0f84f25851bd75c8cbe1d7f0c789f7514ed4fc0549957302fbc6f386a0f387"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/inference-bridge-contract",
+          "scope": "runtime",
+          "specifier": "file:../galerina-inference-bridge-contract"
+        },
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-photonic-emulator",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-photonic-emulator",
+      "contentDigest": "da884efd5c571504b7acbeec2a3c73a09a4f24a04f928947052b42b7f626404f",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "028ac5ddc0680a0b25a39ff2013eb13ad0cfc0063905e49f8f8fdad2eaabbd3f"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/inference-bridge-contract",
+          "scope": "runtime",
+          "specifier": "file:../galerina-inference-bridge-contract"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-proof-snarkjs",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-proof-snarkjs",
+      "contentDigest": "b237f106aefead455bf74a64fee38d9d9d87e274c0186fe7731cec5b5e401e87",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "abadaa215a01744c0856d396cca50ec19cebca7df9b5b0081d7e347021e8291f"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "snarkjs",
+          "scope": "runtime",
+          "specifier": "^0.7.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-secrets-spore",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-secrets-spore",
+      "contentDigest": "294cfbaee9354c12440cf3a1fca7ec27e03eea8c34f48df42357483985d63cfb",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "e43dba6a2f3239e07ec8e44c6e4be323347e7adfd184912259112b038964d517"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/ext-spore",
+          "scope": "runtime",
+          "specifier": "file:../galerina-ext-spore"
+        },
+        {
+          "identity": "@noble/hashes",
+          "scope": "runtime",
+          "specifier": "^2.2.0"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-secrets-vault",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-secrets-vault",
+      "contentDigest": "7e143e829b3e5090fbab1cd85e9b08df9157db6b1af60e517c73d61182d857a0",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "667a650d7a67b1bddb2eda49264c93f6fffc76eb58c576c674ad3a3f004b4ead"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-spore",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-spore",
+      "contentDigest": "de4ca4f9cbf0411ed511bb5a8ae1f8baf5a1070b3389aac5c0569e40101b5fdd",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "f57ade92b6c721993a3331e04001469dc8a9def6cb0129df585365b4fd662f6a"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@noble/ciphers",
+          "scope": "runtime",
+          "specifier": "^2.2.0"
+        },
+        {
+          "identity": "@noble/post-quantum",
+          "scope": "runtime",
+          "specifier": "^0.6.1"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/ext-tritsocket",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-ext-tritsocket",
+      "contentDigest": "e47b23de20f2ede0bb31a2ecc14d1ea8779287b06f60f2e84fbca359187cd8c5",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "0a6fb51cf5f3601ee4e772aa96b8e92f766cce5376c4d05677fa5ad649fc9363"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/framework-api-server",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-framework-api-server",
+      "contentDigest": "0b201742f2ec77dbb098bcae4911b4a73e44ae1eb6065ae17e7dc5ef4c866cbe",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "5946b41a5b37f4bf3c90cbd1cc7d63d95c4859facdcae2410ccb8a8801895fdb"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-network",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-network"
+        },
+        {
+          "identity": "@galerina/framework-app-kernel",
+          "scope": "runtime",
+          "specifier": "file:../galerina-framework-app-kernel"
+        },
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/framework-app-kernel",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-framework-app-kernel",
+      "contentDigest": "cd9b82eb485e478811f831eaa4008f7ab31437ccd47e0827672ecbfae000e213",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "4ae0ed05ed5fa102e41681247cd5bb7f6032a21a473ba392243551ae66ae3a5f"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/core-config",
+          "scope": "runtime",
+          "specifier": "file:../galerina-core-config"
+        },
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/framework-example-app",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-framework-example-app",
+      "contentDigest": "cdcdc2841b7bb807ef60249c945872521cefc7be1a2065cb14fe456d6488046c",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "d03f9182bc0849959b97d9f26422f826954f3f90a94838fec15d2babe8a3abff"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/framework-api-server",
+          "scope": "runtime",
+          "specifier": "file:../galerina-framework-api-server"
+        },
+        {
+          "identity": "@galerina/framework-app-kernel",
+          "scope": "runtime",
+          "specifier": "file:../galerina-framework-app-kernel"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/governance-telemetry",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-governance-telemetry",
+      "contentDigest": "944ea62b659ba431c92ab34e1267ad518dd2364dc408b129138b1af94ce4af5e",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "2295bd06467ff10a62d857055d032deb491202d6c84e454f21b93744c0d5d3f2"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/hardware-tier",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-hardware-tier",
+      "contentDigest": "c10ac7d488848a0ad79a3488608f2adac8e09f610806c932fbca970ccfd360e1",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "e16b20e50f6e226614060e67d9240d56e2c0ad378484d7480713c84da9b5f1d3"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/ext-photonic-emulator",
+          "scope": "runtime",
+          "specifier": "file:../galerina-ext-photonic-emulator"
+        },
+        {
+          "identity": "@galerina/inference-bridge-contract",
+          "scope": "runtime",
+          "specifier": "file:../galerina-inference-bridge-contract"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/inference-bridge-contract",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-inference-bridge-contract",
+      "contentDigest": "851e788035dced673d9ad3e4c1963d2b8027c0b48d662cb60a64a5ad40212405",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "b913928b9feccb817fa1e5ec738d6f5a08f0bb043a69a71d6ddf3e0c5ce20153"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/observability",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-observability",
+      "contentDigest": "882337b36e003bfe60abf06b8a3aa744488083a7483409fb7b4713894baf8763",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "a5294582abf7a9dfb1560f24fac662ff8a60d824af78a3fdd29fe9097936d52d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/registry",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-registry",
+      "contentDigest": "0eaa013575fa60f6da98eb8530f81247a8686169cd875a424defb5861d91ec6f",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "5caa59ee863d72f76d6bca0927cc6ba208a18ec6da4d0b2144f771a665e7a89a"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "identity": "@galerina/substrate-math",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-substrate-math",
+      "contentDigest": "bd9b2c5ecf2df19a86450de96591e418b9b65f97d92d949b1f1a4562ba73105d",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "533a5b581c1773b430d634a88a039d714b7796a396e345862bbb02d69b1a8616"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-ai-accelerator",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-ai-accelerator",
+      "contentDigest": "68149c686fade79d362a663028249c756eedf6d5329f4646a37b97b500f693cc",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "4b31d5486631c054c8a7f682a66229a807a398954d98ff35efedc920986bacda"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-cpu",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-cpu",
+      "contentDigest": "1b427ca9ca24cf349042a175505a48421ff6c0880d4a1f5b86312171c18c8783",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "b4aa7d2a4f16eb33c8e1731cc0c76df1c2e559dda21e58988d39420fad292f65"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-gpu",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-gpu",
+      "contentDigest": "ceee400a858e74e3beb67ab3a10ed07e214543093ce90f708e065ce2a2b4ee4a",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "e979e5dd00913702d9b4048195bc42c760cbd2dac9dab294d5b75ca640c2123d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-js",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-js",
+      "contentDigest": "21f599042805b704ed615d600027e49636d789bf4464149ace45920f02898226",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "6e300ef6d502f969f46ed69d0e96adfcd02552a73279afc61c909344c3bfc1ef"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-native",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-native",
+      "contentDigest": "eca415a1481575039e9993385aefab956795ffa0499464d833a05e21f7cf3172",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "6d7b87b8d77538bc05a1ecfe6d709ed0f52932215883ea0c74f057b38b8ef687"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-photonic",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-photonic",
+      "contentDigest": "4fae1bd71bdd5077a4321aefa90cd7f248ee3d3b867f06b9eea274faeb6f56d5",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "3168a8282f949b07f3c19ba6f7f74e6a20a1227784f60de455b41151a83d7166"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/target-wasm",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-target-wasm",
+      "contentDigest": "497b495df7ad8759661728cc8c95bcf6f85786e4f72bf0e66fee3ae01568d3fa",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "9b214fed33445642101ca363efd81122604ede0e0b73d6f3d197aef237064a21"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/test",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-test",
+      "contentDigest": "bbe46ab7d6f1b3c5ece74237042a4574fcb7777c83d78f0d5f01bca5356c7cde",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "ac2b4740e9a4cad901fd903369b33a739ccdbd48514932d1d7f3830950178422"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/tools-benchmark",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-tools-benchmark",
+      "contentDigest": "b4b421e9dc8712e7a68f658cb0a48cc44001a0e20746fe073e5d6483449fcb7e",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "2f03bac15599074e6282c5bf874e733880c8de3a4614f6d2c0ce5e33a695bcc4"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/tools-myco",
+      "version": "0.2.1",
+      "directory": "galerina-tools-myco",
+      "contentDigest": "a3de3f02c2580de27e95f6e251013761e8192998d1bd936451ecda22ed04214d",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "84d6b0c1eb6173ec0e645ab5b0766bf982ae1f90a6614f9b5be33a2d7ba41357"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.9.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/tower-citizen",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-tower-citizen",
+      "contentDigest": "34e08f8d3d538ffc13c7f22bcd2a5c573efea4472e2ec4a69dffc32a80ba23eb",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "d880e7403862a5f0bfa3b94924ad8e04ee7f1f42bf07f19b19930c8873247f84"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/inference-bridge-contract",
+          "scope": "runtime",
+          "specifier": "file:../galerina-inference-bridge-contract"
+        },
+        {
+          "identity": "@galerina/substrate-math",
+          "scope": "runtime",
+          "specifier": "file:../galerina-substrate-math"
+        },
+        {
+          "identity": "@noble/post-quantum",
+          "scope": "runtime",
+          "specifier": "^0.6.1"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^25.9.1"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/tri-pipe",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-tri-pipe",
+      "contentDigest": "7e491f00577bbe2e958be8d68c6a0c9d9efa0e66ea912a47c0f801c849549c10",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "08b39fa6c7573043b92ce49d644b7ba2cf8b6b8c6d0dc0134512513863cbf8f6"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@galerina/ext-photonic-emulator",
+          "scope": "runtime",
+          "specifier": "file:../galerina-ext-photonic-emulator"
+        },
+        {
+          "identity": "@galerina/hardware-tier",
+          "scope": "runtime",
+          "specifier": "file:../galerina-hardware-tier"
+        },
+        {
+          "identity": "@galerina/inference-bridge-contract",
+          "scope": "runtime",
+          "specifier": "file:../galerina-inference-bridge-contract"
+        },
+        {
+          "identity": "@galerina/tower-citizen",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tower-citizen"
+        },
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/tri-regex",
+      "version": "0.1.1",
+      "directory": "galerina-tri-regex",
+      "contentDigest": "2efe66c99654b6afe730fac6c2eb2b0a77eb94d12601077df51dcd4dab21e856",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "4642a409cc1610d513eb101701853887c3c83646337965a954823bd583f1a438"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "@types/node",
+          "scope": "development",
+          "specifier": "^22.10.0"
+        },
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.8.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web",
+      "contentDigest": "03f02e02a4b5f1a1153ea8d856217557be23883df32ea533f7be4b29f6321d01",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "1d1beb745a822e4cbfcce3650ed0ea706b7c18f3fb808029ca172a7e9f75fcce"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web-components",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web-components",
+      "contentDigest": "0701054b0d58caa8bd9dfe57bcdd4aec161e5d1855df77f12c04caf07c0de5ef",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "a9e49a08e53ab720b2c04d07fd43b80d87cf5ca90c51e72863ff6c1d30c32038"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web-events",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web-events",
+      "contentDigest": "44aba90dd0289e144522f31cb342ee769f074953415dcfb77168cd5a17508841",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "16c3c932a2b9fd24c431d40c8ae9a5f549c9b7d6e7293d17a28bac6422f93e3b"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web-render",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web-render",
+      "contentDigest": "63be50e585de67c8f5f7775ae2d5bad6ffdb72d3b64a5064a124f63072c25fdd",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "5f44301a3f4c5bb5915ea63dad04a43840c8028cc56f37d2e88f0cfbf0ae15fd"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web-router",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web-router",
+      "contentDigest": "41cd0d302ac58fd433a97c794ae447b8e03e7f6db8c68ec897f2d6408502c424",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "82002de9edaca142772da398f9997c87bbb409eed339f00410c63f20503a4cfc"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    },
+    {
+      "identity": "@galerina/web-state",
+      "version": "1.0.0-beta.2",
+      "directory": "galerina-web-state",
+      "contentDigest": "add4476ddc29204a3d0a747392520001b6d560f3ed855443004e1747e98b60ca",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "48681695bf1c0ede3ad5c2f2c4cd22f1105ffc2cc43ce2429230579c10fb6a1d"
+        }
+      ],
+      "dependencies": [
+        {
+          "identity": "typescript",
+          "scope": "development",
+          "specifier": "^5.5.0"
+        }
+      ]
+    }
+  ],
+  "topologicalOrder": [
+    "@galerina/ai",
+    "@galerina/ai-agent",
+    "@galerina/ai-lowbit",
+    "@galerina/ai-neural",
+    "@galerina/ai-neuromorphic",
+    "@galerina/api-protocol-rest",
+    "@galerina/core",
+    "@galerina/core-cli",
+    "@galerina/core-compute",
+    "@galerina/core-config",
+    "@galerina/core-economics",
+    "@galerina/core-logic",
+    "@galerina/core-photonic",
+    "@galerina/core-reports",
+    "@galerina/core-runtime",
+    "@galerina/core-runtime-wasm",
+    "@galerina/core-security",
+    "@galerina/core-sentinel-egress",
+    "@galerina/core-sentinel-io",
+    "@galerina/core-sentinel-memory",
+    "@galerina/core-sentinel-power",
+    "@galerina/core-sentinel-state",
+    "@galerina/core-sentinel-time",
+    "@galerina/core-vector",
+    "@galerina/cpu-kernels",
+    "@galerina/data",
+    "@galerina/data-archive",
+    "@galerina/data-database",
+    "@galerina/data-db",
+    "@galerina/data-html",
+    "@galerina/data-json",
+    "@galerina/data-model",
+    "@galerina/data-pipeline",
+    "@galerina/data-query",
+    "@galerina/data-reports",
+    "@galerina/data-response",
+    "@galerina/data-search",
+    "@galerina/db-firestore",
+    "@galerina/db-mysql",
+    "@galerina/db-opensearch",
+    "@galerina/db-postgres",
+    "@galerina/db-sqlite",
+    "@galerina/devtools-graph-algorithms",
+    "@galerina/devtools-kb-graph",
+    "@galerina/devtools-package-graph",
+    "@galerina/devtools-project-graph",
+    "@galerina/core-tasks",
+    "@galerina/devtools-graph-project",
+    "@galerina/devtools-wasmtime-oracle",
+    "@galerina/ext-proof-snarkjs",
+    "@galerina/ext-secrets-vault",
+    "@galerina/ext-spore",
+    "@galerina/ext-secrets-spore",
+    "@galerina/ext-tritsocket",
+    "@galerina/governance-telemetry",
+    "@galerina/inference-bridge-contract",
+    "@galerina/ext-photonic-emulator",
+    "@galerina/hardware-tier",
+    "@galerina/observability",
+    "@galerina/registry",
+    "@galerina/substrate-math",
+    "@galerina/target-ai-accelerator",
+    "@galerina/target-cpu",
+    "@galerina/target-gpu",
+    "@galerina/target-js",
+    "@galerina/target-native",
+    "@galerina/target-photonic",
+    "@galerina/target-wasm",
+    "@galerina/test",
+    "@galerina/tools-benchmark",
+    "@galerina/tools-myco",
+    "@galerina/tower-citizen",
+    "@galerina/core-network",
+    "@galerina/auth",
+    "@galerina/core-compiler",
+    "@galerina/devtools-benchmarks",
+    "@galerina/devtools-flowgraph",
+    "@galerina/devtools-fungi-scan",
+    "@galerina/devtools-intelligence",
+    "@galerina/devtools-naming",
+    "@galerina/devtools-pci",
+    "@galerina/devtools-provenance",
+    "@galerina/devtools-security",
+    "@galerina/devtools-context",
+    "@galerina/ext-bridge-bitnet",
+    "@galerina/ext-bridge-cpp",
+    "@galerina/framework-app-kernel",
+    "@galerina/docs",
+    "@galerina/framework-api-server",
+    "@galerina/framework-example-app",
+    "@galerina/tri-pipe",
+    "@galerina/tri-regex",
+    "@galerina/web",
+    "@galerina/web-components",
+    "@galerina/web-events",
+    "@galerina/web-render",
+    "@galerina/web-router",
+    "@galerina/web-state"
+  ],
+  "externalBootstrapDependencies": [
+    {
+      "identity": "@noble/ciphers",
+      "owner": "@galerina/ext-spore",
+      "scope": "runtime",
+      "specifier": "^2.2.0"
+    },
+    {
+      "identity": "@noble/hashes",
+      "owner": "@galerina/ext-secrets-spore",
+      "scope": "runtime",
+      "specifier": "^2.2.0"
+    },
+    {
+      "identity": "@noble/post-quantum",
+      "owner": "@galerina/core-compiler",
+      "scope": "runtime",
+      "specifier": "^0.6.1"
+    },
+    {
+      "identity": "@noble/post-quantum",
+      "owner": "@galerina/ext-spore",
+      "scope": "runtime",
+      "specifier": "^0.6.1"
+    },
+    {
+      "identity": "@noble/post-quantum",
+      "owner": "@galerina/tower-citizen",
+      "scope": "runtime",
+      "specifier": "^0.6.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-runtime-wasm",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-egress",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-io",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-memory",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-power",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-state",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/core-sentinel-time",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-context",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-flowgraph",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-fungi-scan",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-intelligence",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-kb-graph",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-naming",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-package-graph",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-pci",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-project-graph",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-provenance",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/devtools-security",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-bridge-bitnet",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-bridge-cpp",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-photonic-emulator",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-proof-snarkjs",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-secrets-spore",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-secrets-vault",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-spore",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/ext-tritsocket",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/hardware-tier",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/inference-bridge-contract",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/substrate-math",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/test",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/tools-myco",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/tower-citizen",
+      "scope": "development",
+      "specifier": "^25.9.1"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/tri-pipe",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "@types/node",
+      "owner": "@galerina/tri-regex",
+      "scope": "development",
+      "specifier": "^22.10.0"
+    },
+    {
+      "identity": "argon2",
+      "owner": "@galerina/core-compiler",
+      "scope": "runtime",
+      "specifier": "^0.44.0"
+    },
+    {
+      "identity": "bcryptjs",
+      "owner": "@galerina/core-compiler",
+      "scope": "runtime",
+      "specifier": "^3.0.3"
+    },
+    {
+      "identity": "snarkjs",
+      "owner": "@galerina/ext-proof-snarkjs",
+      "scope": "runtime",
+      "specifier": "^0.7.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ai-agent",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ai-lowbit",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ai-neural",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ai-neuromorphic",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ai",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/auth",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-cli",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-compiler",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-compute",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-config",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-economics",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-logic",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-network",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-photonic",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-reports",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-runtime-wasm",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-runtime",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-security",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-egress",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-io",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-memory",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-power",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-state",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-sentinel-time",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-tasks",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core-vector",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/core",
+      "scope": "development",
+      "specifier": "^5.9.3"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/cpu-kernels",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-archive",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-database",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-db",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-html",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-json",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-model",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-pipeline",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-query",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-reports",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-response",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data-search",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/data",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/db-firestore",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/db-mysql",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/db-opensearch",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/db-postgres",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/db-sqlite",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-context",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-flowgraph",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-fungi-scan",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-graph-algorithms",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-graph-project",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-intelligence",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-kb-graph",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-naming",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-package-graph",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-pci",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-project-graph",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-provenance",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/devtools-security",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/docs",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-bridge-bitnet",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-bridge-cpp",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-photonic-emulator",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-proof-snarkjs",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-secrets-spore",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-secrets-vault",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-spore",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/ext-tritsocket",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/framework-api-server",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/framework-app-kernel",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/framework-example-app",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/governance-telemetry",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/hardware-tier",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/inference-bridge-contract",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/observability",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/substrate-math",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-ai-accelerator",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-cpu",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-gpu",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-js",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-native",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-photonic",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/target-wasm",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/test",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/tools-benchmark",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/tools-myco",
+      "scope": "development",
+      "specifier": "^5.9.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/tower-citizen",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/tri-pipe",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/tri-regex",
+      "scope": "development",
+      "specifier": "^5.8.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web-components",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web-events",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web-render",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web-router",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web-state",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "typescript",
+      "owner": "@galerina/web",
+      "scope": "development",
+      "specifier": "^5.5.0"
+    },
+    {
+      "identity": "wabt",
+      "owner": "@galerina/core-compiler",
+      "scope": "runtime",
+      "specifier": "^1.0.39"
+    },
+    {
+      "identity": "wat-wasm",
+      "owner": "@galerina/core-compiler",
+      "scope": "runtime",
+      "specifier": "^1.0.43"
+    }
+  ],
+  "developmentVersionDrift": [
+    {
+      "identity": "@types/node",
+      "specifiers": [
+        "^22.10.0",
+        "^25.9.1"
+      ]
+    },
+    {
+      "identity": "typescript",
+      "specifiers": [
+        "^5.5.0",
+        "^5.8.0",
+        "^5.9.0",
+        "^5.9.3"
+      ]
+    }
+  ],
+  "rootDigest": "a129621d1f47478dc0c99811d83ce1ed1c4899975cf9c3fa2074cc9deaf48fe1"
+}

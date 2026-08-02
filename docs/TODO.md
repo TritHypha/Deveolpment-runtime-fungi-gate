@@ -197,6 +197,26 @@
   public fixed point, and require `beta-v1-release-admission.mjs` to derive
   `ADMITTED`; never hand-edit a green receipt.
 
+### Flat package root-lock and exact peer resolver - 2026-08-02
+
+- **Implementation green:** one reference lock now accounts for all **98**
+  direct package peers, **45** exact first-party edges, one deterministic
+  dependency-first order, **138** external bootstrap edges and **2**
+  development-only version-drift records.
+- **Fail-close intake:** Git-tracked regular files only; bounded stable double
+  reads, real-path containment, fatal UTF-8, decoded duplicate-key refusal,
+  case-fold collision checks and exact direct-peer `file:` targets.
+- **No ambient lookup:** the resolver accepts only a process-local verified
+  lock handle and one caller-declared peer. It does not search `node_modules`,
+  parents, children, caches, registries or the network.
+- **Fresh evidence:** pure and live tests **7/7**, current check green, governed
+  generator contracts **15/15**.
+- **Authority remains closed:** the lock says `authorityReleased: false`.
+  Physical debt remains **95** package-local dependency trees and **1** nested
+  native package; package conversion is untouched.
+- **Report:**
+  `docs/reports/flat-package-root-lock-completion-2026-08-02.md`.
+
 ### Galerina -> SLIDE execution and terminal-retirement reconciliation - 2026-08-02
 
 - **Exact blocker report:**
