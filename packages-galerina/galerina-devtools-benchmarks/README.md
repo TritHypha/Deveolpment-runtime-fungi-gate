@@ -129,15 +129,38 @@ npm run compare
 
 Reads `results/latest.json` and prints a Markdown table showing throughput for each runtime and cross-runtime ratios.
 
-### Two views + a chart
+### Interpreted views + charts
 
 ```
 npm run report      # writes results/benchmark-report-latest.{md,json} AND …-chart-latest.html
 npm run chart       # (re)render just the chart from the existing report JSON
 ```
 
-`report` derives two views — the cross-language table (current run) and the diff-from-the-last-snapshot —
-and, as its last step, renders **`results/benchmark-chart-latest.html`**: a **self-contained SVG chart** (no CDN,
+`report` derives three views: the diff from the last distinct snapshot, an
+interpreted cross-language table, and the prepared Galerina/SLIDE transition
+comparison. Every current-workload row states whether higher or lower is
+better, who may honestly be called the winner, and where the
+**Galerina/Wasm production** lane placed. `Galerina governed diagnostic` is the
+Stage-A reference interpreter; it remains visible but is not counted as a
+separate competing product.
+
+In the table, **✅ means the workload is work-equivalent and unit-aligned for
+cross-runtime ranking. It does not mean Galerina won.** Rows without the tick
+may expose measurements, but the report will not manufacture a winner or a
+Galerina place from them. Memory rows display and rank heap bytes per operation
+(lower is better); their throughput is secondary evidence.
+
+The transition contract pins
+`results/archive/2026-08-02_galerina-wasm-before-slide/results.json`. Once an
+executable backend supplies a real `slide` lane, the report compares current
+Galerina/SLIDE with that archived Galerina/Wasm result for the same admitted
+workload and unit. Until then it reports `DEFERRED_NO_SLIDE_LANE`. It never
+reruns Wasm and labels the new result historical, never substitutes the
+non-comparative VADE child, and never treats performance evidence as production
+authority.
+
+The report also renders **`results/benchmark-chart-latest.html`** as a
+**self-contained SVG chart** (no CDN,
 no `<script>`, no dependency — opens offline in any browser, adapts to light/dark). View 1 is *where the
 production path lands* (WASM ÷ Node per benchmark, log scale, teal = WASM faster); view 2 is the notable movers vs
 the last snapshot. Read the movers against the noise floor — single-run cross-session diffs are dominated by

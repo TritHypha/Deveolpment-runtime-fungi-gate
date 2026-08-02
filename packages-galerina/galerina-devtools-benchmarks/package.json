@@ -38,6 +38,7 @@
       "src/variance.mjs"
     ],
     "loadedAssets": [
+      "contracts/galerina-slide-transition-v1.json",
       "contracts/slide-v2g-vade-admission-v1.json",
       "evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json",
       "src/wasm-runner.mjs"

@@ -5,14 +5,58 @@
     "Rust",
     "C++",
     "Node.js",
-    "WASM prod",
-    "Galerina gov",
+    "Galerina/Wasm production",
+    "Galerina governed diagnostic",
     "Python"
+  ],
+  "runtimeCatalog": [
+    {
+      "key": "rustAvx2",
+      "label": "Rust AVX2",
+      "ranked": true,
+      "productionGalerina": false
+    },
+    {
+      "key": "rust",
+      "label": "Rust",
+      "ranked": true,
+      "productionGalerina": false
+    },
+    {
+      "key": "cpp",
+      "label": "C++",
+      "ranked": true,
+      "productionGalerina": false
+    },
+    {
+      "key": "nodejs",
+      "label": "Node.js",
+      "ranked": true,
+      "productionGalerina": false
+    },
+    {
+      "key": "wasm",
+      "label": "Galerina/Wasm production",
+      "ranked": true,
+      "productionGalerina": true
+    },
+    {
+      "key": "galerinaGoverned",
+      "label": "Galerina governed diagnostic",
+      "ranked": false,
+      "productionGalerina": false
+    },
+    {
+      "key": "python",
+      "label": "Python",
+      "ranked": true,
+      "productionGalerina": false
+    }
   ],
   "diffFromLast": [
     {
       "benchmark": "crypto-ops",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 86,
       "post": 208,
       "deltaPct": 141.86046511627907
@@ -54,7 +98,7 @@
     },
     {
       "benchmark": "hardware-targets",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 4550,
       "post": 3610,
       "deltaPct": -20.659340659340657
@@ -68,7 +112,7 @@
     },
     {
       "benchmark": "data-query",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 241488,
       "post": 204541,
       "deltaPct": -15.299725038097131
@@ -82,7 +126,7 @@
     },
     {
       "benchmark": "tower-of-hanoi",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 97299,
       "post": 83945,
       "deltaPct": -13.724704262119857
@@ -117,7 +161,7 @@
     },
     {
       "benchmark": "low-memory",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 134427,
       "post": 149611,
       "deltaPct": 11.295349892506714
@@ -131,7 +175,7 @@
     },
     {
       "benchmark": "tri-logic",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 335293,
       "post": 299437,
       "deltaPct": -10.693930383276715
@@ -152,7 +196,7 @@
     },
     {
       "benchmark": "call-chain",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 53905,
       "post": 48523,
       "deltaPct": -9.98423151841202
@@ -173,14 +217,14 @@
     },
     {
       "benchmark": "nbody",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 61790,
       "post": 56560,
       "deltaPct": -8.464152775530021
     },
     {
       "benchmark": "fibonacci-recursive",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 13,
       "post": 12,
       "deltaPct": -7.6923076923076925
@@ -194,14 +238,14 @@
     },
     {
       "benchmark": "collection-pipeline",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 2288330,
       "post": 2450980,
       "deltaPct": 7.107803507361263
     },
     {
       "benchmark": "gpu-compute",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 336462,
       "post": 313440,
       "deltaPct": -6.842377445298429
@@ -222,7 +266,7 @@
     },
     {
       "benchmark": "json-parse",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 5188,
       "post": 5488,
       "deltaPct": 5.782575173477255
@@ -236,7 +280,7 @@
     },
     {
       "benchmark": "text-html",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 906,
       "post": 953,
       "deltaPct": 5.187637969094923
@@ -250,7 +294,7 @@
     },
     {
       "benchmark": "governance-cost",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 810,
       "post": 769,
       "deltaPct": -5.061728395061729
@@ -285,7 +329,7 @@
     },
     {
       "benchmark": "record-allocation",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 555476600,
       "post": 536475400,
       "deltaPct": -3.4207021501895847
@@ -306,7 +350,7 @@
     },
     {
       "benchmark": "compute-mix",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 1653439,
       "post": 1690331,
       "deltaPct": 2.231228367057992
@@ -334,21 +378,21 @@
     },
     {
       "benchmark": "tri-logic",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 472704000,
       "post": 463593000,
       "deltaPct": -1.9274218115353372
     },
     {
       "benchmark": "low-memory",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 467714700,
       "post": 459060300,
       "deltaPct": -1.8503587764079257
     },
     {
       "benchmark": "compute-mix",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 76932000,
       "post": 78313000,
       "deltaPct": 1.795091769354755
@@ -362,28 +406,28 @@
     },
     {
       "benchmark": "binary-trees",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 344169,
       "post": 338046,
       "deltaPct": -1.7790678416708072
     },
     {
       "benchmark": "matrix-multiply",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 702422,
       "post": 714678,
       "deltaPct": 1.7448200654307526
     },
     {
       "benchmark": "binary-trees",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 581009519,
       "post": 591100754,
       "deltaPct": 1.736845037817702
     },
     {
       "benchmark": "call-chain",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 54279000,
       "post": 55187000,
       "deltaPct": 1.6728384826544336
@@ -432,14 +476,14 @@
     },
     {
       "benchmark": "mandelbrot",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 7330,
       "post": 7241,
       "deltaPct": -1.21418826739427
     },
     {
       "benchmark": "fibonacci-recursive",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 17271.6,
       "post": 17085.93,
       "deltaPct": -1.0750017369554543
@@ -488,7 +532,7 @@
     },
     {
       "benchmark": "nbody",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 29587210,
       "post": 29297869,
       "deltaPct": -0.9779259348887577
@@ -502,7 +546,7 @@
     },
     {
       "benchmark": "record-allocation",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 2439024,
       "post": 2415459,
       "deltaPct": -0.9661651545864248
@@ -530,7 +574,7 @@
     },
     {
       "benchmark": "hardware-targets",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 38088013.52,
       "post": 38420830.95,
       "deltaPct": 0.8738114678131937
@@ -544,7 +588,7 @@
     },
     {
       "benchmark": "matrix-multiply",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 445751951,
       "post": 441902367,
       "deltaPct": -0.8636157377132827
@@ -586,7 +630,7 @@
     },
     {
       "benchmark": "six-digit-guess",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 36475505.76,
       "post": 36202898.64,
       "deltaPct": -0.7473703635357004
@@ -621,14 +665,14 @@
     },
     {
       "benchmark": "governance-cost",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 2881553.07,
       "post": 2898640.54,
       "deltaPct": 0.5929951517429525
     },
     {
       "benchmark": "tower-of-hanoi",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 121055597,
       "post": 121727986,
       "deltaPct": 0.555438176063846
@@ -677,7 +721,7 @@
     },
     {
       "benchmark": "collection-pipeline",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 419434900,
       "post": 420973500,
       "deltaPct": 0.36682689018009706
@@ -712,7 +756,7 @@
     },
     {
       "benchmark": "mandelbrot",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 9093775,
       "post": 9064940,
       "deltaPct": -0.31708503894147366
@@ -733,7 +777,7 @@
     },
     {
       "benchmark": "arithmetic-threshold",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 495151515.03999996,
       "post": 493793580.48,
       "deltaPct": -0.2742462698291945
@@ -803,7 +847,7 @@
     },
     {
       "benchmark": "gpu-compute",
-      "runtime": "WASM prod",
+      "runtime": "Galerina/Wasm production",
       "pre": 472800000,
       "post": 472776000,
       "deltaPct": -0.005076142131979695
@@ -817,14 +861,14 @@
     },
     {
       "benchmark": "arithmetic-threshold",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 82,
       "post": 82,
       "deltaPct": 0
     },
     {
       "benchmark": "six-digit-guess",
-      "runtime": "Galerina gov",
+      "runtime": "Galerina governed diagnostic",
       "pre": 1,
       "post": 1,
       "deltaPct": 0
@@ -836,377 +880,641 @@
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "mix-ops/s",
+      "scoreUnit": "mix-ops/s",
       "rustAvx2": 130343110.06,
       "rust": 132847356.34,
       "cpp": 133509000,
       "nodejs": 136214524.18,
       "wasm": 78313000,
       "galerinaGoverned": 1690331,
-      "python": 797787.48
+      "python": 797787.48,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "5th of 6",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "arithmetic-threshold",
       "metricClass": "cpu-throughput",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": 1585552604.67,
       "rust": 1551217472.91,
       "cpp": 1884000000,
       "nodejs": 972223669.76,
       "wasm": 493793580.48,
       "galerinaGoverned": 82,
-      "python": 3903660.33
+      "python": 3903660.33,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "six-digit-guess",
       "metricClass": "cpu-throughput",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": 76048445.41,
       "rust": 77806547.07,
       "cpp": 69216800,
       "nodejs": 2300566.53,
       "wasm": 36202898.64,
       "galerinaGoverned": 1,
-      "python": 86450.92
+      "python": 86450.92,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "record-allocation",
       "metricClass": "memory",
       "aligned": true,
       "unit": "records/s",
+      "scoreUnit": "heap bytes/op",
       "rustAvx2": 1176747469.99,
       "rust": 1173929376.41,
       "cpp": null,
       "nodejs": 52057575.68,
       "wasm": 536475400,
       "galerinaGoverned": 2415459,
-      "python": 3143146.76
+      "python": 3143146.76,
+      "interpretation": {
+        "direction": "lower is better (heap bytes/op)",
+        "winner": "Galerina/Wasm production",
+        "galerinaPlace": "1st of 3",
+        "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
+        "memoryBytesPerOp": {
+          "nodejs": 0.21495440499203194,
+          "wasm": 0.00009171851115080448,
+          "galerinaGoverned": 5.985599844374405,
+          "python": 0.01
+        }
+      }
     },
     {
       "benchmark": "fibonacci-recursive",
       "metricClass": "cpu-throughput",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": 494.33,
       "rust": 489.63,
       "cpp": null,
       "nodejs": 124.87,
       "wasm": 17085.93,
       "galerinaGoverned": 12,
-      "python": 4.56
+      "python": 4.56,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "tower-of-hanoi",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "moves/s",
+      "scoreUnit": "moves/s",
       "rustAvx2": 254654927.71,
       "rust": 248169355.75,
       "cpp": null,
       "nodejs": 131139635.15,
       "wasm": 121727986,
       "galerinaGoverned": 83945,
-      "python": 3052533.05
+      "python": 3052533.05,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust AVX2",
+        "galerinaPlace": "4th of 5",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "collection-pipeline",
       "metricClass": "memory",
       "aligned": true,
       "unit": "elements/s",
+      "scoreUnit": "heap bytes/op",
       "rustAvx2": 13351099200,
       "rust": 4314322600,
       "cpp": null,
       "nodejs": 70636000,
       "wasm": 420973500,
       "galerinaGoverned": 2450980,
-      "python": 10796300
+      "python": 10796300,
+      "interpretation": {
+        "direction": "lower is better (heap bytes/op)",
+        "winner": "Galerina/Wasm production",
+        "galerinaPlace": "1st of 3",
+        "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
+        "memoryBytesPerOp": {
+          "nodejs": 0.1628907308572468,
+          "wasm": 0.00005663255632373709,
+          "galerinaGoverned": 16.76720268275243,
+          "python": 0.04
+        }
+      }
     },
     {
       "benchmark": "governance-cost",
       "metricClass": "governance",
       "aligned": false,
       "unit": "gov-factor",
+      "scoreUnit": "gov-factor",
       "rustAvx2": 892769460.14,
       "rust": 782925950.86,
       "cpp": null,
       "nodejs": 2129408.41,
       "wasm": 2898640.54,
       "galerinaGoverned": 769,
-      "python": 24905.03
+      "python": 24905.03,
+      "interpretation": {
+        "direction": "internal only",
+        "winner": "no cross-runtime winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Governance compares Galerina tiers only; native lanes perform different work.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "hardware-targets",
       "metricClass": "cpu-throughput",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": 1189159.34,
       "rust": 1182819.83,
       "cpp": null,
       "nodejs": 909842.44,
       "wasm": 38420830.95,
       "galerinaGoverned": 3610,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "low-memory",
       "metricClass": "memory",
       "aligned": true,
       "unit": "items/s",
+      "scoreUnit": "heap bytes/op",
       "rustAvx2": 6177255100,
       "rust": 1354122500,
       "cpp": null,
       "nodejs": 712349100,
       "wasm": 459060300,
       "galerinaGoverned": 149611,
-      "python": 3695600
+      "python": 3695600,
+      "interpretation": {
+        "direction": "lower is better (heap bytes/op)",
+        "winner": "Rust AVX2 + Rust + Node.js + Galerina/Wasm production (tie)",
+        "galerinaPlace": "joint 1st of 5",
+        "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
+        "memoryBytesPerOp": {
+          "rustAvx2": 0,
+          "rust": 0,
+          "nodejs": 0,
+          "wasm": 0,
+          "galerinaGoverned": 35.21040267599061,
+          "python": 0.27
+        }
+      }
     },
     {
       "benchmark": "gpu-compute",
       "metricClass": "gpu",
       "aligned": true,
       "unit": "kernel-evals/s",
+      "scoreUnit": "kernel-evals/s",
       "rustAvx2": 1193018513,
       "rust": 1192621916,
       "cpp": null,
       "nodejs": 989289947,
       "wasm": 472776000,
       "galerinaGoverned": 313440,
-      "python": 7998483
+      "python": 7998483,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust AVX2",
+        "galerinaPlace": "4th of 5",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "matrix-multiply",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "mul-adds/s",
+      "scoreUnit": "mul-adds/s",
       "rustAvx2": 1425431593,
       "rust": 1514835804,
       "cpp": null,
       "nodejs": 611395830,
       "wasm": 441902367,
       "galerinaGoverned": 714678,
-      "python": 7198474
+      "python": 7198474,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust",
+        "galerinaPlace": "4th of 5",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "crypto-ops",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": 208,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "text-html",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": 953,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "tri-logic",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "trit-ops/s",
+      "scoreUnit": "trit-ops/s",
       "rustAvx2": 1399098421,
       "rust": 1396275899,
       "cpp": null,
       "nodejs": 1000505255,
       "wasm": 463593000,
       "galerinaGoverned": 299437,
-      "python": 6838698
+      "python": 6838698,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust AVX2",
+        "galerinaPlace": "4th of 5",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "data-query",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "record-scans/s",
+      "scoreUnit": "record-scans/s",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": 387907526,
       "wasm": null,
       "galerinaGoverned": 204541,
-      "python": 4116844
+      "python": 4116844,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "not measured",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "call-chain",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "chains/s",
+      "scoreUnit": "chains/s",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": 277596568.91,
       "wasm": 55187000,
       "galerinaGoverned": 48523,
-      "python": 1427457.81
+      "python": 1427457.81,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "2nd of 3",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "nbody",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "force-evals/s",
+      "scoreUnit": "force-evals/s",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": 122521013,
       "wasm": 29297869,
       "galerinaGoverned": 56560,
-      "python": 1083101
+      "python": 1083101,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "2nd of 3",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "json-parse",
       "metricClass": "io",
       "aligned": true,
       "unit": "records/s",
+      "scoreUnit": "records/s",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": 3160500,
       "wasm": null,
       "galerinaGoverned": 5488,
-      "python": 504500
+      "python": 504500,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "not measured",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "mandelbrot",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "pixels/s",
+      "scoreUnit": "pixels/s",
       "rustAvx2": 23431774,
       "rust": 23340877,
       "cpp": null,
       "nodejs": 6869463,
       "wasm": 9064940,
       "galerinaGoverned": 7241,
-      "python": 147816
+      "python": 147816,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust AVX2",
+        "galerinaPlace": "3rd of 5",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "spectral-norm",
       "metricClass": "cpu-throughput",
       "aligned": true,
       "unit": "A-evals/s",
+      "scoreUnit": "A-evals/s",
       "rustAvx2": 374471527,
       "rust": 379246135,
       "cpp": null,
       "nodejs": 241130032,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": 1728515
+      "python": 1728515,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust",
+        "galerinaPlace": "not measured",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "binary-trees",
       "metricClass": "memory",
       "aligned": true,
       "unit": "nodes/s",
+      "scoreUnit": "heap bytes/op",
       "rustAvx2": 16640821,
       "rust": 15341374,
       "cpp": null,
       "nodejs": 78005282,
       "wasm": 591100754,
       "galerinaGoverned": 338046,
-      "python": 2876867
+      "python": 2876867,
+      "interpretation": {
+        "direction": "lower is better (heap bytes/op)",
+        "winner": "Python",
+        "galerinaPlace": "2nd of 3",
+        "explanation": "Winner uses the lowest non-negative heap bytes/op; throughput is secondary.",
+        "memoryBytesPerOp": {
+          "nodejs": 3.15,
+          "wasm": 0.0000023436906831453613,
+          "galerinaGoverned": 8.247623230565607,
+          "python": 0
+        }
+      }
     },
     {
       "benchmark": "spore-container",
       "metricClass": "io",
       "aligned": true,
       "unit": "containers/s",
+      "scoreUnit": "containers/s",
       "rustAvx2": 163353,
       "rust": 163552,
       "cpp": null,
       "nodejs": 43788,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": 66847
+      "python": 66847,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Rust",
+        "galerinaPlace": "not measured",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "framework-pipeline",
       "metricClass": "io",
       "aligned": true,
       "unit": "requests/s",
+      "scoreUnit": "requests/s",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": 392897,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": 114449
+      "python": 114449,
+      "interpretation": {
+        "direction": "higher is better",
+        "winner": "Node.js",
+        "galerinaPlace": "not measured",
+        "explanation": "Winner uses the highest admitted same-unit throughput.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "http-throughput",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "naming-check",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "context-receipt",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "intelligence-search",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     },
     {
       "benchmark": "provenance-trace",
       "metricClass": "io",
       "aligned": false,
       "unit": "per-call",
+      "scoreUnit": "per-call",
       "rustAvx2": null,
       "rust": null,
       "cpp": null,
       "nodejs": null,
       "wasm": null,
       "galerinaGoverned": null,
-      "python": null
+      "python": null,
+      "interpretation": {
+        "direction": "not certified",
+        "winner": "no admitted winner",
+        "galerinaPlace": "not ranked",
+        "explanation": "Measurements are visible, but this workload is not work-equivalence certified.",
+        "memoryBytesPerOp": {}
+      }
     }
-  ]
+  ],
+  "slideTransition": {
+    "schema": "galerina.benchmark.slide-transition.v1",
+    "baselineLabel": "Galerina/Wasm",
+    "candidateLabel": "Galerina/SLIDE",
+    "archiveDirectory": "2026-08-02_galerina-wasm-before-slide",
+    "authorityReleased": false,
+    "status": "DEFERRED_NO_SLIDE_LANE",
+    "rows": [],
+    "exclusions": []
+  }
 }
