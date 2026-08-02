@@ -57,10 +57,11 @@ response shapes, and webhook-style input.
 
 ### Memory (3)
 
-These cover Galerina's memory model. Galerina is **value-semantics** (no shared mutable aliasing,
-no references, no raw pointers) — `borrow`/`move` are reserved-but-unenforced surface, and there
-is no "use after move" / borrow error class. The genuine consume-once guarantee for linear
-resources is FUNGI-AFFINE-001 in the production value-state checker (#65 / RD-0130).
+These cover Galerina's ordinary-value memory model. Ordinary values use **value semantics** (no
+shared mutable aliasing, references or raw pointers); general `borrow`/`move` remain reserved and
+unenforced. Two narrow consume-once families are compiler-enforced outside this prototype corpus:
+Passport uses `FUNGI-AFFINE-001`, while `Authority<Tag>` uses `FUNGI-AFFINE-002..004` for transfer,
+persistence and containment refusal. This does not turn ordinary values into move-only values.
 
 | File | Demonstrates | Expected |
 |---|---|---|
@@ -120,7 +121,7 @@ inputs but must not be parsed as correct programs:
 
 | File | Expected diagnostic | Reason |
 |---|---|---|
-| _(none)_ | — | The use-after-move fixture was retired in #65 — Galerina is value-semantics, so there is no use-after-move / borrow error class to reject. The consume-once guarantee is FUNGI-AFFINE-001, exercised in the production compiler's value-state tests (not this prototype corpus). |
+| _(none)_ | — | The general use-after-move fixture was retired in #65 because ordinary values retain value semantics. Narrow Passport and `Authority<Tag>` consume-once failures are exercised in production compiler value-state tests, not this prototype corpus. |
 
 ---
 

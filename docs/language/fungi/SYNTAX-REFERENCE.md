@@ -54,6 +54,7 @@ One table per construct family. Every **Example** links a curriculum example tha
 |---|---|---|---|
 | `Int` · `Decimal` · `String` · `Bool` · `Byte` · `Char` | primitives | [051-int-basic](../../examples/Level-2-Types/051-int-basic/example.fungi), [053-string-basic](../../examples/Level-2-Types/053-string-basic/example.fungi) | — |
 | `type X = Brand<String, Tag>` | domain-branded newtype (inline one-off) | [017-domain-brand-type](../../examples/Level-1-Basics/017-domain-brand-type/example.fungi), [057-email-type](../../examples/Level-2-Types/057-email-type/example.fungi) | `FUNGI-TYPE-001` |
+| `type X = Authority<"closed.tag.v1">` | opaque runtime-authority family: exact ASCII tag, move-on-transfer, no ordinary-data construction, containment, serialization or persistence; native minting is not yet implemented | [self-hosted VOK contract](../../../packages-galerina/galerina-core-compiler/src/self-hosted/slide-vok-authority-types.fungi) | `FUNGI-TYPE-009/035`, `FUNGI-AFFINE-002..004` |
 | `hallmark X of T { gate: flow f }` | developer-minted nominal type — a *declared* brand, constructed **only** through its mandatory assay gate; schema `ops {}` is deny-by-default | [094-hallmark-declaration](../../examples/Level-2-Types/094-hallmark-declaration/example.fungi) | `FUNGI-HALLMARK-001..005`, `FUNGI-TYPE-003` |
 | `type X = Y` | type alias | [016-type-alias](../../examples/Level-1-Basics/016-type-alias/example.fungi) | — |
 | `record X { field: T, … }` | record **declaration** (NOT `type X = record {…}` — fails strict, see F2) | [015-record-basic](../../examples/Level-1-Basics/015-record-basic/example.fungi) | `FUNGI-TYPE-001` |
@@ -74,6 +75,7 @@ One table per construct family. Every **Example** links a curriculum example tha
 | `validate.*(raw)?` | untaint boundary input (prove or `Err`) | [154-validate-email](../../examples/Level-4-Security/154-validate-email/example.fungi) | `FUNGI-VALUESTATE-003` |
 | `redact(x)` → bind to `let` before a sink | strip PII **and** gate the boundary | [161-safe-audit-log](../../examples/Level-4-Security/161-safe-audit-log/example.fungi), [168-redacted-network-send](../../examples/Level-4-Security/168-redacted-network-send/example.fungi) | `FUNGI-VALUESTATE-006/008` |
 | Validate-before-DB (query) | prove filters before `database.read` | [178-governed-data-query](../../examples/Level-4-Security/178-governed-data-query/example.fungi) | `FUNGI-VALUESTATE-003/008` |
+| direct `Authority<Tag>` transfer | passing, returning or rebinding transfers once; reuse refuses; records/lists/persistence refuse | [self-hosted VOK contract](../../../packages-galerina/galerina-core-compiler/src/self-hosted/slide-vok-authority-types.fungi) | `FUNGI-AFFINE-002..004` |
 
 ## Control flow
 

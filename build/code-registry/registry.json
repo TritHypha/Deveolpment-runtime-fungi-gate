@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 768,
+  "total": 772,
   "counts": {
     "ref": 202,
     "inline": 175,
     "phantom": 113,
-    "live": 165,
+    "live": 169,
     "referenced": 100,
     "dead": 13
   },
@@ -1784,7 +1784,55 @@
       "defs": 0,
       "emits": 1,
       "tests": 3,
+      "docs": 7
+    },
+    {
+      "code": "FUNGI-AFFINE-002",
+      "family": "AFFINE",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "AUTHORITY_CONSUMED_TWICE"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 5,
+      "docs": 13
+    },
+    {
+      "code": "FUNGI-AFFINE-003",
+      "family": "AFFINE",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "AUTHORITY_PERSISTENCE_FORBIDDEN"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
       "docs": 5
+    },
+    {
+      "code": "FUNGI-AFFINE-004",
+      "family": "AFFINE",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "AUTHORITY_CONTAINMENT_FORBIDDEN"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 2,
+      "tests": 4,
+      "docs": 2
     },
     {
       "code": "FUNGI-AMD-024",
@@ -9400,7 +9448,7 @@
       ],
       "defs": 1,
       "emits": 1,
-      "tests": 95,
+      "tests": 96,
       "docs": 8
     },
     {
@@ -9492,7 +9540,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 26,
+      "tests": 28,
       "docs": 1
     },
     {
@@ -9508,8 +9556,8 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 97,
-      "docs": 13
+      "tests": 99,
+      "docs": 16
     },
     {
       "code": "FUNGI-TYPE-010",
@@ -9704,7 +9752,8 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "UNKNOWN_SYMBOL"
+        "UNKNOWN_SYMBOL",
+        "INVALID_AUTHORITY_TAG"
       ],
       "severities": [
         "error"
@@ -9914,6 +9963,22 @@
       "emits": 1,
       "tests": 7,
       "docs": 3
+    },
+    {
+      "code": "FUNGI-TYPE-035",
+      "family": "TYPE",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "INVALID_AUTHORITY_TAG"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 2,
+      "docs": 2
     },
     {
       "code": "FUNGI-TYPE-099",

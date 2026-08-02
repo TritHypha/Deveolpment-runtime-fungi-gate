@@ -14,7 +14,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 165 | emitted with an exported constant |
+| live | 169 | emitted with an exported constant |
 | inline | 175 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
@@ -61,11 +61,14 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ADMIT-003 | inline | ADMISSION_PREDICATE_TYPE | error |
 | FUNGI-ADMIT-004 | ref | — | — |
 
-### AFFINE (1)
+### AFFINE (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-AFFINE-001 | inline | PASSPORT_CONSUMED_TWICE | error |
+| FUNGI-AFFINE-002 | live | AUTHORITY_CONSUMED_TWICE | error |
+| FUNGI-AFFINE-003 | live | AUTHORITY_PERSISTENCE_FORBIDDEN | error |
+| FUNGI-AFFINE-004 | live | AUTHORITY_CONTAINMENT_FORBIDDEN | error |
 
 ### AMD (1)
 
@@ -1419,7 +1422,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TRI-004 | live | UNKNOWN_LEAKED | error |
 | FUNGI-TRI-005 | live | MALFORMED_UNKNOWN_REASON | error |
 
-### TYPE (35)
+### TYPE (36)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1442,7 +1445,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TYPE-016 | live | TENSOR_SHAPE_MISMATCH / QUANTIZED_PRECISION_MISMATCH / INVALID_RUNTIME_TARGET_TYPE / UNKNOWN_SYMBOL | error/warning |
 | FUNGI-TYPE-017 | live | QUANTIZED_PRECISION_MISMATCH / INVALID_RUNTIME_TARGET_TYPE / UNKNOWN_SYMBOL | warning/error |
 | FUNGI-TYPE-018 | referenced | INVALID_RUNTIME_TARGET_TYPE / UNKNOWN_SYMBOL | error |
-| FUNGI-TYPE-019 | referenced | UNKNOWN_SYMBOL | error |
+| FUNGI-TYPE-019 | referenced | UNKNOWN_SYMBOL / INVALID_AUTHORITY_TAG | error |
 | FUNGI-TYPE-020 | inline | SHADOWED_BINDING / X | warning |
 | FUNGI-TYPE-021 | ref | — | — |
 | FUNGI-TYPE-022 | inline | UNREACHABLE_PATTERN | error |
@@ -1456,6 +1459,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TYPE-032 | inline | INVALID_CURRENCY_TAG | error |
 | FUNGI-TYPE-033 | inline | CONDITION_NOT_BOOL | error |
 | FUNGI-TYPE-034 | inline | GOVERNANCE_QUALIFIER_MISMATCH | error |
+| FUNGI-TYPE-035 | live | INVALID_AUTHORITY_TAG | error |
 | FUNGI-TYPE-099 | ref | WRONG_NAME | — |
 | FUNGI-TYPE-903 | ref | — | — |
 

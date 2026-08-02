@@ -1,5 +1,29 @@
 # TODO
 
+### Native `.fungi` VOK authority source boundary - 2026-08-02
+
+- **Compiler contract implemented:** `Authority<Tag>` accepts exactly one
+  bounded ASCII tag; direct distinct tags do not unify and statically known
+  ordinary values cannot construct authority. Named VOK admitted-object and
+  lease aliases are now a tracked self-hosted package asset.
+- **Fail-close use state:** rebind, direct call and return transfer once;
+  duplicate use emits `FUNGI-AFFINE-002` with the first transfer location.
+  Serialization/persistent storage emits `FUNGI-AFFINE-003`, while ordinary
+  record/list/payload containment emits `FUNGI-AFFINE-004`. Refused boundaries
+  do not count as valid transfers. Ordinary values and Passport remain on
+  their existing semantics.
+- **Verified focused evidence:** 26/26 authority, VOK-contract and type tests
+  pass after observed RED failures. The VOK source passes production parse,
+  type, value-state, effect and governance checks and contains no authority in
+  its serializable records.
+- **Fresh repository fixed point:** the governed count-writing runner passes
+  98/98 packages and 8,807 tests; the core compiler contributes 5,781 tests.
+- **Still open and non-authorizing:** no native mint table, unguessable
+  slot/generation resolution, revocation lookup, W^X loader or cross-platform
+  hostile runtime evidence exists. Unknown-return inference also remains a
+  compiler-wide deferred-type boundary; it cannot mint a native handle because
+  that runtime mechanism does not yet exist. `authorityReleased` remains false.
+
 ### SLIDE repository security policy closed - 2026-08-02
 
 - **Binding policy:** independent SLIDE now has root `SECURITY.md` version 1.0.

@@ -48,7 +48,11 @@ describe("compiler authority ledger negative fixture", () => {
 
     assert.equal(result.status, 0, output);
     assert.match(output, /7\/7 canonical compiler stages check-clean/i);
-    assert.match(output, /49\/49 non-authorizing auxiliary \.fungi files check-clean/i);
+    assert.match(output, /(\d+)\/\1 non-authorizing auxiliary \.fungi files check-clean/i);
+    assert.match(
+      output,
+      /\[auxiliary\s+\].*slide-vok-authority-types\.fungi/i,
+    );
     assert.match(
       output,
       /0 shadow .* 0 differential .* 7 authoritative/i,

@@ -3,9 +3,19 @@
 Date: 2026-08-02
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: strict **84/84**, exhaustive **85/85**, unified
-package lane **98/98** with **8,781** tests, graph **5/5**
+package lane **98/98** with **8,807** tests, graph **5/5**
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: the first native `.fungi` VOK source boundary now exists.
+`Authority<Tag>` has bounded ASCII tags, exact tag identity, move-on-rebind/
+call/return, duplicate-use refusal, and separate fail-close diagnostics for
+persistence and ordinary-data containment. The tracked self-hosted contract
+defines admitted-object and lease authority aliases while keeping receipts and
+evidence value-only. Focused evidence is 26/26. This closes the source
+type/use-state slice only: native minting, slot/generation/revocation checks,
+W^X execution and cross-platform hostile runtime evidence remain amber, so no
+production authority or component removal is released.
 
 Roadmap refresh: bounded Shape Lab E03, E04 and E05 are now green as completed
 experiments, not green as production features. A reproducibility defect was
@@ -99,6 +109,7 @@ invented completion percentage. The detailed execution checklist remains
 ```mermaid
 flowchart TB
     AR["SLIDE Verified Object Kernel<br/>RD-0657 · 9/9 hostile · reference-only"]
+    AT["🟨 .fungi VOK authority boundary<br/>26/26 · source use-state · native mint open"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
     B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
@@ -162,7 +173,7 @@ flowchart TB
     E --> O --> H
     Q --> I
     M --> I
-    AI --> AR --> H
+    AI --> AR --> AT --> H
 
     classDef green fill:#166534,color:#ffffff,stroke:#22c55e,stroke-width:2px;
     classDef amber fill:#854d0e,color:#ffffff,stroke:#facc15,stroke-width:2px;
@@ -171,7 +182,7 @@ flowchart TB
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
     class A,B,C,D,E,G,R,Y,Z,K,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,SP,AD,AG,AI,SI,O,SA,NP,RP green;
     class X red;
-    class Q,AC,AH,TG,LI,F amber;
+    class Q,AC,AH,TG,LI,F,AT amber;
     class H,I,T,AE,AF blue;
     class P green;
     class J grey;
@@ -197,6 +208,7 @@ must own that operation before rotation can become yellow or green.
 | SLIDE architecture reduction R&D | adopted with bounded evidence | RD-0643 through RD-0650 define the DFE/Shape-Fabric/VPEG split. Owner-adopted RD-0657 selects the small VOK rather than shared helpers or a monolithic Fabric runtime. The VOK reference passes 9/9 hostile tests and remains non-authorizing; native `.fungi` authority and every deletion gate stay open |
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.0 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal and narrow non-findings. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 336/336 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
+| Native `.fungi` VOK authority boundary | 🟨 source boundary implemented | `Authority<Tag>` now enforces bounded tags, exact tag identity, one-transfer use state, persistence refusal and ordinary-container refusal. The tracked VOK source contract passes 26/26 focused checks. Native mint-table, generation/revocation resolution, W^X execution and cross-platform hostile evidence remain open, so this is amber and non-authorizing |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 336/336, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
@@ -287,7 +299,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    evidence is strict 84/84, exhaustive 85/85, graph 5/5 and package 98/98
-   with 8,781 unit tests.
+   with 8,807 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.

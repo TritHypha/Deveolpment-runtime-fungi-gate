@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 151 |
+| Files | 152 |
 | Internal edges | 276 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
@@ -112,6 +112,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2e-frontend-schema.fungi`
 - `src/self-hosted/slide-v2e-frontend-validator.fungi`
 - `src/self-hosted/slide-v2e-signature-evidence.fungi`
+- `src/self-hosted/slide-vok-authority-types.fungi`
 - `src/self-hosted/type-checker.fungi`
 
 ## Allowed Orphans

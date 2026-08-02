@@ -1,6 +1,6 @@
 # Generic Runtime Authority Type Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Completed steps use checkbox (`- [x]`) syntax; pending steps use (`- [ ]`).
 
 **Goal:** Add an opt-in `Authority<Tag>` type whose bindings move on transfer,
 refuse duplicate use and cannot cross serialization or persistent-storage
@@ -36,7 +36,7 @@ mint table and executable-memory loader remain separate future work.
 - Consumes: existing `parseTypeString`, generic arity/kind maps and `checkTypes`.
 - Produces: `Authority<Tag>` with arity 1 and tag-kind validation; named aliases remain exact user-defined types.
 
-- [ ] **Step 1: Write the failing type tests**
+- [x] **Step 1: Write the failing type tests**
 
 ```javascript
 it("accepts a named Authority tag alias", () => {
@@ -44,15 +44,15 @@ it("accepts a named Authority tag alias", () => {
 });
 
 it("refuses a missing Authority tag", () => {
-  assert.ok(errorCodes(`type Lease = Authority`).includes("FUNGI-TYPE-005"));
+  assert.ok(errorCodes(`type Lease = Authority`).includes("FUNGI-TYPE-009"));
 });
 
 it("refuses Authority with two arguments", () => {
-  assert.ok(errorCodes(`type Lease = Authority<String, "tag">`).includes("FUNGI-TYPE-005"));
+  assert.ok(errorCodes(`type Lease = Authority<String, "tag">`).includes("FUNGI-TYPE-009"));
 });
 ```
 
-- [ ] **Step 2: Run the focused test and confirm RED**
+- [x] **Step 2: Run the focused test and confirm RED**
 
 Run:
 
@@ -64,13 +64,13 @@ node --test tests/type-checker-authority.test.mjs
 Expected: at least the valid alias fails with unknown type or the invalid forms
 are accepted because `Authority` is not registered.
 
-- [ ] **Step 3: Add the minimal generic registration**
+- [x] **Step 3: Add the minimal generic registration**
 
 Add `Authority` to `BUILT_IN_TYPES`, `GENERIC_ARITY` with arity 1,
 `GENERIC_ARG_KINDS` with `tag`, and the generic example map. Reuse the existing
 generic-arity diagnostic rather than inventing a duplicate fault code.
 
-- [ ] **Step 4: Run focused tests and existing Brand/hallmark tests**
+- [x] **Step 4: Run focused tests and existing Brand/hallmark tests**
 
 ```powershell
 npm.cmd run build
@@ -79,7 +79,7 @@ node --test tests/type-checker-authority.test.mjs tests/type-checker-brand-tag-r
 
 Expected: all pass; Brand and hallmark behavior is unchanged.
 
-- [ ] **Step 5: Commit the type-family slice**
+- [x] **Step 5: Commit the type-family slice**
 
 ```powershell
 git add packages-galerina/galerina-core-compiler/src/type-checker.ts packages-galerina/galerina-core-compiler/tests/type-checker-authority.test.mjs
@@ -99,7 +99,7 @@ git commit -m "feat(compiler): recognize runtime authority types"
 - Consumes: AST `typeDecl`, `paramDecl`, `letDecl`, `callExpr` and `returnStmt` nodes.
 - Produces: `FUNGI-AFFINE-002 / AUTHORITY_CONSUMED_TWICE` with the first transfer as a related location.
 
-- [ ] **Step 1: Write failing transfer tests**
+- [x] **Step 1: Write failing transfer tests**
 
 ```javascript
 it("refuses a second call transfer", () => {
@@ -132,7 +132,7 @@ it("does not mark an ordinary value affine", () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and confirm RED**
+- [x] **Step 2: Run the focused test and confirm RED**
 
 ```powershell
 npm.cmd run build
@@ -141,7 +141,7 @@ node --test tests/value-state/authority-use-state.test.mjs
 
 Expected: duplicate authority uses do not yet emit `FUNGI-AFFINE-002`.
 
-- [ ] **Step 3: Implement alias and binding use-state**
+- [x] **Step 3: Implement alias and binding use-state**
 
 Add one pre-pass that maps a `typeDecl` whose RHS base is `Authority` to its
 alias/tag. Extend `BindingInfo` with exact `authorityType`, `consumed` and
@@ -157,7 +157,7 @@ drift:
 private consumeAuthorityBinding(name: string, at: SourceLocation | undefined): void
 ```
 
-- [ ] **Step 4: Add return-transfer and nested-wrapper tests**
+- [x] **Step 4: Add return-transfer and nested-wrapper tests**
 
 ```javascript
 it("refuses reuse after returning an authority", () => {
@@ -169,20 +169,20 @@ secure flow returnThenReuse(lease: Lease) -> Lease {
 }`).includes("FUNGI-AFFINE-002"));
 });
 
-it("cannot hide duplicate authority in a nested list argument", () => {
+it("refuses authority containment in a nested list argument", () => {
   assert.ok(codes(`
 type Lease = Authority<"slide.vok.lease.v1">
 secure flow nestedDuplicate(lease: Lease) -> Bool {
   consume.wrapper([lease, lease])
   return true
-}`).includes("FUNGI-AFFINE-002"));
+}`).includes("FUNGI-AFFINE-004"));
 });
 ```
 
 Run the focused suite after adding each test and observe RED before extending
 the walker, then GREEN afterward.
 
-- [ ] **Step 5: Run focused and Passport regression suites**
+- [x] **Step 5: Run focused and Passport regression suites**
 
 ```powershell
 npm.cmd run build
@@ -192,7 +192,7 @@ node --test tests/value-state/authority-use-state.test.mjs tests/value-state/aff
 Expected: both suites pass and Passport still emits only
 `FUNGI-AFFINE-001` for its existing fault.
 
-- [ ] **Step 6: Commit the use-state slice**
+- [x] **Step 6: Commit the use-state slice**
 
 ```powershell
 git add packages-galerina/galerina-core-compiler/src/value-state-checker.ts packages-galerina/galerina-core-compiler/src/index.ts packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs
@@ -212,13 +212,13 @@ git commit -m "feat(compiler): enforce authority use state"
 - Consumes: exact authority binding metadata and existing serialization/sink classifiers.
 - Produces: `FUNGI-AFFINE-003 / AUTHORITY_PERSISTENCE_FORBIDDEN`.
 
-- [ ] **Step 1: Write failing boundary tests**
+- [x] **Step 1: Write failing boundary tests**
 
 Add individual tests for `json.encode(lease)`, a nested
 `json.encode({ lease })`, `database.write(lease)`, `vault.write(lease)` and
 `AuditLog.write(lease)`. Each must expect `FUNGI-AFFINE-003`.
 
-- [ ] **Step 2: Run the focused test and confirm RED**
+- [x] **Step 2: Run the focused test and confirm RED**
 
 ```powershell
 npm.cmd run build
@@ -227,14 +227,14 @@ node --test tests/value-state/authority-use-state.test.mjs
 
 Expected: none of those calls yet emit the dedicated persistence diagnostic.
 
-- [ ] **Step 3: Implement the exact forbidden-boundary classifier**
+- [x] **Step 3: Implement the exact forbidden-boundary classifier**
 
 Reuse `isSerializationCall` and add a closed persistent-sink predicate for the
 already-recognized database, vault, cache and audit APIs. Recursively inspect
 arguments. Emit `FUNGI-AFFINE-003` before consuming the handle; do not allow a
 forbidden call to become the first valid transfer.
 
-- [ ] **Step 4: Verify focused tests**
+- [x] **Step 4: Verify focused tests**
 
 ```powershell
 npm.cmd run build
@@ -244,7 +244,7 @@ node --test tests/value-state/authority-use-state.test.mjs
 Expected: all authority boundary tests pass; ordinary serialization tests stay
 free of affine diagnostics.
 
-- [ ] **Step 5: Commit the boundary slice**
+- [x] **Step 5: Commit the boundary slice**
 
 ```powershell
 git add packages-galerina/galerina-core-compiler/src/value-state-checker.ts packages-galerina/galerina-core-compiler/src/index.ts packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs
@@ -264,14 +264,14 @@ git commit -m "security(compiler): deny authority persistence"
 - Consumes: `Authority<Tag>` and the existing strict compiler pipeline.
 - Produces: exact VOK admitted-object and lease aliases, plus serializable evidence/receipt records that carry identities but no handle.
 
-- [ ] **Step 1: Write the failing loaded-asset contract test**
+- [x] **Step 1: Write the failing loaded-asset contract test**
 
 The test reads the future `.fungi` file, compiles it through the same strict
 pipeline used by self-hosted assets, asserts zero diagnostics, asserts the two
 exact authority tags, and asserts the source never contains
 `authorityReleased: true`.
 
-- [ ] **Step 2: Run the test and confirm RED**
+- [x] **Step 2: Run the test and confirm RED**
 
 ```powershell
 npm.cmd run build
@@ -280,7 +280,7 @@ node --test tests/slide-vok-authority-contract.test.mjs
 
 Expected: file-not-found or missing loaded asset.
 
-- [ ] **Step 3: Add the minimal `.fungi` contract**
+- [x] **Step 3: Add the minimal `.fungi` contract**
 
 Declare:
 
@@ -293,7 +293,7 @@ Add closed evidence and receipt records containing schema IDs, action/object
 digests, policy/revocation epochs and `authorityReleased: Bool`. Do not add a
 minting or execution implementation in this task.
 
-- [ ] **Step 4: Add the asset to `packageGraph.loadedAssets` and verify**
+- [x] **Step 4: Add the asset to `packageGraph.loadedAssets` and verify**
 
 ```powershell
 npm.cmd run build
@@ -302,7 +302,7 @@ node --test tests/slide-vok-authority-contract.test.mjs
 
 Expected: the focused contract passes.
 
-- [ ] **Step 5: Commit the VOK contract slice**
+- [x] **Step 5: Commit the VOK contract slice**
 
 ```powershell
 git add packages-galerina/galerina-core-compiler/src/self-hosted/slide-vok-authority-types.fungi packages-galerina/galerina-core-compiler/package.json packages-galerina/galerina-core-compiler/tests/slide-vok-authority-contract.test.mjs
@@ -328,24 +328,24 @@ git commit -m "feat(vok): add native authority type contract"
 - Consumes: implemented code and fresh test counts.
 - Produces: one factual current-state story; no native-runtime authority claim.
 
-- [ ] **Step 1: Document only implemented behavior**
+- [x] **Step 1: Document only implemented behavior**
 
-Add `Authority<Tag>`, move-on-transfer and the two diagnostics to the language
+Add `Authority<Tag>`, move-on-transfer and the three affine diagnostics to the language
 references. Explicitly label general `move`/`borrow`, native minting and W^X
 execution as unbuilt. Mark the completed RD-0659 evidence checkboxes only when
 their tests passed.
 
-- [ ] **Step 2: Regenerate canonical code artifacts**
+- [x] **Step 2: Regenerate canonical code artifacts**
 
 ```powershell
-node scripts/gen-code-registry.mjs
 node scripts/code-index.mjs
+node scripts/gen-code-registry.mjs
 ```
 
-Expected: the registry/index list `FUNGI-AFFINE-002` and `003` with definition,
-emission, test and documentation sites.
+Expected: the registry/index list `FUNGI-TYPE-035` and
+`FUNGI-AFFINE-002..004` with definition, emission, test and documentation sites.
 
-- [ ] **Step 3: Run narrow-to-broad verification**
+- [x] **Step 3: Run narrow-to-broad verification**
 
 ```powershell
 npm.cmd --prefix packages-galerina/galerina-core-compiler test
@@ -359,7 +359,7 @@ Then run the repository's canonical aggregate test command from `package.json`.
 Expected: zero failures. Environmental Ubuntu, reboot/power-loss and elevated
 native-link evidence remain explicitly pending.
 
-- [ ] **Step 4: Review the complete diff**
+- [x] **Step 4: Review the complete diff**
 
 ```powershell
 git diff --check

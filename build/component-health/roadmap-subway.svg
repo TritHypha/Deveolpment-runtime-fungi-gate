@@ -12,7 +12,7 @@
 </style>
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="202" y="34" text-anchor="end" class="title">Where the project is</text>
-<text x="220" y="34" class="sub">v1.0.0-beta.2 · 98 packages · 8781 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
+<text x="220" y="34" class="sub">v1.0.0-beta.2 · 98 packages · 8807 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
 <text x="220" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers; exact build identity is in build/component-health/provenance.json</text>
 <text x="202" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="202" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
@@ -153,9 +153,9 @@
 <text x="1156" y="610" class="sub">asserted</text>
 <text x="202" y="636" text-anchor="end" class="stn">Type checker / Effect checker</text>
 <line x1="220" y1="632" x2="1110" y2="632" stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="2 4"/>
-<line x1="220" y1="632" x2="1083.3" y2="632" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
-<circle cx="1083.3" cy="632" r="6.5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2.75"/>
-<text x="1096.3" y="636" class="pct">97%</text>
+<line x1="220" y1="632" x2="1056.6" y2="632" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+<circle cx="1056.6" cy="632" r="6.5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2.75"/>
+<text x="1069.6" y="636" class="pct">94%</text>
 <text x="202" y="662" text-anchor="end" class="stn">WAT emitter</text>
 <line x1="220" y1="658" x2="1110" y2="658" stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="2 4"/>
 <line x1="220" y1="658" x2="1012.1" y2="658" stroke="#1c5ea8" stroke-width="6" stroke-linecap="round" opacity="0.9"/>

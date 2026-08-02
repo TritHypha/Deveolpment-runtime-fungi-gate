@@ -665,6 +665,32 @@ Alias vs brand:
 
 ---
 
+## Runtime Authority Types
+
+Galerina has a narrow, opt-in authority family for runtime-owned handles:
+
+```Galerina
+type SlideVOKLease = Authority<"slide.vok.lease.v1">
+```
+
+The tag is one closed ASCII identifier and remains part of type identity.
+Different authority tags do not unify. A statically known ordinary value cannot
+be assigned to an authority type. Passing, returning or rebinding an authority
+transfers it once; a second transfer is a compile-time error.
+
+Authority values cannot be fields of ordinary records, members of lists or
+record payloads, serialized, logged, or written to databases, vaults, caches,
+atlases or files. Store a non-authorizing identity/evidence record instead and
+pass live authority directly.
+
+This is not a general ownership conversion: ordinary Galerina values retain
+value semantics and the reserved `move`/`borrow` surface remains unenforced.
+The compiler now enforces source type/use-state boundaries, but native handle
+minting, stale-generation lookup and W^X execution remain unbuilt. Therefore
+the current source contract does not release production authority.
+
+---
+
 ## Money Type
 
 Money should be typed by currency.

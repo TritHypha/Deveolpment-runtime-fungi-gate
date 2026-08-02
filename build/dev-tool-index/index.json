@@ -3,7 +3,7 @@
   "totals": {
     "packages": 98,
     "testBearing": 98,
-    "tests": 8781,
+    "tests": 8807,
     "devTools": 141,
     "auditTools": 80,
     "toolsInCadence": 62,
@@ -297,10 +297,10 @@
       "name": "galerina-core-compiler",
       "kind": "core",
       "description": "Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.",
-      "tests": 5755,
+      "tests": 5781,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 151,
+      "files": 152,
       "deps": [
         "@galerina/core-network",
         "@galerina/core-runtime-wasm",
