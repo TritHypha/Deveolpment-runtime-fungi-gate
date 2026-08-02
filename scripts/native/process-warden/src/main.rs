@@ -128,6 +128,8 @@ mod windows {
         ) -> Dword;
         fn WaitForSingleObject(handle: Handle, milliseconds: Dword) -> Dword;
         fn GetExitCodeProcess(process: Handle, exit_code: *mut Dword) -> Bool;
+        fn GetCurrentProcessId() -> Dword;
+        fn SetEnvironmentVariableW(name: *const u16, value: *const u16) -> Bool;
         fn TerminateJobObject(job: Handle, exit_code: Dword) -> Bool;
         fn TerminateProcess(process: Handle, exit_code: Dword) -> Bool;
         fn CloseHandle(handle: Handle) -> Bool;
@@ -191,6 +193,10 @@ mod windows {
         output
     }
 
+    fn wide_nul(value: &OsStr) -> Vec<u16> {
+        value.encode_wide().chain(std::iter::once(0)).collect()
+    }
+
     fn parse() -> (Dword, Dword, Vec<OsString>) {
         let arguments: Vec<OsString> = env::args_os().skip(1).collect();
         if arguments.len() < 6
@@ -251,6 +257,15 @@ mod windows {
         startup.cb = size_of::<StartupInfoW>() as Dword;
         let mut process_info: ProcessInformation = unsafe { zeroed() };
         let mut command_line = command_line(&command);
+        let mediator_name = wide_nul(OsStr::new("GALERINA_SUITE_LEASE_MEDIATOR_PID"));
+        let mediator_value = wide_nul(OsStr::new(&unsafe { GetCurrentProcessId() }.to_string()));
+        if unsafe { SetEnvironmentVariableW(mediator_name.as_ptr(), mediator_value.as_ptr()) }
+            == FALSE
+        {
+            close(job);
+            close(owner);
+            fail(&last_error("SetEnvironmentVariableW"));
+        }
         let created = unsafe {
             CreateProcessW(
                 null(),

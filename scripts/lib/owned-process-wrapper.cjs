@@ -23,7 +23,11 @@ process.stdin.on("end", async () => {
     process.exit(126);
   }
   try {
-    const result = await runOwnedProcess({ ...request, env: process.env });
+    const childEnvironment = {
+      ...process.env,
+      GALERINA_SUITE_LEASE_MEDIATOR_PID: String(process.pid),
+    };
+    const result = await runOwnedProcess({ ...request, env: childEnvironment });
     process.stdout.write(`${JSON.stringify(result)}\n`);
     process.exit(0);
   } catch (error) {

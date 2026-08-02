@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8831,
-    "devTools": 143,
+    "devTools": 145,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -2495,7 +2495,6 @@
       "inCadence": true,
       "concerns": [
         "signing/fusion",
-        "source-hygiene",
         "graph/index"
       ]
     },
@@ -2599,6 +2598,17 @@
         "diagnostics",
         "package-border",
         "graph/index"
+      ]
+    },
+    {
+      "name": "build-process-warden.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "source-hygiene"
       ]
     },
     {
@@ -2816,6 +2826,18 @@
       "concerns": [
         "diagnostics",
         "package-border",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "phase-close-hook.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
         "graph/index"
       ]
     },
@@ -3079,6 +3101,7 @@
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
       "package-usage.mjs",
+      "phase-close-hook.mjs",
       "platform-smoke.mjs",
       "rebrand-tmf-to-spore.mjs",
       "repoint-kb-refs.mjs",
@@ -3181,6 +3204,7 @@
       "mark-core-change.cjs",
       "migrate-fungi.mjs",
       "package-usage.mjs",
+      "phase-close-hook.mjs",
       "rd-absorb.mjs",
       "rebuild-fusable-packages.mjs",
       "relink-workspace.mjs",
@@ -3303,6 +3327,7 @@
       "bench-startup.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
+      "build-process-warden.mjs",
       "check-gate-injection.mjs",
       "emit-doc-wat.mjs",
       "gather-compiler-stage-hashes.mjs",
@@ -3313,6 +3338,7 @@
       "hardening-show-derived.mjs",
       "migrate-fungi.mjs",
       "p9-100-site-mapper.mjs",
+      "phase-close-hook.mjs",
       "rebuild-fusable-packages.mjs",
       "release-evidence-authority-cli.mjs",
       "verify-artifacts.mjs",
@@ -3454,10 +3480,10 @@
       "verify-registry-static-host-build-recipe.mjs",
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
-      "run-all-tests.cjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
+      "build-process-warden.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "rd-absorb.mjs",

@@ -608,7 +608,6 @@ flowchart LR
   T_component_health_mjs --> C_doc_drift
   T_run_all_tests_cjs["run-all-tests.cjs"]
   T_run_all_tests_cjs --> C_signing_fusion
-  T_run_all_tests_cjs --> C_source_hygiene
   T_run_all_tests_cjs --> C_graph_index
   T_run_core_tests_cjs["run-core-tests.cjs"]
   T_run_core_tests_cjs --> C_diagnostics
@@ -648,6 +647,9 @@ flowchart LR
   T_build_core_chain_mjs --> C_diagnostics
   T_build_core_chain_mjs --> C_package_border
   T_build_core_chain_mjs --> C_graph_index
+  T_build_process_warden_mjs["build-process-warden.mjs"]
+  T_build_process_warden_mjs --> C_signing_fusion
+  T_build_process_warden_mjs --> C_source_hygiene
   T_check_gate_injection_mjs["check-gate-injection.mjs"]
   T_check_gate_injection_mjs --> C_sinks_taint
   T_check_gate_injection_mjs --> C_signing_fusion
@@ -738,6 +740,10 @@ flowchart LR
   T_package_usage_mjs --> C_diagnostics
   T_package_usage_mjs --> C_package_border
   T_package_usage_mjs --> C_graph_index
+  T_phase_close_hook_mjs["phase-close-hook.mjs"]
+  T_phase_close_hook_mjs --> C_signing_fusion
+  T_phase_close_hook_mjs --> C_diagnostics
+  T_phase_close_hook_mjs --> C_graph_index
   T_platform_smoke_mjs["platform-smoke.mjs"]
   T_platform_smoke_mjs --> C_diagnostics
   T_rd_absorb_mjs["rd-absorb.mjs"]

@@ -119,6 +119,8 @@ function nonAuthorizingChildEnv() {
   delete childEnv.NODE_TEST_CONTEXT;
   delete childEnv.GALERINA_SUITE_LEASE_NONCE;
   delete childEnv.GALERINA_SUITE_LEASE_ROOT_ID;
+  delete childEnv.GALERINA_SUITE_LEASE_OWNER_PID;
+  delete childEnv.GALERINA_SUITE_LEASE_MEDIATOR_PID;
   return childEnv;
 }
 

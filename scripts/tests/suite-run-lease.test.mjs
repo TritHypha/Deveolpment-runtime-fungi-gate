@@ -79,7 +79,7 @@ test("different checkout identities do not share a lease", () => {
   );
 });
 
-test("a nested aggregate requires the exact nonce and immediate parent", () => {
+test("a nested aggregate requires the exact nonce and an admitted process parent", () => {
   const { root, leaseBase } = fixture();
   const lease = acquireSuiteLease({
     root,
@@ -102,13 +102,37 @@ test("a nested aggregate requires the exact nonce and immediate parent", () => {
   assert.equal(inherited.inherited, true);
   assert.equal(inherited.ownerPid, 43001);
 
+  const mediated = admitInheritedSuiteLease({
+    root,
+    leaseBase,
+    expectedCommandClass: "phase-close",
+    environment: {
+      ...environment,
+      GALERINA_SUITE_LEASE_MEDIATOR_PID: "43002",
+    },
+    parentPid: 43002,
+  });
+  assert.equal(mediated.inherited, true);
+
   assert.equal(errorCode(() => admitInheritedSuiteLease({
     root,
     leaseBase,
     expectedCommandClass: "phase-close",
     environment,
-    parentPid: 43002,
+    parentPid: 43003,
   })), "SUITE-LEASE-PARENT-MISMATCH");
+
+  assert.equal(errorCode(() => admitInheritedSuiteLease({
+    root,
+    leaseBase,
+    expectedCommandClass: "phase-close",
+    environment: {
+      ...environment,
+      GALERINA_SUITE_LEASE_OWNER_PID: "99999",
+      GALERINA_SUITE_LEASE_MEDIATOR_PID: "43002",
+    },
+    parentPid: 43002,
+  })), "SUITE-LEASE-OWNER-MISMATCH");
 
   assert.equal(errorCode(() => admitInheritedSuiteLease({
     root,

@@ -193,6 +193,7 @@ function acquireSuiteLease({
         ...environment,
         GALERINA_SUITE_LEASE_NONCE: nonce,
         GALERINA_SUITE_LEASE_ROOT_ID: rootId,
+        GALERINA_SUITE_LEASE_OWNER_PID: String(ownerPid),
       };
     },
     release() {
@@ -238,7 +239,13 @@ function admitInheritedSuiteLease({
   if (record.commandClass !== expectedCommandClass) {
     throw leaseError("SUITE-LEASE-CLASS-MISMATCH", "Inherited suite lease class does not match.");
   }
-  if (record.ownerPid !== parentPid) {
+  if (environment.GALERINA_SUITE_LEASE_OWNER_PID !== String(record.ownerPid)) {
+    throw leaseError("SUITE-LEASE-OWNER-MISMATCH", "Inherited suite lease owner does not match.");
+  }
+  const mediatorPid = /^[1-9][0-9]*$/.test(environment.GALERINA_SUITE_LEASE_MEDIATOR_PID || "")
+    ? Number(environment.GALERINA_SUITE_LEASE_MEDIATOR_PID)
+    : null;
+  if (record.ownerPid !== parentPid && mediatorPid !== parentPid) {
     throw leaseError("SUITE-LEASE-PARENT-MISMATCH", "Inherited suite lease parent does not match.");
   }
   if (record.nonce !== environment.GALERINA_SUITE_LEASE_NONCE) {
