@@ -23,13 +23,13 @@ CSPRNG, VM-resource transfer and W^X execution explicitly open.
 
 ## Task 2 - native crate skeleton and opaque types
 
-- [ ] Add failing Rust compile-fail/unit tests proving handles are not publicly
+- [x] Add failing Rust compile-fail/unit tests proving handles are not publicly
   constructible, `Clone`, `Copy`, `Send` or `Sync`, and debug is redacted.
-- [ ] Add `native/vok-authority` with `#![forbid(unsafe_code)]`, no runtime
+- [x] Add `native/vok-authority` with `#![forbid(unsafe_code)]`, no runtime
   dependency and a committed lockfile.
-- [ ] Implement `Trit`, exact tag/context types, stable errors, private handle
+- [x] Implement `Trit`, exact tag/context types, stable errors, private handle
   types and injected `NonceSource`.
-- [ ] Run `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
+- [x] Run `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
   `cargo test --all-targets` and doctests; commit the slice.
 
 ## Task 3 - bounded mint table

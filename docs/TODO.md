@@ -15,8 +15,10 @@
   all 19,683 nine-gate vectors and authorizes exactly one. Malformed trits
   refuse; core-runtime is 47/47.
 - **Still non-authorizing:** no native handle, mint, lease, revocation or
-  execution authority has been released. Next action is the observed-RED
-  unsafe-free native crate/opaque-type slice.
+  execution authority has been released. The unsafe-free native crate now has
+  closed trits, exact tag/context values, injected nonce failures and opaque
+  non-Clone/non-Send handles with redacted debug output. It has no table or mint
+  method. Next action is the observed-RED bounded mint-table slice.
 
 ### Native `.fungi` VOK authority source boundary - 2026-08-02
 
