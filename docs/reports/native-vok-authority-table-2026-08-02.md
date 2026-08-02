@@ -1,7 +1,9 @@
 # Native VOK authority table evidence report
 
-**Date:** 2026-08-02  
-**Status:** experimental native floor; not linked into Galerina execution  
+**Date:** 2026-08-02
+
+**Status:** experimental native floor; not linked into Galerina execution
+
 **R&D:** `ZTF-Knowledge-Bases/RD-0660-native-vok-authority-table.md`
 
 ## Outcome
