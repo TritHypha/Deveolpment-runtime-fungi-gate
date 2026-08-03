@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 53 bounded wide-function graph green - 2026-08-03
+
+- The append-only Contract 53 registry now admits four through 128 dense,
+  source-ordered functions while preserving earlier-only static calls, call
+  depth two, the 24,576-byte body ceiling and zero back edges, recursion,
+  effects, capabilities, memory objects and host calls.
+- A conservative direct survey of the pinned 120-file corpus found 66 files
+  with more than three explicit top-level functions and 23 with more than
+  eight. This is demand evidence, not automatic TypeScript parity.
+- Exact profile selection refuses narrow graphs claiming the wide registry,
+  wide graphs claiming inherited registries, altered limits/identity, forward
+  calls and 129 functions.
+- Focused evidence is 6/6, including checked-Fungi execution and physical typed
+  receipt re-admission. Complete SLIDE is 628/628 across 66 suites; contracts
+  cover 49 files; benchmark, security closure `+1` with evidence K3 `0`, and
+  the 59-file tool identity verify; Node is 1 -> 1.
+- This remains reference-only. Loops/back edges, deeper or dynamic calls,
+  effects, production authority, owner-reviewed conversion and terminal
+  retirement remain open.
+
 ### SLIDE Contract 52 zero-argument direct call green - 2026-08-03
 
 - V2-C and checked Fungi now carry instruction-driven zero-argument calls to
