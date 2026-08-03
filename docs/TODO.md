@@ -1,5 +1,27 @@
 # TODO
 
+### Independent pure-scalar `.fungi` to `.slide` floor green - 2026-08-03
+
+- SLIDE now independently compiles bounded `Int`/`Bool`/`Verdict` modules
+  with immutable locals, typed comparisons, exhaustive integer matches,
+  earlier-flow calls and exact K3 checks into canonical executable GIR and
+  selected `.slide` entries.
+- A fresh read-only survey found 154 pure flows across 53 current
+  non-compiler package `src` files. The registered profile sequence admits 39
+  across 15 files: 3 checked-decision, 5 routing and 31 pure-scalar.
+- The admitted scalar cohort includes complete current Tower Citizen
+  governance/PQ policy, inbound-guard, passive-plan replay, audit-egress,
+  power-governor, time-sentinel, durability-evidence and example-app modules.
+- Focused scalar evidence is 4/4; composed scalar/package/contract evidence is
+  16/16; complete serial SLIDE is 466/466 across 43 suites; contracts are
+  28/28; security closure remains verdict `+1` with authenticated evidence K3
+  `0`; Node remains one before/after.
+- This is reference-only source coverage, not production admission. Strings,
+  mutation, loops, general effects/memory, detached authentication, platform
+  authority and the owner's package-conversion lane remain open and untouched.
+- Report: SLIDE
+  `docs/reports/checked-fungi-pure-scalar-module-completion-2026-08-03.md`.
+
 ### Physical `.slide` package loading floor green - 2026-08-03
 
 - SLIDE now reopens a completed checked-package publication, independently
@@ -433,7 +455,7 @@
   authority. The typed hybrid receipt verifier is implemented, but the opaque
   producer GIR fact remains unauthenticated and no current signed native-object,
   producer, platform or terminal evidence has been issued. Current ledger
-  counts are 2 candidates, 0 executed and 110 unexecuted `.fungi` sources.
+  counts are 2 candidates, 0 executed and 111 unexecuted `.fungi` sources.
 - **Next dependency:** widen the checked-decision grammar/package corpus where
   useful, complete native object/evidence production, then perform the offline
   delegated signing ceremony before promoting any candidate.
@@ -539,7 +561,7 @@
   [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
   records the complete live compile/admission chain, the 243 fail-closed
   post-SLIDE violations and the dependency order from 495 tracked TypeScript
-  paths, 110 unexecuted Fungi sources, 36 unowned host boundaries, 95
+  paths, 111 unexecuted Fungi sources, 36 unowned host boundaries, 95
   `node_modules` trees and one nested identity to zero. The older 491 count is
   stale.
 - **Status split approved:** the retirement verifier implementation is green;
@@ -585,7 +607,7 @@
   `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
   reports `postSlideReady: false`: **495** tracked package TypeScript paths,
-  **110** unexecuted production `.fungi` sources, **36** unowned production
+  **111** unexecuted production `.fungi` sources, **36** unowned production
   host boundaries, **95** package-local `node_modules` trees and **1** nested
   package identity. The execution-authority ledger contains two exact
   non-authorizing candidates, zero executed sources and zero owned bridges.

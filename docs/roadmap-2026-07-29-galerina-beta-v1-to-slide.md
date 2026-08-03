@@ -8,6 +8,20 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the independent pure-scalar compiler floor is green. SLIDE
+now derives bounded multi-flow `Int`/`Bool`/`Verdict` semantics directly from
+`.fungi` bytes, including immutable locals, typed comparisons, exhaustive
+integer matches, exact earlier-flow calls and K3 checks, then re-admits
+canonical GIR and seals one selected `.slide` entry. A fresh current-source
+survey found 154 pure flows across 53 non-compiler package `src` files; the
+registered profile sequence admits 39 across 15 files: 3 checked-decision, 5
+routing and 31 scalar. Focused scalar evidence is 4/4, composed
+scalar/package/contract evidence is 16/16 and complete serial SLIDE is 466/466
+across 43 suites, with contracts 28/28, security closure `+1`/K3 `0`, and Node
+stable at one. This remains reference-only: general effects/memory, strings,
+checked mutation, detached authentication, platform authority and the owner's
+package-conversion lane remain open and untouched.
+
 Roadmap refresh: the physical checked-package loading floor is green. SLIDE
 now reopens one completed publication, stable-reads and independently validates
 the canonical receipt plus every `.slide` object, re-admits the complete flat
@@ -234,7 +248,7 @@ reconciled against the live gate on 2026-08-02. The terminal verifier itself
 is implemented and green (**12/12 top-level adversarial tests**;
 historical focused checkpoint 16/16). Terminal retirement admission is a
 separate red state because current exact debt is 495 tracked package `.ts`
-paths, 110 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
+paths, 111 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
 package-local `node_modules` trees and one nested package. The authority ledger
 contains two non-authorizing candidates and zero production entries. Schema v3
 isolates digest-checked candidates and admits a production source or boundary
@@ -425,6 +439,7 @@ flowchart TB
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
+    PS["🟩 Pure-scalar module compiler<br/>39/154 current pure flows · 15 files<br/>466/466 · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     EB["🟩 Independent V2-B broker floor<br/>eight K3 gates · affine lease · audit-before-success<br/>398/398 · reference-only"]
@@ -487,7 +502,7 @@ flowchart TB
     E --> K --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
-    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> H
+    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
     ST --> H
@@ -502,7 +517,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV,PR,SM,PL green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -648,7 +663,7 @@ table is navigation, not authority.
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **12/12 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v3 separates non-authorizing candidates from hybrid-signed production lanes, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
-| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 495 tracked package `.ts` paths, 110 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
+| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 495 tracked package `.ts` paths, 111 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
 | Fungi staging/compiler repair chapter | 🟩 | Dossier audit 10/10; four staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Candidates remain quarantined pending executable parity and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -766,7 +781,7 @@ The remaining sequence is:
    `.fungi`/SLIDE execution. The current retirement-graph ratchets are **480**
    implementation `.ts` files and **495** tracked package `.ts` paths: 28
    twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 339 governed
-   migration-program paths, plus 110 unexecuted `.fungi` sources, 36 unowned
+   migration-program paths, plus 111 unexecuted `.fungi` sources, 36 unowned
    host boundaries, one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
    without hiding, renaming or exempting a member.
