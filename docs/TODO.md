@@ -17,9 +17,13 @@
   remains unchanged.
 - Complete compiler evidence passes 5,818/5,818; graph regeneration/check is
   5/5 and the flat 98-peer root lock is current. Node remains 1 -> 1.
-- **Open:** independent SLIDE fact re-derivation, exact VOK object/collection
-  binding, checked/optimized parity, lifecycle/platform evidence and total-cost
-  measurement. Until those close, only the checked semantic path executes.
+- Independent SLIDE commit `b7d1705` now re-derives the exact source, owns and
+  digests one million-value collection generation, binds it through all eight
+  K3 VOK gates, executes one affine lease and zeroes owned storage. Complete
+  SLIDE is 472/472, contracts 29/29 and security evidence remains K3 `0`.
+- **Open:** Galerina production-switch wiring, general loop/GIR/serialized
+  `.slide` lowering, native/platform/physical-erasure evidence and a paired
+  total-cost benchmark. No speed claim or package-retirement authority follows.
 - Report: `docs/reports/verified-loop-envelope-proposal-2026-08-03.md`.
 
 ### V2-C semantic-verifier closure and coverage correction - 2026-08-03

@@ -60,3 +60,16 @@ authority.
 
 The current implementation is therefore green as a bounded proposal control
 and blue as an executable optimization.
+
+## Independent SLIDE follow-up
+
+SLIDE commit `b7d1705` now independently re-parses the exact source, owns and
+digests a fixed million-value generation, binds source and collection into VOK,
+executes one affine lease and zeroes the owned generation. Complete serial
+SLIDE is 472/472, contracts are 29/29 and security closure retains authenticated
+evidence K3 `0`.
+
+This closes items 1 and 2 above for the bounded reference profile only. The
+Galerina production switch, general loop-to-GIR/serialized `.slide` lowering,
+native/platform evidence and total-cost measurement remain open. The compiler
+proposal itself remains non-authorizing.
