@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### External Fungi conversion Round 9 issued with executable closure tooling - 2026-08-03
+
+- Round 8's handback is adjudicated: its 0/120 classified-row outcome remains
+  true, but its missing-probe and dirty-SLIDE setup blockers are stale. Fresh
+  evidence proves all 120 source pins, clean Galerina package and SLIDE trees,
+  checker 10/10, CLI 8/8 and independent SLIDE 16/16 with Node 1 -> 1.
+- Round 9 keeps the complete 120-source assignment and seven human evidence
+  artifacts per row. It adds a machine `ROW-RESULT.json`, exact row scaffolder,
+  status command, manifest generator and fail-closed 120/120 closure verifier.
+- A separate append-only handover folder now carries Codex-to-worker and
+  worker-to-Codex messages. Questions block only their row; chapter/context
+  boundaries require a checkpoint and immediate continuation.
+- The compiler-source authority order, 10/8/16 capability table, deterministic
+  decision ladder, golden examples, source pins and probe executable ship with
+  the assignment. The canonical-syntax quick reference now points explicitly
+  at live compiler/checker behavior and checker-passing golden sources.
+- Round 9 remains external, flat, quarantined and non-authorizing. Progress is
+  honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
+
 ### SLIDE Contract 54 immutable Array<Int> membership green - 2026-08-03
 
 - Contract 54 now carries exact immutable bounded

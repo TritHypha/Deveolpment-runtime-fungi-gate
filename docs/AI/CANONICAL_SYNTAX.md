@@ -1,7 +1,10 @@
 # Galerina Canonical Syntax Reference
 
-This document is the definitive reference for current canonical Galerina syntax.
-Use it when generating code. Do not invent syntax not listed here.
+This document is a quick reference for current canonical Galerina syntax. The
+live lexer/parser/checkers and checker-passing sources under
+[`docs/examples/golden/`](../examples/golden/README.md) are authoritative when
+they disagree with this prose. Use those executable examples when generating
+code, probe unfamiliar forms, and do not invent syntax.
 
 > **New (2026-07-04):** a full, example-grounded learning library now lives in
 > [`docs/language/fungi/`](../language/fungi/README.md) (and [`docs/language/gate/`](../language/gate/README.md)
