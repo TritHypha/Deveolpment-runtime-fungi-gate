@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0692 bounded deterministic fold VOK binding green - 2026-08-03
+
+- SLIDE commit `8325149` binds the exact bounded fold's source/flow identity,
+  owned-input digest, initial value, trip count, body work, total work and
+  caller work ceiling into canonical VOK evidence.
+- Eleven semantic K3 gates remain separate from eight authority gates; all
+  nineteen must allow before one affine lease opens. Prefix overflow consumes
+  that lease as refused, and retry or fallback cannot occur.
+- Success reconciles the terminal execution receipt with the admitted input and
+  work facts before lease consumption. Copied handles, malformed context and
+  unknown/deny all refuse without releasing authority.
+- Focused fold/shared-VOK evidence is 25/25 and complete SLIDE is 687/687
+  across 70 suites with Node 1 -> 1. Contract integrity remains 64 files,
+  security closure is `+1` with evidence K3 `0`, and the 64-file tool identity
+  verifies.
+- Canonical GIR/physical `.slide`, flat package/typed receipt integration,
+  production authority, conversion and retirement remain open.
+
 ### RD-0692 bounded deterministic fold reference green - 2026-08-03
 
 - SLIDE commit `d8c7602` implements one exact checked-Fungi
@@ -21,9 +39,9 @@ counts or open items that a newer section explicitly supersedes.
   SLIDE is 682/682 across 70 suites with Node 1 -> 1. Contract integrity is
   64 files, security closure is `+1` with evidence K3 `0`, and the 64-file
   tool identity verifies.
-- This does not change conversion or retirement counts. VOK binding, canonical
-  physical `.slide`, flat package/typed receipt integration and production
-  authority remain open.
+- The newer RD-0692 VOK checkpoint closes reference VOK binding. Canonical
+  physical `.slide`, flat package/typed receipt integration, production
+  authority, conversion and retirement remain open.
 
 ### External Fungi conversion Round 9 issued with executable closure tooling - 2026-08-03
 
