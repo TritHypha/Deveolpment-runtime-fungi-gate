@@ -66,10 +66,18 @@ and blue as an executable optimization.
 SLIDE commit `b7d1705` now independently re-parses the exact source, owns and
 digests a fixed million-value generation, binds source and collection into VOK,
 executes one affine lease and zeroes the owned generation. Complete serial
-SLIDE is 472/472, contracts are 29/29 and security closure retains authenticated
+SLIDE is 476/476, contracts are 29/29 and security closure retains authenticated
 evidence K3 `0`.
 
 This closes items 1 and 2 above for the bounded reference profile only. The
 Galerina production switch, general loop-to-GIR/serialized `.slide` lowering,
-native/platform evidence and total-cost measurement remain open. The compiler
-proposal itself remains non-authorizing.
+native/platform evidence remain open. The compiler proposal itself remains
+non-authorizing.
+
+The first paired component benchmark is also complete. Median checked demand
+was 1.700 ms, direct control 0.517 ms, VLE preparation 8.878 ms, VLE demand
+1.713 ms and VLE total 10.640 ms. Demand is 1.008x and total 6.259x the checked
+peer, so the current speed hypothesis fails. The direct lane identifies
+headroom but omits VOK, receipt and cleanup. Evidence remains K3 `0`; no speed
+or production claim follows. The detailed maths and break-even ruling are in
+KB RD-0682.

@@ -20,10 +20,14 @@
 - Independent SLIDE commit `b7d1705` now re-derives the exact source, owns and
   digests one million-value collection generation, binds it through all eight
   K3 VOK gates, executes one affine lease and zeroes owned storage. Complete
-  SLIDE is 472/472, contracts 29/29 and security evidence remains K3 `0`.
+  SLIDE is 476/476, contracts 29/29 and security evidence remains K3 `0`.
+- The paired benchmark is complete and negative for speed: checked 1.700 ms,
+  direct 0.517 ms, VLE preparation 8.878 ms, demand 1.713 ms and total 10.640
+  ms. VLE demand is 1.008x and total 6.259x the checked peer. Evidence remains
+  K3 `0`; KB RD-0682 records the maths and no finite current break-even.
 - **Open:** Galerina production-switch wiring, general loop/GIR/serialized
-  `.slide` lowering, native/platform/physical-erasure evidence and a paired
-  total-cost benchmark. No speed claim or package-retirement authority follows.
+  `.slide` lowering, native/platform/physical-erasure evidence and a bounded
+  reusable-generation successor experiment. No speed or retirement claim follows.
 - Report: `docs/reports/verified-loop-envelope-proposal-2026-08-03.md`.
 
 ### V2-C semantic-verifier closure and coverage correction - 2026-08-03
