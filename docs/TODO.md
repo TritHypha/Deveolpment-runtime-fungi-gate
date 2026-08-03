@@ -12,7 +12,7 @@
   no-replace links. Artifacts are re-verified before the receipt is linked
   last; incomplete targets refuse. Public receipts contain no absolute paths.
 - Build evidence is 5/5, publication is 4/4 and composed lanes are 11/11 and
-  9/9. Complete serial SLIDE evidence is 447/447 across 39 suites with Node
+  9/9. Complete serial SLIDE evidence is 448/448 across 39 suites with Node
   stable at one and contracts 24/24; security closure remains `+1` with
   authenticated evidence K3 `0`.
 - Node power-loss durability is explicitly K3 `0`. A strict source-manifest
@@ -32,8 +32,8 @@
   duplicates and drift refuse without fallback.
 - Resource records contain type, content digest and byte length but no host
   path and no effect authority. All eight K3 gates precede descriptor parsing.
-- Evidence is 6/6 focused and 438/438 complete serial SLIDE tests across 37
-  suites with Node count stable at one; the contract is 22/22 and security
+- Evidence is 7/7 focused and 448/448 complete serial SLIDE tests across 39
+  suites with Node count stable at one; the contract is 24/24 and security
   closure remains `+1` with authenticated evidence K3 `0`.
 - Multi-module `.fungi` compilation and a package `.slide` object remain the
   next independent backend increment. The owner-reviewed package-conversion
