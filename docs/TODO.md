@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE cross-platform CI candidate locally closed - 2026-08-03
+
+- SLIDE commit `57ffab5` now uses sibling SHA-pinned SLIDE/Galerina checkouts
+  and builds the exact Galerina compiler closure before running its Windows,
+  macOS and Ubuntu matrix gates.
+- Stable operating-system ancestor aliases are admitted only by repeated
+  filesystem device/inode identity; callers continue from the canonical path,
+  while a symlink or junction at the admitted final object still refuses.
+- Focused evidence is 24/24. Complete SLIDE is 514/514 across 53 suites and 82
+  test files; contracts are 29/29; recorded benchmark integrity verifies;
+  security closure is `+1` with evidence K3 `0`; and the 59-file tool manifest
+  independently verifies. The bounded npm runner kept Node at 1 -> 1.
+- **Still open:** hosted three-operating-system evidence requires the owner's
+  next push. No GitHub pass or production anchor authority is inferred from
+  the local result.
+
 ### Scheduled secret-scan false-positive closure - 2026-08-03
 
 - The scheduled full-history scan was failing on 78 findings introduced by

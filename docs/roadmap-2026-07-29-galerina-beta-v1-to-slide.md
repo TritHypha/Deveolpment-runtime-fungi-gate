@@ -12,6 +12,18 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: SLIDE's cross-platform CI candidate is locally closed at
+commit `57ffab5`. The workflow creates sibling SHA-pinned SLIDE/Galerina
+checkouts and builds the exact compiler closure before its Windows, macOS and
+Ubuntu gates. Stable operating-system ancestor aliases are admitted only by
+repeated filesystem device/inode identity and canonical continuation; a
+symlink or junction at the final admitted object still refuses. Focused
+evidence is 24/24; complete SLIDE is 514/514 across 53 suites and 82 test
+files; contracts are 29/29; recorded benchmark and security closure verify;
+the 59-file tool identity verifies; and Node remains 1 -> 1. Hosted matrix
+evidence remains blue until an owner push produces three successful jobs.
+Production evidence-key and rollback-anchor authority remain separately open.
+
 Roadmap refresh: the physical multi-package typed `Int` and `Bool` receipts are green as a
 reference boundary. The existing stable-file loader retains the independently
 verified result type in its private affine binding; compatibility and typed
@@ -637,7 +649,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>local 3-OS CI candidate green"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -686,7 +698,7 @@ flowchart TB
     AG["🟩 RD-0625-0631 baseline matrix<br/>7 lanes · maths · Tri-1 · ZT"]
     AH["🟩 NSE-Micro E11 complete<br/>99 paired · 41,580 exact · speed negative"]
     DCTP["🟩 DCTP reference measured<br/>1,188 outputs · 108 refusals<br/>correctness pass · performance point negative"]
-    AE["🟦 SLIDE evidence + anchor activation<br/>offline authority · platform adapters"]
+    AE["🟦 SLIDE evidence + anchor activation<br/>local CI candidate green<br/>hosted run · offline authority pending"]
     AF["🟦 Patent counsel FTO gate<br/>UK · US · EPO/UPC scope fixed<br/>counsel review pending"]
     Z["🟩 Governed-memory/index floor<br/>8 pillars · read-only beta index"]
 
