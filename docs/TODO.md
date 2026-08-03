@@ -12,10 +12,23 @@ counts or open items that a newer section explicitly supersedes.
   candidate, two partial candidates, five incorrectly labelled tractable rows
   and no required per-file dossiers, control/effect ledgers or parity vectors.
   Round 5 is retained only as a non-authorizing inventory.
-- **Current action:** re-measure actual compiler/runtime support for the
-  reported blocker families before issuing another conversion batch. A future
-  candidate requires positive, negative and mutation execution evidence in
-  addition to strict frontend acceptance.
+- **Capability re-measurement completed:** Galerina collection/HOF evidence is
+  77/77, disproving several worker blocker labels. Independent SLIDE now
+  carries checked `Int` addition through package-bound `.slide` execution and
+  fails closed on overflow; its complete suite is 495/495. Collections,
+  strings, mutation, loops and general effects remain unadmitted by that path.
+- **Retirement inventory regenerated:** 496 tracked package TypeScript paths,
+  including 481 categorised implementation paths under `src`; 111 `.fungi`
+  sources still lack production execution authority, 38 host boundaries are
+  unowned and the post-SLIDE total is 246 terminal violations.
+- The delta is accounted rather than hidden: the verified-loop envelope added
+  one current `.ts`/`.fungi` twin, while the benchmark adapter and report added
+  two explicitly unowned reference host boundaries. They remain retirement
+  debt until independently owned or replaced.
+- **Current action:** define the typed safe-value/result boundary needed before
+  independent collection and String lowering. A future conversion candidate
+  requires positive, negative and mutation execution evidence in addition to
+  strict frontend acceptance.
 - Report:
   `docs/reports/round-5-fungi-package-conversion-independent-review-2026-08-03.md`.
 
@@ -857,11 +870,11 @@ counts or open items that a newer section explicitly supersedes.
 
 - **Exact blocker report:**
   [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
-  records the complete live compile/admission chain, the 243 fail-closed
-  post-SLIDE violations and the dependency order from 495 tracked TypeScript
-  paths, 111 unexecuted Fungi sources, 36 unowned host boundaries, 95
+  records the complete live compile/admission chain, the 246 fail-closed
+  post-SLIDE violations and the dependency order from 496 tracked TypeScript
+  paths, 111 unexecuted Fungi sources, 38 unowned host boundaries, 95
   `node_modules` trees and one nested identity to zero. The older 491 count is
-  stale.
+  and 495 counts are stale.
 - **Status split approved:** the retirement verifier implementation is green;
   terminal retirement admission is red. The green state means the gate exists
   and passes its hostile fixtures. It does not mean any package is retired.

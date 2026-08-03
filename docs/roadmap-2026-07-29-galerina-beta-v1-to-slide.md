@@ -401,8 +401,8 @@ Roadmap refresh: the execution-switch and terminal-retirement boundaries were
 reconciled against the live gate on 2026-08-02. The terminal verifier itself
 is implemented and green (**12/12 top-level adversarial tests**;
 historical focused checkpoint 16/16). Terminal retirement admission is a
-separate red state because current exact debt is 495 tracked package `.ts`
-paths, 111 unexecuted `.fungi` sources, 36 unowned host boundaries, 95
+separate red state because current exact debt is 496 tracked package `.ts`
+paths, 111 unexecuted `.fungi` sources, 38 unowned host boundaries, 95
 package-local `node_modules` trees and one nested package. The authority ledger
 contains two non-authorizing candidates and zero production entries. Schema v3
 isolates digest-checked candidates and admits a production source or boundary
@@ -758,7 +758,7 @@ table is navigation, not authority.
 | 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts remain green. The package route additionally pins an exact 56-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. Focused evidence is 7/7 plus one real library/top-level CLI build. This is reference-only | Keep both bounded routes green while widening admitted package semantics; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
-| 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 assigns 32 prior-file retries, four history-recovery entrypoints and 30 deterministic backups across 60 flat peers; no Round 5 output is admitted | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
+| 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 accounted for 66 paths but was independently rejected: three files are unadmitted, two are partial, one is defective/superseded and required dossiers/parity evidence are absent | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary production admission | 🟦 | The signed ownership verifier is green; all 36 detected production boundaries still lack signed receipts | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit signed replacement or retention decision |
 | 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
 | 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |
@@ -821,7 +821,7 @@ table is navigation, not authority.
 | Implicit corpus failures | 🟩 | Zero implicit failures; intentional negatives have explicit ownership |
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **12/12 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v3 separates non-authorizing candidates from hybrid-signed production lanes, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
-| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 496 tracked package `.ts` paths, 111 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
+| Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 496 tracked package `.ts` paths, 111 production `.fungi` sources requiring admission, 38 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
 | Fungi staging/compiler repair chapter | 🟩 maintained standard / 🟥 Round 5 rejected | Dossier audit 10/10; four earlier staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Round 5 returned 66 accounted paths and three strict-clean files, but independent review found a defective superseded secret gate, two partial candidates, five misclassified tractable rows and no required per-file dossiers/parity vectors. Fresh capability evidence passes 77/77 for Galerina collections/HOFs and proves several worker blocker labels stale; SLIDE now carries checked Int addition through a package-bound `.slide`, but collections and effects remain unadmitted. Nothing from Round 5 is admitted |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
@@ -936,10 +936,10 @@ The remaining sequence is:
    pre-native baseline and does not authorize production execution, component
    removal or the terminal cross-runtime comparison.
 8. Switch packages in dependency order from TypeScript execution to verified
-   `.fungi`/SLIDE execution. The current retirement-graph ratchets are **480**
-   implementation `.ts` files and **495** tracked package `.ts` paths: 28
+   `.fungi`/SLIDE execution. The current retirement-graph ratchets are **481**
+   implementation `.ts` files and **496** tracked package `.ts` paths: 29
    twinned, 97 compiler bootstrap, 16 bounded bootstrap-floor and 339 governed
-   migration-program paths, plus 111 unexecuted `.fungi` sources, 36 unowned
+   migration-program paths, plus 111 unexecuted `.fungi` sources, 38 unowned
    host boundaries, one nested native package and 95 package-local
    `node_modules` trees. The terminal gates require every debt to reach zero
    without hiding, renaming or exempting a member.
