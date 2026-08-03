@@ -13,6 +13,18 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 62's exact counted-sum package path is green at SLIDE
+commit `b0bc73a`. The existing flat direct-peer descriptor, exclusive
+receipt-last publisher, physical loader, affine VOK and typed Safe Value receipt
+now carry `[Int, Int, Int] -> Int`; no nested package tree or fallback was
+added. A red test caught and the typed boundary refused an initial `Verdict`
+type-ID mistake before correction to `[1, 1, 1] -> 1`. Focused evidence is
+20/20, the composed slice is 71/71 and complete SLIDE is 676/676 across 70
+suites with Node 1 -> 1. Contract integrity remains 64 files, security closure
+is `+1` with K3 `0`, and the 63-file tool identity verifies. Independent SLIDE
+remains blue because general bodies, native durability and production authority
+remain open; package retirement counts are unchanged.
+
 Roadmap refresh: Contract 61's physical counted-sum `.slide` is green at SLIDE
 commit `f0b1c20`. The exact source family compiles to a fixed 192-byte canonical
 GIR inside the existing bundle; source-free re-admission independently verifies
@@ -1004,11 +1016,12 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>674/674 · general loops/package binding open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>676/676 · general loop bodies/production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
     LO["🟩 Counted-sum physical .slide<br/>192-byte GIR · source-free re-admission<br/>6/6 · every byte mutation refused"]
+    LP["🟩 Counted-sum flat package route<br/>[Int, Int, Int] → Int · typed receipt<br/>20/20 focused · no fallback"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -1027,7 +1040,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 9 issued · 120/120 pins + 10/8/16 preflight<br/>0/120 terminal rows · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>row 001 active · 0/120 terminal · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
@@ -1074,7 +1087,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> VN --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> H
+    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> LP --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
@@ -1090,7 +1103,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;

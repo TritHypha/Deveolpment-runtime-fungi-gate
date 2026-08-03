@@ -21,7 +21,30 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
+  honestly 0/120 terminal rows; its fresh preflight is green and row 001 is in
+  progress. No TypeScript path is retired.
+
+### SLIDE Contract 62 counted-sum flat package and typed receipt green - 2026-08-03
+
+- SLIDE commit `b0bc73a` carries the exact counted-sum family through the
+  existing checked package compiler, flat direct-peer descriptor, exclusive
+  receipt-last publication, physical loader, affine VOK and typed Safe Value
+  receipt path. It adds no second publisher/loader, fallback or nested package
+  tree.
+- The package ABI is exactly `[Int, Int, Int] -> Int`. An initial `Verdict`
+  type-ID mistake was refused by the typed boundary during red testing and was
+  corrected to `[1, 1, 1] -> 1`; no value was silently relabelled.
+- Re-admission binds compiler profile, source/flow, bundle/context/GIR, flat
+  export and exact ABI. Insufficient work consumes the package handle, and a
+  later larger budget cannot retry it. Typed verification releases the result
+  only against an exact external expectation.
+- The focused loader passes 20/20, the composed package/count-sum slice passes
+  71/71, and complete SLIDE passes 676/676 across 70 suites with Node 1 -> 1.
+  Contract integrity remains 64 files, security is `+1` with K3 `0`, and the
+  63-file tool identity verifies.
+- This closes flat publication and typed receipt re-admission for the exact
+  counted-sum family only. Native power-loss durability, general bodies,
+  authenticated production authority, conversion and retirement remain open.
 
 ### SLIDE Contract 61 counted-sum physical `.slide` green - 2026-08-03
 
@@ -36,8 +59,8 @@ counts or open items that a newer section explicitly supersedes.
   the combined slice is 43/43, and full SLIDE is 674/674 across 70 suites with
   Node 1 -> 1. Contract integrity remains at its 64-file ceiling, security is
   `+1` with K3 `0`, and the 63-file tool identity verifies.
-- This closes physical serialization/re-admission only. Flat package
-  publication, receipt-last durability, typed package receipt re-admission,
+- Contract 62 subsequently closes flat package publication and typed package
+  receipt re-admission for this exact family. Native power-loss durability,
   general loop bodies and production authority remain open. No conversion or
   retirement count changes.
 
