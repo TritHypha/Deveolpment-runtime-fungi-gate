@@ -10,7 +10,7 @@
 | **Effect checker** | `effect-checker.fungi` **6/6 codes — DIAGNOSTIC PARITY COMPLETE** (pilot `5a23152c`) | execution-switch only (§3) |
 | **Type checker** | `type-checker.fungi` **6/22 codes** (001/002/004/005/007 + a Stage-B-only 006) | **17 codes** + reconcile the 006 divergence (§1) |
 | **GIR emitter** | `gir-emitter.fungi` already self-hosted | — (rides the same execution switch) |
-| **OS-kernel** | **0/6** floor-free files converted (1,144 lines); floor confined to `fuse-loader.ts` (1,066 lines, 9 primitives, gate GREEN) | 6 file conversions (§2) + the seam endgame (§4) |
+| **OS-kernel** | Historical conversion count; current floor is confined to `host-floor.ts` with seven admitted module/WASM surfaces and exact per-consumer slices (gate GREEN) | remaining file conversions (§2) + the SLIDE/VOK seam endgame (§4) |
 
 Suite 92/92 · 6,929 · 0 fail; self-hosted corpus 294/294; all gates green (known #20 baseline aside).
 
@@ -70,7 +70,7 @@ Diagnostic parity makes a `.fungi` twin *complete*; deleting the `.ts` requires 
 
 | Floor | Why `.fungi` can never hold it | Endgame that still reaches "no `.ts` source" |
 |---|---|---|
-| **Kernel host seam** (`fuse-loader.ts`, 9 primitives: createHash/createPublicKey/verify/readFileSync/existsSync/readdirSync/join/basename/WebAssembly.instantiate) | `.fungi` is host-blind by design (`galerina check` rejects even `^`); *something* must call the host | **(a)** extract the decision half into `.fungi` (shrinks the seam), then **(b)** the residual shim becomes **JSDoc-typed `.mjs` checked by `tsc --checkJs`** (type safety kept, zero `.ts` source), and **(c)** long-term the seam collapses into the **DSS.wasm TCB (#102-106)** where the host boundary is the WASM embedder itself. The `audit-kernel-floor` gate holds throughout: the floor can only shrink. |
+| **Kernel host seam** (`host-floor.ts`; seven fixed module/WASM surfaces, narrowed into frozen per-consumer slices) | `.fungi` is host-blind by design; *something* must call the host | **(a)** keep all decision logic outside the seam, **(b)** retain exact slice tests and the fail-closed floor manifest, and **(c)** long-term move the residual boundary into **SLIDE/VOK**. The `audit-kernel-floor` gate holds throughout: the floor can only shrink. |
 | **Compiler crypto/host-io** (signing, fs) | same host-blindness | same (b)/(c) pattern at the compiler's I/O edge; the checker/emitter logic itself has no floor |
 
 **Bottom line, stated plainly:** *"100% + no `.ts`"* is reachable for both objectives — the checker modules literally (pure logic, twins + execution switch), the kernel literally at the **source-language** level (governed surface → `.fungi`; the irreducible 9-primitive host shim → `.mjs`/DSS.wasm, which is *not TypeScript*). What can never happen is `.fungi` itself calling the host — that is the boundary the whole architecture exists to govern, and the floor gate keeps it honest while it shrinks.

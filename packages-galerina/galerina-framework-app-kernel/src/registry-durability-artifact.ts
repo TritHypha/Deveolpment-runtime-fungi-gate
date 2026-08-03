@@ -9,6 +9,7 @@ import {
   isRegistryDurabilityAdapterDescriptor,
   type RegistryDurabilityAdapterDescriptor,
 } from "./registry-durability-admission.js";
+import { loadDurabilityArtifactHostFloor } from "./host-floor.js";
 
 const MAX_NATIVE_ARTIFACT_BYTES = 16 * 1024 * 1024;
 
@@ -56,23 +57,17 @@ interface NodePath {
   resolve(...parts: string[]): string;
 }
 
-const dynImport = (specifier: string): Promise<unknown> =>
-  (Function(
-    "specifier",
-    "return import(specifier)",
-  ) as (value: string) => Promise<unknown>)(specifier);
-
 async function loadNode(): Promise<{
   readonly crypto: NodeCrypto;
   readonly fs: NodeFs;
   readonly path: NodePath;
 }> {
-  const [crypto, fs, path] = await Promise.all([
-    dynImport("node:crypto") as Promise<NodeCrypto>,
-    dynImport("node:fs") as Promise<NodeFs>,
-    dynImport("node:path") as Promise<NodePath>,
-  ]);
-  return { crypto, fs, path };
+  const host = await loadDurabilityArtifactHostFloor();
+  return host as {
+    readonly crypto: NodeCrypto;
+    readonly fs: NodeFs;
+    readonly path: NodePath;
+  };
 }
 
 export interface RegistryDurabilityArtifactDecision {

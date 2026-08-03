@@ -310,6 +310,29 @@ describe("Structured Await deterministic reducer", () => {
     assert.equal(late.error.code, "ERR_RUNTIME_AWAIT_TERMINAL_STATE");
   });
 
+  it("refuses a second terminal event for a task while sibling work remains active", () => {
+    let step = start(validPlan({
+      taskIds: ["first", "second"],
+      maxInFlight: 2,
+      completion: { kind: "all", onFailure: "wait_for_all" },
+    }));
+
+    step = advance(step.state, {
+      kind: "task_succeeded",
+      taskId: "first",
+      elapsedMs: 1,
+    });
+    assert.equal(step.state.scopeStatus, "running");
+
+    const repeated = advanceStructuredAwait(step.state, {
+      kind: "task_failed",
+      taskId: "first",
+      elapsedMs: 2,
+    });
+    assert.equal(repeated.ok, false);
+    assert.equal(repeated.error.code, "ERR_RUNTIME_AWAIT_TASK_STATE");
+  });
+
   it("refuses copied state and accessor-backed events without invoking getters", () => {
     const step = start();
     const copied = { ...step.state };

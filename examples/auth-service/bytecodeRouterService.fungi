@@ -47,6 +47,8 @@ contract {
 ;; Validate an untrusted flow qualifier against the recognised set before it drives tier selection —
 ;; admit only the known qualifiers, returning a constant (never the raw input). Validate untrusted input
 ;; before it drives a decision. Pure — no runtime authority / no effects.
+// @cause  [Tier selection receives an untrusted qualifier] -> validate before policy selection.
+// @effect [Qualifier verdict] -> returns one admitted constant or an empty refusal marker.
 pure flow validateQualifier(qualifier: String) -> String
 {
   match qualifier {
@@ -59,6 +61,8 @@ pure flow validateQualifier(qualifier: String) -> String
 
 ;; Validate an untrusted boolean-flag string against {"true","false"} before it is decoded to a Bool —
 ;; admit only the two literals, returning a constant. Pure — no runtime authority / no effects.
+// @cause  [Tier selection receives an untrusted Boolean spelling] -> validate before decoding.
+// @effect [Boolean-string verdict] -> returns one admitted literal or an empty refusal marker.
 pure flow validateBoolStr(flag: String) -> String
 {
   match flag {

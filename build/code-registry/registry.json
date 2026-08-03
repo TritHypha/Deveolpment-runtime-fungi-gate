@@ -1435,8 +1435,8 @@
       "severities": [],
       "defs": 1,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 1,
+      "docs": 2
     },
     {
       "code": "ERR_RUNTIME_AWAIT_TERMINAL_STATE",
@@ -9319,7 +9319,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 5,
+      "tests": 7,
       "docs": 0
     },
     {
@@ -9331,7 +9331,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 2,
+      "tests": 3,
       "docs": 0
     },
     {
@@ -9518,11 +9518,8 @@
       "status": "live",
       "names": [
         "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL",
         "TYPE_MISMATCH",
         "X",
-        "Y",
         "a",
         "WRONG_NAME"
       ],
@@ -9649,12 +9646,7 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "UNSATISFIED_GENERIC_CONSTRAINT",
-        "INVALID_COLLECTION_ELEMENT",
-        "INVALID_RESULT_TYPE",
-        "INVALID_SECRET_OPERATION",
-        "MISSING_REQUIRED_EFFECT",
-        "GOVERNED_SINK_VIOLATION"
+        "UNSATISFIED_GENERIC_CONSTRAINT"
       ],
       "severities": [
         "error"
@@ -9670,12 +9662,7 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "INVALID_COLLECTION_ELEMENT",
-        "INVALID_RESULT_TYPE",
-        "INVALID_SECRET_OPERATION",
-        "MISSING_REQUIRED_EFFECT",
-        "GOVERNED_SINK_VIOLATION",
-        "TENSOR_SHAPE_MISMATCH"
+        "INVALID_COLLECTION_ELEMENT"
       ],
       "severities": [
         "error"
@@ -9691,16 +9678,10 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "INVALID_RESULT_TYPE",
-        "INVALID_SECRET_OPERATION",
-        "MISSING_REQUIRED_EFFECT",
-        "GOVERNED_SINK_VIOLATION",
-        "TENSOR_SHAPE_MISMATCH",
-        "QUANTIZED_PRECISION_MISMATCH"
+        "INVALID_RESULT_TYPE"
       ],
       "severities": [
-        "error",
-        "warning"
+        "error"
       ],
       "defs": 1,
       "emits": 0,
@@ -9713,16 +9694,10 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "INVALID_SECRET_OPERATION",
-        "MISSING_REQUIRED_EFFECT",
-        "GOVERNED_SINK_VIOLATION",
-        "TENSOR_SHAPE_MISMATCH",
-        "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE"
+        "INVALID_SECRET_OPERATION"
       ],
       "severities": [
-        "error",
-        "warning"
+        "error"
       ],
       "defs": 1,
       "emits": 0,
@@ -9736,17 +9711,11 @@
       "status": "live",
       "names": [
         "MISSING_REQUIRED_EFFECT",
-        "GOVERNED_SINK_VIOLATION",
-        "TENSOR_SHAPE_MISMATCH",
-        "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL",
         "Y",
         "WRONG_NAME"
       ],
       "severities": [
-        "error",
-        "warning"
+        "error"
       ],
       "defs": 1,
       "emits": 1,
@@ -9759,15 +9728,10 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "GOVERNED_SINK_VIOLATION",
-        "TENSOR_SHAPE_MISMATCH",
-        "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL"
+        "GOVERNED_SINK_VIOLATION"
       ],
       "severities": [
-        "error",
-        "warning"
+        "error"
       ],
       "defs": 1,
       "emits": 0,
@@ -9780,14 +9744,10 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "TENSOR_SHAPE_MISMATCH",
-        "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL"
+        "TENSOR_SHAPE_MISMATCH"
       ],
       "severities": [
-        "error",
-        "warning"
+        "error"
       ],
       "defs": 1,
       "emits": 1,
@@ -9800,13 +9760,10 @@
       "namespace": "FUNGI",
       "status": "live",
       "names": [
-        "QUANTIZED_PRECISION_MISMATCH",
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL"
+        "QUANTIZED_PRECISION_MISMATCH"
       ],
       "severities": [
-        "warning",
-        "error"
+        "warning"
       ],
       "defs": 1,
       "emits": 1,
@@ -9819,8 +9776,7 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "INVALID_RUNTIME_TARGET_TYPE",
-        "UNKNOWN_SYMBOL"
+        "INVALID_RUNTIME_TARGET_TYPE"
       ],
       "severities": [
         "error"
@@ -9836,8 +9792,7 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "UNKNOWN_SYMBOL",
-        "INVALID_AUTHORITY_TAG"
+        "UNKNOWN_SYMBOL"
       ],
       "severities": [
         "error"
@@ -10069,9 +10024,7 @@
       "family": "TYPE",
       "namespace": "FUNGI",
       "status": "ref",
-      "names": [
-        "WRONG_NAME"
-      ],
+      "names": [],
       "severities": [],
       "defs": 0,
       "emits": 0,
@@ -10108,8 +10061,7 @@
       "namespace": "FUNGI",
       "status": "referenced",
       "names": [
-        "SAFETY_CRITICAL_MISSING_AUDIT",
-        "DENY_ONLY_EFFECT"
+        "SAFETY_CRITICAL_MISSING_AUDIT"
       ],
       "severities": [
         "error"

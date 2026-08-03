@@ -19,6 +19,10 @@ import {
   registryRotationKeyCommit,
   type RegistryRotationState,
 } from "@galerina/tower-citizen";
+import {
+  loadRegistryRuntimeHostFloor,
+  loadTrustedRevocationAuthorityHostFloor,
+} from "./host-floor.js";
 
 interface NodeStats {
   readonly size: number;
@@ -50,21 +54,13 @@ interface NodeUrl {
   fileURLToPath(url: URL): string;
 }
 
-const dynImport = (specifier: string): Promise<unknown> =>
-  (Function("s", "return import(s)") as
-    (value: string) => Promise<unknown>)(specifier);
-
 async function loadNode(): Promise<{
   fs: NodeFs;
   crypto: NodeCrypto;
   url: NodeUrl;
 }> {
-  const [fs, crypto, url] = await Promise.all([
-    dynImport("node:fs") as Promise<NodeFs>,
-    dynImport("node:crypto") as Promise<NodeCrypto>,
-    dynImport("node:url") as Promise<NodeUrl>,
-  ]);
-  return { fs, crypto, url };
+  const host = await loadRegistryRuntimeHostFloor();
+  return host as { fs: NodeFs; crypto: NodeCrypto; url: NodeUrl };
 }
 
 const MAX_INDEX_BYTES = 1_048_576;
@@ -574,11 +570,9 @@ export async function loadProductionRegistry(
     readonly isRevoked: (keyId: string) => boolean;
   };
   try {
-    const moduleUrl = new URL(
-      "governance/revocation-registry.mjs",
+    const module = await loadTrustedRevocationAuthorityHostFloor(
       repositoryRoot,
-    );
-    const module = await dynImport(moduleUrl.href) as {
+    ) as {
       loadTrustedRevocationSnapshot(rootDir: string): {
         readonly isRevoked: (keyId: string) => boolean;
       };

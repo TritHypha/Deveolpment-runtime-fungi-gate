@@ -73,3 +73,34 @@ test("code-index --check refuses missing and drifted output without writing", ()
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("code-index keeps one-line diagnostic metadata inside its own definition", () => {
+  const root = mkdtempSync(join(tmpdir(), "code-index-definition-boundary-"));
+  try {
+    write(
+      root,
+      "packages-galerina/example/src/index.ts",
+      [
+        'export const FIRST = { code: "FUNGI-TEST-001", name: "FIRST", severity: "error" } as const;',
+        "export const SECOND = {",
+        '  code: "FUNGI-TEST-002",',
+        '  name: "SECOND",',
+        '  severity: "warning",',
+        "} as const;",
+        "",
+      ].join("\n"),
+    );
+
+    const generated = run(root);
+    assert.equal(generated.status, 0, generated.stderr);
+
+    const index = JSON.parse(
+      readFileSync(join(root, "build", "code-index", "code-index.json"), "utf8"),
+    );
+    const first = index.find(({ code }) => code === "FUNGI-TEST-001");
+    assert.deepEqual(first?.names, ["FIRST"]);
+    assert.deepEqual(first?.severities, ["error"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

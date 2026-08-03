@@ -62,7 +62,7 @@ test("audit-diagnostic-codes refuses a name collision and accepts one-to-one ide
 test("audit-kernel-floor refuses host reach outside the seam and accepts confinement", () => {
   withFixture("galerina-kernel-floor-gate-", (root) => {
     const sourceRoot = "packages-galerina/galerina-framework-app-kernel/src";
-    write(root, `${sourceRoot}/fuse-loader.ts`, 'import { readFileSync } from "node:fs";\n');
+    write(root, `${sourceRoot}/host-floor.ts`, 'import { readFileSync } from "node:fs";\n');
     write(root, `${sourceRoot}/governed.ts`, 'import { existsSync } from "node:fs";\n');
     const planted = run("audit-kernel-floor.mjs", ["--root", root, "--json"]);
     assert.equal(planted.status, 1, planted.stdout + planted.stderr);
@@ -73,6 +73,14 @@ test("audit-kernel-floor refuses host reach outside the seam and accepts confine
     const control = run("audit-kernel-floor.mjs", ["--root", root, "--json"]);
     assert.equal(control.status, 0, control.stdout + control.stderr);
     assert.equal(JSON.parse(control.stdout).violations.length, 0);
+
+    write(root, `${sourceRoot}/host-floor.ts`, 'import { spawn } from "node:child_process";\n');
+    const widened = run("audit-kernel-floor.mjs", ["--root", root, "--json"]);
+    assert.equal(widened.status, 1, widened.stdout + widened.stderr);
+    assert.deepEqual(
+      JSON.parse(widened.stdout).seamManifestViolations,
+      ["node:child_process"],
+    );
   });
 });
 

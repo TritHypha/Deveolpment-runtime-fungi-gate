@@ -77,6 +77,8 @@ contract {
 ;; Validate an untrusted HTTP method against the allowed set before it drives dispatch — admit only the
 ;; recognised verbs, returning a constant (never the raw input). Validate untrusted input before it
 ;; drives a decision; a pure lookup only propagates taint. Pure — no runtime authority / no effects.
+// @cause  [Route dispatch receives an untrusted HTTP method] -> validate before route selection.
+// @effect [Method verdict] -> returns one admitted verb or an empty refusal marker.
 pure flow validateMethod(method: String) -> String
 {
   match method {
@@ -88,6 +90,8 @@ pure flow validateMethod(method: String) -> String
 
 ;; Validate an untrusted request path against the registered route allowlist — admit only known paths,
 ;; returning a constant. Pure — no runtime authority / no effects.
+// @cause  [Route dispatch receives an untrusted path] -> validate against the fixed route set.
+// @effect [Path verdict] -> returns one admitted path or an empty refusal marker.
 pure flow validatePath(path: String) -> String
 {
   match path {

@@ -13,6 +13,7 @@ import {
   isProductionRegistryDurabilityProfile,
   type ProductionRegistryDurabilityProfile,
 } from "./registry-durability-production-admission.js";
+import { loadRegistryGenerationHostFloor } from "./host-floor.js";
 
 interface NodeStats {
   readonly dev: number;
@@ -146,21 +147,17 @@ const durableReceipts = new WeakSet<object>();
 const productionReceipts = new WeakSet<object>();
 const linkedProductionReceipts = new WeakSet<object>();
 const forwardProbeReceipts = new WeakSet<object>();
-const dynImport = (specifier: string): Promise<unknown> =>
-  (Function("s", "return import(s)") as
-    (value: string) => Promise<unknown>)(specifier);
-
 async function loadNode(): Promise<{
   readonly fs: NodeFsPromises;
   readonly path: NodePath;
   readonly process: NodeProcess & object;
 }> {
-  const [fs, path, processModule] = await Promise.all([
-    dynImport("node:fs/promises") as Promise<NodeFsPromises>,
-    dynImport("node:path") as Promise<NodePath>,
-    dynImport("node:process") as Promise<{ readonly default: NodeProcess & object }>,
-  ]);
-  return { fs, path, process: processModule.default };
+  const host = await loadRegistryGenerationHostFloor();
+  return host as {
+    readonly fs: NodeFsPromises;
+    readonly path: NodePath;
+    readonly process: NodeProcess & object;
+  };
 }
 
 function hasExactFrozenDataShape(

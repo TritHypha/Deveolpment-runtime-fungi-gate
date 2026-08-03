@@ -554,7 +554,7 @@
       "tests": 204,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 31,
+      "files": 32,
       "deps": [
         "@galerina/core-config",
         "@galerina/tower-citizen"

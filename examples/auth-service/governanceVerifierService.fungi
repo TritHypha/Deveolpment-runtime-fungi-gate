@@ -143,6 +143,9 @@ pure flow validateProfile(profile: String) -> String
   }
 }
 
+;; Admit only a recognised governance qualifier before it reaches the verifier policy.
+// @cause  [Governance verification receives an untrusted qualifier] -> validate before policy use.
+// @effect [Qualifier verdict] -> returns one admitted constant or an empty refusal marker.
 pure flow validateQualifier(qualifier: String) -> String
 {
   match qualifier {
@@ -153,6 +156,9 @@ pure flow validateQualifier(qualifier: String) -> String
   }
 }
 
+;; Admit only canonical Boolean spellings before governance flag decoding.
+// @cause  [Governance verification receives an untrusted Boolean spelling] -> validate before decoding.
+// @effect [Boolean-string verdict] -> returns one admitted literal or an empty refusal marker.
 pure flow validateBoolStr(flag: String) -> String
 {
   match flag {

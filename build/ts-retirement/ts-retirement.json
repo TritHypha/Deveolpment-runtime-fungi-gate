@@ -99,7 +99,7 @@
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-router/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-state/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web/node_modules'",
-    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 496",
+    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 497",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-api-protocol-rest/src/index.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi'",
@@ -620,6 +620,7 @@
     "packages-galerina/galerina-ext-tritsocket/src/prefilter.ts",
     "packages-galerina/galerina-framework-api-server/src/index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts",
     "packages-galerina/galerina-framework-app-kernel/src/index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-activation-simulator.ts",
@@ -5335,6 +5336,18 @@
       "retirementState": "physical-typescript-present"
     },
     {
+      "path": "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts",
+      "package": "galerina-framework-app-kernel",
+      "dependencyTranche": "T1-trust-root",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": "bounded-bootstrap-floor",
+      "replacementOwner": "galerina-framework-app-kernel",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-typescript-present"
+    },
+    {
       "path": "packages-galerina/galerina-framework-app-kernel/src/index.ts",
       "package": "galerina-framework-app-kernel",
       "dependencyTranche": "T1-trust-root",
@@ -6961,11 +6974,11 @@
     ]
   },
   "totals": {
-    "ts": 481,
-    "allTrackedTs": 496,
+    "ts": 482,
+    "allTrackedTs": 497,
     "twinned": 29,
     "compilerCore": 97,
-    "floor": 16,
+    "floor": 17,
     "program": 339,
     "fungiInSrc": 111,
     "packages": 95,
@@ -7335,7 +7348,7 @@
       "fungi": 0
     },
     "galerina-framework-app-kernel": {
-      "ts": 19,
+      "ts": 20,
       "twinned": 8,
       "fungi": 12
     },

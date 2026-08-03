@@ -1,8 +1,8 @@
 {
- "stamp": "2026-08-02T13-38-44",
+ "stamp": "2026-08-03T15-21-54",
  "sinceLast": {
   "baseline": false,
-  "fromStamp": "2026-07-30T02-46-12",
+  "fromStamp": "2026-08-02T13-38-44",
   "rows": [
    {
     "key": "build-progress:AI Inference Tower (BitNet/Groq/NVFP4)",
@@ -78,9 +78,9 @@
    },
    {
     "key": "build-progress:Type checker / Effect checker",
-    "from": 97,
+    "from": 94,
     "to": 94,
-    "deltaPp": -3
+    "deltaPp": 0
    },
    {
     "key": "build-progress:WAT emitter",

@@ -40,6 +40,8 @@ pure flow requiresEncryption(classification: Int) -> Bool
 ;; a classification decision. A pure classifier only PROPAGATES taint; a validating gate that admits none
 ;; but the known categories clears it — validate untrusted input before it drives a decision.
 ;; Pure — no runtime authority / no effects.
+// @cause  [Value classification receives an untrusted type name] -> validate before classification.
+// @effect [Type-name verdict] -> returns one admitted category or an empty refusal marker.
 pure flow validateTypeName(typeName: String) -> String
 {
   match typeName {

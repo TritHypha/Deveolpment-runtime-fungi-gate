@@ -22,6 +22,11 @@
  * signed manifest as the source of truth on any disagreement (fail-closed).
  */
 // ── Node builtins, loaded WITHOUT @types/node ────────────────────────────────
+import {
+  instantiateWasmHostFloor,
+  loadFuseHostFloor,
+} from "./host-floor.js";
+
 // This package deliberately ships no @types/node (cf. kernel.ts, which duck-types
 // `unref`). We therefore declare the minimal slices of node:crypto/fs/path we use
 // and load them via a dynamically-typed import so the typechecker never resolves
@@ -52,16 +57,9 @@ interface NodePath {
   basename(p: string, ext?: string): string;
 }
 
-const dynImport = (s: string): Promise<unknown> =>
-  (Function("s", "return import(s)") as (s: string) => Promise<unknown>)(s);
-
 async function loadNode(): Promise<{ crypto: NodeCrypto; fs: NodeFs; path: NodePath }> {
-  const [crypto, fs, path] = await Promise.all([
-    dynImport("node:crypto") as Promise<NodeCrypto>,
-    dynImport("node:fs") as Promise<NodeFs>,
-    dynImport("node:path") as Promise<NodePath>,
-  ]);
-  return { crypto, fs, path };
+  const host = await loadFuseHostFloor();
+  return host as { crypto: NodeCrypto; fs: NodeFs; path: NodePath };
 }
 
 /** UTF-8 encode without depending on node:Buffer (TextEncoder is an ambient global). */
@@ -632,7 +630,10 @@ async function instantiateComponent(
   admitted: AdmittedPackage,
   imports: WebAssembly.Imports,
 ): Promise<FusedComponent> {
-  const result: unknown = await WebAssembly.instantiate(admitted.wasmBytes as BufferSource, imports);
+  const result: unknown = await instantiateWasmHostFloor(
+    admitted.wasmBytes as BufferSource,
+    imports,
+  );
   const instance =
     (result as { instance?: WebAssembly.Instance }).instance ?? (result as WebAssembly.Instance);
   const exportsObj = instance.exports as Record<string, unknown>;

@@ -40,6 +40,8 @@ contract {
 ;; Validate an untrusted flow qualifier against the recognised set before it drives the proof-level
 ;; decision — admit only the known qualifiers, returning a constant. Validate untrusted input before it
 ;; drives a decision. Pure — no runtime authority / no effects.
+// @cause  [Proof-graph construction receives an untrusted qualifier] -> validate before level selection.
+// @effect [Qualifier verdict] -> returns one admitted constant or an empty refusal marker.
 pure flow validateQualifier(qualifier: String) -> String
 {
   match qualifier {

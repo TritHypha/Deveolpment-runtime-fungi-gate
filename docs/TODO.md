@@ -4,6 +4,47 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Full gate reconciliation and bounded host-floor repair - 2026-08-03
+
+Completion evidence: [full gate and host-floor reconciliation](reports/full-gate-and-host-floor-reconciliation-2026-08-03.md).
+
+- **Exhaustive fixed point restored:** one uninterrupted owned-process close is
+  **87/87** with zero failures in **845.7 seconds**. Graphs are **5/5**, all 98
+  packages pass, tooling is **346 tests**, benchmark integrity is **60 tests**,
+  the security audit reports 31 files with zero findings/errors, and Node
+  returns to the one pre-existing MCP process.
+- **Code identity repaired at the generator:** the apparent
+  `INVALID_AUTHORITY_TAG` collision was a one-line-definition parsing bleed in
+  `code-index.mjs`, not a compiler diagnostic collision. A RED/GREEN fixture
+  now proves one definition cannot absorb the next definition's name or
+  severity. The regenerated code index, registry and coverage gates pass.
+- **Security-critical runtime refusal covered:** Structured Await now tests a
+  repeated terminal event against an already-terminal task while sibling work
+  remains active. It refuses with `ERR_RUNTIME_AWAIT_TASK_STATE`; core-runtime
+  is **51/51** and the code audit has zero errors.
+- **App-kernel floor re-confined:** `host-floor.ts` is the single module allowed
+  to name host modules or invoke the WASM host. It admits seven fixed
+  module/WASM surfaces and releases only frozen per-consumer callable/data
+  slices; complete module namespaces are not exposed. The audit rejects host
+  reach outside the seam and undeclared primitives inside it. App-kernel is
+  **207/207**.
+- **Example governance comments complete:** GSCM coverage is **143/143** for
+  signed governance comments, `@cause`, and `@effect`; no required form is
+  missing.
+- **Flat package evidence current:** the 98-peer lock verifies with 45 internal
+  edges, 138 external bootstrap edges. The exact root digest is recorded in
+  `governance/flat-package-root-lock.json`. Graph and lock generation order is respected: graph
+  outputs are generated before the content lock is sealed.
+- **External Round 7 remains non-authorizing:** independent marking found no
+  evidence directory, candidate, experiment or terminal row outcome. The
+  preflight itself was correct, but the submission stopped after seven control
+  files and scored **22/100 (incomplete)**. Nothing was copied into Galerina.
+- **Open, report-only performance review:** `audit-perf-hotpath` still reports
+  36 high-tier heuristics (31 AST child scans, three intentional synchronous
+  ancestry/content reads, and two per-record sorts). Phase-close keeps this
+  soft. Each item needs measured refactoring or a narrow justified disposition;
+  no blanket exemption was added.
+
 ### SLIDE bounded Array literal count executable - 2026-08-03
 
 - SLIDE commit `bcfe9cb` compiles the real Galerina R6
@@ -252,8 +293,8 @@ counts or open items that a newer section explicitly supersedes.
   fails closed on overflow. SLIDE additionally has the first reference-only
   Safe Value Envelope; its complete suite is now 510/510. General collection
   lowering, mutation, loops and effects remain unadmitted by that path.
-- **Retirement inventory regenerated:** 496 tracked package TypeScript paths,
-  including 481 categorised implementation paths under `src`; 111 `.fungi`
+- **Retirement inventory regenerated:** 497 tracked package TypeScript paths,
+  including 482 categorised implementation paths under `src`; 111 `.fungi`
   sources still lack production execution authority, 38 host boundaries are
   unowned and the post-SLIDE total is 246 terminal violations.
 - The delta is accounted rather than hidden: the verified-loop envelope added
@@ -1107,7 +1148,7 @@ counts or open items that a newer section explicitly supersedes.
 - **Exact blocker report:**
   [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
   records the complete live compile/admission chain, the 246 fail-closed
-  post-SLIDE violations and the dependency order from 496 tracked TypeScript
+  post-SLIDE violations and the dependency order from 497 tracked TypeScript
   paths, 111 unexecuted Fungi sources, 38 unowned host boundaries, 95
   `node_modules` trees and one nested identity to zero. The older 491 count is
   and 495 counts are stale.

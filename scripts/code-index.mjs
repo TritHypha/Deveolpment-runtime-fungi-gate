@@ -62,6 +62,27 @@ function emitOutput(path, content) {
 const idx = new Map(); // code -> { occ:[{file,line,role}], names:Set, sevs:Set }
 const get = (c) => { if (!idx.has(c)) idx.set(c, { occ: [], names: new Set(), sevs: new Set() }); return idx.get(c); };
 
+/**
+ * Capture metadata from one diagnostic object without crossing into the next
+ * exported definition or object field. One-line definitions close on the
+ * starting line and must never absorb metadata from following declarations.
+ */
+function captureObjectMetadata(lines, start, entry, limit = 10) {
+  for (let j = start; j < Math.min(start + limit, lines.length); j++) {
+    const current = lines[j];
+    if (j > start && (
+      /\bexport const\s+\w+\s*=/.test(current)
+      || /^\s*\}/.test(current)
+      || /\b(?:code|errorCode):/.test(current)
+    )) break;
+    const name = current.match(/name:\s*"([^"]+)"/);
+    if (name) entry.names.add(name[1]);
+    const severity = current.match(/severity:\s*"([^"]+)"/);
+    if (severity) entry.sevs.add(severity[1]);
+    if (/}\s*(?:as const)?\s*;?\s*$/.test(current)) break;
+  }
+}
+
 const FILES = SCAN.flatMap(walk);
 
 // PASS 1 — constId -> code: `export const <ID> = { … code:"CODE" … }` or `export const <ID> = "CODE"`.
@@ -162,11 +183,7 @@ for (const file of FILES) {
         // name/severity here from the SAME object, bounded at the object close (`}`) or the next `code:`
         // field so it can never bleed into the following diagnostic object.
         if (!isDoc && !isTest) {
-          for (let j = i; j < Math.min(i + 10, lines.length); j++) {
-            if (j > i && (/^\s*\}/.test(lines[j]) || /\b(?:code|errorCode):/.test(lines[j]))) break;
-            const nm = lines[j].match(/name:\s*"([^"]+)"/); if (nm) e.names.add(nm[1]);
-            const sv = lines[j].match(/severity:\s*"([^"]+)"/); if (sv) e.sevs.add(sv[1]);
-          }
+          captureObjectMetadata(lines, i, e);
         }
       }
     }
@@ -203,10 +220,7 @@ for (const file of FILES) {
       e.occ.push({ file: rel, line: i + 1, role });
       // capture name/severity only at code-bearing src lines (def/emit), within a tight window
       if (!isDoc && !isTest && (isDef || isEmit)) {
-        for (let j = i; j < Math.min(i + 6, lines.length); j++) {
-          const nm = lines[j].match(/name:\s*"([^"]+)"/); if (nm) e.names.add(nm[1]);
-          const sv = lines[j].match(/severity:\s*"([^"]+)"/); if (sv) e.sevs.add(sv[1]);
-        }
+        captureObjectMetadata(lines, i, e, 6);
         if (isMake) {
           const win = line.slice(line.search(/make\w*Diag\(/)) + " " + lines.slice(i + 1, Math.min(i + 4, lines.length)).join(" ");
           const args = [...win.matchAll(/"([^"]+)"/g)].map((m) => m[1]);

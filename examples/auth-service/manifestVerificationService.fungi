@@ -25,6 +25,8 @@ pure flow isValidGovernanceFlags(flags: Int) -> Bool
 ;; the value), and EXCLUDE anything else (→ ""). Genuine gate: excludes non-conforming versions; the
 ;; validated value only feeds a .contains check + a redacted echo (content-safe downstream, R&D caveat
 ;; 2026-07-17). Pure — no runtime authority / no effects.
+// @cause  [Manifest verification receives an untrusted schema version] -> validate before dispatch.
+// @effect [Schema-version verdict] -> returns the admitted value or an empty refusal marker.
 pure flow validateSchemaVersion(version: String) -> String
 {
   if version.contains("fungi.") and version.contains(".v1") { return version }
@@ -35,6 +37,8 @@ pure flow validateSchemaVersion(version: String) -> String
 ;; validating clamp that EXCLUDES out-of-range values (negative → 0, over-ceiling → the 16-flag ceiling),
 ;; clearing the taint (CWE-190: a governance bitfield must be ceilinged, not left unbounded). Pure — no
 ;; runtime authority / no effects.
+// @cause  [Manifest verification receives an untrusted flags mask] -> bound it before bit checks.
+// @effect [Bounded flags mask] -> returns a value in the closed 0..65535 range without mutation.
 pure flow validateFlagsMask(n: Int) -> Int
 {
   match n {

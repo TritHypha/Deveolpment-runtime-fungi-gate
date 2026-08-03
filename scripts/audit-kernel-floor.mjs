@@ -31,7 +31,7 @@ const KERNEL_SRC = join(ROOT, "packages-galerina", "galerina-framework-app-kerne
 const AS_JSON = argv.includes("--json");
 
 // The ONE file permitted to hold the host floor — the declared TCB seam.
-const DECLARED_SEAM = "fuse-loader.ts";
+const DECLARED_SEAM = "host-floor.ts";
 
 // Host-primitive markers = the floor. A match OUTSIDE the seam is a boundary breach.
 const FLOOR = [
@@ -43,10 +43,13 @@ const FLOOR = [
 // The declared floor manifest — the primitive surface the seam is allowed to use.
 // Auditing the seam against this makes the floor size N explicit and reviewable.
 const MANIFEST = [
-  "createHash", "createPublicKey", "verify",          // NodeCrypto (3)
-  "readFileSync", "existsSync", "readdirSync",         // NodeFs (3)
-  "join", "basename",                                  // NodePath (2)
-  "WebAssembly.instantiate",                           // WASM host (1)
+  "node:crypto",
+  "node:fs",
+  "node:fs/promises",
+  "node:path",
+  "node:process",
+  "node:url",
+  "WebAssembly.instantiate",
 ];
 
 const listTs = (dir) => {
@@ -80,16 +83,23 @@ for (const f of files) {
 
 // The seam's actual primitive surface, for the manifest report (informational).
 let seamSurface = [];
+let seamManifestViolations = [];
 if (seamFound) {
   const seamCode = stripComments(readFileSync(join(KERNEL_SRC, DECLARED_SEAM), "utf8"));
-  seamSurface = MANIFEST.filter((p) => seamCode.includes(p));
+  const importedModules = [...seamCode.matchAll(/["'](node:[A-Za-z0-9_/-]+)["']/g)]
+    .map((match) => match[1]);
+  if (/\bWebAssembly\.instantiate\b/.test(seamCode)) {
+    importedModules.push("WebAssembly.instantiate");
+  }
+  seamSurface = [...new Set(importedModules)].sort();
+  seamManifestViolations = seamSurface.filter((primitive) => !MANIFEST.includes(primitive));
 }
 
 const governed = rows.filter((r) => !r.seam && r.floor.length === 0).map((r) => r.file);
 
 if (AS_JSON) {
-  console.log(JSON.stringify({ declaredSeam: DECLARED_SEAM, seamFound, violations, governedFiles: governed, seamSurface, floorSize: seamSurface.length }, null, 2));
-  process.exit(violations.length > 0 || !seamFound ? 1 : 0);
+  console.log(JSON.stringify({ declaredSeam: DECLARED_SEAM, seamFound, violations, seamManifestViolations, governedFiles: governed, seamSurface, floorSize: seamSurface.length }, null, 2));
+  process.exit(violations.length > 0 || seamManifestViolations.length > 0 || !seamFound ? 1 : 0);
 }
 
 const L = (s, n) => String(s).padEnd(n);
@@ -108,6 +118,11 @@ if (violations.length > 0) {
   console.log("");
   console.log(`  ❌ ${violations.length} boundary breach(es): a non-seam kernel file reaches a host primitive.`);
   for (const v of violations) console.log(`     ${v.file}  [${v.floor.join(",")}]  → move the host call into ${DECLARED_SEAM}, hand the .fungi logic its OUTPUT`);
+  process.exit(1);
+}
+if (seamManifestViolations.length > 0) {
+  console.log("");
+  console.log(`  FAIL: undeclared seam primitive(s): ${seamManifestViolations.join(", ")}`);
   process.exit(1);
 }
 if (!seamFound) {

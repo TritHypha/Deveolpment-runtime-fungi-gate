@@ -79,6 +79,13 @@ const POST_SLIDE = process.argv.includes("--post-slide");
 // host/crypto/algorithm contract. They are not "unfinished" beta work, but they
 // are not a permanent TypeScript exemption either.
 const FLOOR_PACKAGES = new Set(["galerina-substrate-math", "galerina-devtools-graph-algorithms", "galerina-core-security"]);
+const FLOOR_PATHS = new Set([
+  "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts",
+]);
+
+function isBoundedBootstrapFloor(path, packageName) {
+  return FLOOR_PACKAGES.has(packageName) || FLOOR_PATHS.has(path);
+}
 const COMPILER_AUTHORITY_LEDGER =
   "docs/security/rd0528-compiler-authoritative-stages.json";
 const GOVERNED_AUTHORITY_LEDGER =
@@ -761,7 +768,7 @@ export function buildRetirementGraph(root = ROOT) {
     pp.ts++;
     if (twinKeys.has(`${pkg}::${stem(f)}`)) { twinned++; pp.twinned++; twinnedPairs.push(f); }
     else if (pkg === "galerina-core-compiler") compilerCore++;
-    else if (FLOOR_PACKAGES.has(pkg)) floor++;
+    else if (isBoundedBootstrapFloor(f, pkg)) floor++;
     else program++;
   }
   for (const f of fungi) (perPackage[pkgOf(f)] ??= { ts: 0, twinned: 0, fungi: 0 }).fungi++;
@@ -783,7 +790,7 @@ export function buildRetirementGraph(root = ROOT) {
         compilerAuthority.has(replacement)
         || governedAuthority.has(replacement)
       ),
-      declaredFloor: FLOOR_PACKAGES.has(pkg)
+      declaredFloor: isBoundedBootstrapFloor(path, pkg)
         ? "bounded-bootstrap-floor"
         : null,
       replacementOwner: pkg,
@@ -902,6 +909,13 @@ if (process.argv.includes("--self-test")) {
     ? "myco unavailable — git index alone (degraded but complete for tracked)"
     : `graph finder covers the tracked corpus (drift=${g.totals.finderDrift})`);
   ok(g.twinnedPairs.includes("packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts"), "known twin pair detected: secret-gate.ts ↔ secret-gate.fungi");
+  ok(
+    g.retirementLedger.some((entry) =>
+      entry.path === "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts"
+      && entry.declaredFloor === "bounded-bootstrap-floor"
+    ),
+    "single app-kernel host seam is classified as bounded bootstrap floor",
+  );
   ok(g.totals.twinned + g.totals.compilerCore + g.totals.floor + g.totals.program === g.totals.ts, "buckets partition the corpus exactly (twinned + compiler-core + floor + program == total)");
   ok(!g.retirementPaths.floor.includes("NEVER") && g.retirementPaths.floor.includes("SLIDE"),
     "bounded bootstrap floor has an admitted-SLIDE retirement path rather than a permanent TypeScript exemption");

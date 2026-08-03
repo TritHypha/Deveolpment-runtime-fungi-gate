@@ -72,6 +72,8 @@ contract {
 
 ;; Admits only the three K3 flow qualifiers. Returning constants prevents an untrusted spelling from
 ;; being reflected into policy state.
+// @cause  [Governance evaluation receives an untrusted qualifier] -> validate before policy use.
+// @effect [Qualifier verdict] -> returns one admitted constant or an empty refusal marker.
 pure flow validateQualifier(qualifier: String) -> String
 {
   match qualifier {

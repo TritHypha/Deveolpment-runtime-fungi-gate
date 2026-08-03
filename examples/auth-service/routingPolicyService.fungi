@@ -37,6 +37,8 @@ pure flow tierGovernanceClass(tier: String) -> Int
 ;; Bound an untrusted effect count to [0, MAX] before it drives the tier decision — a validating gate
 ;; that constrains the range clears the taint and rejects out-of-range input. Validate untrusted input
 ;; before it drives a decision. Pure — no runtime authority / no effects.
+// @cause  [Routing policy receives an untrusted effect count] -> bound it before tier selection.
+// @effect [Bounded effect count] -> returns a value in the closed 0..10000 range without mutation.
 pure flow validateEffectCount(n: Int) -> Int
 {
   match n {
