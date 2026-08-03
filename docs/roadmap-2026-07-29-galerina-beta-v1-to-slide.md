@@ -28,6 +28,19 @@ conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
 
+Roadmap refresh: Contract 44's append-only checked-multiplication profile is
+green as a bounded reference implementation. Exact signed-Int32 multiplication
+now crosses checked-Fungi parsing, canonical GIR, independent execution,
+portable VOK/VEO, canonical `.slide`, flat package publication and physical
+loading. Opcode 28 uses an exact product for admission and refuses overflow;
+there is no wrap, saturation, coercion or host call. Multiplication is
+left-associative above addition/subtraction. Fresh focused evidence is 38/38,
+the inherited-profile set is 70/70 and complete serial SLIDE is 571/571 across
+57 suites. Contracts cover 37 files; benchmark, security closure `+1` with
+evidence K3 `0`, and the 59-file tool identity verify. Division/modulo, Float
+arithmetic, mutation, general loops/effects, production authority and package
+conversion remain blue.
+
 Roadmap refresh: Contract 43's append-only checked-subtraction child profile is
 green as a bounded reference implementation. Dynamic signed-Int32 subtraction
 now crosses checked-Fungi parsing, canonical GIR, independent execution,
@@ -36,9 +49,10 @@ loading. Opcode 27 refuses overflow and cannot wrap, saturate, coerce or call
 the host. Contracts 24, 41 and 42 remain byte-for-byte frozen. Fresh focused
 evidence is 36/36; complete serial SLIDE is 560/560 across 56 suites; the
 35-file contract tree, benchmark, security closure `+1` with evidence K3 `0`,
-and 59-file tool identity all verify. This does not green the general backend:
-multiplication/division/modulo, Float arithmetic, mutation, general loops and
-effects, production authority and package conversion remain blue.
+and 59-file tool identity all verify. Contract 44 above supersedes the former
+multiplication gap. This does not green the general backend: division/modulo,
+Float arithmetic, mutation, general loops and effects, production authority
+and package conversion remain blue.
 
 Roadmap refresh: Contract 42's append-only immutable Array/Option child profile
 is green as a bounded reference implementation. Galerina-style `Array<Int>`
@@ -759,7 +773,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar + exact String/Bytes + bounded Array/Option green<br/>560/560 · Contract 43 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/× scalar + exact String/Bytes + bounded Array/Option<br/>571/571 · Contract 44 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

@@ -63,6 +63,27 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   soft. Each item needs measured refactoring or a narrow justified disposition;
   no blanket exemption was added.
 
+### SLIDE Contract 44 checked multiplication registry green - 2026-08-03
+
+- Independent SLIDE now carries dynamic checked signed-Int32 multiplication
+  through checked-Fungi parsing, canonical GIR, exact independent execution,
+  portable VOK/VEO, canonical `.slide`, flat package publication and physical
+  package loading.
+- Contract 44 is an append-only child of Contract 43. Opcode 28 accepts exactly
+  two Int32 operands and refuses overflow. Runtime admission uses the exact
+  mathematical product; wrapping, saturation, coercion, Float promotion and
+  host arithmetic calls are absent.
+- Multiplication is left-associative and has higher precedence than `+`/`-`.
+  Fully constant products use the same checked rule and retain the parent
+  profile after folding.
+- Focused package/physical/hostile evidence passes 38/38; composed inherited
+  profiles pass 70/70. Complete serial SLIDE passes 571/571 across 57 suites in
+  37.8 seconds; the 37-file contract tree, benchmark, security closure `+1`
+  with evidence K3 `0`, and 59-file tool identity all verify. Node is 1 -> 1.
+- This remains reference-only. Division, modulo, Float arithmetic, mutation,
+  general loops/effects, production authority, package conversion and terminal
+  retirement remain closed or blue.
+
 ### SLIDE Contract 43 checked subtraction registry green - 2026-08-03
 
 - Independent SLIDE now carries dynamic checked signed-Int32 subtraction
@@ -80,8 +101,8 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   across 56 suites in 38.3 seconds; the 35-file contract tree, benchmark,
   security closure `+1` with evidence K3 `0`, and 59-file tool manifest all
   verify. Node collapses from 3 processes before the run to 1 afterward.
-- This is a reference-only language increment. Multiplication, division,
-  modulo, Float arithmetic, mutation, general loops/effects, production
+- This is a reference-only language increment. Division, modulo, Float
+  arithmetic, mutation, general loops/effects, production
   authority, package conversion and terminal retirement remain closed or blue.
 
 ### SLIDE Contract 42 immutable Array and Option profile green - 2026-08-03
