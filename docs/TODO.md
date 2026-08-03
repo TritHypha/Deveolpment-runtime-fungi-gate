@@ -1,5 +1,28 @@
 # TODO
 
+### Independent multi-flow routing `.fungi` to `.slide` floor green - 2026-08-03
+
+- SLIDE now independently parses a bounded multi-flow pure-routing module,
+  derives its exact direct-call graph and stable dependency-first function
+  order, lowers terminal guards and exhaustive integer matches to canonical
+  V2-C GIR and wraps a selected entry in canonical `.slide` bytes.
+- The current Galerina REST routing source compiles unchanged for all five
+  flows. Its dispatch and main entries execute through the existing VOK/affine
+  bundle path. No Galerina TypeScript AST, WAT, caller graph or fallback enters
+  the route.
+- Multi-flow package exports require an explicit source-flow identity. Package
+  content binds alias, source flow, compiler profile, source, signature and
+  bundle; an implicit selection refuses.
+- Focused routing evidence is 4/4, composed routing/package evidence is 10/10,
+  complete serial SLIDE is 453/453 across 40 suites, Node is stable at one,
+  contracts are 25/25 and authenticated evidence remains K3 `0`.
+- This is a routing-language increment, not full-language or production
+  admission. Effects, mutable values, general expressions/types, signed
+  loading, platform authority and owner-reviewed package conversion remain
+  open and unchanged.
+- Report: SLIDE
+  `docs/reports/checked-fungi-pure-routing-module-completion-2026-08-03.md`.
+
 ### Independent checked package build and publication floors green - 2026-08-03
 
 - A closed top-level peer set now compiles real checked `.fungi` exports into

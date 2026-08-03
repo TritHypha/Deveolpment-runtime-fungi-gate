@@ -8,6 +8,19 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the independent multi-flow pure-routing compiler floor is
+green. SLIDE now derives five `Int` routing flows, their direct-call graph,
+stable dependency-first function order, terminal guards and exhaustive integer
+matches directly from `.fungi` bytes, emits canonical V2-C GIR and packages a
+selected entry as `.slide`. The unchanged current Galerina REST routing source
+compiles for all five flows; dispatch and main execute through the existing
+VOK/affine bundle route. Multi-flow package exports require an exact
+`sourceFlowName`, and package identity binds alias, source flow, compiler
+profile, source, signature and bundle. Focused evidence is 4/4, composed
+routing/package evidence is 10/10 and complete serial SLIDE is 453/453 across
+40 suites with Node stable at one and contracts 25/25. Complete language
+semantics, production admission and package conversion remain open.
+
 Roadmap refresh: the bounded checked multi-package build and physical
 publication floors are green. Independent SLIDE now compiles a closed
 dependency-first peer set from real checked `.fungi` sources into canonical
@@ -450,7 +463,7 @@ flowchart TB
     E --> K --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
-    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> H
+    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
     ST --> H
@@ -465,7 +478,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV,PR green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -569,6 +582,7 @@ table is navigation, not authority.
 | Durable V2-B broker reservation binding | 🟩 bounded reference floor | The distinct durable entrypoint requires all eight K3 gates and one exact append-only reservation before returning an effect lease. Store/lease/nonce/state/generation/call/request-byte/expiry facts are re-derived; reservation evidence binds audit and terminal transcript. Focused evidence is 6/6, composed effect evidence 33/33 and complete SLIDE 427/427 across 35 suites. Audit refusal suppresses response but cannot roll back the nonce. The later durable-bundle row closes canonical selection; production durability/providers remain blue |
 | Canonical durable V2-B effect `.slide` route | 🟩 bounded reference floor | Fixed `.slide` bytes and canonical GIR select database or HTTPS, bind the bundle digest as artifact identity and reach only the durable broker. Owned state/context/gates, exact request/state byte increment and affine process-local/durable handle separation prevent bypass. Focused evidence is 5/5, composed bundle/effect/broker 31/31 and complete SLIDE 432/432 across 36 suites. Package ABI/imports/resources, authenticated providers, trusted time, native power-loss proof and signed production admission remain blue |
 | Checked `.fungi` to `.slide` compiler floor | 🟩 bounded reference floor | Independent source bytes derive total Boolean/K3 graphs, canonical V2-C GIR, exact entry re-admission and a reference `.slide` bundle. A stable-read exclusive CLI publishes one real file without overwrite. Two real fixtures plus two unregistered shapes execute 206 vectors; focused evidence is 9/9 and complete SLIDE is 414/414 across 33 suites. General syntax/effects/memory/package ABI and production admission remain blue; no package count or deletion authority changes |
+| Checked multi-flow pure-routing compiler | 🟩 bounded reference floor | Independent source bytes derive five `Int` flows, exact direct calls, stable dependency-first order, terminal `if <=` guards and exhaustive integer matches. The unchanged Galerina REST routing source compiles for every flow; selected entries execute as canonical `.slide` through VOK. Multi-flow package exports bind an explicit source-flow identity. Focused evidence is 4/4, composed routing/package evidence 10/10 and complete SLIDE 453/453 across 40 suites. General language/effect/native/production semantics and owner-reviewed package conversion remain blue |
 | Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 367/367, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
