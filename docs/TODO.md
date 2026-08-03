@@ -1,5 +1,25 @@
 # TODO
 
+### Physical `.slide` package loading floor green - 2026-08-03
+
+- SLIDE now reopens a completed checked-package publication, independently
+  re-admits its canonical flat descriptors, re-derives package content and
+  package-set identity, validates every physical `.slide` object and prepares
+  one selected export through VOK.
+- Stable double-open receipt/artifact reads bind device, inode, size, time and
+  bytes. Exact directory closure, canonical JSON/base64, context, signature and
+  all-eight-K3 checks precede one affine handle.
+- Canonical package-set, artifact and source-provenance lies, artifact mutation,
+  surplus files, hostile inputs, replay and non-ALLOW gates refuse without a
+  source/Wasm/cache/tree-walker fallback.
+- Focused loader evidence is 3/3; composed package/ABI/contract evidence is
+  26/26; complete serial SLIDE is 461/461 across 42 suites; contracts are
+  27/27; security closure remains verdict `+1` with authenticated evidence K3
+  `0`; Node remains one before/after.
+- The loader remains physical and reference-only. Detached producer
+  authentication, native durability, complete language semantics, platform
+  admission and owner-reviewed package conversion remain open.
+
 ### Checked physical source-manifest to `.slide` publication green - 2026-08-03
 
 - SLIDE now accepts one exact canonical source manifest, performs stable
