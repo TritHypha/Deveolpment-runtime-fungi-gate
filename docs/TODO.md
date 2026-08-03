@@ -4,6 +4,21 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 52 zero-argument direct call green - 2026-08-03
+
+- V2-C and checked Fungi now carry instruction-driven zero-argument calls to
+  one statically resolved earlier zero-parameter flow. A pinned-corpus lexical
+  survey found the signal in 86/120 files with 487 hits.
+- Calls encode an exact empty operand vector. Unknown, forward, missing,
+  surplus and signature-mismatched targets refuse; indirect calls, callbacks
+  and recursion remain closed. No opcode, registry or authority was added.
+- Focused direct/hostile/record/array/physical evidence is 4/4. Complete SLIDE
+  is 622/622 across 65 suites; contracts cover 47 files; benchmark, security
+  closure `+1` with evidence K3 `0`, and the 59-file tool identity verify;
+  Node is 1 -> 1.
+- This remains reference-only. Effects, production authority, owner-reviewed
+  conversion and terminal retirement remain open.
+
 ### SLIDE Contract 51 internal immutable Array/Option flow green - 2026-08-03
 
 - Existing bounded immutable `Array<Int>` and `Option<Int>` values may cross
