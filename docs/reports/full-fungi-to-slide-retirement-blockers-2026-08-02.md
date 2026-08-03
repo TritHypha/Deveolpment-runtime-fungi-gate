@@ -21,8 +21,10 @@ The first canonical Safe Value Envelope additionally owns and verifies exact
 `Int`, `Bool`, K3 `Verdict`, `String`, `Bytes` and `Array<Int>` values without
 releasing execution authority. A separately versioned typed package receipt
 now binds the current signed-32-bit execution result without a loose host
-value; physical multi-package publication/loading is not yet wired to it.
-Fresh complete SLIDE evidence is 506/506 across 52 suites. These floors remove
+value. The stable-file multi-package loader carries the same typed `Int`
+boundary through one shared affine consumption path. A Boolean-result probe
+refused at package compilation, so non-`Int` physical profiles remain open.
+Fresh complete SLIDE evidence is 509/509 across 52 suites. These floors remove
 several design/implementation unknowns below; they do not change the measured
 production counts because they remain reference-only, unsigned and limited to
 bounded source profiles.
