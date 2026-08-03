@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0692 bounded deterministic fold reference green - 2026-08-03
+
+- SLIDE commit `d8c7602` implements one exact checked-Fungi
+  `for value in Array<Int>` fold over an owned dense 0-16 element signed-Int32
+  array and one checked Int32 accumulator. This is a bounded reference family,
+  not a callback API or general loop backend.
+- Every sequential prefix addition is checked. Work `1 + 5n` is reserved
+  through the existing counted-loop certificate before execution, and all
+  eleven semantic K3 gates are evaluated before hostile array intake.
+- Source intake reuses SLIDE's exact-fixed typed-array boundary. Partial,
+  resizable, detached, behavior-overridden or changing source views refuse
+  before parsing; copied program objects, sparse arrays and over-ceiling values
+  also refuse.
+- Focused evidence is 6/6, the composed regression slice is 21/21, and complete
+  SLIDE is 682/682 across 70 suites with Node 1 -> 1. Contract integrity is
+  64 files, security closure is `+1` with evidence K3 `0`, and the 64-file
+  tool identity verifies.
+- This does not change conversion or retirement counts. VOK binding, canonical
+  physical `.slide`, flat package/typed receipt integration and production
+  authority remain open.
+
 ### External Fungi conversion Round 9 issued with executable closure tooling - 2026-08-03
 
 - Round 8's handback is adjudicated: its 0/120 classified-row outcome remains
@@ -21,8 +42,8 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly 0/120 terminal rows; its fresh preflight is green and row 001 is in
-  progress. No TypeScript path is retired.
+  honestly 2/120 terminal rows, both `BLOCKED_LANGUAGE`; row 003 is next. Its
+  fresh preflight remains green. No TypeScript path is retired.
 
 ### SLIDE Contract 62 counted-sum flat package and typed receipt green - 2026-08-03
 

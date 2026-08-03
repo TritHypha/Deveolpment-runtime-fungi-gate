@@ -13,6 +13,19 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: RD-0692's first bounded deterministic fold reference is green
+at SLIDE commit `d8c7602`. One exact checked-Fungi `Array<Int>` fold owns a
+dense 0-16 element signed-Int32 input, checks every sequential accumulator
+prefix and reserves `1 + 5n` work before execution. Eleven semantic K3 gates
+precede hostile array intake. Source bytes reuse the shared exact-fixed
+typed-array boundary, so partial, resizable, detached, behavior-overridden or
+changing views refuse before parsing. Focused evidence is 6/6, the composed
+slice is 21/21 and complete SLIDE is 682/682 across 70 suites with Node 1 -> 1.
+Contract integrity is 64 files, security closure is `+1` with K3 `0`, and the
+64-file tool identity verifies. This reference has no VOK lease, physical
+`.slide`, package route or production authority yet, so Independent SLIDE
+remains blue and conversion counts do not change.
+
 Roadmap refresh: Contract 62's exact counted-sum package path is green at SLIDE
 commit `b0bc73a`. The existing flat direct-peer descriptor, exclusive
 receipt-last publisher, physical loader, affine VOK and typed Safe Value receipt
@@ -72,9 +85,9 @@ SLIDE 16/16 with Node 1 -> 1. Round 8's setup-blocker statements are
 superseded, but its outcome remains 0/120 classified rows. Round 9 adds exact
 row scaffolding, a machine row-result contract, deterministic decision ladder,
 status/manifest tools, a fail-closed 120/120 closure verifier and a separate
-append-only AI handover channel. It starts at 0/120 terminal rows and remains
-external, quarantined and non-authorizing; package retirement counts do not
-change.
+append-only AI handover channel. It now has 2/120 terminal rows, both
+`BLOCKED_LANGUAGE`, with row 003 next. It remains external, quarantined and
+non-authorizing; package retirement counts do not change.
 
 Roadmap refresh: Contract 58's structured counted-loop certificate floor is
 green at SLIDE commit `39cb6da`. A fresh package survey found 1,416 `for`
@@ -1016,12 +1029,13 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>676/676 · general loop bodies/production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>682/682 · general loop bodies/production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
     LO["🟩 Counted-sum physical .slide<br/>192-byte GIR · source-free re-admission<br/>6/6 · every byte mutation refused"]
     LP["🟩 Counted-sum flat package route<br/>[Int, Int, Int] → Int · typed receipt<br/>20/20 focused · no fallback"]
+    BF["🟩 Bounded deterministic fold reference<br/>Array&lt;Int&gt; · checked sequential prefixes<br/>6/6 focused · VOK/package open"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -1040,7 +1054,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>row 001 active · 0/120 terminal · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>2/120 terminal · row 003 next · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
@@ -1088,6 +1102,7 @@ flowchart TB
     E --> K --> VN --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> LP --> H
+    LC --> BF --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
@@ -1103,7 +1118,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,BF,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
