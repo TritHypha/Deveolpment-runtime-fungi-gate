@@ -92,4 +92,3 @@ therefore unmet even though `NOT ASSESSED` is absent from the summary table.
    vectors. A strict checker exit alone cannot produce `CANDIDATE` status.
 5. Preserve the existing secret-gate twin and its differential test as the
    authoritative current conversion evidence for that decision surface.
-
