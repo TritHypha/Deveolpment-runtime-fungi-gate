@@ -70,15 +70,23 @@ switch (mode) {
 Fungi:
 
 ```fungi
+pure flow selectMode(mode: Int) -> Result<Int,String>
+contract { intent { "Select one admitted mode and preserve invalid-mode failure." } }
+{
 match mode {
   1 => return Ok(10)
   2 => return Ok(20)
   _ => return Err("MODE")
 }
+}
 ```
 
 This remains `match` even though every arm is terminal. `mode` is `Int`, not
-`Verdict`.
+`Verdict`. `Ok(10)` is present because the declared result is
+`Result<Int,String>` and the TypeScript source can throw. It is not mandatory
+wrapping syntax: a flow whose proved return type is plain `Int` returns `10`
+directly, but that different signature must have a separately proved terminal
+failure contract rather than silently deleting the `default` failure.
 
 ### K3 authority decision
 

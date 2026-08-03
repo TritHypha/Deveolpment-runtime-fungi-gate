@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Round 6 external conversion issued - 2026-08-03
+
+- A fresh external quarantine assigns 20 exact TypeScript files from 20
+  different top-level package peers, biased toward trust/runtime dependencies
+  and five surfaces misclassified in Round 5.
+- Every source path is pinned by byte length and SHA-256 at Galerina commit
+  `0dea7935...`; all 20 pins and the clean package-path condition were verified
+  at issuance.
+- The worker must complete a source dossier, decision/effect ledger, parity and
+  mutation vectors, test plan and terminal status for every row. A strict
+  checker pass without executed parity is `BLOCKED`, never `CANDIDATE`.
+- Galerina, SLIDE and prior rounds remain read-only to the worker. Output is
+  flat, external, non-authorizing and cannot change the retirement ledger.
+- Handover: sibling folder
+  `Galerina-Fungi-Package-Staging-Round-6-2026-08-03`.
+
 ### SLIDE Safe Value Envelope v1 reference primitive green - 2026-08-03
 
 - Independent SLIDE now owns and canonically verifies the first typed

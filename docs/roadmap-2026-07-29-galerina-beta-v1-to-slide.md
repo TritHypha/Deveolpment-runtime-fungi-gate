@@ -12,6 +12,14 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: external conversion Round 6 is issued as a clean,
+non-authorizing 20-file batch across 20 separate package peers. Exact source
+bytes are pinned at `0dea7935...`. Unlike Round 5, every row requires a source
+dossier, complete decision/effect ledger, positive/negative/boundary/mutation
+vectors, test plan and terminal status. Checker acceptance without executed
+parity is explicitly blocked rather than promoted. The worker may write only
+to its sibling quarantine; no candidate changes the live retirement ledger.
+
 Roadmap refresh: SLIDE Safe Value Envelope v1 is green as a reference-only
 primitive. It canonically owns and verifies signed 32-bit `Int`, `Bool`, K3
 `Verdict`, exact well-formed Unicode `String`, bounded `Bytes` and bounded
