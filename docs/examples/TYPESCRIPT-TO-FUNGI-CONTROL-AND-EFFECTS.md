@@ -200,3 +200,40 @@ every file as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or
 
 No status in an external staging folder authorizes integration, TypeScript
 deletion, package retirement, `.slide` execution, signing, or production use.
+
+## Name the execution surface
+
+`galerina check` success proves frontend acceptance only. Executed parity must
+also identify the exact runtime surface and prove that the complete typed input
+reached the selected flow. Do not turn a limitation of one command-line
+marshaller into a language or SLIDE blocker.
+
+| Surface | Current admitted input relevant to translation | Use and limit |
+|---|---|---|
+| raw legacy `galerina run --invoke` | positional `Int` and `Bool` | narrow pure-WASM development probe; no structured input syntax |
+| governed legacy `galerina run --governed` | positional `Int`, `Bool` and non-numeric `String` | governed interpreter probe; no typed Array, Bytes or record input syntax |
+| independent SLIDE checked-package API | exact admitted profiles including scalar/K3 values, bounded String, owned Bytes and dense immutable `Array<Int>` | reference-only `.fungi -> GIR -> .slide -> VOK` evidence; every profile keeps its own limits |
+
+The current `Array<Int>` SLIDE profile admits at most 16 exact signed Int32
+elements and only the frozen `.count()` and checked `.get() -> Option<Int>`
+operations. It does not admit general arrays, Array results, nested arrays,
+mutation, iteration or callbacks. String and Bytes profiles are similarly
+bounded; their presence does not imply general collection or host-object
+support.
+
+Use the narrowest accurate blocker:
+
+- `BLOCKED_LEGACY_CLI_HARNESS` when only the legacy CLI cannot marshal a
+  required input;
+- `BLOCKED_SLIDE_PROFILE` when the independent compiler/VOK path lacks the
+  required type or operation;
+- `BLOCKED_LANGUAGE` when the Fungi semantics cannot express the behavior;
+- `BLOCKED_HOST_ABI` when a typed admitted host boundary is absent; and
+- `BLOCKED_EXECUTION` only after every applicable authorized research surface
+  has been checked and none can execute the required vectors.
+
+Never award parity from an empty/default path produced by an input-type
+mismatch. At least one non-default distinguishing vector must prove that the
+intended input reached the flow. A candidate dossier records the source pin,
+toolchain pin, execution surface, exact input profile, command or API call,
+independent oracle result, observed result and refusal/mutation evidence.

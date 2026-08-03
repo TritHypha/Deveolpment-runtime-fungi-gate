@@ -39,6 +39,16 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   evidence directory, candidate, experiment or terminal row outcome. The
   preflight itself was correct, but the submission stopped after seven control
   files and scored **22/100 (incomplete)**. Nothing was copied into Galerina.
+- **Round 7 mapping adjudicated:** its control/effect/failure guidance is useful,
+  but its execution table confused the legacy CLI with the independent SLIDE
+  package API and incorrectly excluded governed String arguments. The maintained
+  worked map now requires every parity claim to name its execution surface and
+  distinguishes CLI-harness, SLIDE-profile, language and host-ABI blockers.
+  Open fail-closed tooling debt: a governed CLI probe supplied a scalar to an
+  Array-typed parameter and reached the empty-array path instead of refusing;
+  surplus positional arguments are also ignored. Such runs are prohibited as
+  parity evidence until the CLI marshaller enforces exact declared arity and
+  types with regression tests.
 - **Compact status drift closed:** the live retirement line now reports 497
   tracked TypeScript paths and 38 unowned host boundaries. A tooling regression
   test compares every displayed retirement count with the generated retirement
