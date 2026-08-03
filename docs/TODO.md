@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Scheduled secret-scan false-positive closure - 2026-08-03
+
+- The scheduled full-history scan was failing on 78 findings introduced by
+  public feature-branch history: 75 broad generic-key matches, two canonical
+  JWT detector vectors and one deliberately denied Stripe-shaped example.
+- Every finding was independently classified. The reviewed set contains 40
+  diagnostic-code identifiers, 24 SHA-256 digests, 11 schema/config labels,
+  two JWT test vectors and one negative documentation example; no live
+  credential was found.
+- `.gitleaksignore` now binds exactly those 78 historical fingerprints. It
+  suppresses no rule, path or commit, so any changed or future finding remains
+  denied. Set comparison proves 78 expected = 78 recorded, with no missing,
+  surplus or duplicate entry.
+- Gitleaks 8.24.3, matching the failing action, now scans all local refs with
+  zero remaining findings. A fresh JWT stdin probe is still detected as one
+  finding and exits with the configured refusal code.
+- **Publication state:** GitHub remains red until the owner pushes the local
+  commits; no CI pass is inferred from local evidence.
+
 ### Runtime identity and execution-graph authority closure - 2026-08-03
 
 - Tower Citizen now validates caller-supplied correlation identities, creates
