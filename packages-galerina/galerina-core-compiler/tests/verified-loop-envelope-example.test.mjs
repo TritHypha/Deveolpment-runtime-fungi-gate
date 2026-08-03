@@ -23,15 +23,29 @@ const SOURCE = join(
   "examples",
   "VERIFIED-MILLION-ITERATION-LOOP.fungi",
 );
+const CHECKED_SOURCE = join(
+  HERE,
+  "..",
+  "..",
+  "..",
+  "docs",
+  "examples",
+  "CHECKED-MILLION-ITERATION-LOOP.fungi",
+);
 
 const errors = (diagnostics) =>
   diagnostics.filter((diagnostic) => diagnostic.severity === "error");
 
 let parsed;
+let parsedChecked;
 
 before(async () => {
   const source = await readFile(SOURCE, "utf8");
   parsed = parseProgram(source, SOURCE, { requireVersionHeader: true });
+  const checkedSource = await readFile(CHECKED_SOURCE, "utf8");
+  parsedChecked = parseProgram(checkedSource, CHECKED_SOURCE, {
+    requireVersionHeader: true,
+  });
 });
 
 describe("verified million-iteration developer example", () => {
@@ -71,5 +85,37 @@ describe("verified million-iteration developer example", () => {
     assert.deepEqual(Object.values(proposal.facts), Array(13).fill(true));
     assert.equal(proposal.executionWhenNotAdmitted, "checked");
     assert.equal(proposal.proof?.exactTripCount, 1000000);
+  });
+
+  it("keeps the permission-absent twin valid on the checked path", () => {
+    assert.deepEqual(errors(parsedChecked.diagnostics), []);
+    assert.deepEqual(errors(checkTypes(parsedChecked.ast).diagnostics), []);
+    assert.deepEqual(
+      errors(checkValueStates(parsedChecked.ast, "production").diagnostics),
+      [],
+    );
+    const effects = checkEffects(parsedChecked.flows, parsedChecked.ast);
+    assert.deepEqual(errors(effects), []);
+    assert.deepEqual(
+      errors(
+        verifyGovernance(
+          parsedChecked.ast,
+          parsedChecked.flows,
+          effects,
+          "production",
+        ).diagnostics,
+      ),
+      [],
+    );
+    const proposal = analyzeMillionReadLoopEnvelope(
+      parsedChecked.ast,
+      "readMillionValues",
+    );
+    assert.equal(proposal.candidate, false);
+    assert.equal(proposal.verdict, -1);
+    assert.equal(proposal.executionWhenNotAdmitted, "checked");
+    assert.deepEqual(proposal.failureIds, [
+      "VERIFIED_NATIVE_PERMISSION_MISSING",
+    ]);
   });
 });

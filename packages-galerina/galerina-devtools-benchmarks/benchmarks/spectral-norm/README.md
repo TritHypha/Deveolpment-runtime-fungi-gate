@@ -5,3 +5,9 @@ A scaled-integer power-iteration benchmark from the Computer Language Benchmarks
 The **Node.js, Python and Rust** columns compute a **byte-identical scaled-integer checksum** (`6647`): every value stays non-negative, so truncating integer division behaves the same across Node `Math.trunc(a/b)`, Python `a // b` and Rust `a / b`, and all three reproduce the exact same integer sequence. `SCALE = 4096` keeps every intermediate inside i64 (largest matvec sum ≈ 4.9e11; the final `vBv × SCALE` ≈ 3.1e12, both far below ≈ 9.2e18), so Rust runs i64 throughout and Node's plain `Number` arithmetic stays exact (under 2^53).
 
 **Galerina is intentionally excluded** from this benchmark. The power iteration mutates `u`, `v` and `tmp` vectors in place across iterations, which requires fast mutable arrays. Galerina arrays are immutable and only available on the slow immutable tree-walker path, so a `.fungi` version would re-allocate the vectors on every update and end up measuring allocation/GC rather than fair numeric compute. This is a known capability gap (mutable vectors), not a measurement choice — there is deliberately no `benchmark.fungi` here.
+
+The throughput registry therefore marks this workload
+`native-controls-only`. The publication audit admits the native comparison
+only under that exact scope and fails closed if any Galerina subject lane is
+inserted. Reports show Galerina's place as not applicable rather than treating
+the absent subject as either a result or a silent dropout.

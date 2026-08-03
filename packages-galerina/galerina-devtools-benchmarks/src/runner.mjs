@@ -64,6 +64,11 @@ export const BENCHMARKS = [
   // Tri-logic: 3-valued ternary logic (True=1, False=-1, Unknown=0) — all 27 truth table combinations.
   // Relevant for future photonic compute substrates; validates correctness and shows CPU overhead today.
   { id: "tri-logic", dir: "tri-logic", galerinaOpsPerRun: 300000, passiveCallCount: 100 },
+  // Verified native operation: one exact traversal of 1,000,000 Int32 values.
+  // checkedReference and slideReference are both non-authorizing, unranked
+  // laboratory lanes admitted from one pinned SLIDE publication. Neither is
+  // the production `slide` lane used by the historical Wasm transition gate.
+  { id: "verified-native-operation", dir: "verified-native-operation", galerinaOpsPerRun: 1000000 },
   // Data-query: SQL-like data filtering on arrays of JSON records — a core web service workload.
   // Galerina governed path validates query inputs as Tainted<String> before execution.
   // main() = filterAndCount(1000) + groupByCategory(1000) = 2000 record-scans per call
@@ -171,7 +176,7 @@ async function runGalerina(fungiPath, mode, bench) {
   } catch(e) { return { error: true, reason: String(e), runtime: `galerina-${mode}` }; }
 }
 
-async function runBenchmark(bench) {
+export async function runBenchmark(bench) {
   const dir = join(benchDir, bench.dir);
   const res = {};
 
@@ -219,6 +224,31 @@ async function runBenchmark(bench) {
     console.log(`  wasm...`);
     try { res.wasm = await (await import(pathToFileURL(wasmRunner).href)).runWasmBenchmark(); }
     catch(e) { res.wasm = { error: true, reason: String(e), runtime: "wasm" }; }
+  }
+
+  const slideReferenceRunner = join(dir, "bench-slide-reference.mjs");
+  if (existsSync(slideReferenceRunner)) {
+    console.log("  checked + SLIDE reference...");
+    try {
+      const observation = await (await import(pathToFileURL(slideReferenceRunner).href))
+        .runSlideReferenceBenchmark();
+      if (observation.verdict === 1) {
+        res.checkedReference = { ...observation.checkedReference };
+        res.slideReference = {
+          ...observation.slideReference,
+          phases: observation.phases,
+          provenance: observation.provenance,
+        };
+      } else {
+        const unavailable = { error: true, reason: observation.failureId, referenceOnly: true };
+        res.checkedReference = unavailable;
+        res.slideReference = unavailable;
+      }
+    } catch (error) {
+      const unavailable = { error: true, reason: String(error), referenceOnly: true };
+      res.checkedReference = unavailable;
+      res.slideReference = unavailable;
+    }
   }
 
   // ── Deno WebGPU execution (Phase 38 — real GPU when Deno+WebGPU available) ─
@@ -348,6 +378,7 @@ export function publicationOutputName(filter) {
   if (!BENCHMARKS.some((benchmark) => benchmark.id === filter)) {
     throw new Error(`REFUSED: unknown benchmark filter '${filter}'`);
   }
+
   return `${filter}-latest.json`;
 }
 

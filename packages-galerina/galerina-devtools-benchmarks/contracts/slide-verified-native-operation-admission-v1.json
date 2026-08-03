@@ -1,0 +1,32 @@
+{
+  "schema": "galerina.benchmark.slide-verified-native-operation-admission.v1",
+  "benchmark": "verified-native-operation",
+  "maxEvidenceBytes": 16384,
+  "evidenceSha256": "40c7056e8819487b2bf349077d1ab962abf9691e5393ad2b8792351ddae67970",
+  "slideCommit": "710271581fa1806afe2f2820fb463592f17d7e63",
+  "publicationDigest": "sha256:75b4ea4d18c4e60be8c6cda37a49fafec10e3feff9a7a00e059501cdcb74fe1d",
+  "evidenceDigest": "sha256:7c2e83d8033e6ee4bd4cffb70971c7d58a8f17d7d5a2a40c028af98032c6d342",
+  "iterations": 1000000,
+  "expectedResult": 999999,
+  "laneIds": [
+    "checkedPeer",
+    "directControl",
+    "sourcePreparation",
+    "sourceDemand",
+    "sourceTotal",
+    "slideCompilation",
+    "slidePreparation",
+    "slideDemand",
+    "slidePreparedTotal",
+    "slideEndToEndTotal"
+  ],
+  "host": {
+    "platform": "win32",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+    "node": "v24.18.0"
+  },
+  "referenceOnly": true,
+  "authorityReleased": false
+}

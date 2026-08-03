@@ -34,7 +34,7 @@
 //        exit 0 = clean · exit 3 = findings (gate use) · exit 2 = inputs missing
 // =============================================================================
 import { readFileSync, existsSync, readdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { benchmarkSpec, isComparable, metricClassOf } from "./throughput-units.mjs";
@@ -43,6 +43,8 @@ import { BENCHMARKS } from "./runner.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
+const IS_MAIN = process.argv[1] !== undefined
+  && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 // Native (non-Galerina, non-WASM) runtimes — the "ceiling" a cross-runtime ratio
 // compares a Galerina lane against. A ratio only exists if ≥1 of these ran.
@@ -61,6 +63,9 @@ const NODE_SUBJECT_BENCHMARKS = new Set([
   "intelligence-search",
   "provenance-trace",
 ]);
+const REQUIRED_REFERENCE_SUBJECTS = new Map([
+  ["verified-native-operation", Object.freeze(["checkedReference", "slideReference"])],
+]);
 // Above this governed-vs-native slowdown, "the interpreter is just slow" stops being
 // a credible explanation (the tree-walker's honest worst on work-equivalent lanes is
 // ~4000×). Beyond it, non-work-equivalence is the likelier cause → CRITICAL not HIGH.
@@ -76,8 +81,11 @@ const tput = (r) => {
       ?? r.queriesPerSecond ?? null;
 };
 
-const subjectLanesFor = (benchmark) =>
-  NODE_SUBJECT_BENCHMARKS.has(benchmark) ? new Set(["nodejs"]) : GALERINA;
+const subjectLanesFor = (benchmark) => {
+  const reference = REQUIRED_REFERENCE_SUBJECTS.get(benchmark);
+  if (reference !== undefined) return new Set(reference);
+  return NODE_SUBJECT_BENCHMARKS.has(benchmark) ? new Set(["nodejs"]) : GALERINA;
+};
 
 const NON_PUBLICATION_DIRECTORIES = new Set([
   "diagnostic",
@@ -198,11 +206,18 @@ export function classifyBenchmark(entry) {
     .map((lane) => rt[lane])
     .filter((x) => x != null && x > 0);
   const observedRates = Object.values(rt).filter((x) => x != null && x > 0);
-  const subjectPresent = subjectRates.length > 0;
+  const requiredReference = REQUIRED_REFERENCE_SUBJECTS.has(id);
+  const spec = benchmarkSpec(id);
+  const nativeControlsOnly = spec?.comparisonScope === "native-controls-only";
+  const referenceOnly = spec?.comparisonScope === "reference-only";
+  const subjectPresent = nativeControlsOnly
+    ? nativeRates.length > 0
+    : requiredReference
+    ? subjectRates.length === subjectLanes.size
+    : subjectRates.length > 0;
   const shown = nativeRates.length > 0 && subjectPresent;
 
   const mc = metricClassOf(id);
-  const spec = benchmarkSpec(id);
   const certified = !!spec && isComparable(id) && WORK_EQUIVALENCE[id] === undefined && (mc === "cpu-throughput" || mc === "gpu");
 
   let category;
@@ -214,12 +229,31 @@ export function classifyBenchmark(entry) {
   else category = "uncertified";                                     // cpu/gpu, shown, not yet certified
 
   const findings = [];
-  if (observedRates.length > 0 && !subjectPresent) {
+  if (!nativeControlsOnly && observedRates.length > 0 && !subjectPresent) {
     findings.push({
-      code: "benchmark-subject-absent",
+      code: requiredReference ? "benchmark-subject-incomplete" : "benchmark-subject-absent",
       severity: "HIGH",
-      detail: `${id} has measured comparator output but none of its admitted subject lanes ran; publication is incomplete`,
+      detail: requiredReference
+        ? `${id} requires every admitted reference subject lane; publication is incomplete`
+        : `${id} has measured comparator output but none of its admitted subject lanes ran; publication is incomplete`,
     });
+  }
+  if (nativeControlsOnly && subjectRates.length > 0) {
+    findings.push({
+      code: "native-controls-only-subject-present",
+      severity: "HIGH",
+      detail: `${id} is scoped to equivalent native controls but contains a Galerina subject lane`,
+    });
+  }
+  if (referenceOnly) {
+    const productionRates = [...GALERINA].map((lane) => rt[lane]).filter((rate) => rate != null && rate > 0);
+    if (productionRates.length > 0) {
+      findings.push({
+        code: "reference-only-production-subject-present",
+        severity: "HIGH",
+        detail: `${id} is reference-only but contains a Galerina production subject lane`,
+      });
+    }
   }
   if (shown && category === "uncertified") {
     const bestNative = Math.max(...nativeRates);
@@ -237,6 +271,11 @@ export function classifyBenchmark(entry) {
     shown,
     subjectPresent,
     subjectLanes: [...subjectLanes],
+    comparisonScope: nativeControlsOnly
+      ? "native-controls-only"
+      : referenceOnly
+      ? "reference-only"
+      : "cross-runtime",
     category,
     metricClass: mc,
     findings,
@@ -286,7 +325,7 @@ export function structuralFindings(reportText) {
 }
 
 // ── self-test ────────────────────────────────────────────────────────────────
-if (process.argv.includes("--self-test")) {
+if (IS_MAIN && process.argv.includes("--self-test")) {
   let ok = 0, fail = 0;
   const check = (cond, what) => { if (cond) ok++; else { fail++; console.error(`  FAIL: ${what}`); } };
 
@@ -324,7 +363,7 @@ if (process.argv.includes("--self-test")) {
 
   // The inverse axis is not equivalent: comparator results with no admitted
   // subject must block publication rather than disappear into "not-shown".
-  const noSubject = classifyBenchmark({ benchmark: "spectral-norm", results: {
+  const noSubject = classifyBenchmark({ benchmark: "mandelbrot", results: {
     rust: { normThroughput: 100 }, nodejs: { normThroughput: 50 },
   }});
   check(
@@ -332,6 +371,38 @@ if (process.argv.includes("--self-test")) {
       && noSubject.findings.some((finding) =>
         finding.code === "benchmark-subject-absent" && finding.severity === "HIGH"),
     "native/comparator lanes with no benchmark subject → HIGH finding",
+  );
+
+  const nativeOnly = classifyBenchmark({ benchmark: "spectral-norm", results: {
+    rust: { normThroughput: 100 }, nodejs: { normThroughput: 50 },
+  }});
+  check(
+    nativeOnly.shown
+      && nativeOnly.category === "certified"
+      && nativeOnly.comparisonScope === "native-controls-only"
+      && nativeOnly.findings.length === 0,
+    "declared native-controls-only lane is visible without inventing a Galerina subject",
+  );
+
+  const nativeOnlyForged = classifyBenchmark({ benchmark: "spectral-norm", results: {
+    rust: { normThroughput: 100 }, wasm: { normThroughput: 75 },
+  }});
+  check(
+    nativeOnlyForged.findings.some((finding) =>
+      finding.code === "native-controls-only-subject-present" && finding.severity === "HIGH"),
+    "native-controls-only lane containing Galerina evidence refuses",
+  );
+
+  const referenceOnlyForged = classifyBenchmark({ benchmark: "verified-native-operation", results: {
+    rust: { normThroughput: 100 },
+    checkedReference: { normThroughput: 75 },
+    slideReference: { normThroughput: 80 },
+    wasm: { normThroughput: 90 },
+  }});
+  check(
+    referenceOnlyForged.findings.some((finding) =>
+      finding.code === "reference-only-production-subject-present" && finding.severity === "HIGH"),
+    "reference-only lane containing a production subject refuses",
   );
 
   const missingCatalogEntry = catalogFindings({
@@ -407,6 +478,7 @@ if (process.argv.includes("--self-test")) {
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────
+if (IS_MAIN) {
 const asJson = process.argv.includes("--json");
 // --stale-only runs report freshness plus catalog completeness. Wired into
 // phase-close now: these checks do not require executable SLIDE. Subject-lane
@@ -511,3 +583,4 @@ if (asJson) {
     : `  verdict: ${blocking.length} blocking finding(s) — publication integrity is incomplete ✗`);
 }
 process.exit(blocking.length === 0 ? 0 : 3);
+}

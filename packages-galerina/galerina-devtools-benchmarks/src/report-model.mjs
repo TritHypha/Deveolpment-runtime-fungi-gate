@@ -1,7 +1,7 @@
 // Pure benchmark report model and Markdown renderer.
 // Filesystem access, digest checks and output publication stay in report.mjs.
 import { interpretBenchmark } from "./benchmark-interpretation.mjs";
-import { metricClassOf } from "./throughput-units.mjs";
+import { benchmarkSpec, metricClassOf } from "./throughput-units.mjs";
 
 export const REPORT_RUNTIMES = Object.freeze([
   Object.freeze({ key: "rustAvx2", label: "Rust AVX2", ranked: true }),
@@ -9,6 +9,8 @@ export const REPORT_RUNTIMES = Object.freeze([
   Object.freeze({ key: "cpp", label: "C++", ranked: true }),
   Object.freeze({ key: "nodejs", label: "Node.js", ranked: true }),
   Object.freeze({ key: "wasm", label: "Galerina/Wasm production", ranked: true, productionGalerina: true }),
+  Object.freeze({ key: "checkedReference", label: "Checked reference - no permission", ranked: false }),
+  Object.freeze({ key: "slideReference", label: "SLIDE reference - permission present", ranked: false }),
   Object.freeze({ key: "galerinaGoverned", label: "Galerina governed diagnostic", ranked: false }),
   Object.freeze({ key: "python", label: "Python", ranked: true }),
 ]);
@@ -38,13 +40,16 @@ export function formatRate(value) {
 export function buildCrossLanguageRows(latest, runtimeCatalog = REPORT_RUNTIMES) {
   if (!Array.isArray(latest)) throw new TypeError("latest benchmark result must be an array");
   return latest.map((benchmark) => {
+    const spec = benchmarkSpec(benchmark.benchmark);
     const metricClass = typeof benchmark.metricClass === "string" && benchmark.metricClass.length > 0
       ? benchmark.metricClass
       : metricClassOf(benchmark.benchmark);
-    const normalized = { ...benchmark, metricClass };
+    const comparisonScope = spec?.comparisonScope ?? "cross-runtime";
+    const normalized = { ...benchmark, metricClass, comparisonScope };
     const row = {
       benchmark: benchmark.benchmark,
       metricClass,
+      comparisonScope,
       aligned: benchmark.units?.comparable === true && benchmark.units?.status === "PASS",
       unit: benchmark.units?.unit ?? "per-call",
       scoreUnit: metricClass === "memory" ? "heap bytes/op" : (benchmark.units?.unit ?? "per-call"),
@@ -102,6 +107,7 @@ export function buildReportMarkdown({ baseline, diffFromLast, crossLanguage, sli
   output += "- **✅ means the workload is work-equivalent and unit-aligned for cross-runtime ranking; it does not mean Galerina won.**\n";
   output += "- A row without ✅ may show observations, but it receives no admitted winner or product place.\n";
   output += "- **Galerina** in the place column means the Galerina/Wasm production lane. The governed interpreter is diagnostic evidence and is not counted as another competing product.\n\n";
+  output += "- **Checked reference - no permission** and **SLIDE reference - permission present** are non-authorizing laboratory observations. They are visible for the one-million-loop comparison but cannot win or count as Galerina production.\n\n";
 
   output += "## 1. Difference from the last run\n\n";
   if (diffFromLast.length > 0) {

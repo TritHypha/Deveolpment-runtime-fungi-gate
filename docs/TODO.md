@@ -6,17 +6,88 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Next chapter queue after requested pause - 2026-08-03
 
-- **External conversion Round 5:** select re-attempts from files handled across
-  Rounds 1-4 plus 30 explicitly named backup files. Use the corrected
-  control/effects map, require an outcome dossier for every file and continue
-  after individual blockers. Do not admit staging output without independent
-  parity, checker, effect, graph and execution evidence.
-- **Verified native-operation benchmark:** add the one-million-element boundary
-  workload to the governed benchmark suite and compare only equivalent
-  implementations already present in the comparator. Report preparation,
-  admission and demand separately; use the same data/checksum and label timing
-  lower-is-better without claiming unlike safety contracts are equivalent.
-- Neither item was started in the receipt-bound build-selection chapter.
+- **External conversion Round 5 issued:** the new external quarantine assigns
+  32 exact prior-file retries, four honestly labelled history-recovery
+  entrypoints and 30 reproducibly selected backup files: 66 tracked paths
+  across 60 top-level package peers. All paths were present and tracked at
+  issuance. The worker must fully read and account every path; `NOT ASSESSED`
+  is not a final outcome and one blocker does not stop the batch. No candidate
+  is admitted without independent parity, checker, effect, graph, execution
+  and production-authority evidence.
+- The Round 5 handover is issued but no Round 5 candidate or report has been
+  produced. Package conversion remains the owner's independent lane.
+
+### Paired one-million verified-native benchmark green - 2026-08-03
+
+- Both developer-visible forms are now permanent checker examples: the
+  permission-absent source remains an ordinary checked loop; the
+  permission-present source can only produce a non-authorizing optimization
+  proposal inside Galerina.
+- The governed benchmark registers the same 1,000,000-element traversal and
+  exact final value `999999` for Node, Python, Rust, Rust AVX2 and two pinned
+  reference lanes. Work and units pass; both Galerina/SLIDE lanes are explicitly
+  unranked with `referenceOnly: true` and `authorityReleased: false`.
+- Fresh focused medians: checked reference `1.712 ms` / `584.2M
+  element-reads/s`; SLIDE reference demand `0.623 ms` / `1.606B
+  element-reads/s`; reference demand ratio `2.749x`. Preparation, compilation,
+  demand and total phases remain visible, so demand timing cannot conceal setup
+  cost.
+- Adapter hostile evidence is 4/4, controls are 4/4, catalog/integration is
+  3/3, report verification is 4/4 and the paired source examples are 3/3. The
+  fresh full benchmark completed in 292 seconds, all comparable-unit checks
+  passed, the complete benchmark package is 56/56, truth audit passes, and
+  publication integrity is clean with its self-test at 18/18. All focused and
+  complete runs kept Node at 1 -> 1.
+- The prior spectral-norm blocker was an intentional native-only workload, not
+  a missing Galerina implementation. Its `native-controls-only` scope is now
+  machine-readable; the audit refuses any Galerina lane under that scope and
+  the report says the Galerina place is not applicable.
+- The paired workload is independently marked `reference-only`; the audit
+  refuses a Galerina production lane in that scope and the aggregate explicitly
+  reports both references as visible but unranked.
+- Report:
+  `packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.md`.
+- **Open:** this is JavaScript reference evidence, not a production/native or
+  general-loop speed claim. Production tool/source authentication,
+  native/platform durability and authority release remain required.
+
+### Phase-close timing tokens and clean fixed point - 2026-08-03
+
+- The complete phase-close cadence passes every blocking gate in `497.4 s`;
+  benchmark integrity reports 60 passing tests, graph-all is 5/5, tooling has
+  345 passes with two intentional skips, and Node returns 1 -> 1.
+- Phase-close now emits stable slowest-first timing tokens in text and JSON.
+  The first measured profile is: `P01` example diagnostics `95.1 s` / `20.0%`,
+  `P02` core tests `93.8 s` / `19.7%`, `P03` Fungi corpus `68.8 s` / `14.5%`,
+  `P04` generator contract `58.6 s` / `12.3%`, and `P05` tooling tests
+  `36.3 s` / `7.6%`.
+- The top four account for `66.5%` of accounted stage time. The observed host
+  was not CPU, memory or disk saturated; optimisation should first remove
+  repeated repository scans and share immutable scan manifests, while retaining
+  the existing owned-process tree and maximum-four test concurrency controls.
+- Generator contract is 15/15, package graph is 98 packages / 197 outputs,
+  code index is current at 777 codes, and the flat 98-peer root lock re-verifies
+  after the benchmark package additions.
+
+### Terminal deferred R&D: Lyth/Weaver virtual execution layer - 2026-08-03
+
+- **Owner order:** do this after all current Galerina package conversion,
+  terminal TypeScript/dependency retirement, admitted `.fungi -> .slide`
+  execution, SLIDE/VOK production authority and benchmark/release work is
+  complete. It must not delay or silently alter the active program.
+- **Possible project boundary:** investigate an independent layer beneath
+  SLIDE. SLIDE/VOK would retain all authority and issue one exact bounded
+  execution request; a Lyth interface could present one deterministic virtual
+  execution contract while a Weaver schedules only proved-independent,
+  coarse-grained strands. Do not create the project until that boundary and a
+  clean removal/serial path are evidenced.
+- **Current status:** research wishlist only; zero-trust score `PENDING`,
+  economics cap `EXPERIMENT-ONLY`, decision `TRACK`. The private numbered KB
+  record is `RD-0687`.
+- **Critical maths rule:** integer or Tri-1 representation does not itself make
+  reassociation legal. Each operation must prove its algebra and overflow
+  model; checked arithmetic needs a no-overflow proof, saturation is generally
+  non-associative, and governance remains an explicit fail-closed K3 gate.
 
 ### Result-return ergonomics design item - 2026-08-03
 

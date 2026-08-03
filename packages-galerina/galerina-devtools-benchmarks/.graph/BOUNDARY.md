@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 29 |
+| Files | 33 |
 | Internal edges | 18 |
 | External dependencies | 9 |
 | ├─ Node core | 9 |
@@ -62,11 +62,15 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/slide-vade-adapter.mjs`
 - `src/snapshot.mjs`
 - `src/variance.mjs`
+- `src/verified-native-operation-adapter.mjs`
+- `src/verified-native-operation-report.mjs`
 
 ## Loaded Assets
 - `contracts/galerina-slide-transition-v1.json`
 - `contracts/slide-v2g-vade-admission-v1.json`
+- `contracts/slide-verified-native-operation-admission-v1.json`
 - `evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json`
+- `evidence/slide-verified-native-operation-reference.json`
 - `src/wasm-runner.mjs`
 
 ## Allowed Orphans

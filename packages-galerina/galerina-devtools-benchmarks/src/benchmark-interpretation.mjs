@@ -89,6 +89,17 @@ export function interpretBenchmark(benchmark, runtimeCatalog) {
     );
   }
 
+  const nativeControlsOnly = benchmark.comparisonScope === "native-controls-only";
+  const referenceOnly = benchmark.comparisonScope === "reference-only";
+  if (nativeControlsOnly && runtimeCatalog.some((runtime) =>
+    runtime.productionGalerina === true && benchmark.results?.[runtime.key] !== undefined)) {
+    return noRanking(
+      "refused",
+      "no admitted winner",
+      "A Galerina production lane appeared inside a native-controls-only workload.",
+    );
+  }
+
   const memory = benchmark.metricClass === "memory";
   const memoryBytesPerOp = {};
   const candidates = [];
@@ -121,7 +132,11 @@ export function interpretBenchmark(benchmark, runtimeCatalog) {
     ? winners[0].label
     : `${winners.map((entry) => entry.label).join(" + ")} (tie)`;
   const galerina = ranked.find((entry) => entry.productionGalerina);
-  const galerinaPlace = galerina
+  const galerinaPlace = nativeControlsOnly
+    ? "not applicable - native controls only"
+    : referenceOnly
+    ? "not applicable - references are unranked"
+    : galerina
     ? `${ranked.filter((entry) => entry.place === galerina.place).length > 1 ? "joint " : ""}${ordinal(galerina.place)} of ${ranked.length}`
     : (productionPresent ? "not rankable" : "not measured");
 
@@ -129,7 +144,11 @@ export function interpretBenchmark(benchmark, runtimeCatalog) {
     direction,
     winner,
     galerinaPlace,
-    explanation: memory
+    explanation: nativeControlsOnly
+      ? "This workload deliberately excludes a Galerina subject; it ranks only equivalent native controls."
+      : referenceOnly
+      ? "Native controls may be ranked; the checked and SLIDE reference lanes remain visible but unranked."
+      : memory
       ? "Winner uses the lowest non-negative heap bytes/op; throughput is secondary."
       : "Winner uses the highest admitted same-unit throughput.",
     memoryBytesPerOp: Object.freeze(memoryBytesPerOp),

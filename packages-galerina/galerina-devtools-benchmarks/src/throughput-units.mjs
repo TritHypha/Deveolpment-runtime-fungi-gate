@@ -151,6 +151,7 @@ const SPECS = {
   },
   "spectral-norm": {  // one op = one A(i,j) evaluation
     N: 200000, unit: "A-evals/s", comparable: true,
+    comparisonScope: "native-controls-only",
     native: (_rt, r) => num(r.operationsPerSecond),
   },
   "binary-trees": {   // one op = one allocated tree node (the memory benchmark)
@@ -187,6 +188,11 @@ const SPECS = {
     // One op = one record-scan; the governed Tainted<String> query path is a
     // compile-time cost layered on top, not part of this throughput core.
     N: 10000, unit: "record-scans/s", comparable: true,
+    native: (_rt, r) => num(r.operationsPerSecond),
+  },
+  "verified-native-operation": {
+    N: 1_000_000, unit: "element-reads/s", comparable: true,
+    comparisonScope: "reference-only",
     native: (_rt, r) => num(r.operationsPerSecond),
   },
 
@@ -252,6 +258,7 @@ export const METRIC_CLASS = {
   "spectral-norm": "cpu-throughput",
   "tri-logic": "cpu-throughput",
   "data-query": "cpu-throughput",
+  "verified-native-operation": "cpu-throughput",
   "call-chain": "cpu-throughput",
   "matrix-multiply": "cpu-throughput",    // dual-home: also rendered in the GPU table via its WebGPU lane
   "record-allocation": "memory",

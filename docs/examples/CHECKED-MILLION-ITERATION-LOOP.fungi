@@ -1,0 +1,28 @@
+@version 1
+/// @file: CHECKED-MILLION-ITERATION-LOOP.fungi
+/// @purpose: Show the permission-absent one-million loop that stays on the checked path.
+/// @status: Production source gates pass; no Verified Loop Envelope candidate is created.
+/// expected_diagnostics: none
+
+secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
+contract {
+  intent { "Read exactly one million values through the checked semantic path." }
+  effects {}
+}
+{
+  if values.count() != 1000000 {
+    return Err("MILLION_LENGTH")
+  }
+  mut i: Int = 0
+  mut last: Int = 0
+  while i < 1000000 {
+    let selected: Option<Int> = values.get(i)
+    match selected {
+      Some(value) => { last = value }
+      None => return Err("MILLION_BOUNDS")
+      _ => return Err("MILLION_OPTION")
+    }
+    i = i + 1
+  }
+  return Ok(last)
+}

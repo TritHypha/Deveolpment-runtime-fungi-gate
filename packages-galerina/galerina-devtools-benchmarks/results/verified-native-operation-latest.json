@@ -1,0 +1,176 @@
+[
+  {
+    "benchmark": "verified-native-operation",
+    "metricClass": "cpu-throughput",
+    "results": {
+      "nodejs": {
+        "runtime": "nodejs",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          511200,
+          500900,
+          501200,
+          500000,
+          503900,
+          500800,
+          521800,
+          527900,
+          536400
+        ],
+        "medianNs": 503900,
+        "operationsPerSecond": 1984520738,
+        "unit": "element-reads/s",
+        "antiElision": "returned-last-value-and-iteration-count",
+        "normThroughput": 1984520738,
+        "throughputUnit": "element-reads/s"
+      },
+      "python": {
+        "runtime": "python",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          113268000,
+          86126100,
+          85477100,
+          93061200,
+          94900800,
+          86994100,
+          101167600,
+          110448500,
+          86743800
+        ],
+        "medianNs": 93061200,
+        "operationsPerSecond": 10745616,
+        "unit": "element-reads/s",
+        "antiElision": "interpreter-observes-returned-last-value-and-iteration-count",
+        "normThroughput": 10745616,
+        "throughputUnit": "element-reads/s"
+      },
+      "rust": {
+        "runtime": "rust",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          447800,
+          425800,
+          424400,
+          425900,
+          424400,
+          425600,
+          424300,
+          425500,
+          424300
+        ],
+        "medianNs": 425500,
+        "operationsPerSecond": 2350176263,
+        "unit": "element-reads/s",
+        "antiElision": "std::hint::black_box-per-index",
+        "normThroughput": 2350176263,
+        "throughputUnit": "element-reads/s"
+      },
+      "rustAvx2": {
+        "runtime": "rust",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          430800,
+          424300,
+          425500,
+          424300,
+          424300,
+          471500,
+          448200,
+          436900,
+          424800
+        ],
+        "medianNs": 425500,
+        "operationsPerSecond": 2350176263,
+        "unit": "element-reads/s",
+        "antiElision": "std::hint::black_box-per-index",
+        "normThroughput": 2350176263,
+        "throughputUnit": "element-reads/s"
+      },
+      "checkedReference": {
+        "runtime": "checked-reference-no-permission",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          1714400,
+          1724100,
+          1699000,
+          1704900,
+          1703100,
+          1704300,
+          1711800,
+          1728800,
+          1875700
+        ],
+        "medianNs": 1711800,
+        "operationsPerSecond": 584180394,
+        "unit": "element-reads/s",
+        "antiElision": "explicit-length-bounds-and-option-checks",
+        "referenceOnly": true,
+        "authorityReleased": false,
+        "normThroughput": 584180394,
+        "throughputUnit": "element-reads/s"
+      },
+      "slideReference": {
+        "runtime": "slide-reference-permission-present",
+        "iterations": 1000000,
+        "result": 999999,
+        "samplesNs": [
+          613000,
+          970200,
+          717400,
+          609800,
+          602900,
+          622700,
+          629900,
+          1270300,
+          452800
+        ],
+        "medianNs": 622700,
+        "operationsPerSecond": 1605909747,
+        "unit": "element-reads/s",
+        "antiElision": "affine-vok-lease-and-value-only-receipt",
+        "referenceOnly": true,
+        "authorityReleased": false,
+        "phases": {
+          "direction": "lower-is-better",
+          "unit": "nanoseconds-per-million-iteration-flow",
+          "sourcePreparationMedianNs": 9000100,
+          "sourceDemandMedianNs": 616600,
+          "sourceTotalMedianNs": 9659700,
+          "slideCompilationMedianNs": 248000,
+          "slidePreparationMedianNs": 8903400,
+          "slideDemandMedianNs": 622700,
+          "slidePreparedTotalMedianNs": 9619400,
+          "slideEndToEndTotalMedianNs": 9927700,
+          "slideDemandVsChecked": 0.3637691319079332
+        },
+        "provenance": {
+          "slideCommit": "710271581fa1806afe2f2820fb463592f17d7e63",
+          "publicationDigest": "sha256:75b4ea4d18c4e60be8c6cda37a49fafec10e3feff9a7a00e059501cdcb74fe1d",
+          "evidenceDigest": "sha256:7c2e83d8033e6ee4bd4cffb70971c7d58a8f17d7d5a2a40c028af98032c6d342",
+          "generatedAt": "2026-08-03T08:44:26.667Z",
+          "platform": "win32",
+          "release": "10.0.19045",
+          "architecture": "x64",
+          "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+          "node": "v24.18.0"
+        },
+        "normThroughput": 1605909747,
+        "throughputUnit": "element-reads/s"
+      }
+    },
+    "units": {
+      "benchId": "verified-native-operation",
+      "comparable": true,
+      "unit": "element-reads/s",
+      "status": "PASS",
+      "normalized": 6,
+      "problems": []
+    }
+  }
+]

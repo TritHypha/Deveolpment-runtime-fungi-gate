@@ -3,10 +3,12 @@
 Date: 2026-08-03
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
-with **8,831/8,831** tests, graph **5/5**, code index/registry/coverage current,
-benchmark publication fresh, and executable examples **233/233**. The complete
-phase-close cadence passed every blocking gate with tooling **343/343** and
-Node restored **1 -> 1**.
+with the prior derived **8,831/8,831** package-test ledger, graph **5/5**, code
+index/registry/coverage current, benchmark publication fresh, and executable
+examples **233/233**. The current complete phase-close cadence passed every
+blocking gate in **497.4 seconds**, benchmark integrity has **60** passing tests,
+tooling has **345** passes plus two intentional skips, and Node returned
+**1 -> 1**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -20,6 +22,42 @@ Galerina evidence is 7/7, a real library and top-level CLI package build is
 `referenceOnly: true` with `authorityReleased: false`; production source/tool
 authentication, native/platform durability and complete language semantics
 remain blue. Package conversion is unchanged.
+
+Roadmap refresh: external conversion Round 5 is issued as a clean,
+non-authorizing quarantine. It contains 32 exact prior-file retries, four
+separately labelled history-recovery entrypoints and 30 deterministic backup
+paths: 66 tracked TypeScript paths across 60 flat package peers. Every path was
+present and tracked at issuance. This is assignment evidence only; no Round 5
+candidate has been produced, reviewed, executed or admitted, and the live
+package-retirement count remains unchanged.
+
+Roadmap refresh: the paired one-million verified-native benchmark is green as
+reference evidence. The permission-absent `.fungi` source remains checked; the
+permission-present source remains a K3 Unknown compiler proposal until an
+independent authority is available. The governed benchmark executes the same
+1,000,000-element traversal and exact result `999999` for Node, Python, Rust,
+Rust AVX2 and both pinned reference lanes. Unit/work equivalence passes. Fresh
+medians are checked reference `1.712 ms` (`584.2M element-reads/s`) and SLIDE
+reference demand `0.623 ms` (`1.606B element-reads/s`), a `2.749x` reference
+demand ratio. Preparation, compilation and total phases remain separately
+published. Both reference lanes are unranked with `authorityReleased: false`;
+no production, native, general-loop or authority-release claim follows.
+The full aggregate completed in 292 seconds with Node restored 1 -> 1 and all
+comparable units passing. Publication integrity is blocking-clean; its self-
+test is 18/18, the benchmark package is 56/56 and truth audit passes.
+Spectral-norm is now explicitly `native-controls-only`, and both
+the audit and report refuse to misrepresent that intentional scope as a
+Galerina result. The paired workload is independently `reference-only`; a
+production subject appearing under that scope blocks publication.
+
+Roadmap refresh: phase-close now publishes slowest-first timing tokens in text
+and JSON. The first clean profile identifies example diagnostics (`P01`, 95.1
+seconds), core tests (`P02`, 93.8 seconds), Fungi corpus checking (`P03`, 68.8
+seconds), generator contracts (`P04`, 58.6 seconds) and tooling tests (`P05`,
+36.3 seconds). The top four account for 66.5% of measured stage time. This is a
+serial repeated-scan/process-startup optimisation target, not evidence of CPU,
+RAM or disk saturation; future consolidation must preserve owned trees,
+fail-closed generation checks and the maximum-four worker ceiling.
 
 Roadmap refresh: the Galerina bounded checked-read producer is green.
 `analyzeBoundedReadLoopEnvelope` and its self-hosted `.fungi` authority model
@@ -573,8 +611,9 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 4: 20 files · 20 flat peers · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 5 issued: 66 paths · 60 flat peers · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
+    VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
     RV["🟩 Retirement verifier implemented<br/>12/12 top-level adversarial<br/>schema-v3 signed-authority closure"]
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
@@ -617,7 +656,7 @@ flowchart TB
     AG --> AI --> AH --> DCTP
     AI --> DCTP --> AE --> I
     AI --> PG --> AF --> I
-    E --> K --> FB --> Q
+    E --> K --> VN --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
@@ -719,7 +758,7 @@ table is navigation, not authority.
 | 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts remain green. The package route additionally pins an exact 56-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. Focused evidence is 7/7 plus one real library/top-level CLI build. This is reference-only | Keep both bounded routes green while widening admitted package semantics; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
-| 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 4 assigns one reproducibly selected file from each of 20 different packages; all candidates remain quarantined | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
+| 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 assigns 32 prior-file retries, four history-recovery entrypoints and 30 deterministic backups across 60 flat peers; no Round 5 output is admitted | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary production admission | 🟦 | The signed ownership verifier is green; all 36 detected production boundaries still lack signed receipts | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit signed replacement or retention decision |
 | 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
 | 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |
@@ -783,7 +822,7 @@ table is navigation, not authority.
 | `.fungi` source-quality gate | 🟩 | Zero findings at the last full checkpoint |
 | Retirement verifier implementation | 🟩 | Complete and hardened: fresh self-test **12/12 top-level adversarial tests** passes. The earlier 16/16 focused checkpoint remains historical evidence. Schema v3 separates non-authorizing candidates from hybrid-signed production lanes, requires bounded canonical UTF-8 JSON and refuses text claimed as production execution; the verifier also refuses tracked TypeScript, unexecuted or stale-ledger Fungi, unowned host boundaries, nested package identities, package-local dependency trees and substituted evidence |
 | Terminal retirement admission | 🟥 | Correctly refused by the completed verifier. The bounded Galerina→SLIDE reference switch is green; clear remaining dependencies in order: production `.fungi` admission → package conversion → host-boundary ownership → flat dependency tooling → final admission. Current exact debt is 496 tracked package `.ts` paths, 111 production `.fungi` sources requiring admission, 36 unowned production host boundaries, 95 `node_modules` trees and one nested native package. Schema v2 contains two non-authorizing candidates and zero production entries; no percentage, exemption, R4 shadow-bake fact or fallback can make this green |
-| Fungi staging/compiler repair chapter | 🟩 maintained standard / 🟨 external candidates | Dossier audit 10/10; four earlier staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Round 4 now samples 20 tracked TypeScript files from 20 different packages and uses the maintained type-first control/effect worked map. Candidates remain quarantined pending per-file parity, executable SLIDE evidence and governed admission |
+| Fungi staging/compiler repair chapter | 🟩 maintained standard / 🟨 external candidates | Dossier audit 10/10; four earlier staged files strict-clean; `for x in xs` lexical resolver scope proved; compiler 5,755/5,755; direct no-shell test boundary 47/47. Round 5 is issued for 66 tracked paths across 60 flat peers and uses the maintained type-first control/effect worked map. No Round 5 candidate/report exists yet; all staging remains quarantined pending per-file parity, executable SLIDE evidence and governed admission |
 | Read-only production check | 🟩 | `check FILE --strict-governance` enforces production effect, tier and value-state rules without emitting build/signing artefacts |
 | Effect authority | 🟩 | Structured registry covers clocks, model operations, governed services/payments, helper propagation, PII/PHI reads and audit evidence |
 | Hardware fallback | 🟩 | Non-CPU targets without explicit fallback fail with `FUNGI-TARGET-001` |

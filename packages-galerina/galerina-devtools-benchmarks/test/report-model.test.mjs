@@ -91,6 +91,42 @@ test("memory rows display the lower-is-better bytes/op scores that actually choo
   assert.doesNotMatch(markdown, /\| 900 \| 100 \|/u);
 });
 
+test("native-controls-only scope ranks controls without implying a missing Galerina subject", () => {
+  const rows = buildCrossLanguageRows([{
+    benchmark: "spectral-norm",
+    metricClass: "cpu-throughput",
+    units: { comparable: true, status: "PASS", unit: "A-evals/s" },
+    results: {
+      rust: { normThroughput: 300 },
+      nodejs: { normThroughput: 200 },
+      python: { normThroughput: 100 },
+    },
+  }]);
+
+  assert.equal(rows[0].comparisonScope, "native-controls-only");
+  assert.equal(rows[0].interpretation.winner, "Rust");
+  assert.equal(rows[0].interpretation.galerinaPlace, "not applicable - native controls only");
+  assert.match(rows[0].interpretation.explanation, /deliberately excludes a Galerina subject/u);
+});
+
+test("reference-only scope keeps both observed references outside Galerina production ranking", () => {
+  const rows = buildCrossLanguageRows([{
+    benchmark: "verified-native-operation",
+    metricClass: "cpu-throughput",
+    units: { comparable: true, status: "PASS", unit: "element-reads/s" },
+    results: {
+      rust: { normThroughput: 300 },
+      checkedReference: { normThroughput: 100 },
+      slideReference: { normThroughput: 200 },
+    },
+  }]);
+
+  assert.equal(rows[0].comparisonScope, "reference-only");
+  assert.equal(rows[0].interpretation.winner, "Rust");
+  assert.equal(rows[0].interpretation.galerinaPlace, "not applicable - references are unranked");
+  assert.match(rows[0].interpretation.explanation, /reference lanes remain visible but unranked/u);
+});
+
 test("the report names the frozen old-Wasm baseline and defers until a real SLIDE lane exists", () => {
   const markdown = buildReportMarkdown({
     baseline: null,

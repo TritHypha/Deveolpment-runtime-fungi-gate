@@ -1,0 +1,200 @@
+{
+  "schema": "slide.verified-loop-slide-benchmark-publication.v1",
+  "benchmark": {
+    "schema": "slide.verified-loop-slide-benchmark.v1",
+    "status": "MEASURED_NON_AUTHORIZING",
+    "evidenceK3": 0,
+    "authorityReleased": false,
+    "config": {
+      "warmups": 2,
+      "samples": 9,
+      "iterationsPerSample": 1000000
+    },
+    "lanes": {
+      "checkedPeer": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          1714400,
+          1724100,
+          1699000,
+          1704900,
+          1703100,
+          1704300,
+          1711800,
+          1728800,
+          1875700
+        ],
+        "medianNs": 1711800
+      },
+      "directControl": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          559800,
+          595800,
+          546300,
+          522300,
+          527600,
+          525100,
+          1282800,
+          526600,
+          527900
+        ],
+        "medianNs": 527900
+      },
+      "sourcePreparation": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          9053200,
+          9000100,
+          9034700,
+          8837300,
+          8960000,
+          9040500,
+          12016400,
+          8759100,
+          8771600
+        ],
+        "medianNs": 9000100
+      },
+      "sourceDemand": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          608100,
+          606800,
+          609600,
+          616600,
+          705900,
+          619200,
+          2934100,
+          1255800,
+          449400
+        ],
+        "medianNs": 616600
+      },
+      "sourceTotal": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          9661300,
+          9606900,
+          9644300,
+          9453900,
+          9665900,
+          9659700,
+          14950500,
+          10014900,
+          9221000
+        ],
+        "medianNs": 9659700
+      },
+      "slideCompilation": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          302100,
+          318900,
+          313900,
+          248000,
+          649500,
+          155400,
+          240900,
+          200600,
+          161300
+        ],
+        "medianNs": 248000
+      },
+      "slidePreparation": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          9006400,
+          8968000,
+          9150700,
+          8884500,
+          8748000,
+          8796100,
+          9056900,
+          8903400,
+          8800100
+        ],
+        "medianNs": 8903400
+      },
+      "slideDemand": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          613000,
+          970200,
+          717400,
+          609800,
+          602900,
+          622700,
+          629900,
+          1270300,
+          452800
+        ],
+        "medianNs": 622700
+      },
+      "slidePreparedTotal": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          9619400,
+          9938200,
+          9868100,
+          9494300,
+          9350900,
+          9418800,
+          9686800,
+          10173700,
+          9252900
+        ],
+        "medianNs": 9619400
+      },
+      "slideEndToEndTotal": {
+        "direction": "lower-is-better",
+        "unit": "nanoseconds-per-million-iteration-flow",
+        "samplesNs": [
+          9921500,
+          10257100,
+          10182000,
+          9742300,
+          10000400,
+          9574200,
+          9927700,
+          10374300,
+          9414200
+        ],
+        "medianNs": 9927700
+      }
+    },
+    "comparisons": {
+      "slidePreparationVsSourcePreparation": 0.9892556749369451,
+      "slideDemandVsSourceDemand": 1.0098929614012326,
+      "slideDemandVsChecked": 0.3637691319079332,
+      "slidePreparedTotalVsSourceTotal": 0.995828027785542,
+      "slideEndToEndVsSourceTotal": 1.0277441328405643
+    },
+    "checks": {
+      "expectedValue": 999999,
+      "exactResults": 90,
+      "failures": 0
+    },
+    "evidenceDigest": "sha256:7c2e83d8033e6ee4bd4cffb70971c7d58a8f17d7d5a2a40c028af98032c6d342"
+  },
+  "provenance": {
+    "commit": "710271581fa1806afe2f2820fb463592f17d7e63",
+    "dirty": false,
+    "generatedAt": "2026-08-03T08:44:26.667Z",
+    "platform": "win32",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+    "node": "v24.18.0"
+  },
+  "publicationDigest": "sha256:75b4ea4d18c4e60be8c6cda37a49fafec10e3feff9a7a00e059501cdcb74fe1d"
+}

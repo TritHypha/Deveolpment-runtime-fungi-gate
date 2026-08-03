@@ -23,6 +23,7 @@ import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseGovernanceDiff } from "./lib/phase-close-result.mjs";
+import { buildPhaseCloseTimingProfile } from "./lib/phase-close-profile.mjs";
 import suiteLeaseModule from "./lib/suite-run-lease.cjs";
 import ownedProcessModule from "./lib/owned-process-tree.cjs";
 
@@ -231,6 +232,7 @@ function finish() {
     },
   }));
   const failed = normalizedResults.filter((result) => !result.ok);
+  const profile = buildPhaseCloseTimingProfile(normalizedResults);
   const verdict = failed.length === 0
     ? options.reportOnly
       ? "REPORT_ONLY_PASS"
@@ -251,6 +253,7 @@ function finish() {
       passed: normalizedResults.length - failed.length,
       failed: failed.length,
     },
+    profile,
     results: normalizedResults,
   };
   if (options.json) {
@@ -263,6 +266,14 @@ function finish() {
         ? ` (${(result.durationMs / 1000).toFixed(1)}s)`
         : "";
       console.log(`${mark} ${result.name.padEnd(26)} ${result.detail}${time}`);
+    }
+    console.log("\n-- phase-close bottleneck tokens --");
+    if (profile.slowest.length === 0) {
+      console.log("No positive stage durations were recorded.");
+    } else {
+      for (const item of profile.slowest) {
+        console.log(`${item.token} ${item.name.padEnd(26)} ${(item.durationMs / 1000).toFixed(1)}s · ${item.sharePct.toFixed(1)}% of accounted stage time`);
+      }
     }
     if (verdict.startsWith("REPORT_ONLY")) {
       console.log(`\nphase-close: ${verdict}; no authority released.`);

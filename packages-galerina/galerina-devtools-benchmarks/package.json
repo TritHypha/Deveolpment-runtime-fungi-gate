@@ -34,13 +34,17 @@
       "src/report.mjs",
       "src/runner.mjs",
       "src/slide-vade-adapter.mjs",
+      "src/verified-native-operation-adapter.mjs",
+      "src/verified-native-operation-report.mjs",
       "src/snapshot.mjs",
       "src/variance.mjs"
     ],
     "loadedAssets": [
       "contracts/galerina-slide-transition-v1.json",
       "contracts/slide-v2g-vade-admission-v1.json",
+      "contracts/slide-verified-native-operation-admission-v1.json",
       "evidence/slide-v2g-verified-ahead-of-demand-b5aab13.json",
+      "evidence/slide-verified-native-operation-reference.json",
       "src/wasm-runner.mjs"
     ],
     "allowOrphans": [
@@ -60,6 +64,8 @@
     "run:governance-cost": "node --expose-gc src/runner.mjs --benchmark governance-cost",
     "run:call-chain": "node --expose-gc src/runner.mjs --benchmark call-chain",
     "run:passive": "node --expose-gc src/runner.mjs --benchmark hardware-targets",
+    "run:verified-native-operation": "node --expose-gc src/runner.mjs --benchmark verified-native-operation",
+    "report:verified-native-operation": "node src/verified-native-operation-report.mjs",
     "run:http": "node benchmarks/http-throughput/benchmark.mjs",
     "compare": "node src/compare.mjs",
     "report": "node src/report.mjs",

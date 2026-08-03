@@ -6,17 +6,25 @@ This document explains the adopted relationship between `unsafe let`,
 Hallmarks and the SLIDE Verified Object Kernel (VOK). It deliberately separates:
 
 - **current Galerina source forms**, which the compiler checks today; and
-- the **planned Verified Native Operation path**, which is not application
-  `.fungi` syntax and is not yet a general production authority.
+- the **implemented reference Verified Native Operation path**, which is not
+  application `.fungi` syntax and is not yet a general production authority.
 
 The example makes no claim that a Hallmark removes a bounds check or that the
 current compiler can emit a general VOK native operation.
 
-## One million iterations without one million authority decisions
+## One million iterations, with and without the permission
 
 The developer writes ordinary pointer-free `.fungi`, not an `unsafe while` and
-not a raw-memory loop. The complete checked example is
-[VERIFIED-MILLION-ITERATION-LOOP.fungi](VERIFIED-MILLION-ITERATION-LOOP.fungi):
+not a raw-memory loop. Both complete forms are kept as executable-checker
+examples:
+
+- [CHECKED-MILLION-ITERATION-LOOP.fungi](CHECKED-MILLION-ITERATION-LOOP.fungi)
+  has no verified-native permission and remains on ordinary checked execution;
+- [VERIFIED-MILLION-ITERATION-LOOP.fungi](VERIFIED-MILLION-ITERATION-LOOP.fungi)
+  adds one flow-local, target-scoped permission and may become a candidate for
+  independent SLIDE/VOK admission.
+
+The permission-present form is:
 
 ```fungi
 secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
@@ -70,19 +78,51 @@ optimization request must remain local to one execution boundary. It is also
 not written as `unsafe where`; `unsafe` already means untrusted boundary data
 in Galerina and must not become an unchecked-memory authority.
 
-The intended completed path pays proof and admission cost once for the whole
-closed loop. A future independent verifier must re-derive the facts and VOK
-must bind one affine lease to the exact collection generation, object, target
-and policy. That can remove repeated bounds and governance admission from the
-loop body. It cannot remove physical memory reads, required loop arithmetic or
-the runtime's ownership of allocation and cleanup.
+The reference path pays proof and admission cost once for the whole closed
+loop. The independent SLIDE verifier re-derives the exact-profile facts and VOK
+binds one affine lease to the collection generation, object, target and policy.
+That can remove repeated bounds and governance admission from the loop body. It
+cannot remove physical memory reads, required loop arithmetic or the runtime's
+ownership of allocation and cleanup.
 
 The contract does not authorize itself. Its canonical form contributes to the
 proof input; the compiler remains a proposal producer and VOK remains the final
-authority boundary. Until those independent stages exist, the checked semantic
-path remains the only executable path. Hallmarks cannot mint or impersonate
-this permission; the build-generated exclusions are listed in
+authority boundary. The implemented independent path is reference-only and
+cannot activate production `.slide` execution. Production therefore continues
+to use the checked semantic path. Hallmarks cannot mint or impersonate this
+permission; the build-generated exclusions are listed in
 [Hallmark non-authorities](../generated/HALLMARK-NON-AUTHORITIES.md).
+
+### Exact outcome of each form
+
+| Source form | Compiler result | Execution when not admitted |
+|---|---|---|
+| Permission absent | source gates pass; candidate `false`; K3 `-1`; `VERIFIED_NATIVE_PERMISSION_MISSING` | checked |
+| Permission present | exact-profile candidate `true`; K3 `0`; `INDEPENDENT_VERIFIER_UNAVAILABLE` inside the Galerina compiler | checked |
+
+The second K3 result is not silently upgraded by the separate laboratory
+implementation. The pinned SLIDE/VOK evidence is independently checked by the
+benchmark adapter and remains `referenceOnly: true` with
+`authorityReleased: false`.
+
+### Focused benchmark evidence
+
+The focused report is
+[Verified native-operation benchmark](../../packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.md),
+with an accompanying
+[SVG chart](../../packages-galerina/galerina-devtools-benchmarks/results/verified-native-operation-latest.svg).
+It compares the same one-million-element traversal and the same final value
+`999999`:
+
+- checked reference, permission absent: `584.2M element-reads/s`, `1.712 ms`;
+- SLIDE reference demand, permission present: `1.606B element-reads/s`,
+  `0.623 ms`;
+- measured reference demand ratio: `2.749x`.
+
+Higher throughput is better; lower phase time is better. Preparation and
+compilation remain visible in the phase table. Both Galerina/SLIDE lanes are
+unranked JavaScript reference evidence, so this result does not establish a
+production winner, native backend, general-loop speedup or authority release.
 
 ## Example scenario
 
@@ -225,10 +265,11 @@ terminal construct.
 
 ## Evidence boundary
 
-The current language examples prove frontend syntax and checking only. A
-production claim additionally requires independent executable SLIDE/VOK
-parity, hostile and mutation testing, platform evidence, lifecycle evidence,
-and paired performance measurements against the checked implementation.
+The language examples prove frontend syntax and checking. The pinned
+reference path additionally proves one exact independent SLIDE/VOK profile and
+paired laboratory measurement. A production claim still requires production
+integration, native/platform evidence, lifecycle evidence and authority
+release for the exact deployed object and context.
 
 Architecture ruling:
 `../../../ZTF-Knowledge-Bases/RD-0680-galerina-verified-native-operation-hallmark-vok-ruling.md`

@@ -74,6 +74,7 @@ const EXPECT_UNITS = {
   "framework-pipeline": "requests/s", "mandelbrot": "pixels/s", "spectral-norm": "A-evals/s",
   "binary-trees": "nodes/s", "matrix-multiply": "mul-adds/s",
   "tri-logic": "trit-ops/s", "data-query": "record-scans/s",
+  "verified-native-operation": "element-reads/s",
 };
 for (const [b, u] of Object.entries(EXPECT_UNITS)) {
   ok(benchmarkSpec(b)?.unit === u, `${b} unit = ${u}`);
