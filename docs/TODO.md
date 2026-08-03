@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0692 bounded deterministic fold physical/package path green - 2026-08-03
+
+- SLIDE commit `2a77234` closes the exact fold reference through a fixed
+  192-byte canonical source-free GIR, the existing `.slide` envelope,
+  independent re-admission, affine VOK, flat direct-peer package publication
+  and typed Safe Value receipt verification.
+- Every emitted-object byte mutation refuses. Package admission binds the exact
+  `[Array<Int>, Int] -> Int` ABI as `[10, 1] -> 1`; deliberate ABI relabelling
+  is refused before a package execution handle exists.
+- The existing publisher writes exclusively and the receipt last. Exact
+  `{ steps }` drives the fold work ceiling; insufficient work consumes the
+  handle and cannot retry. No nested package tree, parallel loader or fallback
+  was added.
+- Physical/fold regression evidence is 23/23, package/ABI/Safe-Value evidence
+  is 63/63 and complete SLIDE is 695/695 across 70 suites with Node 1 -> 1.
+  Contract integrity is 64 files, security closure is `+1` with evidence K3
+  `0`, and the 66-file tool identity verifies.
+- The exact RD-0692 family is complete as a non-authorizing reference path.
+  General bodies, authenticated production authority, native durability,
+  conversion and retirement remain open.
+
 ### RD-0692 bounded deterministic fold VOK binding green - 2026-08-03
 
 - SLIDE commit `8325149` binds the exact bounded fold's source/flow identity,
@@ -19,8 +40,9 @@ counts or open items that a newer section explicitly supersedes.
   across 70 suites with Node 1 -> 1. Contract integrity remains 64 files,
   security closure is `+1` with evidence K3 `0`, and the 64-file tool identity
   verifies.
-- Canonical GIR/physical `.slide`, flat package/typed receipt integration,
-  production authority, conversion and retirement remain open.
+- The newer RD-0692 physical/package checkpoint closes canonical `.slide` and
+  typed package integration. Production authority, conversion and retirement
+  remain open.
 
 ### RD-0692 bounded deterministic fold reference green - 2026-08-03
 
