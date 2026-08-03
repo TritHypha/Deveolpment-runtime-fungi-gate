@@ -4,18 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Next chapter queue after requested pause - 2026-08-03
+### Round 5 external conversion independently rejected - 2026-08-03
 
-- **External conversion Round 5 issued:** the new external quarantine assigns
-  32 exact prior-file retries, four honestly labelled history-recovery
-  entrypoints and 30 reproducibly selected backup files: 66 tracked paths
-  across 60 top-level package peers. All paths were present and tracked at
-  issuance. The worker must fully read and account every path; `NOT ASSESSED`
-  is not a final outcome and one blocker does not stop the batch. No candidate
-  is admitted without independent parity, checker, effect, graph, execution
-  and production-authority evidence.
-- The Round 5 handover is issued but no Round 5 candidate or report has been
-  produced. Package conversion remains the owner's independent lane.
+- The returned batch accounts for all 66 assigned TypeScript paths and writes
+  three strict-checker-clean files containing eight flows. None is admitted.
+- Independent review found a defective and already-superseded secret-gate
+  candidate, two partial candidates, five incorrectly labelled tractable rows
+  and no required per-file dossiers, control/effect ledgers or parity vectors.
+  Round 5 is retained only as a non-authorizing inventory.
+- **Current action:** re-measure actual compiler/runtime support for the
+  reported blocker families before issuing another conversion batch. A future
+  candidate requires positive, negative and mutation execution evidence in
+  addition to strict frontend acceptance.
+- Report:
+  `docs/reports/round-5-fungi-package-conversion-independent-review-2026-08-03.md`.
 
 ### Paired one-million verified-native benchmark green - 2026-08-03
 
