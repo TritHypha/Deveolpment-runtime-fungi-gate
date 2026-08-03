@@ -14,10 +14,11 @@ dependency-first peer set from real checked `.fungi` sources into canonical
 per-export `.slide` objects, derives package identity from those exact outputs,
 re-admits the descriptors through the flat ABI and executes exports through
 fresh VOK leases. A separate publisher writes the complete object set and one
-deterministic receipt through a private same-parent stage and non-overwriting
-directory transition, then re-verifies every byte. Build evidence is 5/5,
-publication is 3/3, their composed lanes are 11/11 and 8/8, and complete
-serial SLIDE is 446/446 across 39 suites with Node stable at one and contracts
+deterministic receipt through a private same-parent stage, exclusive target
+reservation and no-replace hard links. Artifacts are re-verified before the
+receipt is linked last; incomplete targets refuse. Build evidence is 5/5,
+publication is 4/4 and the composed lanes are 11/11 and 9/9. Complete serial
+evidence is 447/447 across 39 suites with Node stable at one and contracts
 24/24. Node power-loss durability remains K3 `0`; full-language semantics,
 signed production loading and the owner-reviewed conversion lane remain open.
 
@@ -449,7 +450,7 @@ flowchart TB
     E --> K --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
-    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · exact flow signatures<br/>438/438 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>closed non-overwriting directory<br/>446/446 · durability K3=0"] --> H
+    EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · exact flow signatures<br/>438/438 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>447/447 · durability K3=0"] --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
     ST --> H
@@ -573,7 +574,7 @@ table is navigation, not authority.
 | V2-D logical flow cleanup | 🟩 bounded reference | Private per-invocation region closes in `finally`; success and registered failure clear 15 logical bindings and 12 admitted semantic bytes. Pre-admission refusal is `NOT_OPENED`; hostile nested accessors/proxies are not invoked. This is not physical/native erasure or production authority |
 | Flat package ABI/import/resource floor | 🟩 bounded reference floor | Canonical deterministic-CBOR descriptors admit each top-level peer once, close exact dependency version/digest edges, derive one dependency-first order and resolve only exact direct-peer flow signatures. Typed resources contain no host path and grant no effect authority. Focused evidence is 6/6; complete serial SLIDE is 438/438 across 37 suites and the closed contract is 22/22. Multi-module compilation and production admission remain blue |
 | Checked `.fungi` multi-package build | 🟩 bounded reference floor | A closed peer set compiles real checked exports into canonical per-export `.slide` objects, derives package content identity from exact source/object facts, binds dependency descriptor digests in dependency-first order and re-admits the flat ABI before fresh VOK execution. Focused evidence is 5/5, composed ABI/build is 11/11 and complete serial SLIDE is 443/443 across 38 suites. General language semantics, production signing/loading and owner-reviewed conversion remain blue |
-| Physical checked-package publication | 🟩 bounded reference floor | An opaque build publishes all `.slide` objects plus one deterministic receipt through an exclusive same-parent stage and non-overwriting directory rename, with exact fileset/byte verification before and after. Focused evidence is 3/3, composed build/publication is 8/8 and complete serial SLIDE is 446/446 across 39 suites. Node records power-loss durability K3 `0`; native barriers and signed production evidence remain open |
+| Physical checked-package publication | 🟩 bounded reference floor | An opaque build stages and verifies all `.slide` objects, exclusively reserves the target, links each artifact without replacement, rechecks them and links the deterministic receipt last. Incomplete targets refuse. Focused evidence is 4/4, composed build/publication is 9/9 and complete serial SLIDE is 447/447 across 39 suites. Node records power-loss durability K3 `0`; native barriers and signed production evidence remain open |
 | V2-D topological schedule validation | 🟩 bounded proof | A changed 15-instruction order is admitted only after exact permutation and SSA/guard dominance proof, then matches every current runtime/lifecycle row. Copied, forged and hostile schedules refuse without source-order fallback. General rewrites, effects, native and artifact proof remain open |
 | V2-F direct Wasm compatibility adapter | 🟩 bounded executable evidence | Independent SLIDE commit `bb81c75` closes a direct GIR-to-binary route for the frozen V2-D checked-index profile: exact sections 1/3/5/7/10, zero imports, one internal memory page, one `(i32)->i64` export, all 15 admitted opcodes and a guard-dominated dynamically addressed array load. A separate parser verifies canonical structure and code identity before Node WebAssembly compilation. Execution is bound to the exact process-local artifact with a private `WeakMap`; copied, parsed, forged, proxied and cross-module artifacts refuse. V2-F is 13/13 focused; SLIDE is 295/295 across 17 suites; the frozen independent corpus remains 41/41 and Galerina's exact 28-file adapter corpus remains 496/496. Node/V8 is bootstrap compatibility only: no WAT, AST, Galerina callback, native certificate, production authority, component-removal permission or fallback is claimed |
 | V2-G Verified Ahead-of-Demand Execution | 🟩 bounded measured evidence | SLIDE commits `dacc8af`, `bec6bd2` and `b5aab13` bind one exact prepared V2-D plan, verified schedule and direct import-free V2-F instance to a process-local capsule. Demand re-admits one signed-i32 value and has no clean, WAT, Galerina or alternate-backend fallback. Copied, forged, proxied, serialized and cross-module capsules refuse. Full SLIDE passes 304/304 across 19 suites; Galerina's exact adapter harness remains 496/496 and independently invokes SLIDE 304/304 |

@@ -8,13 +8,13 @@
   order and the complete set is independently re-admitted through the flat
   ABI before fresh VOK execution.
 - A separate publisher writes every object plus one deterministic receipt
-  through an exclusive same-parent stage and non-overwriting directory
-  transition, then re-verifies the complete fileset and bytes. Public receipts
-  contain no absolute paths.
-- Build evidence is 5/5, publication is 3/3, composed lanes are 11/11 and 8/8,
-  and complete serial SLIDE is 446/446 across 39 suites with Node stable at
-  one. Contracts are 24/24; security closure is `+1` with authenticated
-  evidence K3 `0`.
+  through an exclusive same-parent stage, exclusive target reservation and
+  no-replace links. Artifacts are re-verified before the receipt is linked
+  last; incomplete targets refuse. Public receipts contain no absolute paths.
+- Build evidence is 5/5, publication is 4/4 and composed lanes are 11/11 and
+  9/9. Complete serial SLIDE evidence is 447/447 across 39 suites with Node
+  stable at one and contracts 24/24; security closure remains `+1` with
+  authenticated evidence K3 `0`.
 - Node power-loss durability is explicitly K3 `0`. A strict source-manifest
   CLI, full-language calls/expressions/effects, production signing/loading and
   the owner-reviewed package-conversion lane remain open. Counts are unchanged.
