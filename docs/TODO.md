@@ -23,6 +23,26 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 60 counted-sum VOK binding green - 2026-08-03
+
+- SLIDE commit `5602f3b` binds the exact Contract 59 counted-sum execution to
+  the existing VOK schema/evidence/proposal chain, eight-gate context
+  admission, one affine lease and terminal receipt. Contract 58 trip/work
+  certification occurs before VOK evidence or a handle exists.
+- Eleven loop-semantic gates and eight VOK authority gates remain separate; all
+  nineteen must allow. A changed target/policy/verifier context changes the
+  admission identity. Unknown/deny creates no execution handle.
+- Checked-result overflow consumes the lease as refused, so it cannot retry or
+  fall back. Success binds source, flow, admission, VOK terminal digest,
+  trip/body/total work and result in a frozen non-authorizing receipt.
+- Focused VOK/count-sum evidence is 20/20; the combined slice is 30/30; and
+  complete SLIDE is 668/668 across 70 suites with Node 1 -> 1. Contracts cover
+  63 files, security closure remains `+1` with K3 `0`, and the 61-file tool
+  identity verifies.
+- This exact reference now closes VOK binding, but physical `.slide`
+  serialization, package compilation/publication, general loop bodies and
+  production authority remain open. Package-conversion credit is unchanged.
+
 ### SLIDE Contract 59 counted-sum reference execution green - 2026-08-03
 
 - SLIDE commit `25e0a95` independently parses and executes one exact
