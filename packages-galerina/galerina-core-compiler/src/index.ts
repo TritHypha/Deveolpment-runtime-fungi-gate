@@ -1012,6 +1012,15 @@ export {
   type ProfileDiagnostic,
 } from "./profile-checker.js";
 
+// Verified Native Operation research floor: exact million-read loop proposal.
+// This analyzer never emits bytes or returns an authorizing (+1) verdict.
+export {
+  analyzeMillionReadLoopEnvelope,
+  type LoopEnvelopeTrit,
+  type VerifiedLoopEnvelopeFacts,
+  type VerifiedLoopEnvelopeProposal,
+} from "./verified-loop-envelope.js";
+
 // Phase 32 — Governance Diff (galerina diff main..branch)
 export {
   diffGovernance,
