@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE immutable-value operation registry executable - 2026-08-03
+
+- SLIDE commit `93600cb` implements Contract 41's append-only immutable-value
+  registry without changing the frozen V2-C descriptor or parent receipt
+  schemas.
+- Bounded Fungi now compiles exact `String ==/!=`, immutable `Bytes ==/!=`, and
+  exhaustive String-literal `match` through canonical GIR, independent
+  registry verification, portable VOK evidence, package-bound `.slide` and an
+  affine terminal receipt.
+- Registry ID/digest facts are explicit in compiler, preparation, inspection,
+  reference-bundle, package and execution evidence. Package content identity
+  also binds the pair. Parent/successor downgrade and gratuitous promotion
+  refuse.
+- Text remains capped at 256 UTF-8 bytes and Bytes at 1,024 bytes. No Unicode
+  normalization, host identity, pointers, ordering, mutation, concatenation,
+  slicing or fallback is admitted.
+- Fresh SLIDE evidence is 533/533 across 54 suites, contracts are 31/31, the
+  59-file tool identity verifies and security closure is `+1` with evidence K3
+  `0`.
+- This remains reference-only. General collections/resources/effects,
+  production admission, owner-reviewed package conversion and terminal
+  retirement remain open.
+
 ### Physical package bounded Bytes pass-through green - 2026-08-03
 
 - SLIDE commit `c6a8a24` carries an immutable Fungi `Bytes` parameter/result
@@ -19,9 +42,9 @@ counts or open items that a newer section explicitly supersedes.
 - Focused evidence is 33/33. Complete SLIDE is 525/525 across 53 suites;
   contracts pass 29/29; benchmark and security closure verify; and the 59-file
   tool identity verifies.
-- Bytes comparison/matching/mutation/concatenation/slicing remain closed. They
-  require an append-only registry successor, not changed V2-C opcode meanings.
-  Production authority and package conversion remain open.
+- The later `93600cb` successor supersedes only exact Bytes equality and
+  inequality. Bytes matching, mutation, concatenation and slicing remain
+  closed. Production authority and package conversion remain open.
 
 ### Physical package bounded String parameter receipt green - 2026-08-03
 
@@ -37,9 +60,10 @@ counts or open items that a newer section explicitly supersedes.
 - Focused evidence is 30/30. Complete SLIDE is 522/522 across 53 suites;
   contracts pass 29/29; benchmark and security closure verify; and the 59-file
   tool identity verifies.
-- String comparison/matching, concatenation and generalized resource
-  accounting remain closed. Physical Bytes/collections/resources/effects,
-  production authority and package conversion remain open.
+- The later `93600cb` successor supersedes exact String equality/inequality and
+  exhaustive literal matching. Concatenation and generalized resource
+  accounting remain closed. Collections/resources/effects, production
+  authority and package conversion remain open.
 
 ### Physical package literal String receipt green - 2026-08-03
 
