@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Physical package bounded String parameter receipt green - 2026-08-03
+
+- SLIDE commit `f0449d2` extends the bounded physical String result route with
+  exact String parameters and runtime passage through an earlier Fungi flow.
+- Portable VEO privately retains the exact parameter-type vector. It admits
+  only primitive, well-formed Unicode strings whose canonical UTF-8 encoding
+  is at most 4,096 bytes; boxed strings, lone surrogates, oversized values,
+  type mismatches, accessors, proxies and surplus arguments refuse.
+- V2-C owns the encoded input bytes and returns a fresh owned result before the
+  existing physical UTF-8 and Safe Value re-admission boundary.
+- Focused evidence is 30/30. Complete SLIDE is 522/522 across 53 suites;
+  contracts pass 29/29; benchmark and security closure verify; and the 59-file
+  tool identity verifies.
+- String comparison/matching, concatenation and generalized resource
+  accounting remain closed. Physical Bytes/collections/resources/effects,
+  production authority and package conversion remain open.
+
 ### Physical package literal String receipt green - 2026-08-03
 
 - SLIDE commit `d136afd` adds a bounded literal-result `String` profile to the
@@ -16,10 +33,9 @@ counts or open items that a newer section explicitly supersedes.
 - Focused compiler/executor/loader evidence is 23/23. Complete SLIDE is
   519/519 across 53 suites; contracts pass 29/29; benchmark and security
   closure verify; the 59-file tool identity verifies; and Node remains 1 -> 1.
-- This does **not** advertise a general String ABI. String parameters,
-  equality/matching, concatenation and bounded resource accounting still
-  refuse. Physical Bytes/collections/resources/effects, production authority
-  and package conversion remain open.
+- This did **not** advertise a general String ABI. The later `f0449d2`
+  checkpoint supersedes the parameter refusal only; equality/matching,
+  concatenation and generalized resource accounting still refuse.
 
 ### Physical package K3 Verdict receipt green - 2026-08-03
 
