@@ -13,6 +13,19 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 50's internal immutable-record flow is green as a
+bounded reference implementation. The sole admitted record schema can cross an
+internal pure helper parameter or result through existing `fixture_record`,
+call and return semantics, while direct selection of any record-bearing flow
+refuses. The package entrypoint therefore remains on the existing external
+value boundary. Focused record input/result/composition/refusal evidence is
+5/5, including flat execution, physical publication and typed-receipt
+re-admission. Complete SLIDE is 614/614 across 63 suites. Contracts cover 45
+files; benchmark, security closure `+1` with evidence K3 `0`, and the 59-file
+tool identity verify. This adds no opcode, registry or authority. External or
+general records, variants, mutation, loops/effects, callbacks, production
+authority and package conversion remain blue.
+
 Roadmap refresh: Contract 49's Bool-only condition algebra is green as a
 bounded reference implementation. Unary `not`, short-circuit `and` and the
 existing short-circuit `or` now parse with exact comparison/`not`/`and`/`or`
@@ -836,7 +849,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + Array/Option + one immutable record local<br/>609/609 · Contract 49 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + Array/Option + internal immutable record helpers<br/>614/614 · Contract 50 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

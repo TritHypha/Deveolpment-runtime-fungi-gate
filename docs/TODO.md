@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 50 internal immutable-record flow green - 2026-08-03
+
+- The sole bounded record schema may now cross an internal pure helper
+  parameter or result through existing `fixture_record`, call and return
+  semantics. No opcode, registry, effect, capability, Safe Value or receipt
+  field was added.
+- The selected package entrypoint must retain an already admitted external
+  value signature. Direct selection of a record-taking or record-returning flow
+  refuses before GIR, bundle, handle or package evidence is returned.
+- Focused input/result/composition/refusal/package evidence is 5/5, including
+  physical publication and typed-receipt re-admission. Complete SLIDE is
+  614/614 across 63 suites; contracts cover 45 files; benchmark, security
+  closure `+1` with evidence K3 `0`, and the 59-file tool identity verify;
+  Node is 1 -> 1.
+- This remains reference-only. External/general records, multiple/nested
+  records, variants, mutation, loops/effects, callbacks, production authority,
+  owner-reviewed external conversion and terminal retirement remain open.
+
 ### SLIDE Contract 49 Bool condition algebra green - 2026-08-03
 
 - Independent SLIDE now admits Bool-only `not`, short-circuit `and` and the
