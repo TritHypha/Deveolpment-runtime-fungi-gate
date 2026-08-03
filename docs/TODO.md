@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Physical package bounded Bytes pass-through green - 2026-08-03
+
+- SLIDE commit `c6a8a24` carries an immutable Fungi `Bytes` parameter/result
+  through an exact earlier-flow call, canonical GIR, `.slide`, portable VEO,
+  V2-C and the physical Safe Value receipt boundary.
+- Portable VEO and V2-C independently require an ordinary fixed full
+  `Uint8Array` over an ordinary non-resizable `ArrayBuffer`, capped at the
+  frozen V2-C `limit.byte_bytes=1,024`. Buffer, partial/derived views, Proxy,
+  oversize, type mismatch and post-snapshot mutation refuse.
+- Successful values are copied at each host boundary. Physical provenance
+  binds raw length-prefixed bytes, and Safe Value re-admission compares exact
+  byte content rather than object identity.
+- Focused evidence is 33/33. Complete SLIDE is 525/525 across 53 suites;
+  contracts pass 29/29; benchmark and security closure verify; and the 59-file
+  tool identity verifies.
+- Bytes comparison/matching/mutation/concatenation/slicing remain closed. They
+  require an append-only registry successor, not changed V2-C opcode meanings.
+  Production authority and package conversion remain open.
+
 ### Physical package bounded String parameter receipt green - 2026-08-03
 
 - SLIDE commit `f0449d2` extends the bounded physical String result route with
