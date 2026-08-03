@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 49 Bool condition algebra green - 2026-08-03
+
+- Independent SLIDE now admits Bool-only `not`, short-circuit `and` and the
+  existing short-circuit `or` with exact precedence. Repeated `not` is allowed;
+  `Verdict` remains K3 and must terminate through `check`.
+- The implementation uses only existing conditional branches and jumps. It
+  adds no opcode, registry, type, effect, capability, runtime value or receipt
+  field. Checked division proves that unreachable `and`/`or` edges are not
+  evaluated while reached refusing edges still fail closed.
+- Focused behavior/refusal evidence is 5/5 and inherited compiler,
+  publication, grouping and record evidence is 55/55. Complete SLIDE is
+  609/609 across 62 suites; contracts cover 44 files; recorded benchmark,
+  security closure `+1` with evidence K3 `0`, and the 59-file tool identity
+  verify; Node is 1 -> 1.
+- This remains reference-only. Grouped whole conditions, ternary/nullish
+  behavior, Float, mutation, loops/effects, callbacks, production authority,
+  owner-reviewed external conversion and terminal retirement remain open.
+
 ### SLIDE Contract 48 immutable record local green - 2026-08-03
 
 - Independent SLIDE now admits one bounded immutable record schema, local

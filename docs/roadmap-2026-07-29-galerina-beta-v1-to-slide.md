@@ -13,6 +13,18 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 49's Bool-only condition algebra is green as a
+bounded reference implementation. Unary `not`, short-circuit `and` and the
+existing short-circuit `or` now parse with exact comparison/`not`/`and`/`or`
+precedence and lower only to existing branches and jumps. `Verdict` is never
+coerced: K3 remains terminal through `check`. Focused evidence is 5/5,
+inherited compiler/publication/grouping/record evidence is 55/55, and complete
+SLIDE is 609/609 across 62 suites. Contracts cover 44 files; benchmark,
+security closure `+1` with evidence K3 `0`, and the 59-file tool identity
+verify. This adds no opcode, registry or authority. Grouped whole conditions,
+ternary/nullish behavior, Float, mutation, loops/effects, callbacks,
+production authority and package conversion remain blue.
+
 Roadmap refresh: Contract 48's bounded immutable record-local slice is green as
 a reference implementation. One module schema with one to eight exact ordered
 fields now crosses checked-Fungi, canonical V2-C record opcodes 17/18,
@@ -824,7 +836,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + exact String/Bytes + Array/Option + one immutable record local<br/>604/604 · Contract 48 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + Array/Option + one immutable record local<br/>609/609 · Contract 49 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
