@@ -49,6 +49,32 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   soft. Each item needs measured refactoring or a narrow justified disposition;
   no blanket exemption was added.
 
+### SLIDE Contract 42 immutable Array and Option profile green - 2026-08-03
+
+- SLIDE now carries bounded immutable `Array<Int>` input, `.count()` and
+  checked `.get(Int) -> Option<Int>` through the independent
+  `.fungi -> GIR -> .slide -> portable VOK -> flat package -> physical receipt`
+  route.
+- The child registry is append-only. Frozen parent V2-C and Contract 41 keep
+  their prior behavior. Ordinary physical packages retain publication receipt
+  v1; a successor package uses v2 and binds an exact registry ID/digest pair
+  into package content identity and selected-artifact re-admission.
+- Arrays must be ordinary, dense, Int32-only and at most 16 elements. Proxy,
+  subclass, hole, accessor, surplus key, wrong value, oversize input and
+  post-snapshot drift refuse. Only an owned snapshot reaches execution.
+- Option lowering requires exact terminal `Some(binding)`, `None`, `_` arms.
+  Independent semantic verification refuses an `index_value` projection unless
+  its matching true edge is distinct, solely enters the success block and that
+  block dominates the projection.
+- Fresh SLIDE evidence is 550/550 across 55 suites; contracts are 33 files;
+  the 59-file tool manifest verifies at
+  `sha256:2f6efd907f990765dfce75aa4d6fccdd653052f538e838d5439935a26f03db0c`;
+  benchmark integrity verifies; security closure is `+1` with evidence K3 `0`;
+  and Node returns 1 -> 1.
+- This is reference-only. Array results/nesting/mutation/iteration, effects,
+  production authority, owner-reviewed package conversion and terminal
+  retirement remain closed or blue.
+
 ### SLIDE bounded Array literal count executable - 2026-08-03
 
 - SLIDE commit `bcfe9cb` compiles the real Galerina R6
@@ -60,9 +86,10 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
 - Fresh SLIDE evidence is 535/535 across 54 suites, contracts are 31/31, the
   59-file tool identity verifies and security closure is `+1` with evidence K3
   `0`.
-- Array input and `get -> Option` require the planned append-only Contract 42.
-  Mutation, append, iteration callbacks, Set/Map, production authority,
-  package conversion and terminal retirement remain open.
+- The newer Contract 42 checkpoint above supersedes the former Array-input and
+  `get -> Option` gap. Mutation, append, iteration callbacks, Set/Map,
+  production authority, package conversion and terminal retirement remain
+  open.
 
 ### SLIDE immutable-value operation registry executable - 2026-08-03
 

@@ -6,9 +6,9 @@ Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
 with the prior derived **8,831/8,831** package-test ledger, graph **5/5**, code
 index/registry/coverage current, benchmark publication fresh, and executable
 examples **233/233**. The current complete phase-close cadence passed every
-blocking gate in **497.4 seconds**, benchmark integrity has **60** passing tests,
-tooling has **345** passes plus two intentional skips, and Node returned
-**1 -> 1**.
+blocking gate in **845.7 seconds**, benchmark integrity has **60** passing tests,
+tooling has **346** passes, the security audit checked 31 files with zero
+errors, and Node returned to the one pre-existing MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -28,16 +28,19 @@ conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
 
-Roadmap refresh: bounded immutable `Array<Int>` literal construction and
-`.count()` are executable at SLIDE commit `bcfe9cb` using the already-frozen
-V2-C array/length operations. Galerina's real R6 syntax crosses package-bound
-`.slide`, portable VOK and one affine receipt. Literals are non-empty,
-Int32-only and capped at 16 elements; external Array parameters/results still
-refuse, so no host ABI or frozen registry behavior changed. Fresh SLIDE
-evidence is 535/535 across 54 suites, contracts are 31/31, the 59-file tool
-identity verifies and security closure is `+1` with evidence K3 `0`. Array
-input and `get -> Option` remain sequenced through append-only Contract 42;
-mutation, append, callbacks, Set/Map and production authority remain blue.
+Roadmap refresh: Contract 42's append-only immutable Array/Option child profile
+is green as a bounded reference implementation. Galerina-style `Array<Int>`
+parameters, `.count()` and checked `.get(Int) -> Option<Int>` now cross the
+independent `.fungi -> GIR -> .slide -> portable VOK -> flat package -> physical
+receipt` route. Exact terminal `Some(binding)`, `None`, `_` matching is required;
+the semantic verifier separately refuses value projection unless a distinct,
+single-predecessor success edge dominates it. Ordinary physical packages retain
+receipt v1, while
+successor packages select strict v2 registry evidence. Fresh SLIDE evidence is
+550/550 across 55 suites, contracts cover 33 files, the 59-file tool identity
+verifies, benchmark integrity verifies and security closure is `+1` with
+evidence K3 `0`. Array results/nesting/mutation/iteration, general effects,
+production authority and package conversion remain blue.
 
 Roadmap refresh: Contract 41's append-only immutable-value operation registry
 is executable at SLIDE commit `93600cb`. Bounded Fungi exact String/Bytes
@@ -744,7 +747,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>Int · Bool · K3 · String/Bytes exact ops green<br/>533/533 · reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar + exact String/Bytes + bounded Array/Option green<br/>550/550 · reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
