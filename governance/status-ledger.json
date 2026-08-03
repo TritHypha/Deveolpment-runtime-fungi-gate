@@ -26,7 +26,7 @@
     },
     {
       "id": "FUNGI-PACKAGE-RETIREMENT",
-      "summary": "Current debt is 496 TypeScript paths, 111 unexecuted Fungi sources, 36 host boundaries, 95 package dependency trees and one nested package. Each must reach zero through exact admission.",
+      "summary": "Current debt is 497 TypeScript paths, 111 unexecuted Fungi sources, 38 host boundaries, 95 package dependency trees and one nested package. Each must reach zero through exact admission.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {

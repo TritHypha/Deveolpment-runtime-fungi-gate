@@ -39,6 +39,10 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   evidence directory, candidate, experiment or terminal row outcome. The
   preflight itself was correct, but the submission stopped after seven control
   files and scored **22/100 (incomplete)**. Nothing was copied into Galerina.
+- **Compact status drift closed:** the live retirement line now reports 497
+  tracked TypeScript paths and 38 unowned host boundaries. A tooling regression
+  test compares every displayed retirement count with the generated retirement
+  authority, so a future hand-edited stale status fails the test suite.
 - **Open, report-only performance review:** `audit-perf-hotpath` still reports
   36 high-tier heuristics (31 AST child scans, three intentional synchronous
   ancestry/content reads, and two per-record sorts). Phase-close keeps this

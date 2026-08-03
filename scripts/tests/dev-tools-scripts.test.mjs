@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const SCRIPTS = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(SCRIPTS, "..");
 
 // ── DOC-004 doc↔source drift: a second fixture (version.json authority + crafted docs) ──
 const tmp2 = mkdtempSync(join(tmpdir(), "fungi-docdrift-"));
@@ -395,6 +396,25 @@ test("status: overall % is read from the NEWEST galerina percent-audit in the si
 });
 test("status: a sibling PRODUCT audit (tritmeshql-*) is excluded from the galerina % pick", () => {
   assert.ok(!/product-scope/.test(stOut), "tritmeshql audit is not selected as the galerina overall %");
+});
+
+test("status: package-retirement debt matches the generated retirement authority", () => {
+  const retirement = JSON.parse(readFileSync(
+    join(ROOT, "build", "ts-retirement", "ts-retirement.json"),
+    "utf8",
+  ));
+  const expected = [
+    `${retirement.totals.allTrackedTs} TypeScript paths`,
+    `${retirement.totals.unexecutedFungi} unexecuted Fungi sources`,
+    `${retirement.totals.unownedHostBridges} host boundaries`,
+    `${retirement.totals.nodeModulesTrees} package dependency trees`,
+    retirement.totals.nestedNativePackages === 1
+      ? "one nested package"
+      : `${retirement.totals.nestedNativePackages} nested packages`,
+  ];
+  for (const claim of expected) {
+    assert.match(stOut, new RegExp(claim), `live status retirement claim drifted: ${claim}`);
+  }
 });
 
 const statusLedger = join(tmp11, "status-ledger.json");
