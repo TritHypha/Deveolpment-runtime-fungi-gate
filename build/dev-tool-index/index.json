@@ -4,9 +4,9 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8831,
-    "devTools": 147,
+    "devTools": 148,
     "auditTools": 80,
-    "toolsInCadence": 62,
+    "toolsInCadence": 63,
     "proofs": 40
   },
   "packages": [
@@ -2707,6 +2707,19 @@
       ]
     },
     {
+      "name": "fungi-golden-probe.mjs",
+      "category": "util",
+      "purpose": "derive fail-closed checker/runtime evidence for the",
+      "selfTest": false,
+      "inCadence": true,
+      "concerns": [
+        "gate-wiring",
+        "diagnostics",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "gather-compiler-stage-hashes.mjs",
       "category": "util",
       "purpose": "RD-0528 Phase I-1 evidence producer (item d) for the COMPILER",
@@ -3120,6 +3133,7 @@
       "build-receipt-bound-slide-package.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
+      "fungi-golden-probe.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "gather-t2-twin-hashes.mjs",
@@ -3223,6 +3237,7 @@
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "fungi-golden-probe.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3283,6 +3298,7 @@
       "lint-conventions.mjs",
       "check-gate-injection.mjs",
       "debug-compiler-globs.mjs",
+      "fungi-golden-probe.mjs",
       "gather-compiler-stage-hashes.mjs",
       "hardening-show-derived.mjs",
       "test-compiler-subdirs.mjs"
@@ -3518,6 +3534,7 @@
       "build-process-warden.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "fungi-golden-probe.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"

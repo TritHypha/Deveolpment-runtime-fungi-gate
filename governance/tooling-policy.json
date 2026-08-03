@@ -262,6 +262,31 @@
       "provenance": "embedded",
       "tier": "phase-close"
     },
+    "scripts/fungi-golden-probe.mjs": {
+      "inputs": [
+        "docs/examples/golden",
+        "galerina.mjs",
+        "governance",
+        "packages-galerina/galerina-core-compiler/dist",
+        "scripts/fungi-golden-probe.mjs"
+      ],
+      "outputs": [
+        "build/fungi-capabilities/golden-manifest.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/fungi-golden-probe.mjs",
+        "--write"
+      ],
+      "check": [
+        "node",
+        "scripts/fungi-golden-probe.mjs",
+        "--check"
+      ],
+      "provenance": "embedded",
+      "tier": "phase-close"
+    },
     "scripts/generate-sbom.mjs": {
       "inputs": [
         "package-lock.json",

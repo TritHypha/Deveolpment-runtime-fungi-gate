@@ -212,6 +212,32 @@ function equalOutputState(first, second) {
   return true;
 }
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function atomicSiblingOutput(path, outputs) {
+  const slash = path.lastIndexOf("/");
+  const directory = slash === -1 ? "" : path.slice(0, slash + 1);
+  const filename = slash === -1 ? path : path.slice(slash + 1);
+  return outputs.some((output) => {
+    const outputSlash = output.lastIndexOf("/");
+    const outputDirectory = outputSlash === -1 ? "" : output.slice(0, outputSlash + 1);
+    const outputName = outputSlash === -1 ? output : output.slice(outputSlash + 1);
+    if (directory !== outputDirectory) return false;
+    return new RegExp(`^\\.${escapeRegex(outputName)}\\.[0-9a-f]{16}\\.tmp$`).test(filename);
+  });
+}
+
+function findUnexpectedWrites(run, outputSet, shadowRoot) {
+  return run.writes.filter((path) => {
+    if (outputSet.has(path)) return false;
+    if (!atomicSiblingOutput(path, [...outputSet])) return true;
+    const shadowPath = join(shadowRoot, "outputs", ...path.split("/"));
+    return existsSync(shadowPath);
+  });
+}
+
 function provenanceMissing(root, policy, shadowRoot) {
   if (policy.provenance !== "required") return false;
   const sidecars = policy.outputs.filter((path) => path.endsWith("provenance.json"));
@@ -243,9 +269,7 @@ export async function verifyGenerator(rootPath, generator) {
   try {
     const firstRun = runCommand(root, policy.generate, policy, sandboxRoot);
     const outputSet = new Set(policy.outputs);
-    const unexpectedWrites = firstRun.writes.filter(
-      (path) => !outputSet.has(path),
-    );
+    const unexpectedWrites = findUnexpectedWrites(firstRun, outputSet, sandboxRoot);
     if (unexpectedWrites.length > 0) {
       return fail(
         "GENERATOR-UNDECLARED-WRITE",
@@ -275,9 +299,7 @@ export async function verifyGenerator(rootPath, generator) {
 
     const firstOutputs = outputState(root, policy.outputs, sandboxRoot);
     const secondRun = runCommand(root, policy.generate, policy, sandboxRoot);
-    const secondUnexpected = secondRun.writes.filter(
-      (path) => !outputSet.has(path),
-    );
+    const secondUnexpected = findUnexpectedWrites(secondRun, outputSet, sandboxRoot);
     if (secondUnexpected.length > 0) {
       return fail(
         "GENERATOR-UNDECLARED-WRITE",

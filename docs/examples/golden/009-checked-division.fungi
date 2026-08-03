@@ -1,0 +1,9 @@
+@version 1
+/// GOLDEN: signed Int division is checked and zero divisor refuses.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/009-checked-division.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/009-checked-division.fungi --invoke divide 84 2
+/// EXPECT: exit 0; final value 42.
+pure flow divide(value: Int, divisor: Int) -> Int {
+  return value / divisor
+}

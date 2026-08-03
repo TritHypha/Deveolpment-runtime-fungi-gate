@@ -7,6 +7,12 @@
 > apply it (propose → compiler-verify → policy → human-approve). Intent strings must be
 > descriptive prose only (no logic/URLs/variables).
 
+> **Need one minimal construct that is proven against the current toolchain?**
+> Start with the [Executable Fungi Golden Pack](golden/README.md) and run
+> `npm run audit:fungi-golden`. It separates checker evidence from runtime
+> evidence and refuses stale generated results. It complements this corpus; it
+> does not replace the grammar or make an exhaustive capability claim.
+
 ## Status
 
 ```

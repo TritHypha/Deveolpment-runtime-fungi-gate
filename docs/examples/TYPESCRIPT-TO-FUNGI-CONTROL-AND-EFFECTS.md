@@ -8,11 +8,19 @@ grant runtime authority or prove parity with the TypeScript source.
 
 The compiler remains authoritative. The primary references are:
 
+- [Executable Golden Pack](golden/README.md) for minimal construct shapes that
+  are rechecked and, where the CLI admits their inputs, executed by a serial
+  probe;
 - [Control flow](../language/fungi/07-control-flow.md);
 - [Effects and capabilities](../language/fungi/03-effects-and-capabilities.md);
 - [Effect reference](../reference/effects.md); and
 - `packages-galerina/galerina-core-compiler/src/type-checker.ts` and
   `effect-checker.ts`.
+
+If prose and an executable example appear to disagree, rerun
+`npm run audit:fungi-golden` and inspect the generated manifest. A
+`CHECKER_PROVEN` entry establishes syntax, typing and zero diagnostics only;
+only an `EXECUTED` vector establishes behavior on its named surface.
 
 ## The decision rule
 

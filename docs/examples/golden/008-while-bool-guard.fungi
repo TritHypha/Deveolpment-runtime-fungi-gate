@@ -1,0 +1,13 @@
+@version 1
+/// GOLDEN: while guard is Bool and mutation is explicit.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/008-while-bool-guard.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/008-while-bool-guard.fungi --invoke countTo 5
+/// EXPECT: exit 0; final value 5.
+pure flow countTo(limit: Int) -> Int {
+  mut current: Int = 0
+  while current < limit {
+    current = current + 1
+  }
+  return current
+}

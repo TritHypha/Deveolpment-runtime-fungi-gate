@@ -22,6 +22,19 @@ const original = {
   unlinkSync: fs.unlinkSync,
   writeFileSync: fs.writeFileSync,
 };
+const originalPromises = {
+  access: fs.promises.access,
+  appendFile: fs.promises.appendFile,
+  copyFile: fs.promises.copyFile,
+  lstat: fs.promises.lstat,
+  mkdir: fs.promises.mkdir,
+  readFile: fs.promises.readFile,
+  rename: fs.promises.rename,
+  rm: fs.promises.rm,
+  stat: fs.promises.stat,
+  unlink: fs.promises.unlink,
+  writeFile: fs.promises.writeFile,
+};
 
 const root = path.resolve(process.env.GENERATOR_SANDBOX_ROOT || process.cwd());
 const shadow = path.resolve(process.env.GENERATOR_SANDBOX_SHADOW || "");
@@ -70,6 +83,25 @@ function declaredFile(candidate) {
   return allowed.has(candidate);
 }
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function atomicSiblingTarget(candidate) {
+  for (const output of allowed) {
+    if (path.dirname(candidate) !== path.dirname(output)) continue;
+    const pattern = new RegExp(
+      `^\\.${escapeRegex(path.basename(output))}\\.[0-9a-f]{16}\\.tmp$`,
+    );
+    if (pattern.test(path.basename(candidate))) return output;
+  }
+  return null;
+}
+
+function declaredWrite(candidate) {
+  return declaredFile(candidate) || atomicSiblingTarget(candidate) !== null;
+}
+
 function declaredDirectory(candidate) {
   const prefix = `${candidate}${path.sep}`;
   return [...allowed].some((item) => item.startsWith(prefix));
@@ -77,7 +109,7 @@ function declaredDirectory(candidate) {
 
 function mapRead(value) {
   const candidate = absolutePath(value);
-  if (candidate === null || !declaredFile(candidate)) return value;
+  if (candidate === null || !declaredWrite(candidate)) return value;
   const redirected = shadowPath(candidate);
   return original.existsSync(redirected) ? redirected : value;
 }
@@ -89,7 +121,7 @@ function mapWrite(value) {
   }
   if (relativeInside(candidate) === null) return value;
   record(candidate);
-  if (!declaredFile(candidate)) {
+  if (!declaredWrite(candidate)) {
     throw new Error(
       `GENERATOR_SANDBOX_UNDECLARED_WRITE:${path.relative(root, candidate)}`,
     );
@@ -149,6 +181,54 @@ fs.mkdirSync = function sandboxMkdir(pathValue, options) {
     );
   }
   return original.mkdirSync(shadowPath(candidate), options);
+};
+
+fs.promises.readFile = function sandboxReadFile(pathValue, ...args) {
+  return originalPromises.readFile(mapRead(pathValue), ...args);
+};
+fs.promises.stat = function sandboxStat(pathValue, ...args) {
+  return originalPromises.stat(mapRead(pathValue), ...args);
+};
+fs.promises.lstat = function sandboxLstat(pathValue, ...args) {
+  return originalPromises.lstat(mapRead(pathValue), ...args);
+};
+fs.promises.access = function sandboxAccess(pathValue, ...args) {
+  return originalPromises.access(mapRead(pathValue), ...args);
+};
+fs.promises.writeFile = function sandboxWriteFile(pathValue, ...args) {
+  return originalPromises.writeFile(mapWrite(pathValue), ...args);
+};
+fs.promises.appendFile = function sandboxAppendFile(pathValue, ...args) {
+  return originalPromises.appendFile(mapWrite(pathValue), ...args);
+};
+fs.promises.copyFile = function sandboxCopyFile(source, destination, ...args) {
+  return originalPromises.copyFile(mapRead(source), mapWrite(destination), ...args);
+};
+fs.promises.rename = function sandboxRename(source, destination, ...args) {
+  return originalPromises.rename(mapRead(source), mapWrite(destination), ...args);
+};
+fs.promises.unlink = function sandboxUnlink(pathValue, ...args) {
+  return originalPromises.unlink(mapWrite(pathValue), ...args);
+};
+fs.promises.rm = function sandboxRemove(pathValue, ...args) {
+  const candidate = absolutePath(pathValue);
+  if (candidate !== null && relativeInside(candidate) !== null) {
+    return originalPromises.rm(mapWrite(pathValue), ...args);
+  }
+  return originalPromises.rm(pathValue, ...args);
+};
+fs.promises.mkdir = function sandboxMkdir(pathValue, options) {
+  const candidate = absolutePath(pathValue);
+  if (candidate === null || relativeInside(candidate) === null) {
+    return originalPromises.mkdir(pathValue, options);
+  }
+  if (!declaredDirectory(candidate)) {
+    record(candidate);
+    throw new Error(
+      `GENERATOR_SANDBOX_UNDECLARED_DIRECTORY:${path.relative(root, candidate)}`,
+    );
+  }
+  return originalPromises.mkdir(shadowPath(candidate), options);
 };
 
 syncBuiltinESMExports();

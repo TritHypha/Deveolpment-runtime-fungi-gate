@@ -1,0 +1,275 @@
+{
+  "authority": {
+    "packageConversionAuthorized": false,
+    "productionAuthorityReleased": false,
+    "releaseAuthorized": false,
+    "retirementAuthorized": false
+  },
+  "examples": [
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "boolToInt",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "true"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "777",
+            "observedExitCode": 0,
+            "observedStdout": "777"
+          },
+          {
+            "arguments": [
+              "false"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "333",
+            "observedExitCode": 0,
+            "observedStdout": "333"
+          }
+        ]
+      },
+      "id": "001-bool-if",
+      "source": "docs/examples/golden/001-bool-if.fungi",
+      "sourceSha256": "sha256:6d4bba1ea48e44276463a07226d2721ebf6839e03a7e1ebaee76d69e23c6ad87"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "selectMode",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "2"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "20",
+            "observedExitCode": 0,
+            "observedStdout": "20"
+          }
+        ]
+      },
+      "id": "002-int-match",
+      "source": "docs/examples/golden/002-int-match.fungi",
+      "sourceSha256": "sha256:40984a55f631a1c4042d0f40b42aa5ce2cf2d99d055ae426db648b332cc285b7"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "selectModeResult",
+        "status": "EXECUTED",
+        "surface": "GOVERNED_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "9"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "Err(\"MODE\")",
+            "observedExitCode": 0,
+            "observedStdout": "Err(\"MODE\")"
+          }
+        ]
+      },
+      "id": "003-result-match",
+      "source": "docs/examples/golden/003-result-match.fungi",
+      "sourceSha256": "sha256:94037a24e84b5e2c33db9d217572984808aada20407c9af916b0b251efbeb5f5"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "reason": "The Galerina CLI has no admitted Verdict argument syntax; checker evidence is not execution parity.",
+        "status": "NOT_EXECUTED"
+      },
+      "id": "004-k3-check",
+      "source": "docs/examples/golden/004-k3-check.fungi",
+      "sourceSha256": "sha256:7b8dc65fedb81023e0448fc7042e4c7999c07e5ba457c90bbc66a77fa864a1f4"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "reason": "The Galerina CLI does not admit structured Array<Int> arguments.",
+        "status": "NOT_EXECUTED"
+      },
+      "id": "005-array-count",
+      "source": "docs/examples/golden/005-array-count.fungi",
+      "sourceSha256": "sha256:4915224d9374e2e5bbc88d50124508d47adddb2da77ef2165948c2a1fee26301"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "reason": "The Galerina CLI does not admit structured Array<Int> arguments.",
+        "status": "NOT_EXECUTED"
+      },
+      "id": "006-array-get-option",
+      "source": "docs/examples/golden/006-array-get-option.fungi",
+      "sourceSha256": "sha256:8d6fb7f25aef565bf9c1cdb7215ed5389640079828af1cf3607fe48339de7914"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "sameText",
+        "status": "EXECUTED",
+        "surface": "GOVERNED_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "ready",
+              "ready"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "true",
+            "observedExitCode": 0,
+            "observedStdout": "true"
+          }
+        ]
+      },
+      "id": "007-string-equality",
+      "source": "docs/examples/golden/007-string-equality.fungi",
+      "sourceSha256": "sha256:7f1018ccc2cbf38f2302b4765b468a8afd40e0b853adfb9fbb472611172d935e"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "countTo",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "5"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "5",
+            "observedExitCode": 0,
+            "observedStdout": "5"
+          }
+        ]
+      },
+      "id": "008-while-bool-guard",
+      "source": "docs/examples/golden/008-while-bool-guard.fungi",
+      "sourceSha256": "sha256:7d2ec5cc934248a1159c0c17eefb490beafcdfc0af631bc1083ad547bc0b89be"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "divide",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "84",
+              "2"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "42",
+            "observedExitCode": 0,
+            "observedStdout": "42"
+          },
+          {
+            "arguments": [
+              "1",
+              "0"
+            ],
+            "expectedExitCode": 1,
+            "expectedOutputIncludes": "divide by zero",
+            "observedExitCode": 1,
+            "observedOutputIncludes": "divide by zero"
+          }
+        ]
+      },
+      "id": "009-checked-division",
+      "source": "docs/examples/golden/009-checked-division.fungi",
+      "sourceSha256": "sha256:5cb76db28a77a08e0aa906273ca9ce5cca8462b6978259a56988d24b451e2b3a"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "remainder",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "-43",
+              "5"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "-3",
+            "observedExitCode": 0,
+            "observedStdout": "-3"
+          },
+          {
+            "arguments": [
+              "1",
+              "0"
+            ],
+            "expectedExitCode": 1,
+            "expectedOutputIncludes": "remainder by zero",
+            "observedExitCode": 1,
+            "observedOutputIncludes": "remainder by zero"
+          }
+        ]
+      },
+      "id": "010-checked-remainder",
+      "source": "docs/examples/golden/010-checked-remainder.fungi",
+      "sourceSha256": "sha256:d09bf05708a87f99181e223f9bc401c343a33aa69593c1a30e8f334e030d155e"
+    }
+  ],
+  "exhaustiveLanguageManifest": false,
+  "inputs": {
+    "caseDefinition": "docs/examples/golden/cases.json",
+    "caseDefinitionSha256": "sha256:b88286a5758e37fa249b80166c614857f1d69b35ad2d489776cb2cf53f467a24",
+    "probeRunner": "scripts/fungi-golden-probe.mjs",
+    "probeRunnerSha256": "sha256:96b1a994f184b632f61152476f503c4e2d71e61b73482718fae70aae2cfad677"
+  },
+  "schema": "galerina.fungi-golden-manifest.v1",
+  "status": "PROBE_DERIVED_REFERENCE_ONLY",
+  "summary": {
+    "checked": 10,
+    "executedExamples": 7,
+    "executionVectors": 10,
+    "notExecutedExamples": 3
+  },
+  "toolchain": {
+    "runtimeClosureFileCount": 219,
+    "runtimeClosureSha256": "sha256:8c748494d339e052fd1923899de05a4c820040f2af59509d1a206ebc0de78629"
+  }
+}

@@ -1,0 +1,15 @@
+@version 1
+/// GOLDEN: non-K3 selector preserves a named failure with Result.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/003-result-match.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/003-result-match.fungi --invoke selectModeResult 9 --governed
+/// EXPECT: exit 0; governed Result contains MODE.
+pure flow selectModeResult(mode: Int) -> Result<Int,String>
+contract { intent { "Select one admitted mode and preserve invalid-mode failure." } }
+{
+  match mode {
+    1 => return Ok(10)
+    2 => return Ok(20)
+    _ => return Err("MODE")
+  }
+}

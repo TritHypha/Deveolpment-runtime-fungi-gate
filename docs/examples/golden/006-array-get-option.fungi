@@ -1,0 +1,13 @@
+@version 1
+/// GOLDEN: checked Array.get returns Option and uses exhaustive match.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/006-array-get-option.fungi --strict-types --strict-governance
+/// RUN: not admitted by the Galerina CLI because structured Array<Int> arguments are unsupported.
+pure flow getOrZero(values: Array<Int>, index: Int) -> Int {
+  let selected: Option<Int> = values.get(index)
+  match selected {
+    Some(value) => return value
+    None => return 0
+    _ => return 0
+  }
+}

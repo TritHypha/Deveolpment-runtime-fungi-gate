@@ -1,0 +1,9 @@
+@version 1
+/// GOLDEN: signed Int remainder is checked and zero divisor refuses.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/010-checked-remainder.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/010-checked-remainder.fungi --invoke remainder -43 5
+/// EXPECT: exit 0; final value -3.
+pure flow remainder(value: Int, divisor: Int) -> Int {
+  return value % divisor
+}

@@ -67,6 +67,30 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   8/8 and independent SLIDE checked-package probing is 16/16, with Node 1 -> 1.
   Its generated toolchain-pinned manifest is explicitly probe-derived,
   non-exhaustive and reference-only.
+- **Executable Golden Pack promoted into Galerina:** ten minimal construct
+  sources now live beside the canonical example documentation and strict-check
+  **10/10** with zero errors and zero governance warnings. Seven examples carry
+  **10/10** exact raw/governed CLI vectors, including division-by-zero and
+  remainder-by-zero refusal; three structured/K3 examples remain honestly
+  `NOT_EXECUTED` because the Galerina CLI cannot admit those argument types.
+  `scripts/fungi-golden-probe.mjs` derives a deterministic manifest from exact
+  source, case, runner and executed runtime-closure digests. Its `--check` mode
+  refuses drift, failed probes cannot replace prior evidence, execution is
+  serial with Node returning 1 -> 1, and all authority flags remain false.
+  It is registered as the sixteenth governed generator. During that admission,
+  a promises-based filesystem escape in the generator sandbox was reproduced
+  and closed: synchronous and promise APIs now share the same declared-output
+  isolation, narrowly named atomic sibling temporaries must be removed, and an
+  undeclared async write refuses. Focused sandbox evidence is 7/7 and the full
+  generator contract is 16/16.
+- **Golden Pack phase-close evidence:** the first integrated cadence correctly
+  refused a stale generated code index at 86/87. After regenerating the code
+  index, registry and coverage outputs, one uninterrupted owned-process rerun
+  passed **87/87** in **530.3 seconds**. The Golden Pack gate passed, tooling is
+  **358 tests**, generator governance is **16/16**, security reports zero
+  findings/errors, and Node returned **1 -> 1**. This evidence authorizes the
+  repository checkpoint only; every generated manifest authority flag remains
+  false.
 - **Compact status drift closed:** the live retirement line now reports 497
   tracked TypeScript paths and 38 unowned host boundaries. A tooling regression
   test compares every displayed retirement count with the generated retirement

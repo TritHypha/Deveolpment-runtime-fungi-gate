@@ -1,0 +1,10 @@
+@version 1
+/// GOLDEN: Boolean guard uses if.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/001-bool-if.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/001-bool-if.fungi --invoke boolToInt true
+/// EXPECT: exit 0; final value 777.
+pure flow boolToInt(value: Bool) -> Int {
+  if value { return 777 }
+  return 333
+}

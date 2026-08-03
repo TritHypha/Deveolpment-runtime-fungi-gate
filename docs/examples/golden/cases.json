@@ -1,0 +1,126 @@
+{
+  "schema": "galerina.fungi-golden-cases.v1",
+  "examples": [
+    {
+      "id": "001-bool-if",
+      "source": "001-bool-if.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "boolToInt",
+        "vectors": [
+          { "arguments": ["true"], "expectedStdout": "777" },
+          { "arguments": ["false"], "expectedStdout": "333" }
+        ]
+      }
+    },
+    {
+      "id": "002-int-match",
+      "source": "002-int-match.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "selectMode",
+        "vectors": [
+          { "arguments": ["2"], "expectedStdout": "20" }
+        ]
+      }
+    },
+    {
+      "id": "003-result-match",
+      "source": "003-result-match.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "GOVERNED_CLI",
+        "flow": "selectModeResult",
+        "vectors": [
+          { "arguments": ["9"], "expectedStdout": "Err(\"MODE\")" }
+        ]
+      }
+    },
+    {
+      "id": "004-k3-check",
+      "source": "004-k3-check.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "NOT_EXECUTED",
+        "reason": "The Galerina CLI has no admitted Verdict argument syntax; checker evidence is not execution parity."
+      }
+    },
+    {
+      "id": "005-array-count",
+      "source": "005-array-count.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "NOT_EXECUTED",
+        "reason": "The Galerina CLI does not admit structured Array<Int> arguments."
+      }
+    },
+    {
+      "id": "006-array-get-option",
+      "source": "006-array-get-option.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "NOT_EXECUTED",
+        "reason": "The Galerina CLI does not admit structured Array<Int> arguments."
+      }
+    },
+    {
+      "id": "007-string-equality",
+      "source": "007-string-equality.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "GOVERNED_CLI",
+        "flow": "sameText",
+        "vectors": [
+          { "arguments": ["ready", "ready"], "expectedStdout": "true" }
+        ]
+      }
+    },
+    {
+      "id": "008-while-bool-guard",
+      "source": "008-while-bool-guard.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "countTo",
+        "vectors": [
+          { "arguments": ["5"], "expectedStdout": "5" }
+        ]
+      }
+    },
+    {
+      "id": "009-checked-division",
+      "source": "009-checked-division.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "divide",
+        "vectors": [
+          { "arguments": ["84", "2"], "expectedStdout": "42" },
+          { "arguments": ["1", "0"], "expectedExitCode": 1, "expectedOutputIncludes": "divide by zero" }
+        ]
+      }
+    },
+    {
+      "id": "010-checked-remainder",
+      "source": "010-checked-remainder.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "remainder",
+        "vectors": [
+          { "arguments": ["-43", "5"], "expectedStdout": "-3" },
+          { "arguments": ["1", "0"], "expectedExitCode": 1, "expectedOutputIncludes": "remainder by zero" }
+        ]
+      }
+    }
+  ]
+}

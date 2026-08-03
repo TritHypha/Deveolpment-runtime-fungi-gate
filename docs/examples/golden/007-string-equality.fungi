@@ -1,0 +1,10 @@
+@version 1
+/// GOLDEN: declared String arguments use the governed CLI.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/007-string-equality.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/007-string-equality.fungi --invoke sameText ready ready --governed
+/// EXPECT: exit 0; governed Bool is true.
+pure flow sameText(left: String, right: String) -> Bool {
+  if left == right { return true }
+  return false
+}

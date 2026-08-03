@@ -1,0 +1,13 @@
+@version 1
+/// GOLDEN: non-K3 Int selector uses exhaustive match and plain Int returns.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/002-int-match.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/002-int-match.fungi --invoke selectMode 2
+/// EXPECT: exit 0; final value 20.
+pure flow selectMode(mode: Int) -> Int {
+  match mode {
+    1 => return 10
+    2 => return 20
+    _ => return 0
+  }
+}

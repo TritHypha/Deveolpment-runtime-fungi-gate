@@ -1,0 +1,8 @@
+@version 1
+/// GOLDEN: bounded immutable Array<Int> count.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/005-array-count.fungi --strict-types --strict-governance
+/// RUN: not admitted by the Galerina CLI because structured Array<Int> arguments are unsupported.
+pure flow listLen(values: Array<Int>) -> Int {
+  return values.count()
+}

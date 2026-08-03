@@ -689,6 +689,11 @@ flowchart LR
   T_flat_package_root_lock_mjs --> C_diagnostics
   T_fungi_astshape_mjs["fungi-astshape.mjs"]
   T_fungi_astshape_mjs --> C_secrets_privacy
+  T_fungi_golden_probe_mjs["fungi-golden-probe.mjs"]
+  T_fungi_golden_probe_mjs --> C_gate_wiring
+  T_fungi_golden_probe_mjs --> C_diagnostics
+  T_fungi_golden_probe_mjs --> C_source_hygiene
+  T_fungi_golden_probe_mjs --> C_graph_index
   T_gather_compiler_stage_hashes_mjs["gather-compiler-stage-hashes.mjs"]
   T_gather_compiler_stage_hashes_mjs --> C_effects
   T_gather_compiler_stage_hashes_mjs --> C_signing_fusion

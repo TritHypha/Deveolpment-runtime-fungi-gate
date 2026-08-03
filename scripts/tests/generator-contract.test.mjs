@@ -103,6 +103,73 @@ test("an undeclared generated write is refused", async () => {
   }
 });
 
+test("an undeclared promises-based generated write is refused", async () => {
+  const { root, generator } = generatorFixture();
+  write(
+    root,
+    generator,
+    `import { mkdir, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+const root = process.cwd();
+if (process.argv.includes("--check")) process.exit(0);
+for (const relativePath of ["build/declared.json", "build/provenance.json", "build/hidden.json"]) {
+  const path = join(root, relativePath);
+  await mkdir(dirname(path), { recursive: true });
+  const value = relativePath.endsWith("provenance.json")
+    ? { tool: "fake-generator", gitCommit: "a".repeat(40), builtAt: "2026-07-29T10:00:00.000Z", node: process.version, inputs: ["input/source.txt"] }
+    : { value: "stable" };
+  await writeFile(path, JSON.stringify(value, null, 2) + "\\n");
+}
+`,
+  );
+  try {
+    const result = await verifyGenerator(root, generator);
+    assert.equal(result.ok, false);
+    assert.equal(result.code, "GENERATOR-UNDECLARED-WRITE");
+    assert.deepEqual(result.unexpectedWrites, ["build/hidden.json"]);
+    assert.equal(existsSync(join(root, "build", "hidden.json")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a promises-based atomic sibling write stays isolated", async () => {
+  const { root, generator } = generatorFixture();
+  write(
+    root,
+    generator,
+    `import { mkdir, rename, rm, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+const root = process.cwd();
+if (process.argv.includes("--check")) process.exit(0);
+const output = join(root, "build/declared.json");
+const temporary = join(root, "build/.declared.json.0123456789abcdef.tmp");
+await mkdir(dirname(output), { recursive: true });
+try {
+  await writeFile(temporary, JSON.stringify({ value: "stable" }, null, 2) + "\\n", { flag: "wx" });
+  await rename(temporary, output);
+} finally {
+  await rm(temporary, { force: true });
+}
+await writeFile(join(root, "build/provenance.json"), JSON.stringify({
+  tool: "fake-generator",
+  gitCommit: "a".repeat(40),
+  builtAt: "2026-07-29T10:00:00.000Z",
+  node: process.version,
+  inputs: ["input/source.txt"],
+}, null, 2) + "\\n");
+`,
+  );
+  try {
+    const result = await verifyGenerator(root, generator);
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(existsSync(join(root, "build", "declared.json")), false);
+    assert.equal(existsSync(join(root, "build", "provenance.json")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("an undeclared same-byte rewrite is still refused", async () => {
   const { root, generator } = generatorFixture({
     outputs: ["build/declared.json", "build/provenance.json"],

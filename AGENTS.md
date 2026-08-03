@@ -196,6 +196,7 @@ Galerina is structured as a **Core-first product constellation**. Core ships fir
 | Phase 4 plan | `../ZTF-Knowledge-Bases/phase-4-parser-ast-plan.md` |
 | Concept model | `../ZTF-Knowledge-Bases/galerina-concept-map.md` |
 | Code examples (corrected) | `../ZTF-Knowledge-Bases/galerina-code-examples-full-flow.md` |
+| Minimal executable construct lookup | `docs/examples/golden/README.md` (verify: `npm run audit:fungi-golden`) |
 
 ## Package Map
 
@@ -247,6 +248,9 @@ one-code-one-fault, one owner per code, emit via an exported constant. Enforced 
   `C:\laragon\www\Galerina_Archive\packages-galerina\` — not part of the active v1 build.
 - Keep the repository root clean. Do not commit secrets.
 - Do not invent Galerina syntax without documenting it in a KB doc.
+- For a minimal construct shape, read `docs/examples/golden/` before prose and
+  rerun its audit. The generated Golden Pack manifest is bounded evidence, not
+  a complete language specification or production authority.
 - Update relevant docs when changing architecture, requirements, security, or API behaviour.
 
 ## Project Graph for AI Tools

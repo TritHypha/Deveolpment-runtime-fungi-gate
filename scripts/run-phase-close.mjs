@@ -403,6 +403,12 @@ if (existsSync(patternsDir)) {
 // warm runs are seconds; a cold cache sweeps everything, hence the raised timeout.
 run("fungi:corpus-check", "node", ["scripts/audit-fungi-corpus-check.mjs"], { timeout: 600000 });
 
+// Minimal executable language lookup: all Golden Pack sources must remain
+// strict-checker clean, every declared CLI vector must replay exactly, and the
+// tracked source/toolchain-bound manifest must match. This is bounded reference
+// evidence only; it grants no package-conversion or production authority.
+run("fungi:golden", "node", ["scripts/fungi-golden-probe.mjs", "--check"]);
+
 // ── 1b3. Quoted-WAT drift gate — docs that quote emitted WAT must match the CURRENT emitter ──
 // (emit-doc-wat.mjs regenerates the excerpts through the real pipeline; --check fails on drift.)
 run("doc:wat-drift", "node", ["scripts/emit-doc-wat.mjs", "--check"]);
