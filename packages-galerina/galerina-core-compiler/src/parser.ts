@@ -6188,10 +6188,21 @@ class Parser {
     const name = this.current().kind === "identifier" ? this.current().value : "<unknown>";
     if (this.current().kind === "identifier") this.advance();
 
-    // `type Name { ... }` — record-style type body
+    // Block-bodied product types are declared with `record`, never `type`.
+    // The old branch silently discarded every field and returned a usable,
+    // fieldless typeDecl. That was a fail-open semantic erasure: later passes
+    // could accept the name while having no schema to check. Consume the body
+    // once for recovery, but return a non-authorizing error node.
     if (this.currentIs("symbol", "{")) {
+      this.emit(
+        "FUNGI-PARSE-002",
+        "EXPECTED_TYPE_ALIAS",
+        `Block-bodied type '${name}' is not a type alias. Write 'record ${name} { ... }' for a product type.`,
+        loc,
+        `Replace 'type ${name} { ... }' with 'record ${name} { ... }', or write 'type ${name} = TypeRef'.`,
+      );
       this.skipBalancedBraces();
-      return { kind: "typeDecl", value: name, location: loc };
+      return { kind: "identifier", value: `invalid:type:${name}`, location: loc };
     }
 
     // `type Name = TypeRef` — alias form; capture the RHS as a child typeRef

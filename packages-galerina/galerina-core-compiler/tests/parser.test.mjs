@@ -382,6 +382,41 @@ record User {
     assert.ok(fieldValues.some((v) => v?.includes("id")));
     assert.ok(fieldValues.some((v) => v?.includes("email")));
   });
+
+  it("preserves canonical record field names, types, and declaration order", () => {
+    const result = parseOk(`
+record Receipt {
+  sequence: Int
+  label: String
+}
+`);
+    const node = findNode(result.ast, "recordDecl");
+    assert.equal(node?.value, "Receipt");
+    assert.deepEqual(
+      node?.children?.map((field) => field.value),
+      ["sequence: Int", "label: String"],
+    );
+  });
+});
+
+describe("Parser — type declarations are aliases only", () => {
+  it("retains `type Name = TypeRef` as an explicit alias", () => {
+    const result = parseOk(`type Counter = Int\n`);
+    const node = findNode(result.ast, "typeDecl");
+    assert.equal(node?.value, "Counter");
+    assert.equal(node?.children?.length, 1);
+    assert.equal(node?.children?.[0]?.kind, "typeRef");
+    assert.equal(node?.children?.[0]?.value, "Int");
+  });
+
+  it("refuses block-bodied `type` instead of erasing its fields", () => {
+    const result = parseProgram(`type Receipt { value: Int }\n`, "legacy-type-body.fungi");
+    const errors = result.diagnostics.filter((d) => d.severity === "error");
+    assert.equal(errors.length, 1, JSON.stringify(errors));
+    assert.equal(errors[0].code, "FUNGI-PARSE-002");
+    assert.match(errors[0].message, /record Receipt/);
+    assert.equal(findNode(result.ast, "typeDecl"), undefined);
+  });
 });
 
 describe("Parser — readonly parameter and binding", () => {
