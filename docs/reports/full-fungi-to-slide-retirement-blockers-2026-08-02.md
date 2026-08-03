@@ -1,6 +1,6 @@
 # Full `.fungi` to `.slide` retirement blockers
 
-Status: current measured implementation gap, 2026-08-02
+Status: current measured implementation gap, refreshed 2026-08-03
 Authority: explanatory report only; it grants no execution or retirement authority
 
 ## Outcome
@@ -11,6 +11,15 @@ bootstrap dependencies. The limiting dependency is not the amount of source
 translation. It is the absence of a production execution and artifact-admission
 chain capable of proving that translated source is the code that was checked,
 lowered, admitted and executed.
+
+Since the original 2026-08-02 report, independent SLIDE has closed bounded
+reference floors for a flat package ABI, direct-peer flow/resource binding,
+multi-package checked-source compilation, canonical per-export `.slide`
+objects, package-bound VOK execution and receipt-last physical publication.
+Fresh complete SLIDE evidence is 447/447 across 39 suites. These floors remove
+several design/implementation unknowns below; they do not change the measured
+production counts because they remain reference-only, unsigned and limited to
+the checked-decision source subset.
 
 The current live target is:
 
@@ -102,16 +111,19 @@ are important prerequisites, but they do not execute an arbitrary Galerina
 package.
 
 The current V2-C executor supports a closed subset of scalar/aggregate
-operations, calls and Boolean/K3 control flow. General effectful calls, complete
-safe-value memory behavior, component resources, package imports/exports and
-the full Galerina construct set are not an executable production backend.
+operations, calls and Boolean/K3 control flow. Contract 33 now closes a bounded
+flat package ABI with exact direct-peer export signatures and typed path-free
+resources. Contract 34 compiles a closed set of checked-decision exports into
+per-export `.slide` objects and executes them through that ABI and VOK. General
+effectful/cross-module calls, complete safe-value memory behavior and the full
+Galerina construct set are not yet an executable production backend.
 
 Missing exit evidence:
 
 - frontend-neutral execution of the complete admitted GIR profile;
 - exact effect and capability requests with no ambient host authority;
 - checked allocation, lifetime, bounds, alias, cleanup and failure behavior;
-- package ABI, import/export and component-resource semantics;
+- general cross-module call lowering and effect-bearing component resources;
 - deterministic budgets for steps, recursion, memory, output and host calls;
 - independent re-validation and no fallback after any refusal.
 
@@ -132,14 +144,17 @@ Still required:
 
 ### 4. The production `.slide` format, packager and loader
 
-There is currently no production `.slide` container, general packager or
-general isolated runner. Reference files and diagrams do not constitute this
-implementation.
+Contracts 30, 34 and 35 now implement a canonical bounded `.slide` envelope,
+checked multi-package packager and receipt-last physical publisher. The
+publisher exclusively reserves an absent target, uses no-replace artifact
+links and places the receipt last; Node honestly reports power-loss durability
+K3 `0`. There is still no production-signed general container or general
+isolated runner.
 
 Still required:
 
-- a bounded canonical `.slide` bundle schema;
-- content-addressed source/GIR/object/receipt members and one bundle identity;
+- extend the bounded bundle/member identities from the checked subset to the
+  complete admitted language and object profiles;
 - hybrid-signature and key-epoch metadata through the crypto-agility
   interface, without embedding private material;
 - independent two-path bundle admission and exact rollback/revocation state;
@@ -176,13 +191,16 @@ replacement verifier.
 
 Galerina's intended package model is one canonical top-level package or plugin
 instance under `packages-galerina`, never npm-style child dependency forests.
-The resolver/root-lock implementation is not complete.
+Galerina now has a non-authorizing 98-peer root lock and exact direct-peer
+resolver. SLIDE Contract 33 independently closes deterministic descriptor,
+topological, direct-import and typed-resource semantics. The physical/runtime
+retirement and signed graph authority are not complete.
 
 Still required:
 
-- canonical direct-child resolution and a single root dependency lock;
-- deterministic topological order and a signed graph/provenance receipt;
-- exact name/version/content/ABI/capability/effect compatibility checks;
+- production-sign the deterministic root graph/provenance receipt;
+- extend exact compatibility from the bounded flow/resource ABI to every
+  admitted capability/effect and general call surface;
 - refusal of missing, duplicate, nested, shadowed, cyclic, hash-mismatched,
   capability-expanding or multi-version-conflicting identities;
 - move the nested greeting identity to one direct top-level package;
@@ -251,8 +269,9 @@ production fallback.
 
 The first quarantine workspace currently contains four flat strict-frontend
 candidates: Substrate Math and the GPU, native and Wasm target descriptors.
-They have not executed through a package ABI and cannot be copied into
-production as finished replacements. The second 2026-08-02 workspace contains
+The independent ABI/build route now exists, but these staged candidates have
+not been compiled and executed through it and cannot be copied into production
+as finished replacements. The second 2026-08-02 workspace contains
 an updated corpus ledger but no candidate source yet.
 
 External conversion can continue safely because it reduces later translation
@@ -269,10 +288,12 @@ probable checker defect is not an acceptable fix.
 
 ```text
 1. Complete general Galerina frontend receipt + detached executable GIR
-2. Complete frontend-neutral SLIDE backend and general VOK object verification
-3. Implement canonical .slide packager, admission and isolated runner
-4. Implement cryptographic execution/host-ownership receipt verifiers
-5. Implement flat package resolver, root lock and graph receipts
+2. Extend the green flat/check-decision SLIDE floors to the complete admitted
+   language, effects, memory, calls and general VOK object verification
+3. Extend the green reference packager/publisher to hybrid-signed production
+   admission, native durability and an isolated runner
+4. Populate cryptographically verified execution/host-ownership receipts
+5. Activate signed flat root-graph authority and retire physical nested trees
 6. Convert/reconcile packages in T1 -> T2 -> T3 order; compiler self-host last
 7. Replace or admit every host boundary
 8. Move the nested greeting package and remove all 95 node_modules trees
@@ -318,6 +339,8 @@ It must exit zero without exemptions, renamed debt or fallback.
 - [`docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`](../security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md);
 - [`docs/architecture/flat-package-topology-and-post-slide-migration.md`](../architecture/flat-package-topology-and-post-slide-migration.md);
 - [`docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`](../superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md);
+- independent SLIDE Contracts 33-35 and completion reports at local commit
+  `64dd1cf`.
 - SLIDE `contracts/v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md` and
   `docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`;
 - both external Galerina Fungi package staging workspaces and their current
