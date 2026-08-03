@@ -1,5 +1,26 @@
 # TODO
 
+### Pure-scalar structured control flow green - 2026-08-03
+
+- SLIDE's checked scalar frontend now admits `Bool` results, inferred
+  immutable locals, trailing parameter commas, typed inequality, bounded
+  short-circuit `or`, optional `else` and lexically scoped fallthrough to an
+  empty continuation.
+- `Verdict` remains `check`-only. Branch locals cannot escape and joins carry
+  no values; no mutation, loop, string, effect, memory or fallback was added.
+- The fresh current-source survey rises from 39/154 to 64/154 pure flows and
+  from 15/53 to 20/53 files. Newly complete modules include B8 admission,
+  defensive controls, CORS, VOK authority admission and Tower Citizen
+  inference governance.
+- Focused scalar/package/contract evidence is 16/16; complete serial SLIDE is
+  466/466 across 43 suites; contracts are 28/28; security closure remains
+  verdict `+1` with authenticated evidence K3 `0`; Node remains one.
+- This remains a reference compiler floor. Production admission, detached
+  authentication, platform authority and the owner's package-conversion lane
+  remain open and unchanged.
+- Report: SLIDE
+  `docs/reports/pure-scalar-control-flow-widening-completion-2026-08-03.md`.
+
 ### Independent pure-scalar `.fungi` to `.slide` floor green - 2026-08-03
 
 - SLIDE now independently compiles bounded `Int`/`Bool`/`Verdict` modules

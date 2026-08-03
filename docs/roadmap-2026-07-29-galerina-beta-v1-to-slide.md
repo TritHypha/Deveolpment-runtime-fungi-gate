@@ -8,6 +8,19 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the pure-scalar compiler's structured-control-flow widening
+is green. Boolean results, inferred immutable locals, trailing parameter
+commas, typed inequality, bounded short-circuit `or`, optional `else` and
+lexically scoped branch fallthrough now lower without a new opcode, mutable
+value, phi or fallback. The same current-source survey rises from 39/154 to
+64/154 admitted pure flows and from 15/53 to 20/53 source files. Newly complete
+modules include B8 admission, defensive controls, CORS, VOK authority admission
+and Tower Citizen inference governance. Focused scalar/package/contract
+evidence is 16/16; complete serial SLIDE is 466/466 across 43 suites; contracts
+are 28/28; security closure is `+1`/K3 `0`; Node remains one. General
+effects/memory, strings, checked mutation/loops, production authority and the
+owner's package-conversion lane remain open and unchanged.
+
 Roadmap refresh: the independent pure-scalar compiler floor is green. SLIDE
 now derives bounded multi-flow `Int`/`Bool`/`Verdict` semantics directly from
 `.fungi` bytes, including immutable locals, typed comparisons, exhaustive
@@ -439,7 +452,7 @@ flowchart TB
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
-    PS["🟩 Pure-scalar module compiler<br/>39/154 current pure flows · 15 files<br/>466/466 · reference-only"]
+    PS["🟩 Pure-scalar module compiler<br/>64/154 current pure flows · 20 files<br/>466/466 · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     EB["🟩 Independent V2-B broker floor<br/>eight K3 gates · affine lease · audit-before-success<br/>398/398 · reference-only"]
