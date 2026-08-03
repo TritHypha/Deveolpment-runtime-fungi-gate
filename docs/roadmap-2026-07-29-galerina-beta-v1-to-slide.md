@@ -8,6 +8,19 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the registered bounded checked-read SLIDE profile is green as
+a reference backend. A strict `.fungi` family with variable flow identity and
+literal bounds 1 through 1,000,000 lowers into a distinct canonical 208-byte
+GIR and common `.slide` envelope. The flow-local request
+`verified_native_checked_read_loop_v1 on values` remains an opt-in to proof,
+not authority: omission keeps ordinary checked execution valid and slower.
+The admission tuple binds flow, target, source, GIR, collection generation and
+policy; `contract.types`, `unsafe let` and Hallmarks cannot transport it.
+Focused evidence is 4/4, all 208 one-byte GIR mutations refuse, complete SLIDE
+is 488/488 across 48 suites and Node remains 1 -> 1. Galerina production
+producer/switch wiring and native/platform evidence remain blue; package
+conversion is unchanged.
+
 Roadmap refresh: the Verified Loop Envelope proposal is now v2. The developer
 may opt in through the flow-local, target-scoped permission
 `verified_native_checked_read_loop_v1 on values`; omission retains the checked
@@ -22,10 +35,10 @@ admission; package conversion is unchanged.
 
 Roadmap refresh: canonical serialized lowering is green for the exact Verified
 Loop Envelope profile. SLIDE commit `fe5f922` independently converts the exact
-million-read source into an 88-byte loop GIR inside the common `.slide`
+million-read source into a 144-byte v2 loop GIR inside the common `.slide`
 envelope, keeps dynamic collection values outside the program object, rechecks
 current context and GIR identity, then binds the owned generation through all
-eight K3 VOK gates. Frozen V2-C is unchanged. Complete SLIDE is 484/484 across
+eight K3 VOK gates. Frozen V2-C is unchanged. Complete SLIDE is 488/488 across
 47 suites, contracts are 29/29, security closure is `+1`/K3 `0`, and Node is
 1 -> 1. The clean nine-sample benchmark at commit `60521ff` is a completed
 negative speed result: compilation 0.248 ms, `.slide` preparation 8.901 ms,

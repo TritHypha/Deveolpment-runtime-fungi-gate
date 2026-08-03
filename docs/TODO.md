@@ -1,9 +1,30 @@
 # TODO
 
+### Registered bounded checked-read SLIDE profile green - 2026-08-03
+
+- Independent SLIDE now accepts a separate registered family with variable
+  flow identities and literal bounds from 1 through 1,000,000. Exact access,
+  induction, refusal and return semantics remain fixed.
+- The optional request remains flow-local and target-scoped:
+  `permissions { require verified_native_checked_read_loop_v1 on values }`.
+  Omission does not break the loop: normal checked `values.get(i)` execution
+  remains valid and slower. Only the optimization profile refuses.
+- Authority is confined by flow, permission, target, source, GIR, collection
+  generation and current policy. `contract.types`, `unsafe let` and Hallmarks
+  cannot grant, transport or widen it.
+- The bounded 208-byte GIR is distinct from the exact 144-byte v2 million-read
+  GIR and frozen V2-C. Focused SLIDE evidence is 4/4; all 208 one-byte GIR
+  mutations refuse; complete SLIDE is 488/488 across 48 suites, Node 1 -> 1.
+- **Open:** general-profile production producer/switch wiring in Galerina,
+  native/platform evidence and broader registered loop families. Package
+  conversion remains the owner's separate lane.
+- SLIDE report:
+  `docs/reports/registered-bounded-checked-read-loop-2026-08-03.md`.
+
 ### Exact Verified Loop `.slide` lowering green - 2026-08-03
 
 - Independent SLIDE now compiles the exact million-read `.fungi` profile into
-  one canonical 88-byte loop GIR inside the existing reference `.slide`
+  one canonical 144-byte v2 loop GIR inside the existing reference `.slide`
   envelope. Frozen V2-C remains unchanged.
 - Program bytes contain no dynamic collection values. Bundle/context/GIR
   re-admission precedes exact fixed-array ownership, collection hashing, all
@@ -12,13 +33,13 @@
 - Source, bundle, context, hostile collection, handle and non-ALLOW K3 drift
   refuse without fallback. The object executes after the original source
   buffer is erased.
-- Complete SLIDE passes 484/484 across 47 suites, contract 29/29, security
+- Complete SLIDE passes 488/488 across 48 suites, contract 29/29, security
   closure `+1`/K3 `0`, Node 1 -> 1.
 - The clean paired result is honest and negative for speed: `.slide`
   compilation 0.248 ms, preparation 8.901 ms, demand 1.718 ms and prepared
   total 10.633 ms. Prepared `.slide` is 1.004x source total; end-to-end is
   1.031x.
-- **Open:** registered general checked-loop GIR/backend, production-switch
+- **Open:** registered-profile production-switch
   wiring, native/platform/physical-erasure evidence and bounded reusable
   generations. Package conversion remains the owner's separate lane.
 - SLIDE report:

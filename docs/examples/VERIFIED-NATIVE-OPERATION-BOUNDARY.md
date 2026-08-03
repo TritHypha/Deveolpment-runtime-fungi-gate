@@ -62,6 +62,14 @@ this profile, the ordinary checked source remains valid and runs on the checked
 path. The compiler proposal reports the canonical block to add, so the
 developer does not have to construct proof mechanics or guess placement.
 
+The scope is the tuple `(enclosing flow, permission ID, target parameter,
+source identity, GIR identity, collection generation, current policy)`. The
+same spelling in another flow is a different request. The request cannot be
+stored in `contract.types`: types describe values and may travel, while this
+optimization request must remain local to one execution boundary. It is also
+not written as `unsafe where`; `unsafe` already means untrusted boundary data
+in Galerina and must not become an unchecked-memory authority.
+
 The intended completed path pays proof and admission cost once for the whole
 closed loop. A future independent verifier must re-derive the facts and VOK
 must bind one affine lease to the exact collection generation, object, target
