@@ -166,6 +166,14 @@ const SECURITY_TYPE_CODES = new Set(["FUNGI-TYPE-033", "FUNGI-TYPE-034", "FUNGI-
 async function main() {
   let [, , command = "help", ...rest] = process.argv;
 
+  if (command === "build-slide-package") {
+    const { emitReceiptBoundSlidePackageResult, runReceiptBoundSlidePackageCli } = await import(
+      new URL("scripts/build-receipt-bound-slide-package.mjs", import.meta.url).href
+    );
+    emitReceiptBoundSlidePackageResult(await runReceiptBoundSlidePackageCli(rest));
+    return;
+  }
+
   // ── `generate tests` — canonical surface for contract-driven test obligations (0016) ──
   // This command was historically `gen-tests`; it is now the two-word `galerina generate tests`.
   // Normalize the subcommand into an internal dispatch token (the literal string "generate tests",

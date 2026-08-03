@@ -3,10 +3,23 @@
 Date: 2026-08-03
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
-with **8,846/8,846** tests, graph **5/5**, code index current, benchmark
-publication fresh, and executable examples **232/232**.
+with **8,831/8,831** tests, graph **5/5**, code index/registry/coverage current,
+benchmark publication fresh, and executable examples **233/233**. The complete
+phase-close cadence passed every blocking gate with tooling **343/343** and
+Node restored **1 -> 1**.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: receipt-bound Galerina to SLIDE package build selection is
+green as a bounded reference route. One explicit command pins the canonical
+56-file SLIDE tool manifest and current bootstrap-runtime bytes, runs only the
+named compiler through the owned-process boundary, then independently reopens
+the source manifest, physical receipt and every `.slide` artifact. Focused
+Galerina evidence is 7/7, a real library and top-level CLI package build is
+1/1, and complete SLIDE is 493/493 across 50 suites. The result remains
+`referenceOnly: true` with `authorityReleased: false`; production source/tool
+authentication, native/platform durability and complete language semantics
+remain blue. Package conversion is unchanged.
 
 Roadmap refresh: the Galerina bounded checked-read producer is green.
 `analyzeBoundedReadLoopEnvelope` and its self-hosted `.fungi` authority model
@@ -525,7 +538,7 @@ flowchart TB
     AT["🟩 Native VOK W^X floor<br/>19,683/19,683 · linked · Windows RX/not-W"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
     A["🟩 Galerina source policy<br/>.fungi authority<br/>if=Bool, check=K3, match=alternatives"]
-    B["🟩 Compiler/curriculum close<br/>232/232, zero known drift"]
+    B["🟩 Compiler/curriculum close<br/>233/233, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
     BO["🟩 Bounded root orchestration<br/>one lease · four test workers<br/>owned process trees · 86/86"]
@@ -566,7 +579,8 @@ flowchart TB
     RV["🟩 Retirement verifier implemented<br/>12/12 top-level adversarial<br/>schema-v3 signed-authority closure"]
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
     RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · differential oracle"]
-    I["🟩 Galerina → SLIDE integration<br/>compiler-derived decision switch<br/>21/21 · reference-only"]
+    I["🟩 Galerina → SLIDE integration<br/>decisions + receipt-bound package build<br/>explicit tool identity · reference-only"]
+    RT["🟩 Receipt-bound SLIDE tool selection<br/>56-file content pin · runtime pin<br/>physical outputs independently re-derived"]
     AV["🟩 Signed post-SLIDE receipt verifier<br/>hybrid two-part signatures<br/>exact predicates · no fallback"]
     AL["🟦 .fungi production admission<br/>2 candidates · 0 signed sources<br/>offline authority/evidence pending"]
     T["🟦 Package conversion<br/>496 tracked package .ts → 0"]
@@ -594,7 +608,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -621,7 +635,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,VL,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -702,7 +716,7 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 12/12 terminal adversarial tests; schema-v3 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived receipts plus independent SLIDE token/map/graph/plan derivation pass 21/21. Two real profiles cover 196 vectors and a third unregistered shape covers 8; VOK is affine and refusal has no fallback. This is reference-only | Keep the bounded switch green while widening admitted package semantics; production promotion stays in row 2 |
+| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts remain green. The package route additionally pins an exact 56-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. Focused evidence is 7/7 plus one real library/top-level CLI build. This is reference-only | Keep both bounded routes green while widening admitted package semantics; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
 | 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 4 assigns one reproducibly selected file from each of 20 different packages; all candidates remain quarantined | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
@@ -775,7 +789,7 @@ table is navigation, not authority.
 | Hardware fallback | 🟩 | Non-CPU targets without explicit fallback fail with `FUNGI-TARGET-001` |
 | Sensitive-data lessons | 🟩 | PII, PHI, audit-evidence and protected-response examples now emit their exact fail-closed diagnostics |
 | Focused compiler tests | 🟩 | Effect checker 70/70; governance verifier 121/121 at this tranche. Static `Native*` enum members remain pure while actual `Native*` invocations still require `native.call` |
-| Curriculum drift | 🟩 | 232/232 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
+| Curriculum drift | 🟩 | 233/233 admitted examples honor their contract; zero known drift and zero new regression; detector self-test 16/16 |
 | Full compiler package | 🟩 | Fresh typecheck/build and 5,752/5,752 tests after the native-member regression fix |
 | Compiler specification authority | 🟩 | 7/7 canonical stages authoritative; 49/49 auxiliary `.fungi` files clean but non-authorizing; all seven hashes and 60/60 mutation anchors green |
 | Governed decision authority | 🟩 | 29/29 authoritative; zero shadow and zero differential candidates remain; TypeScript stays the running differential shadow for the later retirement gate |
@@ -826,7 +840,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    direct evidence is exhaustive 87/87, graph 5/5 and package 98/98 with
-   8,846/8,846 unit tests.
+   8,831/8,831 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.

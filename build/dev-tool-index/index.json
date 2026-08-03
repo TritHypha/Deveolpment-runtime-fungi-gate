@@ -4,7 +4,7 @@
     "packages": 98,
     "testBearing": 98,
     "tests": 8831,
-    "devTools": 146,
+    "devTools": 147,
     "auditTools": 80,
     "toolsInCadence": 62,
     "proofs": 40
@@ -2613,6 +2613,18 @@
       ]
     },
     {
+      "name": "build-receipt-bound-slide-package.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "graph/index"
+      ]
+    },
+    {
       "name": "check-gate-injection.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3105,6 +3117,7 @@
       "status.mjs",
       "brand-audit.mjs",
       "build-core-chain.mjs",
+      "build-receipt-bound-slide-package.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
       "gather-compiler-stage-hashes.mjs",
@@ -3205,6 +3218,7 @@
       "status.mjs",
       "bench-startup.mjs",
       "build-core-chain.mjs",
+      "build-receipt-bound-slide-package.mjs",
       "check-gate-injection.mjs",
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
@@ -3342,6 +3356,7 @@
       "brand-audit.mjs",
       "build-core-chain.mjs",
       "build-process-warden.mjs",
+      "build-receipt-bound-slide-package.mjs",
       "check-gate-injection.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",

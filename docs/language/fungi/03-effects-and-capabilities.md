@@ -39,7 +39,7 @@ Both separators appear in the corpus and both parse:
 ```fungi
 effects { database.read phi.read audit.write }        // whitespace, from getPatient.fungi:14
 effects { database.write, audit.write }               // commas, from guard-domain-ceiling.fungi:58
-effects { allow network.outbound, allow audit.write } // optional `allow` prefix, hardened-border-plugin.fungi:44
+effects { allow network.outbound, allow audit.write } // optional `allow` prefix; see hardened-border-plugin.fungi
 ```
 
 The optional `allow` prefix (`effects { allow audit.write }`) appears in several examples and reads as

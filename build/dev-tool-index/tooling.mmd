@@ -651,6 +651,10 @@ flowchart LR
   T_build_process_warden_mjs["build-process-warden.mjs"]
   T_build_process_warden_mjs --> C_signing_fusion
   T_build_process_warden_mjs --> C_source_hygiene
+  T_build_receipt_bound_slide_package_mjs["build-receipt-bound-slide-package.mjs"]
+  T_build_receipt_bound_slide_package_mjs --> C_signing_fusion
+  T_build_receipt_bound_slide_package_mjs --> C_diagnostics
+  T_build_receipt_bound_slide_package_mjs --> C_graph_index
   T_check_gate_injection_mjs["check-gate-injection.mjs"]
   T_check_gate_injection_mjs --> C_sinks_taint
   T_check_gate_injection_mjs --> C_signing_fusion

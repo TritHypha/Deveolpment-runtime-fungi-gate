@@ -1,5 +1,66 @@
 # TODO
 
+The first dated sections are the current checkpoint and next queue. Lower
+dated sections are retained as a chronological evidence ledger and may contain
+counts or open items that a newer section explicitly supersedes.
+
+### Next chapter queue after requested pause - 2026-08-03
+
+- **External conversion Round 5:** select re-attempts from files handled across
+  Rounds 1-4 plus 30 explicitly named backup files. Use the corrected
+  control/effects map, require an outcome dossier for every file and continue
+  after individual blockers. Do not admit staging output without independent
+  parity, checker, effect, graph and execution evidence.
+- **Verified native-operation benchmark:** add the one-million-element boundary
+  workload to the governed benchmark suite and compare only equivalent
+  implementations already present in the comparator. Report preparation,
+  admission and demand separately; use the same data/checksum and label timing
+  lower-is-better without claiming unlike safety contracts are equivalent.
+- Neither item was started in the receipt-bound build-selection chapter.
+
+### Result-return ergonomics design item - 2026-08-03
+
+- The current canonical form remains explicit: a flow returning
+  `Result<Int, Error>` returns `Ok(value)` or `Err(error)`. A plain `Int` is not
+  silently treated as a `Result` today.
+- Investigate narrowly context-checked return sugar in a later language-design
+  chapter: `return value` may desugar to `return Ok(value)` only when the
+  declared return type makes that conversion unique. The compiler, GIR and
+  receipt must expose the desugaring, while `_ =>` still ends in an explicit
+  `fail` or `Err` path.
+- Do not add general implicit wrapping: nested `Result` types, error-like
+  integers and non-terminal branches must remain unambiguous. No language
+  semantics changed in the receipt-bound build-selection chapter.
+
+### Receipt-bound SLIDE package build selection green - 2026-08-03
+
+- `galerina build-slide-package` now selects one explicit SLIDE tool root,
+  canonical tool manifest, manifest digest and bootstrap-runtime digest. It
+  never searches `PATH`, a sibling checkout, `node_modules` or an alternate
+  backend.
+- The child runs through the owned-process boundary with a minimal environment,
+  timeout and output ceiling. Its exit code and JSON claim are insufficient:
+  Galerina independently reopens the source/tool manifests, physical
+  publication receipt and every `.slide` object and re-derives exact package,
+  descriptor, GIR, artifact and bundle identities.
+- The pinned SLIDE manifest binds 56 stable non-symlinked source files. Focused
+  Galerina evidence is 7/7 and the real cross-repository library plus top-level
+  CLI build is 1/1. Complete SLIDE is 493/493 across 50 suites with contracts
+  29/29 and authenticated evidence K3 `0`.
+- The final Galerina phase-close passes every blocking gate: 98/98 packages and
+  8,831 tests are current, tooling is 343/343, examples are 233/233, graphs are
+  5/5, generated code index/registry/coverage and benchmark publication are
+  current, and Node returns 1 -> 1.
+- Ordinary `build` is unchanged. Success remains
+  `GALERINA_SLIDE_PACKAGE_VERIFIED_REFERENCE_ONLY`, `referenceOnly: true` and
+  `authorityReleased: false`; no package conversion or production promotion is
+  implied.
+- **Open:** authenticated production tool/source admission, native/platform
+  durability and full language/effect/native coverage. Package conversion
+  remains the owner's separate external-review lane.
+- Report:
+  `docs/reports/receipt-bound-slide-package-build-completion-2026-08-03.md`.
+
 ### External package conversion Round 4 issued - 2026-08-03
 
 - A reproducible 20-file sample now covers 20 different top-level

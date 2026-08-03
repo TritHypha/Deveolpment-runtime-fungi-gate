@@ -19,7 +19,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 202 | referenced only (no def/emit) |
+| ref | 207 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -344,12 +344,17 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-CONTEXT-001 | live | REQUIRED_CONTEXT_NOT_ACCESSED | warning |
 
-### CONTRACT (2)
+### CONTRACT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-CONTRACT-003 | phantom | — | — |
 | FUNGI-CONTRACT-004 | phantom | — | — |
+| FUNGI-CONTRACT-017 | ref | — | — |
+| FUNGI-CONTRACT-018 | ref | — | — |
+| FUNGI-CONTRACT-019 | ref | — | — |
+| FUNGI-CONTRACT-020 | ref | — | — |
+| FUNGI-CONTRACT-021 | ref | — | — |
 
 ### CRYPTO (1)
 

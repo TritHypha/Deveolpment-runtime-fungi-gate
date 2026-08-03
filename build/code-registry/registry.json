@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 772,
+  "total": 777,
   "counts": {
-    "ref": 202,
+    "ref": 207,
     "inline": 175,
     "phantom": 113,
     "live": 169,
@@ -2964,7 +2964,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 5,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "FUNGI-CLI-REDACT-001",
@@ -3539,6 +3539,66 @@
       "emits": 0,
       "tests": 0,
       "docs": 2
+    },
+    {
+      "code": "FUNGI-CONTRACT-017",
+      "family": "CONTRACT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-CONTRACT-018",
+      "family": "CONTRACT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-CONTRACT-019",
+      "family": "CONTRACT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-CONTRACT-020",
+      "family": "CONTRACT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "FUNGI-CONTRACT-021",
+      "family": "CONTRACT",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 0,
+      "docs": 0
     },
     {
       "code": "FUNGI-CRYPTO-PQ-001",
@@ -9946,7 +10006,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 19,
-      "docs": 1
+      "docs": 2
     },
     {
       "code": "FUNGI-TYPE-034",

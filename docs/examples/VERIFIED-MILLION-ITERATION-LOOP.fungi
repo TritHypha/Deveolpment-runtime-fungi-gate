@@ -1,7 +1,8 @@
 @version 1
 /// @file: VERIFIED-MILLION-ITERATION-LOOP.fungi
 /// @purpose: Show the exact pointer-free source shape eligible for a Verified Loop Envelope proposal.
-/// @status: The compiler derives only a non-authorizing proposal; VOK execution admission is not yet implemented.
+/// @status: Galerina derives a non-authorizing proposal; independent reference-only VOK admission is implemented.
+/// expected_diagnostics: none
 
 secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
 contract {
