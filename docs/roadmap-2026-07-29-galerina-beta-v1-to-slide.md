@@ -13,6 +13,20 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 59's counted-sum reference execution is green at
+SLIDE commit `25e0a95`. One exact checked-Fungi strict-less-than, unit-step
+counted-sum family is independently tokenized, binding-checked and executed on
+top of Contract 58's pre-reserved `1 + 3N` work certificate. All 177,147
+eleven-gate K3 vectors have one authorizing combination; hostile byte intake,
+forged handles, malformed arguments, insufficient work and result overflow
+refuse without a result or receipt. Focused execution is 6/6, the combined
+certificate/reference/contract slice is 16/16 and complete SLIDE is 663/663
+across 70 suites with Node 1 -> 1. Contracts cover 61 files, security closure
+is `+1` with K3 `0`, and the 61-file tool identity verifies. This is a
+reference-only exact family: no V2-C opcode, VOK lease/context, physical
+`.slide` publication, package authority or production authority exists, so the
+general backend remains blue and conversion counts remain unchanged.
+
 Roadmap refresh: external Fungi conversion Round 9 is issued with all 120
 source byte pins freshly verified, clean Galerina-package and SLIDE trees, and
 the mandatory golden preflight passing checker 10/10, CLI 8/8 and independent
@@ -964,8 +978,9 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>657/657 · Contract 58 certificate-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>663/663 · general loops/VOK-package binding open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
+    LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -1031,7 +1046,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> VN --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> H
+    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
@@ -1047,7 +1062,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
