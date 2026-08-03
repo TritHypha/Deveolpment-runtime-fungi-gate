@@ -20,21 +20,24 @@ counts or open items that a newer section explicitly supersedes.
 - Handover: sibling folder
   `Galerina-Fungi-Package-Staging-Round-6-2026-08-03`.
 
-### Physical package typed `Int` receipt green - 2026-08-03
+### Physical package typed `Int` and `Bool` receipts green - 2026-08-03
 
 - The existing stable-file multi-package loader now carries its independently
   verified result type in the private affine binding and can emit a Safe
   Value-backed physical receipt with no loose decoded value.
 - Compatibility and typed execution share one consumption path. Mutation,
   identity substitution, hostile input, replay and compatibility-refusal
-  diagnostic preservation are covered; focused evidence is 6/6.
-- Fresh complete SLIDE evidence is 509/509 across 52 suites, contracts 29/29,
+  diagnostic preservation are covered; focused evidence is 7/7.
+- Fresh complete SLIDE evidence is 510/510 across 52 suites, contracts 29/29,
   security closure `+1` with evidence K3 `0`, and the 58-file tool identity
   verifies. The real sibling build re-passes 1/1; Node remains 1 -> 1.
-- The physical compiler currently admits `Int` results only. A fresh Boolean
-  result probe refused at compile time, so Bool, K3 Verdict, String and
-  collection result profiles remain open. This is reference-only and does not
-  change package-retirement counts.
+- The physical compiler and typed receipt now admit declared `Int` and `Bool`
+  results. VOK's canonical Boolean machine values `0`/`1` are converted only
+  under the independently verified `Bool` result ID; any other representation
+  refuses. The earlier Boolean probe failed because its multi-flow manifest
+  omitted `sourceFlowName`, not because Boolean lowering was absent. K3
+  Verdict, String and collection result profiles remain open. This is
+  reference-only and does not change package-retirement counts.
 
 ### SLIDE typed package execution receipt v2 reference boundary green - 2026-08-03
 
@@ -49,10 +52,10 @@ counts or open items that a newer section explicitly supersedes.
 - Fresh SLIDE evidence at this checkpoint was 506/506 across 52 suites, contracts 29/29, security
   closure `+1` with evidence K3 `0`, and the regenerated 58-file tool manifest
   verifies. The real sibling package build re-passes 1/1; Node remains 1 -> 1.
-- **Still open:** the later physical `Int` profile above supersedes this
-  integration gap. Non-`Int` runtime lowering, authenticated evidence and
-  production ledger admission remain required. Package conversion and
-  retirement counts are unchanged.
+- **Still open:** the later physical `Int` and `Bool` profiles above supersede
+  this integration gap. K3 Verdict and non-scalar runtime lowering,
+  authenticated evidence and production ledger admission remain required.
+  Package conversion and retirement counts are unchanged.
 
 ### SLIDE Safe Value Envelope v1 reference primitive green - 2026-08-03
 
@@ -86,7 +89,7 @@ counts or open items that a newer section explicitly supersedes.
   77/77, disproving several worker blocker labels. Independent SLIDE now
   carries checked `Int` addition through package-bound `.slide` execution and
   fails closed on overflow. SLIDE additionally has the first reference-only
-  Safe Value Envelope; its complete suite is now 509/509. General collection
+  Safe Value Envelope; its complete suite is now 510/510. General collection
   lowering, mutation, loops and effects remain unadmitted by that path.
 - **Retirement inventory regenerated:** 496 tracked package TypeScript paths,
   including 481 categorised implementation paths under `src`; 111 `.fungi`

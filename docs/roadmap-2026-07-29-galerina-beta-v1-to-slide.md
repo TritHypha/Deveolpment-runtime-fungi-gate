@@ -12,16 +12,19 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap refresh: the physical multi-package typed `Int` receipt is green as a
+Roadmap refresh: the physical multi-package typed `Int` and `Bool` receipts are green as a
 reference boundary. The existing stable-file loader retains the independently
 verified result type in its private affine binding; compatibility and typed
 outputs share one consumption path, and decoding requires external exact
-identity re-admission. Focused evidence is 6/6 and complete SLIDE is 509/509
+identity re-admission. Focused evidence is 7/7 and complete SLIDE is 510/510
 across 52 suites, with contracts 29/29, security closure `+1`/K3 `0`, the
 58-file tool identity verified and the real sibling build re-passing 1/1.
-A fresh Boolean-result probe refused at package compilation, so Bool, K3
-Verdict, String and collection physical profiles remain blue rather than
-latent permissions. Production admission and package conversion are unchanged.
+The `Bool` profile admits only declared Boolean results and converts canonical
+VOK `0`/`1` machine values at that typed boundary; all other representations
+refuse. The earlier Boolean probe omitted the required multi-flow
+`sourceFlowName` and was a manifest failure, not a compiler limitation. K3
+Verdict, String and collection physical profiles remain blue rather than latent
+permissions. Production admission and package conversion are unchanged.
 
 Roadmap refresh: typed package execution receipt v2 is green as a bounded
 reference boundary. It replaces the loose signed-32-bit result field with one
@@ -797,7 +800,7 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 12/12 terminal adversarial tests; schema-v3 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and the physical typed `Int` path are green. The package route pins an exact 58-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. The real sibling build re-passes 1/1. This is reference-only | Add measured non-`Int` compiler/result profiles; production promotion stays in row 2 |
+| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and physical typed `Int`/`Bool` paths are green. The package route pins an exact 58-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. The real sibling build re-passes 1/1. This is reference-only | Add measured K3 Verdict and non-scalar compiler/result profiles; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
 | 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 accounted for 66 paths but was independently rejected: three files are unadmitted, two are partial, one is defective/superseded and required dossiers/parity evidence are absent | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
