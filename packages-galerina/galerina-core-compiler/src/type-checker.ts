@@ -568,9 +568,25 @@ class TypeChecker {
     if (expr === undefined || expr.kind !== "callExpr" || expr.value !== "#record") return false;
     const declFields = this.recordFieldTypes.get(declaredBase);
     if (declFields === undefined) return false;
+
+    // A named literal carries nominal intent. It may never be structurally
+    // adopted as another record merely because the field schemas happen to
+    // match. Anonymous literals remain eligible for exact contextual adoption.
+    const literalTypeName = expr.typeName?.trim();
+    const nominalMismatch = literalTypeName !== undefined &&
+      literalTypeName !== "" && literalTypeName !== declaredBase;
+
     const litFields = new Map<string, AstNode | undefined>();
+    const duplicateFields: string[] = [];
+    const seenFields = new Set<string>();
     for (const f of expr.children ?? []) {
-      if (f.kind === "identifier" && f.value) litFields.set(f.value, f.children?.[0]);
+      if (f.kind !== "identifier" || !f.value) continue;
+      if (seenFields.has(f.value)) {
+        if (!duplicateFields.includes(f.value)) duplicateFields.push(f.value);
+        continue;
+      }
+      seenFields.add(f.value);
+      litFields.set(f.value, f.children?.[0]);
     }
     const missing = [...declFields.keys()].filter((k) => !litFields.has(k));
     const unknown = [...litFields.keys()].filter((k) => !declFields.has(k));
@@ -585,8 +601,10 @@ class TypeChecker {
         badTypes.push(`${fname}: declared '${declType}', got '${fInferred}'`);
       }
     }
-    if (missing.length > 0 || unknown.length > 0 || badTypes.length > 0) {
+    if (nominalMismatch || duplicateFields.length > 0 || missing.length > 0 || unknown.length > 0 || badTypes.length > 0) {
       const detail = [
+        nominalMismatch ? `literal names record '${literalTypeName}' but ${contextLabel} requires '${declaredBase}'` : "",
+        duplicateFields.length ? `duplicate field(s): ${duplicateFields.join(", ")}` : "",
         missing.length ? `missing field(s): ${missing.join(", ")}` : "",
         unknown.length ? `unknown field(s): ${unknown.join(", ")}` : "",
         ...badTypes,

@@ -73,6 +73,38 @@ pure flow pick() -> TierDecision {
     assert.equal(errs.length, 1, JSON.stringify(errs));
     assert.match(errs[0].message, /tier: declared 'String', got 'Bool'/);
   });
+
+  it("admits an exact named record literal", () => {
+    const errs = check(`
+record TierDecision {tier: String reason: String isOptimal: Bool }
+pure flow pick() -> TierDecision {
+  return TierDecision { reason: "pure", isOptimal: true, tier: "bytecode" }
+}`);
+    assert.deepEqual(errs.map((e) => e.code), [], JSON.stringify(errs));
+  });
+
+  it("refuses a cross-nominal named record literal even when fields match", () => {
+    const errs = check(`
+record Alpha {value: Int }
+record Beta {value: Int }
+pure flow pick() -> Beta {
+  return Alpha { value: 1 }
+}`);
+    assert.equal(errs.length, 1, JSON.stringify(errs));
+    assert.equal(errs[0].code, "FUNGI-TYPE-008");
+    assert.match(errs[0].message, /names record 'Alpha'.*requires 'Beta'/);
+  });
+
+  it("refuses duplicate fields instead of collapsing the earlier value", () => {
+    const errs = check(`
+record Exact {value: Int }
+pure flow pick() -> Exact {
+  return Exact { value: 1, value: 2 }
+}`);
+    assert.equal(errs.length, 1, JSON.stringify(errs));
+    assert.equal(errs[0].code, "FUNGI-TYPE-008");
+    assert.match(errs[0].message, /duplicate field\(s\): value/);
+  });
 });
 
 describe("TYPE-002: record literal bound at a let annotation", () => {
