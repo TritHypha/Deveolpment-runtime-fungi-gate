@@ -1,5 +1,26 @@
 # TODO
 
+### Bounded checked-read Galerina producer green - 2026-08-03
+
+- `analyzeBoundedReadLoopEnvelope` now derives flow identity, equal literal
+  bounds 1 through 1,000,000 and the complete thirteen-fact proof proposal.
+- The existing exact-million API remains unchanged. Complete bounded
+  candidates remain K3 Unknown until independent SLIDE/VOK admission; malformed
+  shapes, mismatched/out-of-profile bounds and wrong permissions deny.
+- The self-hosted `.fungi` authority model rechecks the same fact set and bound
+  ceiling. Its exhaustive 8,192-vector fact lane never releases authority and
+  explicitly denies an impossible upstream Allow.
+- Omitting `contract.permissions` keeps the source valid on checked execution;
+  only the optimization proposal refuses.
+- Focused producer/model evidence passes 32/32, TypeScript build succeeds and
+  complete compiler evidence passes 5,794/5,794 across 1,218 suites; Node
+  remains 1 -> 1.
+- **Open:** confined bounded `.fungi` file-to-`.slide` CLI, Galerina build
+  selection, checked fallback parity, production authority and platform/native
+  evidence. Package conversion remains the owner's separate lane.
+- Report:
+  `docs/reports/bounded-checked-read-producer-completion-2026-08-03.md`.
+
 ### Registered bounded checked-read SLIDE profile green - 2026-08-03
 
 - Independent SLIDE now accepts a separate registered family with variable

@@ -8,6 +8,17 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the Galerina bounded checked-read producer is green.
+`analyzeBoundedReadLoopEnvelope` and its self-hosted `.fungi` authority model
+derive variable flow identity, equal bounds 1 through 1,000,000 and thirteen
+proof facts, while returning at most K3 Unknown. Missing permission leaves the
+ordinary checked loop valid; only optimization admission denies. Focused
+producer/model evidence is 32/32 and the complete 8,192-vector fact space never
+releases authority. Complete compiler evidence is 5,794/5,794 across 1,218
+suites with Node 1 -> 1. The bounded physical file compiler, build selector,
+checked parity and production authority remain blue; package conversion is
+unchanged.
+
 Roadmap refresh: the registered bounded checked-read SLIDE profile is green as
 a reference backend. A strict `.fungi` family with variable flow identity and
 literal bounds 1 through 1,000,000 lowers into a distinct canonical 208-byte

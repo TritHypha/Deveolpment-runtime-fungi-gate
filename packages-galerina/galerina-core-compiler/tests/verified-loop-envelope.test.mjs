@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  analyzeBoundedReadLoopEnvelope,
   analyzeMillionReadLoopEnvelope,
   checkProfiles,
   parseProgram,
@@ -46,6 +47,10 @@ function analyze(source = VALID_SOURCE, flowName = "readMillionValues") {
   return analyzeMillionReadLoopEnvelope(parse(source).ast, flowName);
 }
 
+function analyzeBounded(source, flowName) {
+  return analyzeBoundedReadLoopEnvelope(parse(source).ast, flowName);
+}
+
 function expectRefusal(source, failureId) {
   const result = analyze(source);
   assert.equal(result.candidate, false);
@@ -84,6 +89,63 @@ test("exact million-read loop produces a non-authorizing proposal", () => {
     invariant: "i(k)=k AND 0<=k<=1000000",
   });
   assert.equal(Object.isFrozen(result.proof), true);
+});
+
+test("bounded checked-read proposal derives the flow-local bound and proof", () => {
+  const source = VALID_SOURCE
+    .replace("readMillionValues", "readThirtySevenValues")
+    .replaceAll("1000000", "37");
+  const result = analyzeBounded(source, "readThirtySevenValues");
+
+  assert.equal(result.schemaId, "galerina.bounded-checked-read.proposal.v1");
+  assert.equal(result.candidate, true);
+  assert.equal(result.verdict, 0);
+  assert.equal(result.flowName, "readThirtySevenValues");
+  assert.equal(result.bound, 37);
+  assert.equal(result.permissionTarget, "values");
+  assert.equal(result.executionWhenNotAdmitted, "checked");
+  assert.deepEqual(Object.values(result.facts), Array(13).fill(true));
+  assert.deepEqual(result.proof, {
+    arithmeticModelId: "galerina.int.checked.v1",
+    initialValue: 0,
+    step: 1,
+    boundExclusive: 37,
+    maximumAccessIndex: 36,
+    terminalValue: 37,
+    exactTripCount: 37,
+    invariant: "i(k)=k AND 0<=k<=37",
+  });
+});
+
+test("bounded proposal keeps omission checked and rejects mismatched or excessive bounds", () => {
+  const ten = VALID_SOURCE
+    .replace("readMillionValues", "readTenValues")
+    .replaceAll("1000000", "10");
+  const omitted = analyzeBounded(
+    ten.replace(/\s+permissions \{[\s\S]*?\n  \}/, ""),
+    "readTenValues",
+  );
+  assert.equal(omitted.candidate, false);
+  assert.equal(omitted.verdict, -1);
+  assert.equal(omitted.executionWhenNotAdmitted, "checked");
+  assert.ok(omitted.failureIds.includes("VERIFIED_NATIVE_PERMISSION_MISSING"));
+
+  const mismatched = analyzeBounded(
+    ten.replace("while i < 10", "while i < 9"),
+    "readTenValues",
+  );
+  assert.equal(mismatched.candidate, false);
+  assert.ok(mismatched.failureIds.includes("LOOP_BOUND_MISMATCH"));
+
+  for (const [name, bound] of [["readZeroValues", "0"], ["readTooManyValues", "1000001"]]) {
+    const source = VALID_SOURCE
+      .replace("readMillionValues", name)
+      .replaceAll("1000000", bound);
+    const result = analyzeBounded(source, name);
+    assert.equal(result.candidate, false);
+    assert.ok(result.failureIds.includes("BOUND_OUT_OF_PROFILE"));
+    assert.equal(result.proof, null);
+  }
 });
 
 test("missing flow refuses rather than manufacturing a default proposal", () => {

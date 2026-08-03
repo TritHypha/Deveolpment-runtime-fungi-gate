@@ -1015,7 +1015,10 @@ export {
 // Verified Native Operation research floor: exact million-read loop proposal.
 // This analyzer never emits bytes or returns an authorizing (+1) verdict.
 export {
+  analyzeBoundedReadLoopEnvelope,
   analyzeMillionReadLoopEnvelope,
+  type BoundedLoopInductionProof,
+  type BoundedReadLoopProposal,
   type LoopEnvelopeTrit,
   type VerifiedLoopEnvelopeFacts,
   type VerifiedLoopEnvelopeProposal,

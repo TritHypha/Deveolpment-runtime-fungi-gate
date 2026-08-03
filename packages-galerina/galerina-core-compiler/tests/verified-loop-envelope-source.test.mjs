@@ -96,6 +96,23 @@ async function propose(mask) {
   return result.value;
 }
 
+async function proposeBounded(mask, bound) {
+  const result = await executeFlow(
+    "boundedReadLoopPropose",
+    new Map([
+      ["facts", factsValue(mask)],
+      ["bound", { __tag: "int", value: BigInt(bound) }],
+    ]),
+    parsed.ast,
+    parsed.flows,
+    undefined,
+    undefined,
+    { pureFastPath: false },
+  );
+  assert.equal(result.audit.result, "ok", JSON.stringify(result.audit));
+  return result.value;
+}
+
 describe("verified loop envelope .fungi authority model", () => {
   it("is a declared package asset and passes every production source gate", async () => {
     const packageDocument = JSON.parse(await readFile(PACKAGE, "utf8"));
@@ -148,5 +165,24 @@ describe("verified loop envelope .fungi authority model", () => {
       assert.equal(verdict.value, -1);
       assert.equal(failureId.value, FAILURE_IDS[firstMissing]);
     }
+  });
+
+  it("keeps bounded proposals non-authorizing and rejects out-of-profile bounds", async () => {
+    const admittedShape = await proposeBounded(8191, 37);
+    assert.equal(field(admittedShape, "schemaId").value, "galerina.bounded-checked-read.proposal.v1");
+    assert.equal(field(admittedShape, "candidate").value, true);
+    assert.equal(field(admittedShape, "verdict").value, 0);
+
+    for (const bound of [0, 1000001]) {
+      const refused = await proposeBounded(8191, bound);
+      assert.equal(field(refused, "candidate").value, false);
+      assert.equal(field(refused, "verdict").value, -1);
+      assert.equal(field(refused, "failureId").value, "BOUND_OUT_OF_PROFILE");
+    }
+
+    const missingPermission = await proposeBounded(8191 & ~(1 << 1), 37);
+    assert.equal(field(missingPermission, "candidate").value, false);
+    assert.equal(field(missingPermission, "verdict").value, -1);
+    assert.equal(field(missingPermission, "failureId").value, "VERIFIED_NATIVE_PERMISSION_MISSING");
   });
 });

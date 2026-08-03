@@ -93,3 +93,47 @@ contract { intent { "Recheck a verified-loop-envelope proposal without granting 
     failureId: "INDEPENDENT_VERIFIER_UNAVAILABLE"
   }
 }
+
+// Return a bounded-profile denial without carrying any executable authority.
+pure flow boundedReadLoopDeny(
+  failureId: String,
+) -> VerifiedLoopEnvelopeSourceProposal
+contract { intent { "Refuse an incomplete bounded checked-read proposal." } }
+{
+  return {
+    schemaId: "galerina.bounded-checked-read.proposal.v1"
+    candidate: false
+    verdict: Verdict.Deny
+    failureId: failureId
+  }
+}
+
+// Reuse the thirteen-fact audit, then apply the registered bound ceiling.
+// The final candidate remains Unknown until independent SLIDE and VOK admission.
+pure flow boundedReadLoopPropose(
+  facts: VerifiedLoopEnvelopeSourceFacts,
+  bound: Int,
+) -> VerifiedLoopEnvelopeSourceProposal
+contract { intent { "Recheck one registered bounded checked-read proposal without granting authority." } }
+{
+  let factsProposal = verifiedLoopEnvelopePropose(facts)
+  check(factsProposal.verdict) {
+    deny: {
+      return boundedReadLoopDeny(factsProposal.failureId)
+    }
+    ambig: {
+      if bound < 1 or bound > 1000000 {
+        return boundedReadLoopDeny("BOUND_OUT_OF_PROFILE")
+      }
+      return {
+        schemaId: "galerina.bounded-checked-read.proposal.v1"
+        candidate: true
+        verdict: Verdict.Unknown
+        failureId: "INDEPENDENT_VERIFIER_UNAVAILABLE"
+      }
+    }
+    if: {
+      return boundedReadLoopDeny("UPSTREAM_AUTHORITY_VIOLATION")
+    }
+  }
+}

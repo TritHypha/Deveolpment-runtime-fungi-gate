@@ -46,10 +46,39 @@ export interface VerifiedLoopEnvelopeProposal {
   readonly failureIds: readonly string[];
 }
 
+export interface BoundedLoopInductionProof {
+  readonly arithmeticModelId: "galerina.int.checked.v1";
+  readonly initialValue: 0;
+  readonly step: 1;
+  readonly boundExclusive: number;
+  readonly maximumAccessIndex: number;
+  readonly terminalValue: number;
+  readonly exactTripCount: number;
+  readonly invariant: string;
+}
+
+export interface BoundedReadLoopProposal {
+  readonly schemaId: "galerina.bounded-checked-read.proposal.v1";
+  readonly candidate: boolean;
+  readonly verdict: LoopEnvelopeTrit;
+  readonly flowName: string;
+  readonly collectionName: "values";
+  readonly inductionName: "i";
+  readonly bound: number;
+  readonly facts: VerifiedLoopEnvelopeFacts;
+  readonly proof: BoundedLoopInductionProof | null;
+  readonly executionWhenNotAdmitted: "checked";
+  readonly requiredPermission: "verified_native_checked_read_loop_v1";
+  readonly permissionTarget: "values";
+  readonly contractSuggestion: "permissions { require verified_native_checked_read_loop_v1 on values }";
+  readonly failureIds: readonly string[];
+}
+
 const SCHEMA_ID = "galerina.verified-loop-envelope.proposal.v2" as const;
 const COLLECTION_NAME = "values" as const;
 const INDUCTION_NAME = "i" as const;
 const BOUND = 1000000 as const;
+const MIN_BOUND = 1 as const;
 const MAXIMUM_ACCESS_INDEX = 999999 as const;
 const CONTRACT_PERMISSION = "verified_native_checked_read_loop_v1" as const;
 const FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
@@ -88,7 +117,7 @@ function isTerminalErrorReturn(node: AstNode | undefined): boolean {
     && children(expression).length === 1;
 }
 
-function isExactCardinalityGate(node: AstNode | undefined): boolean {
+function isExactCardinalityGate(node: AstNode | undefined, bound: number = BOUND): boolean {
   const parts = children(node);
   const condition = parts[0];
   const refusalBlock = parts[1];
@@ -103,7 +132,7 @@ function isExactCardinalityGate(node: AstNode | undefined): boolean {
 
   return node?.kind === "ifStmt"
     && parts.length === 2
-    && isExactBinary(condition, "!=", leftIsCount, (candidate) => isNumber(candidate, BOUND))
+    && isExactBinary(condition, "!=", leftIsCount, (candidate) => isNumber(candidate, bound))
     && refusalBlock?.kind === "block"
     && children(refusalBlock).length === 1
     && isTerminalErrorReturn(children(refusalBlock)[0]);
@@ -123,12 +152,12 @@ function isExactResultInitialization(node: AstNode | undefined): boolean {
     && isNumber(children(node)[0], 0);
 }
 
-function isExactLoopCondition(node: AstNode | undefined): boolean {
+function isExactLoopCondition(node: AstNode | undefined, bound: number = BOUND): boolean {
   return isExactBinary(
     node,
     "<",
     (candidate) => isIdentifier(candidate, INDUCTION_NAME),
-    (candidate) => isNumber(candidate, BOUND),
+    (candidate) => isNumber(candidate, bound),
   );
 }
 
@@ -302,37 +331,18 @@ function proposal(
   });
 }
 
-export function analyzeMillionReadLoopEnvelope(
-  ast: AstNode,
-  flowName: string,
-): VerifiedLoopEnvelopeProposal {
-  const flow = children(ast).find((node) => FLOW_KINDS.has(node.kind) && node.value === flowName);
-  if (flow === undefined) {
-    const facts: VerifiedLoopEnvelopeFacts = {
-      exactFlowShape: false,
-      exactContractPermission: false,
-      exactCardinalityGate: false,
-      exactInductionInitialization: false,
-      exactLoopCondition: false,
-      exactIndexAccess: false,
-      exactOptionMatch: false,
-      exactInductionStep: false,
-      closedLoopBody: false,
-      inductionInvariantDerived: false,
-      overflowImpossible: false,
-      exactTripCountDerived: false,
-      accessDominatedByGuard: false,
-    };
-    return proposal(flowName, facts, Object.freeze(["FLOW_NOT_FOUND"]));
-  }
-
+function analyzeFlowFacts(
+  flow: AstNode,
+  bound: number,
+  boundsMatch: boolean,
+): VerifiedLoopEnvelopeFacts {
   const body = children(flow).find((node) => node.kind === "block");
   const statements = children(body);
   const loops = collectNodes(flow, (node) => node.kind === "whileStmt");
   const loop = loops[0];
   const loopStatementIndex = loop === undefined ? -1 : statements.indexOf(loop);
   const beforeLoop = loopStatementIndex < 0 ? [] : statements.slice(0, loopStatementIndex);
-  const cardinalityGates = beforeLoop.filter(isExactCardinalityGate);
+  const cardinalityGates = beforeLoop.filter((node) => isExactCardinalityGate(node, bound));
   const inductionInitializations = beforeLoop.filter(isExactInductionInitialization);
   const loopStatements = children(children(loop)[1]);
   const getCalls = loop === undefined
@@ -349,7 +359,7 @@ export function analyzeMillionReadLoopEnvelope(
     : collectNodes(loop, (node) => node.kind === "callExpr");
   const allowedCalls = loopCalls.every((node) => node.value === "get" || node.value === "Err");
   const exactOuterShape = statements.length === 5
-    && isExactCardinalityGate(statements[0])
+    && isExactCardinalityGate(statements[0], bound)
     && isExactInductionInitialization(statements[1])
     && isExactResultInitialization(statements[2])
     && statements[3] === loop
@@ -360,7 +370,7 @@ export function analyzeMillionReadLoopEnvelope(
     exactContractPermission: isExactContractPermission(flow),
     exactCardinalityGate: cardinalityGates.length === 1,
     exactInductionInitialization: inductionInitializations.length === 1,
-    exactLoopCondition: loops.length >= 1 && isExactLoopCondition(children(loop)[0]),
+    exactLoopCondition: loops.length >= 1 && isExactLoopCondition(children(loop)[0], bound),
     exactIndexAccess: getCalls.length === 1 && isExactGet(getCalls[0]),
     exactOptionMatch: isExactSelection(loopStatements[0]) && isExactOptionMatch(loopStatements[1]),
     exactInductionStep: inductionWrites.length === 1
@@ -372,21 +382,152 @@ export function analyzeMillionReadLoopEnvelope(
       && collectionWrites.length === 0
       && allowedCalls,
   };
-  const inductionInvariantDerived = structuralFacts.exactInductionInitialization
+  const inductionInvariantDerived = boundsMatch
+    && structuralFacts.exactInductionInitialization
     && structuralFacts.exactLoopCondition
     && structuralFacts.exactInductionStep
     && structuralFacts.closedLoopBody;
   const facts: VerifiedLoopEnvelopeFacts = {
     ...structuralFacts,
     inductionInvariantDerived,
-    overflowImpossible: inductionInvariantDerived && BOUND <= 2147483647,
-    exactTripCountDerived: inductionInvariantDerived && BOUND >= 0,
-    accessDominatedByGuard: structuralFacts.exactCardinalityGate
+    overflowImpossible: inductionInvariantDerived && bound <= 2147483647,
+    exactTripCountDerived: inductionInvariantDerived && bound >= MIN_BOUND,
+    accessDominatedByGuard: boundsMatch
+      && structuralFacts.exactCardinalityGate
       && structuralFacts.exactLoopCondition
       && structuralFacts.exactIndexAccess
       && structuralFacts.exactOptionMatch
       && structuralFacts.closedLoopBody,
   };
+  return facts;
+}
 
+export function analyzeMillionReadLoopEnvelope(
+  ast: AstNode,
+  flowName: string,
+): VerifiedLoopEnvelopeProposal {
+  const flow = children(ast).find((node) => FLOW_KINDS.has(node.kind) && node.value === flowName);
+  if (flow === undefined) {
+    return proposal(flowName, emptyFacts(), Object.freeze(["FLOW_NOT_FOUND"]));
+  }
+
+  const facts = analyzeFlowFacts(flow, BOUND, true);
   return proposal(flowName, facts, refusalIds(facts));
+}
+
+function literalInteger(node: AstNode | undefined): number | null {
+  if (
+    node?.kind !== "numberLiteral"
+    || typeof node.value !== "string"
+    || !/^(?:0|[1-9][0-9]*)$/u.test(node.value)
+  ) return null;
+  const value = Number(node.value);
+  return Number.isSafeInteger(value) ? value : null;
+}
+
+function cardinalityBound(node: AstNode | undefined): number | null {
+  const condition = children(node)[0];
+  const operands = children(condition);
+  return node?.kind === "ifStmt"
+    && condition?.kind === "binaryExpr"
+    && condition.value === "!="
+    && operands.length === 2
+    ? literalInteger(operands[1])
+    : null;
+}
+
+function loopBound(node: AstNode | undefined): number | null {
+  const condition = children(node)[0];
+  const operands = children(condition);
+  return node?.kind === "whileStmt"
+    && condition?.kind === "binaryExpr"
+    && condition.value === "<"
+    && operands.length === 2
+    ? literalInteger(operands[1])
+    : null;
+}
+
+function emptyFacts(): VerifiedLoopEnvelopeFacts {
+  return {
+    exactFlowShape: false,
+    exactContractPermission: false,
+    exactCardinalityGate: false,
+    exactInductionInitialization: false,
+    exactLoopCondition: false,
+    exactIndexAccess: false,
+    exactOptionMatch: false,
+    exactInductionStep: false,
+    closedLoopBody: false,
+    inductionInvariantDerived: false,
+    overflowImpossible: false,
+    exactTripCountDerived: false,
+    accessDominatedByGuard: false,
+  };
+}
+
+function boundedProof(bound: number): BoundedLoopInductionProof {
+  return Object.freeze({
+    arithmeticModelId: "galerina.int.checked.v1",
+    initialValue: 0,
+    step: 1,
+    boundExclusive: bound,
+    maximumAccessIndex: bound - 1,
+    terminalValue: bound,
+    exactTripCount: bound,
+    invariant: `i(k)=k AND 0<=k<=${bound}`,
+  });
+}
+
+function boundedProposal(
+  flowName: string,
+  bound: number,
+  facts: VerifiedLoopEnvelopeFacts,
+  failureIds: readonly string[],
+): BoundedReadLoopProposal {
+  const candidate = failureIds.length === 0;
+  return Object.freeze({
+    schemaId: "galerina.bounded-checked-read.proposal.v1",
+    candidate,
+    verdict: candidate ? 0 : -1,
+    flowName,
+    collectionName: COLLECTION_NAME,
+    inductionName: INDUCTION_NAME,
+    bound,
+    facts: Object.freeze(facts),
+    proof: candidate ? boundedProof(bound) : null,
+    executionWhenNotAdmitted: "checked",
+    requiredPermission: CONTRACT_PERMISSION,
+    permissionTarget: COLLECTION_NAME,
+    contractSuggestion: "permissions { require verified_native_checked_read_loop_v1 on values }",
+    failureIds: candidate
+      ? Object.freeze(["INDEPENDENT_VERIFIER_UNAVAILABLE"])
+      : Object.freeze([...failureIds]),
+  });
+}
+
+export function analyzeBoundedReadLoopEnvelope(
+  ast: AstNode,
+  flowName: string,
+): BoundedReadLoopProposal {
+  const flow = children(ast).find((node) => FLOW_KINDS.has(node.kind) && node.value === flowName);
+  if (flow === undefined) {
+    return boundedProposal(flowName, 0, emptyFacts(), Object.freeze(["FLOW_NOT_FOUND"]));
+  }
+
+  const body = children(flow).find((node) => node.kind === "block");
+  const statements = children(body);
+  const loops = collectNodes(flow, (node) => node.kind === "whileStmt");
+  const loop = loops[0];
+  const declaredBound = cardinalityBound(statements[0]);
+  const repeatedBound = loopBound(loop);
+  const bound = declaredBound ?? repeatedBound ?? 0;
+  const boundsMatch = declaredBound !== null
+    && repeatedBound !== null
+    && declaredBound === repeatedBound;
+  const boundInProfile = bound >= MIN_BOUND && bound <= BOUND;
+  const facts = analyzeFlowFacts(flow, bound, boundsMatch);
+  const failures = [...refusalIds(facts)];
+  if (!boundsMatch) failures.push("LOOP_BOUND_MISMATCH");
+  if (!boundInProfile) failures.push("BOUND_OUT_OF_PROFILE");
+  return boundedProposal(flowName, bound, facts, failures);
 }
