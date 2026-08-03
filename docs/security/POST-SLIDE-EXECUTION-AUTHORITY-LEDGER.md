@@ -98,8 +98,8 @@ Production activation remains blue. The tracked ledger contains two exact
 checked-decision candidates, zero signed production sources and zero signed
 host boundaries. The beta-v1 operational release-evidence delegation/public
 bundle is also deliberately absent pending the later offline ceremony.
-Consequently the live audit still reports 110 unexecuted `.fungi` sources and
-36 unowned host boundaries. Those are real admission work, not a missing
+Consequently the live audit still reports 111 unexecuted `.fungi` sources and
+38 unowned host boundaries. Those are real admission work, not a missing
 verifier and not exemptions.
 
 Verification:
