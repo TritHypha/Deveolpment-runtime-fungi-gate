@@ -8,6 +8,18 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap correction: V2-C semantic-verifier closure is green. The verifier now
+re-derives the frozen function, block, instruction, value, block-parameter,
+call-depth, reachability, acyclicity, dense-ID, dominance and opcode-type rules
+instead of trusting the declared limit vector. Whole-source validation plus
+selected dependency-closure lowering, bounded K3 decomposition and typed
+routing joins preserve the registry without raising a ceiling. The corrected
+current survey is 53/154 admitted pure flows across 20/53 files: 3
+checked-decision, 4 routing and 46 scalar. The earlier 64/154 figure is
+superseded because it included graphs admitted through the missing limit
+checks. Dynamic routing `dispatch` is a concrete successor-profile blocker;
+package conversion remains untouched.
+
 Roadmap refresh: the pure-scalar compiler's structured-control-flow widening
 is green. Boolean results, inferred immutable locals, trailing parameter
 commas, typed inequality, bounded short-circuit `or`, optional `else` and
@@ -452,7 +464,7 @@ flowchart TB
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
     H["🟦 Independent SLIDE<br/>general executable backend"]
-    PS["🟩 Pure-scalar module compiler<br/>64/154 current pure flows · 20 files<br/>466/466 · reference-only"]
+    PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     EB["🟩 Independent V2-B broker floor<br/>eight K3 gates · affine lease · audit-before-success<br/>398/398 · reference-only"]

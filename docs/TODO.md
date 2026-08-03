@@ -1,5 +1,22 @@
 # TODO
 
+### V2-C semantic-verifier closure and coverage correction - 2026-08-03
+
+- SLIDE now re-derives every frozen V2-C graph ceiling, reachability,
+  acyclicity, dense identity, SSA dominance and registered opcode type rule in
+  both source production and independent CBOR preparation.
+- Checked producers validate the complete `.fungi` source and lower only the
+  selected runtime dependency closure. Large K3 Boolean folds and routing
+  matches were compacted without raising a limit or adding fallback.
+- The honest current survey is 53/154 pure flows across 20/53 files: 3
+  checked-decision, 4 routing and 46 scalar. The previous 64/154 figure relied
+  on missing ceiling enforcement and is superseded as current evidence.
+- Dynamic routing `dispatch` remains refused by frozen V2-C and identifies a
+  concrete requirement for the registered general-backend successor.
+- The owner's package-conversion lane remains untouched.
+- Report: SLIDE
+  `docs/reports/v2c-semantic-verifier-closure-2026-08-03.md`.
+
 ### Pure-scalar structured control flow green - 2026-08-03
 
 - SLIDE's checked scalar frontend now admits `Bool` results, inferred
