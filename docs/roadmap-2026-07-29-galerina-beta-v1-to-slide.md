@@ -12,6 +12,17 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the physical multi-package K3 `Verdict` result profile is
+green as bounded reference evidence at SLIDE commit `bbb844b`. The independent
+pure-scalar compiler admits a declared Verdict result, and the physical receipt
+accepts only exact machine values `-1`, `0` or `1` before Safe Value encoding.
+All three values remain distinct through physical `.slide` execution and exact
+external re-admission; `2` refuses. Focused compiler/loader evidence is 15/15;
+complete SLIDE is 516/516 across 53 suites; contracts are 29/29; benchmark and
+security closure verify; the 59-file tool identity verifies; and Node remains
+1 -> 1. String/Bytes/collection/resource/effect result profiles and production
+authority remain blue; package conversion is unchanged.
+
 Roadmap refresh: SLIDE's cross-platform CI candidate is locally closed at
 commit `57ffab5`. The workflow creates sibling SHA-pinned SLIDE/Galerina
 checkouts and builds the exact compiler closure before its Windows, macOS and
@@ -34,9 +45,10 @@ across 52 suites, with contracts 29/29, security closure `+1`/K3 `0`, the
 The `Bool` profile admits only declared Boolean results and converts canonical
 VOK `0`/`1` machine values at that typed boundary; all other representations
 refuse. The earlier Boolean probe omitted the required multi-flow
-`sourceFlowName` and was a manifest failure, not a compiler limitation. K3
-Verdict, String and collection physical profiles remain blue rather than latent
-permissions. Production admission and package conversion are unchanged.
+`sourceFlowName` and was a manifest failure, not a compiler limitation. The
+later `bbb844b` checkpoint adds exact K3 Verdict results. String and collection
+physical profiles remain blue rather than latent permissions. Production
+admission and package conversion are unchanged.
 
 Roadmap refresh: typed package execution receipt v2 is green as a bounded
 reference boundary. It replaces the loose signed-32-bit result field with one
@@ -649,7 +661,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>local 3-OS CI candidate green"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>Int · Bool · K3 physical results green"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

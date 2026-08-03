@@ -4,6 +4,21 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Physical package K3 Verdict receipt green - 2026-08-03
+
+- SLIDE commit `bbb844b` extends the independent pure-scalar result profile
+  from `Int`/`Bool` to declared K3 `Verdict` without changing Galerina syntax.
+- Exact `-1`, `0` and `1` results remain distinct through `.fungi`
+  compilation, flat publication, physical `.slide` execution, Safe Value
+  receipt inspection and caller-supplied exact re-admission. The invalid value
+  `2` refuses without releasing a typed result.
+- Focused compiler/loader evidence is 15/15. Complete SLIDE is 516/516 across
+  53 suites; contracts are 29/29; benchmark and security closure verify; the
+  59-file tool identity verifies; and Node remains 1 -> 1.
+- This remains reference-only. String/Bytes/collection/resource/effect
+  results, production authentication/durability/admission and package
+  conversion remain open.
+
 ### SLIDE cross-platform CI candidate locally closed - 2026-08-03
 
 - SLIDE commit `57ffab5` now uses sibling SHA-pinned SLIDE/Galerina checkouts
