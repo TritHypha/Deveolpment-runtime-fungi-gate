@@ -1,0 +1,75 @@
+@version 1
+/// @file: verified-loop-envelope.fungi
+/// @purpose: Recheck compiler-derived facts for the bounded million-read loop proposal.
+/// @status: Proposal only; an independent verifier and VOK lease remain mandatory.
+
+record VerifiedLoopEnvelopeSourceFacts {
+  exactFlowShape: Bool
+  exactCardinalityGate: Bool
+  exactInductionInitialization: Bool
+  exactLoopCondition: Bool
+  exactIndexAccess: Bool
+  exactOptionMatch: Bool
+  exactInductionStep: Bool
+  closedLoopBody: Bool
+}
+
+record VerifiedLoopEnvelopeSourceProposal {
+  schemaId: String
+  candidate: Bool
+  verdict: Verdict
+  failureId: String
+}
+
+// Refuse a structurally incomplete proposal without releasing authority.
+pure flow verifiedLoopEnvelopeDeny(
+  failureId: String,
+) -> VerifiedLoopEnvelopeSourceProposal
+contract { intent { "Refuse an incomplete verified-loop-envelope proposal." } }
+{
+  return {
+    schemaId: "galerina.verified-loop-envelope.proposal.v1"
+    candidate: false
+    verdict: Verdict.Deny
+    failureId: failureId
+  }
+}
+
+// Recheck every compiler fact but keep an exact candidate Unknown until independent admission.
+pure flow verifiedLoopEnvelopePropose(
+  facts: VerifiedLoopEnvelopeSourceFacts,
+) -> VerifiedLoopEnvelopeSourceProposal
+contract { intent { "Recheck a verified-loop-envelope proposal without granting execution authority." } }
+{
+  if facts.exactFlowShape == false {
+    return verifiedLoopEnvelopeDeny("FLOW_SHAPE_NOT_EXACT")
+  }
+  if facts.exactCardinalityGate == false {
+    return verifiedLoopEnvelopeDeny("CARDINALITY_GATE_NOT_EXACT")
+  }
+  if facts.exactInductionInitialization == false {
+    return verifiedLoopEnvelopeDeny("INDUCTION_INITIALIZATION_NOT_EXACT")
+  }
+  if facts.exactLoopCondition == false {
+    return verifiedLoopEnvelopeDeny("LOOP_CONDITION_NOT_EXACT")
+  }
+  if facts.exactIndexAccess == false {
+    return verifiedLoopEnvelopeDeny("INDEX_ACCESS_NOT_EXACT")
+  }
+  if facts.exactOptionMatch == false {
+    return verifiedLoopEnvelopeDeny("OPTION_MATCH_NOT_EXACT")
+  }
+  if facts.exactInductionStep == false {
+    return verifiedLoopEnvelopeDeny("INDUCTION_STEP_NOT_EXACT")
+  }
+  if facts.closedLoopBody == false {
+    return verifiedLoopEnvelopeDeny("LOOP_BODY_NOT_CLOSED")
+  }
+
+  return {
+    schemaId: "galerina.verified-loop-envelope.proposal.v1"
+    candidate: true
+    verdict: Verdict.Unknown
+    failureId: "INDEPENDENT_VERIFIER_UNAVAILABLE"
+  }
+}
