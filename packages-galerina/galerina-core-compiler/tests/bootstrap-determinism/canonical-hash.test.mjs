@@ -14,6 +14,8 @@
 // =============================================================================
 
 import assert from "node:assert/strict";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 
 import {
@@ -31,6 +33,7 @@ import {
   executionGraphCacheKey,
   getGraphCacheStats,
 } from "../../dist/index.js";
+import { __diskCacheDirForTest } from "../../dist/execution-graph.js";
 
 // ExecOp.BINOP = 3 (const enum inlined at compile time)
 const EXEC_OP_BINOP       = 3;
@@ -342,19 +345,52 @@ describe("ExecutionGraph: build and cache", () => {
     assert.ok(hasReturn, `Last node must be RETURN/RETURN_VOID, got op=${lastOp}`);
   });
 
-  it("storeGraph + getOrLoadGraph returns same graph", () => {
+  it("storeGraph + getOrLoadGraph returns the same process-local graph without persistence", () => {
     const flowNode = makeAddFlowNode();
     const graph = buildExecutionGraph(flowNode, "addCacheTest", "pure", [], true);
-    const key = executionGraphCacheKey("addCacheTest", "testhash1");
+    const key = executionGraphCacheKey("addCacheTest", `testhash-${process.pid}-${Date.now()}`);
+    const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
+    const historicalDiskPath = join(__diskCacheDirForTest, `${safe}.egraph.json`);
+    rmSync(historicalDiskPath, { force: true });
 
     storeGraph(key, graph);
     const loaded = getOrLoadGraph(key);
 
     assert.ok(loaded !== null, "getOrLoadGraph must return a graph after storeGraph");
+    assert.strictEqual(loaded, graph, "process-local reuse must preserve the admitted graph identity");
     assert.equal(loaded.flowName, graph.flowName, "flowName must round-trip");
     assert.equal(loaded.slotCount, graph.slotCount, "slotCount must round-trip");
     assert.equal(loaded.nodes.length, graph.nodes.length, "nodes.length must round-trip");
     assert.equal(loaded.isPure, graph.isPure, "isPure must round-trip");
+    assert.equal(existsSync(historicalDiskPath), false, "storeGraph must not create unauthenticated disk authority");
+  });
+
+  it("refuses a syntactically valid graph placed in the historical disk cache", () => {
+    const key = executionGraphCacheKey("forgedDiskGraph", `testhash-${process.pid}-${Date.now()}`);
+    const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
+    const historicalDiskPath = join(__diskCacheDirForTest, `${safe}.egraph.json`);
+    const forged = {
+      flowName: "forged",
+      qualifier: "pure",
+      nodes: [{ op: EXEC_OP_RETURN, dest: -1, src1: 0, src2: -1, imm: 0, opName: "", callName: "" }],
+      constants: [],
+      slotCount: 1,
+      slotNames: [["result", 0]],
+      isPure: true,
+      effectMask: 0,
+    };
+
+    mkdirSync(__diskCacheDirForTest, { recursive: true });
+    writeFileSync(historicalDiskPath, JSON.stringify(forged), "utf8");
+    try {
+      assert.equal(
+        getOrLoadGraph(key),
+        null,
+        "an unauthenticated persisted graph must never become execution authority",
+      );
+    } finally {
+      rmSync(historicalDiskPath, { force: true });
+    }
   });
 
   it("executionGraphCacheKey is deterministic", () => {

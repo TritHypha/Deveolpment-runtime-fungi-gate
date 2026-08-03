@@ -9,10 +9,9 @@
 //   - Sequential memory layout → CPU prefetcher keeps it in L1 cache
 //   - Binding slots (Int16Array indices) replace Map<string,GalerinaValue> lookups
 //   - Cache key = flowName + ":" + sourceHash
-//   - Persisted to build/.fungi-cache/<hash>.egraph.json (disk-fallback)
+//   - Process-local only: persisted graphs are not trusted as execution authority
 // =============================================================================
 
-import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { AstNode } from "./parser.js";
@@ -58,51 +57,16 @@ export interface ExecutionGraph {
 // ── Memory cache ──────────────────────────────────────────────────────────────
 const MEMORY_CACHE = new Map<string, ExecutionGraph>();
 
-// ── Disk cache ────────────────────────────────────────────────────────────────
-// ANCHORED to this package, deliberately (2026-07-25). This was `"build/.fungi-cache"` — a bare
-// RELATIVE path, so it resolved against `process.cwd()` rather than the repo. Run the compiler from
-// the repo and the cache landed in `Galerina/build/.fungi-cache` (correct, and gitignored); run it
-// with the cwd one level up and it landed in a `build/.fungi-cache` OUTSIDE every repository, where
-// no .gitignore and no cleanup reaches it. Measured when found: 204 stray files at the hub level.
-//
-// It is not only litter. This is a COMPILER CACHE keyed on flow name + source hash: an unanchored
-// path means the set of graphs the compiler trusts depends on the directory it was launched from,
-// and a shared parent directory is a cache two unrelated checkouts can both read and write. A
-// build input whose location varies with cwd is a supply-chain surface, not a tidiness question — so
-// it gets a fixed, in-package home. `dirname(import.meta.url)/..` is the package root from BOTH
-// `src/` (strip-types) and `dist/` (compiled), and `**/.fungi-cache/` already ignores it.
+// ── Retired disk-cache authority ──────────────────────────────────────────────
+// Current ruling: disk execution authority is retired. This historical location remains named
+// only so regression tests can prove that files placed there are ignored. Durable graph reuse
+// belongs behind SLIDE's authenticated evidence and independent re-admission boundary.
 const DISK_CACHE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "build", ".fungi-cache");
 
-// Exposed for the cwd-independence regression lock (tests/execution-graph-cache-anchor.test.mjs).
+// Exposed for historical-cache refusal and cwd-independence regression locks.
 // A test cannot assert this path is cwd-independent without being able to read it, and asserting
 // "it is absolute" would NOT catch the bug — resolve("build/…") is absolute and still moves.
 export const __diskCacheDirForTest = DISK_CACHE_DIR;
-
-function diskCachePath(key: string): string {
-  const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);
-  return join(DISK_CACHE_DIR, `${safe}.egraph.json`);
-}
-
-function ensureCacheDir(): void {
-  try { mkdirSync(DISK_CACHE_DIR, { recursive: true }); } catch {}
-}
-
-function readDiskCache(key: string): ExecutionGraph | null {
-  const path = diskCachePath(key);
-  if (!existsSync(path)) return null;
-  try {
-    const data = JSON.parse(readFileSync(path, "utf8")) as ExecutionGraph & { slotNames: [string,number][] };
-    return { ...data, slotNames: new Map(data.slotNames) };
-  } catch { return null; }
-}
-
-function writeDiskCache(key: string, graph: ExecutionGraph): void {
-  try {
-    ensureCacheDir();
-    const data = { ...graph, slotNames: [...graph.slotNames.entries()] };
-    writeFileSync(diskCachePath(key), JSON.stringify(data), "utf8");
-  } catch {}
-}
 
 // ── Graph lookup ──────────────────────────────────────────────────────────────
 
@@ -111,16 +75,11 @@ export function getCachedGraph(key: string): ExecutionGraph | null {
 }
 
 export function getOrLoadGraph(key: string): ExecutionGraph | null {
-  const mem = MEMORY_CACHE.get(key);
-  if (mem !== undefined) return mem;
-  const disk = readDiskCache(key);
-  if (disk !== null) { MEMORY_CACHE.set(key, disk); return disk; }
-  return null;
+  return MEMORY_CACHE.get(key) ?? null;
 }
 
 export function storeGraph(key: string, graph: ExecutionGraph): void {
   MEMORY_CACHE.set(key, graph);
-  writeDiskCache(key, graph);
 }
 
 // ── Graph builder ─────────────────────────────────────────────────────────────
