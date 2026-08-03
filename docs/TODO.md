@@ -1,5 +1,25 @@
 # TODO
 
+### Checked physical source-manifest to `.slide` publication green - 2026-08-03
+
+- SLIDE now accepts one exact canonical source manifest, performs stable
+  root-confined non-symlink reads of every physical `.fungi` source, compiles
+  the closed flat package set and invokes the receipt-last publisher.
+- BOMs, duplicate/reordered/missing/surplus keys, alternate whitespace, path
+  escape, backslashes, symlinks and unstable file identity/bytes refuse. No
+  ambient scan, `node_modules` lookup, WAT stage or fallback is present.
+- Public results contain only manifest/package digests, output basename,
+  counts and output basenames. The internal all-ALLOW vector is reference-only
+  and cannot enter the production ledger.
+- Focused evidence is 4/4, composed manifest/package/publication/contract is
+  19/19, complete serial SLIDE is 457/457 across 41 suites, Node is stable at
+  one, contracts are 26/26 and authenticated evidence remains K3 `0`.
+- Signed source manifests/providers, native durability, complete language
+  semantics, platform admission and owner-reviewed package conversion remain
+  open.
+- Report: SLIDE
+  `docs/reports/checked-package-source-manifest-cli-completion-2026-08-03.md`.
+
 ### Independent multi-flow routing `.fungi` to `.slide` floor green - 2026-08-03
 
 - SLIDE now independently parses a bounded multi-flow pure-routing module,
