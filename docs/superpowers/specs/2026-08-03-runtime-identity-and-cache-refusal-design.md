@@ -17,10 +17,11 @@ cryptographically strong source. A caller-supplied identity is accepted only
 when it is a bounded canonical value and is not active; malformed or duplicate
 input refuses before sandbox state changes.
 
-The execution-graph disk cache must distinguish `absent` from `rejected`.
-Missing files may produce an ordinary cache miss. Inspection, read, parse,
-shape or write failures must remain explicit failures and must not silently
-fall through as if no cache entry existed.
+The unauthenticated execution-graph disk cache must not authorize executable
+state. Execution-graph reuse remains process-local until a durable candidate
+can be independently bound to its source, compiler profile and admission
+evidence. Historical disk-cache files become inert rather than being upgraded
+from unvalidated JSON to structurally validated but still forgeable JSON.
 
 ## 2. Verified root causes
 
@@ -32,10 +33,14 @@ fall through as if no cache entry existed.
 - `ensureCacheDir()` and `writeDiskCache()` swallow every filesystem failure.
 - `readDiskCache()` returns `null` for malformed JSON and filesystem errors,
   making corruption and denied access indistinguishable from absence.
+- `getOrLoadGraph()` can return that unauthenticated disk object to
+  `executeFlow()`, which may execute it when `egraphFastPath` is enabled. The
+  filename is content-scoped, but no signature, MAC or independent graph
+  derivation binds the stored bytes to that name.
 
 The audit ledger also contains timestamps and sequence-derived event IDs, so
 this work does not claim byte-identical audit replay. It closes identity
-collision and failure-classification defects only.
+collision and unauthenticated persisted-execution authority only.
 
 ## 3. Selected design
 
@@ -51,39 +56,34 @@ Caller-provided identities remain supported for cross-component trace binding.
 They are not treated as authority: uniqueness is checked locally and their
 bytes never bypass plugin evidence or governance admission.
 
-### 3.2 Cache outcome contract
+### 3.2 Process-local cache only
 
-Represent disk-cache reads as a closed result:
+`storeGraph()` writes only to the private in-process map. `getOrLoadGraph()`
+reads only that map and returns `null` when this process has not built the
+graph. Runtime code performs no execution-graph filesystem read, directory
+creation or write.
 
-- `ok` carries one structurally validated execution graph;
-- `absent` is produced only by a verified missing-file condition; and
-- `rejected` carries a stable diagnostic reason for every other failure.
+The historical cache directory remains exported only as a regression-test
+probe. Tests place a syntactically valid hostile graph at the old path and
+prove that it cannot be observed or executed. A new process therefore rebuilds
+from the admitted AST; repeat calls within that process still reuse the exact
+built graph.
 
-`getOrLoadGraph()` may return `null` only for `absent`. A `rejected` result
-throws a dedicated cache error so the caller cannot recompute silently under
-a false cache-miss story.
+### 3.3 Durable reuse boundary
 
-Cache directory creation and writes return normally only after success. Any
-failure throws the same dedicated error family. This preserves cache
-optionality when no entry exists while making an unusable configured cache
-visible and fail-closed.
-
-### 3.3 Structural validation
-
-JSON parsing alone is not admission. A loaded record must have the expected
-closed top-level fields, bounded arrays, valid slot tuples, unique slot names
-and indices, and safe numeric values before it is converted to a `Map`.
-Unknown or malformed shapes are rejected rather than trusted through a type
-assertion.
+Durable graph reuse is deferred to the existing independent SLIDE programme.
+Any later implementation must bind graph bytes to canonical source identity,
+compiler/profile identity and independent admission evidence. A self-hash or
+closed JSON shape alone is not authentication and cannot reopen this path.
 
 ## 4. Compatibility and safety rules
 
 - Preserve the public optional correlation-ID parameter.
-- Preserve an ordinary `null` result for a genuinely absent disk-cache entry.
+- Preserve an ordinary `null` result when the process-local cache has no entry.
 - Do not make correlation IDs deterministic from request contents; that would
   expose equality and invite predictable collisions.
-- Do not catch the new cache error at a higher layer merely to restore the old
-  silent fallback.
+- Do not add a different filesystem cache or sidecar to restore the removed
+  authority.
 - Do not weaken plugin signature, artifact, capacity or governance gates.
 - Do not change package-retirement counts or claim SLIDE execution authority.
 
@@ -96,16 +96,15 @@ Completion requires fresh evidence that:
 2. malformed and overlong supplied identities refuse before state mutation;
 3. omitted identities use the canonical namespace and remain unique across a
    deterministic stress sample;
-4. a missing cache file remains an ordinary miss;
-5. malformed JSON, malformed graph shape and non-missing filesystem failures
-   are rejected distinctly;
-6. a cache-directory or cache-write failure is visible to the caller;
-7. valid disk entries still load and populate the memory cache; and
+4. a hostile graph at the historical disk path remains unobserved;
+5. `storeGraph()` creates no disk file or directory;
+6. a process-local graph still round-trips by exact object identity;
+7. a new key with only a historical disk file returns `null`; and
 8. the focused Tower Citizen and core-compiler suites, type checks and
    convention gates remain green.
 
 ## 6. Deferred work
 
-SLIDE atlas cleanup-error observability, durable cache authentication,
-cross-process correlation reservations and complete audit-ledger
+SLIDE atlas cleanup-error observability, independently admitted durable graph
+reuse, cross-process correlation reservations and complete audit-ledger
 reproducibility are separate workstreams. None is implied complete here.
