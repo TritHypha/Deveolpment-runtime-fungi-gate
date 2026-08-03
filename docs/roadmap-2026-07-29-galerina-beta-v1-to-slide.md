@@ -5,10 +5,11 @@ Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**,
 graph **5/5**, code index/registry/coverage current, benchmark publication
 fresh, and executable examples **233/233**. The latest uninterrupted complete
-phase-close passed every blocking gate in **502.1 seconds**; tooling has **347**
-passes, governed CLI marshalling has **9/9**, crypto has **21/21**, the security
-audit checked 31 files with zero findings/errors, and aggregate Node returned
-to the one pre-existing MCP process.
+phase-close passed every blocking gate in **530.3 seconds**; tooling has **358**
+passes, the executable Golden Pack is **10/10** checked with **10/10** runtime
+vectors, generator governance is **16/16**, the security audit checked 31 files
+with zero findings/errors, and aggregate Node returned to the one pre-existing
+MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -27,6 +28,18 @@ pre-existing MCP process. External conversion Round 7 is independently graded
 conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
+
+Roadmap refresh: Contract 47's bounded grouped-expression grammar is green as
+a reference implementation. At most seven simultaneously open scalar groups
+are admitted and erased at parse time, so no group node, opcode, registry or
+authority crosses canonical GIR. Explicit grouping can change precedence;
+equivalent redundant grouping emits byte-identical GIR. Malformed, eighth,
+mistyped and overflowing groups refuse. Focused evidence is 6/6 twice,
+inherited arithmetic/scalar evidence is 48/48, and complete SLIDE is 594/594
+across 60 suites. Contracts cover 42 files; benchmark, security closure `+1`
+with evidence K3 `0`, and the 59-file tool identity verify. Float arithmetic,
+mutation, loops/effects, callbacks, production authority and package
+conversion remain blue.
 
 Roadmap refresh: Contract 46's append-only checked-remainder profile is green
 as a bounded reference implementation. Signed Int32 remainder now crosses
@@ -797,7 +810,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷/% scalar + exact String/Bytes + bounded Array/Option<br/>588/588 · Contract 46 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷/% scalar + grouping + exact String/Bytes + bounded Array/Option<br/>594/594 · Contract 47 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -816,7 +829,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 7 graded 22/100<br/>0 candidates · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 8 issued · 120 pinned sources<br/>external evidence pending · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]

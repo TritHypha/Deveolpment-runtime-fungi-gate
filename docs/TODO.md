@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 47 grouped expression green - 2026-08-03
+
+- Independent SLIDE now admits at most seven nested parenthesized scalar
+  expressions through the same parse-time erasure model as Galerina. Grouping
+  adds no opcode, registry, type, effect, capability, runtime object or receipt
+  field; equivalent grouped and ungrouped source emits byte-identical GIR.
+- Grouped precedence survives checked execution, portable VOK/VEO, flat
+  package publication and physical typed-receipt re-admission. A redundant
+  group cannot promote a parent registry; malformed, eighth-level, mistyped
+  and overflowing groups refuse.
+- Focused evidence is 6/6 twice and inherited arithmetic/scalar evidence is
+  48/48. Complete SLIDE is 594/594 across 60 suites; contracts are 42 files;
+  benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
+  identity verify; Node is 1 -> 1.
+- This remains reference-only. Float arithmetic, mutation, loops/effects,
+  callbacks, production authority, owner-reviewed package conversion and
+  terminal retirement remain open.
+
 ### Full gate reconciliation and bounded host-floor repair - 2026-08-03
 
 Completion evidence: [full gate and host-floor reconciliation](reports/full-gate-and-host-floor-reconciliation-2026-08-03.md).
