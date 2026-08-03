@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Physical package literal String receipt green - 2026-08-03
+
+- SLIDE commit `d136afd` adds a bounded literal-result `String` profile to the
+  independent `.fungi -> GIR -> .slide -> VOK` package route.
+- The compiler lowers canonical source literals and exact earlier-flow calls
+  into deduplicated text constants. V2-C returns a fresh owned byte value on
+  every execution, and the physical receipt admits it only after exact
+  fixed-buffer shape, fatal UTF-8 decode, canonical UTF-8 re-encoding and a
+  post-copy mutation check.
+- Focused compiler/executor/loader evidence is 23/23. Complete SLIDE is
+  519/519 across 53 suites; contracts pass 29/29; benchmark and security
+  closure verify; the 59-file tool identity verifies; and Node remains 1 -> 1.
+- This does **not** advertise a general String ABI. String parameters,
+  equality/matching, concatenation and bounded resource accounting still
+  refuse. Physical Bytes/collections/resources/effects, production authority
+  and package conversion remain open.
+
 ### Physical package K3 Verdict receipt green - 2026-08-03
 
 - SLIDE commit `bbb844b` extends the independent pure-scalar result profile

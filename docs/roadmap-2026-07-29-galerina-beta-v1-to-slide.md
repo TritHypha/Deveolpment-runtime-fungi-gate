@@ -12,6 +12,18 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: a bounded physical package literal-`String` result profile is
+green at SLIDE commit `d136afd`. Canonical source literals and exact
+earlier-flow calls lower to deduplicated V2-C text constants; execution returns
+a fresh owned byte value, and the physical receipt re-admits it only after
+exact fixed-buffer shape, fatal UTF-8 decode, canonical UTF-8 re-encoding and a
+post-copy mutation check. Focused evidence is 23/23; complete SLIDE is 519/519
+across 53 suites; contracts are 29/29; benchmark and security closure verify;
+the 59-file tool identity verifies; and Node remains 1 -> 1. This is not a
+general String ABI: String parameters, comparison/matching, concatenation and
+resource accounting still refuse. Physical Bytes/collections/resources/
+effects, production authority and package conversion remain blue.
+
 Roadmap refresh: the physical multi-package K3 `Verdict` result profile is
 green as bounded reference evidence at SLIDE commit `bbb844b`. The independent
 pure-scalar compiler admits a declared Verdict result, and the physical receipt
@@ -20,8 +32,9 @@ All three values remain distinct through physical `.slide` execution and exact
 external re-admission; `2` refuses. Focused compiler/loader evidence is 15/15;
 complete SLIDE is 516/516 across 53 suites; contracts are 29/29; benchmark and
 security closure verify; the 59-file tool identity verifies; and Node remains
-1 -> 1. String/Bytes/collection/resource/effect result profiles and production
-authority remain blue; package conversion is unchanged.
+1 -> 1. The later `d136afd` checkpoint adds only bounded literal String
+results. General String, Bytes, collection/resource/effect profiles and
+production authority remain blue; package conversion is unchanged.
 
 Roadmap refresh: SLIDE's cross-platform CI candidate is locally closed at
 commit `57ffab5`. The workflow creates sibling SHA-pinned SLIDE/Galerina
@@ -47,7 +60,8 @@ VOK `0`/`1` machine values at that typed boundary; all other representations
 refuse. The earlier Boolean probe omitted the required multi-flow
 `sourceFlowName` and was a manifest failure, not a compiler limitation. The
 later `bbb844b` checkpoint adds exact K3 Verdict results. String and collection
-physical profiles remain blue rather than latent permissions. Production
+physical profiles remain blue except for the later bounded literal-String
+result checkpoint. No latent general String permission follows. Production
 admission and package conversion are unchanged.
 
 Roadmap refresh: typed package execution receipt v2 is green as a bounded
@@ -661,7 +675,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>Int · Bool · K3 physical results green"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>Int · Bool · K3 · literal String results green"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -824,7 +838,7 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 12/12 terminal adversarial tests; schema-v3 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and physical typed `Int`/`Bool` paths are green. The package route pins an exact 58-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. The real sibling build re-passes 1/1. This is reference-only | Add measured K3 Verdict and non-scalar compiler/result profiles; production promotion stays in row 2 |
+| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and physical typed `Int`/`Bool`/K3 plus bounded literal-`String` results are green. The package route pins an exact 59-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. The real sibling build re-passes 1/1. This is reference-only | Add general non-scalar parameters/operations/results; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
 | 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 accounted for 66 paths but was independently rejected: three files are unadmitted, two are partial, one is defective/superseded and required dossiers/parity evidence are absent | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
