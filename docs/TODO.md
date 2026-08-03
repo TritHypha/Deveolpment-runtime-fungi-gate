@@ -1,5 +1,23 @@
 # TODO
 
+### Independent SLIDE V2-B durable nonce reference floor green - 2026-08-03
+
+- SLIDE now owns an internal append-only lease-use authority with an immutable
+  store manifest and exclusive fixed generation slots. It is a library, not a
+  sidecar, and receipts expose no filesystem path.
+- Exact canonical state supports 2100-era unsigned expiry values. Complete
+  restart recovery returns K3 `0` for genuinely absent state and `-1` for
+  malformed, replayed, collided or cross-lease-substituted state.
+- Evidence is 7/7 focused and 421/421 complete SLIDE tests across 34 suites,
+  including sixteen same-process and two independent-process contenders. The
+  measured Node count returns to one before/after.
+- The green claim is the bounded reference floor. Broker receipt binding,
+  native file and parent-directory durability barriers, trusted time and
+  external crash/platform receipts remain open. Package conversion remains
+  owner-reviewed and unchanged.
+- Report: SLIDE
+  `docs/reports/v2b-durable-nonce-authority-completion-2026-08-03.md`.
+
 ### Checked `.fungi` to canonical `.slide` compiler floor green - 2026-08-03
 
 - Independent SLIDE now lowers the admitted checked-decision subset of real

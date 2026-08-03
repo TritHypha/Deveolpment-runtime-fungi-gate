@@ -1,12 +1,25 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-02
+Date: 2026-08-03
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
 with **8,846/8,846** tests, graph **5/5**, code index current, benchmark
 publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: the independent V2-B durable nonce reference floor is green.
+SLIDE now owns an internal append-only authority with an immutable manifest,
+digest-named lease directories and exclusive immutable generation slots. It
+recovers the complete contiguous chain on restart, returns K3 `0` only for
+genuinely missing state, detects cross-lease digest substitution as `-1`, and
+admits exactly one of sixteen same-process contenders and two simultaneous
+independent processes. The focused evidence is 7/7 and complete SLIDE is
+421/421 across 34 suites with Node count stable at one before/after. This is
+not a sidecar and changes no package-conversion count. The Node reference
+explicitly reports `powerLossDurability: 0`; broker receipt binding, native
+file/parent-directory barriers, trusted time and external crash/platform
+receipts remain blue.
 
 Roadmap refresh: a real bounded `.fungi -> GIR -> .slide -> VOK` route is now
 green. Independent SLIDE derives Boolean/K3 graphs directly from real source
@@ -327,6 +340,7 @@ flowchart TB
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
     EB["🟩 Independent V2-B broker floor<br/>eight K3 gates · affine lease · audit-before-success<br/>398/398 · reference-only"]
     EG["🟩 Canonical V2-B effect GIR floor<br/>bytes select operation · bundle-bound identity<br/>405/405 · reference-only"]
+    DN["🟩 Durable V2-B nonce reference<br/>append-only generations · cross-process CAS<br/>421/421 · power-loss K3=0"]
     CF["🟩 Checked .fungi → .slide compiler floor<br/>source-derived Boolean/K3 · physical .slide CLI<br/>414/414 · reference-only"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
@@ -382,6 +396,7 @@ flowchart TB
     E --> K --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
+    EG --> DN --> H
     ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
@@ -395,7 +410,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,CF,LS,FL,AV green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,CF,LS,FL,AV green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -404,12 +419,15 @@ flowchart TB
     class AR green;
 ```
 
-The green V2-B broker and effect-GIR tiles are bounded independent protocol
-floors inside the still-blue general-backend programme. Canonical bytes now
+The green V2-B broker, effect-GIR and durable-nonce tiles are bounded
+independent protocol floors inside the still-blue general-backend programme.
+Canonical bytes now
 select database read or HTTPS fetch, the reference `.slide` identity binds the
 artifact, and all eight K3 VOK gates plus audit-before-success are enforced.
-Fresh complete evidence is 405/405 at single concurrency. Authenticated
-isolated providers, crash-consistent nonce state, general package/memory/native
+The independent append-only nonce store admits one exact cross-process
+generation transition and recovers it on restart. Fresh complete evidence is
+421/421 at single test-file concurrency. Broker receipt binding, authenticated
+isolated providers, native power-loss barriers, general package/memory/native
 semantics and production platform evidence remain open. No package-conversion
 or retirement authority changed.
 
@@ -488,6 +506,7 @@ table is navigation, not authority.
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 367/367 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
 | Independent V2-B effect broker | 🟩 bounded reference floor | Exact database-read/HTTPS profiles bind resource, schema, artifact, nonce and context identities through all eight VOK gates and one affine lease. Protected response bytes are released only after a matching append-only audit ALLOW receipt; non-ALLOW, malformed, replay and hostile paths refuse without fallback. Fresh evidence is 8/8 focused, 22/22 broker/VOK/contract and 398/398 complete SLIDE with Node count stable at 1 before/after. Full GIR opcodes 9-11, authenticated isolated providers and production authority remain blue |
 | Canonical V2-B effect GIR and `.slide` floor | 🟩 bounded reference floor | Exact deterministic-CBOR bytes select database read or HTTPS fetch and close effect, capability, resource, function and instruction tables. The reference bundle digest becomes the broker artifact identity; owned context/gates close the tested prepare/execute TOCTOU seam. Fresh evidence is 20/20 focused, 25/25 with contract mutation checks, 405/405 complete across 31 suites and 21/21 contract files. Durable nonce authority, authenticated providers and the general backend remain blue |
+| Independent V2-B durable nonce authority | 🟩 bounded reference floor | Immutable manifest and append-only fixed generation slots admit exactly one same-process or independent-process transition, recover the complete chain on restart and distinguish genuinely missing K3 state from cross-lease substitution. Focused evidence is 7/7 and complete SLIDE is 421/421 across 34 suites. The library is not a sidecar and exposes no store path. `powerLossDurability: 0` keeps native barriers, trusted time, broker receipt binding and external crash receipts blue |
 | Checked `.fungi` to `.slide` compiler floor | 🟩 bounded reference floor | Independent source bytes derive total Boolean/K3 graphs, canonical V2-C GIR, exact entry re-admission and a reference `.slide` bundle. A stable-read exclusive CLI publishes one real file without overwrite. Two real fixtures plus two unregistered shapes execute 206 vectors; focused evidence is 9/9 and complete SLIDE is 414/414 across 33 suites. General syntax/effects/memory/package ABI and production admission remain blue; no package count or deletion authority changes |
 | Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 367/367, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
