@@ -1,5 +1,46 @@
 # TODO
 
+### Independent checked package build and publication floors green - 2026-08-03
+
+- A closed top-level peer set now compiles real checked `.fungi` exports into
+  canonical per-export `.slide` objects. Package identity is derived from
+  exact source/object facts, dependency descriptors bind in dependency-first
+  order and the complete set is independently re-admitted through the flat
+  ABI before fresh VOK execution.
+- A separate publisher writes every object plus one deterministic receipt
+  through an exclusive same-parent stage and non-overwriting directory
+  transition, then re-verifies the complete fileset and bytes. Public receipts
+  contain no absolute paths.
+- Build evidence is 5/5, publication is 3/3, composed lanes are 11/11 and 8/8,
+  and complete serial SLIDE is 446/446 across 39 suites with Node stable at
+  one. Contracts are 24/24; security closure is `+1` with authenticated
+  evidence K3 `0`.
+- Node power-loss durability is explicitly K3 `0`. A strict source-manifest
+  CLI, full-language calls/expressions/effects, production signing/loading and
+  the owner-reviewed package-conversion lane remain open. Counts are unchanged.
+- Reports: SLIDE
+  `docs/reports/checked-fungi-package-build-completion-2026-08-03.md` and
+  `docs/reports/checked-fungi-package-publication-completion-2026-08-03.md`.
+
+### Independent SLIDE flat package ABI floor green - 2026-08-03
+
+- SLIDE now admits one canonical byte descriptor for each top-level package
+  peer, verifies exact direct dependency versions/digests and derives one
+  deterministic dependency-first order.
+- Imports resolve only an exact exported flow signature on a caller-declared
+  direct peer. Transitive visibility, ambient lookup, copied handles, cycles,
+  duplicates and drift refuse without fallback.
+- Resource records contain type, content digest and byte length but no host
+  path and no effect authority. All eight K3 gates precede descriptor parsing.
+- Evidence is 6/6 focused and 438/438 complete serial SLIDE tests across 37
+  suites with Node count stable at one; the contract is 22/22 and security
+  closure remains `+1` with authenticated evidence K3 `0`.
+- Multi-module `.fungi` compilation and a package `.slide` object remain the
+  next independent backend increment. The owner-reviewed package-conversion
+  lane remains untouched.
+- Report: SLIDE
+  `docs/reports/flat-package-abi-completion-2026-08-03.md`.
+
 ### Canonical durable SLIDE V2-B effect `.slide` route green - 2026-08-03
 
 - The fixed `.slide` envelope and canonical effect GIR now execute through a
