@@ -20,6 +20,24 @@ counts or open items that a newer section explicitly supersedes.
 - Handover: sibling folder
   `Galerina-Fungi-Package-Staging-Round-6-2026-08-03`.
 
+### SLIDE typed package execution receipt v2 reference boundary green - 2026-08-03
+
+- The bounded package switch now carries its signed-32-bit result in the Safe
+  Value Envelope and emits a closed v2 receipt with no loose host-language
+  `value` property. Decoding occurs only after exact external package/profile,
+  receipt, type, state and provenance re-admission.
+- The receipt retains all source/frontend/GIR/semantic/admission/VOK/input/
+  transcript facts and independently enforces registered function/K3 and
+  success/failure invariants. A refused conversion consumes the affine switch;
+  no fallback or partial typed result is exposed.
+- Fresh SLIDE evidence is 506/506 across 52 suites, contracts 29/29, security
+  closure `+1` with evidence K3 `0`, and the regenerated 58-file tool manifest
+  verifies. The real sibling package build re-passes 1/1; Node remains 1 -> 1.
+- **Still open:** physical multi-package publication/loading still emits its
+  earlier bounded result surface. Non-scalar runtime lowering, authenticated
+  evidence and production ledger admission remain required. Package conversion
+  and retirement counts are unchanged.
+
 ### SLIDE Safe Value Envelope v1 reference primitive green - 2026-08-03
 
 - Independent SLIDE now owns and canonically verifies the first typed
@@ -30,8 +48,9 @@ counts or open items that a newer section explicitly supersedes.
   prototypes, invalid Unicode/UTF-8, resizable views and resource excess.
   Verification binds type, safety state, provenance and complete envelope
   identity supplied by an external expectation.
-- Fresh SLIDE evidence is 501/501 across 51 suites, contracts 29/29, security
-  closure `+1` with evidence K3 `0`, the regenerated 57-file tool manifest
+- Fresh SLIDE evidence at this superseded checkpoint was 501/501 across 51
+  suites, contracts 29/29, security closure `+1` with evidence K3 `0`; the
+  then-current 57-file tool manifest
   verifies, and Node remains 1 -> 1. The real receipt-bound sibling build was
   re-run against that new manifest and passes 1/1 with Node 1 -> 1.
 - **Still open:** this is reference-only and is not an execution receipt.
@@ -51,7 +70,7 @@ counts or open items that a newer section explicitly supersedes.
   77/77, disproving several worker blocker labels. Independent SLIDE now
   carries checked `Int` addition through package-bound `.slide` execution and
   fails closed on overflow. SLIDE additionally has the first reference-only
-  Safe Value Envelope; its complete suite is now 501/501. General collection
+  Safe Value Envelope; its complete suite is now 506/506. General collection
   lowering, mutation, loops and effects remain unadmitted by that path.
 - **Retirement inventory regenerated:** 496 tracked package TypeScript paths,
   including 481 categorised implementation paths under `src`; 111 `.fungi`
@@ -61,10 +80,11 @@ counts or open items that a newer section explicitly supersedes.
   one current `.ts`/`.fungi` twin, while the benchmark adapter and report added
   two explicitly unowned reference host boundaries. They remain retirement
   debt until independently owned or replaced.
-- **Current action:** integrate typed values into a separately versioned
-  terminal execution receipt without widening frozen V2-C. A future conversion
-  candidate requires positive, negative and mutation execution evidence in
-  addition to strict frontend acceptance.
+- **Current action:** carry the separately versioned typed receipt through
+  physical multi-package publication/loading, then widen only measured
+  non-scalar source demand. A future conversion candidate requires positive,
+  negative and mutation execution evidence in addition to strict frontend
+  acceptance.
 - Report:
   `docs/reports/round-5-fungi-package-conversion-independent-review-2026-08-03.md`.
 
