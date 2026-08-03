@@ -1,5 +1,25 @@
 # TODO
 
+### Canonical durable SLIDE V2-B effect `.slide` route green - 2026-08-03
+
+- The fixed `.slide` envelope and canonical effect GIR now execute through a
+  distinct durable bundle, GIR and broker route. Bytes still select database
+  or HTTPS; the bundle digest is the exact broker artifact identity.
+- Bundle preparation owns store/state/context/gate inputs. Dynamic request
+  length must equal the proposed state increment; reservation evidence binds
+  audit, broker and final bundle transcripts.
+- Process-local and durable handles are separate affine types. Cross-executor
+  use, K3 non-ALLOW, request mismatch, replay and audit refusal consume/refuse
+  without fallback or protected response release.
+- Evidence is 5/5 focused, 31/31 composed bundle/effect/broker and 432/432
+  complete serial SLIDE tests across 36 suites with Node count stable at one
+  before/after.
+- General package ABI/imports/resources, memory, authenticated providers,
+  trusted time, native power-loss proof, signed production admission and
+  owner-reviewed package conversion remain open.
+- Report: SLIDE
+  `docs/reports/durable-v2b-effect-slide-bundle-completion-2026-08-03.md`.
+
 ### Durable SLIDE V2-B broker reservation binding green - 2026-08-03
 
 - The distinct durable effect entrypoint now performs all eight K3 VOK gates

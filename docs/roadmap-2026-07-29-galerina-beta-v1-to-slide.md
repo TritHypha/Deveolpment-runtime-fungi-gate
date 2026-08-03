@@ -8,6 +8,19 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the canonical durable V2-B effect `.slide` route is green.
+The fixed envelope and canonical GIR now reach a distinct durable bundle/GIR/
+broker path: bytes select database or HTTPS, the bundle digest is the broker
+artifact identity, the dynamic request length must equal the proposed state
+increment, and reservation evidence reaches audit and the final bundle
+transcript. Process-local and durable handles are separate affine types;
+cross-executor use consumes and refuses without fallback. Focused durable-
+bundle evidence is 5/5, composed effect evidence is 31/31 and complete serial
+SLIDE is 432/432 across 36 suites. This closes the bounded effect route, not
+the general backend: package ABI/imports/resources, general memory,
+authenticated providers, trusted time, native power-loss proof and signed
+production admission remain blue. Package conversion is unchanged.
+
 Roadmap refresh: durable V2-B broker binding is green. A distinct effect
 preparation path performs the existing eight K3 VOK gates, independently
 re-derives store/lease/nonce/state/generation/call/request-byte/expiry facts,
@@ -29,9 +42,9 @@ admits exactly one of sixteen same-process contenders and two simultaneous
 independent processes. The focused evidence is 7/7 and complete SLIDE is
 421/421 across 34 suites with Node count stable at one before/after. This is
 not a sidecar and changes no package-conversion count. The Node reference
-explicitly reports `powerLossDurability: 0`; broker receipt binding, native
-file/parent-directory barriers, trusted time and external crash/platform
-receipts remain blue.
+explicitly reports `powerLossDurability: 0`. Later green tiles now close broker
+receipt binding and canonical bundle selection; native file/parent-directory
+barriers, trusted time and external crash/platform receipts remain blue.
 
 Roadmap refresh: a real bounded `.fungi -> GIR -> .slide -> VOK` route is now
 green. Independent SLIDE derives Boolean/K3 graphs directly from real source
@@ -54,10 +67,10 @@ A tested prepare/execute TOCTOU defect was closed by owning context and gate
 values before returning the affine handle. Fresh evidence is 20/20 focused,
 25/25 with contract mutation checks, 405/405 complete across 31 suites and
 21/21 contract files, with Node count stable at one. This does not green the
-general backend: durable nonce authority, authenticated isolated providers,
-package ABI/imports/resources, general memory/native/platform evidence and
-production admission remain open. Package conversion counts and authority are
-unchanged.
+general backend. Later green tiles now close durable nonce authority and
+canonical bundle binding; authenticated isolated providers, package ABI/
+imports/resources, general memory/native/platform evidence and production
+admission remain open. Package conversion counts and authority are unchanged.
 
 Roadmap refresh: the post-SLIDE production authority verifier is now green as
 an implementation control. Schema v3 consumes exact in-toto-shaped predicates
@@ -354,6 +367,7 @@ flowchart TB
     EG["🟩 Canonical V2-B effect GIR floor<br/>bytes select operation · bundle-bound identity<br/>405/405 · reference-only"]
     DN["🟩 Durable V2-B nonce reference<br/>append-only generations · cross-process CAS<br/>421/421 · power-loss K3=0"]
     DB["🟩 Durable V2-B broker binding<br/>reservation before dispatch · audit-bound digest<br/>427/427 · no fallback"]
+    DE["🟩 Durable effect .slide route<br/>canonical GIR → reservation → broker<br/>432/432 · affine separation"]
     CF["🟩 Checked .fungi → .slide compiler floor<br/>source-derived Boolean/K3 · physical .slide CLI<br/>414/414 · reference-only"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
@@ -409,7 +423,7 @@ flowchart TB
     E --> K --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
-    EG --> DN --> DB --> H
+    EG --> DN --> DB --> DE --> H
     ST --> WF --> CB --> GV --> H
     ST --> H
     S --> L --> H
@@ -423,7 +437,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,CF,LS,FL,AV green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -432,7 +446,8 @@ flowchart TB
     class AR green;
 ```
 
-The green V2-B broker, effect-GIR, durable-nonce and durable-binding tiles are bounded
+The green V2-B broker, effect-GIR, durable-nonce, durable-binding and durable-
+bundle tiles are bounded
 independent protocol floors inside the still-blue general-backend programme.
 Canonical bytes now
 select database read or HTTPS fetch, the reference `.slide` identity binds the
@@ -441,7 +456,8 @@ The independent append-only nonce store admits one exact cross-process
 generation transition and recovers it on restart. The durable broker now
 requires that transition before dispatch and binds its digest into audit and
 terminal evidence. Fresh complete evidence is 427/427 at single test-file
-concurrency. Canonical bundle selection, authenticated isolated providers,
+concurrency. Canonical bundle selection is now also closed by a distinct
+affine route with 432/432 complete evidence. Authenticated isolated providers,
 native power-loss barriers, general package/memory/native semantics and
 production platform evidence remain open. No package-conversion or retirement
 authority changed.
@@ -520,9 +536,10 @@ table is navigation, not authority.
 | SLIDE repository security policy | 🟩 binding policy | Root `SECURITY.md` version 1.1 resolves repository-wide and defines private disclosure, authority/complete admission, K3 fail-close, hostile-memory/injection boundaries, proposal non-authority, live-control and mutation assurance, evidence withdrawal, narrow non-findings and explicit engineering-standards alignment. Its two contract tests pass. Remote CI, authenticated evidence and production implementation remain separate gates |
 | SLIDE Verified Object Kernel | 🟩 bounded reference | Contract V2-H and `src/verified-object-kernel.mjs` implement closed typed canonical evidence, proposal non-authority, exact eight-gate K3 admission, process-local reference handles, one-use leases and terminal receipts. Complete SLIDE is 367/367 and contract integrity covers 16 files. All results state `authorityReleased: false`; no VEO execution, production authority or component removal follows |
 | Independent V2-B effect broker | 🟩 bounded reference floor | Exact database-read/HTTPS profiles bind resource, schema, artifact, nonce and context identities through all eight VOK gates and one affine lease. Protected response bytes are released only after a matching append-only audit ALLOW receipt; non-ALLOW, malformed, replay and hostile paths refuse without fallback. Fresh evidence is 8/8 focused, 22/22 broker/VOK/contract and 398/398 complete SLIDE with Node count stable at 1 before/after. Full GIR opcodes 9-11, authenticated isolated providers and production authority remain blue |
-| Canonical V2-B effect GIR and `.slide` floor | 🟩 bounded reference floor | Exact deterministic-CBOR bytes select database read or HTTPS fetch and close effect, capability, resource, function and instruction tables. The reference bundle digest becomes the broker artifact identity; owned context/gates close the tested prepare/execute TOCTOU seam. Fresh evidence is 20/20 focused, 25/25 with contract mutation checks, 405/405 complete across 31 suites and 21/21 contract files. Durable nonce authority, authenticated providers and the general backend remain blue |
-| Independent V2-B durable nonce authority | 🟩 bounded reference floor | Immutable manifest and append-only fixed generation slots admit exactly one same-process or independent-process transition, recover the complete chain on restart and distinguish genuinely missing K3 state from cross-lease substitution. Focused evidence is 7/7 and complete SLIDE is 421/421 across 34 suites. The library is not a sidecar and exposes no store path. `powerLossDurability: 0` keeps native barriers, trusted time, broker receipt binding and external crash receipts blue |
-| Durable V2-B broker reservation binding | 🟩 bounded reference floor | The distinct durable entrypoint requires all eight K3 gates and one exact append-only reservation before returning an effect lease. Store/lease/nonce/state/generation/call/request-byte/expiry facts are re-derived; reservation evidence binds audit and terminal transcript. Focused evidence is 6/6, composed effect evidence 33/33 and complete SLIDE 427/427 across 35 suites. Audit refusal suppresses response but cannot roll back the nonce. Canonical bundle selection and production durability/providers remain blue |
+| Canonical V2-B effect GIR and `.slide` floor | 🟩 bounded reference floor | Exact deterministic-CBOR bytes select database read or HTTPS fetch and close effect, capability, resource, function and instruction tables. The reference bundle digest becomes the broker artifact identity; owned context/gates close the tested prepare/execute TOCTOU seam. Fresh evidence is 20/20 focused, 25/25 with contract mutation checks, 405/405 complete across 31 suites and 21/21 contract files. Later green rows close durable nonce and bundle binding; authenticated providers and the general backend remain blue |
+| Independent V2-B durable nonce authority | 🟩 bounded reference floor | Immutable manifest and append-only fixed generation slots admit exactly one same-process or independent-process transition, recover the complete chain on restart and distinguish genuinely missing K3 state from cross-lease substitution. Focused evidence is 7/7 and complete SLIDE is 421/421 across 34 suites. The library is not a sidecar and exposes no store path. Later green rows close broker/bundle binding; `powerLossDurability: 0` keeps native barriers, trusted time and external crash receipts blue |
+| Durable V2-B broker reservation binding | 🟩 bounded reference floor | The distinct durable entrypoint requires all eight K3 gates and one exact append-only reservation before returning an effect lease. Store/lease/nonce/state/generation/call/request-byte/expiry facts are re-derived; reservation evidence binds audit and terminal transcript. Focused evidence is 6/6, composed effect evidence 33/33 and complete SLIDE 427/427 across 35 suites. Audit refusal suppresses response but cannot roll back the nonce. The later durable-bundle row closes canonical selection; production durability/providers remain blue |
+| Canonical durable V2-B effect `.slide` route | 🟩 bounded reference floor | Fixed `.slide` bytes and canonical GIR select database or HTTPS, bind the bundle digest as artifact identity and reach only the durable broker. Owned state/context/gates, exact request/state byte increment and affine process-local/durable handle separation prevent bypass. Focused evidence is 5/5, composed bundle/effect/broker 31/31 and complete SLIDE 432/432 across 36 suites. Package ABI/imports/resources, authenticated providers, trusted time, native power-loss proof and signed production admission remain blue |
 | Checked `.fungi` to `.slide` compiler floor | 🟩 bounded reference floor | Independent source bytes derive total Boolean/K3 graphs, canonical V2-C GIR, exact entry re-admission and a reference `.slide` bundle. A stable-read exclusive CLI publishes one real file without overwrite. Two real fixtures plus two unregistered shapes execute 206 vectors; focused evidence is 9/9 and complete SLIDE is 414/414 across 33 suites. General syntax/effects/memory/package ABI and production admission remain blue; no package count or deletion authority changes |
 | Native `.fungi` VOK authority boundary | 🟩 bounded linked W^X floor complete | `Authority<Tag>` retains bounded exact source use state. One native crate keeps its parser/emitter/OS adapter private, denies `unsafe` outside the exact platform module and has no safe executor bypass. It passes 30 hostile/unit tests, 14 compile-fail contracts, exact 19,683-vector native/`.fungi` parity and dependency/supply-chain scans. A live Windows x86-64 receipt proves RX/not-W immediately before one fixed-profile call and remains non-authorizing. Windows/Linux/macOS x64/Arm64 source targets compile. Opaque Galerina VM transfer, hostile-memory isolation, physical erasure, general VEO lowering and independent live Linux/macOS evidence are separate gates and receive no implied release authority |
 | SLIDE reference-platform contract | active | Exact non-authorizing profiles plus a bounded Node-bootstrap observer/report CLI cover Windows x86-64, Ubuntu/Debian/Fedora/Mint x86-64/Arm64 and macOS x86-64/Arm64. It reads no environment, shell, network, package manager, driver or cached fallback; hostile missing/surplus/accessor/Proxy inputs refuse. Current Windows 10 evidence passes 17/17 focused and complete SLIDE is 367/367, but remains unauthenticated and `UNVERIFIED`; native and all other platform runs remain open |
