@@ -13,6 +13,10 @@ runner in temporary directories and verify fail-closed publication.
 **Technology:** Node.js ESM, `node:test`, Galerina CLI, SHA-256 and tracked
 `.fungi` examples.
 
+**Status:** Completed and committed locally on 2026-08-03. The full
+phase-close passed 87/87, and the refreshed codebase index resolves the new
+Golden Pack runner at the committed HEAD.
+
 ## Task 1: Prove the missing integration seam
 
 **Files:**
@@ -89,5 +93,5 @@ runner in temporary directories and verify fail-closed publication.
   gates.
 - [x] Regenerate the project graph because docs and AGENTS change.
 - [x] Inspect the complete diff and repository status.
-- [ ] Commit only the intended Galerina files locally; do not push.
-- [ ] Refresh codebase-memory and verify its indexed commit equals the new HEAD.
+- [x] Commit only the intended Galerina files locally; do not push.
+- [x] Refresh codebase-memory and verify its indexed commit equals the new HEAD.
