@@ -1683,7 +1683,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "cd9b82eb485e478811f831eaa4008f7ab31437ccd47e0827672ecbfae000e213",
+      "contentDigest": "b20e01927c9b9f9f9303edab218d193ef1d648a6de45b9b831158ec26976a5fb",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2050,11 +2050,11 @@
       "identity": "@galerina/tools-myco",
       "version": "0.2.1",
       "directory": "galerina-tools-myco",
-      "contentDigest": "a3de3f02c2580de27e95f6e251013761e8192998d1bd936451ecda22ed04214d",
+      "contentDigest": "8a6550bb94902ef01297213093eec36adb3f3aeaab983b51ed152deb4c144c30",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "84d6b0c1eb6173ec0e645ab5b0766bf982ae1f90a6614f9b5be33a2d7ba41357"
+          "digest": "1e656ae123da259cb79d54e6647bcb745a7a97d4b183d1a8d0a3a956c57401fb"
         }
       ],
       "dependencies": [
@@ -3240,5 +3240,5 @@
       ]
     }
   ],
-  "rootDigest": "a129621d1f47478dc0c99811d83ce1ed1c4899975cf9c3fa2074cc9deaf48fe1"
+  "rootDigest": "1d7c4d4d6d3278a0bc43d90c583ff1a70f25d98f904af6041018fd83a733f992"
 }
