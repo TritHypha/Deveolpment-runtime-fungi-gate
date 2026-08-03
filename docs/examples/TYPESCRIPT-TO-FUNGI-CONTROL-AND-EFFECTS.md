@@ -229,6 +229,8 @@ Array results, nested arrays, mutation, iteration or callbacks. String and
 Bytes profiles are similarly bounded. String additionally admits exact
 `.startsWith(String) -> Bool` and `.endsWith(String) -> Bool` over canonical
 UTF-8; it does not imply a general String, collection or host-object surface.
+Exact bounded `.includes(String) -> Bool` is also admitted, with its separate
+comparison-work budget described below.
 
 Use the checked String method directly when TypeScript performs an exact prefix
 decision:
@@ -256,9 +258,28 @@ pure flow ends(value: String, suffix: String) -> Bool {
 }
 ```
 
-The same canonical UTF-8 and 256-byte limits apply. Do not substitute it for
-substring search; String `.includes` remains outside the admitted profile until
-its larger worst-case work has an explicit bounded accounting contract.
+The same canonical UTF-8 and 256-byte limits apply. Do not substitute suffix
+testing for substring search.
+
+Exact substring membership uses the checked String method directly:
+
+```ts
+return value.includes(needle);
+```
+
+```fungi
+pure flow contains(value: String, needle: String) -> Bool {
+  return value.includes(needle)
+}
+```
+
+Contract 57 keeps the 256-byte Text and 96-step ceilings but adds a distinct
+comparison-work budget. For byte lengths `n` and `m`, work is exactly
+`m(n-m+1)` when `1 <= m <= n`, zero otherwise, at most 16,512 per operation
+and 65,536 per execution. Every candidate window is visited after mismatch or
+match. Do not translate index-returning search, regex, normalization,
+case-folding, callbacks or host-object behavior as this Boolean operation.
+This reference profile does not by itself authorize package retirement.
 
 Governed CLI admission is exact by declared type and arity. `Bool` accepts only
 `true` or `false`; `Int` accepts only canonical signed decimal safe integers;

@@ -24,6 +24,22 @@ append-only AI handover channel. It starts at 0/120 terminal rows and remains
 external, quarantined and non-authorizing; package retirement counts do not
 change.
 
+Roadmap refresh: Contract 57's immutable canonical-text substring membership
+is green as a bounded reference implementation at SLIDE commit `99583dc`.
+Exact `String.includes(String) -> Bool` crosses checked Fungi, canonical opcode
+34, independent verification, VOK, `.slide`, physical publication and typed
+receipt re-admission. The inherited 256-byte Text and 96-step ceilings remain;
+comparison work is separately bounded and receipted as `m(n-m+1)` for
+`1 <= m <= n`, with maxima of 16,512 per operation and 65,536 per execution.
+All candidate windows are visited after mismatch or match using direct owned
+byte reads, without a transient view or host String/search primitive. Focused
+behavior is 5/5, the behavior/integrity slice is 10/10, inherited
+compiler/VOK/package evidence is 66/66 and complete SLIDE is 652/652 across 70
+suites. Contracts cover 57 files, security closure is `+1` with evidence K3
+`0`, the 59-file tool identity verifies, and Node is 1 -> 1. This remains
+reference-only; production authority, package conversion and terminal
+retirement remain blue.
+
 Roadmap refresh: Contract 56's immutable canonical-text suffix is green as a
 bounded reference implementation. Exact `String.endsWith(String) -> Bool`
 crosses checked Fungi, canonical opcode 33, independent verification, VOK,

@@ -23,6 +23,27 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 57 immutable canonical-text substring green - 2026-08-03
+
+- SLIDE commit `99583dc` carries exact `String.includes(String) -> Bool`
+  through checked Fungi, canonical GIR opcode 34, independent verification,
+  VOK, `.slide`, physical package publication and typed receipt re-admission.
+- Owned canonical UTF-8 operands retain the 256-byte Text ceiling and execution
+  retains 96 instruction steps. Comparison work is separately bounded and
+  receipted as `m(n-m+1)` for `1 <= m <= n`, zero otherwise, with maxima of
+  16,512 per operation and 65,536 per execution.
+- Every candidate window is visited after mismatch or match. The reference
+  creates no transient byte view and calls no host String/search primitive.
+  Operand lengths remain observable; this is fixed source-level content work,
+  not a whole-program or hardware constant-time claim.
+- Focused behavior is 5/5, behavior plus contract integrity is 10/10, the
+  inherited compiler/VOK/package slice is 66/66, and complete SLIDE is 652/652
+  across 70 suites. Contracts cover 57 files, security closure is `+1` with
+  evidence K3 `0`, the 59-file tool identity verifies, and Node is 1 -> 1.
+- This remains reference-only. Index-returning search, regex, normalization,
+  callbacks, effects, production authority, owner-reviewed conversion and
+  terminal retirement remain closed.
+
 ### SLIDE Contract 56 immutable canonical-text suffix green - 2026-08-03
 
 - Contract 56 carries exact `String.endsWith(String) -> Bool` through checked
