@@ -1,5 +1,25 @@
 # TODO
 
+### Durable SLIDE V2-B broker reservation binding green - 2026-08-03
+
+- The distinct durable effect entrypoint now performs all eight K3 VOK gates
+  and then requires one exact append-only nonce reservation before returning
+  an executable lease.
+- Store, lease, nonce, prior/next state, generation, call count, exact request-
+  byte increment, expiry and commit time are independently re-derived. The
+  caller supplies no digest or reservation evidence.
+- The reservation digest is bound into audit and the terminal transcript.
+  Audit refusal releases no response and cannot roll back the nonce; retry
+  denies without dispatch or fallback.
+- Evidence is 6/6 focused, 33/33 composed effect/broker/store/bundle and
+  427/427 complete serial SLIDE tests across 35 suites with Node count stable
+  at one before/after.
+- Canonical effect-bundle selection, native power-loss barriers, trusted time,
+  authenticated providers and external evidence remain open. Package
+  conversion is unchanged.
+- Report: SLIDE
+  `docs/reports/v2b-durable-effect-binding-completion-2026-08-03.md`.
+
 ### Independent SLIDE V2-B durable nonce reference floor green - 2026-08-03
 
 - SLIDE now owns an internal append-only lease-use authority with an immutable
