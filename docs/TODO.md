@@ -63,6 +63,23 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   soft. Each item needs measured refactoring or a narrow justified disposition;
   no blanket exemption was added.
 
+### SLIDE Contract 46 checked signed remainder registry green - 2026-08-03
+
+- Independent SLIDE now carries checked signed Int32 remainder through
+  checked-Fungi, canonical GIR, independent execution, portable VOK/VEO,
+  canonical `.slide`, flat packages and physical typed receipts.
+- Zero divisor refuses. The result sign follows the dividend, while
+  `-2147483648 % -1` succeeds as canonical zero. The rule was checked against
+  Galerina's live `i32ModChecked`; no wrapping, coercion, Float promotion or
+  host arithmetic call is admitted.
+- Focused package/physical/hostile evidence passes 41/41. Complete serial SLIDE
+  passes 588/588 across 59 suites in 38.8 seconds. The 41-file contract tree,
+  benchmark, security closure `+1` with evidence K3 `0`, and 59-file tool
+  identity verify; Node is 1 -> 1.
+- This is reference-only. Float arithmetic, general parentheses, mutation,
+  loops/effects, production authority, package conversion and terminal
+  retirement remain closed or blue.
+
 ### SLIDE Contract 45 checked signed division registry green - 2026-08-03
 
 - Independent SLIDE now carries signed Int32 division truncated toward zero
@@ -75,7 +92,8 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   passes 579/579 across 58 suites in 37.9 seconds. The 39-file contract tree,
   benchmark, security closure `+1` with evidence K3 `0`, and 59-file tool
   identity verify; Node is 1 -> 1.
-- This is reference-only. Modulo, Float arithmetic, general parentheses,
+- This is reference-only. Contract 46 above closes the former modulo gap;
+  Float arithmetic, general parentheses,
   mutation, loops/effects, production authority, package conversion and
   terminal retirement remain closed or blue.
 

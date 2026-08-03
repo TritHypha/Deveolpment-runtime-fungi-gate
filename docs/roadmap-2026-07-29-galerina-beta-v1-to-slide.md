@@ -28,6 +28,18 @@ conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
 
+Roadmap refresh: Contract 46's append-only checked-remainder profile is green
+as a bounded reference implementation. Signed Int32 remainder now crosses
+checked-Fungi, canonical GIR, independent execution, portable VOK/VEO,
+canonical `.slide`, flat packages and physical typed receipts. Zero divisor
+refuses; the result sign follows the dividend; minimum-Int remainder negative
+one succeeds with canonical zero, matching Galerina's live checked arithmetic.
+Focused evidence is 41/41 and complete serial SLIDE is 588/588 across 59
+suites. Contracts cover 41 files; benchmark, security closure `+1` with
+evidence K3 `0`, and the 59-file tool identity verify. Float arithmetic,
+general loops/effects, production authority and package conversion remain
+blue.
+
 Roadmap refresh: Contract 45's append-only checked-division profile is green as
 a bounded reference implementation. Signed Int32 division truncated toward
 zero now crosses checked-Fungi, canonical GIR, independent execution, portable
@@ -36,7 +48,8 @@ divisor and minimum-Int divided by negative one refuse, matching Galerina's
 live checked arithmetic and signed WAT behavior. Focused evidence is 38/38 and
 complete serial SLIDE is 579/579 across 58 suites. Contracts cover 39 files;
 benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
-identity verify. Modulo, Float arithmetic, general loops/effects, production
+identity verify. Contract 46 above closes the former modulo gap. Float
+arithmetic, general loops/effects, production
 authority and package conversion remain blue.
 
 Roadmap refresh: Contract 44's append-only checked-multiplication profile is
@@ -784,7 +797,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷ scalar + exact String/Bytes + bounded Array/Option<br/>579/579 · Contract 45 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷/% scalar + exact String/Bytes + bounded Array/Option<br/>588/588 · Contract 46 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
