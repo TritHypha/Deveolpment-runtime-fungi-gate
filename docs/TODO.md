@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 51 internal immutable Array/Option flow green - 2026-08-03
+
+- Existing bounded immutable `Array<Int>` and `Option<Int>` values may cross
+  internal pure helpers. The selected external entry keeps the prior rule:
+  array input is admitted, while array result and every option input/result
+  refuse.
+- The implementation reuses existing V2-C collection, call, return and
+  successor-registry evidence. It adds no opcode, type ID, registry, effect,
+  capability, Safe Value or receipt field.
+- Focused behavior/refusal/physical evidence is 4/4 and inherited evidence is
+  61/61. Complete SLIDE is 618/618 across 64 suites; contracts cover 46 files;
+  benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
+  identity verify; Node is 1 -> 1.
+- This remains reference-only. External array results/options, nested arrays,
+  iteration, map/filter/reduce, mutation, callbacks, effects, production
+  authority, owner-reviewed conversion and terminal retirement remain open.
+
 ### SLIDE Contract 50 internal immutable-record flow green - 2026-08-03
 
 - The sole bounded record schema may now cross an internal pure helper
