@@ -10,10 +10,23 @@
  *   Erase:   Clear sandbox state → write completion to audit trail
  */
 
+import { randomUUID } from "node:crypto";
 import { AuditLogger, TowerAuditEvent, type AuditLoggerOptions, type EgressSink } from "./audit-logger.js";
 import { PluginSandbox, ExecutionResult, PluginMetadata } from "./plugin-sandbox.js";
 import { verifyPluginManifest, artifactBytesHash, type SignedPluginManifest } from "./plugin-manifest.js";
 import type { AttestationPolicy } from "./bridge-attestation.js";
+
+const CORRELATION_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
+
+function admittedCorrelationId(value: string | undefined): string {
+  const id = value ?? `CORR-${randomUUID()}`;
+  if (!CORRELATION_ID.test(id)) {
+    throw new Error(
+      "ERR_CORRELATION_ID_INVALID: correlationId must be 1..128 canonical ASCII characters",
+    );
+  }
+  return id;
+}
 
 export type { TowerAuditEvent } from "./audit-logger.js";
 export type { PluginMetadata, ExecutionResult } from "./plugin-sandbox.js";
@@ -61,6 +74,7 @@ export class TowerRuntime {
   private readonly config: TowerConfig;
   private readonly audit: AuditLogger;
   private readonly sandboxes = new Map<string, PluginSandbox>();
+  private readonly loadingCorrelationIds = new Set<string>();
 
   constructor(config: Partial<TowerConfig> = {}) {
     this.config = {
@@ -97,8 +111,15 @@ export class TowerRuntime {
     correlationId?: string,
     evidence?: { artifactBytes?: Uint8Array; signedManifest?: SignedPluginManifest },
   ): Promise<{ sandbox: PluginSandbox; correlationId: string; loadEvent: TowerAuditEvent }> {
-    const corrId = correlationId ?? `CORR-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const corrId = admittedCorrelationId(correlationId);
+    if (this.sandboxes.has(corrId) || this.loadingCorrelationIds.has(corrId)) {
+      throw new Error(
+        `ERR_CORRELATION_ID_ACTIVE: correlationId '${corrId}' already identifies an active or loading sandbox`,
+      );
+    }
+    this.loadingCorrelationIds.add(corrId);
 
+    try {
     // Check assimilation budget
     if (metadata.maxMemoryMB > this.config.assimilationMemoryBudgetMB) {
       const ev = this.audit.trap(corrId, metadata.artifactHash, metadata.engineId, "BUDGET_EXCEEDED", {
@@ -109,7 +130,7 @@ export class TowerRuntime {
     }
 
     // Check plugin capacity
-    if (this.sandboxes.size >= this.config.maxPlugins) {
+    if (this.sandboxes.size + this.loadingCorrelationIds.size > this.config.maxPlugins) {
       throw new Error(`FUNGI-ASSIMILATE-002: Tower at capacity (${this.config.maxPlugins} plugins). Evict a plugin first.`);
     }
 
@@ -161,6 +182,9 @@ export class TowerRuntime {
     const loadEvent = this.audit.load(corrId, metadata.artifactHash, metadata.engineId);
 
     return { sandbox, correlationId: corrId, loadEvent };
+    } finally {
+      this.loadingCorrelationIds.delete(corrId);
+    }
   }
 
   // ── EXECUTE ───────────────────────────────────────────────────────────────

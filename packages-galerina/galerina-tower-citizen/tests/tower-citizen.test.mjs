@@ -133,6 +133,69 @@ describe("TowerRuntime: Load→Execute→Erase lifecycle", () => {
     assert.equal(tower.getActiveSandboxCount(), 0);
   });
 
+  it("refuses a duplicate active correlation identity without replacing its sandbox", async () => {
+    const tower = new TowerRuntime({
+      assimilationMemoryBudgetMB: 256,
+      allowUnsignedLoad: true,
+      auditInMemory: true,
+    });
+    const first = await tower.load(TEST_METADATA, "RUN-SAME");
+
+    await assert.rejects(
+      () => tower.load(TEST_METADATA, "RUN-SAME"),
+      /ERR_CORRELATION_ID_ACTIVE/,
+    );
+    assert.equal(tower.getActiveSandboxCount(), 1);
+
+    const result = await tower.execute(
+      first.sandbox,
+      { prompt: "still-owned" },
+      first.correlationId,
+    );
+    assert.equal(result.success, true);
+    await tower.erase(first.sandbox, first.correlationId, result);
+  });
+
+  it("refuses malformed correlation identities before sandbox state changes", async () => {
+    const tower = new TowerRuntime({
+      assimilationMemoryBudgetMB: 256,
+      allowUnsignedLoad: true,
+      auditInMemory: true,
+    });
+
+    for (const correlationId of ["", " leading", "line\nbreak", "x".repeat(129)]) {
+      await assert.rejects(
+        () => tower.load(TEST_METADATA, correlationId),
+        /ERR_CORRELATION_ID_INVALID/,
+      );
+      assert.equal(tower.getActiveSandboxCount(), 0);
+    }
+  });
+
+  it("generates unique cryptographic UUID correlation identities", async () => {
+    const tower = new TowerRuntime({
+      assimilationMemoryBudgetMB: 256,
+      allowUnsignedLoad: true,
+      auditInMemory: true,
+      maxPlugins: 128,
+    });
+    const loaded = [];
+    const identities = new Set();
+
+    for (let i = 0; i < 128; i += 1) {
+      const item = await tower.load(TEST_METADATA);
+      assert.match(item.correlationId, /^CORR-[0-9a-f-]{36}$/);
+      identities.add(item.correlationId);
+      loaded.push(item);
+    }
+    assert.equal(identities.size, 128);
+
+    for (const item of loaded) {
+      await tower.erase(item.sandbox, item.correlationId);
+    }
+    assert.equal(tower.getActiveSandboxCount(), 0);
+  });
+
   it("rejects plugin exceeding assimilation_memory_budget", async () => {
     const tower = new TowerRuntime({ assimilationMemoryBudgetMB: 32, allowUnsignedLoad: true });
     await assert.rejects(
