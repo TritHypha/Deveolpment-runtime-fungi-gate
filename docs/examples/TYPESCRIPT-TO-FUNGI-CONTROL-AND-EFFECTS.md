@@ -223,11 +223,30 @@ marshaller into a language or SLIDE blocker.
 | independent SLIDE checked-package API | exact admitted profiles including scalar/K3 values, bounded String, owned Bytes and dense immutable `Array<Int>` | reference-only `.fungi -> GIR -> .slide -> VOK` evidence; every profile keeps its own limits |
 
 The current `Array<Int>` SLIDE profile admits at most 16 exact signed Int32
-elements and only the frozen `.count()` and checked `.get() -> Option<Int>`
-operations. It does not admit general arrays, Array results, nested arrays,
-mutation, iteration or callbacks. String and Bytes profiles are similarly
-bounded; their presence does not imply general collection or host-object
-support.
+elements and only the frozen `.count()`, checked `.get() -> Option<Int>` and
+exact `.includes(Int) -> Bool` operations. It does not admit general arrays,
+Array results, nested arrays, mutation, iteration or callbacks. String and
+Bytes profiles are similarly bounded. String additionally admits exact
+`.startsWith(String) -> Bool` over canonical UTF-8; it does not imply a general
+String, collection or host-object surface.
+
+Use the checked String method directly when TypeScript performs an exact prefix
+decision:
+
+```ts
+return value.startsWith(prefix);
+```
+
+```fungi
+pure flow starts(value: String, prefix: String) -> Bool {
+  return value.startsWith(prefix)
+}
+```
+
+Do not rewrite locale, case-folded, normalized, regex, suffix or substring
+logic as `startsWith`. Contract 55 preserves exact canonical UTF-8 bytes,
+observes lengths and refuses values above 256 bytes. It grants no effect,
+callback, mutation, host call or package-retirement authority.
 
 Governed CLI admission is exact by declared type and arity. `Bool` accepts only
 `true` or `false`; `Int` accepts only canonical signed decimal safe integers;

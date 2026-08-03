@@ -23,6 +23,25 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 55 immutable canonical-text prefix green - 2026-08-03
+
+- Contract 55 now carries exact `String.startsWith(String) -> Bool` across
+  checked Fungi, canonical GIR, independent verification, VOK, `.slide`,
+  physical package publication and typed receipt re-admission.
+- The operation uses owned canonical UTF-8 bytes under the inherited 256-byte
+  Text and 96-step ceilings. Length is observable; content comparison has no
+  early unequal-byte exit. No host String method, normalization, locale,
+  mutation, allocation, effect, capability or host call was introduced.
+- Direct package demand is 378 `.startsWith(` calls across 89 TypeScript files.
+  This is planning evidence, not automatic TypeScript parity or deletion
+  authority.
+- Focused evidence is 6/6, the predecessor/successor slice is 18/18 and
+  complete SLIDE is 640/640 across 68 suites. Contracts cover 53 files;
+  security closure `+1` with evidence K3 `0` and the 59-file tool identity
+  verify; Node is 1 -> 1.
+- This remains reference-only. General String methods, effects, production
+  authority, owner-reviewed conversion and terminal retirement remain open.
+
 ### SLIDE Contract 54 immutable Array<Int> membership green - 2026-08-03
 
 - Contract 54 now carries exact immutable bounded
