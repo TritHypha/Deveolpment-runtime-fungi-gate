@@ -227,8 +227,8 @@ elements and only the frozen `.count()`, checked `.get() -> Option<Int>` and
 exact `.includes(Int) -> Bool` operations. It does not admit general arrays,
 Array results, nested arrays, mutation, iteration or callbacks. String and
 Bytes profiles are similarly bounded. String additionally admits exact
-`.startsWith(String) -> Bool` over canonical UTF-8; it does not imply a general
-String, collection or host-object surface.
+`.startsWith(String) -> Bool` and `.endsWith(String) -> Bool` over canonical
+UTF-8; it does not imply a general String, collection or host-object surface.
 
 Use the checked String method directly when TypeScript performs an exact prefix
 decision:
@@ -247,6 +247,18 @@ Do not rewrite locale, case-folded, normalized, regex, suffix or substring
 logic as `startsWith`. Contract 55 preserves exact canonical UTF-8 bytes,
 observes lengths and refuses values above 256 bytes. It grants no effect,
 callback, mutation, host call or package-retirement authority.
+
+Exact suffix decisions use the corresponding checked method:
+
+```fungi
+pure flow ends(value: String, suffix: String) -> Bool {
+  return value.endsWith(suffix)
+}
+```
+
+The same canonical UTF-8 and 256-byte limits apply. Do not substitute it for
+substring search; String `.includes` remains outside the admitted profile until
+its larger worst-case work has an explicit bounded accounting contract.
 
 Governed CLI admission is exact by declared type and arity. `Bool` accepts only
 `true` or `false`; `Int` accepts only canonical signed decimal safe integers;

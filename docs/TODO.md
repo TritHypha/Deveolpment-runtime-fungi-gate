@@ -23,6 +23,24 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 56 immutable canonical-text suffix green - 2026-08-03
+
+- Contract 56 carries exact `String.endsWith(String) -> Bool` through checked
+  Fungi, canonical GIR, independent verification, VOK, `.slide`, physical
+  package publication and typed receipt re-admission.
+- Owned canonical UTF-8 operands retain the 256-byte Text and 96-step ceilings.
+  Length is observable; suffix content has no early mismatch exit. No host
+  String method, normalization, slice allocation, mutation, effect, capability
+  or host call was introduced.
+- Direct demand is 66 `.endsWith(` calls across 32 package TypeScript files.
+  This is planning evidence, not parity or deletion authority.
+- Focused evidence is 6/6 and complete SLIDE is 646/646 across 69 suites;
+  contracts cover 55 files, security closure is `+1` with evidence K3 `0`, the
+  59-file tool identity verifies, and Node is 1 -> 1.
+- Substring search remains closed pending explicit worst-case work accounting.
+  Production authority, owner-reviewed conversion and terminal retirement also
+  remain open.
+
 ### SLIDE Contract 55 immutable canonical-text prefix green - 2026-08-03
 
 - Contract 55 now carries exact `String.startsWith(String) -> Bool` across

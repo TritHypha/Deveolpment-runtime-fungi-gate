@@ -24,6 +24,19 @@ append-only AI handover channel. It starts at 0/120 terminal rows and remains
 external, quarantined and non-authorizing; package retirement counts do not
 change.
 
+Roadmap refresh: Contract 56's immutable canonical-text suffix is green as a
+bounded reference implementation. Exact `String.endsWith(String) -> Bool`
+crosses checked Fungi, canonical opcode 33, independent verification, VOK,
+`.slide`, physical publication and typed receipt re-admission. It inherits the
+256-byte Text and 96-step ceilings. Length is observable; equal-length suffix
+content has no early mismatch exit and uses no host String method or
+normalization. Complete package demand is 66 calls across 32 TypeScript files.
+Focused evidence is 6/6 and complete SLIDE is 646/646 across 69 suites;
+contracts cover 55 files, security closure is `+1` with evidence K3 `0`, the
+59-file tool identity verifies, and Node is 1 -> 1. Substring search remains
+closed pending explicit worst-case work accounting; production authority,
+package conversion and terminal retirement remain blue.
+
 Roadmap refresh: Contract 55's immutable canonical-text prefix is green as a
 bounded reference implementation. Exact `String.startsWith(String) -> Bool`
 now crosses checked Fungi, canonical opcode 32, independent V2-C verification,
@@ -923,7 +936,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>640/640 · Contract 55 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>646/646 · Contract 56 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
