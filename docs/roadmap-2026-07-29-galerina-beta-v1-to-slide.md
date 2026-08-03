@@ -12,6 +12,17 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: bounded immutable `Array<Int>` literal construction and
+`.count()` are executable at SLIDE commit `bcfe9cb` using the already-frozen
+V2-C array/length operations. Galerina's real R6 syntax crosses package-bound
+`.slide`, portable VOK and one affine receipt. Literals are non-empty,
+Int32-only and capped at 16 elements; external Array parameters/results still
+refuse, so no host ABI or frozen registry behavior changed. Fresh SLIDE
+evidence is 535/535 across 54 suites, contracts are 31/31, the 59-file tool
+identity verifies and security closure is `+1` with evidence K3 `0`. Array
+input and `get -> Option` remain sequenced through append-only Contract 42;
+mutation, append, callbacks, Set/Map and production authority remain blue.
+
 Roadmap refresh: Contract 41's append-only immutable-value operation registry
 is executable at SLIDE commit `93600cb`. Bounded Fungi exact String/Bytes
 equality and inequality plus exhaustive String-literal matching now cross the

@@ -4,6 +4,21 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE bounded Array literal count executable - 2026-08-03
+
+- SLIDE commit `bcfe9cb` compiles the real Galerina R6
+  `Array<Int>` literal plus `.count()` syntax through frozen V2-C,
+  package-bound `.slide`, portable VOK and an affine receipt.
+- Literals are immutable, non-empty, Int32-only and capped at 16 elements.
+  External Array parameters/results remain refused, so the host ABI and frozen
+  registry are unchanged.
+- Fresh SLIDE evidence is 535/535 across 54 suites, contracts are 31/31, the
+  59-file tool identity verifies and security closure is `+1` with evidence K3
+  `0`.
+- Array input and `get -> Option` require the planned append-only Contract 42.
+  Mutation, append, iteration callbacks, Set/Map, production authority,
+  package conversion and terminal retirement remain open.
+
 ### SLIDE immutable-value operation registry executable - 2026-08-03
 
 - SLIDE commit `93600cb` implements Contract 41's append-only immutable-value
