@@ -13,6 +13,19 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 54's immutable bounded `Array<Int>` membership is
+green as a reference implementation. Exact `.includes(Int) -> Bool` now
+crosses checked Fungi, canonical opcode 31, independent V2-C verification,
+VOK, `.slide`, physical package publication and typed receipt re-admission.
+The operation performs a full scan and charges one instruction step plus one
+step per element under the inherited 16-element ceiling. A pinned-corpus
+survey found 92 `.includes(` signals in 37/120 files. Focused evidence is 5/5,
+the targeted inherited registry/package slice is 86/86, and complete SLIDE is
+634/634 across 67 suites. Contracts cover 51 files; benchmark, security
+closure `+1` with evidence K3 `0`, and the 59-file tool identity verify.
+String membership, Set/Map, callbacks, loops, mutation, effects, production
+authority and package conversion remain blue.
+
 Roadmap refresh: Contract 53's bounded wide-function graph is green as a
 reference implementation. Its exact append-only registry admits four through
 128 dense, source-ordered functions while retaining earlier-only static calls,
@@ -885,7 +898,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + internal Array/Option + record + zero-argument + 4–128 static functions<br/>628/628 · Contract 53 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>634/634 · Contract 54 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

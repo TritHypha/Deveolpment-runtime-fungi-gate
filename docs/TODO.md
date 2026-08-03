@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 54 immutable Array<Int> membership green - 2026-08-03
+
+- Contract 54 now carries exact immutable bounded
+  `Array<Int>.includes(Int) -> Bool` across checked Fungi, canonical GIR,
+  independent verification, VOK, `.slide`, physical package publication and
+  typed receipt re-admission.
+- The operation scans all elements and charges one instruction step plus one
+  step per array element. The inherited 16-element ceiling remains. No early
+  exit, callback, mutation, allocation, address exposure, effect, capability,
+  memory object or host call was introduced.
+- Exact lexical demand is 92 `.includes(` signals in 37/120 pinned files. This
+  is planning evidence, not automatic TypeScript parity.
+- Focused evidence is 5/5 and the targeted registry/package slice is 86/86.
+  Complete SLIDE is 634/634 across 67 suites; contracts cover 51 files;
+  benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
+  identity verify; Node is 1 -> 1.
+- This remains reference-only. String membership, Set/Map, callbacks, loops,
+  mutation, effects, production authority, owner-reviewed conversion and
+  terminal retirement remain open.
+
 ### SLIDE Contract 53 bounded wide-function graph green - 2026-08-03
 
 - The append-only Contract 53 registry now admits four through 128 dense,
