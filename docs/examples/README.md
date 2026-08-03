@@ -222,6 +222,9 @@ For the distinction between untrusted values, assayed domain types and bounded
 native execution authority, see the
 [Verified native operation boundary worked example](VERIFIED-NATIVE-OPERATION-BOUNDARY.md).
 
+For TypeScript conversion, construct selection and exact effect derivation,
+use the [TypeScript to Fungi control-flow and effects worked map](TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md).
+
 ```
 Unsafe → Protected → Redacted → Audit
 ```

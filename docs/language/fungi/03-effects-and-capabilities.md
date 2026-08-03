@@ -12,6 +12,10 @@
 > `queue.publish`, `db.write`, `ai.call`, `state.mutate`). Where they disagree with
 > `effect-checker.ts`, the checker wins. This page lists the real set.
 
+For the translation workflow that maps TypeScript decisions and operations to
+control constructs, exact effects and flow tiers, see
+[TypeScript to Fungi: control-flow and effects worked map](../../examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md).
+
 ## What an effect is
 
 An **effect** is a system capability the flow's body is allowed to exercise — reading a database,

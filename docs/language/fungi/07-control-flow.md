@@ -11,6 +11,9 @@ Galerina's control flow is deliberately small and explicit. Two things surprise 
 **there is no `else if`** (use `match`), and **bitwise operators are not part of the language** (they
 live in the engine layer). Both are enforced by the parser.
 
+For a source-conversion walkthrough that combines this rule with effect
+derivation, see [TypeScript to Fungi: control-flow and effects worked map](../../examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md).
+
 ## Project control-flow standard
 
 Use the smallest construct that expresses the complete decision:

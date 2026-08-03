@@ -1,5 +1,21 @@
 # TODO
 
+### External package conversion Round 4 issued - 2026-08-03
+
+- A reproducible 20-file sample now covers 20 different top-level
+  `packages-galerina` packages and excludes every package attempted in earlier
+  staging rounds plus the superseded Round 4 draft.
+- The binding translator map is now maintained in
+  `docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md`: subject type
+  selects `if`, `check` or `match`; terminality selects the exit shape; effects
+  are derived exactly and transitively from operations.
+- External candidates remain quarantined and non-authorizing. The worker must
+  report all 20 outcomes and continue after per-file blockers rather than
+  guessing or stopping the batch.
+- **Open:** owner/external-AI execution of Round 4, coordinator review of every
+  dossier/vector/candidate and independent parity/admission before any source
+  integration or TypeScript retirement.
+
 ### Bounded checked-read Galerina producer green - 2026-08-03
 
 - `analyzeBoundedReadLoopEnvelope` now derives flow identity, equal literal
