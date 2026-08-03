@@ -23,6 +23,24 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 61 counted-sum physical `.slide` green - 2026-08-03
+
+- SLIDE commit `f0b1c20` compiles the exact counted-sum family into a fixed
+  192-byte canonical GIR inside the existing `.slide` bundle. Re-admission
+  validates bundle/context/GIR independently and executes through Contract
+  60's affine VOK path without retaining source bytes.
+- Dynamic start, limit and initial values remain outside the object and are
+  admitted at execution. The object fixes strict-less-than guard, literal unit
+  step, checked-add body and the existing trip/work/gate ceilings.
+- Focused physical evidence is 6/6, every emitted-object byte mutation refuses,
+  the combined slice is 43/43, and full SLIDE is 674/674 across 70 suites with
+  Node 1 -> 1. Contract integrity remains at its 64-file ceiling, security is
+  `+1` with K3 `0`, and the 63-file tool identity verifies.
+- This closes physical serialization/re-admission only. Flat package
+  publication, receipt-last durability, typed package receipt re-admission,
+  general loop bodies and production authority remain open. No conversion or
+  retirement count changes.
+
 ### SLIDE Contract 60 counted-sum VOK binding green - 2026-08-03
 
 - SLIDE commit `5602f3b` binds the exact Contract 59 counted-sum execution to
@@ -39,9 +57,10 @@ counts or open items that a newer section explicitly supersedes.
   complete SLIDE is 668/668 across 70 suites with Node 1 -> 1. Contracts cover
   63 files, security closure remains `+1` with K3 `0`, and the 61-file tool
   identity verifies.
-- This exact reference now closes VOK binding, but physical `.slide`
-  serialization, package compilation/publication, general loop bodies and
-  production authority remain open. Package-conversion credit is unchanged.
+- Contract 61 subsequently closes physical `.slide` serialization and
+  source-free re-admission for this exact reference. Package
+  compilation/publication, general loop bodies and production authority remain
+  open. Package-conversion credit is unchanged.
 
 ### SLIDE Contract 59 counted-sum reference execution green - 2026-08-03
 
@@ -60,10 +79,11 @@ counts or open items that a newer section explicitly supersedes.
   complete SLIDE is 663/663 across 70 suites with Node 1 -> 1. Contracts cover
   61 files, security closure is `+1` with K3 `0`, and the 61-file tool identity
   verifies.
-- This does not make the general backend green. General closed acyclic bodies,
-  VOK lease/context binding, physical `.slide` publication, package integration
-  and production authority remain open. Package conversion stays 0/120 in the
-  separate owner-reviewed Round 9 lane.
+- Contracts 60 and 61 subsequently close VOK lease/context binding and physical
+  `.slide` re-admission for this exact family. The general backend remains blue:
+  general closed acyclic bodies, package integration and production authority
+  remain open. Package conversion stays 0/120 in the separate owner-reviewed
+  Round 9 lane.
 
 ### SLIDE Contract 58 structured counted-loop certificate floor green - 2026-08-03
 
