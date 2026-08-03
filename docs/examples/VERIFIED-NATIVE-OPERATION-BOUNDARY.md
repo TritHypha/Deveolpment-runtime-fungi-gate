@@ -12,6 +12,57 @@ Hallmarks and the SLIDE Verified Object Kernel (VOK). It deliberately separates:
 The example makes no claim that a Hallmark removes a bounds check or that the
 current compiler can emit a general VOK native operation.
 
+## One million iterations without one million authority decisions
+
+The developer writes ordinary pointer-free `.fungi`, not an `unsafe while` and
+not a raw-memory loop. The complete checked example is
+[VERIFIED-MILLION-ITERATION-LOOP.fungi](VERIFIED-MILLION-ITERATION-LOOP.fungi):
+
+```fungi
+secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
+contract {
+  intent { "Read exactly one million values through the checked semantic peer." }
+  effects {}
+}
+{
+  if values.count() != 1000000 {
+    return Err("MILLION_LENGTH")
+  }
+  mut i: Int = 0
+  mut last: Int = 0
+  while i < 1000000 {
+    let selected: Option<Int> = values.get(i)
+    match selected {
+      Some(value) => { last = value }
+      None => return Err("MILLION_BOUNDS")
+      _ => return Err("MILLION_OPTION")
+    }
+    i = i + 1
+  }
+  return Ok(last)
+}
+```
+
+The compiler now recognizes only this exact first-profile shape and derives a
+`galerina.verified-loop-envelope.proposal.v1` record. It proves the exact
+cardinality gate, induction initialization, loop condition, indexed read,
+exhaustive `Option` decision, induction step and closed loop body. A missing,
+moved, duplicated or changed obligation returns K3 deny. An exact match returns
+K3 unknown with `INDEPENDENT_VERIFIER_UNAVAILABLE`; it does not emit unchecked
+code or grant native authority.
+
+The intended completed path pays proof and admission cost once for the whole
+closed loop. A future independent verifier must re-derive the facts and VOK
+must bind one affine lease to the exact collection generation, object, target
+and policy. That can remove repeated bounds and governance admission from the
+loop body. It cannot remove physical memory reads, required loop arithmetic or
+the runtime's ownership of allocation and cleanup.
+
+The contract does not authorize itself. Its canonical form contributes to the
+proof input; the compiler remains a proposal producer and VOK remains the final
+authority boundary. Until those independent stages exist, the checked semantic
+path remains the only executable path.
+
 ## Example scenario
 
 An HTTP request supplies an index and a collection. The application needs one

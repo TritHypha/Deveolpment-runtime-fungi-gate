@@ -1,0 +1,27 @@
+@version 1
+/// @file: VERIFIED-MILLION-ITERATION-LOOP.fungi
+/// @purpose: Show the exact pointer-free source shape eligible for a Verified Loop Envelope proposal.
+/// @status: The compiler derives only a non-authorizing proposal; VOK execution admission is not yet implemented.
+
+secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
+contract {
+  intent { "Read exactly one million values through the checked semantic peer." }
+  effects {}
+}
+{
+  if values.count() != 1000000 {
+    return Err("MILLION_LENGTH")
+  }
+  mut i: Int = 0
+  mut last: Int = 0
+  while i < 1000000 {
+    let selected: Option<Int> = values.get(i)
+    match selected {
+      Some(value) => { last = value }
+      None => return Err("MILLION_BOUNDS")
+      _ => return Err("MILLION_OPTION")
+    }
+    i = i + 1
+  }
+  return Ok(last)
+}
