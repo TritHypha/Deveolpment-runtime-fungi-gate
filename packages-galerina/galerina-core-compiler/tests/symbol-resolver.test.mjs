@@ -55,6 +55,49 @@ flow test(value: String) -> String {
 `);
     assert.ok(!hasDiag(result, "FUNGI-NAME-001"), "Flow parameter should be in scope");
   });
+
+  it("does not treat capitalization as call authority", () => {
+    const result = parseAndResolve(`
+flow test() -> Int {
+  return MissingCallable(1)
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-NAME-001"), "Undeclared PascalCase call must refuse");
+  });
+
+  it("does not treat a record declaration as positional-call authority", () => {
+    const result = parseAndResolve(`
+record Receipt { value: Int }
+flow test() -> Receipt {
+  return Receipt(1)
+}
+`);
+    assert.ok(hasDiag(result, "FUNGI-NAME-001"), "Records construct with `Receipt { value: 1 }`, not `Receipt(1)`");
+  });
+
+  it("allows an exactly declared PascalCase flow call", () => {
+    const result = parseAndResolve(`
+flow Compute(value: Int) -> Int { return value }
+flow test() -> Int { return Compute(1) }
+`);
+    assert.ok(!hasDiag(result, "FUNGI-NAME-001"), "Declared flow is callable regardless of case");
+  });
+
+  it("allows an exactly supplied imported callable name", () => {
+    const parsed = parseProgram(`flow test() -> Int { return ImportedFlow(1) }`, "imported-call.fungi");
+    const result = resolveSymbols(parsed.ast, ["ImportedFlow"]);
+    assert.ok(!hasDiag(result, "FUNGI-NAME-001"), "Importer-provided callable authority should be exact");
+  });
+
+  it("keeps built-in constructors and receiver calls admitted", () => {
+    const result = parseAndResolve(`
+flow test(value: Int) -> Result<Int, String> {
+  let text = value.toString()
+  return Ok(value)
+}
+`);
+    assert.ok(!hasDiag(result, "FUNGI-NAME-001"), "Exact built-ins and method receivers remain callable");
+  });
 });
 
 describe("Symbol resolver — FUNGI-NAME-002 duplicate name", () => {

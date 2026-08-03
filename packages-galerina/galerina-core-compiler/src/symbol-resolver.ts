@@ -595,10 +595,15 @@ class SymbolResolver {
     // Internal parser tokens (e.g. #record for anonymous record literals) are not user-defined names
     if (name.startsWith("#")) return;
 
-    // Capital-letter call targets are stdlib or user-defined constructors
-    if (name[0] !== undefined && name[0] >= "A" && name[0] <= "Z") return;
+    if (STANDARD_PRELUDE.has(name)) return;
 
-    if (STANDARD_PRELUDE.has(name) || this.lookup(name) !== undefined) return;
+    // Spelling and declaration existence are not call authority. In particular,
+    // a record/type/enum name in scope must not make `Name(args)` legal: records
+    // use the explicit `Name { field: value }` syntax, which the parser marks as
+    // the internal #record form. Imported value names, declared flows/helpers,
+    // and callable bindings remain admitted through their exact scope entries.
+    const resolved = this.lookup(name);
+    if (resolved !== undefined && !TYPE_DECL_KINDS.has(resolved.kind)) return;
 
     // Method call on a receiver — receiver check suppresses the call target
     if (isReceiverCall(node)) return;
