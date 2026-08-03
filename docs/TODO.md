@@ -10,7 +10,8 @@ counts or open items that a newer section explicitly supersedes.
   exact String parameters and runtime passage through an earlier Fungi flow.
 - Portable VEO privately retains the exact parameter-type vector. It admits
   only primitive, well-formed Unicode strings whose canonical UTF-8 encoding
-  is at most 4,096 bytes; boxed strings, lone surrogates, oversized values,
+  is at most 256 bytes, matching the frozen V2-C text limit; boxed strings,
+  lone surrogates, oversized values,
   type mismatches, accessors, proxies and surplus arguments refuse.
 - V2-C owns the encoded input bytes and returns a fresh owned result before the
   existing physical UTF-8 and Safe Value re-admission boundary.

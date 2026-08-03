@@ -15,7 +15,8 @@ Policy: zero trust, verify rather than assume, fail closed
 Roadmap refresh: bounded physical package String parameters are green at SLIDE
 commit `f0449d2`. Portable VEO retains the exact parameter-type vector
 privately and admits only primitive, well-formed Unicode strings whose
-canonical UTF-8 encoding is at most 4,096 bytes. V2-C owns those bytes, can
+canonical UTF-8 encoding is at most 256 bytes, matching the frozen V2-C
+`limit.text_bytes` registry field. V2-C owns those bytes, can
 pass the dynamic value through an exact earlier Fungi flow and returns a fresh
 owned result before physical UTF-8 and Safe Value re-admission. Boxed strings,
 lone surrogates, oversized values, wrong types, accessors, proxies and surplus
