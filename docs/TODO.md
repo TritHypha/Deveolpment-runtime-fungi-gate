@@ -10,9 +10,11 @@
   producer GIR, WAT emitter, runtime walker, caller graph or fallback enters
   the route.
 - Two real Galerina fixtures plus two unregistered shapes compile
-  deterministically. Evidence covers 206 exact execution vectors, 5/5 focused
-  compiler tests and 410/410 complete SLIDE tests across 32 suites with Node
-  count stable at 1 before/after.
+  deterministically. A bounded CLI performs stable source reads and exclusive,
+  non-overwriting publication of one physical `.slide` file; receipts expose
+  no absolute paths. Evidence covers 206 exact execution vectors, 9/9 focused
+  compiler/file tests and 414/414 complete SLIDE tests across 33 suites with
+  Node count stable at 1 before/after.
 - Refusal releases zero partial GIR or bundle bytes. The 21-file SLIDE contract
   and security closure remain green; authenticated external evidence remains
   K3 `0`.
