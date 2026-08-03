@@ -12,6 +12,9 @@ secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
 contract {
   intent { "Read exactly one million values through the checked semantic peer." }
   effects {}
+  permissions {
+    require verified_native_checked_read_loop_v1 on values
+  }
 }
 {
   if values.count() != 1000000 {
@@ -47,21 +50,40 @@ function expectRefusal(source, failureId) {
   const result = analyze(source);
   assert.equal(result.candidate, false);
   assert.equal(result.verdict, -1);
+  assert.equal(result.proof, null);
   assert.ok(result.failureIds.includes(failureId), `${failureId} absent from ${result.failureIds.join(", ")}`);
 }
 
 test("exact million-read loop produces a non-authorizing proposal", () => {
   const result = analyze();
 
-  assert.equal(result.schemaId, "galerina.verified-loop-envelope.proposal.v1");
+  assert.equal(result.schemaId, "galerina.verified-loop-envelope.proposal.v2");
   assert.equal(result.candidate, true);
   assert.equal(result.verdict, 0);
   assert.equal(result.flowName, "readMillionValues");
   assert.equal(result.collectionName, "values");
   assert.equal(result.inductionName, "i");
   assert.equal(result.bound, 1000000);
+  assert.equal(result.executionWhenNotAdmitted, "checked");
+  assert.equal(result.requiredPermission, "verified_native_checked_read_loop_v1");
+  assert.equal(result.permissionTarget, "values");
+  assert.equal(
+    result.contractSuggestion,
+    "permissions { require verified_native_checked_read_loop_v1 on values }",
+  );
   assert.deepEqual(result.failureIds, ["INDEPENDENT_VERIFIER_UNAVAILABLE"]);
-  assert.deepEqual(Object.values(result.facts), Array(8).fill(true));
+  assert.deepEqual(Object.values(result.facts), Array(13).fill(true));
+  assert.deepEqual(result.proof, {
+    arithmeticModelId: "galerina.int.checked.v1",
+    initialValue: 0,
+    step: 1,
+    boundExclusive: 1000000,
+    maximumAccessIndex: 999999,
+    terminalValue: 1000000,
+    exactTripCount: 1000000,
+    invariant: "i(k)=k AND 0<=k<=1000000",
+  });
+  assert.equal(Object.isFrozen(result.proof), true);
 });
 
 test("missing flow refuses rather than manufacturing a default proposal", () => {
@@ -80,6 +102,45 @@ test("missing exact-cardinality gate refuses", () => {
     VALID_SOURCE.replace(/\s+if values\.count\(\) != 1000000 \{[\s\S]*?\n  \}/, ""),
     "CARDINALITY_GATE_MISSING",
   );
+});
+
+test("missing permission keeps the valid checked path and refuses only optimization", () => {
+  const result = analyze(VALID_SOURCE.replace(/\s+permissions \{[\s\S]*?\n  \}/, ""));
+  assert.equal(result.candidate, false);
+  assert.equal(result.verdict, -1);
+  assert.equal(result.executionWhenNotAdmitted, "checked");
+  assert.ok(result.failureIds.includes("VERIFIED_NATIVE_PERMISSION_MISSING"));
+});
+
+test("look-alike verified-native permission refuses", () => {
+  expectRefusal(
+    VALID_SOURCE.replace(
+      "verified_native_checked_read_loop_v1",
+      "verified_native_checked_read_loop_v2",
+    ),
+    "VERIFIED_NATIVE_PERMISSION_MISSING",
+  );
+});
+
+test("permission scoped to a different value refuses", () => {
+  expectRefusal(
+    VALID_SOURCE.replace(
+      "require verified_native_checked_read_loop_v1 on values",
+      "require verified_native_checked_read_loop_v1 on items",
+    ),
+    "VERIFIED_NATIVE_PERMISSION_MISSING",
+  );
+});
+
+test("non-canonical permissions syntax is rejected rather than ignored", () => {
+  const source = VALID_SOURCE.replace(
+    "require verified_native_checked_read_loop_v1",
+    'requires: ["verified_native_checked_read_loop_v1"]',
+  );
+  const parsed = parseProgram(source, "malformed-permission.fungi");
+  assert.ok(parsed.diagnostics.some(
+    (diagnostic) => diagnostic.code === "FUNGI-CONTRACT-020",
+  ));
 });
 
 test("cardinality gate after the loop refuses", () => {

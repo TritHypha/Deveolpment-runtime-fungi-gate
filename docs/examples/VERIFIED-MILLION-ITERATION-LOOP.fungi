@@ -7,6 +7,9 @@ secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
 contract {
   intent { "Read exactly one million values through the checked semantic peer." }
   effects {}
+  permissions {
+    require verified_native_checked_read_loop_v1 on values
+  }
 }
 {
   if values.count() != 1000000 {

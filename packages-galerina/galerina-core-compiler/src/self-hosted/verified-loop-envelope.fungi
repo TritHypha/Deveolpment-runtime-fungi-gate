@@ -5,6 +5,7 @@
 
 record VerifiedLoopEnvelopeSourceFacts {
   exactFlowShape: Bool
+  exactContractPermission: Bool
   exactCardinalityGate: Bool
   exactInductionInitialization: Bool
   exactLoopCondition: Bool
@@ -12,6 +13,10 @@ record VerifiedLoopEnvelopeSourceFacts {
   exactOptionMatch: Bool
   exactInductionStep: Bool
   closedLoopBody: Bool
+  inductionInvariantDerived: Bool
+  overflowImpossible: Bool
+  exactTripCountDerived: Bool
+  accessDominatedByGuard: Bool
 }
 
 record VerifiedLoopEnvelopeSourceProposal {
@@ -28,7 +33,7 @@ pure flow verifiedLoopEnvelopeDeny(
 contract { intent { "Refuse an incomplete verified-loop-envelope proposal." } }
 {
   return {
-    schemaId: "galerina.verified-loop-envelope.proposal.v1"
+    schemaId: "galerina.verified-loop-envelope.proposal.v2"
     candidate: false
     verdict: Verdict.Deny
     failureId: failureId
@@ -43,6 +48,9 @@ contract { intent { "Recheck a verified-loop-envelope proposal without granting 
 {
   if facts.exactFlowShape == false {
     return verifiedLoopEnvelopeDeny("FLOW_SHAPE_NOT_EXACT")
+  }
+  if facts.exactContractPermission == false {
+    return verifiedLoopEnvelopeDeny("VERIFIED_NATIVE_PERMISSION_MISSING")
   }
   if facts.exactCardinalityGate == false {
     return verifiedLoopEnvelopeDeny("CARDINALITY_GATE_NOT_EXACT")
@@ -65,9 +73,21 @@ contract { intent { "Recheck a verified-loop-envelope proposal without granting 
   if facts.closedLoopBody == false {
     return verifiedLoopEnvelopeDeny("LOOP_BODY_NOT_CLOSED")
   }
+  if facts.inductionInvariantDerived == false {
+    return verifiedLoopEnvelopeDeny("INDUCTION_INVARIANT_NOT_DERIVED")
+  }
+  if facts.overflowImpossible == false {
+    return verifiedLoopEnvelopeDeny("INDUCTION_OVERFLOW_NOT_EXCLUDED")
+  }
+  if facts.exactTripCountDerived == false {
+    return verifiedLoopEnvelopeDeny("EXACT_TRIP_COUNT_NOT_DERIVED")
+  }
+  if facts.accessDominatedByGuard == false {
+    return verifiedLoopEnvelopeDeny("ACCESS_NOT_DOMINATED_BY_GUARD")
+  }
 
   return {
-    schemaId: "galerina.verified-loop-envelope.proposal.v1"
+    schemaId: "galerina.verified-loop-envelope.proposal.v2"
     candidate: true
     verdict: Verdict.Unknown
     failureId: "INDEPENDENT_VERIFIER_UNAVAILABLE"

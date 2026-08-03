@@ -23,6 +23,9 @@ secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>
 contract {
   intent { "Read exactly one million values through the checked semantic peer." }
   effects {}
+  permissions {
+    require verified_native_checked_read_loop_v1 on values
+  }
 }
 {
   if values.count() != 1000000 {
@@ -44,12 +47,20 @@ contract {
 ```
 
 The compiler now recognizes only this exact first-profile shape and derives a
-`galerina.verified-loop-envelope.proposal.v1` record. It proves the exact
-cardinality gate, induction initialization, loop condition, indexed read,
-exhaustive `Option` decision, induction step and closed loop body. A missing,
-moved, duplicated or changed obligation returns K3 deny. An exact match returns
-K3 unknown with `INDEPENDENT_VERIFIER_UNAVAILABLE`; it does not emit unchecked
-code or grant native authority.
+`galerina.verified-loop-envelope.proposal.v2` record. In addition to the
+structural facts, it derives the invariant `i(k) = k`, excludes checked-integer
+overflow through the terminal value, derives the exact trip count, and proves
+that the loop guard dominates the indexed access. A missing, moved, duplicated
+or changed obligation returns K3 deny. An exact match returns K3 unknown with
+`INDEPENDENT_VERIFIER_UNAVAILABLE`; it does not emit unchecked code or grant
+native authority.
+
+The `permissions` entry is an explicit developer opt-in to proof-backed check
+elision for the `values` parameter in this flow only. It is not a grant. If it
+is absent, misspelled, scoped to another value, or paired with effects outside
+this profile, the ordinary checked source remains valid and runs on the checked
+path. The compiler proposal reports the canonical block to add, so the
+developer does not have to construct proof mechanics or guess placement.
 
 The intended completed path pays proof and admission cost once for the whole
 closed loop. A future independent verifier must re-derive the facts and VOK
@@ -61,7 +72,9 @@ the runtime's ownership of allocation and cleanup.
 The contract does not authorize itself. Its canonical form contributes to the
 proof input; the compiler remains a proposal producer and VOK remains the final
 authority boundary. Until those independent stages exist, the checked semantic
-path remains the only executable path.
+path remains the only executable path. Hallmarks cannot mint or impersonate
+this permission; the build-generated exclusions are listed in
+[Hallmark non-authorities](../generated/HALLMARK-NON-AUTHORITIES.md).
 
 ## Example scenario
 
@@ -165,6 +178,10 @@ is forbidden or cannot be proved equivalent, execution terminates with `_=>`.
 | independent verifier | re-derives the required facts from the exact object and context | application policy or reusable authority |
 | VOK | binds the exact admitted object and opens one affine execution lease | source meaning by itself |
 | runtime | owns allocation, cleanup and result revalidation | developer-visible raw pointers or manual frees |
+
+The developer writes the loop and the optional contract permission. The
+compiler, SLIDE and VOK own the mechanics. Omitting the permission selects the
+safe checked implementation rather than breaking otherwise valid code.
 
 ## Injection and forgery examples
 

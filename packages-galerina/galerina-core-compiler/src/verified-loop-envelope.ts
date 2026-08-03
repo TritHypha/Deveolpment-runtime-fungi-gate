@@ -4,6 +4,7 @@ export type LoopEnvelopeTrit = -1 | 0;
 
 export interface VerifiedLoopEnvelopeFacts {
   readonly exactFlowShape: boolean;
+  readonly exactContractPermission: boolean;
   readonly exactCardinalityGate: boolean;
   readonly exactInductionInitialization: boolean;
   readonly exactLoopCondition: boolean;
@@ -11,10 +12,25 @@ export interface VerifiedLoopEnvelopeFacts {
   readonly exactOptionMatch: boolean;
   readonly exactInductionStep: boolean;
   readonly closedLoopBody: boolean;
+  readonly inductionInvariantDerived: boolean;
+  readonly overflowImpossible: boolean;
+  readonly exactTripCountDerived: boolean;
+  readonly accessDominatedByGuard: boolean;
+}
+
+export interface VerifiedLoopInductionProof {
+  readonly arithmeticModelId: "galerina.int.checked.v1";
+  readonly initialValue: 0;
+  readonly step: 1;
+  readonly boundExclusive: 1000000;
+  readonly maximumAccessIndex: 999999;
+  readonly terminalValue: 1000000;
+  readonly exactTripCount: 1000000;
+  readonly invariant: "i(k)=k AND 0<=k<=1000000";
 }
 
 export interface VerifiedLoopEnvelopeProposal {
-  readonly schemaId: "galerina.verified-loop-envelope.proposal.v1";
+  readonly schemaId: "galerina.verified-loop-envelope.proposal.v2";
   readonly candidate: boolean;
   readonly verdict: LoopEnvelopeTrit;
   readonly flowName: string;
@@ -22,13 +38,20 @@ export interface VerifiedLoopEnvelopeProposal {
   readonly inductionName: "i";
   readonly bound: 1000000;
   readonly facts: VerifiedLoopEnvelopeFacts;
+  readonly proof: VerifiedLoopInductionProof | null;
+  readonly executionWhenNotAdmitted: "checked";
+  readonly requiredPermission: "verified_native_checked_read_loop_v1";
+  readonly permissionTarget: "values";
+  readonly contractSuggestion: "permissions { require verified_native_checked_read_loop_v1 on values }";
   readonly failureIds: readonly string[];
 }
 
-const SCHEMA_ID = "galerina.verified-loop-envelope.proposal.v1" as const;
+const SCHEMA_ID = "galerina.verified-loop-envelope.proposal.v2" as const;
 const COLLECTION_NAME = "values" as const;
 const INDUCTION_NAME = "i" as const;
 const BOUND = 1000000 as const;
+const MAXIMUM_ACCESS_INDEX = 999999 as const;
+const CONTRACT_PERMISSION = "verified_native_checked_read_loop_v1" as const;
 const FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
 
 function children(node: AstNode | undefined): readonly AstNode[] {
@@ -211,9 +234,21 @@ function isExactFlowShape(flow: AstNode): boolean {
     && bodies.length === 1;
 }
 
+function isExactContractPermission(flow: AstNode): boolean {
+  const contract = children(flow).find((node) => node.kind === "contractDecl");
+  const permissions = children(contract).filter(
+    (node) => node.kind === "identifier" && node.value === "permissions:block",
+  );
+  return permissions.length === 1
+    && children(permissions[0]).length === 1
+    && children(permissions[0])[0]?.kind === "identifier"
+    && children(permissions[0])[0]?.value === `require:${CONTRACT_PERMISSION}:on:${COLLECTION_NAME}`;
+}
+
 function refusalIds(facts: VerifiedLoopEnvelopeFacts): readonly string[] {
   const failures: string[] = [];
   if (!facts.exactFlowShape) failures.push("FLOW_SHAPE_NOT_EXACT");
+  if (!facts.exactContractPermission) failures.push("VERIFIED_NATIVE_PERMISSION_MISSING");
   if (!facts.exactCardinalityGate) failures.push("CARDINALITY_GATE_MISSING");
   if (!facts.exactInductionInitialization) failures.push("INDUCTION_INITIALIZATION_NOT_EXACT");
   if (!facts.exactLoopCondition) failures.push("LOOP_CONDITION_NOT_EXACT");
@@ -221,7 +256,24 @@ function refusalIds(facts: VerifiedLoopEnvelopeFacts): readonly string[] {
   if (!facts.exactOptionMatch) failures.push("OPTION_MATCH_NOT_EXACT");
   if (!facts.exactInductionStep) failures.push("INDUCTION_STEP_NOT_EXACT");
   if (!facts.closedLoopBody) failures.push("LOOP_BODY_NOT_CLOSED");
+  if (!facts.inductionInvariantDerived) failures.push("INDUCTION_INVARIANT_NOT_DERIVED");
+  if (!facts.overflowImpossible) failures.push("INDUCTION_OVERFLOW_NOT_EXCLUDED");
+  if (!facts.exactTripCountDerived) failures.push("EXACT_TRIP_COUNT_NOT_DERIVED");
+  if (!facts.accessDominatedByGuard) failures.push("ACCESS_NOT_DOMINATED_BY_GUARD");
   return Object.freeze(failures);
+}
+
+function inductionProof(): VerifiedLoopInductionProof {
+  return Object.freeze({
+    arithmeticModelId: "galerina.int.checked.v1",
+    initialValue: 0,
+    step: 1,
+    boundExclusive: BOUND,
+    maximumAccessIndex: MAXIMUM_ACCESS_INDEX,
+    terminalValue: BOUND,
+    exactTripCount: BOUND,
+    invariant: "i(k)=k AND 0<=k<=1000000",
+  });
 }
 
 function proposal(
@@ -239,6 +291,11 @@ function proposal(
     inductionName: INDUCTION_NAME,
     bound: BOUND,
     facts: Object.freeze(facts),
+    proof: candidate ? inductionProof() : null,
+    executionWhenNotAdmitted: "checked",
+    requiredPermission: CONTRACT_PERMISSION,
+    permissionTarget: COLLECTION_NAME,
+    contractSuggestion: "permissions { require verified_native_checked_read_loop_v1 on values }",
     failureIds: candidate
       ? Object.freeze(["INDEPENDENT_VERIFIER_UNAVAILABLE"])
       : failureIds,
@@ -253,6 +310,7 @@ export function analyzeMillionReadLoopEnvelope(
   if (flow === undefined) {
     const facts: VerifiedLoopEnvelopeFacts = {
       exactFlowShape: false,
+      exactContractPermission: false,
       exactCardinalityGate: false,
       exactInductionInitialization: false,
       exactLoopCondition: false,
@@ -260,6 +318,10 @@ export function analyzeMillionReadLoopEnvelope(
       exactOptionMatch: false,
       exactInductionStep: false,
       closedLoopBody: false,
+      inductionInvariantDerived: false,
+      overflowImpossible: false,
+      exactTripCountDerived: false,
+      accessDominatedByGuard: false,
     };
     return proposal(flowName, facts, Object.freeze(["FLOW_NOT_FOUND"]));
   }
@@ -293,8 +355,9 @@ export function analyzeMillionReadLoopEnvelope(
     && statements[3] === loop
     && isExactSuccessReturn(statements[4]);
 
-  const facts: VerifiedLoopEnvelopeFacts = {
+  const structuralFacts = {
     exactFlowShape: isExactFlowShape(flow),
+    exactContractPermission: isExactContractPermission(flow),
     exactCardinalityGate: cardinalityGates.length === 1,
     exactInductionInitialization: inductionInitializations.length === 1,
     exactLoopCondition: loops.length >= 1 && isExactLoopCondition(children(loop)[0]),
@@ -308,6 +371,21 @@ export function analyzeMillionReadLoopEnvelope(
       && loopStatements.length === 3
       && collectionWrites.length === 0
       && allowedCalls,
+  };
+  const inductionInvariantDerived = structuralFacts.exactInductionInitialization
+    && structuralFacts.exactLoopCondition
+    && structuralFacts.exactInductionStep
+    && structuralFacts.closedLoopBody;
+  const facts: VerifiedLoopEnvelopeFacts = {
+    ...structuralFacts,
+    inductionInvariantDerived,
+    overflowImpossible: inductionInvariantDerived && BOUND <= 2147483647,
+    exactTripCountDerived: inductionInvariantDerived && BOUND >= 0,
+    accessDominatedByGuard: structuralFacts.exactCardinalityGate
+      && structuralFacts.exactLoopCondition
+      && structuralFacts.exactIndexAccess
+      && structuralFacts.exactOptionMatch
+      && structuralFacts.closedLoopBody,
   };
 
   return proposal(flowName, facts, refusalIds(facts));

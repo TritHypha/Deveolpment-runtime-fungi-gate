@@ -4498,6 +4498,15 @@ class Parser {
         continue;
       }
 
+      // `permissions { require <registered_permission> }` is an explicit
+      // developer opt-in. It is retained as contract evidence; it never grants
+      // execution authority without the owning verifier and runtime gate.
+      if ((tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "permissions") {
+        children.push(this.parsePermissionsBlock());
+        this.skipNewlines();
+        continue;
+      }
+
       if ((tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "errors") {
         children.push(this.parseContractSubBlock("errors"));
         this.skipNewlines();
@@ -4951,6 +4960,103 @@ class Parser {
    * The content is stored as identifier children (names of types/events).
    * Full parsing of sub-block content is Phase 9B+.
    */
+  private parsePermissionsBlock(): AstNode {
+    const loc = this.loc();
+    this.advance(); // consume permissions
+    this.skipNewlines();
+    const children: AstNode[] = [];
+
+    if (!this.currentIs("symbol", "{")) {
+      this.emit(
+        "FUNGI-CONTRACT-017",
+        "PERMISSIONS_BLOCK_REQUIRED",
+        "A permissions declaration requires a block containing explicit 'require <permission>' entries.",
+        loc,
+        "Use: permissions { require registered_permission_name }",
+      );
+      return { kind: "identifier", value: "permissions:block", location: loc, children };
+    }
+
+    this.advance(); // consume {
+    this.skipNewlines();
+    while (!this.currentIs("symbol", "}") && !this.isEof()) {
+      const entryLoc = this.loc();
+      const tok = this.current();
+      if ((tok.kind === "identifier" || tok.kind === "keyword") && tok.value === "require") {
+        this.advance();
+        const permission = this.current();
+        if (permission.kind !== "identifier") {
+          this.emit(
+            "FUNGI-CONTRACT-018",
+            "PERMISSION_IDENTIFIER_REQUIRED",
+            "A permissions entry requires one plain registered permission identifier.",
+            entryLoc,
+            "Use: require registered_permission_name",
+          );
+        } else {
+          let entryValue = `require:${permission.value}`;
+          this.advance();
+          if (
+            (this.current().kind === "identifier" || this.current().kind === "keyword")
+            && this.current().value === "on"
+          ) {
+            this.advance();
+            const target = this.current();
+            if (target.kind !== "identifier") {
+              this.emit(
+                "FUNGI-CONTRACT-021",
+                "PERMISSION_TARGET_REQUIRED",
+                "A scoped permission requires one flow-local target identifier after 'on'.",
+                entryLoc,
+                "Use: require registered_permission_name on flow_local_value",
+              );
+            } else {
+              entryValue += `:on:${target.value}`;
+              this.advance();
+            }
+          }
+          children.push({
+            kind: "identifier",
+            value: entryValue,
+            location: entryLoc,
+          });
+        }
+        if (this.current().kind !== "newline" && !this.currentIs("symbol", "}")) {
+          this.emit(
+            "FUNGI-CONTRACT-019",
+            "PERMISSION_ENTRY_NOT_EXACT",
+            "A permissions entry must contain 'require <permission>' with at most one 'on <flow-local-target>' scope.",
+            this.loc(),
+            "Put each permission on its own line as: require registered_permission_name on flow_local_value",
+          );
+          while (!this.isEof() && this.current().kind !== "newline" && !this.currentIs("symbol", "}")) {
+            this.advance();
+          }
+        }
+        this.skipNewlines();
+        continue;
+      }
+
+      this.emit(
+        "FUNGI-CONTRACT-020",
+        "UNKNOWN_PERMISSION_ENTRY",
+        `Unknown permissions entry '${tok.value}'. Permissions are deny-by-default and must use 'require <permission>'.`,
+        entryLoc,
+        "Use: require registered_permission_name",
+      );
+      if (this.currentIs("symbol", "{")) {
+        this.skipBalancedBraces();
+      } else {
+        while (!this.isEof() && this.current().kind !== "newline" && !this.currentIs("symbol", "}")) {
+          this.advance();
+        }
+      }
+      this.skipNewlines();
+    }
+    this.expect("symbol", "}");
+    return { kind: "identifier", value: "permissions:block", location: loc, children };
+  }
+
   private parseContractSubBlock(subBlockName: string): AstNode {
     const loc = this.loc();
     this.advance(); // consume the sub-block keyword

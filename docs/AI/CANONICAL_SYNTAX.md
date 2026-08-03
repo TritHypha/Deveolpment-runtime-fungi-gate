@@ -111,7 +111,9 @@ contract ExampleContract {
 
     // Section 8: permissions
     permissions {
-        requires: ["role:admin", "scope:write"]
+        require role_admin
+        require scope_write
+        // Target-scoped form: require registered_permission on flow_local_value
     }
 
     // Section 9: invariants

@@ -1,0 +1,46 @@
+{
+  "schemaId": "galerina.hallmark.non-authorities.v1",
+  "title": "Hallmark non-authority registry",
+  "entries": [
+    {
+      "id": "contract.permission",
+      "description": "Hallmarks cannot create, satisfy, copy or impersonate a contract permission."
+    },
+    {
+      "id": "effect.capability",
+      "description": "Hallmarks cannot grant an effect, host capability or external-resource permission."
+    },
+    {
+      "id": "memory.pointer",
+      "description": "Hallmarks cannot expose, forge or dereference raw pointers."
+    },
+    {
+      "id": "memory.lifecycle",
+      "description": "Hallmarks cannot allocate, free, extend or transfer a flow-owned memory lifetime."
+    },
+    {
+      "id": "memory.alias-mutation",
+      "description": "Hallmarks cannot prove alias isolation, mutation exclusion or collection-generation stability."
+    },
+    {
+      "id": "memory.unchecked-access",
+      "description": "Hallmarks cannot remove a bounds check or authorize unchecked indexed access."
+    },
+    {
+      "id": "verified-native.checked-read-loop.v1",
+      "description": "Hallmarks cannot grant, retarget or widen the flow-local verified-native checked-read-loop permission, or admit its direct path."
+    },
+    {
+      "id": "vok.admission",
+      "description": "Hallmarks cannot issue, reuse or widen a Verified Object Kernel admission lease."
+    },
+    {
+      "id": "proof.receipt",
+      "description": "Hallmarks cannot turn a proof, proposal or receipt into reusable execution authority."
+    },
+    {
+      "id": "cryptographic.authority",
+      "description": "Hallmarks cannot sign, delegate, rotate or revoke cryptographic authority."
+    }
+  ]
+}

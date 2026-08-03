@@ -28,19 +28,31 @@
 ### Verified Loop Envelope proposal implemented - 2026-08-03
 
 - The compiler now recognizes one exact pointer-free million-read `.fungi`
-  shape and derives `galerina.verified-loop-envelope.proposal.v1`.
+  shape and derives `galerina.verified-loop-envelope.proposal.v2`.
+- A flow-local opt-in uses
+  `permissions { require verified_native_checked_read_loop_v1 on values }`.
+  Omission, misspelling, a different target or a non-empty/unknown effect
+  profile keeps otherwise valid source on the ordinary checked path. The
+  proposal reports the exact contract block to add.
+- A literal bound is not an induction proof. The proposal binds the checked-
+  integer model, `i(0)=0`, exact step, invariant, maximum access index,
+  terminal counter, trip count and access dominance. Any missing proof fact
+  returns K3 deny and carries no proof record.
 - Structural drift returns K3 deny. The exact shape remains K3 unknown with
   `INDEPENDENT_VERIFIER_UNAVAILABLE`; no native authority or unchecked object
   is emitted.
 - A `.fungi` authority model passes production parse/type/value/effect/
-  governance checks and executes all 256 fact vectors without one K3 allow.
+  governance checks and executes all 8,192 fact vectors without one K3 allow.
+- Hallmarks cannot create the permission or native authority. The compiler
+  build validates a canonical ten-entry registry and regenerates
+  `docs/generated/HALLMARK-NON-AUTHORITIES.md` plus its distribution JSON.
 - The checked example is
   `docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi`; the architecture guide
   now explains how one future affine lease can cover the closed loop without
   exposing pointers or treating a contract as self-authority.
-- Focused analyzer/source/example evidence passes 27/27 and the Node count
-  remains unchanged.
-- Complete compiler evidence passes 5,818/5,818; graph regeneration/check is
+- Focused analyzer/source/example/generator evidence passes 32/32 and the Node
+  count remains unchanged.
+- Complete compiler evidence passes 5,823/5,823; graph regeneration/check is
   5/5 and the flat 98-peer root lock is current. Node remains 1 -> 1.
 - Independent SLIDE commit `b7d1705` now re-derives the exact source, owns and
   digests one million-value collection generation, binds it through all eight

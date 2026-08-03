@@ -8,6 +8,18 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the Verified Loop Envelope proposal is now v2. The developer
+may opt in through the flow-local, target-scoped permission
+`verified_native_checked_read_loop_v1 on values`; omission retains the checked
+path and the compiler reports the canonical block to add. The compiler derives
+an explicit checked-integer induction certificate, exact trip count, overflow
+exclusion and access dominance instead of treating a literal bound as proof.
+All thirteen facts are rechecked across 8,192 vectors without K3 allow. A
+canonical ten-entry Hallmark non-authority registry is validated and its
+public list is regenerated during every compiler build. Focused evidence is
+32/32. The proposal remains K3 unknown until independent SLIDE and VOK
+admission; package conversion is unchanged.
+
 Roadmap refresh: canonical serialized lowering is green for the exact Verified
 Loop Envelope profile. SLIDE commit `fe5f922` independently converts the exact
 million-read source into an 88-byte loop GIR inside the common `.slide`
@@ -22,7 +34,8 @@ source total and end-to-end is 1.031x. General checked-loop GIR, Galerina
 production wiring and native/platform evidence remain blue; package conversion
 is unchanged.
 
-Roadmap refresh: the first Verified Loop Envelope proposal control is green.
+Roadmap history (superseded by the v2 refresh above): the first Verified Loop
+Envelope proposal control is green.
 Galerina recognizes one exact pointer-free million-read `.fungi` loop and
 derives eight closed structural facts. Any missing, moved, duplicated or
 changed obligation returns K3 deny; the exact shape remains K3 unknown with

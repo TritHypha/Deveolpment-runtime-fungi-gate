@@ -68,6 +68,8 @@ describe("verified million-iteration developer example", () => {
     assert.deepEqual(proposal.failureIds, [
       "INDEPENDENT_VERIFIER_UNAVAILABLE",
     ]);
-    assert.deepEqual(Object.values(proposal.facts), Array(8).fill(true));
+    assert.deepEqual(Object.values(proposal.facts), Array(13).fill(true));
+    assert.equal(proposal.executionWhenNotAdmitted, "checked");
+    assert.equal(proposal.proof?.exactTripCount, 1000000);
   });
 });

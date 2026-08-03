@@ -26,6 +26,7 @@ const ASSET = "src/self-hosted/verified-loop-envelope.fungi";
 
 const FACT_NAMES = [
   "exactFlowShape",
+  "exactContractPermission",
   "exactCardinalityGate",
   "exactInductionInitialization",
   "exactLoopCondition",
@@ -33,10 +34,15 @@ const FACT_NAMES = [
   "exactOptionMatch",
   "exactInductionStep",
   "closedLoopBody",
+  "inductionInvariantDerived",
+  "overflowImpossible",
+  "exactTripCountDerived",
+  "accessDominatedByGuard",
 ];
 
 const FAILURE_IDS = [
   "FLOW_SHAPE_NOT_EXACT",
+  "VERIFIED_NATIVE_PERMISSION_MISSING",
   "CARDINALITY_GATE_NOT_EXACT",
   "INDUCTION_INITIALIZATION_NOT_EXACT",
   "LOOP_CONDITION_NOT_EXACT",
@@ -44,6 +50,10 @@ const FAILURE_IDS = [
   "OPTION_MATCH_NOT_EXACT",
   "INDUCTION_STEP_NOT_EXACT",
   "LOOP_BODY_NOT_CLOSED",
+  "INDUCTION_INVARIANT_NOT_DERIVED",
+  "INDUCTION_OVERFLOW_NOT_EXCLUDED",
+  "EXACT_TRIP_COUNT_NOT_DERIVED",
+  "ACCESS_NOT_DOMINATED_BY_GUARD",
 ];
 
 const errors = (diagnostics) =>
@@ -112,8 +122,8 @@ describe("verified loop envelope .fungi authority model", () => {
     );
   });
 
-  it("executes all 256 fact combinations without ever granting authority", async () => {
-    for (let mask = 0; mask < 256; mask += 1) {
+  it("executes all 8192 fact combinations without ever granting authority", async () => {
+    for (let mask = 0; mask < 8192; mask += 1) {
       const proposal = await propose(mask);
       const candidate = field(proposal, "candidate");
       const verdict = field(proposal, "verdict");
@@ -124,7 +134,7 @@ describe("verified loop envelope .fungi authority model", () => {
       assert.equal(failureId.__tag, "string");
       assert.notEqual(verdict.value, 1, `mask ${mask} granted authority`);
 
-      if (mask === 255) {
+      if (mask === 8191) {
         assert.equal(candidate.value, true);
         assert.equal(verdict.value, 0);
         assert.equal(failureId.value, "INDEPENDENT_VERIFIER_UNAVAILABLE");

@@ -14,6 +14,21 @@ The developer-facing source remains ordinary memory-managed `.fungi`. The
 developer never supplies a pointer, raw address, proof Boolean, lease or native
 object identity.
 
+The developer may add one flow-local, target-scoped contract opt-in:
+
+```fungi
+permissions {
+  require verified_native_checked_read_loop_v1 on values
+}
+```
+
+This permits the compiler to attempt proof-backed lowering; it does not bypass
+a check. When the permission or an exact empty-effect profile is absent, the
+normal checked source remains valid and runs with its checks. The proposal
+reports the canonical block as a developer suggestion but cannot insert
+authority or self-admit. The scope is the named `values` parameter in the same
+flow only.
+
 ## Implemented boundary
 
 The first profile accepts exactly one secure flow with:
@@ -27,6 +42,15 @@ The first profile accepts exactly one secure flow with:
 - one exact `i = i + 1` induction step;
 - no collection write, surplus loop, extra call or alternate terminal result.
 
+The v2 proposal also binds a compiler-derived induction certificate:
+
+- checked-integer arithmetic model;
+- `i(0) = 0`, step `1` and invariant `i(k) = k`;
+- exclusive bound and maximum access index;
+- overflow exclusion through terminal `i = 1000000`;
+- exact trip count; and
+- domination of the read by the cardinality and loop guards.
+
 Any structural drift produces K3 deny. The exact shape produces K3 unknown
 with `INDEPENDENT_VERIFIER_UNAVAILABLE`. The TypeScript analyzer and its
 independently executable `.fungi` fact model therefore cannot release native
@@ -34,15 +58,17 @@ authority.
 
 ## Verification
 
-- 23 analyzer tests cover the exact proposal and adversarial structural drift.
+- 27 analyzer tests cover the exact proposal, permission grammar and scope,
+  induction certificate and adversarial structural drift.
 - The `.fungi` model passes production parse, type, value-state, effect and
   governance gates.
-- All 256 combinations of eight Boolean facts execute through the interpreter;
+- All 8,192 combinations of thirteen Boolean facts execute through the interpreter;
   none returns K3 allow.
 - The checked example passes all production source gates and derives only the
   exact K3-unknown proposal.
-- The focused combined corpus passes 27/27 with Node count unchanged.
-- The complete compiler package passes 5,818/5,818; graph generation/check is
+- The focused combined corpus, including the generated Hallmark registry,
+  passes 32/32 with Node count unchanged.
+- The complete compiler package passes 5,823/5,823; graph generation/check is
   5/5, the flat root lock re-verifies all 98 peers, and Node remains 1 -> 1.
 
 ## Still required before optimized execution

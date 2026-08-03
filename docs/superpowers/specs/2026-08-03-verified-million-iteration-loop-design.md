@@ -21,10 +21,16 @@ The application writes an ordinary `while` over a flow-owned collection. It
 does not write `unsafe while`, raw pointers, an unchecked access, a VOK lease or
 a proof object.
 
+The application may explicitly opt in to proof-backed check elision with
+`permissions { require verified_native_checked_read_loop_v1 on values }`.
+This flow-local entry permits an attempt for that exact parameter; it cannot
+prove or authorize the operation. If omitted, the checked source remains
+valid and executes with its normal checks.
+
 The first worked example uses one million sequential reads because it is the
 closest safe comparison with the supplied unchecked-indexing example. The
 collection is assayed once for exact cardinality. That Hallmark is a typed
-input fact, not authority.
+input fact, not authority, and cannot mint or impersonate the permission.
 
 ## Considered approaches
 
@@ -108,16 +114,16 @@ open the native lease, so the authorization density is
 - Any post-proof change to the collection generation, GIR, object, target,
   policy or revocation epoch invalidates admission.
 
-## Existing checker defect exposed by this design
+## Checker defect exposed by this design - resolved in proposal v2
 
 The current strict-profile bounded-loop heuristic recognizes a comparison with
 a numeric literal but does not prove the documented monotonic-update condition.
 It is suitable only as an early diagnostic heuristic. It must not authorize the
 Verified Loop Envelope or bounds-check elimination.
 
-The implementation must introduce a separate exact analyzer and regression
-tests. It must not silently strengthen the meaning of the existing heuristic
-without preserving its diagnostic compatibility.
+The implementation now has a separate exact analyzer and regression tests. It
+derives and serializes the induction certificate while leaving the older
+diagnostic heuristic unchanged. The proposal remains non-authorizing.
 
 ## Test obligations
 
