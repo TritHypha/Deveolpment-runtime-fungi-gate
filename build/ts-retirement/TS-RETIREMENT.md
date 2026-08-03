@@ -1,4 +1,4 @@
-# .ts retirement graph (494 tracked package .ts; 480 in src)
+# .ts retirement graph (495 tracked package .ts; 480 in src)
 
 Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit reads these numbers LIVE.
 
@@ -11,7 +11,7 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 
 Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
-Terminal physical retirement: OPEN — 494 tracked package TypeScript paths remain.
+Terminal physical retirement: OPEN — 495 tracked package TypeScript paths remain.
 
 Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/110 production Fungi sources cryptographically admitted; 0/36 host boundaries owned; 95 node_modules trees.
 

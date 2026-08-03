@@ -99,7 +99,7 @@
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-router/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-state/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web/node_modules'",
-    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 494",
+    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 495",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-api-protocol-rest/src/index.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi'",
@@ -687,6 +687,7 @@
     "packages-galerina/galerina-tools-myco/src/util/normalize.ts",
     "packages-galerina/galerina-tools-myco/tests/cli-epipe.test.ts",
     "packages-galerina/galerina-tools-myco/tests/cli-streams.test.ts",
+    "packages-galerina/galerina-tools-myco/tests/index-ceiling.test.ts",
     "packages-galerina/galerina-tools-myco/tests/path-filter.test.ts",
     "packages-galerina/galerina-tools-myco/tests/regex-guard.test.ts",
     "packages-galerina/galerina-tools-myco/tests/search.test.ts",
@@ -6167,6 +6168,18 @@
       "retirementState": "physical-typescript-present"
     },
     {
+      "path": "packages-galerina/galerina-tools-myco/tests/index-ceiling.test.ts",
+      "package": "galerina-tools-myco",
+      "dependencyTranche": "T3-package-graph",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-tools-myco",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-typescript-present"
+    },
+    {
       "path": "packages-galerina/galerina-tools-myco/tests/path-filter.test.ts",
       "package": "galerina-tools-myco",
       "dependencyTranche": "T3-package-graph",
@@ -6930,7 +6943,7 @@
   },
   "totals": {
     "ts": 480,
-    "allTrackedTs": 494,
+    "allTrackedTs": 495,
     "twinned": 28,
     "compilerCore": 97,
     "floor": 16,

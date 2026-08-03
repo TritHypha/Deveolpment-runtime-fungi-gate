@@ -25,7 +25,7 @@ The current live target is:
 
 | Terminal debt | Current | Required |
 |---|---:|---:|
-| Tracked package TypeScript paths | **494** | **0** |
+| Tracked package TypeScript paths | **495** | **0** |
 | Categorised implementation TypeScript paths under `src` | **480** | **0** |
 | Production `.fungi` sources without execution authority | **110** | **0** |
 | Non-authorizing `.fungi` candidates | **2** | candidates do not count as production |
@@ -36,8 +36,8 @@ The current live target is:
 | Post-SLIDE gate violations | **243** | **0** |
 
 The often quoted **491** TypeScript count is stale. The fresh repository audit
-finds **494** tracked paths. Of these, 480 are categorised implementation paths
-under `src`; the other 14 are ten Myco TypeScript tests, two benchmark sources
+finds **495** tracked paths. Of these, 480 are categorised implementation paths
+under `src`; the other 15 are eleven Myco TypeScript tests, two benchmark sources
 and two example-app host files. They are all in the retirement scope.
 
 The exhaustive path-level inventory is generated at
@@ -55,7 +55,7 @@ The post-SLIDE verifier fails closed for five independent reasons:
 | Unowned host boundary | 36 | Native, OS and runtime seams have no typed cryptographic ownership receipt |
 | Package-local dependency tree | 95 | Each package still carries an npm-shaped dependency world |
 | Nested native identity | 1 | `galerina-framework-example-app/packages/greeting/package.fungi.json` violates the flat package rule |
-| TypeScript-zero terminal assertion | 1 | The physical tracked count is 494, not zero |
+| TypeScript-zero terminal assertion | 1 | The physical tracked count is 495, not zero |
 | **Total** | **243** | Every row must reach zero; there are no exemptions |
 
 The verifier implementation is already green against its adversarial fixtures.
@@ -297,7 +297,7 @@ probable checker defect is not an acceptable fix.
 6. Convert/reconcile packages in T1 -> T2 -> T3 order; compiler self-host last
 7. Replace or admit every host boundary
 8. Move the nested greeting package and remove all 95 node_modules trees
-9. Require 494 -> 0, unexecuted 110+ -> 0, unowned 36 -> 0
+9. Require 495 -> 0, unexecuted 110+ -> 0, unowned 36 -> 0
 10. Rebuild from a clean checkout; run all graphs/tests/audits/security checks
 11. Generate provenance-bound Galerina/SLIDE benchmarks and release evidence
 ```

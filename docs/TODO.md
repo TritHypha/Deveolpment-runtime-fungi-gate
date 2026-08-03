@@ -475,7 +475,7 @@
 - **Exact blocker report:**
   [`docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`](reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md)
   records the complete live compile/admission chain, the 243 fail-closed
-  post-SLIDE violations and the dependency order from 494 tracked TypeScript
+  post-SLIDE violations and the dependency order from 495 tracked TypeScript
   paths, 110 unexecuted Fungi sources, 36 unowned host boundaries, 95
   `node_modules` trees and one nested identity to zero. The older 491 count is
   stale.
@@ -521,7 +521,7 @@
   The contract is documented in
   `docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`.
 - **Fresh measured debt:** `ts-retirement-graph --post-slide --check --json`
-  reports `postSlideReady: false`: **494** tracked package TypeScript paths,
+  reports `postSlideReady: false`: **495** tracked package TypeScript paths,
   **110** unexecuted production `.fungi` sources, **36** unowned production
   host boundaries, **95** package-local `node_modules` trees and **1** nested
   package identity. The execution-authority ledger contains two exact
@@ -546,7 +546,7 @@
   switch verified as a bounded reference; (2) ledger: schema-v3 candidate
   isolation and the hybrid cryptographic verifier are green, while 110 signed
   Fungi admissions are required, two entries are candidates and zero are
-  executed; (3) conversion: 494
+  executed; (3) conversion: 495
   tracked package TypeScript paths remain; (4) host ownership: 36 boundaries
   remain unowned; (5) flat dependencies: 95 `node_modules` trees and one nested
   identity remain; (6) terminal admission: refused until all five predecessor
