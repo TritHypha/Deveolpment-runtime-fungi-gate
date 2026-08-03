@@ -44,11 +44,15 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   package API and incorrectly excluded governed String arguments. The maintained
   worked map now requires every parity claim to name its execution surface and
   distinguishes CLI-harness, SLIDE-profile, language and host-ABI blockers.
-  Open fail-closed tooling debt: a governed CLI probe supplied a scalar to an
-  Array-typed parameter and reached the empty-array path instead of refusing;
-  surplus positional arguments are also ignored. Such runs are prohibited as
-  parity evidence until the CLI marshaller enforces exact declared arity and
-  types with regression tests.
+  The discovered fail-closed tooling debt is now closed: governed CLI argument
+  admission requires exact arity, derives `Int`/`Bool`/`String` from declared
+  parameter types and refuses malformed or unsupported types before execution.
+  Scalar-to-Array defaulting and surplus arguments are regression-tested;
+  focused evidence is 9/9 with Node 1 -> 1. Fresh phase-close evidence on
+  2026-08-03 is fully green in 502.1 seconds: graph 5/5, tooling 347, CLI
+  marshalling 9/9, crypto 21/21, security 0 findings/errors and aggregate Node
+  1 -> 1. This does not add structured CLI input or authorize any external
+  candidate.
 - **Compact status drift closed:** the live retirement line now reports 497
   tracked TypeScript paths and 38 unowned host boundaries. A tooling regression
   test compares every displayed retirement count with the generated retirement

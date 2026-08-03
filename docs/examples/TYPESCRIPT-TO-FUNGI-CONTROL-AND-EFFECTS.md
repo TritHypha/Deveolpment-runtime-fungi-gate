@@ -211,7 +211,7 @@ marshaller into a language or SLIDE blocker.
 | Surface | Current admitted input relevant to translation | Use and limit |
 |---|---|---|
 | raw legacy `galerina run --invoke` | positional `Int` and `Bool` | narrow pure-WASM development probe; no structured input syntax |
-| governed legacy `galerina run --governed` | positional `Int`, `Bool` and non-numeric `String` | governed interpreter probe; no typed Array, Bytes or record input syntax |
+| governed legacy `galerina run --governed` | positional values declared as `Int`, `Bool` or `String` | governed interpreter probe; no typed Array, Bytes or record input syntax |
 | independent SLIDE checked-package API | exact admitted profiles including scalar/K3 values, bounded String, owned Bytes and dense immutable `Array<Int>` | reference-only `.fungi -> GIR -> .slide -> VOK` evidence; every profile keeps its own limits |
 
 The current `Array<Int>` SLIDE profile admits at most 16 exact signed Int32
@@ -220,6 +220,13 @@ operations. It does not admit general arrays, Array results, nested arrays,
 mutation, iteration or callbacks. String and Bytes profiles are similarly
 bounded; their presence does not imply general collection or host-object
 support.
+
+Governed CLI admission is exact by declared type and arity. `Bool` accepts only
+`true` or `false`; `Int` accepts only canonical signed decimal safe integers;
+and `String` preserves the exact token even when it looks numeric or Boolean.
+Missing, surplus, malformed and unsupported declared inputs refuse before the
+interpreter runs. The CLI never converts a scalar into an empty/default
+structured value.
 
 Use the narrowest accurate blocker:
 
