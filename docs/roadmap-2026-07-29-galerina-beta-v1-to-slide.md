@@ -2,13 +2,13 @@
 
 Date: 2026-08-03
 Branch: `codex/galerina-beta-v1-completion`
-Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**
-with the prior derived **8,831/8,831** package-test ledger, graph **5/5**, code
-index/registry/coverage current, benchmark publication fresh, and executable
-examples **233/233**. The current complete phase-close cadence passed every
-blocking gate in **845.7 seconds**, benchmark integrity has **60** passing tests,
-tooling has **346** passes, the security audit checked 31 files with zero
-errors, and Node returned to the one pre-existing MCP process.
+Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**,
+graph **5/5**, code index/registry/coverage current, benchmark publication
+fresh, and executable examples **233/233**. The latest uninterrupted complete
+phase-close passed every blocking gate in **502.1 seconds**; tooling has **347**
+passes, governed CLI marshalling has **9/9**, crypto has **21/21**, the security
+audit checked 31 files with zero findings/errors, and aggregate Node returned
+to the one pre-existing MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
@@ -27,6 +27,18 @@ pre-existing MCP process. External conversion Round 7 is independently graded
 conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
+
+Roadmap refresh: Contract 43's append-only checked-subtraction child profile is
+green as a bounded reference implementation. Dynamic signed-Int32 subtraction
+now crosses checked-Fungi parsing, canonical GIR, independent execution,
+portable VOK/VEO, canonical `.slide`, flat package publication and physical
+loading. Opcode 27 refuses overflow and cannot wrap, saturate, coerce or call
+the host. Contracts 24, 41 and 42 remain byte-for-byte frozen. Fresh focused
+evidence is 36/36; complete serial SLIDE is 560/560 across 56 suites; the
+35-file contract tree, benchmark, security closure `+1` with evidence K3 `0`,
+and 59-file tool identity all verify. This does not green the general backend:
+multiplication/division/modulo, Float arithmetic, mutation, general loops and
+effects, production authority and package conversion remain blue.
 
 Roadmap refresh: Contract 42's append-only immutable Array/Option child profile
 is green as a bounded reference implementation. Galerina-style `Array<Int>`
@@ -747,7 +759,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar + exact String/Bytes + bounded Array/Option green<br/>550/550 · reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar + exact String/Bytes + bounded Array/Option green<br/>560/560 · Contract 43 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

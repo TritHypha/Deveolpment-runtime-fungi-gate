@@ -63,6 +63,27 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   soft. Each item needs measured refactoring or a narrow justified disposition;
   no blanket exemption was added.
 
+### SLIDE Contract 43 checked subtraction registry green - 2026-08-03
+
+- Independent SLIDE now carries dynamic checked signed-Int32 subtraction
+  through checked-Fungi parsing, canonical GIR, independent execution,
+  portable VOK/VEO, canonical `.slide`, flat package publication and physical
+  package loading.
+- Contract 43 is append-only. Contracts 24, 41 and 42 retain their exact
+  descriptor bytes and meanings. Opcode 27 accepts exactly two Int32 operands,
+  returns one Int32 and refuses overflow without wrapping, saturation,
+  coercion or a host call.
+- The parser preserves left-associative `+`/`-` semantics and the canonical
+  `0 - 1` spelling remains an Int literal rather than falsely selecting the
+  successor registry.
+- Focused SLIDE evidence passes 36/36. Complete serial SLIDE passes 560/560
+  across 56 suites in 38.3 seconds; the 35-file contract tree, benchmark,
+  security closure `+1` with evidence K3 `0`, and 59-file tool manifest all
+  verify. Node collapses from 3 processes before the run to 1 afterward.
+- This is a reference-only language increment. Multiplication, division,
+  modulo, Float arithmetic, mutation, general loops/effects, production
+  authority, package conversion and terminal retirement remain closed or blue.
+
 ### SLIDE Contract 42 immutable Array and Option profile green - 2026-08-03
 
 - SLIDE now carries bounded immutable `Array<Int>` input, `.count()` and
