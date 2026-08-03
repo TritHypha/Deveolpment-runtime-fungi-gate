@@ -53,6 +53,20 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   marshalling 9/9, crypto 21/21, security 0 findings/errors and aggregate Node
   1 -> 1. This does not add structured CLI input or authorize any external
   candidate.
+- **External Round 8 issued:** the controlled Round 7 resubmission is expanded
+  to 120 byte-pinned tracked package TypeScript sources: the original 20
+  rows plus 100 reproducibly selected files spanning 87 additional-source
+  package peers. Every row must continue to a terminal evidence dossier and a
+  complete source-to-Fungi export/type/control/effect/failure/package-edge map,
+  even when translation is blocked. Candidate parity must name raw CLI,
+  governed CLI or independent SLIDE checked-package execution exactly. The
+  sandbox remains external, flat, quarantined and non-authorizing; no result is
+  integrated, retired, signed or promoted by issuing the assignment. A
+  ten-source executable Golden Pack now gives the external worker verified
+  lookup shapes before row 001: strict checking is 10/10, raw/governed CLI is
+  8/8 and independent SLIDE checked-package probing is 16/16, with Node 1 -> 1.
+  Its generated toolchain-pinned manifest is explicitly probe-derived,
+  non-exhaustive and reference-only.
 - **Compact status drift closed:** the live retirement line now reports 497
   tracked TypeScript paths and 38 unowned host boundaries. A tooling regression
   test compares every displayed retirement count with the generated retirement
