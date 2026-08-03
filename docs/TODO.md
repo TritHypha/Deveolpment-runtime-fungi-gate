@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Runtime identity and execution-graph authority closure - 2026-08-03
+
+- Tower Citizen now validates caller-supplied correlation identities, creates
+  defaults with the platform cryptographic UUID generator, and synchronously
+  reserves each identity before the first asynchronous verification boundary.
+  Duplicate active/loading identities refuse before sandbox replacement.
+- Tower focused evidence is 22/22 and the complete package is 495/495; build
+  and typecheck pass, and the bounded run kept Node at 1 -> 1.
+- The compiler no longer reads or writes persisted execution graphs. Graph
+  reuse is process-local only, so a syntactically valid file placed in the
+  historical cache cannot become execution authority.
+- The cache regression is 21/21. The complete core-compiler run covered 371
+  test files in 19 sequential batches capped at four workers; every batch,
+  build and typecheck passed, with Node remaining 1 -> 1.
+- **Still open:** cross-process Tower correlation namespaces require an
+  authenticated host/SLIDE authority, and durable graph reuse requires SLIDE
+  evidence plus independent re-admission. Neither is inferred from these
+  process-local closures.
+
 ### Round 6 external conversion issued - 2026-08-03
 
 - A fresh external quarantine assigns 20 exact TypeScript files from 20

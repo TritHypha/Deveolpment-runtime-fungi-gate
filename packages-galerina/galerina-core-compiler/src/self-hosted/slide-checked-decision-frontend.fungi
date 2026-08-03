@@ -81,6 +81,7 @@ contract { intent { "Return no partial checked-decision receipt after refusal." 
   }
 }
 
+// Collapse every frontend refusal to a closed receipt with no partial authority.
 pure flow refuseSLIDECheckedDecisionFrontend(
   failureId: String,
   detail: String,

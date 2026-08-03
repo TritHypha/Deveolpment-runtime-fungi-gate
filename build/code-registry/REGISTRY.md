@@ -15,7 +15,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 169 | emitted with an exported constant |
-| inline | 175 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 177 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
@@ -432,7 +432,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
 | FUNGI-EFFECT-906 | ref | — | — |
 
-### ERR_* (139)
+### ERR_* (141)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -464,6 +464,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_CERTIFIED_UNSIGNED_LOAD_FORBIDDEN | inline | — | — |
 | ERR_CODE | ref | — | — |
 | ERR_COMPUTE_BUDGET_EXCEEDED | ref | — | — |
+| ERR_CORRELATION_ID_ACTIVE | inline | — | — |
+| ERR_CORRELATION_ID_INVALID | inline | — | — |
 | ERR_DIV_BY_ZERO | ref | — | — |
 | ERR_EMPTY | ref | — | — |
 | ERR_EMPTY_CALLER | ref | — | — |

@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 777,
+  "total": 779,
   "counts": {
     "ref": 207,
-    "inline": 175,
+    "inline": 177,
     "phantom": 113,
     "live": 169,
     "referenced": 100,
@@ -345,6 +345,30 @@
       "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "ERR_CORRELATION_ID_ACTIVE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "inline",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 2
+    },
+    {
+      "code": "ERR_CORRELATION_ID_INVALID",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "inline",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 3
     },
     {
       "code": "ERR_DIV_BY_ZERO",
