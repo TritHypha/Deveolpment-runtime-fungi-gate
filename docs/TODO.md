@@ -23,6 +23,23 @@ counts or open items that a newer section explicitly supersedes.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
   honestly 0/120 terminal rows at issuance; no TypeScript path is retired.
 
+### SLIDE Contract 58 structured counted-loop certificate floor green - 2026-08-03
+
+- RD-0691 selects a structured counted-loop object after measuring 1,416 `for`
+  signals across 268 package files, including 1,222 `for...of`, and 200 `while`
+  signals across 45 files. These are planning signals, not parity claims.
+- SLIDE commit `39cb6da` implements the prerequisite certificate only: exact
+  positive-step trip count, signed-Int32 terminal proof and complete work
+  reservation before any future body execution. Proxies, accessors, inherited
+  records, malformed fields, arithmetic overflow and budget exhaustion refuse.
+- Focused behavior is 5/5 over an 8,712-vector arithmetic differential;
+  certificate plus contract integrity is 10/10; complete SLIDE is 657/657
+  across 70 suites. Contracts cover 59 files, security closure is `+1` with K3
+  `0`, the 60-file tool identity verifies, and Node is 1 -> 1.
+- This green tile is a certificate floor, not an executable general-loop claim.
+  Source-family derivation, closed acyclic body verification, VOK execution,
+  package integration and production authority remain open.
+
 ### SLIDE Contract 57 immutable canonical-text substring green - 2026-08-03
 
 - SLIDE commit `99583dc` carries exact `String.includes(String) -> Bool`

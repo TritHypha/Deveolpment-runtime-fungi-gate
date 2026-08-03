@@ -24,6 +24,18 @@ append-only AI handover channel. It starts at 0/120 terminal rows and remains
 external, quarantined and non-authorizing; package retirement counts do not
 change.
 
+Roadmap refresh: Contract 58's structured counted-loop certificate floor is
+green at SLIDE commit `39cb6da`. A fresh package survey found 1,416 `for`
+signals across 268 files, including 1,222 `for...of`, plus 200 `while` signals
+across 45 files. The implemented floor derives exact positive-step trip count,
+proves the signed-Int32 terminal update and reserves complete loop work; hostile
+or over-budget intake refuses before certification. Focused evidence is 5/5
+over an 8,712-vector arithmetic differential, the contract slice is 10/10 and
+complete SLIDE is 657/657 across 70 suites. Contracts cover 59 files, security
+closure is `+1` with K3 `0`, the 60-file tool identity verifies, and Node is
+1 -> 1. No executable opcode or body region is admitted, so the independent
+general loop backend remains blue.
+
 Roadmap refresh: Contract 57's immutable canonical-text substring membership
 is green as a bounded reference implementation at SLIDE commit `99583dc`.
 Exact `String.includes(String) -> Bool` crosses checked Fungi, canonical opcode
@@ -952,7 +964,8 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>646/646 · Contract 56 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + record + zero-argument + 4–128 static functions<br/>657/657 · Contract 58 certificate-only"]
+    LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]
@@ -1018,7 +1031,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> VN --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> H
+    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
@@ -1034,7 +1047,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;

@@ -281,6 +281,25 @@ match. Do not translate index-returning search, regex, normalization,
 case-folding, callbacks or host-object behavior as this Boolean operation.
 This reference profile does not by itself authorize package retirement.
 
+An exact emptiness decision does not need a general text-length contract. When
+the static receiver type is exactly `String`, these rewrites preserve behavior
+for every well-formed string, including non-ASCII text:
+
+```ts
+value.length === 0
+value.length > 0
+```
+
+```fungi
+value == ""
+value != ""
+```
+
+For admitted `Array<Int>`, use `.count()` and compare the result. Do not infer a
+receiver type from its variable name, and do not rewrite general `.length`
+arithmetic this way. Text byte count, Unicode scalar count and legacy code-unit
+count are different operations and remain deliberately unmerged.
+
 Governed CLI admission is exact by declared type and arity. `Bool` accepts only
 `true` or `false`; `Int` accepts only canonical signed decimal safe integers;
 and `String` preserves the exact token even when it looks numeric or Boolean.
