@@ -2057,25 +2057,74 @@ Baseline comparison (governance-cost):
         console.error(`No flow named '${gflow}'. Declared: ${(parsed.flows ?? []).map(f => f.name).join(", ") || "(none)"}`);
         process.exit(1);
       }
-      // Marshal positional args to the flow's NAMED params (param text is "readonly x: T" / "n: Int"
-      // / "n" — take the identifier before ':', last token strips qualifiers). Fail loud on junk.
-      const gparamNames = (gmeta.params ?? []).map(p => {
-        const toks = String(p).split(":")[0].trim().split(/\s+/);
-        return toks[toks.length - 1];
+      // Marshal from the flow's DECLARED parameter types, never from lexical guessing. The previous
+      // marshaller tagged every numeric-looking token as Int, every other token as String and silently
+      // ignored surplus values. That let a scalar reach an Array parameter and execute a default/empty
+      // path — false parity evidence. This legacy CLI admits only exact scalar profiles; structured
+      // values use a typed admitted execution surface instead.
+      const gparams = (gmeta.params ?? []).map((parameter, index) => {
+        const text = String(parameter);
+        const separator = text.indexOf(":");
+        const nameParts = separator > 0 ? text.slice(0, separator).trim().split(/\s+/) : [];
+        const name = nameParts[nameParts.length - 1] ?? "";
+        const withMetadata = separator > 0 ? text.slice(separator + 1).trim() : "";
+        const type = withMetadata.split(/\s+source_from\s+/u, 1)[0]?.trim() ?? "";
+        if (name === "" || type === "") {
+          console.error(`REFUSED: governed parameter metadata #${index + 1} is malformed; execution denied.`);
+          process.exit(2);
+        }
+        return { name, type };
       });
       const invokeAt = rest.indexOf("--invoke");
       const gposArgs = (invokeAt >= 0 ? rest.slice(invokeAt + 2) : []).filter(a => a !== "--governed");
+      if (gposArgs.length !== gparams.length) {
+        console.error(
+          `REFUSED: governed invoke of '${gflow}' expected ${gparams.length} positional argument(s) ` +
+          `but received ${gposArgs.length}; exact arity is required.`,
+        );
+        process.exit(2);
+      }
       const gargs = new Map();
-      gposArgs.forEach((a, i) => {
-        const name = gparamNames[i];
-        if (name === undefined) return; // extra positional arg with no param — ignore (flow decides)
-        let v;
-        if (a === "true") v = { __tag: "bool", value: true };
-        else if (a === "false") v = { __tag: "bool", value: false };
-        else if (a.trim() !== "" && Number.isFinite(Number(a))) v = { __tag: "int", value: Number(a) };
-        else v = { __tag: "string", value: a };
-        gargs.set(name, v);
-      });
+      for (let i = 0; i < gparams.length; i++) {
+        const parameter = gparams[i];
+        const raw = gposArgs[i];
+        if (parameter === undefined || raw === undefined) {
+          console.error(`REFUSED: governed argument #${i + 1} has no exact parameter binding; execution denied.`);
+          process.exit(2);
+        }
+        if (parameter.type === "Bool") {
+          if (raw !== "true" && raw !== "false") {
+            console.error(
+              `REFUSED: governed argument #${i + 1} for parameter '${parameter.name}' declared Bool is invalid; ` +
+              `expected true or false.`,
+            );
+            process.exit(2);
+          }
+          gargs.set(parameter.name, { __tag: "bool", value: raw === "true" });
+          continue;
+        }
+        if (parameter.type === "Int") {
+          const value = /^-?(0|[1-9][0-9]*)$/u.test(raw) ? Number(raw) : Number.NaN;
+          if (!Number.isSafeInteger(value)) {
+            console.error(
+              `REFUSED: governed argument #${i + 1} for parameter '${parameter.name}' declared Int is invalid; ` +
+              `expected a canonical signed decimal safe integer.`,
+            );
+            process.exit(2);
+          }
+          gargs.set(parameter.name, { __tag: "int", value });
+          continue;
+        }
+        if (parameter.type === "String") {
+          gargs.set(parameter.name, { __tag: "string", value: raw });
+          continue;
+        }
+        console.error(
+          `REFUSED: governed CLI cannot marshal argument #${i + 1} for parameter '${parameter.name}' ` +
+          `declared ${parameter.type}; use a typed admitted execution surface.`,
+        );
+        process.exit(2);
+      }
 
       const gres = await m.run(source, fungiFile, gflow, gargs, { mode: "dev" });
 

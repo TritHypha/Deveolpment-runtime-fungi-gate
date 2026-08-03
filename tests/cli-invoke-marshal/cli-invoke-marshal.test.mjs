@@ -19,6 +19,23 @@ function run(...args) {
   return { status: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
 }
 
+let governedFixtureId = 0;
+function runGoverned(flowSource, flowName, ...args) {
+  governedFixtureId += 1;
+  const fixture = join(ROOT, "build", `__governed_marshal_${governedFixtureId}.fungi`);
+  writeFileSync(fixture, `@version 1\n${flowSource}\n`);
+  try {
+    const r = spawnSync(
+      process.execPath,
+      ["galerina.mjs", "run", fixture, "--invoke", flowName, ...args, "--governed"],
+      { cwd: ROOT, encoding: "utf-8", timeout: 60000 },
+    );
+    return { status: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+  } finally {
+    try { rmSync(fixture, { force: true }); } catch { /* ignore */ }
+  }
+}
+
 before(() => {
   mkdirSync(dirname(FIXTURE), { recursive: true });
   // Distinct, unlikely return values so the marshalled bool is unambiguous in the output.
@@ -81,6 +98,71 @@ test("--governed runs a flow through the governed runtime and prints its value (
     assert.match(out, /governed/, "must announce the governed runtime");
   } finally {
     try { rmSync(f, { force: true }); } catch { /* ignore */ }
+  }
+});
+
+test("--governed refuses a scalar for an Array parameter before the empty path executes", () => {
+  const result = runGoverned(
+    "pure flow listLen(values: Array<Int>) -> Int { return values.count() }",
+    "listLen",
+    "7",
+  );
+  assert.equal(result.status, 2, result.out);
+  assert.match(result.out, /cannot marshal.*Array<Int>/i);
+  assert.doesNotMatch(result.out, /governed · flow=listLen/);
+});
+
+test("--governed refuses missing and surplus positional arguments", () => {
+  const source = "pure flow add(a: Int, b: Int) -> Int { return a + b }";
+  for (const args of [["1"], ["1", "2", "3"]]) {
+    const result = runGoverned(source, "add", ...args);
+    assert.equal(result.status, 2, result.out);
+    assert.match(result.out, /expected 2.*received/i);
+    assert.doesNotMatch(result.out, /governed · flow=add/);
+  }
+});
+
+test("--governed marshals scalar values from declared types", () => {
+  const stringResult = runGoverned(
+    "pure flow echo(v: String) -> String { return v }",
+    "echo",
+    "42",
+  );
+  const boolResult = runGoverned(
+    "pure flow choose(v: Bool) -> Int { if v { return 1 } return 0 }",
+    "choose",
+    "true",
+  );
+  const intResult = runGoverned(
+    "pure flow echo(v: Int) -> Int { return v }",
+    "echo",
+    "-42",
+  );
+  assert.equal(stringResult.status, 0, stringResult.out);
+  assert.match(stringResult.out, /"42"/);
+  assert.equal(boolResult.status, 0, boolResult.out);
+  assert.match(boolResult.out, /\b1\b/);
+  assert.equal(intResult.status, 0, intResult.out);
+  assert.match(intResult.out, /-42/);
+});
+
+test("--governed refuses malformed declared scalar values", () => {
+  const boolResult = runGoverned(
+    "pure flow echo(v: Bool) -> Bool { return v }",
+    "echo",
+    "yes",
+  );
+  assert.equal(boolResult.status, 2, boolResult.out);
+  assert.match(boolResult.out, /argument #1.*Bool/i);
+
+  for (const value of ["1.5", "1e3", "9007199254740992"]) {
+    const intResult = runGoverned(
+      "pure flow echo(v: Int) -> Int { return v }",
+      "echo",
+      value,
+    );
+    assert.equal(intResult.status, 2, intResult.out);
+    assert.match(intResult.out, /argument #1.*Int/i);
   }
 });
 
