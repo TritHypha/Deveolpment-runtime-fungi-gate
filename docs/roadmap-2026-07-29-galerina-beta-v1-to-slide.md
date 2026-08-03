@@ -13,6 +13,20 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Contract 48's bounded immutable record-local slice is green as
+a reference implementation. One module schema with one to eight exact ordered
+fields now crosses checked-Fungi, canonical V2-C record opcodes 17/18,
+independent execution, `.slide`, VOK, physical package publication and typed
+receipt re-admission. Both supported declaration spellings emit byte-identical
+GIR. Multiple/recursive schemas, record ABI parameters/results, malformed or
+reordered fields, dynamic projection, operators and mutation refuse. Focused
+evidence is 10/10, inherited evidence is 31/31 plus 44/44, and complete SLIDE is
+604/604 across 61 suites. Contracts cover 43 files; benchmark, security closure
+`+1` with evidence K3 `0`, and the 59-file tool identity verify. This adds no
+opcode, registry or authority. General records/variants, Float, mutation,
+loops/effects, callbacks, production authority and package conversion remain
+blue.
+
 Roadmap refresh: the full Galerina gate set is restored to **87/87** after a
 fresh 845.7-second owned-process exhaustive close. The false diagnostic-name
 collision was fixed at its code-index parsing root and is regression-tested;
@@ -810,7 +824,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷/% scalar + grouping + exact String/Bytes + bounded Array/Option<br/>594/594 · Contract 47 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + exact String/Bytes + Array/Option + one immutable record local<br/>604/604 · Contract 48 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

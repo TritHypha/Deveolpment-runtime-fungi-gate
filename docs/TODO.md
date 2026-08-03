@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 48 immutable record local green - 2026-08-03
+
+- Independent SLIDE now admits one bounded immutable record schema, local
+  construction and static field projection. Both supported declaration
+  spellings canonicalize to the same GIR and reuse frozen V2-C record opcodes
+  17/18; no opcode, registry, effect, capability or receipt field was added.
+- Exact one-to-eight ordered fields support existing `Int`, `Bool`, `Verdict`,
+  `String`, `Bytes`, `Array<Int>` and `Option<Int>` values. Multiple/recursive
+  schemas, record ABI parameters/results, reordered or mistyped fields,
+  dynamic projection, record operators and mutation refuse.
+- Focused record evidence is 10/10; inherited evidence is 31/31 and 44/44.
+  Complete SLIDE is 604/604 across 61 suites; contracts are 43 files; recorded
+  benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
+  identity verify; Node is 1 -> 1.
+- This remains reference-only. General records/variants, Float, mutation,
+  loops/effects, callbacks, production authority, owner-reviewed external
+  conversion and terminal retirement remain open.
+
 ### SLIDE Contract 47 grouped expression green - 2026-08-03
 
 - Independent SLIDE now admits at most seven nested parenthesized scalar
