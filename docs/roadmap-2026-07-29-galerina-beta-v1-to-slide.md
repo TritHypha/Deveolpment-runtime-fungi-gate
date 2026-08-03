@@ -28,6 +28,17 @@ conversion remains blue and unchanged. The direct performance heuristic still
 has 36 report-only items pending measured adjudication; no exemption was used
 to manufacture green.
 
+Roadmap refresh: Contract 45's append-only checked-division profile is green as
+a bounded reference implementation. Signed Int32 division truncated toward
+zero now crosses checked-Fungi, canonical GIR, independent execution, portable
+VOK/VEO, canonical `.slide`, flat packages and physical typed receipts. Zero
+divisor and minimum-Int divided by negative one refuse, matching Galerina's
+live checked arithmetic and signed WAT behavior. Focused evidence is 38/38 and
+complete serial SLIDE is 579/579 across 58 suites. Contracts cover 39 files;
+benchmark, security closure `+1` with evidence K3 `0`, and the 59-file tool
+identity verify. Modulo, Float arithmetic, general loops/effects, production
+authority and package conversion remain blue.
+
 Roadmap refresh: Contract 44's append-only checked-multiplication profile is
 green as a bounded reference implementation. Exact signed-Int32 multiplication
 now crosses checked-Fungi parsing, canonical GIR, independent execution,
@@ -37,9 +48,9 @@ there is no wrap, saturation, coercion or host call. Multiplication is
 left-associative above addition/subtraction. Fresh focused evidence is 38/38,
 the inherited-profile set is 70/70 and complete serial SLIDE is 571/571 across
 57 suites. Contracts cover 37 files; benchmark, security closure `+1` with
-evidence K3 `0`, and the 59-file tool identity verify. Division/modulo, Float
-arithmetic, mutation, general loops/effects, production authority and package
-conversion remain blue.
+evidence K3 `0`, and the 59-file tool identity verify. Contract 45 above
+supersedes the former division gap. Modulo, Float arithmetic, mutation, general
+loops/effects, production authority and package conversion remain blue.
 
 Roadmap refresh: Contract 43's append-only checked-subtraction child profile is
 green as a bounded reference implementation. Dynamic signed-Int32 subtraction
@@ -773,7 +784,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/× scalar + exact String/Bytes + bounded Array/Option<br/>571/571 · Contract 44 reference-only"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked +/−/×/÷ scalar + exact String/Bytes + bounded Array/Option<br/>579/579 · Contract 45 reference-only"]
     PS["🟩 V2-C checked source floor<br/>53/154 contract-valid pure flows · 20 files<br/>semantic ceilings closed · reference-only"]
     PV["🟩 Portable VEO execution floor<br/>direct GIR · VOK affine lease<br/>385/385 · reference-only"]
     SB["🟩 Canonical .slide object floor<br/>fixed envelope + exact GIR<br/>390/390 · reference-only"]

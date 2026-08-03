@@ -63,6 +63,22 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   soft. Each item needs measured refactoring or a narrow justified disposition;
   no blanket exemption was added.
 
+### SLIDE Contract 45 checked signed division registry green - 2026-08-03
+
+- Independent SLIDE now carries signed Int32 division truncated toward zero
+  through checked-Fungi, canonical GIR, independent execution, portable
+  VOK/VEO, canonical `.slide`, flat packages and physical typed receipts.
+- Zero divisor and `-2147483648 / -1` refuse. The rule was checked against
+  Galerina's live `i32DivChecked` and signed WAT behavior; no alternate rounding,
+  wrapping, coercion, Float promotion or host arithmetic call is admitted.
+- Focused package/physical/hostile evidence passes 38/38. Complete serial SLIDE
+  passes 579/579 across 58 suites in 37.9 seconds. The 39-file contract tree,
+  benchmark, security closure `+1` with evidence K3 `0`, and 59-file tool
+  identity verify; Node is 1 -> 1.
+- This is reference-only. Modulo, Float arithmetic, general parentheses,
+  mutation, loops/effects, production authority, package conversion and
+  terminal retirement remain closed or blue.
+
 ### SLIDE Contract 44 checked multiplication registry green - 2026-08-03
 
 - Independent SLIDE now carries dynamic checked signed-Int32 multiplication
@@ -80,7 +96,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   profiles pass 70/70. Complete serial SLIDE passes 571/571 across 57 suites in
   37.8 seconds; the 37-file contract tree, benchmark, security closure `+1`
   with evidence K3 `0`, and 59-file tool identity all verify. Node is 1 -> 1.
-- This remains reference-only. Division, modulo, Float arithmetic, mutation,
+- This remains reference-only. Modulo, Float arithmetic, mutation,
   general loops/effects, production authority, package conversion and terminal
   retirement remain closed or blue.
 
