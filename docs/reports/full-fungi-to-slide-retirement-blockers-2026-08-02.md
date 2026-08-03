@@ -17,7 +17,10 @@ reference floors for a flat package ABI, direct-peer flow/resource binding,
 multi-package checked-source compilation, canonical per-export `.slide`
 objects, package-bound VOK execution, receipt-last physical publication and
 independently parsed pure-scalar control flow with checked `Int` addition.
-Fresh complete SLIDE evidence is 495/495 across 50 suites. These floors remove
+The first canonical Safe Value Envelope additionally owns and verifies exact
+`Int`, `Bool`, K3 `Verdict`, `String`, `Bytes` and `Array<Int>` values without
+releasing execution authority. Fresh complete SLIDE evidence is 501/501 across
+51 suites. These floors remove
 several design/implementation unknowns below; they do not change the measured
 production counts because they remain reference-only, unsigned and limited to
 bounded source profiles.

@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Safe Value Envelope v1 reference primitive green - 2026-08-03
+
+- Independent SLIDE now owns and canonically verifies the first typed
+  non-scalar value profile: signed 32-bit `Int`, `Bool`, K3 `Verdict`, exact
+  well-formed Unicode `String`, bounded `Bytes` and bounded homogeneous
+  `Array<Int>`.
+- Exact intake refuses proxies, accessors, surplus/sparse shapes, derived
+  prototypes, invalid Unicode/UTF-8, resizable views and resource excess.
+  Verification binds type, safety state, provenance and complete envelope
+  identity supplied by an external expectation.
+- Fresh SLIDE evidence is 501/501 across 51 suites, contracts 29/29, security
+  closure `+1` with evidence K3 `0`, the regenerated 57-file tool manifest
+  verifies, and Node remains 1 -> 1. The real receipt-bound sibling build was
+  re-run against that new manifest and passes 1/1 with Node 1 -> 1.
+- **Still open:** this is reference-only and is not an execution receipt.
+  Typed execution receipt v2, nested values, resources, effects and package
+  integration remain required. It does not admit any Round 5 conversion or
+  change the retirement counts.
+
 ### Round 5 external conversion independently rejected - 2026-08-03
 
 - The returned batch accounts for all 66 assigned TypeScript paths and writes
@@ -15,8 +34,9 @@ counts or open items that a newer section explicitly supersedes.
 - **Capability re-measurement completed:** Galerina collection/HOF evidence is
   77/77, disproving several worker blocker labels. Independent SLIDE now
   carries checked `Int` addition through package-bound `.slide` execution and
-  fails closed on overflow; its complete suite is 495/495. Collections,
-  strings, mutation, loops and general effects remain unadmitted by that path.
+  fails closed on overflow. SLIDE additionally has the first reference-only
+  Safe Value Envelope; its complete suite is now 501/501. General collection
+  lowering, mutation, loops and effects remain unadmitted by that path.
 - **Retirement inventory regenerated:** 496 tracked package TypeScript paths,
   including 481 categorised implementation paths under `src`; 111 `.fungi`
   sources still lack production execution authority, 38 host boundaries are
@@ -25,10 +45,10 @@ counts or open items that a newer section explicitly supersedes.
   one current `.ts`/`.fungi` twin, while the benchmark adapter and report added
   two explicitly unowned reference host boundaries. They remain retirement
   debt until independently owned or replaced.
-- **Current action:** define the typed safe-value/result boundary needed before
-  independent collection and String lowering. A future conversion candidate
-  requires positive, negative and mutation execution evidence in addition to
-  strict frontend acceptance.
+- **Current action:** integrate typed values into a separately versioned
+  terminal execution receipt without widening frozen V2-C. A future conversion
+  candidate requires positive, negative and mutation execution evidence in
+  addition to strict frontend acceptance.
 - Report:
   `docs/reports/round-5-fungi-package-conversion-independent-review-2026-08-03.md`.
 

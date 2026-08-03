@@ -12,9 +12,21 @@ tooling has **345** passes plus two intentional skips, and Node returned
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: SLIDE Safe Value Envelope v1 is green as a reference-only
+primitive. It canonically owns and verifies signed 32-bit `Int`, `Bool`, K3
+`Verdict`, exact well-formed Unicode `String`, bounded `Bytes` and bounded
+homogeneous `Array<Int>`. Proxies, accessors, surplus/sparse shapes, derived
+prototypes, invalid Unicode/UTF-8, resizable views and resource excess refuse.
+Fresh SLIDE evidence is 501/501 across 51 suites, contracts 29/29, security
+closure `+1` with evidence K3 `0`, and the regenerated 57-file tool identity
+verifies with Node 1 -> 1. This does not release authority or admit package
+conversion: typed execution receipt v2, nested values, resources, effects and
+package integration remain blue. The receipt-bound sibling integration was
+re-run against the 57-file identity and passes 1/1 with Node 1 -> 1.
+
 Roadmap refresh: receipt-bound Galerina to SLIDE package build selection is
 green as a bounded reference route. One explicit command pins the canonical
-56-file SLIDE tool manifest and current bootstrap-runtime bytes, runs only the
+57-file SLIDE tool manifest and current bootstrap-runtime bytes, runs only the
 named compiler through the owned-process boundary, then independently reopens
 the source manifest, physical receipt and every `.slide` artifact. Focused
 Galerina evidence is 7/7, a real library and top-level CLI package build is
@@ -619,7 +631,7 @@ flowchart TB
     G4I["🟩 G4 cross-repository floor<br/>source + 40-map + V2-D + VOK<br/>25/25 focused · reference-only"]
     RDP["🟩 Registered real-source floor<br/>ordinary + K3 package decisions<br/>196 vectors · differential oracle"]
     I["🟩 Galerina → SLIDE integration<br/>decisions + receipt-bound package build<br/>explicit tool identity · reference-only"]
-    RT["🟩 Receipt-bound SLIDE tool selection<br/>56-file content pin · runtime pin<br/>physical outputs independently re-derived"]
+    RT["🟩 Receipt-bound SLIDE tool selection<br/>57-file content pin · runtime pin<br/>physical outputs independently re-derived"]
     AV["🟩 Signed post-SLIDE receipt verifier<br/>hybrid two-part signatures<br/>exact predicates · no fallback"]
     AL["🟦 .fungi production admission<br/>2 candidates · 0 signed sources<br/>offline authority/evidence pending"]
     T["🟦 Package conversion<br/>496 tracked package .ts → 0"]
@@ -755,7 +767,7 @@ table is navigation, not authority.
 | Order | Workstream | State | Current evidence/debt | Green condition |
 |---:|---|---:|---|---|
 | 0 | Retirement verifier implementation | 🟩 | 12/12 terminal adversarial tests; schema-v3 candidate isolation, canonical bounded JSON and false production-authority refusal; historical 16/16 checkpoint retained | Remains continuously green with hostile fixtures unchanged or strengthened |
-| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts remain green. The package route additionally pins an exact 56-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. Focused evidence is 7/7 plus one real library/top-level CLI build. This is reference-only | Keep both bounded routes green while widening admitted package semantics; production promotion stays in row 2 |
+| 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts remain green. The package route additionally pins an exact 57-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. Focused evidence is 7/7 plus one real library/top-level CLI build. This is reference-only | Keep both bounded routes green while widening admitted package semantics; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
 | 3 | Package conversion | 🟦 | 496 tracked package TypeScript paths remain. External Round 5 accounted for 66 paths but was independently rejected: three files are unadmitted, two are partial, one is defective/superseded and required dossiers/parity evidence are absent | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
