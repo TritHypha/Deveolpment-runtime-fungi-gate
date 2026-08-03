@@ -1,5 +1,30 @@
 # TODO
 
+### Exact Verified Loop `.slide` lowering green - 2026-08-03
+
+- Independent SLIDE now compiles the exact million-read `.fungi` profile into
+  one canonical 88-byte loop GIR inside the existing reference `.slide`
+  envelope. Frozen V2-C remains unchanged.
+- Program bytes contain no dynamic collection values. Bundle/context/GIR
+  re-admission precedes exact fixed-array ownership, collection hashing, all
+  eight K3 gates and one affine VOK lease. Semantic GIR and bundle-payload
+  digests are kept distinct; the semantic GIR identity enters VOK evidence.
+- Source, bundle, context, hostile collection, handle and non-ALLOW K3 drift
+  refuse without fallback. The object executes after the original source
+  buffer is erased.
+- Complete SLIDE passes 484/484 across 47 suites, contract 29/29, security
+  closure `+1`/K3 `0`, Node 1 -> 1.
+- The clean paired result is honest and negative for speed: `.slide`
+  compilation 0.248 ms, preparation 8.901 ms, demand 1.718 ms and prepared
+  total 10.633 ms. Prepared `.slide` is 1.004x source total; end-to-end is
+  1.031x.
+- **Open:** registered general checked-loop GIR/backend, production-switch
+  wiring, native/platform/physical-erasure evidence and bounded reusable
+  generations. Package conversion remains the owner's separate lane.
+- SLIDE report:
+  `docs/reports/canonical-verified-loop-slide-object-2026-08-03.md`.
+- KB maths/adjudication: RD-0683.
+
 ### Verified Loop Envelope proposal implemented - 2026-08-03
 
 - The compiler now recognizes one exact pointer-free million-read `.fungi`
@@ -25,9 +50,10 @@
   direct 0.517 ms, VLE preparation 8.878 ms, demand 1.713 ms and total 10.640
   ms. VLE demand is 1.008x and total 6.259x the checked peer. Evidence remains
   K3 `0`; KB RD-0682 records the maths and no finite current break-even.
-- **Open:** Galerina production-switch wiring, general loop/GIR/serialized
-  `.slide` lowering, native/platform/physical-erasure evidence and a bounded
-  reusable-generation successor experiment. No speed or retirement claim follows.
+- **Open:** Galerina production-switch wiring, general checked-loop GIR,
+  native/platform/physical-erasure evidence and a bounded reusable-generation
+  successor experiment. Exact-profile serialized `.slide` lowering is now
+  green; no speed or retirement claim follows.
 - Report: `docs/reports/verified-loop-envelope-proposal-2026-08-03.md`.
 
 ### V2-C semantic-verifier closure and coverage correction - 2026-08-03

@@ -8,6 +8,20 @@ publication fresh, and executable examples **232/232**.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: canonical serialized lowering is green for the exact Verified
+Loop Envelope profile. SLIDE commit `fe5f922` independently converts the exact
+million-read source into an 88-byte loop GIR inside the common `.slide`
+envelope, keeps dynamic collection values outside the program object, rechecks
+current context and GIR identity, then binds the owned generation through all
+eight K3 VOK gates. Frozen V2-C is unchanged. Complete SLIDE is 484/484 across
+47 suites, contracts are 29/29, security closure is `+1`/K3 `0`, and Node is
+1 -> 1. The clean nine-sample benchmark at commit `60521ff` is a completed
+negative speed result: compilation 0.248 ms, `.slide` preparation 8.901 ms,
+demand 1.718 ms and prepared total 10.633 ms. Prepared `.slide` is 1.004x
+source total and end-to-end is 1.031x. General checked-loop GIR, Galerina
+production wiring and native/platform evidence remain blue; package conversion
+is unchanged.
+
 Roadmap refresh: the first Verified Loop Envelope proposal control is green.
 Galerina recognizes one exact pointer-free million-read `.fungi` loop and
 derives eight closed structural facts. Any missing, moved, duplicated or
@@ -500,6 +514,7 @@ flowchart TB
     DB["🟩 Durable V2-B broker binding<br/>reservation before dispatch · audit-bound digest<br/>427/427 · no fallback"]
     DE["🟩 Durable effect .slide route<br/>canonical GIR → reservation → broker<br/>432/432 · affine separation"]
     CF["🟩 Checked .fungi → .slide compiler floor<br/>source-derived Boolean/K3 · physical .slide CLI<br/>414/414 · reference-only"]
+    VL["🟩 Canonical verified-loop .slide<br/>exact loop GIR + external generation<br/>484/484 · measured speed negative"]
     S["🟩 Bounded SLIDE prepared executor<br/>immutable plan · fresh per-call state"]
     SC["🟩 V2-D logical flow cleanup<br/>finally-close · 15 bindings · 12 semantic bytes"]
     ST["🟩 V2-D schedule translation proof<br/>changed order · exact permutation · no fallback"]
@@ -553,7 +568,7 @@ flowchart TB
     AI --> PG --> AF --> I
     E --> K --> FB --> Q
     FB --> J
-    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> H
+    E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
     ST --> WF --> CB --> GV --> H
@@ -569,7 +584,7 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,PV,SB,EB,EG,DN,DB,DE,CF,VL,LS,FL,AV,PR,SM,PL,PS green;
     class TG red;
     class Q,LI,F,AT,X amber;
     class H,AL,T,HB,FD,AE,AF blue;
@@ -673,7 +688,7 @@ table is navigation, not authority.
 | Durable V2-B broker reservation binding | 🟩 bounded reference floor | The distinct durable entrypoint requires all eight K3 gates and one exact append-only reservation before returning an effect lease. Store/lease/nonce/state/generation/call/request-byte/expiry facts are re-derived; reservation evidence binds audit and terminal transcript. Focused evidence is 6/6, composed effect evidence 33/33 and complete SLIDE 427/427 across 35 suites. Audit refusal suppresses response but cannot roll back the nonce. The later durable-bundle row closes canonical selection; production durability/providers remain blue |
 | Canonical durable V2-B effect `.slide` route | 🟩 bounded reference floor | Fixed `.slide` bytes and canonical GIR select database or HTTPS, bind the bundle digest as artifact identity and reach only the durable broker. Owned state/context/gates, exact request/state byte increment and affine process-local/durable handle separation prevent bypass. Focused evidence is 5/5, composed bundle/effect/broker 31/31 and complete SLIDE 432/432 across 36 suites. Package ABI/imports/resources, authenticated providers, trusted time, native power-loss proof and signed production admission remain blue |
 | Checked `.fungi` to `.slide` compiler floor | 🟩 bounded reference floor | Independent source bytes derive total Boolean/K3 graphs, canonical V2-C GIR, exact entry re-admission and a reference `.slide` bundle. A stable-read exclusive CLI publishes one real file without overwrite. Two real fixtures plus two unregistered shapes execute 206 vectors; focused evidence is 9/9 and complete SLIDE is 414/414 across 33 suites. General syntax/effects/memory/package ABI and production admission remain blue; no package count or deletion authority changes |
-| Verified Loop Envelope | 🟩 proposal + independent execution + measured result / 🟦 production | Independent SLIDE owns/digests one million values, applies all eight VOK gates, executes one affine lease and zeroes storage. SLIDE is 476/476. The first benchmark is a completed negative result: demand 1.008x and total 6.259x checked; K3 `0`. Galerina production wiring, general loop/GIR/serialized `.slide` lowering and native/platform evidence remain required; no speed or retirement claim follows |
+| Verified Loop Envelope | 🟩 proposal + exact serialized execution + measured result / 🟦 production/general loop | Independent SLIDE owns/digests one million values, applies all eight VOK gates, executes one affine lease and zeroes storage. The exact source now compiles into canonical loop GIR inside the common `.slide` envelope while the collection remains a separate current generation. SLIDE is 484/484. The source-path and serialized-path benchmarks are completed negative speed results: `.slide` demand 1.003x checked, prepared `.slide` total 1.004x source total and end-to-end 1.031x; K3 `0`. General checked-loop GIR, Galerina production wiring and native/platform evidence remain required; no speed or retirement claim follows |
 | Checked multi-flow pure-routing compiler | 🟩 bounded reference floor | Independent source bytes derive five `Int` flows, exact direct calls, stable dependency-first order, terminal `if <=` guards and exhaustive integer matches. The unchanged Galerina REST routing source compiles for every flow; selected entries execute as canonical `.slide` through VOK. Multi-flow package exports bind an explicit source-flow identity. Focused evidence is 4/4, composed routing/package evidence 10/10 and complete SLIDE 453/453 across 40 suites. General language/effect/native/production semantics and owner-reviewed package conversion remain blue |
 | Checked physical source-manifest CLI | 🟩 bounded reference floor | Canonical UTF-8/LF manifests bind root-confined stable non-symlink `.fungi` reads to the checked flat-package compiler and receipt-last publisher. BOM, duplicate/reordered/missing/surplus keys, alternate whitespace, escape, backslash, symlink and unstable-read cases refuse. Focused evidence is 4/4, composed manifest/package/publication/contract evidence is 19/19 and complete SLIDE is 457/457 across 41 suites. The internal all-ALLOW vector is reference-only; signed production admission, native durability, complete language semantics and package conversion remain blue |
 | Physical checked-package loader | 🟩 bounded reference floor | A canonical receipt plus every physical `.slide` artifact is stable-read, the complete flat descriptor graph and package/source content identities are re-derived, exact context/export signatures are matched, and one selected export executes through an affine VOK handle. Receipt/provenance/artifact lies, mutation, surplus files, replay and non-ALLOW gates refuse. Focused evidence is 3/3, composed package/ABI/contract evidence is 26/26 and complete serial SLIDE is 461/461 across 42 suites. Detached authentication, native durability, general semantics and package conversion remain blue |
