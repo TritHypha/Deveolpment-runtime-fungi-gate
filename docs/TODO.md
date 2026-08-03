@@ -1,5 +1,27 @@
 # TODO
 
+### Verified Loop Envelope proposal implemented - 2026-08-03
+
+- The compiler now recognizes one exact pointer-free million-read `.fungi`
+  shape and derives `galerina.verified-loop-envelope.proposal.v1`.
+- Structural drift returns K3 deny. The exact shape remains K3 unknown with
+  `INDEPENDENT_VERIFIER_UNAVAILABLE`; no native authority or unchecked object
+  is emitted.
+- A `.fungi` authority model passes production parse/type/value/effect/
+  governance checks and executes all 256 fact vectors without one K3 allow.
+- The checked example is
+  `docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi`; the architecture guide
+  now explains how one future affine lease can cover the closed loop without
+  exposing pointers or treating a contract as self-authority.
+- Focused analyzer/source/example evidence passes 27/27 and the Node count
+  remains unchanged.
+- Complete compiler evidence passes 5,818/5,818; graph regeneration/check is
+  5/5 and the flat 98-peer root lock is current. Node remains 1 -> 1.
+- **Open:** independent SLIDE fact re-derivation, exact VOK object/collection
+  binding, checked/optimized parity, lifecycle/platform evidence and total-cost
+  measurement. Until those close, only the checked semantic path executes.
+- Report: `docs/reports/verified-loop-envelope-proposal-2026-08-03.md`.
+
 ### V2-C semantic-verifier closure and coverage correction - 2026-08-03
 
 - SLIDE now re-derives every frozen V2-C graph ceiling, reachability,

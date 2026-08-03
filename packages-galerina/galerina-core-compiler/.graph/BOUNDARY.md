@@ -11,8 +11,8 @@
 
 | Metric | Count |
 |---|---|
-| Files | 153 |
-| Internal edges | 276 |
+| Files | 155 |
+| Internal edges | 278 |
 | External dependencies | 16 |
 | ├─ Node core | 8 |
 | ├─ Workspace (@galerina/*) | 5 |
@@ -115,6 +115,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-v2e-signature-evidence.fungi`
 - `src/self-hosted/slide-vok-authority-types.fungi`
 - `src/self-hosted/type-checker.fungi`
+- `src/self-hosted/verified-loop-envelope.fungi`
 
 ## Allowed Orphans
 _none declared_
