@@ -55,10 +55,10 @@ counts or open items that a newer section explicitly supersedes.
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
-- Round 9 has independently closed 23/120 rows. One row is an executed-parity
-  candidate, one is superseded by existing Fungi, 19 are language-blocked,
+- Round 9 has independently closed 25/120 rows. One row is an executed-parity
+  candidate, one is superseded by existing Fungi, 21 are language-blocked,
   one is host-ABI-blocked and one requires dedicated security handling. These
-  are analysis outcomes, not production conversion credit.
+  are analysis outcomes, not production conversion credit. Row 026 is next.
 
 ### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
 
