@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Canonical records now cross the bounded SLIDE ABI - 2026-08-04
+
+- Galerina's live product declarations use canonical `record Name { ... }`;
+  block-bodied `type Name { ... }` is refused by both the compiler and the
+  self-hosted parser. `type Name = TypeRef` remains the separate alias form.
+- SLIDE commit `94969db` independently re-derives the nominal name and ordered
+  field/type descriptor, binds it through GIR, physical `.slide`, affine VOK,
+  flat package publication and a v4 field-level Safe Value receipt, then
+  verifies it against a caller-owned descriptor expectation.
+- The admitted external lane is deliberately narrow: at most one record
+  parameter and one record result, one schema, one to eight fields, exact own
+  data properties and no externally transported `Option<Int>` record field.
+  Proxies, accessors, inherited/surplus fields, descriptor drift and receipt or
+  envelope tampering refuse.
+- Fresh SLIDE closure is 706/706 across 72 suites. Contract integrity is 64
+  files; security closure is `+1` with evidence K3 `0`; benchmark integrity
+  verifies; the 67-file reference-tool identity verifies; Node is 1 -> 1.
+- This closes the bounded record transport dependency, not general records,
+  production authority, package conversion or terminal retirement. External
+  Round 9 remains quarantined and non-authorizing; it must re-run its preflight
+  at the new clean SLIDE commit and continue all 120 rows.
+
 ### RD-0692 bounded deterministic fold physical/package path green - 2026-08-03
 
 - SLIDE commit `2a77234` closes the exact fold reference through a fixed

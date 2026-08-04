@@ -1,6 +1,6 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-03
+Date: 2026-08-04
 Branch: `codex/galerina-beta-v1-completion`
 Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**,
 graph **5/5**, code index/registry/coverage current, benchmark publication
@@ -12,6 +12,22 @@ with zero findings/errors, and aggregate Node returned to the one pre-existing
 MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: canonical Galerina records now cross one bounded independent
+SLIDE ABI at commit `94969db`. The source nominal name and declaration-ordered
+field/type descriptor are independently re-derived and bound through GIR,
+physical `.slide`, affine VOK, the flat direct-peer package lane and a v4
+field-level Safe Value receipt. Host property order canonicalizes; proxies,
+accessors, inherited/surplus fields, descriptor drift, selected receipt-field
+tampering and every Safe Value envelope-byte mutation refuse. The external
+ceiling is at most one record parameter and one record result over the sole
+one-to-eight-field schema; multiple/nested/recursive records, variants,
+mutation, effects and external `Option<Int>` record fields remain closed.
+Complete SLIDE is 706/706 across 72 suites, contract integrity is 64 files,
+security closure is `+1` with K3 `0`, benchmark integrity verifies and the
+67-file tool identity verifies with Node 1 -> 1. This removes one structural
+backend blocker but does not credit a single package conversion or terminal
+retirement row; external Round 9 remains blue and non-authorizing.
 
 Roadmap refresh: the complete bounded RD-0692 reference path is green at SLIDE
 commit `2a77234`. The exact fold now crosses fixed 192-byte canonical GIR,
