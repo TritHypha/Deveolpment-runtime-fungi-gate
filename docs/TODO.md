@@ -4,6 +4,49 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Demand-admitted native provider packs deferred - 2026-08-04
+
+- [ ] Keep the language's stable types, contracts, effect rules and provider
+  ABI in the small core, while moving optional implementations into flat
+  demand-admitted native providers. Candidate packs include algebra,
+  scientific maths, arbitrary precision, data mining, quantum simulation,
+  calendar, time-zone and locale operations.
+- [ ] Derive provider requirements from fully parsed and type-checked canonical
+  GIR, never from a raw syntax/token trigger. An installed pack makes an exact
+  provider available; it does not select, load or authorize it.
+- [ ] Add explicit CLI installation profiles such as
+  `galerina pack install algebra` and
+  `galerina pack install quantum-simulation`. Pack manifests must expand to
+  exact top-level peers under `packages-galerina`; nested dependency trees,
+  ambient lookup and install scripts remain refused.
+- [ ] Make the production route AOT-only: resolve, verify and directly link
+  selected providers during build, installation, update or admitted boot
+  preparation before emitting the final `.slide` application object. Do not
+  add request-time download, first-call discovery, production JIT or an
+  unrestricted dynamic loader.
+- [ ] Bind every selected provider's identity, version, content digest,
+  semantic profile, target/hardware profile and conversion/rounding policy into
+  the `.slide` build and terminal receipt. A missing provider or unsupported
+  target must refuse without a lower-precision or generic fallback.
+- [ ] Prefer fixed standard types (`Float32`, `Float64`, `Float128`) plus one
+  bounded arbitrary-precision family such as `BigFloat<Bits>` instead of
+  multiplying one-off primitive types. Specify overflow, underflow, NaN,
+  subnormal, rounding, endianness and deterministic-maths behaviour before
+  admitting a numeric provider.
+- [ ] Split deterministic date/calendar arithmetic from effectful clock access.
+  `Clock.now()` requires an admitted `time.read` capability; time-zone and
+  locale data are exact versioned providers whose dataset digests enter
+  reproducibility and audit receipts.
+- [ ] Benchmark monolithic, demand-selected AOT and first-use loading research
+  candidates for binary size, verification/admission time, startup, resident
+  memory, instruction-cache behaviour, first-call latency and steady-state
+  throughput. Adopt only the AOT route unless measured evidence justifies a
+  narrower exception without weakening zero-trust admission.
+
+**Status:** architecture direction approved but deliberately deferred. No
+current Galerina or SLIDE capability, performance result or production
+authority may be inferred from this TODO.
+
 ### Legacy runtime duplication reconciled - 2026-08-04
 
 - [x] Retired the stale undifferentiated future-work label
