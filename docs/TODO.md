@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE bounded wide control-flow successor green - 2026-08-04
+
+- SLIDE commit `6cc3cbb` admits the real ten-block checked-Fungi `dispatch`
+  graph through one append-only exact 9..16-block registry. The same source now
+  crosses canonical GIR, source-free `.slide`, independent re-admission,
+  eight K3 VOK gates, flat package publication and typed Safe Value receipt
+  verification.
+- Narrow graphs remain on their narrower registry and block 17 refuses. No
+  loop, effect, mutation, callback, memory, host-call or fallback authority was
+  added.
+- Focused evidence is 77/77; complete SLIDE is 713/713 across 73 suites with
+  Node 1 -> 1. Contract integrity passes at 66 files and 213,218 bytes,
+  security closure is `+1` with evidence K3 `0`, and benchmark/tool identity
+  checks verify.
+- This closes the bounded successor only. General executable bodies,
+  production authority, package conversion and terminal retirement remain
+  open and receive no completion credit.
+
 ### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
 
 - Owner approval makes RD-0693's canonical declaration, exact construction and

@@ -17,6 +17,20 @@ package locked to offline custody and 0 failures.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: SLIDE commit `6cc3cbb` closes the smallest measured
+wide-control-flow successor without widening frozen V2-C. The real checked-
+Fungi `dispatch` flow requires ten reachable blocks; the append-only exact
+profile admits only graphs requiring 9..16 blocks, keeps narrower graphs on
+their narrower registry and refuses block 17. It crosses canonical GIR,
+source-free `.slide`, independent re-admission, eight K3 VOK gates, flat
+package publication and typed Safe Value receipt verification. Focused
+inherited/profile/package evidence is 77/77 and complete SLIDE is 713/713
+across 73 suites with Node 1 -> 1. Contract integrity passes at 66 files and
+213,218 bytes; security closure is `+1` with K3 `0`; benchmark and the 67-file
+tool identity verify. Independent SLIDE remains blue because general bodies,
+loops, effects and production authority are still open. Package-conversion
+and terminal-retirement counts do not change.
+
 Roadmap refresh: owner-approved RD-0693 makes canonical `record`
 declarations, declared call authority and exact nominal record construction
 binding. The one remaining finite-input gap is now implemented as Galerina
@@ -1141,7 +1155,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + bounded fold + record + zero-argument + 4–128 static functions<br/>695/695 · general loop bodies/production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + bounded fold + record + zero-argument + 4–128 static functions + exact 9–16-block control flow<br/>713/713 · general loop bodies/effects/production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
