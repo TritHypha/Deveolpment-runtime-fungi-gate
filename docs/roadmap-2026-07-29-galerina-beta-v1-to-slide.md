@@ -171,12 +171,13 @@ SLIDE 16/16 with Node 1 -> 1. Round 8's setup-blocker statements are
 superseded, but its outcome remains 0/120 classified rows. Round 9 adds exact
 row scaffolding, a machine row-result contract, deterministic decision ladder,
 status/manifest tools, a fail-closed 120/120 closure verifier and a separate
-append-only AI handover channel. It now has 10/120 terminal rows: 1
-executed-parity candidate, 1 superseded twin and 8 blocked rows, with row 011
-next. Row 010 exposed the now-corrected Galerina String-ordering runtime
+append-only AI handover channel. It now has 11/120 terminal rows: 1
+executed-parity candidate, 1 superseded twin, 7 `BLOCKED_LANGUAGE`, 1
+`BLOCKED_HOST_ABI` and 1 `BLOCKED_SECURITY_DEDICATED`, with row 012 next. Row
+010 exposed the now-corrected Galerina String-ordering runtime
 differential; the external result remains non-authorizing until exact evidence
-is re-run. Row 085's source pin was re-issued from
-the exact security-fixed file, restoring preflight to 120/120 + 10/8/16.
+is re-run. Rows 037 and 085 have exact source pins re-issued from their clean,
+intentionally corrected files, restoring preflight to 120/120 + 10/8/16.
 Grading is per assigned file; verified sub-surfaces remain non-authorizing evidence for whole-file retirement. It
 remains external, quarantined and non-authorizing; package retirement counts
 do not change.
@@ -1146,7 +1147,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>10/120 terminal · row 011 next · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>11/120 terminal · row 012 next · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
@@ -1294,7 +1295,7 @@ table is navigation, not authority.
 | 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and physical typed `Int`/`Bool`/K3 plus bounded String and immutable Bytes paths are green. Commit `93600cb` adds registry-bound exact String/Bytes equality and exhaustive String-literal matching without mutating V2-C. The package route pins an exact 59-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. This is reference-only | Add only demand-proven non-scalar/resource/effect profiles through append-only registries; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
-| 3 | Package conversion | 🟦 | 497 tracked package TypeScript paths remain after the single auditable `host-floor.ts` seam replaced four sprawled host-module import sites; that floor must later move to SLIDE/VOK rather than become an exemption. External Round 8 verified 120/120 pins but produced 0/120 terminal row outcomes. Round 9 has a green 120/120 + 10/8/16 preflight and fail-closed closure tooling; 10/120 files are terminal under binding whole-file grading, but the lane remains non-authorizing | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
+| 3 | Package conversion | 🟦 | 497 tracked package TypeScript paths remain after the single auditable `host-floor.ts` seam replaced four sprawled host-module import sites; that floor must later move to SLIDE/VOK rather than become an exemption. External Round 8 verified 120/120 pins but produced 0/120 terminal row outcomes. Round 9 has a green 120/120 + 10/8/16 preflight and fail-closed closure tooling; 11/120 files are terminal under binding whole-file grading, but the lane remains non-authorizing | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary production admission | 🟦 | The signed ownership verifier is green; all 38 detected production boundaries still lack signed receipts | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit signed replacement or retention decision |
 | 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
 | 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |

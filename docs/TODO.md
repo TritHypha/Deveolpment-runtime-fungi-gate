@@ -173,12 +173,14 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly **10/120** terminal rows: 1 executed-parity candidate, 1 superseded
-  by an existing Fungi twin, and 8 blocked rows; row 011 is next. Row 010's
+  honestly **11/120** terminal rows: 1 executed-parity candidate, 1 superseded
+  by an existing Fungi twin, 7 `BLOCKED_LANGUAGE`, 1 `BLOCKED_HOST_ABI` and
+  1 `BLOCKED_SECURITY_DEDICATED`; row 012 is next. Row 010's
   newly discovered String-ordering runtime defect is corrected by the current
   Galerina checkpoint but its external classification remains non-authorizing
-  until the worker re-runs exact evidence. Row 085's source pin was re-issued from the exact clean
-  security-fixed file, restoring preflight to 120/120 + 10/8/16. Whole-file
+  until the worker re-runs exact evidence. Rows 037 and 085 have exact pins
+  re-issued from their clean, intentionally corrected sources, restoring
+  preflight to 120/120 + 10/8/16. Whole-file
   grading is binding; partial executed surfaces are retained as evidence without earning
   retirement credit. No TypeScript path is retired.
 
