@@ -6,11 +6,20 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Legacy runtime duplication reconciled - 2026-08-04
 
-- [x] Retired the stale future-work label `DSS.wasm supervisor (#102–106)`.
-  The former production `dss-host`/Wasmtime sidecar is not rebuilt.
+- [x] Retired the stale undifferentiated future-work label
+  `DSS.wasm supervisor (#102–106)`. The former production sidecar is not
+  restored wholesale; each component is reused or adapted where it satisfies
+  SLIDE/VOK contracts, and only incompatible parts are rebuilt.
 - [x] Preserved completed work as completed: the DSS `.fungi` decision core,
   10/10 deterministic build evidence, 386-point Stage-A differential/laws and
   the flat development-only Wasmtime oracle remain reusable evidence.
+- [x] Made a binding fragment-level call for every remaining retirement gate:
+  `KEEP`, `ADAPT`, `ORACLE`, `REDO` or `RETIRE-AFTER-PARITY`. See
+  [`reports/slide-vok-reuse-inventory-2026-08-04.md`](reports/slide-vok-reuse-inventory-2026-08-04.md).
+- [ ] Apply that inventory dependency-first: complete detached GIR, widen the
+  existing SLIDE profiles, generalise VOK/final-object verification, extend
+  the existing packager/loader/receipt chain, then switch packages one proven
+  file at a time. Do not delete current TypeScript/Wasm/npm paths early.
 - [x] Reassigned only the genuinely open requirements—target-neutral
   containment, typed trap classification, admission, memory and host
   boundaries—to the existing Independent SLIDE/VOK and release gates.
@@ -77,10 +86,11 @@ counts or open items that a newer section explicitly supersedes.
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
-- Round 9 has independently closed 31/120 rows. One row is an executed-parity
-  candidate, one is superseded by existing Fungi, 25 are language-blocked,
-  one is host-ABI-blocked and three require dedicated security handling. These
-  are analysis outcomes, not production conversion credit. Row 032 is next.
+- Round 9 has independently closed 35/120 rows. One row is an executed-parity
+  candidate, two are superseded by existing Fungi, one has no runtime
+  behaviour, 27 are language-blocked, one is host-ABI-blocked and three
+  require dedicated security handling. These are analysis outcomes, not
+  production conversion credit. Row 036 is next.
 
 ### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
 
@@ -6161,7 +6171,9 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 - [ ] **Full-suite CI** (#155 npm workspaces) — get the crypto/border phase-close gates off local-only.
 - [ ] Self-hosting: extend byte-parity tokenize → parser.
 - [x] Historical DSS.wasm (#102–106) reconciled: keep the decision core and
-  optional-oracle evidence; do not rebuild the retired production sidecar.
+  optional-oracle evidence; reuse compatible sidecar components rather than
+  scheduling the old architecture wholesale. Rebuild only parts that cannot
+  meet the target-neutral contract.
   Remaining target-neutral requirements are owned by SLIDE/VOK. Enhancements
   (#146, #156/#157 start, #158) and CI secret-scan residual (#149) remain
   separate work and receive no DSS completion credit.

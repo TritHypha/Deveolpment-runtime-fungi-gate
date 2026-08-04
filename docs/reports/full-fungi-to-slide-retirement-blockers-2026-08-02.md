@@ -29,6 +29,10 @@ These are gates, not seven individual files. A file whose constructs already
 fit the bounded SLIDE profiles has less implementation work inside gates 1-3,
 but none of gates 4-7 can be inferred from reference-only evidence.
 
+The binding decision on which existing fragments are kept, adapted, retained
+as oracles, completely redone or retired only after parity is in
+[`slide-vok-reuse-inventory-2026-08-04.md`](slide-vok-reuse-inventory-2026-08-04.md).
+
 Complete package retirement remains the **eleven-work-package** programme in
 the dependency-order section below. Its current terminal verifier reports
 **246 exact violations**; those violations are debt instances, not 246 separate

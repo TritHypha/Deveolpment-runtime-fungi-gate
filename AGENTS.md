@@ -84,14 +84,17 @@ intent → governed execution plan → coordinated compute → audit proof
 > executable SLIDE backend remain later gates; see
 > `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
 >
-> **Legacy-runtime reconciliation (2026-08-04):** do not rebuild the former
-> production `dss-host`/Wasmtime supervisor (`#102–#106`). The DSS `.fungi`
-> decision core and flat development-only Wasmtime oracle are retained evidence,
-> not production authority. Target-neutral containment, typed traps, admission
-> and execution belong to independent SLIDE/VOK. The remaining self-hosting
-> milestone is the source-to-SLIDE bootstrap fixpoint, not another WASM
-> stage-flip programme. See
-> `docs/reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md`.
+> **Legacy-runtime reconciliation (2026-08-04):** do not treat the former
+> production `dss-host`/Wasmtime supervisor (`#102–#106`) as one intact new
+> build queue. Reuse and adapt its `.fungi` decision core, typed contracts,
+> tests and optional-oracle evidence wherever they satisfy the current
+> SLIDE/VOK boundary; rebuild only incompatible host-specific authority or
+> isolation parts. Target-neutral containment, typed traps, admission and
+> execution belong to independent SLIDE/VOK. The remaining self-hosting
+> milestone is the source-to-SLIDE bootstrap fixpoint, not a rerun of completed
+> stage flips. See
+> `docs/reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md` and
+> `docs/reports/slide-vok-reuse-inventory-2026-08-04.md`.
 >
 > **Registry durability checkpoint (2026-07-31):** the production native
 > adapter allow-list remains empty. The zero-dependency Windows candidate

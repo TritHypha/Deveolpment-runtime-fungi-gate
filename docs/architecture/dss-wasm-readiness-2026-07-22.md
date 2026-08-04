@@ -1,10 +1,13 @@
 # DSS.wasm Readiness Report
 
 > **Historical architecture — superseded 2026-07-30.** Do not execute the
-> production `dss-host`/Wasmtime phases below. The `.fungi` DSS decision core
-> and its differential evidence are retained, and the flat Wasmtime package is
-> a development-only oracle. Target-neutral containment, typed traps,
-> admission and production execution now belong to independent SLIDE/VOK. See
+> production `dss-host`/Wasmtime phases below as one intact queue. Reuse or
+> adapt their `.fungi` decision core, contracts, tests and oracle mechanics
+> wherever they satisfy the current boundary; rebuild only incompatible
+> host-specific authority, memory or isolation parts. The flat Wasmtime
+> package is a development-only oracle. Target-neutral containment, typed
+> traps, admission and production execution now belong to independent
+> SLIDE/VOK. See
 > [the reconciliation report](../reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md)
 > and [the current SLIDE ledger](slide-v2-status-and-implementation-plan-2026-07-29.md).
 

@@ -20,14 +20,20 @@ Policy: zero trust, verify rather than assume, fail closed
 Roadmap refresh: the former `DSS.wasm supervisor (#102–106)` production
 sidecar row was stale and is retired. The completed `.fungi` DSS/V_DPM
 decision core, deterministic builds, 386-point differential/laws and optional
-development-only Wasmtime oracle remain shipped evidence. They are not rebuilt
-as a second supervisor and grant no production authority. Target-neutral
+development-only Wasmtime oracle remain shipped evidence. They are not
+scheduled blindly as a second supervisor: compatible components, contracts and tests are
+reused or adapted after independent SLIDE/VOK admission, while incompatible
+host-specific authority, memory or isolation parts are rebuilt. The retained
+evidence alone grants no production authority. Target-neutral
 containment, typed traps, admission, memory and host boundaries are already
 owned by the Independent SLIDE/VOK and release gates. The separate
 self-hosting remainder is now named the SLIDE bootstrap fixpoint so seven-stage
 authority is not confused with executable source-to-SLIDE self-compilation.
 The exact reuse/removal map is in
 `docs/reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md`.
+The binding `KEEP`/`ADAPT`/`ORACLE`/`REDO` calls for each fragment and all
+seven retirement gates are in
+`docs/reports/slide-vok-reuse-inventory-2026-08-04.md`.
 
 Roadmap refresh: the original subway-style roadmap has been restored from
 `scripts/gen-roadmap-subway.mjs` and regenerated from the live component,
@@ -63,9 +69,10 @@ translation can continue today but grants no production credit. The fresh
 terminal audit refuses honestly with 246 exact debt instances: 497 tracked
 package TypeScript paths, 111 unexecuted `.fungi`, 38 unowned host boundaries,
 95 package-local `node_modules` trees and one nested native identity. Round 9
-has classified 31/120 source rows: one executed-parity candidate, one
-superseded-by-existing-Fungi row, 25 language-blocked rows, one host-ABI row
-and three dedicated-security rows. No count is converted, deleted or exempted.
+has classified 35/120 source rows: one executed-parity candidate, two
+superseded-by-existing-Fungi rows, one no-runtime-behavior row, 27
+language-blocked rows, one host-ABI row and three dedicated-security rows. No
+count is converted, deleted or exempted.
 
 Roadmap refresh: owner-approved RD-0693 makes canonical `record`
 declarations, declared call authority and exact nominal record construction
