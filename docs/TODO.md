@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Galerina compiler and generated-authority closure green - 2026-08-04
+### Galerina compiler, channel gate and generated-authority closure green - 2026-08-04
 
 - Galerina commit `1f72ded4` hardens canonical `record` parsing, self-hosted
   parity and naturally aligned WAT record layouts. A discarded immutable
@@ -19,9 +19,10 @@ counts or open items that a newer section explicitly supersedes.
   compiler hash baseline verifies.
 - Standalone tooling passes **358**, fails **0**, with two intentional
   platform/toolchain skips. The unified package lane passes **98/98** with
-  **8,941** parsed tests. The post-fix exhaustive phase-close passes **87/87**
-  blocking gates in one uninterrupted **891.8-second** run. Its owned package
-  runner retired cleanly and Node returned to the one pre-existing MCP process.
+  **8,942** parsed tests. The security-fixed exhaustive phase-close passes
+  **87/87** blocking gates in one uninterrupted **890.0-second** run. Its owned
+  package runner retired cleanly and Node returned to the one pre-existing MCP
+  process.
 - The final strict fusable-package build reports 0 rebuilt, 2 fresh, 2
   intentionally non-Fungi skipped, 1 ceremony-signed package locked to offline
   custody, and 0 failures. No signed artifact was regenerated locally.
@@ -36,6 +37,12 @@ counts or open items that a newer section explicitly supersedes.
   focused runtime evidence is 12/12 and governed CLI evidence is 10/10.
   Generated authority was rebound through commit `4c8e9133` before the
   exhaustive close.
+- An adversarial real-HTTPS test proved that a denied TLS channel could reach
+  an application route marked `public`. Commit `a36ef7ab` closes the seam at
+  the kernel's single auth gate: any supplied channel verdict now constrains
+  every route, while a plain public route with no channel policy remains
+  public. The real kernel, HTTPS integration and self-hosted `.fungi` twin all
+  pass; R4 re-derives **29/29** authority twins at commit `8e4f333d`.
 
 ### Canonical records now cross the bounded SLIDE ABI - 2026-08-04
 
@@ -137,8 +144,11 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly 2/120 terminal rows, both `BLOCKED_LANGUAGE`; row 003 is next. Its
-  fresh preflight remains green. No TypeScript path is retired.
+  honestly **8/120** terminal rows: 1 executed-parity candidate, 1 superseded
+  by an existing Fungi twin, 5 `BLOCKED_LANGUAGE` and 1 `BLOCKED_HOST_ABI`;
+  row 009 is next. Its fresh preflight remains green. Whole-file grading is
+  binding; partial executed surfaces are retained as evidence without earning
+  retirement credit. No TypeScript path is retired.
 
 ### SLIDE Contract 62 counted-sum flat package and typed receipt green - 2026-08-03
 
