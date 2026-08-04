@@ -72,11 +72,11 @@ async function createProject() {
   );
   await writeFile(
     join(cwd, "src", "api.fungi"),
-    `type CreateOrderRequest {
+    `record CreateOrderRequest {
   customerId: String
 }
 
-type CreateOrderResponse {
+record CreateOrderResponse {
   id: String
 }
 
