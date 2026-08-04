@@ -11,8 +11,8 @@ build order 7 of 7). **Verified against source 2026-07-15.**
 
 > **Honest scope:** `sha256_seal` is implemented (the TypeScript mirror computes it in Stage A); `zk_snark_receipt`
 > is an explicit **stub** — the prover backend is not integrated, so it is admissible in a certified profile **only**
-> with a real, non-placeholder circuit. Receipt *verification* against the signed audit log is Stage-B (the real
-> `DSS.wasm`, #102–106); Stage A simulates it.
+> with a real, non-placeholder circuit. Receipt *verification* against the signed audit log belongs to the
+> target-neutral admitted SLIDE/VOK execution boundary; the optional Wasm lane is differential evidence only.
 
 ---
 
@@ -80,8 +80,8 @@ fail-closed floor, not a per-flow convenience).
 
 Every governed execution emits a receipt, and every security trap additionally appends an `AuditEvent` (CBOR Tag
 410) to an **append-only** log. Verification (`verifyReceipt`) checks a receipt against that signed audit log — Stage
-A simulates it (returns true for a well-formed receipt); Stage B is the real `DSS.wasm` deterministic-isolation TCB
-(#102–106, post-P9). See [governance-automated-floor.md](../governance-automated-floor.md) §6.
+A simulates it (returns true for a well-formed receipt); production verification belongs to the independently
+admitted SLIDE/VOK isolation boundary. See [governance-automated-floor.md](../governance-automated-floor.md) §6.
 
 ---
 

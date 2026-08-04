@@ -75,14 +75,23 @@ intent → governed execution plan → coordinated compute → audit proof
 | 5 | Type + Effect Checker | Complete (Stage-A) |
 | 6 | IR (GIR) + Target Planner + WAT emitter | Complete (Stage-A) |
 
-> **Current beta-v1 checkpoint (2026-08-01):** the full pipeline
+> **Current beta-v1 checkpoint (2026-08-04):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
-> and green (`galerina-core-compiler` 5,851/5,851; whole suite 98/98 packages,
-> 8,941 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
+> and green (`galerina-core-compiler` 5,866/5,866; whole suite 98/98 packages,
+> 8,956 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Literal `.ts` retirement and the independent
 > executable SLIDE backend remain later gates; see
 > `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+>
+> **Legacy-runtime reconciliation (2026-08-04):** do not rebuild the former
+> production `dss-host`/Wasmtime supervisor (`#102–#106`). The DSS `.fungi`
+> decision core and flat development-only Wasmtime oracle are retained evidence,
+> not production authority. Target-neutral containment, typed traps, admission
+> and execution belong to independent SLIDE/VOK. The remaining self-hosting
+> milestone is the source-to-SLIDE bootstrap fixpoint, not another WASM
+> stage-flip programme. See
+> `docs/reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md`.
 >
 > **Registry durability checkpoint (2026-07-31):** the production native
 > adapter allow-list remains empty. The zero-dependency Windows candidate

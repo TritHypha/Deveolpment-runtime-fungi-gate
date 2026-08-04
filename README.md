@@ -33,8 +33,8 @@ Galerina is a **Governed Application Language for High-Assurance Systems** — p
 - **Value-state and taint tracking** — `UNSAFE → VALIDATED → PROTECTED → REDACTED` transitions checked at compile time; secrets and PII cannot silently cross a boundary.
 - **Cryptographic outputs** — the ProofGraph, Epilogue Receipts, and the signed `.lmanifest` (Ed25519; the certified profile mandates hybrid +ML-DSA-65).
 - **A signed admission border** — packages and apps enter only through hash-pin + signature + revocation + closed capability masks.
-- **The governed runtime** — the K3 algebra, bridge attestation, and the DSS/V_DPM supervision model, compiled to WASM as the production path *(DSS supervision: the decision core is proven on real wasmtime; the full supervisor is in build)*.
-- **Zero middleware** — governance is compiled *into* the binary, not stacked around it. What is middleware elsewhere (authorisation, audit, redaction, rate-limits) is a compile-time property of the flow itself — there is no auth wrapper, logging layer, or policy sidecar in the request path to misconfigure or bypass. The transport design extends this to the OS: raw encrypted bytes go straight into the sandbox, not through kernel/middleware layers.
+- **The governed runtime** — the K3 algebra, bridge attestation, and DSS/V_DPM decision model. The decision core is differential-proven through the optional Wasmtime oracle; current WAT/Wasm remains the compatibility/bootstrap path while independent SLIDE/VOK production authority is built.
+- **Zero middleware** — governance is compiled *into* the binary, not stacked around it. What is middleware elsewhere (authorisation, audit, redaction, rate-limits) is a compile-time property of the flow itself — there is no auth wrapper, logging layer, or policy sidecar in the request path to misconfigure or bypass. The target-neutral transport boundary admits only typed, bounded encrypted-byte movement and never treats an external sidecar as authority.
 - **Design lineage** — Ada/SPARK's contracts-for-regulated-domains, Rust's no-silent-failure, Erlang's structured fault handling — retargeted at modern API/web workloads, shipping to WASM.
 
 ## How your data is protected
@@ -65,9 +65,9 @@ Galerina optimises for **compile-time-verified governance and fail-closed Zero-T
 | **I/O — the OS kernel** | The kernel is assumed hostile. Native capabilities **denied by default**; the host is a dumb byte-mover; authorisation is the fail-closed **`vAnd` Kleene-K3 gate**. | ◑ K3 gate shipped · full kernel bypass = target architecture |
 | **Packages** | A **signed admission border** with fail-closed kernel verification: cryptographic manifests, content-addressed hash-pinning, transitive capability masks. | ✅ shipped + decision surfaces execute as signed WASM |
 | **Memory** | An actively-governed, hostile physical boundary — network memory is governed directly (TLSTP), never handed to shared host state. | ◑ governed surfaces twinned · residency hardening merged · runtime isolation = target architecture |
-| **TLSTP — zero-middleware** | Routes around the OS kernel: raw encrypted packets go straight into WASM linear memory as unparsed bytes; **decryption happens inside the sandbox** — the kernel never sees plaintext. | ◑ all 6 border decision surfaces twinned · admission fold executes as signed WASM · in-sandbox decryption = target architecture (DSS.wasm) |
+| **TLSTP — zero-middleware** | Keeps plaintext outside ambient middleware: encrypted input remains untrusted until a typed, bounded admitted execution boundary validates and processes it. | ◑ all 6 border decision surfaces twinned · admission fold executes on the current compatibility path · target-neutral isolation and in-boundary decryption remain SLIDE/VOK work |
 
-> **Honest line — shipped vs. target architecture.** The compiler, the K3 authorisation gate, signed package admission (hash-pin · signature · revocation · closed capabilities), and the S1 cert/channel gate are **shipped and tested today**. On the execution-cutover ladder, **9 governed decision surfaces are now authoritative as signed, admission-gated WASM** (their TypeScript originals demoted to differential shadows) **and 20 more are differential-proven** (the WASM verdict equals the reference verdict over the full corpus). The **DSS decision core is proven on the real Wasmtime TCB** — a 386-point three-way differential (interpreter ≡ Node-WASM ≡ wasmtime) with the governance laws asserted directly on wasmtime outputs. The full **kernel-bypass / in-sandbox isolation** (the host as pure byte-mover, decryption inside a real sandbox) is the **target architecture** — the embedder build is in progress, not a shipped runtime property. *(Status date: 2026-07-22.)*
+> **Honest line — shipped vs. target architecture.** The compiler, K3 authorisation gate, signed package admission and S1 cert/channel gate are shipped and tested. The live execution ledger records **29 authoritative** governed `.fungi` specifications and **7 differential** candidates; TypeScript remains the executing/bootstrap layer until executable SLIDE integration closes. The DSS decision core has a 386-point interpreter/Node-Wasm/Wasmtime differential, but the Wasmtime lane is a development oracle, not a production TCB. The former production DSS sidecar is retired. Target-neutral isolation, typed traps and admitted execution belong to SLIDE/VOK and remain open.
 
 ---
 
@@ -109,7 +109,7 @@ Properties of the **language itself** — not libraries, not middleware, not con
 
 **2) Governed tolerant compute** *(real, but emulated today)* — Galerina can govern a deny-by-default, untrusted **compute-only numeric lane** (a CPU photonic **emulator** today, cheap-verified, degrade-only) while every decision stays bit-exact on the digital core. Fits the tolerant-MAC half of: weather-model surrogates · covariance MVM in finance · tolerant render/physics · similarity/embedding inner-products · MD non-bonded forces · low-precision GEMM. **Honest fence:** the optics is a precision-limited analog accelerator (~8-bit), latency ≠ work (~1.9× emulated, never "instant/free/O(1)"), and the analog lane can only **False-DENY, never False-ALLOW**.
 
-**3) The hard boundary** *(by design)* — bit-exact maths never runs on the analog lane (number theory, symbolic algebra, DFT cores stay digital) · crypto on a noisy/photonic lane is denied (`FUNGI-SUBSTRATE-001`) no matter how much voting is stacked · AI may *propose* but can never *lift* a security verdict · "instant optical compute" is refuted (light transit is N-independent in latency; the work is still Θ(N²)). **Roadmap, not "cannot":** real photonic hardware, the self-hosting authority cutover, and real in-sandbox DSS.wasm isolation.
+**3) The hard boundary** *(by design)* — bit-exact maths never runs on the analog lane (number theory, symbolic algebra, DFT cores stay digital) · crypto on a noisy/photonic lane is denied (`FUNGI-SUBSTRATE-001`) no matter how much voting is stacked · AI may *propose* but can never *lift* a security verdict · "instant optical compute" is refuted (light transit is N-independent in latency; the work is still Θ(N²)). **Roadmap, not "cannot":** real photonic hardware, the SLIDE bootstrap fixpoint, and target-neutral SLIDE/VOK isolation.
 
 ---
 
@@ -238,7 +238,7 @@ Nine canonical patterns; 1–6 compile today (`drcm_stable_v0`); 7–9 require t
 | 4 | Cross-Boundary Workflow | stable | External APIs |
 | 5 | Secret-Using Flow | stable | Reads a credential — `secrets {}` + taint guards |
 | 6 | Multi-Tier Service | stable | API → business → data, three governed flows |
-| 7 | Governed WASM Module | `drcm_core_v1` | DSS supervision, DWI isolates |
+| 7 | Governed WASM Module | `drcm_core_v1` | DSS decision semantics and optional compatibility-oracle evidence; production isolation is SLIDE/VOK-owned |
 | 8 | Emergency Policy Overlay | `drcm_core_v1` | Auto-tightening `policy {}` |
 | 9 | .lmanifest Compliance | `drcm_core_v1` | PCI DSS / SOC 2 artifact |
 
@@ -312,7 +312,7 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 
 **No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP).
 
-**Tracking registry (23):** shipped 12 · building 7 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (23):** shipped 13 · building 7 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 

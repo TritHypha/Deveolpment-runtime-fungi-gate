@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Legacy runtime duplication reconciled - 2026-08-04
+
+- [x] Retired the stale future-work label `DSS.wasm supervisor (#102–106)`.
+  The former production `dss-host`/Wasmtime sidecar is not rebuilt.
+- [x] Preserved completed work as completed: the DSS `.fungi` decision core,
+  10/10 deterministic build evidence, 386-point Stage-A differential/laws and
+  the flat development-only Wasmtime oracle remain reusable evidence.
+- [x] Reassigned only the genuinely open requirements—target-neutral
+  containment, typed trap classification, admission, memory and host
+  boundaries—to the existing Independent SLIDE/VOK and release gates.
+- [x] Renamed the ambiguous self-hosting remainder to the **SLIDE bootstrap
+  fixpoint**. Seven-stage specification authority is already complete; the
+  distinct open work is executable source-to-SLIDE self-compilation and an
+  exact fixpoint, not another stage-flip/Wasm programme.
+- [x] Added a component-health self-test that refuses resurrection of the
+  retired production label and requires the shipped evidence row to remain.
+  Full reasoning and the `#102–#106` disposition are in
+  `docs/reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md`.
+- [ ] Keep the explicitly named T-007 single-cycle capability placeholder
+  non-authorizing. Close that requirement only through measured SLIDE/VOK
+  execution evidence; do not implement it under the retired DSS host.
+
 ### Old-style subway roadmap regenerated - 2026-08-04
 
 - [x] Recovered the original dev-tool chain:
@@ -55,10 +77,10 @@ counts or open items that a newer section explicitly supersedes.
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
-- Round 9 has independently closed 25/120 rows. One row is an executed-parity
-  candidate, one is superseded by existing Fungi, 21 are language-blocked,
-  one is host-ABI-blocked and one requires dedicated security handling. These
-  are analysis outcomes, not production conversion credit. Row 026 is next.
+- Round 9 has independently closed 31/120 rows. One row is an executed-parity
+  candidate, one is superseded by existing Fungi, 25 are language-blocked,
+  one is host-ABI-blocked and three require dedicated security handling. These
+  are analysis outcomes, not production conversion credit. Row 032 is next.
 
 ### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
 
@@ -6138,5 +6160,9 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
 - [ ] **web-* lead pair** (`galerina-web-render` + `galerina-web-state`) — largest shippable-scope gap.
 - [ ] **Full-suite CI** (#155 npm workspaces) — get the crypto/border phase-close gates off local-only.
 - [ ] Self-hosting: extend byte-parity tokenize → parser.
-- [ ] Post-P9: DSS.wasm (#102–106); enhancements (#146, #156/#157 start, #158); CI secret-scan residual (#149).
+- [x] Historical DSS.wasm (#102–106) reconciled: keep the decision core and
+  optional-oracle evidence; do not rebuild the retired production sidecar.
+  Remaining target-neutral requirements are owned by SLIDE/VOK. Enhancements
+  (#146, #156/#157 start, #158) and CI secret-scan residual (#149) remain
+  separate work and receive no DSS completion credit.
 - [ ] Hygiene: 2 untracked `RESUME-2026-07-01-continue*.md` at repo root; LICENSE copyright fill uncommitted.

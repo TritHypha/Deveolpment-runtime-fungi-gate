@@ -1,5 +1,12 @@
 # Galerina Roadmap — 2026-07-25 (cycle 2)
 
+> **Historical cycle snapshot.** The generated subway block below remains
+> current, but the narrative before it records the July cycle and is not an
+> active task queue. In particular, the former production DSS/Wasmtime sidecar
+> is retired; use
+> [the current roadmap](roadmap-2026-07-29-galerina-beta-v1-to-slide.md) and
+> [the runtime reconciliation](reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md).
+
 **State anchor:** `main` @ `6816162f`, synchronised with `origin` (owner pushed this cycle — `origin/main..HEAD`
 is empty). Beta: nothing here is "shipped", "frozen" or "released".
 
@@ -230,7 +237,7 @@ are rebaselined.
 
 **No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP).
 
-**Tracking registry (23):** shipped 12 · building 7 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (23):** shipped 13 · building 7 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 

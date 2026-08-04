@@ -366,8 +366,8 @@ const TRACKING_REGISTRY = [
   { item: "Value-unit types (RD-0349)",          state: "building",      detail: "I2/I3/I4 done (I4: ONE runtime unit table — generated constructors + deny-by-default Money.of, G2+G5 closed) · I5/I6 queued · I1 OWNER-GATE CLEARED (ISO-4217 snapshot pinned in KB data/iso-4217/, 280 entries, hash-recorded) → remainder = the compile-time tag-validation + fuzzy-suggestion rungs NOW BUILT (2026-07-18 — type-checker imports MONEY_UNIT_TAGS; FUNGI-TYPE-032 rejects Money<BANANAS>/Money<GPB>/Money<XAU>/Money<XXX> at COMPILE, transposition-aware 'did you mean GBP', 6 regression tests, doc-drift+diagnostic-codes+twin-parity green) → I1 = 3/6; remaining rungs = `unit` schema escape · B1 reserved-name gate · B0 shadowing check; metals/reserved SPECIFIC Commodity<T> routing waits on RD-0350 C1; no float bridge" },
   { item: "CANONICAL_EFFECTS registry (RD-0341)",state: "shipped",       detail: "single-source domain.verb + anti-drift self-tests; memory.spill deny-only, FUNGI-EFFECT-006" },
   { item: "Contract Registry (RD-0359)",         state: "shipped",       detail: contractCounts.available ? `generated authority is current at ${contractCounts.contracts.toLocaleString("en-GB")} contracts across ${contractCounts.sources} .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired` : "CONTRACT REGISTRY EVIDENCE UNAVAILABLE — refusing to publish stale counts" },
-  { item: "Self-hosting Stages 3–6",             state: "post-v1",       detail: "bootstrap fixpoint · crypto FFI seam · .fungi↔host path · floor-by-floor; P9, non-v1-gate" },
-  { item: "DSS.wasm supervisor (#102–106)",      state: "post-v1",       detail: "real Wasmtime TCB (kernel-bypass / in-sandbox decrypt) stays post-v1 — but the DECISION CORE is now execution-proven (2026-07-16 night): build gate 10/10 deterministic, V_DPM flows ≡ Stage-A over 386 pts + topology-first/monotonicity/deny-by-default laws, zero effect calls from the pure core, 10 real .wasm artifacts sha256-manifested (build/dss-wasm); effect imports link only via explicit deny-by-default grants (createHostRuntime effectHandlers)" },
+  { item: "Self-hosting SLIDE bootstrap fixpoint", state: "post-v1",      detail: "all 7 canonical .fungi compiler stages are authoritative specifications; the distinct open work is an executable source-to-SLIDE self-compile, exact bootstrap fixpoint, crypto FFI seam and bounded host path. Do not repeat the retired WASM stage-flip programme" },
+  { item: "DSS decision core + optional Wasm oracle", state: "shipped",  detail: "the .fungi V_DPM decision core is execution-proven (10/10 deterministic builds; 386-point Stage-A differential plus topology-first, monotonicity and deny-by-default laws). Fuel, reset and attestation evidence is retained in the flat development-only Wasmtime oracle. The former dss-host production sidecar and real-Wasmtime-supervisor plan are retired; #102–106 are historical labels, not a second implementation queue. Remaining target-neutral containment, typed-trap and admission work belongs to the Independent SLIDE backend and its release gates" },
   { item: "Workspace package families",          state: "shipped",       detail: `${summary.green}/${summary.components} component families green; ${summary.workspacePackages} workspace packages, ${fmt(summary.recordedTotal)} recorded tests and ${summary.orphans} unadjudicated orphans, all derived from the live workspace and version ledgers` },
   { item: "Package Standard + pub ladder",       state: "building",      detail: "Standard v1 + pkg-census + 9 schematics done; R1–R6 rungs pending; .graph amendment 🔒 owner" },
   { item: "Security-infra designs (×4)",         state: "building",      detail: "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request" },
@@ -721,6 +721,14 @@ if (SELF_TEST) {
   const reg = audit.sections.find((s) => s.key === "tracking-registry").rows;
   const ranks = reg.map((r) => statusRank(r.state));
   ok(ranks.every((v, i) => i === 0 || ranks[i - 1] <= v), "Tracking registry rows are ordered by status (non-decreasing rank)");
+  ok(
+    !reg.some((r) => r.item === "DSS.wasm supervisor (#102–106)"),
+    "retired production DSS.wasm supervisor is not scheduled as a living roadmap workstream",
+  );
+  ok(
+    reg.some((r) => r.item === "DSS decision core + optional Wasm oracle" && r.state === "shipped"),
+    "completed DSS decision-core and optional-oracle evidence remain visible as shipped assets",
+  );
   ok(contractCounts.available, "contract-registry counts are available from generated authority");
   ok(retirementCounts.available, "package-retirement counts are available from the exact retirement ledger");
   ok(

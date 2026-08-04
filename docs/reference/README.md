@@ -37,10 +37,10 @@ here is **source-verified**: each documents a vocabulary that resolves to a real
 ## The runtime error contract
 
 - **[dss-wasm-runtime-errors.md](dss-wasm-runtime-errors.md)** — the stable `FUNGI-*` error codes a program
-  hits at the WASM/wasmtime boundary (traps, fuel, admission `CRITICAL_SECURITY_VIOLATION`), and the rule that
-  the DSS.wasm sidecar translates every raw engine error into one of them — so a `.fungi` program's error
-  handling survives an engine upgrade (the `add_fuel`→`set_fuel` lesson). Compile-time + admission codes are
-  live; the runtime trap-classification lands with DSS.wasm (`#102`).
+  sees at a runtime boundary (traps, fuel and admission refusal). A target-neutral admitted executor must
+  translate every raw backend error into this versioned contract so `.fungi` handling survives an engine
+  change. The former DSS/Wasmtime production sidecar is retired; independent SLIDE/VOK owns production
+  classification and the optional Wasmtime package remains a development oracle.
 
 ## How to trust these pages
 

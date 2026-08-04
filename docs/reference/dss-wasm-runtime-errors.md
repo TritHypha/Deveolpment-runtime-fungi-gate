@@ -1,5 +1,12 @@
 # DSS.wasm runtime errors — the stable developer-facing contract
 
+> **Current authority correction:** the typed `FUNGI-*` classifications remain
+> the portable developer contract, but the former production DSS/Wasmtime
+> sidecar and `#102–#106` host plan are retired. Independent SLIDE/VOK owns the
+> target-neutral production classification and admission boundary. The
+> Wasmtime package is an optional development oracle only. See
+> [the runtime reconciliation](../reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md).
+
 **Status:** contract of record for the `#102`–`#106` runtime. Two surfaces, two maturities:
 - **Compile-time** `FUNGI-*` diagnostics (at `galerina build`) — **live today**.
 - **Admission** refusal (`CRITICAL_SECURITY_VIOLATION`) — **live today** (`admitAndInstantiate`).

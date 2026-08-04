@@ -1,5 +1,16 @@
 # DSS.wasm Readiness Report
 
+> **Historical architecture — superseded 2026-07-30.** Do not execute the
+> production `dss-host`/Wasmtime phases below. The `.fungi` DSS decision core
+> and its differential evidence are retained, and the flat Wasmtime package is
+> a development-only oracle. Target-neutral containment, typed traps,
+> admission and production execution now belong to independent SLIDE/VOK. See
+> [the reconciliation report](../reports/roadmap-legacy-runtime-reconciliation-2026-08-04.md)
+> and [the current SLIDE ledger](slide-v2-status-and-implementation-plan-2026-07-29.md).
+
+The remainder of this file is retained as historical design provenance. Its
+phase and task wording is not an active implementation queue.
+
 **Date:** 2026-07-22  
 **Status:** Pre-readiness assessment — Stage A gate analysis  
 **Suite baseline:** 95/95 packages · 7,616 tests · 0 fail · audit 0 errors  
