@@ -1,7 +1,7 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-04T02:04:14.000Z",
-  "sha": "1f72ded4",
+  "generatedAt": "2026-08-04T03:44:08.000Z",
+  "sha": "a36ef7ab",
   "contracts": 1454,
   "parsed": 534,
   "rows": [
@@ -11178,7 +11178,7 @@
       "qualifier": "pure",
       "signature": "pure flow authGateVerdict(authMode: String, hasChannelVerdict: Bool, channelVerdictAuthorized: Bool, headerPresent: Bool, allowPresenceFallback: Bool) -> String",
       "effects": [],
-      "intent": "Fail-closed kernel auth gate 6: a required-auth route admits ONLY on an authorizing channel verdict (or an explicit opt-in header-presence fallback); bare presence never authenticates."
+      "intent": "Fail-closed kernel auth gate 6: any supplied channel verdict constrains every route; required auth admits only on that ALLOW or an explicit header fallback, and bare presence never authenticates."
     },
     {
       "file": "packages-galerina/galerina-framework-app-kernel/src/self-hosted/package-admission.fungi",

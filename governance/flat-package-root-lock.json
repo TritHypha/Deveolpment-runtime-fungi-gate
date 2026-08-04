@@ -1649,7 +1649,7 @@
       "identity": "@galerina/framework-api-server",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-api-server",
-      "contentDigest": "0b201742f2ec77dbb098bcae4911b4a73e44ae1eb6065ae17e7dc5ef4c866cbe",
+      "contentDigest": "c3e2309309af67eaf1f2b862a49bfc3608e4708d9d5246c0e944b6f1a829155e",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1683,7 +1683,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "6a4660c05a771dc1a28e4858709a6eb78cfd3b9a088f0beb81b319810375dac8",
+      "contentDigest": "769762289e3a79018221c413cc18aae7e3bede314fbd77b376d20e9582533feb",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3240,5 +3240,5 @@
       ]
     }
   ],
-  "rootDigest": "7862d73af95f9ddf6b130873d87b2102d1de5389c8745601a27da0d07d5c08fb"
+  "rootDigest": "c59eaeb654de78e8417f4c7ef2488230975ef8925ed2ece5dd68f52000aa2351"
 }
