@@ -64,6 +64,22 @@ describe("Self-Hosted Parser — fail-closed error reporting (FUNGI-PARSE-00x)",
     assert.equal(r.flowCount, 1);
   });
 
+  it("FUNGI-PARSE-008: a record declaration above 64 fields refuses", async () => {
+    const fields = Array.from({ length: 65 }, (_, i) => `f${i}: Int`).join("\n");
+    const r = await pipeline(`record TooWide {\n${fields}\n}\n`);
+    assert.equal(r.errors.length, 1, JSON.stringify(r.errors));
+    assert.match(r.errors[0], /^FUNGI-PARSE-008/);
+    assert.match(r.errors[0], /64/);
+  });
+
+  it("FUNGI-PARSE-008: an anonymous record literal above 64 fields refuses", async () => {
+    const fields = Array.from({ length: 65 }, (_, i) => `f${i}: ${i}`).join(", ");
+    const r = await pipeline(`pure flow over() -> Int { let x = { ${fields} } return 1 }`);
+    assert.equal(r.errors.length, 1, JSON.stringify(r.errors));
+    assert.match(r.errors[0], /^FUNGI-PARSE-008/);
+    assert.match(r.errors[0], /64/);
+  });
+
   it("FUNGI-PARSE-001: garbage at top level ERRORS — and the next flow still parses (recovery)", async () => {
     const r = await pipeline("banana garbage tokens\npure flow ok() -> Int {\n  return 1\n}\n");
     assert.equal(r.errors.length, 1, `expected exactly one error, got: ${JSON.stringify(r.errors)}`);

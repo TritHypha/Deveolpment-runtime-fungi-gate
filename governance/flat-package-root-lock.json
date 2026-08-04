@@ -191,7 +191,7 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "b07366583e5c2a4f2f573d96f286bb9593db4b2e9958718badca3b281b8bf4a6",
+      "contentDigest": "2fe351ff884fcb076fff3acfafcd6d9b76c32ecb01aa4b7505a8676a1814d1a7",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -417,7 +417,7 @@
       "identity": "@galerina/core-runtime-wasm",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-runtime-wasm",
-      "contentDigest": "d5c5f2a6050372437ad8a82dd98c800812a8102d920814f921bb221d9969368e",
+      "contentDigest": "73f9acb6c3466998fe07926ea6fffa64673ce2f99294a7eb4fcf5e1a156f7863",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3240,5 +3240,5 @@
       ]
     }
   ],
-  "rootDigest": "c59eaeb654de78e8417f4c7ef2488230975ef8925ed2ece5dd68f52000aa2351"
+  "rootDigest": "113426fd93336a033eb3d709970444f4294afd41cd4335c7a8371f4eeafbe698"
 }

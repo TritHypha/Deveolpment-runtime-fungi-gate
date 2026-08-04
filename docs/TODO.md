@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
+
+- Owner approval makes RD-0693's canonical declaration, exact construction and
+  declared-call rules binding. Live-history review confirms those rules and the
+  bounded one-to-eight-field SLIDE record ABI were already implemented; this
+  chapter does not claim general record transport or package-conversion credit.
+- Galerina now has a dedicated `F_max = 64` for each record declaration and
+  literal. A fresh AST inventory measured 291 declarations and 988 literals
+  across 534 tracked `.fungi` files, with 32 fields as both maxima. The ceiling
+  therefore preserves 2x measured headroom without widening SLIDE's narrower
+  independently admitted ABI.
+- Field 65 emits `FUNGI-PARSE-008` exactly once. Surplus fields are parsed only
+  for recovery and never enter the authorizing AST. The self-hosted parser
+  independently re-derives declaration and literal breaches from bounded token
+  shapes; its flipped WAT path uses no recursive host stack or growing AST
+  worklist.
+- Focused parser/self-hosted/WAT evidence is **130/130**, including the
+  non-vacuous 64-admit/65-refuse check on both interpreter and real WAT. The
+  complete compiler suite is **5,866/5,866** across 1,231 suites. Generated authority is refreshed
+  at code index/registry **782**, graph **5/5** and contract registry **1,456**
+  contracts across 534 sources. The count-owning package aggregate passes
+  **98/98** with **8,956** tests and zero failures in 352.2 seconds.
+- The first exhaustive run correctly refused stale Golden Pack and flat-package
+  root authorities. Their owning tools regenerated the reviewed runtime-closure
+  and exact 98-peer package lock; focused root-lock evidence is 7/7 and tooling
+  is 358 pass, 0 fail, 2 intentional skips. The uninterrupted rerun then passed
+  all **87/87** blocking gates in 895.6 seconds. Node returned from each run to
+  the single pre-existing MCP process; no worker was left behind.
+
 ### Galerina String ordering and generated-authority closure green - 2026-08-04
 
 - Round 9 row 010 exposed a checker/runtime differential: the checker admitted

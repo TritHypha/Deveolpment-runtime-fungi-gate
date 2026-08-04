@@ -157,6 +157,12 @@ Record admission is exact and fail closed:
 - the emitter lays fields out in declaration order, regardless of literal
   source order.
 
+Declarations and literals have a hard **64-field** parser ceiling. Field 65
+emits `FUNGI-PARSE-008`; surplus fields are parsed only for recovery and never
+enter the authorizing AST. A translation that needs more fields must split the
+schema explicitly. This does not widen the independent SLIDE record profile,
+which currently admits one schema of one to eight fields.
+
 An anonymous literal may be contextually adopted only when the complete shape
 is exact:
 

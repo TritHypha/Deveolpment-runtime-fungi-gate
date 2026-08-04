@@ -1,8 +1,8 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 781,
+  "total": 782,
   "counts": {
-    "ref": 208,
+    "ref": 209,
     "inline": 177,
     "phantom": 113,
     "live": 170,
@@ -6922,6 +6922,18 @@
       "emits": 0,
       "tests": 2,
       "docs": 5
+    },
+    {
+      "code": "FUNGI-PARSE-008",
+      "family": "PARSE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 6,
+      "docs": 4
     },
     {
       "code": "FUNGI-PARSE-DEPTH-001",

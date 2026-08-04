@@ -299,6 +299,25 @@ contract { intent { "True when the token at pos is an Identifier token." } }
   }
 }
 
+// Record fields admit identifiers and keyword-shaped names. This helper reads
+// only the token kind; it never treats punctuation or a literal as a field.
+pure flow isRecordFieldName(tokens: Array<Token>, pos: Int) -> Bool
+contract { intent { "True when the token can name a record-literal field." } }
+{
+  let opt = tokens.get(pos)
+  match opt {
+    None => { return false }
+    Some(tok) => {
+      match tok.kind {
+        Identifier => { return true }
+        Keyword => { return true }
+        _ => { return false }
+      }
+    }
+    _ => { return false }
+  }
+}
+
 // True when the token at pos is an Operator/Symbol token with the given value.
 pure flow isOpSym(tokens: Array<Token>, pos: Int, val: String) -> Bool
 contract { intent { "True when the token at pos is an Operator/Symbol token with the given value." } }
@@ -331,6 +350,63 @@ contract { intent { "True when a `%` operator token appears in the flow-body tok
   while i < endPos {
     if isOpSym(tokens, i, "%") { return true }
     i = i + 1
+  }
+  return false
+}
+
+// The Stage-A parser retains at most 64 fields in any record literal. Stage B
+// independently re-derives that fact from tokens rather than trusting the
+// materialised AST. A candidate begins only at a brace whose first meaningful
+// tokens have the exact `name :` shape used by record literals. Field colons in
+// nested braces, parentheses, and brackets do not count. The scan is iterative
+// and scalar-only so the flipped WAT backend does not depend on recursive host
+// stacks or dynamically growing AST worklists.
+pure flow bodyHasRecordFieldCeilingBreach(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool
+contract { intent { "Refuse a flow-body record literal containing more than 64 immediate fields." } }
+{
+  mut open: Int = startPos
+  while open < endPos {
+    if tokVal(tokens, open) == "{" {
+      let first: Int = skipNewlines(tokens, open + 1)
+      let colon: Int = skipNewlines(tokens, first + 1)
+      if isRecordFieldName(tokens, first) and tokVal(tokens, colon) == ":" {
+        mut p: Int = first
+        mut braceDepth: Int = 1
+        mut parenDepth: Int = 0
+        mut bracketDepth: Int = 0
+        mut fields: Int = 0
+        while p < endPos and braceDepth > 0 {
+          let value: String = tokVal(tokens, p)
+          match value {
+            "{" => { braceDepth = braceDepth + 1 }
+            "}" => { braceDepth = braceDepth - 1 }
+            "(" => {
+              if braceDepth == 1 { parenDepth = parenDepth + 1 }
+            }
+            ")" => {
+              if braceDepth == 1 and parenDepth > 0 { parenDepth = parenDepth - 1 }
+            }
+            "[" => {
+              if braceDepth == 1 { bracketDepth = bracketDepth + 1 }
+            }
+            "]" => {
+              if braceDepth == 1 and bracketDepth > 0 { bracketDepth = bracketDepth - 1 }
+            }
+            _ => {
+              if braceDepth == 1 and parenDepth == 0 and bracketDepth == 0 and isRecordFieldName(tokens, p) {
+                let afterName: Int = skipNewlines(tokens, p + 1)
+                if tokVal(tokens, afterName) == ":" {
+                  fields = fields + 1
+                  if fields > 64 { return true }
+                }
+              }
+            }
+          }
+          p = p + 1
+        }
+      }
+    }
+    open = open + 1
   }
   return false
 }
@@ -1853,8 +1929,14 @@ contract { intent { "Preserve one ordered record/type declaration as checked fro
             scanning = false
           }
           else {
-            fields = fields.append({ name: fieldName, typeName: typeName })
-            p = afterType
+            if fields.count() >= 64 {
+              error = "record field ceiling 64 exceeded"
+              scanning = false
+            }
+            else {
+              fields = fields.append({ name: fieldName, typeName: typeName })
+              p = afterType
+            }
           }
         }
       }
@@ -2265,8 +2347,14 @@ contract {
             if tv == "type" {
               errs = errs.append("FUNGI-PARSE-007: block-bodied type '" + parsedRecord.declaration.name + "' must be declared with 'record'")
             }
-            if parsedRecord.error != "" {
-              errs = errs.append("FUNGI-PARSE-003: " + parsedRecord.error)
+            match parsedRecord.error {
+              "" => {}
+              "record field ceiling 64 exceeded" => {
+                if tv == "record" {
+                  errs = errs.append("FUNGI-PARSE-008: record declaration exceeds the maximum of 64 fields")
+                }
+              }
+              _ => { errs = errs.append("FUNGI-PARSE-003: " + parsedRecord.error) }
             }
             if parsedRecord.closed == false {
               errs = errs.append("FUNGI-PARSE-003: unterminated '" + tv + "' declaration - missing '}' before end of input")
@@ -2507,6 +2595,9 @@ contract {
           // truncated flow was accepted; the error now makes it un-consumable to the drivers.
           if blk.closed == false {
             errs = errs.append("FUNGI-PARSE-003: flow '" + flowName + "' body block not closed ('}' expected)")
+          }
+          if bodyHasRecordFieldCeilingBreach(tokens, bodyStart, p) {
+            errs = errs.append("FUNGI-PARSE-008: flow '" + flowName + "' contains a record literal above the maximum of 64 fields")
           }
           // FUNGI-PARSE-005: fail-CLOSED on the `%` (modulo) operator (R&D 0256). The multiplicative
           // cascade silently drops `%` -> the expression collapses to its left operand (5 % 2 -> 5, a

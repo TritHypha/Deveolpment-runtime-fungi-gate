@@ -71,6 +71,22 @@ contract { intent { "P9 R3 driver: check flow bodies and project the diagnostic 
     Err(e) => { return -1 }
   }
 }
+
+/// R3 driver D — parseFlows; project its fail-closed parser error count.
+/// This keeps finite-input parser refusals non-vacuous through the flipped WAT
+/// path instead of inferring them from successful compilation of parser.fungi.
+pure flow parseDiagCount(src: String) -> Int
+contract { intent { "P9 R3 driver: parse flows and project the parser error count." } }
+{
+  let res = tokenize(src)
+  match res {
+    Ok(toks) => {
+      let p = parseFlows(toks)
+      return p.errors.count()
+    }
+    Err(e) => { return -1 }
+  }
+}
 `;
 
 const SRC = "@version 1\n" + strip("lexer.fungi") + "\n" + strip("parser.fungi") + "\n" + strip("type-checker.fungi") + "\n" + DRIVER;
@@ -169,6 +185,28 @@ describe("P9 R3 · type-checker stage: checkFlowBodies byte-parity (Stage-A inte
 const CALL_OK = 5;      // addok(1,2) — correct call: the silence control
 const CALL_BADTYPE = 6; // greetp(42) — String param, Int literal → FUNGI-TYPE-005
 const CALL_BADARITY = 7;// addp(1,2,3) — 2 params, 3 args   → FUNGI-TYPE-007
+
+const recordLiteralFlow = (fieldCount) => {
+  const fields = Array.from({ length: fieldCount }, (_, index) => `f${index}: ${index}`).join(", ");
+  return `pure flow recordCeiling() -> Int\ncontract { intent { "record ceiling" } }\n{ let x = { ${fields} }\n return 1 }`;
+};
+
+describe("P9 R3 · record field ceiling is non-vacuous through Stage-B WASM", () => {
+  it("admits exactly 64 literal fields on BOTH backends", async () => {
+    const source = recordLiteralFlow(64);
+    const [i, w] = await Promise.all([runInterp("parseDiagCount", source), runWasm("parseDiagCount", source)]);
+    assert.equal(i, 0, "interpreter must admit the exact 64-field ceiling");
+    assert.equal(w, 0, "WASM must admit the exact 64-field ceiling");
+  });
+
+  it("refuses field 65 on BOTH backends", async () => {
+    const source = recordLiteralFlow(65);
+    const [i, w] = await Promise.all([runInterp("parseDiagCount", source), runWasm("parseDiagCount", source)]);
+    assert.ok(i >= 1, `interpreter must emit a parser refusal for field 65, got ${i}`);
+    assert.ok(w >= 1, `WASM must emit a parser refusal for field 65, got ${w}`);
+    assert.equal(w, i, "WASM and interpreter must agree on the parser refusal count");
+  });
+});
 
 describe("P9 R3 · type-checker stage: checkFlowBodies EMISSION parity (diagnostics, not just flowCount)", () => {
   for (const input of CORPUS) {

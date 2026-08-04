@@ -1,8 +1,8 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-04T04:47:31.000Z",
-  "sha": "2e114de9",
-  "contracts": 1454,
+  "generatedAt": "2026-08-04T05:13:01.000Z",
+  "sha": "e2814211",
+  "contracts": 1456,
   "parsed": 534,
   "rows": [
     {
@@ -4666,6 +4666,14 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "isRecordFieldName",
+      "qualifier": "pure",
+      "signature": "pure flow isRecordFieldName(tokens: Array<Token>, pos: Int) -> Bool",
+      "effects": [],
+      "intent": "True when the token can name a record-literal field."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
       "name": "isOpSym",
       "qualifier": "pure",
       "signature": "pure flow isOpSym(tokens: Array<Token>, pos: Int, val: String) -> Bool",
@@ -4679,6 +4687,14 @@
       "signature": "pure flow bodyHasModulo(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
       "effects": [],
       "intent": "True when a `%` operator token appears in the flow-body token range."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
+      "name": "bodyHasRecordFieldCeilingBreach",
+      "qualifier": "pure",
+      "signature": "pure flow bodyHasRecordFieldCeilingBreach(tokens: Array<Token>, startPos: Int, endPos: Int) -> Bool",
+      "effects": [],
+      "intent": "Refuse a flow-body record literal containing more than 64 immediate fields."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",

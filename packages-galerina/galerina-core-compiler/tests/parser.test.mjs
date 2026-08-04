@@ -399,6 +399,40 @@ record Receipt {
   });
 });
 
+describe("Parser — record field ceiling", () => {
+  it("admits the documented 64-field ceiling", () => {
+    const fields = Array.from({ length: 64 }, (_, i) => `f${i}: Int`).join("\n");
+    const result = parseOk(`record Wide {\n${fields}\n}\n`);
+    assert.equal(findNode(result.ast, "recordDecl")?.children?.length, 64);
+  });
+
+  it("refuses and truncates a declaration above the 64-field ceiling", () => {
+    const fields = Array.from({ length: 65 }, (_, i) => `f${i}: Int`).join("\n");
+    const result = parseProgram(`record TooWide {\n${fields}\n}\n`, "record-ceiling.fungi");
+    const ceiling = result.diagnostics.filter((d) => d.code === "FUNGI-PARSE-008");
+    assert.equal(ceiling.length, 1, JSON.stringify(result.diagnostics));
+    assert.match(ceiling[0].message, /64/);
+    assert.equal(findNode(result.ast, "recordDecl")?.children?.length, 64);
+  });
+
+  it("refuses named and anonymous literals above the 64-field ceiling", () => {
+    const fields = Array.from({ length: 65 }, (_, i) => `f${i}: ${i}`).join(", ");
+    for (const [label, literal] of [
+      ["named", `Wide { ${fields} }`],
+      ["anonymous", `{ ${fields} }`],
+    ]) {
+      const result = parseProgram(
+        `pure flow over() -> Int { let x = ${literal} return 1 }`,
+        `${label}-record-ceiling.fungi`,
+      );
+      const ceiling = result.diagnostics.filter((d) => d.code === "FUNGI-PARSE-008");
+      assert.equal(ceiling.length, 1, `${label}: ${JSON.stringify(result.diagnostics)}`);
+      assert.match(ceiling[0].message, /64/);
+      assert.equal(findNode(result.ast, "callExpr")?.children?.length, 64);
+    }
+  });
+});
+
 describe("Parser — type declarations are aliases only", () => {
   it("retains `type Name = TypeRef` as an explicit alias", () => {
     const result = parseOk(`type Counter = Int\n`);

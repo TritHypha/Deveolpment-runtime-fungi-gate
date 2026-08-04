@@ -19,7 +19,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 208 | referenced only (no def/emit) |
+| ref | 209 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -991,7 +991,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (9)
+### PARSE (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1003,6 +1003,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PARSE-005 | ref | — | — |
 | FUNGI-PARSE-006 | ref | — | — |
 | FUNGI-PARSE-007 | ref | — | — |
+| FUNGI-PARSE-008 | ref | — | — |
 | FUNGI-PARSE-DEPTH-001 | ref | — | — |
 
 ### PASSPORT (1)

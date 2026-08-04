@@ -397,6 +397,14 @@ function makeNode(
  *  depth this bounds. */
 const MAX_EXPR_DEPTH = 256;
 
+/** Maximum number of fields retained by one record declaration or literal.
+ *
+ * The tracked corpus currently peaks at 32 fields. A ceiling of 64 preserves
+ * 2x measured headroom while bounding declaration harvest and literal
+ * admission to O(d + c). The independent SLIDE record ABI remains the narrower
+ * eight-field profile; this parser ceiling does not widen that authority. */
+export const MAX_RECORD_FIELDS = 64;
+
 /** Thrown by the depth guard to unwind the recursion to parseProgram's per-declaration catch — fail-closed,
  *  never a host crash. The FUNGI-PARSE-DEPTH-001 diagnostic is recorded before the throw. */
 class ParseAborted extends Error {}
@@ -406,6 +414,9 @@ class Parser {
   /** Current recursive-descent expression-nesting depth (FUNGI-PARSE-DEPTH-001 stack-exhaustion guard). */
   private exprDepth = 0;
   private readonly diagnostics: ParseDiagnostic[] = [];
+  /** One diagnostic per over-ceiling field array; surplus fields are parsed
+   * for recovery but never retained in the authorizing AST. */
+  private readonly recordFieldCeilingReported = new WeakSet<AstNode[]>();
   private readonly flows: FlowMeta[] = [];
   /** Flagship (0119 item 2): `where <k3-expr>` three-valued admission predicates parsed on parameters
    *  are stashed here by parseParam and DRAINED by the enclosing parseParamList caller into a flow-level
@@ -417,6 +428,22 @@ class Parser {
     private readonly tokens: readonly Token[],
     private readonly file: string,
   ) {}
+
+  private appendRecordField(fields: AstNode[], field: AstNode, subject: string): void {
+    if (fields.length < MAX_RECORD_FIELDS) {
+      fields.push(field);
+      return;
+    }
+    if (this.recordFieldCeilingReported.has(fields)) return;
+    this.recordFieldCeilingReported.add(fields);
+    this.emit(
+      "FUNGI-PARSE-008",
+      "RECORD_FIELD_CEILING",
+      `${subject} exceeds the maximum of ${MAX_RECORD_FIELDS} fields; surplus fields are non-authorizing.`,
+      field.location ?? this.loc(),
+      `Split the record into bounded components of at most ${MAX_RECORD_FIELDS} fields.`,
+    );
+  }
 
   parse(): { ast: AstNode; diagnostics: readonly ParseDiagnostic[]; flows: readonly FlowMeta[] } {
     const program = this.parseProgram();
@@ -2577,7 +2604,11 @@ class Parser {
             this.expect("symbol", ":");
             this.skipNewlines();
             const fieldValue = this.parseExpression();
-            fields.push({ kind: "identifier", value: fieldName, location: fieldLoc, children: [fieldValue] });
+            this.appendRecordField(
+              fields,
+              { kind: "identifier", value: fieldName, location: fieldLoc, children: [fieldValue] },
+              `Named record literal '${name}'`,
+            );
             this.skipNewlines();
             if (this.currentIs("symbol", ",")) {
               this.advance();
@@ -2637,12 +2668,11 @@ class Parser {
       this.skipNewlines();
 
       const fieldValue = this.parseExpression();
-      fields.push({
-        kind: "identifier",
-        value: fieldName,
-        location: fieldLoc,
-        children: [fieldValue],
-      });
+      this.appendRecordField(
+        fields,
+        { kind: "identifier", value: fieldName, location: fieldLoc, children: [fieldValue] },
+        "Anonymous record literal",
+      );
 
       this.skipNewlines();
       if (this.currentIs("symbol", ",")) {
@@ -6252,11 +6282,15 @@ class Parser {
             const typeNode = this.parseTypeRef();
             typeAnnotation = typeNode.value ?? "";
           }
-          fields.push({
-            kind: "paramDecl",
-            value: typeAnnotation !== "" ? `${fName}: ${typeAnnotation}` : fName,
-            location: fLoc,
-          });
+          this.appendRecordField(
+            fields,
+            {
+              kind: "paramDecl",
+              value: typeAnnotation !== "" ? `${fName}: ${typeAnnotation}` : fName,
+              location: fLoc,
+            },
+            `Record declaration '${name}'`,
+          );
         } else if (this.currentIs("symbol", ",")) {
           this.advance();
         } else {

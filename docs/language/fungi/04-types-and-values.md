@@ -70,6 +70,12 @@ fields, so accepting that spelling would make the type name exist without a sche
 `type Name = TypeRef` only for an alias. Record values use `Name { field: value }`, not positional
 `Name(value)` calls. Capitalization never grants constructor or call authority.
 
+One record declaration or literal may contain at most **64 fields**. The
+compiler emits `FUNGI-PARSE-008` on field 65 and does not retain surplus fields
+in the authorizing AST. The limit is deliberately separate from the narrower
+SLIDE record ABI: the current independently admitted `.slide` profile permits
+one schema with one to eight fields.
+
 ### Record guarantees — fixed shape and bounded current emission
 
 Two properties hold for every record *by construction* and are worth stating as named guarantees (RD-0286a/g):
@@ -80,11 +86,12 @@ Two properties hold for every record *by construction* and are worth stating as 
   record declaration and know everything the value is — no hidden state, no shape mutation, no hidden-class
   transition — so field access is a static offset, never a key lookup.
 - **Current measured emission.** The Stage-A checker and WAT path preserve declaration-order field layout;
-  reordered source literals execute with the same field offsets. Current V2-E evidence binds record
-  declarations and source digests. A general, versioned record descriptor carried through `.slide`, independently
-  revalidated by VOK, and bound into a field-level execution receipt is **planned, not yet implemented**. Until
-  that separate transport chapter closes, do not claim that every record value has one end-to-end canonical
-  byte form across Galerina and SLIDE.
+  reordered source literals execute with the same field offsets. The bounded independent SLIDE ABI now carries
+  a versioned nominal descriptor with one to eight ordered fields through GIR and `.slide`, revalidates it in
+  VOK and binds the values into a field-level Safe Value receipt. That evidence is intentionally narrow: general,
+  nested or recursive records, multiple schemas and effectful/mutable records are not admitted by this profile.
+  Do not generalise the bounded result into a claim that every record value has one end-to-end canonical byte
+  form across Galerina and SLIDE.
 
 > **`sealed` surface — owner-gated.** Because there is no *unsealed* record semantics to opt into, a record
 > is already fixed-shape ("sealed") by nature; this section states the guarantee, it adds no grammar.

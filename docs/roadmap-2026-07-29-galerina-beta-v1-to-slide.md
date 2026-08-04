@@ -4,7 +4,7 @@ Date: 2026-08-04
 Branch: `codex/galerina-beta-v1-completion`
 Current verified fixed point after the governed-runtime and channel-gate
 fail-close increments:
-exhaustive **87/87**, unified package lane **98/98** with **8,949** generated tests,
+exhaustive **87/87**, unified package lane **98/98** with **8,956** generated tests,
 graph **5/5**, code index/registry/coverage current,
 benchmark publication fresh, and executable examples **233/233**. The latest
 uninterrupted exhaustive phase-close passed every blocking gate in **890.0
@@ -16,6 +16,25 @@ returned to the one pre-existing MCP process. The strict fusable build reports
 package locked to offline custody and 0 failures.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: owner-approved RD-0693 makes canonical `record`
+declarations, declared call authority and exact nominal record construction
+binding. The one remaining finite-input gap is now implemented as Galerina
+parser `F_max = 64`, selected from a fresh 534-source AST inventory whose
+declaration and literal maxima are both 32 fields. Field 65 emits
+`FUNGI-PARSE-008` and never enters the authorizing AST; the self-hosted parser
+independently re-derives declaration and literal breaches without recursive
+host stacks or growing AST worklists. The separate SLIDE ABI remains one
+nominal one-to-eight-field schema. Focused parser/self-hosted/WAT evidence is
+130/130, including direct 64-admit/65-refuse parity on interpreter and real
+WAT. The full compiler is 5,866/5,866 across 1,231 suites, code
+index/registry is 782, graph generation is 5/5 and the contract registry is
+1,456 across 534 `.fungi` sources. The count-owning aggregate is 98/98 with
+8,956 tests in 352.2 seconds. After the owning Golden Pack and flat-package
+root tools refreshed their derived authorities, the uninterrupted exhaustive
+rerun passed 87/87 blocking gates in 895.6 seconds and Node returned to the one
+pre-existing MCP process. This increment is locally green; no
+package-conversion or general-record credit is implied.
 
 Roadmap refresh: Round 9 row 010 exposed a real String-ordering differential.
 The checker admitted `<`, `<=`, `>` and `>=`, while the governed interpreter

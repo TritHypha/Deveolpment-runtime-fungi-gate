@@ -83,6 +83,7 @@ export {
   NodeFlags,
   FUNGI_MIN_SUPPORTED_VERSION,
   FUNGI_CURRENT_VERSION,
+  MAX_RECORD_FIELDS,
   type ParseOptions,
   type NodeFlagsMask,
   type AstNode,
