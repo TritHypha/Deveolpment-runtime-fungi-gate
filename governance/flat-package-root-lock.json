@@ -172,7 +172,7 @@
       "identity": "@galerina/core-cli",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-cli",
-      "contentDigest": "17389ddc1ead1c477108497e182ed53c6a807446ff86b911b321d065d4cdbcd3",
+      "contentDigest": "87920ef31de0ae8b4d651edab709d676858e25840fec640fc8dd7474dca513b9",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -994,7 +994,7 @@
       "identity": "@galerina/devtools-benchmarks",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-benchmarks",
-      "contentDigest": "a30378e8ddeb3552da155b57bdb17d21b85e21b669151dd619f56bf96c911c4a",
+      "contentDigest": "8cb8f9806ce57bef0f74c3719f7ececb4136ad1ea9911b1271f42b17ceb652ee",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3240,5 +3240,5 @@
       ]
     }
   ],
-  "rootDigest": "5b78efdbb7d4d1f02a01e4d298149a3e2da7ab72e001b26830becc71410005c7"
+  "rootDigest": "97e4afc8abb5d837ae9d103c108898bbb1a8133e1aabc732ee96a2b8805cf7e6"
 }

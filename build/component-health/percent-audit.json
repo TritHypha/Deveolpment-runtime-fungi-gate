@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "0e57a715",
+    "sha": "ca9323bd",
     "detached": false,
     "dirty": true
   },
@@ -154,6 +154,7 @@
               "FUNGI-TYPE-024",
               "FUNGI-TYPE-025",
               "FUNGI-TYPE-026",
+              "FUNGI-TYPE-028",
               "FUNGI-TYPE-030",
               "FUNGI-TYPE-032",
               "FUNGI-TYPE-033",
