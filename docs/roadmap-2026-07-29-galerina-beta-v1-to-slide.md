@@ -13,6 +13,19 @@ MCP process.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Galerina commit `1f72ded4` closes canonical record parsing,
+self-hosted parity, naturally aligned WAT record layouts and the discarded
+immutable-result seam. Bare `Array.push` or `Array.append` expression
+statements now refuse as `FUNGI-TYPE-028`; the returned replacement must be
+used. The complete compiler suite is 5,850/5,850 across 1,227 suites. Generated
+authority is current at code index/registry 781, graph 5/5, Golden Pack 11/11
+checked plus 11/11 executed, contract registry 1,454 contracts across 534
+`.fungi` files and seven verified compiler-stage hashes. Standalone tooling is
+358 pass, 0 fail, with two intentional platform/toolchain skips. The 98-package
+aggregate and exhaustive phase-close are being rerun before the fixed-point
+header is revised; no package conversion or terminal retirement credit is
+implied by this compiler increment.
+
 Roadmap refresh: canonical Galerina records now cross one bounded independent
 SLIDE ABI at commit `94969db`. The source nominal name and declaration-ordered
 field/type descriptor are independently re-derived and bound through GIR,

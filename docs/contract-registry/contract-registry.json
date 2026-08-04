@@ -1,10 +1,18 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-02T19:18:38.000Z",
-  "sha": "c07c405a",
-  "contracts": 1437,
-  "parsed": 520,
+  "generatedAt": "2026-08-04T02:04:14.000Z",
+  "sha": "1f72ded4",
+  "contracts": 1454,
+  "parsed": 534,
   "rows": [
+    {
+      "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
+      "name": "readMillionValues",
+      "qualifier": "secure",
+      "signature": "secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Read exactly one million values through the checked semantic path."
+    },
     {
       "file": "docs/examples/Level-1-Basics/001-pure-flow/example.fungi",
       "name": "calculateVat",
@@ -2567,6 +2575,102 @@
       "intent": "Approve a payment — enforce high-value threshold as a governance condition."
     },
     {
+      "file": "docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi",
+      "name": "readMillionValues",
+      "qualifier": "secure",
+      "signature": "secure flow readMillionValues(values: Array<Int>) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Read exactly one million values through the checked semantic peer."
+    },
+    {
+      "file": "docs/examples/golden/001-bool-if.fungi",
+      "name": "boolToInt",
+      "qualifier": "pure",
+      "signature": "pure flow boolToInt(value: Bool) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/002-int-match.fungi",
+      "name": "selectMode",
+      "qualifier": "pure",
+      "signature": "pure flow selectMode(mode: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/003-result-match.fungi",
+      "name": "selectModeResult",
+      "qualifier": "pure",
+      "signature": "pure flow selectModeResult(mode: Int) -> Result<Int,String>",
+      "effects": [],
+      "intent": "Select one admitted mode and preserve invalid-mode failure."
+    },
+    {
+      "file": "docs/examples/golden/004-k3-check.fungi",
+      "name": "durabilityEvidence",
+      "qualifier": "pure",
+      "signature": "pure flow durabilityEvidence(evidenceVerdict: Verdict, shapeValid: Bool, authorityReleased: Bool) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/005-array-count.fungi",
+      "name": "listLen",
+      "qualifier": "pure",
+      "signature": "pure flow listLen(values: Array<Int>) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/006-array-get-option.fungi",
+      "name": "getOrZero",
+      "qualifier": "pure",
+      "signature": "pure flow getOrZero(values: Array<Int>, index: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/007-string-equality.fungi",
+      "name": "sameText",
+      "qualifier": "pure",
+      "signature": "pure flow sameText(left: String, right: String) -> Bool",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/008-while-bool-guard.fungi",
+      "name": "countTo",
+      "qualifier": "pure",
+      "signature": "pure flow countTo(limit: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/009-checked-division.fungi",
+      "name": "divide",
+      "qualifier": "pure",
+      "signature": "pure flow divide(value: Int, divisor: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/010-checked-remainder.fungi",
+      "name": "remainder",
+      "qualifier": "pure",
+      "signature": "pure flow remainder(value: Int, divisor: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
+      "file": "docs/examples/golden/011-canonical-record.fungi",
+      "name": "pairDigest",
+      "qualifier": "pure",
+      "signature": "pure flow pairDigest(left: Int, right: Int) -> Int",
+      "effects": [],
+      "intent": ""
+    },
+    {
       "file": "docs/reference/examples/cost-model/loops-cost.fungi",
       "name": "gridChecksum",
       "qualifier": "pure",
@@ -2902,7 +3006,7 @@
       "qualifier": "pure",
       "signature": "pure flow estimateComputeCost(opCount: Int, targetClass: Int) -> Int",
       "effects": [],
-      "intent": "Estimate the economic cost of an operation to inform routing decisions."
+      "intent": ""
     },
     {
       "file": "examples/auth-service/economicsService.fungi",
@@ -3133,7 +3237,7 @@
       "qualifier": "pure",
       "signature": "pure flow isValidGovernanceFlags(flags: Int) -> Bool",
       "effects": [],
-      "intent": "Verify a runtime manifest's schema version and signature status."
+      "intent": ""
     },
     {
       "file": "examples/auth-service/manifestVerificationService.fungi",
@@ -9015,6 +9119,38 @@
       "signature": "pure flow checkStepExpr(expr: Array<Auto>, env: Array<Auto>) -> Array<Auto>",
       "effects": [],
       "intent": "FUNGI-TYPE-007: step target must be a flow call expression, not a literal or parameter reference."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi",
+      "name": "verifiedLoopEnvelopeDeny",
+      "qualifier": "pure",
+      "signature": "pure flow verifiedLoopEnvelopeDeny(failureId: String) -> VerifiedLoopEnvelopeSourceProposal",
+      "effects": [],
+      "intent": "Refuse an incomplete verified-loop-envelope proposal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi",
+      "name": "verifiedLoopEnvelopePropose",
+      "qualifier": "pure",
+      "signature": "pure flow verifiedLoopEnvelopePropose(facts: VerifiedLoopEnvelopeSourceFacts) -> VerifiedLoopEnvelopeSourceProposal",
+      "effects": [],
+      "intent": "Recheck a verified-loop-envelope proposal without granting execution authority."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi",
+      "name": "boundedReadLoopDeny",
+      "qualifier": "pure",
+      "signature": "pure flow boundedReadLoopDeny(failureId: String) -> VerifiedLoopEnvelopeSourceProposal",
+      "effects": [],
+      "intent": "Refuse an incomplete bounded checked-read proposal."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi",
+      "name": "boundedReadLoopPropose",
+      "qualifier": "pure",
+      "signature": "pure flow boundedReadLoopPropose(facts: VerifiedLoopEnvelopeSourceFacts, bound: Int) -> VerifiedLoopEnvelopeSourceProposal",
+      "effects": [],
+      "intent": "Recheck one registered bounded checked-read proposal without granting authority."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/tests/fixtures/slide-g4-checked-source.fungi",

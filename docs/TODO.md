@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Galerina compiler and generated-authority closure in progress - 2026-08-04
+
+- Galerina commit `1f72ded4` hardens canonical `record` parsing, self-hosted
+  parity and naturally aligned WAT record layouts. A discarded immutable
+  `Array.push` or `Array.append` result now fails closed as
+  `FUNGI-TYPE-028`; assignment, return and nested use remain admitted.
+- The complete compiler suite passes **5,850/5,850** across 1,227 suites.
+  The self-hosted diagnostic twin covers 24 type codes with zero name,
+  severity or differential violations.
+- Generated authority has been refreshed: code index/registry **781**, graphs
+  **5/5**, Golden Pack **11/11** checked and **11/11** executed, contract
+  registry **1,454** contracts across 534 `.fungi` files, and the seven-stage
+  compiler hash baseline verifies.
+- Standalone tooling passes **358**, fails **0**, with two intentional
+  platform/toolchain skips. The unified 98-package aggregate and exhaustive
+  phase-close remain the current closure work and must supply the final counts
+  before this checkpoint is called complete.
+- The current benchmark publication contains 115 runtime/benchmark comparisons
+  against the archived pre-SLIDE Galerina/Wasm baseline. The direct production
+  Galerina/SLIDE lane remains honestly `DEFERRED_NO_SLIDE_LANE`; a reference or
+  non-authorizing SLIDE result is not credited as production parity.
+
 ### Canonical records now cross the bounded SLIDE ABI - 2026-08-04
 
 - Galerina's live product declarations use canonical `record Name { ... }`;
