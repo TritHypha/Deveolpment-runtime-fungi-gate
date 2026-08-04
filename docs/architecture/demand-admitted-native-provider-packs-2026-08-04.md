@@ -13,9 +13,12 @@ from canonical checked GIR, and production builds resolve, verify and AOT-link
 the complete provider set before emitting the final `.slide` application
 object.
 
-Developers may install signed convenience packs through the CLI. Installation
-makes exact bytes available; it does not activate code, grant a capability or
-change an existing application.
+All optional source packages may remain as flat top-level peers under
+`packages-galerina` without being installed. After canonical GIR first proves
+that one is required, an interactive build asks whether to install the exact
+local package for that build, permit that exact identity for the project, or
+refuse. Installation does not activate code, grant a capability or change an
+existing application.
 
 This decision is recorded in R&D as RD-0695.
 
@@ -40,7 +43,8 @@ paths.
 
 | state | meaning | authority |
 |---|---|---:|
-| available/installed | exact pack/provider bytes exist locally | none |
+| source-present | exact source exists once under `packages-galerina` with the canonical name | none; not installed |
+| installed/registered | exact identity/version/digest was accepted and locally verified | none |
 | selected | checked GIR and target profile require the provider | none |
 | verified | exact identity, provenance, ABI and semantics pass | none |
 | linked | bound into one `.slide` build | none by itself |
@@ -49,6 +53,14 @@ paths.
 An application plugin remains an explicitly imported extension. A native
 provider is a compiler-selected implementation of an already typed semantic
 requirement.
+
+The state order is strict:
+
+```text
+source-present -> installed -> selected -> verified -> linked -> admitted
+```
+
+No later state may be inferred from an earlier one.
 
 ## Two independent pack axes
 
@@ -96,14 +108,14 @@ The following commands describe intended behaviour and are not implemented:
 
 ```text
 galerina pack search algebra
-galerina pack inspect algebra
-galerina pack install algebra --version <exact>
-galerina pack install scientific --version <exact>
-galerina pack install quantum-simulation --version <exact>
-galerina pack install target-arm64-linux --version <exact>
-galerina pack install platform-raspberry-pi-5 --version <exact>
-galerina pack verify algebra
-galerina pack remove algebra
+galerina pack inspect galerina-pack-algebra
+galerina pack install galerina-pack-algebra --version <exact>
+galerina pack install galerina-pack-scientific --version <exact>
+galerina pack install galerina-pack-quantum-simulation --version <exact>
+galerina pack install galerina-target-arm64-linux --version <exact>
+galerina pack install galerina-platform-raspberry-pi-5 --version <exact>
+galerina pack verify galerina-pack-algebra
+galerina pack remove galerina-pack-algebra
 
 galerina build app.fungi \
   --target arm64-linux \
@@ -115,29 +127,78 @@ must expose the exact selected manifest. `--quantum` alone is too ambiguous:
 quantum simulation and access to quantum hardware are different packs and
 different authority surfaces.
 
-An absent requirement must produce an actionable refusal:
+An absent local requirement must produce an actionable refusal:
 
 ```text
 BigFloat<256> requires numeric.bigfloat with the exact requested semantic
-profile. No admitted provider is installed.
+profile. No exact local provider is installed.
 
 Suggested explicit action:
-  galerina pack install scientific --version <exact>
+  galerina pack install galerina-pack-scientific --version <exact>
 
 No lower-precision fallback was selected.
 ```
 
-The build never performs an automatic network fetch. Offline/closed-network
-installation must accept a separately transferred, signed and reverified pack
-bundle.
+When exactly one matching source-present local package exists, the first
+interactive build asks:
+
+```text
+This build requires:
+  galerina-numeric-bigfloat
+  Version: <exact>
+  Digest: <exact>
+  Source: local packages-galerina peer
+  Effects: <exact set or none>
+  Reason: BigFloat<256> is required by canonical GIR
+
+[1] Install for this build
+[2] Automatically install this exact identity/version/digest for this project
+[3] Refuse (default)
+```
+
+Choice 1 emits a build-scoped installation receipt. Choice 2 enables automatic
+local installation only for the displayed exact identity/version/digest and
+writes an exact project-policy/lock entry. It does not permit a different
+package, version or digest. Choice 3 creates no installation and no `.slide`
+object.
+
+Non-interactive/CI builds never prompt. They may install a source-present local
+candidate only when exact checked-in project policy permits it; otherwise they
+fail closed with a copyable explicit command. A global `--yes` cannot approve
+unknown packages. The first release never performs an automatic network fetch.
+Offline/closed-network installation accepts separately transferred, signed and
+reverified pack bundles.
+
+### Consent and refusal matrix
+
+| condition | result |
+|---|---|
+| no matching local source | refuse with exact requirement and explicit install guidance |
+| more than one candidate | ambiguity refusal; no prompt |
+| one candidate, interactive, no policy | display bounded prompt; refusal is the default |
+| developer chooses build-only | verify, install for this build and emit a scoped receipt |
+| developer chooses automatic project install | write exact identity/version/digest policy, then verify and install |
+| exact project policy already exists | verify current bytes and install without prompting |
+| package/version/digest differs from policy | refuse or prompt for fresh interactive consent |
+| non-interactive build without exact policy | refuse; never prompt |
+| network would be required | refuse in the first release |
+| installation succeeds but effect/admission fails | no `.slide` authority and no VOK lease |
 
 ## Flat package rule
 
 A pack is a signed convenience manifest, not a nested dependency directory.
-It expands to exact top-level peer providers under `packages-galerina`:
+Every pack/provider source follows the binding folder and identity form:
+
+```text
+packages-galerina/galerina-[category]-[name]
+```
+
+`[category]` and `[name]` are registered lowercase kebab-case identifiers.
+Examples of exact top-level peers are:
 
 ```text
 packages-galerina/
+  galerina-pack-scientific
   galerina-numeric-binary128
   galerina-numeric-bigfloat
   galerina-math-linear-algebra
@@ -145,14 +206,16 @@ packages-galerina/
   galerina-compute-data-mining
   galerina-compute-quantum-simulation
   galerina-target-arm64-linux
-  galerina-platform-raspberry-pi
+  galerina-platform-raspberry-pi-5
+  galerina-device-raspberry-pi-gpio
   galerina-time-calendar
   galerina-time-timezone
 ```
 
-Each identity occurs once. Dependencies are exact direct peers. Version ranges,
-ambient search paths, copied nested packages, cycles, install scripts and
-transitive-only imports refuse.
+Each identity occurs once. Folder identity, manifest identity and registry
+identity must agree exactly. Dependencies are exact direct peers. Aliases,
+unprefixed folders, version ranges, ambient search paths, copied nested
+packages, cycles, install scripts and transitive-only imports refuse.
 
 ## Compiler contract
 
@@ -165,7 +228,9 @@ The compiler remains responsible for:
 5. rejecting missing, duplicate, surplus or ambiguous implementations;
 6. emitting provider and target identities into build provenance;
 7. handing a closed link set to SLIDE;
-8. never treating installed bytes or a caller Boolean as authority.
+8. distinguishing source-present, installed, selected, linked and admitted;
+9. never treating source presence, installed bytes, prompt choice or a caller
+   Boolean as execution authority.
 
 Raw token spelling cannot trigger a native load. A malformed source file emits
 no provider request and no `.slide` object.
@@ -246,16 +311,21 @@ Primary references:
 
 ### Install
 
-1. Obtain an exact pack manifest and provider artifacts.
-2. Verify closed schema, identity, signatures, provenance, license/SBOM policy,
+1. Begin only from a canonical-GIR requirement or an explicit CLI command.
+2. Resolve zero or one canonical local source package named
+   `galerina-[category]-[name]`; ambiguity refuses.
+3. Obtain explicit interactive consent or an exact checked-in project-policy
+   record binding identity, version and digest.
+4. Verify closed schema, identity, signatures, provenance, license/SBOM policy,
    revocation state, byte digests and flat direct peers.
-3. Store exact content-addressed artifacts as available, not authorised.
-4. Emit an installation receipt containing no private material.
+5. Register the exact content-addressed artifact as installed, not authorised.
+6. Emit an installation receipt containing no private material.
 
 ### Build
 
 1. Derive canonical GIR requirements.
-2. Resolve only exact installed candidates.
+2. Resolve exact installed candidates; an interactive local source-present
+   candidate may enter the consent/install sequence above.
 3. Select an explicit target/platform profile.
 4. Hand the closed set to SLIDE for deterministic AOT preparation.
 5. Bind the complete provider-set digest into `.slide` identity.
@@ -275,7 +345,11 @@ verification evidence.
 ## Security rules
 
 - default deny and exact closed schemas;
+- source-present never means installed; installed never means admitted;
 - installed/native/local never means trusted;
+- first-release automatic installation is local-only and consent/policy bound;
+- CI never prompts and no broad `--yes` approves unknown packages;
+- changed identity/version/digest requires fresh consent;
 - no runtime ambient resolver or first-call loader;
 - no hidden initialisation effects;
 - no raw developer-managed pointers;
@@ -293,7 +367,7 @@ verification evidence.
 | component | responsibility |
 |---|---|
 | Galerina parser/type/effect checker | validate source and derive semantic requirements |
-| Galerina CLI | install, inspect, verify and remove availability packs |
+| Galerina CLI | show bounded consent, install, inspect, verify and remove exact local packs |
 | package resolver/Tower Citizen | registry, policy, signature, revocation and flat-set decisions |
 | SLIDE compiler/linker | deterministic target selection, AOT lowering and direct linking |
 | Shape Fabric/VPEG/NSE | optional proposals/reuse only; no provider authority |
@@ -326,7 +400,8 @@ rework. The ordered gates are:
    contracts;
 3. implement one pure numeric provider and one target provider reference;
 4. carry provider-set identity through `.slide`, VOK and typed receipts;
-5. implement CLI availability management without automatic activation;
+5. implement canonical naming, source-present discovery and consent-based local
+   installation without automatic activation;
 6. add hostile/mutation/cross-target matrices;
 7. benchmark before production adoption;
 8. publish only after production signing, durability and platform evidence.

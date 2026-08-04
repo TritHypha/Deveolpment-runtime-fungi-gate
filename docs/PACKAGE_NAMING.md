@@ -16,11 +16,16 @@ Use grouped names so package purpose is visible from the directory alone.
 Use:
 
 ```text
-Galerina-[family]-[purpose]
+packages-galerina/galerina-[category]-[name]
 ```
 
-Ungrouped names are allowed only for stable root packages whose responsibility is
-already clear:
+`[category]` and `[name]` use registered lowercase kebab-case identifiers.
+Folder identity, package manifest identity, installation receipt and registry
+identity must agree exactly. Each package occurs once as a top-level peer;
+aliases, unprefixed folders and nested dependency copies are refused.
+
+Existing stable root packages whose responsibility is already clear are
+grandfathered names, not templates for new packages:
 
 ```text
 galerina-core
@@ -29,6 +34,24 @@ galerina-ai
 
 `galerina-core` is the language root. `galerina-ai` is the generic AI contract root.
 `galerina-core-photonic` is the photonic concept/model root, not a compiler target.
+
+Provider and pack examples:
+
+```text
+galerina-pack-scientific
+galerina-numeric-bigfloat
+galerina-math-linear-algebra
+galerina-target-arm64-linux
+galerina-platform-raspberry-pi-5
+galerina-device-raspberry-pi-gpio
+```
+
+The presence of one of these sources under `packages-galerina` means
+**source-present**, not installed. Consent-based local installation and exact
+project automatic-install policy are defined in
+`architecture/demand-admitted-native-provider-packs-2026-08-04.md` and
+Knowledge Base RD-0695. Presence, naming and installation grant no runtime
+authority.
 
 When a core package has both a grouped `galerina-core-*` name and an older ungrouped
 name, keep the grouped `galerina-core-*` package as canonical. Merge any unique source,
@@ -45,6 +68,11 @@ remove the stale ungrouped package folder.
 | `galerina-web-*` | Browser-safe web rendering, state, component, router and event contracts | `galerina-web-render`, `galerina-web-state`, `galerina-web-components` |
 | `galerina-db-*` | Database provider adapter contract packages | `galerina-db-postgres`, `galerina-db-mysql`, `galerina-db-sqlite` |
 | `galerina-target-*` | Compiler/output targets and backend planning | `galerina-target-cpu`, `galerina-target-gpu`, `galerina-target-wasm`, `galerina-target-photonic` |
+| `galerina-pack-*` | Signed convenience manifests expanding to exact flat peer packages | future `galerina-pack-scientific`, `galerina-pack-algebra` |
+| `galerina-numeric-*` | Optional exact numeric implementations | future `galerina-numeric-bigfloat`, `galerina-numeric-binary128` |
+| `galerina-math-*` | Optional mathematical operation providers | future `galerina-math-linear-algebra` |
+| `galerina-platform-*` | Exact board/SoC platform profiles layered over target packages | future `galerina-platform-raspberry-pi-5` |
+| `galerina-device-*` | Separately effect-governed device providers | future `galerina-device-raspberry-pi-gpio` |
 | `galerina-cpu-*` | CPU implementation and optimized kernel packages | `galerina-cpu-kernels`, future `galerina-cpu-photonic-sim` |
 | `Galerina-gpu-*` | GPU implementation and optimized kernel packages | future `Galerina-gpu-kernels` |
 | `galerina-framework-*` | Optional framework, server and app boundary packages | `galerina-framework-app-kernel`, `galerina-framework-api-server`, `galerina-framework-example-app` |

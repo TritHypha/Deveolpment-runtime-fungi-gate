@@ -19,14 +19,22 @@ document.
   calendar, time-zone and locale operations. Keep capability packs separate
   from target/platform packs such as ARM64 Linux and exact Raspberry Pi model
   profiles; neither grants device effects.
+- [ ] Keep every source package as one top-level
+  `packages-galerina/galerina-[category]-[name]` peer. Source presence is not
+  installation. After canonical GIR first detects a requirement, offer an
+  interactive local-only choice: install for this build, automatically install
+  that exact identity/version/digest for this project, or refuse by default.
+- [ ] Make non-interactive/CI builds refuse unless exact checked-in project
+  policy permits the local provider. Never prompt in CI, fetch automatically
+  from the network, or let a broad `--yes` approve unknown packages.
 - [ ] Derive provider requirements from fully parsed and type-checked canonical
   GIR, never from a raw syntax/token trigger. An installed pack makes an exact
   provider available; it does not select, load or authorize it.
 - [ ] Add explicit CLI installation profiles such as
-  `galerina pack install algebra` and
-  `galerina pack install quantum-simulation`. Pack manifests must expand to
-  exact top-level peers under `packages-galerina`; nested dependency trees,
-  ambient lookup and install scripts remain refused.
+  `galerina pack install galerina-pack-algebra` and
+  `galerina pack install galerina-pack-quantum-simulation`. Pack manifests
+  must expand to exact top-level peers under `packages-galerina`; nested
+  dependency trees, ambient lookup and install scripts remain refused.
 - [ ] Make the production route AOT-only: resolve, verify and directly link
   selected providers during build, installation, update or admitted boot
   preparation before emitting the final `.slide` application object. Do not
