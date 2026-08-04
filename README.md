@@ -310,25 +310,25 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 | AI Inference Tower (BitNet/Groq/NVFP4) | 30% | **asserted** |
 | Photonic / Ternary Computing | 3% | **asserted** |
 
-**No percentage claimed:** Stage-B self-hosting — WASM execution (P9) · B8 governed HTTP transport (TLSTP).
+**No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP).
 
-**Tracking registry (21):** shipped 12 · building 5 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (23):** shipped 12 · building 7 · post-v1 4 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 
 <sub>generated from component-health + the RD-0528/RD-0361 authority ledgers; exact build identity is in build/component-health/provenance.json · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->
 
-**v1.0.0-beta.2 · full suite 98/98 packages · 8,941 tests · 0 failures.**
+**v1.0.0-beta.2 · full suite 98/98 packages · 8,956 tests · 0 failures.**
 
 | Layer | Status | Note |
 |---|---|---|
 | **Compiler pipeline** (lexer → parser → checkers → governance → GIR) | ✅ complete | full pipeline, fail-closed diagnostics |
 | **Type / effect checkers** | ✅ complete | full TYPE/EFFECT diagnostic charter, twin-parity verified |
 | **WAT / WASM backend** | ✅ complete | lowering audit `VIOLATIONS: 0`; Decimal (bignum) + higher-order closures are deliberate fail-closed feature-flags |
-| **Tests** | ✅ green | 98/98 · 8,781 · 0 fail |
+| **Tests** | ✅ green | 98/98 · 8,956 · 0 fail |
 | **Stage-B self-hosting** (the compiler rewritten in `.fungi`) | ◑ parity proven | **all 7 stages proven byte-identical** to the reference compiler as signed, admission-gated WASM (R3); the authority cutover to `.fungi`-as-decider is staged behind the flip ladder |
-| **Execution cutover** (governed decision surfaces → signed WASM) | ✅ authority complete | **29 authoritative** `.fungi` specifications · 0 differential candidates · TypeScript retained as the running differential/bootstrap layer until executable SLIDE integration |
+| **Execution cutover** (governed decision surfaces → signed WASM) | ◑ bounded authority | **29 authoritative** `.fungi` specifications · 7 differential candidates · TypeScript retained as the running differential/bootstrap layer until executable SLIDE integration |
 | **Optional Wasm compatibility oracle** | ◑ retained for beta | development-only independent evidence; no production-sidecar or memory authority. A narrowly admitted `.fungi` compatibility engine is planned after beta and executable SLIDE, with the current path retained until its full replacement gate passes |
 | **Post-quantum signing** | ◑ shipped surfaces | hybrid Ed25519+ML-DSA-65 on attestation/proof/bridge; opt-in certified `.lmanifest` profile (both halves required, fail-closed) |
 | **`.spore` trust-capsule format** | ◑ slices 1–3 | TMX-256 + container + KEM-DEM golden-verified; ML-DSA root signing next. `env.spore` sealed secrets shipped |

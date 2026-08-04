@@ -143,7 +143,10 @@ function station(x, y, colour, filled, measured) {
 }
 
 export function renderSVG({ stages, thesis, build, kernel, meta }) {
-  const W = 1180, PAD_L = 220, PAD_R = 70, TRACK = W - PAD_L - PAD_R;
+  // The current labels are materially longer than the original July map.
+  // Keep a real label gutter and a right evidence gutter so neither the
+  // longest layer name nor the asserted marker is clipped in the SVG itself.
+  const W = 1600, PAD_L = 360, PAD_R = 130, TRACK = W - PAD_L - PAD_R;
   const x = (pct) => PAD_L + (TRACK * pct) / 100;
   const out = [];
   let y = 96;
@@ -203,7 +206,7 @@ export function renderSVG({ stages, thesis, build, kernel, meta }) {
   pctLine("Zero-Trust thesis", "the five trust boundaries", LINES.thesis, thesis);
   pctLine("Build progress", "layers with a number", LINES.build, build);
 
-  // --- Tracking registry: the 20 named workstreams (owner catch 2026-07-25 — the first cut dropped this
+  // --- Tracking registry: every named workstream (owner catch 2026-07-25 — the first cut dropped this
   // section entirely, so DSS.wasm / .spore / TritMesh simply vanished from the map). Grouped by state:
   // shipped = solid, building = hollow, post-v1 = hollow + dashed (declared out of the current horizon).
   if (meta.registry.length) {
@@ -215,7 +218,7 @@ export function renderSVG({ stages, thesis, build, kernel, meta }) {
       if (!items.length) continue;
       out.push(`<text x="${x(0)}" y="${y}" class="stn">${esc(state)} (${items.length})</text>`);
       y += 20;
-      // Two columns so twenty rows do not double the map's height.
+      // Two columns so the registry does not double the map's height.
       items.forEach((r, i) => {
         const cx = x(0) + (i % 2) * ((TRACK / 2) | 0), cy = y + Math.floor(i / 2) * 20;
         out.push(`<circle cx="${cx}" cy="${cy}" r="5" fill="${filled ? LINES.build : "var(--paper)"}" stroke="${LINES.build}" stroke-width="2"${dash}/>`);

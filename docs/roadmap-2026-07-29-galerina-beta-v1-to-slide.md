@@ -17,6 +17,19 @@ package locked to offline custody and 0 failures.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the original subway-style roadmap has been restored from
+`scripts/gen-roadmap-subway.mjs` and regenerated from the live component,
+authority, contract and retirement ledgers. Its current measured headline is
+98/98 workspace packages with 8,956 tests and 100.0% component
+ship-readiness. The chart now exposes 23 named workstreams, including the
+independent SLIDE backend and package retirement, and its no-percentage lane
+names the general SLIDE backend instead of the superseded P9 Wasm-execution
+word row. The five Zero-Trust and twelve of the numbered build-readiness
+values remain explicitly labelled **asserted**; regeneration did not promote
+those judgements into measurements. Live debt remains 497 tracked package
+TypeScript paths, 111/111 unexecuted `.fungi`, 0/38 owned host bridges, 95
+`node_modules` trees and one nested native identity.
+
 Roadmap refresh: SLIDE commit `6cc3cbb` closes the smallest measured
 wide-control-flow successor without widening frozen V2-C. The real checked-
 Fungi `dispatch` flow requires ten reachable blocks; the append-only exact
@@ -1190,7 +1203,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>11/120 terminal · row 012 next · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>23/120 classified · 1 executed candidate · row 024 next · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]

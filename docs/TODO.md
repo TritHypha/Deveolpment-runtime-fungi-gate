@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Old-style subway roadmap regenerated - 2026-08-04
+
+- [x] Recovered the original dev-tool chain:
+  `component-health.mjs --audit-html` supplies the three-section evidence
+  audit and `gen-roadmap-subway.mjs --write` renders the SVG, provenance and
+  marker-owned documentation blocks.
+- [x] Reconciled the hand-maintained source records with the current ledgers:
+  98/98 component families, 8,956 tests, 1,456 contracts across 534 `.fungi`,
+  713/713 independent SLIDE checks and 23 named tracking workstreams.
+- [x] Added source-driven SLIDE and package-retirement rows. The retirement row
+  now reads the generated ledger rather than copying its 497 TypeScript, 111
+  unexecuted-Fungi, 38 host-bridge, 95 `node_modules` and one nested-identity
+  counts by hand.
+- [x] Preserved the evidence distinction: only live or countable-ladder values
+  render as measured; the remaining readiness percentages stay visibly
+  asserted rather than being promoted by regeneration.
+- [ ] Replace the remaining asserted readiness values only when each has a
+  mechanically checkable rung ladder. Do not infer or hand-improve a number.
+
 ### SLIDE bounded wide control-flow successor green - 2026-08-04
 
 - SLIDE commit `6cc3cbb` admits the real ten-block checked-Fungi `dispatch`

@@ -72,6 +72,17 @@ const testCounts = version.testCountByPackage || {};
 const retirement = readJSON(
   join(ROOT, "build", "ts-retirement", "ts-retirement.json"),
 );
+const contractRegistry = readJSON(
+  join(ROOT, "docs", "contract-registry", "contract-registry.json"),
+);
+const contractCounts = (
+  Number.isInteger(contractRegistry?.contracts)
+  && contractRegistry.contracts >= 0
+  && Number.isInteger(contractRegistry?.parsed)
+  && contractRegistry.parsed >= 0
+)
+  ? { available: true, contracts: contractRegistry.contracts, sources: contractRegistry.parsed }
+  : { available: false };
 const authorityCounts = (() => {
   const totals = retirement?.totals;
   const fields = [
@@ -91,6 +102,22 @@ const authorityCounts = (() => {
     || totals.governedAuthoritativeFlips + totals.governedDifferential
       !== totals.governedTwinTotal
   ) {
+    return { available: false };
+  }
+  return { available: true, ...totals };
+})();
+const retirementCounts = (() => {
+  const totals = retirement?.totals;
+  const fields = [
+    "allTrackedTs",
+    "allTrackedFungi",
+    "unexecutedFungi",
+    "hostBridges",
+    "ownedHostBridges",
+    "nodeModulesTrees",
+    "nestedNativePackages",
+  ];
+  if (!totals || fields.some((field) => !Number.isInteger(totals[field]) || totals[field] < 0)) {
     return { available: false };
   }
   return { available: true, ...totals };
@@ -298,11 +325,11 @@ let TCE = null;
 try { TCE = twinParityLadder(); } catch { TCE = null; }
 
 const ZERO_TRUST = [
-  { boundary: "Compiler", pct: 100, status: "✅ shipped — policy + execution DAG proven at build time" },
-  { boundary: "I/O — OS kernel", pct: 72, status: "◑ auth gate 6 (kernel.fungi) EXECUTION-PROVEN (RD-0361 differential ≡ the shipped kernel `handle`, first string-ARG twin) · DSS build gate now 10/10 DETERMINISTIC (2026-07-16 night: wabt fresh-instance-per-build + the P9.4 guarded-body adoption gate — the partial-lowering class that blocked the supervisor bundle is structurally dead) · the DSS supervisor V_DPM DECISION CORE is EXECUTION-PROVEN ≡ Stage-A over a 386-point matrix + laws (topology-first, monotonicity, deny-by-default, zero effect calls) with real .wasm artifacts (build/dss-wasm, sha256 manifest). sentinel-io decision surface FULLY twinned + checker-clean. ★ 2026-07-18: the #143 border-safe INJECTABLE execution path is now BUILT (@galerina/core-runtime-wasm seam adapters — R&D model-A admission-verify + HARD export-presence gate + sync LowLevelWasmExecutor, cc057d7c) so the extracted WASM TCB is wirable by the kernel/DSS WITHOUT crossing the compiler border; the % is unchanged because the remaining step is the authority FLIP (owner nod), not the wiring. Remaining to 100%: authoritative execution (#143 flip, owner) + full kernel-bypass I/O EXECUTION (the real Wasmtime TCB, DSS.wasm #102-106, post-v1)" },
-  { boundary: "Packages", pct: 98, status: "◑ signed admission fully twinned — central-index (registry-index) + per-package manifest (package-admission) + kernel FUSION admission (descriptor · hash · sidecar · revocation · sig-policy · registry · capability — fuse-admission.fungi) checker-clean · ★ 2026-07-18: the #72 walkthrough-§3 signer CLI is BUILT (registry-index-cli.mjs — build/sign/verify over the SHIPPED decider, single-witness; deny-by-default review gate makes a stub catalog UN-SIGNABLE — proven by 16/16 hermetic self-test + a live-tree REFUSED run; phase-close-wired) · remaining = REAL registry entries (governance review = human act) + the owner signing ceremony (§1.1 alg + §1.2 authority-key decisions, walkthrough §4) + #143 execution — the % does NOT move for a mechanism-only increment · ★ 2026-07-18: the #143 injectable execution path (core-runtime-wasm seam adapters, cc057d7c) is now BUILT — still % unchanged (gated on real registry entries + owner signing + the #143 flip)" },
-  { boundary: "Memory", pct: 62, status: "◑ governed-decision surface FULLY twinned (validator · pool-config · segmentation LSM-SEGV · trit-tamper LSM-TRIT-CORRUPT · allocate/free/UAF-guard LSM-UAF-001 + REJECT-scrub — 5 checker-clean .fungi) · real WASM isolation execution = design intent (#143 switch) · ★ 2026-07-18: the injectable border-safe execution path is now BUILT (core-runtime-wasm seam adapters, cc057d7c); % unchanged — the #143 flip is the gate, not the wiring" },
-  { boundary: "TLSTP — zero-middleware", pct: 56, status: "◑ S4 recovering-FSM TWINNED + EXECUTION-PROVEN (2026-07-16 night: transport-fsm.fungi — δ as 4 pure all-int projections, checker-clean; RD-0361 differential 192 points ≡ the shipped `transportStep` incl. the τ boundary + Closed absorption, INV-1 join / INV-2 / INV-4 / INV-6 pinned on WASM outputs; charter-safe = state never aliased to the trit, resume rides === ALLOW only, erase-on-Closed). ALL 6 core-network border DECISION surfaces twinned (.fungi, fail-closed): cert-gate · cors-policy · inbound-guard · defensive-controls · admission-feedback · egress-guard — core-network decision surface COMPLETE; the B8 ADMISSION fold (b8-admission.fungi) twinned + EXECUTION-PROVEN ≡ the shipped K3 calculus; the DSS supervisor decision core (the in-sandbox tier's brain) is now execution-proven ≡ Stage-A (386 pts). Remaining = in-sandbox decryption EXECUTION (DSS.wasm Wasmtime TCB, #143 switch/post-v1) + B8 transport plumbing (raw-byte shim/ECH) + S4 wiring into the live transport (the twin is proven, not yet build-wired) · ★ 2026-07-18: the injectable border-safe execution path is now BUILT (core-runtime-wasm seam adapters, cc057d7c) — the DSS/kernel can reach authoritative twin execution without the compiler; % unchanged (owner #143 flip is the gate)" },
+  { boundary: "Compiler", pct: 100, status: "✅ shipped — complete compiler 5,866/5,866; all 7 self-hosted stages are authoritative and byte-pinned" },
+  { boundary: "I/O — OS kernel", pct: 72, status: "◑ kernel channel admission is fail-closed and 29 governed twins are authoritative; independent SLIDE/VOK execution is bounded and verified, while general effects, platform targets and production authority remain open" },
+  { boundary: "Packages", pct: 98, status: "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 497 tracked package TypeScript paths, 111 unexecuted .fungi sources, 95 node_modules trees and one nested native identity" },
+  { boundary: "Memory", pct: 62, status: "◑ native VOK W^X/K3 floor is linked and verified at 19,683/19,683; general memory, hostile-memory execution and production VOK authority remain open" },
+  { boundary: "TLSTP — zero-middleware", pct: 56, status: "◑ channel denial now constrains every route and the governed transport decisions are proven; raw-byte/ECH plumbing, live recovering-FSM wiring and independent in-sandbox execution remain open" },
 ];
 const BUILD_PROGRESS = [
   { layer: "Specification / KB", pct: 100 },
@@ -321,8 +348,8 @@ const BUILD_PROGRESS = [
   { layer: "Passive Execution Plans & Target Bridges", pct: 35 },
   { layer: "AI Inference Tower (BitNet/Groq/NVFP4)", pct: 30 },
   { layer: "Photonic / Ternary Computing", pct: 3 },
-  { layer: "Stage-B self-hosting — WASM execution (P9)", status: "R3 BYTE-PARITY ACHIEVED for ALL 7 self-hosted stages (2026-07-22, commit 2bcfd457) — 138/138 wat-p9-*-parity tests green: lexer tokenize · the full parser ladder (params → expr → stmt → block → flows) · gir-emitter emitGIRModule · type-checker · effect-checker · governance-verifier · runtime exec-value (Stage-A interpreter ≡ Stage-B WASM behind #105). #100 (the Array<Auto> element-type erasure that trapped 4 stages at COMPILE/EXECUTION) CLEARED end-to-end by un-erasing the element type at source across the stage twins (commit 4eba36bd); audit-stage-execution now 5/5 swept stages RUN · 0 trap · baseline 0 (was 3). Remaining for FULL self-hosting (post-v1, non-v1 gate): the bootstrap fixpoint (parser→GIR→WAT→WASM round-trip) + the whole-compiler bundle, still blocked when stages are concatenated by duplicate export names (FUNGI-NAME-002 covers bindings only). ⚠ this row read '3 of 7 stages RUN' until 2026-07-22 — superseded by the R3 milestone; corrected against 138/138 parity + audit-stage-execution baseline 0. Owner may wish to convert this WORD row to a countable 7/7-stages-at-R3 ladder." },
-  { layer: "B8 governed HTTP transport (TLSTP)", status: "in progress — admission fold (b8-admission.fungi) execution-proven ≡ the shipped K3 calculus; S4 recovering-FSM twinned + execution-proven (192-pt differential, 2026-07-16 night); remaining = raw-byte shim + S4 live wiring + ECH/OHTTP + DSS.wasm in-sandbox isolation" },
+  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 713/713 across 73 suites; general bodies, loops, effects and production authority remain open" },
+  { layer: "B8 governed HTTP transport (TLSTP)", status: "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open" },
 ];
 // ── TRACKING REGISTRY — substantial items NOT surfaced by the Zero-Trust or Build-Progress tables
 //    (the R&D §5 registry, HANDOVER-v1-finish-line-cutover 2026-07-12). HONESTY RULE: `state` is a bare %
@@ -338,14 +365,14 @@ const TRACKING_REGISTRY = [
   { item: "Hallmark open types (RD-0353 H1)",    state: "shipped",       detail: "developer-minted nominal types + mandatory assay gates; FUNGI-HALLMARK-001..005, example 097" },
   { item: "Value-unit types (RD-0349)",          state: "building",      detail: "I2/I3/I4 done (I4: ONE runtime unit table — generated constructors + deny-by-default Money.of, G2+G5 closed) · I5/I6 queued · I1 OWNER-GATE CLEARED (ISO-4217 snapshot pinned in KB data/iso-4217/, 280 entries, hash-recorded) → remainder = the compile-time tag-validation + fuzzy-suggestion rungs NOW BUILT (2026-07-18 — type-checker imports MONEY_UNIT_TAGS; FUNGI-TYPE-032 rejects Money<BANANAS>/Money<GPB>/Money<XAU>/Money<XXX> at COMPILE, transposition-aware 'did you mean GBP', 6 regression tests, doc-drift+diagnostic-codes+twin-parity green) → I1 = 3/6; remaining rungs = `unit` schema escape · B1 reserved-name gate · B0 shadowing check; metals/reserved SPECIFIC Commodity<T> routing waits on RD-0350 C1; no float bridge" },
   { item: "CANONICAL_EFFECTS registry (RD-0341)",state: "shipped",       detail: "single-source domain.verb + anti-drift self-tests; memory.spill deny-only, FUNGI-EFFECT-006" },
-  { item: "Contract Registry (RD-0359)",         state: "shipped",       detail: "gen-contract-registry.mjs BUILT — 926 contracts across 460 .fungi → docs/contract-registry/CONTRACT_REGISTRY.md + .json; parser-authoritative flow list + intent extraction; --self-test + --check (CI-ready)" },
+  { item: "Contract Registry (RD-0359)",         state: "shipped",       detail: contractCounts.available ? `generated authority is current at ${contractCounts.contracts.toLocaleString("en-GB")} contracts across ${contractCounts.sources} .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired` : "CONTRACT REGISTRY EVIDENCE UNAVAILABLE — refusing to publish stale counts" },
   { item: "Self-hosting Stages 3–6",             state: "post-v1",       detail: "bootstrap fixpoint · crypto FFI seam · .fungi↔host path · floor-by-floor; P9, non-v1-gate" },
   { item: "DSS.wasm supervisor (#102–106)",      state: "post-v1",       detail: "real Wasmtime TCB (kernel-bypass / in-sandbox decrypt) stays post-v1 — but the DECISION CORE is now execution-proven (2026-07-16 night): build gate 10/10 deterministic, V_DPM flows ≡ Stage-A over 386 pts + topology-first/monotonicity/deny-by-default laws, zero effect calls from the pure core, 10 real .wasm artifacts sha256-manifested (build/dss-wasm); effect imports link only via explicit deny-by-default grants (createHostRuntime effectHandlers)" },
-  { item: "Workspace package families",          state: "shipped",       detail: "95 workspace packages + 2 #32-exempt orphans = 97 components (target×9 · data×12 · db×5 · web×6 · ai · tools). galerina-tools-myco joined 2026-07-17 — it had a package.json and 23 passing tests but was never in galerina.workspace.json, so it read as an un-adjudicated ORPHAN. Two hand-kept registries (workspace list · version.json testCountByPackage) disagreeing is what that gate is for; it caught it." },
+  { item: "Workspace package families",          state: "shipped",       detail: `${summary.green}/${summary.components} component families green; ${summary.workspacePackages} workspace packages, ${fmt(summary.recordedTotal)} recorded tests and ${summary.orphans} unadjudicated orphans, all derived from the live workspace and version ledgers` },
   { item: "Package Standard + pub ladder",       state: "building",      detail: "Standard v1 + pkg-census + 9 schematics done; R1–R6 rungs pending; .graph amendment 🔒 owner" },
   { item: "Security-infra designs (×4)",         state: "building",      detail: "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request" },
   { item: "Devtools audit suite",                state: "shipped",       detail: "108 tools · 63 audits · 40 proofs (incl. claim-hygiene public-doc gate + env-var-literal-strict path-leak + the fungi-corpus-check compile gate; + report-blind-consumers / auto-erasure-ratchet / gate-key-injectivity added 2026-07-19; corpus sub-counts 447/211/49 unverified this pass) · keep-green + gate-selftests meta-gate; twin-audit execution column shipped (shadow|differential|authoritative)" },
-  { item: "Signing-key custody",                 state: "shipped",       detail: "RESOLVED 2026-07-16 — the hybrid root 21415420b447e219 moved OFF the plaintext env-file into an OFFLINE secret store (owner); custody README corrected (it had mis-named the key + a dangerous restore step) + root-vs-operational split plan written (answers #72 — the registry authority is a NEW operational key, never the cold root). The 'wipe the 2 remaining plaintext copies' residual is CLOSED (2026-07-18 custody close-out, re-verified 2026-07-19: key-vault empty, GitHub\\keys absent, every .pem on disk is a .pub half; the only private key present is the repo-root .env.galerina-signing = 53de6be4, gitignored, which belongs there). OPEN instead: (a) the offline root has ONE copy — duplicate to 2-3 media with destination verification, the exact ab46f4c7 machine-rebuild risk; (b) NOT a residual — recorded so it stops being re-raised: per-machine dev keys auto-mint into a package's governance/ dir when a build runs with cwd inside it (api-protocol-rest's own package.json build script does). That is BY DESIGN — .gitignore:34 ignores **/governance/signing-key-*.pub.pem with :39 negating the single ceremony anchor 21415420, so minted pubkeys are build artifacts, never governance records, and key-inventory is CORRECT to omit them. Owner mints deliberately. Do not flag, do not 'delete on sight'. key-rotation itself SHIPS (tower-citizen/key-rotation.ts). TPM(L3)/HW(L4) + HSM/PKCS#11 = post-v1 hardening" },
+  { item: "Signing-key custody",                 state: "shipped",       detail: "cold hybrid root (214…) and delegated operational hybrid key (f31…) are in offline custody; public halves, root-signed delegation and the exact one-entry registry index are verified. Key-rotation protocol ships, while production rotation activation still requires external platform evidence and a later offline ceremony" },
   { item: "RD-0363/0364/0365 wiring (R&D done)",        state: "building",      detail: "R&D COMPLETE — all 3 authored in the KB (galerina-rd-0363/0364/0365). RD-0363 replay-admission + RD-0364 inference-governance DECISION surfaces execute through #105 (R0→R1, verdict≡spec); RD-0365 key-custody design-done. What remains is BUILD not R&D: P/I wiring increments (0363/0364) + implement 0365. (Renamed 2026-07-15 — 'Missing R&D' was a stale backlog label; the R&D is not missing.)" },
   { item: "KB category indexes",                 state: "post-v1",       detail: "auto-generated KB grouping (API/Kernel/…); trigger: v1-freeze 🔒 owner" },
   { item: "ZTF-KB path-leak guard",              state: "shipped",       detail: "U7 DONE — kb-guards.yml LIVE + twice green on real pushes (self-test→enforce, contents:read, burn-in passed); guards green 0/1,064. Any future red = investigation, never a baseline bump" },
@@ -389,6 +416,32 @@ TRACKING_REGISTRY.splice(
         detail: "AUTHORITY EVIDENCE UNAVAILABLE — refusing to publish a stale count.",
       },
 );
+TRACKING_REGISTRY.splice(
+  2,
+  0,
+  {
+    item: "Independent SLIDE backend",
+    state: "building",
+    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 713/713 across 73 suites; general bodies, loops, effects and production authority remain open",
+  },
+  retirementCounts.available
+    ? {
+        item: "Package retirement",
+        state: "building",
+        detail:
+          `${retirementCounts.allTrackedTs} tracked package TypeScript paths · `
+          + `${retirementCounts.unexecutedFungi}/${retirementCounts.allTrackedFungi} .fungi sources unexecuted · `
+          + `${retirementCounts.ownedHostBridges}/${retirementCounts.hostBridges} host bridges owned · `
+          + `${retirementCounts.nodeModulesTrees} node_modules trees · `
+          + `${retirementCounts.nestedNativePackages} nested native identity. `
+          + "All exact debts must reach zero before terminal retirement authority.",
+      }
+    : {
+        item: "Package retirement",
+        state: "build-pending",
+        detail: "RETIREMENT EVIDENCE UNAVAILABLE — refusing to publish stale counts.",
+      },
+);
 // ── EVIDENCE BINDING (RULING 1, R&D-blessed 2026-07-17) ──────────────────────────────────
 // A published number that cannot move in response to evidence is not a measurement, it is a
 // slogan. Every QUANTIFIED row above must therefore declare HOW its number is known. Exactly
@@ -416,10 +469,10 @@ const EVIDENCE = {
 
   // ── DEBT. Each states WHY it is still asserted, so the baseline is a work-list, not a dump. ──
   "Compiler": { asserted: "no countable ladder — 'shipped' is a judgement over the twin corpus; candidate ladder = per-stage twin checker-clean + RD-0361 differential ≡" },
-  "I/O — OS kernel": { asserted: "remainder is #143 execution — a binary switch, not a ladder; likely becomes a WORD" },
-  "Packages": { asserted: "remainder is #143 execution + Phase-28 registry data; the registry half IS countable (real sourceHash + reviewed:true per package)" },
-  "Memory": { asserted: "remainder is #143 execution — a binary switch, not a ladder; likely becomes a WORD" },
-  "TLSTP — zero-middleware": { asserted: "remainder is #143 + B8 raw-byte shim + S4 live wiring; the twinned-surface half is countable, the execution half is not" },
+  "I/O — OS kernel": { asserted: "bounded SLIDE/VOK evidence exists, but general effects, target adapters and production authority do not yet form one countable ladder" },
+  "Packages": { asserted: "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger" },
+  "Memory": { asserted: "the linked native W^X/K3 floor is measured separately; general memory, hostile-memory execution and production authority lack one countable ladder" },
+  "TLSTP — zero-middleware": { asserted: "channel and decision gates are proven, while raw-byte plumbing, live S4 wiring and in-sandbox execution lack one countable ladder" },
   "Specification / KB": { asserted: "no countable ladder defined" },
   "Lexer / Parser / Verifier / Contract / Value-state": { asserted: "no countable ladder defined" },
   "DRCM Phases 1-7 (Stage-A simulation)": { asserted: "candidate ladder = the 7 phases, if each has a green gate" },
@@ -668,6 +721,16 @@ if (SELF_TEST) {
   const reg = audit.sections.find((s) => s.key === "tracking-registry").rows;
   const ranks = reg.map((r) => statusRank(r.state));
   ok(ranks.every((v, i) => i === 0 || ranks[i - 1] <= v), "Tracking registry rows are ordered by status (non-decreasing rank)");
+  ok(contractCounts.available, "contract-registry counts are available from generated authority");
+  ok(retirementCounts.available, "package-retirement counts are available from the exact retirement ledger");
+  ok(
+    reg.some((row) => row.item === "Package retirement" && row.detail.includes(`${retirementCounts.allTrackedTs} tracked package TypeScript paths`)),
+    "Package retirement row is driven by the live ledger rather than a copied count",
+  );
+  ok(
+    reg.some((row) => row.item === "Workspace package families" && row.detail.includes(`${summary.workspacePackages} workspace packages`)),
+    "workspace-family row is driven by the live workspace ledger",
+  );
   ok(!/https?:\/\//.test(html) && !/<script/i.test(html), "artifact is self-contained (no CDN / no <script>)");
   // Owner color rule (2026-07-16): one-hue blue meter fill + threshold-colored VALUES (>=90 green, <40 red).
   ok(html.includes('class="mval v-hi"') && html.includes(".v-hi{color:#0f6e56}"), "values >=90 carry the green threshold class (color rule enforced)");
