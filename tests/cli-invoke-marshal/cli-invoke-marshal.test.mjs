@@ -166,6 +166,23 @@ test("--governed refuses malformed declared scalar values", () => {
   }
 });
 
+test("--governed fails closed when a discarded call emits a runtime diagnostic", () => {
+  const result = runGoverned(
+    `pure flow grow(seed: Int) -> Int {
+  mut items: Array<Int> = []
+  items.totallyFakeMethodXyzzy(seed)
+  return items.count()
+}`,
+    "grow",
+    "7",
+  );
+
+  assert.equal(result.status, 1, result.out);
+  assert.match(result.out, /FUNGI-RUNTIME-002.*Unresolved call/i);
+  assert.match(result.out, /FAILED \(fail-closed\)/i);
+  assert.doesNotMatch(result.out, /governed .* flow=grow/i);
+});
+
 test("--governed is FAIL-CLOSED: a governance violation refuses to run (exit 1 + FUNGI diagnostic)", () => {
   const f = join(ROOT, "build", "__g_violation.fungi");
   // console.log without an import → FUNGI-NAME-001; the governed run must refuse, not execute.

@@ -4,13 +4,13 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Galerina compiler and generated-authority closure in progress - 2026-08-04
+### Galerina compiler and generated-authority closure green - 2026-08-04
 
 - Galerina commit `1f72ded4` hardens canonical `record` parsing, self-hosted
   parity and naturally aligned WAT record layouts. A discarded immutable
   `Array.push` or `Array.append` result now fails closed as
   `FUNGI-TYPE-028`; assignment, return and nested use remain admitted.
-- The complete compiler suite passes **5,850/5,850** across 1,227 suites.
+- The complete compiler suite passes **5,851/5,851** across 1,227 suites.
   The self-hosted diagnostic twin covers 24 type codes with zero name,
   severity or differential violations.
 - Generated authority has been refreshed: code index/registry **781**, graphs
@@ -18,13 +18,21 @@ counts or open items that a newer section explicitly supersedes.
   registry **1,454** contracts across 534 `.fungi` files, and the seven-stage
   compiler hash baseline verifies.
 - Standalone tooling passes **358**, fails **0**, with two intentional
-  platform/toolchain skips. The unified 98-package aggregate and exhaustive
-  phase-close remain the current closure work and must supply the final counts
-  before this checkpoint is called complete.
+  platform/toolchain skips. The unified package lane passes **98/98** with
+  **8,941** parsed tests. The last pre-runtime-fix exhaustive phase-close passed
+  **87/87** blocking gates in one uninterrupted **889.4-second** run; a fresh
+  post-fix close is required before this checkpoint is final again.
+- The final strict fusable-package build reports 0 rebuilt, 2 fresh, 2
+  intentionally non-Fungi skipped, 1 ceremony-signed package locked to offline
+  custody, and 0 failures. No signed artifact was regenerated locally.
 - The current benchmark publication contains 115 runtime/benchmark comparisons
   against the archived pre-SLIDE Galerina/Wasm baseline. The direct production
   Galerina/SLIDE lane remains honestly `DEFERRED_NO_SLIDE_LANE`; a reference or
   non-authorizing SLIDE result is not credited as production parity.
+- Governed execution now treats any interpreter diagnostic as terminal for the
+  whole run. A discarded unresolved method call can no longer be followed by a
+  normal return that makes `RuntimeResult.ok` or the CLI exit report success;
+  focused runtime evidence is 12/12 and governed CLI evidence is 10/10.
 
 ### Canonical records now cross the bounded SLIDE ABI - 2026-08-04
 

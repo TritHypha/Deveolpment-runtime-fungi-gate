@@ -2,29 +2,35 @@
 
 Date: 2026-08-04
 Branch: `codex/galerina-beta-v1-completion`
-Last verified fixed point: exhaustive **87/87**, unified package lane **98/98**,
-graph **5/5**, code index/registry/coverage current, benchmark publication
-fresh, and executable examples **233/233**. The latest uninterrupted complete
-phase-close passed every blocking gate in **530.3 seconds**; tooling has **358**
-passes, the executable Golden Pack is **10/10** checked with **10/10** runtime
-vectors, generator governance is **16/16**, the security audit checked 31 files
-with zero findings/errors, and aggregate Node returned to the one pre-existing
-MCP process.
+Last verified fixed point before the governed-runtime fail-close increment:
+exhaustive **87/87**, unified package lane **98/98** with **8,941** parsed tests,
+graph **5/5**, code index/registry/coverage current,
+benchmark publication fresh, and executable examples **233/233**. The latest
+uninterrupted exhaustive phase-close passed every blocking gate in **889.4
+seconds**; tooling has **358** passes, the executable Golden Pack is **11/11**
+checked with **11/11** runtime vectors, generator governance is **16/16**, the
+security audit checked 31 files with zero findings/errors, and aggregate Node
+returned to the one pre-existing MCP process. The strict fusable build reports
+0 rebuilt, 2 fresh, 2 intentionally non-Fungi skipped, 1 ceremony-signed
+package locked to offline custody and 0 failures.
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap refresh: Galerina commit `1f72ded4` closes canonical record parsing,
+Roadmap refresh: Galerina commits `1f72ded4` through the current governed-runtime increment close canonical record parsing,
 self-hosted parity, naturally aligned WAT record layouts and the discarded
 immutable-result seam. Bare `Array.push` or `Array.append` expression
 statements now refuse as `FUNGI-TYPE-028`; the returned replacement must be
-used. The complete compiler suite is 5,850/5,850 across 1,227 suites. Generated
+used. The complete compiler suite is 5,851/5,851 across 1,227 suites. Generated
 authority is current at code index/registry 781, graph 5/5, Golden Pack 11/11
 checked plus 11/11 executed, contract registry 1,454 contracts across 534
 `.fungi` files and seven verified compiler-stage hashes. Standalone tooling is
 358 pass, 0 fail, with two intentional platform/toolchain skips. The 98-package
-aggregate and exhaustive phase-close are being rerun before the fixed-point
-header is revised; no package conversion or terminal retirement credit is
-implied by this compiler increment.
+aggregate is 98/98 with 8,941 parsed tests. The pre-runtime-fix exhaustive
+phase-close was 87/87 in 889.4 seconds; the fresh post-fix cadence is the next
+gate. No package conversion or terminal retirement credit is implied by this
+compiler increment. Governed execution now fails the whole run when any
+interpreter diagnostic occurs, even if a later statement returns a normal
+value; focused runtime evidence is 12/12 and governed CLI evidence is 10/10.
 
 Roadmap refresh: canonical Galerina records now cross one bounded independent
 SLIDE ABI at commit `94969db`. The source nominal name and declaration-ordered

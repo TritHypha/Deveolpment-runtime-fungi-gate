@@ -258,6 +258,13 @@ export async function run(
       message: diagnostic.message,
     });
   }
+  // A statement-local runtime error can be followed by a later return value.
+  // The returned value must never erase the earlier refusal: any execution
+  // diagnostic denies the whole run and records a failed audit outcome.
+  const executionFailed =
+    execution.value.__tag === "runtimeError" ||
+    execution.value.__tag === "error" ||
+    execution.diagnostics.length > 0;
 
   // Audit + proof chain
   // SECURITY (F4 fixed — Audit Pass 2): failClosed=true in production/deterministic.
@@ -272,7 +279,7 @@ export async function run(
   const auditEvent = buildFlowAuditEvent(
     flowName,
     execution.audit.qualifier,
-    execution.value.__tag === "runtimeError" || execution.value.__tag === "error" ? "Failed" : "Success",
+    executionFailed ? "Failed" : "Success",
     options.traceId ?? `trace_${Date.now()}`,
     execution.auditEntries,
   );
@@ -309,9 +316,8 @@ export async function run(
     attestationResult = att;
   }
 
-  const isError = execution.value.__tag === "runtimeError" || execution.value.__tag === "error";
   return {
-    ok: !isError && !hasNamingErrors,
+    ok: !executionFailed && !hasNamingErrors,
     value: execution.value,
     execution,
     diagnostics: allDiagnostics,

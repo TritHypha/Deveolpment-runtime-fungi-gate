@@ -74,6 +74,26 @@ pure flow buildReceipt() -> Receipt {
       1,
     );
   });
+
+  it("fails closed when a discarded expression emits a runtime diagnostic", async () => {
+    const result = await run(`
+pure flow grow(seed: Int) -> Int {
+  mut items: Array<Int> = []
+  items.totallyFakeMethodXyzzy(seed)
+  return items.count()
+}
+`, "unresolved-method.fungi", "grow", new Map([
+      ["seed", { __tag: "int", value: 7 }],
+    ]));
+
+    assert.equal(result.value?.__tag, "int");
+    assert.equal(result.value?.value, 0);
+    assert.ok(
+      result.diagnostics.some((diagnostic) => diagnostic.code === "FUNGI-RUNTIME-002"),
+      "the unresolved call must remain observable as a runtime diagnostic",
+    );
+    assert.equal(result.ok, false, "an execution diagnostic must deny the run even when a later return produces a value");
+  });
 });
 
 describe("Runtime pipeline — naming policy", () => {
