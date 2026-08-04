@@ -77,7 +77,7 @@ environment or process authority fails the tranche. App-kernel result:
 | Twin | bytes | SHA-256 | deterministic stdlib imports |
 |---|---:|---|---|
 | `fuse-admission` | 597 | `3290d0913fa7694c4b6f907ac2644d6d2e1b26a730d6969d604c81bf528b49fb` | string equality |
-| `kernel` | 150 | `0048ffbe26b75afd3da86b248979223d84cef28a00b664905156b938ba2c318c` | string equality |
+| `kernel` | 150 | `3c6ad27e97ce1f9db83209293a9e6d2334e8a5b0a884885430b785cb0f33da5f` | string equality |
 | `package-admission` | 562 | `a725b0ae366e64beebf188f7793f28cb5814d0199c4f2dc0393ac2b274a7b113` | string equality |
 | `registry-index` | 479 | `99796c089eb1a88961ed6ca2766b3d7ec91ab6fa083b378027267ec4280a61e0` | string equality |
 | `route-defaults` | 408 | `b7a27319ea50bfd09525ab151a33851fd2717137a6e2c101b4ed4fdcd8780bff` | string equality |
@@ -87,6 +87,15 @@ environment or process authority fails the tranche. App-kernel result:
 currently authoritative twin and refuses hash drift, failed admission,
 malformed/duplicate ledger entries, unknown build definitions, or ambient
 imports.
+
+On 2026-08-04 the `kernel` twin was intentionally re-baselined after an
+end-to-end adversarial test proved that a denied TLS channel could still reach
+an application route marked `public`. The real kernel and the `.fungi` twin now
+apply any supplied channel verdict before route-auth relaxation: `public`
+removes only the application-credential requirement and cannot override a
+configured channel refusal. The complete differential covers public routes
+with absent, ALLOW, INDETERMINATE and DENY channel evidence; the app-kernel and
+real HTTPS suites pass before this new deterministic hash is admitted.
 
 ## Result
 
