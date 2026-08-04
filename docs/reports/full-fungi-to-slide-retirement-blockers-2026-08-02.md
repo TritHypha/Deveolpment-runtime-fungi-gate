@@ -1,40 +1,53 @@
 # Full `.fungi` to `.slide` retirement blockers
 
-Status: current measured implementation gap, refreshed 2026-08-03
+Status: current measured implementation gap, refreshed 2026-08-04
 Authority: explanatory report only; it grants no execution or retirement authority
 
 ## Outcome
 
-Galerina cannot yet convert the package tree to authoritative `.fungi`, compile
-the whole tree to admitted `.slide` artifacts, or delete TypeScript and npm
-bootstrap dependencies. The limiting dependency is not the amount of source
-translation. It is the absence of a production execution and artifact-admission
-chain capable of proving that translated source is the code that was checked,
-lowered, admitted and executed.
+Galerina can create `.fungi` translation drafts now in external quarantine.
+It cannot yet promote those drafts as production-authoritative replacements,
+compile the complete package tree to admitted `.slide` artifacts, or delete
+TypeScript and npm bootstrap dependencies. The limiting dependency is not the
+amount of source translation. It is the production execution and artifact-
+admission chain that proves translated source is the code checked, lowered,
+admitted and executed.
 
-Since the original 2026-08-02 report, independent SLIDE has closed bounded
-reference floors for a flat package ABI, direct-peer flow/resource binding,
-multi-package checked-source compilation, canonical per-export `.slide`
-objects, package-bound VOK execution, receipt-last physical publication and
-independently parsed pure-scalar control flow with checked `Int` addition.
-The first canonical Safe Value Envelope additionally owns and verifies exact
-`Int`, `Bool`, K3 `Verdict`, `String`, `Bytes` and `Array<Int>` values without
-releasing execution authority. A separately versioned typed package receipt
-now binds the current signed-32-bit execution result without a loose host
-value. The stable-file multi-package loader carries the same typed `Int`
-boundary through one shared affine consumption path. A Boolean-result probe
-refused at package compilation, so non-`Int` physical profiles remain open.
-Fresh complete SLIDE evidence is 509/509 across 52 suites. These floors remove
-several design/implementation unknowns below; they do not change the measured
-production counts because they remain reference-only, unsigned and limited to
-bounded source profiles.
+There are **seven ordered gates** between the current state and the first
+trustworthy production `.ts -> .fungi` authority switch:
+
+1. complete canonical frontend/GIR coverage for that file's source constructs;
+2. independent SLIDE execution for the exact admitted GIR slice;
+3. deterministic VOK object lowering and independent final-object validation;
+4. production `.slide` signing, packaging, loading and isolated execution;
+5. authenticated execution and any required host-ownership receipts;
+6. signed flat-root dependency authority for the file's direct peers; and
+7. file-specific parity/refusal tests, production-ledger admission, consumer
+   switch and only then TypeScript deletion.
+
+These are gates, not seven individual files. A file whose constructs already
+fit the bounded SLIDE profiles has less implementation work inside gates 1-3,
+but none of gates 4-7 can be inferred from reference-only evidence.
+
+Complete package retirement remains the **eleven-work-package** programme in
+the dependency-order section below. Its current terminal verifier reports
+**246 exact violations**; those violations are debt instances, not 246 separate
+architecture designs.
+
+Since the original report, independent SLIDE has added exact scalar, Boolean,
+K3, immutable String/Bytes/Array/Option, bounded record, bounded fold,
+4..128-function and 9..16-block control-flow profiles through the shared flat
+package/VOK/typed-receipt route. The latest bounded successor is verified at
+713/713 across 73 suites. These floors remove design and implementation
+unknowns below; they do not change production counts because general bodies,
+effects, production signing and production authority remain open.
 
 The current live target is:
 
 | Terminal debt | Current | Required |
 |---|---:|---:|
-| Tracked package TypeScript paths | **496** | **0** |
-| Categorised implementation TypeScript paths under `src` | **481** | **0** |
+| Tracked package TypeScript paths | **497** | **0** |
+| Categorised implementation TypeScript paths under `src` | **482** | **0** |
 | Production `.fungi` sources without execution authority | **111** | **0** |
 | Non-authorizing `.fungi` candidates | **2** | candidates do not count as production |
 | Production-executed `.fungi` sources | **0** | **111 now; then every added replacement** |
@@ -43,10 +56,10 @@ The current live target is:
 | Nested native package identities | **1** | **0** |
 | Post-SLIDE gate violations | **246** | **0** |
 
-The often quoted **491** and **495** TypeScript counts are stale. The fresh
-repository audit finds **496** tracked paths. Of these, 481 are categorised implementation paths
-under `src`; the other 15 are eleven Myco TypeScript tests, two benchmark sources
-and two example-app host files. They are all in the retirement scope.
+The often quoted **491**, **495** and **496** TypeScript counts are stale. The
+fresh repository audit finds **497** tracked paths. Of these, 482 are
+categorised implementation paths under `src`; the other 15 remain in the
+retirement scope.
 
 The exhaustive path-level inventory is generated at
 [`build/ts-retirement/ts-retirement.json`](../../build/ts-retirement/ts-retirement.json).
@@ -63,7 +76,7 @@ The post-SLIDE verifier fails closed for five independent reasons:
 | Unowned host boundary | 38 | Native, OS and runtime seams have no typed cryptographic ownership receipt |
 | Package-local dependency tree | 95 | Each package still carries an npm-shaped dependency world |
 | Nested native identity | 1 | `galerina-framework-example-app/packages/greeting/package.fungi.json` violates the flat package rule |
-| TypeScript-zero terminal assertion | 1 | The physical tracked count is 496, not zero |
+| TypeScript-zero terminal assertion | 1 | The physical tracked count is 497, not zero |
 | **Total** | **246** | Every row must reach zero; there are no exemptions |
 
 The verifier implementation is already green against its adversarial fixtures.
@@ -227,15 +240,15 @@ The physical conversion programme has not begun in the production tree. The
 live ledger records no TypeScript path with a terminal `.fungi` replacement and
 no production execution authority.
 
-The 481 implementation paths divide into:
+The 482 implementation paths divide into:
 
 | Retirement tranche | Paths | What closes it |
 |---|---:|---|
 | Exact `.ts`/`.fungi` twins | 29 | Reconcile behavior, execute the `.fungi`, switch authority, retain the old path only as an external frozen oracle until deletion |
 | Compiler/bootstrap core | 97 | Complete self-host and two-build fixed point; retire last |
-| Bounded bootstrap/host floor | 16 | Replace or narrowly admit the crypto/native/host behavior with equivalent evidence |
+| Bounded bootstrap/host floor | 17 | Replace or narrowly admit the crypto/native/host behavior with equivalent evidence |
 | Migration programme | 339 | Translate and admit in dependency order with package parity |
-| **Categorised implementation total** | **481** | |
+| **Categorised implementation total** | **482** | |
 
 For each public surface the required sequence is: write parity/refusal tests,
 translate using the current `.fungi` coding standard, pass the strict frontend,
@@ -308,7 +321,7 @@ probable checker defect is not an acceptable fix.
 6. Convert/reconcile packages in T1 -> T2 -> T3 order; compiler self-host last
 7. Replace or admit every host boundary
 8. Move the nested greeting package and remove all 95 node_modules trees
-9. Require 496 -> 0, unexecuted 111 -> 0, unowned 38 -> 0
+9. Require 497 -> 0, unexecuted 111 -> 0, unowned 38 -> 0
 10. Rebuild from a clean checkout; run all graphs/tests/audits/security checks
 11. Generate provenance-bound Galerina/SLIDE benchmarks and release evidence
 ```
@@ -346,12 +359,12 @@ It must exit zero without exemptions, renamed debt or fallback.
 ## Evidence used for this report
 
 - live `node scripts/ts-retirement-graph.mjs --post-slide --json` on Galerina
-  commit `a7d306317d80d6d0607ac2a4e504d8f46a2698d6`;
+  commit `3b3ee19ab95a72736868df33962ac2a26b996c04`;
 - [`docs/security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md`](../security/POST-SLIDE-EXECUTION-AUTHORITY-LEDGER.md);
 - [`docs/architecture/flat-package-topology-and-post-slide-migration.md`](../architecture/flat-package-topology-and-post-slide-migration.md);
 - [`docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md`](../superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md);
-- independent SLIDE Contracts 33-35 and completion reports at local commit
-  `64dd1cf`.
+- independent SLIDE Contracts 33-62 and completion reports through local
+  commit `6cc3cbb`.
 - SLIDE `contracts/v2/19-GENERAL-EXECUTABLE-GIR-SUCCESSOR.md` and
   `docs/GALERINA-INTEGRATION-MIGRATION-PLAN.md`;
 - both external Galerina Fungi package staging workspaces and their current

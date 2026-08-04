@@ -31,6 +31,16 @@ tool identity verify. Independent SLIDE remains blue because general bodies,
 loops, effects and production authority are still open. Package-conversion
 and terminal-retirement counts do not change.
 
+Roadmap refresh: the current production conversion distance is now stated as
+seven ordered gates to the first trustworthy `.ts -> .fungi` authority switch,
+while full retirement remains eleven top-level work packages. Quarantine
+translation can continue today but grants no production credit. The fresh
+terminal audit refuses honestly with 246 exact debt instances: 497 tracked
+package TypeScript paths, 111 unexecuted `.fungi`, 38 unowned host boundaries,
+95 package-local `node_modules` trees and one nested native identity. Round 9
+has classified 23/120 source rows; only one currently has executed-parity
+candidate status. No count is converted, deleted or exempted.
+
 Roadmap refresh: owner-approved RD-0693 makes canonical `record`
 declarations, declared call authority and exact nominal record construction
 binding. The one remaining finite-input gap is now implemented as Galerina
