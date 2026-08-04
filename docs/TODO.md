@@ -144,10 +144,11 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly **8/120** terminal rows: 1 executed-parity candidate, 1 superseded
-  by an existing Fungi twin, 5 `BLOCKED_LANGUAGE` and 1 `BLOCKED_HOST_ABI`;
-  row 009 is next. Its fresh preflight remains green. Whole-file grading is
-  binding; partial executed surfaces are retained as evidence without earning
+  honestly **9/120** terminal rows: 1 executed-parity candidate, 1 superseded
+  by an existing Fungi twin, 6 `BLOCKED_LANGUAGE` and 1 `BLOCKED_HOST_ABI`;
+  row 010 is next. Row 085's source pin was re-issued from the exact clean
+  security-fixed file, restoring preflight to 120/120 + 10/8/16. Whole-file
+  grading is binding; partial executed surfaces are retained as evidence without earning
   retirement credit. No TypeScript path is retired.
 
 ### SLIDE Contract 62 counted-sum flat package and typed receipt green - 2026-08-03
