@@ -9,7 +9,7 @@ export { WAT_HEAP_BASE, WAT_REC_FIELD_SIZE } from "./record-abi.js";
 // createGovernedRuntimeExecutor injects these (never imports them).
 export {
   wasmHash, generateRunnerKeypair, signWasm, verifyWasm,
-  createHostRuntime, admitAndInstantiate,
+  createHostRuntime, compareUtf16CodeUnits, admitAndInstantiate,
 } from "./wasm-runtime.js";
 export type {
   AdmissionPolicy, RunnerProfile, WasmAttestation, AdmissionVerdict,

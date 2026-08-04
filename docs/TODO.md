@@ -4,13 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Galerina String ordering and generated-authority closure green - 2026-08-04
+
+- Round 9 row 010 exposed a checker/runtime differential: the checker admitted
+  ordered `String` comparisons, but governed interpretation treated the missing
+  dispatch as false and the WAT path compared opaque handles rather than String
+  values. The correction defines one deterministic UTF-16 code-unit order for
+  the interpreter, admitted WASM host and self-hosted runtime. Unknown WAT
+  String handles now trap fail-closed.
+- Regression evidence covers all four ordered operators, non-BMP code units,
+  interpreter/WAT parity and forged handles. The complete compiler suite now
+  passes **5,859/5,859** across 1,229 suites; the border-safe WASM runtime is
+  **27/27** and the focused self-hosted/runtime slice is **34/34**.
+- The canonical per-package aggregate passes **98/98** with **8,949** generated
+  tests and zero failures in 350.1 seconds. Its process tree was monitored and
+  retired back to the one pre-existing MCP process; no package runner leaked.
+  The seven canonical compiler-stage hashes and all 52 auxiliary `.fungi`
+  checks remain current.
+- This closes the row-010 language/runtime defect only. It does not authorize
+  an external candidate, retire TypeScript or change package-conversion debt.
+
 ### Galerina compiler, channel gate and generated-authority closure green - 2026-08-04
 
 - Galerina commit `1f72ded4` hardens canonical `record` parsing, self-hosted
   parity and naturally aligned WAT record layouts. A discarded immutable
   `Array.push` or `Array.append` result now fails closed as
   `FUNGI-TYPE-028`; assignment, return and nested use remain admitted.
-- The complete compiler suite passes **5,851/5,851** across 1,227 suites.
+- The complete compiler suite at that checkpoint passed **5,851/5,851** across
+  1,227 suites; the newer String-ordering checkpoint above supersedes it.
   The self-hosted diagnostic twin covers 24 type codes with zero name,
   severity or differential violations.
 - Generated authority has been refreshed: code index/registry **781**, graphs
@@ -19,9 +40,9 @@ counts or open items that a newer section explicitly supersedes.
   compiler hash baseline verifies.
 - Standalone tooling passes **358**, fails **0**, with two intentional
   platform/toolchain skips. The canonical per-package aggregate passes
-  **98/98** with **8,941** generated tests and zero failures. This exact
-  `version.json` sum supersedes the earlier phase-close parser display of
-  8,942. The security-fixed exhaustive phase-close passes
+  **98/98** with **8,941** generated tests and zero failures at that checkpoint.
+  The newer 8,949-test canonical sum above supersedes both it and the earlier
+  phase-close parser display of 8,942. The security-fixed exhaustive phase-close passes
   **87/87** blocking gates in one uninterrupted **890.0-second** run. Its owned
   package runner retired cleanly and Node returned to the one pre-existing MCP
   process.
@@ -152,9 +173,11 @@ counts or open items that a newer section explicitly supersedes.
   the assignment. The canonical-syntax quick reference now points explicitly
   at live compiler/checker behavior and checker-passing golden sources.
 - Round 9 remains external, flat, quarantined and non-authorizing. Progress is
-  honestly **9/120** terminal rows: 1 executed-parity candidate, 1 superseded
-  by an existing Fungi twin, 6 `BLOCKED_LANGUAGE` and 1 `BLOCKED_HOST_ABI`;
-  row 010 is next. Row 085's source pin was re-issued from the exact clean
+  honestly **10/120** terminal rows: 1 executed-parity candidate, 1 superseded
+  by an existing Fungi twin, and 8 blocked rows; row 011 is next. Row 010's
+  newly discovered String-ordering runtime defect is corrected by the current
+  Galerina checkpoint but its external classification remains non-authorizing
+  until the worker re-runs exact evidence. Row 085's source pin was re-issued from the exact clean
   security-fixed file, restoring preflight to 120/120 + 10/8/16. Whole-file
   grading is binding; partial executed surfaces are retained as evidence without earning
   retirement credit. No TypeScript path is retired.

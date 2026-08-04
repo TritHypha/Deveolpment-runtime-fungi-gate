@@ -339,10 +339,37 @@ contract { intent { "Evaluate a GIR binop with fail-closed Int32 arithmetic." } 
     if a.ty == "String" { return rtBool(a.s != b.s) }
     return rtBool(a.i != b.i)
   }
-  if op == "lt" { return rtBool(a.i < b.i) }
-  if op == "gt" { return rtBool(a.i > b.i) }
-  if op == "le" { return rtBool(a.i <= b.i) }
-  if op == "ge" { return rtBool(a.i >= b.i) }
+  match op {
+    "lt" => {
+      if a.ty == "String" or b.ty == "String" {
+        trap a.ty != "String" or b.ty != "String" : ERR_GIR_TYPE
+        return rtBool(a.s < b.s)
+      }
+      return rtBool(a.i < b.i)
+    }
+    "gt" => {
+      if a.ty == "String" or b.ty == "String" {
+        trap a.ty != "String" or b.ty != "String" : ERR_GIR_TYPE
+        return rtBool(a.s > b.s)
+      }
+      return rtBool(a.i > b.i)
+    }
+    "le" => {
+      if a.ty == "String" or b.ty == "String" {
+        trap a.ty != "String" or b.ty != "String" : ERR_GIR_TYPE
+        return rtBool(a.s <= b.s)
+      }
+      return rtBool(a.i <= b.i)
+    }
+    "ge" => {
+      if a.ty == "String" or b.ty == "String" {
+        trap a.ty != "String" or b.ty != "String" : ERR_GIR_TYPE
+        return rtBool(a.s >= b.s)
+      }
+      return rtBool(a.i >= b.i)
+    }
+    _ => {}
+  }
   // Fail-CLOSED on an unknown binop: an Err fault, not a silent rtInt(0) (R&D bridge 0222).
   return rtTag("Err", rtStr("unknown binop"))
 }

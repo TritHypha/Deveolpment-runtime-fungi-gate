@@ -1577,6 +1577,14 @@ export function emitWATExpr(
       if (op === "!=" && stringOperand) {
         return `(i32.eqz (call $host___str_eq ${left} ${right}))`;
       }
+      if (["<", "<=", ">", ">="].includes(op) && stringOperand) {
+        const compare = `(call $host___str_compare ${left} ${right})`;
+        const compareOp = op === "<" ? "i32.lt_s"
+          : op === "<=" ? "i32.le_s"
+          : op === ">" ? "i32.gt_s"
+          : "i32.ge_s";
+        return `(${compareOp} ${compare} (i32.const 0))`;
+      }
       // W5a K3: type-directed verdict lane — && = lattice min, || = lattice max.
       // MUST come before the generic i32 map: bitwise i32.and(-1,1)=1 would turn
       // Deny&&Allow into ALLOW (fail-open).
@@ -3986,6 +3994,7 @@ export function buildWATModule(
     { module: "host", name: "__str_to_int",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__int_to_str",     effect: "stdlib.string", type: { params: ["i32"],          results: ["i32"] } },
     { module: "host", name: "__str_eq",         effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
+    { module: "host", name: "__str_compare",    effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },
     // #162 — String methods
     { module: "host", name: "__str_starts_with", effect: "stdlib.string", type: { params: ["i32", "i32"], results: ["i32"] } },
     { module: "host", name: "__str_ends_with",  effect: "stdlib.string", type: { params: ["i32", "i32"],  results: ["i32"] } },

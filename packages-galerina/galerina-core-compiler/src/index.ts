@@ -813,7 +813,7 @@ export {
 // (compiler → core-runtime-wasm is the ALLOWED direction; the kernel reaches the TCB without the compiler).
 export {
   wasmHash, generateRunnerKeypair, signWasm, verifyWasm,
-  createHostRuntime, admitAndInstantiate,
+  createHostRuntime, compareUtf16CodeUnits, admitAndInstantiate,
 } from "@galerina/core-runtime-wasm";
 export type {
   AdmissionPolicy, RunnerProfile, WasmAttestation, AdmissionVerdict,

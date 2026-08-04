@@ -4,7 +4,7 @@ Date: 2026-08-04
 Branch: `codex/galerina-beta-v1-completion`
 Current verified fixed point after the governed-runtime and channel-gate
 fail-close increments:
-exhaustive **87/87**, unified package lane **98/98** with **8,941** generated tests,
+exhaustive **87/87**, unified package lane **98/98** with **8,949** generated tests,
 graph **5/5**, code index/registry/coverage current,
 benchmark publication fresh, and executable examples **233/233**. The latest
 uninterrupted exhaustive phase-close passed every blocking gate in **890.0
@@ -17,6 +17,17 @@ package locked to offline custody and 0 failures.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: Round 9 row 010 exposed a real String-ordering differential.
+The checker admitted `<`, `<=`, `>` and `>=`, while the governed interpreter
+had no String dispatch and WAT compared opaque String handles. Galerina now
+uses one deterministic UTF-16 code-unit oracle in the interpreter, admitted
+WASM host and self-hosted runtime; an unknown host handle traps fail-closed.
+The complete compiler is 5,859/5,859 across 1,229 suites, the WASM runtime is
+27/27, the focused self-hosted/runtime slice is 34/34 and the canonical package
+aggregate is 98/98 with 8,949 tests. Aggregate workers returned to the one
+pre-existing MCP process. This is a language/runtime correctness closure, not
+package-conversion or retirement credit.
+
 Roadmap refresh: Galerina commits `1f72ded4` through `4c8e9133` close canonical
 record parsing, self-hosted parity, naturally aligned WAT record layouts and
 the discarded immutable-result seam. Bare `Array.push` or `Array.append`
@@ -26,9 +37,9 @@ Generated authority is current at code index/registry 781, graph 5/5, Golden
 Pack 11/11 checked plus 11/11 executed, contract registry 1,454 contracts across 534
 `.fungi` files and seven verified compiler-stage hashes. Standalone tooling is
 358 pass, 0 fail, with two intentional platform/toolchain skips. The 98-package
-aggregate is 98/98 with 8,941 generated tests and zero failures. The canonical
-per-package `version.json` sum supersedes the earlier phase-close parser display
-of 8,942. The security-fixed exhaustive
+aggregate was 98/98 with 8,941 generated tests and zero failures at that
+checkpoint. The newer 8,949-test canonical sum above supersedes both it and the
+earlier phase-close parser display of 8,942. The security-fixed exhaustive
 phase-close is 87/87 in 890.0 seconds, and its owned aggregate process tree
 retired back to the single pre-existing MCP process. No package conversion or
 terminal retirement credit is implied by this compiler increment. Governed execution
@@ -160,9 +171,11 @@ SLIDE 16/16 with Node 1 -> 1. Round 8's setup-blocker statements are
 superseded, but its outcome remains 0/120 classified rows. Round 9 adds exact
 row scaffolding, a machine row-result contract, deterministic decision ladder,
 status/manifest tools, a fail-closed 120/120 closure verifier and a separate
-append-only AI handover channel. It now has 9/120 terminal rows: 1
-executed-parity candidate, 1 superseded twin, 6 `BLOCKED_LANGUAGE` and 1
-`BLOCKED_HOST_ABI`, with row 010 next. Row 085's source pin was re-issued from
+append-only AI handover channel. It now has 10/120 terminal rows: 1
+executed-parity candidate, 1 superseded twin and 8 blocked rows, with row 011
+next. Row 010 exposed the now-corrected Galerina String-ordering runtime
+differential; the external result remains non-authorizing until exact evidence
+is re-run. Row 085's source pin was re-issued from
 the exact security-fixed file, restoring preflight to 120/120 + 10/8/16.
 Grading is per assigned file; verified sub-surfaces remain non-authorizing evidence for whole-file retirement. It
 remains external, quarantined and non-authorizing; package retirement counts
@@ -1133,7 +1146,7 @@ flowchart TB
     GV["🟩 Galerina VADE admission<br/>exact bytes · independent maths · non-comparative"]
     SA["🟩 Structured Await reducer<br/>bounded plan · cancel acknowledgement · 44/44"]
     L["🟩 Bounded clean/prepared benchmark<br/>exact checksum · 21.03x on measured host"]
-    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>9/120 terminal · row 010 next · non-authorizing"]
+    Q["🟨 External candidate staging<br/>Round 9 active · green 120/120 + 10/8/16 preflight<br/>10/120 terminal · row 011 next · non-authorizing"]
     K["🟩 Benchmark publication guard<br/>subject + catalog fail-close"]
     VN["🟩 Paired verified-native benchmark<br/>1,000,000 reads · checked vs permission<br/>unranked reference evidence"]
     FB["🟩 Interpreted Galerina benchmark<br/>29 workloads · 17/17 aligned<br/>winner/place comments · truth audit clean"]
@@ -1281,7 +1294,7 @@ table is navigation, not authority.
 | 1 | Galerina → SLIDE execution switch | 🟩 | Compiler-derived decision receipts, typed receipt v2 and physical typed `Int`/`Bool`/K3 plus bounded String and immutable Bytes paths are green. Commit `93600cb` adds registry-bound exact String/Bytes equality and exhaustive String-literal matching without mutating V2-C. The package route pins an exact 59-file SLIDE tool identity and bootstrap-runtime digest, uses an owned bounded process, then independently re-derives the stable source closure, physical receipt and every `.slide` object. This is reference-only | Add only demand-proven non-scalar/resource/effect profiles through append-only registries; production promotion stays in row 2 |
 | 2a | Signed post-SLIDE receipt verifier | 🟩 | Schema v3 validates exact execution and host-ownership predicates through a root-delegated repository role; both hybrid signature components, serial, time, revocation, current commit and independently re-read artifacts are mandatory; focused 5/5 | Keep the verifier green and never replace signed derived facts with claimed Booleans |
 | 2b | `.fungi` production admission | 🟦 | Two exact non-authorizing candidates, zero signed production entries and 111 sources requiring admission; the offline operational authority/public bundle is pending | Produce and verify one current signed evidence chain per production source, with no package-conversion shortcut |
-| 3 | Package conversion | 🟦 | 497 tracked package TypeScript paths remain after the single auditable `host-floor.ts` seam replaced four sprawled host-module import sites; that floor must later move to SLIDE/VOK rather than become an exemption. External Round 8 verified 120/120 pins but produced 0/120 terminal row outcomes. Round 9 has a green 120/120 + 10/8/16 preflight and fail-closed closure tooling; 9/120 files are terminal under binding whole-file grading, but the lane remains non-authorizing | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
+| 3 | Package conversion | 🟦 | 497 tracked package TypeScript paths remain after the single auditable `host-floor.ts` seam replaced four sprawled host-module import sites; that floor must later move to SLIDE/VOK rather than become an exemption. External Round 8 verified 120/120 pins but produced 0/120 terminal row outcomes. Round 9 has a green 120/120 + 10/8/16 preflight and fail-closed closure tooling; 10/120 files are terminal under binding whole-file grading, but the lane remains non-authorizing | Zero tracked package `.ts`, with parity and rollback evidence closed before each deletion |
 | 4 | Host-boundary production admission | 🟦 | The signed ownership verifier is green; all 38 detected production boundaries still lack signed receipts | Zero unowned boundaries; each retained boundary has least authority, exact digest/evidence and an explicit signed replacement or retention decision |
 | 5 | Flat package root-lock and exact resolver | 🟩 | All 98 direct peers and 45 internal edges are content-bound in one deterministic non-authorizing lock; exact process-local resolution has no ambient search; 7/7 focused/live tests and 15/15 generator contracts pass | Keep the reference control green and require its exact check throughout physical retirement |
 | 6 | Physical dependency retirement | 🟦 | 138 declared bootstrap edges, 95 package-local `node_modules` trees and one nested native package identity remain | One admitted top-level package instance per identity; zero external bootstrap dependencies, zero package-local dependency trees and zero nested package identities |
@@ -1402,7 +1415,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    direct evidence is exhaustive 87/87, graph 5/5 and package 98/98 with
-   8,941/8,941 unit tests.
+   8,949/8,949 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.

@@ -120,6 +120,7 @@ const constB = (x) => gExpr("const", "Bool", x ? "true" : "false");
 // only auto-wraps primitives). Used for the applyBinop unknown-op harden below.
 const emptyList = vList([]);
 const rtInt = (n) => vRec({ ty: vStr("Int"), i: vInt(n), b: vBool(false), s: vStr(""), tag: vStr(""), payload: emptyList, fields: emptyList });
+const rtString = (s) => vRec({ ty: vStr("String"), i: vInt(0), b: vBool(false), s: vStr(s), tag: vStr(""), payload: emptyList, fields: emptyList });
 async function callRt(flowName, argMap) {
   const r = await executeFlow(flowName, argMap, program.ast, program.flows, undefined, undefined, { pureFastPath: false }, undefined, undefined);
   return r.value ?? r;
@@ -145,6 +146,26 @@ describe("runtime.fungi — applyBinop unknown-op harden (RD-0528; R&D 0256/0258
     assert.equal(field(r, "ty"), "tag");
     assert.equal(field(r, "tag"), "Err");
   });
+});
+
+describe("runtime.fungi - String ordering uses value, not the zeroed Int carrier", () => {
+  for (const [op, left, right, expected] of [
+    ["lt", "alpha", "beta", true],
+    ["lt", "beta", "alpha", false],
+    ["le", "same", "same", true],
+    ["gt", "beta", "alpha", true],
+    ["ge", "same", "same", true],
+  ]) {
+    it(`${op}(${JSON.stringify(left)}, ${JSON.stringify(right)}) -> ${expected}`, async () => {
+      const result = await callRt("applyBinop", new Map([
+        ["op", vStr(op)],
+        ["a", rtString(left)],
+        ["b", rtString(right)],
+      ]));
+      assert.equal(field(result, "ty"), "Bool");
+      assert.equal(field(result, "b"), expected);
+    });
+  }
 });
 
 async function runGIR(stmts, env = []) {

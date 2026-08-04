@@ -21,6 +21,7 @@ import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModCheck
 import { u64AddChecked, u64SubChecked, u64MulChecked, u64DivChecked, u64ModChecked, u64NegChecked, isU64Trap, type U64Result } from "./u64-arith.js";
 import { decAdd, decSub, decMul, decCompare, isDecTrap, decDiv, decRem, isRoundMode, type DecResult } from "./decimal-arith.js";
 import { numericBaseType, parseI64Literal, parseU64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
+import { compareUtf16CodeUnits } from "@galerina/core-runtime-wasm";
 
 export type GalerinaValue =
   | { readonly __tag: "int";       readonly value: number }
@@ -319,6 +320,10 @@ export const BINARY_DISPATCH = new Map<number, _DispatchFn>([
   [dispatchKey("float", "!=", "int"),   (a, b) => boolVal((a.value as number) !== (b.value as number))],
   // --- String concatenation ---
   [dispatchKey("string", "+", "string"), (a, b) => ({ __tag: "string" as const, value: (a.value as string) + (b.value as string) })],
+  [dispatchKey("string", "<", "string"), (a, b) => boolVal(compareUtf16CodeUnits(a.value as string, b.value as string) < 0)],
+  [dispatchKey("string", "<=", "string"), (a, b) => boolVal(compareUtf16CodeUnits(a.value as string, b.value as string) <= 0)],
+  [dispatchKey("string", ">", "string"), (a, b) => boolVal(compareUtf16CodeUnits(a.value as string, b.value as string) > 0)],
+  [dispatchKey("string", ">=", "string"), (a, b) => boolVal(compareUtf16CodeUnits(a.value as string, b.value as string) >= 0)],
   [dispatchKey("string", "==", "string"), (a, b) => boolVal((a.value as string) === (b.value as string))],
   [dispatchKey("string", "!=", "string"), (a, b) => boolVal((a.value as string) !== (b.value as string))],
   // --- Bool ops ---

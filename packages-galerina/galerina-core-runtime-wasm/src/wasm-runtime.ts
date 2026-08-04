@@ -217,6 +217,20 @@ export interface HostRuntime {
 }
 
 /**
+ * Deterministic String ordering used by the interpreter and the WASM host.
+ *
+ * JavaScript relational String comparison is lexicographic over UTF-16 code
+ * units. Galerina adopts that exact rule so the Stage-A interpreter, the
+ * TypeScript bootstrap and host-backed WAT execution share one oracle. Locale,
+ * process settings and normalization are deliberately not consulted here;
+ * callers that require normalized text must admit it before comparison.
+ */
+export function compareUtf16CodeUnits(left: string, right: string): -1 | 0 | 1 {
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
+}
+
+/**
  * Build the closed host runtime for the self-hosted lexer's 4-function surface:
  *   __array_create() → handle · __array_append(handle, item) → () ·
  *   __str_char_at(strHandle, idx) → charCode · __int_to_str(n) → strHandle
@@ -259,6 +273,14 @@ export function createHostRuntime(
   const tap = (name: string, args: number[], ret: number | undefined): number | undefined => {
     observe?.onHostCall?.(name, args, ret);
     return ret;
+  };
+
+  const admittedString = (handle: number): string => {
+    const value = strings[handle];
+    if (value === undefined) {
+      throw new Error(`unknown string handle ${handle} (fail-closed)`);
+    }
+    return value;
   };
 
   const host: Record<string, (...a: number[]) => number | void> = {
@@ -310,6 +332,15 @@ export function createHostRuntime(
     },
     __str_length: (h: number) => tap("__str_length", [h], [...(strings[h] ?? "")].length) as number, // #170: code-point length (consistent with __str_count/__str_char_at)
     __str_eq: (a: number, b: number) => tap("__str_eq", [a, b], (strings[a] ?? "") === (strings[b] ?? "") ? 1 : 0) as number,
+    // Ordered comparison is by UTF-16 CODE UNIT value, never by opaque handle
+    // identity or locale. Unknown handles trap instead of becoming the empty
+    // string, because an ordering guard that accepts an unbound handle is a
+    // canonicalization fail-open.
+    __str_compare: (a: number, b: number) => tap(
+      "__str_compare",
+      [a, b],
+      compareUtf16CodeUnits(admittedString(a), admittedString(b)),
+    ) as number,
     // #162 — String methods (mirror src/stdlib.ts EXACTLY for byte-parity; note slice/
     // indexOf are UTF-16 in stdlib while charAt/length are code-point — replicate as-is).
     __str_starts_with: (h: number, p: number) => tap("__str_starts_with", [h, p], (strings[h] ?? "").startsWith(strings[p] ?? "") ? 1 : 0) as number,
