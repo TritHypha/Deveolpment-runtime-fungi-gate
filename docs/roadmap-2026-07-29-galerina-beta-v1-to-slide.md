@@ -69,9 +69,9 @@ translation can continue today but grants no production credit. The fresh
 terminal audit refuses honestly with 246 exact debt instances: 497 tracked
 package TypeScript paths, 111 unexecuted `.fungi`, 38 unowned host boundaries,
 95 package-local `node_modules` trees and one nested native identity. Round 9
-has classified 35/120 source rows: one executed-parity candidate, two
-superseded-by-existing-Fungi rows, one no-runtime-behavior row, 27
-language-blocked rows, one host-ABI row and three dedicated-security rows. No
+has classified 38/120 source rows at handback 0053: one executed-parity
+candidate, two superseded-by-existing-Fungi rows, one no-runtime-behavior row,
+30 language-blocked rows, one host-ABI row and three dedicated-security rows. No
 count is converted, deleted or exempted.
 
 Roadmap refresh: owner-approved RD-0693 makes canonical `record`

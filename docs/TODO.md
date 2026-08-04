@@ -86,11 +86,17 @@ counts or open items that a newer section explicitly supersedes.
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
-- Round 9 has independently closed 35/120 rows. One row is an executed-parity
-  candidate, two are superseded by existing Fungi, one has no runtime
-  behaviour, 27 are language-blocked, one is host-ABI-blocked and three
+- Round 9 handback 0053 has independently closed 38/120 rows. One row is an
+  executed-parity candidate, two are superseded by existing Fungi, one has no runtime
+  behaviour, 30 are language-blocked, one is host-ABI-blocked and three
   require dedicated security handling. These are analysis outcomes, not
-  production conversion credit. Row 036 is next.
+  production conversion credit. Row 039 is next.
+- [ ] Close the Round 9 row-035/038 report-redaction trace before production
+  conversion: `allowSecretValuesInReports` is false and the fail-closed
+  redactor exists, but the reports package does not call it directly. Trace
+  every producer to the report sinks, prove upstream redaction or add one
+  canonical typed boundary, then add secret/PII mutation tests. This is an
+  unestablished wiring guarantee, not evidence of a current data leak.
 
 ### RD-0693 canonical record authority and finite parser ceiling - 2026-08-04
 
