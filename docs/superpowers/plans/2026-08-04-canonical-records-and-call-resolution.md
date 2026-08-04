@@ -214,8 +214,8 @@ git commit -m "feat(self-hosted): align canonical record admission"
 - [x] Verify the post-run Node process set matches the baseline; no orphan required termination.
 - [x] Run `git diff --check`, public-path hygiene, working-diff secret-shape scan and generated-artifact drift checks on the final documentation snapshot.
 - [x] Review every changed file and stage only this chapter's paths; generated files were accepted only through their owning check modes.
-- [ ] Commit locally and verify the worktree is clean; do not push.
-- [ ] Refresh codebase-memory at moderate depth and verify its persisted indexed HEAD equals the committed Galerina HEAD.
+- [x] Commit locally and verify the worktree is clean; the source/generated chapter is `b11bc7e1`, followed only by this plan-state close, and neither commit is pushed.
+- [x] Refresh codebase-memory at moderate depth and verify its persisted indexed HEAD equals the final committed Galerina HEAD.
 
 ## Task 9: Open the separate SLIDE typed-record transport chapter
 
