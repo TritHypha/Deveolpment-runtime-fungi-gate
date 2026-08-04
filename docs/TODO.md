@@ -19,9 +19,9 @@ counts or open items that a newer section explicitly supersedes.
   compiler hash baseline verifies.
 - Standalone tooling passes **358**, fails **0**, with two intentional
   platform/toolchain skips. The unified package lane passes **98/98** with
-  **8,941** parsed tests. The last pre-runtime-fix exhaustive phase-close passed
-  **87/87** blocking gates in one uninterrupted **889.4-second** run; a fresh
-  post-fix close is required before this checkpoint is final again.
+  **8,941** parsed tests. The post-fix exhaustive phase-close passes **87/87**
+  blocking gates in one uninterrupted **891.8-second** run. Its owned package
+  runner retired cleanly and Node returned to the one pre-existing MCP process.
 - The final strict fusable-package build reports 0 rebuilt, 2 fresh, 2
   intentionally non-Fungi skipped, 1 ceremony-signed package locked to offline
   custody, and 0 failures. No signed artifact was regenerated locally.
@@ -29,10 +29,13 @@ counts or open items that a newer section explicitly supersedes.
   against the archived pre-SLIDE Galerina/Wasm baseline. The direct production
   Galerina/SLIDE lane remains honestly `DEFERRED_NO_SLIDE_LANE`; a reference or
   non-authorizing SLIDE result is not credited as production parity.
-- Governed execution now treats any interpreter diagnostic as terminal for the
-  whole run. A discarded unresolved method call can no longer be followed by a
-  normal return that makes `RuntimeResult.ok` or the CLI exit report success;
+- Galerina commit `7d9a93cf` makes governed execution treat any interpreter
+  diagnostic as terminal for the whole run. A discarded unresolved method
+  call can no longer be followed by a normal return that makes
+  `RuntimeResult.ok` or the CLI exit report success;
   focused runtime evidence is 12/12 and governed CLI evidence is 10/10.
+  Generated authority was rebound through commit `4c8e9133` before the
+  exhaustive close.
 
 ### Canonical records now cross the bounded SLIDE ABI - 2026-08-04
 
