@@ -123,6 +123,51 @@ Even when the named constructors appear exhaustive, the project standard
 retains the explicit terminal wildcard as the fail-closed impossible-state
 path.
 
+## The record rule
+
+Use one declaration spelling and one explicit construction spelling:
+
+```fungi
+record Pair {
+  left: Int
+  right: Int
+}
+
+pure flow pairDigest(left: Int, right: Int) -> Int {
+  let pair: Pair = Pair { right: right, left: left }
+  return pair.left * 1000 + pair.right
+}
+```
+
+The declaration is `record Pair { ... }`. `type Pair { ... }` is refused with
+`FUNGI-PARSE-002` because older handling erased the field schema. `type` remains
+valid only for an explicit alias such as `type PairResult = Result<Pair,String>`.
+
+`Pair(left, right)` is a flow call, not a record constructor. It is refused
+unless an exact callable named `Pair` is declared or imported, and a record
+declaration does not provide that authority. Use `Pair { left: left, right:
+right }`.
+
+Record admission is exact and fail closed:
+
+- a named literal must name the required nominal record;
+- every field occurs exactly once;
+- missing and surplus fields are refused;
+- every value is assignment-compatible with its declared field type; and
+- the emitter lays fields out in declaration order, regardless of literal
+  source order.
+
+An anonymous literal may be contextually adopted only when the complete shape
+is exact:
+
+```fungi
+let pair: Pair = { right: right, left: left }
+```
+
+Checker acceptance alone is not execution parity. Use the Golden Pack record
+vector and the record field-order differential before promoting translated
+record code.
+
 ## The effects rule
 
 Do not translate an import name or a TypeScript package name into an effect.

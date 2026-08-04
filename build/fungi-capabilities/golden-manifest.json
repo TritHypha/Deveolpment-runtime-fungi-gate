@@ -251,25 +251,51 @@
       "id": "010-checked-remainder",
       "source": "docs/examples/golden/010-checked-remainder.fungi",
       "sourceSha256": "sha256:d09bf05708a87f99181e223f9bc401c343a33aa69593c1a30e8f334e030d155e"
+    },
+    {
+      "checker": {
+        "diagnostics": "0 errors, 0 governance warnings",
+        "status": "CHECKER_PROVEN"
+      },
+      "execution": {
+        "flow": "pairDigest",
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "vectors": [
+          {
+            "arguments": [
+              "11",
+              "20"
+            ],
+            "expectedExitCode": 0,
+            "expectedStdout": "11020",
+            "observedExitCode": 0,
+            "observedStdout": "11020"
+          }
+        ]
+      },
+      "id": "011-canonical-record",
+      "source": "docs/examples/golden/011-canonical-record.fungi",
+      "sourceSha256": "sha256:9a4c950568ad341ace358d23f36601d67bd825da9d0f299e7f4adb23db3624cf"
     }
   ],
   "exhaustiveLanguageManifest": false,
   "inputs": {
     "caseDefinition": "docs/examples/golden/cases.json",
-    "caseDefinitionSha256": "sha256:b88286a5758e37fa249b80166c614857f1d69b35ad2d489776cb2cf53f467a24",
+    "caseDefinitionSha256": "sha256:62bc3954227e50a59c59a0ab7e3b6c058e01b29ee8288768c92c82d5af877b4a",
     "probeRunner": "scripts/fungi-golden-probe.mjs",
     "probeRunnerSha256": "sha256:96b1a994f184b632f61152476f503c4e2d71e61b73482718fae70aae2cfad677"
   },
   "schema": "galerina.fungi-golden-manifest.v1",
   "status": "PROBE_DERIVED_REFERENCE_ONLY",
   "summary": {
-    "checked": 10,
-    "executedExamples": 7,
-    "executionVectors": 10,
+    "checked": 11,
+    "executedExamples": 8,
+    "executionVectors": 11,
     "notExecutedExamples": 3
   },
   "toolchain": {
     "runtimeClosureFileCount": 219,
-    "runtimeClosureSha256": "sha256:8c748494d339e052fd1923899de05a4c820040f2af59509d1a206ebc0de78629"
+    "runtimeClosureSha256": "sha256:6b01513bd53d0068e8f660befb9d715e8ccfffe7e3adb163f3ed1c167f98e30f"
   }
 }

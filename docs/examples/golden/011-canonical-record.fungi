@@ -1,0 +1,15 @@
+@version 1
+/// GOLDEN: canonical record declaration, named construction, and declaration-ordered field access.
+/// expected_diagnostics: none
+/// CHECK: node galerina.mjs check docs/examples/golden/011-canonical-record.fungi --strict-types --strict-governance
+/// RUN: node galerina.mjs run docs/examples/golden/011-canonical-record.fungi --invoke pairDigest 11 20
+/// EXPECT: exit 0; final value 11020.
+record Pair {
+  left: Int
+  right: Int
+}
+
+pure flow pairDigest(left: Int, right: Int) -> Int {
+  let pair: Pair = Pair { right: right, left: left }
+  return pair.left * 1000 + pair.right
+}

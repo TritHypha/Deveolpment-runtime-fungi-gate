@@ -21,6 +21,20 @@
 - Run one aggregate at a time and verify Node process counts before and after long commands.
 - Commit locally in narrow verified increments; never push.
 
+## Execution checkpoint — 2026-08-04
+
+| Task | State | Verified evidence |
+|---|---|---|
+| 1 — parser contract | complete | alias retained; canonical record fields preserved; legacy block-bodied `type` refuses with `FUNGI-PARSE-002` |
+| 2 — call authority | complete | capitalization exemption removed; undeclared and record-name positional calls refuse with `FUNGI-NAME-001` |
+| 3 — exact record construction | complete | nominal identity, uniqueness, exact field set, and field types are checked before adoption |
+| 4 — tracked corpus migration | complete with recorded source debt | 44 declarations in 35 `.fungi` files migrated; live legacy inventory is zero; eight independently pre-existing strict-check debts remain listed in `docs/TODO.md` |
+| 5 — self-hosted alignment | partial | exact legacy-syntax refusal is implemented and tested; the current self-hosted parser/checker corpus is not yet strict-clean and must not be called parity-complete |
+| 6 — governed execution/layout | complete for the current Stage-A/WAT boundary | Golden Pack 11/11; record field-order differential 4/4; positional pseudo-call runtime refusal executes no flow; general `.slide` record transport remains Task 9 |
+| 7 — maintained guidance/indexes | in progress | canonical syntax and Golden Pack updated; repository-wide generated indexes and roadmap closure remain |
+| 8 — bounded repository closure | pending | run after documentation reconciliation |
+| 9 — independent SLIDE transport | pending | requires its own frozen plan and repository-scoped implementation |
+
 ---
 
 ## Task 1: Pin the parser contract

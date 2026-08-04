@@ -1,6 +1,6 @@
 # 04 — Types & Values
 
-> Grounded in: `parser.ts:5326-5343` (`type` alias / record-body), `parser.ts:5353-5391`
+> Grounded in: `parser.ts:5326-5352` (`type` alias / legacy-body refusal), `parser.ts:5353-5391`
 > (`record`), `parser.ts:5394-5426` (`enum`), `parser.ts:1134-1140` (`protected`/`redacted`
 > qualifier on a type), type IDs in `type-registry.ts:22-99`, generics/arity + `Some/None/Ok/Err`
 > in KB `formal-type-system-spec.md`. Real examples: `examples/healthcare/getPatient.fungi`,
@@ -46,13 +46,12 @@ type CreateSessionResult = Result<Session, SessionError>       // createSession.
 type PatientId = Brand<String, "PatientId">                    // getPatient.fungi:2
 ```
 
-### Record — two equivalent forms
+### Record — one canonical form
 
 A record is a struct with named fields. **Fields are separated by newlines or commas** (both parse;
-`parser.ts:5353-5391`). There are two spellings and both work:
+the parser preserves declaration order and the checker enforces the closed field set):
 
 ```fungi
-// Form 1 — top-level `record` keyword (self-hosted/lexer.fungi:39-48)
 record Token {
   kind: TokenKind
   value: String
@@ -60,21 +59,18 @@ record Token {
   column: Int
 }
 
-// Form 2 — `type Name = record { ... }` (getPatient.fungi:5)
-type PatientSummary = record { patientId: redacted String, name: String, dob: String }
-
-// Form 3 — `type Name { ... }` record-body shorthand (createSession.fungi:2-5)
-type Session {
-  readonly sessionId: SessionId
-  readonly expiresAt: Timestamp
+record Session {
+  sessionId: SessionId
+  expiresAt: Timestamp
 }
 ```
 
-Form 3 (`type Name { ... }` with no `= record`) is the short spelling the parser treats as a
-record-style body (`parser.ts:5326`). Note that fields can carry qualifiers: `redacted String`,
-`readonly sessionId: SessionId`.
+`type Name { ... }` is rejected with `FUNGI-PARSE-002`; older compilers silently discarded its
+fields, so accepting that spelling would make the type name exist without a schema. Use
+`type Name = TypeRef` only for an alias. Record values use `Name { field: value }`, not positional
+`Name(value)` calls. Capitalization never grants constructor or call authority.
 
-### Record guarantees — fixed shape & canonical encoding
+### Record guarantees — fixed shape and bounded current emission
 
 Two properties hold for every record *by construction* and are worth stating as named guarantees (RD-0286a/g):
 
@@ -83,9 +79,12 @@ Two properties hold for every record *by construction* and are worth stating as 
   not merely forbidden** (the same discipline that makes bounded cycles unrepresentable). You can read a
   record declaration and know everything the value is — no hidden state, no shape mutation, no hidden-class
   transition — so field access is a static offset, never a key lookup.
-- **Canonical encoding.** Each record *value* has exactly one byte-form — a single canonical serialization
-  (RFC 8785 / JCS discipline; materialise-once). This is what lets a record be hashed and signed without
-  ambiguity, and it underpins the signed inclusion / Merkle proofs over `.spore` (ext-spore).
+- **Current measured emission.** The Stage-A checker and WAT path preserve declaration-order field layout;
+  reordered source literals execute with the same field offsets. Current V2-E evidence binds record
+  declarations and source digests. A general, versioned record descriptor carried through `.slide`, independently
+  revalidated by VOK, and bound into a field-level execution receipt is **planned, not yet implemented**. Until
+  that separate transport chapter closes, do not claim that every record value has one end-to-end canonical
+  byte form across Galerina and SLIDE.
 
 > **`sealed` surface — owner-gated.** Because there is no *unsealed* record semantics to opt into, a record
 > is already fixed-shape ("sealed") by nature; this section states the guarantee, it adds no grammar.
@@ -340,22 +339,26 @@ followed by an identifier `MB`. Inside contract-clause bodies the clause sub-par
 **Takeaway:** don't write `let size = 16MB` in a flow body and expect it to work. Unit suffixes are a
 contract-clause convenience, not a general number literal.
 
-## Module-path calls use `.` (not `::`)
+## Module-path calls
 
-Method and module calls use a dot today: `AuditLog.write(...)`, `String.split(...)`,
-`PatientsDB.find(...)`. The KB notes `::` is the intended canonical form but the `::` parser is not
-implemented — **use `.` in all `.fungi` source** (KB `galerina-contract-clause-reference.md`
-Stage-A notes).
+Method and module calls may use `.` or `::`; the parser treats them as equivalent path separators.
+Existing standard-library examples predominantly use `.`, such as `AuditLog.write(...)` and
+`PatientsDB.find(...)`. This syntax does not itself authorize a call: the receiver or imported value
+must still be admitted by resolution and governance.
 
-## A note on named-constructor let-bindings
+## Named record construction
 
-Per the KB Stage-A notes, `let x = TypeName { field: value }` (a named constructor directly in a
-let-binding) can fail in Stage A. The reliable forms are:
+Named and contextually typed anonymous literals are supported. The checker requires nominal identity
+for a named literal, unique fields, the exact declared field set, and assignment-compatible values:
 
 ```fungi
-return Ok(PatientSummary { patientId: id, name: n })   // ✅ constructor as a call argument
-let r = { patientId: id, name: n }                     // ✅ anonymous record literal
+let named: PatientSummary = PatientSummary { patientId: id, name: n }
+let contextual: PatientSummary = { patientId: id, name: n }
 ```
+
+`OtherSummary { ... }` cannot be adopted as `PatientSummary` even when its fields happen to match.
+Duplicate, missing, surplus, and wrongly typed fields are errors. Emission uses declaration order,
+so source-field reordering cannot change record layout.
 
 ## Common mistakes (types)
 
@@ -365,13 +368,13 @@ let r = { patientId: id, name: n }                     // ✅ anonymous record l
 | `enum E { A, B }` assuming commas are required | commas are optional | `enum E { A B }` (whitespace) is canonical |
 | `let x: Tainted<Foo> = ...` | `Tainted<T>` isn't parser-backed | use `unsafe let` or a `tainted` param (see [05](05-bindings-taint-privacy.md)) |
 | `Decimal` vs `Float` for money | `Float` loses precision | use `Decimal` (or `Money<Currency>`) |
-| `AuditLog::write(...)` | `::` not implemented | `AuditLog.write(...)` |
+| `TypeName(value)` for a record | records are not positional calls | `TypeName { field: value }` |
 | `let x = 16MB` in a body | unit suffixes are contract-clause-only | keep budgets inside contract clauses |
 | `result of X else Y` type form | proposal, not in parser | `Result<X, Y>` (`DO_NOT_USE_YET.md` §1) |
 
 ## Real files to open
 
-* `examples/auth-service/createSession.fungi` — alias, record (`type Session { ... }`), `enum`, `Brand`.
+* `examples/auth-service/createSession.fungi` — alias, canonical `record`, `enum`, `Brand`.
 * `examples/healthcare/getPatient.fungi` — `record` with a `redacted` field, `enum`, `Brand`, `Result`.
 * `packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi` — top-level `record`/`enum`,
   `Option<Char>`, `Array<String>`, real `match`/`Some`/`None` usage.

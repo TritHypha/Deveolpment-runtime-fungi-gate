@@ -14,7 +14,7 @@ leave a model, flow or route boundary.
 ## Syntax Example
 
 ```galerina
-type UserResponse {
+record UserResponse {
   id: UserId
   email: Email
 }

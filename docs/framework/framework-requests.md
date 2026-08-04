@@ -12,7 +12,7 @@ tool calls.
 ## Syntax Example
 
 ```galerina
-type CreateUserRequest {
+record CreateUserRequest {
   email: Email
   displayName: String
 }

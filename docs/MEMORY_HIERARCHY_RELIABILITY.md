@@ -97,7 +97,7 @@ For gaming, simulation, AI preprocessing or large JSON processing, Galerina coul
 allow layout choices:
 
 ```Galerina
-type Position {
+record Position {
   x: Float32
   y: Float32
   z: Float32
@@ -113,7 +113,7 @@ memory layout PositionBuffer {
 For high-performance array processing:
 
 ```Galerina
-type Particle {
+record Particle {
   position: Vec3<Float32>
   velocity: Vec3<Float32>
   mass: Float32

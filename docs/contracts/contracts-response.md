@@ -11,7 +11,7 @@ Response contracts are safe public output boundaries.
 ## Syntax
 
 ```galerina
-type UserResponse {
+record UserResponse {
   id: UserId
   email: Email
 }

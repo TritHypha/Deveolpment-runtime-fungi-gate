@@ -121,6 +121,19 @@
           { "arguments": ["1", "0"], "expectedExitCode": 1, "expectedOutputIncludes": "remainder by zero" }
         ]
       }
+    },
+    {
+      "id": "011-canonical-record",
+      "source": "011-canonical-record.fungi",
+      "checker": "STRICT_ZERO_DIAGNOSTICS",
+      "execution": {
+        "status": "EXECUTED",
+        "surface": "RAW_CLI",
+        "flow": "pairDigest",
+        "vectors": [
+          { "arguments": ["11", "20"], "expectedStdout": "11020" }
+        ]
+      }
     }
   ]
 }

@@ -54,6 +54,26 @@ flow bad() -> UnknownType {
 
     assert.ok(result.diagnostics.some((diagnostic) => diagnostic.code === "FUNGI-TYPE-001"));
   });
+
+  it("refuses positional record pseudo-calls before execution", async () => {
+    const result = await run(`
+record Receipt {
+  value: Int
+}
+
+pure flow buildReceipt() -> Receipt {
+  return Receipt(1)
+}
+`, "record-call.fungi", "buildReceipt");
+
+    assert.equal(result.ok, false);
+    assert.equal(result.execution, undefined);
+    assert.equal(result.value, undefined);
+    assert.equal(
+      result.diagnostics.filter((diagnostic) => diagnostic.code === "FUNGI-NAME-001").length,
+      1,
+    );
+  });
 });
 
 describe("Runtime pipeline — naming policy", () => {

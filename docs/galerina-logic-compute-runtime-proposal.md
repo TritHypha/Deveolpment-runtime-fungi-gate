@@ -689,7 +689,7 @@ let lambda: Wavelength = 1550 nm
 let phase: Phase = phase(90 deg)
 let amp: Amplitude = amplitude(0.75)
 
-type OpticalSignal {
+record OpticalSignal {
   wavelength: Wavelength
   phase: Phase
   amplitude: Amplitude

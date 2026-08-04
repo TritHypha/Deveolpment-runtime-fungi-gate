@@ -52,7 +52,7 @@ Core language constructs, keywords, type system, declaration blocks.
 | Result<T, E> and typed errors | ✅ | `typed-error-model.md`, `no-exceptions-result-model.md` |
 | Tri / Decision / Bool logic types | ✅ | `mathematics-and-tri-logic.md` |
 | Formal proof types (axiom, theorem, lemma, proof, assume, given, invariant) | ✅ | `formal-proof-system.md` |
-| Type definitions (type Foo { field: Type }) | ✅ | `type-and-enum-declarations.md` |
+| Record definitions (`record Foo { field: Type }`) | ✅ | `type-and-enum-declarations.md` |
 | Enum syntax (enum Status { Paid, Failed }) | ✅ | `type-and-enum-declarations.md` |
 | Generic types (Option<T>, Result<T,E>, Array<T>, Map<K,V>) | ✅ | `generic-types.md` |
 | Branded/opaque types (Brand<T,"Name">) | ✅ | `type-and-enum-declarations.md`, `generic-types.md` |

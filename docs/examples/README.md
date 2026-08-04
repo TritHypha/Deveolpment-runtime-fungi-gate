@@ -79,12 +79,12 @@ NNN-example-name/
 | Code | Meaning | Status |
 |---|---|---|
 | `FUNGI-TYPE-001` | Unknown type — not in scope | ✅ Implemented |
-| `FUNGI-TYPE-002` | Type mismatch — incompatible assignment | ✅ Implemented |
+| `FUNGI-TYPE-002` | Type mismatch — incompatible assignment, including record field and nominal-identity mismatch | ✅ Implemented |
 | `FUNGI-TYPE-003` | Nominal type conversion denied — `unsafe let id: CustomerId = raw` rejected | ✅ Phase 9A-2 |
 | `FUNGI-TYPE-004` | Invalid binary operation — wrong operand types or cross-currency Money | ✅ Implemented |
 | `FUNGI-TYPE-006` | Wrong argument type for flow call | ✅ Implemented |
 | `FUNGI-TYPE-007` | Wrong argument count for flow call | ✅ Implemented |
-| `FUNGI-TYPE-008` | Return type mismatch / null-undefined denied | ✅ Implemented |
+| `FUNGI-TYPE-008` | Return type mismatch / null-undefined denied; record returns require an exact, duplicate-free field set | ✅ Implemented |
 | `FUNGI-TYPE-009` | Generic arity mismatch (Option expects 1, Result expects 2) | ✅ Implemented |
 | `FUNGI-TYPE-020` | Binding shadows outer-scope name (warning) | ✅ Implemented |
 | `FUNGI-TYPE-021` | Non-exhaustive match | ✅ Implemented |
@@ -94,7 +94,7 @@ NNN-example-name/
 
 | Code | Meaning | Status |
 |---|---|---|
-| `FUNGI-NAME-001` | Undeclared name in expression position | ✅ Implemented |
+| `FUNGI-NAME-001` | Undeclared name or call target; capitalization never grants call or constructor authority | ✅ Implemented |
 | `FUNGI-NAME-002` | Duplicate name in same scope | ✅ Implemented |
 
 ### Value-state checker

@@ -11,7 +11,7 @@ Request contracts are typed input boundaries.
 ## Syntax
 
 ```galerina
-type CreateOrderRequest {
+record CreateOrderRequest {
   sku: String
   quantity: Int
 }

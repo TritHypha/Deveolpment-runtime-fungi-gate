@@ -41,3 +41,4 @@ authority.
 | `008-while-bool-guard.fungi` | Boolean `while` guard and mutation | raw CLI vector |
 | `009-checked-division.fungi` | signed division and zero refusal | raw CLI vectors |
 | `010-checked-remainder.fungi` | signed remainder and zero refusal | raw CLI vectors |
+| `011-canonical-record.fungi` | canonical record declaration, named construction, and declaration-order layout | raw CLI vector |
