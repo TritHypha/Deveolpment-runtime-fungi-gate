@@ -291,6 +291,18 @@ pure flow f(value: Int) -> Int { return value }
       [],
     );
   });
+
+  it("refuses block-bodied `type` instead of reclassifying it as a record", async () => {
+    const result = await pipeline(`@version 1
+type LegacyRecord { value: Int }
+pure flow f(value: Int) -> Int { return value }
+`);
+    assert.deepEqual(recordDeclsList(result), []);
+    assert.deepEqual(
+      result.fields.get("errors").items.map((entry) => entry.value),
+      ["FUNGI-PARSE-002: block-bodied type 'LegacyRecord' must be declared with 'record'"],
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

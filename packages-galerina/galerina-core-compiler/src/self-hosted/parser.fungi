@@ -2259,13 +2259,16 @@ contract {
           }
           else {
             let parsedRecord: RecordDeclParse = parseTopLevelRecordDecl(tokens, pos)
+            if tv == "type" {
+              errs = errs.append("FUNGI-PARSE-002: block-bodied type '" + parsedRecord.declaration.name + "' must be declared with 'record'")
+            }
             if parsedRecord.error != "" {
               errs = errs.append("FUNGI-PARSE-003: " + parsedRecord.error)
             }
             if parsedRecord.closed == false {
               errs = errs.append("FUNGI-PARSE-003: unterminated '" + tv + "' declaration - missing '}' before end of input")
             }
-            if parsedRecord.error == "" and parsedRecord.closed {
+            if tv == "record" and parsedRecord.error == "" and parsedRecord.closed {
               recordDecls = recordDecls.append(parsedRecord.declaration)
             }
             pos = parsedRecord.nextPos
