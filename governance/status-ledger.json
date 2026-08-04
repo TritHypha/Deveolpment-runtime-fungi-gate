@@ -1,6 +1,6 @@
 {
   "schema": "galerina.status-ledger.v1",
-  "asOf": "2026-08-03",
+  "asOf": "2026-08-04",
   "milestone": "Receipt-bound Galerina-to-SLIDE package execution before terminal TypeScript and dependency retirement",
   "roadmap": "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
   "openGates": [
@@ -21,7 +21,7 @@
     },
     {
       "id": "SLIDE-EXECUTABLE",
-      "summary": "The reusable bounded frontend handoff, independent validation, VOK lease and canonical .slide floor are implemented; general effects, memory, package ABI/import/resource and production-authentication profiles remain open.",
+      "summary": "Canonical .slide, flat package ABI/import/resource, affine VOK and typed receipts are implemented. Dynamic routing, broader closed bodies, effects, mutation/manual memory, callbacks, initialisers and production authentication remain open.",
       "evidence": "docs/superpowers/plans/2026-07-30-galerina-slide-full-fungi-retirement.md"
     },
     {

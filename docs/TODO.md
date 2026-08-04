@@ -18,8 +18,10 @@ counts or open items that a newer section explicitly supersedes.
   registry **1,454** contracts across 534 `.fungi` files, and the seven-stage
   compiler hash baseline verifies.
 - Standalone tooling passes **358**, fails **0**, with two intentional
-  platform/toolchain skips. The unified package lane passes **98/98** with
-  **8,942** parsed tests. The security-fixed exhaustive phase-close passes
+  platform/toolchain skips. The canonical per-package aggregate passes
+  **98/98** with **8,941** generated tests and zero failures. This exact
+  `version.json` sum supersedes the earlier phase-close parser display of
+  8,942. The security-fixed exhaustive phase-close passes
   **87/87** blocking gates in one uninterrupted **890.0-second** run. Its owned
   package runner retired cleanly and Node returned to the one pre-existing MCP
   process.
@@ -65,6 +67,12 @@ counts or open items that a newer section explicitly supersedes.
   production authority, package conversion or terminal retirement. External
   Round 9 remains quarantined and non-authorizing; it must re-run its preflight
   at the new clean SLIDE commit and continue all 120 rows.
+- The next locally actionable SLIDE design gate is the smallest registered
+  successor for dynamic routing and broader closed-body semantics. Existing
+  canonical GIR, flat package ABI/import/resource, affine VOK and typed receipt
+  paths must be reused. Effects, mutation/manual memory, callbacks,
+  initialisers and production authentication stay closed unless separately
+  designed and verified.
 
 ### RD-0692 bounded deterministic fold physical/package path green - 2026-08-03
 
@@ -1020,7 +1028,7 @@ Completion evidence: [full gate and host-floor reconciliation](reports/full-gate
   CLI build is 1/1. Complete SLIDE is 493/493 across 50 suites with contracts
   29/29 and authenticated evidence K3 `0`.
 - The final Galerina phase-close passes every blocking gate: 98/98 packages and
-  8,831 tests are current, tooling is 343/343, examples are 233/233, graphs are
+  8,941 tests are current, tooling is 343/343, examples are 233/233, graphs are
   5/5, generated code index/registry/coverage and benchmark publication are
   current, and Node returns 1 -> 1.
 - Ordinary `build` is unchanged. Success remains

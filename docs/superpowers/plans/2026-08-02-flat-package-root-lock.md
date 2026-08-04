@@ -25,6 +25,6 @@ without moving or converting package source.
 ### Task 4: Evidence
 
 - [x] Run focused and governed generator-contract tests.
-- [ ] Run topology, graph and complete repository aggregate tests at chapter close.
+- [x] Run topology, graph and complete repository aggregate tests at chapter close.
 - [x] Update roadmap/TODO with implementation green and physical debt blue.
 - [x] Add a numbered KB R&D adjudication; local commit follows verification.

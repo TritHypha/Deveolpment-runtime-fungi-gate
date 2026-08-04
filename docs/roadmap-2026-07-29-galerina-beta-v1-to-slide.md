@@ -4,7 +4,7 @@ Date: 2026-08-04
 Branch: `codex/galerina-beta-v1-completion`
 Current verified fixed point after the governed-runtime and channel-gate
 fail-close increments:
-exhaustive **87/87**, unified package lane **98/98** with **8,942** parsed tests,
+exhaustive **87/87**, unified package lane **98/98** with **8,941** generated tests,
 graph **5/5**, code index/registry/coverage current,
 benchmark publication fresh, and executable examples **233/233**. The latest
 uninterrupted exhaustive phase-close passed every blocking gate in **890.0
@@ -26,7 +26,9 @@ Generated authority is current at code index/registry 781, graph 5/5, Golden
 Pack 11/11 checked plus 11/11 executed, contract registry 1,454 contracts across 534
 `.fungi` files and seven verified compiler-stage hashes. Standalone tooling is
 358 pass, 0 fail, with two intentional platform/toolchain skips. The 98-package
-aggregate is 98/98 with 8,942 parsed tests. The security-fixed exhaustive
+aggregate is 98/98 with 8,941 generated tests and zero failures. The canonical
+per-package `version.json` sum supersedes the earlier phase-close parser display
+of 8,942. The security-fixed exhaustive
 phase-close is 87/87 in 890.0 seconds, and its owned aggregate process tree
 retired back to the single pre-existing MCP process. No package conversion or
 terminal retirement credit is implied by this compiler increment. Governed execution
@@ -1400,7 +1402,7 @@ The remaining sequence is:
 1. Keep the now-green graph/generator/test/strict/exhaustive fixed point
    reproducible while the final registry artifact changes. Current fresh
    direct evidence is exhaustive 87/87, graph 5/5 and package 98/98 with
-   8,831/8,831 unit tests.
+   8,941/8,941 unit tests.
 2. **Completed:** root-signed serial-1 delegation, operational hybrid auth
    signature, independent manifest verification, live admission, and exact
    one-entry public-only index build.
