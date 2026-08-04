@@ -6,7 +6,7 @@
 // until SLIDE has an executable backend. This source therefore validates only
 // the portable, deterministic request envelope.
 
-type ComputeMixBenchmarkRequest {
+record ComputeMixBenchmarkRequest {
   targetMs: Int
   requestedOperations: Int
   warmupMs: Int

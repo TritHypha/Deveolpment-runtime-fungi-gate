@@ -1,5 +1,5 @@
 @version 1
-type FraudFeatures {
+record FraudFeatures {
   amountScore: Float
   accountAgeScore: Float
   velocityScore: Float

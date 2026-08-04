@@ -2,7 +2,7 @@
 // EXPECT: ACCEPT
 // AREA: api
 // PURPOSE: webhook declaration with HMAC security, JSON decode, and typed handler
-type PaymentEvent {
+record PaymentEvent {
   id: String
   type: String
   orderId: String

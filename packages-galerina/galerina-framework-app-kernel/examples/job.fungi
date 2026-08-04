@@ -2,7 +2,7 @@
 // Queue names and resource limits are admitted host-manifest data. The .fungi
 // decision surface remains portable across Windows, macOS, and Linux hosts.
 
-type VideoJob {
+record VideoJob {
   videoId: String
   attempt: Int
 }

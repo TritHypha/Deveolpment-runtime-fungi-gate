@@ -6,13 +6,13 @@
 type ContractOrderId = String
 type ContractCustomerId = String
 
-type ContractOrderRequest {
+record ContractOrderRequest {
   customerId: ContractCustomerId
   sku: String
   quantity: Int
 }
 
-type ContractOrderResponse {
+record ContractOrderResponse {
   id: ContractOrderId
   decision: Decision
   status: String

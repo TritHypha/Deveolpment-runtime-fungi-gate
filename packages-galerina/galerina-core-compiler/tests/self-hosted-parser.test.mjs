@@ -247,7 +247,7 @@ describe("Self-Hosted Parser (parser.fungi) — parse-time sanity", () => {
 describe("Self-Hosted Parser — checked declaration facts", () => {
   it("preserves ordered type fields and enum cases instead of silently skipping them", async () => {
     const result = await pipeline(`@version 1
-type ExampleRecord {
+record ExampleRecord {
   selected: Int
   values: Array<String>
 }

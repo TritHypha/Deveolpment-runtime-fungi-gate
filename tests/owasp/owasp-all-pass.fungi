@@ -21,7 +21,7 @@ type UserId = Brand<String, "UserId">
 type Email = Brand<String, "Email">
 type AuthToken = Brand<String, "AuthToken">
 type PatientId = Brand<String, "PatientId">
-type PatientSummary {
+record PatientSummary {
   patientRef: String
   name: String
   dob: String

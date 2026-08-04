@@ -5,7 +5,7 @@
 // evidence, but this `.fungi` source does not claim native or SLIDE execution.
 // Cross-runtime publication waits for an executable SLIDE backend.
 
-type ComputeMixBenchmarkRequest {
+record ComputeMixBenchmarkRequest {
   targetMs: Int
   warmupMs: Int
   batchSize: Int

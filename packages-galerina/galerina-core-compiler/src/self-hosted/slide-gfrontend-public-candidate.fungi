@@ -34,10 +34,10 @@ pure flow slideG4SourceExact(sourceText: String) -> Bool
 contract { intent { "Pin the normalized G4 source bytes without ambient path identity." } }
 {
   let bytes = sourceText.encode()
-  if bytes.length() != 1641 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+  if bytes.length() != 1643 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
     return false
   }
-  return bytes.sha256Hex() == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+  return bytes.sha256Hex() == "d4007a8e4b89bffc3dc84d0108b422b71efdb741e4b1a3ca9d760db49d7d8c6d"
 }
 
 // Bind exact semantic bytes and checked trace facts into frontend evidence.
@@ -199,7 +199,7 @@ contract { intent { "Independently re-derive the bounded G4 source, semantic, ma
   }
   let source = slideV2ESourceUnitAt(evidence.sourceUnits, 0)
   let sourceBytes = sourceText.encode()
-  let sourceExact: Bool = source.sourceUnitId == 1 and source.logicalName == "fixtures/slide-g4-checked-source.fungi" and source.sourceText == sourceText and source.sourceByteLength == 1641 and source.sourceBytesDigest == sourceBytes.sha256Hex()
+  let sourceExact: Bool = source.sourceUnitId == 1 and source.logicalName == "fixtures/slide-g4-checked-source.fungi" and source.sourceText == sourceText and source.sourceByteLength == 1643 and source.sourceBytesDigest == sourceBytes.sha256Hex()
   if sourceExact == false {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-GFRONT-001", "source-unit binding mismatch",

@@ -107,7 +107,7 @@ describe("R5 complete: TypeId migration", () => {
   // before the validation walk (Pass 2), so locally declared types must never produce FUNGI-TYPE-001.
   it("type checker does not fire FUNGI-TYPE-001 for locally declared type aliases", () => {
     const result = parseAndCheck(`
-type PatientError {
+record PatientError {
   code: String
   message: String
 }

@@ -12,7 +12,7 @@
 // for FUNGI-MEMORY-001. That borrow-checker code was retired as RESERVED / NOT-EMITTED in #65 once
 // Galerina's value-semantics model was confirmed — the rejection never fired and never will.
 
-type Payload {
+record Payload {
   data: String
 }
 

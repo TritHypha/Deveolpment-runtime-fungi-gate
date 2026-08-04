@@ -555,7 +555,7 @@ contract { effects { database.write, network.outbound, audit.write } }
 describe("Financial — record types: Invoice, Payment, Balance", () => {
   it("type checker accepts an Invoice record type declaration", () => {
     const result = parseAndCheck(`
-type Invoice {
+record Invoice {
   id: String
   amount: Money<GBP>
   vatAmount: Money<GBP>
@@ -575,7 +575,7 @@ flow getTotal(inv: Invoice) -> Money<GBP> {
 
   it("type checker accepts a Payment record type declaration", () => {
     const result = parseAndCheck(`
-type Payment {
+record Payment {
   id: String
   invoiceId: String
   paid: Money<GBP>
@@ -595,7 +595,7 @@ flow getPaymentId(pmt: Payment) -> String {
 
   it("type checker accepts a Balance record type declaration", () => {
     const result = parseAndCheck(`
-type Balance {
+record Balance {
   accountId: String
   available: Money<GBP>
   pending: Money<GBP>
@@ -613,21 +613,21 @@ flow isPositive(bal: Balance) -> Bool {
 
   it("type checker accepts Invoice, Payment, and Balance together in a flow", () => {
     const result = parseAndCheck(`
-type Invoice {
+record Invoice {
   id: String
   amount: Money<GBP>
   totalAmount: Money<GBP>
   status: String
 }
 
-type Payment {
+record Payment {
   id: String
   invoiceId: String
   amount: Money<GBP>
   status: String
 }
 
-type Balance {
+record Balance {
   accountId: String
   available: Money<GBP>
   updatedAt: Timestamp

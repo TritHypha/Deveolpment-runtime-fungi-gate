@@ -67,10 +67,10 @@ pure flow slideG4SnapshotSourceExact(sourceText: String) -> Bool
 contract { intent { "Pin the bounded raw source bytes before any checked fact is sealed." } }
 {
   let bytes = sourceText.encode()
-  if bytes.length() != 1641 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+  if bytes.length() != 1643 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
     return false
   }
-  return bytes.sha256Hex() == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+  return bytes.sha256Hex() == "d4007a8e4b89bffc3dc84d0108b422b71efdb741e4b1a3ca9d760db49d7d8c6d"
 }
 
 // Prove lexer ranges are monotonic, bounded, and terminated at source end.
@@ -86,11 +86,11 @@ contract { intent { "Require monotonic lexer byte ranges covering the exact boun
   while index < tokens.count() {
     match tokens.get(index) {
       Some(token) => {
-        if token.start < previousEnd or token.end < token.start or token.end > 1641 {
+        if token.start < previousEnd or token.end < token.start or token.end > 1643 {
           return false
         }
         previousEnd = token.end
-        if token.start == 1641 and token.end == 1641 {
+        if token.start == 1643 and token.end == 1643 {
           sawSourceEnd = true
         }
       }
@@ -306,7 +306,7 @@ contract { intent { "Seal exact compiler facts without retaining the source AST 
       logicalName: "fixtures/slide-g4-checked-source.fungi"
       normalizedPathIdentity: "fixtures/slide-g4-checked-source.fungi"
       sourceLanguageEdition: "fungi.v1"
-      sourceByteLength: 1641
+      sourceByteLength: 1643
       sourceDigest: sourceText.encode().sha256Hex()
       diagnosticSetDigest: "".encode().sha256Hex()
       errorCount: 0 warningCount: 0
@@ -352,7 +352,7 @@ pure flow slideG4CheckedSnapshotExact(
 contract { intent { "Validate every bounded snapshot identity, fact, limit, and trace without ambient state." } }
 {
   let identity: Bool = snapshot.profileId == "galerina.checked-module.g4.fixture.v1" and snapshot.sourceUnitId == 1 and snapshot.logicalName == "fixtures/slide-g4-checked-source.fungi" and snapshot.normalizedPathIdentity == "fixtures/slide-g4-checked-source.fungi" and snapshot.sourceLanguageEdition == "fungi.v1"
-  let source: Bool = snapshot.sourceByteLength == 1641 and snapshot.sourceDigest == "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3"
+  let source: Bool = snapshot.sourceByteLength == 1643 and snapshot.sourceDigest == "d4007a8e4b89bffc3dc84d0108b422b71efdb741e4b1a3ca9d760db49d7d8c6d"
   let diagnostics: Bool = snapshot.diagnosticSetDigest == "".encode().sha256Hex() and snapshot.errorCount == 0 and snapshot.warningCount == 0 and snapshot.checkerProfileId == "galerina.check.bounded-shape.v1"
   let declarationDigest = "SLIDEG4FixtureRecord:selected:Int,length:Int,label:String|SLIDEG4FixtureVariant:Selected,Missing".encode().sha256Hex()
   let checkedFactsDigest = "slide_g4_checked_increment|slide_g4_k3_join|slide_g4_guarded_memory|31|9|40".encode().sha256Hex()

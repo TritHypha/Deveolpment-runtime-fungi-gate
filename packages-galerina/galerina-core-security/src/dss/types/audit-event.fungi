@@ -11,7 +11,7 @@
 ;; See: ../ZTF-Knowledge-Bases/galerina-governed-tower-specification.md §3E
 
 // AuditEvent — emitted by DSS.wasm trap handler on every FUNGI-INV-000 signal
-type AuditEvent {
+record AuditEvent {
   code:           String  // "FUNGI-INV-000" or specific capability/fuel code
   flowId:         String  // which flow triggered the trap
   contractHash:   String  // sha256 of the flow's contract block

@@ -356,14 +356,20 @@ describe("CLI compatibility — platform awareness", () => {
   });
 
   it("npm is available (required for npm install -g @galerina/cli)", () => {
-    const npmEntry = process.env.npm_execpath;
-    assert.ok(npmEntry, "npm_execpath must identify the npm CLI under npm test");
-    const r = spawnSync(process.execPath, [npmEntry, "--version"], {
+    // `npm_execpath` is lifecycle metadata, not proof that npm is installed:
+    // direct `node --test` runs and newer Windows npm launchers may omit it.
+    // Probe the platform command that installation instructions actually use.
+    const command = isWin ? "cmd.exe" : "npm";
+    const args = isWin
+      ? ["/d", "/s", "/c", "npm.cmd --version"]
+      : ["--version"];
+    const r = spawnSync(command, args, {
       encoding: "utf8",
       shell: false,
       timeout: 5000,
     });
-    assert.ok(r.status === 0 || r.error === undefined, "npm should be available");
+    assert.equal(r.status, 0, `npm should be available: ${r.error?.message ?? r.stderr}`);
+    assert.match(r.stdout.trim(), /^\d+\.\d+\.\d+/);
   });
 
   it("galerina.mjs works via direct node invocation (no global install needed)", () => {

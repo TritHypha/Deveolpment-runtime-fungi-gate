@@ -2,7 +2,7 @@
 // EXPECT: ACCEPT
 // AREA: api
 // PURPOSE: checkpoint and rollback for transactional flows
-type Order {
+record Order {
   id: String
 }
 

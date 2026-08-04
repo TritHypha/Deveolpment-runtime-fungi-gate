@@ -12,7 +12,7 @@ import "./vdpm.fungi"
 import "./capability-map.fungi"
 
 ;; EmergencyTransitionResult — the output of applying an emergency transition
-type EmergencyTransitionResult {
+record EmergencyTransitionResult {
   vdpmAfter:        Int     ;; V_DPM register value after clearing bits
   bitsCleared:      Int     ;; bitmask of bits that were cleared
   quarantineSet:    Bool    ;; quarantine_engaged bit set?

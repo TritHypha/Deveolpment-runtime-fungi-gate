@@ -135,7 +135,7 @@ contract { intent { "Verify producer claims against exact source and independent
 
   let sourceBytes = sourceText.encode()
   let sourceDigest = sourceBytes.sha256Hex()
-  if sourceBytes.length() != 1492 or sourceText.contains("\u000D") or sourceText.contains("\u0000") or sourceDigest != "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde" {
+  if sourceBytes.length() != 1494 or sourceText.contains("\u000D") or sourceText.contains("\u0000") or sourceDigest != "aabc496358ca86d9527861ee5937a38662d71145c5b361b19aa5d4df38a62b90" {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-V2E-RECEIPT-004", "independent source normalization or digest refused",
     )
@@ -146,7 +146,7 @@ contract { intent { "Verify producer claims against exact source and independent
     )
   }
   let source = slideV2ESourceUnitAt(evidence.sourceUnits, 0)
-  if source.sourceUnitId != 1 or source.logicalName != "fixtures/slide-v2d-memory.fungi" or source.sourceText != sourceText or source.sourceByteLength != 1492 or source.sourceBytesDigest != sourceDigest {
+  if source.sourceUnitId != 1 or source.logicalName != "fixtures/slide-v2d-memory.fungi" or source.sourceText != sourceText or source.sourceByteLength != 1494 or source.sourceBytesDigest != sourceDigest {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-V2E-RECEIPT-004", "source-unit binding changed",
     )

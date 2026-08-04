@@ -3,7 +3,7 @@
 // exists. This portable source validates the deterministic default request;
 // it does not publish a cross-runtime performance claim.
 
-type BenchmarkRequest {
+record BenchmarkRequest {
   durationSeconds: Int
   submitResults: Bool
   includeHostIdentity: Bool

@@ -18,13 +18,13 @@ pure flow materializeSLIDEV2EFrontendEvidence(
 contract { intent { "Materialize one non-authorizing receipt only from exact source and admitted V2-D bytes." } }
 {
   let sourceBytes = sourceText.encode()
-  if sourceBytes.length() != 1492 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
+  if sourceBytes.length() != 1494 or sourceText.contains("\u000D") or sourceText.contains("\u0000") {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-V2E-RECEIPT-004", "source normalization or byte ceiling changed",
     )
   }
   let sourceDigest = sourceBytes.sha256Hex()
-  if sourceDigest != "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde" {
+  if sourceDigest != "aabc496358ca86d9527861ee5937a38662d71145c5b361b19aa5d4df38a62b90" {
     return refuseSLIDEV2EFrontendEvidence(
       "SLIDE-V2E-RECEIPT-004", "source bytes changed",
     )

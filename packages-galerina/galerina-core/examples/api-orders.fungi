@@ -2,18 +2,18 @@
 type OrderId = String
 type CustomerId = String
 
-type OrderItem {
+record OrderItem {
   sku: String
   quantity: Int
 }
 
-type CreateOrderRequest {
+record CreateOrderRequest {
   customerId: CustomerId
   items: Array<OrderItem>
   currency: String
 }
 
-type CreateOrderResponse {
+record CreateOrderResponse {
   id: OrderId
   decision: Decision
   status: String

@@ -1,6 +1,6 @@
 @version 1
 
-type SLIDEV2EFixtureRecord {
+record SLIDEV2EFixtureRecord {
   selected: Int
   length: Int
   label: String

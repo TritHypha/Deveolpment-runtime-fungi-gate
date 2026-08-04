@@ -92,7 +92,7 @@ flow test(e: ApiError) -> Result<String, ValidationError> {
 
   it("does not emit FUNGI-TYPE-001 for a user-defined type", () => {
     const result = parseAndCheck(`
-type Order {
+record Order {
   id: String
 }
 

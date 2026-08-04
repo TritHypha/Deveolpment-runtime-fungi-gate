@@ -4,7 +4,7 @@
 // PURPOSE: type aliases, record declaration, and typed field access
 type CustomerId = String
 
-type Customer {
+record Customer {
   id: CustomerId
   name: String
   email: Option<String>

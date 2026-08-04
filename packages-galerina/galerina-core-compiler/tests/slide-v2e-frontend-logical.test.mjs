@@ -185,10 +185,10 @@ before(async () => {
 
 describe("SLIDE V2-E logical frontend receipt", () => {
   it("pins a strictly checked normalized source fixture", () => {
-    assert.equal(Buffer.byteLength(sourceText, "utf8"), 1492);
+    assert.equal(Buffer.byteLength(sourceText, "utf8"), 1494);
     assert.equal(
       createHash("sha256").update(sourceText, "utf8").digest("hex"),
-      "8bdc2c2961d0c13c66132d3d506ebe24c050e1a618631c18b30eba6539694bde",
+      "aabc496358ca86d9527861ee5937a38662d71145c5b361b19aa5d4df38a62b90",
     );
     assert.equal(sourceText.includes("\r"), false);
     assert.equal(sourceText.includes("\0"), false);
@@ -242,7 +242,7 @@ describe("SLIDE V2-E logical frontend receipt", () => {
     for (const entry of mappings) {
       const start = field(entry, "startByte").value;
       const end = field(entry, "endByte").value;
-      assert.ok(start >= 0 && end > start && end <= 1492);
+      assert.ok(start >= 0 && end > start && end <= 1494);
       assert.equal(field(entry, "sourceUnitId").value, 1);
     }
   });

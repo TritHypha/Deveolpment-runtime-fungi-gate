@@ -16,7 +16,7 @@ import "./vdpm.fungi"
 import "./capability-map.fungi"
 
 ;; DAGEdgeResult — result of a DAG edge validation
-type DAGEdgeResult {
+record DAGEdgeResult {
   authorized:   Bool    ;; true if the transition is in the ExecutionDAG
   fromFloor:    String  ;; source floor ("floor_1" through "floor_4")
   toFloor:      String  ;; destination floor

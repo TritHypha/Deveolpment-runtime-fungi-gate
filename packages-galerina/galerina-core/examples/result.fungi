@@ -4,7 +4,7 @@
 // PURPOSE: Result type with enum errors and exhaustive match
 type OrderId = String
 
-type Order {
+record Order {
   id: OrderId
 }
 

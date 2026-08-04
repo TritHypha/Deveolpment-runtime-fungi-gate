@@ -229,7 +229,7 @@ describe("independent SLIDE V2-E canonical receipt import", () => {
     assert.equal(field(imported, "consumed").value, 1739);
     assert.equal(
       field(imported, "receiptDigest").value,
-      "068f4d63564bc3e544b3768b4a6bb760793c4384ac194928564987e7d846bb14",
+      "0398e41a3465f7effa9d9e098d5ff350c07e59c53ed2b52314e52a9c53b8e7d6",
     );
     assert.equal(
       field(imported, "semanticDigest").value,
@@ -238,7 +238,7 @@ describe("independent SLIDE V2-E canonical receipt import", () => {
     assert.equal(field(imported, "authorityReleased").value, false);
     assert.equal(
       createHash("sha256").update(receiptBytes).digest("hex"),
-      "1041154e66fc9fddd578031534d98fcbc0a058d30221ac6edc7e578cdcb1eba0",
+      "2a9edb1f3336c77740c330555d78ad1c24cc23640f2a65489c53ce0e04739537",
     );
   });
 
@@ -286,7 +286,7 @@ describe("independent SLIDE V2-E canonical receipt import", () => {
     );
     assert.equal(
       field(result.value, "receiptDigest").value,
-      "068f4d63564bc3e544b3768b4a6bb760793c4384ac194928564987e7d846bb14",
+      "0398e41a3465f7effa9d9e098d5ff350c07e59c53ed2b52314e52a9c53b8e7d6",
     );
     assert.equal(field(result.value, "authorityReleased").value, false);
   });

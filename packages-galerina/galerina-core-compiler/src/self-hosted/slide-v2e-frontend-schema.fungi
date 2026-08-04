@@ -142,9 +142,9 @@ pure flow slideV2EFunctionSpan(functionId: Int) -> SLIDEV2ESourceSpan
 contract { intent { "Return the exact normalized-source span for one frozen fixture flow." } }
 {
   match functionId {
-    1 => { return { startByte: 144 endByte: 310 } }
-    2 => { return { startByte: 310 endByte: 683 } }
-    3 => { return { startByte: 683 endByte: 1492 } }
+    1 => { return { startByte: 146 endByte: 312 } }
+    2 => { return { startByte: 312 endByte: 685 } }
+    3 => { return { startByte: 685 endByte: 1494 } }
     _ => { return { startByte: 0 endByte: 0 } }
   }
 }

@@ -4,7 +4,7 @@
 // PURPOSE: legacy filename retained to document that Rust-style use-after-move
 //          rejection is not part of Galerina's value-semantics model.
 
-type Payload {
+record Payload {
   data: String
 }
 

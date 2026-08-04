@@ -23,7 +23,7 @@ import "./types/audit-event.fungi"
 import "./vdpm.fungi"
 
 ;; EpilogueReceipt — the cryptographic proof of governed execution
-type EpilogueReceipt {
+record EpilogueReceipt {
   strategy:        String  ;; "sha256_seal" | "zk_snark_receipt" | "none"
   inputSeal:       String  ;; sha256:<hex> of source + contract hash
   outputSeal:      String  ;; sha256:<hex> of execution result (set post-execution)

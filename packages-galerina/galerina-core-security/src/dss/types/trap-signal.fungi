@@ -4,7 +4,7 @@
 ;; The trap handler (trap-handler.fungi) converts this into an AuditEvent.
 
 // TrapSignal — Wasmtime delivers this to DSS.wasm on unreachable
-type TrapSignal {
+record TrapSignal {
   dwiId:         String  // which DWI isolate triggered
   flowId:        String  // which flow was executing
   contractHash:  String  // sha256 of the contract block
@@ -15,7 +15,7 @@ type TrapSignal {
 }
 
 ;; PluginEvictionSignal — sent to DSS when Tower.evict() is called
-type PluginEvictionSignal {
+record PluginEvictionSignal {
   pluginAlias:   String  // the "as X" alias from import plugin assimilate
   reason:        String  // "explicit_evict" | "emergency_evict" | "budget_exceeded"
   replacedBy:    String  // "" if no replacement, otherwise new plugin alias

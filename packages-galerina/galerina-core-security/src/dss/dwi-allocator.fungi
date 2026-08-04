@@ -23,7 +23,7 @@ static DWI_STATE_EVICTED    = "evicted"
 static DWI_DEFAULT_FUEL     = 100000
 static DWI_MAX_MEMORY_BYTES = 4194304   ;; 4MB — DWI linear memory ceiling
 
-type DWIHandle {
+record DWIHandle {
   dwiId:       String  ;; unique identifier for this isolate
   state:       String  ;; DWI_STATE_* constant
   fuelBudget:  Int     ;; fuel units remaining

@@ -1,6 +1,6 @@
 @version 1
 type CreateSessionResult = Result<Session, SessionError>
-type Session {
+record Session {
   readonly sessionId: SessionId
   readonly expiresAt: Timestamp
 }

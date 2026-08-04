@@ -110,10 +110,10 @@ it("seals immutable checked facts with an instruction-total source trace", async
     field(snapshot, "profileId").value,
     "galerina.checked-module.g4.fixture.v1",
   );
-  assert.equal(field(snapshot, "sourceByteLength").value, 1641);
+  assert.equal(field(snapshot, "sourceByteLength").value, 1643);
   assert.equal(
     field(snapshot, "sourceDigest").value,
-    "efa29344d4b837aaeabeef1419132586afb94f13fa747703b69d9b58568533a3",
+    "d4007a8e4b89bffc3dc84d0108b422b71efdb741e4b1a3ca9d760db49d7d8c6d",
   );
   assert.equal(field(snapshot, "errorCount").value, 0);
   assert.equal(field(snapshot, "warningCount").value, 0);
@@ -145,7 +145,7 @@ it("seals immutable checked facts with an instruction-total source trace", async
   for (const entry of trace) {
     const start = field(entry, "startByte").value;
     const end = field(entry, "endByte").value;
-    assert.ok(start >= 0 && end > start && end <= 1641);
+    assert.ok(start >= 0 && end > start && end <= 1643);
   }
 
   const forbidden = [
@@ -171,7 +171,7 @@ it("refuses caller-supplied lexer facts that do not match the bound source", asy
   const token = changed.items.find(
     (item) =>
       field(item, "value").value === "slide_g4_checked_increment" &&
-      field(item, "start").value === 152,
+      field(item, "start").value === 154,
   );
   assert.ok(token);
   token.fields.set("value", vStr("slide_g4_checked_incremenx"));

@@ -4,12 +4,12 @@
 // PURPOSE: typed JSON decode with generics and explicit error propagation
 type CustomerId = String
 
-type OrderItem {
+record OrderItem {
   sku: String
   quantity: Int
 }
 
-type CreateOrderRequest {
+record CreateOrderRequest {
   customerId: CustomerId
   items: Array<OrderItem>
   currency: String

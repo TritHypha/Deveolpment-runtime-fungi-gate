@@ -3,7 +3,7 @@
 // AREA: memory
 // PURPOSE: resource is moved to a handler; handler holds sole ownership and performs cleanup
 
-type Connection {
+record Connection {
   host: String
   port: Int
 }

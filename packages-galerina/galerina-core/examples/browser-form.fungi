@@ -3,7 +3,7 @@
 // out of executable syntax prevents an unaudited source declaration from
 // minting DOM, network, storage, filesystem, or secret authority.
 
-type ContactFormData {
+record ContactFormData {
   name: String
   email: String
   message: String

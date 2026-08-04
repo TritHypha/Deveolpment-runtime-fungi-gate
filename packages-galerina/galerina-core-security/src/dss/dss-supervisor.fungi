@@ -26,7 +26,7 @@ import "./dwi-allocator.fungi"
 
 ;; DSSState — the supervisor's runtime state
 ;; Lives in DSS.wasm's private linear memory — guest DWIs cannot address it
-type DSSState {
+record DSSState {
   vdpm:              Int    ;; current V_DPM register (starts at 0xFF)
   activeDwiCount:    Int    ;; number of running DWI isolates
   totalAuditEvents:  Int    ;; cumulative audit events emitted

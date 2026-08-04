@@ -1,5 +1,5 @@
 @version 1
-type ArithmeticBenchmarkReport {
+record ArithmeticBenchmarkReport {
   threshold: Int
   total: Int
   nextI: Int

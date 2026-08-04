@@ -2,21 +2,21 @@
 // EXPECT: ACCEPT
 // AREA: concurrency
 // PURPOSE: structured await — parallel calls with timeout policy
-type EnrichedOrder {
+record EnrichedOrder {
   customer: Customer
   stock: StockStatus
   risk: RiskScore
 }
 
-type Customer {
+record Customer {
   id: CustomerId
 }
 
-type StockStatus {
+record StockStatus {
   available: Bool
 }
 
-type RiskScore {
+record RiskScore {
   score: Float
 }
 

@@ -1,6 +1,6 @@
 @version 1
 
-type SLIDEG4FixtureRecord {
+record SLIDEG4FixtureRecord {
   selected: Int
   length: Int
   label: String

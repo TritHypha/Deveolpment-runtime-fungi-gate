@@ -3,7 +3,7 @@
 // The portable language does not expose a brute-force loop or runtime metrics
 // as a benchmark claim; execution remains host-owned until SLIDE is executable.
 
-type FourDigitGuessRequest {
+record FourDigitGuessRequest {
   codeLength: Int
   maxAttempts: Int
 }

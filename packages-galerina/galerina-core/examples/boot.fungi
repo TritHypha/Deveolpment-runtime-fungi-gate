@@ -7,7 +7,7 @@
 // cannot mint authority from source code. A present device with no admitted
 // driver remains present-but-unusable.
 
-type BootPolicy {
+record BootPolicy {
   strictTypes: Bool
   denyNull: Bool
   denyImplicitCasts: Bool
@@ -15,7 +15,7 @@ type BootPolicy {
   deterministicBuild: Bool
 }
 
-type HardwareAdmission {
+record HardwareAdmission {
   present: Bool
   driverAdmitted: Bool
   contractAdmitted: Bool

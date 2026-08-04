@@ -3,7 +3,7 @@
 // AREA: memory
 // PURPOSE: immutable value input keeps the caller's owner valid
 
-type Buffer {
+record Buffer {
   data: Array<UInt8>
   size: Int
 }

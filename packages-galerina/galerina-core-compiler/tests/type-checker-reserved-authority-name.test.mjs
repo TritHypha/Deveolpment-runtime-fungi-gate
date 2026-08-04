@@ -26,12 +26,12 @@ const errs = (src) => {
 describe("B0: a non-hallmark decl may not shadow a reserved AUTHORITY name (set a)", () => {
   // The reject-set — Money, Brand, and the epistemic vocabulary, across type/record/enum forms.
   const REJECT = [
-    ["type", "type Money { x: Int }", "Money"],
+    ["record", "record Money { x: Int }", "Money"],
     ["record", "record Verdict { x: Int }", "Verdict"],
     ["enum", "enum Secret { A }", "Secret"],
     ["record", "record Brand { x: Int }", "Brand"],
     ["enum", "enum Tainted { A }", "Tainted"],
-    ["type", "type Trusted { x: Int }", "Trusted"],
+    ["record", "record Trusted { x: Int }", "Trusted"],
     ["record", "record Decision { x: Int }", "Decision"],
     ["enum", "enum SafeFor { A }", "SafeFor"],
   ];
@@ -50,9 +50,9 @@ describe("B0: a non-hallmark decl may not shadow a reserved AUTHORITY name (set 
 
   // The clean-set — structural ADT builtins, domain-convenience names, and user names are all free to declare.
   const CLEAN = [
-    "type Result { x: Int }",
+    "record Result { x: Int }",
     "enum Option { A }",
-    "type GBP { x: Int }",
+    "record GBP { x: Int }",
     "type UserId = String",
     "type Email = String",
     "record MyThing { x: Int }",

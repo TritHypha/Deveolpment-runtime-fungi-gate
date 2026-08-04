@@ -4,7 +4,7 @@
 // PURPOSE: Option type with Some/None match and error propagation
 type CustomerId = String
 
-type Customer {
+record Customer {
   id: CustomerId
   email: Option<String>
 }

@@ -16,7 +16,7 @@ import "./vdpm.fungi"
 import "./capability-map.fungi"
 
 ;; MMCP entry — one per view() declaration
-type MMCPEntry {
+record MMCPEntry {
   variableName:  String   ;; the variable name (for audit log correlation)
   capabilityMask: Int     ;; V_DPM bitmask (OR of declared capabilities)
   cborTag:       Int      ;; always 415

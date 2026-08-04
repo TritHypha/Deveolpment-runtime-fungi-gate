@@ -2,7 +2,7 @@
 // Worker counts, queues, and dead-letter paths belong to an admitted deployment
 // manifest. The portable language core only decides how an event is classified.
 
-type OrderEvent {
+record OrderEvent {
   id: String
   type: String
 }
