@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "992cce0b",
+    "sha": "ea489832",
     "detached": false,
     "dirty": true
   },
@@ -284,6 +284,11 @@
           "detail": "generated authority is current at 1,456 contracts across 534 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
         },
         {
+          "item": "DSS decision core + optional Wasm oracle",
+          "state": "shipped",
+          "detail": "the .fungi V_DPM decision core is execution-proven (10/10 deterministic builds; 386-point Stage-A differential plus topology-first, monotonicity and deny-by-default laws). Fuel, reset and attestation evidence is retained in the flat development-only Wasmtime oracle. The former dss-host production sidecar and real-Wasmtime-supervisor plan are retired; #102–106 are historical labels, not a second implementation queue. Remaining target-neutral containment, typed-trap and admission work belongs to the Independent SLIDE backend and its release gates"
+        },
+        {
           "item": "Workspace package families",
           "state": "shipped",
           "detail": "98/98 component families green; 98 workspace packages, 8,956 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
@@ -344,14 +349,9 @@
           "detail": "R&D COMPLETE — all 3 authored in the KB (galerina-rd-0363/0364/0365). RD-0363 replay-admission + RD-0364 inference-governance DECISION surfaces execute through #105 (R0→R1, verdict≡spec); RD-0365 key-custody design-done. What remains is BUILD not R&D: P/I wiring increments (0363/0364) + implement 0365. (Renamed 2026-07-15 — 'Missing R&D' was a stale backlog label; the R&D is not missing.)"
         },
         {
-          "item": "Self-hosting Stages 3–6",
+          "item": "Self-hosting SLIDE bootstrap fixpoint",
           "state": "post-v1",
-          "detail": "bootstrap fixpoint · crypto FFI seam · .fungi↔host path · floor-by-floor; P9, non-v1-gate"
-        },
-        {
-          "item": "DSS.wasm supervisor (#102–106)",
-          "state": "post-v1",
-          "detail": "real Wasmtime TCB (kernel-bypass / in-sandbox decrypt) stays post-v1 — but the DECISION CORE is now execution-proven (2026-07-16 night): build gate 10/10 deterministic, V_DPM flows ≡ Stage-A over 386 pts + topology-first/monotonicity/deny-by-default laws, zero effect calls from the pure core, 10 real .wasm artifacts sha256-manifested (build/dss-wasm); effect imports link only via explicit deny-by-default grants (createHostRuntime effectHandlers)"
+          "detail": "all 7 canonical .fungi compiler stages are authoritative specifications; the distinct open work is an executable source-to-SLIDE self-compile, exact bootstrap fixpoint, crypto FFI seam and bounded host path. Do not repeat the retired WASM stage-flip programme"
         },
         {
           "item": "KB category indexes",
