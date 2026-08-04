@@ -13,20 +13,20 @@
 // Returns "admit" or a structured 401 reason. Deny-by-default: presence is NOT authentication.
 pure flow authGateVerdict(authMode: String, hasChannelVerdict: Bool, channelVerdictAuthorized: Bool, headerPresent: Bool, allowPresenceFallback: Bool) -> String
 contract {
-  intent { "Fail-closed kernel auth gate 6: a required-auth route admits ONLY on an authorizing channel verdict (or an explicit opt-in header-presence fallback); bare presence never authenticates." }
+  intent { "Fail-closed kernel auth gate 6: any supplied channel verdict constrains every route; required auth admits only on that ALLOW or an explicit header fallback, and bare presence never authenticates." }
 }
 {
-  // A public route carries no auth gate.
-  if authMode == "public" {
-    return "admit"
-  }
-  // mode "required": a transport-supplied channel/identity verdict is collapsed FAIL-CLOSED —
-  // only an authorizing (ALLOW) verdict admits; INDETERMINATE/DENY -> 401.
+  // A supplied transport/channel verdict constrains EVERY route. Public removes the
+  // application-credential requirement; it never overrides a configured channel refusal.
   if hasChannelVerdict == true {
     if channelVerdictAuthorized == true {
       return "admit"
     }
     return "unauthorized_channel_verdict_denied"
+  }
+  // With no channel policy/evidence, a public route carries no application auth gate.
+  if authMode == "public" {
+    return "admit"
   }
   // No channel verdict. The OPT-IN legacy fallback admits on mere Authorization-header presence —
   // which is NOT a real token verification — so it is gated behind an explicit per-route opt-in.

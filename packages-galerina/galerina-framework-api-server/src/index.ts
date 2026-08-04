@@ -15,11 +15,12 @@
  *      posture-aware body-size policy; this cap never removes or relaxes it. When
  *      the cap trips we respond 413 and destroy the socket WITHOUT buffering more.
  *   2. An OPTIONAL channel/identity verdict (TLSTP S1 cert-gate) fed to the kernel.
- *      The kernel folds it FAIL-CLOSED in its auth step as an authentication factor:
+ *      The kernel folds it FAIL-CLOSED in its auth step as a mandatory channel factor:
  *      only +1/ALLOW (e.g. a fully-validated, pinned, fresh-revocation client cert)
- *      authenticates the channel; 0/−1 deny. A verified channel authenticates in
- *      lieu of a bearer token (mutual-TLS semantics); it does not relax any other
- *      gate. There are two ways to supply it:
+ *      authenticates the channel; 0/−1 deny every route. A `public` route removes
+ *      only its application-credential requirement; it never overrides a configured
+ *      channel refusal. A verified channel authenticates in lieu of a bearer token
+ *      (mutual-TLS semantics); it does not relax any other gate. There are two ways to supply it:
  *        a. an explicit `resolveChannelVerdict` hook (advanced / custom transports);
  *        b. the built-in `tls` mode — pass key/cert (+ optional `ca`, `pinnedDigests`,
  *           `checkRevocation`, …) and the adapter stands up an HTTPS server, reads the
@@ -151,8 +152,9 @@ export interface CreateApiServerOptions {
    *
    * This is the live end-to-end channel-verdict path: transport → cert-gate →
    * `channelVerdict` → kernel `decideAtBoundary` fold. The kernel folds it in its auth
-   * step as a fail-closed authentication factor (a +1 channel authenticates in lieu of a
-   * bearer token; 0/−1 deny). The transport never pre-empts the pipeline.
+   * step as a fail-closed mandatory factor whenever it is supplied (a +1 channel
+   * authenticates in lieu of a bearer token; 0/−1 deny even a public route). The
+   * transport never pre-empts the pipeline.
    *
    * Default: unset → no channel verdict is supplied → the adapter behaves exactly as
    * before, leaving admission entirely to the kernel's own auth gate (no behaviour change).

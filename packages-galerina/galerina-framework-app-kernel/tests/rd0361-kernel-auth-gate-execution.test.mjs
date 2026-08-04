@@ -62,7 +62,10 @@ function evidence(auth, over) {
 // The full gate-6 matrix — every twin outcome, both admission boundaries, and the empty/whitespace
 // header-presence bypass the RD-0307/0309 fix closed (#10).
 const SCENARIOS = [
-  { name: "public route admits",                    auth: { mode: "public" },                                          over: {} },
+  { name: "public route without channel policy admits", auth: { mode: "public" },                                     over: {} },
+  { name: "public + channel ALLOW(+1) admits",      auth: { mode: "public" },                                          over: { channelVerdict: 1 } },
+  { name: "public + channel DENY(-1) refuses",      auth: { mode: "public" },                                          over: { channelVerdict: -1 } },
+  { name: "public + channel INDET(0) refuses",      auth: { mode: "public" },                                          over: { channelVerdict: 0 } },
   { name: "required + channel ALLOW(+1) admits",    auth: { mode: "required" },                                        over: { channelVerdict: 1 } },
   { name: "required + channel DENY(-1) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: -1 } },
   { name: "required + channel INDET(0) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: 0 } },
@@ -119,8 +122,10 @@ test("RD-0361 kernel · auth gate 6: R0 build → R1 #105-admit → R3 WASM ≡ 
   assert.equal(agree, SCENARIOS.length, "every gate-6 differential case checked");
 
   // The two admission boundaries, asserted explicitly on BOTH sides:
-  assert.equal(twinVerdict(evidence({ mode: "public" }, {})), "admit", "WASM: a public route admits");
-  assert.notEqual((await kernelFor({ mode: "public" }).handle(req({}))).status, 401, "real kernel: a public route admits");
+  assert.equal(twinVerdict(evidence({ mode: "public" }, {})), "admit", "WASM: a public route without channel policy admits");
+  assert.notEqual((await kernelFor({ mode: "public" }).handle(req({}))).status, 401, "real kernel: a public route without channel policy admits");
+  assert.equal(twinVerdict(evidence({ mode: "public" }, { channelVerdict: -1 })), "unauthorized_channel_verdict_denied", "WASM: public cannot override channel DENY");
+  assert.equal((await kernelFor({ mode: "public" }).handle(req({ channelVerdict: -1 }))).status, 401, "real kernel: public cannot override channel DENY");
   assert.equal(twinVerdict(evidence({ mode: "required" }, { channelVerdict: 1 })), "admit", "WASM: an ALLOW channel verdict admits");
   assert.notEqual((await kernelFor({ mode: "required" }).handle(req({ channelVerdict: 1 }))).status, 401, "real kernel: an ALLOW channel verdict admits");
 });

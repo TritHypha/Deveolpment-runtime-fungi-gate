@@ -48,12 +48,18 @@ const UNTRUSTED_PIN = pinOf(CLIENT_UNTRUSTED_CERT);
 /** A "good + fresh" revocation answer for the host-injected check; producedAt defaults to now. */
 const REVOCATION_GOOD = () => "good";
 
-/** auth-REQUIRED GET /secure kernel; records whether the handler actually ran so we can
- *  assert a denied channel blocks BEFORE dispatch (handler never reached). */
+/** Mixed auth-required/public kernel. Both handlers share one execution marker so tests can
+ *  prove TLS channel admission runs before dispatch regardless of route auth metadata. */
 function buildSecureKernel(ran) {
   return createAppKernel({
-    routes: [{ method: "GET", path: "/secure", handler: "secure" }], // default auth: required
-    dispatch: { secure: () => { ran.value = true; return { status: 200, body: { ok: true } }; } },
+    routes: [
+      { method: "GET", path: "/secure", handler: "secure" }, // default auth: required
+      { method: "GET", path: "/public", handler: "public", auth: { mode: "public" } },
+    ],
+    dispatch: {
+      secure: () => { ran.value = true; return { status: 200, body: { ok: true } }; },
+      public: () => { ran.value = true; return { status: 200, body: { ok: true } }; },
+    },
   });
 }
 
@@ -187,6 +193,17 @@ test("(bonus) a THROWING revocation check → 401 (unknown → 0 → DENY), hand
     },
     async (port, ran) => {
       const res = await tlsRequest(port, { clientKey: CLIENT_GOOD_KEY, clientCert: CLIENT_GOOD_CERT });
+      assert.equal(res.status, 401);
+      assert.equal(ran.value, false);
+    },
+  );
+});
+
+test("(invariant) TLS admission denies an unauthenticated public route before dispatch", async () => {
+  await withTlsServer(
+    { pinnedDigests: [GOOD_PIN], checkRevocation: REVOCATION_GOOD, revocationFreshnessMs: 60_000 },
+    async (port, ran) => {
+      const res = await tlsRequest(port, { path: "/public" });
       assert.equal(res.status, 401);
       assert.equal(ran.value, false);
     },

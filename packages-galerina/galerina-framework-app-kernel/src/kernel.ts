@@ -343,14 +343,20 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
     }
 
     // ── 6 auth ──
+    // A supplied transport/channel verdict constrains EVERY route, including a route whose
+    // application auth mode is public. `public` means no application credential is required;
+    // it never means an explicitly untrusted TLS/channel peer can bypass its configured gate.
+    // Only ALLOW (+1) admits. INDETERMINATE (0), DENY (−1), and invalid values refuse.
+    if (
+      req.channelVerdict !== undefined &&
+      !decideAtBoundary(req.channelVerdict).authorized
+    ) {
+      return { response: errorResponse(401, "unauthorized", "Channel/identity verdict denied admission."), policy };
+    }
+
     if (policy.auth.mode === "required") {
       if (req.channelVerdict !== undefined) {
-        // Zero-trust: a transport-supplied channel/identity verdict (e.g. the TLSTP S1 cert-gate)
-        // is collapsed FAIL-CLOSED here — only an explicit ALLOW (+1) admits; an INDETERMINATE (0)
-        // or DENY (−1) refuses. unknown → DENY by the algebra, not a flag.
-        if (!decideAtBoundary(req.channelVerdict).authorized) {
-          return { response: errorResponse(401, "unauthorized", "Channel/identity verdict denied admission."), policy };
-        }
+        // The mandatory channel fold above already proved ALLOW.
       } else if (policy.auth.allowHeaderPresenceFallback === true) {
         // OPT-IN legacy fallback: header-PRESENCE only — NOT a real token verification (it admits any
         // non-empty Authorization header), so it is gated behind an explicit per-route opt-in (default
