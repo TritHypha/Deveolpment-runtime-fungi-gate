@@ -102,4 +102,24 @@ describe("P9.4b: record construction lowers to a linear-memory struct", () => {
     assert.equal(mem[WAT_HEAP_BASE / 4 + 0], 1);
     assert.equal(mem[WAT_HEAP_BASE / 4 + 1], 2);
   });
+
+  it("naturally aligns mixed i32, f64, and i64 fields and round-trips them", async () => {
+    const src =
+      "record Wide { tag: Int, score: Float, count: Int64, tail: Int }\n" +
+      "pure flow makeWide(tag: Int, score: Float, count: Int64, tail: Int) -> Wide contract { effects {} } { return Wide { tag: tag, score: score, count: count, tail: tail } }\n" +
+      "pure flow readScore(w: Wide) -> Float contract { effects {} } { return w.score }\n" +
+      "pure flow readCount(w: Wide) -> Int64 contract { effects {} } { return w.count }\n" +
+      "pure flow readTail(w: Wide) -> Int contract { effects {} } { return w.tail }";
+    const wat = await compileToWAT(src);
+    assert.match(wat, /f64\.store[^\n]*i32\.const 8/, "f64 field is naturally aligned at offset 8");
+    assert.match(wat, /i64\.store[^\n]*i32\.const 16/, "i64 field is naturally aligned at offset 16");
+    assert.match(wat, /i32\.store[^\n]*i32\.const 24/, "trailing i32 field follows the wide slots");
+    assert.match(wat, /f64\.load[^\n]*i32\.const 8/, "f64 read uses the same offset");
+    assert.match(wat, /i64\.load[^\n]*i32\.const 16/, "i64 read uses the same offset");
+    const inst = await instantiate(wat);
+    const base = inst.exports.makeWide(7, 3.5, 9007199254740991n, 11);
+    assert.equal(inst.exports.readScore(base), 3.5);
+    assert.equal(inst.exports.readCount(base), 9007199254740991n);
+    assert.equal(inst.exports.readTail(base), 11);
+  });
 });

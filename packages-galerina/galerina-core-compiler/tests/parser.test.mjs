@@ -413,7 +413,7 @@ describe("Parser — type declarations are aliases only", () => {
     const result = parseProgram(`type Receipt { value: Int }\n`, "legacy-type-body.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 1, JSON.stringify(errors));
-    assert.equal(errors[0].code, "FUNGI-PARSE-002");
+    assert.equal(errors[0].code, "FUNGI-PARSE-007");
     assert.match(errors[0].message, /record Receipt/);
     assert.equal(findNode(result.ast, "typeDecl"), undefined);
   });

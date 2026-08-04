@@ -140,7 +140,7 @@ pure flow pairDigest(left: Int, right: Int) -> Int {
 ```
 
 The declaration is `record Pair { ... }`. `type Pair { ... }` is refused with
-`FUNGI-PARSE-002` because older handling erased the field schema. `type` remains
+`FUNGI-PARSE-007` because older handling erased the field schema. `type` remains
 valid only for an explicit alias such as `type PairResult = Result<Pair,String>`.
 
 `Pair(left, right)` is a flow call, not a record constructor. It is refused
@@ -344,6 +344,25 @@ For admitted `Array<Int>`, use `.count()` and compare the result. Do not infer a
 receiver type from its variable name, and do not rewrite general `.length`
 arithmetic this way. Text byte count, Unicode scalar count and legacy code-unit
 count are different operations and remain deliberately unmerged.
+
+Arrays are persistent values. `push` and `append` return a replacement array;
+they do not mutate the receiver. Consume the result explicitly:
+
+```fungi
+mut items: Array<Int> = []
+items = items.append(7)
+return items
+```
+
+Do not translate a mutating call as a bare statement:
+
+```fungi
+items.push(7) // refused: FUNGI-TYPE-028, result would be discarded
+```
+
+This refusal is checked by both the TypeScript compiler stage and its `.fungi`
+twin. It prevents checker-clean code that appears to append but actually leaves
+the collection unchanged.
 
 Governed CLI admission is exact by declared type and arity. `Bool` accepts only
 `true` or `false`; `Int` accepts only canonical signed decimal safe integers;

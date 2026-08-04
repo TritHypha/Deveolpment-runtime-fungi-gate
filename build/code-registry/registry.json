@@ -1,11 +1,11 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 779,
+  "total": 781,
   "counts": {
-    "ref": 207,
+    "ref": 208,
     "inline": 177,
     "phantom": 113,
-    "live": 169,
+    "live": 170,
     "referenced": 100,
     "dead": 13
   },
@@ -6430,8 +6430,8 @@
       ],
       "defs": 0,
       "emits": 2,
-      "tests": 40,
-      "docs": 6
+      "tests": 46,
+      "docs": 8
     },
     {
       "code": "FUNGI-NAME-002",
@@ -6910,6 +6910,18 @@
       "emits": 0,
       "tests": 17,
       "docs": 6
+    },
+    {
+      "code": "FUNGI-PARSE-007",
+      "family": "PARSE",
+      "namespace": "FUNGI",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
+      "docs": 5
     },
     {
       "code": "FUNGI-PARSE-DEPTH-001",
@@ -9621,7 +9633,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 28,
+      "tests": 30,
       "docs": 1
     },
     {
@@ -9921,6 +9933,22 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
+      "docs": 1
+    },
+    {
+      "code": "FUNGI-TYPE-028",
+      "family": "TYPE",
+      "namespace": "FUNGI",
+      "status": "live",
+      "names": [
+        "DISCARDED_IMMUTABLE_RESULT"
+      ],
+      "severities": [
+        "error"
+      ],
+      "defs": 1,
+      "emits": 1,
+      "tests": 6,
       "docs": 1
     },
     {

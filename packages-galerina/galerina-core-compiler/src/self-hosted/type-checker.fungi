@@ -302,6 +302,7 @@ contract { intent { "The canonical Stage-A diagnostic name for a code the twin e
   if code == "FUNGI-TYPE-024" { return "INT_LITERAL_I32_OVERFLOW" }
   if code == "FUNGI-TYPE-025" { return "SILENT_NULL_DENIED" }
   if code == "FUNGI-TYPE-026" { return "DEFERRED_TYPE_CHECK" }
+  if code == "FUNGI-TYPE-028" { return "DISCARDED_IMMUTABLE_RESULT" }
   if code == "FUNGI-TYPE-030" { return "TENSOR_ELEMENT_TYPE_MISMATCH" }
   if code == "FUNGI-TYPE-032" { return "INVALID_CURRENCY_TAG" }
   if code == "FUNGI-TYPE-033" { return "CONDITION_NOT_BOOL" }
@@ -314,8 +315,8 @@ contract { intent { "The canonical Stage-A diagnostic name for a code the twin e
 // carries the SAME {code, severity} Stage-A does (one-code = one-severity, #94's parity leg). Stage-A's
 // makeTCDiag hardcodes "error" (type-checker.ts:120-128); only three ADVISORY codes are pushed as a
 // warning inline (017 quantized-stub · 020 shadowing · 026 deferred-inference). All 21 listed EXPLICITLY
-// (not "default error") so the severity-parity gate leg reads a declared severity for every code, not a
-// silent fallback. R&D-ground-truthed 2026-07-17 (19 TYPE + NAME-002 + BINDING-005, symmetric-diff empty).
+  // (not "default error") so the severity-parity gate leg reads a declared severity for every code, not a
+  // silent fallback. The parity audit derives the current count and requires an empty symmetric diff.
 pure flow diagSeverity(code: String) -> String
 contract { intent { "The canonical Stage-A severity for a code the twin emits (else empty)." } }
 {
@@ -337,6 +338,7 @@ contract { intent { "The canonical Stage-A severity for a code the twin emits (e
   if code == "FUNGI-TYPE-023" { return "error" }
   if code == "FUNGI-TYPE-024" { return "error" }
   if code == "FUNGI-TYPE-025" { return "error" }
+  if code == "FUNGI-TYPE-028" { return "error" }
   if code == "FUNGI-TYPE-030" { return "error" }
   if code == "FUNGI-TYPE-032" { return "error" }
   if code == "FUNGI-TYPE-033" { return "error" }
@@ -567,6 +569,21 @@ contract {
   }
   if kind == "mut" {
     diags = appendAll(diags, checkBinding(flowName, stmt, scope))
+  }
+  if kind == "exprStmt" {
+    let exprOpt = firstExpr(stmt)
+    match exprOpt {
+      Some(expression) => {
+        let immutableTransform: Bool = expression.value == "push" or expression.value == "append"
+        let discardedMethod: Bool = expression.kind == "call" and expression.litType == "@method" and immutableTransform
+        if discardedMethod {
+          let msg28: String = "the result of immutable collection transform '" + expression.value + "' is discarded; the receiver is unchanged (FUNGI-TYPE-028)"
+          diags = diags.append({ code: "FUNGI-TYPE-028", message: msg28, flowName: flowName })
+        }
+      }
+      None => {}
+      _ => {}
+    }
   }
   if kind == "if" {
     let condOptIf = firstExpr(stmt)

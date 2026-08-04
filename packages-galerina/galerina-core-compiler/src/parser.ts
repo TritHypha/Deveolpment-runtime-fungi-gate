@@ -6195,8 +6195,8 @@ class Parser {
     // once for recovery, but return a non-authorizing error node.
     if (this.currentIs("symbol", "{")) {
       this.emit(
-        "FUNGI-PARSE-002",
-        "EXPECTED_TYPE_ALIAS",
+        "FUNGI-PARSE-007",
+        "BLOCK_TYPE_REQUIRES_RECORD",
         `Block-bodied type '${name}' is not a type alias. Write 'record ${name} { ... }' for a product type.`,
         loc,
         `Replace 'type ${name} { ... }' with 'record ${name} { ... }', or write 'type ${name} = TypeRef'.`,

@@ -1796,7 +1796,7 @@ function parseFile(source, diagnostics) {
     ast.jsonPolicies.push({ settings: parseSettings(block.body), ...loc(source, block.index) });
   }
 
-  for (const block of findBlocks(content, /\btype\s+([A-Z][A-Za-z0-9_]*)\s*\{/g)) {
+  for (const block of findBlocks(content, /\brecord\s+([A-Z][A-Za-z0-9_]*)\s*\{/g)) {
     ast.types.push({
       name: block.name,
       fields: parseFields(block.body),
@@ -2019,7 +2019,9 @@ function strictCommentSubject(line, lineNumber) {
   if (global) return { kind: "global", globalKind: global[1], name: global[2], line: lineNumber };
   const compute = cleaned.match(/^compute\s+target\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s+verify\s+([A-Za-z_][A-Za-z0-9_]*))?/);
   if (compute) return { kind: "compute", name: compute[1], verify: compute[2] || null, line: lineNumber };
-  const type = cleaned.match(/^type\s+([A-Z][A-Za-z0-9_]*)/);
+  const record = cleaned.match(/^record\s+([A-Z][A-Za-z0-9_]*)/);
+  if (record) return { kind: "type", name: record[1], line: lineNumber };
+  const type = cleaned.match(/^type\s+([A-Z][A-Za-z0-9_]*)\s*=/);
   if (type) return { kind: "type", name: type[1], line: lineNumber };
   const enumMatch = cleaned.match(/^enum\s+([A-Z][A-Za-z0-9_]*)/);
   if (enumMatch) return { kind: "enum", name: enumMatch[1], line: lineNumber };

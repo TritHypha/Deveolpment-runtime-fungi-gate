@@ -39,6 +39,7 @@ const KEYWORDS = new Set([
   "prefer",
   "project",
   "pure",
+  "record",
   "return",
   "rollback",
   "run_mode",

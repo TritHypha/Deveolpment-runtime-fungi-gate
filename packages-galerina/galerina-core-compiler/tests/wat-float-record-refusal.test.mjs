@@ -1,20 +1,8 @@
 /**
- * #132 / FUNGI-LAYOUT-001 — a record field whose type does NOT lower to a 4-byte WASM `i32` slot must be
- * REFUSED at WASM-lowering time, not silently mis-laid-out. The record layout stores EVERY field via a
- * 4-byte `i32.store` at offset = index·4 (record-abi.ts: WAT_REC_FIELD_SIZE = 4), so any field wider than
- * an i32 — f64 (Float/Float64/Double), i64 (Int64/UInt64), or f32 (Float32/Float16) — cannot round-trip.
- * Measured 2026-07-19: every such record field builds an INVALID module (rejected at instantiate) or reads
- * back the WRONG value. The guard converts both into one early, actionable compile refusal.
- *
- * The boundary is a PROPERTY: `galerinaTypeToWAT(fieldType) !== "i32"` — drift-proof (reuses the emitter's
- * own type→wasm mapping) and self-correcting (a type is admitted the moment its lowering becomes an i32
- * handle). `Decimal` maps to f64 today (a latent inconsistency — it is designed as a bignum i32-handle),
- * so a Decimal record field is refused today and measurably breaks; it will be admitted with no edit once
- * its lowering is fixed. i32-handle occupants (String / Array / nested record / enum) are admitted.
- *
- * VALUE-DISCRIMINATING (not vacuous): the guard fires on EXACTLY the non-i32 field types and NOT on i32 /
- * i32-handle fields (Int-only records still compile + instantiate + return the right value), NOT on scalar
- * Float returns, and NOT on Array<Float> / String / nested-record fields (all i32 handles).
+ * #132 / FUNGI-LAYOUT-001 — typed natural alignment admits faithful i32, i64 and f64 fields. The guard
+ * still refuses Float16/Float32 until the scalar f32 expression lane exists, and refuses Decimal until
+ * its exact representation replaces the current f64 mapping. Tests prove both the refusal and admission
+ * directions so the boundary cannot be weakened or left permanently closed.
  */
 
 import { describe, it } from "node:test";
@@ -42,15 +30,23 @@ function refusedByLayoutGuard(program) {
 }
 const trivialFlow = `pure flow f() -> Int contract { intent { "x" } } { return 0 }`;
 
-// Every type whose field lowers to a WASM value wider than the 4-byte i32 slot (f64 / i64 / f32),
-// plus Decimal (maps to f64 today). A record DECLARING any of these must be refused.
-const REFUSED = ["Float", "Float64", "Double", "Float32", "Float16", "Int64", "UInt64", "Decimal"];
+// Float32/Float16 do not yet have a scalar f32 expression lane, and Decimal must not be
+// represented as an inexact f64. These remain refused even after naturally aligned
+// f64/i64 record slots are admitted.
+const REFUSED = ["Float32", "Float16", "Decimal"];
 
-describe("FUNGI-LAYOUT-001 — record fields wider than a 4-byte i32 slot are refused (fail-closed)", () => {
-  it("refuses every non-i32 field type (f64 / i64 / f32 / Decimal) — declaration alone suffices", () => {
+describe("FUNGI-LAYOUT-001 — unfaithful record field representations are refused (fail-closed)", () => {
+  it("refuses f32 fields without a scalar f32 lane and inexact Decimal fields", () => {
     for (const T of REFUSED) {
       const program = `record S { x: ${T} }\n${trivialFlow}`;
       assert.ok(refusedByLayoutGuard(program), `must refuse a record with a ${T} field`);
+    }
+  });
+
+  it("admits naturally aligned f64 and i64 fields", () => {
+    for (const T of ["Float", "Float64", "Double", "Int64", "UInt64"]) {
+      const program = `record S { x: ${T} }\n${trivialFlow}`;
+      assert.equal(refusedByLayoutGuard(program), false, `must admit a record with a ${T} field`);
     }
   });
 

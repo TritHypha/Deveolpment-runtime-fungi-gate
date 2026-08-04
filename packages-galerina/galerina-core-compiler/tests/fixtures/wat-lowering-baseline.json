@@ -2,10 +2,10 @@
   "generatedBy": "audit-wat-lowering.mjs",
   "note": "Shrink-only inventory of the WAT record-field-layout fault class + Decimal-wart occurrences. A NEW off-baseline site fails the gate. Keys are line-independent (path + qualified name + type).",
   "rootCauses": {
-    "slot-width": {
-      "why": "WAT_REC_FIELD_SIZE=4 cannot hold an i64/f32/f64 record field",
+    "missing-f32-scalar-lane": {
+      "why": "Float16/Float32 lack a faithful scalar WAT expression lane",
       "task": "#132",
-      "anchor": "record-abi.ts WAT_REC_FIELD_SIZE===4"
+      "anchor": "isWATRecordFieldTypeSupported"
     },
     "decimal-f64-wart": {
       "why": "galerinaTypeToWAT(Decimal)=f64 but Decimal is a bignum; also mis-lowers scalars",

@@ -382,6 +382,20 @@ let recordLayouts: ReadonlyMap<string, readonly string[]> | null = null;
  *  a silent wrong answer for equal-valued heap strings. Module-level, built once per module emit
  *  (mirrors flowReturnTypes), consumed by inferExprType. */
 let recordFieldTypes: Map<string, Map<string, string>> | null = null;
+export interface WATRecordFieldLayout {
+  readonly name: string;
+  readonly type: string;
+  readonly watType: "i32" | "i64" | "f64";
+  readonly offset: number;
+  readonly size: 4 | 8;
+}
+export interface WATRecordLayout {
+  readonly fields: readonly WATRecordFieldLayout[];
+  readonly size: number;
+  readonly alignment: 4 | 8;
+}
+/** Canonical, naturally aligned record layout for the module currently being emitted. */
+let watRecordLayouts: ReadonlyMap<string, WATRecordLayout> | null = null;
 /** varName → record typeName for the flow currently being emitted (reset per flow).
  *  Populated from `let r: T = …` annotations, `let r = T{…}` literal types, and
  *  record-typed flow params. Lets `r.field` resolve to an i32.load at the slot offset. */
@@ -508,34 +522,53 @@ export function buildRecordFieldTypes(ast: AstNode | undefined): Map<string, Map
 }
 
 /**
- * #132 fail-closed guard — refuse (at record-layout time) any record field whose type does NOT lower to a
- * 4-byte WASM `i32` slot. The record layout stores EVERY field via a 4-byte `i32.store` at
- * `offset = index·4` (record-abi.ts: `WAT_REC_FIELD_SIZE = 4`), so a field whose value is wider than an
- * i32 — `f64` (Float/Float64/Double), `i64` (Int64/UInt64), or `f32` (Float32/Float16) — cannot round-trip
- * that slot. Measured 2026-07-19: every such record field either builds an INVALID module (rejected at
- * instantiate with a CRITICAL_SECURITY_VIOLATION — loud but late and opaque) or reads back the WRONG value
- * (silent-wrong). Refuse rather than emit a mis-laid-out module — never a silent mis-layout (fail-closed).
- * Surfaced as FUNGI-LAYOUT-001 so the failure is an early, actionable compile refusal. The genuine fix
- * (variable-width record slots — real `f64.store`/`i64.store` at an 8-byte slot) is task #132; this holds
- * the line until then.
- *
- * The boundary is a PROPERTY, not a name list: `galerinaTypeToWAT(fieldType) !== "i32"`. Reusing the
- * emitter's own type→wasm-type mapping makes the guard drift-proof (any current or future non-i32 type is
- * covered automatically — no list to rot) AND self-correcting: a type is auto-admitted the moment its
- * lowering is fixed to a 4-byte i32/handle. i32-handle occupants (String / Array / nested record / enum /
- * Option / Result — the mapping's `default` case) all return "i32" and are correctly admitted.
- *
- * Note (2026-07-19): `Decimal` maps to `f64` here, so a Decimal record field is refused TODAY — and
- * measurably breaks (invalid module). It is *designed* as a bignum i32-handle (`stdlib.ts` ScaledDecimal),
- * so the `Decimal → f64` line in galerinaTypeToWAT is a latent inconsistency; once that lowers Decimal to a
- * handle, this guard admits Decimal with no edit. Flagged to R&D.
- *
- * SCOPE: WASM lowering only (this emitter). The tree-walking interpreter stores wide values faithfully, so
- * interpreter execution of the same program is unaffected. Corpus inventory (scripts/audit-wat-lowering.mjs,
- * 2026-07-19 — supersedes an earlier ad-hoc scan that was fail-open/vacuous): the ONLY non-i32 record
- * fields are 4 `Decimal` fields in one example (docs/examples/…/472-physics-simulation), latently broken on
- * WASM by the `Decimal → f64` wart (#137) — refusing them is correct, not a false-refusal. There are 0
- * Float/Int64/Float32 record fields anywhere; none of the refused fields is a working program.
+ * True only when the WAT emitter has a faithful scalar representation and expression lane for a
+ * record field. Decimal stays refused because Galerina Decimal is exact and must not be silently
+ * rounded to f64. Float16/Float32 stay refused until the scalar f32 lane is complete.
+ */
+export function isWATRecordFieldTypeSupported(typeName: string): boolean {
+  const base = numericBaseType(typeName.trim());
+  if (base === "Decimal" || base === "Float16" || base === "Float32") return false;
+  const watType = galerinaTypeToWAT(typeName.trim());
+  return watType === "i32" || watType === "i64" || watType === "f64";
+}
+
+function alignRecordOffset(offset: number, alignment: 4 | 8): number {
+  return Math.ceil(offset / alignment) * alignment;
+}
+
+/** Build the canonical natural-alignment layout used by every record load, store, copy and size. */
+export function buildWATRecordLayouts(ast: AstNode | undefined): Map<string, WATRecordLayout> {
+  const out = new Map<string, WATRecordLayout>();
+  for (const [recordName, fields] of buildRecordFieldTypes(ast)) {
+    const slots: WATRecordFieldLayout[] = [];
+    let cursor = 0;
+    let recordAlignment: 4 | 8 = 4;
+    for (const [name, type] of fields) {
+      if (!isWATRecordFieldTypeSupported(type)) continue;
+      const lowered = galerinaTypeToWAT(type);
+      if (lowered !== "i32" && lowered !== "i64" && lowered !== "f64") continue;
+      const size: 4 | 8 = lowered === "i32" ? 4 : 8;
+      cursor = alignRecordOffset(cursor, size);
+      slots.push({ name, type, watType: lowered, offset: cursor, size });
+      cursor += size;
+      if (size === 8) recordAlignment = 8;
+    }
+    out.set(recordName, {
+      fields: slots,
+      size: alignRecordOffset(cursor, recordAlignment),
+      alignment: recordAlignment,
+    });
+  }
+  return out;
+}
+
+/**
+ * #132 fail-closed guard after typed natural-alignment support. i32 handles retain their compact
+ * four-byte slots; i64 and f64 fields use naturally aligned eight-byte slots. Float16/Float32 remain
+ * refused until the scalar f32 expression lane is faithful, and Decimal remains refused because its
+ * exact semantics cannot be represented by the current f64 scalar mapping. The predicate is shared with
+ * the corpus audit so new unsupported representations cannot enter silently.
  */
 function assertLowerableRecordFields(ast: AstNode | undefined): void {
   const offenders: string[] = [];
@@ -544,7 +577,7 @@ function assertLowerableRecordFields(ast: AstNode | undefined): void {
       let watType;
       try { watType = galerinaTypeToWAT(ftype.trim()); }
       catch { continue; } // malformed type name → not this guard's concern (BK-2 fails closed at lowering)
-      if (watType !== "i32") offenders.push(`${recName}.${fname}: ${ftype} (→ wasm ${watType})`);
+      if (!isWATRecordFieldTypeSupported(ftype)) offenders.push(`${recName}.${fname}: ${ftype} (→ wasm ${watType})`);
     }
   }
   if (offenders.length > 0) {
@@ -552,10 +585,9 @@ function assertLowerableRecordFields(ast: AstNode | undefined): void {
     // is the form the diagnostic-namespace registration test discovers, so this code stays machine-checked.
     const diag = { code: "FUNGI-LAYOUT-001", name: "UNSUPPORTED_RECORD_LAYOUT", severity: "error" } as const;
     throw new Error(
-      `${diag.code}: a record field whose type lowers to a WASM value wider than the 4-byte record slot ` +
-      `(f64 / i64 / f32) cannot be laid out yet — every record field is stored via a 4-byte i32.store ` +
-      `(offset = index·4), so such a field is emitted into an invalid module or silently mis-read. Refusing ` +
-      `rather than emit a mis-laid-out module (fail-closed; the variable-width-slot fix is task #132). ` +
+      `${diag.code}: a record field has no faithful WAT record representation. Float16/Float32 require ` +
+      `the unfinished scalar f32 lane; Decimal is exact and must not be represented by inexact f64. Refusing ` +
+      `rather than emit an invalid or silently rounded value (fail-closed). ` +
       `Offending field(s): ${offenders.join(", ")}.`,
     );
   }
@@ -1469,11 +1501,13 @@ export function emitWATExpr(
             if (local === undefined) {
               return `(unreachable) (; unresolved record base: ${receiverName} — fail-closed (emitter cannot lower; #163) ;)`;
             }
-            const off = idx * WAT_REC_FIELD_SIZE;
+            const slot = watRecordLayouts?.get(recType)?.fields.find((field) => field.name === memberName);
+            const off = slot?.offset ?? idx * WAT_REC_FIELD_SIZE;
+            const load = slot === undefined ? "i32.load" : `${slot.watType}.load`;
             // NO trailing ;; comment — this expression is used INLINE (e.g. inside
             // (i32.add <left> <right>)), and a line comment would swallow the closing
             // paren of the enclosing S-expression.
-            return `(i32.load (i32.add (local.get ${local}) (i32.const ${off})))`;
+            return `(${load} (i32.add (local.get ${local}) (i32.const ${off})))`;
           }
         }
       }
@@ -1483,6 +1517,16 @@ export function emitWATExpr(
     case "numberLiteral": {
       const raw = node.value ?? "0";
       const isFloat = raw.includes(".") || raw.includes("e") || raw.includes("E");
+      const expectedWatType = expectedType === undefined || expectedType.trim() === ""
+        ? undefined
+        : galerinaTypeToWAT(expectedType);
+      if (expectedWatType === "f64") {
+        const value = Number(raw);
+        if (!Number.isFinite(value)) {
+          return `(unreachable) (; non-finite float literal '${raw}' overflows f64 — fail-closed (#55/FUNGI-FLOAT-NAN-001) ;)`;
+        }
+        return `(f64.const ${raw})`;
+      }
       if (isFloat) {
         // #55: a literal that overflows f64 to ±Inf (e.g. 1e400) must NOT emit a non-finite (f64.const …) —
         // it would pass range guards / be signed. Fail-closed (matches the walker's mkFloat on the literal).
@@ -1716,8 +1760,8 @@ export function emitWATExpr(
     case "callExpr": {
       const name = node.value ?? "";
       // Record literals are parsed as callExpr with value "#record" or "#record-update".
-      // P9.4b: lower a `#record` literal to a linear-memory struct — bump-allocate
-      // fieldCount*4 bytes, store each field at its slot offset, evaluate to the base
+      // P9.4b/#132: lower a `#record` literal to a naturally aligned linear-memory struct —
+      // bump-allocate the canonical typed layout, store each field at its slot offset, evaluate to the base
       // pointer. Gated on an active flow-body scratch context (recordCtx); outside it
       // (other pipeline stages) the placeholder is preserved. `#record-update` still
       // falls back (it needs a base copy — a follow-on).
@@ -1740,6 +1784,7 @@ export function emitWATExpr(
           const declaredTypeName = (node as { typeName?: string }).typeName
             ?? (expectedType !== undefined && recordLayouts?.has(expectedType) ? expectedType : undefined);
           const declaredLayout = declaredTypeName ? recordLayouts?.get(declaredTypeName) : undefined;
+          const declaredWATLayout = declaredTypeName ? watRecordLayouts?.get(declaredTypeName) : undefined;
           // A field name foreign to a KNOWN declared layout = a malformed/ill-typed literal (the type-checker
           // should have rejected it). Fail CLOSED rather than silently store it by position — matches the read
           // side's fail-closed posture (line ~1191); never a silent wrong-slot write.
@@ -1749,17 +1794,19 @@ export function emitWATExpr(
               return `(unreachable) (; #record: field .${foreign.value ?? "?"} not in declared layout of ${declaredTypeName} — fail-closed (#32) ;)`;
             }
           }
-          const size = (declaredLayout?.length ?? fields.length) * WAT_REC_FIELD_SIZE;
+          const size = declaredWATLayout?.size ?? (declaredLayout?.length ?? fields.length) * WAT_REC_FIELD_SIZE;
           const parts: string[] = [`(block (result i32)`];
           // base = heap; heap += size  (per-record local → safe under nesting + calls)
           parts.push(`  (local.set ${recLocal} (global.get $__fungi_heap))`);
           parts.push(`  (global.set $__fungi_heap (i32.add (global.get $__fungi_heap) (i32.const ${size})))`);
           fields.forEach((f, i) => {
             const valNode = f.children?.[0];
-            const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts) : "(i32.const 0)";
             const declIdx = declaredLayout ? declaredLayout.indexOf(f.value ?? "") : -1;
-            const off = (declIdx >= 0 ? declIdx : i) * WAT_REC_FIELD_SIZE;
-            parts.push(`  (i32.store (i32.add (local.get ${recLocal}) (i32.const ${off})) ${valWat}) ;; .${f.value ?? `f${i}`}`);
+            const slot = declaredWATLayout?.fields.find((candidate) => candidate.name === (f.value ?? ""));
+            const off = slot?.offset ?? (declIdx >= 0 ? declIdx : i) * WAT_REC_FIELD_SIZE;
+            const store = slot === undefined ? "i32.store" : `${slot.watType}.store`;
+            const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts, slot?.type) : "(i32.const 0)";
+            parts.push(`  (${store} (i32.add (local.get ${recLocal}) (i32.const ${off})) ${valWat}) ;; .${f.value ?? `f${i}`}`);
           });
           parts.push(`  (local.get ${recLocal})`);
           parts.push(`)`);
@@ -1777,12 +1824,13 @@ export function emitWATExpr(
         const updates = updChildren.filter(c => c.value !== "#spread");
         const baseType = spreadBase !== undefined ? inferExprType(spreadBase) : undefined;
         const layout = (baseType !== undefined && recordLayouts !== null) ? recordLayouts.get(baseType) : undefined;
+        const watLayout = baseType !== undefined ? watRecordLayouts?.get(baseType) : undefined;
         if (recordCtx !== null && spreadBase !== undefined && layout !== undefined) {
           const recLocal  = `$__fungi_rec_${recordCtx.counter.n++}`;
           const baseLocal = `$__fungi_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           recordCtx.localDecls.push(`(local ${baseLocal} i32)`);
-          const size = layout.length * WAT_REC_FIELD_SIZE;
+          const size = watLayout?.size ?? layout.length * WAT_REC_FIELD_SIZE;
           const baseWat = emitWATExpr(spreadBase, vars, staticConsts);
           const parts: string[] = [`(block (result i32)`];
           parts.push(`  (local.set ${baseLocal} ${baseWat})`);
@@ -1790,16 +1838,21 @@ export function emitWATExpr(
           parts.push(`  (global.set $__fungi_heap (i32.add (global.get $__fungi_heap) (i32.const ${size})))`);
           // Copy every base slot, then overwrite the updated fields by slot index.
           layout.forEach((fname, i) => {
-            const off = i * WAT_REC_FIELD_SIZE;
-            parts.push(`  (i32.store (i32.add (local.get ${recLocal}) (i32.const ${off})) (i32.load (i32.add (local.get ${baseLocal}) (i32.const ${off})))) ;; copy .${fname}`);
+            const slot = watLayout?.fields.find((candidate) => candidate.name === fname);
+            const off = slot?.offset ?? i * WAT_REC_FIELD_SIZE;
+            const store = slot === undefined ? "i32.store" : `${slot.watType}.store`;
+            const load = slot === undefined ? "i32.load" : `${slot.watType}.load`;
+            parts.push(`  (${store} (i32.add (local.get ${recLocal}) (i32.const ${off})) (${load} (i32.add (local.get ${baseLocal}) (i32.const ${off})))) ;; copy .${fname}`);
           });
           for (const u of updates) {
             const idx = layout.indexOf(u.value ?? "");
             if (idx < 0) continue;
-            const off = idx * WAT_REC_FIELD_SIZE;
+            const slot = watLayout?.fields.find((candidate) => candidate.name === (u.value ?? ""));
+            const off = slot?.offset ?? idx * WAT_REC_FIELD_SIZE;
             const valNode = u.children?.[0];
-            const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts) : "(i32.const 0)";
-            parts.push(`  (i32.store (i32.add (local.get ${recLocal}) (i32.const ${off})) ${valWat}) ;; set .${u.value}`);
+            const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts, slot?.type) : "(i32.const 0)";
+            const store = slot === undefined ? "i32.store" : `${slot.watType}.store`;
+            parts.push(`  (${store} (i32.add (local.get ${recLocal}) (i32.const ${off})) ${valWat}) ;; set .${u.value}`);
           }
           parts.push(`  (local.get ${recLocal})`);
           parts.push(`)`);
@@ -3978,9 +4031,11 @@ export function buildWATModule(
 
   // P9.4b: record-type → field-name layout, built once for `r.field` offset lowering.
   const recordLayoutRegistry = buildRecordLayouts(gir.ast);
-  // #132 fail-closed: refuse any record with a DIRECT f64 field before emitting a mis-laid-out module.
-  // Placed here (layout time, before any module-level state is mutated) so a refusal leaks no state.
+  // #132: build one naturally aligned typed layout for every record. Unsupported f32 fields and
+  // inexact Decimal fields remain an early fail-closed refusal.
   assertLowerableRecordFields(gir.ast);
+  const prevWATRecordLayouts = watRecordLayouts;
+  watRecordLayouts = buildWATRecordLayouts(gir.ast);
   // P9.4d (#144): enum-type → variant-name list, for `EnumType.Variant` → i32 tag.
   const enumVariantRegistry = buildEnumVariants(gir.ast);
   // #160: flowName → return type, so `let xs = makeKeywordTable()` carries a type for
@@ -4211,6 +4266,7 @@ export function buildWATModule(
 
   flowReturnTypes = prevFlowReturnTypes; // #160: restore module-level type context
   recordFieldTypes = prevRecordFieldTypes;
+  watRecordLayouts = prevWATRecordLayouts;
   flowParamBases = prevFlowParamBases;   // 0115: restore
 
   return {

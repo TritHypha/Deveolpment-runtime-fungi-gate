@@ -1,34 +1,19 @@
 #!/usr/bin/env node
 // =============================================================================
-// audit-wat-lowering.mjs — corpus auditor for the WAT record-field-layout fault class
+// audit-wat-lowering.mjs — corpus auditor for WAT record representation gaps
 // =============================================================================
-// Owner-directed (R&D design 2026-07-19). The FUNGI-LAYOUT-001 compile guard refuses a bad record field
-// at compile time, ONE program at a time. This is the complement: a corpus-wide inventory that (a) finds
-// every AFFECTED site — including in non-compiled / example / staged .fungi the guard never sees — and
-// (b) separates the TWO distinct core root causes so a fix for one is not mistaken for a fix for the other,
-// and (c) fail-closes on drift so a NEW affected site is caught in CI, not at someone's compile error.
+// The emitter uses one naturally aligned typed layout for i32 handles, i64 integers and f64 floating
+// values. This audit inventories record fields that still lack a faithful executable representation,
+// and separately inventories the exact-Decimal-to-f64 mismatch across every type site. It imports the
+// compiler's own isWATRecordFieldTypeSupported predicate, so no second hand-written type list can drift.
 //
-//   Leg A — AFFECTED sites: a record field whose type lowers to a WASM value WIDER than the fixed 4-byte
-//           record slot. Predicate = the emitter's OWN `galerinaTypeToWAT(fieldType) !== "i32"` (imported,
-//           never a re-implemented name list — it stays honest as the mapping evolves). That is
-//           f64 {Float,Float64,Double,Decimal} · i64 {Int64,UInt64} · f32 {Float32,Float16}.
-//   Leg B — CORE ROOT CAUSE #1 (slot-width): WAT_REC_FIELD_SIZE = 4 can't hold an i64/f32/f64 field →
-//           invalid module / silent mis-read. The genuine fix is variable-width slots — task #132.
-//   Leg C — CORE ROOT CAUSE #2 (Decimal→f64 wart): galerinaTypeToWAT("Decimal") = "f64", but Decimal is a
-//           bignum (stdlib ScaledDecimal). An f64 can't faithfully hold it. This is DISTINCT from #132
-//           (fixing slot width won't fix Decimal — it needs a faithful representation) and it also
-//           mis-lowers SCALARS (params/locals/returns), so this leg inventories EVERY Decimal occurrence.
-//           Task #137.
+// Leg A — unsupported record fields. Float16/Float32 remain blocked until the scalar f32 expression
+//         lane is complete. Decimal remains blocked because Galerina Decimal is exact and f64 is not.
+// Leg C — every Decimal occurrence, including params, locals and returns, because the current scalar
+//         mapping remains f64 and is therefore not an exact production representation.
 //
-// A Decimal RECORD FIELD is therefore both a Leg-A affected site AND a Leg-C occurrence; the tool
-// attributes each Leg-A site to its root cause (Decimal field → decimal-f64-wart, otherwise slot-width) so
-// the two are never conflated.
-//
-// Baseline (shrink-only, ratcheted — the house pattern): the CURRENT known sites live in
-// tests/fixtures/wat-lowering-baseline.json. A NEW off-baseline affected site → exit 1. Each root cause
-// carries an EXISTENCE-CHECKED anchor (its `why` cannot rot): slot-width ↔ WAT_REC_FIELD_SIZE===4 in
-// record-abi.ts; decimal-wart ↔ galerinaTypeToWAT("Decimal")==="f64"; plus the FUNGI-LAYOUT-001 compile
-// guard must still be present. If an anchor is GONE the root cause can't be verified → fail closed.
+// The shrink-only baseline records current unsupported sites. A new site, a missing typed-layout
+// anchor, or a missing FUNGI-LAYOUT-001 guard fails closed.
 //
 // Usage:
 //   node scripts/audit-wat-lowering.mjs                 → enforce (exit = violation count)
@@ -52,7 +37,7 @@ const SELF_TEST = args.has("--self-test");
 const UPDATE = args.has("--update-baseline");
 
 const L = await import(pathToFileURL(DIST).href);
-if (typeof L.galerinaTypeToWAT !== "function" || typeof L.parseProgram !== "function") {
+if (typeof L.galerinaTypeToWAT !== "function" || typeof L.isWATRecordFieldTypeSupported !== "function" || typeof L.parseProgram !== "function") {
   console.error("FATAL: compiler dist missing galerinaTypeToWAT/parseProgram — build packages-galerina/galerina-core-compiler first.");
   process.exit(2);
 }
@@ -97,8 +82,8 @@ function collectSites(src, rel) {
 }
 
 // ── leg extraction ────────────────────────────────────────────────────────────
-const rootCauseOf = (site) => (site.base === "Decimal" ? "decimal-f64-wart" : "slot-width");
-function legA(sites) { return sites.filter((s) => s.kind === "record-field" && s.wasm !== "i32" && s.wasm !== "?"); }
+const rootCauseOf = (site) => (site.base === "Decimal" ? "decimal-f64-wart" : "missing-f32-scalar-lane");
+function legA(sites) { return sites.filter((s) => s.kind === "record-field" && !L.isWATRecordFieldTypeSupported(s.type)); }
 function legC(sites) { return sites.filter((s) => s.base === "Decimal"); }
 const keyA = (s) => `${s.rel}::${s.container}.${s.name}::${s.type}`;
 const keyC = (s) => `${s.rel}::${s.kind}::${s.container}.${s.name}::${s.type}`;
@@ -149,9 +134,12 @@ function checkAnchors() {
   let decWasm = "?"; try { decWasm = L.galerinaTypeToWAT("Decimal"); } catch { /* falls through */ }
   if (decWasm !== "f64") notes.push(`decimal-wart anchor CHANGED: galerinaTypeToWAT("Decimal")="${decWasm}" (was "f64") — the wart may be fixed; Decimal sites can shrink from the baseline`);
   // FUNGI-LAYOUT-001 compile guard still present
-  const guardPresent = existsSync(WAT_EMITTER) && /FUNGI-LAYOUT-001/.test(readFileSync(WAT_EMITTER, "utf8"));
+  const emitterSource = existsSync(WAT_EMITTER) ? readFileSync(WAT_EMITTER, "utf8") : "";
+  const guardPresent = /FUNGI-LAYOUT-001/.test(emitterSource);
+  const typedLayoutPresent = /buildWATRecordLayouts/.test(emitterSource) && /isWATRecordFieldTypeSupported/.test(emitterSource);
   if (!guardPresent) problems.push("FUNGI-LAYOUT-001 compile guard GONE from wat-emitter.ts — auditor + guard are decoupled");
-  return { problems, notes, slotSize, decWasm, guardPresent };
+  if (!typedLayoutPresent) problems.push("typed WAT record layout GONE from wat-emitter.ts; wide-field admission is unverifiable");
+  return { problems, notes, slotSize, decWasm, guardPresent, typedLayoutPresent };
 }
 
 // ── baseline ──────────────────────────────────────────────────────────────────
@@ -160,7 +148,7 @@ function currentBaselineShape(aSites, cSites) {
     generatedBy: "audit-wat-lowering.mjs",
     note: "Shrink-only inventory of the WAT record-field-layout fault class + Decimal-wart occurrences. A NEW off-baseline site fails the gate. Keys are line-independent (path + qualified name + type).",
     rootCauses: {
-      "slot-width": { why: "WAT_REC_FIELD_SIZE=4 cannot hold an i64/f32/f64 record field", task: "#132", anchor: "record-abi.ts WAT_REC_FIELD_SIZE===4" },
+      "missing-f32-scalar-lane": { why: "Float16/Float32 lack a faithful scalar WAT expression lane", task: "#132", anchor: "isWATRecordFieldTypeSupported" },
       "decimal-f64-wart": { why: "galerinaTypeToWAT(Decimal)=f64 but Decimal is a bignum; also mis-lowers scalars", task: "#137", anchor: 'galerinaTypeToWAT("Decimal")==="f64"' },
     },
     legA_record_fields: [...new Set(aSites.map(keyA))].sort(),
@@ -173,12 +161,11 @@ function selfTest() {
   let pass = 0, fail = 0;
   const ok = (cond, msg) => { if (cond) { pass++; } else { fail++; console.log(`  ✗ ${msg}`); } };
 
-  const red1 = collectSites(`@version 1\nrecord R { x: Float }\npure flow f() -> Int contract { intent { "x" } } { return 0 }\n`, "red1");
-  ok(legA(red1.sites).some((s) => s.base === "Float" && s.wasm === "f64"), "RED: a Float record field is a Leg-A affected site (f64)");
+  const red1 = collectSites(`@version 1\nrecord R { x: Float32 }\npure flow f() -> Int contract { intent { "x" } } { return 0 }\n`, "red1");
+  ok(legA(red1.sites).some((s) => s.base === "Float32" && s.wasm === "f32"), "RED: a Float32 record field lacks the scalar f32 lane");
 
   const red2 = collectSites(`@version 1\nrecord R { x: Int64 }\npure flow f() -> Int contract { intent { "x" } } { return 0 }\n`, "red2");
-  ok(legA(red2.sites).some((s) => s.base === "Int64" && s.wasm === "i64"), "RED: an Int64 record field is a Leg-A affected site (i64)");
-  ok(legA(red2.sites).every((s) => rootCauseOf(s) === "slot-width"), "RED: an Int64 field attributes to slot-width, not the Decimal wart");
+  ok(legA(red2.sites).length === 0, "GREEN: a naturally aligned Int64 record field is supported");
 
   const red3 = collectSites(`@version 1\npure flow f(d: Decimal, n: Int) -> Int contract { intent { "x" } } { return n }\n`, "red3");
   ok(legC(red3.sites).some((s) => s.kind === "flow-param" && s.base === "Decimal"), "RED: a Decimal SCALAR param is a Leg-C occurrence (scalar, not a field)");
@@ -200,7 +187,8 @@ function selfTest() {
   // anchors self-check
   const anc = checkAnchors();
   ok(anc.decWasm === "f64", "ANCHOR: the decimal-wart is still present (galerinaTypeToWAT(Decimal)=f64)");
-  ok(anc.slotSize === 4, "ANCHOR: the slot-width root cause is still present (WAT_REC_FIELD_SIZE=4)");
+  ok(anc.slotSize === 4, "ANCHOR: compact i32 host staging remains WAT_REC_FIELD_SIZE=4");
+  ok(anc.typedLayoutPresent, "ANCHOR: typed naturally aligned record layout is present");
   ok(anc.guardPresent, "ANCHOR: the FUNGI-LAYOUT-001 compile guard is present");
 
   console.log(`\naudit-wat-lowering --self-test: ${pass}/${pass + fail} checks passed`);
@@ -243,14 +231,14 @@ if (JSON_OUT) {
 
 console.log(`audit-wat-lowering — WAT record-field-layout fault class`);
 console.log(`  scanned ${scanned} .fungi · ${parseErr} parse-skipped`);
-console.log(`\n  Leg A — record fields wider than the 4-byte i32 slot (galerinaTypeToWAT != i32): ${curAkeys.size}`);
+console.log(`\n  Leg A — record fields without a faithful WAT representation: ${curAkeys.size}`);
 for (const s of aSites.sort((a, b) => keyA(a).localeCompare(keyA(b))))
   console.log(`    ${s.rel}:${s.line}  record ${s.container}.${s.name}: ${s.type} → ${s.wasm}  [${rootCauseOf(s)}]`);
 console.log(`\n  Leg C — every Decimal occurrence (fields + params + returns + locals): ${curCkeys.size}`);
 for (const s of cSites.sort((a, b) => keyC(a).localeCompare(keyC(b))))
   console.log(`    ${s.rel}:${s.line}  ${s.kind} ${s.container}.${s.name}: ${s.type}`);
 console.log(`\n  Root causes:`);
-console.log(`    slot-width (#132)      — WAT_REC_FIELD_SIZE=${anchors.slotSize}; ${aSites.filter((s) => rootCauseOf(s) === "slot-width").length} Leg-A field(s)`);
+console.log(`    missing f32 lane (#132)— ${aSites.filter((s) => rootCauseOf(s) === "missing-f32-scalar-lane").length} Leg-A field(s); i64/f64 use typed natural alignment`);
 console.log(`    decimal-f64-wart (#137)— galerinaTypeToWAT("Decimal")="${anchors.decWasm}"; ${aSites.filter((s) => rootCauseOf(s) === "decimal-f64-wart").length} field(s) + ${cSites.length} occurrence(s)`);
 for (const n of anchors.notes) console.log(`  ⚠ note: ${n}`);
 if (staleA.length || staleC.length) console.log(`\n  ✎ baseline can shrink (fixed/removed): Leg A ${staleA.length} · Leg C ${staleC.length} — run --update-baseline`);

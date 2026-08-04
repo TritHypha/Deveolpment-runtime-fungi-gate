@@ -127,9 +127,9 @@ describe("Fungi Golden Pack probe", () => {
     assert.equal(manifest.schema, "galerina.fungi-golden-manifest.v1");
     assert.equal(manifest.status, "PROBE_DERIVED_REFERENCE_ONLY");
     assert.deepEqual(manifest.summary, {
-      checked: 10,
-      executedExamples: 7,
-      executionVectors: 10,
+      checked: 11,
+      executedExamples: 8,
+      executionVectors: 11,
       notExecutedExamples: 3,
     });
     assert.equal(manifest.authority.productionAuthorityReleased, false);

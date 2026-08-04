@@ -2132,12 +2132,12 @@
     {
       "name": "audit-wat-lowering.mjs",
       "category": "audit",
-      "purpose": "corpus auditor for the WAT record-field-layout fault class",
+      "purpose": "corpus auditor for WAT record representation gaps",
       "selfTest": true,
       "inCadence": true,
       "concerns": [
-        "signing/fusion",
-        "teaching-corpus"
+        "teaching-corpus",
+        "graph/index"
       ]
     },
     {
@@ -3208,6 +3208,7 @@
       "audit-tooling-contract.mjs",
       "audit-twin-differential.mjs",
       "audit-wasm-validate.mjs",
+      "audit-wat-lowering.mjs",
       "fix-logicn-brand.mjs",
       "gen-status-blocks.mjs",
       "graph-all.mjs",
@@ -3346,7 +3347,6 @@
       "audit-u2-version-floor.mjs",
       "audit-unlowered-nodes.mjs",
       "audit-wasm-validate.mjs",
-      "audit-wat-lowering.mjs",
       "audit-web-stub-guard.mjs",
       "fix-logicn-brand.mjs",
       "galerina-new.mjs",

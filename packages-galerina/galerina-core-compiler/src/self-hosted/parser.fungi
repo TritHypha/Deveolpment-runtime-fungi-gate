@@ -868,7 +868,10 @@ contract { intent { "Parse a primary then chain any .field / .method() accesses.
                 if isSep2 == false { ap = afterArg  argScanning = false }
               }
             }
-            cur = { kind: "call", value: fname, litType: "", children: methodArgs }
+            // `@method` is a structural marker, not a value type.  Stage B needs
+            // to distinguish `receiver.append(x)` from a plain `append(a, x)`
+            // when enforcing discarded immutable-result rules.
+            cur = { kind: "call", value: fname, litType: "@method", children: methodArgs }
             p = ap
           }
           else {
@@ -2260,7 +2263,7 @@ contract {
           else {
             let parsedRecord: RecordDeclParse = parseTopLevelRecordDecl(tokens, pos)
             if tv == "type" {
-              errs = errs.append("FUNGI-PARSE-002: block-bodied type '" + parsedRecord.declaration.name + "' must be declared with 'record'")
+              errs = errs.append("FUNGI-PARSE-007: block-bodied type '" + parsedRecord.declaration.name + "' must be declared with 'record'")
             }
             if parsedRecord.error != "" {
               errs = errs.append("FUNGI-PARSE-003: " + parsedRecord.error)

@@ -6,8 +6,8 @@
       "sha256": "82119859d48a9d6cc627682a0643fb09cb3fb782414cb7d051b3fee52adcb4ba"
     },
     "parser": {
-      "bytes": 21122,
-      "sha256": "135751bd0297856f4c2fe86e53a5085c573b49f049e0bc749e9ad7a31b106166"
+      "bytes": 21161,
+      "sha256": "4284891396cd727fc966fdb7b8ad9ab9a24a690a5d9a235835ae6365997d93c0"
     },
     "gir-emitter": {
       "bytes": 4420,
@@ -18,8 +18,8 @@
       "sha256": "1ba43b9107c6e9563b2e23f9bb98600c5dee9cb5c0612f10b914ccadbaa74cce"
     },
     "type-checker": {
-      "bytes": 11901,
-      "sha256": "17d45560c557ba6eca8d6f26daa3e1e49de560ce8ffb0d67226e4b6dd39e9ecb"
+      "bytes": 12062,
+      "sha256": "eda0e73afb7ad3f3108cde463d8bd87919f84dc7dd936ec3e79a95ef91f11283"
     },
     "effect-checker": {
       "bytes": 6206,

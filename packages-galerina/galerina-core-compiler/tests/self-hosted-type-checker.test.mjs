@@ -625,7 +625,7 @@ describe("type-checker.fungi — checkFlowBodies (M-B body AST)", () => {
     assert.deepEqual(codesFor(diags, "f"), []);
   });
 
-  it("assign/return/exprStmt are left alone this milestone", async () => {
+  it("assign/return/ordinary exprStmt remain clean", async () => {
     const { diags } = await checkBodies([
       bodyFlow({ name: "f", body: [
         stmt({ kind: "assign", name: "x", expr: [expr("lit", "s", "String")] }),
@@ -634,6 +634,15 @@ describe("type-checker.fungi — checkFlowBodies (M-B body AST)", () => {
       ] }),
     ]);
     assert.deepEqual(codesFor(diags, "f"), []);
+  });
+
+  it("discarded immutable method result emits FUNGI-TYPE-028", async () => {
+    const { diags } = await checkBodies([
+      bodyFlow({ name: "f", body: [
+        stmt({ kind: "exprStmt", expr: [expr("call", "append", "@method", [expr("name", "items"), expr("lit", "1", "Int")])] }),
+      ] }),
+    ]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-028"]);
   });
 
   it("let with no declared type is skipped (typeName empty)", async () => {

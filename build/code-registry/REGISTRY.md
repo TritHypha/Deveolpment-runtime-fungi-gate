@@ -14,12 +14,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | status | count | meaning |
 |---|---|---|
-| live | 169 | emitted with an exported constant |
+| live | 170 | emitted with an exported constant |
 | inline | 177 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 207 | referenced only (no def/emit) |
+| ref | 208 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -991,7 +991,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (8)
+### PARSE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1002,6 +1002,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PARSE-004 | ref | — | — |
 | FUNGI-PARSE-005 | ref | — | — |
 | FUNGI-PARSE-006 | ref | — | — |
+| FUNGI-PARSE-007 | ref | — | — |
 | FUNGI-PARSE-DEPTH-001 | ref | — | — |
 
 ### PASSPORT (1)
@@ -1429,7 +1430,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TRI-004 | live | UNKNOWN_LEAKED | error |
 | FUNGI-TRI-005 | live | MALFORMED_UNKNOWN_REASON | error |
 
-### TYPE (36)
+### TYPE (37)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1461,6 +1462,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TYPE-025 | inline | SILENT_NULL_DENIED | error |
 | FUNGI-TYPE-026 | inline | DEFERRED_TYPE_CHECK | warning |
 | FUNGI-TYPE-027 | ref | — | — |
+| FUNGI-TYPE-028 | live | DISCARDED_IMMUTABLE_RESULT | error |
 | FUNGI-TYPE-030 | live | TENSOR_ELEMENT_TYPE_MISMATCH | error |
 | FUNGI-TYPE-031 | referenced | TENSOR_DIMENSION_MISMATCH | error |
 | FUNGI-TYPE-032 | inline | INVALID_CURRENCY_TAG | error |

@@ -25,7 +25,7 @@
 
 | Task | State | Verified evidence |
 |---|---|---|
-| 1 — parser contract | complete | alias retained; canonical record fields preserved; legacy block-bodied `type` refuses with `FUNGI-PARSE-002` |
+| 1 — parser contract | complete | alias retained; canonical record fields preserved; legacy block-bodied `type` refuses with `FUNGI-PARSE-007` |
 | 2 — call authority | complete | capitalization exemption removed; undeclared and record-name positional calls refuse with `FUNGI-NAME-001` |
 | 3 — exact record construction | complete | nominal identity, uniqueness, exact field set, and field types are checked before adoption |
 | 4 — tracked corpus migration | complete with recorded source debt | 44 declarations in 35 `.fungi` files migrated; live legacy inventory is zero; eight independently pre-existing strict-check debts remain listed in `docs/TODO.md` |
@@ -46,10 +46,10 @@
 - Verify: `packages-galerina/galerina-core-compiler/src/index.ts`
 
 - [ ] Add a parser test proving `type Alias = Int` remains a `typeDecl` with one `typeRef` child.
-- [ ] Add a failing parser test proving `type Rec { value: Int }` emits one `FUNGI-PARSE-002` error with a `record Rec { ... }` repair hint and does not silently create a fieldless usable type.
+- [x] Add a failing parser test proving `type Rec { value: Int }` emits one dedicated `FUNGI-PARSE-007` error with a `record Rec { ... }` repair hint and does not silently create a fieldless usable type.
 - [ ] Add or retain the positive test proving `record Rec { value: Int }` preserves `recordDecl`, declaration name, field name, field type, and declaration order.
 - [ ] Run only the parser test and capture the expected failure.
-- [ ] Change `parseTypeDecl` so a `{` body emits the dedicated `FUNGI-PARSE-002` diagnostic, consumes the balanced body exactly once for recovery, and returns a non-authorizing error node rather than a usable type declaration.
+- [x] Change `parseTypeDecl` so a `{` body emits the dedicated `FUNGI-PARSE-007` diagnostic, consumes the balanced body exactly once for recovery, and returns a non-authorizing error node rather than a usable type declaration.
 - [ ] Re-run the parser test and confirm the new tests pass without changing alias behavior.
 - [ ] Commit the parser contract.
 

@@ -65,7 +65,7 @@ record Session {
 }
 ```
 
-`type Name { ... }` is rejected with `FUNGI-PARSE-002`; older compilers silently discarded its
+`type Name { ... }` is rejected with `FUNGI-PARSE-007`; older compilers silently discarded its
 fields, so accepting that spelling would make the type name exist without a schema. Use
 `type Name = TypeRef` only for an alias. Record values use `Name { field: value }`, not positional
 `Name(value)` calls. Capitalization never grants constructor or call authority.
@@ -324,7 +324,7 @@ aspirational and prefer the qualifier forms that are.
 | Int | `42`, `0xFF`, `0b1010`, `0o755`, `1_000_000` | hex/binary/octal, underscores allowed |
 | Float | `3.14159`, `1.23e-4` | scientific notation allowed |
 | Bool | `true`, `false` | keywords |
-| Array | `[1, 2, 3]`, `[]` | comma-separated |
+| Array | `[1, 2, 3]`, `[]` | comma-separated; persistent/immutable — consume the value returned by `push` or `append` |
 | Record/object | `{ event: "X", id: redact(id) }` | `field: value`, comma-separated, trailing comma OK |
 
 ### The unit-suffix gotcha (`16MB`, `5mj`, `GBP0.00`)

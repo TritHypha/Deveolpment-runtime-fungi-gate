@@ -141,6 +141,15 @@ describe("self-hosted pipeline — full body AST + body type-check (M-A fold →
     assert.deepEqual(bodyDiags, []);
   });
 
+  it("FUNGI-TYPE-028: a discarded persistent Array transform is refused through the real parser", async () => {
+    const { bodyDiags } = await pipeline(`pure flow f() -> Int {
+      mut items: Array<Int> = []
+      items.append(1)
+      return items.count()
+    }`);
+    assert.deepEqual(bodyDiags, [{ code: "FUNGI-TYPE-028", flowName: "f" }]);
+  });
+
   it("a null initializer via the REAL parser → 002 + 025 (SILENT_NULL_DENIED)", async () => {
     // `null` parses to an identifier node (value "null"), not a literal. The twin's value-keyed nullish
     // branch must fire on that real representation — this proves it, not just the hand-built differential.

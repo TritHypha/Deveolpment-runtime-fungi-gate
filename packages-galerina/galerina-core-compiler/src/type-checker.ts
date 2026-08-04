@@ -15,6 +15,7 @@
 //   FUNGI-TYPE-020  ShadowedBinding            — binding shadows outer-scope name (warning)
 //   FUNGI-TYPE-021  NonExhaustiveMatch         — match missing arm(s)
 //   FUNGI-TYPE-022  UnreachablePattern         — arm after wildcard or exhausted set
+//   FUNGI-TYPE-028  DiscardedImmutableResult   — immutable collection transform used as a statement
 //   FUNGI-TYPE-032  InvalidCurrencyTag         — Money<CCY> tag is not a known ISO-4217 code (RD-0349 I1)
 //   FUNGI-NAME-002  DuplicateName              — same name declared twice in same scope
 //
@@ -56,6 +57,17 @@ import { MONEY_UNIT_TAGS } from "./unit-registry.generated.js";
 // enforces (stdlib.ts). A Money<CCY> whose tag is not here now fails at COMPILE time (FUNGI-TYPE-032),
 // not only at runtime. The table is generated from the KB snapshot; its drift gate keeps it in sync.
 const MONEY_UNIT_SET: ReadonlySet<string> = new Set<string>(MONEY_UNIT_TAGS);
+
+// Galerina collections are persistent values: these methods return a replacement
+// value and never mutate the receiver.  In expression-statement position the
+// result would be silently discarded, making code such as `items.push(x)` appear
+// to succeed while leaving `items` unchanged.  Keep this set deliberately narrow
+// and source-verified against stdlib.ts; add methods only when their immutable
+// return contract is executable and tested.
+const IMMUTABLE_COLLECTION_TRANSFORMS: ReadonlySet<string> = new Set([
+  "push",
+  "append",
+]);
 
 // ---------------------------------------------------------------------------
 // R5A: isBuiltInType — unified built-in type check (TypeId hot-path + BUILT_IN_TYPES fallback)
@@ -1429,15 +1441,36 @@ class TypeChecker {
         this.checkHallmarkDecl(node);
         return;
 
-      case "block":
+      case "block": {
         this.pushBindingScope();
         this.pushTypeScope();
+        // parseExprStatement marks a bare expression with block.value="(expr)".
+        // Refuse known immutable transforms here, at the statement boundary;
+        // assignments, returns and nested calls remain valid consumers.
+        if (node.value === "(expr)") {
+          const expression = node.children?.[0];
+          const method = expression?.value ?? "";
+          if (
+            expression?.kind === "callExpr"
+            && expression.callStyle === "method"
+            && IMMUTABLE_COLLECTION_TRANSFORMS.has(method)
+          ) {
+            this.diagnostics.push(makeTCDiag(
+              "FUNGI-TYPE-028",
+              "DISCARDED_IMMUTABLE_RESULT",
+              `The result of immutable collection transform '${method}' is discarded; the receiver is unchanged.`,
+              expression.location,
+              `Assign or return the result, for example: items = items.${method}(value).`,
+            ));
+          }
+        }
         for (const child of node.children ?? []) {
           this.walkNode(child);
         }
         this.popTypeScope();
         this.popBindingScope();
         return;
+      }
 
       // ── Flagship (0119 item 2): parameter-admission predicate typing ─────────
       // `name: T where <predicate>` gates a flow at entry, admitting ONLY on Verdict.Allow (a Bool

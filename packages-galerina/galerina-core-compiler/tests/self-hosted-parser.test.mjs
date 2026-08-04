@@ -300,7 +300,7 @@ pure flow f(value: Int) -> Int { return value }
     assert.deepEqual(recordDeclsList(result), []);
     assert.deepEqual(
       result.fields.get("errors").items.map((entry) => entry.value),
-      ["FUNGI-PARSE-002: block-bodied type 'LegacyRecord' must be declared with 'record'"],
+      ["FUNGI-PARSE-007: block-bodied type 'LegacyRecord' must be declared with 'record'"],
     );
   });
 });

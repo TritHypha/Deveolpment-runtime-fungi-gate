@@ -415,6 +415,16 @@ export const FUNGI_TYPE_017 = { code: "FUNGI-TYPE-017", name: "QUANTIZED_PRECISI
 export const FUNGI_TYPE_018 = { code: "FUNGI-TYPE-018", name: "INVALID_RUNTIME_TARGET_TYPE", severity: "error", message: "This type cannot exist in the selected compute target." } as const;
 export const FUNGI_TYPE_019 = { code: "FUNGI-TYPE-019", name: "UNKNOWN_SYMBOL", severity: "error", message: "Symbol is not defined in the current scope." } as const;
 
+/** FUNGI-TYPE-028: A persistent collection transform was used as a statement, so its replacement value would be lost. */
+export const FUNGI_TYPE_028 = {
+  code: "FUNGI-TYPE-028",
+  name: "DISCARDED_IMMUTABLE_RESULT",
+  severity: "error" as const,
+  message: "The result of an immutable collection transform cannot be discarded.",
+  why: "Galerina collections are persistent values. Transform methods return replacements and never mutate the receiver.",
+  suggestedFix: "Assign or return the transformed value.",
+} as const;
+
 /** FUNGI-TYPE-035: Authority<Tag> used an empty, non-ASCII, unbounded or unsupported identity tag. */
 export const FUNGI_TYPE_035 = {
   code: "FUNGI-TYPE-035",
@@ -822,6 +832,8 @@ export {
   emitWATExpr,
   emitBlockLastExpr,
   buildRecordLayouts,
+  buildWATRecordLayouts,
+  isWATRecordFieldTypeSupported,
   buildEnumVariants,
   getInternedStrings,
   extractFlowParamNames,
@@ -842,6 +854,8 @@ export {
   type WATFlowInput,
   type WATGIRInput,
   type WATParamDef,
+  type WATRecordFieldLayout,
+  type WATRecordLayout,
   type WASMSIMDCapability,
   type WATSIMDInstruction,
 } from "./wat-emitter.js";
