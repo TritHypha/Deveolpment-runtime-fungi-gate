@@ -6,11 +6,19 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Demand-admitted native provider packs deferred - 2026-08-04
 
+Canonical architecture:
+[`architecture/demand-admitted-native-provider-packs-2026-08-04.md`](architecture/demand-admitted-native-provider-packs-2026-08-04.md).
+Research and adoption adjudication: `RD-0695` in the Knowledge Base. The
+independent SLIDE repository owns the matching AOT/provider/VOK integration
+document.
+
 - [ ] Keep the language's stable types, contracts, effect rules and provider
   ABI in the small core, while moving optional implementations into flat
   demand-admitted native providers. Candidate packs include algebra,
   scientific maths, arbitrary precision, data mining, quantum simulation,
-  calendar, time-zone and locale operations.
+  calendar, time-zone and locale operations. Keep capability packs separate
+  from target/platform packs such as ARM64 Linux and exact Raspberry Pi model
+  profiles; neither grants device effects.
 - [ ] Derive provider requirements from fully parsed and type-checked canonical
   GIR, never from a raw syntax/token trigger. An installed pack makes an exact
   provider available; it does not select, load or authorize it.
