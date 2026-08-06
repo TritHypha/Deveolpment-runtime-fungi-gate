@@ -1,7 +1,7 @@
 # @galerina/devtools-hypha
 
 **Passive capability-map scanner.** Extracts the compiler's dispatch surfaces, sentinel sets and
-checker wiring into memory, answers four drift questions, prints the answer, exits. Every claim
+checker wiring into memory, answers five drift questions, prints the answer, exits. Every claim
 carries a `file:line` so a human can check it in seconds.
 
 ```bash
@@ -11,7 +11,8 @@ node bin/galerina-hypha.mjs --scan surface:push  # one name, layer by layer
 node bin/galerina-hypha.mjs --self-test          # prove it is not vacuous
 ```
 
-No `--root`. No config. No install. No build. Run it from anywhere in the repo.
+No config. No install. No build. Run it from anywhere in the repo. (`--root` overrides root
+detection for a relocated checkout; you should never need it.)
 
 ---
 
@@ -22,7 +23,7 @@ Four properties, each **enforced or proven**, not asserted:
 | property | how |
 |---|---|
 | **Nothing to load** | Facts are extracted at each invocation and held in memory. No database, no index, no cache, no priming step. A stale index that answers confidently is worse than no index. |
-| **Nothing to find** | The repo root is located by walking up from the script until a directory containing `packages-galerina` is found. No flag, no env var, no cwd assumption. |
+| **Nothing to find** | The repo root is located by walking up from the script until a directory containing `packages-galerina` is found. No env var, no cwd assumption, nothing to configure. `--root` overrides the search when the package has been relocated — an escape hatch, not a setup step. |
 | **Nothing written** | No output file unless `--out` names one. No temp files, no dotfiles, no `.db`. The self-test **snapshots the working tree around a scan and compares** — the property is tested, not claimed. |
 | **Nothing installed** | Zero dependencies. Runs on the Node this repo already needs. |
 
@@ -41,7 +42,7 @@ evidence. Use this one when you want an answer.**
 
 ---
 
-## The four queries
+## The five queries
 
 Each exists because a real defect of its class was found by hand first. The incident is named in
 the source above each function, so nobody has to guess what the query protects.
@@ -52,6 +53,29 @@ the source above each function, so nobody has to guess what the query protects.
 | `duplicate-sets` | Which sentinel sets were hand-copied and then drifted? | `FLOW_KINDS` existed at four sites; the parser gained `governedFlowDecl` and one copy was updated. Governed flows were skipped by checkers. |
 | `kind-coverage` | Which parser-producible kinds does a gating set omit? | The same incident from the other side — pure negative space, so no test could notice the absence. |
 | `dead-exports` | Which exported checkers are never called? | `checkEvents` was implemented, exported, imported — and called by nothing, so `FUNGI-EVENT-001` was unreachable in every mode. |
+| `name-set-drift` | Which guard lists enumerate **fewer names than the code tests for**? | `DECLASSIFIER_NAMES` named three privacy declassifiers; the checker also short-circuits on a fourth, `constantTimeEquals`. The shadow floor therefore never covered it, and a comment asking a human to keep the two in sync was the only thing holding them together. |
+
+### Why these five, when upstream has a different five
+
+Four are shared with `subprojects/hypha`. `name-set-drift` is **local to this package** — it needs
+a fact family (string-literal sets and the literals actually compared against them) that the
+upstream extractor does not collect. See `src/namesets.mjs`.
+
+Upstream's fifth, `diagnostics` — every `FUNGI-*` code with a site count and first location — is
+deliberately **not** here, and the reason is the distinction this tool already draws in
+`bin/galerina-hypha.mjs`:
+
+> a single-name lookup is a question, not a check
+
+`diagnostics` is a census of the code *universe*. Every row is context; none is a finding.
+Upstream says so itself — presence is not reachability, and whether a code fires is an execution
+question static extraction cannot answer. A query with no finding semantics cannot participate in
+the `0`/`1` exit contract above: it would always exit `0`, which reads as *checked and clean*
+rather than *nothing was checked*.
+
+So it stays where the answer is useful — upstream, where you are reading rather than gating. **Use
+`hypha query diagnostics` when you want the code universe; use this tool when you want a
+pass or a fail.**
 
 ### Honest scope — read this before adopting
 
@@ -131,7 +155,31 @@ over a plain fact object.
   which a reference set of one passes; a threshold is not a correctness check.
 - **Read a `kind-coverage` gap as a candidate.** The execution lanes exclude governed flows
   correctly — governed flows cannot execute. A gap in a *checker* set is the one worth reading.
-- **Static visibility is not runtime truth.** A name present in every layer may still be
+- **`name-set-drift` is filtered three ways, and each filter can hide a real gap.** A set is
+  compared only against literals tested through the **same receiver** in the **same file**; only
+  **identifier-shaped** literals are considered, since a set of verbs cannot be missing `==`; and
+  the set must be the **majority** of that receiver's vocabulary, or it is not that receiver's
+  guard list. Without the first, a 27-member `CONTRACT_SECTIONS` pairs with every token literal
+  in the parser. With them, the real finding survives with one readable false positive beside it
+  (`string`, a type word). Every claim carries `file:line` so dismissing it costs seconds.
+- **Coverage is pinned by a formatting fixture, not by argument.** `tests/` writes the same
+  four-kind vocabulary eleven legal ways — one-line, multi-line, trailing comma, single and mixed
+  quotes, array, `Object.freeze`, comment inside, `export const`, bare assignment, object
+  property — and asserts each is read. Three further forms (spread, built-by-call, concatenated)
+  carry no literals and are unreadable by any textual pass; they are named rather than implied.
+- **Extraction spans lines.** The vendored extractor is line-based, so a `new Set([` whose members
+  sit on following lines was invisible to it — four real gating sets were missed for no reason but
+  formatting. `src/namesets.mjs` re-reads both shapes across lines and the caller de-duplicates by
+  site. **Formatting is not a property of meaning.**
+- **Collections are read in two shapes, and that is measurably enough.** `new Set([…])` and
+  array literals (including `Object.freeze([…])`) are extracted; `new Map` and object literals are
+  not, and were checked rather than assumed: **0 of 23 Maps and 0 of 10 objects** hold a flow-kind
+  vocabulary, and **0 of 20** have every key tested through a single receiver. They enumerate what
+  a record *has*, not what a check *accepts*. TypeScript union types are not read either. Union types are erased by the build, so a tool that reads `dist/` **cannot**
+  see them at any effort — the four-value `qualifier` union in the parser is invisible here by
+  construction, not by omission.
+- **Static visibility is not runtime truth.**
+ A name present in every layer may still be
   unreachable; a name absent from a layer may be handled elsewhere. For execution-verified answers
   use `sporeprint`'s matrix upstream.
 
