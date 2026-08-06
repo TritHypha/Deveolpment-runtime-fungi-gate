@@ -12,19 +12,19 @@ no statements and no arithmetic in `.gate`.**
 `.gate` adds a *surface*, not new security. Every guarantee is discharged by the
 governance engine, and a clean circuit authorizes nothing.
 
-## Is  the right tool for this file?
+## Is `.gate` the right tool for this file?
 
 **Usually not, and knowing that early is the cheapest refusal available.** A
-200-file study of real governed code (numpy/pandas/polars/pymining and a Go
-backend, already translated to ) measured **2% circuit-shaped** — a
+200-file study of real governed code (numpy / pandas / polars / pymining and a
+Go backend, already translated to `.fungi`) measured **2% circuit-shaped** — a
 call plus a governed exit. 80% of those files are arithmetic-dominated, and
-across 455 flows there were **zero** ,  or  constructs.
+across **455 flows** there were **zero** `check`, `trap` or `fault` constructs.
 
- governs the **authority and privacy spine**: who may proceed, what
-gets redacted before egress, where a refusal terminates. It has no
-expressions and cannot add two numbers. If the file you are looking at is
-computation, transformation, or plumbing, the answer is  — reach for
- when you are drawing the decision that guards the work, not the work.
+`.gate` governs the **authority and privacy spine**: who may proceed, what gets
+redacted before egress, where a refusal terminates. It has no expressions and
+cannot add two numbers. If the file in front of you is computation,
+transformation or plumbing, the answer is `.fungi` — reach for `.gate` when you
+are drawing the decision that *guards* the work, not the work.
 
 ## Anatomy
 
