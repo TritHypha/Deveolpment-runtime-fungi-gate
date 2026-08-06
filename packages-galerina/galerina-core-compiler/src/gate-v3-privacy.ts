@@ -118,6 +118,20 @@ function dominatorsOf(node: string, idom: ReadonlyMap<string, string>): Set<stri
   return result;
 }
 
+/** G4: the taint FRONTIER — instances of components declaring `tainted: true`.
+ *  With none declared, the whole input frontier is treated as tainted (the
+ *  conservative pre-G4 behaviour, unchanged). Declaring sources SHARPENS the
+ *  separator: an untainted side-path to egress stops refusing. */
+function taintFrontier(graph: GateGraph, registry: GateV3Registry): string[] {
+  const tainted: string[] = [];
+  for (const node of graph.nodes) {
+    if (node.kind !== "part") continue;
+    const contract = registry.components.get(node.component);
+    if (contract?.tainted) tainted.push(node.id);
+  }
+  return tainted.length > 0 ? tainted : ["IN"];
+}
+
 /** The instances in this graph whose CONTRACT declares `cut: true`. Resolution
  *  owns unknown-component refusals; an unresolved part simply is not a cut. */
 function declaredCuts(graph: GateGraph, registry: GateV3Registry): string[] {
@@ -188,8 +202,9 @@ export function verifyTaintCutSeparator(graph: GateGraph, registry: GateV3Regist
     successors.get(edge.from.node)?.push(edge.to.node);
   }
 
-  const seen = new Set<string>(["IN"]);
-  const queue: string[] = ["IN"];
+  const frontier = taintFrontier(graph, registry);
+  const seen = new Set<string>(frontier);
+  const queue: string[] = [...frontier];
   while (queue.length > 0) {
     for (const next of successors.get(queue.shift()!) ?? []) {
       if (!seen.has(next)) { seen.add(next); queue.push(next); }
@@ -202,6 +217,6 @@ export function verifyTaintCutSeparator(graph: GateGraph, registry: GateV3Regist
     code: GATE_SEM_003.code,
     name: GATE_SEM_003.name,
     severity: "error",
-    message: `${graph.circuit}: ${GATE_SEM_003.message}; removed cut(s): ${[...cuts].join(", ")}`,
+    message: `${graph.circuit}: ${GATE_SEM_003.message}; removed cut(s): ${[...cuts].join(", ")}; taint frontier: ${frontier.join(", ")}`,
   }]);
 }

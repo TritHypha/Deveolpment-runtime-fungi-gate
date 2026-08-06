@@ -118,7 +118,8 @@
       ],
       "capabilities": [
         "patient.read"
-      ]
+      ],
+      "tainted": true
     },
     {
       "id": "galerina.privacy.cut",

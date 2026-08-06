@@ -162,13 +162,16 @@ export {
 export { vAnd, foldVerdicts, type GateVerdict } from "./gate-v3-verdict.js";
 
 // Round-three G3 rung 6 — GD-008's secondary half: the decision-shape backstop
-export { verifyDecisionShapes, verifyTerminalVocabulary, GATE_SEM_004, GATE_SEM_007, GATE_SEM_008 } from "./gate-v3-authority.js";
+export { verifyDecisionShapes, verifyTerminalVocabulary, verifyDenyArmContainment, GATE_SEM_004, GATE_SEM_007, GATE_SEM_008, GATE_SEM_011 } from "./gate-v3-authority.js";
 
 // Round-three G3 rung 7 — GD-025: the construction axis becomes a guard
 export { verifyConstructionEntry, GATE_SEM_005 } from "./gate-v3-construction.js";
 
 // Round-three G3 rung 8 — tropical budget composition, deny-side only (RD-0215)
 export { composeWorstCaseBudgets, verifyBudgetComposition, GATE_SEM_006 } from "./gate-v3-budget.js";
+
+// Round-four G4 — envelope, deny-arm containment, taint frontier
+export { verifyEffectEnvelope, GATE_SEM_009, GATE_SEM_010 } from "./gate-v3-envelope.js";
 
 // Round-three G3 rungs 3–4 — privacy passes: dominators + the cut rules
 export {

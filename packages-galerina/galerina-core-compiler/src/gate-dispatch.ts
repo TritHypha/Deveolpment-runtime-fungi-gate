@@ -36,9 +36,10 @@ import { resolveGateV3, checkGateV3Liveness, type ResolveOptions } from "./gate-
 import { buildGateGraph } from "./gate-v3-graph.js";
 import { verifyGateGraphAcyclic } from "./gate-v3-condense.js";
 import { verifyCutDominatesEgress, verifyTaintCutSeparator } from "./gate-v3-privacy.js";
-import { verifyDecisionShapes, verifyTerminalVocabulary } from "./gate-v3-authority.js";
+import { verifyDecisionShapes, verifyTerminalVocabulary, verifyDenyArmContainment } from "./gate-v3-authority.js";
 import { verifyConstructionEntry } from "./gate-v3-construction.js";
 import { verifyBudgetComposition } from "./gate-v3-budget.js";
+import { verifyEffectEnvelope } from "./gate-v3-envelope.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -124,6 +125,8 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
     structural.push(...verifyDecisionShapes(circuit, resolvedRegistry));
     structural.push(...verifyConstructionEntry(circuit, resolvedRegistry));
     structural.push(...verifyTerminalVocabulary(circuit, resolvedRegistry));
+    structural.push(...verifyEffectEnvelope(circuit, resolvedRegistry));       // G4
+    structural.push(...verifyDenyArmContainment(circuit, graph, resolvedRegistry)); // G4
   }
 
   // Constraint 3 — re-homed, never downgraded. The lowering may be produced and

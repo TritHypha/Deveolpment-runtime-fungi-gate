@@ -25,6 +25,7 @@
 import type { ParseDiagnostic } from "./parser.js";
 import type { GateV3Circuit } from "./gate-v3-parser.js";
 import type { GateV3Registry } from "./gate-v3-registry.js";
+import type { GateGraph } from "./gate-v3-graph.js";
 
 /** The terminal families whose reasons a vocabulary may govern. Kept in lock
  *  step with the loader's VOCABULARY_FAMILIES and the graph's terminal set. */
@@ -104,6 +105,79 @@ export function verifyTerminalVocabulary(circuit: GateV3Circuit, registry: GateV
       name: GATE_SEM_008.name,
       severity: "info",
       message: `${circuit.name}: ${family}.* — ${GATE_SEM_008.message}`,
+      location: circuit.location,
+    });
+  }
+  return Object.freeze(diagnostics);
+}
+
+/** G4 refusal: a non-allow decision arm reaches egress without passing
+ *  through another decision. */
+export const GATE_SEM_011 = Object.freeze({
+  code: "GATE-SEM-011",
+  name: "GATE_V3_NON_ALLOW_ARM_REACHES_EGRESS",
+  message: "a deny/indeterminate arm reaches OUT without an intervening decision (a refusal is flowing into success)",
+});
+
+/**
+ * G4 — the circuit-level use of the K3 fold's deny-dominance: a value that
+ * left a decision on a NON-allow arm must never reach `OUT` unless a LATER
+ * decision re-authorizes it. Sequential re-decision REPLACES a verdict (the
+ * shipped token example's expired path: `state.deny -> reemit.subject`, and
+ * only `reemit.allow` proceeds); flowing a deny-arm value into success
+ * WITHOUT one is the fail-open this rule exists to refuse.
+ *
+ * ARM ROLES COME FROM POSITION, NEVER FROM NAMES: ruling ①'s `arms` list is
+ * ORDERED — `arms[0]` is the allow-role arm, everything after it is not. A
+ * component spelling its arms `permit/refuse/unsure` is judged identically.
+ *
+ * Mechanics: from each wire leaving a non-allow arm, walk forward with EVERY
+ * decision part as a barrier (entering a decision's inputs ends the walk —
+ * that is the re-authorization). Reaching OUT refuses. Iterative BFS.
+ */
+export function verifyDenyArmContainment(
+  circuit: GateV3Circuit,
+  graph: GateGraph,
+  registry: GateV3Registry,
+): readonly ParseDiagnostic[] {
+  // Decision instances and their non-allow arm ports, from contracts only.
+  const decisionParts = new Set<string>();
+  const nonAllowArms = new Map<string, Set<string>>();      // instance -> ports
+  for (const part of circuit.parts) {
+    const contract = registry.components.get(`${part.component}@${part.version}`);
+    if (!contract || !contract.decision || contract.arms.length === 0) continue;
+    decisionParts.add(part.instance);
+    nonAllowArms.set(part.instance, new Set(contract.arms.slice(1)));
+  }
+  if (decisionParts.size === 0) return Object.freeze([]);
+
+  const successors = new Map<string, string[]>();
+  for (const node of graph.nodes) successors.set(node.id, []);
+  for (const edge of graph.edges) successors.get(edge.from.node)?.push(edge.to.node);
+
+  const diagnostics: ParseDiagnostic[] = [];
+  for (const edge of graph.edges) {
+    const arms = nonAllowArms.get(edge.from.node);
+    if (!arms || !arms.has(edge.from.port)) continue;
+
+    // Walk forward from the arm's TARGET. A decision node is a barrier: the
+    // walk records reaching it but never traverses beyond it.
+    const seen = new Set<string>([edge.to.node]);
+    const queue = decisionParts.has(edge.to.node) ? [] : [edge.to.node];
+    while (queue.length > 0) {
+      for (const next of successors.get(queue.shift()!) ?? []) {
+        if (seen.has(next)) continue;
+        seen.add(next);
+        if (!decisionParts.has(next)) queue.push(next);
+      }
+    }
+    if (!seen.has("OUT")) continue;
+
+    diagnostics.push({
+      code: GATE_SEM_011.code,
+      name: GATE_SEM_011.name,
+      severity: "error",
+      message: `${circuit.name}: '${edge.from.node}.${edge.from.port}' — ${GATE_SEM_011.message}`,
       location: circuit.location,
     });
   }

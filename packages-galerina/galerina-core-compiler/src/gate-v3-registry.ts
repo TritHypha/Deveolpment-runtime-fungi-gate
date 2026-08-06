@@ -56,7 +56,7 @@ const STATUS_RE = /^(SHIPPED|PARTIAL|SIMULATED|PROPOSED|BLOCKED|REJECTED)$/;
 const TYPE_ID_RE = /^[A-Za-z_][A-Za-z0-9_.]*(?:<[A-Za-z0-9_.,<>]+>)?$/;
 
 /** Fields a closed schema admits. Anything else is a surplus field and refuses. */
-const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf"]);
+const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf", "tainted"]);
 const PORT_FIELDS = new Set(["name", "type", "copyable", "required"]);
 const ARGUMENT_FIELDS = new Set(["name", "type", "required", "min", "max"]);
 const TYPE_FIELDS = new Set(["id", "kind", "construction", "values", "scalarEncoding", "packedEncoding"]);
@@ -100,6 +100,14 @@ export interface GateV3Component {
    *  the SAME implementationDigest — "one implementation" is a checked claim
    *  (GATE-REGISTRY-016), never decoration. Empty string = not a variant. */
   readonly variantOf: string;
+  /** G4: the contract declares this component a TAINT SOURCE — its outputs
+   *  carry the sensitive data the cut rules govern. With any tainted component
+   *  declared, the privacy separator reasons from the tainted parts instead of
+   *  the whole input frontier; with none declared it falls back to treating
+   *  everything reachable from IN as tainted (the conservative pre-G4
+   *  behaviour). Declaring sources SHARPENS the check — it never relaxes a
+   *  path that carries real taint. Boolean-or-absent. */
+  readonly tainted: boolean;
 }
 export interface GateV3Registry {
   readonly version: string;
@@ -335,6 +343,12 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
 
     // Variant family (GD-028 B): a well-formed dotted identifier or absent —
     // one level only, so a variant cannot itself be a family.
+    const tainted = component.tainted === true;
+    if (component.tainted !== undefined && typeof component.tainted !== "boolean") {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_006, `${key} tainted must be Boolean`);
+      continue;
+    }
+
     const variantOf = typeof component.variantOf === "string" ? component.variantOf : "";
     if (component.variantOf !== undefined && (typeof component.variantOf !== "string" || !IDENT_RE.test(component.variantOf))) {
       emit(GATE_V3_REGISTRY_CODES.REGISTRY_016, `${key} variantOf must be a dotted identifier`);
@@ -360,6 +374,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       arms: Object.freeze(arms),
       cut,
       variantOf,
+      tainted,
     }));
   }
 
