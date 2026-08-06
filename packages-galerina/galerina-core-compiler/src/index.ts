@@ -150,6 +150,14 @@ export {
   type GateGraphEdge,
 } from "./gate-v3-graph.js";
 
+// Round-three G3 rung 2 — SCC condensation; acyclicity asserted, not assumed
+export {
+  condenseGateGraph,
+  verifyGateGraphAcyclic,
+  GATE_SEM_001,
+  type GateGraphCondensation,
+} from "./gate-v3-condense.js";
+
 export {
   verifyGateV3Structure,
   analyzeGateV3Liveness,
