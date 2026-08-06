@@ -88,16 +88,23 @@ export interface GateV3Registry {
   readonly types: ReadonlyMap<string, { readonly id: string; readonly kind: string; readonly construction: string; readonly values?: readonly unknown[] }>;
   readonly components: ReadonlyMap<string, GateV3Component>;
 }
-export interface GateV3RegistryLoad {
-  readonly registry: GateV3Registry | null;
-  readonly diagnostics: readonly ParseDiagnostic[];
-}
+/**
+ * The load outcome as a DISCRIMINATED UNION, never `T | null`.
+ *
+ * `ok: true` carries a registry; `ok: false` carries only diagnostics. The
+ * type system therefore makes "read the registry without checking" a compile
+ * error rather than a runtime surprise — the null reference is the
+ * billion-dollar mistake (Hoare, ALGOL W 1965), and a governance checker is
+ * the last place to reintroduce it.
+ */
+export type GateV3RegistryLoad =
+  | { readonly ok: true; readonly registry: GateV3Registry; readonly diagnostics: readonly ParseDiagnostic[] }
+  | { readonly ok: false; readonly diagnostics: readonly ParseDiagnostic[] };
 
 /**
  * Load and validate a component registry.
  *
- * Returns `registry: null` with diagnostics if ANY entry fails the closed
- * schema — a partially-valid registry is never produced, because a downstream
+ * Returns `ok: false` with diagnostics if ANY entry fails the closed schema — a partially-valid registry is never produced, because a downstream
  * check cannot tell which half it is standing on.
  *
  * @param value the parsed registry object (from JSON)
@@ -113,7 +120,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       message: detail ? `${source}: ${def.message}: ${detail}` : `${source}: ${def.message}`,
     });
   };
-  const fail = (): GateV3RegistryLoad => ({ registry: null, diagnostics: Object.freeze(diagnostics) });
+  const fail = (): GateV3RegistryLoad => ({ ok: false, diagnostics: Object.freeze(diagnostics) });
 
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     emit(GATE_V3_REGISTRY_CODES.REGISTRY_001);
@@ -322,6 +329,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
   if (diagnostics.length > 0) return fail();
 
   return {
+    ok: true,
     registry: Object.freeze({ version: "1.0.0", digest, types, components }),
     diagnostics: Object.freeze([]),
   };

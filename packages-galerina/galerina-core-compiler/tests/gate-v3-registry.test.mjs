@@ -48,7 +48,7 @@ test("registry: GD-013a — a null argument entry REFUSES, never throws", () => 
   let result;
   assert.doesNotThrow(() => { result = load((v) => { v.components[0].arguments = [null]; }); },
     "a malformed entry must not escape as a host exception");
-  assert.equal(result.registry, null, "no registry is produced from a malformed contract");
+  assert.equal(result.ok, false, "no registry is produced from a malformed contract");
   assert.ok(codesOf(result).includes(GATE_V3_REGISTRY_CODES.REGISTRY_011.code));
 });
 
@@ -59,7 +59,7 @@ test("registry: GD-013b — duplicate argument names REFUSE (never last-write-wi
       { name: "mode", type: "Int" },
     ];
   });
-  assert.equal(r.registry, null, "a contract with a duplicate declaration is not admissible");
+  assert.equal(r.ok, false, "a contract with a duplicate declaration is not admissible");
   assert.ok(codesOf(r).includes(GATE_V3_REGISTRY_CODES.REGISTRY_012.code));
 });
 
@@ -73,7 +73,7 @@ test("registry: duplicate port names REFUSE on inputs and outputs alike", () => 
 test("registry: GD-011 — copyable must be Boolean or absent; every other spelling REFUSES", () => {
   for (const bad of ["false", "true", 0, 1, null, "yes"]) {
     const r = load((v) => { v.components[0].outputs[0].copyable = bad; });
-    assert.equal(r.registry, null, `copyable=${JSON.stringify(bad)} must refuse`);
+    assert.equal(r.ok, false, `copyable=${JSON.stringify(bad)} must refuse`);
     assert.ok(codesOf(r).includes(GATE_V3_REGISTRY_CODES.REGISTRY_013.code), JSON.stringify(bad));
   }
   // absent is legal and means NON-copyable (fail-closed default)
@@ -94,12 +94,12 @@ test("registry: duplicate components and bad identity REFUSE", () => {
 
 test("registry: a declared digest that does not match the content REFUSES", () => {
   const r = load((v) => { v.digest = `sha256:${"0".repeat(64)}`; });
-  assert.equal(r.registry, null);
+  assert.equal(r.ok, false);
   assert.ok(codesOf(r).includes(GATE_V3_REGISTRY_CODES.REGISTRY_005.code));
 });
 
 test("registry: surplus/unknown fields on a component REFUSE (closed schema)", () => {
   const r = load((v) => { v.components[0].backdoor = true; });
-  assert.equal(r.registry, null, "a closed schema rejects what it does not declare");
+  assert.equal(r.ok, false, "a closed schema rejects what it does not declare");
   assert.ok(codesOf(r).includes(GATE_V3_REGISTRY_CODES.REGISTRY_014.code));
 });

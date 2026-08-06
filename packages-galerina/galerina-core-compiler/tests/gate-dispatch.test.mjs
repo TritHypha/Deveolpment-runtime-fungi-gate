@@ -41,7 +41,7 @@ test("dispatch: constraint 3 — a v3 file still carries GATELANG-002 (signing w
 test("dispatch: a v1 `@version` file REFUSES with a migration pointer (Ruling A)", () => {
   const r = dispatchGateSource("@version 1.0.0\nINTENT \"x\"\n", "old.gate");
   assert.equal(r.dialect, "refused");
-  assert.equal(r.circuit, null);
+  assert.equal(r.circuit, undefined);
   assert.ok(codesOf(r).includes("GATE-PARSE-002"));
   assert.match(r.diagnostics[0].message, /@version|retired|v3 files begin/i, "carries a migration pointer");
 });
@@ -50,7 +50,7 @@ test("dispatch: a v2 glyph file and junk REFUSE fail-closed", () => {
   for (const src of ["GATE Foo(x: T) -> T:\n", "hello\n", "", "\n@gate 3.0.0\n"]) {
     const r = dispatchGateSource(src, "x.gate");
     assert.equal(r.dialect, "refused", JSON.stringify(src));
-    assert.equal(r.circuit, null);
+    assert.equal(r.circuit, undefined);
   }
 });
 

@@ -119,12 +119,17 @@ export interface GateV3Circuit {
   readonly wires: readonly GateV3Wire[];
   readonly location: SourceLocation;
 }
-export interface ParsedGateV3 {
-  readonly ok: boolean;
-  readonly exactVersion: string | null;
-  readonly circuit: GateV3Circuit | null;
-  readonly diagnostics: readonly ParseDiagnostic[];
-}
+/**
+ * The parse outcome as a DISCRIMINATED UNION, never `T | null`.
+ *
+ * `ok: true` carries a circuit and its exact version; `ok: false` carries only
+ * diagnostics. Reading the circuit without checking `ok` is a compile error,
+ * not a runtime surprise (the null reference - Hoare's billion-dollar mistake,
+ * ALGOL W 1965 - has no place in a fail-closed frontend).
+ */
+export type ParsedGateV3 =
+  | { readonly ok: true; readonly exactVersion: string; readonly circuit: GateV3Circuit; readonly diagnostics: readonly ParseDiagnostic[] }
+  | { readonly ok: false; readonly diagnostics: readonly ParseDiagnostic[] };
 
 // ── lexical helpers ─────────────────────────────────────────────────────────
 
@@ -174,8 +179,6 @@ function locate(raw: string, needle: string, file: string, line: number, from = 
 export function parseGateV3(source: string, file: string): ParsedGateV3 {
   const refuse = (def: { code: string; name: string; message: string }, line: number, column = 1, endColumn?: number): ParsedGateV3 => ({
     ok: false,
-    exactVersion: null,
-    circuit: null,
     diagnostics: [{
       code: def.code,
       name: def.name,

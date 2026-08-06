@@ -151,6 +151,12 @@ export {
 } from "./gate-v3-registry.js";
 
 export {
+  resolveGateV3,
+  GATE_V3_RESOLVE_CODES,
+  type ResolveOptions,
+} from "./gate-v3-resolve.js";
+
+export {
   dispatchGateSource,
   type GateDialect,
   type GateDispatchResult,

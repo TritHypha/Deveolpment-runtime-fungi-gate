@@ -33,12 +33,10 @@ import { verifyGateV3Structure } from "./gate-v3-verify.js";
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
 
-export interface GateDispatchResult {
-  readonly dialect: GateDialect;
-  readonly exactVersion: string | null;
-  readonly circuit: GateV3Circuit | null;
-  readonly diagnostics: readonly ParseDiagnostic[];
-}
+/** Dispatch outcome as a DISCRIMINATED UNION - no null in this API. */
+export type GateDispatchResult =
+  | { readonly dialect: "gate-v3"; readonly exactVersion: string; readonly circuit: GateV3Circuit; readonly diagnostics: readonly ParseDiagnostic[] }
+  | { readonly dialect: "refused"; readonly diagnostics: readonly ParseDiagnostic[] };
 
 /**
  * Dispatch a `.gate` source to its frontend.
@@ -65,10 +63,10 @@ export function dispatchGateSource(source: string, file: string): GateDispatchRe
         : "";
 
     const diagnostics = parsed.diagnostics.map((d) => (legacy ? { ...d, message: `${d.message}${legacy}` } : d));
-    return { dialect: "refused", exactVersion: null, circuit: null, diagnostics };
+    return { dialect: "refused", diagnostics };
   }
 
-  const circuit = parsed.circuit!;
+  const circuit = parsed.circuit;
   const structural = verifyGateV3Structure(circuit);
 
   // Constraint 3 — re-homed, never downgraded. The lowering may be produced and
