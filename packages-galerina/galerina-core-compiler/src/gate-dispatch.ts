@@ -29,6 +29,8 @@ import type { ParseDiagnostic } from "./parser.js";
 import { FUNGI_GATELANG_002 } from "./gate-parser.js";
 import { parseGateV3, GATE_V3_VERSION, type GateV3Circuit } from "./gate-v3-parser.js";
 import { verifyGateV3Structure } from "./gate-v3-verify.js";
+import { loadGateV3Registry } from "./gate-v3-registry.js";
+import { resolveGateV3, checkGateV3Liveness, type ResolveOptions } from "./gate-v3-resolve.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -37,6 +39,18 @@ export type GateDialect = "gate-v3" | "refused";
 export type GateDispatchResult =
   | { readonly dialect: "gate-v3"; readonly exactVersion: string; readonly circuit: GateV3Circuit; readonly diagnostics: readonly ParseDiagnostic[] }
   | { readonly dialect: "refused"; readonly diagnostics: readonly ParseDiagnostic[] };
+
+export interface GateDispatchOptions {
+  /**
+   * A component registry (as parsed JSON). When supplied, an admitted circuit
+   * is additionally RESOLVED against it and checked for liveness — otherwise
+   * only structure is verified. A check with no registry establishes shape;
+   * it does not establish that any component exists.
+   */
+  readonly registry?: unknown;
+  /** Resolution profile; `strict` (the default) demands a type catalogue. */
+  readonly profile?: ResolveOptions["profile"];
+}
 
 /**
  * Dispatch a `.gate` source to its frontend.
@@ -49,7 +63,7 @@ export type GateDispatchResult =
  * @param source raw file text
  * @param file source path, for diagnostics
  */
-export function dispatchGateSource(source: string, file: string): GateDispatchResult {
+export function dispatchGateSource(source: string, file: string, options: GateDispatchOptions = {}): GateDispatchResult {
   const parsed = parseGateV3(source, file);
 
   if (!parsed.ok) {
@@ -67,7 +81,23 @@ export function dispatchGateSource(source: string, file: string): GateDispatchRe
   }
 
   const circuit = parsed.circuit;
-  const structural = verifyGateV3Structure(circuit);
+  const structural = [...verifyGateV3Structure(circuit)];
+
+  // With a registry, the contract becomes the authority: resolve the circuit
+  // and check liveness. Without one, only shape is established — a green
+  // structural pass says nothing about whether any component exists.
+  if (options.registry !== undefined) {
+    const loaded = loadGateV3Registry(options.registry, `${file} (registry)`);
+    if (!loaded.ok) {
+      // A malformed registry refuses the FILE. Resolving against a
+      // half-validated registry would produce verdicts nobody can trust.
+      structural.push(...loaded.diagnostics);
+    } else {
+      const resolveOptions: ResolveOptions = options.profile ? { profile: options.profile } : {};
+      structural.push(...resolveGateV3(circuit, loaded.registry, resolveOptions));
+      structural.push(...checkGateV3Liveness(circuit, loaded.registry));
+    }
+  }
 
   // Constraint 3 — re-homed, never downgraded. The lowering may be produced and
   // inspected; SIGNING stays withheld until the privacy backstop is wired.

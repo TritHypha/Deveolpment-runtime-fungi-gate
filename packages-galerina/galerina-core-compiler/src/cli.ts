@@ -342,6 +342,34 @@ interface FileCompileResult {
   readonly manifestJson?: string;
 }
 
+/**
+ * Find the component registry governing a `.gate` file: `gate.registry.json`
+ * in its directory, or the nearest such file in an ancestor directory.
+ *
+ * Returns the parsed registry wrapped for the dispatcher, or undefined when
+ * none is found (the check then establishes shape only). A registry that
+ * exists but cannot be parsed is returned as-is so the dispatcher's loader
+ * refuses it with a stable diagnostic — an unreadable registry must never be
+ * silently treated as "no registry", which would quietly downgrade the check.
+ */
+function findGateRegistry(filePath: string): { registry: unknown } | undefined {
+  let directory = dirname(resolvePath(filePath));
+  for (let depth = 0; depth < 16; depth += 1) {
+    const candidate = join(directory, "gate.registry.json");
+    if (existsSync(candidate)) {
+      try {
+        return { registry: JSON.parse(readFileSync(candidate, "utf8")) };
+      } catch {
+        return { registry: { malformed: true } };  // loader emits the refusal
+      }
+    }
+    const parent = dirname(directory);
+    if (parent === directory) break;
+    directory = parent;
+  }
+  return undefined;
+}
+
 function compileFile(
   filePath: string,
   mode: CliMode,
@@ -370,7 +398,15 @@ function compileFile(
   // and never produces flows here: round one is syntax/AST closure, so there is
   // no GIR, no signing, and FUNGI-GATELANG-002 keeps production withheld.
   if (filePath.endsWith(".gate")) {
-    const dispatched = dispatchGateSource(source, filePath);
+    // A `gate.registry.json` beside the circuit (or in a parent directory)
+    // supplies the component contracts, so resolution and liveness run. With
+    // no registry the check establishes SHAPE only — it says nothing about
+    // whether any named component exists. Discovery is by convention and
+    // read-only; a malformed registry refuses the file rather than producing
+    // half-trustworthy verdicts.
+    const dispatched = dispatchGateSource(source, filePath, {
+      ...(findGateRegistry(filePath) ?? {}),
+    });
     for (const d of dispatched.diagnostics) {
       pushDiag(
         diagnostics,
