@@ -1,0 +1,19 @@
+{
+  "vendoredFrom": "subprojects/hypha/src/extract.js",
+  "sha256": "6d1d9f34fbaf2c221ab690ccd0bcf9db7d828eb64452fdeac066dff6abc9291f",
+  "exports": [
+    "distDir",
+    "distFiles",
+    "extractGateList",
+    "extractStdlibCases",
+    "extractInlineTables",
+    "extractKindSets",
+    "extractPassCalls",
+    "extractExportedCheckers",
+    "extractDiagnostics",
+    "findCallSites",
+    "findAllCallSites",
+    "extractParserKinds"
+  ],
+  "note": "Regenerate by re-running the vendor transform; never edit src/extract.mjs by hand."
+}

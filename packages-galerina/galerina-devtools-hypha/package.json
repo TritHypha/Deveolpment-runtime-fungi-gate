@@ -1,0 +1,32 @@
+{
+  "name": "@galerina/devtools-hypha",
+  "version": "1.0.0-beta.1",
+  "description": "Passive capability-map scanner for Galerina: extracts the compiler's dispatch surfaces, sentinel sets and checker wiring in memory and answers drift/coverage questions. No database, no build step, no dependencies — run it and it answers.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/queries.mjs",
+    "./extract": "./src/extract.mjs"
+  },
+  "bin": { "galerina-hypha": "./bin/galerina-hypha.mjs" },
+  "packageGraph": {
+    "roots": ["src", "bin"],
+    "extensions": [".mjs"],
+    "entryPoints": ["bin/galerina-hypha.mjs"]
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "self-test": "node bin/galerina-hypha.mjs --self-test",
+    "scan": "node bin/galerina-hypha.mjs"
+  },
+  "private": true,
+  "keywords": [
+    "galerina",
+    "devtools",
+    "capability-map",
+    "drift",
+    "coverage",
+    "static-analysis"
+  ],
+  "note": "NO build step and NO dependencies, deliberately. This package ships runnable .mjs rather than TypeScript compiled to dist/, because a tool that needs `npm run build` before it can answer a question is not a passive scanner. It reads the compiler's dist/ JavaScript — what ships, which is also what runs. See README.md §Why this package breaks two house conventions."
+}

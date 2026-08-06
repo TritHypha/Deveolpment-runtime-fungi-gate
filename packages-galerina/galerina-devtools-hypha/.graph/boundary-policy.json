@@ -1,0 +1,10 @@
+{
+  "packageName": "@galerina/devtools-hypha",
+  "allowedExternal": [
+    "node:crypto",
+    "node:fs",
+    "node:path",
+    "node:url"
+  ],
+  "note": "Hand-authored, not generator-produced: the surface was derived by calling scanPackage/buildGraph from @galerina/devtools-package-graph in memory and transcribing the result. Node core only — this package has ZERO third-party and ZERO workspace dependencies by design, which is what lets it run with no install step. Widening this list is a deliberate act and shows in the PR diff. Note the packageGraph block in package.json: this package ships .mjs rather than TypeScript, so without an explicit extensions override the default [.ts,.fungi] scan matches zero files and the border would be vacuously green."
+}
