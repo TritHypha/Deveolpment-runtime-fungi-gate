@@ -127,6 +127,14 @@ export {
   type GateTagKind,
 } from "./gate-parser.js";
 
+// Round-one G1 — `.gate` v3 front-end parser (separate from the v1 gate-parser)
+export {
+  parseGateV3,
+  GATE_V3_VERSION,
+  GATE_PARSE_002,
+  type ParsedGateV3,
+} from "./gate-v3-parser.js";
+
 // RD-0358 — governed memory-residency hardening (PROTOTYPE; see hardening-residency.ts header).
 // H-1 auto-derivation + H-2 ceiling lattice + H-5 host seam + H-7 only-tightens + M6 fingerprint.
 export {
