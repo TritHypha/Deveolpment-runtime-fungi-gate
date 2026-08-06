@@ -7,8 +7,12 @@
 // (FUNGI-ACCESS-001-002) were captured as phantom single codes. Import from here; never hand-roll again.
 //
 //   FUNGI: family (one or more alpha/num segments) then a final -<digits> with an OPTIONAL trailing letter.
+//   GATE:  the `.gate` v3 frontend surface (round-one G1). Same shape as FUNGI so the
+//          index/registry/collision tools see it without special-casing — a new code
+//          family must be visible to the detectors that police it, or the catalogue
+//          reports a namespace it cannot see.
 //   ERR: ERR_ then segments; must END on a non-underscore char (rejects ERR_AI_ wildcard prefixes).
-export const CODE_SRC = "FUNGI-[A-Z0-9]+(?:-[A-Z0-9]+)*-[0-9]+[A-Z]?|ERR_[A-Z0-9_]*[A-Z0-9]";
+export const CODE_SRC = "(?:FUNGI|GATE)-[A-Z0-9]+(?:-[A-Z0-9]+)*-[0-9]+[A-Z]?|ERR_[A-Z0-9_]*[A-Z0-9]";
 
 /** Anchored, non-global — test whether a whole token IS a code. */
 export const CODE_TEST = new RegExp(`^(?:${CODE_SRC})$`);
@@ -29,5 +33,5 @@ export function extractCodes(text) {
   return out;
 }
 
-export const familyOf = (c) => (c.startsWith("ERR_") ? "ERR_*" : (c.match(/^FUNGI-([A-Z0-9]+)-/)?.[1] ?? "?"));
-export const nsOf = (c) => (c.startsWith("ERR_") ? "ERR" : "FUNGI");
+export const familyOf = (c) => (c.startsWith("ERR_") ? "ERR_*" : (c.match(/^(?:FUNGI|GATE)-([A-Z0-9]+)-/)?.[1] ?? "?"));
+export const nsOf = (c) => (c.startsWith("ERR_") ? "ERR" : c.startsWith("GATE-") ? "GATE" : "FUNGI");

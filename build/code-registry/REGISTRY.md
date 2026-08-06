@@ -15,7 +15,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 177 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 222 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
@@ -143,6 +143,13 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-AUDIT-005 | phantom | — | — |
 | FUNGI-AUDIT-006 | phantom | — | — |
 | FUNGI-AUDIT-007 | phantom | — | — |
+
+### AUTH (2)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-AUTH-001 | inline | GATE_V3_MISSING_DENY_ARM | — |
+| GATE-AUTH-002 | inline | GATE_V3_MISSING_INDETERMINATE_ARM | — |
 
 ### B (1)
 
@@ -416,7 +423,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ECON-002 | referenced | LINEAGE_MISSING | info |
 | FUNGI-ECON-003 | referenced | AI_MODEL_UNAPPROVED | error |
 
-### EFFECT (11)
+### EFFECT (13)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -431,6 +438,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-008 | inline | PRIVILEGED_EFFECT_ON_PLAIN_FLOW | warning |
 | FUNGI-EFFECT-009 | inline | NON_CANONICAL_EFFECT | error |
 | FUNGI-EFFECT-906 | ref | — | — |
+| GATE-EFFECT-001 | inline | GATE_V3_DUPLICATE_CAPABILITY | — |
+| GATE-EFFECT-002 | inline | GATE_V3_DUPLICATE_EFFECT | — |
 
 ### ERR_* (141)
 
@@ -850,6 +859,13 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-LINT-001 | live | FLOW_EXCESSIVE_NESTING | info |
 | FUNGI-LINT-002 | live | UNUSED_BINDING | warning |
 
+### LIVE (2)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-LIVE-001 | inline | GATE_V3_UNREACHABLE_PART | — |
+| GATE-LIVE-002 | inline | GATE_V3_DEAD_END_PART | — |
+
 ### LOGIC (14)
 
 | code | status | name(s) | severity |
@@ -991,7 +1007,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (10)
+### PARSE (30)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1005,6 +1021,26 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PARSE-007 | ref | — | — |
 | FUNGI-PARSE-008 | ref | — | — |
 | FUNGI-PARSE-DEPTH-001 | ref | — | — |
+| GATE-PARSE-002 | inline | GATE_V3_BAD_VERSION_HEADER | — |
+| GATE-PARSE-003 | inline | GATE_V3_NON_ASCII | — |
+| GATE-PARSE-004 | inline | GATE_V3_MISSING_CIRCUIT | — |
+| GATE-PARSE-005 | inline | GATE_V3_MALFORMED_CIRCUIT | — |
+| GATE-PARSE-006 | inline | GATE_V3_MISSING_INTENT | — |
+| GATE-PARSE-008 | inline | GATE_V3_MISSING_REQUIRES | — |
+| GATE-PARSE-009 | inline | GATE_V3_MALFORMED_REQUIREMENT | — |
+| GATE-PARSE-010 | inline | GATE_V3_MISSING_PARTS | — |
+| GATE-PARSE-011 | inline | GATE_V3_NO_PARTS | — |
+| GATE-PARSE-012 | inline | GATE_V3_MISSING_WIRES | — |
+| GATE-PARSE-013 | inline | GATE_V3_NO_WIRES | — |
+| GATE-PARSE-014 | inline | GATE_V3_MISSING_END | — |
+| GATE-PARSE-015 | inline | GATE_V3_TRAILING_CONTENT | — |
+| GATE-PARSE-016 | inline | GATE_V3_MALFORMED_PARAM | — |
+| GATE-PARSE-018 | inline | GATE_V3_MALFORMED_PART | — |
+| GATE-PARSE-019 | inline | GATE_V3_INEXACT_COMPONENT | — |
+| GATE-PARSE-020 | inline | GATE_V3_MALFORMED_ARGUMENT | — |
+| GATE-PARSE-021 | inline | GATE_V3_MALFORMED_WIRE | — |
+| GATE-PARSE-022 | inline | GATE_V3_INVALID_ENDPOINT | — |
+| GATE-PARSE-025 | inline | GATE_V3_INVALID_LITERAL | — |
 
 ### PASSPORT (1)
 
@@ -1202,6 +1238,19 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
 | FUNGI-RES-002 | live | SUBSTRATE_HEAL_NOT_AUDITED | warning |
 
+### RESOLVE (8)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-RESOLVE-001 | inline | GATE_V3_DUPLICATE_PARAMETER | — |
+| GATE-RESOLVE-002 | inline | GATE_V3_DUPLICATE_PART | — |
+| GATE-RESOLVE-003 | inline | GATE_V3_DUPLICATE_ARGUMENT | — |
+| GATE-RESOLVE-004 | inline | GATE_V3_UNKNOWN_PARAM_REF | — |
+| GATE-RESOLVE-005 | inline | GATE_V3_UNKNOWN_INPUT | — |
+| GATE-RESOLVE-006 | inline | GATE_V3_UNKNOWN_SOURCE | — |
+| GATE-RESOLVE-007 | inline | GATE_V3_UNKNOWN_TARGET | — |
+| GATE-RESOLVE-008 | inline | GATE_V3_DUPLICATE_SET_VALUE | — |
+
 ### RESOURCE (1)
 
 | code | status | name(s) | severity |
@@ -1388,11 +1437,15 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-TENANT-002 | live | UNSCOPED_TENANT_DATA_ACCESS | error |
 | FUNGI-TENANT-003 | ref | — | — |
 
-### TERM (1)
+### TERM (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-TERM-001 | live | TERMINATION_ANNOTATION_MISSING | warning |
+| GATE-TERM-001 | inline | GATE_V3_DUPLICATE_BUDGET | — |
+| GATE-TERM-002 | inline | GATE_V3_INVALID_BUDGET | — |
+| GATE-TERM-003 | inline | GATE_V3_UNBOUNDED_CYCLE | — |
+| GATE-TERM-004 | inline | GATE_V3_UNPROVED_CYCLE | — |
 
 ### TEST (3)
 
@@ -1572,6 +1625,18 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-WEB-041 | ref | — | — |
 | FUNGI-WEB-042 | ref | — | — |
 | FUNGI-WEB-050 | ref | — | — |
+
+### WIRE (7)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-WIRE-001 | inline | GATE_V3_BAD_RETURN_PORT | — |
+| GATE-WIRE-002 | inline | GATE_V3_DUPLICATE_CONSUMER | — |
+| GATE-WIRE-003 | inline | GATE_V3_UNUSED_INPUT | — |
+| GATE-WIRE-004 | inline | GATE_V3_DISCONNECTED_PART | — |
+| GATE-WIRE-005 | inline | GATE_V3_NO_OUT_PATH | — |
+| GATE-WIRE-006 | inline | GATE_V3_TERMINAL_PRODUCES | — |
+| GATE-WIRE-007 | inline | GATE_V3_INPUT_CONSUMES | — |
 
 ### WORKFLOW (3)
 
