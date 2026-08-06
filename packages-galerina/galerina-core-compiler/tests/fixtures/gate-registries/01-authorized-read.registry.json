@@ -1,0 +1,186 @@
+{
+  "version": "1.0.0",
+  "types": [
+    {
+      "id": "CallerId",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "CustomerRef",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "Authority",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "CustomerRecord",
+      "kind": "record",
+      "construction": "source"
+    },
+    {
+      "id": "ReadEvidence",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "CustomerView",
+      "kind": "record",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "CutEvidence",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    }
+  ],
+  "components": [
+    {
+      "id": "galerina.tower.authorize",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "CallerId",
+          "required": true
+        },
+        {
+          "name": "resource",
+          "type": "CustomerRef",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "Authority"
+        },
+        {
+          "name": "deny",
+          "type": "Authority"
+        },
+        {
+          "name": "indeterminate",
+          "type": "Authority"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "app.customer.read",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "inputs": [
+        {
+          "name": "key",
+          "type": "CustomerRef",
+          "required": true
+        },
+        {
+          "name": "authority",
+          "type": "Authority",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "CustomerRecord"
+        },
+        {
+          "name": "evidence",
+          "type": "ReadEvidence"
+        }
+      ],
+      "arguments": [],
+      "effects": [
+        "database.read"
+      ],
+      "capabilities": [
+        "customer.read"
+      ]
+    },
+    {
+      "id": "galerina.privacy.cut",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "CustomerRecord",
+          "required": true
+        },
+        {
+          "name": "evidence",
+          "type": "ReadEvidence",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "CustomerView"
+        },
+        {
+          "name": "evidence",
+          "type": "CutEvidence"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "fields",
+          "type": "Set<Name>",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.audit.record",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "CutEvidence",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "arguments": [
+        {
+          "name": "event",
+          "type": "String",
+          "required": true
+        }
+      ],
+      "effects": [
+        "audit.write"
+      ],
+      "capabilities": []
+    }
+  ]
+}
