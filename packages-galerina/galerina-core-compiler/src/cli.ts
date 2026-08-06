@@ -1375,6 +1375,31 @@ function main(): void {
       })
     : files;
 
+  // GD-026: a check that verified NOTHING must never report success.
+  //
+  // `ignore` patterns are applied AFTER discovery, so a config broad enough to
+  // cover every discovered file used to leave `filteredFiles` empty, skip the
+  // loop, leave `totalErrors` at 0 and fall through to `PASS: Check passed` --
+  // a green that is byte-identical to a real one and produced by checking zero
+  // files. Measured: a file that fails with exit 1 uncovered passes with exit 0
+  // once an `ignore` pattern covers it.
+  //
+  // This is the fail-open direction, so it refuses. Note the asymmetry with the
+  // `files.length === 0` case above: finding no `.fungi` files at all is a
+  // statement about the TREE, and it reports "No .fungi files found" rather
+  // than claiming a pass. Having found files and then suppressed all of them is
+  // a statement about the CONFIG, and it is almost always a mistake -- an
+  // over-broad pattern silencing the whole project.
+  if (files.length > 0 && filteredFiles.length === 0) {
+    process.stdout.write(
+      `\nREFUSED: ${files.length} file(s) found, but the 'ignore' patterns in ` +
+      `galerina.check.json suppressed every one of them, so this check verified nothing.\n` +
+      `Narrow the patterns, or point the check at a path they do not cover. ` +
+      `A check that inspects zero files cannot report a pass (fail-closed).\n`,
+    );
+    process.exit(1);
+  }
+
   const wantFix  = process.argv.includes("--fix") || process.argv.includes("--fix-confirm");
 
   for (const filePath of filteredFiles) {
@@ -1521,8 +1546,17 @@ function main(): void {
     process.exit(1);
   } else {
     const warnSuffix =
-      totalWarnings > 0 ? ` (${totalWarnings} warning(s))` : "";
-    process.stdout.write(`\nPASS: Check passed${warnSuffix}\n`);
+      totalWarnings > 0 ? `, ${totalWarnings} warning(s)` : "";
+    // The count is part of the verdict, not decoration. "PASS" alone cannot be
+    // told apart from a pass over nothing; "PASS ... (0 files)" can be, by a
+    // reader and by a script. The refusal above should make zero unreachable
+    // here -- stating the scope anyway is what keeps that true if a future
+    // filter lands somewhere else in this function.
+    const suppressed = files.length - filteredFiles.length;
+    const skipSuffix = suppressed > 0 ? `, ${suppressed} ignored` : "";
+    process.stdout.write(
+      `\nPASS: Check passed (${filteredFiles.length} file(s) checked${skipSuffix}${warnSuffix})\n`,
+    );
   }
 }
 
