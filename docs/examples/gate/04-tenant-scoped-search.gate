@@ -19,12 +19,12 @@ CIRCUIT search_records(caller: CallerId, query: Query, tenant_id: TenantId) -> R
     effect database.read
     budget hops=64
   PARTS:
-    [authz :: galerina.tower.authorize@1.0.0 capability=records.search]
-    [scope :: galerina.privacy.cut@1.0.0 fields={TenantScope}]
-    [tenant :: galerina.tower.authorize@1.0.0 capability=tenant.reach]
+    [authz :: galerina.tower.authorize.records@1.0.0 capability=records.search]
+    [scope :: galerina.privacy.cut.scope@1.0.0 fields={TenantScope}]
+    [tenant :: galerina.tower.authorize.tenant@1.0.0 capability=tenant.reach]
     [pages :: app.shard.scan_paged@1.0.0 max_hops=64]
-    [egress :: galerina.tower.authorize@1.0.0 capability=records.egress]
-    [safe :: galerina.privacy.cut@1.0.0 fields={Records}]
+    [egress :: galerina.tower.authorize.egress@1.0.0 capability=records.egress]
+    [safe :: galerina.privacy.cut.records@1.0.0 fields={Records}]
   WIRES:
     IN.caller -> authz.subject
     IN.query -> authz.resource

@@ -1,0 +1,341 @@
+{
+  "version": "1.0.0",
+  "types": [
+    {
+      "id": "CallerId",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "Query",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "TenantId",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "AuthzGrant",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "TenantScope",
+      "kind": "opaque",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "ScopeEvidence",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "TenantGrant",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "PageData",
+      "kind": "record",
+      "construction": "source"
+    },
+    {
+      "id": "PageEvidence",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "PageExhausted",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "EgressGrant",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "RecordPage",
+      "kind": "record",
+      "construction": "canonical-only"
+    }
+  ],
+  "components": [
+    {
+      "id": "galerina.tower.authorize.records",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "variantOf": "galerina.tower.authorize",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "CallerId",
+          "required": true
+        },
+        {
+          "name": "resource",
+          "type": "Query",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "AuthzGrant"
+        },
+        {
+          "name": "deny",
+          "type": "AuthzGrant"
+        },
+        {
+          "name": "indeterminate",
+          "type": "AuthzGrant"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.tower.authorize.tenant",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "variantOf": "galerina.tower.authorize",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "TenantScope",
+          "required": true
+        },
+        {
+          "name": "resource",
+          "type": "ScopeEvidence",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "TenantGrant"
+        },
+        {
+          "name": "deny",
+          "type": "TenantGrant"
+        },
+        {
+          "name": "indeterminate",
+          "type": "TenantGrant"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.tower.authorize.egress",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "variantOf": "galerina.tower.authorize",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "PageData",
+          "required": true
+        },
+        {
+          "name": "resource",
+          "type": "PageEvidence",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "EgressGrant"
+        },
+        {
+          "name": "deny",
+          "type": "EgressGrant"
+        },
+        {
+          "name": "indeterminate",
+          "type": "EgressGrant"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.privacy.cut.scope",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "variantOf": "galerina.privacy.cut",
+      "cut": true,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "TenantId",
+          "required": true
+        },
+        {
+          "name": "evidence",
+          "type": "AuthzGrant",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "TenantScope"
+        },
+        {
+          "name": "evidence",
+          "type": "ScopeEvidence"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "fields",
+          "type": "Set<Name>",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.privacy.cut.records",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "variantOf": "galerina.privacy.cut",
+      "cut": true,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "PageData",
+          "required": true
+        },
+        {
+          "name": "evidence",
+          "type": "EgressGrant",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "RecordPage"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "fields",
+          "type": "Set<Name>",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "app.shard.scan_paged",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "inputs": [
+        {
+          "name": "authority",
+          "type": "TenantGrant",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "PageData",
+          "copyable": true
+        },
+        {
+          "name": "evidence",
+          "type": "PageEvidence"
+        },
+        {
+          "name": "exhausted",
+          "type": "PageExhausted"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "max_hops",
+          "type": "Int",
+          "required": true,
+          "min": 1,
+          "max": 4096
+        }
+      ],
+      "effects": [
+        "database.read"
+      ],
+      "capabilities": [
+        "records.search"
+      ]
+    }
+  ],
+  "vocabularies": {
+    "deny": [
+      "not_authorized",
+      "authority_unknown",
+      "tenant_reach_unknown",
+      "hop_budget_exhausted",
+      "egress_refused",
+      "egress_unknown"
+    ],
+    "trap": [
+      "cross_tenant_reach"
+    ]
+  }
+}

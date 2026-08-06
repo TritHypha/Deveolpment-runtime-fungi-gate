@@ -192,5 +192,14 @@
       ],
       "capabilities": []
     }
-  ]
+  ],
+  "vocabularies": {
+    "deny": [
+      "not_eligible",
+      "eligibility_unknown"
+    ],
+    "trap": [
+      "ledger_write_failed"
+    ]
+  }
 }

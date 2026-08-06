@@ -43,13 +43,13 @@ node --test packages-galerina/galerina-core-compiler/tests/gate-v3-shipped-examp
 ```
 
 It asserts the exact `@gate 3.0.0` header, a clean parse and a clean structural
-verification for every file here; resolves **01–03 against real per-circuit
-contracts** (in `tests/fixtures/gate-registries/`, kept there because a
-`gate.registry.json` beside the examples would be discovered for all five and
-refuse the other four); and carries self-checks proving both tiers are
-load-bearing — a mutated circuit is caught structurally, and a mutated
-contract is caught at resolution, so the suite cannot silently pass over
-nothing.
+verification for every file here; resolves **all five against real per-circuit
+contracts** (in `tests/fixtures/gate-registries/`, kept there because one
+`gate.registry.json` beside the examples would be discovered for all five while
+each circuit needs its own contract set); and carries self-checks proving both
+tiers are load-bearing — a mutated circuit is caught structurally, and a
+mutated contract is caught at resolution, so the suite cannot silently pass
+over nothing.
 
 The root CLI routes `.gate` directly — `node galerina.mjs check <file>.gate`
 reaches the same v3 frontend as the compiler package's own CLI, through one
@@ -59,11 +59,11 @@ decision-shape backstop, construction entry, worst-case budget composition,
 and terminal-reason vocabularies (`GATE-SEM-001..008` — see
 [RULES.md](RULES.md), tier 5).
 
-**One scope note, so a green is not over-read:** examples **04 and 05 are
-structure-only.** Each reuses one component id at several payload types within
-a single circuit, which exact nominal typing cannot express; the resolution of
-that is a recorded language decision, and the suite pins the un-contracted set
-so it cannot grow silently.
+All five examples resolve — 04/05 through per-use registered variants
+(GD-028, owner-ratified): one implementation used at several payload types
+registers one contract per use, families declare `variantOf`, and "one
+implementation" is digest-checked (`GATE-REGISTRY-016`). The suite pins that
+the un-contracted set stays EMPTY.
 
 ## What a passing circuit does *not* do
 

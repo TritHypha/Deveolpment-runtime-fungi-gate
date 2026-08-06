@@ -118,19 +118,19 @@ test("shipped examples: every contracted circuit resolves clean", () => {
     if (codes.length) failures.push(`${file}: ${codes.join(" ")}`);
   }
   assert.deepEqual(failures, [], `contracted examples must resolve:\n  ${failures.join("\n  ")}`);
-  assert.ok(contracted >= 3, `expected at least three contracted examples, resolved ${contracted}`);
+  assert.ok(contracted >= 5, `all five examples are contracted since GD-028 B, resolved ${contracted}`);
 });
 
-test("shipped examples: the un-contracted set is exactly the two known circuits", () => {
-  // A silent cap is worse than a stated one. If a sixth example lands without a
-  // contract, or someone contracts 04/05 without updating the README's
-  // explanation, this fails rather than letting coverage drift downward unseen.
+test("shipped examples: the un-contracted set is EMPTY — every circuit has a contract", () => {
+  // THE FLIP. This test previously pinned ["04-…", "05-…"] as un-contractable
+  // under exact nominal typing (GD-028). The owner ratified Option B — per-use
+  // registered variants sharing one implementationDigest — and both circuits
+  // now name their variants and resolve. Per the flip discipline, changing
+  // this pin is the accepted proof the decision landed. If a future example
+  // ships without a contract, this fails rather than letting coverage drift
+  // downward unseen.
   const uncontracted = shippedExamples().filter((f) => !contractFor(f));
-  assert.deepEqual(
-    uncontracted,
-    ["04-tenant-scoped-search.gate", "05-token-verify.gate"],
-    "un-contracted examples changed — update fixtures/gate-registries/README.md and this list together",
-  );
+  assert.deepEqual(uncontracted, [], "every shipped example must carry a per-circuit contract");
 });
 
 test("shipped examples: signing stays withheld even when a circuit resolves clean", () => {

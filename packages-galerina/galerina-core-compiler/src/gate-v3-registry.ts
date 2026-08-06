@@ -41,6 +41,7 @@ export const GATE_V3_REGISTRY_CODES = {
   REGISTRY_013: { code: "GATE-REGISTRY-013", name: "GATE_V3_REGISTRY_BAD_COPYABLE", message: "copyable must be absent or a Boolean" },
   REGISTRY_014: { code: "GATE-REGISTRY-014", name: "GATE_V3_REGISTRY_SURPLUS_FIELD", message: "unknown field on a contract entry (the schema is closed)" },
   REGISTRY_015: { code: "GATE-REGISTRY-015", name: "GATE_V3_REGISTRY_BAD_VOCABULARY", message: "malformed vocabularies block" },
+  REGISTRY_016: { code: "GATE-REGISTRY-016", name: "GATE_V3_REGISTRY_VARIANT_VIOLATION", message: "variant family violation" },
 } as const;
 
 /** The terminal families a vocabulary may govern — the same closed set the
@@ -55,7 +56,7 @@ const STATUS_RE = /^(SHIPPED|PARTIAL|SIMULATED|PROPOSED|BLOCKED|REJECTED)$/;
 const TYPE_ID_RE = /^[A-Za-z_][A-Za-z0-9_.]*(?:<[A-Za-z0-9_.,<>]+>)?$/;
 
 /** Fields a closed schema admits. Anything else is a surplus field and refuses. */
-const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut"]);
+const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf"]);
 const PORT_FIELDS = new Set(["name", "type", "copyable", "required"]);
 const ARGUMENT_FIELDS = new Set(["name", "type", "required", "min", "max"]);
 const TYPE_FIELDS = new Set(["id", "kind", "construction", "values", "scalarEncoding", "packedEncoding"]);
@@ -92,6 +93,13 @@ export interface GateV3Component {
    *  never inferred from the component's name: role-by-name is the exact
    *  heuristic GD-008 was raised about, on a different axis. Absent = false. */
   readonly cut: boolean;
+  /** GD-028 Option B (owner-ratified): the FAMILY this per-use variant belongs
+   *  to. Variants exist because `.gate` wire typing is exact nominal equality
+   *  with no generics, so one implementation used at several payload types
+   *  registers one contract PER USE-TYPE. All variants of a family must carry
+   *  the SAME implementationDigest — "one implementation" is a checked claim
+   *  (GATE-REGISTRY-016), never decoration. Empty string = not a variant. */
+  readonly variantOf: string;
 }
 export interface GateV3Registry {
   readonly version: string;
@@ -325,6 +333,14 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       continue;
     }
 
+    // Variant family (GD-028 B): a well-formed dotted identifier or absent —
+    // one level only, so a variant cannot itself be a family.
+    const variantOf = typeof component.variantOf === "string" ? component.variantOf : "";
+    if (component.variantOf !== undefined && (typeof component.variantOf !== "string" || !IDENT_RE.test(component.variantOf))) {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_016, `${key} variantOf must be a dotted identifier`);
+      continue;
+    }
+
     // Port types must exist in the catalogue when one is supplied.
     if (types.size > 0) {
       for (const port of [...inputs.values(), ...outputs.values()]) {
@@ -343,7 +359,33 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       decision,
       arms: Object.freeze(arms),
       cut,
+      variantOf,
     }));
+  }
+
+  // ── variant families (GD-028 B) ──────────────────────────────────────────
+  // "One implementation, several use-types" is a CLAIM, and the digest is how
+  // it is checked: every member of a family must carry the identical
+  // implementationDigest. Two variants sharing a family with different
+  // digests are two implementations wearing one name — refused. A family
+  // whose name collides with a REGISTERED component id is also refused: a
+  // variant of a concrete component would make dispatch ambiguous.
+  const familyDigests = new Map<string, { digest: string; member: string }>();
+  for (const [key, component] of components) {
+    if (component.variantOf === "") continue;
+    if ([...components.values()].some((c) => c.id === component.variantOf)) {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_016, `${key} variantOf '${component.variantOf}' names a registered component, not a family`);
+      continue;
+    }
+    const seen = familyDigests.get(component.variantOf);
+    if (seen === undefined) {
+      familyDigests.set(component.variantOf, { digest: component.implementationDigest, member: key });
+    } else if (seen.digest !== component.implementationDigest) {
+      emit(
+        GATE_V3_REGISTRY_CODES.REGISTRY_016,
+        `family '${component.variantOf}': ${key} and ${seen.member} declare different implementationDigests — one family, one implementation`,
+      );
+    }
   }
 
   // ── vocabularies (GD-009, ruling ④) ─────────────────────────────────────

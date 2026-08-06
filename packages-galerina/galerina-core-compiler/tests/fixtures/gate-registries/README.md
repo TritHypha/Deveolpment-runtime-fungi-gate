@@ -38,27 +38,18 @@ own contract explicitly.
 | `01-authorized-read` | ✅ | clean |
 | `02-write-transaction` | ✅ | clean |
 | `03-phi-redaction` | ✅ | clean |
-| `04-tenant-scoped-search` | ❌ none | see below |
-| `05-token-verify` | ❌ none | see below |
+| `04-tenant-scoped-search` | ✅ (per-use variants) | clean |
+| `05-token-verify` | ✅ (per-use variants) | clean |
 
-**04 and 05 cannot be contracted at all under the current type system**, and the
-reason is worth stating precisely because it is a language-design limit rather
-than an oversight: both reuse one component id *several times within a single
-circuit*, carrying different payload types at each use.
-
-- **04** instantiates `galerina.tower.authorize` three times (`authz`, `tenant`,
-  `egress`) and `galerina.privacy.cut` twice (`scope`, `safe`). Pinning
-  `cut.value` to satisfy `scope` forces
-  `pages.value:CallerId -> safe.value:TenantId` to mismatch, and pinning its
-  output to satisfy `tenant.subject` forces
-  `safe.value:CallerId -> OUT.value:RecordPage` to mismatch.
-- **05** instantiates `authorize` twice (`state`, `reemit`), where
-  `state.deny -> reemit.subject` demands that one contract's `subject` be both a
-  verdict payload and an authority token.
-
-Per-circuit registries solved the *cross-circuit* polymorphism; these are
-*intra-circuit*, so no registry granularity can fix them. Closing this needs a
-language decision — parameterised component types, or per-use component
-variants — and that decision is not the test suite's to make. It is recorded as
-a defect in the KAT register rather than papered over with a contract that
-refuses the examples it is supposed to certify.
+**04 and 05 are contracted via GD-028 Option B (owner-ratified): per-use
+registered variants.** Both circuits reuse one implementation at several
+payload types within a single circuit, which exact nominal typing cannot
+express through a single contract. Each use therefore registers its own
+variant (`galerina.tower.authorize.records` / `.tenant` / `.egress`,
+`galerina.privacy.cut.scope` / `.records` / `.token`, …) with concrete
+types, all members of a family declaring `variantOf` and carrying the SAME
+`implementationDigest` — a checked claim (`GATE-REGISTRY-016`), not
+decoration. Variants are not a conversion side-channel: `GATE-WIRE-101`
+refuses across them exactly as between unrelated types. The circuits name
+their variants explicitly, which makes the three authorize roles visible in
+the drawing — the teaching improved rather than survived.

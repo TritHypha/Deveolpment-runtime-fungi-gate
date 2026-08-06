@@ -14,9 +14,9 @@ CIRCUIT verify_token(token: SecureString) -> TokenVerdict
   PARTS:
     [key :: galerina.secret.load_verify_key@1.0.0]
     [check :: app.token.verify_signature@1.0.0]
-    [state :: galerina.tower.authorize@1.0.0 capability=token.verify]
-    [reemit :: galerina.tower.authorize@1.0.0 capability=token.emit_expired]
-    [redacted :: galerina.privacy.cut@1.0.0 fields={Token}]
+    [state :: galerina.tower.authorize.token_state@1.0.0 capability=token.verify]
+    [reemit :: galerina.tower.authorize.token_reemit@1.0.0 capability=token.emit_expired]
+    [redacted :: galerina.privacy.cut.token@1.0.0 fields={Token}]
     [verdict :: app.token.emit_verdict@1.0.0]
   WIRES:
     IN.token -> key.token

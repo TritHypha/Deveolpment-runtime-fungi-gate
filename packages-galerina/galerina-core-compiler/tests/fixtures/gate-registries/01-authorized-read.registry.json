@@ -183,5 +183,11 @@
       ],
       "capabilities": []
     }
-  ]
+  ],
+  "vocabularies": {
+    "deny": [
+      "not_authorized",
+      "authority_unknown"
+    ]
+  }
 }

@@ -108,9 +108,10 @@ against a loaded registry.
 - **Which sources are tainted is not yet contract-expressible.** The cut rules
   treat everything reachable from the input frontier as tainted; a declared
   sensitivity axis is future work.
-- **Examples 01–03 are contract-checked; 04 and 05 are structure-only.** The
-  first three resolve against per-circuit contracts in the compiler package's
-  test fixtures (kept there because a `gate.registry.json` beside the examples
-  would be discovered for all five and refuse the other four). 04/05 reuse one
-  component id at several types *within* one circuit, which exact nominal
-  typing cannot express — a recorded language decision, not an oversight.
+- **All five examples are contract-checked**, via per-circuit contracts in
+  the compiler package's test fixtures (kept there because a
+  `gate.registry.json` beside the examples would be discovered for all five
+  and cross-refuse them). 04/05 use per-use registered VARIANTS —
+  `variantOf` families sharing one checked `implementationDigest`
+  (`GATE-REGISTRY-016`) — the owner-ratified answer to polymorphic component
+  use under exact nominal typing.

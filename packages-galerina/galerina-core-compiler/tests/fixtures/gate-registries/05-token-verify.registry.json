@@ -1,0 +1,271 @@
+{
+  "version": "1.0.0",
+  "types": [
+    {
+      "id": "SecureString",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "VerifyKey",
+      "kind": "opaque",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "SignedClaim",
+      "kind": "record",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "CheckEvidence",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "InvalidSig",
+      "kind": "opaque",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "StateGrant",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "StateDenial",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "ReemitGrant",
+      "kind": "evidence",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "RedactedVerdict",
+      "kind": "record",
+      "construction": "canonical-only"
+    },
+    {
+      "id": "TokenVerdict",
+      "kind": "record",
+      "construction": "canonical-only"
+    }
+  ],
+  "components": [
+    {
+      "id": "galerina.secret.load_verify_key",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "SecureString",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "VerifyKey"
+        }
+      ],
+      "arguments": [],
+      "effects": [
+        "secret.read"
+      ],
+      "capabilities": [
+        "token.verify"
+      ]
+    },
+    {
+      "id": "app.token.verify_signature",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "inputs": [
+        {
+          "name": "key",
+          "type": "VerifyKey",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "SignedClaim"
+        },
+        {
+          "name": "evidence",
+          "type": "CheckEvidence"
+        },
+        {
+          "name": "invalid",
+          "type": "InvalidSig"
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.tower.authorize.token_state",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "variantOf": "galerina.tower.authorize",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "SignedClaim",
+          "required": true
+        },
+        {
+          "name": "resource",
+          "type": "CheckEvidence",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "StateGrant"
+        },
+        {
+          "name": "deny",
+          "type": "StateDenial"
+        },
+        {
+          "name": "indeterminate",
+          "type": "StateGrant"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.tower.authorize.token_reemit",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "variantOf": "galerina.tower.authorize",
+      "decision": true,
+      "arms": [
+        "allow",
+        "deny",
+        "indeterminate"
+      ],
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "StateDenial",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "allow",
+          "type": "ReemitGrant"
+        },
+        {
+          "name": "deny",
+          "type": "ReemitGrant"
+        },
+        {
+          "name": "indeterminate",
+          "type": "ReemitGrant"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "capability",
+          "type": "Name",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.privacy.cut.token",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "variantOf": "galerina.privacy.cut",
+      "cut": true,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "ReemitGrant",
+          "required": true
+        },
+        {
+          "name": "evidence",
+          "type": "StateGrant",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "RedactedVerdict"
+        }
+      ],
+      "arguments": [
+        {
+          "name": "fields",
+          "type": "Set<Name>",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "app.token.emit_verdict",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "RedactedVerdict",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "TokenVerdict"
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    }
+  ],
+  "vocabularies": {
+    "deny": [
+      "token_state_unknown",
+      "expired_verdict_suppressed",
+      "emit_policy_unknown"
+    ],
+    "trap": [
+      "invalid_signature"
+    ]
+  }
+}
