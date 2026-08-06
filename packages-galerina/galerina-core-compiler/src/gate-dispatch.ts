@@ -38,6 +38,7 @@ import { verifyGateGraphAcyclic } from "./gate-v3-condense.js";
 import { verifyCutDominatesEgress, verifyTaintCutSeparator } from "./gate-v3-privacy.js";
 import { verifyDecisionShapes } from "./gate-v3-authority.js";
 import { verifyConstructionEntry } from "./gate-v3-construction.js";
+import { verifyBudgetComposition } from "./gate-v3-budget.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -116,6 +117,7 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
   // verdicts from a contract nobody validated.
   const graph = buildGateGraph(circuit);
   structural.push(...verifyGateGraphAcyclic(graph));
+  structural.push(...verifyBudgetComposition(circuit, graph));   // drawing-tier: needs no registry
   if (resolvedRegistry !== null) {
     structural.push(...verifyCutDominatesEgress(graph, resolvedRegistry));
     structural.push(...verifyTaintCutSeparator(graph, resolvedRegistry));

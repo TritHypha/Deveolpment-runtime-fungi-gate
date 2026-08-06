@@ -167,6 +167,9 @@ export { verifyDecisionShapes, GATE_SEM_004 } from "./gate-v3-authority.js";
 // Round-three G3 rung 7 — GD-025: the construction axis becomes a guard
 export { verifyConstructionEntry, GATE_SEM_005 } from "./gate-v3-construction.js";
 
+// Round-three G3 rung 8 — tropical budget composition, deny-side only (RD-0215)
+export { composeWorstCaseBudgets, verifyBudgetComposition, GATE_SEM_006 } from "./gate-v3-budget.js";
+
 // Round-three G3 rungs 3–4 — privacy passes: dominators + the cut rules
 export {
   computeDominators,
