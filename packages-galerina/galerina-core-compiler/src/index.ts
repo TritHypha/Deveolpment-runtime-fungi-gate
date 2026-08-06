@@ -143,6 +143,12 @@ export {
   GATE_V3_CODES,
 } from "./gate-v3-verify.js";
 
+export {
+  dispatchGateSource,
+  type GateDialect,
+  type GateDispatchResult,
+} from "./gate-dispatch.js";
+
 // RD-0358 — governed memory-residency hardening (PROTOTYPE; see hardening-residency.ts header).
 // H-1 auto-derivation + H-2 ceiling lattice + H-5 host seam + H-7 only-tightens + M6 fingerprint.
 export {
