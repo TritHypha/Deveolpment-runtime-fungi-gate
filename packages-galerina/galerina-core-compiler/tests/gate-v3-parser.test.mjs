@@ -10,7 +10,7 @@
 // Tests-first (KAT discipline): written before the code, red then green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseGateV3, GATE_V3_VERSION, GATE_PARSE_002 } from "../dist/index.js";
+import { parseGateV3, formatGateV3, GATE_V3_VERSION, GATE_PARSE_002 } from "../dist/index.js";
 
 const codesOf = (r) => r.diagnostics.map((d) => d.code);
 
@@ -144,4 +144,75 @@ test("gate-v3: structural malformations REFUSE with the right PARSE code", () =>
     assert.equal(r.ok, false, src);
     assert.ok(codesOf(r).includes(code), `${src} => expected ${code}, got ${codesOf(r)}`);
   }
+});
+
+// ── Step 3-4: the canonical formatter ──────────────────────────────────────
+// Correct-by-construction: ASCII code-unit ordering (NOT locale collation —
+// the reference's localeCompare inverts 'A' vs 'a' between en and da locales),
+// no interior blank lines (Ruling B), canonical numeric forms.
+
+test("gate-v3 formatter: parse(format(x)) is identity on the corpus circuit", () => {
+  const first = parseGateV3(VALID, "customer.gate");
+  const formatted = formatGateV3(first.circuit);
+  const second = parseGateV3(formatted, "customer.gate");
+  assert.equal(second.ok, true, JSON.stringify(codesOf(second)));
+  assert.equal(formatGateV3(second.circuit), formatted, "format is idempotent");
+});
+
+test("gate-v3 formatter: emits NO interior blank lines (Ruling B)", () => {
+  const out = formatGateV3(parseGateV3(VALID, "c.gate").circuit);
+  const body = out.split("\n").slice(1); // everything after the version line
+  const blanks = body.filter((l, i) => l.trim() === "" && i < body.length - 1);
+  assert.deepEqual(blanks, [], "no blank lines inside the circuit body");
+});
+
+test("gate-v3 formatter: ordering is ASCII code-unit, not locale collation", () => {
+  // 'A' vs 'a' invert under en/da locale collation; code-unit ordering is
+  // stable everywhere. Uppercase must sort BEFORE lowercase ('A'=65 < 'a'=97).
+  const src = [
+    "@gate 3.0.0",
+    "CIRCUIT ordering(value: T) -> T",
+    '  INTENT "x"',
+    "  REQUIRES:",
+    "    effect a.lower",
+    "    effect A.upper",
+    "  PARTS:",
+    "    [alpha :: test.z@1.0.0]",
+    "    [Alpha :: test.a@1.0.0]",
+    "  WIRES:",
+    "    IN.value -> alpha.value",
+    "    IN.value -> Alpha.value",
+    "    alpha.value -> OUT.value",
+    "    Alpha.value -> DRAIN.spare",
+    "END",
+    "",
+  ].join("\n");
+  const out = formatGateV3(parseGateV3(src, "o.gate").circuit);
+  const effects = out.split("\n").filter((l) => l.trim().startsWith("effect")).map((l) => l.trim());
+  assert.deepEqual(effects, ["effect A.upper", "effect a.lower"], "uppercase sorts first (code-unit)");
+  const partLines = out.split("\n").filter((l) => l.trim().startsWith("[")).map((l) => l.trim().slice(1, 6));
+  assert.equal(partLines[0], "Alpha", "Alpha before alpha (code-unit)");
+});
+
+test("gate-v3 formatter: numeric forms are canonical (no -0, no 0.0 aliases)", () => {
+  const src = [
+    "@gate 3.0.0",
+    "CIRCUIT nums(value: T) -> T",
+    '  INTENT "x"',
+    "  REQUIRES:",
+    "  PARTS:",
+    "    [c :: test.k@1.0.0 a=-0 b=0.0 d=-0.0 e=0]",
+    "  WIRES:",
+    "    IN.value -> c.value",
+    "    c.value -> OUT.value",
+    "END",
+    "",
+  ].join("\n");
+  const out = formatGateV3(parseGateV3(src, "n.gate").circuit);
+  const part = out.split("\n").find((l) => l.includes("test.k"));
+  // every spelling of zero collapses to the single canonical form "0"
+  assert.match(part, /a=0 /, "-0 canonicalizes to 0");
+  assert.match(part, /b=0 /, "0.0 canonicalizes to 0");
+  assert.match(part, /d=0 /, "-0.0 canonicalizes to 0");
+  assert.doesNotMatch(part, /-0/, "no signed zero survives formatting");
 });

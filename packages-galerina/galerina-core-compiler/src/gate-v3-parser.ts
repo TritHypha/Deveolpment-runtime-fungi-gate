@@ -381,6 +381,99 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
   return Object.freeze({ ok: true, exactVersion: GATE_V3_VERSION, circuit, diagnostics: Object.freeze([]) });
 }
 
+// ── canonical formatter ─────────────────────────────────────────────────────
+
+/**
+ * ASCII code-unit comparator — the ONLY ordering used for canonical output.
+ *
+ * WHY NOT localeCompare: default-locale collation is machine-dependent —
+ * "A" vs "a" orders +1 under `en` and -1 under `da`, so a locale-sorted
+ * canonical form (and therefore any fingerprint over it) differs between
+ * machines. Code-unit ordering is stable everywhere. (Reference-prototype
+ * defect; deliberately not inherited.)
+ */
+function byCodeUnit(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0;
+}
+
+/**
+ * Canonical numeric text. Every spelling of a value collapses to one form, so
+ * one logical number has one canonical identity: `-0`, `0.0`, `-0.0` and `0`
+ * all render as `0`. (The reference admits all four and yields four distinct
+ * fingerprints for one logical trit zero — deliberately not inherited.)
+ */
+function canonicalNumber(value: number): string {
+  const normalised = value === 0 ? 0 : value; // collapses -0 to 0
+  return Number.isInteger(normalised) ? String(normalised) : String(normalised);
+}
+
+/** Render one argument value in canonical form. Sets are sorted by code unit. */
+function formatValue(value: GateV3Value): string {
+  switch (value.kind) {
+    case "string":
+      return JSON.stringify(value.value as string);
+    case "number":
+      return canonicalNumber(value.value as number);
+    case "reference":
+      return `$${value.value as string}`;
+    case "name":
+      return value.value as string;
+    case "set": {
+      const items = (value.value as readonly GateV3Value[]).map(formatValue).sort(byCodeUnit);
+      return `{${items.join(",")}}`;
+    }
+  }
+}
+
+/**
+ * Render a circuit in canonical form.
+ *
+ * Guarantees: deterministic across machines (code-unit ordering only), NO
+ * interior blank lines (Ruling B — the body carries edges, nothing else),
+ * canonical numeric forms, and `parse(format(x))` identity. The output is the
+ * form any digest/fingerprint must be taken over.
+ *
+ * @param circuit a frozen AST from {@link parseGateV3}
+ */
+export function formatGateV3(circuit: GateV3Circuit): string {
+  const lines: string[] = [GATE_V3_HEADER];
+
+  const params = circuit.params.map((p) => `${p.name}: ${p.type}`).join(", ");
+  lines.push(`CIRCUIT ${circuit.name}(${params}) -> ${circuit.returnType}`);
+  lines.push(`  INTENT ${JSON.stringify(circuit.intent)}`);
+
+  lines.push("  REQUIRES:");
+  for (const item of [...circuit.requirements.capabilities].sort((a, b) => byCodeUnit(a.name, b.name))) {
+    lines.push(`    capability ${item.name}`);
+  }
+  for (const item of [...circuit.requirements.effects].sort((a, b) => byCodeUnit(a.name, b.name))) {
+    lines.push(`    effect ${item.name}`);
+  }
+  for (const item of [...circuit.requirements.budgets].sort((a, b) => byCodeUnit(a.name, b.name))) {
+    lines.push(`    budget ${item.name}=${canonicalNumber(item.value)}`);
+  }
+
+  lines.push("  PARTS:");
+  for (const part of [...circuit.parts].sort((a, b) => byCodeUnit(a.instance, b.instance))) {
+    const args = [...part.args]
+      .sort((a, b) => byCodeUnit(a.name, b.name))
+      .map((a) => `${a.name}=${formatValue(a.value)}`)
+      .join(" ");
+    lines.push(`    [${part.instance} :: ${part.component}@${part.version}${args ? ` ${args}` : ""}]`);
+  }
+
+  lines.push("  WIRES:");
+  const wires = [...circuit.wires].sort((a, b) =>
+    byCodeUnit(a.from.text, b.from.text) || byCodeUnit(a.to.text, b.to.text));
+  for (const wire of wires) {
+    const bound = wire.bound ? ` ${wire.bound.kind}=${wire.bound.value}` : "";
+    lines.push(`    ${wire.from.text} -> ${wire.to.text}${bound}`);
+  }
+
+  lines.push("END", "");
+  return lines.join("\n");
+}
+
 /** Split a part's argument text on whitespace that is not inside a quoted
  *  string or a `{set}` — so `fields={a,b} mode="x y"` stays two arguments. */
 function splitArguments(text: string): string[] {

@@ -130,9 +130,11 @@ export {
 // Round-one G1 — `.gate` v3 front-end parser (separate from the v1 gate-parser)
 export {
   parseGateV3,
+  formatGateV3,
   GATE_V3_VERSION,
   GATE_PARSE_002,
   type ParsedGateV3,
+  type GateV3Circuit,
 } from "./gate-v3-parser.js";
 
 // RD-0358 — governed memory-residency hardening (PROTOTYPE; see hardening-residency.ts header).
