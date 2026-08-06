@@ -40,7 +40,13 @@ export const GATE_V3_REGISTRY_CODES = {
   REGISTRY_012: { code: "GATE-REGISTRY-012", name: "GATE_V3_REGISTRY_DUPLICATE_DECLARATION", message: "duplicate declaration in a component contract" },
   REGISTRY_013: { code: "GATE-REGISTRY-013", name: "GATE_V3_REGISTRY_BAD_COPYABLE", message: "copyable must be absent or a Boolean" },
   REGISTRY_014: { code: "GATE-REGISTRY-014", name: "GATE_V3_REGISTRY_SURPLUS_FIELD", message: "unknown field on a contract entry (the schema is closed)" },
+  REGISTRY_015: { code: "GATE-REGISTRY-015", name: "GATE_V3_REGISTRY_BAD_VOCABULARY", message: "malformed vocabularies block" },
 } as const;
+
+/** The terminal families a vocabulary may govern — the same closed set the
+ *  graph knows. A vocabulary for anything else is a schema error. */
+const VOCABULARY_FAMILIES = new Set(["deny", "fault", "trap", "drain"]);
+const REASON_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 const IDENT_RE = /^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$/;
 const SEMVER_RE = /^[0-9]+\.[0-9]+\.[0-9]+$/;
@@ -92,6 +98,13 @@ export interface GateV3Registry {
   readonly digest: string;
   readonly types: ReadonlyMap<string, { readonly id: string; readonly kind: string; readonly construction: string; readonly values?: readonly unknown[] }>;
   readonly components: ReadonlyMap<string, GateV3Component>;
+  /** Per-terminal-family reason vocabularies (GD-009 under ruling ④): family
+   *  ("deny" | "fault" | "trap" | "drain") -> the closed set of admissible
+   *  reason identifiers. A family ABSENT from the map declares NO vocabulary —
+   *  its reasons are unchecked, and the checker LABELS that rather than
+   *  silently passing (GD-018's lesson). Empty map when the registry declares
+   *  none at all. */
+  readonly vocabularies: ReadonlyMap<string, ReadonlySet<string>>;
 }
 /**
  * The load outcome as a DISCRIMINATED UNION, never `T | null`.
@@ -333,6 +346,44 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
     }));
   }
 
+  // ── vocabularies (GD-009, ruling ④) ─────────────────────────────────────
+  // Optional. When PRESENT the block is validated closed: only the four
+  // terminal families, every reason a well-formed identifier, no duplicates.
+  // A malformed block refuses the REGISTRY — resolving terminal reasons
+  // against a half-validated vocabulary would produce verdicts nobody can
+  // trust (the same rule as every other loader surface here).
+  const vocabularies = new Map<string, ReadonlySet<string>>();
+  const rawVocab = (raw as Record<string, unknown>).vocabularies;
+  if (rawVocab !== undefined) {
+    if (rawVocab === null || typeof rawVocab !== "object" || Array.isArray(rawVocab)) {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_015, "must be an object of family -> reason list");
+    } else {
+      for (const [family, reasons] of Object.entries(rawVocab as Record<string, unknown>)) {
+        if (!VOCABULARY_FAMILIES.has(family)) {
+          emit(GATE_V3_REGISTRY_CODES.REGISTRY_015, `unknown family '${family}'`);
+          continue;
+        }
+        if (!Array.isArray(reasons)) {
+          emit(GATE_V3_REGISTRY_CODES.REGISTRY_015, `family '${family}' must list its reasons in an array`);
+          continue;
+        }
+        const set = new Set<string>();
+        for (const reason of reasons as unknown[]) {
+          if (typeof reason !== "string" || !REASON_RE.test(reason)) {
+            emit(GATE_V3_REGISTRY_CODES.REGISTRY_015, `family '${family}' carries a malformed reason ${JSON.stringify(reason)}`);
+            continue;
+          }
+          if (set.has(reason)) {
+            emit(GATE_V3_REGISTRY_CODES.REGISTRY_015, `family '${family}' repeats reason '${reason}'`);
+            continue;
+          }
+          set.add(reason);
+        }
+        vocabularies.set(family, Object.freeze(set) as ReadonlySet<string>);
+      }
+    }
+  }
+
   // ── content digest ───────────────────────────────────────────────────────
   const { digest: declared = null, ...unsigned } = raw as Record<string, unknown> & { digest?: string };
   const digest = `sha256:${createHash("sha256").update(canonicalJson(unsigned), "utf8").digest("hex")}`;
@@ -344,7 +395,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
 
   return {
     ok: true,
-    registry: Object.freeze({ version: "1.0.0", digest, types, components }),
+    registry: Object.freeze({ version: "1.0.0", digest, types, components, vocabularies }),
     diagnostics: Object.freeze([]),
   };
 }

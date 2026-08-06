@@ -162,7 +162,7 @@ export {
 export { vAnd, foldVerdicts, type GateVerdict } from "./gate-v3-verdict.js";
 
 // Round-three G3 rung 6 — GD-008's secondary half: the decision-shape backstop
-export { verifyDecisionShapes, GATE_SEM_004 } from "./gate-v3-authority.js";
+export { verifyDecisionShapes, verifyTerminalVocabulary, GATE_SEM_004, GATE_SEM_007, GATE_SEM_008 } from "./gate-v3-authority.js";
 
 // Round-three G3 rung 7 — GD-025: the construction axis becomes a guard
 export { verifyConstructionEntry, GATE_SEM_005 } from "./gate-v3-construction.js";
