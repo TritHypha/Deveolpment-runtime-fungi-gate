@@ -161,6 +161,9 @@ export {
 // Round-three G3 rung 5 — the K3 verdict algebra (RD-0231 V3's proven min fold)
 export { vAnd, foldVerdicts, type GateVerdict } from "./gate-v3-verdict.js";
 
+// Round-three G3 rung 6 — GD-008's secondary half: the decision-shape backstop
+export { verifyDecisionShapes, GATE_SEM_004 } from "./gate-v3-authority.js";
+
 // Round-three G3 rungs 3–4 — privacy passes: dominators + the cut rules
 export {
   computeDominators,
