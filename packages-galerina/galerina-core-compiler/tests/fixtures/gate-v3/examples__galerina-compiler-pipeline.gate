@@ -1,0 +1,50 @@
+@gate 3.0.0
+
+CIRCUIT compile_galerina(source: FungiSource, profile: BuildProfile) -> AdmittedArtifact
+  INTENT "Compile verified Galerina source into an attested artifact; every failed stage terminates without emission."
+
+  REQUIRES:
+    capability compiler.build
+    effect artifact.write
+    effect crypto.sign
+    budget compiler_passes=64
+
+  PARTS:
+    [scan :: compiler.scan@1.0.0]
+    [lex :: compiler.lex@1.0.0]
+    [parse :: compiler.parse@1.0.0]
+    [resolve :: compiler.resolve@1.0.0]
+    [check :: compiler.type_effect_value@1.0.0]
+    [govern :: compiler.governance@1.0.0]
+    [gir :: compiler.gir_emit@1.0.0]
+    [optimize :: compiler.optimize@1.0.0]
+    [backend :: compiler.backend@1.0.0]
+    [attest :: compiler.attest@1.0.0]
+
+  WIRES:
+    IN.source          -> scan.source
+    scan.tokens        -> lex.input
+    scan.error         -> DENY.scan_failed
+    lex.tokens         -> parse.tokens
+    lex.error          -> DENY.lex_failed
+    parse.ast          -> resolve.ast
+    parse.error        -> DENY.parse_failed
+    resolve.program    -> check.program
+    resolve.error      -> DENY.resolve_failed
+    check.program      -> govern.program
+    check.error        -> DENY.check_failed
+    govern.program     -> gir.program
+    govern.evidence    -> gir.evidence
+    govern.error       -> DENY.governance_failed
+    gir.unit           -> optimize.unit
+    gir.error          -> DENY.gir_failed
+    IN.profile         -> optimize.profile
+    optimize.unit      -> backend.unit
+    optimize.evidence  -> backend.evidence
+    optimize.error     -> DENY.optimization_failed
+    backend.artifact   -> attest.artifact
+    backend.evidence   -> attest.evidence
+    backend.error      -> DENY.backend_failed
+    attest.artifact    -> OUT.value
+    attest.error       -> DENY.attestation_failed
+END

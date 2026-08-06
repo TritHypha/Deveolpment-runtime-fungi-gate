@@ -1,0 +1,17 @@
+@gate 3.0.0
+
+CIRCUIT duplicate_consumer(value: Text) -> Text
+  INTENT "A component input cannot have two producers."
+  REQUIRES:
+    budget operations=3
+  PARTS:
+    [left :: test.echo@1.0.0]
+    [right :: test.echo@1.0.0]
+    [sink :: test.echo@1.0.0]
+  WIRES:
+    IN.value -> left.value
+    IN.value -> right.value
+    left.value -> sink.value
+    right.value -> sink.value
+    sink.value -> OUT.value
+END

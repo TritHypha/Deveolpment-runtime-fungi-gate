@@ -1,0 +1,40 @@
+@gate 3.0.0
+
+CIRCUIT compare_quantum_experiment(caller: CallerId, experiment: ExperimentSpec) -> ResearchResult
+  INTENT "Compare a future provider result with a pinned classical reference before research egress."
+
+  REQUIRES:
+    capability research.quantum.run
+    effect compute.quantum
+    effect audit.write
+    budget shots=10000
+    budget wall_time_ms=60000
+
+  PARTS:
+    [freeze :: research.experiment.freeze@1.0.0 seed=42]
+    [auth :: galerina.tower.authorize@1.0.0 capability=research.quantum.run]
+    [reference :: research.quantum.classical_reference@1.0.0 deterministic=true]
+    [provider :: research.quantum.provider@1.0.0 shots=10000]
+    [compare :: research.result.compare@1.0.0 metric=total_variation tolerance="0.01"]
+    [audit :: galerina.audit.record@1.0.0 event="research.quantum.compare"]
+
+  WIRES:
+    IN.experiment       -> freeze.spec
+    freeze.invalid      -> DENY.invalid_experiment
+    IN.caller           -> auth.subject
+    freeze.identity     -> auth.resource
+    auth.deny           -> DENY.not_authorized
+    auth.indeterminate  -> DENY.authority_unknown
+    freeze.value        -> reference.experiment
+    reference.failure   -> TRAP.reference_failure
+    auth.allow          -> provider.authority
+    freeze.value        -> provider.experiment
+    provider.unavailable -> DENY.provider_unavailable
+    provider.failure    -> TRAP.provider_failure
+    reference.result    -> compare.reference
+    provider.result     -> compare.candidate
+    compare.outside_tolerance -> DENY.result_not_verified
+    compare.accepted    -> OUT.value
+    compare.evidence    -> audit.value
+    auth.allow          -> audit.evidence
+END

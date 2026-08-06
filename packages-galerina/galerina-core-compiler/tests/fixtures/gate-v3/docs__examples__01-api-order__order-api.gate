@@ -1,0 +1,42 @@
+@gate 3.0.0
+
+CIRCUIT create_order(caller: CallerId, request: RawOrderRequest) -> OrderReceipt
+  INTENT "Validate and authorize one idempotent order before network and database effects."
+
+  REQUIRES:
+    capability order.create
+    effect network.outbound
+    effect database.write
+    effect audit.write
+    budget outbound_requests=1
+    budget database_writes=1
+
+  PARTS:
+    [validate :: app.order.validate@1.0.0]
+    [auth :: galerina.tower.authorize@1.0.0 capability=order.create]
+    [rate :: app.exchange_rate.fetch@1.0.0 timeout_ms=1000]
+    [write :: app.order.insert_idempotent@1.0.0]
+    [redact :: galerina.privacy.redact@1.0.0 fields={email,payment_token}]
+    [audit :: galerina.audit.record@1.0.0 event="order.create"]
+
+  WIRES:
+    IN.request          -> validate.raw
+    validate.invalid    -> DENY.invalid_request
+    validate.order      -> auth.resource
+    IN.caller           -> auth.subject
+    auth.deny           -> DENY.not_authorized
+    auth.indeterminate  -> DENY.authority_unknown
+    auth.allow          -> rate.authority
+    validate.currency   -> rate.currency
+    rate.timeout        -> TRAP.exchange_timeout
+    rate.unavailable    -> TRAP.exchange_unavailable
+    rate.value          -> write.exchange_rate
+    auth.allow          -> write.authority
+    validate.order      -> write.order
+    write.conflict      -> DENY.duplicate_order
+    write.failure       -> TRAP.database_failure
+    write.receipt       -> OUT.value
+    write.audit_summary -> redact.value
+    redact.value        -> audit.value
+    auth.allow          -> audit.evidence
+END

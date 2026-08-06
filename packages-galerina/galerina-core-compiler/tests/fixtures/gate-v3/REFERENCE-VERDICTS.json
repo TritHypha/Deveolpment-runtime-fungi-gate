@@ -1,0 +1,94 @@
+{
+  "docs__examples__01-api-order__order-api.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__02-file-config__file-config.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__03-database-query__transaction-count.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__04-bulk-data-mining__bulk-mine.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__05-maths-algebra__loyalty-algebra.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__06-quantum-readiness__experiment.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__07-balanced-ternary__photonic-boundary.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "docs__examples__07-balanced-ternary__trit-min.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "examples__customer-read.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "examples__galerina-compiler-pipeline.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "examples__patient-query.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "test__fixtures__negative__duplicate-consumer.gate": {
+    "ok": true,
+    "codes": [
+      "GATE-WIRE-002"
+    ]
+  },
+  "test__fixtures__negative__missing-k3-arms.gate": {
+    "ok": true,
+    "codes": [
+      "GATE-AUTH-001",
+      "GATE-AUTH-002"
+    ]
+  },
+  "test__fixtures__negative__unbounded-cycle.gate": {
+    "ok": true,
+    "codes": [
+      "GATE-TERM-003"
+    ]
+  },
+  "test__fixtures__negative__unknown-instance.gate": {
+    "ok": true,
+    "codes": [
+      "GATE-RESOLVE-006",
+      "GATE-RESOLVE-007"
+    ]
+  },
+  "test__fixtures__negative__wrong-version.gate": {
+    "ok": false,
+    "codes": [
+      "GATE-PARSE-002"
+    ]
+  },
+  "test__fixtures__positive__minimal.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "test__fixtures__positive__trit-min.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "test__fixtures__registry-negative__invalid-trit-literal.gate": {
+    "ok": true,
+    "codes": []
+  },
+  "test__fixtures__registry-negative__trit-to-verdict.gate": {
+    "ok": true,
+    "codes": []
+  }
+}

@@ -1,0 +1,15 @@
+@gate 3.0.0
+
+CIRCUIT missing_k3(caller: CallerId) -> Text
+  INTENT "An authority allow route without deny and indeterminate must reject."
+  REQUIRES:
+    capability test.read
+    budget operations=2
+  PARTS:
+    [auth :: test.authorize@1.0.0]
+    [read :: test.read@1.0.0]
+  WIRES:
+    IN.caller -> auth.subject
+    auth.allow -> read.authority
+    read.value -> OUT.value
+END

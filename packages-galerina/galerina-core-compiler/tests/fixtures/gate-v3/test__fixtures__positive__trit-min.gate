@@ -1,0 +1,16 @@
+@gate 3.0.0
+
+CIRCUIT trit_min(left: Trit, right: Trit) -> Trit
+  INTENT "Compute exact K3 conjunction as the minimum balanced trit."
+
+  REQUIRES:
+    budget operations=1
+
+  PARTS:
+    [minimum :: galerina.trit.min@1.0.0]
+
+  WIRES:
+    IN.left      -> minimum.left
+    IN.right     -> minimum.right
+    minimum.value -> OUT.value
+END

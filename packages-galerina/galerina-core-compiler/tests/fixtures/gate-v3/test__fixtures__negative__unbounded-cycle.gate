@@ -1,0 +1,15 @@
+@gate 3.0.0
+
+CIRCUIT unbounded_cycle(value: Text) -> Text
+  INTENT "A component cycle without an explicit bound must reject."
+  REQUIRES:
+    budget operations=8
+  PARTS:
+    [left :: test.feedback@1.0.0]
+    [right :: test.feedback@1.0.0]
+  WIRES:
+    IN.value -> left.value
+    left.next -> right.value
+    right.next -> left.feedback
+    right.value -> OUT.value
+END

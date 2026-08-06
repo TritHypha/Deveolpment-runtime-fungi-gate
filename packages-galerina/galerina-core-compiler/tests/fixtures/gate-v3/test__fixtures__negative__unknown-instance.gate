@@ -1,0 +1,13 @@
+@gate 3.0.0
+
+CIRCUIT unknown(value: Text) -> Text
+  INTENT "An unknown instance must reject."
+  REQUIRES:
+    budget operations=1
+  PARTS:
+    [echo :: test.echo@1.0.0]
+  WIRES:
+    IN.value -> echo.value
+    echo.value -> missing.value
+    missing.value -> OUT.value
+END

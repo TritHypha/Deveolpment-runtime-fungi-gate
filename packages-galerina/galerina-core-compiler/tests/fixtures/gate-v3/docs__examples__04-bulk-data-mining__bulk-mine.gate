@@ -1,0 +1,47 @@
+@gate 3.0.0
+
+CIRCUIT mine_dataset(caller: CallerId, source: DatasetRef) -> MiningSummary
+  INTENT "Mine a bounded dataset in restartable batches and return only approved aggregate findings."
+
+  REQUIRES:
+    capability dataset.mine
+    effect storage.read
+    effect storage.write
+    effect audit.write
+    budget input_rows=10000000
+    budget memory_bytes=536870912
+    budget parallel_batches=8
+
+  PARTS:
+    [auth :: galerina.tower.authorize@1.0.0 capability=dataset.mine]
+    [scan :: analytics.dataset.scan_bounded@1.0.0 rows=10000000]
+    [validate :: analytics.rows.validate@1.0.0]
+    [batch :: galerina.stream.batch@1.0.0 size=4096 queue=16]
+    [mine :: analytics.mine.fixed_seed@1.0.0 seed=42]
+    [aggregate :: analytics.aggregate@1.0.0]
+    [checkpoint :: galerina.checkpoint.commit@1.0.0 interval_batches=32]
+    [cut :: galerina.privacy.cut@1.0.0 fields={raw_row,direct_identifier}]
+    [audit :: galerina.audit.record@1.0.0 event="dataset.mine"]
+
+  WIRES:
+    IN.caller           -> auth.subject
+    IN.source           -> auth.resource
+    auth.deny           -> DENY.not_authorized
+    auth.indeterminate  -> DENY.authority_unknown
+    auth.allow          -> scan.authority
+    IN.source           -> scan.source
+    scan.failure        -> TRAP.source_failure
+    scan.rows           -> validate.rows
+    validate.rejected   -> DRAIN.invalid_rows
+    validate.rows       -> batch.rows
+    batch.batches       -> mine.batches
+    mine.failure        -> TRAP.mining_failure
+    mine.findings       -> aggregate.findings
+    mine.progress       -> checkpoint.progress
+    auth.allow          -> checkpoint.authority
+    checkpoint.failure  -> TRAP.checkpoint_failure
+    aggregate.summary   -> cut.value
+    cut.value           -> OUT.value
+    checkpoint.evidence -> audit.value
+    auth.allow          -> audit.evidence
+END

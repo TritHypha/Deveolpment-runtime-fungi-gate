@@ -1,0 +1,41 @@
+@gate 3.0.0
+
+CIRCUIT transaction_count(caller: CallerId, filter: RawTransactionFilter) -> TransactionCount
+  INTENT "Count an authorized bounded transaction set and emit only redacted audit evidence."
+
+  REQUIRES:
+    capability transaction.aggregate
+    effect database.read
+    effect audit.write
+    budget scanned_rows=100000
+    budget result_rows=1
+
+  PARTS:
+    [validate :: app.transaction_filter.validate@1.0.0]
+    [gate :: tritmesh.ql.gate@1.0.0 capability=transaction.aggregate]
+    [scan :: tritmesh.ql.scan@1.0.0 dataset=transactions ceiling=100000]
+    [filter :: tritmesh.ql.filter_bound@1.0.0 schema=transactions]
+    [count :: tritmesh.ql.aggregate_count@1.0.0]
+    [execute :: tritmesh.ql.execute@1.0.0 consistency=snapshot]
+    [cut :: galerina.privacy.cut@1.0.0 fields={account_id,customer_id}]
+    [audit :: galerina.audit.record@1.0.0 event="transaction.aggregate"]
+
+  WIRES:
+    IN.filter           -> validate.raw
+    validate.invalid    -> DENY.invalid_filter
+    IN.caller           -> gate.subject
+    validate.scope      -> gate.resource
+    gate.deny           -> DENY.not_authorized
+    gate.indeterminate  -> DENY.authority_unknown
+    scan.plan           -> filter.plan
+    validate.parameters -> filter.parameters
+    filter.plan         -> count.plan
+    count.plan          -> execute.plan
+    gate.allow          -> execute.authority
+    execute.timeout     -> TRAP.database_timeout
+    execute.failure     -> TRAP.database_failure
+    execute.value       -> OUT.value
+    execute.evidence    -> cut.value
+    cut.value           -> audit.value
+    gate.allow          -> audit.evidence
+END

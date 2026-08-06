@@ -1,0 +1,33 @@
+@gate 3.0.0
+
+CIRCUIT load_config(caller: CallerId, path: RawPath) -> AppConfig
+  INTENT "Read one authorized configuration file within a pinned root and byte limit."
+
+  REQUIRES:
+    capability config.read
+    effect storage.read
+    budget file_bytes=1048576
+
+  PARTS:
+    [path :: galerina.path.confine@1.0.0 root="config" symlinks=deny]
+    [auth :: galerina.tower.authorize@1.0.0 capability=config.read]
+    [read :: galerina.storage.read_bounded@1.0.0 max_bytes=1048576 snapshot=true]
+    [decode :: app.config.toml.decode@1.0.0]
+
+  WIRES:
+    IN.path             -> path.raw
+    path.invalid        -> DENY.invalid_path
+    path.confined       -> auth.resource
+    IN.caller           -> auth.subject
+    auth.deny           -> DENY.not_authorized
+    auth.indeterminate  -> DENY.authority_unknown
+    auth.allow          -> read.authority
+    path.confined       -> read.path
+    read.not_found      -> DENY.config_not_found
+    read.too_large      -> DENY.config_too_large
+    read.changed        -> TRAP.file_changed_during_read
+    read.failure        -> TRAP.storage_failure
+    read.bytes          -> decode.bytes
+    decode.invalid      -> DENY.invalid_config
+    decode.value        -> OUT.value
+END

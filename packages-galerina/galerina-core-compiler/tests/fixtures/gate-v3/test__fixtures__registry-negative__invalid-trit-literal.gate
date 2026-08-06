@@ -1,0 +1,14 @@
+@gate 3.0.0
+
+CIRCUIT invalid_trit() -> Trit
+  INTENT "Reject an integer outside the exact Trit domain."
+
+  REQUIRES:
+    budget operations=1
+
+  PARTS:
+    [constant :: galerina.trit.constant@1.0.0 value=2]
+
+  WIRES:
+    constant.value -> OUT.value
+END

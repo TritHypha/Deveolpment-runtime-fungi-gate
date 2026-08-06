@@ -1,0 +1,18 @@
+@gate 3.0.0
+
+CIRCUIT verify_photonic_trit(sample: PhotonicTritSample, calibration: TritCalibration) -> Trit
+  INTENT "Produce an exact trit only after calibrated photonic and digital verification."
+
+  REQUIRES:
+    budget operations=8
+
+  PARTS:
+    [verify :: galerina.photonic.trit.verify@1.0.0]
+
+  WIRES:
+    IN.sample          -> verify.sample
+    IN.calibration     -> verify.calibration
+    verify.exact       -> OUT.value
+    verify.uncertain   -> DENY.unverified_measurement
+    verify.invalid     -> TRAP.invalid_measurement
+END

@@ -1,0 +1,28 @@
+@gate 3.0.0
+
+CIRCUIT get_customer(caller: CallerId, id: CustomerId) -> CustomerView
+  INTENT "Return one authorized customer view with protected identifiers removed."
+
+  REQUIRES:
+    capability customer.read
+    effect database.read
+    effect audit.write
+
+  PARTS:
+    [auth :: galerina.tower.authorize@1.0.0 capability=customer.read]
+    [load :: app.customer.read@1.2.0]
+    [cut :: galerina.privacy.cut@1.0.0 fields={customer_id,ssn}]
+    [audit :: galerina.audit.record@1.0.0 event="customer.read"]
+
+  WIRES:
+    IN.caller          -> auth.subject
+    IN.id              -> auth.resource
+    auth.allow         -> load.authority
+    auth.deny          -> DENY.not_authorized
+    auth.indeterminate -> DENY.authority_unknown
+    IN.id              -> load.key
+    load.record        -> cut.value
+    load.evidence      -> cut.evidence
+    cut.value          -> OUT.value
+    cut.evidence       -> audit.evidence
+END

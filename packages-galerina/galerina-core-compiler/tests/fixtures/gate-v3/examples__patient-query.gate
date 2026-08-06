@@ -1,0 +1,32 @@
+@gate 3.0.0
+
+CIRCUIT find_patients(caller: CallerId, x: Int, label: String) -> PatientViews
+  INTENT "Find a bounded patient set; semantic filtering occurs only after authorization and SSN never reaches egress."
+
+  REQUIRES:
+    capability patient.read
+    effect database.read
+    effect audit.write
+    budget result_rows=25
+
+  PARTS:
+    [scan :: tritmesh.ql.scan@1.0.0 dataset=patients ceiling=1000]
+    [by_x :: tritmesh.ql.filter@1.0.0 field=patients.x op=eq value=$x]
+    [gate :: tritmesh.ql.gate@1.0.0 capability=patient.read]
+    [by_label :: tritmesh.ql.filter@1.0.0 field=patients.label op=eq value=$label]
+    [project :: tritmesh.ql.project@1.0.0 fields={patient_id,label,ssn}]
+    [redact :: tritmesh.ql.redact@1.0.0 fields={ssn}]
+    [limit :: tritmesh.ql.limit@1.0.0 count=25]
+
+  WIRES:
+    IN.caller         -> gate.subject
+    scan.rows         -> by_x.rows
+    by_x.rows         -> gate.candidates
+    gate.allow_rows   -> by_label.rows
+    gate.deny         -> DENY.not_authorized
+    gate.indeterminate -> DENY.authority_unknown
+    by_label.rows     -> project.rows
+    project.rows      -> redact.rows
+    redact.rows       -> limit.rows
+    limit.rows        -> OUT.value
+END

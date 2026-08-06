@@ -1,0 +1,15 @@
+@gate 3.0.0
+
+CIRCUIT trit_to_verdict(value: Trit) -> Verdict3
+  INTENT "Prove that a numeric positive trit cannot become authority evidence."
+
+  REQUIRES:
+    budget operations=1
+
+  PARTS:
+    [verdict :: test.verdict.identity@1.0.0]
+
+  WIRES:
+    IN.value     -> verdict.value
+    verdict.value -> OUT.value
+END

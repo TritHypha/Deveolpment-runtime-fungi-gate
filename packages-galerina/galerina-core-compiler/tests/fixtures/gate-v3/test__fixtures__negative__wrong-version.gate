@@ -1,0 +1,12 @@
+@gate 2.0.0
+
+CIRCUIT wrong(value: Text) -> Text
+  INTENT "This file must reject before parsing."
+  REQUIRES:
+    budget operations=1
+  PARTS:
+    [echo :: test.echo@1.0.0]
+  WIRES:
+    IN.value -> echo.value
+    echo.value -> OUT.value
+END

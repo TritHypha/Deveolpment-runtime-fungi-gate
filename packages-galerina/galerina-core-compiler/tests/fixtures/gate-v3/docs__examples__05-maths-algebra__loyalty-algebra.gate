@@ -1,0 +1,23 @@
+@gate 3.0.0
+
+CIRCUIT award_bonus(points: LoyaltyPoints, bonus: LoyaltyPoints) -> LoyaltyPoints
+  INTENT "Apply only operations declared by the closed LoyaltyPoints algebra."
+
+  REQUIRES:
+    budget operations=1
+
+  PARTS:
+    [assay_points :: app.loyalty_points.assay@1.0.0]
+    [assay_bonus :: app.loyalty_points.assay@1.0.0]
+    [add :: app.loyalty_points.add@1.0.0 overflow=reject]
+
+  WIRES:
+    IN.points           -> assay_points.value
+    assay_points.invalid -> DENY.invalid_points
+    IN.bonus            -> assay_bonus.value
+    assay_bonus.invalid -> DENY.invalid_bonus
+    assay_points.value  -> add.left
+    assay_bonus.value   -> add.right
+    add.overflow        -> DENY.points_overflow
+    add.value           -> OUT.value
+END

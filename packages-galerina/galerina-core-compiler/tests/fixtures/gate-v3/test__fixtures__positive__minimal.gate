@@ -1,0 +1,15 @@
+@gate 3.0.0
+
+CIRCUIT echo(value: Text) -> Text
+  INTENT "Pass one value through a registered component."
+
+  REQUIRES:
+    budget operations=1
+
+  PARTS:
+    [echo :: test.echo@1.0.0]
+
+  WIRES:
+    IN.value -> echo.value
+    echo.value -> OUT.value
+END
