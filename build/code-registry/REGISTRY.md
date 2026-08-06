@@ -15,11 +15,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 222 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 250 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 209 | referenced only (no def/emit) |
+| ref | 212 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -423,7 +423,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ECON-002 | referenced | LINEAGE_MISSING | info |
 | FUNGI-ECON-003 | referenced | AI_MODEL_UNAPPROVED | error |
 
-### EFFECT (13)
+### EFFECT (15)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -440,6 +440,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-EFFECT-906 | ref | — | — |
 | GATE-EFFECT-001 | inline | GATE_V3_DUPLICATE_CAPABILITY | — |
 | GATE-EFFECT-002 | inline | GATE_V3_DUPLICATE_EFFECT | — |
+| GATE-EFFECT-101 | ref | — | — |
+| GATE-EFFECT-102 | ref | — | — |
 
 ### ERR_* (141)
 
@@ -863,8 +865,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| GATE-LIVE-001 | inline | GATE_V3_UNREACHABLE_PART | — |
-| GATE-LIVE-002 | inline | GATE_V3_DEAD_END_PART | — |
+| GATE-LIVE-001 | inline | GATE_V3_ORPHAN_SOURCE / GATE_V3_UNREACHABLE_PART | error |
+| GATE-LIVE-002 | inline | GATE_V3_DEAD_END / GATE_V3_DEAD_END_PART | — |
 
 ### LOGIC (14)
 
@@ -1224,6 +1226,25 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-RAWPTR-001 | live | RAW_POINTER_OUTSIDE_UNSAFE | error |
 
+### REGISTRY (14)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-REGISTRY-001 | inline | GATE_V3_REGISTRY_NOT_OBJECT | — |
+| GATE-REGISTRY-002 | inline | GATE_V3_REGISTRY_BAD_VERSION | — |
+| GATE-REGISTRY-003 | inline | GATE_V3_REGISTRY_COMPONENTS_NOT_ARRAY | — |
+| GATE-REGISTRY-004 | inline | GATE_V3_REGISTRY_DUPLICATE_COMPONENT | — |
+| GATE-REGISTRY-005 | inline | GATE_V3_REGISTRY_DIGEST_MISMATCH | — |
+| GATE-REGISTRY-006 | inline | GATE_V3_REGISTRY_BAD_COMPONENT_SHAPE | — |
+| GATE-REGISTRY-007 | inline | GATE_V3_REGISTRY_TYPES_NOT_ARRAY | — |
+| GATE-REGISTRY-008 | inline | GATE_V3_REGISTRY_BAD_TYPE_SHAPE | — |
+| GATE-REGISTRY-009 | inline | GATE_V3_REGISTRY_DUPLICATE_TYPE | — |
+| GATE-REGISTRY-010 | inline | GATE_V3_REGISTRY_UNKNOWN_PORT_TYPE | — |
+| GATE-REGISTRY-011 | inline | GATE_V3_REGISTRY_MALFORMED_ENTRY | — |
+| GATE-REGISTRY-012 | inline | GATE_V3_REGISTRY_DUPLICATE_DECLARATION | — |
+| GATE-REGISTRY-013 | inline | GATE_V3_REGISTRY_BAD_COPYABLE | — |
+| GATE-REGISTRY-014 | inline | GATE_V3_REGISTRY_SURPLUS_FIELD | — |
+
 ### REPORT (2)
 
 | code | status | name(s) | severity |
@@ -1238,7 +1259,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
 | FUNGI-RES-002 | live | SUBSTRATE_HEAL_NOT_AUDITED | warning |
 
-### RESOLVE (8)
+### RESOLVE (21)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1250,6 +1271,19 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-RESOLVE-006 | inline | GATE_V3_UNKNOWN_SOURCE | — |
 | GATE-RESOLVE-007 | inline | GATE_V3_UNKNOWN_TARGET | — |
 | GATE-RESOLVE-008 | inline | GATE_V3_DUPLICATE_SET_VALUE | — |
+| GATE-RESOLVE-1 | ref | — | — |
+| GATE-RESOLVE-101 | inline | GATE_V3_COMPONENT_ABSENT | — |
+| GATE-RESOLVE-102 | inline | GATE_V3_COMPONENT_INADMISSIBLE | — |
+| GATE-RESOLVE-103 | inline | GATE_V3_UNKNOWN_ARGUMENT | — |
+| GATE-RESOLVE-104 | inline | GATE_V3_ARGUMENT_TYPE | — |
+| GATE-RESOLVE-105 | inline | GATE_V3_MISSING_ARGUMENT | — |
+| GATE-RESOLVE-106 | inline | GATE_V3_UNKNOWN_OUTPUT_PORT | — |
+| GATE-RESOLVE-107 | inline | GATE_V3_UNKNOWN_INPUT_PORT | — |
+| GATE-RESOLVE-108 | inline | GATE_V3_UNKNOWN_TYPE | — |
+| GATE-RESOLVE-109 | inline | GATE_V3_NO_TYPE_CATALOGUE | — |
+| GATE-RESOLVE-110 | inline | GATE_V3_REQUIRED_INPUT_UNWIRED | — |
+| GATE-RESOLVE-111 | inline | GATE_V3_DECISION_ARM_UNROUTED | — |
+| GATE-RESOLVE-112 | inline | GATE_V3_ARGUMENT_OUT_OF_RANGE | — |
 
 ### RESOURCE (1)
 
@@ -1626,7 +1660,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-WEB-042 | ref | — | — |
 | FUNGI-WEB-050 | ref | — | — |
 
-### WIRE (7)
+### WIRE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1637,6 +1671,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-WIRE-005 | inline | GATE_V3_NO_OUT_PATH | — |
 | GATE-WIRE-006 | inline | GATE_V3_TERMINAL_PRODUCES | — |
 | GATE-WIRE-007 | inline | GATE_V3_INPUT_CONSUMES | — |
+| GATE-WIRE-101 | inline | GATE_V3_WIRE_TYPE_MISMATCH | — |
+| GATE-WIRE-102 | inline | GATE_V3_NONCOPYABLE_FANOUT | — |
 
 ### WORKFLOW (3)
 

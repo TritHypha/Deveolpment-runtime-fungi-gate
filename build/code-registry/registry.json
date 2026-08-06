@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 827,
+  "total": 858,
   "counts": {
-    "ref": 209,
-    "inline": 222,
+    "ref": 212,
+    "inline": 250,
     "phantom": 113,
     "live": 170,
     "referenced": 100,
@@ -10860,17 +10860,44 @@
       "docs": 0
     },
     {
+      "code": "GATE-EFFECT-101",
+      "family": "EFFECT",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "GATE-EFFECT-102",
+      "family": "EFFECT",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 1,
+      "docs": 0
+    },
+    {
       "code": "GATE-LIVE-001",
       "family": "LIVE",
       "namespace": "GATE",
       "status": "inline",
       "names": [
+        "GATE_V3_ORPHAN_SOURCE",
         "GATE_V3_UNREACHABLE_PART"
       ],
-      "severities": [],
+      "severities": [
+        "error"
+      ],
       "defs": 0,
-      "emits": 1,
-      "tests": 0,
+      "emits": 4,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -10879,12 +10906,13 @@
       "namespace": "GATE",
       "status": "inline",
       "names": [
+        "GATE_V3_DEAD_END",
         "GATE_V3_DEAD_END_PART"
       ],
       "severities": [],
       "defs": 0,
-      "emits": 1,
-      "tests": 0,
+      "emits": 2,
+      "tests": 1,
       "docs": 0
     },
     {
@@ -11168,6 +11196,202 @@
       "docs": 0
     },
     {
+      "code": "GATE-REGISTRY-001",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_NOT_OBJECT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-002",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_BAD_VERSION"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-003",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_COMPONENTS_NOT_ARRAY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-004",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_DUPLICATE_COMPONENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-005",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_DIGEST_MISMATCH"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-006",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_BAD_COMPONENT_SHAPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-007",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_TYPES_NOT_ARRAY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-008",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_BAD_TYPE_SHAPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-009",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_DUPLICATE_TYPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-010",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_UNKNOWN_PORT_TYPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-011",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_MALFORMED_ENTRY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-012",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_DUPLICATE_DECLARATION"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-013",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_BAD_COPYABLE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-REGISTRY-014",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_SURPLUS_FIELD"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
       "code": "GATE-RESOLVE-001",
       "family": "RESOLVE",
       "namespace": "GATE",
@@ -11277,6 +11501,186 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-1",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
+      "tests": 2,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-101",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_COMPONENT_ABSENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-102",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_COMPONENT_INADMISSIBLE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-103",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNKNOWN_ARGUMENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-104",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ARGUMENT_TYPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-105",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_MISSING_ARGUMENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-106",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNKNOWN_OUTPUT_PORT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-107",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNKNOWN_INPUT_PORT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-108",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNKNOWN_TYPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-109",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_NO_TYPE_CATALOGUE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-110",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REQUIRED_INPUT_UNWIRED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-111",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_DECISION_ARM_UNROUTED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "GATE-RESOLVE-112",
+      "family": "RESOLVE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ARGUMENT_OUT_OF_RANGE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
       "docs": 0
     },
     {
@@ -11426,6 +11830,34 @@
       "status": "inline",
       "names": [
         "GATE_V3_INPUT_CONSUMES"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-WIRE-101",
+      "family": "WIRE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_WIRE_TYPE_MISMATCH"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 0
+    },
+    {
+      "code": "GATE-WIRE-102",
+      "family": "WIRE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_NONCOPYABLE_FANOUT"
       ],
       "severities": [],
       "defs": 0,
