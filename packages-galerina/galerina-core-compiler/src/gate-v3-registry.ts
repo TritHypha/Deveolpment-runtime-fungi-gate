@@ -55,6 +55,24 @@ const DIGEST_RE = /^sha256:[a-f0-9]{64}$/;
 const STATUS_RE = /^(SHIPPED|PARTIAL|SIMULATED|PROPOSED|BLOCKED|REJECTED)$/;
 const TYPE_ID_RE = /^[A-Za-z_][A-Za-z0-9_.]*(?:<[A-Za-z0-9_.,<>]+>)?$/;
 
+/**
+ * Top-level registry keys (GD-029). The schema advertised itself as closed and
+ * refused a surplus key at every NESTED level — component, type, port,
+ * argument — while accepting any unknown key at the top. That asymmetry was
+ * measured NOT to be a fail-open (a misspelled `components` is caught by
+ * REGISTRY-003's required-key check, a misspelled `types` by GD-010's
+ * empty-catalogue refusal), but a schema closed at four levels and open at the
+ * fifth invites exactly the wrong inference, and the next reader should not
+ * have to re-run that probe to find out. Closed here for consistency.
+ *
+ * `effects` and `capabilities` are the reference implementation's catalogue of
+ * KNOWN effect/capability names. This loader does not consult them (the
+ * envelope is checked against component contracts, not a name catalogue), but
+ * they are legitimate registry content and are admitted rather than refused —
+ * closing a schema must not break the artifacts it already governs.
+ */
+const REGISTRY_FIELDS = new Set(["version", "digest", "types", "components", "vocabularies", "effects", "capabilities"]);
+
 /** Fields a closed schema admits. Anything else is a surplus field and refuses. */
 const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf", "tainted"]);
 const PORT_FIELDS = new Set(["name", "type", "copyable", "required"]);
@@ -161,6 +179,13 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
     return fail();
   }
   const raw = value as Record<string, unknown>;
+
+  // GD-029: the top level is closed too. Checked BEFORE the shape rules, so an
+  // unknown key is named as itself rather than surfacing later as a confusing
+  // consequence of the key it was meant to be.
+  for (const key of Object.keys(raw)) {
+    if (!REGISTRY_FIELDS.has(key)) emit(GATE_V3_REGISTRY_CODES.REGISTRY_014, `registry has unknown top-level field '${key}'`);
+  }
 
   if (raw.version !== "1.0.0") emit(GATE_V3_REGISTRY_CODES.REGISTRY_002, String(raw.version));
   if (!Array.isArray(raw.components)) emit(GATE_V3_REGISTRY_CODES.REGISTRY_003);
