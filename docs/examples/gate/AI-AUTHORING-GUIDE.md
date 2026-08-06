@@ -77,6 +77,15 @@ looks like your parameter), while `key=$customer_id` is a **`ParameterRef`** tha
 actually binds to it. They are different types and a contract accepts only the
 one it declared.
 
+### Resource ceilings — hard, owner-ruled, refused with a code
+
+A file is refused (never crashed on) past any of: set nesting **6** · set
+cardinality **256** per literal · identifier **64** chars · arguments per part
+**32** · parts **4096** · wires **8192** · file **512 KiB**
+(`GATE-PARSE-028..034`). These are far above anything a legitimate circuit
+needs — the shipped examples peak at 6 parts and 19 wires — so meeting one is
+a sign the file is generated wrong, not a sign to ask for a bigger limit.
+
 ## The canonical patterns
 
 ### 1. The K3 authority gate
@@ -108,7 +117,23 @@ field it strips**:
 ```
 
 A cut naming the wrong field is still a leak — the declaration is what binds it
-to the privacy rule.
+to the privacy rule. And the cut ROLE itself is a contract fact, not a naming
+convention: the registry entry declares `cut: true`, and with any cut declared
+the checker proves two graph facts — a cut **dominates** egress
+(`GATE-SEM-002`), and removing every cut **disconnects** taint from egress
+(`GATE-SEM-003`, the machine-proven separator form). One bypass wire past the
+cut is a refusal, not a review comment.
+
+### 2b. Decisions declare themselves; reasons come from a vocabulary
+
+A decision component carries `decision: true` and its ordered `arms` in the
+CONTRACT — the checker verifies every declared arm is routed
+(`GATE-RESOLVE-111`), whatever the arms are named. A component merely *shaped*
+like a three-valued decision (three outputs, one shared type) that declares
+nothing draws a warning (`GATE-SEM-004`): declare intent, don't imply it.
+Terminal reasons can be governed the same way — a registry may declare
+per-family vocabularies, and `DENY.approved` refuses when the deny vocabulary
+never admitted it (`GATE-SEM-007`).
 
 ### 3. Refusals name their terminal
 

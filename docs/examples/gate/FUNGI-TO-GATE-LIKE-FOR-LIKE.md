@@ -315,25 +315,24 @@ conversion (`GATE-WIRE-101`) means a `String` cannot be wired into a
 `CustomerRef` port. That is the circuit-level analogue of `FUNGI-TYPE-003`: the
 brand cannot be forged by connection.
 
-**3. But the mint axis is not enforced yet.** The catalogue's `construction`
+**3. And the mint axis is now ENFORCED.** The catalogue's `construction`
 field — `source`, `canonical-only`, `verified-measurement-only` — is *exactly*
 the hallmark question: may a value of this type simply appear, or must it come
-through a sanctioned route? The registry loader validates the field and refuses
-any other value, **but no resolution rule consults it.** So a circuit today is
-not checked against it: a `canonical-only` type can be taken straight in as a
-circuit parameter, or emerge from any component output, with nothing asking
-whether it was ever assayed.
+through a sanctioned route? The semantic tier reads it: a non-`source` type
+entering as a **circuit parameter** refuses with `GATE-SEM-005`, because a
+parameter arrives from outside the governed drawing and the type's constructor
+or verifier never ran anywhere the circuit can see. Outputs and returns stay
+sound by construction — a component output of such a type is the registered
+constructor speaking through its own contract. (For a while this field was
+declared and read by nothing — the same shape as the disabled type wall and
+the truthy-string `copyable`, both closed earlier. A field that looks like a
+guard but is never read is not a guard; now it is read.)
 
-This is the same shape as two defects already closed in this programme — an
-empty type catalogue that silently disabled the type wall, and a `copyable`
-field that was declared but read as a truthy string. A field that looks like a
-guard but is never read is not a guard. It belongs with the semantic
-verification work, not with the surface syntax.
-
-**4. One property to preserve when it is built.** Minting is taint-transparent in
-`.fungi`. The circuit rule must match: a part whose output is a hallmarked type
-must not thereby be credited with having cleaned its input. A mint is not a
-sanitizer in either language.
+**4. One property preserved in the build.** Minting is taint-transparent in
+`.fungi`, and the circuit rule matches: `GATE-SEM-005` shares no state with
+the cut passes, so a part whose output is a hallmarked type is never thereby
+credited with having cleaned its input. A mint is not a sanitizer in either
+language.
 
 ---
 
@@ -372,5 +371,5 @@ difference against the reference implementation rather than left silent.
 | π, `sqrt`, trig | `Math.PI`, `Math.sqrt`, `Math.sin/cos/tan`, … | no arithmetic at all | inside a part |
 | arrays | persistent `Array<T>`, `append` returns | a value on a wire; set literals for arguments | inside a part |
 | records | `record` + named literal | catalogue type, `kind: "record"` | inside a part |
-| hallmarks | `hallmark X of C { gate: … }` | honoured via exact typing; `construction` not yet enforced | **do not add to `.gate`** |
+| hallmarks | `hallmark X of C { gate: … }` | honoured via exact typing; `construction` ENFORCED at entry (`GATE-SEM-005`) | **do not add to `.gate`** |
 | effects | derived, declared per flow | `REQUIRES:` envelope; parts' from contracts | direct; envelope check not yet built |

@@ -4,6 +4,49 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### `.gate` v3 frontend through semantic verification - 2026-08-06
+
+Supersedes the `.gate` posture recorded in the 2026-07-03/04 ledger sections
+below (the reference checker era: "`parseGate` not wired to `cli.ts`",
+front-end = `gate-check.mjs`). The v3 frontend now lives in
+`packages-galerina/galerina-core-compiler/` (`gate-v3-*.ts`) behind one shared
+dispatcher (`gate-dispatch.ts`) reached by BOTH CLIs — the root `galerina.mjs`
+routes `.gate` directly. Programme workspace: the
+`ZT-Galerina-GRAPH-ASCII-v3-KTA` repository (plan/decision/exit documents and
+the cross-implementation harness).
+
+- [x] Parse + structure tier: exact `@gate 3.0.0` header, ASCII-only, closed
+  section order, owner-ruled resource ceilings as `GATE_V3_LIMITS`
+  (`GATE-PARSE-028..034`; a refusal is a diagnostic, never a host exception).
+- [x] Registry tier: closed schema (`GATE-REGISTRY-001..015`), nominal type
+  wall, exact wire typing, contract-declared `decision`/`arms`,
+  `copyable`/`cut` Boolean-or-absent, argument ranges, per-terminal reason
+  `vocabularies`.
+- [x] Semantic tier (`GATE-SEM-001..008`): canonical GateGraph (byte-identical
+  under source permutation) → asserted acyclicity → cut domination + the
+  RD-0229 taint-cut separator → decision-shape backstop (warning) →
+  `construction` enforced at parameter entry → worst-case (max-plus) budget
+  composition, deny-side only → vocabulary refusals with unchecked families
+  labelled.
+- [x] Shipped examples `docs/examples/gate/`: five circuits; 01–03 resolve
+  against per-circuit contracts in the compiler package's test fixtures;
+  guides (README/RULES/AI-AUTHORING-GUIDE/FUNGI-TO-GATE-LIKE-FOR-LIKE) current
+  with all three tiers.
+- [x] `galerina check` scope fail-open closed: a check whose `ignore` patterns
+  suppress every discovered file REFUSES, and a pass states its file count.
+- [ ] **Owner ratification pending — GD-028**: examples 04/05 reuse one
+  component id at several payload types within one circuit, inexpressible
+  under exact nominal typing. Decision record with options and a
+  recommendation (per-use registered variants) awaits a one-word ruling; until
+  then 04/05 are structure-only and the suite pins the un-contracted set.
+- [ ] G4 remainder: effect/capability envelope check (declared vs resolved),
+  circuit-level verdict composition (the proven `vAnd = min` algebra ships as
+  a library, including empty-fold = INDETERMINATE), a declared taint-sources
+  axis for the cut rules.
+- Unchanged posture: `.gate` production signing stays REFUSED via
+  `FUNGI-GATELANG-002` until the RD-0234c/`FUNGI-PRIVACY-002` backstop lands;
+  a structurally perfect circuit authorizes nothing.
+
 ### Demand-admitted native provider packs deferred - 2026-08-04
 
 Canonical architecture:

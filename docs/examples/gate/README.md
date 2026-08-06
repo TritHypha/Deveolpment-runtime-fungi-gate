@@ -43,23 +43,27 @@ node --test packages-galerina/galerina-core-compiler/tests/gate-v3-shipped-examp
 ```
 
 It asserts the exact `@gate 3.0.0` header, a clean parse and a clean structural
-verification for every file here — and it carries a self-check proving it is
-load-bearing, so it cannot silently pass over nothing.
+verification for every file here; resolves **01–03 against real per-circuit
+contracts** (in `tests/fixtures/gate-registries/`, kept there because a
+`gate.registry.json` beside the examples would be discovered for all five and
+refuse the other four); and carries self-checks proving both tiers are
+load-bearing — a mutated circuit is caught structurally, and a mutated
+contract is caught at resolution, so the suite cannot silently pass over
+nothing.
 
-**Two limits, stated so a green is not over-read:**
+The root CLI routes `.gate` directly — `node galerina.mjs check <file>.gate`
+reaches the same v3 frontend as the compiler package's own CLI, through one
+shared dispatcher. A circuit that resolves also passes the semantic tier:
+canonical-graph acyclicity, cut domination and taint-cut separation, the
+decision-shape backstop, construction entry, worst-case budget composition,
+and terminal-reason vocabularies (`GATE-SEM-001..008` — see
+[RULES.md](RULES.md), tier 5).
 
-- **`galerina check` does not validate this folder.** The project config
-  (`galerina.check.json`) ignores `docs/**`, so pointing it here walks zero files
-  and prints `PASS` — a vacuous green, not evidence.
-- **The root `galerina.mjs` does not yet route `.gate`.** Handing it a circuit
-  sends the file to the `.fungi` parser, which reports a missing `@version`
-  header and rejects `#` comments. It fails closed, but the diagnostics name the
-  wrong language. Routing lives in the compiler package's own CLI.
-
-These examples ship without a `gate.registry.json`, so they are checked for
-**syntax and structure** only. Contract resolution — do the named components
-exist, do the arguments fit their declared types and ranges, is every decision
-arm routed — needs a registry beside them.
+**One scope note, so a green is not over-read:** examples **04 and 05 are
+structure-only.** Each reuses one component id at several payload types within
+a single circuit, which exact nominal typing cannot express; the resolution of
+that is a recorded language decision, and the suite pins the un-contracted set
+so it cannot grow silently.
 
 ## What a passing circuit does *not* do
 

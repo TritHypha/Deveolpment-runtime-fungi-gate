@@ -20,6 +20,7 @@ registry — without one, those checks do not run at all.
 | **INTENT is mandatory** and is exactly one quoted string. | `GATE-PARSE-006` |
 | **Exact component versions.** A part names `component.id@1.2.3` — no ranges, no "latest". | `GATE-PARSE-019` |
 | **Comments sit on their own line**, after the header. A trailing `#` on any line is refused — including on `@gate 3.0.0` itself. | `GATE-PARSE-002/006/018/021` |
+| **Resource ceilings are owner-ruled constants**, refused before the work they bound is attempted: set nesting ≤ 6 · set cardinality ≤ 256 per literal · identifier ≤ 64 chars · arguments per part ≤ 32 · parts ≤ 4096 · wires ≤ 8192 · file ≤ 512 KiB. A refusal is a diagnostic, never a host exception — before these landed, a deeply nested set escaped as a raw `RangeError`. The numbers live in one exported `GATE_V3_LIMITS`, so tests assert the same constants the parser enforces. | `GATE-PARSE-028..034` |
 
 ## Tier 2 — structure (topology, still no registry)
 
@@ -61,7 +62,28 @@ be silently coerced into a permissive one.
 | **The schema is closed.** An unknown field on any contract entry refuses — a typo becomes a refusal, not a silently ignored constraint. | `GATE-REGISTRY-014` |
 | **Version pinned, digest bound.** The registry version is exactly `1.0.0`, and a declared digest must match the canonical content. | `GATE-REGISTRY-002/005` |
 | **`copyable` is Boolean or absent.** The string `"false"` is not a Boolean; before this rule it was truthy, and illegal fan-out passed. | `GATE-REGISTRY-013` |
+| **`cut` is Boolean or absent** — the same discipline. A component declaring `cut: true` is a privacy CUT, the redaction node the semantic tier reasons about. Declared, never inferred from the component's name. | `GATE-REGISTRY-006` |
+| **`vocabularies` is closed when present** — per-terminal-family reason lists (`deny`/`fault`/`trap`/`drain`), well-formed identifiers, no duplicates, no unknown families. | `GATE-REGISTRY-015` |
 | **Identity and shape are exact** — component and type entries, finite domains, and no duplicates. | `GATE-REGISTRY-004/006/008/009/010/011/012` |
+
+## Tier 5 — semantic passes (the GateGraph)
+
+The graph every pass reads is CANONICAL: derived from the drawing alone, edge
+identity assigned only after a code-unit sort, byte-identical however the
+source happened to order its parts and wires. Acyclicity and budget
+composition run on every admitted circuit; the contract-driven passes run only
+against a loaded registry.
+
+| Rule | Enforced by |
+|---|---|
+| **Acyclicity is asserted, not assumed.** Cycles refuse upstream (`GATE-TERM-003/004`); the semantic tier machine-checks the invariant at its entrance anyway, so a future path that admits a cycle becomes a stable diagnostic here, not a wrong dominator tree three passes later. | `GATE-SEM-001` |
+| **A declared cut must govern egress.** With any `cut: true` part declared, egress must be dominated by a cut… | `GATE-SEM-002` |
+| **…and the cut SET must separate taint from egress** — the machine-proven form: remove every declared cut and egress must become unreachable from the input frontier. Plain reachability with cuts in place is the refuted check: it flags the sanitized path too. | `GATE-SEM-003` |
+| **A component that LOOKS like a three-valued decision** (exactly three outputs, one shared type) **but is not marked `decision: true`** draws a WARNING — shape-driven, port names never consulted. A nudge to declare, not a refusal. | `GATE-SEM-004` (warning) |
+| **`construction` is enforced.** A non-`source` type (`canonical-only`, `verified-measurement-only`) must not enter as a circuit PARAMETER — its constructor or verifier never ran inside the governed drawing. Outputs and returns are sound by construction. A mint is still not a sanitizer: this rule shares nothing with the cut passes. | `GATE-SEM-005` |
+| **Budget ceilings hold against the WORST case.** Wire `budget=N` annotations compose max-plus along paths; a composed worst case above a declared `REQUIRES budget` refuses. Deny-side only: the result can refuse and can do nothing else — "within budget" admits nothing, ever. | `GATE-SEM-006` |
+| **Terminal reasons obey their declared vocabulary.** With a family vocabulary declared, a reason outside it refuses — `DENY.approved` is refused because the deny vocabulary never admitted it, not because it sounds positive. | `GATE-SEM-007` |
+| **An unchecked family says so.** Reasons with NO declared vocabulary yield an INFO label per family — the mode that skips a check must announce itself. | `GATE-SEM-008` (info) |
 
 ## The doctrine
 
@@ -79,10 +101,16 @@ be silently coerced into a permissive one.
   an envelope; comparing it against what the resolved components actually do is
   scheduled work, and is carried as a classified difference against the reference
   implementation rather than left silent.
-- **`construction` is declared but not enforced.** The type catalogue records how
-  a value may come into existence (`source`, `canonical-only`,
-  `verified-measurement-only`) and the loader refuses any other value — but no
-  resolution rule consults it yet, so a circuit is not currently checked against
-  it. See [FUNGI-TO-GATE-LIKE-FOR-LIKE.md](FUNGI-TO-GATE-LIKE-FOR-LIKE.md).
-- **These example circuits ship without a registry**, so only tiers 1 and 2 run
-  against them.
+- **The verdict algebra is a proven library, not yet a circuit-level pass.**
+  `vAnd = min` over DENY < INDETERMINATE < ALLOW ships with its whole table
+  machine-checked (including: the empty fold is INDETERMINATE, never ALLOW),
+  but no rule yet composes a full circuit's verdict along its authority wires.
+- **Which sources are tainted is not yet contract-expressible.** The cut rules
+  treat everything reachable from the input frontier as tainted; a declared
+  sensitivity axis is future work.
+- **Examples 01–03 are contract-checked; 04 and 05 are structure-only.** The
+  first three resolve against per-circuit contracts in the compiler package's
+  test fixtures (kept there because a `gate.registry.json` beside the examples
+  would be discovered for all five and refuse the other four). 04/05 reuse one
+  component id at several types *within* one circuit, which exact nominal
+  typing cannot express — a recorded language decision, not an oversight.
