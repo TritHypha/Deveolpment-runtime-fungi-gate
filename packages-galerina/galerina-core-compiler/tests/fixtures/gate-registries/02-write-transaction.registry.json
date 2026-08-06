@@ -9,7 +9,7 @@
     {
       "id": "Money",
       "kind": "measurement",
-      "construction": "verified-measurement-only"
+      "construction": "source"
     },
     {
       "id": "Authority",
