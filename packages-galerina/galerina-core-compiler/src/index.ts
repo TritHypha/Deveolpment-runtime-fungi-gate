@@ -141,6 +141,15 @@ export {
   type GateV3Circuit,
 } from "./gate-v3-parser.js";
 
+// Round-three G3 rung 1 — the canonical GateGraph every semantic pass reads
+export {
+  buildGateGraph,
+  serializeGateGraph,
+  type GateGraph,
+  type GateGraphNode,
+  type GateGraphEdge,
+} from "./gate-v3-graph.js";
+
 export {
   verifyGateV3Structure,
   analyzeGateV3Liveness,
