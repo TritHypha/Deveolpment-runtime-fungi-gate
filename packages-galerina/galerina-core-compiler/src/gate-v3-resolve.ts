@@ -36,8 +36,12 @@ export const GATE_V3_RESOLVE_CODES = {
   RESOLVE_110: { code: "GATE-RESOLVE-110", name: "GATE_V3_REQUIRED_INPUT_UNWIRED", message: "required input port has no producer" },
   RESOLVE_111: { code: "GATE-RESOLVE-111", name: "GATE_V3_DECISION_ARM_UNROUTED", message: "declared decision arm is not routed" },
   RESOLVE_112: { code: "GATE-RESOLVE-112", name: "GATE_V3_ARGUMENT_OUT_OF_RANGE", message: "argument value violates its declared range" },
-  RESOLVE_113: { code: "GATE-RESOLVE-113", name: "GATE_V3_WIRE_TYPE_MISMATCH", message: "wire type mismatch (no implicit conversion)" },
-  RESOLVE_114: { code: "GATE-RESOLVE-114", name: "GATE_V3_NONCOPYABLE_FANOUT", message: "non-copyable output has more than one consumer" },
+  // These two invariants are ALREADY named in the reference catalogue as
+  // GATE-WIRE-101/102. Minting new numbers for the same invariant would be
+  // catalogue drift: a code is a stable machine identity, and one invariant
+  // must not answer to two of them.
+  WIRE_101: { code: "GATE-WIRE-101", name: "GATE_V3_WIRE_TYPE_MISMATCH", message: "wire type mismatch (no implicit conversion)" },
+  WIRE_102: { code: "GATE-WIRE-102", name: "GATE_V3_NONCOPYABLE_FANOUT", message: "non-copyable output has more than one consumer" },
 } as const;
 
 /** Terminals consume; they carry no registry-declared payload type (yet). */
@@ -196,7 +200,7 @@ export function resolveGateV3(
     // exact nominal equality — a registered explicit conversion is a future
     // named round; today an implicit one is a refusal.
     if (fromType !== "" && toType !== "" && fromType !== toType) {
-      emit(GATE_V3_RESOLVE_CODES.RESOLVE_113, `${wire.from.text}:${fromType} -> ${wire.to.text}:${toType}`, wire.location);
+      emit(GATE_V3_RESOLVE_CODES.WIRE_101, `${wire.from.text}:${fromType} -> ${wire.to.text}:${toType}`, wire.location);
     }
   }
 
@@ -207,7 +211,7 @@ export function resolveGateV3(
     const [instance, port] = endpoint.split(".");
     const output = resolved.get(instance ?? "")?.outputs.get(port ?? "");
     if (output && !output.copyable) {
-      emit(GATE_V3_RESOLVE_CODES.RESOLVE_114, `${endpoint} has ${count} consumers`, circuit.location);
+      emit(GATE_V3_RESOLVE_CODES.WIRE_102, `${endpoint} has ${count} consumers`, circuit.location);
     }
   }
 

@@ -1,0 +1,158 @@
+{
+  "docs__examples__01-api-order__order-api.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__02-file-config__file-config.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__03-database-query__transaction-count.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__04-bulk-data-mining__bulk-mine.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__05-maths-algebra__loyalty-algebra.gate": [
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__06-quantum-readiness__experiment.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__07-balanced-ternary__photonic-boundary.gate": [
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108"
+  ],
+  "docs__examples__07-balanced-ternary__trit-min.gate": [],
+  "examples__customer-read.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "examples__galerina-compiler-pipeline.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "examples__patient-query.gate": [
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-101",
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108",
+    "GATE-RESOLVE-108"
+  ],
+  "test__fixtures__negative__duplicate-consumer.gate": [],
+  "test__fixtures__negative__missing-k3-arms.gate": [
+    "GATE-EFFECT-102",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-108"
+  ],
+  "test__fixtures__negative__unbounded-cycle.gate": [
+    "GATE-RESOLVE-101",
+    "GATE-RESOLVE-101"
+  ],
+  "test__fixtures__negative__unknown-instance.gate": [],
+  "test__fixtures__negative__wrong-version.gate": [
+    "PARSE-REFUSED"
+  ],
+  "test__fixtures__positive__minimal.gate": [],
+  "test__fixtures__positive__trit-min.gate": [],
+  "test__fixtures__registry-negative__invalid-trit-literal.gate": [
+    "GATE-RESOLVE-104"
+  ],
+  "test__fixtures__registry-negative__trit-to-verdict.gate": [
+    "GATE-WIRE-101"
+  ]
+}

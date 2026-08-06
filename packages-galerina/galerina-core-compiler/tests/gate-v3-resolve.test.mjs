@@ -148,11 +148,11 @@ test("resolve: wire types must match exactly — no implicit conversion", () => 
   });
   const mixed = circuit("    [e :: test.echo@1.0.0]\n    [o :: test.other@1.0.0]",
     "    IN.value -> e.value\n    e.value -> o.value\n    o.value -> OUT.value");
-  assert.ok(resolve(mixed, twoTypes).includes(GATE_V3_RESOLVE_CODES.RESOLVE_113.code));
+  assert.ok(resolve(mixed, twoTypes).includes(GATE_V3_RESOLVE_CODES.WIRE_101.code));
 });
 
 test("resolve: a NON-copyable output with two consumers REFUSES (fan-out is contract-gated)", () => {
   const nonCopyable = registry((v) => { v.components[0].outputs[0].copyable = false; });
   const fanOut = circuit(OK_PARTS, "    IN.value -> e.value\n    e.value -> OUT.value\n    e.value -> DRAIN.copy");
-  assert.ok(resolve(fanOut, nonCopyable).includes(GATE_V3_RESOLVE_CODES.RESOLVE_114.code));
+  assert.ok(resolve(fanOut, nonCopyable).includes(GATE_V3_RESOLVE_CODES.WIRE_102.code));
 });

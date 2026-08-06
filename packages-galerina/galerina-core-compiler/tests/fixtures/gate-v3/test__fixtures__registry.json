@@ -1,0 +1,406 @@
+{
+  "version": "1.0.0",
+  "effects": [],
+  "capabilities": [],
+  "types": [
+    {
+      "id": "Text",
+      "kind": "opaque",
+      "construction": "source"
+    },
+    {
+      "id": "Trit",
+      "kind": "finite",
+      "construction": "source",
+      "values": [-1, 0, 1],
+      "scalarEncoding": "signed-i32-domain",
+      "packedEncoding": "signed-i8-domain"
+    },
+    {
+      "id": "TritAddResult",
+      "kind": "record",
+      "construction": "canonical-only",
+      "scalarEncoding": "record<sum:Trit,carry:Trit>"
+    },
+    {
+      "id": "Ordering3",
+      "kind": "finite",
+      "construction": "canonical-only",
+      "values": [-1, 0, 1],
+      "scalarEncoding": "signed-i32-domain"
+    },
+    {
+      "id": "Truth3",
+      "kind": "finite",
+      "construction": "source",
+      "values": ["false", "unknown", "true"]
+    },
+    {
+      "id": "Verdict3",
+      "kind": "evidence",
+      "construction": "canonical-only",
+      "values": ["deny", "indeterminate", "allow"]
+    },
+    {
+      "id": "PhotonicTritSample",
+      "kind": "measurement",
+      "construction": "verified-measurement-only"
+    }
+  ],
+  "components": [
+    {
+      "id": "test.echo",
+      "version": "1.0.0",
+      "status": "PROPOSED",
+      "implementationDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Text",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Text",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.constant",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "copyable": true
+        }
+      ],
+      "arguments": [
+        {
+          "name": "value",
+          "type": "TritLiteral",
+          "required": true
+        }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.negate",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.min",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "inputs": [
+        {
+          "name": "left",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "right",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.max",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "inputs": [
+        {
+          "name": "left",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "right",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.multiply",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "inputs": [
+        {
+          "name": "left",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "right",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Trit",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.add_digit",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "inputs": [
+        {
+          "name": "left",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "right",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "carry_in",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "sum",
+          "type": "Trit",
+          "copyable": false
+        },
+        {
+          "name": "carry",
+          "type": "Trit",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.compare",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "inputs": [
+        {
+          "name": "left",
+          "type": "Trit",
+          "required": true
+        },
+        {
+          "name": "right",
+          "type": "Trit",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "ordering",
+          "type": "Ordering3",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.negated_meet",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "inputs": [
+        { "name": "left", "type": "Trit", "required": true },
+        { "name": "right", "type": "Trit", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Trit", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.negated_join",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "inputs": [
+        { "name": "left", "type": "Trit", "required": true },
+        { "name": "right", "type": "Trit", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Trit", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.sum_mod3",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "inputs": [
+        { "name": "left", "type": "Trit", "required": true },
+        { "name": "right", "type": "Trit", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Trit", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.nsum_mod3",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "inputs": [
+        { "name": "left", "type": "Trit", "required": true },
+        { "name": "right", "type": "Trit", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Trit", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.trit.equal",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "inputs": [
+        { "name": "left", "type": "Trit", "required": true },
+        { "name": "right", "type": "Trit", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Truth3", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.truth3.xor_k3",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "inputs": [
+        { "name": "left", "type": "Truth3", "required": true },
+        { "name": "right", "type": "Truth3", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Truth3", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.truth3.equivalent_k3",
+      "version": "1.0.0",
+      "status": "PARTIAL",
+      "implementationDigest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "inputs": [
+        { "name": "left", "type": "Truth3", "required": true },
+        { "name": "right", "type": "Truth3", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "Truth3", "copyable": false }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "test.verdict.identity",
+      "version": "1.0.0",
+      "status": "PROPOSED",
+      "implementationDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Verdict3",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "Verdict3",
+          "copyable": false
+        }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    }
+  ]
+}
