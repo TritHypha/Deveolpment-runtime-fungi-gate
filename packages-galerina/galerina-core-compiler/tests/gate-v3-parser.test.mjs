@@ -1,61 +1,147 @@
-// gate-v3-parser.test.mjs — Round-one G1 step 1: the `.gate` v3 front-end parser.
+// gate-v3-parser.test.mjs — Round-one G1 (steps 1-2): the `.gate` v3 front-end parser.
 //
 // Separate from the v1 `gate-parser.ts` (Ruling A / hard constraint 1: the v1
-// parser and its 14 tests stay intact). This suite proves the v3 header
-// recognition and the fail-closed dispatch boundary frozen in the KTA
-// (22-g0-boundary-freeze.md §1): first line must be exactly `@gate 3.0.0`;
-// v1 `@version`, v2 glyph headers, blanks, and anything else REFUSE.
+// parser and its 14 tests stay intact). Proves v3 header recognition, the
+// fail-closed dispatch boundary (22-g0-boundary-freeze.md §1), the full section
+// parse (CIRCUIT/INTENT/REQUIRES/PARTS/WIRES/END), and EXACT SPANS on every node
+// (the reference parser is line-only and explicitly does not satisfy the
+// production interface — spans are the G1 deliverable).
 //
-// Tests-first (KAT discipline): written before the parser exists, so it goes
-// red on the missing export, then green once the skeleton lands. Step 2 adds
-// the full section parse with exact spans.
+// Tests-first (KAT discipline): written before the code, red then green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseGateV3, GATE_V3_VERSION, GATE_PARSE_002 } from "../dist/index.js";
 
 const codesOf = (r) => r.diagnostics.map((d) => d.code);
 
-test("gate-v3: a valid `@gate 3.0.0` header is accepted (no version refusal)", () => {
-  const r = parseGateV3("@gate 3.0.0\n", "probe.gate");
-  assert.equal(r.ok, true, "the exact header is accepted");
+const VALID = [
+  "@gate 3.0.0",
+  "CIRCUIT get_customer(caller: CallerId, id: CustomerId) -> CustomerView",
+  '  INTENT "Return one authorized, redacted customer view."',
+  "  REQUIRES:",
+  "    capability customer.read",
+  "    effect database.read",
+  "    budget scanned_rows=100",
+  "  PARTS:",
+  "    [auth :: galerina.tower.authorize@1.0.0 capability=customer.read]",
+  "    [load :: app.customer.read@1.2.0]",
+  "  WIRES:",
+  "    IN.caller -> auth.subject",
+  "    IN.id -> load.key",
+  "    auth.allow -> load.authority",
+  "    auth.deny -> DENY.not_authorized",
+  "    auth.indeterminate -> DENY.authority_unknown",
+  "    load.record -> OUT.value",
+  "END",
+  "",
+].join("\n");
+
+// ── Step 1: header recognition (fail-closed) ───────────────────────────────
+
+test("gate-v3: a valid `@gate 3.0.0` header is accepted", () => {
+  const r = parseGateV3(VALID, "customer.gate");
+  assert.equal(r.ok, true, JSON.stringify(codesOf(r)));
   assert.equal(r.exactVersion, GATE_V3_VERSION);
-  assert.ok(!codesOf(r).includes(GATE_PARSE_002.code), "no version refusal on the exact header");
+  assert.ok(!codesOf(r).includes(GATE_PARSE_002.code));
 });
 
-test("gate-v3: the v1 `@version 1.0.0` header REFUSES (one parser - Ruling A)", () => {
-  const r = parseGateV3("@version 1.0.0\nINTENT \"x\"\n", "v1.gate");
-  assert.equal(r.ok, false);
-  assert.deepEqual(codesOf(r), [GATE_PARSE_002.code]);
+test("gate-v3: v1 `@version`, v2 glyph, blank, and two-space headers REFUSE", () => {
+  for (const bad of ["@version 1.0.0\n", "GATE Foo(x: T) -> T:\n", "\n@gate 3.0.0\n", "@gate  3.0.0\n"]) {
+    const r = parseGateV3(bad, "bad.gate");
+    assert.equal(r.ok, false, bad);
+    assert.deepEqual(codesOf(r), [GATE_PARSE_002.code], bad);
+  }
 });
 
-test("gate-v3: a v2 glyph header REFUSES (no best-effort parse)", () => {
-  const r = parseGateV3("GATE getCustomer(caller: CallerId) -> View:\n", "v2.gate");
-  assert.equal(r.ok, false);
-  assert.deepEqual(codesOf(r), [GATE_PARSE_002.code]);
+test("gate-v3: CRLF is normalized — a CRLF checkout of a valid circuit parses identically", () => {
+  // The whole file in CRLF: header check, section scan and spans must all be
+  // line-ending independent (a Windows checkout must not change admission).
+  const crlf = parseGateV3(VALID.replace(/\n/g, "\r\n"), "crlf.gate");
+  const lf = parseGateV3(VALID, "crlf.gate");
+  assert.equal(crlf.ok, true, JSON.stringify(codesOf(crlf)));
+  assert.deepEqual(crlf.circuit.wires.length, lf.circuit.wires.length);
+  assert.deepEqual(crlf.circuit.parts[0].location, lf.circuit.parts[0].location, "spans identical across line endings");
 });
 
-test("gate-v3: a leading blank line REFUSES (literal first line - no non-blank leniency)", () => {
-  const r = parseGateV3("\n@gate 3.0.0\n", "blank.gate");
-  assert.equal(r.ok, false);
-  assert.deepEqual(codesOf(r), [GATE_PARSE_002.code]);
+test("gate-v3: a header-only file REFUSES (no CIRCUIT) and the refusal carries a line:column", () => {
+  const headerOnly = parseGateV3("@gate 3.0.0\n", "empty.gate");
+  assert.equal(headerOnly.ok, false);
+  assert.ok(codesOf(headerOnly).includes("GATE-PARSE-004"));
+  const diag = parseGateV3("nope\n", "loc.gate").diagnostics[0];
+  assert.deepEqual([diag.location.file, diag.location.line, diag.location.column], ["loc.gate", 1, 1]);
 });
 
-test("gate-v3: a two-space header REFUSES (exactly one space)", () => {
-  const r = parseGateV3("@gate  3.0.0\n", "twospace.gate");
-  assert.equal(r.ok, false);
-  assert.deepEqual(codesOf(r), [GATE_PARSE_002.code]);
+// ── Step 2: full section parse ─────────────────────────────────────────────
+
+test("gate-v3: the circuit AST records name, params (typed), return type, intent", () => {
+  const c = parseGateV3(VALID, "customer.gate").circuit;
+  assert.equal(c.name, "get_customer");
+  assert.deepEqual(c.params.map((p) => [p.name, p.type]), [["caller", "CallerId"], ["id", "CustomerId"]]);
+  assert.equal(c.returnType, "CustomerView");
+  assert.equal(c.intent, "Return one authorized, redacted customer view.");
 });
 
-test("gate-v3: CRLF line endings are normalized - `@gate 3.0.0\\r\\n` is accepted", () => {
-  const r = parseGateV3("@gate 3.0.0\r\n", "crlf.gate");
-  assert.equal(r.ok, true, "CR before LF is normalized away before the header check");
+test("gate-v3: REQUIRES parses capabilities, effects, budgets", () => {
+  const req = parseGateV3(VALID, "customer.gate").circuit.requirements;
+  assert.deepEqual(req.capabilities.map((c) => c.name), ["customer.read"]);
+  assert.deepEqual(req.effects.map((e) => e.name), ["database.read"]);
+  assert.deepEqual(req.budgets.map((b) => [b.name, b.value]), [["scanned_rows", 100]]);
 });
 
-test("gate-v3: the version refusal carries a line:column location", () => {
-  const r = parseGateV3("nope\n", "loc.gate");
-  assert.equal(r.ok, false);
-  const diag = r.diagnostics.find((d) => d.code === GATE_PARSE_002.code);
-  assert.equal(diag.location.file, "loc.gate");
-  assert.equal(diag.location.line, 1);
-  assert.equal(diag.location.column, 1);
+test("gate-v3: PARTS parse instance, component, exact version, and args", () => {
+  const parts = parseGateV3(VALID, "customer.gate").circuit.parts;
+  assert.deepEqual(parts.map((p) => [p.instance, p.component, p.version]), [
+    ["auth", "galerina.tower.authorize", "1.0.0"],
+    ["load", "app.customer.read", "1.2.0"],
+  ]);
+  assert.deepEqual(parts[0].args.map((a) => [a.name, a.value.value]), [["capability", "customer.read"]]);
+});
+
+test("gate-v3: WIRES parse endpoints and node/port split", () => {
+  const wires = parseGateV3(VALID, "customer.gate").circuit.wires;
+  assert.equal(wires.length, 6);
+  const first = wires[0];
+  assert.deepEqual([first.from.node, first.from.port, first.to.node, first.to.port], ["IN", "caller", "auth", "subject"]);
+});
+
+test("gate-v3: EXACT SPANS — every top node has line AND column start/end", () => {
+  const c = parseGateV3(VALID, "customer.gate").circuit;
+  // circuit on line 2, params/return present
+  assert.equal(c.location.line, 2);
+  assert.ok(c.location.column >= 1 && c.location.endColumn > c.location.column, "circuit has a column span");
+  // a part instance token span points at the right line and a real column
+  const auth = c.parts[0];
+  assert.equal(auth.location.line, 9);
+  assert.ok(auth.location.column >= 1, "part carries a column");
+  assert.ok(auth.location.endColumn >= auth.location.column, "part has an end column");
+  // a wire span
+  const w = c.wires[0];
+  assert.equal(w.location.line, 12);
+  assert.ok(w.location.endColumn > w.location.column, "wire has a column span");
+  // a param span is narrower than the whole circuit line
+  const p = c.params[0];
+  assert.ok(p.location.column > 1, "param column is past 'CIRCUIT '");
+});
+
+test("gate-v3: the AST is frozen (immutable)", () => {
+  const c = parseGateV3(VALID, "customer.gate").circuit;
+  assert.throws(() => { c.name = "hacked"; }, TypeError);
+  assert.throws(() => { c.parts.push({}); }, TypeError);
+});
+
+// ── Step 2: section refusals (fail-closed, faithful to the reference codes) ──
+
+test("gate-v3: structural malformations REFUSE with the right PARSE code", () => {
+  const cases = [
+    ["@gate 3.0.0\n", "GATE-PARSE-004"], // missing CIRCUIT
+    ["@gate 3.0.0\nCIRCUIT bad line\n", "GATE-PARSE-005"], // malformed CIRCUIT
+    ["@gate 3.0.0\nCIRCUIT f() -> T\n  REQUIRES:\n", "GATE-PARSE-006"], // missing INTENT
+    ['@gate 3.0.0\nCIRCUIT f() -> T\n  INTENT "x"\n  PARTS:\n', "GATE-PARSE-008"], // missing REQUIRES
+    ['@gate 3.0.0\nCIRCUIT f() -> T\n  INTENT "x"\n  REQUIRES:\n', "GATE-PARSE-010"], // missing PARTS
+  ];
+  for (const [src, code] of cases) {
+    const r = parseGateV3(src, "m.gate");
+    assert.equal(r.ok, false, src);
+    assert.ok(codesOf(r).includes(code), `${src} => expected ${code}, got ${codesOf(r)}`);
+  }
 });
