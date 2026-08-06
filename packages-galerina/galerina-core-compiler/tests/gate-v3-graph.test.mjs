@@ -128,6 +128,41 @@ test("graph: the adjacency answers who-feeds-whom", () => {
   assert.deepEqual(into("OUT"), ["view"], "egress is fed only by the cut");
 });
 
+test("graph: bound annotations carry the type their discriminant promises (G3-1)", () => {
+  // The parser's `bound` is a DISCRIMINATED union since improvement G3-1, so
+  // the graph boundary no longer re-narrows it. TypeScript enforces that at
+  // compile time; this row enforces the same invariant at RUNTIME, because a
+  // constructor regression (e.g. `value: match[4]` instead of `Number(...)`)
+  // would still typecheck at the construction site while silently putting a
+  // string where the discriminant promises a number — and the tropical budget
+  // pass adds that value.
+  const graph = buildGateGraph(circuitOf(`@gate 3.0.0
+CIRCUIT probe(v: T) -> T
+  INTENT "bound shapes"
+  REQUIRES:
+  PARTS:
+    [a :: t.a@1.0.0]
+    [b :: t.b@1.0.0]
+  WIRES:
+    IN.v -> a.value budget=30
+    a.value -> b.value decreases=remaining
+    b.value -> OUT.value
+END
+`));
+  const bounds = graph.edges.map((e) => e.bound).filter(Boolean);
+  assert.equal(bounds.length, 2, "both annotated wires must carry their bound");
+  for (const bound of bounds) {
+    if (bound.kind === "budget") {
+      assert.equal(typeof bound.value, "number", "a budget's value must be a number");
+      assert.equal(bound.value, 30);
+    } else {
+      assert.equal(bound.kind, "decreases");
+      assert.equal(typeof bound.value, "string", "a decreases' value must be the variant name");
+      assert.equal(bound.value, "remaining");
+    }
+  }
+});
+
 test("graph: serialization is pure — two calls, one string", () => {
   const graph = buildGateGraph(circuitOf(ORDERED));
   assert.equal(serializeGateGraph(graph), serializeGateGraph(graph));

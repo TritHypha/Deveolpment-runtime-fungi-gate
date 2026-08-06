@@ -136,22 +136,13 @@ export function buildGateGraph(circuit: GateV3Circuit): GateGraph {
   const boundKey = (bound: GateGraphEdge["bound"]): string =>
     bound === null ? "" : `${bound.kind}=${bound.value}`;
 
-  // The parser types `bound` as a NON-discriminated union ({kind: "budget" |
-  // "decreases"; value: string | number}), though its constructor only ever
-  // builds the two coherent pairings. Narrow here at the boundary so every
-  // downstream pass gets the discriminated form; tightening the parser's own
-  // type is logged as an improvement observation, not smuggled into this rung.
-  const narrowBound = (bound: GateV3Circuit["wires"][number]["bound"]): GateGraphEdge["bound"] =>
-    bound === null
-      ? null
-      : bound.kind === "budget"
-        ? Object.freeze({ kind: "budget" as const, value: Number(bound.value) })
-        : Object.freeze({ kind: "decreases" as const, value: String(bound.value) });
-
+  // `bound` arrives already discriminated from the parser (improvement G3-1),
+  // so this boundary no longer re-narrows it — the shim that used to sit here
+  // existed only because the parser's type admitted states it never built.
   const unnumbered = circuit.wires.map((wire) => ({
     from: Object.freeze({ node: nodeIdOf(wire.from), port: portOf(wire.from) }),
     to: Object.freeze({ node: nodeIdOf(wire.to), port: portOf(wire.to) }),
-    bound: narrowBound(wire.bound),
+    bound: wire.bound,
   }));
   unnumbered.sort((a, b) =>
     byCodeUnit(a.from.node, b.from.node) ||

@@ -128,7 +128,19 @@ export interface GateV3Endpoint {
 export interface GateV3Wire {
   readonly from: GateV3Endpoint;
   readonly to: GateV3Endpoint;
-  readonly bound: { readonly kind: "budget" | "decreases"; readonly value: string | number } | null;
+  /**
+   * The wire's termination annotation, as a DISCRIMINATED union (improvement
+   * G3-1). It was previously `{kind: "budget" | "decreases"; value: string |
+   * number}` — a non-discriminated pair whose constructor only ever built the
+   * two coherent combinations, so every consumer had to re-narrow it and the
+   * type admitted two states the parser cannot produce (`budget` with a string,
+   * `decreases` with a number). Discriminating it here makes the impossible
+   * states unrepresentable instead of merely unbuilt.
+   */
+  readonly bound:
+    | { readonly kind: "budget"; readonly value: number }
+    | { readonly kind: "decreases"; readonly value: string }
+    | null;
   readonly location: SourceLocation;
 }
 export interface GateV3Named {
