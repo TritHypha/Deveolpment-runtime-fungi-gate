@@ -45,6 +45,7 @@ import { canonicalHash, hashSource, hashGIR } from "./runtime/canonicalHash.js";
 import { gatherFileImports } from "./module-registry.js";
 import { loadPackageManifest } from "./package-resolver.js";
 import { generateCycloneDxSbom } from "./sbom.js";
+import { dispatchGateSource } from "./gate-dispatch.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 
@@ -358,6 +359,27 @@ function compileFile(
   }
 
   const diagnostics: CliDiagnostic[] = [];
+
+  // `.gate` files dispatch to the v3 frontend ONLY (round-one G1 step 6; the
+  // dispatch rule is fail-closed and tries one parser, never both). The
+  // `.fungi` path below is untouched. A `.gate` file never reaches parseProgram
+  // and never produces flows here: round one is syntax/AST closure, so there is
+  // no GIR, no signing, and FUNGI-GATELANG-002 keeps production withheld.
+  if (filePath.endsWith(".gate")) {
+    const dispatched = dispatchGateSource(source, filePath);
+    for (const d of dispatched.diagnostics) {
+      pushDiag(
+        diagnostics,
+        d.code,
+        d.severity as CliDiagnostic["severity"],
+        d.message,
+        filePath,
+        d.location?.line,
+        d.location?.column,
+      );
+    }
+    return { file: filePath, diagnostics };
+  }
 
   const parseResult = parseProgram(source, filePath, { requireVersionHeader: true });
   for (const d of parseResult.diagnostics) {
