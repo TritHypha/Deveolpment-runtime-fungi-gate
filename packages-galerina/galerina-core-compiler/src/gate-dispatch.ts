@@ -31,8 +31,11 @@ import type { ParseDiagnostic } from "./parser.js";
 import { FUNGI_GATELANG_002 } from "./gate-parser.js";
 import { parseGateV3, GATE_V3_VERSION, type GateV3Circuit } from "./gate-v3-parser.js";
 import { verifyGateV3Structure } from "./gate-v3-verify.js";
-import { loadGateV3Registry } from "./gate-v3-registry.js";
+import { loadGateV3Registry, type GateV3Registry } from "./gate-v3-registry.js";
 import { resolveGateV3, checkGateV3Liveness, type ResolveOptions } from "./gate-v3-resolve.js";
+import { buildGateGraph } from "./gate-v3-graph.js";
+import { verifyGateGraphAcyclic } from "./gate-v3-condense.js";
+import { verifyCutDominatesEgress } from "./gate-v3-privacy.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -88,6 +91,7 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
   // With a registry, the contract becomes the authority: resolve the circuit
   // and check liveness. Without one, only shape is established — a green
   // structural pass says nothing about whether any component exists.
+  let resolvedRegistry: GateV3Registry | null = null;
   if (options.registry !== undefined) {
     const loaded = loadGateV3Registry(options.registry, `${file} (registry)`);
     if (!loaded.ok) {
@@ -95,10 +99,23 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
       // half-validated registry would produce verdicts nobody can trust.
       structural.push(...loaded.diagnostics);
     } else {
+      resolvedRegistry = loaded.registry;
       const resolveOptions: ResolveOptions = options.profile ? { profile: options.profile } : {};
       structural.push(...resolveGateV3(circuit, loaded.registry, resolveOptions));
       structural.push(...checkGateV3Liveness(circuit, loaded.registry));
     }
+  }
+
+  // ── Semantic tier (G3) — wired HERE because dispatch is the one choke point
+  // both CLIs share; a pass reachable from only one entry point is GD-024
+  // again. Acyclicity runs on every admitted circuit (drawing-only fact); the
+  // registry-dependent rules run only against a registry that actually
+  // LOADED — running them against a refused registry would manufacture
+  // verdicts from a contract nobody validated.
+  const graph = buildGateGraph(circuit);
+  structural.push(...verifyGateGraphAcyclic(graph));
+  if (resolvedRegistry !== null) {
+    structural.push(...verifyCutDominatesEgress(graph, resolvedRegistry));
   }
 
   // Constraint 3 — re-homed, never downgraded. The lowering may be produced and

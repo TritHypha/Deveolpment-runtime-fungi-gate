@@ -155,7 +155,8 @@
         }
       ],
       "effects": [],
-      "capabilities": []
+      "capabilities": [],
+      "cut": true
     },
     {
       "id": "galerina.audit.record",

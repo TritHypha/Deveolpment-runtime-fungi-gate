@@ -49,7 +49,7 @@ const STATUS_RE = /^(SHIPPED|PARTIAL|SIMULATED|PROPOSED|BLOCKED|REJECTED)$/;
 const TYPE_ID_RE = /^[A-Za-z_][A-Za-z0-9_.]*(?:<[A-Za-z0-9_.,<>]+>)?$/;
 
 /** Fields a closed schema admits. Anything else is a surplus field and refuses. */
-const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms"]);
+const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut"]);
 const PORT_FIELDS = new Set(["name", "type", "copyable", "required"]);
 const ARGUMENT_FIELDS = new Set(["name", "type", "required", "min", "max"]);
 const TYPE_FIELDS = new Set(["id", "kind", "construction", "values", "scalarEncoding", "packedEncoding"]);
@@ -81,6 +81,11 @@ export interface GateV3Component {
   readonly decision: boolean;
   /** The ordered arm port names a decision must route (GD-008's ruled fix). */
   readonly arms: readonly string[];
+  /** True when the contract declares this component a privacy CUT — the
+   *  redaction node the taint-cut separator (RD-0229) reasons about. Declared,
+   *  never inferred from the component's name: role-by-name is the exact
+   *  heuristic GD-008 was raised about, on a different axis. Absent = false. */
+  readonly cut: boolean;
 }
 export interface GateV3Registry {
   readonly version: string;
@@ -299,6 +304,14 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
     }
     if (!argsOk) continue;
 
+    // Cut role (G3 rung 3): Boolean-or-absent, same discipline as `copyable`
+    // after GD-011 — a truthy string must refuse at load, never read as true.
+    const cut = component.cut === true;
+    if (component.cut !== undefined && typeof component.cut !== "boolean") {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_006, `${key} cut must be Boolean`);
+      continue;
+    }
+
     // Port types must exist in the catalogue when one is supplied.
     if (types.size > 0) {
       for (const port of [...inputs.values(), ...outputs.values()]) {
@@ -316,6 +329,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       capabilities: Object.freeze((component.capabilities as unknown[]).map(String)),
       decision,
       arms: Object.freeze(arms),
+      cut,
     }));
   }
 

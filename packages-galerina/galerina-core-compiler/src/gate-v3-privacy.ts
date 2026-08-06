@@ -1,0 +1,150 @@
+// =============================================================================
+// Privacy passes over the GateGraph — G3 rungs 3–4 (KTA plan 27).
+//
+// Description: dominators from the input frontier, and the cut rules built on
+//   them. Rung 3 ships the dominator machinery + the cut-DOMINATES-egress
+//   refusal; rung 4 adds the RD-0229 taint-cut separator beside it.
+// Version / change-control: G3 rung 3 (separator lands rung 4).
+// Pointers: gate-v3-graph.ts (the input); gate-v3-condense.ts (acyclicity is
+//   asserted before these passes run — a dominator tree over a cyclic graph
+//   would be a proof over a false premise); gate-v3-registry.ts (`cut: true`,
+//   the DECLARED role these rules read).
+//
+// CONTRACT-DRIVEN, NEVER NAME-DRIVEN: which part is a cut comes only from the
+//   registry's `cut: true`. Recognising the redaction node by its component
+//   name would be GD-008's port-name heuristic reborn on the privacy axis.
+//   And fail-closed about scope: with NO declared cut there is NO domination
+//   claim in either direction — the pass is silent because the contract
+//   declared no obligation, not because the circuit was proven safe.
+// =============================================================================
+
+import type { ParseDiagnostic } from "./parser.js";
+import type { GateGraph } from "./gate-v3-graph.js";
+import type { GateV3Registry } from "./gate-v3-registry.js";
+
+/** Rung-3 refusal: a declared cut no longer dominates egress. */
+export const GATE_SEM_002 = Object.freeze({
+  code: "GATE-SEM-002",
+  name: "GATE_V3_CUT_DOES_NOT_DOMINATE_EGRESS",
+  message: "egress is reachable on a path that bypasses every declared cut (domination violated)",
+});
+
+/**
+ * Immediate dominators from the input frontier ("IN"), iterative worklist on
+ * reverse postorder — Cooper/Harvey/Kennedy's shape, chosen because it is
+ * simple to audit and needs no recursion (GD-006's class: a circuit may hold
+ * 4096 parts, so nothing in the semantic tier may recurse per node).
+ *
+ * Nodes unreachable from IN are ABSENT from the result — absence is the
+ * honest answer (liveness owns unreachability refusals, GATE-LIVE-001), and
+ * inventing a dominator for an unreachable node would let a later rule reason
+ * from a fact that does not exist.
+ */
+export function computeDominators(graph: GateGraph): ReadonlyMap<string, string> {
+  // Successors in canonical edge order; predecessor lists derived with them.
+  const successors = new Map<string, string[]>();
+  const predecessors = new Map<string, string[]>();
+  for (const node of graph.nodes) { successors.set(node.id, []); predecessors.set(node.id, []); }
+  for (const edge of graph.edges) {
+    successors.get(edge.from.node)?.push(edge.to.node);
+    predecessors.get(edge.to.node)?.push(edge.from.node);
+  }
+
+  // Reverse postorder from IN, iteratively (explicit stack, post flag).
+  const order: string[] = [];
+  const seen = new Set<string>(["IN"]);
+  const stack: [string, number][] = [["IN", 0]];
+  while (stack.length > 0) {
+    const frame = stack[stack.length - 1]!;
+    const targets = successors.get(frame[0]) ?? [];
+    if (frame[1] < targets.length) {
+      const next = targets[frame[1]!]!;
+      frame[1] += 1;
+      if (!seen.has(next)) { seen.add(next); stack.push([next, 0]); }
+      continue;
+    }
+    order.push(frame[0]);
+    stack.pop();
+  }
+  order.reverse();                                   // reverse postorder
+  const position = new Map(order.map((id, i) => [id, i]));
+
+  const idom = new Map<string, string>([["IN", "IN"]]);
+  const intersect = (a: string, b: string): string => {
+    // Walk both up the tree by RPO position until they meet.
+    let x = a;
+    let y = b;
+    while (x !== y) {
+      while (position.get(x)! > position.get(y)!) x = idom.get(x)!;
+      while (position.get(y)! > position.get(x)!) y = idom.get(y)!;
+    }
+    return x;
+  };
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const node of order) {
+      if (node === "IN") continue;
+      // First processed predecessor that already has an idom.
+      const preds = (predecessors.get(node) ?? []).filter((p) => idom.has(p));
+      if (preds.length === 0) continue;
+      let candidate = preds[0]!;
+      for (const pred of preds.slice(1)) candidate = intersect(candidate, pred);
+      if (idom.get(node) !== candidate) { idom.set(node, candidate); changed = true; }
+    }
+  }
+  return idom;
+}
+
+/** The strict dominators of a node: its idom chain up to IN. */
+function dominatorsOf(node: string, idom: ReadonlyMap<string, string>): Set<string> {
+  const result = new Set<string>();
+  let current = node;
+  while (idom.has(current)) {
+    const up = idom.get(current)!;
+    if (up === current) break;                       // reached the root
+    result.add(up);
+    current = up;
+  }
+  return result;
+}
+
+/** The instances in this graph whose CONTRACT declares `cut: true`. Resolution
+ *  owns unknown-component refusals; an unresolved part simply is not a cut. */
+function declaredCuts(graph: GateGraph, registry: GateV3Registry): string[] {
+  const cuts: string[] = [];
+  for (const node of graph.nodes) {
+    if (node.kind !== "part") continue;
+    const contract = registry.components.get(node.component);
+    if (contract?.cut) cuts.push(node.id);
+  }
+  return cuts;
+}
+
+/**
+ * Rung-3 rule: if the contract declares any cut, egress must be DOMINATED by
+ * at least one of them — every path from the input frontier to OUT passes a
+ * declared redaction point. One bypass wire breaks domination and refuses.
+ *
+ * Silent when no cut is declared (no obligation exists), and silent about
+ * DENY/FAULT/TRAP/DRAIN terminals by design: refusal surfaces carry evidence,
+ * not payloads — the cut governs the VALUE leaving on OUT.
+ */
+export function verifyCutDominatesEgress(graph: GateGraph, registry: GateV3Registry): readonly ParseDiagnostic[] {
+  const cuts = declaredCuts(graph, registry);
+  if (cuts.length === 0) return Object.freeze([]);
+
+  const idom = computeDominators(graph);
+  if (!idom.has("OUT")) return Object.freeze([]);    // no egress path: liveness owns that verdict
+
+  const dominators = dominatorsOf("OUT", idom);
+  if (cuts.some((cut) => dominators.has(cut))) return Object.freeze([]);
+
+  return Object.freeze([{
+    code: GATE_SEM_002.code,
+    name: GATE_SEM_002.name,
+    severity: "error",
+    message: `${graph.circuit}: ${GATE_SEM_002.message}; declared cut(s): ${cuts.join(", ")}`,
+  }]);
+}

@@ -158,6 +158,13 @@ export {
   type GateGraphCondensation,
 } from "./gate-v3-condense.js";
 
+// Round-three G3 rungs 3–4 — privacy passes: dominators + the cut rules
+export {
+  computeDominators,
+  verifyCutDominatesEgress,
+  GATE_SEM_002,
+} from "./gate-v3-privacy.js";
+
 export {
   verifyGateV3Structure,
   analyzeGateV3Liveness,
