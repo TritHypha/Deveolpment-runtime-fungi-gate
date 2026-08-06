@@ -64,9 +64,13 @@ refusal auditable.
 | `TritLiteral` | exactly `-1`, `0` or `1` | `default=-1` |
 | `Set<...>` | a brace-enclosed set | `fields={CustomerId,Email}` |
 
-Anything else a contract declares is **refused**, not waved through. There is no
-`Float`; there are no constants and no computed values — a circuit cannot
-calculate, so a number is always a literal you wrote or a parameter you passed.
+Anything else a contract declares is **refused**, not waved through. Note the
+list above is the set of **`.gate` argument types** — there is no `Float`
+*argument type* here, though `.fungi` itself has a full floating-point tower and
+a `Math` surface including `PI` and `sqrt`. A circuit has no constants and no
+computed values: it cannot calculate, so a number in a circuit is always a
+literal you wrote or a parameter you passed, and the mathematics lives in the
+component.
 
 The `$` matters: `key=customer_id` is a **`Name`** (a bare identifier that merely
 looks like your parameter), while `key=$customer_id` is a **`ParameterRef`** that

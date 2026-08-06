@@ -189,16 +189,30 @@ cannot exist.
 
 ### `.fungi`
 
-- `Int` and `Decimal` are the numeric tower. `Decimal` is written exactly:
-  `let vatRate: Decimal = Decimal("0.20")` — the point is to avoid binary
-  floating-point rounding in money and governance arithmetic.
-- **`Float16`/`Float32` are refused** at WASM record layout by
-  `FUNGI-LAYOUT-001`, until a scalar `f32` expression lane exists. `Decimal` is
-  refused at that same layer until its exact representation replaces the current
-  `f64` mapping. The guard is emitter-only, so such a program still type-checks
-  clean and is refused when it tries to become a module — fail-closed, and tested
-  in both directions so the boundary can be neither weakened nor left shut
-  forever.
+The numeric tower is wider than money arithmetic alone:
+
+| Type | Note |
+|---|---|
+| `Int` | the integer type |
+| `Decimal` | **exact** decimal, written `Decimal("0.20")` — chosen for money and governance so binary rounding cannot creep in |
+| `Float`, `Float16`, `Float32`, `Float64`, `Double` | admitted floating-point types; a literal containing `.` infers as `Float` |
+
+`Math` is a real surface, not a stub: `PI`, `abs`, `ceil`, `clamp`, `cos`,
+`floor`, `log`, `log2`, `max`, `min`, `pow`, `round`, `sign`, `sin`, `sqrt`,
+`tan`. So π, roots and trigonometry are all available to a `.fungi` author.
+
+Two fail-closed edges are worth knowing:
+
+- **Non-finite results refuse rather than propagate.** `Math.sqrt` of a negative,
+  or a standard deviation over an empty list, would produce `NaN` — the stdlib
+  treats that as a refusal instead of returning a silent `NaN` downstream.
+- **`Float16`/`Float32` record *fields* are refused at WASM layout** by
+  `FUNGI-LAYOUT-001` until a scalar `f32` lane exists, and `Decimal` fields at
+  that same layer until an exact representation replaces the current `f64`
+  mapping. This is an emitter-only guard on struct layout — it does **not** mean
+  the types are absent from the language. Such a program type-checks clean and is
+  refused when it tries to become a module, and the boundary is tested in both
+  directions so it can be neither weakened nor left permanently shut.
 
 ### `.gate`
 
@@ -209,16 +223,16 @@ cannot exist.
 
 ### π
 
-There is **no `PI` constant, no `sqrt`, and no trigonometry anywhere in the
-codebase** — so this is not a `.gate` omission, it is the shape of the whole
-system. Galerina's numeric world is exact: integers and exact decimals, chosen
-for money and governance rather than for geometry.
+`.fungi` has π: `Math.PI`, returning a float. `.gate` does not, and cannot — not
+because π is unavailable to the system, but because a circuit has no expressions
+to put it in.
 
-π is irrational, so an exact-decimal tower cannot hold it exactly at all; it can
-only carry an approximation to a declared precision. If a circuit ever needs one,
-the honest form is a `Number` argument on a part whose contract declares the
-precision it expects, with the mathematics inside the `.fungi` component — never
-a constant invented in the drawing.
+So the asymmetry is about *where the mathematics lives*, not about what the
+system can compute. If a circuit needs π, it names a component whose contract
+declares what it does; the constant and the arithmetic sit inside that component.
+A circuit can pass a `Number` argument, but it can never compute one, and it must
+never carry a hand-written approximation of a constant the stdlib already
+provides exactly.
 
 ---
 
@@ -354,8 +368,8 @@ difference against the reference implementation rather than left silent.
 | type declaration | `record`, `hallmark`, alias | — references the catalogue only | no equivalent, by design |
 | integers | `Int` | `Int` argument literals, range-checked | argument only |
 | exact decimals | `Decimal("0.20")` | `Number` argument literal | argument only |
-| floating point | refused at layout (`FUNGI-LAYOUT-001`) | no `Float` type exists | absent in both |
-| π, `sqrt`, trig | absent from the codebase | no arithmetic at all | no equivalent, by design |
+| floating point | `Float`/`Float16/32/64`/`Double`; only record *fields* are layout-refused | no `Float` argument type | inside a part |
+| π, `sqrt`, trig | `Math.PI`, `Math.sqrt`, `Math.sin/cos/tan`, … | no arithmetic at all | inside a part |
 | arrays | persistent `Array<T>`, `append` returns | a value on a wire; set literals for arguments | inside a part |
 | records | `record` + named literal | catalogue type, `kind: "record"` | inside a part |
 | hallmarks | `hallmark X of C { gate: … }` | honoured via exact typing; `construction` not yet enforced | **do not add to `.gate`** |
