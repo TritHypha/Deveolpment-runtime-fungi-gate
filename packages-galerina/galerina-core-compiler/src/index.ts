@@ -132,6 +132,10 @@ export {
   parseGateV3,
   formatGateV3,
   GATE_V3_VERSION,
+  // Exported so callers and KATs assert against the ruled numbers themselves
+  // rather than re-typing them — a bound duplicated in a test is a bound that
+  // can drift from the one the parser enforces.
+  GATE_V3_LIMITS,
   GATE_PARSE_002,
   type ParsedGateV3,
   type GateV3Circuit,

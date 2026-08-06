@@ -29,6 +29,30 @@ import type { ParseDiagnostic, SourceLocation } from "./parser.js";
 export const GATE_V3_VERSION = "3.0.0";
 const GATE_V3_HEADER = `@gate ${GATE_V3_VERSION}`;
 
+/**
+ * Resource ceilings, adopted verbatim from owner ruling ② (GD-006).
+ *
+ * These are NOT tuning knobs. A parser with no ceiling is a denial-of-service
+ * surface (CWE-400/770), and before these landed a deeply nested set literal
+ * escaped as a raw host `RangeError` — through `parseGateV3`, through
+ * `dispatchGateSource`, and all the way to the user as a stack trace with no
+ * diagnostic code. A refusal must be a diagnostic, never an exception.
+ *
+ * Every value here was ruled by the owner. `intentLength` is deliberately
+ * ABSENT: the ruling bounds file size, nesting, cardinality, identifiers,
+ * parts, wires and arguments, and says nothing about INTENT, so INTENT is left
+ * bounded only indirectly by `fileBytes` rather than by a number invented here.
+ */
+export const GATE_V3_LIMITS = Object.freeze({
+  setNesting: 6,
+  setCardinality: 256,
+  identifier: 64,
+  argumentsPerPart: 32,
+  parts: 4096,
+  wires: 8192,
+  fileBytes: 512 * 1024,
+});
+
 /** Diagnostic definitions. Codes are stable machine identities: wording may
  *  improve, but changing an invariant requires a NEW code. Numbering follows
  *  the reference catalogue (docs/17-DIAGNOSTICS.md) so the two agree. */
@@ -53,6 +77,18 @@ const D = {
   P021: { code: "GATE-PARSE-021", name: "GATE_V3_MALFORMED_WIRE", message: "malformed wire" },
   P022: { code: "GATE-PARSE-022", name: "GATE_V3_INVALID_ENDPOINT", message: "invalid endpoint" },
   P025: { code: "GATE-PARSE-025", name: "GATE_V3_INVALID_LITERAL", message: "invalid literal" },
+
+  // ── Resource bounds (GD-006, owner ruling ②) ──────────────────────────────
+  // Numbering starts at 028 because the reference implementation's catalogue
+  // already claims GATE-PARSE-026 and 027; one invariant must never answer to
+  // two codes, and neither must two invariants share one.
+  P028: { code: "GATE-PARSE-028", name: "GATE_V3_SET_NESTING_EXCEEDED", message: `set literal nests deeper than ${GATE_V3_LIMITS.setNesting}` },
+  P029: { code: "GATE-PARSE-029", name: "GATE_V3_SET_CARDINALITY_EXCEEDED", message: `set literal holds more than ${GATE_V3_LIMITS.setCardinality} elements` },
+  P030: { code: "GATE-PARSE-030", name: "GATE_V3_IDENTIFIER_TOO_LONG", message: `identifier is longer than ${GATE_V3_LIMITS.identifier} characters` },
+  P031: { code: "GATE-PARSE-031", name: "GATE_V3_TOO_MANY_ARGUMENTS", message: `a part declares more than ${GATE_V3_LIMITS.argumentsPerPart} arguments` },
+  P032: { code: "GATE-PARSE-032", name: "GATE_V3_TOO_MANY_PARTS", message: `a circuit declares more than ${GATE_V3_LIMITS.parts} parts` },
+  P033: { code: "GATE-PARSE-033", name: "GATE_V3_TOO_MANY_WIRES", message: `a circuit declares more than ${GATE_V3_LIMITS.wires} wires` },
+  P034: { code: "GATE-PARSE-034", name: "GATE_V3_FILE_TOO_LARGE", message: `source exceeds ${GATE_V3_LIMITS.fileBytes / 1024} KiB` },
 } as const;
 
 /** Public re-export of the header diagnostic (used by the dispatcher + tests). */
@@ -188,6 +224,18 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
     }],
   });
 
+  // Size is checked FIRST, before normalisation copies the whole source and
+  // before it is split into lines — a ceiling enforced after the allocation it
+  // exists to prevent is not a ceiling.
+  //
+  // `source.length` counts UTF-16 units, not bytes. For every source this
+  // parser can ADMIT that is the same number, because non-ASCII is refused
+  // outright a few lines below (P003). A non-ASCII source whose byte length
+  // exceeds the bound while its unit count does not is therefore still refused
+  // — by P003 rather than P034. Counting units keeps this check allocation-free,
+  // which is the point of doing it first.
+  if (source.length > GATE_V3_LIMITS.fileBytes) return refuse(D.P034, 1);
+
   const normalised = source.replace(/\r\n?/g, "\n");
   const rawLines = normalised.split("\n");
 
@@ -303,19 +351,45 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
     if (!match) return refuse(D.P019, item.line, item.indent + 1, item.raw.length);
 
     const instance = match[1]!;
+    if (instance.length > GATE_V3_LIMITS.identifier) {
+      return refuse(D.P030, item.line, item.indent + 1, item.raw.length);
+    }
     const args: GateV3Argument[] = [];
     if (match[4]) {
       let searchFrom = 0;
-      for (const token of splitArguments(match[4]!)) {
+      const tokens = splitArguments(match[4]!);
+      if (tokens.length > GATE_V3_LIMITS.argumentsPerPart) {
+        return refuse(D.P031, item.line, item.indent + 1, item.raw.length);
+      }
+      for (const token of tokens) {
         const arg = token.match(new RegExp(`^(${IDENT})=(.+)$`));
         if (!arg) return refuse(D.P020, item.line, item.indent + 1, item.raw.length);
         const argName = arg[1]!;
+        if (argName.length > GATE_V3_LIMITS.identifier) {
+          return refuse(D.P030, item.line, item.indent + 1, item.raw.length);
+        }
         const argLocation = locate(item.raw, argName, file, item.line, searchFrom);
         searchFrom = (argLocation.column ?? 1) + argName.length;
+
+        // Bound the literal BEFORE parsing it — parseValue recurses per set
+        // element, so measuring afterwards would mean the overflow already
+        // happened. This is the guard that turns a host RangeError into a
+        // diagnostic.
+        const shape = measureSetShape(arg[2]!);
+        if (shape.depth > GATE_V3_LIMITS.setNesting) {
+          return refuse(D.P028, item.line, item.indent + 1, item.raw.length);
+        }
+        if (shape.cardinality > GATE_V3_LIMITS.setCardinality) {
+          return refuse(D.P029, item.line, item.indent + 1, item.raw.length);
+        }
+
         const value = parseValue(arg[2]!, item, file);
         if (!value) return refuse(D.P025, item.line, item.indent + 1, item.raw.length);
         args.push(Object.freeze({ name: argName, value, location: argLocation }));
       }
+    }
+    if (parts.length >= GATE_V3_LIMITS.parts) {
+      return refuse(D.P032, item.line, item.indent + 1, item.raw.length);
     }
     parts.push(Object.freeze({
       instance,
@@ -351,6 +425,9 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
         : { kind: "decreases" as const, value: match[5]! })
       : null;
 
+    if (wires.length >= GATE_V3_LIMITS.wires) {
+      return refuse(D.P033, item.line, item.indent + 1, item.raw.length);
+    }
     wires.push(Object.freeze({
       from,
       to,
@@ -502,6 +579,57 @@ function splitArguments(text: string): string[] {
     }
   }
   return result;
+}
+
+/**
+ * Measure a raw argument's set structure WITHOUT parsing it.
+ *
+ * The ceiling has to be applied BEFORE `parseValue` runs, not inside it: that
+ * function recurses per set element, so a depth check performed during the
+ * recursion has already done the recursing it exists to prevent. This is a flat
+ * lexical scan — it cannot overflow the stack on any input — and it is the only
+ * thing standing between a hostile literal and a host `RangeError`.
+ *
+ * Braces inside string literals are not structure, so the scan tracks quoting.
+ * Cardinality is the widest single set at any level, not the total element
+ * count, because the bound the owner ruled is per set literal.
+ */
+function measureSetShape(text: string): { depth: number; cardinality: number } {
+  let depth = 0;
+  let maxDepth = 0;
+  let maxCardinality = 0;
+  let inString = false;
+  let escaped = false;
+  // Element count per open set, indexed by depth. A set with no separators
+  // still holds one element, so a level starts at 1 and each comma adds one.
+  const counts: number[] = [];
+
+  for (const char of text) {
+    if (escaped) { escaped = false; continue; }
+    if (inString) {
+      if (char === "\\") escaped = true;
+      else if (char === '"') inString = false;
+      continue;
+    }
+    if (char === '"') { inString = true; continue; }
+    if (char === "{") {
+      depth += 1;
+      if (depth > maxDepth) maxDepth = depth;
+      counts[depth] = 1;
+      continue;
+    }
+    if (char === "}") {
+      if (depth > 0) {
+        const count = counts[depth] ?? 0;
+        if (count > maxCardinality) maxCardinality = count;
+        depth -= 1;
+      }
+      continue;
+    }
+    if (char === "," && depth > 0) counts[depth] = (counts[depth] ?? 1) + 1;
+  }
+
+  return { depth: maxDepth, cardinality: maxCardinality };
 }
 
 /** Parse an argument value with its own span. Returns null on an invalid
