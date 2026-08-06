@@ -25,6 +25,8 @@
 //   downgraded, and it is removed only when the named privacy backstop lands.
 // =============================================================================
 
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve as resolvePath } from "node:path";
 import type { ParseDiagnostic } from "./parser.js";
 import { FUNGI_GATELANG_002 } from "./gate-parser.js";
 import { parseGateV3, GATE_V3_VERSION, type GateV3Circuit } from "./gate-v3-parser.js";
@@ -115,4 +117,37 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
     circuit,
     diagnostics: Object.freeze([...structural, productionBlock]),
   };
+}
+
+/**
+ * Find the component registry governing a `.gate` file: `gate.registry.json`
+ * in its directory, or the nearest such file in an ancestor directory.
+ *
+ * Returns the parsed registry wrapped for the dispatcher, or undefined when
+ * none is found (the check then establishes shape only). A registry that
+ * exists but cannot be parsed is returned as-is so the dispatcher's loader
+ * refuses it with a stable diagnostic — an unreadable registry must never be
+ * silently treated as "no registry", which would quietly downgrade the check.
+ *
+ * Lives beside the dispatcher because BOTH CLI entry points need it — this
+ * package's own CLI and the root `galerina.mjs`. GD-024 was precisely the cost
+ * of wiring one entry point and not the other, and a second copy of this walk
+ * would be a second place for them to drift apart.
+ */
+export function findGateRegistry(filePath: string): { registry: unknown } | undefined {
+  let directory = dirname(resolvePath(filePath));
+  for (let depth = 0; depth < 16; depth += 1) {
+    const candidate = join(directory, "gate.registry.json");
+    if (existsSync(candidate)) {
+      try {
+        return { registry: JSON.parse(readFileSync(candidate, "utf8")) };
+      } catch {
+        return { registry: { malformed: true } };  // loader emits the refusal
+      }
+    }
+    const parent = dirname(directory);
+    if (parent === directory) break;
+    directory = parent;
+  }
+  return undefined;
 }

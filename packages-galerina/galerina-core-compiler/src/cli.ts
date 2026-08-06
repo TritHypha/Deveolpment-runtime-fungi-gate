@@ -45,7 +45,7 @@ import { canonicalHash, hashSource, hashGIR } from "./runtime/canonicalHash.js";
 import { gatherFileImports } from "./module-registry.js";
 import { loadPackageManifest } from "./package-resolver.js";
 import { generateCycloneDxSbom } from "./sbom.js";
-import { dispatchGateSource } from "./gate-dispatch.js";
+import { dispatchGateSource, findGateRegistry } from "./gate-dispatch.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 
@@ -342,33 +342,10 @@ interface FileCompileResult {
   readonly manifestJson?: string;
 }
 
-/**
- * Find the component registry governing a `.gate` file: `gate.registry.json`
- * in its directory, or the nearest such file in an ancestor directory.
- *
- * Returns the parsed registry wrapped for the dispatcher, or undefined when
- * none is found (the check then establishes shape only). A registry that
- * exists but cannot be parsed is returned as-is so the dispatcher's loader
- * refuses it with a stable diagnostic — an unreadable registry must never be
- * silently treated as "no registry", which would quietly downgrade the check.
- */
-function findGateRegistry(filePath: string): { registry: unknown } | undefined {
-  let directory = dirname(resolvePath(filePath));
-  for (let depth = 0; depth < 16; depth += 1) {
-    const candidate = join(directory, "gate.registry.json");
-    if (existsSync(candidate)) {
-      try {
-        return { registry: JSON.parse(readFileSync(candidate, "utf8")) };
-      } catch {
-        return { registry: { malformed: true } };  // loader emits the refusal
-      }
-    }
-    const parent = dirname(directory);
-    if (parent === directory) break;
-    directory = parent;
-  }
-  return undefined;
-}
+// `findGateRegistry` now lives in gate-dispatch.ts and is imported above. It
+// moved because BOTH CLI entry points need it — this one and the root
+// galerina.mjs — and it cannot be re-exported from here: this module ends in a
+// bare `main()`, so anything importing it would run the CLI as a side effect.
 
 function compileFile(
   filePath: string,

@@ -160,6 +160,13 @@ export {
 
 export {
   dispatchGateSource,
+  // Registry discovery for `.gate`, shared by BOTH CLI entry points (this
+  // package's own CLI and the root galerina.mjs). GD-024: wiring one entry
+  // point and not the other is how a `.gate` file ended up being reported with
+  // `.fungi` diagnostics; one implementation keeps them from diverging again.
+  // It lives HERE and not in cli.ts because cli.ts ends in a bare `main()` —
+  // re-exporting from it would make merely importing the library run the CLI.
+  findGateRegistry,
   type GateDialect,
   type GateDispatchResult,
 } from "./gate-dispatch.js";

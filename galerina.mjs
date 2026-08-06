@@ -1151,6 +1151,36 @@ Baseline comparison (governance-cost):
 
   const source = readUntrustedSource(fungiFile);
   if (source === null) process.exit(1); // fail-closed: oversized/unreadable .fungi rejected before parse
+
+  // ── `.gate` routes to the v3 circuit frontend, never to parseProgram (GD-024) ──
+  // Without this the `.fungi` parser saw every file regardless of extension, so a
+  // valid v3 circuit was refused with FUNGI-SYNTAX-015 ("missing @version header")
+  // on a file whose header is correct for its OWN language, then a cascade of
+  // FUNGI-PARSE-001 on its `#` comments. It failed closed but named the wrong
+  // language — a true refusal that tells the author nothing.
+  //
+  // The dispatch rule is fail-closed: try ONE frontend, never both. A `.gate`
+  // file yields no flows, no GIR and no signing here — FUNGI-GATELANG-002 keeps
+  // production withheld until the sound compile-time backstop is wired.
+  if (fungiFile.endsWith(".gate")) {
+    // A `gate.registry.json` beside the circuit (or in an ancestor) supplies the
+    // component contracts, so resolution and liveness run. With none, the check
+    // establishes SHAPE only. Discovery uses the compiler package's exported
+    // helper rather than a second copy — GD-024 was the cost of two entry points
+    // drifting apart, and duplicating this walk would invite the same fault.
+    const dispatched = m.dispatchGateSource(source, fungiFile, {
+      ...(m.findGateRegistry?.(fungiFile) ?? {}),
+    });
+    const gateErrors = dispatched.diagnostics.filter(d => d.severity === "error");
+    for (const d of dispatched.diagnostics) {
+      const where = d.location ? `:${d.location.line}:${d.location.column}` : "";
+      const mark = d.severity === "error" ? "❌" : d.severity === "warning" ? "⚠️ " : "ℹ️ ";
+      console.error(`${mark} ${d.code}: ${fungiFile}${where}: ${d.message}`);
+    }
+    if (gateErrors.length === 0) console.log(`✅ ${fungiFile}: 0 errors`);
+    process.exit(gateErrors.length === 0 ? 0 : 1);
+  }
+
   const parsed = m.parseProgram(source, fungiFile, { requireVersionHeader: true });
   const errors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
 
