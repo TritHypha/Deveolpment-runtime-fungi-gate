@@ -144,6 +144,13 @@ export {
 } from "./gate-v3-verify.js";
 
 export {
+  loadGateV3Registry,
+  GATE_V3_REGISTRY_CODES,
+  type GateV3Registry,
+  type GateV3Component,
+} from "./gate-v3-registry.js";
+
+export {
   dispatchGateSource,
   type GateDialect,
   type GateDispatchResult,
