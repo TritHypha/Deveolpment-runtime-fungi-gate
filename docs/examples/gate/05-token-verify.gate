@@ -1,30 +1,35 @@
-@version 1.2.0
-# Pattern (advanced): secret handling + tri-state verdict + re-auth on a non-happy path.
-# Shows:
-#   - a SecureString input and secret.read, with the raw token cut before any egress,
-#   - a PANIC drain [!] on an invalid/unknown signature (fail-closed),
-#   - a FRESH ? guard re-authorising the "expired" verdict (a legitimate ×-arm continuation),
-#   - two paths (valid + expired) converging on the SAME :cut, so no token bytes ever leave.
-GATE verifyToken(token: SecureString) -> TokenVerdict:
-  INTENT  "Verify a token signature and return a valid/expired/invalid verdict; the raw token never leaves in the verdict."
-  EFFECTS { secret.read }
-  PRIVACY deny secret token -> response.body
-  AUDIT   off
-  FLOW:
-    [in] := IN
-    [in]                    -> [key:fu loadVerifyKey]    @secret.read  # load signing key material
-    [key:fu loadVerifyKey]  -> [check:fu verifySig]                    # constant-time signature check over the token
-    [check:fu verifySig]    -> [state]                   ? tokenState
-    [state]                 -> [✓]                                     # signature valid and unexpired
-    [state]                 -> [×expired]                              # signature valid but expired
-    [state]                 -> [!]                                     # invalid / unknown signature -> panic drain (distinct, fail-closed)
-    [×expired]              -> [reemit]                  ? emitExpired  # FRESH guard re-authorises the expired verdict egress
-    [reemit]                -> [✓expiredOk]                            # expired is a returnable verdict
-    [reemit]                -> [×suppress]                             # verdict suppressed by policy
-    [reemit]                -> [-]                                     # emit policy unknown -> deny drain (distinct)
-    [×suppress]             -> [-]                                     # suppressed -> deny (drains)
-    [✓]                     -> [redacted:cut(token) fu redactToken]          # EXPLICIT CUT (:cut) — strip raw token before verdict egress
-    [✓expiredOk]            -> [redacted:cut(token) fu redactToken]          # EXPLICIT CUT (:cut) — expired path also strips the token
-    [redacted:cut(token) fu redactToken] -> [verdict:fu emitVerdict]         # verdict carries no token bytes
-    [verdict:fu emitVerdict] -> [+]                                   # egress: signature verdict only
+@gate 3.0.0
+# Pattern (advanced): secret handling + tri-state verdict + re-auth on a
+# non-happy path. MIGRATED from v1.2 to v3.
+#   - a SecureString input and secret.read; the raw token is cut before egress,
+#   - an invalid/unknown signature TRAPs (fail-closed, distinct from a denial),
+#   - a FRESH authority check re-authorises the "expired" verdict,
+#   - both the valid and expired paths converge on the SAME cut, so no token
+#     bytes can leave by either route.
+CIRCUIT verify_token(token: SecureString) -> TokenVerdict
+  INTENT "Verify a token signature and return a valid/expired/invalid verdict; the raw token never leaves in the verdict."
+  REQUIRES:
+    capability token.verify
+    effect secret.read
+  PARTS:
+    [key :: galerina.secret.load_verify_key@1.0.0]
+    [check :: app.token.verify_signature@1.0.0]
+    [state :: galerina.tower.authorize@1.0.0 capability=token.verify]
+    [reemit :: galerina.tower.authorize@1.0.0 capability=token.emit_expired]
+    [redacted :: galerina.privacy.cut@1.0.0 fields={Token}]
+    [verdict :: app.token.emit_verdict@1.0.0]
+  WIRES:
+    IN.token -> key.token
+    key.value -> check.key
+    check.value -> state.subject
+    check.evidence -> state.resource
+    check.invalid -> TRAP.invalid_signature
+    state.allow -> redacted.evidence
+    state.deny -> reemit.subject
+    state.indeterminate -> DENY.token_state_unknown
+    reemit.allow -> redacted.value
+    reemit.deny -> DENY.expired_verdict_suppressed
+    reemit.indeterminate -> DENY.emit_policy_unknown
+    redacted.value -> verdict.value
+    verdict.value -> OUT.value
 END

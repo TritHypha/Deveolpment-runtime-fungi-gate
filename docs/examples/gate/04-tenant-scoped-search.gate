@@ -1,41 +1,48 @@
-@version 1.2.0
-# Pattern (advanced): tenant isolation + bounded loop + re-authorised egress.
-# Shows four things 01-03 don't:
-#   - a PANIC drain [!] on cross-tenant reach (fail-closed, distinct from a deny drain),
-#   - a BOUNDED cycle ([✓more] -> [page…] decreases budget) so the loop must terminate (R11),
-#   - a FRESH ? guard re-authorising egress after the loop (the R7 deny-arm carve-out),
-#   - two explicit :cut vertices (tenant-scope the query, then strip any cross-tenant records).
-# This is the IDOR / per-tenant-scope shape — reachability = authorization.
-GATE searchRecords(caller: CallerId, query: Query, tenantId: TenantId) -> RecordPage:
-  INTENT  "Search records within the caller's tenant only, paging through a bounded number of hops."
-  EFFECTS { database.read }
-  PRIVACY deny protected Records -> response.body
-  AUDIT   on
-  FLOW:
-    [in] := IN
-    [in]                    -> [authz]              ? authorised       # branch on the capability check (the signed capability authorizes, not this glyph)
-    [authz]                 -> [✓]                                     # caller may search
-    [authz]                 -> [×]                                     # caller may not
-    [authz]                 -> [-]                                     # undecidable -> deny drain (distinct)
-    [×]                     -> [-]                                     # rejected caller -> deny (drains)
-    [✓]                     -> [scope:cut fu tenantFilter]            # EXPLICIT CUT (:cut) — constrain query to caller's tenant
-    [scope:cut fu tenantFilter] -> [tenant]         ? tenantReachable  # tenant reachability test
-    [tenant]                -> [✓tenant]                               # only same-tenant shards reachable
-    [tenant]                -> [×tenant]                               # a cross-tenant shard is reachable
-    [tenant]                -> [-]                                     # reachability unknown -> deny drain (distinct)
-    [×tenant]               -> [!]                                     # cross-tenant reach -> panic drain (fail-closed)
-    [✓tenant]               -> [budget:fu initHopBudget]              # establish the hop budget BEFORE the loop
-    [budget:fu initHopBudget] -> [page:fu scanShard] @database.read    # read the first page of same-tenant records
-    [page:fu scanShard]     -> [more]               ? hasNextHop       # bounded loop control (exhaustive)
-    [more]                  -> [✓more]                                 # more pages remain
-    [more]                  -> [×more]                                 # no more pages -> assemble result
-    [more]                  -> [-]                                     # cursor undecidable -> deny drain (distinct)
-    [✓more]                 -> [page:fu scanShard]  decreases budget   # bounded cycle: hop budget decreases each pass
-    [×more]                 -> [done]               ? pageAssembled    # FRESH guard re-authorises egress after the loop
-    [done]                  -> [✓done]                                 # page assembled cleanly
-    [done]                  -> [×incomplete]                           # assembly incomplete
-    [done]                  -> [-]                                     # assembly state unknown -> deny drain (distinct)
-    [×incomplete]           -> [-]                                     # incomplete -> deny (drains)
-    [✓done]                 -> [safe:cut(Records) fu redactCrossTenant]        # EXPLICIT CUT (:cut) — strip any cross-tenant records
-    [safe:cut(Records) fu redactCrossTenant] -> [+]                            # egress: assembled, tenant-clean record page
+@gate 3.0.0
+# Pattern (advanced): tenant isolation + BOUNDED iteration + re-authorised egress.
+# MIGRATED from v1.2 to v3, with one deliberate structural change:
+#
+#   the v1.2 drawing used a DRAWN CYCLE ([check-more] -> [page...] decreases budget).
+#   v3 REFUSES every component cycle (GATE-TERM-003/004) - a budget on an edge
+#   looks like a termination proof and is not one. The v3 idiom is an ITERATOR
+#   PART whose bound is a contract argument: the paging loop lives inside
+#   app.shard.scan_paged, which declares its own hop ceiling, so termination is
+#   the component's proved obligation rather than a drawn back-edge.
+#
+# The four teaching points survive: cross-tenant reach TRAPs (fail-closed and
+# distinct from a policy denial), iteration is bounded, a FRESH authority check
+# re-authorises egress after the scan, and two explicit cuts scope then clean.
+CIRCUIT search_records(caller: CallerId, query: Query, tenant_id: TenantId) -> RecordPage
+  INTENT "Search records within the caller's tenant only, paging through a bounded number of hops."
+  REQUIRES:
+    capability records.search
+    effect database.read
+    budget hops=64
+  PARTS:
+    [authz :: galerina.tower.authorize@1.0.0 capability=records.search]
+    [scope :: galerina.privacy.cut@1.0.0 fields={TenantScope}]
+    [tenant :: galerina.tower.authorize@1.0.0 capability=tenant.reach]
+    [pages :: app.shard.scan_paged@1.0.0 max_hops=64]
+    [egress :: galerina.tower.authorize@1.0.0 capability=records.egress]
+    [safe :: galerina.privacy.cut@1.0.0 fields={Records}]
+  WIRES:
+    IN.caller -> authz.subject
+    IN.query -> authz.resource
+    IN.tenant_id -> scope.value
+    authz.allow -> scope.evidence
+    authz.deny -> DENY.not_authorized
+    authz.indeterminate -> DENY.authority_unknown
+    scope.value -> tenant.subject
+    scope.evidence -> tenant.resource
+    tenant.allow -> pages.authority
+    tenant.deny -> TRAP.cross_tenant_reach
+    tenant.indeterminate -> DENY.tenant_reach_unknown
+    pages.value -> egress.subject
+    pages.evidence -> egress.resource
+    pages.exhausted -> DENY.hop_budget_exhausted
+    egress.allow -> safe.evidence
+    egress.deny -> DENY.egress_refused
+    egress.indeterminate -> DENY.egress_unknown
+    pages.value -> safe.value
+    safe.value -> OUT.value
 END

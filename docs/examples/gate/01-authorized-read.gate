@@ -1,20 +1,32 @@
-@version 1.2.0
-# Pattern: authorised read with PII redaction.
-# Gate the caller (K3), read on the ALLOW arm, cut the protected field, audit, egress.
-GATE getCustomer(caller: CallerId, customerId: CustomerRef) -> CustomerView:
-  INTENT  "Return one customer record to an authorised caller; PII is redacted before egress."
-  EFFECTS { database.read, audit.write }
-  PRIVACY deny protected CustomerId -> response.body
-  AUDIT   on
-  FLOW:
-    [in] := IN                                                  # caller + customerId enter here
-    [in]                -> [authz]              ? authorised     # K3 gate: True / False / Unknown
-    [authz]             -> [✓]                                   # allowed -> continue
-    [authz]             -> [×]                                   # denied -> reject arm (distinct False)
-    [authz]             -> [-]                                   # unknown -> deny drain (distinct default)
-    [×]                 -> [-]                                   # denied caller drains to deny (deny-by-default)
-    [✓]                 -> [record:fu dbQuery]  @database.read   # dense read delegated to a .fungi fu
-    [record:fu dbQuery] -> [view:cut(CustomerId) fu redactCustomerId]       # EXPLICIT CUT (:cut) — strips CustomerId
-    [view:cut(CustomerId) fu redactCustomerId] -> [logged:fu audit] @audit.write   # access is audited
-    [logged:fu audit]   -> [+]                                  # egress: only the redacted view leaves
+@gate 3.0.0
+# Pattern: authorised read with PII redaction. MIGRATED from the v1.2 glyph
+# dialect to v3 named-port circuits (round-one G1).
+#   ? guard      -> a K3 authority part with allow/deny/indeterminate ports
+#   [check]/[cross]/[dash]  -> the arms are the wires themselves; refusals name a terminal
+#   [name:fu op] -> [name :: component.id@version] (an exact registered part)
+#   [:cut(F)]    -> [cut :: galerina.privacy.cut@1.0.0 fields={F}]
+#   @effect tags -> derived from component contracts; REQUIRES states the envelope
+#   [+]          -> OUT.value
+CIRCUIT get_customer(caller: CallerId, customer_id: CustomerRef) -> CustomerView
+  INTENT "Return one customer record to an authorised caller; PII is redacted before egress."
+  REQUIRES:
+    capability customer.read
+    effect database.read
+    effect audit.write
+  PARTS:
+    [authz :: galerina.tower.authorize@1.0.0 capability=customer.read]
+    [record :: app.customer.read@1.0.0]
+    [view :: galerina.privacy.cut@1.0.0 fields={CustomerId}]
+    [logged :: galerina.audit.record@1.0.0 event="customer.read"]
+  WIRES:
+    IN.caller -> authz.subject
+    IN.customer_id -> authz.resource
+    IN.customer_id -> record.key
+    authz.allow -> record.authority
+    authz.deny -> DENY.not_authorized
+    authz.indeterminate -> DENY.authority_unknown
+    record.value -> view.value
+    record.evidence -> view.evidence
+    view.evidence -> logged.value
+    view.value -> OUT.value
 END

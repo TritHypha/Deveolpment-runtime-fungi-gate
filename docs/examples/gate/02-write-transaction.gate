@@ -1,20 +1,28 @@
-@version 1.2.0
-# Pattern: governed write (transaction). Draw-don't-code: the deduction and the
-# masking are dense compute delegated to .fungi `fu` bodies; the map is the shape.
-GATE processRefund(client: CallerId, amount: Money<GBP>) -> RefundReceipt:
-  INTENT  "Issue a client refund and append it to the immutable audit log."
-  EFFECTS { database.write, audit.write }
-  PRIVACY deny protected Amount -> response.body
-  AUDIT   on
-  FLOW:
-    [in] := IN                                                     # client + amount enter here
-    [in]                     -> [authz]  ? eligible                # K3 gate: verified AND funds sufficient
-    [authz]                  -> [✓]                                # eligible -> continue
-    [authz]                  -> [×]                                # ineligible -> reject arm (distinct False)
-    [authz]                  -> [-]                                # unknown -> deny drain (distinct default)
-    [×]                      -> [-]                                # ineligible client drains to deny
-    [✓]                      -> [posted:fu ledgerDeduct] @database.write   # dense compute in a .fungi fu
-    [posted:fu ledgerDeduct] -> [receipt:cut(Amount) fu maskAmount]        # EXPLICIT CUT — masks the raw amount
-    [receipt:cut(Amount) fu maskAmount] -> [logged:fu audit] @audit.write  # audit trail
-    [logged:fu audit]        -> [+]                                # egress: only the masked receipt leaves
+@gate 3.0.0
+# Pattern: governed write (transaction). MIGRATED from v1.2 to v3.
+# The deduction and the masking remain dense compute in registered components;
+# the circuit is the shape. The masked amount is the only value that egresses.
+CIRCUIT process_refund(client: CallerId, amount: Money) -> RefundReceipt
+  INTENT "Issue a client refund and append it to the immutable audit log."
+  REQUIRES:
+    capability refund.issue
+    effect database.write
+    effect audit.write
+  PARTS:
+    [authz :: galerina.tower.authorize@1.0.0 capability=refund.issue]
+    [posted :: app.ledger.deduct@1.0.0]
+    [receipt :: galerina.privacy.cut@1.0.0 fields={Amount}]
+    [logged :: galerina.audit.record@1.0.0 event="refund.issue"]
+  WIRES:
+    IN.client -> authz.subject
+    IN.amount -> authz.resource
+    IN.amount -> posted.amount
+    authz.allow -> posted.authority
+    authz.deny -> DENY.not_eligible
+    authz.indeterminate -> DENY.eligibility_unknown
+    posted.receipt -> receipt.value
+    posted.evidence -> receipt.evidence
+    posted.failure -> TRAP.ledger_write_failed
+    receipt.evidence -> logged.value
+    receipt.value -> OUT.value
 END

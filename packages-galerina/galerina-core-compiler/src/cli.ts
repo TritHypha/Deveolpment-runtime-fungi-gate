@@ -288,7 +288,11 @@ function findFungiFiles(dir: string): string[] {
         if (entry.name !== "node_modules" && !entry.name.startsWith(".")) {
           walk(full);
         }
-      } else if (entry.isFile() && entry.name.endsWith(".fungi")) {
+      } else if (entry.isFile() && (entry.name.endsWith(".fungi") || entry.name.endsWith(".gate"))) {
+        // `.gate` files are collected alongside `.fungi` and routed by
+        // compileFile to the v3 frontend (round-one G1). A `.gate` file yields
+        // diagnostics only - no flows, no GIR, no signing - and carries
+        // FUNGI-GATELANG-002, so production stays withheld.
         results.push(full);
       }
     }

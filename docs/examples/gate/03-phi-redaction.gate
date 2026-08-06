@@ -1,22 +1,28 @@
-@version 1.2.0
-# Pattern: healthcare PHI. TWO protected fields (PatientId + SSN) are cut before egress.
-# The security property is visible in the shape: there is NO drawn edge from the raw
-# read to [+]; the only path to egress passes through the :cut, which dominates it.
-GATE getPatient(caller: CallerId, patientRef: PatientRef) -> PatientView:
-  INTENT  "Return a patient record to an authorised caller; PatientId and SSN are redacted before egress."
-  EFFECTS { database.read, audit.write }
-  PRIVACY deny protected PatientId -> response.body
-          deny protected SSN -> response.body
-  AUDIT   on
-  FLOW:
-    [in] := IN
-    [in]              -> [authz]              ? authorised
-    [authz]           -> [✓]
-    [authz]           -> [×]
-    [authz]           -> [-]
-    [×]               -> [-]
-    [✓]               -> [raw:fu dbRead]      @database.read
-    [raw:fu dbRead]   -> [view:cut(PatientId,SSN) fu redactPatientIdAndSSN]        # cuts BOTH PatientId and SSN
-    [view:cut(PatientId,SSN) fu redactPatientIdAndSSN] -> [logged:fu audit] @audit.write
-    [logged:fu audit] -> [+]
+@gate 3.0.0
+# Pattern: healthcare PHI. MIGRATED from v1.2 to v3. TWO protected fields are
+# cut before egress. The security property is still visible in the shape:
+# there is NO wire from the raw read to OUT.value; the only path to egress
+# passes through the cut, which dominates it.
+CIRCUIT get_patient(caller: CallerId, patient_ref: PatientRef) -> PatientView
+  INTENT "Return a patient record to an authorised caller; PatientId and SSN are redacted before egress."
+  REQUIRES:
+    capability patient.read
+    effect database.read
+    effect audit.write
+  PARTS:
+    [authz :: galerina.tower.authorize@1.0.0 capability=patient.read]
+    [raw :: app.patient.read@1.0.0]
+    [view :: galerina.privacy.cut@1.0.0 fields={PatientId,SSN}]
+    [logged :: galerina.audit.record@1.0.0 event="patient.read"]
+  WIRES:
+    IN.caller -> authz.subject
+    IN.patient_ref -> authz.resource
+    IN.patient_ref -> raw.key
+    authz.allow -> raw.authority
+    authz.deny -> DENY.not_authorized
+    authz.indeterminate -> DENY.authority_unknown
+    raw.value -> view.value
+    raw.evidence -> view.evidence
+    view.evidence -> logged.value
+    view.value -> OUT.value
 END
