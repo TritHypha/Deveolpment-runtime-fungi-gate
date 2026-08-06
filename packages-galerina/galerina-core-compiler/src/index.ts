@@ -162,7 +162,9 @@ export {
 export {
   computeDominators,
   verifyCutDominatesEgress,
+  verifyTaintCutSeparator,
   GATE_SEM_002,
+  GATE_SEM_003,
 } from "./gate-v3-privacy.js";
 
 export {

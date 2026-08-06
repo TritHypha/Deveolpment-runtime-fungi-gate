@@ -29,6 +29,14 @@ export const GATE_SEM_002 = Object.freeze({
   message: "egress is reachable on a path that bypasses every declared cut (domination violated)",
 });
 
+/** Rung-4 refusal: with every declared cut REMOVED, taint still reaches
+ *  egress — the RD-0229 separator property is violated. */
+export const GATE_SEM_003 = Object.freeze({
+  code: "GATE-SEM-003",
+  name: "GATE_V3_TAINT_REACHES_EGRESS_PAST_CUTS",
+  message: "taint reaches egress with every declared cut removed (separator violated, RD-0229)",
+});
+
 /**
  * Immediate dominators from the input frontier ("IN"), iterative worklist on
  * reverse postorder — Cooper/Harvey/Kennedy's shape, chosen because it is
@@ -135,16 +143,65 @@ export function verifyCutDominatesEgress(graph: GateGraph, registry: GateV3Regis
   const cuts = declaredCuts(graph, registry);
   if (cuts.length === 0) return Object.freeze([]);
 
+  // The separator (rung 4) is the set-level truth; single-point domination is
+  // the stronger claim and legitimately fails on multi-cut drawings (two
+  // branches, each with its own cut — neither dominates, the set separates).
+  // So this rule refuses only when the SEPARATOR also refuses: domination
+  // failing while separation holds is a sound multi-cut drawing, not a leak.
   const idom = computeDominators(graph);
   if (!idom.has("OUT")) return Object.freeze([]);    // no egress path: liveness owns that verdict
 
   const dominators = dominatorsOf("OUT", idom);
   if (cuts.some((cut) => dominators.has(cut))) return Object.freeze([]);
+  if (verifyTaintCutSeparator(graph, registry).length === 0) return Object.freeze([]);
 
   return Object.freeze([{
     code: GATE_SEM_002.code,
     name: GATE_SEM_002.name,
     severity: "error",
     message: `${graph.circuit}: ${GATE_SEM_002.message}; declared cut(s): ${cuts.join(", ")}`,
+  }]);
+}
+
+/**
+ * Rung-4 rule — RD-0229's machine-proven correction, implemented as proven:
+ * remove every declared cut from the graph, then ask whether egress is still
+ * reachable from the input frontier. Reachable = a bypass exists = refuse.
+ *
+ * NOT node-BFS from the tainted source with cuts in place — that question
+ * flags the sanitized path too (reachable THROUGH the cut is the sanctioned
+ * route), and the KAT demonstrates that false-flag on the shipped PHI example
+ * before showing this check give the correct verdict both ways.
+ */
+export function verifyTaintCutSeparator(graph: GateGraph, registry: GateV3Registry): readonly ParseDiagnostic[] {
+  const cuts = new Set(declaredCuts(graph, registry));
+  if (cuts.size === 0) return Object.freeze([]);
+
+  // Reachability over the graph WITH EVERY CUT DELETED — iterative BFS on an
+  // explicit queue (no recursion; 4096 parts is legal input).
+  const successors = new Map<string, string[]>();
+  for (const node of graph.nodes) {
+    if (!cuts.has(node.id)) successors.set(node.id, []);
+  }
+  for (const edge of graph.edges) {
+    if (cuts.has(edge.from.node) || cuts.has(edge.to.node)) continue;
+    successors.get(edge.from.node)?.push(edge.to.node);
+  }
+
+  const seen = new Set<string>(["IN"]);
+  const queue: string[] = ["IN"];
+  while (queue.length > 0) {
+    for (const next of successors.get(queue.shift()!) ?? []) {
+      if (!seen.has(next)) { seen.add(next); queue.push(next); }
+    }
+  }
+
+  if (!seen.has("OUT")) return Object.freeze([]);
+
+  return Object.freeze([{
+    code: GATE_SEM_003.code,
+    name: GATE_SEM_003.name,
+    severity: "error",
+    message: `${graph.circuit}: ${GATE_SEM_003.message}; removed cut(s): ${[...cuts].join(", ")}`,
   }]);
 }

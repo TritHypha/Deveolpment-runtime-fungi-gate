@@ -35,7 +35,7 @@ import { loadGateV3Registry, type GateV3Registry } from "./gate-v3-registry.js";
 import { resolveGateV3, checkGateV3Liveness, type ResolveOptions } from "./gate-v3-resolve.js";
 import { buildGateGraph } from "./gate-v3-graph.js";
 import { verifyGateGraphAcyclic } from "./gate-v3-condense.js";
-import { verifyCutDominatesEgress } from "./gate-v3-privacy.js";
+import { verifyCutDominatesEgress, verifyTaintCutSeparator } from "./gate-v3-privacy.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -116,6 +116,7 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
   structural.push(...verifyGateGraphAcyclic(graph));
   if (resolvedRegistry !== null) {
     structural.push(...verifyCutDominatesEgress(graph, resolvedRegistry));
+    structural.push(...verifyTaintCutSeparator(graph, resolvedRegistry));
   }
 
   // Constraint 3 — re-homed, never downgraded. The lowering may be produced and
