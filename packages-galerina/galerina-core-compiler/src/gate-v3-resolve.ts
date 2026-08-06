@@ -261,3 +261,119 @@ function valueMatchesType(value: GateV3Value, type: string): boolean {
       return type.startsWith("Set<") ? value.kind === "set" : false;
   }
 }
+
+// ── contract-driven liveness (G2 step 7) ────────────────────────────────────
+
+/** Liveness diagnostic codes, exported so the catalogue and KATs bind to constants. */
+export const GATE_V3_LIVENESS_CODES = {
+  LIVE_001: { code: "GATE-LIVE-001", name: "GATE_V3_ORPHAN_SOURCE", message: "part declares required inputs but none are wired and it is unreachable from any circuit input" },
+  LIVE_002: { code: "GATE-LIVE-002", name: "GATE_V3_DEAD_END", message: "part declares outputs but none are wired and it reaches no terminal" },
+} as const;
+
+/**
+ * Check liveness using component contracts.
+ *
+ * GD-007's ruling was full liveness; implementing it structurally in G1 fired
+ * on 7 of 20 canonical circuits, because a legitimate SOURCE (a dataset scan,
+ * a literal constant) and a legitimate SINK (an audit recorder) look exactly
+ * like a ghost part when all you have is the drawing. With contracts the
+ * question becomes decidable:
+ *
+ *   a part is an ORPHAN SOURCE iff its contract declares required inputs, the
+ *   drawing wires none of them, and no path reaches it from a circuit input;
+ *
+ *   a part is a DEAD END iff its contract declares outputs, the drawing wires
+ *   none of them, and it reaches no terminal.
+ *
+ * A component that declares no inputs is a source by contract; one that
+ * declares no outputs is a sink by contract. Neither is an orphan, and neither
+ * is flagged. An unresolved component yields NO verdict — resolution already
+ * refused it, and a second guess would be noise.
+ *
+ * @param circuit a frozen AST from `parseGateV3`
+ * @param registry a validated registry from `loadGateV3Registry`
+ */
+export function checkGateV3Liveness(
+  circuit: GateV3Circuit,
+  registry: GateV3Registry,
+): readonly ParseDiagnostic[] {
+  const diagnostics: ParseDiagnostic[] = [];
+
+  // Resolve what we can; parts without a contract are skipped entirely.
+  const contracts = new Map<string, GateV3Component>();
+  for (const part of circuit.parts) {
+    const contract = registry.components.get(`${part.component}@${part.version}`);
+    if (contract) contracts.set(part.instance, contract);
+  }
+
+  // Which ports the drawing actually wires, per instance and direction.
+  const wiredInputs = new Map<string, Set<string>>();
+  const wiredOutputs = new Map<string, Set<string>>();
+  const forwardEdges = new Map<string, string[]>();
+  const backwardEdges = new Map<string, string[]>();
+  for (const wire of circuit.wires) {
+    if (!wiredOutputs.has(wire.from.node)) wiredOutputs.set(wire.from.node, new Set());
+    wiredOutputs.get(wire.from.node)!.add(wire.from.port);
+    if (!wiredInputs.has(wire.to.node)) wiredInputs.set(wire.to.node, new Set());
+    wiredInputs.get(wire.to.node)!.add(wire.to.port);
+
+    if (!forwardEdges.has(wire.from.node)) forwardEdges.set(wire.from.node, []);
+    forwardEdges.get(wire.from.node)!.push(wire.to.node);
+    if (!backwardEdges.has(wire.to.node)) backwardEdges.set(wire.to.node, []);
+    backwardEdges.get(wire.to.node)!.push(wire.from.node);
+  }
+
+  const reach = (start: string, edges: Map<string, string[]>): Set<string> => {
+    const seen = new Set<string>();
+    const stack = [start];
+    while (stack.length > 0) {
+      const node = stack.pop()!;
+      for (const next of edges.get(node) ?? []) {
+        if (seen.has(next)) continue;
+        seen.add(next);
+        stack.push(next);
+      }
+    }
+    return seen;
+  };
+
+  const fromInput = reach("IN", forwardEdges);
+  const toTerminal = new Set<string>();
+  for (const terminal of TERMINALS) {
+    for (const node of reach(terminal, backwardEdges)) toTerminal.add(node);
+  }
+
+  for (const part of circuit.parts) {
+    const contract = contracts.get(part.instance);
+    if (!contract) continue;   // unresolved: resolution owns that verdict
+
+    const requiredInputs = [...contract.inputs.values()].filter((p) => p.required);
+    const wiredIn = wiredInputs.get(part.instance) ?? new Set<string>();
+    const wiredOut = wiredOutputs.get(part.instance) ?? new Set<string>();
+
+    // A source BY CONTRACT (no required inputs) is legitimately unreachable.
+    if (requiredInputs.length > 0 && wiredIn.size === 0 && !fromInput.has(part.instance)) {
+      diagnostics.push({
+        code: GATE_V3_LIVENESS_CODES.LIVE_001.code,
+        name: GATE_V3_LIVENESS_CODES.LIVE_001.name,
+        severity: "error",
+        message: `${GATE_V3_LIVENESS_CODES.LIVE_001.message}: '${part.instance}'`,
+        location: part.location,
+      });
+      continue;
+    }
+
+    // A sink BY CONTRACT (no declared outputs) legitimately reaches no terminal.
+    if (contract.outputs.size > 0 && wiredOut.size === 0 && !toTerminal.has(part.instance)) {
+      diagnostics.push({
+        code: GATE_V3_LIVENESS_CODES.LIVE_002.code,
+        name: GATE_V3_LIVENESS_CODES.LIVE_002.name,
+        severity: "error",
+        message: `${GATE_V3_LIVENESS_CODES.LIVE_002.message}: '${part.instance}'`,
+        location: part.location,
+      });
+    }
+  }
+
+  return Object.freeze(diagnostics);
+}

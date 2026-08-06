@@ -152,7 +152,9 @@ export {
 
 export {
   resolveGateV3,
+  checkGateV3Liveness,
   GATE_V3_RESOLVE_CODES,
+  GATE_V3_LIVENESS_CODES,
   type ResolveOptions,
 } from "./gate-v3-resolve.js";
 
