@@ -143,12 +143,16 @@ refusal, and the two are mutually exclusive claims about the same loop:
 | verdict | claim |
 |---|---|
 | `GATE-TERM-003` | the cycle's lap count is **unbounded** |
-| `GATE-TERM-004` | the laps are capped, but no registered state contract and canonical termination proof admits the loop |
+| `GATE-TERM-004` | the cycle is **annotated as bounded** at every wire of some step, but no registered state contract and canonical termination proof admits the loop |
 
 A cycle is **bounded** when at some step of the cycle **every parallel wire
 between that step's pair of nodes carries a bound** (`budget=` or `decreases=`).
 A lap must cross each step exactly once, so a fully-bounded step caps the lap
-count. Two shapes prove nothing and must classify `GATE-TERM-003`: a bounded
+count. The classification grades the **annotation**, not a verified cap: a
+`budget=` is a parser-validated positive integer and is self-evidently finite,
+while a `decreases=` names a measure whose well-foundedness only a registered
+state contract can establish — when that surface exists, an undeclared measure
+name must refuse at resolution rather than classify as bounded. Two shapes prove nothing and must classify `GATE-TERM-003`: a bounded
 **chord** — a wire whose endpoints lie on the cycle but which is not an edge of
 it, so no lap crosses it — and a bounded wire beside an unbounded **parallel**,
 which every lap may take instead.
