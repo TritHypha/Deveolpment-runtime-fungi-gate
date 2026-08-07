@@ -137,10 +137,36 @@ one.
 
 ## 4 · Termination and authority
 
-**Cycles.** A part-to-part cycle is refused (`GATE-TERM-003`) unless every edge
-in the cycle carries a bound (`GATE-TERM-004`). A conforming verifier must find
-cycles **without unbounded recursion** — a circuit may hold 4,096 parts, so an
-implementation that recurses per node is a stack overflow waiting for an input.
+**Cycles.** A part-to-part cycle is always refused; the bound decides **which**
+refusal, and the two are mutually exclusive claims about the same loop:
+
+| verdict | claim |
+|---|---|
+| `GATE-TERM-003` | the cycle's lap count is **unbounded** |
+| `GATE-TERM-004` | the laps are capped, but no registered state contract and canonical termination proof admits the loop |
+
+A cycle is **bounded** when at some step of the cycle **every parallel wire
+between that step's pair of nodes carries a bound** (`budget=` or `decreases=`).
+A lap must cross each step exactly once, so a fully-bounded step caps the lap
+count. Two shapes prove nothing and must classify `GATE-TERM-003`: a bounded
+**chord** — a wire whose endpoints lie on the cycle but which is not an edge of
+it, so no lap crosses it — and a bounded wire beside an unbounded **parallel**,
+which every lap may take instead.
+
+> **Correction (2026-08-07).** This rule previously read "unless every edge in
+> the cycle carries a bound", and the reference implementation tested something
+> different again — any bounded wire whose two endpoints were cycle *nodes*.
+> Both were wrong: "every edge" is stronger than the mathematics requires (one
+> fully-bounded step suffices), and node-membership is unsound (the chord and
+> parallel shapes above misclassified as `TERM-004`). Both refusals still
+> refuse, so admission never depended on the distinction — but §3.1 makes
+> distinguishable refusals a security property, and the wrong code sends an
+> author off to prove termination of a loop that has none. Conformance vectors
+> CV-087…089 pin the corrected rule from both directions.
+
+A conforming verifier must find cycles **without unbounded recursion** — a
+circuit may hold 4,096 parts, so an implementation that recurses per node is a
+stack overflow waiting for an input.
 
 **K3 authority.** A three-valued decision routes **allow**, **deny** and
 **indeterminate**. A part with an allow arm and no deny route refuses

@@ -200,7 +200,25 @@ export function verifyGateV3Structure(circuit: GateV3Circuit): readonly ParseDia
   // `if (x)` fires on every input. Caught here; worth stating because the same
   // trap waits at every other null-to-empty conversion.
   if (cycle.length > 0) {
-    const bounded = circuit.wires.some((w) => w.bound && cycle.includes(w.from.node) && cycle.includes(w.to.node));
+    // EDGE-wise, not NODE-wise. TERM-004 claims the lap count is capped, and a
+    // lap crosses each consecutive STEP of the cycle exactly once — so the
+    // cycle is bounded only if at some step EVERY parallel wire between that
+    // step's pair carries a bound. The node-membership test this replaces
+    // (`some(w.bound && cycle.includes(from) && cycle.includes(to))`) was
+    // fooled by two shapes, both conformance-pinned (CV-088/089): a bounded
+    // CHORD — endpoints on the cycle, but not an edge of it, so no lap crosses
+    // it — and a bounded wire beside an unbounded PARALLEL, which every lap may
+    // take instead. Both misreported an unbounded cycle as "register a proof"
+    // (TERM-004) when the truth is "this loop is unbounded" (TERM-003); both
+    // refuse either way, but §3.1 makes distinguishable refusals a security
+    // property, and the wrong one sends the author to prove the unprovable.
+    // `findCycle` closes the path by repeating the entry node, so consecutive
+    // pairs enumerate exactly the cycle's edges.
+    let bounded = false;
+    for (let i = 0; i + 1 < cycle.length && !bounded; i += 1) {
+      const step = circuit.wires.filter((w) => w.from.node === cycle[i] && w.to.node === cycle[i + 1]);
+      bounded = step.length > 0 && step.every((w) => w.bound !== null);
+    }
     emit(bounded ? GATE_V3_CODES.TERM_004 : GATE_V3_CODES.TERM_003, cycle.join(" -> "), circuit.location);
   }
 
