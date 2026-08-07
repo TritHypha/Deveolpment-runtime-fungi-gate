@@ -12,7 +12,7 @@
 // ============================================================================
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, existsSync, readFileSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { readdirSync, existsSync, readFileSync, mkdirSync, writeFileSync, rmSync, statSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -612,16 +612,85 @@ test('the "nothing to find" claim is true — the tool self-locates from an unre
 
 test('the "nothing written" claim is true — a REAL spawned scan leaves the tree byte-identical', () => {
   // Stronger than the in-process self-test: a full child-process scan, tree snapshotted around it.
-  // Snapshot names + sizes of the package dir (where a stray temp/db would most likely land).
+  //
+  // ★ THIS TEST WAS NARROWER THAN ITS NAME. It used to snapshot readdirSync(packageDir) —
+  // TOP LEVEL ONLY, names plus file sizes — so a write into src/, bin/, tests/ or .graph/
+  // was invisible to it: the entry simply stayed "src|d". It also never watched the
+  // WORKING DIRECTORY, on the assumption that the package dir is "where a stray temp/db
+  // would most likely land". That assumption is exactly what failed for the sibling tool
+  // in subprojects/hypha, which writes its ~270 KB artifact into whatever directory the
+  // caller happens to stand in. A claim about writing nothing must watch where writes go,
+  // not where we expect them.
+  //
+  // Now: RECURSIVE over the package, plus an isolated scratch cwd, and — because a wider
+  // instrument that cannot detect anything is worse than a narrow one — the snapshot must
+  // first be PROVEN to see a nested write before any null result is believed.
   const dir = join(HERE, "..");
-  const snap = () => readdirSync(dir).sort().map((n) => {
-    try { const s = require("node:fs").statSync(join(dir, n)); return n + "|" + (s.isFile() ? s.size : "d"); }
-    catch { return n + "|?"; }
-  }).join(",");
-  const before = snap();
-  const r = runCli(["--scan", "full"]);
-  assert.notEqual(r.status, 2, "the scan could not run");
-  assert.equal(snap(), before, "a scan with no --out changed the package directory");
+
+  /** Recursive path+size snapshot. Directories are recorded so a new one is visible too. */
+  const snap = (root, withMtime, depth = 0) => {
+    const out = [];
+    let entries;
+    try { entries = readdirSync(root).sort(); } catch { return ["<unreadable:" + root + ">"]; }
+    for (const n of entries) {
+      if (n === "node_modules" || n === ".git") continue;
+      const p = join(root, n);
+      let s;
+      try { s = statSync(p); } catch { out.push(p + "|?"); continue; }
+      if (s.isDirectory()) { out.push(p + "|d"); if (depth < 6) out.push(...snap(p, withMtime, depth + 1)); }
+      else out.push(p + "|" + s.size + (withMtime ? "|" + s.mtimeMs : ""));
+    }
+    return out;
+  };
+  // The package tree is compared on path+size only. This checkout is shared with other
+  // sessions, and an mtime there would report someone else's edit as a passivity
+  // violation. The scratch cwd below is ours alone, so it gets mtime as well.
+  const snapPkg = () => snap(dir, false).join("\n");
+
+  // ── CONTROL: the snapshot must SEE a nested write ──────────────────────────────
+  // Without this, "nothing changed" would be indistinguishable from "nothing looked" —
+  // which is precisely the failure the previous version of this test shipped with.
+  const canary = join(dir, "src", ".passivity-canary.tmp");
+  const baseline = snapPkg();
+  let sawCanary = false;
+  try {
+    writeFileSync(canary, "x");
+    sawCanary = snapPkg() !== baseline;
+  } finally {
+    rmSync(canary, { force: true });
+  }
+  assert.ok(sawCanary,
+    "the snapshot did not detect a file written into src/ — the instrument is dead, so a clean result would prove nothing");
+  assert.equal(snapPkg(), baseline, "the control did not clean up after itself");
+
+  // ── MEASUREMENT: a real scan, from a cwd that is not the package ───────────────
+  const scratch = mkdtempSync(join(tmpdir(), "hypha-passivity-"));
+  try {
+    const beforePkg = snapPkg();
+    const beforeCwd = snap(scratch, true).join("\n");
+    const r = runCli(["--scan", "full"], { cwd: scratch });
+    assert.notEqual(r.status, 2, "the scan could not run");
+    assert.equal(snapPkg(), beforePkg, "a scan with no --out changed the package tree");
+    assert.equal(snap(scratch, true).join("\n"), beforeCwd,
+      "a scan with no --out wrote into the working directory");
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+test('the documented exception is real — --out actually writes, so "the only write" means something', () => {
+  // The companion to the test above. If --out wrote nothing either, a clean tree would
+  // only show the run did nothing at all, and the passivity result would be vacuous.
+  const scratch = mkdtempSync(join(tmpdir(), "hypha-out-"));
+  try {
+    const out = join(scratch, "report.txt");
+    const r = runCli(["--scan", "kind-coverage", "--out", out], { cwd: scratch });
+    assert.notEqual(r.status, 2, "the scan could not run");
+    assert.ok(existsSync(out), "--out is documented as the tool's one write, and it did not happen");
+    assert.ok(statSync(out).size > 0, "--out produced an empty file");
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
 });
 
 test("determinism — two scans agree, so no stale cache decides the answer", () => {
