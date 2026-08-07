@@ -98,6 +98,32 @@ flow collectEmail() -> String {
     girHash: "sha256:722b2464a4e01e6e4da8b6c0b3628a5c77b5efffc44f4f6d7ac9517b8eafdfe3",
     flows: 1,
   },
+  // ★ Added cycle 0142, closing one of the five declared gaps. Cycle 0141
+  // recorded `faultHandlers` as unreachable because no `on_*_fault` source
+  // existed anywhere in tests or docs/examples to copy — that was a fact about
+  // the CORPUS, not about the language. Reading `extractDeclaredFaultHandlers`
+  // gave the real shape: a `resilience { … }` block inside `contract { … }`.
+  //
+  // ⚠ The field is emitted ONLY when at least one handler is `declared`; a flow
+  // with no resilience block omits it entirely (same omitted-when-empty
+  // discipline as `circuits` and `proofs`). So this golden is also the pin that
+  // the whole 4-signal matrix is carried — the three undeclared signals appear
+  // with `source: "inferred-default"`, which is what lets an auditor tell "the
+  // author chose halt" from "nobody said, so halt".
+  "declared-fault-handler": {
+    source: `
+guarded flow readLedger(id: String) -> Result<String, Error>
+contract {
+  effects { database.read }
+  resilience { on_substrate_fault halt }
+}
+{
+  return Ok(id)
+}
+`,
+    girHash: "sha256:9e2560f5caa50ee197bca24c7e646bf6e843575d23acded6fb37b7834e8b99b2",
+    flows: 1,
+  },
 });
 
 // ★ The corpus's own scope, declared. Without this a golden could be deleted
@@ -106,8 +132,8 @@ flow collectEmail() -> String {
 // and a NEW GIRFlow field arriving is visible here too.
 const EXERCISED_FIELDS = Object.freeze([
   "allowedEffectsMask", "audit", "capabilities", "contract", "effects",
-  "execution", "intent", "name", "paramTypes", "protected_values", "proofs",
-  "qualifier",
+  "execution", "faultHandlers", "intent", "name", "paramTypes",
+  "protected_values", "proofs", "qualifier",
 ].sort());
 
 // ⚠ DECLARED GAP, not an oversight. These GIRFlow fields are carried by no
@@ -117,12 +143,13 @@ const EXERCISED_FIELDS = Object.freeze([
 //                                       not the default emit path
 //   target_affinity                   — an effect-derived hint; a two-effect
 //                                       contract did not trigger it
-//   faultHandlers                     — no `on_timeout`-style source exists
-//                                       anywhere in tests or docs/examples to
-//                                       copy, and inventing syntax to reach a
-//                                       field is how a golden ends up pinning
-//                                       a parse error
 // Recorded so the hole is a known hole. Closing any of them is a real task.
+//
+// ✅ `faultHandlers` was on this list in cycle 0141 and came OFF it in 0142.
+// The entry said no source existed "anywhere in tests or docs/examples to
+// copy" — true, and it described the CORPUS rather than the language. Reading
+// the extractor gave the syntax in one step. A gap recorded as "unreachable"
+// deserves one look at the enforcement point before it is believed.
 
 function girOf(source, name) {
   const parsed = parseProgram(source, `${name}.fungi`);
