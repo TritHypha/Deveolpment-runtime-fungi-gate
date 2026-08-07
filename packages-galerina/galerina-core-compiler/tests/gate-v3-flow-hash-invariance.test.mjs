@@ -72,7 +72,57 @@ pure flow double(n: Int) -> Int {
     girHash: "sha256:2a03b297e3d63eed0698f26d2096b5275effaf46273b64ef08ce5843a83e3371",
     flows: 2,
   },
+  // ★ Added cycle 0141, and it is the ONLY addition that earned a place. The
+  // exit review called the 3-program corpus a GAP, so three candidates were
+  // measured against the fields the corpus already exercises — not chosen on
+  // plausibility. Two were rejected by that measurement:
+  //
+  //   `secure flow … intent "…"`     → adds NOTHING: `qualifier` and `intent`
+  //                                     are already exercised. A different
+  //                                     qualifier VALUE is not a new field, and
+  //                                     a flow-path leak does not care which
+  //                                     keyword a flow was declared with.
+  //   multi-effect `contract { … }`  → adds NOTHING: `contract` and `effects`
+  //                                     already exercised.
+  //
+  // Both "felt" governance-adjacent, which is exactly why they were measured
+  // rather than trusted. Adding them would have been three more magic numbers
+  // pinning nothing new.
+  "protected-value": {
+    source: `
+flow collectEmail() -> String {
+  let email: protected Email = "a@example.com"
+  return "ok"
+}
+`,
+    girHash: "sha256:722b2464a4e01e6e4da8b6c0b3628a5c77b5efffc44f4f6d7ac9517b8eafdfe3",
+    flows: 1,
+  },
 });
+
+// ★ The corpus's own scope, declared. Without this a golden could be deleted
+// and coverage would shrink silently — the corpus would still be "all green"
+// while guarding less. Pinning the set means narrowing it is a deliberate act,
+// and a NEW GIRFlow field arriving is visible here too.
+const EXERCISED_FIELDS = Object.freeze([
+  "allowedEffectsMask", "audit", "capabilities", "contract", "effects",
+  "execution", "intent", "name", "paramTypes", "protected_values", "proofs",
+  "qualifier",
+].sort());
+
+// ⚠ DECLARED GAP, not an oversight. These GIRFlow fields are carried by no
+// program in this corpus, so a G7 leak into one of them would go unseen here:
+//   tensors · typedArrayLoweringPlan  — need tensor syntax
+//   executionPlan                     — only present via buildExecutionPlan,
+//                                       not the default emit path
+//   target_affinity                   — an effect-derived hint; a two-effect
+//                                       contract did not trigger it
+//   faultHandlers                     — no `on_timeout`-style source exists
+//                                       anywhere in tests or docs/examples to
+//                                       copy, and inventing syntax to reach a
+//                                       field is how a golden ends up pinning
+//                                       a parse error
+// Recorded so the hole is a known hole. Closing any of them is a real task.
 
 function girOf(source, name) {
   const parsed = parseProgram(source, `${name}.fungi`);
@@ -133,6 +183,28 @@ test("★ the two fields canonicalisation strips are the ONLY ones that may move
   const withStripped = { ...base, generatedAt: "2030-01-01T00:00:00.000Z", girHash: `sha256:${"0".repeat(64)}` };
   assert.equal(computeGIRHash(withStripped), baseHash,
     "generatedAt and girHash must be stripped before hashing, or no golden could ever be stable");
+});
+
+test("★ the corpus's field coverage is pinned — narrowing it must be deliberate", () => {
+  // What the whole corpus actually exercises, measured the same way the
+  // expansion decision was: a field counts only if PRESENT and non-empty.
+  const covered = new Set();
+  for (const [name, entry] of Object.entries(CORPUS)) {
+    for (const flow of girOf(entry.source, name).flows) {
+      for (const [key, value] of Object.entries(flow)) {
+        if (value === undefined || value === null) continue;
+        if (Array.isArray(value) && value.length === 0) continue;
+        if (value instanceof Map && value.size === 0) continue;
+        if (typeof value === "object" && !Array.isArray(value) && !(value instanceof Map)
+          && Object.keys(value).length === 0) continue;
+        if (value === 0 || value === "" || value === false) continue;
+        covered.add(key);
+      }
+    }
+  }
+  assert.deepEqual([...covered].sort(), EXERCISED_FIELDS,
+    "the corpus now exercises a different field set. If a golden was removed, coverage SHRANK — say why. " +
+    "If a new GIRFlow field appeared, decide whether a golden should carry it before adding it here.");
 });
 
 test("★ the hash is stable across repeated emission, not just repeated hashing", () => {
