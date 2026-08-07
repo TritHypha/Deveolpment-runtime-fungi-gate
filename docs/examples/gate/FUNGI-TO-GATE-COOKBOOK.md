@@ -296,6 +296,38 @@ substitutes for the other.
   transform and let the transform take the narrowed type; that way the
   correction lives in the contract rather than in a reviewer's memory.
 
+### 7a. "Rejected" and "never checked" are two terminals, not one
+
+A validator returns one refusal value for two opposite facts:
+
+| | the input was rejected | the validator never ran |
+|---|---|---|
+| what happened | the check ran and said no | the check was refused, disabled, or unavailable |
+| the input | was examined | was **never examined** |
+| the right response | reject this request | **every request on this path is unvalidated** |
+| how often | routine, per request | a deployment-wide condition |
+
+A caller that folds both into "reject" is correct per request and silently catastrophic in
+aggregate — no input has been validated since deploy, and the only symptom is a rejection
+rate that reads as user error. The fail-open is not instead of the gate; it is **underneath**
+it, where nothing distinguishes refused input from an absent validator.
+
+Give them **separate terminals**. A terminal is a node, and the checker reads nodes:
+
+```text
+  [validate :: app.validate.email@1.0.0]
+WIRES
+  validate.allow   -> store.value
+  validate.deny    -> DENY.malformed          # the check ran and refused
+  validate.veto    -> DENY.validator_refused  # the check never ran
+  validate.unknown -> DENY.undecided          # collapsed; never reaches store
+```
+
+Wiring `deny` and `veto` to one terminal is still allowed — but now it is **visible**, one
+line in a diagram rather than a branch buried in a caller. That visibility is the whole
+purchase: a circuit cannot tell you a pattern is correct, only that its answer was not
+ignored.
+
 ## 8. Effects — compose from the canonical set, never mint a name
 
 `.gate` does not own the effect vocabulary. `GATE-SEM-012` checks every declared
