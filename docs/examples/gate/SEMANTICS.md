@@ -277,6 +277,34 @@ An implementation conforms when, for every shipped example and fixture registry
 in this directory, it produces **the same set of diagnostic codes** as the
 specification requires — no more and no fewer.
 
+### 8.1 ★ The reporting model — staged tiers, complete within a tier
+
+"The same set of codes" is not decidable without saying **how codes
+accumulate**. This clause was added after the conformance vector set found the
+ambiguity on its first run: two vectors disagreed with the reference, and
+adjudication showed the **specification** was silent, not that either
+implementation was wrong.
+
+> **Tiers are staged: a tier that refuses stops the tiers after it.**
+> **Within a tier, every applicable code is reported.**
+
+The tier order is the one §1–§6 are written in: parse → registry → resolve →
+wire → term/auth/live → semantic.
+
+Two consequences a conforming implementation must reproduce:
+
+- A circuit with an unused parameter reports the wire-tier code **alone**; the
+  liveness code that would also have applied is never reached, because the wire
+  tier refused first.
+- An empty type catalogue reports **both** resolve-tier codes together, because
+  both belong to the tier that refused.
+
+**Why staged rather than exhaustive.** A later tier reasons over a structure the
+earlier tier just declared invalid; running it anyway produces diagnostics
+derived from a false premise — the same reason acyclicity is asserted before any
+dominator reasoning (§6). An implementation that reports every code from every
+tier is not being more helpful; it is reporting conclusions it has no basis for.
+
 Two properties a conforming verifier must have, both learned from defects:
 
 - **Refusals are diagnostics.** Any input, however hostile, yields a code. A
