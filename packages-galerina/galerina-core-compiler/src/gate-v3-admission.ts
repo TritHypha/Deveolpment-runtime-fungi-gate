@@ -91,33 +91,32 @@ export interface AdmissionSeams {
 const sha256 = (bytes: Uint8Array): string => `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 
 /**
- * Build the admission statement for one (source, registry, circuit, proofs,
- * target). Fails closed: any missing binding refuses with a GATE-ADMIT code.
+ * G7.2 — check an admission statement's BINDINGS against the artifacts in hand.
  *
- * ★ THE VERDICT IS COMPUTED, NOT ACCEPTED. There is deliberately no verdict
- * parameter: `admitted` is derivable — verification produced zero errors and
- * no proof FAILED — and an input field would let a caller hand a forged
- * verdict to the signer. A proof with status `missing` does not block: it
- * means the obligation does not exist for this drawing (no zone types → no
- * zone proof), and refusing on it would demand proofs of properties the
- * circuit does not have. The KAT pins both directions.
- */
-/**
- * G7.2 — verify an admission statement against the artifacts IN HAND.
- * Verification only; no issuance, no signatures (the wrapping envelope's
- * signature and suite checks are the release-evidence layer's existing job —
- * this function answers the question that layer cannot: is the statement
- * ABOUT these exact artifacts?).
+ * 🔴 THIS IS HALF THE CHECK, AND THE NAME SAYS SO ON PURPOSE. It answers
+ * "is this statement ABOUT these exact artifacts?" — nothing more. It does NOT
+ * establish that anyone signed the statement, or that whoever did was
+ * authorised to. **A statement forged wholesale, never signed by anybody, has
+ * matching bindings and passes here.** That is not a defect; it is the
+ * division of labour. Authenticity belongs to the release-evidence envelope
+ * layer, which already owns suites, keys, delegation and revocation.
+ *
+ * ⚠ RENAMED from `verifyAdmissionStatement` during the G7 exit review (cycle
+ * 0139), which reached for it as "the" verifier and got `ok: true` on a forged
+ * statement. The old name and an `ok` field promised the whole answer; the
+ * result field is now `bindingsMatch`, because no caller should be able to
+ * read this return value as "admitted". **Use `verifyGateAdmissionEnvelope` or
+ * `linkableFromAdmission` (scripts/lib/gate-admission-envelope.mjs) for the
+ * real question** — they run the envelope FIRST and this second.
  *
  * ★ EVERY comparison is against a value recomputed from what the caller holds,
  * never against the statement's own fields — a substituted envelope is
  * trivially self-consistent, which is exactly why binding 3 must be checked
  * against the circuit in hand (`ADMIT-009`) and not against itself.
  *
- * All applicable refusals are reported in one pass (§8.1 rule 1); `ok` is
- * true only for an authentic, matching, ADMITTED statement.
+ * All applicable refusals are reported in one pass (§8.1 rule 1).
  */
-export function verifyAdmissionStatement(
+export function verifyAdmissionBindings(
   statement: unknown,
   inHand: {
     readonly sourceBytes: Uint8Array;
@@ -127,7 +126,7 @@ export function verifyAdmissionStatement(
     readonly target: string;
   },
   seams: AdmissionSeams,
-): { readonly ok: boolean; readonly diagnostics: readonly ParseDiagnostic[] } {
+): { readonly bindingsMatch: boolean; readonly diagnostics: readonly ParseDiagnostic[] } {
   const diagnostics: ParseDiagnostic[] = [];
   const here = { file: "<admission>", line: 1, column: 1 } as const;
   const refuse = (entry: { code: string; name: string; message: string }, detail: string): void => {
@@ -142,7 +141,7 @@ export function verifyAdmissionStatement(
     || typeof s.circuitDigest !== "string" || !Array.isArray(s.proofs)
     || typeof s.target !== "string" || (s.verdict !== "admitted" && s.verdict !== "refused")) {
     refuse(GATE_V3_ADMISSION_CODES.ADMIT_010, String((s as { kind?: unknown } | null)?.kind ?? typeof statement));
-    return { ok: false, diagnostics: Object.freeze(diagnostics) };
+    return { bindingsMatch: false, diagnostics: Object.freeze(diagnostics) };
   }
 
   if (sha256(inHand.sourceBytes) !== s.sourceDigest) {
@@ -172,9 +171,26 @@ export function verifyAdmissionStatement(
     refuse(GATE_V3_ADMISSION_CODES.ADMIT_011, `verdict '${s.verdict}'`);
   }
 
-  return { ok: diagnostics.length === 0, diagnostics: Object.freeze(diagnostics) };
+  return { bindingsMatch: diagnostics.length === 0, diagnostics: Object.freeze(diagnostics) };
 }
 
+/**
+ * Build the admission statement for one (source, registry, circuit, proofs,
+ * target). Fails closed: any missing binding refuses with a GATE-ADMIT code.
+ *
+ * ★ THE VERDICT IS COMPUTED, NOT ACCEPTED. There is deliberately no verdict
+ * parameter: `admitted` is derivable — verification produced zero errors and
+ * no proof FAILED — and an input field would let a caller hand a forged
+ * verdict to the signer. A proof with status `missing` does not block: it
+ * means the obligation does not exist for this drawing (no zone types → no
+ * zone proof), and refusing on it would demand proofs of properties the
+ * circuit does not have. The KAT pins both directions.
+ *
+ * ⚠ Building a statement is NOT admitting one: this returns an unsigned
+ * assertion, and nothing downstream may treat it as authority until the
+ * envelope layer has signed it and `linkableFromAdmission` has minted a
+ * linkable from it.
+ */
 export function buildAdmissionStatement(
   input: {
     readonly sourceBytes: Uint8Array;

@@ -20,7 +20,7 @@ import {
   circuitProofs,
   lowerCircuitToGIR,
   buildAdmissionStatement,
-  verifyAdmissionStatement,
+  verifyAdmissionBindings,
   dispatchGateSource,
 } from "../dist/index.js";
 
@@ -190,17 +190,17 @@ const codesOf = (r) => r.diagnostics.map((d) => d.code).sort();
 
 test("verify: the clean statement verifies — the master negative control", () => {
   const { statement, inHand } = admitted();
-  const r = verifyAdmissionStatement(statement, inHand, seams);
+  const r = verifyAdmissionBindings(statement, inHand, seams);
   assert.deepEqual(codesOf(r), []);
-  assert.equal(r.ok, true);
+  assert.equal(r.bindingsMatch, true);
 });
 
 test("verify: TAMPER — one flipped source byte in hand refuses ADMIT-005", () => {
   const { statement, inHand } = admitted();
   const bytes = Uint8Array.from(inHand.sourceBytes);
   bytes[bytes.length - 2] ^= 1;
-  const r = verifyAdmissionStatement(statement, { ...inHand, sourceBytes: bytes }, seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(statement, { ...inHand, sourceBytes: bytes }, seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-005"]);
 });
 
@@ -208,23 +208,23 @@ test("verify: WRONG REGISTRY — a different catalogue in hand refuses ADMIT-006
   const { statement, inHand } = admitted();
   const other = structuredClone(REGISTRY_VALUE);
   other.components[0].implementationDigest = `sha256:${"b".repeat(64)}`;
-  const r = verifyAdmissionStatement(statement, { ...inHand, registryCanonicalForm: other }, seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(statement, { ...inHand, registryCanonicalForm: other }, seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-006"]);
 });
 
 test("verify: WRONG TARGET — an envelope for target A does not admit target B (ADMIT-007)", () => {
   const { statement, inHand } = admitted();
-  const r = verifyAdmissionStatement(statement, { ...inHand, target: "wasm32-other" }, seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(statement, { ...inHand, target: "wasm32-other" }, seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-007"]);
 });
 
 test("verify: MISSING PROOF — a deleted proof entry refuses ADMIT-008", () => {
   const { statement, inHand } = admitted();
   const gutted = { ...statement, proofs: statement.proofs.slice(1) };
-  const r = verifyAdmissionStatement(gutted, inHand, seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(gutted, inHand, seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-008"]);
 });
 
@@ -234,8 +234,8 @@ test("verify: FORGED PROOF — a status rewritten to satisfied disagrees with re
     ...statement,
     proofs: statement.proofs.map((p) => (p.status === "missing" ? { ...p, status: "satisfied" } : p)),
   };
-  const r = verifyAdmissionStatement(forged, inHand, seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(forged, inHand, seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-008"]);
 });
 
@@ -247,8 +247,8 @@ test("verify: SUBSTITUTION — an internally consistent statement for a DIFFEREN
   const otherSource = SOURCE.replace("CIRCUIT probe(", "CIRCUIT other(");
   const otherInput = inputsFor(otherSource, REGISTRY_VALUE);
   assert.equal(buildAdmissionStatement(otherInput, seams).ok, true, "the substitute is itself admissible");
-  const r = verifyAdmissionStatement(statement, inHandOf(otherInput), seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(statement, inHandOf(otherInput), seams);
+  assert.equal(r.bindingsMatch, false);
   // The SOURCE differs too (the name is in the bytes), so tamper co-reports;
   // the load-bearing assertion is that ADMIT-009 names the substitution
   // DISTINCTLY — §3.1: two attacks needing different responses, two codes.
@@ -263,16 +263,35 @@ test("verify: an authentic statement whose verdict is REFUSED does not admit (AD
   const input = inputsFor(SOURCE, badRegistry);
   const built = buildAdmissionStatement(input, seams);
   assert.equal(built.ok && built.statement.verdict === "refused", true);
-  const r = verifyAdmissionStatement(built.statement, inHandOf(input), seams);
-  assert.equal(r.ok, false);
+  const r = verifyAdmissionBindings(built.statement, inHandOf(input), seams);
+  assert.equal(r.bindingsMatch, false);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-011"]);
+});
+
+test("★ verify: a FORGED statement has matching bindings — this check is half the answer, by design", () => {
+  // The G7 exit review reached for this function as "the" verifier and got a
+  // pass on a statement nobody ever signed. That is correct behaviour and a
+  // dangerous name, both fixed in cycle 0139: `verifyAdmissionBindings`, and a
+  // `bindingsMatch` field no caller can read as "admitted".
+  //
+  // This KAT keeps the boundary visible. If someone later makes this function
+  // "safer" by having it check signatures, they must delete this test — and
+  // deleting it is the moment to notice they are duplicating the envelope
+  // layer's job, which is the one thing the G7 ruling forbade.
+  const { statement, inHand } = admitted();
+  const forged = { ...statement, verifier: { version: "attacker", ruleSet: "none" } };
+  const r = verifyAdmissionBindings(forged, inHand, seams);
+  assert.equal(r.bindingsMatch, true,
+    "bindings match because they DO match — authenticity is not this function's question");
+  assert.deepEqual(r.diagnostics, [],
+    "and it reports nothing, because nothing it checks is wrong");
 });
 
 test("verify: a non-statement refuses ADMIT-010 and reads nothing else", () => {
   const { inHand } = admitted();
   for (const junk of [null, 42, "statement", { kind: "gate-v3-admission.v2" }, {}]) {
-    const r = verifyAdmissionStatement(junk, inHand, seams);
-    assert.equal(r.ok, false);
+    const r = verifyAdmissionBindings(junk, inHand, seams);
+    assert.equal(r.bindingsMatch, false);
     assert.deepEqual(codesOf(r), ["GATE-ADMIT-010"]);
   }
 });
@@ -281,7 +300,7 @@ test("verify: all applicable refusals report in ONE pass (§8.1 rule 1)", () => 
   const { statement, inHand } = admitted();
   const bytes = Uint8Array.from(inHand.sourceBytes);
   bytes[0] ^= 1;
-  const r = verifyAdmissionStatement(statement, { ...inHand, sourceBytes: bytes, target: "wasm32-other" }, seams);
+  const r = verifyAdmissionBindings(statement, { ...inHand, sourceBytes: bytes, target: "wasm32-other" }, seams);
   assert.deepEqual(codesOf(r), ["GATE-ADMIT-005", "GATE-ADMIT-007"]);
 });
 

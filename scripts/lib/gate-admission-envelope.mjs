@@ -29,21 +29,6 @@ const compiler = await import(
   pathToFileURL(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist", "index.js")).href
 );
 
-/**
- * Verify a signed gate-admission envelope against the artifacts IN HAND.
- *
- * @param envelope the release-evidence envelope carrying an admission statement
- * @param options  the envelope layer's options (verified delegation, public
- *                 bundles, `at`, `isRevoked`) — `role` is pinned here and not
- *                 caller-choosable: this function answers exactly one question
- * @param inHand   { sourceBytes, registryCanonicalForm, circuitCanonicalForm,
- *                   proofs, target } — what the caller actually holds
- * @returns {{ ok: boolean, refusals: readonly string[], statement: object|null }}
- *   `ok` only when the signature verifies AND the statement is about these
- *   artifacts AND its verdict is admitted. Refusals carry the layer's own
- *   codes verbatim — envelope strings or GATE-ADMIT-* — so the two layers
- *   stay distinguishable in the report.
- */
 const KEY_ID = /^[0-9a-f]{16}$/u;
 const SIGNING_CONTEXT = "galerina.release.evidence.gate-admission.sig.v1";
 
@@ -126,6 +111,25 @@ export function issueGateAdmissionEnvelope(statement, signer, options = {}) {
   });
 }
 
+/**
+ * Verify a signed gate-admission envelope against the artifacts IN HAND.
+ *
+ * ★ THIS is the whole question — signature AND bindings, in that order. The
+ * compiler's `verifyAdmissionBindings` answers only the second half and passes
+ * a forged statement; use this, or `linkableFromAdmission`, never that alone.
+ *
+ * @param envelope the release-evidence envelope carrying an admission statement
+ * @param options  the envelope layer's options (verified delegation, public
+ *                 bundles, `at`, `isRevoked`) — `role` is pinned here and not
+ *                 caller-choosable: this function answers exactly one question
+ * @param inHand   { sourceBytes, registryCanonicalForm, circuitCanonicalForm,
+ *                   proofs, target } — what the caller actually holds
+ * @returns {{ ok: boolean, refusals: readonly string[], statement: object|null }}
+ *   `ok` only when the signature verifies AND the statement is about these
+ *   artifacts AND its verdict is admitted. Refusals carry the layer's own
+ *   codes verbatim — envelope strings or GATE-ADMIT-* — so the two layers
+ *   stay distinguishable in the report.
+ */
 export function verifyGateAdmissionEnvelope(envelope, options, inHand) {
   let verified;
   try {
@@ -137,11 +141,11 @@ export function verifyGateAdmissionEnvelope(envelope, options, inHand) {
     return Object.freeze({ ok: false, refusals: Object.freeze([String(error.message)]), statement: null });
   }
 
-  const result = compiler.verifyAdmissionStatement(verified.statement, inHand, {
+  const result = compiler.verifyAdmissionBindings(verified.statement, inHand, {
     canonicalBytes: canonicalReleaseEvidenceBytes,
   });
   return Object.freeze({
-    ok: result.ok,
+    ok: result.bindingsMatch,
     refusals: Object.freeze(result.diagnostics.map((d) => d.code)),
     statement: verified.statement,
   });
