@@ -328,6 +328,56 @@ line in a diagram rather than a branch buried in a caller. That visibility is th
 purchase: a circuit cannot tell you a pattern is correct, only that its answer was not
 ignored.
 
+### 7b. Convert, don't bless — authority as a wired input is not domination
+
+The natural way to draw "this may only run if authorised" is to wire the
+decision's allow arm into the privileged part:
+
+```text
+  filter.plan  -> execute.plan          # ← the payload route
+  gate.allow   -> execute.authority     # ← the authority route
+```
+
+That reads as governed and is **weaker than it looks.** `execute` is reachable
+by a path that never passed the gate; the authority is an *input it received*,
+not a *route it had to take*. Nothing in the drawing prevents a future wire from
+reaching it another way, and a reviewer's eye slides past because the word
+"authority" is right there.
+
+**Draw the transition instead.** Give the decision an output type that only it
+can produce, and make the privileged part demand that type:
+
+```text
+  ordered.plan -> gate.plan             # the plan enters the gate
+  gate.allow   -> execute.plan          # ← the ONLY producer of LivePlan
+```
+
+| | authority as an input | conversion |
+|---|---|---|
+| routes reaching the privileged part | any number | **exactly one** |
+| what stops a second one | review | the **type**, then `GATE-SEM-014` |
+| what a diagram shows | a token arriving | the path being the only path |
+
+Two mechanisms do the work together, and it is worth knowing which is which:
+
+- **Nominal typing** stops the obvious bypass. If `LivePlan` has one producer,
+  a wire from anywhere else is `GATE-WIRE-101` before any semantic pass runs.
+- **`GATE-SEM-014`** catches the case typing cannot: a semantic type with more
+  than one producer, or a part that names the type on a second port. Mark the
+  type `zone: "semantic"` and the transition `zoneGate: true`, and every
+  semantic part must be **dominated** by the gate and unreachable from its
+  refusal arms.
+
+Worked end to end in [`06-analytic-query.gate`](06-analytic-query.gate), which
+resolves clean through the production dispatcher — and whose test strips
+`zoneGate` from the contract to prove the clean resolution comes from the
+declaration rather than from luck.
+
+⚠ The same trap has a privacy twin, and it is easy to draw by accident: cutting
+the **evidence** while the payload goes straight to `OUT`. It looks careful and
+redacts the wrong artifact. `GATE-SEM-002`/`003` refuse it — route the value
+that actually crosses the boundary through the cut.
+
 ## 8. Effects — compose from the canonical set, never mint a name
 
 `.gate` does not own the effect vocabulary. `GATE-SEM-012` checks every declared
