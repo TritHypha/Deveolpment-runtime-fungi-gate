@@ -479,7 +479,78 @@ you the pattern is **correct**, does not cover **scanning** (finding a match
 inside a longer string — that is the engine's job, §5), and is **larger** than
 a pattern string. It removes classes of failure; it does not remove review.
 
-## 9 · Where this sits
+## 9 · Would writing the ENGINE in `.gate` make it more secure?
+
+**Mostly no** — and the question is worth answering carefully, because the
+instinct behind it is right and the conclusion it points at is not.
+
+### Why "rewrite the engine as a circuit" does not work
+
+A matching engine is a tight loop over characters with mutable state: an active
+thread set, bitset unions, a position, a latched span. `.gate` has **no
+expressions, no loops, no arithmetic, no mutable state** — by design, because
+those are exactly what would stop a circuit being auditable at a glance.
+
+So "the engine written in `.gate`" cannot mean what it sounds like. Every piece
+of real work would still be a component in another language, and the circuit
+would be a wrapper around them. That is **a diagram on top of the same code**,
+and it is worth being blunt about what a diagram does and does not buy:
+
+| improves | unchanged |
+|---|---|
+| which callers may reach the engine | the NFA simulation |
+| what its verdict routes to | class-membership tests |
+| whether a taint reaches a sink | bitset unions, position advance, span latching |
+| that a certificate was checked | **every place an engine's real bugs live** |
+
+★ **The general rule, stated once because it decides a lot of questions:**
+`.gate` secures the **perimeter** of a component, never its **interior**. A
+circuit proves *what may reach what*. It cannot prove *what a part does once
+reached* — that is the part's own tests' job, and no amount of wiring
+substitutes for them.
+
+⚠ And there is an active risk, not merely an absence of benefit. TriRegex's
+safety properties — no backtracking, bounded expansion, a cost certificate,
+`end()` collapsing fail-closed — belong to **its implementation and its tests**.
+Wrapping it in a circuit does not carry them anywhere; it adds a layer that
+*looks* like governance over a core that did not change. A component that
+appears governed and is not is worse than one that appears ungoverned, because
+the appearance is what people rely on.
+
+### What WOULD genuinely help — draw the admission, not the engine
+
+There is a real property here, and it needs no rewrite at all.
+
+The engine already has two separable steps: **compile** (which certifies a
+pattern or vetoes it) and **run**. Draw the boundary between them and one thing
+becomes provable that today is a convention:
+
+> **No pattern runs unless it was certified.**
+
+```text
+  [compile :: re.compile@1.0.0]        # produces a Certificate, or vetoes
+  [run     :: re.match@1.0.0]          # DEMANDS a Certificate
+WIRES
+  IN.pattern       -> compile.subject
+  compile.certified -> run.certificate  # the only producer of Certificate
+  compile.veto      -> DENY.pattern_refused
+  run.match         -> OUT.value
+  run.no            -> DENY.no_match
+```
+
+With `Certificate` as `construction: "canonical-only"` and zoned semantic, a
+part that runs an uncertified pattern is not *discouraged* — it is
+**unrepresentable**, and `GATE-SEM-014` says so if a second producer ever
+appears. That is §7b's *convert, don't bless* applied to the engine's own
+lifecycle, and it costs one drawing rather than a rewrite.
+
+### The answer in one line
+
+Drawing the **pattern** (§1–§3) and the **admission boundary** (above) are real
+security gains. Re-expressing the **matcher** as a circuit is not — it relocates
+code `.gate` still cannot see inside, and buys a layer to maintain.
+
+## 10 · Where this sits
 
 GateRegex is the **compile-time artifact**: the shape, the composed budget, the terminals,
 readable by eye. A streaming engine is the **run-time** side: no rewind, three-valued, a
