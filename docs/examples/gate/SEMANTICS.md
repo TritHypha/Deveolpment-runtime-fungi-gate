@@ -277,33 +277,45 @@ An implementation conforms when, for every shipped example and fixture registry
 in this directory, it produces **the same set of diagnostic codes** as the
 specification requires — no more and no fewer.
 
-### 8.1 ★ The reporting model — staged tiers, complete within a tier
+### 8.1 ⚠ OPEN — the reporting model is NOT yet specified
 
 "The same set of codes" is not decidable without saying **how codes
-accumulate**. This clause was added after the conformance vector set found the
-ambiguity on its first run: two vectors disagreed with the reference, and
-adjudication showed the **specification** was silent, not that either
-implementation was wrong.
+accumulate**, and this specification **does not yet say**. Until it does, §8
+determines conformance only for single-code cases.
 
-> **Tiers are staged: a tier that refuses stops the tiers after it.**
-> **Within a tier, every applicable code is reported.**
+**🔴 A retraction, recorded rather than quietly rewritten.** An earlier revision
+of this clause asserted a *staged* model — "a tier that refuses stops the tiers
+after it, and within a tier every applicable code is reported." That rule was
+**inferred from two observations** and is **false**. Extending the conformance
+vector set falsified it within one cycle:
 
-The tier order is the one §1–§6 are written in: parse → registry → resolve →
-wire → term/auth/live → semantic.
+| observation | verdict on the staged model |
+|---|---|
+| a decision missing its deny arm reports **`GATE-AUTH-001` + `GATE-RESOLVE-111`** | two different tiers, both reported — **staging refuted** |
+| an unbounded cycle reports **`GATE-TERM-003` + `GATE-SEM-001`** | `SEM-001` exists precisely to catch a cycle *reaching* the semantic tier — a deliberate **defence-in-depth backstop** that runs regardless |
+| an unused parameter reports the wire code alone | consistent with staging, but equally consistent with the liveness rule simply not applying |
 
-Two consequences a conforming implementation must reproduce:
+**What is actually established**, and all that may be relied on today:
 
-- A circuit with an unused parameter reports the wire-tier code **alone**; the
-  liveness code that would also have applied is never reached, because the wire
-  tier refused first.
-- An empty type catalogue reports **both** resolve-tier codes together, because
-  both belong to the tier that refused.
+1. Codes from **different tiers can co-occur**. An implementation must not
+   assume an earlier refusal suppresses a later one.
+2. Some rules are **deliberate backstops** (`GATE-SEM-001` names itself one)
+   and fire *because* an upstream refusal was bypassed. A model that suppressed
+   them would remove a safety net.
+3. **Severity is part of the answer.** `GATE-SEM-004` is a **warning**, not an
+   error — a conformance comparison that filters to errors will not see it, and
+   a comparison that ignores severity will disagree with one that does not.
 
-**Why staged rather than exhaustive.** A later tier reasons over a structure the
-earlier tier just declared invalid; running it anyway produces diagnostics
-derived from a false premise — the same reason acyclicity is asserted before any
-dominator reasoning (§6). An implementation that reports every code from every
-tier is not being more helpful; it is reporting conclusions it has no basis for.
+**What a conforming implementation should do meanwhile:** report every code it
+establishes, with its severity, and do not treat the absence of a later-tier
+code as meaningful. Deciding the model is a **design decision**, not something
+to be read off a sample — which is the whole lesson of this retraction.
+
+⚠ Conformance vectors whose expectation depends on the unsettled model are
+marked `pendingModel` in the vector set and are **excluded from the pass/fail
+count**. Encoding observed behaviour as if it were a rule would turn the vectors
+into a change-detector for one implementation — the exact failure they exist to
+avoid.
 
 Two properties a conforming verifier must have, both learned from defects:
 
