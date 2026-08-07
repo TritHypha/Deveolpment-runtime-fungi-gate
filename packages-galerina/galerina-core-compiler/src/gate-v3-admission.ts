@@ -33,12 +33,22 @@ import type { GateV3Registry } from "./gate-v3-registry.js";
 import type { GIRProof } from "./gir-emitter.js";
 import type { ParseDiagnostic } from "./parser.js";
 
-/** G7.1 refusal codes — statement construction fails closed. */
+/** G7.1 refusal codes — statement construction fails closed. G7.2 adds the
+ *  verification refusals, one code per DISTINGUISHABLE failure (§3.1): tamper
+ *  and substitution are different attacks needing different responses, so they
+ *  never share a code. */
 export const GATE_V3_ADMISSION_CODES = {
   ADMIT_001: { code: "GATE-ADMIT-001", name: "GATE_V3_ADMISSION_NO_TARGET", message: "admission requires a non-empty target; an admission is target-scoped, never universal" },
   ADMIT_002: { code: "GATE-ADMIT-002", name: "GATE_V3_ADMISSION_PROOFS_ABSENT", message: "admission requires the proof set; a circuit whose proofs were never evaluated cannot be admitted or refused, only rejected here" },
   ADMIT_003: { code: "GATE-ADMIT-003", name: "GATE_V3_ADMISSION_VERIFIER_UNIDENTIFIED", message: "admission requires the verifier version and rule-set identity; a verdict with no verifier identity cannot be re-checked" },
   ADMIT_004: { code: "GATE-ADMIT-004", name: "GATE_V3_ADMISSION_UNRESOLVED_COMPONENT", message: "admission requires every part's implementation digest; a part with no resolved contract cannot be bound" },
+  ADMIT_005: { code: "GATE-ADMIT-005", name: "GATE_V3_ADMISSION_SOURCE_TAMPERED", message: "source bytes in hand do not match the admitted source digest" },
+  ADMIT_006: { code: "GATE-ADMIT-006", name: "GATE_V3_ADMISSION_WRONG_REGISTRY", message: "registry in hand does not match the admitted registry digest; admission under one component catalogue is not admission under another" },
+  ADMIT_007: { code: "GATE-ADMIT-007", name: "GATE_V3_ADMISSION_WRONG_TARGET", message: "target in hand does not match the admitted target; a universal admission is not an admission" },
+  ADMIT_008: { code: "GATE-ADMIT-008", name: "GATE_V3_ADMISSION_PROOFS_DISAGREE", message: "statement proofs disagree with recomputation from the artifacts in hand" },
+  ADMIT_009: { code: "GATE-ADMIT-009", name: "GATE_V3_ADMISSION_SUBSTITUTED_CIRCUIT", message: "circuit in hand does not match the admitted circuit digest; the envelope is internally consistent but was issued for a different circuit" },
+  ADMIT_010: { code: "GATE-ADMIT-010", name: "GATE_V3_ADMISSION_NOT_A_STATEMENT", message: "value is not a gate-v3-admission.v1 statement" },
+  ADMIT_011: { code: "GATE-ADMIT-011", name: "GATE_V3_ADMISSION_VERDICT_NOT_ADMITTED", message: "statement is authentic and records a refusal; a refused admission does not become admissible by verifying" },
 } as const;
 
 /** The statement an admission envelope signs over. Bindings 1–8 of the ratified
@@ -92,6 +102,79 @@ const sha256 = (bytes: Uint8Array): string => `sha256:${createHash("sha256").upd
  * zone proof), and refusing on it would demand proofs of properties the
  * circuit does not have. The KAT pins both directions.
  */
+/**
+ * G7.2 — verify an admission statement against the artifacts IN HAND.
+ * Verification only; no issuance, no signatures (the wrapping envelope's
+ * signature and suite checks are the release-evidence layer's existing job —
+ * this function answers the question that layer cannot: is the statement
+ * ABOUT these exact artifacts?).
+ *
+ * ★ EVERY comparison is against a value recomputed from what the caller holds,
+ * never against the statement's own fields — a substituted envelope is
+ * trivially self-consistent, which is exactly why binding 3 must be checked
+ * against the circuit in hand (`ADMIT-009`) and not against itself.
+ *
+ * All applicable refusals are reported in one pass (§8.1 rule 1); `ok` is
+ * true only for an authentic, matching, ADMITTED statement.
+ */
+export function verifyAdmissionStatement(
+  statement: unknown,
+  inHand: {
+    readonly sourceBytes: Uint8Array;
+    readonly registryCanonicalForm: unknown;
+    readonly circuitCanonicalForm: unknown;
+    readonly proofs: readonly GIRProof[];
+    readonly target: string;
+  },
+  seams: AdmissionSeams,
+): { readonly ok: boolean; readonly diagnostics: readonly ParseDiagnostic[] } {
+  const diagnostics: ParseDiagnostic[] = [];
+  const here = { file: "<admission>", line: 1, column: 1 } as const;
+  const refuse = (entry: { code: string; name: string; message: string }, detail: string): void => {
+    diagnostics.push({ code: entry.code, name: entry.name, severity: "error", message: `${entry.message}: ${detail}`, location: here });
+  };
+
+  // Shape first, and fail closed on anything that is not the statement kind —
+  // the remaining checks would read fields off an arbitrary object.
+  const s = statement as Partial<GateV3AdmissionStatement> | null;
+  if (s === null || typeof s !== "object" || s.kind !== "gate-v3-admission.v1"
+    || typeof s.sourceDigest !== "string" || typeof s.registryDigest !== "string"
+    || typeof s.circuitDigest !== "string" || !Array.isArray(s.proofs)
+    || typeof s.target !== "string" || (s.verdict !== "admitted" && s.verdict !== "refused")) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_010, String((s as { kind?: unknown } | null)?.kind ?? typeof statement));
+    return { ok: false, diagnostics: Object.freeze(diagnostics) };
+  }
+
+  if (sha256(inHand.sourceBytes) !== s.sourceDigest) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_005, "sourceDigest");
+  }
+  if (sha256(seams.canonicalBytes(inHand.registryCanonicalForm)) !== s.registryDigest) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_006, "registryDigest");
+  }
+  if (sha256(seams.canonicalBytes(inHand.circuitCanonicalForm)) !== s.circuitDigest) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_009, "circuitDigest");
+  }
+  if (inHand.target !== s.target) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_007, `statement '${s.target}', in hand '${inHand.target}'`);
+  }
+
+  // Proofs: the statement's list must equal RECOMPUTATION — name for name,
+  // status for status, in the closed declared order. A deleted entry and a
+  // forged status both land here; both are the statement disagreeing with
+  // what the artifacts actually prove.
+  const recomputed = inHand.proofs.map((p) => `${p.name}=${p.status}`).join(",");
+  const claimed = (s.proofs as readonly GIRProof[]).map((p) => `${p?.name}=${p?.status}`).join(",");
+  if (recomputed !== claimed) {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_008, `recomputed [${recomputed}], statement [${claimed}]`);
+  }
+
+  if (s.verdict !== "admitted") {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_011, `verdict '${s.verdict}'`);
+  }
+
+  return { ok: diagnostics.length === 0, diagnostics: Object.freeze(diagnostics) };
+}
+
 export function buildAdmissionStatement(
   input: {
     readonly sourceBytes: Uint8Array;
