@@ -124,6 +124,29 @@ contract {
     girHash: "sha256:9e2560f5caa50ee197bca24c7e646bf6e843575d23acded6fb37b7834e8b99b2",
     flows: 1,
   },
+  // ★ Added cycle 0143. ONE program closes THREE declared gaps — `tensors`,
+  // `typedArrayLoweringPlan` and `target_affinity` — because the last is
+  // inferred from the first. It is deliberately the COMBINED case: a
+  // photonic-compatible tensor AND the `ai.inference` effect, so the affinity
+  // is the merged value (`photonic` unshifted in front of `npu, gpu, cpu`).
+  // Either trigger alone would pin a simpler shape; the merge exercises both
+  // branches of `inferTargetAffinity` and their ordering in one hash.
+  //
+  // An `ai.inference`-only source was measured and NOT added: it introduces no
+  // field this one lacks, and cycle 0141's rule stands — a golden that widens
+  // no coverage is a magic number.
+  "tensor-and-inference": {
+    source: `
+guarded flow embedAndClassify(text: String) -> Result<Int, Error>
+contract { effects { ai.inference } }
+{
+  let embedding: Tensor<Float32, [1, 768]> = EmbeddingModel.embed(text)
+  return Ok(1)
+}
+`,
+    girHash: "sha256:841cb4eba06a519026b3cc9bef149e96c834cbf79e03e4bccda301fbfcba8f82",
+    flows: 1,
+  },
 });
 
 // ★ The corpus's own scope, declared. Without this a golden could be deleted
@@ -133,16 +156,18 @@ contract {
 const EXERCISED_FIELDS = Object.freeze([
   "allowedEffectsMask", "audit", "capabilities", "contract", "effects",
   "execution", "faultHandlers", "intent", "name", "paramTypes",
-  "protected_values", "proofs", "qualifier",
+  "protected_values", "proofs", "qualifier", "target_affinity", "tensors",
+  "typedArrayLoweringPlan",
 ].sort());
 
-// ⚠ DECLARED GAP, not an oversight. These GIRFlow fields are carried by no
-// program in this corpus, so a G7 leak into one of them would go unseen here:
-//   tensors · typedArrayLoweringPlan  — need tensor syntax
-//   executionPlan                     — only present via buildExecutionPlan,
-//                                       not the default emit path
-//   target_affinity                   — an effect-derived hint; a two-effect
-//                                       contract did not trigger it
+// ⚠ ONE field remains uncovered, and it is OUT OF SCOPE BY DESIGN rather than
+// missing — verified at the enforcement point (cycle 0143), not inferred from
+// its absence:
+//   executionPlan  — `buildExecutionPlan` is a SEPARATE exported stage
+//                    (gir-emitter.ts) called by `runtime.ts`, never by
+//                    `emitGIR`. No source reaching this corpus can populate it,
+//                    because it belongs to a later pipeline stage. A golden
+//                    here could not guard it; a runtime-stage test must.
 // Recorded so the hole is a known hole. Closing any of them is a real task.
 //
 // ✅ `faultHandlers` was on this list in cycle 0141 and came OFF it in 0142.
