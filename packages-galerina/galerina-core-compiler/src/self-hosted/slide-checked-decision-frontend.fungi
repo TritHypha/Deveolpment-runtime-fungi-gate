@@ -97,6 +97,161 @@ contract { intent { "Fail closed without preserving partial receipt authority." 
   }
 }
 
+// F-05 parity: one lowercase-hex character (0-9 a-f), by exact enumeration.
+pure flow slideCheckedDecisionIsLowerHexChar(c: Char) -> Bool
+contract { intent { "Admit exactly the lowercase hexadecimal alphabet." } }
+{
+  if c.isDigit() { return true }
+  let t: String = c.toString()
+  if t == "a" or t == "b" or t == "c" or t == "d" or t == "e" or t == "f" {
+    return true
+  }
+  return false
+}
+
+// F-05 parity: a 64-character lowercase-hex digest (the independent validator's
+// HASH form) — length alone admitted uppercase and non-hex before this fix.
+pure flow slideCheckedDecisionIsLowerHex64(value: String) -> Bool
+contract { intent { "Require canonical lowercase 64-hex digest form." } }
+{
+  if value.length() != 64 { return false }
+  mut i: Int = 0
+  while i < 64 {
+    let opt: Option<Char> = value.charAt(i)
+    match opt {
+      None => { return false }
+      Some(c) => {
+        if slideCheckedDecisionIsLowerHexChar(c) == false { return false }
+      }
+    }
+    i = i + 1
+  }
+  return true
+}
+
+// F-05 parity: identifier form [A-Za-z_][A-Za-z0-9_]{0,maxLen-1}.
+pure flow slideCheckedDecisionIsIdentifierName(value: String, maxLen: Int) -> Bool
+contract { intent { "Require identifier-shaped names, never free text." } }
+{
+  if value.length() < 1 or value.length() > maxLen { return false }
+  mut i: Int = 0
+  while i < value.length() {
+    let opt: Option<Char> = value.charAt(i)
+    match opt {
+      None => { return false }
+      Some(c) => {
+        let t: String = c.toString()
+        if c.isLetter() == false and c.isDigit() == false and t != "_" {
+          return false
+        }
+        if i == 0 and c.isDigit() { return false }
+      }
+    }
+    i = i + 1
+  }
+  return true
+}
+
+// F-05 parity: one lowercase-alphanumeric character.
+pure flow slideCheckedDecisionIsLowerAlnumChar(c: Char) -> Bool
+contract { intent { "Admit lowercase letters and digits only." } }
+{
+  if c.isDigit() { return true }
+  if c.isLetter() == false { return false }
+  let t: String = c.toString()
+  return t == t.toLower()
+}
+
+// F-05 parity: canonical identity tail — first char lowercase-alphanumeric, the
+// rest lowercase-alphanumeric or the admitted punctuation, walked from `start`.
+pure flow slideCheckedDecisionIsCanonicalTail(
+  value: String,
+  start: Int,
+  allowDash: Bool,
+  allowDot: Bool,
+) -> Bool
+contract { intent { "Require canonical lowercase identity tails after a fixed prefix." } }
+{
+  let tail: Int = value.length() - start
+  if tail < 1 or tail > 64 { return false }
+  mut i: Int = start
+  while i < value.length() {
+    let opt: Option<Char> = value.charAt(i)
+    match opt {
+      None => { return false }
+      Some(c) => {
+        let t: String = c.toString()
+        mut ok: Bool = slideCheckedDecisionIsLowerAlnumChar(c)
+        if i > start and allowDash and t == "-" { ok = true }
+        if i > start and allowDot and t == "." { ok = true }
+        if ok == false { return false }
+      }
+    }
+    i = i + 1
+  }
+  return true
+}
+
+// F-05 parity: package identity @galerina/[a-z0-9][a-z0-9-]{0,63}.
+pure flow slideCheckedDecisionIsPackageId(value: String) -> Bool
+contract { intent { "Require the canonical package identity pattern." } }
+{
+  if value.startsWith("@galerina/") == false { return false }
+  return slideCheckedDecisionIsCanonicalTail(value, 10, true, false)
+}
+
+// F-05 parity: profile identity galerina.package.[a-z0-9][a-z0-9.-]{0,63}.
+pure flow slideCheckedDecisionIsProfileId(value: String) -> Bool
+contract { intent { "Require the canonical profile identity pattern." } }
+{
+  if value.startsWith("galerina.package.") == false { return false }
+  return slideCheckedDecisionIsCanonicalTail(value, 17, true, true)
+}
+
+// F-05 parity: version [0-9]+.[0-9]+.[0-9]+ with an optional -suffix of
+// [0-9A-Za-z.-]. A small explicit state walk; refuses empty runs.
+pure flow slideCheckedDecisionIsVersion(value: String) -> Bool
+contract { intent { "Require canonical three-part version identities." } }
+{
+  if value.length() < 5 or value.length() > 64 { return false }
+  mut dots: Int = 0
+  mut run: Int = 0
+  mut i: Int = 0
+  mut inSuffix: Bool = false
+  while i < value.length() {
+    let opt: Option<Char> = value.charAt(i)
+    match opt {
+      None => { return false }
+      Some(c) => {
+        let t: String = c.toString()
+        if inSuffix {
+          if c.isLetter() == false and c.isDigit() == false and t != "." and t != "-" {
+            return false
+          }
+        }
+        if inSuffix == false {
+          if c.isDigit() { run = run + 1 }
+          if t == "." {
+            if run < 1 or dots >= 2 { return false }
+            dots = dots + 1
+            run = 0
+          }
+          if t == "-" {
+            if run < 1 or dots != 2 { return false }
+            inSuffix = true
+            if i == value.length() - 1 { return false }
+          }
+          if c.isDigit() == false and t != "." and t != "-" { return false }
+        }
+      }
+    }
+    i = i + 1
+  }
+  if inSuffix { return true }
+  if dots != 2 or run < 1 { return false }
+  return true
+}
+
 // Validate parameter order, identity and admitted scalar types.
 pure flow slideCheckedDecisionParametersValid(
   parameters: Array<SLIDECheckedDecisionParameter>,
@@ -111,6 +266,10 @@ contract { intent { "Require a closed ordered Bool/Verdict parameter surface." }
     if parameter.name.length() < 1 or parameter.name.length() > 64 {
       return false
     }
+    // F-05 parity: names are identifiers, never free text.
+    if slideCheckedDecisionIsIdentifierName(parameter.name, 64) == false {
+      return false
+    }
     if parameter.typeName != "Bool" and parameter.typeName != "Verdict" {
       return false
     }
@@ -122,7 +281,31 @@ contract { intent { "Require a closed ordered Bool/Verdict parameter surface." }
     }
     expected = expected + 1
   }
+  // F-05 parity: duplicate parameter names are refused (the independent
+  // validator's uniqueness rule; length checks alone admitted duplicates).
+  mut i: Int = 0
+  for left in parameters {
+    mut j: Int = 0
+    for right in parameters {
+      if j > i and left.name == right.name { return false }
+      j = j + 1
+    }
+    i = i + 1
+  }
   return true
+}
+
+// F-05 parity: the closed mapping-kind registry (the independent validator's
+// MAPPING_KINDS set) — length checks alone admitted any spelling.
+pure flow slideCheckedDecisionIsMappingKind(kind: String) -> Bool
+contract { intent { "Admit exactly the closed mapping-kind registry." } }
+{
+  if kind == "BOOLEAN_GUARD" { return true }
+  if kind == "BOOLEAN_ALLOW" { return true }
+  if kind == "K3_DENY" { return true }
+  if kind == "K3_AMBIG" { return true }
+  if kind == "K3_ALLOW" { return true }
+  return false
 }
 
 // Validate complete ordered source mappings without overlapping byte ranges.
@@ -138,6 +321,8 @@ contract { intent { "Require bounded monotonic instruction-to-source evidence." 
   for mapping in mappings {
     if mapping.instructionId != expected { return false }
     if mapping.kind.length() < 1 or mapping.kind.length() > 32 { return false }
+    // F-05 parity: the kind must be a member of the closed registry.
+    if slideCheckedDecisionIsMappingKind(mapping.kind) == false { return false }
     if mapping.startByte < previousEnd or mapping.startByte < 0 {
       return false
     }
@@ -161,17 +346,17 @@ contract { intent { "Validate a bounded candidate without releasing execution au
       "SLIDE-CDFRONT-001", "unknown receipt schema",
     )
   }
-  if receipt.frontendId != "@galerina/core-compiler" or receipt.frontendVersion.length() < 1 or receipt.frontendVersion.length() > 64 or receipt.languageEdition != 1 {
+  if receipt.frontendId != "@galerina/core-compiler" or receipt.frontendVersion.length() < 1 or receipt.frontendVersion.length() > 64 or receipt.languageEdition != 1 or slideCheckedDecisionIsVersion(receipt.frontendVersion) == false {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-002", "frontend identity or edition refused",
     )
   }
-  if receipt.packageId.length() < 1 or receipt.packageId.length() > 80 or receipt.profileId.length() < 1 or receipt.profileId.length() > 80 or receipt.flowName.length() < 1 or receipt.flowName.length() > 80 {
+  if receipt.packageId.length() < 1 or receipt.packageId.length() > 80 or receipt.profileId.length() < 1 or receipt.profileId.length() > 80 or receipt.flowName.length() < 1 or receipt.flowName.length() > 80 or slideCheckedDecisionIsPackageId(receipt.packageId) == false or slideCheckedDecisionIsProfileId(receipt.profileId) == false or slideCheckedDecisionIsIdentifierName(receipt.flowName, 80) == false {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-003", "package, profile, or flow identity refused",
     )
   }
-  if receipt.sourceNormalization != "UTF8_LF_V1" or receipt.sourceByteLength < 1 or receipt.sourceByteLength > 1048576 or receipt.sourceDigest.length() != 64 or receipt.semanticTokenDigest.length() != 64 {
+  if receipt.sourceNormalization != "UTF8_LF_V1" or receipt.sourceByteLength < 1 or receipt.sourceByteLength > 1048576 or slideCheckedDecisionIsLowerHex64(receipt.sourceDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.semanticTokenDigest) == false {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-004", "source identity or bound refused",
     )
@@ -186,12 +371,12 @@ contract { intent { "Validate a bounded candidate without releasing execution au
       "SLIDE-CDFRONT-006", "source mapping refused",
     )
   }
-  if receipt.decisionGraphCanonical.length() < 2 or receipt.decisionGraphCanonical.length() > 4096 or receipt.decisionGraphDigest.length() != 64 {
+  if receipt.decisionGraphCanonical.length() < 2 or receipt.decisionGraphCanonical.length() > 4096 or slideCheckedDecisionIsLowerHex64(receipt.decisionGraphDigest) == false {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-007", "decision graph refused",
     )
   }
-  if receipt.diagnosticDigest.length() != 64 or receipt.memoryPlanDigest.length() != 64 or receipt.effectPlanDigest.length() != 64 or receipt.failurePlanDigest.length() != 64 or receipt.capabilityPlanDigest.length() != 64 or receipt.producerGIRDigest.length() != 64 {
+  if slideCheckedDecisionIsLowerHex64(receipt.diagnosticDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.memoryPlanDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.effectPlanDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.failurePlanDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.capabilityPlanDigest) == false or slideCheckedDecisionIsLowerHex64(receipt.producerGIRDigest) == false {
     return refuseSLIDECheckedDecisionFrontend(
       "SLIDE-CDFRONT-008", "plan or producer evidence refused",
     )

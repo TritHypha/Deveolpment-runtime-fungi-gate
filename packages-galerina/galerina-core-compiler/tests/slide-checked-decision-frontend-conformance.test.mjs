@@ -175,12 +175,19 @@ const VECTORS = [
   ["V08_plan", (r) => ({ ...r, diagnosticDigest: "d".repeat(63) }), "SLIDE-CDFRONT-008", null, "plan digest length 63"],
   ["V09_det", (r) => ({ ...r, deterministic: false }), "SLIDE-CDFRONT-009", null, "determinism refused"],
   ["V09b_ref", (r) => ({ ...r, referenceOnly: false }), "SLIDE-CDFRONT-009", null, "reference boundary refused"],
-  // ---- the review's divergence vectors: candidate ACCEPTS, oracle domain REFUSES ----
-  ["V10_upper_hex", (r) => ({ ...r, sourceDigest: "A".repeat(64) }), "NONE", { verdict: "reject", why: "HASH requires lowercase hex; candidate checks length only" }, "review gap: digest form"],
-  ["V12_kind_banana", (r) => ({ ...r, mappings: [{ instructionId: 0, kind: "banana", startByte: 0, endByte: 120 }], instructionCount: 1 }), "NONE", { verdict: "reject", why: "MAPPING_KINDS is closed; candidate checks length only" }, "review gap: mapping kind"],
-  ["V13_pkg_pattern", (r) => ({ ...r, packageId: "Not Canonical Id" }), "NONE", { verdict: "reject", why: "PACKAGE_ID pattern; candidate checks length only" }, "review gap: identity pattern"],
-  ["V14_param_ident", (r) => ({ ...r, parameters: [{ index: 0, name: "not a name!", typeName: "Verdict" }, { index: 1, name: "flag", typeName: "Bool" }] }), "NONE", { verdict: "reject", why: "IDENTIFIER pattern; candidate checks length only" }, "review gap: param identifier"],
-  ["V11_dup_params", (r) => ({ ...r, parameters: [{ index: 0, name: "gate", typeName: "Verdict" }, { index: 1, name: "gate", typeName: "Bool" }] }), "NONE", null, "review gap (oracle LOGIC): duplicate names pass the candidate"],
+  // ---- the review's five divergence vectors: PARITY CLOSED — candidate now REFUSES each ----
+  ["V10_upper_hex", (r) => ({ ...r, sourceDigest: "A".repeat(64) }), "SLIDE-CDFRONT-004", { verdict: "reject", why: "HASH requires lowercase hex" }, "parity: digest form"],
+  ["V12_kind_banana", (r) => ({ ...r, mappings: [{ instructionId: 0, kind: "banana", startByte: 0, endByte: 120 }], instructionCount: 1 }), "SLIDE-CDFRONT-006", { verdict: "reject", why: "MAPPING_KINDS is closed" }, "parity: mapping kind"],
+  ["V13_pkg_pattern", (r) => ({ ...r, packageId: "Not Canonical Id" }), "SLIDE-CDFRONT-003", { verdict: "reject", why: "PACKAGE_ID pattern" }, "parity: identity pattern"],
+  ["V14_param_ident", (r) => ({ ...r, parameters: [{ index: 0, name: "not a name!", typeName: "Verdict" }, { index: 1, name: "flag", typeName: "Bool" }] }), "SLIDE-CDFRONT-005", { verdict: "reject", why: "IDENTIFIER pattern" }, "parity: param identifier"],
+  ["V11_dup_params", (r) => ({ ...r, parameters: [{ index: 0, name: "gate", typeName: "Verdict" }, { index: 1, name: "gate", typeName: "Bool" }] }), "SLIDE-CDFRONT-005", null, "parity: duplicate parameter names (oracle LOGIC rule)"],
+  // ---- parity additions: forms the oracle refuses that no vector previously drove ----
+  ["V25_profile_pattern", (r) => ({ ...r, profileId: "not.a.profile.v1" }), "SLIDE-CDFRONT-003", { verdict: "reject", why: "PROFILE_ID prefix" }, "parity: profile identity"],
+  ["V26_version_form", (r) => ({ ...r, frontendVersion: "one.two.three" }), "SLIDE-CDFRONT-002", { verdict: "reject", why: "VERSION pattern" }, "parity: version form"],
+  ["V27_nonhex_digest", (r) => ({ ...r, producerGIRDigest: "z".repeat(64) }), "SLIDE-CDFRONT-008", { verdict: "reject", why: "HASH rejects non-hex" }, "parity: non-hex plan digest"],
+  ["V28_flow_ident", (r) => ({ ...r, flowName: "not a flow!" }), "SLIDE-CDFRONT-003", { verdict: "reject", why: "IDENTIFIER for flowName" }, "parity: flow name identifier"],
+  ["V29_version_prerelease", (r) => ({ ...r, frontendVersion: "1.2.3-beta.1" }), "NONE", { verdict: "accept", why: "VERSION admits a prerelease suffix" }, "parity CONTROL: legal prerelease still ADMITTED"],
+  ["V30_kind_other_member", (r) => ({ ...r, mappings: [{ instructionId: 0, kind: "K3_AMBIG", startByte: 0, endByte: 120 }], instructionCount: 1 }), "NONE", { verdict: "accept", why: "K3_AMBIG is a registry member" }, "parity CONTROL: another legal kind still ADMITTED"],
   // ---- boundary vectors (both domains refuse or candidate refuses) ----
   ["V15_params_empty", (r) => ({ ...r, parameters: [] }), "SLIDE-CDFRONT-005", null, "no parameters"],
   ["V17_map_overlap", (r) => ({ ...r, mappings: [{ instructionId: 0, kind: KINDS[0], startByte: 0, endByte: 60 }, { instructionId: 1, kind: KINDS[0], startByte: 30, endByte: 90 }] }), "SLIDE-CDFRONT-006", null, "overlapping byte ranges"],
@@ -243,7 +250,16 @@ for (const [id, mutate, expectCandidate, domainCheck, note] of VECTORS) {
     if (domainCheck) {
       const receipt = mutate(baseReceipt());
       const rejects = [];
-      if (!DOMAIN.HASH.test(receipt.sourceDigest)) rejects.push("HASH:sourceDigest");
+      // EVERY digest field the oracle's receiptShapeValid runs HASH over — an incomplete
+      // sweep here makes the domain arm blind (caught by V27/V28 on their first run).
+      for (const key of [
+        "sourceDigest", "semanticTokenDigest", "decisionGraphDigest", "diagnosticDigest",
+        "memoryPlanDigest", "effectPlanDigest", "failurePlanDigest", "capabilityPlanDigest",
+        "producerGIRDigest",
+      ]) {
+        if (!DOMAIN.HASH.test(receipt[key])) rejects.push("HASH:" + key);
+      }
+      if (!DOMAIN.IDENTIFIER.test(receipt.flowName)) rejects.push("IDENTIFIER:flowName");
       if (!DOMAIN.PACKAGE_ID.test(receipt.packageId)) rejects.push("PACKAGE_ID");
       if (!DOMAIN.PROFILE_ID.test(receipt.profileId)) rejects.push("PROFILE_ID");
       if (!DOMAIN.VERSION.test(receipt.frontendVersion)) rejects.push("VERSION");
@@ -273,11 +289,16 @@ test("K3 three-state coverage — the verdict text preserves deny/unknown/allow 
   assert.equal(unknown?.value?.value, "0");
 });
 
-test("divergence ledger — the review's gaps hold in BOTH directions until parity work lands", () => {
-  // Candidate-accepts / oracle-refuses rows: V10, V12, V13, V14 (live), V11 (logic, review-cited).
-  // If the CANDIDATE later gains these checks, the vector tests above go red on failureId=NONE —
-  // the intended signal to rewrite the expectations AND re-argue parity. If SLIDE ever LOOSENS a
-  // pattern, the domainCheck arms above go red. Either direction of drift is loud.
-  const gapRows = VECTORS.filter(([, , exp, d]) => exp === "NONE" && (d === null || d.verdict === "reject"));
-  assert.equal(gapRows.length, 5, "exactly the review's five divergence vectors are tracked");
+test("PARITY LEDGER — zero candidate-accepts/oracle-refuses rows remain", () => {
+  // The invariant that replaces the divergence ledger: no vector may expect the CANDIDATE to
+  // admit (failureId NONE) a receipt the oracle DOMAIN rejects. Every such row was a review gap;
+  // all five are now closed, and this test refuses the reintroduction of a sixth.
+  const stillDivergent = VECTORS.filter(([, , exp, d]) => exp === "NONE" && d !== null && d.verdict === "reject");
+  assert.deepEqual(stillDivergent.map(([id]) => id), [],
+    "a vector expects the candidate to ADMIT what the oracle domain REFUSES — parity regression");
+  // And the reverse direction: every domain-clean control must still be admitted.
+  const cleanControls = VECTORS.filter(([, , exp, d]) => d !== null && d.verdict === "accept");
+  assert.ok(cleanControls.length >= 3, "keep discriminating accept-controls so the parity checks cannot be vacuously strict");
+  assert.deepEqual(cleanControls.filter(([, , exp]) => exp !== "NONE").map(([id]) => id), [],
+    "a domain-clean control is expected to be refused — the parity checks are over-strict");
 });
