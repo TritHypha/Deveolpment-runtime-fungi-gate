@@ -1,6 +1,6 @@
 # `.gate` diagnostic codes — the complete catalogue
 
-**96 codes.**
+**100 codes.**
 
 **GENERATED FILE — do not edit by hand.** Regenerate with:
 
@@ -119,7 +119,7 @@ Tier 2c — exact nominal wire typing. No generics, no implicit conversion; `GAT
 
 ## GATE-TERM-* (4)
 
-Tier 3a — termination: part-to-part cycles are refused unless every edge in the cycle carries a bound.
+Tier 3a — termination: a part-to-part cycle always refuses. TERM-003 (unbounded) unless some STEP of the cycle has every parallel wire bounded, then TERM-004 (annotated as bounded, pending a registered state contract and termination proof). SEMANTICS §4.
 
 | code | name | message |
 |---|---|---|
@@ -175,4 +175,15 @@ Tier 5 — the semantic passes over the GateGraph: privacy domination and separa
 | `GATE-SEM-012` | `GATE_V3_UNKNOWN_EFFECT_NAME` | effect name is not in the canonical effect vocabulary |
 | `GATE-SEM-013` | `GATE_V3_TAINT_REACHES_GOVERNED_SINK` | taint reaches a governed sink (an egress-class effect) without passing a declared cut |
 | `GATE-SEM-014` | `GATE_V3_SEMANTIC_ZONE_NOT_GATED` | a semantic-zone part is reachable without passing a zone gate's allow arm |
+
+## GATE-ADMIT-* (4)
+
+Tier 6 — G7 admission: building the statement an admission envelope signs over. Construction fails closed on any missing binding; the verdict is computed, never accepted as input. NOTE the G4 capability envelope (SEM-009/010) is a different surface — same word, different job.
+
+| code | name | message |
+|---|---|---|
+| `GATE-ADMIT-001` | `GATE_V3_ADMISSION_NO_TARGET` | admission requires a non-empty target; an admission is target-scoped, never universal |
+| `GATE-ADMIT-002` | `GATE_V3_ADMISSION_PROOFS_ABSENT` | admission requires the proof set; a circuit whose proofs were never evaluated cannot be admitted or refused, only rejected here |
+| `GATE-ADMIT-003` | `GATE_V3_ADMISSION_VERIFIER_UNIDENTIFIED` | admission requires the verifier version and rule-set identity; a verdict with no verifier identity cannot be re-checked |
+| `GATE-ADMIT-004` | `GATE_V3_ADMISSION_UNRESOLVED_COMPONENT` | admission requires every part's implementation digest; a part with no resolved contract cannot be bound |
 
