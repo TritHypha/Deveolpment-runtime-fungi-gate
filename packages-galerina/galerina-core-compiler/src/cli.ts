@@ -1043,8 +1043,30 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
     const girResult = emitGIR(parseResult.ast, parseResult.flows, effectResults);
     // #140: pass ast so the emitter can use real flow bodies instead of the Phase-25 fallback walker.
     // exportAllPure is deliberately omitted (default false) — that is a separate design decision.
-    const watModule = buildWATModuleFromGIR(girResult.gir, STDLIB_CAPABILITY_MAP, "wasm-standalone", parseResult.ast);
-    const watText = renderWAT(watModule);
+    //
+    // A CAPABILITY REFUSAL IS A DIAGNOSTIC, NOT A CRASH. The lowering guards
+    // (FUNGI-LAYOUT-001 and its siblings) signal an unsupported representation
+    // by THROWING, and this call site let the throw escape the CLI as a raw
+    // Node stack trace — the same shape GD-006 closed for `.gate`, where a
+    // 4,000-deep set surfaced a bare RangeError to the user. The refusal itself
+    // was always correct and fail-closed; what was missing is that it never
+    // reached anyone as a diagnostic on the production path.
+    //
+    // `continue`, matching the block above: a refused input contributes no WAT,
+    // and if every input is refused `watParts` is empty and nothing is written.
+    let watText: string;
+    try {
+      const watModule = buildWATModuleFromGIR(girResult.gir, STDLIB_CAPABILITY_MAP, "wasm-standalone", parseResult.ast);
+      watText = renderWAT(watModule);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const code = /\b(FUNGI-[A-Z0-9-]+-\d+)\b/.exec(message)?.[1] ?? "FUNGI-BACKEND-001";
+      process.stderr.write(
+        `[error] ${code}  ${filePath}\n  ${message}\n` +
+        `  This flow cannot target wasm-standalone. It remains runnable through the governed interpreter.\n`,
+      );
+      continue; // do NOT lower / write a module the target cannot faithfully represent
+    }
     watParts.push(`\n;; === ${filePath} ===\n${watText}`);
   }
 
@@ -1052,7 +1074,19 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
   // leave a runnable .wasm behind.
   if (watParts.length === 0) {
     process.stderr.write(`[error] no WASM emitted — all inputs were blocked by the production gate or unreadable (fail-closed).\n`);
-    return;
+    // 🔴 EXIT CODE, added 2026-08-07. This wrote the error and returned 0, so a
+    // build that refused EVERY input and produced NO artifact reported success —
+    // and `main` went on to print `PASS`. A CI pipeline gating on the exit
+    // status would have shipped a green on a build that emitted nothing.
+    //
+    // "Wrote the message" is not "reported the failure": the message goes to a
+    // human reading a terminal, the exit code goes to the machine deciding
+    // whether to proceed, and only one of those was told.
+    //
+    // `exit(1)` rather than `exitCode = 1` — the typed process shim this file
+    // uses exposes `exit` and not `exitCode`, and exiting here is correct
+    // anyway: there is nothing left to do and no artifact to clean up.
+    process.exit(1);
   }
 
   // For wasm-standalone, we emit a single combined WAT. If there are multiple
