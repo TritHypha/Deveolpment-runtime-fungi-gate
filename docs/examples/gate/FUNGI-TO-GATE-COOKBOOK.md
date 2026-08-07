@@ -222,6 +222,65 @@ case, and recognising it early is the cheapest possible answer.
 
 ---
 
+## 7. Border data — API input, database rows, and where sanitisation lives
+
+**The regex is not in the circuit, and that is the design.** Take email
+validation: checking `rawEmail` against a pattern is expression work — `.gate`
+has no expressions, so the regex lives inside a `.fungi` component
+(`validate.email`), and that component's own tests prove the pattern is right.
+What the circuit proves is the thing a regex never can: **that nothing routes
+around the validator.**
+
+The mechanism is the type ladder from recipe 2's contract side, applied at the
+boundary:
+
+- the raw type is `construction: "source"` — it may arrive from outside;
+- the validated type is `construction: "canonical-only"` — the only way to
+  hold one is to have been given it by its validator;
+- the privileged part **demands the validated type**.
+
+```
+@gate 3.0.0
+CIRCUIT create_patient(raw: RawEmail) -> Receipt
+  INTENT "Validate boundary input before any privileged use."
+  REQUIRES:
+    effect database.write
+  PARTS:
+    [validate :: app.validate.email@1.0.0]
+    [insert :: app.patient.insert@1.0.0]
+  WIRES:
+    IN.raw -> validate.raw
+    validate.value -> insert.email
+    insert.value -> OUT.value
+END
+```
+
+Measured through the production dispatcher, all three directions:
+
+| construction | verdict |
+|---|---|
+| raw → validator → privileged part | **CLEAN** |
+| raw wired straight into the privileged part | `GATE-WIRE-101` |
+| the validated type smuggled in as a circuit parameter | `GATE-WIRE-101` + `GATE-SEM-005` |
+
+**Database data is the same shape plus two declarations.** The reading
+component's contract carries its effect (`database.read`) — which the circuit's
+`REQUIRES:` envelope must cover (`GATE-SEM-009`), so a part cannot quietly
+touch the database — and `tainted: true` when the payload is sensitive, which
+hands governance to the egress fence: a declared cut must dominate egress
+(`GATE-SEM-002`) and removing every cut must disconnect taint from `OUT`
+(`GATE-SEM-003`).
+
+**Validation and redaction are different fences — keep them apart.** A mint is
+not a sanitizer: validating an email makes it well-*formed*, not
+non-*sensitive*. A validated `Email` flowing from a tainted read still has to
+pass the cut before egress. The construction fence and the cut fence share no
+state, by design.
+
+**The honest split, in one line:** the `.fungi` component proves the sanitiser
+is *correct*; the `.gate` circuit proves it is *unbypassable*. Neither proof
+substitutes for the other.
+
 ## What to reach for
 
 | you are looking at | draw a circuit? |
