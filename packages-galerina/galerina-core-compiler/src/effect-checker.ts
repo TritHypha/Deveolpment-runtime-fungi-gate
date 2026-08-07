@@ -7,7 +7,8 @@
 // Diagnostic codes: FUNGI-EFFECT-001..004 (compiler-diagnostics.md)
 // =============================================================================
 
-import { type AstNode, type AstNodeKind, type ParseDiagnostic, type FlowMeta, type SourceLocation } from "./parser.js";
+import { type AstNode, type ParseDiagnostic, type FlowMeta, type SourceLocation } from "./parser.js";
+import { isFlowDeclNamed } from "./flow-name.js";
 import { buildCallGraph, topoSort, detectCycle } from "@galerina/devtools-graph-algorithms";
 import { effectsToFlags, type EffectFlagsMask, EffectCheckerFlags, type EffectCheckerFlagsMask } from "./type-registry.js";
 import { getStdlibRequiredEffects, getStdlibModuleKind } from "./stdlib-registry.js";
@@ -1336,10 +1337,13 @@ function hasTransitiveEffect(
 // ---------------------------------------------------------------------------
 
 function findFlowNode(ast: AstNode, name: string): AstNode | undefined {
-  const kinds: AstNodeKind[] = ["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"];
-
+  // A governed flow parses to `governedFlowDecl` with an encoded value
+  // ("governed:<floor>:<name>"), so the old `kind ∈ SET && value === name` shape
+  // missed it twice and a governed flow was effect-checked as if it had NO body
+  // (observedEffects empty). `isFlowDeclNamed` decodes all five tiers, so a
+  // governed flow is now found and checked at least as strictly as a guarded one.
   function walk(node: AstNode): AstNode | undefined {
-    if (kinds.includes(node.kind) && node.value === name) {
+    if (isFlowDeclNamed(node, name)) {
       return node;
     }
     for (const child of node.children ?? []) {

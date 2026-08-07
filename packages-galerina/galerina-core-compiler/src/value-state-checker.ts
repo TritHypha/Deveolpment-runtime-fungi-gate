@@ -35,6 +35,7 @@
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
+import { decodeFlowDecl } from "./flow-name.js"; // Q2: governed-aware shadow-floor scan
 import { buildModuleAliasMap } from "./effect-checker.js"; // C1: resolve `let x = Module` aliases at sinks
 import { numericBaseType, BACKEND_UNLOWERABLE_SCALAR } from "./numeric-lowering.js";
 
@@ -2540,16 +2541,25 @@ function scanUnlowerableNumerics(root: AstNode): ValueStateDiagnostic[] {
 // fail-closed value-state gate (CWE-501; main confirmed-live through the CLI, bridge 0197). Fail-closed
 // FLOOR: reject the SHADOW at its DEFINITION. This single scan closes all 8 discharge sites BY CONSTRUCTION
 // (a shadow can't be defined clean, so isRedactCall/isSealCall can never match a user flow anywhere).
-// ⚠ Keep DECLASSIFIER_NAMES in sync with isRedactCall/isSealCall — a new declassifier verb added there
-// without adding it here re-opens the bypass. Interim until the durable `disclose` primitive lands
-// (effect + reserved keyword + intrinsic + typed return = unspoofable; VALUESTATE-011 then folds).
-const DECLASSIFIER_NAMES: ReadonlySet<string> = new Set(["redact", "seal", "encrypt"]);
-const FLOW_DECL_KINDS: ReadonlySet<string> = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
+// ⚠ Keep DECLASSIFIER_NAMES in sync with isRedactCall/isSealCall AND the constantTimeEquals
+// clearing site — a declassifier verb that clears secret state but is absent here re-opens the
+// bypass. `constantTimeEquals` was exactly that gap (WP94): it clears state at the SecureString
+// comparison site yet was missing from this set, so a `pure flow constantTimeEquals(x){ return x }`
+// laundered secrets past the gate. `tests/value-state/declassifier-shadow-drift.test.mjs` derives
+// the protected set from the clearing sites so a future declassifier cannot be added to one list
+// without the floor. Interim until the durable `disclose` primitive lands.
+const DECLASSIFIER_NAMES: ReadonlySet<string> = new Set(["redact", "seal", "encrypt", "constantTimeEquals"]);
 export function scanDeclassifierShadows(ast: AstNode): ValueStateDiagnostic[] {
   const out: ValueStateDiagnostic[] = [];
   const visit = (node: AstNode): void => {
-    if (FLOW_DECL_KINDS.has(node.kind)) {
-      const name = node.value ?? "";
+    // Decode by DECLARED name across all five tiers. A governed flow parses to
+    // `governedFlowDecl` with value "governed:<floor>:<name>", so the old
+    // `FLOW_DECL_KINDS.has(kind) && value === name` shape missed it twice — a
+    // `governed floor_2 flow redact(...)` could shadow the declassifier undetected.
+    // A malformed governed value decodes to an error and is (correctly) not a shadow.
+    const decoded = decodeFlowDecl(node);
+    if (decoded !== undefined && !("error" in decoded)) {
+      const name = decoded.name;
       if (DECLASSIFIER_NAMES.has(name)) {
         out.push(makeVSDiag(
           "FUNGI-VALUESTATE-011",

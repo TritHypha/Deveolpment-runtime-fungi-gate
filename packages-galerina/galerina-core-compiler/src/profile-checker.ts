@@ -18,6 +18,7 @@
 // =============================================================================
 
 import { type AstNode, type FlowMeta } from "./parser.js";
+import { isFlowDeclNamed } from "./flow-name.js";
 
 // ---------------------------------------------------------------------------
 // Profile diagnostics
@@ -146,12 +147,13 @@ const PROFILE_RULES: Record<RuntimeProfile, ProfileRules> = {
 // Helpers — AST analysis
 // ---------------------------------------------------------------------------
 
-const FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
-
-/** Find a flow node by name in the program AST. */
+/** Find a flow node by name in the program AST. Uses the shared decoder so a
+ *  governed flow (kind `governedFlowDecl`, value `governed:<floor>:<name>`) is
+ *  found by its declared name rather than missed twice — the profile checker
+ *  must see a governed flow at least as well as a guarded one. */
 function findFlowNode(ast: AstNode, name: string): AstNode | undefined {
   for (const child of ast.children ?? []) {
-    if (FLOW_KINDS.has(child.kind) && child.value === name) return child;
+    if (isFlowDeclNamed(child, name)) return child;
   }
   return undefined;
 }
