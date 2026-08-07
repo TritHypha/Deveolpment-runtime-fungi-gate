@@ -21,6 +21,7 @@ what its v1.2 shape became.
 | **[FUNGI-TO-GATE-COOKBOOK.md](FUNGI-TO-GATE-COOKBOOK.md)** | recipe-first: `if` on a Boolean, then on a number, then sequences, `check`, `match`, and the partition method for a whole flow |
 | **[RULES.md](RULES.md)** | the fail-closed invariants, each bound to the diagnostic code that enforces it |
 | **[FUNGI-TO-GATE-LIKE-FOR-LIKE.md](FUNGI-TO-GATE-LIKE-FOR-LIKE.md)** | `if` / `check` / `match`, arrays, numbers, hallmarks and contracts — what each becomes in a circuit, and what has no equivalent by design |
+| **[GATEREGEX.md](GATEREGEX.md)** | patterns drawn as circuits — numeric, email and quoted-string worked examples; why a pattern that cannot be drawn is refused, and why that is the safety property rather than a limit |
 
 ## The examples
 
