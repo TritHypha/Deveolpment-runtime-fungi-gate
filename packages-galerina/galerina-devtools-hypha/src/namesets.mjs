@@ -123,8 +123,16 @@ export function extractNameComparisons(root) {
   const out = [];
   for (const { file, text } of readAll(root)) {
     const lines = text.split(/\r?\n/);
-    for (const m of text.matchAll(COMPARISON))
+    for (const m of text.matchAll(COMPARISON)) {
+      // `typeof x === "string"` is a TYPE GUARD, not a value-vs-name comparison: COMPARISON captures
+      // `x` as the receiver and `"string"` as the literal, but the real left side is `typeof x` and
+      // the literal is a type name (`string`/`number`/…), never a vocabulary member. Left in, it made
+      // `nameSetDrift` report a phantom "uncovered" comparison on `typeof node.value === "string"`
+      // (WP143). The `\btypeof\s+` boundary is why a property named `typeofFoo` is NOT mistaken for a
+      // guard. `instanceof` needs no handling — its right side is a constructor, never a "string".
+      if (/\btypeof\s+$/.test(text.slice(Math.max(0, m.index - 12), m.index))) continue;
       out.push({ receiver: m[1], literal: m[2], file, line: lineOf(text, m.index, lines) });
+    }
   }
   return out;
 }
