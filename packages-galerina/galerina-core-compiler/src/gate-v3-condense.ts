@@ -29,14 +29,30 @@
 import type { ParseDiagnostic } from "./parser.js";
 import type { GateGraph } from "./gate-v3-graph.js";
 
-/** The rung's diagnostic: a cycle survived to the semantic tier. Unreachable
- *  from parsed circuits (GATE-TERM-003/004 refuses them) — this is the
- *  defence-in-depth arm, and the KAT hand-builds a cyclic graph to prove the
- *  detector can actually detect (an unfirable check is GD-004's class). */
+/** The rung's diagnostic: the semantic graph is cyclic, so no dominator
+ *  reasoning below may run.
+ *
+ *  ⚠ CORRECTED 2026-08-07 (cycle 0138). This declaration previously claimed
+ *  the code was "unreachable from parsed circuits (GATE-TERM-003/004 refuses
+ *  them)" and its message asserted an "upstream refusal was bypassed". BOTH
+ *  ARE FALSE, and conformance vector CV-076 reaches it from an ordinary parsed
+ *  circuit. The two rules quantify over DIFFERENT NODE SETS: `findCycle` in
+ *  gate-v3-verify.ts walks parts only, while this pass condenses the whole
+ *  GateGraph — which includes `IN`, `OUT` and wired terminals (SEMANTICS §6.0).
+ *  A wire back into the input frontier (`a.spare -> IN.v`) is therefore a cycle
+ *  HERE and no part-to-part cycle THERE. Nothing was bypassed; TERM-003's rule
+ *  simply does not apply to it.
+ *
+ *  The message no longer names a cause it cannot know. Misattributing one is
+ *  not cosmetic: §3.1 makes distinguishable refusals a security property, and
+ *  the old text sent an author hunting for a defeated upstream check that had
+ *  never applied. This remains defence-in-depth for genuine part cycles — the
+ *  KAT still hand-builds a cyclic graph to prove the detector can detect (an
+ *  unfirable check is GD-004's class) — it is simply not ONLY that. */
 export const GATE_SEM_001 = Object.freeze({
   code: "GATE-SEM-001",
   name: "GATE_V3_CYCLE_REACHED_SEMANTIC_TIER",
-  message: "a component cycle reached the semantic tier (upstream refusal GATE-TERM-003/004 was bypassed)",
+  message: "the semantic graph is cyclic, so dominator reasoning cannot run (a part-to-part cycle also refuses at GATE-TERM-003/004; a cycle through IN, OUT or a terminal does not)",
 });
 
 /** The condensation: components in canonical order, each a sorted member

@@ -161,7 +161,7 @@ Tier 5 — the semantic passes over the GateGraph: privacy domination and separa
 
 | code | name | message |
 |---|---|---|
-| `GATE-SEM-001` | `GATE_V3_CYCLE_REACHED_SEMANTIC_TIER` | a component cycle reached the semantic tier (upstream refusal GATE-TERM-003/004 was bypassed) |
+| `GATE-SEM-001` | `GATE_V3_CYCLE_REACHED_SEMANTIC_TIER` | the semantic graph is cyclic, so dominator reasoning cannot run (a part-to-part cycle also refuses at GATE-TERM-003/004; a cycle through IN, OUT or a terminal does not) |
 | `GATE-SEM-002` | `GATE_V3_CUT_DOES_NOT_DOMINATE_EGRESS` | egress is reachable on a path that bypasses every declared cut (domination violated) |
 | `GATE-SEM-003` | `GATE_V3_TAINT_REACHES_EGRESS_PAST_CUTS` | taint reaches egress with every declared cut removed (separator violated, RD-0229) |
 | `GATE-SEM-004` | `GATE_V3_UNDECLARED_DECISION_SHAPE` | component's outputs are shaped like a three-valued decision (three outputs, one shared type) but the contract does not declare decision: true |

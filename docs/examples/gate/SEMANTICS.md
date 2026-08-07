@@ -250,6 +250,32 @@ identifiers assigned **after** the canonical sort, and acyclicity asserted
 before any dominator reasoning — a dominator tree over a cyclic graph is a proof
 over a false premise (`GATE-SEM-001`).
 
+### 6.0 The node universe
+
+Every rule in this section quantifies over "the graph", so the graph's node set
+is normative. It contains exactly:
+
+| node | id | note |
+|---|---|---|
+| the input frontier | `IN` | **one node for the whole frontier** — parameters are *ports* on it, not nodes. Domination is measured from the frontier, so a per-parameter node would make `SEM-002` ask a different question |
+| the egress | `OUT` | |
+| each part instance | the instance name | carries its `component@version` |
+| each **wired** terminal | `FAMILY.reason` | `DENY.not_authorized` is a node; `DENY` alone is not. **An unwired terminal is not in the graph at all** — the drawing decides the node set, not the terminal vocabulary |
+
+Terminal families are `DENY`, `FAULT`, `TRAP`, `DRAIN`. On an edge touching a
+terminal the port is empty, because the reason is already carried in the node
+id and reading it twice would let two spellings of one terminal compare unequal.
+
+⚠ **`IN` and `OUT` being real nodes has a consequence worth stating outright,
+because it surprised this specification's own conformance suite.** A wire back
+into the input frontier — `a.spare -> IN.v` — forms a cycle **in this graph**
+while forming no *part-to-part* cycle. So §4's `GATE-TERM-003/004`, which
+quantify over parts, correctly stay silent, and this section's acyclicity rule
+`GATE-SEM-001` fires. That is two rules over two node sets, not a bypassed
+refusal: the primary refusal for the shape is `GATE-WIRE-007` (an input cannot
+consume), and `SEM-001` co-fires as the acyclicity guarantee the dominator
+passes depend on.
+
 | rule | code | statement |
 |---|---|---|
 | cut dominates egress | `SEM-002` | if any cut is declared, every path from the frontier to `OUT` passes one |
