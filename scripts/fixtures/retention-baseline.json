@@ -1,0 +1,23 @@
+{
+  "_doc": [
+    "Retention baseline for audit-retention-gate.mjs.",
+    "",
+    "NAMED FINDINGS ONLY — never a count. A count cannot say WHICH finding was accepted,",
+    "so a new defect can enter as an old one leaves and the number never moves.",
+    "",
+    "Every entry MUST carry a `reason` and an `owner`. The gate rejects a baseline that",
+    "omits either: an exemption without a reason cannot be reviewed, and an un-owned",
+    "exemption is permanent by default.",
+    "",
+    "NOTHING IS BASELINED BEFORE ADJUDICATION. This file is empty because all three",
+    "retention surfaces found by the audit were FIXED (commit e99f0ddd) rather than",
+    "accepted: MEMORY_CACHE, manifestTypeCache and PROOF_SHAPE_CACHE are all bounded.",
+    "An empty baseline is the correct state and should be kept that way.",
+    "",
+    "The baseline is SHRINK-ONLY in spirit: when a baselined finding stops occurring the",
+    "gate says so, and the entry should be deleted in the same commit as the fix that",
+    "retired it. A baseline that outlives its fault goes vacuous and starts excusing",
+    "nothing while looking like it excuses something."
+  ],
+  "entries": []
+}
