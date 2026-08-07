@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Canonical environment mode constants for the Galerina platform.
  *
  * EnvironmentMode is owned by this package (@galerina/core-config).
@@ -19,10 +19,10 @@ export const GALERINA_ENVIRONMENT_MODES = [
 
 export type EnvironmentMode = (typeof GALERINA_ENVIRONMENT_MODES)[number];
 
-// #195 — OS/HW-compromised security posture (off|auto|on, default auto, fail-secure).
+// #195 â€” OS/HW-compromised security posture (off|auto|on, default auto, fail-secure).
 export * from "./posture.js";
 
-// JOB 0011 (a) — project governance ceiling (full|auto|lean, default full, fail-closed).
+// JOB 0011 (a) â€” project governance ceiling (full|auto|lean, default full, fail-closed).
 export * from "./governance.js";
 
 /**
@@ -69,7 +69,7 @@ export interface ProjectConfig {
   readonly entryFiles: readonly string[];
   readonly packages: readonly ProjectPackageReference[];
   readonly strict: boolean;
-  /** Governance ceiling — full|auto|lean, default full (secure pole). JOB 0011 (a). */
+  /** Governance ceiling â€” full|auto|lean, default full (secure pole). JOB 0011 (a). */
   readonly governance: GovernanceMode;
   readonly targets: readonly string[];
   readonly defaultPackage?: string;
@@ -314,7 +314,7 @@ export function parseProjectConfig(
         "FUNGI-CONFIG-GOV-003",
         "INVALID_GOVERNANCE_MODE",
         "error",
-        `Unsupported governance mode "${String(governanceResolved.requested)}" — forcing 'full' (fail-closed).`,
+        `Unsupported governance mode "${String(governanceResolved.requested)}" â€” forcing 'full' (fail-closed).`,
         "project.governance",
         `Use one of: ${GOVERNANCE_MODES.join(", ")}.`,
       ),
@@ -674,7 +674,7 @@ function validateProductionStrictness(
   );
 
   for (const packageRef of project.packages) {
-    const matchedPattern = policy.disabledPackagePatterns.find((pattern) => // perf-allow: loop-array-find — substring-match predicate (not key equality), not Map-indexable; bounded disabled-pattern list
+    const matchedPattern = policy.disabledPackagePatterns.find((pattern) => // perf-allow: loop-array-find â€” substring-match predicate (not key equality), not Map-indexable; bounded disabled-pattern list
       packageRef.path.includes(pattern),
     );
 
@@ -1128,7 +1128,7 @@ function isLoPackageGraphAlias(packageName: string): boolean {
 }
 
 // =============================================================================
-// v0.2 ADDITIONS — SecretConfigSource, EnvironmentPolicy, ConfigValue, Vault
+// v0.2 ADDITIONS â€” SecretConfigSource, EnvironmentPolicy, ConfigValue, Vault
 // =============================================================================
 
 // ---------------------------------------------------------------------------
@@ -1136,7 +1136,7 @@ function isLoPackageGraphAlias(packageName: string): boolean {
 //
 // Discriminated union for where a secret value comes from.
 // Used in galerina-core-config (4 values). The security package adds oauth and
-// token (6 values total — defined separately in galerina-core-security).
+// token (6 values total â€” defined separately in galerina-core-security).
 // ---------------------------------------------------------------------------
 
 export type SecretConfigSource =
@@ -1164,7 +1164,7 @@ export function isSecretConfigSourceKind(
 }
 
 // ---------------------------------------------------------------------------
-// SecretCategory — classifies the nature of a secret
+// SecretCategory â€” classifies the nature of a secret
 // ---------------------------------------------------------------------------
 
 export type SecretCategory =
@@ -1179,7 +1179,7 @@ export type SecretCategory =
   | "generic";
 
 // ---------------------------------------------------------------------------
-// SecretRedactionPolicy — how a secret value should be redacted in output
+// SecretRedactionPolicy â€” how a secret value should be redacted in output
 // ---------------------------------------------------------------------------
 
 export interface SecretRedactionPolicy {
@@ -1200,6 +1200,16 @@ export interface SecretRedactionPolicy {
   readonly includeSourceKindInReports: boolean;
 }
 
+/**
+ * A rendering shape for a redacted secret. **Not yet consumed** by any code path
+ * in this package â€” measured, one declaration site and no readers â€” so it
+ * describes an intended presentation, it does not enforce one.
+ *
+ * The guarantee that actually holds is structural and is stated at
+ * `SECRET_REPORT_MODE` below: no report sink in this package accepts a value, so
+ * there is nothing for a redaction step to catch. Keep this shape for the day a
+ * sink does render values; do not cite it as the mechanism until then.
+ */
 export const DEFAULT_SECRET_REDACTION_POLICY: SecretRedactionPolicy = {
   placeholder: "[REDACTED]",
   includeNameInReports: true,
@@ -1207,7 +1217,7 @@ export const DEFAULT_SECRET_REDACTION_POLICY: SecretRedactionPolicy = {
 };
 
 // ---------------------------------------------------------------------------
-// EnvironmentPolicy — per-mode access policy for environment sources
+// EnvironmentPolicy â€” per-mode access policy for environment sources
 // ---------------------------------------------------------------------------
 
 export interface EnvironmentPolicy {
@@ -1224,12 +1234,31 @@ export interface EnvironmentPolicy {
   readonly allowUnsafeOverrides: boolean;
 
   /**
-   * Raw secret values must NEVER appear in reports.
-   * This field is always false — it exists to make the prohibition explicit
-   * and type-checkable so callers cannot accidentally set it to true.
+   * How secret material may appear in reports. **An invariant, not a permission.**
+   *
+   * It is single-valued by type: `"redacted-only"` is the only mode that exists,
+   * so there is no configuration â€” in any environment, from any caller â€” that
+   * yields plaintext. Previously this was `secretReportMode: SECRET_REPORT_MODE`,
+   * which was correct but permission-SHAPED: a reader sees `allow*: false` and
+   * reasonably infers that `true` would grant something. It granted nothing (it
+   * had no consumer), so the shape promised a switch that was not wired to
+   * anything.
+   *
+   * What actually holds the line is structural: every report sink in this
+   * package accepts a KEY (and, in one case, two TYPE NAMES) and never a value.
+   * A sink cannot leak what it never receives. That property is pinned by
+   * `tests/secret-report-invariant.test.mjs`, so a signature change admitting a
+   * value turns the suite red.
    */
-  readonly allowSecretValuesInReports: false;
+  readonly secretReportMode: typeof SECRET_REPORT_MODE;
 }
+
+/**
+ * The one admitted secret-report mode. Exported so a consumer can assert against
+ * the value rather than re-spelling the literal â€” an inline copy is how a second,
+ * divergent spelling gets introduced.
+ */
+export const SECRET_REPORT_MODE = "redacted-only" as const;
 
 /**
  * Default EnvironmentPolicy per environment mode.
@@ -1243,18 +1272,18 @@ export interface EnvironmentPolicy {
 export function defaultEnvironmentPolicy(mode: EnvironmentMode): EnvironmentPolicy {
   switch (mode) {
     case "development":
-      return { allowDotEnvFiles: true,  allowUnsafeOverrides: true,  allowSecretValuesInReports: false };
+      return { allowDotEnvFiles: true,  allowUnsafeOverrides: true,  secretReportMode: SECRET_REPORT_MODE };
     case "test":
-      return { allowDotEnvFiles: true,  allowUnsafeOverrides: false, allowSecretValuesInReports: false };
+      return { allowDotEnvFiles: true,  allowUnsafeOverrides: false, secretReportMode: SECRET_REPORT_MODE };
     case "staging":
-      return { allowDotEnvFiles: false, allowUnsafeOverrides: false, allowSecretValuesInReports: false };
+      return { allowDotEnvFiles: false, allowUnsafeOverrides: false, secretReportMode: SECRET_REPORT_MODE };
     case "production":
-      return { allowDotEnvFiles: false, allowUnsafeOverrides: false, allowSecretValuesInReports: false };
+      return { allowDotEnvFiles: false, allowUnsafeOverrides: false, secretReportMode: SECRET_REPORT_MODE };
   }
 }
 
 // ---------------------------------------------------------------------------
-// ConfigValue — typed value kinds for the Config Vault
+// ConfigValue â€” typed value kinds for the Config Vault
 // ---------------------------------------------------------------------------
 
 export type ConfigValue =
@@ -1307,10 +1336,10 @@ export function getVaultEntry<T>(
 }
 
 // ---------------------------------------------------------------------------
-// Config Vault diagnostic codes — LN-VAULT series
+// Config Vault diagnostic codes â€” LN-VAULT series
 // ---------------------------------------------------------------------------
 
-/** FUNGI-VAULT-001: Secret-like value found in config vault — use secret {} reference instead. */
+/** FUNGI-VAULT-001: Secret-like value found in config vault â€” use secret {} reference instead. */
 export const FUNGI_VAULT_001 = "FUNGI-VAULT-001";
 /** FUNGI-VAULT-002: Config vault key does not match segment.segment dot-path format. */
 export const FUNGI_VAULT_002 = "FUNGI-VAULT-002";
@@ -1385,11 +1414,11 @@ export function vaultDiagnosticMutationDenied(key: string): ConfigDiagnostic {
 
 /**
  * A secret value as it appears in reports.
- * The raw value is never included — only the source kind and redacted marker.
+ * The raw value is never included â€” only the source kind and redacted marker.
  */
 export interface SecretReportValue {
   readonly name: string;
-  /** Source kind (env, vault, kms, runtime) — never the raw path or value. */
+  /** Source kind (env, vault, kms, runtime) â€” never the raw path or value. */
   readonly sourceKind: SecretConfigSourceKind;
   readonly redacted: true;
   readonly category?: SecretCategory;

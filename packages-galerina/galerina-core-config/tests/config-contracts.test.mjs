@@ -272,11 +272,17 @@ describe("galerina-core-config contracts", () => {
     const prod = defaultEnvironmentPolicy("production");
     assert.equal(prod.allowDotEnvFiles, false);
     assert.equal(prod.allowUnsafeOverrides, false);
-    assert.equal(prod.allowSecretValuesInReports, false);
+    // Was `allowSecretValuesInReports === false` — a permission that granted
+    // nothing because nothing read it. It is now an invariant with exactly one
+    // value, so there is no configuration that yields plaintext. The full
+    // guarantee (no report sink accepts a value at all) lives in
+    // tests/secret-report-invariant.test.mjs.
+    assert.equal(prod.secretReportMode, "redacted-only");
 
     const staging = defaultEnvironmentPolicy("staging");
     assert.equal(staging.allowDotEnvFiles, false);
     assert.equal(staging.allowUnsafeOverrides, false);
+    assert.equal(staging.secretReportMode, "redacted-only");
   });
 
   it("defaultEnvironmentPolicy allows .env files in development only", () => {

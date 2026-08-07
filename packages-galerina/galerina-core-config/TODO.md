@@ -18,7 +18,7 @@
 [x] Define EnvironmentMode as closed type: "development" | "test" | "staging" | "production" — implemented as (typeof ENVIRONMENT_MODES)[number] from as-const tuple
 [x] Implement EnvironmentMode unknown-mode diagnostic (FUNGI-CONFIG-001, FUNGI-CONFIG-002) — resolveEnvironmentMode() returns INVALID_ENVIRONMENT_MODE or MISSING_ENVIRONMENT_MODE
 [x] Define ConfigValue discriminated union: string|number|boolean|url|duration|bytes|region|semver|currency|mime-type|array (2026-05-26)
-[x] Define EnvironmentPolicy with allowSecretValuesInReports: false (always false — never expose secret values) (2026-05-26)
+[x] Define EnvironmentPolicy with secretReportMode: "redacted-only" (single-valued by type; no plaintext mode exists) (2026-05-26)
 [x] Implement defaultEnvironmentPolicy(mode): EnvironmentPolicy per mode — development/test allow .env; staging/production forbid it (2026-05-26)
 [ ] Upgrade EnvironmentConfig to v0.2: add schemaVersion "galerina.config.environment.v1", policy field
 [ ] Upgrade SecretEnvironmentReference: add id, source (SecretConfigSource), category, provider, requiredIn[], allowedSinks, deniedSinks, redaction
@@ -29,7 +29,7 @@
 [x] Define EnvironmentConfigReport and SecretReportValue (source: kind only, not raw path/value) (2026-05-26)
 [x] Implement ProductionStrictnessPolicy enforcement — validateProductionStrictness() + integration in createRuntimeConfigHandoff()
 [x] Implement RuntimeConfigHandoff type — type defined (project/environment/productionPolicy/activeProductionPackageOverrides/diagnostics/canRun/generatedAt) + createRuntimeConfigHandoff() constructor
-[x] Ensure no raw secret values can appear in any config diagnostic output — EnvironmentPolicy.allowSecretValuesInReports is always false (2026-05-26)
+[x] Ensure no raw secret values can appear in any config diagnostic output — EnvironmentPolicy.secretReportMode is always false (2026-05-26)
 [x] Implement host package manifest boundary diagnostic (FUNGI-CONFIG-010) — validateHostPackageManifestBoundary() rejects Galerina keys from package.json; diagnostic rename pass complete — all codes now use FUNGI-CONFIG-001…027 format with {code, name, message} metadata (2026-05-26)
 [x] Define ConfigVaultEntry<T>, ConfigVaultSchema, ConfigVaultResult, getVaultEntry<T>() (2026-05-26)
 [x] Define FUNGI-VAULT-001 through FUNGI-VAULT-005 diagnostic codes and constructors (2026-05-26)

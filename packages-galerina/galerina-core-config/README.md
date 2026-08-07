@@ -197,7 +197,7 @@ export interface EnvironmentPolicy {
     allowLocalhost: boolean
     allowDevTools: boolean
     allowDebugLogging: boolean
-    allowSecretValuesInReports: false   // always false — never expose secret values
+    secretReportMode: "redacted-only"   // an INVARIANT: no mode yields plaintext
     strictMode: boolean
 }
 
