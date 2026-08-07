@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "types": [
+    { "id": "RawPattern", "kind": "opaque", "construction": "source" },
+    { "id": "RawText", "kind": "opaque", "construction": "source" },
+    { "id": "Refusal", "kind": "evidence", "construction": "canonical-only" },
+    {
+      "id": "LiveRequest",
+      "kind": "record",
+      "construction": "canonical-only",
+      "zone": "semantic"
+    },
+    { "id": "MatchedText", "kind": "record", "construction": "canonical-only" },
+    { "id": "Undecided", "kind": "evidence", "construction": "canonical-only" }
+  ],
+  "components": [
+    {
+      "id": "re.compile",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "decision": true,
+      "arms": ["certified", "veto", "unavailable"],
+      "zoneGate": true,
+      "inputs": [
+        { "name": "pattern", "type": "RawPattern", "required": true },
+        { "name": "subject", "type": "RawText", "required": true }
+      ],
+      "outputs": [
+        { "name": "certified", "type": "LiveRequest" },
+        { "name": "veto", "type": "Refusal" },
+        { "name": "unavailable", "type": "Refusal" }
+      ],
+      "arguments": [{ "name": "dialect", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "re.match",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "inputs": [{ "name": "request", "type": "LiveRequest", "required": true }],
+      "outputs": [
+        { "name": "match", "type": "MatchedText" },
+        { "name": "no", "type": "Refusal" },
+        { "name": "undecided", "type": "Undecided" }
+      ],
+      "arguments": [],
+      "effects": ["compute.cpu"],
+      "capabilities": []
+    }
+  ],
+  "vocabularies": {
+    "deny": ["pattern_refused", "compiler_unavailable", "no_match", "undecided"]
+  }
+}

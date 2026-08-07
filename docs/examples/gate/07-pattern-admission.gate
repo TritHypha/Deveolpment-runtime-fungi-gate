@@ -1,0 +1,46 @@
+@gate 3.0.0
+# Pattern: the GateRegex ADMISSION BOUNDARY (GATEREGEX.md section 9).
+#
+# The security property this drawing proves:
+#   No pattern can reach the matching operation unless an admitted compiler
+#   produced the certificate consumed by that exact operation.
+#
+# It is proven by the TYPE, not by a convention. LiveRequest is
+# construction: canonical-only and zone: semantic, and compile.certified is its
+# ONLY producer - so a matcher reachable without a certificate is not merely
+# discouraged, it is unrepresentable, and GATE-SEM-014 reports if a second
+# producer is ever added.
+#
+# WHY THE SUBJECT GOES THROUGH THE COMPILER TOO, and this is the whole lesson:
+# the first draft wired IN.subject straight to the matcher and kept only the
+# certificate coming from the gate. GATE-SEM-014 refused it, correctly - the
+# matcher was reachable from IN on a path that never passed the compiler, so the
+# certificate was an INPUT IT RECEIVED rather than a route it had to take. That
+# is the same fail-open the shipped v3 reference has in 03-database-query, and
+# cookbook 7b names it: convert, do not bless. The compiler now takes both and
+# emits ONE admitted request; there is exactly one route to the matcher.
+#
+# Note what is NOT drawn: the matcher's interior. .gate secures the perimeter of
+# a component, never its interior - the NFA simulation, class membership and
+# span handling stay the engine's own responsibility and its own tests'.
+#
+# Four outcomes stay four terminals. Collapsing pattern-refused into no-match is
+# the fail-open GATEREGEX.md section 4 names: one says this input was rejected,
+# the other says NO INPUT ON THIS PATH HAS BEEN CHECKED SINCE DEPLOY.
+CIRCUIT admit_and_match(pattern: RawPattern, subject: RawText) -> MatchedText
+  INTENT "A pattern may only be matched with a certificate its own compilation produced."
+  REQUIRES:
+    effect compute.cpu
+  PARTS:
+    [compile :: re.compile@1.0.0 dialect=bounded]
+    [run :: re.match@1.0.0]
+  WIRES:
+    IN.pattern -> compile.pattern
+    IN.subject -> compile.subject
+    compile.veto -> DENY.pattern_refused
+    compile.unavailable -> DENY.compiler_unavailable
+    compile.certified -> run.request
+    run.match -> OUT.value
+    run.no -> DENY.no_match
+    run.undecided -> DENY.undecided
+END
