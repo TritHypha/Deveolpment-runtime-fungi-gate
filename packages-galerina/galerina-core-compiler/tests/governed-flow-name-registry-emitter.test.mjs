@@ -68,7 +68,7 @@ test("emitGIR resolves params for a COLON-QUALIFIED governed flow (the truncatio
   const ast = { kind: "program", value: undefined, location: loc, children: [govNode] };
   const flows = [{ name: "ns:sub", qualifier: "guarded", params: ["a: Int", "b: Int"], returnType: "Int", declaredEffects: [], location: loc }];
   const result = emitGIR(ast, flows, []);
-  const flow = result.program.flows.find((f) => f.name === "ns:sub") ?? result.program?.flows?.[0];
+  const flow = result.gir.flows.find((f) => f.name === "ns:sub");
   assert.ok(flow, "emitGIR must emit the governed flow");
   assert.deepEqual(flow.paramTypes, ["Int", "Int"], "colon-qualified governed flow params must resolve (truncating decoder dropped them)");
 });
@@ -85,7 +85,7 @@ test("CONTROL: a bare-named governed flow resolves params under BOTH decoders", 
   const ast = { kind: "program", value: undefined, location: loc, children: [govNode] };
   const flows = [{ name: "simple", qualifier: "guarded", params: ["x: Int"], returnType: "Int", declaredEffects: [], location: loc }];
   const result = emitGIR(ast, flows, []);
-  const flow = result.program.flows.find((f) => f.name === "simple") ?? result.program?.flows?.[0];
+  const flow = result.gir.flows.find((f) => f.name === "simple");
   assert.ok(flow, "emitGIR must emit the governed flow");
   assert.deepEqual(flow.paramTypes, ["Int"], "bare-named governed flow is the discriminating control (old decoder also matched it)");
 });
