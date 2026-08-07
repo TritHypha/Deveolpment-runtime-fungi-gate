@@ -201,10 +201,10 @@ const IDENTIFIER = (s) => /^[A-Za-z_$][\w$]*$/.test(s);
 export function nameSetDrift(facts) {
   const sets = facts.nameSets ?? [];
   const comparisons = facts.nameComparisons ?? [];
-  // key: file + " " + receiver
+  // key: file + "\u0000" + receiver
   const byFileReceiver = new Map();
   for (const c of comparisons) {
-    const k = c.file + " " + c.receiver;
+    const k = c.file + "\u0000" + c.receiver;
     if (!byFileReceiver.has(k)) byFileReceiver.set(k, []);
     byFileReceiver.get(k).push(c);
   }
@@ -219,7 +219,7 @@ export function nameSetDrift(facts) {
     if (s.members.length < 2) continue;          // filter 2
     considered++;
     for (const [k, group] of byFileReceiver) {
-      const [file, receiver] = k.split(" ");
+      const [file, receiver] = k.split("\u0000");
       if (file !== s.file) continue;             // filter 1
       // FILTER 3: identifier-shaped literals only. A guard list of call names can only be
       // MISSING a call name. `node.value` in the value-state checker is tested against ten
