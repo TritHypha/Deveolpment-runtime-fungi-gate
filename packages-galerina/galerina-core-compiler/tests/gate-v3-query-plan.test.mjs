@@ -24,11 +24,14 @@
 //    reproduced verbatim below as the RED case.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import {
   parseGateV3,
   buildGateGraph,
   loadGateV3Registry,
   verifyZoneDomination,
+  dispatchGateSource,
   GATE_SEM_014,
 } from "../dist/index.js";
 
@@ -195,6 +198,29 @@ test("★ authority as a wired INPUT is not domination — the reference shape R
   assert.equal(found.length, 1, "must refuse");
   assert.equal(found[0].code, GATE_SEM_014.code);
   assert.match(found[0].message, /not dominated/);
+});
+
+test("the SHIPPED example's clean resolution depends on the zone declaration, not on luck", () => {
+  // `06-analytic-query.gate` resolves clean through the production dispatcher.
+  // That is only evidence if the zone rule is what makes it so — otherwise the
+  // example is merely well-drawn and the rule is along for the ride. Strip
+  // `zoneGate` from the contract and the same circuit must refuse.
+  const EXAMPLES = resolve(import.meta.dirname, "..", "..", "..", "docs", "examples", "gate");
+  const REGISTRIES = resolve(import.meta.dirname, "fixtures", "gate-registries");
+  const source = readFileSync(join(EXAMPLES, "06-analytic-query.gate"), "utf8");
+  const contract = JSON.parse(readFileSync(join(REGISTRIES, "06-analytic-query.registry.json"), "utf8"));
+
+  const codes = (registry) =>
+    dispatchGateSource(source, "06-analytic-query.gate", { registry })
+      .diagnostics.filter((d) => d.severity === "error" && d.code !== "FUNGI-GATELANG-002")
+      .map((d) => d.code);
+
+  assert.deepEqual(codes(contract), [], "the unmutated pair must be clean, or nothing below is readable");
+
+  const ungated = JSON.parse(JSON.stringify(contract));
+  delete ungated.components.find((c) => c.id === "tritmesh.ql.gate").zoneGate;
+  assert.ok(codes(ungated).includes(GATE_SEM_014.code),
+    "with no declared transition, semantic evaluation must refuse");
 });
 
 test("NEGATIVE CONTROL — with no semantic zone declared, both drawings are silent", () => {

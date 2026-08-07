@@ -1,0 +1,179 @@
+{
+  "version": "1.0.0",
+  "types": [
+    { "id": "CallerId", "kind": "opaque", "construction": "source" },
+    { "id": "RawTripFilter", "kind": "opaque", "construction": "source" },
+    { "id": "TripScope", "kind": "opaque", "construction": "canonical-only" },
+    { "id": "FilterParameters", "kind": "opaque", "construction": "canonical-only" },
+    { "id": "Refusal", "kind": "evidence", "construction": "canonical-only" },
+    { "id": "TripPlan", "kind": "record", "construction": "canonical-only", "zone": "opaque" },
+    { "id": "LivePlan", "kind": "record", "construction": "canonical-only", "zone": "semantic" },
+    { "id": "TripReport", "kind": "record", "construction": "canonical-only" },
+    { "id": "RedactedTripReport", "kind": "record", "construction": "canonical-only" },
+    { "id": "QueryEvidence", "kind": "evidence", "construction": "canonical-only" },
+    { "id": "AuditEvidence", "kind": "evidence", "construction": "canonical-only" },
+    { "id": "TimeoutSignal", "kind": "evidence", "construction": "canonical-only" },
+    { "id": "FailureSignal", "kind": "evidence", "construction": "canonical-only" }
+  ],
+  "components": [
+    {
+      "id": "app.trip_filter.validate",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "inputs": [{ "name": "raw", "type": "RawTripFilter", "required": true }],
+      "outputs": [
+        { "name": "plan", "type": "TripPlan" },
+        { "name": "parameters", "type": "FilterParameters" },
+        { "name": "scope", "type": "TripScope" },
+        { "name": "invalid", "type": "Refusal" }
+      ],
+      "arguments": [],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.scan",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "inputs": [{ "name": "plan", "type": "TripPlan", "required": true }],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [
+        { "name": "dataset", "type": "Name", "required": true },
+        { "name": "ceiling", "type": "Number", "required": true }
+      ],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.filter_bound",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "inputs": [
+        { "name": "plan", "type": "TripPlan", "required": true },
+        { "name": "parameters", "type": "FilterParameters", "required": true }
+      ],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [{ "name": "schema", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.time_bucket",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "inputs": [{ "name": "plan", "type": "TripPlan", "required": true }],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [{ "name": "interval", "type": "String", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.aggregate_max",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "inputs": [{ "name": "plan", "type": "TripPlan", "required": true }],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [{ "name": "field", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.group_by",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "inputs": [{ "name": "plan", "type": "TripPlan", "required": true }],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [{ "name": "key", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.order_by",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "inputs": [{ "name": "plan", "type": "TripPlan", "required": true }],
+      "outputs": [{ "name": "plan", "type": "TripPlan" }],
+      "arguments": [{ "name": "key", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "tritmesh.ql.gate",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "decision": true,
+      "arms": ["allow", "deny", "indeterminate"],
+      "zoneGate": true,
+      "inputs": [
+        { "name": "subject", "type": "CallerId", "required": true },
+        { "name": "resource", "type": "TripScope", "required": true },
+        { "name": "plan", "type": "TripPlan", "required": true }
+      ],
+      "outputs": [
+        { "name": "allow", "type": "LivePlan" },
+        { "name": "deny", "type": "Refusal" },
+        { "name": "indeterminate", "type": "Refusal" }
+      ],
+      "arguments": [{ "name": "capability", "type": "Name", "required": true }],
+      "effects": [],
+      "capabilities": ["trips.aggregate"]
+    },
+    {
+      "id": "tritmesh.ql.execute",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "inputs": [{ "name": "plan", "type": "LivePlan", "required": true }],
+      "outputs": [
+        { "name": "value", "type": "TripReport" },
+        { "name": "evidence", "type": "QueryEvidence" },
+        { "name": "timeout", "type": "TimeoutSignal" },
+        { "name": "failure", "type": "FailureSignal" }
+      ],
+      "arguments": [{ "name": "consistency", "type": "Name", "required": true }],
+      "effects": ["database.read"],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.privacy.cut",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cut": true,
+      "inputs": [
+        { "name": "value", "type": "TripReport", "required": true },
+        { "name": "evidence", "type": "QueryEvidence", "required": true }
+      ],
+      "outputs": [
+        { "name": "value", "type": "RedactedTripReport" },
+        { "name": "evidence", "type": "AuditEvidence" }
+      ],
+      "arguments": [{ "name": "fields", "type": "Set<Name>", "required": true }],
+      "effects": [],
+      "capabilities": []
+    },
+    {
+      "id": "galerina.audit.record",
+      "version": "1.0.0",
+      "status": "SHIPPED",
+      "implementationDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "inputs": [{ "name": "value", "type": "AuditEvidence", "required": true }],
+      "outputs": [],
+      "arguments": [{ "name": "event", "type": "String", "required": true }],
+      "effects": ["audit.write"],
+      "capabilities": []
+    }
+  ],
+  "vocabularies": {
+    "deny": ["invalid_filter", "not_authorized", "authority_unknown"],
+    "trap": ["database_timeout", "database_failure"]
+  }
+}

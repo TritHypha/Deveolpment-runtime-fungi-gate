@@ -1,0 +1,57 @@
+@gate 3.0.0
+# Pattern: an analytic query as a governed plan. The SQL this replaces:
+#
+#   SELECT TIME_BUCKET(INTERVAL '1 day', started_at) AS day, MAX(total_amount)
+#   FROM trips WHERE started_at >= ? AND started_at < ?
+#   GROUP BY day ORDER BY day
+#
+# No clause is ever text. Each is a registered plan part, so the string-assembly
+# class of injection is not prevented here; it is unrepresentable.
+#
+# THE SHAPE WORTH COPYING: the gate CONVERTS the plan (TripPlan to LivePlan)
+# rather than handing an authority token to a part that could be reached without
+# one. execute names LivePlan, LivePlan is zoned semantic, and only gate.allow
+# produces one, so evaluation is reachable on exactly one route and
+# GATE-SEM-014 proves it. Wiring authority in as a side input reads as governed
+# and is weaker; see FUNGI-TO-GATE-COOKBOOK.md.
+CIRCUIT daily_trip_maximum(caller: CallerId, filter: RawTripFilter) -> RedactedTripReport
+  INTENT "Aggregate a bounded trip set for an authorised caller; evaluation happens only past the allow arm."
+  REQUIRES:
+    capability trips.aggregate
+    effect database.read
+    effect audit.write
+  PARTS:
+    [validate :: app.trip_filter.validate@1.0.0]
+    [scan :: tritmesh.ql.scan@1.0.0 dataset=trips ceiling=100000]
+    [bounded :: tritmesh.ql.filter_bound@1.0.0 schema=trips]
+    [bucket :: tritmesh.ql.time_bucket@1.0.0 interval="1 day"]
+    [peak :: tritmesh.ql.aggregate_max@1.0.0 field=total_amount]
+    [grouped :: tritmesh.ql.group_by@1.0.0 key=day]
+    [ordered :: tritmesh.ql.order_by@1.0.0 key=day]
+    [gate :: tritmesh.ql.gate@1.0.0 capability=trips.aggregate]
+    [execute :: tritmesh.ql.execute@1.0.0 consistency=snapshot]
+    [cut :: galerina.privacy.cut@1.0.0 fields={rider_id}]
+    [audit :: galerina.audit.record@1.0.0 event="trips.aggregate"]
+  WIRES:
+    IN.filter -> validate.raw
+    validate.invalid -> DENY.invalid_filter
+    validate.plan -> scan.plan
+    validate.parameters -> bounded.parameters
+    scan.plan -> bounded.plan
+    bounded.plan -> bucket.plan
+    bucket.plan -> peak.plan
+    peak.plan -> grouped.plan
+    grouped.plan -> ordered.plan
+    ordered.plan -> gate.plan
+    IN.caller -> gate.subject
+    validate.scope -> gate.resource
+    gate.deny -> DENY.not_authorized
+    gate.indeterminate -> DENY.authority_unknown
+    gate.allow -> execute.plan
+    execute.timeout -> TRAP.database_timeout
+    execute.failure -> TRAP.database_failure
+    execute.value -> cut.value
+    execute.evidence -> cut.evidence
+    cut.value -> OUT.value
+    cut.evidence -> audit.value
+END
