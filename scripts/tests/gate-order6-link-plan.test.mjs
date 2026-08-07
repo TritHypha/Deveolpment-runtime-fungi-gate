@@ -1,364 +1,370 @@
-// gate-order6-link-plan.test.mjs — order 6's RED suite, second submission.
+// gate-order6-link-plan.test.mjs — order 6's RED suite, THIRD submission.
 //
-// KTA 43 Q2 unlocked order 6 for "plan and red tests first". The FIRST
-// submission was REJECTED by KTA 45 with three blockers; this is the rewrite.
-// Plan: KTA `44-order-six-plan.md`. Required assertions: KTA 45 §3.
+// KTA 43 Q2 unlocked order 6 for "plan and red tests first". Submission 1 was
+// rejected by KTA 45; submission 2 by KTA 57. This is the rewrite against
+// KTA 57 §4's eight-item bar. Schema contract: KTA 44 §8.
 //
-// ★ WHAT THE FIRST ATTEMPT GOT WRONG, kept here because the failure mode is
-// more instructive than the fix:
+// ★ THE ERROR I HAVE NOW MADE TWICE, so it is at the top of the file:
+// **I keep widening the public surface to make testing easier.**
+//   sub 1 (KTA 45 F1) — demanded a PUBLIC `admittedPayloadFor` reader;
+//   sub 2 (KTA 57 F3) — demanded a PUBLIC `__planFieldOmissionForTesting` hook.
+// Both contradict the module-private authority boundary they were meant to
+// verify. **A test that needs production to expose a hole is not a test of that
+// hole; it is the hole.** Row 15 now mutates an ISOLATED COPY and the production
+// namespace stays closed.
 //
-//   F1  it demanded a PUBLIC `admittedPayloadFor` export — while the plan it
-//       implemented said the binding must be module-PRIVATE. The test would
-//       have widened the exact authority surface the design exists to close.
-//       ⟹ Privacy is now tested THROUGH PUBLIC BEHAVIOUR: a clone, a forged
-//         object and post-mint mutation must refuse or have no effect. There is
-//         no export to inspect, and there must never be one.
+// ⚠ EXPECTED STATE: **11 red · 7 green** — NOT the 14/1 of submission 2, and
+// the change is a CONSEQUENCE of complying with KTA 57 F2, not a drift from it.
 //
-//   F2  twelve of fourteen rows would have gone GREEN ON EMPTY STUBS — a
-//       one-argument empty function and a constant object satisfied them.
-//       ⟹ Every body below constructs a control and a one-variable mutant,
-//         calls the public path, and asserts the exact result or refusal.
+//   RED (11)   — rows 1-6, 10-13, 15: every one needs `buildLinkPlan`,
+//                `resolveComponentArtifact`, `linkPlanDigest` or
+//                `assertNotEmitterInput`, none of which exist. Link layer.
+//   GREEN (7)  — rows 7a/7b/7c + its control, 8, 9: these assert ADMISSION-layer
+//                refusals, and that layer already exists and already refuses.
+//                Row 14 is the composite chapter gate.
 //
-//   F3  the row labelled "detector-of-detector" planted no bypass.
-//       ⟹ Row 15 now names an exact mutant and requires a specific behavioural
-//         assertion to fail because of it.
+// ★ F2 required controls for missing proof, rewritten proof and revoked
+// evidence. Those refusals are enforced by admission, which is built — so they
+// PASS, and passing is the correct result. Submission 2 forced them red by
+// guarding them on an unrelated absent export; that is "red for the wrong
+// reason", the very fault KTA 45 F6 rejected. **The count moved because the
+// suite stopped lying about why a row was red.**
 //
-// ⚠ `function.length === 1` is NOT a security boundary (KTA 45 §3): JS callers
-// can always pass surplus arguments. The property asserted here is that no code
-// path READS caller-supplied replacement material.
-//
-// ⚠ Rows 1–13 and 15 are EXPECTED RED until order 6 is implemented. They fail
-// at the `order6(...)` resolve, and every assertion after it is written out in
-// full so the row tests real behaviour the moment the export lands.
+// Red rows fail at the `order6(...)` resolve; every assertion after it is
+// written out in full so the row tests real behaviour the moment the export
+// lands.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { pathToFileURL } from "node:url";
 import {
   admittedControl, admissionInputs, inHandOf, envelopeFor, delegationFixture,
   verifiedOptions, compiler, gate, lib, seams, SOURCE, REGISTRY_VALUE,
 } from "./helpers/gate-admission-fixture.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
+const MODULE = join(ROOT, "scripts", "lib", "gate-admission-envelope.mjs");
 
-/**
- * Resolve an order-6 export, distinguishing "not implemented yet" from "the
- * harness is broken". A missing export is the expected red; anything else
- * rethrows, so a broken fixture cannot masquerade as honest red evidence.
- */
 function order6(name) {
   const fn = gate[name];
   if (fn === undefined) {
     assert.fail(
       `ORDER-6 NOT IMPLEMENTED: \`${name}\` is not exported. Expected red for this ` +
-      `chapter — the behaviour is absent, not broken. The assertions below this ` +
-      `line specify what it must do.`,
+      `chapter — the behaviour is absent, not broken. The assertions below specify it.`,
     );
   }
   assert.equal(typeof fn, "function", `\`${name}\` exists but is not callable`);
   return fn;
 }
 
-/** Mint a genuine capability through the only path that produces one. */
 function mintedCapability(control) {
   const r = gate.linkableFromAdmission(control.envelope, control.options, control.inHand);
   assert.equal(r.ok, true, "fixture check: the control must admit, or every row below is vacuous");
   return r.linkable;
 }
 
-// ── row 1 · the admitted control ─────────────────────────────────────────────
+/** The eleven keys of KTA 44 §8.1, in sorted order. */
+const PLAN_KEYS = [
+  "admissionDigest", "circuitDigest", "components", "linkerRules",
+  "productionAuthorizing", "proofSetDigest", "registryDigest", "schema",
+  "sourceDigest", "target", "verifierRules",
+];
+const SHA256 = /^sha256:[0-9a-f]{64}$/;
 
-test("row 1: a valid linkable ALONE produces the exact closed non-executable plan", () => {
+// ── row 1 · the admitted control, against the closed schema ─────────────────
+
+test("row 1: a valid linkable ALONE produces the exact closed plan (KTA 44 §8.1)", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const control = admittedControl();
-  const capability = mintedCapability(control);
+  const plan = buildLinkPlan(mintedCapability(control));
 
-  const plan = buildLinkPlan(capability);
-
+  assert.deepEqual(Object.keys(plan).sort(), PLAN_KEYS, "exactly eleven keys — absent and extra are both refusals");
   assert.equal(plan.schema, "gate-v3-link-plan.v1");
-  assert.equal(plan.productionAuthorizing, false, "order 6 output is never production-authorizing");
-  assert.equal(plan.target, control.statement.target);
+  assert.equal(plan.productionAuthorizing, false);
+  for (const k of ["admissionDigest", "sourceDigest", "registryDigest", "circuitDigest", "proofSetDigest"]) {
+    assert.match(plan[k], SHA256, `${k} must be sha256:<64 hex>`);
+  }
   assert.equal(plan.circuitDigest, control.statement.circuitDigest);
   assert.equal(plan.registryDigest, control.statement.registryDigest);
-  assert.deepEqual(
-    plan.components.map((c) => `${c.id}@${c.version}:${c.implementationDigest}`),
-    control.statement.components.map((c) => `${c.id}@${c.version}:${c.implementationDigest}`),
-    "components carry exact id, version AND implementation digest, in admitted order",
-  );
-  // Closed key set — a new field must be added here deliberately.
-  assert.deepEqual(Object.keys(plan).sort(), [
-    "admissionDigest", "circuitDigest", "components", "linkerRules", "productionAuthorizing",
-    "proofSetDigest", "registryDigest", "schema", "sourceDigest", "target", "verifierRules",
-  ]);
+  assert.equal(plan.sourceDigest, control.statement.sourceDigest);
+  assert.equal(plan.target, control.statement.target);
+  assert.match(plan.target, /^[A-Za-z0-9._-]+$/);
+  assert.ok(plan.components.length >= 1 && plan.components.length <= 4096);
+  for (const c of plan.components) {
+    assert.deepEqual(Object.keys(c).sort(), ["id", "implementationDigest", "version"]);
+    assert.match(c.version, /^\d+\.\d+\.\d+$/);
+    assert.match(c.implementationDigest, SHA256);
+  }
+  const sorted = [...plan.components].sort((a, b) => a.id.localeCompare(b.id) || a.version.localeCompare(b.version));
+  assert.deepEqual(plan.components, sorted, "components are sorted at construction, so caller order cannot move the digest");
+  assert.ok(plan.verifierRules.length > 0 && plan.linkerRules.length > 0);
 });
 
-// ── rows 2, 10 · the capability cannot be forged or bypassed ─────────────────
+// ── row 2 · clone ────────────────────────────────────────────────────────────
 
 test("row 2: a structural clone of the capability refuses", () => {
   const buildLinkPlan = order6("buildLinkPlan");
-  const control = admittedControl();
-  const real = mintedCapability(control);
+  const real = mintedCapability(admittedControl());
   const clone = JSON.parse(JSON.stringify(real));
-
   assert.deepEqual(clone, JSON.parse(JSON.stringify(real)), "the clone IS structurally identical");
-  assert.throws(() => buildLinkPlan(clone), /GATE_LINK_NOT_ADMITTED/,
-    "identity, not shape, must grant linking authority");
+  assert.throws(() => buildLinkPlan(clone), /GATE_LINK_NOT_ADMITTED/);
 });
 
-test("row 10: a forged object cannot enter, and there is NO alternate public link path", () => {
+// ── row 3 · capability A + circuit B — the substitution KTA 57 F2 required ───
+
+test("row 3: capability A paired with a DISTINCT circuit B is refused or ignored", () => {
+  // KTA 57 F2: submission 2 only mutated A's own object. That is a different
+  // control. This supplies a genuinely distinct B as a surplus argument — which
+  // JavaScript always permits — and requires that B cannot influence the result.
   const buildLinkPlan = order6("buildLinkPlan");
-  const forged = { kind: "gate-v3-linkable.v1", circuitDigest: `sha256:${"0".repeat(64)}`, target: "wasm32-test", components: [] };
-  assert.throws(() => buildLinkPlan(forged), /GATE_LINK_NOT_ADMITTED/);
-  for (const junk of [null, undefined, 42, "linkable", {}, []]) {
-    assert.throws(() => buildLinkPlan(junk), /GATE_LINK_NOT_ADMITTED/, `must refuse ${JSON.stringify(junk)}`);
-  }
-  // No second public entry point may exist that skips admission.
-  const linkish = Object.keys(gate).filter((k) => /link/i.test(k) && k !== "buildLinkPlan" && k !== "linkableFromAdmission" && k !== "assertLinkableAdmitted");
-  assert.deepEqual(linkish, [], `alternate public link surface(s) found: ${linkish.join(", ")}`);
-  // ★ F1: the private payload binding must NOT be reachable from outside.
-  assert.equal(gate.admittedPayloadFor, undefined,
-    "the payload reader must stay module-private (KTA 43 Q3); exporting it widens the authority surface");
+  const controlA = admittedControl();
+  const capabilityA = mintedCapability(controlA);
+  const controlB = admittedControl({ source: SOURCE.replace("CIRCUIT probe(", "CIRCUIT other(") });
+  assert.notEqual(controlB.statement.circuitDigest, controlA.statement.circuitDigest,
+    "fixture check: B must really be a different circuit");
+
+  const honest = buildLinkPlan(capabilityA);
+
+  // Either the surplus argument is refused outright, or it is ignored entirely.
+  // Both are acceptable; silently honouring B is not.
+  let withB;
+  try { withB = buildLinkPlan(capabilityA, controlB.input.circuitCanonicalForm); }
+  catch (e) { assert.match(String(e.message), /GATE_LINK_/, "if it refuses, it refuses with a named code"); return; }
+  assert.deepEqual(withB, honest, "a supplied circuit B must not influence the plan built from capability A");
+  assert.equal(withB.circuitDigest, controlA.statement.circuitDigest, "the plan still describes A");
 });
 
-// ── rows 3, 4 · post-mint mutation cannot change the plan ────────────────────
-
-test("row 3: mutating the ORIGINAL circuit material after mint changes nothing", () => {
-  const buildLinkPlan = order6("buildLinkPlan");
-  const control = admittedControl();
-  const capability = mintedCapability(control);
-  const before = buildLinkPlan(capability);
-
-  // Deep mutation of the caller's own objects, after the capability was minted.
-  // A shallow Object.freeze would leave these reachable (KTA 45 F5).
-  try { control.input.circuitCanonicalForm.parts.push("injected"); } catch { /* frozen is fine too */ }
-  try { control.input.circuitCanonicalForm.name = "other"; } catch { /* ditto */ }
-
-  const after = buildLinkPlan(capability);
-  assert.deepEqual(after, before, "the plan derives from the private snapshot, never from caller-reachable objects");
-});
+// ── row 4 · post-mint registry mutation ─────────────────────────────────────
 
 test("row 4: mutating the ORIGINAL registry material after mint changes nothing", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const control = admittedControl();
   const capability = mintedCapability(control);
   const before = buildLinkPlan(capability);
-
   try { control.input.registryCanonicalForm.components[0].implementationDigest = `sha256:${"9".repeat(64)}`; } catch { /* frozen is fine */ }
-
-  const after = buildLinkPlan(capability);
-  assert.deepEqual(after, before, "registry material is snapshotted at admission, not read at link time");
+  assert.deepEqual(buildLinkPlan(capability), before, "registry material is snapshotted at admission, not read at link time");
 });
 
-// ── rows 5, 6 · component and target binding ─────────────────────────────────
+// ── rows 5, 6 · component and target binding ────────────────────────────────
 
 test("row 5: a component whose bytes differ from the admitted digest refuses", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const resolveComponent = order6("resolveComponentArtifact");
-  const control = admittedControl();
-  const capability = mintedCapability(control);
-  const plan = buildLinkPlan(capability);
-  const wanted = plan.components[0];
-
-  // Same id and version, different bytes => different digest => refuse.
+  const capability = mintedCapability(admittedControl());
+  const wanted = buildLinkPlan(capability).components[0];
   assert.throws(
-    () => resolveComponent(capability, { id: wanted.id, version: wanted.version, implementationDigest: `sha256:${"b".repeat(64)}` }),
+    () => resolveComponent(capability, { ...wanted, implementationDigest: `sha256:${"b".repeat(64)}` }),
     /GATE_LINK_COMPONENT_DIGEST_MISMATCH/,
     "name and version are not identity; the implementation digest is",
   );
-  // Negative control: the admitted digest resolves.
   assert.doesNotThrow(() => resolveComponent(capability, wanted));
 });
 
 test("row 6: the correct component digest under a DIFFERENT target refuses", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const resolveComponent = order6("resolveComponentArtifact");
-  const control = admittedControl();
-  const capability = mintedCapability(control);
+  const capability = mintedCapability(admittedControl());
   const wanted = buildLinkPlan(capability).components[0];
-
-  assert.throws(
-    () => resolveComponent(capability, wanted, { target: "wasm32-other" }),
-    /GATE_LINK_TARGET_MISMATCH/,
-    "admission is target-scoped; a right digest for the wrong target is not admitted",
-  );
+  assert.throws(() => resolveComponent(capability, wanted, { target: "wasm32-other" }), /GATE_LINK_TARGET_MISMATCH/);
   assert.doesNotThrow(() => resolveComponent(capability, wanted, { target: "wasm32-test" }));
 });
 
-// ── row 7 · proof-set identity ───────────────────────────────────────────────
+// ── row 7 · proof identity — missing, reordered AND rewritten (KTA 57 F2) ────
 
-test("row 7: missing, reordered or rewritten proofs refuse; canonical equivalence is explicit", () => {
-  const buildLinkPlan = order6("buildLinkPlan");
-  const control = admittedControl();
-  const capability = mintedCapability(control);
-  const plan = buildLinkPlan(capability);
-
-  // The plan pins the proof set by DIGEST, so any change moves it.
-  const rebuilt = admittedControl();
-  const rebuiltPlan = buildLinkPlan(mintedCapability(rebuilt));
-  assert.equal(rebuiltPlan.proofSetDigest, plan.proofSetDigest,
-    "the same circuit and registry yield the same proof-set digest");
-
-  // A statement whose proofs were reordered must not verify into a capability
-  // at all — the admission layer owns that refusal (GATE-ADMIT-008).
+const tamperedProofEnvelope = (transform) => {
   const input = admissionInputs();
   const built = compiler.buildAdmissionStatement(input, seams);
   const f = delegationFixture();
-  const reordered = { ...built.statement, proofs: [...built.statement.proofs].reverse() };
-  const tampered = envelopeFor(reordered, f.operational);
-  const r = gate.linkableFromAdmission(tampered, verifiedOptions(f), inHandOf(input));
-  assert.equal(r.ok, false, "a reordered proof set must not mint a capability");
-  assert.equal(r.linkable, null);
+  const statement = { ...built.statement, proofs: transform([...built.statement.proofs]) };
+  return { envelope: envelopeFor(statement, f.operational), options: verifiedOptions(f), inHand: inHandOf(input) };
+};
+
+for (const [label, transform] of [
+  ["MISSING — one proof removed", (p) => p.slice(1)],
+  ["REORDERED — same set, reversed", (p) => [...p].reverse()],
+  ["REWRITTEN — same cardinality, one status changed", (p) => p.map((x, i) => (i === 0 ? { ...x, status: x.status === "satisfied" ? "missing" : "satisfied" } : x))],
+]) {
+  test(`row 7: proof material ${label} must not mint a capability`, () => {
+    const { envelope, options, inHand } = tamperedProofEnvelope(transform);
+    const r = gate.linkableFromAdmission(envelope, options, inHand);
+    assert.equal(r.ok, false, `${label}: must refuse`);
+    assert.equal(r.linkable, null);
+  });
+}
+
+test("row 7 control: an untampered proof set DOES mint — so the three above are not vacuous", () => {
+  const control = admittedControl();
+  assert.equal(gate.linkableFromAdmission(control.envelope, control.options, control.inHand).ok, true);
 });
 
-// ── rows 8, 9 · the signature layer refuses BEFORE binding steers anything ───
+// ── row 8 · expired, revoked and wrong-role (KTA 57 F2 added revoked) ───────
 
-test("row 8: expired and wrong-role envelopes refuse before binding selection", () => {
-  order6("buildLinkPlan");
+test("row 8: expired, REVOKED and wrong-role evidence refuse before binding selection", () => {
   const input = admissionInputs();
   const built = compiler.buildAdmissionStatement(input, seams);
 
-  // Expired: `at` outside the delegation window.
-  const f1 = delegationFixture();
-  const expired = gate.linkableFromAdmission(
-    envelopeFor(built.statement, f1.operational),
-    verifiedOptions(f1, { at: "2026-09-01T00:00:00.000Z" }),
-    inHandOf(input),
-  );
-  assert.equal(expired.ok, false);
-  assert.equal(expired.linkable, null);
-  assert.equal(expired.refusals.some((c) => String(c).startsWith("RELEASE_EVIDENCE")), true,
-    "the ENVELOPE layer must refuse, not a binding check — unauthenticated fields never steer selection");
+  const expect = (label, r) => {
+    assert.equal(r.ok, false, `${label} must refuse`);
+    assert.equal(r.linkable, null, `${label} must yield no capability`);
+    assert.equal(r.refusals.some((c) => String(c).startsWith("RELEASE_EVIDENCE")), true,
+      `${label}: the ENVELOPE layer must refuse — unauthenticated fields never steer selection`);
+  };
 
-  // Wrong role: a delegation without gate-admission authority.
-  const f2 = delegationFixture({ roles: [lib.RELEASE_EVIDENCE_ROLE.DURABILITY, lib.RELEASE_EVIDENCE_ROLE.REPOSITORY] });
-  const wrongRole = gate.linkableFromAdmission(
-    envelopeFor(built.statement, f2.operational), verifiedOptions(f2), inHandOf(input),
-  );
-  assert.equal(wrongRole.ok, false);
-  assert.equal(wrongRole.linkable, null);
-  assert.deepEqual([...wrongRole.refusals], ["RELEASE_EVIDENCE_ENVELOPE_POLICY_REFUSED"]);
+  const f1 = delegationFixture();
+  expect("expired", gate.linkableFromAdmission(
+    envelopeFor(built.statement, f1.operational),
+    verifiedOptions(f1, { at: "2026-09-01T00:00:00.000Z" }), inHandOf(input)));
+
+  // REVOKED — the operational key is revoked at verification time.
+  const f2 = delegationFixture();
+  expect("revoked", gate.linkableFromAdmission(
+    envelopeFor(built.statement, f2.operational),
+    verifiedOptions(f2, { isRevoked: (keyId) => keyId === f2.operational.keyId }), inHandOf(input)));
+
+  const f3 = delegationFixture({ roles: [lib.RELEASE_EVIDENCE_ROLE.DURABILITY, lib.RELEASE_EVIDENCE_ROLE.REPOSITORY] });
+  expect("wrong role", gate.linkableFromAdmission(
+    envelopeFor(built.statement, f3.operational), verifiedOptions(f3), inHandOf(input)));
 });
 
+// ── row 9 · unknown suite ────────────────────────────────────────────────────
+
 test("row 9: an unknown signing suite refuses through the existing catalogue", () => {
-  order6("buildLinkPlan");
   const control = admittedControl();
   const bogus = { ...control.envelope, signature: { ...control.envelope.signature, algorithm: "hybrid-ed25519-mldsa99" } };
   const r = gate.linkableFromAdmission(bogus, control.options, control.inHand);
   assert.equal(r.ok, false);
   assert.equal(r.linkable, null);
   assert.deepEqual([...r.refusals], ["RELEASE_EVIDENCE_ENVELOPE_SIGNATURE_REFUSED"]);
-  // Negative control: the same envelope, correct suite, admits.
   assert.equal(gate.linkableFromAdmission(control.envelope, control.options, control.inHand).ok, true);
 });
 
-// ── row 11 · the plan is non-executable by shape ─────────────────────────────
+// ── row 10 · no forged entry, no alternate path, no public payload reader ───
 
-test("row 11: the plan carries no executable/flow material and cannot enter a flow emitter", () => {
+test("row 10: forged objects refuse, no alternate public link path, no payload reader", () => {
   const buildLinkPlan = order6("buildLinkPlan");
-  const plan = buildLinkPlan(mintedCapability(admittedControl()));
-
-  const FLOW_ONLY = [
-    "paramTypes", "executionPlan", "target_affinity", "qualifier", "tensors",
-    "allowedEffectsMask", "typedArrayLoweringPlan", "faultHandlers",
-    "protected_values", "audit", "execution", "contract", "body", "wat", "flows",
-  ];
-  const trespassers = FLOW_ONLY.filter((k) => k in plan);
-  assert.deepEqual(trespassers, [], `a link plan has no executable body: ${trespassers.join(", ")}`);
-  assert.equal(plan.productionAuthorizing, false);
-  // And it must not be shaped like a GIRProgram a flow emitter would accept.
-  assert.equal("schemaVersion" in plan, false, "a link plan is not a GIRProgram");
+  for (const junk of [null, undefined, 42, "linkable", {}, [],
+    { kind: "gate-v3-linkable.v1", circuitDigest: `sha256:${"0".repeat(64)}`, target: "wasm32-test", components: [] }]) {
+    assert.throws(() => buildLinkPlan(junk), /GATE_LINK_NOT_ADMITTED/, `must refuse ${JSON.stringify(junk)}`);
+  }
+  const linkish = Object.keys(gate).filter((k) => /link/i.test(k)
+    && !["buildLinkPlan", "linkableFromAdmission", "assertLinkableAdmitted", "linkPlanDigest", "assertLinkPlanComplete", "GATE_LINK_CODES"].includes(k));
+  assert.deepEqual(linkish, [], `alternate public link surface(s): ${linkish.join(", ")}`);
+  assert.equal(gate.admittedPayloadFor, undefined, "the payload reader stays module-private (KTA 43 Q3)");
+  assert.equal(gate.__planFieldOmissionForTesting, undefined,
+    "★ KTA 57 F3: production must NOT ship a mutation hook — row 15 mutates an isolated copy instead");
 });
 
-// ── rows 12, 13 · canonical determinism ──────────────────────────────────────
+// ── row 11 · the emitter boundary, runtime-enforced (KTA 57 F4) ─────────────
 
-test("row 12: semantically equal source spellings yield the SAME canonical plan identity", () => {
+test("row 11: a link plan is REFUSED by the emitter-boundary discriminator", () => {
+  // KTA 57 F4: absence of flow-shaped keys proves nothing. KTA 44 §8.5 requires
+  // a runtime discriminator that recognises a link plan by WHAT IT IS.
+  const buildLinkPlan = order6("buildLinkPlan");
+  const assertNotEmitterInput = order6("assertNotEmitterInput");
+  const plan = buildLinkPlan(mintedCapability(admittedControl()));
+
+  assert.throws(() => assertNotEmitterInput(plan), /GATE_LINK_PLAN_NOT_EMITTER_INPUT/,
+    "the plan is refused by identity — `schema: gate-v3-link-plan.v1` — not by missing fields");
+
+  // Negative control: a genuine GIRProgram passes the same seam, so the guard
+  // discriminates rather than refusing everything.
+  const parsed = compiler.parseGateV3(SOURCE, "row11.gate");
+  const loaded = compiler.loadGateV3Registry(REGISTRY_VALUE, "row11.json");
+  const program = {
+    schemaVersion: "fungi.gir.v1",
+    generatedAt: "1970-01-01T00:00:00.000Z",
+    entryPoints: [], flows: [],
+    circuits: [compiler.lowerCircuitToGIR(parsed.circuit, loaded.registry)],
+  };
+  assert.doesNotThrow(() => assertNotEmitterInput(program), "a real GIRProgram must pass");
+  assert.equal("schemaVersion" in plan, false, "and the plan is still not GIRProgram-shaped");
+});
+
+// ── rows 12, 13 · canonical determinism ─────────────────────────────────────
+
+test("row 12: semantically equal source spellings yield the SAME plan digest", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const planDigest = order6("linkPlanDigest");
-
-  // Same circuit, different non-semantic spacing in the WIRES block.
   const respaced = SOURCE.replace("    IN.v -> a.subject", "    IN.v  ->  a.subject");
-  assert.notEqual(respaced, SOURCE, "fixture check: the two spellings must actually differ");
-
+  assert.notEqual(respaced, SOURCE, "fixture check: the spellings must differ");
   const a = buildLinkPlan(mintedCapability(admittedControl()));
   const b = buildLinkPlan(mintedCapability(admittedControl({ source: respaced })));
-  assert.equal(planDigest(b), planDigest(a),
-    "canonical identity follows the semantic graph, not the source bytes");
+  assert.match(planDigest(a), SHA256);
+  assert.equal(planDigest(b), planDigest(a), "identity follows the semantic graph, not source bytes");
 });
 
 test("row 13: repeated construction from ONE capability is byte-identical", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const planDigest = order6("linkPlanDigest");
   const capability = mintedCapability(admittedControl());
-
   const first = buildLinkPlan(capability);
   const second = buildLinkPlan(capability);
   assert.equal(planDigest(second), planDigest(first));
   assert.equal(
     Buffer.from(lib.canonicalReleaseEvidenceBytes(second)).toString("hex"),
     Buffer.from(lib.canonicalReleaseEvidenceBytes(first)).toString("hex"),
-    "byte-identical through the production canonicaliser, not merely deepEqual",
+    "byte-identical through the PRODUCTION canonicaliser (KTA 44 §8.2), not merely deepEqual",
   );
 });
 
-// ── row 14 · the composite chapter gate, executable ──────────────────────────
+// ── row 14 · the composite chapter gate ─────────────────────────────────────
 
 test("row 14: the owning flow-hash suite is INVOKED and its failure propagates", () => {
-  // KTA 45 F6: `assert.ok(true)` proved nothing — running this file alone
-  // reported green even if the flow-hash suite were deleted or failing. This
-  // now actually executes the one owning suite and fails when it does.
   const suite = join(ROOT, "packages-galerina", "galerina-core-compiler", "tests", "gate-v3-flow-hash-invariance.test.mjs");
-  // ⚠ TWO harness traps were hit writing this row, and both are the kind that
-  // make a test red for the wrong reason — which this chapter's discipline
-  // forbids and which doc 45 F6 rejected the previous version for:
-  //
-  //   1. matching `/# pass 16/` against output that reads `ℹ pass 16`;
-  //   2. the parent test runner exporting NODE_TEST_CONTEXT, which switches the
-  //      CHILD's reporter — so the child's format depended on how the parent
-  //      happened to be invoked.
-  //
-  // Fixed at the cause: the child runs with that variable cleared, so its
-  // output is deterministic. And the LOAD-BEARING assertion is the exit code —
-  // `execFileSync` throws on non-zero, so "the owning suite passed" is proven
-  // by reaching the next line at all. The count match is a second, weaker
-  // check that the right suite ran with the expected size.
   const childEnv = { ...process.env };
   delete childEnv.NODE_TEST_CONTEXT;
-
   let out;
   try {
     out = execFileSync(process.execPath, ["--test", "--test-concurrency=1", suite], {
       encoding: "utf8", timeout: 120_000, cwd: ROOT, env: childEnv,
     });
   } catch (error) {
-    assert.fail(
-      `the owning flow-hash suite FAILED or could not run (exit ${error.status}). ` +
-      `This row exists so that failure cannot be hidden by a local assert.ok(true):\n` +
-      String(error.stdout ?? error.message).split("\n").slice(-15).join("\n"),
-    );
+    assert.fail(`the owning flow-hash suite FAILED or could not run (exit ${error.status}):\n` +
+      String(error.stdout ?? error.message).split("\n").slice(-15).join("\n"));
   }
-  assert.match(out, /pass 16/, `expected 16 passing from the owning suite; got:\n${out.split("\n").slice(-10).join("\n")}`);
+  assert.match(out, /pass 16/, `expected 16 passing:\n${out.split("\n").slice(-10).join("\n")}`);
   assert.match(out, /fail 0/, "and zero failing");
 });
 
-// ── row 15 · the detector of the detector ────────────────────────────────────
+// ── row 15 · detector-of-detector, ISOLATED (KTA 57 F3) ─────────────────────
 
-test("★ row 15: a NAMED source mutant makes a specific behavioural assertion fail", () => {
-  // KTA 45 F3: the previous row planted no bypass and would have turned green
-  // the moment the exports existed. The mutant is now named exactly.
-  const buildLinkPlan = order6("buildLinkPlan");
-  const mutate = order6("__planFieldOmissionForTesting");
+test("★ row 15: a source mutant in an ISOLATED COPY makes a behavioural assertion fail", () => {
+  // KTA 57 F3 rejected the previous row for requiring a PUBLIC mutation hook.
+  // The mutant now lives in a temp copy of the module: production exposes
+  // nothing, and the checkout is left untouched.
 
-  // MUTANT: omit `circuitDigest` from the canonical plan — the single field
-  // that binds the plan to the admitted circuit. If the suite still passes with
-  // it gone, row 1's identity assertions are decoration.
-  const capability = mintedCapability(admittedControl());
-  const mutantPlan = mutate(capability, "circuitDigest");
-  assert.equal("circuitDigest" in mutantPlan, false, "fixture check: the mutant really omits the field");
+  const dir = mkdtempSync(join(tmpdir(), "order6-mutant-"));
+  try {
+    // Copy the module, rewriting its relative import to an absolute one so the
+    // copy still resolves its sibling.
+    let src = readFileSync(MODULE, "utf8");
+    src = src.replace(/from "\.\/beta-release-evidence-envelope\.mjs"/g,
+      `from ${JSON.stringify(pathToFileURL(join(ROOT, "scripts", "lib", "beta-release-evidence-envelope.mjs")).href)}`);
 
-  // The behavioural consequence a real detector must show:
-  const honest = buildLinkPlan(capability);
-  assert.notDeepEqual(mutantPlan, honest,
-    "omitting circuitDigest must change the plan — if it does not, nothing binds the plan to its circuit");
-  assert.throws(() => order6("assertLinkPlanComplete")(mutantPlan), /GATE_LINK_PLAN_INCOMPLETE/,
-    "a plan missing a required binding must be refused by the plan's own completeness check");
+    // THE MUTANT: drop `circuitDigest` from the constructed plan — the single
+    // field binding the plan to its admitted circuit. If the suite survives it,
+    // row 1's identity assertions are decoration.
+    const mutated = src.replace(/^\s*circuitDigest:.*$/m, "");
+    assert.notEqual(mutated, src, "the mutation must actually apply, or this row proves nothing");
+
+    const file = join(dir, "mutant.mjs");
+    writeFileSync(file, mutated);
+    assert.equal(readFileSync(MODULE, "utf8").includes("circuitDigest"), true,
+      "the ORIGINAL module is untouched — the mutation is isolated");
+
+    // The behavioural consequence a real detector must show: a plan built by the
+    // mutant fails row 1's closed-key assertion.
+    return import(pathToFileURL(file).href).then((mutant) => {
+      const control = admittedControl();
+      const cap = mutant.linkableFromAdmission(control.envelope, control.options, control.inHand).linkable;
+      const plan = mutant.buildLinkPlan(cap);
+      assert.notDeepEqual(Object.keys(plan).sort(), PLAN_KEYS,
+        "the mutant must NOT satisfy the closed-key schema — if it does, the schema assertion is not load-bearing");
+    });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
