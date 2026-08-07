@@ -37,7 +37,9 @@
 //   FUNGI-INV-004  SYMBOL_UNRESOLVED_IN_INVARIANT   ensure references a name not in parameter scope
 // =============================================================================
 
+
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
+import { decodeFlowDecl } from "./flow-name.js";
 import {
   KNOWN_SIGNALS, KNOWN_FLOORS, normaliseFloor, KNOWN_CAPABILITIES,
   ADMISSION_CAPABILITIES, normalizeCapability,
@@ -2812,15 +2814,23 @@ class GovernanceVerifier {
   // a volatility participate (an undeclared flow is "unknown" → not checked → no false positives). Edges
   // are the OBSERVED flow→flow call graph (you can't lie about what you call).
   private verifyArchitectureStability(ast: AstNode, _flows: readonly FlowMeta[]): void {
-    const FLOW_KINDS = new Set(["pureFlowDecl", "flowDecl", "secureFlowDecl", "guardedFlowDecl"]);
+    // Uses the module-level FLOW_KINDS (:112), which includes `governedFlowDecl`.
+    // A LOCAL four-kind set previously shadowed it here, so every governed flow
+    // was skipped by the `continue` below — a gate documented as "ALWAYS a hard
+    // error (every profile)" silently exempted the most-governed tier. The name
+    // must also be DECODED: a governed flow's `value` is `governed:<floor>:<name>`,
+    // so keying by `child.value` would both mis-key the graph and print the
+    // encoding in the diagnostic.
     const NAME = ["LOW", "MED", "HIGH"];
     const flowNodes = new Map<string, AstNode>();
     const volat = new Map<string, number>();
     for (const child of ast.children ?? []) {
-      if (!FLOW_KINDS.has(child.kind) || (child.value ?? "") === "") continue;
-      flowNodes.set(child.value as string, child);
+      if (!FLOW_KINDS.has(child.kind)) continue;
+      const decoded = decodeFlowDecl(child);
+      if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
+      flowNodes.set(decoded.name, child);
       const lvl = this.flowVolatilityLevel(child);
-      if (lvl !== undefined) volat.set(child.value as string, lvl);
+      if (lvl !== undefined) volat.set(decoded.name, lvl);
     }
     if (volat.size === 0) return; // nothing declares volatility → nothing to enforce
     for (const [name, node] of flowNodes) {
