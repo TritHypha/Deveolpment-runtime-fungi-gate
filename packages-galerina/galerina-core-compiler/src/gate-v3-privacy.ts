@@ -20,6 +20,7 @@
 
 import type { ParseDiagnostic } from "./parser.js";
 import type { GateGraph } from "./gate-v3-graph.js";
+import type { GateV3Circuit } from "./gate-v3-parser.js";
 import type { GateV3Registry } from "./gate-v3-registry.js";
 
 /** Rung-3 refusal: a declared cut no longer dominates egress. */
@@ -117,6 +118,30 @@ function dominatorsOf(node: string, idom: ReadonlyMap<string, string>): Set<stri
   }
   return result;
 }
+
+/** Map iteration 5: a governed sink lets a value LEAVE the trust boundary.
+ *
+ *  Derived from DECLARED EFFECTS, never from an opt-in `sink: true` flag: a
+ *  forgotten flag would mean no protection, which is the fail-OPEN default.
+ *  Effects are already mandatory and already checked (SEM-009/012), so to have
+ *  a network effect at all is to be a sink — automatically.
+ *
+ *  `database.write` and `storage.write` are deliberately ABSENT. A tainted
+ *  value written to the application's own store has not left the boundary;
+ *  refusing that would make the rule unusable and teach authors to work around
+ *  it, which costs more than it saves. */
+const EGRESS_EFFECTS = new Set([
+  "network.outbound", "network.external",
+  "email.send",
+  "audit.write",       // audit logs are widely readable — the classic PII leak
+]);
+
+/** Rung-5 refusal: taint reaches a governed sink without passing a cut. */
+export const GATE_SEM_013 = Object.freeze({
+  code: "GATE-SEM-013",
+  name: "GATE_V3_TAINT_REACHES_GOVERNED_SINK",
+  message: "taint reaches a governed sink (an egress-class effect) without passing a declared cut",
+});
 
 /** G4: the taint FRONTIER — instances of components declaring `tainted: true`.
  *  With none declared, the whole input frontier is treated as tainted (the
@@ -219,4 +244,72 @@ export function verifyTaintCutSeparator(graph: GateGraph, registry: GateV3Regist
     severity: "error",
     message: `${graph.circuit}: ${GATE_SEM_003.message}; removed cut(s): ${[...cuts].join(", ")}; taint frontier: ${frontier.join(", ")}`,
   }]);
+}
+
+/**
+ * Map iteration 5's rule: taint must not reach a GOVERNED SINK without first
+ * passing a declared cut.
+ *
+ * `verifyTaintCutSeparator` proved the same property for `OUT` — the circuit's
+ * return. But a value leaves the trust boundary through any egress-class part:
+ * a network send, an outbound email, an audit write. `.fungi` has always
+ * enforced that (`FUNGI-VALUESTATE-003/004` refuse an unsafe or tainted value
+ * reaching any governed sink); `.gate` was watching one door of several.
+ *
+ * Same machinery as the separator, different target set: delete every declared
+ * cut, then ask which sinks remain reachable from the taint frontier. One
+ * refusal per reachable sink, so fixing one cannot mask another.
+ */
+export function verifyTaintReachesSink(
+  circuit: GateV3Circuit,
+  graph: GateGraph,
+  registry: GateV3Registry,
+): readonly ParseDiagnostic[] {
+  const cuts = new Set(declaredCuts(graph, registry));
+  if (cuts.size === 0) return Object.freeze([]);
+
+  // Sinks: parts whose contract declares any egress-class effect.
+  const sinks = new Map<string, string>();                 // instance -> the effect that made it a sink
+  for (const part of circuit.parts) {
+    const contract = registry.components.get(`${part.component}@${part.version}`);
+    if (!contract) continue;
+    const egress = contract.effects.find((effect) => EGRESS_EFFECTS.has(effect));
+    if (egress !== undefined) sinks.set(part.instance, egress);
+  }
+  if (sinks.size === 0) return Object.freeze([]);
+
+  const frontier = taintFrontier(graph, registry);
+  // A frontier that fell back to IN means no taint is DECLARED; this rule then
+  // says nothing, exactly as the separator does — absence of a declaration is
+  // absence of the obligation, and it is stated, not silently assumed safe.
+  if (frontier.length === 1 && frontier[0] === "IN") return Object.freeze([]);
+
+  const successors = new Map<string, string[]>();
+  for (const node of graph.nodes) if (!cuts.has(node.id)) successors.set(node.id, []);
+  for (const edge of graph.edges) {
+    if (cuts.has(edge.from.node) || cuts.has(edge.to.node)) continue;
+    successors.get(edge.from.node)?.push(edge.to.node);
+  }
+
+  const seen = new Set<string>(frontier);
+  const queue = [...frontier];
+  while (queue.length > 0) {
+    for (const next of successors.get(queue.shift()!) ?? []) {
+      if (seen.has(next)) continue;
+      seen.add(next);
+      queue.push(next);
+    }
+  }
+
+  const diagnostics: ParseDiagnostic[] = [];
+  for (const [instance, effect] of sinks) {
+    if (!seen.has(instance)) continue;
+    diagnostics.push({
+      code: GATE_SEM_013.code,
+      name: GATE_SEM_013.name,
+      severity: "error",
+      message: `${circuit.name}: sink '${instance}' (effect '${effect}') — ${GATE_SEM_013.message}; taint frontier: ${frontier.join(", ")}`,
+    });
+  }
+  return Object.freeze(diagnostics);
 }

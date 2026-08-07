@@ -35,7 +35,7 @@ import { loadGateV3Registry, type GateV3Registry } from "./gate-v3-registry.js";
 import { resolveGateV3, checkGateV3Liveness, type ResolveOptions } from "./gate-v3-resolve.js";
 import { buildGateGraph } from "./gate-v3-graph.js";
 import { verifyGateGraphAcyclic } from "./gate-v3-condense.js";
-import { verifyCutDominatesEgress, verifyTaintCutSeparator } from "./gate-v3-privacy.js";
+import { verifyCutDominatesEgress, verifyTaintCutSeparator, verifyTaintReachesSink } from "./gate-v3-privacy.js";
 import { verifyDecisionShapes, verifyTerminalVocabulary, verifyDenyArmContainment } from "./gate-v3-authority.js";
 import { verifyConstructionEntry } from "./gate-v3-construction.js";
 import { verifyBudgetComposition } from "./gate-v3-budget.js";
@@ -122,6 +122,7 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
   if (resolvedRegistry !== null) {
     structural.push(...verifyCutDominatesEgress(graph, resolvedRegistry));
     structural.push(...verifyTaintCutSeparator(graph, resolvedRegistry));
+    structural.push(...verifyTaintReachesSink(circuit, graph, resolvedRegistry));  // map iter 5
     structural.push(...verifyDecisionShapes(circuit, resolvedRegistry));
     structural.push(...verifyConstructionEntry(circuit, resolvedRegistry));
     structural.push(...verifyTerminalVocabulary(circuit, resolvedRegistry));
