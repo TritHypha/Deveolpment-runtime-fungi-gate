@@ -35,6 +35,11 @@ const VERIFIABLE_SUITE_STATUSES = new Set([
 export const RELEASE_EVIDENCE_ROLE = Object.freeze({
   DURABILITY: "durability-evidence.sign",
   REPOSITORY: "repository-evidence.sign",
+  // G7 (owner-ratified 2026-08-07): gate admission signs as a NEW ROLE inside
+  // THIS envelope — one canonicaliser, one suite catalogue — never a sibling
+  // signing layer. The statement it signs over is built by the compiler's
+  // gate-v3-admission surface.
+  GATE_ADMISSION: "gate-admission.sign",
 });
 
 const ROLE_CONTEXT = Object.freeze({
@@ -42,9 +47,17 @@ const ROLE_CONTEXT = Object.freeze({
     "galerina.release.evidence.durability.sig.v1",
   [RELEASE_EVIDENCE_ROLE.REPOSITORY]:
     "galerina.release.evidence.repository.sig.v1",
+  [RELEASE_EVIDENCE_ROLE.GATE_ADMISSION]:
+    "galerina.release.evidence.gate-admission.sig.v1",
 });
-const REQUIRED_ROLES = Object.freeze([
+// Every role a delegation MAY carry, in canonical (code-unit) order. A
+// delegation's roles must be a non-empty sorted unique subset of this set —
+// widened from the original exact [DURABILITY, REPOSITORY] pin when the
+// admission role landed. Existing ceremony delegations carry exactly that
+// pair and remain valid byte-for-byte; an unknown role name still refuses.
+const KNOWN_ROLES = Object.freeze([
   RELEASE_EVIDENCE_ROLE.DURABILITY,
+  RELEASE_EVIDENCE_ROLE.GATE_ADMISSION,
   RELEASE_EVIDENCE_ROLE.REPOSITORY,
 ]);
 const DELEGATION_KEYS = Object.freeze([
@@ -200,12 +213,17 @@ function exactRoles(value) {
     !Array.isArray(value)
     || types.isProxy(value)
     || Object.getPrototypeOf(value) !== Array.prototype
-    || value.length !== REQUIRED_ROLES.length
+    || value.length === 0
+    || value.length > KNOWN_ROLES.length
   ) {
     refuse("RELEASE_EVIDENCE_DELEGATION_MALFORMED");
   }
   const canonical = canonicalValue(value, { nodes: 0 }, 0);
-  if (canonical.some((role, index) => role !== REQUIRED_ROLES[index])) {
+  // Non-empty, KNOWN, unique, and in canonical order — sorted-unique-subset,
+  // so a signed delegation has exactly one byte representation of any role
+  // set, and an unknown or shuffled list refuses rather than normalising.
+  if (canonical.some((role, index) =>
+    !KNOWN_ROLES.includes(role) || (index > 0 && String(canonical[index - 1]) >= String(role)))) {
     refuse("RELEASE_EVIDENCE_DELEGATION_MALFORMED");
   }
   return canonical;
