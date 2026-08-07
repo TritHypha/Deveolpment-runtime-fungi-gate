@@ -43,6 +43,7 @@
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
+import { decodeFlowDecl } from "./flow-name.js";
 import {
   resolveTypeId,
   TypeId,
@@ -828,31 +829,39 @@ class TypeChecker {
       }
     }
 
-    // Phase 8A: Build flow signature registry for call argument checking
-    const FLOW_DECL_KINDS = new Set([
-      "flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl",
-    ]);
-    if (FLOW_DECL_KINDS.has(node.kind) && node.value) {
+    // Phase 8A: Build flow signature registry for call argument checking.
+    //
+    // ALL FIVE tiers, through the one decoder (flow-name.ts). A local four-kind set
+    // here omitted `governedFlowDecl`, so a governed flow was never entered in
+    // flowReturnTypes / flowParamTypes / flowDeclaredEffects / declaredFlowNames —
+    // the most-governed tier was absent from the type system entirely. Keying by
+    // `node.value` is the second half of the same defect: a governed flow's value is
+    // the encoded `governed:<floor>:<name>`, so the registry would store the
+    // encoding and every lookup by the declared name would miss.
+    const decodedFlow = decodeFlowDecl(node);
+    const flowDeclName =
+      decodedFlow !== undefined && !("error" in decodedFlow) ? decodedFlow.name : "";
+    if (flowDeclName !== "") {
       // FUNGI-NAME-002: two flows with the same name in one module silently overwrite each other in the
       // signature registry below and collide only at WASM instantiate ("Duplicate export name"). Catch
       // it at COMPILE time — the 2nd+ declaration of a name is the duplicate (the first is authoritative).
-      if (this.declaredFlowNames.has(node.value)) {
+      if (this.declaredFlowNames.has(flowDeclName)) {
         this.diagnostics.push({
           code: "FUNGI-NAME-002",
           name: "DUPLICATE_NAME",
           severity: "error",
-          message: `Flow '${node.value}' is already declared in this module.`,
+          message: `Flow '${flowDeclName}' is already declared in this module.`,
           ...(node.location !== undefined ? { location: node.location } : {}),
-          suggestedFix: `Rename this flow — a flow named '${node.value}' was already declared. Duplicate flow names collide at WASM export.`,
+          suggestedFix: `Rename this flow — a flow named '${flowDeclName}' was already declared. Duplicate flow names collide at WASM export.`,
         });
       } else {
-        this.declaredFlowNames.add(node.value);
+        this.declaredFlowNames.add(flowDeclName);
       }
       const children = node.children ?? [];
       // Extract return type from the first typeRef child (the return type annotation)
       const retTypeNode = children.find((c) => c.kind === "typeRef");
       if (retTypeNode?.value) {
-        this.flowReturnTypes.set(node.value, parseTypeString(retTypeNode.value).base);
+        this.flowReturnTypes.set(flowDeclName, parseTypeString(retTypeNode.value).base);
       }
       // Extract parameter types
       const paramTypes = children
@@ -861,7 +870,7 @@ class TypeChecker {
           const typeRef = c.children?.find((t) => t.kind === "typeRef"); // perf-allow: loop-array-find — bounded N over a paramDecl's children (typeRef lookup)
           return typeRef?.value ? parseTypeString(typeRef.value).base : "";
         });
-      this.flowParamTypes.set(node.value, paramTypes);
+      this.flowParamTypes.set(flowDeclName, paramTypes);
 
       // Extract declared effects for FUNGI-TYPE-014.
       // Effects appear in two possible AST shapes:
@@ -904,7 +913,7 @@ class TypeChecker {
           }
         }
       }
-      this.flowDeclaredEffects.set(node.value, effectNames);
+      this.flowDeclaredEffects.set(flowDeclName, effectNames);
     }
 
     for (const child of node.children ?? []) {
@@ -1343,12 +1352,20 @@ class TypeChecker {
       case "flowDecl":
       case "secureFlowDecl":
       case "pureFlowDecl":
-      case "guardedFlowDecl": {
+      case "guardedFlowDecl":
+      // `governed` belongs here like any other tier. Its omission meant the body of
+      // a governed flow was never walked by the type checker at all — no return-type
+      // check, no parameter registration, no typeRef validation.
+      case "governedFlowDecl": {
         // Save + set the current flow's return type for return statement checking
         const prevReturnType = this.currentReturnType;
         const prevFlowEffects = this.currentFlowEffects;
         const prevFlowName = this.currentFlowName;
-        const flowName = node.value ?? "";
+        // Decoded, not `node.value`: a governed flow's value is the encoded triple,
+        // and the registries above are keyed by the DECLARED name.
+        const decodedCurrent = decodeFlowDecl(node);
+        const flowName =
+          decodedCurrent !== undefined && !("error" in decodedCurrent) ? decodedCurrent.name : "";
         this.currentReturnType = this.flowReturnTypes.get(flowName) ?? "";
         this.currentFlowEffects = this.flowDeclaredEffects.get(flowName) ?? [];
         this.currentFlowName = flowName;
