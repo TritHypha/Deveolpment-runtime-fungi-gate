@@ -296,6 +296,31 @@ substitutes for the other.
   transform and let the transform take the narrowed type; that way the
   correction lives in the contract rather than in a reviewer's memory.
 
+## 8. Effects — compose from the canonical set, never mint a name
+
+`.gate` does not own the effect vocabulary. `GATE-SEM-012` checks every declared
+effect against `CANONICAL_EFFECTS` in the `.fungi` compiler's `effect-checker.ts`
+— **one named set, read at the point of use, never copied**. So when a component
+seems to have no effect name, the answer is not a new name; it is a composition
+of the names that already exist.
+
+Two cases the corpus actually raised, and what to write instead:
+
+| you want to say | there is no… | declare instead | why the composition is better |
+|---|---|---|---|
+| "this runs code on another machine" | `remote.execution` | `network.outbound` **+** `shell.execute` — or `process.spawn` / `worker.spawn` for a spawned remote worker | one word hides the network hop; two effects put the egress in front of the same analysis that catches a leak |
+| "this writes personal data" | `pii.write` | the **sink**: `database.write` · `storage.write` · `state.write` · `vault.write` — and `phi.write` where the data is health data | `pii.write` names the data class but not the destination, and the destination is the half a leak analysis needs |
+
+**The rule underneath.** An effect name is what an admission policy filters on,
+so a name outside the set is a component exempt from the rule meant to govern
+it — one keystroke of quiet exemption. That is why `GATE-SEM-012` **refuses** an
+unrecognised name rather than warning about it, and why a plausible-sounding
+invention is precisely the failure it exists to catch.
+
+Minting a genuinely new effect is a change to the `.fungi` vocabulary, never a
+convenience taken in a circuit: it belongs in `effect-checker.ts` with its own
+tests, and it is a decision someone makes rather than a gap someone fills.
+
 ## What to reach for
 
 | you are looking at | draw a circuit? |
