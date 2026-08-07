@@ -64,6 +64,19 @@ P("== stage 0: detector self-test (fail-closed) ==");
   }
   P("  * detector discriminates");
 }
+{
+  // The bound KAT gets the same treatment: it asserts that the real cache stops at its
+  // ceiling, so its assertion must first be shown to REJECT an unbounded container.
+  const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs", "--self-test"],
+    { encoding: "utf8", timeout: 300000 });
+  if (r.status !== 0) {
+    console.error("  ❌ the bound assertion failed its own self-test.");
+    console.error("     An assertion that accepts an unbounded container proves nothing when it passes.");
+    console.error((r.stdout || "") + (r.stderr || ""));
+    process.exit(2);
+  }
+  P("  * bound assertion discriminates");
+}
 
 // ---------------------------------------------------------------------------
 // Stage 1 — positive bounded-cache regressions.
@@ -82,6 +95,22 @@ P("\n== stage 1: positive bounded-cache regressions ==");
     fail(`bounded-cache regressions: ${pass} passed, ${fl} failed. A bound that is never exercised is a bound nobody has tested.`);
   } else {
     P(`  * ${pass} positive regressions pass (bounds reached AND enforced)`);
+  }
+}
+{
+  // Those regressions exercise the BoundedCache class with test-sized limits. They do
+  // not touch the real execution-graph cache at its real 2048-entry ceiling, so the
+  // production bound was configured but never measured against. This KAT drives past
+  // that ceiling and requires evictions to have actually occurred — without which
+  // "entries <= maxEntries" would pass on a cache that simply never filled.
+  const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs"],
+    { encoding: "utf8", timeout: 600000 });
+  const out = (r.stdout || "") + (r.stderr || "");
+  if (r.status !== 0) {
+    fail("the execution-graph cache bound is not enforced under pressure:\n" + out);
+  } else {
+    const binds = (out.match(/which ceiling BINDS first: ([^\n]+)/) ?? [])[1] ?? "unreported";
+    P(`  * production cache bound enforced under pressure — binding ceiling: ${binds}`);
   }
 }
 
