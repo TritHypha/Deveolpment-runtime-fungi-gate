@@ -47,6 +47,21 @@ const compiler = await import(
 const KEY_ID = /^[0-9a-f]{16}$/u;
 const SIGNING_CONTEXT = "galerina.release.evidence.gate-admission.sig.v1";
 
+// ★ G7.4 — the linking gate, as a CAPABILITY rather than a shape.
+//
+// "Admission is the only path to linking" is unenforceable if a linkable
+// artifact is merely an object with the right fields: any caller could build
+// one and a downstream linker checking `typeof` would accept it. So the mark
+// of admission is MEMBERSHIP IN A MODULE-PRIVATE SET — mintable only by
+// `linkableFromAdmission`, unforgeable from outside because the set is not
+// exported and identity, not shape, is what is checked.
+//
+// Same pattern the release-evidence layer already uses for verified
+// delegations (`VERIFIED_DELEGATIONS`); reused deliberately rather than
+// invented, so there is one idea of "this object was vouched for" in the
+// estate rather than two.
+const ADMITTED_LINKABLES = new WeakSet();
+
 /**
  * G7.3 — issue a gate-admission envelope over an ADMITTED statement.
  *
@@ -130,4 +145,53 @@ export function verifyGateAdmissionEnvelope(envelope, options, inHand) {
     refusals: Object.freeze(result.diagnostics.map((d) => d.code)),
     statement: verified.statement,
   });
+}
+
+/**
+ * G7.4 — the ONLY way to obtain a linkable artifact for a circuit.
+ *
+ * Runs the composed verification (signature, then binding) and, only on a
+ * clean pass, mints a frozen linkable and registers it in the private
+ * capability set. Any refusal returns `linkable: null` — there is no partial
+ * result and no override parameter, because an override is how "the only
+ * path" becomes "the usual path".
+ *
+ * ⚠ SCOPE, stated so nobody reads more into this than it does. G6 is still
+ * unwired (doc 34 §3.1) and `lowerCircuitToGIR` has NO consumer in the
+ * compiler: wiring it is doc 34 ORDER 6, a separate ratified step. This
+ * function is the gate that order 6 must route through — it does not itself
+ * connect a circuit to any emitter, and a circuit still has no executable
+ * body. What it establishes today is that when a linker arrives, the only
+ * artifact it can accept is one this function minted.
+ */
+export function linkableFromAdmission(envelope, options, inHand) {
+  const verdict = verifyGateAdmissionEnvelope(envelope, options, inHand);
+  if (!verdict.ok) {
+    return Object.freeze({ ok: false, refusals: verdict.refusals, linkable: null });
+  }
+  const linkable = Object.freeze({
+    kind: "gate-v3-linkable.v1",
+    circuitDigest: verdict.statement.circuitDigest,
+    target: verdict.statement.target,
+    components: verdict.statement.components,
+  });
+  ADMITTED_LINKABLES.add(linkable);
+  return Object.freeze({ ok: true, refusals: Object.freeze([]), linkable });
+}
+
+/**
+ * The check a linker performs before doing anything with an artifact.
+ *
+ * ★ Identity, not shape. A structurally identical object built by hand — same
+ * kind, same digest, same fields — is REFUSED, because it was never minted
+ * here. That is the whole difference between a gate and a convention.
+ *
+ * @throws {Error} `GATE_LINK_NOT_ADMITTED` for anything not minted by
+ *   `linkableFromAdmission`, including a perfect structural clone.
+ */
+export function assertLinkableAdmitted(value) {
+  if (typeof value !== "object" || value === null || !ADMITTED_LINKABLES.has(value)) {
+    throw new Error("GATE_LINK_NOT_ADMITTED");
+  }
+  return value;
 }

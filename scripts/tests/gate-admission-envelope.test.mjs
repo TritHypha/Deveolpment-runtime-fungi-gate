@@ -29,7 +29,12 @@ import {
   releaseEvidenceStatementPreimage,
   verifyReleaseEvidenceDelegation,
 } from "../lib/beta-release-evidence-envelope.mjs";
-import { issueGateAdmissionEnvelope, verifyGateAdmissionEnvelope } from "../lib/gate-admission-envelope.mjs";
+import {
+  assertLinkableAdmitted,
+  issueGateAdmissionEnvelope,
+  linkableFromAdmission,
+  verifyGateAdmissionEnvelope,
+} from "../lib/gate-admission-envelope.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compilerRequire = createRequire(
@@ -332,6 +337,78 @@ test("issue: the catalogue currently holds ONE active suite — this pin fails w
   assert.equal(catalogue.length, 1);
   assert.equal(catalogue[0].suiteId, "hybrid-ed25519-mldsa65");
   assert.equal(catalogue[0].status, "active-for-signing");
+});
+
+// ── G7.4 — admission as the ONLY path to linking ─────────────────────────────
+
+test("link: a clean admission mints a linkable, and the linker accepts it", () => {
+  const { f, input, envelope } = admittedEnvelope();
+  const r = linkableFromAdmission(envelope, verifiedOptions(f), inHandOf(input));
+  assert.equal(r.ok, true);
+  assert.deepEqual([...r.refusals], []);
+  assert.equal(r.linkable.kind, "gate-v3-linkable.v1");
+  assert.equal(assertLinkableAdmitted(r.linkable), r.linkable);
+});
+
+test("★ link: a hand-built STRUCTURAL CLONE is refused — the mark is identity, not shape", () => {
+  // The case that decides whether this is a gate or a convention. Same kind,
+  // same digest, same fields, byte-identical when serialised — and refused,
+  // because it was never minted by linkableFromAdmission.
+  const { f, input, envelope } = admittedEnvelope();
+  const real = linkableFromAdmission(envelope, verifiedOptions(f), inHandOf(input)).linkable;
+  const clone = JSON.parse(JSON.stringify(real));
+  assert.deepEqual(clone, JSON.parse(JSON.stringify(real)), "the clone IS structurally identical");
+  assert.throws(() => assertLinkableAdmitted(clone), /GATE_LINK_NOT_ADMITTED/);
+});
+
+test("★ link: every one of the six ratified mutations BLOCKS linking", () => {
+  const { f, input, envelope } = admittedEnvelope();
+  const opts = verifiedOptions(f);
+  const blocked = (label, envelopeArg, inHandArg) => {
+    const r = linkableFromAdmission(envelopeArg, opts, inHandArg);
+    assert.equal(r.ok, false, `${label} must block linking`);
+    assert.equal(r.linkable, null, `${label} must yield NO linkable`);
+    assert.throws(() => assertLinkableAdmitted(r.linkable), /GATE_LINK_NOT_ADMITTED/);
+    return r.refusals;
+  };
+
+  const bytes = Uint8Array.from(input.sourceBytes); bytes[0] ^= 1;
+  assert.deepEqual([...blocked("tamper", envelope, { ...inHandOf(input), sourceBytes: bytes })], ["GATE-ADMIT-005"]);
+
+  const otherRegistry = structuredClone(REGISTRY_VALUE);
+  otherRegistry.components[0].implementationDigest = `sha256:${"b".repeat(64)}`;
+  assert.deepEqual([...blocked("wrong registry", envelope, { ...inHandOf(input), registryCanonicalForm: otherRegistry })], ["GATE-ADMIT-006"]);
+
+  assert.deepEqual([...blocked("wrong target", envelope, { ...inHandOf(input), target: "wasm32-other" })], ["GATE-ADMIT-007"]);
+  assert.deepEqual([...blocked("missing proof", envelope, { ...inHandOf(input), proofs: input.proofs.slice(1) })], ["GATE-ADMIT-008"]);
+
+  const bogusSuite = { ...envelope, signature: { ...envelope.signature, algorithm: "hybrid-ed25519-mldsa99" } };
+  assert.deepEqual([...blocked("unknown suite", bogusSuite, inHandOf(input))], ["RELEASE_EVIDENCE_ENVELOPE_SIGNATURE_REFUSED"]);
+
+  const otherInput = admissionInputs(SOURCE.replace("CIRCUIT probe(", "CIRCUIT other("));
+  assert.equal(blocked("substitution", envelope, inHandOf(otherInput)).includes("GATE-ADMIT-009"), true);
+});
+
+test("link: there is no override — a refusal yields nothing linkable, not a degraded one", () => {
+  const { f, input, envelope } = admittedEnvelope();
+  const r = linkableFromAdmission(envelope, verifiedOptions(f), { ...inHandOf(input), target: "wasm32-other" });
+  assert.equal(r.linkable, null);
+  assert.equal("override" in r, false);
+  assert.equal(Object.isFrozen(r), true);
+});
+
+test("link: a linkable minted for one circuit is not interchangeable with another's", () => {
+  const { f, input, envelope } = admittedEnvelope();
+  const a = linkableFromAdmission(envelope, verifiedOptions(f), inHandOf(input)).linkable;
+  const otherInput = admissionInputs(SOURCE.replace("CIRCUIT probe(", "CIRCUIT other("));
+  const built = compiler.buildAdmissionStatement(otherInput, { canonicalBytes: canonicalReleaseEvidenceBytes });
+  const f2 = fixture();
+  const b = linkableFromAdmission(envelopeFor(built.statement, f2.operational), verifiedOptions(f2), inHandOf(otherInput)).linkable;
+  // Both are genuinely admitted — the point is that they carry DIFFERENT
+  // circuit digests, so a linker binding to one cannot silently use the other.
+  assert.equal(assertLinkableAdmitted(a), a);
+  assert.equal(assertLinkableAdmitted(b), b);
+  assert.notEqual(a.circuitDigest, b.circuitDigest);
 });
 
 test("composed: the six ratified exit refusals are all reachable, each on its own axis", () => {
