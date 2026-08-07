@@ -136,6 +136,13 @@ export interface GateV3Wire {
    * type admitted two states the parser cannot produce (`budget` with a string,
    * `decreases` with a number). Discriminating it here makes the impossible
    * states unrepresentable instead of merely unbuilt.
+   *
+   * NULL AUDIT 2026-08-07 — the trailing `| null` is KEPT. It means "no
+   * annotation on this wire": one meaning, one cause, no reason lost. G3-1 was
+   * about the two PRESENT shapes admitting combinations the parser cannot
+   * produce; absence was never the ambiguous part. A `{kind: "none"}` variant
+   * would put an object where nothing exists, and consumers already test
+   * presence before narrowing on `kind`. Mirrored on `GateGraphEdge.bound`.
    */
   readonly bound:
     | { readonly kind: "budget"; readonly value: number }
@@ -788,7 +795,17 @@ function parseValue(text: string, item: Line, file: string): ParsedValue {
   return badValue("expected a quoted string, a number, a $reference, a {set}, or a qualified name");
 }
 
-/** Parse `node.port` into an endpoint with its exact span, or null. */
+/**
+ * Parse `node.port` into an endpoint with its exact span, or null.
+ *
+ * NULL AUDIT 2026-08-07 — KEPT, and the contrast with `parseValue` is the whole
+ * reason. That function had SIX failure paths collapsing to one null, so the
+ * null erased the reason and it was rewritten. This one has exactly ONE: the
+ * endpoint regex did not match. There is no second cause to distinguish, the
+ * caller already emits the code that owns it (`GATE-PARSE-022`), and a
+ * discriminated union here would carry a `reason` field with one possible
+ * value. A null is the right size for a single-cause absence.
+ */
 function parseEndpoint(text: string, item: Line, file: string, from: number): GateV3Endpoint | null {
   const match = text.match(ENDPOINT_RE);
   if (!match) return null;

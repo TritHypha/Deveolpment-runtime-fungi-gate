@@ -269,6 +269,11 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
     const key = `${component.id as string}@${component.version as string}`;
     if (components.has(key)) emit(GATE_V3_REGISTRY_CODES.REGISTRY_004, key);
 
+    // NULL AUDIT 2026-08-07 — KEPT. Every `return null` below is preceded by an
+    // `emit` naming the specific REGISTRY code that owns it (011 shape, 006
+    // identity, 013 copyable). The reason is already recorded where a reader
+    // will look for it — the diagnostics list — so the null carries no
+    // information and loses none. It means only "stop building this map".
     const ports = (list: unknown[], label: string): Map<string, GateV3Port> | null => {
       const out = new Map<string, GateV3Port>();
       for (const item of list) {

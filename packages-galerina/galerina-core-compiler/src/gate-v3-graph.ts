@@ -58,8 +58,19 @@ export interface GateGraphEdge {
   readonly id: string;
   readonly from: GateGraphEndpoint;
   readonly to: GateGraphEndpoint;
-  /** The wire's termination annotation, verbatim: budget=N or decreases=x.
-   *  Absent on ordinary wires. Carried for the tropical pass (rung 8). */
+  /**
+   * The wire's termination annotation, verbatim: budget=N or decreases=x.
+   * Absent on ordinary wires. Carried for the tropical pass (rung 8).
+   *
+   * NULL AUDIT 2026-08-07 — KEPT. `null` here means "this wire carries no
+   * annotation", which is one meaning with one cause and no lost reason. A
+   * fourth variant `{kind: "none"}` was considered and rejected: it would put
+   * an object where nothing exists, and every consumer already narrows on
+   * `kind` after checking presence, so the variant would be a state that reads
+   * as data and means absence. The discriminated union (improvement G3-1) was
+   * about the two PRESENT shapes, which previously admitted combinations the
+   * parser cannot produce; absence was never the ambiguous part.
+   */
   readonly bound: { readonly kind: "budget"; readonly value: number } | { readonly kind: "decreases"; readonly value: string } | null;
 }
 

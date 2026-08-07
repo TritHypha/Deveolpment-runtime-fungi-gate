@@ -96,6 +96,13 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
   // With a registry, the contract becomes the authority: resolve the circuit
   // and check liveness. Without one, only shape is established — a green
   // structural pass says nothing about whether any component exists.
+  // NULL AUDIT 2026-08-07 — KEPT, and deliberately. This says "no registry is
+  // in force", which has exactly ONE cause and loses no reason: either the
+  // caller supplied none, or the one supplied refused and its diagnostics are
+  // already in `structural`. Every downstream reader must handle the
+  // no-contract case anyway — that case is the difference between "shape is
+  // established" and "the contract is the authority" — so replacing it with a
+  // sentinel object would hide the distinction the dispatcher exists to make.
   let resolvedRegistry: GateV3Registry | null = null;
   if (options.registry !== undefined) {
     const loaded = loadGateV3Registry(options.registry, `${file} (registry)`);

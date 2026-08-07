@@ -20,6 +20,21 @@
 //
 // New files must be CLEAN: absent from the baseline and carrying one is a hard
 // fail, so the debt can only shrink.
+//
+// ★ THE CONVENTION FOR A NULL THAT STAYS. Not every null is the mistake. One
+// that has been triaged and kept carries a `NULL AUDIT <date>` comment saying
+// WHY — the test being: does this null lose a REASON? Six failure paths
+// collapsing to one null erase the cause and get rewritten; a single-cause
+// absence whose caller already holds the diagnostic code does not.
+//
+// So a null WITHOUT that comment has not been triaged, and a future audit can
+// tell the two apart instead of re-deriving every verdict. The `.gate` v3
+// modules are the worked example: five kept, each with its reasoning in place,
+// three removed in cycles 0105 and 0107. This convention is deliberately NOT
+// enforced by an assertion — 104 baselined files have not been triaged yet, and
+// a gate that demands a comment on all of them would be red for months and
+// switched off. It is a reading rule, and it is written here rather than in a
+// file nobody opens.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, existsSync, writeFileSync } from "node:fs";
