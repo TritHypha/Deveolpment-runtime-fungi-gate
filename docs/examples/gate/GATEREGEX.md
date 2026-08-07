@@ -402,7 +402,84 @@ complete with `\1`, `(?=` and an assumption that PCRE semantics apply.
 
 ---
 
-## 8 · Where this sits
+## 8 · What this gives `.fungi` — four security answers
+
+`.fungi` has no regex construct, so today a pattern is an **opaque call**: a
+component that returns a Boolean and tells the language nothing. Four things
+follow from that, and drawing the pattern answers each.
+
+### 8.1 · A Boolean forces a three-valued situation into two values
+
+This is the sharpest one, because `.fungi` already has the receiver.
+
+A validator has **three** outcomes: it matched, it ran and refused, or it never
+ran (refused pattern, unavailable, misconfigured). A Boolean has room for two,
+so the third collapses into `false` — and *"we could not check"* becomes
+*"we checked and it is bad"*. That reads safe and is not: the two need opposite
+responses, and one of them is a deployment-wide condition.
+
+`.fungi`'s `check` is a **K3 router** with `if:` / `deny:` / `ambig:` all
+mandatory (`FUNGI-CHECK-001`). A drawn validator's verdict maps onto it exactly:
+
+| GateRegex terminal | `.fungi` arm |
+|---|---|
+| `OUT.value` (matched) | `if:` |
+| `DENY.no_match` (ran, refused) | `deny:` |
+| `DENY.pattern_refused` / `DENY.undecided` | `ambig:` |
+
+The language has had the third arm all along. What was missing was a validator
+honest enough to use it — and `ambig:` is **mandatory**, so once the verdict is
+a Verdict rather than a Boolean, the case cannot be forgotten.
+
+### 8.2 · Declassification stops being a convention
+
+In `.fungi` today, calling `validate(x)` and then treating `x` as clean is a
+**convention the call site follows**. Nothing structural says the validator ran,
+and nothing stops a second path reaching the sink without it.
+
+Draw the validator and its output type is `construction: "canonical-only"`
+(`GATE-SEM-005`) — **holding the type IS the proof it passed**. The
+value-state checker gains something structural to key on instead of a call-site
+pattern, and the declassifier cannot be bypassed because there is no other way
+to obtain the value. This is §7's border-data guarantee applied to `.fungi`'s
+own taint machinery rather than to a circuit's egress.
+
+### 8.3 · Heuristic at the source, proof at the sink
+
+`.fungi` auto-taints by **parameter name** — `cookies`, `session`, `formData`,
+`searchParams` and the rest — with a deliberate anti-over-block list for
+ambiguous ones (`data`, `payload`, `url`, `event`). That is a good, pragmatic
+rule, and like every name heuristic it has both directions of error: a tainted
+value called `input` is missed.
+
+GateRegex does not improve the guess. It anchors **the other end**: whatever the
+source heuristic decides, the sink demands a canonical-only type that only the
+drawn validator produces. A missed taint at the source no longer reaches the
+sink unchallenged, because the sink is not asking about taint — it is asking for
+a type that cannot be forged. **Two independent mechanisms, failing in
+different directions**, which is what defence in depth actually means.
+
+### 8.4 · ReDoS becomes a declared cost, not a runtime surprise
+
+A `.fungi` flow declares effects and budgets. A regex inside it declares
+nothing: its cost is invisible to the effect checker, to the budget, and to
+resilience inference. An eleven-character pattern can be the most expensive
+thing in a governed flow and no governance artifact will mention it.
+
+Drawn, the pattern's worst case is **a number** — the max-plus fold over the
+longest path (`GATE-SEM-006`) — and a number can enter the flow's budget like
+any other cost. And the pattern that has no finite drawing never reaches the
+budget at all, because it was refused at compile (§3). ReDoS stops being a
+runtime property to monitor and becomes a **compile-time refusal**.
+
+### What it does not give
+
+Stated so the section is not read as more than it is: the drawing cannot tell
+you the pattern is **correct**, does not cover **scanning** (finding a match
+inside a longer string — that is the engine's job, §5), and is **larger** than
+a pattern string. It removes classes of failure; it does not remove review.
+
+## 9 · Where this sits
 
 GateRegex is the **compile-time artifact**: the shape, the composed budget, the terminals,
 readable by eye. A streaming engine is the **run-time** side: no rewind, three-valued, a
