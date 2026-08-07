@@ -74,10 +74,10 @@ const TYPE_ID_RE = /^[A-Za-z_][A-Za-z0-9_.]*(?:<[A-Za-z0-9_.,<>]+>)?$/;
 const REGISTRY_FIELDS = new Set(["version", "digest", "types", "components", "vocabularies", "effects", "capabilities"]);
 
 /** Fields a closed schema admits. Anything else is a surplus field and refuses. */
-const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf", "tainted"]);
+const COMPONENT_FIELDS = new Set(["id", "version", "status", "implementationDigest", "inputs", "outputs", "arguments", "effects", "capabilities", "decision", "arms", "cut", "variantOf", "tainted", "zoneGate"]);
 const PORT_FIELDS = new Set(["name", "type", "copyable", "required"]);
 const ARGUMENT_FIELDS = new Set(["name", "type", "required", "min", "max"]);
-const TYPE_FIELDS = new Set(["id", "kind", "construction", "values", "scalarEncoding", "packedEncoding"]);
+const TYPE_FIELDS = new Set(["id", "kind", "construction", "values", "scalarEncoding", "packedEncoding", "zone"]);
 
 export interface GateV3Port {
   readonly name: string;
@@ -102,6 +102,11 @@ export interface GateV3Component {
   readonly arguments: ReadonlyMap<string, GateV3ArgumentSpec>;
   readonly effects: readonly string[];
   readonly capabilities: readonly string[];
+  /** True when the contract declares this component the sanctioned opaque →
+   *  semantic trust transition (GD-R09's zone seam). Declared, never inferred
+   *  from the component's name — binding the checker to `tritmesh.ql.gate`
+   *  would tie it to one vocabulary and repeat GD-008's naming mistake. */
+  readonly zoneGate: boolean;
   /** True when the contract declares this component a three-valued decision. */
   readonly decision: boolean;
   /** The ordered arm port names a decision must route (GD-008's ruled fix). */
@@ -130,7 +135,7 @@ export interface GateV3Component {
 export interface GateV3Registry {
   readonly version: string;
   readonly digest: string;
-  readonly types: ReadonlyMap<string, { readonly id: string; readonly kind: string; readonly construction: string; readonly values?: readonly unknown[] }>;
+  readonly types: ReadonlyMap<string, { readonly id: string; readonly kind: string; readonly construction: string; readonly values?: readonly unknown[]; readonly zone: string }>;
   readonly components: ReadonlyMap<string, GateV3Component>;
   /** Per-terminal-family reason vocabularies (GD-009 under ruling ④): family
    *  ("deny" | "fault" | "trap" | "drain") -> the closed set of admissible
@@ -193,7 +198,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
   if (diagnostics.length > 0) return fail();
 
   // ── types ────────────────────────────────────────────────────────────────
-  const types = new Map<string, { id: string; kind: string; construction: string; values?: readonly unknown[] }>();
+  const types = new Map<string, { id: string; kind: string; construction: string; values?: readonly unknown[]; zone: string }>();
   for (const entry of (raw.types ?? []) as unknown[]) {
     if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
       emit(GATE_V3_REGISTRY_CODES.REGISTRY_011, "type list");
@@ -209,6 +214,15 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       emit(GATE_V3_REGISTRY_CODES.REGISTRY_008, String(type.id ?? "?"));
       continue;
     }
+    // GD-R09 zone tag. Absent means `opaque`: a zone is an obligation the
+    // registry DECLARES, exactly as `cut` is, and defaulting to `semantic`
+    // would make every existing type demand a gate that no existing circuit
+    // draws. The fail-closed half lives in the checker instead — a declared
+    // semantic type with no gate anywhere REFUSES (GATE-SEM-014).
+    if (type.zone !== undefined && !/^(opaque|semantic)$/.test(String(type.zone))) {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_008, `${type.id} zone must be 'opaque' or 'semantic'`);
+      continue;
+    }
     if (type.kind === "finite" && (!Array.isArray(type.values) || type.values.length === 0)) {
       emit(GATE_V3_REGISTRY_CODES.REGISTRY_008, `${type.id} (finite type needs a non-empty domain)`);
       continue;
@@ -218,10 +232,11 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
     } else {
       // `values` is omitted entirely when absent (exactOptionalPropertyTypes:
       // an optional property set to undefined is not the same as absent).
-      const entry: { id: string; kind: string; construction: string; values?: readonly unknown[] } = {
+      const entry: { id: string; kind: string; construction: string; values?: readonly unknown[]; zone: string } = {
         id: type.id,
         kind: String(type.kind),
         construction: String(type.construction),
+        zone: type.zone === undefined ? "opaque" : String(type.zone),
       };
       if (Array.isArray(type.values)) entry.values = Object.freeze([...type.values]);
       types.set(type.id, entry);
@@ -368,6 +383,10 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
 
     // Variant family (GD-028 B): a well-formed dotted identifier or absent —
     // one level only, so a variant cannot itself be a family.
+    const zoneGate = component.zoneGate === true;
+    if (component.zoneGate !== undefined && typeof component.zoneGate !== "boolean") {
+      emit(GATE_V3_REGISTRY_CODES.REGISTRY_006, `${key} zoneGate must be Boolean`);
+    }
     const tainted = component.tainted === true;
     if (component.tainted !== undefined && typeof component.tainted !== "boolean") {
       emit(GATE_V3_REGISTRY_CODES.REGISTRY_006, `${key} tainted must be Boolean`);
@@ -400,6 +419,7 @@ export function loadGateV3Registry(value: unknown, source: string): GateV3Regist
       cut,
       variantOf,
       tainted,
+      zoneGate,
     }));
   }
 

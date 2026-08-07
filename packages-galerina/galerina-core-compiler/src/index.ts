@@ -184,6 +184,9 @@ export {
   GATE_SEM_013,
 } from "./gate-v3-privacy.js";
 
+// Round-five G5 rung 1 — the zone seam: semantic work must pass a declared gate
+export { verifyZoneDomination, GATE_SEM_014 } from "./gate-v3-zone.js";
+
 export {
   verifyGateV3Structure,
   analyzeGateV3Liveness,
