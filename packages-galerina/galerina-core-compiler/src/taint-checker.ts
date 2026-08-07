@@ -14,6 +14,7 @@
 // =============================================================================
 
 import { type AstNode, type FlowMeta } from "./parser.js";
+import { decodeFlowDecl } from "./flow-name.js";
 
 // ---------------------------------------------------------------------------
 // Sink contexts (closed set)
@@ -249,7 +250,6 @@ export const FUNGI_TAINT_004 = {
 // Taint analysis
 // ---------------------------------------------------------------------------
 
-const FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
 
 /** What a binding currently holds, from a taint perspective. */
 type TaintState =
@@ -396,9 +396,18 @@ export function checkTaint(ast: AstNode, flows: readonly FlowMeta[]): TaintDiagn
   const diagnostics: TaintDiagnostic[] = [];
 
   // Index top-level flow nodes by name once — the per-flow .find scanned all of ast.children (O(flows²)).
+  //
+  // Keyed by the DECODED name, over all FIVE tiers. A local four-kind set here
+  // omitted `governedFlowDecl`, and the key was `c.value` — which for a governed
+  // flow is the encoded `governed:<floor>:<name>`. Either fault alone makes the
+  // lookup below miss and `continue`, so a governed flow was skipped entirely: a
+  // tainted value reaching an injection sink signed CLEAN at the highest
+  // governance tier. Both close through the one decoder (flow-name.ts).
   const flowNodeByName = new Map<string, AstNode>();
   for (const c of ast.children ?? []) {
-    if (FLOW_KINDS.has(c.kind) && typeof c.value === "string" && !flowNodeByName.has(c.value)) flowNodeByName.set(c.value, c);
+    const decoded = decodeFlowDecl(c);
+    if (decoded === undefined || "error" in decoded || decoded.name === "") continue;
+    if (!flowNodeByName.has(decoded.name)) flowNodeByName.set(decoded.name, c);
   }
   for (const flow of flows) {
     const flowNode = flowNodeByName.get(flow.name);
