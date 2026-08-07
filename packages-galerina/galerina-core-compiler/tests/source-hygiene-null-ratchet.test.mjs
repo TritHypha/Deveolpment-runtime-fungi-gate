@@ -46,7 +46,26 @@ const BASELINE = join(import.meta.dirname, "fixtures", "null-ratchet-baseline.js
 // Product source only. Tests measured 0 and stay that way by their own rule
 // below; vendored/compiled bundles are a different population and are excluded
 // rather than baselined, so nobody can hide a new null by editing a bundle.
-const SCAN = join(REPO, "packages-galerina");
+//
+// ★ SCOPE 2026-08-07 (cycle 0109), after a widening that taught more by failing
+// than it would have by working. The first version scanned `packages-galerina`
+// alone; the other roots looked like 279 unguarded files, so they were added.
+// The red-first probe then did NOT fire on a planted null there, and chasing
+// that instead of shipping found two things:
+//
+//   1. all 3 "occurrences" in those roots were `x || null` FALSE POSITIVES —
+//      the pattern was matching the second pipe of a logical-or;
+//   2. and a type-position null CANNOT occur in plain JavaScript code at all.
+//      A `.mjs` may carry `@type {string | null}` in JSDoc, which is a comment
+//      and stripped. So scanning `.js`/`.mjs`/`.cjs` for this pattern can only
+//      ever produce noise.
+//
+// The roots stay — a `.ts` file added under `scripts/` later IS covered, and
+// that costs nothing — but the extension filter is now `.ts` only, which is
+// where the construct can exist. Narrower AND more correct than the widening
+// that prompted it.
+const SCAN_ROOTS = ["packages-galerina", "governance", "scripts", "tools", "bin", "src"]
+  .map((root) => join(REPO, root));
 const SKIP = new Set(["node_modules", "dist", "build", ".git", "coverage"]);
 const VENDORED = /galerina-core\/compiler\/|\.min\.js$/;
 const IS_TEST = /(^|\/)tests?\//;
@@ -62,14 +81,20 @@ const IS_TEST = /(^|\/)tests?\//;
  * costs one line and leaves no exemption to remember.
  */
 const N = "null";
-const TYPE_NULL = new RegExp(`:\\s*[\\w<>\\[\\]|\\s.]*\\|\\s*${N}\\b|\\|\\s*${N}\\s*[;,)=>]`);
+// `(?<!\|)` — a pipe NOT preceded by a pipe, so the logical-or default
+// `x || null` is excluded. WITHOUT this the pattern matched the SECOND pipe of
+// `||` and counted every `?? 0 || null` idiom as a type annotation: measured at
+// 4 false positives, every one of them in a `.mjs`/`.cjs` file, and 0 in `.ts`.
+const TYPE_NULL = new RegExp(`:\\s*[\\w<>\\[\\]\\s.]*(?<!\\|)\\|\\s*${N}\\b|(?<!\\|)\\|\\s*${N}\\s*[;,)=>]`);
 
 function* walk(dir) {
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
   for (const e of entries) {
     if (e.isDirectory()) { if (!SKIP.has(e.name)) yield* walk(join(dir, e.name)); }
-    else if (/\.(ts|mjs|js|cjs)$/.test(e.name)) yield join(dir, e.name);
+    // `.ts` only — see the SCOPE note above. The construct being hunted is a
+    // TypeScript type annotation; in plain JS it can only appear in a comment.
+    else if (/\.ts$/.test(e.name) && !/\.d\.ts$/.test(e.name)) yield join(dir, e.name);
   }
 }
 
@@ -77,7 +102,7 @@ function* walk(dir) {
 function measure() {
   const found = {};
   const tests = {};
-  for (const file of walk(SCAN)) {
+  for (const file of SCAN_ROOTS.flatMap((root) => [...walk(root)])) {
     const rel = file.slice(REPO.length + 1).split(sep).join("/");
     if (VENDORED.test(rel)) continue;
     let count = 0;
