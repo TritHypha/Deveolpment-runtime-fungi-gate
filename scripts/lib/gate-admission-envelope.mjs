@@ -124,11 +124,18 @@ export function issueGateAdmissionEnvelope(statement, signer, options = {}) {
  *                 caller-choosable: this function answers exactly one question
  * @param inHand   { sourceBytes, registryCanonicalForm, circuitCanonicalForm,
  *                   proofs, target } — what the caller actually holds
- * @returns {{ ok: boolean, refusals: readonly string[], statement: object|null }}
+ * @returns {{ ok: boolean, refusals: readonly string[], statement: object|null,
+ *   refusedStatement?: object }}
  *   `ok` only when the signature verifies AND the statement is about these
  *   artifacts AND its verdict is admitted. Refusals carry the layer's own
  *   codes verbatim — envelope strings or GATE-ADMIT-* — so the two layers
  *   stay distinguishable in the report.
+ *
+ *   ★ `statement` is NULL on EVERY failure, whichever layer refused — a
+ *   caller may treat its presence as the result being usable. Where a
+ *   signature verified but the bindings did not, the statement is returned as
+ *   `refusedStatement` for reporting only; it describes some OTHER artifact,
+ *   which is exactly why it does not get the usable name.
  */
 export function verifyGateAdmissionEnvelope(envelope, options, inHand) {
   let verified;
@@ -144,9 +151,30 @@ export function verifyGateAdmissionEnvelope(envelope, options, inHand) {
   const result = compiler.verifyAdmissionBindings(verified.statement, inHand, {
     canonicalBytes: canonicalReleaseEvidenceBytes,
   });
+  if (!result.bindingsMatch) {
+    // ⚠ `statement` is NULL on every failure, and that uniformity is the point
+    // (cold review, cycle 0144). This branch used to return the statement
+    // regardless, so the two failure modes had DIFFERENT shapes: an envelope
+    // failure gave null, a binding failure gave a live object. A caller who
+    // learned "null on failure" from the first got, in the SUBSTITUTION case, an
+    // authentically-signed statement describing a DIFFERENT CIRCUIT — and the
+    // natural defensive idiom `const s = r.statement; if (s) { … }` sails
+    // straight through it. The signature being genuine is what made it
+    // dangerous: nothing about the object looks wrong.
+    //
+    // The statement is still available for REPORTING under a name no caller can
+    // mistake for a usable result. "Your envelope is for circuit X, you hold Y"
+    // is worth saying; it is not worth risking a field called `statement`.
+    return Object.freeze({
+      ok: false,
+      refusals: Object.freeze(result.diagnostics.map((d) => d.code)),
+      statement: null,
+      refusedStatement: verified.statement,
+    });
+  }
   return Object.freeze({
-    ok: result.bindingsMatch,
-    refusals: Object.freeze(result.diagnostics.map((d) => d.code)),
+    ok: true,
+    refusals: Object.freeze([]),
     statement: verified.statement,
   });
 }

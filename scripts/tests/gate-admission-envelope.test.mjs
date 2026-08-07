@@ -411,6 +411,56 @@ test("link: a linkable minted for one circuit is not interchangeable with anothe
   assert.notEqual(a.circuitDigest, b.circuitDigest);
 });
 
+test("★ composed: `statement` is NULL on EVERY failure mode — the shape does not vary by which layer refused", () => {
+  // Cold review, cycle 0144. The binding path used to return the statement
+  // regardless of the verdict while the envelope path returned null, so the
+  // two failure modes had different shapes. In the SUBSTITUTION case that meant
+  // handing back an authentically-signed statement for a DIFFERENT circuit —
+  // and `const s = r.statement; if (s) { … }` is the idiom that gets written.
+  //
+  // Enumerated across all six axes rather than the two that happened to be
+  // probed: a uniformity claim tested on a subset is a claim about the subset.
+  const { f, input, envelope } = admittedEnvelope();
+  const opts = verifiedOptions(f);
+  const bytes = Uint8Array.from(input.sourceBytes); bytes[0] ^= 1;
+  const otherRegistry = structuredClone(REGISTRY_VALUE);
+  otherRegistry.components[0].implementationDigest = `sha256:${"b".repeat(64)}`;
+  const otherInput = admissionInputs(SOURCE.replace("CIRCUIT probe(", "CIRCUIT other("));
+
+  const failures = [
+    ["tamper", envelope, { ...inHandOf(input), sourceBytes: bytes }],
+    ["wrong registry", envelope, { ...inHandOf(input), registryCanonicalForm: otherRegistry }],
+    ["wrong target", envelope, { ...inHandOf(input), target: "wasm32-other" }],
+    ["missing proof", envelope, { ...inHandOf(input), proofs: input.proofs.slice(1) }],
+    ["unknown suite", { ...envelope, signature: { ...envelope.signature, algorithm: "hybrid-ed25519-mldsa99" } }, inHandOf(input)],
+    ["substitution", envelope, inHandOf(otherInput)],
+  ];
+
+  for (const [label, env, hand] of failures) {
+    const r = verifyGateAdmissionEnvelope(env, opts, hand);
+    assert.equal(r.ok, false, `${label} must fail`);
+    assert.equal(r.statement, null, `${label}: statement must be null on failure, whichever layer refused`);
+  }
+});
+
+test("composed: a signature-verified refusal still reports WHICH statement, under an unusable name", () => {
+  // The information is worth keeping — "your envelope is for circuit X, you
+  // hold Y" — it is just not worth risking a field called `statement`.
+  const { f, envelope } = admittedEnvelope();
+  const otherInput = admissionInputs(SOURCE.replace("CIRCUIT probe(", "CIRCUIT other("));
+  const r = verifyGateAdmissionEnvelope(envelope, verifiedOptions(f), inHandOf(otherInput));
+  assert.equal(r.statement, null);
+  assert.equal(r.refusedStatement?.kind, "gate-v3-admission.v1",
+    "a genuinely signed but wrong-circuit statement is still reportable");
+
+  // …and where NO signature verified there is nothing to report, so the field
+  // is absent rather than null-and-meaningless.
+  const bogus = { ...envelope, signature: { ...envelope.signature, algorithm: "hybrid-ed25519-mldsa99" } };
+  const s = verifyGateAdmissionEnvelope(bogus, verifiedOptions(f), inHandOf(otherInput));
+  assert.equal("refusedStatement" in s, false,
+    "an unverified envelope's statement is not evidence of anything and is not returned");
+});
+
 test("composed: the six ratified exit refusals are all reachable, each on its own axis", () => {
   // tamper / wrong registry / wrong target / missing proof — compiler layer;
   // unknown suite — envelope layer; substitution — the composed case above.
