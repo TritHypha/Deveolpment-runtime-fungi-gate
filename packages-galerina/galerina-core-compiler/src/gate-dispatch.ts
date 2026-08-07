@@ -39,7 +39,7 @@ import { verifyCutDominatesEgress, verifyTaintCutSeparator } from "./gate-v3-pri
 import { verifyDecisionShapes, verifyTerminalVocabulary, verifyDenyArmContainment } from "./gate-v3-authority.js";
 import { verifyConstructionEntry } from "./gate-v3-construction.js";
 import { verifyBudgetComposition } from "./gate-v3-budget.js";
-import { verifyEffectEnvelope } from "./gate-v3-envelope.js";
+import { verifyEffectEnvelope, verifyEffectNames } from "./gate-v3-envelope.js";
 
 /** Which frontend handled the file. `refused` means no frontend admitted it. */
 export type GateDialect = "gate-v3" | "refused";
@@ -126,6 +126,7 @@ export function dispatchGateSource(source: string, file: string, options: GateDi
     structural.push(...verifyConstructionEntry(circuit, resolvedRegistry));
     structural.push(...verifyTerminalVocabulary(circuit, resolvedRegistry));
     structural.push(...verifyEffectEnvelope(circuit, resolvedRegistry));       // G4
+    structural.push(...verifyEffectNames(circuit, resolvedRegistry));          // map iter 4
     structural.push(...verifyDenyArmContainment(circuit, graph, resolvedRegistry)); // G4
   }
 

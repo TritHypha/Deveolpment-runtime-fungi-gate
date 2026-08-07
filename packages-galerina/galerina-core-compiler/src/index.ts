@@ -171,7 +171,7 @@ export { verifyConstructionEntry, GATE_SEM_005 } from "./gate-v3-construction.js
 export { composeWorstCaseBudgets, verifyBudgetComposition, GATE_SEM_006 } from "./gate-v3-budget.js";
 
 // Round-four G4 — envelope, deny-arm containment, taint frontier
-export { verifyEffectEnvelope, GATE_SEM_009, GATE_SEM_010 } from "./gate-v3-envelope.js";
+export { verifyEffectEnvelope, verifyEffectNames, GATE_SEM_009, GATE_SEM_010, GATE_SEM_012 } from "./gate-v3-envelope.js";
 
 // Round-three G3 rungs 3–4 — privacy passes: dominators + the cut rules
 export {
