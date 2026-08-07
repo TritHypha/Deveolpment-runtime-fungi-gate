@@ -194,6 +194,29 @@ async function main() {
     process.exit(1);
   }
 
+  // ── `gate <subcommand>` — routed to the compiler package's CLI ──
+  // GD-024's class, and it caught me a second time: that defect was "the ROOT
+  // entry point has no .gate routing; round one wired only the compiler
+  // package's own CLI". Wiring `from-pattern` into the package CLI alone would
+  // have reproduced it exactly — `galerina gate from-pattern …` fell through to
+  // the file pipeline and tried to stat a file called `from-pattern`.
+  //
+  // Delegated rather than reimplemented: one implementation, so the two entry
+  // points cannot drift. spawnSync with shell:false and an argv ARRAY — a
+  // pattern is hostile-shaped input by nature (it is full of shell
+  // metacharacters) and must never reach a shell string.
+  if (command === "gate") {
+    const cliPath = new URL(
+      "./packages-galerina/galerina-core-compiler/dist/cli.js",
+      import.meta.url,
+    );
+    const result = spawnSync(process.execPath, [fileURLToPath(cliPath), "gate", ...rest], {
+      stdio: "inherit",
+      shell: false,
+    });
+    process.exit(result.status ?? 1);
+  }
+
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(`galerina — Galerina compiler + runtime (Phase 27 WASM)
 

@@ -46,6 +46,7 @@ import { gatherFileImports } from "./module-registry.js";
 import { loadPackageManifest } from "./package-resolver.js";
 import { generateCycloneDxSbom } from "./sbom.js";
 import { dispatchGateSource, findGateRegistry } from "./gate-dispatch.js";
+import { generateCircuitFromPattern } from "./gate-from-pattern.js";
 import type { Dirent } from "node:fs";
 import { join, basename, dirname, resolve as resolvePath } from "node:path";
 
@@ -938,7 +939,8 @@ function parseArgs(): { readonly mode: CliMode; readonly targetDir: string } {
         "  emit --ai-graph              Emit build/semantic/galerina.ai.json\n" +
         "  verify-selfhost              Verify deterministic (reproducible) build\n" +
         "  cost --analysis              Analyse contract.economics blocks across all flows\n" +
-        "  diff [baseRef] [--json]      Governance delta vs a git ref (exit 2 if authority widens)\n",
+        "  diff [baseRef] [--json]      Governance delta vs a git ref (exit 2 if authority widens)\n" +
+        "  gate from-pattern <p> --name <c>  Generate a .gate circuit from a bounded pattern (stdout)\n",
       );
       process.exit(1);
   }
@@ -1322,7 +1324,66 @@ function runCostAnalysis(targetDir: string): void {
 // Main entry point
 // ---------------------------------------------------------------------------
 
+/**
+ * `galerina gate from-pattern <pattern> --name <circuit>` (ratified order 2).
+ *
+ * Handled BEFORE `parseArgs` deliberately: that function returns a fixed
+ * `{mode, targetDir}` contract with nowhere to carry a pattern and a name, and
+ * widening it for one subcommand would distort every other command's shape.
+ *
+ * Writes the generated circuit to STDOUT and nothing else — no file is created
+ * (doc 34 §4: "write to standard output by default and refuse overwriting an
+ * existing file"). A refusal goes to stderr with exit 1, so a shell pipeline
+ * cannot mistake a refusal for a circuit.
+ *
+ * Returns true when it handled the argv, so `main` can stop.
+ */
+function runGateFromPattern(args: readonly string[]): boolean {
+  if (args[0] !== "gate" || args[1] !== "from-pattern") return false;
+
+  const rest = args.slice(2);
+  const nameAt = rest.indexOf("--name");
+  const name = nameAt >= 0 ? rest[nameAt + 1] : undefined;
+  const positional = rest.filter((a, i) => !a.startsWith("--") && i !== nameAt + 1);
+  const pattern = positional[0];
+
+  if (pattern === undefined || name === undefined) {
+    process.stderr.write(
+      "Usage: galerina gate from-pattern <pattern> --name <circuit>\n" +
+      "  Generates a .gate circuit on STDOUT. The generated TEXT is the artifact:\n" +
+      "  review it, commit it, and let the normal check pipeline verify it.\n" +
+      "  A generator is not an admission authority.\n",
+    );
+    process.exit(1);
+  }
+  if (positional.length > 1) {
+    // Refuse rather than silently use the first: an unquoted pattern that the
+    // shell split into several words would otherwise generate a circuit for a
+    // FRAGMENT of what the author wrote.
+    process.stderr.write(
+      `[error] expected one pattern, got ${positional.length} — quote the pattern so the shell does not split it\n`,
+    );
+    process.exit(1);
+  }
+
+  const result = generateCircuitFromPattern(pattern, { name });
+  if (!result.ok) {
+    process.stderr.write(`[error] ${result.reason}\n`);
+    process.exit(1);
+  }
+  process.stdout.write(result.source);
+  // The reason list goes to STDERR so `> out.gate` captures only the circuit.
+  process.stderr.write(
+    `[info] ${result.parts} parts, ${result.wires} wires. ` +
+    `The registry must declare deny reasons: ${result.reasons.join(", ")}\n`,
+  );
+  return true;
+}
+
 function main(): void {
+  // Before parseArgs — see the note on runGateFromPattern.
+  if (runGateFromPattern(process.argv.slice(2))) return;
+
   const { mode, targetDir } = parseArgs();
   // Load galerina.check.json / .galerinarc.json if present
   const checkConfig: CheckConfig = (mode === "check" || mode === "check-strict")
