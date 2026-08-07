@@ -83,6 +83,8 @@ against a loaded registry.
 | **`construction` is enforced.** A non-`source` type (`canonical-only`, `verified-measurement-only`) must not enter as a circuit PARAMETER — its constructor or verifier never ran inside the governed drawing. Outputs and returns are sound by construction. A mint is still not a sanitizer: this rule shares nothing with the cut passes. | `GATE-SEM-005` |
 | **Budget ceilings hold against the WORST case.** Wire `budget=N` annotations compose max-plus along paths; a composed worst case above a declared `REQUIRES budget` refuses. Deny-side only: the result can refuse and can do nothing else — "within budget" admits nothing, ever. | `GATE-SEM-006` |
 | **Terminal reasons obey their declared vocabulary.** With a family vocabulary declared, a reason outside it refuses — `DENY.approved` is refused because the deny vocabulary never admitted it, not because it sounds positive. | `GATE-SEM-007` |
+| **Effect names must be CANONICAL.** An effect the shared vocabulary does not admit refuses — in a component contract or the envelope. A misspelling is invisible to the admission policy watching the real name, so a single keystroke would otherwise exempt a component from the rule meant to govern it. | `GATE-SEM-012` |
+| **Taint must not reach a GOVERNED SINK.** A value leaves the trust boundary through any egress-class part — a network send, an outbound email, an audit write — not only through `OUT`. Sinks are derived from **declared effects**, never an opt-in flag, so a forgotten declaration cannot mean no protection. `database.write` is deliberately not egress: an internal write has not left the boundary. | `GATE-SEM-013` |
 | **An unchecked family says so.** Reasons with NO declared vocabulary yield an INFO label per family — the mode that skips a check must announce itself. | `GATE-SEM-008` (info) |
 
 ## The doctrine
@@ -94,6 +96,13 @@ against a loaded registry.
   compile-time backstop is wired — a deliberate, loud, fail-closed refusal.
 - **Comments carry no authority.** A `#` comment narrating the opposite of the
   drawn wires is ignored. The wires are the truth.
+- **A circuit cannot be switched off.** There is no ambient environment, no
+  conditional part-skipping and no `#ifdef`: a value arrives on a wire or does
+  not exist, and a part is wired or it is not. The `SKIP_THE_CHECK=1`
+  environment flag and the compile-time feature gate — both found in real code
+  during the corpus mapping — are the shape that lets a deployment disable a
+  safety check. Neither is representable here, so a governance check drawn into
+  a circuit is in the shipped artifact or was never drawn.
 
 ## Known limits — stated, not hidden
 

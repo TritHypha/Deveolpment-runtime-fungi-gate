@@ -372,4 +372,36 @@ difference against the reference implementation rather than left silent.
 | arrays | persistent `Array<T>`, `append` returns | a value on a wire; set literals for arguments | inside a part |
 | records | `record` + named literal | catalogue type, `kind: "record"` | inside a part |
 | hallmarks | `hallmark X of C { gate: … }` | honoured via exact typing; `construction` ENFORCED at entry (`GATE-SEM-005`) | **do not add to `.gate`** |
-| effects | derived, declared per flow | `REQUIRES:` envelope; parts' from contracts | direct; envelope check not yet built |
+| effects | derived, declared per flow | `REQUIRES:` envelope; parts' from contracts | direct; envelope CHECKED (`GATE-SEM-009/010`), names canonical (`GATE-SEM-012`) |
+
+---
+
+## 10. Boundaries confirmed by 91 real sources
+
+Everything above was written from the language definitions. The list below was
+**confirmed by mapping 91 real files** — the Galerina example levels plus 20
+each of Go, Python, Rust and C from working codebases. Each is a deliberate
+limit rather than a gap awaiting a fix: adding any of them would give a drawing
+invisible control flow, which is the one thing it cannot have.
+
+| construct | why it stays out |
+|---|---|
+| `try`/`catch`, `defer`, `goto cleanup`, `finally` | recovery is a re-decision — a second decision part — not a handler scope |
+| `async`/`await`, goroutines, channels, futures | a wire is not a promise; sequencing is depth, and concurrency has no representation |
+| propagation (`?`, bubbling `err != nil`) | no call stack to propagate up — every refusal terminates somewhere **named** |
+| ambient state: `ctx.Set`, thread-local `PyErr_*`, `os.environ` | a value arrives on a wire or does not exist |
+| `#ifdef` gates, `SKIP_THE_CHECK=1` | a circuit is one artifact with one shape; it cannot be disabled by deployment |
+| `unsafe` blocks, raw pointers, `malloc`/`free` | the runtime owns memory; a drawing never does |
+| generics, traits, duck typing | `.gate` is monomorphic — the *absence* of unification is what makes the type wall sound |
+| decorators and macros | they wrap or expand behaviour invisibly; a drawing must be what it says |
+| field-level `exposes`/`denies` | below a drawing's resolution — a wire carries a whole value |
+| arithmetic and string building | a circuit cannot compute, which is why SQL-injection taint cannot even be *built* here |
+
+**The law the corpus settled.** The further a source language is from
+classifying its failures, the more of the translation happens in `.fungi` and
+the less `.gate` can take directly. C classifies nothing — a failure is a
+string in a struct field plus a caller who remembers to look — so essentially
+all of it is `.fungi` work. That is why the route is
+TypeScript/Go/Rust/C → `.fungi` → `.gate`, and why a direct source-to-circuit
+translator would be guessing at terminals.
+

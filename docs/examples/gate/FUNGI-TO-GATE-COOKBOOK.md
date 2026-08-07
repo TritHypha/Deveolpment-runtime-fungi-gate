@@ -281,6 +281,21 @@ state, by design.
 is *correct*; the `.gate` circuit proves it is *unbypassable*. Neither proof
 substitutes for the other.
 
+**Two consequences of that split, both worth knowing before you draw:**
+
+- **A cut's `fields` are declared, not verified.** `fields={PatientId,SSN}` is
+  a declaration the checker does not audit against the type — a circuit has no
+  field concept, and giving it one would mean a structural type system. The
+  cut's *position* is proven (`GATE-SEM-002/003`); which fields it strips is
+  the component's obligation, proven by that component's own tests. A cut
+  naming the wrong field is still a leak, and nothing in `.gate` will tell you.
+- **Redaction is not laundering.** Taint follows the graph, so passing a value
+  through an ordinary transform does not clean it. Drawing a JWT signer between
+  a tainted read and `OUT` refuses (measured: `SEM-002` + `SEM-003`) — the
+  signer re-shapes the value, it does not redact it. Put the cut *before* the
+  transform and let the transform take the narrowed type; that way the
+  correction lives in the contract rather than in a reviewer's memory.
+
 ## What to reach for
 
 | you are looking at | draw a circuit? |
