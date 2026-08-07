@@ -179,6 +179,93 @@ separately. Where a language forces you to name both cases, both cases get thoug
 
 ---
 
+## 3a · Slashes — one escaping layer instead of two
+
+Slashes are where patterns go wrong, because the character you want is also the character the
+notation uses. Four cases that must be told apart: `/` (a path separator), `//` (a comment
+marker, or a scheme's authority prefix), `\` (a Windows separator), `\\` (a UNC prefix, or an
+escaped backslash).
+
+### First, the measured fact — because the obvious claim is wrong
+
+It is tempting to say a circuit has *no* escaping problem since it holds no pattern string.
+**That is not true, and the source says so:** `.gate` argument values are parsed with
+`JSON.parse` and re-emitted with `JSON.stringify` (`gate-v3-parser.ts`). A `.gate` string is a
+**JSON string**, so a backslash is still written doubled.
+
+The honest claim is narrower and still worth having — **one layer, not two**:
+
+| you want to match | `.gate` argument | JS `RegExp` from a string | JS regex literal |
+|---|---|---|---|
+| one `/` | `value="/"` | `"\\/"` | `/\//` — the classic annoyance |
+| two `//` | `value="//"` | `"\\/\\/"` | `/\/\//` |
+| one `\` | `value="\\"` | `"\\\\\\\\"` — eight characters | `/\\/` |
+| two `\\` | `value="\\\\"` | sixteen characters | `/\\\\/` |
+
+A regex has the language's string escaping **and** the pattern's metacharacter escaping
+stacked on each other; that is where the eight-backslash line comes from, and where the bugs
+live. A circuit has JSON escaping and nothing else — forward slash needs no escape at all,
+because nothing in a circuit treats `/` as notation.
+
+### The circuit
+
+Four alternation paths, one per accepted form:
+
+```text
+CIRCUIT separator_form(raw: RawText) -> SeparatorKind
+INTENT "Tell four separator spellings apart, and refuse the rest."
+REQUIRES
+  [f1  :: re.literal@1.0.0] value="/"     budget steps=1
+  [f2  :: re.literal@1.0.0] value="/"     budget steps=1
+  [b1  :: re.literal@1.0.0] value="\\"    budget steps=1      # one backslash, JSON-escaped
+  [b2  :: re.literal@1.0.0] value="\\"    budget steps=1
+  [end :: re.boundary@1.0.0]              budget steps=1
+WIRES
+  IN       -> f1.subject          # alternation: both openers see the input
+  IN       -> b1.subject
+  f1.match -> f2.subject          # maximal munch: try the double form first
+  f1.match -> end.subject         # …and the single form is the same path, ended sooner
+  f2.match -> end.subject
+  b1.match -> b2.subject
+  b1.match -> end.subject
+  b2.match -> end.subject
+  end.ok   -> OUT.value
+  f1.no    -> DENY.no_match
+  b1.no    -> DENY.no_match
+  end.more -> DENY.no_match       # ★ this is what separates "/" from "//"
+END
+```
+
+**Composed budget: 3.**
+
+★ **The disambiguation is the boundary part, not a longest-match rule.** `/` and `//` are not
+distinguished by trying one first — both routes exist, and `end` decides. Given `/`, the
+two-part route has no second character and dies at `f2`; the one-part route reaches `end` with
+nothing left, so `end.ok` fires. Given `//`, the one-part route reaches `end` with input
+remaining and lands on `end.more`; the two-part route completes. Exactly one path reaches
+`OUT` in each case, and it is visible in the drawing which one.
+
+| input | verdict | path |
+|---|---|---|
+| `/` | **true** | `f1` → `end.ok` |
+| `//` | **true** | `f1` → `f2` → `end.ok` |
+| `\` | **true** | `b1` → `end.ok` |
+| `\\` | **true** | `b1` → `b2` → `end.ok` |
+| `///` | **false** — `DENY.no_match` | `f1` → `f2` → `end.more` (trailing input) |
+| `/\` | **false** — `DENY.no_match` | `f1` → `end.more`; the mixed form was never drawn |
+| `` (empty) | **false** — `DENY.no_match` | neither opener matched |
+| `\/` | **false** — `DENY.no_match` | `b1` → `end.more` |
+
+The last two rows are the useful ones. **Mixed separators are refused because no path was
+drawn for them** — not because a check rejected them. To accept `/\` somebody has to add the
+wiring, in a diff, where a reviewer sees it. That is the difference between a language that
+refuses by omission and one that refuses by rule: the first cannot be widened by accident.
+
+⚠ Distinguishing `\` from `\\` at all requires that the *whole input* be the separator. If
+you are matching separators **inside** a longer string — a path like `C:\\a\\b` — that is a
+scan, and a scan is the engine's job. Draw the shape of what an input **is**; stream the
+search for where something **occurs**.
+
 ## 4 · The two refusals that must never merge
 
 Everything above wires `no_match` and friends. There is a second, unrelated refusal:
@@ -233,10 +320,12 @@ decision someone should be able to review.
 
 ---
 
-## 7 · Could there be a `PATTERN` block instead of `REQUIRES` + `WIRES`?
+## 7 · Should there be a `PATTERN` block instead of `REQUIRES` + `WIRES`?
 
-Yes — **as sugar that must expand, never as a primitive that must be trusted.** The
-distinction is the whole safety property, so it is worth stating exactly.
+**No. Generate the circuit instead — do not add the syntax.**
+
+An earlier draft of this section answered "yes, as sugar that must expand". That answer was
+too accommodating, and the reasoning below is why it was withdrawn.
 
 ### Why the obvious version is wrong
 
@@ -254,54 +343,62 @@ escape" part that is hard-vetoed on the query side.
 A pattern that is *stored* rather than *expanded* is not a circuit element. It is a
 dependency wearing one.
 
-### The form that works
+### Why "sugar that expands" does not survive contact
 
-`PATTERN` as a **compile-time expansion**, in the same relationship to `PARTS` that `{3}`
-already has to three parts:
+The proposal was: `PATTERN` lowers to `REQUIRES` + `WIRES` before verification, the expansion
+is printable with a command, a non-terminating expansion refuses, and the grammar has no
+backreference production. Every one of those rules is sound. The proposal still fails, for
+four reasons that compound:
 
-```text
-CIRCUIT accept_contact(raw: RawText) -> ValidEmail
-INTENT "The accepted form, drawn — not the standard, claimed."
-PATTERN
-  local  = class{alnum,dot,underscore,hyphen,plus}+ ceiling=64
-  at     = literal "@"
-  domain = class{alnum,hyphen}+ ceiling=63
-  dot    = literal "."
-  tld    = class{alpha}+ ceiling=24
-  MATCH   local at domain dot tld
-  ON MATCH   -> OUT.value
-  ON NO      -> DENY.no_match
-END
+1. **Sugar that is always used and never inspected is not sugar — it is the primitive.** The
+   value of GateRegex is that a reviewer reads a drawing. If the authoring surface is a
+   compact pattern, the expansion is what nobody looks at. An inspection command that exists
+   and is never run has moved the trust, not removed it.
+2. **The composed budget disappears.** §2's email circuit costs **154**. That number is
+   readable off the drawn circuit and invisible in a pattern block — you would have to expand
+   to find it. The budget is the whole safety argument, so hiding it hides the argument.
+3. **Diagnostics stop pointing at what you wrote.** An error in the expansion names a part
+   the author never typed. "Point at the expanded form" is the honest choice and it is still
+   a regression — every author now debugs a file they do not have open.
+4. **Two spellings for one construct is a permanent tax.** Every future tier — lowering,
+   emission, the graph — must handle both, and every future author must learn which one the
+   examples used.
+
+### The alternative, which is strictly better
+
+**A generator, not a syntax:**
+
+```bash
+galerina gate from-pattern "^[a-z0-9._+-]{1,64}@[a-z0-9-]{1,63}\.[a-z]{1,24}$" --name accept_contact
 ```
 
-Four rules keep it honest, and all four are load-bearing:
+It emits `REQUIRES` + `WIRES` as text, you commit that text, and the drawing is what lives in
+the repository. Compare honestly:
 
-1. **Expansion happens before verification.** `PATTERN` lowers to `REQUIRES` + `WIRES` in the
-   parse tier; every semantic pass — budget composition, construction, domination, terminal
-   vocabulary — sees the expanded circuit and nothing else. The block is never a thing the
-   checker reasons about.
-2. **The expansion is emittable.** `galerina gate expand <file>` prints the drawn circuit.
-   The picture is elided at authoring time, never lost — and a diagnostic points at the
-   expanded part, not the source line, so what failed is what you can see.
-3. **A non-terminating expansion refuses.** `+` without a `ceiling` has no finite lowering,
-   so it is a parse-tier refusal. The ReDoS proof survives intact, because it never depended
-   on anyone analysing the pattern — only on whether the drawing finishes.
-4. **The grammar has no unrepresentable productions.** No backreference, no lookaround — not
-   rejected by a later check, simply **absent from the syntax**. Unrepresentable beats
-   refused: there is no error message to argue with, and no version of the tool where someone
-   turns it back on.
+| | `PATTERN` block | generator |
+|---|---|---|
+| authoring effort | low | **low — identical** |
+| what review sees | a pattern string | **the circuit** |
+| composed budget visible | no | **yes** |
+| diagnostics point at your file | no | **yes** |
+| diffs show what changed | one opaque line | **which parts moved** |
+| language surface added | a whole block | **none** |
+| refuses `(a+)+` | yes, at parse tier | **yes — it cannot finish emitting** |
 
-### Why `PATTERN` and not `REGEX`
+The generator wins or ties on every row. The only thing the block buys is a shorter file on
+disk, and a shorter file is precisely what is not wanted here — the length **is** the
+audit trail.
 
-The name sets the expectation. `REGEX` invites a paste from somewhere else — with `\1`,
-`(?=`, lazy quantifiers and an assumption that PCRE semantics apply. `PATTERN` says this is
-`.gate`'s own restricted dialect, which is the truth: a deliberate subset, chosen so that
-every phrase in it has a finite drawing.
+**The general principle, worth stating because it will come up again:** when the complaint is
+*"this is verbose to write"*, that is a **tooling** problem. It becomes a **language** problem
+only when the verbose form cannot express something. `REQUIRES` + `WIRES` expresses every
+pattern in this document. Adding a compact textual dialect would move `.gate` toward being a
+general-purpose language, and lose the property the whole thing exists for — that a circuit
+is auditable at a glance.
 
-**Status: PROPOSED.** This is a language change, and language changes are the owner's to
-ratify. Nothing in §1–§6 waits on it — every example above verifies today with `REQUIRES` and
-`WIRES` as written. The block is ergonomics, and the ergonomics are real: it is the answer to
-§6's honest cost, which is the only argument against drawing patterns at all.
+**Status: REJECTED, with the generator proposed in its place.** If it is ever revisited, the
+name should be `PATTERN` rather than `REGEX` — `REGEX` invites a paste from elsewhere,
+complete with `\1`, `(?=` and an assumption that PCRE semantics apply.
 
 ---
 
