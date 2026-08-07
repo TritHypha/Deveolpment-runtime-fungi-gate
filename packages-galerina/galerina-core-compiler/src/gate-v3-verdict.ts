@@ -44,9 +44,20 @@ export function vAnd(left: GateVerdict, right: GateVerdict): GateVerdict {
  * trap — the algebraically convenient value is the security-wrong one.)
  */
 export function foldVerdicts(verdicts: Iterable<GateVerdict>): GateVerdict {
-  let result: GateVerdict | null = null;
+  // `seen` rather than a null accumulator (null audit, 2026-08-07). The null
+  // here was LOAD-BEARING — it was the only thing distinguishing "nothing was
+  // established" from "everything allowed", and initialising to ALLOW to remove
+  // it would have created the exact fail-open the comment above forbids.
+  //
+  // So the emptiness test is now asked as its own question instead of being
+  // encoded in a sentinel. ALLOW is safe as the seed precisely BECAUSE `seen`
+  // decides the empty case separately: it is min's identity, used only where
+  // the identity is the right answer.
+  let seen = false;
+  let result: GateVerdict = "allow";
   for (const verdict of verdicts) {
-    result = result === null ? verdict : vAnd(result, verdict);
+    seen = true;
+    result = vAnd(result, verdict);
   }
-  return result ?? "indeterminate";
+  return seen ? result : "indeterminate";
 }

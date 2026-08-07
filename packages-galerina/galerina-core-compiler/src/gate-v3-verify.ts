@@ -194,7 +194,12 @@ export function verifyGateV3Structure(circuit: GateV3Circuit): readonly ParseDia
 
   // ── cycles ────────────────────────────────────────────────────────────────
   const cycle = findCycle(circuit);
-  if (cycle) {
+  // `.length > 0`, not truthiness: absence is now an EMPTY ARRAY, and an empty
+  // array is truthy. Swapping a null for a sentinel value moves the emptiness
+  // test from the language to the caller, and a caller that keeps the old
+  // `if (x)` fires on every input. Caught here; worth stating because the same
+  // trap waits at every other null-to-empty conversion.
+  if (cycle.length > 0) {
     const bounded = circuit.wires.some((w) => w.bound && cycle.includes(w.from.node) && cycle.includes(w.to.node));
     emit(bounded ? GATE_V3_CODES.TERM_004 : GATE_V3_CODES.TERM_003, cycle.join(" -> "), circuit.location);
   }
@@ -271,9 +276,25 @@ export function analyzeGateV3Liveness(circuit: GateV3Circuit): {
   });
 }
 
-/** Find one part-to-part cycle, or null. Depth-first with an explicit stack so
- *  a pathological graph cannot exhaust the JS call stack. */
-function findCycle(circuit: GateV3Circuit): string[] | null {
+/**
+ * Find one part-to-part cycle. Returns the cycle's nodes, or an EMPTY array
+ * when there is none — a cycle always has at least one node, so empty is
+ * unambiguous and no null is needed to express absence.
+ *
+ * ★ NOW ACTUALLY ITERATIVE (null audit, 2026-08-07). The comment here already
+ * claimed "an explicit stack so a pathological graph cannot exhaust the JS call
+ * stack" — and `visit` recursed per node, which is precisely what GD-006 ruled
+ * out on the grounds that a circuit may hold 4,096 parts. The doctrine was
+ * written down and the code did the opposite; the comment was the part that was
+ * true about the intent and false about the artifact.
+ *
+ * ⚠ A probe at 4,000 chained parts did NOT overflow on this host, and that
+ * measured this Node build's stack rather than the algorithm — a smaller stack
+ * (a worker thread, another runtime, `--stack-size`) is a different answer to
+ * the same question. Fixed because the rule exists so the answer does not
+ * depend on the host, not because a crash was demonstrated.
+ */
+function findCycle(circuit: GateV3Circuit): readonly string[] {
   const known = new Set(circuit.parts.map((p) => p.instance));
   const successors = new Map<string, string[]>(circuit.parts.map((p) => [p.instance, []]));
   for (const wire of circuit.wires) {
@@ -282,28 +303,42 @@ function findCycle(circuit: GateV3Circuit): string[] | null {
     }
   }
 
-  const visiting = new Set<string>();
-  const visited = new Set<string>();
-  const path: string[] = [];
-
-  const visit = (node: string): string[] | null => {
-    if (visiting.has(node)) return [...path.slice(path.indexOf(node)), node];
-    if (visited.has(node)) return null;
-    visiting.add(node);
-    path.push(node);
-    for (const next of successors.get(node) ?? []) {
-      const found = visit(next);
-      if (found) return found;
-    }
-    path.pop();
-    visiting.delete(node);
-    visited.add(node);
-    return null;
-  };
+  // Explicit stack, one frame per node, each frame remembering how far through
+  // its successor list it has walked. Same colouring as the recursive form —
+  // VISITING means "on the current path" (a back-edge to it is the cycle),
+  // VISITED means "fully explored, cannot be on any future path".
+  const VISITING = 1, VISITED = 2;
+  const state = new Map<string, number>();
 
   for (const part of circuit.parts) {
-    const found = visit(part.instance);
-    if (found) return found;
+    const root = part.instance;
+    if (state.get(root) === VISITED) continue;
+
+    const path: string[] = [root];
+    const stack: { node: string; index: number }[] = [{ node: root, index: 0 }];
+    state.set(root, VISITING);
+
+    while (stack.length > 0) {
+      const frame = stack[stack.length - 1]!;
+      const targets = successors.get(frame.node) ?? [];
+      if (frame.index < targets.length) {
+        const next = targets[frame.index]!;
+        frame.index += 1;
+        const seen = state.get(next);
+        // A back-edge into the current path IS the cycle; slice it out at the
+        // point of re-entry, closing the loop by repeating that node.
+        if (seen === VISITING) return Object.freeze([...path.slice(path.indexOf(next)), next]);
+        if (seen === undefined) {
+          state.set(next, VISITING);
+          path.push(next);
+          stack.push({ node: next, index: 0 });
+        }
+      } else {
+        state.set(frame.node, VISITED);
+        stack.pop();
+        path.pop();
+      }
+    }
   }
-  return null;
+  return Object.freeze([]);
 }

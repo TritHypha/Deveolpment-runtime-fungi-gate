@@ -1,6 +1,6 @@
 {
   "note": "type-position `| null` per file; see source-hygiene-null-ratchet.test.mjs",
-  "total": 272,
+  "total": 269,
   "files": {
     "packages-galerina/galerina-auth/src/bearer.ts": 1,
     "packages-galerina/galerina-core-cli/src/core-command.ts": 1,
@@ -15,8 +15,6 @@
     "packages-galerina/galerina-core-compiler/src/gate-v3-graph.ts": 1,
     "packages-galerina/galerina-core-compiler/src/gate-v3-parser.ts": 2,
     "packages-galerina/galerina-core-compiler/src/gate-v3-registry.ts": 1,
-    "packages-galerina/galerina-core-compiler/src/gate-v3-verdict.ts": 1,
-    "packages-galerina/galerina-core-compiler/src/gate-v3-verify.ts": 2,
     "packages-galerina/galerina-core-compiler/src/gir-emitter.ts": 5,
     "packages-galerina/galerina-core-compiler/src/governance-verifier.ts": 3,
     "packages-galerina/galerina-core-compiler/src/interpreter.ts": 6,
