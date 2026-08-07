@@ -45,6 +45,11 @@ This is the load-bearing consequence, and every boundary in §7 follows from it:
 | endpoint | exactly `identifier.identifier` — a node and a port |
 | block order | `CIRCUIT` · `INTENT` · `REQUIRES:` · `PARTS:` · `WIRES:` · `END`, all mandatory |
 
+Each absent block has its own refusal rather than one generic "malformed" code —
+a missing `REQUIRES:` is `GATE-PARSE-008`. An empty block is still a *present*
+block: a circuit that declares no requirements writes `REQUIRES:` with nothing
+under it, and omitting the line entirely is a different fact about the document.
+
 ### 1.2 Bounded input (`GATE-PARSE-028…034`)
 
 Every input dimension has a declared ceiling, enforced **before** the structure
@@ -181,9 +186,19 @@ Unknown fields are refused rather than ignored (`GATE-REGISTRY-014`).
 | component | `id` `version` `status` `implementationDigest` `inputs` `outputs` `arguments` `effects` `capabilities` `decision` `arms` `cut` `variantOf` `tainted` `zoneGate` |
 | port | `name` `type` `copyable` `required` |
 
-**Defaults are fail-closed.** An output with no `copyable` is non-copyable. A
-non-Boolean where a Boolean is required is a malformed contract, not a
-truthiness question.
+**Defaults are fail-closed.** An output with no `copyable` is non-copyable, so a
+second consumer of it is refused (`GATE-WIRE-102`). A non-Boolean where a Boolean
+is required is a malformed contract, not a truthiness question.
+
+Note the division of labour with §2, because the two rules read alike and are
+not: one source feeding two consumers is **fan-out**, which §2 admits — each
+consumer still has exactly one producer, so `GATE-WIRE-002` does not fire. What
+restricts it is this copyability default. A drawing can therefore be refused by
+`GATE-WIRE-102` alone, and that is not an omission.
+
+A registry input marked `required` must have a producer after endpoint
+resolution; leaving one unwired is refused (`GATE-RESOLVE-110`). Being incident
+to some edge is not the same as being correctly supplied.
 
 ### 5.1 Exact nominal typing
 
