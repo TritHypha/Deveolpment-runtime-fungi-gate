@@ -188,7 +188,7 @@ export {
 export { verifyZoneDomination, GATE_SEM_014 } from "./gate-v3-zone.js";
 
 // Round-six G6 rung 2 — circuit -> GIR lowering (records, never re-checks)
-export { lowerCircuitToGIR } from "./gate-v3-gir.js";
+export { lowerCircuitToGIR, circuitProofs } from "./gate-v3-gir.js";
 
 export {
   verifyGateV3Structure,
