@@ -24,11 +24,12 @@ import { pathToFileURL } from "node:url";
 import {
   RELEASE_EVIDENCE_ROLE,
   canonicalReleaseEvidenceBytes,
+  releaseEvidenceCryptoSuiteCatalog,
   releaseEvidenceDelegationPreimage,
   releaseEvidenceStatementPreimage,
   verifyReleaseEvidenceDelegation,
 } from "../lib/beta-release-evidence-envelope.mjs";
-import { verifyGateAdmissionEnvelope } from "../lib/gate-admission-envelope.mjs";
+import { issueGateAdmissionEnvelope, verifyGateAdmissionEnvelope } from "../lib/gate-admission-envelope.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const compilerRequire = createRequire(
@@ -235,6 +236,102 @@ test("composed: SUBSTITUTION — a correctly SIGNED envelope for a different cir
   assert.equal(r.refusals.includes("GATE-ADMIT-009"), true, "substitution named distinctly");
   assert.equal(r.refusals.includes("GATE-ADMIT-005"), true, "the source moved too, and both report (§8.1 rule 1)");
   assert.equal(r.refusals.some((c) => c.startsWith("RELEASE_EVIDENCE")), false, "the signature was GENUINE — that is the attack");
+});
+
+// ── G7.3 — issuance behind the suite catalogue ───────────────────────────────
+
+/** A counting signer over per-run keys: the count proves a refusal signed NOTHING. */
+function signerFor(operational) {
+  const calls = { count: 0 };
+  return {
+    calls,
+    keyId: operational.keyId,
+    signEd25519: (preimage) => {
+      calls.count += 1;
+      return signEd25519(null, Buffer.from(preimage), operational.edPrivate).toString("base64");
+    },
+    signMlDsa65: (preimage, context) => {
+      calls.count += 1;
+      return Buffer.from(
+        mlDsa65.sign(preimage, operational.mlPrivate, { context: new TextEncoder().encode(context) }),
+      ).toString("base64");
+    },
+  };
+}
+
+test("issue: an issued envelope round-trips through the composed verifier — issuance and verification agree", () => {
+  const input = admissionInputs(SOURCE);
+  const built = compiler.buildAdmissionStatement(input, { canonicalBytes: canonicalReleaseEvidenceBytes });
+  const f = fixture();
+  const issued = issueGateAdmissionEnvelope(built.statement, signerFor(f.operational));
+  assert.equal(issued.ok, true);
+  const r = verifyGateAdmissionEnvelope(issued.envelope, verifiedOptions(f), inHandOf(input));
+  assert.deepEqual([...r.refusals], []);
+  assert.equal(r.ok, true);
+});
+
+test("issue: an UNKNOWN suite refuses at issuance and the signer is never invoked", () => {
+  const input = admissionInputs(SOURCE);
+  const built = compiler.buildAdmissionStatement(input, { canonicalBytes: canonicalReleaseEvidenceBytes });
+  const f = fixture();
+  const signer = signerFor(f.operational);
+  const issued = issueGateAdmissionEnvelope(built.statement, signer, { suiteId: "hybrid-ed25519-mldsa99" });
+  assert.equal(issued.ok, false);
+  assert.deepEqual([...issued.refusals], ["GATE_ADMISSION_ISSUE_SUITE_REFUSED"]);
+  assert.equal(issued.envelope, null);
+  assert.equal(signer.calls.count, 0, "a refusal signs NOTHING");
+});
+
+test("issue: a REFUSED-verdict statement is not issuable — the refusal is authoritative unsigned", () => {
+  const badRegistry = structuredClone(REGISTRY_VALUE);
+  badRegistry.types.push({ id: "U", kind: "opaque", construction: "source" });
+  badRegistry.components[0].outputs[0].type = "U";
+  const parsed = compiler.parseGateV3(SOURCE, "<env>.gate");
+  const loaded = compiler.loadGateV3Registry(badRegistry, "<env registry>");
+  const graph = compiler.buildGateGraph(parsed.circuit, loaded.registry);
+  const errors = compiler.dispatchGateSource(SOURCE, "<env>.gate", { registry: badRegistry })
+    .diagnostics.filter((d) => d.severity === "error" && d.code !== "FUNGI-GATELANG-002");
+  const built = compiler.buildAdmissionStatement({
+    sourceBytes: new TextEncoder().encode(SOURCE),
+    registry: loaded.registry,
+    registryCanonicalForm: badRegistry,
+    circuit: parsed.circuit,
+    circuitCanonicalForm: compiler.lowerCircuitToGIR(parsed.circuit, loaded.registry),
+    verifier: { version: "test-0.0.0", ruleSet: "gate-v3-codes@test" },
+    proofs: compiler.circuitProofs(parsed.circuit, graph, loaded.registry),
+    verificationErrorCount: errors.length,
+    target: "wasm32-test",
+  }, { canonicalBytes: canonicalReleaseEvidenceBytes });
+  assert.equal(built.ok && built.statement.verdict === "refused", true);
+  const f = fixture();
+  const signer = signerFor(f.operational);
+  const issued = issueGateAdmissionEnvelope(built.statement, signer);
+  assert.equal(issued.ok, false);
+  assert.deepEqual([...issued.refusals], ["GATE_ADMISSION_ISSUE_VERDICT_NOT_ADMITTED"]);
+  assert.equal(signer.calls.count, 0);
+});
+
+test("issue: a non-statement and a malformed signer refuse, together, signing nothing", () => {
+  const f = fixture();
+  const signer = signerFor(f.operational);
+  const issued = issueGateAdmissionEnvelope({ kind: "junk" }, { keyId: "nope" });
+  assert.equal(issued.ok, false);
+  assert.deepEqual([...issued.refusals].sort(), [
+    "GATE_ADMISSION_ISSUE_NOT_A_STATEMENT",
+    "GATE_ADMISSION_ISSUE_SIGNER_REFUSED",
+  ]);
+  assert.equal(signer.calls.count, 0);
+});
+
+test("issue: the catalogue currently holds ONE active suite — this pin fails when that changes, on purpose", () => {
+  // Retirement handling (verify-only suites refusing for signing) is written
+  // but unreachable while only one active suite exists. This pin makes the
+  // catalogue's first change land HERE, where the retirement branch must then
+  // get its live KAT — a reminder with an alarm attached, not a hope.
+  const catalogue = releaseEvidenceCryptoSuiteCatalog();
+  assert.equal(catalogue.length, 1);
+  assert.equal(catalogue[0].suiteId, "hybrid-ed25519-mldsa65");
+  assert.equal(catalogue[0].status, "active-for-signing");
 });
 
 test("composed: the six ratified exit refusals are all reachable, each on its own axis", () => {
