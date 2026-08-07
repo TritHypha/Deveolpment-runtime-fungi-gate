@@ -4,6 +4,7 @@
 
 import { createHash } from "node:crypto";
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
+import { isFlowDeclNamed } from "./flow-name.js";
 import { inferFlowResilience, type FaultHandler } from "./resilience-inference.js";
 import { type EffectCheckResult } from "./effect-checker.js";
 import { SemanticGraphBuilder, type SemanticGraph } from "@galerina/devtools-graph-algorithms";
@@ -426,15 +427,16 @@ function findFlowNode(ast: AstNode, name: string): AstNode | undefined {
 }
 
 /**
- * R2 (RD-0412): resolve a `governed floor_N flow` by its BARE name. Its node kind is
+ * R2 (RD-0412): resolve a `governed floor_N flow` by its declared name. Its node kind is
  * `governedFlowDecl` and its value is the qualified `governed:floor_N:name`, so the generic
- * findFlowNode (FLOW_KINDS + value===name) does not match it. Match the last colon-segment.
- * Flow names are identifiers (never contain ':'), so `split(':').pop()` recovers the bare name
- * unambiguously — no substring false-match. Used only as a paramTypes fallback (§emitGIR).
+ * findFlowNode (FLOW_KINDS + value===name) does not match it. A declared flow name may
+ * itself contain ':' (e.g. `ns:sub`), so taking the last colon-segment is NOT a safe
+ * decode — route through the ONE shared decoder (flow-name.ts). A malformed governed
+ * value matches no name there. Used only as a paramTypes fallback (§emitGIR).
  */
 function findGovernedFlowNode(ast: AstNode, name: string): AstNode | undefined {
   function walk(node: AstNode): AstNode | undefined {
-    if (node.kind === "governedFlowDecl" && ((node.value ?? "").split(":").pop() === name)) return node;
+    if (node.kind === "governedFlowDecl" && isFlowDeclNamed(node, name)) return node;
     for (const child of node.children ?? []) {
       const found = walk(child);
       if (found !== undefined) return found;

@@ -28,6 +28,7 @@ import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";
 import { resolve, dirname, relative, isAbsolute } from "node:path";
 import { parseProgram } from "./parser.js";
 import type { AstNode } from "./parser.js";
+import { decodeFlowDecl } from "./flow-name.js";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -110,6 +111,7 @@ const FLOW_KINDS = new Set([
 function extractSymbols(
   ast: AstNode,
   sourceFile: string,
+  diagnostics: FileModuleDiagnostic[],
 ): FileImportedSymbol[] {
   const symbols: FileImportedSymbol[] = [];
 
@@ -117,11 +119,24 @@ function extractSymbols(
     const kind = node.kind;
 
     if (FLOW_KINDS.has(kind)) {
-      // For governed flows, node.value may be "governed:floor:name" — take last segment
-      const rawName = node.value ?? "";
-      const name = rawName.includes(":") ? (rawName.split(":").pop() ?? rawName) : rawName;
-      if (name) {
-        symbols.push({ name, kind: "flow", sourceFile, node });
+      // ONE-decoder rule: a governed value is "governed:<floor>:<name>" where the
+      // name may itself contain ':' — decode via flow-name.ts, never split().pop()
+      // (which exported a TRUNCATED symbol for qualified names). A malformed
+      // governed value is an explicit diagnostic, never a silent skip.
+      const decoded = decodeFlowDecl(node);
+      if (decoded === undefined) continue;
+      if ("error" in decoded) {
+        diagnostics.push({
+          code: "FUNGI-IMPORT-007",
+          severity: "error",
+          message: `Malformed governed flow declaration: ${decoded.error}`,
+          file: sourceFile,
+          importedFrom: sourceFile,
+        });
+        continue;
+      }
+      if (decoded.name) {
+        symbols.push({ name: decoded.name, kind: "flow", sourceFile, node });
       }
       continue;
     }
@@ -371,8 +386,10 @@ export function resolveFileImports(
     // Mark as in-progress for circular import detection
     inProgress.add(resolvedPath);
 
-    // Extract top-level symbols from this file
-    const symbols: FileImportedSymbol[] = extractSymbols(parseResult.ast, resolvedPath);
+    // Extract top-level symbols from this file (symbol-level diagnostics ride the
+    // module entry so a malformed governed declaration is surfaced, not swallowed)
+    const symbolDiagnostics: FileModuleDiagnostic[] = [];
+    const symbols: FileImportedSymbol[] = extractSymbols(parseResult.ast, resolvedPath, symbolDiagnostics);
 
     // Recursively resolve nested imports in the imported file
     const nestedImportDecls = (parseResult.ast.children ?? []).filter(
@@ -392,7 +409,7 @@ export function resolveFileImports(
 
     inProgress.delete(resolvedPath);
 
-    results.push({ filePath: resolvedPath, symbols, diagnostics: [] });
+    results.push({ filePath: resolvedPath, symbols, diagnostics: symbolDiagnostics });
   }
 
   return results;
