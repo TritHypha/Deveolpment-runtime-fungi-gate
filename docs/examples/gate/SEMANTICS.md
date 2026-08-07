@@ -322,11 +322,43 @@ An implementation conforms when, for every shipped example and fixture registry
 in this directory, it produces **the same set of diagnostic codes** as the
 specification requires — no more and no fewer.
 
-### 8.1 ⚠ OPEN — the reporting model is NOT yet specified
+### 8.1 The reporting model — DECIDED 2026-08-07: independent accumulation
 
-"The same set of codes" is not decidable without saying **how codes
-accumulate**, and this specification **does not yet say**. Until it does, §8
-determines conformance only for single-code cases.
+> Ruled on the owner's directive to resolve, against **twelve multi-code
+> adjudications with zero surviving counterexamples** — where the earlier,
+> retracted attempt (preserved below) was inferred from two samples, this one
+> was decided only after every candidate counterexample was traced to its
+> enforcement point and either confirmed the model or exposed a defect
+> elsewhere (the `TERM-003/004` chord misclassification fell out of exactly
+> that tracing).
+
+**The model, in four rules:**
+
+1. **Independence.** Every rule whose stated conditions are met reports, at its
+   declared severity. No tier suppresses another; an earlier refusal never
+   swallows a later one. Backstops (`GATE-SEM-001` names itself one) co-fire
+   *by design* — a model that suppressed them would remove the net.
+2. **Classifications.** Where this specification defines ONE question with
+   mutually exclusive answers, exactly one of the pair reports. There are two:
+   **cycle boundedness** (`TERM-003` xor `TERM-004`, per cycle — §4) and
+   **part connectivity** (`LIVE-001` xor `LIVE-002`, per part; orphan-source
+   takes precedence, because both describe the same dangling part and the fix
+   is one act). A classification is not suppression: it is one verdict with
+   several spellings, and this list is **closed** — a pair not named here is
+   two independent rules.
+3. **Undefinedness.** A check whose *input* was refused by an earlier check on
+   the same object does not run — an unknown argument cannot be type-checked, a
+   mistyped one cannot be range-checked. This is the §3.1 *rejected versus
+   never-checked* distinction, not suppression, and it is scoped to the refused
+   object alone.
+4. **Severity channels.** Conformance compares the **deduplicated set of codes
+   per severity channel**. A comparison that filters to errors and one that
+   ignores severity will disagree; both are wrong. Absence of a code is
+   meaningful only where a rule's conditions are demonstrably unmet.
+
+---
+
+**History — the retracted first attempt, preserved rather than rewritten:**
 
 **🔴 A retraction, recorded rather than quietly rewritten.** An earlier revision
 of this clause asserted a *staged* model — "a tier that refuses stops the tiers
@@ -340,27 +372,16 @@ vector set falsified it within one cycle:
 | an unbounded cycle reports **`GATE-TERM-003` + `GATE-SEM-001`** | `SEM-001` exists precisely to catch a cycle *reaching* the semantic tier — a deliberate **defence-in-depth backstop** that runs regardless |
 | an unused parameter reports the wire code alone | consistent with staging, but equally consistent with the liveness rule simply not applying |
 
-**What is actually established**, and all that may be relied on today:
+The three facts that survived the retraction constrained the decision, and all
+three are now rules 1 and 4 above: different tiers co-occur; backstops fire
+because an upstream refusal was bypassed; severity is part of the answer.
 
-1. Codes from **different tiers can co-occur**. An implementation must not
-   assume an earlier refusal suppresses a later one.
-2. Some rules are **deliberate backstops** (`GATE-SEM-001` names itself one)
-   and fire *because* an upstream refusal was bypassed. A model that suppressed
-   them would remove a safety net.
-3. **Severity is part of the answer.** `GATE-SEM-004` is a **warning**, not an
-   error — a conformance comparison that filters to errors will not see it, and
-   a comparison that ignores severity will disagree with one that does not.
-
-**What a conforming implementation should do meanwhile:** report every code it
-establishes, with its severity, and do not treat the absence of a later-tier
-code as meaningful. Deciding the model is a **design decision**, not something
-to be read off a sample — which is the whole lesson of this retraction.
-
-⚠ Conformance vectors whose expectation depends on the unsettled model are
-marked `pendingModel` in the vector set and are **excluded from the pass/fail
-count**. Encoding observed behaviour as if it were a rule would turn the vectors
-into a change-detector for one implementation — the exact failure they exist to
-avoid.
+The `pendingModel` marking in the conformance vector set is retired with this
+decision: the held vectors' expectations are now **derived** from rules 1–3
+plus each rule's stated conditions, and they grade. The distinction between
+*deriving from the model* and *recording what one implementation printed*
+remains the vector set's founding rule — the decision changes which side of
+that line the multi-code cases sit on, not the line.
 
 Two properties a conforming verifier must have, both learned from defects:
 
