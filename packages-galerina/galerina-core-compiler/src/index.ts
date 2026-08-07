@@ -187,6 +187,9 @@ export {
 // Round-five G5 rung 1 — the zone seam: semantic work must pass a declared gate
 export { verifyZoneDomination, GATE_SEM_014 } from "./gate-v3-zone.js";
 
+// Round-six G6 rung 2 — circuit -> GIR lowering (records, never re-checks)
+export { lowerCircuitToGIR } from "./gate-v3-gir.js";
+
 export {
   verifyGateV3Structure,
   analyzeGateV3Liveness,

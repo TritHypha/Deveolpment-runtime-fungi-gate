@@ -153,7 +153,15 @@ export interface GIRCircuit {
   /** `from.port -> to.port` in canonical order. */
   readonly wires: readonly string[];
   readonly effects: GIREffect;
-  readonly proofs: readonly GIRProof[];
+  /**
+   * The semantic-tier results as artifacts. **Omitted until they have been
+   * computed** — never `[]` for "not yet". The distinction is load-bearing: an
+   * empty array reads as *no proof failed*, which is a safety claim, whereas an
+   * absent field reads as *nobody asked*. Same reasoning as `circuits` on
+   * `GIRProgram`, and the same reason `faultHandlers` is omitted rather than
+   * materialised for purely-default flows.
+   */
+  readonly proofs?: readonly GIRProof[];
   readonly capabilities: readonly string[];
 }
 
