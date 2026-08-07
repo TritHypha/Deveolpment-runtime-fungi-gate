@@ -128,10 +128,50 @@ export interface GIRFlow {
   readonly faultHandlers?: readonly FaultHandler[];
 }
 
+/**
+ * G6 (KTA plan 32) — a lowered `.gate` circuit. Owner-ratified option C: a
+ * circuit is NOT a flow and does not live in `flows`.
+ *
+ * WHY A SEPARATE ARRAY. `GIRFlow` assumes a body — `paramTypes` for the WAT
+ * emitter, an `executionPlan`, `emitExpr` over AST nodes. A circuit has no
+ * body: its parts REFERENCE components whose implementations live elsewhere.
+ * Put one in `flows` and an unaware consumer would try to compile it, emit a
+ * stub, and mark the stub valid — the fail-open this repository has already
+ * recorded once. In its own array, a consumer that does not know about circuits
+ * never sees one.
+ *
+ * `effects` and `proofs` are the SHARED types, deliberately: `.gate`'s envelope
+ * (GATE-SEM-009/010) is the same {declared, observed, status} triple computed at
+ * another tier, and its semantic passes are proof generators. Sharing the type
+ * is what keeps the two node kinds from quietly forking.
+ */
+export interface GIRCircuit {
+  readonly name: string;
+  readonly intent: string;
+  /** Instance names in canonical order — the order the graph already sorts to. */
+  readonly parts: readonly string[];
+  /** `from.port -> to.port` in canonical order. */
+  readonly wires: readonly string[];
+  readonly effects: GIREffect;
+  readonly proofs: readonly GIRProof[];
+  readonly capabilities: readonly string[];
+}
+
 export interface GIRProgram {
   readonly schemaVersion: "fungi.gir.v1";
   readonly generatedAt: string;
   readonly flows: readonly GIRFlow[];
+  /**
+   * G6: lowered circuits. **OMITTED ENTIRELY when there are none** — never `[]`.
+   *
+   * This is not tidiness, it is the compatibility contract. `canonicaliseGIR`
+   * strips `undefined` but keeps an empty array, so `circuits: []` would enter
+   * the canonical JSON and move EVERY existing program's `girHash` — and every
+   * artifact keyed on one. `faultHandlers` documents the same discipline for
+   * the same reason. `gir-circuit-hash-inertness.test.mjs` proves both halves:
+   * absent leaves hashes byte-identical, and an empty array does not.
+   */
+  readonly circuits?: readonly GIRCircuit[];
   /** SHA-256 of canonical GIR (set after emission). */
   readonly girHash?: string;
   /**
