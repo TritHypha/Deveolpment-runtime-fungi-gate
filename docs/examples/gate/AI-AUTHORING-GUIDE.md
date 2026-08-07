@@ -14,17 +14,19 @@ governance engine, and a clean circuit authorizes nothing.
 
 ## Is `.gate` the right tool for this file?
 
-**Usually not, and knowing that early is the cheapest refusal available.** A
-200-file study of real governed code (numpy / pandas / polars / pymining and a
-Go backend, already translated to `.fungi`) measured **2% circuit-shaped** — a
-call plus a governed exit. 80% of those files are arithmetic-dominated, and
-across **455 flows** there were **zero** `check`, `trap` or `fault` constructs.
+**Usually not, and knowing that early is the cheapest refusal available.**
+`.gate` governs the **authority and privacy spine**: who may proceed, what
+gets redacted before egress, where a refusal terminates. It has no
+expressions and cannot add two numbers. If the file in front of you is
+computation, transformation or plumbing, the answer is `.fungi` — reach for
+`.gate` when you are drawing the decision that *guards* the work, not the
+work.
 
-`.gate` governs the **authority and privacy spine**: who may proceed, what gets
-redacted before egress, where a refusal terminates. It has no expressions and
-cannot add two numbers. If the file in front of you is computation,
-transformation or plumbing, the answer is `.fungi` — reach for `.gate` when you
-are drawing the decision that *guards* the work, not the work.
+A circuit is also **coarser than a file**. One circuit governs a whole
+request path that may span many `.fungi` files, and everything it calls
+becomes a registered component. So the question is never "what is the
+`.gate` for this file?" but "what is the `.gate` for this *entry point*?" —
+see the partition method in FUNGI-TO-GATE-LIKE-FOR-LIKE.md.
 
 ## Anatomy
 

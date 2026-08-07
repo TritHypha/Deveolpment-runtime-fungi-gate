@@ -18,6 +18,7 @@ what its v1.2 shape became.
 | File | What it gives you |
 |---|---|
 | **[AI-AUTHORING-GUIDE.md](AI-AUTHORING-GUIDE.md)** | how to author v3: anatomy, endpoints, argument types, canonical patterns, and the hallucination guard |
+| **[FUNGI-TO-GATE-COOKBOOK.md](FUNGI-TO-GATE-COOKBOOK.md)** | recipe-first: `if` on a Boolean, then on a number, then sequences, `check`, `match`, and the partition method for a whole flow |
 | **[RULES.md](RULES.md)** | the fail-closed invariants, each bound to the diagnostic code that enforces it |
 | **[FUNGI-TO-GATE-LIKE-FOR-LIKE.md](FUNGI-TO-GATE-LIKE-FOR-LIKE.md)** | `if` / `check` / `match`, arrays, numbers, hallmarks and contracts — what each becomes in a circuit, and what has no equivalent by design |
 
