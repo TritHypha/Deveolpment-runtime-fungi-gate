@@ -207,10 +207,14 @@ function applyAutoFix(filePath: string, diagnostics: readonly CliDiagnostic[]): 
   const fixable = diagnostics.filter(
     d => d.severity === "error" || d.severity === "warning"
   ).filter(d => {
-    // Only apply fixes where the suggestedFix is a code snippet (starts with
-    // a code fragment, not a prose description). Heuristic: no leading capital.
-    const fix = (d as unknown as Record<string, unknown>)["suggestedFix"] as string | undefined;
-    return fix !== undefined && fix.length > 0 && fix.length < 500;
+    // `suggestedCode` is the machine channel — a substitutable source fragment.
+    // `suggestedFix` is PROSE for a human and must never be applied to source.
+    // This previously read `suggestedFix` through a cast, which no type error
+    // could reach: measured, 121 of 121 statically classifiable values there are
+    // prose, so the reported count described the wrong population entirely.
+    // No heuristic is needed once the right channel is named.
+    const code = d.suggestedCode;
+    return code !== undefined && code.length > 0 && code.length < 500;
   });
   if (fixable.length === 0) return 0;
   // Log fixable but don't apply automatically -- require --fix-confirm for safety.
@@ -232,6 +236,19 @@ interface CliDiagnostic {
   readonly file: string;
   readonly line?: number;
   readonly column?: number;
+  /**
+   * Human-readable guidance ("Declare 'x' before using it, or import it from a
+   * module."). Producers populate this at 136 sites; it is prose, and it must
+   * NEVER be applied to source as if it were code.
+   */
+  readonly suggestedFix?: string;
+  /**
+   * A machine-applicable source fragment (`guarded flow ${name}`,
+   * `effects [...]`). This — never `suggestedFix` — is the only channel an
+   * auto-fix path may select on, and applying it still requires the mode's
+   * declared confirmation policy.
+   */
+  readonly suggestedCode?: string;
 }
 
 type CliMode =
@@ -315,6 +332,12 @@ function pushDiag(
   file: string,
   line: number | undefined,
   column: number | undefined,
+  // The two cure channels the producers populate. They are carried through the
+  // funnel because a widened record that this function drops on the floor is a
+  // wider type over the same loss. Absent stays absent — exactly as line/column
+  // are handled — so a missing cure is never reported as an empty one.
+  suggestedFix?: string | undefined,
+  suggestedCode?: string | undefined,
 ): void {
   const base: { code: string; severity: CliDiagnostic["severity"]; message: string; file: string } = {
     code,
@@ -322,12 +345,15 @@ function pushDiag(
     message,
     file,
   };
+  const cures: { suggestedFix?: string; suggestedCode?: string } = {};
+  if (suggestedFix !== undefined) cures.suggestedFix = suggestedFix;
+  if (suggestedCode !== undefined) cures.suggestedCode = suggestedCode;
   if (line !== undefined && column !== undefined) {
-    out.push({ ...base, line, column });
+    out.push({ ...base, ...cures, line, column });
   } else if (line !== undefined) {
-    out.push({ ...base, line });
+    out.push({ ...base, ...cures, line });
   } else {
-    out.push(base);
+    out.push({ ...base, ...cures });
   }
 }
 
@@ -394,6 +420,8 @@ function compileFile(
         filePath,
         d.location?.line,
         d.location?.column,
+        d.suggestedFix,
+        d.suggestedCode,
       );
     }
     return { file: filePath, diagnostics };
@@ -409,6 +437,8 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
+      d.suggestedCode,
     );
   }
 
@@ -453,6 +483,8 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
+      d.suggestedCode,
     );
   }
 
@@ -466,6 +498,8 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
+      d.suggestedCode,
     );
   }
 
@@ -491,6 +525,8 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
+      d.suggestedCode,
     );
   }
 
@@ -513,6 +549,8 @@ function compileFile(
         filePath,
         d.location?.line,
         d.location?.column,
+        d.suggestedFix,
+        d.suggestedCode,
       );
     }
   }
@@ -527,6 +565,7 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
     );
   }
 
@@ -568,6 +607,7 @@ function compileFile(
       filePath,
       d.location?.line,
       d.location?.column,
+      d.suggestedFix,
     );
   }
 
@@ -606,6 +646,7 @@ function compileFile(
         filePath,
         d.location?.line,
         d.location?.column,
+        d.suggestedFix,
       );
     }
   }
