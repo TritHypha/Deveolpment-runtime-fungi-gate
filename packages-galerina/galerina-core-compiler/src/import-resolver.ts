@@ -16,6 +16,7 @@
 // =============================================================================
 
 import { type AstNode } from "./parser.js";
+import { BoundedCache, cachePolicyFromEnv } from "./bounded-cache.js";
 import { loadPackageManifest, resolvePackageTypes } from "./package-resolver.js";
 
 // ---------------------------------------------------------------------------
@@ -194,7 +195,47 @@ function parseImportValue(raw: string): readonly RawImportItem[] {
 // Populated lazily on first import of a non-@galerina/* package.
 // ---------------------------------------------------------------------------
 
-const manifestTypeCache = new Map<string, readonly string[]>();
+// ★ BOUNDED, and — more importantly — KEYED CORRECTLY.
+//
+// This was `new Map<string, readonly string[]>()` keyed by `moduleSource` ALONE.
+// `nodeModulesRoot` is a parameter of the lookup and it CHANGES THE ANSWER, so
+// omitting it from the key meant the first workspace to resolve `@acme/types` fixed
+// the answer for every other workspace in the process — whose `node_modules` may
+// hold a different version entirely.
+//
+// That is not a memory bug. It is **stale cross-workspace resolution**, and the
+// unbounded growth is what made it durable: nothing ever expired the wrong answer.
+// Bounding the cache without fixing the key would have shortened the window and left
+// the fault, which is why the key changed first.
+//
+// A cache key must contain every input the cached value depends on. That is not a
+// performance rule, it is the definition of a cache.
+//
+// Limits: package resolution is bounded in practice by the dependency graph, not by
+// source versions, so the entry ceiling is modest. Weight is the count of exported
+// type names — a manifest with tens of thousands of exports is refused admission and
+// re-read, which is slower and always correct.
+const manifestTypeCache = new BoundedCache<string, readonly string[]>({
+  maxEntries: 512,
+  maxWeight: 65536,
+  maxItemWeight: 4096,
+  weigh: (types) => types.length + 1,
+  enabled: cachePolicyFromEnv(process.env["GALERINA_MANIFEST_CACHE"]).enabled,
+});
+
+/**
+ * The cache key. `\u0000` cannot occur in a path or a module specifier, so it cannot
+ * be produced by concatenation of two different (root, module) pairs — a separator
+ * that a caller can inject is not a separator.
+ */
+function manifestCacheKey(nodeModulesRoot: string, moduleSource: string): string {
+  return `${nodeModulesRoot}\u0000${moduleSource}`;
+}
+
+/** Test-only reset. Production correctness must not depend on this being called. */
+export function __resetManifestTypeCacheForTest(): void {
+  manifestTypeCache.clear();
+}
 
 /**
  * Attempt to load a package.galerina.yaml for a non-@galerina/* module.
@@ -205,9 +246,10 @@ function loadExternalManifestTypes(
   moduleSource: string,
   nodeModulesRoot: string,
 ): readonly string[] {
-  if (manifestTypeCache.has(moduleSource)) {
-    return manifestTypeCache.get(moduleSource)!;
-  }
+  // Keyed by BOTH inputs. A miss here is ordinary: the manifest is simply re-read.
+  const key = manifestCacheKey(nodeModulesRoot, moduleSource);
+  const cached = manifestTypeCache.get(key);
+  if (cached !== undefined) return cached;
 
   const packagePath = `${nodeModulesRoot}/${moduleSource}`;
   const manifest = loadPackageManifest(packagePath);
@@ -215,7 +257,9 @@ function loadExternalManifestTypes(
     ? resolvePackageTypes(manifest)
     : [];
 
-  manifestTypeCache.set(moduleSource, types);
+  // Admission may be refused (oversize, or caching disabled). That costs a re-read on
+  // the next call and changes nothing else — the value returned is the same either way.
+  manifestTypeCache.set(key, types);
   return types;
 }
 

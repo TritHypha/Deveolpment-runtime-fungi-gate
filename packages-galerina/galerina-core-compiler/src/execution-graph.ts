@@ -13,6 +13,7 @@
 // =============================================================================
 
 import { join, dirname } from "node:path";
+import { BoundedCache, cachePolicyFromEnv } from "./bounded-cache.js";
 import { fileURLToPath } from "node:url";
 import type { AstNode } from "./parser.js";
 import type { GalerinaValue } from "./interpreter.js";
@@ -55,7 +56,74 @@ export interface ExecutionGraph {
 }
 
 // ── Memory cache ──────────────────────────────────────────────────────────────
-const MEMORY_CACHE = new Map<string, ExecutionGraph>();
+//
+// ★ BOUNDED, and the bounds are MEASURED. This was an unbounded `Map` keyed by
+// `executionGraphCacheKey(flowName, canonicalHash(flowNode))` — a CONTENT hash — so
+// every source version of every flow was retained for the life of the process.
+// Harmless in a CLI that exits; monotonic in watch mode, a REPL, a language server
+// or any hosted evaluator. Proven twice: by a paired KAT on the key space, and
+// end-to-end through `executeFlow()` (20 executions -> 20 permanent entries, with an
+// identical-source control adding none).
+//
+// The keying is CORRECT and stays. The comment at interpreter.ts:4014 records why it
+// became a content hash: keying by flow NAME collided two source versions and served
+// the wrong graph. That fix widened a bounded key space (flow names) into an
+// unbounded one (source versions) without bounding the container — which is the
+// general shape worth remembering: **a correctness fix that widens a key space
+// silently converts a cache into a leak.**
+//
+// LIMITS, from `extra-tests/tools/measure-graph-cache-limits.mjs` over all 534
+// tracked `.fungi` files (1,456 flows, 1,456 distinct keys):
+//
+//   maxEntries    2048  — the measured floor is 1,456 distinct keys for ONE
+//                         full-corpus compile. A cap below that evicts its own
+//                         working set: the rejected `max: 256` would have shed 83%.
+//                         2048 clears the floor with ~40% headroom.
+//   maxWeight    65536  — total structural weight (object nodes). Measured p50 is 9
+//                         and max 163; the whole corpus is ~1.1 MB serialized, so
+//                         this is generous by design — it is a backstop against a
+//                         pathological distribution, not a working constraint.
+//   maxItemWeight  512  — admission ceiling, ~0.8% of the budget, so no single graph
+//                         can dominate it. Deliberately set ABOVE the observed max of
+//                         163 rather than at p99 (76): refusing 1% of this estate's
+//                         own graphs would cost recomputation for no memory benefit,
+//                         since those graphs are ~6 KB. It still refuses genuinely
+//                         pathological input from outside this corpus.
+//
+// ⚠ These come from ONE corpus on ONE machine. A host compiling third-party code has
+// a different distribution. The number that matters is that the measurement is
+// repeatable, not that these constants are universal.
+const CACHE_POLICY = cachePolicyFromEnv(process.env["GALERINA_EXECUTION_GRAPH_CACHE"]);
+const MEMORY_CACHE = new BoundedCache<string, ExecutionGraph>({
+  maxEntries: 2048,
+  maxWeight: 65536,
+  maxItemWeight: 512,
+  weigh: weighGraph,
+  enabled: CACHE_POLICY.enabled,
+});
+
+/**
+ * Structural weight of a graph, in object nodes — the unit the limits are expressed
+ * in and the unit `measure-graph-cache-limits.mjs` reports. Cycle-safe and
+ * depth-capped: a weigher that can recurse forever would turn a cache write into a
+ * hang, and `BoundedCache` treats a throw here as "refuse admission" rather than
+ * propagating it.
+ */
+function weighGraph(g: ExecutionGraph): number {
+  let nodes = 0;
+  const seen = new Set<unknown>();
+  const walk = (o: unknown, depth: number): void => {
+    if (o === null || typeof o !== "object" || depth > 40) return;
+    if (seen.has(o)) return;
+    seen.add(o);
+    nodes++;
+    if (Array.isArray(o)) { for (const v of o) walk(v, depth + 1); return; }
+    if (o instanceof Map) { for (const v of o.values()) walk(v, depth + 1); return; }
+    for (const v of Object.values(o as Record<string, unknown>)) walk(v, depth + 1);
+  };
+  walk(g, 0);
+  return nodes;
+}
 
 // ── Retired disk-cache authority ──────────────────────────────────────────────
 // Current ruling: disk execution authority is retired. This historical location remains named
@@ -78,8 +146,22 @@ export function getOrLoadGraph(key: string): ExecutionGraph | null {
   return MEMORY_CACHE.get(key) ?? null;
 }
 
+/**
+ * Offer a graph to the cache.
+ *
+ * ★ The return type stays `void` and the signature is unchanged, deliberately. An
+ * eviction or a refused admission is a PERFORMANCE event and nothing else: the
+ * caller already holds the graph and proceeds identically either way. If a caller
+ * could observe non-admission and behave differently, the cache would have become
+ * part of the trust boundary instead of an optimisation beneath it.
+ */
 export function storeGraph(key: string, graph: ExecutionGraph): void {
   MEMORY_CACHE.set(key, graph);
+}
+
+/** Test-only reset. Production correctness must never depend on this being called. */
+export function __resetGraphCacheForTest(): void {
+  MEMORY_CACHE.clear();
 }
 
 // ── Graph builder ─────────────────────────────────────────────────────────────
@@ -234,6 +316,12 @@ export function executionGraphCacheKey(flowName: string, sourceHash: string): st
   return `${flowName}:${sourceHash}`;
 }
 
-export function getGraphCacheStats() {
-  return { memoryEntries: MEMORY_CACHE.size };
+export function getGraphCacheStats(): ReturnType<BoundedCache<string, ExecutionGraph>["stats"]> & { memoryEntries: number } {
+  // ★ `memoryEntries` is retained so the existing determinism tests keep working;
+  // the rest of the surface is new and is what a production consumer needs — counts,
+  // weights, hits, misses, evictions and refusals. Never a key: these keys are
+  // content hashes of source, and a metrics surface reaches a wider audience than the
+  // compiler's own callers.
+  const s = MEMORY_CACHE.stats();
+  return { ...s, memoryEntries: s.entries };
 }

@@ -22,6 +22,7 @@
 // =============================================================================
 
 import { canonicalHash } from "./runtime/canonicalHash.js";
+import { BoundedCache, cachePolicyFromEnv } from "./bounded-cache.js";
 import type { EffectFlagsMask, GovernanceFlagsMask, ProofLevelId } from "./type-registry.js";
 import type { ValueStateFlagsMask } from "./value-state-checker.js";
 import { createHash, generateKeyPairSync, sign as nodeCryptoSign, verify as nodeCryptoVerify } from "node:crypto";
@@ -929,8 +930,25 @@ interface CachedProofShape {
   readonly verified: boolean;
 }
 
-/** Module-level cache keyed by ExecutionSignature hash. */
-const PROOF_SHAPE_CACHE = new Map<string, CachedProofShape>();
+// ★ BOUNDED. This was an unbounded `Map` that a lexical audit reported as *bounded*
+// because `clearProofCache()` exists. It is not the same claim: production POPULATES
+// this cache, and `clearProofCache()` had **2 test callers and 0 production callers**.
+//
+// A verdict that looks safe is worse than one that looks bad — nobody re-reads it.
+// The static audit now resolves every removal against production reachability and
+// reports `TEST-ONLY-CLEAR` for exactly this shape.
+//
+// Keyed by `executionSignatureHash(sig)` — a governance SHAPE, not a source version,
+// so the key space is far smaller than the execution-graph cache's. The entry limit
+// reflects that; the weight limit exists because a shape carries its obligations and
+// evidence, which are unbounded in principle even when the shape count is not.
+const PROOF_SHAPE_CACHE = new BoundedCache<string, CachedProofShape>({
+  maxEntries: 1024,
+  maxWeight: 32768,
+  maxItemWeight: 2048,
+  weigh: (s) => 1 + s.obligations.length + s.evidence.length,
+  enabled: cachePolicyFromEnv(process.env["GALERINA_PROOF_SHAPE_CACHE"]).enabled,
+});
 
 /** Cache statistics for diagnostics. */
 let _proofCacheHits = 0;
@@ -989,14 +1007,32 @@ export function buildProofGraphCached(
   };
 }
 
-/** Phase 30: ProofGraph cache statistics. */
-export function getProofCacheStats(): { hits: number; misses: number; size: number; hitRate: number } {
+/**
+ * Phase 30: ProofGraph cache statistics.
+ *
+ * `size` is retained under its original name so existing callers keep working, and
+ * the bound/eviction figures are added beside it — `evictions` and `refusedOversize`
+ * are what tell an operator the cache is under pressure, which a bare size never
+ * could. No key is exposed.
+ */
+export function getProofCacheStats(): {
+  hits: number; misses: number; size: number; hitRate: number;
+  weight: number; evictions: number; refusedOversize: number;
+  maxEntries: number; maxWeight: number; enabled: boolean;
+} {
   const total = _proofCacheHits + _proofCacheMisses;
+  const s = PROOF_SHAPE_CACHE.stats();
   return {
     hits: _proofCacheHits,
     misses: _proofCacheMisses,
-    size: PROOF_SHAPE_CACHE.size,
+    size: s.entries,
     hitRate: total > 0 ? _proofCacheHits / total : 0,
+    weight: s.weight,
+    evictions: s.evictions,
+    refusedOversize: s.refusedOversize,
+    maxEntries: s.maxEntries,
+    maxWeight: s.maxWeight,
+    enabled: s.enabled,
   };
 }
 
