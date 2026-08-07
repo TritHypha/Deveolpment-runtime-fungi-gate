@@ -8,6 +8,34 @@ budget, the terminals. Something else does the streaming.
 
 ---
 
+## 🔴 CORRECTION 2026-08-07 — read this before the circuits below
+
+**`.gate` v3 is SINGLE-ASSIGNMENT.** `GATE-WIRE-002` refuses any consumer with more than
+one producer: fan-**out** is admitted, fan-**in** is not. Measured while building
+`galerina gate from-pattern` — the tool these circuits were supposed to describe.
+
+**Several drawings below do not verify**, and they were published without being run
+through the checker. That is precisely the failure the shipped `*.gate` examples are gated
+against, and these illustrative listings sat outside that gate.
+
+| shape used below | verdict |
+|---|---|
+| many `pN.no -> DENY.no_match` sharing one refusal terminal | 🔴 refuses — **each refusal needs its own reason**, e.g. `DENY.no_match_at_3` |
+| alternation: two branches converging on one part or on `OUT` | 🔴 **not expressible** — draw each alternative as its own circuit |
+| `?`, `{n,m}`, bounded `*`: a skip edge past an optional tail | 🔴 **not expressible** — a skip edge is a second producer |
+
+**What survives, and is now generated and pipeline-tested:** literals, `\d \w \s`, `.`,
+grouping, and **exact `{n}`** repetition in sequence, each refusal on its own named
+terminal. §3's drawability argument is untouched and arguably strengthened — the
+expressible subset is *smaller* than this document first claimed, and every claim about
+what **cannot** be drawn was already correct.
+
+Sections 1–3 are kept as the reasoning that led here. Treat their circuit listings as
+**illustrative, not authoring guidance**; the verified shape is whatever
+`galerina gate from-pattern` emits.
+
+---
+
 ## The rule that makes it worth doing
 
 > **If it draws, it is linear. If it cannot be drawn finitely, it is refused.**
