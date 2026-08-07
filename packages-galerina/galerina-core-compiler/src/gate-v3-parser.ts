@@ -369,7 +369,14 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
     const args: GateV3Argument[] = [];
     if (match[4]) {
       let searchFrom = 0;
-      const tokens = splitArguments(match[4]!);
+      const split = splitArguments(match[4]!);
+      if (!split.ok) {
+        return refuse(
+          { ...D.P020, message: `${D.P020.message}: ${split.reason}` },
+          item.line, item.indent + 1, item.raw.length,
+        );
+      }
+      const tokens = split.tokens;
       if (tokens.length > GATE_V3_LIMITS.argumentsPerPart) {
         return refuse(D.P031, item.line, item.indent + 1, item.raw.length);
       }
@@ -395,9 +402,16 @@ export function parseGateV3(source: string, file: string): ParsedGateV3 {
           return refuse(D.P029, item.line, item.indent + 1, item.raw.length);
         }
 
-        const value = parseValue(arg[2]!, item, file);
-        if (!value) return refuse(D.P025, item.line, item.indent + 1, item.raw.length);
-        args.push(Object.freeze({ name: argName, value, location: argLocation }));
+        const parsed = parseValue(arg[2]!, item, file);
+        if (!parsed.ok) {
+          // Same code — it is pinned and it is still correct — with the reason
+          // the old `null` threw away appended to the message.
+          return refuse(
+            { ...D.P025, message: `${D.P025.message}: ${parsed.reason}` },
+            item.line, item.indent + 1, item.raw.length,
+          );
+        }
+        args.push(Object.freeze({ name: argName, value: parsed.value, location: argLocation }));
       }
     }
     if (parts.length >= GATE_V3_LIMITS.parts) {
@@ -566,11 +580,33 @@ export function formatGateV3(circuit: GateV3Circuit): string {
   return lines.join("\n");
 }
 
-/** Split a part's argument text on whitespace that is not inside a quoted
- *  string or a `{set}` — so `fields={a,b} mode="x y"` stays two arguments. */
-function splitArguments(text: string): string[] {
+/**
+ * Split a part's argument text on whitespace that is not inside a quoted string
+ * or a `{set}` — so `fields={a,b} mode="x y"` stays two arguments.
+ *
+ * 🔴 FIXED 2026-08-07 — this silently DROPPED a malformed trailing argument.
+ * The scan ends at `index === text.length` with a synthetic space; if `quoted`
+ * was still open, that sentinel was consumed *inside* the quote, so `boundary`
+ * stayed false and the accumulated token was never flushed. `arg="unterminated`
+ * therefore returned `[]`, the caller's per-token validation never ran, and the
+ * part parsed clean **with the argument simply absent**.
+ *
+ * That is the worst shape a parser bug takes: not a wrong answer but a
+ * **refusal rendering as an absence**. A `fields={…}` on a privacy cut, or a
+ * `ceiling=` on a scan, would vanish and the circuit would verify as though the
+ * author had never written it. Only a contract marking the argument `required`
+ * would have caught it downstream, and optional arguments carry governance too.
+ *
+ * The outcome is now a discriminated union rather than a lossy array — the same
+ * doctrine this file states at `ParsedGateV3` and did not carry inward.
+ */
+type SplitArguments =
+  | { readonly ok: true; readonly tokens: readonly string[] }
+  | { readonly ok: false; readonly reason: string };
+
+function splitArguments(text: string): SplitArguments {
   const result: string[] = [];
-  let start: number | null = null;
+  let start = -1;                       // -1, not null: an index sentinel needs no optional
   let braces = 0;
   let quoted = false;
   let escaped = false;
@@ -584,13 +620,17 @@ function splitArguments(text: string): string[] {
     else if (char === "{") braces += 1;
     else if (char === "}") braces -= 1;
     const boundary = /\s/.test(char) && !quoted && braces === 0;
-    if (start === null && !/\s/.test(char)) start = index;
-    if (boundary && start !== null) {
+    if (start === -1 && !/\s/.test(char)) start = index;
+    if (boundary && start !== -1) {
       result.push(text.slice(start, index));
-      start = null;
+      start = -1;
     }
   }
-  return result;
+  // The two states that previously ate a token. Refuse them by name; an
+  // unterminated construct is a malformed argument, never zero arguments.
+  if (quoted) return { ok: false, reason: "unterminated string literal in the argument list" };
+  if (braces !== 0) return { ok: false, reason: "unbalanced { } in the argument list" };
+  return { ok: true, tokens: Object.freeze(result) };
 }
 
 /**
@@ -644,28 +684,88 @@ function measureSetShape(text: string): { depth: number; cardinality: number } {
   return { depth: maxDepth, cardinality: maxCardinality };
 }
 
-/** Parse an argument value with its own span. Returns null on an invalid
- *  literal so the caller can refuse fail-closed. */
-function parseValue(text: string, item: Line, file: string): GateV3Value | null {
+/**
+ * The outcome of parsing one argument value — a DISCRIMINATED UNION, not
+ * `GateV3Value | null`.
+ *
+ * WHY THIS CHANGED (audit 2026-08-07). The previous signature returned `null`
+ * from SIX distinct failure paths — malformed string, unparseable string,
+ * non-finite number, malformed `$reference`, a bad element inside a set, and
+ * "nothing matched at all" — and the caller emitted ONE generic diagnostic for
+ * all of them. TypeScript's strict null checks meant the null was never
+ * *unchecked*, so this was not Hoare's mistake in the memory-safety sense; it
+ * was the other half of it. **`null` erases the reason.** An author who wrote
+ * `$bad-name` and an author who wrote `{a,,b}` got the same message.
+ *
+ * The code stays `GATE-PARSE-025` — it is pinned by tests and is still the
+ * right code — but the message now names which of the six fired.
+ */
+type ParsedValue =
+  | { readonly ok: true; readonly value: GateV3Value }
+  | { readonly ok: false; readonly reason: string };
+
+const badValue = (reason: string): ParsedValue => ({ ok: false, reason });
+
+/**
+ * Spellings that READ as absence and, admitted as names, would not BE absence.
+ *
+ * `.gate` has no null and no NaN: every value is a string, a finite number, a
+ * name, a reference or a set — the union has no absence member, and
+ * `-Infinity` / an overflowing literal already refuse as non-finite. So a value
+ * cannot *become* null here, and this guard is not about memory safety.
+ *
+ * It is about the other failure: `arg=null` parsed as the NAME "null" is a
+ * token that reads as absence to every human reviewer while being an ordinary
+ * string to the checker. A component receiving it would see `"null"`, and a
+ * consumer that round-trips through JSON or evaluates a name could coerce it
+ * back to the thing the author appeared to write. A value that looks like one
+ * thing and is another is the shape this project refuses everywhere else.
+ *
+ * Verified before adding: **zero** uses across the shipped examples and every
+ * fixture registry, so nothing legitimate is being taken away. Refusing an
+ * absence-shaped spelling costs an author nothing — there is no meaning here it
+ * could have expressed.
+ */
+const ABSENCE_SPELLINGS: ReadonlySet<string> = new Set([
+  "null", "NaN", "Infinity", "undefined", "nil", "None", "NULL", "Null", "nan",
+]);
+
+const absenceReason = (value: string): string =>
+  `'${value}' is not admitted: .gate has no null and no NaN, and a name that READS as absence `
+  + "would be an ordinary string the checker cannot distinguish from one. Use a declared value.";
+
+/** Parse an argument value with its own span, or say precisely why not. */
+function parseValue(text: string, item: Line, file: string): ParsedValue {
   const value = text.trim();
   const location = locate(item.raw, value, file, item.line);
 
   if (value.startsWith('"')) {
-    if (!/^"(?:[\x20-\x21\x23-\x5B\x5D-\x7E]|\\["\\nrt])*"$/.test(value)) return null;
+    if (!/^"(?:[\x20-\x21\x23-\x5B\x5D-\x7E]|\\["\\nrt])*"$/.test(value)) {
+      return badValue("malformed string literal — unterminated, or carrying a character outside the printable escape set");
+    }
     try {
-      return Object.freeze({ kind: "string" as const, value: JSON.parse(value) as string, location });
+      return { ok: true, value: Object.freeze({ kind: "string" as const, value: JSON.parse(value) as string, location }) };
     } catch {
-      return null;
+      return badValue("string literal is well-shaped but does not decode");
     }
   }
   if (/^-?[0-9]+(?:\.[0-9]+)?$/.test(value)) {
     const numeric = Number(value);
-    if (!Number.isFinite(numeric)) return null;
-    return Object.freeze({ kind: "number" as const, value: numeric, location });
+    // Not merely tidiness: a non-finite argument would flow into budget
+    // composition, where Infinity absorbs every other cost silently.
+    if (!Number.isFinite(numeric)) return badValue("numeric literal is not finite");
+    // `-0` normalised away. It is not merely tidiness: `-0 === 0` is true, so
+    // two circuits differing only here compare equal to every rule and to the
+    // canonical formatter (`String(-0)` is `"0"`) — while `Object.is` and any
+    // downstream consumer that distinguishes them would see two values. A
+    // difference the canonical form erases must not survive in the parsed tree.
+    return { ok: true, value: Object.freeze({ kind: "number" as const, value: numeric === 0 ? 0 : numeric, location }) };
   }
   if (value.startsWith("$")) {
-    if (!new RegExp(`^\\$${IDENT}$`).test(value)) return null;
-    return Object.freeze({ kind: "reference" as const, value: value.slice(1), location });
+    if (!new RegExp(`^\\$${IDENT}$`).test(value)) {
+      return badValue("'$' must be followed by a single identifier");
+    }
+    return { ok: true, value: Object.freeze({ kind: "reference" as const, value: value.slice(1), location }) };
   }
   if (value.startsWith("{") && value.endsWith("}")) {
     const inner = value.slice(1, -1).trim();
@@ -673,16 +773,19 @@ function parseValue(text: string, item: Line, file: string): GateV3Value | null 
     if (inner !== "") {
       for (const element of inner.split(",")) {
         const parsed = parseValue(element, item, file);
-        if (!parsed) return null;
-        items.push(parsed);
+        // Propagate the inner reason rather than flattening it — a bad element
+        // three sets deep should still say what was wrong with it.
+        if (!parsed.ok) return badValue(`set element '${element.trim()}': ${parsed.reason}`);
+        items.push(parsed.value);
       }
     }
-    return Object.freeze({ kind: "set" as const, value: Object.freeze(items), location });
+    return { ok: true, value: Object.freeze({ kind: "set" as const, value: Object.freeze(items), location }) };
   }
   if (new RegExp(`^${QNAME}$`).test(value)) {
-    return Object.freeze({ kind: "name" as const, value, location });
+    if (ABSENCE_SPELLINGS.has(value)) return badValue(absenceReason(value));
+    return { ok: true, value: Object.freeze({ kind: "name" as const, value, location }) };
   }
-  return null;
+  return badValue("expected a quoted string, a number, a $reference, a {set}, or a qualified name");
 }
 
 /** Parse `node.port` into an endpoint with its exact span, or null. */
