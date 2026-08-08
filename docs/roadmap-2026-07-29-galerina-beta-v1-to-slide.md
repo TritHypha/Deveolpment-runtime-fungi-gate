@@ -3,8 +3,8 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina was structurally indexed at
-subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and SLIDE at subject
-head `8705fa6` (**9,503 / 22,995**); both observed counts exactly equal the
+subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and the latest SLIDE
+implementation at `b82db4f` (**9,554 / 23,144**); both observed counts exactly equal the
 indexers' expected counts, and fresh symbol queries prove the new graph content
 is searchable. Galerina's repository graph and generated-authority checks pass
 **5/5** after regenerating the project and KB outputs that correctly refused
@@ -12,9 +12,8 @@ the preceding TODO drift. SLIDE's contract check
 now passes **87 files**, its tool manifest passes **81 files**, its independent
 path-leak gate passes **14 controls / 707 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**819/819 across 86 suites** with no authority released. The new Contract 80
-implementation is later than the quoted exact graph point and will be reindexed
-at phase close. The fresh Galerina
+**819/819 across 86 suites** with no authority released. Direct graph search
+finds the Contract 80 compiler and both independent validators. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close

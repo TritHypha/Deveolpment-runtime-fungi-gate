@@ -15,6 +15,9 @@ counts or open items that a newer section explicitly supersedes.
   tools**, path leak **14 controls / 707 targets**, security closure `+1` with
   evidence K3 `0`, and **819/819 tests across 86 suites** with Node **2 -> 2**.
   `authorityReleased` remains false.
+- [x] Re-index SLIDE's committed Contract 80 implementation at `b82db4f`:
+  **9,554 nodes / 23,144 edges**, with observed and expected totals equal and
+  direct graph hits for the new compiler plus producer/executor validators.
 - [ ] Keep package-conversion and retirement credit at zero for this increment.
   Galerina has not yet switched package consumers, and Contract 80 does not
   admit other element types, collection arguments/results, arbitrary mutation,
