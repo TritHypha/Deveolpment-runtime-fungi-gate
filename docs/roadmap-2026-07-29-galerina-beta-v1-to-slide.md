@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`c544cd28` (**45,665 nodes / 120,560 edges**) and SLIDE at `de39ad6`
-(**8,150 / 19,895**). The Galerina graph suite initially
+`c544cd28` (**45,665 nodes / 120,560 edges**) and SLIDE at `372f76b`
+(**8,161 / 19,922**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **70 files**, its tool manifest passes **72 files**, its independent
-path-leak gate passes **14 controls / 627 targets**, security closure is `+1`
+passes **71 files**, its tool manifest passes **72 files**, its independent
+path-leak gate passes **14 controls / 633 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**746/746 across 75 suites** with no authority released. The fresh Galerina
+**752/752 across 75 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -26,6 +26,17 @@ host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh 2026-08-08: SLIDE Contract 67 is green at `372f76b`. The
+append-only straight-line loop source profile now uses two through eight
+ordered checked state updates and reaches Contract 63's exact sixteen-
+instruction capacity without creating another executor. Contract 66 remains
+the one-update predecessor. The successor crosses the same canonical physical
+`.slide`, flat package, work-bounded affine VOK and typed receipt path. Focused
+evidence is **59/59**; complete SLIDE is **752/752 across 75 suites**, contract
+integrity covers 71 files, the tool manifest covers 72 files, path-leak covers
+633 targets, and Node returned to one process. Conditional/nested control,
+owned memory, effects, host calls and production authority remain open.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 66 is green at `de39ad6`. One
 closed checked-Fungi counted-loop family using checked `+`, `-` or `*` now
@@ -1241,6 +1252,7 @@ flowchart TB
     SBR["VERIFIED Contract 63 structured loop body<br/>1-4 states · bounded dense SSA · checked Int32"]
     SBP["VERIFIED Contracts 64-65 physical body + VOK<br/>canonical .slide · 19 K3 gates · affine lease"]
     C66["VERIFIED Contract 66 checked-Fungi loop source<br/>flat package · typed receipt · 746/746 complete"]
+    C67["VERIFIED Contract 67 straight-line loop source<br/>2-8 updates · 16-instruction ceiling · 752/752 complete"]
     AR["SLIDE Verified Object Kernel<br/>RD-0657 · 9/9 hostile · reference-only"]
     AT["🟩 Native VOK W^X floor<br/>19,683/19,683 · linked · Windows RX/not-W"]
     AI["🟩 RD-0634-0642 adjudication<br/>B1 null · N3 cost · E11 measured"]
@@ -1261,7 +1273,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool/K3 + String/Bytes + immutable Array/Option + bounded fold + records + 4–128 static functions + exact 9–16-block control + Contract 66 checked counted-loop body<br/>746/746 · general branches/nesting/memory/effects/production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool/K3 + String/Bytes + immutable Array/Option + bounded fold + records + 4–128 static functions + exact 9–16-block control + Contract 66/67 checked loop bodies<br/>752/752 · general branches/nesting/memory/effects/production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
@@ -1334,7 +1346,7 @@ flowchart TB
     E --> K --> VN --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> LP --> H
-    LC --> SBR --> SBP --> C66 --> H
+    LC --> SBR --> SBP --> C66 --> C67 --> H
     LC --> BF --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
