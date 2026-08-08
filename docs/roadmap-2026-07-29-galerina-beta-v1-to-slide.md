@@ -33,6 +33,18 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap boundary ruling 2026-08-08: the **bounded general scalar/control SLIDE
+core is green**. V2-C is not an application-specific table: it independently
+validates complete canonical function graphs, reachable CFG, dense SSA, typed
+block parameters, dominance, exact edge arguments, direct calls, Boolean/K3
+successors and bounded work. Wide profiles reach 128 functions and 16 blocks;
+Contract 70 adds one or two certified reducible counted loops. The independent
+executor re-derives the same facts before physical `.slide`, portable VEO, VOK,
+flat-package and typed-receipt admission. Memory/effect/host profiles, general
+checked-Fungi source binding and authenticated production authority remain
+open and retain their own roadmap status; they do not make the reusable scalar
+backend core blue again.
+
 Roadmap refresh 2026-08-08: SLIDE Contracts 70-71 are green at implementation
 commit `f291fda`. Contract 70 adds one or two independently certified natural
 counted loops to V2-C; reducibility, dominance, unique preheaders, zero start,

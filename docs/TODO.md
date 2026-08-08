@@ -125,12 +125,17 @@ must not displace the critical path below or grant production authority.
 - [x] Adjudicate the former `bounded-cache.ts`/`memory-sandobx` concurrent
   hold. Neither surface is outstanding in the current tree; no unknown content
   was staged, deleted or granted authority.
-- [ ] Finish the independent general SLIDE backend dependency-first: complete
-  canonical GIR and independent validation for general bodies, structured
-  control/loop bodies, owned memory, failures, effects, capabilities, K3
-  collapse and source maps; then bind them through physical `.slide`, VOK,
-  the flat package loader and typed terminal receipts. Unknown or unsupported
-  semantics must remain terminal.
+- [x] Close the bounded general SLIDE scalar/control core dependency-first.
+  V2-C now validates complete canonical function graphs, reachable CFG, dense
+  SSA, types, dominance, edge arguments, direct calls, Boolean/K3 successors,
+  work budgets and one or two certified natural counted loops; the independent
+  executor re-derives those facts before physical `.slide`, VOK, flat-package
+  and typed-receipt admission. No fallback interpreter exists.
+- [ ] Extend that green core one exact family at a time with independently
+  bound source/compiler receipts, owned memory, general failures, effects,
+  capabilities, host calls and source maps. Unknown or unsupported mutation,
+  callback, initializer, memory, effect or host semantics must remain terminal
+  before any executable handle exists.
 - [x] Complete the next bounded general-body increment without overclaiming
   the general backend. Contract 66 compiles one exact checked-Fungi counted
   loop using checked `+`, `-` or `*` through Contracts 63-65, physical
@@ -152,12 +157,12 @@ must not displace the critical path below or grant production authority.
   mutation refusal. General/nested control, memory, effects and production
   authority remain open.
 - [x] Add the bounded Contract 69 nested-conditional successor. One outer and
-  one inner `if/else` now carry two complete K3 successor rows, five byte-bound
+  one inner `if/else` carry two complete K3 successor rows, five byte-bound
   source spans and worst-case path work through a canonical 344-byte GIR,
   physical `.slide`, flat package profile and affine VOK receipt. All 344
-  one-byte GIR mutations refuse and the historical inner-loop fixture remains
-  refused. This is bounded nested control, not general CFG or nested-loop
-  completion; package-retirement debt and production authority do not change.
+  one-byte GIR mutations refuse. At that checkpoint the historical inner-loop
+  fixture remained refused; Contracts 70-71 now supersede that exact boundary.
+  Package-retirement debt and production authority do not change.
 - [ ] Close production execution authority after the backend: authenticated
   producer evidence, native object identity, platform/durability receipts,
   anchor/revocation checks and the later offline ceremony. Local reference
