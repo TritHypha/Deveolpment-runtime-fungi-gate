@@ -15,10 +15,10 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. SLIDE Contract 72 is indexed at exact head
-  `80f3f61`: **9,252 nodes and 22,284 edges**. SLIDE passes **78 contracts**, **77 reference tools**,
-  path-leak **14 controls / 670 targets**, security closure `+1` with evidence
-  K3 `0`, and **794/794 tests across 80 suites**. The complete serial SLIDE run
+  nodes and 120,560 edges**. SLIDE Contract 74 is indexed at exact head
+  `77e22c6`: **9,310 nodes and 22,485 edges**. SLIDE passes **80 contracts**, **78 reference tools**,
+  path-leak **14 controls / 677 targets**, security closure `+1` with evidence
+  K3 `0`, and **798/798 tests across 81 suites**. The complete serial SLIDE run
   stayed process-bounded at Node **2 -> 2**.
 - [x] Close the exact historical nested-state boundary without claiming a
   general language backend. Contract 70 independently certifies one or two
@@ -27,8 +27,11 @@ counts or open items that a newer section explicitly supersedes.
   VEO, eight VOK gates and one affine lease. True/true returns seven and either
   disabled control returns zero. Contract 72 separately closes the first
   bounded owned-memory family: one local linear `Int32` buffer with checked
-  store/load and terminal zeroisation. General mutable collections, effects,
-  host calls and production authority remain open.
+  store/load and terminal zeroisation. Contract 73 raises only the closed
+  contract-root runway to 96 files. Contract 74 source-binds two strict-clean
+  read-only `.fungi` effect families to the existing V2-B broker and mandatory
+  audit route. General mutable collections, effects, host calls and production
+  authority remain open.
 - [x] Adopt RD-0754's bounded application-resident index with verified
   on-demand object loading as the post-SLIDE architecture direction for large,
   cold or selectively accessed data. Keep its physical store in SLIDE DFE,
@@ -143,7 +146,9 @@ must not displace the critical path below or grant production authority.
 - [ ] Extend that green core one exact family at a time with independently
   bound source/compiler receipts. Contract 72 supplies the first local owned
   `Int32` buffer profile with linear handles, checked bounds and terminal
-  zeroisation; general collections, general failures, effects, capabilities,
+  zeroisation. Contract 74 supplies a source-bound validated-`Bytes` bridge to
+  the existing V2-B database-read or HTTPS-fetch route with audit-before-
+  release. General collections, failures, multi-effect programs, capabilities,
   host calls and source maps remain open. Unknown or unsupported mutation,
   callback, initializer, memory, effect or host semantics must remain terminal
   before any executable handle exists.

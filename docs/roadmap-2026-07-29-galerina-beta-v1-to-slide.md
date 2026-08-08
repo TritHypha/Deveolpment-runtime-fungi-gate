@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 72 at exact
-implementation head `80f3f61` (**9,252 / 22,284**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 74 at exact
+implementation head `77e22c6` (**9,310 / 22,485**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **78 files**, its tool manifest passes **77 files**, its independent
-path-leak gate passes **14 controls / 670 targets**, security closure is `+1`
+passes **80 files**, its tool manifest passes **78 files**, its independent
+path-leak gate passes **14 controls / 677 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**794/794 across 80 suites** with no authority released. The fresh Galerina
+**798/798 across 81 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -38,13 +38,28 @@ core is green**. V2-C is not an application-specific table: it independently
 validates complete canonical function graphs, reachable CFG, dense SSA, typed
 block parameters, dominance, exact edge arguments, direct calls, Boolean/K3
 successors and bounded work. Wide profiles reach 128 functions and 16 blocks;
-Contract 70 adds one or two certified reducible counted loops and Contract 72
-adds one bounded local owned `Int32` buffer family. The independent
+Contract 70 adds one or two certified reducible counted loops, Contract 72
+adds one bounded local owned `Int32` buffer family, and Contract 74 source-
+binds one validated read-only effect to the existing V2-B engine. The independent
 executor re-derives the same facts before physical `.slide`, portable VEO, VOK,
 flat-package and typed-receipt admission. General collections, effect/host
 profiles, general checked-Fungi source binding and authenticated production
 authority remain open and retain their own roadmap status; they do not make
 the reusable scalar backend core blue again.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 74 is green at local implementation
+commit `77e22c6`. Two exact Galerina-strict-clean source families validate a
+`Bytes` request and select the existing V2-B database-read or HTTPS-fetch
+operation with mandatory audit-before-release. The producer uses a bounded
+token parser; preparation uses an independent exact line grammar, revalidates
+the bundled GIR and reproduces a full SHA-256 source-plus-artifact closure.
+Valid source edits become distinct artifacts rather than inheriting the old
+bundle. Focused evidence is **4/4**, composed effect evidence is **30/30**, and
+complete SLIDE is **798/798 across 81 suites**. Contract integrity is **80
+files** under Contract 73's bounded 96-file ceiling (97 refuses), tool identity
+is **78 files**, path hygiene covers **677 targets**, security evidence K3 is
+`0`, benchmark evidence verifies and Node is **2 -> 2**. This is a bounded
+reference bridge, not general effects, production providers or authority.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 72 is green at local implementation
 commit `80f3f61`. It admits one 1..16-element runtime-owned local `Int32`
@@ -1379,7 +1394,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool/K3 + String/Bytes + immutable Array/Option + bounded fold + records + 4–128 static functions + exact 9–16-block control + Contracts 66–69 checked loop bodies<br/>781/781 · general CFG/nested-loop, memory, effects and production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/control + certified nested loops + owned local Int32 + source-bound single read effect<br/>Contracts 66–74 · 798/798 · general collections/effects, native and production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
