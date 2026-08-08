@@ -57,6 +57,19 @@ function run(root, kb, args = [], failChild = "") {
 test("graph-all routes all five repository checks and propagates a child refusal", () => {
   const { root, kb } = fixture();
   try {
+    const generated = run(root, kb);
+    assert.equal(generated.status, 0, `${generated.stdout}\n${generated.stderr}`);
+    const generateCalls = readFileSync(join(root, "calls.log"), "utf8")
+      .trim()
+      .split(/\r?\n/)
+      .map((line) => line.split(" ", 1)[0]);
+    assert.equal(
+      generateCalls.at(-1),
+      "project-graph-generator.mjs",
+      "project graph must run last because it covers outputs written by sibling generators",
+    );
+
+    writeFileSync(join(root, "calls.log"), "");
     const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");

@@ -59,14 +59,6 @@ const node = process.execPath;
 const mode = options.check ? "check" : "generate";
 const children = [
   {
-    name: "project graph",
-    args: [
-      "scripts/project-graph-generator.mjs",
-      "--root", options.root,
-      ...(options.check ? ["--check"] : []),
-    ],
-  },
-  {
     name: "graph integrity",
     args: ["scripts/audit-graph-integrity.mjs"],
   },
@@ -93,6 +85,16 @@ const children = [
       "scripts/dev-tool-index.mjs",
       "--root", options.root,
       ...(options.check ? ["--generator-check"] : []),
+    ],
+  },
+  {
+    // This graph includes generated repository surfaces. Run it after every
+    // sibling generator so one graph-all invocation reaches a fixed point.
+    name: "project graph",
+    args: [
+      "scripts/project-graph-generator.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
     ],
   },
 ];
