@@ -4,7 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Generated authority fixed point and current structural baseline - 2026-08-08
+### Live routing and stale-evidence reconciliation - 2026-08-08
+
+- [x] Verify the active local route directly before this documentation-only
+  update: branch `codex/galerina-beta-v1-completion`, clean subject head
+  `f5de2530`. The roadmap/TODO reconciliation at `e2c0e424` is an ancestor of
+  that subject. No push was made.
+- [x] Reclassify `362df72d` as the **last exact graph build point**, not the
+  current repository head. Since that build point the tree gained the bounded
+  RD-0755 detector as well as documentation, so its 45,665-node/120,560-edge
+  totals are dated evidence and must not be quoted as the current graph.
+- [ ] Re-index Galerina at the current committed `HEAD` after this TODO update,
+  require the indexer's committed head to equal that exact revision and
+  `stale: false`, then rerun graph-all and the generated-authority drift gates
+  before replacing the dated graph totals.
+- [x] Check publication state without changing it. The local upstream-tracking
+  ref is `b3b84a6c`, 25 commits behind this branch. That local ref was not
+  fetched in this housekeeping pass; hosted CI is therefore **unverified for
+  the current unpublished branch**, not green or red. The owner remains the
+  only publisher.
+- [x] Verify the paired SLIDE route was clean at subject head `89f9dafc`. Its
+  last indexed implementation point is `420a1e9`; the later two commits add
+  only completion evidence, but exact-head graph admission still requires a
+  fresh index.
+
+### Last fully verified generated-authority fixed point - 2026-08-08
 
 - [x] Reconcile and commit the 27-file generated-state refresh as
   `c544cd28`. The code registry and code index required one additional bounded
@@ -14,7 +38,8 @@ counts or open items that a newer section explicitly supersedes.
   component-health audit, generated status blocks, subway roadmap, dev-tool
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
-- [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
+- [x] Re-index Galerina at the then-exact implementation head `362df72d`:
+  **45,665
   nodes and 120,560 edges**. SLIDE Contract 79 is indexed at exact
   implementation head `420a1e9`: **9,502 nodes and 22,994 edges**. SLIDE
   passes **85 contracts**, **79 reference tools**, path-leak **14 controls /
@@ -87,14 +112,14 @@ counts or open items that a newer section explicitly supersedes.
   coverage **974/974**, catalog coverage **0 missing / 0 ambiguous**, artifact
   drift, governed examples and crypto suites. The post-run Node census returned
   to the single pre-existing MCP process.
-- [x] Audit GitHub Actions without changing remote state. SLIDE's latest
-  remote security-closure is green at `feda0e7`, but the local branch is 15
-  commits ahead. Galerina's latest `main` runs are stale failures at
+- [x] Audit GitHub Actions without changing remote state at this historical
+  checkpoint. SLIDE's then-latest remote security-closure was green at
+  `feda0e7`; newer local contracts were not represented. Galerina's latest
+  observed `main` runs were stale failures at
   `8a8997b`: full-history gitleaks reported digest/field-name false positives
   already precisely adjudicated on this branch, while the earlier conventions
-  run stopped on a stale benchmark. The local Galerina branch was eight
-  commits ahead before this CI record. Current hosted CI therefore remains
-  **unverified**, not green, until the owner pushes and the exact heads run.
+  run stopped on a stale benchmark. This bullet is retained as historical CI
+  evidence only; the live publication state is governed by the section above.
 
 ### Unix/macOS path-leak regression closed on the active branch - 2026-08-08
 
