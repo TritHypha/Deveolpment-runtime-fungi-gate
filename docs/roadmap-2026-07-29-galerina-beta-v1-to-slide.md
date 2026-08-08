@@ -2,18 +2,19 @@
 
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: Galerina's pre-refresh subject head is
-`7ad66886`; its repository graph was regenerated and independently checked
-**5/5**, with Node **2 -> 2**. SLIDE Contract 83 implementation head `0579136`
-indexes to **9,706 nodes / 23,547 edges**, exactly equal to the indexer's
+Current revalidated checkpoint: Galerina graph provenance binds subject
+`fb8fa703`; repository graph generation and independent drift checking pass
+**5/5**, with Node **2 -> 2** after this roadmap update.
+SLIDE Contract 84 implementation head `81850ca`
+indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
-not a bulk defect count. SLIDE's contract check now passes **91 files in two
-closed partitions**, its tool manifest passes **87 files** with digest
-`9d00deab...5707a`, its independent path-leak gate passes **14 controls / 736
+not a bulk defect count. SLIDE's contract check now passes **92 files in two
+closed partitions**, its tool manifest passes **89 files** with digest
+`6688de04...0c1e`, its independent path-leak gate passes **14 controls / 739
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**849/849 across 92 suites** with no authority released. The fresh Galerina
+**857/857 across 94 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close
@@ -36,18 +37,17 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap active gate 2026-08-09: **Contract 83 is green** at SLIDE implementation
-commit `0579136`. One exact flow carries two distinct append-only `Array<Int>`
-owners through separate CFG slots and generations; producer and executor both
-re-derive the complete graph. Runtime success, overflow and post-allocation
-budget failure zeroise exactly two buffers. Physical `.slide`, portable VEO,
-one-use VOK and flat-package receipts bind the distinct registry, while owner
-copy/drop/swap/cross-write, K3/context/replay and every-byte mutations refuse.
-The original **262,090 / 262,144-byte** partition and 96-file ceiling remain
-unchanged; Contract 83 is the first manifest-bound file in
-`v2-extensions-01`. Contract 84's exact internal cross-function owned handoff
-is the next RED gate. Conversion, retirement, signing and production authority
-remain unchanged until a real Galerina package consumer switch is green.
+Roadmap active gate 2026-08-09: **Contract 84 is green** at SLIDE implementation
+commit `81850ca`. One exact caller transfers a private append-only `Array<Int>`
+owner to one helper through the existing GIR `call`, receives only the
+successor owner, consumes index zero and reaches unconditional one-buffer
+zeroisation. Producer and executor independently reject old-owner reuse,
+copy/retry, wrong target/return, direct physical helper selection, K3/context/
+replay substitution and every-byte object mutations. The path is bound through
+physical `.slide`, portable VEO, VOK and the flat-package compiler. It admits
+no external collection ABI, general call graph or general collection family.
+Conversion, retirement, signing and production authority remain unchanged
+until a real Galerina package consumer switch is green.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One

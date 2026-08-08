@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current route: SLIDE Contract 84 internal owned handoff RED - 2026-08-09
+### Current route: SLIDE Contract 84 internal owned handoff complete - 2026-08-09
 
 - [x] Close SLIDE Contract 83 at implementation checkpoint `0579136`. Its exact
   checked-Fungi family carries two distinct append-only `Array<Int>` owners
@@ -26,10 +26,16 @@ counts or open items that a newer section explicitly supersedes.
   memory stores: zero orphan, dangling-file, duplicate-target or warehouse
   defects. The reported unresolved wikilinks remain non-authorizing suggestion
   queues rather than broken file links.
-- [ ] Define Contract 84's semantic RED boundary for one exact internal
+- [x] Define and implement Contract 84's semantic RED boundary for one exact internal
   cross-function owned collection handoff. Ownership must remain affine across
   the call/return boundary, refuse copy/retry/alias, and zeroise exactly once.
   This does not admit an external collection ABI or general collections.
+- [x] Bind the exact two-flow source through one internal GIR `call`, independent
+  producer/executor validation, physical `.slide`, portable VEO, VOK and the
+  flat-package compiler. Checkpoint `81850ca` passes **857/857 tests across 94
+  suites**, **2 partitions / 92 contracts**, **89 manifest-bound tools**, path
+  hygiene **14/739**, closure K3 `0`, Node **2 -> 2**, and exact indexing at
+  **9,755 nodes / 23,691 edges** equal to expected.
 - [ ] Keep Galerina's conversion and retirement counters unchanged until an
   exact package consumer switch, generated admission evidence and complete
   Galerina/SLIDE owning gates are green.
