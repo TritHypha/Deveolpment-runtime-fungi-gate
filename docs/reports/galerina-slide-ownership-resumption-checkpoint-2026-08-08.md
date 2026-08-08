@@ -53,6 +53,10 @@ tooling changes were reconciled.
 10. `graph-all` previously generated the project graph before generators that
     mutate its input set. Project graph now runs last; a fresh one-pass
     generate/check is 5/5 + 5/5.
+11. The count-owning test runner previously sorted packages alphabetically.
+    Local `file:` dependencies now run first, cycles refuse, and bounded npm
+    diagnostics remain visible. The clean dependency-first aggregate is
+    99/99 packages, 9,452 tests, 0 failed.
 
 ## Exact remaining retirement debt
 
@@ -84,4 +88,3 @@ exhaustive run before 88/88 can be attributed to the newer tree.
    family at a time through physical `.slide`, affine VOK and typed receipts.
 5. Close authenticated object/platform/anchor authority, then switch packages by
    exact executed parity tranches until the retirement ledger reaches zero.
-

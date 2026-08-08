@@ -56,6 +56,11 @@ must not displace the critical path below or grant production authority.
 - [x] Correct graph generation order. The project graph now runs after its four
   sibling generators, so a single `graph-all` invocation reaches a fixed point;
   focused order tests pass and fresh generate/check results are **5/5 + 5/5**.
+- [x] Correct the root test/build order. Flat `file:` dependencies now execute
+  before their dependants, cycles refuse, and bounded npm/fatal diagnostics are
+  visible on failure. A fresh canonical run passed **99/99 packages, 9,452
+  tests, 0 failed**; alphabetical order had previously hidden missing built
+  dependency closures.
 - [x] Implement the `.gate` order-six non-authorizing link-plan boundary:
   closed 11-key plan, canonical digest, deterministic component order,
   admission-time circuit snapshot, private linkable binding, emitter-input

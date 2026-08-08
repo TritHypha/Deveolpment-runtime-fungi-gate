@@ -1,7 +1,7 @@
 # Galerina beta v1 to SLIDE roadmap
 
 Date: 2026-08-08
-Working branch: `codex/galerina-fresh-verify-2026-08-08` (local; never pushed)
+Working branch: `codex/galerina-final2-close-2026-08-08` (local; never pushed)
 Current revalidated checkpoint: Galerina and SLIDE were structurally re-indexed
 at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
@@ -19,7 +19,11 @@ the same **99/99 / 9,452 / 0 failed** aggregate without package junctions to any
 other worktree. Exact-byte evidence is LF-bound, the historical example key is
 confined to a temporary test governance set, and graph-all now reaches its
 fixed point in one ordered pass (**5/5 generate + 5/5 check**). The exhaustive
-close still requires one final run at this newer isolated fixed point.
+close still requires one final run at this newer isolated fixed point. The
+count-owning 99-package runner is now dependency-first across flat `file:`
+edges; its canonical rerun passes **99/99 and 9,452**, including the sealed
+secrets package that alphabetical execution previously reached before its
+built dependency.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned

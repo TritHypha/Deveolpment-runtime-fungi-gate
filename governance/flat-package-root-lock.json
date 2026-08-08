@@ -119,7 +119,7 @@
       "identity": "@galerina/auth",
       "version": "1.0.0-beta.2",
       "directory": "galerina-auth",
-      "contentDigest": "b6fb53441e493d3e7b869666797157260b0b78eae9a3d849233417475e8e5173",
+      "contentDigest": "9c0cb9704b965437322c60d461c0deb00805d446a983f209d1abf1e473e5a4c5",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3254,5 +3254,5 @@
       ]
     }
   ],
-  "rootDigest": "9758f7c0d1d1e78e5a10b4673ef7e7ea696a34a8f9d39f9f81906277e1050237"
+  "rootDigest": "d46569f9cfaeb2a9ac45b45b61e00a6b83de1c3770c6d08d79b094c1378a1663"
 }

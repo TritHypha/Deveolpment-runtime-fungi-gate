@@ -2,8 +2,8 @@
   "generatedBy": "scripts/component-health.mjs --audit-html",
   "provenance": {
     "available": true,
-    "branch": "codex/galerina-fresh-verify-2026-08-08",
-    "sha": "ba362d70",
+    "branch": "codex/galerina-final2-close-2026-08-08",
+    "sha": "e0d0d7e8",
     "detached": false,
     "dirty": true
   },

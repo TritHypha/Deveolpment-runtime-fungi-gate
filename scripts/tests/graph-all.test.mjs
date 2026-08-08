@@ -63,10 +63,16 @@ test("graph-all routes all five repository checks and propagates a child refusal
       .trim()
       .split(/\r?\n/)
       .map((line) => line.split(" ", 1)[0]);
-    assert.equal(
-      generateCalls.at(-1),
-      "project-graph-generator.mjs",
-      "project graph must run last because it covers outputs written by sibling generators",
+    assert.deepEqual(
+      generateCalls,
+      [
+        "kb-graph-generator.mjs",
+        "package-graph-generator.mjs",
+        "dev-tool-index.mjs",
+        "project-graph-generator.mjs",
+        "audit-graph-integrity.mjs",
+      ],
+      "input generators must precede the project graph, and integrity must inspect that final graph",
     );
 
     writeFileSync(join(root, "calls.log"), "");
