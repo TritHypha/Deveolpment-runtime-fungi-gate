@@ -3,16 +3,17 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at exact
-subject head `11a9216e` (**45,706 nodes / 120,650 edges**) and SLIDE Contract 82
-implementation head `18bc56b` indexes to **9,609 / 23,289**; both observed
+subject head `11a9216e` (**45,706 nodes / 120,650 edges**) and SLIDE contract-
+catalog implementation head `aa6b802` indexes to **9,640 / 23,365**; both observed
 counts exactly equal the indexers' expected counts. Galerina's repository graph
 was regenerated and independently checked **5/5**, with Node **2 -> 2**. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
-not a bulk defect count. SLIDE's contract check now passes **90 files**, its
-tool manifest passes **83 files** with digest `397c976e...f638c5`, its independent
-path-leak gate passes **14 controls / 720 targets**, security closure is `+1`
+not a bulk defect count. SLIDE's contract check now passes **90 files in one
+closed partition**, its tool manifest passes **84 files** with digest
+`348b347e...0b902`, its independent path-leak gate passes **14 controls / 725
+targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**831/831 across 90 suites** with no authority released. The fresh Galerina
+**838/838 across 90 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close
@@ -40,12 +41,13 @@ commit `18bc56b` and documentation head `7ffe06f`. The package compiler selects
 only the two exact registered Contract 80/81 profiles, independently rechecks
 their registry IDs and digests, and preserves typed source `Err` as the original
 terminal Result rather than collapsing it into package refusal. There is no
-generic selector, host-exception fallback or authority release. The next gate
-is structural, not another profile: the bounded contract root is **262,090 /
-262,144 bytes**, leaving **54 bytes**. Contract 83 must first introduce a closed,
-versioned partition/manifest scheme without raising the ceiling or weakening
-the 96-file runway. Conversion, retirement, signing and production authority
-remain unchanged until a real Galerina package consumer switch is green.
+generic selector, host-exception fallback or authority release. The structural
+capacity gate is also green at `aa6b802`: the original **262,090 / 262,144-byte**
+partition and 96-file ceiling remain unchanged, while an exact canonical
+catalog admits at most eight manifest-bound sibling partitions. Contract 83's
+semantic RED contract is now the next SLIDE gate. Conversion, retirement,
+signing and production authority remain unchanged until a real Galerina
+package consumer switch is green.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One
@@ -1512,11 +1514,12 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–82 · 831/831 · no production authority"]
+    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–82 · 838/838 · no production authority"]
     C80["🟩 Contract 80 owned append-array<br/>standalone exact profile · affine owner · zeroised storage"]
     C81["🟩 Contract 81 typed Result propagation<br/>single evaluation · original failure preserved"]
     C82["🟩 Contract 82 flat-package extension<br/>two exact profiles · typed failure preserved<br/>831/831 · no authority released"]
-    C83["🟦 Contract-root partition gate<br/>262,090 / 262,144 bytes · 54 bytes free<br/>closed versioned manifest required"]
+    CAT["🟩 Contract-root catalog gate<br/>legacy ceiling unchanged · 8 bounded partitions<br/>7/7 focused · 838/838 complete"]
+    C83["🟦 Contract 83 semantic gate<br/>new closed partition · RED contract first<br/>no authority by catalog membership"]
     HC["🟦 Complete Galerina language backend<br/>general owned collections · failures · multi-effect/cross-package calls<br/>provider binary identity · generated supported-source manifest"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
@@ -1578,7 +1581,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> C83 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> CAT --> C83 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P

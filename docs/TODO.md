@@ -33,10 +33,15 @@ counts or open items that a newer section explicitly supersedes.
 - [ ] Keep all Galerina conversion and retirement counters unchanged until a
   real Galerina package consumer switch is green. Contract 82 closes only the
   two named profiles and releases no production or signing authority.
-- [ ] Resolve SLIDE's bounded contract-root capacity before adding Contract 83.
-  The current root is **262,090 / 262,144 bytes**, leaving **54 bytes**. Do not
-  raise the ceiling or weaken the 96-file runway; define a bounded, versioned,
-  closed partition/manifest scheme first.
+- [x] Resolve SLIDE's bounded contract-root capacity before adding Contract 83.
+  Implementation `aa6b802` keeps the original **262,090 / 262,144-byte**
+  partition and 96-file ceiling unchanged, then adds a closed catalog for at
+  most eight exact sibling partitions. Focused evidence is **7/7**, complete
+  SLIDE is **838/838**, the tool manifest is **84 files**, and the exact code
+  graph is **9,640 nodes / 23,365 edges**.
+- [ ] Define Contract 83's semantic RED boundary in the first new partition.
+  Catalog membership alone grants no package conversion, retirement, signing,
+  production or release authority.
 
 ### Corrected R&D reply adjudication - 2026-08-08
 
