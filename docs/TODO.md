@@ -4,6 +4,24 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 80 integration boundary - 2026-08-08
+
+- [x] Verify the first finish-ledger owned-collection increment rather than
+  claiming the whole gate. SLIDE Contract 80 independently derives one exact
+  checked-Fungi append-only `Array<Int>` loop, revalidates its affine owner
+  through a fixed cross-block CFG, executes it through private zeroised
+  storage, physical `.slide`, portable VEO and one eight-gate VOK lease.
+- [x] Record fresh bounded evidence: **87 contract files**, **81 reference
+  tools**, path leak **14 controls / 707 targets**, security closure `+1` with
+  evidence K3 `0`, and **819/819 tests across 86 suites** with Node **2 -> 2**.
+  `authorityReleased` remains false.
+- [ ] Keep package-conversion and retirement credit at zero for this increment.
+  Galerina has not yet switched package consumers, and Contract 80 does not
+  admit other element types, collection arguments/results, arbitrary mutation,
+  multiple live collections or cross-function ownership. Continue SLIDE's
+  finish-ledger gate 1 before typed failures, multiple effects and the later
+  gates.
+
 ### Live routing and stale-evidence reconciliation - 2026-08-08
 
 - [x] Verify the active local route directly before this documentation-only

@@ -2,17 +2,19 @@
 
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: Galerina is structurally indexed at
-subject head `cfbe91e7` (**45,706 nodes / 120,650 edges**) and SLIDE at subject
-head `6e090c3` (**9,503 / 22,995**); both observed counts exactly equal the
+Current revalidated checkpoint: Galerina was structurally indexed at
+subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and SLIDE at subject
+head `8705fa6` (**9,503 / 22,995**); both observed counts exactly equal the
 indexers' expected counts, and fresh symbol queries prove the new graph content
 is searchable. Galerina's repository graph and generated-authority checks pass
 **5/5** after regenerating the project and KB outputs that correctly refused
 the preceding TODO drift. SLIDE's contract check
-passes **85 files**, its tool manifest passes **79 files**, its independent
-path-leak gate passes **14 controls / 698 targets**, security closure is `+1`
+now passes **87 files**, its tool manifest passes **81 files**, its independent
+path-leak gate passes **14 controls / 707 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**809/809 across 84 suites** with no authority released. The fresh Galerina
+**819/819 across 86 suites** with no authority released. The new Contract 80
+implementation is later than the quoted exact graph point and will be reindexed
+at phase close. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close
@@ -48,6 +50,22 @@ flat-package and typed-receipt admission. General collections, effect/host
 profiles, general checked-Fungi source binding and authenticated production
 authority remain open and retain their own roadmap status; they do not make
 the reusable scalar backend core blue again.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 80 is green at local implementation
+commit `b0d019f` for one deliberately narrow slice of the first remaining
+internal gate. Exact checked-Fungi bytes describe an append-only `Array<Int>`
+loop with bound 1..16 and one terminal in-range read. Producer and executor
+independently require a fixed four-block CFG, one affine owner slot, checked
+Int32 arithmetic and terminal consumption; copied, dropped, wrong-slot,
+non-dominating and call-transferred owners refuse. Runtime storage is private,
+fixed and zeroised on success and failure. The exact profile continues through
+physical `.slide`, portable VEO and one eight-gate VOK lease, with replay,
+context/K3 drift, overflow and every-byte physical mutation refused. Complete
+SLIDE is **819/819 across 86 suites**; contract integrity is **87 files**, tool
+identity is **81 files**, path hygiene covers **707 targets**, security evidence
+K3 is `0`, and Node is **2 -> 2**. This closes only the append-array floor:
+general collections, package conversion, retirement and production authority
+remain open.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 74 is green at local implementation
 commit `77e22c6`. Two exact Galerina-strict-clean source families validate a
