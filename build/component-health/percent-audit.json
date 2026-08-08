@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "788ffbec",
+    "sha": "eca15ba0",
     "detached": false,
     "dirty": true
   },
@@ -229,7 +229,7 @@
         {
           "label": "Independent SLIDE general executable backend",
           "pct": null,
-          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 713/713 across 73 suites; general bodies, loops, effects and production authority remain open",
+          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 828/828 across 89 suites; bounded scalar/control, certified loops, one affine append-array floor and one typed Result-propagation floor are built, while general collections/Result families, multiple/cross-package effects and production authority remain open",
           "live": false,
           "evidence": null
         },
@@ -333,7 +333,7 @@
         {
           "item": "Independent SLIDE backend",
           "state": "building",
-          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 713/713 across 73 suites; general bodies, loops, effects and production authority remain open"
+          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 828/828 across 89 suites; bounded scalar/control, certified loops, one affine append-array floor and one typed Result-propagation floor are built, while general collections/Result families, multiple/cross-package effects and production authority remain open"
         },
         {
           "item": "Package retirement",
