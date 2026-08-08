@@ -95,6 +95,14 @@ must not displace the critical path below or grant production authority.
   **99/99 package aggregate**. Governance diff reports no authority widening;
   the terminal census found only the pre-existing MCP Node process and no
   phase-close-owned child.
+- [x] Close Galerina's half of the historical deep-mutation gap with one
+  portable, checker-clean fixture whose exact shape is
+  `while -> if -> if -> while`. The production interpreter returns the
+  propagated value `7`, both disabled controls return `0`, and the K3-facing
+  wrapper returns only explicit Allow/Deny values without coercion or XOR.
+  Focused evidence passes **3/3**. SLIDE pins a byte-identical mirror and
+  refuses it without partial GIR, bundle, map, handle or authority until the
+  general backend owns nested loops.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3
@@ -121,7 +129,7 @@ approval and a genuinely clean-room verifier require owner or independent
 hands; they are not needed for the next general-backend increment and will be
 raised only when reached.
 
-### Memory-retention programme: bounded caches shipped, workflow host pending - 2026-08-08
+### Memory-retention programme: per-commit host shipped, scheduled matrix pending - 2026-08-08
 
 Owner rulings Q2 (tools live in `scripts/`, no new package) and Q3 (staged CI)
 are implemented up to one open decision. The detailed audit is retained in the
@@ -5413,8 +5421,10 @@ and bundle identity; Galerina is its first frontend.
   lexer-depth fix and arithmetic XOR are separate mechanisms. Tower Citizen’s
   balanced-ternary XOR is type-separated from Verdict and must never aggregate
   K3 authority (`xor(-1,-1)=+1`). A current four-deep Stage-A mutation probe
-  passes; retain a TODO for the exact historical `while -> if -> if -> while`
-  regression. Canonical decision:
+  passes. The exact historical `while -> if -> if -> while` regression is now
+  a portable Galerina-owned fixture with propagated, disabled-control and K3
+  evidence (**3/3**); SLIDE pins and fail-closes the same bytes until its
+  general backend admits nested loops. Canonical decision:
   `../../SLIDE/docs/NESTING-AND-XOR-DECISION.md`.
 - [ ] Keep the current WebAssembly path as the implemented production/differential
   path until SLIDE release gates pass and a transition is explicitly recorded.

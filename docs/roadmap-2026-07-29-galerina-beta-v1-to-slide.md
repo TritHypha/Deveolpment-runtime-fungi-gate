@@ -51,6 +51,19 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: the historical deep-mutation gap now has one portable,
+Galerina-owned semantic corpus with the exact
+`while -> if -> if -> while` shape. Galerina's production interpreter proves
+the propagated result (`7`), both disabled controls (`0`) and an explicit K3
+Allow/Deny wrapper without Boolean/trit coercion or XOR (**3/3**). SLIDE pins a
+byte-identical mirror by SHA-256 and proves two boundaries: the current
+bounded compiler refuses the unsupported nested loop with no partial GIR,
+bundle, source map, handle or authority, while an admitted K3 control still
+re-derives its nine source-map entries (**3/3**). This closes the missing
+regression instrument, not nested-loop execution: the general backend remains
+blue until it independently derives nested state, source maps and K3 evidence
+through executable `.slide`.
+
 Roadmap refresh 2026-08-08: no other AI worker was declared active when this
 chapter began. Codex owns Galerina
 and SLIDE end to end. The critical path is: current Galerina phase-close ->

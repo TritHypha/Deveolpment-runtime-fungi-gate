@@ -1,0 +1,45 @@
+@version 1
+
+/// Historical mutation-propagation regression.
+/// The control shape must remain exactly while -> if -> if -> while.
+pure flow deepNestedMutation(enabled: Bool, innerEnabled: Bool) -> Int
+contract {
+  intent {
+    "Prove that one flow-owned mutable value propagates through the historical nested control shape."
+  }
+}
+{
+  mut cursor: Int = 0
+  mut outer: Int = 0
+
+  while outer < 1 {
+    if enabled {
+      if innerEnabled {
+        mut inner: Int = 0
+        while inner < 1 {
+          cursor = cursor + 7
+          inner = inner + 1
+        }
+      }
+    }
+    outer = outer + 1
+  }
+
+  return cursor
+}
+
+/// K3-facing control: mutation evidence is converted explicitly, never by
+/// Boolean/trit coercion and never by arithmetic XOR.
+pure flow deepNestedMutationVerdict(enabled: Bool, innerEnabled: Bool) -> Verdict
+contract {
+  intent {
+    "Return Allow only for the exact propagated value; every control returns Deny."
+  }
+}
+{
+  let propagated: Int = deepNestedMutation(enabled, innerEnabled)
+  if propagated == 7 {
+    return Verdict.Allow
+  }
+  return Verdict.Deny
+}
