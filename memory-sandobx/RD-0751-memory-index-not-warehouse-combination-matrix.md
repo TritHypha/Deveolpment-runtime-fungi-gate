@@ -160,6 +160,25 @@ tier looped past the Windows CPU-tick:
   wall on the stream; a pointer-chasing layout (Map, linked nodes) would multiply far harder.
   That is *why* CSR beats Map by more at scale.
 
+### ★ Placement refinement (owner question): don't pin the graph to L1 — pin the RANDOM set to L2
+
+You cannot place data into L1/L2/L3 from userland; the hardware does, by access pattern
+(≈LRU). What is controllable is **size and access shape**, and the tier table names the one
+lever that pays:
+
+| measured fact | consequence |
+|---|---|
+| L1 ≡ L2 (1.07×) — prefetch fully hides L2 on the **sequential** CSR stream | shrinking the streamed arrays toward L1 buys nothing; leave them alone |
+| the wall lands on the **random** `dist[dst]` writes (2.6× at L3, 12.8× at RAM) | the residency that pays is for the **random-access working set** — `dist[]`, the frontier/heap — not the graph itself |
+
+So the correct split is **not** "graph in L1". It is: keep the *random-access state* inside L2,
+and let the *sequentially-streamed* CSR arrays spill to L3/RAM — the L1≡L2 result proves
+prefetch already covers the stream. For the production 2,048-entry cache this is automatic
+(0.65 MiB, L2↔L3 band, `dist[]` per-flow-graph tiny). The refinement only bites at the
+million-node end, where `dist[]` alone (8 MB) exceeds L2 — there a **blocked/bucketed
+traversal** that keeps a slice of `dist[]` L2-resident is the win, not relocating the graph.
+This is a *follow-up measurement* (blocked vs flat traversal), named here, not yet run.
+
 ---
 
 ## §5 XIP (RD-0559), and the owner's question: "if it never enters memory, does it need hashing?"
