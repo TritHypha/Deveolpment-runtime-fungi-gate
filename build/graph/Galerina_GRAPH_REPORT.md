@@ -1,15 +1,15 @@
 # Galerina Graph Report
 
 Workspace: Galerina-app
-Generated: 2026-08-04T17:51:11.732Z
+Generated: 2026-08-08T07:04:56.000Z
 
 ## Summary
 
-- Packages: 98
-- Documents: 4616
-- Types/interfaces: 2904
-- Functions: 1344
-- Relationships: 9267
+- Packages: 99
+- Documents: 4640
+- Types/interfaces: 2964
+- Functions: 1382
+- Relationships: 9395
 
 ## Package Nodes
 
@@ -101,6 +101,7 @@ Generated: 2026-08-04T17:51:11.732Z
 - galerina-devtools-context (packages-galerina/galerina-devtools-context/package.json)
 - galerina-devtools-flowgraph (packages-galerina/galerina-devtools-flowgraph/package.json)
 - galerina-devtools-graph-algorithms (packages-galerina/galerina-devtools-graph-algorithms/README.md)
+- galerina-devtools-hypha (packages-galerina/galerina-devtools-hypha/README.md)
 - galerina-devtools-intelligence (packages-galerina/galerina-devtools-intelligence/package.json)
 - galerina-devtools-fungi-scan (packages-galerina/galerina-devtools-fungi-scan/README.md)
 - galerina-devtools-kb-graph (packages-galerina/galerina-devtools-kb-graph/package.json)

@@ -3,11 +3,11 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "ea489832",
+    "sha": "9b454a35",
     "detached": false,
     "dirty": true
   },
-  "shipReadinessPct": 100,
+  "shipReadinessPct": 98.98989898989899,
   "ztAvg": 78,
   "buildAvg": 75,
   "trackingRegistryCount": 23,
@@ -37,7 +37,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 497 tracked package TypeScript paths, 111 unexecuted .fungi sources, 95 node_modules trees and one nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 516 tracked package TypeScript paths, 111 unexecuted .fungi sources, 42 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -291,7 +291,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "98/98 component families green; 98 workspace packages, 8,956 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "98/99 component families green; 99 workspace packages, 8,956 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",
@@ -326,7 +326,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "497 tracked package TypeScript paths · 111/111 .fungi sources unexecuted · 0/38 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "516 tracked package TypeScript paths · 111/111 .fungi sources unexecuted · 0/42 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",

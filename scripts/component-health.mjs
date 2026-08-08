@@ -327,7 +327,13 @@ try { TCE = twinParityLadder(); } catch { TCE = null; }
 const ZERO_TRUST = [
   { boundary: "Compiler", pct: 100, status: "✅ shipped — complete compiler 5,866/5,866; all 7 self-hosted stages are authoritative and byte-pinned" },
   { boundary: "I/O — OS kernel", pct: 72, status: "◑ kernel channel admission is fail-closed and 29 governed twins are authoritative; independent SLIDE/VOK execution is bounded and verified, while general effects, platform targets and production authority remain open" },
-  { boundary: "Packages", pct: 98, status: "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 497 tracked package TypeScript paths, 111 unexecuted .fungi sources, 95 node_modules trees and one nested native identity" },
+  {
+    boundary: "Packages",
+    pct: 98,
+    status: retirementCounts.available
+      ? `◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records ${retirementCounts.allTrackedTs} tracked package TypeScript paths, ${retirementCounts.unexecutedFungi} unexecuted .fungi sources, ${retirementCounts.hostBridges - retirementCounts.ownedHostBridges} unowned host boundaries, ${retirementCounts.nodeModulesTrees} node_modules trees and ${retirementCounts.nestedNativePackages} nested native identity`
+      : "PACKAGE RETIREMENT EVIDENCE UNAVAILABLE — refusing to publish copied counts",
+  },
   { boundary: "Memory", pct: 62, status: "◑ native VOK W^X/K3 floor is linked and verified at 19,683/19,683; general memory, hostile-memory execution and production VOK authority remain open" },
   { boundary: "TLSTP — zero-middleware", pct: 56, status: "◑ channel denial now constrains every route and the governed transport decisions are proven; raw-byte/ECH plumbing, live recovering-FSM wiring and independent in-sandbox execution remain open" },
 ];
@@ -731,6 +737,17 @@ if (SELF_TEST) {
   );
   ok(contractCounts.available, "contract-registry counts are available from generated authority");
   ok(retirementCounts.available, "package-retirement counts are available from the exact retirement ledger");
+  const packageBoundary = audit.sections
+    .find((section) => section.key === "zero-trust-thesis")
+    ?.rows.find((row) => row.label === "Packages");
+  ok(
+    packageBoundary?.note?.includes(`${retirementCounts.allTrackedTs} tracked package TypeScript paths`)
+      && packageBoundary.note.includes(`${retirementCounts.unexecutedFungi} unexecuted .fungi sources`)
+      && packageBoundary.note.includes(`${retirementCounts.hostBridges - retirementCounts.ownedHostBridges} unowned host boundaries`)
+      && packageBoundary.note.includes(`${retirementCounts.nodeModulesTrees} node_modules trees`)
+      && packageBoundary.note.includes(`${retirementCounts.nestedNativePackages} nested native identity`),
+    "Packages thesis row is driven by the exact retirement ledger rather than copied counts",
+  );
   ok(
     reg.some((row) => row.item === "Package retirement" && row.detail.includes(`${retirementCounts.allTrackedTs} tracked package TypeScript paths`)),
     "Package retirement row is driven by the live ledger rather than a copied count",

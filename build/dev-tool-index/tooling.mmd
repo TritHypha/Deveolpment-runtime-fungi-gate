@@ -234,6 +234,8 @@ flowchart LR
   T_audit_kernel_fungi_twins_mjs --> C_gate_wiring
   T_audit_kernel_fungi_twins_mjs --> C_doc_drift
   T_audit_kernel_fungi_twins_mjs --> C_graph_index
+  T_audit_leak_static_mjs["audit-leak-static.mjs"]
+  T_audit_leak_static_mjs --> C_diagnostics
   T_audit_license_compat_mjs["audit-license-compat.mjs"]
   T_audit_license_compat_mjs --> C_effects
   T_audit_license_compat_mjs --> C_doc_drift
@@ -338,6 +340,13 @@ flowchart LR
   T_audit_reference_doc_drift_mjs --> C_gate_wiring
   T_audit_reference_doc_drift_mjs --> C_diagnostics
   T_audit_reference_doc_drift_mjs --> C_doc_drift
+  T_audit_registry_fixtures_mjs["audit-registry-fixtures.mjs"]
+  T_audit_registry_fixtures_mjs --> C_sinks_taint
+  T_audit_registry_fixtures_mjs --> C_effects
+  T_audit_registry_fixtures_mjs --> C_signing_fusion
+  T_audit_registry_fixtures_mjs --> C_gate_wiring
+  T_audit_registry_fixtures_mjs --> C_diagnostics
+  T_audit_registry_fixtures_mjs --> C_secrets_privacy
   T_audit_remote_shell_install_mjs["audit-remote-shell-install.mjs"]
   T_audit_remote_shell_install_mjs --> C_signing_fusion
   T_audit_remote_shell_install_mjs --> C_coverage
@@ -348,6 +357,10 @@ flowchart LR
   T_audit_report_blind_consumers_mjs["audit-report-blind-consumers.mjs"]
   T_audit_report_blind_consumers_mjs --> C_signing_fusion
   T_audit_report_blind_consumers_mjs --> C_diagnostics
+  T_audit_retention_gate_mjs["audit-retention-gate.mjs"]
+  T_audit_retention_gate_mjs --> C_teaching_corpus
+  T_audit_retention_nightly_mjs["audit-retention-nightly.mjs"]
+  T_audit_retention_nightly_mjs --> C_diagnostics
   T_audit_route_overlap_mjs["audit-route-overlap.mjs"]
   T_audit_route_overlap_mjs --> C_signing_fusion
   T_audit_route_overlap_mjs --> C_governance
@@ -392,11 +405,25 @@ flowchart LR
   T_audit_sink_canonicality_mjs --> C_secrets_privacy
   T_audit_sink_canonicality_mjs --> C_graph_index
   T_audit_sink_canonicality_mjs --> C_sensitive_allowlist
+  T_audit_sink_tri_parity_mjs["audit-sink-tri-parity.mjs"]
+  T_audit_sink_tri_parity_mjs --> C_sinks_taint
+  T_audit_sink_tri_parity_mjs --> C_effects
+  T_audit_sink_tri_parity_mjs --> C_governance
+  T_audit_sink_tri_parity_mjs --> C_gate_wiring
+  T_audit_sink_tri_parity_mjs --> C_diagnostics
   T_audit_stage_execution_mjs["audit-stage-execution.mjs"]
   T_audit_stage_execution_mjs --> C_coverage
   T_audit_stage_execution_mjs --> C_teaching_corpus
   T_audit_stage_execution_mjs --> C_doc_drift
   T_audit_stage_execution_mjs --> C_graph_index
+  T_audit_stdlib_gates_parity_mjs["audit-stdlib-gates-parity.mjs"]
+  T_audit_stdlib_gates_parity_mjs --> C_sinks_taint
+  T_audit_stdlib_gates_parity_mjs --> C_effects
+  T_audit_stdlib_gates_parity_mjs --> C_governance
+  T_audit_stdlib_gates_parity_mjs --> C_gate_wiring
+  T_audit_stdlib_gates_parity_mjs --> C_diagnostics
+  T_audit_stdlib_gates_parity_mjs --> C_teaching_corpus
+  T_audit_stdlib_gates_parity_mjs --> C_doc_drift
   T_audit_stray_docs_mjs["audit-stray-docs.mjs"]
   T_audit_stray_docs_mjs --> C_coverage
   T_audit_stray_docs_mjs --> C_source_hygiene
@@ -495,16 +522,25 @@ flowchart LR
   T_graph_all_mjs --> C_package_border
   T_graph_all_mjs --> C_source_hygiene
   T_graph_all_mjs --> C_graph_index
+  T_kat_execution_graph_cache_bound_mjs["kat-execution-graph-cache-bound.mjs"]
+  T_kat_execution_graph_cache_bound_mjs --> C_signing_fusion
+  T_kat_execution_graph_cache_bound_mjs --> C_graph_index
   T_kb_graph_generator_mjs["kb-graph-generator.mjs"]
   T_kb_graph_generator_mjs --> C_governance
   T_kb_graph_generator_mjs --> C_provenance
   T_kb_graph_generator_mjs --> C_teaching_corpus
   T_kb_graph_generator_mjs --> C_source_hygiene
   T_kb_graph_generator_mjs --> C_graph_index
+  T_measure_graph_cache_limits_mjs["measure-graph-cache-limits.mjs"]
+  T_measure_graph_cache_limits_mjs --> C_effects
+  T_measure_graph_cache_limits_mjs --> C_signing_fusion
+  T_measure_graph_cache_limits_mjs --> C_teaching_corpus
+  T_measure_graph_cache_limits_mjs --> C_graph_index
   T_memory_graph_mjs["memory-graph.mjs"]
   T_memory_graph_mjs --> C_signing_fusion
   T_memory_graph_mjs --> C_diagnostics
   T_memory_graph_mjs --> C_teaching_corpus
+  T_memory_graph_mjs --> C_source_hygiene
   T_memory_graph_mjs --> C_graph_index
   T_package_graph_generator_mjs["package-graph-generator.mjs"]
   T_package_graph_generator_mjs --> C_signing_fusion
@@ -733,6 +769,11 @@ flowchart LR
   T_hardening_show_derived_mjs --> C_diagnostics
   T_hardening_show_derived_mjs --> C_secrets_privacy
   T_hardening_show_derived_mjs --> C_graph_index
+  T_kat_executeflow_cache_growth_mjs["kat-executeflow-cache-growth.mjs"]
+  T_kat_executeflow_cache_growth_mjs --> C_diagnostics
+  T_kat_executeflow_cache_growth_mjs --> C_graph_index
+  T_kat_primitives_are_collected_mjs["kat-primitives-are-collected.mjs"]
+  T_kat_primitives_are_collected_mjs --> C_signing_fusion
   T_license_rollout_mjs["license-rollout.mjs"]
   T_license_rollout_mjs --> C_governance
   T_license_rollout_mjs --> C_coverage
@@ -783,6 +824,11 @@ flowchart LR
   T_repoint_kb_refs_mjs --> C_diagnostics
   T_repoint_kb_refs_mjs --> C_doc_drift
   T_repoint_kb_refs_mjs --> C_graph_index
+  T_subject_galerina_compile_mjs["subject-galerina-compile.mjs"]
+  T_subject_galerina_compile_mjs --> C_sinks_taint
+  T_subject_galerina_compile_mjs --> C_effects
+  T_subject_galerina_compile_mjs --> C_governance
+  T_subject_galerina_compile_mjs --> C_graph_index
   T_test_compiler_subdirs_mjs["test-compiler-subdirs.mjs"]
   T_test_compiler_subdirs_mjs --> C_effects
   T_test_compiler_subdirs_mjs --> C_governance

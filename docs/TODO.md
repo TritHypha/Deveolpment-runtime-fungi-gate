@@ -4,7 +4,63 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Memory-retention programme: bounded caches shipped, staged CI half-wired - 2026-08-08
+### Primary ownership resumed: Galerina beta v1 to independent SLIDE - 2026-08-08
+
+There are no other AI workers active. Codex again owns the Galerina and SLIDE
+implementation lanes end to end. Lyth/Weaver, `.gate`, experimental provider
+packs and external conversion staging remain preserved secondary lanes; they
+must not displace the critical path below or grant production authority.
+
+- [x] Re-index both current repositories at exact heads: Galerina
+  `9b454a35` produced 45,198 nodes and 119,314 edges; SLIDE `211b641`
+  produced 8,022 nodes and 19,459 edges. Both persistent graph artifacts were
+  written by the indexer.
+- [x] Run the Galerina graph suite. Its first run correctly refused because
+  `galerina-devtools-hypha` existed on disk but was absent from
+  `galerina.workspace.json` (98 registered / 99 present). The package is now a
+  registered top-level peer, its boundary output is generated, and the fresh
+  graph suite passes **5/5**. No nested package or graph exemption was added.
+- [x] Regenerate the exact TypeScript-retirement ledger. Current debt is
+  **516 tracked package `.ts` paths (501 in `src`)**, **111/111 unexecuted
+  `.fungi` sources**, **0/42 owned host boundaries**, **95 package-local
+  `node_modules` trees**, and **one nested native identity**. Earlier 497/38
+  counts in dated sections are historical and must not drive decisions.
+- [x] Re-run the independent SLIDE baseline: contract manifest/integrity
+  **66 files**, tool manifest **67 files**, security closure `+1` with evidence
+  K3 `0`, and **713/713 tests across 73 suites** all pass. This is bounded
+  reference evidence; `authorityReleased` remains false.
+- [ ] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
+  phase-close after the Hypha enlistment and the 2026-08-07/08 compiler,
+  `.gate`, retention and audit changes. Until then, the 98-package / 8,956-test
+  / 87-of-87 figures below are the last full checkpoint, not proof of the
+  current working tree.
+- [ ] Finish the independent general SLIDE backend dependency-first: complete
+  canonical GIR and independent validation for general bodies, structured
+  control/loop bodies, owned memory, failures, effects, capabilities, K3
+  collapse and source maps; then bind them through physical `.slide`, VOK,
+  the flat package loader and typed terminal receipts. Unknown or unsupported
+  semantics must remain terminal.
+- [ ] Close production execution authority after the backend: authenticated
+  producer evidence, native object identity, platform/durability receipts,
+  anchor/revocation checks and the later offline ceremony. Local reference
+  success cannot substitute for these inputs.
+- [ ] Convert packages one dependency tranche at a time only after their exact
+  `.fungi -> .slide` parity, rollback and host-boundary receipts pass. Delete
+  no TypeScript, Wasm or dependency path early; reuse validated DSS/Wasm
+  fragments as oracles or components where the inventory permits.
+- [ ] Reach terminal retirement only when the controlling ledger independently
+  reports zero `.ts`, zero unexecuted `.fungi`, zero unowned host boundaries,
+  zero package-local dependency trees and zero nested identities. Then run the
+  full graphs, tests, audits, generated build and the Galerina/SLIDE versus
+  frozen Galerina/Wasm benchmark.
+
+**Owner questions:** none block the current engineering sequence. Later
+external-host receipts, offline signing/anchor ceremonies, public release/FTO
+approval and a genuinely clean-room verifier require owner or independent
+hands; they are not needed for the next general-backend increment and will be
+raised only when reached.
+
+### Memory-retention programme: bounded caches shipped, workflow host pending - 2026-08-08
 
 Owner rulings Q2 (tools live in `scripts/`, no new package) and Q3 (staged CI)
 are implemented up to one open decision. Audit document:
@@ -31,11 +87,10 @@ are implemented up to one open decision. Audit document:
   evictions**, weight 6,144/65,536, item weight ~3.0. **`maxEntries` is the
   binding ceiling; `maxWeight` is never the constraint at this item weight** and
   must not be cited as an enforced limit.
-- [ ] **Owner decision pending — §13 of the audit document**: which CI workflow
-  hosts the per-commit retention gate. Every job in `.github/workflows/conventions.yml`
-  is deliberately *(build-free)* and the gate is not — stage 1 imports `dist/`.
-  Three options with a recommendation (a new `retention.yml` that builds first)
-  are written up; nothing was changed in that workflow unilaterally.
+- [ ] **Engineering action selected under the resumed ownership:** add a
+  dedicated `retention.yml` that builds first and then runs the per-commit
+  retention gate. Do not make the deliberately build-free
+  `.github/workflows/conventions.yml` install or build dependencies.
 - [ ] The nightly/release dynamic stage exists and is wired as an npm script but
   no scheduler invokes it.
 
@@ -224,7 +279,7 @@ authority may be inferred from this TODO.
   production authority, package conversion and terminal retirement remain
   open and receive no completion credit.
 
-### Current `.ts -> .fungi -> .slide` gate count - 2026-08-04
+### Current `.ts -> .fungi -> .slide` gate count - refreshed 2026-08-08
 
 - Quarantine translation drafts may be written now. Promotion of the first
   trustworthy production replacement has seven ordered gates: complete GIR
@@ -232,17 +287,20 @@ authority may be inferred from this TODO.
   production bundle/loader/runner authority, authenticated execution and host
   receipts, signed flat-root dependency authority, then per-file parity,
   ledger/consumer switch and deletion.
-- Full retirement remains eleven top-level work packages. The fresh controlling
-  audit correctly refuses with 246 exact debt instances: 497 tracked package
-  TypeScript paths, 111 unexecuted `.fungi`, 38 unowned host boundaries, 95
+- Full retirement remains eleven top-level work packages. The controlling
+  audit correctly refuses with 516 tracked package TypeScript paths (501 in
+  `src`), 111 unexecuted `.fungi`, 42 unowned host boundaries, 95
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
-- Round 9 handback 0053 has independently closed 38/120 rows. One row is an
+- Round 9 handback 0053 is retained as quarantined, non-authorizing analysis;
+  no external worker is active. It classified 38/120 rows. One row is an
   executed-parity candidate, two are superseded by existing Fungi, one has no runtime
   behaviour, 30 are language-blocked, one is host-ABI-blocked and three
   require dedicated security handling. These are analysis outcomes, not
-  production conversion credit. Row 039 is next.
+  production conversion credit. Any useful row must be revalidated against
+  the current Galerina and SLIDE heads before adoption; there is no active
+  external row queue.
 - [ ] Close the Round 9 row-035/038 report-redaction trace before production
   conversion: `allowSecretValuesInReports` is false and the fail-closed
   redactor exists, but the reports package does not call it directly. Trace

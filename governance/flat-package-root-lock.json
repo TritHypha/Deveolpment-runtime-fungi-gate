@@ -191,11 +191,11 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "2fe351ff884fcb076fff3acfafcd6d9b76c32ecb01aa4b7505a8676a1814d1a7",
+      "contentDigest": "d6ba67e2a179d9e431e2b144eeefd68bac5f1ddfe2eaef849187aaedd116a4e2",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "a5d0b48f2e3307564bf5313b0603dff27925690ce8c38d4cb44b6bc095984a05"
+          "digest": "24c19b6cdda443e0f1143af7800d7ea53f9924590b9a48c1e602d7b9943a4f4c"
         }
       ],
       "dependencies": [
@@ -279,7 +279,7 @@
       "identity": "@galerina/core-config",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-config",
-      "contentDigest": "bc4596ed09acad0b474ecdc901d6ef589c3cca2f76313b5267f1db251b81f0de",
+      "contentDigest": "0946d9f88366d315cb0b1f45ff0fd1e7e2f207c23949b1fd14d388c78c5fd7b7",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1143,6 +1143,19 @@
           "specifier": "^5.5.0"
         }
       ]
+    },
+    {
+      "identity": "@galerina/devtools-hypha",
+      "version": "1.0.0-beta.1",
+      "directory": "galerina-devtools-hypha",
+      "contentDigest": "fea712b615bfeb413a120f42bc8feb6553f39c129ccf564082673dfa9bed54a4",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "0339c9472e18fa98c1987413de0d72807f9afc26640f102acfe2a0491f915085"
+        }
+      ],
+      "dependencies": []
     },
     {
       "identity": "@galerina/devtools-intelligence",
@@ -2336,6 +2349,7 @@
     "@galerina/db-postgres",
     "@galerina/db-sqlite",
     "@galerina/devtools-graph-algorithms",
+    "@galerina/devtools-hypha",
     "@galerina/devtools-kb-graph",
     "@galerina/devtools-package-graph",
     "@galerina/devtools-project-graph",
@@ -3240,5 +3254,5 @@
       ]
     }
   ],
-  "rootDigest": "113426fd93336a033eb3d709970444f4294afd41cd4335c7a8371f4eeafbe698"
+  "rootDigest": "e7a1b0eb1402e84f2f9fe905f8c3fd3109016b466856e7e17bb50e14305e419c"
 }

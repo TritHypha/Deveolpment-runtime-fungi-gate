@@ -1465,6 +1465,10 @@ Provides:
 - NodeId
 - GraphNode
 
+## galerina-devtools-hypha
+
+Passive capability-map scanner for Galerina: extracts the compiler's dispatch surfaces, sentinel sets and checker wiring in memory and answers drift/coverage questions. No database, no build step, no dependencies — run it and it answers.
+
 ## galerina-devtools-intelligence
 
 Hybrid BM25 + structural code search for Galerina workspaces. Indexes flows by semantic tokens, effects, economics, and governance metadata. Zero external dependencies — runs fully local.
