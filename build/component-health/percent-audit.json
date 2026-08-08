@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-final2-close-2026-08-08",
-    "sha": "57b54d72",
+    "sha": "3f21e9fa",
     "detached": false,
     "dirty": true
   },
@@ -229,7 +229,7 @@
         {
           "label": "Independent SLIDE general executable backend",
           "pct": null,
-          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 716/716 across 74 suites; general bodies, loops, effects and production authority remain open",
+          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK plus Contract 63 structured counted-loop body regions are 723/723 across 75 suites; general structured control, nested loops, effects and production authority remain open",
           "live": false,
           "evidence": null
         },
@@ -333,7 +333,7 @@
         {
           "item": "Independent SLIDE backend",
           "state": "building",
-          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 716/716 across 74 suites; general bodies, loops, effects and production authority remain open"
+          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK plus Contract 63 structured counted-loop body regions are 723/723 across 75 suites; general structured control, nested loops, effects and production authority remain open"
         },
         {
           "item": "Package retirement",

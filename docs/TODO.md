@@ -26,8 +26,8 @@ must not displace the critical path below or grant production authority.
   `node_modules` trees**, and **one nested native identity**. Earlier 497/38
   counts in dated sections are historical and must not drive decisions.
 - [x] Re-run the independent SLIDE baseline: contract manifest/integrity
-  **66 files**, tool manifest **67 files**, security closure `+1` with evidence
-  K3 `0`, and **716/716 tests across 74 suites** all pass. This is bounded
+  **67 files**, tool manifest **68 files**, security closure `+1` with evidence
+  K3 `0`, and **723/723 tests across 75 suites** all pass. This is bounded
   reference evidence; `authorityReleased` remains false.
 - [x] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
   phase-close after the Hypha enlistment and the 2026-08-07/08 compiler,
@@ -103,6 +103,15 @@ must not displace the critical path below or grant production authority.
   Focused evidence passes **3/3**. SLIDE pins a byte-identical mirror and
   refuses it without partial GIR, bundle, map, handle or authority until the
   general backend owns nested loops.
+- [x] Extend SLIDE's counted-loop reference with the first reusable structured
+  body region under Contract 63: one to four Int32 loop-carried values, zero
+  to sixteen dense-SSA checked arithmetic instructions, a domain-separated
+  body digest, Contract 58 work certification and eleven fail-closed K3 gates.
+  Focused evidence is **6/6**, combined counted-loop/K3 evidence is **17/17**,
+  and complete SLIDE is **723/723 across 75 suites** with **67 contracts** and
+  **68 reference tools**. The region is acyclic and reference-only; general
+  control, nested loops, physical `.slide`/VOK binding and authority remain
+  open.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3

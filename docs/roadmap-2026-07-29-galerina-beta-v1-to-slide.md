@@ -7,9 +7,9 @@ at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **66 files**, its tool manifest passes **67 files**, security closure is
+passes **67 files**, its tool manifest passes **68 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**716/716 across 74 suites** with no authority released. The fresh Galerina
+**723/723 across 75 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **428 total / 426 pass / 2 intentional skip / 0
 fail**, and the current uninterrupted exhaustive close passed **92/92** in
@@ -50,6 +50,20 @@ host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: SLIDE Contract 63 now implements the smallest reusable
+structured counted-loop body region. It admits one to four Int32 loop-carried
+values and zero to sixteen dense-SSA checked arithmetic instructions, binds a
+domain-separated body digest to a module-private plan, and produces state and
+a receipt only after Contract 58 certifies complete work and all eleven K3
+gates Allow. Hostile descriptors, copied handles, insufficient work, overflow
+and every non-Allow outcome refuse without partial output. Focused evidence is
+**6/6**, combined counted-loop/K3 evidence is **17/17**, and complete SLIDE is
+**723/723 across 75 suites** with **67 contracts** and **68 reference tools**.
+This moves the independent backend forward but does not make it green: the
+body is acyclic and reference-only, while general structured control, nested
+loops, physical `.slide`/VOK binding, memory, effects and production authority
+remain open.
 
 Roadmap refresh: the historical deep-mutation gap now has one portable,
 Galerina-owned semantic corpus with the exact
