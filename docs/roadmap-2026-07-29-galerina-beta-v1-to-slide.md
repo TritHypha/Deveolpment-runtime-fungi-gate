@@ -5,13 +5,13 @@ Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina graph provenance binds subject
 `fb8fa703`; repository graph generation and independent drift checking pass
 **5/5**, with Node **2 -> 2** after this roadmap update.
-SLIDE Contract 84 implementation head `81850ca`
+SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
 indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
 not a bulk defect count. SLIDE's contract check now passes **92 files in two
 closed partitions**, its tool manifest passes **89 files** with digest
-`6688de04...0c1e`, its independent path-leak gate passes **14 controls / 739
+`6688de04...0c1e`, its independent final path-leak gate passes **14 controls / 744
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **857/857 across 94 suites** with no authority released. The fresh Galerina

@@ -36,6 +36,10 @@ counts or open items that a newer section explicitly supersedes.
   suites**, **2 partitions / 92 contracts**, **89 manifest-bound tools**, path
   hygiene **14/739**, closure K3 `0`, Node **2 -> 2**, and exact indexing at
   **9,755 nodes / 23,691 edges** equal to expected.
+- [x] Close the SLIDE evidence ledger at local documentation head `f302182`.
+  Post-document contract/tool checks remain current, path hygiene expands to
+  **14/744**, closure remains K3 `0`, the complete suite remains **857/857**,
+  and Node remains **2 -> 2**.
 - [ ] Keep Galerina's conversion and retirement counters unchanged until an
   exact package consumer switch, generated admission evidence and complete
   Galerina/SLIDE owning gates are green.
