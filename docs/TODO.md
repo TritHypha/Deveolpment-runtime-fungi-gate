@@ -15,10 +15,10 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. SLIDE Contract 74 is indexed at exact head
-  `77e22c6`: **9,310 nodes and 22,485 edges**. SLIDE passes **80 contracts**, **78 reference tools**,
-  path-leak **14 controls / 677 targets**, security closure `+1` with evidence
-  K3 `0`, and **798/798 tests across 81 suites**. The complete serial SLIDE run
+  nodes and 120,560 edges**. SLIDE Contract 75 is indexed at exact head
+  `af2240e`: **9,345 nodes and 22,576 edges**. SLIDE passes **81 contracts**, **78 reference tools**,
+  path-leak **14 controls / 681 targets**, security closure `+1` with evidence
+  K3 `0`, and **801/801 tests across 82 suites**. The complete serial SLIDE run
   stayed process-bounded at Node **2 -> 2**.
 - [x] Close the exact historical nested-state boundary without claiming a
   general language backend. Contract 70 independently certifies one or two
@@ -30,7 +30,9 @@ counts or open items that a newer section explicitly supersedes.
   store/load and terminal zeroisation. Contract 73 raises only the closed
   contract-root runway to 96 files. Contract 74 source-binds two strict-clean
   read-only `.fungi` effect families to the existing V2-B broker and mandatory
-  audit route. General mutable collections, effects, host calls and production
+  audit route. Contract 75 carries those exact `[Bytes] -> Result<Bytes,
+  Failure>` exports through the flat-package ABI while the ordinary pure
+  executor refuses them. General mutable collections, effects, host calls and production
   authority remain open.
 - [x] Adopt RD-0754's bounded application-resident index with verified
   on-demand object loading as the post-SLIDE architecture direction for large,
@@ -148,7 +150,9 @@ must not displace the critical path below or grant production authority.
   `Int32` buffer profile with linear handles, checked bounds and terminal
   zeroisation. Contract 74 supplies a source-bound validated-`Bytes` bridge to
   the existing V2-B database-read or HTTPS-fetch route with audit-before-
-  release. General collections, failures, multi-effect programs, capabilities,
+  release. Contract 75 binds that route to exact flat-package export identity
+  and a separate broker-bearing executor. General collections, failures,
+  multi-effect programs, capabilities,
   host calls and source maps remain open. Unknown or unsupported mutation,
   callback, initializer, memory, effect or host semantics must remain terminal
   before any executable handle exists.
