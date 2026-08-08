@@ -15,10 +15,10 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact head `c544cd28`: **45,665 nodes and 120,560
-  edges**. Re-index SLIDE after Contract 67 at exact head `372f76b`: **8,161
-  nodes and 19,922 edges**. SLIDE now passes **71 contracts**, **72 reference
+  edges**. Re-index SLIDE after Contract 68 at exact head `1fdb5ba`: **8,224
+  nodes and 20,067 edges**. SLIDE now passes **72 contracts**, **74 reference
   tools**, path-leak **14 controls / 633 targets**, security closure `+1` with
-  evidence K3 `0`, and **752/752 tests across 75 suites**.
+  evidence K3 `0`, and **764/764 tests across 75 suites**.
 - [x] Close the stale concurrent-change hold. Neither the former
   `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
   in the current working tree; the bounded-cache programme is already tracked
@@ -136,6 +136,13 @@ must not displace the critical path below or grant production authority.
   instruction ceiling and runs through the same physical object, package,
   affine VOK and typed receipt path. Contract 66 remains the one-update
   predecessor. Conditional and nested control remain open.
+- [x] Add the bounded Contract 68 conditional-loop successor. One exact
+  `if/else` derives a closed K3 successor table whose unknown edge is terminal,
+  a bound source digest, byte-bound source mapping and a fixed canonical GIR. It crosses the existing
+  physical `.slide`, flat package, affine VOK and typed receipt path; only the
+  selected arm executes. Twelve new tests include exhaustive 280-byte GIR
+  mutation refusal. General/nested control, memory, effects and production
+  authority remain open.
 - [ ] Close production execution authority after the backend: authenticated
   producer evidence, native object identity, platform/durability receipts,
   anchor/revocation checks and the later offline ceremony. Local reference
