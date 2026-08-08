@@ -1,0 +1,16 @@
+# sink-tri-parity baseline — sinks known to ONE recogniser as of this write.
+# Format:  <callee>  # <reason it is legitimately single-governed>
+# An entry with no reason is reported every run until one is written.
+# This file is a RATCHET: a NEW single-governed sink blocks; these do not.
+
+Db.query  # REASON-NEEDED (axis: taint only)
+Dom.setHtml  # REASON-NEEDED (axis: taint only)
+Html.render  # REASON-NEEDED (axis: taint only)
+Ldap.search  # REASON-NEEDED (axis: taint only)
+Network.call  # REASON-NEEDED (axis: taint only)
+Process.exec  # REASON-NEEDED (axis: taint only)
+Response.header  # REASON-NEEDED (axis: taint only)
+Response.setHeader  # REASON-NEEDED (axis: taint only)
+Sql.run  # REASON-NEEDED (axis: taint only)
+log.write  # REASON-NEEDED (axis: value-state only)
+response.body  # REASON-NEEDED (axis: value-state only)
