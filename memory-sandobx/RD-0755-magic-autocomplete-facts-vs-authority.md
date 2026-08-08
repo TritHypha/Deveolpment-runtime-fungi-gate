@@ -192,13 +192,38 @@ on top — and the guardrails are not caution, they are the *reason those framew
 
 ---
 
-## §8 · Recommendation
+## §8 · Prototype — BUILT and PROVEN on real fixtures (2026-08-08)
 
-**Prototype the safe, grounded slice first:** attach a Y/N `FixEdit` to **`FUNGI-VAULT-003`** on a
-real `.fungi` that reads `secure.*` without declaring `vault.read` — show the prompt, grant nothing,
-emit the receipt stub. It is the sharpest case (secrets), the detector already exists, and it proves
-the propose-only prompt is honest before the `y`-writes-a-grant path is wired anywhere near the
-facts lane.
+The safe slice is prototyped in `Galerina/memory-sandobx/magic-vault-detector.mjs`, run against the
+estate's **own** Level-5 examples — `230-vault-access-denied-invalid` (reads `secure.*` without
+`vault.read`) and `227-global-vault-declaration` (declares it, the control). All controls pass:
+
+| control | result |
+|---|---|
+| detector **fires** on 230 (FUNGI-VAULT-003 on `unauthorisedFlow`) and **stays silent** on 227 | ✅ discriminates |
+| **default-N** — bare Enter DECLINES (fail-closed) | ✅ |
+| **non-interactive / piped REFUSES** — never auto-`y` | ✅ |
+| explicit `y` emits the **FixEdit + receipt** (`{grantedEffect, flow, triggeredBy, when, by}`) | ✅ |
+| the FixEdit adds the **effect declaration only** — never a secret value | ✅ |
+| read (`vault.read`) and write (`vault.write`) are **separate grants** | ✅ |
+
+**The code cannot grant itself vault access; only a human `y` can, one effect at a time, with a
+trail.** The propose-only authority lane works.
+
+⚠️ **Prototype limits (stated):** the parser is lexical — a production `--magic` reads the compiler
+AST, not a regex; the receipt's `when`/`by` are stubs; and only the vault read/write gap is wired
+(database and the facts lane are next). What is proven is the **control flow**, on real code — the
+part that had to be right before any `y` writes a grant.
+
+## §9 · Next, to strengthen (v2)
+
+- Wire the same propose-only decision to the **database-effect gaps** (§4) and the **facts lane**
+  (types/comments, auto-apply on `computeAutoFix`).
+- Two more OSS angles to fold in: **Rails/Laravel migrations** (reviewable + reversible changes —
+  informs the receipt/rollback of a grant) and **Terraform plan/apply** (propose the whole
+  change-set, then one approval — informs a `--magic --plan` that lists every gap before any `y`).
+- Replace the lexical parser with the compiler AST so the RESOLVED effect (not a source label)
+  drives every prompt.
 
 *Provenance: owner concept 2026-08-08 · `computeAutoFix`/`fix-edit.ts` · `governance-verifier.ts`
 FUNGI-VAULT-003/004 · `secretReportMode` invariant · RD-0391 Lock-1 (request-not-assert) · primary
