@@ -2,22 +2,23 @@
 
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: Galerina and SLIDE were structurally re-indexed
-at their 2026-08-08 working heads. The Galerina graph suite initially
+Current revalidated checkpoint: Galerina is structurally indexed at
+`c544cd28` (**45,665 nodes / 120,560 edges**) and SLIDE at `b48899f`
+(**8,118 / 19,794**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **66 files**, its tool manifest passes **67 files**, security closure is
-`+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**713/713 across 73 suites** with no authority released. The fresh Galerina
+passes **69 files**, its tool manifest passes **71 files**, its independent
+path-leak gate passes **14 controls / 625 targets**, security closure is `+1`
+with evidence K3 `0`, and the complete bounded reference suite passes
+**735/735 across 75 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
 seconds**. The post-run process census returned to the one pre-existing MCP
-Node process. One concurrent, non-owned `bounded-cache.ts`/`memory-sandobx`
-mutation appeared during that close; it is preserved and excluded from commit
-authority until provenance is adjudicated, so the result is not overstated as
-a stable-checkout fixed point.
+Node process. The former concurrent `bounded-cache.ts`/`memory-sandobx` hold is
+now closed: neither surface is outstanding in the current tree and no unknown
+content was adopted or deleted.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
@@ -34,6 +35,15 @@ Linux/macOS home-path refusal, scrubber parity, hostile controls and report
 redaction. The full path gate now passes over 4,759 tracked entries. This closes
 the low-severity repository disclosure class on the active branch; it changes
 no SLIDE execution authority, retirement count or production-admission state.
+
+Roadmap refresh 2026-08-08: the outstanding 27-file generated estate was
+regenerated to a verified fixed point and committed locally as `c544cd28`.
+Code registry/index converged at **896 codes**; component health is **99/99
+(100%)**; status, subway, dev-tool, flat-root and graph drift gates all pass.
+One explicit production debt remains visible: **81 real FUNGI-* tokens are not
+yet catalogued, including 51 on the signing path**. The scanner still labels
+this report-only under boards #164/#165, so production signing authority may
+not treat catalog silence as complete coverage.
 
 Roadmap refresh 2026-08-08: no other AI worker was declared active when this
 chapter began. Codex owns Galerina
@@ -77,7 +87,7 @@ Roadmap refresh: the original subway-style roadmap has been restored from
 authority, contract and retirement ledgers. Its last count-owning test
 headline was 98/98 test-bearing packages with 8,956 tests. The workspace now
 contains 99 top-level peers after Hypha was enlisted; current component health
-is 98/99 pending a fresh aggregate/count refresh. The chart exposes 23 named workstreams, including the
+is **99/99 with 9,452 recorded tests**. The chart exposes 26 named workstreams, including the
 independent SLIDE backend and package retirement, and its no-percentage lane
 names the general SLIDE backend instead of the superseded P9 Wasm-execution
 word row. The five Zero-Trust and twelve of the numbered build-readiness

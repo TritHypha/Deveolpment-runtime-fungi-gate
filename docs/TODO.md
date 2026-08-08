@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Generated authority fixed point and current structural baseline - 2026-08-08
+
+- [x] Reconcile and commit the 27-file generated-state refresh as
+  `c544cd28`. The code registry and code index required one additional bounded
+  convergence pass after the first code-index write exposed one new phantom
+  code; both generators then reached a fixed point at **896 codes**.
+- [x] Re-run every owning drift gate after regeneration: code registry/index,
+  component-health audit, generated status blocks, subway roadmap, dev-tool
+  index, flat-package root lock and graph-all **5/5** all pass. Component health
+  is **99/99 (100%)** and the post-run Node census is one.
+- [x] Re-index Galerina at exact head `c544cd28`: **45,665 nodes and 120,560
+  edges**. Revalidate SLIDE at `b48899f`: **69 contracts**, **71 reference
+  tools**, path-leak **14 controls / 625 targets**, security closure `+1` with
+  evidence K3 `0`, and **735/735 tests across 75 suites**.
+- [x] Close the stale concurrent-change hold. Neither the former
+  `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
+  in the current working tree; the bounded-cache programme is already tracked
+  in its own dated section below. No unknown file was adopted or deleted.
+- [ ] Close the code-catalog shape gap before production signing authority:
+  the current registry scanner reports **81 real FUNGI-* tokens absent from the
+  catalog, 51 on the signing path**. This remains report-only under boards
+  #164/#165 and must become a count-owning fail-closed gate after the scanner
+  can distinguish complete diagnostic identities from prefixes/examples.
+
 ### Unix/macOS path-leak regression closed on the active branch - 2026-08-08
 
 - [x] Revalidate the imported four-repository security reports against current
@@ -71,11 +95,9 @@ must not displace the critical path below or grant production authority.
   now remove only inherited `NODE_TEST_CONTEXT`, retain suite/process custody,
   and the meta-audit preserves the failing child's last diagnostic lines.
   Tooling is **424 total / 422 pass / 2 intentional skip / 0 fail**.
-- [ ] Adjudicate the concurrently appearing `bounded-cache.ts` tombstone
-  changes and untracked `memory-sandobx/` research before treating the green
-  close as a stable-checkout fixed point or including either surface in a
-  commit. They appeared during the exhaustive run and were not created by this
-  lane; preserve them unchanged until provenance is established.
+- [x] Adjudicate the former `bounded-cache.ts`/`memory-sandobx` concurrent
+  hold. Neither surface is outstanding in the current tree; no unknown content
+  was staged, deleted or granted authority.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3
