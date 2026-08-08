@@ -4,22 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current route: SLIDE Contract 83 semantic RED boundary - 2026-08-09
+### Current route: SLIDE Contract 84 internal owned handoff RED - 2026-08-09
 
-- [x] Revalidate the clean local repositories before changing this ledger:
-  Galerina `730e9c3d`, SLIDE `171bd34`, and Knowledge Base `037ceb1`; all remain
-  on their named working branches and nothing was pushed.
-- [x] Re-run the current SLIDE owning gates rather than inheriting yesterday's
-  counts: contract/catalog **one partition / 90 files**, **84 reference tools**,
-  path hygiene **14/726**, security closure `+1` with evidence K3 `0`, and
-  **838/838 tests across 90 suites** with Node **2 -> 2**.
+- [x] Close SLIDE Contract 83 at implementation checkpoint `0579136`. Its exact
+  checked-Fungi family carries two distinct append-only `Array<Int>` owners
+  through fixed CFG slots, independent producer/executor validation, physical
+  `.slide`, portable VEO, VOK and the flat-package path. Copy/drop/swap/
+  cross-write/wrong-terminal owner mutations refuse; success and failure after
+  allocation both zeroise exactly two private buffers.
+- [x] Open the first manifest-bound successor partition without changing the
+  original per-partition limits. Contract/catalog evidence is **2 partitions /
+  91 files**; the reference tool manifest is **87 files** with digest
+  `9d00deab...5707a`; security closure remains Allow with evidence K3 `0`.
+- [x] Run the complete SLIDE owning suite at the implementation checkpoint:
+  **849/849 tests across 92 suites**; final closure-document path hygiene is
+  **14/736**, and Node
+  **2 -> 2**. The exact implementation graph is **9,706 nodes / 23,547
+  edges**, equal to expected totals. Nothing was pushed and no authority was
+  released.
 - [x] Re-run the memory-index detector self-test and all four active Claude
   memory stores: zero orphan, dangling-file, duplicate-target or warehouse
   defects. The reported unresolved wikilinks remain non-authorizing suggestion
   queues rather than broken file links.
-- [ ] Define Contract 83's semantic RED boundary in SLIDE's first new closed
-  sibling partition. Catalog membership grants no package conversion,
-  retirement, signing, production or release authority.
+- [ ] Define Contract 84's semantic RED boundary for one exact internal
+  cross-function owned collection handoff. Ownership must remain affine across
+  the call/return boundary, refuse copy/retry/alias, and zeroise exactly once.
+  This does not admit an external collection ABI or general collections.
 - [ ] Keep Galerina's conversion and retirement counters unchanged until an
   exact package consumer switch, generated admission evidence and complete
   Galerina/SLIDE owning gates are green.
