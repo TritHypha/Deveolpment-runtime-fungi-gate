@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 76 at exact
-implementation head `d081352` (**9,417 / 22,771**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 77 at exact
+implementation head `559c143` (**9,440 / 22,826**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **82 files**, its tool manifest passes **79 files**, its independent
-path-leak gate passes **14 controls / 686 targets**, security closure is `+1`
+passes **83 files**, its tool manifest passes **79 files**, its independent
+path-leak gate passes **14 controls / 689 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**805/805 across 83 suites** with no authority released. The fresh Galerina
+**806/806 across 83 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -89,6 +89,21 @@ files**, path hygiene covers **686 targets**, security evidence K3 is `0`,
 benchmark evidence verifies and Node is **2 -> 2**. The trust record, time and
 revocation K3 remain caller evidence, so platform custody, offline activation
 and production authority stay open.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 77 is green at local implementation
+commit `559c143`. Contract 76 authentication now gates the real Contract 75
+package-effect route: the package compiler hashes its module-private `.slide`
+artifact, consumes the affine authenticated-object handle for the exact
+package/export/compiler/tool/epoch closure, and byte-compares the consumed
+object before the existing V2-B executor can call a provider. A separately
+validly authenticated but byte-different object refuses with zero broker
+calls, and handle replay refuses. Focused authentication/effect evidence is
+**8/8**, complete SLIDE is **806/806 across 83 suites**, contract integrity is
+**83 files**, tool identity is **79 files**, path hygiene covers **689
+targets**, security evidence K3 is `0`, benchmark evidence verifies, and the
+Node census reduced **4 -> 2**. Trust/time/revocation inputs, durable replay,
+platform evidence, offline anchor custody and production authority remain
+open; `authorityReleased` remains false.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 72 is green at local implementation
 commit `80f3f61`. It admits one 1..16-element runtime-owned local `Int32`
@@ -1423,7 +1438,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + package-bound read effect + hybrid object authentication<br/>Contracts 66–76 · 805/805 · platform custody, native and production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + authenticated package-bound read effect<br/>Contracts 66–77 · 806/806 · platform custody, native and production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
