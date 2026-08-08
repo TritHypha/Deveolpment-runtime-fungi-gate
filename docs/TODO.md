@@ -28,6 +28,14 @@ counts or open items that a newer section explicitly supersedes.
   catalog, 51 on the signing path**. This remains report-only under boards
   #164/#165 and must become a count-owning fail-closed gate after the scanner
   can distinguish complete diagnostic identities from prefixes/examples.
+- [x] Audit GitHub Actions without changing remote state. SLIDE's latest
+  remote security-closure is green at `feda0e7`, but the local branch is 15
+  commits ahead. Galerina's latest `main` runs are stale failures at
+  `8a8997b`: full-history gitleaks reported digest/field-name false positives
+  already precisely adjudicated on this branch, while the earlier conventions
+  run stopped on a stale benchmark. The local Galerina branch was eight
+  commits ahead before this CI record. Current hosted CI therefore remains
+  **unverified**, not green, until the owner pushes and the exact heads run.
 
 ### Unix/macOS path-leak regression closed on the active branch - 2026-08-08
 

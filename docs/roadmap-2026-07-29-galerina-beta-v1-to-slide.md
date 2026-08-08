@@ -27,6 +27,15 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh 2026-08-08: hosted CI was checked read-only. SLIDE's latest
+remote security-closure is green at `feda0e7`, but the local branch is 15
+commits ahead. Galerina's latest `main` secret-scan/conventions failures are at
+the stale `8a8997b` line: exact historical false positives are already
+adjudicated on the current branch and the old conventions run stopped on a
+stale benchmark. Galerina was eight local commits ahead before this CI record.
+No push was made, so hosted evidence for the current heads remains unverified
+and cannot be used as release admission.
+
 Roadmap refresh 2026-08-08: SLIDE Contract 67 is green at `372f76b`. The
 append-only straight-line loop source profile now uses two through eight
 ordered checked state updates and reaches Contract 63's exact sixteen-
