@@ -94,10 +94,29 @@ export interface ExecutionGraph {
 // a different distribution. The number that matters is that the measurement is
 // repeatable, not that these constants are universal.
 const CACHE_POLICY = cachePolicyFromEnv(process.env["GALERINA_EXECUTION_GRAPH_CACHE"]);
+//   maxTombstones 4096  — ★ the ONE number here that is NOT measured, and it is
+//                         labelled as such. Eviction never occurs in a one-shot
+//                         compile (1,456 keys against a 2,048 ceiling), so the
+//                         workload that would pin this is a LONG-LIVED process —
+//                         watch mode, a language server — which has not been
+//                         profiled. 4096 is 2x the resident ceiling: enough to keep
+//                         a useful window of what was forgotten, at ~80 B/key.
+//                         `forgottenEntirely` in `stats()` is the instrument that
+//                         says whether it is too low; a rising count is the signal
+//                         to raise it, and it ships with the change for that reason.
 const MEMORY_CACHE = new BoundedCache<string, ExecutionGraph>({
   maxEntries: 2048,
   maxWeight: 65536,
   maxItemWeight: 512,
+  // Eviction is otherwise measure-CONTRACTING: dropping an entry destroys the record
+  // that the computation ever happened, so "I no longer have this" and "I never knew
+  // this" become one observation. Retaining the key and its weight — never the graph —
+  // keeps the first distinguishable from the second at ~80 B against the ~544 B median
+  // graph. This is the cheap half of the owner's index/warehouse concept: the index
+  // remembers, the warehouse does not. Measured in `memory-sandobx/FINDINGS.md`, where
+  // the expensive half (bytes to disk) was rejected for this cache — rebuilding a graph
+  // costs 9-15 us, below the ~18 us floor for loading and verifying one.
+  maxTombstones: 4096,
   weigh: weighGraph,
   enabled: CACHE_POLICY.enabled,
 });
@@ -314,6 +333,17 @@ export function buildExecutionGraph(
 
 export function executionGraphCacheKey(flowName: string, sourceHash: string): string {
   return `${flowName}:${sourceHash}`;
+}
+
+/**
+ * Did this cache ever hold a graph for `key` — resident OR evicted?
+ *
+ * The "do I KNOW this?" question, kept separate from `getCachedGraph`'s "do I HAVE
+ * it?". Answering it costs no work and returns no graph, which is the whole point:
+ * an eviction should lose the bytes, not the fact.
+ */
+export function graphWasKnown(key: string): boolean {
+  return MEMORY_CACHE.knew(key);
 }
 
 export function getGraphCacheStats(): ReturnType<BoundedCache<string, ExecutionGraph>["stats"]> & { memoryEntries: number } {

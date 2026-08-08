@@ -44,6 +44,16 @@ export interface CacheStats {
   readonly maxWeight: number;
   readonly maxItemWeight: number;
   readonly enabled: boolean;
+  /** Keys retained as tombstones — evicted, still known. Zero when the option is off. */
+  readonly tombstones: number;
+  readonly maxTombstones: number;
+  /**
+   * Keys forgotten ENTIRELY: evicted, then their tombstone evicted too. This is the
+   * only number that measures what the cache can no longer account for at all, so it
+   * is the one to watch — a rising count means the tombstone ceiling is too low to
+   * keep eviction measure-preserving.
+   */
+  readonly forgottenEntirely: number;
 }
 
 export interface BoundedCacheOptions<V> {
@@ -55,6 +65,20 @@ export interface BoundedCacheOptions<V> {
   readonly maxItemWeight: number;
   /** Structural weight of one value. Must be pure and cheap. */
   readonly weigh: (value: V) => number;
+  /**
+   * Retain a TOMBSTONE for each evicted key: `{ weight, evictedAt }`, no value.
+   *
+   * Eviction is otherwise measure-CONTRACTING — dropping an entry destroys the record
+   * that the computation ever happened, so "I no longer have this" and "I never knew
+   * this" become the same observation. A tombstone keeps the second one, which is the
+   * cheap half of the index/warehouse split: the index remembers, the warehouse does
+   * not (memory-sandobx/FINDINGS.md).
+   *
+   * OPT-IN, and deliberately so. Absent this option tombstoning is OFF — a cache is
+   * not given an unmeasured bound behind the caller's back, per the constructor rule
+   * above. Supply a measured ceiling to enable it.
+   */
+  readonly maxTombstones?: number;
   /**
    * High-assurance hosts may disable caching entirely. A disabled cache still
    * COUNTS (misses, refusals) so the metric surface does not silently go dark —
@@ -68,12 +92,17 @@ export class BoundedCache<K, V> {
   // which moves it to the end. Deterministic, and no second structure to fall out
   // of sync with the first.
   readonly #map = new Map<K, { value: V; weight: number }>();
+  // Evicted keys, no values. Same insertion-order-is-LRU discipline as #map, and
+  // bounded by the same argument: an unbounded record of what we forgot is the
+  // original defect one level up.
+  readonly #tombstones = new Map<K, { weight: number; evictedAt: number }>();
   readonly #opts: Required<BoundedCacheOptions<V>>;
   #weight = 0;
   #hits = 0;
   #misses = 0;
   #evictions = 0;
   #refusedOversize = 0;
+  #forgottenEntirely = 0;
 
   constructor(opts: BoundedCacheOptions<V>) {
     // Fail closed on a nonsensical configuration. A cache built with a zero or
@@ -91,7 +120,13 @@ export class BoundedCache<K, V> {
     if (opts.maxItemWeight > opts.maxWeight) {
       throw new RangeError("BoundedCache: maxItemWeight exceeds maxWeight — a single admitted item could never fit");
     }
-    this.#opts = { ...opts, enabled: opts.enabled ?? true };
+    // A supplied tombstone ceiling must be sane on the same terms as the others;
+    // ABSENT is the off switch and is not an error.
+    if (opts.maxTombstones !== undefined
+      && (!Number.isFinite(opts.maxTombstones) || opts.maxTombstones < 0)) {
+      throw new RangeError(`BoundedCache: maxTombstones must be a non-negative finite number, got ${String(opts.maxTombstones)}`);
+    }
+    this.#opts = { ...opts, enabled: opts.enabled ?? true, maxTombstones: opts.maxTombstones ?? 0 };
   }
 
   get(key: K): V | undefined {
@@ -120,6 +155,9 @@ export class BoundedCache<K, V> {
     }
     const existing = this.#map.get(key);
     if (existing !== undefined) { this.#weight -= existing.weight; this.#map.delete(key); }
+    // Resident again, so it is no longer merely known — drop the tombstone or the
+    // same key would be counted in both places.
+    this.#tombstones.delete(key);
     this.#map.set(key, { value, weight });
     this.#weight += weight;
     this.#evictToFit();
@@ -142,17 +180,64 @@ export class BoundedCache<K, V> {
       this.#map.delete(oldest.value);
       this.#weight -= entry?.weight ?? 0;
       this.#evictions++;
+      this.#tombstone(oldest.value, entry?.weight ?? 0);
     }
   }
 
+  /**
+   * Record that this key WAS held, and what it weighed. No value is retained.
+   *
+   * `evictedAt` is the eviction SEQUENCE number, not wall-clock: it answers "in what
+   * order were things forgotten", which is the useful question, and it keeps
+   * `stats()` deterministic. A timestamp here would make any test that reads stats
+   * nondeterministic for no gain.
+   *
+   * The tombstone map is itself bounded. An unbounded record of what we forgot would
+   * be the same defect one level up, wearing a different name.
+   */
+  #tombstone(key: K, weight: number): void {
+    const max = this.#opts.maxTombstones;
+    if (max === undefined || max <= 0) return;      // opt-in: absent means OFF
+    this.#tombstones.delete(key);
+    this.#tombstones.set(key, { weight, evictedAt: this.#evictions });
+    while (this.#tombstones.size > max) {
+      const oldest = this.#tombstones.keys().next();
+      if (oldest.done === true) return;
+      this.#tombstones.delete(oldest.value);
+      this.#forgottenEntirely++;
+    }
+  }
+
+  /**
+   * Did this cache ever hold an entry for `key` — resident OR evicted?
+   *
+   * This is the "do I KNOW this?" question, separate from `get()`'s "do I HAVE it?".
+   * It costs no I/O and never returns a value.
+   */
+  knew(key: K): boolean {
+    return this.#map.has(key) || this.#tombstones.has(key);
+  }
+
+  /** What an evicted key weighed, and when it went. `undefined` if never tombstoned. */
+  tombstone(key: K): { readonly weight: number; readonly evictedAt: number } | undefined {
+    const t = this.#tombstones.get(key);
+    return t === undefined ? undefined : { weight: t.weight, evictedAt: t.evictedAt };
+  }
+
+  /**
+   * Explicit removal. Leaves NO tombstone: `delete` means the caller has decided this
+   * key should be forgotten, which is different from the cache running out of room.
+   * Eviction is the cache's choice and is recorded; deletion is the caller's and is not.
+   */
   delete(key: K): boolean {
     const e = this.#map.get(key);
+    this.#tombstones.delete(key);
     if (e === undefined) return false;
     this.#weight -= e.weight;
     return this.#map.delete(key);
   }
 
-  clear(): void { this.#map.clear(); this.#weight = 0; }
+  clear(): void { this.#map.clear(); this.#tombstones.clear(); this.#weight = 0; }
 
   /**
    * ★ Counts, weights, hits, misses and evictions — and NEVER a key.
@@ -174,6 +259,9 @@ export class BoundedCache<K, V> {
       maxWeight: this.#opts.maxWeight,
       maxItemWeight: this.#opts.maxItemWeight,
       enabled: this.#opts.enabled,
+      tombstones: this.#tombstones.size,
+      maxTombstones: this.#opts.maxTombstones,
+      forgottenEntirely: this.#forgottenEntirely,
     };
   }
 }

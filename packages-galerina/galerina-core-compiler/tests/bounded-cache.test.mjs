@@ -94,8 +94,13 @@ describe("BoundedCache — the bound is enforced, not merely present", () => {
     const serialized = JSON.stringify(s);
     assert.ok(!serialized.includes("a-secret-content-hash"),
       "cache keys are content hashes of source; a metrics surface must not publish them");
+    // ★ This lock did its job: adding tombstones broke it, which is exactly what a
+    // closed metric surface is for. The three new fields are a deliberate decision
+    // (measure-preserving eviction), and none of them is or contains a key —
+    // `tombstones` and `maxTombstones` are counts, `forgottenEntirely` is a counter.
     assert.deepEqual(Object.keys(s).sort(),
-      ["enabled", "entries", "evictions", "hits", "maxEntries", "maxItemWeight", "maxWeight", "misses", "refusedOversize", "weight"],
+      ["enabled", "entries", "evictions", "forgottenEntirely", "hits", "maxEntries", "maxItemWeight",
+       "maxTombstones", "maxWeight", "misses", "refusedOversize", "tombstones", "weight"],
       "the metric surface is closed — a new field must be a deliberate decision, not a leak");
     assert.equal(typeof c.keys, "undefined", "there is no key enumerator to misuse");
   });
@@ -113,6 +118,63 @@ describe("BoundedCache — the bound is enforced, not merely present", () => {
     const s = c.stats();
     assert.equal(s.hits, 2);
     assert.equal(s.misses, 1);
+  });
+
+  // ── measure-preserving eviction ─────────────────────────────────────────────
+  //
+  // Eviction is otherwise measure-CONTRACTING: dropping an entry destroys the record
+  // that the computation happened, so "I no longer have this" and "I never knew this"
+  // become one observation. A tombstone keeps the fact without the value.
+  //
+  // PAIRED, one variable — whether maxTombstones is supplied. If the OFF arm also
+  // remembers, the option is doing nothing and the ON arm proves nothing.
+
+  const mkT = (maxTombstones) =>
+    new BoundedCache({ maxEntries: 4, maxWeight: 10_000, maxItemWeight: 100, weigh: () => 1, ...(maxTombstones === undefined ? {} : { maxTombstones }) });
+
+  it("★ CONTROL: with maxTombstones absent, eviction forgets the fact entirely", () => {
+    const c = mkT(undefined);
+    for (let i = 0; i < 20; i++) c.set("k" + i, { i });
+    assert.equal(c.knew("k0"), false, "no tombstones were asked for, so none are kept");
+    assert.equal(c.stats().tombstones, 0);
+    assert.equal(c.stats().maxTombstones, 0, "absent means OFF — never an invented default");
+  });
+
+  it("★ with maxTombstones set, an evicted key stays KNOWN but is not HELD", () => {
+    const c = mkT(100);
+    for (let i = 0; i < 20; i++) c.set("k" + i, { i });
+    assert.equal(c.knew("k0"), true, "the fact survives eviction");
+    assert.equal(c.get("k0"), undefined, "...but the value does not");
+    const t = c.tombstone("k0");
+    assert.ok(t !== undefined && t.weight >= 0 && t.evictedAt > 0, "the tombstone carries weight and an ordering");
+  });
+
+  it("the tombstone index is itself BOUNDED, and its over-run is counted not silent", () => {
+    const c = mkT(5);
+    for (let i = 0; i < 100; i++) c.set("k" + i, { i });
+    const s = c.stats();
+    assert.ok(s.tombstones <= 5, "an unbounded record of what we forgot is the original defect one level up");
+    assert.ok(s.forgottenEntirely > 0, "keys dropped from the tombstone map are counted, so a too-low ceiling is visible");
+  });
+
+  it("re-admission drops that key's tombstone, so a key is never both held and merely known", () => {
+    const c = mkT(100);
+    for (let i = 0; i < 20; i++) c.set("k" + i, { i });
+    assert.ok(c.tombstone("k0") !== undefined);
+    c.set("k0", { i: 0 });
+    assert.equal(c.tombstone("k0"), undefined, "resident again, so no longer merely known");
+    assert.notEqual(c.get("k0"), undefined);
+  });
+
+  it("delete() leaves no tombstone — the caller's choice is not the cache's eviction", () => {
+    const c = mkT(100);
+    c.set("a", { w: 1 });
+    c.delete("a");
+    assert.equal(c.knew("a"), false, "an explicit delete means forget it, not record that we forgot it");
+  });
+
+  it("a negative maxTombstones fails closed rather than being coerced", () => {
+    assert.throws(() => mkT(-1), RangeError, "a nonsensical bound must not be silently normalised");
   });
 });
 
