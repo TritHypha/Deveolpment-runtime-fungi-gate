@@ -2,18 +2,17 @@
 
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: Galerina was structurally indexed at
-subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and SLIDE checkpoint
-`b7289af` (**9,598 / 23,273**); both observed counts exactly equal the indexers'
-expected counts. Direct SLIDE graph search resolves the Contract 81 source
-derivation, compiler and both independent Result validators. Galerina's
-repository graph and generated-authority checks pass
-**5/5** after regenerating the project and KB outputs that correctly refused
-the preceding TODO drift. SLIDE's contract check
-now passes **89 files**, its tool manifest passes **83 files**, its independent
-path-leak gate passes **14 controls / 717 targets**, security closure is `+1`
+Current revalidated checkpoint: Galerina is structurally indexed at exact
+subject head `11a9216e` (**45,706 nodes / 120,650 edges**) and SLIDE Contract 82
+implementation head `18bc56b` indexes to **9,609 / 23,289**; both observed
+counts exactly equal the indexers' expected counts. Galerina's repository graph
+was regenerated and independently checked **5/5**, with Node **2 -> 2**. Hypha's
+own detector is **58/58**; its broad scan remains a non-authorizing lead set,
+not a bulk defect count. SLIDE's contract check now passes **90 files**, its
+tool manifest passes **83 files** with digest `397c976e...f638c5`, its independent
+path-leak gate passes **14 controls / 720 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**828/828 across 89 suites** with no authority released. The fresh Galerina
+**831/831 across 90 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close
@@ -36,15 +35,17 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap active gate 2026-08-08: **Contract 82 is RED by design** at SLIDE
-commit `7bfc02e`. The focused flat-package extension test is **1/3 pass and 2/3
-fail**: hostile wrong-entry/source/K3 cases already refuse, while the two valid
-Contract 80/81 exports stop at `SLIDE-PACKAGE-BUILD-001`. The missing work is
-exact package-compiler selection, physical bundle/profile binding and package
-execution of the already-admitted standalone families. A typed source `Err`
-must remain an admitted terminal Result rather than being collapsed into
-package refusal. Until implementation and the complete gates are green,
-conversion, retirement, signing and production authority remain unchanged.
+Roadmap active gate 2026-08-08: **Contract 82 is green** at SLIDE implementation
+commit `18bc56b` and documentation head `7ffe06f`. The package compiler selects
+only the two exact registered Contract 80/81 profiles, independently rechecks
+their registry IDs and digests, and preserves typed source `Err` as the original
+terminal Result rather than collapsing it into package refusal. There is no
+generic selector, host-exception fallback or authority release. The next gate
+is structural, not another profile: the bounded contract root is **262,090 /
+262,144 bytes**, leaving **54 bytes**. Contract 83 must first introduce a closed,
+versioned partition/manifest scheme without raising the ceiling or weakening
+the 96-file runway. Conversion, retirement, signing and production authority
+remain unchanged until a real Galerina package consumer switch is green.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One
@@ -1511,10 +1512,11 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–81 · 828/828 · no production authority"]
+    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–82 · 831/831 · no production authority"]
     C80["🟩 Contract 80 owned append-array<br/>standalone exact profile · affine owner · zeroised storage"]
     C81["🟩 Contract 81 typed Result propagation<br/>single evaluation · original failure preserved"]
-    C82["🟥 Contract 82 flat-package extension<br/>RED 1/3 pass · 2/3 expected fail<br/>profile selection not implemented"]
+    C82["🟩 Contract 82 flat-package extension<br/>two exact profiles · typed failure preserved<br/>831/831 · no authority released"]
+    C83["🟦 Contract-root partition gate<br/>262,090 / 262,144 bytes · 54 bytes free<br/>closed versioned manifest required"]
     HC["🟦 Complete Galerina language backend<br/>general owned collections · failures · multi-effect/cross-package calls<br/>provider binary identity · generated supported-source manifest"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
@@ -1576,7 +1578,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> C82 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> C83 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -1588,7 +1590,7 @@ flowchart TB
     E --> K --> VN --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> LP --> H
-    LC --> SBR --> SBP --> C66 --> C67 --> C68 --> C69 --> C80 --> C81 --> H
+    LC --> SBR --> SBP --> C66 --> C67 --> C68 --> C69 --> C80 --> C81 --> C82 --> H
     LC --> BF --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK

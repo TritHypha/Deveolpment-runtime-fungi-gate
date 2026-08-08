@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### SLIDE Contract 82 package-integration RED boundary - 2026-08-08
+### Current checkpoint: SLIDE Contract 82 package integration green - 2026-08-08
 
 - [x] Record the next exact integration gate rather than treating Contracts 80
   and 81 as package-executable merely because their standalone paths are green.
@@ -13,18 +13,45 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Re-run the focused test at the clean current head: **1/3 passes and 2/3
   fail**. The hostile wrong-entry/source/K3 controls already refuse; both valid
   exports are still refused by `SLIDE-PACKAGE-BUILD-001`, proving that package
-  profile selection is absent.
-- [ ] Implement and independently verify the two exact package profiles in
+  profile selection was absent before implementation.
+- [x] Implement and independently verify the two exact package profiles in
   SLIDE. Galerina does not need new syntax for this increment: the accepted
   sources remain the existing bounded append-only `Array<Int>` flow and exact
-  `Result<Int,String>`/`expr?` family.
-- [ ] Keep typed source failure distinct from package admission failure. Once
+  `Result<Int,String>`/`expr?` family. Implementation commit `18bc56b` binds
+  exact profile ID, registry digest, source family, object and package identity;
+  it provides no generic or fallback selector.
+- [x] Keep typed source failure distinct from package admission failure. Once
   an exact package is admitted, negative input must preserve failure ID `4`
-  and checked overflow failure ID `1`, with no fallback or host exception.
-- [ ] Keep all Galerina conversion and retirement counters unchanged until the
-  Contract 82 implementation, complete SLIDE gates, graph evidence and a real
-  Galerina package consumer switch are green. The RED contract releases no
-  production or signing authority.
+  and checked overflow failure ID `1`, with no fallback or host exception. The
+  focused Contract 82 suite and hostile profile/registry/K3 controls are green.
+- [x] Record fresh complete evidence at SLIDE documentation head `7ffe06f`:
+  **90 contract files**, **83 reference tools** with manifest digest
+  `397c976e...f638c5`, path leak **14 controls / 720 targets**, security closure
+  `+1` with evidence K3 `0`, **831/831 tests across 90 suites**, and Node
+  **2 -> 2**. Exact implementation head `18bc56b` indexes to **9,609 nodes /
+  23,289 edges**, observed and expected equal.
+- [ ] Keep all Galerina conversion and retirement counters unchanged until a
+  real Galerina package consumer switch is green. Contract 82 closes only the
+  two named profiles and releases no production or signing authority.
+- [ ] Resolve SLIDE's bounded contract-root capacity before adding Contract 83.
+  The current root is **262,090 / 262,144 bytes**, leaving **54 bytes**. Do not
+  raise the ceiling or weaken the 96-file runway; define a bounded, versioned,
+  closed partition/manifest scheme first.
+
+### Corrected R&D reply adjudication - 2026-08-08
+
+- [x] Preserve and adjudicate the four corrected independent replies as raw,
+  private, non-authorizing evidence in the Knowledge Base. `RD-0777` through
+  `RD-0781` record the executed counterexamples, maths corrections and decision
+  table; none is promoted merely because it is an AI reply.
+- [x] Issue four context-complete third-pass prompts: nested-loop/SSA legality,
+  one atomic HostCall claim state, a no-hot-key terminal receipt, and the
+  `ReadFact x AuthorityVerdict` composition boundary.
+- [ ] Treat those four subjects as research lanes, not blockers that silently
+  change the current compiler or SLIDE contracts. Any implementation requires
+  a separately admitted contract, RED evidence and owning tests.
+- [x] Refresh the Knowledge Base canonical indexes and Myco index after intake;
+  private filenames remain excluded from public generated indexes.
 
 ### SLIDE Contract 81 integration boundary - 2026-08-08
 
