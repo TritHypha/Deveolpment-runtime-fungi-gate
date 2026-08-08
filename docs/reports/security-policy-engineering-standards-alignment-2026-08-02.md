@@ -43,7 +43,7 @@ The review corrected four material drifts:
 ## Incompatibilities and limitations flagged
 
 - The source standards file contains mojibake in punctuation and example
-  appendices that claim implementations under `/home/workdir/artifacts`.
+  appendices that claim implementations under `<artifact-root>`.
   Those paths are not Galerina evidence and were explicitly denied authority.
 - Its fail-open appendix is descriptive. Galerina forbids fail-open composition
   on authentication, authorization, admission, cryptography, secret, effect and

@@ -208,7 +208,7 @@ describe("reporter — path-leak redaction (ZT-17)", () => {
     }],
     edges: [],
     orphans: [],
-    staleLinks: ["from -> /home/example/secret/roadmap.md"],
+    staleLinks: ["from -> /home/example/secret/roadmap.md"], // path-leak-audit:allow -- hostile fixture
     stats: { totalDocs: 1, totalEdges: 0, totalFungiCodes: 0, orphanCount: 0, staleLinkCount: 1 },
   };
 

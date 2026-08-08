@@ -3,12 +3,14 @@
 // kb-index.mjs so it is IMPORTABLE and UNIT-TESTABLE (it previously ran only on-import, invisible to tests).
 //
 // The patterns are the lockstep of scripts/audit-path-leak.mjs's detectors (named to teach — path-leak-audit:allow):
-// `C:\Users\<name>\...`, the wwwprojects root, and the %USERPROFILE%-style env-var literals (path-leak-audit:allow).
+// `C:\Users\<name>\...`, `/home/<name>/...`, `/Users/<name>/...`, the wwwprojects root, and
+// the %USERPROFILE%-style env-var literals (path-leak-audit:allow).
 // A generator that scrubs the SAME classes the gate forbids means a regen can never re-introduce a leak
 // (the fix + detector are one unit).
 export function scrubPaths(s) {
   return String(s)
     .replace(/[A-Za-z]:[\\/]{1,2}Users[\\/]{1,2}[^\s"'`)\]]+/g, "<path>")
+    .replace(/(?<![A-Za-z0-9:])\/(?:home|Users)\/[A-Za-z0-9._-]+(?:\/[^\s"'`)\]]*)?/g, "<path>")
     .replace(/(?:[A-Za-z]:[\\/]{1,2})?wwwprojects[\\/][^\s"'`)\]]*/g, "<path>")
     // Windows env-var path literals (USERPROFILE / APPDATA / HOMEPATH etc., percent-wrapped) — the
     // `windows-env-literal` class the path-leak gate enforces. A bare `userprofile` token carries no `%%` and

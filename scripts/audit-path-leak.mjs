@@ -14,9 +14,11 @@
 //
 // ★ THE FAMILY, AND ITS PARITY GAP — this gate is VENDORED EIGHT TIMES and the copies are NOT equal.
 // Surveyed 2026-07-17 (and correcting 0820cd3f's message, which called six of them "blind": wrong — see
-// below). Two shapes exist:
-//   • 6 rules (this file, 184L · ZTF-Knowledge-Bases/tools/kb-path-leak.mjs, 166L) — adds
+// below). Three declared coverage levels now exist:
+//   • 7 rule classes (this file) — Windows/env/wwwprojects + unix-user-home +
 //     dash-encoded-user-home + the NEVER_TRACKED pass (codebase-memory-dir, graph-db-blob).
+//   • 6 rule classes (ZTF-Knowledge-Bases/tools/kb-path-leak.mjs) — the earlier set without
+//     unix-user-home.
 //   • 3 rules (98L, byte-identical across TritMesh-Database · -Markets · -Query-Language · -Rhizo ·
 //     -Tensor · ZT-Galerina-GRAPH-ASCII-v2) — drive-user-path · wwwprojects · unix-home-path ONLY.
 // The 3-rule copies never modelled the dash slug in EITHER form, and carry no NEVER_TRACKED pass at all
@@ -53,6 +55,11 @@ const PATTERNS = [
   // Windows user home: drive + Users + a REAL name segment — leaks BOTH the drive layout and the
   // username. The (?!<) skips a `<name>`/`<user>` PLACEHOLDER, which teaches the rule rather than leaks.
   { name: "windows-user-home", re: /[A-Za-z]:[\\/]{1,2}Users[\\/]{1,2}(?!<)[^\\/\s"'`,;<]+/g },
+  // POSIX user homes on Linux and macOS. Require a plausible username segment and reject
+  // `<user>` placeholders. The negative lookbehind keeps URL path components such as
+  // `https://example.test/Users/name` out of scope: this detector models absolute local paths,
+  // not arbitrary URL routes.
+  { name: "unix-user-home", re: /(?<![A-Za-z0-9:])\/(?:home|Users)\/(?!<)[A-Za-z0-9._-]+/g },
   // Percent-wrapped Windows env var used as a LITERAL path stand-in (`%USERPROFILE%\...`). Owner ruling
   // 2026-07-15: a public repo hardcodes NOTHING machine-specific — a `%USERPROFILE%` literal is still a
   // Windows-only hardcoding, not a portable fix, so it is itself a leak. A runtime env READ in code
@@ -192,6 +199,8 @@ function selfTest() {
     ["windows-user-home fires", fires("see C:\\Users\\someone\\Documents\\GitHub\\x")],
     ["forward-slash user-home fires", fires("C:/Users/someone/dev")],
     ["json-escaped user-home fires", fires('"root": "C:\\\\Users\\\\someone"')],
+    ["linux user-home fires", fires("report /home/someone/Documents/GitHub/Galerina")],
+    ["macOS user-home fires", fires("report /Users/someone/Documents/GitHub/Galerina")],
     ["wwwprojects path fires", fires("moved from C:\\wwwprojects\\galerina")],
     ["percent env literal fires (%USERPROFILE% is NOT a portable fix)", fires("run %USERPROFILE%\\Documents\\GitHub\\x")],
     ["%APPDATA% literal fires", fires("cache in %APPDATA%\\galerina")],
@@ -199,6 +208,8 @@ function selfTest() {
     ["$env:USERNAME READ does NOT fire", !fires('icacls x /grant:r "$($env:USERNAME):F"')],
     ["bare 'wwwprojects' word in prose does NOT fire", !fires("migrated the wwwprojects layout")],
     ["'C:\\Users\\<name>' placeholder does NOT fire", !fires("a hardcoded C:\\Users\\<name>\\x breaks")],
+    ["'/home/<user>' placeholder does NOT fire", !fires("a hardcoded /home/<user>/x breaks")],
+    ["'/Users/<name>' placeholder does NOT fire", !fires("a hardcoded /Users/<name>/x breaks")],
     ["allow-marker suppresses", !fires("example C:\\Users\\x  (path-leak-audit:allow)")],
     ["dash-encoded slug fires", fires('"project": "C-Users-someone-Documents-GitHub-Galerina"')],
     // ★ THE REGRESSION (R&D finding, 2026-07-17). This is the shape the ENCODER actually emits — drive

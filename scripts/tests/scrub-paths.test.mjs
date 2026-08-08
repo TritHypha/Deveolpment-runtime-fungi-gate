@@ -5,6 +5,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { scrubPaths } from "../lib/scrub-paths.mjs";
 
+test("scrubPaths: Linux and macOS user-home paths become <path>", () => {
+  assert.equal(scrubPaths("see /home/alice/GitHub/x.ts here"), "see <path> here"); // path-leak-audit:allow
+  assert.equal(scrubPaths("see /Users/bob/GitHub/y.md end"), "see <path> end"); // path-leak-audit:allow
+});
+
 // Fixture strings below QUOTE the banned patterns deliberately — they are the scrubber's inputs,
 // proving each class is genericized. Fake names (alice/bob/me), never a real machine path.
 test("scrubPaths: Windows user-home path → <path> (single and double backslash)", () => {
