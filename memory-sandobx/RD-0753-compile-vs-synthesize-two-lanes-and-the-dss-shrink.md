@@ -154,6 +154,37 @@ Stated plainly, because it is the easiest thing to get wrong:
 **In one line:** the change makes ~two-thirds of a program run as verifiable `.gate` fabric; the
 remaining third is `.fungi` compute that continues to go through **SLIDE**, unchanged.
 
+### §5a · Why the compute lane cannot be cut — the "100% .gate app" argument, answered
+
+A tempting objection: *if an AI writes an app 100% in `.gate` with no `.fungi`, then `.gate` can do
+everything `.fungi` can — so map `.fungi → .gate` and delete the compute lane.* It does not follow,
+for a reason that is now **verified in source**, not asserted:
+
+- **`.gate` has no arithmetic, by design** (`FUNGI-TO-GATE-LIKE-FOR-LIKE.md`: *"No equivalent, by
+  design. A circuit has no arithmetic. Numbers appear only as…"*). It *cannot add two numbers.*
+- **`.gate` v3 is machine-checked ACYCLIC** (`gate-v3-condense.ts` → `verifyGateGraphAcyclic`;
+  `SEMANTICS.md` SEM-001). An acyclic, expression-free circuit computes a **fixed, bounded function**
+  of its inputs. It is provably **not a general computer** — no loop, no unbounded recursion, no
+  arithmetic.
+
+So a "100% `.gate` app" hides a move: **where did the computation go?** Either the app does no real
+arithmetic (pure routing — a narrow app that proves nothing about computing), or the arithmetic lives
+**inside the parts the circuit names**, and those parts are still `.fungi` leaf compute. The compute
+did not vanish; it moved behind a port. **Cutting the compute lane would not remove the compute — it
+would only hide where it runs, and lose SLIDE's verification of it.**
+
+**Where the objection is genuinely right — and why we still decline it.** At the raw *logic-gate*
+level (AND/OR/XOR), gates are universal: an adder *is* a gate network, a CPU *is* gates. So one
+*could* express arithmetic as gates. But that is a **different `.gate`** — a full hardware
+description language (Verilog-class) — and adopting it **destroys the three properties `.gate` exists
+for**: (1) verify-by-inspection dies — a 32-bit multiplier is thousands of gates, not human-legible;
+(2) the bounded/acyclic guarantee that makes it provable is swamped; (3) it is bigger and slower than
+the compiled path — silicon already has an ALU, so a compiled `mul` is one instruction versus a
+hand-wired multiplier. **`.gate` deliberately trades "can compute anything" for "can be verified by
+looking at it." Making it compute arithmetic trades that back — you get Verilog and lose the reason
+`.gate` exists.** The compute lane is therefore not a limitation to cut; it is the **right tool** for
+the ~29%, and SLIDE is its verification boundary.
+
 ---
 
 ## §6 · Every binary still passes Lyth-Weaver — and the DSS.wasm rebuild
