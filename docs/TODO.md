@@ -15,11 +15,11 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. SLIDE Contract 77 is indexed at exact
-  implementation head `559c143`: **9,440 nodes and 22,826 edges**. SLIDE
-  passes **83 contracts**, **79 reference tools**, path-leak **14 controls /
-  689 targets**, security closure `+1` with evidence K3 `0`, and **806/806
-  tests across 83 suites**. The complete serial SLIDE run reduced the observed
+  nodes and 120,560 edges**. SLIDE Contract 78 is indexed at exact
+  implementation head `7c97448`: **9,480 nodes and 22,956 edges**. SLIDE
+  passes **84 contracts**, **79 reference tools**, path-leak **14 controls /
+  693 targets**, security closure `+1` with evidence K3 `0`, and **808/808
+  tests across 84 suites**. The complete serial SLIDE run reduced the observed
   Node census from **four to two** without process growth.
 - [x] Close the exact historical nested-state boundary without claiming a
   general language backend. Contract 70 independently certifies one or two
@@ -41,6 +41,14 @@ counts or open items that a newer section explicitly supersedes.
   proves mismatch reaches zero broker calls. General mutable collections,
   general effects/host calls, trusted anchor/time/revocation custody and
   production authority remain open.
+- [x] Close the source-free side of that effect route under Contract 78. The
+  physical publication loader now needs only the exact receipt and `.slide`
+  files: it stable-reads and re-admits the flat descriptor, physical bundle,
+  fixed effect type and V2-B GIR. Ordinary execution refuses the profile; the
+  authenticated route consumes both affine handles and requires byte equality
+  before provider access. No compiler build handle or checked-Fungi source is
+  required by the loader. Trusted custody/time/revocation, durable replay,
+  platform/native authority and package-conversion credit remain open.
 - [x] Adopt RD-0754's bounded application-resident index with verified
   on-demand object loading as the post-SLIDE architecture direction for large,
   cold or selectively accessed data. Keep its physical store in SLIDE DFE,
