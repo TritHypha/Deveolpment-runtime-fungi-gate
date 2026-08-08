@@ -1,36 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# Galerina source participates in cross-platform compiler and SLIDE receipt
-# identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
-*.fungi text eol=lf
-
-# Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.
-scripts/hooks/* text eol=lf
-
-# ── Regenerated graph / border / index artifacts (written LF by the graph tools). Pin eol=lf so Windows
-#    autocrlf does not phantom-dirty them on every `graph` run (the recurring CRLF churn — 44 files flipping
-#    line endings with no content change). They then diff cleanly and appear modified ONLY when the border/
-#    index ACTUALLY changes, which keeps the tracked BOUNDARY.md useful for PR-diff review.
-**/.graph/BOUNDARY.md   text eol=lf
-build/graph/*.md        text eol=lf
-build/kb-graph/*.md     text eol=lf
-build/dev-tool-index/*  text eol=lf
-
-# Hybrid-signed registry manifests have public byte pins. Preserve identical
-# bytes across Windows, macOS and Linux checkouts.
-packages-galerina/galerina-registry/**/package.galerina.yaml text eol=lf
-packages-galerina/galerina-registry/registry-index-v2.json text eol=lf
-
-# Platform evidence receipts are hashed as raw UTF-8 bytes. Preserve the
-# Ubuntu-produced LF representation across every checkout.
-docs/platform-handover/ubuntu-desktop/reports/*.receipt.json text eol=lf
-docs/platform-handover/ubuntu-desktop/reports/*.slide-platform.json text eol=lf
-
-# Checked-decision frontend receipts are exact-byte evidence artifacts.
-docs/security/slide-frontend-receipts/*.frontend.json text eol=lf
-
-# ── Benchmark result artifacts (written LF by the runner/snapshot scripts). Pin eol=lf so the committed
-#    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
-#    autocrlf; a saved run then diffs cleanly and the NEXT benchmark's real change is visible against it.
-packages-galerina/galerina-devtools-benchmarks/results/**   text eol=lf
+# Canonical benchmark contracts and evidence are hashed as exact bytes.
+# Disable line-ending conversion so a fresh Windows checkout preserves the
+# reviewed LF byte stream and cannot invalidate or silently remint its pins.
+packages-galerina/galerina-devtools-benchmarks/contracts/*.json -text
+packages-galerina/galerina-devtools-benchmarks/evidence/*.json -text
