@@ -25,6 +25,15 @@ edges; its canonical rerun passes **99/99 and 9,452**, including the sealed
 secrets package that alphabetical execution previously reached before its
 built dependency.
 
+The first exhaustive attempt on the isolated fixed point retained the green
+99/99 aggregate but refused four clean-checkout assumptions: stale coverage
+output, a Myco-dependent audit without a build/index prerequisite, a path-leak
+self-test hardcoded to one checkout basename, and static-host raw-byte pins read
+as CRLF on Windows. The fixes are fail-closed and focused evidence is 17/17:
+phase-close builds Myco, refreshes only the compiler-source index, then audits
+that snapshot; `.cc` and `.patch` are LF-bound; no pin, detector or verifier was
+weakened. A complete exhaustive rerun remains the immediate gate.
+
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
 host boundaries**, **95 package-local `node_modules` trees**, and **one nested

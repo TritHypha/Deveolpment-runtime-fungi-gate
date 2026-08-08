@@ -57,6 +57,12 @@ tooling changes were reconciled.
     Local `file:` dependencies now run first, cycles refuse, and bounded npm
     diagnostics remain visible. The clean dependency-first aggregate is
     99/99 packages, 9,452 tests, 0 failed.
+12. The first exact isolated exhaustive attempt exposed four checkout-state
+    assumptions. Coverage output is regenerated after its index; phase-close
+    builds and compiler-source-indexes Myco before the no-refresh audit; the
+    path-leak self-test derives the actual checkout basename; and `.cc`/`.patch`
+    checkouts preserve the LF bytes already named by static-host manifests.
+    Focused combined evidence is 17/17; no signed digest was edited.
 
 ## Exact remaining retirement debt
 
@@ -71,9 +77,10 @@ No debt was deleted, exempted or converted by this verification chapter.
 ## Fixed-point qualification
 
 The initial 88/88 exhaustive result belongs to its recorded tree. The isolated
-checkout now provides a stable full-build and full-aggregate fixed point, but
-the later byte-canonicalisation and graph-order changes require one final
-exhaustive run before 88/88 can be attributed to the newer tree.
+checkout provides a stable full-build and full-aggregate fixed point. Its first
+exact exhaustive attempt kept the package aggregate green but refused four
+tooling prerequisites now repaired above. One complete rerun is required before
+an exhaustive pass can be attributed to the newer tree.
 
 ## Next critical path
 

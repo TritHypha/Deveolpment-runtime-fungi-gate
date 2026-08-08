@@ -683,6 +683,8 @@ run("artifact-drift", "node", ["scripts/audit-artifact-drift.mjs"]);
 //   REVIEW CANDIDATES (a heuristic aid, not a proof). Report-only (exit 0) — a backlog like fungi-quality;
 //   run `node scripts/audit-silent-overwrite.mjs` for the candidate list, `--all` for guarded+unguarded.
 //   Its --self-test also runs in the gate-selftests meta-gate.
+run("build:myco", "node", ["packages-galerina/galerina-tools-myco/node_modules/typescript/bin/tsc", "-p", "packages-galerina/galerina-tools-myco/tsconfig.json"]);
+run("index:myco", "node", ["packages-galerina/galerina-tools-myco/dist/cli.js", "index", "packages-galerina/galerina-core-compiler/src"]);
 run("silent-overwrite", "node", ["scripts/audit-silent-overwrite.mjs"]);
 // example-diagnostics — every curriculum example under docs/examples/Level-* must honour its declared
 //   `/// expected_diagnostics:` contract. WIRED 2026-07-25 (board #173): the gate existed and was RED

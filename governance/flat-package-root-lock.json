@@ -1696,7 +1696,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "3e453247668ca66f0f1f6ba575f9ed161ffe15d8aaa56780f901c8d9f7e7136f",
+      "contentDigest": "4cd9593c6322757c6235cb845d5e48f2f53bd7f056d42f52aada30f6382361b6",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3254,5 +3254,5 @@
       ]
     }
   ],
-  "rootDigest": "d46569f9cfaeb2a9ac45b45b61e00a6b83de1c3770c6d08d79b094c1378a1663"
+  "rootDigest": "97d9e9e65a21f763b0e9b60b0c33a7ae4c827310ea6f406dd68a6a039333c5e4"
 }

@@ -61,6 +61,13 @@ must not displace the critical path below or grant production authority.
   visible on failure. A fresh canonical run passed **99/99 packages, 9,452
   tests, 0 failed**; alphabetical order had previously hidden missing built
   dependency closures.
+- [x] Close the clean-checkout tooling assumptions exposed by the first exact
+  exhaustive attempt at `27369e22`. Path-leak self-tests now derive the actual
+  checkout basename; `.cc` and `.patch` use LF so three existing static-host
+  byte pins reproduce on Windows; and phase-close builds Myco, refreshes a
+  compiler-source-scoped index, then runs the no-refresh overwrite audit on
+  that exact snapshot. Coverage evidence was regenerated after the code index.
+  Focused meta-gate, static-host and runner evidence is **17/17**.
 - [x] Implement the `.gate` order-six non-authorizing link-plan boundary:
   closed 11-key plan, canonical digest, deterministic component order,
   admission-time circuit snapshot, private linkable binding, emitter-input
@@ -72,9 +79,11 @@ must not displace the critical path below or grant production authority.
   and the meta-audit preserves the failing child's last diagnostic lines.
   Tooling is **424 total / 422 pass / 2 intentional skip / 0 fail**.
 - [ ] Re-run the uninterrupted exhaustive phase-close in the isolated checkout
-  after the byte-canonicalisation and graph-order commits. The previous 88/88
-  result remains valid evidence for its recorded tree, but is not silently
-  promoted to the new fixed point.
+  after the clean-checkout tooling repairs. The first exact attempt kept the
+  99/99 package aggregate green but correctly refused stale coverage evidence,
+  an unbuilt/unindexed Myco audit, a checkout-name-dependent self-test and
+  CRLF static-host bytes. The previous 88/88 result remains evidence only for
+  its recorded tree and is not silently promoted to this fixed point.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3

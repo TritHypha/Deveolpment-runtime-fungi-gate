@@ -209,6 +209,24 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
 });
 
+test("live phase-close builds Myco before the Myco-dependent overwrite audit", () => {
+  const build = runnerSource.indexOf(
+    'run("build:myco", "node", ["packages-galerina/galerina-tools-myco/node_modules/typescript/bin/tsc", "-p", "packages-galerina/galerina-tools-myco/tsconfig.json"]);',
+  );
+  const index = runnerSource.indexOf(
+    'run("index:myco", "node", ["packages-galerina/galerina-tools-myco/dist/cli.js", "index", "packages-galerina/galerina-core-compiler/src"]);',
+  );
+  const audit = runnerSource.indexOf(
+    'run("silent-overwrite", "node", ["scripts/audit-silent-overwrite.mjs"]);',
+  );
+
+  assert.notEqual(build, -1, "a clean phase-close must build the exact Myco tool it executes");
+  assert.notEqual(index, -1, "a clean phase-close must refresh Myco before a no-refresh audit");
+  assert.notEqual(audit, -1, "the Myco-dependent audit must remain wired");
+  assert.ok(build < index, "Myco must be built before its index can be refreshed");
+  assert.ok(index < audit, "the exact Myco index must be current before silent-overwrite executes");
+});
+
 test("a held checkout lease refuses phase-close before any child starts", () => {
   const root = fixture({
     phaseClose: [{ name: "must-not-run", command: ["node", "must-not-run.mjs"] }],
