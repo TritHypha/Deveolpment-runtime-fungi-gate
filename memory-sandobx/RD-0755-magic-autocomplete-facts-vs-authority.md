@@ -22,7 +22,8 @@ authority?* — and treats the two halves completely differently.
 | the facts/authority split, propose-not-grant, per-secret Y/N | **REASONED**, and convergent with three mature frameworks (§6) |
 | the estate already detects the vault gap (`FUNGI-VAULT-003/004`) | **VERIFIED in source** (§5) |
 | the estate already has a re-check-gated, fail-closed auto-fix (`computeAutoFix`) | **VERIFIED in source** (§1) |
-| a built `--magic` | **NOT BUILT** — this RD is the design |
+| the vault authority lane (detect → Y/N → grant nothing by default) | **PROTOTYPED and PROVEN on real fixtures** (§8) |
+| the full `--magic` tool (facts lane, database gaps, AST parser, receipt log) | **NOT BUILT** — this RD is the design + one proven slice |
 
 ---
 
@@ -186,9 +187,10 @@ on top — and the guardrails are not caution, they are the *reason those framew
 |---|---|
 | re-check-gated fail-closed auto-fix rail (`computeAutoFix`) | **exists** |
 | effect-gap detectors (`FUNGI-VAULT-003/004`, and the effect-declaration diagnostics) | **exist** |
-| type inference (facts-lane fix-kind) | partly exists (type checker) — wire as a `FixEdit` |
-| the interactive **authority lane** (Y/N, default-N, refuse-non-interactive, receipt) | **build** |
-| dangerous-first ordering + receipt log | **build** |
+| the interactive **authority lane** (Y/N, default-N, refuse-non-interactive, receipt) | ✅ **prototyped + proven for the vault gap** (§8) — extend to database + productionize |
+| type inference (facts-lane fix-kind) | partly exists (type checker) — wire as a `FixEdit` (**build**) |
+| database-effect gaps on the same decision | **build** (v2) |
+| dangerous-first ordering + persistent receipt log + AST parser | **build** (v2) |
 
 ---
 
@@ -225,7 +227,14 @@ part that had to be right before any `y` writes a grant.
 - Replace the lexical parser with the compiler AST so the RESOLVED effect (not a source label)
   drives every prompt.
 
+## §10 · Artifacts
+
+- `Galerina/memory-sandobx/magic-vault-detector.mjs` — the proven propose-only vault-gap prototype
+  (self-locating, no absolute path; all controls pass on real Level-5 fixtures 230 + 227).
+- A copy of this document lives beside it in `memory-sandobx/`.
+
 *Provenance: owner concept 2026-08-08 · `computeAutoFix`/`fix-edit.ts` · `governance-verifier.ts`
-FUNGI-VAULT-003/004 · `secretReportMode` invariant · RD-0391 Lock-1 (request-not-assert) · primary
-docs: laravel.com/docs/11.x/authorization, guides.rubyonrails.org (strong parameters),
-eslint.org (`--fix`). Living document — v1. Contact hello@trithypha.dev.*
+FUNGI-VAULT-003/004 · `secretReportMode` invariant · RD-0391 Lock-1 (request-not-assert) · Level-5
+examples 227/230 · primary docs: laravel.com/docs/11.x/authorization, guides.rubyonrails.org (strong
+parameters), eslint.org (`--fix`). **Living document — v1 + one proven slice (§8).** Contact
+hello@trithypha.dev.*
