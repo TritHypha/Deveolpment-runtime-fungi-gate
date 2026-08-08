@@ -55,6 +55,12 @@ counts or open items that a newer section explicitly supersedes.
   generation before dispatch; replay produces zero broker calls. Power-loss
   durability remains K3 Unknown pending admitted external crash evidence, and
   no production or package-conversion authority is inferred.
+- [x] Split the ambiguous "Independent SLIDE" roadmap state after Contract 79.
+  The bounded source-to-execution implementation is green for its admitted
+  profiles; complete Galerina language coverage and production activation stay
+  blue. The exact internal and external gates are recorded in SLIDE's
+  `docs/reports/slide-finish-ledger-after-contract79-2026-08-08.md`. This split
+  adds visibility only and grants no package-conversion or retirement credit.
 - [x] Adopt RD-0754's bounded application-resident index with verified
   on-demand object loading as the post-SLIDE architecture direction for large,
   cold or selectively accessed data. Keep its physical store in SLIDE DFE,

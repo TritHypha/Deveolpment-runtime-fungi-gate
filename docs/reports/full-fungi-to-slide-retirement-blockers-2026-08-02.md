@@ -1,7 +1,16 @@
 # Full `.fungi` to `.slide` retirement blockers
 
-Status: current measured implementation gap, refreshed 2026-08-04
+Status: historical detailed programme, current counts superseded 2026-08-08
 Authority: explanatory report only; it grants no execution or retirement authority
+
+> **Current checkpoint:** use SLIDE's
+> `docs/reports/slide-finish-ledger-after-contract79-2026-08-08.md` for the
+> post-Contract-79 implementation boundary and `docs/TODO.md` for current
+> counts. The seven ordered retirement gates below remain valid, but the
+> Contract 34-era capability description and 497/38 counts are historical.
+> Current generated debt is 516 tracked package `.ts` paths, 111 unexecuted
+> `.fungi` sources, 42 unowned host boundaries, 95 `node_modules` trees and one
+> nested package identity.
 
 ## Outcome
 

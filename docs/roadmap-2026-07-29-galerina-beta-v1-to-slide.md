@@ -1468,7 +1468,8 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + durable source-free authenticated package effect<br/>Contracts 66–79 · 809/809 · platform custody, native and production authority open"]
+    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned local Int32 + durable source-free authenticated package effect<br/>Contracts 66–79 · 809/809 · no production authority"]
+    HC["🟦 Complete Galerina language backend<br/>general owned collections · failures · multi-effect/cross-package calls<br/>provider binary identity · generated supported-source manifest"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
@@ -1529,7 +1530,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -1558,18 +1559,19 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,BF,LS,FL,AV,PR,SM,PL,PS green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,BF,LS,FL,AV,PR,SM,PL,PS,H green;
     class TG red;
     class LI,F,AT,X amber;
-    class H,AL,T,HB,FD,AE,AF blue;
+    class HC,AL,T,HB,FD,AE,AF blue;
     class P green;
     class J,Q grey;
     class AR green;
 ```
 
 The green V2-B broker, effect-GIR, durable-nonce, durable-binding and durable-
-bundle tiles are bounded
-independent protocol floors inside the still-blue general-backend programme.
+bundle tiles are bounded independent protocol floors inside the now-green
+bounded execution chain. Complete Galerina language coverage remains the
+separate blue successor tile.
 Canonical bytes now
 select database read or HTTPS fetch, the reference `.slide` identity binds the
 artifact, and all eight K3 VOK gates plus audit-before-success are enforced.
