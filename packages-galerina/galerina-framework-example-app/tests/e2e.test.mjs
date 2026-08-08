@@ -11,12 +11,20 @@
 //   serve     createApiServer + listen(0) drive a REAL socket end-to-end: GET /hello
 //             returns 200 + {message, status} JSON.
 
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, rmSync, existsSync, readFileSync, cpSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -31,6 +39,23 @@ import {
 } from "../dist/server.js";
 
 const SCAFFOLDER = fileURLToPath(new URL("../../../scripts/galerina-new.mjs", import.meta.url));
+const FIXTURE_ROOT = mkdtempSync(join(tmpdir(), "galerina-example-governance-"));
+const FIXTURE_GOVERNANCE = join(FIXTURE_ROOT, "governance");
+const FIXTURE_PUBLIC_KEY = fileURLToPath(new URL(
+  "./fixtures/signing-key-942d6b2726b0a991.pub.pem",
+  import.meta.url,
+));
+
+// The shipped greeting predates the active hybrid authority. Its public half is
+// admitted only inside this test-owned copy: placing it in root governance would
+// broaden production trust merely to satisfy an example. Production remains
+// fail-closed until the greeting is re-signed in an owner ceremony.
+cpSync(paths.governanceDir, FIXTURE_GOVERNANCE, { recursive: true });
+copyFileSync(
+  FIXTURE_PUBLIC_KEY,
+  join(FIXTURE_GOVERNANCE, "signing-key-942d6b2726b0a991.pub.pem"),
+);
+after(() => rmSync(FIXTURE_ROOT, { recursive: true, force: true }));
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 function withTempDir(fn) {
@@ -97,8 +122,12 @@ test("scaffold: `galerina new app` emits the runnable golden layout", () => {
 // ── fuse ──────────────────────────────────────────────────────────────────────
 test("fuse: the SIGNED greeting wasm is admitted VERIFIED (no allowUnsigned) and invoke('main') => 200", async () => {
   // No allowUnsigned: this only passes because the manifest's Ed25519 signature
-  // verifies against the repo governance public key — real signed admission.
-  const greeting = await fusePackage(paths.greetingDir, { governanceDir: paths.governanceDir, warn: () => {} });
+  // verifies against an explicit test-only governance set — real signed
+  // admission without adding the retired signer to production trust.
+  const greeting = await fusePackage(paths.greetingDir, {
+    governanceDir: FIXTURE_GOVERNANCE,
+    warn: () => {},
+  });
   assert.equal(greeting.name, "greeting");
   assert.deepEqual(greeting.capabilities, [], "fused with NO capabilities (deny-by-default)");
   assert.equal(greeting.invoke("main"), 200, "the governed compute returns HTTP 200");
@@ -136,7 +165,7 @@ test("fuse: a REVOKED signing key is refused at app fusion (revocation gate wire
     // Full COPY of the repo governance dir (pubkeys + registry module + trust anchor) so
     // signature verification still has the signer's public key…
     const govDir = join(base, "governance");
-    cpSync(paths.governanceDir, govDir, { recursive: true });
+    cpSync(FIXTURE_GOVERNANCE, govDir, { recursive: true });
 
     // …but with the greeting's own signer added to the revocation list. That signer is also
     // the registry's pinned signer, so assertRegistryTrustworthy fails closed ("signed by a
@@ -162,7 +191,7 @@ test("fuse: a REVOKED signing key is refused at app fusion (revocation gate wire
 // ── kernel ──────────────────────────────────────────────────────────────────────
 test("kernel: GET /hello dispatches to the fused compute; unknown path 404s (fail-closed routing)", async () => {
   const config = loadConfig(paths.configPath);
-  const greeting = await fuseGreeting();
+  const greeting = await fuseGreeting({ governanceDir: FIXTURE_GOVERNANCE });
   const kernel = createGreetingKernel(config, greeting);
 
   const ok = await kernel.handle({
@@ -201,7 +230,10 @@ test("kernel: an auth-required route 401s with no channel verdict (zero-trust de
 test("serve: a REAL HTTP GET /hello through the api-server returns 200 + the greeting JSON", async () => {
   const config = loadConfig(paths.configPath);
   // Ephemeral port for the test.
-  const started = await startServer({ ...config, http: { ...config.http, port: 0 } });
+  const started = await startServer(
+    { ...config, http: { ...config.http, port: 0 } },
+    { governanceDir: FIXTURE_GOVERNANCE },
+  );
   try {
     const res = await request(started.port, { method: "GET", path: "/hello" });
     assert.equal(res.status, 200);

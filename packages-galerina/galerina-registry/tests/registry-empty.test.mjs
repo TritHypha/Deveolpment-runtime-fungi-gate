@@ -616,6 +616,20 @@ test("the owner-approved auth package is live only under the exact public author
     /^packages-galerina\/galerina-registry\/registry-index-v2\.json text eol=lf$/mu,
     "hybrid-signed index bytes must remain LF-stable across platforms",
   );
+  const attributes = readFileSync(GIT_ATTRIBUTES, "utf8");
+  for (const governedTextPattern of [
+    "*.ts",
+    "*.mjs",
+    "*.json",
+    "*.md",
+    "LICENSE",
+  ]) {
+    assert.match(
+      attributes,
+      new RegExp(`^${governedTextPattern.replace("*", "\\*")} text eol=lf$`, "mu"),
+      `${governedTextPattern} package artifact bytes must remain LF-stable across platforms`,
+    );
+  }
   assert.equal(
     existsSync(
       join(

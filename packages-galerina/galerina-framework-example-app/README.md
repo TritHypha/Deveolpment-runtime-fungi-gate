@@ -74,6 +74,10 @@ tests/e2e.test.mjs          the scaffold→fuse→kernel→serve proof
   audited** relaxation (recorded as `auth:public`), appropriate for a hello-world.
 - **Signed admission.** The fuse border verifies the component's Ed25519 signature and
   sha256 against `App.manifest` before the kernel will run it. `tests/e2e.test.mjs`
-  admits it with **no** `allowUnsigned`, proving the signature really verifies.
+  admits it with **no** `allowUnsigned`, proving the signature really verifies. The
+  greeting predates the active hybrid authority, so its old public half is confined to
+  `tests/fixtures/` and copied into a temporary test-owned governance set. It is not a
+  production trust anchor. A production build remains fail-closed until the greeting is
+  re-signed through the current owner ceremony.
 - **Secrets are runtime-only.** `.env` is git-ignored and never compiled in; in
   production secrets come from a vault/KMS, not the binary.

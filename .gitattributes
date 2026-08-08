@@ -5,6 +5,27 @@
 # identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
 *.fungi text eol=lf
 
+# Registry package identities cover raw source bytes. Governed text artifacts
+# must therefore expose the same bytes on every host; binary formats remain
+# under Git's normal binary detection and are not forced through text filters.
+*.ts text eol=lf
+*.mts text eol=lf
+*.cts text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.wat text eol=lf
+*.wast text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.txt text eol=lf
+LICENSE text eol=lf
+
 # Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.
 scripts/hooks/* text eol=lf
 
