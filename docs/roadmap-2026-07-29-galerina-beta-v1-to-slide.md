@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 75 at exact
-implementation head `af2240e` (**9,345 / 22,576**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 76 at exact
+implementation head `d081352` (**9,417 / 22,771**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **81 files**, its tool manifest passes **78 files**, its independent
-path-leak gate passes **14 controls / 681 targets**, security closure is `+1`
+passes **82 files**, its tool manifest passes **79 files**, its independent
+path-leak gate passes **14 controls / 686 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**801/801 across 82 suites** with no authority released. The fresh Galerina
+**805/805 across 83 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -75,6 +75,20 @@ is **801/801 across 82 suites**, contract integrity is **81 files**, tool
 identity is **78 files**, path hygiene covers **681 targets**, security evidence
 K3 is `0`, benchmark evidence verifies and Node is **2 -> 2**. Durable replay,
 authenticated providers and production authority remain open.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 76 is green at local implementation
+commit `d081352`. A fixed canonical producer statement binds exact object,
+package-set, package/export/compiler/tool, role, key, suite, epoch and
+revocation identities. SLIDE derives both SPKI fingerprints and actually
+verifies Ed25519 plus ML-DSA-65 over the same domain-separated bytes; either
+half or any bound fact drifting refuses. Verification opens one module-private
+affine authenticated-object handle and no private signing material exists in
+the implementation. Focused evidence is **4/4**, complete SLIDE is **805/805
+across 83 suites**, contract integrity is **82 files**, tool identity is **79
+files**, path hygiene covers **686 targets**, security evidence K3 is `0`,
+benchmark evidence verifies and Node is **2 -> 2**. The trust record, time and
+revocation K3 remain caller evidence, so platform custody, offline activation
+and production authority stay open.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 72 is green at local implementation
 commit `80f3f61`. It admits one 1..16-element runtime-owned local `Int32`
@@ -1409,7 +1423,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/control + certified nested loops + owned local Int32 + package-bound single read effect<br/>Contracts 66–75 · 801/801 · general collections/effects, native and production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + package-bound read effect + hybrid object authentication<br/>Contracts 66–76 · 805/805 · platform custody, native and production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]

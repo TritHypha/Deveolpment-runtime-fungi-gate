@@ -15,10 +15,10 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. SLIDE Contract 75 is indexed at exact head
-  `af2240e`: **9,345 nodes and 22,576 edges**. SLIDE passes **81 contracts**, **78 reference tools**,
-  path-leak **14 controls / 681 targets**, security closure `+1` with evidence
-  K3 `0`, and **801/801 tests across 82 suites**. The complete serial SLIDE run
+  nodes and 120,560 edges**. SLIDE Contract 76 is indexed at exact head
+  `d081352`: **9,417 nodes and 22,771 edges**. SLIDE passes **82 contracts**, **79 reference tools**,
+  path-leak **14 controls / 686 targets**, security closure `+1` with evidence
+  K3 `0`, and **805/805 tests across 83 suites**. The complete serial SLIDE run
   stayed process-bounded at Node **2 -> 2**.
 - [x] Close the exact historical nested-state boundary without claiming a
   general language backend. Contract 70 independently certifies one or two
@@ -32,7 +32,9 @@ counts or open items that a newer section explicitly supersedes.
   read-only `.fungi` effect families to the existing V2-B broker and mandatory
   audit route. Contract 75 carries those exact `[Bytes] -> Result<Bytes,
   Failure>` exports through the flat-package ABI while the ordinary pure
-  executor refuses them. General mutable collections, effects, host calls and production
+  executor refuses them. Contract 76 separately verifies a canonical object
+  statement with both Ed25519 and ML-DSA-65 and opens one affine authenticated
+  handle without releasing authority. General mutable collections, effects, host calls and production
   authority remain open.
 - [x] Adopt RD-0754's bounded application-resident index with verified
   on-demand object loading as the post-SLIDE architecture direction for large,
