@@ -11,7 +11,7 @@ repository graph and generated-authority checks pass
 **5/5** after regenerating the project and KB outputs that correctly refused
 the preceding TODO drift. SLIDE's contract check
 now passes **89 files**, its tool manifest passes **83 files**, its independent
-path-leak gate passes **14 controls / 716 targets**, security closure is `+1`
+path-leak gate passes **14 controls / 717 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **828/828 across 89 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
@@ -46,7 +46,7 @@ exception, silent fallthrough or fallback participates. The registry has
 distinct physical `.slide`, portable VEO, input, execution and transcript
 domains, with K3/context/replay/copy and every-byte mutation refusal. Complete
 SLIDE is **828/828 across 89 suites**; contract integrity is **89 files**, tool
-identity is **83 files**, path hygiene covers **716 targets**, and security
+identity is **83 files**, path hygiene covers **717 targets**, and security
 evidence K3 remains `0`. Other Result types, dynamic failures, effectful and
 cross-package propagation, conversion, retirement and production authority
 remain open.

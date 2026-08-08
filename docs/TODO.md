@@ -16,7 +16,7 @@ counts or open items that a newer section explicitly supersedes.
   fallthrough and fallback are absent; K3/context/replay/copy and every-byte
   physical mutations refuse.
 - [x] Record fresh SLIDE evidence: **89 contract files**, **83 reference
-  tools**, path leak **14 controls / 716 targets**, security closure `+1` with
+  tools**, path leak **14 controls / 717 targets**, security closure `+1` with
   evidence K3 `0`, and **828/828 tests across 89 suites**.
 - [x] Re-index exact SLIDE checkpoint `b7289af`: **9,598 nodes / 23,273
   edges**, expected and observed equal, with direct graph hits for the source
