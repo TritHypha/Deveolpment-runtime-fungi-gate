@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-final2-close-2026-08-08",
-    "sha": "856b896c",
+    "sha": "df72a5c5",
     "detached": false,
     "dirty": true
   },
@@ -229,7 +229,7 @@
         {
           "label": "Independent SLIDE general executable backend",
           "pct": null,
-          "status": "building — Contract 64 carries structured counted-loop body regions through canonical GIR and source-free physical .slide at 728/728 across 75 suites; VOK admission, general structured control, nested loops, effects and production authority remain open",
+          "status": "building — Contract 65 carries bounded structured loop bodies through canonical GIR, source-free .slide and affine VOK at 732/732 across 75 suites; general .fungi control, nested loops, effects, packages and production authority remain open",
           "live": false,
           "evidence": null
         },
@@ -333,7 +333,7 @@
         {
           "item": "Independent SLIDE backend",
           "state": "building",
-          "detail": "Contract 64 carries structured counted-loop body regions through canonical GIR and source-free physical .slide at 728/728 across 75 suites; VOK admission, general structured control, nested loops, effects and production authority remain open"
+          "detail": "Contract 65 carries bounded structured loop bodies through canonical GIR, source-free .slide and affine VOK at 732/732 across 75 suites; general .fungi control, nested loops, effects, packages and production authority remain open"
         },
         {
           "item": "Package retirement",

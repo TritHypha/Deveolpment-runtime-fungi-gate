@@ -354,7 +354,7 @@ const BUILD_PROGRESS = [
   { layer: "Passive Execution Plans & Target Bridges", pct: 35 },
   { layer: "AI Inference Tower (BitNet/Groq/NVFP4)", pct: 30 },
   { layer: "Photonic / Ternary Computing", pct: 3 },
-  { layer: "Independent SLIDE general executable backend", status: "building — Contract 64 carries structured counted-loop body regions through canonical GIR and source-free physical .slide at 728/728 across 75 suites; VOK admission, general structured control, nested loops, effects and production authority remain open" },
+  { layer: "Independent SLIDE general executable backend", status: "building — Contract 65 carries bounded structured loop bodies through canonical GIR, source-free .slide and affine VOK at 732/732 across 75 suites; general .fungi control, nested loops, effects, packages and production authority remain open" },
   { layer: "B8 governed HTTP transport (TLSTP)", status: "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open" },
   { layer: "Lyth/Weaver Verified Admission Fabric", status: "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed" },
 ];
@@ -432,7 +432,7 @@ TRACKING_REGISTRY.splice(
   {
     item: "Independent SLIDE backend",
     state: "building",
-    detail: "Contract 64 carries structured counted-loop body regions through canonical GIR and source-free physical .slide at 728/728 across 75 suites; VOK admission, general structured control, nested loops, effects and production authority remain open",
+    detail: "Contract 65 carries bounded structured loop bodies through canonical GIR, source-free .slide and affine VOK at 732/732 across 75 suites; general .fungi control, nested loops, effects, packages and production authority remain open",
   },
   retirementCounts.available
     ? {

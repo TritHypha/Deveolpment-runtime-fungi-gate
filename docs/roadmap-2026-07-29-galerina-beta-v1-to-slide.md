@@ -7,9 +7,9 @@ at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **68 files**, its tool manifest passes **70 files**, security closure is
+passes **69 files**, its tool manifest passes **71 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**728/728 across 75 suites** with no authority released. The fresh Galerina
+**732/732 across 75 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **428 total / 426 pass / 2 intentional skip / 0
 fail**, and the current uninterrupted exhaustive close passed **92/92** in
@@ -50,6 +50,19 @@ host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: Contract 65 now admits Contract 64's source-free structured
+body through typed VOK evidence. Artifact, body, initial state and complete
+Contract 58 work identity are fixed before all eleven loop K3 gates and all
+eight VOK gates may open one affine lease. Execution terminally consumes that
+lease as succeeded or refused; copied handles, retries, and every individual
+Deny/Unknown gate vector return no usable handle or result. Focused
+body/object/VOK evidence is **15/15**, combined contract evidence is **24/24**,
+and complete SLIDE is **732/732 across 75 suites** with **69 contracts** and
+**71 reference tools**. The independent backend remains blue because this is
+still one bounded acyclic descriptor profile, not general `.fungi` structured
+control, nested state, memory/effects, package integration or production
+authority.
 
 Roadmap refresh: SLIDE Contract 64 now carries the exact Contract 63 body
 through canonical binary GIR and the existing context-bound physical `.slide`

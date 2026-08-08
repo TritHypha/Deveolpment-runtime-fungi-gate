@@ -26,8 +26,8 @@ must not displace the critical path below or grant production authority.
   `node_modules` trees**, and **one nested native identity**. Earlier 497/38
   counts in dated sections are historical and must not drive decisions.
 - [x] Re-run the independent SLIDE baseline: contract manifest/integrity
-  **68 files**, tool manifest **70 files**, security closure `+1` with evidence
-  K3 `0`, and **728/728 tests across 75 suites** all pass. This is bounded
+  **69 files**, tool manifest **71 files**, security closure `+1` with evidence
+  K3 `0`, and **732/732 tests across 75 suites** all pass. This is bounded
   reference evidence; `authorityReleased` remains false.
 - [x] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
   phase-close after the Hypha enlistment and the 2026-08-07/08 compiler,
@@ -120,6 +120,14 @@ must not displace the critical path below or grant production authority.
   complete SLIDE is **728/728 across 75 suites**, with **68 contracts** and
   **70 reference tools**. VOK admission, general control and authority remain
   open.
+- [x] Admit that source-free Contract 64 object through typed Contract 65 VOK
+  evidence, all eleven loop K3 gates and all eight VOK gates. The resulting
+  handle is affine; execution always terminally consumes its lease and a copy
+  or retry refuses. Focused body/object/VOK evidence is **15/15**, the combined
+  contract closure is **24/24**, and complete SLIDE is **732/732 across 75
+  suites** with **69 contracts** and **71 reference tools**. The profile is
+  still bounded, acyclic and reference-only; general `.fungi` control, package
+  integration and production authority remain open.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3
