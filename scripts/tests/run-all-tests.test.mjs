@@ -55,6 +55,43 @@ function workspaceFixture(packageName, packageJson, files = {}) {
   return root;
 }
 
+function dependencyOrderFixture() {
+  const root = mkdtempSync(join(tmpdir(), "galerina-run-order-"));
+  roots.push(root);
+  write(root, "galerina.workspace.json", JSON.stringify({
+    packages: [
+      "packages-galerina/a-consumer",
+      "packages-galerina/z-dependency",
+    ],
+  }));
+  write(root, "governance/tooling-policy.json", JSON.stringify({
+    schemaVersion: 1,
+    packageNoTest: {},
+    toolExceptions: {},
+    generators: {},
+  }));
+  write(root, "packages-galerina/a-consumer/package.json", JSON.stringify({
+    name: "@galerina/a-consumer",
+    dependencies: { "@galerina/z-dependency": "file:../z-dependency" },
+    scripts: { test: "node test.cjs" },
+  }));
+  write(
+    root,
+    "packages-galerina/a-consumer/test.cjs",
+    "const fs=require('node:fs'); if(!fs.existsSync('../z-dependency/dist/ready')) process.exit(2); console.log('tests 1\\npass 1\\nfail 0');\n",
+  );
+  write(root, "packages-galerina/z-dependency/package.json", JSON.stringify({
+    name: "@galerina/z-dependency",
+    scripts: { test: "node test.cjs" },
+  }));
+  write(
+    root,
+    "packages-galerina/z-dependency/test.cjs",
+    "const fs=require('node:fs'); fs.mkdirSync('dist',{recursive:true}); fs.writeFileSync('dist/ready','yes'); console.log('tests 1\\npass 1\\nfail 0');\n",
+  );
+  return root;
+}
+
 function run(root, ...args) {
   return spawnSync(
     process.execPath,
@@ -77,6 +114,19 @@ test("full discovery includes every registered package with a test script", () =
   assert.equal(result.status, 0);
   assert.match(result.stdout, /custom/);
   assert.match(result.stdout, /Test-bearing packages \(1\)/);
+});
+
+test("full execution is dependency-first rather than alphabetical", () => {
+  const root = dependencyOrderFixture();
+
+  const result = run(root, "--json");
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.deepEqual(
+    report.results.map((entry) => entry.package),
+    ["galerina-z-dependency", "galerina-a-consumer"],
+  );
 });
 
 test("an existing dist directory never bypasses the declared test and build chain", () => {
@@ -151,6 +201,21 @@ test("a zero exit with no parseable non-zero test summary is refused", () => {
   const report = JSON.parse(result.stdout);
   assert.equal(report.results[0].status, "fail");
   assert.equal(report.results[0].failureCode, "TEST-SUMMARY-UNPARSEABLE");
+});
+
+test("a failed package prints a bounded npm diagnostic instead of hiding exit 2", () => {
+  const root = workspaceFixture("diagnostic", {
+    name: "@galerina/diagnostic",
+    scripts: { test: "node diagnostic-fail.mjs" },
+  }, {
+    "diagnostic-fail.mjs":
+      "console.error('npm error code EAGAIN'); process.exit(2);\n",
+  });
+
+  const result = run(root);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /npm error code EAGAIN/u);
 });
 
 test("a zero-test summary is refused rather than treated as an empty pass", () => {

@@ -27,6 +27,56 @@ const CORE = Object.freeze([
 const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
 const TIMEOUT_MS = 600_000;
 
+function packagePathKey(value) {
+  const resolved = path.resolve(value);
+  return process.platform === "win32" ? resolved.toLowerCase() : resolved;
+}
+
+function dependencyFirstOrder(records) {
+  const byPath = new Map(
+    records.map((record) => [packagePathKey(record.absolutePath), record]),
+  );
+  const orderedRoots = [...records].sort((left, right) => {
+    const leftLast = RUN_LAST.has(left.subject);
+    const rightLast = RUN_LAST.has(right.subject);
+    if (leftLast !== rightLast) return leftLast ? 1 : -1;
+    return left.subject.localeCompare(right.subject);
+  });
+  const visiting = new Set();
+  const visited = new Set();
+  const ordered = [];
+
+  function visit(record) {
+    if (visited.has(record.subject)) return;
+    if (visiting.has(record.subject)) {
+      throw new Error(`Workspace file-dependency cycle reaches ${record.subject}`);
+    }
+    visiting.add(record.subject);
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(record.absolutePath, "package.json"), "utf8"),
+    );
+    const dependencySpecs = {
+      ...(manifest.dependencies || {}),
+      ...(manifest.optionalDependencies || {}),
+      ...(manifest.devDependencies || {}),
+    };
+    const dependencies = Object.values(dependencySpecs)
+      .filter((spec) => typeof spec === "string" && spec.startsWith("file:"))
+      .map((spec) => byPath.get(packagePathKey(
+        path.resolve(record.absolutePath, spec.slice("file:".length)),
+      )))
+      .filter((dependency) => dependency !== undefined)
+      .sort((left, right) => left.subject.localeCompare(right.subject));
+    for (const dependency of dependencies) visit(dependency);
+    visiting.delete(record.subject);
+    visited.add(record.subject);
+    ordered.push(record);
+  }
+
+  for (const record of orderedRoots) visit(record);
+  return ordered;
+}
+
 function parseArguments(argv) {
   const options = {
     root: DEFAULT_ROOT,
@@ -237,12 +287,7 @@ function stablePackageRecords(inventory, policy, options) {
   const unique = [...new Map(
     selected.map((record) => [record.subject, record]),
   ).values()];
-  return unique.sort((left, right) => {
-    const leftLast = RUN_LAST.has(left.subject);
-    const rightLast = RUN_LAST.has(right.subject);
-    if (leftLast !== rightLast) return leftLast ? 1 : -1;
-    return left.subject.localeCompare(right.subject);
-  });
+  return dependencyFirstOrder(unique);
 }
 
 function packageContractViolations(violations) {
@@ -315,7 +360,9 @@ function humanReport(report, results) {
       );
       for (const line of result._output
         .split(/\r?\n/)
-        .filter((candidate) => /not ok|Error:|fail \d/i.test(candidate))
+        .filter((candidate) =>
+          /not ok|Error:|fail \d|npm (?:error|ERR!)|ERR_[A-Z0-9_]+|REFUSED:|FATAL:/i
+            .test(candidate))
         .slice(0, 8)) {
         process.stdout.write(`   ${line.trim()}\n`);
       }
