@@ -1,5 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+.gitattributes text eol=lf
 
 # Galerina source participates in cross-platform compiler and SLIDE receipt
 # identities. Checkouts must expose the same LF bytes on Windows/macOS/Linux.
@@ -24,6 +25,7 @@
 *.html text eol=lf
 *.css text eol=lf
 *.txt text eol=lf
+*.svg text eol=lf
 LICENSE text eol=lf
 
 # Shell hooks must stay LF — a CRLF in the #!/bin/sh shebang breaks execution under sh.

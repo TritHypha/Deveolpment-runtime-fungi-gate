@@ -1,7 +1,7 @@
 # Galerina beta v1 to SLIDE roadmap
 
 Date: 2026-08-08
-Branch: `codex/galerina-beta-v1-completion`
+Working branch: `codex/galerina-fresh-verify-2026-08-08` (local; never pushed)
 Current revalidated checkpoint: Galerina and SLIDE were structurally re-indexed
 at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
@@ -14,10 +14,12 @@ aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
 seconds**. The post-run process census returned to the one pre-existing MCP
-Node process. One concurrent, non-owned `bounded-cache.ts`/`memory-sandobx`
-mutation appeared during that close; it is preserved and excluded from commit
-authority until provenance is adjudicated, so the result is not overstated as
-a stable-checkout fixed point.
+Node process. A second isolated checkout then reproduced the complete build and
+the same **99/99 / 9,452 / 0 failed** aggregate without package junctions to any
+other worktree. Exact-byte evidence is LF-bound, the historical example key is
+confined to a temporary test governance set, and graph-all now reaches its
+fixed point in one ordered pass (**5/5 generate + 5/5 check**). The exhaustive
+close still requires one final run at this newer isolated fixed point.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
@@ -67,8 +69,9 @@ Roadmap refresh: the original subway-style roadmap has been restored from
 `scripts/gen-roadmap-subway.mjs` and regenerated from the live component,
 authority, contract and retirement ledgers. Its last count-owning test
 headline was 98/98 test-bearing packages with 8,956 tests. The workspace now
-contains 99 top-level peers after Hypha was enlisted; current component health
-is 98/99 pending a fresh aggregate/count refresh. The chart exposes 23 named workstreams, including the
+contains 99 top-level peers after Hypha was enlisted, and the fresh aggregate
+and generated count authority report **99/99 with 9,452 tests**. The chart
+exposes 23 named workstreams, including the
 independent SLIDE backend and package retirement, and its no-percentage lane
 names the general SLIDE backend instead of the superseded P9 Wasm-execution
 word row. The five Zero-Trust and twelve of the numbered build-readiness

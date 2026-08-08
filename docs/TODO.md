@@ -37,6 +37,20 @@ must not displace the critical path below or grant production authority.
   authorities, and bounding the direct tooling runner at four workers, the
   uninterrupted exhaustive close passed **88/88** in **1,055 seconds**.
   Post-run Node census returned to the one pre-existing MCP process.
+- [x] Reproduce the full build and aggregate in an isolated checkout with no
+  package `node_modules` junctions to another worktree. All 99 flat packages
+  built and the aggregate again passed **99/99 packages, 9,452 tests, 0
+  failed**. This closed a Windows-only private-identity split that the earlier
+  junction-based setup could conceal.
+- [x] Make governed text and generated evidence checkout-independent: common
+  source/document extensions, SVG graphs, benchmark contracts and benchmark
+  evidence are explicitly LF-bound. Exact Vade contract/evidence pins now
+  reproduce in a fresh Windows worktree. The historical example-app public key
+  is a test-only fixture copied into an isolated temporary governance set;
+  production trust remains fail-closed and was not broadened.
+- [x] Correct graph generation order. The project graph now runs after its four
+  sibling generators, so a single `graph-all` invocation reaches a fixed point;
+  focused order tests pass and fresh generate/check results are **5/5 + 5/5**.
 - [x] Implement the `.gate` order-six non-authorizing link-plan boundary:
   closed 11-key plan, canonical digest, deterministic component order,
   admission-time circuit snapshot, private linkable binding, emitter-input
@@ -47,11 +61,10 @@ must not displace the critical path below or grant production authority.
   now remove only inherited `NODE_TEST_CONTEXT`, retain suite/process custody,
   and the meta-audit preserves the failing child's last diagnostic lines.
   Tooling is **424 total / 422 pass / 2 intentional skip / 0 fail**.
-- [ ] Adjudicate the concurrently appearing `bounded-cache.ts` tombstone
-  changes and untracked `memory-sandobx/` research before treating the green
-  close as a stable-checkout fixed point or including either surface in a
-  commit. They appeared during the exhaustive run and were not created by this
-  lane; preserve them unchanged until provenance is established.
+- [ ] Re-run the uninterrupted exhaustive phase-close in the isolated checkout
+  after the byte-canonicalisation and graph-order commits. The previous 88/88
+  result remains valid evidence for its recorded tree, but is not silently
+  promoted to the new fixed point.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3

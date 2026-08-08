@@ -30,9 +30,10 @@ tooling changes were reconciled.
    38 host boundaries. It now derives and reports 516 and 42 respectively.
 3. Four checked-decision frontend matches had no explicit wildcard terminal.
    Each now has a fail-closed `_ =>` return.
-4. A control-flow example invented `ERR_BOUNDS`, creating a new phantom
-   diagnostic. It now uses the real `FUNGI-MEMORY-006` authority. The registry
-   returned to 111 unadjudicated phantoms and the named membership ratchet.
+4. A control-flow example invented an unregistered bounds label, creating a new
+   phantom diagnostic. It now uses the real `FUNGI-MEMORY-006` authority. The
+   registry returned to 111 unadjudicated phantoms and the named membership
+   ratchet.
 5. A nested retention audit inherited `NODE_TEST_CONTEXT`, so 13 passing cache
    regressions became an unparseable child summary. Probe children now receive a
    fresh Node-test presentation boundary while retaining suite/process custody.
@@ -42,6 +43,16 @@ tooling changes were reconciled.
 7. Gate order six moved from planned/red to an implemented, non-authorizing link
    plan with 18/18 focused tests. It does not execute a circuit or grant release
    authority.
+8. A clean worktree install/build exposed package-junction identity leakage in
+   the first isolated setup. The verification environment now installs every
+   flat peer locally; the full 99-package build and 9,452-test aggregate pass
+   without borrowing another checkout's dependency identities.
+9. Canonical evidence and governed text now have explicit LF attributes. Exact
+   benchmark/Vade pins reproduce on Windows, SVG graphs no longer depend on
+   checkout conversion, and the old example public key is test-fixture-only.
+10. `graph-all` previously generated the project graph before generators that
+    mutate its input set. Project graph now runs last; a fresh one-pass
+    generate/check is 5/5 + 5/5.
 
 ## Exact remaining retirement debt
 
@@ -53,18 +64,17 @@ tooling changes were reconciled.
 
 No debt was deleted, exempted or converted by this verification chapter.
 
-## Custody exception discovered after the close
+## Fixed-point qualification
 
-During the final exhaustive run, `bounded-cache.ts` changed and an untracked
-`memory-sandobx/` research directory appeared. This lane did not create them.
-They are preserved unchanged and excluded from commit scope until their
-provenance is established. Because a source changed while the close owned the
-checkout, 88/88 is reported as a fresh test result but not overstated as a
-stable-checkout fixed point.
+The initial 88/88 exhaustive result belongs to its recorded tree. The isolated
+checkout now provides a stable full-build and full-aggregate fixed point, but
+the later byte-canonicalisation and graph-order changes require one final
+exhaustive run before 88/88 can be attributed to the newer tree.
 
 ## Next critical path
 
-1. Adjudicate or isolate the concurrent cache/sandbox material.
+1. Complete the isolated exhaustive phase-close and retain its bounded process
+   receipt.
 2. Use the repository-owned Myco and Hypha tools to produce the next dependency,
    capability and host-boundary inventory; build a new tool only for a proven
    uncovered question.

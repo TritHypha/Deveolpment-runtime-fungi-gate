@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 858,
+  "total": 895,
   "counts": {
-    "ref": 212,
-    "inline": 250,
+    "ref": 214,
+    "inline": 285,
     "phantom": 113,
     "live": 170,
     "referenced": 100,
@@ -332,7 +332,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 2,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "ERR_COMPUTE_BUDGET_EXCEEDED",
@@ -1911,7 +1911,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 3,
+      "tests": 7,
       "docs": 0
     },
     {
@@ -2972,7 +2972,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 6,
-      "docs": 5
+      "docs": 7
     },
     {
       "code": "FUNGI-CHECK-002",
@@ -4428,8 +4428,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 3,
-      "docs": 7
+      "tests": 22,
+      "docs": 12
     },
     {
       "code": "FUNGI-GEN-TEST-005",
@@ -5422,6 +5422,20 @@
       "docs": 0
     },
     {
+      "code": "FUNGI-IMPORT-007",
+      "family": "IMPORT",
+      "namespace": "FUNGI",
+      "status": "inline",
+      "names": [],
+      "severities": [
+        "error"
+      ],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 0
+    },
+    {
       "code": "FUNGI-INHERIT-001",
       "family": "INHERIT",
       "namespace": "FUNGI",
@@ -5720,8 +5734,8 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 5,
-      "docs": 0
+      "tests": 6,
+      "docs": 1
     },
     {
       "code": "FUNGI-LEX-001",
@@ -6161,7 +6175,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 5,
-      "docs": 22
+      "docs": 24
     },
     {
       "code": "FUNGI-MEMORY-001",
@@ -6257,7 +6271,7 @@
       "defs": 1,
       "emits": 0,
       "tests": 2,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "FUNGI-MEMORY-007",
@@ -6446,7 +6460,7 @@
       ],
       "defs": 0,
       "emits": 9,
-      "tests": 56,
+      "tests": 59,
       "docs": 3
     },
     {
@@ -6848,7 +6862,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 23,
+      "tests": 25,
       "docs": 14
     },
     {
@@ -6921,7 +6935,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 2,
-      "docs": 5
+      "docs": 6
     },
     {
       "code": "FUNGI-PARSE-008",
@@ -6933,7 +6947,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 6,
-      "docs": 4
+      "docs": 5
     },
     {
       "code": "FUNGI-PARSE-DEPTH-001",
@@ -7761,7 +7775,7 @@
       "defs": 1,
       "emits": 2,
       "tests": 39,
-      "docs": 18
+      "docs": 16
     },
     {
       "code": "FUNGI-PRIVACY-003",
@@ -9109,7 +9123,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 8,
+      "tests": 10,
       "docs": 4
     },
     {
@@ -9177,7 +9191,7 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 40,
+      "tests": 44,
       "docs": 3
     },
     {
@@ -9209,7 +9223,7 @@
       ],
       "defs": 1,
       "emits": 0,
-      "tests": 11,
+      "tests": 12,
       "docs": 2
     },
     {
@@ -9570,7 +9584,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 64,
-      "docs": 13
+      "docs": 15
     },
     {
       "code": "FUNGI-TYPE-004",
@@ -9645,7 +9659,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 30,
+      "tests": 33,
       "docs": 1
     },
     {
@@ -9869,7 +9883,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 12,
-      "docs": 4
+      "docs": 5
     },
     {
       "code": "FUNGI-TYPE-023",
@@ -9885,7 +9899,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 20,
-      "docs": 5
+      "docs": 7
     },
     {
       "code": "FUNGI-TYPE-024",
@@ -9961,7 +9975,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 6,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "FUNGI-TYPE-030",
@@ -10224,7 +10238,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 126,
+      "tests": 127,
       "docs": 33
     },
     {
@@ -10241,7 +10255,7 @@
       "defs": 0,
       "emits": 2,
       "tests": 22,
-      "docs": 14
+      "docs": 15
     },
     {
       "code": "FUNGI-VALUESTATE-005",
@@ -10336,7 +10350,7 @@
       ],
       "defs": 0,
       "emits": 1,
-      "tests": 7,
+      "tests": 11,
       "docs": 2
     },
     {
@@ -10804,6 +10818,160 @@
       "docs": 1
     },
     {
+      "code": "GATE-ADMIT-001",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_NO_TARGET"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-002",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_PROOFS_ABSENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-003",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_VERIFIER_UNIDENTIFIED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-004",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_UNRESOLVED_COMPONENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 0,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-005",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_SOURCE_TAMPERED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 6,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-006",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_WRONG_REGISTRY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-007",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_WRONG_TARGET"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 6,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-008",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_PROOFS_DISAGREE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 4,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-009",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_SUBSTITUTED_CIRCUIT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-010",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_NOT_A_STATEMENT"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
+      "code": "GATE-ADMIT-011",
+      "family": "ADMIT",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_ADMISSION_VERDICT_NOT_ADMITTED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
       "code": "GATE-AUTH-001",
       "family": "AUTH",
       "namespace": "GATE",
@@ -10815,7 +10983,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 5
     },
     {
       "code": "GATE-AUTH-002",
@@ -10828,8 +10996,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 3,
+      "docs": 3
     },
     {
       "code": "GATE-EFFECT-001",
@@ -10843,7 +11011,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-EFFECT-002",
@@ -10857,7 +11025,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-EFFECT-101",
@@ -10868,7 +11036,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 1,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -10880,7 +11048,7 @@
       "severities": [],
       "defs": 0,
       "emits": 0,
-      "tests": 1,
+      "tests": 2,
       "docs": 0
     },
     {
@@ -10898,7 +11066,7 @@
       "defs": 0,
       "emits": 4,
       "tests": 2,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-LIVE-002",
@@ -10913,7 +11081,7 @@
       "defs": 0,
       "emits": 2,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-002",
@@ -10927,7 +11095,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 4
     },
     {
       "code": "GATE-PARSE-003",
@@ -10941,7 +11109,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-PARSE-004",
@@ -10955,7 +11123,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 2,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-PARSE-005",
@@ -10969,7 +11137,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-006",
@@ -10983,7 +11151,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-PARSE-008",
@@ -10997,7 +11165,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-PARSE-009",
@@ -11011,7 +11179,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-010",
@@ -11025,7 +11193,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-011",
@@ -11039,7 +11207,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-012",
@@ -11053,7 +11221,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-013",
@@ -11067,7 +11235,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-014",
@@ -11081,7 +11249,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-015",
@@ -11095,7 +11263,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-016",
@@ -11109,7 +11277,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-018",
@@ -11123,7 +11291,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-019",
@@ -11137,7 +11305,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-PARSE-020",
@@ -11150,8 +11318,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 2,
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-021",
@@ -11165,7 +11333,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-022",
@@ -11179,7 +11347,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-PARSE-025",
@@ -11192,8 +11360,118 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
+      "tests": 2,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-026",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
       "tests": 0,
       "docs": 0
+    },
+    {
+      "code": "GATE-PARSE-028",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_SET_NESTING_EXCEEDED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 6
+    },
+    {
+      "code": "GATE-PARSE-029",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_SET_CARDINALITY_EXCEEDED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-030",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_IDENTIFIER_TOO_LONG"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-031",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_TOO_MANY_ARGUMENTS"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-032",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_TOO_MANY_PARTS"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-033",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_TOO_MANY_WIRES"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
+    },
+    {
+      "code": "GATE-PARSE-034",
+      "family": "PARSE",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_FILE_TOO_LARGE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 1,
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-001",
@@ -11207,7 +11485,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-REGISTRY-002",
@@ -11221,7 +11499,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-REGISTRY-003",
@@ -11234,8 +11512,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 1,
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-004",
@@ -11249,7 +11527,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-REGISTRY-005",
@@ -11263,7 +11541,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-006",
@@ -11277,7 +11555,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-REGISTRY-007",
@@ -11291,7 +11569,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-008",
@@ -11305,7 +11583,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-009",
@@ -11319,7 +11597,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-010",
@@ -11333,7 +11611,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-011",
@@ -11347,7 +11625,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-012",
@@ -11361,7 +11639,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-REGISTRY-013",
@@ -11375,7 +11653,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-REGISTRY-014",
@@ -11388,8 +11666,36 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 4,
+      "docs": 3
+    },
+    {
+      "code": "GATE-REGISTRY-015",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_BAD_VOCABULARY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 2
+    },
+    {
+      "code": "GATE-REGISTRY-016",
+      "family": "REGISTRY",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REGISTRY_VARIANT_VIOLATION"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 4,
+      "docs": 4
     },
     {
       "code": "GATE-RESOLVE-001",
@@ -11403,7 +11709,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-002",
@@ -11417,7 +11723,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-003",
@@ -11431,7 +11737,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-004",
@@ -11445,7 +11751,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-005",
@@ -11459,7 +11765,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-006",
@@ -11473,7 +11779,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-007",
@@ -11487,7 +11793,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-008",
@@ -11501,7 +11807,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-1",
@@ -11527,7 +11833,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-102",
@@ -11541,7 +11847,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-103",
@@ -11555,7 +11861,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-104",
@@ -11569,7 +11875,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-105",
@@ -11583,7 +11889,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-106",
@@ -11597,7 +11903,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-107",
@@ -11611,7 +11917,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-RESOLVE-108",
@@ -11624,8 +11930,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 1,
+      "docs": 4
     },
     {
       "code": "GATE-RESOLVE-109",
@@ -11639,7 +11945,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-RESOLVE-110",
@@ -11652,8 +11958,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 2,
+      "docs": 3
     },
     {
       "code": "GATE-RESOLVE-111",
@@ -11666,8 +11972,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 2,
+      "docs": 6
     },
     {
       "code": "GATE-RESOLVE-112",
@@ -11681,7 +11987,203 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
+    },
+    {
+      "code": "GATE-SEM-001",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_CYCLE_REACHED_SEMANTIC_TIER"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 8
+    },
+    {
+      "code": "GATE-SEM-002",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_CUT_DOES_NOT_DOMINATE_EGRESS"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 6
+    },
+    {
+      "code": "GATE-SEM-003",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_TAINT_REACHES_EGRESS_PAST_CUTS"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 4
+    },
+    {
+      "code": "GATE-SEM-004",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNDECLARED_DECISION_SHAPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 4,
+      "docs": 4
+    },
+    {
+      "code": "GATE-SEM-005",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_NON_SOURCE_TYPE_AS_PARAMETER"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 9
+    },
+    {
+      "code": "GATE-SEM-006",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_BUDGET_CEILING_EXCEEDED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 5
+    },
+    {
+      "code": "GATE-SEM-007",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REASON_OUTSIDE_VOCABULARY"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 4
+    },
+    {
+      "code": "GATE-SEM-008",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_REASONS_UNCHECKED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
+    },
+    {
+      "code": "GATE-SEM-009",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_EFFECT_OUTSIDE_ENVELOPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 6,
+      "docs": 3
+    },
+    {
+      "code": "GATE-SEM-010",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_CAPABILITY_OUTSIDE_ENVELOPE"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 1
+    },
+    {
+      "code": "GATE-SEM-011",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_NON_ALLOW_ARM_REACHES_EGRESS"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 2,
+      "docs": 3
+    },
+    {
+      "code": "GATE-SEM-012",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_UNKNOWN_EFFECT_NAME"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 5
+    },
+    {
+      "code": "GATE-SEM-013",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_TAINT_REACHES_GOVERNED_SINK"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 3,
+      "docs": 2
+    },
+    {
+      "code": "GATE-SEM-014",
+      "family": "SEM",
+      "namespace": "GATE",
+      "status": "inline",
+      "names": [
+        "GATE_V3_SEMANTIC_ZONE_NOT_GATED"
+      ],
+      "severities": [],
+      "defs": 0,
+      "emits": 1,
+      "tests": 6,
+      "docs": 4
     },
     {
       "code": "GATE-TERM-001",
@@ -11695,7 +12197,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-TERM-002",
@@ -11709,7 +12211,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 1
     },
     {
       "code": "GATE-TERM-003",
@@ -11722,8 +12224,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 6,
+      "docs": 7
     },
     {
       "code": "GATE-TERM-004",
@@ -11736,8 +12238,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 5,
+      "docs": 2
     },
     {
       "code": "GATE-WIRE-001",
@@ -11751,7 +12253,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-WIRE-002",
@@ -11764,8 +12266,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 1,
-      "docs": 0
+      "tests": 9,
+      "docs": 5
     },
     {
       "code": "GATE-WIRE-003",
@@ -11779,7 +12281,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-WIRE-004",
@@ -11793,7 +12295,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-WIRE-005",
@@ -11807,7 +12309,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 2,
-      "docs": 0
+      "docs": 2
     },
     {
       "code": "GATE-WIRE-006",
@@ -11821,7 +12323,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-WIRE-007",
@@ -11835,7 +12337,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 0,
-      "docs": 0
+      "docs": 3
     },
     {
       "code": "GATE-WIRE-101",
@@ -11848,8 +12350,8 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
-      "docs": 0
+      "tests": 2,
+      "docs": 11
     },
     {
       "code": "GATE-WIRE-102",
@@ -11862,6 +12364,18 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
+      "tests": 0,
+      "docs": 4
+    },
+    {
+      "code": "GATE-X-001",
+      "family": "X",
+      "namespace": "GATE",
+      "status": "ref",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 0,
       "tests": 0,
       "docs": 0
     }

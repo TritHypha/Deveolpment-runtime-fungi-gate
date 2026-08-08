@@ -2,12 +2,12 @@
   "generatedBy": "scripts/component-health.mjs --audit-html",
   "provenance": {
     "available": true,
-    "branch": "codex/galerina-beta-v1-completion",
-    "sha": "9b454a35",
+    "branch": "codex/galerina-fresh-verify-2026-08-08",
+    "sha": "ba362d70",
     "detached": false,
     "dirty": true
   },
-  "shipReadinessPct": 98.98989898989899,
+  "shipReadinessPct": 100,
   "ztAvg": 78,
   "buildAvg": 75,
   "trackingRegistryCount": 23,
@@ -291,7 +291,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "98/99 component families green; 99 workspace packages, 8,956 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "99/99 component families green; 99 workspace packages, 9,452 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",

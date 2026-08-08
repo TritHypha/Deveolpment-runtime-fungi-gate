@@ -317,7 +317,6 @@ flowchart LR
   T_audit_perf_hotpath_mjs --> C_graph_index
   T_audit_perf_hotpath_mjs --> C_muted_diagnostics
   T_audit_private_doc_leak_mjs["audit-private-doc-leak.mjs"]
-  T_audit_private_doc_leak_mjs --> C_sinks_taint
   T_audit_private_doc_leak_mjs --> C_signing_fusion
   T_audit_private_doc_leak_mjs --> C_naming
   T_audit_private_doc_leak_mjs --> C_source_hygiene
@@ -490,7 +489,6 @@ flowchart LR
   T_audit_wat_emitter_mutation_mjs --> C_mutation_testing
   T_audit_wat_emitter_mutation_mjs --> C_teaching_corpus
   T_audit_wat_emitter_mutation_mjs --> C_web_stub
-  T_audit_wat_emitter_mutation_mjs --> C_proofs
   T_audit_wat_lowering_mjs["audit-wat-lowering.mjs"]
   T_audit_wat_lowering_mjs --> C_teaching_corpus
   T_audit_wat_lowering_mjs --> C_graph_index
