@@ -7,9 +7,9 @@ at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **67 files**, its tool manifest passes **68 files**, security closure is
+passes **68 files**, its tool manifest passes **70 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**723/723 across 75 suites** with no authority released. The fresh Galerina
+**728/728 across 75 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **428 total / 426 pass / 2 intentional skip / 0
 fail**, and the current uninterrupted exhaustive close passed **92/92** in
@@ -50,6 +50,18 @@ host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh: SLIDE Contract 64 now carries the exact Contract 63 body
+through canonical binary GIR and the existing context-bound physical `.slide`
+envelope. Independent inspection reconstructs the descriptor, reruns the
+Contract 63 validator, re-derives body/GIR/bundle identity and requires
+byte-for-byte canonical encoding. Preparation creates a new module-private
+Contract 63 plan from source-free bytes; every single-byte physical-object
+mutation and context drift refuses without a plan. Focused body/object evidence
+is **11/11**, combined contract evidence is **20/20**, and complete SLIDE is
+**728/728 across 75 suites** with **68 contracts** and **70 reference tools**.
+VOK admission remains the next separate gate, so physical validation grants no
+lease, package authority or production authority.
 
 Roadmap refresh: SLIDE Contract 63 now implements the smallest reusable
 structured counted-loop body region. It admits one to four Int32 loop-carried
