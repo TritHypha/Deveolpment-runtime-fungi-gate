@@ -49,9 +49,10 @@ must not displace the critical path below or grant production authority.
   is a test-only fixture copied into an isolated temporary governance set;
   production trust remains fail-closed and was not broadened.
 - [x] Preserve the live hybrid-signed `@galerina/auth` package as a narrow
-  exact-blob exception to the general LF rule. Its registry signature binds the
-  historical bytes; canonicalising that package requires a later offline
-  re-sign ceremony, never an online hash edit or verification bypass.
+  explicit-CRLF exception to the general LF rule. Its registry signature binds
+  that historical representation on every host; migrating it to LF requires a
+  later offline re-sign ceremony, never an online hash edit or verification
+  bypass.
 - [x] Correct graph generation order. The project graph now runs after its four
   sibling generators, so a single `graph-all` invocation reaches a fixed point;
   focused order tests pass and fresh generate/check results are **5/5 + 5/5**.

@@ -632,8 +632,8 @@ test("the owner-approved auth package is live only under the exact public author
   }
   assert.match(
     attributes,
-    /^packages-galerina\/galerina-auth\/\*\* -text$/mu,
-    "the offline-signed auth package must retain its exact historical blob bytes until re-signing",
+    /^packages-galerina\/galerina-auth\/\*\* text eol=crlf$/mu,
+    "the offline-signed auth package must retain its historical CRLF bytes until re-signing",
   );
   assert.equal(
     existsSync(

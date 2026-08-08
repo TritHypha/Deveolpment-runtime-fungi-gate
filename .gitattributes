@@ -62,7 +62,7 @@ packages-galerina/galerina-devtools-benchmarks/evidence/*.json text eol=lf
 #    autocrlf; a saved run then diffs cleanly and the NEXT benchmark's real change is visible against it.
 packages-galerina/galerina-devtools-benchmarks/results/**   text eol=lf
 
-# The live @galerina/auth registry manifest is hybrid-signed over the exact
-# historical package bytes. Preserve those committed blobs byte-for-byte until
-# an offline ceremony re-signs a deliberately canonicalised replacement.
-packages-galerina/galerina-auth/** -text
+# The live @galerina/auth registry manifest is hybrid-signed over its historical
+# CRLF package representation. Force that representation on every host until an
+# offline ceremony re-signs a deliberately LF-canonical replacement.
+packages-galerina/galerina-auth/** text eol=crlf
