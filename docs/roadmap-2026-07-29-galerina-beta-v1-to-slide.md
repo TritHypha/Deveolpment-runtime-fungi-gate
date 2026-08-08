@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE at `f291fda`
-(**9,189 / 22,139**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 72 at exact
+implementation head `80f3f61` (**9,252 / 22,284**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **76 files**, its tool manifest passes **77 files**, its independent
-path-leak gate passes **14 controls / 663 targets**, security closure is `+1`
+passes **78 files**, its tool manifest passes **77 files**, its independent
+path-leak gate passes **14 controls / 670 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**789/789 across 79 suites** with no authority released. The fresh Galerina
+**794/794 across 80 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -38,12 +38,35 @@ core is green**. V2-C is not an application-specific table: it independently
 validates complete canonical function graphs, reachable CFG, dense SSA, typed
 block parameters, dominance, exact edge arguments, direct calls, Boolean/K3
 successors and bounded work. Wide profiles reach 128 functions and 16 blocks;
-Contract 70 adds one or two certified reducible counted loops. The independent
+Contract 70 adds one or two certified reducible counted loops and Contract 72
+adds one bounded local owned `Int32` buffer family. The independent
 executor re-derives the same facts before physical `.slide`, portable VEO, VOK,
-flat-package and typed-receipt admission. Memory/effect/host profiles, general
-checked-Fungi source binding and authenticated production authority remain
-open and retain their own roadmap status; they do not make the reusable scalar
-backend core blue again.
+flat-package and typed-receipt admission. General collections, effect/host
+profiles, general checked-Fungi source binding and authenticated production
+authority remain open and retain their own roadmap status; they do not make
+the reusable scalar backend core blue again.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 72 is green at local implementation
+commit `80f3f61`. It admits one 1..16-element runtime-owned local `Int32`
+buffer per function, at most eight stores, linear handle generations, checked
+bounds, no pointer/alias/call/edge transfer, and terminal zeroisation on both
+success and refusal. The producer and executor independently re-derive the
+ownership chain; physical `.slide` and one affine VOK lease bind the zeroised
+buffer count. Complete SLIDE is **794/794 across 80 suites**, contract
+integrity is **78 files**, tool identity is **77 files**, path hygiene covers
+**670 targets**, security evidence K3 is `0`, benchmark evidence verifies and
+the serial Node census is **2 -> 2**. This is a bounded memory family, not a
+general collection, host-memory, encrypted-residency or production-authority
+claim.
+
+Roadmap ruling 2026-08-08: RD-0754 is adopted as a later architecture
+direction, but implementation is ordered after SLIDE's executable critical
+path. Large cold/selective data may use a bounded application-resident index
+with verified on-demand immutable-object loading: Galerina owns developer data
+contracts, SLIDE DFE owns the one physical object mechanism and VOK owns affine
+verified read leases. The RD-0751 sandbox is not promoted, Lyth/Weaver owns no
+competing store, and no claim that ordinary storage keeps accessed bytes out of
+RAM is permitted. This ruling changes no current completion or authority tile.
 
 Roadmap refresh 2026-08-08: SLIDE Contracts 70-71 are green at implementation
 commit `f291fda`. Contract 70 adds one or two independently certified natural
@@ -152,8 +175,8 @@ superseded by the current syntax-bound **974-entry** registry and fail-closed
 Roadmap refresh 2026-08-08: no other AI worker was declared active when this
 chapter began. Codex owns Galerina
 and SLIDE end to end. The critical path is: current Galerina phase-close ->
-general independent SLIDE bodies/control/loops -> owned memory and admitted
-effects/host profiles -> authenticated native/platform authority -> per-file
+general independent SLIDE bodies/control/loops -> bounded owned memory and
+admitted effects/host profiles -> authenticated native/platform authority -> per-file
 package conversion -> host/dependency retirement -> terminal zero-debt gate ->
 same-workload transition benchmark. `.gate`, Lyth/Weaver, provider packs and
 neural/VPEG experiments remain preserved secondary programmes and cannot

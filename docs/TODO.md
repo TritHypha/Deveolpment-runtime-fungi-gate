@@ -15,18 +15,27 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. Re-index SLIDE after Contracts 70-71 at exact head
-  `f291fda`: **9,189 nodes and 22,139 edges**. SLIDE now passes **76
-  contracts**, **77 reference tools**, path-leak **14 controls / 663 targets**,
-  security closure `+1` with evidence K3 `0`, and **789/789 tests across 79
-  suites**. The complete SLIDE run stayed process-bounded at Node **1 -> 1**.
+  nodes and 120,560 edges**. SLIDE Contract 72 is indexed at exact head
+  `80f3f61`: **9,252 nodes and 22,284 edges**. SLIDE passes **78 contracts**, **77 reference tools**,
+  path-leak **14 controls / 670 targets**, security closure `+1` with evidence
+  K3 `0`, and **794/794 tests across 80 suites**. The complete serial SLIDE run
+  stayed process-bounded at Node **2 -> 2**.
 - [x] Close the exact historical nested-state boundary without claiming a
   general language backend. Contract 70 independently certifies one or two
   reducible counted loops; Contract 71 binds the SHA-256-pinned Galerina
   `deepNestedMutation` flow through canonical GIR, physical `.slide`, portable
   VEO, eight VOK gates and one affine lease. True/true returns seven and either
-  disabled control returns zero. General mutable collections, effects, owned
-  memory, host calls and production authority remain open.
+  disabled control returns zero. Contract 72 separately closes the first
+  bounded owned-memory family: one local linear `Int32` buffer with checked
+  store/load and terminal zeroisation. General mutable collections, effects,
+  host calls and production authority remain open.
+- [x] Adopt RD-0754's bounded application-resident index with verified
+  on-demand object loading as the post-SLIDE architecture direction for large,
+  cold or selectively accessed data. Keep its physical store in SLIDE DFE,
+  verified leases in VOK and developer-facing contracts in Galerina. It is
+  deliberately deferred until the SLIDE executable critical path is complete;
+  the RD-0751 sandbox remains research-only and grants no implementation or
+  production authority.
 - [x] Close the stale concurrent-change hold. Neither the former
   `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
   in the current working tree; the bounded-cache programme is already tracked
@@ -132,8 +141,10 @@ must not displace the critical path below or grant production authority.
   executor re-derives those facts before physical `.slide`, VOK, flat-package
   and typed-receipt admission. No fallback interpreter exists.
 - [ ] Extend that green core one exact family at a time with independently
-  bound source/compiler receipts, owned memory, general failures, effects,
-  capabilities, host calls and source maps. Unknown or unsupported mutation,
+  bound source/compiler receipts. Contract 72 supplies the first local owned
+  `Int32` buffer profile with linear handles, checked bounds and terminal
+  zeroisation; general collections, general failures, effects, capabilities,
+  host calls and source maps remain open. Unknown or unsupported mutation,
   callback, initializer, memory, effect or host semantics must remain terminal
   before any executable handle exists.
 - [x] Complete the next bounded general-body increment without overclaiming
