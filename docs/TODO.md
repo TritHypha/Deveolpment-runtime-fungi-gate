@@ -4,6 +4,56 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Memory-retention programme: bounded caches shipped, staged CI half-wired - 2026-08-08
+
+Owner rulings Q2 (tools live in `scripts/`, no new package) and Q3 (staged CI)
+are implemented up to one open decision. Audit document:
+[`extra-tests/tools/MEMORY-LEAK-AUDIT.md`](../../extra-tests/tools/MEMORY-LEAK-AUDIT.md).
+
+- [x] `BoundedCache` primitive with measured limits, and all three retention
+  surfaces converted (`e99f0ddd`): execution-graph `MEMORY_CACHE`, the
+  import-resolver manifest cache (which had been keyed by `moduleSource` alone
+  while `nodeModulesRoot` changes the answer), and `PROOF_SHAPE_CACHE`.
+- [x] Tools moved to `scripts/` per Q2: `audit-memory-leak.mjs`,
+  `audit-leak-static.mjs`, `audit-retention-gate.mjs`,
+  `audit-retention-nightly.mjs`, `measure-graph-cache-limits.mjs`, plus the
+  KATs.
+- [x] npm entry points on the house convention: `audit:retention`,
+  `audit:retention:selftest`, `audit:retention:nightly`.
+- [x] The bound KAT is wired **into** the gate — stage 0 self-test (fail-closed)
+  and stage 1 enforcing — and the wiring is proven live: with the KAT moved
+  aside the gate exits 2, restored it exits 0.
+- [x] `kat-execution-graph-cache-unbounded.mjs` was a **permanently-red gate**
+  (it asserted the pre-fix defect, which the container bound rather than the key
+  space). Re-roled and renamed to `kat-execution-graph-cache-bound.mjs`.
+- [x] The production bound measured against, for the first time: driven past its
+  ceiling with 3,072 distinct keys it stops at **2,048 entries with 1,024
+  evictions**, weight 6,144/65,536, item weight ~3.0. **`maxEntries` is the
+  binding ceiling; `maxWeight` is never the constraint at this item weight** and
+  must not be cited as an enforced limit.
+- [ ] **Owner decision pending — §13 of the audit document**: which CI workflow
+  hosts the per-commit retention gate. Every job in `.github/workflows/conventions.yml`
+  is deliberately *(build-free)* and the gate is not — stage 1 imports `dist/`.
+  Three options with a recommendation (a new `retention.yml` that builds first)
+  are written up; nothing was changed in that workflow unilaterally.
+- [ ] The nightly/release dynamic stage exists and is wired as an npm script but
+  no scheduler invokes it.
+
+### Passive capability-map devtool verified against its spec - 2026-08-08
+
+`packages-galerina/galerina-devtools-hypha` meets all five spec points, verified
+rather than assumed: self-locating root, in-memory by default (no db/cache/socket
+module, zero dependencies, no build step), `--scan full|<target>`, CI exit codes
+0/1/2 with every documented code reachable, and writes nothing unless `--out`.
+
+- [x] Passivity **PROVEN**: a full scan leaves both the package tree
+  (recursively) and an isolated scratch cwd byte-identical, and `--out` does
+  write — so the null is not vacuous.
+- [x] Its own "nothing written" test was **narrower than its name** (top-level
+  `readdirSync` only, package dir only) and has been widened, with both halves
+  proven live by mutation.
+- 42/42 package tests pass.
+
 ### `.gate` v3 frontend through semantic verification - 2026-08-06
 
 Supersedes the `.gate` posture recorded in the 2026-07-03/04 ledger sections
