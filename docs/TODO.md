@@ -4,7 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current checkpoint: SLIDE Contract 82 package integration green - 2026-08-08
+### Current route: SLIDE Contract 83 semantic RED boundary - 2026-08-09
+
+- [x] Revalidate the clean local repositories before changing this ledger:
+  Galerina `730e9c3d`, SLIDE `171bd34`, and Knowledge Base `037ceb1`; all remain
+  on their named working branches and nothing was pushed.
+- [x] Re-run the current SLIDE owning gates rather than inheriting yesterday's
+  counts: contract/catalog **one partition / 90 files**, **84 reference tools**,
+  path hygiene **14/726**, security closure `+1` with evidence K3 `0`, and
+  **838/838 tests across 90 suites** with Node **2 -> 2**.
+- [x] Re-run the memory-index detector self-test and all four active Claude
+  memory stores: zero orphan, dangling-file, duplicate-target or warehouse
+  defects. The reported unresolved wikilinks remain non-authorizing suggestion
+  queues rather than broken file links.
+- [ ] Define Contract 83's semantic RED boundary in SLIDE's first new closed
+  sibling partition. Catalog membership grants no package conversion,
+  retirement, signing, production or release authority.
+- [ ] Keep Galerina's conversion and retirement counters unchanged until an
+  exact package consumer switch, generated admission evidence and complete
+  Galerina/SLIDE owning gates are green.
+
+### SLIDE Contract 82 package integration - complete - 2026-08-08
 
 - [x] Record the next exact integration gate rather than treating Contracts 80
   and 81 as package-executable merely because their standalone paths are green.
