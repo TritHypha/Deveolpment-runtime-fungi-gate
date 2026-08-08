@@ -15,6 +15,11 @@ must not displace the critical path below or grant production authority.
   `9b454a35` produced 45,198 nodes and 119,314 edges; SLIDE `211b641`
   produced 8,022 nodes and 19,459 edges. Both persistent graph artifacts were
   written by the indexer.
+- [x] Refresh the codebase-memory discovery indexes after SLIDE Contract 65.
+  SLIDE `675a610` is **8,118 nodes / 19,755 edges**. Galerina `a512ff23`
+  is **22,995 / 56,811** under the indexer's fast, generated/dependency-
+  excluded profile. That scoped count is not substituted for the broader
+  45,198 / 119,314 Galerina project-graph headline above.
 - [x] Run the Galerina graph suite. Its first run correctly refused because
   `galerina-devtools-hypha` existed on disk but was absent from
   `galerina.workspace.json` (98 registered / 99 present). The package is now a

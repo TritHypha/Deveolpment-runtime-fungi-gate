@@ -51,6 +51,13 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh: code discovery was re-indexed at the Contract 65 checkpoint.
+SLIDE `675a610` now records **8,118 nodes / 19,755 edges** with its persistent
+artifact. Galerina `a512ff23` records **22,995 / 56,811** under the fast
+generated/dependency-excluded discovery profile; this is a separate scoped
+instrument and does not replace the broader 45,198 / 119,314 Galerina
+project-graph count.
+
 Roadmap refresh: Contract 65 now admits Contract 64's source-free structured
 body through typed VOK evidence. Artifact, body, initial state and complete
 Contract 58 work identity are fixed before all eleven loop K3 gates and all
