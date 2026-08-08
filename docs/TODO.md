@@ -12,7 +12,7 @@ counts or open items that a newer section explicitly supersedes.
   through a fixed cross-block CFG, executes it through private zeroised
   storage, physical `.slide`, portable VEO and one eight-gate VOK lease.
 - [x] Record fresh bounded evidence: **87 contract files**, **81 reference
-  tools**, path leak **14 controls / 707 targets**, security closure `+1` with
+  tools**, path leak **14 controls / 708 targets**, security closure `+1` with
   evidence K3 `0`, and **819/819 tests across 86 suites** with Node **2 -> 2**.
   `authorityReleased` remains false.
 - [x] Re-index SLIDE's committed Contract 80 implementation at `b82db4f`:

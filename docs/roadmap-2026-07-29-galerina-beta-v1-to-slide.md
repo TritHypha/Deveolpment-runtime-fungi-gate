@@ -10,7 +10,7 @@ is searchable. Galerina's repository graph and generated-authority checks pass
 **5/5** after regenerating the project and KB outputs that correctly refused
 the preceding TODO drift. SLIDE's contract check
 now passes **87 files**, its tool manifest passes **81 files**, its independent
-path-leak gate passes **14 controls / 707 targets**, security closure is `+1`
+path-leak gate passes **14 controls / 708 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **819/819 across 86 suites** with no authority released. Direct graph search
 finds the Contract 80 compiler and both independent validators. The fresh Galerina
@@ -61,7 +61,7 @@ fixed and zeroised on success and failure. The exact profile continues through
 physical `.slide`, portable VEO and one eight-gate VOK lease, with replay,
 context/K3 drift, overflow and every-byte physical mutation refused. Complete
 SLIDE is **819/819 across 86 suites**; contract integrity is **87 files**, tool
-identity is **81 files**, path hygiene covers **707 targets**, security evidence
+identity is **81 files**, path hygiene covers **708 targets**, security evidence
 K3 is `0`, and Node is **2 -> 2**. This closes only the append-array floor:
 general collections, package conversion, retirement and production authority
 remain open.
