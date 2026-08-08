@@ -17,7 +17,7 @@
       "ref packages-galerina/galerina-ext-bridge-cpp/src/addon-loader.ts:96",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:58",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:63",
-      "doc docs/TODO.md:6114"
+      "doc docs/TODO.md:6124"
     ]
   },
   {
@@ -39,7 +39,7 @@
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:53",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:68",
       "test packages-galerina/galerina-ext-bridge-cpp/tests/addon-loader.test.mjs:74",
-      "doc docs/TODO.md:6113"
+      "doc docs/TODO.md:6123"
     ]
   },
   {
@@ -107,7 +107,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/compiled-policy.test.mjs:56",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:146",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:152",
-      "doc docs/TODO.md:6435"
+      "doc docs/TODO.md:6445"
     ]
   },
   {
@@ -251,23 +251,6 @@
     ]
   },
   {
-    "code": "ERR_BOUNDS",
-    "namespace": "ERR",
-    "family": "ERR_*",
-    "occurrences": 1,
-    "docOnly": true,
-    "defs": [],
-    "emits": [],
-    "tests": 0,
-    "refs": 0,
-    "docs": 1,
-    "names": [],
-    "severities": [],
-    "allSites": [
-      "doc docs/reports/galerina-slide-ownership-resumption-checkpoint-2026-08-08.md:33"
-    ]
-  },
-  {
     "code": "ERR_BRIDGE_DISPATCH_FAULT",
     "namespace": "ERR",
     "family": "ERR_*",
@@ -339,7 +322,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:114",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:120",
-      "doc docs/TODO.md:6432"
+      "doc docs/TODO.md:6442"
     ]
   },
   {
@@ -561,8 +544,8 @@
       "emit packages-galerina/galerina-tower-citizen/src/hybrid-engine.ts:1085",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:53",
       "test packages-galerina/galerina-tower-citizen/tests/certified-profile.test.mjs:113",
-      "doc docs/TODO.md:6027",
-      "doc docs/TODO.md:6402"
+      "doc docs/TODO.md:6037",
+      "doc docs/TODO.md:6412"
     ]
   },
   {
@@ -584,8 +567,8 @@
       "ref packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:65",
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:95",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:96",
-      "doc docs/TODO.md:6027",
-      "doc docs/TODO.md:6422"
+      "doc docs/TODO.md:6037",
+      "doc docs/TODO.md:6432"
     ]
   },
   {
@@ -1004,8 +987,8 @@
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:33",
       "test scripts/tests/dev-tools-code-catalog.test.mjs:42",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:103",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:118"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:111",
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:135"
     ]
   },
   {
@@ -1025,8 +1008,8 @@
       "test scripts/tests/dev-tools-code-catalog.test.mjs:34",
       "test scripts/tests/dev-tools-code-catalog.test.mjs:44",
       "test scripts/tests/dev-tools-code-catalog.test.mjs:45",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:104",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:119"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:112",
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:136"
     ]
   },
   {
@@ -1097,7 +1080,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/governance-hardening.test.mjs:38",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:136",
       "doc docs/reports/galerina-ground-up-security-architectural-audit-report.md:625",
-      "doc docs/TODO.md:6433"
+      "doc docs/TODO.md:6443"
     ]
   },
   {
@@ -2811,7 +2794,7 @@
       "ref packages-galerina/galerina-core-runtime/src/structured-await.ts:585",
       "test packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs:333",
       "doc docs/reports/full-gate-and-host-floor-reconciliation-2026-08-03.md:17",
-      "doc docs/TODO.md:934"
+      "doc docs/TODO.md:944"
     ]
   },
   {
@@ -2989,6 +2972,23 @@
     ]
   },
   {
+    "code": "ERR_STRING_TOO_LONG",
+    "namespace": "ERR",
+    "family": "ERR_*",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [],
+    "tests": 0,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref galerina.mjs:33"
+    ]
+  },
+  {
     "code": "ERR_TOO_SHORT",
     "namespace": "ERR",
     "family": "ERR_*",
@@ -3151,7 +3151,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:1751",
       "ref scripts/audit-artifact-drift.mjs:325",
-      "ref scripts/code-index.mjs:170",
+      "ref scripts/code-index.mjs:191",
       "test scripts/tests/codes.test.mjs:45"
     ]
   },
@@ -3331,7 +3331,7 @@
       "doc docs/paper/defensive-papers/dp-rd-0271-secure-by-omission-contract-field-defaults.md:62",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:96",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:35",
-      "doc docs/TODO.md:5988"
+      "doc docs/TODO.md:5998"
     ]
   },
   {
@@ -3400,7 +3400,7 @@
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:63",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:73",
       "test packages-galerina/galerina-core-compiler/tests/param-admission.test.mjs:84",
-      "doc docs/TODO.md:5531"
+      "doc docs/TODO.md:5541"
     ]
   },
   {
@@ -3560,7 +3560,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:169",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:346",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:54",
-      "doc docs/TODO.md:2420"
+      "doc docs/TODO.md:2430"
     ]
   },
   {
@@ -3595,7 +3595,7 @@
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:219",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:234",
       "doc docs/superpowers/specs/2026-08-02-generic-runtime-authority-type-design.md:55",
-      "doc docs/TODO.md:2421"
+      "doc docs/TODO.md:2431"
     ]
   },
   {
@@ -3632,7 +3632,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:121",
       "test packages-galerina/galerina-core-compiler/tests/value-state/authority-use-state.test.mjs:131",
       "doc docs/superpowers/plans/2026-08-02-generic-runtime-authority-type.md:178",
-      "doc docs/TODO.md:2422"
+      "doc docs/TODO.md:2432"
     ]
   },
   {
@@ -3837,7 +3837,7 @@
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:68",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:77",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:107",
-      "doc docs/TODO.md:6414",
+      "doc docs/TODO.md:6424",
       "ref scripts/audit-import-governance.mjs:20"
     ]
   },
@@ -3859,7 +3859,7 @@
     "allSites": [
       "emit packages-galerina/galerina-tower-citizen/src/tower-runtime.ts:158",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:81",
-      "doc docs/TODO.md:6416"
+      "doc docs/TODO.md:6426"
     ]
   },
   {
@@ -4011,7 +4011,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/index.ts:2154",
       "def packages-galerina/galerina-core-compiler/src/index.ts:2170",
-      "doc docs/TODO.md:5936"
+      "doc docs/TODO.md:5946"
     ]
   },
   {
@@ -4035,7 +4035,7 @@
     ],
     "allSites": [
       "def packages-galerina/galerina-core-compiler/src/index.ts:2181",
-      "doc docs/TODO.md:5847"
+      "doc docs/TODO.md:5857"
     ]
   },
   {
@@ -4154,8 +4154,8 @@
       "def packages-galerina/galerina-core-compiler/src/attribute-checker.ts:45",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:101",
-      "doc docs/TODO.md:6259",
-      "doc docs/TODO.md:6273"
+      "doc docs/TODO.md:6269",
+      "doc docs/TODO.md:6283"
     ]
   },
   {
@@ -4376,7 +4376,7 @@
     "code": "FUNGI-BACKEND-001",
     "namespace": "FUNGI",
     "family": "BACKEND",
-    "occurrences": 12,
+    "occurrences": 13,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:2145"
@@ -4385,7 +4385,7 @@
       "packages-galerina/galerina-core-compiler/src/cli.ts:389"
     ],
     "tests": 2,
-    "refs": 5,
+    "refs": 6,
     "docs": 3,
     "names": [
       "BACKEND_ERROR"
@@ -4405,7 +4405,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-conformance/monkey-patch.test.mjs:12",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:40",
       "doc docs/reports/fungi-package-staging-translation-issues-adjudication-2026-07-31.md:71",
-      "doc docs/TODO.md:3263"
+      "doc docs/TODO.md:3273",
+      "ref galerina.mjs:61"
     ]
   },
   {
@@ -5328,8 +5329,8 @@
     "severities": [],
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/cli.ts:664",
-      "doc docs/TODO.md:6260",
-      "doc docs/TODO.md:6264"
+      "doc docs/TODO.md:6270",
+      "doc docs/TODO.md:6274"
     ]
   },
   {
@@ -7040,6 +7041,25 @@
     ]
   },
   {
+    "code": "FUNGI-DRCM-UNSUPPORTED",
+    "namespace": "FUNGI",
+    "family": "DRCM",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:726"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/governance-verifier.ts:726"
+    ]
+  },
+  {
     "code": "FUNGI-DRIFT-001",
     "namespace": "FUNGI",
     "family": "DRIFT",
@@ -7072,7 +7092,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:54",
-      "doc docs/TODO.md:5546",
+      "doc docs/TODO.md:5556",
       "ref scripts/audit-artifact-drift.mjs:23",
       "ref scripts/audit-artifact-drift.mjs:26",
       "ref scripts/audit-artifact-drift.mjs:172",
@@ -7517,7 +7537,7 @@
     "code": "FUNGI-EFFECT-003",
     "namespace": "FUNGI",
     "family": "EFFECT",
-    "occurrences": 87,
+    "occurrences": 91,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -7526,7 +7546,7 @@
       "packages-galerina/galerina-core-compiler/src/effect-checker.ts:782"
     ],
     "tests": 49,
-    "refs": 4,
+    "refs": 8,
     "docs": 19,
     "names": [
       "EFFECT_BOUNDARY_VIOLATION"
@@ -7621,7 +7641,11 @@
       "doc docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md:311",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:90",
       "ref scripts/audit-examples-vs-declared.mjs:92",
-      "ref scripts/audit-examples-vs-declared.mjs:102"
+      "ref scripts/audit-examples-vs-declared.mjs:102",
+      "ref galerina.mjs:1387",
+      "ref galerina.mjs:1395",
+      "ref galerina.mjs:2249",
+      "ref galerina.mjs:2255"
     ]
   },
   {
@@ -7732,13 +7756,13 @@
       "doc docs/patterns/applications/01-crud-resource.md:94",
       "doc docs/reference/effects.md:67",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:16",
-      "doc docs/TODO.md:5653",
+      "doc docs/TODO.md:5663",
       "ref scripts/audit-corpus-effect-names.mjs:15",
       "ref scripts/audit-corpus-effect-names.mjs:17",
       "ref scripts/audit-muted-diagnostics.mjs:46",
       "ref scripts/audit-muted-diagnostics.mjs:61",
       "ref scripts/audit-stdlib-gates-parity.mjs:19",
-      "ref scripts/audit-stdlib-gates-parity.mjs:441",
+      "ref scripts/audit-stdlib-gates-parity.mjs:443",
       "ref scripts/audit-twin-differential.mjs:7",
       "ref scripts/audit-twin-differential.mjs:143"
     ]
@@ -7861,7 +7885,7 @@
     "code": "FUNGI-EFFECT-006",
     "namespace": "FUNGI",
     "family": "EFFECT",
-    "occurrences": 62,
+    "occurrences": 66,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:1277"
@@ -7870,7 +7894,7 @@
       "packages-galerina/galerina-core-compiler/src/effect-checker.ts:1020"
     ],
     "tests": 21,
-    "refs": 18,
+    "refs": 22,
     "docs": 15,
     "names": [
       "DENY_ONLY_EFFECT"
@@ -7909,7 +7933,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:396",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:211",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-pipeline.test.mjs:218",
-      "doc docs/CONSISTENCY_GATES.md:66",
+      "doc docs/CONSISTENCY_GATES.md:68",
       "doc docs/contract-authoring-model.md:94",
       "doc docs/examples/Level-4-Security/180-hardening-spill-rejected/notes.md:18",
       "fungi docs/examples/Level-4-Security/182-hardening-spill-effect-denied/example.fungi:5",
@@ -7924,7 +7948,7 @@
       "doc docs/reference/effects.md:438",
       "doc docs/reference/effects.md:447",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:193",
-      "doc docs/TODO.md:6203",
+      "doc docs/TODO.md:6213",
       "ref scripts/audit-codes-full.mjs:90",
       "ref scripts/audit-codes-full.mjs:93",
       "ref scripts/audit-corpus-effect-names.mjs:134",
@@ -7941,7 +7965,11 @@
       "ref scripts/audit-twin-emit-parity.mjs:207",
       "ref scripts/audit-twin-emit-parity.mjs:209",
       "ref scripts/component-health.mjs:374",
-      "test scripts/tests/cg4-signing-boundary.test.mjs:80"
+      "test scripts/tests/cg4-signing-boundary.test.mjs:80",
+      "ref galerina.mjs:1393",
+      "ref galerina.mjs:1395",
+      "ref galerina.mjs:2253",
+      "ref galerina.mjs:2255"
     ]
   },
   {
@@ -8104,6 +8132,27 @@
     "severities": [],
     "allSites": [
       "ref scripts/audit-mutation.mjs:645"
+    ]
+  },
+  {
+    "code": "FUNGI-EMIT-STUB",
+    "namespace": "FUNGI",
+    "family": "EMIT",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:2332",
+      "galerina.mjs:2336"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:2332",
+      "emit galerina.mjs:2336"
     ]
   },
   {
@@ -8626,8 +8675,674 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:53",
       "doc docs/reference/dss-wasm-runtime-errors.md:57",
       "doc docs/reference/dss-wasm-runtime-errors.md:94",
-      "doc docs/TODO.md:5634",
+      "doc docs/TODO.md:5644",
       "ref scripts/audit-artifact-drift.mjs:68"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-ACL-UNDERDECLARED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:2392"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:2392"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-BAD-DESCRIPTOR",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:325",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:328"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:325",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:328"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-BAD-SIDECAR",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:583"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:583"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HASH-MISMATCH",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:575"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:575"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-ERROR",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:426"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:426"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-INVALID",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:430"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:430"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-PQ-KEY-MALFORMED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts:68"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts:68"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-PQ-KEY-MISSING",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts:63"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/lmanifest-hybrid-verifier.ts:63"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-UNVERIFIED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:435",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:436"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:435",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:436"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1152"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1152"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-KEY-REVOKED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:621"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:621"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-DESCRIPTOR",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:319"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:319"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-EXPORT",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:648"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:648"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-MANIFEST",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:562"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:562"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-PACKAGE",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:555"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:555"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-PUBKEY",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:443"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:443"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-NO-WASM",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:570"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:570"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-PROVIDES-UNKNOWN",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:813",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:909"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:813",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:909"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-REGISTRY-DENIED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:710",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:965"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:710",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:965"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-REVOCATION-UNTRUSTED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-example-app/host/server.ts:94",
+      "galerina.mjs:1141"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-example-app/host/server.ts:94",
+      "emit galerina.mjs:1141"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-REVOCATION-UNVERIFIABLE",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:618"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:618"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SET-AMBIGUOUS",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:819"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:819"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SET-CYCLE",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:887"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:887"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SET-DUPLICATE",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:951"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:951"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SET-SELF",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:836"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:836"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SET-UNSIGNED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:789"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:789"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SIDECAR-DRIFT",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:586"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:586"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SIG-ERROR",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:459"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:459"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-SIG-INVALID",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:462"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:462"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-UNKNOWN-CAP",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:518",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:846"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:518",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:846"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-UNSIGNED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 4,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:683",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:689",
+      "scripts/audit-signed-fixture-drift.mjs:80",
+      "galerina.mjs:2376"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:683",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:689",
+      "emit scripts/audit-signed-fixture-drift.mjs:80",
+      "emit galerina.mjs:2376"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-UNSIGNED-ALLOWED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:695",
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:984"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:695",
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:984"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-UNSIGNED-DENIED",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1125"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1125"
+    ]
+  },
+  {
+    "code": "FUNGI-FUSE-VERSION",
+    "namespace": "FUNGI",
+    "family": "FUSE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:344"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-framework-app-kernel/src/fuse-loader.ts:344"
     ]
   },
   {
@@ -8645,7 +9360,7 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:32",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:117"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:134"
     ]
   },
   {
@@ -8663,7 +9378,7 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:37",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:105"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:113"
     ]
   },
   {
@@ -8681,7 +9396,7 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:50",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:98"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:106"
     ]
   },
   {
@@ -8699,7 +9414,7 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:51",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:99"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:107"
     ]
   },
   {
@@ -8717,8 +9432,8 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:52",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:112",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:113"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:120",
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:121"
     ]
   },
   {
@@ -8736,9 +9451,9 @@
     "severities": [],
     "allSites": [
       "test scripts/tests/dev-tools-code-catalog.test.mjs:49",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:109",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:110",
-      "test scripts/tests/dev-tools-code-catalog.test.mjs:111"
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:117",
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:118",
+      "test scripts/tests/dev-tools-code-catalog.test.mjs:119"
     ]
   },
   {
@@ -8881,21 +9596,21 @@
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:155",
       "test packages-galerina/galerina-core-compiler/tests/gate-parser.test.mjs:158",
       "doc docs/architecture/gate-cutset-version-gating-decision-2026-07-11.md:42",
-      "doc docs/TODO.md:6085"
+      "doc docs/TODO.md:6095"
     ]
   },
   {
     "code": "FUNGI-GATELANG-002",
     "namespace": "FUNGI",
     "family": "GATELANG",
-    "occurrences": 41,
+    "occurrences": 42,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/gate-parser.ts:42"
     ],
     "emits": [],
     "tests": 22,
-    "refs": 6,
+    "refs": 7,
     "docs": 12,
     "names": [
       "GATE_PRODUCTION_EMIT_GATED_ON_BACKSTOP"
@@ -8937,14 +9652,15 @@
       "doc docs/language/gate/07-cheatsheet-and-gotchas.md:186",
       "doc docs/language/gate/README.md:33",
       "doc docs/language/gate/README.md:164",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:97",
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:115",
       "doc docs/SYNTAX_UPDATE_PLAN.md:18",
-      "doc docs/TODO.md:247",
-      "doc docs/TODO.md:6089",
+      "doc docs/TODO.md:257",
+      "doc docs/TODO.md:6099",
       "test scripts/tests/gate-admission-envelope.test.mjs:103",
       "test scripts/tests/gate-admission-envelope.test.mjs:298",
       "test scripts/tests/helpers/gate-admission-fixture.mjs:83",
-      "test scripts/tests/helpers/gate-admission-fixture.mjs:86"
+      "test scripts/tests/helpers/gate-admission-fixture.mjs:86",
+      "ref galerina.mjs:1186"
     ]
   },
   {
@@ -9103,7 +9819,7 @@
       "doc docs/examples/README.md:130",
       "doc docs/roadmap-2026-07-23.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:194",
-      "doc docs/TODO.md:5649",
+      "doc docs/TODO.md:5659",
       "ref scripts/audit-mutation.mjs:626",
       "ref scripts/audit-mutation.mjs:630",
       "ref scripts/audit-muted-diagnostics.mjs:49",
@@ -9235,8 +9951,8 @@
       "doc docs/language/fungi/05-bindings-taint-privacy.md:268",
       "doc docs/language/fungi/DO-DONT-TERNARY.md:18",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:36",
-      "doc docs/TODO.md:6303",
-      "doc docs/TODO.md:6360",
+      "doc docs/TODO.md:6313",
+      "doc docs/TODO.md:6370",
       "ref scripts/audit-registry-fixtures.mjs:204",
       "ref scripts/audit-stdlib-gates-parity.mjs:138"
     ]
@@ -9297,7 +10013,7 @@
     "code": "FUNGI-GOV-005",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 48,
+    "occurrences": 47,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:528"
@@ -9307,7 +10023,7 @@
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1990"
     ],
     "tests": 17,
-    "refs": 6,
+    "refs": 5,
     "docs": 12,
     "names": [
       "POLICY_PURPOSE_MISMATCH"
@@ -9361,8 +10077,7 @@
       "doc docs/examples/README.md:139",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:93",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:101",
-      "doc docs/TODO.md:5539",
-      "ref scripts/audit-code-catalog-coverage.mjs:92",
+      "doc docs/TODO.md:5549",
       "ref scripts/audit-diagnostic-code-collisions.mjs:76"
     ]
   },
@@ -9469,7 +10184,7 @@
     "allSites": [
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:15",
       "ref packages-galerina/galerina-core-compiler/src/governance-verifier.ts:1722",
-      "doc docs/TODO.md:5539"
+      "doc docs/TODO.md:5549"
     ]
   },
   {
@@ -9956,7 +10671,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1092",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1095",
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1096",
-      "doc docs/TODO.md:6140"
+      "doc docs/TODO.md:6150"
     ]
   },
   {
@@ -10145,8 +10860,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs:1920",
       "doc docs/examples/README.md:25",
       "doc docs/examples/README.md:138",
-      "doc docs/TODO.md:5946",
-      "doc docs/TODO.md:5951",
+      "doc docs/TODO.md:5956",
+      "doc docs/TODO.md:5961",
       "ref scripts/audit-codes-full.mjs:50",
       "ref scripts/audit-muted-diagnostics.mjs:53"
     ]
@@ -10191,25 +10906,26 @@
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:5",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:12",
       "fungi docs/examples/Level-9-Enterprise/461-authority-missing/example.fungi:34",
-      "doc docs/TODO.md:4107"
+      "doc docs/TODO.md:4117"
     ]
   },
   {
     "code": "FUNGI-GOV-3V",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 2,
+    "occurrences": 3,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 2,
-    "refs": 0,
+    "refs": 1,
     "docs": 0,
     "names": [],
     "severities": [],
     "allSites": [
       "test packages-galerina/galerina-core-compiler/tests/security-type-codes-invariant.test.mjs:4",
-      "test packages-galerina/galerina-core-compiler/tests/security-type-codes-invariant.test.mjs:10"
+      "test packages-galerina/galerina-core-compiler/tests/security-type-codes-invariant.test.mjs:10",
+      "ref galerina.mjs:156"
     ]
   },
   {
@@ -10335,14 +11051,14 @@
     "code": "FUNGI-GOV-3VL-003",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 16,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2925"
     ],
     "tests": 13,
-    "refs": 2,
+    "refs": 4,
     "docs": 0,
     "names": [
       "WILDCARD_OVER_DENY_ON_VERDICT_MATCH"
@@ -10366,21 +11082,23 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-match.test.mjs:61",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-match.test.mjs:76",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-match.test.mjs:93",
-      "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-match.test.mjs:104"
+      "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-match.test.mjs:104",
+      "ref galerina.mjs:140",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-GOV-3VL-004",
     "namespace": "FUNGI",
     "family": "GOV",
-    "occurrences": 17,
+    "occurrences": 19,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2450"
     ],
     "tests": 12,
-    "refs": 2,
+    "refs": 4,
     "docs": 2,
     "names": [
       "ORDERED_COMPARISON_ON_VERDICT"
@@ -10405,7 +11123,9 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:39",
       "test packages-galerina/galerina-core-compiler/tests/governance/tri-lint-verdict-ordering.test.mjs:49",
       "doc docs/roadmap-2026-07-15.md:117",
-      "doc docs/TODO.md:5510"
+      "doc docs/TODO.md:5520",
+      "ref galerina.mjs:131",
+      "ref galerina.mjs:164"
     ]
   },
   {
@@ -10468,7 +11188,7 @@
       "emit packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:56",
       "ref packages-galerina/galerina-tower-citizen/src/governance-enforcer.ts:57",
       "test packages-galerina/galerina-tower-citizen/tests/rd0236-runtime-hardening.test.mjs:39",
-      "doc docs/TODO.md:6405"
+      "doc docs/TODO.md:6415"
     ]
   },
   {
@@ -11921,8 +12641,8 @@
       "doc docs/reference/dss-wasm-runtime-errors.md:58",
       "doc docs/reference/dss-wasm-runtime-errors.md:90",
       "doc docs/reports/slide-v2-g1-capability-probe-2026-07-29.md:73",
-      "doc docs/TODO.md:5392",
-      "doc docs/TODO.md:5731"
+      "doc docs/TODO.md:5402",
+      "doc docs/TODO.md:5741"
     ]
   },
   {
@@ -11980,7 +12700,7 @@
       "doc packages-galerina/galerina-core-compiler/TODO.md:18",
       "ref packages-galerina/galerina-devtools-wasmtime-oracle/tools/export-corpus-differential.mjs:116",
       "doc docs/reference/dss-wasm-runtime-errors.md:50",
-      "doc docs/TODO.md:5677"
+      "doc docs/TODO.md:5687"
     ]
   },
   {
@@ -12099,14 +12819,14 @@
     "code": "FUNGI-K3-001",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 21,
+    "occurrences": 23,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2495"
     ],
     "tests": 10,
-    "refs": 5,
+    "refs": 7,
     "docs": 5,
     "names": [
       "MIXED_VERDICT_BOOL_OPERANDS"
@@ -12135,14 +12855,16 @@
       "doc docs/examples/README.md:24",
       "doc docs/examples/README.md:150",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
-      "doc docs/TODO.md:5996"
+      "doc docs/TODO.md:6006",
+      "ref galerina.mjs:134",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-K3-002",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 14,
+    "occurrences": 16,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -12150,7 +12872,7 @@
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2646"
     ],
     "tests": 7,
-    "refs": 3,
+    "refs": 5,
     "docs": 2,
     "names": [
       "VERDICT_UNARY_MISMATCH"
@@ -12172,21 +12894,23 @@
       "test packages-galerina/galerina-core-compiler/tests/k3-operators.test.mjs:181",
       "test packages-galerina/galerina-core-compiler/tests/k3-operators.test.mjs:182",
       "doc docs/examples/README.md:151",
-      "doc docs/SYNTAX_UPDATE_TRACKER.md:42"
+      "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
+      "ref galerina.mjs:145",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-K3-003",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 10,
+    "occurrences": 12,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2660"
     ],
     "tests": 5,
-    "refs": 2,
+    "refs": 4,
     "docs": 2,
     "names": [
       "FOLD_OPERAND_NOT_VERDICT"
@@ -12204,21 +12928,23 @@
       "test packages-galerina/galerina-core-compiler/tests/k3-operators.test.mjs:185",
       "test packages-galerina/galerina-core-compiler/tests/k3-operators.test.mjs:186",
       "doc docs/examples/README.md:152",
-      "doc docs/SYNTAX_UPDATE_TRACKER.md:42"
+      "doc docs/SYNTAX_UPDATE_TRACKER.md:42",
+      "ref galerina.mjs:148",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-K3-004",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 6,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2418"
     ],
     "tests": 4,
-    "refs": 1,
+    "refs": 3,
     "docs": 0,
     "names": [
       "VERDICT_COMPARED_TO_NON_VERDICT"
@@ -12232,21 +12958,23 @@
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:68",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:164",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:166",
-      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:184"
+      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:184",
+      "ref galerina.mjs:150",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-K3-005",
     "namespace": "FUNGI",
     "family": "K3",
-    "occurrences": 6,
+    "occurrences": 8,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:1538"
     ],
     "tests": 4,
-    "refs": 1,
+    "refs": 3,
     "docs": 0,
     "names": [
       "NON_VERDICT_RETURNED_AS_VERDICT"
@@ -12260,7 +12988,9 @@
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:70",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:173",
       "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:175",
-      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:187"
+      "test packages-galerina/galerina-core-compiler/tests/cli-security-type-gate.test.mjs:187",
+      "ref galerina.mjs:153",
+      "ref galerina.mjs:164"
     ]
   },
   {
@@ -12279,6 +13009,109 @@
     "allSites": [
       "test scripts/tests/kb-index-generator.test.mjs:45",
       "test scripts/tests/kb-index-generator.test.mjs:65"
+    ]
+  },
+  {
+    "code": "FUNGI-KEY-001",
+    "namespace": "FUNGI",
+    "family": "KEY",
+    "occurrences": 3,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/key-lifecycle.mjs:85",
+      "governance/key-lifecycle.mjs:90"
+    ],
+    "tests": 0,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref governance/key-lifecycle.mjs:28",
+      "emit governance/key-lifecycle.mjs:85",
+      "emit governance/key-lifecycle.mjs:90"
+    ]
+  },
+  {
+    "code": "FUNGI-KEY-002",
+    "namespace": "FUNGI",
+    "family": "KEY",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/key-lifecycle.mjs:119"
+    ],
+    "tests": 0,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref governance/key-lifecycle.mjs:29",
+      "emit governance/key-lifecycle.mjs:119"
+    ]
+  },
+  {
+    "code": "FUNGI-KEY-004",
+    "namespace": "FUNGI",
+    "family": "KEY",
+    "occurrences": 3,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/key-lifecycle.mjs:98"
+    ],
+    "tests": 0,
+    "refs": 2,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref governance/key-lifecycle.mjs:30",
+      "emit governance/key-lifecycle.mjs:98",
+      "ref galerina.mjs:2497"
+    ]
+  },
+  {
+    "code": "FUNGI-KEY-005",
+    "namespace": "FUNGI",
+    "family": "KEY",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/key-lifecycle.mjs:109"
+    ],
+    "tests": 0,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref governance/key-lifecycle.mjs:31",
+      "emit governance/key-lifecycle.mjs:109"
+    ]
+  },
+  {
+    "code": "FUNGI-KEY-010",
+    "namespace": "FUNGI",
+    "family": "KEY",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/key-lifecycle.mjs:74"
+    ],
+    "tests": 0,
+    "refs": 1,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "ref governance/key-lifecycle.mjs:32",
+      "emit governance/key-lifecycle.mjs:74"
     ]
   },
   {
@@ -12316,8 +13149,8 @@
       "ref scripts/audit-wat-lowering.mjs:138",
       "ref scripts/audit-wat-lowering.mjs:140",
       "ref scripts/audit-wat-lowering.mjs:192",
-      "ref scripts/run-phase-close.mjs:722",
-      "ref scripts/run-phase-close.mjs:723"
+      "ref scripts/run-phase-close.mjs:724",
+      "ref scripts/run-phase-close.mjs:725"
     ]
   },
   {
@@ -12463,7 +13296,7 @@
     "code": "FUNGI-LEX-004",
     "namespace": "FUNGI",
     "family": "LEX",
-    "occurrences": 15,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/index.ts:56"
@@ -12473,7 +13306,7 @@
       "packages-galerina/galerina-core-compiler/src/lexer.ts:417"
     ],
     "tests": 5,
-    "refs": 7,
+    "refs": 10,
     "docs": 0,
     "names": [
       "FILE_TOO_LARGE"
@@ -12496,7 +13329,10 @@
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:487",
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:492",
       "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:496",
-      "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:497"
+      "test packages-galerina/galerina-core-compiler/tests/lexer.test.mjs:497",
+      "ref galerina.mjs:31",
+      "ref galerina.mjs:37",
+      "ref galerina.mjs:56"
     ]
   },
   {
@@ -12600,7 +13436,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:392",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:393",
       "test packages-galerina/galerina-core-compiler/tests/governance/guard-decl.test.mjs:398",
-      "doc docs/TODO.md:6244"
+      "doc docs/TODO.md:6254"
     ]
   },
   {
@@ -12670,6 +13506,101 @@
       "emit packages-galerina/galerina-core-compiler/src/lint-checker.ts:263",
       "test packages-galerina/galerina-core-compiler/tests/lint-unused-binding.test.mjs:2",
       "test packages-galerina/galerina-core-compiler/tests/lint-unused-binding.test.mjs:19"
+    ]
+  },
+  {
+    "code": "FUNGI-LINT-AUTO-SETTING",
+    "namespace": "FUNGI",
+    "family": "LINT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:249"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:249"
+    ]
+  },
+  {
+    "code": "FUNGI-LINT-COMMENT",
+    "namespace": "FUNGI",
+    "family": "LINT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:225"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:225"
+    ]
+  },
+  {
+    "code": "FUNGI-LINT-CONTRACT",
+    "namespace": "FUNGI",
+    "family": "LINT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:238"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:238"
+    ]
+  },
+  {
+    "code": "FUNGI-LINT-ERROR",
+    "namespace": "FUNGI",
+    "family": "LINT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:272"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:272"
+    ]
+  },
+  {
+    "code": "FUNGI-LINT-INTENT",
+    "namespace": "FUNGI",
+    "family": "LINT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:248"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:248"
     ]
   },
   {
@@ -13084,6 +14015,359 @@
     ]
   },
   {
+    "code": "FUNGI-MANIFEST-DEPTH",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:391"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:391"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-DUPLICATE-KEY",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:445"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:445"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-INVALID",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 4,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1903",
+      "galerina.mjs:1917",
+      "galerina.mjs:1954",
+      "galerina.mjs:2092"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1903",
+      "emit galerina.mjs:1917",
+      "emit galerina.mjs:1954",
+      "emit galerina.mjs:2092"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-LEGACY-FORMAT",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:2064"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:2064"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-LENGTH-OVERFLOW",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 4,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:409",
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:416",
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:423",
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:434"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:409",
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:416",
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:423",
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:434"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-MISSING",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1643"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1643"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-NONCANONICAL",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1670"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1670"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-PQ-REQUIRED",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 8,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1708",
+      "galerina.mjs:1757",
+      "galerina.mjs:1983",
+      "galerina.mjs:2025",
+      "galerina.mjs:2511",
+      "galerina.mjs:2531",
+      "galerina.mjs:2599",
+      "galerina.mjs:2641"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1708",
+      "emit galerina.mjs:1757",
+      "emit galerina.mjs:1983",
+      "emit galerina.mjs:2025",
+      "emit galerina.mjs:2511",
+      "emit galerina.mjs:2531",
+      "emit galerina.mjs:2599",
+      "emit galerina.mjs:2641"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-PROFILE-UNRECOGNIZED",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 3,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1699",
+      "galerina.mjs:1974",
+      "galerina.mjs:2524"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1699",
+      "emit galerina.mjs:1974",
+      "emit galerina.mjs:2524"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-PUBKEY-MISSING",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 4,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1774",
+      "galerina.mjs:1871",
+      "galerina.mjs:2037",
+      "galerina.mjs:2077"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1774",
+      "emit galerina.mjs:1871",
+      "emit galerina.mjs:2037",
+      "emit galerina.mjs:2077"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-REVOKED-KEY",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 4,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1768",
+      "galerina.mjs:1827",
+      "galerina.mjs:2031",
+      "galerina.mjs:2071"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1768",
+      "emit galerina.mjs:1827",
+      "emit galerina.mjs:2031",
+      "emit galerina.mjs:2071"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-TAMPER",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 10,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1657",
+      "galerina.mjs:1789",
+      "galerina.mjs:1807",
+      "galerina.mjs:1811",
+      "galerina.mjs:1857",
+      "galerina.mjs:1865",
+      "galerina.mjs:1944",
+      "galerina.mjs:2047",
+      "galerina.mjs:2057",
+      "galerina.mjs:2084"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1657",
+      "emit galerina.mjs:1789",
+      "emit galerina.mjs:1807",
+      "emit galerina.mjs:1811",
+      "emit galerina.mjs:1857",
+      "emit galerina.mjs:1865",
+      "emit galerina.mjs:1944",
+      "emit galerina.mjs:2047",
+      "emit galerina.mjs:2057",
+      "emit galerina.mjs:2084"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-UNSIGNED",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 5,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1878",
+      "galerina.mjs:1887",
+      "galerina.mjs:1894",
+      "galerina.mjs:1911",
+      "galerina.mjs:2015"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1878",
+      "emit galerina.mjs:1887",
+      "emit galerina.mjs:1894",
+      "emit galerina.mjs:1911",
+      "emit galerina.mjs:2015"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-VERSION",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1676"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1676"
+    ]
+  },
+  {
+    "code": "FUNGI-MANIFEST-VERSION-UNAVAILABLE",
+    "namespace": "FUNGI",
+    "family": "MANIFEST",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/manifest-generator.ts:78"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/manifest-generator.ts:78"
+    ]
+  },
+  {
     "code": "FUNGI-MATCH-001",
     "namespace": "FUNGI",
     "family": "MATCH",
@@ -13137,9 +14421,9 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:29",
       "doc docs/SYNTAX_UPDATE_PLAN.md:60",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:33",
-      "doc docs/TODO.md:5818",
-      "doc docs/TODO.md:5984",
-      "doc docs/TODO.md:6096"
+      "doc docs/TODO.md:5828",
+      "doc docs/TODO.md:5994",
+      "doc docs/TODO.md:6106"
     ]
   },
   {
@@ -13186,8 +14470,8 @@
       "ref scripts/audit-artifact-drift.mjs:176",
       "ref scripts/audit-production-blockers.mjs:5",
       "ref scripts/audit-twin-emit-parity.mjs:175",
-      "ref scripts/code-index.mjs:198",
-      "ref scripts/code-index.mjs:239",
+      "ref scripts/code-index.mjs:219",
+      "ref scripts/code-index.mjs:260",
       "ref scripts/lint-conventions.mjs:67"
     ]
   },
@@ -13616,7 +14900,7 @@
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:45",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:109",
-      "doc docs/TODO.md:5546"
+      "doc docs/TODO.md:5556"
     ]
   },
   {
@@ -13707,8 +14991,8 @@
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:42",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:29",
       "doc docs/superpowers/plans/2026-08-04-canonical-records-and-call-resolution.md:72",
-      "doc docs/TODO.md:6264",
-      "doc docs/TODO.md:6356"
+      "doc docs/TODO.md:6274",
+      "doc docs/TODO.md:6366"
     ]
   },
   {
@@ -14303,14 +15587,14 @@
     "code": "FUNGI-NUMERIC-001",
     "namespace": "FUNGI",
     "family": "NUMERIC",
-    "occurrences": 44,
+    "occurrences": 47,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2490"
     ],
     "tests": 26,
-    "refs": 17,
+    "refs": 20,
     "docs": 0,
     "names": [
       "UNSUPPORTED_NUMERIC_WIDTH"
@@ -14362,7 +15646,10 @@
       "test packages-galerina/galerina-core-compiler/tests/wat-i64-lift-readiness.test.mjs:11",
       "test packages-galerina/galerina-core-compiler/tests/wat-i64-lift-readiness.test.mjs:25",
       "test packages-galerina/galerina-core-compiler/tests/wat-i64-milestone.test.mjs:9",
-      "ref packages-galerina/galerina-devtools-hypha/src/extract.mjs:310"
+      "ref packages-galerina/galerina-devtools-hypha/src/extract.mjs:310",
+      "ref galerina.mjs:1406",
+      "ref galerina.mjs:1504",
+      "ref galerina.mjs:2263"
     ]
   },
   {
@@ -14661,12 +15948,12 @@
     "code": "FUNGI-PARSE-001",
     "namespace": "FUNGI",
     "family": "PARSE",
-    "occurrences": 66,
+    "occurrences": 67,
     "docOnly": false,
     "defs": [],
     "emits": [],
     "tests": 25,
-    "refs": 19,
+    "refs": 20,
     "docs": 14,
     "names": [],
     "severities": [],
@@ -14732,11 +16019,12 @@
       "doc docs/language/fungi/07-control-flow.md:321",
       "doc docs/language/fungi/README.md:78",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:5547",
-      "doc docs/TODO.md:5649",
-      "doc docs/TODO.md:5672",
+      "doc docs/TODO.md:5557",
+      "doc docs/TODO.md:5659",
+      "doc docs/TODO.md:5682",
       "ref scripts/audit-syntax.mjs:4",
-      "ref scripts/rebuild-fusable-packages.mjs:133"
+      "ref scripts/rebuild-fusable-packages.mjs:133",
+      "ref galerina.mjs:1182"
     ]
   },
   {
@@ -14813,7 +16101,7 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:127",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-parser-failclosed.test.mjs:131",
       "doc docs/architecture/slide-v2-status-and-implementation-plan-2026-07-29.md:450",
-      "doc docs/TODO.md:5198"
+      "doc docs/TODO.md:5208"
     ]
   },
   {
@@ -14910,7 +16198,7 @@
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:59",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:64",
       "doc docs/security/rd0528-compiler-stages-evidence-pack.md:90",
-      "doc docs/TODO.md:5464"
+      "doc docs/TODO.md:5474"
     ]
   },
   {
@@ -14965,8 +16253,8 @@
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:268",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:383",
       "doc docs/language/fungi/04-types-and-values.md:74",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:162",
-      "doc docs/TODO.md:417"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:180",
+      "doc docs/TODO.md:427"
     ]
   },
   {
@@ -15030,7 +16318,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state/affine-passport-typestate-0111.test.mjs:36",
       "doc docs/reference/value-states.md:118",
       "doc docs/reference/value-states.md:134",
-      "doc docs/TODO.md:6372"
+      "doc docs/TODO.md:6382"
     ]
   },
   {
@@ -16550,10 +17838,10 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:113",
       "test packages-galerina/galerina-core-compiler/tests/governance/rd-fungi-privacy-canonicality-guard.test.mjs:117",
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:71",
-      "doc docs/TODO.md:6128",
-      "doc docs/TODO.md:6260",
-      "doc docs/TODO.md:6275",
-      "doc docs/TODO.md:6290"
+      "doc docs/TODO.md:6138",
+      "doc docs/TODO.md:6270",
+      "doc docs/TODO.md:6285",
+      "doc docs/TODO.md:6300"
     ]
   },
   {
@@ -16645,12 +17933,12 @@
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:62",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:102",
       "doc docs/paper/defensive-papers/dp-rd-0229-graph-aot-gate-unreachability-proof-hallucination-block.md:129",
-      "doc docs/TODO.md:247",
-      "doc docs/TODO.md:6089",
-      "doc docs/TODO.md:6463",
-      "doc docs/TODO.md:6470",
+      "doc docs/TODO.md:257",
+      "doc docs/TODO.md:6099",
+      "doc docs/TODO.md:6473",
+      "doc docs/TODO.md:6480",
       "ref scripts/audit-muted-diagnostics.mjs:44",
-      "ref scripts/code-index.mjs:129",
+      "ref scripts/code-index.mjs:150",
       "ref scripts/kb-index.mjs:9",
       "ref scripts/rd-0168-graph-pci-compliance-scanner-proof.mjs:477"
     ]
@@ -16995,6 +18283,25 @@
     ]
   },
   {
+    "code": "FUNGI-PROFILE-UNRECOGNIZED",
+    "namespace": "FUNGI",
+    "family": "PROFILE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "governance/profile.mjs:53"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit governance/profile.mjs:53"
+    ]
+  },
+  {
     "code": "FUNGI-PROOF-001",
     "namespace": "FUNGI",
     "family": "PROOF",
@@ -17034,17 +18341,18 @@
     "code": "FUNGI-PROOF-CERT-00",
     "namespace": "FUNGI",
     "family": "PROOF",
-    "occurrences": 1,
+    "occurrences": 2,
     "docOnly": false,
     "defs": [],
     "emits": [],
-    "tests": 0,
+    "tests": 1,
     "refs": 1,
     "docs": 0,
     "names": [],
     "severities": [],
     "allSites": [
-      "ref packages-galerina/galerina-core-compiler/src/proof-graph.ts:207"
+      "ref packages-galerina/galerina-core-compiler/src/proof-graph.ts:207",
+      "test scripts/tests/descriptive-diagnostic-identities.test.mjs:39"
     ]
   },
   {
@@ -17362,6 +18670,25 @@
     ]
   },
   {
+    "code": "FUNGI-RES-CB-PENDING",
+    "namespace": "FUNGI",
+    "family": "RES",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/resilience-inference.ts:336"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/resilience-inference.ts:336"
+    ]
+  },
+  {
     "code": "FUNGI-RESOURCE-001",
     "namespace": "FUNGI",
     "family": "RESOURCE",
@@ -17403,6 +18730,46 @@
       "test packages-galerina/galerina-tower-citizen/tests/substrate-erasure.test.mjs:41",
       "test packages-galerina/galerina-tower-citizen/tests/substrate-erasure.test.mjs:46",
       "doc docs/paper/defensive-papers/latency-is-not-work-measured-negatives-defensive-publication-2026-06-25.md:37"
+    ]
+  },
+  {
+    "code": "FUNGI-REVOCATION-REGISTRY",
+    "namespace": "FUNGI",
+    "family": "REVOCATION",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1831"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1831"
+    ]
+  },
+  {
+    "code": "FUNGI-REVOCATION-UNSIGNED",
+    "namespace": "FUNGI",
+    "family": "REVOCATION",
+    "occurrences": 2,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:1765",
+      "galerina.mjs:1824"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:1765",
+      "emit galerina.mjs:1824"
     ]
   },
   {
@@ -17662,6 +19029,25 @@
     ]
   },
   {
+    "code": "FUNGI-RUNTIME-EFFECT-GATE",
+    "namespace": "FUNGI",
+    "family": "RUNTIME",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/route-dispatcher.ts:172"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/route-dispatcher.ts:172"
+    ]
+  },
+  {
     "code": "FUNGI-SAFETY-001",
     "namespace": "FUNGI",
     "family": "SAFETY",
@@ -17882,6 +19268,25 @@
     ]
   },
   {
+    "code": "FUNGI-SCAN-UNANALYZABLE",
+    "namespace": "FUNGI",
+    "family": "SCAN",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "galerina.mjs:425"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit galerina.mjs:425"
+    ]
+  },
+  {
     "code": "FUNGI-SEC-014",
     "namespace": "FUNGI",
     "family": "SEC",
@@ -17986,7 +19391,7 @@
       "test packages-galerina/galerina-core-compiler/tests/security-gate-coverage.test.mjs:31",
       "test packages-galerina/galerina-core-compiler/tests/signing-boundary-matrix.test.mjs:85",
       "ref packages-galerina/galerina-devtools-security/src/audit-runner.ts:139",
-      "doc docs/TODO.md:6351"
+      "doc docs/TODO.md:6361"
     ]
   },
   {
@@ -18254,8 +19659,8 @@
       "doc docs/patterns/applications/08-secrets.md:14",
       "doc docs/patterns/applications/08-secrets.md:38",
       "doc docs/reference/value-states.md:93",
-      "doc docs/TODO.md:6241",
-      "doc docs/TODO.md:6369",
+      "doc docs/TODO.md:6251",
+      "doc docs/TODO.md:6379",
       "ref scripts/audit-muted-diagnostics.mjs:42",
       "ref scripts/audit-registry-fixtures.mjs:26"
     ]
@@ -18481,7 +19886,7 @@
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:12",
       "fungi docs/examples/Level-7-AI/358-ai-secure-string-in-ai/example.fungi:30",
       "doc docs/examples/Level-7-AI/358-ai-secure-string-in-ai/notes.md:5",
-      "doc docs/TODO.md:4102"
+      "doc docs/TODO.md:4112"
     ]
   },
   {
@@ -18500,6 +19905,101 @@
     "allSites": [
       "test scripts/tests/dev-tools-scripts.test.mjs:354",
       "test scripts/tests/dev-tools-scripts.test.mjs:366"
+    ]
+  },
+  {
+    "code": "FUNGI-SLOP-AI-ARTIFACT",
+    "namespace": "FUNGI",
+    "family": "SLOP",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:186"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:186"
+    ]
+  },
+  {
+    "code": "FUNGI-SLOP-EMOJI",
+    "namespace": "FUNGI",
+    "family": "SLOP",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:180"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:180"
+    ]
+  },
+  {
+    "code": "FUNGI-SLOP-FILLER-COMMENT",
+    "namespace": "FUNGI",
+    "family": "SLOP",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:185"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:185"
+    ]
+  },
+  {
+    "code": "FUNGI-SLOP-PLACEHOLDER-NAME",
+    "namespace": "FUNGI",
+    "family": "SLOP",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:210"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:210"
+    ]
+  },
+  {
+    "code": "FUNGI-SLOP-VACUOUS-INTENT",
+    "namespace": "FUNGI",
+    "family": "SLOP",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:252"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:252"
     ]
   },
   {
@@ -18789,14 +20289,14 @@
     "code": "FUNGI-STDLIB-002",
     "namespace": "FUNGI",
     "family": "STDLIB",
-    "occurrences": 24,
+    "occurrences": 28,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/effect-checker.ts:1265"
     ],
     "tests": 17,
-    "refs": 1,
+    "refs": 5,
     "docs": 5,
     "names": [
       "UNKNOWN_EFFECTFUL_STDLIB_CALL"
@@ -18826,7 +20326,11 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:84",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
-      "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88"
+      "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
+      "ref galerina.mjs:1388",
+      "ref galerina.mjs:1395",
+      "ref galerina.mjs:2250",
+      "ref galerina.mjs:2255"
     ]
   },
   {
@@ -18844,7 +20348,7 @@
     "severities": [],
     "allSites": [
       "doc docs/roadmap-2026-07-25-cycle2.md:46",
-      "doc docs/TODO.md:5546"
+      "doc docs/TODO.md:5556"
     ]
   },
   {
@@ -19156,7 +20660,7 @@
     "code": "FUNGI-SUBSTRATE-001",
     "namespace": "FUNGI",
     "family": "SUBSTRATE",
-    "occurrences": 61,
+    "occurrences": 62,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-core-compiler/src/governance-verifier.ts:392"
@@ -19165,7 +20669,7 @@
       "packages-galerina/galerina-core-compiler/src/substrate-inference.ts:263"
     ],
     "tests": 27,
-    "refs": 24,
+    "refs": 25,
     "docs": 8,
     "names": [
       "CRYPTO_ON_NOISY_LANE"
@@ -19234,7 +20738,8 @@
       "doc docs/SYNTAX_UPDATE_PLAN.md:21",
       "ref scripts/rd-0156-photonic-wavefront-db-proof.mjs:16",
       "ref scripts/rd-0156-photonic-wavefront-db-proof.mjs:293",
-      "ref scripts/rd-0157-0159-virtual-wavefront-silicon-proof.mjs:514"
+      "ref scripts/rd-0157-0159-virtual-wavefront-silicon-proof.mjs:514",
+      "ref galerina.mjs:1426"
     ]
   },
   {
@@ -19425,6 +20930,25 @@
       "test packages-galerina/galerina-core-compiler/tests/substrate-compute-only-fence.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/substrate-compute-only-fence.test.mjs:44",
       "test packages-galerina/galerina-core-compiler/tests/substrate-compute-only-fence.test.mjs:60"
+    ]
+  },
+  {
+    "code": "FUNGI-SUBSTRATE-DEADZONE",
+    "namespace": "FUNGI",
+    "family": "SUBSTRATE",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-tower-citizen/src/deadzone-dispatcher.ts:27"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-tower-citizen/src/deadzone-dispatcher.ts:27"
     ]
   },
   {
@@ -19733,7 +21257,7 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:89",
       "doc docs/roadmap-2026-07-15.md:164",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:5985",
+      "doc docs/TODO.md:5995",
       "ref scripts/audit-fungi-corpus-check.mjs:8",
       "ref scripts/audit-fungi-corpus-check.mjs:194",
       "ref scripts/audit-fungi-corpus-check.mjs:267",
@@ -19759,7 +21283,7 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/governance/unknown-block-reject.test.mjs:137",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:34",
-      "doc docs/TODO.md:5986"
+      "doc docs/TODO.md:5996"
     ]
   },
   {
@@ -19793,21 +21317,21 @@
       "test packages-galerina/galerina-core-compiler/tests/version-header.test.mjs:69",
       "doc docs/examples/README.md:25",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:37",
-      "doc docs/TODO.md:5989"
+      "doc docs/TODO.md:5999"
     ]
   },
   {
     "code": "FUNGI-SYNTAX-015",
     "namespace": "FUNGI",
     "family": "SYNTAX",
-    "occurrences": 16,
+    "occurrences": 17,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/parser.ts:6702"
     ],
     "tests": 10,
-    "refs": 1,
+    "refs": 2,
     "docs": 4,
     "names": [
       "VERSION_HEADER_MISSING"
@@ -19831,7 +21355,46 @@
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:21",
       "doc docs/handover/HANDOVER-worker-cli-invoke-marshal-2026-07-10.md:50",
       "doc docs/language/fungi/01-flows-and-functions.md:34",
-      "doc docs/language/fungi/README.md:53"
+      "doc docs/language/fungi/README.md:53",
+      "ref galerina.mjs:1180"
+    ]
+  },
+  {
+    "code": "FUNGI-SYNTAX-BRACE",
+    "namespace": "FUNGI",
+    "family": "SYNTAX",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:200"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:200"
+    ]
+  },
+  {
+    "code": "FUNGI-SYNTAX-CONTRACT-IN-BODY",
+    "namespace": "FUNGI",
+    "family": "SYNTAX",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:255"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:255"
     ]
   },
   {
@@ -19933,6 +21496,44 @@
     "severities": [],
     "allSites": [
       "doc docs/examples/Proposed-Readable-Logic-Forms/AI_SUMMARY.md:48"
+    ]
+  },
+  {
+    "code": "FUNGI-SYNTAX-TAB",
+    "namespace": "FUNGI",
+    "family": "SYNTAX",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:178"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:178"
+    ]
+  },
+  {
+    "code": "FUNGI-SYNTAX-TRAILING-WS",
+    "namespace": "FUNGI",
+    "family": "SYNTAX",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "scripts/lint-fungi.mjs:179"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit scripts/lint-fungi.mjs:179"
     ]
   },
   {
@@ -20208,7 +21809,7 @@
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:42",
       "doc docs/examples/Level-8-Targets/AI_SUMMARY.md:51",
       "doc docs/examples/Level-9-Enterprise/AI_SUMMARY.md:63",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1526"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:1544"
     ]
   },
   {
@@ -20250,8 +21851,8 @@
       "test packages-galerina/galerina-core-compiler/tests/governance/tenant-isolation.test.mjs:124",
       "test packages-galerina/galerina-core-compiler/tests/leak-proof.test.mjs:55",
       "doc docs/SYNTAX_UPDATE_TRACKER.md:57",
-      "doc docs/TODO.md:5795",
-      "doc docs/TODO.md:5925"
+      "doc docs/TODO.md:5805",
+      "doc docs/TODO.md:5935"
     ]
   },
   {
@@ -20393,8 +21994,8 @@
       "test scripts/tests/code-index-generator.test.mjs:55",
       "test scripts/tests/code-index-generator.test.mjs:84",
       "test scripts/tests/code-index-generator.test.mjs:100",
-      "test scripts/tests/code-registry-generator.test.mjs:55",
-      "test scripts/tests/code-registry-generator.test.mjs:71"
+      "test scripts/tests/code-registry-generator.test.mjs:52",
+      "test scripts/tests/code-registry-generator.test.mjs:85"
     ]
   },
   {
@@ -20440,14 +22041,14 @@
     "code": "FUNGI-TIER-001",
     "namespace": "FUNGI",
     "family": "TIER",
-    "occurrences": 49,
+    "occurrences": 55,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/effect-checker.ts:910"
     ],
     "tests": 26,
-    "refs": 9,
+    "refs": 15,
     "docs": 11,
     "names": [
       "UNDER_DECLARED_FLOW_TIER"
@@ -20496,13 +22097,19 @@
       "doc docs/reference/effects.md:91",
       "doc docs/reference/effects.md:163",
       "doc docs/roadmap-2026-07-25-cycle2.md:107",
-      "doc docs/TODO.md:5548",
+      "doc docs/TODO.md:5558",
       "ref scripts/audit-example-diagnostics.mjs:230",
       "ref scripts/audit-example-diagnostics.mjs:232",
       "ref scripts/audit-twin-differential.mjs:26",
       "ref scripts/audit-twin-differential.mjs:143",
       "ref scripts/audit-twin-differential.mjs:145",
-      "ref scripts/audit-twin-emit-parity.mjs:115"
+      "ref scripts/audit-twin-emit-parity.mjs:115",
+      "ref galerina.mjs:1381",
+      "ref galerina.mjs:1386",
+      "ref galerina.mjs:1389",
+      "ref galerina.mjs:2221",
+      "ref galerina.mjs:2225",
+      "ref galerina.mjs:2235"
     ]
   },
   {
@@ -21273,7 +22880,7 @@
       "ref scripts/audit-twin-emit-parity.mjs:192",
       "ref scripts/audit-twin-emit-parity.mjs:193",
       "ref scripts/audit-twin-emit-parity.mjs:194",
-      "ref scripts/code-index.mjs:237",
+      "ref scripts/code-index.mjs:258",
       "ref scripts/lib/twin-parity-ladder.mjs:68"
     ]
   },
@@ -21408,7 +23015,7 @@
     "code": "FUNGI-TYPE-004",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 218,
+    "occurrences": 219,
     "docOnly": false,
     "defs": [],
     "emits": [
@@ -21430,7 +23037,7 @@
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2516"
     ],
     "tests": 137,
-    "refs": 31,
+    "refs": 32,
     "docs": 19,
     "names": [
       "INVALID_BINARY_OPERATION"
@@ -21656,7 +23263,8 @@
       "ref scripts/audit-examples-vs-declared.mjs:102",
       "ref scripts/audit-examples-vs-declared.mjs:103",
       "ref scripts/audit-examples-vs-declared.mjs:107",
-      "ref scripts/audit-examples-vs-declared.mjs:109"
+      "ref scripts/audit-examples-vs-declared.mjs:109",
+      "ref galerina.mjs:137"
     ]
   },
   {
@@ -22506,7 +24114,7 @@
       "ref scripts/audit-twin-emit-parity.mjs:182",
       "ref scripts/audit-twin-emit-parity.mjs:183",
       "ref scripts/audit-twin-emit-parity.mjs:186",
-      "ref scripts/code-index.mjs:238"
+      "ref scripts/code-index.mjs:259"
     ]
   },
   {
@@ -22906,8 +24514,8 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-type-checker.test.mjs:645",
       "doc docs/examples/gate/FUNGI-TO-GATE-LIKE-FOR-LIKE.md:246",
       "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:634",
-      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:190",
-      "doc docs/TODO.md:460"
+      "doc docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md:208",
+      "doc docs/TODO.md:470"
     ]
   },
   {
@@ -23058,14 +24666,14 @@
     "code": "FUNGI-TYPE-033",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 29,
+    "occurrences": 31,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:2573"
     ],
     "tests": 19,
-    "refs": 1,
+    "refs": 3,
     "docs": 2,
     "names": [
       "CONDITION_NOT_BOOL"
@@ -23102,21 +24710,23 @@
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:308",
       "test packages-galerina/galerina-core-compiler/tests/self-hosted-i3-functional-corpus.test.mjs:309",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:1117",
-      "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:159"
+      "doc docs/examples/TYPESCRIPT-TO-FUNGI-CONTROL-AND-EFFECTS.md:159",
+      "ref galerina.mjs:128",
+      "ref galerina.mjs:164"
     ]
   },
   {
     "code": "FUNGI-TYPE-034",
     "namespace": "FUNGI",
     "family": "TYPE",
-    "occurrences": 16,
+    "occurrences": 18,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/type-checker.ts:1900"
     ],
     "tests": 7,
-    "refs": 2,
+    "refs": 4,
     "docs": 3,
     "names": [
       "GOVERNANCE_QUALIFIER_MISMATCH"
@@ -23140,7 +24750,9 @@
       "doc docs/examples/EXAMPLES_INDEX.md:157",
       "fungi docs/examples/Level-2-Types/062-invalid-redacted-email/example.fungi:6",
       "fungi docs/examples/Level-2-Types/086-protected-not-redacted/example.fungi:6",
-      "fungi docs/examples/Level-4-Security/160-protected-not-redacted/example.fungi:6"
+      "fungi docs/examples/Level-4-Security/160-protected-not-redacted/example.fungi:6",
+      "ref galerina.mjs:162",
+      "ref galerina.mjs:164"
     ]
   },
   {
@@ -23306,7 +24918,7 @@
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:569",
       "doc docs/contract-registry/CONTRACT_REGISTRY.md:570",
       "doc docs/roadmap-2026-07-23.md:64",
-      "doc docs/TODO.md:5649",
+      "doc docs/TODO.md:5659",
       "ref scripts/audit-codes-full.mjs:91",
       "ref scripts/audit-diagnostic-code-collisions.mjs:179",
       "ref scripts/audit-examples-vs-declared.mjs:94",
@@ -23789,7 +25401,7 @@
       "doc docs/patterns/applications/11-audit-trails.md:120",
       "doc docs/reference/value-states.md:56",
       "doc docs/reference/value-states.md:128",
-      "doc docs/TODO.md:6331",
+      "doc docs/TODO.md:6341",
       "ref scripts/audit-mutation.mjs:205",
       "ref scripts/audit-mutation.mjs:212",
       "ref scripts/audit-reference-doc-drift.mjs:65",
@@ -23798,7 +25410,7 @@
       "ref scripts/audit-registry-fixtures.mjs:198",
       "ref scripts/audit-registry-fixtures.mjs:200",
       "ref scripts/audit-registry-fixtures.mjs:206",
-      "ref scripts/audit-stdlib-gates-parity.mjs:357"
+      "ref scripts/audit-stdlib-gates-parity.mjs:358"
     ]
   },
   {
@@ -24073,13 +25685,13 @@
       "doc docs/reference/value-states.md:131",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:87",
       "doc docs/security/slsa-deep-bola-pass-2026-07-09.md:45",
-      "doc docs/TODO.md:6370",
+      "doc docs/TODO.md:6380",
       "ref scripts/audit-example-diagnostics.mjs:9",
       "ref scripts/audit-example-diagnostics.mjs:225",
       "ref scripts/audit-muted-diagnostics.mjs:63",
       "ref scripts/audit-registry-fixtures.mjs:20",
       "ref scripts/audit-stdlib-gates-parity.mjs:24",
-      "ref scripts/audit-stdlib-gates-parity.mjs:471"
+      "ref scripts/audit-stdlib-gates-parity.mjs:473"
     ]
   },
   {
@@ -24161,14 +25773,14 @@
     "code": "FUNGI-VALUESTATE-008",
     "namespace": "FUNGI",
     "family": "VALUESTATE",
-    "occurrences": 59,
+    "occurrences": 65,
     "docOnly": false,
     "defs": [],
     "emits": [
       "packages-galerina/galerina-core-compiler/src/value-state-checker.ts:2151"
     ],
     "tests": 31,
-    "refs": 8,
+    "refs": 14,
     "docs": 11,
     "names": [
       "BOUNDARY_INPUT_UNCLEAN"
@@ -24233,9 +25845,15 @@
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:86",
       "doc docs/reports/fungi-corpus-adjudication-2026-07-29.md:88",
       "doc docs/roadmap-2026-07-25-cycle2.md:109",
-      "doc docs/TODO.md:5548",
+      "doc docs/TODO.md:5558",
       "ref scripts/audit-codes-full.mjs:53",
-      "ref scripts/audit-muted-diagnostics.mjs:55"
+      "ref scripts/audit-muted-diagnostics.mjs:55",
+      "ref galerina.mjs:1381",
+      "ref galerina.mjs:1405",
+      "ref galerina.mjs:1414",
+      "ref galerina.mjs:2225",
+      "ref galerina.mjs:2236",
+      "ref galerina.mjs:2268"
     ]
   },
   {
@@ -24326,7 +25944,7 @@
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:41",
       "test packages-galerina/galerina-core-compiler/tests/value-state-egress-hardening.test.mjs:44",
       "doc docs/roadmap-2026-07-24.md:16",
-      "doc docs/TODO.md:5607"
+      "doc docs/TODO.md:5617"
     ]
   },
   {
@@ -24499,7 +26117,7 @@
       "doc docs/language/fungi/03-effects-and-capabilities.md:69",
       "doc docs/reference/effects.md:148",
       "doc docs/reference/effects.md:149",
-      "doc docs/TODO.md:5547",
+      "doc docs/TODO.md:5557",
       "ref scripts/audit-example-diagnostics.mjs:125"
     ]
   },
@@ -24620,7 +26238,7 @@
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5918",
       "ref packages-galerina/galerina-core-compiler/src/parser.ts:5934",
       "doc docs/roadmap-2026-07-25-cycle2.md:86",
-      "doc docs/TODO.md:5548",
+      "doc docs/TODO.md:5558",
       "ref scripts/audit-diagnostic-code-collisions.mjs:56"
     ]
   },
@@ -24638,7 +26256,7 @@
     "names": [],
     "severities": [],
     "allSites": [
-      "doc docs/TODO.md:6339"
+      "doc docs/TODO.md:6349"
     ]
   },
   {
@@ -24818,6 +26436,25 @@
     "severities": [],
     "allSites": [
       "doc packages-galerina/galerina-core-compute/README.md:545"
+    ]
+  },
+  {
+    "code": "FUNGI-WAT-STUB",
+    "namespace": "FUNGI",
+    "family": "WAT",
+    "occurrences": 1,
+    "docOnly": false,
+    "defs": [],
+    "emits": [
+      "packages-galerina/galerina-core-compiler/src/wat-emitter.ts:4532"
+    ],
+    "tests": 0,
+    "refs": 0,
+    "docs": 0,
+    "names": [],
+    "severities": [],
+    "allSites": [
+      "emit packages-galerina/galerina-core-compiler/src/wat-emitter.ts:4532"
     ]
   },
   {
@@ -26099,7 +27736,7 @@
       "doc docs/examples/gate/GATEREGEX.md:325",
       "doc docs/examples/gate/RULES.md:23",
       "doc docs/examples/gate/SEMANTICS.md:53",
-      "doc docs/TODO.md:212"
+      "doc docs/TODO.md:222"
     ]
   },
   {
@@ -26261,7 +27898,7 @@
     "allSites": [
       "emit packages-galerina/galerina-core-compiler/src/gate-v3-registry.ts:29",
       "doc docs/examples/gate/CODES.md:60",
-      "doc docs/TODO.md:213"
+      "doc docs/TODO.md:223"
     ]
   },
   {
@@ -27138,7 +28775,7 @@
       "doc docs/examples/gate/SEMANTICS.md:274",
       "doc docs/examples/gate/SEMANTICS.md:365",
       "doc docs/examples/gate/SEMANTICS.md:398",
-      "doc docs/TODO.md:217",
+      "doc docs/TODO.md:227",
       "test scripts/tests/gate-result-shape.test.mjs:14"
     ]
   },

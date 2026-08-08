@@ -46,30 +46,45 @@ function runCommand(root, command, args) {
  * Create a Git-indexed source fixture with one catalogued and one deliberately
  * shape-blind code so the coverage measurement cannot be vacuous.
  */
-function fixture() {
+function fixture({ includeDescriptiveIndex = true, sourceExtra = "" } = {}) {
   const root = mkdtempSync(join(tmpdir(), "code-registry-generator-"));
+  const codeIndex = [{
+    code: "FUNGI-TEST-001",
+    family: "TEST",
+    namespace: "FUNGI",
+    docOnly: false,
+    defs: ["packages-galerina/example/src/index.ts:1"],
+    emits: ["packages-galerina/example/src/index.ts:2"],
+    tests: 1,
+    refs: 0,
+    docs: 0,
+    names: ["TEST_FAILURE"],
+    severities: ["error"],
+  }];
+  if (includeDescriptiveIndex) codeIndex.push({
+    code: "FUNGI-FUSE-HASH-MISMATCH",
+    family: "FUSE",
+    namespace: "FUNGI",
+    docOnly: false,
+    defs: [],
+    emits: ["packages-galerina/example/src/index.ts:2"],
+    tests: 0,
+    refs: 0,
+    docs: 0,
+    names: [],
+    severities: [],
+  });
   write(
     root,
     "build/code-index/code-index.json",
-    JSON.stringify([{
-      code: "FUNGI-TEST-001",
-      family: "TEST",
-      namespace: "FUNGI",
-      docOnly: false,
-      defs: ["packages-galerina/example/src/index.ts:1"],
-      emits: ["packages-galerina/example/src/index.ts:2"],
-      tests: 1,
-      refs: 0,
-      docs: 0,
-      names: ["TEST_FAILURE"],
-      severities: ["error"],
-    }], null, 2),
+    JSON.stringify(codeIndex, null, 2),
   );
   write(
     root,
     "packages-galerina/example/src/index.ts",
     'export const D = { code: "FUNGI-TEST-001", name: "TEST_FAILURE", severity: "error" };\n'
-      + 'throw new Error("FUNGI-FUSE-HASH-MISMATCH");\n',
+      + 'throw new Error("FUNGI-FUSE-HASH-MISMATCH");\n'
+      + sourceExtra,
   );
   write(
     root,
@@ -115,6 +130,32 @@ test("gen-code-registry --check refuses drift without rewriting outputs or stamp
     assert.notEqual(drifted.status, 0);
     assert.equal(readFileSync(markdown, "utf8"), "tampered\n");
     assert.equal(readFileSync(agents, "utf8"), stamped);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("gen-code-registry refuses an admitted descriptive identity missing from the index", () => {
+  const root = fixture({ includeDescriptiveIndex: false });
+  try {
+    const result = run(root);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /descriptive coverage REFUSED.*1 admitted identity/i);
+    assert.equal(existsSync(join(root, "build", "code-registry", "REGISTRY.md")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("gen-code-registry refuses an ambiguous descriptive source token", () => {
+  const root = fixture({
+    sourceExtra: 'const unexplained = "FUNGI-NOVEL-AMBIGUOUS";\n',
+  });
+  try {
+    const result = run(root);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /descriptive coverage REFUSED.*1 ambiguous token/i);
+    assert.equal(existsSync(join(root, "build", "code-registry", "REGISTRY.md")), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

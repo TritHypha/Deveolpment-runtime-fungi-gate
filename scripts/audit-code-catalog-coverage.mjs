@@ -1,115 +1,155 @@
 #!/usr/bin/env node
-// audit-code-catalog-coverage.mjs — how much of the FUNGI-* code space can the catalog SEE?
+// audit-code-catalog-coverage.mjs -- count-owning descriptive code gate.
 //
-// WHY THIS EXISTS
-//   build/code-registry used to claim "every code is registered by construction — no orphans".
-//   That was false. A false completeness claim is worse than the gap it hides, because it stops
-//   anyone looking. This measures the gap so the claim can be DERIVED instead of asserted.
+// The former report matched every uppercase FUNGI-* token and guessed that
+// every non-numeric tail was a real code. That mixed emitted identities,
+// comments, family prefixes, domain tags, and deliberate negative fixtures.
+// It could expose a gap, but could not safely authorize a zero.
 //
-// THE TWO BLIND SPOTS (both measured 2026-07-25, board #164/#165)
-//   EMIT FORM   a positional call argument on its own line is scored "ref", not an emit.
-//   CODE SHAPE  every instrument on both sides matched `FUNGI-[A-Z0-9]+-\d+`, which REQUIRES a
-//               numeric tail — so `FUNGI-FUSE-HASH-MISMATCH` is invisible by construction. R&D
-//               0392 named this one, and owned that it had silently excluded FUSE from their own
-//               294- and 378-code surfaces too.
+// The current gate consumes the syntax-bound classifier shared with the code
+// index. A descriptive identity must occur at a bounded diagnostic sink. A
+// novel ambiguous source token is an explicit refusal until it is either bound
+// to a sink or marked as a deliberate `code-catalog-reference`.
 //
-// REPORT-ONLY by design (always exit 0). The gap is real and boarded, but turning it into a
-// blocking gate today would just park a third red — and a parked red teaches people to ignore it.
-// It becomes a gate when the index is fixed; then a REGRESSION is what should fail the close.
-//
-// Usage:  node scripts/audit-code-catalog-coverage.mjs [--self-test]
+// Usage: node scripts/audit-code-catalog-coverage.mjs [--self-test] [--json] [--report-only]
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { classifyDescriptiveDiagnosticIdentities } from "./lib/descriptive-diagnostic-identities.mjs";
 
 const DEFAULT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-
-// A shape-agnostic sweep also catches ILLUSTRATIVE placeholders (`FUNGI-CATEGORY-NNN` in a doc
-// comment, `FUNGI-TYPE-XXX` in a codemod). Those are not missing registrations, and letting them
-// pad the headline would be the same overclaiming this whole thread is about.
-const isPlaceholder = (c) => /-(NNN|XXX|N)$/.test(c) || /-XXX-/.test(c) || /-[A-Z]$/.test(c);
-const SHAPE_AGNOSTIC = /\bFUNGI-[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g;
-const NUMERIC_TAIL = /-\d+$/;
-const famOf = (c) => c.split("-").slice(0, 2).join("-");
-// Families whose refusals run on the signing / verification path — the ones a human most needs to
-// look up, and the ones the catalog is most conspicuously missing.
+const famOf = (code) => code.split("-").slice(0, 2).join("-");
 const SIGNING_FAMILIES = new Set(["FUNGI-FUSE", "FUNGI-MANIFEST", "FUNGI-REVOCATION"]);
 
-/** Measure the catalog's coverage gap. Returns derived counts — never hand-typed downstream. */
+/** Measure syntax-admitted descriptive identities against generated catalog entries. */
 export function measureCoverageGap(root = DEFAULT_ROOT, registryEntries = undefined) {
   const entries = registryEntries ?? JSON.parse(
     readFileSync(join(root, "build/code-registry/registry.json"), "utf8"),
   ).entries;
   const known = new Set(entries.map((entry) => entry.code));
 
-  // build/ is EXCLUDED deliberately: ingesting our own generated output is the exact defect that
-  // keeps audit-artifact-drift parked on a phantom that sustains itself.
-  const files = execFileSync("git", ["ls-files", "*.ts", "*.mjs", "*.js", "*.fungi"], { cwd: root, encoding: "utf8" })
-    .split("\n").map((s) => s.trim()).filter(Boolean)
-    .filter((f) => !f.startsWith("build/") && !f.includes("node_modules/") && !f.endsWith(".d.ts"));
+  const files = execFileSync("git", ["ls-files", "*.ts", "*.mjs", "*.js"], {
+    cwd: root,
+    encoding: "utf8",
+  })
+    .split("\n")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .filter((file) => !file.startsWith("build/") && !file.includes("node_modules/") && !file.endsWith(".d.ts"));
 
-  const seen = new Map();
-  let scanned = 0, absent = 0;                      // absent = tracked but not on disk; counted, not swallowed
-  for (const f of files) {
-    let src;
-    try { src = readFileSync(join(root, f), "utf8"); } catch { absent++; continue; }
-    scanned++;
-    src.split("\n").forEach((line, i) => {
-      for (const m of line.matchAll(SHAPE_AGNOSTIC)) if (!seen.has(m[0])) seen.set(m[0], `${f}:${i + 1}`);
-    });
+  const identities = new Map();
+  const references = new Map();
+  const ambiguous = new Map();
+  let scanned = 0;
+  let absent = 0;
+  for (const file of files) {
+    let source;
+    try { source = readFileSync(join(root, file), "utf8"); } catch { absent += 1; continue; }
+    scanned += 1;
+    const normalized = file.replace(/\\/g, "/");
+    const testOnly = /\/tests?\//.test(`/${normalized}`) || /\.test\./.test(normalized);
+    const classified = classifyDescriptiveDiagnosticIdentities(source, { testOnly });
+    for (const entry of classified.identities) {
+      if (!identities.has(entry.code)) identities.set(entry.code, `${normalized}:${entry.line}`);
+    }
+    for (const entry of classified.references) {
+      if (!references.has(entry.code)) references.set(entry.code, `${normalized}:${entry.line}`);
+    }
+    for (const entry of classified.unclassified) {
+      if (!ambiguous.has(entry.code)) ambiguous.set(entry.code, `${normalized}:${entry.line}`);
+    }
   }
 
-  const realMissing = [...seen].filter(([c]) => !known.has(c) && !NUMERIC_TAIL.test(c) && !isPlaceholder(c));
+  // An identity may be emitted in one file and mentioned without a sink in
+  // another. Once the emitted identity is admitted, the other occurrence is a
+  // reference, not a second ambiguity. A registered descriptive identity is
+  // treated the same way.
+  const unclassified = [...ambiguous].filter(([code]) => !identities.has(code) && !known.has(code));
+  const missing = [...identities].filter(([code]) => !known.has(code));
   const byFamily = {};
-  for (const [c, site] of realMissing) (byFamily[famOf(c)] ??= []).push([c, site]);
-  const signing = realMissing.filter(([c]) => SIGNING_FAMILIES.has(famOf(c))).length;
+  for (const [code, site] of missing) (byFamily[famOf(code)] ??= []).push([code, site]);
+  const unclassifiedByFamily = {};
+  for (const [code, site] of unclassified) (unclassifiedByFamily[famOf(code)] ??= []).push([code, site]);
 
   return {
-    scanned, absent, filesEnumerated: files.length,
-    tokensInSource: seen.size,
-    realMissing: realMissing.length,
-    signingMissing: signing,
+    scanned,
+    absent,
+    filesEnumerated: files.length,
+    descriptiveIdentities: identities.size,
+    signingIdentities: [...identities].filter(([code]) => SIGNING_FAMILIES.has(famOf(code))).length,
+    referenceOnly: [...references].filter(([code]) => !identities.has(code)).length,
+    unclassified: unclassified.length,
+    realMissing: missing.length,
+    signingMissing: missing.filter(([code]) => SIGNING_FAMILIES.has(famOf(code))).length,
     byFamily,
-    // Non-vacuity is a PROPERTY of the result, so every consumer can check it rather than trusting us.
-    vacuous: files.length === 0 || scanned === 0 || seen.size === 0,
+    unclassifiedByFamily,
+    vacuous: files.length === 0 || scanned === 0 || identities.size === 0,
   };
 }
 
-// ── self-test ────────────────────────────────────────────────────────────────
-// Controls, so a zero can never read as "clean": one code that must be FOUND and MISSING, one that
-// must be FOUND and PRESENT. If the premise ever goes stale (someone registers FUSE — good news),
-// this fails loudly rather than reporting a quietly meaningless zero.
 function selfTest() {
-  const fails = [];
-  let checks = 0; // DERIVED — the denominator must move when a check is added
-  const ok = (cond, what) => { checks += 1; if (!cond) fails.push(what); };
+  const failures = [];
+  let checks = 0;
+  const check = (condition, message) => { checks += 1; if (!condition) failures.push(message); };
 
-  ok(isPlaceholder("FUNGI-CATEGORY-NNN"), "placeholder classifier must catch an -NNN template");
-  ok(isPlaceholder("FUNGI-PCI-G"), "placeholder classifier must catch a single-letter tail");
-  ok(!isPlaceholder("FUNGI-FUSE-HASH-MISMATCH"), "CONTROL: a real code must NOT be classified a placeholder");
-  ok(!NUMERIC_TAIL.test("FUNGI-FUSE-VERSION"), "CONTROL: the shape blindness must be reproducible");
-  ok(NUMERIC_TAIL.test("FUNGI-GOV-005"), "CONTROL: a numeric code must still read as numeric");
+  const sink = classifyDescriptiveDiagnosticIdentities(
+    'return fuseError("FUNGI-FUSE-HASH-MISMATCH", "x");',
+  );
+  check(sink.identities.length === 1, "CONTROL: descriptive sink must be admitted");
+  const prefix = classifyDescriptiveDiagnosticIdentities("// FUNGI-FUSE is a family prefix\n");
+  check(prefix.identities.length === 0, "CONTROL: comment prefix must not mint an identity");
+  // code-catalog-reference: detector-of-detector mutation token.
+  const ambiguous = classifyDescriptiveDiagnosticIdentities(
+    'const unexplained = "FUNGI-NOVEL-AMBIGUOUS";', // code-catalog-reference
+  );
+  check(ambiguous.unclassified.length === 1, "CONTROL: ambiguous token must stay visible");
 
-  const r = measureCoverageGap();
-  ok(!r.vacuous, "sweep must not be vacuous (files enumerated, read, and tokens found)");
-  ok(r.byFamily["FUNGI-FUSE"]?.length > 0, "CONTROL: the known-missing FUSE family must be reported missing");
-  ok(!Object.keys(r.byFamily).includes("FUNGI-ADMIT"), "CONTROL: a fully-registered numeric family must NOT appear");
+  const result = measureCoverageGap();
+  check(!result.vacuous, "repository sweep must not be vacuous");
+  check(result.signingIdentities > 0, "CONTROL: signing identities must be observed");
+  check(result.realMissing === 0, "generated registry must own every admitted identity");
+  check(result.unclassified === 0, "source must contain no unresolved descriptive token");
 
-  console.log(fails.length === 0
-    ? `  ✅ self-test ${checks - fails.length}/${checks} — the known gap is visible and the controls stay silent`
-    : `  ❌ self-test FAILED:\n     - ${fails.join("\n     - ")}`);
-  return fails.length === 0 ? 0 : 1;
+  console.log(failures.length === 0
+    ? `  PASS self-test ${checks}/${checks}`
+    : `  REFUSED self-test ${checks - failures.length}/${checks}:\n     - ${failures.join("\n     - ")}`);
+  return failures.length === 0 ? 0 : 1;
 }
 
-if (process.argv.includes("--self-test")) process.exit(selfTest());
+function main() {
+  if (process.argv.includes("--self-test")) return selfTest();
 
-const r = measureCoverageGap();
-if (r.vacuous) { console.error("VACUOUS: nothing enumerated or readable — refusing to report a zero"); process.exit(2); }
-console.log(`code-catalog coverage: scanned ${r.scanned}/${r.filesEnumerated} tracked sources (${r.absent} tracked-but-absent)`);
-console.log(`  ${r.tokensInSource} distinct FUNGI-* tokens in source (shape-agnostic)`);
-console.log(`  ${r.realMissing} REAL codes absent from the catalog — ${r.signingMissing} of them on the signing path`);
-for (const fam of Object.keys(r.byFamily).sort((a, b) => r.byFamily[b].length - r.byFamily[a].length)) {
-  console.log(`    ${fam.padEnd(20)} ${String(r.byFamily[fam].length).padStart(3)}   e.g. ${r.byFamily[fam][0][1]}`);
+  const result = measureCoverageGap();
+  if (result.vacuous) {
+    console.error("VACUOUS: nothing enumerated or no identities observed; refusing a zero");
+    return 2;
+  }
+  const failed = result.realMissing > 0 || result.unclassified > 0;
+  const reportOnly = process.argv.includes("--report-only");
+  if (process.argv.includes("--json")) {
+    console.log(JSON.stringify({
+      authority: reportOnly ? "report-only" : "fail-closed",
+      verdict: failed ? "REFUSED" : "PASS",
+      ...result,
+    }, null, 2));
+  } else {
+    console.log(`code-catalog coverage: scanned ${result.scanned}/${result.filesEnumerated} tracked sources (${result.absent} tracked-but-absent)`);
+    console.log(`  ${result.descriptiveIdentities} admitted descriptive identities (${result.signingIdentities} signing path) | ${result.referenceOnly} reference-only tokens`);
+    console.log(`  ${result.realMissing} admitted identities absent from catalog | ${result.unclassified} ambiguous tokens`);
+    for (const [label, groups] of [["missing", result.byFamily], ["ambiguous", result.unclassifiedByFamily]]) {
+      for (const family of Object.keys(groups).sort((left, right) => groups[right].length - groups[left].length)) {
+        console.log(`    ${label.padEnd(9)} ${family.padEnd(20)} ${String(groups[family].length).padStart(3)}   e.g. ${groups[family][0][1]}`);
+      }
+    }
+    console.log(reportOnly
+      ? "  REPORT-ONLY: non-authorizing inventory"
+      : failed
+        ? "  REFUSED: catalog coverage is incomplete"
+        : "  PASS: catalog owns every admitted descriptive identity");
+  }
+  return reportOnly ? 0 : failed ? 1 : 0;
 }
-console.log("  report-only (board #164/#165) — becomes a gate when the index can see these shapes.");
+
+const invokedPath = process.argv[1] ? resolve(process.argv[1]) : undefined;
+if (invokedPath === resolve(fileURLToPath(import.meta.url))) process.exit(main());

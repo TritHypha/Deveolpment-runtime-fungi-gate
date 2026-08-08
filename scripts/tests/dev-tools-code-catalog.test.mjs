@@ -51,10 +51,18 @@ writeFileSync(join(src, "diag.ts"), [
   'export const FUNGI_FX_005B = { code: "FUNGI-FX-005B", name: "FxFiveB", severity: "error" };',
   'export interface FxShape { readonly code: "FUNGI-FX-050"; }',
   "export function useFive(d){ d.push({ ...FUNGI_FX_005 }); d.push({ ...FUNGI_FX_005B }); }",
+  'export function emitDescriptive(d){ d.push({ code: "FUNGI-FX-REFUSED", name: "FxRefused", severity: "error" }); }',
+  'export function throwDescriptive(){ throw new Error("FUNGI-FX-THROW-REFUSED: boom"); }',
+  "// FUNGI-FX-PREFIX is documentation, not a complete admitted identity",
 ].join("\n") + "\n");
 writeFileSync(
   join(tmp, "AGENTS.md"),
   "live <!-- registry:counts.live -->0 of <!-- registry:counts.total -->0\n",
+);
+mkdirSync(join(tmp, "docs"), { recursive: true });
+writeFileSync(
+  join(tmp, "docs", "example.md"),
+  '`fuseError("FUNGI-DOC-EXAMPLE", "illustrative only")`\n',
 );
 
 const git = (...args) => spawnSync(
@@ -64,7 +72,7 @@ const git = (...args) => spawnSync(
 );
 assert.equal(git("init", "--quiet").status, 0);
 assert.equal(
-  git("add", "--", "AGENTS.md", "packages-galerina/fx/src/diag.ts").status,
+  git("add", "--", "AGENTS.md", "docs/example.md", "packages-galerina/fx/src/diag.ts").status,
   0,
 );
 
@@ -111,6 +119,15 @@ test("code-index does not classify comment or type-position mentions as emits", 
   assert.equal(defs("FUNGI-FX-099"), 0);
   assert.equal(emits("FUNGI-FX-050"), 0);
   assert.equal(defs("FUNGI-FX-050"), 0);
+});
+
+test("code-index admits descriptive identities only from runtime diagnostic sinks", () => {
+  assert.ok(byCode["FUNGI-FX-REFUSED"]);
+  assert.ok(byCode["FUNGI-FX-THROW-REFUSED"]);
+  assert.ok(emits("FUNGI-FX-REFUSED") > 0);
+  assert.ok(emits("FUNGI-FX-THROW-REFUSED") > 0);
+  assert.equal(byCode["FUNGI-FX-PREFIX"], undefined);
+  assert.equal(byCode["FUNGI-DOC-EXAMPLE"], undefined);
 });
 
 test("gen-code-registry distinguishes dead definitions from live emits", () => {

@@ -30,9 +30,9 @@ tooling changes were reconciled.
    38 host boundaries. It now derives and reports 516 and 42 respectively.
 3. Four checked-decision frontend matches had no explicit wildcard terminal.
    Each now has a fail-closed `_ =>` return.
-4. A control-flow example invented `ERR_BOUNDS`, creating a new phantom
-   diagnostic. It now uses the real `FUNGI-MEMORY-006` authority. The registry
-   returned to 111 unadjudicated phantoms and the named membership ratchet.
+4. A control-flow example invented an unregistered bounds-error token, creating
+   a new phantom diagnostic. It now uses the real `FUNGI-MEMORY-006` authority.
+   The registry returned to the named phantom-membership ratchet.
 5. A nested retention audit inherited `NODE_TEST_CONTEXT`, so 13 passing cache
    regressions became an unparseable child summary. Probe children now receive a
    fresh Node-test presentation boundary while retaining suite/process custody.
@@ -74,4 +74,3 @@ stable-checkout fixed point.
    family at a time through physical `.slide`, affine VOK and typed receipts.
 5. Close authenticated object/platform/anchor authority, then switch packages by
    exact executed parity tranches until the retirement ledger reaches zero.
-

@@ -3,13 +3,16 @@
 // and every place it is emitted / tested / documented. A re-runnable dev tool that SAVES TOKENS —
 // query build/code-index/CODE_INDEX.md instead of re-grepping the tree. (Owner request, 2026-06-22.)
 //
-// Namespaces indexed: FUNGI-<FAMILY>-NNN (diagnostics) and ERR_<...> (runtime errors).
+// Namespaces indexed: numeric FUNGI-<FAMILY>-NNN, syntax-admitted descriptive
+// FUNGI identities such as FUNGI-FUSE-HASH-MISMATCH, GATE-* diagnostics, and
+// ERR_<...> runtime errors. Descriptive prose cannot mint catalog authority.
 // Output: build/code-index/code-index.json (machine) + CODE_INDEX.md (human/AI-browsable) + a stdout summary.
 // Roles per occurrence: def (exported const / make*Diag definition / object literal with name+severity),
 //   emit (push/throw/code: site), test, doc (.md), fungi (.fungi), ref (any other mention).
-import { readdirSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { extractCodes, CODE_TEST, familyOf, nsOf } from "./lib/codes.mjs";
+import { classifyDescriptiveDiagnosticIdentities } from "./lib/descriptive-diagnostic-identities.mjs";
 import {
   generatedOutputMatches,
   provenance,
@@ -17,11 +20,14 @@ import {
 
 const ROOT = process.cwd();
 const CHECK = process.argv.includes("--check");
-const SCAN = ["packages-galerina", "docs", "scripts"].map((d) => join(ROOT, d));
+const SCAN = ["packages-galerina", "docs", "scripts", "governance"].map((d) => join(ROOT, d));
+const ROOT_SOURCES = [join(ROOT, "galerina.mjs")];
 const OUT = join(ROOT, "build", "code-index");
 const EXT = /\.(ts|mjs|cjs|fungi|md)$/;
 const SKIP = new Set(["node_modules", "dist", ".git"]);
-// CODE_RE / CODE_TEST / familyOf / nsOf come from the SHARED module (scripts/lib/codes.mjs) — one regex.
+// Numeric CODE_RE / CODE_TEST / familyOf / nsOf come from the shared codes
+// module. Descriptive identities use the bounded lexical classifier rather
+// than broadening that regex into family-prefix and example false positives.
 
 function walk(dir) {
   const out = [];
@@ -83,7 +89,10 @@ function captureObjectMetadata(lines, start, entry, limit = 10) {
   }
 }
 
-const FILES = SCAN.flatMap(walk);
+const FILES = [
+  ...SCAN.flatMap(walk),
+  ...ROOT_SOURCES.filter((path) => existsSync(path)),
+];
 
 // PASS 1 — constId -> code: `export const <ID> = { … code:"CODE" … }` or `export const <ID> = "CODE"`.
 // Lets PASS 2 resolve emits/uses that reference a code by its CONSTANT IDENTIFIER (e.g.
@@ -105,7 +114,19 @@ for (const file of FILES) {
   const isTest = /\/tests?\//.test(rel) || /\.test\./.test(rel);
   const isDoc = rel.endsWith(".md");
   const isFungi = rel.endsWith(".fungi");
-  const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    const source = readFileSync(file, "utf8");
+    const lines = source.split(/\r?\n/);
+    const descriptive = isDoc || isFungi
+      ? { identities: [] }
+      : classifyDescriptiveDiagnosticIdentities(source, { testOnly: isTest });
+    for (const identity of descriptive.identities) {
+      get(identity.code).occ.push({
+        file: rel,
+        line: identity.line,
+        role: "emit",
+        catalogIdentity: true,
+      });
+    }
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimmed = line.trimStart();
@@ -251,7 +272,7 @@ const codes = [...idx.entries()]
   .map(([code, e]) => {
   const seen = new Set();
   const occ = e.occ
-    .map((o) => (isScriptFile(o.file) && (o.role === "def" || o.role === "emit")) ? { ...o, role: "ref" } : o)
+    .map((o) => (isScriptFile(o.file) && !o.catalogIdentity && (o.role === "def" || o.role === "emit")) ? { ...o, role: "ref" } : o)
     .filter((o) => { const k = `${o.file}:${o.line}:${o.role}`; if (seen.has(k)) return false; seen.add(k); return true; });
   return {
     code, namespace: nsOf(code), family: familyOf(code),

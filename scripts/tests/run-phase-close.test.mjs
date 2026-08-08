@@ -205,6 +205,14 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
   assert.match(
     runnerSource,
+    /run\("code-catalog-coverage:selftest", "node", \["scripts\/audit-code-catalog-coverage\.mjs", "--self-test"\]\)/,
+  );
+  assert.match(
+    runnerSource,
+    /run\("code-catalog-coverage", "node", \["scripts\/audit-code-catalog-coverage\.mjs"\]\)/,
+  );
+  assert.match(
+    runnerSource,
     /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
   );
 });

@@ -549,6 +549,8 @@ run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check"]);
 //        dev-tool-index remains inside graph:all. ──
 run("code-index", "node", ["scripts/code-index.mjs", "--check"]);
 run("code-registry", "node", ["scripts/gen-code-registry.mjs", "--check"]);
+run("code-catalog-coverage:selftest", "node", ["scripts/audit-code-catalog-coverage.mjs", "--self-test"]);
+run("code-catalog-coverage", "node", ["scripts/audit-code-catalog-coverage.mjs"]);
 // FUNGI-TYPE twin-parity (RD-0412): the self-hosted type-checker twin must only emit codes the real
 // type-checker.ts emits (scanned from actual call-sites, per-pass). Fail-closed — exit 3 on a false
 // differential — now that the type-system twin is complete, a permanent regression guard against a new

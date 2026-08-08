@@ -23,11 +23,21 @@ counts or open items that a newer section explicitly supersedes.
   `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
   in the current working tree; the bounded-cache programme is already tracked
   in its own dated section below. No unknown file was adopted or deleted.
-- [ ] Close the code-catalog shape gap before production signing authority:
-  the current registry scanner reports **81 real FUNGI-* tokens absent from the
-  catalog, 51 on the signing path**. This remains report-only under boards
-  #164/#165 and must become a count-owning fail-closed gate after the scanner
-  can distinguish complete diagnostic identities from prefixes/examples.
+- [x] Close the code-catalog shape gap before production signing authority.
+  The former shape sweep's **81** was an over-broad token count; the
+  syntax-bound classifier proves **73 admitted descriptive identities**, of
+  which **51** are on the signing path. All 73 now appear in the derived
+  **974-code** registry. The count-owning gate passes with **0 missing / 0
+  ambiguous**, its detector self-test is **7/7**, and phase-close runs both the
+  self-test and authoritative gate. Comments, tests, types, family/domain
+  prefixes and explicit mutation fixtures cannot mint identity authority;
+  dynamic code-prefix construction refuses.
+- [x] Re-run the complete blocking phase-close after the catalog and generated
+  evidence converged. Every blocking gate passed in **643 seconds**, including
+  core tests, **433 tooling tests**, graph-all **5/5**, Golden Pack **11/11**,
+  coverage **974/974**, catalog coverage **0 missing / 0 ambiguous**, artifact
+  drift, governed examples and crypto suites. The post-run Node census returned
+  to the single pre-existing MCP process.
 - [x] Audit GitHub Actions without changing remote state. SLIDE's latest
   remote security-closure is green at `feda0e7`, but the local branch is 15
   commits ahead. Galerina's latest `main` runs are stale failures at

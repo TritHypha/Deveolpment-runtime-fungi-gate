@@ -6,7 +6,7 @@
     "tests": 9452,
     "devTools": 160,
     "auditTools": 87,
-    "toolsInCadence": 63,
+    "toolsInCadence": 64,
     "proofs": 40
   },
   "packages": [
@@ -1192,14 +1192,14 @@
     {
       "name": "audit-code-catalog-coverage.mjs",
       "category": "audit",
-      "purpose": "how much of the FUNGI-* code space can the catalog SEE?",
+      "purpose": "- count-owning descriptive code gate.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
+        "sinks/taint",
         "signing/fusion",
         "coverage",
         "diagnostics",
-        "doc-drift",
         "graph/index"
       ]
     },
@@ -2410,6 +2410,8 @@
       "selfTest": true,
       "inCadence": true,
       "concerns": [
+        "signing/fusion",
+        "governance",
         "provenance",
         "diagnostics",
         "doc-drift",
@@ -2423,6 +2425,7 @@
       "selfTest": false,
       "inCadence": true,
       "concerns": [
+        "sinks/taint",
         "signing/fusion",
         "provenance",
         "coverage",
@@ -3521,6 +3524,7 @@
       "memory-graph.mjs",
       "package-graph-generator.mjs",
       "ts-retirement-graph.mjs",
+      "code-index.mjs",
       "gen-code-registry.mjs",
       "gen-contract-registry.mjs",
       "gen-unit-registry.mjs",
@@ -3566,7 +3570,6 @@
       "audit-cast-hygiene.mjs",
       "audit-checker-wiring.mjs",
       "audit-claim-hygiene.mjs",
-      "audit-code-catalog-coverage.mjs",
       "audit-codes-full.mjs",
       "audit-compiler-stage-hashes.mjs",
       "audit-compiler-stage-twins.mjs",
@@ -3659,6 +3662,7 @@
       "package-graph-generator.mjs",
       "project-graph-generator.mjs",
       "ts-retirement-graph.mjs",
+      "code-index.mjs",
       "gen-contract-registry.mjs",
       "registry-authority-cli.mjs",
       "registry-generation-cli.mjs",
@@ -3727,6 +3731,7 @@
     ],
     "sinks/taint": [
       "audit-checker-wiring.mjs",
+      "audit-code-catalog-coverage.mjs",
       "audit-flowparam-fidelity.mjs",
       "audit-hardening-determinism.mjs",
       "audit-muted-diagnostics.mjs",
@@ -3737,6 +3742,7 @@
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
       "audit-stdlib-gates-parity.mjs",
+      "gen-code-registry.mjs",
       "verify-registry-static-host-build-recipe.mjs",
       "check-gate-injection.mjs",
       "generate-sbom.mjs",
@@ -3906,7 +3912,6 @@
     "toolsNotInCadence": [
       "audit-allowlist-sensitive.mjs",
       "audit-brand-keys.mjs",
-      "audit-code-catalog-coverage.mjs",
       "audit-codes-full.mjs",
       "audit-diagnostic-codes.mjs",
       "audit-diagnostic-doc-drift.mjs",

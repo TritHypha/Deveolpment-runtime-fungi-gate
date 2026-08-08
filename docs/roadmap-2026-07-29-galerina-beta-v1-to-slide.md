@@ -20,12 +20,31 @@ Node process. The former concurrent `bounded-cache.ts`/`memory-sandobx` hold is
 now closed: neither surface is outstanding in the current tree and no unknown
 content was adopted or deleted.
 
+The diagnostic catalog is now count-owning at **974 entries**. Its bounded
+source classifier admits **73 descriptive identities**, including **51 on the
+signing path**, and the fail-closed coverage gate reports **0 missing / 0
+ambiguous** with a **7/7** detector self-test. Prefixes, examples, tests,
+type-only strings and explicit mutation fixtures cannot mint catalog entries.
+
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
 host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh 2026-08-08: boards #164-#166 are closed on the active branch.
+The old shape-only scanner's **81 real code** headline was not authoritative:
+it mixed emitted identities with prefixes and examples. A bounded lexer now
+admits only code-bearing sinks, rejects dynamically assembled prefixes, and
+forces novel ambiguous source tokens to fail the generator and phase-close.
+The red-before-regeneration evidence was **73 missing / 51 signing / 0
+ambiguous**; the same gate after regeneration is **73 admitted / 51 signing /
+0 missing / 0 ambiguous**. The registry contains **974** entries and its
+detector controls pass **7/7**. The subsequent complete blocking phase-close
+passed every gate in **643 seconds**, including **433 tooling tests**, graph-all
+**5/5**, Golden Pack **11/11**, coverage **974/974**, artifact drift and crypto
+suites; the process census returned to one pre-existing MCP Node process.
 
 Roadmap refresh 2026-08-08: hosted CI was checked read-only. SLIDE's latest
 remote security-closure is green at `feda0e7`, but the local branch is 15
@@ -70,12 +89,11 @@ no SLIDE execution authority, retirement count or production-admission state.
 
 Roadmap refresh 2026-08-08: the outstanding 27-file generated estate was
 regenerated to a verified fixed point and committed locally as `c544cd28`.
-Code registry/index converged at **896 codes**; component health is **99/99
-(100%)**; status, subway, dev-tool, flat-root and graph drift gates all pass.
-One explicit production debt remains visible: **81 real FUNGI-* tokens are not
-yet catalogued, including 51 on the signing path**. The scanner still labels
-this report-only under boards #164/#165, so production signing authority may
-not treat catalog silence as complete coverage.
+Code registry/index converged at **896 codes** at that historical checkpoint;
+component health was **99/99 (100%)** and status, subway, dev-tool, flat-root
+and graph drift gates passed. The then-report-only 81/51 catalog headline is
+superseded by the current syntax-bound **974-entry** registry and fail-closed
+**73 admitted / 51 signing / 0 missing / 0 ambiguous** coverage gate above.
 
 Roadmap refresh 2026-08-08: no other AI worker was declared active when this
 chapter began. Codex owns Galerina

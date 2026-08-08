@@ -2,24 +2,23 @@
 
 The authoritative catalog of EVERY diagnostic/error code, GENERATED from the code-index (standard #10).
 Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-code-registry.mjs`.
-> **Coverage is PARTIAL — do not read this as the code space.** This catalog covers codes the code-index
-> can see: NUMERIC-tailed codes (`FUNGI-<FAMILY>-001`) reached through the emit shapes its line-based
-> matcher recognises. **81 real codes are absent outright** because their tail is not numeric —
-> **51 of them on the signing path** (unsigned, hash mismatch, tamper, revoked key, sidecar drift).
-> Those refusals DO fire; this catalog cannot see them. **Absence here is not evidence a code is
-> unregistered.** Board #164/#165. Counts are DERIVED at generation time by
-> `scripts/audit-code-catalog-coverage.mjs` — never hand-typed, so they cannot rot into a comfortable lie.
+> **Coverage gate PASS:** 73 syntax-admitted descriptive identities are catalogued,
+> including 51 on the signing path; 0 are missing and 0 source tokens are ambiguous.
+> Numeric-tail codes and descriptive identities share this catalog. Descriptive text only acquires identity
+> authority at a bounded diagnostic sink; comments, type positions, tests, and explicit
+> `code-catalog-reference` fixtures cannot mint entries. Counts are derived by
+> `scripts/audit-code-catalog-coverage.mjs`; generation refuses any non-zero gap.
 
 ## Status counts
 
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 285 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 363 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 114 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 214 | referenced only (no def/emit) |
+| phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 215 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -411,6 +410,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-DEPLOY-001 | phantom | — | — |
 | FUNGI-DEPLOY-005 | phantom | — | — |
 
+### DRCM (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-DRCM-UNSUPPORTED | inline | — | — |
+
 ### DRIFT (3)
 
 | code | status | name(s) | severity |
@@ -454,6 +459,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-EFFECT-101 | ref | — | — |
 | GATE-EFFECT-102 | ref | — | — |
 
+### EMIT (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-EMIT-STUB | inline | — | — |
+
 ### ERR_* (142)
 
 | code | status | name(s) | severity |
@@ -470,7 +481,6 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_ANONYMOUS_DENIED | ref | — | — |
 | ERR_ARGUMENT_COUNT | ref | — | — |
 | ERR_ARTIFACT_HASH_MISMATCH | ref | — | — |
-| ERR_BOUNDS | phantom | — | — |
 | ERR_BRIDGE_DISPATCH_FAULT | inline | — | — |
 | ERR_BRIDGE_NO_MANIFEST | inline | — | — |
 | ERR_BRIDGE_UNATTESTED | inline | — | — |
@@ -585,6 +595,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_SCHEMA | ref | — | — |
 | ERR_SIZE_EXCEEDED | ref | — | — |
 | ERR_SOME_CODE | ref | — | — |
+| ERR_STRING_TOO_LONG | ref | — | — |
 | ERR_TOO_SHORT | ref | — | — |
 | ERR_TOXIC_NEGATIVE | ref | — | — |
 | ERR_TOXIC_OVERFLOW | ref | — | — |
@@ -655,6 +666,45 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-FUEL-001 | ref | — | — |
+
+### FUSE (34)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-FUSE-ACL-UNDERDECLARED | inline | — | — |
+| FUNGI-FUSE-BAD-DESCRIPTOR | inline | — | — |
+| FUNGI-FUSE-BAD-SIDECAR | inline | — | — |
+| FUNGI-FUSE-HASH-MISMATCH | inline | — | — |
+| FUNGI-FUSE-HYBRID-ERROR | inline | — | — |
+| FUNGI-FUSE-HYBRID-INVALID | inline | — | — |
+| FUNGI-FUSE-HYBRID-PQ-KEY-MALFORMED | inline | — | — |
+| FUNGI-FUSE-HYBRID-PQ-KEY-MISSING | inline | — | — |
+| FUNGI-FUSE-HYBRID-UNVERIFIED | inline | — | — |
+| FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE | inline | — | — |
+| FUNGI-FUSE-KEY-REVOKED | inline | — | — |
+| FUNGI-FUSE-NO-DESCRIPTOR | inline | — | — |
+| FUNGI-FUSE-NO-EXPORT | inline | — | — |
+| FUNGI-FUSE-NO-MANIFEST | inline | — | — |
+| FUNGI-FUSE-NO-PACKAGE | inline | — | — |
+| FUNGI-FUSE-NO-PUBKEY | inline | — | — |
+| FUNGI-FUSE-NO-WASM | inline | — | — |
+| FUNGI-FUSE-PROVIDES-UNKNOWN | inline | — | — |
+| FUNGI-FUSE-REGISTRY-DENIED | inline | — | — |
+| FUNGI-FUSE-REVOCATION-UNTRUSTED | inline | — | — |
+| FUNGI-FUSE-REVOCATION-UNVERIFIABLE | inline | — | — |
+| FUNGI-FUSE-SET-AMBIGUOUS | inline | — | — |
+| FUNGI-FUSE-SET-CYCLE | inline | — | — |
+| FUNGI-FUSE-SET-DUPLICATE | inline | — | — |
+| FUNGI-FUSE-SET-SELF | inline | — | — |
+| FUNGI-FUSE-SET-UNSIGNED | inline | — | — |
+| FUNGI-FUSE-SIDECAR-DRIFT | inline | — | — |
+| FUNGI-FUSE-SIG-ERROR | inline | — | — |
+| FUNGI-FUSE-SIG-INVALID | inline | — | — |
+| FUNGI-FUSE-UNKNOWN-CAP | inline | — | — |
+| FUNGI-FUSE-UNSIGNED | inline | — | — |
+| FUNGI-FUSE-UNSIGNED-ALLOWED | inline | — | — |
+| FUNGI-FUSE-UNSIGNED-DENIED | inline | — | — |
+| FUNGI-FUSE-VERSION | inline | — | — |
 
 ### FX (6)
 
@@ -844,6 +894,16 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-KB-001 | ref | — | — |
 
+### KEY (5)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-KEY-001 | inline | — | — |
+| FUNGI-KEY-002 | inline | — | — |
+| FUNGI-KEY-004 | inline | — | — |
+| FUNGI-KEY-005 | inline | — | — |
+| FUNGI-KEY-010 | inline | — | — |
+
 ### LAYOUT (1)
 
 | code | status | name(s) | severity |
@@ -867,12 +927,17 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-LIMIT-001 | inline | ENFORCED_LIMIT_EXCEEDED | — |
 
-### LINT (2)
+### LINT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-LINT-001 | live | FLOW_EXCESSIVE_NESTING | info |
 | FUNGI-LINT-002 | live | UNUSED_BINDING | warning |
+| FUNGI-LINT-AUTO-SETTING | inline | — | — |
+| FUNGI-LINT-COMMENT | inline | — | — |
+| FUNGI-LINT-CONTRACT | inline | — | — |
+| FUNGI-LINT-ERROR | inline | — | — |
+| FUNGI-LINT-INTENT | inline | — | — |
 
 ### LIVE (2)
 
@@ -900,7 +965,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-LOGIC-013 | inline | DUPLICATE_TRUTH_TABLE_ROW | error |
 | FUNGI-LOGIC-014 | inline | INCOMPLETE_TRUTH_TABLE | warning |
 
-### MANIFEST (5)
+### MANIFEST (20)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -909,6 +974,21 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-MANIFEST-003 | phantom | — | — |
 | FUNGI-MANIFEST-004 | phantom | — | — |
 | FUNGI-MANIFEST-005 | phantom | — | — |
+| FUNGI-MANIFEST-DEPTH | inline | — | — |
+| FUNGI-MANIFEST-DUPLICATE-KEY | inline | — | — |
+| FUNGI-MANIFEST-INVALID | inline | — | — |
+| FUNGI-MANIFEST-LEGACY-FORMAT | inline | — | — |
+| FUNGI-MANIFEST-LENGTH-OVERFLOW | inline | — | — |
+| FUNGI-MANIFEST-MISSING | inline | — | — |
+| FUNGI-MANIFEST-NONCANONICAL | inline | — | — |
+| FUNGI-MANIFEST-PQ-REQUIRED | inline | — | — |
+| FUNGI-MANIFEST-PROFILE-UNRECOGNIZED | inline | — | — |
+| FUNGI-MANIFEST-PUBKEY-MISSING | inline | — | — |
+| FUNGI-MANIFEST-REVOKED-KEY | inline | — | — |
+| FUNGI-MANIFEST-TAMPER | inline | — | — |
+| FUNGI-MANIFEST-UNSIGNED | inline | — | — |
+| FUNGI-MANIFEST-VERSION | inline | — | — |
+| FUNGI-MANIFEST-VERSION-UNAVAILABLE | inline | — | — |
 
 ### MATCH (1)
 
@@ -1197,7 +1277,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PROBE-001 | ref | — | — |
 | FUNGI-PROBE-002 | ref | — | — |
 
-### PROFILE (8)
+### PROFILE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1209,6 +1289,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-PROFILE-005B | referenced | DYNAMIC_REGEX_IN_STRICT_PROFILE | error |
 | FUNGI-PROFILE-006 | referenced | MISSING_RUNTIME_BUDGET | warning |
 | FUNGI-PROFILE-007 | referenced | DYNAMIC_RUNTIME_MUTATION_PROHIBITED | error |
+| FUNGI-PROFILE-UNRECOGNIZED | inline | — | — |
 
 ### PROOF (5)
 
@@ -1275,12 +1356,13 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-REPORT-001 | inline | — | — |
 | FUNGI-REPORT-005 | inline | — | — |
 
-### RES (2)
+### RES (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
 | FUNGI-RES-002 | live | SUBSTRATE_HEAL_NOT_AUDITED | warning |
+| FUNGI-RES-CB-PENDING | inline | — | — |
 
 ### RESOLVE (21)
 
@@ -1320,6 +1402,13 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-RETAIN-001 | ref | — | — |
 
+### REVOCATION (2)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-REVOCATION-REGISTRY | inline | — | — |
+| FUNGI-REVOCATION-UNSIGNED | inline | — | — |
+
 ### ROUTE (3)
 
 | code | status | name(s) | severity |
@@ -1328,7 +1417,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ROUTE-002 | phantom | — | — |
 | FUNGI-ROUTE-003 | phantom | — | — |
 
-### RUNTIME (6)
+### RUNTIME (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1338,6 +1427,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-RUNTIME-005 | live | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error |
 | FUNGI-RUNTIME-006 | live | RATE_LIMIT_EXCEEDED / RateLimitExceeded | error |
 | FUNGI-RUNTIME-007 | inline | — | — |
+| FUNGI-RUNTIME-EFFECT-GATE | inline | — | — |
 
 ### SAFETY (6)
 
@@ -1355,6 +1445,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | code | status | name(s) | severity |
 |---|---|---|---|
 | FUNGI-SBOM-001 | inline | — | error |
+
+### SCAN (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-SCAN-UNANALYZABLE | inline | — | — |
 
 ### SEC (4)
 
@@ -1396,6 +1492,16 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-SEM-012 | inline | GATE_V3_UNKNOWN_EFFECT_NAME | — |
 | GATE-SEM-013 | inline | GATE_V3_TAINT_REACHES_GOVERNED_SINK | — |
 | GATE-SEM-014 | inline | GATE_V3_SEMANTIC_ZONE_NOT_GATED | — |
+
+### SLOP (5)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-SLOP-AI-ARTIFACT | inline | — | — |
+| FUNGI-SLOP-EMOJI | inline | — | — |
+| FUNGI-SLOP-FILLER-COMMENT | inline | — | — |
+| FUNGI-SLOP-PLACEHOLDER-NAME | inline | — | — |
+| FUNGI-SLOP-VACUOUS-INTENT | inline | — | — |
 
 ### SOURCE (1)
 
@@ -1456,7 +1562,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-STYLE-002 | live | TYPE_NAME_PASCAL_CASE | warning |
 | FUNGI-STYLE-SEC-001 | live | SENSITIVE_BINDING_TYPE | warning |
 
-### SUBSTRATE (5)
+### SUBSTRATE (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1465,8 +1571,9 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SUBSTRATE-003 | live | REDUNDANCY_INSUFFICIENT | error |
 | FUNGI-SUBSTRATE-004 | live | UNVOTED_ANALOG_INTO_DETERMINISTIC | error |
 | FUNGI-SUBSTRATE-005 | live | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
+| FUNGI-SUBSTRATE-DEADZONE | inline | — | — |
 
-### SYNTAX (17)
+### SYNTAX (21)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1483,10 +1590,14 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SYNTAX-013 | ref | — | — |
 | FUNGI-SYNTAX-014 | inline | VERSION_HEADER_INVALID | error |
 | FUNGI-SYNTAX-015 | inline | VERSION_HEADER_MISSING | error |
+| FUNGI-SYNTAX-BRACE | inline | — | — |
+| FUNGI-SYNTAX-CONTRACT-IN-BODY | inline | — | — |
 | FUNGI-SYNTAX-LEGACY-001 | referenced | LEGACY_EFFECTS_SYNTAX | warning |
 | FUNGI-SYNTAX-LEGACY-002 | ref | — | — |
 | FUNGI-SYNTAX-LEGACY-003 | ref | — | — |
 | FUNGI-SYNTAX-RLF-001 | phantom | — | — |
+| FUNGI-SYNTAX-TAB | inline | — | — |
+| FUNGI-SYNTAX-TRAILING-WS | inline | — | — |
 
 ### TAINT (6)
 
@@ -1682,6 +1793,12 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-WASM-001 | phantom | — | — |
 | FUNGI-WASM-004 | phantom | — | — |
 | FUNGI-WASM-005 | phantom | — | — |
+
+### WAT (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| FUNGI-WAT-STUB | inline | — | — |
 
 ### WEB (14)
 

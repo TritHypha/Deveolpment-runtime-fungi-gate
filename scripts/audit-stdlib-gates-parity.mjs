@@ -332,6 +332,7 @@ if (SELF_TEST) {
     "    required_effects:",
     "      - shell.exec",              // R1: real name is shell.execute
     "      - not.arealeffect",         // R1: no such family
+    // code-catalog-reference: deliberately unemittable R2 mutation fixture.
     "    diagnostic_on_reject: FUNGI-NOT-A-REAL-CODE",  // R2: unemittable
     "  - id: nowhere_sink",
     "    kind: function",
@@ -381,6 +382,7 @@ if (SELF_TEST) {
     ["R1 fires on an absent family (not.arealeffect)", dirty.badEffects.includes("not.arealeffect")],
     ["R1 does NOT fire on `effect: pure` (a tier marker)", !dirty.badEffects.includes("pure")],
     ["R1 does NOT fire on a canonical name (audit.write)", !dirty.badEffects.includes("audit.write")],
+    // code-catalog-reference: assertion for the deliberately unemittable R2 fixture.
     ["R2 fires on an unemittable diagnostic code", dirty.badCodes.includes("FUNGI-NOT-A-REAL-CODE")],
     // The catalogue-vs-emitter guard: a code that EXISTS in source but only as a
     // catalogue entry must still be reported. Crediting mere appearance would let
