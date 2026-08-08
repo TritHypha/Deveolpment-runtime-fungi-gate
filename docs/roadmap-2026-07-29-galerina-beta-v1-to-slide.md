@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 78 at exact
-implementation head `7c97448` (**9,480 / 22,956**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 79 at exact
+implementation head `420a1e9` (**9,502 / 22,994**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **84 files**, its tool manifest passes **79 files**, its independent
-path-leak gate passes **14 controls / 693 targets**, security closure is `+1`
+passes **85 files**, its tool manifest passes **79 files**, its independent
+path-leak gate passes **14 controls / 696 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**808/808 across 84 suites** with no authority released. The fresh Galerina
+**809/809 across 84 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -120,6 +120,20 @@ is **79 files**, path hygiene covers **693 targets**, security evidence K3 is
 `0`, benchmark evidence verifies and Node is **4 -> 2**. This closes
 source-free loading, not trusted custody, durable replay, platform/native or
 production authority.
+
+Roadmap refresh 2026-08-08: SLIDE Contract 79 is green at local implementation
+commit `420a1e9`. The source-free authenticated effect route now composes with
+the existing append-only V2-B durable nonce store through a separate exact-key
+entry point. Canonical prior/next lease states are snapshotted and one
+cross-process compare-and-swap generation must commit before provider dispatch;
+replaying the same transition on fresh physical and authentication handles
+produces zero provider or audit calls. Focused durable evidence is **24/24**,
+complete SLIDE is **809/809 across 84 suites**, contract integrity is **85
+files**, tool identity is **79 files**, path hygiene covers **696 targets**,
+security evidence K3 is `0`, benchmark evidence verifies and Node is **2 ->
+2**. The mechanism reports `powerLossDurability: 0`; trusted platform crash
+evidence, revocation/time/anchor custody, native W^X and production authority
+remain open.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 72 is green at local implementation
 commit `80f3f61`. It admits one 1..16-element runtime-owned local `Int32`
@@ -1454,7 +1468,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + source-free authenticated package effect<br/>Contracts 66–78 · 808/808 · platform custody, native and production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>scalar/control + owned local Int32 + durable source-free authenticated package effect<br/>Contracts 66–79 · 809/809 · platform custody, native and production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
