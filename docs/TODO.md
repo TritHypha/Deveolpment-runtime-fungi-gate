@@ -27,7 +27,7 @@ must not displace the critical path below or grant production authority.
   counts in dated sections are historical and must not drive decisions.
 - [x] Re-run the independent SLIDE baseline: contract manifest/integrity
   **66 files**, tool manifest **67 files**, security closure `+1` with evidence
-  K3 `0`, and **713/713 tests across 73 suites** all pass. This is bounded
+  K3 `0`, and **716/716 tests across 74 suites** all pass. This is bounded
   reference evidence; `authorityReleased` remains false.
 - [x] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
   phase-close after the Hypha enlistment and the 2026-08-07/08 compiler,

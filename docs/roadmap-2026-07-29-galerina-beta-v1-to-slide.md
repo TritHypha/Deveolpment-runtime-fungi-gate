@@ -9,7 +9,7 @@ the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
 passes **66 files**, its tool manifest passes **67 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**713/713 across 73 suites** with no authority released. The fresh Galerina
+**716/716 across 74 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **428 total / 426 pass / 2 intentional skip / 0
 fail**, and the current uninterrupted exhaustive close passed **92/92** in
@@ -1276,7 +1276,7 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + bounded fold + record + zero-argument + 4–128 static functions + exact 9–16-block control flow<br/>713/713 · general loop bodies/effects/production authority open"]
+    H["🟦 Independent SLIDE<br/>general executable backend<br/>checked scalar/grouping + Bool not/and/or + exact String/Bytes + immutable text prefix/suffix/substring + internal Array/Option + immutable Array&lt;Int&gt; membership + bounded fold + record + zero-argument + 4–128 static functions + exact 9–16-block control flow<br/>716/716 · general loop bodies/effects/production authority open"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
     LV["🟩 Counted-sum VOK binding<br/>20/20 focused · 19 K3 gates<br/>affine lease · terminal receipt"]
