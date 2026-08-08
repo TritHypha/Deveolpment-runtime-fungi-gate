@@ -310,9 +310,9 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 | AI Inference Tower (BitNet/Groq/NVFP4) | 30% | **asserted** |
 | Photonic / Ternary Computing | 3% | **asserted** |
 
-**No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP).
+**No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP) · Lyth/Weaver Verified Admission Fabric.
 
-**Tracking registry (23):** shipped 13 · building 7 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (26):** shipped 14 · building 9 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 

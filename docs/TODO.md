@@ -41,10 +41,11 @@ must not displace the critical path below or grant production authority.
   subway map without inventing completion numbers. Lyth/Weaver is carried
   under **Not a number** because its A-lane is preregistered but unrun. The
   tracking registry records Hypha as **shipped**, the memory-retention
-  tools/caches as **building** until their CI host and scheduler exist, and
-  `.gate` v3 as **building** until independent review, runtime execution,
-  offline signing and production release close. The generator check and its
-  23-control self-test pass with all 26 registry workstreams present.
+  tools/caches as **building** until scheduled cross-platform measurement
+  exists, and `.gate` v3 as **building** until independent review, runtime
+  execution, offline signing and production release close. The generator
+  check and its 23-control self-test pass with all 26 registry workstreams
+  present.
 - [x] Reproduce the full build and aggregate in an isolated checkout with no
   package `node_modules` junctions to another worktree. All 99 flat packages
   built and the aggregate again passed **99/99 packages, 9,452 tests, 0
@@ -148,10 +149,11 @@ outside this repository.
   evictions**, weight 6,144/65,536, item weight ~3.0. **`maxEntries` is the
   binding ceiling; `maxWeight` is never the constraint at this item weight** and
   must not be cited as an enforced limit.
-- [ ] **Engineering action selected under the resumed ownership:** add a
-  dedicated `retention.yml` that builds first and then runs the per-commit
-  retention gate. Do not make the deliberately build-free
-  `.github/workflows/conventions.yml` install or build dependencies.
+- [x] A dedicated `retention.yml` builds the exact compiler dependency closure
+  first and then runs the enforcing per-commit retention gate. Its structural
+  contract is 2/2, the real gate passes 13 positive bound regressions, drives
+  the production cache past its 2,048-entry ceiling, scans 115 compiler files
+  and reports zero new findings. The conventions workflow was not changed.
 - [ ] The nightly/release dynamic stage exists and is wired as an npm script but
   no scheduler invokes it.
 

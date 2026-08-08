@@ -1,0 +1,34 @@
+name: retention
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  per-commit-retention:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 (SHA-pinned)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4 (SHA-pinned)
+        with:
+          node-version: "20"
+
+      # The retention gate executes the real compiler pipeline and its bounded
+      # execution-graph cache. Build the exact file-dependency closure first;
+      # an absent dist/ tree must fail rather than turn a missing subject into
+      # a clean retention result.
+      - name: Build the compiler dependency closure
+        run: node scripts/build-core-chain.mjs
+
+      # This is the enforcing per-commit stage: detector self-tests, positive
+      # bound regressions, production-cache pressure and the named static
+      # baseline. Dynamic cross-platform measurement remains a separately
+      # scheduled nightly/release stage.
+      - name: Retention gate (enforcing)
+        run: npm run audit:retention

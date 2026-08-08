@@ -3,14 +3,14 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-final2-close-2026-08-08",
-    "sha": "1ad4cd68",
+    "sha": "02dd5f59",
     "detached": false,
     "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
   "buildAvg": 75,
-  "trackingRegistryCount": 23,
+  "trackingRegistryCount": 26,
   "sections": [
     {
       "key": "zero-trust-thesis",
@@ -239,6 +239,13 @@
           "status": "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open",
           "live": false,
           "evidence": null
+        },
+        {
+          "label": "Lyth/Weaver Verified Admission Fabric",
+          "pct": null,
+          "status": "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed",
+          "live": false,
+          "evidence": null
         }
       ]
     },
@@ -299,6 +306,11 @@
           "detail": "108 tools · 63 audits · 40 proofs (incl. claim-hygiene public-doc gate + env-var-literal-strict path-leak + the fungi-corpus-check compile gate; + report-blind-consumers / auto-erasure-ratchet / gate-key-injectivity added 2026-07-19; corpus sub-counts 447/211/49 unverified this pass) · keep-green + gate-selftests meta-gate; twin-audit execution column shipped (shadow|differential|authoritative)"
         },
         {
+          "item": "Hypha passive capability map",
+          "state": "shipped",
+          "detail": "top-level galerina-devtools-hypha is workspace-enlisted and passes 42/42; the default scan is in-memory, self-locating, zero-dependency and write-free unless --out is explicit"
+        },
+        {
           "item": "Signing-key custody",
           "state": "shipped",
           "detail": "cold hybrid root (214…) and delegated operational hybrid key (f31…) are in offline custody; public halves, root-signed delegation and the exact one-entry registry index are verified. Key-rotation protocol ships, while production rotation activation still requires external platform evidence and a later offline ceremony"
@@ -342,6 +354,16 @@
           "item": "Security-infra designs (×4)",
           "state": "building",
           "detail": "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request"
+        },
+        {
+          "item": "Memory retention audit and bounded caches",
+          "state": "building",
+          "detail": "bounded compiler caches, static/dynamic retention tools and the dedicated build-first per-commit workflow are implemented; scheduled cross-platform nightly/release measurements remain open"
+        },
+        {
+          "item": ".gate v3",
+          "state": "building",
+          "detail": "frontend, canonical GIR, admission and the non-authorizing order-six link-plan boundary are verified; independent review, runtime execution, offline signing and production release remain separate open gates"
         },
         {
           "item": "RD-0363/0364/0365 wiring (R&D done)",

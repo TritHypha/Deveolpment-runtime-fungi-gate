@@ -61,6 +61,15 @@ same-workload transition benchmark. `.gate`, Lyth/Weaver, provider packs and
 neural/VPEG experiments remain preserved secondary programmes and cannot
 authorize deletion or displace this order.
 
+Roadmap refresh: the memory-retention per-commit CI host is now implemented.
+The dedicated read-only workflow builds the compiler dependency closure before
+running the enforcing gate; missing build subjects cannot be mistaken for a
+clean scan. Its structural contract is 2/2, all actions are immutable-SHA
+pinned, the real gate passes 13 positive regressions, drives the production
+cache past its 2,048-entry ceiling and scans 115 compiler files with zero new
+findings. The programme remains **building**, not shipped, because the dynamic
+nightly/release stage is not yet scheduled across supported platforms.
+
 Roadmap refresh: `.gate` order six is now implemented as a non-authorizing
 link-plan boundary, not an executor. The closed 11-key plan, canonical digest,
 deterministic component order, admission-time circuit snapshot, module-private
@@ -94,10 +103,11 @@ authority, contract and retirement ledgers. Its last count-owning test
 headline was 98/98 test-bearing packages with 8,956 tests. The workspace now
 contains 99 top-level peers after Hypha was enlisted, and the fresh aggregate
 and generated count authority report **99/99 with 9,452 tests**. The chart
-exposes 23 named workstreams, including the
-independent SLIDE backend and package retirement, and its no-percentage lane
-names the general SLIDE backend instead of the superseded P9 Wasm-execution
-word row. The five Zero-Trust and twelve of the numbered build-readiness
+exposes 26 named workstreams, including Hypha, memory retention, `.gate`, the
+independent SLIDE backend and package retirement. Its no-percentage lane names
+Lyth/Weaver alongside the general SLIDE backend instead of inventing a
+performance percentage or reviving the superseded P9 Wasm-execution word row.
+The five Zero-Trust and twelve of the numbered build-readiness
 values remain explicitly labelled **asserted**; regeneration did not promote
 those judgements into measurements. Live debt is now 516 tracked package
 TypeScript paths, 111/111 unexecuted `.fungi`, 0/42 owned host bridges, 95
