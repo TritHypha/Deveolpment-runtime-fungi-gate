@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Unix/macOS path-leak regression closed on the active branch - 2026-08-08
+
+- [x] Revalidate the imported four-repository security reports against current
+  repository heads instead of trusting their historical closure text. The
+  earlier Galerina repair `45ffd0dd` was not an ancestor of this active branch;
+  the Unix-home detector and four report leaks had therefore returned.
+- [x] Restore the class fix in `aa73877c`: Linux `/home/<user>` and macOS
+  `/Users/<user>` detection, placeholder and URL negative controls, scrubber
+  parity, hostile-fixture markers, and redaction of both Ubuntu reports and the
+  recorded hostname. No sibling checkout is required at runtime.
+- [x] Prove the detector rather than infer it. The two new detector cases and
+  the Unix scrubber test failed before implementation, then passed. The full
+  path gate passed over **4,759 tracked entries**; scrubber **6/6**, SBOM
+  self-test **23/23**, KB-graph **31/31**, and repository security-policy
+  **2/2** also passed. Node census remained one before and after focused runs.
+
 ### Primary ownership resumed: Galerina beta v1 to independent SLIDE - 2026-08-08
 
 There are no other AI workers active. Codex again owns the Galerina and SLIDE

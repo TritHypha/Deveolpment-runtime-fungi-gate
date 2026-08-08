@@ -26,6 +26,15 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh 2026-08-08: the imported security-report closure was
+revalidated against the active branch and one historical regression was found.
+The earlier Unix-home repair was not an ancestor of the current Galerina head,
+so the detector and four report leaks had returned. Commit `aa73877c` restores
+Linux/macOS home-path refusal, scrubber parity, hostile controls and report
+redaction. The full path gate now passes over 4,759 tracked entries. This closes
+the low-severity repository disclosure class on the active branch; it changes
+no SLIDE execution authority, retirement count or production-admission state.
+
 Roadmap refresh 2026-08-08: no other AI worker was declared active when this
 chapter began. Codex owns Galerina
 and SLIDE end to end. The critical path is: current Galerina phase-close ->
