@@ -123,6 +123,7 @@ contract { intent { "Require canonical lowercase 64-hex digest form." } }
       Some(c) => {
         if slideCheckedDecisionIsLowerHexChar(c) == false { return false }
       }
+      _ => { return false }
     }
     i = i + 1
   }
@@ -146,6 +147,7 @@ contract { intent { "Require identifier-shaped names, never free text." } }
         }
         if i == 0 and c.isDigit() { return false }
       }
+      _ => { return false }
     }
     i = i + 1
   }
@@ -186,6 +188,7 @@ contract { intent { "Require canonical lowercase identity tails after a fixed pr
         if i > start and allowDot and t == "." { ok = true }
         if ok == false { return false }
       }
+      _ => { return false }
     }
     i = i + 1
   }
@@ -244,6 +247,7 @@ contract { intent { "Require canonical three-part version identities." } }
           if c.isDigit() == false and t != "." and t != "-" { return false }
         }
       }
+      _ => { return false }
     }
     i = i + 1
   }

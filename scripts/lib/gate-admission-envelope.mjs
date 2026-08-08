@@ -14,6 +14,7 @@
 // envelope layer already refuses an algorithm outside the catalogue, and the
 // KAT drives it through this composed path to prove the refusal reaches an
 // admission caller.
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -45,7 +46,83 @@ const SIGNING_CONTEXT = "galerina.release.evidence.gate-admission.sig.v1";
 // delegations (`VERIFIED_DELEGATIONS`); reused deliberately rather than
 // invented, so there is one idea of "this object was vouched for" in the
 // estate rather than two.
-const ADMITTED_LINKABLES = new WeakSet();
+const ADMITTED_LINKABLES = new WeakMap();
+const SHA256 = /^sha256:[0-9a-f]{64}$/u;
+const TARGET = /^[A-Za-z0-9._-]+$/u;
+const VERSION = /^\d+\.\d+\.\d+$/u;
+const LINKER_RULES = "gate-v3-linker-rules@1";
+const PLAN_KEYS = Object.freeze([
+  "admissionDigest", "circuitDigest", "components", "linkerRules",
+  "productionAuthorizing", "proofSetDigest", "registryDigest", "schema",
+  "sourceDigest", "target", "verifierRules",
+]);
+const COMPONENT_KEYS = Object.freeze(["id", "implementationDigest", "version"]);
+
+export const GATE_LINK_CODES = Object.freeze({
+  NOT_ADMITTED: "GATE_LINK_NOT_ADMITTED",
+  PLAN_INCOMPLETE: "GATE_LINK_PLAN_INCOMPLETE",
+  PLAN_MALFORMED: "GATE_LINK_PLAN_MALFORMED",
+  PLAN_DUPLICATE_COMPONENT: "GATE_LINK_PLAN_DUPLICATE_COMPONENT",
+  PLAN_CARDINALITY: "GATE_LINK_PLAN_CARDINALITY",
+  COMPONENT_NOT_ADMITTED: "GATE_LINK_COMPONENT_NOT_ADMITTED",
+  COMPONENT_DIGEST_MISMATCH: "GATE_LINK_COMPONENT_DIGEST_MISMATCH",
+  TARGET_MISMATCH: "GATE_LINK_TARGET_MISMATCH",
+  PLAN_NOT_EMITTER_INPUT: "GATE_LINK_PLAN_NOT_EMITTER_INPUT",
+  EMITTER_INPUT_REFUSED: "GATE_EMITTER_INPUT_REFUSED",
+});
+
+const refuseLink = (code) => { throw new Error(code); };
+const digestCanonical = (value) => `sha256:${createHash("sha256")
+  .update(canonicalReleaseEvidenceBytes(value)).digest("hex")}`;
+
+function deepFreeze(value) {
+  if (value !== null && typeof value === "object" && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) deepFreeze(child);
+    Object.freeze(value);
+  }
+  return value;
+}
+
+function canonicalSnapshot(value) {
+  return deepFreeze(JSON.parse(canonicalReleaseEvidenceBytes(value).toString("utf8")));
+}
+
+function hasExactKeys(value, keys) {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false;
+  const actual = Object.keys(value).sort();
+  return actual.length === keys.length && actual.every((key, index) => key === keys[index]);
+}
+
+function compareComponent(left, right) {
+  if (left.id !== right.id) return left.id < right.id ? -1 : 1;
+  if (left.version === right.version) return 0;
+  return left.version < right.version ? -1 : 1;
+}
+
+function validateComponents(components) {
+  if (!Array.isArray(components) || components.length < 1 || components.length > 4096) {
+    refuseLink(GATE_LINK_CODES.PLAN_CARDINALITY);
+  }
+  const identities = new Set();
+  for (const component of components) {
+    if (!hasExactKeys(component, COMPONENT_KEYS)
+        || typeof component.id !== "string" || component.id.length < 1 || component.id.length > 128
+        || typeof component.version !== "string" || !VERSION.test(component.version)
+        || typeof component.implementationDigest !== "string" || !SHA256.test(component.implementationDigest)) {
+      refuseLink(GATE_LINK_CODES.PLAN_MALFORMED);
+    }
+    const identity = `${component.id}\u0000${component.version}`;
+    if (identities.has(identity)) refuseLink(GATE_LINK_CODES.PLAN_DUPLICATE_COMPONENT);
+    identities.add(identity);
+  }
+}
+
+function privateBinding(value) {
+  if (value === null || typeof value !== "object") refuseLink(GATE_LINK_CODES.NOT_ADMITTED);
+  const binding = ADMITTED_LINKABLES.get(value);
+  if (binding === undefined) refuseLink(GATE_LINK_CODES.NOT_ADMITTED);
+  return binding;
+}
 
 /**
  * G7.3 — issue a gate-admission envelope over an ADMITTED statement.
@@ -201,14 +278,42 @@ export function linkableFromAdmission(envelope, options, inHand) {
   if (!verdict.ok) {
     return Object.freeze({ ok: false, refusals: verdict.refusals, linkable: null });
   }
-  const linkable = Object.freeze({
-    kind: "gate-v3-linkable.v1",
-    circuitDigest: verdict.statement.circuitDigest,
-    target: verdict.statement.target,
-    components: verdict.statement.components,
-  });
-  ADMITTED_LINKABLES.add(linkable);
-  return Object.freeze({ ok: true, refusals: Object.freeze([]), linkable });
+  try {
+    const statement = canonicalSnapshot(verdict.statement);
+    const components = canonicalSnapshot([...statement.components].sort(compareComponent));
+    validateComponents(components);
+    const plan = deepFreeze({
+      schema: "gate-v3-link-plan.v1",
+      productionAuthorizing: false,
+      admissionDigest: digestCanonical(statement),
+      sourceDigest: statement.sourceDigest,
+      registryDigest: statement.registryDigest,
+      circuitDigest: statement.circuitDigest,
+      proofSetDigest: digestCanonical(statement.proofs),
+      target: statement.target,
+      components,
+      verifierRules: statement.verifier.ruleSet,
+      linkerRules: LINKER_RULES,
+    });
+    assertLinkPlanComplete(plan);
+
+    const linkable = deepFreeze({
+      kind: "gate-v3-linkable.v1",
+      circuitDigest: statement.circuitDigest,
+      target: statement.target,
+      components,
+    });
+    ADMITTED_LINKABLES.set(linkable, deepFreeze({
+      plan,
+      circuitSnapshot: canonicalSnapshot(inHand.circuitCanonicalForm),
+    }));
+    return Object.freeze({ ok: true, refusals: Object.freeze([]), linkable });
+  } catch (error) {
+    const code = error instanceof Error && /^GATE_LINK_/u.test(error.message)
+      ? error.message
+      : GATE_LINK_CODES.PLAN_MALFORMED;
+    return Object.freeze({ ok: false, refusals: Object.freeze([code]), linkable: null });
+  }
 }
 
 /**
@@ -222,8 +327,75 @@ export function linkableFromAdmission(envelope, options, inHand) {
  *   `linkableFromAdmission`, including a perfect structural clone.
  */
 export function assertLinkableAdmitted(value) {
-  if (typeof value !== "object" || value === null || !ADMITTED_LINKABLES.has(value)) {
-    throw new Error("GATE_LINK_NOT_ADMITTED");
+  privateBinding(value);
+  return value;
+}
+
+/** Validate the exact non-authorizing order-six plan schema. */
+export function assertLinkPlanComplete(plan) {
+  if (!hasExactKeys(plan, PLAN_KEYS)) refuseLink(GATE_LINK_CODES.PLAN_INCOMPLETE);
+  if (plan.schema !== "gate-v3-link-plan.v1" || plan.productionAuthorizing !== false) {
+    refuseLink(GATE_LINK_CODES.PLAN_MALFORMED);
+  }
+  for (const field of ["admissionDigest", "sourceDigest", "registryDigest", "circuitDigest", "proofSetDigest"]) {
+    if (typeof plan[field] !== "string" || !SHA256.test(plan[field])) {
+      refuseLink(GATE_LINK_CODES.PLAN_MALFORMED);
+    }
+  }
+  if (typeof plan.target !== "string" || plan.target.length < 1 || plan.target.length > 128
+      || !TARGET.test(plan.target)
+      || typeof plan.verifierRules !== "string" || plan.verifierRules.length < 1 || plan.verifierRules.length > 128
+      || typeof plan.linkerRules !== "string" || plan.linkerRules.length < 1 || plan.linkerRules.length > 128) {
+    refuseLink(GATE_LINK_CODES.PLAN_MALFORMED);
+  }
+  validateComponents(plan.components);
+  const sorted = [...plan.components].sort(compareComponent);
+  if (plan.components.some((component, index) => component.id !== sorted[index].id
+      || component.version !== sorted[index].version
+      || component.implementationDigest !== sorted[index].implementationDigest)) {
+    refuseLink(GATE_LINK_CODES.PLAN_MALFORMED);
+  }
+  return plan;
+}
+
+/** Build the closed plan solely from module-private admission-time material. */
+export function buildLinkPlan(linkable) {
+  return privateBinding(linkable).plan;
+}
+
+/** Digest the exact canonical plan bytes through the production encoder. */
+export function linkPlanDigest(plan) {
+  assertLinkPlanComplete(plan);
+  return digestCanonical(plan);
+}
+
+/** Resolve one component descriptor within the admitted target and digest set. */
+export function resolveComponentArtifact(linkable, requested, options = {}) {
+  const binding = privateBinding(linkable);
+  const plan = binding.plan;
+  if (options !== null && typeof options === "object" && options.target !== undefined
+      && options.target !== plan.target) {
+    refuseLink(GATE_LINK_CODES.TARGET_MISMATCH);
+  }
+  if (requested === null || typeof requested !== "object") {
+    refuseLink(GATE_LINK_CODES.COMPONENT_NOT_ADMITTED);
+  }
+  const component = plan.components.find((candidate) => candidate.id === requested.id
+    && candidate.version === requested.version);
+  if (component === undefined) refuseLink(GATE_LINK_CODES.COMPONENT_NOT_ADMITTED);
+  if (requested.implementationDigest !== component.implementationDigest) {
+    refuseLink(GATE_LINK_CODES.COMPONENT_DIGEST_MISMATCH);
+  }
+  return component;
+}
+
+/** Refuse order-six plans at every executable GIR/emitter seam. */
+export function assertNotEmitterInput(value) {
+  if (value !== null && typeof value === "object" && value.schema === "gate-v3-link-plan.v1") {
+    refuseLink(GATE_LINK_CODES.PLAN_NOT_EMITTER_INPUT);
+  }
+  if (value === null || typeof value !== "object" || value.schemaVersion !== "fungi.gir.v1") {
+    refuseLink(GATE_LINK_CODES.EMITTER_INPUT_REFUSED);
   }
   return value;
 }

@@ -22,6 +22,7 @@
 //   FUNGI-IMPORT-004  Symbol collision — imported name conflicts with local definition
 //   FUNGI-IMPORT-005  Import path escapes the allowed project root (pre-governance path traversal)
 //   FUNGI-IMPORT-006  Imported file exceeds the maximum size (compile-time DoS guard)
+//   FUNGI-IMPORT-007  Governed flow declaration is malformed and cannot be registered
 // =============================================================================
 
 import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";

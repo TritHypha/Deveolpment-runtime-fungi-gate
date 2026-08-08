@@ -29,11 +29,29 @@ must not displace the critical path below or grant production authority.
   **66 files**, tool manifest **67 files**, security closure `+1` with evidence
   K3 `0`, and **713/713 tests across 73 suites** all pass. This is bounded
   reference evidence; `authorityReleased` remains false.
-- [ ] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
+- [x] Re-run the Galerina **99-package** count-owning aggregate and exhaustive
   phase-close after the Hypha enlistment and the 2026-08-07/08 compiler,
-  `.gate`, retention and audit changes. Until then, the 98-package / 8,956-test
-  / 87-of-87 figures below are the last full checkpoint, not proof of the
-  current working tree.
+  `.gate`, retention and audit changes. The aggregate passed **99/99 packages,
+  9,452 tests, 0 failed** (compiler **6,313**). After correcting one invented
+  documentation diagnostic, refreshing its exact registry/coverage/golden
+  authorities, and bounding the direct tooling runner at four workers, the
+  uninterrupted exhaustive close passed **88/88** in **1,055 seconds**.
+  Post-run Node census returned to the one pre-existing MCP process.
+- [x] Implement the `.gate` order-six non-authorizing link-plan boundary:
+  closed 11-key plan, canonical digest, deterministic component order,
+  admission-time circuit snapshot, private linkable binding, emitter-input
+  refusal, isolated substitution mutant, and **18/18** focused tests. This
+  creates no execution or production-signing authority; G7/R2/R4/R5 remain
+  separate gates.
+- [x] Repair nested audit execution under Node's test runner. Retention probes
+  now remove only inherited `NODE_TEST_CONTEXT`, retain suite/process custody,
+  and the meta-audit preserves the failing child's last diagnostic lines.
+  Tooling is **424 total / 422 pass / 2 intentional skip / 0 fail**.
+- [ ] Adjudicate the concurrently appearing `bounded-cache.ts` tombstone
+  changes and untracked `memory-sandobx/` research before treating the green
+  close as a stable-checkout fixed point or including either surface in a
+  commit. They appeared during the exhaustive run and were not created by this
+  lane; preserve them unchanged until provenance is established.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3
@@ -63,8 +81,9 @@ raised only when reached.
 ### Memory-retention programme: bounded caches shipped, workflow host pending - 2026-08-08
 
 Owner rulings Q2 (tools live in `scripts/`, no new package) and Q3 (staged CI)
-are implemented up to one open decision. Audit document:
-[`extra-tests/tools/MEMORY-LEAK-AUDIT.md`](../../extra-tests/tools/MEMORY-LEAK-AUDIT.md).
+are implemented up to one open decision. The detailed audit is retained in the
+private external test workspace; public Galerina documentation does not link
+outside this repository.
 
 - [x] `BoundedCache` primitive with measured limits, and all three retention
   surfaces converted (`e99f0ddd`): execution-graph `MEMORY_CACHE`, the

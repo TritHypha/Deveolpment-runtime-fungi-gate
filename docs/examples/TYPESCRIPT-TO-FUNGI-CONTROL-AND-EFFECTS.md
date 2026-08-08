@@ -283,7 +283,7 @@ Use `trap` for a Boolean failure predicate whose occurrence must terminate the
 flow:
 
 ```fungi
-trap index < 0 or index >= length : ERR_BOUNDS
+trap index < 0 or index >= length : "FUNGI-MEMORY-006"
 ```
 
 Use `fault` only when the flow cannot safely return a normal typed failure:

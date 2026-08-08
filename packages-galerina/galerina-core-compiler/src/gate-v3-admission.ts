@@ -135,12 +135,17 @@ export function verifyAdmissionBindings(
 
   // Shape first, and fail closed on anything that is not the statement kind —
   // the remaining checks would read fields off an arbitrary object.
-  const s = statement as Partial<GateV3AdmissionStatement> | null;
-  if (s === null || typeof s !== "object" || s.kind !== "gate-v3-admission.v1"
+  if (statement === null || typeof statement !== "object") {
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_010, typeof statement);
+    return { bindingsMatch: false, diagnostics: Object.freeze(diagnostics) };
+  }
+
+  const s = statement as Partial<GateV3AdmissionStatement>;
+  if (s.kind !== "gate-v3-admission.v1"
     || typeof s.sourceDigest !== "string" || typeof s.registryDigest !== "string"
     || typeof s.circuitDigest !== "string" || !Array.isArray(s.proofs)
     || typeof s.target !== "string" || (s.verdict !== "admitted" && s.verdict !== "refused")) {
-    refuse(GATE_V3_ADMISSION_CODES.ADMIT_010, String((s as { kind?: unknown } | null)?.kind ?? typeof statement));
+    refuse(GATE_V3_ADMISSION_CODES.ADMIT_010, String((s as { kind?: unknown }).kind ?? typeof statement));
     return { bindingsMatch: false, diagnostics: Object.freeze(diagnostics) };
   }
 

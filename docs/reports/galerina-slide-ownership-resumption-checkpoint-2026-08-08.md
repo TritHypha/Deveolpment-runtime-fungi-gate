@@ -1,0 +1,77 @@
+# Galerina and SLIDE ownership-resumption checkpoint
+
+Date: 2026-08-08  
+Authority: local engineering evidence only; no push, release, production-signing or retirement authority
+
+## Outcome
+
+The current Galerina host/bootstrap estate is green after Hypha was admitted as
+the 99th flat workspace peer and the 7-8 August compiler, `.gate`, retention and
+tooling changes were reconciled.
+
+| Surface | Fresh result |
+|---|---:|
+| Workspace aggregate | 99/99 packages; 9,452 tests; 0 failed |
+| Compiler package | 6,313 tests |
+| Tooling tests | 424 total; 422 pass; 2 intentional skip; 0 fail |
+| Graph generation | 5/5 |
+| Graph check | 5/5 |
+| Fungi Golden Pack | 11/11 checked; 11/11 executed |
+| Independent SLIDE bounded baseline | 713/713 across 73 suites |
+| Exhaustive Galerina phase-close | 88/88; 1,055 seconds; authorizing verdict true |
+| Post-run Node census | one pre-existing MCP process; no owned child remained |
+
+## Defects closed in this chapter
+
+1. `galerina-devtools-hypha` existed as a direct package but was absent from the
+   workspace manifest. It is now one top-level peer with governed graph outputs;
+   no nesting or exception was introduced.
+2. The package-retirement status ledger still stated 497 TypeScript paths and
+   38 host boundaries. It now derives and reports 516 and 42 respectively.
+3. Four checked-decision frontend matches had no explicit wildcard terminal.
+   Each now has a fail-closed `_ =>` return.
+4. A control-flow example invented `ERR_BOUNDS`, creating a new phantom
+   diagnostic. It now uses the real `FUNGI-MEMORY-006` authority. The registry
+   returned to 111 unadjudicated phantoms and the named membership ratchet.
+5. A nested retention audit inherited `NODE_TEST_CONTEXT`, so 13 passing cache
+   regressions became an unparseable child summary. Probe children now receive a
+   fresh Node-test presentation boundary while retaining suite/process custody.
+6. Direct phase-close tooling tests inherited the host CPU count. The phase-close
+   command now fixes their worker ceiling at four and a source-shape regression
+   test prevents removal.
+7. Gate order six moved from planned/red to an implemented, non-authorizing link
+   plan with 18/18 focused tests. It does not execute a circuit or grant release
+   authority.
+
+## Exact remaining retirement debt
+
+- 516 tracked package TypeScript paths, 501 under package `src`;
+- 111/111 tracked `.fungi` sources not yet production-executed;
+- 0/42 host boundaries owned by the replacement path;
+- 95 package-local `node_modules` trees;
+- one nested native identity.
+
+No debt was deleted, exempted or converted by this verification chapter.
+
+## Custody exception discovered after the close
+
+During the final exhaustive run, `bounded-cache.ts` changed and an untracked
+`memory-sandobx/` research directory appeared. This lane did not create them.
+They are preserved unchanged and excluded from commit scope until their
+provenance is established. Because a source changed while the close owned the
+checkout, 88/88 is reported as a fresh test result but not overstated as a
+stable-checkout fixed point.
+
+## Next critical path
+
+1. Adjudicate or isolate the concurrent cache/sandbox material.
+2. Use the repository-owned Myco and Hypha tools to produce the next dependency,
+   capability and host-boundary inventory; build a new tool only for a proven
+   uncovered question.
+3. Implement the smallest general independent SLIDE successor: general bodies,
+   structured control/loops, exact CFG/SSA/type/K3 validation and bounded work.
+4. Add owned memory, failures, effects/capabilities and host profiles one closed
+   family at a time through physical `.slide`, affine VOK and typed receipts.
+5. Close authenticated object/platform/anchor authority, then switch packages by
+   exact executed parity tranches until the retirement ledger reaches zero.
+

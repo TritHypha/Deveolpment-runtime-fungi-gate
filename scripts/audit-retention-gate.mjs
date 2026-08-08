@@ -48,13 +48,24 @@ const P = console.log;
 let failed = false;
 const fail = (m) => { failed = true; console.error("  ❌ " + m); };
 
+// A nested `node --test` inherits NODE_TEST_CONTEXT when this audit itself is
+// exercised by the tooling test suite. That switches the child's output to the
+// parent test protocol and makes a valid pass summary indistinguishable from a
+// missing summary. Keep suite/process custody intact, but give every probe a
+// fresh Node-test presentation boundary so evidence parsing is deterministic.
+function probeEnv() {
+  const env = { ...process.env };
+  delete env.NODE_TEST_CONTEXT;
+  return env;
+}
+
 // ---------------------------------------------------------------------------
 // Stage 0 — the detector must prove itself first. Fail CLOSED.
 // ---------------------------------------------------------------------------
 P("== stage 0: detector self-test (fail-closed) ==");
 {
   const r = spawnSync(process.execPath, [SCRIPTS + "/audit-leak-static.mjs", "--self-test"],
-    { encoding: "utf8", timeout: 300000 });
+    { encoding: "utf8", timeout: 300000, env: probeEnv() });
   if (r.status !== 0) {
     console.error("  ❌ the static detector failed its own self-test.");
     console.error("     A scan from an unproven detector cannot distinguish 'nothing found' from");
@@ -68,7 +79,7 @@ P("== stage 0: detector self-test (fail-closed) ==");
   // The bound KAT gets the same treatment: it asserts that the real cache stops at its
   // ceiling, so its assertion must first be shown to REJECT an unbounded container.
   const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs", "--self-test"],
-    { encoding: "utf8", timeout: 300000 });
+    { encoding: "utf8", timeout: 300000, env: probeEnv() });
   if (r.status !== 0) {
     console.error("  ❌ the bound assertion failed its own self-test.");
     console.error("     An assertion that accepts an unbounded container proves nothing when it passes.");
@@ -87,7 +98,7 @@ P("\n== stage 1: positive bounded-cache regressions ==");
 {
   const r = spawnSync(process.execPath,
     ["--test", CORPUS_ROOT + "/tests/bounded-cache.test.mjs"],
-    { encoding: "utf8", timeout: 600000, cwd: CORPUS_ROOT });
+    { encoding: "utf8", timeout: 600000, cwd: CORPUS_ROOT, env: probeEnv() });
   const out = (r.stdout || "") + (r.stderr || "");
   const pass = Number((out.match(/^.\s*pass (\d+)/m) ?? [])[1] ?? 0);
   const fl = Number((out.match(/^.\s*fail (\d+)/m) ?? [])[1] ?? -1);
@@ -104,7 +115,7 @@ P("\n== stage 1: positive bounded-cache regressions ==");
   // that ceiling and requires evictions to have actually occurred — without which
   // "entries <= maxEntries" would pass on a cache that simply never filled.
   const r = spawnSync(process.execPath, [SCRIPTS + "/kat-execution-graph-cache-bound.mjs"],
-    { encoding: "utf8", timeout: 600000 });
+    { encoding: "utf8", timeout: 600000, env: probeEnv() });
   const out = (r.stdout || "") + (r.stderr || "");
   if (r.status !== 0) {
     fail("the execution-graph cache bound is not enforced under pressure:\n" + out);
@@ -120,7 +131,7 @@ P("\n== stage 1: positive bounded-cache regressions ==");
 P("\n== stage 2: static retention scan vs baseline ==");
 const scan = spawnSync(process.execPath,
   [SCRIPTS + "/audit-leak-static.mjs", "--scan", SCAN_ROOT, "--corpus", CORPUS_ROOT, "--json"],
-  { encoding: "utf8", timeout: 600000 });
+  { encoding: "utf8", timeout: 600000, env: probeEnv() });
 const scanOut = (scan.stdout || "") + (scan.stderr || "");
 
 /** Findings are parsed from the human report; `--json` is honoured if present. */

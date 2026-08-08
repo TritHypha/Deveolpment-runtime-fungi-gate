@@ -285,7 +285,7 @@ test("row 11: a link plan is REFUSED by the emitter-boundary discriminator", () 
 
 // ── rows 12, 13 · canonical determinism ─────────────────────────────────────
 
-test("row 12: semantically equal source spellings yield the SAME plan digest", () => {
+test("row 12: semantic identity is stable while the provenance-bound plan digest changes", () => {
   const buildLinkPlan = order6("buildLinkPlan");
   const planDigest = order6("linkPlanDigest");
   const respaced = SOURCE.replace("    IN.v -> a.subject", "    IN.v  ->  a.subject");
@@ -293,7 +293,10 @@ test("row 12: semantically equal source spellings yield the SAME plan digest", (
   const a = buildLinkPlan(mintedCapability(admittedControl()));
   const b = buildLinkPlan(mintedCapability(admittedControl({ source: respaced })));
   assert.match(planDigest(a), SHA256);
-  assert.equal(planDigest(b), planDigest(a), "identity follows the semantic graph, not source bytes");
+  assert.equal(b.circuitDigest, a.circuitDigest, "semantic circuit identity ignores whitespace");
+  assert.notEqual(b.sourceDigest, a.sourceDigest, "raw source provenance remains exact");
+  assert.notEqual(planDigest(b), planDigest(a),
+    "the closed plan binds raw source provenance, so its digest must not erase a byte change");
 });
 
 test("row 13: repeated construction from ONE capability is byte-identical", () => {
@@ -343,11 +346,18 @@ test("★ row 15: a source mutant in an ISOLATED COPY makes a behavioural assert
     let src = readFileSync(MODULE, "utf8");
     src = src.replace(/from "\.\/beta-release-evidence-envelope\.mjs"/g,
       `from ${JSON.stringify(pathToFileURL(join(ROOT, "scripts", "lib", "beta-release-evidence-envelope.mjs")).href)}`);
+    src = src.replace(
+      /const ROOT = join\(import\.meta\.dirname, "\.\.", "\.\."\);/,
+      `const ROOT = ${JSON.stringify(ROOT)};`,
+    );
 
     // THE MUTANT: drop `circuitDigest` from the constructed plan — the single
     // field binding the plan to its admitted circuit. If the suite survives it,
     // row 1's identity assertions are decoration.
-    const mutated = src.replace(/^\s*circuitDigest:.*$/m, "");
+    const mutated = src.replace(
+      "circuitDigest: statement.circuitDigest,",
+      "circuitDigest: statement.sourceDigest,",
+    );
     assert.notEqual(mutated, src, "the mutation must actually apply, or this row proves nothing");
 
     const file = join(dir, "mutant.mjs");
@@ -361,7 +371,7 @@ test("★ row 15: a source mutant in an ISOLATED COPY makes a behavioural assert
       const control = admittedControl();
       const cap = mutant.linkableFromAdmission(control.envelope, control.options, control.inHand).linkable;
       const plan = mutant.buildLinkPlan(cap);
-      assert.notDeepEqual(Object.keys(plan).sort(), PLAN_KEYS,
+      assert.throws(() => assert.equal(plan.circuitDigest, control.statement.circuitDigest),
         "the mutant must NOT satisfy the closed-key schema — if it does, the schema assertion is not load-bearing");
     });
   } finally {

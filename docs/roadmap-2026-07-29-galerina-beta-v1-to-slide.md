@@ -3,21 +3,21 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina and SLIDE were structurally re-indexed
-at heads `9b454a35` and `211b641`. Galerina produced 45,198 graph nodes / 119,314
-edges; SLIDE produced 8,022 / 19,459. The Galerina graph suite initially
+at their 2026-08-08 working heads. The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
 passes **66 files**, its tool manifest passes **67 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
-**713/713 across 73 suites** with no authority released.
-
-The last count-owning Galerina aggregate/exhaustive fixed point remains the
-2026-08-04 result: **98/98**, **8,956 tests**, and **87/87** blocking gates.
-It is retained as evidence but is not relabelled as proof of the current tree:
-the workspace now has 99 packages and substantial compiler, `.gate`, retention
-and audit changes landed on 7-8 August. A fresh 99-package aggregate and
-exhaustive phase-close are therefore the next Galerina verification gate.
+**713/713 across 73 suites** with no authority released. The fresh Galerina
+aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
+bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
+fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
+seconds**. The post-run process census returned to the one pre-existing MCP
+Node process. One concurrent, non-owned `bounded-cache.ts`/`memory-sandobx`
+mutation appeared during that close; it is preserved and excluded from commit
+authority until provenance is adjudicated, so the result is not overstated as
+a stable-checkout fixed point.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
@@ -26,7 +26,8 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
-Roadmap refresh 2026-08-08: no other AI worker is active. Codex owns Galerina
+Roadmap refresh 2026-08-08: no other AI worker was declared active when this
+chapter began. Codex owns Galerina
 and SLIDE end to end. The critical path is: current Galerina phase-close ->
 general independent SLIDE bodies/control/loops -> owned memory and admitted
 effects/host profiles -> authenticated native/platform authority -> per-file
@@ -34,6 +35,15 @@ package conversion -> host/dependency retirement -> terminal zero-debt gate ->
 same-workload transition benchmark. `.gate`, Lyth/Weaver, provider packs and
 neural/VPEG experiments remain preserved secondary programmes and cannot
 authorize deletion or displace this order.
+
+Roadmap refresh: `.gate` order six is now implemented as a non-authorizing
+link-plan boundary, not an executor. The closed 11-key plan, canonical digest,
+deterministic component order, admission-time circuit snapshot, module-private
+linkable binding, emitter-input refusal and isolated substitution mutant pass
+**18/18** focused tests and the full exhaustive close. This supersedes the old
+"planned and red" state in KTA document 60. It does not clear independent R2
+review, G7 execution/admission, the offline signing ceremony, or removal of
+`FUNGI-GATELANG-002`.
 
 Roadmap refresh: the former `DSS.wasm supervisor (#102–106)` production
 sidecar row was stale and is retired. The completed `.fungi` DSS/V_DPM

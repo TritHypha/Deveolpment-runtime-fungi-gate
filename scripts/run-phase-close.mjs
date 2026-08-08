@@ -895,7 +895,7 @@ run("doc:drift", "node", ["scripts/audit-doc-drift.mjs", "--soft"]);
 const toolingTests = existsSync(join(ROOT, "scripts", "tests"))
   ? readdirSync(join(ROOT, "scripts", "tests")).filter((f) => f.endsWith(".test.mjs")).map((f) => join("scripts", "tests", f))
   : [];
-if (toolingTests.length) run("tests:tooling", "node", ["--test", ...toolingTests]);
+if (toolingTests.length) run("tests:tooling", "node", ["--test", "--test-concurrency=4", ...toolingTests]);
 
 // ── 5e. R&D proofs keep-green gate (2026-07-01) ──
 // POSTURE prove-own-maths: every RD claim (adopted AND refuted) carries a machine-checkable,

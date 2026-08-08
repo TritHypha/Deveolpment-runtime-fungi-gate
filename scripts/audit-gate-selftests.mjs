@@ -95,7 +95,8 @@ export function classifyGate(name, { category, declaresSelfTest, viaTest, ran })
   }
   if (ran.exit !== 0) {
     return { name, category, status: "SELFTEST_FAILS", violation: true, advisory: false,
-      reason: `--self-test exited ${ran.exit} — the gate's own self-test does not pass (a broken/neutered detector)` };
+      reason: `--self-test exited ${ran.exit} — the gate's own self-test does not pass (a broken/neutered detector)`,
+      note: ran.note || "the failing gate emitted no diagnostic output" };
   }
   if (!ran.hasEvidence) {
     return { name, category, status: "SELFTEST_VACUOUS", violation: true, advisory: false,
@@ -146,7 +147,8 @@ function runSelfTest(scriptsDir, name) {
     return { exit: r.signal ? 124 : 1, hasEvidence: false, note: r.error?.message || `killed by ${r.signal}` };
   }
   const output = `${r.stdout || ""}${r.stderr || ""}`;
-  return { exit: r.status, hasEvidence: /self[-\s]?test/i.test(output) };
+  const diagnostic = output.trim().split(/\r?\n/).slice(-12).join("\n");
+  return { exit: r.status, hasEvidence: /self[-\s]?test/i.test(output), note: diagnostic };
 }
 
 // Credit a fixture-test proof ONLY if it is real: the referenced test file exists AND still names the tool.
