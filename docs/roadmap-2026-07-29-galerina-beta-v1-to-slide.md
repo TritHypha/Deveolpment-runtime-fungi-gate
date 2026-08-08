@@ -3,22 +3,24 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE Contract 79 at exact
-implementation head `420a1e9` (**9,502 / 22,994**). The Galerina graph suite initially
-refused a real topology drift (`galerina-devtools-hypha` existed but was not in
-the workspace), then passed **5/5** after the package was enlisted as the 99th
-top-level peer and its boundary graph was generated. SLIDE's contract check
+subject head `cfbe91e7` (**45,706 nodes / 120,650 edges**) and SLIDE at subject
+head `6e090c3` (**9,503 / 22,995**); both observed counts exactly equal the
+indexers' expected counts, and fresh symbol queries prove the new graph content
+is searchable. Galerina's repository graph and generated-authority checks pass
+**5/5** after regenerating the project and KB outputs that correctly refused
+the preceding TODO drift. SLIDE's contract check
 passes **85 files**, its tool manifest passes **79 files**, its independent
-path-leak gate passes **14 controls / 696 targets**, security closure is `+1`
+path-leak gate passes **14 controls / 698 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **809/809 across 84 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
-bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
-fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
-seconds**. The post-run process census returned to the one pre-existing MCP
-Node process. The former concurrent `bounded-cache.ts`/`memory-sandobx` hold is
-now closed: neither surface is outstanding in the current tree and no unknown
-content was adopted or deleted.
+last complete bounded tooling suite passed **428 total / 426 pass / 2
+intentional skip / 0 fail**, and the last uninterrupted exhaustive close
+passed **92/92** in **1,042.9 seconds**. Those aggregate/tooling/phase-close
+figures are retained evidence and were not rerun in this graph-only refresh.
+The former unknown-content hold is closed, but `memory-sandobx/` now exists as
+the bounded RD-0755 `--magic` vault-gap proposal laboratory. It is propose-only,
+non-authorizing and grants no compiler, SLIDE or production authority.
 
 The diagnostic catalog is now count-owning at **974 entries**. Its bounded
 source classifier admits **73 descriptive identities**, including **51 on the
@@ -201,14 +203,13 @@ passed every gate in **643 seconds**, including **433 tooling tests**, graph-all
 **5/5**, Golden Pack **11/11**, coverage **974/974**, artifact drift and crypto
 suites; the process census returned to one pre-existing MCP Node process.
 
-Roadmap refresh 2026-08-08: hosted CI was checked read-only. SLIDE's latest
-remote security-closure is green at `feda0e7`, but the local branch is 15
-commits ahead. Galerina's latest `main` secret-scan/conventions failures are at
-the stale `8a8997b` line: exact historical false positives are already
-adjudicated on the current branch and the old conventions run stopped on a
-stale benchmark. Galerina was eight local commits ahead before this CI record.
-No push was made, so hosted evidence for the current heads remains unverified
-and cannot be used as release admission.
+Roadmap refresh 2026-08-08: publication state was checked without fetching or
+changing remote refs. The local Galerina upstream-tracking ref is 25 commits
+behind its housekeeping subject and the SLIDE ref is 47 commits behind. The
+older observed SLIDE security-closure at `feda0e7` and Galerina `main` failures
+at `8a8997b` are historical evidence only. No push was made, so hosted evidence
+for the current unpublished branches remains **unverified**, neither green nor
+red, and cannot be used as release admission.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 67 is green at `372f76b`. The
 append-only straight-line loop source profile now uses two through eight

@@ -14,10 +14,15 @@ counts or open items that a newer section explicitly supersedes.
   current repository head. Since that build point the tree gained the bounded
   RD-0755 detector as well as documentation, so its 45,665-node/120,560-edge
   totals are dated evidence and must not be quoted as the current graph.
-- [ ] Re-index Galerina at the current committed `HEAD` after this TODO update,
-  require the indexer's committed head to equal that exact revision and
-  `stale: false`, then rerun graph-all and the generated-authority drift gates
-  before replacing the dated graph totals.
+- [x] Re-index Galerina at exact subject head `cfbe91e7`. The moderate graph
+  committed **45,706 nodes / 120,650 edges**, exactly matching both expected
+  counts; a graph query finds the newly added `detectVaultGaps` implementation.
+- [x] Regenerate the project/KB graph outputs that correctly refused after the
+  TODO changed, converge the code index and derived registry, then rerun every
+  owning check. Graph-all is **5/5**; code index/registry remain **974** codes;
+  component-health audit, generated status blocks, subway roadmap, dev-tool
+  index and the 99-package flat-root lock all pass. Generated provenance files
+  changed only through their owning generators.
 - [x] Check publication state without changing it. The local upstream-tracking
   ref is `b3b84a6c`, 25 commits behind this branch. That local ref was not
   fetched in this housekeeping pass; hosted CI is therefore **unverified for
@@ -27,6 +32,11 @@ counts or open items that a newer section explicitly supersedes.
   last indexed implementation point is `420a1e9`; the later two commits add
   only completion evidence, but exact-head graph admission still requires a
   fresh index.
+- [x] Re-index the subsequent SLIDE TODO head `6e090c3`: **9,503 nodes / 22,995
+  edges**, exactly matching expected counts. Its fresh gates pass **85
+  contracts**, **79 reference tools**, **14 path-leak controls / 698 targets**,
+  security closure `+1` with evidence K3 `0`, and **809/809 tests across 84
+  suites**. The complete run held the Node census at **two to two**.
 
 ### Last fully verified generated-authority fixed point - 2026-08-08
 
