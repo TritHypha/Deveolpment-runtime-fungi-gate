@@ -3,15 +3,15 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina is structurally indexed at
-`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE at `72676bc`
-(**8,286 / 20,354**). The Galerina graph suite initially
+`362df72d` (**45,665 nodes / 120,560 edges**) and SLIDE at `f291fda`
+(**9,189 / 22,139**). The Galerina graph suite initially
 refused a real topology drift (`galerina-devtools-hypha` existed but was not in
 the workspace), then passed **5/5** after the package was enlisted as the 99th
 top-level peer and its boundary graph was generated. SLIDE's contract check
-passes **73 files**, its tool manifest passes **76 files**, its independent
-path-leak gate passes **14 controls / 654 targets**, security closure is `+1`
+passes **76 files**, its tool manifest passes **77 files**, its independent
+path-leak gate passes **14 controls / 663 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**781/781 across 78 suites** with no authority released. The fresh Galerina
+**789/789 across 79 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
 fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
@@ -33,6 +33,22 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap refresh 2026-08-08: SLIDE Contracts 70-71 are green at implementation
+commit `f291fda`. Contract 70 adds one or two independently certified natural
+counted loops to V2-C; reducibility, dominance, unique preheaders, zero start,
+checked unit progress, constant bounds, induction forwarding, nesting and a
+conservative 96-step ceiling are re-derived on both sides of admission.
+Contract 71 then binds the exact SHA-256-pinned Galerina
+`deepNestedMutation` source through a six-span source map, canonical GIR,
+physical `.slide`, portable VEO, eight VOK gates and one affine lease. The
+three admitted vectors return 7, 0 and 0 with replay refused. Complete SLIDE is
+**789/789 across 79 suites**; contract integrity is **76 files**, tool identity
+is **77 files**, path hygiene covers **663 targets**, security evidence K3 is
+`0`, and Node returns **1 -> 1**. This closes the exact historical nested-state
+boundary only. General checked-Fungi parsing/mutation, owned memory, effects,
+host calls, authenticated production authority and package retirement remain
+open.
+
 Roadmap refresh 2026-08-08: SLIDE Contract 69 is green at implementation
 commit `72676bc`. One exact two-level conditional inside the existing counted
 loop now derives two complete K3 successor rows, a source digest, five ordered
@@ -43,8 +59,9 @@ lease and typed receipt path; no interpreter fallback exists. Complete SLIDE
 is **781/781 across 78 suites**, contract integrity is **73 files** under a
 bounded 80-file ceiling (81 refuses), the tool manifest covers **76 files**,
 path-leak covers **654 targets**, security evidence K3 remains `0`, and Node
-returns **1 -> 1**. The historical inner-loop fixture remains refused, so
-general CFG/nested-loop, owned memory, effects, host calls and production
+returns **1 -> 1**. At that checkpoint the historical inner-loop fixture still
+refused; Contract 71 above supersedes only that exact refusal. General
+checked-Fungi control/mutation, owned memory, effects, host calls and production
 authority remain open and retirement counts do not change.
 
 Roadmap refresh 2026-08-08: boards #164-#166 are closed on the active branch.

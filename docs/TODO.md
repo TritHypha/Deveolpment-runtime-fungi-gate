@@ -15,11 +15,18 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact implementation head `362df72d`: **45,665
-  nodes and 120,560 edges**. Re-index SLIDE after Contract 69 at exact head
-  `72676bc`: **8,286 nodes and 20,354 edges**. SLIDE now passes **73
-  contracts**, **76 reference tools**, path-leak **14 controls / 654 targets**,
-  security closure `+1` with evidence K3 `0`, and **781/781 tests across 78
+  nodes and 120,560 edges**. Re-index SLIDE after Contracts 70-71 at exact head
+  `f291fda`: **9,189 nodes and 22,139 edges**. SLIDE now passes **76
+  contracts**, **77 reference tools**, path-leak **14 controls / 663 targets**,
+  security closure `+1` with evidence K3 `0`, and **789/789 tests across 79
   suites**. The complete SLIDE run stayed process-bounded at Node **1 -> 1**.
+- [x] Close the exact historical nested-state boundary without claiming a
+  general language backend. Contract 70 independently certifies one or two
+  reducible counted loops; Contract 71 binds the SHA-256-pinned Galerina
+  `deepNestedMutation` flow through canonical GIR, physical `.slide`, portable
+  VEO, eight VOK gates and one affine lease. True/true returns seven and either
+  disabled control returns zero. General mutable collections, effects, owned
+  memory, host calls and production authority remain open.
 - [x] Close the stale concurrent-change hold. Neither the former
   `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
   in the current working tree; the bounded-cache programme is already tracked
