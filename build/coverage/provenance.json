@@ -1,7 +1,7 @@
 {
   "tool": "audit-coverage",
-  "gitCommit": "4c24d0cd79bf00bd68e8926084fd68e5ed39977b",
-  "builtAt": "2026-08-08T12:36:27.000Z",
+  "gitCommit": "35f47787184d86a71254909ac8d617a6ccdb2f8c",
+  "builtAt": "2026-08-08T12:37:04.000Z",
   "node": "v24.18.0",
   "externalInputs": [
     {

@@ -11,15 +11,14 @@ passes **66 files**, its tool manifest passes **67 files**, security closure is
 `+1` with evidence K3 `0`, and the complete bounded reference suite passes
 **713/713 across 73 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
-bounded tooling suite passed **424 total / 422 pass / 2 intentional skip / 0
-fail**, and the uninterrupted exhaustive close passed **88/88** in **1,055
-seconds**. The post-run process census returned to the one pre-existing MCP
-Node process. A second isolated checkout then reproduced the complete build and
+bounded tooling suite passed **428 total / 426 pass / 2 intentional skip / 0
+fail**, and the current uninterrupted exhaustive close passed **92/92** in
+**1,042.9 seconds**. The post-run process census returned to the one
+pre-existing MCP Node process. A second isolated checkout then reproduced the complete build and
 the same **99/99 / 9,452 / 0 failed** aggregate without package junctions to any
 other worktree. Exact-byte evidence is LF-bound, the historical example key is
 confined to a temporary test governance set, and graph-all now reaches its
-fixed point in one ordered pass (**5/5 generate + 5/5 check**). The exhaustive
-close still requires one final run at this newer isolated fixed point. The
+fixed point in one ordered pass (**5/5 generate + 5/5 check**). The
 count-owning 99-package runner is now dependency-first across flat `file:`
 edges; its canonical rerun passes **99/99 and 9,452**, including the sealed
 secrets package that alphabetical execution previously reached before its
@@ -35,12 +34,15 @@ that snapshot; `.cc` and `.patch` are LF-bound; no pin, detector or verifier was
 weakened. That first attempt remained non-authorizing pending the complete
 rerun recorded below.
 
-That rerun is now complete at `1ad4cd68`: **90/90 blocking gates passed in
+An intermediate rerun at `1ad4cd68` passed **90/90 blocking gates in
 1,038.2 seconds**, including the two explicit Myco prerequisites, 425 tooling
 tests and the count-owning 99/99 package aggregate. Governance diff reports no
-authority widening and no phase-close-owned Node process remained. The next
-critical-path item is the independent general SLIDE backend, not another
-Galerina fixed-point rerun.
+authority widening and no phase-close-owned Node process remained. That run
+preceded the strict registry-fixture gate. The current `35f47787` tree then passed **92/92** in
+**1,042.9 seconds**, including an explicit compiler build and strict execution
+of all six canonical registry known-answer fixtures through the production
+security gate. The critical-path item is the independent general SLIDE backend,
+not another Galerina fixed-point rerun.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned

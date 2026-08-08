@@ -13,13 +13,13 @@ tooling changes were reconciled.
 |---|---:|
 | Workspace aggregate | 99/99 packages; 9,452 tests; 0 failed |
 | Compiler package | 6,313 tests |
-| Tooling tests | 424 total; 422 pass; 2 intentional skip; 0 fail |
+| Tooling tests | 428 total; 426 pass; 2 intentional skip; 0 fail |
 | Graph generation | 5/5 |
 | Graph check | 5/5 |
 | Fungi Golden Pack | 11/11 checked; 11/11 executed |
 | Independent SLIDE bounded baseline | 713/713 across 73 suites |
-| Exhaustive Galerina phase-close | 90/90; 1,038.2 seconds; all blocking gates passed |
-| Post-run Node census | no phase-close-owned Node process remained |
+| Exhaustive Galerina phase-close | 92/92; 1,042.9 seconds; all blocking gates passed |
+| Post-run Node census | one pre-existing MCP process; no phase-close-owned child remained |
 
 ## Defects closed in this chapter
 
@@ -63,6 +63,10 @@ tooling changes were reconciled.
     path-leak self-test derives the actual checkout basename; and `.cc`/`.patch`
     checkouts preserve the LF bytes already named by static-host manifests.
     Focused combined evidence is 17/17; no signed digest was edited.
+13. The canonical stdlib registry's six accepted/rejected security fixtures
+    were not in the phase-close cadence. Their two defective vectors were
+    corrected without weakening a diagnostic, and phase-close now builds the
+    compiler then executes the registry audit with `--strict`.
 
 ## Exact remaining retirement debt
 
@@ -78,7 +82,7 @@ No debt was deleted, exempted or converted by this verification chapter.
 
 The initial 88/88 exhaustive result belongs to its recorded tree. The isolated
 checkout now provides a stable full-build, full-aggregate and exhaustive fixed
-point: the repaired tree passed 90/90 blocking gates in 1,038.2 seconds. This
+point: the current tree passed 92/92 blocking gates in 1,042.9 seconds. This
 does not release production, signing, package-conversion or retirement
 authority; it closes the Galerina host/bootstrap verification gate for the next
 independent SLIDE backend increment.
