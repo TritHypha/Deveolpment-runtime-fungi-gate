@@ -15,9 +15,10 @@ counts or open items that a newer section explicitly supersedes.
   index, flat-package root lock and graph-all **5/5** all pass. Component health
   is **99/99 (100%)** and the post-run Node census is one.
 - [x] Re-index Galerina at exact head `c544cd28`: **45,665 nodes and 120,560
-  edges**. Revalidate SLIDE at `b48899f`: **69 contracts**, **71 reference
-  tools**, path-leak **14 controls / 625 targets**, security closure `+1` with
-  evidence K3 `0`, and **735/735 tests across 75 suites**.
+  edges**. Re-index SLIDE after Contract 66 at exact head `de39ad6`: **8,150
+  nodes and 19,895 edges**. SLIDE now passes **70 contracts**, **72 reference
+  tools**, path-leak **14 controls / 627 targets**, security closure `+1` with
+  evidence K3 `0`, and **746/746 tests across 75 suites**.
 - [x] Close the stale concurrent-change hold. Neither the former
   `memory-sandobx/` path nor an uncommitted `bounded-cache.ts` tombstone exists
   in the current working tree; the bounded-cache programme is already tracked
@@ -104,6 +105,13 @@ must not displace the critical path below or grant production authority.
   collapse and source maps; then bind them through physical `.slide`, VOK,
   the flat package loader and typed terminal receipts. Unknown or unsupported
   semantics must remain terminal.
+- [x] Complete the next bounded general-body increment without overclaiming
+  the general backend. Contract 66 compiles one exact checked-Fungi counted
+  loop using checked `+`, `-` or `*` through Contracts 63-65, physical
+  `.slide`, the flat package ABI, affine VOK and typed Safe Value receipt.
+  Copied handles, retry, insufficient work, overflow, hostile source and the
+  historical nested fixture refuse. Branches, nested control, owned memory,
+  effects and host calls remain in the open item above.
 - [ ] Close production execution authority after the backend: authenticated
   producer evidence, native object identity, platform/durability receipts,
   anchor/revocation checks and the later offline ceremony. Local reference
