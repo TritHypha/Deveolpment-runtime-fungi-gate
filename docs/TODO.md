@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 81 integration boundary - 2026-08-08
+
+- [x] Verify the first independently compiled Galerina `expr?` path rather
+  than inferring it from the older Wasm emitter. SLIDE Contract 81 admits one
+  exact two-flow `Result<Int,String>` family, evaluates the Result-producing
+  call once, projects only on the success-dominated edge and returns the
+  original registered failure unchanged on the other edge.
+- [x] Record all three terminal paths: ordinary `40 -> 41`, negative input ->
+  failure ID `4`, and Int32 overflow -> failure ID `1`. Host exceptions,
+  fallthrough and fallback are absent; K3/context/replay/copy and every-byte
+  physical mutations refuse.
+- [x] Record fresh SLIDE evidence: **89 contract files**, **83 reference
+  tools**, path leak **14 controls / 716 targets**, security closure `+1` with
+  evidence K3 `0`, and **828/828 tests across 89 suites**.
+- [x] Re-index exact SLIDE checkpoint `b7289af`: **9,598 nodes / 23,273
+  edges**, expected and observed equal, with direct graph hits for the source
+  derivation, compiler and both independent Result validators.
+- [ ] Keep conversion and retirement credit at zero. This closes a bounded
+  `Result<Int,String>` floor, not general Result, effectful or cross-package
+  propagation, and releases no production or signing authority.
+
 ### SLIDE Contract 80 integration boundary - 2026-08-08
 
 - [x] Verify the first finish-ledger owned-collection increment rather than

@@ -3,17 +3,17 @@
 Date: 2026-08-08
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina was structurally indexed at
-subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and the latest SLIDE
-implementation at `b82db4f` (**9,554 / 23,144**); both observed counts exactly equal the
-indexers' expected counts, and fresh symbol queries prove the new graph content
-is searchable. Galerina's repository graph and generated-authority checks pass
+subject head `28b19e88` (**45,706 nodes / 120,650 edges**) and SLIDE checkpoint
+`b7289af` (**9,598 / 23,273**); both observed counts exactly equal the indexers'
+expected counts. Direct SLIDE graph search resolves the Contract 81 source
+derivation, compiler and both independent Result validators. Galerina's
+repository graph and generated-authority checks pass
 **5/5** after regenerating the project and KB outputs that correctly refused
 the preceding TODO drift. SLIDE's contract check
-now passes **87 files**, its tool manifest passes **81 files**, its independent
-path-leak gate passes **14 controls / 708 targets**, security closure is `+1`
+now passes **89 files**, its tool manifest passes **83 files**, its independent
+path-leak gate passes **14 controls / 716 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**819/819 across 86 suites** with no authority released. Direct graph search
-finds the Contract 80 compiler and both independent validators. The fresh Galerina
+**828/828 across 89 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
 last complete bounded tooling suite passed **428 total / 426 pass / 2
 intentional skip / 0 fail**, and the last uninterrupted exhaustive close
@@ -35,6 +35,21 @@ host boundaries**, **95 package-local `node_modules` trees**, and **one nested
 native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
+
+Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
+commit `36bb79d` for the first bounded typed-failure propagation family. One
+exact Galerina `Result<Int,String>` caller uses `expr?`; SLIDE independently
+proves single evaluation, returns the original failure on the failure edge and
+permits value projection only on the success-dominated block. Negative input
+preserves failure `4`; checked overflow preserves failure `1`; no host
+exception, silent fallthrough or fallback participates. The registry has
+distinct physical `.slide`, portable VEO, input, execution and transcript
+domains, with K3/context/replay/copy and every-byte mutation refusal. Complete
+SLIDE is **828/828 across 89 suites**; contract integrity is **89 files**, tool
+identity is **83 files**, path hygiene covers **716 targets**, and security
+evidence K3 remains `0`. Other Result types, dynamic failures, effectful and
+cross-package propagation, conversion, retirement and production authority
+remain open.
 
 Roadmap boundary ruling 2026-08-08: the **bounded general scalar/control SLIDE
 core is green**. V2-C is not an application-specific table: it independently
