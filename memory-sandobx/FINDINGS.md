@@ -342,6 +342,42 @@ tables independently arrive at the same place.
 
 ---
 
+## 8 · CPU cost and resident footprint of the top-2 combos (`bench-cpu-top2.mjs`)
+
+| combo | wall | user CPU | sys CPU | resident RAM | on disk |
+|---|---:|---:|---:|---:|---:|
+| T1 #1 raw + tropical + seek+verify | 30.9 ms | ~31 ms | ~0 | **1.26 MiB** (graph 0.65 + packed digest idx 0.61) | 30.5 MiB |
+| T1 #2 gzip + tropical + seek+verify | 32.6 ms | ~31 ms | ~0 | 0.71–1.36 MiB | 30.5 MiB |
+| T2 #1 resident + tropical | 30.1 ms | ~31 ms | ~0 | **31.2 MiB** (store resident) | 0 |
+| T2 #2 resident + Dijkstra | 22.9 ms | **~16 ms** | ~0 | 31.2 MiB | 0 |
+
+- **All four are one core, ~100% user-mode.** System time is below the tick even with the
+  verified seeks. ⚠ Windows quantises `cpuUsage` at ~15.6 ms, and these workloads sit at
+  1–2 ticks — the *direction* is solid, fine deltas are not resolvable at this length.
+- **T1 #1 vs #2: no measurable CPU difference.** The gunzip (~2 ms) is below the tick —
+  an 85% smaller file for processor cost too small to see here.
+- ★ **HONEST CORRECTION to §7's kernel headline: it is JIT-state-dependent.** This bench
+  warms up before measuring, and warm Dijkstra drops to ~0.8 ms/SSSP — **half tropical's
+  CPU** (16 vs 31 ms) despite §7's cold-ish run showing tropical ahead (2.02 vs 3.68 ms).
+  Tropical does **8.2×** the edge work (323k vs 39k visits/source) and hides it in stream
+  locality — but a fully-warmed heap catches up. So: tropical wins **cold starts,
+  Lock-1 eligibility, and algebraic safety**; Dijkstra wins **warm steady-state CPU**.
+  The placement doctrine (RD-0400) handles exactly this: measure per lane, don't assume.
+- ★★ **The size answer, end to end: 25×.** Table 1's index-resident posture holds
+  **1.26 MiB** in RAM with 30.5 MiB on disk; Table 2 holds **31.2 MiB** resident. The
+  price of the 25× is 1.65 ms of verified seeks per 50 lookups. That is the owner's
+  index/warehouse concept, measured at system scale.
+
+**External corroboration, same week:** Flatiron/CCQ + Boston University (*Science*, July
+2026) simulated hundreds of entangled qubits on a laptop using tensor networks — *"a zip
+file for the wave function"* — driven by **belief propagation**, a 1980s message-passing
+fixpoint algorithm on a graph. Belief propagation and tropical relaxation are the same
+family: semiring message-passing to fixpoint (sum-product vs min-plus). Their result is
+this table's thesis at physics scale: **compressed representation + semiring
+message-passing on a graph beats brute-force enumeration on grander hardware.**
+
+---
+
 ## Files
 
 | file | what |
