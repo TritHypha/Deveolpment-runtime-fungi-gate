@@ -187,6 +187,161 @@ it. Updated deliberately, with the reason recorded in the test.
 
 ---
 
+---
+
+## 6 · XIP (RD-0559 / AXFS) — the maths checked, and one correction to §2
+
+`node bench-xip-verification-tension.mjs` · 32 MiB immutable collection, page cache warm.
+
+**The owner's reading is confirmed in direction.** XIP removes the copy leg, and `.fungi`
+immutability really is XIP's hard requirement — most languages cannot use it safely.
+
+### ★ But the throughputs invert the §2 conclusion at scale
+
+| leg | throughput |
+|---|---:|
+| `readFileSync` (what XIP removes) | **3,181 MB/s** |
+| `sha256` (what verification demands) | **572 MB/s** |
+
+**Hashing is 5.6× slower than reading.** §2's "read is 85%, hash is 8%" was measured on
+~1 KB objects, where the *syscall's fixed cost* dominates. At 32 MiB the picture reverses:
+**bandwidth dominates, and the hash is the bottleneck.** The ~18 µs floor in §2 is a
+small-object figure and does not generalise — that is a correction to my own analysis, not
+to the owner's.
+
+**Consequence:** XIP alone on whole-object verified data buys
+`66 ms → 55.9 ms` = **~1.2×**. Not worth the complexity.
+
+### ★★ The tension the analysis did not name
+
+**XIP's win is laziness — you touch only the pages you walk. Digest verification is eager —
+you cannot verify a region without reading every byte.** So whole-object verification turns
+a lazy zero-copy walk into an eager full read, in exactly the case XIP exists for:
+
+| scan | lazy read | + whole-object verify | penalty |
+|---:|---:|---:|---:|
+| 1% | 0.7 ms | 56.6 ms | **81×** |
+| 10% | 6.1 ms | 62.0 ms | 10× |
+| 100% | 54.2 ms | 110.1 ms | 2× |
+
+### ★★★ The resolution is already in RD-0559 — AXFS decides *per page*
+
+Per-page digests make verification lazy too:
+
+| | |
+|---|---|
+| index overhead at 32 B/page | **0.78%** (256 KiB for 32 MiB) |
+| verifying 1% of pages vs all | **100× cheaper** |
+| **1% scan, XIP + per-page digests** | 1.26 ms vs 66 ms whole-object = **~52×** |
+
+> **The per-page digest is what unlocks XIP — not XIP itself.** Alone, XIP is a 1.2×
+> curiosity on verified data. With lazy verification and partial access it is ~50×.
+
+⚠️ **And the page-digest index must be covered by the signature.** Delete one page's digest
+and every surviving page still verifies — the exact fail-open demonstrated in
+`kat-index-fail-open.mjs`. Same defect, one level down.
+
+⚠️ **The owner's own law still binds:** never XIP the hot path. The execution-graph cache is
+hot, so none of this applies there — rebuild at 9–15 µs already wins.
+
+---
+
+## 7 · The combination matrix — every axis measured, then composed
+
+`node bench-combination-matrix.mjs` · 10,000 nodes / 80,000 edges, seeded · KAT-first:
+a hand-computed 5-node fixture asserted **exact** (`[0,2,5,6,10]`), then three kernels
+× five sources in differential parity before any timing was believed. Dense matrix
+**refused by arithmetic**: 381 MiB for 0.08% occupancy.
+
+### Component results
+
+| axis | winner | number |
+|---|---|---|
+| representation | **CSR typed arrays** | Dijkstra 2.7× faster than on Map; 0.65 MiB exact vs ~10 MiB-class heap |
+| kernel | ★ **tropical min-plus on CSR** | **2.02 ms vs Dijkstra's 3.68 ms** — fixpoint in 8 rounds on this diameter; linear array scans beat heap machinery |
+| encoding | **binary CSR** | decode **0.2 ms** vs JSON 20.6 ms vs gate-text 58.1 ms (~300× / ~100×) |
+| compression (".zip") | **gzip on binary only** | 0.65 → 0.10 MiB at +1.8 ms decode; on JSON it *costs* (26–34 ms decode); worth it for I/O and cold storage, never for hot |
+| query interface | **prepared, closed grammar** | 1.64× direct; interpreted-per-call 6.3× — parse once is the whole game |
+| I/O locate | **index + seek + per-record verify** | **1.65 ms vs 437.7 ms full scan (265×)**; the verify adds 0.7 ms over fail-open |
+
+### Table 1 — with I/O (load + 20 SSSP + 100k queries + 50 locates)
+
+| rank | total | verification | combination |
+|---:|---:|---|---|
+| 1 | **68.5 ms** | per-record (lazy) | binaryCSR/raw + CSR + **tropical** + prepared + seek+verify |
+| 2 | 70.3 ms | per-record (lazy) | binaryCSR/**gzip** + CSR + tropical + prepared + seek+verify |
+| 3 | 90.7 ms | ⚠ **none — fail-open** | binaryCSR/raw + CSR + Dijkstra + direct + seek |
+| 4 | 101.7 ms | per-record (lazy) | binaryCSR/raw + CSR + Dijkstra + prepared + seek+verify |
+| 7 | 169.4 ms | per-record (lazy) | gate-text + CSR + Dijkstra + prepared + seek+verify |
+| 9 | 931.6 ms | whole (eager) | JSON + Map + Dijkstra + interpreted + scan |
+
+★ **Verified beats unverified**: rank 1 with full lazy verification beats rank 3's
+fail-open — the security is not the cost; the naive substrate is. The naive-everything
+baseline is **13.6× slower** than the verified winner.
+
+### Table 2 — same effects, everything resident (RAM becomes a column)
+
+| rank | work | resident | verification | combination |
+|---:|---:|---:|---|---|
+| 1 | **66.7 ms** | 0.65 MiB | admission-time | CSR resident + tropical + prepared |
+| 2 | 89.6 ms | 0.65 MiB | admission-time | CSR resident + Dijkstra + direct |
+| 4 | 99.9 ms | 0.65 MiB | **verify buffer once, views free** | binary buffer + zero-copy views + Dijkstra + prepared |
+| 5 | 101.8 ms | **0.10 MiB** | at decompress | gzip(binary) resident + decompress/session |
+| 6 | 215.4 ms | ~10 MiB-class¹ | admission-time | Map resident + Dijkstra + direct |
+| 8 | 275.9 ms | 0.35 MiB | at decompress | gzip(JSON) resident + parse/session |
+
+¹ heap-delta measurement failed (GC fired mid-delta, reading −10 MiB); the class is an
+analytic estimate from 80k boxed pair-arrays. Buffer sizes are exact.
+
+**What changes in memory:** verification collapses to **admission time** — inside one
+process, hashing your own heap on every read defends against nothing the process cannot
+already do. Compression becomes a RAM-vs-CPU dial (6.5× smaller for +2 ms/session).
+And the zero-copy-views row is **"XIP in RAM"** — the Arrow/FlatBuffers shape: one
+canonical buffer, verified once, views free (0.002 ms).
+
+### ★★ The XIP question answered: "if it never enters memory, does it need hashing?"
+
+**The copy was never why you hash. Provenance is.** XIP removes the copy, not the
+question of whether the bytes are the ones that were signed — the CPU consumes them
+either way, and tampered XIP bytes execute *directly*, with no load step for a check to
+sit in. Three regimes:
+
+| media | verification needed |
+|---|---|
+| physically read-only (NOR/ROM), verified at provisioning | **none at runtime** — the trust anchor is the hardware write-protection. RD-0559's own home turf. |
+| writable file, mapped | **lazy per-page Merkle, verify on first fault** — this is exactly Android's **dm-verity/fs-verity**, and it is the per-page-digest scheme measured in §6 (0.78% overhead, index inside the signature) |
+| writable file, no verification | fail-open — `unknown → allow` at the memory boundary |
+
+### ★★★ Lock-1 adjudication (RD-0391 P1–P9): the speed winner is also the most eligible
+
+| candidate | Lock-1 reading |
+|---|---|
+| **tropical on CSR** | P1 fixed-width ✓ (Int32/Float64 arrays) · P3 no heap ✓ (preallocated, no per-op allocation) · P4 boundable ✓ (rounds ≤ declared ceiling, trap over = the Lock-3 fence) · monotone + idempotent algebra — replayed or reordered edges cannot change the answer, the same deny-side shape as `.gate`'s max-plus budget |
+| Dijkstra (binary heap) | dynamic heap arrays — P3 in doubt; data-dependent branching |
+| Map adjacency | P1 **REFUTED** by name (maps are excluded from FixedWidth) — it is the cold/reference twin, which is exactly the P9 fallback role, and my differential parity **is** the twin verification |
+| interpreted queries | violates RD-0400's no-grammar-surface rule for the hot lane; prepared+closed grammar is the seam, at a measured 1.64× |
+
+### What other open-source projects use (and which row they are)
+
+| project | technique | our measured analogue |
+|---|---|---|
+| SQLite | B-tree pages + **prepared statements** | prepared plans (1.64× vs 6.3×) |
+| LMDB | mmap + copy-on-write, **zero-copy reads** | zero-copy views row (0.002 ms) |
+| git | zlib objects + packfiles, **content-addressed** | gzip(binary) + digest index |
+| RocksDB | LSM + per-**block** compression + block checksums | per-record verify (lazy, 1.65 ms) |
+| Arrow / FlatBuffers | columnar / struct **zero-copy over one buffer** | binary buffer + views |
+| SciPy / cuGraph / ligra | **CSR** | CSR (2.7× over Map) |
+| NetworkX | dict-of-dicts | the Map row it outgrew |
+| Neo4j | index-free adjacency, fixed-size records | CSR offsets as the same idea |
+| Android dm-verity | **per-page Merkle, verify-on-fault, signed root** | §6's per-page digests |
+
+Nobody serious ships JSON-parse-per-query or unverified mmap of writable files; everyone
+converges on: **one canonical binary buffer, zero-copy access, lazy block-level
+verification under a signed root, prepared queries over a closed surface.** The measured
+tables independently arrive at the same place.
+
+---
+
 ## Files
 
 | file | what |
