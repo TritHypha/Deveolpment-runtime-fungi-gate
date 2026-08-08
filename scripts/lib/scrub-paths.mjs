@@ -9,6 +9,7 @@
 export function scrubPaths(s) {
   return String(s)
     .replace(/[A-Za-z]:[\\/]{1,2}Users[\\/]{1,2}[^\s"'`)\]]+/g, "<path>")
+    .replace(/(?<![A-Za-z0-9+:])\/(?:home|Users)\/(?!<)[^/\s"'`)\]]+(?:\/[^\s"'`)\]]*)?/g, "<path>")
     .replace(/(?:[A-Za-z]:[\\/]{1,2})?wwwprojects[\\/][^\s"'`)\]]*/g, "<path>")
     // Windows env-var path literals (USERPROFILE / APPDATA / HOMEPATH etc., percent-wrapped) — the
     // `windows-env-literal` class the path-leak gate enforces. A bare `userprofile` token carries no `%%` and

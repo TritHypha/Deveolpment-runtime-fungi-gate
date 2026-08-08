@@ -290,7 +290,7 @@ engineering standard:
 - threat models, ADRs, runbooks, exit ramps, crypto agility and stable contracts
   support operation and migration over a twenty-year horizon.
 
-The standard's example `/home/workdir/artifacts` appendices are not Galerina
+The standard's example `<artifact-root>` appendices are not Galerina
 implementation evidence and grant no authority here. Descriptive fail-open
 examples are forbidden for authentication, authorization, admission, crypto,
 secret, effect and durable-publication paths.

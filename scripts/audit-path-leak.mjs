@@ -53,6 +53,9 @@ const PATTERNS = [
   // Windows user home: drive + Users + a REAL name segment — leaks BOTH the drive layout and the
   // username. The (?!<) skips a `<name>`/`<user>` PLACEHOLDER, which teaches the rule rather than leaks.
   { name: "windows-user-home", re: /[A-Za-z]:[\\/]{1,2}Users[\\/]{1,2}(?!<)[^\\/\s"'`,;<]+/g },
+  // Unix user home: Linux `/home/<user>` and macOS `/Users/<user>`. The left boundary prevents a
+  // normal URL route from being mistaken for a local filesystem path; file URIs remain detectable.
+  { name: "unix-user-home", re: /(?<![A-Za-z0-9+:])\/(?:home|Users)\/(?!<)[^/\s"'`,;<]+/g },
   // Percent-wrapped Windows env var used as a LITERAL path stand-in (`%USERPROFILE%\...`). Owner ruling
   // 2026-07-15: a public repo hardcodes NOTHING machine-specific — a `%USERPROFILE%` literal is still a
   // Windows-only hardcoding, not a portable fix, so it is itself a leak. A runtime env READ in code
@@ -191,6 +194,8 @@ function selfTest() {
     ["clean repo-relative path is silent", !fires("packages-galerina/foo/src/index.ts")],
     ["windows-user-home fires", fires("see C:\\Users\\someone\\Documents\\GitHub\\x")],
     ["forward-slash user-home fires", fires("C:/Users/someone/dev")],
+    ["linux user-home fires", fires("/home/someone/Documents/GitHub/x")],
+    ["macOS user-home fires", fires("/Users/someone/Documents/GitHub/x")],
     ["json-escaped user-home fires", fires('"root": "C:\\\\Users\\\\someone"')],
     ["wwwprojects path fires", fires("moved from C:\\wwwprojects\\galerina")],
     ["percent env literal fires (%USERPROFILE% is NOT a portable fix)", fires("run %USERPROFILE%\\Documents\\GitHub\\x")],
@@ -199,6 +204,9 @@ function selfTest() {
     ["$env:USERNAME READ does NOT fire", !fires('icacls x /grant:r "$($env:USERNAME):F"')],
     ["bare 'wwwprojects' word in prose does NOT fire", !fires("migrated the wwwprojects layout")],
     ["'C:\\Users\\<name>' placeholder does NOT fire", !fires("a hardcoded C:\\Users\\<name>\\x breaks")],
+    ["'/home/<user>' placeholder does NOT fire", !fires("a portable /home/<user>/x example")],
+    ["'/Users/<name>' placeholder does NOT fire", !fires("a portable /Users/<name>/x example")],
+    ["URL route containing Users does NOT fire", !fires("https://example.test/Users/someone/profile")],
     ["allow-marker suppresses", !fires("example C:\\Users\\x  (path-leak-audit:allow)")],
     ["dash-encoded slug fires", fires('"project": "C-Users-someone-Documents-GitHub-Galerina"')],
     // ★ THE REGRESSION (R&D finding, 2026-07-17). This is the shape the ENCODER actually emits — drive

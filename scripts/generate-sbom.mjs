@@ -926,7 +926,7 @@ function runSelfTest() {
     check("path-leak guard: rejects drive-letter path", threw);
     let threwHome = false;
     try {
-      assertNoPathLeak('{"x": "/home/someone/repo"}');
+      assertNoPathLeak('{"x": "/home/someone/repo"}'); // path-leak-audit:allow -- hostile fixture
     } catch {
       threwHome = true;
     }

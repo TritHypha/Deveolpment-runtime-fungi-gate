@@ -90,7 +90,7 @@ Grace. The rule is the consistency, not the title.)*
 - **ZT-16 — Explicit pathspecs only.** Never `git add -A` or `git add .` — you commit what
   you touched, not whatever else was lying about.
 - **ZT-17 — Nothing machine-specific ships.** No absolute local paths (`C:\Users\…`, <!-- path-leak-audit:allow: this line teaches the rule by quoting the pattern -->
-  `/home/…`) in anything committed: they leak identity and break on every other machine.
+  `/home/<user>/…`) in anything committed: they leak identity and break on every other machine.
   Scan before committing — then encode the scan as a check (ZT-43).
 - **ZT-18 — No secrets in the repo. Ever.** Keys, tokens, and `.env` files stay out;
   commit a `.env.example` instead. A butler does not read out the master's bank details at

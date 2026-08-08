@@ -14,9 +14,9 @@ Evidence classification: CANDIDATE_NON_AUTHORIZING
 ## Host facts
 
 - Ubuntu release (`/etc/os-release`): Ubuntu 24.04.4 LTS (Noble Numbat), `VERSION_ID="24.04"`
-- Kernel (`uname -a`): `Linux Fittingly-phillip-booth-ThinkPad-P16v 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul  1 15:50:57 UTC 2 x86_64 x86_64 x86_64 GNU/Linux`
+- Kernel (`uname -a`): `Linux <host> 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul  1 15:50:57 UTC 2 x86_64 x86_64 x86_64 GNU/Linux`
 - Architecture: `x86_64` (`process.arch` in the verifier receipt: `x64`)
-- Mount target/source/filesystem/options (`findmnt -T .`): target `/home/phillip-booth/Documents/GitHub/Galerina`; source `/dev/nvme0n1p2[/home/phillip-booth/Documents/GitHub/Galerina]`; filesystem `ext4`; options `rw,nosuid,nodev,relatime`
+- Mount target/source/filesystem/options (`findmnt -T .`): target `<workspace-root>`; source `/dev/nvme0n1p2[<workspace-root>]`; filesystem `ext4`; options `rw,nosuid,nodev,relatime`
 - Bare host, VM or container: `systemd-detect-virt` reported `none`; no stronger bare-host inference was made
 - Storage/controller facts actually measured: the repository mount was reported as ext4 backed by `/dev/nvme0n1p2`; controller-cache behavior and physical-media durability were not measured
 

@@ -12,6 +12,11 @@ test("scrubPaths: Windows user-home path → <path> (single and double backslash
   assert.equal(scrubPaths("see C:\\\\Users\\\\bob\\\\y.md end"), "see <path> end"); // path-leak-audit:allow
 });
 
+test("scrubPaths: Unix user-home paths → <path> (Linux and macOS)", () => {
+  assert.equal(scrubPaths("see /home/alice/GitHub/x.ts here"), "see <path> here"); // path-leak-audit:allow -- hostile fixture
+  assert.equal(scrubPaths("see /Users/bob/GitHub/y.md end"), "see <path> end"); // path-leak-audit:allow -- hostile fixture
+});
+
 test("scrubPaths: wwwprojects root → <path>", () => {
   assert.equal(scrubPaths("root wwwprojects\\galerina\\z done"), "root <path> done"); // path-leak-audit:allow
 });
@@ -27,6 +32,8 @@ test("scrubPaths: SAFE tokens are untouched (no over-scrub)", () => {
   // A placeholder / repo-relative path is already portable — left alone.
   assert.equal(scrubPaths("read <path>/a and packages-galerina/x/src/y.ts"), "read <path>/a and packages-galerina/x/src/y.ts");
   assert.equal(scrubPaths("~/notes and $HOME/x"), "~/notes and $HOME/x");
+  assert.equal(scrubPaths("/home/<user>/notes and /Users/<name>/work"), "/home/<user>/notes and /Users/<name>/work");
+  assert.equal(scrubPaths("https://example.test/Users/alice/profile"), "https://example.test/Users/alice/profile");
 });
 
 test("scrubPaths: idempotent (scrubbing an already-clean/scrubbed string is a no-op)", () => {
