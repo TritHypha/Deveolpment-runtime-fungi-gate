@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### SLIDE Contract 82 package-integration RED boundary - 2026-08-08
+
+- [x] Record the next exact integration gate rather than treating Contracts 80
+  and 81 as package-executable merely because their standalone paths are green.
+  SLIDE commit `7bfc02e` adds the plan and RED package test for the two existing
+  exact source families.
+- [x] Re-run the focused test at the clean current head: **1/3 passes and 2/3
+  fail**. The hostile wrong-entry/source/K3 controls already refuse; both valid
+  exports are still refused by `SLIDE-PACKAGE-BUILD-001`, proving that package
+  profile selection is absent.
+- [ ] Implement and independently verify the two exact package profiles in
+  SLIDE. Galerina does not need new syntax for this increment: the accepted
+  sources remain the existing bounded append-only `Array<Int>` flow and exact
+  `Result<Int,String>`/`expr?` family.
+- [ ] Keep typed source failure distinct from package admission failure. Once
+  an exact package is admitted, negative input must preserve failure ID `4`
+  and checked overflow failure ID `1`, with no fallback or host exception.
+- [ ] Keep all Galerina conversion and retirement counters unchanged until the
+  Contract 82 implementation, complete SLIDE gates, graph evidence and a real
+  Galerina package consumer switch are green. The RED contract releases no
+  production or signing authority.
+
 ### SLIDE Contract 81 integration boundary - 2026-08-08
 
 - [x] Verify the first independently compiled Galerina `expr?` path rather
@@ -46,7 +68,10 @@ counts or open items that a newer section explicitly supersedes.
   finish-ledger gate 1 before typed failures, multiple effects and the later
   gates.
 
-### Live routing and stale-evidence reconciliation - 2026-08-08
+### Historical routing checkpoint - superseded by Contract 82 - 2026-08-08
+
+This section records the earlier pre-Contract-80/81 route. It remains as dated
+evidence; the first Contract 82 section owns current status and next work.
 
 - [x] Verify the active local route directly before this documentation-only
   update: branch `codex/galerina-beta-v1-completion`, clean subject head

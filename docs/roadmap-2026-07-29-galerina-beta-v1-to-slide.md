@@ -36,6 +36,16 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap active gate 2026-08-08: **Contract 82 is RED by design** at SLIDE
+commit `7bfc02e`. The focused flat-package extension test is **1/3 pass and 2/3
+fail**: hostile wrong-entry/source/K3 cases already refuse, while the two valid
+Contract 80/81 exports stop at `SLIDE-PACKAGE-BUILD-001`. The missing work is
+exact package-compiler selection, physical bundle/profile binding and package
+execution of the already-admitted standalone families. A typed source `Err`
+must remain an admitted terminal Result rather than being collapsed into
+package refusal. Until implementation and the complete gates are green,
+conversion, retirement, signing and production authority remain unchanged.
+
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One
 exact Galerina `Result<Int,String>` caller uses `expr?`; SLIDE independently
@@ -1501,7 +1511,10 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned local Int32 + durable source-free authenticated package effect<br/>Contracts 66–79 · 809/809 · no production authority"]
+    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–81 · 828/828 · no production authority"]
+    C80["🟩 Contract 80 owned append-array<br/>standalone exact profile · affine owner · zeroised storage"]
+    C81["🟩 Contract 81 typed Result propagation<br/>single evaluation · original failure preserved"]
+    C82["🟥 Contract 82 flat-package extension<br/>RED 1/3 pass · 2/3 expected fail<br/>profile selection not implemented"]
     HC["🟦 Complete Galerina language backend<br/>general owned collections · failures · multi-effect/cross-package calls<br/>provider binary identity · generated supported-source manifest"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
@@ -1563,7 +1576,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> C82 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -1575,7 +1588,7 @@ flowchart TB
     E --> K --> VN --> FB --> Q
     FB --> J
     E --> S --> SC --> ST --> PV --> SB --> EB --> EG --> CF --> VL --> LC --> LR --> LV --> LO --> LP --> H
-    LC --> SBR --> SBP --> C66 --> C67 --> C68 --> C69 --> H
+    LC --> SBR --> SBP --> C66 --> C67 --> C68 --> C69 --> C80 --> C81 --> H
     LC --> BF --> H
     EG --> DN --> DB --> DE --> PK["Flat package ABI floor<br/>direct peers · complete GIR type IDs<br/>448/448 · reference-only"] --> MP["Checked multi-package build<br/>real .fungi → per-export .slide<br/>443/443 · reference-only"] --> PP["Physical package publication<br/>exclusive target · receipt last<br/>448/448 · durability K3=0"] --> PR["Pure-routing module compiler<br/>five flows · guard/match/calls<br/>453/453 · reference-only"] --> SM["Closed source-manifest CLI<br/>stable confined reads · receipt last<br/>457/457 · reference-only"] --> PL["Physical package loader<br/>ABI + provenance re-derived · affine VOK<br/>461/461 · reference-only"] --> PS --> H
     FL --> PK
