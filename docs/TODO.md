@@ -78,12 +78,12 @@ must not displace the critical path below or grant production authority.
   now remove only inherited `NODE_TEST_CONTEXT`, retain suite/process custody,
   and the meta-audit preserves the failing child's last diagnostic lines.
   Tooling is **424 total / 422 pass / 2 intentional skip / 0 fail**.
-- [ ] Re-run the uninterrupted exhaustive phase-close in the isolated checkout
-  after the clean-checkout tooling repairs. The first exact attempt kept the
-  99/99 package aggregate green but correctly refused stale coverage evidence,
-  an unbuilt/unindexed Myco audit, a checkout-name-dependent self-test and
-  CRLF static-host bytes. The previous 88/88 result remains evidence only for
-  its recorded tree and is not silently promoted to this fixed point.
+- [x] Re-run the uninterrupted exhaustive phase-close in the isolated checkout
+  after the clean-checkout tooling repairs. All **90/90 blocking gates passed**
+  in **1,038.2 seconds**, including `build:myco`, `index:myco`, the exact
+  compiler-source overwrite audit, **425 tooling tests**, and the full **99/99
+  package aggregate**. Governance diff reports no authority widening and the
+  terminal process census found no owned Node child.
 - [ ] Finish the independent general SLIDE backend dependency-first: complete
   canonical GIR and independent validation for general bodies, structured
   control/loop bodies, owned memory, failures, effects, capabilities, K3

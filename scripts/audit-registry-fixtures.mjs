@@ -2,7 +2,7 @@
 // =============================================================================
 // audit-registry-fixtures.mjs — RUN the canonical registry's own known-answer tests
 // =============================================================================
-// THE GAP THIS CLOSES (found 2026-08-06, ticks 208-210):
+// THE ORIGINAL GAP (found 2026-08-06; closed in phase-close 2026-08-08):
 //   ZTF-Knowledge-Bases/stdlib-gates.yaml — the file value-state-checker.ts names
 //   as its source of truth for sinks — ships a `test_fixtures:` block:
 //
@@ -11,25 +11,23 @@
 //                  `expected_diagnostic` it must draw
 //
 //   The vendor wrote the known-answer tests, with the answers in the margin, and
-//   NOTHING RUNS THEM. Measured: 0 of 163 scripts in scripts/ mention
-//   `test_fixtures`, and 0 mention `stdlib-gates.yaml` at all.
+//   Nothing ran them when this audit was written. Phase-close now builds the
+//   compiler and executes this audit with --strict on every close.
 //
-//   What that costs, verified by executing them:
+//   The first execution exposed two canonical-fixture defects, now corrected:
 //     • `ai_guidance.safe_example` — the snippet the registry publishes FOR CODE
 //       GENERATORS, and duplicated as the `validate_before_insert` accepted
 //       fixture — draws FUNGI-VALUESTATE-006. `validate.email()` returns a
-//       `protected` value (correctly: an email is PII) and the registry's
-//       `transitions:` block never models `protected` as a validation output.
-//       The published "do it this way" example does not compile.
+//       `protected` value (correctly: an email is PII), while the example
+//       discarded that qualifier in its explicit binding type.
 //     • `direct_secret_equality` cannot fire its own expected diagnostic: it
-//       compares two UNDECLARED identifiers, so nothing marks them secret. Bind
-//       them through env.secret() and FUNGI-SECRET-002 fires correctly — the
-//       vector is at fault, not the checker.
+//       originally compared two undeclared identifiers, so nothing marked them
+//       secret. The corrected vector binds both through env.secret().
 //
 // SECOND GAP, closed as a side effect:
-//   This is the FIRST audit in the repo to execute `runProductionSecurityGate` —
-//   the gate that stands between a defect and a signed artifact. 0 of 163 do
-//   today. Every other gate reasons about source; this one runs the thing.
+//   This was the first audit in the repo to execute `runProductionSecurityGate`
+//   against the canonical registry. Every other gate reasons about source;
+//   this one runs the thing.
 //
 // WHAT IS JUDGED, AND ON WHICH AXIS
 //   The fixtures are flow BODIES, not whole files: the registry supplies no

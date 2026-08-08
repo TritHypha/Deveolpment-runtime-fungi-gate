@@ -18,8 +18,8 @@ tooling changes were reconciled.
 | Graph check | 5/5 |
 | Fungi Golden Pack | 11/11 checked; 11/11 executed |
 | Independent SLIDE bounded baseline | 713/713 across 73 suites |
-| Exhaustive Galerina phase-close | 88/88; 1,055 seconds; authorizing verdict true |
-| Post-run Node census | one pre-existing MCP process; no owned child remained |
+| Exhaustive Galerina phase-close | 90/90; 1,038.2 seconds; all blocking gates passed |
+| Post-run Node census | no phase-close-owned Node process remained |
 
 ## Defects closed in this chapter
 
@@ -77,21 +77,20 @@ No debt was deleted, exempted or converted by this verification chapter.
 ## Fixed-point qualification
 
 The initial 88/88 exhaustive result belongs to its recorded tree. The isolated
-checkout provides a stable full-build and full-aggregate fixed point. Its first
-exact exhaustive attempt kept the package aggregate green but refused four
-tooling prerequisites now repaired above. One complete rerun is required before
-an exhaustive pass can be attributed to the newer tree.
+checkout now provides a stable full-build, full-aggregate and exhaustive fixed
+point: the repaired tree passed 90/90 blocking gates in 1,038.2 seconds. This
+does not release production, signing, package-conversion or retirement
+authority; it closes the Galerina host/bootstrap verification gate for the next
+independent SLIDE backend increment.
 
 ## Next critical path
 
-1. Complete the isolated exhaustive phase-close and retain its bounded process
-   receipt.
-2. Use the repository-owned Myco and Hypha tools to produce the next dependency,
+1. Use the repository-owned Myco and Hypha tools to produce the next dependency,
    capability and host-boundary inventory; build a new tool only for a proven
    uncovered question.
-3. Implement the smallest general independent SLIDE successor: general bodies,
+2. Implement the smallest general independent SLIDE successor: general bodies,
    structured control/loops, exact CFG/SSA/type/K3 validation and bounded work.
-4. Add owned memory, failures, effects/capabilities and host profiles one closed
+3. Add owned memory, failures, effects/capabilities and host profiles one closed
    family at a time through physical `.slide`, affine VOK and typed receipts.
-5. Close authenticated object/platform/anchor authority, then switch packages by
+4. Close authenticated object/platform/anchor authority, then switch packages by
    exact executed parity tranches until the retirement ledger reaches zero.

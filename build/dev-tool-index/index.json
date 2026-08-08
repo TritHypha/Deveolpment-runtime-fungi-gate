@@ -6,7 +6,7 @@
     "tests": 9452,
     "devTools": 160,
     "auditTools": 87,
-    "toolsInCadence": 63,
+    "toolsInCadence": 64,
     "proofs": 40
   },
   "packages": [
@@ -1844,11 +1844,11 @@
       "category": "audit",
       "purpose": "RUN the canonical registry's own known-answer tests",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
       "concerns": [
         "sinks/taint",
         "effects",
-        "signing/fusion",
+        "governance",
         "gate-wiring",
         "diagnostics",
         "secrets/privacy"
@@ -3502,7 +3502,6 @@
       "audit-private-doc-leak.mjs",
       "audit-provenance.mjs",
       "audit-reference-doc-drift.mjs",
-      "audit-registry-fixtures.mjs",
       "audit-remote-shell-install.mjs",
       "audit-report-blind-consumers.mjs",
       "audit-route-overlap.mjs",
@@ -3649,6 +3648,7 @@
       "audit-name-collisions.mjs",
       "audit-no-redeclare.mjs",
       "audit-papers-index.mjs",
+      "audit-registry-fixtures.mjs",
       "audit-route-overlap.mjs",
       "audit-selfhosted-dead-flows.mjs",
       "audit-sink-tri-parity.mjs",
@@ -3931,7 +3931,6 @@
       "audit-percent-history.mjs",
       "audit-production-blockers.mjs",
       "audit-provenance.mjs",
-      "audit-registry-fixtures.mjs",
       "audit-retention-gate.mjs",
       "audit-retention-nightly.mjs",
       "audit-route-overlap.mjs",

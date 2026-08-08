@@ -319,14 +319,14 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 <sub>generated from component-health + the RD-0528/RD-0361 authority ledgers; exact build identity is in build/component-health/provenance.json · regenerate: `node scripts/gen-roadmap-subway.mjs --write`</sub>
 <!-- SUBWAY:END -->
 
-**v1.0.0-beta.2 · full suite 98/98 packages · 8,956 tests · 0 failures.**
+**v1.0.0-beta.2 · full suite 99/99 packages · 9,452 tests · 0 failures.**
 
 | Layer | Status | Note |
 |---|---|---|
 | **Compiler pipeline** (lexer → parser → checkers → governance → GIR) | ✅ complete | full pipeline, fail-closed diagnostics |
 | **Type / effect checkers** | ✅ complete | full TYPE/EFFECT diagnostic charter, twin-parity verified |
 | **WAT / WASM backend** | ✅ complete | lowering audit `VIOLATIONS: 0`; Decimal (bignum) + higher-order closures are deliberate fail-closed feature-flags |
-| **Tests** | ✅ green | 98/98 · 8,956 · 0 fail |
+| **Tests** | ✅ green | 99/99 · 9,452 · 0 fail |
 | **Stage-B self-hosting** (the compiler rewritten in `.fungi`) | ◑ parity proven | **all 7 stages proven byte-identical** to the reference compiler as signed, admission-gated WASM (R3); the authority cutover to `.fungi`-as-decider is staged behind the flip ladder |
 | **Execution cutover** (governed decision surfaces → signed WASM) | ◑ bounded authority | **29 authoritative** `.fungi` specifications · 7 differential candidates · TypeScript retained as the running differential/bootstrap layer until executable SLIDE integration |
 | **Optional Wasm compatibility oracle** | ◑ retained for beta | development-only independent evidence; no production-sidecar or memory authority. A narrowly admitted `.fungi` compatibility engine is planned after beta and executable SLIDE, with the current path retained until its full replacement gate passes |

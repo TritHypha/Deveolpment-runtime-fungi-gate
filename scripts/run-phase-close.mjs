@@ -643,6 +643,12 @@ run("effects:corpus", "node", ["scripts/audit-corpus-effect-names.mjs"]);
 // gate catches any path). Blocking.
 run("signed:fixtures", "node", ["scripts/audit-signed-fixture-drift.mjs"]);
 
+// Execute the canonical stdlib registry's accepted/rejected source vectors
+// through the production security gate. Build the compiler explicitly so the
+// strict audit does not trust an untracked dist/ from an earlier package run.
+run("build:registry-fixture-compiler", "node", ["packages-galerina/galerina-core-compiler/node_modules/typescript/bin/tsc", "-p", "packages-galerina/galerina-core-compiler/tsconfig.json"]);
+run("registry:known-answer-fixtures", "node", ["scripts/audit-registry-fixtures.mjs", "--strict"]);
+
 // ── 5c-viii. ZT house-hygiene guards — wired into cadence 2026-07-10 (closes a dev-tool-index gap) ──
 // Both tools existed with a passing --self-test but were invoked only ad-hoc, so dev-tool-index's
 // gaps.toolsNotInCadence flagged them: a regression could escape phase-close and surface only on a manual

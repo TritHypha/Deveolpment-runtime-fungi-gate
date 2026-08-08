@@ -227,6 +227,19 @@ test("live phase-close builds Myco before the Myco-dependent overwrite audit", (
   assert.ok(index < audit, "the exact Myco index must be current before silent-overwrite executes");
 });
 
+test("live phase-close builds the compiler before strict canonical registry fixtures", () => {
+  const build = runnerSource.indexOf(
+    'run("build:registry-fixture-compiler", "node", ["packages-galerina/galerina-core-compiler/node_modules/typescript/bin/tsc", "-p", "packages-galerina/galerina-core-compiler/tsconfig.json"]);',
+  );
+  const audit = runnerSource.indexOf(
+    'run("registry:known-answer-fixtures", "node", ["scripts/audit-registry-fixtures.mjs", "--strict"]);',
+  );
+
+  assert.notEqual(build, -1, "a clean phase-close must build the compiler used by the registry audit");
+  assert.notEqual(audit, -1, "canonical registry fixtures must be a blocking phase-close gate");
+  assert.ok(build < audit, "the production security gate must exist before strict fixtures execute");
+});
+
 test("a held checkout lease refuses phase-close before any child starts", () => {
   const root = fixture({
     phaseClose: [{ name: "must-not-run", command: ["node", "must-not-run.mjs"] }],

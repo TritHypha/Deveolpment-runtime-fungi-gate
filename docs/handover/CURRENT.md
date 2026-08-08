@@ -18,8 +18,9 @@ linked, dated documents.
 - Local branch: `codex/galerina-final2-close-2026-08-08`; never pushed.
 - Count-owning aggregate: 99/99 packages, 9,452 tests, zero failed.
 - Generated graph authority: 5/5 generation and 5/5 check.
-- Immediate gate: rerun exhaustive phase-close at the isolated fixed point,
-  then continue the independent general SLIDE backend.
+- Exhaustive fixed point: 90/90 blocking gates in 1,038.2 seconds at
+  `1ad4cd68`; no phase-close-owned Node child remained.
+- Immediate gate: continue the independent general SLIDE backend.
 - No TypeScript, dependency tree, host boundary, or nested identity is retired
   until the controlling ledger reports exact zero debt.
 

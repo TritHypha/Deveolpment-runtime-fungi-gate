@@ -32,7 +32,15 @@ self-test hardcoded to one checkout basename, and static-host raw-byte pins read
 as CRLF on Windows. The fixes are fail-closed and focused evidence is 17/17:
 phase-close builds Myco, refreshes only the compiler-source index, then audits
 that snapshot; `.cc` and `.patch` are LF-bound; no pin, detector or verifier was
-weakened. A complete exhaustive rerun remains the immediate gate.
+weakened. That first attempt remained non-authorizing pending the complete
+rerun recorded below.
+
+That rerun is now complete at `1ad4cd68`: **90/90 blocking gates passed in
+1,038.2 seconds**, including the two explicit Myco prerequisites, 425 tooling
+tests and the count-owning 99/99 package aggregate. Governance diff reports no
+authority widening and no phase-close-owned Node process remained. The next
+critical-path item is the independent general SLIDE backend, not another
+Galerina fixed-point rerun.
 
 The regenerated retirement authority now reports **516 tracked package `.ts`
 paths (501 in `src`)**, **111/111 unexecuted `.fungi` sources**, **0/42 owned
