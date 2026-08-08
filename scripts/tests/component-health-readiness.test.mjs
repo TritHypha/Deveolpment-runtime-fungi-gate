@@ -47,4 +47,22 @@ test("component health counts the benchmark package's governed test/ surface", (
   assert.ok(compiler);
   assert.match(compiler.detail, /0 differential/);
   assert.match(compiler.detail, /7 authoritative/);
+
+  const lythWeaver = report.percentAudit.sections
+    .find((section) => section.key === "build-progress")
+    ?.rows.find((row) => row.label === "Lyth/Weaver Verified Admission Fabric");
+  assert.ok(lythWeaver, "Lyth/Weaver must remain visible as a no-percentage roadmap row");
+  assert.equal(lythWeaver.pct, null);
+  assert.match(lythWeaver.status, /A-lane preregistered but not yet run/);
+
+  const expectedRegistryRows = [
+    ["Hypha passive capability map", "shipped"],
+    ["Memory retention audit and bounded caches", "building"],
+    [".gate v3", "building"],
+  ];
+  for (const [item, state] of expectedRegistryRows) {
+    const row = tracking.rows.find((candidate) => candidate.item === item);
+    assert.ok(row, `${item} must remain in the tracking registry`);
+    assert.equal(row.state, state);
+  }
 });

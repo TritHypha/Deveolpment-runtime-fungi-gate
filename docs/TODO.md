@@ -37,6 +37,14 @@ must not displace the critical path below or grant production authority.
   authorities, and bounding the direct tooling runner at four workers, the
   uninterrupted exhaustive close passed **88/88** in **1,055 seconds**.
   Post-run Node census returned to the one pre-existing MCP process.
+- [x] Refresh the canonical component-health roadmap source and generated
+  subway map without inventing completion numbers. Lyth/Weaver is carried
+  under **Not a number** because its A-lane is preregistered but unrun. The
+  tracking registry now records Hypha as **shipped**, the memory-retention
+  tools/caches as **building** until their CI host and scheduler exist, and
+  `.gate` v3 as **building** until independent review, runtime execution,
+  offline signing and production release close. The generator check and its
+  23-control self-test pass with all 26 registry workstreams present.
 - [x] Implement the `.gate` order-six non-authorizing link-plan boundary:
   closed 11-key plan, canonical digest, deterministic component order,
   admission-time circuit snapshot, private linkable binding, emitter-input
@@ -158,15 +166,23 @@ the cross-implementation harness).
   with all three tiers.
 - [x] `galerina check` scope fail-open closed: a check whose `ignore` patterns
   suppress every discovered file REFUSES, and a pass states its file count.
+- [x] Order six is implemented as a **non-authorizing** link-plan boundary:
+  closed 11-key schema, canonical bytes/digest, deterministic component order,
+  admission-time circuit snapshot, private linkable binding and emitter-input
+  refusal. Focused evidence is 18/18; this does not execute a circuit or release
+  production authority.
 - [ ] **Owner ratification pending — GD-028**: examples 04/05 reuse one
   component id at several payload types within one circuit, inexpressible
   under exact nominal typing. Decision record with options and a
   recommendation (per-use registered variants) awaits a one-word ruling; until
   then 04/05 are structure-only and the suite pins the un-contracted set.
-- [ ] G4 remainder: effect/capability envelope check (declared vs resolved),
+- [ ] Remaining `.gate` programme: effect/capability envelope check (declared
+  vs resolved),
   circuit-level verdict composition (the proven `vAnd = min` algebra ships as
   a library, including empty-fold = INDETERMINATE), a declared taint-sources
-  axis for the cut rules.
+  axis for the cut rules, independent adversarial review, executable runtime
+  authority, the offline signing ceremony and the final production-release
+  ruling.
 - Unchanged posture: `.gate` production signing stays REFUSED via
   `FUNGI-GATELANG-002` until the RD-0234c/`FUNGI-PRIVACY-002` backstop lands;
   a structurally perfect circuit authorizes nothing.
