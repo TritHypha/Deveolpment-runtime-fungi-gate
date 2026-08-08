@@ -1850,7 +1850,7 @@
       "identity": "@galerina/registry",
       "version": "1.0.0-beta.2",
       "directory": "galerina-registry",
-      "contentDigest": "a3c487ca1fbddcc535b8894b8793617119fd1a465c09167e7f142eb13e8962d0",
+      "contentDigest": "51238ab5f24e1dd632120addb264b0a805af8efbfd7133f431745d0e0241edf7",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3254,5 +3254,5 @@
       ]
     }
   ],
-  "rootDigest": "08f03c6d4cfece92ef7961b1ce4edf6732b2434ca172f8965d3d50dd0d866921"
+  "rootDigest": "664aa3fcdee7f0890e5611ab0d398bdcdcc714330448f608441761a5200789da"
 }
