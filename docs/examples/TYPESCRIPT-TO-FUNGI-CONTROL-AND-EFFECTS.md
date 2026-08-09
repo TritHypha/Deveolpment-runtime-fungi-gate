@@ -22,6 +22,20 @@ If prose and an executable example appear to disagree, rerun
 `CHECKER_PROVEN` entry establishes syntax, typing and zero diagnostics only;
 only an `EXECUTED` vector establishes behavior on its named surface.
 
+### Two cautions
+
+- **The compiler stays the source of truth.** Effects derive from the registry
+  (`CANONICAL_EFFECTS` / `DENY_ONLY_EFFECTS` / the secure-tier set in
+  `effect-checker.ts`); constructs from the parser, type and governance checkers —
+  never from a copied frozen list. Docs reconcile **to** the code, not the other
+  way round.
+- **Many duplicate copies of this map exist** in snapshot / worktree folders
+  (`Galerina-codex-*-close-2026-08-08/…`, `Galerina-AI-Handover-…`,
+  `…-Staging-Round-7-…`). Those are frozen snapshots — edit the two authorities
+  (this worked map and
+  `extra-tests/claude-notes/11-OWNER-RULING-THROW-IF-CHECK-MATCH.md`), never a
+  snapshot.
+
 ## The authority ladder
 
 A translation moves through separate authorities. Passing one layer never
