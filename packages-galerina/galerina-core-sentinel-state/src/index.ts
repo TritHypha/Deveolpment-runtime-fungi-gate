@@ -12,4 +12,9 @@ export type {
   StateSerializerOptions,
 } from "./state-serializer.js";
 export { AtomicWriter } from "./atomic-writer.js";
-export { ColdBootOrchestrator } from "./cold-boot.js";
+export {
+  ColdBootOrchestrator,
+  RESTORE_VERDICT_EXPORT_NAME,
+  RESTORE_VERDICT_PACKAGE_IDENTITY,
+} from "./cold-boot.js";
+export type { RestoreVerdictAuthority } from "./cold-boot.js";

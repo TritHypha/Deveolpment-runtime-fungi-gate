@@ -13,9 +13,21 @@ import {
 } from "../dist/index.js";
 import { tmpDir } from "./_tmp.mjs";
 
+const TEST_RESTORE_AUTHORITY = Object.freeze({
+  packageIdentity: "@galerina/core-sentinel-state",
+  exportName: "restoreVerdict",
+  restoreVerdict: (snapshotPresent, integrityOk) => (
+    snapshotPresent && integrityOk ? 1 : -1
+  ),
+});
+
 function makeOrchestrator() {
   const dir = tmpDir();
-  const orch = new ColdBootOrchestrator(new StateSerializer(), new AtomicWriter(dir));
+  const orch = new ColdBootOrchestrator(
+    new StateSerializer(),
+    new AtomicWriter(dir),
+    TEST_RESTORE_AUTHORITY,
+  );
   return { dir, orch };
 }
 

@@ -39,6 +39,13 @@ sweepScratchDirs();
 after(sweepScratchDirs);
 
 const TRITS = 256;
+const TEST_RESTORE_AUTHORITY = Object.freeze({
+  packageIdentity: "@galerina/core-sentinel-state",
+  exportName: "restoreVerdict",
+  restoreVerdict: (snapshotPresent, integrityOk) => (
+    snapshotPresent && integrityOk ? 1 : -1
+  ),
+});
 let counter = 0;
 const dir = () => {
   const d = `${SCRATCH_ROOT}/${OWN_PREFIX}${++counter}`;
@@ -84,7 +91,7 @@ test("all six sentinels compose into one governed, recoverable flight", () => {
   // ── LSS: checkpoint the flight state, then prove cold-boot recovery ──
   const serializer = new StateSerializer();
   const writer = new AtomicWriter(dir());
-  const coldBoot = new ColdBootOrchestrator(serializer, writer);
+  const coldBoot = new ColdBootOrchestrator(serializer, writer, TEST_RESTORE_AUTHORITY);
   coldBoot.checkpoint("flight", { resultChecksum: r.value, kernel: decision.kernel, tick: clock.now() }, clock.now());
   const restored = coldBoot.restore("flight");
   assert.equal(restored.payload.resultChecksum, r.value, "cold-boot recovers the exact flight result");

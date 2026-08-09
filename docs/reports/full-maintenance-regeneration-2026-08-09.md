@@ -6,6 +6,11 @@ Scope: Galerina, SLIDE and the Knowledge Base indexes
 
 Authority: local verification evidence only; no production or signing authority released
 
+> Historical checkpoint: this report records the maintenance close before the
+> subsequent restore-verdict consumer switch. Current route and counts are in
+> [the consumer-switch report](restore-verdict-consumer-switch-2026-08-09.md)
+> and [the live TODO](../TODO.md).
+
 ## Outcome
 
 The sequential maintenance run completed without process fan-out. The host had

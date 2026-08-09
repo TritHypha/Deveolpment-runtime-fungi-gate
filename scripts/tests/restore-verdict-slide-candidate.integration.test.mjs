@@ -59,6 +59,51 @@ function exactKeys(value, keys) {
     && JSON.stringify(Object.keys(value)) === JSON.stringify(keys);
 }
 
+async function receiptBackedAuthority(loader, manifest, decisionCount) {
+  const handles = [];
+  for (let index = 0; index < decisionCount; index += 1) {
+    const prepared = await loader.prepareCheckedFungiPackagePublication({
+      publicationDirectory: PUBLICATION,
+      packageIdentity: "@galerina/core-sentinel-state",
+      exportName: "restoreVerdict",
+      context: manifest.context,
+      gates: ALL_ALLOW,
+    });
+    assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
+    handles.push(prepared.packageExecutionHandle);
+  }
+
+  return {
+    packageIdentity: "@galerina/core-sentinel-state",
+    exportName: "restoreVerdict",
+    restoreVerdict(snapshotPresent, integrityOk) {
+      const handle = handles.shift();
+      assert.notEqual(handle, undefined, "one prepared affine handle per restore decision");
+      const receipt = loader.executeTypedCheckedFungiPackagePublication(
+        handle,
+        [snapshotPresent, integrityOk],
+        { steps: 64 },
+      );
+      assert.equal(receipt.status, "SUCCEEDED_PHYSICAL_REFERENCE_ONLY", JSON.stringify(receipt));
+      assert.equal(receipt.fallbackInvoked, false);
+      const verified = loader.verifyTypedCheckedFungiPackageReceipt(receipt, {
+        packageSetDigest: receipt.packageSetDigest,
+        packageIdentity: "@galerina/core-sentinel-state",
+        exportName: "restoreVerdict",
+        receiptDigest: receipt.receiptDigest,
+        safeValueTypeId: receipt.safeValueTypeId,
+        safeValueStateId: receipt.safeValueStateId,
+        safeValueProvenanceDigest: receipt.safeValueProvenanceDigest,
+      });
+      assert.equal(verified.verdict, 1, JSON.stringify(verified));
+      return verified.value;
+    },
+    remaining() {
+      return handles.length;
+    },
+  };
+}
+
 async function authority() {
   const pinBytes = await readFile(PIN_PATH);
   const manifestBytes = await readFile(MANIFEST_PATH);
@@ -173,5 +218,53 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
       gates: ALL_ALLOW,
     });
     assert.equal(prepared.verdict, -1);
+  });
+
+  it("drives the real cold-boot consumer with receipt-verified decisions", {
+    skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
+  }, async () => {
+    const { manifest } = await authority();
+    const loader = await import(pathToFileURL(
+      join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
+    ).href);
+    const sentinel = await import(pathToFileURL(join(
+      ROOT,
+      "packages-galerina",
+      "galerina-core-sentinel-state",
+      "dist",
+      "index.js",
+    )).href);
+    const parent = await mkdtemp(join(ROOT, "build", "contract85-consumer-"));
+    TEMP.push(parent);
+    const decisionAuthority = await receiptBackedAuthority(loader, manifest, 3);
+    const orchestrator = new sentinel.ColdBootOrchestrator(
+      new sentinel.StateSerializer(),
+      new sentinel.AtomicWriter(parent),
+      decisionAuthority,
+    );
+
+    orchestrator.checkpoint("valid", { recovered: true }, 85);
+    assert.deepEqual(orchestrator.restore("valid"), {
+      payload: { recovered: true },
+      logicalTick: 85,
+    });
+
+    assert.throws(
+      () => orchestrator.restore("missing"),
+      (error) => error instanceof sentinel.HardenedBorderViolation
+        && error.code === "LSS-NOSNAP-001",
+    );
+
+    orchestrator.checkpoint("tampered", { recovered: false }, 86);
+    const tamperedPath = join(parent, "tampered.snap");
+    const tampered = JSON.parse(await readFile(tamperedPath, "utf8"));
+    tampered.payloadJson = tampered.payloadJson.replace("false", "true");
+    await writeFile(tamperedPath, JSON.stringify(tampered), "utf8");
+    assert.throws(
+      () => orchestrator.restore("tampered"),
+      (error) => error instanceof sentinel.SecurityTrap
+        && error.code === "LSS-INTEGRITY-001",
+    );
+    assert.equal(decisionAuthority.remaining(), 0);
   });
 });

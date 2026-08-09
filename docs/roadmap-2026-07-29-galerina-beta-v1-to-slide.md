@@ -4,7 +4,7 @@ Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: repository graph generation and independent
 drift checking pass **6/6**. The complete sequential maintenance close passes
-**95/95 package builds**, **99/99 package tests / 9,458 tests / 0 failed**
+**95/95 package builds**, **99/99 package tests / 9,464 tests / 0 failed**
 (compiler **6,319**), **64/64** normal phase-close blocking gates and the full
 exhaustive blocking lane. Node remains **2 -> 2** after every major phase.
 Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
@@ -22,7 +22,7 @@ closed partitions**, its tool manifest passes **89 files** with digest
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **857/857 across 94 suites** with no authority released. The fresh Galerina
-aggregate passed **99/99 packages and 9,458 tests** (compiler **6,319**), the
+aggregate passed **99/99 packages and 9,464 tests** (compiler **6,319**), the
 last complete bounded tooling suite passed **441 total / 436 pass / 5
 intentional cross-checkout skips / 0 fail**; Contract 85 was then run with the
 pinned SLIDE checkout and passed its skipped **3/3** independently. The last uninterrupted exhaustive close
@@ -59,9 +59,12 @@ source is manifest-bound to a 617-byte physical `.slide`, an 89-file pinned
 SLIDE tool closure and a receipt-bound source-free publication. Focused evidence
 is **3/3** for typed execution, byte-exact rebuild and one-byte mutation
 refusal; `referenceOnly=true`, `authorityReleased=false` and durability remains
-zero. The next bounded slice is the real sentinel-state consumer switch. It
-must not retire `cold-boot.ts`, which also owns host serialization, durability
-and scrub operations outside the decision twin.
+zero. The real sentinel-state consumer switch is now green: the mandatory
+decision port calls the receipt-verified Contract 85 export once and locally
+rechecks exact agreement, with no fallback. It does not retire `cold-boot.ts`,
+which still owns host serialization, durability and scrub operations outside
+the decision twin. The next bounded gate is content-bound production boot
+composition with authenticated platform evidence.
 
 Roadmap active gate 2026-08-09: **Contract 84 is green** at SLIDE implementation
 commit `81850ca`. One exact caller transfers a private append-only `Array<Int>`
@@ -72,8 +75,9 @@ copy/retry, wrong target/return, direct physical helper selection, K3/context/
 replay substitution and every-byte object mutations. The path is bound through
 physical `.slide`, portable VEO, VOK and the flat-package compiler. It admits
 no external collection ABI, general call graph or general collection family.
-Conversion, retirement, signing and production authority remain unchanged
-until a real Galerina package consumer switch is green.
+Conversion, retirement, signing and production authority remain unchanged:
+the Galerina consumer switch is reference-only, and production composition
+plus retirement evidence remain absent.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One
@@ -375,7 +379,7 @@ Roadmap refresh: the original subway-style roadmap has been restored from
 authority, contract and retirement ledgers. Its last count-owning test
 headline was 98/98 test-bearing packages with 8,956 tests. The workspace now
 contains 99 top-level peers after Hypha was enlisted; current component health
-is **99/99 with 9,458 recorded tests**. The chart exposes 26 named workstreams, including the
+is **99/99 with 9,464 recorded tests**. The chart exposes 26 named workstreams, including the
 independent SLIDE backend and package retirement, and its no-percentage lane
 names the general SLIDE backend instead of the superseded P9 Wasm-execution
 word row. The five Zero-Trust and twelve of the numbered build-readiness

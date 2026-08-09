@@ -13,7 +13,7 @@ counts or open items that a newer section explicitly supersedes.
   non-authorizing process warden and verify the fusable-package state with no
   failure.
 - [x] Run the complete Galerina test surface at concurrency one: **99/99
-  packages, 9,458 tests, 0 failed**, including compiler **6,319**. Update the
+  packages, 9,464 tests, 0 failed**, including compiler **6,319**. Update the
   canonical counts only through the aggregate's owning `--emit-counts` mode.
 - [x] Run complete SLIDE at concurrency one: **857/857 across 94 suites**, then
   pass the contract catalog, tool manifest, path-leak and security-closure
@@ -24,10 +24,11 @@ counts or open items that a newer section explicitly supersedes.
   major phase.
 - [x] Record exact commands, limits and remaining authority boundaries in the
   [full maintenance report](reports/full-maintenance-regeneration-2026-08-09.md).
-- [ ] Continue with the sentinel `restoreVerdict` consumer switch below. This
-  maintenance evidence does not reduce package-conversion or retirement debt.
+- [x] Complete the sentinel `restoreVerdict` consumer switch below. This
+  reference-only evidence does not reduce package-conversion or retirement
+  debt.
 
-### Current route: Contract 85 complete; sentinel consumer switch next - 2026-08-09
+### Current route: consumer switch complete; production composition next - 2026-08-09
 
 - [x] Add a fail-closed source-capability inventory derived from the live
   retirement graph rather than regex guesses. All **111** unexecuted `.fungi`
@@ -55,10 +56,17 @@ counts or open items that a newer section explicitly supersedes.
   anti-staleness detector fails on the old 828/828 claim and passes on Contract
   84's **857/857 across 94 suites** plus the separate Contract 85 **3/3**.
   Regenerated percent/subway evidence, graph **6/6** and path hygiene are green.
-- [ ] Bind the real sentinel-state consumer to the admitted `restoreVerdict`
-  package export without weakening fail-closed recovery. Keep the switch
-  decision-only: `cold-boot.ts` still owns serialization, durable storage and
-  scrub until each responsibility has its own replacement and evidence.
+- [x] Bind the real sentinel-state consumer to the admitted `restoreVerdict`
+  package export without weakening fail-closed recovery. The mandatory exact
+  decision port has no fallback; six focused authority cases, Contract 85
+  **4/4**, sentinel-state **26/26**, Tower Citizen **495/495** and the complete
+  **9,464-test** aggregate are green. `cold-boot.ts` still owns serialization,
+  durable storage and scrub until each responsibility has its own replacement
+  and evidence. See
+  [the consumer-switch report](reports/restore-verdict-consumer-switch-2026-08-09.md).
+- [ ] Bind a production boot composition to a content-bound SLIDE runtime and
+  authenticated platform evidence. The reference-only Contract 85 checkout
+  path grants no production, signing, durability or retirement authority.
 - [ ] Use the generated demand inventory plus a separate SLIDE admitted-
   capability manifest to choose subsequent implementation slices. Syntax
   recognition alone must never reduce the 111-source or 516-TypeScript debt.

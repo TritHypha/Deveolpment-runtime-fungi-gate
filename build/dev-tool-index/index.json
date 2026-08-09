@@ -3,7 +3,7 @@
   "totals": {
     "packages": 99,
     "testBearing": 99,
-    "tests": 9458,
+    "tests": 9464,
     "devTools": 161,
     "auditTools": 87,
     "toolsInCadence": 64,
@@ -457,7 +457,7 @@
       "name": "galerina-core-sentinel-state",
       "kind": "core",
       "description": "Galerina Sentinel State (LSS) — atomic, HMAC-verified state snapshots + cold-boot recovery. Citizen Protocol v",
-      "tests": 20,
+      "tests": 26,
       "hasTestScript": true,
       "border": "PASS",
       "files": 6,

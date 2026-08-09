@@ -3,6 +3,10 @@
 Date: 2026-08-09
 Status: **COMPLETE — REFERENCE-ONLY, NON-AUTHORIZING**
 
+Consumer status is superseded by
+`docs/reports/restore-verdict-consumer-switch-2026-08-09.md`; this document
+remains the immutable candidate-build evidence boundary.
+
 ## Outcome
 
 The live `@galerina/core-sentinel-state` `restoreVerdict` flow now has a

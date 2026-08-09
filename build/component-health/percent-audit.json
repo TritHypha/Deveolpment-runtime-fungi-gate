@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "e17f9d48",
+    "sha": "6ce987d1",
     "detached": false,
     "dirty": true
   },
@@ -229,7 +229,7 @@
         {
           "label": "Independent SLIDE general executable backend",
           "pct": null,
-          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's real restoreVerdict package candidate adds separate 3/3 source-free execution/rebuild/mutation evidence; its consumer switch, general collections/Result families, multiple/cross-package effects and production authority remain open",
+          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's mandatory restoreVerdict consumer switch is reference-only and passes 4/4 source-free execution/rebuild/mutation/consumer evidence; production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open",
           "live": false,
           "evidence": null
         },
@@ -298,7 +298,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "99/99 component families green; 99 workspace packages, 9,458 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "99/99 component families green; 99 workspace packages, 9,464 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",
@@ -333,7 +333,7 @@
         {
           "item": "Independent SLIDE backend",
           "state": "building",
-          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's real restoreVerdict package candidate adds separate 3/3 source-free execution/rebuild/mutation evidence; its consumer switch, general collections/Result families, multiple/cross-package effects and production authority remain open"
+          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's mandatory restoreVerdict consumer switch is reference-only and passes 4/4 source-free execution/rebuild/mutation/consumer evidence; production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
         },
         {
           "item": "Package retirement",

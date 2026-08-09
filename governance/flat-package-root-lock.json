@@ -561,7 +561,7 @@
       "identity": "@galerina/core-sentinel-state",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-sentinel-state",
-      "contentDigest": "18bd43977897c7f262914ae8678f7bfcb41fe2d04e035e7bc63ed55c1da22f0a",
+      "contentDigest": "86b45302381bbce9af2962d2e5d2f50a144425d89048e563e2fff0d0faaa77d1",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2087,7 +2087,7 @@
       "identity": "@galerina/tower-citizen",
       "version": "1.0.0-beta.2",
       "directory": "galerina-tower-citizen",
-      "contentDigest": "0cab4c0f11660e0509f68a4281394061ebbdef335e8e0b344111153fcd527c87",
+      "contentDigest": "99af7b6d0ab8c20a70e447767598b8d8374d4731b3282d05b2f08cef6704ba36",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3254,5 +3254,5 @@
       ]
     }
   ],
-  "rootDigest": "b8ebd71f7829fdbe64149bcad35a98aa47b2bff09e88da30742da7fb5c45cfa0"
+  "rootDigest": "21750d57210b66510fe73dbe038daa5f503ebb8333d23810d9f800fc7ac67a04"
 }

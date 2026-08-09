@@ -1161,6 +1161,9 @@ Galerina Sentinel State (LSS) — atomic, HMAC-verified state snapshots + cold-b
 
 Provides:
 - AtomicWriter
+- RESTORE_VERDICT_PACKAGE_IDENTITY
+- RESTORE_VERDICT_EXPORT_NAME
+- RestoreVerdictAuthority
 - ColdBootOrchestrator
 - SecurityTrap
 - HardenedBorderViolation
