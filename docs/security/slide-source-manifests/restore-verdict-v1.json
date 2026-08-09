@@ -1,0 +1,23 @@
+{
+  "schema": "slide.checked-fungi.source-manifest.v1",
+  "context": {
+    "targetDigest": "sha256:86660b1189d4d22e6d0ace33680fa86a7f6d5861f14d35818fbf14dc0d7ee06b",
+    "policyDigest": "sha256:1a6652da399349640002e893cc083a77c9a902caa3f2174179f37fd08bb950d5",
+    "verifierDigest": "sha256:6688de0478f8b2ed0c8358d4ae3c17277e459dbefe34f1aadf698e274fdd0c1e"
+  },
+  "packages": [
+    {
+      "identity": "@galerina/core-sentinel-state",
+      "version": "1.0.0-beta.2",
+      "exports": [
+        {
+          "name": "restoreVerdict",
+          "sourceFlowName": "restoreVerdict",
+          "source": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi"
+        }
+      ],
+      "dependencies": [],
+      "resources": []
+    }
+  ]
+}

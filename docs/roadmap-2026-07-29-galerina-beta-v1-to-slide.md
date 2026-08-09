@@ -3,8 +3,8 @@
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina graph provenance binds subject
-`fb8fa703`; repository graph generation and independent drift checking pass
-**5/5**, with Node **2 -> 2** after this roadmap update.
+`c09a20e3`; repository graph generation and independent drift checking pass
+**6/6**, with Node **2 -> 2** after this roadmap update.
 SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
 indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
@@ -16,8 +16,9 @@ targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **857/857 across 94 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
-last complete bounded tooling suite passed **428 total / 426 pass / 2
-intentional skip / 0 fail**, and the last uninterrupted exhaustive close
+last complete bounded tooling suite passed **441 total / 436 pass / 5
+intentional cross-checkout skips / 0 fail**; Contract 85 was then run with the
+pinned SLIDE checkout and passed its skipped **3/3** independently. The last uninterrupted exhaustive close
 passed **92/92** in **1,042.9 seconds**. Those aggregate/tooling/phase-close
 figures are retained evidence and were not rerun in this graph-only refresh.
 The former unknown-content hold is closed, but `memory-sandobx/` now exists as
@@ -43,11 +44,15 @@ bytes**, all parser-clean. The inventory is non-authorizing and explicitly
 separate from SLIDE capability evidence. It measures 2,241 `if` statements,
 371 `match` expressions, 340 `while` statements, 206 record declarations and
 substantial String/Bytes/Array demand. This rules out treating further isolated
-`Array<Int>` profiles as a complete migration plan. The next bounded slice is
-Contract 85: turn the already successful real `restoreVerdict` pure-scalar
-probe into manifest-bound physical `.slide` and receipt-bound package evidence.
-It will not retire `cold-boot.ts`; that file also owns host serialization,
-durability and scrub operations outside the decision twin.
+`Array<Int>` profiles as a complete migration plan. **Contract 85 is now
+green** for the real `restoreVerdict` pure-scalar package candidate: the exact
+source is manifest-bound to a 617-byte physical `.slide`, an 89-file pinned
+SLIDE tool closure and a receipt-bound source-free publication. Focused evidence
+is **3/3** for typed execution, byte-exact rebuild and one-byte mutation
+refusal; `referenceOnly=true`, `authorityReleased=false` and durability remains
+zero. The next bounded slice is the real sentinel-state consumer switch. It
+must not retire `cold-boot.ts`, which also owns host serialization, durability
+and scrub operations outside the decision twin.
 
 Roadmap active gate 2026-08-09: **Contract 84 is green** at SLIDE implementation
 commit `81850ca`. One exact caller transfers a private append-only `Array<Int>`

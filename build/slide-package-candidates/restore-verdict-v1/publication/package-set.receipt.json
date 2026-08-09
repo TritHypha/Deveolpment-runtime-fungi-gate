@@ -1,0 +1,36 @@
+{
+  "schema": "slide.checked-fungi.package-publication.v1",
+  "packageSetDigest": "sha256:0942ac025d842e9171f32b943e12e0dcb520ca93fd7653910a75c1b43ec83309",
+  "topologicalIdentities": [
+    "@galerina/core-sentinel-state"
+  ],
+  "descriptors": [
+    {
+      "packageIdentity": "@galerina/core-sentinel-state",
+      "descriptorDigest": "sha256:ac940a826afed6a4ddc8e74c285479196fd2c5f718da3299289dbb4a3c11a2a1",
+      "canonicalBase64": "h3VzbGlkZS5mbGF0LXBhY2thZ2UudjF4HUBnYWxlcmluYS9jb3JlLXNlbnRpbmVsLXN0YXRlbDEuMC4wLWJldGEuMnhHc2hhMjU2OjE3YjE2ZTJiOWZhYWZjY2ZmNDM2MGFmNzNiYjAwY2Q0MjY3ZTE3MDYyNDhhNTAwOWEwZGE2Yzk1YTRkNTI3OTCBhG5yZXN0b3JlVmVyZGljdHhHc2hhMjU2OmI3OTNiMTY1Yzk2NGQwNTMxY2NlYjc5MWMyNTdlN2I2M2RlNjI0OGNlMTViMDQ2ZmIzYzZhNDc4ZjAyM2I2ZTOCAgIBgIA="
+    }
+  ],
+  "artifacts": [
+    {
+      "packageIdentity": "@galerina/core-sentinel-state",
+      "exportName": "restoreVerdict",
+      "sourceFlowName": "restoreVerdict",
+      "compilerProfileId": "slide.checked-decision.v1",
+      "sourceDigest": "sha256:5040e0b1ff890f602b8629f6205cee95f4236c502a446579f9184f27d22cf996",
+      "fileName": "package-243795e71c23adfb-d8d192539e365aab.slide",
+      "slideBundleDigest": "sha256:b793b165c964d0531cceb791c257e7b63de6248ce15b046fb3c6a478f023b6e3",
+      "packageDescriptorDigest": "sha256:ac940a826afed6a4ddc8e74c285479196fd2c5f718da3299289dbb4a3c11a2a1",
+      "parameterTypeIds": [
+        2,
+        2
+      ],
+      "resultTypeId": 1,
+      "byteLength": 617
+    }
+  ],
+  "publicationMode": "exclusive-directory-receipt-last.v1",
+  "powerLossDurability": 0,
+  "referenceOnly": true,
+  "authorityReleased": false
+}

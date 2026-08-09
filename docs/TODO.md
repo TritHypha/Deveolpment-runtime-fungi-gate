@@ -18,10 +18,19 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Probe the real sentinel-state `restoreVerdict` source through SLIDE's
   existing general pure-scalar compiler. It compiles now and returns `1` for
   present+intact, `-1` for absent, and `-1` for integrity failure.
-- [ ] Contract 85: replace that ad-hoc probe with a canonical source manifest,
-  physical `.slide`, receipt-bound package build, hostile substitution tests
-  and typed parity evidence. Keep the scope decision-only: `cold-boot.ts` still
-  owns serialization, durable storage and scrub until separately replaced.
+- [x] Close Contract 85 with a canonical source manifest, pinned 89-file SLIDE
+  tool closure, 617-byte physical `.slide`, receipt-bound package build and
+  typed parity evidence. The focused suite is **3/3**: source-free execution,
+  byte-exact rebuild and one-byte physical-object mutation refusal. The result
+  remains reference-only and non-authorizing.
+- [x] Re-run the complete bounded script-test surface: **441 total / 436 pass /
+  5 intentional cross-checkout skips / 0 fail**, Node **2 -> 2**. The three
+  Contract 85 cases are among those skips without a SLIDE checkout and pass
+  **3/3** when the pinned checkout is explicitly supplied.
+- [ ] Bind the real sentinel-state consumer to the admitted `restoreVerdict`
+  package export without weakening fail-closed recovery. Keep the switch
+  decision-only: `cold-boot.ts` still owns serialization, durable storage and
+  scrub until each responsibility has its own replacement and evidence.
 - [ ] Use the generated demand inventory plus a separate SLIDE admitted-
   capability manifest to choose subsequent implementation slices. Syntax
   recognition alone must never reduce the 111-source or 516-TypeScript debt.
