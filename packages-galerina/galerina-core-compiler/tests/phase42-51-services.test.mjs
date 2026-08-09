@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parseProgram, startServer } from "../dist/index.js";
+import { parseProgram, serve } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SVC_DIR = join(__dir, "..", "..", "..", "examples", "auth-service");
@@ -21,12 +21,17 @@ function loadService(filename) {
   return parseProgram(src, filename);
 }
 
+function serveService(filename, config) {
+  const src = readFileSync(join(SVC_DIR, filename), "utf8");
+  return serve(src, filename, config);
+}
+
 // ── Phase 42: Capability Host ───────────────────────────────────────────────
 
 describe("Phase 42: capabilityHostService.fungi", () => {
   let server;
   const PORT = 3930;
-  before(async () => { server = await startServer(loadService("capabilityHostService.fungi").ast, loadService("capabilityHostService.fungi").flows, { port: PORT }); });
+  before(async () => { server = await serveService("capabilityHostService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/capability/check`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return {status:r.status,json:JSON.parse(await r.text())}; };
 
@@ -58,7 +63,7 @@ describe("Phase 47: routingPolicyService.fungi", () => {
   let server;
   const PORT = 3931;
   const prog = loadService("routingPolicyService.fungi");
-  before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
+  before(async () => { server = await serveService("routingPolicyService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/routing/resolve`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 
@@ -91,7 +96,7 @@ describe("Phase 48: economicsService.fungi", () => {
   let server;
   const PORT = 3932;
   const prog = loadService("economicsService.fungi");
-  before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
+  before(async () => { server = await serveService("economicsService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/economics/estimate`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 
@@ -115,7 +120,7 @@ describe("Phase 49: valueClassificationService.fungi", () => {
   let server;
   const PORT = 3933;
   const prog = loadService("valueClassificationService.fungi");
-  before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
+  before(async () => { server = await serveService("valueClassificationService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/value/classify`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 
@@ -139,7 +144,7 @@ describe("Phase 50: runtimeProfileService.fungi", () => {
   let server;
   const PORT = 3934;
   const prog = loadService("runtimeProfileService.fungi");
-  before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
+  before(async () => { server = await serveService("runtimeProfileService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/profile/check`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 
@@ -170,7 +175,7 @@ describe("Phase 51: manifestVerificationService.fungi", () => {
   let server;
   const PORT = 3935;
   const prog = loadService("manifestVerificationService.fungi");
-  before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
+  before(async () => { server = await serveService("manifestVerificationService.fungi", { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/manifest/verify`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 

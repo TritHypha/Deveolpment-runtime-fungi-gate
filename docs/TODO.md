@@ -13,7 +13,8 @@ counts or open items that a newer section explicitly supersedes.
   historical evidence and were not restamped as current completion claims.
 - [x] Run the canonical percentage audit. Ship-readiness is **100%**,
   zero-trust thesis average **78%**, build-progress average **75%**, and the
-  TODO document state is **1,196 done / 914 open / 2,110 total (56.7%)**.
+  TODO document state is **1,200 done / 910 open / 2,110 total (56.9%)** after
+  the G1-G4 remediation checkboxes were reconciled.
   These are separate evidence classes, not a production-authority percentage.
 - [x] Replace 21 implicit absence sentinels in the percentage toolchain with
   closed row/diff variants, finite-number refusal and focused regression tests.
@@ -48,21 +49,25 @@ counts or open items that a newer section explicitly supersedes.
   committed Galerina plus committed Hypha reproduces the recorded provenance
   digest and passes **42/42** focused tests. The live complete lane remains
   failed until sibling custody is resolved and the aggregate is freshly rerun.
-- [ ] **G1:** make `serve()` use the same complete, closed admission boundary
-  as compilation. Taint, governance, exact mode, flow metadata and every
-  effect must be admitted before `executeFlow()`; missing or unknown state
-  reaches `_=>`.
-- [ ] **G2:** replace permissive numeric parsing in the security risk CLI with
-  a finite canonical decoder. Malformed, infinite, negative and out-of-range
-  values must refuse nonzero and no path may construct or print `NaN`.
-- [ ] **G3:** stop presenting lexical path comparison as filesystem
-  confinement. Bind retained object identity across links, traversal and use,
-  or narrow the helper and its claims so it cannot authorize a file operation.
-- [ ] **G4:** reconcile `KNOWN-ISSUES.md` with current non-production evidence
-  and add a claim-drift regression check for its tester-facing readiness text.
-- [ ] Close SLIDE S1-S2 in its owning TODO: eliminate authority-path `null`
-  sentinels and retain filesystem root identity across source-manifest reads.
-  Mechanical TypeScript-to-`.fungi` conversion is forbidden before both pass.
+- [x] **G1:** route compile, `run()` and `serve()` through one total admission
+  boundary. Production/deterministic governance errors, mode disagreement,
+  unknown modes, missing flow metadata and request-time execution now refuse;
+  the focused admission and route surface passes **13/13**.
+- [x] **G2:** replace permissive risk-CLI parsing with finite canonical
+  decoders. `NaN`, infinity, exponent/partial forms, negatives and out-of-range
+  values refuse nonzero; the complete security-devtools package passes
+  **51/51**.
+- [x] **G3:** narrow the path helper to an explicit `lexical-only` assurance.
+  Its API/help text now state that it cannot prove symlink, junction, reparse,
+  mount or rename-race identity and therefore cannot authorize a file use.
+- [x] **G4:** reconcile `KNOWN-ISSUES.md` with current bounded,
+  non-production evidence and add a regression check that requires the
+  non-authority, open-retirement and non-production-key claims.
+- [ ] Close SLIDE S1 in its owning TODO. S2 identity retention is closed and
+  the V2-D core plus named exported loader refusal variants are null-free, but
+  the loader still has **131** `null` matches across **22** functions and the
+  complete source surface remains at least **500 / 121 functions**. Mechanical
+  TypeScript-to-`.fungi` conversion remains forbidden.
 - [ ] Close Lyth-Weaver S1-S5 before selecting its affected code for
   conversion. TritMesh:QL remains design-only and may not enter a shipping
   path until its six scan findings are closed or the affected material is

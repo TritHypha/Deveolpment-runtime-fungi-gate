@@ -6,11 +6,11 @@
 //   → Governance Verify → GIR Emit → Execute → Audit → Proof Chain
 // =============================================================================
 
-import { parseProgram } from "./parser.js";
+import { parseProgram, type ParseResult } from "./parser.js";
 import { resolveSymbols } from "./symbol-resolver.js";
 import { checkTypes } from "./type-checker.js";
 import { checkValueStates } from "./value-state-checker.js";
-import { checkEffects } from "./effect-checker.js";
+import { checkEffects, type EffectCheckResult } from "./effect-checker.js";
 import { verifyGovernance, type GovernanceDiagnostic, type DeploymentProfile } from "./governance-verifier.js";
 import { emitGIR, buildSemanticGraph, buildAiGraph, buildExecutionPlan } from "./gir-emitter.js";
 import type { SemanticGraph, GalerinaAiGraph, PassiveExecutionPlan } from "./gir-emitter.js";
@@ -72,6 +72,104 @@ export interface RuntimeResult {
   readonly semanticGraphHash?: string;
 }
 
+interface RuntimeAdmission {
+  readonly mode: RuntimeMode;
+  readonly parseResult: ParseResult;
+  readonly effectResults: readonly EffectCheckResult[];
+  readonly diagnostics: readonly { code: string; severity: string; message: string }[];
+  readonly governanceDiagnostics: readonly GovernanceDiagnostic[];
+  readonly escapeDiagnostics: readonly EscapeDiagnostic[];
+  readonly namingDiagnostics: readonly NamingPolicyDiagnostic[];
+  readonly denied: boolean;
+}
+
+function decodeRuntimeMode(value: unknown): RuntimeMode {
+  if (value === "check-only" || value === "dev" || value === "production" || value === "deterministic") {
+    return value;
+  }
+  throw new Error(`Galerina: unknown runtime mode '${String(value)}'`);
+}
+
+function admitRuntime(
+  source: string,
+  file: string,
+  mode: RuntimeMode,
+  enforceNamingPolicy: boolean,
+): RuntimeAdmission {
+  const allDiagnostics: Array<{ code: string; severity: string; message: string }> = [];
+
+  const appendDiagnostics = (
+    diagnostics: readonly { readonly code: string; readonly severity: string; readonly message: string }[],
+  ): void => {
+    for (const diagnostic of diagnostics) {
+      allDiagnostics.push({
+        code: diagnostic.code,
+        severity: diagnostic.severity,
+        message: diagnostic.message,
+      });
+    }
+  };
+
+  const parseResult = parseProgram(source, file);
+  appendDiagnostics(parseResult.diagnostics);
+
+  const symbolResult = resolveSymbols(parseResult.ast);
+  appendDiagnostics(symbolResult.diagnostics);
+
+  const namingResult = checkNamingPolicy(parseResult.ast);
+  const typeResult = checkTypes(parseResult.ast);
+  appendDiagnostics(typeResult.diagnostics);
+
+  const valueStateResult = checkValueStates(parseResult.ast);
+  appendDiagnostics(valueStateResult.diagnostics);
+
+  const effectResults = checkEffects(parseResult.flows, parseResult.ast);
+  for (const result of effectResults) appendDiagnostics(result.diagnostics);
+
+  const escapeResult = checkSourceEscapes(parseResult.ast);
+  appendDiagnostics(escapeResult.diagnostics);
+
+  const flowNames = new Set(parseResult.flows.map((flow) => flow.name));
+  const effectFlowNames = new Set(effectResults.map((result) => result.flowName));
+  const checkerStateIsTotal =
+    flowNames.size === parseResult.flows.length &&
+    effectFlowNames.size === effectResults.length &&
+    effectResults.length === parseResult.flows.length &&
+    parseResult.flows.every((flow) => effectFlowNames.has(flow.name));
+  if (!checkerStateIsTotal) {
+    throw new Error("Galerina: runtime admission checker state is incomplete");
+  }
+
+  const profile: DeploymentProfile = mode === "check-only" ? "dev" : mode;
+  const governanceResult = verifyGovernance(
+    parseResult.ast,
+    parseResult.flows,
+    effectResults,
+    profile,
+  );
+
+  const namingDenied =
+    enforceNamingPolicy &&
+    namingResult.diagnostics.some((diagnostic) =>
+      diagnostic.severity === "error" || diagnostic.severity === "warning"
+    );
+  const denied =
+    allDiagnostics.some((diagnostic) => diagnostic.severity === "error") ||
+    governanceResult.diagnostics.some((diagnostic) => diagnostic.severity === "error") ||
+    namingDenied;
+
+  return {
+    mode,
+    parseResult,
+    effectResults,
+    diagnostics: allDiagnostics,
+    governanceDiagnostics: governanceResult.diagnostics,
+    escapeDiagnostics: escapeResult.diagnostics,
+    namingDiagnostics: namingResult.diagnostics,
+    denied,
+  };
+}
+
 export async function run(
   source: string,
   file: string,
@@ -79,86 +177,23 @@ export async function run(
   args: ReadonlyMap<string, GalerinaValue> = new Map(),
   options: RuntimeOptions = {},
 ): Promise<RuntimeResult> {
-  const mode = options.mode ?? "dev";
-  const allDiagnostics: Array<{ code: string; severity: string; message: string }> = [];
-
-  const parseResult = parseProgram(source, file);
-  for (const diagnostic of parseResult.diagnostics) {
-    allDiagnostics.push({
-      code: diagnostic.code,
-      severity: diagnostic.severity,
-      message: diagnostic.message,
-    });
-  }
-
-  const symbolResult = resolveSymbols(parseResult.ast);
-  for (const diagnostic of symbolResult.diagnostics) {
-    allDiagnostics.push({
-      code: diagnostic.code,
-      severity: diagnostic.severity,
-      message: diagnostic.message,
-    });
-  }
-
-  // Phase 17A: Naming policy checker (runs after symbol resolver)
-  const namingResult = checkNamingPolicy(parseResult.ast);
-  const namingDiags = namingResult.diagnostics;
-
-  const typeResult = checkTypes(parseResult.ast);
-  for (const diagnostic of typeResult.diagnostics) {
-    allDiagnostics.push({
-      code: diagnostic.code,
-      severity: diagnostic.severity,
-      message: diagnostic.message,
-    });
-  }
-
-  const valueStateResult = checkValueStates(parseResult.ast);
-  for (const diagnostic of valueStateResult.diagnostics) {
-    allDiagnostics.push({
-      code: diagnostic.code,
-      severity: diagnostic.severity,
-      message: diagnostic.message,
-    });
-  }
-
-  const effectResults = checkEffects(parseResult.flows, parseResult.ast);
-  for (const result of effectResults) {
-    for (const diagnostic of result.diagnostics) {
-      allDiagnostics.push({
-        code: diagnostic.code,
-        severity: diagnostic.severity,
-        message: diagnostic.message,
-      });
-    }
-  }
-
-  // Phase 12A: Source escape checker (runs after effect checker)
-  const escapeResult = checkSourceEscapes(parseResult.ast);
-  for (const diagnostic of escapeResult.diagnostics) {
-    allDiagnostics.push({
-      code: diagnostic.code,
-      severity: diagnostic.severity,
-      message: diagnostic.message,
-    });
-  }
-
-  const hasErrors = allDiagnostics.some((diagnostic) => diagnostic.severity === "error");
+  const mode = decodeRuntimeMode((options as { readonly mode?: unknown }).mode ?? "dev");
+  const admission = admitRuntime(source, file, mode, options.enforceNamingPolicy === true);
+  const { parseResult, effectResults } = admission;
+  const allDiagnostics = [...admission.diagnostics];
   const hasNamingErrors =
     options.enforceNamingPolicy === true &&
-    namingDiags.some((d) => d.severity === "error" || d.severity === "warning");
+    admission.namingDiagnostics.some((diagnostic) =>
+      diagnostic.severity === "error" || diagnostic.severity === "warning"
+    );
 
-  // Pass 7: Governance verification (runs even in check-only, uses profile to adjust severity)
-  const profile = (mode === "check-only" ? "dev" : mode) as DeploymentProfile;
-  const govResult = verifyGovernance(parseResult.ast, parseResult.flows, effectResults, profile);
-
-  if (mode === "check-only" || hasErrors) {
+  if (mode === "check-only" || admission.denied) {
     return {
-      ok: !hasErrors && !hasNamingErrors,
+      ok: !admission.denied,
       diagnostics: allDiagnostics,
-      governanceDiagnostics: govResult.diagnostics,
-      escapeDiagnostics: escapeResult.diagnostics,
-      namingDiagnostics: namingDiags,
+      governanceDiagnostics: admission.governanceDiagnostics,
+      escapeDiagnostics: admission.escapeDiagnostics,
+      namingDiagnostics: admission.namingDiagnostics,
       mode,
     };
   }
@@ -321,9 +356,9 @@ export async function run(
     value: execution.value,
     execution,
     diagnostics: allDiagnostics,
-    governanceDiagnostics: govResult.diagnostics,
-    escapeDiagnostics: escapeResult.diagnostics,
-    namingDiagnostics: namingDiags,
+    governanceDiagnostics: admission.governanceDiagnostics,
+    escapeDiagnostics: admission.escapeDiagnostics,
+    namingDiagnostics: admission.namingDiagnostics,
     ...(proofChain !== undefined ? { proofChain } : {}),
     ...(attestationResult !== undefined ? { attestation: attestationResult } : {}),
     mode,
@@ -341,36 +376,64 @@ export async function serve(
   serverConfig: ServerConfig,
   options: RuntimeOptions = {},
 ): Promise<RunningServer> {
-  const _mode = options.mode ?? "dev";
-  void _mode;
-
-  const parseResult = parseProgram(source, file);
-  const symbolResult = resolveSymbols(parseResult.ast);
-  const typeResult = checkTypes(parseResult.ast);
-  const valueStateResult = checkValueStates(parseResult.ast);
-  const effectResults = checkEffects(parseResult.flows, parseResult.ast);
-
-  const allDiagnostics = [
-    ...parseResult.diagnostics,
-    ...symbolResult.diagnostics,
-    ...typeResult.diagnostics,
-    ...valueStateResult.diagnostics,
-    ...effectResults.flatMap((result) => result.diagnostics),
-  ];
-
-  const hasErrors = allDiagnostics.some((diagnostic) => diagnostic.severity === "error");
-  if (hasErrors) {
-    const codes = allDiagnostics
-      .filter((diagnostic) => diagnostic.severity === "error")
-      .map((diagnostic) => diagnostic.code)
-      .join(", ");
-    throw new Error(`Galerina: cannot serve - compiler errors: ${codes}`);
+  const optionMode = (options as { readonly mode?: unknown }).mode;
+  const configMode = (serverConfig as { readonly mode?: unknown }).mode;
+  if (optionMode !== undefined && configMode !== undefined && optionMode !== configMode) {
+    throw new Error(`Galerina: conflicting runtime modes '${String(optionMode)}' and '${String(configMode)}'`);
+  }
+  const mode = decodeRuntimeMode(optionMode ?? configMode ?? "dev");
+  if (mode === "check-only") {
+    throw new Error("Galerina: check-only mode cannot open a listener");
   }
 
-  const registry = buildRouteRegistry(parseResult.ast);
+  const admission = admitRuntime(source, file, mode, options.enforceNamingPolicy === true);
+  if (admission.denied) {
+    const governanceErrors = admission.governanceDiagnostics.filter(
+      (diagnostic) => diagnostic.severity === "error",
+    );
+    const compilerErrors = admission.diagnostics.filter(
+      (diagnostic) => diagnostic.severity === "error",
+    );
+    const namingErrors = admission.namingDiagnostics.filter((diagnostic) =>
+      diagnostic.severity === "error" || diagnostic.severity === "warning"
+    );
+    const category = governanceErrors.length > 0
+      ? "governance errors"
+      : namingErrors.length > 0 && options.enforceNamingPolicy === true
+        ? "naming policy errors"
+        : "compiler errors";
+    const codes = [...compilerErrors, ...governanceErrors, ...namingErrors]
+      .map((diagnostic) => diagnostic.code)
+      .join(", ");
+    throw new Error(`Galerina: cannot serve - ${category}: ${codes}`);
+  }
+
+  const registry = buildRouteRegistry(admission.parseResult.ast);
   if (registry.routes.length === 0) {
     throw new Error("Galerina: no routes declared - nothing to serve");
   }
 
-  return startServer(parseResult.ast, parseResult.flows, serverConfig);
+  const flowNames = new Set(admission.parseResult.flows.map((flow) => flow.name));
+  const unresolvedRoutes = registry.routes.filter((route) => !flowNames.has(route.flowName));
+  if (unresolvedRoutes.length > 0) {
+    throw new Error("Galerina: route admission references an unknown flow");
+  }
+
+  return startServer(
+    admission.parseResult.ast,
+    { ...serverConfig, mode },
+    async (flowName, args) => {
+      const result = await run(source, file, flowName, args, { ...options, mode });
+      if (result.execution === undefined || result.value === undefined) {
+        throw new Error(`Galerina: admitted route '${flowName}' refused during execution`);
+      }
+      if (!result.ok && result.value.__tag !== "runtimeError" && result.value.__tag !== "error") {
+        return {
+          __tag: "runtimeError",
+          message: `Galerina: route '${flowName}' failed closed after an execution diagnostic`,
+        };
+      }
+      return result.value;
+    },
+  );
 }

@@ -1528,7 +1528,8 @@ class TypeChecker {
             const isOkErrReturn = returnExpr.kind === "callExpr" &&
               (returnExpr.value === "Ok" || returnExpr.value === "Err" || returnExpr.value === "Some");
             const declaredBase = this.currentReturnType.split("<")[0]?.trim() ?? this.currentReturnType;
-            if (!isOkErrReturn && !isAssignmentCompatible(declaredBase, inferredType)) {
+            const isHttpResponseRecord = declaredBase === "Response" && inferredType === "Record";
+            if (!isOkErrReturn && !isHttpResponseRecord && !isAssignmentCompatible(declaredBase, inferredType)) {
               // K3-005 (S3/A9, R&D bridge 0174) — a NON-Verdict value returned where Verdict is declared.
               // `return 2` (or any non-Verdict) as a Verdict smuggles an out-of-K3-domain value into a
               // governance result (fail-open). Fires BEFORE the generic TYPE-008 so the author gets the K3

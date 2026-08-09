@@ -3,10 +3,9 @@
 ## Ruling
 
 TypeScript-to-`.fungi` conversion is **not authorised** at this checkpoint.
-Four repository-wide Codex Security scans are sealed, but their findings and
-the current exhaustive-suite refusal must be closed before conversion begins.
-A green normal cadence or an isolated package pass does not override an open
-security finding.
+Galerina G1-G4 and SLIDE S2 are locally remediated with negative tests, but
+SLIDE S1 remains systemically open. A green package or repository cadence does
+not override a remaining forbidden-state boundary.
 
 The owner explicitly waived the repeat pass through
 `Anthropic-Cybersecurity-Skills`; it was not run and is not represented as
@@ -27,26 +26,25 @@ its `TODO.md`. TritMesh:QL remains a design/R&D repository; its findings are
 still conversion blockers for any code or contract adopted into the shipping
 Galerina/SLIDE path.
 
-## Galerina blockers
+## Galerina findings - locally remediated
 
-1. **G1 - high - serving bypasses complete admission.** `serve()` omits taint
-   and governance verification, discards the requested mode, and reaches
-   `executeFlow()` through a fail-open runtime effect deny-list. One shared,
-   total admission function must gate compile and serve; unknown mode, effect,
-   flow metadata or checker state must reach `_=>`.
-2. **G2 - medium - malformed numbers mint STANDARD assurance.** The security
-   risk CLI allows `parseInt()`/`parseFloat()` to create `NaN`; ordered
-   comparisons then choose the least restrictive tier and exit zero. The
-   decoder must admit finite canonical values in range or refuse nonzero, and
-   internal/output state must contain neither `NaN` nor infinity.
-3. **G3 - low - lexical containment is labelled filesystem confinement.** The
-   path-sandbox helper does not bind filesystem-object identity across links
-   or substitution. Its claim and implementation must be narrowed or replaced
-   by retained identity/handle evidence before it protects an authority path.
-4. **G4 - low - stale readiness claims.** `KNOWN-ISSUES.md` presents obsolete
-   production-grade language despite open composition, custody, durability,
-   conversion and release gates. Tester-facing claims must match current
-   evidence.
+1. **G1 - high - closed locally.** Compile, `run()` and `serve()` now use one
+   total admission function. Production/deterministic governance failure,
+   mode disagreement, unknown modes, absent flow metadata and request-time
+   execution refuse before authority; focused route/admission evidence is
+   **13/13**.
+2. **G2 - medium - closed locally.** The risk CLI accepts only canonical,
+   bounded finite integers and decimal probabilities. `NaN`, infinity,
+   exponent/partial forms and out-of-range values exit nonzero without a risk
+   result; security-devtools passes **51/51**.
+3. **G3 - low - closed by claim narrowing.** Every path result is explicitly
+   `lexical-only`; API and CLI wording state that links, reparse points,
+   mounts and rename races are outside its assurance and it cannot authorize a
+   filesystem use.
+4. **G4 - low - closed locally.** `KNOWN-ISSUES.md` now leads with bounded
+   development/test evidence and explicitly open production, custody,
+   retirement and bootstrap gates. A focused regression check pins those
+   non-authority claims.
 
 Primary evidence locations are `packages-galerina/galerina-core-compiler/src/runtime.ts`,
 `packages-galerina/galerina-core-compiler/src/route-dispatcher.ts`,
@@ -55,23 +53,21 @@ Primary evidence locations are `packages-galerina/galerina-core-compiler/src/run
 `packages-galerina/galerina-devtools-security/src/path-sandbox.ts`, and
 `KNOWN-ISSUES.md`.
 
-## SLIDE blockers
+## SLIDE findings
 
-1. **S1 - no-null conversion boundary.** Authority-shaped APIs still encode
-   refusal and absence with `null`. Graph-augmented source search found at
-   least 500 occurrences across 121 source functions; live verification of
-   the authenticated typed receipt path returned `{ verdict: -1, value: null }`.
-   Replace internal and exported sentinel state with closed tagged variants
-   and explicit `_=>` outcomes before translating or claiming a total typed
-   boundary. Representative surfaces are
-   `src/checked-fungi-package-publication-loader.mjs` and
-   `src/v2d-execution-core.mjs`.
-2. **S2 - source traversal loses root identity.**
-   `canonicalStableDirectory()` reduces an observed directory to a pathname;
-   later inventory and manifest reads reopen descendants by name. Retain and
-   revalidate filesystem identity across traversal and final reads, including
-   substitution tests. Representative surfaces are
-   `src/filesystem-identity.mjs` and `src/reference-tool-manifest.mjs`.
+1. **S1 - open, partial remediation only.** The V2-D execution core contains
+   no `null` sentinel, and named exported publication-loader refusal variants
+   now carry closed tagged absence state. The loader still has **131** `null`
+   matches across **22** functions, while the complete source surface remains
+   at least **500 matches across 121 functions**. Internal decoders, foreign
+   JSON and the complete admitted/emitted surface still need explicit `_=>`
+   variants before conversion.
+2. **S2 - closed locally.** The reference manifest carries frozen directory
+   anchors, traverses through a retained directory stream, reads through one
+   retained file handle and revalidates root/source/parent/file identities
+   before and after use. A deterministic rename-and-replace test proves that
+   the old anchor refuses the substituted path. This is portable reference
+   evidence, not production `openat` authority.
 
 ## Lyth-Weaver and TritMesh:QL blockers
 
@@ -88,6 +84,16 @@ the closed namespace, and non-finite/null AST state is eliminated. Its current
 findings.
 
 ## Fresh Galerina verification
+
+### Local remediation evidence
+
+| Check | Result | Gate meaning |
+|---|---|---|
+| Core compiler package | 6,324/6,324 | G1 and compiler regressions green |
+| Security devtools package | 51/51 | G2-G3 and existing security checks green |
+| SLIDE complete suite | 869/869 across 96 suites | S2 and partial S1 changes preserve the independent reference suite |
+| SLIDE reference-tool manifest | 89 files at `25ac6e7f...ed34b48`; checkpoint `a91a943` | Current partial-remediation identity; not yet promoted into Galerina's pinned publications |
+| Loader null inventory | 131 matches across 22 functions | S1 remains open; this is refusal evidence, not progress authority |
 
 | Check | Result | Gate meaning |
 |---|---|---|

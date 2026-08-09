@@ -3,16 +3,11 @@
 //
 // VENDORED, NOT WRITTEN HERE. Source of truth:
 //   subprojects/hypha/src/extract.js
-//   sha256 6d1d9f34fbaf2c221ab690ccd0bcf9db7d828eb64452fdeac066dff6abc9291f
+//   sha256 b2e89b8bb9696aaaa61a659a70516509cd6c2a2b2e7a939352cc15bcd67c04d2
 //
-// Transformed CJS -> ESM mechanically (scripts/vendor step), never by hand: a
-// hand-copied mirror that drifts from its source is precisely the defect class
-// this tool exists to detect, and shipping one inside it would be absurd.
-//
-// `galerina-hypha --self-test` re-hashes the source when it is reachable and
-// FAILS if this digest no longer matches. When the source is not reachable (the
-// normal case — hypha lives outside this repo) the check is reported as SKIPPED,
-// never as passed: a check that cannot run must not print green.
+// Deterministic CJS-to-ESM surface transform: npm run vendor. The upstream
+// persistence-only freshness helpers are excluded because this passive package
+// has no database or persisted fact base. Any transform drift refuses.
 //
 // Exports: distDir, distFiles, extractGateList, extractStdlibCases, extractInlineTables, extractKindSets, extractPassCalls, extractExportedCheckers, extractDiagnostics, findCallSites, findAllCallSites, extractParserKinds
 // ============================================================================
@@ -40,7 +35,6 @@
 //   exportedCheckers — every `export function check…` in dist (what EXISTS).
 //   parserKinds      — every flow-decl node kind the parser can produce.
 // =============================================================================
-
 import fs from "node:fs";
 import path from "node:path";
 
@@ -92,9 +86,9 @@ function distFiles(root) {
  * sites, so "absent from the result" and "no call sites" can never be confused.
  */
 function findAllCallSites(root, names) {
-  const out = Object.create(null);
-  for (const n of names) out[n] = [];
-  if (names.length === 0) return out;
+  const out = new Map();
+  for (const n of names) out.set(n, []);
+  if (names.length === 0) return Object.fromEntries(out);
 
   const matchers = names.map((n) => ({
     name: n,
@@ -108,7 +102,7 @@ function findAllCallSites(root, names) {
       for (const m of present) {
         if (!m.re.test(ln)) continue;
         if (/\/\//.test(ln.split(m.name)[0] || "")) continue;   // commented out
-        out[m.name].push({ file, line: i + 1 });
+        out.get(m.name).push({ file, line: i + 1 });
       }
     });
   };
@@ -141,7 +135,7 @@ function findAllCallSites(root, names) {
     throw new Error("hypha: call-site sweep read 0 of " + files.length +
       " dist files — the sweep is broken, not the codebase");
   }
-  return out;
+  return Object.fromEntries(out);
 }
 
 // ── gate list ────────────────────────────────────────────────────────────────
@@ -195,27 +189,82 @@ function extractStdlibCases(root) {
 /**
  * The interpreter's per-receiver fallbacks look like:
  *   if (receiver.__tag === "list") { switch (method) { case "count": … } }
- * Heuristic: on a `__tag === "x"` line open a bucket; every `case "n":` line
- * belongs to the most recent bucket until the next `__tag` guard. This is the
- * layer that mis-led a human reader into calling it "the method table" — the
- * graph records it as the FALLBACK layer it actually is.
+ *
+ * SCOPE RULE (LIMITS.md §12, fixed here 2026-08-09). A `case "n":` belongs to a
+ * table only while brace-depth is *strictly inside* the `if (receiver.__tag …)`
+ * body that opened it. The previous heuristic kept `current` until the next
+ * tag, so every later switch in the file — `safeDisplay` value-kinds, the
+ * string-escape decoder — was attributed to the last tag (often the real
+ * `unresolved` arm). That produced **false presence**: 25 names reported in
+ * the inline layer when they are formatters/escapes, not methods.
+ *
+ * Unattributed switches (a `switch` opened while no tag-bucket is open) are
+ * still extracted, tagged `unresolved`, and returned so `surface` can report
+ * them as context without counting them as dispatch. Fail closed on the layer
+ * union; report the uncertainty.
  */
 function extractInlineTables(root) {
   const file = "interpreter.js";
+  const lines = distLines(root, file);
   const buckets = [];
-  let current = null;
-  distLines(root, file).forEach((ln, i) => {
+  let depth = 0;
+  let current = undefined;       // attributed: inside receiver.__tag body
+  let una = undefined;           // unattributed switch body
+
+  /** Approximate brace delta; strings with braces are rare in this dist region. */
+  const braceDelta = (ln) => {
+    let d = 0;
+    for (let i = 0; i < ln.length; i++) {
+      const ch = ln[i];
+      if (ch === "{") d++;
+      else if (ch === "}") d--;
+    }
+    return d;
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const ln = lines[i];
     const tag = ln.match(/receiver\.__tag\s*===\s*"([A-Za-z0-9_]+)"/);
     if (tag) {
-      current = { receiverTag: tag[1], file, line: i + 1, cases: [] };
+      // Close any open unattributed switch — a real tag supersedes it.
+      una = undefined;
+      current = {
+        receiverTag: tag[1],
+        file,
+        line: i + 1,
+        cases: [],
+        openDepth: depth,
+      };
       buckets.push(current);
-      return;
+    } else if (/switch\s*\(/.test(ln) && !current) {
+      // Switch with no enclosing receiver-tag guard: context, not dispatch.
+      una = {
+        receiverTag: "unresolved",
+        file,
+        line: i + 1,
+        cases: [],
+        openDepth: depth,
+      };
+      buckets.push(una);
     }
+
     const c = ln.match(/case\s+"([A-Za-z0-9_]+)"\s*:/);
-    if (c && current) current.cases.push({ name: c[1], line: i + 1 });
-  });
-  // Only buckets that actually dispatch methods are tables.
-  return buckets.filter((b) => b.cases.length > 0);
+    if (c) {
+      if (current && depth > current.openDepth) {
+        current.cases.push({ name: c[1], line: i + 1 });
+      } else if (una && depth > una.openDepth) {
+        una.cases.push({ name: c[1], line: i + 1 });
+      }
+    }
+
+    depth += braceDelta(ln);
+    if (depth < 0) depth = 0;
+    if (current && depth <= current.openDepth) current = undefined;
+    if (una && depth <= una.openDepth) una = undefined;
+  }
+  // Only buckets that actually collected cases are tables.
+  return buckets.filter((b) => b.cases.length > 0).map(({ receiverTag, file: f, line, cases }) =>
+    ({ receiverTag, file: f, line, cases }));
 }
 
 // ── kind sets (the drift-prone sentinels) ────────────────────────────────────
@@ -316,7 +365,8 @@ function extractDiagnostics(root) {
   for (const file of distFiles(root)) {
     const lines = distLines(root, file);
     lines.forEach((ln, i) => {
-      for (const m of ln.matchAll(/"(FUNGI-[A-Z0-9-]+)"/g)) {
+      // FUNGI-* (compute lane) and GATE-* (authority / .gate v3 lane). Presence ≠ reachability.
+      for (const m of ln.matchAll(/"((?:FUNGI|GATE)-[A-Z0-9-]+)"/g)) {
         // Grab whatever message-ish text sits nearby, for semantic filtering.
         const ctx = (ln + " " + (lines[i + 1] ?? "") + " " + (lines[i + 2] ?? ""))
           .replace(/\s+/g, " ").slice(0, 400);

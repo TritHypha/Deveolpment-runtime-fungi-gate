@@ -4,7 +4,7 @@
 //
 // galerina-security audit <file.fungi> [--profile strict,high_integrity] [--json]
 // galerina-security risk <classification> <records> <probability>
-// galerina-security path-check <root> <path>
+// galerina-security path-check <root> <path>  (lexical precheck only)
 //
 // Exit codes:
 //   0 — passed (no critical/high findings)
@@ -23,6 +23,32 @@ import { runPciAudit } from "@galerina/devtools-pci";
 
 const args = process.argv.slice(2);
 const command = args[0];
+
+type NumberDecode =
+  | { readonly ok: true; readonly value: number }
+  | { readonly ok: false; readonly reason: string };
+
+function decodeRecordCount(input: string): NumberDecode {
+  if (input.length === 0 || input.length > 16 || !/^(?:0|[1-9][0-9]*)$/.test(input)) {
+    return { ok: false, reason: "expected a canonical non-negative integer" };
+  }
+  const value = Number(input);
+  if (!Number.isSafeInteger(value)) {
+    return { ok: false, reason: "value exceeds the safe integer bound" };
+  }
+  return { ok: true, value };
+}
+
+function decodeBreachProbability(input: string): NumberDecode {
+  if (input.length === 0 || input.length > 64 || !/^(?:0(?:\.[0-9]+)?|1(?:\.0+)?)$/.test(input)) {
+    return { ok: false, reason: "expected a canonical decimal between 0 and 1" };
+  }
+  const value = Number(input);
+  if (!Number.isFinite(value) || value < 0 || value > 1) {
+    return { ok: false, reason: "value must be finite and between 0 and 1" };
+  }
+  return { ok: true, value };
+}
 
 async function main(): Promise<number> {
   switch (command) {
@@ -121,7 +147,7 @@ async function main(): Promise<number> {
     }
 
     case "risk": {
-      const [, , classStr, recordsStr, probStr] = args;
+      const [, classStr, recordsStr, probStr] = args;
       if (!classStr || !recordsStr || !probStr) {
         process.stderr.write("Usage: galerina-security risk <classification> <records> <probability>\n");
         process.stderr.write("  classifications: public employee_data healthcare_phi financial_record customer_pii intellectual_property\n");
@@ -137,10 +163,20 @@ async function main(): Promise<number> {
       };
       const cls = classMap[classStr.toLowerCase()];
       if (cls === undefined) { process.stderr.write(`Unknown classification: ${classStr}\n`); return 1; }
+      const recordCount = decodeRecordCount(recordsStr);
+      if (!recordCount.ok) {
+        process.stderr.write(`Invalid record count '${recordsStr}': ${recordCount.reason}\n`);
+        return 1;
+      }
+      const breachProbability = decodeBreachProbability(probStr);
+      if (!breachProbability.ok) {
+        process.stderr.write(`Invalid breach probability '${probStr}': ${breachProbability.reason}\n`);
+        return 1;
+      }
       const profile = {
         classification: cls,
-        recordCount: parseInt(recordsStr, 10),
-        breachProbability: parseFloat(probStr),
+        recordCount: recordCount.value,
+        breachProbability: breachProbability.value,
         isMultiCloud: args.includes("--multi-cloud"),
         isUngovernedAI: args.includes("--ungoverned-ai"),
       };
@@ -152,7 +188,7 @@ async function main(): Promise<number> {
       process.stdout.write(`galerina-security — Galerina Security Devtools\n\n`);
       process.stdout.write(`Commands:\n`);
       process.stdout.write(`  audit <file.fungi> [--profile strict,...] [--json] [--strict] [--pci]   Run security audit (add --pci for PCI DSS 4.0.1 checks)\n`);
-      process.stdout.write(`  path-check <root> <path>                                      Check path confinement\n`);
+      process.stdout.write(`  path-check <root> <path>                                      Lexical path precheck (not filesystem identity proof)\n`);
       process.stdout.write(`  regex-check <pattern>                                         Check regex for ReDoS\n`);
       process.stdout.write(`  risk <classification> <records> <probability>                 Calculate breach risk\n\n`);
       process.stdout.write(`Exit codes: 0=passed, 2=findings present, 3=parse error\n`);

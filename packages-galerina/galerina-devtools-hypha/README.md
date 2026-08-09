@@ -119,7 +119,10 @@ detect, and shipping one inside it would be absurd. So:
 - when it is not reachable — the normal case, since hypha lives outside this repo — that case
   reports **SKIPPED, never passed**. A check that cannot run must not print green.
 
-To update: re-run the transform, never edit `src/extract.mjs`.
+To update, run `npm run vendor` from this package and then `npm run vendor:check`.
+The transform imports the passive extraction surface and deliberately excludes
+upstream's database-freshness helpers: this package has no persisted fact base
+for those helpers to attest. Never edit `src/extract.mjs` by hand.
 
 ---
 

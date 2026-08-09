@@ -27,7 +27,9 @@ describe("path-sandbox: segment-safe confinement", () => {
   });
 
   it("allows normal nested path", () => {
-    assert.equal(checkPathSandbox("/app/root", "a/b/c.txt").allowed, true);
+    const result = checkPathSandbox("/app/root", "a/b/c.txt");
+    assert.equal(result.allowed, true);
+    assert.equal(result.assurance, "lexical-only");
   });
 
   it("blocks sibling-prefix bypass (the key audit finding)", () => {

@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parseProgram, startServer } from "../dist/index.js";
+import { parseProgram, serve } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SERVICE = join(__dir, "..", "..", "..", "examples", "auth-service", "compilationService.fungi");
@@ -23,8 +23,7 @@ describe("Phase 41: compilationService.fungi", () => {
 
   before(async () => {
     const src = readFileSync(SERVICE, "utf8");
-    const prog = parseProgram(src, "compilationService.fungi");
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    server = await serve(src, "compilationService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });

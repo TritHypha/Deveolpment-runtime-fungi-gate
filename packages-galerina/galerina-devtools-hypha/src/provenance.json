@@ -1,6 +1,6 @@
 {
   "vendoredFrom": "subprojects/hypha/src/extract.js",
-  "sha256": "6d1d9f34fbaf2c221ab690ccd0bcf9db7d828eb64452fdeac066dff6abc9291f",
+  "sha256": "b2e89b8bb9696aaaa61a659a70516509cd6c2a2b2e7a939352cc15bcd67c04d2",
   "exports": [
     "distDir",
     "distFiles",
@@ -15,5 +15,5 @@
     "findAllCallSites",
     "extractParserKinds"
   ],
-  "note": "Regenerate by re-running the vendor transform; never edit src/extract.mjs by hand."
+  "note": "Regenerate with npm run vendor; never edit src/extract.mjs by hand."
 }

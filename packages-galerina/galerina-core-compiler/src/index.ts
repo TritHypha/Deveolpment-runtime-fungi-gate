@@ -994,7 +994,6 @@ export {
 
 // Stage A - Route Dispatcher
 export {
-  startServer,
   makeResponseValue,
   makeApiErrorValue,
   type ServerConfig,

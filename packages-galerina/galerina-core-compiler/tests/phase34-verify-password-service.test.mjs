@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-import { parseProgram, startServer, executeFlow, checkEffects, verifyGovernance, checkTaint } from "../dist/index.js";
+import { parseProgram, serve, executeFlow, checkEffects, verifyGovernance, checkTaint } from "../dist/index.js";
 import bcrypt from "bcryptjs";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
@@ -98,8 +98,8 @@ describe("Phase 34: live HTTP service", () => {
   const url = `http://127.0.0.1:${PORT}/auth/verify`;
 
   before(async () => {
-    const prog = loadService();
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    const source = readFileSync(SERVICE, "utf8");
+    server = await serve(source, "verifyPasswordService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });

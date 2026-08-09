@@ -8,6 +8,14 @@ import { resolve } from "node:path";
 
 const SCRIPT = resolve("scripts/component-health.mjs");
 
+test("tester-facing known-issues claims remain explicitly non-authorizing", () => {
+  const knownIssues = readFileSync(resolve("KNOWN-ISSUES.md"), "utf8");
+  assert.match(knownIssues, /not production authority/i);
+  assert.match(knownIssues, /literal TypeScript retirement[\s\S]{0,120}remain open/i);
+  assert.match(knownIssues, /non-production material/i);
+  assert.match(knownIssues, /bounded evidence, not production authority/i);
+});
+
 test("component health counts the benchmark package's governed test/ surface", () => {
   const selfTest = spawnSync(process.execPath, [SCRIPT, "--self-test"], {
     encoding: "utf8",

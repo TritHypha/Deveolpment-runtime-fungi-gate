@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "80da97d5",
+    "sha": "2e1d2e14",
     "detached": false,
     "dirty": true
   },
@@ -228,7 +228,7 @@
         {
           "kind": "status",
           "label": "Independent SLIDE general executable backend",
-          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
+          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 869/869 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate. Filesystem source traversal now retains and revalidates directory identity, and the V2-D execution core plus named exported loader refusal variants are null-free. Systemic null-state removal, authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
         },
         {
           "kind": "status",
@@ -336,7 +336,7 @@
         {
           "item": "Independent SLIDE backend",
           "state": "building",
-          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
+          "detail": "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 869/869 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate. Filesystem source traversal now retains and revalidates directory identity, and the V2-D execution core plus named exported loader refusal variants are null-free. Systemic null-state removal, authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
         },
         {
           "item": "Package retirement",
@@ -361,7 +361,7 @@
         {
           "item": "Pre-conversion security closure",
           "state": "building",
-          "detail": "four repository-wide scans are sealed at 2 high / 7 medium / 8 low. Galerina G1-G4, SLIDE S1-S2 and the selected Lyth-Weaver/TritMesh:QL findings must be remediated or explicitly excluded, then all four scopes and the complete/exhaustive lanes must be rerun in one current custody state before mechanical TypeScript-to-.fungi conversion"
+          "detail": "Galerina G1-G4 and SLIDE S2 are locally remediated with negative tests; SLIDE S1 is only partial. Its V2-D execution core and named exported loader refusal variants are null-free, but the loader still has 131 null matches across 22 functions and the complete source surface remains at least 500 matches across 121 functions. Conversion stays refused until systemic S1 closure and fresh scan, complete and exhaustive custody evidence"
         },
         {
           "item": "Memory retention audit and bounded caches",

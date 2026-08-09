@@ -15,7 +15,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parseProgram, startServer } from "../dist/index.js";
+import { parseProgram, serve } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SERVICES = join(__dir, "..", "..", "..", "examples", "auth-service");
@@ -23,6 +23,11 @@ const SERVICES = join(__dir, "..", "..", "..", "examples", "auth-service");
 function loadService(filename) {
   const src = readFileSync(join(SERVICES, filename), "utf8");
   return parseProgram(src, filename);
+}
+
+function serveService(filename, config) {
+  const src = readFileSync(join(SERVICES, filename), "utf8");
+  return serve(src, filename, config);
 }
 
 // ── Phase 43: governanceService.fungi ──────────────────────────────────────────
@@ -33,8 +38,7 @@ describe("Phase 43: governanceService.fungi", () => {
   const url = `http://127.0.0.1:${PORT}/governance/verify`;
 
   before(async () => {
-    const prog = loadService("governanceService.fungi");
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    server = await serveService("governanceService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });
@@ -123,8 +127,7 @@ describe("Phase 44: auditChainService.fungi", () => {
   const url = `http://127.0.0.1:${PORT}/audit/chain`;
 
   before(async () => {
-    const prog = loadService("auditChainService.fungi");
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    server = await serveService("auditChainService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });
@@ -192,8 +195,7 @@ describe("Phase 45: proofVerifierService.fungi", () => {
   const url = `http://127.0.0.1:${PORT}/proof/verify`;
 
   before(async () => {
-    const prog = loadService("proofVerifierService.fungi");
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    server = await serveService("proofVerifierService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });
@@ -252,8 +254,7 @@ describe("Phase 46: typeRegistryService.fungi", () => {
   const url = `http://127.0.0.1:${PORT}/types/resolve`;
 
   before(async () => {
-    const prog = loadService("typeRegistryService.fungi");
-    server = await startServer(prog.ast, prog.flows, { port: PORT });
+    server = await serveService("typeRegistryService.fungi", { port: PORT });
   });
 
   after(async () => { if (server) await server.close(); });

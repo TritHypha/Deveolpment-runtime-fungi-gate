@@ -4,8 +4,8 @@
 // index.js → route-dispatcher.js — a network stack has no business in a file check. The deferred
 // import fails CLOSED at first use with the same rejection semantics callers already handle
 // (startServer rejects). Detector: scripts/audit-check-import-set.mjs (the import-set ratchet).
-import { executeFlow, type GalerinaValue } from "./interpreter.js";
-import { type AstNode, type FlowMeta } from "./parser.js";
+import { type GalerinaValue } from "./interpreter.js";
+import { type AstNode } from "./parser.js";
 import { buildRouteRegistry, type RouteMatch, type RouteRegistry } from "./route-registry.js";
 import { jsObjectToGalerina } from "./stdlib.js";
 
@@ -48,6 +48,11 @@ export interface RunningServer {
   readonly registry: RouteRegistry;
 }
 
+export type AdmittedRouteExecutor = (
+  flowName: string,
+  args: ReadonlyMap<string, GalerinaValue>,
+) => Promise<GalerinaValue>;
+
 export function makeResponseValue(status: number, body: GalerinaValue): GalerinaValue {
   const fields = new Map<string, GalerinaValue>([
     ["__httpStatus", { __tag: "int", value: status }],
@@ -68,8 +73,8 @@ export function makeApiErrorValue(status: number, message: string): GalerinaValu
 
 export async function startServer(
   ast: AstNode,
-  flows: readonly FlowMeta[],
-  config: ServerConfig = { port: 3000 },
+  config: ServerConfig,
+  executeAdmittedRoute: AdmittedRouteExecutor,
 ): Promise<RunningServer> {
   // W2: the network stack loads only when a server actually starts (see header comment).
   const { createServer } = await import("node:http");
@@ -142,44 +147,10 @@ export async function startServer(
       ]);
 
       // ── SECURITY: Runtime effect gate (F1 hardened — Audit Pass 2) ─────────
-      // Policy-driven: deny ANY effect not in the deployment profile's allowlist.
-      // Previously only checked a hardcoded list in deterministic mode.
-      // Now generalised: any effect not in PROFILE_ALLOWED_EFFECTS[mode] is denied
-      // for all non-dev modes. Default-deny; explicit allow.
-      //
-      // Phase 39: this list comes from a signed runtime manifest. Until then we
-      // use a conservative compile-time profile table.
-      const flowMeta = flows.find(f => f.name === match.route.flowName);
-      const mode = config.mode ?? "dev";
-
-      // Effects allowed per deployment profile (default-deny for unlisted).
-      // dev: no restrictions. production: no process.spawn or dynamic load.
-      // deterministic: no outbound I/O without manifest proof.
-      const PROFILE_DENIED_EFFECTS: Readonly<Record<string, readonly string[]>> = {
-        production:    ["process.spawn", "eval.execute"],
-        deterministic: ["process.spawn", "eval.execute", "network.outbound", "storage.write"],
-      };
-
-      if (flowMeta !== undefined && mode !== "dev") {
-        const deniedForMode = PROFILE_DENIED_EFFECTS[mode] ?? [];
-        const violations = flowMeta.declaredEffects.filter(e => deniedForMode.includes(e));
-        if (violations.length > 0) {
-          res.statusCode = 403;
-          res.setHeader("Content-Type", "application/json");
-          res.setHeader("X-Galerina-Denial-Reason", "effect-gate");
-          res.end(JSON.stringify({
-            error: "Governance Denied",
-            code: "FUNGI-RUNTIME-EFFECT-GATE",
-            detail: `Flow '${match.route.flowName}' declares effects disallowed in '${mode}' profile`,
-            deniedEffects: violations,
-            profile: mode,
-          }));
-          return;
-        }
-      }
-
-      executeFlow(match.route.flowName, args, ast, flows).then((execution) => {
-        serializeResponse(execution.value, res);
+      // Transport never calls the interpreter directly. The runtime supplies a
+      // callback only after the shared compiler/governance admission has passed.
+      executeAdmittedRoute(match.route.flowName, args).then((value) => {
+        serializeResponse(value, res);
       }).catch((error: unknown) => {
         res.statusCode = 500;
         res.setHeader("Content-Type", "application/json");

@@ -1,29 +1,39 @@
 # Known Issues & Limitations — Galerina v1.0-beta
 
-This is the honest front-door for testers. Galerina v1.0-beta is **ready for full testing**: the core
-is production-grade, but some advertised layers are simulated/aspirational and a few residuals are
-disclosed below. Read this before relying on any guarantee. Last reconciled: 2026-06-24.
+This is the honest front-door for testers. Galerina v1.0-beta is suitable for
+development and full-suite testing, but it is **not production authority**.
+Production signing custody, platform durability evidence, general source-family
+coverage, literal TypeScript retirement, and the source-to-SLIDE bootstrap
+fixpoint remain open. Read this before relying on any guarantee. Last
+reconciled: 2026-08-09.
 
-## What is production-grade (real, tested)
+## What is implemented and tested (bounded evidence, not production authority)
 
 - **Compiler & type system (Stage A)** — parsing, type-checking, effect inference, governance
-  verification, WASM codegen. Full suite: **60/60 packages · 5,248 tests · 0 fail**.
+  verification, GIR and WAT emission. The dated 2026-08-09 checkpoint was
+  **100/100 packages · 9,470 tests · 0 fail**; rerun the phase-close gate for
+  current evidence.
 - **Governance & admission border** — K3 (Kleene three-valued) fail-closed verdicts, value-state
-  taint checking, effect/tier floors, signed `.lmanifest` admission, an enforced revocation registry.
+  taint checking, effect/tier floors, signed `.lmanifest` admission, and a revocation registry are
+  implemented. Their tests are bounded software evidence, not proof of production custody,
+  persistence, or platform composition.
 - **Cryptographic signing** — Ed25519 (default) plus opt-in hybrid Ed25519 + ML-DSA-65 (NIST FIPS 204)
-  post-quantum manifest signatures; tamper-evident and fail-closed.
+  post-quantum manifest signatures are implemented and tested with non-production material. No
+  production private-key use or operational public-bundle authority is claimed.
 
 ## What is simulated or aspirational (NOT yet real)
 
-- **DSS.wasm deterministic runtime isolation (#102–106)** — the DRCM containment model is *simulated*
-  in the Stage-A TypeScript interpreter. The real in-WASM DSS / kernel-bypass isolation is not yet
-  built. Do **not** rely on hardware-grade process isolation in this beta.
+- **Legacy DSS.wasm deterministic runtime isolation (#102–106)** — this is no longer one intact
+  build target. Reusable `.fungi` decision cores, typed contracts, and tests are being adapted to
+  SLIDE/VOK; incompatible Wasmtime-host authority and isolation are not production evidence. Do
+  **not** rely on hardware-grade process isolation in this beta.
 - **Photonic / ternary substrate (the "Tower")** — the photonic execution path is a physics-faithful
   **emulator** plus a governance layer, **not real silicon**. The governance is real; the substrate
   is emulated.
-- **Stage-B self-hosting** — the self-hosted compiler achieves byte-for-byte WASM parity for
-  `tokenize` only. Parser / type-checker / governance-verifier WASM parity is still in progress; the
-  authoritative compiler is the Stage-A TypeScript implementation.
+- **Fungi self-hosting and SLIDE retirement** — seven canonical compiler-stage `.fungi` files are
+  authoritative specifications and independent SLIDE executes a bounded checked-Fungi family, but
+  TypeScript remains the executing differential/bootstrap layer. Production authority, general
+  source families, and literal `.ts` retirement are still open.
 
 ## Security disclosures
 

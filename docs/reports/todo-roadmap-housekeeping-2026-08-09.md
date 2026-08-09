@@ -30,7 +30,7 @@ The canonical component-health audit reports:
 | Zero-trust thesis average | 78% | Mixed evidence classes; not one release percentage |
 | Build-progress average | 75% | Mixed evidence classes; not one release percentage |
 | Fungi-only packages | 2/100 (2.0%) | Package source-language retirement state |
-| TODO document state | 1,196 done / 914 open / 2,110 total (56.7%) | Documentation checkboxes only |
+| TODO document state | 1,200 done / 910 open / 2,110 total (56.9%) | Documentation checkboxes only; current after G1-G4 reconciliation |
 | Named workstreams | 31 | 16 shipped, 11 building, 1 build-pending, 3 post-v1 |
 
 The 19 quantified thesis/build rows comprise **1 live measurement, 1 release

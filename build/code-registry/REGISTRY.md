@@ -2,7 +2,7 @@
 
 The authoritative catalog of EVERY diagnostic/error code, GENERATED from the code-index (standard #10).
 Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-code-registry.mjs`.
-> **Coverage gate PASS:** 73 syntax-admitted descriptive identities are catalogued,
+> **Coverage gate PASS:** 72 syntax-admitted descriptive identities are catalogued,
 > including 51 on the signing path; 0 are missing and 0 source tokens are ambiguous.
 > Numeric-tail codes and descriptive identities share this catalog. Descriptive text only acquires identity
 > authority at a bounded diagnostic sink; comments, type positions, tests, and explicit
@@ -14,7 +14,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 363 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 362 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
@@ -1417,7 +1417,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ROUTE-002 | phantom | — | — |
 | FUNGI-ROUTE-003 | phantom | — | — |
 
-### RUNTIME (7)
+### RUNTIME (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1427,7 +1427,6 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-RUNTIME-005 | live | UNAUTHORIZED_GOVERNED_VALUE_ACCESS | error |
 | FUNGI-RUNTIME-006 | live | RATE_LIMIT_EXCEEDED / RateLimitExceeded | error |
 | FUNGI-RUNTIME-007 | inline | — | — |
-| FUNGI-RUNTIME-EFFECT-GATE | inline | — | — |
 
 ### SAFETY (6)
 

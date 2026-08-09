@@ -4,7 +4,7 @@ Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
 Current checkpoint: Galerina pins SLIDE Contract 86 implementation `39920eb`,
 its **89-file** tool manifest at `817e9d17...1d8484`, and a closed contract
-catalog of **95 files in two partitions**. Complete SLIDE passes **866/866
+catalog of **95 files in two partitions**. Complete SLIDE passes **869/869
 tests across 96 suites**, path hygiene **14/14** across 755 targets and security
 closure `+1` with evidence K3 `0`; authority remains unreleased.
 
@@ -22,15 +22,26 @@ including **444 tooling tests**, generator contracts **16/16**, graph
 generation/check **6/6**, Golden Pack **11/11 + 11/11**, and the independent
 percent-fresh gate. This remains repository evidence, not production authority.
 
-Pre-conversion security hold 2026-08-09: fresh repository-wide Codex Security
-scans are sealed for Galerina, SLIDE, Lyth-Weaver and TritMesh:QL. They report
-**2 high, 7 medium and 8 low** findings in total. Galerina's serving admission
-bypass and non-finite risk calculation, SLIDE's authority-path `null`
-sentinels and pathname-only source traversal, and the selected Lyth/Trit
-surfaces must be closed before TypeScript-to-`.fungi` conversion. The owner
-waived the separate Anthropic-skills repeat; it is not represented as evidence.
-The full ruling and exit conditions are in
+Pre-conversion security hold 2026-08-09: Galerina G1-G4 and SLIDE S2 are
+locally remediated with negative tests. Compile, `run()` and `serve()` now use
+one total admission path; risk inputs decode canonically; lexical path checks
+cannot claim filesystem identity; tester-facing claims remain explicitly
+non-authorizing; and SLIDE manifest traversal retains and revalidates object
+identity. SLIDE S1 is only partial: its V2-D execution core and named exported
+loader refusal variants are null-free, but the loader still has **131** `null`
+matches across **22** functions and the complete source surface remains at
+least **500 / 121 functions**. Conversion therefore remains refused. Current
+focused/package evidence is compiler **6,324/6,324**, security devtools
+**51/51**, and SLIDE **869/869 across 96 suites**. The owner waived the separate
+Anthropic-skills repeat; it is not represented as evidence. The full ruling and
+exit conditions are in
 `docs/security/pre-conversion-security-gate-2026-08-09.md`.
+
+The independent partial-remediation SLIDE checkpoint is `a91a943` with an
+**89-file** tool manifest at `25ac6e7f...ed34b48`. Galerina deliberately keeps
+its published Contract 85/86 evidence pinned to `39920eb` / `817e9d17...1d8484`
+until systemic S1 closure; a partial security checkpoint is not silently
+promoted into downstream authority.
 
 The current Galerina graph run is **6/6** and normal phase-close passes every
 blocking gate in **577.3s**. The live complete aggregate is nevertheless

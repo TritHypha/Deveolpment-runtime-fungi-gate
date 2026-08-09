@@ -8,16 +8,12 @@ const lnRoot = join(__dir, "../../../galerina-core-compiler");
 
 // ESM on Windows needs file:// URLs
 const indexUrl = pathToFileURL(join(lnRoot, "dist/index.js")).href;
-const rdUrl    = pathToFileURL(join(lnRoot, "dist/route-dispatcher.js")).href;
 
-const { parseProgram } = await import(indexUrl);
-const { startServer }  = await import(rdUrl);
+const { serve } = await import(indexUrl);
 
 const healthFungi = join(lnRoot, "../../examples/auth-service/healthCheck.fungi");
 const source = readFileSync(healthFungi, "utf8");
-const parsed = parseProgram(source, "healthCheck.fungi");
-
-const server = await startServer(parsed.ast, parsed.flows, {
+const server = await serve(source, "healthCheck.fungi", {
   port: 0, host: "127.0.0.1", mode: "dev", rateLimit: 100000,
 });
 

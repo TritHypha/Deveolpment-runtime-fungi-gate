@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 974,
+  "total": 973,
   "counts": {
     "ref": 215,
-    "inline": 363,
+    "inline": 362,
     "phantom": 113,
     "live": 170,
     "referenced": 100,
@@ -9090,18 +9090,6 @@
       "defs": 0,
       "emits": 1,
       "tests": 3,
-      "docs": 0
-    },
-    {
-      "code": "FUNGI-RUNTIME-EFFECT-GATE",
-      "family": "RUNTIME",
-      "namespace": "FUNGI",
-      "status": "inline",
-      "names": [],
-      "severities": [],
-      "defs": 0,
-      "emits": 1,
-      "tests": 0,
       "docs": 0
     },
     {
