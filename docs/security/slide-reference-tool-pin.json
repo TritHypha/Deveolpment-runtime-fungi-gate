@@ -1,6 +1,6 @@
 {
   "schema": "galerina.slide.reference-tool-pin.v1",
-  "repositoryCommit": "f302182ccdea6d4491ad0121e9ca3e56a8f85a3a",
-  "toolManifestDigest": "sha256:6688de0478f8b2ed0c8358d4ae3c17277e459dbefe34f1aadf698e274fdd0c1e",
+  "repositoryCommit": "aa90dd72f04accd399c76b4bc650d097275bd735",
+  "toolManifestDigest": "sha256:535e1d8652a514675ecc82a0603b9e4f95c860b9c03ac176eddf66f146d69fdb",
   "toolFileCount": 89
 }

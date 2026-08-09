@@ -42,13 +42,19 @@ const RECEIPT_KEYS = Object.freeze([
   "publicationMode", "powerLossDurability", "referenceOnly", "authorityReleased",
 ]);
 const DESCRIPTOR_KEYS = Object.freeze(["packageIdentity", "descriptorDigest", "canonicalBase64"]);
-const ARTIFACT_KEYS = Object.freeze([
+const ARTIFACT_V1_KEYS = Object.freeze([
   "packageIdentity", "exportName", "sourceFlowName", "compilerProfileId", "sourceDigest",
   "fileName", "slideBundleDigest", "packageDescriptorDigest", "parameterTypeIds",
   "resultTypeId", "byteLength",
 ]);
+const ARTIFACT_V2_KEYS = Object.freeze([
+  "packageIdentity", "exportName", "sourceFlowName", "compilerProfileId", "sourceDigest",
+  "fileName", "slideBundleDigest", "registrySetId", "registrySetDigest",
+  "packageDescriptorDigest", "parameterTypeIds", "resultTypeId", "byteLength",
+]);
 const ENTRYPOINT = "src/checked-fungi-package-manifest-cli.mjs";
 const DIGEST = /^sha256:[0-9a-f]{64}$/u;
+const BARE_DIGEST = /^[0-9a-f]{64}$/u;
 const TOOL_PATH = /^src\/(?:[A-Za-z0-9][A-Za-z0-9._-]{0,127}\/)*[A-Za-z0-9][A-Za-z0-9._-]{0,127}\.mjs$/u;
 const ARTIFACT_NAME = /^package-[0-9a-f]{16}-[0-9a-f]{16}\.slide$/u;
 const PACKAGE_IDENTITY = /^@[a-z][a-z0-9-]{0,31}\/[a-z][a-z0-9-]{0,31}$/u;
@@ -69,6 +75,21 @@ const DESCRIPTOR_MEMBERS = 128;
 const SOURCE_BYTES = 1024 * 1024;
 const RECEIPT_NAME = "package-set.receipt.json";
 const MAGIC = Uint8Array.of(0x53, 0x4c, 0x49, 0x44, 0x45, 0x0d, 0x0a, 0x1a);
+const SUCCESSOR_REGISTRIES = new Map([
+  ["slide.registry.executable-gir.v2c-immutable-value-ops.v1", "956e5f12ea00599f67fc4892774c01b78bedcc5d630df70f0164730ee8a25703"],
+  ["slide.registry.executable-gir.v2c-immutable-array-option.v1", "0ca2e25be48aab5d5e3355069144e79b33888345c8771bffc5afbaab59c8dfbc"],
+  ["slide.registry.executable-gir.v2c-checked-subtraction.v1", "b362701177580e4cefae36a5bf863f4f3e791881f3a4dfcad81b8540b9533422"],
+  ["slide.registry.executable-gir.v2c-checked-multiplication.v1", "f602ce3bd84872a86b910b75ff88dbff4bbbcbdaefd52da5a36edb6fbe50a03a"],
+  ["slide.registry.executable-gir.v2c-checked-division.v1", "64b05c2094afe4767e1229be3d7a09c8662a0168919c06cc3b680238eedcd4cd"],
+  ["slide.registry.executable-gir.v2c-checked-remainder.v1", "aa7f2c9f890dc92bd0cee93385871d9c16b5c33bff53e536138f84224ed140f9"],
+  ["slide.registry.executable-gir.v2c-bounded-wide-function-graph.v1", "69747391f450ed0d1250e20ee8fe259a8482f1cf29aadf5eb90be8a5deff8b3f"],
+  ["slide.registry.executable-gir.v2c-bounded-transitive-call-work.v1", "6121be7c1e279d8a28eeeaa31e46889e4fd8450aa9383bb40de80d2484bf855e"],
+  ["slide.registry.executable-gir.v2c-immutable-array-contains.v1", "679f28399d3ff87809fdee4a535abbf393fcfebac5da73c4f729bf05a12bf337"],
+  ["slide.registry.executable-gir.v2c-immutable-text-prefix.v1", "a461bdcb44e52d8c37e28731992d5fc2d0bed482fae966ec50c8bde1be987a4f"],
+  ["slide.registry.executable-gir.v2c-immutable-text-suffix.v1", "0548c1b0202f3586ac7ef61e1d849dee422940407eff6c4e89a96d0d2ab80713"],
+  ["slide.registry.executable-gir.v2c-immutable-text-contains.v1", "fbed63b8b647a301dac16867e0f2497d78a4cf165535b9fc093ba61934ac1f84"],
+  ["slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1", "d805dae4b822392e5092126ce4f0fb27e8bfa6aa2de8862ee88e09e23eed43cc"],
+]);
 
 function refusal() {
   return Object.freeze({
@@ -717,6 +738,12 @@ function packageContentDigest(descriptor, artifacts) {
       Buffer.from(artifact.slideBundleDigest, "utf8"),
       Uint8Array.from([...artifact.parameterTypeIds, artifact.resultTypeId]),
     );
+    if (artifact.registrySetId !== "" && artifact.registrySetId !== undefined) {
+      parts.push(
+        Buffer.from(artifact.registrySetId, "utf8"),
+        Buffer.from(artifact.registrySetDigest, "utf8"),
+      );
+    }
   }
   if (artifacts.length !== descriptor.exports.length) return "";
   for (const resource of descriptor.resources) {
@@ -775,9 +802,11 @@ async function inspectPublication(outputDirectory, child, sourceBinding) {
   const receiptBytes = await stableRegularFile(join(outputDirectory, RECEIPT_NAME), 1, MANIFEST_BYTES);
   const parsed = receiptBytes === null ? null : parseCanonical(receiptBytes);
   const receipt = parsed === null ? null : exactRecord(parsed, RECEIPT_KEYS);
+  const successorReceipt = receipt !== null
+    && receipt.schema === "slide.checked-fungi.package-publication.v2";
   if (
     receipt === null
-    || receipt.schema !== "slide.checked-fungi.package-publication.v1"
+    || (receipt.schema !== "slide.checked-fungi.package-publication.v1" && !successorReceipt)
     || receipt.packageSetDigest !== child.packageSetDigest
     || receipt.publicationMode !== "exclusive-directory-receipt-last.v1"
     || receipt.powerLossDurability !== child.powerLossDurability
@@ -837,10 +866,22 @@ async function inspectPublication(outputDirectory, child, sourceBinding) {
   const artifactNames = [];
   const inspectedArtifacts = [];
   for (const candidate of artifactCandidates) {
-    const artifact = exactRecord(candidate, ARTIFACT_KEYS);
+    const artifact = exactRecord(candidate, successorReceipt ? ARTIFACT_V2_KEYS : ARTIFACT_V1_KEYS);
     const parameters = artifact === null ? null : exactArray(artifact.parameterTypeIds, 64);
+    const validRegistry = !successorReceipt || (
+      typeof artifact?.registrySetId === "string"
+      && typeof artifact?.registrySetDigest === "string"
+      && (
+        (artifact.registrySetId === "" && artifact.registrySetDigest === "")
+        || (
+          BARE_DIGEST.test(artifact.registrySetDigest)
+          && SUCCESSOR_REGISTRIES.get(artifact.registrySetId) === artifact.registrySetDigest
+        )
+      )
+    );
     if (
       artifact === null
+      || !validRegistry
       || parameters === null
       || !PACKAGE_IDENTITY.test(artifact.packageIdentity)
       || !SYMBOL.test(artifact.exportName)
@@ -888,6 +929,7 @@ async function inspectPublication(outputDirectory, child, sourceBinding) {
     JSON.stringify([...artifactNames].sort()) !== JSON.stringify(outputFiles.slice(0, -1))
     || new Set(artifactNames).size !== artifactNames.length
     || new Set(inspectedArtifacts.map((artifact) => `${artifact.packageIdentity}\0${artifact.exportName}`)).size !== inspectedArtifacts.length
+    || (successorReceipt && !inspectedArtifacts.some((artifact) => artifact.registrySetId !== ""))
     || inspectedArtifacts.length !== sourceBinding.exportMap.size
   ) return null;
   for (const descriptor of descriptorMap.values()) {

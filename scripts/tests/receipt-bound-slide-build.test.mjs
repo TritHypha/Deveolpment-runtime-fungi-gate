@@ -18,6 +18,10 @@ import {
 } from "../lib/receipt-bound-slide-build.mjs";
 
 const TEMP = [];
+const SUCCESSOR_REGISTRY = Object.freeze({
+  id: "slide.registry.executable-gir.v2c-bounded-transitive-call-work.v1",
+  digest: "6121be7c1e279d8a28eeeaa31e46889e4fd8450aa9383bb40de80d2484bf855e",
+});
 
 function rawDigest(domain, parts) {
   const hash = createHash("sha256").update(domain, "utf8").update(Uint8Array.of(0));
@@ -185,7 +189,7 @@ async function fixture() {
   };
 }
 
-function successRunner(fixtureValue, mutate = () => undefined) {
+function successRunner(fixtureValue, mutate = () => undefined, successorRegistry = null) {
   return async ({ command, args }) => {
     assert.equal(command, process.execPath);
     assert.equal(args[0], join(fixtureValue.toolRoot, "src", "checked-fungi-package-manifest-cli.mjs"));
@@ -197,7 +201,7 @@ function successRunner(fixtureValue, mutate = () => undefined) {
     const fileName = artifactFileName(packageIdentity, exportName);
     await writeFile(join(output, fileName), slide);
     const version = "1.0.0";
-    const artifact = {
+    const baseArtifact = {
       packageIdentity,
       exportName,
       sourceFlowName: "main",
@@ -205,12 +209,20 @@ function successRunner(fixtureValue, mutate = () => undefined) {
       sourceDigest: typedDigest("slide.checked-fungi.pure-scalar.source.v1", [fixtureValue.sourceBytes]),
       fileName,
       slideBundleDigest: typedDigest("slide.bundle.v1", [slide]),
+    };
+    const registryArtifact = successorRegistry === null ? {} : {
+      registrySetId: successorRegistry.id,
+      registrySetDigest: successorRegistry.digest,
+    };
+    const artifact = {
+      ...baseArtifact,
+      ...registryArtifact,
       packageDescriptorDigest: "",
       parameterTypeIds: [],
       resultTypeId: 1,
       byteLength: slide.length,
     };
-    const contentDigest = framedDigest("slide.checked-fungi.package-content.v1", [
+    const contentParts = [
       Buffer.from(packageIdentity, "utf8"),
       Buffer.from(version, "utf8"),
       Buffer.from(artifact.exportName, "utf8"),
@@ -219,7 +231,14 @@ function successRunner(fixtureValue, mutate = () => undefined) {
       Buffer.from(artifact.sourceDigest, "utf8"),
       Buffer.from(artifact.slideBundleDigest, "utf8"),
       Uint8Array.of(artifact.resultTypeId),
-    ]);
+    ];
+    if (successorRegistry !== null && successorRegistry.id !== "") {
+      contentParts.push(
+        Buffer.from(successorRegistry.id, "utf8"),
+        Buffer.from(successorRegistry.digest, "utf8"),
+      );
+    }
+    const contentDigest = framedDigest("slide.checked-fungi.package-content.v1", contentParts);
     const canonicalDescriptor = descriptorBytes({
       identity: packageIdentity,
       version,
@@ -230,7 +249,9 @@ function successRunner(fixtureValue, mutate = () => undefined) {
     artifact.packageDescriptorDigest = descriptorDigest;
     const packageSetDigest = framedDigest("slide.flat-package.set.v1", [Buffer.from(descriptorDigest, "utf8")]);
     const receipt = {
-      schema: "slide.checked-fungi.package-publication.v1",
+      schema: successorRegistry === null
+        ? "slide.checked-fungi.package-publication.v1"
+        : "slide.checked-fungi.package-publication.v2",
       packageSetDigest,
       topologicalIdentities: [packageIdentity],
       descriptors: [{
@@ -296,6 +317,44 @@ describe("receipt-bound Galerina to SLIDE package build", () => {
     assert.equal(result.referenceOnly, true);
     assert.equal(result.authorityReleased, false);
     assert.equal(Object.hasOwn(result, "slideToolRoot"), false);
+  });
+
+  it("admits only an exact registry-bound v2 publication receipt", async () => {
+    const accepted = await fixture();
+    const acceptedResult = await buildReceiptBoundSlidePackage({
+      rootDirectory: accepted.projectRoot,
+      sourceManifestPath: accepted.sourceManifestPath,
+      outputDirectory: accepted.outputDirectory,
+      slideToolRoot: accepted.toolRoot,
+      slideToolManifestPath: accepted.toolManifestPath,
+      expectedSlideToolManifestDigest: slideToolManifestDigest(accepted.toolManifestBytes),
+      expectedRuntimeDigest: await digestRuntimeFile(process.execPath),
+    }, { runOwnedProcess: successRunner(accepted, () => undefined, SUCCESSOR_REGISTRY) });
+    assert.equal(acceptedResult.verdict, 1, JSON.stringify(acceptedResult));
+
+    for (const refusedRegistry of [
+      {
+        id: "slide.registry.executable-gir.unknown.v1",
+        digest: SUCCESSOR_REGISTRY.digest,
+      },
+      {
+        id: SUCCESSOR_REGISTRY.id,
+        digest: "0".repeat(64),
+      },
+      { id: "", digest: "" },
+    ]) {
+      const value = await fixture();
+      const result = await buildReceiptBoundSlidePackage({
+        rootDirectory: value.projectRoot,
+        sourceManifestPath: value.sourceManifestPath,
+        outputDirectory: value.outputDirectory,
+        slideToolRoot: value.toolRoot,
+        slideToolManifestPath: value.toolManifestPath,
+        expectedSlideToolManifestDigest: slideToolManifestDigest(value.toolManifestBytes),
+        expectedRuntimeDigest: await digestRuntimeFile(process.execPath),
+      }, { runOwnedProcess: successRunner(value, () => undefined, refusedRegistry) });
+      assert.equal(result.verdict, -1);
+    }
   });
 
   it("refuses wrong pins and mutated tool bytes before child execution", async () => {

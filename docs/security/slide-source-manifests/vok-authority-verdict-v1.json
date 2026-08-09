@@ -7,13 +7,13 @@
   },
   "packages": [
     {
-      "identity": "@galerina/core-sentinel-state",
+      "identity": "@galerina/core-runtime",
       "version": "1.0.0-beta.2",
       "exports": [
         {
-          "name": "restoreVerdict",
-          "sourceFlowName": "restoreVerdict",
-          "source": "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi"
+          "name": "vokAuthorityVerdict",
+          "sourceFlowName": "vokAuthorityVerdict",
+          "source": "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi"
         }
       ],
       "dependencies": [],

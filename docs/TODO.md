@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Contract 86 physical VOK authority candidate - 2026-08-09
+
+- [x] Close the SLIDE work-ceiling root cause without modifying frozen
+  Contract 53. SLIDE Contract 85 independently derives conservative
+  transitive work for its inherited scalar call family and admits only
+  **97..2,048** steps; complete SLIDE is **863/863 across 95 suites**.
+- [x] Re-pin Galerina to exact SLIDE checkpoint `aa90dd7`, its **89-file**
+  tool closure and manifest digest `535e1d86...69fdb`; rebuild both Contract
+  85/86 source-free publications through the owning receipt-bound builder.
+- [x] Extend Galerina's independent publication inspector to exact receipt v2
+  semantics. Registry ID/digest pairs are allowlisted, included in package
+  content identity and mutation-tested; receipt v1 remains unchanged. The
+  focused builder suite is **6/6**.
+- [x] Revalidate Contract 85 at **4/4**, including the real cold-boot consumer.
+  Exhaustively execute Contract 86's **19,683/19,683** nine-trit vectors through
+  physical `.slide`, observe exactly one authorizing vector, refuse malformed
+  trits, reproduce the artifact byte-for-byte and refuse a one-byte mutation:
+  **4/4**.
+- [x] Run Galerina's owning graph/index/build/test/audit closure sequentially,
+  regenerate only stale owned artifacts, update the roadmap/component-health
+  views and preserve Node **2 -> 2**. Graph generation/check is **6/6**,
+  tooling is **447 total / 437 pass / 10 intentional skips / 0 fail**, the
+  aggregate is **99/99 packages / 9,464 tests / 0 fail**, and both normal and
+  exhaustive phase-close lanes pass every blocking gate. Commit/index closure
+  follows; no production, signing, durability, conversion or retirement
+  authority follows.
+
 ### Sequential full maintenance close - 2026-08-09
 
 - [x] Regenerate and independently check all six Galerina repository graphs,
@@ -15,7 +42,7 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Run the complete Galerina test surface at concurrency one: **99/99
   packages, 9,464 tests, 0 failed**, including compiler **6,319**. Update the
   canonical counts only through the aggregate's owning `--emit-counts` mode.
-- [x] Run complete SLIDE at concurrency one: **857/857 across 94 suites**, then
+- [x] Run complete SLIDE at concurrency one: **863/863 across 95 suites**, then
   pass the contract catalog, tool manifest, path-leak and security-closure
   gates without releasing authority.
 - [x] Diagnose the first phase-close's three generated-state refusals, rerun

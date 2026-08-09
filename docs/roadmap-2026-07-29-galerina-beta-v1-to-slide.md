@@ -12,24 +12,37 @@ closure head is `b0b4bb86`.
 The current maintenance evidence and remaining route are recorded in
 `docs/reports/full-maintenance-regeneration-2026-08-09.md`; the report is the
 count-owning source for this maintenance chapter.
-SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
-previously indexed to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
-expected counts. Hypha's
+SLIDE Contract 85 implementation head `aa90dd7` indexes to **9,775 nodes /
+23,712 edges**, exactly equal to the indexer's expected counts. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
-not a bulk defect count. SLIDE's contract check now passes **92 files in two
+not a bulk defect count. SLIDE's contract check now passes **94 files in two
 closed partitions**, its tool manifest passes **89 files** with digest
-`6688de04...0c1e`, its independent final path-leak gate passes **14 controls / 745
+`535e1d86...69fdb`, its independent final path-leak gate passes **14 controls / 747
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
-**857/857 across 94 suites** with no authority released. The fresh Galerina
+**863/863 across 95 suites** with no authority released. The fresh Galerina
 aggregate passed **99/99 packages and 9,464 tests** (compiler **6,319**), the
-last complete bounded tooling suite passed **441 total / 436 pass / 5
-intentional cross-checkout skips / 0 fail**; Contract 85 was then run with the
-pinned SLIDE checkout and passed its skipped **3/3** independently. The last uninterrupted exhaustive close
-passed **92/92** in **1,042.9 seconds**. The present maintenance chapter reran
-the aggregate and both normal and exhaustive phase-close lanes sequentially;
+last complete bounded tooling suite passed **447 total / 437 pass / 10
+intentional environment/cross-checkout skips / 0 fail**; Contract 85 and 86
+were then run with the pinned SLIDE checkout and passed **4/4** each. The
+current uninterrupted exhaustive close passed every blocking gate in
+**1,061.4 seconds**. The present maintenance chapter reran the aggregate and
+both normal and exhaustive phase-close lanes sequentially;
 the detailed evidence is in
 `docs/reports/full-maintenance-regeneration-2026-08-09.md`.
+Roadmap increment 2026-08-09: SLIDE Contract 85 is complete at `aa90dd7`.
+It preserves frozen Contract 53 and admits only its inherited scalar call
+family when independently derived conservative transitive work is
+**97..2,048** steps. Complete SLIDE is **863/863 across 95 suites**; contract
+integrity is **94 files in two partitions**, the tool manifest remains
+**89 files** at `535e1d86...69fdb`, path hygiene is **14/14 across 751
+targets**, and security evidence K3 remains `0`. Galerina now pins that exact
+closure. Contract 85 restore evidence remains **4/4** and Contract 86 is
+**4/4** after physical execution of all **19,683** nine-trit vectors, exact
+rebuild and mutation refusal. These are reference-only implementation facts;
+production boot composition, platform authority, signing, durability,
+conversion and retirement remain open.
+
 The former unknown-content hold is closed, but `memory-sandobx/` now exists as
 the bounded RD-0755 `--magic` vault-gap proposal laboratory. It is propose-only,
 non-authorizing and grants no compiler, SLIDE or production authority.
