@@ -71,9 +71,10 @@ counts or open items that a newer section explicitly supersedes.
   `.slide`, portable VEO, VOK and the flat-package path. Copy/drop/swap/
   cross-write/wrong-terminal owner mutations refuse; success and failure after
   allocation both zeroise exactly two private buffers.
-- [x] Open the first manifest-bound successor partition without changing the
-  original per-partition limits. Contract/catalog evidence is **2 partitions /
-  91 files**; the reference tool manifest is **87 files** with digest
+- [x] At the Contract 83 checkpoint, open the first manifest-bound successor
+  partition without changing the original per-partition limits. Its interim
+  contract/catalog evidence was **2 partitions / 91 files**; the reference tool
+  manifest was **87 files** with digest
   `9d00deab...5707a`; security closure remains Allow with evidence K3 `0`.
 - [x] Run the complete SLIDE owning suite at the implementation checkpoint:
   **849/849 tests across 92 suites**; final closure-document path hygiene is

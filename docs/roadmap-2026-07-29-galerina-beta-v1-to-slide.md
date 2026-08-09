@@ -9,8 +9,9 @@ drift checking pass **6/6**. The complete sequential maintenance close passes
 exhaustive blocking lane. Node remains **2 -> 2** after every major phase.
 Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
 closure head is `b0b4bb86`.
-The current-state documentation and component-health reconciliation head is
-`4bba35a2`.
+The current maintenance evidence and remaining route are recorded in
+`docs/reports/full-maintenance-regeneration-2026-08-09.md`; the report is the
+count-owning source for this maintenance chapter.
 SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
 previously indexed to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
@@ -374,7 +375,7 @@ Roadmap refresh: the original subway-style roadmap has been restored from
 authority, contract and retirement ledgers. Its last count-owning test
 headline was 98/98 test-bearing packages with 8,956 tests. The workspace now
 contains 99 top-level peers after Hypha was enlisted; current component health
-is **99/99 with 9,452 recorded tests**. The chart exposes 26 named workstreams, including the
+is **99/99 with 9,458 recorded tests**. The chart exposes 26 named workstreams, including the
 independent SLIDE backend and package retirement, and its no-percentage lane
 names the general SLIDE backend instead of the superseded P9 Wasm-execution
 word row. The five Zero-Trust and twelve of the numbered build-readiness
