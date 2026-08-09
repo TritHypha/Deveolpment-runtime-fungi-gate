@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "4bba35a2",
+    "sha": "e17f9d48",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
@@ -288,7 +288,7 @@
         {
           "item": "Contract Registry (RD-0359)",
           "state": "shipped",
-          "detail": "generated authority is current at 1,456 contracts across 534 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
+          "detail": "generated authority is current at 1,465 contracts across 534 .fungi sources; parser-authoritative flow list + intent extraction; self-test and freshness check are CI-wired"
         },
         {
           "item": "DSS decision core + optional Wasm oracle",
@@ -298,7 +298,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "99/99 component families green; 99 workspace packages, 9,452 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "99/99 component families green; 99 workspace packages, 9,458 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",

@@ -1,8 +1,8 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-04T05:13:01.000Z",
-  "sha": "e2814211",
-  "contracts": 1456,
+  "generatedAt": "2026-08-09T00:28:17.000Z",
+  "sha": "e17f9d48",
+  "contracts": 1465,
   "parsed": 534,
   "rows": [
     {
@@ -5202,11 +5202,83 @@
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsLowerHexChar",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsLowerHexChar(c: Char) -> Bool",
+      "effects": [],
+      "intent": "Admit exactly the lowercase hexadecimal alphabet."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsLowerHex64",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsLowerHex64(value: String) -> Bool",
+      "effects": [],
+      "intent": "Require canonical lowercase 64-hex digest form."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsIdentifierName",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsIdentifierName(value: String, maxLen: Int) -> Bool",
+      "effects": [],
+      "intent": "Require identifier-shaped names, never free text."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsLowerAlnumChar",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsLowerAlnumChar(c: Char) -> Bool",
+      "effects": [],
+      "intent": "Admit lowercase letters and digits only."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsCanonicalTail",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsCanonicalTail(value: String, start: Int, allowDash: Bool, allowDot: Bool) -> Bool",
+      "effects": [],
+      "intent": "Require canonical lowercase identity tails after a fixed prefix."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsPackageId",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsPackageId(value: String) -> Bool",
+      "effects": [],
+      "intent": "Require the canonical package identity pattern."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsProfileId",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsProfileId(value: String) -> Bool",
+      "effects": [],
+      "intent": "Require the canonical profile identity pattern."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsVersion",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsVersion(value: String) -> Bool",
+      "effects": [],
+      "intent": "Require canonical three-part version identities."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
       "name": "slideCheckedDecisionParametersValid",
       "qualifier": "pure",
       "signature": "pure flow slideCheckedDecisionParametersValid(parameters: Array<SLIDECheckedDecisionParameter>, k3Sensitive: Bool) -> Bool",
       "effects": [],
       "intent": "Require a closed ordered Bool/Verdict parameter surface."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",
+      "name": "slideCheckedDecisionIsMappingKind",
+      "qualifier": "pure",
+      "signature": "pure flow slideCheckedDecisionIsMappingKind(kind: String) -> Bool",
+      "effects": [],
+      "intent": "Admit exactly the closed mapping-kind registry."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/slide-checked-decision-frontend.fungi",

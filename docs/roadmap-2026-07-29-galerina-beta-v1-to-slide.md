@@ -2,29 +2,33 @@
 
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: Galerina graph provenance binds subject
-`4bba35a2`; repository graph generation and independent drift checking pass
-**6/6**, with Node **2 -> 2** after this roadmap update.
+Current revalidated checkpoint: repository graph generation and independent
+drift checking pass **6/6**. The complete sequential maintenance close passes
+**95/95 package builds**, **99/99 package tests / 9,458 tests / 0 failed**
+(compiler **6,319**), **64/64** normal phase-close blocking gates and the full
+exhaustive blocking lane. Node remains **2 -> 2** after every major phase.
 Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
 closure head is `b0b4bb86`.
 The current-state documentation and component-health reconciliation head is
 `4bba35a2`.
 SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
-indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
+previously indexed to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
 not a bulk defect count. SLIDE's contract check now passes **92 files in two
 closed partitions**, its tool manifest passes **89 files** with digest
-`6688de04...0c1e`, its independent final path-leak gate passes **14 controls / 744
+`6688de04...0c1e`, its independent final path-leak gate passes **14 controls / 745
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **857/857 across 94 suites** with no authority released. The fresh Galerina
-aggregate passed **99/99 packages and 9,452 tests** (compiler **6,313**), the
+aggregate passed **99/99 packages and 9,458 tests** (compiler **6,319**), the
 last complete bounded tooling suite passed **441 total / 436 pass / 5
 intentional cross-checkout skips / 0 fail**; Contract 85 was then run with the
 pinned SLIDE checkout and passed its skipped **3/3** independently. The last uninterrupted exhaustive close
-passed **92/92** in **1,042.9 seconds**. Those aggregate/tooling/phase-close
-figures are retained evidence and were not rerun in this graph-only refresh.
+passed **92/92** in **1,042.9 seconds**. The present maintenance chapter reran
+the aggregate and both normal and exhaustive phase-close lanes sequentially;
+the detailed evidence is in
+`docs/reports/full-maintenance-regeneration-2026-08-09.md`.
 The former unknown-content hold is closed, but `memory-sandobx/` now exists as
 the bounded RD-0755 `--magic` vault-gap proposal laboratory. It is propose-only,
 non-authorizing and grants no compiler, SLIDE or production authority.

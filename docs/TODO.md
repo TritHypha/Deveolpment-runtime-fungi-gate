@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Sequential full maintenance close - 2026-08-09
+
+- [x] Regenerate and independently check all six Galerina repository graphs,
+  the 974-entry diagnostic index, the 1,465-contract registry and the
+  1,848-document Knowledge Base index.
+- [x] Build all **95/95** package build scripts serially, rebuild the
+  non-authorizing process warden and verify the fusable-package state with no
+  failure.
+- [x] Run the complete Galerina test surface at concurrency one: **99/99
+  packages, 9,458 tests, 0 failed**, including compiler **6,319**. Update the
+  canonical counts only through the aggregate's owning `--emit-counts` mode.
+- [x] Run complete SLIDE at concurrency one: **857/857 across 94 suites**, then
+  pass the contract catalog, tool manifest, path-leak and security-closure
+  gates without releasing authority.
+- [x] Diagnose the first phase-close's three generated-state refusals, rerun
+  their owning generators and checks, then pass **64/64** normal blocking gates
+  and the full exhaustive blocking lane. Node remained **2 -> 2** across every
+  major phase.
+- [x] Record exact commands, limits and remaining authority boundaries in the
+  [full maintenance report](reports/full-maintenance-regeneration-2026-08-09.md).
+- [ ] Continue with the sentinel `restoreVerdict` consumer switch below. This
+  maintenance evidence does not reduce package-conversion or retirement debt.
+
 ### Current route: Contract 85 complete; sentinel consumer switch next - 2026-08-09
 
 - [x] Add a fail-closed source-capability inventory derived from the live
