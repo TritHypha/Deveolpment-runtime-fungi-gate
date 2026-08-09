@@ -27,9 +27,10 @@ counts or open items that a newer section explicitly supersedes.
   views and preserve Node **2 -> 2**. Graph generation/check is **6/6**,
   tooling is **447 total / 437 pass / 10 intentional skips / 0 fail**, the
   aggregate is **99/99 packages / 9,464 tests / 0 fail**, and both normal and
-  exhaustive phase-close lanes pass every blocking gate. Commit/index closure
-  follows; no production, signing, durability, conversion or retirement
-  authority follows.
+  exhaustive phase-close lanes pass every blocking gate. Implementation
+  checkpoint `ade75593` indexes at **45,711 nodes / 120,676 edges**, exactly
+  equal to expected totals. No production, signing, durability, conversion or
+  retirement authority follows.
 
 ### Sequential full maintenance close - 2026-08-09
 

@@ -44,4 +44,4 @@ independently verify every typed receipt.
 - [x] Regenerate and check graphs, indexes, root lock and Golden Pack through
   owning tools.
 - [x] Update both TODOs, the current roadmap and a factual completion report.
-- [ ] Commit locally, re-index Galerina and verify the exact indexed HEAD.
+- [x] Commit locally, re-index Galerina and verify the exact implementation HEAD.

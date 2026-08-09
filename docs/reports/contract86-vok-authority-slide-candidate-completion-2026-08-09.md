@@ -67,6 +67,7 @@ The focused independent builder suite is **6/6**.
 | Normal phase-close | every blocking gate passed |
 | Exhaustive phase-close | every blocking gate passed, including all packages |
 | Repository graph generation and check | 6/6 + 6/6 |
+| Codebase graph at implementation `ade75593` | 45,711 nodes / 120,676 edges, expected equal |
 | Node process census | 2 -> 2 |
 
 Every accepted result equals the numeric K3 minimum, carries a verified typed

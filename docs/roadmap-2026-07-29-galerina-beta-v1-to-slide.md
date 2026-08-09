@@ -9,6 +9,9 @@ drift checking pass **6/6**. The complete sequential maintenance close passes
 exhaustive blocking lane. Node remains **2 -> 2** after every major phase.
 Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
 closure head is `b0b4bb86`.
+Contract 86 implementation checkpoint `ade75593` indexes to **45,711 nodes /
+120,676 edges**, exactly equal to expected totals; its physical candidate
+evidence is the current integration route described below.
 The current maintenance evidence and remaining route are recorded in
 `docs/reports/full-maintenance-regeneration-2026-08-09.md`; the report is the
 count-owning source for this maintenance chapter.
