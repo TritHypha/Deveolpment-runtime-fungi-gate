@@ -43,12 +43,12 @@ a native adapter, publish a release or move any package-retirement counter.
 ### Selected: sealed upper-layer composition candidate
 
 Add a narrow composition module at the optional app-kernel/host layer. It
-consumes independently admitted opaque evidence capabilities, rechecks every
+consumes independently authenticated opaque evidence capabilities, rechecks every
 cross-capability identity join and returns a privately registered immutable
 candidate record. The record contains no `restoreVerdict` method and cannot be
 passed to `ColdBootOrchestrator` as authority.
 
-A repository integration test uses the same admitted inputs to exercise the
+A repository integration test uses the same authenticated inputs to exercise the
 real orchestrator through the existing reference-only SLIDE execution path.
 That adapter remains test evidence and is never exported by the production
 composition module.
@@ -83,14 +83,14 @@ The new module belongs under
 host layer already owns durability admission. It may depend from the optional
 layer toward Core contracts, but no Core package gains an upward dependency.
 
-The module owns a private `WeakSet` of admitted candidates and exports:
+The module owns a private `WeakSet` of registered candidates and exports:
 
 1. `admitProductionBootCompositionCandidate(policy, inputs)`;
 2. `isProductionBootCompositionCandidate(value)`; and
 3. closed data interfaces for the policy, authenticated SLIDE execution
    profile and resulting candidate.
 
-The candidate is admitted only when its evidence objects came from their
+The candidate is registered only when its evidence objects came from their
 owning admission modules. Closed object shapes and positive-looking fields are
 insufficient. The composition module recognizes the authenticated SLIDE and
 durability profiles through private capability registries, not caller-supplied
@@ -186,6 +186,7 @@ raw platform/durability evidence + production delegation authority
 closed composition policy + both sealed profiles
     -> recheck every cross-profile identity join
     -> immutable sealed production-boot candidate
+    -> verdict=0
     -> authorityReleased=false
     -> productionAuthorizing=false
     -> no RestoreVerdictAuthority output
@@ -199,17 +200,21 @@ composition evidence, not installation authority.
 
 ## Outcomes and errors
 
-The public entry point has only two semantic outcomes:
+The public entry point has only two semantic outcomes. This slice has no K3
+`+1` path: structurally complete but owner-incomplete evidence remains `0`,
+while malformed, forged, stale or mismatched evidence is `-1`:
 
 - an immutable registered candidate with exact status
-  `CANDIDATE_ADMITTED_NON_AUTHORIZING`; or
-- a typed refusal with one stable production-boot composition diagnostic.
+  `CANDIDATE_INDETERMINATE_NON_AUTHORIZING` and exact `verdict: 0`; or
+- a typed refusal with exact `verdict: -1` and one stable production-boot
+  composition diagnostic.
 
 The candidate contains:
 
 - the exact joined public identities and digests;
 - `authenticatedObjectExecution: true`;
 - `authenticatedPlatformDurability: true`;
+- `verdict: 0`;
 - `consumerCompositionExercised: true` only in the separate evidence report,
   never as a caller-supplied admission field;
 - `authorityReleased: false`;
@@ -218,15 +223,17 @@ The candidate contains:
   later authority-release design.
 
 The module catches unexpected dependency failures and maps them to the closed
-malformed refusal. It never returns a partial candidate, retries through a
-weaker verifier or falls back to TypeScript decision logic.
+`verdict: -1` malformed refusal. It never returns a partial candidate, retries
+through a weaker verifier or falls back to TypeScript decision logic.
 
 ## Tests
 
 Implementation follows RED -> GREEN. Focused tests cover:
 
 - a complete disposable-key candidate while retaining both false authority
-  fields and exposing no restore method;
+  fields, exact K3 `verdict: 0` and exposing no restore method;
+- an empty input, every malformed or forged input and every dependency failure
+  producing a typed K3 `verdict: -1` refusal, with no composition `+1` path;
 - forged plain-object copies of every opaque profile;
 - each missing or invalid hybrid-signature component;
 - one-byte `.slide` mutation and correct signatures over the wrong object;
@@ -269,6 +276,13 @@ Detailed research and adjudication remain in RD-numbered private Knowledge
 Base files. Memory remains a concise routing graph that points to those files;
 the implementation report does not turn the memory index into an evidence
 warehouse.
+
+The implementation therefore produces RD-0789 as the linked private gap
+adjudication. It separates unit/KAT, cross-repository integration, host-local,
+source-model, independent-review, owner-ceremony and external-platform
+evidence tiers. A fresh approved independent review is preserved and
+sceptically adjudicated when available; its absence remains an explicit R&D
+wish-list item and cannot be laundered into verification.
 
 ## Completion boundary
 
