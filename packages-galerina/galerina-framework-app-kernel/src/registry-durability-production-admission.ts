@@ -79,10 +79,13 @@ export interface ProductionRegistryDurabilityProfile {
   readonly filesystem: string;
   readonly storageProfileDigest: string;
   readonly generationId: string;
+  readonly rootKeyId: string;
   readonly operationalKeyId: string;
+  readonly minDelegationSerial: number;
   readonly delegationSerial: number;
   readonly indexIssuedAt: string;
   readonly acceptedCheckpointDigest: string;
+  readonly notBefore: string;
   readonly notAfter: string;
   readonly authenticated: true;
   readonly authorityReleased: false;
@@ -353,10 +356,13 @@ export function admitRegistryDurabilityProfile(
       filesystem: manifest.filesystem,
       storageProfileDigest: manifest.storageProfileDigest,
       generationId: manifest.generationId,
+      rootKeyId: manifest.rootSignature.keyId,
       operationalKeyId: manifest.operationalKeyId,
+      minDelegationSerial: authority.minDelegationSerial,
       delegationSerial: manifest.delegationSerial,
       indexIssuedAt: manifest.indexIssuedAt,
       acceptedCheckpointDigest: manifest.acceptedCheckpointDigest,
+      notBefore: manifest.notBefore,
       notAfter: manifest.notAfter,
       authenticated: true as const,
       authorityReleased: false as const,

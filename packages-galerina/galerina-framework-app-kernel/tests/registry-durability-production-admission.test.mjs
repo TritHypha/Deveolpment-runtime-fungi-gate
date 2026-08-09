@@ -115,7 +115,10 @@ describe("production registry durability composition", () => {
     assert.equal(isProductionRegistryDurabilityProfile(profile), true);
     assert.equal(Object.isFrozen(profile), true);
     assert.equal(profile.generationId, "b".repeat(64));
+    assert.equal(profile.rootKeyId, "offline-root-v1");
     assert.equal(profile.operationalKeyId, "f31-example-public-id");
+    assert.equal(profile.minDelegationSerial, 6);
+    assert.equal(profile.notBefore, "2026-08-01T00:00:00.000Z");
     assert.equal(profile.productionAuthorizing, false);
     assert.equal(profile.authorityReleased, false);
     assert.equal(profile.authenticated, true);

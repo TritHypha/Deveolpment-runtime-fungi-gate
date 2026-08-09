@@ -32,3 +32,4 @@ export * from "./registry-durability-artifact.js";
 export * from "./registry-durability-evidence.js";
 export * from "./registry-durability-production-admission.js";
 export * from "./production-slide-restore-admission.js";
+export * from "./production-boot-composition-candidate.js";

@@ -93,7 +93,9 @@ export interface AuthenticatedSlideRestoreProfile {
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
+  readonly minDelegationSerial: number;
   readonly delegationSerial: number;
+  readonly notBefore: string;
   readonly notAfter: string;
   readonly authenticatedObjectExecution: true;
   readonly authorityReleased: false;
@@ -480,7 +482,9 @@ export function admitAuthenticatedSlideRestoreProfile(
       currentEpoch: manifest.currentEpoch,
       rootKeyId: manifest.rootKeyId,
       operationalKeyId: manifest.operationalKeyId,
+      minDelegationSerial: authority.minDelegationSerial,
       delegationSerial: manifest.delegationSerial,
+      notBefore: manifest.notBefore,
       notAfter: manifest.notAfter,
       authenticatedObjectExecution: true as const,
       authorityReleased: false as const,

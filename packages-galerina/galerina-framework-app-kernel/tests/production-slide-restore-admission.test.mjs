@@ -152,6 +152,8 @@ describe("authenticated SLIDE restore profile", () => {
     assert.equal(isAuthenticatedSlideRestoreProfile(profile), true);
     assert.equal(isAuthenticatedSlideRestoreProfile({ ...profile }), false);
     assert.equal(profile.authenticatedObjectExecution, true);
+    assert.equal(profile.minDelegationSerial, 6);
+    assert.equal(profile.notBefore, "2026-08-09T00:00:00.000Z");
     assert.equal(profile.authorityReleased, false);
     assert.equal(profile.productionAuthorizing, false);
     assert.equal("restoreVerdict" in profile, false);
