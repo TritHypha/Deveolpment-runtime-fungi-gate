@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "b0b4bb86",
+    "sha": "4bba35a2",
     "detached": false,
-    "dirty": true
+    "dirty": false
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,

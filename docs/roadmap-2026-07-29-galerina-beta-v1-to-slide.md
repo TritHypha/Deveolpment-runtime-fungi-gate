@@ -3,10 +3,12 @@
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina graph provenance binds subject
-`9b5b5897`; repository graph generation and independent drift checking pass
+`4bba35a2`; repository graph generation and independent drift checking pass
 **6/6**, with Node **2 -> 2** after this roadmap update.
 Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
 closure head is `b0b4bb86`.
+The current-state documentation and component-health reconciliation head is
+`4bba35a2`.
 SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
 indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
 expected counts. Hypha's
