@@ -3,7 +3,7 @@
   "totals": {
     "packages": 99,
     "testBearing": 99,
-    "tests": 8956,
+    "tests": 9452,
     "devTools": 160,
     "auditTools": 87,
     "toolsInCadence": 63,
@@ -297,7 +297,7 @@
       "name": "galerina-core-compiler",
       "kind": "core",
       "description": "Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.",
-      "tests": 5866,
+      "tests": 6313,
       "hasTestScript": true,
       "border": "PASS",
       "files": 174,
@@ -323,7 +323,7 @@
       "name": "galerina-core-config",
       "kind": "core",
       "description": "Galerina project configuration, environment mode and policy loading contracts.",
-      "tests": 45,
+      "tests": 52,
       "hasTestScript": true,
       "border": "PASS",
       "files": 3,
@@ -645,7 +645,7 @@
       "name": "galerina-devtools-hypha",
       "kind": "devtools",
       "description": "Passive capability-map scanner for Galerina: extracts the compiler's dispatch surfaces, sentinel sets and chec",
-      "tests": null,
+      "tests": 42,
       "hasTestScript": true,
       "border": "PASS",
       "files": 5,
@@ -1790,7 +1790,6 @@
       "selfTest": true,
       "inCadence": true,
       "concerns": [
-        "sinks/taint",
         "signing/fusion",
         "naming",
         "source-hygiene",
@@ -2218,8 +2217,7 @@
         "diagnostics",
         "mutation-testing",
         "teaching-corpus",
-        "web-stub",
-        "proofs"
+        "web-stub"
       ]
     },
     {
@@ -3721,7 +3719,6 @@
       "audit-license-compat.mjs",
       "audit-signing-refusal-recon.mjs",
       "audit-silent-overwrite.mjs",
-      "audit-wat-emitter-mutation.mjs",
       "run-proofs.mjs",
       "license-rollout.mjs"
     ],
@@ -3732,7 +3729,6 @@
       "audit-muted-diagnostics.mjs",
       "audit-oblivious.mjs",
       "audit-papers-index.mjs",
-      "audit-private-doc-leak.mjs",
       "audit-registry-fixtures.mjs",
       "audit-sink-canonicality.mjs",
       "audit-sink-tri-parity.mjs",
@@ -3901,9 +3897,7 @@
     ]
   },
   "gaps": {
-    "packagesNoTests": [
-      "galerina-devtools-hypha"
-    ],
+    "packagesNoTests": [],
     "concernsNoTool": [],
     "toolsNotInCadence": [
       "audit-allowlist-sensitive.mjs",

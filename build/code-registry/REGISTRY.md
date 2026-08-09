@@ -4,7 +4,7 @@ The authoritative catalog of EVERY diagnostic/error code, GENERATED from the cod
 Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-code-registry.mjs`.
 > **Coverage is PARTIAL — do not read this as the code space.** This catalog covers codes the code-index
 > can see: NUMERIC-tailed codes (`FUNGI-<FAMILY>-001`) reached through the emit shapes its line-based
-> matcher recognises. **80 real codes are absent outright** because their tail is not numeric —
+> matcher recognises. **81 real codes are absent outright** because their tail is not numeric —
 > **51 of them on the signing path** (unsigned, hash mismatch, tamper, revoked key, sidecar drift).
 > Those refusals DO fire; this catalog cannot see them. **Absence here is not evidence a code is
 > unregistered.** Board #164/#165. Counts are DERIVED at generation time by
@@ -15,11 +15,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 250 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 285 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
-| phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 212 | referenced only (no def/emit) |
+| phantom | 114 | doc-only mention, not in source (drift — DOC-004) |
+| ref | 214 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -52,7 +52,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ACCESS-001 | inline | ACCESS_UNKNOWN_CAPABILITY | — |
 | FUNGI-ACCESS-002 | inline | ACCESS_GRANT_WITHOUT_EFFECT | — |
 
-### ADMIT (4)
+### ADMIT (15)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -60,6 +60,17 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-ADMIT-002 | inline | — | — |
 | FUNGI-ADMIT-003 | inline | ADMISSION_PREDICATE_TYPE | error |
 | FUNGI-ADMIT-004 | ref | — | — |
+| GATE-ADMIT-001 | inline | GATE_V3_ADMISSION_NO_TARGET | — |
+| GATE-ADMIT-002 | inline | GATE_V3_ADMISSION_PROOFS_ABSENT | — |
+| GATE-ADMIT-003 | inline | GATE_V3_ADMISSION_VERIFIER_UNIDENTIFIED | — |
+| GATE-ADMIT-004 | inline | GATE_V3_ADMISSION_UNRESOLVED_COMPONENT | — |
+| GATE-ADMIT-005 | inline | GATE_V3_ADMISSION_SOURCE_TAMPERED | — |
+| GATE-ADMIT-006 | inline | GATE_V3_ADMISSION_WRONG_REGISTRY | — |
+| GATE-ADMIT-007 | inline | GATE_V3_ADMISSION_WRONG_TARGET | — |
+| GATE-ADMIT-008 | inline | GATE_V3_ADMISSION_PROOFS_DISAGREE | — |
+| GATE-ADMIT-009 | inline | GATE_V3_ADMISSION_SUBSTITUTED_CIRCUIT | — |
+| GATE-ADMIT-010 | inline | GATE_V3_ADMISSION_NOT_A_STATEMENT | — |
+| GATE-ADMIT-011 | inline | GATE_V3_ADMISSION_VERDICT_NOT_ADMITTED | — |
 
 ### AFFINE (4)
 
@@ -443,7 +454,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-EFFECT-101 | ref | — | — |
 | GATE-EFFECT-102 | ref | — | — |
 
-### ERR_* (141)
+### ERR_* (142)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -459,6 +470,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_ANONYMOUS_DENIED | ref | — | — |
 | ERR_ARGUMENT_COUNT | ref | — | — |
 | ERR_ARTIFACT_HASH_MISMATCH | ref | — | — |
+| ERR_BOUNDS | phantom | — | — |
 | ERR_BRIDGE_DISPATCH_FAULT | inline | — | — |
 | ERR_BRIDGE_NO_MANIFEST | inline | — | — |
 | ERR_BRIDGE_UNATTESTED | inline | — | — |
@@ -769,7 +781,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-ID-001 | referenced | MANIFEST_VERIFICATION_FAILED | error |
 
-### IMPORT (7)
+### IMPORT (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -780,6 +792,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-IMPORT-004 | inline | — | warning |
 | FUNGI-IMPORT-005 | inline | — | error |
 | FUNGI-IMPORT-006 | inline | — | error |
+| FUNGI-IMPORT-007 | inline | — | error |
 
 ### INHERIT (2)
 
@@ -1009,7 +1022,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-OTHER-1 | ref | — | — |
 
-### PARSE (30)
+### PARSE (38)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1043,6 +1056,14 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-PARSE-021 | inline | GATE_V3_MALFORMED_WIRE | — |
 | GATE-PARSE-022 | inline | GATE_V3_INVALID_ENDPOINT | — |
 | GATE-PARSE-025 | inline | GATE_V3_INVALID_LITERAL | — |
+| GATE-PARSE-026 | ref | — | — |
+| GATE-PARSE-028 | inline | GATE_V3_SET_NESTING_EXCEEDED | — |
+| GATE-PARSE-029 | inline | GATE_V3_SET_CARDINALITY_EXCEEDED | — |
+| GATE-PARSE-030 | inline | GATE_V3_IDENTIFIER_TOO_LONG | — |
+| GATE-PARSE-031 | inline | GATE_V3_TOO_MANY_ARGUMENTS | — |
+| GATE-PARSE-032 | inline | GATE_V3_TOO_MANY_PARTS | — |
+| GATE-PARSE-033 | inline | GATE_V3_TOO_MANY_WIRES | — |
+| GATE-PARSE-034 | inline | GATE_V3_FILE_TOO_LARGE | — |
 
 ### PASSPORT (1)
 
@@ -1226,7 +1247,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-RAWPTR-001 | live | RAW_POINTER_OUTSIDE_UNSAFE | error |
 
-### REGISTRY (14)
+### REGISTRY (16)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -1244,6 +1265,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | GATE-REGISTRY-012 | inline | GATE_V3_REGISTRY_DUPLICATE_DECLARATION | — |
 | GATE-REGISTRY-013 | inline | GATE_V3_REGISTRY_BAD_COPYABLE | — |
 | GATE-REGISTRY-014 | inline | GATE_V3_REGISTRY_SURPLUS_FIELD | — |
+| GATE-REGISTRY-015 | inline | GATE_V3_REGISTRY_BAD_VOCABULARY | — |
+| GATE-REGISTRY-016 | inline | GATE_V3_REGISTRY_VARIANT_VIOLATION | — |
 
 ### REPORT (2)
 
@@ -1354,6 +1377,25 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-SECRET-006 | inline | SECRET_CROSSES_FLOW_BOUNDARY | — |
 | FUNGI-SECRET-007 | inline | SECRET_SENT_TO_MODEL | error |
 | FUNGI-SECRET-999 | ref | — | — |
+
+### SEM (14)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-SEM-001 | inline | GATE_V3_CYCLE_REACHED_SEMANTIC_TIER | — |
+| GATE-SEM-002 | inline | GATE_V3_CUT_DOES_NOT_DOMINATE_EGRESS | — |
+| GATE-SEM-003 | inline | GATE_V3_TAINT_REACHES_EGRESS_PAST_CUTS | — |
+| GATE-SEM-004 | inline | GATE_V3_UNDECLARED_DECISION_SHAPE | — |
+| GATE-SEM-005 | inline | GATE_V3_NON_SOURCE_TYPE_AS_PARAMETER | — |
+| GATE-SEM-006 | inline | GATE_V3_BUDGET_CEILING_EXCEEDED | — |
+| GATE-SEM-007 | inline | GATE_V3_REASON_OUTSIDE_VOCABULARY | — |
+| GATE-SEM-008 | inline | GATE_V3_REASONS_UNCHECKED | — |
+| GATE-SEM-009 | inline | GATE_V3_EFFECT_OUTSIDE_ENVELOPE | — |
+| GATE-SEM-010 | inline | GATE_V3_CAPABILITY_OUTSIDE_ENVELOPE | — |
+| GATE-SEM-011 | inline | GATE_V3_NON_ALLOW_ARM_REACHES_EGRESS | — |
+| GATE-SEM-012 | inline | GATE_V3_UNKNOWN_EFFECT_NAME | — |
+| GATE-SEM-013 | inline | GATE_V3_TAINT_REACHES_GOVERNED_SINK | — |
+| GATE-SEM-014 | inline | GATE_V3_SEMANTIC_ZONE_NOT_GATED | — |
 
 ### SOURCE (1)
 
@@ -1681,3 +1723,9 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | FUNGI-WORKFLOW-001 | phantom | — | — |
 | FUNGI-WORKFLOW-002 | phantom | — | — |
 | FUNGI-WORKFLOW-003 | phantom | — | — |
+
+### X (1)
+
+| code | status | name(s) | severity |
+|---|---|---|---|
+| GATE-X-001 | ref | — | — |

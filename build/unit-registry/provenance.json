@@ -1,6 +1,6 @@
 {
   "tool": "gen-unit-registry",
-  "gitCommit": "e2814211f307e65b7d5a3d66b7fe4d4dff992460",
-  "builtAt": "2026-08-04T05:13:01.000Z",
+  "gitCommit": "8d998621d592d913b6c9f2847354112e99762a7e",
+  "builtAt": "2026-08-08T09:29:49.000Z",
   "node": "v24.18.0"
 }
