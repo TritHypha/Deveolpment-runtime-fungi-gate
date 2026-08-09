@@ -8,6 +8,20 @@
 
 **Tech Stack:** TypeScript ES2022 with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`; Node ESM and `node:test`; existing app-kernel durability admission; existing SLIDE checked-Fungi publication loader; repository graph, code-index and phase-close tools.
 
+**Implementation correction (2026-08-09):** Tasks 1-3 are implemented through
+local commit `06121a57`; hardened repository closure is `47267944`. Physical
+provenance is transcript-specific, so the
+manifest/profile/policy/candidate bind an ordered four-digest tuple rather than
+one invented constant digest. Real integration consumes **11**, not seven,
+fresh handle pairs: four preflight, four admission and three consumer. The
+private adjudication is RD-0791 because RD-0789 was already allocated to the
+acyclic checked-Fungi correction. Antigravity review accepted duplicate-digest
+and Proxy-record hardening; its proposed durability timestamp gap was rejected
+because the owning private admission already proves
+`indexIssuedAt <= authority.at <= notAfter`. Normal **89/89** and exhaustive
+**90/90** are green. The boundary carries no internal `null`/`NaN` state and
+all malformed absence/non-number inputs reach an explicit total refusal exit.
+
 ## Global Constraints
 
 - Preserve Core-first dependency direction: no Core package imports app-kernel, platform or release-policy code.
@@ -17,13 +31,16 @@
 - Keep `authorityReleased: false` and `productionAuthorizing: false` as literal readonly values.
 - Use light, repository-consistent commentary: each new source file opens with
   a description, change-control marker and pointers to this design, its sibling
-  module and RD-0789; every exported or security-critical function states its
+  module and RD-0791; every exported or security-critical function states its
   purpose, inputs/outputs, assumptions and exact refusal mode; non-obvious
   branches explain why while obvious lines remain bare.
 - Keep the sibling-checkout SLIDE loader and disposable keys confined to cross-repository test evidence.
 - Do not add ambient-path loading, TypeScript decision fallback, retry through a weaker verifier or a default allow implementation.
 - Use full 40-hex repository commits and exact `sha256:<64 lowercase hex>` digests in production records.
 - Use only closed records with own data properties; surplus keys, accessors, proxies, inherited properties and malformed canonical values refuse.
+- Represent absence and invalid numeric input with explicit variants/refusals,
+  never `null` or `NaN`; every decision surface retains a total `_ =>`-equivalent
+  refusal exit.
 - Do not perform signing, access private keys, activate a native adapter, publish, push or move retirement counters.
 - Run tests and repository-owned generators sequentially.
 
@@ -39,8 +56,8 @@
 - Modify `scripts/tests/restore-verdict-slide-candidate.integration.test.mjs`: bind the real Contract 85 receipt observations to the new profiles and candidate while driving the real consumer.
 - Modify `docs/TODO.md` and `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`: record the candidate honestly and retain the open authority gate.
 - Create `docs/reports/production-boot-composition-candidate-2026-08-09.md`: fresh evidence and owner-only input manifest.
-- Create sibling KB `RD-0789-production-boot-composition-candidate-gaps-PRIVATE.md`: private source-linked adjudication, evidence tiers and R&D wish list.
-- Append sibling KB `_RD-CATCH-UP-LEDGER-PRIVATE.md`: dated evidence-state entry; never rewrite prior entries.
+- Create the sibling KB private RD-0791 adjudication record: source-linked adjudication, evidence tiers and R&D wish list.
+- Append the sibling KB private catch-up ledger: dated evidence-state entry; never rewrite prior entries.
 - Regenerate only outputs selected by repository-owned generators after the implementation files and documentation are final.
 
 ---
@@ -80,7 +97,7 @@ function manifest(overrides = {}) {
     toolManifestDigest: DIGEST("4"),
     safeValueTypeId: "Int",
     safeValueStateId: "safe.scalar.int.v1",
-    safeValueProvenanceDigest: DIGEST("5"),
+    safeValueProvenanceDigests: [DIGEST("5"), DIGEST("6"), DIGEST("7"), DIGEST("8")],
     currentEpoch: 15,
     rootKeyId: "offline-root-v1",
     operationalKeyId: "slide-object-signer-v1",
@@ -119,7 +136,7 @@ records each Boolean pair and returns this exact closed observation:
   currentEpoch: manifest.currentEpoch,
   safeValueTypeId: manifest.safeValueTypeId,
   safeValueStateId: manifest.safeValueStateId,
-  safeValueProvenanceDigest: manifest.safeValueProvenanceDigest,
+  safeValueProvenanceDigest: manifest.safeValueProvenanceDigests[vectorIndex],
   fallbackInvoked: false,
   verificationVerdict: 1,
   value: snapshotPresent && integrityOk ? 1 : -1,
@@ -163,7 +180,7 @@ export interface ProductionSlideRestoreManifest {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: readonly [string, string, string, string];
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -214,7 +231,7 @@ export interface AuthenticatedSlideRestoreProfile {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: readonly [string, string, string, string];
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -407,7 +424,7 @@ export interface ProductionBootCompositionPolicy {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: readonly [string, string, string, string];
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -544,8 +561,9 @@ verified receipt appends this data-only observation to a caller-owned array:
 }
 ```
 
-Use four fresh handles to admit the SLIDE profile, then three separate fresh
-handles for the real valid, missing and tampered restore paths. Use the real
+Use four fresh handles to derive the physical tuple, four new handles to admit
+the SLIDE profile, then three separate fresh handles for the real valid,
+missing and tampered restore paths. Use the real
 app-kernel evidence and durability admission factories to create a disposable
 test production profile matching the same Galerina commit and policy. Admit
 the composition candidate and assert all observed consumer identities equal
@@ -592,15 +610,16 @@ missing snapshot -> LSS-NOSNAP-001
 tampered snapshot -> LSS-INTEGRITY-001
 ```
 
-Require seven total fresh affine handle pairs: four for profile admission and
-three for consumer decisions. Assert zero remaining handles, no fallback, the
+Require eleven total fresh affine handle pairs: four for tuple preflight, four
+for profile admission and three for consumer decisions. Assert zero remaining
+handles, no fallback, the
 exact candidate/private-profile predicates, no `restoreVerdict` property on
 the candidate, and both false authority fields.
 
 - [ ] **Step 5: Run focused cross-repository GREEN**
 
 Run the commands from Step 2. Expected: Contract 85 reports all cases passed,
-none skipped, all seven handles consumed and no fallback.
+none skipped, all eleven handles consumed and no fallback.
 
 - [ ] **Step 6: Run affected package evidence**
 
@@ -630,9 +649,9 @@ git commit -m "test: bind boot candidate to real restore consumer"
 - Read: sibling KB `RD-0775-kleene-k3-control-completeness-over-general-cfg.md`
 - Read: sibling KB `ai-reviews/reports/Claude-04-slide-independent-platform-review.md`
 - Read: sibling KB `ai-reviews/reports/GPT-04-slide-independent-platform-review.md`
-- Create: sibling KB `RD-0789-production-boot-composition-candidate-gaps-PRIVATE.md`
-- Create when an approved route is available: sibling KB `ai-reviews/reports/RD-0789-production-boot-composition-independent-review-PRIVATE.md`
-- Append: sibling KB `_RD-CATCH-UP-LEDGER-PRIVATE.md`
+- Create: sibling KB private RD-0791 adjudication record.
+- Create when an approved route is available: sibling KB private Antigravity review record.
+- Append: sibling KB private catch-up ledger.
 
 **Interfaces:**
 - Consumes: Task 3 source, tests and fresh receipts plus the KB's existing K3, signing, platform and durability research.
@@ -646,7 +665,7 @@ durability. Open only the ranked documents needed for the adjudication. Treat
 private documents as direct custody inputs and never copy their private
 contents into public generated indexes or logs.
 
-- [ ] **Step 2: Write RD-0789 as a private, source-linked adjudication**
+- [x] **Step 2: Write RD-0791 as a private, source-linked adjudication**
 
 Use the exact primary heading suffix ` - PRIVATE`. Record:
 
@@ -676,21 +695,14 @@ unresolved R&D wish-list item and keep every authority field false.
 
 - [ ] **Step 4: Append the private catch-up ledger and commit only KB paths**
 
-Append a dated entry to `_RD-CATCH-UP-LEDGER-PRIVATE.md` that distinguishes
+Append a dated entry to the KB private catch-up ledger that distinguishes
 `SOURCE-CHECKED`, `BINDING` and `CONCURRENT` state. Recheck the KB worktree and
 commit only the new RD file, any approved raw review artefact and the ledger
 entry using explicit pathspecs. Do not push.
 
-```powershell
-git -C ..\ZTF-Knowledge-Bases status --short --branch
-git -C ..\ZTF-Knowledge-Bases log -1 --oneline
-git -C ..\ZTF-Knowledge-Bases add -- RD-0789-production-boot-composition-candidate-gaps-PRIVATE.md _RD-CATCH-UP-LEDGER-PRIVATE.md
-git -C ..\ZTF-Knowledge-Bases commit -m "docs: record production boot composition gaps"
-```
-
-If the fixed-path raw independent-review artefact exists, add that exact path
-to the same explicit `git add --` invocation after inspecting it. Do not use a
-directory pathspec.
+Use the KB-local custody instructions and explicit file pathspecs for the
+private RD, review record and ledger entry. Do not copy private filenames into
+this public repository, use a directory pathspec, or push.
 
 ---
 
@@ -703,7 +715,7 @@ directory pathspec.
 - Regenerate: only files selected by their owning graph, code-index, registry, component-health and phase-close generators.
 
 **Interfaces:**
-- Consumes: fresh focused, cross-repository and aggregate outputs plus the linked RD-0789 gap adjudication.
+- Consumes: fresh focused, cross-repository and aggregate outputs plus the linked RD-0791 gap adjudication.
 - Produces: an honest non-authorizing checkpoint, exact owner-input manifest, clean local commit and fresh structural index.
 
 - [ ] **Step 1: Record the focused evidence without promoting authority**
@@ -723,7 +735,7 @@ No production private key was generated, read or used.
 List the five missing external inputs from Task 2 and distinguish disposable
 test mechanics from authentic owner-controlled evidence. State explicitly
 that the slice exposes no K3 `+1` result and that public refusals carry `-1`.
-Link the public report to RD-0789 only through its safe repository-relative
+Link the public report to RD-0791 only through its safe repository-relative
 identifier and summarize the wish-list categories without disclosing private
 review content.
 
@@ -827,7 +839,7 @@ evidence:
 | K3 boundary | Candidate is exactly `0`; every public refusal is `-1`; no `+1` path exists |
 | Real consumer | Valid/missing/tampered cold-boot paths through fresh authenticated typed handles |
 | Non-authorizing | Literal false fields, no restore/activation/release export, five missing external inputs |
-| R&D custody | RD-0789 source links, evidence tiers, live controls, explicit wish list and private ledger entry |
+| R&D custody | RD-0791 source links, evidence tiers, live controls, explicit wish list and private ledger entry |
 | Independent review | Raw approved review plus sceptical adjudication, or an explicit unresolved third-party-review gap |
 | Core-first boundary | No Core import or package dependency toward app-kernel |
 | Fresh closure | Focused packages, Contract 85/86, generators, aggregate, normal and exhaustive phase-close |

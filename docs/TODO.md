@@ -34,9 +34,23 @@ counts or open items that a newer section explicitly supersedes.
   `memory_summary.md` and `raw_memories.md` files and index mode sees zero
   flat rows. This is a detector-scope gap, not evidence that memory contents
   are stale or unsafe.
-- [ ] Production boot composition, authenticated platform/durability evidence,
-  package conversion and terminal retirement remain open. A green repository
-  close must not be relabelled as production authority.
+- [x] Seal the repository production-boot composition candidate and bind it to
+  the real Contract 85 consumer. It remains data-only K3 `0`, consumes **11**
+  fresh physical handle pairs, exposes no restore authority and retains both
+  false authority fields. Hardened closure commit `47267944` also enforces
+  no-`null`, no-`NaN` internal state and an explicit total refusal exit for
+  every malformed boundary input. See
+  [the candidate report](reports/production-boot-composition-candidate-2026-08-09.md).
+- [x] Close the complete post-candidate repository cadence: **89/89 normal**
+  in **612.9s**, **90/90 exhaustive** in **868.6s**, all **100 packages / 9,470
+  tests** in the exhaustive lane, and **455 tooling tests** with 444 passes,
+  11 intentional skips and zero failures. Generator contract **16/16**, graph
+  generation/check **6/6**, golden examples/vectors **11/11**, private-document
+  leak **0**, and code index **974 / 170 live** are current.
+- [ ] Authentic offline delegation/public bundle, content-bound native host,
+  named-platform durability receipts, owner release, package conversion and
+  terminal retirement remain open. A green repository close must not be
+  relabelled as production authority.
 
 ### Documentation and generated-index housekeeping - 2026-08-09
 
@@ -143,9 +157,13 @@ counts or open items that a newer section explicitly supersedes.
   is **89/89 in 567.6s** and exhaustive closure is **90/90 in 838.5s**. Do not
   infer authenticated platform, signing, durability or production authority
   from authenticated object execution.
-- [ ] Bind production boot composition to separately authenticated platform
-  evidence and production signing/durability receipts. This is the next
-  authority gate; package conversion and retirement remain separate debts.
+- [x] Bind the sealed repository boot candidate to exact authenticated physical
+  SLIDE receipts, a privately admitted durability profile and the real consumer.
+  Focused evidence is app-kernel **215/215**, Contract 85 **4/4** and all **11**
+  affine handle pairs consumed with no fallback.
+- [ ] Replace disposable evidence with authentic platform, offline signing and
+  durability receipts under owner custody. This is the next authority gate;
+  package conversion and retirement remain separate debts.
 
 ### Contract 86 physical VOK authority candidate - 2026-08-09
 
@@ -236,9 +254,11 @@ counts or open items that a newer section explicitly supersedes.
   durable storage and scrub until each responsibility has its own replacement
   and evidence. See
   [the consumer-switch report](reports/restore-verdict-consumer-switch-2026-08-09.md).
-- [ ] Bind a production boot composition to a content-bound SLIDE runtime and
-  authenticated platform evidence. The reference-only Contract 85 checkout
-  path grants no production, signing, durability or retirement authority.
+- [x] Seal and exercise the non-authorizing boot-composition candidate through
+  the reference-only Contract 85 consumer path with exact physical provenance.
+- [ ] Supply a content-bound native SLIDE runtime and authentic platform
+  evidence. The current checkout path grants no production, signing,
+  durability or retirement authority.
 - [ ] Use the generated demand inventory plus a separate SLIDE admitted-
   capability manifest to choose subsequent implementation slices. Syntax
   recognition alone must never reduce the 111-source or 516-TypeScript debt.

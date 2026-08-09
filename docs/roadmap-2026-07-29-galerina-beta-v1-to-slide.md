@@ -16,13 +16,28 @@ malformed-trit refusal, exact rebuild and mutation refusal, and adds one
 hybrid-authenticated authorizing candidate: **5/5**. Disposable test keys prove
 the Ed25519 + ML-DSA-65 composition without using offline production custody.
 
+Production-boot composition checkpoint 2026-08-09: local Galerina commits
+`06121a57` and hardened closure `47267944` seal a privately registered,
+data-only K3 `0` candidate joining the
+exact Contract 85 object/profile to a privately admitted durability profile and
+the real cold-boot consumer. Four physical preflight executions, four new
+admission executions and three new consumer decisions consume **11/11** affine
+handle pairs with no fallback. The ordered provenance tuple is distinct and
+Proxy-refused. Focused evidence is app-kernel **215/215**, sentinel-state
+**26/26**, Tower Citizen **495/495** and Contract 85 **4/4**, zero skips. Both
+authority fields remain false and the candidate exports no restore capability.
+The hardened boundary carries no internal `null` or `NaN` state: every absent,
+malformed or non-numeric input reaches an explicit total refusal exit, matching
+the Galerina `_ =>` rule rather than relying on an implicit bottom value.
+
 The fresh post-integration close is green. Graph generation and independent
 checking pass **6/6**; the audit/lint meta-gate proves **88/88** detectors with
-zero violations; and the complete aggregate passes **100/100 packages / 9,470
-tests** in **253.6s**. The first normal phase-close correctly refused two stale
-generated views (code index and percent audit). Their owning generators restored
-both checks, after which the exhaustive lane passed every blocking gate in
-**819.2s**, including **444 tooling tests** and the complete normal cadence.
+zero violations; and the final exhaustive aggregate passes **100/100 packages
+/ 9,470 tests** in **286.1s**. Normal phase-close passes **89/89** in **612.9s**;
+exhaustive passes **90/90** in **868.6s**, including **455 tooling tests** (444
+passed, 11 intentional skips, zero failures). Earlier refusals exposed stale
+package-boundary, root-lock, golden and code-index evidence. Their owning
+generators restored each dependency in order before the final green cadence.
 The code index remains **974/974** with zero coverage holes and the KB query
 index contains **1,848 external documents** and **1,850 total entries** after
 its two Galerina navigation sources. This remains repository/reference evidence;
@@ -62,11 +77,12 @@ reliability gate is therefore one atomic cross-process admission authority,
 owned-child migration and a measured live-process census. This correction does
 not invalidate the 100-package fixed point or authorize affected-scope results.
 
-This increment closes content-bound authenticated typed reference execution.
-It does **not** authenticate the host platform, authorize production, prove
-repository or power-loss durability, perform an offline signing ceremony,
-convert remaining packages or retire TypeScript/Node. Production boot
-composition with separately authenticated platform and durability evidence is
+This increment closes content-bound authenticated typed reference execution
+and the sealed repository composition candidate. It does **not** authenticate
+the native host platform, authorize production, prove external power-loss
+durability, perform an offline signing ceremony, convert remaining packages or
+retire TypeScript/Node. Authentic owner signing, a content-bound native host,
+named-platform durability receipts and separately approved owner release are
 the next authority gate.
 
 The former unknown-content hold is closed, but `memory-sandobx/` now exists as
@@ -102,8 +118,9 @@ zero. The real sentinel-state consumer switch is now green: the mandatory
 decision port calls the receipt-verified Contract 85 export once and locally
 rechecks exact agreement, with no fallback. It does not retire `cold-boot.ts`,
 which still owns host serialization, durability and scrub operations outside
-the decision twin. The next bounded gate is content-bound production boot
-composition with authenticated platform evidence.
+the decision twin. The repository composition candidate is now sealed; the
+next bounded gate is authentic content-bound native hosting, owner signing and
+platform evidence.
 
 Roadmap active gate 2026-08-09: **Contract 84 is green** at SLIDE implementation
 commit `81850ca`. One exact caller transfers a private append-only `Array<Int>`
@@ -115,8 +132,9 @@ replay substitution and every-byte object mutations. The path is bound through
 physical `.slide`, portable VEO, VOK and the flat-package compiler. It admits
 no external collection ABI, general call graph or general collection family.
 Conversion, retirement, signing and production authority remain unchanged:
-the Galerina consumer switch is reference-only, and production composition
-plus retirement evidence remain absent.
+the Galerina consumer switch and sealed composition candidate are
+reference-only, while authentic owner/platform inputs and retirement evidence
+remain absent.
 
 Roadmap refresh 2026-08-08: SLIDE Contract 81 is green at local implementation
 commit `36bb79d` for the first bounded typed-failure propagation family. One
@@ -1911,8 +1929,13 @@ The remaining sequence is:
    **Completed non-authorizing proof:** the RD-0601 statically linked profile
    binds the exact adapter source, authoritative `.fungi` contract, ABI and
    release build without an external `.node` loader. Its executable is
-   independently re-hashed and a hostile loader decoy cannot alter the result.
-   **Still required:** signed-host and admitted platform durability adapters
+    independently re-hashed and a hostile loader decoy cannot alter the result.
+    **Completed repository composition candidate:** the exact authenticated
+    Contract 85 object/profile and private durability profile join under one
+    closed policy; **11/11** fresh physical handle pairs cover preflight,
+    admission and the real consumer. The immutable K3 `0` result exposes no
+    executable authority and retains both false authority fields.
+    **Still required:** signed-host and admitted platform durability adapters
    and Windows 10/11, Debian/Ubuntu, Fedora/Mint and macOS crash/reboot/
    power-loss evidence through least-authority custody before any real
    owner-key rotation is authorized.

@@ -2,8 +2,9 @@
 
 Date: 2026-08-09
 
-Status: owner-approved direction through the persistent beta-v1 completion
-goal; written specification pending owner review before implementation.
+Status: implemented through local Galerina commits `06121a57` and hardened
+closure `47267944`; focused, cross-repository, normal and exhaustive evidence
+is green. Production authority remains unavailable by design.
 
 ## Goal
 
@@ -109,7 +110,8 @@ The composition policy pins at least:
 - package identity and export name;
 - `.slide` object SHA-256 and package-set digest;
 - compiler profile and exact SLIDE tool-manifest digest;
-- typed receipt type, state and provenance identities;
+- typed receipt type/state identities and the ordered four-vector provenance
+  digest tuple;
 - current epoch and minimum acceptable delegation serial;
 - root and operational key IDs;
 - admitted operating system, platform, architecture and filesystem;
@@ -120,6 +122,10 @@ The composition policy pins at least:
 All records are exact closed records with own data properties. Surplus keys,
 accessors, proxies, inherited fields, non-canonical instants, unsafe integers,
 short commits, malformed digests and ambiguous Unicode refuse.
+
+Internal absence and invalid-number states must not use `null` or `NaN`.
+Untrusted boundary representations terminate through the stable typed refusal;
+every decision surface is total and retains an explicit `_ =>`-equivalent exit.
 
 No local path, checkout location, environment variable, private material or
 mutable callback identity becomes part of the candidate.
@@ -142,7 +148,8 @@ The SLIDE profile binds the exact physical object bytes and their SHA-256 to:
 
 The admission step independently hashes the retained bytes, verifies both
 signature components and executes the four closed Boolean vectors through
-fresh affine handles:
+fresh affine handles. Each vector has one distinct transcript-bound provenance
+digest at the same tuple index:
 
 ```text
 (true,  true)  ->  1
@@ -193,10 +200,12 @@ closed composition policy + both sealed profiles
 ```
 
 The real consumer integration separately constructs the existing
-reference-only adapter from fresh affine handles, drives valid, missing and
-tampered snapshot paths, and requires the sealed candidate identities to match
-the receipt identities observed on every decision. This is executable
-composition evidence, not installation authority.
+reference-only adapter from fresh affine handles. Four preflight executions
+derive the physical provenance tuple, four new executions admit the profile,
+and three more drive valid, missing and tampered snapshot paths. All **11**
+handle pairs are consumed, and the sealed candidate identities must match the
+receipt identities observed on every decision. This is executable composition
+evidence, not installation authority.
 
 ## Outcomes and errors
 
@@ -225,6 +234,8 @@ The candidate contains:
 The module catches unexpected dependency failures and maps them to the closed
 `verdict: -1` malformed refusal. It never returns a partial candidate, retries
 through a weaker verifier or falls back to TypeScript decision logic.
+There is no implicit bottom-value path: absence and non-numeric values reach
+the same explicit total refusal exit.
 
 ## Tests
 
@@ -247,6 +258,7 @@ Implementation follows RED -> GREEN. Focused tests cover:
 - missing reboot or power-loss evidence;
 - forged positive authority fields;
 - surplus keys, accessors, proxies, inherited data and non-canonical input;
+- duplicate provenance digests and Proxy-wrapped callback records;
 - absence of any exported activation or authority-release function; and
 - the real `ColdBootOrchestrator` valid, missing and tampered paths through the
   authenticated typed reference execution adapter.
@@ -277,7 +289,7 @@ Base files. Memory remains a concise routing graph that points to those files;
 the implementation report does not turn the memory index into an evidence
 warehouse.
 
-The implementation therefore produces RD-0789 as the linked private gap
+The implementation therefore produces RD-0791 as the linked private gap
 adjudication. It separates unit/KAT, cross-repository integration, host-local,
 source-model, independent-review, owner-ceremony and external-platform
 evidence tiers. A fresh approved independent review is preserved and
