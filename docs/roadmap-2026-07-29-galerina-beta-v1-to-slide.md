@@ -3,7 +3,7 @@
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
 Current revalidated checkpoint: Galerina graph provenance binds subject
-`c09a20e3`; repository graph generation and independent drift checking pass
+`9b5b5897`; repository graph generation and independent drift checking pass
 **6/6**, with Node **2 -> 2** after this roadmap update.
 SLIDE Contract 84 implementation head `81850ca` and closure head `f302182`
 indexes to **9,755 nodes / 23,691 edges**, exactly equal to the indexer's
