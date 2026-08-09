@@ -16,12 +16,14 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Verify the Knowledge Base's separate category/flat index through its own
   generator: **1,846 tracked, non-private documents**, 15 topic groups and 6
   document types. Private R&D remains intentionally absent from public indexes.
-- [ ] Separate or guard the two generators' overlapping `build/kb-index`
-  output names. Galerina's query generator must run from the Galerina root;
-  invoking it with the Knowledge Base as `--root` can overwrite the KB-owned
-  flat-index format. Until that boundary is enforced in code, use each
-  repository's owning generator only and treat a cross-root run as refused
-  housekeeping evidence, not a valid regeneration.
+- [x] Design the fail-closed output-root boundary in
+  `docs/superpowers/specs/2026-08-09-kb-index-output-root-admission-design.md`.
+  Production output is bound to the Galerina-owned root; external corpus
+  selection remains `--kb-dir`; a temporary output root is test-only.
+- [ ] Implement and regression-test that design. Until the boundary is
+  enforced in code, use each repository's owning generator only: invoking the
+  Galerina query generator with the Knowledge Base as `--root` can overwrite
+  the KB-owned flat-index format and is not valid regeneration evidence.
 
 ### Verified affected-scope verification - 2026-08-09
 
