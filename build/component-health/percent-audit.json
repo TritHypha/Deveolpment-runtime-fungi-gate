@@ -3,14 +3,14 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "abec5aaa",
+    "sha": "52b71474",
     "detached": false,
     "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
   "buildAvg": 75,
-  "trackingRegistryCount": 27,
+  "trackingRegistryCount": 29,
   "sections": [
     {
       "key": "zero-trust-thesis",
@@ -316,6 +316,11 @@
           "detail": "top-level galerina-devtools-impact derives Git-byte changes, reverse package dependencies and deterministic non-authorizing commands; compiler, topology, manifest and unknown changes fail closed to FULL_REQUIRED; focused planner and executor surface passes 8/8"
         },
         {
+          "item": "Grok evidence intake",
+          "state": "shipped",
+          "detail": "serial read-only intake is self-tested; receipt v2 binds the exact prompt and complete reply, refuses response path leaks, redacts diagnostic user-home paths and requires independent RD adjudication before adoption"
+        },
+        {
           "item": "Signing-key custody",
           "state": "shipped",
           "detail": "cold hybrid root (214…) and delegated operational hybrid key (f31…) are in offline custody; public halves, root-signed delegation and the exact one-entry registry index are verified. Key-rotation protocol ships, while production rotation activation still requires external platform evidence and a later offline ceremony"
@@ -364,6 +369,11 @@
           "item": "Memory retention audit and bounded caches",
           "state": "building",
           "detail": "bounded compiler caches and the static/dynamic retention tools are implemented; the dedicated per-commit workflow and scheduled cross-platform nightly/release measurements remain open"
+        },
+        {
+          "item": "General Fungi-to-SLIDE control-flow corpus",
+          "state": "building",
+          "detail": "Grok prompt 21 is source-adjudicated for partial use; prompt 22 completed but does not pass the technical acceptance gate as submitted. Executable fixtures, corrected lattice maths and current Fungi surface mappings remain open; no later query has started"
         },
         {
           "item": ".gate v3",

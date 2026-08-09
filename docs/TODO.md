@@ -4,6 +4,40 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Fresh graph, audit and test close - 2026-08-09
+
+- [x] Regenerate and independently check all six repository-owned graph/index
+  surfaces. Project graph, integrity, Knowledge Base graph, package graph,
+  dev-tool index and Fungi capability inventory pass **6/6 generate** and
+  **6/6 check**.
+- [x] Run the audit/lint anti-neutering surface. All **88/88** registered
+  audit/lint gates have executable non-vacuity evidence and report **0
+  violations**.
+- [x] Run the complete registered package aggregate with bounded ownership:
+  **100/100 packages, 9,470/9,470 tests, 0 failures in 253.6s**. The owned
+  Galerina process population returned to zero after the run.
+- [x] Treat the first normal phase-close refusal as evidence rather than a
+  false positive. It found two stale generated views: the diagnostic code
+  index and component-health percent audit. Their owning generators refreshed
+  them; both independent checks then passed.
+- [x] Run the post-regeneration exhaustive close. Every blocking cadence gate
+  passed in **819.2s**, including **444 tooling tests**, the entire normal
+  cadence and the complete 100-package lane. No owned Node worker remained.
+- [x] Re-run independent SLIDE at the current checkout: **866/866 tests across
+  96 suites**, V2 contract integrity **90 files**, closed catalog **95 files / 2
+  partitions**, reference-tool manifest **89 files**, path hygiene **755
+  targets**, and security closure checked with evidence K3 `0`. These are
+  reference/repository facts; `authorityReleased` remains `false`.
+- [ ] Add a Codex-memory layout adapter or equivalent focused detector before
+  using `memory-graph.mjs` on `~/.codex/memories`. Its flat-corpus self-test is
+  **9/9**, but the hierarchical Codex root currently refuses on the managed
+  `memory_summary.md` and `raw_memories.md` files and index mode sees zero
+  flat rows. This is a detector-scope gap, not evidence that memory contents
+  are stale or unsafe.
+- [ ] Production boot composition, authenticated platform/durability evidence,
+  package conversion and terminal retirement remain open. A green repository
+  close must not be relabelled as production authority.
+
 ### Documentation and generated-index housekeeping - 2026-08-09
 
 - [x] Regenerate the component-health status blocks through their owning tool.

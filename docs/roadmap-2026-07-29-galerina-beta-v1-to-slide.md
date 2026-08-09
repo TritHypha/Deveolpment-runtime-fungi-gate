@@ -5,7 +5,7 @@ Branch: `codex/galerina-beta-v1-completion`
 Current checkpoint: Galerina pins SLIDE Contract 86 implementation `39920eb`,
 its **89-file** tool manifest at `817e9d17...1d8484`, and a closed contract
 catalog of **95 files in two partitions**. Complete SLIDE passes **866/866
-tests across 96 suites**, path hygiene **14/14** across 753 targets and security
+tests across 96 suites**, path hygiene **14/14** across 755 targets and security
 closure `+1` with evidence K3 `0`; authority remains unreleased.
 
 The real `restoreVerdict` consumer now executes only exact hybrid-authenticated
@@ -16,12 +16,16 @@ malformed-trit refusal, exact rebuild and mutation refusal, and adds one
 hybrid-authenticated authorizing candidate: **5/5**. Disposable test keys prove
 the Ed25519 + ML-DSA-65 composition without using offline production custody.
 
-The registered post-integration fixed point is green: normal phase-close passed
-**89/89** gates in **567.6s** and exhaustive phase-close passed **90/90** in
-**838.5s**, including **100/100 packages / 9,470 tests** in **263.8s**. Graphs
-are **6/6**, the code index is **974/974** with zero coverage holes and the KB
-query index contains **1,848 external documents** and **1,850 total entries**
-after its two Galerina navigation sources. This remains repository/reference evidence;
+The fresh post-integration close is green. Graph generation and independent
+checking pass **6/6**; the audit/lint meta-gate proves **88/88** detectors with
+zero violations; and the complete aggregate passes **100/100 packages / 9,470
+tests** in **253.6s**. The first normal phase-close correctly refused two stale
+generated views (code index and percent audit). Their owning generators restored
+both checks, after which the exhaustive lane passed every blocking gate in
+**819.2s**, including **444 tooling tests** and the complete normal cadence.
+The code index remains **974/974** with zero coverage holes and the KB query
+index contains **1,848 external documents** and **1,850 total entries** after
+its two Galerina navigation sources. This remains repository/reference evidence;
 no green production claim follows.
 
 Documentation housekeeping 2026-08-09: the generated component-health status
