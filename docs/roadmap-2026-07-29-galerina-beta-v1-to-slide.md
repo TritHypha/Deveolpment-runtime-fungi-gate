@@ -37,6 +37,17 @@ that package opens a new **100-package** fixed point. Its aggregate, graphs,
 indexes and normal/exhaustive closure are now green. The frequent affected lane
 remains non-authorizing and cannot replace those complete gates.
 
+Independent scheduler review 2026-08-09: RD-0788 source-checks the current
+runner after the fixed point. The root suite lease, Windows owned-process tree,
+bounded **2 package x 2 test-file** pool and serial full-gate cadence remain
+valid. A separate global-population claim is not valid yet:
+`process-lease-budget.cjs` is unwired pure accounting, and copied environment
+counters cannot atomically coordinate concurrent sibling processes. Several
+graph/corpus/diagnostic paths also retain raw `spawnSync` boundaries. The next
+reliability gate is therefore one atomic cross-process admission authority,
+owned-child migration and a measured live-process census. This correction does
+not invalidate the 100-package fixed point or authorize affected-scope results.
+
 This increment closes content-bound authenticated typed reference execution.
 It does **not** authenticate the host platform, authorize production, prove
 repository or power-loss durability, perform an offline signing ceremony,
@@ -1545,8 +1556,9 @@ flowchart TB
     B["🟩 Compiler/curriculum close<br/>233/233, zero known drift"]
     C["🟩 Governed .fungi authority<br/>7/7 compiler · 29/29 decisions"]
     D["🟩 Devtools evidence<br/>tests · audits · mutations · generators"]
-    BO["🟩 Bounded root orchestration<br/>one lease · four test workers<br/>owned process trees · 86/86"]
-    E["🟩 Final fixed point<br/>84/84 strict · 85/85 exhaustive"]
+    BO["🟩 Bounded root orchestration<br/>one suite lease · 2 package x 2 test-file<br/>owned package trees"]
+    GA["🟨 Global child admission<br/>atomic cross-process cap · raw-spawn migration<br/>measured census pending"]
+    E["🟩 Current fixed point<br/>89/89 normal · 90/90 exhaustive<br/>100 packages · 9,470 tests"]
     R["🟩 Automatic rotation control<br/>K3 gates · hybrid proof · restart-safe state"]
     Y["🟩 Immutable registry generation<br/>ID · evidence receipt · checkpoint-bound load"]
     SI["🟩 Static-link profile proof<br/>release binary · independent re-hash · decoy invariant"]
@@ -1558,12 +1570,15 @@ flowchart TB
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
     G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
-    H["🟩 Independent SLIDE bounded execution<br/>scalar/control + owned append-array + typed Result + durable source-free authenticated package effect<br/>Contracts 66–82 · 838/838 · no production authority"]
+    H["🟩 Independent SLIDE bounded execution<br/>through authenticated typed Contract 86<br/>866/866 · no production authority"]
     C80["🟩 Contract 80 owned append-array<br/>standalone exact profile · affine owner · zeroised storage"]
     C81["🟩 Contract 81 typed Result propagation<br/>single evaluation · original failure preserved"]
     C82["🟩 Contract 82 flat-package extension<br/>two exact profiles · typed failure preserved<br/>831/831 · no authority released"]
     CAT["🟩 Contract-root catalog gate<br/>legacy ceiling unchanged · 8 bounded partitions<br/>7/7 focused · 838/838 complete"]
-    C83["🟦 Contract 83 semantic gate<br/>new closed partition · RED contract first<br/>no authority by catalog membership"]
+    C83["🟩 Contract 83 two-owner semantic gate<br/>closed successor partition · affine separation"]
+    C84["🟩 Contract 84 internal owned handoff<br/>one exact Array&lt;Int&gt; transfer · zeroise once"]
+    C85["🟩 Contract 85 transitive work + real consumer<br/>authenticated typed restoreVerdict · 4/4"]
+    C86["🟩 Contract 86 authenticated VOK candidate<br/>19,683 vectors · 5/5 · reference-only"]
     HC["🟦 Complete Galerina language backend<br/>general owned collections · failures · multi-effect/cross-package calls<br/>provider binary identity · generated supported-source manifest"]
     LC["🟩 Structured loop certificate floor<br/>8,712 arithmetic vectors · exact trip/work<br/>no executable body region"]
     LR["🟩 Counted-sum execution reference<br/>6/6 · 177,147 K3 vectors<br/>exact body only · authority false"]
@@ -1625,7 +1640,7 @@ flowchart TB
 
     PG["Patent architecture trigger floor<br/>PAT-NEU-01 AST gate 4/4<br/>external scanner quarantined"]
 
-    A --> B --> C --> D --> BO --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> H --> CAT --> C83 --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
+    A --> B --> C --> D --> BO --> GA --> E --> G --> R --> Y --> SI --> NP --> LI --> RP --> LS --> X --> F --> CAT --> C83 --> C84 --> C85 --> C86 --> H --> HC --> G4I --> RDP --> I --> RT --> AV --> AL --> T --> HB --> FL --> FD --> TG --> J
     E --> RV --> TG
     Z --> E --> SA
     G --> P
@@ -1654,9 +1669,9 @@ flowchart TB
     classDef red fill:#7f1d1d,color:#ffffff,stroke:#f87171,stroke-width:2px;
     classDef blue fill:#1e3a8a,color:#ffffff,stroke:#60a5fa,stroke-width:2px;
     classDef grey fill:#374151,color:#ffffff,stroke:#9ca3af,stroke-width:2px;
-    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,BF,LS,FL,AV,PR,SM,PL,PS,H green;
+    class A,B,C,D,BO,E,G,R,Y,Z,K,FB,S,SC,ST,WF,CB,GV,L,M,U,V,W,AA,AB,AC,AH,SP,AD,AG,AI,SI,O,SA,NP,RP,RV,PG,G4I,RDP,I,RT,PV,SB,EB,EG,DN,DB,DE,CF,VL,LC,LR,LV,LO,LP,BF,LS,FL,AV,PR,SM,PL,PS,H,C83,C84,C85,C86 green;
     class TG red;
-    class LI,F,AT,X amber;
+    class LI,F,AT,X,GA amber;
     class HC,AL,T,HB,FD,AE,AF blue;
     class P green;
     class J,Q grey;

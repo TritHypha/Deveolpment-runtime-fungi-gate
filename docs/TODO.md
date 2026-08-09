@@ -6,6 +6,27 @@ counts or open items that a newer section explicitly supersedes.
 
 ### Verified affected-scope verification - 2026-08-09
 
+- [x] Independently review the current Node scan/worker implementation rather
+  than treating the new timing result as architectural proof. Grok attempt
+  **1/5** was path-safely refused and adjudicated in private RD-0788. Local
+  source checks retain the two-cadence scheduler direction but reject its
+  process-count table and its copied-environment "global lease" claim.
+- [ ] Replace the unwired `process-lease-budget.cjs` proposal with one real
+  atomic cross-process admission authority. Copied environment counters cannot
+  coordinate concurrent sibling branches. The admitted design must close
+  acquire/release races, nested ownership, owner death, crash recovery,
+  heartbeat/reap evidence and an exact population ceiling before claiming a
+  global bound.
+- [ ] Route production graph, corpus, example-diagnostics and legacy test
+  children through one owned-process boundary, or prove an equivalent bounded
+  tree contract. Raw `spawnSync` remains common outside the root package runner;
+  root-suite mutual exclusion and package/test ceilings do not prove every
+  nested child is globally admitted.
+- [ ] Build a measured process-census harness before changing concurrency:
+  record exact live roots/descendants, work/span, CPU, RSS, output bytes and
+  cleanup latency for `(package,test)=(1,1),(2,2),(2,4)`. Plant an orphaning
+  child and a stale/undeclared dependency so the detector proves it can fail.
+
 - [x] Measure the scan architecture rather than blame the host. Normal
   phase-close took **645.1s** and exhaustive took **1,077.4s**. The old package
   aggregate was **416.9s**; phase-close ran every top-level gate serially and
@@ -242,9 +263,10 @@ counts or open items that a newer section explicitly supersedes.
   most eight exact sibling partitions. Focused evidence is **7/7**, complete
   SLIDE is **838/838**, the tool manifest is **84 files**, and the exact code
   graph is **9,640 nodes / 23,365 edges**.
-- [ ] Define Contract 83's semantic RED boundary in the first new partition.
-  Catalog membership alone grants no package conversion, retirement, signing,
-  production or release authority.
+- [x] Superseded historical gate: Contract 83's semantic RED boundary was
+  subsequently implemented in the first new partition and is recorded in the
+  newer Contract 83/84/85/86 sections. Catalog membership alone still grants no
+  package conversion, retirement, signing, production or release authority.
 
 ### Corrected R&D reply adjudication - 2026-08-08
 
