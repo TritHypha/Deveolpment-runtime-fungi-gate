@@ -3,6 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const SCRIPT = resolve("scripts/component-health.mjs");
@@ -21,7 +22,16 @@ test("component health counts the benchmark package's governed test/ surface", (
     encoding: "utf8",
   });
   assert.equal(result.status, 0, result.stderr);
+  const forbiddenScalar = new RegExp(
+    `:\\s*${["nu", "ll"].join("")}\\b|\\b${["N", "a", "N"].join("")}\\b`,
+  );
+  assert.doesNotMatch(
+    result.stdout,
+    forbiddenScalar,
+    "component-health JSON must encode absence and non-finite states with explicit variants",
+  );
   const report = JSON.parse(result.stdout);
+  const version = JSON.parse(readFileSync(resolve("version.json"), "utf8"));
   const benchmark = report.rows.find(
     (row) => row.dir === "galerina-devtools-benchmarks",
   );
@@ -48,17 +58,28 @@ test("component health counts the benchmark package's governed test/ surface", (
   assert.match(compiler.detail, /0 differential/);
   assert.match(compiler.detail, /7 authoritative/);
 
+  const compilerBoundary = report.percentAudit.sections
+    .find((section) => section.key === "zero-trust-thesis")
+    ?.rows.find((row) => row.label === "Compiler");
+  assert.ok(compilerBoundary);
+  const compilerTests = version.testCountByPackage["galerina-core-compiler"];
+  assert.equal(Number.isInteger(compilerTests), true);
+  assert.match(compilerBoundary.note, new RegExp(`${compilerTests.toLocaleString("en-US")}/${compilerTests.toLocaleString("en-US")}`));
+
   const lythWeaver = report.percentAudit.sections
     .find((section) => section.key === "build-progress")
     ?.rows.find((row) => row.label === "Lyth/Weaver Verified Admission Fabric");
   assert.ok(lythWeaver, "Lyth/Weaver must remain visible as a no-percentage roadmap row");
-  assert.equal(lythWeaver.pct, null);
+  assert.equal(lythWeaver.kind, "status");
+  assert.equal(Object.hasOwn(lythWeaver, "pct"), false);
   assert.match(lythWeaver.status, /A-lane preregistered but not yet run/);
 
   const expectedRegistryRows = [
     ["Hypha passive capability map", "shipped"],
     ["Verified affected-scope planner", "shipped"],
     ["Memory retention audit and bounded caches", "building"],
+    ["Pre-conversion security closure", "building"],
+    [".gate v4 ADR-002 synthesize-only experiment", "build-pending"],
     [".gate v3", "building"],
   ];
   for (const [item, state] of expectedRegistryRows) {

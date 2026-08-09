@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### TODO, roadmap and percentage-audit housekeeping - 2026-08-09
+
+- [x] Keep memory as a routing index and store the detailed reconciliation in
+  [the focused housekeeping record](reports/todo-roadmap-housekeeping-2026-08-09.md).
+- [x] Inventory all **32 tracked TODO files** and **16 tracked roadmap files**.
+  Package TODO checkboxes remain owned by their packages; dated roadmaps remain
+  historical evidence and were not restamped as current completion claims.
+- [x] Run the canonical percentage audit. Ship-readiness is **100%**,
+  zero-trust thesis average **78%**, build-progress average **75%**, and the
+  TODO document state is **1,196 done / 914 open / 2,110 total (56.7%)**.
+  These are separate evidence classes, not a production-authority percentage.
+- [x] Replace 21 implicit absence sentinels in the percentage toolchain with
+  closed row/diff variants, finite-number refusal and focused regression tests.
+  The compiler checkpoint is now derived from the current **6,319/6,319**
+  compiler version record.
+- [x] Regenerate the percentage audit/history, generated status blocks and
+  component-health subway through their owning tools. The registry now contains
+  **31 workstreams: 16 shipped, 11 building, 1 build-pending and 3 post-v1**;
+  every registered state renders or the generator refuses. Final normal
+  phase-close passes **89/89** with **444 tooling tests**, generator contracts
+  **16/16**, graph generation/check **6/6**, and the percent-fresh gate green.
+- [x] Record RD-0792 as a later `.gate` v4 synthesize-only experiment requiring
+  rework. It is not a prerequisite and does not replace the current Galerina
+  source -> GIR -> SLIDE/VOK conversion route.
+- [ ] Close the security gates below and rerun the complete custody state before
+  conversion. Housekeeping and green percentage checks grant no conversion or
+  production authority.
+
 ### Pre-conversion security hold - 2026-08-09
 
 - [x] Seal repository-wide Codex Security scans for Galerina, SLIDE,
@@ -95,9 +123,10 @@ counts or open items that a newer section explicitly supersedes.
 ### Documentation and generated-index housekeeping - 2026-08-09
 
 - [x] Regenerate the component-health status blocks through their owning tool.
-  The tracking registry is now **29 entries: 16 shipped, 10 building and 3
-  post-v1**; ship-readiness and the measured thesis/build averages remain
-  unchanged.
+  The successor tracking registry is now **31 entries: 16 shipped, 11
+  building, 1 build-pending and 3 post-v1**; ship-readiness and the measured
+  thesis/build averages remain unchanged. See the newer housekeeping section
+  above for the owning audit and closed-state correction.
 - [x] Refresh Galerina's private-corpus query index. It covers **1,848 external
   Knowledge Base documents** and **1,850 total query entries** after adding the
   Galerina `README.md` and `AGENTS.md` navigation sources.

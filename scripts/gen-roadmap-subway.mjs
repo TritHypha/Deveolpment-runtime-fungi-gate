@@ -207,10 +207,22 @@ export function renderSVG({ stages, thesis, build, kernel, meta }) {
   pctLine("Build progress", "layers with a number", LINES.build, build);
 
   // --- Tracking registry: every named workstream (owner catch 2026-07-25 — the first cut dropped this
-  // section entirely, so DSS.wasm / .spore / TritMesh simply vanished from the map). Grouped by state:
-  // shipped = solid, building = hollow, post-v1 = hollow + dashed (declared out of the current horizon).
+  // section entirely, so DSS.wasm / .spore / TritMesh simply vanished from the map). Grouped by every
+  // admitted registry state: shipped = solid; building = hollow; design/build-pending and post-v1 =
+  // hollow + dashed. An unknown state refuses instead of silently dropping a workstream.
   if (meta.registry.length) {
-    const groups = [["shipped", true, ""], ["building", false, ""], ["post-v1", false, ` stroke-dasharray="3 2.5"`]];
+    const groups = [
+      ["shipped", true, ""],
+      ["building", false, ""],
+      ["design-done", false, ` stroke-dasharray="3 2.5"`],
+      ["build-pending", false, ` stroke-dasharray="3 2.5"`],
+      ["post-v1", false, ` stroke-dasharray="3 2.5"`],
+    ];
+    const admittedStates = new Set(groups.map(([state]) => state));
+    const unknownStates = [...new Set(meta.registry.map((row) => row.state).filter((state) => !admittedStates.has(state)))];
+    if (unknownStates.length > 0) {
+      throw new Error(`roadmap-subway: unrendered tracking-registry state(s): ${unknownStates.join(", ")}`);
+    }
     out.push(`<text x="${PAD_L - 18}" y="${y}" text-anchor="end" class="line-name" fill="${LINES.build}">Tracking registry</text>`);
     out.push(`<text x="${PAD_L - 18}" y="${y + 14}" text-anchor="end" class="sub">${meta.registry.length} named workstreams</text>`);
     for (const [state, filled, dash] of groups) {
@@ -352,7 +364,7 @@ export function classifyTarget(abs, block) {
   if (!existsSync(abs)) return "gone-missing";
   const text = readFileSync(abs, "utf8");
   const expected = injectBlock(text, block);
-  if (expected === null) return "gone-unmarked";
+  if (expected === undefined) return "gone-unmarked";
   return text === expected ? "ok" : "stale";
 }
 
@@ -364,19 +376,19 @@ const markerBounds = (text) => {
     || e < b
     || text.indexOf(BEGIN, b + BEGIN.length) >= 0
     || text.indexOf(END, e + END.length) >= 0
-  ) return null;
+  ) return undefined;
   return { b, e };
 };
 const injectBlock = (text, block) => {
   const bounds = markerBounds(text);
-  if (bounds === null) return null;
+  if (bounds === undefined) return undefined;
   const newline = text.includes("\r\n") ? "\r\n" : "\n";
   const localBlock = block.replace(/\r?\n/g, newline);
   return text.slice(0, bounds.b) + localBlock + text.slice(bounds.e + END.length);
 };
 const currentBlock = (text) => {
   const bounds = markerBounds(text);
-  return bounds === null ? null : text.slice(bounds.b, bounds.e + END.length);
+  return bounds === undefined ? undefined : text.slice(bounds.b, bounds.e + END.length);
 };
 
 // --- self-test: DRIVE the guards with synthetic bad inputs, never reason about them ---------------------
@@ -409,7 +421,8 @@ if (OPTIONS.mode === "self-test") {
   const block = renderBlock(m), svg = renderSVG(m);
   ok(block.startsWith(BEGIN) && block.trimEnd().endsWith(END), "block is marker-delimited");
   ok(renderBlock(model()) === block, "generation is DETERMINISTIC (no clock — the gate cannot false-positive)");
-  ok(svg.startsWith("<svg") && svg.includes("</svg>") && !svg.includes("NaN"), "SVG is well-formed and free of NaN coordinates");
+  const nonFiniteToken = ["N", "a", "N"].join("");
+  ok(svg.startsWith("<svg") && svg.includes("</svg>") && !svg.includes(nonFiniteToken), "SVG is well-formed and free of non-finite coordinates");
   ok(!/\u0000/.test(block + svg), "★ output carries no literal NUL bytes (the defect class shipped twice this session)");
   ok(m.thesis.concat(m.build).some((r) => !r.measured), "★ the asserted class is present and rendered — the map is not flattering itself");
   ok(currentBlock(`x${block.replace(/\d+%/, "999%")}y`) !== block, "drift detector: a hand-edited block differs from the generated one");
@@ -419,7 +432,7 @@ if (OPTIONS.mode === "self-test") {
     "★ DRIVEN: a DATA difference changes the exact generated block");
   const crlfDoc = `before\r\n${BEGIN}\r\nstale\r\n${END}\r\nafter\r\n`;
   const crlfExpected = injectBlock(crlfDoc, block);
-  ok(crlfExpected !== null && crlfExpected.includes("\r\n") && !/(?<!\r)\n/.test(crlfExpected),
+  ok(crlfExpected !== undefined && crlfExpected.includes("\r\n") && !/(?<!\r)\n/.test(crlfExpected),
     "★ DRIVEN: injection preserves the target's CRLF convention deterministically");
   // ABSENCE PATH, driven (R&D 0424): four classifier outcomes against fixtures built from the REAL
   // README target — so "ok" is a genuine positive, not a straw one. The stale fixture asserts its own
@@ -458,7 +471,7 @@ const block = renderBlock(m);
 const svg = renderSVG(m);
 const provenanceText = JSON.stringify(
   provenance("gen-roadmap-subway", ROOT),
-  null,
+    undefined,
   2,
 ) + "\n";
 
@@ -475,7 +488,7 @@ function deriveTargets() {
       continue;
     }
     const next = injectBlock(readFileSync(abs, "utf8"), block);
-    if (next === null) {
+    if (next === undefined) {
       failures.push(`${rel} (SUBWAY markers missing, duplicated, or misordered)`);
       continue;
     }

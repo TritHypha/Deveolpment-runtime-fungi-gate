@@ -1,5 +1,11 @@
 # Node-Hosted Runtime And Standalone Roadmap
 
+> Current-status note (2026-08-09): this file preserves the legacy hosted
+> execution shape and standalone scope constraints. The current migration route
+> is Galerina source -> canonical GIR -> physical SLIDE -> independent
+> re-admission/VOK, and its security/authority state is owned by
+> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.
+
 Galerina's practical web/API execution path is currently Node-hosted.
 
 This means Galerina should be described as a secure language/framework layer that

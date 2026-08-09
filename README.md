@@ -312,7 +312,7 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 
 **No percentage claimed:** Independent SLIDE general executable backend · B8 governed HTTP transport (TLSTP) · Lyth/Weaver Verified Admission Fabric.
 
-**Tracking registry (29):** shipped 16 · building 10 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
+**Tracking registry (31):** shipped 16 · building 11 · post-v1 3 — every named workstream, from the same percent-audit source; the map's registry section lists each one.
 
 > **Read the map honestly: 2 of 19 percentages are measured** (a live reading or a countable ladder); the remaining 17 are asserted — a considered judgement, but hand-typed. Burning that ratio down is itself tracked work, which is why the map draws the difference instead of hiding it.
 

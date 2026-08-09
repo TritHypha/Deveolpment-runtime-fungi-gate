@@ -1,5 +1,10 @@
 # Galerina Roadmap
 
+> Current-status note (2026-08-09): this package roadmap preserves the original
+> staged direction and is not the live completion ledger. Current conversion,
+> security and authority state is owned by
+> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md` at repository root.
+
 This roadmap outlines the planned direction for **Galerina / Galerina**.
 
 Galerina is a strict, memory-safe, security-first, JSON-native, API-native and accelerator-aware programming language concept.

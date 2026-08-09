@@ -3,25 +3,24 @@
   "provenance": {
     "available": true,
     "branch": "codex/galerina-beta-v1-completion",
-    "sha": "47267944",
+    "sha": "80da97d5",
     "detached": false,
     "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
   "buildAvg": 75,
-  "trackingRegistryCount": 29,
+  "trackingRegistryCount": 31,
   "sections": [
     {
       "key": "zero-trust-thesis",
       "title": "Zero-Trust thesis",
       "kind": "meter",
-      "avg": 78,
       "rows": [
         {
           "label": "Compiler",
           "pct": 100,
-          "note": "✅ shipped — complete compiler 5,866/5,866; all 7 self-hosted stages are authoritative and byte-pinned",
+          "note": "✅ shipped — complete compiler 6,319/6,319; all 7 self-hosted stages are authoritative and byte-pinned",
           "evidence": {
             "asserted": "no countable ladder — 'shipped' is a judgement over the twin corpus; candidate ladder = per-stage twin checker-clean + RD-0361 differential ≡"
           }
@@ -58,72 +57,72 @@
             "asserted": "channel and decision gates are proven, while raw-byte plumbing, live S4 wiring and in-sandbox execution lack one countable ladder"
           }
         }
-      ]
+      ],
+      "avg": 78
     },
     {
       "key": "build-progress",
       "title": "Build progress",
       "kind": "meter",
-      "avg": 75,
       "rows": [
         {
+          "kind": "percent",
           "label": "Specification / KB",
           "pct": 100,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "no countable ladder defined"
           }
         },
         {
+          "kind": "percent",
           "label": "Lexer / Parser / Verifier / Contract / Value-state",
           "pct": 100,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "no countable ladder defined"
           }
         },
         {
+          "kind": "percent",
           "label": "DRCM Phases 1-7 (Stage-A simulation)",
           "pct": 100,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "candidate ladder = the 7 phases, if each has a green gate"
           }
         },
         {
+          "kind": "percent",
           "label": "CBOR Manifests (RFC 8949)",
           "pct": 100,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "no countable ladder defined"
           }
         },
         {
+          "kind": "percent",
           "label": "Tests — full suite",
           "pct": 100,
-          "status": null,
           "live": true,
           "evidence": {
             "live": "version.json test/package counts"
           }
         },
         {
+          "kind": "percent",
           "label": "Stage-B self-hosting — interpreter parity",
           "pct": 100,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "candidate ladder = R6 corpus Stage-A ≡ Stage-B per stage"
           }
         },
         {
+          "kind": "percent",
           "label": "Type checker / Effect checker",
           "pct": 94,
-          "status": null,
           "live": false,
           "evidence": {
             "ladder": [
@@ -164,96 +163,90 @@
           }
         },
         {
+          "kind": "percent",
           "label": "WAT emitter",
           "pct": 89,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "candidate ladder = per-construct lowering coverage; #100 Option<Record> is the known open rung"
           }
         },
         {
+          "kind": "percent",
           "label": "Runtime interpreter",
           "pct": 87,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "no countable ladder defined"
           }
         },
         {
+          "kind": "percent",
           "label": "Application-framework layer",
           "pct": 72,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "candidate ladder = servable api-server · example-app · signed registry index"
           }
         },
         {
+          "kind": "percent",
           "label": "Post-Quantum & Hardware Security",
           "pct": 40,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "NO ladder — custody ladder + HW signer are post-v1/hardware. Fail-closed reading: this should become a WORD"
           }
         },
         {
+          "kind": "percent",
           "label": "Passive Execution Plans & Target Bridges",
           "pct": 35,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "countable P1-P4, but P2 is R&D-blocked (RD-0311) — convert once each rung has a check"
           }
         },
         {
+          "kind": "percent",
           "label": "AI Inference Tower (BitNet/Groq/NVFP4)",
           "pct": 30,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "countable I1-I5, but I1+I2 are ONE unit (RULING 2: no load site exists) — convert with the I2 wiring"
           }
         },
         {
+          "kind": "percent",
           "label": "Photonic / Ternary Computing",
           "pct": 3,
-          "status": null,
           "live": false,
           "evidence": {
             "asserted": "NO ladder — simulation only, no hardware. Fail-closed reading: this should become a WORD"
           }
         },
         {
+          "kind": "status",
           "label": "Independent SLIDE general executable backend",
-          "pct": null,
-          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open",
-          "live": false,
-          "evidence": null
+          "status": "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open"
         },
         {
+          "kind": "status",
           "label": "B8 governed HTTP transport (TLSTP)",
-          "pct": null,
-          "status": "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open",
-          "live": false,
-          "evidence": null
+          "status": "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open"
         },
         {
+          "kind": "status",
           "label": "Lyth/Weaver Verified Admission Fabric",
-          "pct": null,
-          "status": "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed",
-          "live": false,
-          "evidence": null
+          "status": "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed"
         }
-      ]
+      ],
+      "avg": 75
     },
     {
       "key": "tracking-registry",
       "title": "Tracking registry",
       "kind": "registry",
-      "avg": null,
       "rows": [
         {
           "item": "Compiler authority (RD-0528)",
@@ -303,7 +296,7 @@
         {
           "item": "Devtools audit suite",
           "state": "shipped",
-          "detail": "the generated dev-tool index owns current tool, audit, phase-close and proof counts; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain the fail-closed meta-gates; twin-audit execution states are shadow|differential|authoritative"
+          "detail": "the generated dev-tool index owns current tool, audit, phase-close and proof counts; the percentage producer, evidence ratchet, history snapshotter, status generator and subway generator now encode absence/non-finite states explicitly with no forbidden scalar sentinels; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain fail-closed meta-gates"
         },
         {
           "item": "Hypha passive capability map",
@@ -366,6 +359,11 @@
           "detail": "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request"
         },
         {
+          "item": "Pre-conversion security closure",
+          "state": "building",
+          "detail": "four repository-wide scans are sealed at 2 high / 7 medium / 8 low. Galerina G1-G4, SLIDE S1-S2 and the selected Lyth-Weaver/TritMesh:QL findings must be remediated or explicitly excluded, then all four scopes and the complete/exhaustive lanes must be rerun in one current custody state before mechanical TypeScript-to-.fungi conversion"
+        },
+        {
           "item": "Memory retention audit and bounded caches",
           "state": "building",
           "detail": "bounded compiler caches and the static/dynamic retention tools are implemented; the dedicated per-commit workflow and scheduled cross-platform nightly/release measurements remain open"
@@ -384,6 +382,11 @@
           "item": "RD-0363/0364/0365 wiring (R&D done)",
           "state": "building",
           "detail": "R&D COMPLETE — all 3 authored in the KB (galerina-rd-0363/0364/0365). RD-0363 replay-admission + RD-0364 inference-governance DECISION surfaces execute through #105 (R0→R1, verdict≡spec); RD-0365 key-custody design-done. What remains is BUILD not R&D: P/I wiring increments (0363/0364) + implement 0365. (Renamed 2026-07-15 — 'Missing R&D' was a stale backlog label; the R&D is not missing.)"
+        },
+        {
+          "item": ".gate v4 ADR-002 synthesize-only experiment",
+          "state": "build-pending",
+          "detail": "RD-0792 rules REWORK as a versioned experiment and REFUSE production authority. Grok independently returned REWORK; Antigravity returned ADOPT research / REWORK conversion / REFUSE production. V4-X1 through V4-X4 remain unbuilt, S3 cannot inherit transparent re-derivation or no-DSS claims, and current conversion retains Galerina → GIR → SLIDE/VOK"
         },
         {
           "item": "Self-hosting SLIDE bootstrap fixpoint",

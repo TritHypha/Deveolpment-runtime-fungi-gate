@@ -8,6 +8,20 @@ catalog of **95 files in two partitions**. Complete SLIDE passes **866/866
 tests across 96 suites**, path hygiene **14/14** across 755 targets and security
 closure `+1` with evidence K3 `0`; authority remains unreleased.
 
+Housekeeping checkpoint 2026-08-09: the repository contains **32 tracked TODO
+files** and **16 tracked roadmap files**. The current authority route is this
+document; older dated roadmaps remain historical evidence, while generated
+status views were refreshed through their owning tools. The canonical
+percentage audit remains **100% ship-readiness / 78% zero-trust thesis / 75%
+build progress**. Those are distinct repository evidence classes, not a
+production-readiness percentage. Detailed custody, evidence classes and open
+exits are recorded in
+`docs/reports/todo-roadmap-housekeeping-2026-08-09.md`.
+The terminal housekeeping cadence passes **89/89 normal phase-close gates**,
+including **444 tooling tests**, generator contracts **16/16**, graph
+generation/check **6/6**, Golden Pack **11/11 + 11/11**, and the independent
+percent-fresh gate. This remains repository evidence, not production authority.
+
 Pre-conversion security hold 2026-08-09: fresh repository-wide Codex Security
 scans are sealed for Galerina, SLIDE, Lyth-Weaver and TritMesh:QL. They report
 **2 high, 7 medium and 8 low** findings in total. Galerina's serving admission
@@ -64,13 +78,27 @@ its two Galerina navigation sources. This remains repository/reference evidence;
 no green production claim follows.
 
 Documentation housekeeping 2026-08-09: the generated component-health status
-blocks now reflect **29 tracking entries (16 shipped, 10 building, 3 post-v1)**.
+blocks now reflect **31 tracking entries (16 shipped, 11 building, 1
+build-pending, 3 post-v1)**. The percent audit and history now use explicit
+closed variants for percentage, status, added, removed and delta rows; missing
+or non-finite state refuses rather than becoming an implicit sentinel. The
+subway renderer also refuses unknown registry states and visibly accounts for
+all 31 named workstreams.
 The Knowledge Base's separate category/flat index remains owned by its own
 generator and covers **1,846 tracked, non-private documents**. Galerina's
 TF-IDF query generator and the KB category generator currently reuse some
 `build/kb-index` filenames when pointed at the same root, so cross-root
 generation is not an admitted workflow; separating or fail-closing those
 output namespaces remains tooling debt.
+
+RD-0792 route ruling 2026-08-09: Grok and Antigravity independently support
+**REWORK**, not adoption of `.gate` v4 ADR-002 as written. A synthesize-only
+v4 may be built later as a bounded experiment, but it is not a prerequisite
+for the present conversion and grants no authority. The current route remains
+Galerina source -> canonical GIR -> physical SLIDE -> independent
+re-admission/VOK. Any v4 experiment must prove measured build-time value,
+semantic equivalence, closed refusal behavior and no widening of the trusted
+computing base before another owner decision.
 
 Roadmap performance increment 2026-08-09: the old package aggregate was
 structurally serial and took **416.9s**. A bounded scheduler now isolates the

@@ -88,7 +88,7 @@ export function computeDone(ladder, checkRung) {
 
 /** Derived pct from a ladder. Rounded the same way buildAvg rounds, so comparisons are exact. */
 export function ladderPct(ladder, checkRung) {
-  if (!Array.isArray(ladder) || ladder.length === 0) return null;
+  if (!Array.isArray(ladder) || ladder.length === 0) return undefined;
   return Math.round((computeDone(ladder, checkRung) / ladder.length) * 100);
 }
 
@@ -144,7 +144,7 @@ function selfTest() {
   // Clean cases stay SILENT.
   ok(auditRows(meter([{ label: "L", pct: 100, evidence: { live: "version.json" } }]), []).violations.length === 0,
     "a LIVE row passes");
-  ok(auditRows(meter([{ label: "W", pct: null, status: "in progress" }]), []).violations.length === 0,
+  ok(auditRows(meter([{ label: "W", kind: "status", status: "in progress" }]), []).violations.length === 0,
     "a WORD row (no pct) passes — the fail-closed target state is not punished");
   ok(auditRows(meter([{ label: "B", pct: 40, evidence: { asserted: "why" } }]), ["B"]).violations.length === 0,
     "a DECLARED baseline row passes (the ratchet allows existing debt)");

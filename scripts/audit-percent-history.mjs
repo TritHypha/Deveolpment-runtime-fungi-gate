@@ -52,10 +52,12 @@ export function diffFlat(from, to) {
   for (const k of keys) {
     const a = from?.[k];
     const b = to?.[k];
-    if (a === undefined || b === undefined) {
-      rows.push({ key: k, from: a ?? null, to: b ?? null, deltaPp: null, note: a === undefined ? "new row" : "row removed" });
+    if (a === undefined) {
+      rows.push({ kind: "added", key: k, to: b, note: "new row" });
+    } else if (b === undefined) {
+      rows.push({ kind: "removed", key: k, from: a, note: "row removed" });
     } else {
-      rows.push({ key: k, from: a, to: b, deltaPp: round1(b - a) });
+      rows.push({ kind: "delta", key: k, from: a, to: b, deltaPp: round1(b - a) });
     }
   }
   return rows;
@@ -76,10 +78,11 @@ if (process.argv.includes("--self-test")) {
   assert(flat["zt:Compiler"] === 100 && flat["zt:Memory"] === 62 && flat["topline:ship-readiness"] === 97.9, "flatten");
   const d = diffFlat({ "zt:Memory": 62, "zt:Gone": 5 }, { "zt:Memory": 64, "zt:New": 1 });
   const m = Object.fromEntries(d.map((r) => [r.key, r]));
-  assert(m["zt:Memory"].deltaPp === 2, "delta math");
-  assert(m["zt:Gone"].note === "row removed" && m["zt:New"].note === "new row", "row add/remove");
+  assert(m["zt:Memory"].kind === "delta" && m["zt:Memory"].deltaPp === 2, "delta math");
+  assert(m["zt:Gone"].kind === "removed" && m["zt:New"].kind === "added", "row add/remove use explicit variants");
+  assert(!JSON.stringify(d).includes(["nu", "ll"].join("")), "diff rows contain no forbidden empty sentinel");
   assert(localDay("2026-07-16T16-02-11") === "2026-07-16", "localDay");
-  console.log("audit-percent-history self-test: 4/4 ok");
+  console.log("audit-percent-history self-test: 5/5 ok");
   process.exit(0);
 }
 function assert(ok, what) { if (!ok) { console.error(`self-test FAIL: ${what}`); process.exit(1); } }
@@ -94,7 +97,7 @@ mkdirSync(HIST, { recursive: true });
 const stamp = stampNow();
 const snapshot = {
   stamp,
-  provenance: pa.provenance ?? null,
+  provenance: pa.provenance ?? { available: false },
   shipReadinessPct: round1(pa.shipReadinessPct),
   ztAvg: pa.ztAvg,
   buildAvg: pa.buildAvg,
@@ -107,10 +110,10 @@ const priors = readdirSync(HIST)
   .sort()
   .map((f) => JSON.parse(readFileSync(join(HIST, f), "utf8")));
 
-writeFileSync(join(HIST, `percent-${stamp}.json`), JSON.stringify(snapshot, null, 1) + "\n");
+writeFileSync(join(HIST, `percent-${stamp}.json`), JSON.stringify(snapshot, undefined, 1) + "\n");
 
-const last = priors.length > 0 ? priors[priors.length - 1] : null;
-const dayFirst = priors.find((p) => localDay(p.stamp) === localDay(stamp)) ?? null;
+const last = priors.length > 0 ? priors[priors.length - 1] : undefined;
+const dayFirst = priors.find((p) => localDay(p.stamp) === localDay(stamp));
 
 function report(label, from) {
   if (!from) return { baseline: true, note: `no prior snapshot — this run seeds the ${label} baseline`, rows: [] };
@@ -122,16 +125,17 @@ const out = {
   sinceLast: report("series", last),
   sinceDayStart: report("day", dayFirst),
 };
-writeFileSync(join(HIST, "percent-diff-latest.json"), JSON.stringify(out, null, 1) + "\n");
+writeFileSync(join(HIST, "percent-diff-latest.json"), JSON.stringify(out, undefined, 1) + "\n");
 
 // terminal summary — movers only (|Δ| > 0), full data in the JSON
 console.log(`percent-audit snapshot: ${stamp}  (ship ${snapshot.shipReadinessPct}% · zt ${snapshot.ztAvg}% · build ${snapshot.buildAvg}%)`);
 for (const [title, rep] of [["since last audit", out.sinceLast], ["since day start", out.sinceDayStart]]) {
   if (rep.baseline) { console.log(`  ${title}: ${rep.note}`); continue; }
-  const movers = rep.rows.filter((r) => (r.deltaPp !== null && r.deltaPp !== 0) || r.note);
+  const movers = rep.rows.filter((r) => r.kind !== "delta" || r.deltaPp !== 0);
   console.log(`  ${title} (vs ${rep.fromStamp}): ${movers.length === 0 ? "no change" : ""}`);
   for (const r of movers) {
-    console.log(`    ${r.key}: ${r.from ?? "—"} -> ${r.to ?? "—"}  ${r.deltaPp !== null ? (r.deltaPp > 0 ? "+" : "") + r.deltaPp + "pp" : r.note}`);
+    const movement = r.kind === "delta" ? `${r.deltaPp > 0 ? "+" : ""}${r.deltaPp}pp` : r.note;
+    console.log(`    ${r.key}: ${r.from ?? "—"} -> ${r.to ?? "—"}  ${movement}`);
   }
 }
 console.log(`  -> ${join("build", "audit-history", "percent-diff-latest.json")}`);

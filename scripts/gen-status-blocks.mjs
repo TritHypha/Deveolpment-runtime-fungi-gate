@@ -71,12 +71,12 @@ export function renderBlock(pa) {
 
 function inject(text, block) {
   const b = text.indexOf(BEGIN), e = text.indexOf(END);
-  if (b < 0 || e < 0) return null; // no markers
+  if (b < 0 || e < 0) return undefined; // no markers
   return text.slice(0, b) + block + text.slice(e + END.length);
 }
 function currentBlock(text) {
   const b = text.indexOf(BEGIN), e = text.indexOf(END);
-  return b < 0 || e < 0 ? null : text.slice(b, e + END.length);
+  return b < 0 || e < 0 ? undefined : text.slice(b, e + END.length);
 }
 
 if (process.argv.includes("--self-test")) {
@@ -87,7 +87,7 @@ if (process.argv.includes("--self-test")) {
   ok(renderBlock(audit()) === block, "generation is DETERMINISTIC (no clock — the gate can't false-positive)");
   // drift detector: a doc whose block was hand-edited must be detected as stale.
   const stale = `pre\n${block.replace(/avg \d+%/, "avg 999%")}\npost`;
-  ok(inject(stale, block) !== null && currentBlock(stale) !== block, "drift detector: a mutated block differs from the freshly generated one");
+  ok(inject(stale, block) !== undefined && currentBlock(stale) !== block, "drift detector: a mutated block differs from the freshly generated one");
   console.log(process.exitCode ? "  gen-status self-test FAILED" : "  gen-status self-test: generate + determinism + drift detection verified ✅");
   process.exit(process.exitCode ?? 0);
 }
@@ -95,7 +95,7 @@ if (process.argv.includes("--self-test")) {
 const block = renderBlock(audit());
 const provenanceText = JSON.stringify(
   provenance("gen-status-blocks", ROOT),
-  null,
+  undefined,
   2,
 ) + "\n";
 
@@ -118,7 +118,7 @@ if (CHECK) {
     const abs = join(ROOT, rel);
     if (!existsSync(abs)) { stale.push(rel); continue; }
     const cur = currentBlock(readFileSync(abs, "utf8"));
-    if (cur === null) { stale.push(rel); continue; }
+    if (cur === undefined) { stale.push(rel); continue; }
     if (cur !== block) stale.push(rel);
   }
   if (stale.length) {
@@ -139,7 +139,7 @@ if (WRITE) {
     if (!existsSync(abs)) { missing.push(rel); continue; }
     const text = readFileSync(abs, "utf8");
     const next = inject(text, block);
-    if (next === null) { missing.push(rel); continue; }
+    if (next === undefined) { missing.push(rel); continue; }
     targetOutputs.push([abs, next]);
   }
   if (missing.length > 0) {

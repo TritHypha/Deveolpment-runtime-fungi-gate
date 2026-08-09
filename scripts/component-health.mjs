@@ -40,17 +40,17 @@ const AUDIT_HTML = argv.has("--audit-html");   // emit the self-contained % audi
 const AUDIT_CHECK = argv.has("--audit-check");  // staleness gate: committed percent-audit.json must match source (git provenance excluded)
 const SELF_TEST = argv.has("--self-test");      // prove the % audit can never omit a section (fail-closed)
 
-const readJSON = (p) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; } };
-const listDir = (p) => { try { return readdirSync(p); } catch { return null; } };
+const readJSON = (p) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return undefined; } };
+const listDir = (p) => { try { return readdirSync(p); } catch { return undefined; } };
 const isDir = (p) => { try { return statSync(p).isDirectory(); } catch { return false; } };
 const fmt = (n) => (typeof n === "number" ? n.toLocaleString("en-US") : String(n));
 
 // ── git provenance (read-only; names the exact tree these numbers describe) ────
-// Runs only reporting git subcommands; ROOT-anchored; never throws (returns null on any failure).
+// Runs only reporting git subcommands; ROOT-anchored; never throws (returns undefined on failure).
 const git = (args) => {
   try {
     return execFileSync("git", args, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
-  } catch { return null; }
+  } catch { return undefined; }
 };
 const provenance = (() => {
   if (git(["rev-parse", "--is-inside-work-tree"]) !== "true") return { available: false };
@@ -60,7 +60,7 @@ const provenance = (() => {
   return {
     available: true, branch, sha,
     detached: branch === "HEAD",
-    dirty: porcelain == null ? null : porcelain.length > 0,
+    dirty: porcelain === undefined ? "unknown" : porcelain.length > 0,
   };
 })();
 
@@ -171,14 +171,14 @@ const rows = wsPackages.map((rel) => {
   return {
     dir, name: pkg?.name || dir, family: familyOf(dir),
     onDisk: isDir(abs), hasPkg: !!pkg, private: pkg?.private === true,
-    version: pkg?.version || null,
+    version: pkg?.version || "unknown",
     testScript: !!pkg?.scripts?.test, buildScript: !!pkg?.scripts?.build,
     hasTestsDir,
     testFiles: testDirs.reduce(
       (count, testsDir) => count + countTestFiles(testsDir),
       0,
     ),
-    recordedCount: Object.prototype.hasOwnProperty.call(testCounts, dir) ? testCounts[dir] : null,
+    recordedCount: Object.prototype.hasOwnProperty.call(testCounts, dir) ? testCounts[dir] : undefined,
   };
 });
 
@@ -218,15 +218,18 @@ const EXEMPT_ORPHANS = {
   "galerina-devtools-benchmarks": "benchmark harness — not a shippable unit-tested package (run via its own npm scripts)",
   "galerina-registry": "signed registry index — planned; joins the workspace when the index ships",
 };
-const orphanRows = orphans.slice().sort().map((o) => ({ dir: o, exemptReason: EXEMPT_ORPHANS[o] ?? null }));
-const unexpectedOrphans = orphanRows.filter((o) => o.exemptReason === null).map((o) => o.dir);
+const orphanRows = orphans.slice().sort().map((o) => ({
+  dir: o,
+  ...(EXEMPT_ORPHANS[o] === undefined ? {} : { exemptReason: EXEMPT_ORPHANS[o] }),
+}));
+const unexpectedOrphans = orphanRows.filter((o) => o.exemptReason === undefined).map((o) => o.dir);
 
 // ── .ts→.fungi conversion inventory (Stage-6 self-hosting metric) ─────────────
 // Tracked files only (git ls-files) so gitignored build/ output can never inflate the counts.
 // Fail-honest: if git is unavailable the section reports itself unavailable instead of guessing.
 const trackedFiles = (() => {
   const o = git(["ls-files"]);
-  return o ? o.split("\n").filter(Boolean) : null;
+  return o ? o.split("\n").filter(Boolean) : undefined;
 })();
 const conversion = (() => {
   if (!trackedFiles) return { available: false };
@@ -321,11 +324,15 @@ summary.todos = todos;
 // parity (scripts/lib/twin-parity-ladder.mjs → audit-twin-emit-parity). Fail-closed but NON-FATAL: if
 // the ladder can't be computed we carry a WORD (never the old hand-typed number), which preserves this
 // tool's "never throws" contract while honouring RULING-1's "no evidence ⇒ no number".
-let TCE = null;
-try { TCE = twinParityLadder(); } catch { TCE = null; }
+let TCE;
+try { TCE = twinParityLadder(); } catch { TCE = undefined; }
+const compilerRecordedCount = rows.find((row) => row.dir === "galerina-core-compiler")?.recordedCount;
+const compilerStatus = Number.isInteger(compilerRecordedCount) && compilerRecordedCount > 0
+  ? `✅ shipped — complete compiler ${fmt(compilerRecordedCount)}/${fmt(compilerRecordedCount)}; all 7 self-hosted stages are authoritative and byte-pinned`
+  : "COMPILER TEST EVIDENCE UNAVAILABLE — refusing to publish a copied test count";
 
 const ZERO_TRUST = [
-  { boundary: "Compiler", pct: 100, status: "✅ shipped — complete compiler 5,866/5,866; all 7 self-hosted stages are authoritative and byte-pinned" },
+  { boundary: "Compiler", pct: 100, status: compilerStatus },
   { boundary: "I/O — OS kernel", pct: 72, status: "◑ kernel channel admission is fail-closed and 29 governed twins are authoritative; independent SLIDE/VOK execution is bounded and verified, while general effects, platform targets and production authority remain open" },
   {
     boundary: "Packages",
@@ -378,7 +385,9 @@ const TRACKING_REGISTRY = [
   { item: "Workspace package families",          state: "shipped",       detail: `${summary.green}/${summary.components} component families green; ${summary.workspacePackages} workspace packages, ${fmt(summary.recordedTotal)} recorded tests and ${summary.orphans} unadjudicated orphans, all derived from the live workspace and version ledgers` },
   { item: "Package Standard + pub ladder",       state: "building",      detail: "Standard v1 + pkg-census + 9 schematics done; R1–R6 rungs pending; .graph amendment 🔒 owner" },
   { item: "Security-infra designs (×4)",         state: "building",      detail: "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request" },
-  { item: "Devtools audit suite",                state: "shipped",       detail: "the generated dev-tool index owns current tool, audit, phase-close and proof counts; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain the fail-closed meta-gates; twin-audit execution states are shadow|differential|authoritative" },
+  { item: "Pre-conversion security closure",     state: "building",      detail: "four repository-wide scans are sealed at 2 high / 7 medium / 8 low. Galerina G1-G4, SLIDE S1-S2 and the selected Lyth-Weaver/TritMesh:QL findings must be remediated or explicitly excluded, then all four scopes and the complete/exhaustive lanes must be rerun in one current custody state before mechanical TypeScript-to-.fungi conversion" },
+  { item: ".gate v4 ADR-002 synthesize-only experiment", state: "build-pending", detail: "RD-0792 rules REWORK as a versioned experiment and REFUSE production authority. Grok independently returned REWORK; Antigravity returned ADOPT research / REWORK conversion / REFUSE production. V4-X1 through V4-X4 remain unbuilt, S3 cannot inherit transparent re-derivation or no-DSS claims, and current conversion retains Galerina → GIR → SLIDE/VOK" },
+  { item: "Devtools audit suite",                state: "shipped",       detail: "the generated dev-tool index owns current tool, audit, phase-close and proof counts; the percentage producer, evidence ratchet, history snapshotter, status generator and subway generator now encode absence/non-finite states explicitly with no forbidden scalar sentinels; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain fail-closed meta-gates" },
   { item: "Hypha passive capability map",        state: "shipped",       detail: "top-level galerina-devtools-hypha is workspace-enlisted and passes 42/42; the default scan is in-memory, self-locating, zero-dependency and write-free unless --out is explicit" },
   { item: "Verified affected-scope planner",     state: "shipped",       detail: "top-level galerina-devtools-impact derives Git-byte changes, reverse package dependencies and deterministic non-authorizing commands; compiler, topology, manifest and unknown changes fail closed to FULL_REQUIRED; focused planner and executor surface passes 8/8" },
   { item: "Grok evidence intake",                state: "shipped",       detail: "serial read-only intake is self-tested; receipt v2 binds the exact prompt and complete reply, refuses response path leaks, redacts diagnostic user-home paths and requires independent RD adjudication before adoption" },
@@ -503,7 +512,7 @@ const EVIDENCE = {
   "AI Inference Tower (BitNet/Groq/NVFP4)": { asserted: "countable I1-I5, but I1+I2 are ONE unit (RULING 2: no load site exists) — convert with the I2 wiring" },
   "Photonic / Ternary Computing": { asserted: "NO ladder — simulation only, no hardware. Fail-closed reading: this should become a WORD" },
 };
-const evidenceFor = (label) => EVIDENCE[label] ?? null;
+const evidenceFor = (label) => EVIDENCE[label];
 
 const quantified = BUILD_PROGRESS.filter((l) => typeof l.pct === "number");
 const buildAvg = Math.round(quantified.reduce((a, l) => a + l.pct, 0) / quantified.length);
@@ -582,7 +591,21 @@ const STATUS_ORDER = ["shipped", "building", "design-done", "build-pending", "po
 const statusRank = (s) => { const i = STATUS_ORDER.indexOf(typeof s === "number" ? "building" : s); return i === -1 ? STATUS_ORDER.length : i; };
 const REQUIRED_SECTIONS = [
   { key: "zero-trust-thesis", title: "Zero-Trust thesis", kind: "meter", get rows() { return ZERO_TRUST.map((b) => ({ label: b.boundary, pct: b.pct, note: b.status, evidence: evidenceFor(b.boundary) })); }, get avg() { return ztAvg; } },
-  { key: "build-progress",    title: "Build progress",    kind: "meter", get rows() { return BUILD_PROGRESS.map((l) => ({ label: l.layer, pct: typeof l.pct === "number" ? l.pct : null, status: l.status ?? null, live: !!l.live, evidence: evidenceFor(l.layer) })); }, get avg() { return buildAvg; } },
+  { key: "build-progress", title: "Build progress", kind: "meter", get rows() {
+    return BUILD_PROGRESS.map((l) => {
+      const evidence = evidenceFor(l.layer);
+      if (typeof l.pct === "number") {
+        return {
+          kind: "percent", label: l.layer, pct: l.pct, live: !!l.live,
+          ...(evidence === undefined ? {} : { evidence }),
+        };
+      }
+      return {
+        kind: "status", label: l.layer,
+        status: l.status ?? "status unavailable — refusing to invent a percentage",
+      };
+    });
+  }, get avg() { return buildAvg; } },
   { key: "tracking-registry", title: "Tracking registry", kind: "registry", get rows() {
     return TRACKING_REGISTRY
       .map((t, i) => ({ item: t.item, state: t.state, detail: t.detail, _i: i }))
@@ -597,7 +620,8 @@ function buildPercentAudit() {
     if (!Array.isArray(rows) || rows.length === 0) {
       throw new Error(`% audit section "${s.key}" (${s.title}) is empty or missing — the audit MUST carry all ${REQUIRED_SECTIONS.length} sections (zero-trust-thesis · build-progress · tracking-registry). Refusing to emit a partial audit.`);
     }
-    return { key: s.key, title: s.title, kind: s.kind, avg: s.avg ?? null, rows };
+    const section = { key: s.key, title: s.title, kind: s.kind, rows };
+    return typeof s.avg === "number" ? { ...section, avg: s.avg } : section;
   });
   const keys = sections.map((s) => s.key).join(",");
   const need = ["zero-trust-thesis", "build-progress", "tracking-registry"].join(",");
@@ -647,11 +671,11 @@ function renderAuditHtml(audit) {
   };
   const sectionHtml = (s) => {
     if (s.kind === "meter") {
-      return `<h2>${esc(s.title)}${s.avg != null ? ` <span class="avg">avg ${s.avg}%</span>` : ""}</h2>` + s.rows.map(meterRow).join("");
+      return `<h2>${esc(s.title)}${typeof s.avg === "number" ? ` <span class="avg">avg ${s.avg}%</span>` : ""}</h2>` + s.rows.map(meterRow).join("");
     }
     // registry — grouped by STATUS (owner rule: always status-ordered), a state badge per item.
     // Rows arrive status-ordered from REQUIRED_SECTIONS; insert a group header each time the status changes.
-    let last = null;
+    let last;
     const body = s.rows.map((r) => {
       const st = typeof r.state === "number" ? "building" : r.state;
       const hdr = st !== last ? `<tr><td colspan="3" class="rgroup"><span class="badge ${stateClass(r.state)}">${esc(st)}</span> <span class="rgcount">${s.rows.filter((x) => (typeof x.state === "number" ? "building" : x.state) === st).length}</span></td></tr>` : "";
@@ -810,7 +834,7 @@ if (AUDIT_HTML) {
   mkdirSync(outDir, { recursive: true });
   const htmlPath = join(outDir, "percent-audit.html");
   writeFileSync(htmlPath, renderAuditHtml(audit));
-  writeFileSync(join(outDir, "percent-audit.json"), JSON.stringify(audit, null, 2));
+  writeFileSync(join(outDir, "percent-audit.json"), JSON.stringify(audit, undefined, 2));
   console.log(`✅ % audit: build/component-health/percent-audit.{html,json} — ${audit.sections.length} sections (ZT-thesis ${audit.ztAvg}% · build ${audit.buildAvg}% · tracking registry ${audit.trackingRegistryCount} items)`);
   process.exit(0);
 }
@@ -836,7 +860,7 @@ if (AUDIT_CHECK) {
 }
 
 if (AS_JSON) {
-  console.log(JSON.stringify({ provenance, summary, rows, orphans, orphanExemptions: orphanRows, unexpectedOrphans, percentAudit: buildPercentAudit() }, null, 2));
+  console.log(JSON.stringify({ provenance, summary, rows, orphans, orphanExemptions: orphanRows, unexpectedOrphans, percentAudit: buildPercentAudit() }, undefined, 2));
   process.exit(STRICT && summary.totalGaps > 0 ? 1 : 0);
 }
 
@@ -856,7 +880,10 @@ if (TABLE) {
   const L = (s, n) => String(s).padEnd(n);
   const R = (s, n) => String(s).padStart(n);
   const out = [];
-  if (provenance.available) out.push(`  ${provenance.branch} @ ${provenance.sha} · ${provenance.dirty ? "dirty" : "clean"}`);
+  if (provenance.available) {
+    const state = provenance.dirty === true ? "dirty" : provenance.dirty === false ? "clean" : "dirty state unknown";
+    out.push(`  ${provenance.branch} @ ${provenance.sha} · ${state}`);
+  }
   out.push(`  ${L("FAMILY", 12)} ${R("GREEN", 6)} ${R("TOTAL", 6)} ${R("%", 7)}`);
   for (const r of ranked) out.push(`  ${L(r.f, 12)} ${R(r.g, 6)} ${R(r.t, 6)} ${R(r.pct.toFixed(0) + "%", 7)}`);
   out.push(`  ${L("(orphans)", 12)} ${R(0, 6)} ${R(orphans.length, 6)} ${R("0%", 7)}  ${unexpectedOrphans.length ? `⚠ ${unexpectedOrphans.length} UNEXPECTED (not on #32 allowlist)` : "all exempt (#32 documented)"}`);
@@ -873,7 +900,7 @@ const out = [];
 out.push(`Galerina component health — ${summary.workspacePackages} workspace packages · ${summary.withTestScript} test-bearing · ${fmt(summary.recordedTotal)} recorded tests`);
 // ── provenance header: which git tree produced these numbers (top of report) ──
 if (provenance.available) {
-  const state = provenance.dirty == null ? "dirty state unknown" : provenance.dirty ? "dirty (uncommitted changes)" : "clean";
+  const state = provenance.dirty === true ? "dirty (uncommitted changes)" : provenance.dirty === false ? "clean" : "dirty state unknown";
   out.push(`  provenance: ${provenance.branch} @ ${provenance.sha} · ${state}`);
   if (provenance.detached) out.push("  ⚠ DETACHED HEAD — report may reflect a stale tree; confirm the SHA above is the tree you meant to measure");
 } else {
@@ -888,7 +915,7 @@ for (const fam of [...new Set(rows.map((r) => r.family))].sort()) {
   if (!shown.length) continue;
   out.push(`  ${fam}/`);
   for (const r of shown) {
-    const cnt = r.recordedCount != null ? `${fmt(r.recordedCount)}t` : (r.testFiles ? `${r.testFiles}f` : "—");
+    const cnt = typeof r.recordedCount === "number" ? `${fmt(r.recordedCount)}t` : (r.testFiles ? `${r.testFiles}f` : "—");
     const flags = r.gaps.length ? `  ⚠ ${r.gaps.join(", ")}` : "";
     out.push(`    ${pad(r.dir, 40)} ${pad(cnt, 9)}${flags}`);
   }

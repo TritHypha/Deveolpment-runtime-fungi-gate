@@ -1,5 +1,11 @@
 # Core Foundation Roadmap
 
+> Current-status note (2026-08-09): this is a long-lived scope and sequencing
+> roadmap, not the live completion ledger. Current conversion, security and
+> authority state is owned by
+> `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`; dated roadmaps remain
+> historical evidence.
+
 ## Purpose
 
 This roadmap keeps Galerina focused on the language foundation before expanding
