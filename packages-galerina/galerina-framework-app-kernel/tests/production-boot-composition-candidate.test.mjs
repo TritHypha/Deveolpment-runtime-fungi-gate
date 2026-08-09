@@ -2,7 +2,7 @@
  * Sealed production boot composition candidate contract tests.
  * Change control: production boot composition candidate v1, 2026-08-09.
  * Relates to the production boot composition design, authenticated SLIDE
- * restore admission, registry durability production admission and RD-0789.
+ * restore admission, registry durability production admission and RD-0791.
  */
 
 import assert from "node:assert/strict";
@@ -20,6 +20,12 @@ import {
 const DIGEST = (value) => `sha256:${value.repeat(64)}`;
 const GALERINA_COMMIT = "a".repeat(40);
 const SLIDE_COMMIT = "b".repeat(40);
+const PROVENANCE_DIGESTS = Object.freeze([
+  DIGEST("5"),
+  DIGEST("6"),
+  DIGEST("7"),
+  DIGEST("8"),
+]);
 const BOUNDARIES = Object.freeze([
   "DIRECTORY_BARRIER",
   "FILE_BARRIER",
@@ -49,7 +55,7 @@ function slideProfile() {
     toolManifestDigest: DIGEST("4"),
     safeValueTypeId: "Int",
     safeValueStateId: "safe.scalar.int.v1",
-    safeValueProvenanceDigest: DIGEST("5"),
+    safeValueProvenanceDigests: [...PROVENANCE_DIGESTS],
     currentEpoch: 15,
     rootKeyId: "offline-root-v1",
     operationalKeyId: "slide-object-signer-v1",
@@ -82,6 +88,9 @@ function slideProfile() {
     {
       schema: "galerina.production-slide-restore.execution-port.v1",
       executeAndVerify(snapshotPresent, integrityOk) {
+        const provenanceIndex = snapshotPresent
+          ? (integrityOk ? 0 : 1)
+          : (integrityOk ? 2 : 3);
         return {
           schema: "galerina.production-slide-restore.observation.v1",
           status: "SUCCEEDED_AUTHENTICATED_PHYSICAL_REFERENCE_ONLY",
@@ -96,7 +105,8 @@ function slideProfile() {
           currentEpoch: manifest.currentEpoch,
           safeValueTypeId: manifest.safeValueTypeId,
           safeValueStateId: manifest.safeValueStateId,
-          safeValueProvenanceDigest: manifest.safeValueProvenanceDigest,
+          safeValueProvenanceDigest:
+            manifest.safeValueProvenanceDigests[provenanceIndex],
           fallbackInvoked: false,
           verificationVerdict: 1,
           value: snapshotPresent && integrityOk ? 1 : -1,
@@ -208,7 +218,7 @@ function policy(overrides = {}) {
     toolManifestDigest: DIGEST("4"),
     safeValueTypeId: "Int",
     safeValueStateId: "safe.scalar.int.v1",
-    safeValueProvenanceDigest: DIGEST("5"),
+    safeValueProvenanceDigests: [...PROVENANCE_DIGESTS],
     currentEpoch: 15,
     rootKeyId: "offline-root-v1",
     operationalKeyId: "slide-object-signer-v1",
@@ -262,11 +272,14 @@ describe("sealed production boot composition candidate", () => {
     assert.equal(candidate.authorityReleased, false);
     assert.equal(candidate.productionAuthorizing, false);
     assert.equal("restoreVerdict" in candidate, false);
+    assert.equal(Object.isFrozen(candidate.safeValueProvenanceDigests), true);
+    assert.deepEqual(candidate.safeValueProvenanceDigests, PROVENANCE_DIGESTS);
     assert.equal(Object.isFrozen(candidate.missingExternalInputs), true);
     assert.deepEqual(candidate.missingExternalInputs, MISSING_EXTERNAL_INPUTS);
     assert.equal(
       Object.values(candidate).every((value) =>
         ["string", "number", "boolean"].includes(typeof value)
+        || value === candidate.safeValueProvenanceDigests
         || value === candidate.missingExternalInputs
       ),
       true,
@@ -319,7 +332,25 @@ describe("sealed production boot composition candidate", () => {
       ["tool manifest", policy({ toolManifestDigest: DIGEST("f") })],
       ["safe type", policy({ safeValueTypeId: "String" })],
       ["safe state", policy({ safeValueStateId: "unsafe.scalar.int.v1" })],
-      ["safe provenance", policy({ safeValueProvenanceDigest: DIGEST("f") })],
+      ["safe provenance", policy({
+        safeValueProvenanceDigests: [
+          DIGEST("5"),
+          DIGEST("6"),
+          DIGEST("f"),
+          DIGEST("8"),
+        ],
+      })],
+      ["safe provenance length", policy({
+        safeValueProvenanceDigests: [DIGEST("5"), DIGEST("6"), DIGEST("7")],
+      })],
+      ["safe provenance duplicate", policy({
+        safeValueProvenanceDigests: [
+          DIGEST("5"),
+          DIGEST("5"),
+          DIGEST("7"),
+          DIGEST("8"),
+        ],
+      })],
       ["epoch", policy({ currentEpoch: 16 })],
       ["root", policy({ rootKeyId: "forged-root" })],
       ["operational", policy({ operationalKeyId: "forged-operational" })],

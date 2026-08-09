@@ -2,7 +2,7 @@
  * Authenticated SLIDE restore profile contract tests.
  * Change control: production boot composition candidate v1, 2026-08-09.
  * Relates to the production boot composition design, the registry durability
- * production admission sibling, Contract 85 and RD-0789.
+ * production admission sibling, Contract 85 and RD-0791.
  */
 
 import assert from "node:assert/strict";
@@ -17,6 +17,12 @@ import {
 const DIGEST = (value) => `sha256:${value.repeat(64)}`;
 const GALERINA_COMMIT = "a".repeat(40);
 const SLIDE_COMMIT = "b".repeat(40);
+const PROVENANCE_DIGESTS = Object.freeze([
+  DIGEST("5"),
+  DIGEST("6"),
+  DIGEST("7"),
+  DIGEST("8"),
+]);
 
 /** Returns the exact signed public manifest, with explicit hostile overrides. */
 function manifest(overrides = {}) {
@@ -34,7 +40,7 @@ function manifest(overrides = {}) {
     toolManifestDigest: DIGEST("4"),
     safeValueTypeId: "Int",
     safeValueStateId: "safe.scalar.int.v1",
-    safeValueProvenanceDigest: DIGEST("5"),
+    safeValueProvenanceDigests: [...PROVENANCE_DIGESTS],
     currentEpoch: 15,
     rootKeyId: "offline-root-v1",
     operationalKeyId: "slide-object-signer-v1",
@@ -79,6 +85,7 @@ function executionPort(sourceManifest, calls, overrides = {}) {
   return {
     schema: "galerina.production-slide-restore.execution-port.v1",
     executeAndVerify(snapshotPresent, integrityOk) {
+      const vectorIndex = calls.length;
       calls.push([snapshotPresent, integrityOk]);
       return {
         schema: "galerina.production-slide-restore.observation.v1",
@@ -94,7 +101,8 @@ function executionPort(sourceManifest, calls, overrides = {}) {
         currentEpoch: sourceManifest.currentEpoch,
         safeValueTypeId: sourceManifest.safeValueTypeId,
         safeValueStateId: sourceManifest.safeValueStateId,
-        safeValueProvenanceDigest: sourceManifest.safeValueProvenanceDigest,
+        safeValueProvenanceDigest:
+          sourceManifest.safeValueProvenanceDigests[vectorIndex],
         fallbackInvoked: false,
         verificationVerdict: 1,
         value: snapshotPresent && integrityOk ? 1 : -1,
@@ -154,6 +162,8 @@ describe("authenticated SLIDE restore profile", () => {
     assert.equal(profile.authenticatedObjectExecution, true);
     assert.equal(profile.minDelegationSerial, 6);
     assert.equal(profile.notBefore, "2026-08-09T00:00:00.000Z");
+    assert.equal(Object.isFrozen(profile.safeValueProvenanceDigests), true);
+    assert.deepEqual(profile.safeValueProvenanceDigests, PROVENANCE_DIGESTS);
     assert.equal(profile.authorityReleased, false);
     assert.equal(profile.productionAuthorizing, false);
     assert.equal("restoreVerdict" in profile, false);
@@ -177,6 +187,18 @@ describe("authenticated SLIDE restore profile", () => {
       { sourceManifest: manifest({ packageIdentity: "@example/forged" }) },
       { sourceManifest: manifest({ exportName: "fallbackRestore" }) },
       { sourceManifest: manifest({ safeValueTypeId: "String" }) },
+      { sourceManifest: manifest({ safeValueProvenanceDigests: [DIGEST("5")] }) },
+      { sourceManifest: manifest({
+        safeValueProvenanceDigests: [
+          DIGEST("5"),
+          DIGEST("5"),
+          DIGEST("7"),
+          DIGEST("8"),
+        ],
+      }) },
+      { sourceManifest: manifest({
+        safeValueProvenanceDigests: [DIGEST("5"), DIGEST("6"), DIGEST("7"), "bad"],
+      }) },
       { sourceManifest: manifest({ currentEpoch: Number.MAX_SAFE_INTEGER + 1 }) },
       { sourceAuthority: authority({ at: "2026-08-11T00:00:00.000Z" }) },
       { sourceManifest: manifest({ delegationSerial: 6 }) },
@@ -186,6 +208,9 @@ describe("authenticated SLIDE restore profile", () => {
       { sourceAuthority: authority({ verifyMlDsa65: () => "true" }) },
       { sourceAuthority: authority({ verifyEd25519: () => { throw new Error("fault"); } }) },
       { sourceAuthority: authority({ digestObject: () => DIGEST("9") }) },
+      { sourceAuthority: new Proxy(authority(), {}) },
+      { portFactory: (sourceManifest, calls) =>
+        new Proxy(executionPort(sourceManifest, calls), {}) },
       { objectBytes: new Uint8Array() },
     ];
     for (const [index, input] of cases.entries()) {
@@ -236,7 +261,7 @@ describe("authenticated SLIDE restore profile", () => {
       sourceManifest: mutableManifest,
       sourceAuthority: authority({
         digestObject() {
-          mutableManifest.safeValueStateId = "";
+          mutableManifest.safeValueProvenanceDigests[0] = DIGEST("9");
           return DIGEST("1");
         },
       }),

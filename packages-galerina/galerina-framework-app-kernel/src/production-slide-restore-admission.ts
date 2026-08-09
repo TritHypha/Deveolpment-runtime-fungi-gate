@@ -2,8 +2,10 @@
  * Seals authenticated, reference-only SLIDE restore execution evidence.
  * Change control: production boot composition candidate v1, 2026-08-09.
  * Relates to the production boot composition design, registry durability
- * production admission, Contract 85 and RD-0789.
+ * production admission, Contract 85 and RD-0791.
  */
+
+import { types as nodeUtilTypes } from "node:util";
 
 export interface ProductionSlideRestoreManifest {
   readonly schema: "galerina.production-slide-restore.manifest.v1";
@@ -19,7 +21,8 @@ export interface ProductionSlideRestoreManifest {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  /** Ordered as true/true, true/false, false/true, false/false. */
+  readonly safeValueProvenanceDigests: ProductionSlideRestoreProvenanceDigests;
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -75,6 +78,14 @@ export interface ProductionSlideRestoreObservation {
   readonly value: 1 | -1;
 }
 
+/** One transcript-bound digest for each fixed restore truth-table vector. */
+export type ProductionSlideRestoreProvenanceDigests = readonly [
+  string,
+  string,
+  string,
+  string,
+];
+
 export interface AuthenticatedSlideRestoreProfile {
   readonly schema: "galerina.authenticated-slide-restore.profile.v1";
   readonly galerinaCommit: string;
@@ -89,7 +100,7 @@ export interface AuthenticatedSlideRestoreProfile {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: ProductionSlideRestoreProvenanceDigests;
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -140,7 +151,7 @@ const MANIFEST_KEYS = Object.freeze([
   "packageIdentity",
   "packageSetDigest",
   "rootKeyId",
-  "safeValueProvenanceDigest",
+  "safeValueProvenanceDigests",
   "safeValueStateId",
   "safeValueTypeId",
   "schema",
@@ -203,8 +214,12 @@ function hasExactDataShape(
   keys: readonly string[],
   functionsAllowed = false,
 ): boolean {
+  if (nodeUtilTypes.isProxy(value)) return false;
   if (Object.getPrototypeOf(value) !== Object.prototype) return false;
-  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const descriptors = Object.getOwnPropertyDescriptors(value) as Record<
+    string,
+    PropertyDescriptor
+  >;
   if (Object.keys(descriptors).sort().join(",") !== keys.join(",")) return false;
   const dataPropertiesAreValid = Object.values(descriptors).every((descriptor) =>
     "value" in descriptor
@@ -237,6 +252,60 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
 }
 
+/** Accepts only the exact four-element, plain-array provenance tuple. */
+function provenanceDigestsAreValid(
+  value: unknown,
+): value is ProductionSlideRestoreProvenanceDigests {
+  if (
+    typeof value !== "object"
+    || value === null
+    || nodeUtilTypes.isProxy(value)
+    || !Array.isArray(value)
+    || Object.getPrototypeOf(value) !== Array.prototype
+  ) {
+    return false;
+  }
+  const descriptors: Record<string, PropertyDescriptor> =
+    Object.getOwnPropertyDescriptors(value) as unknown as Record<
+      string,
+      PropertyDescriptor
+    >;
+  if (Object.keys(descriptors).sort().join(",") !== "0,1,2,3,length") {
+    return false;
+  }
+  const lengthDescriptor = descriptors.length;
+  if (
+    lengthDescriptor === undefined
+    || !("value" in lengthDescriptor)
+    || lengthDescriptor.value !== 4
+    || lengthDescriptor.get !== undefined
+    || lengthDescriptor.set !== undefined
+  ) return false;
+  const seen = new Set<string>();
+  for (const index of ["0", "1", "2", "3"] as const) {
+    const descriptor = descriptors[index];
+    const digest = descriptor !== undefined && "value" in descriptor
+      ? descriptor.value
+      : undefined;
+    if (
+      descriptor === undefined
+      || !("value" in descriptor)
+      || descriptor.get !== undefined
+      || descriptor.set !== undefined
+      || typeof digest !== "string"
+      || !DIGEST.test(digest)
+      || seen.has(digest)
+    ) return false;
+    seen.add(digest);
+  }
+  try {
+    structuredClone(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Validates the complete closed manifest before any callback executes. */
 function manifestShapeIsValid(
   value: unknown,
@@ -260,7 +329,7 @@ function manifestShapeIsValid(
     && DIGEST.test(manifest.toolManifestDigest)
     && manifest.safeValueTypeId === "Int"
     && isNonEmptyString(manifest.safeValueStateId)
-    && DIGEST.test(manifest.safeValueProvenanceDigest)
+    && provenanceDigestsAreValid(manifest.safeValueProvenanceDigests)
     && Number.isSafeInteger(manifest.currentEpoch)
     && manifest.currentEpoch >= 0
     && isNonEmptyString(manifest.rootKeyId)
@@ -315,7 +384,9 @@ function signaturePreimage(manifest: ProductionSlideRestoreManifest): Uint8Array
   const text = [
     "galerina.production-slide-restore.sig.v1",
     ...SIGNED_MANIFEST_KEYS.map((key) => {
-      const value = String(record[key]);
+      const value = key === "safeValueProvenanceDigests"
+        ? JSON.stringify(record[key])
+        : String(record[key]);
       return `${key.length}:${key}=${value.length}:${value}`;
     }),
   ].join("\n");
@@ -343,6 +414,7 @@ function observationIsValid(
   value: unknown,
   manifest: ProductionSlideRestoreManifest,
   expectedValue: 1 | -1,
+  expectedProvenanceDigest: string,
 ): value is ProductionSlideRestoreObservation {
   if (
     typeof value !== "object"
@@ -363,7 +435,7 @@ function observationIsValid(
     && observation.currentEpoch === manifest.currentEpoch
     && observation.safeValueTypeId === manifest.safeValueTypeId
     && observation.safeValueStateId === manifest.safeValueStateId
-    && observation.safeValueProvenanceDigest === manifest.safeValueProvenanceDigest
+    && observation.safeValueProvenanceDigest === expectedProvenanceDigest
     && observation.fallbackInvoked === false
     && observation.verificationVerdict === 1
     && observation.value === expectedValue;
@@ -395,8 +467,12 @@ export function admitAuthenticatedSlideRestoreProfile(
     }
     // Snapshot every accepted surface before invoking caller-controlled code;
     // otherwise a verifier can mutate an already-validated record (TOCTOU).
+    const safeValueProvenanceDigests = Object.freeze([
+      ...manifestValue.safeValueProvenanceDigests,
+    ]) as ProductionSlideRestoreProvenanceDigests;
     const manifest: ProductionSlideRestoreManifest = Object.freeze({
       ...manifestValue,
+      safeValueProvenanceDigests,
     });
     const authority: ProductionSlideRestoreAuthority = Object.freeze({
       ...authorityValue,
@@ -452,14 +528,26 @@ export function admitAuthenticatedSlideRestoreProfile(
       manifest.operationalKeyId,
     );
 
-    for (const [snapshotPresent, integrityOk, expectedValue] of VECTORS) {
+    for (const [index, vector] of VECTORS.entries()) {
+      const [snapshotPresent, integrityOk, expectedValue] = vector;
+      const expectedProvenanceDigest = manifest.safeValueProvenanceDigests[index];
+      if (expectedProvenanceDigest === undefined) {
+        refuse("PRODUCTION_SLIDE_RESTORE_EXECUTION_REFUSED");
+      }
       let observation: unknown;
       try {
         observation = executionPort.executeAndVerify(snapshotPresent, integrityOk);
       } catch {
         refuse("PRODUCTION_SLIDE_RESTORE_EXECUTION_REFUSED");
       }
-      if (!observationIsValid(observation, manifest, expectedValue)) {
+      if (
+        !observationIsValid(
+          observation,
+          manifest,
+          expectedValue,
+          expectedProvenanceDigest,
+        )
+      ) {
         refuse("PRODUCTION_SLIDE_RESTORE_EXECUTION_REFUSED");
       }
     }
@@ -478,7 +566,7 @@ export function admitAuthenticatedSlideRestoreProfile(
       toolManifestDigest: manifest.toolManifestDigest,
       safeValueTypeId: manifest.safeValueTypeId,
       safeValueStateId: manifest.safeValueStateId,
-      safeValueProvenanceDigest: manifest.safeValueProvenanceDigest,
+      safeValueProvenanceDigests: manifest.safeValueProvenanceDigests,
       currentEpoch: manifest.currentEpoch,
       rootKeyId: manifest.rootKeyId,
       operationalKeyId: manifest.operationalKeyId,

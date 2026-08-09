@@ -2,12 +2,15 @@
  * Joins sealed SLIDE execution and platform durability evidence as K3 0.
  * Change control: production boot composition candidate v1, 2026-08-09.
  * Relates to the production boot composition design, both owning admission
- * modules and RD-0789; it deliberately exposes no execution or release port.
+ * modules and RD-0791; it deliberately exposes no execution or release port.
  */
+
+import { types as nodeUtilTypes } from "node:util";
 
 import {
   isAuthenticatedSlideRestoreProfile,
   type AuthenticatedSlideRestoreProfile,
+  type ProductionSlideRestoreProvenanceDigests,
 } from "./production-slide-restore-admission.js";
 import {
   isProductionRegistryDurabilityProfile,
@@ -29,7 +32,7 @@ export interface ProductionBootCompositionPolicy {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: ProductionSlideRestoreProvenanceDigests;
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -75,7 +78,7 @@ export interface ProductionBootCompositionCandidate {
   readonly toolManifestDigest: string;
   readonly safeValueTypeId: "Int";
   readonly safeValueStateId: string;
-  readonly safeValueProvenanceDigest: string;
+  readonly safeValueProvenanceDigests: ProductionSlideRestoreProvenanceDigests;
   readonly currentEpoch: number;
   readonly rootKeyId: string;
   readonly operationalKeyId: string;
@@ -144,7 +147,7 @@ const POLICY_KEYS = Object.freeze([
   "platform",
   "releaseId",
   "rootKeyId",
-  "safeValueProvenanceDigest",
+  "safeValueProvenanceDigests",
   "safeValueStateId",
   "safeValueTypeId",
   "schema",
@@ -171,8 +174,12 @@ function refuse(): never {
 
 /** Accepts only one proxy-free plain record with exact own data properties. */
 function hasExactDataShape(value: object, keys: readonly string[]): boolean {
+  if (nodeUtilTypes.isProxy(value)) return false;
   if (Object.getPrototypeOf(value) !== Object.prototype) return false;
-  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const descriptors = Object.getOwnPropertyDescriptors(value) as Record<
+    string,
+    PropertyDescriptor
+  >;
   if (Object.keys(descriptors).sort().join(",") !== keys.join(",")) return false;
   const exactData = Object.values(descriptors).every((descriptor) =>
     "value" in descriptor
@@ -202,6 +209,60 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
 }
 
+/** Accepts only the exact four-element, plain-array provenance tuple. */
+function provenanceDigestsAreValid(
+  value: unknown,
+): value is ProductionSlideRestoreProvenanceDigests {
+  if (
+    typeof value !== "object"
+    || value === null
+    || nodeUtilTypes.isProxy(value)
+    || !Array.isArray(value)
+    || Object.getPrototypeOf(value) !== Array.prototype
+  ) {
+    return false;
+  }
+  const descriptors: Record<string, PropertyDescriptor> =
+    Object.getOwnPropertyDescriptors(value) as unknown as Record<
+      string,
+      PropertyDescriptor
+    >;
+  if (Object.keys(descriptors).sort().join(",") !== "0,1,2,3,length") {
+    return false;
+  }
+  const lengthDescriptor = descriptors.length;
+  if (
+    lengthDescriptor === undefined
+    || !("value" in lengthDescriptor)
+    || lengthDescriptor.value !== 4
+    || lengthDescriptor.get !== undefined
+    || lengthDescriptor.set !== undefined
+  ) return false;
+  const seen = new Set<string>();
+  for (const index of ["0", "1", "2", "3"] as const) {
+    const descriptor = descriptors[index];
+    const digest = descriptor !== undefined && "value" in descriptor
+      ? descriptor.value
+      : undefined;
+    if (
+      descriptor === undefined
+      || !("value" in descriptor)
+      || descriptor.get !== undefined
+      || descriptor.set !== undefined
+      || typeof digest !== "string"
+      || !DIGEST.test(digest)
+      || seen.has(digest)
+    ) return false;
+    seen.add(digest);
+  }
+  try {
+    structuredClone(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Validates the complete policy without invoking caller-controlled code. */
 function policyShapeIsValid(
   value: unknown,
@@ -228,7 +289,7 @@ function policyShapeIsValid(
     && DIGEST.test(policy.toolManifestDigest)
     && policy.safeValueTypeId === "Int"
     && isNonEmptyString(policy.safeValueStateId)
-    && DIGEST.test(policy.safeValueProvenanceDigest)
+    && provenanceDigestsAreValid(policy.safeValueProvenanceDigests)
     && Number.isSafeInteger(policy.currentEpoch)
     && policy.currentEpoch >= 0
     && isNonEmptyString(policy.rootKeyId)
@@ -270,7 +331,9 @@ function slideProfileMatches(
     && policy.toolManifestDigest === profile.toolManifestDigest
     && policy.safeValueTypeId === profile.safeValueTypeId
     && policy.safeValueStateId === profile.safeValueStateId
-    && policy.safeValueProvenanceDigest === profile.safeValueProvenanceDigest
+    && policy.safeValueProvenanceDigests.every(
+      (digest, index) => digest === profile.safeValueProvenanceDigests[index],
+    )
     && policy.currentEpoch === profile.currentEpoch
     && policy.rootKeyId === profile.rootKeyId
     && policy.operationalKeyId === profile.operationalKeyId
@@ -331,8 +394,12 @@ export function admitProductionBootCompositionCandidate(
     if (!isAuthenticatedSlideRestoreProfile(slideProfileValue)) refuse();
     if (!isProductionRegistryDurabilityProfile(durabilityProfileValue)) refuse();
 
+    const safeValueProvenanceDigests = Object.freeze([
+      ...policyValue.safeValueProvenanceDigests,
+    ]) as ProductionSlideRestoreProvenanceDigests;
     const policy: ProductionBootCompositionPolicy = Object.freeze({
       ...policyValue,
+      safeValueProvenanceDigests,
     });
     const slideProfile = slideProfileValue;
     const durabilityProfile = durabilityProfileValue;
@@ -364,7 +431,7 @@ export function admitProductionBootCompositionCandidate(
       toolManifestDigest: policy.toolManifestDigest,
       safeValueTypeId: policy.safeValueTypeId,
       safeValueStateId: policy.safeValueStateId,
-      safeValueProvenanceDigest: policy.safeValueProvenanceDigest,
+      safeValueProvenanceDigests: policy.safeValueProvenanceDigests,
       currentEpoch: policy.currentEpoch,
       rootKeyId: policy.rootKeyId,
       operationalKeyId: policy.operationalKeyId,
