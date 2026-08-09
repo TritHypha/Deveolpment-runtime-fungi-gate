@@ -16,11 +16,13 @@ The current maintenance evidence and remaining route are recorded in
 `docs/reports/full-maintenance-regeneration-2026-08-09.md`; the report is the
 count-owning source for this maintenance chapter.
 SLIDE Contract 85 implementation head `aa90dd7` indexes to **9,775 nodes /
-23,712 edges**, exactly equal to the indexer's expected counts. Hypha's
+23,712 edges**, exactly equal to the indexer's expected counts; its Contract
+85 closure-evidence checkpoint `7b026a2` indexes to **9,775 nodes / 23,716
+edges**, also exactly equal to expected. Hypha's
 own detector is **58/58**; its broad scan remains a non-authorizing lead set,
 not a bulk defect count. SLIDE's contract check now passes **94 files in two
 closed partitions**, its tool manifest passes **89 files** with digest
-`535e1d86...69fdb`, its independent final path-leak gate passes **14 controls / 747
+`535e1d86...69fdb`, its independent final path-leak gate passes **14 controls / 751
 targets**, security closure is `+1`
 with evidence K3 `0`, and the complete bounded reference suite passes
 **863/863 across 95 suites** with no authority released. The fresh Galerina

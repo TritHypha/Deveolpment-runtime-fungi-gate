@@ -29,7 +29,8 @@ counts or open items that a newer section explicitly supersedes.
   aggregate is **99/99 packages / 9,464 tests / 0 fail**, and both normal and
   exhaustive phase-close lanes pass every blocking gate. Implementation
   checkpoint `ade75593` indexes at **45,711 nodes / 120,676 edges**, exactly
-  equal to expected totals. No production, signing, durability, conversion or
+  equal to expected totals; Contract 86 closure-evidence checkpoint `50de0a45`
+  retains the same exact graph totals. No production, signing, durability, conversion or
   retirement authority follows.
 
 ### Sequential full maintenance close - 2026-08-09
