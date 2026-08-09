@@ -77,15 +77,17 @@ intent → governed execution plan → coordinated compute → audit proof
 
 > **Current beta-v1 checkpoint (2026-08-09):** the full pipeline
 > lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT is shipped
-> and green (`galerina-core-compiler` 6,319/6,319; whole suite 99/99 packages,
-> 9,464 tests, zero failures at the last canonical count). All seven canonical `.fungi` compiler stages
+> and green (`galerina-core-compiler` 6,319/6,319; whole suite 100/100 packages,
+> 9,470 tests, zero failures at the current canonical count). All seven canonical `.fungi` compiler stages
 > are authoritative specifications, with TypeScript retained as the executing
 > differential/bootstrap layer. Independent SLIDE now executes a bounded
 > checked-Fungi family through canonical GIR, physical `.slide`, independent
-> re-admission and VOK (**857/857 across 94 suites**). Galerina Contract 85 binds
+> re-admission and VOK (**866/866 across 96 suites**). Galerina Contract 85 binds
 > the real `restoreVerdict` decision source to a receipt-bound 617-byte package
 > candidate and mandatory reference-only consumer switch with **4/4** focused
-> evidence, but production boot composition,
+> hybrid-authenticated typed evidence. Contract 86 retains its exhaustive
+> 19,683-vector proof and adds one authenticated authorizing candidate (**5/5**),
+> but production boot composition and authenticated platform evidence,
 > general source families, literal `.ts` retirement and production authority
 > remain later gates; see
 > `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`.

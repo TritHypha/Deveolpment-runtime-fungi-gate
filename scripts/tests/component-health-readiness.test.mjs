@@ -57,6 +57,7 @@ test("component health counts the benchmark package's governed test/ surface", (
 
   const expectedRegistryRows = [
     ["Hypha passive capability map", "shipped"],
+    ["Verified affected-scope planner", "shipped"],
     ["Memory retention audit and bounded caches", "building"],
     [".gate v3", "building"],
   ];

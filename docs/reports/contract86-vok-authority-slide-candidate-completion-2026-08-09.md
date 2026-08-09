@@ -1,5 +1,9 @@
 # Contract 86 VOK authority SLIDE candidate completion
 
+> Historical physical-candidate checkpoint. The current authenticated typed
+> integration is recorded in
+> [authenticated-typed-slide-integration-2026-08-09.md](authenticated-typed-slide-integration-2026-08-09.md).
+
 Date: 2026-08-09
 
 Status: **COMPLETE - REFERENCE-ONLY, NON-AUTHORIZING**

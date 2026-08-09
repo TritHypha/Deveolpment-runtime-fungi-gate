@@ -1158,6 +1158,19 @@
       "dependencies": []
     },
     {
+      "identity": "@galerina/devtools-impact",
+      "version": "1.0.0-beta.1",
+      "directory": "galerina-devtools-impact",
+      "contentDigest": "1f4f9d27814cce2ed9f8404e727bd63f204de252d98528eaf88f1e43c3f8661b",
+      "manifestDigests": [
+        {
+          "path": "package.json",
+          "digest": "6a15e8d095488385d6732001d22309304317fe24d01183af3ca305cae2158112"
+        }
+      ],
+      "dependencies": []
+    },
+    {
       "identity": "@galerina/devtools-intelligence",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-intelligence",
@@ -2350,6 +2363,7 @@
     "@galerina/db-sqlite",
     "@galerina/devtools-graph-algorithms",
     "@galerina/devtools-hypha",
+    "@galerina/devtools-impact",
     "@galerina/devtools-kb-graph",
     "@galerina/devtools-package-graph",
     "@galerina/devtools-project-graph",
@@ -3254,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "9d329de4e43be61da684f26f2cd460df72a8f746c83332e54f765c68d3eb6932"
+  "rootDigest": "ca4c1b977da404d5015b18cd06e24a55b8f92ff3787799f0d30a9df6286674e7"
 }

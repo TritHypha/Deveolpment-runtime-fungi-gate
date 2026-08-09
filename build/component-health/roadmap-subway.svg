@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1414" width="1600" height="1414" role="img" aria-label="Galerina roadmap subway map">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1434" width="1600" height="1434" role="img" aria-label="Galerina roadmap subway map">
 <style>
   :root { --paper:#fbfaf7; --ink:#1b1a17; --rule:#c9c4ba; }
   @media (prefers-color-scheme: dark) { :root { --paper:#16181c; --ink:#e8e6e1; --rule:#3a3f47; } }
@@ -12,7 +12,7 @@
 </style>
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="342" y="34" text-anchor="end" class="title">Where the project is</text>
-<text x="360" y="34" class="sub">v1.0.0-beta.2 · 99 packages · 9464 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
+<text x="360" y="34" class="sub">v1.0.0-beta.2 · 100 packages · 9470 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
 <text x="360" y="50" class="sub">generated from component-health + the RD-0528/RD-0361 authority ledgers; exact build identity is in build/component-health/provenance.json</text>
 <text x="342" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="342" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
@@ -199,8 +199,8 @@
 <text x="406.3" y="818" class="pct">3%</text>
 <text x="439.3" y="818" class="sub">asserted</text>
 <text x="342" y="854" text-anchor="end" class="line-name" fill="#1c5ea8">Tracking registry</text>
-<text x="342" y="868" text-anchor="end" class="sub">26 named workstreams</text>
-<text x="360" y="854" class="stn">shipped (14)</text>
+<text x="342" y="868" text-anchor="end" class="sub">29 named workstreams</text>
+<text x="360" y="854" class="stn">shipped (16)</text>
 <circle cx="360" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
 <text x="372" y="878" class="sub">Compiler authority (RD-0528)</text>
 <circle cx="915" cy="874" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
@@ -224,44 +224,50 @@
 <circle cx="360" cy="974" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
 <text x="372" y="978" class="sub">Hypha passive capability map</text>
 <circle cx="915" cy="974" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="978" class="sub">Signing-key custody</text>
+<text x="927" y="978" class="sub">Verified affected-scope planner</text>
 <circle cx="360" cy="994" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="998" class="sub">ZTF-KB path-leak guard</text>
+<text x="372" y="998" class="sub">Grok evidence intake</text>
 <circle cx="915" cy="994" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="998" class="sub">myco</text>
-<text x="360" y="1028" class="stn">building (9)</text>
-<circle cx="360" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="1052" class="sub">Execution-cutover (RD-0361)</text>
-<circle cx="915" cy="1048" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="1052" class="sub">Independent SLIDE backend</text>
+<text x="927" y="998" class="sub">Signing-key custody</text>
+<circle cx="360" cy="1014" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="372" y="1018" class="sub">ZTF-KB path-leak guard</text>
+<circle cx="915" cy="1014" r="5" fill="#1c5ea8" stroke="#1c5ea8" stroke-width="2"/>
+<text x="927" y="1018" class="sub">myco</text>
+<text x="360" y="1048" class="stn">building (10)</text>
 <circle cx="360" cy="1068" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="1072" class="sub">Package retirement</text>
+<text x="372" y="1072" class="sub">Execution-cutover (RD-0361)</text>
 <circle cx="915" cy="1068" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="1072" class="sub">Value-unit types (RD-0349)</text>
+<text x="927" y="1072" class="sub">Independent SLIDE backend</text>
 <circle cx="360" cy="1088" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="1092" class="sub">Package Standard + pub ladder</text>
+<text x="372" y="1092" class="sub">Package retirement</text>
 <circle cx="915" cy="1088" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="1092" class="sub">Security-infra designs (×4)</text>
+<text x="927" y="1092" class="sub">Value-unit types (RD-0349)</text>
 <circle cx="360" cy="1108" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="1112" class="sub">Memory retention audit and bounded caches</text>
+<text x="372" y="1112" class="sub">Package Standard + pub ladder</text>
 <circle cx="915" cy="1108" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="927" y="1112" class="sub">.gate v3</text>
+<text x="927" y="1112" class="sub">Security-infra designs (×4)</text>
 <circle cx="360" cy="1128" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
-<text x="372" y="1132" class="sub">RD-0363/0364/0365 wiring (R&amp;D done)</text>
-<text x="360" y="1162" class="stn">post-v1 (3)</text>
-<circle cx="360" cy="1182" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="372" y="1186" class="sub">Self-hosting SLIDE bootstrap fixpoint</text>
-<circle cx="915" cy="1182" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="927" y="1186" class="sub">KB category indexes</text>
+<text x="372" y="1132" class="sub">Memory retention audit and bounded caches</text>
+<circle cx="915" cy="1128" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="927" y="1132" class="sub">General Fungi-to-SLIDE control-flow corpus</text>
+<circle cx="360" cy="1148" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="372" y="1152" class="sub">.gate v3</text>
+<circle cx="915" cy="1148" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2"/>
+<text x="927" y="1152" class="sub">RD-0363/0364/0365 wiring (R&amp;D done)</text>
+<text x="360" y="1182" class="stn">post-v1 (3)</text>
 <circle cx="360" cy="1202" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="372" y="1206" class="sub">TritMesh / .hypha / TritMeshQL</text>
-<text x="342" y="1248" text-anchor="end" class="line-name" fill="var(--ink)">Not a number</text>
-<text x="342" y="1262" text-anchor="end" class="sub">no percentage claimed</text>
-<circle cx="360" cy="1248" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="374" y="1252" class="stn">Independent SLIDE general executable backend</text>
-<circle cx="360" cy="1270" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="374" y="1274" class="stn">B8 governed HTTP transport (TLSTP)</text>
-<circle cx="360" cy="1292" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
-<text x="374" y="1296" class="stn">Lyth/Weaver Verified Admission Fabric</text>
-<text x="360" y="1360" class="sub"><tspan class="stn">solid station</tspan> — reached / authority flipped</text><text x="360" y="1375" class="sub"><tspan class="stn">hollow station</tspan> — not yet reached</text><text x="360" y="1390" class="sub"><tspan class="stn">dashed ring</tspan> — the number is ASSERTED (hand-typed), not measured</text>
+<text x="372" y="1206" class="sub">Self-hosting SLIDE bootstrap fixpoint</text>
+<circle cx="915" cy="1202" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="927" y="1206" class="sub">KB category indexes</text>
+<circle cx="360" cy="1222" r="5" fill="var(--paper)" stroke="#1c5ea8" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="372" y="1226" class="sub">TritMesh / .hypha / TritMeshQL</text>
+<text x="342" y="1268" text-anchor="end" class="line-name" fill="var(--ink)">Not a number</text>
+<text x="342" y="1282" text-anchor="end" class="sub">no percentage claimed</text>
+<circle cx="360" cy="1268" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="374" y="1272" class="stn">Independent SLIDE general executable backend</text>
+<circle cx="360" cy="1290" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="374" y="1294" class="stn">B8 governed HTTP transport (TLSTP)</text>
+<circle cx="360" cy="1312" r="5" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2.5"/>
+<text x="374" y="1316" class="stn">Lyth/Weaver Verified Admission Fabric</text>
+<text x="360" y="1380" class="sub"><tspan class="stn">solid station</tspan> — reached / authority flipped</text><text x="360" y="1395" class="sub"><tspan class="stn">hollow station</tspan> — not yet reached</text><text x="360" y="1410" class="sub"><tspan class="stn">dashed ring</tspan> — the number is ASSERTED (hand-typed), not measured</text>
 </svg>

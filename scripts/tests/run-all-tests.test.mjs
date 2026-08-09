@@ -55,6 +55,93 @@ function workspaceFixture(packageName, packageJson, files = {}) {
   return root;
 }
 
+function parallelWorkspaceFixture() {
+  const root = mkdtempSync(join(tmpdir(), "galerina-run-all-parallel-"));
+  roots.push(root);
+  const packageNames = ["parallel-a", "parallel-b"];
+  write(root, "galerina.workspace.json", JSON.stringify({
+    packages: packageNames.map((name) => `packages-galerina/${name}`),
+  }));
+  write(root, "governance/tooling-policy.json", JSON.stringify({
+    schemaVersion: 1,
+    packageNoTest: {},
+    toolExceptions: {},
+    generators: {},
+  }));
+  for (const packageName of packageNames) {
+    const peerName = packageName === "parallel-a" ? "parallel-b" : "parallel-a";
+    write(root, `packages-galerina/${packageName}/package.json`, JSON.stringify({
+      name: `@galerina/${packageName}`,
+      scripts: { test: "node concurrent-proof.cjs" },
+    }));
+    write(root, `packages-galerina/${packageName}/concurrent-proof.cjs`, [
+      `const fs = require("node:fs");`,
+      `const path = require("node:path");`,
+      `const root = path.resolve(__dirname, "..", "..");`,
+      `const own = path.join(root, "${packageName}.ready");`,
+      `const peer = path.join(root, "${peerName}.ready");`,
+      `fs.writeFileSync(own, "ready");`,
+      `const deadline = Date.now() + 5000;`,
+      `const waitCell = new Int32Array(new SharedArrayBuffer(4));`,
+      `while (!fs.existsSync(peer) && Date.now() < deadline) Atomics.wait(waitCell, 0, 0, 25);`,
+      `if (!fs.existsSync(peer)) process.exit(2);`,
+      `console.log("tests 1\\npass 1\\nfail 0");`,
+    ].join("\n") + "\n");
+  }
+  return root;
+}
+
+function compilerIsolationFixture() {
+  const root = mkdtempSync(join(tmpdir(), "galerina-run-all-isolation-"));
+  roots.push(root);
+  write(root, "galerina.workspace.json", JSON.stringify({
+    packages: [
+      "packages-galerina/galerina-core-compiler",
+      "packages-galerina/galerina-dependent",
+    ],
+  }));
+  write(root, "governance/tooling-policy.json", JSON.stringify({
+    schemaVersion: 1,
+    packageNoTest: {},
+    toolExceptions: {},
+    generators: {},
+  }));
+  write(root, "packages-galerina/galerina-core-compiler/package.json", JSON.stringify({
+    name: "@galerina/core-compiler",
+    scripts: { test: "node isolation-proof.cjs" },
+  }));
+  write(root, "packages-galerina/galerina-core-compiler/isolation-proof.cjs", [
+    `const fs = require("node:fs");`,
+    `const path = require("node:path");`,
+    `const root = path.resolve(__dirname, "..", "..");`,
+    `const active = path.join(root, "compiler.active");`,
+    `const done = path.join(root, "compiler.done");`,
+    `const waitCell = new Int32Array(new SharedArrayBuffer(4));`,
+    `fs.writeFileSync(active, "active");`,
+    `Atomics.wait(waitCell, 0, 0, 500);`,
+    `fs.rmSync(active);`,
+    `fs.writeFileSync(done, "done");`,
+    `console.log("tests 1\\npass 1\\nfail 0");`,
+  ].join("\n") + "\n");
+  write(root, "packages-galerina/galerina-dependent/package.json", JSON.stringify({
+    name: "@galerina/dependent",
+    scripts: { test: "node isolation-proof.cjs" },
+  }));
+  write(root, "packages-galerina/galerina-dependent/isolation-proof.cjs", [
+    `const fs = require("node:fs");`,
+    `const path = require("node:path");`,
+    `const root = path.resolve(__dirname, "..", "..");`,
+    `const active = path.join(root, "compiler.active");`,
+    `const done = path.join(root, "compiler.done");`,
+    `const deadline = Date.now() + 3000;`,
+    `const waitCell = new Int32Array(new SharedArrayBuffer(4));`,
+    `while (!fs.existsSync(active) && !fs.existsSync(done) && Date.now() < deadline) Atomics.wait(waitCell, 0, 0, 25);`,
+    `if (fs.existsSync(active) || !fs.existsSync(done)) process.exit(2);`,
+    `console.log("tests 1\\npass 1\\nfail 0");`,
+  ].join("\n") + "\n");
+  return root;
+}
+
 function run(root, ...args) {
   return spawnSync(
     process.execPath,
@@ -105,10 +192,11 @@ test("an existing dist directory never bypasses the declared test and build chai
   );
   const report = JSON.parse(result.stdout);
   assert.deepEqual(report.controls, {
-    testConcurrency: 4,
+    testConcurrency: 2,
+    packageConcurrency: 2,
     processIsolation: "process",
   });
-  assert.match(result.stderr, /START galerina-build-current.*ceiling 4/);
+  assert.match(result.stderr, /START galerina-build-current.*test-file ceiling 2/);
   assert.match(result.stderr, /END galerina-build-current.*pass/);
   assert.equal(report.results[0].built, true);
   assert.equal(report.results[0].tests, 1);
@@ -134,6 +222,48 @@ test("a caller may lower but never raise the test concurrency ceiling", () => {
   const raised = run(root, "--json", "--test-concurrency", "5");
   assert.equal(raised.status, 3);
   assert.match(raised.stderr, /TEST-CONCURRENCY-INVALID|one through four/i);
+});
+
+test("package concurrency is bounded and overlaps independent package tests", () => {
+  const root = parallelWorkspaceFixture();
+
+  const result = run(
+    root,
+    "--json",
+    "--package-concurrency",
+    "2",
+    "--test-concurrency",
+    "1",
+  );
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.controls.packageConcurrency, 2);
+  assert.equal(report.controls.testConcurrency, 1);
+  assert.equal(report.totals.passed, 2);
+  assert.deepEqual(
+    report.results.map((item) => item.package),
+    ["galerina-parallel-a", "galerina-parallel-b"],
+    "completion order must not change report order",
+  );
+
+  const refused = run(root, "--json", "--package-concurrency", "3");
+  assert.equal(refused.status, 3);
+  assert.match(refused.stderr, /PACKAGE-CONCURRENCY-INVALID|one or two/i);
+});
+
+test("compiler build authority is isolated before dependent package tests", () => {
+  const root = compilerIsolationFixture();
+
+  const result = run(root, "--json", "--package-concurrency", "2");
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.totals.passed, 2);
+  assert.deepEqual(
+    report.results.map((item) => item.package),
+    ["galerina-core-compiler", "galerina-dependent"],
+  );
 });
 
 test("a zero exit with no parseable non-zero test summary is refused", () => {

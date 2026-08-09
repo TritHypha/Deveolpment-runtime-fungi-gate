@@ -652,6 +652,11 @@ flowchart LR
   T_run_core_tests_cjs["run-core-tests.cjs"]
   T_run_core_tests_cjs --> C_diagnostics
   T_run_core_tests_cjs --> C_graph_index
+  T_run_impact_check_mjs["run-impact-check.mjs"]
+  T_run_impact_check_mjs --> C_signing_fusion
+  T_run_impact_check_mjs --> C_diagnostics
+  T_run_impact_check_mjs --> C_source_hygiene
+  T_run_impact_check_mjs --> C_graph_index
   T_run_phase_close_mjs["run-phase-close.mjs"]
   T_run_phase_close_mjs --> C_governance
   T_run_phase_close_mjs --> C_naming

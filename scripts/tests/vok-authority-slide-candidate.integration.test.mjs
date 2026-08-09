@@ -17,6 +17,7 @@ import {
   digestRuntimeFile,
   slideToolManifestDigest,
 } from "../lib/receipt-bound-slide-build.mjs";
+import { createDisposableSlideObjectAuthenticator } from "./helpers/disposable-slide-object-authentication.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
@@ -90,6 +91,42 @@ function* k3Vectors(width, prefix = []) {
   }
 }
 
+function authenticatedExpectation(receipt) {
+  return {
+    packageSetDigest: receipt.packageSetDigest,
+    packageIdentity: receipt.packageIdentity,
+    exportName: receipt.exportName,
+    slideBundleDigest: receipt.slideBundleDigest,
+    compilerProfileId: receipt.compilerProfileId,
+    toolManifestDigest: receipt.toolManifestDigest,
+    currentEpoch: receipt.currentEpoch,
+    authenticationConsumptionDigest: receipt.authenticationConsumptionDigest,
+    typedReceiptDigest: receipt.typedReceiptDigest,
+    receiptDigest: receipt.receiptDigest,
+    typedReceiptExpectation: {
+      packageSetDigest: receipt.typedReceipt.packageSetDigest,
+      packageIdentity: receipt.typedReceipt.packageIdentity,
+      exportName: receipt.typedReceipt.exportName,
+      receiptDigest: receipt.typedReceipt.receiptDigest,
+      safeValueTypeId: receipt.typedReceipt.safeValueTypeId,
+      safeValueStateId: receipt.typedReceipt.safeValueStateId,
+      safeValueProvenanceDigest: receipt.typedReceipt.safeValueProvenanceDigest,
+    },
+  };
+}
+
+async function publishedObject() {
+  const receipt = JSON.parse(await readFile(join(PUBLICATION, "package-set.receipt.json"), "utf8"));
+  const artifact = receipt.artifacts[0];
+  return {
+    objectBytes: new Uint8Array(await readFile(join(PUBLICATION, basename(artifact.fileName)))),
+    packageSetDigest: receipt.packageSetDigest,
+    packageIdentity: PACKAGE_IDENTITY,
+    exportName: EXPORT_NAME,
+    compilerProfileId: artifact.compilerProfileId,
+  };
+}
+
 async function authority() {
   const pinBytes = await readFile(PIN_PATH);
   const manifestBytes = await readFile(MANIFEST_PATH);
@@ -99,6 +136,7 @@ async function authority() {
   assert.equal(`${JSON.stringify(manifest, null, 2)}\n`, manifestBytes.toString("utf8"));
   assert.equal(exactKeys(pin, ["schema", "repositoryCommit", "toolManifestDigest", "toolFileCount"]), true);
   assert.equal(pin.schema, "galerina.slide.reference-tool-pin.v1");
+  assert.equal(pin.repositoryCommit, "39920eb997a27bcb8deb937dcd97ef59612245aa");
   assert.equal(pin.toolFileCount, 89);
   assert.equal(exactKeys(manifest, ["schema", "context", "packages"]), true);
   assert.equal(manifest.schema, "slide.checked-fungi.source-manifest.v1");
@@ -162,6 +200,49 @@ describe("Contract 86 VOK authority source candidate", () => {
     }
     assert.equal(vectors, 19_683);
     assert.equal(authorizing, 1);
+  });
+
+  it("binds the exact authorizing vector to hybrid-authenticated .slide bytes", {
+    skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
+  }, async () => {
+    const { pin, manifest } = await authority();
+    const loader = await import(pathToFileURL(
+      join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
+    ).href);
+    const hybrid = await import(pathToFileURL(
+      join(SLIDE_ROOT, "src", "hybrid-object-authentication.mjs"),
+    ).href);
+    const authenticator = createDisposableSlideObjectAuthenticator(hybrid, {
+      ...await publishedObject(),
+      toolManifestDigest: pin.toolManifestDigest,
+    });
+    assert.equal(authenticator.verdict, 1);
+    const authenticated = authenticator.openHandle();
+    assert.equal(authenticated.verdict, 1, JSON.stringify(authenticated));
+    const prepared = await loader.prepareCheckedFungiPackagePublication({
+      publicationDirectory: PUBLICATION,
+      packageIdentity: PACKAGE_IDENTITY,
+      exportName: EXPORT_NAME,
+      context: manifest.context,
+      gates: ALL_ALLOW,
+    });
+    assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
+    const receipt = loader.executeAuthenticatedTypedCheckedFungiPackagePublication(
+      prepared.packageExecutionHandle,
+      authenticated.authenticatedObjectHandle,
+      Array(9).fill(1),
+      { steps: 256 },
+      { toolManifestDigest: pin.toolManifestDigest, currentEpoch: 15 },
+    );
+    assert.equal(receipt.verdict, 1, JSON.stringify(receipt));
+    assert.equal(receipt.authenticated, true);
+    assert.equal(receipt.fallbackInvoked, false);
+    const verified = loader.verifyAuthenticatedTypedCheckedFungiPackageReceipt(
+      receipt,
+      authenticatedExpectation(receipt),
+    );
+    assert.equal(verified.verdict, 1, JSON.stringify(verified));
+    assert.equal(verified.value, 1);
   });
 
   it("refuses malformed trits through the physical object", {

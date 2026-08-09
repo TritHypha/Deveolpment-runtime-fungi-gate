@@ -17,6 +17,7 @@ import {
   digestRuntimeFile,
   slideToolManifestDigest,
 } from "../lib/receipt-bound-slide-build.mjs";
+import { createDisposableSlideObjectAuthenticator } from "./helpers/disposable-slide-object-authentication.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
@@ -59,8 +60,49 @@ function exactKeys(value, keys) {
     && JSON.stringify(Object.keys(value)) === JSON.stringify(keys);
 }
 
-async function receiptBackedAuthority(loader, manifest, decisionCount) {
+function authenticatedExpectation(receipt) {
+  return {
+    packageSetDigest: receipt.packageSetDigest,
+    packageIdentity: receipt.packageIdentity,
+    exportName: receipt.exportName,
+    slideBundleDigest: receipt.slideBundleDigest,
+    compilerProfileId: receipt.compilerProfileId,
+    toolManifestDigest: receipt.toolManifestDigest,
+    currentEpoch: receipt.currentEpoch,
+    authenticationConsumptionDigest: receipt.authenticationConsumptionDigest,
+    typedReceiptDigest: receipt.typedReceiptDigest,
+    receiptDigest: receipt.receiptDigest,
+    typedReceiptExpectation: {
+      packageSetDigest: receipt.typedReceipt.packageSetDigest,
+      packageIdentity: receipt.typedReceipt.packageIdentity,
+      exportName: receipt.typedReceipt.exportName,
+      receiptDigest: receipt.typedReceipt.receiptDigest,
+      safeValueTypeId: receipt.typedReceipt.safeValueTypeId,
+      safeValueStateId: receipt.typedReceipt.safeValueStateId,
+      safeValueProvenanceDigest: receipt.typedReceipt.safeValueProvenanceDigest,
+    },
+  };
+}
+
+async function publishedObject() {
+  const receipt = JSON.parse(await readFile(join(PUBLICATION, "package-set.receipt.json"), "utf8"));
+  const artifact = receipt.artifacts[0];
+  return {
+    objectBytes: new Uint8Array(await readFile(join(PUBLICATION, basename(artifact.fileName)))),
+    packageSetDigest: receipt.packageSetDigest,
+    packageIdentity: "@galerina/core-sentinel-state",
+    exportName: "restoreVerdict",
+    compilerProfileId: artifact.compilerProfileId,
+  };
+}
+
+async function receiptBackedAuthority(loader, hybrid, manifest, pin, decisionCount) {
   const handles = [];
+  const authenticator = createDisposableSlideObjectAuthenticator(hybrid, {
+    ...await publishedObject(),
+    toolManifestDigest: pin.toolManifestDigest,
+  });
+  assert.equal(authenticator.verdict, 1);
   for (let index = 0; index < decisionCount; index += 1) {
     const prepared = await loader.prepareCheckedFungiPackagePublication({
       publicationDirectory: PUBLICATION,
@@ -70,31 +112,37 @@ async function receiptBackedAuthority(loader, manifest, decisionCount) {
       gates: ALL_ALLOW,
     });
     assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
-    handles.push(prepared.packageExecutionHandle);
+    const authenticated = authenticator.openHandle();
+    assert.equal(authenticated.verdict, 1, JSON.stringify(authenticated));
+    handles.push({
+      packageExecutionHandle: prepared.packageExecutionHandle,
+      authenticatedObjectHandle: authenticated.authenticatedObjectHandle,
+    });
   }
 
   return {
     packageIdentity: "@galerina/core-sentinel-state",
     exportName: "restoreVerdict",
     restoreVerdict(snapshotPresent, integrityOk) {
-      const handle = handles.shift();
-      assert.notEqual(handle, undefined, "one prepared affine handle per restore decision");
-      const receipt = loader.executeTypedCheckedFungiPackagePublication(
-        handle,
+      const selected = handles.shift();
+      assert.notEqual(selected, undefined, "one prepared affine handle per restore decision");
+      const receipt = loader.executeAuthenticatedTypedCheckedFungiPackagePublication(
+        selected.packageExecutionHandle,
+        selected.authenticatedObjectHandle,
         [snapshotPresent, integrityOk],
         { steps: 64 },
+        { toolManifestDigest: pin.toolManifestDigest, currentEpoch: 15 },
       );
-      assert.equal(receipt.status, "SUCCEEDED_PHYSICAL_REFERENCE_ONLY", JSON.stringify(receipt));
+      assert.equal(
+        receipt.status,
+        "SUCCEEDED_AUTHENTICATED_PHYSICAL_REFERENCE_ONLY",
+        JSON.stringify(receipt),
+      );
       assert.equal(receipt.fallbackInvoked, false);
-      const verified = loader.verifyTypedCheckedFungiPackageReceipt(receipt, {
-        packageSetDigest: receipt.packageSetDigest,
-        packageIdentity: "@galerina/core-sentinel-state",
-        exportName: "restoreVerdict",
-        receiptDigest: receipt.receiptDigest,
-        safeValueTypeId: receipt.safeValueTypeId,
-        safeValueStateId: receipt.safeValueStateId,
-        safeValueProvenanceDigest: receipt.safeValueProvenanceDigest,
-      });
+      const verified = loader.verifyAuthenticatedTypedCheckedFungiPackageReceipt(
+        receipt,
+        authenticatedExpectation(receipt),
+      );
       assert.equal(verified.verdict, 1, JSON.stringify(verified));
       return verified.value;
     },
@@ -113,7 +161,7 @@ async function authority() {
   assert.equal(`${JSON.stringify(manifest, null, 2)}\n`, manifestBytes.toString("utf8"));
   assert.equal(exactKeys(pin, ["schema", "repositoryCommit", "toolManifestDigest", "toolFileCount"]), true);
   assert.equal(pin.schema, "galerina.slide.reference-tool-pin.v1");
-  assert.equal(pin.repositoryCommit, "aa90dd72f04accd399c76b4bc650d097275bd735");
+  assert.equal(pin.repositoryCommit, "39920eb997a27bcb8deb937dcd97ef59612245aa");
   assert.equal(pin.toolFileCount, 89);
   assert.equal(exactKeys(manifest, ["schema", "context", "packages"]), true);
   assert.equal(manifest.schema, "slide.checked-fungi.source-manifest.v1");
@@ -129,10 +177,18 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
   it("re-admits and executes the committed source-free publication", {
     skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
   }, async () => {
-    const { manifest } = await authority();
+    const { pin, manifest } = await authority();
     const loader = await import(pathToFileURL(
       join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
     ).href);
+    const hybrid = await import(pathToFileURL(
+      join(SLIDE_ROOT, "src", "hybrid-object-authentication.mjs"),
+    ).href);
+    const authenticator = createDisposableSlideObjectAuthenticator(hybrid, {
+      ...await publishedObject(),
+      toolManifestDigest: pin.toolManifestDigest,
+    });
+    assert.equal(authenticator.verdict, 1);
     for (const [arguments_, expected] of [
       [[true, true], 1],
       [[false, true], -1],
@@ -146,21 +202,24 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
         gates: ALL_ALLOW,
       });
       assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
-      const receipt = loader.executeTypedCheckedFungiPackagePublication(
+      const authenticated = authenticator.openHandle();
+      assert.equal(authenticated.verdict, 1, JSON.stringify(authenticated));
+      const receipt = loader.executeAuthenticatedTypedCheckedFungiPackagePublication(
         prepared.packageExecutionHandle,
+        authenticated.authenticatedObjectHandle,
         arguments_,
         { steps: 64 },
+        { toolManifestDigest: pin.toolManifestDigest, currentEpoch: 15 },
       );
-      assert.equal(receipt.status, "SUCCEEDED_PHYSICAL_REFERENCE_ONLY", JSON.stringify(receipt));
-      const verified = loader.verifyTypedCheckedFungiPackageReceipt(receipt, {
-        packageSetDigest: receipt.packageSetDigest,
-        packageIdentity: receipt.packageIdentity,
-        exportName: receipt.exportName,
-        receiptDigest: receipt.receiptDigest,
-        safeValueTypeId: receipt.safeValueTypeId,
-        safeValueStateId: receipt.safeValueStateId,
-        safeValueProvenanceDigest: receipt.safeValueProvenanceDigest,
-      });
+      assert.equal(
+        receipt.status,
+        "SUCCEEDED_AUTHENTICATED_PHYSICAL_REFERENCE_ONLY",
+        JSON.stringify(receipt),
+      );
+      const verified = loader.verifyAuthenticatedTypedCheckedFungiPackageReceipt(
+        receipt,
+        authenticatedExpectation(receipt),
+      );
       assert.equal(verified.verdict, 1, JSON.stringify(verified));
       assert.equal(verified.value, expected);
       assert.equal(receipt.fallbackInvoked, false);
@@ -223,9 +282,12 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
   it("drives the real cold-boot consumer with receipt-verified decisions", {
     skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
   }, async () => {
-    const { manifest } = await authority();
+    const { pin, manifest } = await authority();
     const loader = await import(pathToFileURL(
       join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
+    ).href);
+    const hybrid = await import(pathToFileURL(
+      join(SLIDE_ROOT, "src", "hybrid-object-authentication.mjs"),
     ).href);
     const sentinel = await import(pathToFileURL(join(
       ROOT,
@@ -236,7 +298,7 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
     )).href);
     const parent = await mkdtemp(join(ROOT, "build", "contract85-consumer-"));
     TEMP.push(parent);
-    const decisionAuthority = await receiptBackedAuthority(loader, manifest, 3);
+    const decisionAuthority = await receiptBackedAuthority(loader, hybrid, manifest, pin, 3);
     const orchestrator = new sentinel.ColdBootOrchestrator(
       new sentinel.StateSerializer(),
       new sentinel.AtomicWriter(parent),

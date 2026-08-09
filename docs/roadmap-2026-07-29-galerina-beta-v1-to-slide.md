@@ -2,51 +2,47 @@
 
 Date: 2026-08-09
 Branch: `codex/galerina-beta-v1-completion`
-Current revalidated checkpoint: repository graph generation and independent
-drift checking pass **6/6**. The complete sequential maintenance close passes
-**95/95 package builds**, **99/99 package tests / 9,464 tests / 0 failed**
-(compiler **6,319**), **64/64** normal phase-close blocking gates and the full
-exhaustive blocking lane. Node remains **2 -> 2** after every major phase.
-Galerina Contract 85 implementation is `9b5b5897` and its documentation/evidence
-closure head is `b0b4bb86`.
-Contract 86 implementation checkpoint `ade75593` indexes to **45,711 nodes /
-120,676 edges**, exactly equal to expected totals; its physical candidate
-evidence is the current integration route described below.
-The current maintenance evidence and remaining route are recorded in
-`docs/reports/full-maintenance-regeneration-2026-08-09.md`; the report is the
-count-owning source for this maintenance chapter.
-SLIDE Contract 85 implementation head `aa90dd7` indexes to **9,775 nodes /
-23,712 edges**, exactly equal to the indexer's expected counts; its Contract
-85 closure-evidence checkpoint `7b026a2` indexes to **9,775 nodes / 23,716
-edges**, also exactly equal to expected. Hypha's
-own detector is **58/58**; its broad scan remains a non-authorizing lead set,
-not a bulk defect count. SLIDE's contract check now passes **94 files in two
-closed partitions**, its tool manifest passes **89 files** with digest
-`535e1d86...69fdb`, its independent final path-leak gate passes **14 controls / 751
-targets**, security closure is `+1`
-with evidence K3 `0`, and the complete bounded reference suite passes
-**863/863 across 95 suites** with no authority released. The fresh Galerina
-aggregate passed **99/99 packages and 9,464 tests** (compiler **6,319**), the
-last complete bounded tooling suite passed **447 total / 437 pass / 10
-intentional environment/cross-checkout skips / 0 fail**; Contract 85 and 86
-were then run with the pinned SLIDE checkout and passed **4/4** each. The
-current uninterrupted exhaustive close passed every blocking gate in
-**1,061.4 seconds**. The present maintenance chapter reran the aggregate and
-both normal and exhaustive phase-close lanes sequentially;
-the detailed evidence is in
-`docs/reports/full-maintenance-regeneration-2026-08-09.md`.
-Roadmap increment 2026-08-09: SLIDE Contract 85 is complete at `aa90dd7`.
-It preserves frozen Contract 53 and admits only its inherited scalar call
-family when independently derived conservative transitive work is
-**97..2,048** steps. Complete SLIDE is **863/863 across 95 suites**; contract
-integrity is **94 files in two partitions**, the tool manifest remains
-**89 files** at `535e1d86...69fdb`, path hygiene is **14/14 across 751
-targets**, and security evidence K3 remains `0`. Galerina now pins that exact
-closure. Contract 85 restore evidence remains **4/4** and Contract 86 is
-**4/4** after physical execution of all **19,683** nine-trit vectors, exact
-rebuild and mutation refusal. These are reference-only implementation facts;
-production boot composition, platform authority, signing, durability,
-conversion and retirement remain open.
+Current checkpoint: Galerina pins SLIDE Contract 86 implementation `39920eb`,
+its **89-file** tool manifest at `817e9d17...1d8484`, and a closed contract
+catalog of **95 files in two partitions**. Complete SLIDE passes **866/866
+tests across 96 suites**, path hygiene **14/14** across 753 targets and security
+closure `+1` with evidence K3 `0`; authority remains unreleased.
+
+The real `restoreVerdict` consumer now executes only exact hybrid-authenticated
+`.slide` bytes and independently verifies the composed typed receipt. Its
+focused evidence remains **4/4**. The VOK authority candidate preserves the
+full **19,683/19,683** nine-trit semantic proof, exactly one authorizing vector,
+malformed-trit refusal, exact rebuild and mutation refusal, and adds one
+hybrid-authenticated authorizing candidate: **5/5**. Disposable test keys prove
+the Ed25519 + ML-DSA-65 composition without using offline production custody.
+
+The registered post-integration fixed point is green: normal phase-close passed
+**89/89** gates in **567.6s** and exhaustive phase-close passed **90/90** in
+**838.5s**, including **100/100 packages / 9,470 tests** in **263.8s**. Graphs
+are **6/6**, the code index is **974/974** with zero coverage holes and the KB
+index contains **1,848 documents**. This remains repository/reference evidence;
+no green production claim follows.
+
+Roadmap performance increment 2026-08-09: the old package aggregate was
+structurally serial and took **416.9s**. A bounded scheduler now isolates the
+compiler and cross-package writers, overlaps only ordinary flat peers and
+keeps a total **2 package x 2 test-file** ceiling. Its admitted pre-registration
+run passed **99/99 / 9,464** in **269.2s** (-35.4%). The registered successor
+passes **100/100 / 9,470** in **262.0s** (-37.2%). Exact compiler-content
+binding reduces an unchanged Fungi corpus pass from about **79.6s to 3.2s**.
+The new flat `galerina-devtools-impact` package derives frequent affected-scope
+plans from Git bytes and reverse dependencies; unknown/shared changes require
+the full lane. Affected-scope results are explicitly non-authorizing. Registering
+that package opens a new **100-package** fixed point. Its aggregate, graphs,
+indexes and normal/exhaustive closure are now green. The frequent affected lane
+remains non-authorizing and cannot replace those complete gates.
+
+This increment closes content-bound authenticated typed reference execution.
+It does **not** authenticate the host platform, authorize production, prove
+repository or power-loss durability, perform an offline signing ceremony,
+convert remaining packages or retire TypeScript/Node. Production boot
+composition with separately authenticated platform and durability evidence is
+the next authority gate.
 
 The former unknown-content hold is closed, but `memory-sandobx/` now exists as
 the bounded RD-0755 `--magic` vault-gap proposal laboratory. It is propose-only,

@@ -13,9 +13,10 @@ const {
 } = require("./lib/suite-run-lease.cjs");
 const {
   npmTestInvocation,
+  parsePackageConcurrency,
   parseTestConcurrency,
 } = require("./lib/test-runner-policy.cjs");
-const { runOwnedProcessSync } = require("./lib/owned-process-tree.cjs");
+const { runOwnedProcess } = require("./lib/owned-process-tree.cjs");
 
 const DEFAULT_ROOT = path.join(__dirname, "..");
 const CORE = Object.freeze([
@@ -24,6 +25,7 @@ const CORE = Object.freeze([
   "galerina-core-compiler",
   "galerina-core-security",
 ]);
+const RUN_FIRST = new Set(["galerina-core-compiler"]);
 const RUN_LAST = new Set(["galerina-devtools-graph-project"]);
 const TIMEOUT_MS = 600_000;
 
@@ -36,6 +38,7 @@ function parseArguments(argv) {
     bail: false,
     emitCounts: false,
     testConcurrency: parseTestConcurrency(undefined),
+    packageConcurrency: parsePackageConcurrency(undefined),
     named: [],
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -63,6 +66,13 @@ function parseArguments(argv) {
         throw new Error("--test-concurrency requires an integer from one through four");
       }
       options.testConcurrency = parseTestConcurrency(value);
+      index += 1;
+    } else if (argument === "--package-concurrency") {
+      const value = argv[index + 1];
+      if (value === undefined || value.startsWith("--")) {
+        throw new Error("--package-concurrency requires one or two");
+      }
+      options.packageConcurrency = parsePackageConcurrency(value);
       index += 1;
     } else if (argument.startsWith("--")) {
       throw new Error(`Unknown option: ${argument}`);
@@ -92,7 +102,7 @@ function parseCounts(output) {
   };
 }
 
-function runNpmTest(directory, testScript, testConcurrency) {
+async function runNpmTest(directory, testScript, testConcurrency) {
   const childEnv = { ...process.env };
   // A runner invoked by node:test must start a new top-level test process.
   // Inheriting this marker makes Node treat the package suite as recursive
@@ -115,12 +125,39 @@ function runNpmTest(directory, testScript, testConcurrency) {
     testScript,
     concurrency: testConcurrency,
   });
+  const owned = await runOwnedProcess({
+    command: invocation.command,
+    args: invocation.args,
+    ...common,
+  });
+  let error;
+  if (owned.spawnError !== null) {
+    error = Object.assign(new Error(owned.spawnError.message), {
+      code: owned.spawnError.code,
+    });
+  } else if (owned.outputLimitExceeded) {
+    error = Object.assign(new Error("Owned process exceeded its bounded output limit."), {
+      code: "OWNED-PROCESS-OUTPUT-LIMIT",
+    });
+  } else if (owned.timedOut) {
+    error = Object.assign(
+      new Error(owned.cleanupDetail),
+      { code: owned.cleanupAcknowledged ? "ETIMEDOUT" : "OWNED-PROCESS-TREE-CLEANUP-REFUSED" },
+    );
+  } else if (owned.cleanupAttempted && !owned.cleanupAcknowledged) {
+    error = Object.assign(new Error(owned.cleanupDetail), {
+      code: "OWNED-PROCESS-TREE-CLEANUP-REFUSED",
+    });
+  }
   return {
-    child: runOwnedProcessSync({
-      command: invocation.command,
-      args: invocation.args,
-      ...common,
-    }),
+    child: {
+      status: owned.status,
+      signal: owned.signal,
+      stdout: owned.stdout,
+      stderr: owned.stderr,
+      ...(error ? { error } : {}),
+      owned,
+    },
     boundedNodeTest: invocation.boundedNodeTest,
   };
 }
@@ -163,12 +200,12 @@ function failureFor(child, counts) {
   return null;
 }
 
-function runPackage(record, testConcurrency) {
+async function runPackage(record, testConcurrency) {
   const started = Date.now();
   process.stderr.write(
     `[run-all-tests] START ${record.subject} (test-file ceiling ${testConcurrency})\n`,
   );
-  const invocation = runNpmTest(
+  const invocation = await runNpmTest(
     record.absolutePath,
     record.testScript,
     testConcurrency,
@@ -201,6 +238,33 @@ function runPackage(record, testConcurrency) {
     `[run-all-tests] END ${record.subject} (${result.status}, ${(durationMs / 1000).toFixed(1)}s)\n`,
   );
   return result;
+}
+
+async function runPackageGroup(records, options) {
+  if (records.length === 0) return [];
+  const results = new Array(records.length);
+  let nextIndex = 0;
+  let refusedNewWork = false;
+  const workerCount = Math.min(options.packageConcurrency, records.length);
+
+  async function worker() {
+    while (true) {
+      if (refusedNewWork) return;
+      const index = nextIndex;
+      nextIndex += 1;
+      if (index >= records.length) return;
+      const result = await runPackage(records[index], options.testConcurrency);
+      results[index] = result;
+      if (options.bail && result.status === "fail") refusedNewWork = true;
+    }
+  }
+
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return results.filter((result) => result !== undefined);
+}
+
+function testScriptEscapesPackage(record) {
+  return /(?:^|[\s"'])\.\.[\\/]/.test(record.testScript);
 }
 
 function stablePackageRecords(inventory, policy, options) {
@@ -430,6 +494,7 @@ async function main() {
         root: options.root,
         controls: {
           testConcurrency: options.testConcurrency,
+          packageConcurrency: options.packageConcurrency,
           processIsolation: "process",
         },
         packages: selection.map((record) => record.subject),
@@ -443,12 +508,29 @@ async function main() {
     process.exit(0);
   }
 
-  const results = [];
-  for (const record of selection) {
-    const result = runPackage(record, options.testConcurrency);
-    results.push(result);
-    if (options.bail && result.status === "fail") break;
+  const runFirstRecords = selection.filter((record) => RUN_FIRST.has(record.subject));
+  const serialRecords = selection.filter((record) =>
+    !RUN_FIRST.has(record.subject)
+    && !RUN_LAST.has(record.subject)
+    && testScriptEscapesPackage(record));
+  const parallelRecords = selection.filter((record) =>
+    !RUN_FIRST.has(record.subject)
+    && !RUN_LAST.has(record.subject)
+    && !testScriptEscapesPackage(record));
+  const runLastRecords = selection.filter((record) => RUN_LAST.has(record.subject));
+  const executed = [];
+  const isolatedGroups = [runFirstRecords, parallelRecords, serialRecords, runLastRecords];
+  for (const group of isolatedGroups) {
+    if (options.bail && executed.some((result) => result.status === "fail")) break;
+    executed.push(...await runPackageGroup(group, {
+      ...options,
+      packageConcurrency: group === parallelRecords ? options.packageConcurrency : 1,
+    }));
   }
+  const resultByPackage = new Map(executed.map((result) => [result.package, result]));
+  const results = selection
+    .map((record) => resultByPackage.get(record.subject))
+    .filter((result) => result !== undefined);
   const visibleResults = results.map(publicResult);
   const passed = results.filter((result) => result.status === "pass").length;
   const failed = results.length - passed;
@@ -482,6 +564,7 @@ async function main() {
     scope,
     controls: {
       testConcurrency: options.testConcurrency,
+      packageConcurrency: options.packageConcurrency,
       processIsolation: "process",
     },
     totals: {

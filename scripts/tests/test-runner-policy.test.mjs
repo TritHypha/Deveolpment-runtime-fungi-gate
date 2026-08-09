@@ -9,11 +9,12 @@ const require = createRequire(import.meta.url);
 const scriptsRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const {
   npmTestInvocation,
+  parsePackageConcurrency,
   parseTestConcurrency,
 } = require("../lib/test-runner-policy.cjs");
 
 test("test concurrency accepts only the closed range one through four", () => {
-  assert.equal(parseTestConcurrency(undefined), 4);
+  assert.equal(parseTestConcurrency(undefined), 2);
   assert.equal(parseTestConcurrency("1"), 1);
   assert.equal(parseTestConcurrency("4"), 4);
 
@@ -21,6 +22,18 @@ test("test concurrency accepts only the closed range one through four", () => {
     assert.throws(
       () => parseTestConcurrency(value),
       (error) => error.code === "TEST-CONCURRENCY-INVALID",
+    );
+  }
+});
+
+test("package concurrency accepts only the closed range one through two", () => {
+  assert.equal(parsePackageConcurrency(undefined), 2);
+  assert.equal(parsePackageConcurrency("1"), 1);
+  assert.equal(parsePackageConcurrency(2), 2);
+  for (const value of ["0", "3", "-1", "1.5", "x", "", null]) {
+    assert.throws(
+      () => parsePackageConcurrency(value),
+      (error) => error.code === "PACKAGE-CONCURRENCY-INVALID",
     );
   }
 });

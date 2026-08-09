@@ -1,0 +1,11 @@
+{
+  "packageName": "@galerina/devtools-impact",
+  "allowedExternal": [
+    "node:child_process",
+    "node:crypto",
+    "node:fs",
+    "node:path",
+    "node:url"
+  ],
+  "note": "Hand-authored from the package's complete src/bin import surface. Node core only: this package has zero third-party and zero workspace dependencies. Any widening is deliberate and must remain visible in review. The packageGraph manifest explicitly includes .mjs so the boundary scan cannot pass vacuously."
+}

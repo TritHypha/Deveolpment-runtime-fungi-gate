@@ -30,11 +30,11 @@
 //   node scripts/audit-fungi-corpus-check.mjs --self-test          # prove the detector fires (CI first)
 //   node scripts/audit-fungi-corpus-check.mjs                      # enforce: exit 1 on NEW breakage
 //   node scripts/audit-fungi-corpus-check.mjs --update-baseline    # re-record (deliberate; diff-reviewed)
-import { readFileSync, writeFileSync, existsSync, statSync, mkdirSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, statSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
+import { compilerContentFingerprint } from "./lib/compiler-content-fingerprint.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const BASELINE = join(ROOT, "scripts", "baselines", "fungi-corpus-check.json");
@@ -202,26 +202,10 @@ const loadJson = (p, fallback) => { try { return JSON.parse(readFileSync(p, "utf
 // the COMPILED compiler. If the compiler changes (e.g. a new checker rule) while no .fungi changes, a
 // pure (size, mtime) cache replays STALE verdicts and the gate silently trusts old results — a fail-OPEN
 // (found 2026-07-16: a fresh tri-lint rule left every .fungi mtime untouched, so the gate never re-ran).
-// So the whole cache is scoped to a fingerprint of the adjudicator (galerina.mjs + the core-compiler
-// dist): change the compiler and every entry misses, forcing a real re-check. Over-invalidation (a no-op
-// rebuild busts the cache) is the SAFE direction for a fail-closed gate.
-function statMark(p) {
-  try { const s = statSync(p); return `${relative(ROOT, p).replace(/\\/g, "/")}:${s.size}:${Math.round(s.mtimeMs)}`; }
-  catch { return ""; }
-}
-function compilerFingerprint() {
-  const marks = [statMark(join(ROOT, "galerina.mjs"))];
-  const walk = (dir) => {
-    let ents; try { ents = readdirSync(dir, { withFileTypes: true }); } catch { return; }
-    for (const e of ents) {
-      const abs = join(dir, e.name);
-      if (e.isDirectory()) walk(abs);
-      else if (e.isFile() && (e.name.endsWith(".js") || e.name.endsWith(".cjs"))) marks.push(statMark(abs));
-    }
-  };
-  walk(join(ROOT, "packages-galerina", "galerina-core-compiler", "dist"));
-  return createHash("sha256").update(marks.sort().join("|")).digest("hex").slice(0, 16);
-}
+// So the whole cache is scoped to the exact executable content of the adjudicator (galerina.mjs +
+// core-compiler dist). A content change invalidates every row, but a byte-identical rebuild does not.
+// This is stronger than the old size/mtime proxy and avoids spending ~80s after every no-op rebuild.
+const compilerFingerprint = () => compilerContentFingerprint(ROOT);
 
 function sweep(candidates) {
   const fp = compilerFingerprint();

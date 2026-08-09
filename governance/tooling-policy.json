@@ -479,6 +479,8 @@
         "packages-galerina/galerina-devtools-graph-project/.graph/package-graph.json",
         "packages-galerina/galerina-devtools-hypha/.graph/BOUNDARY.md",
         "packages-galerina/galerina-devtools-hypha/.graph/package-graph.json",
+        "packages-galerina/galerina-devtools-impact/.graph/BOUNDARY.md",
+        "packages-galerina/galerina-devtools-impact/.graph/package-graph.json",
         "packages-galerina/galerina-devtools-intelligence/.graph/BOUNDARY.md",
         "packages-galerina/galerina-devtools-intelligence/.graph/package-graph.json",
         "packages-galerina/galerina-devtools-kb-graph/.graph/BOUNDARY.md",

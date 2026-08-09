@@ -354,7 +354,7 @@ const BUILD_PROGRESS = [
   { layer: "Passive Execution Plans & Target Bridges", pct: 35 },
   { layer: "AI Inference Tower (BitNet/Groq/NVFP4)", pct: 30 },
   { layer: "Photonic / Ternary Computing", pct: 3 },
-  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 863/863 across 95 suites; Contract 85 adds independently bounded transitive scalar-call work without changing frozen Contract 53. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 4/4 over 19,683 vectors; production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open" },
+  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open" },
   { layer: "B8 governed HTTP transport (TLSTP)", status: "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open" },
   { layer: "Lyth/Weaver Verified Admission Fabric", status: "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed" },
 ];
@@ -378,9 +378,12 @@ const TRACKING_REGISTRY = [
   { item: "Workspace package families",          state: "shipped",       detail: `${summary.green}/${summary.components} component families green; ${summary.workspacePackages} workspace packages, ${fmt(summary.recordedTotal)} recorded tests and ${summary.orphans} unadjudicated orphans, all derived from the live workspace and version ledgers` },
   { item: "Package Standard + pub ladder",       state: "building",      detail: "Standard v1 + pkg-census + 9 schematics done; R1–R6 rungs pending; .graph amendment 🔒 owner" },
   { item: "Security-infra designs (×4)",         state: "building",      detail: "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request" },
-  { item: "Devtools audit suite",                state: "shipped",       detail: "108 tools · 63 audits · 40 proofs (incl. claim-hygiene public-doc gate + env-var-literal-strict path-leak + the fungi-corpus-check compile gate; + report-blind-consumers / auto-erasure-ratchet / gate-key-injectivity added 2026-07-19; corpus sub-counts 447/211/49 unverified this pass) · keep-green + gate-selftests meta-gate; twin-audit execution column shipped (shadow|differential|authoritative)" },
+  { item: "Devtools audit suite",                state: "shipped",       detail: "the generated dev-tool index owns current tool, audit, phase-close and proof counts; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain the fail-closed meta-gates; twin-audit execution states are shadow|differential|authoritative" },
   { item: "Hypha passive capability map",        state: "shipped",       detail: "top-level galerina-devtools-hypha is workspace-enlisted and passes 42/42; the default scan is in-memory, self-locating, zero-dependency and write-free unless --out is explicit" },
+  { item: "Verified affected-scope planner",     state: "shipped",       detail: "top-level galerina-devtools-impact derives Git-byte changes, reverse package dependencies and deterministic non-authorizing commands; compiler, topology, manifest and unknown changes fail closed to FULL_REQUIRED; focused planner and executor surface passes 8/8" },
+  { item: "Grok evidence intake",                state: "shipped",       detail: "serial read-only intake is self-tested; receipt v2 binds the exact prompt and complete reply, refuses response path leaks, redacts diagnostic user-home paths and requires independent RD adjudication before adoption" },
   { item: "Memory retention audit and bounded caches", state: "building", detail: "bounded compiler caches and the static/dynamic retention tools are implemented; the dedicated per-commit workflow and scheduled cross-platform nightly/release measurements remain open" },
+  { item: "General Fungi-to-SLIDE control-flow corpus", state: "building", detail: "Grok prompt 21 is source-adjudicated for partial use; prompt 22 completed but does not pass the technical acceptance gate as submitted. Executable fixtures, corrected lattice maths and current Fungi surface mappings remain open; no later query has started" },
   { item: ".gate v3",                            state: "building",      detail: "frontend, canonical GIR, admission and the non-authorizing order-six link-plan boundary are verified; independent review, runtime execution, offline signing and production release remain separate open gates" },
   { item: "Signing-key custody",                 state: "shipped",       detail: "cold hybrid root (214…) and delegated operational hybrid key (f31…) are in offline custody; public halves, root-signed delegation and the exact one-entry registry index are verified. Key-rotation protocol ships, while production rotation activation still requires external platform evidence and a later offline ceremony" },
   { item: "RD-0363/0364/0365 wiring (R&D done)",        state: "building",      detail: "R&D COMPLETE — all 3 authored in the KB (galerina-rd-0363/0364/0365). RD-0363 replay-admission + RD-0364 inference-governance DECISION surfaces execute through #105 (R0→R1, verdict≡spec); RD-0365 key-custody design-done. What remains is BUILD not R&D: P/I wiring increments (0363/0364) + implement 0365. (Renamed 2026-07-15 — 'Missing R&D' was a stale backlog label; the R&D is not missing.)" },
@@ -432,7 +435,7 @@ TRACKING_REGISTRY.splice(
   {
     item: "Independent SLIDE backend",
     state: "building",
-    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 863/863 across 95 suites; Contract 85 adds independently bounded transitive scalar-call work without changing frozen Contract 53. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 4/4 over 19,683 vectors; production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open",
+    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 866/866 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate; authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open",
   },
   retirementCounts.available
     ? {
@@ -736,13 +739,13 @@ if (SELF_TEST) {
     ?.rows.find((row) => row.label === "Independent SLIDE general executable backend");
   const slideRegistry = reg.find((row) => row.item === "Independent SLIDE backend");
   ok(
-    slideBuild?.status?.includes("863/863 across 95 suites")
-      && slideBuild.status.includes("VOK authority candidate is 4/4 over 19,683 vectors"),
+    slideBuild?.status?.includes("866/866 across 96 suites")
+      && slideBuild.status.includes("VOK authority candidate is 5/5 over 19,683 vectors"),
     "SLIDE build-progress status records bounded transitive work and VOK candidate evidence",
   );
   ok(
-    slideRegistry?.detail?.includes("863/863 across 95 suites")
-      && slideRegistry.detail.includes("VOK authority candidate is 4/4 over 19,683 vectors"),
+    slideRegistry?.detail?.includes("866/866 across 96 suites")
+      && slideRegistry.detail.includes("VOK authority candidate is 5/5 over 19,683 vectors"),
     "SLIDE tracking-registry status records bounded transitive work and VOK candidate evidence",
   );
   ok(
@@ -752,6 +755,14 @@ if (SELF_TEST) {
   ok(
     reg.some((r) => r.item === "DSS decision core + optional Wasm oracle" && r.state === "shipped"),
     "completed DSS decision-core and optional-oracle evidence remain visible as shipped assets",
+  );
+  ok(
+    reg.some((r) => r.item === "Grok evidence intake" && r.state === "shipped"),
+    "the serial exact-evidence Grok intake remains visible as shipped tooling",
+  );
+  ok(
+    reg.some((r) => r.item === "General Fungi-to-SLIDE control-flow corpus" && r.state === "building"),
+    "the partially adjudicated structured-lowering corpus remains visible as open work",
   );
   ok(contractCounts.available, "contract-registry counts are available from generated authority");
   ok(retirementCounts.available, "package-retirement counts are available from the exact retirement ledger");

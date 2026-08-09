@@ -4,6 +4,72 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Verified affected-scope verification - 2026-08-09
+
+- [x] Measure the scan architecture rather than blame the host. Normal
+  phase-close took **645.1s** and exhaustive took **1,077.4s**. The old package
+  aggregate was **416.9s**; phase-close ran every top-level gate serially and
+  the package runner ran every package serially despite per-file concurrency.
+- [x] Add a bounded package scheduler. The compiler runs first and alone,
+  package test commands that escape their flat package run serially, ordinary
+  packages use **2 package x 2 test-file** slots, and graph-project stays last
+  and alone. The admitted pre-registration aggregate remained **99/99 and
+  9,464/9,464** in **269.2s**, 35.4% faster than the serial baseline.
+- [x] Replace timestamp-based compiler cache invalidation in the governed
+  Fungi corpus gate with exact path-and-byte binding. A real content change
+  rechecked all **278** governed sources in 75.6s; an unchanged compiler and a
+  byte-identical rebuild both reused exact evidence in **3.2s**.
+- [x] Add the flat, dependency-free `galerina-devtools-impact` package and the
+  owned root executor. The plan is Git-byte-derived, expands reverse package
+  dependencies, routes documentation gates and refuses to `FULL_REQUIRED` for
+  compiler, topology, manifest, unknown or malformed changes. All affected-
+  scope evidence is explicitly non-authorizing.
+- [x] Register the new package and emit the successor canonical aggregate:
+  **100/100 packages, 9,470/9,470 tests, zero failures in 262.0s**. This is
+  aggregate evidence only; it does not replace the full closure gate below.
+- [x] Close the new 100-package fixed point. Graph generation/check is **6/6**,
+  the code index is **974/974** with zero coverage holes, the KB index is
+  **1,848 documents**, normal phase-close is **89/89 in 567.6s**, and exhaustive
+  phase-close is **90/90 in 838.5s** including the complete **100-package / 9,470
+  test** lane in **263.8s**. This is repository closure evidence, not a release
+  receipt or production authority.
+- [ ] Add a persistent/batch compiler-check protocol for the 238 curriculum
+  examples and other large Fungi corpora. This is the next major normal-scan
+  bottleneck; GPU offload is not appropriate for branch/string-heavy checks.
+- [ ] Design authenticated affected-closure receipts before considering a
+  chapter-scope result authorizing. Missing dependency edges, tool drift or
+  unknown paths must continue to escalate to the complete lane.
+
+### Authenticated typed SLIDE integration - 2026-08-09
+
+- [x] Advance the pinned SLIDE reference implementation to Contract 86 at
+  `39920eb`. The closed catalog is **2 partitions / 95 files**, the reference
+  tool manifest is **89 files** at `817e9d17...1d8484`, and complete SLIDE is
+  **866/866 across 96 suites** with authority unreleased.
+- [x] Replace the real `restoreVerdict` test consumer's unauthenticated typed
+  execution with exact hybrid-authenticated typed execution. Disposable test
+  keys prove both Ed25519 and ML-DSA-65 without using or imitating offline
+  production custody. Contract 85 remains **4/4**, now with an independently
+  verified authenticated receipt wrapper and no fallback.
+- [x] Preserve Contract 86's exhaustive **19,683/19,683** semantic proof and
+  add a separate hybrid-authenticated authorizing-vector candidate. The focused
+  suite is now **5/5**; exactly one exhaustive vector authorizes, malformed
+  trits, wrong bytes and physical mutation refuse.
+- [x] Diagnose the first full phase-close attempt rather than infer from its
+  wrapper timeout. The owned tree completed and cleaned its lease; the
+  authoritative rerun found one stale generated code-index caused by shifted
+  test line locations. The owning fixed-point generators restored **974/974**
+  code coverage with **0** registry holes.
+- [x] Complete the final graph/index/phase-close/aggregate evidence after the
+  documentation fixed point. Graphs are **6/6**, the code catalog is **974/974**,
+  the registered aggregate is **100/100 packages / 9,470 tests**, normal closure
+  is **89/89 in 567.6s** and exhaustive closure is **90/90 in 838.5s**. Do not
+  infer authenticated platform, signing, durability or production authority
+  from authenticated object execution.
+- [ ] Bind production boot composition to separately authenticated platform
+  evidence and production signing/durability receipts. This is the next
+  authority gate; package conversion and retirement remain separate debts.
+
 ### Contract 86 physical VOK authority candidate - 2026-08-09
 
 - [x] Close the SLIDE work-ceiling root cause without modifying frozen
