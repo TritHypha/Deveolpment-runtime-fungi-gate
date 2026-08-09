@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Documentation and generated-index housekeeping - 2026-08-09
+
+- [x] Regenerate the component-health status blocks through their owning tool.
+  The tracking registry is now **29 entries: 16 shipped, 10 building and 3
+  post-v1**; ship-readiness and the measured thesis/build averages remain
+  unchanged.
+- [x] Refresh Galerina's private-corpus query index. It covers **1,848 external
+  Knowledge Base documents** and **1,850 total query entries** after adding the
+  Galerina `README.md` and `AGENTS.md` navigation sources.
+- [x] Verify the Knowledge Base's separate category/flat index through its own
+  generator: **1,846 tracked, non-private documents**, 15 topic groups and 6
+  document types. Private R&D remains intentionally absent from public indexes.
+- [ ] Separate or guard the two generators' overlapping `build/kb-index`
+  output names. Galerina's query generator must run from the Galerina root;
+  invoking it with the Knowledge Base as `--root` can overwrite the KB-owned
+  flat-index format. Until that boundary is enforced in code, use each
+  repository's owning generator only and treat a cross-root run as refused
+  housekeeping evidence, not a valid regeneration.
+
 ### Verified affected-scope verification - 2026-08-09
 
 - [x] Independently review the current Node scan/worker implementation rather
@@ -49,8 +68,9 @@ counts or open items that a newer section explicitly supersedes.
   **100/100 packages, 9,470/9,470 tests, zero failures in 262.0s**. This is
   aggregate evidence only; it does not replace the full closure gate below.
 - [x] Close the new 100-package fixed point. Graph generation/check is **6/6**,
-  the code index is **974/974** with zero coverage holes, the KB index is
-  **1,848 documents**, normal phase-close is **89/89 in 567.6s**, and exhaustive
+  the code index is **974/974** with zero coverage holes, the KB corpus is
+  **1,848 external documents** (**1,850 query entries** with Galerina's two
+  navigation sources), normal phase-close is **89/89 in 567.6s**, and exhaustive
   phase-close is **90/90 in 838.5s** including the complete **100-package / 9,470
   test** lane in **263.8s**. This is repository closure evidence, not a release
   receipt or production authority.
@@ -124,7 +144,7 @@ counts or open items that a newer section explicitly supersedes.
 
 - [x] Regenerate and independently check all six Galerina repository graphs,
   the 974-entry diagnostic index, the 1,465-contract registry and the
-  1,848-document Knowledge Base index.
+  1,848-external-document Knowledge Base query index.
 - [x] Build all **95/95** package build scripts serially, rebuild the
   non-authorizing process warden and verify the fusable-package state with no
   failure.

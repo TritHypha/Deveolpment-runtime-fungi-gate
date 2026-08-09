@@ -20,8 +20,18 @@ The registered post-integration fixed point is green: normal phase-close passed
 **89/89** gates in **567.6s** and exhaustive phase-close passed **90/90** in
 **838.5s**, including **100/100 packages / 9,470 tests** in **263.8s**. Graphs
 are **6/6**, the code index is **974/974** with zero coverage holes and the KB
-index contains **1,848 documents**. This remains repository/reference evidence;
+query index contains **1,848 external documents** and **1,850 total entries**
+after its two Galerina navigation sources. This remains repository/reference evidence;
 no green production claim follows.
+
+Documentation housekeeping 2026-08-09: the generated component-health status
+blocks now reflect **29 tracking entries (16 shipped, 10 building, 3 post-v1)**.
+The Knowledge Base's separate category/flat index remains owned by its own
+generator and covers **1,846 tracked, non-private documents**. Galerina's
+TF-IDF query generator and the KB category generator currently reuse some
+`build/kb-index` filenames when pointed at the same root, so cross-root
+generation is not an admitted workflow; separating or fail-closing those
+output namespaces remains tooling debt.
 
 Roadmap performance increment 2026-08-09: the old package aggregate was
 structurally serial and took **416.9s**. A bounded scheduler now isolates the
