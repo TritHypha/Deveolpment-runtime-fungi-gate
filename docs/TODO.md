@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Current route: measured Fungi demand and first real package source - 2026-08-09
+### Current route: Contract 85 complete; sentinel consumer switch next - 2026-08-09
 
 - [x] Add a fail-closed source-capability inventory derived from the live
   retirement graph rather than regex guesses. All **111** unexecuted `.fungi`
@@ -27,6 +27,11 @@ counts or open items that a newer section explicitly supersedes.
   5 intentional cross-checkout skips / 0 fail**, Node **2 -> 2**. The three
   Contract 85 cases are among those skips without a SLIDE checkout and pass
   **3/3** when the pinned checkout is explicitly supplied.
+- [x] Reconcile live agent guidance, README claims, the capability-inventory
+  decision, roadmap and component-health source after Contract 85. The
+  anti-staleness detector fails on the old 828/828 claim and passes on Contract
+  84's **857/857 across 94 suites** plus the separate Contract 85 **3/3**.
+  Regenerated percent/subway evidence, graph **6/6** and path hygiene are green.
 - [ ] Bind the real sentinel-state consumer to the admitted `restoreVerdict`
   package export without weakening fail-closed recovery. Keep the switch
   decision-only: `cold-boot.ts` still owns serialization, durable storage and

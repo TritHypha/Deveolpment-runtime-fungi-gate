@@ -67,12 +67,17 @@ The most frequent named type demands start with `Int` (523), `String` (415),
 `Array<Int>` ownership profiles cannot by itself complete the production
 corpus. Strings, bytes, records, calls and general control must be addressed.
 
-## Next use
+## Current use and next gate
 
-The immediate next step is not a new speculative collection subsystem. First,
-exercise an existing general SLIDE capability against a real Galerina source.
-The current `cold-boot.fungi` decision flow has already been probed through the
-existing pure-scalar compiler and returns `1`, `-1`, `-1` for the three exact
-presence/integrity vectors. Contract 85 should turn that probe into
-manifest-bound, physical `.slide`, receipt-bound package evidence while
-retaining its honest decision-surface-only scope.
+Contract 85 has now exercised an existing general SLIDE capability against the
+real `cold-boot.fungi` decision flow. The exact source is manifest-bound to a
+617-byte physical `.slide`, an 89-file pinned SLIDE tool closure and a
+receipt-bound source-free publication. The three presence/integrity vectors
+pass typed execution and receipt re-admission; an exact rebuild matches and a
+one-byte physical-object mutation refuses.
+
+This remains decision-surface-only, reference-only and non-authorizing. The
+next gate is the real `ColdBootOrchestrator.restore` consumer switch. Its
+serialization, durable storage, recovery and scrub responsibilities remain in
+TypeScript until each has a separately admitted replacement; the inventory
+does not reduce either retirement counter on its own.

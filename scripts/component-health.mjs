@@ -354,7 +354,7 @@ const BUILD_PROGRESS = [
   { layer: "Passive Execution Plans & Target Bridges", pct: 35 },
   { layer: "AI Inference Tower (BitNet/Groq/NVFP4)", pct: 30 },
   { layer: "Photonic / Ternary Computing", pct: 3 },
-  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 828/828 across 89 suites; bounded scalar/control, certified loops, one affine append-array floor and one typed Result-propagation floor are built, while general collections/Result families, multiple/cross-package effects and production authority remain open" },
+  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's real restoreVerdict package candidate adds separate 3/3 source-free execution/rebuild/mutation evidence; its consumer switch, general collections/Result families, multiple/cross-package effects and production authority remain open" },
   { layer: "B8 governed HTTP transport (TLSTP)", status: "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open" },
   { layer: "Lyth/Weaver Verified Admission Fabric", status: "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed" },
 ];
@@ -432,7 +432,7 @@ TRACKING_REGISTRY.splice(
   {
     item: "Independent SLIDE backend",
     state: "building",
-    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 828/828 across 89 suites; bounded scalar/control, certified loops, one affine append-array floor and one typed Result-propagation floor are built, while general collections/Result families, multiple/cross-package effects and production authority remain open",
+    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 857/857 across 94 suites; owned append-array, dual-owner, internal owner-handoff and typed Result floors are built. Galerina's real restoreVerdict package candidate adds separate 3/3 source-free execution/rebuild/mutation evidence; its consumer switch, general collections/Result families, multiple/cross-package effects and production authority remain open",
   },
   retirementCounts.available
     ? {
@@ -731,6 +731,20 @@ if (SELF_TEST) {
   const reg = audit.sections.find((s) => s.key === "tracking-registry").rows;
   const ranks = reg.map((r) => statusRank(r.state));
   ok(ranks.every((v, i) => i === 0 || ranks[i - 1] <= v), "Tracking registry rows are ordered by status (non-decreasing rank)");
+  const slideBuild = audit.sections
+    .find((section) => section.key === "build-progress")
+    ?.rows.find((row) => row.label === "Independent SLIDE general executable backend");
+  const slideRegistry = reg.find((row) => row.item === "Independent SLIDE backend");
+  ok(
+    slideBuild?.status?.includes("857/857 across 94 suites")
+      && slideBuild.status.includes("3/3 source-free execution/rebuild/mutation evidence"),
+    "SLIDE build-progress status records Contract 84 closure and separate Contract 85 evidence",
+  );
+  ok(
+    slideRegistry?.detail?.includes("857/857 across 94 suites")
+      && slideRegistry.detail.includes("3/3 source-free execution/rebuild/mutation evidence"),
+    "SLIDE tracking-registry status records Contract 84 closure and separate Contract 85 evidence",
+  );
   ok(
     !reg.some((r) => r.item === "DSS.wasm supervisor (#102–106)"),
     "retired production DSS.wasm supervisor is not scheduled as a living roadmap workstream",
