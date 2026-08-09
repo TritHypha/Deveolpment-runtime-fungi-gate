@@ -37,6 +37,18 @@ native identity**. Older 497/38 counts in dated evidence are superseded.
 
 Policy: zero trust, verify rather than assume, fail closed
 
+Roadmap measurement 2026-08-09: Galerina now derives an AST-level demand
+inventory for all **111** unexecuted `.fungi` sources: **814 flows / 1,113,640
+bytes**, all parser-clean. The inventory is non-authorizing and explicitly
+separate from SLIDE capability evidence. It measures 2,241 `if` statements,
+371 `match` expressions, 340 `while` statements, 206 record declarations and
+substantial String/Bytes/Array demand. This rules out treating further isolated
+`Array<Int>` profiles as a complete migration plan. The next bounded slice is
+Contract 85: turn the already successful real `restoreVerdict` pure-scalar
+probe into manifest-bound physical `.slide` and receipt-bound package evidence.
+It will not retire `cold-boot.ts`; that file also owns host serialization,
+durability and scrub operations outside the decision twin.
+
 Roadmap active gate 2026-08-09: **Contract 84 is green** at SLIDE implementation
 commit `81850ca`. One exact caller transfers a private append-only `Array<Int>`
 owner to one helper through the existing GIR `call`, receives only the

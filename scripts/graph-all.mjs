@@ -95,6 +95,14 @@ const children = [
       ...(options.check ? ["--generator-check"] : []),
     ],
   },
+  {
+    name: "Fungi source capability inventory",
+    args: [
+      "scripts/fungi-source-capability-inventory.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
 ];
 
 const results = [];

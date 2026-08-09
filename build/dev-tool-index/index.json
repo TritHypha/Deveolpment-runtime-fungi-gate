@@ -4,7 +4,7 @@
     "packages": 99,
     "testBearing": 99,
     "tests": 9452,
-    "devTools": 160,
+    "devTools": 161,
     "auditTools": 87,
     "toolsInCadence": 64,
     "proofs": 40
@@ -2841,6 +2841,21 @@
       ]
     },
     {
+      "name": "fungi-source-capability-inventory.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "effects",
+        "signing/fusion",
+        "governance",
+        "secrets/privacy",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "gather-compiler-stage-hashes.mjs",
       "category": "util",
       "purpose": "RD-0528 Phase I-1 evidence producer (item d) for the COMPILER",
@@ -3402,6 +3417,7 @@
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
+      "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3548,6 +3564,7 @@
       "check-gate-injection.mjs",
       "emit-doc-wat.mjs",
       "flat-package-root-lock.mjs",
+      "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3674,6 +3691,7 @@
       "debug-compiler-globs.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "flat-package-root-lock.mjs",
+      "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
       "hardening-show-derived.mjs",
@@ -3713,6 +3731,7 @@
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
       "fungi-golden-probe.mjs",
+      "fungi-source-capability-inventory.mjs",
       "rd-absorb.mjs",
       "rename-package.mjs",
       "validate-workspace-pointers.mjs"
@@ -3801,6 +3820,7 @@
       "debug-compiler-globs.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs",
+      "fungi-source-capability-inventory.mjs",
       "gather-compiler-stage-hashes.mjs",
       "gather-r4-twin-hashes.mjs",
       "gather-t1-twin-hashes.mjs",
@@ -3878,6 +3898,7 @@
       "lint-fungi.mjs",
       "check-gate-injection.mjs",
       "fungi-astshape.mjs",
+      "fungi-source-capability-inventory.mjs",
       "hardening-show-derived.mjs",
       "rename-package.mjs"
     ],

@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Current route: measured Fungi demand and first real package source - 2026-08-09
+
+- [x] Add a fail-closed source-capability inventory derived from the live
+  retirement graph rather than regex guesses. All **111** unexecuted `.fungi`
+  sources parse without an error: **814 flows / 1,113,640 bytes**. The generated
+  report records exact AST/type/operator/method demand and grants no SLIDE or
+  retirement authority.
+- [x] Guard the generator with **5/5** focused tests covering deterministic
+  facts, an unknown-AST detector, traversal, duplicate paths, parse refusal and
+  an out-of-root ledger. Add it to repository `graph-all`; the owning graph
+  count becomes **6/6** once regenerated.
+- [x] Probe the real sentinel-state `restoreVerdict` source through SLIDE's
+  existing general pure-scalar compiler. It compiles now and returns `1` for
+  present+intact, `-1` for absent, and `-1` for integrity failure.
+- [ ] Contract 85: replace that ad-hoc probe with a canonical source manifest,
+  physical `.slide`, receipt-bound package build, hostile substitution tests
+  and typed parity evidence. Keep the scope decision-only: `cold-boot.ts` still
+  owns serialization, durable storage and scrub until separately replaced.
+- [ ] Use the generated demand inventory plus a separate SLIDE admitted-
+  capability manifest to choose subsequent implementation slices. Syntax
+  recognition alone must never reduce the 111-source or 516-TypeScript debt.
+
 ### Current route: SLIDE Contract 84 internal owned handoff complete - 2026-08-09
 
 - [x] Close SLIDE Contract 83 at implementation checkpoint `0579136`. Its exact

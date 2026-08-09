@@ -31,6 +31,7 @@ function fixture() {
     "kb-graph-generator.mjs",
     "package-graph-generator.mjs",
     "dev-tool-index.mjs",
+    "fungi-source-capability-inventory.mjs",
   ];
   for (const name of children) {
     write(root, `scripts/${name}`, `
@@ -54,18 +55,19 @@ function run(root, kb, args = [], failChild = "") {
   });
 }
 
-test("graph-all routes all five repository checks and propagates a child refusal", () => {
+test("graph-all routes all six repository checks and propagates a child refusal", () => {
   const { root, kb } = fixture();
   try {
     const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");
-    assert.equal(calls.trim().split(/\r?\n/).length, 5);
+    assert.equal(calls.trim().split(/\r?\n/).length, 6);
     assert.match(calls, /project-graph-generator\.mjs .*--check/);
     assert.match(calls, /kb-graph-generator\.mjs .*--kb-dir .*--check/);
     assert.match(calls, /package-graph-generator\.mjs .*--check/);
     assert.doesNotMatch(calls, /memory-graph\.mjs/);
     assert.match(calls, /dev-tool-index\.mjs .*--generator-check/);
+    assert.match(calls, /fungi-source-capability-inventory\.mjs .*--root .*--check/);
 
     writeFileSync(join(root, "calls.log"), "");
     const refused = run(
@@ -78,7 +80,7 @@ test("graph-all routes all five repository checks and propagates a child refusal
     assert.match(refused.stderr, /package graph.*exit 7/i);
     assert.equal(
       readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/).length,
-      5,
+      6,
       "the orchestrator aggregates all child results instead of stopping before evidence is complete",
     );
   } finally {
