@@ -55,8 +55,6 @@ export const GATE_V3_CODES = {
   TERM_002: { code: "GATE-TERM-002", name: "GATE_V3_INVALID_BUDGET", message: "budget must be a positive integer" },
   TERM_003: { code: "GATE-TERM-003", name: "GATE_V3_UNBOUNDED_CYCLE", message: "unbounded component cycle" },
   TERM_004: { code: "GATE-TERM-004", name: "GATE_V3_UNPROVED_CYCLE", message: "cycle requires a registered state contract and canonical termination proof" },
-  LIVE_001: { code: "GATE-LIVE-001", name: "GATE_V3_UNREACHABLE_PART", message: "part is not reachable from any input" },
-  LIVE_002: { code: "GATE-LIVE-002", name: "GATE_V3_DEAD_END_PART", message: "part reaches no terminal" },
 } as const;
 
 type CodeDef = { readonly code: string; readonly name: string; readonly message: string };

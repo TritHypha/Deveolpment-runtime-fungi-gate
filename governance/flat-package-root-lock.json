@@ -191,7 +191,7 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "9ad4f757f128af741828e6f392ff50f2d53a70f2757a11c97c8b3bbb745bcab4",
+      "contentDigest": "076ece7e8564d4ce07c4fb748c999ee27f0381e216ef9bd906139aa764491d6e",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1709,7 +1709,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "769762289e3a79018221c413cc18aae7e3bede314fbd77b376d20e9582533feb",
+      "contentDigest": "e55e93ecc7238109bdac4b947f05500538def2b4fc09e345f7f5795190307446",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3268,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "ca4c1b977da404d5015b18cd06e24a55b8f92ff3787799f0d30a9df6286674e7"
+  "rootDigest": "85a56a01cecea00da6c8e07df4572ff63c50c59da6b94cec8108e0af18da6e52"
 }

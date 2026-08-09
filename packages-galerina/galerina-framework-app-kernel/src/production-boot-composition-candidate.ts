@@ -197,11 +197,11 @@ function hasExactDataShape(value: object, keys: readonly string[]): boolean {
 }
 
 /** Returns epoch milliseconds only for canonical ISO instants. */
-function canonicalInstant(value: unknown): number | null {
-  if (typeof value !== "string") return null;
+function canonicalInstant(value: unknown): number | undefined {
+  if (typeof value !== "string") return undefined;
   const parsed = Date.parse(value);
-  if (!Number.isFinite(parsed)) return null;
-  return new Date(parsed).toISOString() === value ? parsed : null;
+  if (!Number.isFinite(parsed)) return undefined;
+  return new Date(parsed).toISOString() === value ? parsed : undefined;
 }
 
 /** Checks a non-empty primitive string. */
@@ -215,7 +215,7 @@ function provenanceDigestsAreValid(
 ): value is ProductionSlideRestoreProvenanceDigests {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || nodeUtilTypes.isProxy(value)
     || !Array.isArray(value)
     || Object.getPrototypeOf(value) !== Array.prototype
@@ -269,7 +269,7 @@ function policyShapeIsValid(
 ): value is ProductionBootCompositionPolicy {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || !hasExactDataShape(value, POLICY_KEYS)
   ) return false;
   const policy = value as ProductionBootCompositionPolicy;
@@ -309,8 +309,8 @@ function policyShapeIsValid(
     && GENERATION.test(policy.generationId)
     && Number.isSafeInteger(policy.minDelegationSerial)
     && policy.minDelegationSerial >= 0
-    && notBefore !== null
-    && notAfter !== null
+    && notBefore !== undefined
+    && notAfter !== undefined
     && notBefore <= notAfter;
 }
 
@@ -371,7 +371,7 @@ function durabilityProfileMatches(
     && policy.generationId === profile.generationId
     && profile.delegationSerial > policy.minDelegationSerial
     && policy.notBefore === profile.notBefore
-    && indexIssuedAt !== null
+    && indexIssuedAt !== undefined
     && indexIssuedAt >= (canonicalInstant(profile.notBefore) as number)
     && policy.notAfter === profile.notAfter
     && profile.authenticated === true
@@ -471,7 +471,7 @@ export function admitProductionBootCompositionCandidate(
 export function isProductionBootCompositionCandidate(
   value: unknown,
 ): value is ProductionBootCompositionCandidate {
-  return typeof value === "object"
-    && value !== null
+  return !!value
+    && typeof value === "object"
     && candidates.has(value);
 }

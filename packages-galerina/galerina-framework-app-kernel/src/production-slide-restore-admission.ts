@@ -240,11 +240,11 @@ function hasExactDataShape(
 }
 
 /** Returns the epoch milliseconds only for a canonical ISO instant. */
-function canonicalInstant(value: unknown): number | null {
-  if (typeof value !== "string") return null;
+function canonicalInstant(value: unknown): number | undefined {
+  if (typeof value !== "string") return undefined;
   const parsed = Date.parse(value);
-  if (!Number.isFinite(parsed)) return null;
-  return new Date(parsed).toISOString() === value ? parsed : null;
+  if (!Number.isFinite(parsed)) return undefined;
+  return new Date(parsed).toISOString() === value ? parsed : undefined;
 }
 
 /** Checks a non-empty string without accepting boxed or coerced values. */
@@ -258,7 +258,7 @@ function provenanceDigestsAreValid(
 ): value is ProductionSlideRestoreProvenanceDigests {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || nodeUtilTypes.isProxy(value)
     || !Array.isArray(value)
     || Object.getPrototypeOf(value) !== Array.prototype
@@ -312,7 +312,7 @@ function manifestShapeIsValid(
 ): value is ProductionSlideRestoreManifest {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || !hasExactDataShape(value, MANIFEST_KEYS)
   ) return false;
   const manifest = value as ProductionSlideRestoreManifest;
@@ -336,8 +336,8 @@ function manifestShapeIsValid(
     && isNonEmptyString(manifest.operationalKeyId)
     && Number.isSafeInteger(manifest.delegationSerial)
     && manifest.delegationSerial >= 0
-    && canonicalInstant(manifest.notBefore) !== null
-    && canonicalInstant(manifest.notAfter) !== null
+    && canonicalInstant(manifest.notBefore) !== undefined
+    && canonicalInstant(manifest.notAfter) !== undefined
     && isNonEmptyString(manifest.ed25519Signature)
     && isNonEmptyString(manifest.mlDsa65Signature);
 }
@@ -348,12 +348,12 @@ function authorityShapeIsValid(
 ): value is ProductionSlideRestoreAuthority {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || !hasExactDataShape(value, AUTHORITY_KEYS, true)
   ) return false;
   const authority = value as ProductionSlideRestoreAuthority;
   return authority.schema === "galerina.production-slide-restore.authority.v1"
-    && canonicalInstant(authority.at) !== null
+    && canonicalInstant(authority.at) !== undefined
     && Number.isSafeInteger(authority.minDelegationSerial)
     && authority.minDelegationSerial >= 0
     && isNonEmptyString(authority.expectedRootKeyId)
@@ -370,7 +370,7 @@ function executionPortShapeIsValid(
 ): value is ProductionSlideRestoreExecutionPort {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || !hasExactDataShape(value, EXECUTION_PORT_KEYS, true)
   ) return false;
   const port = value as ProductionSlideRestoreExecutionPort;
@@ -418,7 +418,7 @@ function observationIsValid(
 ): value is ProductionSlideRestoreObservation {
   if (
     typeof value !== "object"
-    || value === null
+    || !value
     || !hasExactDataShape(value, OBSERVATION_KEYS)
   ) return false;
   const observation = value as ProductionSlideRestoreObservation;
@@ -590,7 +590,7 @@ export function admitAuthenticatedSlideRestoreProfile(
 export function isAuthenticatedSlideRestoreProfile(
   value: unknown,
 ): value is AuthenticatedSlideRestoreProfile {
-  return typeof value === "object"
-    && value !== null
+  return !!value
+    && typeof value === "object"
     && authenticatedProfiles.has(value);
 }

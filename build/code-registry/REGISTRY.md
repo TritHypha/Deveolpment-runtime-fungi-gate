@@ -943,8 +943,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| GATE-LIVE-001 | inline | GATE_V3_ORPHAN_SOURCE / GATE_V3_UNREACHABLE_PART | error |
-| GATE-LIVE-002 | inline | GATE_V3_DEAD_END / GATE_V3_DEAD_END_PART | — |
+| GATE-LIVE-001 | inline | GATE_V3_ORPHAN_SOURCE | error |
+| GATE-LIVE-002 | inline | GATE_V3_DEAD_END | — |
 
 ### LOGIC (14)
 

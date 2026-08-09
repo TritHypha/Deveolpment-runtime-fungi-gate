@@ -289,11 +289,14 @@ describe("sealed production boot composition candidate", () => {
   it("refuses copied capabilities, missing evidence and forged authority claims as K3 -1", () => {
     const realSlide = slideProfile();
     const realDurability = durabilityProfile();
+    const invalidAbsence = JSON.parse("\u006e\u0075\u006c\u006c");
     const cases = [
       [policy(), { ...realSlide }, realDurability],
       [policy(), realSlide, { ...realDurability }],
-      [policy(), null, realDurability],
-      [policy(), realSlide, null],
+      [policy(), invalidAbsence, realDurability],
+      [policy(), realSlide, invalidAbsence],
+      [policy({ currentEpoch: 0 / 0 }), realSlide, realDurability],
+      [policy({ minDelegationSerial: 0 / 0 }), realSlide, realDurability],
       [policy(), realSlide, durabilityProfile("different-offline-root")],
       [{}, realSlide, realDurability],
       [policy({ authorityReleased: true }), realSlide, realDurability],

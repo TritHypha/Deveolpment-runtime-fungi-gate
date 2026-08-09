@@ -11931,7 +11931,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 1,
-      "docs": 5
+      "docs": 6
     },
     {
       "code": "GATE-AUTH-002",
@@ -12005,14 +12005,13 @@
       "namespace": "GATE",
       "status": "inline",
       "names": [
-        "GATE_V3_ORPHAN_SOURCE",
-        "GATE_V3_UNREACHABLE_PART"
+        "GATE_V3_ORPHAN_SOURCE"
       ],
       "severities": [
         "error"
       ],
       "defs": 0,
-      "emits": 4,
+      "emits": 3,
       "tests": 2,
       "docs": 3
     },
@@ -12022,12 +12021,11 @@
       "namespace": "GATE",
       "status": "inline",
       "names": [
-        "GATE_V3_DEAD_END",
-        "GATE_V3_DEAD_END_PART"
+        "GATE_V3_DEAD_END"
       ],
       "severities": [],
       "defs": 0,
-      "emits": 2,
+      "emits": 1,
       "tests": 1,
       "docs": 1
     },
@@ -12921,7 +12919,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 2,
-      "docs": 6
+      "docs": 7
     },
     {
       "code": "GATE-RESOLVE-112",
@@ -13061,7 +13059,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 6,
-      "docs": 3
+      "docs": 4
     },
     {
       "code": "GATE-SEM-010",
@@ -13103,7 +13101,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 3,
-      "docs": 5
+      "docs": 6
     },
     {
       "code": "GATE-SEM-013",
@@ -13299,7 +13297,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 2,
-      "docs": 11
+      "docs": 12
     },
     {
       "code": "GATE-WIRE-102",
