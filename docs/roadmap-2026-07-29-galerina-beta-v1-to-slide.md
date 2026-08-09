@@ -8,6 +8,26 @@ catalog of **95 files in two partitions**. Complete SLIDE passes **866/866
 tests across 96 suites**, path hygiene **14/14** across 755 targets and security
 closure `+1` with evidence K3 `0`; authority remains unreleased.
 
+Pre-conversion security hold 2026-08-09: fresh repository-wide Codex Security
+scans are sealed for Galerina, SLIDE, Lyth-Weaver and TritMesh:QL. They report
+**2 high, 7 medium and 8 low** findings in total. Galerina's serving admission
+bypass and non-finite risk calculation, SLIDE's authority-path `null`
+sentinels and pathname-only source traversal, and the selected Lyth/Trit
+surfaces must be closed before TypeScript-to-`.fungi` conversion. The owner
+waived the separate Anthropic-skills repeat; it is not represented as evidence.
+The full ruling and exit conditions are in
+`docs/security/pre-conversion-security-gate-2026-08-09.md`.
+
+The current Galerina graph run is **6/6** and normal phase-close passes every
+blocking gate in **577.3s**. The live complete aggregate is nevertheless
+**99/100 packages / 9,436 tests**, and exhaustive phase-close refuses at its
+`tests:all-packages` gate. The single package failure is Hypha provenance
+against an owner-modified sibling working file; isolated committed Galerina
+plus committed Hypha matches the recorded digest and passes **42/42**. Owner
+work was preserved. This classification does not turn the exhaustive refusal
+green: the complete lane must be rerun after sibling custody is resolved.
+Conversion and production authority both remain closed.
+
 The real `restoreVerdict` consumer now executes only exact hybrid-authenticated
 `.slide` bytes and independently verifies the composed typed receipt. Its
 focused evidence remains **4/4**. The VOK authority candidate preserves the

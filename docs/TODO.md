@@ -4,6 +4,46 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Pre-conversion security hold - 2026-08-09
+
+- [x] Seal repository-wide Codex Security scans for Galerina, SLIDE,
+  Lyth-Weaver and TritMesh:QL. The result is **2 high / 7 medium / 8 low**
+  reportable findings across the four scopes. The owner waived the repeat pass
+  through `Anthropic-Cybersecurity-Skills`; it was not run and is not claimed.
+  See [the durable gate record](security/pre-conversion-security-gate-2026-08-09.md).
+- [x] Run Galerina's graph, index, test and audit surface. Graph generation is
+  **6/6** and normal phase-close passes every blocking gate in **577.3s**.
+  The complete aggregate is **99/100 packages / 9,436 tests** and exhaustive
+  phase-close refuses at `tests:all-packages` because the live sibling Hypha
+  working tree has an in-progress extractor digest.
+- [x] Prove the Hypha classification without touching owner work. Isolated
+  committed Galerina plus committed Hypha reproduces the recorded provenance
+  digest and passes **42/42** focused tests. The live complete lane remains
+  failed until sibling custody is resolved and the aggregate is freshly rerun.
+- [ ] **G1:** make `serve()` use the same complete, closed admission boundary
+  as compilation. Taint, governance, exact mode, flow metadata and every
+  effect must be admitted before `executeFlow()`; missing or unknown state
+  reaches `_=>`.
+- [ ] **G2:** replace permissive numeric parsing in the security risk CLI with
+  a finite canonical decoder. Malformed, infinite, negative and out-of-range
+  values must refuse nonzero and no path may construct or print `NaN`.
+- [ ] **G3:** stop presenting lexical path comparison as filesystem
+  confinement. Bind retained object identity across links, traversal and use,
+  or narrow the helper and its claims so it cannot authorize a file operation.
+- [ ] **G4:** reconcile `KNOWN-ISSUES.md` with current non-production evidence
+  and add a claim-drift regression check for its tester-facing readiness text.
+- [ ] Close SLIDE S1-S2 in its owning TODO: eliminate authority-path `null`
+  sentinels and retain filesystem root identity across source-manifest reads.
+  Mechanical TypeScript-to-`.fungi` conversion is forbidden before both pass.
+- [ ] Close Lyth-Weaver S1-S5 before selecting its affected code for
+  conversion. TritMesh:QL remains design-only and may not enter a shipping
+  path until its six scan findings are closed or the affected material is
+  explicitly excluded.
+- [ ] Rerun the four security scopes, the complete **100-package** lane and
+  exhaustive phase-close after remediation. Conversion begins only when every
+  required gate is green in one current custody state; no green repository
+  result grants production authority.
+
 ### Fresh graph, audit and test close - 2026-08-09
 
 - [x] Regenerate and independently check all six repository-owned graph/index
