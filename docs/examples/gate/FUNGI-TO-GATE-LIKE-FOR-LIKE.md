@@ -405,3 +405,50 @@ all of it is `.fungi` work. That is why the route is
 TypeScript/Go/Rust/C → `.fungi` → `.gate`, and why a direct source-to-circuit
 translator would be guessing at terminals.
 
+---
+
+## 11. Capability boundary — quick reference
+
+The whole map in two tables. The reason underneath both: `.gate` is machine-checked **acyclic**
+(`verifyGateGraphAcyclic`, `SEMANTICS.md` SEM-001) and expression-free, so it computes a **fixed,
+bounded function** of its inputs — a drawing, not a process. It carries the *authority skeleton*;
+everything that computes a value is pushed **inside a part** and stays `.fungi` (measured ≈ two-thirds
+structure / one-third compute — RD-0753 §3/§5a).
+
+### What `.gate` CAN do
+
+| Capability | How it appears in `.gate` |
+|---|---|
+| K3 authority decision (*direct* — the construct it models best) | `allow` / `deny` / `indeterminate` routed to three **distinct** terminals; False never collapses into Unknown (`GATE-AUTH-001/002`) |
+| Boolean decision | a two-arm decision part — the comparison lives *inside* the part |
+| Selector / multi-way | a **closed** arm set, every declared arm routed (`GATE-RESOLVE-111`) — closed-world completeness, no wildcard |
+| Named outcome terminals | `OUT.value` · `DENY.<name>` · `TRAP.<name>` · `FAULT.<name>` · `DRAIN.<name>` |
+| Reference catalogue types on ports/wires | exact typing, no implicit conversion (`GATE-WIRE-101`); records / arrays / hallmarks ride as opaque values |
+| Declare a capability/effect envelope | `REQUIRES:` `capability` / `effect` (`GATE-SEM-009/010`; canonical names `GATE-SEM-012`) |
+| Pass literal arguments | `Int` (range-checked vs `min`/`max`), `Number`, `TritLiteral` (`−1`/`0`/`1`); set literals `fields={…}` |
+| Wire parts into an admission circuit | part contracts are external/authoritative (the registry) — a circuit cannot lie about a component |
+| Be verified by inspection | re-derive the routing table / re-derive the circuit from the binary — a moved gate is caught |
+
+### What `.gate` CANNOT do — each *by design*
+
+| Cannot | Why it stays out |
+|---|---|
+| Arithmetic — add / multiply / fold / derive a value; no `Float`; no `π` / `sqrt` / trig | a circuit has no expressions; numbers appear only as argument literals |
+| Expressions / comparisons (`index < 0`) | the comparison lives *inside a part* |
+| Loops / iteration / indexing / element access | acyclic — no feedback; a circuit cannot look inside a value |
+| Unbounded recursion | acyclic ⇒ no self-reference |
+| Mutable state / accumulators / memory (`malloc` / `free`, raw pointers) | the runtime owns memory; a drawing never does |
+| Error propagation (postfix `?`, bubbling `err != nil`) | no call stack — every refusal terminates at a **named** terminal |
+| Concurrency (`async` / `await`, channels, futures, goroutines) | a wire is not a promise; sequencing is depth |
+| `try` / `catch` / `defer` / `finally` / `goto` | recovery is a re-decision (a second decision part), not a handler scope |
+| Declare a type / construct a record / read a field | `.gate` **references** the catalogue only — it never declares |
+| Ambient state (`ctx.Set`, thread-local, `os.environ`) | a value arrives on a wire or does not exist |
+| Conditional compilation / disable-by-deploy (`#ifdef`, `SKIP_THE_CHECK=1`) | one artifact, one shape |
+| Generics / traits / duck typing | monomorphic by design — the *absence* of unification is what makes the type wall sound |
+| Decorators / macros | they change behaviour invisibly; a drawing must be what it says |
+| String building | a circuit cannot compute — so injection taint cannot even be *built* here |
+
+★ Not a weaker `.fungi` — a **different kind of artifact**. `.gate` is the authority skeleton drawn so
+it can be proven by inspection; the compute lane (`.fungi → SLIDE`) is where value-producing work
+lives, which is why it cannot be cut.
+
