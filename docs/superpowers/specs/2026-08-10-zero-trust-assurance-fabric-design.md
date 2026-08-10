@@ -450,6 +450,25 @@ The retirement inventory covers the complete executable TypeScript/JavaScript
 family, declarations, bootstrap floors, generated files and named host seams.
 A `.ts`-only denominator cannot authorize retirement.
 
+### 6a. Chapter 3 semantic-evidence integration
+
+The semantic assurance graph is one generated, non-authorizing predecessor of
+the roadmap root. It is bound to its JSON and Markdown artifacts, its
+provenance and its generator; stale provenance makes the roadmap `UNKNOWN`, and
+malformed provenance refuses publication. The closed roadmap set has eight
+predecessors and one aggregate root (nine nodes): project graph, KB graph,
+dev-tool index, percentage evidence, complete executable-family retirement,
+semantic coverage, status ledger and pinned SLIDE reference evidence.
+
+The semantic graph conserves 6 release/system requirements, 1 system contract,
+0 canonical parser-proven routes, 100 registered packages, 874 test-evidence
+nodes, 6 detector mappings and the complete 1,417-path executable family. Its
+local evidence result is `ALLOW (1)` only as a freshness/consistency fact. It
+does not convert, retire, sign, release or execute anything. The published
+roadmap root remains K3 `0` (`UNKNOWN`) and non-authorizing until every
+independent predecessor and the existing release-admission boundary are
+admitted.
+
 ### 7. Cadence scheduler
 
 Cadences remain distinct:

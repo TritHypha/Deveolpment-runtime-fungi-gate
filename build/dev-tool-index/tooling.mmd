@@ -517,6 +517,11 @@ flowchart LR
   T_gen_status_blocks_mjs --> C_provenance
   T_gen_status_blocks_mjs --> C_doc_drift
   T_gen_status_blocks_mjs --> C_graph_index
+  T_gen_assurance_semantic_graph_mjs["gen-assurance-semantic-graph.mjs"]
+  T_gen_assurance_semantic_graph_mjs --> C_signing_fusion
+  T_gen_assurance_semantic_graph_mjs --> C_provenance
+  T_gen_assurance_semantic_graph_mjs --> C_coverage
+  T_gen_assurance_semantic_graph_mjs --> C_graph_index
   T_graph_all_mjs["graph-all.mjs"]
   T_graph_all_mjs --> C_governance
   T_graph_all_mjs --> C_package_border

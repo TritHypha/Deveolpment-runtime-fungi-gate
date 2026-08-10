@@ -14,6 +14,7 @@ const EXPECTED_NODE_IDS = Object.freeze([
   "dev-tool-index",
   "percent-evidence",
   "ts-retirement",
+  "semantic-coverage",
   "status-ledger",
   "slide-reference",
 ]);

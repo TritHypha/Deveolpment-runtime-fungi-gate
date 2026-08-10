@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9498,
-    "devTools": 164,
+    "devTools": 165,
     "auditTools": 87,
-    "toolsInCadence": 64,
+    "toolsInCadence": 65,
     "proofs": 40
   },
   "packages": [
@@ -2307,6 +2307,19 @@
       ]
     },
     {
+      "name": "gen-assurance-semantic-graph.mjs",
+      "category": "graph",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "concerns": [
+        "signing/fusion",
+        "provenance",
+        "coverage",
+        "graph/index"
+      ]
+    },
+    {
       "name": "graph-all.mjs",
       "category": "graph",
       "purpose": "fail-closed orchestrator for repository-owned Galerina graph surfaces.",
@@ -3272,6 +3285,7 @@
       "audit-tooling-contract.mjs",
       "audit-wasmtime-presence.mjs",
       "audit-web-stub-guard.mjs",
+      "gen-assurance-semantic-graph.mjs",
       "ts-retirement-graph.mjs",
       "gen-code-registry.mjs",
       "registry-index-cli.mjs",
@@ -3436,6 +3450,7 @@
       "audit-wat-lowering.mjs",
       "fix-logicn-brand.mjs",
       "gen-status-blocks.mjs",
+      "gen-assurance-semantic-graph.mjs",
       "graph-all.mjs",
       "kat-execution-graph-cache-bound.mjs",
       "kb-graph-generator.mjs",
@@ -3586,6 +3601,7 @@
       "audit-web-stub-guard.mjs",
       "fix-logicn-brand.mjs",
       "galerina-new.mjs",
+      "gen-assurance-semantic-graph.mjs",
       "kat-execution-graph-cache-bound.mjs",
       "measure-graph-cache-limits.mjs",
       "memory-graph.mjs",
@@ -3925,6 +3941,7 @@
       "audit-wasm-validate.mjs",
       "gen-roadmap-subway.mjs",
       "gen-status-blocks.mjs",
+      "gen-assurance-semantic-graph.mjs",
       "kb-graph-generator.mjs",
       "package-graph-generator.mjs",
       "project-graph-generator.mjs",

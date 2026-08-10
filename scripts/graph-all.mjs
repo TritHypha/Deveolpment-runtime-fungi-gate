@@ -59,6 +59,14 @@ const node = process.execPath;
 const mode = options.check ? "check" : "generate";
 const children = [
   {
+    name: "package graph",
+    args: [
+      "scripts/package-graph-generator.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
     name: "project graph",
     args: [
       "scripts/project-graph-generator.mjs",
@@ -80,14 +88,6 @@ const children = [
     ],
   },
   {
-    name: "package graph",
-    args: [
-      "scripts/package-graph-generator.mjs",
-      "--root", options.root,
-      ...(options.check ? ["--check"] : []),
-    ],
-  },
-  {
     name: "dev-tool index",
     args: [
       "scripts/dev-tool-index.mjs",
@@ -99,6 +99,14 @@ const children = [
     name: "Fungi source capability inventory",
     args: [
       "scripts/fungi-source-capability-inventory.mjs",
+      "--root", options.root,
+      ...(options.check ? ["--check"] : []),
+    ],
+  },
+  {
+    name: "semantic assurance graph",
+    args: [
+      "scripts/gen-assurance-semantic-graph.mjs",
       "--root", options.root,
       ...(options.check ? ["--check"] : []),
     ],

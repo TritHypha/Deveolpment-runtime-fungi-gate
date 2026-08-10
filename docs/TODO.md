@@ -4,6 +4,30 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### VOK assurance fabric Chapter 3 integration - 2026-08-10
+
+- [x] Bind the semantic-assurance graph into the closed roadmap evidence DAG as
+  the eighth predecessor (nine nodes including the aggregate root). Stale
+  semantic provenance becomes `UNKNOWN`; malformed provenance or an incomplete
+  descriptor refuses publication. The graph umbrella now runs and checks seven
+  dependency-ordered children, and normal phase-close has the additional
+  blocking `semantic:coverage` gate.
+- [x] Publish the semantic graph only through its owner: 6 release/system
+  requirements, 1 system contract, 0 parser-proven routes, 100 packages, 874
+  test-evidence nodes, 6 detector mappings and **1,417** complete
+  executable-family paths. The current family remains 504 `.ts`, 15 `.d.ts`,
+  886 `.mjs` and 12 `.js` paths (zero `.mts`, `.cts` and `.cjs`); terminal
+  retirement remains open.
+- [x] Retain the authority boundary: the semantic graph's local consistency
+  state is `ALLOW (1)`, but the generated roadmap aggregate is explicitly
+  non-authorizing and K3 **`0`** (`UNKNOWN`) because it retains independent
+  unknown predecessors. No production, release, signing, conversion, execution
+  or retirement authority follows.
+- [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
+  **16/16**, the explicit assurance-family enumeration passes **74/74**, and
+  the complete package lane passes **100/100 packages and 9,499 tests** in
+  310.6 seconds. These are verification evidence, not release authority.
+
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
 - [x] Repair the `.fungi` unused-binding identity for `unsafe let`. The linter

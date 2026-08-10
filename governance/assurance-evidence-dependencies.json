@@ -82,6 +82,21 @@
       "predecessors": []
     },
     {
+      "id": "semantic-coverage",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/assurance-semantic-graph/semantic-graph.json",
+        "build/assurance-semantic-graph/SEMANTIC-GRAPH.md"
+      ],
+      "evidencePath": "build/assurance-semantic-graph/SEMANTIC-GRAPH.md",
+      "provenancePath": "build/assurance-semantic-graph/provenance.json",
+      "toolPath": "scripts/gen-assurance-semantic-graph.mjs",
+      "expectedTool": "semantic-assurance-graph",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
       "id": "status-ledger",
       "kind": "generated",
       "artifactPaths": [
@@ -121,6 +136,7 @@
       "dev-tool-index",
       "percent-evidence",
       "ts-retirement",
+      "semantic-coverage",
       "status-ledger",
       "slide-reference"
     ]

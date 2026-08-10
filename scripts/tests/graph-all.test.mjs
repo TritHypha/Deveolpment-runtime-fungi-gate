@@ -26,12 +26,13 @@ function fixture() {
   const root = mkdtempSync(join(tmpdir(), "graph-all-root-"));
   const kb = mkdtempSync(join(tmpdir(), "graph-all-kb-"));
   const children = [
+    "package-graph-generator.mjs",
     "project-graph-generator.mjs",
     "audit-graph-integrity.mjs",
     "kb-graph-generator.mjs",
-    "package-graph-generator.mjs",
     "dev-tool-index.mjs",
     "fungi-source-capability-inventory.mjs",
+    "gen-assurance-semantic-graph.mjs",
   ];
   for (const name of children) {
     write(root, `scripts/${name}`, `
@@ -55,19 +56,33 @@ function run(root, kb, args = [], failChild = "") {
   });
 }
 
-test("graph-all routes all six repository checks and propagates a child refusal", () => {
+test("graph-all routes all seven repository checks in dependency order and propagates a child refusal", () => {
   const { root, kb } = fixture();
   try {
     const passed = run(root, kb, ["--check"]);
     assert.equal(passed.status, 0, `${passed.stdout}\n${passed.stderr}`);
     const calls = readFileSync(join(root, "calls.log"), "utf8");
-    assert.equal(calls.trim().split(/\r?\n/).length, 6);
+    const callLines = calls.trim().split(/\r?\n/);
+    assert.equal(callLines.length, 7);
+    assert.deepEqual(
+      callLines.map((line) => line.split(" ")[0]),
+      [
+        "package-graph-generator.mjs",
+        "project-graph-generator.mjs",
+        "audit-graph-integrity.mjs",
+        "kb-graph-generator.mjs",
+        "dev-tool-index.mjs",
+        "fungi-source-capability-inventory.mjs",
+        "gen-assurance-semantic-graph.mjs",
+      ],
+    );
     assert.match(calls, /project-graph-generator\.mjs .*--check/);
     assert.match(calls, /kb-graph-generator\.mjs .*--kb-dir .*--check/);
     assert.match(calls, /package-graph-generator\.mjs .*--check/);
     assert.doesNotMatch(calls, /memory-graph\.mjs/);
     assert.match(calls, /dev-tool-index\.mjs .*--generator-check/);
     assert.match(calls, /fungi-source-capability-inventory\.mjs .*--root .*--check/);
+    assert.match(calls, /gen-assurance-semantic-graph\.mjs .*--root .*--check/);
 
     writeFileSync(join(root, "calls.log"), "");
     const refused = run(
@@ -80,7 +95,7 @@ test("graph-all routes all six repository checks and propagates a child refusal"
     assert.match(refused.stderr, /package graph.*exit 7/i);
     assert.equal(
       readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/).length,
-      6,
+      7,
       "the orchestrator aggregates all child results instead of stopping before evidence is complete",
     );
   } finally {

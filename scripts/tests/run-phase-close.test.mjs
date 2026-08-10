@@ -193,6 +193,15 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
   assert.match(
     runnerSource,
+    /run\("semantic:coverage", "node", \["scripts\/gen-assurance-semantic-graph\.mjs", "--check"\]\)/,
+  );
+  assert.equal(
+    (runnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
+    1,
+    "semantic coverage must be one exact blocking phase-close gate",
+  );
+  assert.match(
+    runnerSource,
     /run\("remote-shell-install", "node", \["scripts\/audit-remote-shell-install\.mjs"\]\)/,
   );
   assert.match(

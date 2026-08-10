@@ -20,6 +20,7 @@ const UPSTREAM = Object.freeze([
   ["dev-tool-index", "build/dev-tool-index/index.json", "build/dev-tool-index/provenance.json", "scripts/dev-tool-index.mjs", "dev-tool-index", "generated", "forbidden", "DECLARED_GENERATED_OUTPUT"],
   ["percent-evidence", "build/component-health/percent-audit.json", "build/component-health/percent-provenance.json", "scripts/component-health.mjs", "component-health", "generated", "forbidden", "DECLARED_GENERATED_OUTPUT"],
   ["ts-retirement", "build/ts-retirement/ts-retirement.json", "build/ts-retirement/provenance.json", "scripts/ts-retirement-graph.mjs", "ts-retirement-graph", "generated", "forbidden", "DECLARED_GENERATED_OUTPUT"],
+  ["semantic-coverage", "build/assurance-semantic-graph/SEMANTIC-GRAPH.md", "build/assurance-semantic-graph/provenance.json", "scripts/gen-assurance-semantic-graph.mjs", "semantic-assurance-graph", "generated", "forbidden", "DECLARED_GENERATED_OUTPUT"],
   ["status-ledger", "build/status/STATUS.md", "build/status/provenance.json", "scripts/gen-status-blocks.mjs", "gen-status-blocks", "generated", "forbidden", "DECLARED_GENERATED_OUTPUT"],
   ["slide-reference", "build/slide-reference/reference.json", "build/slide-reference/provenance.json", "scripts/verify-slide-reference-evidence.mjs", "verify-slide-reference-evidence", "external", "required", "EXTERNAL_INPUT"],
 ]);
@@ -122,6 +123,23 @@ describe("roadmap assurance dependency derivation", () => {
     }
   });
 
+  it("propagates an older semantic-coverage Git build point as unknown", () => {
+    const { root } = fixture();
+    try {
+      const path = join(root, "build/assurance-semantic-graph/provenance.json");
+      const value = JSON.parse(readFileSync(path, "utf8"));
+      value.gitCommit = "c".repeat(40);
+      writeFileSync(path, `${JSON.stringify(value, undefined, 2)}\n`);
+      const result = deriveRoadmapEvidence(root);
+      assert.equal(result.kind, "accepted", JSON.stringify(result));
+      assert.equal(result.value.verdictTrit, 0);
+      assert.equal(result.value.nodes.find((node) => node.id === "semantic-coverage").localTrit, 0);
+      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 0);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("propagates malformed required external provenance as deny", () => {
     const { root } = fixture();
     try {
@@ -144,7 +162,8 @@ describe("roadmap assurance dependency derivation", () => {
       assert.equal(missing.code, "ASSURANCE-EVIDENCE-FILE");
 
       const incomplete = descriptor();
-      incomplete.nodes.pop();
+      incomplete.nodes = incomplete.nodes.filter((node) => node.id !== "semantic-coverage");
+      incomplete.root.predecessors = incomplete.root.predecessors.filter((id) => id !== "semantic-coverage");
       write(root, "governance/assurance-evidence-dependencies.json", `${JSON.stringify(incomplete)}\n`);
       const refused = deriveRoadmapEvidence(root);
       assert.equal(refused.kind, "refused", JSON.stringify(refused));
