@@ -5,6 +5,7 @@ import {
   SOURCE_CLASS,
   TRIT,
   foldRequiredTrits,
+  isAssuranceResult,
   isBlockingFailure,
   makeAssuranceResult,
 } from "../lib/assurance-fabric/result-model.mjs";
@@ -38,7 +39,7 @@ describe("assurance result model", () => {
       subjectId: "subject:a",
       detail: "self asserted",
       trit: TRIT.ASSURED,
-    }), /host-derived/);
+    }), /closed relation/);
   });
 
   it("refuses surplus, absent, forged and non-closed result values", () => {
@@ -68,6 +69,41 @@ describe("assurance result model", () => {
     });
     assert.throws(() => makeAssuranceResult(accessor), /ordinary data fields/);
     assert.equal(getterRan, false);
+  });
+
+  it("enforces the closed tag, source and trit relation", () => {
+    const base = {
+      sourceClass: SOURCE_CLASS.HOST,
+      subjectId: "subject:a",
+      detail: "closed relation",
+    };
+    for (const invalid of [
+      { tag: RESULT_TAG.BLOCKING_PASS, trit: TRIT.UNKNOWN },
+      { tag: RESULT_TAG.BLOCKING_FAIL, trit: TRIT.ASSURED },
+      { tag: RESULT_TAG.UNKNOWN, trit: TRIT.DISTRUSTED },
+      { tag: RESULT_TAG.ADVISORY_FINDINGS, trit: TRIT.UNKNOWN },
+      { tag: RESULT_TAG.INFORMATIONAL, trit: TRIT.DISTRUSTED },
+      { tag: RESULT_TAG.NOT_APPLICABLE, trit: TRIT.DISTRUSTED },
+      { tag: RESULT_TAG.REFUSED, trit: TRIT.DISTRUSTED },
+      { tag: RESULT_TAG.LEGACY_EXIT, trit: TRIT.ASSURED },
+      { tag: RESULT_TAG.LEGACY_EXIT, trit: TRIT.UNKNOWN, sourceClass: SOURCE_CLASS.ANALYZER },
+      { tag: RESULT_TAG.BLOCKING_PASS, trit: TRIT.ASSURED, sourceClass: SOURCE_CLASS.LEGACY_EXIT },
+    ]) {
+      assert.throws(() => makeAssuranceResult({ ...base, ...invalid }), /closed relation/);
+    }
+  });
+
+  it("brands only results constructed by the closed result factory", () => {
+    const result = makeAssuranceResult({
+      tag: RESULT_TAG.UNKNOWN,
+      sourceClass: SOURCE_CLASS.ANALYZER,
+      subjectId: "subject:a",
+      detail: "bounded unknown",
+      trit: TRIT.UNKNOWN,
+    });
+    assert.equal(isAssuranceResult(result), true);
+    assert.equal(isAssuranceResult({ ...result }), false);
+    assert.equal(isAssuranceResult(structuredClone(result)), false);
   });
 
   it("distinguishes blocking failures without upgrading other outcomes", () => {

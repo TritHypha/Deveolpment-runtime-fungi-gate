@@ -1,3 +1,5 @@
+import { parseStrictJsonBytes } from "./strict-json.mjs";
+
 const validatedCandidates = new WeakSet();
 
 const OBSERVATION_KEYS = Object.freeze([
@@ -106,50 +108,6 @@ function safeInteger(value, minimum, maximum, label) {
   return value;
 }
 
-function decodedDuplicateKeys(text) {
-  const stack = [];
-  let index = 0;
-  while (index < text.length) {
-    const character = text[index];
-    if (character === '"') {
-      let end = index + 1;
-      while (end < text.length) {
-        if (text[end] === "\\") {
-          end += 2;
-          continue;
-        }
-        if (text[end] === '"') break;
-        end += 1;
-      }
-      if (end >= text.length) refuse("ASSURANCE-OBSERVATION-JSON", "JSON has an unterminated string");
-      const top = stack.at(-1);
-      if (top?.kind === "object" && top.expectKey) {
-        let key;
-        try {
-          key = JSON.parse(text.slice(index, end + 1));
-        } catch {
-          refuse("ASSURANCE-OBSERVATION-JSON", "JSON contains a malformed object key");
-        }
-        if (top.keys.has(key)) {
-          refuse("ASSURANCE-OBSERVATION-DUPLICATE", `JSON repeats decoded key ${JSON.stringify(key)}`);
-        }
-        top.keys.add(key);
-        top.expectKey = false;
-      }
-      index = end + 1;
-      continue;
-    }
-    if (character === "{") stack.push({ kind: "object", keys: new Set(), expectKey: true });
-    else if (character === "[") stack.push({ kind: "array" });
-    else if (character === "}" || character === "]") stack.pop();
-    else if (character === ",") {
-      const top = stack.at(-1);
-      if (top?.kind === "object") top.expectKey = true;
-    }
-    index += 1;
-  }
-}
-
 function normalizeFinding(value, index) {
   const label = `observation.findings[${index}]`;
   const fields = exactRecord(value, ["authorityClass", "detail", "findingId"], label);
@@ -220,13 +178,12 @@ function requireUniqueIdentity(values, field, label) {
   }
 }
 
-function validateObservationText(text, origin) {
-  decodedDuplicateKeys(text);
+function validateObservationBytes(bytes, origin) {
   let parsed;
   try {
-    parsed = JSON.parse(text);
-  } catch {
-    refuse("ASSURANCE-OBSERVATION-JSON", "observation bytes are not valid JSON");
+    parsed = parseStrictJsonBytes(bytes, { label: "observation", maxBytes: 67_108_864 });
+  } catch (error) {
+    refuse("ASSURANCE-OBSERVATION-JSON", error instanceof Error ? error.message : "observation JSON refused");
   }
   const fields = exactRecord(parsed, OBSERVATION_KEYS, "observation");
   if (fields.schemaVersion !== 1) {
@@ -317,13 +274,7 @@ export function createUnsafeObservationIntake({ maxBytes }) {
     const state = unsafe.get(handle);
     if (!state) return refused("ASSURANCE-OBSERVATION-FOREIGN", "unsafe handle is foreign or forged");
     try {
-      let text;
-      try {
-        text = new TextDecoder("utf-8", { fatal: true }).decode(state.bytes);
-      } catch {
-        refuse("ASSURANCE-OBSERVATION-UTF8", "observation bytes are not canonical UTF-8");
-      }
-      const candidate = validateObservationText(text, state.origin);
+      const candidate = validateObservationBytes(state.bytes, state.origin);
       return Object.freeze({ kind: "accepted", value: candidate });
     } catch (error) {
       if (error instanceof ObservationRefusal) return refused(error.code, error.message);

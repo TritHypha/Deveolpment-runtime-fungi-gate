@@ -1,5 +1,11 @@
 import { types as utilTypes } from "node:util";
-import { TRIT } from "./result-model.mjs";
+import { resolve } from "node:path";
+import {
+  RESULT_TAG,
+  SOURCE_CLASS,
+  TRIT,
+  isAssuranceResult,
+} from "./result-model.mjs";
 
 const REPORT_KEYS = Object.freeze([
   "authorizing",
@@ -24,6 +30,25 @@ const LEGACY_RESULT_KEYS = Object.freeze([
 ]);
 const LEGACY_VERDICTS = new Set(["PASS", "FAIL", "REPORT_ONLY_PASS", "REPORT_ONLY_FAILED"]);
 const LEGACY_TIERS = new Set(["phase-close", "exhaustive"]);
+const normalizedLegacyResults = new WeakSet();
+const CANDIDATE_KEYS = Object.freeze([
+  "exitStatus",
+  "id",
+  "processControl",
+  "result",
+  "signalStatus",
+  "stderrHandle",
+  "stderrState",
+  "stdoutHandle",
+  "stdoutState",
+]);
+const PROCESS_CONTROL_KEYS = Object.freeze([
+  "cleanupAcknowledged",
+  "cleanupAttempted",
+  "outputLimitExceeded",
+  "ownedTree",
+  "timedOut",
+]);
 
 function exactRecord(value, expectedKeys, label) {
   if (value === null || typeof value !== "object" || Array.isArray(value)
@@ -127,9 +152,10 @@ function normalizeLegacyResult(value, index) {
     throw new TypeError(`legacy results[${index}].processControl fields must be Boolean`);
   }
   const id = nonEmptyString(fields.name, `legacy results[${index}].name`);
-  return Object.freeze({
+  const result = Object.freeze({
     id,
     subjectId: id,
+    ok: fields.ok,
     exitStatus: optionalExit(fields.exitCode),
     signalStatus: optionalSignal(fields.signal),
     processControl: Object.freeze({
@@ -137,14 +163,28 @@ function normalizeLegacyResult(value, index) {
       cleanupAttempted: control.cleanupAttempted,
     }),
   });
+  normalizedLegacyResults.add(result);
+  return result;
 }
 
-export function normalizeLegacyReport(value) {
+function samePath(left, right) {
+  const normalizedLeft = resolve(left);
+  const normalizedRight = resolve(right);
+  return process.platform === "win32"
+    ? normalizedLeft.toLowerCase() === normalizedRight.toLowerCase()
+    : normalizedLeft === normalizedRight;
+}
+
+export function normalizeLegacyReport(value, expectedRoot) {
   const fields = exactRecord(value, REPORT_KEYS, "legacy report");
   if (fields.tool !== "run-phase-close" || fields.schemaVersion !== 1) {
     throw new TypeError("legacy report identity or version is invalid");
   }
-  nonEmptyString(fields.root, "legacy report.root");
+  const reportRoot = nonEmptyString(fields.root, "legacy report.root");
+  if (expectedRoot !== undefined
+      && (!nonEmptyString(expectedRoot, "expected legacy root") || !samePath(reportRoot, expectedRoot))) {
+    throw new TypeError("legacy report.root does not match the requested root");
+  }
   if (!LEGACY_TIERS.has(fields.tier) || !LEGACY_VERDICTS.has(fields.verdict)) {
     throw new TypeError("legacy report tier or verdict is outside the closed vocabulary");
   }
@@ -153,6 +193,7 @@ export function normalizeLegacyReport(value) {
   }
   const failed = exactArray(fields.failed, "legacy report.failed");
   for (const [index, name] of failed.entries()) nonEmptyString(name, `legacy report.failed[${index}]`);
+  if (new Set(failed).size !== failed.length) throw new TypeError("legacy report.failed contains duplicates");
   const totals = exactRecord(fields.totals, ["checks", "failed", "passed"], "legacy report.totals");
   for (const key of ["checks", "passed", "failed"]) nonNegativeInteger(totals[key], `legacy report.totals.${key}`);
   validateProfile(fields.profile);
@@ -165,6 +206,20 @@ export function normalizeLegacyReport(value) {
   if (totals.checks !== results.length || totals.passed + totals.failed !== totals.checks) {
     throw new TypeError("legacy report totals do not conserve");
   }
+  const actualFailed = results.filter((item) => !item.ok).map((item) => item.id);
+  if (totals.passed !== results.length - actualFailed.length || totals.failed !== actualFailed.length) {
+    throw new TypeError("legacy report totals contradict result outcomes");
+  }
+  if (failed.length !== actualFailed.length || failed.some((id) => !actualFailed.includes(id))) {
+    throw new TypeError("legacy report failed identities contradict result outcomes");
+  }
+  const passingVerdict = fields.verdict === "PASS" || fields.verdict === "REPORT_ONLY_PASS";
+  if (passingVerdict !== (actualFailed.length === 0)) {
+    throw new TypeError("legacy report verdict contradicts result outcomes");
+  }
+  if (fields.authorizing !== (fields.verdict === "PASS")) {
+    throw new TypeError("legacy report authority claim contradicts its verdict");
+  }
   return Object.freeze({
     kind: "normalized-legacy-report",
     verdict: fields.verdict,
@@ -174,44 +229,79 @@ export function normalizeLegacyReport(value) {
   });
 }
 
-function normalizeVariant(value, label) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
+function normalizeVariant(value, label, presentType) {
+  if (value === null || typeof value !== "object" || Array.isArray(value)
+      || utilTypes.isProxy(value) || Object.getPrototypeOf(value) !== Object.prototype) {
     throw new TypeError(`${label} must be a tagged variant`);
   }
-  if (value.kind === "present") {
-    if (!(Number.isSafeInteger(value.value) || (typeof value.value === "string" && value.value.length > 0))) {
-      throw new TypeError(`${label}.value is invalid`);
-    }
-    return Object.freeze({ kind: "present", value: value.value });
+  const kindDescriptor = Object.getOwnPropertyDescriptor(value, "kind");
+  if (!kindDescriptor || !("value" in kindDescriptor)) {
+    throw new TypeError(`${label} must be a tagged variant`);
   }
-  if (value.kind === "absent" && typeof value.reason === "string" && value.reason.length > 0) {
+  if (kindDescriptor.value === "present") {
+    const fields = exactRecord(value, ["kind", "value"], label);
+    const valid = presentType === "integer"
+      ? Number.isSafeInteger(fields.value)
+      : typeof fields.value === "string" && fields.value.length > 0;
+    if (!valid) throw new TypeError(`${label}.value is invalid`);
+    return Object.freeze({ kind: "present", value: fields.value });
+  }
+  if (kindDescriptor.value === "absent") {
+    const fields = exactRecord(value, ["kind", "reason"], label);
+    if (typeof fields.reason !== "string" || fields.reason.length === 0) {
+      throw new TypeError(`${label}.reason is invalid`);
+    }
     return Object.freeze({ kind: "absent" });
   }
   throw new TypeError(`${label} is outside the closed variant vocabulary`);
 }
 
 function normalizeCandidate(value, index) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new TypeError(`candidate results[${index}] must be an object`);
+  const fields = exactRecord(value, CANDIDATE_KEYS, `candidate results[${index}]`);
+  const id = nonEmptyString(fields.id, `candidate results[${index}].id`);
+  if (!isAssuranceResult(fields.result)) {
+    throw new TypeError(`candidate results[${index}].result must be a branded assurance result`);
   }
-  const id = nonEmptyString(value.id, `candidate results[${index}].id`);
-  if (!value.result || typeof value.result !== "object") {
-    throw new TypeError(`candidate results[${index}].result is required`);
-  }
-  if (value.result.trit === TRIT.ASSURED || value.authorizing === true || value.result.authorizing === true) {
+  if (fields.result.trit === TRIT.ASSURED) {
     throw new TypeError("candidate result attempts positive authority");
   }
-  const subjectId = nonEmptyString(value.result.subjectId, `candidate results[${index}].subjectId`);
-  const control = value.processControl;
-  if (!control || typeof control !== "object"
-      || typeof control.ownedTree !== "boolean" || typeof control.cleanupAttempted !== "boolean") {
-    throw new TypeError(`candidate results[${index}].processControl is invalid`);
+  const subjectId = nonEmptyString(fields.result.subjectId, `candidate results[${index}].subjectId`);
+  if (subjectId !== id) throw new TypeError(`candidate results[${index}] subject identity does not match its id`);
+  if (fields.stdoutState !== "boundary-untrusted" || fields.stderrState !== "boundary-untrusted") {
+    throw new TypeError(`candidate results[${index}] output did not retain boundary-untrusted state`);
+  }
+  if ((fields.stdoutHandle === null || typeof fields.stdoutHandle !== "object")
+      || (fields.stderrHandle === null || typeof fields.stderrHandle !== "object")) {
+    throw new TypeError(`candidate results[${index}] output handles are invalid`);
+  }
+  const control = exactRecord(
+    fields.processControl,
+    PROCESS_CONTROL_KEYS,
+    `candidate results[${index}].processControl`,
+  );
+  for (const key of PROCESS_CONTROL_KEYS) {
+    if (typeof control[key] !== "boolean") {
+      throw new TypeError(`candidate results[${index}].processControl.${key} must be Boolean`);
+    }
+  }
+  const exitStatus = normalizeVariant(fields.exitStatus, `candidate results[${index}].exitStatus`, "integer");
+  const signalStatus = normalizeVariant(fields.signalStatus, `candidate results[${index}].signalStatus`, "string");
+  if (fields.result.tag === RESULT_TAG.LEGACY_EXIT
+      && (exitStatus.kind !== "present" || exitStatus.value !== 0 || signalStatus.kind !== "absent")) {
+    throw new TypeError(`candidate results[${index}] has contradictory result semantics`);
+  }
+  if (fields.result.tag === RESULT_TAG.BLOCKING_FAIL
+      && (exitStatus.kind !== "present" || exitStatus.value === 0)) {
+    throw new TypeError(`candidate results[${index}] has contradictory result semantics`);
   }
   return Object.freeze({
     id,
     subjectId,
-    exitStatus: normalizeVariant(value.exitStatus, `candidate results[${index}].exitStatus`),
-    signalStatus: normalizeVariant(value.signalStatus, `candidate results[${index}].signalStatus`),
+    resultTag: fields.result.tag,
+    resultTrit: fields.result.trit,
+    resultSourceClass: fields.result.sourceClass,
+    exitStatus,
+    signalStatus,
     processControl: Object.freeze({
       ownedTree: control.ownedTree,
       cleanupAttempted: control.cleanupAttempted,
@@ -228,7 +318,7 @@ export function compareResultSets(legacyResults, candidateRunRecords) {
   const candidates = exactArray(candidateRunRecords, "candidate results").map(normalizeCandidate);
   const legacyById = new Map();
   for (const item of legacy) {
-    if (!item || typeof item !== "object" || typeof item.id !== "string") {
+    if (!item || typeof item !== "object" || !normalizedLegacyResults.has(item)) {
       throw new TypeError("legacy results must be normalized");
     }
     if (legacyById.has(item.id)) throw new TypeError(`legacy results contain duplicate id ${item.id}`);
@@ -250,17 +340,27 @@ export function compareResultSets(legacyResults, candidateRunRecords) {
     }
     for (const field of ["subjectId", "exitStatus", "signalStatus", "processControl"]) {
       const legacyComparable = field === "exitStatus" || field === "signalStatus"
-        ? normalizeVariant(legacyItem[field], `legacy ${id}.${field}`)
+        ? normalizeVariant(
+          legacyItem[field],
+          `legacy ${id}.${field}`,
+          field === "exitStatus" ? "integer" : "string",
+        )
         : legacyItem[field];
       if (comparable(legacyComparable) !== comparable(candidate[field])) {
         mismatches.push(Object.freeze({ id, field }));
       }
     }
+    const expectedTag = legacyItem.ok ? RESULT_TAG.LEGACY_EXIT : RESULT_TAG.BLOCKING_FAIL;
+    const expectedTrit = legacyItem.ok ? TRIT.UNKNOWN : TRIT.DISTRUSTED;
+    if (candidate.resultTag !== expectedTag || candidate.resultTrit !== expectedTrit
+        || candidate.resultSourceClass !== SOURCE_CLASS.LEGACY_EXIT) {
+      mismatches.push(Object.freeze({ id, field: "resultSemantics" }));
+    }
   }
   const candidateOnlyIds = [...candidateById.keys()].filter((id) => !legacyById.has(id));
   const verdict = mismatches.length > 0
     ? "SHADOW_MISMATCH"
-    : missingCandidateIds.length > 0
+    : missingCandidateIds.length > 0 || candidateOnlyIds.length > 0
       ? "SHADOW_UNKNOWN"
       : "SHADOW_AGREEMENT_NON_AUTHORIZING";
   return Object.freeze({

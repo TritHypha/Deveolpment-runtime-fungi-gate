@@ -161,15 +161,27 @@ function legacyResult(name, exitCode = 0, signal = null) {
 }
 
 function candidateRecord(id, exit = 0, trit = TRIT.UNKNOWN) {
+  const tag = trit === TRIT.ASSURED
+    ? RESULT_TAG.BLOCKING_PASS
+    : trit === TRIT.DISTRUSTED
+      ? RESULT_TAG.BLOCKING_FAIL
+      : RESULT_TAG.LEGACY_EXIT;
+  const sourceClass = tag === RESULT_TAG.BLOCKING_PASS
+    ? SOURCE_CLASS.HOST
+    : SOURCE_CLASS.LEGACY_EXIT;
   return {
     id,
     result: makeAssuranceResult({
-      tag: trit === TRIT.ASSURED ? RESULT_TAG.BLOCKING_PASS : RESULT_TAG.LEGACY_EXIT,
-      sourceClass: trit === TRIT.ASSURED ? SOURCE_CLASS.HOST : SOURCE_CLASS.LEGACY_EXIT,
+      tag,
+      sourceClass,
       subjectId: id,
       detail: "fixture",
       trit,
     }),
+    stdoutHandle: Object.freeze(Object.create(null)),
+    stderrHandle: Object.freeze(Object.create(null)),
+    stdoutState: "boundary-untrusted",
+    stderrState: "boundary-untrusted",
     exitStatus: { kind: "present", value: exit },
     signalStatus: { kind: "absent", reason: "process signal was not observed" },
     processControl: {
@@ -203,6 +215,56 @@ describe("assurance differential model", () => {
       legacyResult("green"),
     ])), /duplicate/);
   });
+
+  it("treats candidate-only identities and contradictory result semantics as unknown or refused", () => {
+    const legacy = normalizeLegacyReport(legacyReport([legacyResult("green")])).results;
+    const extra = compareResultSets(legacy, [candidateRecord("green"), candidateRecord("extra")]);
+    assert.equal(extra.verdict, "SHADOW_UNKNOWN");
+    assert.deepEqual(extra.candidateOnlyIds, ["extra"]);
+
+    const failedLegacy = {
+      ...legacyReport([legacyResult("red", 7)]),
+      verdict: "FAIL",
+      authorizing: false,
+      failed: ["red"],
+      totals: { checks: 1, passed: 0, failed: 1 },
+    };
+    const normalizedFailed = normalizeLegacyReport(failedLegacy).results;
+    assert.throws(
+      () => compareResultSets(normalizedFailed, [candidateRecord("red", 7, TRIT.UNKNOWN)]),
+      /result semantics/,
+    );
+  });
+
+  it("refuses inconsistent legacy summaries and binds the report root", () => {
+    assert.throws(
+      () => normalizeLegacyReport(legacyReport([legacyResult("red", 7)])),
+      /failed identities|totals|verdict/,
+    );
+    assert.throws(
+      () => normalizeLegacyReport(legacyReport([legacyResult("green")]), "different-root"),
+      /root/,
+    );
+  });
+
+  it("refuses surplus and accessor candidate records without invoking accessors", () => {
+    const legacy = normalizeLegacyReport(legacyReport([legacyResult("green")])).results;
+    assert.throws(
+      () => compareResultSets(legacy, [{ ...candidateRecord("green"), authorizing: false }]),
+      /unexpected or missing fields/,
+    );
+    let getterRan = false;
+    const accessor = candidateRecord("green");
+    Object.defineProperty(accessor, "stdoutState", {
+      enumerable: true,
+      get() {
+        getterRan = true;
+        return "boundary-untrusted";
+      },
+    });
+    assert.throws(() => compareResultSets(legacy, [accessor]), /ordinary data field/);
+    assert.equal(getterRan, false);
+  });
 });
 
 describe("assurance shadow CLI", () => {
@@ -213,6 +275,7 @@ describe("assurance shadow CLI", () => {
     const agreementReport = parseReport(agreement);
     assert.equal(agreementReport.verdict, "SHADOW_AGREEMENT_NON_AUTHORIZING");
     assert.equal(agreementReport.authorizing, false);
+    assert.match(agreementReport.environmentDigest, /^sha256:[a-f0-9]{64}$/u);
     assert.equal(JSON.stringify(agreementReport).includes('"authorizing":true'), false);
 
     const missing = runShadow(current.root, current.missing);
@@ -244,6 +307,19 @@ describe("assurance shadow CLI", () => {
     const malformedRun = runShadow(malformed.root, malformed.agreement);
     assert.equal(malformedRun.status, 3);
     assert.equal(parseReport(malformedRun).verdict, "SHADOW_UNKNOWN");
+  });
+
+  it("refuses decoded duplicate keys in a candidate manifest", () => {
+    const current = fixture();
+    writeFileSync(
+      join(current.root, current.agreement),
+      '{"schemaVersion":1,"\\u0073chemaVersion":1,"entries":[]}',
+    );
+    const duplicate = runShadow(current.root, current.agreement);
+    assert.equal(duplicate.status, 3);
+    const report = parseReport(duplicate);
+    assert.equal(report.verdict, "SHADOW_UNKNOWN");
+    assert.equal(report.reason, "MANIFEST_REFUSED");
   });
 
   it("reports build-point drift as unknown, never agreement", () => {

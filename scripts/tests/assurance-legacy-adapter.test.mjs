@@ -22,6 +22,10 @@ writeFileSync(join(root, "seven.mjs"), "process.exit(7)\n");
 writeFileSync(join(root, "authority.mjs"), 'process.stdout.write(JSON.stringify({ allow: true, authorizing: true }))\n');
 writeFileSync(join(root, "hang.mjs"), "setInterval(() => {}, 1000)\n");
 writeFileSync(join(root, "flood.mjs"), 'process.stdout.write("x".repeat(4096))\n');
+writeFileSync(
+  join(root, "environment.mjs"),
+  'process.exit(Object.hasOwn(process.env, "ASSURANCE_TEST_SECRET") ? 9 : 0)\n',
+);
 after(() => rmSync(root, { recursive: true, force: true }));
 
 function rawEntry(overrides = {}) {
@@ -153,5 +157,20 @@ describe("legacy owned-process assurance adapter", () => {
     assert.equal(timeout.result.trit, TRIT.UNKNOWN);
     assert.equal(timeout.processControl.timedOut, true);
     assert.equal(timeout.processControl.cleanupAcknowledged, true);
+  });
+
+  it("does not pass ambient host variables into an analyzer process", () => {
+    process.env.ASSURANCE_TEST_SECRET = "must-not-cross-boundary";
+    try {
+      const isolated = runLegacyEntry(admittedEntry({
+        id: "audit:environment",
+        command: ["node", "environment.mjs"],
+        subjects: { kind: "files", values: ["environment.mjs"], expectedCount: 1 },
+      }), context());
+      assert.deepEqual(isolated.exitStatus, { kind: "present", value: 0 });
+      assert.equal(isolated.result.tag, RESULT_TAG.LEGACY_EXIT);
+    } finally {
+      delete process.env.ASSURANCE_TEST_SECRET;
+    }
   });
 });

@@ -4,6 +4,7 @@ import {
   createUnsafeObservationIntake,
   isValidatedObservationCandidate,
 } from "../lib/assurance-fabric/unsafe-observation.mjs";
+import { parseStrictJsonBytes } from "../lib/assurance-fabric/strict-json.mjs";
 
 function validObservation(overrides = {}) {
   return {
@@ -24,6 +25,31 @@ function encoded(value) {
 }
 
 describe("unsafe analyzer observation intake", () => {
+  it("uses a shared strict JSON boundary that refuses decoded duplicate keys", () => {
+    assert.deepEqual(
+      parseStrictJsonBytes(Buffer.from('{"value":1}', "utf8"), { label: "fixture", maxBytes: 64 }),
+      { value: 1 },
+    );
+    assert.throws(
+      () => parseStrictJsonBytes(Buffer.from('{"value":1,"value":2}', "utf8"), {
+        label: "fixture",
+        maxBytes: 64,
+      }),
+      /duplicate decoded key/,
+    );
+    assert.throws(
+      () => parseStrictJsonBytes(Buffer.from('{"value":1,"\\u0076alue":2}', "utf8"), {
+        label: "fixture",
+        maxBytes: 64,
+      }),
+      /duplicate decoded key/,
+    );
+    assert.throws(
+      () => parseStrictJsonBytes(Buffer.from([0xc3, 0x28]), { label: "fixture", maxBytes: 64 }),
+      /UTF-8/,
+    );
+  });
+
   it("preserves boundary-untrusted state through derivation", () => {
     const intake = createUnsafeObservationIntake({ maxBytes: 4096 });
     const raw = intake.capture(encoded(validObservation()), "analyzer:fixture");

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from "node:crypto";
 import { readFileSync, realpathSync, statSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,12 +14,49 @@ import {
   validateAssuranceManifest,
 } from "./lib/assurance-fabric/manifest.mjs";
 import { createUnsafeObservationIntake } from "./lib/assurance-fabric/unsafe-observation.mjs";
+import { parseStrictJsonBytes } from "./lib/assurance-fabric/strict-json.mjs";
 
 const { runOwnedProcessSync } = ownedProcessTree;
 const SCRIPT_ROOT = dirname(fileURLToPath(import.meta.url));
 const PHASE_CLOSE = join(SCRIPT_ROOT, "run-phase-close.mjs");
 const CADENCES = new Set(["changed", "normal", "nightly", "exhaustive", "release", "on-demand"]);
 const GIT_HEAD = /^[a-f0-9]{40}$/u;
+
+function admittedHostEnvironment() {
+  const admitted = {};
+  const sourceEntries = Object.entries(process.env);
+  const copy = (canonical, aliases) => {
+    const match = sourceEntries.find(([key, value]) => aliases.includes(key.toLowerCase())
+      && typeof value === "string" && value.length > 0);
+    if (match) admitted[canonical] = match[1];
+  };
+  copy("PATH", ["path"]);
+  if (process.platform === "win32") {
+    copy("SystemRoot", ["systemroot"]);
+    copy("WINDIR", ["windir"]);
+    copy("ComSpec", ["comspec"]);
+    copy("PATHEXT", ["pathext"]);
+    copy("TEMP", ["temp"]);
+    copy("TMP", ["tmp"]);
+  } else {
+    copy("TMPDIR", ["tmpdir"]);
+    copy("LANG", ["lang"]);
+    copy("LC_ALL", ["lc_all"]);
+  }
+  admitted.GIT_CONFIG_NOSYSTEM = "1";
+  admitted.GIT_CONFIG_GLOBAL = process.platform === "win32" ? "NUL" : "/dev/null";
+  admitted.NPM_CONFIG_USERCONFIG = process.platform === "win32" ? "NUL" : "/dev/null";
+  admitted.NO_UPDATE_NOTIFIER = "1";
+  return Object.freeze(admitted);
+}
+
+const HOST_ENVIRONMENT = admittedHostEnvironment();
+const ENVIRONMENT_DIGEST = `sha256:${createHash("sha256")
+  .update(JSON.stringify({
+    analyzerEnvironment: [],
+    hostEnvironment: Object.entries(HOST_ENVIRONMENT).sort(([left], [right]) => left.localeCompare(right)),
+  }))
+  .digest("hex")}`;
 
 class ShadowRefusal extends Error {
   constructor(reason, detail, buildPoint = Object.freeze({ kind: "absent", reason: "not observed" })) {
@@ -76,6 +114,7 @@ function runOwned(command, args, cwd, timeoutMs = 30_000, maxOutputBytes = 67_10
     cwd,
     timeoutMs,
     maxOutputBytes,
+    env: HOST_ENVIRONMENT,
     windowsHide: true,
   });
   if (output.owned === null || output.error || output.signal !== null || !Number.isSafeInteger(output.status)) {
@@ -118,6 +157,7 @@ function unknownReport(error) {
     buildPoint: error instanceof ShadowRefusal
       ? error.buildPoint
       : Object.freeze({ kind: "absent", reason: "not observed" }),
+    environmentDigest: ENVIRONMENT_DIGEST,
   });
 }
 
@@ -143,9 +183,15 @@ function main() {
   }
   let manifestValue;
   try {
-    manifestValue = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(manifestBytes));
-  } catch {
-    throw new ShadowRefusal("MANIFEST_REFUSED", "manifest bytes are not strict UTF-8 JSON");
+    manifestValue = parseStrictJsonBytes(manifestBytes, {
+      label: "candidate manifest",
+      maxBytes: 67_108_864,
+    });
+  } catch (error) {
+    throw new ShadowRefusal(
+      "MANIFEST_REFUSED",
+      error instanceof Error ? error.message : "candidate manifest JSON refused",
+    );
   }
   const manifestResult = validateAssuranceManifest(manifestValue, root);
   if (manifestResult.kind !== "accepted") {
@@ -169,13 +215,20 @@ function main() {
   }
   let legacyValue;
   try {
-    legacyValue = JSON.parse(legacy.stdout);
-  } catch {
-    throw new ShadowRefusal("LEGACY_REPORT_MALFORMED", "legacy stdout was not one JSON report", buildPoint);
+    legacyValue = parseStrictJsonBytes(Buffer.from(legacy.stdout, "utf8"), {
+      label: "legacy phase-close report",
+      maxBytes: 67_108_864,
+    });
+  } catch (error) {
+    throw new ShadowRefusal(
+      "LEGACY_REPORT_MALFORMED",
+      error instanceof Error ? error.message : "legacy phase-close JSON refused",
+      buildPoint,
+    );
   }
   let normalizedLegacy;
   try {
-    normalizedLegacy = normalizeLegacyReport(legacyValue);
+    normalizedLegacy = normalizeLegacyReport(legacyValue, root);
   } catch (error) {
     throw new ShadowRefusal("LEGACY_REPORT_REFUSED", error.message, buildPoint);
   }
@@ -201,6 +254,7 @@ function main() {
     authorizing: false,
     cadence: options.cadence,
     buildPoint: `git:${preHead}`,
+    environmentDigest: ENVIRONMENT_DIGEST,
     legacyClaim: normalizedLegacy.legacyClaim,
     mismatches: comparison.mismatches,
     missingCandidateIds: comparison.missingCandidateIds,

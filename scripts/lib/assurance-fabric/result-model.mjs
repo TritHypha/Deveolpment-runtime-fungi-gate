@@ -27,6 +27,17 @@ const TRITS = new Set(Object.values(TRIT));
 const TAGS = new Set(Object.values(RESULT_TAG));
 const SOURCES = new Set(Object.values(SOURCE_CLASS));
 const EXACT_KEYS = Object.freeze(["detail", "sourceClass", "subjectId", "tag", "trit"]);
+const assuranceResults = new WeakSet();
+const CLOSED_RELATION = new Map([
+  [RESULT_TAG.BLOCKING_PASS, Object.freeze({ trit: TRIT.ASSURED, sources: new Set([SOURCE_CLASS.HOST]) })],
+  [RESULT_TAG.BLOCKING_FAIL, Object.freeze({ trit: TRIT.DISTRUSTED, sources: SOURCES })],
+  [RESULT_TAG.UNKNOWN, Object.freeze({ trit: TRIT.UNKNOWN, sources: SOURCES })],
+  [RESULT_TAG.ADVISORY_FINDINGS, Object.freeze({ trit: TRIT.DISTRUSTED, sources: SOURCES })],
+  [RESULT_TAG.INFORMATIONAL, Object.freeze({ trit: TRIT.UNKNOWN, sources: SOURCES })],
+  [RESULT_TAG.NOT_APPLICABLE, Object.freeze({ trit: TRIT.UNKNOWN, sources: SOURCES })],
+  [RESULT_TAG.REFUSED, Object.freeze({ trit: TRIT.UNKNOWN, sources: SOURCES })],
+  [RESULT_TAG.LEGACY_EXIT, Object.freeze({ trit: TRIT.UNKNOWN, sources: new Set([SOURCE_CLASS.LEGACY_EXIT]) })],
+]);
 
 export function foldRequiredTrits(values) {
   if (!Array.isArray(values) || values.length === 0) {
@@ -68,13 +79,20 @@ export function makeAssuranceResult(input) {
     .every((value) => typeof value === "string" && value.length > 0)) {
     throw new TypeError("result strings must be non-empty");
   }
-  if (values.sourceClass === SOURCE_CLASS.ANALYZER
-      && (values.tag === RESULT_TAG.BLOCKING_PASS || values.trit === TRIT.ASSURED)) {
-    throw new TypeError("BLOCKING_PASS and +1 are host-derived only");
+  const relation = CLOSED_RELATION.get(values.tag);
+  if (!relation || relation.trit !== values.trit || !relation.sources.has(values.sourceClass)) {
+    throw new TypeError("result tag, source class and trit violate the closed relation");
   }
-  return Object.freeze(values);
+  const result = Object.freeze(values);
+  assuranceResults.add(result);
+  return result;
+}
+
+export function isAssuranceResult(value) {
+  return value !== null && typeof value === "object" && assuranceResults.has(value);
 }
 
 export function isBlockingFailure(result) {
-  return result.tag === RESULT_TAG.BLOCKING_FAIL || result.tag === RESULT_TAG.REFUSED;
+  return isAssuranceResult(result)
+    && (result.tag === RESULT_TAG.BLOCKING_FAIL || result.tag === RESULT_TAG.REFUSED);
 }

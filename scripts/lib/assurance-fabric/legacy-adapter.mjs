@@ -107,6 +107,7 @@ export function runLegacyEntry(entry, context) {
       timeoutMs: entry.timeoutMs,
       cleanupGraceMs: Number.isSafeInteger(context.cleanupGraceMs) ? context.cleanupGraceMs : 2_000,
       maxOutputBytes: entry.maxOutputBytes,
+      env: Object.freeze({}),
       windowsHide: true,
     });
   } catch {
