@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -8,6 +9,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -97,27 +99,34 @@ function publishAtomically(root, outputs) {
   const buildRoot = join(root, "build");
   const destination = join(buildRoot, "assurance-semantic-graph");
   mkdirSync(buildRoot, { recursive: true });
-  const temporary = mkdtempSync(join(buildRoot, ".assurance-semantic-graph-write-"));
-  const backup = mkdtempSync(join(buildRoot, ".assurance-semantic-graph-backup-"));
-  rmSync(backup, { recursive: true, force: true });
-  let movedExisting = false;
+  const temporary = mkdtempSync(join(tmpdir(), "galerina-assurance-semantic-write-"));
+  const backup = mkdtempSync(join(tmpdir(), "galerina-assurance-semantic-backup-"));
+  const existing = new Set();
   try {
     for (const [name, bytes] of outputs) {
       writeFileSync(join(temporary, name), bytes, { flag: "wx" });
+      const destinationPath = join(destination, name);
+      if (existsSync(destinationPath)) {
+        copyFileSync(destinationPath, join(backup, name));
+        existing.add(name);
+      }
     }
     const actual = OUTPUTS.filter((name) => existsSync(join(temporary, name))).sort();
     if (JSON.stringify(actual) !== JSON.stringify([...OUTPUTS].sort())) {
       throw new Error("semantic-assurance-graph: staged output set did not conserve");
     }
-    if (existsSync(destination)) {
-      renameSync(destination, backup);
-      movedExisting = true;
+    mkdirSync(destination, { recursive: true });
+    for (const name of OUTPUTS) {
+      renameSync(join(temporary, name), join(destination, name));
     }
-    renameSync(temporary, destination);
-    if (movedExisting) rmSync(backup, { recursive: true, force: true });
   } catch (error) {
-    if (movedExisting && !existsSync(destination) && existsSync(backup)) {
-      renameSync(backup, destination);
+    for (const name of OUTPUTS) {
+      const destinationPath = join(destination, name);
+      if (existing.has(name)) {
+        copyFileSync(join(backup, name), destinationPath);
+      } else {
+        rmSync(destinationPath, { force: true });
+      }
     }
     throw error;
   } finally {
