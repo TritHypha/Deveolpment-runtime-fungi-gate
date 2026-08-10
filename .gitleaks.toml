@@ -4,6 +4,9 @@
 # rotated-but-leaked signing key `8eecf4…`). It extends gitleaks' default rule set and allowlists ONLY
 # provably-benign matches — never a real secret. Run in CI via .github/workflows/secret-scan.yml; locally:
 #   gitleaks detect --config .gitleaks.toml --redact -v
+# Exact historical adjudications live in `.gitleaksignore`; every entry binds a
+# commit, path, rule and line. Never replace that ledger with a rule/path/commit
+# suppression merely to make a scheduled scan pass.
 title = "Galerina secret-scan"
 
 [extend]
