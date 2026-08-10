@@ -651,6 +651,40 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/gen-assurance-semantic-graph.mjs": {
+      "inputs": [
+        "AGENTS.md",
+        "build/graph/galerina-devtools-project-graph.json",
+        "build/ts-retirement/ts-retirement.json",
+        "galerina.workspace.json",
+        "governance/assurance-semantic-coverage.json",
+        "packages-galerina",
+        "scripts/gen-assurance-semantic-graph.mjs",
+        "scripts/lib/assurance-fabric/semantic-coverage.mjs",
+        "scripts/lib/assurance-fabric/semantic-graph.mjs",
+        "scripts/lib/assurance-fabric/strict-json.mjs",
+        "scripts/lib/provenance.mjs",
+        "scripts/tests",
+        "tests"
+      ],
+      "outputs": [
+        "build/assurance-semantic-graph/SEMANTIC-GRAPH.md",
+        "build/assurance-semantic-graph/provenance.json",
+        "build/assurance-semantic-graph/semantic-graph.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/gen-assurance-semantic-graph.mjs"
+      ],
+      "check": [
+        "node",
+        "scripts/gen-assurance-semantic-graph.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/verify-slide-reference-evidence.mjs": {
       "inputs": [
         "docs/security/slide-reference-tool-pin.json",

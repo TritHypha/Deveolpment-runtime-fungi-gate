@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "requirements": [
+    {
+      "id": "vok-sem-001",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    },
+    {
+      "id": "vok-sem-002",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    },
+    {
+      "id": "vok-sem-003",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    },
+    {
+      "id": "vok-sem-004",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    },
+    {
+      "id": "vok-sem-005",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    },
+    {
+      "id": "vok-sem-006",
+      "criticality": "release",
+      "evidencePath": "scripts/tests/assurance-semantic-coverage.test.mjs"
+    }
+  ],
+  "systemContracts": [
+    {
+      "id": "system-contract:repository-governance",
+      "evidencePath": "AGENTS.md"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "route-conservation-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-001"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to parser-proven route conservation"
+      }
+    },
+    {
+      "id": "route-conservation-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "detector-self-test",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-001"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to parser-proven route conservation"
+      }
+    },
+    {
+      "id": "package-conservation-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-002"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to package-edge and fan conservation"
+      }
+    },
+    {
+      "id": "package-conservation-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "mutation",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-002"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to package-edge and fan conservation"
+      }
+    },
+    {
+      "id": "test-coverage-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-003"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to test ownership conservation"
+      }
+    },
+    {
+      "id": "test-coverage-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "detector-self-test",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-003"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to test ownership conservation"
+      }
+    },
+    {
+      "id": "detector-liveness-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-graph.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-004"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to planted-defect detector liveness"
+      }
+    },
+    {
+      "id": "detector-liveness-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-graph.test.mjs",
+      "class": "mutation",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-004"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to planted-defect detector liveness"
+      }
+    },
+    {
+      "id": "executable-family-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-005"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to complete executable-family conservation"
+      }
+    },
+    {
+      "id": "executable-family-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "mutation",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-005"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to complete executable-family conservation"
+      }
+    },
+    {
+      "id": "input-conservation-positive",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "contract",
+      "polarity": "positive",
+      "requirementIds": [
+        "vok-sem-006"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to bounded input and build-point conservation"
+      }
+    },
+    {
+      "id": "input-conservation-refusal",
+      "sourcePath": "scripts/tests/assurance-semantic-coverage.test.mjs",
+      "class": "detector-self-test",
+      "polarity": "refusal",
+      "requirementIds": [
+        "vok-sem-006"
+      ],
+      "systemContract": {
+        "kind": "absent",
+        "reason": "mapped to bounded input and build-point conservation"
+      }
+    }
+  ],
+  "detectors": [
+    {
+      "id": "detector:route-conservation",
+      "ruleId": "route-conservation",
+      "plantedDefectId": "route-text-must-not-enter",
+      "testId": "route-conservation-refusal"
+    },
+    {
+      "id": "detector:package-conservation",
+      "ruleId": "package-conservation",
+      "plantedDefectId": "one-sided-package-edge",
+      "testId": "package-conservation-refusal"
+    },
+    {
+      "id": "detector:test-coverage",
+      "ruleId": "test-coverage",
+      "plantedDefectId": "unowned-tracked-test",
+      "testId": "test-coverage-refusal"
+    },
+    {
+      "id": "detector:detector-liveness",
+      "ruleId": "detector-liveness",
+      "plantedDefectId": "missing-planted-defect-test",
+      "testId": "detector-liveness-refusal"
+    },
+    {
+      "id": "detector:executable-family",
+      "ruleId": "executable-family",
+      "plantedDefectId": "stale-executable-total",
+      "testId": "executable-family-refusal"
+    },
+    {
+      "id": "detector:input-conservation",
+      "ruleId": "input-conservation",
+      "plantedDefectId": "mid-derivation-mutation",
+      "testId": "input-conservation-refusal"
+    }
+  ],
+  "legacyUnmapped": {
+    "baselineCount": 0,
+    "pathsDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
