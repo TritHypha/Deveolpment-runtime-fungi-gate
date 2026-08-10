@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "galerina.assurance.phase-close-commands.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "entries"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "command": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmpty" }
+    },
+    "optionalId": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "reason"],
+          "properties": {
+            "kind": { "const": "absent" },
+            "reason": { "$ref": "#/$defs/nonEmpty" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "present" },
+            "value": { "$ref": "#/$defs/nonEmpty" }
+          }
+        }
+      ]
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "requirementId",
+        "command",
+        "cwd",
+        "toolClass",
+        "authorityClass",
+        "cadences",
+        "outcomePolicy",
+        "subjects",
+        "timeoutMs",
+        "maxOutputBytes",
+        "generatedOutputs",
+        "mutationPolicy",
+        "platforms",
+        "selfTest",
+        "predecessors",
+        "lifecycle"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "requirementId": { "$ref": "#/$defs/nonEmpty" },
+        "command": { "$ref": "#/$defs/command" },
+        "cwd": { "$ref": "#/$defs/nonEmpty" },
+        "toolClass": {
+          "enum": ["analyzer", "generator", "test-runner", "verifier", "legacy-oracle"]
+        },
+        "authorityClass": {
+          "enum": ["blocking", "advisory", "informational", "legacy-oracle", "not-applicable"]
+        },
+        "cadences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["changed", "normal", "nightly", "exhaustive", "release", "on-demand"]
+          }
+        },
+        "outcomePolicy": {
+          "enum": ["blocking", "advisory", "informational", "legacy-exit"]
+        },
+        "subjects": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "values", "expectedCount"],
+          "properties": {
+            "kind": { "enum": ["files", "packages", "requirements"] },
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/nonEmpty" }
+            },
+            "expectedCount": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "timeoutMs": { "type": "integer", "minimum": 1, "maximum": 3600000 },
+        "maxOutputBytes": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "generatedOutputs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "mutationPolicy": { "enum": ["read-only", "declared-outputs"] },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["win32", "linux", "darwin"] }
+        },
+        "selfTest": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "reason"],
+              "properties": {
+                "kind": { "const": "absent" },
+                "reason": { "$ref": "#/$defs/nonEmpty" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "command", "plantedDefectId"],
+              "properties": {
+                "kind": { "const": "present" },
+                "command": { "$ref": "#/$defs/command" },
+                "plantedDefectId": { "$ref": "#/$defs/nonEmpty" }
+              }
+            }
+          ]
+        },
+        "predecessors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "lifecycle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["replacementId", "overlap", "retirement"],
+          "properties": {
+            "replacementId": { "$ref": "#/$defs/optionalId" },
+            "overlap": { "enum": ["canonical", "overlap", "replacement-candidate"] },
+            "retirement": { "enum": ["active", "shadow", "retirement-candidate", "retired"] }
+          }
+        }
+      }
+    }
+  }
+}
