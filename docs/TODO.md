@@ -4,6 +4,42 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Conversion-readiness fixed point - 2026-08-10
+
+- [x] Publish the canonical current package ledger through its owning runner:
+  **100/100 packages, 9,496/9,496 tests, zero failures**, including compiler
+  **6,324/6,324**. This supersedes the 9,470-test current-state route in memory
+  and the lower dated sections; those older figures remain historical evidence.
+- [x] Regenerate and independently check the project graph, integrity graph,
+  Knowledge Base graph, package graph, dev-tool index and Fungi capability
+  inventory: **6/6 generate and 6/6 check**. Refresh the code index, coverage
+  report, Golden Pack, flat-package root lock, percent audit, status blocks and
+  subway only through their owning fail-closed generators.
+- [x] Diagnose the initial phase-close refusal before regenerating. Its four
+  causes were stale derived state after the compiler/Hypha update: Golden
+  runtime-closure identity, code-index identity, coverage provenance and the
+  flat-package root lock. The repaired normal close passes every blocking gate
+  in **577.8s**, including **445 tooling tests**, Golden Pack **11/11 checked +
+  11/11 execution vectors**, graph **6/6**, and the security audit over **31
+  files with zero findings**.
+- [x] Close Lyth-Weaver S1-S5 at the repository/laboratory boundary. Lyth head
+  `bbbb8fe` passes **594/594 checks**, type checking, **14/14** sabotage
+  controls, mutation evidence and a sealed Codex Security scan with zero
+  findings. This proves neither OS-sandbox isolation nor production authority.
+- [x] Check Codex memory as an index rather than a warehouse. The current route
+  is stale: it still names Galerina `90699318`, **9,470** tests and SLIDE
+  **866/866**. Do not treat those memory routes as current evidence; repository
+  ledgers remain authoritative until a focused memory-index update is admitted.
+- [x] Run the exhaustive close against this same custody state. Every blocking
+  gate passes in **859.0s**, including the complete **100/100-package / 9,496
+  test** lane in **285.8s** and **445 tooling tests**. The roadmap, graph,
+  percentage, status and subway artifacts were refreshed after recording this
+  result and their independent drift checks pass.
+- [ ] Keep conversion refused until SLIDE S1 is closed and TritMesh:QL is either
+  remediated or explicitly excluded from the shipping path. Green Galerina and
+  Lyth repository evidence grants no package-conversion, retirement, signing,
+  release or production authority.
+
 ### TODO, roadmap and percentage-audit housekeeping - 2026-08-09
 
 - [x] Keep memory as a routing index and store the detailed reconciliation in
@@ -68,10 +104,10 @@ counts or open items that a newer section explicitly supersedes.
   the loader still has **131** `null` matches across **22** functions and the
   complete source surface remains at least **500 / 121 functions**. Mechanical
   TypeScript-to-`.fungi` conversion remains forbidden.
-- [ ] Close Lyth-Weaver S1-S5 before selecting its affected code for
-  conversion. TritMesh:QL remains design-only and may not enter a shipping
-  path until its six scan findings are closed or the affected material is
-  explicitly excluded.
+- [x] Close Lyth-Weaver S1-S5 before selecting its affected code for
+  conversion. The 2026-08-10 fixed point records the closed laboratory gate;
+  TritMesh:QL remains design-only and may not enter a shipping path until its
+  six scan findings are closed or the affected material is explicitly excluded.
 - [ ] Rerun the four security scopes, the complete **100-package** lane and
   exhaustive phase-close after remediation. Conversion begins only when every
   required gate is green in one current custody state; no green repository

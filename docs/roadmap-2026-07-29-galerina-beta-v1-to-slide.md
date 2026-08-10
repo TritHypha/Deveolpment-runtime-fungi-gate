@@ -1,12 +1,37 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-09
-Branch: `codex/galerina-beta-v1-completion`
+Date: 2026-08-10
+Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: Galerina pins SLIDE Contract 86 implementation `39920eb`,
 its **89-file** tool manifest at `817e9d17...1d8484`, and a closed contract
 catalog of **95 files in two partitions**. Complete SLIDE passes **869/869
 tests across 96 suites**, path hygiene **14/14** across 755 targets and security
 closure `+1` with evidence K3 `0`; authority remains unreleased.
+
+Current-state rule: this opening 2026-08-10 checkpoint supersedes lower dated
+counts and open/closed labels. Lower sections remain a chronological evidence
+ledger and must not be reinterpreted as current authority.
+
+Conversion-readiness fixed point 2026-08-10: the canonical Galerina aggregate
+passes **100/100 packages and 9,496/9,496 tests**, including compiler
+**6,324/6,324**. Graph generation and independent checking pass **6/6**. The
+normal phase-close passes every blocking gate in **577.8s**, including **445
+tooling tests**, Golden Pack **11/11 checked examples + 11/11 execution
+vectors**, code coverage with zero holes, and the compiler security scan over
+**31 files with zero findings**. The first close correctly refused four stale
+derived artifacts after the compiler/Hypha update; their owning generators
+refreshed the Golden runtime closure, code index, coverage provenance and
+flat-package root lock before the green rerun. Exhaustive closure then passes
+every blocking gate in **859.0s**, including the complete **100/100-package /
+9,496-test** lane in **285.8s**. Lyth-Weaver S1-S5 is closed at
+repository/laboratory head `bbbb8fe` with **594/594 checks** and a sealed
+zero-finding security scan. SLIDE S1 and the TritMesh:QL shipping decision
+remain open, so conversion, retirement and production authority remain closed.
+
+Memory-index audit 2026-08-10: the Codex routing index still points to Galerina
+`90699318`, **9,470** tests and SLIDE **866/866**. Those routes are stale and
+must not override the repository ledgers. Memory remains a graph/index; detailed
+evidence stays in the linked project and Knowledge Base records.
 
 Housekeeping checkpoint 2026-08-09: the repository contains **32 tracked TODO
 files** and **16 tracked roadmap files**. The current authority route is this
@@ -43,15 +68,13 @@ its published Contract 85/86 evidence pinned to `39920eb` / `817e9d17...1d8484`
 until systemic S1 closure; a partial security checkpoint is not silently
 promoted into downstream authority.
 
-The current Galerina graph run is **6/6** and normal phase-close passes every
-blocking gate in **577.3s**. The live complete aggregate is nevertheless
-**99/100 packages / 9,436 tests**, and exhaustive phase-close refuses at its
-`tests:all-packages` gate. The single package failure is Hypha provenance
-against an owner-modified sibling working file; isolated committed Galerina
-plus committed Hypha matches the recorded digest and passes **42/42**. Owner
-work was preserved. This classification does not turn the exhaustive refusal
-green: the complete lane must be rerun after sibling custody is resolved.
-Conversion and production authority both remain closed.
+The earlier 2026-08-09 Hypha-custody refusal was resolved without discarding
+owner work. It remains useful historical evidence that an isolated package
+result cannot turn the complete lane green, but its **99/100 / 9,436** count is
+not current. The 2026-08-10 aggregate above is the current complete package
+ledger, and the 2026-08-10 exhaustive closure above supersedes that refusal.
+Conversion and production authority remain closed for the separate SLIDE S1,
+TritMesh:QL, signing, platform and durability gates.
 
 The real `restoreVerdict` consumer now executes only exact hybrid-authenticated
 `.slide` bytes and independently verifies the composed typed receipt. Its

@@ -1148,11 +1148,11 @@
       "identity": "@galerina/devtools-hypha",
       "version": "1.0.0-beta.1",
       "directory": "galerina-devtools-hypha",
-      "contentDigest": "6e47c79ee113de29feb391c6787eae2d991801341e21fb18a66165cd671005dc",
+      "contentDigest": "5d6d3b9af6614dcdbb2eeea7b688dbb7fdbfff582b94c4130bd1e62fe30416c9",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "0339c9472e18fa98c1987413de0d72807f9afc26640f102acfe2a0491f915085"
+          "digest": "b66313114f94db1bfc5410ad9d470b645c306b6d3c7a5be8fd1799929170c7d5"
         }
       ],
       "dependencies": []
@@ -3268,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "9585c2c66a2602e3728330ed60115103c33e2950aaac039c6ad1d6840e2f7aeb"
+  "rootDigest": "38669a908998d26e4d43206220f41d9949e0fc5feb6e279365ee804f650df13b"
 }
