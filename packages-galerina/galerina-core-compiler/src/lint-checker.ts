@@ -175,10 +175,13 @@ interface BindingSite {
   readonly form: "local" | "match";
 }
 
-/** Extract the leading identifier from a binding node's `value` (handles "n" and "n: Int"). */
+/** Extract the declared identifier from a binding node's value, after any safety qualifier. */
 function bindingNameOf(raw: string | undefined): string | undefined {
-  const m = (raw ?? "").trim().match(/^([A-Za-z][A-Za-z0-9_]*)/);
-  return m?.[1];
+  const declaration = (raw ?? "")
+    .trim()
+    .replace(/^(?:unsafe|safe)\s+/, "");
+  const match = declaration.match(/^([A-Za-z][A-Za-z0-9_]*)/);
+  return match?.[1];
 }
 
 /**

@@ -33,6 +33,13 @@ describe("FUNGI-LINT-002 — unused-binding lint (both-direction teeth)", () => 
   it("A6: the bare `_` wildcard binds nothing (structurally out of scope)", () => {
     assert.deepEqual(flagged(`pure flow f(v: Int) -> Int {\n  match v {\n    _ => { return 0 }\n  }\n}\n`), []);
   });
+  it("A7: a read unsafe binding is not confused with the unsafe qualifier", () => {
+    assert.deepEqual(flagged(`secure flow f(request: Request) -> String {
+  unsafe let rawBody: String = request.body
+  return rawBody
+}
+`), []);
+  });
 
   // ── REJECT: MUST flag ──
   it("R1: a dead local is flagged", () => {
@@ -43,6 +50,13 @@ describe("FUNGI-LINT-002 — unused-binding lint (both-direction teeth)", () => 
   });
   it("R3: a dead mut is flagged", () => {
     assert.deepEqual(flagged(`pure flow f(input: Int) -> Int {\n  mut acc = 0\n  return input\n}\n`), ["acc"]);
+  });
+  it("R5: a dead unsafe binding reports the declared name", () => {
+    assert.deepEqual(flagged(`secure flow f(request: Request) -> String {
+  unsafe let rawBody: String = request.body
+  return "unused"
+}
+`), ["rawBody"]);
   });
   it("two dead bindings in one flow are both flagged", () => {
     assert.deepEqual(flagged(`pure flow f() -> Int {\n  let a = 1\n  let b = 2\n  return 0\n}\n`), ["a", "b"]);
