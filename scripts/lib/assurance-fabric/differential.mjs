@@ -305,6 +305,9 @@ function normalizeCandidate(value, index) {
     processControl: Object.freeze({
       ownedTree: control.ownedTree,
       cleanupAttempted: control.cleanupAttempted,
+      cleanupAcknowledged: control.cleanupAcknowledged,
+      timedOut: control.timedOut,
+      outputLimitExceeded: control.outputLimitExceeded,
     }),
   });
 }
@@ -338,7 +341,7 @@ export function compareResultSets(legacyResults, candidateRunRecords) {
       missingCandidateIds.push(id);
       continue;
     }
-    for (const field of ["subjectId", "exitStatus", "signalStatus", "processControl"]) {
+    for (const field of ["subjectId", "exitStatus", "signalStatus"]) {
       const legacyComparable = field === "exitStatus" || field === "signalStatus"
         ? normalizeVariant(
           legacyItem[field],
@@ -349,6 +352,16 @@ export function compareResultSets(legacyResults, candidateRunRecords) {
       if (comparable(legacyComparable) !== comparable(candidate[field])) {
         mismatches.push(Object.freeze({ id, field }));
       }
+    }
+    const candidateCommonControl = {
+      ownedTree: candidate.processControl.ownedTree,
+      cleanupAttempted: candidate.processControl.cleanupAttempted,
+    };
+    if (comparable(legacyItem.processControl) !== comparable(candidateCommonControl)
+        || candidate.processControl.cleanupAcknowledged
+        || candidate.processControl.timedOut
+        || candidate.processControl.outputLimitExceeded) {
+      mismatches.push(Object.freeze({ id, field: "processControl" }));
     }
     const expectedTag = legacyItem.ok ? RESULT_TAG.LEGACY_EXIT : RESULT_TAG.BLOCKING_FAIL;
     const expectedTrit = legacyItem.ok ? TRIT.UNKNOWN : TRIT.DISTRUSTED;

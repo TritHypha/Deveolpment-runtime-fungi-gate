@@ -265,6 +265,18 @@ describe("assurance differential model", () => {
     assert.throws(() => compareResultSets(legacy, [accessor]), /ordinary data field/);
     assert.equal(getterRan, false);
   });
+
+  it("does not discard candidate-only process-control evidence", () => {
+    const legacy = normalizeLegacyReport(legacyReport([legacyResult("green")])).results;
+    const boundedOutputBreach = candidateRecord("green");
+    boundedOutputBreach.processControl = {
+      ...boundedOutputBreach.processControl,
+      outputLimitExceeded: true,
+    };
+    const comparison = compareResultSets(legacy, [boundedOutputBreach]);
+    assert.equal(comparison.verdict, "SHADOW_MISMATCH");
+    assert.deepEqual(comparison.mismatches, [{ id: "green", field: "processControl" }]);
+  });
 });
 
 describe("assurance shadow CLI", () => {
