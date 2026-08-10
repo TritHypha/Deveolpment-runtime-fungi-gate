@@ -1,7 +1,7 @@
 # Zero-trust assurance fabric design
 
 Date: 2026-08-10
-Status: owner-approved baseline; unsafe/Signet amendment pending owner review
+Status: owner-approved binding implementation design
 
 ## Decision
 
