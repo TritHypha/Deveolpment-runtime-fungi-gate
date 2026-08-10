@@ -124,11 +124,17 @@ Run:
 ```powershell
 npm run build --prefix packages-galerina/galerina-core-compiler
 node --test packages-galerina/galerina-core-compiler/tests/lint-unused-binding.test.mjs
-node packages-galerina/galerina-core-compiler/dist/cli.js check --strict docs/examples/Level-1-Basics/009-unsafe-let-boundary
-node packages-galerina/galerina-core-compiler/dist/cli.js check --strict docs/examples/Level-4-Security/151-http-request-boundary
+# Working directory: docs/examples/Level-1-Basics/009-unsafe-let-boundary
+node ../../../../packages-galerina/galerina-core-compiler/dist/cli.js check --strict .
+
+# Working directory: docs/examples/Level-4-Security/151-http-request-boundary
+node ../../../../packages-galerina/galerina-core-compiler/dist/cli.js check --strict .
 ```
 
 Expected: every command exits zero; examples 009 and 151 report zero warnings.
+The working directories are part of the evidence contract: repository-root
+direct paths are intentionally refused by the compiler's ignore policy and
+must not be recorded as a successful check.
 
 - [ ] **Step 5: Commit the isolated linter correction**
 

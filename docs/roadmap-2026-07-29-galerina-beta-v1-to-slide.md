@@ -32,7 +32,7 @@ VOK assurance-fabric Chapter 1 checkpoint 2026-08-10: Galerina now has a
 private bootstrap host for closed Tri-1 result folding, exact candidate-manifest
 admission, boundary-untrusted analyzer observations, one-use Signet/Wax Seal
 lifecycle, legacy-exit adaptation and a non-authorizing differential shadow
-runner. Focused evidence is **35/35**; the unsafe-binding repair is included in
+runner. Focused evidence is **49/49**; the unsafe-binding repair is included in
 compiler **6,326/6,326**; and the refreshed complete ledger is **100/100
 packages / 9,498 tests / zero failures in 278.5s**. A missing seal is `0`; a
 broken, copied, forged, wrong-subject, revoked or stale-context seal is `-1`.
@@ -41,11 +41,27 @@ both `authorizing` and `replayable` false. The existing phase-close runner
 remains authoritative, the governed live command manifest remains absent, and
 K3 production authority stays `0`. No package conversion, signing, SLIDE,
 retirement, release or hostile-process containment follows from Chapter 1.
-After owned regeneration, normal phase-close passes **89/89 in 564.6s**,
-including **480 passed tooling tests and 11 intentional skips**, with graph,
+After owned regeneration, normal phase-close passes **89/89 in 568.0s**,
+including **489 passed tooling tests**, with graph,
 Golden Pack, code index, registry, percentage and roadmap checks current. The
 legacy runner's `authorizing: true` result is scoped to that repository close;
 it is not authenticated Signet, VOK execution or production authority.
+Independent review then closed six shadow-boundary gaps: typed outcome
+conservation, exact/branded candidate records, candidate-only uncertainty,
+strict duplicate-key JSON refusal, explicit environment custody and exact
+legacy-root binding. All five candidate process-control fields are retained;
+candidate-only cleanup, timeout or output-limit evidence cannot compare as
+agreement. Canonical examples 009 and 151 each pass **1 file** only
+when invoked from their own admitted example directory; repo-root direct paths
+are deliberately ignored and are not evidence. Generated graph/subway
+provenance records the pre-publication build point by design, so it remains K3
+`0` and non-authorizing rather than pretending to be final-commit identity.
+The first post-review close refused 88/89 on a transient Windows file-open
+error for the generated graph report; isolated graph generation/checking both
+passed 6/6 and the full unchanged-tree rerun passed 89/89. The refusal remains
+part of the evidence history and was not converted into a pass by assertion.
+A later post-regression run also refused 88/89 on a genuinely stale code index;
+the index owning generator and exact check passed before the final 89/89 close.
 
 Memory-index audit 2026-08-10: the Codex routing index still points to Galerina
 `90699318`, **9,470** tests and SLIDE **866/866**. Those routes are stale and

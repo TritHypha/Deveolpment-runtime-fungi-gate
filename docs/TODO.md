@@ -13,8 +13,15 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Implement the private, non-authorizing Chapter 1 result model, governed
   candidate-manifest validator, boundary-untrusted observation intake, Signet/
   Wax Seal lifecycle, legacy-exit adapter and differential shadow runner. The
-  focused assurance surface is **35/35**. Only exact `(D,C,A)=(+1,+1,+1)` can
+  focused assurance surface is **49/49**. Only exact `(D,C,A)=(+1,+1,+1)` can
   derive the conceptual allow vector; analyzers remain limited to `{-1,0}`.
+  Independent review corrections close the tag/source/trit relation, brand
+  canonical results, exact-check differential records and variants, refuse
+  duplicate decoded JSON keys, bind legacy report root/outcome conservation,
+  treat candidate-only identities as unknown, isolate analyzer environments
+  and digest the explicit host environment allow-list. All five candidate
+  process-control fields remain comparison evidence; candidate-only timeout,
+  cleanup or output-limit state cannot be discarded into agreement.
 - [x] Enforce the Wax Seal refusal rule: a missing seal is K3 `0`; any copied,
   altered, forged, wrong-subject, revoked or stale-context seal is K3 `-1`.
   Even an exact live seal is terminal, unauthenticated reference evidence and
@@ -28,10 +35,24 @@ counts or open items that a newer section explicitly supersedes.
   9,498/9,498 tests**, zero failures in **278.5s**, including compiler
   **6,326/6,326**.
 - [x] Close the regenerated normal custody state: authoritative phase-close is
-  **89/89** in **564.6s**, including **480 passed tooling tests plus 11
-  intentional skips**, Golden Pack **11/11 + 11/11**, graph **6/6**, current
+  **89/89** in **568.0s**, including **489 passed tooling tests**, Golden Pack
+  **11/11 + 11/11**, graph **6/6**, current
   code index/registry and zero failed rows. Its legacy `authorizing: true` field
   is a phase-close claim only and grants no VOK, release or production authority.
+  The first post-review attempt refused **88/89** on a transient Windows file-
+  open error while writing `Galerina_GRAPH_REPORT.md`; isolated 6/6 generation
+  and 6/6 checking passed, and the complete unchanged-tree rerun then closed
+  89/89. The refused run is retained as evidence, not relabelled as success.
+  After the final process-control regression was added, a later close also
+  refused 88/89 because its new source lines had not yet been regenerated into
+  the code index. The owning index generator and exact check passed, followed
+  by the final 89/89 close above.
+- [x] Record reproducible example evidence at the compiler's admitted boundary:
+  run `check --strict .` with the working directory set independently to
+  `docs/examples/Level-1-Basics/009-unsafe-let-boundary` and
+  `docs/examples/Level-4-Security/151-http-request-boundary`. Both pass exactly
+  **1 file**. Repo-root direct paths remain correctly ignored and must not be
+  cited as successful evidence.
 - [ ] Do not switch cadence or authority to Chapter 1. The live command
   manifest remains absent by design; authenticated Signet custody, hostile
   process containment, the evidence DAG, semantic coverage graphs and the

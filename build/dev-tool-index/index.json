@@ -2638,7 +2638,7 @@
       "inCadence": false,
       "concerns": [
         "signing/fusion",
-        "graph/index"
+        "source-hygiene"
       ]
     },
     {
@@ -3441,7 +3441,6 @@
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
       "run-all-tests.cjs",
-      "run-assurance-shadow.mjs",
       "run-core-tests.cjs",
       "run-impact-check.mjs",
       "run-phase-close.mjs",
@@ -3763,6 +3762,7 @@
       "verify-registry-static-host-build-recipe.mjs",
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
+      "run-assurance-shadow.mjs",
       "run-impact-check.mjs",
       "status.mjs",
       "bench-startup.mjs",

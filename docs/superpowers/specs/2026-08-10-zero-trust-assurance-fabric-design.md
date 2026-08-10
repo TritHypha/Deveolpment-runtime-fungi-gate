@@ -589,13 +589,35 @@ bootstrap JavaScript host. It is deliberately narrower than the final design:
   shadow runner compares exact result and process-control identity at one stable
   Git build point without modifying or replacing the existing runner.
 
-Fresh focused evidence is **35/35** across the result, manifest, intake, private
+Fresh focused evidence is **49/49** across the result, manifest, intake, private
 host, legacy adapter, owned-process and differential/CLI suites. The supporting
 unsafe-binding regression is green in compiler **6,326/6,326**, and the complete
 package ledger is **100/100 packages / 9,498 tests / zero failures**. These are
 repository facts only. Authenticated Signet custody, a hostile-process sandbox,
 the evidence dependency DAG, semantic requirement/test graphs, cadence switch
 and release authority remain open.
+
+Independent review closed the remaining Chapter 1 shadow ambiguities before
+handoff: canonical results carry an uncopyable in-process brand and a closed
+tag/source/trit relation; candidate records, tagged variants and process
+evidence are exact-object checked; legacy `ok`, failure identities, totals,
+verdict and requested root must conserve; candidate-only identities produce
+`SHADOW_UNKNOWN`; decoded duplicate JSON keys refuse before ordinary parsing;
+analyzers receive no ambient environment; and the minimal host environment
+allow-list is represented in reports only by a SHA-256 identity. All five
+candidate process-control fields survive normalization, and any candidate-only
+cleanup, timeout or output-limit event prevents agreement. The generated
+graph/subway provenance is a pre-publication build point, not final-commit
+authority, and therefore remains non-authorizing with K3 `0`.
+
+The post-review custody run first refused 88/89 because Windows returned a
+transient file-open error while the project-graph generator wrote its report.
+The owning graph orchestrator subsequently passed 6/6 generation and 6/6
+checking, then the complete unchanged-tree normal close passed **89/89 in
+568.0s**, including **489 passed tooling tests**. Refused attempts are retained
+as negative evidence; only the terminal green rerun supports the checkpoint.
+A subsequent post-regression run correctly refused 88/89 on a stale code index;
+the owning generator and exact index check passed before the final green close.
 
 ## Test design
 
