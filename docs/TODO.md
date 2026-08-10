@@ -4,11 +4,44 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### VOK assurance fabric Chapter 1 implementation - 2026-08-10
+
+- [x] Repair the `.fungi` unused-binding identity for `unsafe let`. The linter
+  now tracks the declared binding rather than reporting `unsafe`; focused
+  regression evidence is **15/15**, canonical examples 009 and 151 each check
+  exactly one file with no warning, and the compiler is **6,326/6,326**.
+- [x] Implement the private, non-authorizing Chapter 1 result model, governed
+  candidate-manifest validator, boundary-untrusted observation intake, Signet/
+  Wax Seal lifecycle, legacy-exit adapter and differential shadow runner. The
+  focused assurance surface is **35/35**. Only exact `(D,C,A)=(+1,+1,+1)` can
+  derive the conceptual allow vector; analyzers remain limited to `{-1,0}`.
+- [x] Enforce the Wax Seal refusal rule: a missing seal is K3 `0`; any copied,
+  altered, forged, wrong-subject, revoked or stale-context seal is K3 `-1`.
+  Even an exact live seal is terminal, unauthenticated reference evidence and
+  cannot mint a private admitted object, sink capability, affine lease or
+  production authority.
+- [x] Keep the existing phase-close runner authoritative. The new runner is an
+  explicit shadow only: it normalizes legacy absence variants, compares exact
+  result/process identities, refuses candidate `+1` and reports agreement,
+  omission, mismatch or build-point drift without authority.
+- [x] Re-run the complete governed package ledger: **100/100 packages and
+  9,498/9,498 tests**, zero failures in **278.5s**, including compiler
+  **6,326/6,326**.
+- [x] Close the regenerated normal custody state: authoritative phase-close is
+  **89/89** in **564.6s**, including **480 passed tooling tests plus 11
+  intentional skips**, Golden Pack **11/11 + 11/11**, graph **6/6**, current
+  code index/registry and zero failed rows. Its legacy `authorizing: true` field
+  is a phase-close claim only and grants no VOK, release or production authority.
+- [ ] Do not switch cadence or authority to Chapter 1. The live command
+  manifest remains absent by design; authenticated Signet custody, hostile
+  process containment, the evidence DAG, semantic coverage graphs and the
+  reviewed authority transition remain Chapters 2-4 or later release gates.
+
 ### Conversion-readiness fixed point - 2026-08-10
 
 - [x] Publish the canonical current package ledger through its owning runner:
-  **100/100 packages, 9,496/9,496 tests, zero failures**, including compiler
-  **6,324/6,324**. This supersedes the 9,470-test current-state route in memory
+  **100/100 packages, 9,498/9,498 tests, zero failures**, including compiler
+  **6,326/6,326**. This supersedes the 9,470-test current-state route in memory
   and the lower dated sections; those older figures remain historical evidence.
 - [x] Regenerate and independently check the project graph, integrity graph,
   Knowledge Base graph, package graph, dev-tool index and Fungi capability
@@ -39,13 +72,11 @@ counts or open items that a newer section explicitly supersedes.
   remediated or explicitly excluded from the shipping path. Green Galerina and
   Lyth repository evidence grants no package-conversion, retirement, signing,
   release or production authority.
-- [ ] Repair the `.fungi` unused-binding analysis for `unsafe let`. Fresh strict
-  checks of stable examples 009 and 151 pass but incorrectly report `unsafe`
-  itself as an unused binding instead of tracking the declared value. Add a
-  refusal regression and restore the examples' `expected_diagnostics: none`
-  contract before treating this diagnostic lane as assurance evidence. The
-  separate `examples/ai-inference/classifyMessage.fungi` type/effect/tier drift
-  must also be closed before that file can become a normative reference.
+- [x] Repair the `.fungi` unused-binding analysis for `unsafe let`. The two
+  refusal regressions and examples 009/151 now prove the declared value is
+  tracked and `unsafe` is not misreported as a binding. The separate
+  `examples/ai-inference/classifyMessage.fungi` type/effect/tier drift remains
+  open, so that file is still illustrative rather than normative.
 
 ### TODO, roadmap and percentage-audit housekeeping - 2026-08-09
 

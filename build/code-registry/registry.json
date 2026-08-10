@@ -824,7 +824,7 @@
       "defs": 0,
       "emits": 0,
       "tests": 0,
-      "docs": 1
+      "docs": 7
     },
     {
       "code": "ERR_NEGATIVE",
@@ -11163,7 +11163,7 @@
       "defs": 0,
       "emits": 1,
       "tests": 127,
-      "docs": 33
+      "docs": 34
     },
     {
       "code": "FUNGI-VALUESTATE-004",
@@ -11195,7 +11195,7 @@
       "defs": 1,
       "emits": 1,
       "tests": 45,
-      "docs": 5
+      "docs": 6
     },
     {
       "code": "FUNGI-VALUESTATE-006",

@@ -13,8 +13,8 @@ counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
 
 Conversion-readiness fixed point 2026-08-10: the canonical Galerina aggregate
-passes **100/100 packages and 9,496/9,496 tests**, including compiler
-**6,324/6,324**. Graph generation and independent checking pass **6/6**. The
+passes **100/100 packages and 9,498/9,498 tests**, including compiler
+**6,326/6,326**. Graph generation and independent checking pass **6/6**. The
 normal phase-close passes every blocking gate in **577.8s**, including **445
 tooling tests**, Golden Pack **11/11 checked examples + 11/11 execution
 vectors**, code coverage with zero holes, and the compiler security scan over
@@ -27,6 +27,25 @@ every blocking gate in **859.0s**, including the complete **100/100-package /
 repository/laboratory head `bbbb8fe` with **594/594 checks** and a sealed
 zero-finding security scan. SLIDE S1 and the TritMesh:QL shipping decision
 remain open, so conversion, retirement and production authority remain closed.
+
+VOK assurance-fabric Chapter 1 checkpoint 2026-08-10: Galerina now has a
+private bootstrap host for closed Tri-1 result folding, exact candidate-manifest
+admission, boundary-untrusted analyzer observations, one-use Signet/Wax Seal
+lifecycle, legacy-exit adaptation and a non-authorizing differential shadow
+runner. Focused evidence is **35/35**; the unsafe-binding repair is included in
+compiler **6,326/6,326**; and the refreshed complete ledger is **100/100
+packages / 9,498 tests / zero failures in 278.5s**. A missing seal is `0`; a
+broken, copied, forged, wrong-subject, revoked or stale-context seal is `-1`.
+An exact live seal is still terminal `UNAUTHENTICATED_REFERENCE` evidence with
+both `authorizing` and `replayable` false. The existing phase-close runner
+remains authoritative, the governed live command manifest remains absent, and
+K3 production authority stays `0`. No package conversion, signing, SLIDE,
+retirement, release or hostile-process containment follows from Chapter 1.
+After owned regeneration, normal phase-close passes **89/89 in 564.6s**,
+including **480 passed tooling tests and 11 intentional skips**, with graph,
+Golden Pack, code index, registry, percentage and roadmap checks current. The
+legacy runner's `authorizing: true` result is scoped to that repository close;
+it is not authenticated Signet, VOK execution or production authority.
 
 Memory-index audit 2026-08-10: the Codex routing index still points to Galerina
 `90699318`, **9,470** tests and SLIDE **866/866**. Those routes are stale and

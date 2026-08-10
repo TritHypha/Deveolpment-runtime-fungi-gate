@@ -567,6 +567,36 @@ and non-authorizing checkpoint. The first writing plan covers chapter 1 only.
 An authority switch is not in scope until all four chapters and the complete
 existing release lane agree.
 
+## Chapter 1 implementation checkpoint
+
+The owner-approved Chapter 1 foundation is implemented on 2026-08-10 as a
+bootstrap JavaScript host. It is deliberately narrower than the final design:
+
+- the closed result model admits only the 27 exact Tri-1 coordinate vectors and
+  derives conceptual allow only for `(+1,+1,+1)`;
+- analyzer observations are captured behind opaque handles, retain a
+  `boundary-untrusted` state through derivation, and cannot express `+1` or a
+  blocking pass;
+- the candidate manifest is closed, cycle-checked and root-confined, but the
+  live `governance/phase-close-commands.json` authority source is not installed;
+- the private host retains the Signet, creates one-use admitted and lease
+  handles, and emits a terminal Wax Seal whose authentication class is exactly
+  `UNAUTHENTICATED_REFERENCE`;
+- missing seal state is `0`; broken, copied, forged, wrong-subject, revoked and
+  stale-context seal state is `-1`; serialized values never recreate private
+  authority;
+- legacy exits become typed non-authority observations, and the differential
+  shadow runner compares exact result and process-control identity at one stable
+  Git build point without modifying or replacing the existing runner.
+
+Fresh focused evidence is **35/35** across the result, manifest, intake, private
+host, legacy adapter, owned-process and differential/CLI suites. The supporting
+unsafe-binding regression is green in compiler **6,326/6,326**, and the complete
+package ledger is **100/100 packages / 9,498 tests / zero failures**. These are
+repository facts only. Authenticated Signet custody, a hostile-process sandbox,
+the evidence dependency DAG, semantic requirement/test graphs, cadence switch
+and release authority remain open.
+
 ## Test design
 
 Implementation follows red-green TDD and includes:

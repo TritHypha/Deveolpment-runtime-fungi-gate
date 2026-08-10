@@ -3,8 +3,8 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9496,
-    "devTools": 162,
+    "tests": 9498,
+    "devTools": 163,
     "auditTools": 87,
     "toolsInCadence": 64,
     "proofs": 40
@@ -297,7 +297,7 @@
       "name": "galerina-core-compiler",
       "kind": "core",
       "description": "Galerina compiler pipeline contracts for parsing, checking, IR, diagnostics and reports.",
-      "tests": 6324,
+      "tests": 6326,
       "hasTestScript": true,
       "border": "PASS",
       "files": 174,
@@ -2631,6 +2631,17 @@
       ]
     },
     {
+      "name": "run-assurance-shadow.mjs",
+      "category": "runner",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "graph/index"
+      ]
+    },
+    {
       "name": "run-core-tests.cjs",
       "category": "runner",
       "purpose": "Stop hook: runs tests in dependency order whenever the sentinel file",
@@ -3430,6 +3441,7 @@
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
       "run-all-tests.cjs",
+      "run-assurance-shadow.mjs",
       "run-core-tests.cjs",
       "run-impact-check.mjs",
       "run-phase-close.mjs",
@@ -3580,6 +3592,7 @@
       "lint-fungi.mjs",
       "component-health.mjs",
       "run-all-tests.cjs",
+      "run-assurance-shadow.mjs",
       "run-impact-check.mjs",
       "status.mjs",
       "bench-startup.mjs",
