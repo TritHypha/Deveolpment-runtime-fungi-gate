@@ -541,7 +541,9 @@ try {
 //   per-package Hardened Border checks, and the dev-tool index/graph.
 //   Personal/agent memory is untrusted external data, never a clean-build or
 //   release-gate dependency; memory-graph.mjs is an explicit read-only aid. ──
-run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check"]);
+// Semantic coverage is a named blocking gate below.  Tell the umbrella graph
+// check to leave that owner to its one composed phase-close invocation.
+run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check", "--skip-semantic"]);
 run("semantic:coverage", "node", ["scripts/gen-assurance-semantic-graph.mjs", "--check"]);
 
 // ── 5a. Code index + derived registry — the INDEXES the audits read (a DIFFERENT family from the

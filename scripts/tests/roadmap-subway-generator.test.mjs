@@ -246,6 +246,17 @@ test("roadmap renders stale predecessors as unknown and refuses deny evidence", 
     const denied = run(harness, selected, ["--write"]);
     assert.notEqual(denied.status, 0);
     assert.equal(readFileSync(svg, "utf8"), before);
+
+    installEvidence(selected, spawnSync("git", ["rev-parse", "HEAD"], {
+      cwd: selected,
+      encoding: "utf8",
+    }).stdout.trim());
+    assert.equal(run(harness, selected, ["--write"]).status, 0);
+    const semanticBefore = readFileSync(svg, "utf8");
+    writeFileSync(join(selected, "build/assurance-semantic-graph/provenance.json"), "{\n");
+    const semanticDenied = run(harness, selected, ["--write"]);
+    assert.notEqual(semanticDenied.status, 0);
+    assert.equal(readFileSync(svg, "utf8"), semanticBefore);
   } finally {
     rmSync(harness, { recursive: true, force: true });
   }

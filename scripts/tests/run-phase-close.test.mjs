@@ -35,14 +35,16 @@ function write(root, relativePath, contents) {
   writeFileSync(absolutePath, contents);
 }
 
-function fixture({ phaseClose = [], exhaustive = [] }) {
+function fixture({ phaseClose = [], exhaustive = [], useManifest = true }) {
   const root = mkdtempSync(join(tmpdir(), "galerina-phase-close-"));
   roots.push(root);
-  write(root, "governance/phase-close-commands.json", JSON.stringify({
-    schemaVersion: 1,
-    phaseClose,
-    exhaustive,
-  }));
+  if (useManifest) {
+    write(root, "governance/phase-close-commands.json", JSON.stringify({
+      schemaVersion: 1,
+      phaseClose,
+      exhaustive,
+    }));
+  }
   return root;
 }
 
@@ -189,7 +191,7 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
   assert.match(
     runnerSource,
-    /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check"\]\)/,
+    /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check", "--skip-semantic"\]\)/,
   );
   assert.match(
     runnerSource,
@@ -199,6 +201,11 @@ test("live phase-close checks generated evidence without rewriting it", () => {
     (runnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
     1,
     "semantic coverage must be one exact blocking phase-close gate",
+  );
+  assert.equal(
+    (runnerSource.match(/gen-assurance-semantic-graph\.mjs/g) ?? []).length,
+    1,
+    "the composed phase-close command must delegate semantic coverage to its named gate exactly once",
   );
   assert.match(
     runnerSource,
@@ -223,6 +230,33 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   assert.match(
     runnerSource,
     /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
+  );
+});
+
+test("composed phase-close invokes semantic coverage once and blocks its refusal", () => {
+  const root = fixture({ useManifest: false });
+  write(root, "scripts/graph-all.mjs", [
+    'import { appendFileSync } from "node:fs";',
+    'appendFileSync("semantic-calls.log", `graph:${process.argv.slice(2).join(" ")}\\n`);',
+    'if (!process.argv.includes("--skip-semantic")) process.exit(8);',
+  ].join("\n"));
+  write(root, "scripts/gen-assurance-semantic-graph.mjs", [
+    'import { appendFileSync } from "node:fs";',
+    'appendFileSync("semantic-calls.log", "semantic\\n");',
+    'process.exit(7);',
+  ].join("\n"));
+
+  const result = run(root, "--tier", "phase-close");
+
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  const semantic = report.results.find((entry) => entry.name === "semantic:coverage");
+  assert.equal(semantic?.ok, false);
+  assert.equal(semantic?.exitCode, 7);
+  assert.deepEqual(
+    readFileSync(join(root, "semantic-calls.log"), "utf8").trim().split(/\r?\n/),
+    ["graph:--quiet --check --skip-semantic", "semantic"],
+    "the graph umbrella delegates the semantic owner to exactly one named blocking gate",
   );
 });
 

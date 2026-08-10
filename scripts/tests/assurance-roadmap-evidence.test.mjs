@@ -140,6 +140,19 @@ describe("roadmap assurance dependency derivation", () => {
     }
   });
 
+  it("propagates malformed semantic-coverage provenance as deny", () => {
+    const { root } = fixture();
+    try {
+      write(root, "build/assurance-semantic-graph/provenance.json", "{\n");
+      const result = deriveRoadmapEvidence(root);
+      assert.equal(result.kind, "accepted", JSON.stringify(result));
+      assert.equal(result.value.verdictTrit, -1);
+      assert.equal(result.value.nodes.find((node) => node.id === "semantic-coverage").localTrit, -1);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("propagates malformed required external provenance as deny", () => {
     const { root } = fixture();
     try {

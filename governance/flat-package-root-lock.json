@@ -1124,7 +1124,7 @@
       "identity": "@galerina/devtools-graph-project",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-graph-project",
-      "contentDigest": "95a2630aebb795849524e20e80458ffc739a297fc822804a5bee2748b78816b6",
+      "contentDigest": "bbe373660828248e61fe89042af929b6d4ff900af29dd2d2708feb514c90c544",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3268,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "a0cf2009bc58f42def6ec4b7d9eb05ff0b7201fb2f0b39c58d62240b658b4c62"
+  "rootDigest": "5041b1165059ff5be07e530fc35f3ca4cc42995151cc109c7c04b9d6443e1b12"
 }

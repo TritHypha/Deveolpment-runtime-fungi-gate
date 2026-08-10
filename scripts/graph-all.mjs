@@ -14,6 +14,7 @@ function parseArgs(argv) {
   let kbDir = null;
   let check = false;
   let quiet = false;
+  let skipSemantic = false;
   const seen = new Set();
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -35,6 +36,10 @@ function parseArgs(argv) {
       quiet = true;
       continue;
     }
+    if (arg === "--skip-semantic" && !skipSemantic) {
+      skipSemantic = true;
+      continue;
+    }
     throw new Error(`graph-all: unknown or duplicate argument ${arg}`);
   }
   return {
@@ -44,6 +49,7 @@ function parseArgs(argv) {
       || resolve(root, "..", "ZTF-Knowledge-Bases"),
     check,
     quiet,
+    skipSemantic,
   };
 }
 
@@ -103,14 +109,14 @@ const children = [
       ...(options.check ? ["--check"] : []),
     ],
   },
-  {
+  ...(!options.skipSemantic ? [{
     name: "semantic assurance graph",
     args: [
       "scripts/gen-assurance-semantic-graph.mjs",
       "--root", options.root,
       ...(options.check ? ["--check"] : []),
     ],
-  },
+  }] : []),
 ];
 
 const results = [];

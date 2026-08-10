@@ -3,7 +3,7 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9498,
+    "tests": 9499,
     "devTools": 165,
     "auditTools": 87,
     "toolsInCadence": 65,
@@ -633,7 +633,7 @@
       "name": "galerina-devtools-graph-project",
       "kind": "devtools",
       "description": "Galerina project knowledge graph contracts for package, document, policy and report relationships.",
-      "tests": 7,
+      "tests": 8,
       "hasTestScript": true,
       "border": "PASS",
       "files": 1,
