@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 import {
+  classifyGeneratedOutputMatch,
   generatedOutputMatches,
   provenanceForCheck,
 } from "../lib/provenance.mjs";
@@ -27,6 +28,17 @@ function block(overrides = {}) {
 test("ordinary generated outputs remain byte exact", () => {
   assert.equal(generatedOutputMatches("build/output.json", "a", "a"), true);
   assert.equal(generatedOutputMatches("build/output.json", "a", "b"), false);
+});
+
+test("generated comparison names local byte equality without claiming freshness", () => {
+  assert.deepEqual(
+    classifyGeneratedOutputMatch("build/output.json", "a", "a"),
+    { kind: "match", evidenceClass: "LOCAL_BYTE_EQUALITY" },
+  );
+  assert.deepEqual(
+    classifyGeneratedOutputMatch("build/output.json", "a", "b"),
+    { kind: "mismatch", evidenceClass: "LOCAL_BYTE_EQUALITY" },
+  );
 });
 
 test("provenance comparison permits only a well-formed commit and timestamp change", () => {

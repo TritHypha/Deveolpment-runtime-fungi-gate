@@ -74,6 +74,17 @@ export function generatedOutputMatches(path, actual, expected) {
 }
 
 /**
+ * Classify a local regeneration comparison without promoting byte equality to
+ * evidence that the published output is fresh at the repository build point.
+ */
+export function classifyGeneratedOutputMatch(path, actual, expected) {
+  return Object.freeze({
+    kind: generatedOutputMatches(path, actual, expected) ? "match" : "mismatch",
+    evidenceClass: "LOCAL_BYTE_EQUALITY",
+  });
+}
+
+/**
  * Reuse the published source snapshot during a non-mutating check.
  *
  * Generated outputs may legitimately embed the source snapshot time or
