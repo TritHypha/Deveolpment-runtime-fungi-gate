@@ -1,0 +1,8 @@
+{
+  "schema": "galerina.slide.reference-evidence.v1",
+  "repositoryCommit": "39920eb997a27bcb8deb937dcd97ef59612245aa",
+  "toolManifestDigest": "sha256:817e9d17b31de989e81f744587af6d0e125f5f7d81944eea65330806ee1d8484",
+  "toolFileCount": 89,
+  "referenceOnly": true,
+  "authorityReleased": false
+}

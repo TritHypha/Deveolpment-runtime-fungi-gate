@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "nodes": [
+    {
+      "id": "project-graph",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/graph/Galerina_GRAPH_REPORT.md",
+        "build/graph/galerina-ai-map.md",
+        "build/graph/galerina-devtools-project-graph.html",
+        "build/graph/galerina-devtools-project-graph.json"
+      ],
+      "evidencePath": "build/graph/Galerina_GRAPH_REPORT.md",
+      "provenancePath": "build/graph/provenance.json",
+      "toolPath": "scripts/project-graph-generator.mjs",
+      "expectedTool": "project-graph-generator",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
+      "id": "kb-graph",
+      "kind": "external",
+      "artifactPaths": [
+        "build/kb-graph/kb-graph.dot",
+        "build/kb-graph/kb-graph.json",
+        "build/kb-graph/kb-report.md"
+      ],
+      "evidencePath": "build/kb-graph/kb-report.md",
+      "provenancePath": "build/kb-graph/provenance.json",
+      "toolPath": "scripts/kb-graph-generator.mjs",
+      "expectedTool": "kb-graph-generator",
+      "externalInputPolicy": "required",
+      "workingTreeClass": "EXTERNAL_INPUT",
+      "predecessors": []
+    },
+    {
+      "id": "dev-tool-index",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/dev-tool-index/INDEX.md",
+        "build/dev-tool-index/index.json",
+        "build/dev-tool-index/packages.mmd",
+        "build/dev-tool-index/tooling.mmd"
+      ],
+      "evidencePath": "build/dev-tool-index/INDEX.md",
+      "provenancePath": "build/dev-tool-index/provenance.json",
+      "toolPath": "scripts/dev-tool-index.mjs",
+      "expectedTool": "dev-tool-index",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
+      "id": "percent-evidence",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/component-health/percent-audit.html",
+        "build/component-health/percent-audit.json"
+      ],
+      "evidencePath": "build/component-health/percent-audit.json",
+      "provenancePath": "build/component-health/percent-provenance.json",
+      "toolPath": "scripts/component-health.mjs",
+      "expectedTool": "component-health",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
+      "id": "ts-retirement",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/ts-retirement/TS-RETIREMENT.md",
+        "build/ts-retirement/ts-retirement.json"
+      ],
+      "evidencePath": "build/ts-retirement/TS-RETIREMENT.md",
+      "provenancePath": "build/ts-retirement/provenance.json",
+      "toolPath": "scripts/ts-retirement-graph.mjs",
+      "expectedTool": "ts-retirement-graph",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
+      "id": "status-ledger",
+      "kind": "generated",
+      "artifactPaths": [
+        "build/status/STATUS.md"
+      ],
+      "evidencePath": "build/status/STATUS.md",
+      "provenancePath": "build/status/provenance.json",
+      "toolPath": "scripts/gen-status-blocks.mjs",
+      "expectedTool": "gen-status-blocks",
+      "externalInputPolicy": "forbidden",
+      "workingTreeClass": "DECLARED_GENERATED_OUTPUT",
+      "predecessors": []
+    },
+    {
+      "id": "slide-reference",
+      "kind": "external",
+      "artifactPaths": [
+        "build/slide-reference/reference.json"
+      ],
+      "evidencePath": "build/slide-reference/reference.json",
+      "provenancePath": "build/slide-reference/provenance.json",
+      "toolPath": "scripts/verify-slide-reference-evidence.mjs",
+      "expectedTool": "verify-slide-reference-evidence",
+      "externalInputPolicy": "required",
+      "workingTreeClass": "EXTERNAL_INPUT",
+      "predecessors": []
+    }
+  ],
+  "root": {
+    "id": "roadmap-subway",
+    "evidencePath": "build/component-health/roadmap-subway.svg",
+    "toolPath": "scripts/gen-roadmap-subway.mjs",
+    "expectedTool": "gen-roadmap-subway",
+    "predecessors": [
+      "project-graph",
+      "kb-graph",
+      "dev-tool-index",
+      "percent-evidence",
+      "ts-retirement",
+      "status-ledger",
+      "slide-reference"
+    ]
+  }
+}

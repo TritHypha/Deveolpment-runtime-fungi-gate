@@ -27,6 +27,10 @@ import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { twinParityLadder } from "./lib/twin-parity-ladder.mjs";
+import {
+  generatedOutputMatches,
+  provenance as generatedProvenance,
+} from "./lib/provenance.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PKG_DIR = join(ROOT, "packages-galerina");
@@ -835,6 +839,10 @@ if (AUDIT_HTML) {
   const htmlPath = join(outDir, "percent-audit.html");
   writeFileSync(htmlPath, renderAuditHtml(audit));
   writeFileSync(join(outDir, "percent-audit.json"), JSON.stringify(audit, undefined, 2));
+  writeFileSync(
+    join(outDir, "percent-provenance.json"),
+    `${JSON.stringify(generatedProvenance("component-health", ROOT), undefined, 2)}\n`,
+  );
   console.log(`✅ % audit: build/component-health/percent-audit.{html,json} — ${audit.sections.length} sections (ZT-thesis ${audit.ztAvg}% · build ${audit.buildAvg}% · tracking registry ${audit.trackingRegistryCount} items)`);
   process.exit(0);
 }
@@ -846,6 +854,7 @@ if (AUDIT_CHECK) {
   // data (ZERO_TRUST / BUILD_PROGRESS / TRACKING_REGISTRY) drifted without a `--audit-html` regen.
   const fresh = buildPercentAudit();   // throws (fail-closed) if any section is missing/empty
   const auditPath = join(ROOT, "build", "component-health", "percent-audit.json");
+  const provenancePath = join(ROOT, "build", "component-health", "percent-provenance.json");
   if (!existsSync(auditPath)) {
     console.error("❌ percent-audit staleness: build/component-health/percent-audit.json is MISSING — run `node scripts/component-health.mjs --audit-html` and commit it.");
     process.exit(3);
@@ -853,6 +862,18 @@ if (AUDIT_CHECK) {
   const committed = JSON.parse(readFileSync(auditPath, "utf8"));
   if (auditContentKey(fresh) !== auditContentKey(committed)) {
     console.error("❌ percent-audit staleness: build/component-health/percent-audit.json content drifted from component-health.mjs (source of truth) — run `node scripts/component-health.mjs --audit-html` and commit the refreshed % audit. (git provenance is excluded from this check; only real content drift trips it.)");
+    process.exit(3);
+  }
+  const expectedProvenance = `${JSON.stringify(generatedProvenance("component-health", ROOT), undefined, 2)}\n`;
+  if (
+    !existsSync(provenancePath)
+    || !generatedOutputMatches(
+      provenancePath,
+      readFileSync(provenancePath, "utf8"),
+      expectedProvenance,
+    )
+  ) {
+    console.error("percent-audit provenance is missing or invalid; regenerate it with the owning tool.");
     process.exit(3);
   }
   console.log("✅ percent-audit fresh: committed % audit content == component-health.mjs (git provenance excluded from the staleness check)");

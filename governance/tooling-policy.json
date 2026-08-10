@@ -161,9 +161,10 @@
       ],
       "outputs": [
         "README.md",
-        "build/component-health/provenance.json",
         "build/component-health/roadmap-subway.svg",
-        "docs/roadmap-2026-07-25-cycle2.md"
+        "build/component-health/subway-provenance.json",
+        "docs/roadmap-2026-07-25-cycle2.md",
+        "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md"
       ],
       "tracked": true,
       "generate": [
@@ -587,6 +588,34 @@
       "provenance": "required",
       "tier": "phase-close"
     },
+    "scripts/component-health.mjs": {
+      "inputs": [
+        "galerina.workspace.json",
+        "governance",
+        "packages-galerina",
+        "scripts/component-health.mjs",
+        "scripts/lib/provenance.mjs",
+        "version.json"
+      ],
+      "outputs": [
+        "build/component-health/percent-audit.html",
+        "build/component-health/percent-audit.json",
+        "build/component-health/percent-provenance.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/component-health.mjs",
+        "--audit-html"
+      ],
+      "check": [
+        "node",
+        "scripts/component-health.mjs",
+        "--audit-check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
     "scripts/project-graph-generator.mjs": {
       "inputs": [
         "AGENTS.md",
@@ -617,6 +646,32 @@
       "check": [
         "node",
         "scripts/project-graph-generator.mjs",
+        "--check"
+      ],
+      "provenance": "required",
+      "tier": "phase-close"
+    },
+    "scripts/verify-slide-reference-evidence.mjs": {
+      "inputs": [
+        "docs/security/slide-reference-tool-pin.json",
+        "scripts/lib/assurance-fabric/slide-reference-evidence.mjs",
+        "scripts/lib/assurance-fabric/strict-json.mjs",
+        "scripts/lib/receipt-bound-slide-build.mjs",
+        "scripts/verify-slide-reference-evidence.mjs"
+      ],
+      "outputs": [
+        "build/slide-reference/provenance.json",
+        "build/slide-reference/reference.json"
+      ],
+      "tracked": true,
+      "generate": [
+        "node",
+        "scripts/verify-slide-reference-evidence.mjs",
+        "--write"
+      ],
+      "check": [
+        "node",
+        "scripts/verify-slide-reference-evidence.mjs",
         "--check"
       ],
       "provenance": "required",

@@ -141,6 +141,8 @@ describe("closed assurance evidence DAG", () => {
     refused(graph({ nodes: [node("a", 1, { subjectDigest: "short" })] }), "ASSURANCE-DAG-DIGEST");
     refused(graph({ nodes: [node("a", 1, { repositoryHead: "short" })] }), "ASSURANCE-DAG-GIT");
     refused(graph({ nodes: [node("a", 1, { evidencePath: "../escape" })] }), "ASSURANCE-DAG-PATH");
+    refused(graph({ nodes: [node("a", 1, { evidencePath: "build/report.json:stream" })] }), "ASSURANCE-DAG-PATH");
+    refused(graph({ nodes: [node("a", 1, { evidencePath: "build/re\u0301port.json" })] }), "ASSURANCE-DAG-PATH");
     refused({ ...graph({ nodes: [node("a")] }), surplus: true }, "ASSURANCE-DAG-SHAPE");
     refused(graph({ nodes: [{ ...node("a"), surplus: true }] }), "ASSURANCE-DAG-SHAPE");
     refused(graph({ nodes: [node("a")], edges: [{ ...edge("a", "a"), surplus: true }] }), "ASSURANCE-DAG-SHAPE");

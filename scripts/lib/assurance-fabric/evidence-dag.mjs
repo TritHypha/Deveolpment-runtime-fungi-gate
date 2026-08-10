@@ -143,7 +143,11 @@ function evidencePath(value, label) {
   const path = nonEmptyString(value, label);
   const segments = path.split("/");
   if (path.startsWith("/") || DRIVE_RELATIVE_PATTERN.test(path) || path.includes("\\")
-      || segments.some((segment) => segment.length === 0 || segment === "." || segment === "..")) {
+      || path !== path.normalize("NFC")
+      || /[\u0000-\u001f\u007f:*?"<>|]/u.test(path)
+      || segments.some((segment) => (
+        segment.length === 0 || segment === "." || segment === ".." || /[ .]$/u.test(segment)
+      ))) {
     refuse("ASSURANCE-DAG-PATH", `${label} must be a canonical repository-relative path`);
   }
   return path;
