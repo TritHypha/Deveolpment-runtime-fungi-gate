@@ -1,7 +1,7 @@
 # Zero-trust assurance fabric design
 
 Date: 2026-08-10
-Status: owner-approved binding implementation design
+Status: owner-approved baseline; unsafe/Signet amendment pending owner review
 
 ## Decision
 
@@ -21,6 +21,18 @@ state is private, unchecked work is localised and enumerable, and callers see a
 narrow safe API. It deliberately does not copy Rust's reliance on a programmer's
 `unsafe` assertion as proof. Missing or unprovable facts remain K3 `0` and take a
 terminal `_=>` path.
+
+At every `.fungi` intake boundary, analyzer output and other externally supplied
+bytes use Galerina's existing `unsafe` value-state. Rust `unsafe` and Galerina
+`unsafe` remain distinct: the former marks a memory-safety proof obligation;
+the latter marks memory-safe data whose security trust has not been established.
+
+Each protected component also uses the existing RD-0793 component-private VOK
+profile rather than carrying a reusable self-declared safety certificate. The
+private mint and sink authority is the **Signet**; the exact-subject,
+tamper-evident, terminal assurance receipt is the **Wax Seal**. A serialized
+seal is evidence for inspection, never authority that can be presented back to
+open a lease.
 
 This design changes assurance structure. It grants no package-conversion,
 SLIDE, signing, production or retirement authority.
@@ -94,6 +106,7 @@ small named site.
 The fabric protects:
 
 - exact subject and tool identity;
+- preservation of `unsafe` and derived-taint state from every external intake;
 - completeness of required checks;
 - freshness and provenance of generated evidence;
 - the distinction between blocking, advisory and non-authorizing evidence;
@@ -161,6 +174,41 @@ It can therefore preserve or lower a verdict but cannot raise it. Evidence is
 not authority; the candidate remains non-production until the existing release
 admission boundary binds it to its exact repository, platform and policy.
 
+### Independent Tri-1 coordinates
+
+Data trust, component assurance and execution authority are independent axes.
+They must not be compressed into one stored trit:
+
+```text
+D = data trust
+C = component assurance
+A = execution authority
+
+(D, C, A) in {-1, 0, +1}^3
+V = min(D, C, A)
+execute only when V = +1; otherwise _=>
+```
+
+The three-trit model has `3^3 = 27` vectors. Only `(+1, +1, +1)` can
+authorize, so its maximum authorization density is `1/27 = 3.703703...%`.
+Actual component admission retains RD-0793's finer eight-gate vector; the
+three coordinates are the conceptual axes, not a replacement for those gates.
+
+`unsafe` boundary data is `D = 0`, not `D = -1`: its trust has not yet been
+established. A malformed, contradicted, revoked or independently proven-hostile
+value is `D = -1`. Context-specific validation may establish `D = +1` for the
+validated data shape, but cannot raise `C` or `A`. Consequently a validator
+cannot turn format acceptance into component or execution authority.
+
+In precise terminology, `0` is **untrusted** because no trust has been granted;
+`-1` is **distrusted** because negative evidence exists; `+1` is **assured**
+only for the exact stated context. All `0` and `-1` paths still fail closed.
+
+The same distinction applies to a seal. A missing or unchecked seal is `0`; a
+broken, wrong-subject, stale or revoked seal is `-1`; an exactly verified seal
+is `+1` only on the provenance/integrity fact it proves. It does not prove the
+truth of the sealed claims or grant execution by itself.
+
 ## Components
 
 ### 1. Governed assurance manifest
@@ -219,6 +267,92 @@ The first compatibility adapter may translate legacy exit-code tools into
 observations, but those observations remain visibly `legacy-exit` and cannot
 silently gain stronger authority than the existing runner. The old runner stays
 authoritative until differential parity and negative controls are complete.
+
+### 2a. Galerina `unsafe` intake state
+
+Every byte sequence originating outside the private host enters the `.fungi`
+authority path as `unsafe`. This includes analyzer stdout and stderr, exit
+metadata, consultant output, environment input, external indexes, child-process
+receipts and proposed generated-artifact bytes.
+
+The normative value-state flow follows the live value-state checker and the
+stable teaching examples such as
+`docs/examples/Level-4-Security/151-http-request-boundary/example.fungi`:
+
+```text
+external analyzer bytes
+  -> unsafe binding
+  -> approved bounded parser and schema validator
+  -> typed observation candidate
+  -> independent subject and truth re-derivation
+  -> K3 adjudication
+  -> candidate receipt or _=>
+```
+
+The `unsafe` qualifier applies to data, not to the process as a sandbox and not
+to the analyzer as an authority principal. An analyzer remains non-authoritative
+even after its bytes are structurally validated.
+
+Validation may establish canonical encoding, type, bounds and schema. It does
+not establish that a claim is true, complete, fresh or authority-bearing. A
+validated observation candidate therefore retains the analyzer codomain
+`{-1, 0}` until an independent verifier re-derives its facts. It cannot become
+`+1` merely because a `validate.*` gate accepted its format.
+
+Direct or derived `unsafe` data cannot reach the verdict store, authority
+ledger, signing boundary, publication boundary or another governed sink.
+Ordinary transformations do not clear the state: derived values remain tainted
+until an approved validator acts, matching `FUNGI-VALUESTATE-003` and
+`FUNGI-VALUESTATE-005`. Validation clears the data-format trust state only; the
+separate authority prohibition remains.
+
+During bootstrap, a TypeScript host must preserve an exact equivalent
+`boundary-untrusted` state and prove differential parity with the `.fungi`
+value-state checker. It may not silently treat decoded JSON or exit zero as
+trusted. The equivalent disappears when the admitted `.fungi` host replaces it.
+
+`examples/ai-inference/classifyMessage.fungi` illustrates the intended
+boundary-to-validation transition but is not normative at this build point.
+Fresh strict checking refuses its undefined `MessageText` and warns about its
+effect/tier contract. The canonical examples themselves currently expose a
+separate linter defect that reports `unsafe` as an unused binding; the assurance
+work must not claim that diagnostic as valid evidence.
+
+### 2b. Component Signet and Wax Seal
+
+The wax metaphor names, but does not replace, the RD-0680/RD-0793 authority
+architecture:
+
+- **Envelope** - the exact component digest plus policy, target, ABI, dependency
+  closure, capability/effect declaration, build point, epoch and evidence-set
+  identity;
+- **sealing wax** - the canonical, domain-separated encoding over that closed
+  subject;
+- **Signet** - the private component-profile mint and protected-sink capability,
+  retained only inside the admission host/VOK authority boundary;
+- **Wax Seal** - the immutable exact-subject receipt emitted after independent
+  derivation and terminal consumption.
+
+`Wax Seal` is deliberately distinct from the existing **Hallmark Seal**, which
+is the type-side fixed-AOT eligibility shape for GHP Lock-1. The names must not
+alias, and neither kind of seal grants authority by itself.
+
+A component may submit Hallmarks, measurements and proposed evidence. It cannot
+possess a Signet, seal itself, choose its own assurance trits or convert its
+serialized receipt into a live decision. Hallmarks remain taint-transparent
+typed facts and cannot mint a seal or lease.
+
+The authoritative live binding is private and one-use. The serialized Wax Seal
+is deliberately value-only: copying, parsing, replaying or transplanting it
+cannot recreate the private admitted object, opaque gate decisions, Signet,
+sink capability or affine lease. A change to any Envelope member creates a new
+subject and invalidates the old seal. Missing evidence produces `0`; mismatch,
+tamper, replay or revocation produces `-1`; neither path defaults to `+1`.
+
+This is tamper and provenance evidence, not a claim that sealed contents are
+true. In the authenticated profile, a signature proves only that the admitted
+Signet holder sealed those exact bytes under the named policy and epoch. Truth,
+coverage, freshness and execution permission remain independently re-derived.
 
 ### 3. Typed result model
 
@@ -417,8 +551,8 @@ Implementation is split into four separately reviewable chapters. No later
 chapter may compensate for an incomplete earlier boundary.
 
 1. **Adjudication foundation** - governed manifest, private host state, typed
-   result model, legacy adapter and differential runner. The old runner remains
-   authoritative.
+   result model, `.fungi unsafe` intake contract, legacy adapter and differential
+   runner. The old runner remains authoritative.
 2. **Evidence dependency DAG** - exact generated-input provenance, freshness
    propagation and roadmap/subway dependency binding.
 3. **Semantic coverage graphs** - route/package conservation, requirement-test
@@ -458,12 +592,40 @@ Implementation follows red-green TDD and includes:
     compatibility adapter is not an OS sandbox.
 16. an index response that claims the current head while its queryable `Branch`
     node remains stale; the semantic graph gate must refuse it.
+17. analyzer bytes that are used without an `unsafe` or equivalent
+    `boundary-untrusted` state; the intake gate must refuse them.
+18. a structurally valid observation whose claim is false; validation may clear
+    its format state but independent adjudication must deny or remain unknown.
+19. a value derived from raw analyzer output by trimming, decoding or field
+    extraction; it remains tainted until an approved validation gate acts.
+20. a component that emits its own syntactically valid Wax Seal; the host
+    refuses it because the component has no Signet authority.
+21. a valid serialized seal copied into another component, target, policy,
+    build point or epoch; it cannot recreate a private admitted object or lease.
+22. `D = +1`, `C = +1`, `A = 0`; the exact minimum remains `0` and execution
+    terminates.
+23. a missing seal and a broken seal remain observably distinct as `0` and
+    `-1`, while both fail closed at the execution boundary.
+24. a verified seal containing a structurally valid but false analyzer claim;
+    the seal proves provenance only and independent adjudication refuses allow.
 
 ## Acceptance criteria
 
 - The governed manifest is complete, schema-checked and the only cadence source.
 - Every phase-close result carries a typed authority class and terminal exit.
 - No analyzer schema can express a positive verdict or authority grant.
+- Every external analyzer value enters as `.fungi unsafe` or the exact bootstrap
+  equivalent, and derived taint cannot disappear through ordinary transforms.
+- Structural validation never raises an analyzer observation above K3 `0`;
+  independent re-derivation is mandatory before a positive candidate.
+- Data trust, component assurance and execution authority remain separate
+  Tri-1 coordinates; only exact `+1` on every required coordinate may execute.
+- Every protected component retains its Signet in private VOK profile state;
+  no component-carried or serialized value can mint a decision, sink capability
+  or affine lease.
+- Every Wax Seal binds the complete exact Envelope and is terminal,
+  non-authorizing and non-replayable; a broken seal is not conflated with an
+  absent or unchecked seal.
 - Blocking totals exclude advisory, informational, not-applicable and legacy
   results.
 - Roadmap/subway freshness becomes red or unknown when any displayed upstream
@@ -496,3 +658,7 @@ Implementation follows red-green TDD and includes:
   <https://doc.rust-lang.org/nomicon/send-and-sync.html>
 - Rust 2024 Edition Guide, `unsafe_op_in_unsafe_fn`:
   <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+- Internal architecture ruling RD-0680, "Verified Native Operation, Hallmarks
+  and VOK".
+- Internal architecture ruling RD-0793, "SLIDE VOK live-gate profile and sink
+  capability adjudication".

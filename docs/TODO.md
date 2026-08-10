@@ -39,6 +39,13 @@ counts or open items that a newer section explicitly supersedes.
   remediated or explicitly excluded from the shipping path. Green Galerina and
   Lyth repository evidence grants no package-conversion, retirement, signing,
   release or production authority.
+- [ ] Repair the `.fungi` unused-binding analysis for `unsafe let`. Fresh strict
+  checks of stable examples 009 and 151 pass but incorrectly report `unsafe`
+  itself as an unused binding instead of tracking the declared value. Add a
+  refusal regression and restore the examples' `expected_diagnostics: none`
+  contract before treating this diagnostic lane as assurance evidence. The
+  separate `examples/ai-inference/classifyMessage.fungi` type/effect/tier drift
+  must also be closed before that file can become a normative reference.
 
 ### TODO, roadmap and percentage-audit housekeeping - 2026-08-09
 
