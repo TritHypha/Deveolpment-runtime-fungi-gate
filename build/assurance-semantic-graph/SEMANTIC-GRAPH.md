@@ -1,6 +1,6 @@
 # VOK Semantic Assurance Graph
 
-Build point: `02253f5cf4211939509c7e29bd06dfbd8c3673a7`
+Build point: `5d2e1d13fb93d885471664340f11439006ccaf8e`
 
 K3 evidence state: **ALLOW (1)**
 

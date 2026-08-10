@@ -24,6 +24,7 @@ import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseGovernanceDiff } from "./lib/phase-close-result.mjs";
 import { buildPhaseCloseTimingProfile } from "./lib/phase-close-profile.mjs";
+import { parseStrictJsonBytes } from "./lib/assurance-fabric/strict-json.mjs";
 import suiteLeaseModule from "./lib/suite-run-lease.cjs";
 import ownedProcessModule from "./lib/owned-process-tree.cjs";
 
@@ -179,7 +180,107 @@ function run(name, cmd, args, {
     },
   });
   console.error(`PHASE-CLOSE END ${name} ${ok ? "PASS" : "FAIL"} ${ms}ms`);
-  return { ok, out, code };
+  return {
+    ok,
+    out,
+    stdout: r.stdout || "",
+    code,
+    processControl: {
+      ownedTree: r.owned !== null && r.owned.spawnError === null,
+      cleanupAttempted: r.owned?.cleanupAttempted === true,
+    },
+  };
+}
+
+const GRAPH_ALL_CHILD_NAMES = Object.freeze([
+  "package graph",
+  "project graph",
+  "graph integrity",
+  "KB graph",
+  "dev-tool index",
+  "Fungi source capability inventory",
+  "semantic assurance graph",
+]);
+
+function isExactObject(value, keys) {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false;
+  const actual = Object.keys(value).sort();
+  const expected = [...keys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function semanticCoverageFromGraphAll(graphAll) {
+  let receipt;
+  try {
+    receipt = parseStrictJsonBytes(Buffer.from(graphAll.stdout, "utf8"), {
+      label: "graph-all semantic receipt",
+      maxBytes: 1_048_576,
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      exitCode: typeof graphAll.code === "number" ? graphAll.code : 1,
+      detail: `graph-all semantic receipt refused: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+  if (!isExactObject(receipt, ["tool", "schemaVersion", "mode", "children"])
+      || receipt.tool !== "graph-all"
+      || receipt.schemaVersion !== 1
+      || receipt.mode !== "check"
+      || !Array.isArray(receipt.children)
+      || receipt.children.length !== GRAPH_ALL_CHILD_NAMES.length) {
+    return { ok: false, exitCode: 1, detail: "graph-all semantic receipt has an invalid closed shape" };
+  }
+  const names = new Set();
+  let semantic;
+  for (const child of receipt.children) {
+    if (!isExactObject(child, ["name", "args", "status"])
+        || typeof child.name !== "string"
+        || !Array.isArray(child.args)
+        || !child.args.every((arg) => typeof arg === "string")
+        || !Number.isSafeInteger(child.status)
+        || child.status < 0
+        || !GRAPH_ALL_CHILD_NAMES.includes(child.name)
+        || names.has(child.name)) {
+      return { ok: false, exitCode: 1, detail: "graph-all semantic receipt has an invalid child identity" };
+    }
+    names.add(child.name);
+    if (child.name === "semantic assurance graph") semantic = child;
+  }
+  if (names.size !== GRAPH_ALL_CHILD_NAMES.length || semantic === undefined
+      || semantic.args.length !== 4
+      || semantic.args[0] !== "scripts/gen-assurance-semantic-graph.mjs"
+      || semantic.args[1] !== "--root"
+      || semantic.args[2] !== ROOT
+      || semantic.args[3] !== "--check") {
+    return { ok: false, exitCode: 1, detail: "graph-all semantic receipt omits the exact semantic owner check" };
+  }
+  if (semantic.status !== 0) {
+    return {
+      ok: false,
+      exitCode: semantic.status,
+      detail: `semantic coverage refused with exit ${semantic.status} according to exact graph-all result`,
+    };
+  }
+  return { ok: true, exitCode: 0, detail: "semantic coverage validated from exact graph-all result" };
+}
+
+function runSemanticCoverageFromGraphAll(graphAll) {
+  const t0 = Date.now();
+  console.error("PHASE-CLOSE START semantic:coverage");
+  const checked = semanticCoverageFromGraphAll(graphAll);
+  const durationMs = Date.now() - t0;
+  results.push({
+    name: "semantic:coverage",
+    ok: checked.ok,
+    durationMs,
+    exitCode: checked.exitCode,
+    signal: null,
+    detail: checked.detail,
+    processControl: graphAll.processControl,
+  });
+  console.error(`PHASE-CLOSE END semantic:coverage ${checked.ok ? "PASS" : "FAIL"} ${durationMs}ms`);
+  return checked;
 }
 
 function summarise(name, out, ok, code) {
@@ -541,16 +642,17 @@ try {
 //   per-package Hardened Border checks, and the dev-tool index/graph.
 //   Personal/agent memory is untrusted external data, never a clean-build or
 //   release-gate dependency; memory-graph.mjs is an explicit read-only aid. ──
-// Semantic coverage is a named blocking gate below.  Tell the umbrella graph
-// check to leave that owner to its one composed phase-close invocation.
-run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check", "--skip-semantic"]);
-run("semantic:coverage", "node", ["scripts/gen-assurance-semantic-graph.mjs", "--check"]);
+// graph-all always owns all seven checks. Its strict receipt gives the named
+// semantic gate the exact one-process result without a CLI bypass or rerun.
+const graphAll = run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet", "--check", "--json"]);
+runSemanticCoverageFromGraphAll(graphAll);
 
 // ── 5a. Code index + derived registry — the INDEXES the audits read (a DIFFERENT family from the
 //        graphs in graph:all above). Phase-close verifies their exact current
 //        bytes and refuses drift; generation is a separate reviewed operation.
 //        dev-tool-index remains inside graph:all. ──
 run("code-index", "node", ["scripts/code-index.mjs", "--check"]);
+run("audit:canonical-test-counts", "node", ["scripts/audit-canonical-test-counts.mjs"]);
 run("code-registry", "node", ["scripts/gen-code-registry.mjs", "--check"]);
 run("code-catalog-coverage:selftest", "node", ["scripts/audit-code-catalog-coverage.mjs", "--self-test"]);
 run("code-catalog-coverage", "node", ["scripts/audit-code-catalog-coverage.mjs"]);

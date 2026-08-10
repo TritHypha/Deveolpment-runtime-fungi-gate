@@ -116,18 +116,12 @@ test("graph-all refuses the retired --memory-dir release-gate argument", () => {
   }
 });
 
-test("graph-all can leave semantic coverage to its separately named phase-close gate", () => {
+test("graph-all refuses a CLI semantic bypass", () => {
   const { root, kb } = fixture();
   try {
     const result = run(root, kb, ["--check", "--skip-semantic"]);
-    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
-    const callLines = readFileSync(join(root, "calls.log"), "utf8").trim().split(/\r?\n/);
-    assert.equal(callLines.length, 6);
-    assert.doesNotMatch(
-      callLines.join("\n"),
-      /gen-assurance-semantic-graph\.mjs/,
-      "the umbrella must not execute the semantic owner when a separate blocking gate owns it",
-    );
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /unknown.*--skip-semantic/i);
   } finally {
     rmSync(root, { recursive: true, force: true });
     rmSync(kb, { recursive: true, force: true });

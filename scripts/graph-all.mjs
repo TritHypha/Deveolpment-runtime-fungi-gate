@@ -14,7 +14,7 @@ function parseArgs(argv) {
   let kbDir = null;
   let check = false;
   let quiet = false;
-  let skipSemantic = false;
+  let json = false;
   const seen = new Set();
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -36,8 +36,8 @@ function parseArgs(argv) {
       quiet = true;
       continue;
     }
-    if (arg === "--skip-semantic" && !skipSemantic) {
-      skipSemantic = true;
+    if (arg === "--json" && !json) {
+      json = true;
       continue;
     }
     throw new Error(`graph-all: unknown or duplicate argument ${arg}`);
@@ -49,7 +49,7 @@ function parseArgs(argv) {
       || resolve(root, "..", "ZTF-Knowledge-Bases"),
     check,
     quiet,
-    skipSemantic,
+    json,
   };
 }
 
@@ -109,14 +109,14 @@ const children = [
       ...(options.check ? ["--check"] : []),
     ],
   },
-  ...(!options.skipSemantic ? [{
+  {
     name: "semantic assurance graph",
     args: [
       "scripts/gen-assurance-semantic-graph.mjs",
       "--root", options.root,
       ...(options.check ? ["--check"] : []),
     ],
-  }] : []),
+  },
 ];
 
 const results = [];
@@ -136,13 +136,21 @@ for (const child of children) {
 }
 
 const failed = results.filter((result) => result.status !== 0);
+const report = {
+  tool: "graph-all",
+  schemaVersion: 1,
+  mode,
+  children: results.map(({ name, args, status }) => ({ name, args, status })),
+};
 if (failed.length > 0) {
   for (const result of failed) {
     const detail = `${result.stderr}\n${result.stdout}`.trim();
     console.error(`graph-all: ${result.name} refused with exit ${result.status}${detail ? `\n${detail}` : ""}`);
   }
-  console.error(`graph-all: FAIL ${children.length - failed.length}/${children.length} ${mode} children passed`);
+  if (options.json) process.stdout.write(`${JSON.stringify(report)}\n`);
+  else console.error(`graph-all: FAIL ${children.length - failed.length}/${children.length} ${mode} children passed`);
   process.exit(1);
 }
 
-console.log(`graph-all: PASS ${children.length}/${children.length} ${mode} children passed`);
+if (options.json) process.stdout.write(`${JSON.stringify(report)}\n`);
+else console.log(`graph-all: PASS ${children.length}/${children.length} ${mode} children passed`);

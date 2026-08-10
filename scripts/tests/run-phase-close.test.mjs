@@ -11,7 +11,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
@@ -191,21 +191,21 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   );
   assert.match(
     runnerSource,
-    /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check", "--skip-semantic"\]\)/,
+    /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check", "--json"\]\)/,
   );
   assert.match(
     runnerSource,
-    /run\("semantic:coverage", "node", \["scripts\/gen-assurance-semantic-graph\.mjs", "--check"\]\)/,
+    /runSemanticCoverageFromGraphAll\(graphAll\)/,
   );
   assert.equal(
-    (runnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
+    (runnerSource.match(/^runSemanticCoverageFromGraphAll\(graphAll\);$/gm) ?? []).length,
     1,
     "semantic coverage must be one exact blocking phase-close gate",
   );
   assert.equal(
-    (runnerSource.match(/gen-assurance-semantic-graph\.mjs/g) ?? []).length,
-    1,
-    "the composed phase-close command must delegate semantic coverage to its named gate exactly once",
+    (runnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
+    0,
+    "the named semantic gate must consume exactly one graph-all result rather than launch a second owner",
   );
   assert.match(
     runnerSource,
@@ -214,6 +214,10 @@ test("live phase-close checks generated evidence without rewriting it", () => {
   assert.match(
     runnerSource,
     /run\("code-index", "node", \["scripts\/code-index\.mjs", "--check"\]\)/,
+  );
+  assert.match(
+    runnerSource,
+    /run\("audit:canonical-test-counts", "node", \["scripts\/audit-canonical-test-counts\.mjs"\]\)/,
   );
   assert.match(
     runnerSource,
@@ -235,11 +239,18 @@ test("live phase-close checks generated evidence without rewriting it", () => {
 
 test("composed phase-close invokes semantic coverage once and blocks its refusal", () => {
   const root = fixture({ useManifest: false });
-  write(root, "scripts/graph-all.mjs", [
-    'import { appendFileSync } from "node:fs";',
-    'appendFileSync("semantic-calls.log", `graph:${process.argv.slice(2).join(" ")}\\n`);',
-    'if (!process.argv.includes("--skip-semantic")) process.exit(8);',
-  ].join("\n"));
+  write(root, "scripts/graph-all.mjs", readFileSync(resolve("scripts/graph-all.mjs"), "utf8"));
+  const graphChildren = [
+    "package-graph-generator.mjs",
+    "project-graph-generator.mjs",
+    "audit-graph-integrity.mjs",
+    "kb-graph-generator.mjs",
+    "dev-tool-index.mjs",
+    "fungi-source-capability-inventory.mjs",
+  ];
+  for (const name of graphChildren) {
+    write(root, `scripts/${name}`, "process.exit(0);\\n");
+  }
   write(root, "scripts/gen-assurance-semantic-graph.mjs", [
     'import { appendFileSync } from "node:fs";',
     'appendFileSync("semantic-calls.log", "semantic\\n");',
@@ -253,11 +264,8 @@ test("composed phase-close invokes semantic coverage once and blocks its refusal
   const semantic = report.results.find((entry) => entry.name === "semantic:coverage");
   assert.equal(semantic?.ok, false);
   assert.equal(semantic?.exitCode, 7);
-  assert.deepEqual(
-    readFileSync(join(root, "semantic-calls.log"), "utf8").trim().split(/\r?\n/),
-    ["graph:--quiet --check --skip-semantic", "semantic"],
-    "the graph umbrella delegates the semantic owner to exactly one named blocking gate",
-  );
+  assert.equal(semantic?.detail, "semantic coverage refused with exit 7 according to exact graph-all result");
+  assert.deepEqual(readFileSync(join(root, "semantic-calls.log"), "utf8").trim().split(/\r?\n/), ["semantic"]);
 });
 
 test("a held checkout lease refuses phase-close before any child starts", () => {
