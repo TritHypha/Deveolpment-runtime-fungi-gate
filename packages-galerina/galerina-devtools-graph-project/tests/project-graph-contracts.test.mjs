@@ -209,6 +209,68 @@ describe("galerina-devtools-project-graph contracts", () => {
     assert.equal(validateProjectGraph(workspaceGraph).length, 0);
   });
 
+  it("derives package dependencies from the audited import surface", () => {
+    const workspaceGraph = createWorkspaceProjectGraph({
+      workspace: {
+        name: "Galerina-test",
+        packages: [
+          { path: "packages-galerina/galerina-alpha" },
+          { path: "packages-galerina/galerina-beta" },
+        ],
+      },
+      generatedAt: "2026-05-08T00:00:00.000Z",
+      files: [
+        {
+          path: "packages-galerina/galerina-alpha/package.json",
+          kind: "json",
+          text: JSON.stringify({
+            name: "@galerina/alpha",
+            devDependencies: { "@galerina/beta": "file:../galerina-beta" },
+          }),
+        },
+        {
+          path: "packages-galerina/galerina-beta/package.json",
+          kind: "json",
+          text: JSON.stringify({ name: "@galerina/beta" }),
+        },
+        {
+          path: "packages-galerina/galerina-alpha/.graph/package-graph.json",
+          kind: "json",
+          text: JSON.stringify({
+            packageName: "@galerina/alpha",
+            externalDeps: [],
+          }),
+        },
+        {
+          path: "packages-galerina/galerina-beta/.graph/package-graph.json",
+          kind: "json",
+          text: JSON.stringify({
+            packageName: "@galerina/beta",
+            externalDeps: [
+              {
+                specifier: "@galerina/alpha",
+                kind: "workspace",
+                importedBy: ["src/index.ts"],
+              },
+            ],
+          }),
+        },
+      ],
+    });
+
+    const packageDependencies = workspaceGraph.edges.filter(
+      (edge) => edge.kind === "depends_on",
+    );
+    assert.deepEqual(
+      packageDependencies.map((edge) => [edge.from, edge.to, edge.evidencePath]),
+      [[
+        "package:galerina-beta",
+        "package:galerina-alpha",
+        "packages-galerina/galerina-beta/.graph/package-graph.json",
+      ]],
+    );
+  });
+
   it("queries, explains and finds paths through a graph", () => {
     const query = queryProjectGraph(graph, { query: "SecureString" });
     const explanation = explainProjectGraphNode(graph, {

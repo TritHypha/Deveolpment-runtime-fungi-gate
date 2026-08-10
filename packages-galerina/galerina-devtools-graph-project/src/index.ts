@@ -674,8 +674,8 @@ export function createWorkspaceProjectGraph(
       addMarkdownPackageReferenceEdges(file, packages, nodes, edges);
     }
 
-    if (file.path.endsWith("package.json") && owner !== undefined) {
-      addPackageDependencyEdges(file, owner, packages, edges);
+    if (file.path.endsWith("/.graph/package-graph.json") && owner !== undefined) {
+      addAuditedPackageDependencyEdges(file, owner, packages, edges);
     }
   }
 
@@ -1066,25 +1066,28 @@ function addMarkdownPackageReferenceEdges(
   }
 }
 
-function addPackageDependencyEdges(
+function addAuditedPackageDependencyEdges(
   file: ProjectGraphWorkspaceFile,
   owner: ReturnType<typeof normalizeWorkspacePackage>,
   packages: readonly ReturnType<typeof normalizeWorkspacePackage>[],
   edges: Map<string, ProjectGraphEdge>,
 ): void {
-  const dependencies = readPackageDependencies(file.text);
-
-  // Index packages by their derived @galerina/<short> spec once (first-match-wins, preserving .find semantics).
+  const packageGraph = readAuditedPackageGraph(file.text, owner);
   const packageBySpec = new Map<string, (typeof packages)[number]>();
   for (const item of packages) {
     const spec = `@galerina/${item.name.replace(/^galerina-/, "")}`;
     if (!packageBySpec.has(spec)) packageBySpec.set(spec, item);
   }
 
-  for (const dependency of dependencies) {
-    const targetPackage = packageBySpec.get(dependency);
-    if (targetPackage === undefined) {
+  for (const dependency of packageGraph.externalDeps) {
+    if (dependency.kind !== "workspace") {
       continue;
+    }
+    const targetPackage = packageBySpec.get(dependency.specifier);
+    if (targetPackage === undefined) {
+      throw new Error(
+        `Package graph ${file.path} names unregistered workspace dependency ${dependency.specifier}.`,
+      );
     }
 
     addEdge(
@@ -1098,6 +1101,57 @@ function addPackageDependencyEdges(
       ),
     );
   }
+}
+
+interface AuditedPackageDependency {
+  readonly specifier: string;
+  readonly kind: "node_core" | "workspace" | "thirdparty";
+}
+
+interface AuditedPackageGraph {
+  readonly externalDeps: readonly AuditedPackageDependency[];
+}
+
+function readAuditedPackageGraph(
+  text: string,
+  owner: ReturnType<typeof normalizeWorkspacePackage>,
+): AuditedPackageGraph {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text) as unknown;
+  } catch {
+    throw new Error(`Package graph for ${owner.name} is malformed.`);
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error(`Package graph for ${owner.name} must contain an object.`);
+  }
+  const expectedName = `@galerina/${owner.name.replace(/^galerina-/, "")}`;
+  if (!("packageName" in parsed) || parsed.packageName !== expectedName) {
+    throw new Error(`Package graph for ${owner.name} has the wrong package identity.`);
+  }
+  if (!("externalDeps" in parsed) || !Array.isArray(parsed.externalDeps)) {
+    throw new Error(`Package graph for ${owner.name} has no external dependency array.`);
+  }
+  const externalDeps = parsed.externalDeps.map((entry, index) => {
+    if (
+      typeof entry !== "object" ||
+      entry === null ||
+      Array.isArray(entry) ||
+      !("specifier" in entry) ||
+      typeof entry.specifier !== "string" ||
+      entry.specifier.length === 0 ||
+      !("kind" in entry) ||
+      (entry.kind !== "node_core" &&
+        entry.kind !== "workspace" &&
+        entry.kind !== "thirdparty")
+    ) {
+      throw new Error(
+        `Package graph for ${owner.name} has malformed external dependency ${index}.`,
+      );
+    }
+    return { specifier: entry.specifier, kind: entry.kind };
+  });
+  return { externalDeps };
 }
 
 function readPackageDescription(text?: string): string | undefined {
@@ -1120,21 +1174,6 @@ function readPackageDescription(text?: string): string | undefined {
   }
 
   return undefined;
-}
-
-function readPackageDependencies(text: string): readonly string[] {
-  try {
-    const parsed = JSON.parse(text) as {
-      readonly dependencies?: Readonly<Record<string, string>>;
-      readonly devDependencies?: Readonly<Record<string, string>>;
-    };
-    return [
-      ...Object.keys(parsed.dependencies ?? {}),
-      ...Object.keys(parsed.devDependencies ?? {}),
-    ];
-  } catch {
-    return [];
-  }
 }
 
 function readMarkdownSummary(text?: string): string | undefined {
