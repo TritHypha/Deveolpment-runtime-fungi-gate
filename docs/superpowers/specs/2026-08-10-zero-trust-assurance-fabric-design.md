@@ -619,6 +619,43 @@ as negative evidence; only the terminal green rerun supports the checkpoint.
 A subsequent post-regression run correctly refused 88/89 on a stale code index;
 the owning generator and exact index check passed before the final green close.
 
+## Chapter 2 implementation checkpoint
+
+The owner-approved Chapter 2 dependency fabric is implemented on 2026-08-10.
+It remains a non-authorizing bootstrap boundary:
+
+- a closed evidence DAG validates exact node and edge identities, rejects
+  ambiguity and cycles, and propagates `-1` ahead of `0` through every admitted
+  predecessor edge;
+- bounded generated-evidence intake binds regular artifact bytes, tool bytes,
+  strict provenance, repository build point and explicit external-input state;
+- the roadmap/subway aggregate depends on seven exact predecessors: project
+  graph, KB graph, dev-tool index, percentage evidence, TypeScript-family
+  retirement, status ledger and pinned SLIDE evidence;
+- the percentage and subway outputs have distinct owners and provenance
+  sidecars; stale evidence renders `UNKNOWN`, while malformed or denied
+  evidence prevents publication;
+- pinned SLIDE reference evidence is reconstructed from every manifest-listed
+  blob at the exact immutable commit. It remains reference-only and cannot
+  release execution or production authority.
+
+Fresh focused Chapter 1+2 evidence is **72/72** with zero skips. The complete
+package ledger is **100/100 packages / 9,498 tests / zero failures** and the
+complete tooling lane is **526 total / 515 pass / 11 intentional skip / zero
+fail**. Two exhaustive attempts are preserved as negative evidence: the first
+refused on a stale Golden runtime closure; the next passed 88/89 and refused
+only because the repaired governance status ledger changed a Golden input. The
+owning Golden generator was regenerated, then the uninterrupted terminal run
+passed **89/89 in 590.4 seconds**, including **11/11 checked examples and 11/11
+execution vectors**. Refused attempts remain negative evidence rather than
+being rewritten as passes.
+
+At the exact pre-publication build point all eight DAG nodes evaluate `+1`,
+the sole root is `roadmap-subway`, and the report still states
+`authorizing: false`. `CURRENT` means only that this evidence view is current.
+It does not release VOK, production, signing, package-conversion or retirement
+authority, and any later commit requires re-admission.
+
 ## Test design
 
 Implementation follows red-green TDD and includes:

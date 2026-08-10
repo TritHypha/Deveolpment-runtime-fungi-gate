@@ -732,11 +732,12 @@ must not displace the critical path below or grant production authority.
   `galerina.workspace.json` (98 registered / 99 present). The package is now a
   registered top-level peer, its boundary output is generated, and the fresh
   graph suite passes **5/5**. No nested package or graph exemption was added.
-- [x] Regenerate the exact TypeScript-retirement ledger. Current debt is
-  **516 tracked package `.ts` paths (501 in `src`)**, **111/111 unexecuted
-  `.fungi` sources**, **0/42 owned host boundaries**, **95 package-local
-  `node_modules` trees**, and **one nested native identity**. Earlier 497/38
-  counts in dated sections are historical and must not drive decisions.
+- [x] Regenerate the exact TypeScript-retirement ledger. At this 2026-08-08
+  checkpoint the debt was **516 tracked package `.ts` paths (501 in `src`)**,
+  **111/111 unexecuted `.fungi` sources**, **0/42 owned host boundaries**,
+  **95 package-local `node_modules` trees**, and **one nested native identity**.
+  The current 2026-08-10 values are recorded in the Chapter 2 checkpoint below;
+  earlier counts are historical and must not drive decisions.
 - [x] Re-run the independent SLIDE baseline: contract manifest/integrity
   **66 files**, tool manifest **67 files**, security closure `+1` with evidence
   K3 `0`, and **713/713 tests across 73 suites** all pass. This is bounded
@@ -1071,8 +1072,8 @@ authority may be inferred from this TODO.
   receipts, signed flat-root dependency authority, then per-file parity,
   ledger/consumer switch and deletion.
 - Full retirement remains eleven top-level work packages. The controlling
-  audit correctly refuses with 516 tracked package TypeScript paths (501 in
-  `src`), 111 unexecuted `.fungi`, 42 unowned host boundaries, 95
+  audit correctly refuses with 519 tracked package TypeScript paths (504 in
+  `src`), 111 unexecuted `.fungi`, 44 unowned host boundaries, 95
   package-local `node_modules` trees and one nested package identity.
 - The current detailed source is
   `docs/reports/full-fungi-to-slide-retirement-blockers-2026-08-02.md`.
@@ -7177,3 +7178,43 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
   (#146, #156/#157 start, #158) and CI secret-scan residual (#149) remain
   separate work and receive no DSS completion credit.
 - [ ] Hygiene: 2 untracked `RESUME-2026-07-01-continue*.md` at repo root; LICENSE copyright fill uncommitted.
+
+## VOK assurance fabric Chapter 2 checkpoint - 2026-08-10
+
+- [x] Install a closed, branded, immutable evidence DAG with the exact
+  `DERIVED_FROM`, `CHECKED_BY`, `TESTS`, `PRODUCES`, `BLOCKS`, `SUPERSEDES`
+  and `REPLACES` edge vocabulary. Deny propagates ahead of unknown; cycles,
+  duplicate identities, unknown endpoints, sparse arrays, accessors, proxies,
+  `null` and non-finite values refuse.
+- [x] Bind generated evidence to bounded regular artifact bytes, exact tool
+  bytes, strict provenance, repository build point and required external-input
+  digest. Symlinks, traversal, alternate-data-stream syntax, Unicode/path
+  ambiguity and byte-current output from an older build point fail closed.
+- [x] Bind the roadmap and subway to the project graph, KB graph, dev-tool
+  index, percentage evidence, TypeScript-family retirement inventory, status
+  ledger and pinned SLIDE evidence through one declared dependency root.
+- [x] Split percentage and subway provenance ownership. A malformed or denied
+  predecessor prevents publication; a stale predecessor renders `UNKNOWN`.
+- [x] Rebuild the current retirement ledger: **519 tracked package TypeScript
+  paths (504 in `src`)**, **111 unexecuted `.fungi`**, **44 unowned host
+  boundaries**, **95 package-local `node_modules` trees**, and **one nested
+  package identity**. These are open retirement obligations, not completion.
+- [x] Fresh focused evidence is **72/72** with zero skips. The complete package
+  lane is **100/100 packages and 9,498/9,498 tests**. The tooling lane is
+  **526 total: 515 pass, 11 intentional skip, zero fail**.
+- [x] Preserve refusal evidence. The first regenerated phase-close refused on
+  the stale Golden runtime closure; after that owner was regenerated, the next
+  **88/89** run correctly refused because the status-ledger repair changed a
+  governance input. After regenerating that exact owner, the uninterrupted
+  terminal run passed **89/89 in 590.4 seconds**, including Golden **11/11
+  checked and 11/11 execution vectors**. Refused attempts remain negative
+  evidence and are not rewritten as passes.
+- [x] Keep the assurance DAG explicitly non-authorizing. At the exact
+  pre-publication build point all eight nodes evaluate current, but
+  `authorizing` remains false and K3 evidence remains `0`. Publication or a new
+  commit must be re-admitted; no production, package-conversion, signing or
+  retirement authority follows.
+- [ ] Chapter 3: add semantic route/package conservation, requirement-test
+  mappings, detector liveness and complete executable-family coverage.
+- [ ] Chapter 4: add transitive tool indexing, execution deduplication, legacy
+  replacement lifecycle and the reviewed authority transition.

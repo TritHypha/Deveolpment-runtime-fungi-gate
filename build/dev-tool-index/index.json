@@ -4,7 +4,7 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9498,
-    "devTools": 163,
+    "devTools": 164,
     "auditTools": 87,
     "toolsInCadence": 64,
     "proofs": 40
@@ -3221,6 +3221,19 @@
       ]
     },
     {
+      "name": "verify-slide-reference-evidence.mjs",
+      "category": "util",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": false,
+      "concerns": [
+        "signing/fusion",
+        "provenance",
+        "diagnostics",
+        "graph/index"
+      ]
+    },
+    {
       "name": "wat-invalid-triage.mjs",
       "category": "util",
       "purpose": "(no header description)",
@@ -3358,7 +3371,8 @@
       "rebrand-tmf-to-spore.mjs",
       "repoint-kb-refs.mjs",
       "verify-artifacts.mjs",
-      "verify-platform-durability-evidence.mjs"
+      "verify-platform-durability-evidence.mjs",
+      "verify-slide-reference-evidence.mjs"
     ],
     "package-border": [
       "audit-allowlist-sensitive.mjs",
@@ -3471,6 +3485,7 @@
       "repoint-kb-refs.mjs",
       "subject-galerina-compile.mjs",
       "verify-artifacts.mjs",
+      "verify-slide-reference-evidence.mjs",
       "wat-invalid-triage.mjs"
     ],
     "sensitive-allowlist": [
@@ -3616,7 +3631,8 @@
       "rebuild-fusable-packages.mjs",
       "release-evidence-authority-cli.mjs",
       "verify-artifacts.mjs",
-      "verify-platform-durability-evidence.mjs"
+      "verify-platform-durability-evidence.mjs",
+      "verify-slide-reference-evidence.mjs"
     ],
     "doc-drift": [
       "audit-artifact-drift.mjs",
@@ -3923,6 +3939,7 @@
       "run-phase-close.mjs",
       "emit-doc-wat.mjs",
       "generate-sbom.mjs",
+      "verify-slide-reference-evidence.mjs",
       "wat-invalid-triage.mjs"
     ],
     "secrets/privacy": [

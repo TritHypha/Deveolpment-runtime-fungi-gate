@@ -99,7 +99,7 @@
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-router/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-state/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web/node_modules'",
-    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 516",
+    "post-SLIDE retirement requires zero tracked package TypeScript paths; found 519",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-api-protocol-rest/src/index.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi'",
@@ -248,6 +248,8 @@
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-hypha/src/extract.mjs'",
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-hypha/src/namesets.mjs'",
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-hypha/src/queries.mjs'",
+    "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-impact/src/git-changes.mjs'",
+    "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-impact/src/impact-plan.mjs'",
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-security/conformance-scan.mjs'",
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-wasmtime-oracle/src/admission.rs'",
     "post-SLIDE retirement forbids unowned host bridge 'packages-galerina/galerina-devtools-wasmtime-oracle/src/lib.rs'",
@@ -646,6 +648,9 @@
     "packages-galerina/galerina-framework-app-kernel/src/host-floor.ts",
     "packages-galerina/galerina-framework-app-kernel/src/index.ts",
     "packages-galerina/galerina-framework-app-kernel/src/kernel.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/node-util-shim.d.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/production-boot-composition-candidate.ts",
+    "packages-galerina/galerina-framework-app-kernel/src/production-slide-restore-admission.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-activation-simulator.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-authority.ts",
     "packages-galerina/galerina-framework-app-kernel/src/registry-durability-admission.ts",
@@ -927,6 +932,8 @@
     "packages-galerina/galerina-devtools-hypha/src/extract.mjs",
     "packages-galerina/galerina-devtools-hypha/src/namesets.mjs",
     "packages-galerina/galerina-devtools-hypha/src/queries.mjs",
+    "packages-galerina/galerina-devtools-impact/src/git-changes.mjs",
+    "packages-galerina/galerina-devtools-impact/src/impact-plan.mjs",
     "packages-galerina/galerina-devtools-security/conformance-scan.mjs",
     "packages-galerina/galerina-devtools-wasmtime-oracle/src/admission.rs",
     "packages-galerina/galerina-devtools-wasmtime-oracle/src/lib.rs",
@@ -5627,6 +5634,42 @@
       "retirementState": "physical-typescript-present"
     },
     {
+      "path": "packages-galerina/galerina-framework-app-kernel/src/node-util-shim.d.ts",
+      "package": "galerina-framework-app-kernel",
+      "dependencyTranche": "T1-trust-root",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-framework-app-kernel",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-typescript-present"
+    },
+    {
+      "path": "packages-galerina/galerina-framework-app-kernel/src/production-boot-composition-candidate.ts",
+      "package": "galerina-framework-app-kernel",
+      "dependencyTranche": "T1-trust-root",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-framework-app-kernel",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-typescript-present"
+    },
+    {
+      "path": "packages-galerina/galerina-framework-app-kernel/src/production-slide-restore-admission.ts",
+      "package": "galerina-framework-app-kernel",
+      "dependencyTranche": "T1-trust-root",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-framework-app-kernel",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-typescript-present"
+    },
+    {
       "path": "packages-galerina/galerina-framework-app-kernel/src/registry-activation-simulator.ts",
       "package": "galerina-framework-app-kernel",
       "dependencyTranche": "T1-trust-root",
@@ -7128,7 +7171,7 @@
     }
   ],
   "topology": {
-    "identityCount": 100,
+    "identityCount": 101,
     "deferredNested": [],
     "nodeModulesPaths": [
       "galerina-ai-agent/node_modules",
@@ -7229,12 +7272,12 @@
     ]
   },
   "totals": {
-    "ts": 501,
-    "allTrackedTs": 516,
+    "ts": 504,
+    "allTrackedTs": 519,
     "twinned": 29,
     "compilerCore": 116,
     "floor": 17,
-    "program": 339,
+    "program": 342,
     "fungiInSrc": 111,
     "packages": 95,
     "finderDrift": 0,
@@ -7249,9 +7292,9 @@
     "candidateFungi": 2,
     "executedFungi": 0,
     "unexecutedFungi": 111,
-    "hostBridges": 42,
+    "hostBridges": 44,
     "ownedHostBridges": 0,
-    "unownedHostBridges": 42,
+    "unownedHostBridges": 44,
     "nestedNativePackages": 1,
     "nodeModulesTrees": 95
   },
@@ -7603,7 +7646,7 @@
       "fungi": 0
     },
     "galerina-framework-app-kernel": {
-      "ts": 20,
+      "ts": 23,
       "twinned": 8,
       "fungi": 12
     },
