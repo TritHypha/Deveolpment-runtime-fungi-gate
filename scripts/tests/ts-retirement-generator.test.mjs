@@ -39,8 +39,9 @@ function command(root, executable, args) {
 }
 
 /**
- * Create three tracked TypeScript files, two with exact same-package Fungi
- * twins, and bind one compiler plus one governed twin in the authority ledgers.
+ * Create three tracked TypeScript sources plus every other executable-family
+ * extension, two exact same-package Fungi twins, and one compiler plus one
+ * governed authority-ledger entry.
  */
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "ts-retirement-generator-"));
@@ -69,6 +70,13 @@ function fixture() {
     "packages-galerina/galerina-core-compiler/src/self-hosted/parser.fungi",
     "pure flow parse() -> Bool { return true }\n",
   );
+  write(root, "packages-galerina/galerina-core-compiler/types/api.d.ts", "export type Api = string;\n");
+  write(root, "packages-galerina/galerina-core-compiler/src/module.mts", "export const moduleValue = 1;\n");
+  write(root, "packages-galerina/galerina-core-compiler/src/common.cts", "export const commonValue = 1;\n");
+  write(root, "packages-galerina/galerina-core-compiler/src/runtime.mjs", "export const runtimeValue = 1;\n");
+  write(root, "packages-galerina/galerina-core-compiler/src/legacy.js", "export const legacyValue = 1;\n");
+  write(root, "packages-galerina/galerina-core-compiler/src/legacy-common.cjs", "exports.value = 1;\n");
+  write(root, "docs/executable-family-example.md", "A literal example named pretend.mjs is documentation only.\n");
   write(
     root,
     "docs/security/rd0528-compiler-authoritative-stages.json",
@@ -93,6 +101,11 @@ function fixture() {
   assert.equal(
     command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
     0,
+  );
+  write(
+    root,
+    "packages-galerina/galerina-core-compiler/src/untracked.mjs",
+    "export const untracked = true;\n",
   );
   return root;
 }
@@ -123,6 +136,60 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
     assert.equal(generated.status, 0, generated.stderr);
     const graph = JSON.parse(readFileSync(jsonPath, "utf8"));
     assert.equal(graph.totals.ts, 3);
+    assert.equal(graph.totals.allTrackedTs, 4);
+    assert.equal(graph.totals.allTrackedExecutable, 9);
+    assert.equal(graph.totals.tsSource, 3);
+    assert.equal(graph.totals.declarationTs, 1);
+    assert.equal(graph.totals.mts, 1);
+    assert.equal(graph.totals.cts, 1);
+    assert.equal(graph.totals.mjs, 1);
+    assert.equal(graph.totals.js, 1);
+    assert.equal(graph.totals.cjs, 1);
+    assert.deepEqual(Object.keys(graph.executableFamily), [
+      "ts",
+      "declarationTs",
+      "mts",
+      "cts",
+      "mjs",
+      "js",
+      "cjs",
+    ]);
+    assert.deepEqual(graph.executableFamily.ts, [
+      "packages-galerina/galerina-core-compiler/src/compiler.ts",
+      "packages-galerina/galerina-core-compiler/src/parser.ts",
+      "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
+    ]);
+    assert.deepEqual(graph.executableFamily.declarationTs, [
+      "packages-galerina/galerina-core-compiler/types/api.d.ts",
+    ]);
+    assert.deepEqual(graph.executableFamily.mts, [
+      "packages-galerina/galerina-core-compiler/src/module.mts",
+    ]);
+    assert.deepEqual(graph.executableFamily.cts, [
+      "packages-galerina/galerina-core-compiler/src/common.cts",
+    ]);
+    assert.deepEqual(graph.executableFamily.mjs, [
+      "packages-galerina/galerina-core-compiler/src/runtime.mjs",
+    ]);
+    assert.deepEqual(graph.executableFamily.js, [
+      "packages-galerina/galerina-core-compiler/src/legacy.js",
+    ]);
+    assert.deepEqual(graph.executableFamily.cjs, [
+      "packages-galerina/galerina-core-compiler/src/legacy-common.cjs",
+    ]);
+    assert.deepEqual(graph.allTrackedExecutablePaths, [
+      ...graph.executableFamily.ts,
+      ...graph.executableFamily.declarationTs,
+      ...graph.executableFamily.mts,
+      ...graph.executableFamily.cts,
+      ...graph.executableFamily.mjs,
+      ...graph.executableFamily.js,
+      ...graph.executableFamily.cjs,
+    ].sort());
+    assert.match(
+      graph.postSlideViolations.join("\n"),
+      /tracked package executable-family paths; found 9/,
+    );
     assert.equal(graph.totals.twinned, 2);
     assert.equal(graph.totals.compilerCore, 1);
     assert.equal(graph.totals.compilerAuthoritativeFlips, 1);

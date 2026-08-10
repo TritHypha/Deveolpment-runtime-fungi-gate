@@ -207,6 +207,47 @@ function packageOf(path) {
   return path.split("/")[1] ?? "";
 }
 
+const EXECUTABLE_FAMILY_KEYS = Object.freeze([
+  "ts",
+  "declarationTs",
+  "mts",
+  "cts",
+  "mjs",
+  "js",
+  "cjs",
+]);
+
+function executableClass(path) {
+  if (path.endsWith(".d.ts")) return "declarationTs";
+  if (path.endsWith(".ts")) return "ts";
+  if (path.endsWith(".mts")) return "mts";
+  if (path.endsWith(".cts")) return "cts";
+  if (path.endsWith(".mjs")) return "mjs";
+  if (path.endsWith(".js")) return "js";
+  if (path.endsWith(".cjs")) return "cjs";
+  return "notExecutableFamily";
+}
+
+function classifyExecutableFamily(packagePaths) {
+  const family = Object.fromEntries(
+    EXECUTABLE_FAMILY_KEYS.map((key) => [key, []]),
+  );
+  for (const path of packagePaths) {
+    const kind = executableClass(path);
+    if (kind !== "notExecutableFamily") family[kind].push(path);
+  }
+  for (const key of EXECUTABLE_FAMILY_KEYS) family[key].sort();
+  return family;
+}
+
+function fungiReplacementPath(path) {
+  if (path.endsWith(".d.ts")) return `${path.slice(0, -5)}.fungi`;
+  for (const suffix of [".ts", ".mts", ".cts", ".mjs", ".js", ".cjs"]) {
+    if (path.endsWith(suffix)) return `${path.slice(0, -suffix.length)}.fungi`;
+  }
+  throw new Error(`executable-family path has no admitted extension: ${path}`);
+}
+
 function trancheOf(pkg) {
   if (pkg === "galerina-core-compiler") return "T0-compiler";
   if (pkg === "galerina-framework-app-kernel" || pkg === "galerina-core-security") {
@@ -652,16 +693,18 @@ export function buildRetirementGraph(root = ROOT) {
     root,
     "packages-galerina/*/src/**/*.fungi",
   ).filter((p) => scope.test(p));
-  const allTrackedTsPaths = findTrackedAt(
-    root,
-    "packages-galerina/**/*.ts",
-  )
-    .filter((path) => path.startsWith("packages-galerina/"))
-    .sort();
   const trackedRepositoryFiles = new Set(findTrackedAt(root));
   const allTrackedPackageFiles = [...trackedRepositoryFiles]
     .filter((path) => path.startsWith("packages-galerina/"))
     .sort();
+  const executableFamily = classifyExecutableFamily(allTrackedPackageFiles);
+  const allTrackedExecutablePaths = EXECUTABLE_FAMILY_KEYS
+    .flatMap((key) => executableFamily[key])
+    .sort();
+  const allTrackedTsPaths = [
+    ...executableFamily.ts,
+    ...executableFamily.declarationTs,
+  ].sort();
   const allTrackedFungiPaths = [...fungi].sort();
   const allTrackedFungi = new Set(allTrackedFungiPaths);
   const hostScanViolations = [];
@@ -772,13 +815,10 @@ export function buildRetirementGraph(root = ROOT) {
     else program++;
   }
   for (const f of fungi) (perPackage[pkgOf(f)] ??= { ts: 0, twinned: 0, fungi: 0 }).fungi++;
-  const retirementLedger = allTrackedTsPaths.map((path) => {
+  const retirementLedger = allTrackedExecutablePaths.map((path) => {
     const pkg = pkgOf(path);
-    const replacement = path.endsWith(".ts")
-      ? `${path.slice(0, -3)}.fungi`
-      : null;
-    const hasReplacement = replacement !== null
-      && allTrackedFungi.has(replacement);
+    const replacement = fungiReplacementPath(path);
+    const hasReplacement = allTrackedFungi.has(replacement);
     const authoritative = hasReplacement && executedFungi.has(replacement);
     return {
       path,
@@ -799,7 +839,7 @@ export function buildRetirementGraph(root = ROOT) {
         : hasReplacement
           ? "candidate-only-unexecuted"
           : "replacement-absent",
-      retirementState: "physical-typescript-present",
+      retirementState: "physical-executable-family-present",
     };
   });
 
@@ -835,9 +875,9 @@ export function buildRetirementGraph(root = ROOT) {
     ...postSlideAuthority.violations,
     ...topologyViolations,
   ];
-  if (allTrackedTsPaths.length > 0) {
+  if (allTrackedExecutablePaths.length > 0) {
     postSlideViolations.push(
-      `post-SLIDE retirement requires zero tracked package TypeScript paths; found ${allTrackedTsPaths.length}`,
+      `post-SLIDE retirement requires zero tracked package executable-family paths; found ${allTrackedExecutablePaths.length}`,
     );
   }
   for (const path of unexecutedFungiPaths) {
@@ -853,10 +893,12 @@ export function buildRetirementGraph(root = ROOT) {
   const postSlideReady = postSlideViolations.length === 0;
   return {
     generated: "ts-retirement-graph",
-    terminalReady: allTrackedTsPaths.length === 0,
+    terminalReady: allTrackedExecutablePaths.length === 0,
     postSlideReady,
     postSlideViolations,
     allTrackedTsPaths,
+    allTrackedExecutablePaths,
+    executableFamily,
     candidateFungiPaths,
     unexecutedFungiPaths,
     unownedHostBridgePaths,
@@ -865,6 +907,14 @@ export function buildRetirementGraph(root = ROOT) {
     totals: {
       ts: ts.length,
       allTrackedTs: allTrackedTsPaths.length,
+      allTrackedExecutable: allTrackedExecutablePaths.length,
+      tsSource: executableFamily.ts.length,
+      declarationTs: executableFamily.declarationTs.length,
+      mts: executableFamily.mts.length,
+      cts: executableFamily.cts.length,
+      mjs: executableFamily.mjs.length,
+      js: executableFamily.js.length,
+      cjs: executableFamily.cjs.length,
       twinned,
       compilerCore,
       floor,
@@ -905,6 +955,13 @@ if (process.argv.includes("--self-test")) {
   const ok = (c, m) => { console.log(`  ${c ? "✅" : "❌"} ${m}`); if (!c) process.exitCode = 1; };
   const g = buildRetirementGraph();
   ok(g.totals.ts > 300, `corpus found: ${g.totals.ts} tracked .ts in package src trees`);
+  ok(
+    EXECUTABLE_FAMILY_KEYS.reduce(
+      (sum, key) => sum + g.executableFamily[key].length,
+      0,
+    ) === g.totals.allTrackedExecutable,
+    "complete executable-family classes conserve the terminal denominator",
+  );
   ok(g.totals.finderDrift <= 0 || g.totals.finderDrift === -1, g.totals.finderDrift === -1
     ? "myco unavailable — git index alone (degraded but complete for tracked)"
     : `graph finder covers the tracked corpus (drift=${g.totals.finderDrift})`);
@@ -959,16 +1016,16 @@ if (POST_SLIDE) {
 if (TERMINAL_CHECK) {
   if (!g.terminalReady) {
     console.error(
-      `ts-retirement: terminal refusal — ${t.allTrackedTs} tracked package TypeScript path(s) remain`,
+      `ts-retirement: terminal refusal — ${t.allTrackedExecutable} tracked package executable-family path(s) remain`,
     );
-    for (const path of g.allTrackedTsPaths) console.error(`  ${path}`);
+    for (const path of g.allTrackedExecutablePaths) console.error(`  ${path}`);
     process.exit(1);
   }
-  console.log("ts-retirement: terminal package TypeScript gate GREEN (0 tracked paths)");
+  console.log("ts-retirement: terminal package executable-family gate GREEN (0 tracked paths)");
   process.exit(0);
 }
 const md = [
-  `# .ts retirement graph (${t.allTrackedTs} tracked package .ts; ${t.ts} in src)`,
+  `# Executable-family retirement graph (${t.allTrackedExecutable} tracked package paths; ${t.allTrackedTs} .ts-family)`,
   ``,
   `Regenerate: \`node scripts/ts-retirement-graph.mjs\` (graph-all 7/7). The % audit reads these numbers LIVE.`,
   ``,
@@ -981,7 +1038,9 @@ const md = [
   ``,
   `Authority ledgers: ${t.compilerAuthoritativeFlips} compiler + ${t.governedAuthoritativeFlips} governed = ${t.authoritativeFlips} authoritative twins.`,
   ``,
-  `Terminal physical retirement: ${g.terminalReady ? "GREEN" : `OPEN — ${t.allTrackedTs} tracked package TypeScript paths remain`}.`,
+  `Complete executable family: ${t.tsSource} .ts source · ${t.declarationTs} .d.ts · ${t.mts} .mts · ${t.cts} .cts · ${t.mjs} .mjs · ${t.js} .js · ${t.cjs} .cjs.`,
+  ``,
+  `Terminal physical retirement: ${g.terminalReady ? "GREEN" : `OPEN — ${t.allTrackedExecutable} tracked package executable-family paths remain`}.`,
   ``,
   `Post-SLIDE authority: ${g.postSlideReady ? "GREEN" : "OPEN"} — ${t.candidateFungi} non-authorizing candidate(s); ${t.executedFungi}/${t.allTrackedFungi} production Fungi sources cryptographically admitted; ${t.ownedHostBridges}/${t.hostBridges} host boundaries owned; ${t.nodeModulesTrees} node_modules trees.`,
   ``,
@@ -1017,7 +1076,8 @@ if (CHECK) {
   for (const [path, content] of generatedOutputs) writeFileSync(path, content);
 }
 console.log(
-  `ts-retirement: ${t.ts} .ts · ${t.twinned} same-stem twins (→#143 inventory) · `
+  `ts-retirement: ${t.allTrackedExecutable} executable-family (${t.allTrackedTs} .ts-family · ${t.mjs} .mjs · ${t.js} .js) · `
+  + `${t.ts} src .ts · ${t.twinned} same-stem twins (→#143 inventory) · `
   + `authority ${t.authoritativeFlips}/${t.compilerStageTotal + t.governedTwinTotal} `
   + `(${t.compilerAuthoritativeFlips}/${t.compilerStageTotal} compiler + `
   + `${t.governedAuthoritativeFlips}/${t.governedTwinTotal} governed) · `
