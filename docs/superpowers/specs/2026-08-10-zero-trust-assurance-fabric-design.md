@@ -39,9 +39,10 @@ checks remain valuable, but their composition can report a misleading shape:
 - the committed percentage view matched regenerated content while its embedded
   Git provenance named an older dirty build, because Git identity is excluded
   from that freshness comparison;
-- the structural code graph was current at the repository head but exposed only
-  one `TESTS` edge, classified regex literals as routes and reported zero package
-  fan-in/fan-out despite cross-package calls;
+- the structural index operation reported the repository head, but a query of
+  its own `Branch` node returned an unrelated older branch and SHA; the same
+  graph exposed only one `TESTS` edge, classified regex literals as routes and
+  reported zero package fan-in/fan-out despite cross-package calls;
 - the dev-tool index found 40 audit/lint tools outside cadence by scanning only
   direct filename literals in `run-phase-close.mjs`, so tools reached through an
   orchestrator can appear ungated;
@@ -269,7 +270,8 @@ Graph checks cover semantic conservation, not only parseability and node count:
 - regex literals and documentation examples cannot become live routes;
 - package fan-in/fan-out agrees with derived cross-package edges;
 - written nodes and edges agree with expected counts;
-- the indexed commit equals the repository build point;
+- the live Git head, index response build point and queryable `Branch` node all
+  agree exactly;
 - every rule has a planted defect proving it becomes red.
 
 The graph stores routing and relationships. Detailed reports remain in focused
@@ -454,6 +456,8 @@ Implementation follows red-green TDD and includes:
 14. a legacy WAT/Wasm/DSS control whose premature retirement is refused;
 15. a same-user hostile-process fixture explicitly demonstrating that the
     compatibility adapter is not an OS sandbox.
+16. an index response that claims the current head while its queryable `Branch`
+    node remains stale; the semantic graph gate must refuse it.
 
 ## Acceptance criteria
 
@@ -467,8 +471,8 @@ Implementation follows red-green TDD and includes:
 - Git provenance and external-input digests participate in freshness.
 - The dev-tool index resolves transitive orchestrators and explains intentional
   on-demand/legacy exclusions.
-- Structural graph quality tests, routes and package dependencies semantically,
-  with a negative control for each invariant.
+- Structural graph quality tests build-point agreement, routes and package
+  dependencies semantically, with a negative control for each invariant.
 - Release-critical requirements have positive and refusal evidence mappings;
   the unmapped legacy baseline can only shrink.
 - Exhaustive planning executes each package test obligation once.
