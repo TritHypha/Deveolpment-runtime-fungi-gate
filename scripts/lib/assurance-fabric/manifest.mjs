@@ -35,6 +35,7 @@ const BUILTIN_EXECUTABLES = new Set(["node", "npm", "git", "cargo"]);
 const SHELL_METACHARACTERS = /[;&|`$<>\u0000\r\n]/u;
 const WINDOWS_DRIVE_RELATIVE = /^[A-Za-z]:/u;
 const acceptedManifests = new WeakSet();
+const acceptedEntries = new WeakSet();
 
 class ManifestRefusal extends Error {
   constructor(code, detail) {
@@ -293,6 +294,7 @@ export function validateAssuranceManifest(value, root) {
     const entries = rawEntries.map((entry, index) => cloneEntry(entry, normalizedRoot, index));
     verifyDependencies(entries);
     const manifest = deepFreeze({ schemaVersion: 1, entries });
+    for (const entry of manifest.entries) acceptedEntries.add(entry);
     acceptedManifests.add(manifest);
     return Object.freeze({ kind: "accepted", value: manifest });
   } catch (error) {
@@ -305,6 +307,10 @@ export function validateAssuranceManifest(value, root) {
       detail: "manifest validation refused an unclassified input",
     });
   }
+}
+
+export function isValidatedAssuranceEntry(value) {
+  return value !== null && typeof value === "object" && acceptedEntries.has(value);
 }
 
 export function selectCadenceEntries(manifest, cadence) {
