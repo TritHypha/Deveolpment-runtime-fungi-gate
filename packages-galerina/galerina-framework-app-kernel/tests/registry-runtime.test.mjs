@@ -6,6 +6,7 @@ import {
 import { describe, it } from "node:test";
 
 import {
+  ERR_REGISTRY_RUNTIME_IO,
   loadRegistryForBootstrap,
   loadProductionRegistry,
   loadProductionRegistryFromRotationState,
@@ -99,14 +100,39 @@ function productionOptions(overrides = {}) {
 }
 
 describe("production registry runtime", () => {
-  it("loads the canonical signed index through its root delegation before admission", async () => {
-    const runtime = await loadRegistryForBootstrap(productionOptions());
+  it("refuses bootstrap while no current signed live index is published", async () => {
+    await assert.rejects(
+      loadRegistryForBootstrap(productionOptions()),
+      (error) => error?.code === ERR_REGISTRY_RUNTIME_IO
+        && error?.message === "bootstrap registry index is missing or unreadable.",
+    );
+  });
 
-    assert.equal(runtime.rootKeyId, ROOT_KEY_ID);
+  it("caller freshness and revocation scalars cannot revive an absent live index", async () => {
+    const denied = [
+      productionOptions({ isRevoked: () => true }),
+      productionOptions({ minDelegationSerial: 1 }),
+      productionOptions({
+        minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
+      }),
+    ];
+
+    for (const options of denied) {
+      await assert.rejects(
+        loadRegistryForBootstrap(options),
+        (error) => error?.code === ERR_REGISTRY_RUNTIME_IO,
+      );
+    }
+  });
+
+  it("binds production loading to authenticated rotation floors and active identity", async () => {
+    const state = restoredProductionState();
+    const runtime = await loadProductionRegistry({
+      expectedRootKeyId: ROOT_KEY_ID,
+      rotationState: state,
+    });
     assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
-    assert.equal(runtime.delegationSerial, 1);
-    assert.equal(runtime.indexIssuedAt, "2026-07-30T16:33:10.307Z");
-    assert.equal(runtime.generationId, null);
+    assert.equal(runtime.generationId, ACCEPTED_GENERATION_ID);
     assert.deepEqual(
       runtime.admit(
         {
@@ -137,30 +163,6 @@ describe("production registry runtime", () => {
         },
       },
     );
-  });
-
-  it("refuses revoked and stale authority", async () => {
-    const denied = [
-      productionOptions({ isRevoked: () => true }),
-      productionOptions({ minDelegationSerial: 1 }),
-      productionOptions({
-        minIndexIssuedAt: "2026-07-30T16:33:10.307Z",
-      }),
-    ];
-
-    for (const options of denied) {
-      await assert.rejects(loadRegistryForBootstrap(options));
-    }
-  });
-
-  it("binds production loading to authenticated rotation floors and active identity", async () => {
-    const state = restoredProductionState();
-    const runtime = await loadProductionRegistry({
-      expectedRootKeyId: ROOT_KEY_ID,
-      rotationState: state,
-    });
-    assert.equal(runtime.operationalKeyId, OPERATIONAL_KEY_ID);
-    assert.equal(runtime.generationId, ACCEPTED_GENERATION_ID);
 
     await assert.rejects(loadProductionRegistryFromRotationState({
       expectedRootKeyId: ROOT_KEY_ID,
