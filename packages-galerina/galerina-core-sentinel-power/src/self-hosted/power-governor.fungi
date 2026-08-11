@@ -17,6 +17,17 @@
 /// PowerState codes: 0 NOMINAL · 1 THROTTLED · 2 SAFETY · 3 TERMINAL (a strictly-ordered heat ladder).
 /// KernelTier ranks (power draw, hottest→coolest): 0 native · 1 simd · 2 shadow. A HIGHER rank is COOLER.
 
+/// powerRank preserves KERNEL_POWER_ORDER.indexOf exactly. Canonical tier names receive their fixed
+/// rank; every other admitted String exits with the non-member rank -1.
+pure flow powerRank(kernel: String) -> Int
+contract { intent { "Map a kernel tier name to its fixed power rank; return -1 for a non-member." } }
+{
+  if kernel == "native" { return 0 }
+  if kernel == "simd" { return 1 }
+  if kernel == "shadow" { return 2 }
+  return 0 - 1
+}
+
 /// powerStateVerdict — map the current reading to a power-state. The host supplies the three
 /// at-or-above-threshold booleans (float compares are floor); the twin folds them TERMINAL-first, so the
 /// hottest crossed band always wins (fail-closed toward the safe/shadow end).
