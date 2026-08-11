@@ -62,7 +62,7 @@ test("channel factor ALLOW → kernel ADMITS (handler runs)", { skip }, async ()
   const { kernel, ran } = kernelWithSecureRoute();
   const channelVerdict = channelIdentityVerdict(goodCert());
   assert.equal(channelVerdict, 1); // the factor is +1
-  const res = await kernel.handle(req({ channelVerdict }));
+  const res = await kernel.handle(req({ channelVerdict, principalId: "principal-a" }));
   assert.notEqual(res.status, 401); // the KERNEL admitted on the +1 factor
   assert.equal(ran(), true);
 });
@@ -71,7 +71,7 @@ test("channel factor INDETERMINATE (revocation unknown) → kernel REFUSES (401)
   const { kernel, ran } = kernelWithSecureRoute();
   const channelVerdict = channelIdentityVerdict(goodCert({ revocation: "unknown" }));
   assert.equal(channelVerdict, 0); // the factor is 0 — no positive proof
-  const res = await kernel.handle(req({ channelVerdict }));
+  const res = await kernel.handle(req({ channelVerdict, principalId: "principal-a" }));
   assert.equal(res.status, 401); // the KERNEL's fail-closed fold denied it
   assert.equal(ran(), false);
 });
@@ -90,7 +90,7 @@ test("composed channel ∧ scope (both ALLOW) → kernel ADMITS", { skip }, asyn
     scopeVerdict(["secure.read"], ["secure.read", "other"]),
   ]);
   assert.equal(channelVerdict, 1);
-  const res = await kernel.handle(req({ channelVerdict }));
+  const res = await kernel.handle(req({ channelVerdict, principalId: "principal-a" }));
   assert.notEqual(res.status, 401);
   assert.equal(ran(), true);
 });

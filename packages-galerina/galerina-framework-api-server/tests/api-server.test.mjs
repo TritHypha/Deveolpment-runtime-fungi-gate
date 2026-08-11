@@ -22,9 +22,16 @@ function buildKernel() {
         method: "POST",
         path: "/charge",
         handler: "charge",
+        requestType: "ChargeRequest",
         auth: { mode: "public" },
       },
     ],
+    requestValidators: {
+      ChargeRequest(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value)
+          && Object.keys(value).length === 1 && Number.isFinite(value.amount);
+      },
+    },
     dispatch: {
       charge: () => ({ status: 200, body: { ok: true } }),
     },
@@ -104,7 +111,7 @@ test("POST /charge with valid JSON → 200 {ok:true}", async () => {
     const res = await request(port, {
       method: "POST",
       path: "/charge",
-      headers: JSON_HEADERS,
+      headers: { ...JSON_HEADERS, "idempotency-key": "charge-1" },
       body: JSON.stringify({ amount: 100 }),
     });
     assert.equal(res.status, 200);
@@ -177,12 +184,41 @@ test("channel verdict INDETERMINATE (0) → 401 (fail-closed), handler NOT run",
   });
 });
 
-test("channel verdict ALLOW (+1) → admits with NO Authorization header (handler runs)", async () => {
+test("channel verdict ALLOW (+1) without a principal identity → 401", async () => {
   await withSecureServer({ resolveChannelVerdict: () => Verdict.ALLOW }, async (port, ran) => {
+    const res = await request(port, { method: "GET", path: "/secure" });
+    assert.equal(res.status, 401);
+    assert.equal(ran.value, false);
+  });
+});
+
+test("channel ALLOW plus exact trusted principal evidence admits", async () => {
+  await withSecureServer({
+    resolveChannelVerdict: () => Verdict.ALLOW,
+    resolvePrincipal: () => ({ principalId: "principal-a", principalScopes: [] }),
+  }, async (port, ran) => {
     const res = await request(port, { method: "GET", path: "/secure" });
     assert.equal(res.status, 200);
     assert.equal(ran.value, true);
     assert.deepEqual(JSON.parse(res.body), { ok: true });
+  });
+});
+
+test("principal resolver accessors are refused without execution", async () => {
+  let getterCalls = 0;
+  const hostile = {};
+  Object.defineProperty(hostile, "principalId", {
+    enumerable: true,
+    get() { getterCalls += 1; return "attacker"; },
+  });
+  await withSecureServer({
+    resolveChannelVerdict: () => Verdict.ALLOW,
+    resolvePrincipal: () => hostile,
+  }, async (port, ran) => {
+    const res = await request(port, { method: "GET", path: "/secure" });
+    assert.equal(res.status, 401);
+    assert.equal(ran.value, false);
+    assert.equal(getterCalls, 0);
   });
 });
 

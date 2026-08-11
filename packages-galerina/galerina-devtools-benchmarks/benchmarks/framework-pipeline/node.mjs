@@ -29,10 +29,21 @@ const kernel = createAppKernel({
     method: "POST",
     path: "/orders",
     handler: "createOrder",
+    requestType: "BenchmarkOrderRequest",
+    idempotency: false,
     // The benchmark explicitly admits its bounded synthetic request volume;
     // production routes retain the secure 60/minute default.
     limits: { rate: "1000000/minute" },
   }],
+  requestValidators: {
+    BenchmarkOrderRequest(value) {
+      return value !== null && typeof value === "object" && !Array.isArray(value)
+        && Object.keys(value).length === 3
+        && Number.isSafeInteger(value.id)
+        && typeof value.item === "string"
+        && Number.isSafeInteger(value.qty);
+    },
+  },
   dispatch: { createOrder: (ctx) => ({ status: 200, body: { ok: true, id: ctx.json?.id ?? 0 } }) },
   auditSink: { emit() { auditCount++; } },   // non-retaining sink (real "emit to pipe" cost, no memory growth)
 });
@@ -44,6 +55,7 @@ function freshReq() {
     headers: { authorization: "Bearer t", "content-type": "application/json" },
     body: BODY, query: {}, requestId: "r", receivedAt: 0,
     channelVerdict: 1, // admitted upstream identity proof; header presence alone must never authorize
+    principalId: "benchmark-principal",
   };
 }
 

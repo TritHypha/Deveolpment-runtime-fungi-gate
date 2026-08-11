@@ -19,8 +19,8 @@
  *      only +1/ALLOW (e.g. a fully-validated, pinned, fresh-revocation client cert)
  *      authenticates the channel; 0/−1 deny every route. A `public` route removes
  *      only its application-credential requirement; it never overrides a configured
- *      channel refusal. A verified channel authenticates in lieu of a bearer token
- *      (mutual-TLS semantics); it does not relax any other gate. There are two ways to supply it:
+ *      channel refusal. A verified channel proves the transport factor; a required route also
+ *      requires a separate authenticated principal identity. There are two ways to supply the verdict:
  *        a. an explicit `resolveChannelVerdict` hook (advanced / custom transports);
  *        b. the built-in `tls` mode — pass key/cert (+ optional `ca`, `pinnedDigests`,
  *           `checkRevocation`, …) and the adapter stands up an HTTPS server, reads the
@@ -29,6 +29,8 @@
  *           `channelVerdict = decision.verdict`.
  *      When both are configured, the custom result is an ADDITIONAL factor: it cannot
  *      override or rescue a certificate failure. `undefined` means no additional opinion.
+ *      Admitted TLS derives a default principal ID from the exact leaf-certificate digest. A custom
+ *      transport must provide principal evidence through `resolvePrincipal`; request headers never do.
  *      Both are unset by default → no channel verdict is supplied → the adapter behaves
  *      exactly as before, leaving admission entirely to the kernel's own auth gate. A
  *      throwing resolver / unreadable cert factor DENIES (fail-closed).
@@ -41,6 +43,7 @@ import http from "node:http";
 import https from "node:https";
 import { randomUUID, createHash } from "node:crypto";
 import type { TLSSocket, DetailedPeerCertificate, SecureContextOptions } from "node:tls";
+import { types as utilTypes } from "node:util";
 import type { AppKernel, GalerinaKernelRequest, GalerinaKernelResponse } from "../../galerina-framework-app-kernel/dist/index.js";
 import type { HttpMethod } from "../../galerina-framework-app-kernel/dist/index.js";
 import { Verdict } from "../../galerina-tower-citizen/dist/index.js";
@@ -73,6 +76,16 @@ export interface RevocationResolution {
   readonly outcome: RevocationOutcome;
   /** OCSP/CRL response production time (epoch ms). Omitted ⇒ treated as "now". */
   readonly producedAt?: number;
+}
+
+/**
+ * Authenticated application identity supplied by a trusted deployment resolver after the channel
+ * has independently reached ALLOW. The adapter snapshots this exact object before the kernel sees it;
+ * request headers never populate these fields directly.
+ */
+export interface PrincipalResolution {
+  readonly principalId: string;
+  readonly principalScopes?: readonly string[];
 }
 
 /**
@@ -161,7 +174,7 @@ export interface CreateApiServerOptions {
    * This is the live end-to-end channel-verdict path: transport → cert-gate →
    * `channelVerdict` → kernel `decideAtBoundary` fold. The kernel folds it in its auth
    * step as a fail-closed mandatory factor whenever it is supplied (a +1 channel
-   * authenticates in lieu of a bearer token; 0/−1 deny even a public route). The
+   * proves only that factor; required routes still need principal evidence; 0/−1 deny even a public route). The
    * transport never pre-empts the pipeline.
    *
    * Default: unset → no channel verdict is supplied → the adapter behaves exactly as
@@ -173,6 +186,14 @@ export interface CreateApiServerOptions {
    * additional opinion" when TLS supplies the certificate verdict.
    */
   readonly resolveChannelVerdict?: (req: http.IncomingMessage) => Verdict | undefined;
+  /**
+   * Resolve the authenticated application principal after the independent channel factor reaches
+   * ALLOW. A throw, malformed value, accessor, proxy, duplicate/invalid scope, or explicit undefined
+   * denies the channel. Without TLS, a required-auth route therefore needs both an ALLOW channel
+   * verdict and this exact principal evidence. With TLS, omitting this resolver uses the admitted
+   * leaf-certificate SHA-256 digest as the principal ID and grants no application scopes.
+   */
+  readonly resolvePrincipal?: (req: http.IncomingMessage) => PrincipalResolution | undefined;
 }
 
 /** A fail-closed 500 written when the kernel itself throws. Never leaks the error. */
@@ -485,7 +506,15 @@ export function createApiServer(opts: CreateApiServerOptions): http.Server {
       : opts.resolveChannelVerdict;
 
   const onRequest = (req: http.IncomingMessage, res: http.ServerResponse): void => {
-    void handleRequest(kernel, maxBodyBytes, resolveChannelVerdict, req, res);
+    void handleRequest(
+      kernel,
+      maxBodyBytes,
+      resolveChannelVerdict,
+      opts.resolvePrincipal,
+      opts.tls !== undefined,
+      req,
+      res,
+    );
   };
 
   // HTTPS when `tls` is set, else plain HTTP. https.Server is declared as `extends tls.Server`
@@ -508,10 +537,96 @@ export function createApiServer(opts: CreateApiServerOptions): http.Server {
   return server;
 }
 
+const PRINCIPAL_ID = /^[A-Za-z0-9][A-Za-z0-9@._:\/-]{0,255}$/;
+const PRINCIPAL_SCOPE = /^[A-Za-z0-9][A-Za-z0-9._:\/-]{0,255}$/;
+const MAX_PRINCIPAL_SCOPES = 256;
+
+function snapshotPrincipalResolution(value: unknown): PrincipalResolution {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error("principal evidence must be a plain object");
+  }
+  if (utilTypes.isProxy(value)) throw new Error("principal evidence proxies are forbidden");
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) {
+    throw new Error("principal evidence must have a plain object prototype");
+  }
+  if (Object.getOwnPropertySymbols(value).length !== 0) {
+    throw new Error("principal evidence must not contain symbol keys");
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const names = Object.keys(descriptors).sort();
+  const allowed = new Set(["principalId", "principalScopes"]);
+  if (!names.includes("principalId") || names.some((name) => !allowed.has(name))) {
+    throw new Error("principal evidence fields are not canonical");
+  }
+  const read = (name: string): unknown => {
+    const descriptor = descriptors[name];
+    if (descriptor === undefined) return undefined;
+    if (!("value" in descriptor) || descriptor.enumerable !== true) {
+      throw new Error(`principal evidence field '${name}' must be an enumerable data descriptor`);
+    }
+    return descriptor.value;
+  };
+
+  const principalId = read("principalId");
+  if (typeof principalId !== "string" || !PRINCIPAL_ID.test(principalId)) {
+    throw new Error("principalId is not canonical");
+  }
+
+  const untrustedScopes = read("principalScopes");
+  let principalScopes: readonly string[] = Object.freeze([]);
+  if (untrustedScopes !== undefined) {
+    if (!Array.isArray(untrustedScopes) || utilTypes.isProxy(untrustedScopes)
+      || Object.getPrototypeOf(untrustedScopes) !== Array.prototype
+      || Object.getOwnPropertySymbols(untrustedScopes).length !== 0) {
+      throw new Error("principalScopes must be a canonical array");
+    }
+    const scopeDescriptors = Object.getOwnPropertyDescriptors(untrustedScopes) as Record<string, PropertyDescriptor>;
+    const lengthDescriptor = scopeDescriptors["length"];
+    if (lengthDescriptor === undefined || !("value" in lengthDescriptor)
+      || !Number.isSafeInteger(lengthDescriptor.value)
+      || (lengthDescriptor.value as number) < 0
+      || (lengthDescriptor.value as number) > MAX_PRINCIPAL_SCOPES) {
+      throw new Error("principalScopes length is invalid");
+    }
+    const length = lengthDescriptor.value as number;
+    const descriptorNames = Object.keys(scopeDescriptors).filter((name) => name !== "length");
+    if (descriptorNames.length !== length) throw new Error("principalScopes contains holes or surplus properties");
+    const snapshot: string[] = [];
+    const unique = new Set<string>();
+    for (let index = 0; index < length; index += 1) {
+      const descriptor = scopeDescriptors[String(index)];
+      if (descriptor === undefined || !("value" in descriptor) || descriptor.enumerable !== true
+        || typeof descriptor.value !== "string" || !PRINCIPAL_SCOPE.test(descriptor.value)
+        || unique.has(descriptor.value)) {
+        throw new Error("principalScopes contains a non-canonical or duplicate scope");
+      }
+      unique.add(descriptor.value);
+      snapshot.push(descriptor.value);
+    }
+    principalScopes = Object.freeze(snapshot);
+  }
+
+  return Object.freeze({ principalId, principalScopes });
+}
+
+function principalFromAdmittedTls(req: http.IncomingMessage): PrincipalResolution {
+  const socket: unknown = req.socket;
+  if (!isTlsSocket(socket)) throw new Error("admitted TLS principal requires a TLS socket");
+  const cert = socket.getPeerCertificate(true);
+  if (cert.raw === undefined || cert.raw.byteLength === 0) {
+    throw new Error("admitted TLS principal requires an exact leaf certificate");
+  }
+  const principalId = `tls-sha256:${createHash("sha256").update(cert.raw).digest("hex")}`;
+  return Object.freeze({ principalId, principalScopes: Object.freeze([]) });
+}
+
 async function handleRequest(
   kernel: AppKernel,
   maxBodyBytes: number,
   resolveChannelVerdict: ((req: http.IncomingMessage) => Verdict | undefined) | undefined,
+  resolvePrincipal: ((req: http.IncomingMessage) => PrincipalResolution | undefined) | undefined,
+  deriveTlsPrincipal: boolean,
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): Promise<void> {
@@ -554,6 +669,24 @@ async function handleRequest(
     }
   }
 
+  // Identity is a separate fact from the channel verdict. Resolve it only after an exact ALLOW;
+  // malformed/throwing explicit evidence denies and can never fall back to a certificate identity.
+  let principal: PrincipalResolution | undefined;
+  if (channelVerdict === Verdict.ALLOW) {
+    try {
+      if (resolvePrincipal !== undefined) {
+        const untrusted = resolvePrincipal(req);
+        if (untrusted === undefined) throw new Error("principal resolver returned no identity");
+        principal = snapshotPrincipalResolution(untrusted);
+      } else if (deriveTlsPrincipal) {
+        principal = principalFromAdmittedTls(req);
+      }
+    } catch {
+      channelVerdict = Verdict.DENY;
+      principal = undefined;
+    }
+  }
+
   // (3) Normalise into a GalerinaKernelRequest.
   const { path, query } = parseUrl(req.url);
   const kreq: GalerinaKernelRequest = {
@@ -565,6 +698,10 @@ async function handleRequest(
     requestId: randomUUID(),
     receivedAt: Date.now(),
     ...(channelVerdict !== undefined ? { channelVerdict } : {}),
+    ...(principal !== undefined ? {
+      principalId: principal.principalId,
+      principalScopes: principal.principalScopes ?? Object.freeze([]),
+    } : {}),
   };
 
   // (4) Hand to the kernel's fixed, non-bypassable pipeline. (5) Write its response.
