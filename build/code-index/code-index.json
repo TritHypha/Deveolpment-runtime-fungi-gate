@@ -7970,7 +7970,7 @@
       "ref scripts/audit-twin-emit-parity.mjs:203",
       "ref scripts/audit-twin-emit-parity.mjs:207",
       "ref scripts/audit-twin-emit-parity.mjs:209",
-      "ref scripts/component-health.mjs:385",
+      "ref scripts/component-health.mjs:386",
       "test scripts/tests/cg4-signing-boundary.test.mjs:80",
       "ref galerina.mjs:1393",
       "ref galerina.mjs:1395",
@@ -11408,7 +11408,7 @@
       "doc docs/examples/Level-2-Types/096-hallmark-reserved-name/notes.md:11",
       "doc docs/language/fungi/04-types-and-values.md:203",
       "doc docs/language/fungi/SYNTAX-REFERENCE.md:58",
-      "ref scripts/component-health.mjs:383"
+      "ref scripts/component-health.mjs:384"
     ]
   },
   {
@@ -24642,8 +24642,8 @@
       "test packages-galerina/galerina-core-compiler/tests/type-checker-money-currency-tag.test.mjs:52",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-money-currency-tag.test.mjs:56",
       "test packages-galerina/galerina-core-compiler/tests/type-checker-money-currency-tag.test.mjs:61",
-      "ref scripts/component-health.mjs:384",
-      "ref scripts/component-health.mjs:508",
+      "ref scripts/component-health.mjs:385",
+      "ref scripts/component-health.mjs:509",
       "ref scripts/gen-unit-registry.mjs:77",
       "ref scripts/lib/twin-parity-ladder.mjs:68",
       "ref scripts/lib/twin-parity-ladder.mjs:70"
