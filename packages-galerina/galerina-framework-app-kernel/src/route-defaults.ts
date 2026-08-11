@@ -67,16 +67,14 @@ export function resolveEffectiveRoutePolicy(
     auth = SECURE_DEFAULTS.auth;
     appliedDefaults.push("auth");
   } else {
+    if (route.auth.allowHeaderPresenceFallback === true) {
+      throw new Error("Header-presence authentication is forbidden; supply a verified channel verdict and principal.");
+    }
     auth = {
       mode: route.auth.mode ?? "required",
       scopes: route.auth.scopes ?? [],
-      // Carry the legacy presence-only opt-in through; default off (tightened/fail-closed).
-      ...(route.auth.allowHeaderPresenceFallback === true ? { allowHeaderPresenceFallback: true } : {}),
     };
     if (auth.mode === "public") relaxations.push("auth:public");
-    // An explicit relaxation worth surfacing in the security report — it weakens required-auth to
-    // accept mere header presence as authentication.
-    if (auth.allowHeaderPresenceFallback === true) relaxations.push("auth:header-presence-fallback");
   }
 
   // ── body ──

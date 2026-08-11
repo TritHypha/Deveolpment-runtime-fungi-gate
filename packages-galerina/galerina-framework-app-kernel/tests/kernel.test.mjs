@@ -81,7 +81,7 @@ test("auth: channel verdict ALLOW (+1) admits even with NO Authorization header 
 
 // ── Tightened header-presence fallback (owner decision 2026-06-23, fail-closed by default) ──
 // A required-auth route with NO channelVerdict no longer admits on mere Authorization-header
-// presence — presence is not authentication. Opt back in per-route via allowHeaderPresenceFallback.
+// presence — presence is not authentication. The former opt-in is now a construction-time refusal.
 
 test("auth: required + no verdict + header PRESENT but no opt-in → 401 (tightened default)", async () => {
   let ran = false;
@@ -95,26 +95,18 @@ test("auth: required + no verdict + header PRESENT but no opt-in → 401 (tighte
   assert.equal(ran, false); // header presence alone is NOT sufficient
 });
 
-test("auth: required + allowHeaderPresenceFallback + header PRESENT → admits (legacy opt-in)", async () => {
-  let ran = false;
-  const k = createAppKernel({
+test("auth: legacy header-presence opt-in is refused even with a non-empty header", async () => {
+  assert.throws(() => createAppKernel({
     routes: [{ method: "GET", path: "/secure", handler: "secure", auth: { mode: "required", allowHeaderPresenceFallback: true } }],
-    dispatch: { secure: () => { ran = true; return { body: { ok: true } }; } },
-  });
-  const res = await k.handle(req({ method: "GET", path: "/secure", headers: { authorization: "Bearer tok" } }));
-  assert.notEqual(res.status, 401);
-  assert.equal(ran, true); // explicit opt-in restores the weaker presence-only behaviour
+    dispatch: { secure: () => ({ body: { ok: true } }) },
+  }), /header-presence authentication is forbidden/i);
 });
 
-test("auth: allowHeaderPresenceFallback opt-in still 401s when NO header is present", async () => {
-  let ran = false;
-  const k = createAppKernel({
+test("auth: legacy header-presence opt-in is refused when no header is present", async () => {
+  assert.throws(() => createAppKernel({
     routes: [{ method: "GET", path: "/secure", handler: "secure", auth: { mode: "required", allowHeaderPresenceFallback: true } }],
-    dispatch: { secure: () => { ran = true; return { body: { ok: true } }; } },
-  });
-  const res = await k.handle(req({ method: "GET", path: "/secure" }));
-  assert.equal(res.status, 401);
-  assert.equal(ran, false);
+    dispatch: { secure: () => ({ body: { ok: true } }) },
+  }), /header-presence authentication is forbidden/i);
 });
 
 // ── Empty/whitespace Authorization under the opt-in — the live presence-only bypass (RD-0307/0309) ──
@@ -122,27 +114,18 @@ test("auth: allowHeaderPresenceFallback opt-in still 401s when NO header is pres
 // whitespace-only value) slipped through and admitted a required-auth route with NO credential.
 // Routing the opt-in through headerPresenceVerdict (which treats an empty value as NOT present)
 // closes it: empty/whitespace → INDETERMINATE → decideAtBoundary denies → 401.
-test("auth: allowHeaderPresenceFallback opt-in 401s on an EMPTY Authorization header (presence bypass closed)", async () => {
-  let ran = false;
-  const k = createAppKernel({
+test("auth: legacy header-presence opt-in is refused with an empty header", async () => {
+  assert.throws(() => createAppKernel({
     routes: [{ method: "GET", path: "/secure", handler: "secure", auth: { mode: "required", allowHeaderPresenceFallback: true } }],
-    dispatch: { secure: () => { ran = true; return { body: { ok: true } }; } },
-  });
-  const res = await k.handle(req({ method: "GET", path: "/secure", headers: { authorization: "" } }));
-  assert.equal(res.status, 401);
-  assert.equal(errorOf(res), "unauthorized");
-  assert.equal(ran, false); // an empty credential must NOT admit
+    dispatch: { secure: () => ({ body: { ok: true } }) },
+  }), /header-presence authentication is forbidden/i);
 });
 
-test("auth: allowHeaderPresenceFallback opt-in 401s on a WHITESPACE-only Authorization header", async () => {
-  let ran = false;
-  const k = createAppKernel({
+test("auth: legacy header-presence opt-in is refused with a whitespace-only header", async () => {
+  assert.throws(() => createAppKernel({
     routes: [{ method: "GET", path: "/secure", handler: "secure", auth: { mode: "required", allowHeaderPresenceFallback: true } }],
-    dispatch: { secure: () => { ran = true; return { body: { ok: true } }; } },
-  });
-  const res = await k.handle(req({ method: "GET", path: "/secure", headers: { authorization: "   " } }));
-  assert.equal(res.status, 401);
-  assert.equal(ran, false);
+    dispatch: { secure: () => ({ body: { ok: true } }) },
+  }), /header-presence authentication is forbidden/i);
 });
 
 test("public route is allowed without Authorization (handler runs)", async () => {

@@ -55,6 +55,8 @@ export interface GalerinaKernelRequest {
    *  When present it is collapsed FAIL-CLOSED at the auth gate: only ALLOW (+1) admits; an
    *  INDETERMINATE (0) or DENY (−1) refuses. Absent → the header-presence check applies (legacy). */
   readonly channelVerdict?: Verdict;
+  /** Exact scopes carried by the authenticated principal that produced `channelVerdict`. */
+  readonly principalScopes?: readonly string[];
 }
 
 /** Safe, typed response. `body` is only present once a handler has run and encoded. */
@@ -73,7 +75,9 @@ export interface HandlerContext {
   /** Fail-closed secret accessor. Runs `fn` with a short-lived view; returns `undefined` for an
    *  absent/faulted secret (or absent provider). Any secret this route DECLARES via
    *  `secrets.require` is already guaranteed present-and-not-faulted by gate 9.5 before dispatch. */
-  readonly getSecret: (name: string, fn: (value: Uint8Array) => unknown) => unknown;
+  readonly getSecret: (name: string, fn: (value: Uint8Array) => unknown) => undefined;
+  /** Aborted when the route deadline expires. */
+  readonly deadlineSignal: AbortSignal;
 }
 
 /** A dispatched handler returns the response payload; the kernel encodes it. */
@@ -91,16 +95,40 @@ export type HandlerDispatch = Readonly<Record<string, HandlerFn>>;
 /** Pluggable store for idempotency keys (default: in-memory). Deny-by-default: an absent store still gates. */
 export interface IdempotencyStore {
   /** Returns true if the key was already seen (and records it if not). Fail-closed on the caller side. */
-  seen(routeKey: string, key: string): boolean | Promise<boolean>;
+  seen(routeKey: string, key: string, ttlSeconds: number): boolean | Promise<boolean>;
 }
 
 /** Default in-memory idempotency store. Process-local; replaced via options in real deployments. */
 export class InMemoryIdempotencyStore implements IdempotencyStore {
-  readonly #seen = new Set<string>();
-  seen(routeKey: string, key: string): boolean {
+  readonly #seen = new Map<string, number>();
+  readonly #capacity: number;
+  readonly #maxKeyBytes: number;
+  readonly #now: () => number;
+
+  constructor(opts: { readonly capacity?: number; readonly maxKeyBytes?: number; readonly now?: () => number } = {}) {
+    this.#capacity = opts.capacity ?? 10_000;
+    this.#maxKeyBytes = opts.maxKeyBytes ?? 256;
+    this.#now = opts.now ?? Date.now;
+    if (!Number.isSafeInteger(this.#capacity) || this.#capacity < 1) throw new Error("Idempotency capacity must be a positive safe integer.");
+    if (!Number.isSafeInteger(this.#maxKeyBytes) || this.#maxKeyBytes < 1) throw new Error("Idempotency key limit must be a positive safe integer.");
+  }
+
+  seen(routeKey: string, key: string, ttlSeconds: number): boolean {
+    if (new TextEncoder().encode(key).byteLength > this.#maxKeyBytes) {
+      throw new Error("Idempotency key exceeds the configured byte limit.");
+    }
+    if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) throw new Error("Idempotency TTL must be finite and positive.");
+    const now = this.#now();
+    for (const [entryKey, expiresAt] of this.#seen) {
+      if (expiresAt <= now) this.#seen.delete(entryKey);
+    }
     const composite = `${routeKey}\u0000${key}`;
-    if (this.#seen.has(composite)) return true;
-    this.#seen.add(composite);
+    const existing = this.#seen.get(composite);
+    if (existing !== undefined && existing > now) return true;
+    if (!this.#seen.has(composite) && this.#seen.size >= this.#capacity) {
+      throw new Error("Idempotency store capacity reached.");
+    }
+    this.#seen.set(composite, now + ttlSeconds * 1_000);
     return false;
   }
 }
@@ -143,9 +171,22 @@ export class InMemoryAuditSink implements AuditSink {
   readonly #queue: AuditEvent[] = [];
   readonly #drained: AuditEvent[] = [];
   #scheduled = false;
+  #dropped = 0;
+  readonly #capacity: number;
+
+  constructor(opts: { readonly capacity?: number } = {}) {
+    this.#capacity = opts.capacity ?? 1_024;
+    if (!Number.isSafeInteger(this.#capacity) || this.#capacity < 1) {
+      throw new Error("Audit capacity must be a positive safe integer.");
+    }
+  }
 
   emit(event: AuditEvent): void {
     // Enqueue only — never process inline. That non-blocking contract is the point.
+    if (this.#queue.length >= this.#capacity) {
+      this.#queue.shift();
+      this.#dropped += 1;
+    }
     this.#queue.push(event);
     this.#schedule();
   }
@@ -167,6 +208,10 @@ export class InMemoryAuditSink implements AuditSink {
     this.#scheduled = false;
     while (this.#queue.length > 0) {
       // FIFO drain. Each event is an already-built record; nothing heavy happens here.
+      if (this.#drained.length >= this.#capacity) {
+        this.#drained.shift();
+        this.#dropped += 1;
+      }
       this.#drained.push(this.#queue.shift() as AuditEvent);
     }
   }
@@ -179,6 +224,11 @@ export class InMemoryAuditSink implements AuditSink {
   /** Count still waiting to be flushed (0 once a tick has elapsed). */
   pending(): number {
     return this.#queue.length;
+  }
+
+  /** Count evicted by the bounded retention policy. */
+  dropped(): number {
+    return this.#dropped;
   }
 }
 
@@ -198,6 +248,8 @@ export interface CreateAppKernelOptions {
    *  route that DECLARES a required secret fails closed at gate 9.5 (503); secret-free routes are
    *  unaffected. The host owns the provider's lifecycle and MUST `dispose()` it on shutdown. */
   readonly secretsProvider?: SecretsProvider;
+  /** Closed-schema validators keyed by `RouteDeclaration.requestType`. */
+  readonly requestValidators?: Readonly<Record<string, (value: unknown) => boolean>>;
 }
 
 export interface AppKernel {
@@ -211,10 +263,13 @@ export type KernelErrorCode =
   | "payload_too_large"
   | "unsupported_media_type"
   | "unauthorized"
+  | "forbidden"
   | "unprocessable_entity"
   | "conflict"
   | "too_many_requests"
   | "secret_unavailable"
+  | "deadline_exceeded"
+  | "resource_limit_exceeded"
   | "internal_error";
 
 const JSON_HEADERS: Readonly<Record<string, string>> = Object.freeze({
@@ -249,6 +304,49 @@ function baseContentType(value: string): string {
   return (semi === -1 ? value : value.slice(0, semi)).trim().toLowerCase();
 }
 
+/** Detect duplicate object keys, including escape-equivalent spellings, without changing JSON values. */
+function hasDuplicateJsonKeys(text: string): boolean {
+  const stack: Array<{ readonly kind: "object"; readonly keys: Set<string>; expectingKey: boolean } | { readonly kind: "array" }> = [];
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === '"') {
+      const start = i;
+      i += 1;
+      for (; i < text.length; i += 1) {
+        if (text[i] === "\\") {
+          i += 1;
+        } else if (text[i] === '"') {
+          break;
+        }
+      }
+      const top = stack[stack.length - 1];
+      if (top?.kind === "object" && top.expectingKey) {
+        const key = JSON.parse(text.slice(start, i + 1)) as string;
+        if (top.keys.has(key)) return true;
+        top.keys.add(key);
+        top.expectingKey = false;
+      }
+      continue;
+    }
+    if (ch === "{") stack.push({ kind: "object", keys: new Set<string>(), expectingKey: true });
+    else if (ch === "[") stack.push({ kind: "array" });
+    else if (ch === "}" || ch === "]") stack.pop();
+    else if (ch === ",") {
+      const top = stack[stack.length - 1];
+      if (top?.kind === "object") top.expectingKey = true;
+    }
+  }
+  return false;
+}
+
+function parseRatePerMinute(rate: string): number {
+  const match = /^(\d+)\/minute$/.exec(rate);
+  if (match === null) throw new Error(`Unsupported route rate '${rate}'. Expected '<positive integer>/minute'.`);
+  const value = Number(match[1]);
+  if (!Number.isSafeInteger(value) || value < 1) throw new Error(`Invalid route rate '${rate}'.`);
+  return value;
+}
+
 /**
  * Create an App Kernel over a fixed set of routes and a handler dispatch table.
  * The returned `handle` runs the fixed, non-bypassable pipeline.
@@ -271,9 +369,18 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
 
   // Pre-resolve the routing table once. path → (method → resolved policy).
   const byPath = new Map<string, Map<HttpMethod, EffectiveRoutePolicy>>();
+  const ratesPerMinute = new Map<string, number>();
   let anyRouteRequiresSecret = false;
   for (const route of opts.routes) {
     const policy = resolveEffectiveRoutePolicy(route, { posture });
+    if (
+      policy.requestType !== undefined &&
+      policy.body.unknownFields === "deny" &&
+      opts.requestValidators?.[policy.requestType] === undefined
+    ) {
+      throw new Error(`A request validator is required for closed request type '${policy.requestType}'.`);
+    }
+    ratesPerMinute.set(routeKey(policy.method, policy.path), parseRatePerMinute(policy.limits.rate));
     if (policy.secrets.require.length > 0) anyRouteRequiresSecret = true;
     let methods = byPath.get(route.path);
     if (methods === undefined) {
@@ -296,6 +403,7 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
 
   // Live concurrency counters, keyed per route. Reset as handlers settle.
   const inFlight = new Map<string, number>();
+  const rateWindows = new Map<string, { count: number; resetAt: number }>();
 
   /** Internal pipeline result: the response plus the matched policy (for audit provenance). */
   interface PipelineOutcome {
@@ -357,23 +465,15 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
     if (policy.auth.mode === "required") {
       if (req.channelVerdict !== undefined) {
         // The mandatory channel fold above already proved ALLOW.
-      } else if (policy.auth.allowHeaderPresenceFallback === true) {
-        // OPT-IN legacy fallback: header-PRESENCE only — NOT a real token verification (it admits any
-        // non-empty Authorization header), so it is gated behind an explicit per-route opt-in (default
-        // off). "Presence" means a NON-EMPTY value: an absent, empty, or whitespace-only Authorization
-        // header is not presence and is denied — this closes the empty-header admission the prior
-        // `=== undefined` check let through (RD-0307/0309). Mirrors galerina-auth `headerPresenceVerdict`
-        // (the reusable posture factor), kept INLINE so the kernel takes no capability-package compile
-        // dependency — the same structural-seam stance as gate 9.5 (Hardened Border: core-config + tower-citizen only).
-        const authz = header(req.headers, "authorization");
-        if (authz === undefined || authz.trim().length === 0) {
-          return { response: errorResponse(401, "unauthorized", "Authorization header required."), policy };
-        }
       } else {
-        // TIGHTENED default (fail-closed, owner decision 2026-06-23): with no channel/identity verdict
-        // supplied, a required-auth route does NOT admit on header presence alone — presence is not
-        // authentication. Deny unless a verdict authorises (or the route opts into the legacy fallback).
         return { response: errorResponse(401, "unauthorized", "A channel/identity verdict is required (header presence is not sufficient)."), policy };
+      }
+    }
+
+    if (policy.auth.scopes.length > 0) {
+      const admittedScopes = new Set(req.principalScopes ?? []);
+      if (req.channelVerdict === undefined || policy.auth.scopes.some((scope) => !admittedScopes.has(scope))) {
+        return { response: errorResponse(403, "forbidden", "The authenticated principal lacks a required route scope."), policy };
       }
     }
 
@@ -387,9 +487,27 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
         return { response: errorResponse(422, "unprocessable_entity", "Body is not valid UTF-8."), policy };
       }
       try {
+        if (policy.body.duplicateKeys === "deny" && hasDuplicateJsonKeys(text)) {
+          return { response: errorResponse(422, "unprocessable_entity", "Body contains duplicate JSON object keys."), policy };
+        }
         json = JSON.parse(text);
       } catch {
         return { response: errorResponse(422, "unprocessable_entity", "Body is not valid JSON."), policy };
+      }
+      if (policy.requestType !== undefined) {
+        const validator = opts.requestValidators?.[policy.requestType];
+        if (validator === undefined) {
+          return { response: errorResponse(500, "internal_error", "Request validator is unavailable."), policy };
+        }
+        let valid = false;
+        try {
+          valid = validator(json);
+        } catch {
+          valid = false;
+        }
+        if (!valid) {
+          return { response: errorResponse(422, "unprocessable_entity", "Body does not match the admitted request type."), policy };
+        }
       }
     } else {
       json = undefined;
@@ -402,7 +520,7 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
         const rk = routeKey(method, path);
         let duplicate: boolean;
         try {
-          duplicate = await idempotencyStore.seen(rk, key);
+          duplicate = await idempotencyStore.seen(rk, key, policy.idempotency.ttlSeconds);
         } catch {
           // Fail closed: if the store errors we reject rather than risk a replay.
           return { response: errorResponse(409, "conflict", "Idempotency store unavailable."), policy };
@@ -413,8 +531,24 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       }
     }
 
-    // ── 9 concurrency ──
+    // ── 8.5 rate ──
     const rk = routeKey(method, path);
+    const now = Date.now();
+    const rateLimit = ratesPerMinute.get(rk) as number;
+    const window = rateWindows.get(rk);
+    if (window === undefined || window.resetAt <= now) {
+      rateWindows.set(rk, { count: 1, resetAt: now + 60_000 });
+    } else if (window.count >= rateLimit) {
+      return { response: errorResponse(429, "too_many_requests", `Rate limit ${rateLimit}/minute reached for '${rk}'.`), policy };
+    } else {
+      window.count += 1;
+    }
+
+    if (req.body.byteLength > policy.limits.memoryBytes) {
+      return { response: errorResponse(503, "resource_limit_exceeded", "Request exceeds the route memory budget."), policy };
+    }
+
+    // ── 9 concurrency ──
     const current = inFlight.get(rk) ?? 0;
     if (current >= policy.limits.maxConcurrent) {
       return { response: errorResponse(
@@ -443,11 +577,31 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       }
 
       let result: HandlerResult;
+      const deadline = new AbortController();
+      let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
       try {
-        result = await fn({ request: req, policy, json, getSecret: secretGate.getSecret });
+        const handlerPromise = Promise.resolve(fn({
+          request: req,
+          policy,
+          json,
+          getSecret: (name, callback) => secretGate.getSecret(policy.secrets.require, name, callback),
+          deadlineSignal: deadline.signal,
+        }));
+        const timeoutPromise = new Promise<never>((_resolve, reject) => {
+          deadlineTimer = setTimeout(() => {
+            deadline.abort();
+            reject(new Error("GALERINA_ROUTE_DEADLINE"));
+          }, policy.limits.timeoutMs);
+        });
+        result = await Promise.race([handlerPromise, timeoutPromise]);
       } catch {
+        if (deadline.signal.aborted) {
+          return { response: errorResponse(504, "deadline_exceeded", "Route execution exceeded its deadline."), policy };
+        }
         // Handler faults fail closed: a safe 500, no internal detail leaks.
         return { response: errorResponse(500, "internal_error", "Handler failed."), policy };
+      } finally {
+        if (deadlineTimer !== undefined) clearTimeout(deadlineTimer);
       }
 
       // ── 11 encode ──
@@ -464,6 +618,10 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
         } catch {
           return { response: errorResponse(500, "internal_error", "Response could not be encoded."), policy };
         }
+      }
+
+      if (body !== undefined && body.byteLength > policy.limits.memoryBytes) {
+        return { response: errorResponse(503, "resource_limit_exceeded", "Response exceeds the route memory budget."), policy };
       }
 
       const response: GalerinaKernelResponse =

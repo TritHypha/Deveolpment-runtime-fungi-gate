@@ -11,9 +11,9 @@
 // Gate 6 — the auth DECISION. channelVerdictAuthorized is the host's decideAtBoundary(v).authorized
 // (K3: ONLY an ALLOW +1 authorizes; INDETERMINATE 0 and DENY -1 both fail closed).
 // Returns "admit" or a structured 401 reason. Deny-by-default: presence is NOT authentication.
-pure flow authGateVerdict(authMode: String, hasChannelVerdict: Bool, channelVerdictAuthorized: Bool, headerPresent: Bool, allowPresenceFallback: Bool) -> String
+pure flow authGateVerdict(authMode: String, hasChannelVerdict: Bool, channelVerdictAuthorized: Bool) -> String
 contract {
-  intent { "Fail-closed kernel auth gate 6: any supplied channel verdict constrains every route; required auth admits only on that ALLOW or an explicit header fallback, and bare presence never authenticates." }
+  intent { "Fail-closed kernel auth gate 6: any supplied channel verdict constrains every route; required auth admits only on an explicit ALLOW, and header presence never authenticates." }
 }
 {
   // A supplied transport/channel verdict constrains EVERY route. Public removes the
@@ -28,16 +28,8 @@ contract {
   if authMode == "public" {
     return "admit"
   }
-  // No channel verdict. The OPT-IN legacy fallback admits on mere Authorization-header presence —
-  // which is NOT a real token verification — so it is gated behind an explicit per-route opt-in.
-  if allowPresenceFallback == true {
-    if headerPresent == true {
-      return "admit"
-    }
-    return "unauthorized_header_required"
-  }
-  // TIGHTENED default (fail-closed, owner decision 2026-06-23; RD-0307/0309): with no verdict
+  // Fail-closed (owner decision 2026-08-11): with no verdict
   // supplied, a required-auth route does NOT admit on header presence alone — presence is not
-  // authentication. This is the line that closed the mTLS presence-only bypass (#10).
+  // authentication. The former fallback input and branch are removed from this ABI.
   return "unauthorized_verdict_required"
 }

@@ -123,7 +123,7 @@ test("secrets: required secret PRESENT → handler runs and reads it via view", 
     dispatch: {
       pay: (ctx) => {
         ran = true;
-        ctx.getSecret("db.main", (v) => { seen = v.toString(); }); // short-lived view
+        ctx.getSecret("db.main", (v) => { seen = new TextDecoder().decode(v); }); // short-lived view
         return { body: { ok: true } };
       },
     },

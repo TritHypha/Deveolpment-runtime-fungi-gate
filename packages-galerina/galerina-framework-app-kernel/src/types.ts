@@ -26,6 +26,7 @@ export interface AuthPolicy {
    * verdict, or it 401s. Set `true` ONLY to opt a route back into the weaker presence-only behaviour
    * (e.g. a deployment whose token validation genuinely lives upstream). Deny-by-default; opt-in to relax.
    */
+  /** @deprecated Header presence is not authentication; `true` is refused at construction. */
   readonly allowHeaderPresenceFallback?: boolean;
 }
 

@@ -45,7 +45,7 @@ export interface SecretGate {
    * Handed to the handler as `ctx.getSecret`. Fail-closed: `undefined` for an absent/faulted
    * secret (or absent provider). The value is only ever exposed to `fn` as a short-lived view.
    */
-  getSecret(name: string, fn: (value: Uint8Array) => unknown): unknown;
+  getSecret(required: readonly string[], name: string, fn: (value: Uint8Array) => unknown): undefined;
 }
 
 /**
@@ -76,8 +76,22 @@ export function createSecretGate(provider: SecretsProvider | undefined): SecretG
   }
 
   // ── getSecret: hands the handler a short-lived view; value never leaves via the return path. ──
-  function getSecret(name: string, fn: (value: Uint8Array) => unknown): unknown {
-    return provider?.use(name, fn);
+  function getSecret(
+    required: readonly string[],
+    name: string,
+    fn: (value: Uint8Array) => unknown,
+  ): undefined {
+    if (!required.includes(name) || provider === undefined) return undefined;
+    provider.use(name, (value) => {
+      const view = new Uint8Array(value);
+      try {
+        fn(view);
+      } finally {
+        view.fill(0);
+      }
+      return undefined;
+    });
+    return undefined;
   }
 
   return { admit, getSecret };

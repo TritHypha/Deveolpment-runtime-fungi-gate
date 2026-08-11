@@ -49,13 +49,10 @@ function realToken(res) {
 // structure in kernel.ts (channelVerdict collapse via decideAtBoundary; presence = a non-empty header value).
 function evidence(auth, over) {
   const cv = over.channelVerdict;
-  const authz = over.headers?.authorization;
   return {
     authMode: auth?.mode ?? "required", // kernel default is `required`
     hasChannelVerdict: cv !== undefined,
     channelVerdictAuthorized: cv !== undefined ? decideAtBoundary(cv).authorized : false,
-    headerPresent: typeof authz === "string" && authz.trim().length > 0, // RD-0307/0309: empty/whitespace ≠ presence
-    allowPresenceFallback: auth?.allowHeaderPresenceFallback === true,
   };
 }
 
@@ -69,10 +66,6 @@ const SCENARIOS = [
   { name: "required + channel ALLOW(+1) admits",    auth: { mode: "required" },                                        over: { channelVerdict: 1 } },
   { name: "required + channel DENY(-1) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: -1 } },
   { name: "required + channel INDET(0) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: 0 } },
-  { name: "required + fallback + header admits",    auth: { mode: "required", allowHeaderPresenceFallback: true },     over: { headers: { authorization: "Bearer t" } } },
-  { name: "required + fallback + no header 401",    auth: { mode: "required", allowHeaderPresenceFallback: true },     over: {} },
-  { name: "required + fallback + EMPTY header 401",  auth: { mode: "required", allowHeaderPresenceFallback: true },     over: { headers: { authorization: "" } } },
-  { name: "required + fallback + WS-only header 401", auth: { mode: "required", allowHeaderPresenceFallback: true },   over: { headers: { authorization: "   " } } },
   { name: "required + no fallback + header 401",    auth: { mode: "required" },                                        over: { headers: { authorization: "Bearer t" } } },
   { name: "required + no fallback + no header 401", auth: { mode: "required" },                                        over: {} },
 ];
@@ -87,6 +80,7 @@ test("RD-0361 kernel · auth gate 6: R0 build → R1 #105-admit → R3 WASM ≡ 
   if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
   const prog = L.parseProgram(src, "kernel.fungi");
   assert.equal((prog.diagnostics ?? []).filter((d) => d.severity === "error").length, 0, "twin parses clean (R0)");
+  assert.equal(prog.flows.find((flow) => flow.name === "authGateVerdict")?.params.length, 3, "removed header-presence path is absent from the twin ABI");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "kernel", prog.ast, /*exportAllPure*/ true));
@@ -106,7 +100,7 @@ test("RD-0361 kernel · auth gate 6: R0 build → R1 #105-admit → R3 WASM ≡ 
   const S = (s) => host.internString(s); // string ARG marshalled to a handle the module compares by identity
   const B = (b) => (b ? 1 : 0);
   const twinVerdict = (ev) => host.readString(
-    instance.exports.authGateVerdict(S(ev.authMode), B(ev.hasChannelVerdict), B(ev.channelVerdictAuthorized), B(ev.headerPresent), B(ev.allowPresenceFallback)),
+    instance.exports.authGateVerdict(S(ev.authMode), B(ev.hasChannelVerdict), B(ev.channelVerdictAuthorized)),
   );
 
   // ── R3 · fail-closed differential: WASM verdict EQUALS the real kernel handle's gate-6 decision ──
