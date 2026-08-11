@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "76bdd136a30a5dfb43bea3934f5b55d378d420e06b560650e7b1fbde07f5f7bf",
+  "authoritativeInputsDigest": "98f6768bba38e94da470cd6dbae1a7f8742da5b3e616111a8e4b622460cee94e",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -123,9 +123,9 @@
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-core-compiler/package.json",
       "declaredFanIn": 8,
-      "declaredFanOut": 5,
+      "declaredFanOut": 6,
       "derivedFanIn": 8,
-      "derivedFanOut": 5
+      "derivedFanOut": 6
     },
     {
       "id": "package:galerina-core-compute",
@@ -878,9 +878,9 @@
       "id": "package:galerina-tri-regex",
       "kind": "package",
       "evidencePath": "packages-galerina/galerina-tri-regex/package.json",
-      "declaredFanIn": 0,
+      "declaredFanIn": 1,
       "declaredFanOut": 0,
-      "derivedFanIn": 0,
+      "derivedFanIn": 1,
       "derivedFanOut": 0
     },
     {

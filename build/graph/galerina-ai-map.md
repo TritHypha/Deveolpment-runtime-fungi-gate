@@ -876,6 +876,7 @@ Provides:
 - DEFAULT_HEADERS_TIMEOUT_MS
 - DEFAULT_IDLE_TIMEOUT_MS
 - RevocationResolution
+- PrincipalResolution
 - ApiServerTlsOptions
 - CreateApiServerOptions
 - createApiServer
@@ -1324,6 +1325,7 @@ Provides:
 - RotationPolicy
 - SecretsContractBlock
 - SecretHandle
+- SecretHandleStatus
 - VaultClientOptions
 - VaultClient
 

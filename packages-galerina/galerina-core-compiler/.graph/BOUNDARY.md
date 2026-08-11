@@ -13,9 +13,9 @@
 |---|---|
 | Files | 174 |
 | Internal edges | 367 |
-| External dependencies | 16 |
+| External dependencies | 17 |
 | ├─ Node core | 8 |
-| ├─ Workspace (@galerina/*) | 5 |
+| ├─ Workspace (@galerina/*) | 6 |
 | └─ Third-party | 3 |
 | Orphan files | 0 |
 
@@ -37,6 +37,7 @@
 - `@galerina/core-security`
 - `@galerina/devtools-graph-algorithms`
 - `@galerina/substrate-math`
+- `@galerina/tri-regex`
 
 ### Third-party
 - `@noble/post-quantum/ml-dsa.js`

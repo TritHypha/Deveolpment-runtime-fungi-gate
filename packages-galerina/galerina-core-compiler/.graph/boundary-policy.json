@@ -6,6 +6,7 @@
     "@galerina/core-security",
     "@galerina/devtools-graph-algorithms",
     "@galerina/substrate-math",
+    "@galerina/tri-regex",
     "@noble/post-quantum/ml-dsa.js",
     "argon2",
     "bcryptjs",

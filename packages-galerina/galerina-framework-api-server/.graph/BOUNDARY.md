@@ -13,8 +13,8 @@
 |---|---|
 | Files | 1 |
 | Internal edges | 0 |
-| External dependencies | 7 |
-| ├─ Node core | 4 |
+| External dependencies | 8 |
+| ├─ Node core | 5 |
 | ├─ Workspace (@galerina/*) | 3 |
 | └─ Third-party | 0 |
 | Orphan files | 0 |
@@ -26,6 +26,7 @@
 - `node:http`
 - `node:https`
 - `node:tls`
+- `node:util`
 
 ### Workspace (@galerina/*)
 - `@galerina/core-network`

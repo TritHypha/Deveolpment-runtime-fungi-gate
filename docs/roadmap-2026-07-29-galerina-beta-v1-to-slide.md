@@ -2596,7 +2596,7 @@ checks, and the normal phase-close retains every old gate while adding blocking
 The current semantic inventory conserves **6** release/system requirements,
 **1** system contract, **0** canonical parser-proven routes, **100** packages,
 **880** test-evidence nodes, **6** detector mappings and the complete
-**1,417-path** executable family: 504 `.ts`, 15 `.d.ts`, 886 `.mjs` and 12
+**1,420-path** executable family: 504 `.ts`, 15 `.d.ts`, 889 `.mjs` and 12
 `.js` (zero `.mts`, `.cts` and `.cjs`). The semantic graph records local
 freshness/consistency `ALLOW (1)` only. The roadmap aggregate remains
 non-authorizing and K3 **`0`** (`UNKNOWN`) while independent predecessors are
@@ -2605,6 +2605,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,526 tests** in 282.2 seconds. The normal custody close remains fail-closed:
+9,552 tests** in 285.8 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
