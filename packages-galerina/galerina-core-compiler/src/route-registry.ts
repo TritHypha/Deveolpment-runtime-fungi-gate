@@ -70,6 +70,7 @@ function parseRouteEntry(node: AstNode): RouteEntry | null {
   let flowName = "";
   let requestType = "";
   let responseType = "";
+  let unsupportedPermission = false;
 
   for (const child of node.children ?? []) {
     if (child.kind === "identifier" && child.value?.startsWith("flow:") === true) {
@@ -78,16 +79,32 @@ function parseRouteEntry(node: AstNode): RouteEntry | null {
       requestType = child.value;
     } else if (child.kind === "identifier" && child.value?.startsWith("response:") === true) {
       responseType = child.value.slice("response:".length);
+    } else if (child.kind === "identifier" && child.value === "permission:unsupported") {
+      unsupportedPermission = true;
     }
+  }
+
+  if (unsupportedPermission) {
+    throw new Error(`Route permission clauses are not executable; refusing route '${method} ${path}'.`);
   }
 
   if (flowName === "") return null;
 
   const paramNames: string[] = [];
-  const patternStr = path.replace(/\{([^}]+)\}/g, (_full, name: string) => {
-    paramNames.push(name);
-    return "([^/]+)";
-  });
+  const segments = path.split(/(\{[^{}]*\})/g);
+  const patternStr = segments.map((segment) => {
+    const param = /^\{([^{}]+)\}$/.exec(segment);
+    if (param !== null) {
+      const name = param[1] as string;
+      if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name) || paramNames.includes(name)) {
+        throw new Error(`Invalid or duplicate route parameter '${name}'.`);
+      }
+      paramNames.push(name);
+      return "([^/]+)";
+    }
+    if (segment.includes("{") || segment.includes("}")) throw new Error(`Malformed route template '${path}'.`);
+    return segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }).join("");
   const pathPattern = new RegExp(`^${patternStr}$`);
 
   return { method, path, flowName, requestType, responseType, pathPattern, paramNames };

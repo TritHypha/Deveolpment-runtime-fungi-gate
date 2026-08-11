@@ -4296,6 +4296,7 @@ class Parser {
     let requestType = "";
     let responseType = "";
     let flowName = "";
+    let unsupportedPermission = false;
     if (this.currentIs("symbol", "{")) {
       this.advance(); // consume {
       this.skipNewlines();
@@ -4327,7 +4328,7 @@ class Parser {
             this.advance();
           }
         } else if (isClauseToken && clauseName === "permission") {
-          // Skip permission clause for now.
+          unsupportedPermission = true;
           while (!this.currentIs("newline", "\n") && !this.currentIs("symbol", "}") && !this.isEof()) {
             this.advance();
           }
@@ -4350,6 +4351,9 @@ class Parser {
     }
     if (responseType !== "") {
       children.push({ kind: "identifier", value: `response:${responseType}`, location: loc });
+    }
+    if (unsupportedPermission) {
+      children.push({ kind: "identifier", value: "permission:unsupported", location: loc });
     }
 
     return { kind: "routeDecl", value, location: loc, children };

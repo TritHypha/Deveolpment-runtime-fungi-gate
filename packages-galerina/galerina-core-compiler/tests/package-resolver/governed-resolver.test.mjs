@@ -440,10 +440,10 @@ describe("getResolverReport: resolver output report", () => {
     assert.ok(names.includes("@galerina/ai"), "ai must be in report");
   });
 
-  it("trusted package (valid hash + signature) -> trusted=true", () => {
+  it("hash shape and signature presence remain non-authorizing metadata", () => {
     const report = getResolverReport([AUTH_MANIFEST], "2026-05-31T00:00:00.000Z");
     const pkg = report.packages[0];
-    assert.equal(pkg.trusted, true, "Package with valid hash+signature must be trusted");
+    assert.equal(pkg.trusted, false, "Resolver cannot authenticate bytes or signatures by metadata shape");
   });
 
   it("package without hash -> trusted=false", () => {

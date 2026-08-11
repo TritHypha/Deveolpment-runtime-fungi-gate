@@ -300,8 +300,13 @@ function validateRegexPattern(pattern: string): string | null {
   if (/\([^)]*[+*][^)]*\)[+*{]/.test(pattern)) {
     return "RegexError: nested quantifier detected (e.g. (a+)+ ) — ReDoS prevention";
   }
+  if (pattern.includes("|") || /\\[1-9]/.test(pattern) || pattern.includes("(?")) {
+    return "RegexError: alternation, lookaround, and backreferences are outside the bounded regex subset";
+  }
   return null;
 }
+
+const MAX_REGEX_SUBJECT_CHARS = 4_096;
 
 function ok(value: GalerinaValue): GalerinaValue {
   return { __tag: "ok", value };
@@ -460,6 +465,7 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
 
     case "matchesPattern": {
       const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
+      if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
       // SECURITY (Finding 8 — MEDIUM): ReDoS via dynamic regex from runtime input.
       // Apply pattern length + complexity limits before compiling.
       const regexErr = validateRegexPattern(pattern);
@@ -473,6 +479,7 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
 
     case "extractGroups": {
       const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
+      if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
       const regexErr2 = validateRegexPattern(pattern);
       if (regexErr2 !== null) return err(regexErr2);
       try {
@@ -490,6 +497,7 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
     case "replacePattern": {
       const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
       const replacement = strVal(args[1] ?? { __tag: "string", value: "" });
+      if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
       const regexErr3 = validateRegexPattern(pattern);
       if (regexErr3 !== null) return err(regexErr3);
       try {
@@ -1261,18 +1269,20 @@ function gateFunction(fullName: string, args: readonly GalerinaValue[]): Galerin
 }
 
 export function jsObjectToGalerina(v: unknown): GalerinaValue {
-  return jsValueToGalerina(v);
+  return jsValueToGalerina(v, { nodes: 0 }, 0);
 }
 
-function jsValueToGalerina(v: unknown): GalerinaValue {
+function jsValueToGalerina(v: unknown, budget: { nodes: number }, depth: number): GalerinaValue {
+  budget.nodes += 1;
+  if (depth > 64 || budget.nodes > 10_000) throw new Error("JSON structure exceeds conversion limits");
   if (v === null || v === undefined) return FUNGI_NONE;
   if (typeof v === "string") return { __tag: "string", value: v };
   if (typeof v === "number") return Number.isInteger(v) ? { __tag: "int", value: v } : { __tag: "float", value: v };
   if (typeof v === "boolean") return { __tag: "bool", value: v };
-  if (Array.isArray(v)) return { __tag: "list", items: v.map((item) => jsValueToGalerina(item)) };
+  if (Array.isArray(v)) return { __tag: "list", items: v.map((item) => jsValueToGalerina(item, budget, depth + 1)) };
   if (typeof v === "object") {
     const fields = new Map<string, GalerinaValue>();
-    for (const [key, value] of Object.entries(v)) fields.set(key, jsValueToGalerina(value));
+    for (const [key, value] of Object.entries(v)) fields.set(key, jsValueToGalerina(value, budget, depth + 1));
     return { __tag: "record", fields };
   }
   return { __tag: "string", value: String(v) };
@@ -1332,7 +1342,7 @@ function serialization(fullName: string, args: readonly GalerinaValue[]): Galeri
       return err("DecodeError: expected String or Bytes");
     }
     try {
-      return ok(jsValueToGalerina(JSON.parse(raw)));
+      return ok(jsObjectToGalerina(JSON.parse(raw)));
     } catch {
       return err("DecodeError: invalid JSON");
     }
@@ -1428,6 +1438,7 @@ type NetIncoming = {
   on(event: "data", cb: (chunk: Uint8Array) => void): void;
   on(event: "end", cb: () => void): void;
   on(event: "error", cb: (err: unknown) => void): void;
+  destroy(err?: unknown): void;
 };
 type NetClientRequest = {
   on(event: "error", cb: (err: unknown) => void): void;
@@ -1444,6 +1455,7 @@ type NetLookupCb = (
 ) => void;
 
 const NET_TIMEOUT_MS = 30_000;
+const NET_MAX_RESPONSE_BYTES = 4 * 1024 * 1024;
 
 // Production transport: ONE request over node:http/https, connect pinned to `pinnedIps` (the rebind fix).
 async function pinnedDial(url: string, req: NetDialRequest): Promise<NetDialResponse> {
@@ -1479,9 +1491,11 @@ async function pinnedDial(url: string, req: NetDialRequest): Promise<NetDialResp
 
   return await new Promise<NetDialResponse>((resolve, reject) => {
     let settled = false;
+    let wallTimer: ReturnType<typeof setTimeout> | undefined;
     const fail = (e: unknown): void => {
       if (settled) return;
       settled = true;
+      if (wallTimer !== undefined) clearTimeout(wallTimer);
       reject(e instanceof Error ? e : new Error(String(e)));
     };
     const options = {
@@ -1494,11 +1508,22 @@ async function pinnedDial(url: string, req: NetDialRequest): Promise<NetDialResp
     };
     const request = mod.request(options, (res) => {
       const chunks: Uint8Array[] = [];
-      res.on("data", (c) => chunks.push(c));
+      let responseBytes = 0;
+      res.on("data", (c) => {
+        responseBytes += c.byteLength;
+        if (responseBytes > NET_MAX_RESPONSE_BYTES) {
+          const error = new Error(`network response exceeds ${NET_MAX_RESPONSE_BYTES}-byte limit`);
+          fail(error);
+          res.destroy(error);
+          return;
+        }
+        chunks.push(c);
+      });
       res.on("error", fail);
       res.on("end", () => {
         if (settled) return;
         settled = true;
+        if (wallTimer !== undefined) clearTimeout(wallTimer);
         const status = res.statusCode ?? 0;
         const locRaw = res.headers["location"];
         const location = Array.isArray(locRaw) ? (locRaw[0] ?? null) : (locRaw ?? null);
@@ -1507,6 +1532,7 @@ async function pinnedDial(url: string, req: NetDialRequest): Promise<NetDialResp
     });
     request.on("error", fail);
     request.setTimeout(NET_TIMEOUT_MS, () => request.destroy(new Error(`network timeout after ${NET_TIMEOUT_MS}ms`)));
+    wallTimer = setTimeout(() => request.destroy(new Error(`network wall-clock deadline after ${NET_TIMEOUT_MS}ms`)), NET_TIMEOUT_MS);
     if (bodyOut !== undefined) request.write(bodyOut);
     request.end();
   });
@@ -1527,36 +1553,25 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
   // `302 Location: http://169.254.169.254/`, and a guard that only checks the original URL is bypassed by the
   // redirect (DevSecOps pentest finding). guardHop returns an SSRF error, or the addresses to PIN through
   // connect (RD-0310 DNS-rebind fix): the exact address validated is the exact address the dial connects to.
-  // Force-HTTPS boot setting (owner "force https on http") + a smart LOCAL-DEV loopback exception. Canonical
-  // setting + accessor live in @galerina/core-config (`resolveEgressTls`); the dial mirrors the same env reads
-  // inline (no extra package edge). FAIL-SECURE on every axis:
-  //  - default DENIES plaintext public egress + locks the effective port to 443; only an explicit
-  //    GALERINA_ALLOW_PLAINTEXT_EGRESS=true relaxes it (operator override).
+  // Force-HTTPS boot setting (owner "force https on http") + a bounded LOCAL-DEV loopback exception.
+  // Process environment selects the named production/development profile; it cannot grant host, scheme,
+  // or port authority. FAIL-SECURE on every axis:
+  //  - plaintext public egress is always denied and the effective public TLS port is locked to 443.
   //  - `http://localhost` (LOOPBACK ONLY — 127/8, ::1, localhost) is permitted for LOCAL DEVELOPMENT so a
-  //    dev server "just works", but NEVER in production and only on a dev signal (NODE_ENV/GALERINA_PROFILE=
-  //    development, or GALERINA_ALLOW_LOCALHOST=true). Private LAN / metadata / link-local stay SSRF-denied.
+  //    dev server "just works", but NEVER in production and only under the named development profile.
+  //    Private LAN / metadata / link-local stay SSRF-denied.
   //  - `http` stays in the scheme list so a plaintext URL to an INTERNAL host is still the SSRF finding
   //    (host-category denial runs first); only an otherwise-allowed PUBLIC plaintext host hits TLS_REQUIRED.
-  const allowPlaintextEgress =
-    process.env?.["GALERINA_ALLOW_PLAINTEXT_EGRESS"] === "true" || process.env?.["GALERINA_ALLOW_PLAINTEXT_EGRESS"] === "1";
   const profile = process.env?.["GALERINA_PROFILE"];
   const nodeEnv = process.env?.["NODE_ENV"];
   const isProd = profile === "production" || nodeEnv === "production";
   const isDev = profile === "development" || nodeEnv === "development";
-  const allowLocalhost =
-    process.env?.["GALERINA_ALLOW_LOCALHOST"] === "true" || process.env?.["GALERINA_ALLOW_LOCALHOST"] === "1";
-  const allowLoopback = !isProd && (isDev || allowLocalhost);
-  // Internal egress PROXY / trusted-host allow-list — exact hosts admitted in EVERY env incl. production (over
-  // plaintext / any port), bypassing SSRF + force-HTTPS for those hosts ONLY. Lets a corp proxy work in prod.
-  const allowedHostsRaw = process.env?.["GALERINA_EGRESS_ALLOWED_HOSTS"];
-  const allowedHosts = allowedHostsRaw
-    ? allowedHostsRaw.split(/[,\s]+/).map((h) => h.trim().toLowerCase()).filter((h) => h.length > 0)
-    : [];
+  const allowLoopback = !isProd && isDev;
   const dialPolicy = {
     allowedSchemes: ["http", "https"],
-    ...(allowPlaintextEgress ? {} : { requireTls: true, allowedPorts: [443] }),
+    requireTls: true,
+    allowedPorts: [443],
     ...(allowLoopback ? { allowLoopback: true } : {}),
-    ...(allowedHosts.length ? { allowedHosts } : {}),
   };
   // Resolver seam (default: node:dns/promises, all addresses). The guard re-classifies EVERY address it
   // returns, so an injected resolver cannot smuggle a private/metadata answer past the deny-by-default check.

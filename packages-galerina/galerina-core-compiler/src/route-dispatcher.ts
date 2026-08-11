@@ -138,7 +138,15 @@ export async function startServer(
     req.on("end", () => {
       if (settled) return;
       const body = concatBytes(chunks);
-      const reqValue = hydrateRequest(req, match, body, queryParams, path);
+      let reqValue: GalerinaValue;
+      try {
+        reqValue = hydrateRequest(req, match, body, queryParams, path);
+      } catch {
+        res.statusCode = 422;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ error: "Unprocessable Entity" }));
+        return;
+      }
       // Pass the request value under both "request" (canonical style) and "req"
       // (legacy style) so flows using either parameter name work correctly.
       const args = new Map<string, GalerinaValue>([
@@ -156,7 +164,6 @@ export async function startServer(
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify({
           error: "Flow execution failed",
-          detail: error instanceof Error ? error.message : String(error),
         }));
       });
     });
@@ -223,12 +230,10 @@ function hydrateRequest(
   const contentType = (req.headers["content-type"] ?? "").toLowerCase();
   if (contentType.includes("application/json") && body.length > 0) {
     try {
-      const text = new TextDecoder().decode(body);
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(body);
       const parsed = JSON.parse(text);
       parsedBody = jsObjectToGalerina(parsed);
-    } catch {
-      // Invalid JSON — keep raw bytes
-    }
+    } catch { throw new Error("INVALID_JSON_BODY"); }
   }
 
   const fields = new Map<string, GalerinaValue>([

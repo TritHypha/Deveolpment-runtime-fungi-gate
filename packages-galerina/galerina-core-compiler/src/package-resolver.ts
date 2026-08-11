@@ -385,7 +385,9 @@ export function getResolverReport(
       name: m.name,
       version: m.version,
       hash: m.hash,
-      trusted: hasValidContentHash(m.hash) && !!m.signature,
+      // Metadata shape and signature presence are evidence candidates, never authenticated
+      // package identity. This resolver has no admitted package bytes or verification key.
+      trusted: false,
       effects: m.effects ?? [],
       capabilities: m.capabilities ?? [],
       targets,

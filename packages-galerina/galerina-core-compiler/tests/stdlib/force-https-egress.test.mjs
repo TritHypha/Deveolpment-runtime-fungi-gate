@@ -1,8 +1,8 @@
 // =============================================================================
 // Force-HTTPS boot setting at the outbound dial (owner "force https on http").
 //
-// Default: plaintext PUBLIC http egress is DENIED (TLS required). An explicit operator opt-out
-// (GALERINA_ALLOW_PLAINTEXT_EGRESS=true) relaxes it — but never relaxes the SSRF host guard.
+// Default: plaintext PUBLIC http egress is DENIED (TLS required). Process environment variables
+// are not an authority source and cannot relax TLS, SSRF, or internal-host policy.
 //
 // http.* dials through the injectable seams: `ctx.dial` (fake transport, no real network) and
 // `ctx.resolveHost` (fake DNS → a public literal so FQDN success paths stay hermetic). Denial cases
@@ -29,11 +29,12 @@ test("default (no env): plaintext PUBLIC http egress is denied (force-HTTPS)", a
   assert.match(r.error?.value ?? "", /TLS \(https\) required|TLS_REQUIRED/);
 });
 
-test("operator opt-out (=true): plaintext public http egress is permitted", async () => {
+test("process env cannot opt out of TLS for public egress", async () => {
   process.env.GALERINA_ALLOW_PLAINTEXT_EGRESS = "true";
   try {
-    const r = await getPinned("http://example.com/x", () => dresp(200, "OK-PLAINTEXT"));
-    assert.equal(r.__tag, "ok", `expected ok, got ${JSON.stringify(r)}`);
+    const r = await getPinned("http://example.com/x", () => dresp(200, "UNREACHABLE"));
+    assert.equal(r.__tag, "err");
+    assert.match(r.error?.value ?? "", /TLS \(https\) required|TLS_REQUIRED/);
   } finally {
     delete process.env.GALERINA_ALLOW_PLAINTEXT_EGRESS;
   }
@@ -59,11 +60,12 @@ test("https on 443 is unaffected (the normal path still works)", async () => {
 // ── local-dev loopback exception ("be a bit smart and not block http://localhost") ──
 const clearDev = () => { delete process.env.GALERINA_ALLOW_LOCALHOST; delete process.env.NODE_ENV; delete process.env.GALERINA_PROFILE; delete process.env.GALERINA_EGRESS_ALLOWED_HOSTS; };
 
-test("local dev: http://localhost is ALLOWED with GALERINA_ALLOW_LOCALHOST=true", async () => {
+test("process env cannot grant localhost access outside the development profile", async () => {
   clearDev(); process.env.GALERINA_ALLOW_LOCALHOST = "true";
   try {
-    const r = await getPinned("http://localhost:3000/api", () => dresp(200, "OK-LOCAL"));
-    assert.equal(r.__tag, "ok", `expected ok, got ${JSON.stringify(r)}`);
+    const r = await getPinned("http://localhost:3000/api", () => dresp(200, "UNREACHABLE"));
+    assert.equal(r.__tag, "err");
+    assert.match(r.error?.value ?? "", /SSRF/);
   } finally { clearDev(); }
 });
 
@@ -103,13 +105,14 @@ test("loopback dev does NOT open metadata/private even with the dev signal", asy
 });
 
 // ── internal egress proxy: "even in production we need to work with an internal proxy" ──
-test("internal proxy: an allow-listed host works in PRODUCTION (http, odd port, internal)", async () => {
+test("process env cannot allow-list an internal proxy in production", async () => {
   clearDev();
   process.env.NODE_ENV = "production";
   process.env.GALERINA_EGRESS_ALLOWED_HOSTS = "proxy.internal";
   try {
-    const r = await getPinned("http://proxy.internal:8080/fetch", () => dresp(200, "OK-PROXY"));
-    assert.equal(r.__tag, "ok", `expected ok, got ${JSON.stringify(r)}`);
+    const r = await getPinned("http://proxy.internal:8080/fetch", () => dresp(200, "UNREACHABLE"));
+    assert.equal(r.__tag, "err");
+    assert.match(r.error?.value ?? "", /SSRF/);
   } finally { clearDev(); }
 });
 
@@ -134,17 +137,15 @@ function captureAudit() {
 const getAudited = (url, cap, dial) =>
   callStdlib("http.get", undefined, [str(url)], { ...ctx, dial, resolveHost: async () => [PUBLIC_IP], auditSink: cap.sink });
 
-test("allow-list audit: an admitted bypass host is logged to the audit trail", async () => {
+test("ignored allow-list env cannot create a bypass or a misleading admission audit", async () => {
   clearDev();
   process.env.NODE_ENV = "production";
   process.env.GALERINA_EGRESS_ALLOWED_HOSTS = "audit-a.internal";
   try {
     const cap = captureAudit();
-    await getAudited("http://audit-a.internal:8080/x", cap, () => dresp(200, "OK"));
-    const out = cap.text();
-    assert.match(out, /galerina:egress-audit/);
-    assert.match(out, /audit-a\.internal/);
-    assert.match(out, /GALERINA_EGRESS_ALLOWED_HOSTS/);
+    const r = await getAudited("http://audit-a.internal:8080/x", cap, () => dresp(200, "UNREACHABLE"));
+    assert.equal(r.__tag, "err");
+    assert.doesNotMatch(cap.text(), /egress-audit/);
   } finally { clearDev(); }
 });
 
@@ -155,14 +156,16 @@ test("allow-list audit: a normal public host is NOT audited (only the bypass lea
   assert.doesNotMatch(cap.text(), /egress-audit/);
 });
 
-test("allow-list audit: repeated dials of the same host log once per process (deduped)", async () => {
+test("repeated ignored allow-list attempts remain denied and unaudited as admissions", async () => {
   clearDev();
   process.env.GALERINA_EGRESS_ALLOWED_HOSTS = "audit-dedupe.internal";
   try {
     const cap = captureAudit();
-    await getAudited("http://audit-dedupe.internal/1", cap, () => dresp(200, "OK"));
-    await getAudited("http://audit-dedupe.internal/2", cap, () => dresp(200, "OK"));
+    const first = await getAudited("http://audit-dedupe.internal/1", cap, () => dresp(200, "UNREACHABLE"));
+    const second = await getAudited("http://audit-dedupe.internal/2", cap, () => dresp(200, "UNREACHABLE"));
+    assert.equal(first.__tag, "err");
+    assert.equal(second.__tag, "err");
     const hits = (cap.text().match(/audit-dedupe\.internal/g) ?? []).length;
-    assert.equal(hits, 1, `expected exactly one audit line, got ${hits}`);
+    assert.equal(hits, 0, `expected no admission audit line, got ${hits}`);
   } finally { clearDev(); }
 });

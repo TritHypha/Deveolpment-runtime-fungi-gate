@@ -2595,18 +2595,6 @@ class Interpreter {
       return { __tag: "ok", value: { __tag: "protected", baseType: titleCase(baseName), value: raw } };
     }
 
-    if (fullName.startsWith("json.decode") || fullName.startsWith("toml.decode")) {
-      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
-      if (raw.__tag === "string") {
-        try {
-          return { __tag: "ok", value: jsObjectToGalerina(JSON.parse(raw.value)) };
-        } catch {
-          return { __tag: "err", error: { __tag: "string", value: "DecodeError: invalid JSON" } };
-        }
-      }
-      return { __tag: "ok", value: raw };
-    }
-
     if (methodName === "redact" || fullName === "redact") {
       const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return { __tag: "redacted", baseType: raw.__tag === "protected" ? raw.baseType : "Unknown" };
@@ -3234,22 +3222,6 @@ function safeDisplay(value: GalerinaValue): string {
 
 function safeStringify(value: GalerinaValue): string {
   return safeDisplay(value);
-}
-
-function jsObjectToGalerina(obj: unknown): GalerinaValue {
-  if (obj === null || obj === undefined) return FUNGI_NONE;
-  if (typeof obj === "string") return { __tag: "string", value: obj };
-  if (typeof obj === "number") return Number.isInteger(obj) ? { __tag: "int", value: obj } : { __tag: "float", value: obj };
-  if (typeof obj === "boolean") return { __tag: "bool", value: obj };
-  if (Array.isArray(obj)) return { __tag: "list", items: obj.map((item) => jsObjectToGalerina(item)) };
-  if (typeof obj === "object") {
-    const fields = new Map<string, GalerinaValue>();
-    for (const [key, value] of Object.entries(obj)) {
-      fields.set(key, jsObjectToGalerina(value));
-    }
-    return { __tag: "record", fields };
-  }
-  return { __tag: "string", value: String(obj) };
 }
 
 function extractParamName(value: string): string {
