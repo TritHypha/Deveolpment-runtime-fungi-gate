@@ -69,10 +69,13 @@ pairs, the typed interpreter and signed/admitted Wasm all agree; the compiler
 package passes **6,346/6,346**. Clean SLIDE `ac8a041` required no source change:
 it publishes one physical `.slide`, independently re-admits and executes all
 canonical and hostile pairs, and refuses wrong typed arguments, source
-mutation and a one-byte artifact mutation (**1/1**, zero skips). Repository
-closure is in progress and no final aggregate count is claimed here yet. The
-TypeScript helper and caller remain active; this proof grants no plugin,
-consumer-switch, bootstrap, production, release or retirement authority.
+mutation and a one-byte artifact mutation (**1/1**, zero skips). The current
+aggregate is **100/100 packages / 9,558 tests / 0 failures** in **323.0s**;
+governed tooling is **598 total / 585 pass / 13 intentional skips / 0 fail**
+in **82.6s**; graph and canonical count consumers are **7/7**. Normal
+phase-close is the remaining repository exit. The TypeScript helper and caller
+remain active; this proof grants no plugin, consumer-switch, bootstrap,
+production, release or retirement authority.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

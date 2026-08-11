@@ -18,9 +18,11 @@ counts or open items that a newer section explicitly supersedes.
   physical `.slide`, independently re-admit and execute all canonical and
   hostile pairs, and refuse wrong typed arguments, source mutation and a
   one-byte physical artifact mutation (**1/1**, zero skips).
-- [ ] Close the repository-wide aggregate, governed tooling, generated owners,
-  roadmap and normal phase-close against this third slice; record only the
-  measured final counts.
+- [ ] Close normal phase-close against this third slice. The repository-wide
+  aggregate is green at **100/100 packages and 9,558 tests** in **323.0s**;
+  governed tooling is **598 total / 585 pass / 13 intentional skips / 0 fail**
+  in **82.6s**; generated owners, graph **7/7**, canonical count consumers
+  **7/7** and the roadmap are current. Phase-close remains the final exit.
 - [x] Keep `plugin-schema.ts`, `validatePluginInput` and every consumer active.
   This is a reference-only conversion proof and grants no plugin-execution,
   consumer-switch, bootstrap, production, release or retirement authority.

@@ -46,9 +46,12 @@ exit. No new language syntax or effect authority was introduced.
 
 ## Closure and authority boundary
 
-Repository-wide aggregate, governed tooling, generated-owner, roadmap and
-normal phase-close evidence is still being regenerated. Until those checks
-finish, repository closure is `UNKNOWN`; focused success is not relabelled as
+The repository-wide aggregate passes **100/100 packages and 9,558 tests** in
+**323.0 seconds**. Governed tooling passes **598 total / 585 pass / 13
+intentional skips / 0 fail** in **82.6 seconds**. Generated owners, semantic
+and repository graphs, canonical count consumers and the roadmap are current.
+Normal phase-close remains the final repository exit; until it completes,
+repository closure is `UNKNOWN` and focused success is not relabelled as
 global success.
 
 `plugin-schema.ts`, `validatePluginInput` and every consumer remain active.
