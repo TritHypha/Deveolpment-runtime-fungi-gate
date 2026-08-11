@@ -176,6 +176,46 @@ test("staged-index reader takes one checked bounded NUL snapshot", async () => {
   }), /exit 23|refusal|failed/i);
 });
 
+test("staged-blob reader resolves the exact regular-file object identity", async () => {
+  const { readStagedGitBlob } = await import(pathToFileURL(STAGED_INDEX).href);
+  const calls = [];
+  const expected = Buffer.from('{"packages":[]}\n', "utf8");
+  const entry = Object.freeze({
+    mode: "100644",
+    objectId: HASH,
+    stage: 0,
+    path: "galerina.workspace.json",
+  });
+  const actual = readStagedGitBlob("C:/fixture", entry, {
+    maxBytes: 1024,
+    label: "workspace package registry",
+    run(commandName, args, options) {
+      calls.push({ commandName, args, options });
+      return { status: 0, stdout: expected, stderr: Buffer.alloc(0) };
+    },
+  });
+  assert.deepEqual(actual, expected);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].commandName, "git");
+  assert.deepEqual(calls[0].args, ["cat-file", "blob", HASH]);
+  assert.equal(calls[0].options.encoding, null);
+  assert.equal(calls[0].options.maxBuffer, 1024);
+
+  assert.throws(() => readStagedGitBlob("C:/fixture", entry, {
+    run() {
+      return {
+        status: 9,
+        stdout: Buffer.alloc(0),
+        stderr: Buffer.from("missing staged object", "utf8"),
+      };
+    },
+  }), /exit 9|missing staged object/i);
+  assert.throws(() => readStagedGitBlob("C:/fixture", {
+    ...entry,
+    mode: "160000",
+  }), /regular-file mode/i);
+});
+
 /**
  * Run the real retirement generator against the fixture.
  *
@@ -330,6 +370,38 @@ test("ts-retirement refuses Git-index failure and unregistered owned package pat
     assert.match(`${result.stdout}\n${result.stderr}`, /unregistered|owned package/i);
   } finally {
     rmSync(unownedRoot, { recursive: true, force: true });
+  }
+});
+
+test("ts-retirement binds package ownership to the staged workspace registry blob", () => {
+  const root = fixture();
+  try {
+    const packageRoot = "packages-galerina/unstaged-registry-package";
+    const manifest = `${packageRoot}/package.json`;
+    const source = `${packageRoot}/src/escape.mjs`;
+    write(root, manifest, '{"name":"@galerina/unstaged-registry-package"}\n');
+    write(root, source, "export const escape = true;\n");
+    assert.equal(command(root, "git", ["add", "--", packageRoot]).status, 0);
+
+    const workspacePath = join(root, "galerina.workspace.json");
+    const workspace = JSON.parse(readFileSync(workspacePath, "utf8"));
+    workspace.packages.push(packageRoot);
+    writeFileSync(workspacePath, `${JSON.stringify(workspace)}\n`);
+
+    const stagedNames = command(root, "git", ["diff", "--cached", "--name-only"]).stdout;
+    const unstagedNames = command(root, "git", ["diff", "--name-only"]).stdout;
+    assert.match(stagedNames, /unstaged-registry-package\/package\.json/);
+    assert.doesNotMatch(stagedNames, /galerina\.workspace\.json/);
+    assert.match(unstagedNames, /galerina\.workspace\.json/);
+
+    const result = run(root);
+    assert.notEqual(result.status, 0);
+    assert.match(
+      `${result.stdout}\n${result.stderr}`,
+      /staged workspace registry|unregistered owned package/i,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });
 

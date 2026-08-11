@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 
 const MAX_INDEX_BYTES = 64 * 1024 * 1024;
 const ADMITTED_MODES = new Set(["100644", "100755", "120000", "160000"]);
+const REGULAR_FILE_MODES = new Set(["100644", "100755"]);
 
 function decodeUtf8(bytes, label) {
   try {
@@ -93,4 +94,62 @@ export function readStagedGitIndex(root, { run = spawnSync } = {}) {
     entries.push(Object.freeze({ mode, objectId, stage, path }));
   }
   return Object.freeze(entries);
+}
+
+/**
+ * Read one regular-file blob by the exact object identity captured from the
+ * staged index. Working-tree bytes are never consulted.
+ *
+ * @param {string} root repository root
+ * @param {{mode:string, objectId:string, stage:number, path:string}} entry staged entry
+ * @param {{run?: typeof spawnSync, maxBytes?: number, label?: string}} options process boundary
+ */
+export function readStagedGitBlob(
+  root,
+  entry,
+  {
+    run = spawnSync,
+    maxBytes = MAX_INDEX_BYTES,
+    label = "staged Git blob",
+  } = {},
+) {
+  if (
+    !entry
+    || !REGULAR_FILE_MODES.has(entry.mode)
+    || entry.stage !== 0
+    || typeof entry.objectId !== "string"
+    || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(entry.objectId)
+  ) {
+    throw new Error(`${label} entry must have one regular-file mode, stage 0, and exact object identity`);
+  }
+  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > MAX_INDEX_BYTES) {
+    throw new Error(`${label} maxBytes must be an integer from 1 through ${MAX_INDEX_BYTES}`);
+  }
+  const result = run("git", ["cat-file", "blob", entry.objectId], {
+    cwd: root,
+    encoding: null,
+    maxBuffer: maxBytes,
+    windowsHide: true,
+  });
+  if (result.error) {
+    throw new Error(`${label} command failed: ${result.error.message}`);
+  }
+  const stderr = Buffer.isBuffer(result.stderr)
+    ? decodeUtf8(result.stderr, `${label} stderr`)
+    : String(result.stderr ?? "");
+  if (result.signal) {
+    throw new Error(`${label} command terminated by signal ${String(result.signal)}`);
+  }
+  if (result.status !== 0) {
+    throw new Error(
+      `${label} command failed with exit ${String(result.status)}${stderr.trim() ? `: ${stderr.trim()}` : ""}`,
+    );
+  }
+  if (!Buffer.isBuffer(result.stdout)) {
+    throw new Error(`${label} command returned a non-buffer result`);
+  }
+  if (result.stdout.length > maxBytes) {
+    throw new Error(`${label} exceeds ${maxBytes} bytes`);
+  }
+  return Buffer.from(result.stdout);
 }

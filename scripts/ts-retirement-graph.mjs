@@ -42,7 +42,10 @@ import {
   loadTopologyBaseline,
   scanWorkspace,
 } from "./audit-flat-package-topology.mjs";
-import { readStagedGitIndex } from "./lib/staged-git-index.mjs";
+import {
+  readStagedGitBlob,
+  readStagedGitIndex,
+} from "./lib/staged-git-index.mjs";
 import {
   generatedOutputMatches,
   gitCommit,
@@ -247,17 +250,14 @@ function registeredPackageRoots(root, entries) {
   if (!workspaceEntry || !["100644", "100755"].includes(workspaceEntry.mode)) {
     throw new Error(`${workspacePath} is absent from the staged Git index`);
   }
-  const violations = [];
-  const bytes = readRegularFile(
+  const bytes = readStagedGitBlob(
     root,
-    workspacePath,
-    "workspace package registry",
-    violations,
-    WORKSPACE_MANIFEST_MAX_BYTES,
+    workspaceEntry,
+    {
+      label: "staged workspace package registry",
+      maxBytes: WORKSPACE_MANIFEST_MAX_BYTES,
+    },
   );
-  if (bytes === null || violations.length > 0) {
-    throw new Error(violations.join("; "));
-  }
   let decoded;
   try {
     decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
