@@ -12,7 +12,7 @@
 
 import { randomUUID } from "node:crypto";
 import { AuditLogger, TowerAuditEvent, type AuditLoggerOptions, type EgressSink } from "./audit-logger.js";
-import { PluginSandbox, ExecutionResult, PluginMetadata } from "./plugin-sandbox.js";
+import { PluginSandbox, ExecutionResult, PluginMetadata, snapshotPluginMetadata } from "./plugin-sandbox.js";
 import { verifyPluginManifest, artifactBytesHash, type SignedPluginManifest } from "./plugin-manifest.js";
 import type { AttestationPolicy } from "./bridge-attestation.js";
 
@@ -120,6 +120,13 @@ export class TowerRuntime {
     this.loadingCorrelationIds.add(corrId);
 
     try {
+    try {
+      metadata = snapshotPluginMetadata(metadata);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "invalid plugin metadata";
+      const ev = this.audit.trap(corrId, "sha256:0", "?", "ERR_UNVERIFIED_METADATA", { reason });
+      throw new Error(`FUNGI-ASSIMILATE-003: plugin metadata is not an exact inert object (${reason}) — refusing to load (fail-closed). AuditEvent: ${ev.eventId}`);
+    }
     // Check assimilation budget
     if (metadata.maxMemoryMB > this.config.assimilationMemoryBudgetMB) {
       const ev = this.audit.trap(corrId, metadata.artifactHash, metadata.engineId, "BUDGET_EXCEEDED", {

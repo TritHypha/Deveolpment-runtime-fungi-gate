@@ -84,6 +84,53 @@ test("RD-0236 #10 (follow-on): load requires a SIGNED plugin manifest (deny-by-d
   assert.ok(okBytes.sandbox, "bytes matching the declared hash load");
 });
 
+test("RD-0236 #10: plugin admission never executes metadata accessors", async () => {
+  let getterCalls = 0;
+  const hostile = {
+    artifactPath: "p",
+    artifactHash: "sha256:abc123",
+    governanceTier: 1,
+    license: "Apache-2.0",
+    maxMemoryMB: 1,
+    capabilityMask: 0,
+  };
+  Object.defineProperty(hostile, "engineId", {
+    enumerable: true,
+    get() { getterCalls += 1; return "hostile"; },
+  });
+  const rt = new TowerRuntime({ auditInMemory: true, allowUnsignedLoad: true });
+  await assert.rejects(() => rt.load(hostile), /metadata|descriptor|accessor|plain/i);
+  assert.equal(getterCalls, 0, "validation must inspect descriptors without invoking attacker code");
+});
+
+test("RD-0236 #10: verified metadata is snapshotted before the async verification boundary", async () => {
+  const { publicKeyPem, privateKeyPem } = generateAttestationKeypair();
+  const meta = { engineId: "plugin-snapshot", artifactPath: "p", artifactHash: "sha256:abc123", governanceTier: 1, license: "Apache-2.0", maxMemoryMB: 1, capabilityMask: 0 };
+  const signed = signPluginManifest(meta, privateKeyPem);
+  const rt = new TowerRuntime({ auditInMemory: true, attestationPolicy: { requireSigned: true, publicKeyPem } });
+  const loading = rt.load(meta, undefined, { signedManifest: signed });
+  meta.engineId = "mutated-after-verification-started";
+  meta.maxMemoryMB = 999999;
+  const { sandbox } = await loading;
+  assert.equal(sandbox.metadata.engineId, "plugin-snapshot");
+  assert.equal(sandbox.metadata.maxMemoryMB, 1);
+  assert.equal(Object.isFrozen(sandbox.metadata), true);
+});
+
+test("RD-0236 #10: signed-manifest envelope accessors are rejected without execution", async () => {
+  const { publicKeyPem } = generateAttestationKeypair();
+  const meta = { engineId: "plugin-envelope", artifactPath: "p", artifactHash: "sha256:abc123", governanceTier: 1, license: "Apache-2.0", maxMemoryMB: 1, capabilityMask: 0 };
+  let getterCalls = 0;
+  const signedManifest = {};
+  Object.defineProperty(signedManifest, "manifest", {
+    enumerable: true,
+    get() { getterCalls += 1; return meta; },
+  });
+  const rt = new TowerRuntime({ auditInMemory: true, attestationPolicy: { requireSigned: true, publicKeyPem } });
+  await assert.rejects(() => rt.load(meta, undefined, { signedManifest }), /manifest|descriptor|accessor|plain/i);
+  assert.equal(getterCalls, 0);
+});
+
 // ── #10 follow-on² — a CERTIFIED tower forbids the unsigned-load floor (fail-secure at the load surface) ──
 test("RD-0236 #10 (follow-on²): a certified TowerRuntime forbids allowUnsignedLoad", async () => {
   const { publicKeyPem, privateKeyPem } = generateAttestationKeypair();

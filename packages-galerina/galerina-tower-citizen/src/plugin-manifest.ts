@@ -15,8 +15,9 @@
  */
 
 import { createHash, sign as edSign, verify as edVerify, createPrivateKey, createPublicKey } from "node:crypto";
+import { types as utilTypes } from "node:util";
 import type { AttestationPolicy, AttestationResult } from "./bridge-attestation.js";
-import type { PluginMetadata } from "./plugin-sandbox.js";
+import { snapshotPluginMetadata, type PluginMetadata } from "./plugin-sandbox.js";
 
 export interface SignedPluginManifest {
   readonly manifest: PluginMetadata;
@@ -28,9 +29,7 @@ export interface SignedPluginManifest {
  *  bridge-manifest and capability-grant contexts). */
 const PLUGIN_MLDSA_CONTEXT = new TextEncoder().encode("galerina.plugin.manifest.v1");
 
-/** Canonical, deterministic signing/hashing pre-image — every field in a fixed order, mask normalised
- *  to unsigned 32-bit so `-1` and `0xFFFFFFFF` cannot serialise to different strings. */
-export function canonicalPluginManifestString(m: PluginMetadata): string {
+function canonicalPluginManifestSnapshot(m: PluginMetadata): string {
   return JSON.stringify({
     engineId: m.engineId,
     artifactPath: m.artifactPath,
@@ -38,8 +37,52 @@ export function canonicalPluginManifestString(m: PluginMetadata): string {
     governanceTier: m.governanceTier,
     license: m.license,
     maxMemoryMB: m.maxMemoryMB,
-    capabilityMask: (m.capabilityMask ?? 0) >>> 0,
+    capabilityMask: m.capabilityMask >>> 0,
   });
+}
+
+function snapshotSignedPluginManifest(value: unknown): SignedPluginManifest {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error("signed plugin manifest must be a plain object");
+  }
+  if (utilTypes.isProxy(value)) throw new Error("signed plugin manifest proxies are forbidden");
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) {
+    throw new Error("signed plugin manifest must have a plain object prototype");
+  }
+  if (Object.getOwnPropertySymbols(value).length !== 0) {
+    throw new Error("signed plugin manifest must not contain symbol keys");
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const allowed = new Set(["manifest", "signature", "mlDsaSignature"]);
+  const names = Object.keys(descriptors);
+  if (!names.includes("manifest") || names.some((name) => !allowed.has(name))) {
+    throw new Error("signed plugin manifest fields are not canonical");
+  }
+  const read = (name: string): unknown => {
+    const descriptor = descriptors[name];
+    if (descriptor === undefined) return undefined;
+    if (!("value" in descriptor) || descriptor.enumerable !== true) {
+      throw new Error(`signed plugin manifest field '${name}' must be an enumerable data descriptor; accessors are forbidden`);
+    }
+    return descriptor.value;
+  };
+  const manifest = snapshotPluginMetadata(read("manifest"));
+  const signature = read("signature");
+  const mlDsaSignature = read("mlDsaSignature");
+  if (signature !== undefined && typeof signature !== "string") throw new Error("plugin manifest signature must be a string");
+  if (mlDsaSignature !== undefined && typeof mlDsaSignature !== "string") throw new Error("plugin manifest ML-DSA signature must be a string");
+  return Object.freeze({
+    manifest,
+    ...(signature !== undefined ? { signature } : {}),
+    ...(mlDsaSignature !== undefined ? { mlDsaSignature } : {}),
+  });
+}
+
+/** Canonical, deterministic signing/hashing pre-image — every field in a fixed order, mask normalised
+ *  to unsigned 32-bit so `-1` and `0xFFFFFFFF` cannot serialise to different strings. */
+export function canonicalPluginManifestString(m: PluginMetadata): string {
+  return canonicalPluginManifestSnapshot(snapshotPluginMetadata(m));
 }
 
 /** sha256 hex of the canonical plugin-manifest pre-image. */
@@ -54,8 +97,9 @@ export function artifactBytesHash(bytes: Uint8Array): string {
 
 /** Sign a plugin manifest with an Ed25519 private key (PEM PKCS8). */
 export function signPluginManifest(manifest: PluginMetadata, privateKeyPem: string): SignedPluginManifest {
-  const sig = edSign(null, Buffer.from(canonicalPluginManifestString(manifest), "utf8"), createPrivateKey(privateKeyPem));
-  return { manifest, signature: sig.toString("base64") };
+  const snapshot = snapshotPluginMetadata(manifest);
+  const sig = edSign(null, Buffer.from(canonicalPluginManifestSnapshot(snapshot), "utf8"), createPrivateKey(privateKeyPem));
+  return Object.freeze({ manifest: snapshot, signature: sig.toString("base64") });
 }
 
 /** Hybrid sign (Ed25519 + ML-DSA-65) — both signatures over the canonical manifest pre-image. */
@@ -64,13 +108,14 @@ export async function signPluginManifestHybrid(
   privateKeyPem: string,
   mlDsaPrivateKey: Uint8Array,
 ): Promise<SignedPluginManifest> {
-  const msg = Buffer.from(canonicalPluginManifestString(manifest), "utf8");
+  const snapshot = snapshotPluginMetadata(manifest);
+  const msg = Buffer.from(canonicalPluginManifestSnapshot(snapshot), "utf8");
   const edSig = edSign(null, msg, createPrivateKey(privateKeyPem));
   const { ml_dsa65 } = await import("@noble/post-quantum/ml-dsa.js") as {
     ml_dsa65: { sign(m: Uint8Array, sk: Uint8Array, opts?: { context?: Uint8Array }): Uint8Array };
   };
   const mlSig = ml_dsa65.sign(msg, mlDsaPrivateKey, { context: PLUGIN_MLDSA_CONTEXT });
-  return { manifest, signature: edSig.toString("base64"), mlDsaSignature: Buffer.from(mlSig).toString("base64") };
+  return Object.freeze({ manifest: snapshot, signature: edSig.toString("base64"), mlDsaSignature: Buffer.from(mlSig).toString("base64") });
 }
 
 /**
@@ -85,9 +130,16 @@ export async function verifyPluginManifest(
   policy: AttestationPolicy,
   expected: { engineId: string; artifactHash: string },
 ): Promise<AttestationResult> {
-  if (!signed || !signed.manifest) return { ok: false, reason: "no signed plugin manifest provided" };
-  const m = signed.manifest;
-  const hash = pluginManifestHash(m);
+  if (!signed) return { ok: false, reason: "no signed plugin manifest provided" };
+  let admitted: SignedPluginManifest;
+  try {
+    admitted = snapshotSignedPluginManifest(signed);
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : "signed plugin manifest is invalid" };
+  }
+  const m = admitted.manifest;
+  const canonical = canonicalPluginManifestSnapshot(m);
+  const hash = createHash("sha256").update(canonical, "utf8").digest("hex");
 
   // Bind the manifest to the metadata being loaded — no manifest-for-another-plugin replay.
   if (m.engineId !== expected.engineId || m.artifactHash !== expected.artifactHash) {
@@ -95,14 +147,14 @@ export async function verifyPluginManifest(
   }
 
   // Ed25519 — a load manifest asserts identity/authority, so a signature is always required.
-  if (!signed.signature) return { ok: false, reason: "manifest signature required but absent", hash };
+  if (!admitted.signature) return { ok: false, reason: "manifest signature required but absent", hash };
   if (!policy.publicKeyPem) return { ok: false, reason: "no public key configured to verify the manifest", hash };
   try {
     const ok = edVerify(
       null,
-      Buffer.from(canonicalPluginManifestString(m), "utf8"),
+      Buffer.from(canonical, "utf8"),
       createPublicKey(policy.publicKeyPem),
-      Buffer.from(signed.signature, "base64"),
+      Buffer.from(admitted.signature, "base64"),
     );
     if (!ok) return { ok: false, reason: "manifest signature verification failed", hash };
   } catch (e) {
@@ -124,14 +176,14 @@ export async function verifyPluginManifest(
   // Hybrid ML-DSA-65 half (no PQ downgrade) when the policy demands it.
   if (policy.requireHybrid === true || policy.mlDsaPublicKey !== undefined) {
     if (!policy.mlDsaPublicKey) return { ok: false, reason: "requireHybrid set but policy has no mlDsaPublicKey", hash };
-    if (!signed.mlDsaSignature) return { ok: false, reason: "ML-DSA manifest signature required but absent (hybrid)", hash };
+    if (!admitted.mlDsaSignature) return { ok: false, reason: "ML-DSA manifest signature required but absent (hybrid)", hash };
     try {
       const { ml_dsa65 } = await import("@noble/post-quantum/ml-dsa.js") as {
         ml_dsa65: { verify(s: Uint8Array, m: Uint8Array, pk: Uint8Array, opts?: { context?: Uint8Array }): boolean };
       };
       const ok = ml_dsa65.verify(
-        Buffer.from(signed.mlDsaSignature, "base64"),
-        Buffer.from(canonicalPluginManifestString(m), "utf8"),
+        Buffer.from(admitted.mlDsaSignature, "base64"),
+        Buffer.from(canonical, "utf8"),
         policy.mlDsaPublicKey,
         { context: PLUGIN_MLDSA_CONTEXT },
       );

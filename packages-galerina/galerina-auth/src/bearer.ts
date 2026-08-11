@@ -202,8 +202,14 @@ export function bearerTokenVerdict(
   const claims = parseJsonSegment(p);
   if (claims === null) return Verdict.DENY;
 
-  const now = (opts.now ? opts.now() : Date.now() / 1000);
+  let now: number;
+  try {
+    now = opts.now ? opts.now() : Date.now() / 1000;
+  } catch {
+    return Verdict.DENY;
+  }
   const skew = opts.clockToleranceSec ?? 0;
+  if (!Number.isFinite(now) || now < 0 || !Number.isFinite(skew) || skew < 0) return Verdict.DENY;
 
   // exp — required by default (#4). A present exp must be a finite number and in the future.
   const requireExp = opts.requireExp ?? true;

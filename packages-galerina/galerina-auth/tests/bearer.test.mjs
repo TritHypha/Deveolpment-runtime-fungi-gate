@@ -109,6 +109,30 @@ test("expired but within clockTolerance → ALLOW", () => {
   assert.equal(bearerTokenVerdict(bearer(t), { key: HS_SECRET, algorithms: ["HS256"], now, clockToleranceSec: 60 }), Verdict.ALLOW);
 });
 
+test("non-finite or throwing clocks DENY instead of bypassing temporal claims", () => {
+  const t = jwt({ alg: "HS256" }, { sub: "u1", exp: NOW - 1 }, hsSign(HS_SECRET));
+  for (const badNow of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
+    assert.equal(
+      bearerTokenVerdict(bearer(t), { key: HS_SECRET, algorithms: ["HS256"], now: () => badNow }),
+      Verdict.DENY,
+    );
+  }
+  assert.equal(
+    bearerTokenVerdict(bearer(t), { key: HS_SECRET, algorithms: ["HS256"], now: () => { throw new Error("clock unavailable"); } }),
+    Verdict.DENY,
+  );
+});
+
+test("invalid clock tolerance DENIES and cannot turn an expired token into ALLOW", () => {
+  const t = jwt({ alg: "HS256" }, { sub: "u1", exp: NOW - 1 }, hsSign(HS_SECRET));
+  for (const clockToleranceSec of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, -1]) {
+    assert.equal(
+      bearerTokenVerdict(bearer(t), { key: HS_SECRET, algorithms: ["HS256"], now, clockToleranceSec }),
+      Verdict.DENY,
+    );
+  }
+});
+
 // ── signature integrity ────────────────────────────────────────────────────────
 test("tampered payload (signature no longer matches) → DENY", () => {
   const t = jwt({ alg: "HS256", typ: "JWT" }, { sub: "u1", exp: NOW + 100 }, hsSign(HS_SECRET));
