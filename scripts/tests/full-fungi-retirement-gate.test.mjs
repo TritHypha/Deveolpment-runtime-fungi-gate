@@ -29,8 +29,22 @@ function command(root, executable, args) {
   });
 }
 
+function writeOwnedWorkspace(root) {
+  write(
+    root,
+    "galerina.workspace.json",
+    `${JSON.stringify({ packages: ["packages-galerina/galerina-core"] }, null, 2)}\n`,
+  );
+  write(
+    root,
+    "packages-galerina/galerina-core/package.json",
+    `${JSON.stringify({ name: "@galerina/core", version: "1.0.0" }, null, 2)}\n`,
+  );
+}
+
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "full-fungi-retirement-"));
+  writeOwnedWorkspace(root);
   write(
     root,
     "packages-galerina/galerina-core/src/index.ts",
@@ -63,7 +77,7 @@ function fixture() {
   );
   assert.equal(command(root, "git", ["init"]).status, 0);
   assert.equal(
-    command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
+    command(root, "git", ["add", "--", "galerina.workspace.json", "packages-galerina", "docs"]).status,
     0,
   );
   return root;
@@ -79,6 +93,7 @@ function postSlideFixture({
   crlfSource = false,
 } = {}) {
   const root = mkdtempSync(join(tmpdir(), "full-fungi-post-slide-"));
+  writeOwnedWorkspace(root);
   const source = "pure flow value() -> Int { return 1 }\n";
   const storedSource = crlfSource ? source.replaceAll("\n", "\r\n") : source;
   const evidence = `${JSON.stringify({
