@@ -1,7 +1,7 @@
 {
   "tool": "semantic-assurance-graph",
   "authority": "NONE",
-  "gitCommit": "b76c4ff38549d74e7814f607827aac56849fd28d",
-  "builtAt": "2026-08-11T16:15:43.000Z",
+  "gitCommit": "a73a645af73c55baa4d0206a122b5fae18786e42",
+  "builtAt": "2026-08-11T17:26:25.000Z",
   "node": "v24.18.0"
 }
