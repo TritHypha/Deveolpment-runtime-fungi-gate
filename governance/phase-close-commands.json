@@ -235,7 +235,7 @@
         ],
         "expectedCount": 1
       },
-      "timeoutMs": 30000,
+      "timeoutMs": 120000,
       "maxOutputBytes": 67108864,
       "generatedOutputs": [],
       "nestedTools": [],
