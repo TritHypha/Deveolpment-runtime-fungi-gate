@@ -4993,6 +4993,7 @@
           "scripts/tests/gather-r4-twin-hashes.test.mjs",
           "scripts/tests/generator-contract.test.mjs",
           "scripts/tests/graph-all.test.mjs",
+          "scripts/tests/hardening-trust-fungi-slide.integration.test.mjs",
           "scripts/tests/host-boundary-effect-classification.test.mjs",
           "scripts/tests/impact-executor.test.mjs",
           "scripts/tests/kb-dir.test.mjs",
@@ -5117,6 +5118,7 @@
           "scripts/tests/gather-r4-twin-hashes.test.mjs",
           "scripts/tests/generator-contract.test.mjs",
           "scripts/tests/graph-all.test.mjs",
+          "scripts/tests/hardening-trust-fungi-slide.integration.test.mjs",
           "scripts/tests/host-boundary-effect-classification.test.mjs",
           "scripts/tests/impact-executor.test.mjs",
           "scripts/tests/kb-dir.test.mjs",
@@ -5162,7 +5164,7 @@
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 103
+        "expectedCount": 104
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,
