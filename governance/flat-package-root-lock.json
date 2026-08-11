@@ -322,11 +322,11 @@
       "identity": "@galerina/core-logic",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-logic",
-      "contentDigest": "38313ac83b73cbf2d65b2b1aecddf5f8a3455af8470e5f1ea1143c44eddf7a93",
+      "contentDigest": "ae208b795e8d38750d75fb0a77ec685abb4abce0c122c5e5a4de5ef823b61324",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "8579d40e77ca01ce616153787a1e2797b02c42ba108bd6889ad76423f89ee2c9"
+          "digest": "0ed4064cb1df39159ccdd7593a6c9c1b98878a1a06404a7e11b3fd5cb75e45d9"
         }
       ],
       "dependencies": [
@@ -3273,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "3f00540d0396a5ef1c2acb43cdb8cd20003ea32cc742195c473b2bec15d3d5b7"
+  "rootDigest": "5195fe29943fad4efb9b05a2b9e586fdea52671f327d670b9d7a111a0b497f8b"
 }
