@@ -1,14 +1,14 @@
 {
   "schema": "slide.checked-fungi.package-publication.v2",
-  "packageSetDigest": "sha256:1e6b69dfde3bf677340cb515070b28a9d03c4ba59f7069871ff4d659ac3af187",
+  "packageSetDigest": "sha256:df31c1b534cb29af6ec95276cf9bc5c15479b37b028232abb59c2e5f4eb731ff",
   "topologicalIdentities": [
     "@galerina/core-runtime"
   ],
   "descriptors": [
     {
       "packageIdentity": "@galerina/core-runtime",
-      "descriptorDigest": "sha256:e54d6a8cbbe17a442288414cf31b20fda0258a7fc6fab99fd610b19bdd2c48de",
-      "canonicalBase64": "h3VzbGlkZS5mbGF0LXBhY2thZ2UudjF2QGdhbGVyaW5hL2NvcmUtcnVudGltZWwxLjAuMC1iZXRhLjJ4R3NoYTI1Njo5M2IyNDQwZjA3YjcwN2U3OTA4NjE1YjgxNjJiZDlkYzM4MWRlYzhmNDE3MDlkMjI5NzZkM2ZmY2QzMzBkNTk1gYRzdm9rQXV0aG9yaXR5VmVyZGljdHhHc2hhMjU2OmZjYWQ4YjRjYmJmYWU2YTU3MDQ2Y2Q5ZTgwN2FjNzU5NDgzZTZlMGI2MGI0ZDg0NjIwM2VjZjI2Mzc2Yjc2YjWJAQEBAQEBAQEBAYCA"
+      "descriptorDigest": "sha256:1ad527158889bb9780a2c965e08d5c03ed57e0a70b928004a025055945e92c38",
+      "canonicalBase64": "h3VzbGlkZS5mbGF0LXBhY2thZ2UudjF2QGdhbGVyaW5hL2NvcmUtcnVudGltZWwxLjAuMC1iZXRhLjJ4R3NoYTI1NjpkNzc3ZGM1YzJjMDI5MjM1OWMyOGE2YTI2MGU5Y2M3YWRlNzU3MzRmYTgzZDZkM2JlZTJkZGI1ZjEzYWMyYTlkgYRzdm9rQXV0aG9yaXR5VmVyZGljdHhHc2hhMjU2OjliMTliOWU5Y2M1OTdmODNiNGI4OTgzYjQ5NjM3ZjA2ZmJjYzcyZWFlZWIxYzIyMTRlM2NkOGNiOGMxNGZkOWKJAQEBAQEBAQEBAYCA"
     }
   ],
   "artifacts": [
@@ -19,10 +19,10 @@
       "compilerProfileId": "slide.pure-scalar.v1",
       "sourceDigest": "sha256:054e42d45183ae50af9f23c8aad7d9e21527b6269d3e1abd0e0783d190d335bd",
       "fileName": "package-f44f6b634cf20601-a1df29fa1f435ffd.slide",
-      "slideBundleDigest": "sha256:fcad8b4cbbfae6a57046cd9e807ac759483e6e0b60b4d846203ecf26376b76b5",
+      "slideBundleDigest": "sha256:9b19b9e9cc597f83b4b8983b49637f06fbcc72eaeeb1c2214e3cd8cb8c14fd9b",
       "registrySetId": "slide.registry.executable-gir.v2c-bounded-transitive-call-work.v1",
       "registrySetDigest": "6121be7c1e279d8a28eeeaa31e46889e4fd8450aa9383bb40de80d2484bf855e",
-      "packageDescriptorDigest": "sha256:e54d6a8cbbe17a442288414cf31b20fda0258a7fc6fab99fd610b19bdd2c48de",
+      "packageDescriptorDigest": "sha256:1ad527158889bb9780a2c965e08d5c03ed57e0a70b928004a025055945e92c38",
       "parameterTypeIds": [
         1,
         1,

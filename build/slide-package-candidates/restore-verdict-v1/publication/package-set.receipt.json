@@ -1,14 +1,14 @@
 {
   "schema": "slide.checked-fungi.package-publication.v1",
-  "packageSetDigest": "sha256:538ac71cdf662dba7bada5b7d2b465e99c0500371f4626895dc3fff649356345",
+  "packageSetDigest": "sha256:0428fe053244f61627b3470adc93131e8de5264a93be6878ad8523f20119da37",
   "topologicalIdentities": [
     "@galerina/core-sentinel-state"
   ],
   "descriptors": [
     {
       "packageIdentity": "@galerina/core-sentinel-state",
-      "descriptorDigest": "sha256:02c7f5a914f97cc1252fecb03ee3f447720a46bbfb5800e6f1b702542c441b69",
-      "canonicalBase64": "h3VzbGlkZS5mbGF0LXBhY2thZ2UudjF4HUBnYWxlcmluYS9jb3JlLXNlbnRpbmVsLXN0YXRlbDEuMC4wLWJldGEuMnhHc2hhMjU2OmRjMjE3MmIwNjhiMmQ5YWZlNzlmYjUyOTg0MTYzMzBiMmM2NmRkNzY3MGE5ZDI5NGYwNWVkZWYzMmFiMDJiMjGBhG5yZXN0b3JlVmVyZGljdHhHc2hhMjU2OmRjMjI3YzRkMDM3MzRhMjgyZmJmNWMyN2UxMGE5YzQzZjRiMTI4Y2ZkYzE3NWI1OGNiOGQ5MWJmOGYzMjM5MzmCAgIBgIA="
+      "descriptorDigest": "sha256:6e28b2ae50fd9fc20b5d145c0dcd6632e1a8c24c0b92e4b18dab59c59739c065",
+      "canonicalBase64": "h3VzbGlkZS5mbGF0LXBhY2thZ2UudjF4HUBnYWxlcmluYS9jb3JlLXNlbnRpbmVsLXN0YXRlbDEuMC4wLWJldGEuMnhHc2hhMjU2OjVmMjU1ZjMzNWRkNTkzNzFiZWE1MjhhNzUyNzU4ZTg4NDU3ZmQ4ZDZjODAyMjhhZTg2MjMzMWJmYWJmYzg5OGSBhG5yZXN0b3JlVmVyZGljdHhHc2hhMjU2OmFkYzQzZjFhYzlhOTNkZDhjNjIwNjZkZDQ5N2MwMmFjNjExOWM1MDY0MDI0NWJjNTgwNzU1YzIwZTcyYjc1MWWCAgIBgIA="
     }
   ],
   "artifacts": [
@@ -19,8 +19,8 @@
       "compilerProfileId": "slide.checked-decision.v1",
       "sourceDigest": "sha256:5040e0b1ff890f602b8629f6205cee95f4236c502a446579f9184f27d22cf996",
       "fileName": "package-243795e71c23adfb-d8d192539e365aab.slide",
-      "slideBundleDigest": "sha256:dc227c4d03734a282fbf5c27e10a9c43f4b128cfdc175b58cb8d91bf8f323939",
-      "packageDescriptorDigest": "sha256:02c7f5a914f97cc1252fecb03ee3f447720a46bbfb5800e6f1b702542c441b69",
+      "slideBundleDigest": "sha256:adc43f1ac9a93dd8c62066dd497c02ac6119c50640245bc580755c20e72b751e",
+      "packageDescriptorDigest": "sha256:6e28b2ae50fd9fc20b5d145c0dcd6632e1a8c24c0b92e4b18dab59c59739c065",
       "parameterTypeIds": [
         2,
         2
