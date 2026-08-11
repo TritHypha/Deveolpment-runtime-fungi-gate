@@ -196,8 +196,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the current complete package lane passes **100/100 packages and 9,558 tests**
-  in 323.0 seconds. These are verification evidence, not release authority.
+  the current complete package lane passes **100/100 packages and 9,563 tests**
+  in 286.1 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
