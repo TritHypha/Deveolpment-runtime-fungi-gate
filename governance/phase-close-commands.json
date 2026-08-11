@@ -5039,6 +5039,7 @@
           "scripts/tests/verify-slide-reference-evidence.test.mjs",
           "scripts/tests/vok-authority-slide-candidate.integration.test.mjs",
           "scripts/tests/wat-64-bit-type-fungi-slide.integration.test.mjs",
+          "scripts/tests/retry-strategy-fungi-slide.integration.test.mjs",
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ]
@@ -5167,10 +5168,11 @@
           "scripts/tests/verify-slide-reference-evidence.test.mjs",
           "scripts/tests/vok-authority-slide-candidate.integration.test.mjs",
           "scripts/tests/wat-64-bit-type-fungi-slide.integration.test.mjs",
+          "scripts/tests/retry-strategy-fungi-slide.integration.test.mjs",
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 107
+        "expectedCount": 108
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,

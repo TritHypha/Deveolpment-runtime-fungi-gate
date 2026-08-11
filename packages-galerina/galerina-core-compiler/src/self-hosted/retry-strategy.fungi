@@ -1,0 +1,16 @@
+@version 1
+
+/// True only for the three source-authoritative retry strategy names.
+/// Every other admitted String remains outside the retry strategy set.
+pure flow isValidRetryStrategy(strategy: String) -> Bool {
+  if strategy == "none" {
+    return true
+  }
+  if strategy == "linear" {
+    return true
+  }
+  if strategy == "exponential_backoff" {
+    return true
+  }
+  return false
+}
