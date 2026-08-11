@@ -16,7 +16,13 @@ function req(over = {}) {
 // so the event is available immediately after `await k.handle(...)`.
 function capturingSink() {
   const events = [];
-  return { sink: { emit: (e) => events.push(e) }, events };
+  const sink = {
+    reserve: () => Object.freeze({ id: Symbol("captured-audit") }),
+    commit: (_reservation, event) => events.push(event),
+    cancel: () => {},
+    emit: (event) => events.push(event),
+  };
+  return { sink, events };
 }
 
 const publicGet = (over) => ({

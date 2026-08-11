@@ -120,14 +120,17 @@ test("a slow audit sink does NOT delay handle()'s response", async () => {
 
   // A sink whose emit() schedules work that completes much later than the response.
   const slowSink = {
-    emit(_event) {
-      // emit() itself returns immediately; the slow part is deferred.
+    reserve() { return Object.freeze({ id: Symbol("slow-audit") }); },
+    commit(_reservation, _event) {
+      // commit() itself returns immediately; the slow part is deferred.
       setTimeout(() => {
         sinkFinished = true;
         sinkFinishedAt = Date.now();
         order.push("sink");
       }, 50);
     },
+    cancel() {},
+    emit(event) { this.commit(Object.freeze({ id: Symbol("slow-best-effort") }), event); },
   };
 
   const k = createAppKernel({
@@ -154,6 +157,9 @@ test("a slow audit sink does NOT delay handle()'s response", async () => {
 // Required audit evidence fails closed when the sink refuses synchronously.
 test("a throwing audit sink refuses a route that requires a runtime report", async () => {
   const throwingSink = {
+    reserve() { throw new Error("audit backend on fire"); },
+    commit() { throw new Error("audit backend on fire"); },
+    cancel() { throw new Error("audit backend on fire"); },
     emit() { throw new Error("audit backend on fire"); },
   };
   const k = createAppKernel({
@@ -176,4 +182,67 @@ test("default audit sink is used when none is supplied (no crash, response intac
   const res = await k.handle(req({ method: "GET", path: "/health" }));
   assert.equal(res.status, 200);
   await tick();
+});
+
+test("mandatory audit capacity is reserved before handler effects", async () => {
+  const sink = new InMemoryAuditSink({ capacity: 1 });
+  let effects = 0;
+  const k = createAppKernel({
+    routes: [{
+      method: "GET",
+      path: "/health",
+      handler: "health",
+      auth: { mode: "public" },
+      audit: { runtimeReport: true },
+    }],
+    dispatch: {
+      health: () => {
+        effects += 1;
+        return { status: 200, body: { status: "up" } };
+      },
+    },
+    auditSink: sink,
+  });
+
+  const first = await k.handle(req({ requestId: "rq-reserved-1" }));
+  assert.equal(first.status, 200);
+  assert.equal(effects, 1);
+  await tick();
+  assert.equal(sink.drained().length, 1);
+
+  const refused = await k.handle(req({ requestId: "rq-reserved-2" }));
+  assert.equal(refused.status, 503);
+  assert.equal(JSON.parse(dec.decode(refused.body)).error, "audit_unavailable");
+  assert.equal(effects, 1, "no handler effect may run without reserved evidence capacity");
+  assert.equal(sink.drained()[0].requestId, "rq-reserved-1");
+  assert.equal(sink.dropped(), 0, "accepted audit evidence must never be evicted");
+
+  const transferred = sink.takeDrained();
+  assert.equal(transferred.length, 1);
+  const admitted = await k.handle(req({ requestId: "rq-reserved-3" }));
+  assert.equal(admitted.status, 200);
+  assert.equal(effects, 2);
+});
+
+test("audit reservations are exact affine capabilities", () => {
+  const event = {
+    requestId: "rq-affine",
+    method: "GET",
+    path: "/health",
+    status: 200,
+    errorCode: undefined,
+    appliedDefaults: [],
+    relaxations: [],
+    at: 0,
+  };
+  const sink = new InMemoryAuditSink({ capacity: 1 });
+  const foreign = new InMemoryAuditSink({ capacity: 1 });
+  const reservation = sink.reserve();
+  assert.ok(reservation);
+
+  assert.throws(() => foreign.commit(reservation, event), /reservation/i);
+  sink.commit(reservation, event);
+  assert.throws(() => sink.commit(reservation, event), /reservation/i);
+  assert.throws(() => sink.cancel(reservation), /reservation/i);
+  assert.equal(sink.reserve(), undefined, "committed evidence consumes retained capacity");
 });

@@ -166,14 +166,24 @@ test("default idempotency storage expires entries, rejects oversized keys, and s
   assert.throws(() => store.seen("r", "c", 60), /capacity/i);
 });
 
-test("default audit retention is a bounded ring", async () => {
+test("default audit retention refuses overflow without breaking accepted seals", async () => {
   const sink = new InMemoryAuditSink({ capacity: 2 });
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < 2; i += 1) {
     sink.emit({ requestId: `r${i}`, method: "GET", path: "/x", status: 200, errorCode: undefined, appliedDefaults: [], relaxations: [], at: i });
   }
+  assert.throws(
+    () => sink.emit({ requestId: "r2", method: "GET", path: "/x", status: 200, errorCode: undefined, appliedDefaults: [], relaxations: [], at: 2 }),
+    /capacity/i,
+  );
   await new Promise((resolve) => setTimeout(resolve, 0));
-  assert.deepEqual(sink.drained().map((event) => event.requestId), ["r1", "r2"]);
-  assert.equal(sink.dropped(), 1);
+  assert.deepEqual(sink.drained().map((event) => event.requestId), ["r0", "r1"]);
+  assert.equal(sink.dropped(), 0);
+
+  const transferred = sink.takeDrained();
+  assert.deepEqual(transferred.map((event) => event.requestId), ["r0", "r1"]);
+  sink.emit({ requestId: "r2", method: "GET", path: "/x", status: 200, errorCode: undefined, appliedDefaults: [], relaxations: [], at: 2 });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.deepEqual(sink.drained().map((event) => event.requestId), ["r2"]);
 });
 
 test("JSON bodies without a closed request type refuse null and surplus input", async () => {

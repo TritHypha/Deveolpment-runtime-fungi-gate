@@ -155,12 +155,22 @@ export interface AuditEvent {
   readonly resolvedPosture?: ResolvedPosture;
 }
 
+/** Exact, single-use capacity held for one mandatory audit event. */
+export interface AuditReservation {
+  readonly id: symbol;
+}
+
 /**
- * Audit pipe. `emit` is synchronous and MUST NOT block: implementations accept
- * into a bounded queue and flush off the critical path. A synchronous refusal
- * makes a route with `runtimeReport` fail closed.
+ * Audit pipe. Capacity admission is synchronous and MUST NOT block. The
+ * reservation is an affine capability: a successful `reserve` guarantees one
+ * later `commit`, and the exact reservation may be committed or cancelled once.
+ * The event flush remains asynchronous and off the handler's critical path.
  */
 export interface AuditSink {
+  reserve(): AuditReservation | undefined;
+  commit(reservation: AuditReservation, event: AuditEvent): void;
+  cancel(reservation: AuditReservation): void;
+  /** Best-effort admission for events whose route policy does not require a report. */
   emit(event: AuditEvent): void;
 }
 
@@ -172,8 +182,8 @@ export interface AuditSink {
 export class InMemoryAuditSink implements AuditSink {
   readonly #queue: AuditEvent[] = [];
   readonly #drained: AuditEvent[] = [];
+  readonly #reservations = new Set<AuditReservation>();
   #scheduled = false;
-  #dropped = 0;
   readonly #capacity: number;
 
   constructor(opts: { readonly capacity?: number } = {}) {
@@ -183,14 +193,34 @@ export class InMemoryAuditSink implements AuditSink {
     }
   }
 
-  emit(event: AuditEvent): void {
-    // Enqueue only — never process inline. That non-blocking contract is the point.
-    if (this.#queue.length >= this.#capacity) {
-      this.#queue.shift();
-      this.#dropped += 1;
+  reserve(): AuditReservation | undefined {
+    const retained = this.#queue.length + this.#drained.length + this.#reservations.size;
+    if (retained >= this.#capacity) return undefined;
+    const reservation = Object.freeze({ id: Symbol("galerina-audit-reservation") });
+    this.#reservations.add(reservation);
+    return reservation;
+  }
+
+  commit(reservation: AuditReservation, event: AuditEvent): void {
+    if (!this.#reservations.delete(reservation)) {
+      throw new Error("Audit reservation is foreign, cancelled, or already consumed.");
     }
     this.#queue.push(event);
     this.#schedule();
+  }
+
+  cancel(reservation: AuditReservation): void {
+    if (!this.#reservations.delete(reservation)) {
+      throw new Error("Audit reservation is foreign, committed, or already cancelled.");
+    }
+  }
+
+  emit(event: AuditEvent): void {
+    const reservation = this.reserve();
+    if (reservation === undefined) {
+      throw new Error("Audit evidence capacity reached.");
+    }
+    this.commit(reservation, event);
   }
 
   #schedule(): void {
@@ -209,18 +239,21 @@ export class InMemoryAuditSink implements AuditSink {
     if (!this.#scheduled) return;
     this.#scheduled = false;
     while (this.#queue.length > 0) {
-      // FIFO drain. Each event is an already-built record; nothing heavy happens here.
-      if (this.#drained.length >= this.#capacity) {
-        this.#drained.shift();
-        this.#dropped += 1;
-      }
+      // FIFO transfer. Retained evidence still owns capacity until explicitly taken.
       this.#drained.push(this.#queue.shift() as AuditEvent);
     }
   }
 
   /** Test/inspection hook: events that have been flushed off the queue. */
   drained(): readonly AuditEvent[] {
-    return this.#drained;
+    return Object.freeze([...this.#drained]);
+  }
+
+  /** Transfer custody of flushed evidence and release its retained capacity. */
+  takeDrained(): readonly AuditEvent[] {
+    const transferred = Object.freeze([...this.#drained]);
+    this.#drained.length = 0;
+    return transferred;
   }
 
   /** Count still waiting to be flushed (0 once a tick has elapsed). */
@@ -228,9 +261,9 @@ export class InMemoryAuditSink implements AuditSink {
     return this.#queue.length;
   }
 
-  /** Count evicted by the bounded retention policy. */
+  /** Accepted evidence is never evicted; retained for compatibility and proof. */
   dropped(): number {
-    return this.#dropped;
+    return 0;
   }
 }
 
@@ -699,38 +732,73 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
   }
 
   /**
-   * Public entry point. Runs the fixed pipeline, then synchronously enqueues the
-   * audit event. Flush remains off-path; required enqueue refusal fails closed.
+   * Public entry point. A mandatory runtime report reserves bounded evidence
+   * capacity before any pipeline or handler state can change. The handler and
+   * the eventual evidence flush remain asynchronous happy-path work.
    */
   async function handle(req: GalerinaKernelRequest): Promise<GalerinaKernelResponse> {
-    const outcome = await runPipeline(req);
-    const { response, policy } = outcome;
+    const declaredPolicy = byPath.get(req.path)?.get(req.method);
+    let reservation: AuditReservation | undefined;
+    let reservationLive = false;
 
-    // ── 12 audit ── (off the critical path; fire-and-forget, never awaited)
-    // Build the event AFTER the response is fully computed, then hand it to the
-    // sink. We do not await: a slow or throwing sink must not delay the caller.
-    const event: AuditEvent = {
-      requestId: req.requestId,
-      method: req.method,
-      path: req.path,
-      status: response.status,
-      errorCode: errorCodeOf(response),
-      appliedDefaults: policy?.appliedDefaults ?? [],
-      relaxations: policy?.relaxations ?? [],
-      at: Date.now(),
-      ...(resolvedPosture ? { resolvedPosture } : {}),
-    };
-    let auditAccepted = true;
+    if (declaredPolicy?.audit.runtimeReport === true) {
+      try {
+        const candidate = auditSink.reserve();
+        if (candidate === undefined || candidate === null || typeof candidate !== "object") {
+          return errorResponse(503, "audit_unavailable", "Required runtime audit evidence capacity is unavailable.");
+        }
+        reservation = candidate;
+        reservationLive = true;
+      } catch {
+        return errorResponse(503, "audit_unavailable", "Required runtime audit evidence capacity is unavailable.");
+      }
+    }
+
     try {
-      auditSink.emit(event);
-    } catch {
-      auditAccepted = false;
-    }
-    if (!auditAccepted && policy?.audit.runtimeReport === true) {
-      return errorResponse(503, "audit_unavailable", "Required runtime audit evidence could not be accepted.");
-    }
+      const outcome = await runPipeline(req);
+      const { response, policy } = outcome;
 
-    return response;
+      // ── 12 audit ── Build the event after the response is computed. A mandatory
+      // event consumes its exact reservation synchronously; flushing stays off-path.
+      const event: AuditEvent = {
+        requestId: req.requestId,
+        method: req.method,
+        path: req.path,
+        status: response.status,
+        errorCode: errorCodeOf(response),
+        appliedDefaults: policy?.appliedDefaults ?? [],
+        relaxations: policy?.relaxations ?? [],
+        at: Date.now(),
+        ...(resolvedPosture ? { resolvedPosture } : {}),
+      };
+
+      if (reservation !== undefined) {
+        try {
+          auditSink.commit(reservation, event);
+          reservationLive = false;
+        } catch {
+          return errorResponse(503, "audit_unavailable", "Required runtime audit evidence could not be accepted.");
+        }
+      } else {
+        try {
+          auditSink.emit(event);
+        } catch {
+          // This route did not require runtime evidence. A best-effort refusal
+          // cannot erase or overwrite evidence the sink already accepted.
+        }
+      }
+
+      return response;
+    } finally {
+      if (reservationLive && reservation !== undefined) {
+        try {
+          auditSink.cancel(reservation);
+        } catch {
+          // The sink may have consumed the lease before refusing commit. There
+          // is no safe second authority action to take at this boundary.
+        }
+      }
+    }
   }
 
   return { handle };
