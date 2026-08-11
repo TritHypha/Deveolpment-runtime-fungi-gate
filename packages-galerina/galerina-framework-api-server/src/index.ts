@@ -61,6 +61,9 @@ export const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
 export const DEFAULT_HEADERS_TIMEOUT_MS = 10_000;
 export const DEFAULT_IDLE_TIMEOUT_MS = 30_000;
 
+/** Plain HTTP servers are development-only and must remain on a canonical loopback bind. */
+const INSECURE_LOOPBACK_SERVERS = new WeakSet<http.Server>();
+
 /**
  * Outcome of a host-injected revocation check. A bare `RevocationOutcome` is also
  * accepted (treated as the current status, i.e. `producedAt = now`); the object form
@@ -124,6 +127,11 @@ export interface ApiServerTlsOptions {
 
 export interface CreateApiServerOptions {
   readonly kernel: AppKernel;
+  /**
+   * Explicit development-only authority for plaintext HTTP. Without TLS this must be `true`,
+   * and the exported `listen` helper will refuse every non-loopback bind.
+   */
+  readonly allowInsecureLoopback?: boolean;
   /** Hard cap on buffered body bytes before 413 + socket destroy. Default 8 MiB. */
   readonly maxBodyBytes?: number;
   /** Max ms for the whole request (slowloris body defence). Default 30s. */
@@ -456,6 +464,9 @@ function buildSecureContext(tlsOpts: ApiServerTlsOptions): https.ServerOptions {
  * the App Kernel. The returned server is NOT yet listening — call `listen(server, port)`.
  */
 export function createApiServer(opts: CreateApiServerOptions): http.Server {
+  if (opts.tls === undefined && opts.allowInsecureLoopback !== true) {
+    throw new Error("createApiServer: TLS is required unless plaintext loopback is explicitly authorized");
+  }
   const { kernel } = opts;
   const maxBodyBytes =
     opts.maxBodyBytes !== undefined ? opts.maxBodyBytes : DEFAULT_MAX_BODY_BYTES;
@@ -486,6 +497,7 @@ export function createApiServer(opts: CreateApiServerOptions): http.Server {
     opts.tls !== undefined
       ? (https.createServer(buildSecureContext(opts.tls), onRequest) as unknown as http.Server)
       : http.createServer(onRequest);
+  if (opts.tls === undefined) INSECURE_LOOPBACK_SERVERS.add(server);
 
   // Explicit transport timeouts — a slowloris / idle-connection defence at the toxic border, additive
   // to the body cap (the kernel cannot see transport-level stalls). Set intentionally rather than
@@ -575,14 +587,21 @@ async function handleRequest(
 export function listen(
   server: http.Server,
   port: number,
+  host = "127.0.0.1",
 ): Promise<{ address: string; port: number }> {
   return new Promise((resolve, reject) => {
+    const normalizedHost = host.toLowerCase();
+    const loopback = normalizedHost === "localhost" || normalizedHost === "127.0.0.1" || normalizedHost === "::1" || normalizedHost === "[::1]";
+    if (INSECURE_LOOPBACK_SERVERS.has(server) && !loopback) {
+      reject(new Error("listen: plaintext API servers are restricted to canonical loopback hosts"));
+      return;
+    }
     const onError = (err: Error): void => {
       server.removeListener("error", onError);
       reject(err);
     };
     server.once("error", onError);
-    server.listen(port, () => {
+    server.listen(port, host, () => {
       server.removeListener("error", onError);
       const addr = server.address();
       if (addr && typeof addr === "object") {

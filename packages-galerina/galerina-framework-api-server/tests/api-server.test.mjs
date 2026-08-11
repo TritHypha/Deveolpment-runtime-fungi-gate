@@ -43,7 +43,7 @@ function buildSecureKernel(ran) {
 /** Spin up a secure-kernel adapter with the given options, run fn, always close. */
 async function withSecureServer(opts, fn) {
   const ran = { value: false };
-  const server = createApiServer({ kernel: buildSecureKernel(ran), ...opts });
+  const server = createApiServer({ kernel: buildSecureKernel(ran), allowInsecureLoopback: true, ...opts });
   const { port } = await listen(server, 0);
   try {
     return await fn(port, ran);
@@ -77,7 +77,7 @@ function request(port, { method, path, headers = {}, body }) {
 
 /** Spin up the adapter, run `fn(port)`, always close the server. */
 async function withServer(opts, fn) {
-  const server = createApiServer({ kernel: buildKernel(), ...opts });
+  const server = createApiServer({ kernel: buildKernel(), allowInsecureLoopback: true, ...opts });
   const { port } = await listen(server, 0);
   try {
     return await fn(port);
@@ -87,6 +87,17 @@ async function withServer(opts, fn) {
 }
 
 const JSON_HEADERS = { "content-type": "application/json" };
+
+test("plaintext API transport requires explicit loopback-only authority", async () => {
+  assert.throws(() => createApiServer({ kernel: buildKernel() }), /TLS|plaintext|loopback/i);
+
+  const server = createApiServer({ kernel: buildKernel(), allowInsecureLoopback: true });
+  try {
+    await assert.rejects(() => listen(server, 0, "0.0.0.0"), /loopback|plaintext/i);
+  } finally {
+    if (server.listening) await new Promise((resolve) => server.close(resolve));
+  }
+});
 
 test("POST /charge with valid JSON → 200 {ok:true}", async () => {
   await withServer({}, async (port) => {

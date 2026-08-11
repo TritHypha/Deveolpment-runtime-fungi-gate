@@ -162,7 +162,7 @@ export async function startServer(config?: AppConfig, fuseOpts: FuseOptions = {}
   const cfg = config ?? loadConfig(paths.configPath);
   const greeting = await fuseGreeting(fuseOpts);
   const kernel = createGreetingKernel(cfg, greeting);
-  const server = createApiServer({ kernel });
+  const server = createApiServer({ kernel, allowInsecureLoopback: true });
   const { port } = await listen(server, cfg.http.port);
   return {
     server,
