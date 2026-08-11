@@ -1,0 +1,13 @@
+@version 1
+
+/// True only for the two source-authoritative 64-bit WAT type names.
+/// Every other admitted String remains outside the 64-bit lowering path.
+pure flow is64BitWatType(base: String) -> Bool {
+  if base == "Int64" {
+    return true
+  }
+  if base == "UInt64" {
+    return true
+  }
+  return false
+}

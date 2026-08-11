@@ -18,17 +18,17 @@ WAT-emitter path unchanged.
 
 ### Task 1: Focused compiler RED
 
-- [ ] Register the intended package asset and add a focused test before the
+- [x] Register the intended package asset and add a focused test before the
   Fungi source exists.
-- [ ] Anchor the TypeScript sets/helper and define canonical-plus-hostile
+- [x] Anchor the TypeScript sets/helper and define canonical-plus-hostile
   vectors.
-- [ ] Retain the intended missing-source RED result.
+- [x] Retain the intended missing-source RED result.
 
 ### Task 2: Exact Fungi implementation
 
-- [ ] Add `is64BitWatType` as one pure total flow with two comparisons.
-- [ ] Prove strict checking, typed interpretation and signed/admitted Wasm.
-- [ ] Derive parity through a public WAT-emission caller.
+- [x] Add `is64BitWatType` as one pure total flow with two comparisons.
+- [x] Prove strict checking, typed interpretation and signed/admitted Wasm.
+- [x] Derive parity through a public WAT-emission caller.
 - [ ] Run the complete compiler package and commit the bounded source wave.
 
 ### Task 3: Physical SLIDE/VOK proof
