@@ -20,10 +20,15 @@ counts or open items that a newer section explicitly supersedes.
   physical `.slide`, independently re-admit it through VOK, execute all eight
   vectors, and refuse wrong typed arguments, an unpaired surrogate, source
   mutation and a one-byte physical artifact mutation (**1/1**, zero skips).
-- [ ] Refresh the fourth slice's generated owners and indexes through their
-  bounded checks. Full tooling and normal phase-close remain deliberately
-  excluded because the prior isolated tooling process coincided with the host
-  crash; repository-wide closure is therefore **UNKNOWN**, not green.
+- [x] Refresh the fourth slice's generated owners and indexes through their
+  bounded checks. Golden is **11/11**, semantic is **3/3**, graph is **7/7**,
+  canonical count consumers are **7/7 at 9,558**, roadmap/subway is **5/5**,
+  and codebase-memory matched **49,778/49,778 nodes** plus
+  **132,656/132,656 edges** at the generated-owner commit. Myco indexes
+  **4,959 files / 77,439 terms**. Full tooling and normal phase-close remain
+  deliberately excluded because the prior isolated tooling process coincided
+  with the host crash; repository-wide closure is therefore **UNKNOWN**, not
+  green.
 - [x] Keep `power-governor.ts`, `powerRank`, `PowerGovernor.requestAdjustment`
   and every consumer active. This is a reference-only conversion proof and
   grants no consumer-switch, bootstrap, production, hardware, release or

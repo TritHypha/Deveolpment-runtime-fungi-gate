@@ -165,13 +165,13 @@ tooling process.
 Write source/candidate hashes, build points, vectors, command results, and the
 reference-only/non-retirement boundary in the report and current TODO/roadmap.
 
-- [ ] **Step 3: Refresh owners in dependency order**
+- [x] **Step 3: Refresh owners in dependency order**
 
 Run code index/registry if their checks require it, then graphs, component
 health/status, and roadmap. Verify registry, semantic 3/3, graph 7/7,
 percentage, status, subway 5/5, canonical counts, and path-leak.
 
-- [ ] **Step 4: Commit and re-index**
+- [x] **Step 4: Commit and re-index**
 
 Commit explicit paths locally. Refresh codebase-memory in full mode and require
 actual nodes/edges to equal expected values at the exact final HEAD. Refresh
