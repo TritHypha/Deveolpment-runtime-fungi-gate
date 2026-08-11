@@ -22,15 +22,15 @@
 /**
  * The boot-resolved secrets provider the kernel owns for the process lifetime. Structurally
  * satisfied by the ext-secrets-spore `SealArena` (arena.ts has/use). Fail-closed by contract:
- * `has` is false for an absent OR faulted secret; `use` yields `undefined` (and never calls `fn`)
- * for an absent/faulted secret and otherwise hands `fn` a short-lived plaintext view that never
- * escapes via the return path.
+ * `has` is false for an absent OR faulted secret; `use` never calls `fn` for an
+ * absent/faulted secret and otherwise hands `fn` a short-lived plaintext view.
+ * Providers must expose no callback return channel.
  */
 export interface SecretsProvider {
   /** True only if a non-faulted value is present. (May throw if the backing store is disposed.) */
   has(name: string): boolean;
-  /** Run `fn` with a short-lived view; `undefined` (fn NOT called) for an absent/faulted secret. */
-  use<T>(name: string, fn: (value: Uint8Array) => T): T | undefined;
+  /** Run `fn` with a short-lived view; fn is not called for an absent/faulted secret. */
+  use(name: string, fn: (value: Uint8Array) => void): void;
 }
 
 /** The per-request seam built once at construction and referenced at gate 9.5. */

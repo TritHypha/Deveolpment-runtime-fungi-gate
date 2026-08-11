@@ -30,6 +30,7 @@ paper verdict is defensive-pub (or none).
 | Property | Where |
 |---|---|
 | decrypt only into wiped Buffers / a SealTaint arena | `arena.ts` (`SealArena`, `withWiped`) — mirrors `ext-secrets-vault` rotation-manager:45-49/:95 |
+| no live arena-buffer alias or callback return channel | `SealArena.use` copies into a transient buffer, rejects callback returns/async callbacks, and wipes on every exit |
 | zero-wipe on replace / save / quit / error | `arena.ts`, `store.ts` (`finally` wipes), `cli.ts` |
 | `mlock` pages vs swap where the platform allows (best-effort hook) | `mlock.ts` |
 | NEVER plaintext to a temp file (SOPS #624 class) | `io.ts` `atomicWriteCiphertext` writes **ciphertext only** |

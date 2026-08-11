@@ -108,7 +108,9 @@ test("rm removes the section + manifest entry", () => {
 test("runtime loadAll fills a fail-closed arena; dispose wipes; use-after-dispose throws", () => {
   const buf = freshFile("rta", "A", "alpha", "B", "beta");
   const arena = loadAll(buf, KP.secretKey, K3.ALLOW);
-  assert.equal(arena.use("A", dec), "alpha");
+  let alpha = "";
+  arena.use("A", (value) => { alpha = dec(value); });
+  assert.equal(alpha, "alpha");
   assert.equal(arena.has("B"), true);
   arena.dispose();
   assert.throws(() => arena.use("A", () => 0), /use-after-dispose/);
@@ -138,15 +140,23 @@ test("loadAll fails closed on a bad key (arena disposed, nothing served)", () =>
   assert.throws(() => loadAll(buf, wrong.secretKey, K3.ALLOW), (e) => e instanceof SporeCryptoError);
 });
 
-test("SealArena zero-wipes the backing buffer on remove", () => {
+test("SealArena use exposes only a transient copy and wipes it at callback exit", () => {
   const arena = new SealArena();
   const v = enc("wipe-me-please");
   arena.put("S", v);
-  // capture the live buffer via use(), then remove and confirm the captured ref was zeroed
   let captured;
-  arena.use("S", (b) => { captured = b; });
-  arena.remove("S");
-  assert.ok(captured.every((x) => x === 0), "removed buffer must be zero-filled");
+  arena.use("S", (b) => { captured = b; b.fill(0x41); });
+  assert.ok(captured.every((x) => x === 0), "transient view must be wiped immediately");
+  let original = "";
+  arena.use("S", (b) => { original = dec(b); });
+  assert.equal(original, "wipe-me-please", "mutating a transient view must not alter arena state");
+});
+
+test("SealArena use refuses callback return and asynchronous escape channels", () => {
+  const arena = new SealArena();
+  arena.put("S", enc("secret"));
+  assert.throws(() => arena.use("S", (b) => b), /return|escape/i);
+  assert.throws(() => arena.use("S", async () => {}), /async|promise|escape/i);
 });
 
 test("anchor: Argon2id wrap/unwrap round-trips; wrong passphrase fails closed", () => {

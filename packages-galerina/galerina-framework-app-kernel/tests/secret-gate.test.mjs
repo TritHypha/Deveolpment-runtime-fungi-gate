@@ -64,7 +64,13 @@ class RefArena {
     if (this.#disposed) throw new Error("use-after-dispose");
     const e = this.#m.get(name);
     if (e === undefined || e.faulted) return undefined;
-    return fn(e.value);
+    const transient = Buffer.from(e.value);
+    try {
+      const result = fn(transient);
+      if (result !== undefined) throw new Error("callback return/async escape channel is forbidden");
+    } finally {
+      transient.fill(0);
+    }
   }
   has(name) {
     const e = this.#m.get(name);

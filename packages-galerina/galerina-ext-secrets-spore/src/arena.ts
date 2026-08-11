@@ -44,15 +44,25 @@ export class SealArena {
   }
 
   /**
-   * Run `fn` with a short-lived view of the plaintext. Fail-closed: a faulted or missing
-   * entry yields undefined and `fn` is never called. The arena buffer stays live for the
-   * session; no plaintext escapes except through the explicit `fn` return value.
+   * Run `fn` with an owned transient copy of the plaintext. The live arena
+   * buffer is never exposed. The transient is wiped on every exit, callback
+   * return values are forbidden, and asynchronous callbacks are refused.
    */
-  use<T>(name: string, fn: (value: Buffer) => T): T | undefined {
+  use(name: string, fn: (value: Buffer) => void): void {
     this.assertLive();
     const e = this.entries.get(name);
     if (e === undefined || e.faulted) return undefined; // rotation-manager.ts:108-110
-    return fn(e.value);
+    const transient = Buffer.alloc(e.value.length);
+    transient.set(e.value);
+    tryMlock(transient);
+    try {
+      const result: unknown = (fn as (value: Buffer) => unknown)(transient);
+      if (result !== undefined) {
+        throw new Error("SealArena: callback return/async escape channel is forbidden");
+      }
+    } finally {
+      transient.fill(0);
+    }
   }
 
   /** True if a (non-faulted) value is present. */
