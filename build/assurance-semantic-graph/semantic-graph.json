@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "4a9d8bc766333924d7a183802f31e58beac8cd99c838e89ad11e76c3e213132b",
+  "authoritativeInputsDigest": "772920ca5119d0b9cdc04bd9028da0a3c8e8496485bfbdd7804f30d131269d84",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6335,6 +6335,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-389f5638c5a8155c6e0fe135",
+      "kind": "test",
+      "evidencePath": "scripts/tests/assurance-cadence-plan.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-97b54cc2d945f4aa60eeebf7",
       "kind": "test",
       "evidencePath": "scripts/tests/assurance-evidence-dag.test.mjs",
@@ -6352,6 +6359,13 @@
       "id": "test:auto-9f485697a03883a469eafedc",
       "kind": "test",
       "evidencePath": "scripts/tests/assurance-legacy-adapter.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-65d7efb6c5102fe81dfbc051",
+      "kind": "test",
+      "evidencePath": "scripts/tests/assurance-legacy-lifecycle.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6387,6 +6401,13 @@
       "id": "test:auto-f68fd6ff81b96efd62185103",
       "kind": "test",
       "evidencePath": "scripts/tests/assurance-semantic-generator.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-0d7807582ee456420dcf413d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/assurance-transitive-inventory.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6884,6 +6905,20 @@
       "id": "test:auto-57ee1be6274bea40565f70ec",
       "kind": "test",
       "evidencePath": "scripts/tests/run-assurance-shadow.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7fdb2f59f43e77ef8a2ff21d",
+      "kind": "test",
+      "evidencePath": "scripts/tests/run-generator-contract-cadence.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-508835002310bed2dc5c0fff",
+      "kind": "test",
+      "evidencePath": "scripts/tests/run-phase-close-special.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -10967,6 +11002,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-389f5638c5a8155c6e0fe135",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-97b54cc2d945f4aa60eeebf7",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -10978,6 +11018,11 @@
     },
     {
       "from": "test:auto-9f485697a03883a469eafedc",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-65d7efb6c5102fe81dfbc051",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -11003,6 +11048,11 @@
     },
     {
       "from": "test:auto-f68fd6ff81b96efd62185103",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-0d7807582ee456420dcf413d",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
     },
@@ -11362,6 +11412,16 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-7fdb2f59f43e77ef8a2ff21d",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-508835002310bed2dc5c0fff",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-0aab306b37cfab2c53de5536",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11522,7 +11582,7 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 875,
+    "tests": 880,
     "detectors": 6,
     "executableFamily": 1417,
     "legacyUnmapped": 0

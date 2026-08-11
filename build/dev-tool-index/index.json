@@ -4,9 +4,9 @@
     "packages": 100,
     "testBearing": 100,
     "tests": 9499,
-    "devTools": 166,
-    "auditTools": 88,
-    "toolsInCadence": 66,
+    "devTools": 170,
+    "auditTools": 89,
+    "toolsInCadence": 117,
     "proofs": 40
   },
   "packages": [
@@ -1088,7 +1088,8 @@
       "category": "audit",
       "purpose": "audit every package's Hardened-Border ALLOWLIST for SENSITIVE reach.",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "coverage",
         "diagnostics",
@@ -1103,6 +1104,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "gate-wiring",
         "coverage",
@@ -1115,6 +1117,7 @@
       "purpose": "a hand-authored value drifting from a GENERATED",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "coverage",
@@ -1123,11 +1126,25 @@
       ]
     },
     {
+      "name": "audit-assurance-legacy-lifecycle.mjs",
+      "category": "audit",
+      "purpose": "(no header description)",
+      "selfTest": true,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "mutation-testing"
+      ]
+    },
+    {
       "name": "audit-auto-erasure-ratchet.mjs",
       "category": "audit",
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "coverage",
@@ -1139,7 +1156,8 @@
       "category": "audit",
       "purpose": "Brand-everywhere BOLA lint (RD-0286 §5.3; OWASP API1:2023, CWE-639).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -1154,6 +1172,7 @@
       "purpose": "blocking current-count contract for the",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "doc-drift",
         "graph/index"
@@ -1165,6 +1184,7 @@
       "purpose": "LINT: no NEW bare `as Verdict` / `as Trit` authority cast.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1183,6 +1203,7 @@
       "purpose": "\"dead gate\" detector (generalises check-gate-injection.mjs)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -1201,6 +1222,7 @@
       "purpose": "fail-CLOSED guard on PUBLIC-DOC CLAIM HYGIENE (RD technical-claims-audit,",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "naming",
@@ -1216,6 +1238,7 @@
       "purpose": "- count-owning descriptive code gate.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -1229,7 +1252,8 @@
       "category": "audit",
       "purpose": "Comprehensive diagnostic-code audit for Galerina.",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "governance",
         "coverage",
@@ -1246,6 +1270,7 @@
       "purpose": "RD-0528 evidence-pack drift GATE (bridge 0101/0103, owner-blessed 0104)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "naming",
@@ -1258,6 +1283,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "governance",
@@ -1273,6 +1299,7 @@
       "purpose": "the CORPUS half of the effect-vocabulary SoT",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "gate-wiring",
@@ -1289,6 +1316,7 @@
       "purpose": "#218 coverage cross-check (owner 2026-06-22): \"review the graphs and check",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "provenance",
@@ -1305,6 +1333,7 @@
       "purpose": "one code, one meaning. Across BOTH engines.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "naming",
@@ -1317,7 +1346,8 @@
       "category": "audit",
       "purpose": "Fail-closed diagnostic taxonomy audit:",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "diagnostics",
         "source-hygiene",
@@ -1329,7 +1359,8 @@
       "category": "audit",
       "purpose": "catch the canonical diagnostic DOC describing a code as something",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1344,6 +1375,7 @@
       "purpose": "DOC-004 (#219 standard \"doc↔source drift\"). v1: flag doc \"living metrics\" — global",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "teaching-corpus",
         "doc-drift",
@@ -1356,6 +1388,7 @@
       "purpose": "measured, ratcheted R0 build gate for the DSS.wasm modules (RD-0366:",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "legacy-active",
       "concerns": [
         "signing/fusion",
         "coverage"
@@ -1367,6 +1400,7 @@
       "purpose": "single-source-of-truth gate for effect names",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -1385,6 +1419,7 @@
       "purpose": "RD-0529 B2: the standalone-emitter completeness matrix",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -1400,6 +1435,7 @@
       "purpose": "the curriculum-wide diagnostics gate.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "governance",
@@ -1412,7 +1448,8 @@
       "category": "audit",
       "purpose": "teaching-corpus rot gate: an example's DECLARED",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -1425,7 +1462,8 @@
       "category": "audit",
       "purpose": "(no header description)",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "coverage",
@@ -1438,6 +1476,7 @@
       "purpose": "audit-flowparam-fidelity — the C4 FlowParam qualifier-fidelity gate (standing, self-tested)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "diagnostics",
@@ -1450,6 +1489,7 @@
       "purpose": "fail-CLOSED gate: every positive `.fungi` in",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -1464,6 +1504,7 @@
       "purpose": "audit the SELF-HOSTED `.fungi` runtime corpus (the files the compiler/runtime is",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "gate-wiring",
         "coverage",
@@ -1476,6 +1517,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "coverage",
         "teaching-corpus"
@@ -1486,7 +1528,8 @@
       "category": "audit",
       "purpose": "META-GATE: prove every audit/lint gate is NON-VACUOUS.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "mutation-testing",
         "graph/index",
@@ -1499,6 +1542,7 @@
       "purpose": "executes every declared generator contract",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1513,7 +1557,8 @@
       "category": "audit",
       "purpose": "structural validation of the project graph (R&D 0121).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "diagnostics",
@@ -1526,6 +1571,7 @@
       "purpose": "GSCM comment-coverage auditor (RD-0265, 2026-07-04).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -1542,7 +1588,8 @@
       "category": "audit",
       "purpose": "the M6 / HV1 / HV9 injection-determinism gate (RD-0358 PROTOTYPE).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -1557,7 +1604,8 @@
       "category": "audit",
       "purpose": "inventory + classify every .fungi import; RED a plugin",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "governance",
@@ -1571,7 +1619,8 @@
       "category": "audit",
       "purpose": "enforce the App-Kernel host-floor boundary (ADR:",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1587,6 +1636,7 @@
       "purpose": "Declared self-hosted twin dirs (repo-relative). Add a package's `src/self-hosted` here when it gains twins.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "gate-wiring",
@@ -1599,7 +1649,8 @@
       "category": "audit",
       "purpose": "grow-only MODULE-LEVEL state, found by reading.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "diagnostics"
       ]
@@ -1609,7 +1660,8 @@
       "category": "audit",
       "purpose": "the license-audit GATE (RD-0355 L3).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "effects",
         "doc-drift",
@@ -1621,7 +1673,8 @@
       "category": "audit",
       "purpose": "fail-CLOSED memory-leak audit for repeated workloads.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": []
     },
     {
@@ -1630,6 +1683,7 @@
       "purpose": "TASK-SEC-002 (#219 standard \"mutation / red-team test per gate\", Stryker-style).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "mutation-testing",
         "graph/index"
@@ -1641,6 +1695,7 @@
       "purpose": "visibility + gate for MUTED security/governance codes",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -1661,6 +1716,7 @@
       "purpose": "stop confusingly-similar names from recurring (RD-0124).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1679,6 +1735,7 @@
       "purpose": "P9 Option-Y guard (R&D 2026-07-19, optional strengthening).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "governance",
@@ -1692,6 +1749,7 @@
       "purpose": "the external-dependency floor: visibility + single-source pin.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -1704,6 +1762,7 @@
       "purpose": "RD-0258 data-oblivious / constant-time DETECTOR for .fungi (2026-07-04).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -1720,7 +1779,8 @@
       "category": "audit",
       "purpose": "kill the recurring \"O(1) / single-clock / constant-time zero-wipe\"",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -1733,7 +1793,8 @@
       "category": "audit",
       "purpose": "(no header description)",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "diagnostics",
         "package-border",
@@ -1746,7 +1807,8 @@
       "category": "audit",
       "purpose": "fail-CLOSED guard for the papers corpus index (docs/paper/README.md).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "governance",
@@ -1762,6 +1824,7 @@
       "purpose": "fail-CLOSED guard: no committed file may contain an ABSOLUTE LOCAL path that",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "provenance",
         "diagnostics",
@@ -1776,7 +1839,8 @@
       "category": "audit",
       "purpose": "every published % must carry evidence (RULING 1)",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "teaching-corpus"
       ]
@@ -1786,7 +1850,8 @@
       "category": "audit",
       "purpose": "recurring % audit snapshots + deltas",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": []
     },
     {
@@ -1795,6 +1860,7 @@
       "purpose": "static PERFORMANCE / optimisation auditor for the production source",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -1810,6 +1876,7 @@
       "purpose": "fail-CLOSED: no tracked file in this PUBLIC repo may name a never-public KB doc",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -1825,7 +1892,8 @@
       "category": "audit",
       "purpose": "every PRODUCTION_BLOCKER must have a real emitter (RD-0124 NOW-1 follow-up).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "coverage",
         "diagnostics",
@@ -1837,7 +1905,8 @@
       "category": "audit",
       "purpose": "TASK-BLD-003 (#219 standard \"artifact provenance + freshness\"; folds #216).",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -1852,6 +1921,7 @@
       "purpose": "fail-CLOSED gate: the docs/reference/ pages must not DRIFT from the",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -1865,7 +1935,8 @@
       "category": "audit",
       "purpose": "RUN the canonical registry's own known-answer tests",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -1881,6 +1952,7 @@
       "purpose": "refuse unverified remote content piped into interpreters.",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "coverage",
@@ -1896,6 +1968,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "diagnostics"
@@ -1906,7 +1979,8 @@
       "category": "audit",
       "purpose": "the per-commit CI gate for unbounded module state.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "teaching-corpus"
       ]
@@ -1916,7 +1990,8 @@
       "category": "audit",
       "purpose": "the NIGHTLY / RELEASE stage of the retention gate.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "diagnostics"
       ]
@@ -1926,7 +2001,8 @@
       "category": "audit",
       "purpose": "fail-CLOSED build lint (DP-RD-0285, tri-state route resolution). No two",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1938,7 +2014,8 @@
       "category": "audit",
       "purpose": "The total operator set a numeric tag is expected to service (==/!= are handled by the generic",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -1953,6 +2030,7 @@
       "purpose": "dev-tool detector for the test scratch-dir LEAK CLASS.",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "diagnostics",
         "source-hygiene",
@@ -1964,7 +2042,8 @@
       "category": "audit",
       "purpose": "the honest self-hosting map: per package, how far toward",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "effects",
         "graph/index"
@@ -1975,7 +2054,8 @@
       "category": "audit",
       "purpose": "dead-flow detector for the RD-0528 self-hosted",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -1989,6 +2069,7 @@
       "purpose": "detector for the annotation→re-fuse→unsigned",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "graph/index"
@@ -1999,7 +2080,8 @@
       "category": "audit",
       "purpose": "a RECONNAISSANCE MAP of the signing-path refusal codes.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2012,6 +2094,7 @@
       "purpose": "hunt the silent-name-collision class with myco (owner 2026-07-18)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "naming",
@@ -2026,6 +2109,7 @@
       "purpose": "sink/source hand-list drift gate (mirrors",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -2042,7 +2126,8 @@
       "category": "audit",
       "purpose": "do the THREE sink recognisers agree?",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -2057,6 +2142,7 @@
       "purpose": "R2: does each self-hosted stage actually RUN?",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "coverage",
         "teaching-corpus",
@@ -2069,7 +2155,8 @@
       "category": "audit",
       "purpose": "the CANONICAL REGISTRY half of the effect /",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -2086,6 +2173,7 @@
       "purpose": "STRAY / STALE Markdown tracker (owner 2026-06-23). Surfaces every *.md that lives",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "coverage",
         "source-hygiene",
@@ -2098,7 +2186,8 @@
       "category": "audit",
       "purpose": "(no header description)",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "gate-wiring",
         "doc-drift",
@@ -2110,7 +2199,8 @@
       "category": "audit",
       "purpose": "BAD-SYNTAX / PARSE-ERROR tracker for BOTH `.fungi` AND `.ts` (owner 2026-06-28).",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -2124,7 +2214,8 @@
       "category": "audit",
       "purpose": "TASK 0056-ci-lint: cross-tier contamination guard (open-core \"B7\" lint).",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2142,11 +2233,13 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
         "coverage",
         "diagnostics",
+        "mutation-testing",
         "graph/index"
       ]
     },
@@ -2155,7 +2248,8 @@
       "category": "audit",
       "purpose": "run BOTH engines over ONE corpus and compare what they EMIT.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "effects",
         "gate-wiring",
@@ -2171,6 +2265,7 @@
       "purpose": "twin-emitted ⊆ type-checker-emitted (fail-closed)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "gate-wiring",
         "diagnostics",
@@ -2183,6 +2278,7 @@
       "purpose": "U2 compiler-version admission floor",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -2194,7 +2290,8 @@
       "category": "audit",
       "purpose": "the un-lowered-node ratchet (R&D grounding #6.1)",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "diagnostics"
@@ -2206,6 +2303,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "legacy-active",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2223,6 +2321,7 @@
       "purpose": "RD-0529 A4: turn the wasmtime \"availability check\" into a real GATE",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "coverage",
         "teaching-corpus",
@@ -2234,7 +2333,8 @@
       "category": "audit",
       "purpose": "RD-0529 C1: prove the WASM execution corpus is NON-VACUOUS by",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "diagnostics",
         "mutation-testing",
@@ -2249,6 +2349,7 @@
       "purpose": "corpus auditor for WAT record representation gaps",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "legacy-active",
       "concerns": [
         "teaching-corpus",
         "graph/index"
@@ -2259,7 +2360,8 @@
       "category": "audit",
       "purpose": "RD-0100 web-* fail-closed contract enforcer.",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2274,6 +2376,7 @@
       "purpose": "targeted LogicN->Galerina completion for the residual",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2289,6 +2392,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2301,6 +2405,7 @@
       "purpose": "the ROADMAP as a subway map, generated from live ledgers (owner ask 2026-07-25).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": []
     },
     {
@@ -2309,6 +2414,7 @@
       "purpose": "the DURABLE fix for status drift (task #74). component-health.mjs is the ONE",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "provenance",
         "doc-drift",
@@ -2321,6 +2427,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -2334,6 +2441,7 @@
       "purpose": "fail-closed orchestrator for repository-owned Galerina graph surfaces.",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "package-border",
@@ -2347,6 +2455,7 @@
       "purpose": "KAT — is the execution-graph cache's BOUND actually enforced?",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "graph/index"
@@ -2357,7 +2466,8 @@
       "category": "graph",
       "purpose": "normalize and bind one explicit external KB corpus",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "provenance",
@@ -2372,6 +2482,7 @@
       "purpose": "derive the cache limits from the corpus.",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2385,6 +2496,7 @@
       "purpose": "read-only, ephemeral graph over an explicitly selected",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2398,7 +2510,8 @@
       "category": "graph",
       "purpose": "derive and enforce every registered package",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2412,7 +2525,8 @@
       "category": "graph",
       "purpose": "deterministic, fail-closed publication wrapper",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "governance",
         "provenance",
@@ -2425,6 +2539,7 @@
       "purpose": "graph 7/7: the LIVE `.ts` retirement meter (owner-directed 2026-07-16:",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2442,6 +2557,7 @@
       "purpose": "index EVERY diagnostic/error code in Galerina: its definition, its name/severity,",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2457,6 +2573,7 @@
       "purpose": "the DERIVED code registry (standard #10 \"derived catalog\", #219; closes cluster ①).",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -2473,6 +2590,7 @@
       "purpose": "RD-0359: generate ALL governed .fungi flow contracts into ONE doc.",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2490,6 +2608,7 @@
       "purpose": "RD-0349 I1: generate the runtime unit table from the",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -2502,6 +2621,7 @@
       "purpose": "index the Galerina Knowledge-Base (ZTF-Knowledge-Bases/**/*.md, RECURSIVE — ~690 files) so you can",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "provenance",
         "diagnostics",
@@ -2517,6 +2637,7 @@
       "purpose": "Offline-root -> operational registry authority ceremony.",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2530,6 +2651,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2543,6 +2665,7 @@
       "purpose": "registry-index-cli — walkthrough §3 signer/verifier CLI for the certified",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2558,6 +2681,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -2571,6 +2695,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2584,6 +2709,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "source-hygiene",
@@ -2596,6 +2722,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion"
       ]
@@ -2606,6 +2733,7 @@
       "purpose": "TASK-ENV-001: the umbrella convention linter (owner 2026-06-22, STRICT).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "gate-wiring",
@@ -2621,7 +2749,8 @@
       "category": "lint",
       "purpose": "`.fungi` source-quality gate (owner rules, 2026-06-23).",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "self-test-transitive",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2636,6 +2765,7 @@
       "purpose": "Galerina per-COMPONENT readiness matrix for v1.0 \"full testing\".",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -2648,6 +2778,7 @@
       "purpose": "Complete, build-current package test runner for the Galerina workspace.",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "graph/index"
@@ -2659,6 +2790,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "source-hygiene"
@@ -2670,9 +2802,23 @@
       "purpose": "Stop hook: runs tests in dependency order whenever the sentinel file",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "diagnostics",
         "graph/index"
+      ]
+    },
+    {
+      "name": "run-generator-contract-cadence.mjs",
+      "category": "runner",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "tier-floor",
+        "source-hygiene"
       ]
     },
     {
@@ -2681,6 +2827,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2689,11 +2836,12 @@
       ]
     },
     {
-      "name": "run-phase-close.mjs",
+      "name": "run-phase-close-legacy.mjs",
       "category": "runner",
       "purpose": "Galerina full phase-close cadence",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "governance",
         "naming",
@@ -2705,11 +2853,40 @@
       ]
     },
     {
+      "name": "run-phase-close-special.mjs",
+      "category": "runner",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "governance",
+        "naming",
+        "graph/index"
+      ]
+    },
+    {
+      "name": "run-phase-close.mjs",
+      "category": "runner",
+      "purpose": "(no header description)",
+      "selfTest": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
+      "concerns": [
+        "signing/fusion",
+        "diagnostics",
+        "tier-floor",
+        "source-hygiene",
+        "graph/index"
+      ]
+    },
+    {
       "name": "run-proofs.mjs",
       "category": "runner",
       "purpose": "keep-green gate for machine-checkable R&D proofs",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "diagnostics",
         "doc-drift",
@@ -2722,6 +2899,7 @@
       "purpose": "Galerina STATUS one-shot. Print the live project state (version / stage / test line / overall % /",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2737,6 +2915,7 @@
       "purpose": "W1, the start-up/warm-up measurement rig (RD-0401 §build-order rung 1).",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "source-hygiene",
@@ -2749,6 +2928,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "governance"
       ]
@@ -2759,6 +2939,7 @@
       "purpose": "binary-safe residual-brand + @-scope audit (dev tool)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2771,7 +2952,8 @@
       "category": "util",
       "purpose": "build a package plus its transitive `file:` dependency closure in",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2785,6 +2967,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "source-hygiene"
@@ -2796,6 +2979,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -2807,7 +2991,8 @@
       "category": "util",
       "purpose": "(no header description)",
       "selfTest": true,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -2824,6 +3009,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "governance",
@@ -2837,6 +3023,7 @@
       "purpose": "the \"generate the view\" doctrine applied to QUOTED WAT in docs (RD-0395 §3.2).",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2854,6 +3041,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "governance",
@@ -2868,6 +3056,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -2880,6 +3069,7 @@
       "purpose": "fungi-astshape — AST-SHAPE INSPECTOR for build-spec authors",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "secrets/privacy"
       ]
@@ -2890,6 +3080,7 @@
       "purpose": "derive fail-closed checker/runtime evidence for the",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "gate-wiring",
         "diagnostics",
@@ -2902,7 +3093,8 @@
       "category": "util",
       "purpose": "(no header description)",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2918,6 +3110,7 @@
       "purpose": "RD-0528 Phase I-1 evidence producer (item d) for the COMPILER",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2933,6 +3126,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2946,6 +3140,7 @@
       "purpose": "RD-0361 R4 evidence-pack producer, item (d).",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2960,6 +3155,7 @@
       "purpose": "RD-0361 R4 evidence-pack producer (item (d)) for the T2 Memory tranche.",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -2973,6 +3169,7 @@
       "purpose": "deterministic source SBOM for the REAL npm/lockfile graph (RD-0317 §1).",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "sinks/taint",
         "signing/fusion",
@@ -2988,6 +3185,7 @@
       "purpose": "the HV3 audit surface (RD-0358 PROTOTYPE).",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -3005,6 +3203,7 @@
       "purpose": "KAT — does the REAL executeFlow() path grow the execution-graph cache without",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "diagnostics",
         "graph/index"
@@ -3016,6 +3215,7 @@
       "purpose": "KAT — are JavaScript primitives garbage collected?",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion"
       ]
@@ -3026,6 +3226,7 @@
       "purpose": "RD-0355 L1/L2/L7 (owner-confirmed 2026-07-11: Apache-2.0, attribution",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "governance",
         "coverage",
@@ -3039,6 +3240,7 @@
       "purpose": "mark-core-change.js",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "graph/index"
       ]
@@ -3049,6 +3251,7 @@
       "purpose": "the 2026-07-08 syntax-update codemod (Phase 3, T3.1).",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -3063,6 +3266,7 @@
       "purpose": "the #100 worklist advisor for the P9 self-hosted stages",
       "selfTest": true,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "signing/fusion",
@@ -3075,6 +3279,7 @@
       "purpose": "workspace package USAGE / reverse-dependency graph.",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "diagnostics",
         "package-border",
@@ -3087,6 +3292,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics",
@@ -3098,7 +3304,8 @@
       "category": "util",
       "purpose": "(no header description)",
       "selfTest": false,
-      "inCadence": false,
+      "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "diagnostics"
       ]
@@ -3109,6 +3316,7 @@
       "purpose": "R&D DONE-FILE ABSORBER / REPORTER. Automates the standing process (owner 2026-06-23):",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "source-hygiene",
         "doc-drift",
@@ -3121,6 +3329,7 @@
       "purpose": "case-aware rename of the RETIRED format name \"tmf\" -> \"spore\" across every",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "diagnostics",
         "doc-drift",
@@ -3133,6 +3342,7 @@
       "purpose": "keep fused .wasm artifacts fresh in dev",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -3145,6 +3355,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion"
       ]
@@ -3155,6 +3366,7 @@
       "purpose": "repair broken intra-workspace `file:` dependency links",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "graph/index"
       ]
@@ -3165,6 +3377,7 @@
       "purpose": "mechanical, exact-token rename of a monorepo package across TRACKED files.",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "secrets/privacy",
         "source-hygiene"
@@ -3176,6 +3389,7 @@
       "purpose": "deterministic codemod: repoint dangling in-repo KB refs",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "diagnostics",
         "doc-drift",
@@ -3188,6 +3402,7 @@
       "purpose": "Subject: the Galerina compiler front-to-back, driven the way a long-running",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "sinks/taint",
         "effects",
@@ -3201,6 +3416,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "effects",
         "governance",
@@ -3213,6 +3429,7 @@
       "purpose": "CI guard for galerina.workspace.json",
       "selfTest": false,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "source-hygiene",
         "doc-drift"
@@ -3224,6 +3441,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "governance",
@@ -3238,6 +3456,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "diagnostics"
@@ -3249,6 +3468,7 @@
       "purpose": "(no header description)",
       "selfTest": false,
       "inCadence": false,
+      "cadenceDisposition": "on-demand",
       "concerns": [
         "signing/fusion",
         "provenance",
@@ -3262,6 +3482,7 @@
       "purpose": "(no header description)",
       "selfTest": true,
       "inCadence": true,
+      "cadenceDisposition": "scheduled",
       "concerns": [
         "provenance",
         "teaching-corpus",
@@ -3306,6 +3527,7 @@
     "diagnostics": [
       "audit-allowlist-sensitive.mjs",
       "audit-artifact-drift.mjs",
+      "audit-assurance-legacy-lifecycle.mjs",
       "audit-brand-keys.mjs",
       "audit-cast-hygiene.mjs",
       "audit-checker-wiring.mjs",
@@ -3372,6 +3594,7 @@
       "lint-fungi.mjs",
       "run-core-tests.cjs",
       "run-impact-check.mjs",
+      "run-phase-close-legacy.mjs",
       "run-phase-close.mjs",
       "run-proofs.mjs",
       "status.mjs",
@@ -3483,6 +3706,8 @@
       "run-all-tests.cjs",
       "run-core-tests.cjs",
       "run-impact-check.mjs",
+      "run-phase-close-legacy.mjs",
+      "run-phase-close-special.mjs",
       "run-phase-close.mjs",
       "status.mjs",
       "bench-startup.mjs",
@@ -3567,6 +3792,7 @@
     ],
     "signing/fusion": [
       "audit-artifact-drift.mjs",
+      "audit-assurance-legacy-lifecycle.mjs",
       "audit-auto-erasure-ratchet.mjs",
       "audit-brand-keys.mjs",
       "audit-cast-hygiene.mjs",
@@ -3634,7 +3860,9 @@
       "component-health.mjs",
       "run-all-tests.cjs",
       "run-assurance-shadow.mjs",
+      "run-generator-contract-cadence.mjs",
       "run-impact-check.mjs",
+      "run-phase-close.mjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
@@ -3717,6 +3945,14 @@
       "repoint-kb-refs.mjs",
       "validate-workspace-pointers.mjs"
     ],
+    "mutation-testing": [
+      "audit-assurance-legacy-lifecycle.mjs",
+      "audit-gate-selftests.mjs",
+      "audit-mutation.mjs",
+      "audit-tooling-contract.mjs",
+      "audit-wat-emitter-mutation.mjs",
+      "lint-conventions.mjs"
+    ],
     "brand": [
       "audit-brand-keys.mjs",
       "audit-cast-hygiene.mjs",
@@ -3767,7 +4003,8 @@
       "registry-generation-cli.mjs",
       "registry-index-cli.mjs",
       "lint-fungi.mjs",
-      "run-phase-close.mjs",
+      "run-phase-close-legacy.mjs",
+      "run-phase-close-special.mjs",
       "status.mjs",
       "beta-v1-release-admission.mjs",
       "debug-compiler-globs.mjs",
@@ -3808,7 +4045,9 @@
       "verify-registry-static-host-source.mjs",
       "verify-registry-static-host-toolchain.mjs",
       "run-assurance-shadow.mjs",
+      "run-generator-contract-cadence.mjs",
       "run-impact-check.mjs",
+      "run-phase-close.mjs",
       "status.mjs",
       "bench-startup.mjs",
       "brand-audit.mjs",
@@ -3861,7 +4100,8 @@
       "audit-private-doc-leak.mjs",
       "audit-silent-overwrite.mjs",
       "audit-web-stub-guard.mjs",
-      "run-phase-close.mjs",
+      "run-phase-close-legacy.mjs",
+      "run-phase-close-special.mjs",
       "emit-doc-wat.mjs",
       "export-slide-checked-decision-receipt.mjs"
     ],
@@ -3876,6 +4116,8 @@
       "audit-tier-boundary.mjs",
       "audit-twin-differential.mjs",
       "audit-twin-emit-parity.mjs",
+      "run-generator-contract-cadence.mjs",
+      "run-phase-close-legacy.mjs",
       "run-phase-close.mjs",
       "license-rollout.mjs"
     ],
@@ -3942,7 +4184,7 @@
       "memory-graph.mjs",
       "ts-retirement-graph.mjs",
       "lint-conventions.mjs",
-      "run-phase-close.mjs",
+      "run-phase-close-legacy.mjs",
       "migrate-fungi.mjs",
       "wat-invalid-triage.mjs"
     ],
@@ -3965,7 +4207,7 @@
       "kb-index.mjs",
       "lint-fungi.mjs",
       "component-health.mjs",
-      "run-phase-close.mjs",
+      "run-phase-close-legacy.mjs",
       "emit-doc-wat.mjs",
       "generate-sbom.mjs",
       "verify-slide-reference-evidence.mjs",
@@ -3998,12 +4240,6 @@
       "audit-web-stub-guard.mjs",
       "wat-invalid-triage.mjs"
     ],
-    "mutation-testing": [
-      "audit-gate-selftests.mjs",
-      "audit-mutation.mjs",
-      "audit-wat-emitter-mutation.mjs",
-      "lint-conventions.mjs"
-    ],
     "muted-diagnostics": [
       "audit-muted-diagnostics.mjs",
       "audit-perf-hotpath.mjs",
@@ -4016,48 +4252,2452 @@
   "gaps": {
     "packagesNoTests": [],
     "concernsNoTool": [],
-    "toolsNotInCadence": [
-      "audit-allowlist-sensitive.mjs",
-      "audit-brand-keys.mjs",
-      "audit-codes-full.mjs",
-      "audit-diagnostic-codes.mjs",
-      "audit-diagnostic-doc-drift.mjs",
-      "audit-examples-vs-declared.mjs",
-      "audit-flat-package-topology.mjs",
-      "audit-gate-selftests.mjs",
-      "audit-graph-integrity.mjs",
-      "audit-hardening-determinism.mjs",
-      "audit-import-governance.mjs",
-      "audit-kernel-floor.mjs",
-      "audit-leak-static.mjs",
-      "audit-license-compat.mjs",
-      "audit-memory-leak.mjs",
-      "audit-overclaim-phrases.mjs",
-      "audit-package-border.mjs",
-      "audit-papers-index.mjs",
-      "audit-percent-evidence.mjs",
-      "audit-percent-history.mjs",
-      "audit-production-blockers.mjs",
-      "audit-provenance.mjs",
-      "audit-registry-fixtures.mjs",
-      "audit-retention-gate.mjs",
-      "audit-retention-nightly.mjs",
-      "audit-route-overlap.mjs",
-      "audit-runtime-coverage.mjs",
-      "audit-selfhost-readiness.mjs",
-      "audit-selfhosted-dead-flows.mjs",
-      "audit-signing-refusal-recon.mjs",
-      "audit-sink-tri-parity.mjs",
-      "audit-stdlib-gates-parity.mjs",
-      "audit-syntax-reference-links.mjs",
-      "audit-syntax.mjs",
-      "audit-tier-boundary.mjs",
-      "audit-twin-differential.mjs",
-      "audit-unlowered-nodes.mjs",
-      "audit-wat-emitter-mutation.mjs",
-      "audit-web-stub-guard.mjs",
-      "lint-fungi.mjs"
-    ]
+    "toolsNotInCadence": []
   },
-  "contractViolations": []
+  "contractViolations": [],
+  "cadenceCoverage": [
+    {
+      "tool": "audit-allowlist-sensitive.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-arithmetic-conformance.mjs",
+      "directEntryIds": [
+        "arith-conformance"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-artifact-drift.mjs",
+      "directEntryIds": [
+        "artifact-drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-assurance-legacy-lifecycle.mjs",
+      "directEntryIds": [
+        "audit:assurance-legacy-lifecycle"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-auto-erasure-ratchet.mjs",
+      "directEntryIds": [
+        "auto-erasure-ratchet"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-brand-keys.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-canonical-test-counts.mjs",
+      "directEntryIds": [
+        "audit:canonical-test-counts"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-cast-hygiene.mjs",
+      "directEntryIds": [
+        "lint:cast-hygiene"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-checker-wiring.mjs",
+      "directEntryIds": [
+        "checker:wiring"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-claim-hygiene.mjs",
+      "directEntryIds": [
+        "claim:hygiene"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-code-catalog-coverage.mjs",
+      "directEntryIds": [
+        "code-catalog-coverage",
+        "code-catalog-coverage:selftest"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-codes-full.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-compiler-stage-hashes.mjs",
+      "directEntryIds": [
+        "compiler-stage-hashes"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-compiler-stage-twins.mjs",
+      "directEntryIds": [
+        "compiler-stage-twins"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-corpus-effect-names.mjs",
+      "directEntryIds": [
+        "effects:corpus"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-coverage.mjs",
+      "directEntryIds": [
+        "coverage:codes"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-diagnostic-code-collisions.mjs",
+      "directEntryIds": [
+        "code-collisions",
+        "code-collisions:selftest"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-diagnostic-codes.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-diagnostic-doc-drift.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-doc-drift.mjs",
+      "directEntryIds": [
+        "doc:drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-dss-wasm-build.mjs",
+      "directEntryIds": [
+        "dss-wasm-build"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "legacy-active"
+    },
+    {
+      "tool": "audit-effect-canonicality.mjs",
+      "directEntryIds": [
+        "effect:canonicality"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-emitter-completeness.mjs",
+      "directEntryIds": [
+        "emitter-completeness"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-example-diagnostics.mjs",
+      "directEntryIds": [
+        "example-diagnostics"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-examples-vs-declared.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-flat-package-topology.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-flowparam-fidelity.mjs",
+      "directEntryIds": [
+        "flowparam-fidelity"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-fungi-corpus-check.mjs",
+      "directEntryIds": [
+        "fungi:corpus-check"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-fungi-runtime.mjs",
+      "directEntryIds": [
+        "fungi:runtime"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-gate-key-injectivity.mjs",
+      "directEntryIds": [
+        "gate-key-injectivity"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-gate-selftests.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-generator-contract.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "audit:generator-contract"
+      ],
+      "via": [
+        [
+          "audit:generator-contract",
+          "run-generator-contract-cadence.mjs",
+          "audit-generator-contract.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-graph-integrity.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "audit-graph-integrity.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-gscm.mjs",
+      "directEntryIds": [
+        "gscm"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-hardening-determinism.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-import-governance.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-kernel-floor.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-kernel-fungi-twins.mjs",
+      "directEntryIds": [
+        "kernel-fungi-twins"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-leak-static.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-license-compat.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-memory-leak.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-mutation.mjs",
+      "directEntryIds": [
+        "mutation-anchors"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-muted-diagnostics.mjs",
+      "directEntryIds": [
+        "muted:diagnostics"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-name-collisions.mjs",
+      "directEntryIds": [
+        "name:collisions"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-no-redeclare.mjs",
+      "directEntryIds": [
+        "no-redeclare"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-node-dependencies.mjs",
+      "directEntryIds": [
+        "audit:node-floor"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-oblivious.mjs",
+      "directEntryIds": [
+        "oblivious"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-overclaim-phrases.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-package-border.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-papers-index.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-path-leak.mjs",
+      "directEntryIds": [
+        "path:leak"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-percent-evidence.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-percent-history.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-perf-hotpath.mjs",
+      "directEntryIds": [
+        "perf:hotpath"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-private-doc-leak.mjs",
+      "directEntryIds": [
+        "private-doc-leak"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-production-blockers.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-provenance.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-reference-doc-drift.mjs",
+      "directEntryIds": [
+        "doc:reference-drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-registry-fixtures.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-remote-shell-install.mjs",
+      "directEntryIds": [
+        "remote-shell-install"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-report-blind-consumers.mjs",
+      "directEntryIds": [
+        "report-blind-consumers"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-retention-gate.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-retention-nightly.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-route-overlap.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-runtime-coverage.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-scratchdir-hygiene.mjs",
+      "directEntryIds": [
+        "scratch-dir:hygiene"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-selfhost-readiness.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-selfhosted-dead-flows.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-signed-fixture-drift.mjs",
+      "directEntryIds": [
+        "signed:fixtures"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-signing-refusal-recon.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-silent-overwrite.mjs",
+      "directEntryIds": [
+        "silent-overwrite"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-sink-canonicality.mjs",
+      "directEntryIds": [
+        "sink:canonicality"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-sink-tri-parity.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-stage-execution.mjs",
+      "directEntryIds": [
+        "stage-execution"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-stdlib-gates-parity.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-stray-docs.mjs",
+      "directEntryIds": [
+        "doc:stray"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-syntax-reference-links.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-syntax.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-tier-boundary.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-tooling-contract.mjs",
+      "directEntryIds": [
+        "audit:tooling-contract"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-twin-differential.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-twin-emit-parity.mjs",
+      "directEntryIds": [
+        "twin-emit-parity"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-u2-version-floor.mjs",
+      "directEntryIds": [
+        "u2-version-floor"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-unlowered-nodes.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-wasm-validate.mjs",
+      "directEntryIds": [
+        "wasm-validate"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "legacy-active"
+    },
+    {
+      "tool": "audit-wasmtime-presence.mjs",
+      "directEntryIds": [
+        "wasmtime-presence"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "audit-wat-emitter-mutation.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "audit-wat-lowering.mjs",
+      "directEntryIds": [
+        "wat-lowering"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "legacy-active"
+    },
+    {
+      "tool": "audit-web-stub-guard.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "bench-startup.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "beta-v1-release-admission.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "brand-audit.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "build-core-chain.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "build-process-warden.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "build-receipt-bound-slide-package.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "check-gate-injection.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "code-index.mjs",
+      "directEntryIds": [
+        "code-index"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "component-health.mjs",
+      "directEntryIds": [
+        "audit:percent-fresh",
+        "audit:sections"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "debug-compiler-globs.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "dev-tool-index.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "dev-tool-index.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "emit-doc-wat.mjs",
+      "directEntryIds": [
+        "doc:wat-drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "export-slide-checked-decision-receipt.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "fix-logicn-brand.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "flat-package-root-lock.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "fungi-astshape.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "fungi-golden-probe.mjs",
+      "directEntryIds": [
+        "fungi:golden"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "fungi-source-capability-inventory.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "fungi-source-capability-inventory.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "galerina-new.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "gather-compiler-stage-hashes.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "gather-r4-twin-hashes.mjs",
+      "directEntryIds": [
+        "r4-twin-hashes"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "gather-t1-twin-hashes.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "gather-t2-twin-hashes.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "gen-assurance-semantic-graph.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "gen-assurance-semantic-graph.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "gen-code-registry.mjs",
+      "directEntryIds": [
+        "code-registry"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "gen-contract-registry.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "gen-roadmap-subway.mjs",
+      "directEntryIds": [
+        "doc:roadmap-drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "gen-status-blocks.mjs",
+      "directEntryIds": [
+        "doc:status-drift"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "gen-unit-registry.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "generate-sbom.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "graph-all.mjs",
+      "directEntryIds": [
+        "graph:all"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "hardening-show-derived.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "kat-executeflow-cache-growth.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "kat-execution-graph-cache-bound.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "kat-primitives-are-collected.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "kb-graph-generator.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "kb-graph-generator.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "kb-index.mjs",
+      "directEntryIds": [
+        "kb-index"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "license-rollout.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "lint-conventions.mjs",
+      "directEntryIds": [
+        "lint:conventions"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "lint-fungi.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "self-test-transitive"
+    },
+    {
+      "tool": "mark-core-change.cjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "measure-graph-cache-limits.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "memory-graph.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "migrate-fungi.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "p9-100-site-mapper.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "package-graph-generator.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "package-graph-generator.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "package-usage.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "phase-close-hook.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "platform-smoke.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "project-graph-generator.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [
+        "graph:all"
+      ],
+      "via": [
+        [
+          "graph:all",
+          "graph-all.mjs",
+          "project-graph-generator.mjs"
+        ]
+      ],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "rd-0055-gc-tri-photonic-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0127-framework-friendly-runtime-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0128-cicd-native-testgen-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0138-0143-photonic-security-suite-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0144-0149-governed-chaos-suite-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0151-0153-assimilation-ambiguity-neural-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0154-0155-tritmesh-scaling-factcheck-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0156-photonic-wavefront-db-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0157-0159-virtual-wavefront-silicon-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0160-0161-tcsr-phasegraph-zerocopy-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0162-0164-tritsocket-tritrpc-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0165-tritssl-wavefront-tls-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0166-0167-cache-graph-fungi-index-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0168-graph-pci-compliance-scanner-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-0169-tritmesh-aws-decoupled-tristate-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-absorb.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-aot-tensor-precompute-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rd-for-where-mask-proof.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rebrand-tmf-to-spore.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rebuild-fusable-packages.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "registry-authority-cli.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "registry-generation-cli.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "registry-index-cli.mjs",
+      "directEntryIds": [
+        "registry-index:selftest"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "release-evidence-authority-cli.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "relink-workspace.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "rename-package.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "repoint-kb-refs.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "run-all-tests.cjs",
+      "directEntryIds": [
+        "tests:all-packages",
+        "tests:core"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "run-assurance-shadow.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "run-core-tests.cjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "run-generator-contract-cadence.mjs",
+      "directEntryIds": [
+        "audit:generator-contract"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "run-impact-check.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "run-phase-close-legacy.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "run-phase-close-special.mjs",
+      "directEntryIds": [
+        "audit:naming",
+        "audit:security",
+        "governance:diff",
+        "manifest:cbor",
+        "tests:patterns"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "run-phase-close.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "run-proofs.mjs",
+      "directEntryIds": [
+        "proofs:canonical"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "status.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "subject-galerina-compile.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "test-compiler-subdirs.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "ts-retirement-graph.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "validate-workspace-pointers.mjs",
+      "directEntryIds": [
+        "workspace:pointers"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    },
+    {
+      "tool": "verify-artifacts.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-platform-durability-evidence.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-registry-static-host-build-recipe.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-registry-static-host-source.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-registry-static-host-toolchain.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-registry-static-profile.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "verify-slide-reference-evidence.mjs",
+      "directEntryIds": [],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [],
+      "lifecycle": "not-applicable",
+      "disposition": "on-demand"
+    },
+    {
+      "tool": "wat-invalid-triage.mjs",
+      "directEntryIds": [
+        "wat:invalid-triage"
+      ],
+      "transitiveEntryIds": [],
+      "via": [],
+      "cadences": [
+        "changed",
+        "exhaustive",
+        "nightly",
+        "normal",
+        "on-demand",
+        "release"
+      ],
+      "lifecycle": "active",
+      "disposition": "scheduled"
+    }
+  ],
+  "legacyConsumers": [
+    {
+      "controlId": "dss-wasm-build",
+      "consumerIds": [
+        "dss-wasm-build"
+      ]
+    },
+    {
+      "controlId": "wasm-validate",
+      "consumerIds": [
+        "wasm-validate"
+      ]
+    },
+    {
+      "controlId": "wat-lowering",
+      "consumerIds": [
+        "wat-lowering"
+      ]
+    }
+  ]
 }
