@@ -2605,6 +2605,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,500 tests** in 279.8 seconds. The normal custody close remains fail-closed:
+9,526 tests** in 282.2 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
