@@ -155,7 +155,7 @@ of one physical artifact before requiring re-admission verdict `-1`.
 Run with the explicit repository path:
 
 ```powershell
-$env:GALERINA_SLIDE_REPO='C:\Users\phill\Documents\GitHub\SLIDE'
+$env:GALERINA_SLIDE_REPO=(Resolve-Path ..\SLIDE).Path
 node --test scripts/tests/hardening-trust-fungi-slide.integration.test.mjs
 ```
 
