@@ -51,9 +51,11 @@ compiler package passes **6,344/6,344**. Clean SLIDE `ac8a041` required no
 source change: it builds two physical exports, independently re-admits all
 twelve VOK vectors, keeps deny and unknown closed, and refuses source,
 argument and physical-artifact mutations (**3/3** focused). Repository owner
-closure is still running; the canonical aggregate is green at **100/100
-packages and 9,556 tests** in **293.7s**, but this is presently a non-retiring
-physical proof, not a final closure or authority claim.
+closure is current: the canonical aggregate is green at **100/100 packages and
+9,556 tests** in **285.4s**, the governed tooling lane is **597 total / 585 pass
+/ 12 intentional skips / zero failures**, and all **92/92** normal phase-close
+checks pass in **767.8s**. This remains a non-retiring physical proof, not
+release, production, bootstrap-fixpoint or TypeScript-retirement authority.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

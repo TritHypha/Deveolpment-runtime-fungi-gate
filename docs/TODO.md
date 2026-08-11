@@ -21,11 +21,13 @@ counts or open items that a newer section explicitly supersedes.
   release values false, and refuse source mutation, malformed trits and a
   one-byte physical artifact mutation (**3/3** focused, zero skips).
 - [x] Re-run the canonical package owner: **100/100 packages and 9,556 tests**
-  in **293.7s**, including compiler **6,344/6,344**. This is regression
+  in **285.4s**, including compiler **6,344/6,344**. This is regression
   evidence, not conversion, release or retirement authority.
-- [ ] Close every generated owner and normal phase-close, then replace the
-  dossier's `CLOSURE_PENDING` status with a fresh repository evidence record.
-- [ ] Keep `hardening-residency.ts` and all compiler consumers active. This
+- [x] Close every generated owner and the governed 104-file tooling lane
+  (**597 total, 585 pass, 12 intentional skips, zero failures**), then pass
+  all **92/92** normal phase-close checks in **767.8s**. The dossier now records
+  the non-retiring closure instead of `CLOSURE_PENDING`.
+- [x] Keep `hardening-residency.ts` and all compiler consumers active. This
   non-retiring slice grants no bootstrap fixpoint, consumer switch, release,
   production or TypeScript-retirement authority.
 

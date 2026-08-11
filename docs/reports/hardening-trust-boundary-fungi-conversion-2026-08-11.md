@@ -1,7 +1,7 @@
 # Hardening trust-boundary Fungi conversion dossier
 
 Date: 2026-08-11
-Status: `PHYSICAL_REFERENCE_SLICE_PROVED_CLOSURE_PENDING`
+Status: `PHYSICAL_REFERENCE_SLICE_PROVED_NON_RETIRING`
 Authority: non-retiring compiler-reference slice; TypeScript remains the executing bootstrap and differential reference.
 
 ## Pinned source
@@ -68,10 +68,15 @@ partial result. Every admitted K3 value reaches exactly one terminal arm.
   arguments refuse execution, both non-ALLOW boundary values remain false, and
   one-byte physical artifact mutation refuses re-admission.
 - Focused conversion surface: **3/3**, zero skips.
-- Canonical package owner: **100/100 packages and 9,556 tests** in **293.7s**,
+- Canonical package owner: **100/100 packages and 9,556 tests** in **285.4s**,
   zero failures; compiler **6,344/6,344**.
-- Generated-owner freshness and normal phase-close: pending this dossier's
-  publication cycle; no terminal green claim is made before those owners run.
+- Governed tooling lane: **597 total, 585 pass, 12 intentional skips, zero
+  failures**. The hardening-trust SLIDE/VOK integration proof separately ran
+  live with zero skips; older digest-pinned SLIDE candidates retain their
+  optional skip boundary and were not rebound to a different SLIDE tool.
+- Generated-owner freshness is current. All **92/92** planned normal
+  phase-close checks pass in **767.8s** at the closure build point; the runner
+  explicitly grants no release authority.
 
 ## Retirement boundary
 
