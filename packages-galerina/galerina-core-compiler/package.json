@@ -21,6 +21,7 @@
       "src/self-hosted/effect-checker.fungi",
       "src/self-hosted/gir-emitter.fungi",
       "src/self-hosted/governance-verifier.fungi",
+      "src/self-hosted/hardening-trust-boundary.fungi",
       "src/self-hosted/lexer.fungi",
       "src/self-hosted/parser.fungi",
       "src/self-hosted/runtime.fungi",

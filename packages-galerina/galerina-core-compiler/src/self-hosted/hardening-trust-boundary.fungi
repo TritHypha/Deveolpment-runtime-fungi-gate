@@ -1,0 +1,30 @@
+@version 1
+/// Package-owned scalar trust operations for the closed Verdict domain.
+/// TypeScript remains the executing compiler reference until the bootstrap,
+/// consumer-switch and retirement gates are independently proved.
+
+pure flow combineTrust(left: Verdict, right: Verdict) -> Verdict
+contract { intent { "Return the least-trusted K3 operand without manufacturing trust." } }
+{
+  check(left) {
+    deny: { return left }
+    ambig: {
+      check(right) {
+        deny: { return right }
+        ambig: { return left }
+        if: { return left }
+      }
+    }
+    if: { return right }
+  }
+}
+
+pure flow boundaryTrusted(trust: Verdict) -> Bool
+contract { intent { "Release only a proven Allow verdict; Unknown and Deny remain closed." } }
+{
+  check(trust) {
+    deny: { return false }
+    ambig: { return false }
+    if: { return true }
+  }
+}
