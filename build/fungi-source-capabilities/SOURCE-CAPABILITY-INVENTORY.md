@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 117
-- Flows: 828
-- Bytes: 1117972
-- Retirement graph: `sha256:9446f1e3050cbca9438a7c00e677ae149da2652e422177f7610fe6e567576cf9`
+- Files: 118
+- Flows: 829
+- Bytes: 1118483
+- Retirement graph: `sha256:9bea620a2007708363b25c4c441ca7860aa52818ce066450b9865896f9eb9c97`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18858 |
-| `callExpr` | 7233 |
-| `binaryExpr` | 6028 |
+| `identifier` | 18862 |
+| `callExpr` | 7234 |
+| `binaryExpr` | 6031 |
 | `numberLiteral` | 5708 |
-| `block` | 4981 |
-| `stringLiteral` | 4799 |
+| `block` | 4985 |
+| `stringLiteral` | 4802 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2961 |
-| `paramDecl` | 2779 |
-| `typeRef` | 2447 |
-| `ifStmt` | 2254 |
+| `returnStmt` | 2965 |
+| `paramDecl` | 2780 |
+| `typeRef` | 2449 |
+| `ifStmt` | 2257 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1854 |
-| `boolLiteral` | 1565 |
+| `letDecl` | 1855 |
+| `boolLiteral` | 1569 |
 | `matchArm` | 1207 |
 | `contractDecl` | 823 |
 | `intentDecl` | 823 |
-| `pureFlowDecl` | 816 |
+| `pureFlowDecl` | 817 |
 | `mutDecl` | 810 |
 | `matchExpr` | 371 |
 | `whileStmt` | 340 |
 | `checkArm` | 306 |
 | `unaryExpr` | 249 |
 | `recordDecl` | 206 |
-| `program` | 117 |
+| `program` | 118 |
 | `listLiteral` | 115 |
 | `checkExpr` | 102 |
 | `trapDecl` | 50 |
@@ -59,8 +59,8 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 525 |
-| `String` | 424 |
-| `Bool` | 383 |
+| `String` | 425 |
+| `Bool` | 384 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -338,13 +338,14 @@ admission, execution parity, retirement credit or production authority.
 | `generate_monotonic_id` | 1 |
 | `toHex` | 1 |
 | `toLower` | 1 |
+| `trim` | 1 |
 | `write` | 1 |
 
 ## Operators
 
 | Operator | Count |
 |---|---:|
-| `==` | 1839 |
+| `==` | 1842 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |

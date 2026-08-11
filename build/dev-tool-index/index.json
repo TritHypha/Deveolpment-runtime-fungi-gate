@@ -691,7 +691,7 @@
       "tests": 15,
       "hasTestScript": true,
       "border": "PASS",
-      "files": 4,
+      "files": 5,
       "deps": [
         "@galerina/core-compiler"
       ]
