@@ -125,15 +125,23 @@ release or retirement authority. Repository-wide closure remains **UNKNOWN**
 because the crash-linked full tooling and normal phase-close processes are
 deliberately excluded.
 
-Qualifier escalation partial conversion 2026-08-11: the five-rank governance
-decision has exact package-owned Fungi, typed-interpreter, signed-Wasm and
-public-caller parity across the complete 7 x 7 matrix. Physical publication is
-not claimed. Independent SLIDE `ac8a041` admits three sequential exact String
-branches and refuses the required fourth with
-`SLIDE-CHECKED-PURE-SCALAR-001`; helper-call and four-arm `match` shapes also
-refuse. The zero-trust exit is to extend the bounded checked-Fungi profile with
-hostile String and mutation proofs, not weaken unknown-String fallback or
-remove a qualifier. The TypeScript path remains active.
+Seventh physical conversion slice 2026-08-12: the compiler's private
+five-rank qualifier decision in `governance-diff.ts` now has exact
+package-owned `qualifierRank` and `qualifierEscalated` flows in
+`galerina-core-compiler/src/self-hosted/governance-qualifier-escalation.fungi`.
+Unknown Strings preserve rank zero. Public-caller, typed-interpreter and
+signed/admitted-Wasm parity pass **2/2**, and the complete compiler package is
+**6,354/6,354**. Independent SLIDE `71abe86` selects its existing exact
+wide-control registry by lowered block count; the focused SLIDE neighborhood
+passes **71/71** and still refuses beyond the unchanged sixteen-block ceiling.
+One physical `.slide` is published and independently re-admitted through VOK;
+the complete 11 x 11 canonical-plus-hostile matrix is verified through typed
+Bool receipts, while malformed arguments, an unpaired surrogate, source
+mutation and one-byte artifact mutation refuse (**1/1**, zero skips). The
+TypeScript helper and callers remain active. This grants no consumer-switch,
+bootstrap, production, release or retirement authority; repository-wide
+closure remains **UNKNOWN** because crash-linked full tooling and normal
+phase-close remain excluded.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

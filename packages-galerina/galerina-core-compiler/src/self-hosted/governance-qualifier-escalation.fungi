@@ -1,30 +1,18 @@
 @version 1
 
+/// Return the source-authoritative authority rank for one exact qualifier.
+/// Every other admitted String has the closed fallback rank 0.
+pure flow qualifierRank(qualifier: String) -> Int {
+  if qualifier == "privileged" { return 4 }
+  if qualifier == "secure" { return 3 }
+  if qualifier == "guarded" { return 2 }
+  if qualifier == "flow" { return 1 }
+  return 0
+}
+
 /// Authority widens only when the after qualifier has a strictly higher rank.
-/// Unknown admitted Strings preserve the TypeScript fallback rank 0.
 /// This reference-only flow cannot switch the executing governance-diff path.
 pure flow qualifierEscalated(before: String, after: String) -> Bool {
-  if after == "privileged" {
-    if before == "privileged" { return false }
-    return true
-  }
-  if after == "secure" {
-    if before == "secure" { return false }
-    if before == "privileged" { return false }
-    return true
-  }
-  if after == "guarded" {
-    if before == "guarded" { return false }
-    if before == "secure" { return false }
-    if before == "privileged" { return false }
-    return true
-  }
-  if after == "flow" {
-    if before == "flow" { return false }
-    if before == "guarded" { return false }
-    if before == "secure" { return false }
-    if before == "privileged" { return false }
-    return true
-  }
+  if qualifierRank(after) > qualifierRank(before) { return true }
   return false
 }

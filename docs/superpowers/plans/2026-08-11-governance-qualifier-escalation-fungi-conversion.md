@@ -28,22 +28,21 @@ Keep the executing governance-diff path unchanged.
 
 ### Task 2: Exact Fungi implementation
 
-- [x] Add `qualifierEscalated` as one pure total flow with direct ordering and
-  no internal helper-call surface.
+- [x] Add the source-authoritative pure `qualifierRank` helper and the pure
+  total `qualifierEscalated` comparison.
 - [x] Prove strict checking, typed interpretation and signed/admitted Wasm.
 - [x] Derive parity through the public governance-diff caller surface.
 - [ ] Run the complete compiler package and commit the bounded source wave.
 
 ### Task 3: Physical SLIDE/VOK proof
 
-- [ ] BLOCKED: publish the exact asset as one physical reference-only `.slide`
-  export. SLIDE `ac8a041` refuses the fourth exact String branch in the current
-  pure-scalar profile; three branches admit.
-- [ ] Re-admit and execute the complete matrix through independent VOK after
-  the bounded profile is extended without weakening arbitrary-String fallback.
-- [ ] Refuse wrong counts/types, an unpaired surrogate, source mutation and
+- [x] Publish the exact asset as one physical reference-only `.slide` export
+  through SLIDE `71abe86` and its unchanged wide-control registry.
+- [x] Re-admit and execute the complete matrix through independent VOK without
+  weakening arbitrary-String fallback.
+- [x] Refuse wrong counts/types, an unpaired surrogate, source mutation and
   one-byte artifact mutation.
-- [ ] Register the focused test in the governed tooling manifest.
+- [x] Register the focused test in the governed tooling manifest.
 
 ### Task 4: Closure
 

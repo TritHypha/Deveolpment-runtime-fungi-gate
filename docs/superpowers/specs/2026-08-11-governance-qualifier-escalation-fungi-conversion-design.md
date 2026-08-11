@@ -14,12 +14,12 @@ The source table ranks qualifier Strings as `pure = 0`, `flow = 1`,
 the source fallback rank `0`. `qualifierEscalated(before, after)` returns true
 only when the rank of `after` is strictly greater than the rank of `before`.
 
-The Fungi asset exposes one pure
-`qualifierEscalated(String, String) -> Bool` decision. The rank ordering is
-expressed directly so the physical checked-Fungi scalar profile does not need
-an internal helper-call surface. It contains no null, NaN, `else if`, exception
-syntax, `for` or `loop`. Arbitrary admitted Strings remain valid inputs and
-cannot acquire a rank above `pure`.
+The Fungi asset exposes a pure `qualifierRank(String) -> Int` helper followed
+by the pure `qualifierEscalated(String, String) -> Bool` decision. This is the
+same table-plus-comparison shape as the TypeScript source and keeps each
+lowered function inside the existing bounded wide-control registry. It
+contains no null, NaN, `else if`, exception syntax, `for` or `loop`. Arbitrary
+admitted Strings remain valid inputs and cannot acquire a rank above `pure`.
 
 ## Proof shape
 
@@ -30,9 +30,11 @@ cannot acquire a rank above `pure`.
    behaviour through the public governance-diff surface.
 3. Exact Fungi bytes pass strict checking, typed interpretation, canonical
    GIR/WAT construction, signed/admitted Wasm, and Bool parity.
-4. A physical integration test compiles the same bytes with independent
-   SLIDE, publishes one `.slide`, re-admits it through VOK, executes the matrix,
-   and refuses malformed arguments, source mutation and artifact mutation.
+4. Independent SLIDE build `71abe86` selects its already-adopted exact
+   wide-control registry only when the lowered scalar function exceeds the
+   parent eight-block ceiling. A physical integration test publishes one
+   `.slide`, re-admits it through VOK, executes the matrix, and refuses
+   malformed arguments, source mutation and artifact mutation.
 
 ## Authority boundary
 

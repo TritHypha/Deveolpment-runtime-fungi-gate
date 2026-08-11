@@ -3,9 +3,10 @@
 ## Outcome
 
 The compiler's private `qualifierEscalated` decision has an exact
-package-owned `.fungi` counterpart and complete compiler/interpreter/signed-
-Wasm parity. Physical SLIDE/VOK publication is blocked by a bounded checked-
-Fungi profile limit; the source semantics were not weakened to obtain a pass.
+package-owned `.fungi` counterpart with compiler/interpreter/signed-Wasm parity
+and physical SLIDE/VOK publication. The existing wide-control registry is now
+selected by exact lowered block count; no registry limit or source semantic was
+weakened.
 
 ## Closed decision
 
@@ -15,43 +16,46 @@ only when the after rank is strictly higher than the before rank. The exact
 7 by 7 canonical-plus-hostile matrix agrees across the public TypeScript
 caller, typed Fungi interpreter and signed/admitted Wasm.
 
-The `.fungi` flow contains no null, NaN, `else if`, exception syntax, `for` or
-`loop`. Unknown admitted Strings cannot acquire authority above `pure`.
+The `.fungi` source expresses the same table-plus-comparison shape as
+TypeScript through `qualifierRank` and `qualifierEscalated`. It contains no
+null, NaN, `else if`, exception syntax, `for` or `loop`. Unknown admitted
+Strings cannot acquire authority above `pure`.
 
 ## Exact custody
 
 | Item | Evidence |
 |---|---|
 | TypeScript reference | SHA-256 `7B368F689A822B7A34E4A7101010DC113B5DB72ACD40C8952F1E7A9E94090D6C` |
-| Fungi candidate | SHA-256 `CADE8DA8465525E60344686786691D7F6BB3134229016E5364F4B1E8925CB739` |
+| Fungi candidate | SHA-256 `616FBF04F054C8CF073BD3AA9B411872446A2B2A68BCDE8DFDDBA2EE9B534098` |
 | Focused differential test | SHA-256 `34C428AE282A2C5665C7D17E7D876B9F07580C59FD5C6E9095F32D2483AAC53D` |
+| Physical SLIDE/VOK test | SHA-256 `E2E88F844ED2B12623EDEC9E8535D35252E0FC689516C8F43F7E17035E0DC3D3` |
 | Initial Fungi commit | `67d9da49e3fff224fb26557a640ca66acb12c8f0` |
-| Bounded final shape | `4c0fba1b908f826f52d3e4fbf7067badb1c94816` |
-| Independent SLIDE build point | `ac8a0418ec0bfe6443807db1b100b0a02d5b1ea8` |
+| Prior bounded direct shape | `4c0fba1b908f826f52d3e4fbf7067badb1c94816` |
+| Independent SLIDE build point | `71abe869ba5cc5cbe5590e7fb322b293cc40c8e3` |
 
-## Verification and refusal
+## Verification
 
 - Focused compiler/interpreter/signed-Wasm proof: 2/2 pass.
-- Owning compiler package at this slice: 6,348/6,348 pass.
-- Direct SLIDE profile probes admit one, two and three sequential exact String
-  branches.
-- The required fourth exact String branch refuses with
-  `SLIDE-CHECKED-PURE-SCALAR-001`; helper-call decomposition and a four-arm
-  `match` also refuse in the current profile.
-- No physical proof was committed and no consumer was switched.
+- Owning compiler package: 6,354/6,354 pass with zero skips or failures.
+- SLIDE focused wide-control and neighboring package paths: 71/71 pass.
+- Physical Galerina proof: 1/1 pass with zero skips. It publishes one `.slide`,
+  independently re-admits it through VOK and verifies the 11 by 11
+  canonical-plus-hostile matrix as typed Bool receipts.
+- Wrong argument counts/types, an unpaired surrogate, source mutation and a
+  one-byte artifact mutation all refuse.
+- Programs beyond the unchanged sixteen-block wide-control ceiling refuse.
 
-## R&D wishlist
+## Resolved blocker
 
-Extend the independent SLIDE checked-Fungi pure-scalar profile to admit a
-bounded four-or-more exact-String routing decision without changing arbitrary-
-String fallback semantics. The extension needs hostile-String, source-
-mutation, artifact-mutation, typed-argument and VOK receipt proofs. It must
-remain fail-closed for unsupported branch counts and must not infer authority
-from a successful compile Boolean.
+SLIDE already had the required bounded wide-control registry. Build `71abe86`
+made the pure-scalar compiler select it exclusively when the exact lowered
+function exceeds the parent eight-block ceiling. The source-authoritative rank
+helper then fits inside the existing sixteen-block maximum. Registry identity,
+limits, re-admission and non-authority fields remain unchanged.
 
 ## Authority boundary
 
-`governance-diff.ts`, `qualifierEscalated`, `classifyDelta`, `diffGovernance`
-and every consumer remain active. This partial conversion grants no physical
-SLIDE, consumer-switch, bootstrap, production, release or retirement
-authority.
+`governance-diff.ts`, its private TypeScript `qualifierEscalated`,
+`classifyDelta`, `diffGovernance` and every consumer remain active. The
+physical proof grants no consumer-switch, bootstrap, production, release or
+retirement authority.

@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Seventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the compiler's private deterministic qualifier escalation table
+  from `governance-diff.ts` as package-owned `qualifierRank` plus
+  `qualifierEscalated` flows in
+  `src/self-hosted/governance-qualifier-escalation.fungi`. Unknown Strings keep
+  rank zero; the source contains no null, NaN, `else if`, exception syntax,
+  `for` or `loop`.
+- [x] Prove the source-authoritative table and strict comparison across the
+  public TypeScript caller, typed interpreter and signed/admitted Wasm
+  (**2/2**), with the complete compiler package at **6,354/6,354**.
+- [x] Use independent SLIDE `71abe86` to select its existing bounded
+  wide-control registry by exact lowered block count. The focused SLIDE
+  compiler/package neighborhood is **71/71**, while a program beyond the
+  unchanged sixteen-block ceiling still refuses.
+- [x] Publish one physical `.slide`, independently re-admit it through VOK and
+  verify the complete 11 x 11 canonical-plus-hostile matrix as typed Bool
+  receipts. Wrong arguments, an unpaired surrogate, source mutation and a
+  one-byte artifact mutation refuse (**1/1**, zero skips).
+- [ ] Refresh the seventh slice's generated owners and both indexes through
+  bounded checks. Full tooling, normal phase-close, graph-all-after-roadmap and
+  whole-memory evaluation remain excluded; repository-wide closure remains
+  **UNKNOWN**.
+- [x] Keep `governance-diff.ts`, its TypeScript decision and every consumer
+  active. This reference-only proof grants no consumer-switch, bootstrap,
+  production, release or retirement authority.
+
 ### Sixth physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
 - [x] Translate the compiler's private deterministic `isValidStrategy`
@@ -56,21 +83,6 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Keep `wat-emitter.ts`, `is64BitWatType` and every consumer active. This
   reference-only proof grants no consumer-switch, bootstrap, production,
   release or retirement authority.
-
-### Qualifier escalation Fungi partial conversion and R&D exit - 2026-08-11
-
-- [x] Translate the exact five-rank qualifier decision into package-owned
-  `governance-qualifier-escalation.fungi` and prove the full 7 x 7 matrix
-  through the public TypeScript caller, typed interpreter and signed/admitted
-  Wasm (**2/2** focused; compiler package **6,348/6,348** at that slice).
-- [ ] Extend the independent SLIDE checked-Fungi pure-scalar profile to admit
-  the required fourth exact String branch. Current SLIDE `ac8a041` admits
-  three and refuses four with `SLIDE-CHECKED-PURE-SCALAR-001`; no fallback or
-  qualifier may be weakened to obtain a pass. Required R&D and hostile-proof
-  conditions are recorded in
-  `docs/reports/governance-qualifier-escalation-fungi-conversion-2026-08-11.md`.
-- [x] Keep the TypeScript decision and callers active; physical SLIDE,
-  consumer-switch and retirement authority remain closed.
 
 ### Fourth physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
