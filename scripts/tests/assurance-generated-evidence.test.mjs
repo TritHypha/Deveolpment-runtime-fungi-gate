@@ -28,6 +28,7 @@ function write(root, relativePath, bytes) {
 function provenance(overrides = {}) {
   return {
     tool: "fixture-generator",
+    authority: "NONE",
     gitCommit: HEAD,
     builtAt: "2026-08-10T00:00:00.000Z",
     node: "v24.18.0",
@@ -72,15 +73,15 @@ function refused(root, value, code) {
 }
 
 describe("bounded generated assurance evidence", () => {
-  it("binds exact artifact and tool bytes at the current Git build point", () => {
+  it("binds exact artifact and tool bytes without promoting informational provenance", () => {
     const root = fixture();
     try {
       const evidence = accepted(root);
       assert.equal(evidence.node.subjectDigest, EXPECTED_SUBJECT_DIGEST);
       assert.equal(evidence.node.toolDigest, EXPECTED_TOOL_DIGEST);
       assert.equal(evidence.node.repositoryHead, HEAD);
-      assert.equal(evidence.node.localTrit, 1);
-      assert.equal(evidence.freshnessReason, "CURRENT");
+      assert.equal(evidence.node.localTrit, 0);
+      assert.equal(evidence.freshnessReason, "PROVENANCE_INFORMATIONAL_ONLY");
       assert.deepEqual(evidence.node.externalInput, {
         kind: "absent",
         reason: "descriptor forbids external input",
@@ -115,7 +116,8 @@ describe("bounded generated assurance evidence", () => {
         externalInputPolicy: "required",
         workingTreeClass: "EXTERNAL_INPUT",
       }));
-      assert.equal(evidence.node.localTrit, 1);
+      assert.equal(evidence.node.localTrit, 0);
+      assert.equal(evidence.freshnessReason, "PROVENANCE_INFORMATIONAL_ONLY");
       assert.deepEqual(evidence.node.externalInput, {
         kind: "present",
         digest: EXTERNAL_DIGEST,
@@ -148,6 +150,21 @@ describe("bounded generated assurance evidence", () => {
       },
       {
         bytes: JSON.stringify(provenance({ gitCommit: null })) + "\n",
+        reason: "PROVENANCE_INVALID",
+        value: descriptor(),
+      },
+      {
+        bytes: JSON.stringify(provenance({ authority: "SOURCE_BOUND" })) + "\n",
+        reason: "PROVENANCE_INVALID",
+        value: descriptor(),
+      },
+      {
+        bytes: JSON.stringify({
+          tool: "fixture-generator",
+          gitCommit: HEAD,
+          builtAt: "2026-08-10T00:00:00.000Z",
+          node: "v24.18.0",
+        }) + "\n",
         reason: "PROVENANCE_INVALID",
         value: descriptor(),
       },

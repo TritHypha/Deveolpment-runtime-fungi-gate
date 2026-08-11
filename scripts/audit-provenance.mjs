@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // audit-provenance.mjs — TASK-BLD-003 (#219 standard "artifact provenance + freshness"; folds #216).
 //
-// Every generated artifact must (a) carry a valid provenance sidecar and
+// Every generated artifact must (a) carry a valid non-authoritative generation sidecar and
 // (b) exactly match a fresh, non-mutating run of its generator. This gate flags:
 //   MISSING   — the artifact was never generated (run its tool)
-//   UNSTAMPED — provenance is absent, malformed, source-unbound, or names the wrong tool
+//   UNSTAMPED — provenance is absent, malformed, falsely authorizing, or names the wrong tool
 //   STALE     — the declared generator's semantic check refuses the published outputs
 // Filesystem mtimes are deliberately not authority: checkout, restore, and touch
 // operations can make unchanged source newer than a valid artifact.
@@ -49,9 +49,10 @@ const findings = [];
 for (const a of ARTIFACTS) {
   const abs = join(ROOT, a.file);
   if (!existsSync(abs)) { findings.push({ name: a.name, issue: "MISSING", detail: `${a.file} not generated (run its tool / phase-close)` }); continue; }
-  // Provenance sidecar (#216): complete schema, correct producer, and a real
-  // source snapshot. `null` is valid for generator fixtures but not sufficient
-  // for an auditable repository publication.
+  // Provenance sidecar (#216): complete schema, correct producer, and explicit
+  // non-authority. `gitCommit`/`builtAt` are informational hints only; freshness
+  // authority comes from the exact generator check below. `null` is valid for
+  // generator fixtures but not sufficient for an auditable repository publication.
   let prov;
   try { prov = JSON.parse(readFileSync(join(ROOT, a.prov), "utf8")); } catch { /* absent */ }
   if (
@@ -62,7 +63,7 @@ for (const a of ARTIFACTS) {
     findings.push({
       name: a.name,
       issue: "UNSTAMPED",
-      detail: `${a.prov} is missing, malformed, source-unbound, or names the wrong generator`,
+      detail: `${a.prov} is missing, malformed, falsely authorizing, unbound to a generation event, or names the wrong generator`,
     });
   }
 

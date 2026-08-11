@@ -25,6 +25,7 @@ export function validGeneratedProvenance(value) {
   return isRecord(value)
     && typeof value.tool === "string"
     && value.tool.length > 0
+    && value.authority === "NONE"
     && validCommit(value.gitCommit)
     && validTimestamp(value.builtAt)
     && typeof value.node === "string"
@@ -34,10 +35,11 @@ export function validGeneratedProvenance(value) {
 /**
  * Compare a generated output without making a generated-artifact commit stale.
  *
- * `gitCommit` names the source snapshot used to generate the artifact, so it is
- * expected to lag HEAD after that artifact is committed. `builtAt` is likewise
- * informational. Both fields remain mandatory and structurally validated; all
- * other provenance fields and every non-provenance output remain exact.
+ * Generic `gitCommit` and `builtAt` fields are informational generation hints,
+ * never source-binding authority. They may lag HEAD after the generated output
+ * is committed. Both fields and the explicit `authority: "NONE"` marker remain
+ * mandatory and structurally validated; all other provenance fields and every
+ * non-provenance output remain exact.
  */
 export function generatedOutputMatches(path, actual, expected) {
   if (basename(path) !== "provenance.json") return actual === expected;
@@ -81,18 +83,19 @@ export function classifyGeneratedOutputMatch(path, actual, expected) {
   return Object.freeze({
     kind: generatedOutputMatches(path, actual, expected) ? "match" : "mismatch",
     evidenceClass: "LOCAL_BYTE_EQUALITY",
+    authority: "NONE",
   });
 }
 
 /**
- * Reuse the published source snapshot during a non-mutating check.
+ * Reuse published informational generation hints during a non-mutating check.
  *
  * Generated outputs may legitimately embed the source snapshot time or
  * commit. After those outputs are committed, HEAD points at the artifact
- * commit rather than the source commit they describe. Reusing only the two
- * validated volatile fields prevents self-staleness; current tool and Node
- * identity still come from this process and all generator-specific stable
- * fields are derived again by the caller.
+ * commit rather than the earlier generation event. Reusing only the two
+ * validated, non-authorizing volatile fields prevents self-staleness; current
+ * tool and Node identity still come from this process and all
+ * generator-specific stable fields are derived again by the caller.
  */
 export function provenanceForCheck(tool, root, path, check) {
   const current = provenance(tool, root);
@@ -139,9 +142,15 @@ export function builtAtStamp(root = process.cwd()) {
   return Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString() : new Date().toISOString();
 }
 
-/** Build the provenance block: tool name, the HEAD commit at generation time, a deterministic timestamp, and the node version. */
+/** Build a non-authoritative generation stamp. Source-binding generators must publish and verify a separate exact schema. */
 export function provenance(tool, root = process.cwd()) {
-  return { tool, gitCommit: gitCommit(root), builtAt: builtAtStamp(root), node: process.version };
+  return {
+    tool,
+    authority: "NONE",
+    gitCommit: gitCommit(root),
+    builtAt: builtAtStamp(root),
+    node: process.version,
+  };
 }
 
 /** Write `<outDir>/provenance.json` for a generated artifact. Called by each generator after it writes its artifact. */

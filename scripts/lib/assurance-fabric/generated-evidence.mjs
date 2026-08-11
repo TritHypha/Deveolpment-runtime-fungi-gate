@@ -21,8 +21,9 @@ const DESCRIPTOR_KEYS = Object.freeze([
   "toolPath",
   "workingTreeClass",
 ]);
-const BASE_PROVENANCE_KEYS = Object.freeze(["builtAt", "gitCommit", "node", "tool"]);
+const BASE_PROVENANCE_KEYS = Object.freeze(["authority", "builtAt", "gitCommit", "node", "tool"]);
 const EXTERNAL_PROVENANCE_KEYS = Object.freeze([
+  "authority",
   "builtAt",
   "externalDocumentCount",
   "externalInputDigest",
@@ -189,6 +190,7 @@ function classifyProvenance(value, descriptor, repositoryHead) {
     : hasBaseShape;
   if (!hasAllowedShape
       || typeof value.tool !== "string"
+      || value.authority !== "NONE"
       || !GIT_COMMIT.test(value.gitCommit)
       || !validTimestamp(value.builtAt)
       || typeof value.node !== "string"
@@ -211,7 +213,7 @@ function classifyProvenance(value, descriptor, repositoryHead) {
   if (value.gitCommit !== repositoryHead) {
     return { localTrit: 0, reason: "GIT_BUILD_POINT_MISMATCH", externalInput };
   }
-  return { localTrit: 1, reason: "CURRENT", externalInput };
+  return { localTrit: 0, reason: "PROVENANCE_INFORMATIONAL_ONLY", externalInput };
 }
 
 function invalidExternalInput(descriptor) {

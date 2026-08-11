@@ -44,8 +44,9 @@ for (const relativePath of writes) {
   mkdirSync(dirname(join(root, relativePath)), { recursive: true });
   const value = relativePath.endsWith("provenance.json")
     ? {
-        tool: "fake-generator",
-        gitCommit: "a".repeat(40),
+      tool: "fake-generator",
+      authority: "NONE",
+      gitCommit: "a".repeat(40),
         builtAt: "2026-07-29T10:00:00.000Z",
         node: process.version,
         inputs: ["input/source.txt"],
@@ -116,7 +117,7 @@ for (const relativePath of ["build/declared.json", "build/provenance.json", "bui
   const path = join(root, relativePath);
   await mkdir(dirname(path), { recursive: true });
   const value = relativePath.endsWith("provenance.json")
-    ? { tool: "fake-generator", gitCommit: "a".repeat(40), builtAt: "2026-07-29T10:00:00.000Z", node: process.version, inputs: ["input/source.txt"] }
+    ? { tool: "fake-generator", authority: "NONE", gitCommit: "a".repeat(40), builtAt: "2026-07-29T10:00:00.000Z", node: process.version, inputs: ["input/source.txt"] }
     : { value: "stable" };
   await writeFile(path, JSON.stringify(value, null, 2) + "\\n");
 }
@@ -153,6 +154,7 @@ try {
 }
 await writeFile(join(root, "build/provenance.json"), JSON.stringify({
   tool: "fake-generator",
+  authority: "NONE",
   gitCommit: "a".repeat(40),
   builtAt: "2026-07-29T10:00:00.000Z",
   node: process.version,

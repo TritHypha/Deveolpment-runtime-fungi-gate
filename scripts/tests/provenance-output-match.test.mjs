@@ -21,6 +21,7 @@ const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 function block(overrides = {}) {
   return JSON.stringify({
     tool: "fixture-generator",
+    authority: "NONE",
     gitCommit: "a".repeat(40),
     builtAt: "2026-07-29T10:00:00.000Z",
     node: "v24.4.1",
@@ -37,11 +38,19 @@ test("ordinary generated outputs remain byte exact", () => {
 test("generated comparison names local byte equality without claiming freshness", () => {
   assert.deepEqual(
     classifyGeneratedOutputMatch("build/output.json", "a", "a"),
-    { kind: "match", evidenceClass: "LOCAL_BYTE_EQUALITY" },
+    {
+      kind: "match",
+      evidenceClass: "LOCAL_BYTE_EQUALITY",
+      authority: "NONE",
+    },
   );
   assert.deepEqual(
     classifyGeneratedOutputMatch("build/output.json", "a", "b"),
-    { kind: "mismatch", evidenceClass: "LOCAL_BYTE_EQUALITY" },
+    {
+      kind: "mismatch",
+      evidenceClass: "LOCAL_BYTE_EQUALITY",
+      authority: "NONE",
+    },
   );
 });
 
@@ -73,6 +82,14 @@ test("provenance comparison refuses malformed volatile fields", () => {
     ),
     false,
   );
+  assert.equal(
+    generatedOutputMatches(
+      "build/provenance.json",
+      block({ authority: "SOURCE_BOUND" }),
+      block(),
+    ),
+    false,
+  );
 });
 
 test("provenance comparison refuses drift in stable fields", () => {
@@ -94,7 +111,7 @@ test("provenance comparison refuses drift in stable fields", () => {
   );
 });
 
-test("check mode reuses only a valid published source snapshot", () => {
+test("check mode reuses only valid non-authoritative generation hints", () => {
   const root = mkdtempSync(join(tmpdir(), "provenance-check-"));
   const path = join(root, "provenance.json");
   try {
