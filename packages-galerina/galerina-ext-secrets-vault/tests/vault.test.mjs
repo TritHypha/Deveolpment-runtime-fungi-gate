@@ -7,6 +7,7 @@
  */
 import { describe, it, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
+import { createServer } from "node:http";
 
 // We import from the compiled dist/ output.
 import { VaultClient } from "../dist/vault-client.js";
@@ -103,6 +104,36 @@ describe("VaultClient", () => {
     // We can only observe behaviour through public methods; verify fromEnv
     // does not throw when env vars are provided (tested separately below).
     assert.ok(client instanceof VaultClient, "should be a VaultClient instance");
+  });
+
+  it("refuses plaintext Vault transport unless canonical loopback is explicitly enabled", () => {
+    assert.throws(() => new VaultClient("http://vault.example.com", "tok_abc"), /HTTPS|plaintext/i);
+    assert.throws(() => new VaultClient("http://127.0.0.1:8200", "tok_abc"), /explicit|loopback/i);
+    assert.doesNotThrow(() => new VaultClient(
+      "http://127.0.0.1:8200",
+      "tok_abc",
+      { allowInsecureLoopback: true },
+    ));
+  });
+
+  it("aborts a Vault response that exceeds the hard byte ceiling", async () => {
+    const server = createServer((_req, res) => {
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(Buffer.alloc(1024 * 1024 + 1, 0x20));
+    });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    assert.equal(typeof address, "object");
+    try {
+      const client = new VaultClient(
+        `http://127.0.0.1:${address.port}`,
+        "tok_abc",
+        { allowInsecureLoopback: true },
+      );
+      await assert.rejects(() => client.readSecret("oversized"), /response.*limit/i);
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
   });
 
   // -------------------------------------------------------------------------

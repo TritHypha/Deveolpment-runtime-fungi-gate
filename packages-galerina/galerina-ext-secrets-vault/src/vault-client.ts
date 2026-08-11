@@ -10,6 +10,15 @@ import * as https from "node:https";
 import * as http from "node:http";
 import type { IncomingMessage } from "node:http";
 
+const HARD_MAX_RESPONSE_BYTES = 1024 * 1024;
+const HARD_TIMEOUT_MS = 10_000;
+
+export interface VaultClientOptions {
+  readonly allowInsecureLoopback?: boolean;
+  readonly maxResponseBytes?: number;
+  readonly timeoutMs?: number;
+}
+
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
@@ -17,7 +26,9 @@ import type { IncomingMessage } from "node:http";
 function makeRequest(
   url: string,
   token: string,
-  method: "GET" | "LIST"
+  method: "GET" | "LIST",
+  maxResponseBytes: number,
+  timeoutMs: number,
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url);
@@ -37,25 +48,46 @@ function makeRequest(
       },
     };
 
+    let settled = false;
+    const rejectOnce = (error: Error): void => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
     const req = transport.request(options, (res: IncomingMessage) => {
       const chunks: Buffer[] = [];
-      res.on("data", (chunk: Buffer) => chunks.push(chunk));
+      let totalBytes = 0;
+      res.on("data", (chunk: Buffer | string) => {
+        const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        totalBytes += bytes.length;
+        if (totalBytes > maxResponseBytes) {
+          const error = new Error(`Vault response exceeds the hard ${maxResponseBytes}-byte limit`);
+          rejectOnce(error);
+          res.destroy(error);
+          return;
+        }
+        chunks.push(bytes);
+      });
+      res.on("error", (error: Error) => rejectOnce(error));
+      res.on("aborted", () => rejectOnce(new Error("Vault response aborted before completion")));
       res.on("end", () => {
+        if (settled) return;
         const body = Buffer.concat(chunks);
         const status = res.statusCode ?? 0;
         if (status < 200 || status >= 300) {
-          reject(
-            new Error(
-              `Vault HTTP ${status} for ${method} ${url}: ${body.toString("utf8")}`
-            )
-          );
+          rejectOnce(new Error(`Vault HTTP ${status} for ${method}; response body withheld`));
           return;
         }
+        settled = true;
         resolve(body);
       });
     });
 
-    req.on("error", reject);
+    const wallTimer = setTimeout(() => {
+      req.destroy(new Error(`Vault request exceeded the hard ${timeoutMs}ms deadline`));
+    }, timeoutMs);
+    req.on("close", () => clearTimeout(wallTimer));
+    req.on("error", (error: Error) => rejectOnce(error));
     req.end();
   });
 }
@@ -82,10 +114,36 @@ interface KvListResponse {
 export class VaultClient {
   private readonly address: string;
   private readonly token: string;
+  private readonly maxResponseBytes: number;
+  private readonly timeoutMs: number;
 
-  constructor(address: string, token: string) {
+  constructor(address: string, token: string, options: VaultClientOptions = {}) {
+    const parsed = new URL(address);
+    const hostname = parsed.hostname.toLowerCase();
+    const loopback = hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]" || hostname === "::1";
+    if (parsed.username !== "" || parsed.password !== "") {
+      throw new Error("VaultClient: credentials in the address are forbidden");
+    }
+    if (parsed.protocol === "http:") {
+      if (options.allowInsecureLoopback !== true || !loopback) {
+        throw new Error("VaultClient: plaintext transport requires explicit canonical-loopback development authority");
+      }
+    } else if (parsed.protocol !== "https:") {
+      throw new Error("VaultClient: HTTPS is required for Vault transport");
+    }
+    if (token.length === 0) throw new Error("VaultClient: token must be non-empty");
+    const maxResponseBytes = options.maxResponseBytes ?? HARD_MAX_RESPONSE_BYTES;
+    const timeoutMs = options.timeoutMs ?? HARD_TIMEOUT_MS;
+    if (!Number.isSafeInteger(maxResponseBytes) || maxResponseBytes <= 0 || maxResponseBytes > HARD_MAX_RESPONSE_BYTES) {
+      throw new Error(`VaultClient: maxResponseBytes must be within 1..${HARD_MAX_RESPONSE_BYTES}`);
+    }
+    if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > HARD_TIMEOUT_MS) {
+      throw new Error(`VaultClient: timeoutMs must be within 1..${HARD_TIMEOUT_MS}`);
+    }
     this.address = address.replace(/\/$/, ""); // strip trailing slash
     this.token = token;
+    this.maxResponseBytes = maxResponseBytes;
+    this.timeoutMs = timeoutMs;
   }
 
   /**
@@ -99,7 +157,7 @@ export class VaultClient {
     // KV v2: strip any leading slash and any "data/" prefix the caller may include
     const cleanPath = path.replace(/^\//, "").replace(/^data\//, "");
     const url = `${this.address}/v1/${mountPoint}/data/${cleanPath}`;
-    const raw = await makeRequest(url, this.token, "GET");
+    const raw = await makeRequest(url, this.token, "GET", this.maxResponseBytes, this.timeoutMs);
     const parsed: KvV2Response = JSON.parse(raw.toString("utf8")) as KvV2Response;
 
     if (!parsed.data?.data) {
@@ -117,7 +175,7 @@ export class VaultClient {
    */
   async listSecrets(mountPoint = "secret"): Promise<string[]> {
     const url = `${this.address}/v1/${mountPoint}/metadata/`;
-    const raw = await makeRequest(url, this.token, "LIST");
+    const raw = await makeRequest(url, this.token, "LIST", this.maxResponseBytes, this.timeoutMs);
     const parsed: KvListResponse = JSON.parse(raw.toString("utf8")) as KvListResponse;
     return parsed.data?.keys ?? [];
   }
@@ -132,7 +190,7 @@ export class VaultClient {
     if (devToken) {
       const addr =
         process.env["VAULT_ADDR"] ?? "http://127.0.0.1:8200";
-      return new VaultClient(addr, devToken);
+      return new VaultClient(addr, devToken, { allowInsecureLoopback: true });
     }
     const addr = process.env["VAULT_ADDR"];
     const token = process.env["VAULT_TOKEN"];
