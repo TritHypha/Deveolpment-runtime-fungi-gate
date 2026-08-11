@@ -1,9 +1,9 @@
 {
   "generatedBy": "gen-contract-registry.mjs",
-  "generatedAt": "2026-08-11T11:16:06.000Z",
-  "sha": "72188215",
-  "contracts": 1465,
-  "parsed": 534,
+  "generatedAt": "2026-08-11T17:24:15.000Z",
+  "sha": "fa03b022",
+  "contracts": 1471,
+  "parsed": 536,
   "rows": [
     {
       "file": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
@@ -4535,6 +4535,22 @@
       "signature": "pure flow verifyGuardDecl(guardDecls: Array<Auto>) -> GovResult",
       "effects": [],
       "intent": "FUNGI-GOV-005: guard permitted_effects must all be known capability tokens."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "combineTrust",
+      "qualifier": "pure",
+      "signature": "pure flow combineTrust(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Return the least-trusted K3 operand without manufacturing trust."
+    },
+    {
+      "file": "packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi",
+      "name": "boundaryTrusted",
+      "qualifier": "pure",
+      "signature": "pure flow boundaryTrusted(trust: Verdict) -> Bool",
+      "effects": [],
+      "intent": "Release only a proven Allow verdict; Unknown and Deny remain closed."
     },
     {
       "file": "packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi",
@@ -9345,6 +9361,38 @@
       "signature": "pure flow computeMixRequestAllowed(request: ComputeMixBenchmarkRequest) -> Bool",
       "effects": [],
       "intent": ""
+    },
+    {
+      "file": "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+      "name": "triNot",
+      "qualifier": "pure",
+      "signature": "pure flow triNot(value: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Invert one closed K3 verdict without collapsing ambiguity."
+    },
+    {
+      "file": "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+      "name": "triAnd",
+      "qualifier": "pure",
+      "signature": "pure flow triAnd(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Return the fail-close K3 conjunction of two verdicts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+      "name": "triOr",
+      "qualifier": "pure",
+      "signature": "pure flow triOr(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Return the K3 disjunction of two closed verdicts."
+    },
+    {
+      "file": "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
+      "name": "triNor",
+      "qualifier": "pure",
+      "signature": "pure flow triNor(left: Verdict, right: Verdict) -> Verdict",
+      "effects": [],
+      "intent": "Invert the K3 disjunction without widening authority."
     },
     {
       "file": "packages-galerina/galerina-core-network/src/self-hosted/admission-feedback.fungi",
