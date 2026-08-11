@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "15937f89",
+    "sha": "2967acc7",
     "detached": false,
     "dirty": true
   },
@@ -361,7 +361,7 @@
         {
           "item": "Pre-conversion security closure",
           "state": "building",
-          "detail": "Galerina G1-G4 and SLIDE S1-S2 are closed with negative tests. SLIDE passes 984/984 across 97 suites, has a zero forbidden-state count across its 91-file executable tool surface, and sealed scan 7263c63e reports no finding across six reviewed critical surfaces with honestly partial coverage. Galerina pins the remediated tool and current context; deployment authentication remains K3 0. A fresh four-scope scan plus complete and exhaustive Galerina custody rerun is still required before mechanical conversion"
+          "detail": "Galerina G1-G4 and SLIDE S1-S2 are closed with negative tests. SLIDE passes 984/984 across 97 suites, has a zero forbidden-state count across its 91-file executable tool surface, and sealed scan 7263c63e reports no finding across six reviewed critical surfaces with honestly partial coverage. Galerina pins the remediated tool and current context; deployment authentication remains K3 0. Current Galerina custody passes normal phase-close, 100/100 packages with 9,500/9,500 tests, and exhaustive phase-close. A fresh four-repository security recheck remains required before mechanical conversion"
         },
         {
           "item": "Memory retention audit and bounded caches",
