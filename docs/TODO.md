@@ -19,9 +19,13 @@ counts or open items that a newer section explicitly supersedes.
   physical `.slide`, independently re-admit it through VOK, execute all ten
   vectors, and refuse wrong typed arguments, an unpaired surrogate, source
   mutation and a one-byte artifact mutation (**1/1**, zero skips).
-- [ ] Refresh the sixth slice's generated owners and both indexes through
-  bounded checks. Full tooling, normal phase-close and whole-memory evaluation
-  remain excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Refresh the sixth slice's generated owners and both indexes through
+  bounded checks. The complete package owner passes **100/100 packages and
+  9,566 tests** in **306.0s**; graph is **7/7**, semantic outputs **3/3**,
+  roadmap outputs **5/5**, canonical consumers **7/7**, and Golden is **11/11
+  checked + 11/11 execution vectors**. Full tooling, normal phase-close and
+  whole-memory evaluation remain excluded; repository-wide closure remains
+  **UNKNOWN**.
 - [x] Keep `retryPolicy.ts`, `isValidStrategy`, `parseRetryPolicy` and every
   consumer active. This reference-only proof grants no consumer-switch,
   bootstrap, production, release or retirement authority.

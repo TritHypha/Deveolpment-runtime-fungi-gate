@@ -30,6 +30,7 @@ The independent SLIDE build point is
   both caused only by the deliberately absent Fungi asset.
 - Focused compiler proof: **3/3**, zero failures and zero skips.
 - Compiler package: **6,354/6,354**, zero failures and zero skips.
+- Complete package owner: **100/100 packages and 9,566 tests** in **306.0s**.
 - Physical SLIDE/VOK: **1/1**, zero skips. One physical `.slide` was published,
   independently re-admitted and executed for ten canonical and hostile String
   vectors.
@@ -37,6 +38,13 @@ The independent SLIDE build point is
   surrogate, source mutation and one-byte artifact mutation.
 - The public `parseRetryPolicy` caller retained all three exact strategies and
   retained its existing fallback for an unrecognized strategy.
+- Bounded closure owners are current: graph **7/7**, semantic outputs **3/3**
+  with **894** test nodes, canonical test-count consumers **7/7**, roadmap
+  outputs **5/5**, Golden **11/11 checked + 11/11 execution vectors**, and
+  retirement **1,426 executable-family files / 117 Fungi sources**.
+- Codebase-memory indexed the exact pre-close commit with **49,915 nodes /
+  133,019 edges** and resolved the new retry-strategy test symbols. Myco was
+  refreshed after the source and generated-owner waves.
 
 ## Authority boundary
 

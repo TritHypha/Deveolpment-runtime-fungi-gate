@@ -42,8 +42,8 @@ retry-policy path unchanged.
 
 ### Task 4: Closure
 
-- [ ] Record exact hashes, build points, results and non-authority boundaries.
-- [ ] Refresh generated owners through bounded checks.
-- [ ] Update TODO and the canonical roadmap with the sixth-slice result.
-- [ ] Commit explicit outputs and re-index codebase-memory plus Myco at the
+- [x] Record exact hashes, build points, results and non-authority boundaries.
+- [x] Refresh generated owners through bounded checks.
+- [x] Update TODO and the canonical roadmap with the sixth-slice result.
+- [x] Commit explicit outputs and re-index codebase-memory plus Myco at the
   final exact HEAD without pushing.
