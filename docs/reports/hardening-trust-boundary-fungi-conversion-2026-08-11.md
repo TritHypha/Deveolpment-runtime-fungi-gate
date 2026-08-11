@@ -1,7 +1,7 @@
 # Hardening trust-boundary Fungi conversion dossier
 
 Date: 2026-08-11
-Status: `PHYSICAL_EXTENSION_PROVED_CLOSURE_PENDING`
+Status: `PHYSICAL_REFERENCE_SLICE_PROVED_NON_RETIRING`
 Authority: non-retiring compiler-reference slice; TypeScript remains the executing bootstrap and differential reference.
 
 ## Pinned source
@@ -75,10 +75,17 @@ partial result. Every admitted K3 value reaches exactly one terminal arm.
   arguments refuse execution, both non-ALLOW boundary values remain false, and
   one-byte physical artifact mutation refuses re-admission.
 - Focused conversion surface: **3/3**, zero skips.
-- Current aggregate, tooling, generated-owner and phase-close evidence is
-  intentionally pending regeneration after this extension; the prior closed
-  counts are not reused as current authority. The owning compiler is currently
-  **6,344/6,344**, zero failures in **102.2s**.
+- Owning compiler: **6,344/6,344**, zero failures in **102.2s**.
+- Current complete aggregate: **100/100 packages and 9,556 tests**, zero failures
+  in **311.9s**.
+- Governed tooling: **597 total / 585 pass / 12 intentional skips / 0 fail** in
+  **85.7s**.
+- Generated owners and independent checks: semantic outputs **3/3**, graph
+  **7/7**, canonical count consumers **7/7**, Golden **11/11 checked + 11/11
+  vectors**, retirement,
+  code-index, percent, status, roadmap, path-leak and flat-lock checks all green.
+- Normal phase-close: every blocking gate passed with exit 0 in **704.8s**; its
+  terminal statement explicitly grants no release authority.
 
 ## Retirement boundary
 

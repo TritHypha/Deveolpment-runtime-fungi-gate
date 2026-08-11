@@ -51,11 +51,14 @@ three-row release, three-row trust-name and zero-argument refutation tables; and
 compiler package passes **6,344/6,344**. Clean SLIDE `ac8a041` required no
 source change: it builds four physical exports, independently re-admits all
 sixteen positive VOK vectors, keeps deny and unknown closed, and refuses source,
-argument and physical-artifact mutations (**3/3** focused). Repository owner
-closure is now pending regeneration after the extension; prior aggregate,
-tooling and phase-close counts remain historical evidence only. This remains a
-non-retiring physical proof, not
-release, production, bootstrap-fixpoint or TypeScript-retirement authority.
+argument and physical-artifact mutations (**3/3** focused). Current repository
+closure is **100/100 packages / 9,556 tests / 0 failures** in **311.9s**,
+governed tooling **597 total / 585 pass / 12 intentional skips / 0 fail** in
+**85.7s**, graph **7/7**, canonical consumers **7/7**, Golden **11/11 checked +
+11/11 vectors**, and
+every normal phase-close blocking gate green in **704.8s**. This remains a
+non-retiring physical proof, not release, production, bootstrap-fixpoint or
+TypeScript-retirement authority.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

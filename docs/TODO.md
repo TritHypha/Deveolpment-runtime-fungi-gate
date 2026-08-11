@@ -22,9 +22,14 @@ counts or open items that a newer section explicitly supersedes.
   keep deny and unknown
   release values false, and refuse source mutation, malformed trits and a
   one-byte physical artifact mutation (**3/3** focused, zero skips).
-- [ ] Re-run the canonical package owner, governed tooling, generated owners and
-  normal phase-close after this extension. Prior green counts remain historical
-  and are not reused as current authority.
+- [x] Re-run the canonical package owner, governed tooling, generated owners and
+  normal phase-close after this extension. The current aggregate is **100/100
+  packages and 9,556 tests**, zero failures in **311.9s**; governed tooling is
+  **597 total / 585 pass / 12 intentional skips / 0 fail** in **85.7s**; graph
+  is **7/7**, all seven canonical count consumers agree, Golden is **11/11
+  checked + 11/11 vectors**,
+  and every normal phase-close blocking gate passes in **704.8s**. This is
+  verification evidence, not release or retirement authority.
 - [x] Keep `hardening-residency.ts` and all compiler consumers active. This
   non-retiring slice grants no bootstrap fixpoint, consumer switch, release,
   production or TypeScript-retirement authority.
