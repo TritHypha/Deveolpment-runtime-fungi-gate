@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "a8af0a7d6941d0e33d3c1089ec140b26ce79ddb44bb6841125987bd72db6d92a",
+  "authoritativeInputsDigest": "b848c7d3ffa7a4d3491f8995fdc7dd5e25717f26bc34699af2e9b55accb711ae",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2831,6 +2831,13 @@
       "id": "test:auto-e59331243e6a72bcfa87b6df",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/resource-decl.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7ef41550098d8f6f65f0a880",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/retry-strategy-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -6965,6 +6972,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-e7f8247010f2cb6e25a2fe88",
+      "kind": "test",
+      "evidencePath": "scripts/tests/retry-strategy-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-7bd4330412bab61352babe24",
       "kind": "test",
       "evidencePath": "scripts/tests/roadmap-subway-generator.test.mjs",
@@ -8582,6 +8596,11 @@
     },
     {
       "from": "test:auto-e59331243e6a72bcfa87b6df",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7ef41550098d8f6f65f0a880",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11536,6 +11555,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-e7f8247010f2cb6e25a2fe88",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-7bd4330412bab61352babe24",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11726,9 +11750,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 892,
+    "tests": 894,
     "detectors": 6,
-    "executableFamily": 1425,
+    "executableFamily": 1426,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
