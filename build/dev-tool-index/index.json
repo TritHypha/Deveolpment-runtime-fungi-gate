@@ -3,7 +3,7 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9552,
+    "tests": 9554,
     "devTools": 170,
     "auditTools": 89,
     "toolsInCadence": 117,
@@ -344,7 +344,7 @@
       "name": "galerina-core-logic",
       "kind": "core",
       "description": "Galerina multi-state logic concepts including Tri, Decision, BoolBoundary and Omni logic.",
-      "tests": 53,
+      "tests": 55,
       "hasTestScript": true,
       "border": "PASS",
       "files": 22,
