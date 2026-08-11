@@ -1,0 +1,10 @@
+@version 1
+
+/// Private plugin-border compatibility rule mirrored from plugin-schema.ts.
+/// This reference-only flow cannot authorize plugin execution or retire TypeScript.
+pure flow isCompatibleType(actual: String, expected: String) -> Bool {
+  if actual == "Int" {
+    if expected == "Float" { return true }
+  }
+  return false
+}
