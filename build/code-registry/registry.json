@@ -1962,7 +1962,7 @@
       ],
       "severities": [],
       "defs": 0,
-      "emits": 4,
+      "emits": 5,
       "tests": 13,
       "docs": 1
     },
