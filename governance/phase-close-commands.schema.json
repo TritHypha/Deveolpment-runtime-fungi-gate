@@ -174,11 +174,50 @@
         "lifecycle": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["replacementId", "overlap", "retirement"],
+          "required": ["replacementId", "overlap", "retirement", "evidence"],
           "properties": {
             "replacementId": { "$ref": "#/$defs/optionalId" },
             "overlap": { "enum": ["canonical", "overlap", "replacement-candidate"] },
-            "retirement": { "enum": ["active", "shadow", "retirement-candidate", "retired"] }
+            "retirement": { "enum": ["active", "shadow", "retirement-candidate", "retired"] },
+            "evidence": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["kind", "reason"],
+                  "properties": {
+                    "kind": { "const": "absent" },
+                    "reason": { "$ref": "#/$defs/nonEmpty" }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "consumerCount",
+                    "successorId",
+                    "invariantIds",
+                    "negativeTestIds",
+                    "mutationTestIds",
+                    "replacesEdgeId",
+                    "retirementGateId",
+                    "historicalEvidenceId"
+                  ],
+                  "properties": {
+                    "kind": { "const": "present" },
+                    "consumerCount": { "type": "integer", "minimum": 0 },
+                    "successorId": { "$ref": "#/$defs/nonEmpty" },
+                    "invariantIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+                    "negativeTestIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+                    "mutationTestIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+                    "replacesEdgeId": { "$ref": "#/$defs/nonEmpty" },
+                    "retirementGateId": { "$ref": "#/$defs/nonEmpty" },
+                    "historicalEvidenceId": { "$ref": "#/$defs/nonEmpty" }
+                  }
+                }
+              ]
+            }
           }
         }
       }

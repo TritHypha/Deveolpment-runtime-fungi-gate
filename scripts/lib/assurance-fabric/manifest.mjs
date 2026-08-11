@@ -210,6 +210,44 @@ function selfTest(value, root, label) {
   refuse("ASSURANCE-MANIFEST-VALUE", `${label}.kind is outside the closed vocabulary`);
 }
 
+function lifecycleEvidence(value, label) {
+  const descriptors = recordDescriptors(value, label);
+  const kindDescriptor = descriptors.kind;
+  if (!kindDescriptor || !("value" in kindDescriptor) || kindDescriptor.get !== undefined
+      || kindDescriptor.set !== undefined) {
+    refuse("ASSURANCE-MANIFEST-SHAPE", `${label}.kind must be an ordinary data field`);
+  }
+  if (kindDescriptor.value === "absent") {
+    const fields = exactRecord(value, ["kind", "reason"], label);
+    return { kind: "absent", reason: nonEmptyString(fields.reason, `${label}.reason`) };
+  }
+  if (kindDescriptor.value === "present") {
+    const fields = exactRecord(value, [
+      "consumerCount",
+      "historicalEvidenceId",
+      "invariantIds",
+      "kind",
+      "mutationTestIds",
+      "negativeTestIds",
+      "replacesEdgeId",
+      "retirementGateId",
+      "successorId",
+    ], label);
+    return {
+      kind: "present",
+      consumerCount: boundedInteger(fields.consumerCount, 0, Number.MAX_SAFE_INTEGER, `${label}.consumerCount`),
+      successorId: nonEmptyString(fields.successorId, `${label}.successorId`),
+      invariantIds: uniqueStrings(fields.invariantIds, `${label}.invariantIds`, 1),
+      negativeTestIds: uniqueStrings(fields.negativeTestIds, `${label}.negativeTestIds`, 1),
+      mutationTestIds: uniqueStrings(fields.mutationTestIds, `${label}.mutationTestIds`, 1),
+      replacesEdgeId: nonEmptyString(fields.replacesEdgeId, `${label}.replacesEdgeId`),
+      retirementGateId: nonEmptyString(fields.retirementGateId, `${label}.retirementGateId`),
+      historicalEvidenceId: nonEmptyString(fields.historicalEvidenceId, `${label}.historicalEvidenceId`),
+    };
+  }
+  refuse("ASSURANCE-MANIFEST-VALUE", `${label}.kind is outside the closed vocabulary`);
+}
+
 function execution(value, root, label) {
   const descriptors = recordDescriptors(value, label);
   const kindDescriptor = descriptors.kind;
@@ -239,9 +277,27 @@ function cloneEntry(value, root, index) {
   const label = `entries[${index}]`;
   const fields = exactRecord(value, ENTRY_KEYS, label);
   const subjects = exactRecord(fields.subjects, ["expectedCount", "kind", "values"], `${label}.subjects`);
-  const lifecycle = exactRecord(fields.lifecycle, ["overlap", "replacementId", "retirement"], `${label}.lifecycle`);
+  const lifecycle = exactRecord(
+    fields.lifecycle,
+    ["evidence", "overlap", "replacementId", "retirement"],
+    `${label}.lifecycle`,
+  );
   const generatedOutputs = uniqueStrings(fields.generatedOutputs, `${label}.generatedOutputs`)
     .map((path) => repositoryPath(path, root, `${label}.generatedOutputs`));
+  const replacementId = optionalId(lifecycle.replacementId, `${label}.lifecycle.replacementId`);
+  const retirement = enumValue(lifecycle.retirement, RETIREMENTS, `${label}.lifecycle.retirement`);
+  const evidence = lifecycleEvidence(lifecycle.evidence, `${label}.lifecycle.evidence`);
+  if ((retirement === "retirement-candidate" || retirement === "retired")
+      && evidence.kind !== "present") {
+    refuse("ASSURANCE-MANIFEST-LIFECYCLE", `${label} retirement requires exact evidence`);
+  }
+  if ((retirement === "active" || retirement === "shadow") && evidence.kind !== "absent") {
+    refuse("ASSURANCE-MANIFEST-LIFECYCLE", `${label} active or shadow control cannot carry retirement evidence`);
+  }
+  if (evidence.kind === "present"
+      && (replacementId.kind !== "present" || replacementId.value !== evidence.successorId)) {
+    refuse("ASSURANCE-MANIFEST-LIFECYCLE", `${label} successor identity does not match replacement identity`);
+  }
   return {
     id: nonEmptyString(fields.id, `${label}.id`),
     requirementId: nonEmptyString(fields.requirementId, `${label}.requirementId`),
@@ -265,9 +321,10 @@ function cloneEntry(value, root, index) {
     selfTest: selfTest(fields.selfTest, root, `${label}.selfTest`),
     predecessors: uniqueStrings(fields.predecessors, `${label}.predecessors`),
     lifecycle: {
-      replacementId: optionalId(lifecycle.replacementId, `${label}.lifecycle.replacementId`),
+      replacementId,
       overlap: enumValue(lifecycle.overlap, OVERLAPS, `${label}.lifecycle.overlap`),
-      retirement: enumValue(lifecycle.retirement, RETIREMENTS, `${label}.lifecycle.retirement`),
+      retirement,
+      evidence,
     },
   };
 }

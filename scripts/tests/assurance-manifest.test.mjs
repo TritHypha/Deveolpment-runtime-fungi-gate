@@ -38,6 +38,7 @@ function validEntry(overrides = {}) {
       replacementId: { kind: "absent", reason: "not replaced" },
       overlap: "canonical",
       retirement: "active",
+      evidence: { kind: "absent", reason: "active control has no retirement evidence" },
     },
     ...overrides,
   };
@@ -170,5 +171,26 @@ describe("candidate assurance manifest", () => {
         predecessors: [],
       }),
     ]));
+  });
+
+  it("accepts exact absent lifecycle evidence and refuses incomplete retirement evidence", () => {
+    assert.equal(validateAssuranceManifest(manifest(), root).kind, "accepted");
+    assertRefused(manifest([validEntry({
+      lifecycle: {
+        replacementId: { kind: "present", value: "successor" },
+        overlap: "replacement-candidate",
+        retirement: "retirement-candidate",
+        evidence: {
+          kind: "present",
+          consumerCount: 0,
+          successorId: "successor",
+          invariantIds: ["INV-1"],
+          negativeTestIds: ["TEST-NEG"],
+          mutationTestIds: ["TEST-MUT"],
+          replacesEdgeId: "EDGE-REPLACES",
+          retirementGateId: "GATE-RETIREMENT",
+        },
+      },
+    })]));
   });
 });

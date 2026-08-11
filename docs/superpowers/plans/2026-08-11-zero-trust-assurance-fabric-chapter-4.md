@@ -264,11 +264,14 @@ reasons that name their remaining bootstrap/differential/oracle consumers.
 ```powershell
 node --test scripts/tests/assurance-manifest.test.mjs scripts/tests/assurance-legacy-lifecycle.test.mjs
 node scripts/audit-assurance-legacy-lifecycle.mjs --self-test
-node scripts/audit-assurance-legacy-lifecycle.mjs --root .
 git add -- governance/phase-close-commands.schema.json scripts/lib/assurance-fabric/manifest.mjs scripts/lib/assurance-fabric/legacy-lifecycle.mjs scripts/audit-assurance-legacy-lifecycle.mjs scripts/tests/assurance-manifest.test.mjs scripts/tests/assurance-legacy-lifecycle.test.mjs
 git diff --cached --check
 git commit -m "feat: enforce legacy control lifecycle"
 ```
+
+The live `--root .` audit runs in Task 4 after the sole-source manifest exists;
+before that point a successful live audit would require an impermissible
+fallback.
 
 ### Task 4: Complete Live Manifest and Manifest-Only Runner
 

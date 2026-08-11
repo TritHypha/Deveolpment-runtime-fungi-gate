@@ -32,6 +32,7 @@ function entry(id, subjects, cadences = ["normal", "exhaustive"], overrides = {}
       replacementId: { kind: "absent", reason: "not replaced" },
       overlap: "canonical",
       retirement: "active",
+      evidence: { kind: "absent", reason: "active control has no retirement evidence" },
     },
     ...overrides,
   };

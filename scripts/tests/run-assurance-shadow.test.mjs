@@ -57,6 +57,7 @@ function candidateEntry(id, script, overrides = {}) {
       replacementId: { kind: "absent", reason: "not replaced" },
       overlap: "overlap",
       retirement: "shadow",
+      evidence: { kind: "absent", reason: "shadow control is not retirement-ready" },
     },
     ...overrides,
   };
