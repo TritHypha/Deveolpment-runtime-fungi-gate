@@ -19,26 +19,26 @@ retry-policy path unchanged.
 
 ### Task 1: Focused compiler RED
 
-- [ ] Register the intended package asset and add a focused test before the
+- [x] Register the intended package asset and add a focused test before the
   Fungi source exists.
-- [ ] Anchor the TypeScript type predicate and define canonical-plus-hostile
+- [x] Anchor the TypeScript type predicate and define canonical-plus-hostile
   vectors.
-- [ ] Retain the intended missing-source RED result.
+- [x] Retain the intended missing-source RED result.
 
 ### Task 2: Exact Fungi implementation
 
-- [ ] Add `isValidRetryStrategy` as one pure total flow with three comparisons.
-- [ ] Prove strict checking, typed interpretation and signed/admitted Wasm.
-- [ ] Derive parity through the public retry-policy parser.
-- [ ] Run the complete compiler package and commit the bounded source wave.
+- [x] Add `isValidRetryStrategy` as one pure total flow with three comparisons.
+- [x] Prove strict checking, typed interpretation and signed/admitted Wasm.
+- [x] Derive parity through the public retry-policy parser.
+- [x] Run the complete compiler package and commit the bounded source wave.
 
 ### Task 3: Physical SLIDE/VOK proof
 
-- [ ] Publish the exact asset as one physical reference-only `.slide` export.
-- [ ] Re-admit and execute all vectors through independent VOK.
-- [ ] Refuse wrong counts/types, an unpaired surrogate, source mutation and
+- [x] Publish the exact asset as one physical reference-only `.slide` export.
+- [x] Re-admit and execute all vectors through independent VOK.
+- [x] Refuse wrong counts/types, an unpaired surrogate, source mutation and
   one-byte artifact mutation.
-- [ ] Register the focused test in the governed tooling manifest.
+- [x] Register the focused test in the governed tooling manifest.
 
 ### Task 4: Closure
 

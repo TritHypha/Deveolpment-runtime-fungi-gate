@@ -109,6 +109,22 @@ production, release or retirement authority. Repository-wide closure remains
 **UNKNOWN** because the crash-linked full tooling and normal phase-close
 processes are deliberately excluded.
 
+Sixth physical conversion slice 2026-08-11: the compiler's private
+`isValidStrategy` decision in `runtime/retryPolicy.ts` now has a package-owned
+pure String-to-Bool translation at
+`galerina-core-compiler/src/self-hosted/retry-strategy.fungi`. It returns true
+only for exact `none`, `linear` or `exponential_backoff`. The typed interpreter,
+signed/admitted Wasm and public `parseRetryPolicy` caller proof pass **3/3**;
+the compiler package passes **6,354/6,354**. Clean SLIDE `ac8a041` publishes
+one physical `.slide`, independently re-admits it through VOK, executes ten
+canonical and hostile vectors, and refuses malformed typed arguments, an
+unpaired surrogate, source mutation and a one-byte artifact mutation (**1/1**,
+zero skips). The TypeScript predicate and callers remain active. This
+reference-only proof grants no consumer-switch, bootstrap, production,
+release or retirement authority. Repository-wide closure remains **UNKNOWN**
+because the crash-linked full tooling and normal phase-close processes are
+deliberately excluded.
+
 Qualifier escalation partial conversion 2026-08-11: the five-rank governance
 decision has exact package-owned Fungi, typed-interpreter, signed-Wasm and
 public-caller parity across the complete 7 x 7 matrix. Physical publication is

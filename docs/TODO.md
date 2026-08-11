@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Sixth physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the compiler's private deterministic `isValidStrategy`
+  decision from `runtime/retryPolicy.ts` into package-owned
+  `src/self-hosted/retry-strategy.fungi`. It returns true only for exact
+  `none`, `linear` or `exponential_backoff` and contains no null, NaN,
+  `else if`, exception syntax, `for` or `loop`.
+- [x] Prove ten canonical and hostile Strings through typed interpretation,
+  signed/admitted Wasm and the public `parseRetryPolicy` path. The focused
+  proof is **3/3** and the compiler package is **6,354/6,354** with zero
+  failures and zero skips.
+- [x] Compile the exact Fungi bytes through clean SLIDE `ac8a041`, publish one
+  physical `.slide`, independently re-admit it through VOK, execute all ten
+  vectors, and refuse wrong typed arguments, an unpaired surrogate, source
+  mutation and a one-byte artifact mutation (**1/1**, zero skips).
+- [ ] Refresh the sixth slice's generated owners and both indexes through
+  bounded checks. Full tooling, normal phase-close and whole-memory evaluation
+  remain excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Keep `retryPolicy.ts`, `isValidStrategy`, `parseRetryPolicy` and every
+  consumer active. This reference-only proof grants no consumer-switch,
+  bootstrap, production, release or retirement authority.
+
 ### Fifth physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
 - [x] Translate the compiler's private deterministic `is64BitWatType`
