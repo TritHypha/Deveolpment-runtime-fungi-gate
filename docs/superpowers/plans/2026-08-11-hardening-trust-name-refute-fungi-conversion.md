@@ -33,7 +33,7 @@
 
 ## Task 4: Closure
 
-- [ ] Update the conversion dossier, `docs/TODO.md`, the active roadmap and subway evidence without claiming retirement.
-- [ ] Run the owning compiler, tooling, graph, audit, Golden, count, retirement, roadmap and phase-close checks.
-- [ ] Refresh Myco and attempt the primary codebase-memory refresh once; record `UNKNOWN` if the transport remains closed.
-- [ ] Commit explicit governed outputs locally and do not push.
+- [x] Update the conversion dossier, `docs/TODO.md`, the active roadmap and subway evidence without claiming retirement.
+- [x] Run the owning compiler, tooling, graph, audit, Golden, count, retirement, roadmap and phase-close checks.
+- [x] Refresh Myco and attempt the primary codebase-memory refresh once; record `UNKNOWN` if the transport remains closed.
+- [x] Commit explicit governed outputs locally and do not push.
