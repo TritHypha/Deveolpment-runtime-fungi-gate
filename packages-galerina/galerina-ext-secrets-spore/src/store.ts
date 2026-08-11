@@ -281,7 +281,11 @@ export function openValue<T>(
   const sec = sectionByCoord.get(meta.coordHex);
   if (sec === undefined) throw new SporeCryptoError("MalformedCrypto", `manifest/section mismatch for ${name} (fail-closed)`);
   const plain = openSection(sec.sectionId, sec.coord, sec.payload, recipientSec);
-  return withWiped(plain, (b) => fn(b));
+  try {
+    return withWiped(plain, (b) => fn(b));
+  } finally {
+    plain.fill(0);
+  }
 }
 
 /** Read an env.spore from disk (sync) — convenience for the CLI. */

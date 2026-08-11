@@ -10,7 +10,7 @@
 // network surface is the custody-anchor unseal call inside anchor.ts (KMS/Vault), NEVER secret
 // read-back (design doc §4). `loadAll` returns a SealArena the host queries in-process; values
 // never leave the process via this module.
-import { composeRead, assertKemProfile, K3 } from "./store.js";
+import { composeRead, assertKemProfile } from "./store.js";
 import type { K3Token } from "./store.js";
 import { SealArena } from "./arena.js";
 import { unpackSeal, contextFor } from "./schema.js";
@@ -25,7 +25,7 @@ const SECTION_EPOCH = 0;
  *
  * The caller owns the returned arena and MUST call dispose() on shutdown.
  */
-export function loadAll(buf: Uint8Array, recipientSec: Uint8Array, token: K3Token = K3.ALLOW): SealArena {
+export function loadAll(buf: Uint8Array, recipientSec: Uint8Array, token: K3Token): SealArena {
   const { manifest, sectionByCoord } = composeRead(buf, recipientSec, token);
   const arena = new SealArena();
   try {

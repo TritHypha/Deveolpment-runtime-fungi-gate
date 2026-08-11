@@ -114,6 +114,24 @@ test("runtime loadAll fills a fail-closed arena; dispose wipes; use-after-dispos
   assert.throws(() => arena.use("A", () => 0), /use-after-dispose/);
 });
 
+test("runtime loadAll requires an explicit K3 ALLOW token", () => {
+  const buf = freshFile("explicit-k3", "A", "alpha");
+  assert.throws(
+    () => loadAll(buf, KP.secretKey),
+    (e) => e instanceof SporeCryptoError && e.code === "GovDeny",
+  );
+});
+
+test("openValue wipes the callback view when the callback throws", () => {
+  const buf = freshFile("wipe-on-throw", "A", "alpha");
+  let captured;
+  assert.throws(() => openValue(buf, KP.secretKey, K3.ALLOW, "A", (plain) => {
+    captured = plain;
+    throw new Error("consumer fault");
+  }), /consumer fault/);
+  assert.ok(captured.every((byte) => byte === 0));
+});
+
 test("loadAll fails closed on a bad key (arena disposed, nothing served)", () => {
   const buf = freshFile("rtb", "A", "alpha");
   const wrong = keygen(KEM_PROFILE.HYBRID_X25519_ML_KEM_768);
