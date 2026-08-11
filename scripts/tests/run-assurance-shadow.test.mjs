@@ -38,7 +38,8 @@ function candidateEntry(id, script, overrides = {}) {
   return {
     id,
     requirementId: `REQ-${id.toUpperCase()}`,
-    command: ["node", script],
+    satisfies: [`REQ-${id.toUpperCase()}`],
+    execution: { kind: "process", command: ["node", script] },
     cwd: ".",
     toolClass: "legacy-oracle",
     authorityClass: "blocking",

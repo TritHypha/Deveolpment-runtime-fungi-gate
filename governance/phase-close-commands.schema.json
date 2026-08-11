@@ -47,7 +47,8 @@
       "required": [
         "id",
         "requirementId",
-        "command",
+        "satisfies",
+        "execution",
         "cwd",
         "toolClass",
         "authorityClass",
@@ -66,7 +67,35 @@
       "properties": {
         "id": { "$ref": "#/$defs/nonEmpty" },
         "requirementId": { "$ref": "#/$defs/nonEmpty" },
-        "command": { "$ref": "#/$defs/command" },
+        "satisfies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "execution": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "command"],
+              "properties": {
+                "kind": { "const": "process" },
+                "command": { "$ref": "#/$defs/command" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "predecessorId", "verifierId"],
+              "properties": {
+                "kind": { "const": "predecessor-receipt" },
+                "predecessorId": { "$ref": "#/$defs/nonEmpty" },
+                "verifierId": { "const": "graph-all-semantic-v1" }
+              }
+            }
+          ]
+        },
         "cwd": { "$ref": "#/$defs/nonEmpty" },
         "toolClass": {
           "enum": ["analyzer", "generator", "test-runner", "verifier", "legacy-oracle"]

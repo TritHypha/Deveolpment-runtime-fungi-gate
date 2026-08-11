@@ -32,7 +32,8 @@ function rawEntry(overrides = {}) {
   return {
     id: "audit:fixture",
     requirementId: "REQ-ASSURANCE-001",
-    command: ["node", "zero.mjs"],
+    satisfies: ["REQ-ASSURANCE-001"],
+    execution: { kind: "process", command: ["node", "zero.mjs"] },
     cwd: ".",
     toolClass: "legacy-oracle",
     authorityClass: "blocking",
@@ -87,7 +88,7 @@ describe("legacy owned-process assurance adapter", () => {
     const second = context();
     const authorityText = runLegacyEntry(admittedEntry({
       id: "audit:authority-text",
-      command: ["node", "authority.mjs"],
+      execution: { kind: "process", command: ["node", "authority.mjs"] },
       subjects: { kind: "files", values: ["authority.mjs"], expectedCount: 1 },
     }), second);
     assert.notEqual(authorityText.result.trit, TRIT.ASSURED);
@@ -97,7 +98,7 @@ describe("legacy owned-process assurance adapter", () => {
 
   it("maps a blocking nonzero exit to a blocking failure", () => {
     const red = runLegacyEntry(admittedEntry({
-      command: ["node", "seven.mjs"],
+      execution: { kind: "process", command: ["node", "seven.mjs"] },
       subjects: { kind: "files", values: ["seven.mjs"], expectedCount: 1 },
     }), context());
     assert.equal(red.result.tag, RESULT_TAG.BLOCKING_FAIL);
@@ -109,14 +110,14 @@ describe("legacy owned-process assurance adapter", () => {
   it("keeps advisory and informational nonzero outcomes out of blocking totals", () => {
     const advisory = runLegacyEntry(admittedEntry({
       id: "audit:advisory",
-      command: ["node", "seven.mjs"],
+      execution: { kind: "process", command: ["node", "seven.mjs"] },
       authorityClass: "advisory",
       outcomePolicy: "advisory",
       subjects: { kind: "files", values: ["seven.mjs"], expectedCount: 1 },
     }), context());
     const informational = runLegacyEntry(admittedEntry({
       id: "audit:informational",
-      command: ["node", "seven.mjs"],
+      execution: { kind: "process", command: ["node", "seven.mjs"] },
       authorityClass: "informational",
       outcomePolicy: "informational",
       subjects: { kind: "files", values: ["seven.mjs"], expectedCount: 1 },
@@ -130,14 +131,16 @@ describe("legacy owned-process assurance adapter", () => {
   });
 
   it("refuses malformed commands and bounded-output breaches", () => {
-    const malformed = runLegacyEntry(admittedEntry({ command: ["npm", "--version"] }), context());
+    const malformed = runLegacyEntry(admittedEntry({
+      execution: { kind: "process", command: ["npm", "--version"] },
+    }), context());
     assert.equal(malformed.result.tag, RESULT_TAG.REFUSED);
     assert.equal(malformed.result.trit, TRIT.UNKNOWN);
     assert.equal(malformed.processControl.ownedTree, false);
 
     const flood = runLegacyEntry(admittedEntry({
       id: "audit:flood",
-      command: ["node", "flood.mjs"],
+      execution: { kind: "process", command: ["node", "flood.mjs"] },
       maxOutputBytes: 128,
       subjects: { kind: "files", values: ["flood.mjs"], expectedCount: 1 },
     }), context());
@@ -149,7 +152,7 @@ describe("legacy owned-process assurance adapter", () => {
   it("maps an acknowledged owned-tree timeout to unknown", () => {
     const timeout = runLegacyEntry(admittedEntry({
       id: "audit:timeout",
-      command: ["node", "hang.mjs"],
+      execution: { kind: "process", command: ["node", "hang.mjs"] },
       timeoutMs: 150,
       subjects: { kind: "files", values: ["hang.mjs"], expectedCount: 1 },
     }), context());
@@ -164,7 +167,7 @@ describe("legacy owned-process assurance adapter", () => {
     try {
       const isolated = runLegacyEntry(admittedEntry({
         id: "audit:environment",
-        command: ["node", "environment.mjs"],
+        execution: { kind: "process", command: ["node", "environment.mjs"] },
         subjects: { kind: "files", values: ["environment.mjs"], expectedCount: 1 },
       }), context());
       assert.deepEqual(isolated.exitStatus, { kind: "present", value: 0 });

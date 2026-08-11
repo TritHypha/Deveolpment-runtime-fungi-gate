@@ -15,7 +15,8 @@ function validEntry(overrides = {}) {
   return {
     id: "audit:fixture",
     requirementId: "REQ-ASSURANCE-001",
-    command: ["node", "fixture.mjs"],
+    satisfies: ["REQ-ASSURANCE-001"],
+    execution: { kind: "process", command: ["node", "fixture.mjs"] },
     cwd: ".",
     toolClass: "analyzer",
     authorityClass: "blocking",
@@ -87,10 +88,10 @@ describe("candidate assurance manifest", () => {
 
   it("refuses root escape, shell-shaped commands and invalid output bounds", () => {
     assertRefused(manifest([validEntry({ cwd: "../escape" })]));
-    assertRefused(manifest([validEntry({ command: [] })]));
-    assertRefused(manifest([validEntry({ command: ["node", "fixture.mjs;whoami"] })]));
-    assertRefused(manifest([validEntry({ command: ["../outside-tool"] })]));
-    assertRefused(manifest([validEntry({ command: ["C:outside-tool"] })]));
+    assertRefused(manifest([validEntry({ execution: { kind: "process", command: [] } })]));
+    assertRefused(manifest([validEntry({ execution: { kind: "process", command: ["node", "fixture.mjs;whoami"] } })]));
+    assertRefused(manifest([validEntry({ execution: { kind: "process", command: ["../outside-tool"] } })]));
+    assertRefused(manifest([validEntry({ execution: { kind: "process", command: ["C:outside-tool"] } })]));
     assertRefused(manifest([validEntry({ generatedOutputs: ["../outside.json"] })]));
     assertRefused(manifest([validEntry({ maxOutputBytes: Number.NaN })]));
     assertRefused(manifest([validEntry({ timeoutMs: Number.POSITIVE_INFINITY })]));
@@ -114,5 +115,60 @@ describe("candidate assurance manifest", () => {
     });
     assertRefused(manifest([entry]));
     assert.equal(getterRan, false);
+  });
+
+  it("accepts one closed predecessor receipt and refuses unknown verifier shapes", () => {
+    const producer = validEntry({ id: "graph:all" });
+    const receipt = validEntry({
+      id: "semantic:coverage",
+      requirementId: "REQ-SEMANTIC-COVERAGE",
+      satisfies: ["REQ-SEMANTIC-COVERAGE"],
+      execution: {
+        kind: "predecessor-receipt",
+        predecessorId: "graph:all",
+        verifierId: "graph-all-semantic-v1",
+      },
+      predecessors: ["graph:all"],
+    });
+    assert.equal(validateAssuranceManifest(manifest([producer, receipt]), root).kind, "accepted");
+    assertRefused(manifest([producer, {
+      ...receipt,
+      execution: { ...receipt.execution, verifierId: "invented-verifier" },
+    }]));
+    assertRefused(manifest([producer, {
+      ...receipt,
+      execution: { ...receipt.execution, command: ["node", "bad.mjs"] },
+    }]));
+    assertRefused(manifest([{
+      ...receipt,
+      predecessors: [],
+      execution: { ...receipt.execution, predecessorId: "missing" },
+    }]));
+  });
+
+  it("refuses duplicate satisfies values and receipt dependency cycles", () => {
+    assertRefused(manifest([validEntry({
+      satisfies: ["REQ-ASSURANCE-001", "REQ-ASSURANCE-001"],
+    })]));
+    assertRefused(manifest([
+      validEntry({
+        id: "receipt:a",
+        execution: {
+          kind: "predecessor-receipt",
+          predecessorId: "receipt:b",
+          verifierId: "graph-all-semantic-v1",
+        },
+        predecessors: [],
+      }),
+      validEntry({
+        id: "receipt:b",
+        execution: {
+          kind: "predecessor-receipt",
+          predecessorId: "receipt:a",
+          verifierId: "graph-all-semantic-v1",
+        },
+        predecessors: [],
+      }),
+    ]));
   });
 });

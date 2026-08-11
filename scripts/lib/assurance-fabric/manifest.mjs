@@ -5,8 +5,8 @@ const ROOT_KEYS = Object.freeze(["entries", "schemaVersion"]);
 const ENTRY_KEYS = Object.freeze([
   "authorityClass",
   "cadences",
-  "command",
   "cwd",
+  "execution",
   "generatedOutputs",
   "id",
   "lifecycle",
@@ -16,6 +16,7 @@ const ENTRY_KEYS = Object.freeze([
   "platforms",
   "predecessors",
   "requirementId",
+  "satisfies",
   "selfTest",
   "subjects",
   "timeoutMs",
@@ -32,6 +33,7 @@ const PLATFORMS = new Set(["win32", "linux", "darwin"]);
 const OVERLAPS = new Set(["canonical", "overlap", "replacement-candidate"]);
 const RETIREMENTS = new Set(["active", "shadow", "retirement-candidate", "retired"]);
 const BUILTIN_EXECUTABLES = new Set(["node", "npm", "git", "cargo"]);
+const RECEIPT_VERIFIERS = new Set(["graph-all-semantic-v1"]);
 const SHELL_METACHARACTERS = /[;&|`$<>\u0000\r\n]/u;
 const WINDOWS_DRIVE_RELATIVE = /^[A-Za-z]:/u;
 const acceptedManifests = new WeakSet();
@@ -208,6 +210,31 @@ function selfTest(value, root, label) {
   refuse("ASSURANCE-MANIFEST-VALUE", `${label}.kind is outside the closed vocabulary`);
 }
 
+function execution(value, root, label) {
+  const descriptors = recordDescriptors(value, label);
+  const kindDescriptor = descriptors.kind;
+  if (!kindDescriptor || !("value" in kindDescriptor) || kindDescriptor.get !== undefined
+      || kindDescriptor.set !== undefined) {
+    refuse("ASSURANCE-MANIFEST-SHAPE", `${label}.kind must be an ordinary data field`);
+  }
+  if (kindDescriptor.value === "process") {
+    const fields = exactRecord(value, ["command", "kind"], label);
+    return {
+      kind: "process",
+      command: command(fields.command, root, `${label}.command`),
+    };
+  }
+  if (kindDescriptor.value === "predecessor-receipt") {
+    const fields = exactRecord(value, ["kind", "predecessorId", "verifierId"], label);
+    return {
+      kind: "predecessor-receipt",
+      predecessorId: nonEmptyString(fields.predecessorId, `${label}.predecessorId`),
+      verifierId: enumValue(fields.verifierId, RECEIPT_VERIFIERS, `${label}.verifierId`),
+    };
+  }
+  refuse("ASSURANCE-MANIFEST-VALUE", `${label}.kind is outside the closed vocabulary`);
+}
+
 function cloneEntry(value, root, index) {
   const label = `entries[${index}]`;
   const fields = exactRecord(value, ENTRY_KEYS, label);
@@ -218,7 +245,8 @@ function cloneEntry(value, root, index) {
   return {
     id: nonEmptyString(fields.id, `${label}.id`),
     requirementId: nonEmptyString(fields.requirementId, `${label}.requirementId`),
-    command: command(fields.command, root, `${label}.command`),
+    satisfies: uniqueStrings(fields.satisfies, `${label}.satisfies`, 1),
+    execution: execution(fields.execution, root, `${label}.execution`),
     cwd: repositoryPath(fields.cwd, root, `${label}.cwd`),
     toolClass: enumValue(fields.toolClass, TOOL_CLASSES, `${label}.toolClass`),
     authorityClass: enumValue(fields.authorityClass, AUTHORITY_CLASSES, `${label}.authorityClass`),
@@ -253,7 +281,17 @@ function verifyDependencies(entries) {
     byId.set(entry.id, entry);
   }
   for (const entry of entries) {
-    for (const predecessor of entry.predecessors) {
+    const dependencies = entry.execution.kind === "predecessor-receipt"
+      ? [...entry.predecessors, entry.execution.predecessorId]
+      : entry.predecessors;
+    if (entry.execution.kind === "predecessor-receipt"
+        && !entry.predecessors.includes(entry.execution.predecessorId)) {
+      refuse(
+        "ASSURANCE-MANIFEST-DEPENDENCY",
+        `${entry.id} receipt predecessor must also be declared in predecessors`,
+      );
+    }
+    for (const predecessor of dependencies) {
       if (!byId.has(predecessor)) {
         refuse("ASSURANCE-MANIFEST-DEPENDENCY", `${entry.id} names unknown predecessor ${predecessor}`);
       }
@@ -268,7 +306,11 @@ function verifyDependencies(entries) {
     }
     if (current === "done") return;
     state.set(id, "visiting");
-    for (const predecessor of byId.get(id).predecessors) visit(predecessor);
+    const entry = byId.get(id);
+    const dependencies = entry.execution.kind === "predecessor-receipt"
+      ? [...entry.predecessors, entry.execution.predecessorId]
+      : entry.predecessors;
+    for (const predecessor of new Set(dependencies)) visit(predecessor);
     state.set(id, "done");
   }
   for (const entry of entries) visit(entry.id);

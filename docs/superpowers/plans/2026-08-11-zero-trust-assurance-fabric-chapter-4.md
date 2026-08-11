@@ -72,6 +72,11 @@ assert.deepEqual(result.value.discharged, [{
   subjectId: "compiler",
   executorId: "tests:all",
   overlappedEntryIds: ["tests:core"],
+}, {
+  requirementId: "REQ-PACKAGE-TESTS",
+  subjectId: "core",
+  executorId: "tests:all",
+  overlappedEntryIds: ["tests:core"],
 }]);
 ```
 

@@ -83,7 +83,10 @@ export function runLegacyEntry(entry, context) {
     throw new TypeError("legacy adapter context requires a root and unsafe intake");
   }
   const root = resolve(context.root);
-  if (!Array.isArray(entry.command) || entry.command.length < 1 || entry.command[0] !== "node") {
+  if (entry.execution.kind !== "process"
+      || !Array.isArray(entry.execution.command)
+      || entry.execution.command.length < 1
+      || entry.execution.command[0] !== "node") {
     return refusedBeforeRun(entry, context.intake, "legacy adapter admits only the explicit node executable");
   }
   if (typeof entry.cwd !== "string" || isAbsolute(entry.cwd)) {
@@ -102,7 +105,7 @@ export function runLegacyEntry(entry, context) {
   try {
     output = runOwnedProcessSync({
       command: process.execPath,
-      args: entry.command.slice(1),
+      args: entry.execution.command.slice(1),
       cwd,
       timeoutMs: entry.timeoutMs,
       cleanupGraceMs: Number.isSafeInteger(context.cleanupGraceMs) ? context.cleanupGraceMs : 2_000,
