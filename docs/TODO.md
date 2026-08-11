@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### First physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the closed `triNot`, `triAnd`, `triOr` and `triNor` slice from
+  `galerina-core-logic/src/index.ts` into the package-owned
+  `src/self-hosted/tri-ops.fungi`. The source uses typed `Verdict`, exhaustive
+  `check`, no `null`/`NaN`, no exception syntax, no `else if`, and no `for` or
+  `loop`.
+- [x] Prove strict Galerina checking and complete differential parity over all
+  three unary and nine binary K3 vectors. The owning package is **55/55** and
+  the exact Fungi file reports zero errors and zero governance warnings.
+- [x] Close the independent SLIDE frontend gap for exactly the three typed
+  Verdict constructors. SLIDE checkpoint `ac8a041` is **986/986 across 97
+  suites**, with a current 91-file tool manifest, zero forbidden-state tokens,
+  path hygiene over 767 targets and internally consistent contracts at K3 `0`.
+- [x] Compile the exact Fungi bytes into four physical `.slide` exports,
+  independently re-admit and execute every K3 vector through VOK typed receipts,
+  reject invalid Verdict arguments and refuse a one-byte artifact mutation.
+- [ ] Keep the TypeScript source and its consumers active. This proves one
+  four-flow, reference-only conversion slice; it does not retire the source
+  file, authorize production, or reduce repository retirement debt until the
+  consumer-switch and terminal-retirement gates are independently closed.
+
 ### Pre-conversion security closure - 2026-08-11
 
 - [x] Repair the benchmark harness so its deliberately high-volume framework

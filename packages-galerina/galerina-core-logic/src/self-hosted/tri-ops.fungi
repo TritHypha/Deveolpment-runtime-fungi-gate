@@ -1,0 +1,53 @@
+@version 1
+/// Package-owned K3 operations for the closed Verdict domain {-1, 0, +1}.
+/// TypeScript remains the executing reference until the consumer-switch and
+/// retirement gates are independently satisfied.
+
+pure flow triNot(value: Verdict) -> Verdict
+contract { intent { "Invert one closed K3 verdict without collapsing ambiguity." } }
+{
+  check(value) {
+    deny: { return Verdict.Allow }
+    ambig: { return value }
+    if: { return Verdict.Deny }
+  }
+}
+
+pure flow triAnd(left: Verdict, right: Verdict) -> Verdict
+contract { intent { "Return the fail-close K3 conjunction of two verdicts." } }
+{
+  check(left) {
+    deny: { return left }
+    ambig: {
+      check(right) {
+        deny: { return right }
+        ambig: { return left }
+        if: { return left }
+      }
+    }
+    if: { return right }
+  }
+}
+
+pure flow triOr(left: Verdict, right: Verdict) -> Verdict
+contract { intent { "Return the K3 disjunction of two closed verdicts." } }
+{
+  check(left) {
+    deny: { return right }
+    ambig: {
+      check(right) {
+        deny: { return left }
+        ambig: { return left }
+        if: { return right }
+      }
+    }
+    if: { return left }
+  }
+}
+
+pure flow triNor(left: Verdict, right: Verdict) -> Verdict
+contract { intent { "Invert the K3 disjunction without widening authority." } }
+{
+  let combined: Verdict = triOr(left, right)
+  return triNot(combined)
+}

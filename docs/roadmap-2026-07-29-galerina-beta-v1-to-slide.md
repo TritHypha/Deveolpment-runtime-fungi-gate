@@ -3,13 +3,13 @@
 Date: 2026-08-11
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: Galerina pins the remediated SLIDE implementation
-`eed1249`, its **91-file** tool manifest at `8bb0334f...364ea`, and a closed
+`ac8a041`, its **91-file** tool manifest at `e0e5dd5d...202e48`, and a closed
 contract catalog of **95 files in two partitions**. Complete SLIDE passes
-**984/984 tests across 97 suites**; forbidden-state audit is zero across all 91
+**986/986 tests across 97 suites**; forbidden-state audit is zero across all 91
 executable files, path hygiene covers **767 targets**, and sealed scan
-`7263c63e` reports no finding across six reviewed security-critical surfaces.
-Coverage is honestly partial because independent worker variance was
-unavailable. Security closure remains non-authorizing at K3 `0`.
+`7263c63e` is retained only as older evidence because it predates the typed
+Verdict-constant change. Fresh security closure is therefore `UNKNOWN`, while
+contract consistency remains non-authorizing at K3 `0`.
 
 Both Galerina source manifests are now bound to the exact current portable-VEO
 policy and verifier context, and both committed physical `.slide` publications
@@ -29,6 +29,17 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+First physical conversion slice 2026-08-11: the four closed Tri operations in
+`galerina-core-logic/src/index.ts` now have a package-owned typed `Verdict`
+translation at `src/self-hosted/tri-ops.fungi`. Strict Galerina checking reports
+zero errors and zero governance warnings; canonical GIR/WAT matches TypeScript
+over the complete 3 unary plus 9 binary K3 vectors; and independent SLIDE
+builds four physical `.slide` exports, re-admits them, executes every vector
+through VOK typed receipts, rejects invalid Verdict arguments and refuses a
+one-byte artifact mutation. This is a reference-only, non-retiring slice: the
+TypeScript source and consumers remain active, repository retirement counts do
+not decrease, and production/signing/durability authority remains closed.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

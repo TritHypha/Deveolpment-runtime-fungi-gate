@@ -11,6 +11,9 @@
       "src/decision/index.ts",
       "src/omni/index.ts",
       "src/tri/index.ts"
+    ],
+    "loadedAssets": [
+      "src/self-hosted/tri-ops.fungi"
     ]
   },
   "main": "./dist/index.js",
