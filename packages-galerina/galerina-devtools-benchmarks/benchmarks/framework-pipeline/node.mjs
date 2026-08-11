@@ -24,6 +24,22 @@ const td = new TextDecoder("utf-8", { fatal: true });
 
 // ── The Galerina App Kernel (the framework) ────────────────────────────────────
 let auditCount = 0;
+const liveAuditReservations = new WeakSet();
+const auditSink = {
+  reserve() {
+    const reservation = Object.freeze({ id: Symbol("benchmark-audit-reservation") });
+    liveAuditReservations.add(reservation);
+    return reservation;
+  },
+  commit(reservation) {
+    if (!liveAuditReservations.delete(reservation)) throw new Error("invalid audit reservation");
+    auditCount++;
+  },
+  cancel(reservation) {
+    if (!liveAuditReservations.delete(reservation)) throw new Error("invalid audit reservation");
+  },
+  emit() { auditCount++; },
+};
 const kernel = createAppKernel({
   routes: [{
     method: "POST",
@@ -45,7 +61,7 @@ const kernel = createAppKernel({
     },
   },
   dispatch: { createOrder: (ctx) => ({ status: 200, body: { ok: true, id: ctx.json?.id ?? 0 } }) },
-  auditSink: { emit() { auditCount++; } },   // non-retaining sink (real "emit to pipe" cost, no memory growth)
+  auditSink, // non-retaining sink (real reserve/commit-to-pipe cost, no memory growth)
 });
 
 const BODY = te.encode(JSON.stringify({ id: 1, item: "widget", qty: 3 }));

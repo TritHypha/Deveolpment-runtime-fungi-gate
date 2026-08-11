@@ -20,6 +20,7 @@
 
 import type {
   AuditEvent,
+  AuditReservation,
   AuditSink,
   HandlerContext,
   HandlerDispatch,
@@ -43,17 +44,33 @@ import { HealthRegistry, type HealthReport } from "./health.js";
  * double-count). Prefer `instrumentDispatch` when you can wrap dispatch — it adds latency.
  */
 export function metricsAuditSink(metrics: MetricsCollector): AuditSink {
+  const liveReservations = new WeakSet<AuditReservation>();
+  const record = (event: AuditEvent): void => {
+    metrics.record({
+      method: event.method,
+      route: event.path,
+      status: event.status,
+    });
+  };
   return {
-    emit(event: AuditEvent): void {
-      try {
-        metrics.record({
-          method: event.method,
-          route: event.path,
-          status: event.status,
-        });
-      } catch {
-        // Fail-closed: the audit feed must never throw into the kernel.
+    reserve(): AuditReservation {
+      const reservation = Object.freeze({ id: Symbol("metrics-audit-reservation") });
+      liveReservations.add(reservation);
+      return reservation;
+    },
+    commit(reservation: AuditReservation, event: AuditEvent): void {
+      if (!liveReservations.delete(reservation)) {
+        throw new Error("Metrics audit reservation is foreign or already consumed.");
       }
+      record(event);
+    },
+    cancel(reservation: AuditReservation): void {
+      if (!liveReservations.delete(reservation)) {
+        throw new Error("Metrics audit reservation is foreign or already consumed.");
+      }
+    },
+    emit(event: AuditEvent): void {
+      record(event);
     },
   };
 }
