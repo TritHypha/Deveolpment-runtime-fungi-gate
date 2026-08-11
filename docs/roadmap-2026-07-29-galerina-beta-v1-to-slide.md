@@ -23,7 +23,7 @@ findings close; this exclusion is not a claim that the component is secure.
 
 Current Galerina custody is green: normal phase-close passes every blocking
 gate in **660.4s**, the direct aggregate passes **100/100 packages and
-9,554/9,554 tests** in **299.9s**, and exhaustive phase-close passes every
+9,556/9,556 tests** in **293.7s**, and exhaustive phase-close passes every
 blocking gate in **844.9s**. The first exhaustive attempt refused only at the
 package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
@@ -51,8 +51,9 @@ compiler package passes **6,344/6,344**. Clean SLIDE `ac8a041` required no
 source change: it builds two physical exports, independently re-admits all
 twelve VOK vectors, keeps deny and unknown closed, and refuses source,
 argument and physical-artifact mutations (**3/3** focused). Repository owner
-closure is still running, so this is presently a non-retiring physical proof,
-not a final closure or authority claim.
+closure is still running; the canonical aggregate is green at **100/100
+packages and 9,556 tests** in **293.7s**, but this is presently a non-retiring
+physical proof, not a final closure or authority claim.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence

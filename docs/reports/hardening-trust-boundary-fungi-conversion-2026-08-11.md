@@ -68,8 +68,10 @@ partial result. Every admitted K3 value reaches exactly one terminal arm.
   arguments refuse execution, both non-ALLOW boundary values remain false, and
   one-byte physical artifact mutation refuses re-admission.
 - Focused conversion surface: **3/3**, zero skips.
-- Repository closure and generated-owner freshness: pending this dossier's
-  publication cycle; no green claim is made before those owners run.
+- Canonical package owner: **100/100 packages and 9,556 tests** in **293.7s**,
+  zero failures; compiler **6,344/6,344**.
+- Generated-owner freshness and normal phase-close: pending this dossier's
+  publication cycle; no terminal green claim is made before those owners run.
 
 ## Retirement boundary
 
