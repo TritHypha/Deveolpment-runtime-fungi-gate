@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "ad8c1bd407ebabacd2e757993f62ca74b8b68b0fa8deb15cdfd99d3736976921",
+  "authoritativeInputsDigest": "dd0ce77484a4d4090347a78856eb0eb4483719ce2b15cef9d0c18d5332959281",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6860,6 +6860,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-a63cdb8c1e294e870f3976a8",
+      "kind": "test",
+      "evidencePath": "scripts/tests/power-rank-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-a75bbf275b84b081e6d8cf43",
       "kind": "test",
       "evidencePath": "scripts/tests/process-lease-budget.test.mjs",
@@ -11433,6 +11440,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-a63cdb8c1e294e870f3976a8",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-a75bbf275b84b081e6d8cf43",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11678,7 +11690,7 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 888,
+    "tests": 889,
     "detectors": 6,
     "executableFamily": 1423,
     "legacyUnmapped": 0
