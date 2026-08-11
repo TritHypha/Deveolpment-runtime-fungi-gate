@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import { classifyBenchmark } from "../src/audit-benchmark-integrity.mjs";
@@ -86,4 +88,5 @@ test("the standard runner normalizes both frozen reference subjects", async () =
   assert.equal(result.results.slideReference.throughputUnit, "element-reads/s");
   assert.equal(result.results.checkedReference.referenceOnly, true);
   assert.equal(result.results.slideReference.referenceOnly, true);
+  assert.equal(existsSync(join(process.cwd(), "Python")), false);
 });

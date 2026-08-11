@@ -1,6 +1,7 @@
 import { spawnSync, execSync } from "node:child_process";
-import { existsSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, join, resolve } from "node:path";
 import { types as utilTypes } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf } from "./throughput-units.mjs";
@@ -160,7 +161,18 @@ function runProc(cmd, args=[]) {
   // --expose-gc lets node runners force a clean GC baseline before measuring heap
   // delta, so the per-operation memory numbers are reliable (not GC-timing noise).
   const finalArgs = cmd === "node" ? ["--expose-gc", ...args] : args;
-  const r = spawnSync(cmd, finalArgs, { encoding:"utf8", timeout:180000 });
+  const commandName = basename(cmd).toLowerCase();
+  const pythonCommand = /^(?:python|python3(?:\.\d+)?)(?:\.exe)?$/u.test(commandName);
+  const spawnRuntime = () => {
+    if (!pythonCommand) return spawnSync(cmd, finalArgs, { encoding:"utf8", timeout:180000 });
+    const cwd = mkdtempSync(join(tmpdir(), "galerina-python-benchmark-"));
+    try {
+      return spawnSync(cmd, finalArgs, { cwd, encoding:"utf8", timeout:180000 });
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
+  };
+  const r = spawnRuntime();
   if (r.status !== 0 || !r.stdout?.trim()) return null;
   try { return JSON.parse(r.stdout.trim()); } catch { return null; }
 }

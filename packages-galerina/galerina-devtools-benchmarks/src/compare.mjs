@@ -682,15 +682,9 @@ for (const bench of data) {
 
 const gpuBench = data.find(b => b.benchmark === "gpu-compute");
 if (gpuBench) {
-  let gpu = null;
-  try {
-    const mod = await import("./gpu-detect.mjs");
-    gpu = mod.gpuReport();
-  } catch { /* detection optional */ }
-
-  // Ground truth beats toolchain detection: if a denoWebGpu result exists in the
-  // data, the GPU path actually ran (gpu-detect's `where deno` can miss a Deno
-  // that's only on the augmented runner PATH).
+  // Publication is derived only from the archived benchmark evidence. A live
+  // toolchain probe would make the same result bytes render differently under a
+  // minimal CI environment and could silently relabel historical measurements.
   const denoActuallyRan = data.some(b => {
     const d = b?.results?.denoWebGpu;
     return d && !d.error && typeof d.device === "string" && d.device.toLowerCase().startsWith("gpu");
@@ -700,13 +694,10 @@ if (gpuBench) {
   console.log("> A **GPU-shaped** workload: a per-element kernel `f(i)=i*2+1` applied across 100,000 elements + reduction.");
   console.log("> On a GPU this parallelises across thousands of threads. 🖥️ CPU = running on CPU; 🎮 GPU = real GPU dispatch.\n");
 
-  if (gpu) {
-    const denoGpuAvail = (gpu.toolchains?.denoWebGpu ?? false) || denoActuallyRan;
-    console.log(`**GPU detected:** ${gpu.device.present ? `${gpu.device.name} (driver ${gpu.device.driver}, ${gpu.device.memory})` : "none"}`);
-    console.log(`**Compute toolchain:** ${gpu.summary}`);
-    console.log(`**Deno WebGPU:** ${denoGpuAvail ? `✅ available — real GPU dispatch enabled (${GPU_NAME})` : "⏳ not installed"}`);
-    console.log(`**Galerina GPU backend:** \`${gpu.galerinaGpuStatus}\` — gpu-plan.ts emits a WGSL skeleton only; no dispatch path (pending Phase 38).\n`);
-  }
+  console.log(`**Archived GPU evidence:** ${denoActuallyRan ? `${GPU_NAME} executed the pinned Deno WebGPU lane` : "no GPU lane executed"}`);
+  console.log("**Compute toolchain:** derived from results/latest.json; no live host probe is used while rendering.");
+  console.log(`**Deno WebGPU:** ${denoActuallyRan ? `✅ measured — real GPU dispatch (${GPU_NAME})` : "⏳ no archived execution"}`);
+  console.log("**Galerina GPU backend:** `not-implemented` — gpu-plan.ts emits a WGSL skeleton only; no dispatch path (pending Phase 38).\n");
 
   console.log("| # | 🚦 | Runtime | Device (🖥️ CPU / 🎮 GPU) | Throughput (kernel ops/s) | Wall | vs Node |");
   console.log("|---|---|---|---|---|---|---|");
@@ -731,13 +722,12 @@ if (gpuBench) {
   });
 
   // Honest GPU rows — what each runtime COULD do on GPU, and current status
-  const gpuRunnable = gpu?.toolchains?.anyRunnable ?? false;
-  const denoWebGpuAvail = (gpu?.toolchains?.denoWebGpu ?? false) || denoActuallyRan;
-  console.log(`\n**GPU execution status (this machine):**\n`);
+  const denoWebGpuAvail = denoActuallyRan;
+  console.log(`\n**GPU execution status (archived run):**\n`);
   console.log("| Runtime | GPU path | Device | Status |");
   console.log("|---|---|---|---|");
-  console.log(`| Rust | wgpu (Vulkan/D3D12) | 🖥️ CPU (GPU pending) | ${gpu?.toolchains?.rustWgpu ? "🔧 buildable (cargo present, harness pending)" : "⏳ toolchain required"} |`);
-  console.log(`| Python | torch CUDA / cupy | 🖥️ CPU (GPU pending) | ${gpu?.toolchains?.pythonTorchCuda ? "✅ available" : "⏳ toolchain required (CPU-only torch)"} |`);
+  console.log("| Rust | wgpu (Vulkan/D3D12) | 🖥️ CPU (GPU pending) | no archived GPU execution |");
+  console.log("| Python | torch CUDA / cupy | 🖥️ CPU (GPU pending) | no archived GPU execution |");
   console.log(`| Node.js | WebGPU | 🖥️ CPU only | ⏳ toolchain required (no navigator.gpu in Node.js) |`);
   console.log(`| Deno | WebGPU (built-in) | ${denoWebGpuAvail ? `🎮 GPU (${GPU_NAME})` : "🖥️ CPU"} | ${denoWebGpuAvail ? "✅ available — real GPU dispatch detected (Phase 38 ready)" : "⏳ not installed"} |`);
   console.log(`| **Galerina** | WebGPUComputePlan → WGSL | 🖥️ CPU (GPU pending) | ❌ **pending Phase 38** — stub only, no measured number (by design) |`);

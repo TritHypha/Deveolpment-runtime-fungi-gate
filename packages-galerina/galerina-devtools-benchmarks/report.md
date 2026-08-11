@@ -951,9 +951,9 @@
 > A **GPU-shaped** workload: a per-element kernel `f(i)=i*2+1` applied across 100,000 elements + reduction.
 > On a GPU this parallelises across thousands of threads. 🖥️ CPU = running on CPU; 🎮 GPU = real GPU dispatch.
 
-**GPU detected:** NVIDIA GeForce RTX 2060 (driver 610.74, 6144 MiB)
-**Compute toolchain:** NVIDIA GeForce RTX 2060 — GPU compute available.
-**Deno WebGPU:** ✅ available — real GPU dispatch enabled (NVIDIA GeForce RTX 2060)
+**Archived GPU evidence:** NVIDIA GeForce RTX 2060 executed the pinned Deno WebGPU lane
+**Compute toolchain:** derived from results/latest.json; no live host probe is used while rendering.
+**Deno WebGPU:** ✅ measured — real GPU dispatch (NVIDIA GeForce RTX 2060)
 **Galerina GPU backend:** `not-implemented` — gpu-plan.ts emits a WGSL skeleton only; no dispatch path (pending Phase 38).
 
 | # | 🚦 | Runtime | Device (🖥️ CPU / 🎮 GPU) | Throughput (kernel ops/s) | Wall | vs Node |
@@ -968,12 +968,12 @@
 | 8 | ⚫ | Galerina manifest ⟨interp⟩ | 🖥️ CPU (cpu) | 318.2K/s | 314.2ms | 0.00× |
 | 9 | ⚫ | Galerina governed ⟨interp⟩ | 🖥️ CPU (cpu) | 314.4K/s | 318.1ms | 0.00× |
 
-**GPU execution status (this machine):**
+**GPU execution status (archived run):**
 
 | Runtime | GPU path | Device | Status |
 |---|---|---|---|
-| Rust | wgpu (Vulkan/D3D12) | 🖥️ CPU (GPU pending) | 🔧 buildable (cargo present, harness pending) |
-| Python | torch CUDA / cupy | 🖥️ CPU (GPU pending) | ⏳ toolchain required (CPU-only torch) |
+| Rust | wgpu (Vulkan/D3D12) | 🖥️ CPU (GPU pending) | no archived GPU execution |
+| Python | torch CUDA / cupy | 🖥️ CPU (GPU pending) | no archived GPU execution |
 | Node.js | WebGPU | 🖥️ CPU only | ⏳ toolchain required (no navigator.gpu in Node.js) |
 | Deno | WebGPU (built-in) | 🎮 GPU (NVIDIA GeForce RTX 2060) | ✅ available — real GPU dispatch detected (Phase 38 ready) |
 | **Galerina** | WebGPUComputePlan → WGSL | 🖥️ CPU (GPU pending) | ❌ **pending Phase 38** — stub only, no measured number (by design) |
@@ -1357,4 +1357,3 @@
 | **context-receipt** | Context Receipt generation: 51–97% token reduction per flow | AI context window generation speed — how fast receipts are produced |
 | **intelligence-search** | BM25 hybrid code search: index 81 flows, 10 queries/run | Code search latency — how fast galerina search responds |
 | **provenance-trace** | Data lineage graph: source→transform→sink for 27 files | Compliance evidence generation speed — how fast the audit trail is built |
-

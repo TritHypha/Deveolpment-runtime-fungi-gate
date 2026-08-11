@@ -9,15 +9,22 @@
  * A driver + nvidia-smi only proves the card exists, not that we can run kernels.
  */
 import { execFileSync } from "node:child_process";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 function tryExec(cmd, args) {
+  const cwd = mkdtempSync(join(tmpdir(), "galerina-gpu-probe-"));
   try {
     return execFileSync(cmd, args, {
+      cwd,
       encoding: "utf8", stdio: ["ignore", "pipe", "ignore"],
       timeout: 8000,
     });
   } catch {
     return null;
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
   }
 }
 
