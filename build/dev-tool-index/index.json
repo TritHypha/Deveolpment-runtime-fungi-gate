@@ -2301,9 +2301,7 @@
       "purpose": "the ROADMAP as a subway map, generated from live ledgers (owner ask 2026-07-25).",
       "selfTest": true,
       "inCadence": true,
-      "concerns": [
-        "provenance"
-      ]
+      "concerns": []
     },
     {
       "name": "gen-status-blocks.mjs",
@@ -2434,6 +2432,7 @@
         "coverage",
         "diagnostics",
         "teaching-corpus",
+        "source-hygiene",
         "graph/index"
       ]
     },
@@ -3802,6 +3801,7 @@
       "graph-all.mjs",
       "kb-graph-generator.mjs",
       "memory-graph.mjs",
+      "ts-retirement-graph.mjs",
       "gen-contract-registry.mjs",
       "kb-index.mjs",
       "verify-registry-static-host-build-recipe.mjs",
@@ -3952,7 +3952,6 @@
       "audit-provenance.mjs",
       "audit-u2-version-floor.mjs",
       "audit-wasm-validate.mjs",
-      "gen-roadmap-subway.mjs",
       "gen-status-blocks.mjs",
       "gen-assurance-semantic-graph.mjs",
       "kb-graph-generator.mjs",

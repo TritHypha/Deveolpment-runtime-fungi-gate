@@ -514,8 +514,6 @@ flowchart LR
   T_galerina_new_mjs --> C_effects
   T_galerina_new_mjs --> C_signing_fusion
   T_galerina_new_mjs --> C_governance
-  T_gen_roadmap_subway_mjs["gen-roadmap-subway.mjs"]
-  T_gen_roadmap_subway_mjs --> C_provenance
   T_gen_status_blocks_mjs["gen-status-blocks.mjs"]
   T_gen_status_blocks_mjs --> C_provenance
   T_gen_status_blocks_mjs --> C_doc_drift
@@ -567,6 +565,7 @@ flowchart LR
   T_ts_retirement_graph_mjs --> C_coverage
   T_ts_retirement_graph_mjs --> C_diagnostics
   T_ts_retirement_graph_mjs --> C_teaching_corpus
+  T_ts_retirement_graph_mjs --> C_source_hygiene
   T_ts_retirement_graph_mjs --> C_graph_index
   T_code_index_mjs["code-index.mjs"]
   T_code_index_mjs --> C_signing_fusion
