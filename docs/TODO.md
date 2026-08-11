@@ -4,6 +4,27 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Third physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the compiler's private, deterministic `isCompatibleType`
+  decision from `plugin-schema.ts` into the package-owned
+  `src/self-hosted/plugin-type-compatibility.fungi`. The pure flow accepts two
+  Strings and returns true only for `Int` to `Float`; it contains no null,
+  NaN, `else if`, exception syntax, `for` or `loop`.
+- [x] Prove the complete 7 x 7 canonical matrix, seven hostile String pairs,
+  strict checking, interpreted parity and signed/admitted Wasm parity. The
+  owning compiler package passes **6,346/6,346** with zero failures.
+- [x] Compile the exact Fungi bytes through clean SLIDE `ac8a041`, publish one
+  physical `.slide`, independently re-admit and execute all canonical and
+  hostile pairs, and refuse wrong typed arguments, source mutation and a
+  one-byte physical artifact mutation (**1/1**, zero skips).
+- [ ] Close the repository-wide aggregate, governed tooling, generated owners,
+  roadmap and normal phase-close against this third slice; record only the
+  measured final counts.
+- [x] Keep `plugin-schema.ts`, `validatePluginInput` and every consumer active.
+  This is a reference-only conversion proof and grants no plugin-execution,
+  consumer-switch, bootstrap, production, release or retirement authority.
+
 ### Second physical TypeScript-to-Fungi conversion slice extended - 2026-08-11
 
 - [x] Translate the compiler's closed `combineTrust`, `boundaryTrusted`,

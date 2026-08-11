@@ -28,9 +28,9 @@
 - Consumes: `validatePluginInput`, compiler parse/effect/GIR/WAT/interpreter exports, and the pinned private TypeScript source.
 - Produces: a test contract requiring `src/self-hosted/plugin-type-compatibility.fungi` and `isCompatibleType(String, String) -> Bool`.
 
-- [ ] Add the package asset declaration and focused test before the source exists.
-- [ ] Require exact private-source anchoring, complete canonical matrix parity, hostile String negatives, strict compilation, and typed interpretation.
-- [ ] Run the focused test and retain the missing-source RED result.
+- [x] Add the package asset declaration and focused test before the source exists.
+- [x] Require exact private-source anchoring, complete canonical matrix parity, hostile String negatives, strict compilation, and typed interpretation.
+- [x] Run the focused test and retain the missing-source RED result.
 
 ### Task 2: Exact Fungi implementation
 
@@ -41,10 +41,10 @@
 - Consumes: two admitted `String` arguments.
 - Produces: one deterministic `Bool` with the exact Int-to-Float compatibility policy.
 
-- [ ] Implement the flow with nested `if` statements and a terminal false exit.
-- [ ] Run strict checking and the focused compiler test.
-- [ ] Run the complete compiler package.
-- [ ] Commit the source, package declaration, and focused test locally.
+- [x] Implement the flow with nested `if` statements and a terminal false exit.
+- [x] Run strict checking and the focused compiler test.
+- [x] Run the complete compiler package.
+- [x] Commit the source, package declaration, and focused test locally.
 
 ### Task 3: Physical SLIDE/VOK proof
 
@@ -55,9 +55,9 @@
 - Consumes: the exact package-owned Fungi bytes and independent SLIDE at its clean pinned build point.
 - Produces: one physical reference-only `.slide` export and independently verified typed Bool receipts.
 
-- [ ] Prove canonical and hostile String vectors through physical publication and VOK re-admission.
-- [ ] Refuse wrong argument types/counts, source mutation, and one-byte physical artifact mutation.
-- [ ] Run the focused integration with zero skips and commit it locally.
+- [x] Prove canonical and hostile String vectors through physical publication and VOK re-admission.
+- [x] Refuse wrong argument types/counts, source mutation, and one-byte physical artifact mutation.
+- [x] Run the focused integration with zero skips and commit it locally.
 
 ### Task 4: Closure
 
@@ -71,7 +71,7 @@
 - Consumes: focused compiler/physical proof and current repository owner commands.
 - Produces: a non-retiring conversion record with current counts and fresh indexes.
 
-- [ ] Record exact hashes, vectors, checks, blockers, and non-authority claims.
+- [x] Record exact hashes, vectors, checks, blockers, and non-authority claims.
 - [ ] Run aggregate, tooling, owner, roadmap, and phase-close checks.
 - [ ] Refresh Myco and primary codebase-memory at the final commit.
 - [ ] Commit explicit outputs locally and do not push.

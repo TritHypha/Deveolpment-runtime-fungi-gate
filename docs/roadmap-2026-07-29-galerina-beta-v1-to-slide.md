@@ -60,6 +60,20 @@ every normal phase-close blocking gate green in **704.8s**. This remains a
 non-retiring physical proof, not release, production, bootstrap-fixpoint or
 TypeScript-retirement authority.
 
+Third physical conversion slice 2026-08-11: the compiler's private
+`isCompatibleType` decision in `plugin-schema.ts` now has a package-owned pure
+String-to-Bool translation at
+`galerina-core-compiler/src/self-hosted/plugin-type-compatibility.fungi`.
+Strict checking, the complete 7 x 7 canonical matrix, seven hostile String
+pairs, the typed interpreter and signed/admitted Wasm all agree; the compiler
+package passes **6,346/6,346**. Clean SLIDE `ac8a041` required no source change:
+it publishes one physical `.slide`, independently re-admits and executes all
+canonical and hostile pairs, and refuses wrong typed arguments, source
+mutation and a one-byte artifact mutation (**1/1**, zero skips). Repository
+closure is in progress and no final aggregate count is claimed here yet. The
+TypeScript helper and caller remain active; this proof grants no plugin,
+consumer-switch, bootstrap, production, release or retirement authority.
+
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
