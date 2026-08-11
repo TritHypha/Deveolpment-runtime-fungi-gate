@@ -4,6 +4,14 @@
   "description": "Naming standard enforcer for Galerina: detects abbreviations, implicit types, missing intent. Promotes Zero-Ambiguity / Maximum-Semantics coding.",
   "license": "Apache-2.0",
   "type": "module",
+  "packageGraph": {
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "loadedAssets": [
+      "src/self-hosted/implicit-return-type.fungi"
+    ]
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

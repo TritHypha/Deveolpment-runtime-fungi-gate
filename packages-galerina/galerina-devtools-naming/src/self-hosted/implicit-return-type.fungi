@@ -1,0 +1,12 @@
+@version 1
+
+/// Return true only for the exact implicit or degenerate return-type spellings
+/// after applying the closed immutable String edge-trim operation.
+/// This reference-only flow cannot switch the executing naming-checker path.
+pure flow isImplicitReturnType(returnType: String) -> Bool {
+  let trimmedReturnType: String = returnType.trim()
+  if trimmedReturnType == "" { return true }
+  if trimmedReturnType == "void" { return true }
+  if trimmedReturnType == "Void" { return true }
+  return false
+}
