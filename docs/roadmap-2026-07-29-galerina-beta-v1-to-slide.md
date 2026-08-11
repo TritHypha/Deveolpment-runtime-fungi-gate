@@ -41,6 +41,19 @@ one-byte artifact mutation. This is a reference-only, non-retiring slice: the
 TypeScript source and consumers remain active, repository retirement counts do
 not decrease, and production/signing/durability authority remains closed.
 
+Second physical conversion slice 2026-08-11: the compiler-side
+`combineTrust` and `boundaryTrusted` functions now have a package-owned typed
+`Verdict`/`Bool` translation at
+`galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi`.
+Strict checking reports zero errors and warnings, canonical GIR/WAT matches the
+complete nine-row conjunction and three-row release tables, and the owning
+compiler package passes **6,344/6,344**. Clean SLIDE `ac8a041` required no
+source change: it builds two physical exports, independently re-admits all
+twelve VOK vectors, keeps deny and unknown closed, and refuses source,
+argument and physical-artifact mutations (**3/3** focused). Repository owner
+closure is still running, so this is presently a non-retiring physical proof,
+not a final closure or authority claim.
+
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.

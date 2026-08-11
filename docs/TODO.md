@@ -4,6 +4,28 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Second physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the compiler's closed `combineTrust` and `boundaryTrusted`
+  scalar slice from `hardening-residency.ts` into the package-owned
+  `src/self-hosted/hardening-trust-boundary.fungi`. It uses typed `Verdict`,
+  exhaustive `check`, a fail-closed `Bool` boundary, and none of the forbidden
+  null/NaN, exception, `else if`, `for` or `loop` forms.
+- [x] Prove exact TypeScript and literal-table parity across all nine K3
+  conjunction vectors and all three release vectors. The exact Fungi source
+  reports zero strict errors and zero governance warnings; the owning compiler
+  package passes **6,344/6,344**.
+- [x] Compile the exact bytes through the existing clean SLIDE `ac8a041`
+  Verdict/Bool scalar profile into two physical `.slide` exports. Independently
+  re-admit and execute all twelve typed VOK vectors, keep deny and unknown
+  release values false, and refuse source mutation, malformed trits and a
+  one-byte physical artifact mutation (**3/3** focused, zero skips).
+- [ ] Close every generated owner and normal phase-close, then replace the
+  dossier's `CLOSURE_PENDING` status with a fresh repository evidence record.
+- [ ] Keep `hardening-residency.ts` and all compiler consumers active. This
+  non-retiring slice grants no bootstrap fixpoint, consumer switch, release,
+  production or TypeScript-retirement authority.
+
 ### First physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
 - [x] Translate the closed `triNot`, `triAnd`, `triOr` and `triNor` slice from
