@@ -20,6 +20,11 @@ counts or open items that a newer section explicitly supersedes.
   registry package passes **35/35**, including exact candidate identity and
   refusal of fully-authorized public publication while the live index is
   absent.
+- [x] Reconcile the production consumer with that denied live state. App Kernel
+  now proves exact bootstrap refusal, prevents caller freshness/revocation
+  scalars from reviving an absent index, and retains positive admission only
+  through the authenticated immutable-generation path (**223/223**). The full
+  repository lane passes **100/100 packages and 9,526 tests** in **287.7s**.
 - [ ] Perform the offline hybrid-signing ceremony and independently verify the
   resulting generation before restoring any live auth package. Until then,
   distribution, release and production authority remain denied.
