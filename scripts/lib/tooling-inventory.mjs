@@ -5,6 +5,9 @@ import {
   statSync,
 } from "node:fs";
 import { basename, join, relative, resolve, sep } from "node:path";
+import { isValidatedAssuranceEntry } from "./assurance-fabric/manifest.mjs";
+import { validateAssuranceManifest } from "./assurance-fabric/manifest.mjs";
+import { parseStrictJsonBytes } from "./assurance-fabric/strict-json.mjs";
 
 const POLICY_KEYS = Object.freeze([
   "schemaVersion",
@@ -171,11 +174,6 @@ function extractScriptCommands(source) {
   );
 }
 
-function discoverPhaseCloseCommands(root) {
-  const path = join(root, "scripts", "run-phase-close.mjs");
-  return existsSync(path) ? extractScriptCommands(readText(path)) : [];
-}
-
 function discoverCiCommands(root) {
   const directory = join(root, ".github", "workflows");
   const commands = [];
@@ -259,12 +257,29 @@ export function discoverTooling(root) {
     root: absoluteRoot,
     packages: discoverPackages(absoluteRoot, errors),
     tools,
-    directPhaseClose: discoverPhaseCloseCommands(absoluteRoot),
+    directPhaseClose: [],
     ciCommands: discoverCiCommands(absoluteRoot),
     externalTests: [...registeredEvidence, ...metaGateEvidence]
       .sort((a, b) => a.tool.localeCompare(b.tool)),
     errors,
   };
+}
+
+export function loadAssuranceManifest(root) {
+  const absoluteRoot = resolve(root);
+  const path = join(absoluteRoot, "governance", "phase-close-commands.json");
+  const bytes = readFileSync(path);
+  const value = parseStrictJsonBytes(bytes, {
+    label: "governance/phase-close-commands.json",
+    maxBytes: 67_108_864,
+  });
+  const admitted = validateAssuranceManifest(value, absoluteRoot);
+  if (admitted.kind !== "accepted") {
+    const error = new Error(`${admitted.code}: ${admitted.detail}`);
+    error.code = admitted.code;
+    throw error;
+  }
+  return admitted.value;
 }
 
 export function loadToolingPolicy(root) {
@@ -392,8 +407,11 @@ export function validateToolingContract(inventory, policy) {
     }
   }
 
+  const cadenceRecords = Array.isArray(inventory.cadenceCoverage) ? inventory.cadenceCoverage : [];
   const coveredTools = new Set([
-    ...inventory.directPhaseClose,
+    ...cadenceRecords
+      .filter((record) => record.disposition !== "on-demand")
+      .map((record) => record.tool),
     ...inventory.ciCommands,
     ...inventory.externalTests.map((entry) => entry.tool),
   ]);
@@ -443,4 +461,124 @@ export function validateToolingContract(inventory, policy) {
 
 export function relativeToolingPath(root, path) {
   return relative(resolve(root), resolve(path)).split(sep).join("/");
+}
+
+function manifestToolName(entry) {
+  if (entry.execution.kind !== "process") return undefined;
+  const token = entry.execution.command.find((item) =>
+    /^scripts\/[A-Za-z0-9_.-]+\.(?:mjs|cjs)$/u.test(item));
+  return token === undefined ? undefined : token.slice("scripts/".length);
+}
+
+function ordinal(left, right) {
+  return Buffer.compare(Buffer.from(left, "utf8"), Buffer.from(right, "utf8"));
+}
+
+function exactException(policy, toolName) {
+  const value = isPlainObject(policy?.toolExceptions)
+    ? policy.toolExceptions[toolName]
+    : undefined;
+  return recordIsExact(value, TOOL_EXCEPTION_KEYS);
+}
+
+export function deriveCadenceCoverage(inventory, manifest, policy) {
+  try {
+    if (!inventory || !Array.isArray(inventory.tools)
+        || !manifest || !Array.isArray(manifest.entries)
+        || !manifest.entries.every(isValidatedAssuranceEntry)) {
+      throw new Error("an exact tooling inventory and accepted manifest are required");
+    }
+    const toolsByName = new Map(inventory.tools.map((tool) => [tool.name, tool]));
+    if (toolsByName.size !== inventory.tools.length) throw new Error("tool inventory contains duplicate identities");
+    const facts = new Map(inventory.tools.map((tool) => [tool.name, {
+      tool: tool.name,
+      directEntryIds: new Set(),
+      transitiveEntryIds: new Set(),
+      via: [],
+      cadences: new Set(),
+      lifecycle: new Set(),
+      legacy: false,
+    }]));
+
+    for (const entry of manifest.entries) {
+      const directName = manifestToolName(entry);
+      if (directName === undefined) continue;
+      const direct = facts.get(directName);
+      if (!direct) throw new Error(`${entry.id} names missing or non-regular tool scripts/${directName}`);
+      direct.directEntryIds.add(entry.id);
+      for (const cadence of entry.cadences) direct.cadences.add(cadence);
+      direct.lifecycle.add(entry.lifecycle.retirement);
+      if (entry.toolClass === "legacy-oracle") direct.legacy = true;
+      for (const nestedPath of entry.nestedTools) {
+        const nestedName = nestedPath.slice("scripts/".length);
+        const nested = facts.get(nestedName);
+        if (!nested) throw new Error(`${entry.id} names missing or non-regular nested tool ${nestedPath}`);
+        nested.transitiveEntryIds.add(entry.id);
+        for (const cadence of entry.cadences) nested.cadences.add(cadence);
+        nested.lifecycle.add(entry.lifecycle.retirement);
+        nested.via.push([entry.id, directName, nestedName]);
+      }
+    }
+
+    const external = new Set((inventory.externalTests ?? []).map((item) => item.tool));
+    const ci = new Set(inventory.ciCommands ?? []);
+    const violations = [];
+    const records = [...facts.values()].map((fact) => {
+      if (fact.lifecycle.size > 1) throw new Error(`${fact.tool} has conflicting lifecycle custody`);
+      const scheduled = fact.directEntryIds.size > 0 || fact.transitiveEntryIds.size > 0 || ci.has(fact.tool);
+      let disposition;
+      if (fact.legacy) disposition = "legacy-active";
+      else if (scheduled) disposition = "scheduled";
+      else if (external.has(fact.tool)) disposition = "self-test-transitive";
+      else if (exactException(policy, fact.tool)) disposition = "exception";
+      else disposition = "on-demand";
+      const source = toolsByName.get(fact.tool);
+      if ((source.category === "audit" || source.category === "lint")
+          && disposition === "on-demand") {
+        violations.push(violation(
+          "TOOLING-AUDIT-UNCOVERED",
+          fact.tool,
+          "Audit/lint has no manifest-derived disposition, CI custody, fixture evidence, or exact exception.",
+        ));
+      }
+      const viaKeys = new Set();
+      const via = fact.via
+        .filter((route) => {
+          const key = JSON.stringify(route);
+          if (viaKeys.has(key)) return false;
+          viaKeys.add(key);
+          return true;
+        })
+        .sort((left, right) => ordinal(JSON.stringify(left), JSON.stringify(right)));
+      return Object.freeze({
+        tool: fact.tool,
+        directEntryIds: Object.freeze([...fact.directEntryIds].sort(ordinal)),
+        transitiveEntryIds: Object.freeze([...fact.transitiveEntryIds].sort(ordinal)),
+        via: Object.freeze(via.map((route) => Object.freeze(route))),
+        cadences: Object.freeze([...fact.cadences].sort(ordinal)),
+        lifecycle: fact.lifecycle.size === 1 ? [...fact.lifecycle][0] : "not-applicable",
+        disposition,
+      });
+    }).sort((left, right) => ordinal(left.tool, right.tool));
+
+    const legacyConsumers = manifest.entries
+      .filter((entry) => entry.toolClass === "legacy-oracle")
+      .map((entry) => Object.freeze({ controlId: entry.id, consumerIds: Object.freeze([entry.id]) }))
+      .sort((left, right) => ordinal(left.controlId, right.controlId));
+    return Object.freeze({
+      kind: "accepted",
+      records: Object.freeze(records),
+      legacyConsumers: Object.freeze(legacyConsumers),
+      violations: Object.freeze(violations.sort((left, right) =>
+        ordinal(left.code, right.code) || ordinal(left.subject, right.subject))),
+      authorizing: false,
+    });
+  } catch (error) {
+    return Object.freeze({
+      kind: "refused",
+      code: "TOOLING-CADENCE-COVERAGE-REFUSED",
+      detail: error instanceof Error ? error.message : "cadence coverage refused an unclassified input",
+      authorizing: false,
+    });
+  }
 }

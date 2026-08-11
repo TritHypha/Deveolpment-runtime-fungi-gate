@@ -32,6 +32,7 @@ const LEGACY_VERDICTS = new Set(["PASS", "FAIL", "REPORT_ONLY_PASS", "REPORT_ONL
 const LEGACY_TIERS = new Set(["phase-close", "exhaustive"]);
 const normalizedLegacyResults = new WeakSet();
 const CANDIDATE_KEYS = Object.freeze([
+  "acceptedExitCodes",
   "exitStatus",
   "id",
   "processControl",
@@ -259,6 +260,15 @@ function normalizeVariant(value, label, presentType) {
 function normalizeCandidate(value, index) {
   const fields = exactRecord(value, CANDIDATE_KEYS, `candidate results[${index}]`);
   const id = nonEmptyString(fields.id, `candidate results[${index}].id`);
+  const acceptedExitCodes = exactArray(
+    fields.acceptedExitCodes,
+    `candidate results[${index}].acceptedExitCodes`,
+  );
+  if (acceptedExitCodes.length < 1
+      || acceptedExitCodes.some((code) => !Number.isSafeInteger(code) || code < 0 || code > 255)
+      || new Set(acceptedExitCodes).size !== acceptedExitCodes.length) {
+    throw new TypeError(`candidate results[${index}].acceptedExitCodes is invalid`);
+  }
   if (!isAssuranceResult(fields.result)) {
     throw new TypeError(`candidate results[${index}].result must be a branded assurance result`);
   }
@@ -287,11 +297,12 @@ function normalizeCandidate(value, index) {
   const exitStatus = normalizeVariant(fields.exitStatus, `candidate results[${index}].exitStatus`, "integer");
   const signalStatus = normalizeVariant(fields.signalStatus, `candidate results[${index}].signalStatus`, "string");
   if (fields.result.tag === RESULT_TAG.LEGACY_EXIT
-      && (exitStatus.kind !== "present" || exitStatus.value !== 0 || signalStatus.kind !== "absent")) {
+      && (exitStatus.kind !== "present" || !acceptedExitCodes.includes(exitStatus.value)
+        || signalStatus.kind !== "absent")) {
     throw new TypeError(`candidate results[${index}] has contradictory result semantics`);
   }
   if (fields.result.tag === RESULT_TAG.BLOCKING_FAIL
-      && (exitStatus.kind !== "present" || exitStatus.value === 0)) {
+      && (exitStatus.kind !== "present" || acceptedExitCodes.includes(exitStatus.value))) {
     throw new TypeError(`candidate results[${index}] has contradictory result semantics`);
   }
   return Object.freeze({

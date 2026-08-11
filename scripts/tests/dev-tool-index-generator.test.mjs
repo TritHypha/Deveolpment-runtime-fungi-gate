@@ -44,14 +44,7 @@ function fixture() {
     JSON.stringify({
       schemaVersion: 1,
       packageNoTest: {},
-      toolExceptions: {
-        "audit-fixture.mjs": {
-          class: "fixture",
-          reason: "The isolated fixture has no phase-close cadence.",
-          owner: "fixture",
-          reviewWhen: "The fixture gains a cadence runner.",
-        },
-      },
+      toolExceptions: {},
       generators: {},
     }),
   );
@@ -60,6 +53,23 @@ function fixture() {
     "scripts/audit-fixture.mjs",
     "// audit-fixture.mjs — isolated fixture audit with enough header detail.\nprocess.exit(0);\n",
   );
+  write(root, "governance/phase-close-commands.json", JSON.stringify({
+    schemaVersion: 1,
+    entries: [{
+      id: "audit:fixture", requirementId: "REQ-AUDIT-FIXTURE", satisfies: ["REQ-AUDIT-FIXTURE"],
+      execution: { kind: "process", command: ["node", "scripts/audit-fixture.mjs"] },
+      acceptedExitCodes: [0], leasePolicy: "none", cwd: ".", toolClass: "analyzer",
+      authorityClass: "blocking", cadences: ["normal"], outcomePolicy: "blocking",
+      subjects: { kind: "requirements", values: ["REQ-AUDIT-FIXTURE"], expectedCount: 1 },
+      timeoutMs: 30_000, maxOutputBytes: 1_048_576, generatedOutputs: [], nestedTools: [],
+      mutationPolicy: "read-only", platforms: [process.platform],
+      selfTest: { kind: "absent", reason: "fixture" }, predecessors: [],
+      lifecycle: {
+        replacementId: { kind: "absent", reason: "not replaced" }, overlap: "canonical",
+        retirement: "active", evidence: { kind: "absent", reason: "active" },
+      },
+    }],
+  }));
   return root;
 }
 

@@ -40,6 +40,8 @@ function candidateEntry(id, script, overrides = {}) {
     requirementId: `REQ-${id.toUpperCase()}`,
     satisfies: [`REQ-${id.toUpperCase()}`],
     execution: { kind: "process", command: ["node", script] },
+    acceptedExitCodes: [0],
+    leasePolicy: "none",
     cwd: ".",
     toolClass: "legacy-oracle",
     authorityClass: "blocking",
@@ -49,6 +51,7 @@ function candidateEntry(id, script, overrides = {}) {
     timeoutMs: 5_000,
     maxOutputBytes: 4096,
     generatedOutputs: [],
+    nestedTools: [],
     mutationPolicy: "read-only",
     platforms: [process.platform],
     selfTest: { kind: "absent", reason: "fixture" },
@@ -77,6 +80,7 @@ function fixture(options = {}) {
   temporaryRoots.push(root);
   mkdirSync(join(root, "governance"), { recursive: true });
   writeFileSync(join(root, "green.mjs"), "process.exit(0)\n");
+  writeFileSync(join(root, "green-two.mjs"), "process.exit(0)\n");
   writeFileSync(join(root, "red.mjs"), "process.exit(7)\n");
   writeFileSync(join(root, "drift.mjs"), [
     'import { spawnSync } from "node:child_process";',
@@ -107,8 +111,8 @@ function fixture(options = {}) {
   const missing = writeCandidate(root, "candidate-missing.json", [candidateEntry("green", "green.mjs")]);
   const mismatch = writeCandidate(root, "candidate-mismatch.json", [
     candidateEntry("green", "green.mjs"),
-    candidateEntry("red", "green.mjs", {
-      subjects: { kind: "files", values: ["green.mjs"], expectedCount: 1 },
+    candidateEntry("red", "green-two.mjs", {
+      subjects: { kind: "files", values: ["green-two.mjs"], expectedCount: 1 },
     }),
   ]);
 
@@ -173,6 +177,7 @@ function candidateRecord(id, exit = 0, trit = TRIT.UNKNOWN) {
     : SOURCE_CLASS.LEGACY_EXIT;
   return {
     id,
+    acceptedExitCodes: [0],
     result: makeAssuranceResult({
       tag,
       sourceClass,

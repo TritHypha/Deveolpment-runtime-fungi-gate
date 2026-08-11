@@ -8,17 +8,17 @@ import {
   compareResultSets,
   normalizeLegacyReport,
 } from "./lib/assurance-fabric/differential.mjs";
-import { runLegacyEntry } from "./lib/assurance-fabric/legacy-adapter.mjs";
-import {
-  selectCadenceEntries,
-  validateAssuranceManifest,
-} from "./lib/assurance-fabric/manifest.mjs";
+import { buildCadencePlan } from "./lib/assurance-fabric/cadence-plan.mjs";
+import { runCadencePlan } from "./lib/assurance-fabric/cadence-runner.mjs";
+import { validateAssuranceManifest } from "./lib/assurance-fabric/manifest.mjs";
 import { createUnsafeObservationIntake } from "./lib/assurance-fabric/unsafe-observation.mjs";
 import { parseStrictJsonBytes } from "./lib/assurance-fabric/strict-json.mjs";
+import suiteLeaseModule from "./lib/suite-run-lease.cjs";
 
 const { runOwnedProcessSync } = ownedProcessTree;
+const { acquireSuiteLease } = suiteLeaseModule;
 const SCRIPT_ROOT = dirname(fileURLToPath(import.meta.url));
-const PHASE_CLOSE = join(SCRIPT_ROOT, "run-phase-close.mjs");
+const LEGACY_PHASE_CLOSE = join(SCRIPT_ROOT, "run-phase-close-legacy.mjs");
 const CADENCES = new Set(["changed", "normal", "nightly", "exhaustive", "release", "on-demand"]);
 const GIT_HEAD = /^[a-f0-9]{40}$/u;
 
@@ -146,6 +146,37 @@ function emit(report, status) {
   process.exitCode = status;
 }
 
+function observedStatus(value, reason) {
+  return Number.isSafeInteger(value)
+    ? Object.freeze({ kind: "present", value })
+    : Object.freeze({ kind: "absent", reason });
+}
+
+function observedSignal(value) {
+  return typeof value === "string" && value.length > 0
+    ? Object.freeze({ kind: "present", value })
+    : Object.freeze({ kind: "absent", reason: "process signal was not observed" });
+}
+
+function candidateObservation(observation, intake) {
+  const stdout = typeof observation.output.stdout === "string" ? observation.output.stdout : "";
+  const stderr = typeof observation.output.stderr === "string" ? observation.output.stderr : "";
+  const stdoutHandle = intake.capture(Buffer.from(stdout, "utf8"), `${observation.entry.id}:stdout`);
+  const stderrHandle = intake.capture(Buffer.from(stderr, "utf8"), `${observation.entry.id}:stderr`);
+  return Object.freeze({
+    id: observation.entry.id,
+    acceptedExitCodes: observation.entry.acceptedExitCodes,
+    result: observation.result,
+    stdoutHandle,
+    stderrHandle,
+    stdoutState: intake.stateOf(stdoutHandle),
+    stderrState: intake.stateOf(stderrHandle),
+    exitStatus: observedStatus(observation.output.status, "numeric exit status was not observed"),
+    signalStatus: observedSignal(observation.output.signal),
+    processControl: Object.freeze({ ...observation.processControl }),
+  });
+}
+
 function unknownReport(error) {
   return Object.freeze({
     tool: "run-assurance-shadow",
@@ -200,9 +231,13 @@ function main() {
 
   const preHead = gitHead(root);
   const buildPoint = Object.freeze({ kind: "present", value: `git:${preHead}` });
+  const liveManifestPath = join(root, "governance", "phase-close-commands.json");
+  const legacyArgs = [LEGACY_PHASE_CLOSE];
+  if (samePath(manifestPath, liveManifestPath)) legacyArgs.push("--static-oracle");
+  legacyArgs.push("--root", root, "--tier", tierForCadence(options.cadence), "--json");
   const legacy = runOwned(
     process.execPath,
-    [PHASE_CLOSE, "--root", root, "--tier", tierForCadence(options.cadence), "--json"],
+    legacyArgs,
     root,
     3_600_000,
     67_108_864,
@@ -237,11 +272,24 @@ function main() {
     throw new ShadowRefusal("BUILD_POINT_DRIFT", "Git HEAD changed during the legacy run", buildPoint);
   }
 
-  const selected = selectCadenceEntries(manifestResult.value, options.cadence);
-  const candidateRecords = selected.map((entry) => Object.freeze({
-    id: entry.id,
-    ...runLegacyEntry(entry, { root, intake, cleanupGraceMs: 2_000 }),
-  }));
+  const planned = buildCadencePlan(manifestResult.value, {
+    cadence: options.cadence,
+    platform: process.platform,
+  });
+  if (planned.kind !== "accepted") {
+    throw new ShadowRefusal(planned.code, planned.detail, buildPoint);
+  }
+  const candidateRecords = [];
+  const suiteLease = acquireSuiteLease({ root, commandClass: "phase-close" });
+  try {
+    runCadencePlan(planned.value, {
+      root,
+      suiteLease,
+      observe: (observation) => candidateRecords.push(candidateObservation(observation, intake)),
+    });
+  } finally {
+    suiteLease.release();
+  }
   const postCandidateHead = gitHead(root);
   if (postCandidateHead !== preHead) {
     throw new ShadowRefusal("BUILD_POINT_DRIFT", "Git HEAD changed during the candidate run", buildPoint);

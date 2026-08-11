@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   mkdirSync,
   mkdtempSync,
+  existsSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -46,10 +47,36 @@ function fixture(files, policy = validEmptyPolicy()) {
   roots.push(root);
   write(root, "galerina.workspace.json", JSON.stringify({ packages: [] }));
   write(root, "governance/tooling-policy.json", JSON.stringify(policy));
+  write(root, "scripts/fixture-runner.mjs", "process.exit(0);\n");
+  write(root, "governance/phase-close-commands.json", JSON.stringify({
+    schemaVersion: 1,
+    entries: [manifestEntry("fixture:runner", "scripts/fixture-runner.mjs")],
+  }));
   for (const [relativePath, contents] of Object.entries(files)) {
     write(root, relativePath, contents);
   }
   return root;
+}
+
+function manifestEntry(id, script) {
+  const requirementId = `REQ-${id.toUpperCase().replace(/[^A-Z0-9]/g, "-")}`;
+  return {
+    id, requirementId, satisfies: [requirementId],
+    execution: { kind: "process", command: ["node", script] },
+    acceptedExitCodes: [0], leasePolicy: "none", cwd: ".",
+    toolClass: "analyzer", authorityClass: "blocking", cadences: ["normal"],
+    outcomePolicy: "blocking",
+    subjects: { kind: "requirements", values: [requirementId], expectedCount: 1 },
+    timeoutMs: 30_000, maxOutputBytes: 1_048_576,
+    generatedOutputs: [], nestedTools: [], mutationPolicy: "read-only",
+    platforms: [process.platform], selfTest: { kind: "absent", reason: "fixture" },
+    predecessors: [],
+    lifecycle: {
+      replacementId: { kind: "absent", reason: "not replaced" },
+      overlap: "canonical", retirement: "active",
+      evidence: { kind: "absent", reason: "active" },
+    },
+  };
 }
 
 function validate(root) {
@@ -68,10 +95,14 @@ function validate(root) {
     "function",
     "validateToolingContract must be implemented",
   );
-  return api.validateToolingContract(
-    api.discoverTooling(root),
-    api.loadToolingPolicy(root),
-  );
+  const inventory = api.discoverTooling(root);
+  const policy = api.loadToolingPolicy(root);
+  if (existsSync(join(root, "governance", "phase-close-commands.json"))) {
+    const coverage = api.deriveCadenceCoverage(inventory, api.loadAssuranceManifest(root), policy);
+    assert.equal(coverage.kind, "accepted", coverage.detail);
+    inventory.cadenceCoverage = coverage.records;
+  }
+  return api.validateToolingContract(inventory, policy);
 }
 
 test("an undisposed audit is a blocking violation", () => {
@@ -111,8 +142,10 @@ test("a cadence-tested blocking meta-gate covers the self-tests it executes", ()
 test("a phase-close command disposes the exact audit", () => {
   const root = fixture({
     "scripts/audit-covered.mjs": "process.exit(0);\n",
-    "scripts/run-phase-close.mjs":
-      'run("audit:covered", "node", ["scripts/audit-covered.mjs"]);\n',
+    "governance/phase-close-commands.json": JSON.stringify({
+      schemaVersion: 1,
+      entries: [manifestEntry("audit:covered", "scripts/audit-covered.mjs")],
+    }),
   });
 
   assert.deepEqual(validate(root), []);

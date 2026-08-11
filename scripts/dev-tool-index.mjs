@@ -28,7 +28,9 @@ import { readdirSync, readFileSync, existsSync, writeFileSync, mkdirSync, statSy
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  deriveCadenceCoverage,
   discoverTooling,
+  loadAssuranceManifest,
   loadToolingPolicy,
   validateToolingContract,
 } from "./lib/tooling-inventory.mjs";
@@ -136,8 +138,17 @@ function toolConcerns(hay) {
   return [...s];
 }
 
-const phaseClose = read(join(SCRIPTS_DIR, "run-phase-close.mjs"));
-const gated = new Set([...phaseClose.matchAll(/"scripts\/([\w.\-]+)"/g)].map((m) => m[1]));
+const toolingInventory = discoverTooling(ROOT);
+const toolingPolicy = loadToolingPolicy(ROOT);
+const cadenceResult = deriveCadenceCoverage(
+  toolingInventory,
+  loadAssuranceManifest(ROOT),
+  toolingPolicy,
+);
+if (cadenceResult.kind !== "accepted") {
+  throw new Error(`${cadenceResult.code}: ${cadenceResult.detail}`);
+}
+const cadenceByTool = new Map(cadenceResult.records.map((record) => [record.tool, record]));
 
 const tools = [];
 for (const f of existsSync(SCRIPTS_DIR) ? readdirSync(SCRIPTS_DIR) : []) {
@@ -148,10 +159,12 @@ for (const f of existsSync(SCRIPTS_DIR) ? readdirSync(SCRIPTS_DIR) : []) {
   if (!statSync(p).isFile()) continue;
   const src = read(p);
   const purpose = toolPurpose(src);
+  const cadence = cadenceByTool.get(f);
   tools.push({
     name: f, category: toolCategory(f), purpose,
     selfTest: /--self-test|self[-\s]?test/.test(src),
-    inCadence: gated.has(f),
+    inCadence: cadence !== undefined && cadence.disposition !== "on-demand",
+    cadenceDisposition: cadence?.disposition ?? "on-demand",
     // Tag concerns from the tool's NAME + its header block (first ~2.5k chars) — the header
     // documents what it checks (e.g. sink-canonicality names SECRET/PRIVACY egress), so this is
     // more accurate than the one-line purpose alone.
@@ -174,10 +187,12 @@ const gaps = {
 };
 let contractViolations;
 try {
-  contractViolations = validateToolingContract(
-    discoverTooling(ROOT),
-    loadToolingPolicy(ROOT),
-  );
+  toolingInventory.cadenceCoverage = cadenceResult.records;
+  toolingInventory.legacyConsumers = cadenceResult.legacyConsumers;
+  contractViolations = [...new Map(
+    [...cadenceResult.violations, ...validateToolingContract(toolingInventory, toolingPolicy)]
+      .map((item) => [JSON.stringify([item.code, item.subject]), item]),
+  ).values()];
 } catch (error) {
   contractViolations = [{
     code: error.code || "TOOLING-CONTRACT-ERROR",
@@ -203,6 +218,8 @@ const summary = {
     proofs: proofCount,
   },
   packages, tools, coverage: concernToTools, gaps, contractViolations,
+  cadenceCoverage: cadenceResult.records,
+  legacyConsumers: cadenceResult.legacyConsumers,
 };
 
 // ── 4. RENDER ────────────────────────────────────────────────────────────────

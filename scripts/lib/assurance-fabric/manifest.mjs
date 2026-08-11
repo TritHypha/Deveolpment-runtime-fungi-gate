@@ -3,6 +3,7 @@ import { types as utilTypes } from "node:util";
 
 const ROOT_KEYS = Object.freeze(["entries", "schemaVersion"]);
 const ENTRY_KEYS = Object.freeze([
+  "acceptedExitCodes",
   "authorityClass",
   "cadences",
   "cwd",
@@ -10,8 +11,10 @@ const ENTRY_KEYS = Object.freeze([
   "generatedOutputs",
   "id",
   "lifecycle",
+  "leasePolicy",
   "maxOutputBytes",
   "mutationPolicy",
+  "nestedTools",
   "outcomePolicy",
   "platforms",
   "predecessors",
@@ -32,10 +35,12 @@ const MUTATION_POLICIES = new Set(["read-only", "declared-outputs"]);
 const PLATFORMS = new Set(["win32", "linux", "darwin"]);
 const OVERLAPS = new Set(["canonical", "overlap", "replacement-candidate"]);
 const RETIREMENTS = new Set(["active", "shadow", "retirement-candidate", "retired"]);
+const LEASE_POLICIES = new Set(["none", "suite-child"]);
 const BUILTIN_EXECUTABLES = new Set(["node", "npm", "git", "cargo"]);
 const RECEIPT_VERIFIERS = new Set(["graph-all-semantic-v1"]);
 const SHELL_METACHARACTERS = /[;&|`$<>\u0000\r\n]/u;
 const WINDOWS_DRIVE_RELATIVE = /^[A-Za-z]:/u;
+const NESTED_TOOL_PATH = /^scripts\/[A-Za-z0-9_.-]+\.(?:mjs|cjs)$/u;
 const acceptedManifests = new WeakSet();
 const acceptedEntries = new WeakSet();
 
@@ -138,6 +143,15 @@ function uniqueStrings(value, label, minimum = 0, admitted) {
   return items;
 }
 
+function uniqueExitCodes(value, label) {
+  const items = exactArray(value, label, 1).map((item, index) =>
+    boundedInteger(item, 0, 255, `${label}[${index}]`));
+  if (new Set(items).size !== items.length) {
+    refuse("ASSURANCE-MANIFEST-DUPLICATE", `${label} contains a duplicate value`);
+  }
+  return items;
+}
+
 function isInside(root, target) {
   const rel = relative(root, target);
   return rel === "" || (!isAbsolute(rel) && rel !== ".." && !rel.startsWith(`..\\`) && !rel.startsWith("../"));
@@ -151,6 +165,14 @@ function repositoryPath(value, root, label) {
   const target = resolve(root, path);
   if (!isInside(root, target)) {
     refuse("ASSURANCE-MANIFEST-PATH", `${label} escapes the repository root`);
+  }
+  return path;
+}
+
+function nestedToolPath(value, root, label) {
+  const path = repositoryPath(value, root, label);
+  if (!NESTED_TOOL_PATH.test(path)) {
+    refuse("ASSURANCE-MANIFEST-PATH", `${label} must name one root scripts MJS/CJS tool`);
   }
   return path;
 }
@@ -284,9 +306,21 @@ function cloneEntry(value, root, index) {
   );
   const generatedOutputs = uniqueStrings(fields.generatedOutputs, `${label}.generatedOutputs`)
     .map((path) => repositoryPath(path, root, `${label}.generatedOutputs`));
+  const nestedTools = uniqueStrings(fields.nestedTools, `${label}.nestedTools`)
+    .map((path, nestedIndex) => nestedToolPath(path, root, `${label}.nestedTools[${nestedIndex}]`));
   const replacementId = optionalId(lifecycle.replacementId, `${label}.lifecycle.replacementId`);
   const retirement = enumValue(lifecycle.retirement, RETIREMENTS, `${label}.lifecycle.retirement`);
   const evidence = lifecycleEvidence(lifecycle.evidence, `${label}.lifecycle.evidence`);
+  const subjectValues = uniqueStrings(subjects.values, `${label}.subjects.values`, 1);
+  const subjectExpectedCount = boundedInteger(
+    subjects.expectedCount,
+    1,
+    Number.MAX_SAFE_INTEGER,
+    `${label}.subjects.expectedCount`,
+  );
+  if (subjectExpectedCount !== subjectValues.length) {
+    refuse("ASSURANCE-MANIFEST-CONSERVATION", `${label}.subjects.expectedCount must equal values.length`);
+  }
   if ((retirement === "retirement-candidate" || retirement === "retired")
       && evidence.kind !== "present") {
     refuse("ASSURANCE-MANIFEST-LIFECYCLE", `${label} retirement requires exact evidence`);
@@ -303,6 +337,8 @@ function cloneEntry(value, root, index) {
     requirementId: nonEmptyString(fields.requirementId, `${label}.requirementId`),
     satisfies: uniqueStrings(fields.satisfies, `${label}.satisfies`, 1),
     execution: execution(fields.execution, root, `${label}.execution`),
+    acceptedExitCodes: uniqueExitCodes(fields.acceptedExitCodes, `${label}.acceptedExitCodes`),
+    leasePolicy: enumValue(fields.leasePolicy, LEASE_POLICIES, `${label}.leasePolicy`),
     cwd: repositoryPath(fields.cwd, root, `${label}.cwd`),
     toolClass: enumValue(fields.toolClass, TOOL_CLASSES, `${label}.toolClass`),
     authorityClass: enumValue(fields.authorityClass, AUTHORITY_CLASSES, `${label}.authorityClass`),
@@ -310,12 +346,13 @@ function cloneEntry(value, root, index) {
     outcomePolicy: enumValue(fields.outcomePolicy, OUTCOME_POLICIES, `${label}.outcomePolicy`),
     subjects: {
       kind: enumValue(subjects.kind, SUBJECT_KINDS, `${label}.subjects.kind`),
-      values: uniqueStrings(subjects.values, `${label}.subjects.values`, 1),
-      expectedCount: boundedInteger(subjects.expectedCount, 1, Number.MAX_SAFE_INTEGER, `${label}.subjects.expectedCount`),
+      values: subjectValues,
+      expectedCount: subjectExpectedCount,
     },
     timeoutMs: boundedInteger(fields.timeoutMs, 1, 3_600_000, `${label}.timeoutMs`),
     maxOutputBytes: boundedInteger(fields.maxOutputBytes, 1, 67_108_864, `${label}.maxOutputBytes`),
     generatedOutputs,
+    nestedTools,
     mutationPolicy: enumValue(fields.mutationPolicy, MUTATION_POLICIES, `${label}.mutationPolicy`),
     platforms: uniqueStrings(fields.platforms, `${label}.platforms`, 1, PLATFORMS),
     selfTest: selfTest(fields.selfTest, root, `${label}.selfTest`),

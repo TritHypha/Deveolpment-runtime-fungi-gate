@@ -17,6 +17,8 @@ function validEntry(overrides = {}) {
     requirementId: "REQ-ASSURANCE-001",
     satisfies: ["REQ-ASSURANCE-001"],
     execution: { kind: "process", command: ["node", "fixture.mjs"] },
+    acceptedExitCodes: [0],
+    leasePolicy: "none",
     cwd: ".",
     toolClass: "analyzer",
     authorityClass: "blocking",
@@ -26,6 +28,7 @@ function validEntry(overrides = {}) {
     timeoutMs: 30_000,
     maxOutputBytes: 1_048_576,
     generatedOutputs: [],
+    nestedTools: [],
     mutationPolicy: "read-only",
     platforms: ["win32", "linux", "darwin"],
     selfTest: {
@@ -94,6 +97,8 @@ describe("candidate assurance manifest", () => {
     assertRefused(manifest([validEntry({ execution: { kind: "process", command: ["../outside-tool"] } })]));
     assertRefused(manifest([validEntry({ execution: { kind: "process", command: ["C:outside-tool"] } })]));
     assertRefused(manifest([validEntry({ generatedOutputs: ["../outside.json"] })]));
+    assertRefused(manifest([validEntry({ nestedTools: ["../outside.mjs"] })]));
+    assertRefused(manifest([validEntry({ nestedTools: ["scripts/not-a-tool.txt"] })]));
     assertRefused(manifest([validEntry({ maxOutputBytes: Number.NaN })]));
     assertRefused(manifest([validEntry({ timeoutMs: Number.POSITIVE_INFINITY })]));
   });
@@ -103,6 +108,9 @@ describe("candidate assurance manifest", () => {
       subjects: { kind: "files", values: ["fixture.mjs"], expectedCount: 0 },
     })]));
     assertRefused(manifest([validEntry({ platforms: ["linux", "linux"] })]));
+    assertRefused(manifest([validEntry({
+      subjects: { kind: "files", values: ["fixture.mjs"], expectedCount: 2 },
+    })]));
     assertRefused(new Proxy(manifest(), {}));
 
     let getterRan = false;

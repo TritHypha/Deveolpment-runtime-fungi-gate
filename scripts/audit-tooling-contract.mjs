@@ -9,7 +9,9 @@ import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import {
+  deriveCadenceCoverage,
   discoverTooling,
+  loadAssuranceManifest,
   loadToolingPolicy,
   validateToolingContract,
 } from "./lib/tooling-inventory.mjs";
@@ -35,6 +37,24 @@ function emptyPolicy() {
     packageNoTest: {},
     toolExceptions: {},
     generators: {},
+  };
+}
+
+function fixtureManifestEntry() {
+  return {
+    id: "audit:uncovered", requirementId: "REQ-AUDIT-UNCOVERED", satisfies: ["REQ-AUDIT-UNCOVERED"],
+    execution: { kind: "process", command: ["node", "scripts/audit-uncovered.mjs"] },
+    acceptedExitCodes: [0], leasePolicy: "none", cwd: ".",
+    toolClass: "analyzer", authorityClass: "blocking", cadences: ["normal"],
+    outcomePolicy: "blocking",
+    subjects: { kind: "requirements", values: ["REQ-AUDIT-UNCOVERED"], expectedCount: 1 },
+    timeoutMs: 30_000, maxOutputBytes: 1_048_576, generatedOutputs: [], nestedTools: [],
+    mutationPolicy: "read-only", platforms: [process.platform],
+    selfTest: { kind: "absent", reason: "fixture" }, predecessors: [],
+    lifecycle: {
+      replacementId: { kind: "absent", reason: "not replaced" }, overlap: "canonical",
+      retirement: "active", evidence: { kind: "absent", reason: "active" },
+    },
   };
 }
 
@@ -64,15 +84,19 @@ function runSelfTest() {
       item.code === "TOOLING-AUDIT-UNCOVERED"
       && item.subject === "audit-uncovered.mjs");
 
-    write(
-      fixtureRoot,
-      "scripts/run-phase-close.mjs",
-      'run("audit:uncovered", "node", ["scripts/audit-uncovered.mjs"]);\n',
+    write(fixtureRoot, "governance/phase-close-commands.json", JSON.stringify({
+      schemaVersion: 1,
+      entries: [fixtureManifestEntry()],
+    }));
+    const greenInventory = discoverTooling(fixtureRoot);
+    const greenPolicy = loadToolingPolicy(fixtureRoot);
+    const greenCoverage = deriveCadenceCoverage(
+      greenInventory,
+      loadAssuranceManifest(fixtureRoot),
+      greenPolicy,
     );
-    const green = validateToolingContract(
-      discoverTooling(fixtureRoot),
-      loadToolingPolicy(fixtureRoot),
-    );
+    greenInventory.cadenceCoverage = greenCoverage.kind === "accepted" ? greenCoverage.records : [];
+    const green = validateToolingContract(greenInventory, greenPolicy);
     const checks = [
       ["uncovered audit is refused", catchesUncovered],
       ["exact phase-close coverage clears the control", green.length === 0],
@@ -98,7 +122,18 @@ let inventory;
 let violations;
 try {
   inventory = discoverTooling(root);
-  violations = validateToolingContract(inventory, loadToolingPolicy(root));
+  const policy = loadToolingPolicy(root);
+  const coverage = deriveCadenceCoverage(inventory, loadAssuranceManifest(root), policy);
+  if (coverage.kind !== "accepted") throw Object.assign(new Error(coverage.detail), { code: coverage.code });
+  inventory.cadenceCoverage = coverage.records;
+  inventory.legacyConsumers = coverage.legacyConsumers;
+  inventory.directPhaseClose = coverage.records
+    .filter((record) => record.directEntryIds.length > 0)
+    .map((record) => record.tool);
+  violations = [...new Map(
+    [...coverage.violations, ...validateToolingContract(inventory, policy)]
+      .map((item) => [JSON.stringify([item.code, item.subject]), item]),
+  ).values()];
 } catch (error) {
   violations = [{
     code: error.code ?? "TOOLING-CONTRACT-INDETERMINATE",

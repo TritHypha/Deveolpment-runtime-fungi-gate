@@ -42,7 +42,7 @@ would force an ungoverned temporary fallback and is forbidden.
 - Consumes: one branded manifest from `validateAssuranceManifest(value, root)` and `{ cadence, platform }`.
 - Produces: `buildCadencePlan(manifest, options) -> { kind: "accepted", value: CadencePlan } | { kind: "refused", code, detail }`.
 - `CadencePlan` is branded/frozen and exposes `entries`, `discharged`, `requirements`, `cadence`, `platform`, and `authorizing: false`.
-- Each manifest entry adds exact field `satisfies` and replaces the bootstrap command field with a closed `execution` union. `satisfies` is a non-empty unique array of requirement IDs. `execution` is either `{ kind: "process", command }` or `{ kind: "predecessor-receipt", predecessorId, verifierId }`.
+- Each manifest entry adds exact fields `satisfies`, `acceptedExitCodes` and `leasePolicy`, and replaces the bootstrap command field with a closed `execution` union. `satisfies` is a non-empty unique array of requirement IDs; accepted exits are unique integers from 0 through 255; lease policy is `none` or `suite-child`. `execution` is either `{ kind: "process", command }` or `{ kind: "predecessor-receipt", predecessorId, verifierId }`.
 
 - [ ] **Step 1: Write failing closed-schema and planner tests**
 

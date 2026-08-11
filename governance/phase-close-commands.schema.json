@@ -49,6 +49,8 @@
         "requirementId",
         "satisfies",
         "execution",
+        "acceptedExitCodes",
+        "leasePolicy",
         "cwd",
         "toolClass",
         "authorityClass",
@@ -59,6 +61,7 @@
         "maxOutputBytes",
         "generatedOutputs",
         "mutationPolicy",
+        "nestedTools",
         "platforms",
         "selfTest",
         "predecessors",
@@ -96,6 +99,13 @@
             }
           ]
         },
+        "acceptedExitCodes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 }
+        },
+        "leasePolicy": { "enum": ["none", "suite-child"] },
         "cwd": { "$ref": "#/$defs/nonEmpty" },
         "toolClass": {
           "enum": ["analyzer", "generator", "test-runner", "verifier", "legacy-oracle"]
@@ -135,6 +145,14 @@
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "nestedTools": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^scripts/[A-Za-z0-9_.-]+\\.(mjs|cjs)$"
+          }
         },
         "mutationPolicy": { "enum": ["read-only", "declared-outputs"] },
         "platforms": {

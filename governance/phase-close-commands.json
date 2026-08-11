@@ -1,0 +1,6335 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "tests:core",
+      "requirementId": "REQ-PACKAGE-TESTS",
+      "satisfies": [
+        "REQ-PACKAGE-TESTS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-all-tests.cjs",
+          "--core"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "suite-child",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-graph-algorithms",
+          "galerina-core-economics",
+          "galerina-core-compiler",
+          "galerina-core-security"
+        ],
+        "expectedCount": 4
+      },
+      "timeoutMs": 1800000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:tooling-contract",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-TOOLING-CONTRACT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-TOOLING-CONTRACT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-tooling-contract.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-TOOLING-CONTRACT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:generator-contract",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-GENERATOR-CONTRACT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-GENERATOR-CONTRACT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-generator-contract-cadence.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-GENERATOR-CONTRACT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 600000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [
+        "scripts/audit-generator-contract.mjs"
+      ],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:benchmark-integrity",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-BENCHMARK-INTEGRITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-BENCHMARK-INTEGRITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-benchmarks",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-benchmarks"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "fungi:corpus-check",
+      "requirementId": "REQ-PHASE-CLOSE-FUNGI-CORPUS-CHECK",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-FUNGI-CORPUS-CHECK"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-fungi-corpus-check.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-FUNGI-CORPUS-CHECK"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 600000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "fungi:golden",
+      "requirementId": "REQ-PHASE-CLOSE-FUNGI-GOLDEN",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-FUNGI-GOLDEN"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/fungi-golden-probe.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-FUNGI-GOLDEN"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:wat-drift",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-WAT-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-WAT-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/emit-doc-wat.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-WAT-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:status-drift",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-STATUS-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-STATUS-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/gen-status-blocks.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-STATUS-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:roadmap-drift",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-ROADMAP-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-ROADMAP-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/gen-roadmap-subway.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-ROADMAP-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "lint:cast-hygiene",
+      "requirementId": "REQ-PHASE-CLOSE-LINT-CAST-HYGIENE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-LINT-CAST-HYGIENE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-cast-hygiene.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-LINT-CAST-HYGIENE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "registry-index:selftest",
+      "requirementId": "REQ-PHASE-CLOSE-REGISTRY-INDEX-SELFTEST",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-REGISTRY-INDEX-SELFTEST"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/registry-index-cli.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-REGISTRY-INDEX-SELFTEST"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:node-floor",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-NODE-FLOOR",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-NODE-FLOOR"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-node-dependencies.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-NODE-FLOOR"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:provenance",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-PROVENANCE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-PROVENANCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "packages-galerina/galerina-devtools-provenance/dist/cli.js",
+          "audit",
+          "examples/auth-service"
+        ]
+      },
+      "acceptedExitCodes": [
+        0,
+        2
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-PROVENANCE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "graph:all",
+      "requirementId": "REQ-PHASE-CLOSE-GRAPH-ALL",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-GRAPH-ALL"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/graph-all.mjs",
+          "--quiet",
+          "--check",
+          "--json"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-GRAPH-ALL"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 600000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [
+        "scripts/package-graph-generator.mjs",
+        "scripts/project-graph-generator.mjs",
+        "scripts/audit-graph-integrity.mjs",
+        "scripts/kb-graph-generator.mjs",
+        "scripts/dev-tool-index.mjs",
+        "scripts/fungi-source-capability-inventory.mjs",
+        "scripts/gen-assurance-semantic-graph.mjs"
+      ],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-index",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-INDEX",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-INDEX"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/code-index.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-INDEX"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:canonical-test-counts",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-CANONICAL-TEST-COUNTS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-CANONICAL-TEST-COUNTS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-canonical-test-counts.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-CANONICAL-TEST-COUNTS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-registry",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-REGISTRY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-REGISTRY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/gen-code-registry.mjs",
+          "--check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-REGISTRY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-catalog-coverage:selftest",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE-SELFTEST",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE-SELFTEST"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-code-catalog-coverage.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE-SELFTEST"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-catalog-coverage",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-code-catalog-coverage.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-CATALOG-COVERAGE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "twin-emit-parity",
+      "requirementId": "REQ-PHASE-CLOSE-TWIN-EMIT-PARITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TWIN-EMIT-PARITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-twin-emit-parity.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TWIN-EMIT-PARITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-collisions:selftest",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-COLLISIONS-SELFTEST",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-COLLISIONS-SELFTEST"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-diagnostic-code-collisions.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-COLLISIONS-SELFTEST"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "code-collisions",
+      "requirementId": "REQ-PHASE-CLOSE-CODE-COLLISIONS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CODE-COLLISIONS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-diagnostic-code-collisions.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CODE-COLLISIONS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "kb-index",
+      "requirementId": "REQ-PHASE-CLOSE-KB-INDEX",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-KB-INDEX"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/kb-index.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-KB-INDEX"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "lint:conventions",
+      "requirementId": "REQ-PHASE-CLOSE-LINT-CONVENTIONS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-LINT-CONVENTIONS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/lint-conventions.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-LINT-CONVENTIONS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "coverage:codes",
+      "requirementId": "REQ-PHASE-CLOSE-COVERAGE-CODES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-COVERAGE-CODES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-coverage.mjs",
+          "codes",
+          "--check",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-COVERAGE-CODES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "effect:canonicality",
+      "requirementId": "REQ-PHASE-CLOSE-EFFECT-CANONICALITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-EFFECT-CANONICALITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-effect-canonicality.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-EFFECT-CANONICALITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "perf:hotpath",
+      "requirementId": "REQ-PHASE-CLOSE-PERF-HOTPATH",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-PERF-HOTPATH"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-perf-hotpath.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-PERF-HOTPATH"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "fungi:runtime",
+      "requirementId": "REQ-PHASE-CLOSE-FUNGI-RUNTIME",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-FUNGI-RUNTIME"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-fungi-runtime.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-FUNGI-RUNTIME"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "oblivious",
+      "requirementId": "REQ-PHASE-CLOSE-OBLIVIOUS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-OBLIVIOUS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-oblivious.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-OBLIVIOUS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "gscm",
+      "requirementId": "REQ-PHASE-CLOSE-GSCM",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-GSCM"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-gscm.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-GSCM"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "checker:wiring",
+      "requirementId": "REQ-PHASE-CLOSE-CHECKER-WIRING",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CHECKER-WIRING"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-checker-wiring.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CHECKER-WIRING"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "sink:canonicality",
+      "requirementId": "REQ-PHASE-CLOSE-SINK-CANONICALITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-SINK-CANONICALITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-sink-canonicality.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-SINK-CANONICALITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "scratch-dir:hygiene",
+      "requirementId": "REQ-PHASE-CLOSE-SCRATCH-DIR-HYGIENE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-SCRATCH-DIR-HYGIENE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-scratchdir-hygiene.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-SCRATCH-DIR-HYGIENE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "muted:diagnostics",
+      "requirementId": "REQ-PHASE-CLOSE-MUTED-DIAGNOSTICS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-MUTED-DIAGNOSTICS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-muted-diagnostics.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-MUTED-DIAGNOSTICS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "effects:corpus",
+      "requirementId": "REQ-PHASE-CLOSE-EFFECTS-CORPUS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-EFFECTS-CORPUS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-corpus-effect-names.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-EFFECTS-CORPUS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "signed:fixtures",
+      "requirementId": "REQ-PHASE-CLOSE-SIGNED-FIXTURES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-SIGNED-FIXTURES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-signed-fixture-drift.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-SIGNED-FIXTURES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "path:leak",
+      "requirementId": "REQ-PHASE-CLOSE-PATH-LEAK",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-PATH-LEAK"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-path-leak.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-PATH-LEAK"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "remote-shell-install",
+      "requirementId": "REQ-PHASE-CLOSE-REMOTE-SHELL-INSTALL",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-REMOTE-SHELL-INSTALL"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-remote-shell-install.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-REMOTE-SHELL-INSTALL"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "private-doc-leak",
+      "requirementId": "REQ-PHASE-CLOSE-PRIVATE-DOC-LEAK",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-PRIVATE-DOC-LEAK"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-private-doc-leak.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-PRIVATE-DOC-LEAK"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "bench-report-stale",
+      "requirementId": "REQ-PHASE-CLOSE-BENCH-REPORT-STALE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-BENCH-REPORT-STALE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "packages-galerina/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs",
+          "--stale-only"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-BENCH-REPORT-STALE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "artifact-drift",
+      "requirementId": "REQ-PHASE-CLOSE-ARTIFACT-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-ARTIFACT-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-artifact-drift.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-ARTIFACT-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "silent-overwrite",
+      "requirementId": "REQ-PHASE-CLOSE-SILENT-OVERWRITE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-SILENT-OVERWRITE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-silent-overwrite.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-SILENT-OVERWRITE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "example-diagnostics",
+      "requirementId": "REQ-PHASE-CLOSE-EXAMPLE-DIAGNOSTICS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-EXAMPLE-DIAGNOSTICS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-example-diagnostics.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-EXAMPLE-DIAGNOSTICS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "claim:hygiene",
+      "requirementId": "REQ-PHASE-CLOSE-CLAIM-HYGIENE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-CLAIM-HYGIENE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-claim-hygiene.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-CLAIM-HYGIENE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:sections",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-SECTIONS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-SECTIONS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/component-health.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-SECTIONS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:percent-fresh",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-PERCENT-FRESH",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-PERCENT-FRESH"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/component-health.mjs",
+          "--audit-check"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-PERCENT-FRESH"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "no-redeclare",
+      "requirementId": "REQ-PHASE-CLOSE-NO-REDECLARE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-NO-REDECLARE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-no-redeclare.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-NO-REDECLARE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "wat-lowering",
+      "requirementId": "REQ-PHASE-CLOSE-WAT-LOWERING",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-WAT-LOWERING"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-wat-lowering.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "legacy-oracle",
+      "authorityClass": "legacy-oracle",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "legacy-exit",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-WAT-LOWERING"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "no admitted successor exists"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "zero-consumer and successor evidence are absent"
+        }
+      }
+    },
+    {
+      "id": "wasm-validate",
+      "requirementId": "REQ-PHASE-CLOSE-WASM-VALIDATE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-WASM-VALIDATE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-wasm-validate.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "legacy-oracle",
+      "authorityClass": "legacy-oracle",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "legacy-exit",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-WASM-VALIDATE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "no admitted successor exists"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "zero-consumer and successor evidence are absent"
+        }
+      }
+    },
+    {
+      "id": "dss-wasm-build",
+      "requirementId": "REQ-PHASE-CLOSE-DSS-WASM-BUILD",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DSS-WASM-BUILD"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-dss-wasm-build.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "legacy-oracle",
+      "authorityClass": "legacy-oracle",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "legacy-exit",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DSS-WASM-BUILD"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [
+        "build/dss-wasm"
+      ],
+      "nestedTools": [],
+      "mutationPolicy": "declared-outputs",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "no admitted successor exists"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "zero-consumer and successor evidence are absent"
+        }
+      }
+    },
+    {
+      "id": "emitter-completeness",
+      "requirementId": "REQ-PHASE-CLOSE-EMITTER-COMPLETENESS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-EMITTER-COMPLETENESS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-emitter-completeness.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-EMITTER-COMPLETENESS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "wat:invalid-triage",
+      "requirementId": "REQ-PHASE-CLOSE-WAT-INVALID-TRIAGE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-WAT-INVALID-TRIAGE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/wat-invalid-triage.mjs",
+          "--self-test"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-WAT-INVALID-TRIAGE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "arith-conformance",
+      "requirementId": "REQ-PHASE-CLOSE-ARITH-CONFORMANCE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-ARITH-CONFORMANCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-arithmetic-conformance.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-ARITH-CONFORMANCE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "report-blind-consumers",
+      "requirementId": "REQ-PHASE-CLOSE-REPORT-BLIND-CONSUMERS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-REPORT-BLIND-CONSUMERS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-report-blind-consumers.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-REPORT-BLIND-CONSUMERS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "auto-erasure-ratchet",
+      "requirementId": "REQ-PHASE-CLOSE-AUTO-ERASURE-RATCHET",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUTO-ERASURE-RATCHET"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-auto-erasure-ratchet.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUTO-ERASURE-RATCHET"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "gate-key-injectivity",
+      "requirementId": "REQ-PHASE-CLOSE-GATE-KEY-INJECTIVITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-GATE-KEY-INJECTIVITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-gate-key-injectivity.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-GATE-KEY-INJECTIVITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:reference-drift",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-REFERENCE-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-REFERENCE-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-reference-doc-drift.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-REFERENCE-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "name:collisions",
+      "requirementId": "REQ-PHASE-CLOSE-NAME-COLLISIONS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-NAME-COLLISIONS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-name-collisions.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-NAME-COLLISIONS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "workspace:pointers",
+      "requirementId": "REQ-PHASE-CLOSE-WORKSPACE-POINTERS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-WORKSPACE-POINTERS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/validate-workspace-pointers.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-WORKSPACE-POINTERS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "stage-execution",
+      "requirementId": "REQ-PHASE-CLOSE-STAGE-EXECUTION",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-STAGE-EXECUTION"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-stage-execution.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-STAGE-EXECUTION"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "kernel-fungi-twins",
+      "requirementId": "REQ-PHASE-CLOSE-KERNEL-FUNGI-TWINS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-KERNEL-FUNGI-TWINS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-kernel-fungi-twins.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-KERNEL-FUNGI-TWINS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "r4-twin-hashes",
+      "requirementId": "REQ-PHASE-CLOSE-R4-TWIN-HASHES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-R4-TWIN-HASHES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/gather-r4-twin-hashes.mjs",
+          "--verify-ledger"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-R4-TWIN-HASHES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "compiler-stage-twins",
+      "requirementId": "REQ-PHASE-CLOSE-COMPILER-STAGE-TWINS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-COMPILER-STAGE-TWINS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-compiler-stage-twins.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-COMPILER-STAGE-TWINS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "compiler-stage-hashes",
+      "requirementId": "REQ-PHASE-CLOSE-COMPILER-STAGE-HASHES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-COMPILER-STAGE-HASHES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-compiler-stage-hashes.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-COMPILER-STAGE-HASHES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "mutation-anchors",
+      "requirementId": "REQ-PHASE-CLOSE-MUTATION-ANCHORS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-MUTATION-ANCHORS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-mutation.mjs",
+          "--check-anchors"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-MUTATION-ANCHORS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "flowparam-fidelity",
+      "requirementId": "REQ-PHASE-CLOSE-FLOWPARAM-FIDELITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-FLOWPARAM-FIDELITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-flowparam-fidelity.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-FLOWPARAM-FIDELITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "wasmtime-presence",
+      "requirementId": "REQ-PHASE-CLOSE-WASMTIME-PRESENCE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-WASMTIME-PRESENCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-wasmtime-presence.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-WASMTIME-PRESENCE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "u2-version-floor",
+      "requirementId": "REQ-PHASE-CLOSE-U2-VERSION-FLOOR",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-U2-VERSION-FLOOR"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-u2-version-floor.mjs",
+          "--enforce"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-U2-VERSION-FLOOR"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:stray",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-STRAY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-STRAY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-stray-docs.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-STRAY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "doc:drift",
+      "requirementId": "REQ-PHASE-CLOSE-DOC-DRIFT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-DOC-DRIFT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-doc-drift.mjs",
+          "--soft"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-DOC-DRIFT"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "proofs:canonical",
+      "requirementId": "REQ-PHASE-CLOSE-PROOFS-CANONICAL",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-PROOFS-CANONICAL"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-proofs.mjs",
+          "--canonical-only"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-PROOFS-CANONICAL"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:r6-corpus",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-R6-CORPUS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-R6-CORPUS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "tests/r6-corpus/r6-parity.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TESTS-R6-CORPUS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:border-check",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-BORDER-CHECK",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-BORDER-CHECK"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "tests/border-check/border-check.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TESTS-BORDER-CHECK"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:cli-invoke-marshal",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-CLI-INVOKE-MARSHAL",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-CLI-INVOKE-MARSHAL"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "tests/cli-invoke-marshal/cli-invoke-marshal.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TESTS-CLI-INVOKE-MARSHAL"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:crypto-suites",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-CRYPTO-SUITES",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-CRYPTO-SUITES"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "tests/crypto-suites/crypto-suites.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TESTS-CRYPTO-SUITES"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:goals",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-GOALS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-GOALS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "tests/goals/goal-a-native-speed.test.mjs",
+          "tests/goals/goal-b-bitmask-gating.test.mjs",
+          "tests/goals/goal-c-no-system-crash.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "files",
+        "values": [
+          "tests/goals/goal-a-native-speed.test.mjs",
+          "tests/goals/goal-b-bitmask-gating.test.mjs",
+          "tests/goals/goal-c-no-system-crash.test.mjs"
+        ],
+        "expectedCount": 3
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:tooling",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-TOOLING",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-TOOLING"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=4",
+          "scripts/tests/aerospace-examples.test.mjs",
+          "scripts/tests/allowlist-sensitive.test.mjs",
+          "scripts/tests/assurance-cadence-plan.test.mjs",
+          "scripts/tests/assurance-evidence-dag.test.mjs",
+          "scripts/tests/assurance-generated-evidence.test.mjs",
+          "scripts/tests/assurance-legacy-adapter.test.mjs",
+          "scripts/tests/assurance-legacy-lifecycle.test.mjs",
+          "scripts/tests/assurance-manifest.test.mjs",
+          "scripts/tests/assurance-private-host.test.mjs",
+          "scripts/tests/assurance-result-model.test.mjs",
+          "scripts/tests/assurance-roadmap-evidence.test.mjs",
+          "scripts/tests/assurance-semantic-coverage.test.mjs",
+          "scripts/tests/assurance-semantic-generator.test.mjs",
+          "scripts/tests/assurance-semantic-graph.test.mjs",
+          "scripts/tests/assurance-transitive-inventory.test.mjs",
+          "scripts/tests/assurance-unsafe-observation.test.mjs",
+          "scripts/tests/audit-compiler-stage-twins-ledger.test.mjs",
+          "scripts/tests/audit-flat-package-topology.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-1.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-2.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-3.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-4.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-5.test.mjs",
+          "scripts/tests/audit-generator-contract.test.mjs",
+          "scripts/tests/beta-release-evidence-envelope.test.mjs",
+          "scripts/tests/beta-release-evidence-receipts.test.mjs",
+          "scripts/tests/beta-v1-release-admission.test.mjs",
+          "scripts/tests/build-receipt-bound-slide-package-cli.test.mjs",
+          "scripts/tests/canonical-test-count-consistency.test.mjs",
+          "scripts/tests/cg4-signing-boundary.test.mjs",
+          "scripts/tests/code-index-generator.test.mjs",
+          "scripts/tests/code-registry-generator.test.mjs",
+          "scripts/tests/codemod-boundary.test.mjs",
+          "scripts/tests/codes.test.mjs",
+          "scripts/tests/compiler-content-fingerprint.test.mjs",
+          "scripts/tests/component-health-readiness.test.mjs",
+          "scripts/tests/contract-registry-generator.test.mjs",
+          "scripts/tests/corpus-effect-names.test.mjs",
+          "scripts/tests/descriptive-diagnostic-identities.test.mjs",
+          "scripts/tests/dev-tool-index-generator.test.mjs",
+          "scripts/tests/dev-tools-code-catalog.test.mjs",
+          "scripts/tests/dev-tools-scripts.test.mjs",
+          "scripts/tests/devtools-package-contract.test.mjs",
+          "scripts/tests/diagnostic-code-audit.test.mjs",
+          "scripts/tests/export-slide-checked-decision-receipt.test.mjs",
+          "scripts/tests/flat-package-root-lock.integration.test.mjs",
+          "scripts/tests/flat-package-root-lock.test.mjs",
+          "scripts/tests/full-fungi-retirement-gate.test.mjs",
+          "scripts/tests/fungi-corpus-ownership.test.mjs",
+          "scripts/tests/fungi-golden-probe.test.mjs",
+          "scripts/tests/fungi-source-capability-inventory.test.mjs",
+          "scripts/tests/fuse-cli-refusals.test.mjs",
+          "scripts/tests/gate-admission-envelope.test.mjs",
+          "scripts/tests/gate-order6-link-plan.test.mjs",
+          "scripts/tests/gate-result-shape.test.mjs",
+          "scripts/tests/gate-selftests.test.mjs",
+          "scripts/tests/gather-r4-twin-hashes.test.mjs",
+          "scripts/tests/generator-contract.test.mjs",
+          "scripts/tests/graph-all.test.mjs",
+          "scripts/tests/host-boundary-effect-classification.test.mjs",
+          "scripts/tests/impact-executor.test.mjs",
+          "scripts/tests/kb-dir.test.mjs",
+          "scripts/tests/kb-graph-generator.test.mjs",
+          "scripts/tests/kb-index-generator.test.mjs",
+          "scripts/tests/memory-graph-generator.test.mjs",
+          "scripts/tests/owned-process-tree.test.mjs",
+          "scripts/tests/package-graph-generator.test.mjs",
+          "scripts/tests/phase-close-hook.test.mjs",
+          "scripts/tests/phase-close-profile.test.mjs",
+          "scripts/tests/platform-smoke.test.mjs",
+          "scripts/tests/post-slide-authority-receipts.test.mjs",
+          "scripts/tests/process-lease-budget.test.mjs",
+          "scripts/tests/project-graph-generator.test.mjs",
+          "scripts/tests/provenance-output-match.test.mjs",
+          "scripts/tests/receipt-bound-slide-build.integration.test.mjs",
+          "scripts/tests/receipt-bound-slide-build.test.mjs",
+          "scripts/tests/registry-package-artifact.test.mjs",
+          "scripts/tests/registry-static-host-build-recipe.test.mjs",
+          "scripts/tests/registry-static-host-source.test.mjs",
+          "scripts/tests/registry-static-host-toolchain.test.mjs",
+          "scripts/tests/registry-static-linked-host.integration.test.mjs",
+          "scripts/tests/release-evidence-authority-cli.test.mjs",
+          "scripts/tests/restore-verdict-slide-candidate.integration.test.mjs",
+          "scripts/tests/roadmap-subway-generator.test.mjs",
+          "scripts/tests/run-all-tests.test.mjs",
+          "scripts/tests/run-assurance-shadow.test.mjs",
+          "scripts/tests/run-generator-contract-cadence.test.mjs",
+          "scripts/tests/run-phase-close-special.test.mjs",
+          "scripts/tests/run-phase-close.test.mjs",
+          "scripts/tests/sbom-generator.test.mjs",
+          "scripts/tests/scrub-paths.test.mjs",
+          "scripts/tests/signed-fixture-guard.test.mjs",
+          "scripts/tests/status-blocks-generator.test.mjs",
+          "scripts/tests/suite-run-lease.test.mjs",
+          "scripts/tests/test-runner-policy.test.mjs",
+          "scripts/tests/tooling-contract.test.mjs",
+          "scripts/tests/ts-retirement-generator.test.mjs",
+          "scripts/tests/unit-registry-generator.test.mjs",
+          "scripts/tests/verify-platform-durability-evidence.test.mjs",
+          "scripts/tests/verify-slide-reference-evidence.test.mjs",
+          "scripts/tests/vok-authority-slide-candidate.integration.test.mjs",
+          "scripts/tests/wasmtime-oracle-layout.test.mjs",
+          "scripts/tests/web-stub-guard.test.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "files",
+        "values": [
+          "scripts/tests/aerospace-examples.test.mjs",
+          "scripts/tests/allowlist-sensitive.test.mjs",
+          "scripts/tests/assurance-cadence-plan.test.mjs",
+          "scripts/tests/assurance-evidence-dag.test.mjs",
+          "scripts/tests/assurance-generated-evidence.test.mjs",
+          "scripts/tests/assurance-legacy-adapter.test.mjs",
+          "scripts/tests/assurance-legacy-lifecycle.test.mjs",
+          "scripts/tests/assurance-manifest.test.mjs",
+          "scripts/tests/assurance-private-host.test.mjs",
+          "scripts/tests/assurance-result-model.test.mjs",
+          "scripts/tests/assurance-roadmap-evidence.test.mjs",
+          "scripts/tests/assurance-semantic-coverage.test.mjs",
+          "scripts/tests/assurance-semantic-generator.test.mjs",
+          "scripts/tests/assurance-semantic-graph.test.mjs",
+          "scripts/tests/assurance-transitive-inventory.test.mjs",
+          "scripts/tests/assurance-unsafe-observation.test.mjs",
+          "scripts/tests/audit-compiler-stage-twins-ledger.test.mjs",
+          "scripts/tests/audit-flat-package-topology.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-1.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-2.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-3.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-4.test.mjs",
+          "scripts/tests/audit-gate-evidence-group-5.test.mjs",
+          "scripts/tests/audit-generator-contract.test.mjs",
+          "scripts/tests/beta-release-evidence-envelope.test.mjs",
+          "scripts/tests/beta-release-evidence-receipts.test.mjs",
+          "scripts/tests/beta-v1-release-admission.test.mjs",
+          "scripts/tests/build-receipt-bound-slide-package-cli.test.mjs",
+          "scripts/tests/canonical-test-count-consistency.test.mjs",
+          "scripts/tests/cg4-signing-boundary.test.mjs",
+          "scripts/tests/code-index-generator.test.mjs",
+          "scripts/tests/code-registry-generator.test.mjs",
+          "scripts/tests/codemod-boundary.test.mjs",
+          "scripts/tests/codes.test.mjs",
+          "scripts/tests/compiler-content-fingerprint.test.mjs",
+          "scripts/tests/component-health-readiness.test.mjs",
+          "scripts/tests/contract-registry-generator.test.mjs",
+          "scripts/tests/corpus-effect-names.test.mjs",
+          "scripts/tests/descriptive-diagnostic-identities.test.mjs",
+          "scripts/tests/dev-tool-index-generator.test.mjs",
+          "scripts/tests/dev-tools-code-catalog.test.mjs",
+          "scripts/tests/dev-tools-scripts.test.mjs",
+          "scripts/tests/devtools-package-contract.test.mjs",
+          "scripts/tests/diagnostic-code-audit.test.mjs",
+          "scripts/tests/export-slide-checked-decision-receipt.test.mjs",
+          "scripts/tests/flat-package-root-lock.integration.test.mjs",
+          "scripts/tests/flat-package-root-lock.test.mjs",
+          "scripts/tests/full-fungi-retirement-gate.test.mjs",
+          "scripts/tests/fungi-corpus-ownership.test.mjs",
+          "scripts/tests/fungi-golden-probe.test.mjs",
+          "scripts/tests/fungi-source-capability-inventory.test.mjs",
+          "scripts/tests/fuse-cli-refusals.test.mjs",
+          "scripts/tests/gate-admission-envelope.test.mjs",
+          "scripts/tests/gate-order6-link-plan.test.mjs",
+          "scripts/tests/gate-result-shape.test.mjs",
+          "scripts/tests/gate-selftests.test.mjs",
+          "scripts/tests/gather-r4-twin-hashes.test.mjs",
+          "scripts/tests/generator-contract.test.mjs",
+          "scripts/tests/graph-all.test.mjs",
+          "scripts/tests/host-boundary-effect-classification.test.mjs",
+          "scripts/tests/impact-executor.test.mjs",
+          "scripts/tests/kb-dir.test.mjs",
+          "scripts/tests/kb-graph-generator.test.mjs",
+          "scripts/tests/kb-index-generator.test.mjs",
+          "scripts/tests/memory-graph-generator.test.mjs",
+          "scripts/tests/owned-process-tree.test.mjs",
+          "scripts/tests/package-graph-generator.test.mjs",
+          "scripts/tests/phase-close-hook.test.mjs",
+          "scripts/tests/phase-close-profile.test.mjs",
+          "scripts/tests/platform-smoke.test.mjs",
+          "scripts/tests/post-slide-authority-receipts.test.mjs",
+          "scripts/tests/process-lease-budget.test.mjs",
+          "scripts/tests/project-graph-generator.test.mjs",
+          "scripts/tests/provenance-output-match.test.mjs",
+          "scripts/tests/receipt-bound-slide-build.integration.test.mjs",
+          "scripts/tests/receipt-bound-slide-build.test.mjs",
+          "scripts/tests/registry-package-artifact.test.mjs",
+          "scripts/tests/registry-static-host-build-recipe.test.mjs",
+          "scripts/tests/registry-static-host-source.test.mjs",
+          "scripts/tests/registry-static-host-toolchain.test.mjs",
+          "scripts/tests/registry-static-linked-host.integration.test.mjs",
+          "scripts/tests/release-evidence-authority-cli.test.mjs",
+          "scripts/tests/restore-verdict-slide-candidate.integration.test.mjs",
+          "scripts/tests/roadmap-subway-generator.test.mjs",
+          "scripts/tests/run-all-tests.test.mjs",
+          "scripts/tests/run-assurance-shadow.test.mjs",
+          "scripts/tests/run-generator-contract-cadence.test.mjs",
+          "scripts/tests/run-phase-close-special.test.mjs",
+          "scripts/tests/run-phase-close.test.mjs",
+          "scripts/tests/sbom-generator.test.mjs",
+          "scripts/tests/scrub-paths.test.mjs",
+          "scripts/tests/signed-fixture-guard.test.mjs",
+          "scripts/tests/status-blocks-generator.test.mjs",
+          "scripts/tests/suite-run-lease.test.mjs",
+          "scripts/tests/test-runner-policy.test.mjs",
+          "scripts/tests/tooling-contract.test.mjs",
+          "scripts/tests/ts-retirement-generator.test.mjs",
+          "scripts/tests/unit-registry-generator.test.mjs",
+          "scripts/tests/verify-platform-durability-evidence.test.mjs",
+          "scripts/tests/verify-slide-reference-evidence.test.mjs",
+          "scripts/tests/vok-authority-slide-candidate.integration.test.mjs",
+          "scripts/tests/wasmtime-oracle-layout.test.mjs",
+          "scripts/tests/web-stub-guard.test.mjs"
+        ],
+        "expectedCount": 103
+      },
+      "timeoutMs": 600000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:devtools-naming",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-NAMING",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-NAMING"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-naming",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-naming"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:devtools-context",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-CONTEXT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-CONTEXT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-context",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-context"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:devtools-intelligence",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-INTELLIGENCE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-INTELLIGENCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-intelligence",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-intelligence"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:devtools-provenance",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-PROVENANCE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-PROVENANCE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-provenance",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-provenance"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:devtools-pci",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-PCI",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-DEVTOOLS-PCI"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-devtools-pci",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-devtools-pci"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:ext-secrets-vault",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-EXT-SECRETS-VAULT",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-EXT-SECRETS-VAULT"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-ext-secrets-vault",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-ext-secrets-vault"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:ext-proof-snarkjs",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-EXT-PROOF-SNARKJS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-EXT-PROOF-SNARKJS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-ext-proof-snarkjs",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-ext-proof-snarkjs"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:ext-bridge-cpp",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-EXT-BRIDGE-CPP",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-EXT-BRIDGE-CPP"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "npm",
+          "test",
+          "--silent"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": "packages-galerina/galerina-ext-bridge-cpp",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-ext-bridge-cpp"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:patterns",
+      "requirementId": "REQ-PHASE-CLOSE-TESTS-PATTERNS",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-TESTS-PATTERNS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-phase-close-special.mjs",
+          "--check",
+          "patterns"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-TESTS-PATTERNS"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:security",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-SECURITY",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-SECURITY"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-phase-close-special.mjs",
+          "--check",
+          "security"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-SECURITY"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:naming",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-NAMING",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-NAMING"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-phase-close-special.mjs",
+          "--check",
+          "naming"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-NAMING"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "manifest:cbor",
+      "requirementId": "REQ-PHASE-CLOSE-MANIFEST-CBOR",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-MANIFEST-CBOR"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-phase-close-special.mjs",
+          "--check",
+          "cbor"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-MANIFEST-CBOR"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "governance:diff",
+      "requirementId": "REQ-PHASE-CLOSE-GOVERNANCE-DIFF",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-GOVERNANCE-DIFF"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-phase-close-special.mjs",
+          "--check",
+          "governance-diff"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "analyzer",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-GOVERNANCE-DIFF"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "semantic:coverage",
+      "requirementId": "REQ-PHASE-CLOSE-SEMANTIC-COVERAGE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-SEMANTIC-COVERAGE"
+      ],
+      "execution": {
+        "kind": "predecessor-receipt",
+        "predecessorId": "graph:all",
+        "verifierId": "graph-all-semantic-v1"
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "verifier",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-SEMANTIC-COVERAGE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [
+        "graph:all"
+      ],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "audit:assurance-legacy-lifecycle",
+      "requirementId": "REQ-PHASE-CLOSE-AUDIT-ASSURANCE-LEGACY-LIFECYCLE",
+      "satisfies": [
+        "REQ-PHASE-CLOSE-AUDIT-ASSURANCE-LEGACY-LIFECYCLE"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/audit-assurance-legacy-lifecycle.mjs"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "none",
+      "cwd": ".",
+      "toolClass": "verifier",
+      "authorityClass": "blocking",
+      "cadences": [
+        "changed",
+        "normal",
+        "nightly",
+        "exhaustive",
+        "release",
+        "on-demand"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "requirements",
+        "values": [
+          "REQ-PHASE-CLOSE-AUDIT-ASSURANCE-LEGACY-LIFECYCLE"
+        ],
+        "expectedCount": 1
+      },
+      "timeoutMs": 30000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [
+        "graph:all"
+      ],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    },
+    {
+      "id": "tests:all-packages",
+      "requirementId": "REQ-PACKAGE-TESTS",
+      "satisfies": [
+        "REQ-PACKAGE-TESTS"
+      ],
+      "execution": {
+        "kind": "process",
+        "command": [
+          "node",
+          "scripts/run-all-tests.cjs",
+          "--json"
+        ]
+      },
+      "acceptedExitCodes": [
+        0
+      ],
+      "leasePolicy": "suite-child",
+      "cwd": ".",
+      "toolClass": "test-runner",
+      "authorityClass": "blocking",
+      "cadences": [
+        "exhaustive"
+      ],
+      "outcomePolicy": "blocking",
+      "subjects": {
+        "kind": "packages",
+        "values": [
+          "galerina-ai",
+          "galerina-ai-agent",
+          "galerina-ai-lowbit",
+          "galerina-ai-neural",
+          "galerina-ai-neuromorphic",
+          "galerina-api-protocol-rest",
+          "galerina-auth",
+          "galerina-core",
+          "galerina-core-cli",
+          "galerina-core-compiler",
+          "galerina-core-compute",
+          "galerina-core-config",
+          "galerina-core-economics",
+          "galerina-core-logic",
+          "galerina-core-network",
+          "galerina-core-photonic",
+          "galerina-core-reports",
+          "galerina-core-runtime",
+          "galerina-core-runtime-wasm",
+          "galerina-core-security",
+          "galerina-core-sentinel-egress",
+          "galerina-core-sentinel-io",
+          "galerina-core-sentinel-memory",
+          "galerina-core-sentinel-power",
+          "galerina-core-sentinel-state",
+          "galerina-core-sentinel-time",
+          "galerina-core-tasks",
+          "galerina-core-vector",
+          "galerina-cpu-kernels",
+          "galerina-data",
+          "galerina-data-archive",
+          "galerina-data-database",
+          "galerina-data-db",
+          "galerina-data-html",
+          "galerina-data-json",
+          "galerina-data-model",
+          "galerina-data-pipeline",
+          "galerina-data-query",
+          "galerina-data-reports",
+          "galerina-data-response",
+          "galerina-data-search",
+          "galerina-db-firestore",
+          "galerina-db-mysql",
+          "galerina-db-opensearch",
+          "galerina-db-postgres",
+          "galerina-db-sqlite",
+          "galerina-devtools-benchmarks",
+          "galerina-devtools-context",
+          "galerina-devtools-flowgraph",
+          "galerina-devtools-fungi-scan",
+          "galerina-devtools-graph-algorithms",
+          "galerina-devtools-hypha",
+          "galerina-devtools-impact",
+          "galerina-devtools-intelligence",
+          "galerina-devtools-kb-graph",
+          "galerina-devtools-naming",
+          "galerina-devtools-package-graph",
+          "galerina-devtools-pci",
+          "galerina-devtools-project-graph",
+          "galerina-devtools-provenance",
+          "galerina-devtools-security",
+          "galerina-devtools-wasmtime-oracle",
+          "galerina-docs",
+          "galerina-ext-bridge-bitnet",
+          "galerina-ext-bridge-cpp",
+          "galerina-ext-photonic-emulator",
+          "galerina-ext-proof-snarkjs",
+          "galerina-ext-secrets-spore",
+          "galerina-ext-secrets-vault",
+          "galerina-ext-spore",
+          "galerina-ext-tritsocket",
+          "galerina-framework-api-server",
+          "galerina-framework-app-kernel",
+          "galerina-framework-example-app",
+          "galerina-governance-telemetry",
+          "galerina-hardware-tier",
+          "galerina-inference-bridge-contract",
+          "galerina-observability",
+          "galerina-registry",
+          "galerina-substrate-math",
+          "galerina-target-ai-accelerator",
+          "galerina-target-cpu",
+          "galerina-target-gpu",
+          "galerina-target-js",
+          "galerina-target-native",
+          "galerina-target-photonic",
+          "galerina-target-wasm",
+          "galerina-test",
+          "galerina-tools-benchmark",
+          "galerina-tools-myco",
+          "galerina-tower-citizen",
+          "galerina-tri-pipe",
+          "galerina-tri-regex",
+          "galerina-web",
+          "galerina-web-components",
+          "galerina-web-events",
+          "galerina-web-render",
+          "galerina-web-router",
+          "galerina-web-state",
+          "galerina-devtools-graph-project"
+        ],
+        "expectedCount": 100
+      },
+      "timeoutMs": 1800000,
+      "maxOutputBytes": 67108864,
+      "generatedOutputs": [],
+      "nestedTools": [],
+      "mutationPolicy": "read-only",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ],
+      "selfTest": {
+        "kind": "absent",
+        "reason": "no separate manifest self-test is declared"
+      },
+      "predecessors": [],
+      "lifecycle": {
+        "replacementId": {
+          "kind": "absent",
+          "reason": "canonical control has no replacement"
+        },
+        "overlap": "canonical",
+        "retirement": "active",
+        "evidence": {
+          "kind": "absent",
+          "reason": "active canonical control"
+        }
+      }
+    }
+  ]
+}

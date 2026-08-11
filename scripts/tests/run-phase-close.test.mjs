@@ -16,11 +16,13 @@ import { fileURLToPath } from "node:url";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const RUNNER = join(TEST_DIR, "..", "run-phase-close.mjs");
+const LEGACY_RUNNER = join(TEST_DIR, "..", "run-phase-close-legacy.mjs");
 const require = createRequire(import.meta.url);
 const { acquireSuiteLease } = require("../lib/suite-run-lease.cjs");
 const RESULT_MODULE = new URL("../lib/phase-close-result.mjs", import.meta.url);
 const resultApi = await import(RESULT_MODULE).catch(() => ({}));
 const runnerSource = readFileSync(RUNNER, "utf8");
+const legacyRunnerSource = readFileSync(LEGACY_RUNNER, "utf8");
 const roots = [];
 
 after(() => {
@@ -35,14 +37,48 @@ function write(root, relativePath, contents) {
   writeFileSync(absolutePath, contents);
 }
 
-function fixture({ phaseClose = [], exhaustive = [], useManifest = true }) {
+function manifestEntry(entry, cadences) {
+  const requirementId = `REQ-${entry.name.toUpperCase().replace(/[^A-Z0-9]+/g, "-")}`;
+  return {
+    id: entry.name,
+    requirementId,
+    satisfies: [requirementId],
+    execution: { kind: "process", command: entry.command },
+    acceptedExitCodes: [0],
+    leasePolicy: "none",
+    cwd: entry.cwd ?? ".",
+    toolClass: "legacy-oracle",
+    authorityClass: "blocking",
+    cadences,
+    outcomePolicy: "blocking",
+    subjects: { kind: "requirements", values: [requirementId], expectedCount: 1 },
+    timeoutMs: entry.timeoutMs ?? 30_000,
+    maxOutputBytes: 1_048_576,
+    generatedOutputs: [],
+    nestedTools: [],
+    mutationPolicy: "read-only",
+    platforms: ["win32", "linux", "darwin"],
+    selfTest: { kind: "absent", reason: "runner fixture" },
+    predecessors: [],
+    lifecycle: {
+      replacementId: { kind: "absent", reason: "not replaced" },
+      overlap: "canonical",
+      retirement: "active",
+      evidence: { kind: "absent", reason: "active fixture" },
+    },
+  };
+}
+
+function fixture({ phaseClose = [], exhaustive = [], entries, useManifest = true }) {
   const root = mkdtempSync(join(tmpdir(), "galerina-phase-close-"));
   roots.push(root);
   if (useManifest) {
     write(root, "governance/phase-close-commands.json", JSON.stringify({
       schemaVersion: 1,
-      phaseClose,
-      exhaustive,
+      entries: entries ?? [
+        ...phaseClose.map((entry) => manifestEntry(entry, ["normal", "exhaustive"])),
+        ...exhaustive.map((entry) => manifestEntry(entry, ["exhaustive"])),
+      ],
     }));
   }
   return root;
@@ -76,6 +112,9 @@ test("one failed child makes phase-close exit non-zero", () => {
   assert.deepEqual(report.results[0].processControl, {
     ownedTree: true,
     cleanupAttempted: false,
+    cleanupAcknowledged: false,
+    timedOut: false,
+    outputLimitExceeded: false,
   });
 });
 
@@ -90,6 +129,21 @@ test("each phase-close child has an observable start and end heartbeat", () => {
   assert.equal(result.status, 0);
   assert.match(result.stderr, /PHASE-CLOSE START visible-gate/);
   assert.match(result.stderr, /PHASE-CLOSE END visible-gate PASS/);
+});
+
+test("the branded plan supplies the exact cadence to child wrappers", () => {
+  const root = fixture({
+    phaseClose: [{ name: "cadence", command: ["node", "cadence.mjs"] }],
+  });
+  write(root, "cadence.mjs", [
+    'if (process.env.GALERINA_ASSURANCE_CADENCE !== "normal") process.exit(9);',
+    'console.log(`SUMMARY: ${process.env.GALERINA_ASSURANCE_CADENCE}`);',
+  ].join("\n"));
+
+  const result = run(root, "--cadence", "normal");
+
+  assert.equal(result.status, 0);
+  assert.equal(JSON.parse(result.stdout).results[0].detail, "normal");
 });
 
 test("--report-only cannot describe a failed run as green", () => {
@@ -179,66 +233,81 @@ test("malformed governance-diff JSON is an explicit failed result", () => {
   assert.equal(clean.changeClass, "neutral");
 });
 
-test("live phase-close checks generated evidence without rewriting it", () => {
+test("the preserved legacy oracle retains the former generated-evidence checks", () => {
   assert.doesNotMatch(
-    runnerSource,
+    legacyRunnerSource,
     /spawnSync\(/,
     "every phase-close child must use the owned process-tree boundary",
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("audit:node-floor", "node", \["scripts\/audit-node-dependencies\.mjs"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("graph:all", "node", \["scripts\/graph-all\.mjs", "--quiet", "--check", "--json"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /runSemanticCoverageFromGraphAll\(graphAll\)/,
   );
+  assert.match(legacyRunnerSource, /if \(options\.staticOracle\) return null/);
   assert.equal(
-    (runnerSource.match(/^runSemanticCoverageFromGraphAll\(graphAll\);$/gm) ?? []).length,
+    (legacyRunnerSource.match(/^runSemanticCoverageFromGraphAll\(graphAll\);$/gm) ?? []).length,
     1,
     "semantic coverage must be one exact blocking phase-close gate",
   );
   assert.equal(
-    (runnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
+    (legacyRunnerSource.match(/run\("semantic:coverage"/g) ?? []).length,
     0,
     "the named semantic gate must consume exactly one graph-all result rather than launch a second owner",
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("remote-shell-install", "node", \["scripts\/audit-remote-shell-install\.mjs"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("code-index", "node", \["scripts\/code-index\.mjs", "--check"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("audit:canonical-test-counts", "node", \["scripts\/audit-canonical-test-counts\.mjs"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("code-registry", "node", \["scripts\/gen-code-registry\.mjs", "--check"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("code-catalog-coverage:selftest", "node", \["scripts\/audit-code-catalog-coverage\.mjs", "--self-test"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("code-catalog-coverage", "node", \["scripts\/audit-code-catalog-coverage\.mjs"\]\)/,
   );
   assert.match(
-    runnerSource,
+    legacyRunnerSource,
     /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
   );
 });
 
 test("composed phase-close invokes semantic coverage once and blocks its refusal", () => {
-  const root = fixture({ useManifest: false });
+  const graphEntry = manifestEntry({
+    name: "graph:all",
+    command: ["node", "scripts/graph-all.mjs", "--quiet", "--check", "--json"],
+  }, ["normal"]);
+  const semanticEntry = {
+    ...manifestEntry({ name: "semantic:coverage", command: ["node", "unused.mjs"] }, ["normal"]),
+    toolClass: "verifier",
+    execution: {
+      kind: "predecessor-receipt",
+      predecessorId: "graph:all",
+      verifierId: "graph-all-semantic-v1",
+    },
+    predecessors: ["graph:all"],
+  };
+  const root = fixture({ entries: [graphEntry, semanticEntry] });
   write(root, "scripts/graph-all.mjs", readFileSync(resolve("scripts/graph-all.mjs"), "utf8"));
   const graphChildren = [
     "package-graph-generator.mjs",
@@ -263,8 +332,8 @@ test("composed phase-close invokes semantic coverage once and blocks its refusal
   const report = JSON.parse(result.stdout);
   const semantic = report.results.find((entry) => entry.name === "semantic:coverage");
   assert.equal(semantic?.ok, false);
-  assert.equal(semantic?.exitCode, 7);
-  assert.equal(semantic?.detail, "semantic coverage refused with exit 7 according to exact graph-all result");
+  assert.equal(semantic?.exitCode, 1);
+  assert.equal(semantic?.detail, "predecessor receipt refused");
   assert.deepEqual(readFileSync(join(root, "semantic-calls.log"), "utf8").trim().split(/\r?\n/), ["semantic"]);
 });
 
@@ -287,4 +356,12 @@ test("a held checkout lease refuses phase-close before any child starts", () => 
   assert.equal(report.code, "SUITE-LEASE-HELD");
   assert.equal(existsSync(join(root, "ran.txt")), false);
   assert.equal(lease.release(), true);
+});
+
+test("the public runner has no source-coded cadence or missing-manifest fallback", () => {
+  assert.match(legacyRunnerSource, /run\("audit:node-floor"/);
+  assert.doesNotMatch(runnerSource, /run\("audit:node-floor"/);
+  assert.doesNotMatch(runnerSource, /if \(!existsSync\(manifestPath\)\) return null/);
+  assert.match(runnerSource, /validateAssuranceManifest/);
+  assert.match(runnerSource, /buildCadencePlan/);
 });
