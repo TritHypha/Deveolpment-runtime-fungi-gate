@@ -3,7 +3,7 @@
   "totals": {
     "packages": 100,
     "testBearing": 100,
-    "tests": 9499,
+    "tests": 9500,
     "devTools": 170,
     "auditTools": 89,
     "toolsInCadence": 117,
@@ -577,7 +577,7 @@
       "name": "galerina-devtools-benchmarks",
       "kind": "devtools",
       "description": "Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest)",
-      "tests": 56,
+      "tests": 57,
       "hasTestScript": true,
       "border": "PASS",
       "files": 33,
