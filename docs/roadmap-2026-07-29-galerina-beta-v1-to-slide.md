@@ -2569,7 +2569,7 @@ checks, and the normal phase-close retains every old gate while adding blocking
 
 The current semantic inventory conserves **6** release/system requirements,
 **1** system contract, **0** canonical parser-proven routes, **100** packages,
-**874** test-evidence nodes, **6** detector mappings and the complete
+**875** test-evidence nodes, **6** detector mappings and the complete
 **1,417-path** executable family: 504 `.ts`, 15 `.d.ts`, 886 `.mjs` and 12
 `.js` (zero `.mts`, `.cts` and `.cjs`). The semantic graph records local
 freshness/consistency `ALLOW (1)` only. The roadmap aggregate remains

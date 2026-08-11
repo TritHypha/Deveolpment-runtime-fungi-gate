@@ -13,7 +13,7 @@ counts or open items that a newer section explicitly supersedes.
   dependency-ordered children, and normal phase-close has the additional
   blocking `semantic:coverage` gate.
 - [x] Publish the semantic graph only through its owner: 6 release/system
-  requirements, 1 system contract, 0 parser-proven routes, 100 packages, 874
+  requirements, 1 system contract, 0 parser-proven routes, 100 packages, 875
   test-evidence nodes, 6 detector mappings and **1,417** complete
   executable-family paths. The current family remains 504 `.ts`, 15 `.d.ts`,
   886 `.mjs` and 12 `.js` paths (zero `.mts`, `.cts` and `.cjs`); terminal
