@@ -9,6 +9,8 @@ import { it } from "node:test";
 import {
   boundaryTrusted,
   combineTrust,
+  refute,
+  trustName,
 } from "../../packages-galerina/galerina-core-compiler/dist/index.js";
 
 const SLIDE_ROOT = process.env.GALERINA_SLIDE_REPO;
@@ -45,6 +47,11 @@ const CONJUNCTION = Object.freeze([
   Object.freeze([1, 1]),
 ]);
 const RELEASE = Object.freeze([-1, 0, 1]);
+const NAMES = Object.freeze([
+  Object.freeze([-1, "Refuted"]),
+  Object.freeze([0, "Unverified"]),
+  Object.freeze([1, "Trusted"]),
+]);
 
 async function loadSlide() {
   const fromSlide = async (path) => import(pathToFileURL(join(SLIDE_ROOT, "src", path)).href);
@@ -78,6 +85,8 @@ it(
     const exports = Object.freeze([
       Object.freeze({ name: "combineTrust", sourceFlowName: "combineTrust", sourceBytes }),
       Object.freeze({ name: "boundaryTrusted", sourceFlowName: "boundaryTrusted", sourceBytes }),
+      Object.freeze({ name: "trustName", sourceFlowName: "trustName", sourceBytes }),
+      Object.freeze({ name: "refute", sourceFlowName: "refute", sourceBytes }),
     ]);
     const compiled = slide.compileCheckedFungiPackageSet({
       packages: [{
@@ -121,7 +130,7 @@ it(
       assert.equal(published.verdict, 1, JSON.stringify(published));
       assert.equal(published.packageSetDigest, compiled.packageSetDigest);
       const slideFiles = published.outputFiles.filter((name) => name.endsWith(".slide"));
-      assert.equal(slideFiles.length, 2);
+      assert.equal(slideFiles.length, 4);
 
       for (const vector of CONJUNCTION) {
         const prepared = await slide.prepareCheckedFungiPackagePublication({
@@ -172,9 +181,61 @@ it(
         if (trust !== 1) assert.equal(verified.value, false);
       }
 
+      for (const [trust, expected] of NAMES) {
+        const prepared = await slide.prepareCheckedFungiPackagePublication({
+          publicationDirectory,
+          packageIdentity: "@galerina/core-compiler",
+          exportName: "trustName",
+          context,
+          gates: ALL_ALLOW,
+        });
+        assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
+        const receipt = slide.executeTypedCheckedFungiPackagePublication(
+          prepared.packageExecutionHandle,
+          [trust],
+          { steps: 128 },
+        );
+        assert.equal(receipt.status, "SUCCEEDED_PHYSICAL_REFERENCE_ONLY", JSON.stringify(receipt));
+        assert.equal(receipt.safeValueTypeId, slide.SAFE_VALUE_TYPE_IDS.string);
+        const verified = slide.verifyTypedCheckedFungiPackageReceipt(
+          receipt,
+          verificationExpectation(receipt),
+        );
+        assert.equal(verified.verdict, 1, JSON.stringify(verified));
+        assert.equal(verified.value, expected);
+        assert.equal(verified.value, trustName(trust));
+      }
+
+      {
+        const prepared = await slide.prepareCheckedFungiPackagePublication({
+          publicationDirectory,
+          packageIdentity: "@galerina/core-compiler",
+          exportName: "refute",
+          context,
+          gates: ALL_ALLOW,
+        });
+        assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
+        const receipt = slide.executeTypedCheckedFungiPackagePublication(
+          prepared.packageExecutionHandle,
+          [],
+          { steps: 128 },
+        );
+        assert.equal(receipt.status, "SUCCEEDED_PHYSICAL_REFERENCE_ONLY", JSON.stringify(receipt));
+        assert.equal(receipt.safeValueTypeId, slide.SAFE_VALUE_TYPE_IDS.verdict);
+        const verified = slide.verifyTypedCheckedFungiPackageReceipt(
+          receipt,
+          verificationExpectation(receipt),
+        );
+        assert.equal(verified.verdict, 1, JSON.stringify(verified));
+        assert.equal(verified.value, refute());
+        assert.equal(verified.value, -1);
+      }
+
       for (const [exportName, invalidVector] of [
         ["combineTrust", [1, 2]],
         ["boundaryTrusted", [2]],
+        ["trustName", [2]],
+        ["refute", [1]],
       ]) {
         const prepared = await slide.prepareCheckedFungiPackagePublication({
           publicationDirectory,
