@@ -29,15 +29,15 @@ WAT-emitter path unchanged.
 - [x] Add `is64BitWatType` as one pure total flow with two comparisons.
 - [x] Prove strict checking, typed interpretation and signed/admitted Wasm.
 - [x] Derive parity through a public WAT-emission caller.
-- [ ] Run the complete compiler package and commit the bounded source wave.
+- [x] Run the complete compiler package and commit the bounded source wave.
 
 ### Task 3: Physical SLIDE/VOK proof
 
-- [ ] Publish the exact asset as one physical reference-only `.slide` export.
-- [ ] Re-admit and execute all vectors through independent VOK.
-- [ ] Refuse wrong counts/types, an unpaired surrogate, source mutation and
+- [x] Publish the exact asset as one physical reference-only `.slide` export.
+- [x] Re-admit and execute all vectors through independent VOK.
+- [x] Refuse wrong counts/types, an unpaired surrogate, source mutation and
   one-byte artifact mutation.
-- [ ] Register the focused test in the governed tooling manifest.
+- [x] Register the focused test in the governed tooling manifest.
 
 ### Task 4: Closure
 
