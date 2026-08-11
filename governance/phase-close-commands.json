@@ -5007,6 +5007,7 @@
           "scripts/tests/platform-smoke.test.mjs",
           "scripts/tests/plugin-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/post-slide-authority-receipts.test.mjs",
+          "scripts/tests/power-rank-fungi-slide.integration.test.mjs",
           "scripts/tests/process-lease-budget.test.mjs",
           "scripts/tests/project-graph-generator.test.mjs",
           "scripts/tests/provenance-output-match.test.mjs",
@@ -5133,6 +5134,7 @@
           "scripts/tests/platform-smoke.test.mjs",
           "scripts/tests/plugin-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/post-slide-authority-receipts.test.mjs",
+          "scripts/tests/power-rank-fungi-slide.integration.test.mjs",
           "scripts/tests/process-lease-budget.test.mjs",
           "scripts/tests/project-graph-generator.test.mjs",
           "scripts/tests/provenance-output-match.test.mjs",
@@ -5166,7 +5168,7 @@
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 105
+        "expectedCount": 106
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,
