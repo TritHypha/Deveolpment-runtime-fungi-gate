@@ -1324,6 +1324,7 @@ Provides:
 - RotationPolicy
 - SecretsContractBlock
 - SecretHandle
+- VaultClientOptions
 - VaultClient
 
 ## galerina-ext-secrets-spore

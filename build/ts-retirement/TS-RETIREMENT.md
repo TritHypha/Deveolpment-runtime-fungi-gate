@@ -1,4 +1,4 @@
-# Executable-family retirement graph (1418 tracked package paths; 519 .ts-family)
+# Executable-family retirement graph (1420 tracked package paths; 519 .ts-family)
 
 Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit reads these numbers LIVE.
 
@@ -11,9 +11,9 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 
 Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
-Complete executable family: 504 .ts source · 15 .d.ts · 0 .mts · 0 .cts · 887 .mjs · 12 .js · 0 .cjs.
+Complete executable family: 504 .ts source · 15 .d.ts · 0 .mts · 0 .cts · 889 .mjs · 12 .js · 0 .cjs.
 
-Terminal physical retirement: OPEN — 1418 tracked package executable-family paths remain.
+Terminal physical retirement: OPEN — 1420 tracked package executable-family paths remain.
 
 Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/111 production Fungi sources cryptographically admitted; 0/45 host boundaries owned; 95 node_modules trees.
 

@@ -13,8 +13,8 @@
 |---|---|
 | Files | 37 |
 | Internal edges | 79 |
-| External dependencies | 6 |
-| ├─ Node core | 3 |
+| External dependencies | 7 |
+| ├─ Node core | 4 |
 | ├─ Workspace (@galerina/*) | 2 |
 | └─ Third-party | 1 |
 | Orphan files | 0 |
@@ -25,6 +25,7 @@
 - `node:crypto`
 - `node:fs`
 - `node:path`
+- `node:util`
 
 ### Workspace (@galerina/*)
 - `@galerina/inference-bridge-contract`
