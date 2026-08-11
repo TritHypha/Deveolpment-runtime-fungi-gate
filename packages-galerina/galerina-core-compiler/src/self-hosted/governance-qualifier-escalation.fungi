@@ -1,0 +1,18 @@
+@version 1
+
+/// Private governance qualifier order mirrored from governance-diff.ts.
+/// Unknown admitted Strings preserve the TypeScript fallback rank 0.
+pure flow qualifierRank(qualifier: String) -> Int {
+  if qualifier == "pure" { return 0 }
+  if qualifier == "flow" { return 1 }
+  if qualifier == "guarded" { return 2 }
+  if qualifier == "secure" { return 3 }
+  if qualifier == "privileged" { return 4 }
+  return 0
+}
+
+/// Authority widens only when the after qualifier has a strictly higher rank.
+/// This reference-only flow cannot switch the executing governance-diff path.
+pure flow qualifierEscalated(before: String, after: String) -> Bool {
+  return qualifierRank(after) > qualifierRank(before)
+}
