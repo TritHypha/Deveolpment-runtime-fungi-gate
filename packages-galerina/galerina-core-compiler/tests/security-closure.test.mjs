@@ -99,6 +99,14 @@ test("dynamic regex uses the certified non-backtracking engine and bounds subjec
   assert.equal(ambiguous.value, false);
   const oversized = await callStdlib("matchesPattern", str("a".repeat(4097)), [str("^a+$")], ctx);
   assert.equal(oversized.__tag, "err");
+  const excessive = await callStdlib(
+    "matchesPattern",
+    str("a".repeat(4096)),
+    [str("(a?){500}z")],
+    ctx,
+  );
+  assert.equal(excessive.__tag, "err");
+  assert.match(excessive.error.value, /certificate|work|budget/i);
   const control = await callStdlib("matchesPattern", str("hello"), [str("^[a-z]+$")], ctx);
   assert.equal(control.__tag, "bool");
   assert.equal(control.value, true);

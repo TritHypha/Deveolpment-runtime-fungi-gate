@@ -291,6 +291,13 @@ function containsRegexSyntax(pattern: string): boolean {
 }
 
 const MAX_REGEX_SUBJECT_CHARS = 4_096;
+const MAX_REGEX_CERTIFIED_WORK_UNITS = 1_000_000n;
+
+function unicodeCodePointCount(value: string): bigint {
+  let count = 0n;
+  for (const _codePoint of value) count += 1n;
+  return count;
+}
 
 function ok(value: GalerinaValue): GalerinaValue {
   return { __tag: "ok", value };
@@ -455,6 +462,12 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
         uniformScan: true,
       });
       if (!compiled.ok) return err(`RegexError: ${compiled.code}: ${compiled.reason}`);
+      const certifiedWork =
+        unicodeCodePointCount(s) * BigInt(compiled.certificate.perCharWorkBound) +
+        BigInt(compiled.certificate.boundaryWorkBound);
+      if (certifiedWork > MAX_REGEX_CERTIFIED_WORK_UNITS) {
+        return err("RegexError: certified work exceeds the runtime policy budget");
+      }
       return { __tag: "bool", value: compiled.matcher.test(s).verdict === 1 };
     }
 
