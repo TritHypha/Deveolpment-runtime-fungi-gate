@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "repositoryHead": "5d2e1d13fb93d885471664340f11439006ccaf8e",
+  "schemaVersion": 2,
+  "authoritativeInputsDigest": "a1900b1ad3caa03bc3bf0fff7b0bed09cc7d0a30e4053ac817e818ac455104f4",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -4498,6 +4498,11 @@
       "evidencePath": "scripts/tests/build-receipt-bound-slide-package-cli.test.mjs"
     },
     {
+      "id": "test:auto-1cc2d59a119b27139e6559ba",
+      "kind": "test",
+      "evidencePath": "scripts/tests/canonical-test-count-consistency.test.mjs"
+    },
+    {
       "id": "test:auto-d2650e279c18b06ad34e9d72",
       "kind": "test",
       "evidencePath": "scripts/tests/cg4-signing-boundary.test.mjs"
@@ -8905,6 +8910,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-1cc2d59a119b27139e6559ba",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-d2650e279c18b06ad34e9d72",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -9350,7 +9360,7 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 874,
+    "tests": 875,
     "detectors": 6,
     "executableFamily": 1417,
     "legacyUnmapped": 0

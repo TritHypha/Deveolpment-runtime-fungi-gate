@@ -18,12 +18,12 @@ test("the semantic assurance generator publishes an exact current non-authorizin
     join(ROOT, "build/assurance-semantic-graph/semantic-graph.json"),
     "utf8",
   ));
-  assert.equal(report.schemaVersion, 1);
+  assert.equal(report.schemaVersion, 2);
   assert.equal(report.authorizing, false);
   assert.equal(report.verdictTrit, 1);
   assert.equal(report.totals.routes, 0);
   assert.equal(report.totals.packages, 100);
   assert.equal(report.totals.legacyUnmapped, 0);
-  assert.equal(typeof report.repositoryHead, "string");
-  assert.match(report.repositoryHead, /^[0-9a-f]{40}$/u);
+  assert.equal(typeof report.authoritativeInputsDigest, "string");
+  assert.match(report.authoritativeInputsDigest, /^[0-9a-f]{64}$/u);
 });

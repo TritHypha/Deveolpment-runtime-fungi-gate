@@ -6,7 +6,6 @@ import {
   isSemanticGraphReport,
 } from "../lib/assurance-fabric/semantic-graph.mjs";
 
-const HEAD = "a".repeat(40);
 const DIGEST = "b".repeat(64);
 
 function requirement(id = "vok-sem-001", criticality = "release") {
@@ -82,8 +81,8 @@ function executableFamily(overrides = {}) {
 
 function graph(overrides = {}) {
   return {
-    schemaVersion: 1,
-    repositoryHead: HEAD,
+    schemaVersion: 2,
+    authoritativeInputsDigest: DIGEST,
     requirements: [requirement()],
     systemContracts: [{
       id: "system-contract:repository-governance",
@@ -266,10 +265,10 @@ describe("closed semantic assurance graph", () => {
     }), "ASSURANCE-SEMANTIC-BASELINE");
   });
 
-  it("refuses null, surplus fields, invalid build points and ambiguous paths", () => {
+  it("refuses null, surplus fields, invalid authoritative-input digests and ambiguous paths", () => {
     refused(null, "ASSURANCE-SEMANTIC-SHAPE");
     refused({ ...graph(), surplus: true }, "ASSURANCE-SEMANTIC-SHAPE");
-    refused(graph({ repositoryHead: "short" }), "ASSURANCE-SEMANTIC-GIT");
+    refused(graph({ authoritativeInputsDigest: "short" }), "ASSURANCE-SEMANTIC-DIGEST");
     refused(graph({ routes: [route({ sourcePath: "../escape.fungi" })] }), "ASSURANCE-SEMANTIC-PATH");
     refused(graph({ routes: [route({ sourcePath: "packages-galerina/core/src/a.fungi:stream" })] }), "ASSURANCE-SEMANTIC-PATH");
   });

@@ -56,7 +56,7 @@ function renderMarkdown(report) {
   return [
     "# VOK Semantic Assurance Graph",
     "",
-    `Build point: \`${report.repositoryHead}\``,
+    `Conserved authoritative-input digest: \`${report.authoritativeInputsDigest}\``,
     "",
     `K3 evidence state: **${state} (${report.verdictTrit})**`,
     "",
@@ -135,33 +135,55 @@ function publishAtomically(root, outputs) {
   }
 }
 
-const options = parseArgs(process.argv.slice(2));
-const outputDirectory = join(options.root, "build", "assurance-semantic-graph");
-const provenancePath = join(outputDirectory, "provenance.json");
-const result = await deriveSemanticCoverage(options.root);
-if (result.kind !== "accepted") {
-  console.error(`${result.code}: ${result.detail}`);
-  process.exit(1);
-}
-const stamp = provenanceForCheck(TOOL, options.root, provenancePath, options.check);
-const expected = expectedOutputs(result.value, stamp);
-
-if (options.check) {
-  const stale = [...expected].filter(([name, bytes]) => {
-    const path = join(outputDirectory, name);
-    return !existsSync(path) || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes);
-  }).map(([name]) => relative(options.root, join(outputDirectory, name)).replace(/\\/gu, "/"));
-  if (stale.length > 0) {
-    console.error(`semantic-assurance-graph: ${stale.length} missing or stale output(s): ${stale.join(", ")}; no files written`);
-    process.exit(1);
+export async function generateSemanticGraph(options) {
+  const root = resolve(options.root);
+  const check = options.check === true;
+  const derive = options.derive ?? deriveSemanticCoverage;
+  const outputDirectory = join(root, "build", "assurance-semantic-graph");
+  const provenancePath = join(outputDirectory, "provenance.json");
+  const result = await derive(root);
+  if (result.kind !== "accepted") {
+    return Object.freeze({ kind: "refused", code: result.code, detail: result.detail });
   }
-  console.log(`semantic-assurance-graph: ${expected.size}/${expected.size} outputs current`);
-  process.exit(0);
+  const stamp = provenanceForCheck(TOOL, root, provenancePath, check);
+  const expected = expectedOutputs(result.value, stamp);
+  if (check) {
+    const stale = [...expected].filter(([name, bytes]) => {
+      const path = join(outputDirectory, name);
+      return !existsSync(path) || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes);
+    }).map(([name]) => relative(root, join(outputDirectory, name)).replace(/\\/gu, "/"));
+    return stale.length === 0
+      ? Object.freeze({ kind: "current", outputs: expected.size, report: result.value })
+      : Object.freeze({ kind: "stale", outputs: expected.size, stale, report: result.value });
+  }
+  publishAtomically(root, expected);
+  return Object.freeze({ kind: "published", outputs: expected.size, report: result.value });
 }
 
-publishAtomically(options.root, expected);
-console.log(
-  `semantic-assurance-graph: published ${expected.size} outputs; `
-  + `${result.value.totals.routes} routes / ${result.value.totals.packages} packages / `
-  + `${result.value.totals.tests} tests / K3 ${result.value.verdictTrit}`,
-);
+async function main() {
+  const options = parseArgs(process.argv.slice(2));
+  const result = await generateSemanticGraph(options);
+  if (result.kind === "refused") {
+    console.error(`${result.code}: ${result.detail}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (result.kind === "stale") {
+    console.error(`semantic-assurance-graph: ${result.stale.length} missing or stale output(s): ${result.stale.join(", ")}; no files written`);
+    process.exitCode = 1;
+    return;
+  }
+  if (result.kind === "current") {
+    console.log(`semantic-assurance-graph: ${result.outputs}/${result.outputs} outputs current`);
+    return;
+  }
+  console.log(
+    `semantic-assurance-graph: published ${result.outputs} outputs; `
+    + `${result.report.totals.routes} routes / ${result.report.totals.packages} packages / `
+    + `${result.report.totals.tests} tests / K3 ${result.report.verdictTrit}`,
+  );
+}
+
+if (process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await main();
+}

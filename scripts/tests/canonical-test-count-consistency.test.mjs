@@ -7,6 +7,17 @@ import { spawnSync } from "node:child_process";
 
 const SCRIPT = join(process.cwd(), "scripts", "audit-canonical-test-counts.mjs");
 const roots = [];
+const DOT = "\u00b7";
+const TICK = "\u2705";
+const CONSUMER_IDS = Object.freeze([
+  "readme-subway",
+  "cycle-roadmap-subway",
+  "active-roadmap-subway",
+  "readme-full-suite",
+  "readme-tests-table",
+  "todo-assurance-fabric",
+  "active-roadmap-chapter-3",
+]);
 
 after(() => {
   for (const root of roots) rmSync(root, { recursive: true, force: true });
@@ -18,26 +29,31 @@ function write(root, path, content) {
   writeFileSync(output, content);
 }
 
-function fixture() {
+function fixture(staleConsumer) {
   const root = mkdtempSync(join(tmpdir(), "galerina-count-contract-"));
   roots.push(root);
+  const claim = (consumer, plain = false) => {
+    const value = consumer === staleConsumer ? 9498 : 9499;
+    return plain ? String(value) : value.toLocaleString("en-GB");
+  };
+  const subway = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
   write(root, "version.json", `${JSON.stringify({ testCount: 9499, packageCount: 100 })}\n`);
   write(root, "README.md", [
     "<!-- SUBWAY:BEGIN -->",
-    "**v1.0.0-beta.2 · 100 packages · 9499 tests · ship-readiness 100.0%**",
+    subway("readme-subway"),
     "<!-- SUBWAY:END -->",
-    "**v1.0.0-beta.2 · full suite 100/100 packages · 9,499 tests · 0 failures.**",
-    "| **Tests** | ✅ green | 100/100 · 9,499 · 0 fail |",
+    `**v1.0.0-beta.2 ${DOT} full suite 100/100 packages ${DOT} ${claim("readme-full-suite")} tests ${DOT} 0 failures.**`,
+    `| **Tests** | ${TICK} green | 100/100 ${DOT} ${claim("readme-tests-table")} ${DOT} 0 fail |`,
   ].join("\n"));
-  write(root, "docs/roadmap-2026-07-25-cycle2.md", "<!-- SUBWAY:BEGIN -->\n**v1.0.0-beta.2 · 100 packages · 9499 tests · ship-readiness 100.0%**\n<!-- SUBWAY:END -->\n");
+  write(root, "docs/roadmap-2026-07-25-cycle2.md", `<!-- SUBWAY:BEGIN -->\n${subway("cycle-roadmap-subway")}\n<!-- SUBWAY:END -->\n`);
   write(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
     "<!-- SUBWAY:BEGIN -->",
-    "**v1.0.0-beta.2 · 100 packages · 9499 tests · ship-readiness 100.0%**",
+    subway("active-roadmap-subway"),
     "<!-- SUBWAY:END -->",
     "## VOK assurance fabric Chapter 3 - 2026-08-10",
-    "The complete package lane is **100/100 packages and 9,499 tests** in 1s.",
+    `The complete package lane is **100/100 packages and ${claim("active-roadmap-chapter-3")} tests** in 1s.`,
   ].join("\n"));
-  write(root, "docs/TODO.md", "Fresh evidence: the complete package lane passes **100/100 packages and 9,499 tests**.\n");
+  write(root, "docs/TODO.md", `Fresh evidence: the complete package lane passes **100/100 packages and ${claim("todo-assurance-fabric")} tests**.\n`);
   return root;
 }
 
@@ -48,27 +64,25 @@ function run(root) {
 test("canonical test-count owner accepts every exact current rendered consumer", () => {
   const result = run(fixture());
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(JSON.parse(result.stdout).violations.length, 0);
-});
-
-test("canonical test-count owner blocks one stale active-roadmap claim", () => {
-  const root = fixture();
-  write(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
-    "<!-- SUBWAY:BEGIN -->",
-    "**v1.0.0-beta.2 · 100 packages · 9499 tests · ship-readiness 100.0%**",
-    "<!-- SUBWAY:END -->",
-    "## VOK assurance fabric Chapter 3 - 2026-08-10",
-    "The complete package lane is **100/100 packages and 9,498 tests** in 1s.",
-  ].join("\n"));
-  const result = run(root);
-  assert.notEqual(result.status, 0);
   const report = JSON.parse(result.stdout);
-  assert.equal(report.tool, "canonical-test-count-consistency");
-  assert.deepEqual(report.violations.map((entry) => entry.consumer), ["active-roadmap-chapter-3"]);
+  assert.equal(report.consumers, CONSUMER_IDS.length);
+  assert.equal(report.violations.length, 0);
 });
 
-test("canonical test-count owner self-test proves clean and stale controls", () => {
+test("canonical test-count owner blocks drift in every registered rendered capture", () => {
+  for (const consumer of CONSUMER_IDS) {
+    const result = run(fixture(consumer));
+    assert.notEqual(result.status, 0, consumer);
+    const report = JSON.parse(result.stdout);
+    assert.equal(report.tool, "canonical-test-count-consistency");
+    assert.equal(report.consumers, CONSUMER_IDS.length);
+    assert.deepEqual(report.violations.map((entry) => entry.consumer), [consumer], consumer);
+  }
+});
+
+test("canonical test-count owner self-test proves every registered capture", () => {
   const result = spawnSync(process.execPath, [SCRIPT, "--self-test"], { encoding: "utf8" });
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   assert.match(result.stdout, /self-test.*PASS/i);
+  assert.match(result.stdout, /7\/7/i);
 });

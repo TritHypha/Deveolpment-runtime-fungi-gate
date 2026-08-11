@@ -182,7 +182,20 @@ function createInputReader(root) {
     }
   }
 
-  return Object.freeze({ read, readJson, verifyReadback });
+  function authoritativeInputsDigest() {
+    const hash = createHash("sha256");
+    for (const [path, value] of [...inputs].sort(([left], [right]) => left.localeCompare(right))) {
+      const pathBytes = Buffer.from(path, "utf8");
+      const size = Buffer.alloc(8);
+      size.writeBigUInt64BE(BigInt(value.size));
+      hash.update(size);
+      hash.update(pathBytes);
+      hash.update(Buffer.from(value.digest, "ascii"));
+    }
+    return hash.digest("hex");
+  }
+
+  return Object.freeze({ read, readJson, verifyReadback, authoritativeInputsDigest });
 }
 
 function trackedPaths(root) {
@@ -202,23 +215,6 @@ function trackedPaths(root) {
     refuse("SEMANTIC_GIT_DUPLICATE", "Git returned duplicate tracked paths");
   }
   return paths.map((path, index) => canonicalPath(path, `tracked[${index}]`)).sort();
-}
-
-function repositoryHead(root) {
-  let head;
-  try {
-    head = execFileSync("git", ["rev-parse", "HEAD"], {
-      cwd: root,
-      encoding: "utf8",
-      windowsHide: true,
-    }).trim();
-  } catch {
-    refuse("SEMANTIC_GIT_UNAVAILABLE", "repository build point is unavailable");
-  }
-  if (!/^[0-9a-f]{40}$/u.test(head)) {
-    refuse("SEMANTIC_GIT_IDENTITY", "repository build point is not a lowercase SHA-1 identity");
-  }
-  return head;
 }
 
 function validateManifest(value) {
@@ -304,6 +300,13 @@ function deriveExecutableFamily(tracked, retirement) {
     refuse("SEMANTIC_RETIREMENT_MISMATCH", "retirement executable-family total is stale");
   }
   return { ...family, total };
+}
+
+function conserveExecutableSourceBytes(tracked, reader) {
+  for (const path of tracked) {
+    if (!path.startsWith("packages-galerina/") || path.includes("/node_modules/")) continue;
+    if (executableClass(path) !== "outside-family") reader.read(path);
+  }
 }
 
 function packageIdentity(packagePath) {
@@ -536,7 +539,6 @@ export async function deriveSemanticCoverage(root, options = {}) {
     const selectedRoot = realpathSync(root);
     const reader = createInputReader(selectedRoot);
     const tracked = trackedPaths(selectedRoot);
-    const head = repositoryHead(selectedRoot);
     const manifest = validateManifest(reader.readJson(
       "governance/assurance-semantic-coverage.json",
     ));
@@ -550,6 +552,7 @@ export async function deriveSemanticCoverage(root, options = {}) {
     const routes = deriveRoutes(tracked, reader, compiler);
     const retirement = reader.readJson("build/ts-retirement/ts-retirement.json");
     const executableFamily = deriveExecutableFamily(tracked, retirement);
+    conserveExecutableSourceBytes(tracked, reader);
     const { tests, unmapped } = deriveTests(tracked, reader, manifest, packagePaths);
     if (unmapped.length > manifest.legacyUnmapped.baselineCount) {
       refuse(
@@ -568,9 +571,10 @@ export async function deriveSemanticCoverage(root, options = {}) {
       await options.beforeInputReadback();
     }
     reader.verifyReadback();
+    const authoritativeInputsDigest = reader.authoritativeInputsDigest();
     return evaluateSemanticGraph({
-      schemaVersion: 1,
-      repositoryHead: head,
+      schemaVersion: 2,
+      authoritativeInputsDigest,
       requirements: manifest.requirements,
       systemContracts: manifest.systemContracts,
       routes,

@@ -1,11 +1,11 @@
 import { types as utilTypes } from "node:util";
 
 const ROOT_KEYS = Object.freeze([
+  "authoritativeInputsDigest",
   "detectors",
   "executableFamily",
   "legacyUnmapped",
   "packages",
-  "repositoryHead",
   "requirements",
   "routes",
   "schemaVersion",
@@ -75,7 +75,6 @@ const TEST_CLASSES = new Set([
 ]);
 const POLARITIES = new Set(["positive", "refusal", "neutral"]);
 const DETECTOR_CLASSES = new Set(["detector-self-test", "mutation"]);
-const GIT_PATTERN = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 const DIGEST_PATTERN = /^[0-9a-f]{64}$/u;
 const ID_PATTERN = /^[a-z0-9][a-z0-9._:/-]{0,191}$/u;
 const SIMPLE_ID_PATTERN = /^[A-Za-z_][A-Za-z0-9._-]{0,127}$/u;
@@ -203,13 +202,6 @@ function enumValue(value, admitted, label) {
 function count(value, label) {
   if (!Number.isSafeInteger(value) || value < 0) {
     refuse("ASSURANCE-SEMANTIC-COUNT", `${label} must be a finite non-negative safe integer`);
-  }
-  return value;
-}
-
-function gitIdentity(value, label) {
-  if (typeof value !== "string" || !GIT_PATTERN.test(value)) {
-    refuse("ASSURANCE-SEMANTIC-GIT", `${label} must be an exact lowercase Git identity`);
   }
   return value;
 }
@@ -451,10 +443,13 @@ function deepFreeze(value) {
 
 function validateSemanticGraph(value) {
   const fields = exactRecord(value, ROOT_KEYS, "graph");
-  if (fields.schemaVersion !== 1) {
-    refuse("ASSURANCE-SEMANTIC-VERSION", "graph.schemaVersion must equal 1");
+  if (fields.schemaVersion !== 2) {
+    refuse("ASSURANCE-SEMANTIC-VERSION", "graph.schemaVersion must equal 2");
   }
-  const repositoryHead = gitIdentity(fields.repositoryHead, "graph.repositoryHead");
+  const authoritativeInputsDigest = digest(
+    fields.authoritativeInputsDigest,
+    "graph.authoritativeInputsDigest",
+  );
   const requirements = exactArray(fields.requirements, "graph.requirements", 1)
     .map(cloneRequirement);
   const systemContracts = exactArray(fields.systemContracts, "graph.systemContracts", 1)
@@ -509,7 +504,7 @@ function validateSemanticGraph(value) {
     }
   }
   return {
-    repositoryHead,
+    authoritativeInputsDigest,
     requirements,
     systemContracts,
     routes,
@@ -582,8 +577,8 @@ export function evaluateSemanticGraph(value) {
       })),
     ];
     const report = deepFreeze({
-      schemaVersion: 1,
-      repositoryHead: graph.repositoryHead,
+      schemaVersion: 2,
+      authoritativeInputsDigest: graph.authoritativeInputsDigest,
       nodes,
       edges,
       totals: {

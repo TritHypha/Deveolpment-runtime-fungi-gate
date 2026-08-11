@@ -1,10 +1,31 @@
 #!/usr/bin/env node
 // audit-canonical-test-counts.mjs — blocking current-count contract for the
-// version.json owner and the exact rendered consumers it supplies.
+// version.json owner and its closed, exact rendered consumers.
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
+
+const DOT = "\u00b7";
+const TICK = "\u2705";
+const CONSUMER_SPECS = Object.freeze([
+  Object.freeze({ id: "readme-subway", path: "README.md", capture: "subway" }),
+  Object.freeze({ id: "cycle-roadmap-subway", path: "docs/roadmap-2026-07-25-cycle2.md", capture: "subway" }),
+  Object.freeze({ id: "active-roadmap-subway", path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "subway" }),
+  Object.freeze({ id: "readme-full-suite", path: "README.md", capture: "readme-full-suite" }),
+  Object.freeze({ id: "readme-tests-table", path: "README.md", capture: "readme-tests-table" }),
+  Object.freeze({ id: "todo-assurance-fabric", path: "docs/TODO.md", capture: "todo-assurance-fabric" }),
+  Object.freeze({ id: "active-roadmap-chapter-3", path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "active-roadmap-chapter-3" }),
+]);
+const REQUIRED_CONSUMERS = Object.freeze(new Map([
+  ["readme-subway", Object.freeze({ path: "README.md", capture: "subway" })],
+  ["cycle-roadmap-subway", Object.freeze({ path: "docs/roadmap-2026-07-25-cycle2.md", capture: "subway" })],
+  ["active-roadmap-subway", Object.freeze({ path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "subway" })],
+  ["readme-full-suite", Object.freeze({ path: "README.md", capture: "readme-full-suite" })],
+  ["readme-tests-table", Object.freeze({ path: "README.md", capture: "readme-tests-table" })],
+  ["todo-assurance-fabric", Object.freeze({ path: "docs/TODO.md", capture: "todo-assurance-fabric" })],
+  ["active-roadmap-chapter-3", Object.freeze({ path: "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", capture: "active-roadmap-chapter-3" })],
+]));
 
 function parseArgs(argv) {
   let root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -29,7 +50,7 @@ function parseArgs(argv) {
     }
     throw new Error(`unknown or duplicate argument ${arg}`);
   }
-  return { root, json, selfTest };
+  return Object.freeze({ root, json, selfTest });
 }
 
 function read(root, relativePath) {
@@ -38,6 +59,37 @@ function read(root, relativePath) {
   } catch (error) {
     throw new Error(`${relativePath} is unreadable: ${error instanceof Error ? error.message : String(error)}`);
   }
+}
+
+function validateConsumerRegistry(consumers) {
+  if (!Array.isArray(consumers) || consumers.length !== REQUIRED_CONSUMERS.size) {
+    throw new Error("count consumer registry must conserve its exact closed cardinality");
+  }
+  const seen = new Set();
+  for (const consumer of consumers) {
+    if (
+      consumer === null
+      || typeof consumer !== "object"
+      || Array.isArray(consumer)
+      || Object.keys(consumer).sort().join(",") !== "capture,id,path"
+      || typeof consumer.id !== "string"
+      || typeof consumer.path !== "string"
+      || typeof consumer.capture !== "string"
+      || seen.has(consumer.id)
+    ) {
+      throw new Error("count consumer registry has a duplicate, malformed, or surplus capture");
+    }
+    seen.add(consumer.id);
+    const expected = REQUIRED_CONSUMERS.get(consumer.id);
+    if (
+      expected === undefined
+      || consumer.path !== expected.path
+      || consumer.capture !== expected.capture
+    ) {
+      throw new Error(`count consumer registry does not conserve ${consumer.id}`);
+    }
+  }
+  return consumers;
 }
 
 function capture(text, expression, consumer, violations, expected) {
@@ -65,7 +117,7 @@ function subwayBlock(text, consumer, violations, expected) {
   }
   capture(
     text.slice(begin, end),
-    /\*\*v[^\n]*·\s*\d+\s+packages\s*·\s*([\d,]+)\s+tests\s*·/u,
+    /\*\*v[^\n]*\u00b7\s*\d+\s+packages\s*\u00b7\s*([\d,]+)\s+tests\s*\u00b7/u,
     consumer,
     violations,
     expected,
@@ -76,6 +128,30 @@ function activeChapter(text) {
   const heading = "## VOK assurance fabric Chapter 3 - 2026-08-10";
   const start = text.indexOf(heading);
   return start < 0 ? "" : text.slice(start);
+}
+
+function auditConsumer(consumer, text, violations, expected) {
+  if (consumer.capture === "subway") {
+    subwayBlock(text, consumer.id, violations, expected);
+    return;
+  }
+  if (consumer.capture === "readme-full-suite") {
+    capture(text, /full suite\s+\d+\/\d+\s+packages\s+\u00b7\s+([\d,]+)\s+tests\s+\u00b7/u, consumer.id, violations, expected);
+    return;
+  }
+  if (consumer.capture === "readme-tests-table") {
+    capture(text, /\|\s*\*\*Tests\*\*\s*\|[^\n]*\d+\/\d+\s*\u00b7\s*([\d,]+)\s*\u00b7\s*0 fail\s*\|/u, consumer.id, violations, expected);
+    return;
+  }
+  if (consumer.capture === "todo-assurance-fabric") {
+    capture(text, /complete package lane passes\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
+    return;
+  }
+  if (consumer.capture === "active-roadmap-chapter-3") {
+    capture(activeChapter(text), /complete package lane is\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
+    return;
+  }
+  throw new Error(`count consumer registry has an unimplemented exact capture ${consumer.capture}`);
 }
 
 function audit(root) {
@@ -90,69 +166,64 @@ function audit(root) {
       || !Number.isSafeInteger(version.testCount) || version.testCount < 1) {
     throw new Error("version.json must own one positive safe-integer testCount");
   }
-  const expected = version.testCount;
+  const consumers = validateConsumerRegistry(CONSUMER_SPECS);
+  const texts = new Map(consumers.map((consumer) => [consumer.path, read(root, consumer.path)]));
   const violations = [];
-  const readme = read(root, "README.md");
-  const cycleRoadmap = read(root, "docs/roadmap-2026-07-25-cycle2.md");
-  const activeRoadmap = read(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md");
-  const todo = read(root, "docs/TODO.md");
-
-  subwayBlock(readme, "readme-subway", violations, expected);
-  subwayBlock(cycleRoadmap, "cycle-roadmap-subway", violations, expected);
-  subwayBlock(activeRoadmap, "active-roadmap-subway", violations, expected);
-  capture(readme, /full suite\s+\d+\/\d+\s+packages\s+·\s+([\d,]+)\s+tests\s+·/u,
-    "readme-full-suite", violations, expected);
-  capture(readme, /\|\s*\*\*Tests\*\*\s*\|[^\n]*\d+\/\d+\s*·\s*([\d,]+)\s*·\s*0 fail\s*\|/u,
-    "readme-tests-table", violations, expected);
-  capture(todo, /complete package lane passes\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u,
-    "todo-assurance-fabric", violations, expected);
-  capture(activeChapter(activeRoadmap), /complete package lane is\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u,
-    "active-roadmap-chapter-3", violations, expected);
-
+  for (const consumer of consumers) {
+    auditConsumer(consumer, texts.get(consumer.path), violations, version.testCount);
+  }
   return {
     tool: "canonical-test-count-consistency",
     schemaVersion: 1,
     authorizing: false,
-    testCount: expected,
-    consumers: 7,
+    testCount: version.testCount,
+    consumers: consumers.length,
     violations,
   };
 }
 
-function selfTest() {
-  const root = mkdtempSync(join(tmpdir(), "galerina-count-contract-"));
+function writeFixture(root, staleConsumer) {
   const write = (relativePath, content) => {
     const output = join(root, ...relativePath.split("/"));
     mkdirSync(dirname(output), { recursive: true });
     writeFileSync(output, content);
   };
-  const subway = "**v1.0.0-beta.2 · 100 packages · 9499 tests · ship-readiness 100.0%**";
+  const claim = (consumer, plain = false) => {
+    const value = consumer === staleConsumer ? 9498 : 9499;
+    return plain ? String(value) : value.toLocaleString("en-GB");
+  };
+  const subway = (consumer) => `**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} ${claim(consumer, true)} tests ${DOT} ship-readiness 100.0%**`;
+  write("version.json", `${JSON.stringify({ testCount: 9499, packageCount: 100 })}\n`);
+  write("README.md", [
+    "<!-- SUBWAY:BEGIN -->", subway("readme-subway"), "<!-- SUBWAY:END -->",
+    `**v1.0.0-beta.2 ${DOT} full suite 100/100 packages ${DOT} ${claim("readme-full-suite")} tests ${DOT} 0 failures.**`,
+    `| **Tests** | ${TICK} green | 100/100 ${DOT} ${claim("readme-tests-table")} ${DOT} 0 fail |`,
+  ].join("\n"));
+  write("docs/roadmap-2026-07-25-cycle2.md", `<!-- SUBWAY:BEGIN -->\n${subway("cycle-roadmap-subway")}\n<!-- SUBWAY:END -->\n`);
+  write("docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
+    "<!-- SUBWAY:BEGIN -->", subway("active-roadmap-subway"), "<!-- SUBWAY:END -->",
+    "## VOK assurance fabric Chapter 3 - 2026-08-10",
+    `The complete package lane is **100/100 packages and ${claim("active-roadmap-chapter-3")} tests** in 1s.`,
+  ].join("\n"));
+  write("docs/TODO.md", `The complete package lane passes **100/100 packages and ${claim("todo-assurance-fabric")} tests**.\n`);
+}
+
+function selfTest() {
+  const root = mkdtempSync(join(tmpdir(), "galerina-count-contract-"));
   try {
-    write("version.json", `${JSON.stringify({ testCount: 9499, packageCount: 100 })}\n`);
-    write("README.md", [
-      "<!-- SUBWAY:BEGIN -->", subway, "<!-- SUBWAY:END -->",
-      "**v1.0.0-beta.2 · full suite 100/100 packages · 9,499 tests · 0 failures.**",
-      "| **Tests** | ✅ green | 100/100 · 9,499 · 0 fail |",
-    ].join("\n"));
-    write("docs/roadmap-2026-07-25-cycle2.md", `<!-- SUBWAY:BEGIN -->\n${subway}\n<!-- SUBWAY:END -->\n`);
-    write("docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
-      "<!-- SUBWAY:BEGIN -->", subway, "<!-- SUBWAY:END -->",
-      "## VOK assurance fabric Chapter 3 - 2026-08-10",
-      "The complete package lane is **100/100 packages and 9,499 tests** in 1s.",
-    ].join("\n"));
-    write("docs/TODO.md", "The complete package lane passes **100/100 packages and 9,499 tests**.\n");
+    writeFixture(root);
     const clean = audit(root);
-    write("docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", [
-      "<!-- SUBWAY:BEGIN -->", subway, "<!-- SUBWAY:END -->",
-      "## VOK assurance fabric Chapter 3 - 2026-08-10",
-      "The complete package lane is **100/100 packages and 9,498 tests** in 1s.",
-    ].join("\n"));
-    const stale = audit(root);
+    const stale = CONSUMER_SPECS.map((consumer) => {
+      writeFixture(root, consumer.id);
+      return audit(root);
+    });
     const passed = clean.violations.length === 0
-      && stale.violations.length === 1
-      && stale.violations[0]?.consumer === "active-roadmap-chapter-3";
-    if (!passed) throw new Error("clean or stale count-contract control did not produce its exact expected result");
-    process.stdout.write("[self-test] PASS — clean consumers clear and one stale active-roadmap claim blocks\n");
+      && stale.every((result, index) => (
+        result.violations.length === 1
+        && result.violations[0]?.consumer === CONSUMER_SPECS[index].id
+      ));
+    if (!passed) throw new Error("closed count-consumer registry did not block every stale capture");
+    process.stdout.write(`[self-test] PASS — ${CONSUMER_SPECS.length}/${CONSUMER_SPECS.length} exact rendered captures block drift\n`);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

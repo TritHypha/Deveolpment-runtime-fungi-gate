@@ -19,6 +19,9 @@ import {
 import {
   deriveSemanticCoverage,
 } from "../lib/assurance-fabric/semantic-coverage.mjs";
+import {
+  generateSemanticGraph,
+} from "../gen-assurance-semantic-graph.mjs";
 
 const compiler = { buildRouteRegistry, parseProgram };
 
@@ -295,6 +298,31 @@ describe("semantic coverage derivation", () => {
           write(root, "scripts/tests/semantic.test.mjs", "// changed during derivation\n");
         },
       }), "SEMANTIC_INPUT_CHANGED");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps generated semantic outputs current across their own commit but blocks changed authoritative input bytes", async () => {
+    const root = fixture();
+    try {
+      let result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "published", JSON.stringify(result));
+      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
+
+      result = await generateSemanticGraph({ root, check: true, derive });
+      assert.equal(result.kind, "current", JSON.stringify(result));
+
+      write(root, "scripts/tests/semantic.test.mjs", "// changed authoritative evidence bytes\n");
+      result = await generateSemanticGraph({ root, check: true, derive });
+      assert.equal(result.kind, "stale", JSON.stringify(result));
+
+      result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "published", JSON.stringify(result));
+      write(root, "packages-galerina/galerina-alpha/src/a.ts", "export const routeLike = /route POST \\\"/not-live\\\"/; // changed source bytes\n");
+      result = await generateSemanticGraph({ root, check: true, derive });
+      assert.equal(result.kind, "stale", JSON.stringify(result));
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
