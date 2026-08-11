@@ -166,6 +166,7 @@ function semanticBuildPoint(root, authoritativeInputPaths) {
         dirty: Object.freeze(dirtyRelevant),
         stamp: Object.freeze({
           tool: TOOL,
+          authority: "NONE",
           gitCommit: commit,
           builtAt: new Date(epoch * 1000).toISOString(),
           node: process.version,

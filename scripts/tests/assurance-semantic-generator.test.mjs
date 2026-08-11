@@ -18,6 +18,11 @@ test("the semantic assurance generator publishes an exact current non-authorizin
     join(ROOT, "build/assurance-semantic-graph/semantic-graph.json"),
     "utf8",
   ));
+  const provenance = JSON.parse(readFileSync(
+    join(ROOT, "build/assurance-semantic-graph/provenance.json"),
+    "utf8",
+  ));
+  assert.equal(provenance.authority, "NONE");
   assert.equal(report.schemaVersion, 2);
   assert.equal(report.authorizing, false);
   assert.equal(report.verdictTrit, 1);
