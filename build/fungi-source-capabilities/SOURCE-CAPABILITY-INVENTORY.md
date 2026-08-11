@@ -5,27 +5,27 @@ admission, execution parity, retirement credit or production authority.
 
 - Files: 111
 - Flows: 814
-- Bytes: 1113640
-- Retirement graph: `sha256:645bdb2e5160248c469a15cedfd57a35078770801c2ad29f9e86f85289a20ac5`
+- Bytes: 1113191
+- Retirement graph: `sha256:d931afe88192509cce18da971114f111bea80175de10653104924cf2c8c6ef8f`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18813 |
+| `identifier` | 18811 |
 | `callExpr` | 7229 |
-| `binaryExpr` | 6014 |
+| `binaryExpr` | 6012 |
 | `numberLiteral` | 5698 |
-| `block` | 4927 |
-| `stringLiteral` | 4784 |
+| `block` | 4925 |
+| `stringLiteral` | 4782 |
 | `memberExpr` | 4679 |
-| `returnStmt` | 2917 |
-| `paramDecl` | 2762 |
-| `typeRef` | 2416 |
-| `ifStmt` | 2241 |
+| `returnStmt` | 2915 |
+| `paramDecl` | 2760 |
+| `typeRef` | 2414 |
+| `ifStmt` | 2239 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1853 |
-| `boolLiteral` | 1553 |
+| `boolLiteral` | 1551 |
 | `matchArm` | 1207 |
 | `contractDecl` | 814 |
 | `intentDecl` | 814 |
@@ -60,7 +60,7 @@ admission, execution parity, retirement credit or production authority.
 |---|---:|
 | `Int` | 523 |
 | `String` | 415 |
-| `Bool` | 380 |
+| `Bool` | 378 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -344,7 +344,7 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1827 |
+| `==` | 1825 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |
