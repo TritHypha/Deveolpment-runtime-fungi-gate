@@ -447,32 +447,41 @@ describe("Vault zero-trust boundaries", () => {
     assert.equal("stagingValue" in status, false);
   });
 
-  it("serializes overlapping rotations for one credential", async () => {
+  it("refuses an overlapping rotation for one credential without invoking its client", async () => {
     const manager = new SecretsRotationManager();
     const cred = makeCred("serialized", "secret/data/serialized");
     await manager.load(cred, new MockVaultClient(new Map([
       ["secret/secret/data/serialized", "v1"],
     ])));
 
-    let concurrentReads = 0;
-    let maxConcurrentReads = 0;
-    let version = 1;
-    const delayedClient = {
+    let releaseFirst;
+    const firstGate = new Promise((resolve) => { releaseFirst = resolve; });
+    let firstCalls = 0;
+    let secondCalls = 0;
+    const firstClient = {
       async readSecret() {
-        concurrentReads += 1;
-        maxConcurrentReads = Math.max(maxConcurrentReads, concurrentReads);
-        const next = ++version;
-        await new Promise((resolve) => setTimeout(resolve, 10));
-        concurrentReads -= 1;
-        return Buffer.from(JSON.stringify({ value: `v${next}` }), "utf8");
+        firstCalls += 1;
+        await firstGate;
+        return Buffer.from(JSON.stringify({ value: "v2" }), "utf8");
+      },
+    };
+    const secondClient = {
+      async readSecret() {
+        secondCalls += 1;
+        return Buffer.from(JSON.stringify({ value: "must-not-run" }), "utf8");
       },
     };
 
-    await Promise.all([
-      manager.rotate("serialized", delayedClient, cred),
-      manager.rotate("serialized", delayedClient, cred),
-    ]);
-    assert.equal(maxConcurrentReads, 1, "one credential must have one live rotation lease");
+    const first = manager.rotate("serialized", firstClient, cred);
+    assert.equal(firstCalls, 1);
+    const secondRefusal = assert.rejects(
+      manager.rotate("serialized", secondClient, cred),
+      /rotation.*lease.*active|already.*active/i,
+    );
+    releaseFirst();
+    await first;
+    await secondRefusal;
+    assert.equal(secondCalls, 0, "a refused operation must not invoke its provider client");
     assert.deepEqual(manager.getHandle("serialized"), {
       id: "serialized",
       version: 2,
@@ -481,6 +490,27 @@ describe("Vault zero-trust boundaries", () => {
     const active = activeCopyForTest(manager, "serialized");
     assert.ok(active !== undefined);
     assert.equal(JSON.parse(active.toString("utf8")).value, "v2");
+  });
+
+  it("keeps rotations for different credentials concurrent", async () => {
+    const manager = new SecretsRotationManager();
+    const credA = makeCred("parallel-a", "secret/data/parallel-a");
+    const credB = makeCred("parallel-b", "secret/data/parallel-b");
+    await manager.load(credA, new MockVaultClient(new Map([["secret/secret/data/parallel-a", "a1"]])));
+    await manager.load(credB, new MockVaultClient(new Map([["secret/secret/data/parallel-b", "b1"]])));
+
+    let release;
+    const gate = new Promise((resolve) => { release = resolve; });
+    let callsA = 0;
+    let callsB = 0;
+    const clientA = { async readSecret() { callsA += 1; await gate; return Buffer.from('{"value":"a2"}'); } };
+    const clientB = { async readSecret() { callsB += 1; await gate; return Buffer.from('{"value":"b2"}'); } };
+
+    const rotationA = manager.rotate(credA.id, clientA, credA);
+    const rotationB = manager.rotate(credB.id, clientB, credB);
+    assert.deepEqual([callsA, callsB], [1, 1], "independent credential clients start before either settles");
+    release();
+    await Promise.all([rotationA, rotationB]);
   });
 
   it("does not expose the mutable manager or token-bearing client through the facade", () => {

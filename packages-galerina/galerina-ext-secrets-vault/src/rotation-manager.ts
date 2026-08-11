@@ -74,8 +74,9 @@ export class SecretsRotationManager {
   ): Promise<void> {
     const current = this.rotations.get(credentialId);
     if (current !== undefined) {
-      await current;
-      return;
+      throw new Error(
+        `SecretsRotationManager.rotate: rotation lease already active for "${credentialId}"`,
+      );
     }
 
     const operation = this.rotateOnce(credentialId, vaultClient, credential);
