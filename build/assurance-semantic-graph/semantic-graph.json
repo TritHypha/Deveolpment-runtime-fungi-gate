@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "dd0ce77484a4d4090347a78856eb0eb4483719ce2b15cef9d0c18d5332959281",
+  "authoritativeInputsDigest": "a8af0a7d6941d0e33d3c1089ec140b26ce79ddb44bb6841125987bd72db6d92a",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2030,6 +2030,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-a53af0065ebb6d77094717db",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/governance-qualifier-escalation-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-25d8c4f3787a5bf309b86514",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/governance-verifier.test.mjs",
@@ -3734,6 +3741,13 @@
       "id": "test:auto-fb6b69ede76851e33f50df2a",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/wasm-runtime-marshalling-guards.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-7fe944307e37f7703878297e",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/wat-64-bit-type-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7084,6 +7098,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-d0e7b36076bb44e5bb60e399",
+      "kind": "test",
+      "evidencePath": "scripts/tests/wat-64-bit-type-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-a4a5bc02f93fd329784133dc",
       "kind": "test",
       "evidencePath": "scripts/tests/web-stub-guard.test.mjs",
@@ -7986,6 +8007,11 @@
     },
     {
       "from": "test:auto-e7b7cadb47a28eaefd9d180f",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-a53af0065ebb6d77094717db",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -9206,6 +9232,11 @@
     },
     {
       "from": "test:auto-fb6b69ede76851e33f50df2a",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-7fe944307e37f7703878297e",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11600,6 +11631,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-d0e7b36076bb44e5bb60e399",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-a4a5bc02f93fd329784133dc",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11690,9 +11726,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 889,
+    "tests": 892,
     "detectors": 6,
-    "executableFamily": 1423,
+    "executableFamily": 1425,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
