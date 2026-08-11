@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateAssuranceManifest } from "../lib/assurance-fabric/manifest.mjs";
 
 const require = createRequire(import.meta.url);
 const scriptsRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -85,10 +86,18 @@ test("a custom package runner receives no Node-only argument", () => {
 });
 
 test("phase-close bounds its repository-wide tooling test workers", () => {
-  const source = readFileSync(join(scriptsRoot, "run-phase-close.mjs"), "utf8");
-  assert.match(
-    source,
-    /run\("tests:tooling",\s*"node",\s*\["--test",\s*"--test-concurrency=4",\s*\.\.\.toolingTests\]\)/,
-    "the direct Node tooling suite must not inherit the host CPU count as its worker ceiling",
+  const repositoryRoot = join(scriptsRoot, "..");
+  const raw = JSON.parse(readFileSync(
+    join(repositoryRoot, "governance", "phase-close-commands.json"),
+    "utf8",
+  ));
+  const admitted = validateAssuranceManifest(raw, repositoryRoot);
+  assert.equal(admitted.kind, "accepted");
+  const entry = admitted.value.entries.find((candidate) => candidate.id === "tests:tooling");
+  assert.ok(entry);
+  assert.deepEqual(
+    entry.execution.command.slice(0, 3),
+    ["node", "--test", "--test-concurrency=4"],
+    "the governed Node tooling suite must not inherit the host CPU count as its worker ceiling",
   );
 });

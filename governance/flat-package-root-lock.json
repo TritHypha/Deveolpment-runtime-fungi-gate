@@ -994,11 +994,11 @@
       "identity": "@galerina/devtools-benchmarks",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-benchmarks",
-      "contentDigest": "5347dae41ad5e32a338b4190c8c2dd68e1f7be96093f628c27b68947c88ee185",
+      "contentDigest": "d6e22f69603d36fda76064171ef5a5a45c361d2b760b4bb25f223a2721710125",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "8533f568c1ac9c2f7dd3ec8b5e85981ce90a1505632497e2f677c63887104761"
+          "digest": "00d142175dd73363ec1ebae739db50da9a57533e322f769df332333f28b57ba8"
         }
       ],
       "dependencies": [
@@ -3268,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "5041b1165059ff5be07e530fc35f3ca4cc42995151cc109c7c04b9d6443e1b12"
+  "rootDigest": "6ecd6da0aacdd17376d79d8c56e21ebee4f995025975f50aa124cfed41338e95"
 }

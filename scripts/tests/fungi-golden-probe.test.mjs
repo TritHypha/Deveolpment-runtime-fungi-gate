@@ -12,6 +12,7 @@ import {
   canonicalJson,
   validateCaseDefinition,
 } from "../fungi-golden-probe.mjs";
+import { validateAssuranceManifest } from "../lib/assurance-fabric/manifest.mjs";
 
 const REPOSITORY = fileURLToPath(new URL("../..", import.meta.url));
 
@@ -137,10 +138,19 @@ describe("Fungi Golden Pack probe", () => {
   });
 
   it("is wired into the blocking phase-close cadence", async () => {
-    const phaseClose = await readFile(join(REPOSITORY, "scripts", "run-phase-close.mjs"), "utf8");
-    assert.match(
-      phaseClose,
-      /run\("fungi:golden", "node", \["scripts\/fungi-golden-probe\.mjs", "--check"\]\)/u,
-    );
+    const raw = JSON.parse(await readFile(
+      join(REPOSITORY, "governance", "phase-close-commands.json"),
+      "utf8",
+    ));
+    const admitted = validateAssuranceManifest(raw, REPOSITORY);
+    assert.equal(admitted.kind, "accepted");
+    const entry = admitted.value.entries.find((candidate) => candidate.id === "fungi:golden");
+    assert.ok(entry);
+    assert.deepEqual(entry.execution, {
+      kind: "process",
+      command: ["node", "scripts/fungi-golden-probe.mjs", "--check"],
+    });
+    assert.equal(entry.authorityClass, "blocking");
+    assert.ok(entry.cadences.includes("normal"));
   });
 });
