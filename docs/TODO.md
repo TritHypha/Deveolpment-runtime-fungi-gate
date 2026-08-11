@@ -19,9 +19,14 @@ counts or open items that a newer section explicitly supersedes.
   physical `.slide`, independently re-admit it through VOK, execute all nine
   vectors, and refuse wrong typed arguments, an unpaired surrogate, source
   mutation and a one-byte artifact mutation (**1/1**, zero skips).
-- [ ] Refresh the fifth slice's generated owners and both indexes through
-  bounded checks. Full tooling, normal phase-close and whole-memory evaluation
-  remain excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Refresh the fifth slice's generated owners and both indexes through
+  bounded checks. The complete package owner passes **100/100 packages and
+  9,563 tests** in **286.1s**; graph is **7/7**, semantic outputs **3/3**,
+  roadmap outputs **5/5**, canonical consumers **7/7**, and Golden is **11/11
+  checked + 11/11 execution vectors**. Codebase-memory committed **49,867
+  nodes / 132,886 edges** at its exact indexed head; Myco indexes **4,970
+  files / 77,466 terms**. Full tooling, normal phase-close and whole-memory
+  evaluation remain excluded; repository-wide closure remains **UNKNOWN**.
 - [x] Keep `wat-emitter.ts`, `is64BitWatType` and every consumer active. This
   reference-only proof grants no consumer-switch, bootstrap, production,
   release or retirement authority.

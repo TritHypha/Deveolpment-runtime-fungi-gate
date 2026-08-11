@@ -43,6 +43,6 @@ WAT-emitter path unchanged.
 
 - [x] Record exact hashes, build points, results and non-authority boundaries.
 - [x] Record the qualifier branch-profile R&D blocker in TODO/roadmap evidence.
-- [ ] Refresh generated owners through bounded checks.
-- [ ] Commit explicit outputs and re-index codebase-memory plus Myco at the
+- [x] Refresh generated owners through bounded checks.
+- [x] Commit explicit outputs and re-index codebase-memory plus Myco at the
   final exact HEAD without pushing.

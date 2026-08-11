@@ -35,6 +35,12 @@ permission, Hallmark, border grant or host API. It contains none of null, NaN,
 - Physical SLIDE/VOK path: 1/1 pass with zero skips.
 - Tooling-contract audit: 100 packages, 188 tools and zero violations;
   focused tooling-contract tests pass 13/13.
+- Complete package owner: 100/100 packages and 9,563 tests in 286.1 seconds.
+- Graph umbrella: 7/7; semantic outputs: 3/3; roadmap outputs: 5/5;
+  canonical count consumers: 7/7; Golden Pack: 11/11 checked and 11/11
+  execution vectors.
+- Codebase-memory committed 49,867 nodes and 132,886 edges at the exact indexed
+  head; Myco indexes 4,970 files and 77,466 terms.
 
 The physical proof compiles the exact Fungi bytes into a checked package,
 publishes one `.slide`, and independently re-admits it through VOK before
