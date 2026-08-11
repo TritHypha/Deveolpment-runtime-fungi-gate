@@ -25,20 +25,46 @@ export interface ServerConfig {
 // ── OWASP F5: simple token-bucket rate limiter (per-IP, in-memory) ──────────
 // Not a substitute for infrastructure-level rate limiting (nginx/Cloudflare),
 // but prevents a single Node process from being flooded from one client.
-class RateLimiter {
+export class RateLimiter {
   private readonly counts = new Map<string, { n: number; resetAt: number }>();
-  constructor(private readonly limitPerMin: number) {}
+  private readonly capacity: number;
+  private readonly now: () => number;
+
+  constructor(
+    private readonly limitPerMin: number,
+    options: { readonly capacity?: number; readonly now?: () => number } = {},
+  ) {
+    if (!Number.isSafeInteger(limitPerMin) || limitPerMin <= 0) {
+      throw new Error("RateLimiter limitPerMin must be a positive safe integer");
+    }
+    this.capacity = options.capacity ?? 10_000;
+    if (!Number.isSafeInteger(this.capacity) || this.capacity <= 0) {
+      throw new Error("RateLimiter capacity must be a positive safe integer");
+    }
+    this.now = options.now ?? Date.now;
+  }
 
   isAllowed(ip: string): boolean {
-    const now = Date.now();
+    const now = this.now();
     const entry = this.counts.get(ip);
-    if (!entry || now > entry.resetAt) {
+    if (entry !== undefined && now < entry.resetAt) {
+      if (entry.n >= this.limitPerMin) return false;
+      entry.n++;
+      return true;
+    }
+
+    if (entry === undefined && this.counts.size >= this.capacity) {
+      for (const [candidateIp, candidate] of this.counts) {
+        if (now >= candidate.resetAt) this.counts.delete(candidateIp);
+      }
+      if (this.counts.size >= this.capacity) return false;
+    }
+
+    if (entry !== undefined || this.counts.size < this.capacity) {
       this.counts.set(ip, { n: 1, resetAt: now + 60_000 });
       return true;
     }
-    if (entry.n >= this.limitPerMin) return false;
-    entry.n++;
-    return true;
+    return false;
   }
 }
 
@@ -76,6 +102,13 @@ export async function startServer(
   config: ServerConfig,
   executeAdmittedRoute: AdmittedRouteExecutor,
 ): Promise<RunningServer> {
+  const requestedHost = config.host ?? "127.0.0.1";
+  const bindHost = requestedHost === "[::1]" ? "::1" : requestedHost;
+  if (bindHost !== "127.0.0.1" && bindHost !== "::1") {
+    throw new Error(
+      "Standalone compiler server refuses external binding; use the authenticated app-kernel boundary",
+    );
+  }
   // W2: the network stack loads only when a server actually starts (see header comment).
   const { createServer } = await import("node:http");
   const registry = buildRouteRegistry(ast);
@@ -185,9 +218,8 @@ export async function startServer(
   _srv.keepAliveTimeout = Math.min(requestTimeoutMs, 5_000);
 
   return new Promise<RunningServer>((resolve, reject) => {
-    // OWASP F7: default bind to 127.0.0.1 (loopback) for dev/test; require explicit
-    // opt-in for external exposure. Production deployments set config.host explicitly.
-    const bindHost = config.host ?? (mode === "dev" ? "127.0.0.1" : "127.0.0.1");
+    // OWASP F7: the standalone compiler surface is loopback-only. External
+    // exposure belongs to the authenticated app-kernel boundary.
     server.listen(config.port, bindHost, () => {
       const address = server.address();
       const actualPort = typeof address === "object" && address !== null ? address.port : config.port;

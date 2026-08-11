@@ -26,15 +26,15 @@ import {
 /**
  * Build a raw CBOR byte sequence for a deeply nested array.
  * Each level: major type 4 (array), count 1 — wraps the next.
- * Innermost: null (0xf6).
+ * Innermost: unsigned zero (0x00).
  *
  * decodeCBOR depth parameter starts at 0; each recursive call increments.
  * At depth > 8 the check fires, so 9 levels of nesting should trigger it.
  */
 function buildDeeplyNestedCBOR(levels) {
   // Build from the inside out
-  // Innermost: null = 0xf6
-  let inner = new Uint8Array([0xf6]);
+  // Innermost: unsigned zero = 0x00 (null is forbidden in manifests)
+  let inner = new Uint8Array([0x00]);
   for (let i = 0; i < levels; i++) {
     // Array of 1 element: 0x81 <element>
     const wrapped = new Uint8Array(1 + inner.length);
@@ -180,7 +180,7 @@ describe("FUNGI-MANIFEST-DUPLICATE-KEY: duplicate map key rejection", () => {
     assert.deepEqual(result.value, { a: 1, b: 2 });
   });
 
-  it("detects duplicate keys even with string conversion (numeric key 0 duplicated)", () => {
+  it("detects duplicate canonical keys after bounded integer conversion", () => {
     // Map with two entries both having key 0 (unsigned int)
     // { 0: "first", 0: "second" } — key is 0 (integer), String(0) = "0"
     const cbor = new Uint8Array([
@@ -349,10 +349,10 @@ describe("decodeCBOR: round-trip fidelity with encodeCBOR", () => {
     assert.deepEqual(value, arr);
   });
 
-  it("encodes and decodes null", () => {
-    const cbor = encodeCBOR(null);
-    const { value } = decodeCBOR(cbor, 0, 0);
-    assert.equal(value, null);
+  it("refuses null and undefined in both encoder and decoder", () => {
+    assert.throws(() => encodeCBOR(null), /null|forbidden/i);
+    assert.throws(() => encodeCBOR(undefined), /undefined|forbidden/i);
+    assert.throws(() => decodeCBOR(new Uint8Array([0xf6]), 0, 0), /null|forbidden/i);
   });
 
   it("encodes and decodes a boolean", () => {
@@ -365,4 +365,29 @@ describe("decodeCBOR: round-trip fidelity with encodeCBOR", () => {
     assert.equal(v2, false);
   });
 
+});
+
+describe("decodeCBOR: exact closed-object admission", () => {
+  it("refuses truncated integer heads and payloads", () => {
+    for (const bytes of [
+      [0x18],
+      [0x19, 0x00],
+      [0x1a, 0x00, 0x00, 0x00],
+      [0x43, 0x01, 0x02],
+      [0x63, 0x61, 0x62],
+    ]) {
+      assert.throws(() => decodeCBOR(new Uint8Array(bytes), 0, 0), /end|truncat|length/i);
+    }
+  });
+
+  it("refuses trailing bytes and invalid UTF-8", () => {
+    assert.throws(() => decodeCBOR(new Uint8Array([0x01, 0x02]), 0, 0), /trailing|complete/i);
+    assert.throws(() => decodeCBOR(new Uint8Array([0x61, 0xff]), 0, 0), /utf-8|encoding/i);
+  });
+
+  it("refuses prototype-bearing map keys", () => {
+    const key = new TextEncoder().encode("__proto__");
+    const bytes = new Uint8Array([0xa1, 0x69, ...key, 0xa0]);
+    assert.throws(() => decodeCBOR(bytes, 0, 0), /prototype|key/i);
+  });
 });

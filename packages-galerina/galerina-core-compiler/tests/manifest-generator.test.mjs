@@ -240,14 +240,14 @@ describe("manifest signing input (versioned) + #67 CBOR self-verify", () => {
     zeta: "last-alphabetically",
     alpha: 1,
     nested: { y: 2, x: 1, list: [3, 1, 2] },
-    flags: [true, false, null],
+    flags: [true, false, 0],
   };
 
   it("manifestSigCanon: 'jcs' tag ⇒ jcs; untagged/legacy ⇒ legacy (back-compat default)", () => {
     assert.equal(manifestSigCanon({ algorithm: "Ed25519", canon: "jcs" }), "jcs");
     assert.equal(manifestSigCanon({ algorithm: "Ed25519" }), "legacy");   // untagged older signature
     assert.equal(manifestSigCanon("placeholder"), "legacy");
-    assert.equal(manifestSigCanon(null), "legacy");
+    assert.equal(manifestSigCanon({}), "legacy");
   });
 
   it("jcs input == canonicalJson; legacy input == pretty JSON; the two differ", () => {

@@ -7,7 +7,7 @@ import {
   getResolverReport,
   parseProgram,
 } from "../dist/index.js";
-import { startServer } from "../dist/route-dispatcher.js";
+import { RateLimiter, startServer } from "../dist/route-dispatcher.js";
 
 const ctx = {
   recordEffect: () => {},
@@ -66,6 +66,24 @@ test("standalone route server refuses malformed and over-depth JSON before execu
   } finally {
     await running.close();
   }
+});
+
+test("standalone route server refuses non-loopback binding until an authenticated host owns exposure", async () => {
+  const program = ast('route GET "/x" { flow x }');
+  await assert.rejects(
+    () => startServer(program, { port: 0, host: "0.0.0.0" }, async () => ({ __tag: "string", value: "no" })),
+    /loopback|authenticated|external/i,
+  );
+});
+
+test("compiler rate state has a hard identity capacity and reclaims expired entries", () => {
+  let now = 1_000;
+  const limiter = new RateLimiter(2, { capacity: 2, now: () => now });
+  assert.equal(limiter.isAllowed("client-a"), true);
+  assert.equal(limiter.isAllowed("client-b"), true);
+  assert.equal(limiter.isAllowed("client-c"), false, "new identities refuse at the hard capacity");
+  now += 60_001;
+  assert.equal(limiter.isAllowed("client-c"), true, "expired identities are reclaimed before refusal");
 });
 
 test("the canonical JSON decoder refuses an over-depth value", async () => {

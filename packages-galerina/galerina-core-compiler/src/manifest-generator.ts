@@ -266,7 +266,7 @@ export function encodeCBOR(value: unknown, depth = 0): Uint8Array {
   if (depth > 8) throw new Error("CBOR: max nesting depth (8) exceeded — Billion Laughs protection");
 
   if (value === null || value === undefined) {
-    return new Uint8Array([0xf6]); // null (major 7, additional 22)
+    throw new Error("CBOR: null and undefined are forbidden in Galerina manifests");
   }
 
   if (typeof value === "boolean") {
@@ -384,6 +384,14 @@ function concatBytes(arrays: Uint8Array[]): Uint8Array {
 const CBOR_MAX_FIELD_SIZE = 4 * 1024 * 1024;
 
 export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: unknown; nextOffset: number } {
+  const decoded = decodeCborValue(bytes, offset, depth);
+  if (offset === 0 && depth === 0 && decoded.nextOffset !== bytes.length) {
+    throw new Error(`CBOR: trailing bytes after complete value at offset ${decoded.nextOffset}`);
+  }
+  return decoded;
+}
+
+function decodeCborValue(bytes: Uint8Array, offset: number, depth: number): { value: unknown; nextOffset: number } {
   // ── FUNGI-MANIFEST-DEPTH: Billion Laughs protection ─────────────────────────
   // Maximum nesting depth is 8 levels. A depth-9 call fires this guard.
   // Prevents exponential decode expansion via nested arrays/maps.
@@ -408,6 +416,7 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
       if (head > CBOR_MAX_FIELD_SIZE) {
         throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR byte string claims ${head} bytes — exceeds 4MB DWI ceiling`);
       }
+      requireCborBytes(bytes, offset, head, "byte string");
       const slice = bytes.slice(offset, offset + head);
       return { value: slice, nextOffset: offset + head };
     }
@@ -415,8 +424,16 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
       if (head > CBOR_MAX_FIELD_SIZE) {
         throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR text string claims ${head} bytes — exceeds 4MB DWI ceiling`);
       }
+      requireCborBytes(bytes, offset, head, "text string");
       const slice = bytes.slice(offset, offset + head);
-      return { value: new TextDecoder().decode(slice), nextOffset: offset + head };
+      try {
+        return {
+          value: new TextDecoder("utf-8", { fatal: true }).decode(slice),
+          nextOffset: offset + head,
+        };
+      } catch {
+        throw new Error("CBOR: invalid UTF-8 text string");
+      }
     }
     case 4: {                                                                      // array
       if (head > CBOR_MAX_FIELD_SIZE) {
@@ -424,7 +441,7 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
       }
       const arr: unknown[] = [];
       for (let i = 0; i < head; i++) {
-        const { value: item, nextOffset: next } = decodeCBOR(bytes, offset, depth + 1);
+        const { value: item, nextOffset: next } = decodeCborValue(bytes, offset, depth + 1);
         arr.push(item); offset = next;
       }
       return { value: arr, nextOffset: offset };
@@ -436,7 +453,10 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
       const obj: Record<string, unknown> = {};
       const seenKeys = new Set<string>();
       for (let i = 0; i < head; i++) {
-        const { value: k, nextOffset: afterKey } = decodeCBOR(bytes, offset, depth + 1);
+        const { value: k, nextOffset: afterKey } = decodeCborValue(bytes, offset, depth + 1);
+        if (typeof k !== "string" && (!Number.isSafeInteger(k) || (k as number) < 0)) {
+          throw new Error("CBOR: map key must be text or a non-negative safe integer");
+        }
         const key = String(k); offset = afterKey;
         // ── FUNGI-MANIFEST-DUPLICATE-KEY ──────────────────────────────────────
         // Duplicate keys allow shadow-field attacks: first-key semantics in
@@ -444,8 +464,11 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
         if (seenKeys.has(key)) {
           throw new Error(`FUNGI-MANIFEST-DUPLICATE-KEY: CBOR map contains duplicate key '${key}' — possible shadow-field attack`);
         }
+        if (key === "__proto__" || key === "prototype" || key === "constructor") {
+          throw new Error(`CBOR: prototype-bearing map key '${key}' is forbidden`);
+        }
         seenKeys.add(key);
-        const { value: v, nextOffset: afterVal } = decodeCBOR(bytes, offset, depth + 1);
+        const { value: v, nextOffset: afterVal } = decodeCborValue(bytes, offset, depth + 1);
         obj[key] = v; offset = afterVal;
       }
       return { value: obj, nextOffset: offset };
@@ -453,7 +476,7 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
     case 7: {                                                                      // primitive
       if (head === 20) return { value: false, nextOffset: offset };
       if (head === 21) return { value: true, nextOffset: offset };
-      if (head === 22) return { value: null, nextOffset: offset };
+      if (head === 22) throw new Error("CBOR: null is forbidden in Galerina manifests");
       throw new Error(`CBOR: unsupported primitive ${head}`);
     }
     default: throw new Error(`CBOR: unsupported major type ${majorType}`);
@@ -462,13 +485,26 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
 
 function readCborHead(additionalInfo: number, bytes: Uint8Array, offset: number): { value: number; nextOffset: number } {
   if (additionalInfo <= 23) return { value: additionalInfo, nextOffset: offset };
-  if (additionalInfo === 24) return { value: bytes[offset]!, nextOffset: offset + 1 };
-  if (additionalInfo === 25) return { value: ((bytes[offset]! << 8) | bytes[offset + 1]!), nextOffset: offset + 2 };
+  if (additionalInfo === 24) {
+    requireCborBytes(bytes, offset, 1, "integer head");
+    return { value: bytes[offset]!, nextOffset: offset + 1 };
+  }
+  if (additionalInfo === 25) {
+    requireCborBytes(bytes, offset, 2, "integer head");
+    return { value: ((bytes[offset]! << 8) | bytes[offset + 1]!), nextOffset: offset + 2 };
+  }
   if (additionalInfo === 26) {
+    requireCborBytes(bytes, offset, 4, "integer head");
     const v = ((bytes[offset]! << 24) | (bytes[offset + 1]! << 16) | (bytes[offset + 2]! << 8) | bytes[offset + 3]!) >>> 0;
     return { value: v, nextOffset: offset + 4 };
   }
   throw new Error(`CBOR: unsupported additional info ${additionalInfo}`);
+}
+
+function requireCborBytes(bytes: Uint8Array, offset: number, length: number, context: string): void {
+  if (!Number.isSafeInteger(length) || length < 0 || offset < 0 || offset > bytes.length - length) {
+    throw new Error(`CBOR: truncated ${context}`);
+  }
 }
 
 // ---------------------------------------------------------------------------
