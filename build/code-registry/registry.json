@@ -2611,7 +2611,7 @@
       "severities": [],
       "defs": 0,
       "emits": 1,
-      "tests": 0,
+      "tests": 1,
       "docs": 0
     },
     {
