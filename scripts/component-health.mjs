@@ -349,6 +349,9 @@ const ZERO_TRUST = [
   { boundary: "Memory", pct: 62, status: "◑ native VOK W^X/K3 floor is linked and verified at 19,683/19,683; general memory, hostile-memory execution and production VOK authority remain open" },
   { boundary: "TLSTP — zero-middleware", pct: 56, status: "◑ channel denial now constrains every route and the governed transport decisions are proven; raw-byte/ECH plumbing, live recovering-FSM wiring and independent in-sandbox execution remain open" },
 ];
+const SLIDE_STATUS = "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 984/984 across 97 suites. Contract 85 remains 4/4 and Contract 86 remains 5/5 over all 19,683 K3 vectors, with exact rebuild and mutation refusal. Both physical candidates bind the remediated policy/verifier context; caller-owned authentication refuses and external deployment authentication remains K3 0. General collections/Result families, multiple/cross-package effects, authenticated platform durability and production authority remain open";
+const PRECONVERSION_STATUS = "Galerina G1-G4 and SLIDE S1-S2 are closed with negative tests. SLIDE passes 984/984 across 97 suites, has a zero forbidden-state count across its 91-file executable tool surface, and sealed scan 7263c63e reports no finding across six reviewed critical surfaces with honestly partial coverage. Galerina pins the remediated tool and current context; deployment authentication remains K3 0. A fresh four-scope scan plus complete and exhaustive Galerina custody rerun is still required before mechanical conversion";
+
 const BUILD_PROGRESS = [
   { layer: "Specification / KB", pct: 100 },
   { layer: "Lexer / Parser / Verifier / Contract / Value-state", pct: 100 },
@@ -366,7 +369,7 @@ const BUILD_PROGRESS = [
   { layer: "Passive Execution Plans & Target Bridges", pct: 35 },
   { layer: "AI Inference Tower (BitNet/Groq/NVFP4)", pct: 30 },
   { layer: "Photonic / Ternary Computing", pct: 3 },
-  { layer: "Independent SLIDE general executable backend", status: "building — bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 869/869 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate. Filesystem source traversal now retains and revalidates directory identity, and the V2-D execution core plus named exported loader refusal variants are null-free. Systemic null-state removal, authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open" },
+  { layer: "Independent SLIDE general executable backend", status: SLIDE_STATUS },
   { layer: "B8 governed HTTP transport (TLSTP)", status: "building — denial constrains every route; K3 admission and recovering-FSM decisions are proven; raw-byte shim, live S4 wiring, ECH/OHTTP and independent in-sandbox execution remain open" },
   { layer: "Lyth/Weaver Verified Admission Fabric", status: "laboratory — schema and hardening suites are verified; A-lane preregistered but not yet run; no performance percentage claimed" },
 ];
@@ -390,7 +393,7 @@ const TRACKING_REGISTRY = [
   { item: "Workspace package families",          state: "shipped",       detail: `${summary.green}/${summary.components} component families green; ${summary.workspacePackages} workspace packages, ${fmt(summary.recordedTotal)} recorded tests and ${summary.orphans} unadjudicated orphans, all derived from the live workspace and version ledgers` },
   { item: "Package Standard + pub ladder",       state: "building",      detail: "Standard v1 + pkg-census + 9 schematics done; R1–R6 rungs pending; .graph amendment 🔒 owner" },
   { item: "Security-infra designs (×4)",         state: "building",      detail: "SBOM tool exists · fuzz RD-0316 leg 1 BUILT (slice-6 shape-oracle live in the suite; found+fixed the MIN-literal wasm-trap fidelity bug on run one) · Z3 RD-0318 needs a new dep (🔒 propose) · tabletop RD-0319 = owner exercise, runbook on request" },
-  { item: "Pre-conversion security closure",     state: "building",      detail: "Galerina G1-G4 and SLIDE S2 are locally remediated with negative tests; SLIDE S1 is only partial. Its V2-D execution core and named exported loader refusal variants are null-free, but the loader still has 131 null matches across 22 functions and the complete source surface remains at least 500 matches across 121 functions. Conversion stays refused until systemic S1 closure and fresh scan, complete and exhaustive custody evidence" },
+  { item: "Pre-conversion security closure",     state: "building",      detail: PRECONVERSION_STATUS },
   { item: ".gate v4 ADR-002 synthesize-only experiment", state: "build-pending", detail: "RD-0792 rules REWORK as a versioned experiment and REFUSE production authority. Grok independently returned REWORK; Antigravity returned ADOPT research / REWORK conversion / REFUSE production. V4-X1 through V4-X4 remain unbuilt, S3 cannot inherit transparent re-derivation or no-DSS claims, and current conversion retains Galerina → GIR → SLIDE/VOK" },
   { item: "Devtools audit suite",                state: "shipped",       detail: "the generated dev-tool index owns current tool, audit, phase-close and proof counts; the percentage producer, evidence ratchet, history snapshotter, status generator and subway generator now encode absence/non-finite states explicitly with no forbidden scalar sentinels; claim-hygiene, path-leak, fungi-corpus, keep-green and gate-selftests remain fail-closed meta-gates" },
   { item: "Hypha passive capability map",        state: "shipped",       detail: "top-level galerina-devtools-hypha is workspace-enlisted and passes 42/42; the default scan is in-memory, self-locating, zero-dependency and write-free unless --out is explicit" },
@@ -449,7 +452,7 @@ TRACKING_REGISTRY.splice(
   {
     item: "Independent SLIDE backend",
     state: "building",
-    detail: "bounded checked-Fungi → canonical GIR → source-free .slide → independent re-admission → affine VOK is 869/869 across 96 suites; Contract 86 composes hybrid-authenticated object bytes with typed physical execution. Galerina's restoreVerdict consumer remains 4/4 and the VOK authority candidate is 5/5 over 19,683 vectors plus one authenticated authorizing candidate. Filesystem source traversal now retains and revalidates directory identity, and the V2-D execution core plus named exported loader refusal variants are null-free. Systemic null-state removal, authenticated platform evidence, production boot composition, general collections/Result families, multiple/cross-package effects and production authority remain open",
+    detail: SLIDE_STATUS,
   },
   retirementCounts.available
     ? {
@@ -768,13 +771,15 @@ if (SELF_TEST) {
     ?.rows.find((row) => row.label === "Independent SLIDE general executable backend");
   const slideRegistry = reg.find((row) => row.item === "Independent SLIDE backend");
   ok(
-    slideBuild?.status?.includes("869/869 across 96 suites")
-      && slideBuild.status.includes("VOK authority candidate is 5/5 over 19,683 vectors"),
+    slideBuild?.status?.includes("984/984 across 97 suites")
+      && slideBuild.status.includes("Contract 86 remains 5/5 over all 19,683 K3 vectors")
+      && slideBuild.status.includes("caller-owned authentication refuses"),
     "SLIDE build-progress status records bounded transitive work and VOK candidate evidence",
   );
   ok(
-    slideRegistry?.detail?.includes("869/869 across 96 suites")
-      && slideRegistry.detail.includes("VOK authority candidate is 5/5 over 19,683 vectors"),
+    slideRegistry?.detail?.includes("984/984 across 97 suites")
+      && slideRegistry.detail.includes("Contract 86 remains 5/5 over all 19,683 K3 vectors")
+      && slideRegistry.detail.includes("caller-owned authentication refuses"),
     "SLIDE tracking-registry status records bounded transitive work and VOK candidate evidence",
   );
   ok(

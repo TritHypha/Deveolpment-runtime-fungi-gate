@@ -66,6 +66,22 @@ test("component health counts the benchmark package's governed test/ surface", (
   assert.match(compiler.detail, /0 differential/);
   assert.match(compiler.detail, /7 authoritative/);
 
+  const slide = tracking.rows.find(
+    (row) => row.item === "Independent SLIDE backend",
+  );
+  assert.ok(slide);
+  assert.match(slide.detail, /984\/984 across 97 suites/);
+  assert.match(slide.detail, /caller-owned authentication refuses/);
+  assert.doesNotMatch(slide.detail, /authenticated authorizing candidate/);
+
+  const preconversion = tracking.rows.find(
+    (row) => row.item === "Pre-conversion security closure",
+  );
+  assert.ok(preconversion);
+  assert.match(preconversion.detail, /SLIDE S1-S2 are closed/);
+  assert.match(preconversion.detail, /deployment authentication remains K3 0/);
+  assert.doesNotMatch(preconversion.detail, /SLIDE S1 is only partial/);
+
   const compilerBoundary = report.percentAudit.sections
     .find((section) => section.key === "zero-trust-thesis")
     ?.rows.find((row) => row.label === "Compiler");
