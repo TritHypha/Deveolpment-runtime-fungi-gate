@@ -29,6 +29,7 @@
       "src/compare-chart.mjs",
       "src/compare.mjs",
       "src/diagnostic-runner.mjs",
+      "src/gpu-detect.mjs",
       "src/history.mjs",
       "src/noise-gate.mjs",
       "src/report.mjs",
