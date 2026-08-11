@@ -1,7 +1,7 @@
 # Core logic Tri operations Fungi conversion dossier
 
 Date: 2026-08-11
-Status: `PHYSICAL_REFERENCE_PROOF_PENDING_REPOSITORY_CLOSE`
+Status: `PHYSICAL_REFERENCE_SLICE_PROVED_NON_RETIRING`
 Authority: non-retiring conversion slice; the TypeScript source and consumers remain authoritative until every switch and retirement gate is proved.
 
 ## Pinned source
@@ -50,10 +50,10 @@ There are no loops, exceptions to reproduce inside Fungi, host APIs, effects, mu
 6. VOK/admission gates are all independently positive for the proof candidate; no test Boolean substitutes for them.
 7. Relevant package, Golden, graph, audit, roadmap, and phase-close owners pass after publication.
 
-Items 1 through 6 now hold; item 7 is still pending. The current status is
-therefore `PHYSICAL_REFERENCE_PROOF_PENDING_REPOSITORY_CLOSE`. Even after item
-7 holds, this proves only the four-flow slice and does not retire `src/index.ts`
-or authorize a production consumer switch.
+All seven items now hold. The current status is therefore
+`PHYSICAL_REFERENCE_SLICE_PROVED_NON_RETIRING`. This proves only the four-flow
+slice and does not retire `src/index.ts` or authorize a production consumer
+switch.
 
 ## Current proof record
 
@@ -69,9 +69,10 @@ or authorize a production consumer switch.
   executed through VOK typed receipts over every vector.
 - Negative proof: invalid typed arguments refuse and a one-byte physical
   artifact mutation refuses before execution.
-- Remaining status transition: run the Galerina graph/audit/roadmap/phase-close
-  owner chain on the final committed build point. Until that passes, the
-  dossier does not claim repository-close freshness.
+- Repository closure: the canonical aggregate passes **100/100 packages and
+  9,554 tests** in **299.9s**; tooling passes **583** with **12 intentional
+  skips**; and normal phase-close passes every blocking gate in **660.4s**.
+  The runner explicitly grants no release authority.
 
 The source and its consumers intentionally remain active. Passing the remaining
 repository gates will prove this bounded slice, not retire `src/index.ts`, not

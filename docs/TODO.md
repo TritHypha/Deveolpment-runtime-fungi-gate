@@ -21,6 +21,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Compile the exact Fungi bytes into four physical `.slide` exports,
   independently re-admit and execute every K3 vector through VOK typed receipts,
   reject invalid Verdict arguments and refuse a one-byte artifact mutation.
+- [x] Close the repository evidence at the bounded slice: **100/100 packages
+  and 9,554 tests** in **299.9s**, tooling **583 pass / 12 intentional skips**,
+  Golden Pack **11/11 + 11/11**, graph **7/7**, and normal phase-close every
+  blocking gate in **660.4s**. This is verification, not release authority.
 - [ ] Keep the TypeScript source and its consumers active. This proves one
   four-flow, reference-only conversion slice; it does not retire the source
   file, authorize production, or reduce repository retirement debt until the
