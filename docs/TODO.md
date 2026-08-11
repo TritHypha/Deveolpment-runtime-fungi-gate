@@ -27,12 +27,12 @@ counts or open items that a newer section explicitly supersedes.
   complete package owner passes **100/100 packages and 9,566 tests**; graph is
   **7/7**, semantic outputs **3/3**, roadmap outputs **5/5**, canonical
   consumers **7/7**, and Golden is **11/11 checked + 11/11 execution
-  vectors**. Myco indexes **4,977 files / 77,479 terms**.
-- [ ] Re-index primary codebase-memory at the final exact HEAD. The bounded
-  refresh attempt returned `Transport closed`, so freshness remains
-  **UNKNOWN** rather than being inferred from Myco. Full tooling, normal
-  phase-close, graph-all-after-roadmap and whole-memory evaluation remain
-  excluded; repository-wide closure remains **UNKNOWN**.
+  vectors**. Myco indexes **4,977 files / 77,481 terms**.
+- [x] Re-index primary codebase-memory through a full, conserved rebuild:
+  **49,929/49,929 nodes**, **133,080/133,080 edges**, exact indexed/Git HEAD,
+  `stale: false`, and the new physical test queryable as a graph file node.
+  Full tooling, normal phase-close, graph-all-after-roadmap and whole-memory
+  evaluation remain excluded; repository-wide closure remains **UNKNOWN**.
 - [x] Keep `governance-diff.ts`, its TypeScript decision and every consumer
   active. This reference-only proof grants no consumer-switch, bootstrap,
   production, release or retirement authority.

@@ -48,6 +48,7 @@ Keep the executing governance-diff path unchanged.
 
 - [x] Record exact hashes, build points, results and non-authority boundaries.
 - [x] Refresh generated owners through bounded checks.
-- [ ] Commit explicit outputs and re-index codebase-memory plus Myco at the
-  final exact HEAD without pushing. Myco is fresh at the current checkpoint;
-  codebase-memory returned `Transport closed` and remains fail-closed UNKNOWN.
+- [x] Commit explicit outputs and re-index codebase-memory plus Myco at the
+  final exact HEAD without pushing. The full graph rebuild conserves
+  49,929 nodes and 133,080 edges with exact indexed/Git HEAD and `stale:
+  false`; the new physical test is graph-queryable.
