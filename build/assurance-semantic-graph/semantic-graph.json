@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "98f6768bba38e94da470cd6dbae1a7f8742da5b3e616111a8e4b622460cee94e",
+  "authoritativeInputsDigest": "6c818b5210fef4b755b6faac9437b9a1df8a0e552d58bfe6deba2884f3e50062",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -4214,6 +4214,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-e1fc2d5389e6c931d2d87413",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-logic/tests/tri-ops-fungi-conversion.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-81fdf2ede4636be518be78ce",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-network/tests/admission-feedback.test.mjs",
@@ -6576,6 +6583,13 @@
       "id": "test:auto-d84d61e0699b3c9441ff1657",
       "kind": "test",
       "evidencePath": "scripts/tests/contract-registry-generator.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-1b28cb384cac122920a55b2e",
+      "kind": "test",
+      "evidencePath": "scripts/tests/core-logic-tri-ops-slide.integration.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -9501,6 +9515,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-e1fc2d5389e6c931d2d87413",
+      "to": "package:galerina-core-logic",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-81fdf2ede4636be518be78ce",
       "to": "package:galerina-core-network",
       "type": "CLASSIFIES"
@@ -11191,6 +11210,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-1b28cb384cac122920a55b2e",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-52df8094d609a28484725b8c",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11606,9 +11630,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 882,
+    "tests": 884,
     "detectors": 6,
-    "executableFamily": 1420,
+    "executableFamily": 1421,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
