@@ -27,7 +27,7 @@ counts or open items that a newer section explicitly supersedes.
   complete package owner passes **100/100 packages and 9,566 tests**; graph is
   **7/7**, semantic outputs **3/3**, roadmap outputs **5/5**, canonical
   consumers **7/7**, and Golden is **11/11 checked + 11/11 execution
-  vectors**. Myco indexes **4,977 files / 77,481 terms**.
+  vectors**. Myco indexes **4,977 files** at the closure checkpoint.
 - [x] Re-index primary codebase-memory through a full, conserved rebuild:
   **49,929/49,929 nodes**, **133,080/133,080 edges**, exact indexed/Git HEAD,
   `stale: false`, and the new physical test queryable as a graph file node.

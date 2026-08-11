@@ -49,8 +49,8 @@ Strings cannot acquire authority above `pure`.
 - Generated owners: graph 7/7, semantic outputs 3/3, roadmap outputs 5/5,
   canonical count consumers 7/7, and Golden Pack 11/11 checked plus 11/11
   execution vectors.
-- Myco indexes 4,977 files and 77,481 terms. Primary codebase-memory was
-  rebuilt in full at 49,929/49,929 nodes and 133,080/133,080 edges; indexed
+- Myco indexes 4,977 files at the closure checkpoint. Primary codebase-memory
+  was rebuilt in full at 49,929/49,929 nodes and 133,080/133,080 edges; indexed
   HEAD equals Git HEAD, `stale` is false, and the new physical integration
   test is queryable as a graph file node.
 
