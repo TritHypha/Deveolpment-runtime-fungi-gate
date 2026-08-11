@@ -1,14 +1,27 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-10
+Date: 2026-08-11
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: Galerina pins SLIDE Contract 86 implementation `39920eb`,
-its **89-file** tool manifest at `817e9d17...1d8484`, and a closed contract
-catalog of **95 files in two partitions**. Complete SLIDE passes **869/869
-tests across 96 suites**, path hygiene **14/14** across 755 targets and security
-closure `+1` with evidence K3 `0`; authority remains unreleased.
+Current checkpoint: Galerina pins the remediated SLIDE implementation
+`eed1249`, its **91-file** tool manifest at `8bb0334f...364ea`, and a closed
+contract catalog of **95 files in two partitions**. Complete SLIDE passes
+**984/984 tests across 97 suites**; forbidden-state audit is zero across all 91
+executable files, path hygiene covers **767 targets**, and sealed scan
+`7263c63e` reports no finding across six reviewed security-critical surfaces.
+Coverage is honestly partial because independent worker variance was
+unavailable. Security closure remains non-authorizing at K3 `0`.
 
-Current-state rule: this opening 2026-08-10 checkpoint supersedes lower dated
+Both Galerina source manifests are now bound to the exact current portable-VEO
+policy and verifier context, and both committed physical `.slide` publications
+were regenerated through the pinned tool. Contract 85 source-free execution
+and the complete **19,683-vector** Contract 86 K3 proof remain executable;
+caller-owned disposable trust is now refused and cannot mint a deployment
+authentication handle. External deployment authentication, signing, platform
+durability and production authority remain explicit later exits. TritMesh:QL
+is excluded from the admitted mechanical-conversion scope until its six scan
+findings close; this exclusion is not a claim that the component is secure.
+
+Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
 
@@ -160,13 +173,14 @@ ledger, and the 2026-08-10 exhaustive closure above supersedes that refusal.
 Conversion and production authority remain closed for the separate SLIDE S1,
 TritMesh:QL, signing, platform and durability gates.
 
-The real `restoreVerdict` consumer now executes only exact hybrid-authenticated
-`.slide` bytes and independently verifies the composed typed receipt. Its
-focused evidence remains **4/4**. The VOK authority candidate preserves the
-full **19,683/19,683** nine-trit semantic proof, exactly one authorizing vector,
-malformed-trit refusal, exact rebuild and mutation refusal, and adds one
-hybrid-authenticated authorizing candidate: **5/5**. Disposable test keys prove
-the Ed25519 + ML-DSA-65 composition without using offline production custody.
+The current `restoreVerdict` candidate re-admits and executes exact source-free
+`.slide` bytes and independently verifies the typed receipt. Its authenticated
+cold-boot consumer remains refused because no deployment authentication
+authority is provisioned. The VOK authority candidate preserves the full
+**19,683/19,683** nine-trit semantic proof, exactly one computationally allowing
+vector, malformed-trit refusal, exact rebuild and mutation refusal. That vector
+does not become production-authorizing: caller-owned disposable Ed25519 +
+ML-DSA-65 trust is rejected and no authenticated object handle is exposed.
 
 Production-boot composition checkpoint 2026-08-09: local Galerina commits
 `06121a57` and hardened closure `47267944` seal a privately registered,

@@ -6,6 +6,14 @@ Implementation checkpoints: `06121a57`, hardened closure `47267944`
 
 Private R&D route: RD-0791
 
+> **Superseded security interpretation - 2026-08-11.** The data-only K3 `0`
+> shape remains historical evidence, but its disposable caller-owned
+> authentication preparation is no longer available. Remediated SLIDE
+> `eed1249` requires an externally provisioned deployment authority and exposes
+> no handle for caller-provided trust. The current physical `restoreVerdict`
+> candidate still re-admits and executes source-free; production cold-boot
+> composition stays refused until that separate authority is provisioned.
+
 ## Outcome
 
 The repository now has a sealed composition candidate joining exact

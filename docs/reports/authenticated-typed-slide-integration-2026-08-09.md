@@ -4,6 +4,15 @@ Date: 2026-08-09
 
 Status: reference implementation verified; production authority unreleased.
 
+> **Superseded security interpretation - 2026-08-11.** This report preserves
+> the 2026-08-09 historical experiment, but its caller-owned disposable trust
+> route is no longer admissible. Galerina now pins remediated SLIDE `eed1249`;
+> both physical packages use the current policy/verifier context, and
+> source-free execution remains verified. The public authentication authority
+> constructor returns K3 `0` (`AUTHORITY_PROVISIONING_REQUIRED`), so no positive
+> authenticated handle, cold-boot authority or authorizing VOK candidate may be
+> inferred from the historical disposable-key evidence below.
+
 ## Outcome
 
 Galerina now pins SLIDE Contract 86 implementation `39920eb`, the 89-file

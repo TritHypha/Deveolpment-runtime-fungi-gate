@@ -422,8 +422,8 @@ async function authority() {
   assert.equal(`${JSON.stringify(manifest, null, 2)}\n`, manifestBytes.toString("utf8"));
   assert.equal(exactKeys(pin, ["schema", "repositoryCommit", "toolManifestDigest", "toolFileCount"]), true);
   assert.equal(pin.schema, "galerina.slide.reference-tool-pin.v1");
-  assert.equal(pin.repositoryCommit, "39920eb997a27bcb8deb937dcd97ef59612245aa");
-  assert.equal(pin.toolFileCount, 89);
+  assert.equal(pin.repositoryCommit, "eed124974b6ddf6cd54e14d48e4b36996ed59f57");
+  assert.equal(pin.toolFileCount, 91);
   assert.equal(exactKeys(manifest, ["schema", "context", "packages"]), true);
   assert.equal(manifest.schema, "slide.checked-fungi.source-manifest.v1");
   const source = await readFile(SOURCE_PATH);
@@ -438,18 +438,10 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
   it("re-admits and executes the committed source-free publication", {
     skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
   }, async () => {
-    const { pin, manifest } = await authority();
+    const { manifest } = await authority();
     const loader = await import(pathToFileURL(
       join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
     ).href);
-    const hybrid = await import(pathToFileURL(
-      join(SLIDE_ROOT, "src", "hybrid-object-authentication.mjs"),
-    ).href);
-    const authenticator = createDisposableSlideObjectAuthenticator(hybrid, {
-      ...await publishedObject(),
-      toolManifestDigest: pin.toolManifestDigest,
-    });
-    assert.equal(authenticator.verdict, 1);
     for (const [arguments_, expected] of [
       [[true, true], 1],
       [[false, true], -1],
@@ -463,23 +455,27 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
         gates: ALL_ALLOW,
       });
       assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
-      const authenticated = authenticator.openHandle();
-      assert.equal(authenticated.verdict, 1, JSON.stringify(authenticated));
-      const receipt = loader.executeAuthenticatedTypedCheckedFungiPackagePublication(
+      const receipt = loader.executeTypedCheckedFungiPackagePublication(
         prepared.packageExecutionHandle,
-        authenticated.authenticatedObjectHandle,
         arguments_,
         { steps: 64 },
-        { toolManifestDigest: pin.toolManifestDigest, currentEpoch: 15 },
       );
       assert.equal(
         receipt.status,
-        "SUCCEEDED_AUTHENTICATED_PHYSICAL_REFERENCE_ONLY",
+        "SUCCEEDED_PHYSICAL_REFERENCE_ONLY",
         JSON.stringify(receipt),
       );
-      const verified = loader.verifyAuthenticatedTypedCheckedFungiPackageReceipt(
+      const verified = loader.verifyTypedCheckedFungiPackageReceipt(
         receipt,
-        authenticatedExpectation(receipt),
+        {
+          packageSetDigest: receipt.packageSetDigest,
+          packageIdentity: "@galerina/core-sentinel-state",
+          exportName: "restoreVerdict",
+          receiptDigest: receipt.receiptDigest,
+          safeValueTypeId: receipt.safeValueTypeId,
+          safeValueStateId: receipt.safeValueStateId,
+          safeValueProvenanceDigest: receipt.safeValueProvenanceDigest,
+        },
       );
       assert.equal(verified.verdict, 1, JSON.stringify(verified));
       assert.equal(verified.value, expected);
@@ -540,103 +536,24 @@ describe("Contract 85 real restoreVerdict source candidate", () => {
     assert.equal(prepared.verdict, -1);
   });
 
-  it("drives the real cold-boot consumer with receipt-verified decisions", {
+  it("keeps the cold-boot consumer blocked without deployment authentication authority", {
     skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
   }, async () => {
-    const { pin, manifest } = await authority();
-    const loader = await import(pathToFileURL(
-      join(SLIDE_ROOT, "src", "checked-fungi-package-publication-loader.mjs"),
-    ).href);
+    const { pin } = await authority();
     const hybrid = await import(pathToFileURL(
       join(SLIDE_ROOT, "src", "hybrid-object-authentication.mjs"),
     ).href);
-    const sentinel = await import(pathToFileURL(join(
-      ROOT,
-      "packages-galerina",
-      "galerina-core-sentinel-state",
-      "dist",
-      "index.js",
-    )).href);
-    const parent = await mkdtemp(join(ROOT, "build", "contract85-consumer-"));
-    TEMP.push(parent);
-    const composition = await productionBootComposition(
-      loader,
-      hybrid,
-      manifest,
-      pin,
-    );
-    const { candidate, decisionAuthority } = composition;
-    assert.equal(isProductionBootCompositionCandidate(candidate), true);
-    assert.equal(candidate.verdict, 0);
-    assert.equal(candidate.authenticatedObjectExecution, true);
-    assert.equal(candidate.authenticatedPlatformDurability, true);
-    assert.equal(candidate.authorityReleased, false);
-    assert.equal(candidate.productionAuthorizing, false);
-    assert.equal("restoreVerdict" in candidate, false);
-    assert.equal(Object.isFrozen(candidate.safeValueProvenanceDigests), true);
-    assert.deepEqual(
-      candidate.safeValueProvenanceDigests,
-      composition.preflight.observations.map(
-        (observation) => observation.safeValueProvenanceDigest,
-      ),
-    );
-    assert.equal(composition.preflight.remaining(), 0);
-    assert.equal(composition.admission.remaining(), 0);
-    const orchestrator = new sentinel.ColdBootOrchestrator(
-      new sentinel.StateSerializer(),
-      new sentinel.AtomicWriter(parent),
-      decisionAuthority,
-    );
-
-    orchestrator.checkpoint("valid", { recovered: true }, 85);
-    assert.deepEqual(orchestrator.restore("valid"), {
-      payload: { recovered: true },
-      logicalTick: 85,
+    const authenticator = createDisposableSlideObjectAuthenticator(hybrid, {
+      ...await publishedObject(),
+      toolManifestDigest: pin.toolManifestDigest,
     });
-
-    assert.throws(
-      () => orchestrator.restore("missing"),
-      (error) => error instanceof sentinel.HardenedBorderViolation
-        && error.code === "LSS-NOSNAP-001",
-    );
-
-    orchestrator.checkpoint("tampered", { recovered: false }, 86);
-    const tamperedPath = join(parent, "tampered.snap");
-    const tampered = JSON.parse(await readFile(tamperedPath, "utf8"));
-    tampered.payloadJson = tampered.payloadJson.replace("false", "true");
-    await writeFile(tamperedPath, JSON.stringify(tampered), "utf8");
-    assert.throws(
-      () => orchestrator.restore("tampered"),
-      (error) => error instanceof sentinel.SecurityTrap
-        && error.code === "LSS-INTEGRITY-001",
-    );
-    assert.equal(composition.consumer.remaining(), 0);
-    assert.equal(decisionAuthority.remaining(), 0);
-    assert.deepEqual(
-      composition.consumer.inputs,
-      [[true, true], [false, false], [true, false]],
-    );
-    assert.deepEqual(
-      composition.consumer.observations.map(
-        (observation) => observation.safeValueProvenanceDigest,
-      ),
-      [
-        candidate.safeValueProvenanceDigests[0],
-        candidate.safeValueProvenanceDigests[3],
-        candidate.safeValueProvenanceDigests[1],
-      ],
-    );
-    for (const observation of composition.consumer.observations) {
-      assert.equal(observation.objectSha256, candidate.objectSha256);
-      assert.equal(observation.packageSetDigest, candidate.packageSetDigest);
-      assert.equal(observation.slideBundleDigest, candidate.slideBundleDigest);
-      assert.equal(
-        observation.packageDescriptorDigest,
-        candidate.packageDescriptorDigest,
-      );
-      assert.equal(observation.compilerProfileId, candidate.compilerProfileId);
-      assert.equal(observation.toolManifestDigest, candidate.toolManifestDigest);
-      assert.equal(observation.fallbackInvoked, false);
-    }
+    assert.equal(authenticator.verdict, 1);
+    assert.equal(authenticator.provisioningVerdict, 0);
+    assert.equal(authenticator.provisioningStatus, "AUTHORITY_PROVISIONING_REQUIRED");
+    const authenticated = authenticator.openHandle();
+    assert.equal(authenticated.verdict, -1, JSON.stringify(authenticated));
+    assert.equal(authenticated.authenticated, false);
+    assert.equal(authenticated.authenticatedObjectHandleState, "ABSENT");
+    assert.equal(Object.hasOwn(authenticated, "authenticatedObjectHandle"), false);
   });
 });

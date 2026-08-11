@@ -35,17 +35,22 @@ export function createDisposableSlideObjectAuthenticator(hybrid, candidate) {
     maxExpiresEpoch: 20,
     minRevocationGeneration: 3,
   });
+  const provisioning = hybrid.createHybridObjectAuthenticationAuthority({
+    trust,
+    currentEpoch: 15,
+    authenticationVerdict: 1,
+    revocationVerdict: 1,
+  });
   return Object.freeze({
     verdict: 1,
+    provisioningVerdict: provisioning.verdict,
+    provisioningStatus: provisioning.status,
     openHandle() {
       return hybrid.verifyHybridObjectAuthentication({
         objectBytes: candidate.objectBytes,
         statementBytes: statement.statementBytes,
         signatures,
-        trust,
-        currentEpoch: 15,
-        authenticationVerdict: 1,
-        revocationVerdict: 1,
+        authorityHandle: provisioning.authorityHandle,
       });
     },
   });

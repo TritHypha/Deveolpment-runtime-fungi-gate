@@ -2,8 +2,8 @@
   "schema": "slide.checked-fungi.source-manifest.v1",
   "context": {
     "targetDigest": "sha256:86660b1189d4d22e6d0ace33680fa86a7f6d5861f14d35818fbf14dc0d7ee06b",
-    "policyDigest": "sha256:1a6652da399349640002e893cc083a77c9a902caa3f2174179f37fd08bb950d5",
-    "verifierDigest": "sha256:535e1d8652a514675ecc82a0603b9e4f95c860b9c03ac176eddf66f146d69fdb"
+    "policyDigest": "sha256:f3925a807f2ba48486cb3d6333f20105c354a3f0a7299f543dafc0bae37ebf17",
+    "verifierDigest": "sha256:8e5174567ddebf320cb426345cd9391268728ee74318f291af47fec57766105e"
   },
   "packages": [
     {

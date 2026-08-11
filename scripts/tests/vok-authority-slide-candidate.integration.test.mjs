@@ -136,8 +136,8 @@ async function authority() {
   assert.equal(`${JSON.stringify(manifest, null, 2)}\n`, manifestBytes.toString("utf8"));
   assert.equal(exactKeys(pin, ["schema", "repositoryCommit", "toolManifestDigest", "toolFileCount"]), true);
   assert.equal(pin.schema, "galerina.slide.reference-tool-pin.v1");
-  assert.equal(pin.repositoryCommit, "39920eb997a27bcb8deb937dcd97ef59612245aa");
-  assert.equal(pin.toolFileCount, 89);
+  assert.equal(pin.repositoryCommit, "eed124974b6ddf6cd54e14d48e4b36996ed59f57");
+  assert.equal(pin.toolFileCount, 91);
   assert.equal(exactKeys(manifest, ["schema", "context", "packages"]), true);
   assert.equal(manifest.schema, "slide.checked-fungi.source-manifest.v1");
   const source = await readFile(SOURCE_PATH);
@@ -202,7 +202,7 @@ describe("Contract 86 VOK authority source candidate", () => {
     assert.equal(authorizing, 1);
   });
 
-  it("binds the exact authorizing vector to hybrid-authenticated .slide bytes", {
+  it("refuses caller-owned authentication for the exact authorizing vector", {
     skip: typeof SLIDE_ROOT !== "string" || SLIDE_ROOT.length < 1,
   }, async () => {
     const { pin, manifest } = await authority();
@@ -217,8 +217,11 @@ describe("Contract 86 VOK authority source candidate", () => {
       toolManifestDigest: pin.toolManifestDigest,
     });
     assert.equal(authenticator.verdict, 1);
+    assert.equal(authenticator.provisioningVerdict, 0);
+    assert.equal(authenticator.provisioningStatus, "AUTHORITY_PROVISIONING_REQUIRED");
     const authenticated = authenticator.openHandle();
-    assert.equal(authenticated.verdict, 1, JSON.stringify(authenticated));
+    assert.equal(authenticated.verdict, -1, JSON.stringify(authenticated));
+    assert.equal(authenticated.authenticatedObjectHandleState, "ABSENT");
     const prepared = await loader.prepareCheckedFungiPackagePublication({
       publicationDirectory: PUBLICATION,
       packageIdentity: PACKAGE_IDENTITY,
@@ -234,15 +237,10 @@ describe("Contract 86 VOK authority source candidate", () => {
       { steps: 256 },
       { toolManifestDigest: pin.toolManifestDigest, currentEpoch: 15 },
     );
-    assert.equal(receipt.verdict, 1, JSON.stringify(receipt));
-    assert.equal(receipt.authenticated, true);
+    assert.equal(receipt.verdict, -1, JSON.stringify(receipt));
+    assert.equal(receipt.status, "REFUSED");
+    assert.equal(receipt.authenticated, false);
     assert.equal(receipt.fallbackInvoked, false);
-    const verified = loader.verifyAuthenticatedTypedCheckedFungiPackageReceipt(
-      receipt,
-      authenticatedExpectation(receipt),
-    );
-    assert.equal(verified.verdict, 1, JSON.stringify(verified));
-    assert.equal(verified.value, 1);
   });
 
   it("refuses malformed trits through the physical object", {

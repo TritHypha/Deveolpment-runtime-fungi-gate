@@ -182,11 +182,14 @@ counts or open items that a newer section explicitly supersedes.
 - [x] **G4:** reconcile `KNOWN-ISSUES.md` with current bounded,
   non-production evidence and add a regression check that requires the
   non-authority, open-retirement and non-production-key claims.
-- [ ] Close SLIDE S1 in its owning TODO. S2 identity retention is closed and
-  the V2-D core plus named exported loader refusal variants are null-free, but
-  the loader still has **131** `null` matches across **22** functions and the
-  complete source surface remains at least **500 / 121 functions**. Mechanical
-  TypeScript-to-`.fungi` conversion remains forbidden.
+- [x] Close SLIDE S1 in its owning TODO. At immutable implementation
+  `eed1249`, the named ten-finding remediation queue is closed, the complete
+  suite passes **984/984 across 97 suites**, and the 91-file executable surface
+  has zero executable `null` and zero `NaN`. Sealed scan `7263c63e` reports no
+  finding across six reviewed security-critical surfaces, with honestly
+  partial coverage because an independent variance worker was unavailable.
+  This closes the named mechanical-conversion finding set; it does not create
+  deployment authentication, signing, platform or production authority.
 - [x] Close Lyth-Weaver S1-S5 before selecting its affected code for
   conversion. The 2026-08-10 fixed point records the closed laboratory gate;
   TritMesh:QL remains design-only and may not enter a shipping path until its
@@ -195,6 +198,16 @@ counts or open items that a newer section explicitly supersedes.
   exhaustive phase-close after remediation. Conversion begins only when every
   required gate is green in one current custody state; no green repository
   result grants production authority.
+- [x] Re-pin Contract 85/86 to the remediated SLIDE tool at `eed1249`, migrate
+  both source manifests to its exact policy/verifier context, regenerate the
+  two physical `.slide` publications and retain byte-mutation refusal. The
+  source-free compute paths remain executable, including all **19,683** VOK
+  vectors; caller-owned disposable trust now correctly refuses instead of
+  manufacturing an authenticated handle.
+- [ ] Provision an external deployment authentication authority before any
+  authenticated cold-boot, release or production claim. This is deliberately
+  separate from mechanical source conversion: until provisioned, the boundary
+  is K3 `0`, exposes no authority handle and has an explicit refusal exit.
 
 ### Fresh graph, audit and test close - 2026-08-09
 
