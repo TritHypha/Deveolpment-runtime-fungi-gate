@@ -21,6 +21,12 @@
 - The graph is an index, not a warehouse: store tool identities, dependency edges, cadence/lifecycle classifications, counts and digests, not copied tool source or outputs.
 - Work remains on `codex/rd-0792-synthesize-only`; commit locally and do not push.
 
+## Execution Order
+
+Execute the task sections in dependency order **1 -> 3 -> 4 -> 2 -> 5**.
+Task 2 needs the complete live manifest created by Task 4; running it earlier
+would force an ungoverned temporary fallback and is forbidden.
+
 ---
 
 ### Task 1: Closed Cadence Planner and Obligation Deduplication
@@ -240,13 +246,13 @@ non-empty negative and mutation evidence; a real semantic `REPLACES` edge; a
 current independent retirement gate; and reproducible historical evidence with
 `authorizing: false`. Any missing or contradictory fact refuses.
 
-- [ ] **Step 4: Add the blocking audit and keep live legacy controls active**
+- [ ] **Step 4: Prepare the blocking audit and keep live legacy controls active**
 
 The CLI accepts only `--root` and `--self-test`. It reads owner artifacts
 without writing them, emits no private paths, and exits non-zero on refusal.
-Register it in the live manifest for normal through release cadences. The live
-WAT/Wasm/DSS entries use `retirement: "active"` and absent evidence reasons
-that name their remaining bootstrap/differential/oracle consumers.
+Task 4 registers it in the live manifest for normal through release cadences.
+The Task 4 WAT/Wasm/DSS entries use `retirement: "active"` and absent evidence
+reasons that name their remaining bootstrap/differential/oracle consumers.
 
 - [ ] **Step 5: Run focused lifecycle verification and commit**
 
