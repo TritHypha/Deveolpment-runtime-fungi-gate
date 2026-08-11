@@ -2432,7 +2432,7 @@
     "code": "ERR_REGISTRY_RUNTIME_IO",
     "namespace": "ERR",
     "family": "ERR_*",
-    "occurrences": 11,
+    "occurrences": 14,
     "docOnly": false,
     "defs": [
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:72"
@@ -2444,7 +2444,7 @@
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:159",
       "packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:351"
     ],
-    "tests": 0,
+    "tests": 3,
     "refs": 5,
     "docs": 0,
     "names": [],
@@ -2460,7 +2460,10 @@
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:159",
       "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:160",
       "emit packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:351",
-      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:352"
+      "ref packages-galerina/galerina-framework-app-kernel/src/registry-runtime.ts:352",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:9",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:106",
+      "test packages-galerina/galerina-framework-app-kernel/tests/registry-runtime.test.mjs:123"
     ]
   },
   {
