@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { after, test } from "node:test";
+import { resolvePythonExecutable } from "../src/python-runtime.mjs";
 
 const GPU_DETECT = fileURLToPath(new URL("../src/gpu-detect.mjs", import.meta.url));
 const BENCHMARK_AUDIT = fileURLToPath(new URL("../src/audit-benchmark-integrity.mjs", import.meta.url));
@@ -22,6 +23,21 @@ function minimalEnvironment() {
 }
 
 test("GPU probes execute argv directly without a shell-injection surface", () => {
+  const manager = join(TEMP, "WindowsApps");
+  const installed = join(TEMP, "trusted-runtime", "bin");
+  mkdirSync(manager, { recursive: true });
+  mkdirSync(installed, { recursive: true });
+  writeFileSync(join(manager, "python3.exe"), "manager", "utf8");
+  writeFileSync(join(installed, "python3.exe"), "installed", "utf8");
+  assert.equal(
+    resolvePythonExecutable(`${manager};${installed}`, "win32"),
+    realpathSync(join(installed, "python3.exe")),
+  );
+  assert.equal(
+    resolvePythonExecutable(manager, "win32"),
+    undefined,
+  );
+
   const result = spawnSync(
     process.execPath,
     ["--throw-deprecation", GPU_DETECT],

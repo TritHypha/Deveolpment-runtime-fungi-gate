@@ -6,6 +6,7 @@ import { types as utilTypes } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf } from "./throughput-units.mjs";
 import { admitSlideVadeEvidence } from "./slide-vade-adapter.mjs";
+import { resolvePythonExecutable } from "./python-runtime.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const benchDir   = join(__dirname, "..", "benchmarks");
@@ -200,7 +201,8 @@ export async function runBenchmark(bench) {
   if (existsSync(node)) { console.log(`  node...`); res.nodejs = runProc("node", [node, ...targetArgs]); }
 
   const py = join(dir, "python.py");
-  if (existsSync(py)) { console.log(`  python...`); res.python = runProc("python3",[py, ...targetArgs]) ?? runProc("python",[py, ...targetArgs]); }
+  const python = existsSync(py) ? resolvePythonExecutable() : undefined;
+  if (python !== undefined) { console.log(`  python...`); res.python = runProc(python, [py, ...targetArgs]); }
 
   // ── Native hardware variants ─────────────────────────────────────────────
   // Naming convention:

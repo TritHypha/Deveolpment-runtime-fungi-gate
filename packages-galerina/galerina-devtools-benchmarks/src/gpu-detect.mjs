@@ -12,6 +12,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { resolvePythonExecutable } from "./python-runtime.mjs";
 
 function tryExec(cmd, args) {
   const cwd = mkdtempSync(join(tmpdir(), "galerina-gpu-probe-"));
@@ -43,7 +44,10 @@ export function detectComputeToolchains() {
   const deno     = tryExec("deno", ["--version"]) !== null;    // built-in WebGPU
   // torch CUDA availability
   let torchCuda = false;
-  const torchOut = tryExec("python", ["-c", "import torch;print(torch.cuda.is_available())"]);
+  const python = resolvePythonExecutable();
+  const torchOut = python === undefined
+    ? undefined
+    : tryExec(python, ["-c", "import torch;print(torch.cuda.is_available())"]);
   if (torchOut) torchCuda = torchOut.trim() === "True";
 
   return {
