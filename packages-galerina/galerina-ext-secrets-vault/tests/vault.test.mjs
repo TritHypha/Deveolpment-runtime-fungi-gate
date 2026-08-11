@@ -55,6 +55,14 @@ function makeCred(id, path = `secret/data/${id}`, mountPoint = "secret") {
   return { id, provider: "hashicorp_vault", path, mountPoint };
 }
 
+function activeCopyForTest(manager, credentialId) {
+  let copy;
+  const present = manager.useActive(credentialId, (value) => {
+    copy = Buffer.from(value);
+  });
+  return present ? copy : undefined;
+}
+
 // ---------------------------------------------------------------------------
 // Fail-closed on rotation fault (zero-trust: a stale key must never be served)
 // ---------------------------------------------------------------------------
@@ -63,20 +71,20 @@ describe("SecretsRotationManager — fail-closed on rotation fault", () => {
   const goodMap = () => new Map([["secret/data/db_password", "s3cr3t"]]);
   const faultyClient = () => new MockVaultClient(new Map()); // readSecret throws
 
-  it("'halt' evicts the credential on fault → getActive() fails closed", async () => {
+  it("'halt' evicts the credential on fault → scoped use fails closed", async () => {
     const mgr = new SecretsRotationManager();
     await mgr.load(cred, new MockVaultClient(goodMap()));
-    assert.ok(mgr.getActive("db_password") !== undefined, "value present before fault");
+    assert.ok(activeCopyForTest(mgr, "db_password") !== undefined, "value present before fault");
     const ok = await mgr.rotateOrFault(cred, faultyClient(), "halt");
     assert.equal(ok, false, "rotateOrFault returns false on fault");
-    assert.equal(mgr.getActive("db_password"), undefined, "halt → stale key not served");
+    assert.equal(activeCopyForTest(mgr, "db_password"), undefined, "halt → stale key not served");
   });
 
   it("'quarantine' wipes the active value on fault → reads fail closed, handle retained", async () => {
     const mgr = new SecretsRotationManager();
     await mgr.load(cred, new MockVaultClient(goodMap()));
     await mgr.rotateOrFault(cred, faultyClient(), "quarantine");
-    assert.equal(mgr.getActive("db_password"), undefined, "quarantine → reads fail closed");
+    assert.equal(activeCopyForTest(mgr, "db_password"), undefined, "quarantine → reads fail closed");
     assert.ok(mgr.listIds().includes("db_password"), "handle retained for inspection");
   });
 
@@ -84,14 +92,14 @@ describe("SecretsRotationManager — fail-closed on rotation fault", () => {
     const mgr = new SecretsRotationManager();
     await mgr.load(cred, new MockVaultClient(goodMap()));
     await mgr.rotateOrFault(cred, faultyClient(), "log");
-    assert.ok(mgr.getActive("db_password") !== undefined, "log retains previous value");
+    assert.ok(activeCopyForTest(mgr, "db_password") !== undefined, "log retains previous value");
   });
 
   it("default fault policy is 'halt' (fail-closed by default)", async () => {
     const mgr = new SecretsRotationManager();
     await mgr.load(cred, new MockVaultClient(goodMap()));
     await mgr.rotateOrFault(cred, faultyClient()); // no policy arg → default halt
-    assert.equal(mgr.getActive("db_password"), undefined, "default halt → fail-closed");
+    assert.equal(activeCopyForTest(mgr, "db_password"), undefined, "default halt → fail-closed");
   });
 });
 
@@ -219,7 +227,7 @@ describe("SecretsRotationManager", () => {
 
     await manager.load(cred, mockClient);
 
-    const active = manager.getActive("db_password");
+    const active = activeCopyForTest(manager, "db_password");
     assert.ok(active !== undefined, "active value should be set after load");
     assert.ok(Buffer.isBuffer(active), "active value should be a Buffer");
     const parsed = JSON.parse(active.toString("utf8"));
@@ -239,7 +247,7 @@ describe("SecretsRotationManager", () => {
     await manager.load(cred, mockClientV1);
 
     // Capture reference to the old buffer before rotation
-    const oldBuf = manager.getActive("db_password");
+    const oldBuf = activeCopyForTest(manager, "db_password");
     assert.ok(oldBuf !== undefined, "old buffer should exist before rotation");
     const oldBufCopy = Buffer.from(oldBuf); // copy to check after wipe
 
@@ -249,7 +257,7 @@ describe("SecretsRotationManager", () => {
     await manager.rotate("db_password", mockClientV2, cred);
 
     // After rotation, active value should be the new secret
-    const newActive = manager.getActive("db_password");
+    const newActive = activeCopyForTest(manager, "db_password");
     assert.ok(newActive !== undefined, "new active value should be set");
     const newParsed = JSON.parse(newActive.toString("utf8"));
     assert.equal(newParsed.value, "v2_password", "active value should be v2 after rotation");
@@ -261,9 +269,9 @@ describe("SecretsRotationManager", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Test 7: getActive returns the current value
+  // Test 7: scoped use supplies the current value
   // -------------------------------------------------------------------------
-  it("getActive returns the current active value", async () => {
+  it("scoped use supplies the current active value", async () => {
     const manager = new SecretsRotationManager();
     const secretMap = new Map([["secret/secret/data/api", "my_api_key"]]);
     const mockClient = new MockVaultClient(secretMap);
@@ -271,7 +279,7 @@ describe("SecretsRotationManager", () => {
 
     await manager.load(cred, mockClient);
 
-    const value = manager.getActive("api_key");
+    const value = activeCopyForTest(manager, "api_key");
     assert.ok(value !== undefined);
     const parsed = JSON.parse(value.toString("utf8"));
     assert.equal(parsed.value, "my_api_key");
@@ -289,7 +297,7 @@ describe("SecretsRotationManager", () => {
     await manager.load(cred, mockClientV1);
 
     // Grab the reference to the old active buffer before rotation
-    const oldBuf = manager.getActive("billing_key");
+    const oldBuf = activeCopyForTest(manager, "billing_key");
     assert.ok(oldBuf !== undefined);
 
     const secretMapV2 = new Map([["secret/secret/data/billing", "billing_key_v2"]]);
@@ -297,7 +305,7 @@ describe("SecretsRotationManager", () => {
     await manager.rotate("billing_key", mockClientV2, cred);
 
     assert.equal(JSON.parse(oldBuf.toString("utf8")).value, "billing_key_v1");
-    const current = manager.getActive("billing_key");
+    const current = activeCopyForTest(manager, "billing_key");
     assert.ok(current !== undefined);
     assert.equal(JSON.parse(current.toString("utf8")).value, "billing_key_v2");
   });
@@ -362,14 +370,8 @@ describe("GalerinaSecretsVault", () => {
 
     await vault.loadContract(block);
 
-    assert.ok(
-      vault.getSecret("db_password") !== undefined,
-      "db_password should be loaded"
-    );
-    assert.ok(
-      vault.getSecret("api_auth_key") !== undefined,
-      "api_auth_key should be loaded"
-    );
+    assert.equal(vault.useSecret("db_password", () => {}), true, "db_password should be loaded");
+    assert.equal(vault.useSecret("api_auth_key", () => {}), true, "api_auth_key should be loaded");
   });
 
   // -------------------------------------------------------------------------
@@ -382,8 +384,7 @@ describe("GalerinaSecretsVault", () => {
     const cred = makeCred("db_password", "secret/data/db");
     await vault.loadContract({ credentials: [cred] });
 
-    const activeBuf = vault.getSecret("db_password");
-    assert.ok(activeBuf !== undefined, "buffer should exist before stop");
+    assert.equal(vault.useSecret("db_password", () => {}), true, "value should exist before stop");
 
     // Start a timer and immediately stop it
     const block = { credentials: [cred], rotation: { interval: 60000, strategy: "smooth_handshake", onRotationFault: "halt" } };
@@ -391,9 +392,7 @@ describe("GalerinaSecretsVault", () => {
     vault.stop(timer);
 
     // After stop, all buffers should be zero-wiped and handles cleared
-    const afterStop = vault.getSecret("db_password");
-    assert.equal(afterStop, undefined, "getActive should return undefined after stop");
-    assert.equal(JSON.parse(activeBuf.toString("utf8")).value, "db_pass_to_wipe");
+    assert.equal(vault.useSecret("db_password", () => {}), false, "scoped use should refuse after stop");
   });
 });
 
@@ -433,11 +432,11 @@ describe("Vault zero-trust boundaries", () => {
       ["secret/secret/data/owned-copy", "provider-owned"],
     ])));
 
-    const first = manager.getActive("owned_copy");
+    const first = activeCopyForTest(manager, "owned_copy");
     assert.ok(first !== undefined);
     first.fill(0x41);
 
-    const second = manager.getActive("owned_copy");
+    const second = activeCopyForTest(manager, "owned_copy");
     assert.ok(second !== undefined);
     assert.notEqual(second.toString("utf8"), first.toString("utf8"));
     assert.equal(JSON.parse(second.toString("utf8")).value, "provider-owned");
@@ -479,7 +478,7 @@ describe("Vault zero-trust boundaries", () => {
       version: 2,
       faulted: false,
     });
-    const active = manager.getActive("serialized");
+    const active = activeCopyForTest(manager, "serialized");
     assert.ok(active !== undefined);
     assert.equal(JSON.parse(active.toString("utf8")).value, "v2");
   });
@@ -492,7 +491,7 @@ describe("Vault zero-trust boundaries", () => {
     assert.equal("vaultClientInstance" in vault, false);
   });
 
-  it("wipes scoped copies and refuses asynchronous callback escape", async () => {
+  it("exposes secrets only through a wiped scoped view with a non-secret presence result", async () => {
     const vault = GalerinaSecretsVault.fromClient(new MockVaultClient(new Map([
       ["secret/secret/data/scoped", "scoped-value"],
     ])));
@@ -501,10 +500,13 @@ describe("Vault zero-trust boundaries", () => {
     let escaped;
     const result = vault.useSecret("scoped", (value) => {
       escaped = value;
-      return "used";
+      return Buffer.from(value);
     });
-    assert.equal(result, "used");
+    assert.equal(result, true);
     assert.ok(escaped.every((byte) => byte === 0));
+    assert.equal(vault.useSecret("absent", () => assert.fail("absent callback must not run")), false);
+    assert.equal("getSecret" in vault, false);
+    assert.equal("getActive" in new SecretsRotationManager(), false);
 
     assert.throws(
       () => vault.useSecret("scoped", async () => "not-allowed"),

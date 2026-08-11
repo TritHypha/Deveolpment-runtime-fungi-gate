@@ -25,7 +25,7 @@ const QUIESCE_MS = 50;
 export class SecretsRotationManager {
   /** credential-id → live handle */
   private readonly handles: Map<string, SecretHandle> = new Map();
-  /** At most one live rotation lease per credential. Concurrent requests coalesce. */
+  /** At most one live rotation lease per credential. Concurrent requests refuse. */
   private readonly rotations: Map<string, Promise<void>> = new Map();
 
   /**
@@ -126,14 +126,28 @@ export class SecretsRotationManager {
   }
 
   /**
-   * Return the current active value for a credential, or undefined if not loaded.
-   * The returned Buffer is an owned copy. Mutation cannot alter provider state.
+   * Run a synchronous callback with one transient owned copy of the active value.
+   * The copy is wiped before return; the only method result is non-secret presence.
    */
-  getActive(credentialId: string): Buffer | undefined {
+  useActive(credentialId: string, callback: (value: Buffer) => void): boolean {
     const handle = this.handles.get(credentialId);
     // Fail closed: a faulted (quarantined) credential is never served.
-    if (handle === undefined || handle.faulted === true) return undefined;
-    return Buffer.from(handle.activeValue);
+    if (handle === undefined || handle.faulted === true) return false;
+    const value = Buffer.from(handle.activeValue);
+    try {
+      const result: unknown = callback(value);
+      if (
+        typeof result === "object" &&
+        result !== null &&
+        "then" in result &&
+        typeof (result as { readonly then?: unknown }).then === "function"
+      ) {
+        throw new Error("SecretsRotationManager.useActive callback must be synchronous");
+      }
+      return true;
+    } finally {
+      value.fill(0);
+    }
   }
 
   /** Return an immutable, redacted status view with no secret buffers. */
@@ -155,8 +169,8 @@ export class SecretsRotationManager {
   }
 
   /**
-   * Zero-wipe and remove a credential handle. After eviction `getActive` returns
-   * undefined, so any downstream read fails closed — a stale key is never served.
+   * Zero-wipe and remove a credential handle. After eviction `useActive` returns
+   * false, so any downstream read fails closed — a stale key is never served.
    */
   private evict(credentialId: string): void {
     const h = this.handles.get(credentialId);
@@ -171,8 +185,8 @@ export class SecretsRotationManager {
    * `on_rotation_fault` policy — so a stale key is never silently retained
    * (zero-trust: we cannot trust a stale key). Never throws; returns true if
    * rotated, false if a fault was handled.
-   *   - "halt"       → evict the credential (zero-wipe + remove); getActive fails closed.
-   *   - "quarantine" → wipe the active value + mark faulted; getActive fails closed,
+   *   - "halt"       → evict the credential (zero-wipe + remove); useActive fails closed.
+   *   - "quarantine" → wipe the active value + mark faulted; useActive fails closed,
    *                    handle retained for inspection.
    *   - "log"        → log and keep serving the previous value (explicit opt-in,
    *                    NOT fail-closed — for dev/non-sensitive credentials only).

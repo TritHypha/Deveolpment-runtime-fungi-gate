@@ -62,7 +62,6 @@ async function run(): Promise<void> {
       await vault.loadContract({ credentials: [cred] });
       const written = vault.useSecret("__cli_read__", (value) => {
         process.stdout.write(value.toString("utf8") + "\n");
-        return true;
       });
       if (written !== true) {
         console.error("Error: secret not found");

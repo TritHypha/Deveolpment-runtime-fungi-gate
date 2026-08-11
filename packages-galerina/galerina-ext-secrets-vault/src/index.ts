@@ -64,7 +64,7 @@ export class GalerinaSecretsVault {
   }
 
   // --------------------------------------------------------------------------
-  // Loading + retrieval
+  // Loading + scoped use
   // --------------------------------------------------------------------------
 
   /**
@@ -78,34 +78,13 @@ export class GalerinaSecretsVault {
   }
 
   /**
-   * Retrieve the current active value for a credential by id.
-   * Returns undefined if the credential has not been loaded.
-   */
-  getSecret(credentialId: string): Buffer | undefined {
-    return this.#manager.getActive(credentialId);
-  }
-
-  /**
    * Preferred scoped read. The callback receives an owned transient copy that
    * is wiped before this method returns, including when the callback throws.
+   * Returns only whether a live credential was present; callback results are
+   * discarded so the package creates no plaintext return channel.
    */
-  useSecret<T>(credentialId: string, callback: (value: Buffer) => T): T | undefined {
-    const value = this.#manager.getActive(credentialId);
-    if (value === undefined) return undefined;
-    try {
-      const result = callback(value);
-      if (
-        typeof result === "object" &&
-        result !== null &&
-        "then" in result &&
-        typeof (result as { readonly then?: unknown }).then === "function"
-      ) {
-        throw new Error("GalerinaSecretsVault.useSecret callback must be synchronous");
-      }
-      return result;
-    } finally {
-      value.fill(0);
-    }
+  useSecret(credentialId: string, callback: (value: Buffer) => void): boolean {
+    return this.#manager.useActive(credentialId, callback);
   }
 
   /** Manually rotate one credential without exposing provider internals. */

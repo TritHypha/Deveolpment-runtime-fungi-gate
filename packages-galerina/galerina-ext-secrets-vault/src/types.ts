@@ -55,7 +55,7 @@ export type SecretHandle = {
   activeValue: Buffer;
   stagingValue: Buffer | null;   // null = no rotation in progress
   readonly version: number;
-  faulted?: boolean;             // true = rotation faulted under quarantine; getActive() fails closed
+  faulted?: boolean;             // true = rotation faulted under quarantine; useActive() fails closed
 };
 
 /** Redacted, immutable view safe to expose outside the rotation manager. */
