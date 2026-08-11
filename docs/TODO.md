@@ -4,6 +4,26 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Pre-conversion security closure - 2026-08-11
+
+- [x] Repair the benchmark harness so its deliberately high-volume framework
+  sample declares a benchmark-only route limit instead of exhausting the App
+  Kernel's secure production default during warm-up. The benchmark package is
+  **57/57**; the production default remains unchanged.
+- [x] Fail closed after the auth security hardening changed the package digest.
+  Remove the now-stale live auth manifest and signed live index, refresh only
+  the unsigned candidate identity to the re-derived package bytes, and retain
+  the immutable historical generation as historical evidence. No signature or
+  live-package authority was fabricated or copied forward.
+- [x] Keep the public registry empty and non-authorizing until a new offline
+  Ed25519 + ML-DSA-65 generation ceremony signs the hardened candidate. The
+  registry package passes **35/35**, including exact candidate identity and
+  refusal of fully-authorized public publication while the live index is
+  absent.
+- [ ] Perform the offline hybrid-signing ceremony and independently verify the
+  resulting generation before restoring any live auth package. Until then,
+  distribution, release and production authority remain denied.
+
 ### VOK assurance fabric Chapter 3 integration - 2026-08-10
 
 - [x] Bind the semantic-assurance graph into the closed roadmap evidence DAG as

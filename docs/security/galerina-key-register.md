@@ -123,8 +123,11 @@ act on and the default stops lying.
       checks, serial floor `0`, active-window, exact closed-role, revocation and
       operational-public-pin verification on 2026-07-30. The operational auth
       manifest, exact one-entry public build and returned hybrid-signed index
-      have also independently verified. No further signing action is currently
-      authorized:
+      also independently verified at that historical checkpoint. The auth
+      package bytes later changed during security hardening; those artifacts
+      are no longer a live authority surface. A new offline hybrid-signing
+      ceremony is now required, and no publication is authorized until its
+      exact candidate and returned generation independently verify:
       [`OFFLINE-KEY-SIGNING-WALKTHROUGH.md`](./OFFLINE-KEY-SIGNING-WALKTHROUGH.md);
       later commands are separately locked in
       [`OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md`](./OFFLINE-KEY-SIGNING-CEREMONY-REFERENCE.md).

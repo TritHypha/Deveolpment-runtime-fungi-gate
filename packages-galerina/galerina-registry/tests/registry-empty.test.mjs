@@ -605,7 +605,7 @@ test("the live catalog refuses to build without explicit authority evidence", ()
   }
 });
 
-test("the owner-approved auth package is live only under the exact public authority chain", () => {
+test("a changed auth package remains candidate-only until a new hybrid signing ceremony", () => {
   assert.match(
     readFileSync(GIT_ATTRIBUTES, "utf8"),
     /^packages-galerina\/galerina-registry\/\*\*\/package\.galerina\.yaml text eol=lf$/mu,
@@ -630,16 +630,14 @@ test("the owner-approved auth package is live only under the exact public author
   );
   assert.equal(
     existsSync(LIVE_AUTH_MANIFEST),
-    true,
-    "the independently verified hybrid-signed auth manifest must be live",
+    false,
+    "changed package bytes must remove the stale live manifest",
   );
-  const live = parseTestManifest(readFileSync(LIVE_AUTH_MANIFEST, "utf8"));
-  assert.equal(live.name, "@galerina/auth");
-  assert.equal(live.version, "1.0.0-beta.2");
-  assert.equal(live.keyId, "f3172a48372bfb23");
-  assert.equal(live.signerKeyId, "f3172a48372bfb23");
-  assert.match(live.signature, /^galerina-hybrid-v1\./u);
-  assert.equal(live.governance.reviewed, true);
+  assert.equal(
+    existsSync(LIVE_SIGNED_INDEX),
+    false,
+    "an index signed for stale package bytes must not remain live",
+  );
 
   const candidate = parseTestManifest(readFileSync(AUTH_CANDIDATE, "utf8"));
   assert.equal(candidate.name, "@galerina/auth");
@@ -665,10 +663,6 @@ test("the owner-approved auth package is live only under the exact public author
     artifactFiles: candidate.artifactFiles,
   });
   assert.equal(candidate.hash, artifact.hash);
-  assert.equal(live.hash, artifact.hash);
-  assert.deepEqual(live.artifactFiles, candidate.artifactFiles);
-  assert.deepEqual(live.capabilities, candidate.capabilities);
-  assert.deepEqual(live.effects, candidate.effects);
 
   const temp = mkdtempSync(join(tmpdir(), "galerina-live-authority-"));
   try {
@@ -688,41 +682,9 @@ test("the owner-approved auth package is live only under the exact public author
       "--issued-at", LIVE_INDEX_ISSUED_AT,
       "--out", output,
     ]);
-    assert.equal(result.status, 0, result.stdout + result.stderr);
-    const index = JSON.parse(readFileSync(output, "utf8"));
-    assert.equal(index.schema, "galerina-registry-index/v2");
-    assert.equal(index.entries.length, 1);
-    assert.equal(index.entries[0].name, "@galerina/auth");
-    assert.equal(index.entries[0].version, "1.0.0-beta.2");
-    assert.equal(index.entries[0].sourceHash, artifact.hash);
-    assert.equal(index.entries[0].keyId, "f3172a48372bfb23");
-
-    const verifyResult = runRegistryCli([
-      "verify",
-      "--in", LIVE_SIGNED_INDEX,
-      "--ed25519-pubkey", LIVE_OPERATIONAL_ED_PUBLIC,
-      "--mldsa65-pubkey", LIVE_OPERATIONAL_ML_PUBLIC,
-      "--key-id", "f3172a48372bfb23",
-      "--min-issued-at", "2026-07-30T16:33:10.306Z",
-    ]);
-    assert.equal(
-      verifyResult.status,
-      0,
-      verifyResult.stdout + verifyResult.stderr,
-    );
-
-    const signedIndexBytes = readFileSync(LIVE_SIGNED_INDEX);
-    assert.equal(
-      createHash("sha256").update(signedIndexBytes).digest("hex"),
-      "dcf80aa0717debf8beb837584fdc053e24891c0d1224fb4735900e68fc1aaf06",
-    );
-    const signedIndex = JSON.parse(signedIndexBytes.toString("utf8"));
-    const { signature, ...signedPayload } = signedIndex;
-    assert.deepEqual(signedPayload, index);
-    assert.equal(signature.algorithm, "Ed25519+ML-DSA-65");
-    assert.equal(signature.keyId, "f3172a48372bfb23");
-    assert.equal(typeof signature.ed25519Signature, "string");
-    assert.equal(typeof signature.mlDsa65Signature, "string");
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /no package\.galerina\.yaml.*empty certified index/is);
+    assert.equal(existsSync(output), false);
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }

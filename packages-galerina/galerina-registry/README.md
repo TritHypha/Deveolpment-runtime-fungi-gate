@@ -3,10 +3,12 @@
 The Galerina registry is the fail-closed source of governance-reviewed,
 content-addressed and hybrid-signed package identities.
 
-> **One admitted live package.** `packages/` contains only the independently
-> verified hybrid-signed `@galerina/auth` manifest. The unsigned reviewed
-> source record remains under `candidates/` for provenance. No healthcare
-> package exists, so no healthcare or compliance manifest is claimed.
+> **No admitted live package.** The `@galerina/auth` bytes changed during
+> security hardening, so the prior signed manifest and signed index were
+> removed from the live surface. The refreshed unsigned reviewed source record
+> remains under `candidates/` pending a new offline hybrid-signing ceremony.
+> No healthcare package exists, so no healthcare or compliance manifest is
+> claimed.
 
 ## Admission contract
 
@@ -27,11 +29,7 @@ entry or emits a partial index.
 ## Structure
 
 ```text
-registry-index-v2.json             # verified one-entry hybrid-signed index
-packages/                         # live owner-approved manifests
-  @galerina/
-    auth/
-      package.galerina.yaml       # verified hybrid-signed authority
+packages/                         # empty until a newly signed manifest is admitted
 candidates/
   @galerina/
     auth/
@@ -40,7 +38,8 @@ candidates/
 
 The package bytes exist exactly once as direct children of
 `packages-galerina/`. The registry does not copy a package or create an
-npm-style nested dependency forest.
+npm-style nested dependency forest. A prior immutable generation may remain
+as historical signed evidence, but it is not a current live registry surface.
 
 ## Moving a candidate live
 
@@ -74,10 +73,8 @@ Locked later commands are kept separately in
 
 The artifact hasher, strict manifest reader, root delegation, manifest
 verification, index builder/signer/verifier, revocation checks and denial tests
-are implemented. The auth manifest is root-delegated, hybrid-signed,
-independently verified and live. A public-only build produces exactly one
-unsigned index entry. The byte-identical hybrid-signed index independently
-verifies under operational key `f3172a48372bfb23`; its SHA-256 is
-`dcf80aa0717debf8beb837584fdc053e24891c0d1224fb4735900e68fc1aaf06`.
-Production registry signing is complete. Distribution remains subject to the
-separate release and automatic-rotation gates.
+are implemented. The hardened auth package is candidate-only: its refreshed
+artifact digest is unsigned, the live manifest is absent, and no signed index
+is published. A new offline operational-key ceremony is required before it can
+return to the live registry. Distribution and production authority remain
+denied in the meantime.

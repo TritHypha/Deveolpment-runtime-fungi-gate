@@ -25,7 +25,14 @@ const td = new TextDecoder("utf-8", { fatal: true });
 // ── The Galerina App Kernel (the framework) ────────────────────────────────────
 let auditCount = 0;
 const kernel = createAppKernel({
-  routes: [{ method: "POST", path: "/orders", handler: "createOrder" }], // minimal = secure-by-default
+  routes: [{
+    method: "POST",
+    path: "/orders",
+    handler: "createOrder",
+    // The benchmark explicitly admits its bounded synthetic request volume;
+    // production routes retain the secure 60/minute default.
+    limits: { rate: "1000000/minute" },
+  }],
   dispatch: { createOrder: (ctx) => ({ status: 200, body: { ok: true, id: ctx.json?.id ?? 0 } }) },
   auditSink: { emit() { auditCount++; } },   // non-retaining sink (real "emit to pipe" cost, no memory growth)
 });

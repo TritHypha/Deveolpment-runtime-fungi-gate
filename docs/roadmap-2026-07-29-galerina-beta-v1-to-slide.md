@@ -1790,7 +1790,7 @@ flowchart TB
     LS["🟩 Linked rotation seam<br/>exact host + native brand + reopen<br/>206/206 app-kernel"]
     X["🟨 Production rotation activation<br/>offline-signed host profile<br/>external evidence pending"]
     F["🟨 Beta-v1 release admission<br/>hybrid v2 complete · ceremony/external evidence pending"]
-    G["🟩 Production registry green<br/>auth + one-entry index hybrid-signed"]
+    G["🟨 Production registry denied<br/>hardened auth candidate unsigned<br/>new offline ceremony required"]
     H["🟩 Independent SLIDE bounded execution<br/>through authenticated typed Contract 86<br/>866/866 · no production authority"]
     C80["🟩 Contract 80 owned append-array<br/>standalone exact profile · affine owner · zeroised storage"]
     C81["🟩 Contract 81 typed Result propagation<br/>single evaluation · original failure preserved"]
@@ -2016,9 +2016,9 @@ table is navigation, not authority.
 | Flat package root-lock and resolver | 🟩 reference control | One canonical non-authorizing lock binds all 98 direct peers, 45 exact internal edges, 138 external bootstrap edges, two development-version drifts and a complete dependency-first order. Intake is Git-tracked, bounded, stable, path-contained and duplicate-key strict. Resolution requires an opaque verified handle and one caller-declared peer; it never searches ambient package trees. Focused/live tests pass 7/7 and the governed generator suite passes 15/15. Physical removal of 95 `node_modules` trees and one nested identity remains blue |
 | Flat registry artifact identity | 🟩 | 10/10 exact-byte/path/topology/symlink/resource-limit tests |
 | Delegated package-manifest admission | 🟩 | Registry 35/35; app-kernel 149/149; disposable root→operational→manifest chain, future-review and repeated-argument denials |
-| Live registry population | 🟩 | False stubs removed; the provenance candidate remains unsigned; the separate hybrid-signed auth manifest is independently verified and is the sole live entry |
-| Production registry signing | 🟩 | Exact one-entry index hybrid-signed by operational key `f31…`, independently verified and mutation-tested; SHA-256 `DCF80AA0717DEBF8BEB837584FDC053E24891C0D1224FB4735900E68FC1AAF06` |
-| Default production registry consumption | 🟩 | Canonical read-only loader verifies the live root delegation and both operational signature halves before lookup; production revocation comes from one pinned, signed, immutable snapshot; signed index issuance replaces caller-selected wall time; the active epoch and checkpoint-selected generation ID must match. Tower 492/492, app-kernel 165/165, registry 35/35, auth 59/59 |
+| Live registry population | 🟨 | The hardened auth package is candidate-only. Its prior signed manifest no longer identifies the current package bytes and has been removed from the live surface; no live package is admitted. Registry 35/35 verifies exact candidate identity and fail-closed absence. |
+| Production registry signing | 🟨 | The prior one-entry index is retained only inside its immutable historical generation. No current signed live index is published; a new offline Ed25519 + ML-DSA-65 ceremony must sign the hardened candidate and rebuilt index. |
+| Default production registry consumption | 🟨 | The canonical loader remains implemented and fail closed, but there is no current live manifest or signed index to consume. Distribution, release and production authority remain denied until independent verification of a newly signed generation. |
 | Epoch-aware state integrity | 🟩 | Snapshot v2 MAC-binds epoch/key identity; authenticated ring + custody commitment selects active/retired verification keys and refuses unknown/revoked/substituted authority. Sentinel State 20/20; Tower 483/483 |
 | Automatic rotation safety/control core | 🟩 | Trigger proposes only; readiness, Triple-Lock, M-of-N, switch, canary, fallback, drain and private-retire phases advance one at a time. Every production phase requires a freshly authenticated checkpoint; a production-admitted complete candidate generation is required; accepted delegation/index/generation identity advances only after canary. Disposable-key evidence passes; Tower 492/492 and app-kernel 165/165 |
 | Immutable registry generation | 🟩 | Domain-separated SHA-256 ID, canonical bounded bytes/times, package-relative artifact paths, null install scripts, exclusive same-directory staging/publication, flush/re-open/hash/signature/correspondence verification, distinct verified-vs-host-evidence runtime brands, authenticated checkpoint schema and production loading by exact ID are implemented. Current signed artifacts reproduce generation `f3b432d31f10217006f88c0c39779ba5ae061e0728301b5021979af1cd63dbca`; Tower 492/492 and app-kernel 165/165 |
@@ -2245,12 +2245,15 @@ an active root-signed operational delegation.
 
 The former auth and healthcare live stubs are gone. Healthcare has no canonical
 package and therefore no registry claim. Auth retains a technically reviewed,
-owner-approved unsigned 18-file candidate as provenance. The separately
-hybrid-signed manifest independently verifies and is now the sole live entry.
+owner-approved unsigned candidate as provenance. Security hardening changed
+the auth package bytes, so the earlier hybrid-signed manifest and one-entry
+index no longer identify the current candidate and have been removed from the
+live surface. Their immutable generation remains historical evidence only.
 
-This makes package admission and production registry signing green without
-making the beta release green. The root-signed delegation, hybrid auth
-manifest, public-only build and exact hybrid-signed index independently verify.
+Package admission and production registry signing are therefore denied at the
+current checkpoint. The root delegation and signing machinery remain verified,
+but a new offline hybrid-signing ceremony and independent exact-byte review are
+required before auth can return to the live registry.
 Two verified offline custody copies in separate physical locations were
 owner-confirmed on 2026-07-30. The first public-only export refused before key
 decoding because the wrong file shape was selected. The complete hybrid
