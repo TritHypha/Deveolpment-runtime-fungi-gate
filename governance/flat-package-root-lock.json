@@ -119,7 +119,7 @@
       "identity": "@galerina/auth",
       "version": "1.0.0-beta.2",
       "directory": "galerina-auth",
-      "contentDigest": "90b93a235e7477fea1acb7cb7f04bc453d5c4b1a771616e17ddc094e32285bfd",
+      "contentDigest": "12b0e62f44e0647fb371ce890677d021851733da4a7aba7e73267631c714bc55",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -153,7 +153,7 @@
       "identity": "@galerina/core",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core",
-      "contentDigest": "84ca6346475995bec5aaff70ef15abea5e24d927ee71cf27912e6314b2a53501",
+      "contentDigest": "476dbeae04c99af494c06aa1851ed60f55396557b07b0eb91134890abc7b6e16",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -191,11 +191,11 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "f072889fdb0f43d0b540bfafed24b461d66626cfdeb5aa88da57c779e70c67ac",
+      "contentDigest": "b05247f4138de3b749ffc6decb1efe46b6bc7b3b14df8ab3c9e86c5083b7dcc1",
       "manifestDigests": [
         {
           "path": "package.json",
-          "digest": "24c19b6cdda443e0f1143af7800d7ea53f9924590b9a48c1e602d7b9943a4f4c"
+          "digest": "17c091012c8cbe849ac74d9095de1339aee0b4509ff4e1bbc0bbce597676b081"
         }
       ],
       "dependencies": [
@@ -223,6 +223,11 @@
           "identity": "@galerina/substrate-math",
           "scope": "runtime",
           "specifier": "file:../galerina-substrate-math"
+        },
+        {
+          "identity": "@galerina/tri-regex",
+          "scope": "runtime",
+          "specifier": "file:../galerina-tri-regex"
         },
         {
           "identity": "@noble/post-quantum",
@@ -994,7 +999,7 @@
       "identity": "@galerina/devtools-benchmarks",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-benchmarks",
-      "contentDigest": "469141b4759ea21a5fb0428104353fd72d5e6e894cec93a60684a5cd024b4474",
+      "contentDigest": "9ca7ae2771589bbe48dd5016bae504aada35e39a055a5698bb71a10dd84f0c7a",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1559,7 +1564,7 @@
       "identity": "@galerina/ext-secrets-spore",
       "version": "1.0.0-beta.2",
       "directory": "galerina-ext-secrets-spore",
-      "contentDigest": "dcbf694ee4250f39518d8712afa5dffed3850132388749ddbde75889528b1df8",
+      "contentDigest": "f33d8afd25dd9e9c63d7936e4c6c6a5fc53bdf929d32869804c4aa4d2f2d0298",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1593,7 +1598,7 @@
       "identity": "@galerina/ext-secrets-vault",
       "version": "1.0.0-beta.2",
       "directory": "galerina-ext-secrets-vault",
-      "contentDigest": "ecd978f83fef6c011df4dac74158a271037d62d0ac781fab6067255a7406cfe7",
+      "contentDigest": "62e67565475693f2d1cf2d08484952e77844f6b3d2cde98d4df107daba838e7e",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1675,7 +1680,7 @@
       "identity": "@galerina/framework-api-server",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-api-server",
-      "contentDigest": "48bc0e68a1d66593cd5765955bf5796143b30e40c0344d93164386f07076ff73",
+      "contentDigest": "120b74b1ae07e84e484d8027e073288f15506bae9b8a082a0c81e6f52995b131",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1709,7 +1714,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "962030204535c3b4d65f6a289019dc5d17cdae8b973a951862426d56ecee900e",
+      "contentDigest": "92e9ea613e0d9f393e4934692a7d51c978b127919cd20185a430f1f7feaacbd2",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1844,7 +1849,7 @@
       "identity": "@galerina/observability",
       "version": "1.0.0-beta.2",
       "directory": "galerina-observability",
-      "contentDigest": "882337b36e003bfe60abf06b8a3aa744488083a7483409fb7b4713894baf8763",
+      "contentDigest": "844978998511e8120dbf4a7b1e71ec15db4ba36bc721978a5a545d53f73e7a12",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1863,7 +1868,7 @@
       "identity": "@galerina/registry",
       "version": "1.0.0-beta.2",
       "directory": "galerina-registry",
-      "contentDigest": "7fa75075abc278edacab7a9264d38014e5728057dbf82bb38f9e76bd9f0c01f3",
+      "contentDigest": "aff9f5dd4c648055f05955bd2eaf47e0dbba9dfb9490e616f79971162b2a316f",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2100,7 +2105,7 @@
       "identity": "@galerina/tower-citizen",
       "version": "1.0.0-beta.2",
       "directory": "galerina-tower-citizen",
-      "contentDigest": "26eae2082f01f456f87ab531e1c4238bd470c1cda816e27a0ace1094d6e523eb",
+      "contentDigest": "cef07f5fc564170d40947d839bcef0b6e642f9e6b35e248cc8486de731f7d39a",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2395,6 +2400,14 @@
     "@galerina/tower-citizen",
     "@galerina/core-network",
     "@galerina/auth",
+    "@galerina/ext-bridge-bitnet",
+    "@galerina/ext-bridge-cpp",
+    "@galerina/framework-app-kernel",
+    "@galerina/docs",
+    "@galerina/framework-api-server",
+    "@galerina/framework-example-app",
+    "@galerina/tri-pipe",
+    "@galerina/tri-regex",
     "@galerina/core-compiler",
     "@galerina/devtools-benchmarks",
     "@galerina/devtools-flowgraph",
@@ -2405,14 +2418,6 @@
     "@galerina/devtools-provenance",
     "@galerina/devtools-security",
     "@galerina/devtools-context",
-    "@galerina/ext-bridge-bitnet",
-    "@galerina/ext-bridge-cpp",
-    "@galerina/framework-app-kernel",
-    "@galerina/docs",
-    "@galerina/framework-api-server",
-    "@galerina/framework-example-app",
-    "@galerina/tri-pipe",
-    "@galerina/tri-regex",
     "@galerina/web",
     "@galerina/web-components",
     "@galerina/web-events",
@@ -3268,5 +3273,5 @@
       ]
     }
   ],
-  "rootDigest": "168d41b3e73f2c9e1fc904bc5f29320493efae1b90b7c3ae9ecac5d80b9ed7fb"
+  "rootDigest": "b92b2056e1f49c43261f39a349b1c0ef42a77be2bc86cc00335d3aea58ad4d65"
 }
