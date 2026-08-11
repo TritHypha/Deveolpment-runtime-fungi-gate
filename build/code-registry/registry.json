@@ -1,9 +1,9 @@
 {
   "generatedFrom": "build/code-index/code-index.json",
-  "total": 973,
+  "total": 974,
   "counts": {
-    "ref": 215,
-    "inline": 362,
+    "ref": 214,
+    "inline": 364,
     "phantom": 113,
     "live": 170,
     "referenced": 100,
@@ -1490,12 +1490,24 @@
       "code": "ERR_SCHEMA",
       "family": "ERR_*",
       "namespace": "ERR",
-      "status": "ref",
+      "status": "inline",
       "names": [],
       "severities": [],
       "defs": 0,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
+      "docs": 0
+    },
+    {
+      "code": "ERR_SCHEMA_UNSUPPORTED_INPUT_TYPE",
+      "family": "ERR_*",
+      "namespace": "ERR",
+      "status": "inline",
+      "names": [],
+      "severities": [],
+      "defs": 0,
+      "emits": 2,
+      "tests": 0,
       "docs": 0
     },
     {
@@ -1963,7 +1975,7 @@
       "severities": [],
       "defs": 0,
       "emits": 5,
-      "tests": 13,
+      "tests": 14,
       "docs": 1
     },
     {

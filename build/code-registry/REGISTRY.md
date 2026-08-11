@@ -14,11 +14,11 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | status | count | meaning |
 |---|---|---|
 | live | 170 | emitted with an exported constant |
-| inline | 362 | emitted, NO exported constant (R4 — Stage F) |
+| inline | 364 | emitted, NO exported constant (R4 — Stage F) |
 | referenced | 100 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
 | dead | 13 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 113 | doc-only mention, not in source (drift — DOC-004) |
-| ref | 215 | referenced only (no def/emit) |
+| ref | 214 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
@@ -465,7 +465,7 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 |---|---|---|---|
 | FUNGI-EMIT-STUB | inline | — | — |
 
-### ERR_* (142)
+### ERR_* (143)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
@@ -592,7 +592,8 @@ Do NOT hand-edit. Regenerate: `node scripts/code-index.mjs && node scripts/gen-c
 | ERR_RUNTIME_AWAIT_TIMEOUT | live | — | — |
 | ERR_RUNTIME_AWAIT_TIME_REGRESSION | live | — | — |
 | ERR_RUNTIME_AWAIT_UNKNOWN_TASK | live | — | — |
-| ERR_SCHEMA | ref | — | — |
+| ERR_SCHEMA | inline | — | — |
+| ERR_SCHEMA_UNSUPPORTED_INPUT_TYPE | inline | — | — |
 | ERR_SIZE_EXCEEDED | ref | — | — |
 | ERR_SOME_CODE | ref | — | — |
 | ERR_STRING_TOO_LONG | ref | — | — |
