@@ -110,6 +110,14 @@ describe("PluginSandbox: lifecycle and validation", () => {
     assert.ok(r.violations.includes("NULL_INPUT"));
   });
 
+  it("validate() rejects null and non-canonical numbers anywhere in the input graph", () => {
+    const sb = new PluginSandbox(TEST_METADATA);
+    for (const input of [{ nested: null }, { value: Number.NaN }, { value: Number.POSITIVE_INFINITY }, { value: -0 }]) {
+      const result = sb.validate(input);
+      assert.equal(result.valid, false);
+    }
+  });
+
   it("hashValue produces stable sha256: prefixed string", () => {
     const h = PluginSandbox.hashValue({ test: 1 });
     assert.match(h, /^sha256:[0-9a-f]{16}$/);
@@ -221,6 +229,36 @@ describe("TowerRuntime: Load→Execute→Erase lifecycle", () => {
     assert.equal(result.success, false);
     assert.equal(result.trapFired, true);
     assert.match(result.trapCode ?? "", /ERR_SCHEMA_/);
+  });
+
+  it("execute() refuses cycles and deep structures before recursive hashing", async () => {
+    const tower = new TowerRuntime({ assimilationMemoryBudgetMB: 256, allowUnsignedLoad: true });
+    const { sandbox, correlationId } = await tower.load(TEST_METADATA);
+    const cyclic = {};
+    cyclic.self = cyclic;
+    const cycleResult = await tower.execute(sandbox, cyclic, correlationId);
+    assert.equal(cycleResult.success, false);
+    assert.match(cycleResult.trapCode ?? "", /CYCLE|SCHEMA/);
+
+    let deep = { leaf: true };
+    for (let depth = 0; depth < 40; depth += 1) deep = { child: deep };
+    const deepResult = await tower.execute(sandbox, deep, correlationId);
+    assert.equal(deepResult.success, false);
+    assert.match(deepResult.trapCode ?? "", /DEPTH|SCHEMA/);
+  });
+
+  it("execute() never invokes an untrusted input accessor before refusal", async () => {
+    const tower = new TowerRuntime({ assimilationMemoryBudgetMB: 256, allowUnsignedLoad: true });
+    const { sandbox, correlationId } = await tower.load(TEST_METADATA);
+    let getterCalls = 0;
+    const hostile = {};
+    Object.defineProperty(hostile, "prompt", {
+      enumerable: true,
+      get() { getterCalls += 1; return "attacker-controlled"; },
+    });
+    const result = await tower.execute(sandbox, hostile, correlationId);
+    assert.equal(result.success, false);
+    assert.equal(getterCalls, 0);
   });
 
   it("execute() throws on erased sandbox", async () => {

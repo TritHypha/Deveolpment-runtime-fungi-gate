@@ -76,6 +76,22 @@ test("RD-0236 #10 (follow-on): load requires a SIGNED plugin manifest (deny-by-d
   const wrongManifest = signPluginManifest({ ...meta, engineId: "plugin-y", artifactHash: "sha256:def456" }, privateKeyPem);
   await assert.rejects(() => strict.load(meta, undefined, { signedManifest: wrongManifest }), /FUNGI-ASSIMILATE-003/, "a manifest for another plugin must not admit this one");
 
+  const authorityFieldSubstitutions = [
+    ["artifactPath", "other/plugin.bin"],
+    ["governanceTier", 2],
+    ["license", "MIT"],
+    ["maxMemoryMB", 2],
+    ["capabilityMask", 1],
+  ];
+  for (const [field, value] of authorityFieldSubstitutions) {
+    const substituted = signPluginManifest({ ...meta, [field]: value }, privateKeyPem);
+    await assert.rejects(
+      () => strict.load(meta, `FIELD-${field}`, { signedManifest: substituted }),
+      /FUNGI-ASSIMILATE-003/,
+      `a valid signature over substituted ${field} must not admit the expected metadata`,
+    );
+  }
+
   // (e) hash-vs-bytes: supplied bytes whose sha256 ≠ artifactHash ⇒ refused, even under the floor opt-in.
   const floor = new TowerRuntime({ auditInMemory: true, allowUnsignedLoad: true });
   await assert.rejects(() => floor.load(meta, undefined, { artifactBytes: new Uint8Array([1, 2, 3]) }), /FUNGI-ASSIMILATE-004/, "tampered bytes (hash mismatch) must be refused");

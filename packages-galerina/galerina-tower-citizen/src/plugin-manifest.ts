@@ -120,15 +120,15 @@ export async function signPluginManifestHybrid(
 
 /**
  * Verify a signed plugin manifest against an attestation policy, binding it to the metadata actually
- * being loaded. Fails CLOSED — a missing manifest, an engineId/artifactHash mismatch (so a manifest signed
- * for plugin A cannot admit plugin B), an absent/bad signature, a revoked signer, or (in hybrid mode) an
+ * being loaded. Fails CLOSED — a missing manifest, any exact metadata mismatch (so a manifest signed for
+ * plugin A cannot admit altered path/tier/licence/budget/capability facts), an absent/bad signature, a revoked signer, or (in hybrid mode) an
  * absent/bad ML-DSA half all return `{ ok: false }`. When `policy.requireHybrid` or `policy.mlDsaPublicKey`
  * is set the ML-DSA signature is REQUIRED and verified (no PQ downgrade), mirroring verifyAttestationHybrid.
  */
 export async function verifyPluginManifest(
   signed: SignedPluginManifest | undefined,
   policy: AttestationPolicy,
-  expected: { engineId: string; artifactHash: string },
+  expected: PluginMetadata,
 ): Promise<AttestationResult> {
   if (!signed) return { ok: false, reason: "no signed plugin manifest provided" };
   let admitted: SignedPluginManifest;
@@ -142,8 +142,14 @@ export async function verifyPluginManifest(
   const hash = createHash("sha256").update(canonical, "utf8").digest("hex");
 
   // Bind the manifest to the metadata being loaded — no manifest-for-another-plugin replay.
-  if (m.engineId !== expected.engineId || m.artifactHash !== expected.artifactHash) {
-    return { ok: false, reason: `signed manifest does not match the metadata being loaded (engineId/artifactHash)`, hash };
+  let expectedSnapshot: PluginMetadata;
+  try {
+    expectedSnapshot = snapshotPluginMetadata(expected);
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : "expected plugin metadata is invalid", hash };
+  }
+  if (canonical !== canonicalPluginManifestSnapshot(expectedSnapshot)) {
+    return { ok: false, reason: "signed manifest does not exactly match all plugin metadata fields", hash };
   }
 
   // Ed25519 — a load manifest asserts identity/authority, so a signature is always required.

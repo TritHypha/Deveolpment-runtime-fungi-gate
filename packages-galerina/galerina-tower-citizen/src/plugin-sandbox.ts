@@ -101,6 +101,148 @@ export interface ExecutionResult {
   readonly correlationId:  string;
 }
 
+export type PluginInputAdmission =
+  | { readonly valid: false; readonly violations: readonly [string, ...string[]] }
+  | { readonly valid: true; readonly violations: readonly []; readonly value: unknown };
+
+const MAX_INPUT_BYTES = 4 * 1024 * 1024;
+const MAX_INPUT_DEPTH = 32;
+const MAX_INPUT_NODES = 10_000;
+const MAX_CONTAINER_FIELDS = 1_000;
+const FORBIDDEN_OBJECT_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+const UTF8 = new TextEncoder();
+
+function refuseInput(code: string): PluginInputAdmission {
+  return Object.freeze({
+    valid: false as const,
+    violations: Object.freeze([code]) as readonly [string, ...string[]],
+  });
+}
+
+/**
+ * Admit untrusted plugin input into a detached, deeply frozen JSON-value snapshot.
+ *
+ * The walk is iterative so hostile depth cannot consume the host call stack. Property descriptors
+ * are inspected without reading properties, which prevents accessor execution. Proxies, cycles,
+ * exotic prototypes, sparse/surplus arrays, ambiguous numeric values, and prototype-control keys
+ * are refused before any audit hash or engine dispatch can observe the value.
+ */
+function snapshotPluginInput(input: unknown): PluginInputAdmission {
+  type Work = {
+    readonly source: unknown;
+    readonly depth: number;
+    readonly assign: (value: unknown) => void;
+  };
+
+  let rootValue: unknown = undefined;
+  let nodeCount = 0;
+  let textualBytes = 0;
+  const seen = new WeakSet<object>();
+  const containers: object[] = [];
+  const work: Work[] = [{ source: input, depth: 0, assign: (value) => { rootValue = value; } }];
+
+  while (work.length > 0) {
+    const current = work.pop()!;
+    nodeCount += 1;
+    if (nodeCount > MAX_INPUT_NODES) return refuseInput("INPUT_NODE_LIMIT_EXCEEDED");
+
+    const source = current.source;
+    if (source === null || source === undefined) return refuseInput("NULL_INPUT");
+    if (typeof source === "string") {
+      if (source.length > MAX_INPUT_BYTES) return refuseInput("INPUT_SIZE_EXCEEDED");
+      textualBytes += UTF8.encode(source).byteLength;
+      if (textualBytes > MAX_INPUT_BYTES) return refuseInput("INPUT_SIZE_EXCEEDED");
+      current.assign(source);
+      continue;
+    }
+    if (typeof source === "boolean") {
+      current.assign(source);
+      continue;
+    }
+    if (typeof source === "number") {
+      if (!Number.isFinite(source) || Object.is(source, -0)) return refuseInput("NON_CANONICAL_NUMBER");
+      current.assign(source);
+      continue;
+    }
+    if (typeof source !== "object") return refuseInput("UNSUPPORTED_INPUT_TYPE");
+    if (current.depth >= MAX_INPUT_DEPTH) return refuseInput("INPUT_DEPTH_EXCEEDED");
+    if (utilTypes.isProxy(source)) return refuseInput("PROXY_INPUT");
+    if (seen.has(source)) return refuseInput("INPUT_CYCLE");
+    seen.add(source);
+
+    try {
+      if (Array.isArray(source)) {
+        if (Object.getPrototypeOf(source) !== Array.prototype) return refuseInput("EXOTIC_INPUT_PROTOTYPE");
+        if (Object.getOwnPropertySymbols(source).length !== 0) return refuseInput("SYMBOL_KEY");
+        const descriptors = Object.getOwnPropertyDescriptors(source) as Record<string, PropertyDescriptor>;
+        const lengthDescriptor = descriptors["length"];
+        if (lengthDescriptor === undefined || !("value" in lengthDescriptor)
+          || !Number.isSafeInteger(lengthDescriptor.value) || (lengthDescriptor.value as number) < 0) {
+          return refuseInput("NON_CANONICAL_ARRAY");
+        }
+        const length = lengthDescriptor.value as number;
+        if (length > MAX_CONTAINER_FIELDS) return refuseInput("TOO_MANY_FIELDS");
+        const names = Object.keys(descriptors).filter((name) => name !== "length");
+        if (names.length !== length) return refuseInput("NON_CANONICAL_ARRAY");
+
+        const clone: unknown[] = new Array(length);
+        for (let index = length - 1; index >= 0; index -= 1) {
+          const name = String(index);
+          const descriptor = descriptors[name];
+          if (descriptor === undefined || !("value" in descriptor) || descriptor.enumerable !== true) {
+            return refuseInput("NON_CANONICAL_ARRAY");
+          }
+          work.push({
+            source: descriptor.value,
+            depth: current.depth + 1,
+            assign: (value) => { clone[index] = value; },
+          });
+        }
+        containers.push(clone);
+        current.assign(clone);
+        continue;
+      }
+
+      const prototype = Object.getPrototypeOf(source);
+      if (prototype !== Object.prototype && prototype !== null) return refuseInput("EXOTIC_INPUT_PROTOTYPE");
+      if (Object.getOwnPropertySymbols(source).length !== 0) return refuseInput("SYMBOL_KEY");
+      const descriptors = Object.getOwnPropertyDescriptors(source);
+      const names = Object.keys(descriptors).sort();
+      if (names.length > MAX_CONTAINER_FIELDS) return refuseInput("TOO_MANY_FIELDS");
+      const clone = Object.create(null) as Record<string, unknown>;
+      for (let index = names.length - 1; index >= 0; index -= 1) {
+        const name = names[index]!;
+        if (FORBIDDEN_OBJECT_KEYS.has(name)) return refuseInput("FORBIDDEN_OBJECT_KEY");
+        if (name.length > MAX_INPUT_BYTES) return refuseInput("INPUT_SIZE_EXCEEDED");
+        textualBytes += UTF8.encode(name).byteLength;
+        if (textualBytes > MAX_INPUT_BYTES) return refuseInput("INPUT_SIZE_EXCEEDED");
+        const descriptor = descriptors[name];
+        if (descriptor === undefined || !("value" in descriptor) || descriptor.enumerable !== true) {
+          return refuseInput("ACCESSOR_OR_HIDDEN_FIELD");
+        }
+        work.push({
+          source: descriptor.value,
+          depth: current.depth + 1,
+          assign: (value) => { clone[name] = value; },
+        });
+      }
+      containers.push(clone);
+      current.assign(clone);
+    } catch {
+      return refuseInput("UNINSPECTABLE_INPUT");
+    }
+  }
+
+  for (let index = containers.length - 1; index >= 0; index -= 1) {
+    Object.freeze(containers[index]!);
+  }
+  const serialized = JSON.stringify(rootValue);
+  if (typeof serialized !== "string" || UTF8.encode(serialized).byteLength > MAX_INPUT_BYTES) {
+    return refuseInput("INPUT_SIZE_EXCEEDED");
+  }
+  return Object.freeze({ valid: true as const, violations: Object.freeze([]) as readonly [], value: rootValue });
+}
+
 export class PluginSandbox {
   readonly metadata: PluginMetadata;
   private erased = false;
@@ -113,19 +255,16 @@ export class PluginSandbox {
 
   /** Hash any value for audit trail correlation */
   static hashValue(v: unknown): string {
-    return "sha256:" + createHash("sha256").update(JSON.stringify(v)).digest("hex").slice(0, 16);
+    const admitted = snapshotPluginInput(v);
+    if (!admitted.valid) throw new Error(`ERR_SCHEMA_${admitted.violations[0]}`);
+    const encoded = JSON.stringify(admitted.value);
+    if (typeof encoded !== "string") throw new Error("ERR_SCHEMA_UNSUPPORTED_INPUT_TYPE");
+    return "sha256:" + createHash("sha256").update(encoded).digest("hex").slice(0, 16);
   }
 
   /** Schema validation — the "Sanitize & Interrogate" protocol */
-  validate(input: unknown): { valid: boolean; violations: string[] } {
-    const violations: string[] = [];
-    if (input === null || input === undefined) violations.push("NULL_INPUT");
-    if (typeof input === "string" && input.length > 4 * 1024 * 1024) violations.push("INPUT_SIZE_EXCEEDED");
-    if (typeof input === "object" && input !== null) {
-      const keys = Object.keys(input as object);
-      if (keys.length > 1000) violations.push("TOO_MANY_FIELDS");
-    }
-    return { valid: violations.length === 0, violations };
+  validate(input: unknown): PluginInputAdmission {
+    return snapshotPluginInput(input);
   }
 
   /** Mark this sandbox as erased — prevents re-use */

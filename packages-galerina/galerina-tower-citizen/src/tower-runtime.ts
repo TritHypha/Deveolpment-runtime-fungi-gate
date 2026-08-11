@@ -47,7 +47,7 @@ export interface TowerConfig {
   /**
    * RD-0236 #10: attestation policy used to verify a SIGNED plugin manifest at load(). When load() is
    * not opted out (see allowUnsignedLoad), a plugin MUST present a signedManifest that verifies against
-   * this key (binding to the metadata's engineId + artifactHash) or it is refused before sandboxing.
+   * this key (binding every canonical metadata field) or it is refused before sandboxing.
    */
   readonly attestationPolicy?: AttestationPolicy;
   /**
@@ -167,16 +167,19 @@ export class TowerRuntime {
     }
     // (b) signed manifest — DENY-BY-DEFAULT: unless the deployment opts out via allowUnsignedLoad (e.g. the
     //     engine's own internal self-descriptor load), the plugin MUST present a signedManifest that verifies
-    //     against the tower's attestationPolicy AND binds to THIS metadata's engineId + artifactHash (so a
-    //     manifest signed for plugin A cannot admit plugin B).
+    //     against the tower's attestationPolicy AND binds to every canonical field of THIS metadata (so a
+    //     manifest signed for plugin A cannot admit altered path/tier/licence/budget/capability facts).
     if (this.config.allowUnsignedLoad !== true) {
       if (!this.config.attestationPolicy) {
         const ev = this.audit.trap(corrId, metadata.artifactHash, metadata.engineId,
           "ERR_UNVERIFIED_METADATA", { reason: "no attestation policy configured to verify the plugin manifest (fail-secure; set allowUnsignedLoad to opt out)" });
         throw new Error(`FUNGI-ASSIMILATE-003: plugin load requires a signed manifest but no attestation policy is configured — refusing (fail-closed). AuditEvent: ${ev.eventId}`);
       }
-      const res = await verifyPluginManifest(evidence?.signedManifest, this.config.attestationPolicy,
-        { engineId: metadata.engineId, artifactHash: metadata.artifactHash });
+      const res = await verifyPluginManifest(
+        evidence?.signedManifest,
+        this.config.attestationPolicy,
+        metadata,
+      );
       if (!res.ok) {
         const ev = this.audit.trap(corrId, metadata.artifactHash, metadata.engineId,
           "ERR_UNVERIFIED_METADATA", { reason: res.reason ?? "plugin manifest failed verification" });
@@ -199,16 +202,21 @@ export class TowerRuntime {
   async execute(sandbox: PluginSandbox, input: unknown, correlationId: string): Promise<ExecutionResult> {
     if (sandbox.isErased()) throw new Error("SANDBOX_ERASED: Cannot execute an erased sandbox");
 
-    const inputHash = PluginSandbox.hashValue(input);
     const { artifactHash, engineId } = sandbox.metadata;
 
     // SANITIZE & INTERROGATE — schema validation before execution
     const validation = sandbox.validate(input);
     if (!validation.valid) {
       const trapCode = `ERR_SCHEMA_${validation.violations[0]}`;
-      this.audit.trap(correlationId, artifactHash, engineId, trapCode, { violations: validation.violations, inputHash });
+      this.audit.trap(correlationId, artifactHash, engineId, trapCode, {
+        violations: validation.violations,
+        inputHash: "sha256:0",
+      });
       return { success: false, outputHash: "sha256:0", latencyMs: 0, trapFired: true, trapCode, correlationId };
     }
+
+    const admittedInput = validation.value;
+    const inputHash = PluginSandbox.hashValue(admittedInput);
 
     this.audit.exec(correlationId, artifactHash, engineId, inputHash);
     const t0 = Date.now();
@@ -216,7 +224,7 @@ export class TowerRuntime {
     // Dispatch to engine (Phase 1: stub — real dispatch in galerina-ext-bridge-*)
     // The actual engine call happens via the assimilated plugin interface
     const latencyMs = Date.now() - t0;
-    const outputHash = PluginSandbox.hashValue({ input, engineId, timestamp: Date.now() });
+    const outputHash = PluginSandbox.hashValue({ input: admittedInput, engineId, timestamp: Date.now() });
 
     return { success: true, outputHash, latencyMs, trapFired: false, correlationId };
   }
