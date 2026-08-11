@@ -32,7 +32,7 @@ Keep the executing governance-diff path unchanged.
   total `qualifierEscalated` comparison.
 - [x] Prove strict checking, typed interpretation and signed/admitted Wasm.
 - [x] Derive parity through the public governance-diff caller surface.
-- [ ] Run the complete compiler package and commit the bounded source wave.
+- [x] Run the complete compiler package and commit the bounded source wave.
 
 ### Task 3: Physical SLIDE/VOK proof
 
@@ -46,7 +46,8 @@ Keep the executing governance-diff path unchanged.
 
 ### Task 4: Closure
 
-- [ ] Record exact hashes, build points, results and non-authority boundaries.
-- [ ] Refresh generated owners through bounded checks.
+- [x] Record exact hashes, build points, results and non-authority boundaries.
+- [x] Refresh generated owners through bounded checks.
 - [ ] Commit explicit outputs and re-index codebase-memory plus Myco at the
-  final exact HEAD without pushing.
+  final exact HEAD without pushing. Myco is fresh at the current checkpoint;
+  codebase-memory returned `Transport closed` and remains fail-closed UNKNOWN.

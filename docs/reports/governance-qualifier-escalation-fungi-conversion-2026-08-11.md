@@ -32,6 +32,7 @@ Strings cannot acquire authority above `pure`.
 | Initial Fungi commit | `67d9da49e3fff224fb26557a640ca66acb12c8f0` |
 | Prior bounded direct shape | `4c0fba1b908f826f52d3e4fbf7067badb1c94816` |
 | Independent SLIDE build point | `71abe869ba5cc5cbe5590e7fb322b293cc40c8e3` |
+| Galerina physical source/evidence commit | `a5eda7882e2f278f2c38c9f7f8cbd0c6cdcd2e7e` |
 
 ## Verification
 
@@ -44,6 +45,13 @@ Strings cannot acquire authority above `pure`.
 - Wrong argument counts/types, an unpaired surrogate, source mutation and a
   one-byte artifact mutation all refuse.
 - Programs beyond the unchanged sixteen-block wide-control ceiling refuse.
+- Complete package aggregate: 100/100 packages and 9,566 tests pass.
+- Generated owners: graph 7/7, semantic outputs 3/3, roadmap outputs 5/5,
+  canonical count consumers 7/7, and Golden Pack 11/11 checked plus 11/11
+  execution vectors.
+- Myco indexes 4,977 files and 77,479 terms. Primary codebase-memory freshness
+  remains UNKNOWN because its bounded refresh returned `Transport closed`;
+  Myco is not treated as substitute authority.
 
 ## Resolved blocker
 

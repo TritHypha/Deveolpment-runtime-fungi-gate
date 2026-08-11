@@ -23,10 +23,16 @@ counts or open items that a newer section explicitly supersedes.
   verify the complete 11 x 11 canonical-plus-hostile matrix as typed Bool
   receipts. Wrong arguments, an unpaired surrogate, source mutation and a
   one-byte artifact mutation refuse (**1/1**, zero skips).
-- [ ] Refresh the seventh slice's generated owners and both indexes through
-  bounded checks. Full tooling, normal phase-close, graph-all-after-roadmap and
-  whole-memory evaluation remain excluded; repository-wide closure remains
-  **UNKNOWN**.
+- [x] Refresh the seventh slice's generated owners through bounded checks. The
+  complete package owner passes **100/100 packages and 9,566 tests**; graph is
+  **7/7**, semantic outputs **3/3**, roadmap outputs **5/5**, canonical
+  consumers **7/7**, and Golden is **11/11 checked + 11/11 execution
+  vectors**. Myco indexes **4,977 files / 77,479 terms**.
+- [ ] Re-index primary codebase-memory at the final exact HEAD. The bounded
+  refresh attempt returned `Transport closed`, so freshness remains
+  **UNKNOWN** rather than being inferred from Myco. Full tooling, normal
+  phase-close, graph-all-after-roadmap and whole-memory evaluation remain
+  excluded; repository-wide closure remains **UNKNOWN**.
 - [x] Keep `governance-diff.ts`, its TypeScript decision and every consumer
   active. This reference-only proof grants no consumer-switch, bootstrap,
   production, release or retirement authority.
