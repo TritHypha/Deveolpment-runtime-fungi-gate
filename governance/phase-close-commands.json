@@ -5005,6 +5005,7 @@
           "scripts/tests/phase-close-hook.test.mjs",
           "scripts/tests/phase-close-profile.test.mjs",
           "scripts/tests/platform-smoke.test.mjs",
+          "scripts/tests/plugin-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/post-slide-authority-receipts.test.mjs",
           "scripts/tests/process-lease-budget.test.mjs",
           "scripts/tests/project-graph-generator.test.mjs",
@@ -5130,6 +5131,7 @@
           "scripts/tests/phase-close-hook.test.mjs",
           "scripts/tests/phase-close-profile.test.mjs",
           "scripts/tests/platform-smoke.test.mjs",
+          "scripts/tests/plugin-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/post-slide-authority-receipts.test.mjs",
           "scripts/tests/process-lease-budget.test.mjs",
           "scripts/tests/project-graph-generator.test.mjs",
@@ -5164,7 +5166,7 @@
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 104
+        "expectedCount": 105
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,
