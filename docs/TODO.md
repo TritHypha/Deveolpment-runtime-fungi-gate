@@ -4,6 +4,43 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Fifth physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the compiler's private deterministic `is64BitWatType`
+  decision from `wat-emitter.ts` into package-owned
+  `src/self-hosted/wat-64-bit-type.fungi`. It returns true only for exact
+  `Int64` or `UInt64` and contains no null, NaN, `else if`, exception syntax,
+  `for` or `loop`.
+- [x] Prove canonical and hostile Strings through strict checking, typed
+  interpretation, signed/admitted Wasm and the public WAT-emission path. The
+  focused proof is **3/3** and the compiler package is **6,351/6,351** with
+  zero failures and zero skips.
+- [x] Compile the exact Fungi bytes through clean SLIDE `ac8a041`, publish one
+  physical `.slide`, independently re-admit it through VOK, execute all nine
+  vectors, and refuse wrong typed arguments, an unpaired surrogate, source
+  mutation and a one-byte artifact mutation (**1/1**, zero skips).
+- [ ] Refresh the fifth slice's generated owners and both indexes through
+  bounded checks. Full tooling, normal phase-close and whole-memory evaluation
+  remain excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Keep `wat-emitter.ts`, `is64BitWatType` and every consumer active. This
+  reference-only proof grants no consumer-switch, bootstrap, production,
+  release or retirement authority.
+
+### Qualifier escalation Fungi partial conversion and R&D exit - 2026-08-11
+
+- [x] Translate the exact five-rank qualifier decision into package-owned
+  `governance-qualifier-escalation.fungi` and prove the full 7 x 7 matrix
+  through the public TypeScript caller, typed interpreter and signed/admitted
+  Wasm (**2/2** focused; compiler package **6,348/6,348** at that slice).
+- [ ] Extend the independent SLIDE checked-Fungi pure-scalar profile to admit
+  the required fourth exact String branch. Current SLIDE `ac8a041` admits
+  three and refuses four with `SLIDE-CHECKED-PURE-SCALAR-001`; no fallback or
+  qualifier may be weakened to obtain a pass. Required R&D and hostile-proof
+  conditions are recorded in
+  `docs/reports/governance-qualifier-escalation-fungi-conversion-2026-08-11.md`.
+- [x] Keep the TypeScript decision and callers active; physical SLIDE,
+  consumer-switch and retirement authority remain closed.
+
 ### Fourth physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
 - [x] Translate the sentinel-power package's private, deterministic

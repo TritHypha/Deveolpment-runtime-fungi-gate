@@ -93,6 +93,32 @@ phase-close is the remaining repository exit. The TypeScript helper and caller
 remain active; this proof grants no plugin, consumer-switch, bootstrap,
 production, release or retirement authority.
 
+Fifth physical conversion slice 2026-08-11: the compiler's private
+`is64BitWatType` decision in `wat-emitter.ts` now has a package-owned pure
+String-to-Bool translation at
+`galerina-core-compiler/src/self-hosted/wat-64-bit-type.fungi`. It returns true
+only for exact `Int64` or `UInt64`. Isolated strict checking is clean; the
+typed interpreter, signed/admitted Wasm and public WAT caller proof pass
+**3/3**; and the compiler package passes **6,351/6,351**. Clean SLIDE
+`ac8a041` publishes one physical `.slide`, independently re-admits it through
+VOK, executes nine canonical and hostile vectors, and refuses malformed typed
+arguments, an unpaired surrogate, source mutation and a one-byte artifact
+mutation (**1/1**, zero skips). The TypeScript helper and callers remain
+active. This reference-only proof grants no consumer-switch, bootstrap,
+production, release or retirement authority. Repository-wide closure remains
+**UNKNOWN** because the crash-linked full tooling and normal phase-close
+processes are deliberately excluded.
+
+Qualifier escalation partial conversion 2026-08-11: the five-rank governance
+decision has exact package-owned Fungi, typed-interpreter, signed-Wasm and
+public-caller parity across the complete 7 x 7 matrix. Physical publication is
+not claimed. Independent SLIDE `ac8a041` admits three sequential exact String
+branches and refuses the required fourth with
+`SLIDE-CHECKED-PURE-SCALAR-001`; helper-call and four-arm `match` shapes also
+refuse. The zero-trust exit is to extend the bounded checked-Fungi profile with
+hostile String and mutation proofs, not weaken unknown-String fallback or
+remove a qualifier. The TypeScript path remains active.
+
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
