@@ -26,6 +26,20 @@ docs/sytax/patterns-and-regex.md
 
 Regex is useful for validation, scanning and text extraction, but unsafe pattern engines can create ReDoS risks when a pattern takes too long to match.
 
+### Current runtime closure (2026-08-11)
+
+The existing `String.matchesPattern` compatibility surface now delegates to
+`@galerina/tri-regex`: a cost-certified, non-backtracking engine. Runtime
+subjects are capped at 4,096 characters and patterns at 500 characters.
+Unsupported syntax is a typed refusal; it never falls back to JavaScript
+`RegExp`.
+
+TriRegex v0.1 does not certify capture spans or replacement semantics. Until
+those contracts exist, `String.extractGroups` refuses and
+`String.replacePattern` admits only a non-empty bounded literal pattern. This
+is a deliberate fail-closed compatibility boundary, not completion of the
+forward `Pattern` language design below.
+
 Galerina should support two levels:
 
 ```text

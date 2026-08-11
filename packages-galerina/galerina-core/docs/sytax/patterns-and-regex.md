@@ -2,6 +2,12 @@
 
 Status: Draft.
 
+Runtime note (2026-08-11): `String.matchesPattern` is already routed through
+the cost-certified `@galerina/tri-regex` engine. Capture extraction remains
+refused and pattern replacement remains literal-only until their own certified
+contracts exist. The `Pattern` declarations and policy syntax in this document
+remain forward design.
+
 This file documents proposed Galerina syntax for safe pattern matching and explicit unsafe regex.
 
 Design context lives in:
@@ -244,6 +250,6 @@ check denied safe-regex features
 emit compile-inside-loop diagnostics
 emit pattern security reports
 emit pattern map-manifest entries
-implement or integrate a safe pattern engine
+complete the typed `Pattern` integration over the existing TriRegex runtime
 define production gates for UnsafeRegex
 ```

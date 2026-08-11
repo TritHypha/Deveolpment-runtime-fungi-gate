@@ -12,6 +12,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { resolve as pathResolve, relative as pathRelative, isAbsolute as pathIsAbsolute } from "node:path";
+import { compile as compileTriRegex } from "@galerina/tri-regex";
 
 import {
   parseProgram, checkEffects, verifyGovernance,
@@ -44,11 +45,10 @@ function checkPathSandbox(root, userPath) {
   return rel.startsWith("..") || pathIsAbsolute(rel);
 }
 
-// Regex ReDoS guard (mirrors validateRegexPattern in stdlib.ts)
+// Runtime regex certificate boundary (same package used by stdlib.ts).
 function validateRegexPattern(pattern) {
-  if (pattern.length > 500) return "too long";
-  if (/\([^)]*[+*][^)]*\)[+*{]/.test(pattern)) return "nested quantifier";
-  return null;
+  const result = compileTriRegex(pattern, { budget: { maxPatternLength: 500 } });
+  return result.ok ? null : result.reason;
 }
 
 // ---------------------------------------------------------------------------
@@ -118,12 +118,12 @@ describe("Security F8: dynamic regex validation", () => {
     assert.equal(validateRegexPattern("^[a-z]+$"), null);
   });
 
-  it("rejects nested quantifier (a+)+", () => {
-    assert.notEqual(validateRegexPattern("(a+)+b"), null);
+  it("certifies formerly catastrophic nested quantifier (a+)+ without backtracking", () => {
+    assert.equal(validateRegexPattern("(a+)+b"), null);
   });
 
-  it("rejects nested * quantifier", () => {
-    assert.notEqual(validateRegexPattern("(a*)*b"), null);
+  it("certifies nested star without backtracking", () => {
+    assert.equal(validateRegexPattern("(a*)*b"), null);
   });
 
   it("allows non-nested quantifier", () => {

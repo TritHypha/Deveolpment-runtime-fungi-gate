@@ -352,17 +352,14 @@ describe("Stdlib - String.matchesPattern", () => {
 });
 
 describe("Stdlib - String.extractGroups", () => {
-  it("extracts capture groups", async () => {
+  it("refuses capture extraction until a certified capture engine exists", async () => {
     const r = await callStdlib("extractGroups", { __tag: "string", value: "2024-03-15" }, [{ __tag: "string", value: "(\\d{4})-(\\d{2})-(\\d{2})" }], ctx());
-    assert.equal(r?.__tag, "list");
-    assert.equal(r?.items.length, 3);
-    assert.equal(r?.items[0]?.value, "2024");
-    assert.equal(r?.items[1]?.value, "03");
+    assert.equal(r?.__tag, "err");
+    assert.match(r?.error?.value ?? "", /capture|certified|unsupported/i);
   });
-  it("returns empty list when no match", async () => {
+  it("refuses even when the legacy engine would find no match", async () => {
     const r = await callStdlib("extractGroups", { __tag: "string", value: "hello" }, [{ __tag: "string", value: "(\\d+)" }], ctx());
-    assert.equal(r?.__tag, "list");
-    assert.equal(r?.items.length, 0);
+    assert.equal(r?.__tag, "err");
   });
 });
 
@@ -371,6 +368,10 @@ describe("Stdlib - String.replacePattern", () => {
     const r = await callStdlib("replacePattern", { __tag: "string", value: "hello world hello" }, [{ __tag: "string", value: "hello" }, { __tag: "string", value: "hi" }], ctx());
     assert.equal(r?.__tag, "string");
     assert.equal(r?.value, "hi world hi");
+  });
+  it("refuses regex metacharacters on the literal-only certified path", async () => {
+    const r = await callStdlib("replacePattern", { __tag: "string", value: "aaaa" }, [{ __tag: "string", value: "a+" }, { __tag: "string", value: "x" }], ctx());
+    assert.equal(r?.__tag, "err");
   });
 });
 

@@ -1,6 +1,6 @@
 {
   "note": "type-position `| null` per file; see source-hygiene-null-ratchet.test.mjs",
-  "total": 263,
+  "total": 262,
   "files": {
     "packages-galerina/galerina-auth/src/bearer.ts": 1,
     "packages-galerina/galerina-core-cli/src/core-command.ts": 1,
@@ -27,7 +27,7 @@
     "packages-galerina/galerina-core-compiler/src/resilience-inference.ts": 3,
     "packages-galerina/galerina-core-compiler/src/route-registry.ts": 3,
     "packages-galerina/galerina-core-compiler/src/runtime/limitPolicy.ts": 7,
-    "packages-galerina/galerina-core-compiler/src/stdlib.ts": 5,
+    "packages-galerina/galerina-core-compiler/src/stdlib.ts": 4,
     "packages-galerina/galerina-core-compiler/src/taint-checker.ts": 4,
     "packages-galerina/galerina-core-compiler/src/value-state-checker.ts": 1,
     "packages-galerina/galerina-core-compiler/src/verified-loop-envelope.ts": 5,

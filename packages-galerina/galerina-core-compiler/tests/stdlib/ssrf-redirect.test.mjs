@@ -31,6 +31,7 @@ const dresp = (status, location = null, body = "") => ({
   status, ok: status >= 200 && status < 300, location, bytes: new TextEncoder().encode(body),
 });
 const getPinned = (url, dial) => callStdlib("http.get", undefined, [str(url)], { ...ctx, dial });
+const postPinned = (url, body, dial) => callStdlib("http.post", undefined, [str(url), str(body)], { ...ctx, dial });
 
 // 8.8.8.8 is a public literal IP — guard-approved, no DNS recheck/pin — so the ONLY thing under test is the
 // redirect re-guard (the original URL passes; the redirect target is what must be re-checked). https so it
@@ -66,4 +67,15 @@ test("an infinite redirect loop is capped (does not hang)", async () => {
   const r = await getPinned(PUBLIC, () => dresp(302, "https://2.2.2.2/loop"));
   assert.equal(r.__tag, "err");
   assert.match(r.error?.value ?? "", /too many redirects/i);
+});
+
+test("a request body is never replayed across a redirect", async () => {
+  const calls = [];
+  const r = await postPinned(PUBLIC, "authority-bearing-body", (url, request) => {
+    calls.push({ url, request });
+    return dresp(307, "https://1.1.1.1/replay-target");
+  });
+  assert.equal(r.__tag, "err");
+  assert.match(r.error?.value ?? "", /body|replay|redirect/i);
+  assert.equal(calls.length, 1, "the body must reach at most the original admitted destination");
 });

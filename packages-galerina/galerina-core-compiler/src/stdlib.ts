@@ -19,6 +19,7 @@ import { createRequire as _createRequire } from "node:module";
 // IPv4-in-IPv6 / CGNAT / *.corp bypasses + DNS-rebind recheck). Wiring the EXISTING guard rather than
 // re-cloning the inline regex (self-audit 61-9). egress-guard is pure — no node/tower-citizen load.
 import { guardOutboundUrl, guardResolvedAddresses } from "@galerina/core-network";
+import { compile as compileTriRegex } from "@galerina/tri-regex";
 import bcrypt from "bcryptjs";  // Phase 34: real bcrypt ($2b$) for BCrypt.verify / BCrypt.hash
 // Phase 36: Argon2id (OWASP preferred memory-hard KDF) — async, imported lazily
 // to avoid startup cost when Password API is not used.
@@ -281,29 +282,12 @@ function asList(v: GalerinaValue): readonly GalerinaValue[] {
   return v.__tag === "list" ? v.items : [];
 }
 
-/**
- * SECURITY (Finding 8): Validate a regex pattern before compiling it from runtime input.
- * Returns an error string if the pattern is dangerous, null if safe.
- *
- * Limits:
- *   - Max 500 characters (prevents huge patterns)
- *   - Blocks known catastrophic patterns: nested quantifiers (a+)+, {n,m} in groups
- *   - Blocks character class explosions: [^...]{n,}
- *   - Does NOT block all ReDoS — that requires a full automata analysis.
- *     For full safety, use Regex.escapeLiteral() for user input → LITERAL matching.
- */
-function validateRegexPattern(pattern: string): string | null {
-  if (pattern.length > 500) {
-    return "RegexError: pattern exceeds maximum length (500 chars) — ReDoS prevention";
+/** Replacement stays on a literal-only path until certified replacement spans exist. */
+function containsRegexSyntax(pattern: string): boolean {
+  for (const char of pattern) {
+    if ("^$\\.*+?()[]{}|".includes(char)) return true;
   }
-  // Detect common catastrophic backtracking patterns
-  if (/\([^)]*[+*][^)]*\)[+*{]/.test(pattern)) {
-    return "RegexError: nested quantifier detected (e.g. (a+)+ ) — ReDoS prevention";
-  }
-  if (pattern.includes("|") || /\\[1-9]/.test(pattern) || pattern.includes("(?")) {
-    return "RegexError: alternation, lookaround, and backreferences are outside the bounded regex subset";
-  }
-  return null;
+  return false;
 }
 
 const MAX_REGEX_SUBJECT_CHARS = 4_096;
@@ -466,45 +450,26 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
     case "matchesPattern": {
       const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
       if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
-      // SECURITY (Finding 8 — MEDIUM): ReDoS via dynamic regex from runtime input.
-      // Apply pattern length + complexity limits before compiling.
-      const regexErr = validateRegexPattern(pattern);
-      if (regexErr !== null) return err(regexErr);
-      try {
-        return { __tag: "bool", value: new RegExp(pattern).test(s) };
-      } catch {
-        return err(`RegexError: invalid pattern`);
-      }
+      const compiled = compileTriRegex(pattern, {
+        budget: { maxPatternLength: 500 },
+        uniformScan: true,
+      });
+      if (!compiled.ok) return err(`RegexError: ${compiled.code}: ${compiled.reason}`);
+      return { __tag: "bool", value: compiled.matcher.test(s).verdict === 1 };
     }
 
     case "extractGroups": {
-      const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
-      if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
-      const regexErr2 = validateRegexPattern(pattern);
-      if (regexErr2 !== null) return err(regexErr2);
-      try {
-        const match = new RegExp(pattern).exec(s);
-        if (!match) return { __tag: "list", items: [] };
-        const groups = match.slice(1).map((g): GalerinaValue =>
-          g === undefined ? FUNGI_NONE : { __tag: "string", value: g }
-        );
-        return { __tag: "list", items: groups };
-      } catch {
-        return err(`RegexError: invalid pattern`);
-      }
+      return err("RegexError: capture extraction is unsupported until certified capture spans exist");
     }
 
     case "replacePattern": {
       const pattern = strVal(args[0] ?? { __tag: "string", value: "" });
       const replacement = strVal(args[1] ?? { __tag: "string", value: "" });
       if (s.length > MAX_REGEX_SUBJECT_CHARS) return err("RegexError: subject exceeds maximum length (4096 chars)");
-      const regexErr3 = validateRegexPattern(pattern);
-      if (regexErr3 !== null) return err(regexErr3);
-      try {
-        return { __tag: "string", value: s.replace(new RegExp(pattern, "g"), replacement) };
-      } catch {
-        return err(`RegexError: invalid pattern`);
+      if (pattern.length === 0 || pattern.length > 500 || replacement.length > 4_096 || containsRegexSyntax(pattern)) {
+        return err("RegexError: replacePattern admits only a non-empty bounded literal pattern");
       }
+      return { __tag: "string", value: s.split(pattern).join(replacement) };
     }
 
     // Phase 9A-3: named interpolation — "Hello {name}".format({ name: "World" })
@@ -1606,7 +1571,7 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
     return { pin: null };
   };
 
-  // Parse the optional request body ONCE — re-sent verbatim on each hop (preserves prior behaviour).
+  // Parse the optional request body once. A redirect refuses instead of replaying it.
   let body: NetDialRequest["body"];
   const bodyArg = args[1];
   if (bodyArg !== undefined && bodyArg.__tag !== "void") {
@@ -1627,8 +1592,11 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
       const guard = await guardHop(currentUrl);
       if ("error" in guard) return err(guard.error);
       // Omit `body` when absent (exactOptionalPropertyTypes: a present-but-undefined prop is a type error).
-      const response = await dial(currentUrl, { method, pinnedIps: guard.pin, ...(body ? { body } : {}) });
+      const response = await dial(currentUrl, { method, pinnedIps: guard.pin, ...(body !== undefined ? { body } : {}) });
       if (response.status >= 300 && response.status < 400) {
+        if (body !== undefined) {
+          return err("NetworkError: redirect refused because replaying a request body is not admitted");
+        }
         if (hop >= MAX_REDIRECTS) return err(`NetworkError: too many redirects (>${MAX_REDIRECTS}) from ${url}`);
         const loc = response.location;
         if (!loc) return err(`NetworkError: HTTP ${response.status} redirect with no Location from ${currentUrl}`);

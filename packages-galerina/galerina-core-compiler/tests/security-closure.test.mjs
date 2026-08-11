@@ -93,14 +93,25 @@ test("the canonical JSON decoder refuses an over-depth value", async () => {
   assert.match(result.error.value, /DecodeError/);
 });
 
-test("dynamic regex refuses ambiguous alternation and oversized subjects", async () => {
+test("dynamic regex uses the certified non-backtracking engine and bounds subjects", async () => {
   const ambiguous = await callStdlib("matchesPattern", str(`${"a".repeat(20)}!`), [str("^(a|aa)+$")], ctx);
-  assert.equal(ambiguous.__tag, "err");
+  assert.equal(ambiguous.__tag, "bool");
+  assert.equal(ambiguous.value, false);
   const oversized = await callStdlib("matchesPattern", str("a".repeat(4097)), [str("^a+$")], ctx);
   assert.equal(oversized.__tag, "err");
   const control = await callStdlib("matchesPattern", str("hello"), [str("^[a-z]+$")], ctx);
   assert.equal(control.__tag, "bool");
   assert.equal(control.value, true);
+});
+
+test("uncertified capture extraction and regex replacement refuse closed", async () => {
+  const groups = await callStdlib("extractGroups", str("2024-03-15"), [str("(\\d{4})-(\\d{2})-(\\d{2})")], ctx);
+  assert.equal(groups.__tag, "err");
+  assert.match(groups.error.value, /capture|certified|unsupported/i);
+
+  const replacement = await callStdlib("replacePattern", str("aaaa"), [str("a+"), str("x")], ctx);
+  assert.equal(replacement.__tag, "err");
+  assert.match(replacement.error.value, /literal|certified|unsupported/i);
 });
 
 test("raw environment allow-list cannot authorize metadata egress", async () => {

@@ -95,6 +95,7 @@
     "@galerina/core-security": "file:../galerina-core-security",
     "@galerina/devtools-graph-algorithms": "file:../galerina-devtools-graph-algorithms",
     "@galerina/substrate-math": "file:../galerina-substrate-math",
+    "@galerina/tri-regex": "file:../galerina-tri-regex",
     "@noble/post-quantum": "^0.6.1",
     "argon2": "^0.44.0",
     "bcryptjs": "^3.0.3",
