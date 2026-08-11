@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "4584033d5c79c81201566f1f061fd23e07fed1ba5e74ffff3cf7b795e44783db",
+  "authoritativeInputsDigest": "4d76893e9bc0460b4909ce90776415563846d71197be927b6bd40dcea0f3de7a",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -6776,6 +6776,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-97bc789105e7b242631abb72",
+      "kind": "test",
+      "evidencePath": "scripts/tests/governance-qualifier-escalation-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-381a0b3549568e050190dba6",
       "kind": "test",
       "evidencePath": "scripts/tests/graph-all.test.mjs",
@@ -11415,6 +11422,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-97bc789105e7b242631abb72",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-381a0b3549568e050190dba6",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -11750,7 +11762,7 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 894,
+    "tests": 895,
     "detectors": 6,
     "executableFamily": 1426,
     "legacyUnmapped": 0
