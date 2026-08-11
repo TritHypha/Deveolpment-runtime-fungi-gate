@@ -3,7 +3,7 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "cbc7d1b2",
+    "sha": "930f76b1",
     "detached": false,
     "dirty": true
   },
@@ -291,7 +291,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "100/100 component families green; 100 workspace packages, 9,499 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "100/100 component families green; 100 workspace packages, 9,500 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",
