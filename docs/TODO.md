@@ -46,7 +46,7 @@ counts or open items that a newer section explicitly supersedes.
   now proves exact bootstrap refusal, prevents caller freshness/revocation
   scalars from reviving an absent index, and retains positive admission only
   through the authenticated immutable-generation path (**229/229**). The full
-  repository lane passes **100/100 packages and 9,552 tests** in **285.8s**.
+  repository lane passes **100/100 packages and 9,554 tests** in **299.9s**.
 - [ ] Perform the offline hybrid-signing ceremony and independently verify the
   resulting generation before restoring any live auth package. Until then,
   distribution, release and production authority remain denied.
@@ -72,8 +72,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the complete package lane passes **100/100 packages and 9,552 tests** in
-  285.8 seconds. These are verification evidence, not release authority.
+  the complete package lane passes **100/100 packages and 9,554 tests** in
+  299.9 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
