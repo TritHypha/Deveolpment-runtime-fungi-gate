@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
@@ -14,12 +15,17 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { deriveSemanticCoverage } from "./lib/assurance-fabric/semantic-coverage.mjs";
-import {
-  generatedOutputMatches,
-  provenanceForCheck,
-} from "./lib/provenance.mjs";
 
 const TOOL = "semantic-assurance-graph";
+const GIT_IDENTITY = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const MAX_GIT_BUFFER = 64 * 1024 * 1024;
+const MAX_GIT_COMMITS = 100_000;
+const SEMANTIC_TOOL_PATHS = Object.freeze([
+  "scripts/gen-assurance-semantic-graph.mjs",
+  "scripts/lib/assurance-fabric/semantic-coverage.mjs",
+  "scripts/lib/assurance-fabric/semantic-graph.mjs",
+  "scripts/lib/assurance-fabric/strict-json.mjs",
+]);
 const OUTPUTS = Object.freeze([
   "SEMANTIC-GRAPH.md",
   "provenance.json",
@@ -95,6 +101,83 @@ function expectedOutputs(report, stamp) {
   ]);
 }
 
+function git(root, args) {
+  return execFileSync("git", args, {
+    cwd: root,
+    encoding: "utf8",
+    maxBuffer: MAX_GIT_BUFFER,
+    windowsHide: true,
+  });
+}
+
+function nulPaths(value) {
+  return value.split("\0").filter((path) => path.length > 0);
+}
+
+function semanticBuildPoint(root, authoritativeInputPaths) {
+  try {
+    if (!Array.isArray(authoritativeInputPaths) || authoritativeInputPaths.length === 0) {
+      throw new Error("semantic derivation did not disclose its authoritative inputs");
+    }
+    const relevant = new Set([...authoritativeInputPaths, ...SEMANTIC_TOOL_PATHS]);
+    const tracked = new Set(nulPaths(git(root, ["ls-files", "-z"])));
+    for (const path of relevant) {
+      if (!tracked.has(path)) {
+        throw new Error(`semantic provenance path is not tracked: ${path}`);
+      }
+    }
+    const dirty = nulPaths(git(root, ["diff", "--name-only", "-z", "HEAD", "--"]));
+    const dirtyRelevant = dirty.filter((path) => relevant.has(path));
+    const commits = git(root, ["rev-list", "--topo-order", "HEAD"])
+      .split(/\r?\n/u)
+      .filter((commit) => commit.length > 0);
+    if (commits.length === 0 || commits.length > MAX_GIT_COMMITS) {
+      throw new Error("Git history exceeds the semantic provenance bound");
+    }
+    for (const commit of commits) {
+      if (!GIT_IDENTITY.test(commit)) {
+        throw new Error("Git returned a malformed semantic build point");
+      }
+      const changed = nulPaths(git(root, [
+        "diff-tree",
+        "--root",
+        "-m",
+        "--no-commit-id",
+        "--name-only",
+        "-r",
+        "-z",
+        commit,
+      ]));
+      if (!changed.some((path) => relevant.has(path))) continue;
+      const epochText = git(root, ["show", "-s", "--format=%ct", commit]).trim();
+      if (!/^\d+$/u.test(epochText)) {
+        throw new Error("Git returned a malformed semantic build timestamp");
+      }
+      const epoch = Number(epochText);
+      if (!Number.isSafeInteger(epoch) || epoch < 0) {
+        throw new Error("Git returned an out-of-range semantic build timestamp");
+      }
+      return Object.freeze({
+        kind: dirtyRelevant.length === 0 ? "clean" : "dirty",
+        dirty: Object.freeze(dirtyRelevant),
+        stamp: Object.freeze({
+          tool: TOOL,
+          gitCommit: commit,
+          builtAt: new Date(epoch * 1000).toISOString(),
+          node: process.version,
+        }),
+      });
+    }
+    throw new Error("no commit owns the semantic provenance inputs");
+  } catch (error) {
+    return Object.freeze({
+      kind: "refused",
+      code: "SEMANTIC_PROVENANCE_BUILD_POINT",
+      detail: error instanceof Error ? error.message : "semantic provenance derivation failed",
+    });
+  }
+}
+
 function publishAtomically(root, outputs) {
   const buildRoot = join(root, "build");
   const destination = join(buildRoot, "assurance-semantic-graph");
@@ -140,17 +223,26 @@ export async function generateSemanticGraph(options) {
   const check = options.check === true;
   const derive = options.derive ?? deriveSemanticCoverage;
   const outputDirectory = join(root, "build", "assurance-semantic-graph");
-  const provenancePath = join(outputDirectory, "provenance.json");
   const result = await derive(root);
   if (result.kind !== "accepted") {
     return Object.freeze({ kind: "refused", code: result.code, detail: result.detail });
   }
-  const stamp = provenanceForCheck(TOOL, root, provenancePath, check);
-  const expected = expectedOutputs(result.value, stamp);
+  const buildPoint = semanticBuildPoint(root, result.authoritativeInputPaths);
+  if (buildPoint.kind === "refused") return buildPoint;
+  if (!check && buildPoint.kind === "dirty") {
+    return Object.freeze({
+      kind: "refused",
+      code: "SEMANTIC_PROVENANCE_DIRTY",
+      detail: `semantic provenance input is dirty: ${buildPoint.dirty[0]}`,
+    });
+  }
+  const expected = expectedOutputs(result.value, buildPoint.stamp);
   if (check) {
     const stale = [...expected].filter(([name, bytes]) => {
       const path = join(outputDirectory, name);
-      return !existsSync(path) || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes);
+      return !existsSync(path)
+        || readFileSync(path, "utf8") !== bytes
+        || (name === "provenance.json" && buildPoint.kind === "dirty");
     }).map(([name]) => relative(root, join(outputDirectory, name)).replace(/\\/gu, "/"));
     return stale.length === 0
       ? Object.freeze({ kind: "current", outputs: expected.size, report: result.value })

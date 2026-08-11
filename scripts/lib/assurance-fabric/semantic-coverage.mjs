@@ -195,7 +195,17 @@ function createInputReader(root) {
     return hash.digest("hex");
   }
 
-  return Object.freeze({ read, readJson, verifyReadback, authoritativeInputsDigest });
+  function authoritativeInputPaths() {
+    return Object.freeze([...inputs.keys()]);
+  }
+
+  return Object.freeze({
+    read,
+    readJson,
+    verifyReadback,
+    authoritativeInputsDigest,
+    authoritativeInputPaths,
+  });
 }
 
 function trackedPaths(root) {
@@ -572,7 +582,7 @@ export async function deriveSemanticCoverage(root, options = {}) {
     }
     reader.verifyReadback();
     const authoritativeInputsDigest = reader.authoritativeInputsDigest();
-    return evaluateSemanticGraph({
+    const evaluation = evaluateSemanticGraph({
       schemaVersion: 2,
       authoritativeInputsDigest,
       requirements: manifest.requirements,
@@ -587,6 +597,11 @@ export async function deriveSemanticCoverage(root, options = {}) {
         currentCount: unmapped.length,
         pathsDigest: unmappedDigest,
       },
+    });
+    if (evaluation.kind !== "accepted") return evaluation;
+    return Object.freeze({
+      ...evaluation,
+      authoritativeInputPaths: reader.authoritativeInputPaths(),
     });
   } catch (error) {
     if (error instanceof SemanticCoverageRefusal) {

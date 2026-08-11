@@ -126,6 +126,10 @@ function fixture() {
   );
   write(root, "packages-galerina/galerina-beta/src/b.mjs", "export const b = 1;\n");
   write(root, "docs/routes.md", "route DELETE \"/not-live\" { flow falseRoute }\n");
+  write(root, "scripts/gen-assurance-semantic-graph.mjs", "// fixture semantic generator\n");
+  write(root, "scripts/lib/assurance-fabric/semantic-coverage.mjs", "// fixture semantic derivation\n");
+  write(root, "scripts/lib/assurance-fabric/semantic-graph.mjs", "// fixture semantic graph\n");
+  write(root, "scripts/lib/assurance-fabric/strict-json.mjs", "// fixture strict JSON parser\n");
   write(root, "scripts/tests/semantic.test.mjs", "// requirement evidence\n");
   write(root, "packages-galerina/galerina-alpha/tests/alpha.test.mjs", "// package test\n");
   writeJson(root, "packages-galerina/galerina-alpha/.graph/package-graph.json", {
@@ -306,23 +310,98 @@ describe("semantic coverage derivation", () => {
   it("keeps generated semantic outputs current across their own commit but blocks changed authoritative input bytes", async () => {
     const root = fixture();
     try {
+      const sourceCommit = git(root, ["rev-parse", "HEAD"]);
+      const sourceEpoch = Number(git(root, ["show", "-s", "--format=%ct", sourceCommit]));
       let result = await generateSemanticGraph({ root, derive });
       assert.equal(result.kind, "published", JSON.stringify(result));
+      const provenancePath = "build/assurance-semantic-graph/provenance.json";
+      const publishedProvenance = readJson(root, provenancePath);
+      assert.equal(publishedProvenance.gitCommit, sourceCommit);
+      assert.equal(publishedProvenance.builtAt, new Date(sourceEpoch * 1000).toISOString());
       git(root, ["add", "build/assurance-semantic-graph"]);
       git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
 
       result = await generateSemanticGraph({ root, check: true, derive });
       assert.equal(result.kind, "current", JSON.stringify(result));
+      assert.deepEqual(readJson(root, provenancePath), publishedProvenance);
 
       write(root, "scripts/tests/semantic.test.mjs", "// changed authoritative evidence bytes\n");
       result = await generateSemanticGraph({ root, check: true, derive });
       assert.equal(result.kind, "stale", JSON.stringify(result));
 
       result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "refused", JSON.stringify(result));
+      assert.equal(result.code, "SEMANTIC_PROVENANCE_DIRTY");
+      git(root, ["add", "scripts/tests/semantic.test.mjs"]);
+      git(root, ["commit", "--quiet", "-m", "fixture authoritative input"]);
+      result = await generateSemanticGraph({ root, derive });
       assert.equal(result.kind, "published", JSON.stringify(result));
       write(root, "packages-galerina/galerina-alpha/src/a.ts", "export const routeLike = /route POST \\\"/not-live\\\"/; // changed source bytes\n");
       result = await generateSemanticGraph({ root, check: true, derive });
       assert.equal(result.kind, "stale", JSON.stringify(result));
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("tracks the committed semantic tool buildpoint across its separate output commit", async () => {
+    const root = fixture();
+    try {
+      let result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "published", JSON.stringify(result));
+      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
+
+      const toolPath = "scripts/lib/assurance-fabric/semantic-graph.mjs";
+      write(root, toolPath, "// changed fixture semantic graph tool\n");
+      result = await generateSemanticGraph({ root, check: true, derive });
+      assert.equal(result.kind, "stale", JSON.stringify(result));
+      assert.deepEqual(result.stale, ["build/assurance-semantic-graph/provenance.json"]);
+      result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "refused", JSON.stringify(result));
+      assert.equal(result.code, "SEMANTIC_PROVENANCE_DIRTY");
+
+      git(root, ["add", toolPath]);
+      git(root, ["commit", "--quiet", "-m", "fixture semantic tool"]);
+      const toolCommit = git(root, ["rev-parse", "HEAD"]);
+      result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "published", JSON.stringify(result));
+      assert.equal(
+        readJson(root, "build/assurance-semantic-graph/provenance.json").gitCommit,
+        toolCommit,
+      );
+      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["commit", "--quiet", "-m", "fixture refreshed semantic output"]);
+      result = await generateSemanticGraph({ root, check: true, derive });
+      assert.equal(result.kind, "current", JSON.stringify(result));
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses every well-formed semantic provenance identity substitution", async () => {
+    const root = fixture();
+    try {
+      let result = await generateSemanticGraph({ root, derive });
+      assert.equal(result.kind, "published", JSON.stringify(result));
+      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
+
+      const provenancePath = "build/assurance-semantic-graph/provenance.json";
+      const published = readJson(root, provenancePath);
+      const replacements = [
+        [
+          "gitCommit",
+          published.gitCommit === "a".repeat(40) ? "b".repeat(40) : "a".repeat(40),
+        ],
+        ["builtAt", "2000-01-01T00:00:00.000Z"],
+      ];
+      for (const [field, replacement] of replacements) {
+        writeJson(root, provenancePath, { ...published, [field]: replacement });
+        result = await generateSemanticGraph({ root, check: true, derive });
+        assert.equal(result.kind, "stale", `${field}: ${JSON.stringify(result)}`);
+        assert.deepEqual(result.stale, [provenancePath]);
+      }
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
