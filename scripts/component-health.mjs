@@ -30,6 +30,7 @@ import { twinParityLadder } from "./lib/twin-parity-ladder.mjs";
 import {
   generatedOutputMatches,
   provenance as generatedProvenance,
+  provenanceForCheck,
 } from "./lib/provenance.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -864,7 +865,11 @@ if (AUDIT_CHECK) {
     console.error("❌ percent-audit staleness: build/component-health/percent-audit.json content drifted from component-health.mjs (source of truth) — run `node scripts/component-health.mjs --audit-html` and commit the refreshed % audit. (git provenance is excluded from this check; only real content drift trips it.)");
     process.exit(3);
   }
-  const expectedProvenance = `${JSON.stringify(generatedProvenance("component-health", ROOT), undefined, 2)}\n`;
+  const expectedProvenance = `${JSON.stringify(
+    provenanceForCheck("component-health", ROOT, provenancePath, true),
+    undefined,
+    2,
+  )}\n`;
   if (
     !existsSync(provenancePath)
     || !generatedOutputMatches(

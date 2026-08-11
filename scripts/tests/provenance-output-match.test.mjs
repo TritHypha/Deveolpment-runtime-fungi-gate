@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import {
   mkdtempSync,
   rmSync,
@@ -7,12 +8,15 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 
 import {
   classifyGeneratedOutputMatch,
   generatedOutputMatches,
   provenanceForCheck,
 } from "../lib/provenance.mjs";
+
+const ROOT = join(fileURLToPath(new URL("../..", import.meta.url)));
 
 function block(overrides = {}) {
   return JSON.stringify({
@@ -116,4 +120,18 @@ test("check mode reuses only a valid published source snapshot", () => {
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("component-health percent evidence remains current after its output commit", () => {
+  const result = spawnSync(
+    process.execPath,
+    ["scripts/component-health.mjs", "--audit-check"],
+    { cwd: ROOT, encoding: "utf8" },
+  );
+  assert.equal(
+    result.status,
+    0,
+    `component-health owner self-staled:\n${result.stdout}${result.stderr}`,
+  );
+  assert.match(result.stdout, /percent-audit fresh/);
 });
