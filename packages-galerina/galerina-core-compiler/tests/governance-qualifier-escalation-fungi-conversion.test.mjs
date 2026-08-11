@@ -95,7 +95,6 @@ async function compileCandidate() {
     policy: { requireSigned: true, publicKeyPem: keypair.publicKeyPem },
     host,
   });
-  assert.equal(typeof instance.exports.qualifierRank, "function");
   assert.equal(typeof instance.exports.qualifierEscalated, "function");
   return { host, instance, program };
 }
@@ -142,13 +141,6 @@ describe("compiler package-owned Fungi governance qualifier escalation", () => {
 
   it("matches the complete canonical-plus-hostile matrix and public caller", async () => {
     const compiled = await compileCandidate();
-    for (const qualifier of QUALIFIERS) {
-      assert.equal(
-        compiled.instance.exports.qualifierRank(compiled.host.internString(qualifier)),
-        expectedRank(qualifier),
-        `Wasm rank ${JSON.stringify(qualifier)}`,
-      );
-    }
     for (const before of QUALIFIERS) {
       for (const after of QUALIFIERS) {
         const wanted = expectedEscalation(before, after);

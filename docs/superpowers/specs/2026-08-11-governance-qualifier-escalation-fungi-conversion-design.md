@@ -14,10 +14,12 @@ The source table ranks qualifier Strings as `pure = 0`, `flow = 1`,
 the source fallback rank `0`. `qualifierEscalated(before, after)` returns true
 only when the rank of `after` is strictly greater than the rank of `before`.
 
-The Fungi asset exposes a pure `qualifierRank(String) -> Int` helper and the
-pure `qualifierEscalated(String, String) -> Bool` decision. It contains no
-null, NaN, `else if`, exception syntax, `for` or `loop`. Arbitrary admitted
-Strings remain valid inputs and cannot acquire a rank above `pure`.
+The Fungi asset exposes one pure
+`qualifierEscalated(String, String) -> Bool` decision. The rank ordering is
+expressed directly so the physical checked-Fungi scalar profile does not need
+an internal helper-call surface. It contains no null, NaN, `else if`, exception
+syntax, `for` or `loop`. Arbitrary admitted Strings remain valid inputs and
+cannot acquire a rank above `pure`.
 
 ## Proof shape
 
