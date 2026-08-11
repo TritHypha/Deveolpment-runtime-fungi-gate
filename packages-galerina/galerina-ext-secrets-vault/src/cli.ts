@@ -60,13 +60,14 @@ async function run(): Promise<void> {
       };
 
       await vault.loadContract({ credentials: [cred] });
-      const value = vault.getSecret("__cli_read__");
-      if (value === undefined) {
+      const written = vault.useSecret("__cli_read__", (value) => {
+        process.stdout.write(value.toString("utf8") + "\n");
+        return true;
+      });
+      if (written !== true) {
         console.error("Error: secret not found");
         process.exit(1);
       }
-      // Output raw JSON from KV v2 data.data field
-      process.stdout.write(value.toString("utf8") + "\n");
       vault.stop();
       break;
     }
@@ -96,9 +97,9 @@ async function run(): Promise<void> {
 
       // Load first, then rotate
       await vault.loadContract({ credentials: [cred] });
-      await vault.rotationManager.rotate(credentialId, vault.vaultClientInstance, cred);
+      await vault.rotateCredential(cred);
 
-      const handle = vault.rotationManager.getHandle(credentialId);
+      const handle = vault.getCredentialStatus(credentialId);
       console.log(
         `Rotated "${credentialId}" successfully. Version: ${handle?.version ?? "?"}`
       );

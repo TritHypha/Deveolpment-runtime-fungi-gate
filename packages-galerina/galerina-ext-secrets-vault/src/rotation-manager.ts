@@ -8,7 +8,7 @@
  * The guest is never restarted; in-flight reads using the old value complete
  * safely within the quiesce window before the swap happens.
  */
-import type { SecretCredential, SecretHandle, RotationPolicy } from "./types.js";
+import type { SecretCredential, SecretHandle, SecretHandleStatus, RotationPolicy } from "./types.js";
 import type { VaultClient } from "./vault-client.js";
 
 // ---------------------------------------------------------------------------
@@ -25,6 +25,8 @@ const QUIESCE_MS = 50;
 export class SecretsRotationManager {
   /** credential-id → live handle */
   private readonly handles: Map<string, SecretHandle> = new Map();
+  /** At most one live rotation lease per credential. Concurrent requests coalesce. */
+  private readonly rotations: Map<string, Promise<void>> = new Map();
 
   /**
    * Load a credential from Vault and store it as the active handle.
@@ -70,6 +72,28 @@ export class SecretsRotationManager {
     vaultClient: VaultClient,
     credential?: SecretCredential
   ): Promise<void> {
+    const current = this.rotations.get(credentialId);
+    if (current !== undefined) {
+      await current;
+      return;
+    }
+
+    const operation = this.rotateOnce(credentialId, vaultClient, credential);
+    this.rotations.set(credentialId, operation);
+    try {
+      await operation;
+    } finally {
+      if (this.rotations.get(credentialId) === operation) {
+        this.rotations.delete(credentialId);
+      }
+    }
+  }
+
+  private async rotateOnce(
+    credentialId: string,
+    vaultClient: VaultClient,
+    credential?: SecretCredential
+  ): Promise<void> {
     const handle = this.handles.get(credentialId);
     if (handle === undefined) {
       throw new Error(
@@ -77,45 +101,50 @@ export class SecretsRotationManager {
       );
     }
 
-    // Step 1 — fetch new value into the staging slot
+    // Keep the candidate operation-local until the owned commit point.
     const path = credential?.path ?? credentialId;
     const mountPoint = credential?.mountPoint ?? "secret";
     const newValue = await vaultClient.readSecret(path, mountPoint);
-    handle.stagingValue = newValue;
+    let committed = false;
+    try {
+      await new Promise<void>((res) => setTimeout(res, QUIESCE_MS));
+      if (this.handles.get(credentialId) !== handle) {
+        throw new Error(
+          `SecretsRotationManager.rotate: credential "${credentialId}" changed during rotation`
+        );
+      }
 
-    // Step 2 — quiesce: give in-flight reads time to drain
-    await new Promise<void>((res) => setTimeout(res, QUIESCE_MS));
-
-    // Step 3 — atomic swap (JS is single-threaded; no lock needed)
-    const oldActive = handle.activeValue;
-    handle.activeValue = handle.stagingValue;
-    handle.stagingValue = null;
-
-    // Step 4 — zero-wipe the stale buffer so it cannot be scanned from memory
-    oldActive.fill(0);
-
-    // Bump version (read-only property pattern: cast through unknown)
-    (handle as unknown as { version: number }).version += 1;
+      const oldActive = handle.activeValue;
+      handle.activeValue = newValue;
+      handle.stagingValue = null;
+      (handle as unknown as { version: number }).version += 1;
+      committed = true;
+      oldActive.fill(0);
+    } finally {
+      if (!committed) newValue.fill(0);
+    }
   }
 
   /**
    * Return the current active value for a credential, or undefined if not loaded.
-   * The returned Buffer is a REFERENCE to the internal buffer — callers must not
-   * retain it beyond the current microtask (a rotation may zero-wipe it).
+   * The returned Buffer is an owned copy. Mutation cannot alter provider state.
    */
   getActive(credentialId: string): Buffer | undefined {
     const handle = this.handles.get(credentialId);
     // Fail closed: a faulted (quarantined) credential is never served.
     if (handle === undefined || handle.faulted === true) return undefined;
-    return handle.activeValue;
+    return Buffer.from(handle.activeValue);
   }
 
-  /**
-   * Return the full handle (internal — used by CLI status command).
-   * @internal
-   */
-  getHandle(credentialId: string): SecretHandle | undefined {
-    return this.handles.get(credentialId);
+  /** Return an immutable, redacted status view with no secret buffers. */
+  getHandle(credentialId: string): SecretHandleStatus | undefined {
+    const handle = this.handles.get(credentialId);
+    if (handle === undefined) return undefined;
+    return Object.freeze({
+      id: handle.id,
+      version: handle.version,
+      faulted: handle.faulted === true,
+    });
   }
 
   /**

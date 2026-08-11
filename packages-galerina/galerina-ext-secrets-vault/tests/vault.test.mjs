@@ -280,7 +280,7 @@ describe("SecretsRotationManager", () => {
   // -------------------------------------------------------------------------
   // Test 8: After rotation, old buffer is zeroed
   // -------------------------------------------------------------------------
-  it("old buffer is zero-filled after rotation completes", async () => {
+  it("rotation does not mutate a caller-owned snapshot", async () => {
     const manager = new SecretsRotationManager();
 
     const secretMapV1 = new Map([["secret/secret/data/billing", "billing_key_v1"]]);
@@ -296,12 +296,10 @@ describe("SecretsRotationManager", () => {
     const mockClientV2 = new MockVaultClient(secretMapV2);
     await manager.rotate("billing_key", mockClientV2, cred);
 
-    // The old buffer should now be all zeros (zero-wiped)
-    const isZeroed = oldBuf.every((b) => b === 0);
-    assert.ok(
-      isZeroed,
-      `old buffer should be zero-wiped after rotation; first bytes: ${[...oldBuf.slice(0, 8)].join(",")}`
-    );
+    assert.equal(JSON.parse(oldBuf.toString("utf8")).value, "billing_key_v1");
+    const current = manager.getActive("billing_key");
+    assert.ok(current !== undefined);
+    assert.equal(JSON.parse(current.toString("utf8")).value, "billing_key_v2");
   });
 
   // -------------------------------------------------------------------------
@@ -348,17 +346,12 @@ describe("GalerinaSecretsVault", () => {
   // Test 11: loadContract loads all credentials in the block
   // -------------------------------------------------------------------------
   it("loadContract loads all credentials declared in the contract block", async () => {
-    const vault = GalerinaSecretsVault.fromConfig(
-      "https://vault.test",
-      "test-token"
-    );
-
-    // Inject a mock vault client via the internal rotationManager
     const secretMap = new Map([
       ["secret/secret/data/db", "db_pass"],
       ["secret/secret/data/api", "api_key_value"],
     ]);
     const mockClient = new MockVaultClient(secretMap);
+    const vault = GalerinaSecretsVault.fromClient(mockClient);
 
     const block = {
       credentials: [
@@ -367,16 +360,14 @@ describe("GalerinaSecretsVault", () => {
       ],
     };
 
-    // Load using the injected manager (access via rotationManager + internal load)
-    await vault.rotationManager.load(block.credentials[0], mockClient);
-    await vault.rotationManager.load(block.credentials[1], mockClient);
+    await vault.loadContract(block);
 
     assert.ok(
-      vault.rotationManager.getActive("db_password") !== undefined,
+      vault.getSecret("db_password") !== undefined,
       "db_password should be loaded"
     );
     assert.ok(
-      vault.rotationManager.getActive("api_auth_key") !== undefined,
+      vault.getSecret("api_auth_key") !== undefined,
       "api_auth_key should be loaded"
     );
   });
@@ -385,18 +376,13 @@ describe("GalerinaSecretsVault", () => {
   // Test 12: stop() clears the rotation timer and wipes loaded secrets
   // -------------------------------------------------------------------------
   it("stop() clears the rotation timer and disposes all secret buffers", async () => {
-    const vault = GalerinaSecretsVault.fromConfig(
-      "https://vault.test",
-      "test-token"
-    );
-
     const secretMap = new Map([["secret/secret/data/db", "db_pass_to_wipe"]]);
     const mockClient = new MockVaultClient(secretMap);
+    const vault = GalerinaSecretsVault.fromClient(mockClient);
     const cred = makeCred("db_password", "secret/data/db");
-    await vault.rotationManager.load(cred, mockClient);
+    await vault.loadContract({ credentials: [cred] });
 
-    // Grab the active buffer reference before stop
-    const activeBuf = vault.rotationManager.getActive("db_password");
+    const activeBuf = vault.getSecret("db_password");
     assert.ok(activeBuf !== undefined, "buffer should exist before stop");
 
     // Start a timer and immediately stop it
@@ -405,11 +391,124 @@ describe("GalerinaSecretsVault", () => {
     vault.stop(timer);
 
     // After stop, all buffers should be zero-wiped and handles cleared
-    const afterStop = vault.rotationManager.getActive("db_password");
+    const afterStop = vault.getSecret("db_password");
     assert.equal(afterStop, undefined, "getActive should return undefined after stop");
+    assert.equal(JSON.parse(activeBuf.toString("utf8")).value, "db_pass_to_wipe");
+  });
+});
 
-    // And the buffer itself should be zeroed
-    const isZeroed = activeBuf.every((b) => b === 0);
-    assert.ok(isZeroed, "active buffer should be zero-wiped after stop");
+// ---------------------------------------------------------------------------
+// Security regressions: namespace, ownership, and affine rotation
+// ---------------------------------------------------------------------------
+describe("Vault zero-trust boundaries", () => {
+  it("refuses path traversal before an authenticated Vault request is sent", async () => {
+    let requests = 0;
+    const server = createServer((_req, res) => {
+      requests += 1;
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(JSON.stringify({ data: { data: { value: "must-not-be-read" } } }));
+    });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    assert.equal(typeof address, "object");
+    try {
+      const client = new VaultClient(
+        `http://127.0.0.1:${address.port}`,
+        "tok_abc",
+        { allowInsecureLoopback: true },
+      );
+      await assert.rejects(() => client.readSecret("../../sys/internal"), /path|segment|namespace/i);
+      await assert.rejects(() => client.readSecret("%2e%2e/sys/internal"), /path|segment|namespace/i);
+      await assert.rejects(() => client.listSecrets("../sys"), /mount|segment|namespace/i);
+      assert.equal(requests, 0, "invalid namespace input must be refused before token-bearing I/O");
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+  });
+
+  it("returns owned secret copies rather than aliases to provider state", async () => {
+    const manager = new SecretsRotationManager();
+    const cred = makeCred("owned_copy", "secret/data/owned-copy");
+    await manager.load(cred, new MockVaultClient(new Map([
+      ["secret/secret/data/owned-copy", "provider-owned"],
+    ])));
+
+    const first = manager.getActive("owned_copy");
+    assert.ok(first !== undefined);
+    first.fill(0x41);
+
+    const second = manager.getActive("owned_copy");
+    assert.ok(second !== undefined);
+    assert.notEqual(second.toString("utf8"), first.toString("utf8"));
+    assert.equal(JSON.parse(second.toString("utf8")).value, "provider-owned");
+
+    const status = manager.getHandle("owned_copy");
+    assert.deepEqual(status, { id: "owned_copy", version: 1, faulted: false });
+    assert.equal("activeValue" in status, false);
+    assert.equal("stagingValue" in status, false);
+  });
+
+  it("serializes overlapping rotations for one credential", async () => {
+    const manager = new SecretsRotationManager();
+    const cred = makeCred("serialized", "secret/data/serialized");
+    await manager.load(cred, new MockVaultClient(new Map([
+      ["secret/secret/data/serialized", "v1"],
+    ])));
+
+    let concurrentReads = 0;
+    let maxConcurrentReads = 0;
+    let version = 1;
+    const delayedClient = {
+      async readSecret() {
+        concurrentReads += 1;
+        maxConcurrentReads = Math.max(maxConcurrentReads, concurrentReads);
+        const next = ++version;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        concurrentReads -= 1;
+        return Buffer.from(JSON.stringify({ value: `v${next}` }), "utf8");
+      },
+    };
+
+    await Promise.all([
+      manager.rotate("serialized", delayedClient, cred),
+      manager.rotate("serialized", delayedClient, cred),
+    ]);
+    assert.equal(maxConcurrentReads, 1, "one credential must have one live rotation lease");
+    assert.deepEqual(manager.getHandle("serialized"), {
+      id: "serialized",
+      version: 2,
+      faulted: false,
+    });
+    const active = manager.getActive("serialized");
+    assert.ok(active !== undefined);
+    assert.equal(JSON.parse(active.toString("utf8")).value, "v2");
+  });
+
+  it("does not expose the mutable manager or token-bearing client through the facade", () => {
+    const vault = GalerinaSecretsVault.fromConfig("https://vault.test", "test-token");
+    assert.equal("manager" in vault, false);
+    assert.equal("vaultClient" in vault, false);
+    assert.equal("rotationManager" in vault, false);
+    assert.equal("vaultClientInstance" in vault, false);
+  });
+
+  it("wipes scoped copies and refuses asynchronous callback escape", async () => {
+    const vault = GalerinaSecretsVault.fromClient(new MockVaultClient(new Map([
+      ["secret/secret/data/scoped", "scoped-value"],
+    ])));
+    await vault.loadContract({ credentials: [makeCred("scoped", "secret/data/scoped")] });
+
+    let escaped;
+    const result = vault.useSecret("scoped", (value) => {
+      escaped = value;
+      return "used";
+    });
+    assert.equal(result, "used");
+    assert.ok(escaped.every((byte) => byte === 0));
+
+    assert.throws(
+      () => vault.useSecret("scoped", async () => "not-allowed"),
+      /must be synchronous/i,
+    );
   });
 });

@@ -57,3 +57,10 @@ export type SecretHandle = {
   readonly version: number;
   faulted?: boolean;             // true = rotation faulted under quarantine; getActive() fails closed
 };
+
+/** Redacted, immutable view safe to expose outside the rotation manager. */
+export interface SecretHandleStatus {
+  readonly id: string;
+  readonly version: number;
+  readonly faulted: boolean;
+}

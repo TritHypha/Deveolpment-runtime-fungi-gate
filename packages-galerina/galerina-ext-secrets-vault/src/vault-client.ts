@@ -107,6 +107,33 @@ interface KvListResponse {
   data?: { keys?: string[] };
 }
 
+const VAULT_SEGMENT = /^[A-Za-z0-9_~-][A-Za-z0-9._~-]*$/;
+
+function encodeVaultSegment(value: string, label: string): string {
+  if (value === "." || value === ".." || !VAULT_SEGMENT.test(value)) {
+    throw new Error(`VaultClient: invalid ${label} segment`);
+  }
+  return encodeURIComponent(value);
+}
+
+function encodeVaultMount(mountPoint: string): string {
+  if (mountPoint.includes("/")) {
+    throw new Error("VaultClient: mount point must be one namespace segment");
+  }
+  return encodeVaultSegment(mountPoint, "mount");
+}
+
+function encodeVaultPath(path: string): string {
+  const cleanPath = path.replace(/^\//, "").replace(/^data\//, "");
+  if (cleanPath.length === 0) {
+    throw new Error("VaultClient: secret path must be non-empty");
+  }
+  return cleanPath
+    .split("/")
+    .map((segment) => encodeVaultSegment(segment, "path"))
+    .join("/");
+}
+
 // ---------------------------------------------------------------------------
 // Public client
 // ---------------------------------------------------------------------------
@@ -154,9 +181,9 @@ export class VaultClient {
    * Callers decide which field(s) to extract.
    */
   async readSecret(path: string, mountPoint = "secret"): Promise<Buffer> {
-    // KV v2: strip any leading slash and any "data/" prefix the caller may include
-    const cleanPath = path.replace(/^\//, "").replace(/^data\//, "");
-    const url = `${this.address}/v1/${mountPoint}/data/${cleanPath}`;
+    const cleanPath = encodeVaultPath(path);
+    const cleanMount = encodeVaultMount(mountPoint);
+    const url = `${this.address}/v1/${cleanMount}/data/${cleanPath}`;
     const raw = await makeRequest(url, this.token, "GET", this.maxResponseBytes, this.timeoutMs);
     const parsed: KvV2Response = JSON.parse(raw.toString("utf8")) as KvV2Response;
 
@@ -174,7 +201,8 @@ export class VaultClient {
    * Returns an array of key names relative to the path.
    */
   async listSecrets(mountPoint = "secret"): Promise<string[]> {
-    const url = `${this.address}/v1/${mountPoint}/metadata/`;
+    const cleanMount = encodeVaultMount(mountPoint);
+    const url = `${this.address}/v1/${cleanMount}/metadata/`;
     const raw = await makeRequest(url, this.token, "LIST", this.maxResponseBytes, this.timeoutMs);
     const parsed: KvListResponse = JSON.parse(raw.toString("utf8")) as KvListResponse;
     return parsed.data?.keys ?? [];

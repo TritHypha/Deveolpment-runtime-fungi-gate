@@ -4,14 +4,14 @@
  * Usage (most apps):
  *   const vault = GalerinaSecretsVault.fromEnv();
  *   await vault.loadContract(contractBlock);
- *   const dbPassword = vault.getSecret("db_password");
+ *   vault.useSecret("db_password", (dbPassword) => processValue(dbPassword));
  *   const timer = vault.startRotation(contractBlock);
  *   // ... at shutdown:
  *   vault.stop(timer);
  */
 import { VaultClient } from "./vault-client.js";
 import { SecretsRotationManager } from "./rotation-manager.js";
-import type { SecretsContractBlock, SecretCredential } from "./types.js";
+import type { SecretsContractBlock, SecretCredential, SecretHandleStatus } from "./types.js";
 
 export { VaultClient } from "./vault-client.js";
 export { SecretsRotationManager } from "./rotation-manager.js";
@@ -20,6 +20,7 @@ export type {
   RotationPolicy,
   SecretsContractBlock,
   SecretHandle,
+  SecretHandleStatus,
 } from "./types.js";
 export { SECRETS_GATEWAY_WIT } from "./types.js";
 
@@ -28,12 +29,12 @@ export { SECRETS_GATEWAY_WIT } from "./types.js";
 // ---------------------------------------------------------------------------
 
 export class GalerinaSecretsVault {
-  private readonly vaultClient: VaultClient;
-  private readonly manager: SecretsRotationManager;
+  readonly #vaultClient: VaultClient;
+  readonly #manager: SecretsRotationManager;
 
   private constructor(vaultClient: VaultClient) {
-    this.vaultClient = vaultClient;
-    this.manager = new SecretsRotationManager();
+    this.#vaultClient = vaultClient;
+    this.#manager = new SecretsRotationManager();
   }
 
   // --------------------------------------------------------------------------
@@ -57,6 +58,11 @@ export class GalerinaSecretsVault {
     return new GalerinaSecretsVault(new VaultClient(address, token));
   }
 
+  /** Build from an already-owned client (dependency-injection/test seam). */
+  static fromClient(vaultClient: VaultClient): GalerinaSecretsVault {
+    return new GalerinaSecretsVault(vaultClient);
+  }
+
   // --------------------------------------------------------------------------
   // Loading + retrieval
   // --------------------------------------------------------------------------
@@ -67,7 +73,7 @@ export class GalerinaSecretsVault {
    */
   async loadContract(block: SecretsContractBlock): Promise<void> {
     for (const cred of block.credentials) {
-      await this.manager.load(cred, this.vaultClient);
+      await this.#manager.load(cred, this.#vaultClient);
     }
   }
 
@@ -76,7 +82,40 @@ export class GalerinaSecretsVault {
    * Returns undefined if the credential has not been loaded.
    */
   getSecret(credentialId: string): Buffer | undefined {
-    return this.manager.getActive(credentialId);
+    return this.#manager.getActive(credentialId);
+  }
+
+  /**
+   * Preferred scoped read. The callback receives an owned transient copy that
+   * is wiped before this method returns, including when the callback throws.
+   */
+  useSecret<T>(credentialId: string, callback: (value: Buffer) => T): T | undefined {
+    const value = this.#manager.getActive(credentialId);
+    if (value === undefined) return undefined;
+    try {
+      const result = callback(value);
+      if (
+        typeof result === "object" &&
+        result !== null &&
+        "then" in result &&
+        typeof (result as { readonly then?: unknown }).then === "function"
+      ) {
+        throw new Error("GalerinaSecretsVault.useSecret callback must be synchronous");
+      }
+      return result;
+    } finally {
+      value.fill(0);
+    }
+  }
+
+  /** Manually rotate one credential without exposing provider internals. */
+  async rotateCredential(credential: SecretCredential): Promise<void> {
+    await this.#manager.rotate(credential.id, this.#vaultClient, credential);
+  }
+
+  /** Return only redacted credential status. */
+  getCredentialStatus(credentialId: string): SecretHandleStatus | undefined {
+    return this.#manager.getHandle(credentialId);
   }
 
   // --------------------------------------------------------------------------
@@ -95,9 +134,9 @@ export class GalerinaSecretsVault {
     // Honour the contract's on_rotation_fault policy; default fail-closed ("halt")
     // so a failed rotation never silently keeps serving a stale key (zero-trust).
     const onRotationFault = block.rotation?.onRotationFault ?? "halt";
-    return this.manager.startRotationSweep(
+    return this.#manager.startRotationSweep(
       block.credentials,
-      this.vaultClient,
+      this.#vaultClient,
       intervalMs,
       onRotationFault
     );
@@ -113,23 +152,9 @@ export class GalerinaSecretsVault {
    */
   stop(timer?: NodeJS.Timeout): void {
     if (timer !== undefined) {
-      this.manager.stopRotationSweep(timer);
+      this.#manager.stopRotationSweep(timer);
     }
-    this.manager.dispose();
+    this.#manager.dispose();
   }
 
-  /**
-   * Expose the underlying manager for advanced use (e.g. manual per-credential
-   * rotation or status inspection via the CLI).
-   */
-  get rotationManager(): SecretsRotationManager {
-    return this.manager;
-  }
-
-  /**
-   * Expose the underlying vault client (e.g. for the CLI `read` command).
-   */
-  get vaultClientInstance(): VaultClient {
-    return this.vaultClient;
-  }
 }
