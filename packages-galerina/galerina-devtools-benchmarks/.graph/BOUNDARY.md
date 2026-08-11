@@ -12,7 +12,7 @@
 | Metric | Count |
 |---|---|
 | Files | 33 |
-| Internal edges | 18 |
+| Internal edges | 17 |
 | External dependencies | 9 |
 | ├─ Node core | 9 |
 | ├─ Workspace (@galerina/*) | 0 |
@@ -55,6 +55,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/compare-chart.mjs`
 - `src/compare.mjs`
 - `src/diagnostic-runner.mjs`
+- `src/gpu-detect.mjs`
 - `src/history.mjs`
 - `src/noise-gate.mjs`
 - `src/report.mjs`
