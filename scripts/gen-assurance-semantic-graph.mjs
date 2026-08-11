@@ -119,13 +119,17 @@ function semanticBuildPoint(root, authoritativeInputPaths) {
     if (!Array.isArray(authoritativeInputPaths) || authoritativeInputPaths.length === 0) {
       throw new Error("semantic derivation did not disclose its authoritative inputs");
     }
-    const relevant = new Set([...authoritativeInputPaths, ...SEMANTIC_TOOL_PATHS]);
     const tracked = new Set(nulPaths(git(root, ["ls-files", "-z"])));
-    for (const path of relevant) {
+    for (const path of SEMANTIC_TOOL_PATHS) {
       if (!tracked.has(path)) {
-        throw new Error(`semantic provenance path is not tracked: ${path}`);
+        throw new Error(`semantic provenance tool path is not tracked: ${path}`);
       }
     }
+    const trackedInputs = authoritativeInputPaths.filter((path) => tracked.has(path));
+    if (trackedInputs.length === 0) {
+      throw new Error("semantic derivation has no tracked authoritative input");
+    }
+    const relevant = new Set([...trackedInputs, ...SEMANTIC_TOOL_PATHS]);
     const dirty = nulPaths(git(root, ["diff", "--name-only", "-z", "HEAD", "--"]));
     const dirtyRelevant = dirty.filter((path) => relevant.has(path));
     const commits = git(root, ["rev-list", "--topo-order", "HEAD"])

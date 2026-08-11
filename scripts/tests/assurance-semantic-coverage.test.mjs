@@ -171,6 +171,7 @@ function fixture() {
     },
     totals: { allTrackedExecutable: 3 },
   });
+  write(root, ".gitignore", "/build/\n");
   git(root, ["init", "--quiet"]);
   git(root, ["config", "user.email", "fixture@example.invalid"]);
   git(root, ["config", "user.name", "Fixture"]);
@@ -318,7 +319,7 @@ describe("semantic coverage derivation", () => {
       const publishedProvenance = readJson(root, provenancePath);
       assert.equal(publishedProvenance.gitCommit, sourceCommit);
       assert.equal(publishedProvenance.builtAt, new Date(sourceEpoch * 1000).toISOString());
-      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["add", "-f", "build/assurance-semantic-graph"]);
       git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
 
       result = await generateSemanticGraph({ root, check: true, derive });
@@ -349,7 +350,7 @@ describe("semantic coverage derivation", () => {
     try {
       let result = await generateSemanticGraph({ root, derive });
       assert.equal(result.kind, "published", JSON.stringify(result));
-      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["add", "-f", "build/assurance-semantic-graph"]);
       git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
 
       const toolPath = "scripts/lib/assurance-fabric/semantic-graph.mjs";
@@ -370,7 +371,7 @@ describe("semantic coverage derivation", () => {
         readJson(root, "build/assurance-semantic-graph/provenance.json").gitCommit,
         toolCommit,
       );
-      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["add", "-f", "build/assurance-semantic-graph"]);
       git(root, ["commit", "--quiet", "-m", "fixture refreshed semantic output"]);
       result = await generateSemanticGraph({ root, check: true, derive });
       assert.equal(result.kind, "current", JSON.stringify(result));
@@ -384,7 +385,7 @@ describe("semantic coverage derivation", () => {
     try {
       let result = await generateSemanticGraph({ root, derive });
       assert.equal(result.kind, "published", JSON.stringify(result));
-      git(root, ["add", "build/assurance-semantic-graph"]);
+      git(root, ["add", "-f", "build/assurance-semantic-graph"]);
       git(root, ["commit", "--quiet", "-m", "fixture semantic output"]);
 
       const provenancePath = "build/assurance-semantic-graph/provenance.json";
