@@ -106,6 +106,42 @@ describe("roadmap assurance dependency derivation", () => {
     }
   });
 
+  it("accepts one explicit relevant build point without trusting proxies or accessors", () => {
+    const { root, head } = fixture();
+    try {
+      write(root, ".gitkeep", "output-only commit\n");
+      execFileSync("git", ["add", "--", ".gitkeep"], { cwd: root });
+      execFileSync("git", ["commit", "-m", "output-only fixture"], { cwd: root, stdio: "ignore" });
+      assert.equal(deriveRoadmapEvidence(root).value.verdictTrit, 0);
+      const stable = deriveRoadmapEvidence(root, { repositoryBuildPoint: head });
+      assert.equal(stable.kind, "accepted", JSON.stringify(stable));
+      assert.equal(stable.value.verdictTrit, 1);
+
+      let invoked = false;
+      const proxy = new Proxy({}, {
+        get() {
+          invoked = true;
+          throw new Error("proxy trap must not run");
+        },
+      });
+      assert.equal(deriveRoadmapEvidence(root, proxy).kind, "refused");
+      assert.equal(invoked, false);
+
+      const accessor = {};
+      Object.defineProperty(accessor, "repositoryBuildPoint", {
+        enumerable: true,
+        get() {
+          invoked = true;
+          return head;
+        },
+      });
+      assert.equal(deriveRoadmapEvidence(root, accessor).kind, "refused");
+      assert.equal(invoked, false);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("propagates an older upstream Git build point as unknown", () => {
     const { root } = fixture();
     try {

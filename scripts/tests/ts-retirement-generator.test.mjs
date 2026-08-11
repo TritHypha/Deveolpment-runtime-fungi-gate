@@ -15,8 +15,11 @@ import {
 import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
+import { pathToFileURL } from "node:url";
 
 const SCRIPT = resolve("scripts/ts-retirement-graph.mjs");
+const STAGED_INDEX = resolve("scripts/lib/staged-git-index.mjs");
+const HASH = "a".repeat(40);
 
 /**
  * Write one fixture file, creating its parent directories.
@@ -45,6 +48,26 @@ function command(root, executable, args) {
  */
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "ts-retirement-generator-"));
+  write(
+    root,
+    "galerina.workspace.json",
+    `${JSON.stringify({
+      packages: [
+        "packages-galerina/galerina-core-compiler",
+        "packages-galerina/galerina-framework-app-kernel",
+      ],
+    })}\n`,
+  );
+  write(
+    root,
+    "packages-galerina/galerina-core-compiler/package.json",
+    '{"name":"@galerina/core-compiler"}\n',
+  );
+  write(
+    root,
+    "packages-galerina/galerina-framework-app-kernel/package.json",
+    '{"name":"@galerina/framework-app-kernel"}\n',
+  );
   write(
     root,
     "packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts",
@@ -98,10 +121,13 @@ function fixture() {
     }),
   );
   assert.equal(command(root, "git", ["init"]).status, 0);
+  assert.equal(command(root, "git", ["config", "user.email", "fixture@example.invalid"]).status, 0);
+  assert.equal(command(root, "git", ["config", "user.name", "Fixture"]).status, 0);
   assert.equal(
-    command(root, "git", ["add", "--", "packages-galerina", "docs"]).status,
+    command(root, "git", ["add", "--", "packages-galerina", "docs", "galerina.workspace.json"]).status,
     0,
   );
+  assert.equal(command(root, "git", ["commit", "-m", "fixture"]).status, 0);
   write(
     root,
     "packages-galerina/galerina-core-compiler/src/untracked.mjs",
@@ -109,6 +135,46 @@ function fixture() {
   );
   return root;
 }
+
+test("staged-index reader takes one checked bounded NUL snapshot", async () => {
+  const { readStagedGitIndex } = await import(pathToFileURL(STAGED_INDEX).href);
+  const calls = [];
+  const stdout = Buffer.from([
+    `100644 ${HASH} 0\tpackages-galerina/pkg/src/line\nbreak.mjs\0`,
+    `160000 ${HASH} 0\tpackages-galerina/vendor-submodule\0`,
+  ].join(""), "utf8");
+  const entries = readStagedGitIndex("C:/fixture", {
+    run(commandName, args, options) {
+      calls.push({ commandName, args, options });
+      return { status: 0, stdout, stderr: Buffer.alloc(0) };
+    },
+  });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].commandName, "git");
+  assert.deepEqual(calls[0].args, ["ls-files", "--stage", "-z"]);
+  assert.deepEqual(entries.map(({ mode, stage, path }) => ({ mode, stage, path })), [
+    {
+      mode: "100644",
+      stage: 0,
+      path: "packages-galerina/pkg/src/line\nbreak.mjs",
+    },
+    {
+      mode: "160000",
+      stage: 0,
+      path: "packages-galerina/vendor-submodule",
+    },
+  ]);
+
+  assert.throws(() => readStagedGitIndex("C:/fixture", {
+    run() {
+      return {
+        status: 23,
+        stdout: Buffer.alloc(0),
+        stderr: Buffer.from("hostile git refusal", "utf8"),
+      };
+    },
+  }), /exit 23|refusal|failed/i);
+});
 
 /**
  * Run the real retirement generator against the fixture.
@@ -207,6 +273,63 @@ test("ts-retirement --check refuses drift and uses only the selected root", () =
     assert.equal(readFileSync(markdown, "utf8"), "tampered\n");
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("ts-retirement excludes gitlinks and vendored node_modules from its frozen index", () => {
+  const root = fixture();
+  try {
+    const spacedPath = "packages-galerina/galerina-core-compiler/src/space name.mjs";
+    const vendoredPath = "packages-galerina/galerina-core-compiler/node_modules/vendor/index.mjs";
+    write(root, spacedPath, "export const spacedPath = true;\n");
+    write(root, vendoredPath, "export const vendored = true;\n");
+    assert.equal(command(root, "git", ["add", "-f", "--", spacedPath, vendoredPath]).status, 0);
+    const head = command(root, "git", ["rev-parse", "HEAD"]).stdout.trim();
+    assert.equal(command(root, "git", [
+      "update-index",
+      "--add",
+      "--cacheinfo",
+      `160000,${head},packages-galerina/vendor-submodule`,
+    ]).status, 0);
+
+    const generated = run(root);
+    assert.equal(generated.status, 0, `${generated.stdout}\n${generated.stderr}`);
+    const graph = JSON.parse(readFileSync(
+      join(root, "build", "ts-retirement", "ts-retirement.json"),
+      "utf8",
+    ));
+    assert.ok(graph.executableFamily.mjs.includes(spacedPath));
+    assert.equal(graph.allTrackedExecutablePaths.includes(vendoredPath), false);
+    assert.equal(
+      graph.allTrackedExecutablePaths.some((path) => path.startsWith("packages-galerina/vendor-submodule/")),
+      false,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("ts-retirement refuses Git-index failure and unregistered owned package paths", () => {
+  const noGitRoot = fixture();
+  try {
+    rmSync(join(noGitRoot, ".git"), { recursive: true, force: true });
+    const noGit = run(noGitRoot);
+    assert.notEqual(noGit.status, 0);
+    assert.match(`${noGit.stdout}\n${noGit.stderr}`, /staged Git index|ls-files|Git index/i);
+  } finally {
+    rmSync(noGitRoot, { recursive: true, force: true });
+  }
+
+  const unownedRoot = fixture();
+  try {
+    const unowned = "packages-galerina/not-registered/src/escape.mjs";
+    write(unownedRoot, unowned, "export const escape = true;\n");
+    assert.equal(command(unownedRoot, "git", ["add", "--", unowned]).status, 0);
+    const result = run(unownedRoot);
+    assert.notEqual(result.status, 0);
+    assert.match(`${result.stdout}\n${result.stderr}`, /unregistered|owned package/i);
+  } finally {
+    rmSync(unownedRoot, { recursive: true, force: true });
   }
 });
 

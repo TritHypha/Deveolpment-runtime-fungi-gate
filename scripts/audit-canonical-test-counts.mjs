@@ -93,11 +93,21 @@ function validateConsumerRegistry(consumers) {
 }
 
 function capture(text, expression, consumer, violations, expected) {
-  const match = expression.exec(text);
-  if (match === null || typeof match[1] !== "string") {
+  const flags = expression.flags.includes("g") ? expression.flags : `${expression.flags}g`;
+  const matches = [...text.matchAll(new RegExp(expression.source, flags))];
+  if (matches.length === 0 || typeof matches[0]?.[1] !== "string") {
     violations.push({ consumer, code: "COUNT_CONSUMER_MISSING", detail: "exact current claim is missing" });
     return;
   }
+  if (matches.length !== 1) {
+    violations.push({
+      consumer,
+      code: "COUNT_CONSUMER_DUPLICATE",
+      detail: `expected exactly one current claim; found ${matches.length}`,
+    });
+    return;
+  }
+  const match = matches[0];
   const actual = Number(match[1].replaceAll(",", ""));
   if (!Number.isSafeInteger(actual) || actual !== expected) {
     violations.push({
@@ -108,15 +118,41 @@ function capture(text, expression, consumer, violations, expected) {
   }
 }
 
+function literalOffsets(text, literal) {
+  const offsets = [];
+  let from = 0;
+  while (from <= text.length - literal.length) {
+    const offset = text.indexOf(literal, from);
+    if (offset < 0) break;
+    offsets.push(offset);
+    from = offset + literal.length;
+  }
+  return offsets;
+}
+
+function patternOffsets(text, expression) {
+  const flags = expression.flags.includes("g") ? expression.flags : `${expression.flags}g`;
+  return [...text.matchAll(new RegExp(expression.source, flags))]
+    .map((match) => match.index);
+}
+
 function subwayBlock(text, consumer, violations, expected) {
-  const begin = text.indexOf("<!-- SUBWAY:BEGIN");
-  const end = begin < 0 ? -1 : text.indexOf("<!-- SUBWAY:END -->", begin);
-  if (begin < 0 || end < 0) {
+  const begins = patternOffsets(text, /<!-- SUBWAY:BEGIN(?=\s|-->)/u);
+  const ends = literalOffsets(text, "<!-- SUBWAY:END -->");
+  if (begins.length === 0 || ends.length === 0) {
     violations.push({ consumer, code: "COUNT_CONSUMER_MISSING", detail: "generated subway block is missing" });
     return;
   }
+  if (begins.length !== 1 || ends.length !== 1 || begins[0] >= ends[0]) {
+    violations.push({
+      consumer,
+      code: "COUNT_CONSUMER_DUPLICATE",
+      detail: `expected one ordered subway marker pair; found ${begins.length} begin and ${ends.length} end markers`,
+    });
+    return;
+  }
   capture(
-    text.slice(begin, end),
+    text.slice(begins[0], ends[0]),
     /\*\*v[^\n]*\u00b7\s*\d+\s+packages\s*\u00b7\s*([\d,]+)\s+tests\s*\u00b7/u,
     consumer,
     violations,
@@ -124,10 +160,24 @@ function subwayBlock(text, consumer, violations, expected) {
   );
 }
 
-function activeChapter(text) {
-  const heading = "## VOK assurance fabric Chapter 3 - 2026-08-10";
-  const start = text.indexOf(heading);
-  return start < 0 ? "" : text.slice(start);
+function activeChapter(text, consumer, violations) {
+  const headings = patternOffsets(
+    text,
+    /^## VOK assurance fabric Chapter 3 - 2026-08-10\r?$/mu,
+  );
+  if (headings.length === 0) {
+    violations.push({ consumer, code: "COUNT_CONSUMER_MISSING", detail: "Chapter 3 heading is missing" });
+    return null;
+  }
+  if (headings.length !== 1) {
+    violations.push({
+      consumer,
+      code: "COUNT_CONSUMER_DUPLICATE",
+      detail: `expected exactly one Chapter 3 heading; found ${headings.length}`,
+    });
+    return null;
+  }
+  return text.slice(headings[0]);
 }
 
 function auditConsumer(consumer, text, violations, expected) {
@@ -148,7 +198,10 @@ function auditConsumer(consumer, text, violations, expected) {
     return;
   }
   if (consumer.capture === "active-roadmap-chapter-3") {
-    capture(activeChapter(text), /complete package lane is\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
+    const chapter = activeChapter(text, consumer.id, violations);
+    if (chapter !== null) {
+      capture(chapter, /complete package lane is\s+\*\*\d+\/\d+\s+packages and\s+([\d,]+)\s+tests\*\*/u, consumer.id, violations, expected);
+    }
     return;
   }
   throw new Error(`count consumer registry has an unimplemented exact capture ${consumer.capture}`);

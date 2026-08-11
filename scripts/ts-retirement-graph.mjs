@@ -14,9 +14,9 @@
 // This tool derives those buckets from the tree and writes build/ts-retirement/ so component-health's
 // % audit reads the numbers LIVE (tool = source; no hand-typed count to drift — the version.json rule).
 //
-// FIND: myco (the graph finder) ∪ `git ls-files` (the tracked-corpus source of truth), with finder-drift
-// reporting — the audit-fungi-corpus-check pattern, verified there (dotted queries under-match; token
-// query + extension filter is the reliable shape).
+// FIND: one checked, bounded, NUL-delimited staged Git-index snapshot is the
+// corpus source of truth. Every executable/Fungi/compatibility fact below is
+// derived from that single frozen view; process or ownership failure refuses.
 //
 //   node scripts/ts-retirement-graph.mjs              # regenerate build/ts-retirement/ + summary line
 //   node scripts/ts-retirement-graph.mjs --self-test  # finder coverage + a known twin pair + sum check
@@ -42,7 +42,7 @@ import {
   loadTopologyBaseline,
   scanWorkspace,
 } from "./audit-flat-package-topology.mjs";
-import { findCorpus, findTrackedAt } from "./lib/find-files.mjs"; // THE shared graph∪git finder (owner rule: no per-tool globs)
+import { readStagedGitIndex } from "./lib/staged-git-index.mjs";
 import {
   generatedOutputMatches,
   gitCommit,
@@ -94,6 +94,7 @@ const POST_SLIDE_AUTHORITY_LEDGER =
   "docs/security/post-slide-execution-authority.json";
 const AUTHORITY_LEDGER_MAX_BYTES = 1024 * 1024;
 const AUTHORITY_ARTIFACT_MAX_BYTES = 16 * 1024 * 1024;
+const WORKSPACE_MANIFEST_MAX_BYTES = 1024 * 1024;
 const COMPILER_STAGE_FILES = new Set([
   "effect-checker.fungi",
   "gir-emitter.fungi",
@@ -238,6 +239,85 @@ function classifyExecutableFamily(packagePaths) {
   }
   for (const key of EXECUTABLE_FAMILY_KEYS) family[key].sort();
   return family;
+}
+
+function registeredPackageRoots(root, entries) {
+  const workspacePath = "galerina.workspace.json";
+  const workspaceEntry = entries.find((entry) => entry.path === workspacePath);
+  if (!workspaceEntry || !["100644", "100755"].includes(workspaceEntry.mode)) {
+    throw new Error(`${workspacePath} is absent from the staged Git index`);
+  }
+  const violations = [];
+  const bytes = readRegularFile(
+    root,
+    workspacePath,
+    "workspace package registry",
+    violations,
+    WORKSPACE_MANIFEST_MAX_BYTES,
+  );
+  if (bytes === null || violations.length > 0) {
+    throw new Error(violations.join("; "));
+  }
+  let decoded;
+  try {
+    decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    throw new Error(`${workspacePath} is not UTF-8: ${error.message}`);
+  }
+  const workspace = parseStrictJsonObject(decoded, workspacePath);
+  if (!Array.isArray(workspace.packages)) {
+    throw new Error(`${workspacePath} must contain packages[]`);
+  }
+  const roots = new Set();
+  for (const [index, value] of workspace.packages.entries()) {
+    if (
+      typeof value !== "string"
+      || !/^packages-galerina\/[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value)
+    ) {
+      throw new Error(`${workspacePath} packages[${index}] is not one canonical owned package`);
+    }
+    if (roots.has(value)) throw new Error(`${workspacePath} duplicates owned package ${value}`);
+    roots.add(value);
+  }
+  for (const packageRoot of roots) {
+    const manifest = `${packageRoot}/package.json`;
+    const entry = entries.find((candidate) => candidate.path === manifest);
+    if (!entry || !["100644", "100755"].includes(entry.mode)) {
+      throw new Error(`registered owned package is missing staged manifest ${manifest}`);
+    }
+  }
+  return roots;
+}
+
+function frozenRetirementCorpus(root) {
+  const entries = readStagedGitIndex(root);
+  const packageRoots = registeredPackageRoots(root, entries);
+  const repositoryPaths = entries
+    .filter((entry) =>
+      entry.mode !== "160000" && !entry.path.split("/").includes("node_modules")
+    )
+    .map((entry) => entry.path);
+  const packagePaths = [];
+  for (const entry of entries) {
+    if (!entry.path.startsWith("packages-galerina/")) continue;
+    if (entry.mode === "160000") continue;
+    const parts = entry.path.split("/");
+    // Root metadata such as packages-galerina/README.md has no package owner.
+    if (parts.length < 3) continue;
+    const packageRoot = parts.slice(0, 2).join("/");
+    if (!packageRoots.has(packageRoot)) {
+      throw new Error(`tracked path belongs to an unregistered owned package: ${entry.path}`);
+    }
+    if (parts.includes("node_modules")) continue;
+    packagePaths.push(entry.path);
+  }
+  packagePaths.sort();
+  repositoryPaths.sort();
+  return Object.freeze({
+    entries,
+    packagePaths: Object.freeze(packagePaths),
+    repositoryPaths: Object.freeze(repositoryPaths),
+  });
 }
 
 function fungiReplacementPath(path) {
@@ -683,20 +763,16 @@ function authoritativeTwins(root, ledgerPath, fungiFiles) {
 
 export function buildRetirementGraph(root = ROOT) {
   const scope = /^packages-galerina\/[^/]+\/src\//;
-  const { files: ts, finder, finderDrift } = findCorpus(
-    ".ts",
-    ["packages-galerina/*/src/**/*.ts"],
-    scope,
-    { root },
+  const corpus = frozenRetirementCorpus(root);
+  const trackedRepositoryFiles = new Set(corpus.repositoryPaths);
+  const allTrackedPackageFiles = [...corpus.packagePaths];
+  const ts = allTrackedPackageFiles.filter(
+    (path) => scope.test(path) && path.endsWith(".ts") && !path.endsWith(".d.ts"),
   );
-  const fungi = findTrackedAt(
-    root,
-    "packages-galerina/*/src/**/*.fungi",
-  ).filter((p) => scope.test(p));
-  const trackedRepositoryFiles = new Set(findTrackedAt(root));
-  const allTrackedPackageFiles = [...trackedRepositoryFiles]
-    .filter((path) => path.startsWith("packages-galerina/"))
-    .sort();
+  const fungi = allTrackedPackageFiles.filter(
+    (path) => scope.test(path) && path.endsWith(".fungi"),
+  );
+  const finderDrift = 0;
   const executableFamily = classifyExecutableFamily(allTrackedPackageFiles);
   const allTrackedExecutablePaths = EXECUTABLE_FAMILY_KEYS
     .flatMap((key) => executableFamily[key])
@@ -962,9 +1038,10 @@ if (process.argv.includes("--self-test")) {
     ) === g.totals.allTrackedExecutable,
     "complete executable-family classes conserve the terminal denominator",
   );
-  ok(g.totals.finderDrift <= 0 || g.totals.finderDrift === -1, g.totals.finderDrift === -1
-    ? "myco unavailable — git index alone (degraded but complete for tracked)"
-    : `graph finder covers the tracked corpus (drift=${g.totals.finderDrift})`);
+  ok(
+    g.totals.finderDrift === 0,
+    "one staged-index snapshot conserves the tracked retirement corpus",
+  );
   ok(g.twinnedPairs.includes("packages-galerina/galerina-framework-app-kernel/src/secret-gate.ts"), "known twin pair detected: secret-gate.ts ↔ secret-gate.fungi");
   ok(
     g.retirementLedger.some((entry) =>
@@ -986,7 +1063,7 @@ if (process.argv.includes("--self-test")) {
         === g.totals.governedTwinTotal,
     "authority ledgers partition the compiler and governed inventories",
   );
-  console.log(process.exitCode ? "  ts-retirement self-test FAILED" : "  ts-retirement self-test: finder + twin-match + partition verified ✅");
+  console.log(process.exitCode ? "  ts-retirement self-test FAILED" : "  ts-retirement self-test: staged-index + twin-match + partition verified ✅");
   process.exit(process.exitCode ?? 0);
 }
 
@@ -1044,7 +1121,7 @@ const md = [
   ``,
   `Post-SLIDE authority: ${g.postSlideReady ? "GREEN" : "OPEN"} — ${t.candidateFungi} non-authorizing candidate(s); ${t.executedFungi}/${t.allTrackedFungi} production Fungi sources cryptographically admitted; ${t.ownedHostBridges}/${t.hostBridges} host boundaries owned; ${t.nodeModulesTrees} node_modules trees.`,
   ``,
-  `\`.fungi\` in src trees: ${t.fungiInSrc} across ${t.packages} packages · finder drift: ${t.finderDrift === -1 ? "n/a (myco unavailable)" : t.finderDrift}`,
+  `\`.fungi\` in src trees: ${t.fungiInSrc} across ${t.packages} packages · staged-index drift: ${t.finderDrift}`,
   ``,
   `## Twinned .ts (the #143 flip queue)`,
   ...g.twinnedPairs.map((p) => `- ${p}`),

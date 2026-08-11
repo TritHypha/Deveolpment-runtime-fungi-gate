@@ -441,6 +441,32 @@ function deepFreeze(value) {
   return Object.freeze(value);
 }
 
+const RESERVED_EMITTED_NAMESPACES = Object.freeze([
+  Object.freeze({ prefix: "requirement:", kind: "requirement" }),
+  Object.freeze({ prefix: "test:", kind: "test" }),
+  Object.freeze({ prefix: "system-contract:", kind: "system-contract" }),
+  Object.freeze({ prefix: "executable-family:", kind: "executable-family" }),
+]);
+
+function validateFinalNodeIds(nodes) {
+  const seen = new Set();
+  for (const node of nodes) {
+    if (seen.has(node.id)) {
+      refuse("ASSURANCE-SEMANTIC-DUPLICATE", `emitted graph contains duplicate id ${node.id}`);
+    }
+    seen.add(node.id);
+    const reservation = RESERVED_EMITTED_NAMESPACES.find(({ prefix }) =>
+      node.id.startsWith(prefix)
+    );
+    if (reservation && reservation.kind !== node.kind) {
+      refuse(
+        "ASSURANCE-SEMANTIC-DUPLICATE",
+        `emitted ${node.kind} id ${node.id} squats reserved ${reservation.kind} namespace`,
+      );
+    }
+  }
+}
+
 function validateSemanticGraph(value) {
   const fields = exactRecord(value, ROOT_KEYS, "graph");
   if (fields.schemaVersion !== 2) {
@@ -535,21 +561,33 @@ export function evaluateSemanticGraph(value) {
         kind: "route",
         evidencePath: item.sourcePath,
         line: item.line,
+        method: item.method,
+        path: item.path,
+        flowName: item.flowName,
+        parserProvenance: item.parserProvenance,
       })),
       ...graph.packages.map((item) => ({
         id: item.id,
         kind: "package",
         evidencePath: item.sourcePath,
+        declaredFanIn: item.declaredFanIn,
+        declaredFanOut: item.declaredFanOut,
+        derivedFanIn: item.derivedFanIn,
+        derivedFanOut: item.derivedFanOut,
       })),
       ...graph.tests.map((item) => ({
         id: `test:${item.id}`,
         kind: "test",
         evidencePath: item.sourcePath,
+        class: item.class,
+        polarity: item.polarity,
       })),
       ...graph.detectors.map((item) => ({
         id: item.id,
         kind: "detector",
         evidencePath: graph.tests.find((test) => test.id === item.testId).sourcePath,
+        ruleId: item.ruleId,
+        plantedDefectId: item.plantedDefectId,
       })),
       {
         id: "executable-family:packages",
@@ -557,6 +595,7 @@ export function evaluateSemanticGraph(value) {
         evidencePath: "build/ts-retirement/ts-retirement.json",
       },
     ];
+    validateFinalNodeIds(nodes);
     const edges = [
       ...graph.tests.flatMap((item) => item.requirementIds.map((requirementId) => ({
         from: `test:${item.id}`,

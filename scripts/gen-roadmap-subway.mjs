@@ -17,14 +17,18 @@
 //   node scripts/gen-roadmap-subway.mjs --write       # write the SVG + inject the block into the targets
 //   node scripts/gen-roadmap-subway.mjs --check       # exit 1 if any target's block is stale (the gate)
 //   node scripts/gen-roadmap-subway.mjs --self-test   # DRIVE the generator with synthetic bad inputs
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  realpathSync,
+} from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  generatedOutputMatches,
-  provenance,
-} from "./lib/provenance.mjs";
 import { deriveRoadmapEvidence } from "./lib/assurance-fabric/roadmap-evidence.mjs";
 
 /**
@@ -68,6 +72,40 @@ const TARGETS = [
 ];
 const SVG_OUT = join(ROOT, "build", "component-health", "roadmap-subway.svg");
 const PROVENANCE_OUT = join(ROOT, "build", "component-health", "subway-provenance.json");
+const TOOL = "gen-roadmap-subway";
+const DESCRIPTOR_PATH = "governance/assurance-evidence-dependencies.json";
+const GIT_IDENTITY = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const MAX_GIT_BYTES = 64 * 1024 * 1024;
+const MAX_GIT_COMMITS = 100_000;
+const MAX_INPUT_BYTES = 64 * 1024 * 1024;
+const MAX_TOTAL_INPUT_BYTES = 512 * 1024 * 1024;
+const AUTHORITATIVE_INPUT_DOMAIN = Buffer.from(
+  "galerina.roadmap-subway.authoritative-inputs.v1\0",
+  "utf8",
+);
+const RELEVANT_ROOT_FILES = new Set([
+  "AGENTS.md",
+  "README.md",
+  "galerina.mjs",
+  "galerina.workspace.json",
+  "version.json",
+]);
+const RELEVANT_PREFIXES = Object.freeze([
+  "docs/",
+  "examples/",
+  "governance/",
+  "packages-galerina/",
+  "proofs/",
+  "scripts/",
+  "tests/",
+  "tools/",
+]);
+const ROADMAP_SUPPORT_PATHS = Object.freeze([
+  "scripts/lib/assurance-fabric/roadmap-evidence.mjs",
+  "scripts/lib/assurance-fabric/generated-evidence.mjs",
+  "scripts/lib/assurance-fabric/evidence-dag.mjs",
+  "scripts/lib/assurance-fabric/strict-json.mjs",
+]);
 
 // --- sources -------------------------------------------------------------------------------------------
 // Each source is a FILE THAT DECIDES SOMETHING, not a doc that describes it. A missing/malformed source is
@@ -92,6 +130,56 @@ function percentAudit() {
     { cwd: ROOT, encoding: "utf8", windowsHide: true, maxBuffer: 32 * 1024 * 1024 });
   if (r.status !== 0) throw new Error(`component-health --json failed (exit ${r.status})`);
   return JSON.parse(r.stdout).percentAudit;
+}
+
+function git(args, encoding = "utf8") {
+  const result = spawnSync("git", args, {
+    cwd: ROOT,
+    encoding,
+    windowsHide: true,
+    maxBuffer: MAX_GIT_BYTES,
+  });
+  if (result.error || result.signal || result.status !== 0) {
+    const reason = result.error?.message
+      ?? (result.signal ? `signal ${result.signal}` : `exit ${String(result.status)}`);
+    throw new Error(`roadmap provenance Git command failed (${args[0]}): ${reason}`);
+  }
+  return result.stdout;
+}
+
+function nulPaths(bytes, label, unique = true) {
+  if (!Buffer.isBuffer(bytes)) throw new Error(`${label} did not return exact bytes`);
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    throw new Error(`${label} returned non-UTF-8 paths: ${error.message}`);
+  }
+  const paths = text.split("\0");
+  if (paths.at(-1) !== "") throw new Error(`${label} omitted its final NUL delimiter`);
+  paths.pop();
+  if (unique && new Set(paths).size !== paths.length) throw new Error(`${label} returned duplicate paths`);
+  return paths;
+}
+
+function relevantOrdinaryPath(path) {
+  if (TARGETS.includes(path)) return false;
+  return RELEVANT_ROOT_FILES.has(path)
+    || RELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
+function gitFile(commit, path) {
+  const listing = git(["ls-tree", "-z", "--full-tree", commit, "--", path], null);
+  if (listing.length === 0) return undefined;
+  const records = listing.toString("utf8").split("\0");
+  if (records.at(-1) !== "") throw new Error("Git tree listing omitted its final NUL delimiter");
+  records.pop();
+  if (records.length !== 1) throw new Error(`Git tree listing did not identify exactly one ${path}`);
+  const match = /^(100644|100755) blob ([0-9a-f]{40}|[0-9a-f]{64})\t(.+)$/u.exec(records[0]);
+  if (!match || match[3] !== path) {
+    throw new Error(`Git tree listing contains a non-regular or mismatched roadmap target ${path}`);
+  }
+  return git(["show", `${commit}:${path}`], null);
 }
 
 // The compiler pipeline ORDER is an authored fact (the stages run in this sequence); MEMBERSHIP is derived.
@@ -356,7 +444,9 @@ export function buildModel({ pa, hashBaseline, ledger, kernelLedger, version, as
 }
 
 function model() {
-  const result = deriveRoadmapEvidence(ROOT);
+  const result = deriveRoadmapEvidence(ROOT, {
+    repositoryBuildPoint: ROADMAP_BUILD_POINT.stamp.gitCommit,
+  });
   if (result.kind === "refused") {
     throw new Error(`roadmap assurance refused: ${result.code}: ${result.detail}`);
   }
@@ -365,8 +455,9 @@ function model() {
   }
   const root = result.value.nodes.find((node) => node.id === "roadmap-subway");
   if (root === undefined) throw new Error("roadmap assurance report has no aggregate root");
-  return buildModel({
-    pa: percentAudit(),
+  const pa = percentAudit();
+  const value = buildModel({
+    pa,
     hashBaseline: loadJSON(SOURCES.stageHashes),
     ledger: loadJSON(SOURCES.stageLedger),
     kernelLedger: loadJSON(SOURCES.kernelLedger),
@@ -375,6 +466,11 @@ function model() {
       state: result.value.verdictTrit === 1 ? "CURRENT" : "UNKNOWN",
       rootDigest: root.subjectDigest,
     }),
+  });
+  return Object.freeze({
+    value,
+    percentAudit: pa,
+    descriptor: loadJSON(DESCRIPTOR_PATH),
   });
 }
 
@@ -412,6 +508,245 @@ const currentBlock = (text) => {
   return bounds === undefined ? undefined : text.slice(bounds.b, bounds.e + END.length);
 };
 
+function normalizedTargetTemplate(bytes, label, strict) {
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    if (!strict) return Buffer.from(bytes);
+    throw new Error(`${label} is not canonical UTF-8: ${error.message}`);
+  }
+  const bounds = markerBounds(text);
+  if (bounds === undefined) {
+    if (!strict) return Buffer.from(bytes);
+    throw new Error(`${label} has missing, duplicated, or misordered subway markers`);
+  }
+  const template = `${text.slice(0, bounds.b)}<!-- SUBWAY:OWNED-REGION -->${text.slice(bounds.e + END.length)}`
+    .replaceAll("\r\n", "\n");
+  if (template.includes("\r")) {
+    if (!strict) return Buffer.from(bytes);
+    throw new Error(`${label} contains a bare carriage return`);
+  }
+  return Buffer.from(template, "utf8");
+}
+
+function sameOptionalBytes(left, right) {
+  return left === undefined
+    ? right === undefined
+    : right !== undefined && Buffer.compare(left, right) === 0;
+}
+
+function meaningfulTargetChange(commit, path) {
+  const current = gitFile(commit, path);
+  const currentTemplate = current === undefined
+    ? undefined
+    : normalizedTargetTemplate(current, `${commit}:${path}`, false);
+  const ancestry = git(["rev-list", "--parents", "-n", "1", commit]).trim().split(/\s+/u);
+  if (ancestry[0] !== commit || ancestry.some((identity) => !GIT_IDENTITY.test(identity))) {
+    throw new Error("Git returned malformed roadmap build-point ancestry");
+  }
+  const parents = ancestry.slice(1);
+  if (parents.length === 0) return currentTemplate !== undefined;
+  return !parents.some((parent) => {
+    const bytes = gitFile(parent, path);
+    const template = bytes === undefined
+      ? undefined
+      : normalizedTargetTemplate(bytes, `${parent}:${path}`, false);
+    return sameOptionalBytes(currentTemplate, template);
+  });
+}
+
+function currentTargetDiffersFromHead(path) {
+  const head = gitFile("HEAD", path);
+  if (head === undefined || !existsSync(join(ROOT, ...path.split("/")))) return true;
+  const current = readFileSync(join(ROOT, ...path.split("/")));
+  return Buffer.compare(
+    normalizedTargetTemplate(current, path, true),
+    normalizedTargetTemplate(head, `HEAD:${path}`, false),
+  ) !== 0;
+}
+
+function roadmapBuildPoint() {
+  try {
+    const dirtyPaths = new Set([
+      ...nulPaths(
+        git(["diff", "--name-only", "-z", "HEAD", "--"], null),
+        "roadmap dirty-path enumeration",
+      ),
+      ...nulPaths(
+        git(["ls-files", "--others", "--exclude-standard", "-z"], null),
+        "roadmap untracked-path enumeration",
+      ),
+    ]);
+    const dirty = [...dirtyPaths].filter((path) =>
+      relevantOrdinaryPath(path)
+      || (TARGETS.includes(path) && currentTargetDiffersFromHead(path))
+    ).sort((left, right) => Buffer.compare(Buffer.from(left), Buffer.from(right)));
+
+    const commits = git(["rev-list", "--topo-order", "HEAD"])
+      .split(/\r?\n/u)
+      .filter((commit) => commit.length > 0);
+    if (commits.length === 0 || commits.length > MAX_GIT_COMMITS) {
+      throw new Error("Git history exceeds the roadmap provenance bound");
+    }
+    for (const commit of commits) {
+      if (!GIT_IDENTITY.test(commit)) throw new Error("Git returned a malformed roadmap build point");
+      const changed = new Set(nulPaths(git([
+        "diff-tree",
+        "--root",
+        "-m",
+        "--no-commit-id",
+        "--name-only",
+        "-r",
+        "-z",
+        commit,
+      ], null), "roadmap build-point path enumeration", false));
+      if (
+        [...changed].some(relevantOrdinaryPath)
+        || [...changed].some((path) => TARGETS.includes(path) && meaningfulTargetChange(commit, path))
+      ) {
+        const epochText = git(["show", "-s", "--format=%ct", commit]).trim();
+        if (!/^\d+$/u.test(epochText)) throw new Error("Git returned a malformed roadmap build timestamp");
+        const epoch = Number(epochText);
+        if (!Number.isSafeInteger(epoch) || epoch < 0) {
+          throw new Error("Git returned an out-of-range roadmap build timestamp");
+        }
+        return Object.freeze({
+          kind: dirty.length === 0 ? "clean" : "dirty",
+          dirty: Object.freeze(dirty),
+          stamp: Object.freeze({
+            schemaVersion: 1,
+            tool: TOOL,
+            gitCommit: commit,
+            builtAt: new Date(epoch * 1000).toISOString(),
+            node: process.version,
+          }),
+        });
+      }
+    }
+    throw new Error("no commit owns the roadmap provenance inputs");
+  } catch (error) {
+    return Object.freeze({
+      kind: "refused",
+      code: "ROADMAP_PROVENANCE_BUILD_POINT",
+      detail: error instanceof Error ? error.message : "roadmap provenance derivation failed",
+    });
+  }
+}
+
+function boundedInput(relativePath) {
+  const absolute = resolve(ROOT, ...relativePath.split("/"));
+  const delta = relative(ROOT, absolute);
+  if (delta.startsWith("..") || resolve(absolute) !== absolute) {
+    throw new Error(`roadmap authoritative input escapes the repository: ${relativePath}`);
+  }
+  const stat = lstatSync(absolute);
+  if (!stat.isFile() || stat.isSymbolicLink() || stat.size < 1 || stat.size > MAX_INPUT_BYTES) {
+    throw new Error(`roadmap authoritative input is not one bounded regular file: ${relativePath}`);
+  }
+  const actual = realpathSync.native(absolute);
+  const actualDelta = relative(ROOT, actual);
+  if (actualDelta.startsWith("..")) {
+    throw new Error(`roadmap authoritative input resolves outside the repository: ${relativePath}`);
+  }
+  const bytes = readFileSync(absolute);
+  if (bytes.length !== stat.size) throw new Error(`roadmap authoritative input changed: ${relativePath}`);
+  return bytes;
+}
+
+function u64(value) {
+  const bytes = Buffer.alloc(8);
+  bytes.writeBigUInt64BE(BigInt(value));
+  return bytes;
+}
+
+function authoritativeInputsDigest(derived) {
+  const descriptor = derived.descriptor;
+  if (!Array.isArray(descriptor?.nodes) || descriptor.root === null || typeof descriptor.root !== "object") {
+    throw new Error("roadmap dependency descriptor cannot disclose authoritative inputs");
+  }
+  const paths = new Set([
+    DESCRIPTOR_PATH,
+    ...Object.values(SOURCES),
+    ...ROADMAP_SUPPORT_PATHS,
+    descriptor.root.toolPath,
+  ]);
+  for (const node of descriptor.nodes) {
+    if (!Array.isArray(node?.artifactPaths)) {
+      throw new Error("roadmap dependency node cannot disclose artifact paths");
+    }
+    for (const path of [...node.artifactPaths, node.provenancePath, node.toolPath]) {
+      if (typeof path !== "string") throw new Error("roadmap dependency path is malformed");
+      paths.add(path);
+    }
+  }
+
+  const entries = [];
+  let total = 0;
+  for (const path of paths) {
+    const bytes = boundedInput(path);
+    total += bytes.length;
+    if (!Number.isSafeInteger(total) || total > MAX_TOTAL_INPUT_BYTES) {
+      throw new Error("roadmap authoritative inputs exceed the total byte bound");
+    }
+    entries.push({
+      labelBytes: Buffer.from(`file:${path}`, "utf8"),
+      valueBytes: bytes,
+      readback: () => boundedInput(path),
+    });
+  }
+  for (const path of TARGETS) {
+    const raw = boundedInput(path);
+    const bytes = normalizedTargetTemplate(raw, path, true);
+    total += raw.length;
+    if (!Number.isSafeInteger(total) || total > MAX_TOTAL_INPUT_BYTES) {
+      throw new Error("roadmap authoritative inputs exceed the total byte bound");
+    }
+    entries.push({
+      labelBytes: Buffer.from(`target-template:${path}`, "utf8"),
+      valueBytes: bytes,
+      readback: () => normalizedTargetTemplate(boundedInput(path), path, true),
+    });
+  }
+  const { provenance: _volatilePercentProvenance, ...percentContent } = derived.percentAudit;
+  const percentBytes = Buffer.from(JSON.stringify(percentContent), "utf8");
+  const modelBytes = Buffer.from(JSON.stringify(derived.value), "utf8");
+  total += percentBytes.length + modelBytes.length;
+  if (!Number.isSafeInteger(total) || total > MAX_TOTAL_INPUT_BYTES) {
+    throw new Error("roadmap authoritative inputs exceed the total byte bound");
+  }
+  entries.push({
+    labelBytes: Buffer.from("virtual:percent-audit-content", "utf8"),
+    valueBytes: percentBytes,
+  });
+  entries.push({
+    labelBytes: Buffer.from("virtual:roadmap-model", "utf8"),
+    valueBytes: modelBytes,
+  });
+
+  for (const entry of entries) {
+    if (entry.readback === undefined) continue;
+    const again = entry.readback();
+    if (Buffer.compare(again, entry.valueBytes) !== 0) {
+      throw new Error("roadmap authoritative input changed during readback");
+    }
+  }
+  entries.sort((left, right) => Buffer.compare(left.labelBytes, right.labelBytes));
+  const hash = createHash("sha256").update(AUTHORITATIVE_INPUT_DOMAIN);
+  for (const entry of entries) {
+    hash.update(u64(entry.labelBytes.length));
+    hash.update(entry.labelBytes);
+    hash.update(u64(entry.valueBytes.length));
+    hash.update(entry.valueBytes);
+  }
+  return hash.digest("hex");
+}
+
+const ROADMAP_BUILD_POINT = roadmapBuildPoint();
+if (ROADMAP_BUILD_POINT.kind === "refused") {
+  throw new Error(`${ROADMAP_BUILD_POINT.code}: ${ROADMAP_BUILD_POINT.detail}`);
+}
+
 // --- self-test: DRIVE the guards with synthetic bad inputs, never reason about them ---------------------
 if (OPTIONS.mode === "self-test") {
   // Counts are DERIVED, never typed — a tool whose purpose is "stop hand-typing numbers" must not hand-type its own.
@@ -438,10 +773,10 @@ if (OPTIONS.mode === "self-test") {
   ok(evidenceClass({ evidence: { asserted: "x" } }) === "asserted", "evidence: asserted detected");
   ok(evidenceClass({ evidence: { ladder: [] } }) === "asserted", "★ DRIVEN: an EMPTY ladder is asserted, not measured (an empty set is not evidence)");
 
-  const m = model();
+  const m = model().value;
   const block = renderBlock(m), svg = renderSVG(m);
   ok(block.startsWith(BEGIN) && block.trimEnd().endsWith(END), "block is marker-delimited");
-  ok(renderBlock(model()) === block, "generation is DETERMINISTIC (no clock — the gate cannot false-positive)");
+  ok(renderBlock(model().value) === block, "generation is DETERMINISTIC (no clock — the gate cannot false-positive)");
   const nonFiniteToken = ["N", "a", "N"].join("");
   ok(svg.startsWith("<svg") && svg.includes("</svg>") && !svg.includes(nonFiniteToken), "SVG is well-formed and free of non-finite coordinates");
   ok(!/\u0000/.test(block + svg), "★ output carries no literal NUL bytes (the defect class shipped twice this session)");
@@ -487,12 +822,27 @@ if (OPTIONS.mode === "self-test") {
   process.exit(process.exitCode ?? 0);
 }
 
-const m = model();
+if (
+  (OPTIONS.mode === "write" || OPTIONS.mode === "check")
+  && ROADMAP_BUILD_POINT.kind === "dirty"
+) {
+  console.error(
+    `roadmap-subway: relevant provenance input is dirty: ${ROADMAP_BUILD_POINT.dirty[0]}`,
+  );
+  process.exit(1);
+}
+
+const derived = model();
+const m = derived.value;
 const block = renderBlock(m);
 const svg = renderSVG(m);
+const authoritativeDigest = authoritativeInputsDigest(derived);
 const provenanceText = JSON.stringify(
-  provenance("gen-roadmap-subway", ROOT),
-    undefined,
+  {
+    ...ROADMAP_BUILD_POINT.stamp,
+    authoritativeInputsDigest: authoritativeDigest,
+  },
+  undefined,
   2,
 ) + "\n";
 
@@ -528,7 +878,7 @@ if (OPTIONS.mode === "check") {
   const stale = [...expected.entries()]
     .filter(([path, bytes]) =>
       !existsSync(path)
-      || !generatedOutputMatches(path, readFileSync(path, "utf8"), bytes))
+      || readFileSync(path, "utf8") !== bytes)
     .map(([path]) => relative(ROOT, path).replace(/\\/g, "/"));
   if (failures.length > 0 || stale.length > 0) {
     for (const failure of failures) {

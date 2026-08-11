@@ -118,6 +118,10 @@ function sha256(value) {
 function installEvidence(root, head) {
   const dependencies = JSON.parse(readFileSync(DEPENDENCIES, "utf8"));
   write(root, "governance/assurance-evidence-dependencies.json", `${JSON.stringify(dependencies, undefined, 2)}\n`);
+  write(root, "scripts/lib/assurance-fabric/roadmap-evidence.mjs", readFileSync(ROADMAP_EVIDENCE, "utf8"));
+  write(root, "scripts/lib/assurance-fabric/generated-evidence.mjs", readFileSync(GENERATED_EVIDENCE, "utf8"));
+  write(root, "scripts/lib/assurance-fabric/evidence-dag.mjs", readFileSync(EVIDENCE_DAG, "utf8"));
+  write(root, "scripts/lib/assurance-fabric/strict-json.mjs", readFileSync(STRICT_JSON, "utf8"));
   for (const node of dependencies.nodes) {
     for (const artifactPath of node.artifactPaths) write(root, artifactPath, `${node.id}:${artifactPath}\n`);
     if (node.toolPath !== "scripts/component-health.mjs") {
@@ -152,6 +156,7 @@ function fixture() {
   write(harness, "scripts/lib/assurance-fabric/strict-json.mjs", readFileSync(STRICT_JSON, "utf8"));
   installRepository(harness);
   installRepository(selected);
+  installEvidence(selected, "0".repeat(40));
   assert.equal(spawnSync("git", ["init"], { cwd: selected }).status, 0);
   assert.equal(spawnSync("git", ["config", "user.email", "fixture@example.invalid"], { cwd: selected }).status, 0);
   assert.equal(spawnSync("git", ["config", "user.name", "Fixture"], { cwd: selected }).status, 0);
@@ -257,6 +262,73 @@ test("roadmap renders stale predecessors as unknown and refuses deny evidence", 
     const semanticDenied = run(harness, selected, ["--write"]);
     assert.notEqual(semanticDenied.status, 0);
     assert.equal(readFileSync(svg, "utf8"), semanticBefore);
+  } finally {
+    rmSync(harness, { recursive: true, force: true });
+  }
+});
+
+test("roadmap provenance is exact and stable across its own output-only commits", () => {
+  const { harness, selected } = fixture();
+  const provenancePath = join(selected, "build/component-health/subway-provenance.json");
+  const svgPath = join(selected, "build/component-health/roadmap-subway.svg");
+  try {
+    const sourceCommit = spawnSync("git", ["rev-parse", "HEAD"], {
+      cwd: selected,
+      encoding: "utf8",
+    }).stdout.trim();
+    const generated = run(harness, selected, ["--write"]);
+    assert.equal(generated.status, 0, `${generated.stdout}\n${generated.stderr}`);
+    const published = JSON.parse(readFileSync(provenancePath, "utf8"));
+    assert.equal(published.schemaVersion, 1);
+    assert.equal(published.gitCommit, sourceCommit);
+    assert.match(published.authoritativeInputsDigest, /^[0-9a-f]{64}$/u);
+    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: CURRENT/);
+
+    assert.equal(spawnSync("git", ["add", "--",
+      "README.md",
+      "docs/roadmap-2026-07-25-cycle2.md",
+      "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md",
+      "build/component-health/roadmap-subway.svg",
+      "build/component-health/subway-provenance.json",
+    ], { cwd: selected }).status, 0);
+    assert.equal(spawnSync("git", ["commit", "-m", "roadmap generated outputs"], {
+      cwd: selected,
+    }).status, 0);
+    const afterOutputCommit = run(harness, selected, ["--check"]);
+    assert.equal(
+      afterOutputCommit.status,
+      0,
+      `${afterOutputCommit.stdout}\n${afterOutputCommit.stderr}`,
+    );
+    assert.deepEqual(JSON.parse(readFileSync(provenancePath, "utf8")), published);
+    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: CURRENT/);
+
+    const ledgerPath = join(selected, "docs/security/rd0361-authoritative-twins.json");
+    writeFileSync(ledgerPath, JSON.stringify({ twins: [{ file: "changed-memory.fungi" }] }));
+    assert.equal(spawnSync("git", ["add", "--", "docs/security/rd0361-authoritative-twins.json"], {
+      cwd: selected,
+    }).status, 0);
+    assert.equal(spawnSync("git", ["commit", "-m", "change roadmap authority input"], {
+      cwd: selected,
+    }).status, 0);
+    const inputCommit = spawnSync("git", ["rev-parse", "HEAD"], {
+      cwd: selected,
+      encoding: "utf8",
+    }).stdout.trim();
+    const refreshed = run(harness, selected, ["--write"]);
+    assert.equal(refreshed.status, 0, `${refreshed.stdout}\n${refreshed.stderr}`);
+    const advanced = JSON.parse(readFileSync(provenancePath, "utf8"));
+    assert.equal(advanced.gitCommit, inputCommit);
+    assert.notEqual(advanced.authoritativeInputsDigest, published.authoritativeInputsDigest);
+
+    const substituted = {
+      ...advanced,
+      gitCommit: advanced.gitCommit === "a".repeat(40) ? "c".repeat(40) : "a".repeat(40),
+    };
+    writeFileSync(provenancePath, `${JSON.stringify(substituted, undefined, 2)}\n`);
+    const tampered = run(harness, selected, ["--check"]);
+    assert.notEqual(tampered.status, 0);
+    assert.deepEqual(JSON.parse(readFileSync(provenancePath, "utf8")), substituted);
   } finally {
     rmSync(harness, { recursive: true, force: true });
   }

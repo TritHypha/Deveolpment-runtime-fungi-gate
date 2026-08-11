@@ -34,6 +34,10 @@ const FUNGI_PATH_PATTERN = /^packages-galerina\/([^/]+)\/src\/.+\.fungi$/u;
 const PACKAGE_JSON_PATTERN = /^packages-galerina\/([^/]+)\/package\.json$/u;
 const MAX_INPUT_BYTES = 67_108_864;
 const MAX_TOTAL_BYTES = 536_870_912;
+const AUTHORITATIVE_INPUT_DOMAIN = Buffer.from(
+  "galerina.assurance-semantic.authoritative-inputs.v1\0",
+  "utf8",
+);
 
 class SemanticCoverageRefusal extends Error {
   constructor(code, detail) {
@@ -103,6 +107,12 @@ function hashBytes(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function u64(value) {
+  const bytes = Buffer.alloc(8);
+  bytes.writeBigUInt64BE(BigInt(value));
+  return bytes;
+}
+
 function hashPaths(paths) {
   const hash = createHash("sha256");
   for (const path of paths) {
@@ -152,7 +162,11 @@ function createInputReader(root) {
     if (prior !== undefined && prior.digest !== digest) {
       refuse("SEMANTIC_INPUT_CHANGED", `${canonical} changed during derivation`);
     }
-    inputs.set(canonical, { digest, size: bytes.length });
+    inputs.set(canonical, {
+      digest,
+      size: bytes.length,
+      bytes: Buffer.from(bytes),
+    });
     return bytes;
   }
 
@@ -183,20 +197,24 @@ function createInputReader(root) {
   }
 
   function authoritativeInputsDigest() {
-    const hash = createHash("sha256");
-    for (const [path, value] of [...inputs].sort(([left], [right]) => left.localeCompare(right))) {
-      const pathBytes = Buffer.from(path, "utf8");
-      const size = Buffer.alloc(8);
-      size.writeBigUInt64BE(BigInt(value.size));
-      hash.update(size);
+    const entries = [...inputs].map(([path, value]) => ({
+      pathBytes: Buffer.from(path, "utf8"),
+      value,
+    })).sort((left, right) => Buffer.compare(left.pathBytes, right.pathBytes));
+    const hash = createHash("sha256").update(AUTHORITATIVE_INPUT_DOMAIN);
+    for (const { pathBytes, value } of entries) {
+      hash.update(u64(pathBytes.length));
       hash.update(pathBytes);
-      hash.update(Buffer.from(value.digest, "ascii"));
+      hash.update(u64(value.bytes.length));
+      hash.update(value.bytes);
     }
     return hash.digest("hex");
   }
 
   function authoritativeInputPaths() {
-    return Object.freeze([...inputs.keys()]);
+    return Object.freeze([...inputs.keys()].sort((left, right) =>
+      Buffer.compare(Buffer.from(left, "utf8"), Buffer.from(right, "utf8"))
+    ));
   }
 
   return Object.freeze({
@@ -422,6 +440,27 @@ function routeId(sourcePath, line, method, path, flowName) {
   return `route:${method.toLowerCase()}:${digest}`;
 }
 
+function astRouteIdentity(node, sourcePath) {
+  const raw = typeof node?.value === "string" ? node.value : "";
+  const separator = raw.indexOf(" ");
+  const children = Array.isArray(node?.children) ? node.children : [];
+  const flowReferences = children.filter((child) =>
+    child?.kind === "identifier"
+    && typeof child.value === "string"
+    && child.value.startsWith("flow:")
+  );
+  if (separator < 1 || flowReferences.length !== 1) {
+    refuse("SEMANTIC_ROUTE_CONSERVATION", `${sourcePath} has malformed AST route identity`);
+  }
+  const method = raw.slice(0, separator).toUpperCase();
+  const path = raw.slice(separator + 1).trim();
+  const flowName = flowReferences[0].value.slice("flow:".length);
+  if (path.length === 0 || flowName.length === 0) {
+    refuse("SEMANTIC_ROUTE_CONSERVATION", `${sourcePath} has empty AST route identity`);
+  }
+  return { method, path, flowName };
+}
+
 function deriveRoutes(tracked, reader, compiler) {
   const routes = [];
   for (const sourcePath of tracked.filter((path) => FUNGI_PATH_PATTERN.test(path))) {
@@ -454,12 +493,11 @@ function deriveRoutes(tracked, reader, compiler) {
       ) {
         refuse("SEMANTIC_ROUTE_CONSERVATION", `${sourcePath} has malformed route evidence`);
       }
-      const raw = typeof node.value === "string" ? node.value : "";
-      const separator = raw.indexOf(" ");
+      const astIdentity = astRouteIdentity(node, sourcePath);
       if (
-        separator < 1
-        || raw.slice(0, separator).toUpperCase() !== route.method
-        || raw.slice(separator + 1).trim() !== route.path
+        astIdentity.method !== route.method
+        || astIdentity.path !== route.path
+        || astIdentity.flowName !== route.flowName
       ) {
         refuse("SEMANTIC_ROUTE_CONSERVATION", `${sourcePath} AST and registry route identities differ`);
       }

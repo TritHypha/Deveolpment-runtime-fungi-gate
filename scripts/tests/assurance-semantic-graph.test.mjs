@@ -143,6 +143,97 @@ describe("closed semantic assurance graph", () => {
     assert.equal(Object.isFrozen(report), true);
     assert.equal(Object.isFrozen(report.nodes), true);
     assert.equal(Object.isFrozen(report.edges), true);
+    assert.deepEqual(
+      report.nodes.find((node) => node.kind === "route"),
+      {
+        id: "route:get:/health",
+        kind: "route",
+        evidencePath: "packages-galerina/galerina-core/src/health.fungi",
+        line: 3,
+        method: "GET",
+        path: "/health",
+        flowName: "health",
+        parserProvenance: "canonical-fungi-ast",
+      },
+    );
+    assert.deepEqual(
+      report.nodes.find((node) => node.id === "package:galerina-core"),
+      {
+        id: "package:galerina-core",
+        kind: "package",
+        evidencePath: "packages-galerina/galerina-core/package.json",
+        declaredFanIn: 0,
+        declaredFanOut: 1,
+        derivedFanIn: 0,
+        derivedFanOut: 1,
+      },
+    );
+    assert.deepEqual(
+      report.nodes.find((node) => node.id === "test:route-positive"),
+      {
+        id: "test:route-positive",
+        kind: "test",
+        evidencePath: "scripts/tests/route-positive.test.mjs",
+        class: "contract",
+        polarity: "positive",
+      },
+    );
+    assert.deepEqual(
+      report.nodes.find((node) => node.kind === "detector"),
+      {
+        id: "detector:route-provenance",
+        kind: "detector",
+        evidencePath: "scripts/tests/route-refusal.test.mjs",
+        ruleId: "route-provenance",
+        plantedDefectId: "route-text-must-not-enter",
+      },
+    );
+  });
+
+  it("reserves emitted namespaces and refuses every cross-kind or fixed-node collision", () => {
+    const collisionCases = [
+      ["route / requirement", { routes: [route({ id: "requirement:vok-sem-001" })] }],
+      ["package / requirement", { packages: [packageNode({ id: "requirement:vok-sem-001" })] }],
+      ["detector / requirement", { detectors: [detector({ id: "requirement:vok-sem-001" })] }],
+      ["route / test", { routes: [route({ id: "test:route-positive" })] }],
+      ["package / test", { packages: [packageNode({ id: "test:route-positive" })] }],
+      ["detector / test", { detectors: [detector({ id: "test:route-positive" })] }],
+      ["system contract / route", {
+        systemContracts: [{ id: "system-contract:shared", evidencePath: "AGENTS.md" }],
+        routes: [route({ id: "system-contract:shared" })],
+      }],
+      ["system contract / package", {
+        systemContracts: [{ id: "system-contract:shared", evidencePath: "AGENTS.md" }],
+        packages: [packageNode({ id: "system-contract:shared" })],
+      }],
+      ["system contract / detector", {
+        systemContracts: [{ id: "system-contract:shared", evidencePath: "AGENTS.md" }],
+        detectors: [detector({ id: "system-contract:shared" })],
+      }],
+      ["route / package", {
+        routes: [route({ id: "shared:identity" })],
+        packages: [packageNode({ id: "shared:identity" })],
+      }],
+      ["route / detector", {
+        routes: [route({ id: "shared:identity" })],
+        detectors: [detector({ id: "shared:identity" })],
+      }],
+      ["package / detector", {
+        packages: [packageNode({ id: "shared:identity" })],
+        detectors: [detector({ id: "shared:identity" })],
+      }],
+      ["route / fixed", { routes: [route({ id: "executable-family:packages" })] }],
+      ["package / fixed", { packages: [packageNode({ id: "executable-family:packages" })] }],
+      ["detector / fixed", { detectors: [detector({ id: "executable-family:packages" })] }],
+    ];
+    for (const [label, overrides] of collisionCases) {
+      const result = evaluateSemanticGraph(graph(overrides));
+      assert.equal(result.kind, "refused", `${label}: ${JSON.stringify(result)}`);
+      assert.equal(result.code, "ASSURANCE-SEMANTIC-DUPLICATE", label);
+    }
+
+    refused(graph({ routes: [route({ id: "test:unclaimed" })] }), "ASSURANCE-SEMANTIC-DUPLICATE");
+    refused(graph({ detectors: [detector({ id: "requirement:unclaimed" })] }), "ASSURANCE-SEMANTIC-DUPLICATE");
   });
 
   it("requires positive and refusal evidence for every release requirement", () => {

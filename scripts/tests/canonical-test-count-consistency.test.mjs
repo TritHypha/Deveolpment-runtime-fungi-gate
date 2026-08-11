@@ -1,6 +1,12 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -61,6 +67,11 @@ function run(root) {
   return spawnSync(process.execPath, [SCRIPT, "--root", root, "--json"], { encoding: "utf8" });
 }
 
+function mutate(root, path, transform) {
+  const target = join(root, ...path.split("/"));
+  writeFileSync(target, transform(readFileSync(target, "utf8")));
+}
+
 test("canonical test-count owner accepts every exact current rendered consumer", () => {
   const result = run(fixture());
   assert.equal(result.status, 0, result.stderr);
@@ -85,4 +96,62 @@ test("canonical test-count owner self-test proves every registered capture", () 
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   assert.match(result.stdout, /self-test.*PASS/i);
   assert.match(result.stdout, /7\/7/i);
+});
+
+test("canonical test-count owner rejects duplicate claims, marker pairs and chapter headings", () => {
+  const hostile = [
+    {
+      name: "contradictory full-suite claims",
+      consumer: "readme-full-suite",
+      apply(root) {
+        mutate(root, "README.md", (text) => `${text}\n**v1.0.0-beta.2 ${DOT} full suite 100/100 packages ${DOT} 9,498 tests ${DOT} 0 failures.**\n`);
+      },
+    },
+    {
+      name: "duplicate current test-table claims",
+      consumer: "readme-tests-table",
+      apply(root) {
+        mutate(root, "README.md", (text) => `${text}\n| **Tests** | ${TICK} green | 100/100 ${DOT} 9,499 ${DOT} 0 fail |\n`);
+      },
+    },
+    {
+      name: "duplicate subway marker pairs",
+      consumer: "cycle-roadmap-subway",
+      apply(root) {
+        mutate(root, "docs/roadmap-2026-07-25-cycle2.md", (text) => (
+          `${text}\n<!-- SUBWAY:BEGIN -->\n**v1.0.0-beta.2 ${DOT} 100 packages ${DOT} 9499 tests ${DOT} ship-readiness 100.0%**\n<!-- SUBWAY:END -->\n`
+        ));
+      },
+    },
+    {
+      name: "duplicate Chapter 3 headings",
+      consumer: "active-roadmap-chapter-3",
+      apply(root) {
+        mutate(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", (text) => (
+          `${text}\n## VOK assurance fabric Chapter 3 - 2026-08-10\nThe complete package lane is **100/100 packages and 9,498 tests** in 1s.\n`
+        ));
+      },
+    },
+    {
+      name: "contradictory claims inside the Chapter 3 section",
+      consumer: "active-roadmap-chapter-3",
+      apply(root) {
+        mutate(root, "docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md", (text) => (
+          `${text}\nThe complete package lane is **100/100 packages and 9,498 tests** in 2s.\n`
+        ));
+      },
+    },
+  ];
+
+  for (const attack of hostile) {
+    const root = fixture();
+    attack.apply(root);
+    const result = run(root);
+    assert.notEqual(result.status, 0, attack.name);
+    const report = JSON.parse(result.stdout);
+    assert.ok(
+      report.violations.some((entry) => entry.consumer === attack.consumer),
+      `${attack.name}: ${result.stdout}`,
+    );
+  }
 });

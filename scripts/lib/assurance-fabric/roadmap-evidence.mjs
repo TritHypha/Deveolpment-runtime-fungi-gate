@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { lstatSync, readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
+import { types as utilTypes } from "node:util";
 
 import { evaluateEvidenceDag } from "./evidence-dag.mjs";
 import { inspectGeneratedEvidence } from "./generated-evidence.mjs";
@@ -142,7 +143,39 @@ function aggregateDigest(nodes) {
   return hash.digest("hex");
 }
 
-export function deriveRoadmapEvidence(rootPath) {
+function admittedRepositoryBuildPoint(options) {
+  if (
+    options === null
+    || typeof options !== "object"
+    || Array.isArray(options)
+    || utilTypes.isProxy(options)
+    || Object.getPrototypeOf(options) !== Object.prototype
+  ) {
+    throw new Error("roadmap evidence options are not an ordinary object");
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(options);
+  const keys = Object.keys(descriptors);
+  if (keys.length === 0) return undefined;
+  const descriptor = descriptors.repositoryBuildPoint;
+  if (
+    keys.length !== 1
+    || descriptor === undefined
+    || !("value" in descriptor)
+    || descriptor.get !== undefined
+    || descriptor.set !== undefined
+    || !descriptor.enumerable
+    || typeof descriptor.value !== "string"
+    || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(descriptor.value)
+  ) {
+    throw new Error("repository build point is not exact");
+  }
+  return descriptor.value;
+}
+
+// The roadmap owner supplies its content-aware relevant-input build point so
+// committing only the owner's generated region cannot demote all predecessors
+// from CURRENT to UNKNOWN. Other callers retain exact-HEAD classification.
+export function deriveRoadmapEvidence(rootPath, options = {}) {
   let root;
   let descriptor;
   let head;
@@ -156,7 +189,7 @@ export function deriveRoadmapEvidence(rootPath) {
     if (!descriptorIsClosed(descriptor)) {
       return refusal("ASSURANCE-ROADMAP-DESCRIPTOR", "roadmap dependency descriptor is not the exact closed node set");
     }
-    head = repositoryHead(root);
+    head = admittedRepositoryBuildPoint(options) ?? repositoryHead(root);
   } catch {
     return refusal("ASSURANCE-ROADMAP-DESCRIPTOR", "roadmap dependency descriptor or repository identity could not be admitted");
   }

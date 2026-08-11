@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   mkdtempSync,
   mkdirSync,
@@ -24,6 +25,31 @@ import {
 } from "../gen-assurance-semantic-graph.mjs";
 
 const compiler = { buildRouteRegistry, parseProgram };
+const SEMANTIC_INPUT_DOMAIN = Buffer.from(
+  "galerina.assurance-semantic.authoritative-inputs.v1\0",
+  "utf8",
+);
+
+function u64(value) {
+  const bytes = Buffer.alloc(8);
+  bytes.writeBigUInt64BE(BigInt(value));
+  return bytes;
+}
+
+function expectedAuthoritativeInputsDigest(root, paths) {
+  const entries = paths.map((path) => ({
+    pathBytes: Buffer.from(path, "utf8"),
+    value: readFileSync(join(root, ...path.split("/"))),
+  })).sort((left, right) => Buffer.compare(left.pathBytes, right.pathBytes));
+  const hash = createHash("sha256").update(SEMANTIC_INPUT_DOMAIN);
+  for (const entry of entries) {
+    hash.update(u64(entry.pathBytes.length));
+    hash.update(entry.pathBytes);
+    hash.update(u64(entry.value.length));
+    hash.update(entry.value);
+  }
+  return hash.digest("hex");
+}
 
 function write(root, relativePath, content) {
   const path = join(root, relativePath);
@@ -198,7 +224,8 @@ describe("semantic coverage derivation", () => {
   it("admits only parser-proven routes and conserves package, test and executable facts", async () => {
     const root = fixture();
     try {
-      const report = accepted(await derive(root));
+      const result = await derive(root);
+      const report = accepted(result);
       assert.equal(report.totals.routes, 1);
       assert.equal(report.totals.packages, 2);
       assert.equal(report.totals.tests, 3);
@@ -213,8 +240,70 @@ describe("semantic coverage derivation", () => {
           kind: "route",
           evidencePath: "packages-galerina/galerina-alpha/src/api.fungi",
           line: 2,
+          method: "GET",
+          path: "/health",
+          flowName: "health",
+          parserProvenance: "canonical-fungi-ast",
         }],
       );
+      assert.deepEqual(
+        report.nodes.find((node) => node.id === "package:galerina-alpha"),
+        {
+          id: "package:galerina-alpha",
+          kind: "package",
+          evidencePath: "packages-galerina/galerina-alpha/package.json",
+          declaredFanIn: 0,
+          declaredFanOut: 1,
+          derivedFanIn: 0,
+          derivedFanOut: 1,
+        },
+      );
+      assert.deepEqual(
+        report.nodes.find((node) => node.id === "test:route-positive"),
+        {
+          id: "test:route-positive",
+          kind: "test",
+          evidencePath: "scripts/tests/semantic.test.mjs",
+          class: "contract",
+          polarity: "positive",
+        },
+      );
+      assert.deepEqual(
+        report.nodes.find((node) => node.kind === "detector"),
+        {
+          id: "detector:route-provenance",
+          kind: "detector",
+          evidencePath: "scripts/tests/semantic.test.mjs",
+          ruleId: "route-provenance",
+          plantedDefectId: "route-text-must-not-enter",
+        },
+      );
+      assert.equal(
+        report.authoritativeInputsDigest,
+        expectedAuthoritativeInputsDigest(root, result.authoritativeInputPaths),
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a registry flow identity that differs from the canonical route AST", async () => {
+    const root = fixture();
+    try {
+      const hostileCompiler = {
+        parseProgram,
+        buildRouteRegistry(ast) {
+          const registry = buildRouteRegistry(ast);
+          return {
+            ...registry,
+            routes: registry.routes.map((route) => ({
+              ...route,
+              flowName: `${route.flowName}Mutated`,
+            })),
+          };
+        },
+      };
+      refused(await derive(root, { compiler: hostileCompiler }), "SEMANTIC_ROUTE_CONSERVATION");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
