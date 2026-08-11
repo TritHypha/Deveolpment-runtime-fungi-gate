@@ -74,7 +74,7 @@ test("auth: channel verdict ALLOW (+1) admits even with NO Authorization header 
     routes: [{ method: "GET", path: "/secure", handler: "secure" }],
     dispatch: { secure: () => { ran = true; return { body: { ok: true } }; } },
   });
-  const res = await k.handle(req({ method: "GET", path: "/secure", channelVerdict: 1 }));
+  const res = await k.handle(req({ method: "GET", path: "/secure", channelVerdict: 1, principalId: "principal-a" }));
   assert.equal(ran, true);            // the channel verdict (+1) authorised admission
   assert.notEqual(res.status, 401);
 });
@@ -208,7 +208,13 @@ test("invalid JSON body -> 422", async () => {
 test("handler runs ONLY after all gates pass (correct ordering)", async () => {
   const seen = [];
   const k = createAppKernel({
-    routes: [{ method: "POST", path: "/ok", handler: "ok", auth: { mode: "public" } }],
+    routes: [{ method: "POST", path: "/ok", handler: "ok", requestType: "SimpleRequest", auth: { mode: "public" } }],
+    requestValidators: {
+      SimpleRequest(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value)
+          && Object.keys(value).length === 1 && typeof value.a === "number";
+      },
+    },
     dispatch: { ok: (ctx) => { seen.push("handler"); return { status: 201, body: { echo: ctx.json } }; } },
   });
   // Missing auth on a separate required route must short-circuit BEFORE handler.
@@ -221,7 +227,7 @@ test("handler runs ONLY after all gates pass (correct ordering)", async () => {
 
   const res = await k.handle(req({
     method: "POST", path: "/ok", body: jsonBody({ a: 1 }),
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", "idempotency-key": "ok-1" },
   }));
   assert.equal(res.status, 201);
   assert.deepEqual(seen, ["handler"]);
@@ -242,7 +248,13 @@ test("handler that throws -> safe 500, no leak", async () => {
 
 test("idempotency: duplicate key -> 409", async () => {
   const k = createAppKernel({
-    routes: [{ method: "POST", path: "/pay", handler: "pay", auth: { mode: "public" } }],
+    routes: [{ method: "POST", path: "/pay", handler: "pay", requestType: "Payment", auth: { mode: "public" } }],
+    requestValidators: {
+      Payment(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value)
+          && Object.keys(value).length === 1 && typeof value.amt === "number";
+      },
+    },
     dispatch: { pay: () => ({ status: 200, body: { paid: true } }) },
   });
   const mk = () => req({

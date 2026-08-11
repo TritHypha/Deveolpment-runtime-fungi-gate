@@ -33,12 +33,12 @@ test("required scopes deny an admitted channel that lacks a route scope", async 
     dispatch: { x: () => { ran = true; return { body: { ok: true } }; } },
   });
 
-  const denied = await kernel.handle(request({ channelVerdict: 1, principalScopes: [] }));
+  const denied = await kernel.handle(request({ channelVerdict: 1, principalId: "principal-a", principalScopes: [] }));
   assert.equal(denied.status, 403);
   assert.equal(errorOf(denied), "forbidden");
   assert.equal(ran, false);
 
-  const admitted = await kernel.handle(request({ channelVerdict: 1, principalScopes: ["orders:read"] }));
+  const admitted = await kernel.handle(request({ channelVerdict: 1, principalId: "principal-a", principalScopes: ["orders:read"] }));
   assert.equal(admitted.status, 200);
   assert.equal(ran, true);
 });
@@ -174,4 +174,70 @@ test("default audit retention is a bounded ring", async () => {
   await new Promise((resolve) => setTimeout(resolve, 0));
   assert.deepEqual(sink.drained().map((event) => event.requestId), ["r1", "r2"]);
   assert.equal(sink.dropped(), 1);
+});
+
+test("JSON bodies without a closed request type refuse null and surplus input", async () => {
+  let ran = 0;
+  const kernel = createAppKernel({
+    routes: [{ method: "POST", path: "/x", handler: "x", auth: { mode: "public" } }],
+    dispatch: { x: () => { ran += 1; return { body: { ok: true } }; } },
+  });
+  for (const body of ["null", '{"amount":10,"admin":true}']) {
+    const response = await kernel.handle(request({
+      method: "POST",
+      body: enc.encode(body),
+      headers: { "content-type": "application/json", "idempotency-key": `key-${body.length}` },
+    }));
+    assert.equal(response.status, 422);
+    assert.equal(errorOf(response), "unprocessable_entity");
+  }
+  assert.equal(ran, 0);
+});
+
+test("enabled idempotency requires a bounded key before dispatch", async () => {
+  let ran = false;
+  const kernel = createAppKernel({
+    routes: [{ method: "POST", path: "/x", handler: "x", auth: { mode: "public" } }],
+    dispatch: { x: () => { ran = true; return { body: { ok: true } }; } },
+  });
+  const response = await kernel.handle(request({ method: "POST" }));
+  assert.equal(response.status, 409);
+  assert.equal(errorOf(response), "conflict");
+  assert.equal(ran, false);
+});
+
+test("authenticated rate windows are isolated by a required principal identity", async () => {
+  const kernel = createAppKernel({
+    routes: [{ method: "GET", path: "/x", handler: "x", limits: { rate: "1/minute" } }],
+    dispatch: { x: () => ({ body: { ok: true } }) },
+  });
+  const principal = (principalId) => request({ channelVerdict: 1, principalId });
+  assert.equal((await kernel.handle(principal("principal-a"))).status, 200);
+  assert.equal((await kernel.handle(principal("principal-a"))).status, 429);
+  assert.equal((await kernel.handle(principal("principal-b"))).status, 200);
+  const noIdentity = await kernel.handle(request({ channelVerdict: 1 }));
+  assert.equal(noIdentity.status, 401);
+});
+
+test("a timed-out handler retains its concurrency lease until underlying work settles", async () => {
+  let release;
+  let calls = 0;
+  const blocked = new Promise((resolve) => { release = resolve; });
+  const kernel = createAppKernel({
+    routes: [{ method: "GET", path: "/x", handler: "x", auth: { mode: "public" }, limits: { timeoutMs: 5, maxConcurrent: 1 } }],
+    dispatch: {
+      x: async () => {
+        calls += 1;
+        if (calls === 1) await blocked;
+        return { body: { ok: true } };
+      },
+    },
+  });
+
+  assert.equal((await kernel.handle(request({ requestId: "first" }))).status, 504);
+  assert.equal((await kernel.handle(request({ requestId: "second" }))).status, 429);
+  assert.equal(calls, 1, "a zombie handler must keep its one active-compute lease");
+  release();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal((await kernel.handle(request({ requestId: "third" }))).status, 200);
 });

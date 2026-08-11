@@ -57,6 +57,8 @@ export interface GalerinaKernelRequest {
   readonly channelVerdict?: Verdict;
   /** Exact scopes carried by the authenticated principal that produced `channelVerdict`. */
   readonly principalScopes?: readonly string[];
+  /** Stable, transport-authenticated principal identity used for per-principal budgets. */
+  readonly principalId?: string;
 }
 
 /** Safe, typed response. `body` is only present once a handler has run and encoded. */
@@ -154,9 +156,9 @@ export interface AuditEvent {
 }
 
 /**
- * Audit pipe. `emit` is synchronous and MUST NOT block — implementations queue
- * and flush off the critical path. The kernel calls it WITHOUT awaiting, so a
- * slow or failing sink can never delay (or break) the response (Tri-Pipe).
+ * Audit pipe. `emit` is synchronous and MUST NOT block: implementations accept
+ * into a bounded queue and flush off the critical path. A synchronous refusal
+ * makes a route with `runtimeReport` fail closed.
  */
 export interface AuditSink {
   emit(event: AuditEvent): void;
@@ -270,6 +272,7 @@ export type KernelErrorCode =
   | "secret_unavailable"
   | "deadline_exceeded"
   | "resource_limit_exceeded"
+  | "audit_unavailable"
   | "internal_error";
 
 const JSON_HEADERS: Readonly<Record<string, string>> = Object.freeze({
@@ -404,6 +407,7 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
   // Live concurrency counters, keyed per route. Reset as handlers settle.
   const inFlight = new Map<string, number>();
   const rateWindows = new Map<string, { count: number; resetAt: number }>();
+  const maxRateWindows = 10_000;
 
   /** Internal pipeline result: the response plus the matched policy (for audit provenance). */
   interface PipelineOutcome {
@@ -468,6 +472,13 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       } else {
         return { response: errorResponse(401, "unauthorized", "A channel/identity verdict is required (header presence is not sufficient)."), policy };
       }
+      if (
+        req.principalId === undefined ||
+        req.principalId.trim().length === 0 ||
+        new TextEncoder().encode(req.principalId).byteLength > 256
+      ) {
+        return { response: errorResponse(401, "unauthorized", "An authenticated principal identity is required."), policy };
+      }
     }
 
     if (policy.auth.scopes.length > 0) {
@@ -494,6 +505,12 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       } catch {
         return { response: errorResponse(422, "unprocessable_entity", "Body is not valid JSON."), policy };
       }
+      if (json === null) {
+        return { response: errorResponse(422, "unprocessable_entity", "JSON null is forbidden."), policy };
+      }
+      if (policy.requestType === undefined) {
+        return { response: errorResponse(422, "unprocessable_entity", "A closed request type is required for JSON bodies."), policy };
+      }
       if (policy.requestType !== undefined) {
         const validator = opts.requestValidators?.[policy.requestType];
         if (validator === undefined) {
@@ -516,7 +533,9 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
     // ── 8 idempotency ──
     if (policy.idempotency.enabled) {
       const key = header(req.headers, policy.idempotency.header);
-      if (key !== undefined) {
+      if (key === undefined || key.length === 0) {
+        return { response: errorResponse(409, "conflict", `Header '${policy.idempotency.header}' is required.`), policy };
+      } else {
         const rk = routeKey(method, path);
         let duplicate: boolean;
         try {
@@ -535,9 +554,20 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
     const rk = routeKey(method, path);
     const now = Date.now();
     const rateLimit = ratesPerMinute.get(rk) as number;
-    const window = rateWindows.get(rk);
+    const rateSubject = policy.auth.mode === "required" ? (req.principalId as string) : "public";
+    const rateKey = `${rk}\u0000${rateSubject}`;
+    const window = rateWindows.get(rateKey);
     if (window === undefined || window.resetAt <= now) {
-      rateWindows.set(rk, { count: 1, resetAt: now + 60_000 });
+      if (window !== undefined) rateWindows.delete(rateKey);
+      if (rateWindows.size >= maxRateWindows) {
+        for (const [key, candidate] of rateWindows) {
+          if (candidate.resetAt <= now) rateWindows.delete(key);
+        }
+      }
+      if (rateWindows.size >= maxRateWindows) {
+        return { response: errorResponse(429, "too_many_requests", "Rate-limit identity capacity reached."), policy };
+      }
+      rateWindows.set(rateKey, { count: 1, resetAt: now + 60_000 });
     } else if (window.count >= rateLimit) {
       return { response: errorResponse(429, "too_many_requests", `Rate limit ${rateLimit}/minute reached for '${rk}'.`), policy };
     } else {
@@ -557,6 +587,15 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       ), policy };
     }
     inFlight.set(rk, current + 1);
+    let releaseWhenHandlerSettles = false;
+    let slotReleased = false;
+    const releaseSlot = (): void => {
+      if (slotReleased) return;
+      slotReleased = true;
+      const after = (inFlight.get(rk) ?? 1) - 1;
+      if (after <= 0) inFlight.delete(rk);
+      else inFlight.set(rk, after);
+    };
 
     try {
       // ── 9.5 secrets ── (fail-closed; MUST sit inside this try so the finally still releases the
@@ -579,12 +618,15 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       let result: HandlerResult;
       const deadline = new AbortController();
       let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
+      let handlerPromise: Promise<HandlerResult> | undefined;
       try {
-        const handlerPromise = Promise.resolve(fn({
+        handlerPromise = Promise.resolve(fn({
           request: req,
           policy,
           json,
-          getSecret: (name, callback) => secretGate.getSecret(policy.secrets.require, name, callback),
+          getSecret: (name, callback) => deadline.signal.aborted
+            ? undefined
+            : secretGate.getSecret(policy.secrets.require, name, callback),
           deadlineSignal: deadline.signal,
         }));
         const timeoutPromise = new Promise<never>((_resolve, reject) => {
@@ -596,6 +638,10 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
         result = await Promise.race([handlerPromise, timeoutPromise]);
       } catch {
         if (deadline.signal.aborted) {
+          releaseWhenHandlerSettles = true;
+          if (handlerPromise !== undefined) {
+            void handlerPromise.finally(releaseSlot).catch(() => undefined);
+          }
           return { response: errorResponse(504, "deadline_exceeded", "Route execution exceeded its deadline."), policy };
         }
         // Handler faults fail closed: a safe 500, no internal detail leaks.
@@ -628,10 +674,9 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
         body === undefined ? { status, headers } : { status, headers, body };
       return { response, policy };
     } finally {
-      // Release the concurrency slot whether the handler succeeded or threw.
-      const after = (inFlight.get(rk) ?? 1) - 1;
-      if (after <= 0) inFlight.delete(rk);
-      else inFlight.set(rk, after);
+      // A timed-out handler retains its active-compute lease until its actual
+      // Promise settles. This bounds non-cooperative zombie work.
+      if (!releaseWhenHandlerSettles) releaseSlot();
     }
   }
 
@@ -654,9 +699,8 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
   }
 
   /**
-   * Public entry point. Runs the fixed pipeline, then emits the audit event on
-   * the audit pipe WITHOUT awaiting it (Tri-Pipe: audit must never block or
-   * break the response), and returns immediately.
+   * Public entry point. Runs the fixed pipeline, then synchronously enqueues the
+   * audit event. Flush remains off-path; required enqueue refusal fails closed.
    */
   async function handle(req: GalerinaKernelRequest): Promise<GalerinaKernelResponse> {
     const outcome = await runPipeline(req);
@@ -676,10 +720,14 @@ export function createAppKernel(opts: CreateAppKernelOptions): AppKernel {
       at: Date.now(),
       ...(resolvedPosture ? { resolvedPosture } : {}),
     };
+    let auditAccepted = true;
     try {
       auditSink.emit(event);
     } catch {
-      // A faulty sink must never affect the response. Swallow and move on.
+      auditAccepted = false;
+    }
+    if (!auditAccepted && policy?.audit.runtimeReport === true) {
+      return errorResponse(503, "audit_unavailable", "Required runtime audit evidence could not be accepted.");
     }
 
     return response;

@@ -63,7 +63,7 @@ const SCENARIOS = [
   { name: "public + channel ALLOW(+1) admits",      auth: { mode: "public" },                                          over: { channelVerdict: 1 } },
   { name: "public + channel DENY(-1) refuses",      auth: { mode: "public" },                                          over: { channelVerdict: -1 } },
   { name: "public + channel INDET(0) refuses",      auth: { mode: "public" },                                          over: { channelVerdict: 0 } },
-  { name: "required + channel ALLOW(+1) admits",    auth: { mode: "required" },                                        over: { channelVerdict: 1 } },
+  { name: "required + channel ALLOW(+1) admits",    auth: { mode: "required" },                                        over: { channelVerdict: 1, principalId: "principal-a" } },
   { name: "required + channel DENY(-1) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: -1 } },
   { name: "required + channel INDET(0) refuses",    auth: { mode: "required" },                                        over: { channelVerdict: 0 } },
   { name: "required + no fallback + header 401",    auth: { mode: "required" },                                        over: { headers: { authorization: "Bearer t" } } },
@@ -121,5 +121,5 @@ test("RD-0361 kernel · auth gate 6: R0 build → R1 #105-admit → R3 WASM ≡ 
   assert.equal(twinVerdict(evidence({ mode: "public" }, { channelVerdict: -1 })), "unauthorized_channel_verdict_denied", "WASM: public cannot override channel DENY");
   assert.equal((await kernelFor({ mode: "public" }).handle(req({ channelVerdict: -1 }))).status, 401, "real kernel: public cannot override channel DENY");
   assert.equal(twinVerdict(evidence({ mode: "required" }, { channelVerdict: 1 })), "admit", "WASM: an ALLOW channel verdict admits");
-  assert.notEqual((await kernelFor({ mode: "required" }).handle(req({ channelVerdict: 1 }))).status, 401, "real kernel: an ALLOW channel verdict admits");
+  assert.notEqual((await kernelFor({ mode: "required" }).handle(req({ channelVerdict: 1, principalId: "principal-a" }))).status, 401, "real kernel: an ALLOW channel verdict with identity admits");
 });

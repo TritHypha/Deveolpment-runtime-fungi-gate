@@ -65,13 +65,19 @@ test("posture 'auto' + production tightens the body ceiling (behaviour matches '
   // ~100KB valid JSON: under HARDENED (64KB) → 413; under default 'off' (256KB) → handled.
   const body = enc.encode(JSON.stringify({ pad: "x".repeat(100 * 1024) }));
   const post = (over) => ({
-    routes: [{ method: "POST", path: "/up", handler: "up", auth: { mode: "public" } }],
+    routes: [{ method: "POST", path: "/up", handler: "up", requestType: "Upload", auth: { mode: "public" } }],
+    requestValidators: {
+      Upload(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value)
+          && Object.keys(value).length === 1 && typeof value.pad === "string";
+      },
+    },
     dispatch: { up: () => ({ body: { ok: true } }) },
     ...over,
   });
   const prod = createAppKernel(post({ posture: "auto", env: "production" }));
   const dev = createAppKernel(post({ posture: "auto", env: "development" }));
-  const hdrs = { "content-type": "application/json" };
+  const hdrs = { "content-type": "application/json", "idempotency-key": "upload-1" };
   const r1 = await prod.handle(req({ method: "POST", path: "/up", body, headers: hdrs }));
   const r2 = await dev.handle(req({ method: "POST", path: "/up", body, headers: hdrs }));
   assert.equal(r1.status, 413); // hardened 64KB ceiling rejects

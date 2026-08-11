@@ -28,19 +28,25 @@ const tick = () => new Promise((r) => setTimeout(r, 0));
 
 // ── posture (item 1) ── posture 'on' tightens the body ceiling enforced by the kernel.
 test("posture 'on' tightens kernel body ceiling (256KB default -> 64KB hardened)", async () => {
-  const routes = [{ method: "POST", path: "/up", handler: "up", auth: { mode: "public" } }];
+  const routes = [{ method: "POST", path: "/up", handler: "up", requestType: "Upload", auth: { mode: "public" } }];
   const dispatch = { up: () => ({ status: 200, body: { ok: true } }) };
+  const requestValidators = {
+    Upload(value) {
+      return value !== null && typeof value === "object" && !Array.isArray(value)
+        && Object.keys(value).length === 1 && typeof value.pad === "string";
+    },
+  };
 
   // A ~100KB VALID JSON body: under the 256KB default ceiling, but over the 64KB hardened ceiling.
   const body = jsonBody({ pad: "x".repeat(100 * 1024) });
   assert.ok(body.byteLength > 64 * 1024 && body.byteLength < 256 * 1024);
-  const headers = { "content-type": "application/json" };
+  const headers = { "content-type": "application/json", "idempotency-key": "upload-1" };
 
-  const kOff = createAppKernel({ routes, dispatch, posture: "off" });
+  const kOff = createAppKernel({ routes, dispatch, requestValidators, posture: "off" });
   const rOff = await kOff.handle(req({ method: "POST", path: "/up", body, headers }));
   assert.equal(rOff.status, 200); // default ceiling admits 100KB
 
-  const kOn = createAppKernel({ routes, dispatch, posture: "on" });
+  const kOn = createAppKernel({ routes, dispatch, requestValidators, posture: "on" });
   const rOn = await kOn.handle(req({ method: "POST", path: "/up", body, headers }));
   assert.equal(rOn.status, 413); // hardened ceiling rejects the same 100KB body
 });
@@ -145,8 +151,8 @@ test("a slow audit sink does NOT delay handle()'s response", async () => {
   assert.ok(sinkFinishedAt >= responseResolvedAt, "sink finished at or after the response resolved");
 });
 
-// A sink that THROWS synchronously inside emit() must not break the response either (fail-open audit).
-test("a throwing audit sink does not break the response", async () => {
+// Required audit evidence fails closed when the sink refuses synchronously.
+test("a throwing audit sink refuses a route that requires a runtime report", async () => {
   const throwingSink = {
     emit() { throw new Error("audit backend on fire"); },
   };
@@ -157,8 +163,8 @@ test("a throwing audit sink does not break the response", async () => {
   });
 
   const res = await k.handle(req({ method: "GET", path: "/health" }));
-  assert.equal(res.status, 200);
-  assert.deepEqual(JSON.parse(dec.decode(res.body)), { status: "up" });
+  assert.equal(res.status, 503);
+  assert.equal(JSON.parse(dec.decode(res.body)).error, "audit_unavailable");
 });
 
 // The default sink (no auditSink option) is wired and does not affect responses.
