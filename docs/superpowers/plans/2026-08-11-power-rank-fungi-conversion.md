@@ -29,13 +29,13 @@
 - Consumes: existing compiler exports, `power-governor.fungi`, and the private TypeScript source shape.
 - Produces: a test contract requiring `powerRank(String) -> Int` and exact canonical/hostile vectors.
 
-- [ ] **Step 1: Add the missing-export assertion before changing Fungi**
+- [x] **Step 1: Add the missing-export assertion before changing Fungi**
 
 ```js
 assert.equal(typeof X.powerRank, "function", "powerRank admitted (R1)");
 ```
 
-- [ ] **Step 2: Define an independent bounded vector family**
+- [x] **Step 2: Define an independent bounded vector family**
 
 ```js
 const POWER_RANK_VECTORS = Object.freeze([
@@ -50,7 +50,7 @@ const POWER_RANK_VECTORS = Object.freeze([
 ]);
 ```
 
-- [ ] **Step 3: Run the focused test and retain the intended RED**
+- [x] **Step 3: Run the focused test and retain the intended RED**
 
 Run:
 
@@ -70,7 +70,7 @@ Expected: FAIL only because the `powerRank` export is absent.
 - Consumes: one admitted `String`.
 - Produces: one deterministic `Int` rank with a terminal `-1` non-member exit.
 
-- [ ] **Step 1: Add the minimal pure flow**
+- [x] **Step 1: Add the minimal pure flow**
 
 ```fungi
 pure flow powerRank(kernel: String) -> Int
@@ -83,20 +83,20 @@ contract { intent { "Map a kernel tier name to its fixed power rank; return -1 f
 }
 ```
 
-- [ ] **Step 2: Exercise typed interpretation and signed Wasm**
+- [x] **Step 2: Exercise typed interpretation and signed Wasm**
 
 For every `POWER_RANK_VECTORS` row, call `executeFlow` with a typed String and
 call the admitted `X.powerRank` with the host-interned String. Require the same
 `Int` result from both surfaces.
 
-- [ ] **Step 3: Anchor production ordering**
+- [x] **Step 3: Anchor production ordering**
 
 Instantiate `PowerGovernor` and compare `requestAdjustment` over all three
 target tiers at NOMINAL, THROTTLED, and SAFETY readings. Require the public
 decision to equal `targetRank >= permittedRank` using the independent vector
 table.
 
-- [ ] **Step 4: Run strict and package checks**
+- [x] **Step 4: Run strict and package checks**
 
 ```powershell
 node galerina.mjs check packages-galerina/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi --strict-types --strict-governance
@@ -115,23 +115,23 @@ Expected: all commands exit 0 with no skipped candidate test.
 - Consumes: exact `power-governor.fungi` bytes and independent SLIDE at `ac8a0418`.
 - Produces: one physical reference-only `.slide` export and independently verified typed Int receipts.
 
-- [ ] **Step 1: Compile one checked-Fungi package export**
+- [x] **Step 1: Compile one checked-Fungi package export**
 
 Use package identity `@galerina/core-sentinel-power`, export name and source
 flow `powerRank`, version `1.0.0-beta.2`, no dependencies/resources, and the
 existing all-allow non-production reference gate fixture.
 
-- [ ] **Step 2: Publish, re-admit, and execute all vectors**
+- [x] **Step 2: Publish, re-admit, and execute all vectors**
 
 Require `SUCCEEDED_PHYSICAL_REFERENCE_ONLY`, `SAFE_VALUE_TYPE_IDS.int`, an
 independently verified receipt, and the exact expected rank for every vector.
 
-- [ ] **Step 3: Prove refusal boundaries**
+- [x] **Step 3: Prove refusal boundaries**
 
 Require refusal for `[]`, `[1]`, `["native", "extra"]`, an unpaired surrogate,
 mutated source bytes, and a one-byte physical `.slide` mutation.
 
-- [ ] **Step 4: Run with an explicit SLIDE root and zero skips**
+- [x] **Step 4: Run with an explicit SLIDE root and zero skips**
 
 ```powershell
 $env:GALERINA_SLIDE_REPO=(Resolve-Path '..\SLIDE').Path
@@ -153,14 +153,14 @@ Expected: 1/1 pass, zero skips.
 - Consumes: focused compiler/Wasm and physical SLIDE/VOK evidence.
 - Produces: one registered non-retiring conversion record with fresh graphs and indexes.
 
-- [ ] **Step 1: Register the physical test**
+- [x] **Step 1: Register the physical test**
 
 Add `scripts/tests/power-rank-fungi-slide.integration.test.mjs` once to both the
 `tests:tooling` command and subject lists; raise `expectedCount` from 105 to
 106. Run the tooling-contract and manifest-focused tests only, not the full
 tooling process.
 
-- [ ] **Step 2: Record exact evidence and authority limits**
+- [x] **Step 2: Record exact evidence and authority limits**
 
 Write source/candidate hashes, build points, vectors, command results, and the
 reference-only/non-retirement boundary in the report and current TODO/roadmap.

@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Fourth physical TypeScript-to-Fungi conversion slice - 2026-08-11
+
+- [x] Translate the sentinel-power package's private, deterministic
+  `powerRank` decision from `power-governor.ts` into the existing package-owned
+  `src/self-hosted/power-governor.fungi`. The pure flow preserves the exact
+  `native -> 0`, `simd -> 1`, `shadow -> 2`, non-member `-> -1` mapping and
+  contains no null, NaN, `else if`, exception syntax, `for` or `loop`.
+- [x] Prove eight canonical and hostile String vectors through typed
+  interpretation and signed/admitted Wasm, and compare the existing public
+  `PowerGovernor.requestAdjustment` decision at all three power states. Strict
+  checking reports **0 errors / 0 governance warnings**; the focused proof is
+  **1/1** and the sentinel-power package is **18/18** with zero skips.
+- [x] Compile the exact Fungi bytes through clean SLIDE `ac8a041`, publish one
+  physical `.slide`, independently re-admit it through VOK, execute all eight
+  vectors, and refuse wrong typed arguments, an unpaired surrogate, source
+  mutation and a one-byte physical artifact mutation (**1/1**, zero skips).
+- [ ] Refresh the fourth slice's generated owners and indexes through their
+  bounded checks. Full tooling and normal phase-close remain deliberately
+  excluded because the prior isolated tooling process coincided with the host
+  crash; repository-wide closure is therefore **UNKNOWN**, not green.
+- [x] Keep `power-governor.ts`, `powerRank`, `PowerGovernor.requestAdjustment`
+  and every consumer active. This is a reference-only conversion proof and
+  grants no consumer-switch, bootstrap, production, hardware, release or
+  retirement authority.
+
 ### Third physical TypeScript-to-Fungi conversion slice - 2026-08-11
 
 - [x] Translate the compiler's private, deterministic `isCompatibleType`

@@ -60,6 +60,22 @@ every normal phase-close blocking gate green in **704.8s**. This remains a
 non-retiring physical proof, not release, production, bootstrap-fixpoint or
 TypeScript-retirement authority.
 
+Fourth physical conversion slice 2026-08-11: the sentinel-power package's
+private `powerRank` decision in `power-governor.ts` now has an exact package-
+owned pure String-to-Int translation in `src/self-hosted/power-governor.fungi`.
+The mapping is `native -> 0`, `simd -> 1`, `shadow -> 2`, and every other
+String `-> -1`. Strict checking reports **0 errors / 0 governance warnings**;
+all eight canonical and hostile vectors agree across typed interpretation and
+signed/admitted Wasm, the focused proof is **1/1**, and the owning package is
+**18/18** with zero skips. Clean SLIDE `ac8a041` publishes one physical
+`.slide`, independently re-admits it through VOK, executes all eight vectors,
+and refuses wrong typed arguments, an unpaired surrogate, source mutation and
+a one-byte artifact mutation (**1/1**, zero skips). The TypeScript helper and
+public caller remain active. This reference-only proof grants no consumer-
+switch, bootstrap, production, hardware, release or retirement authority.
+Repository-wide closure remains **UNKNOWN** because the crash-linked full
+tooling and normal phase-close processes are deliberately excluded.
+
 Third physical conversion slice 2026-08-11: the compiler's private
 `isCompatibleType` decision in `plugin-schema.ts` now has a package-owned pure
 String-to-Bool translation at
