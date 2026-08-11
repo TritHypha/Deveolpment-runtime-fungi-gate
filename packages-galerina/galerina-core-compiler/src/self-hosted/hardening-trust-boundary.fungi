@@ -28,3 +28,19 @@ contract { intent { "Release only a proven Allow verdict; Unknown and Deny remai
     if: { return true }
   }
 }
+
+pure flow trustName(trust: Verdict) -> String
+contract { intent { "Name every closed K3 trust state without coercion or fallthrough." } }
+{
+  check(trust) {
+    deny: { return "Refuted" }
+    ambig: { return "Unverified" }
+    if: { return "Trusted" }
+  }
+}
+
+pure flow refute() -> Verdict
+contract { intent { "Return the sticky hard-negative trust state." } }
+{
+  return Verdict.Deny
+}

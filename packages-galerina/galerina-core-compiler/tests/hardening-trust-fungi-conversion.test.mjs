@@ -11,8 +11,11 @@ import {
   checkEffects,
   combineTrust,
   emitGIR,
+  executeFlow,
   parseProgram,
+  refute,
   renderWAT,
+  trustName,
 } from "../dist/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -41,6 +44,11 @@ const RELEASE = Object.freeze([
   Object.freeze([0, false]),
   Object.freeze([1, true]),
 ]);
+const NAMES = Object.freeze([
+  Object.freeze([-1, "Refuted"]),
+  Object.freeze([0, "Unverified"]),
+  Object.freeze([1, "Trusted"]),
+]);
 
 async function compileCandidate() {
   assert.ok(existsSync(SOURCE), "the package-owned hardening trust Fungi asset must exist");
@@ -66,7 +74,7 @@ async function compileCandidate() {
   assert.equal(assembled.valid, true, JSON.stringify(assembled.diagnostics));
   assert.deepEqual(assembled.diagnostics, []);
   const instance = await WebAssembly.instantiate(assembled.wasm, {});
-  return instance.instance.exports;
+  return { exports: instance.instance.exports, program };
 }
 
 describe("compiler package-owned Fungi hardening trust boundary", () => {
@@ -81,9 +89,11 @@ describe("compiler package-owned Fungi hardening trust boundary", () => {
   });
 
   it("matches the literal K3 conjunction and fail-closed release tables", async () => {
-    const fungi = await compileCandidate();
+    const { exports: fungi, program } = await compileCandidate();
     assert.equal(typeof fungi.combineTrust, "function");
     assert.equal(typeof fungi.boundaryTrusted, "function");
+    assert.equal(typeof fungi.trustName, "function");
+    assert.equal(typeof fungi.refute, "function");
 
     for (const [left, right, expected] of CONJUNCTION) {
       assert.equal(combineTrust(left, right), expected, `TypeScript combineTrust(${left},${right})`);
@@ -93,6 +103,28 @@ describe("compiler package-owned Fungi hardening trust boundary", () => {
       assert.equal(boundaryTrusted(trust), expected, `TypeScript boundaryTrusted(${trust})`);
       assert.equal(Boolean(fungi.boundaryTrusted(trust)), expected, `Fungi boundaryTrusted(${trust})`);
     }
+    for (const [trust, expected] of NAMES) {
+      assert.equal(trustName(trust), expected, `TypeScript trustName(${trust})`);
+      const interpreted = await executeFlow(
+        "trustName",
+        new Map([["trust", { __tag: "verdict", value: trust }]]),
+        program.ast,
+        program.flows,
+      );
+      assert.deepEqual(
+        interpreted.value,
+        { __tag: "string", value: expected },
+        `Fungi trustName(${trust})`,
+      );
+    }
+    assert.equal(refute(), -1, "TypeScript refute() must remain the sticky hard negative");
+    assert.equal(fungi.refute(), refute(), "Fungi WAT refute() must exactly match TypeScript");
+    const interpretedRefute = await executeFlow("refute", new Map(), program.ast, program.flows);
+    assert.deepEqual(
+      interpretedRefute.value,
+      { __tag: "verdict", value: refute() },
+      "Fungi interpreted refute() must exactly match TypeScript",
+    );
 
     assert.deepEqual(TRITS, [-1, 0, 1]);
   });
