@@ -1,19 +1,19 @@
 # Hardening trust-boundary Fungi conversion dossier
 
 Date: 2026-08-11
-Status: `PHYSICAL_REFERENCE_SLICE_PROVED_NON_RETIRING`
+Status: `PHYSICAL_EXTENSION_PROVED_CLOSURE_PENDING`
 Authority: non-retiring compiler-reference slice; TypeScript remains the executing bootstrap and differential reference.
 
 ## Pinned source
 
-- Repository source build point: `2a49bc8996bf28913705bc4e4d76abb3c4429ffb`.
+- Extension build point: `2cc651c36c21a84237b7ca061afcdfd9cc0bcec4`.
 - Source: `packages-galerina/galerina-core-compiler/src/hardening-residency.ts`.
 - Source SHA-256: `94f7201206ca406d3d7768dfaab781e78e160a2ad9b550a9ccafabba4fd17ad8`.
 - Runtime: Node `v24.18.0`; npm `12.0.2`.
-- Slice: `combineTrust` and `boundaryTrusted` only.
+- Slice: `combineTrust`, `boundaryTrusted`, `trustName` and `refute` only.
 - Candidate: `packages-galerina/galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi`.
-- Candidate SHA-256: `86c831621c09ce6829c87cb9c4fd9c12110f59198e15b26e413d154fa7bf4fbb`.
-- Excluded: `trustName`, `refute`, `dischargeTrust`, `spillRetype`, every residency derivation/reconciliation function, diagnostics, fingerprints and host-capability behavior.
+- Candidate SHA-256: `ee2c69cf294d793087da0dab3385f5bfbe3cbc8cea455df0525226941bfd7fb0`.
+- Excluded: `dischargeTrust`, `spillRetype`, every residency derivation/reconciliation function, diagnostics, fingerprints and host-capability behavior.
 
 The codebase-memory graph refused its required refresh with `Transport closed`,
 so graph freshness remains `UNKNOWN`. The fresh Myco index plus exact source
@@ -27,7 +27,9 @@ for the rest of the source file or the compiler bootstrap.
 `CompilerTrust` is the closed numeric trit `-1 | 0 | 1`: refuted/deny,
 unknown, and proven/allow. `combineTrust` returns the minimum trit, so neither
 operand can manufacture greater trust. `boundaryTrusted` returns true only for
-proven/allow; unknown and refuted both remain false.
+proven/allow; unknown and refuted both remain false. `trustName` exhaustively
+maps that domain to `Refuted`, `Unverified` and `Trusted`. `refute` always
+returns the sticky hard negative.
 
 The functions are publicly re-exported from the compiler package. Current
 direct evidence callers are `hardening-residency.test.mjs` and the
@@ -46,6 +48,8 @@ exception syntax, `else if`, `for` or `loop` is present.
 |---|---|---:|---|---|---|---|
 | `a < b ? a : b` in `combineTrust` | two closed K3 trust trits | yes | exhaustive nested `check` returning K3 minimum | none | malformed trit refused before execution | source; literal nine-row table; GIR/WAT; physical receipts |
 | `trust === CompilerTrust.PROVEN` in `boundaryTrusted` | one closed K3 trust trit | yes | exhaustive `check`; only `if:` returns true | none | malformed trit refused; deny/unknown return false | source; literal three-row table; GIR/WAT; physical receipts |
+| nested conditional in `trustName` | one closed K3 trust trit | yes | exhaustive `check`; every arm returns one canonical String literal | none | malformed trit refused before execution | source; literal three-row table; interpreter/GIR/WAT; physical String receipts |
+| `refute()` constant | empty parameter list | yes | `return Verdict.Deny` | none | no partial state exists | source; interpreter/GIR/WAT; physical Verdict receipt |
 
 There is no branch fallthrough, ambient authority, error suppression or
 partial result. Every admitted K3 value reaches exactly one terminal arm.
@@ -53,30 +57,28 @@ partial result. Every admitted K3 value reaches exactly one terminal arm.
 ## Current proof
 
 - Package-owned asset and package-graph declaration: present.
-- Strict checker: zero errors and zero governance warnings across two flows and
-  two top-level declarations.
-- Canonical Galerina GIR/WAT: exact parity with literal expectations and the
-  pinned TypeScript source over all nine conjunction vectors and all three
-  boundary vectors.
+- Strict checker: zero errors and zero governance warnings across four flows and
+  four top-level declarations.
+- Canonical Galerina interpreter/GIR/WAT: exact parity with literal expectations
+  and the pinned TypeScript source over all nine conjunction vectors, all three
+  boundary vectors, all three trust-name vectors and the zero-argument
+  refutation result. The raw WAT String handle is not treated as decoded text;
+  String semantics are checked through the typed interpreter and physical
+  SLIDE envelope.
 - Owning compiler package: **6,344/6,344** tests, zero failures.
 - Independent SLIDE build point: clean `ac8a041`; no SLIDE source change was
-  required because its existing external Verdict/Bool scalar profile admits
+  required because its existing external Verdict/Bool/String scalar profile admits
   the exact signatures.
-- Physical proof: two `.slide` files are published, independently re-admitted
-  and executed through typed VOK receipts over all twelve vectors.
+- Physical proof: four `.slide` files are published, independently re-admitted
+  and executed through typed VOK receipts over all sixteen positive vectors.
 - Negative proof: source-byte mutation refuses compilation, malformed Verdict
   arguments refuse execution, both non-ALLOW boundary values remain false, and
   one-byte physical artifact mutation refuses re-admission.
 - Focused conversion surface: **3/3**, zero skips.
-- Canonical package owner: **100/100 packages and 9,556 tests** in **285.4s**,
-  zero failures; compiler **6,344/6,344**.
-- Governed tooling lane: **597 total, 585 pass, 12 intentional skips, zero
-  failures**. The hardening-trust SLIDE/VOK integration proof separately ran
-  live with zero skips; older digest-pinned SLIDE candidates retain their
-  optional skip boundary and were not rebound to a different SLIDE tool.
-- Generated-owner freshness is current. All **92/92** planned normal
-  phase-close checks pass in **767.8s** at the closure build point; the runner
-  explicitly grants no release authority.
+- Current aggregate, tooling, generated-owner and phase-close evidence is
+  intentionally pending regeneration after this extension; the prior closed
+  counts are not reused as current authority. The owning compiler is currently
+  **6,344/6,344**, zero failures in **102.2s**.
 
 ## Retirement boundary
 

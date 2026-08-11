@@ -41,20 +41,20 @@ one-byte artifact mutation. This is a reference-only, non-retiring slice: the
 TypeScript source and consumers remain active, repository retirement counts do
 not decrease, and production/signing/durability authority remains closed.
 
-Second physical conversion slice 2026-08-11: the compiler-side
-`combineTrust` and `boundaryTrusted` functions now have a package-owned typed
-`Verdict`/`Bool` translation at
+Second physical conversion slice extension 2026-08-11: the compiler-side
+`combineTrust`, `boundaryTrusted`, `trustName` and `refute` functions now have a
+package-owned typed `Verdict`/`Bool`/`String` translation at
 `galerina-core-compiler/src/self-hosted/hardening-trust-boundary.fungi`.
-Strict checking reports zero errors and warnings, canonical GIR/WAT matches the
-complete nine-row conjunction and three-row release tables, and the owning
+Strict checking reports zero errors and warnings across four flows; the typed
+interpreter plus canonical GIR/WAT match the complete nine-row conjunction,
+three-row release, three-row trust-name and zero-argument refutation tables; and the owning
 compiler package passes **6,344/6,344**. Clean SLIDE `ac8a041` required no
-source change: it builds two physical exports, independently re-admits all
-twelve VOK vectors, keeps deny and unknown closed, and refuses source,
+source change: it builds four physical exports, independently re-admits all
+sixteen positive VOK vectors, keeps deny and unknown closed, and refuses source,
 argument and physical-artifact mutations (**3/3** focused). Repository owner
-closure is current: the canonical aggregate is green at **100/100 packages and
-9,556 tests** in **285.4s**, the governed tooling lane is **597 total / 585 pass
-/ 12 intentional skips / zero failures**, and all **92/92** normal phase-close
-checks pass in **767.8s**. This remains a non-retiring physical proof, not
+closure is now pending regeneration after the extension; prior aggregate,
+tooling and phase-close counts remain historical evidence only. This remains a
+non-retiring physical proof, not
 release, production, bootstrap-fixpoint or TypeScript-retirement authority.
 
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated

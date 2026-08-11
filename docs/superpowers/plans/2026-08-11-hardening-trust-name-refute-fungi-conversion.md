@@ -13,23 +13,23 @@
 
 ## Task 1: RED compiler parity
 
-- [ ] Extend `packages-galerina/galerina-core-compiler/tests/hardening-trust-fungi-conversion.test.mjs` to require `trustName` and `refute` exports.
-- [ ] Compare `trustName` over all three Verdict values and require `refute()` to equal the TypeScript reference.
-- [ ] Run the focused test and retain the exact missing-export RED result.
+- [x] Extend `packages-galerina/galerina-core-compiler/tests/hardening-trust-fungi-conversion.test.mjs` to require `trustName` and `refute` exports.
+- [x] Compare `trustName` over all three Verdict values and require `refute()` to equal the TypeScript reference.
+- [x] Run the focused test and retain the exact missing-export RED result.
 
 ## Task 2: Exact Fungi flows
 
-- [ ] Add `trustName(trust: Verdict) -> String` using exhaustive `check` with literal results `Refuted`, `Unverified`, and `Trusted`.
-- [ ] Add `refute() -> Verdict` returning `Verdict.Deny`.
-- [ ] Run strict type/governance checking, focused compiler parity and the complete compiler package.
-- [ ] Commit only the source and focused test.
+- [x] Add `trustName(trust: Verdict) -> String` using exhaustive `check` with literal results `Refuted`, `Unverified`, and `Trusted`.
+- [x] Add `refute() -> Verdict` returning `Verdict.Deny`.
+- [x] Run strict type/governance checking, focused compiler parity and the complete compiler package.
+- [x] Commit only the source and focused test.
 
 ## Task 3: Physical SLIDE/VOK
 
-- [ ] Extend `scripts/tests/hardening-trust-fungi-slide.integration.test.mjs` to publish four exports.
-- [ ] Execute and verify all three `trustName` vectors as canonical owned String receipts and `refute` as a zero-argument Verdict receipt.
-- [ ] Require malformed Verdict input and source/artifact mutations to refuse; preserve all earlier negative vectors.
-- [ ] Run with `GALERINA_SLIDE_REPO` resolved from the sibling repository and require zero skips.
+- [x] Extend `scripts/tests/hardening-trust-fungi-slide.integration.test.mjs` to publish four exports.
+- [x] Execute and verify all three `trustName` vectors as canonical owned String receipts and `refute` as a zero-argument Verdict receipt.
+- [x] Require malformed Verdict input and source/artifact mutations to refuse; preserve all earlier negative vectors.
+- [x] Run with `GALERINA_SLIDE_REPO` resolved from the sibling repository and require zero skips.
 
 ## Task 4: Closure
 
