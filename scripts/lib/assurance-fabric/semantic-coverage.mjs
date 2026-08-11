@@ -128,9 +128,10 @@ function hashPaths(paths) {
 function createInputReader(root) {
   const selectedRoot = realpathSync(root);
   const inputs = new Map();
+  const corroboratingInputs = new Map();
   let totalBytes = 0;
 
-  function read(relativePath, missingCode = "SEMANTIC_INPUT_MISSING") {
+  function readBytes(relativePath, missingCode = "SEMANTIC_INPUT_MISSING") {
     const canonical = canonicalPath(relativePath, "input path");
     const absolutePath = resolve(selectedRoot, ...canonical.split("/"));
     const fromRoot = relative(selectedRoot, absolutePath).split(sep).join("/");
@@ -157,16 +158,25 @@ function createInputReader(root) {
     if (totalBytes > MAX_TOTAL_BYTES) {
       refuse("SEMANTIC_INPUT_BOUNDS", "semantic input corpus exceeds the total byte bound");
     }
+    return { canonical, bytes };
+  }
+
+  function record(target, canonical, bytes) {
     const digest = hashBytes(bytes);
-    const prior = inputs.get(canonical);
+    const prior = target.get(canonical);
     if (prior !== undefined && prior.digest !== digest) {
       refuse("SEMANTIC_INPUT_CHANGED", `${canonical} changed during derivation`);
     }
-    inputs.set(canonical, {
+    target.set(canonical, {
       digest,
       size: bytes.length,
       bytes: Buffer.from(bytes),
     });
+  }
+
+  function read(relativePath, missingCode = "SEMANTIC_INPUT_MISSING") {
+    const { canonical, bytes } = readBytes(relativePath, missingCode);
+    record(inputs, canonical, bytes);
     return bytes;
   }
 
@@ -185,11 +195,27 @@ function createInputReader(root) {
     }
   }
 
+  function readCorroboratingJson(relativePath, missingCode) {
+    const { canonical, bytes } = readBytes(relativePath, missingCode);
+    record(corroboratingInputs, canonical, bytes);
+    try {
+      return parseStrictJsonBytes(bytes, {
+        label: relativePath,
+        maxBytes: MAX_INPUT_BYTES,
+      });
+    } catch (error) {
+      if (error instanceof StrictJsonRefusal) {
+        refuse("SEMANTIC_INPUT_JSON", `${relativePath}: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
   function verifyReadback() {
-    const snapshot = [...inputs];
+    const snapshot = [...inputs, ...corroboratingInputs];
     totalBytes = 0;
     for (const [path, expected] of snapshot) {
-      const bytes = read(path);
+      const { bytes } = readBytes(path);
       if (bytes.length !== expected.size || hashBytes(bytes) !== expected.digest) {
         refuse("SEMANTIC_INPUT_CHANGED", `${path} changed during readback`);
       }
@@ -220,6 +246,7 @@ function createInputReader(root) {
   return Object.freeze({
     read,
     readJson,
+    readCorroboratingJson,
     verifyReadback,
     authoritativeInputsDigest,
     authoritativeInputPaths,
@@ -592,7 +619,7 @@ export async function deriveSemanticCoverage(root, options = {}) {
     ));
     const workspace = reader.readJson("galerina.workspace.json");
     const packagePaths = validateWorkspace(workspace, tracked);
-    const projectGraph = reader.readJson(
+    const projectGraph = reader.readCorroboratingJson(
       "build/graph/galerina-devtools-project-graph.json",
     );
     const packages = derivePackages(packagePaths, reader, projectGraph);

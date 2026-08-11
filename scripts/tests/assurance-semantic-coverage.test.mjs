@@ -331,6 +331,33 @@ describe("semantic coverage derivation", () => {
     }
   });
 
+  it("does not let non-semantic project-graph publication bytes churn the authority digest", async () => {
+    const root = fixture();
+    try {
+      const first = await derive(root);
+      const firstReport = accepted(first);
+      const graphPath = "build/graph/galerina-devtools-project-graph.json";
+      const graph = readJson(root, graphPath);
+      graph.generatedAt = "2026-08-11T12:34:56.000Z";
+      graph.nodes = [{ id: "generated:roadmap", kind: "document" }];
+      writeJson(root, graphPath, graph);
+
+      const second = await derive(root);
+      const secondReport = accepted(second);
+      assert.equal(
+        secondReport.authoritativeInputsDigest,
+        firstReport.authoritativeInputsDigest,
+      );
+      assert.equal(
+        second.authoritativeInputPaths.includes(graphPath),
+        false,
+        "the generated project graph is corroborating evidence, not authority bytes",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("refuses a tracked test outside a registered ownership contract", async () => {
     const root = fixture();
     try {
@@ -390,6 +417,22 @@ describe("semantic coverage derivation", () => {
       refused(await derive(root, {
         beforeInputReadback() {
           write(root, "scripts/tests/semantic.test.mjs", "// changed during derivation\n");
+        },
+      }), "SEMANTIC_INPUT_CHANGED");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a corroborating project graph changed during readback", async () => {
+    const root = fixture();
+    try {
+      refused(await derive(root, {
+        beforeInputReadback() {
+          const graphPath = "build/graph/galerina-devtools-project-graph.json";
+          const graph = readJson(root, graphPath);
+          graph.generatedAt = "2026-08-11T23:59:59.000Z";
+          writeJson(root, graphPath, graph);
         },
       }), "SEMANTIC_INPUT_CHANGED");
     } finally {
