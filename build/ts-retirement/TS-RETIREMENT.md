@@ -1,4 +1,4 @@
-# Executable-family retirement graph (1423 tracked package paths; 519 .ts-family)
+# Executable-family retirement graph (1425 tracked package paths; 519 .ts-family)
 
 Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit reads these numbers LIVE.
 
@@ -11,13 +11,13 @@ Regenerate: `node scripts/ts-retirement-graph.mjs` (graph-all 7/7). The % audit 
 
 Authority ledgers: 7 compiler + 29 governed = 36 authoritative twins.
 
-Complete executable family: 504 .ts source · 15 .d.ts · 0 .mts · 0 .cts · 892 .mjs · 12 .js · 0 .cjs.
+Complete executable family: 504 .ts source · 15 .d.ts · 0 .mts · 0 .cts · 894 .mjs · 12 .js · 0 .cjs.
 
-Terminal physical retirement: OPEN — 1423 tracked package executable-family paths remain.
+Terminal physical retirement: OPEN — 1425 tracked package executable-family paths remain.
 
-Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/114 production Fungi sources cryptographically admitted; 0/45 host boundaries owned; 95 node_modules trees.
+Post-SLIDE authority: OPEN — 2 non-authorizing candidate(s); 0/116 production Fungi sources cryptographically admitted; 0/45 host boundaries owned; 95 node_modules trees.
 
-`.fungi` in src trees: 114 across 95 packages · staged-index drift: 0
+`.fungi` in src trees: 116 across 95 packages · staged-index drift: 0
 
 ## Twinned .ts (the #143 flip queue)
 - packages-galerina/galerina-core-compiler/src/effect-checker.ts

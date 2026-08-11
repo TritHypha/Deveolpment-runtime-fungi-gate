@@ -3,41 +3,41 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 114
-- Flows: 824
-- Bytes: 1116585
-- Retirement graph: `sha256:8d7dc890dd18ed1f715923801e93fbaec354717d3b44cd595fc241fe370e61e5`
+- Files: 116
+- Flows: 826
+- Bytes: 1117850
+- Retirement graph: `sha256:7525102a21ea2954b53e63d5476846e5b10cd708f1ff963060ff8fcc1fac65ef`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18847 |
+| `identifier` | 18863 |
 | `callExpr` | 7231 |
-| `binaryExpr` | 6018 |
+| `binaryExpr` | 6034 |
 | `numberLiteral` | 5703 |
-| `block` | 4967 |
-| `stringLiteral` | 4790 |
+| `block` | 4985 |
+| `stringLiteral` | 4806 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2947 |
-| `paramDecl` | 2774 |
-| `typeRef` | 2438 |
-| `ifStmt` | 2244 |
+| `returnStmt` | 2965 |
+| `paramDecl` | 2777 |
+| `typeRef` | 2443 |
+| `ifStmt` | 2260 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1854 |
-| `boolLiteral` | 1556 |
+| `boolLiteral` | 1574 |
 | `matchArm` | 1207 |
 | `contractDecl` | 823 |
 | `intentDecl` | 823 |
-| `pureFlowDecl` | 812 |
+| `pureFlowDecl` | 814 |
 | `mutDecl` | 810 |
 | `matchExpr` | 371 |
 | `whileStmt` | 340 |
 | `checkArm` | 306 |
 | `unaryExpr` | 249 |
 | `recordDecl` | 206 |
+| `program` | 116 |
 | `listLiteral` | 115 |
-| `program` | 114 |
 | `checkExpr` | 102 |
 | `trapDecl` | 50 |
 | `importDecl` | 22 |
@@ -59,8 +59,8 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 524 |
-| `String` | 419 |
-| `Bool` | 380 |
+| `String` | 422 |
+| `Bool` | 382 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -344,7 +344,7 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1830 |
+| `==` | 1846 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 747 |

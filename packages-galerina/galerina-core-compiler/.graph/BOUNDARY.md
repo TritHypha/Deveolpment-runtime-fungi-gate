@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 176 |
+| Files | 178 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -61,6 +61,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/compiler.capabilities.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/gir-emitter.fungi`
+- `src/self-hosted/governance-qualifier-escalation.fungi`
 - `src/self-hosted/governance-verifier.fungi`
 - `src/self-hosted/hardening-trust-boundary.fungi`
 - `src/self-hosted/lexer.fungi`
@@ -119,6 +120,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/slide-vok-authority-types.fungi`
 - `src/self-hosted/type-checker.fungi`
 - `src/self-hosted/verified-loop-envelope.fungi`
+- `src/self-hosted/wat-64-bit-type.fungi`
 
 ## Allowed Orphans
 _none declared_
