@@ -132,6 +132,7 @@ function installEvidence(root, head) {
       : {};
     write(root, node.provenancePath, `${JSON.stringify({
       tool: node.expectedTool,
+      authority: "NONE",
       gitCommit: head,
       builtAt: "2026-08-10T00:00:00.000Z",
       node: process.version,
@@ -201,9 +202,9 @@ test("roadmap subway preflights and checks every selected-root output", () => {
     assert.equal(existsSync(svg), true);
     assert.equal(existsSync(provenance), true);
     assert.match(readFileSync(readme, "utf8"), /Tracking registry \(1\)/);
-    assert.match(readFileSync(readme, "utf8"), /Assurance DAG: CURRENT/);
+    assert.match(readFileSync(readme, "utf8"), /Assurance DAG: UNKNOWN/);
     assert.match(readFileSync(svg, "utf8"), /Workstream/);
-    assert.match(readFileSync(svg, "utf8"), /Assurance DAG: CURRENT/);
+    assert.match(readFileSync(svg, "utf8"), /Assurance DAG: UNKNOWN/);
     assert.equal(run(harness, selected, ["--check"]).status, 0);
 
     writeFileSync(svg, "tampered\n");
@@ -280,9 +281,10 @@ test("roadmap provenance is exact and stable across its own output-only commits"
     assert.equal(generated.status, 0, `${generated.stdout}\n${generated.stderr}`);
     const published = JSON.parse(readFileSync(provenancePath, "utf8"));
     assert.equal(published.schemaVersion, 1);
+    assert.equal(published.authority, "NONE");
     assert.equal(published.gitCommit, sourceCommit);
     assert.match(published.authoritativeInputsDigest, /^[0-9a-f]{64}$/u);
-    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: CURRENT/);
+    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: UNKNOWN/);
 
     assert.equal(spawnSync("git", ["add", "--",
       "README.md",
@@ -301,7 +303,7 @@ test("roadmap provenance is exact and stable across its own output-only commits"
       `${afterOutputCommit.stdout}\n${afterOutputCommit.stderr}`,
     );
     assert.deepEqual(JSON.parse(readFileSync(provenancePath, "utf8")), published);
-    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: CURRENT/);
+    assert.match(readFileSync(svgPath, "utf8"), /Assurance DAG: UNKNOWN/);
 
     const ledgerPath = join(selected, "docs/security/rd0361-authoritative-twins.json");
     writeFileSync(ledgerPath, JSON.stringify({ twins: [{ file: "changed-memory.fungi" }] }));

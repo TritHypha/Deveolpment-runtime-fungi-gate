@@ -107,7 +107,7 @@
       "dir": "packages-galerina/galerina-framework-app-kernel/src/self-hosted",
       "tranche": "T3",
       "surface": "application-kernel authentication gate where every supplied channel verdict constrains every route",
-      "sha256": "3c6ad27e97ce1f9db83209293a9e6d2334e8a5b0a884885430b785cb0f33da5f",
+      "sha256": "e6e6d9a8241cbb8ad989ea6389e89cbf00a894ebd589295653bb5e4ef2a479b8",
       "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
       "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"

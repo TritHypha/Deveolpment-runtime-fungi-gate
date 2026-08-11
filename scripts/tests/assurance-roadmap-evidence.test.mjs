@@ -79,6 +79,7 @@ function fixture() {
       : {};
     write(root, provenancePath, `${JSON.stringify({
       tool: expectedTool,
+      authority: "NONE",
       gitCommit: head,
       builtAt: "2026-08-10T00:00:00.000Z",
       node: process.version,
@@ -90,17 +91,17 @@ function fixture() {
 }
 
 describe("roadmap assurance dependency derivation", () => {
-  it("returns one non-authorizing current aggregate over every exact predecessor", () => {
+  it("returns one non-authorizing unknown aggregate over exact informational predecessors", () => {
     const { root } = fixture();
     try {
       const result = deriveRoadmapEvidence(root);
       assert.equal(result.kind, "accepted", JSON.stringify(result));
-      assert.equal(result.value.verdictTrit, 1);
+      assert.equal(result.value.verdictTrit, 0);
       assert.deepEqual(result.value.roots, ["roadmap-subway"]);
       assert.equal(result.value.authorizing, false);
       assert.equal(result.value.nodes.length, UPSTREAM.length + 1);
       assert.equal(result.value.edges.length, UPSTREAM.length);
-      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 1);
+      assert.equal(result.value.nodes.find((node) => node.id === "roadmap-subway").effectiveTrit, 0);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -115,7 +116,7 @@ describe("roadmap assurance dependency derivation", () => {
       assert.equal(deriveRoadmapEvidence(root).value.verdictTrit, 0);
       const stable = deriveRoadmapEvidence(root, { repositoryBuildPoint: head });
       assert.equal(stable.kind, "accepted", JSON.stringify(stable));
-      assert.equal(stable.value.verdictTrit, 1);
+      assert.equal(stable.value.verdictTrit, 0);
 
       let invoked = false;
       const proxy = new Proxy({}, {

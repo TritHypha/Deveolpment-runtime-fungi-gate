@@ -77,7 +77,7 @@ environment or process authority fails the tranche. App-kernel result:
 | Twin | bytes | SHA-256 | deterministic stdlib imports |
 |---|---:|---|---|
 | `fuse-admission` | 597 | `3290d0913fa7694c4b6f907ac2644d6d2e1b26a730d6969d604c81bf528b49fb` | string equality |
-| `kernel` | 150 | `3c6ad27e97ce1f9db83209293a9e6d2334e8a5b0a884885430b785cb0f33da5f` | string equality |
+| `kernel` | 126 | `e6e6d9a8241cbb8ad989ea6389e89cbf00a894ebd589295653bb5e4ef2a479b8` | string equality |
 | `package-admission` | 562 | `a725b0ae366e64beebf188f7793f28cb5814d0199c4f2dc0393ac2b274a7b113` | string equality |
 | `registry-index` | 479 | `99796c089eb1a88961ed6ca2766b3d7ec91ab6fa083b378027267ec4280a61e0` | string equality |
 | `route-defaults` | 408 | `b7a27319ea50bfd09525ab151a33851fd2717137a6e2c101b4ed4fdcd8780bff` | string equality |
@@ -96,6 +96,13 @@ removes only the application-credential requirement and cannot override a
 configured channel refusal. The complete differential covers public routes
 with absent, ALLOW, INDETERMINATE and DENY channel evidence; the app-kernel and
 real HTTPS suites pass before this new deterministic hash is admitted.
+
+On 2026-08-11 the same twin was re-baselined again after the owner-approved
+zero-trust authentication fix removed header-presence fallback from required
+routes. The Fungi ABI no longer accepts a header-presence input: absent channel
+authority now refuses directly. The deterministic 126-byte artifact has zero
+ambient imports and independently passes signed #105 admission before its new
+hash is recorded above.
 
 ## Result
 

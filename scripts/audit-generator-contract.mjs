@@ -153,6 +153,7 @@ for (const output of outputs) {
   const value = output.endsWith("provenance.json")
     ? {
         tool: "selftest-generator",
+        authority: "NONE",
         gitCommit: "a".repeat(40),
         builtAt: "2026-07-29T10:00:00.000Z",
         node: process.version,

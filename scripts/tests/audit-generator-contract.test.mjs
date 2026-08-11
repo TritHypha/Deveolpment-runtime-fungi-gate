@@ -49,9 +49,10 @@ for (const output of outputs) {
   const path = join(process.cwd(), output);
   mkdirSync(dirname(path), { recursive: true });
   const value = output.endsWith("provenance.json")
-    ? {
-        tool: "fake-generator",
-        gitCommit: "a".repeat(40),
+      ? {
+          tool: "fake-generator",
+          authority: "NONE",
+          gitCommit: "a".repeat(40),
         builtAt: "2026-07-29T10:00:00.000Z",
         node: process.version,
       }

@@ -119,7 +119,7 @@
       "identity": "@galerina/auth",
       "version": "1.0.0-beta.2",
       "directory": "galerina-auth",
-      "contentDigest": "9c0cb9704b965437322c60d461c0deb00805d446a983f209d1abf1e473e5a4c5",
+      "contentDigest": "90b93a235e7477fea1acb7cb7f04bc453d5c4b1a771616e17ddc094e32285bfd",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -191,7 +191,7 @@
       "identity": "@galerina/core-compiler",
       "version": "1.0.0-beta.2",
       "directory": "galerina-core-compiler",
-      "contentDigest": "378e24ed546f833e2b09fd563575aadebe2e80a84ca52d5b7168bf7455529735",
+      "contentDigest": "f072889fdb0f43d0b540bfafed24b461d66626cfdeb5aa88da57c779e70c67ac",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -994,7 +994,7 @@
       "identity": "@galerina/devtools-benchmarks",
       "version": "1.0.0-beta.2",
       "directory": "galerina-devtools-benchmarks",
-      "contentDigest": "8763203bb852b8fe87b525e7685b61e84828ffde6f02150f2b9fa38816860136",
+      "contentDigest": "469141b4759ea21a5fb0428104353fd72d5e6e894cec93a60684a5cd024b4474",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1559,7 +1559,7 @@
       "identity": "@galerina/ext-secrets-spore",
       "version": "1.0.0-beta.2",
       "directory": "galerina-ext-secrets-spore",
-      "contentDigest": "294cfbaee9354c12440cf3a1fca7ec27e03eea8c34f48df42357483985d63cfb",
+      "contentDigest": "dcbf694ee4250f39518d8712afa5dffed3850132388749ddbde75889528b1df8",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1593,7 +1593,7 @@
       "identity": "@galerina/ext-secrets-vault",
       "version": "1.0.0-beta.2",
       "directory": "galerina-ext-secrets-vault",
-      "contentDigest": "7e143e829b3e5090fbab1cd85e9b08df9157db6b1af60e517c73d61182d857a0",
+      "contentDigest": "ecd978f83fef6c011df4dac74158a271037d62d0ac781fab6067255a7406cfe7",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1675,7 +1675,7 @@
       "identity": "@galerina/framework-api-server",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-api-server",
-      "contentDigest": "c3e2309309af67eaf1f2b862a49bfc3608e4708d9d5246c0e944b6f1a829155e",
+      "contentDigest": "48bc0e68a1d66593cd5765955bf5796143b30e40c0344d93164386f07076ff73",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1709,7 +1709,7 @@
       "identity": "@galerina/framework-app-kernel",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-app-kernel",
-      "contentDigest": "e55e93ecc7238109bdac4b947f05500538def2b4fc09e345f7f5795190307446",
+      "contentDigest": "962030204535c3b4d65f6a289019dc5d17cdae8b973a951862426d56ecee900e",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1738,7 +1738,7 @@
       "identity": "@galerina/framework-example-app",
       "version": "1.0.0-beta.2",
       "directory": "galerina-framework-example-app",
-      "contentDigest": "cdcdc2841b7bb807ef60249c945872521cefc7be1a2065cb14fe456d6488046c",
+      "contentDigest": "561d7098e6bf23cd19d7ff81eb136684611173e810f30b066bc23f4d2feeb706",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -1863,7 +1863,7 @@
       "identity": "@galerina/registry",
       "version": "1.0.0-beta.2",
       "directory": "galerina-registry",
-      "contentDigest": "0eaa013575fa60f6da98eb8530f81247a8686169cd875a424defb5861d91ec6f",
+      "contentDigest": "7fa75075abc278edacab7a9264d38014e5728057dbf82bb38f9e76bd9f0c01f3",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -2100,7 +2100,7 @@
       "identity": "@galerina/tower-citizen",
       "version": "1.0.0-beta.2",
       "directory": "galerina-tower-citizen",
-      "contentDigest": "99af7b6d0ab8c20a70e447767598b8d8374d4731b3282d05b2f08cef6704ba36",
+      "contentDigest": "26eae2082f01f456f87ab531e1c4238bd470c1cda816e27a0ace1094d6e523eb",
       "manifestDigests": [
         {
           "path": "package.json",
@@ -3268,5 +3268,5 @@
       ]
     }
   ],
-  "rootDigest": "e1d5f2c3c87f7288d77e8b47f9e3a5aa831f5452636d11ed8cd5b85d54c69c6e"
+  "rootDigest": "168d41b3e73f2c9e1fc904bc5f29320493efae1b90b7c3ae9ecac5d80b9ed7fb"
 }
