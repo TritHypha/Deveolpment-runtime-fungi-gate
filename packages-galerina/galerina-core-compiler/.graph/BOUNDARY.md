@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 175 |
+| Files | 176 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -65,6 +65,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/hardening-trust-boundary.fungi`
 - `src/self-hosted/lexer.fungi`
 - `src/self-hosted/parser.fungi`
+- `src/self-hosted/plugin-type-compatibility.fungi`
 - `src/self-hosted/runtime.fungi`
 - `src/self-hosted/slide-checked-decision-frontend.fungi`
 - `src/self-hosted/slide-gfrontend-checked-snapshot.fungi`
