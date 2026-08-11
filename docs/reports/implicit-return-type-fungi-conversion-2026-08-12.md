@@ -29,10 +29,15 @@ Boolean decisions. It contains no `null`, `NaN`, `else if`, `throw`,
 | Independent SLIDE build point | `dc1add78215cfce2b5d23fcf194076b56501fa53` |
 | SLIDE registry | `slide.registry.executable-gir.v2c-immutable-text-trim.v1` |
 | Registry descriptor digest | `15b25801228797c2f0c5230f4b8d5c3e03bd5bdd8d0451281d380801656641ef` |
+| Galerina source/evidence commit | `37ccee7b` |
+| Retirement owner commit | `0b61dd68` |
+| Graph owner commit | `dd3d0ef4` |
 
 ## Verification
 
 - Complete `@galerina/devtools-naming` package lane: 17/17 pass.
+- Complete package aggregate: 100/100 packages and 9,568 tests pass in
+  274.9 seconds.
 - Focused differential proof: 2/2 pass across 15 canonical and hostile values.
 - Physical proof: 1/1 pass with zero skips. It publishes one `.slide`,
   independently re-admits it through VOK, and verifies every value as a typed
@@ -41,6 +46,11 @@ Boolean decisions. It contains no `null`, `NaN`, `else if`, `throw`,
   comparison work, source mutation, and one-byte artifact mutation all refuse.
 - The physical execution reports exact trim work equal to the input UTF-8 byte
   length and retains `authorityReleased: false`.
+- Generated graph owners pass 7/7 in both generate and check modes; semantic
+  outputs are 3/3 current with 100 packages and 897 test nodes. Retirement
+  evidence records 1,427 executable-family paths and 118 `.fungi` assets.
+- Myco indexes 4,983 files. The primary code graph is deliberately not claimed
+  current until its final forced rebuild reaches the committed closure head.
 
 ## Resolved blocker
 
@@ -56,4 +66,5 @@ re-admission. The predecessor registry refuses the opcode.
 `runNamingAudit`, the CLI, and all existing consumers remain active. This proof
 grants no consumer-switch, production, release, signing, platform, general
 String, or terminal-retirement authority. Repository-wide closure remains
-UNKNOWN until the bounded owner chain is regenerated and checked.
+UNKNOWN because the crash-linked full tooling, normal phase-close and
+whole-memory evaluation remain deliberately excluded.

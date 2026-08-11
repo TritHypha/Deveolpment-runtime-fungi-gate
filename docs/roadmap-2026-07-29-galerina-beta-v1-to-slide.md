@@ -1,6 +1,6 @@
 # Galerina beta v1 to SLIDE roadmap
 
-Date: 2026-08-11
+Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
 Current checkpoint: Galerina pins the remediated SLIDE implementation
 `ac8a041`, its **91-file** tool manifest at `e0e5dd5d...202e48`, and a closed
@@ -143,7 +143,26 @@ bootstrap, production, release or retirement authority; repository-wide
 closure remains **UNKNOWN** because crash-linked full tooling and normal
 phase-close remain excluded.
 
-Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
+Eighth physical conversion slice 2026-08-12: the naming tool's private
+`isImplicitReturnType` decision in `naming-checker.ts` now has an exact
+package-owned pure String-to-Bool translation at
+`galerina-devtools-naming/src/self-hosted/implicit-return-type.fungi`. It uses
+the closed immutable String edge-trim operation and returns true only for
+`""`, `"void"`, or `"Void"`. The real public `checkNaming` caller and typed
+Fungi interpreter agree across 15 canonical and hostile Strings (**2/2**), and
+the naming package passes **17/17**. Independent SLIDE `dc1add7` adds Contract
+83/opcode 43, passes its focused compiler/VOK/package/contract neighborhood
+**101/101**, publishes one physical `.slide`, independently re-admits it and
+verifies typed Bool receipts, while malformed arguments, work exhaustion,
+source mutation and one-byte artifact mutation refuse (**1/1**, zero skips).
+The complete Galerina package owner passes **100/100 packages and 9,568 tests**
+in **274.9s**; graph generation/check is **7/7** and semantic outputs are
+**3/3** with 897 test nodes. TypeScript and all consumers remain active. This
+reference-only proof grants no consumer-switch, production, release or
+retirement authority; crash-linked full tooling and normal phase-close remain
+excluded, so repository-wide closure remains **UNKNOWN**.
+
+Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
 

@@ -4,6 +4,40 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Eighth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the naming tool's private deterministic
+  `isImplicitReturnType` decision from `naming-checker.ts` as package-owned
+  `src/self-hosted/implicit-return-type.fungi`. It applies exact immutable
+  String edge trimming and accepts only `""`, `"void"`, or `"Void"`; the
+  source contains no null, NaN, `else if`, exception syntax, `for`, `while`,
+  or `loop`.
+- [x] Prove exact parity with the real public `checkNaming` caller across 15
+  canonical and hostile Strings (**2/2**), with the complete naming package at
+  **17/17**.
+- [x] Use independent SLIDE `dc1add7` and Contract 83 to lower exact
+  zero-argument `String.trim()` through opcode 43. The focused SLIDE
+  compiler/VOK/package/contract neighborhood passes **101/101**; forbidden
+  state and path-leak scans report zero findings.
+- [x] Publish one physical `.slide`, independently re-admit it through VOK and
+  verify every vector as a typed Bool receipt against the public TypeScript
+  caller. Wrong arguments, surplus input, an unpaired surrogate, insufficient
+  work, source mutation and one-byte artifact mutation refuse (**1/1**, zero
+  skips).
+- [x] Run the bounded complete package owner: **100/100 packages and 9,568
+  tests** pass in **274.9s**. Graph generation/check is **7/7**, semantic
+  outputs are **3/3** with **897** test nodes, retirement tracks **1,427**
+  executable-family paths and **118** `.fungi` source assets, and Myco indexes
+  **4,983 files**.
+- [ ] Finish the eighth slice's percentage/status/roadmap/count/Golden/code
+  indexes and exact primary graph rebuild. Full tooling, normal phase-close,
+  graph-all-after-roadmap and whole-memory evaluation stay excluded; until the
+  bounded owner matrix closes, repository-wide closure is **UNKNOWN**.
+- [x] Keep `naming-checker.ts`, its private TypeScript decision,
+  `checkNaming`, `runNamingAudit`, the CLI and every consumer active. This
+  reference-only proof grants no consumer-switch, production, release or
+  retirement authority.
+
 ### Seventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the compiler's private deterministic qualifier escalation table
