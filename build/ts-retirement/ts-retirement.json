@@ -20897,7 +20897,7 @@
     ]
   },
   "totals": {
-    "ts": 504,
+    "ts": 489,
     "allTrackedTs": 519,
     "allTrackedExecutable": 1417,
     "tsSource": 504,
@@ -20908,9 +20908,9 @@
     "js": 12,
     "cjs": 0,
     "twinned": 29,
-    "compilerCore": 116,
+    "compilerCore": 107,
     "floor": 17,
-    "program": 342,
+    "program": 336,
     "fungiInSrc": 111,
     "packages": 95,
     "finderDrift": 0,
@@ -20969,12 +20969,12 @@
       "fungi": 0
     },
     "galerina-core-cli": {
-      "ts": 10,
+      "ts": 9,
       "twinned": 0,
       "fungi": 0
     },
     "galerina-core-compiler": {
-      "ts": 124,
+      "ts": 115,
       "twinned": 8,
       "fungi": 59
     },
@@ -21059,7 +21059,7 @@
       "fungi": 1
     },
     "galerina-core-tasks": {
-      "ts": 9,
+      "ts": 8,
       "twinned": 0,
       "fungi": 0
     },
@@ -21164,7 +21164,7 @@
       "fungi": 0
     },
     "galerina-devtools-context": {
-      "ts": 6,
+      "ts": 5,
       "twinned": 0,
       "fungi": 0
     },
@@ -21199,7 +21199,7 @@
       "fungi": 0
     },
     "galerina-devtools-naming": {
-      "ts": 5,
+      "ts": 4,
       "twinned": 0,
       "fungi": 0
     },
@@ -21224,7 +21224,7 @@
       "fungi": 0
     },
     "galerina-devtools-security": {
-      "ts": 9,
+      "ts": 8,
       "twinned": 0,
       "fungi": 0
     },
@@ -21279,7 +21279,7 @@
       "fungi": 0
     },
     "galerina-framework-app-kernel": {
-      "ts": 23,
+      "ts": 22,
       "twinned": 8,
       "fungi": 12
     },
