@@ -195,9 +195,14 @@ counts or open items that a newer section explicitly supersedes.
   TritMesh:QL remains design-only and may not enter a shipping path until its
   six scan findings are closed or the affected material is explicitly excluded.
 - [ ] Rerun the four security scopes, the complete **100-package** lane and
-  exhaustive phase-close after remediation. Conversion begins only when every
-  required gate is green in one current custody state; no green repository
-  result grants production authority.
+  exhaustive phase-close after remediation. The current Galerina custody state
+  now passes normal phase-close in **639.6s**, the direct aggregate at
+  **100/100 packages / 9,500/9,500 tests**, and exhaustive phase-close in
+  **844.9s**. The first unchanged-tree exhaustive attempt refused only at the
+  package aggregate; the direct owner rerun and one terminal retry both passed,
+  so the refusal remains recorded as transient evidence rather than erased.
+  The four-scope security recheck remains open; no green repository result
+  grants conversion or production authority.
 - [x] Re-pin Contract 85/86 to the remediated SLIDE tool at `eed1249`, migrate
   both source manifests to its exact policy/verifier context, regenerate the
   two physical `.slide` publications and retain byte-mutation refusal. The

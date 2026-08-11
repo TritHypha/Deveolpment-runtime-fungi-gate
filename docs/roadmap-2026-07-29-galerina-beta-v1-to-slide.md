@@ -21,6 +21,15 @@ durability and production authority remain explicit later exits. TritMesh:QL
 is excluded from the admitted mechanical-conversion scope until its six scan
 findings close; this exclusion is not a claim that the component is secure.
 
+Current Galerina custody is green: normal phase-close passes every blocking
+gate in **639.6s**, the direct aggregate passes **100/100 packages and
+9,500/9,500 tests** in **278.1s**, and exhaustive phase-close passes every
+blocking gate in **844.9s**. The first exhaustive attempt refused only at the
+package aggregate after all preceding gates passed; the direct owner rerun and
+one unchanged-tree terminal retry both passed. The refusal remains part of the
+evidence record and is not relabelled as a pass. A fresh four-repository
+security recheck remains an explicit pre-conversion exit.
+
 Current-state rule: this opening 2026-08-11 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
