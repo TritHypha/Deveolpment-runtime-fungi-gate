@@ -652,7 +652,7 @@ test("a changed auth package remains candidate-only until a new hybrid signing c
   assert.equal(candidate.governance.reviewedBy, "galerina-owner-governance");
   assert.equal(
     candidate.governance.reviewedAt,
-    "2026-07-30T15:45:00.000Z",
+    "2026-08-11T14:36:58.000Z",
   );
   assert.equal(candidate.signerKeyId, null);
   assert.equal(candidate.signature, null);

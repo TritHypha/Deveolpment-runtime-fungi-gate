@@ -29,7 +29,7 @@ effects:
   - "clock.read"
   - "crypto.verify"
 installScript: null
-hash: "sha256:0d72939d2ee6b81496e154895a9b5dc4c2f7091829a67497247d833aeac9fb68"
+hash: "sha256:0a4c54cfee84c45cf23efa767d19c6acb2aa9598581da865faaace896fc1878d"
 publisher: "galerina-owner-governance"
 keyId: "f3172a48372bfb23"
 signerKeyId: null
@@ -39,4 +39,4 @@ signature: null
 governance:
   reviewed: true
   reviewedBy: "galerina-owner-governance"
-  reviewedAt: "2026-07-30T15:45:00.000Z"
+  reviewedAt: "2026-08-11T14:36:58.000Z"

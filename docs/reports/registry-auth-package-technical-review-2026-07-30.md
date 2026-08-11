@@ -1,6 +1,6 @@
 # `@galerina/auth` package technical review
 
-**Evidence date:** 2026-07-30
+**Evidence date:** 2026-08-11 (refresh of the 2026-07-30 review)
 
 **Package version:** `1.0.0-beta.2`
 **Decision:** technically reviewed and owner-approved candidate; not signed,
@@ -14,17 +14,22 @@ candidate for a future owner governance act. Its declared source artifact is:
 ```text
 profile:     galerina-flat-package-tree/v1
 file count:  18
-byte count:  63,281
-digest:      sha256:56f8f08d7d37efa8936b5871582dcab900e7223e69be32361f1ab4dfc4eaee86
+byte count:  64,540
+digest:      sha256:0a4c54cfee84c45cf23efa767d19c6acb2aa9598581da865faaace896fc1878d
 ```
 
 The candidate manifest is outside the live signable tree at
 `packages-galerina/galerina-registry/candidates/@galerina/auth/`.
 Its owner governance record now names `galerina-owner-governance`, approval
-instant `2026-07-30T15:45:00.000Z`, publisher
+refreshed approval instant `2026-08-11T14:36:58.000Z`, publisher
 `galerina-owner-governance`, and expected operational key
 `f31…`. Its signer identity and signature remain null. The live
 registry is empty and therefore terminally refuses index construction.
+
+The 2026-08-11 refresh re-derived the complete artifact after later
+authentication hardening and reran both the package and registry boundaries.
+It does not reuse an earlier signature: the candidate remains unsigned,
+uncertified, outside the live tree, and non-authorizing.
 
 The former healthcare manifest was removed. There is no canonical healthcare
 package, so retaining that stub would have asserted an identity and compliance
@@ -84,11 +89,20 @@ This review does not claim that every future vulnerability is absent. Any
 source, dependency, declared-power or package-metadata change changes the
 artifact digest and requires a new review and signature.
 
-## Fresh executable evidence
+## Executable evidence
+
+The 2026-08-11 digest refresh reran the two narrow owners:
 
 | Command | Result |
 |---|---|
-| `npm.cmd --prefix packages-galerina/galerina-auth test` | **59/59 pass**, typecheck and build green |
+| `npm.cmd --prefix packages-galerina/galerina-auth test` | **61/61 pass**, typecheck and build green |
+| `npm.cmd --prefix packages-galerina/galerina-registry test` | **35/35 pass**, including fresh digest re-derivation and unsigned candidate isolation |
+
+The broader rows below are preserved from the original 2026-07-30 review and
+are historical until the current repository closure lane revalidates them:
+
+| Command | Result |
+|---|---|
 | `node scripts/audit-flat-package-topology.mjs` | green pre-SLIDE ratchet; 99 canonical identities |
 | `node scripts/audit-package-border.mjs` | **98/98 packages pass** |
 | `node scripts/audit-node-dependencies.mjs` | external floor clean; two non-fatal build-tool version drifts remain repository-wide |
@@ -97,7 +111,6 @@ artifact digest and requires a new review and signature.
 | `node scripts/audit-import-governance.mjs` | 511 `.fungi` files parsed; plugin grants complete |
 | `node scripts/audit-private-doc-leak.mjs` | **0 violations** |
 | `node scripts/audit-path-leak.mjs` | **0 violations** |
-| `npm.cmd --prefix packages-galerina/galerina-registry test` | **35/35 pass**, including candidate hash re-derivation, owner-approved-but-unsigned isolation, disposable manifest signing, and future-review refusal |
 
 The flat-topology tool still reports 95 pre-SLIDE package-local
 `node_modules` trees and one explicitly deferred nested native package. Those
