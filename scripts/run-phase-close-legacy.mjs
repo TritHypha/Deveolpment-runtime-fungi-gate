@@ -286,6 +286,16 @@ function runSemanticCoverageFromGraphAll(graphAll) {
   return checked;
 }
 
+function runStaticOracleSpecial(name, mode) {
+  return run(name, "node", [
+    "scripts/run-phase-close-special.mjs",
+    "--root",
+    ROOT,
+    "--check",
+    mode,
+  ]);
+}
+
 function summarise(name, out, ok, code) {
   // An EXPLICIT summary always wins over the guesses below. Added 2026-07-19 after the new
   // auto-erasure-ratchet gate was rendered as "245 tests pass" — the `total` heuristic beneath grabs
@@ -477,7 +487,9 @@ run(
 
 // ── 1b. Architecture pattern examples — galerina check on all tests/patterns/*.fungi ──
 const patternsDir = join(ROOT, "tests", "patterns");
-if (existsSync(patternsDir)) {
+if (options.staticOracle) {
+  runStaticOracleSpecial("tests:patterns", "patterns");
+} else if (existsSync(patternsDir)) {
   const patternFiles = readdirSync(patternsDir).filter(f => f.endsWith(".fungi"));
   // Use galerina.mjs (Stage A compiler) — not the legacy galerina-core-cli
   const galerinaMjs = join(ROOT, "galerina.mjs");
@@ -573,8 +585,12 @@ for (const p of ["galerina-ext-secrets-vault", "galerina-ext-proof-snarkjs", "ga
 // ── 3 + 4. In-process security + naming audit sweep over auth-service ──
 const corpus = join(ROOT, "examples", "auth-service");
 if (existsSync(corpus)) {
-  const fungiFiles = readdirSync(corpus).filter((f) => f.endsWith(".fungi"));
-  try {
+  if (options.staticOracle) {
+    runStaticOracleSpecial("audit:security", "security");
+    runStaticOracleSpecial("audit:naming", "naming");
+  } else {
+    const fungiFiles = readdirSync(corpus).filter((f) => f.endsWith(".fungi"));
+    try {
     const sec = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-security/dist/index.js")).href);
     const nam = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-naming/dist/index.js")).href);
     let secFindings = 0, secErrors = 0, namFindings = 0;
@@ -597,8 +613,9 @@ if (existsSync(corpus)) {
       detail: `${fungiFiles.length} files, ${vsFindings} findings (incl. VALUESTATE), ${secErrors} errors` });
     results.push({ name: "audit:naming", ok: true, ms: 0,
       detail: `${fungiFiles.length} files, ${namFindings} naming findings` });
-  } catch (e) {
-    results.push({ name: "audit:devtools", ok: false, ms: 0, detail: `import failed: ${e.message}` });
+    } catch (e) {
+      results.push({ name: "audit:devtools", ok: false, ms: 0, detail: `import failed: ${e.message}` });
+    }
   }
   // provenance directory audit — exit 2 = "risk flows found" is INFORMATIONAL, not a failure.
   run("audit:provenance", "node",
@@ -608,38 +625,42 @@ if (existsSync(corpus)) {
 // ── 4b. CBOR round-trip verification (task #67) ──
 // Checks that all .lmanifest files in build/ decode and re-encode to identical bytes.
 // Catches non-canonical CBOR before the manifest is used for signing.
-try {
-  const buildDir = join(ROOT, "build");
-  if (existsSync(buildDir)) {
-    const manifestFiles = readdirSync(buildDir).filter(f => f.endsWith(".lmanifest") && !f.endsWith(".json"));
-    if (manifestFiles.length > 0) {
-      const { decodeCBOR, encodeCBOR } = await import(
-        pathToFileURL(join(ROOT, "packages-galerina/galerina-core-compiler/dist/manifest-generator.js")).href
-      );
-      let allOk = true;
-      const failures = [];
-      for (const f of manifestFiles) {
-        const bytes = new Uint8Array(
-          await import("node:fs").then(fs => Buffer.from(fs.readFileSync(join(buildDir, f))))
+if (options.staticOracle) {
+  runStaticOracleSpecial("manifest:cbor", "cbor");
+} else {
+  try {
+    const buildDir = join(ROOT, "build");
+    if (existsSync(buildDir)) {
+      const manifestFiles = readdirSync(buildDir).filter(f => f.endsWith(".lmanifest") && !f.endsWith(".json"));
+      if (manifestFiles.length > 0) {
+        const { decodeCBOR, encodeCBOR } = await import(
+          pathToFileURL(join(ROOT, "packages-galerina/galerina-core-compiler/dist/manifest-generator.js")).href
         );
-        // Only verify binary CBOR files (starts with a valid CBOR major type byte)
-        if (bytes.length > 0 && (bytes[0] & 0xe0) === 0xa0) { // map type (0xa0-0xbf)
-          try {
-            const { value } = decodeCBOR(bytes);
-            const reEncoded = encodeCBOR(value);
-            if (bytes.length !== reEncoded.length || !bytes.every((b, i) => b === reEncoded[i])) {
-              allOk = false; failures.push(f);
-            }
-          } catch { allOk = false; failures.push(f); }
+        let allOk = true;
+        const failures = [];
+        for (const f of manifestFiles) {
+          const bytes = new Uint8Array(
+            await import("node:fs").then(fs => Buffer.from(fs.readFileSync(join(buildDir, f))))
+          );
+          // Only verify binary CBOR files (starts with a valid CBOR major type byte)
+          if (bytes.length > 0 && (bytes[0] & 0xe0) === 0xa0) { // map type (0xa0-0xbf)
+            try {
+              const { value } = decodeCBOR(bytes);
+              const reEncoded = encodeCBOR(value);
+              if (bytes.length !== reEncoded.length || !bytes.every((b, i) => b === reEncoded[i])) {
+                allOk = false; failures.push(f);
+              }
+            } catch { allOk = false; failures.push(f); }
+          }
         }
+        results.push({ name: "manifest:cbor", ok: allOk, ms: 0,
+          detail: allOk
+            ? `${manifestFiles.length} manifest(s) canonical CBOR ✅`
+            : `FAILED — non-canonical: ${failures.join(", ")}` });
       }
-      results.push({ name: "manifest:cbor", ok: allOk, ms: 0,
-        detail: allOk
-          ? `${manifestFiles.length} manifest(s) canonical CBOR ✅`
-          : `FAILED — non-canonical: ${failures.join(", ")}` });
     }
-  }
-} catch { /* non-fatal if no manifests */ }
+  } catch { /* non-fatal if no manifests */ }
+}
 
 // ── 5. Full repository graph drift check — graph-all.mjs runs the reproducible
 //   graph family: project graph, graph-integrity validation, KB graph,
@@ -1025,58 +1046,62 @@ run("proofs:canonical", "node", ["scripts/run-proofs.mjs", "--canonical-only"]);
 // Transforms governance diff from a passive human-review step into an active quality gate.
 // Enforces the Monotonicity Rule at CI level: expansion requires explicit sign-off.
 // Reference: galerina-governed-design-synthesis.md change-class table.
-try {
-  // Check if HEAD~1 exists (might not on first commit)
-  const gitCheck = runOwnedProcessSync({
-    command: "git",
-    args: ["rev-parse", "--verify", "HEAD~1"],
-    cwd: ROOT,
-    env: nonAuthorizingChildEnv(),
-    timeoutMs: 30_000,
-    windowsHide: true,
-  });
-  if (gitCheck.status === 0) {
-    const diffResult = runOwnedProcessSync({
-      command: process.execPath,
-      args: [
-        "packages-galerina/galerina-core-compiler/dist/cli.js",
-        "diff",
-        "HEAD~1",
-        "--json",
-      ],
+if (options.staticOracle) {
+  runStaticOracleSpecial("governance:diff", "governance-diff");
+} else {
+  try {
+    // Check if HEAD~1 exists (might not on first commit)
+    const gitCheck = runOwnedProcessSync({
+      command: "git",
+      args: ["rev-parse", "--verify", "HEAD~1"],
       cwd: ROOT,
       env: nonAuthorizingChildEnv(),
       timeoutMs: 30_000,
       windowsHide: true,
     });
-    const parsed = parseGovernanceDiff(diffResult.stdout || "", diffResult);
-    results.push({
-      name: "governance:diff",
-      ok: parsed.ok,
-      durationMs: 0,
-      exitCode: typeof diffResult.status === "number" ? diffResult.status : null,
-      signal: diffResult.signal ?? null,
-      detail: `${parsed.code}: ${parsed.detail}`,
-    });
-  } else {
+    if (gitCheck.status === 0) {
+      const diffResult = runOwnedProcessSync({
+        command: process.execPath,
+        args: [
+          "packages-galerina/galerina-core-compiler/dist/cli.js",
+          "diff",
+          "HEAD~1",
+          "--json",
+        ],
+        cwd: ROOT,
+        env: nonAuthorizingChildEnv(),
+        timeoutMs: 30_000,
+        windowsHide: true,
+      });
+      const parsed = parseGovernanceDiff(diffResult.stdout || "", diffResult);
+      results.push({
+        name: "governance:diff",
+        ok: parsed.ok,
+        durationMs: 0,
+        exitCode: typeof diffResult.status === "number" ? diffResult.status : null,
+        signal: diffResult.signal ?? null,
+        detail: `${parsed.code}: ${parsed.detail}`,
+      });
+    } else {
+      results.push({
+        name: "governance:diff",
+        ok: false,
+        durationMs: 0,
+        exitCode: typeof gitCheck.status === "number" ? gitCheck.status : null,
+        signal: gitCheck.signal ?? null,
+        detail: "GOVERNANCE-DIFF-BASE-MISSING: HEAD~1 could not be verified.",
+      });
+    }
+  } catch (error) {
     results.push({
       name: "governance:diff",
       ok: false,
       durationMs: 0,
-      exitCode: typeof gitCheck.status === "number" ? gitCheck.status : null,
-      signal: gitCheck.signal ?? null,
-      detail: "GOVERNANCE-DIFF-BASE-MISSING: HEAD~1 could not be verified.",
+      exitCode: null,
+      signal: null,
+      detail: `GOVERNANCE-DIFF-ERROR: ${error.message}`,
     });
   }
-} catch (error) {
-  results.push({
-    name: "governance:diff",
-    ok: false,
-    durationMs: 0,
-    exitCode: null,
-    signal: null,
-    detail: `GOVERNANCE-DIFF-ERROR: ${error.message}`,
-  });
 }
 
 // ── 7. R6 final parity gate (#116) ──

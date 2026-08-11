@@ -14,6 +14,7 @@ after(() => rmSync(TEMP, { recursive: true, force: true }));
 
 function run(command, args) {
   const result = spawnSync(command, args, {
+    cwd: TEMP,
     encoding: "utf8",
     timeout: 120_000,
     windowsHide: true,
@@ -37,6 +38,7 @@ function assertControl(result, runtime) {
 
 function available(command) {
   const probe = spawnSync(command, ["--version"], {
+    cwd: TEMP,
     encoding: "utf8",
     timeout: 10_000,
     windowsHide: true,
@@ -46,6 +48,14 @@ function available(command) {
 
 test("Node.js traverses the complete one-million-value control", () => {
   assertControl(run(process.execPath, [join(BENCHMARK, "node.mjs")]), "nodejs");
+});
+
+test("external runtime probes execute only inside the disposable control directory", () => {
+  const result = run(process.execPath, [
+    "-e",
+    "process.stdout.write(JSON.stringify({ cwd: process.cwd() }))",
+  ]);
+  assert.equal(result.cwd, TEMP);
 });
 
 const python = available("python3") ? "python3" : available("python") ? "python" : null;

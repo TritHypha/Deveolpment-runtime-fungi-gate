@@ -23,6 +23,7 @@ const RESULT_MODULE = new URL("../lib/phase-close-result.mjs", import.meta.url);
 const resultApi = await import(RESULT_MODULE).catch(() => ({}));
 const runnerSource = readFileSync(RUNNER, "utf8");
 const legacyRunnerSource = readFileSync(LEGACY_RUNNER, "utf8");
+const liveManifest = JSON.parse(readFileSync(resolve("governance/phase-close-commands.json"), "utf8"));
 const roots = [];
 
 after(() => {
@@ -290,6 +291,19 @@ test("the preserved legacy oracle retains the former generated-evidence checks",
     legacyRunnerSource,
     /run\("r4-twin-hashes", "node", \["scripts\/gather-r4-twin-hashes\.mjs", "--verify-ledger"\]\)/,
   );
+  for (const [name, mode] of [
+    ["tests:patterns", "patterns"],
+    ["audit:security", "security"],
+    ["audit:naming", "naming"],
+    ["manifest:cbor", "cbor"],
+    ["governance:diff", "governance-diff"],
+  ]) {
+    assert.match(
+      legacyRunnerSource,
+      new RegExp(`runStaticOracleSpecial\\("${name}", "${mode}"\\)`),
+      `${name} must use the same owned special-check process in the static oracle`,
+    );
+  }
 });
 
 test("composed phase-close invokes semantic coverage once and blocks its refusal", () => {
@@ -364,4 +378,11 @@ test("the public runner has no source-coded cadence or missing-manifest fallback
   assert.doesNotMatch(runnerSource, /if \(!existsSync\(manifestPath\)\) return null/);
   assert.match(runnerSource, /validateAssuranceManifest/);
   assert.match(runnerSource, /buildCadencePlan/);
+});
+
+test("the live example diagnostic gate admits the measured Windows runtime envelope", () => {
+  const entry = liveManifest.entries.find((candidate) => candidate.id === "example-diagnostics");
+  assert.deepEqual(entry?.execution?.command, ["node", "scripts/audit-example-diagnostics.mjs"]);
+  assert.equal(Number.isSafeInteger(entry?.timeoutMs), true);
+  assert.equal(entry.timeoutMs >= 180_000, true);
 });
