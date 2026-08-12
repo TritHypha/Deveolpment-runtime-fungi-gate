@@ -1,0 +1,12 @@
+@version 1
+
+/// Return true only for the exact generic or opaque type spellings after
+/// applying the closed immutable String edge-trim operation.
+/// This reference-only flow cannot switch the executing naming-checker path.
+pure flow isGenericTypeName(typeName: String) -> Bool {
+  let trimmedTypeName: String = typeName.trim()
+  if trimmedTypeName == "Any" { return true }
+  if trimmedTypeName == "Object" { return true }
+  if trimmedTypeName == "unknown" { return true }
+  return false
+}

@@ -9,6 +9,7 @@
       "src/index.ts"
     ],
     "loadedAssets": [
+      "src/self-hosted/generic-type-name.fungi",
       "src/self-hosted/implicit-return-type.fungi"
     ]
   },
