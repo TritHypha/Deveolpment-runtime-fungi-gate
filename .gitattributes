@@ -34,3 +34,8 @@ docs/security/slide-frontend-receipts/*.frontend.json text eol=lf
 #    baseline (results/latest.json) + saved snapshots (results/archive/**) don't phantom-churn under Windows
 #    autocrlf; a saved run then diffs cleanly and the NEXT benchmark's real change is visible against it.
 packages-galerina/galerina-devtools-benchmarks/results/**   text eol=lf
+
+# Benchmark admission contracts and evidence are verified as exact raw bytes.
+# Preserve their authored LF representation in every checkout before hashing.
+packages-galerina/galerina-devtools-benchmarks/contracts/*.json text eol=lf
+packages-galerina/galerina-devtools-benchmarks/evidence/*.json  text eol=lf
