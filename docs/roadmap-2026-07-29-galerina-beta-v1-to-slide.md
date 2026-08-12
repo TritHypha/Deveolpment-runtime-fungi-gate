@@ -2,7 +2,7 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-fourth conversion slice continues to use local
+Current checkpoint: the twenty-fifth conversion slice continues to use local
 SLIDE `42b94af`; it requires no new SLIDE change or registry widening. The
 affected pure-scalar, external-record, and transitive-work neighborhood remains
 **27/27**. The last complete SLIDE evidence remains the earlier `ac8a041`
@@ -28,6 +28,28 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-fifth physical conversion slice 2026-08-12: exported
+`computeExecutionSignature` now has exact package-owned pure
+`computeExecutionSignatureFungi`. It returns the closed eight-field
+`ExecutionSignatureFungi` record, preserving seven caller-derived Int facts,
+one Bool fact, and every camel-case field name unchanged. It performs no
+arithmetic, coercion, validation, hashing, or authority inference. The
+differential proof passes **1/1** over four boundary vectors. Independent
+SLIDE publishes and re-admits one physical `.slide`, then verifies four typed
+VOK record receipts (**1/1**, zero skips). The pass-through record needs no
+optional operation registry; the proof pins that absence and exact record
+descriptor digest
+`sha256:1be2ea80225038e88d1fa3b9a48a0863142081ee1bdd3b0d3284c6fd85a121ab`.
+Wrong arity/type, NaN, infinity, out-of-range Int, inadequate fuel, and source,
+receipt, envelope, or artifact mutation refuse. Strict Fungi checking is
+clean, compiler is **6,379/6,379**, Golden Pack is **11/11**, and the
+canonical owner passes **100/100 packages and 9,599 tests in 274.6s**.
+Retirement records **1,444** executable-family paths and **130** source Fungi
+assets. TypeScript, governance-verifier derivation, proof builders, signing,
+hashing, caching, and all consumers remain active; repository-wide closure
+remains **UNKNOWN** because crash-linked full tooling, normal phase-close, and
+monolithic memory evaluation remain excluded.
 
 Twenty-fourth physical conversion slice 2026-08-12: exported
 `sharesGovernanceShape` now has exact package-owned pure

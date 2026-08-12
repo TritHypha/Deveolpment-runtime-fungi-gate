@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-fifth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `computeExecutionSignature` as package-owned pure
+  `computeExecutionSignatureFungi`, returning the exact closed
+  `ExecutionSignatureFungi` record with seven `Int` facts and one `Bool` fact.
+- [x] Preserve every caller-derived value and camel-case field name unchanged.
+  Perform no arithmetic, coercion, validation, hashing, or authority inference;
+  the differential proof passes **1/1** over four boundary vectors.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  four typed VOK record receipts (**1/1**, zero skips). The pass-through record
+  needs no optional operation registry; the proof pins that absence and record
+  descriptor digest
+  `sha256:1be2ea80225038e88d1fa3b9a48a0863142081ee1bdd3b0d3284c6fd85a121ab`.
+  Wrong arity/type, NaN, infinity, out-of-range Int, inadequate fuel, source,
+  receipt, envelope, and artifact mutation all refuse.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,379/6,379**, Golden Pack **11/11**, and the canonical owner **100/100
+  packages and 9,599 tests in 274.6s**. Retirement records **1,444**
+  executable-family paths and **130** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent
+  from the Fungi source. Keep TypeScript, governance-verifier derivation, proof
+  builders, signing, hashing, caching, and every consumer active; grant no
+  authenticated-input, consumer-switch, production, release, or retirement
+  authority.
+
 ### Twenty-fourth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `sharesGovernanceShape` as package-owned pure
