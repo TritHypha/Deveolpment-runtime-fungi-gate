@@ -217,7 +217,10 @@ export function normaliseFloor(name: string): string {
     "proof_zone": "floor_3",
     "attestation": "floor_4",
   };
-  return map[name] ?? name;
+  if (typeof name !== "string") return "";
+  if (!Object.prototype.hasOwnProperty.call(map, name)) return name;
+  const floor = map[name];
+  return floor === undefined ? name : floor;
 }
 
 /**
