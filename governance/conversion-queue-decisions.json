@@ -2,14 +2,54 @@
   "schemaVersion": 2,
   "decisions": [
     {
-      "path": "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
+      "path": "packages-galerina/galerina-core-config/src/index.ts",
       "scope": "SYMBOLS",
       "symbols": [
-        "isLiteralVerificationSuccess"
+        "isEnvironmentMode"
       ],
       "classification": "CANDIDATE",
-      "reason": "COMPLETE_LITERAL_VERIFICATION_DOSSIER",
-      "evidenceDigest": "a08100f6bf9f96093d1de5cc5d2da858476b29cd2d5b0d9e082b8b59d283b199"
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-core-runtime/src/structured-await.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isTerminalScope"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-core-tasks/src/load-tasks.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isTaskEffect"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-data-model/src/index.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isResponseSafeClassification"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-context/src/receipt-generator.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isBuiltin"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     }
   ]
 }

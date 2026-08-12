@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "sourceDigest": "34d2260815f53aabd7872562ecf8aa2958da75186a070de755cd75d754d648b0",
-  "decisionsDigest": "f5d3568952a2ce4cffa4e742d68815f4d096ae5de2aeb694717b6ebac40b3d52",
+  "decisionsDigest": "f61c527324bac873b517cb46afa3a934c050d1833ed28196a25476cd33622fb5",
   "counts": {
     "total": 1451,
     "CANDIDATE": 0,
@@ -10,14 +10,38 @@
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
   },
-  "scopedCandidateCount": 1,
-  "scopedCandidateFileCount": 1,
+  "scopedCandidateCount": 5,
+  "scopedCandidateFileCount": 5,
   "scopedCandidates": [
     {
-      "path": "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
-      "symbol": "isLiteralVerificationSuccess",
-      "reason": "COMPLETE_LITERAL_VERIFICATION_DOSSIER",
-      "evidenceDigest": "a08100f6bf9f96093d1de5cc5d2da858476b29cd2d5b0d9e082b8b59d283b199"
+      "path": "packages-galerina/galerina-core-config/src/index.ts",
+      "symbol": "isEnvironmentMode",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-core-runtime/src/structured-await.ts",
+      "symbol": "isTerminalScope",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-core-tasks/src/load-tasks.ts",
+      "symbol": "isTaskEffect",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-data-model/src/index.ts",
+      "symbol": "isResponseSafeClassification",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-context/src/receipt-generator.ts",
+      "symbol": "isBuiltin",
+      "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     }
   ],
   "entries": [
@@ -5186,8 +5210,8 @@
       "package": "galerina-core-config",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
       "path": "packages-galerina/galerina-core-config/src/posture.ts",
@@ -5762,8 +5786,8 @@
       "package": "galerina-core-runtime",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
       "path": "packages-galerina/galerina-core-runtime/tests/rd0363-passive-plan-replay-execution.test.mjs",
@@ -6466,8 +6490,8 @@
       "package": "galerina-core-tasks",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
       "path": "packages-galerina/galerina-core-tasks/src/node-globals.d.ts",
@@ -6730,8 +6754,8 @@
       "package": "galerina-data-model",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
       "path": "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
@@ -7762,8 +7786,8 @@
       "package": "galerina-devtools-context",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
       "path": "packages-galerina/galerina-devtools-context/src/types.ts",
@@ -9570,8 +9594,8 @@
       "package": "galerina-framework-app-kernel",
       "tranche": "T1-trust-root",
       "classification": "BLOCKED",
-      "reason": "SCOPED_CANDIDATES_ONLY",
-      "evidenceDigest": "a08100f6bf9f96093d1de5cc5d2da858476b29cd2d5b0d9e082b8b59d283b199"
+      "reason": "EXISTING_FUNGI_NOT_CONSUMER_AUTHORITY",
+      "evidenceDigest": null
     },
     {
       "path": "packages-galerina/galerina-framework-app-kernel/src/registry-package-manifest.ts",
