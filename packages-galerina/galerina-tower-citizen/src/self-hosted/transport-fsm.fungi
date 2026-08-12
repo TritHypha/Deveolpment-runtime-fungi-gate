@@ -1,12 +1,12 @@
 @version 1
-/// @file: transport-fsm.fungi
-/// @purpose: Stage-6 CHECKER-VERIFIED twin of the TLSTP S4 Recovering-FSM transition function
+/// File: transport-fsm.fungi
+/// Purpose: Stage-6 CHECKER-VERIFIED twin of the TLSTP S4 Recovering-FSM transition function
 ///   (transport-fsm.ts `step`) as four pure PROJECTIONS over an all-int evidence encoding. The host
 ///   computes the K3 fold g = allOf(subVerdicts) with the SHIPPED calculus (itself execution-proven —
 ///   the b8-admission twin); these flows fold the FSM edge, fail-closed. The charter layer split is
 ///   preserved: the FSM READS a verdict, it never BECOMES one (TransportState is never aliased to the
 ///   trit — Recovering is NOT the trit's 0).
-/// @status: checker-verified twin + RD-0361 execution differential (rd0361-transport-fsm-execution);
+/// Status: checker-verified twin + RD-0361 execution differential (rd0361-transport-fsm-execution);
 ///   NOT build-wired (execution switch #143).
 ///
 /// Encodings (all Int):
@@ -124,4 +124,18 @@ contract {
     }
   }
   return enteredAt
+}
+
+// ── projection 5: may this state carry application data? ──────────────────────
+// INV-1 is exact: Established is the only data-permitting state. Unknown
+// integer encodings deny through the terminal exit.
+pure flow s4PermitData(state: Int) -> Bool
+contract {
+  intent { "Permit transport data only in the Established state." }
+}
+{
+  if state == 0 {
+    return true
+  }
+  return false
 }
