@@ -4,6 +4,34 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-sixth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `effectsSubset` as package-owned pure
+  `effectsSubsetFungi(required: Int, declared: Int) -> Bool`, preserving exact
+  signed-32-bit `(required & declared) === required` behavior.
+- [x] Route equality as a Bool condition with explicit `true` and terminal
+  `false` exits. Add no `else`, `else if`, exception syntax, or loop form; the
+  complete named differential matrix passes **1/1**.
+- [x] Add frozen SLIDE Contract 85 and pin only the independently observed
+  registry `slide.registry.executable-gir.v2c-bitwise-and.v1` with descriptor
+  digest `361f086de7b88928cde0b49c02ce480669192f16e3494353e9e82a2962a40a8c`.
+  SLIDE passes **1,006/1,006 across 101 suites** with exact failure
+  propagation, zero executable null/NaN state, and no authority release.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  fourteen typed VOK Bool receipts (**1/1**, zero skips). Wrong arity/type,
+  NaN, infinity, fraction, out-of-range Int, inadequate fuel, source, receipt,
+  envelope, and artifact mutation all refuse.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,380/6,380**, and the monitored canonical owner **100/100 packages and
+  9,600 tests in about 282s** with captured exit code 0. Retirement derives
+  **1,445** executable-family paths and **131** source Fungi assets; generated
+  retirement and Golden owners are being refreshed from their exact refusals.
+- [ ] Keep effect-name derivation, mask provenance, TypeScript, and every
+  consumer active. This reference proof grants no authentication,
+  consumer-switch, production, release, durability, or retirement authority;
+  repository-wide closure remains `UNKNOWN` because crash-linked full tooling,
+  normal phase-close, graph-all, and monolithic memory evaluation stay excluded.
+
 ### Twenty-fifth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `computeExecutionSignature` as package-owned pure

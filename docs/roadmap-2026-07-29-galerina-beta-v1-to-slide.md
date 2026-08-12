@@ -2,13 +2,13 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-fifth conversion slice continues to use local
-SLIDE `42b94af`; it requires no new SLIDE change or registry widening. The
-affected pure-scalar, external-record, and transitive-work neighborhood remains
-**27/27**. The last complete SLIDE evidence remains the earlier `ac8a041`
-checkpoint (**986/986 across 97 suites**, 91-file tool manifest, 95-file closed
-contract catalog). Complete current-SLIDE and fresh security closure therefore
-remain `UNKNOWN`; contract consistency remains non-authorizing at K3 `0`.
+Current checkpoint: the twenty-sixth conversion slice uses local SLIDE
+`6de4d91`, which freezes and implements exact signed Int32 bitwise AND as
+Contract 85 without changing Contracts 1 through 84. SLIDE passes
+**1,006/1,006 across 101 suites**; its 91-file tool manifest is
+`sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
+its V2 contract partition covers 96 files, and the catalog covers 101 files.
+Complete current security closure remains non-authorizing at K3 `0`.
 
 Both Galerina source manifests are now bound to the exact current portable-VEO
 policy and verifier context, and both committed physical `.slide` publications
@@ -28,6 +28,27 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-sixth physical conversion slice 2026-08-12: exported `effectsSubset`
+now has exact package-owned pure `effectsSubsetFungi(required: Int, declared:
+Int) -> Bool`. It preserves JavaScript signed-32-bit
+`(required & declared) === required` semantics for the complete named boundary
+matrix. Equality is routed as a Bool condition with explicit true and terminal
+false exits; no `else`, `else if`, exception, or loop form is introduced. The
+differential proof passes **1/1**. Independent SLIDE publishes and re-admits
+one physical `.slide`, then verifies fourteen typed VOK Bool receipts (**1/1**,
+zero skips) under pinned registry
+`slide.registry.executable-gir.v2c-bitwise-and.v1` and exact descriptor digest
+`361f086de7b88928cde0b49c02ce480669192f16e3494353e9e82a2962a40a8c`.
+Wrong arity/type, NaN, infinity, fraction, out-of-range Int, inadequate fuel,
+and source, receipt, envelope, or artifact mutation refuse. Strict Fungi
+checking is clean, compiler is **6,380/6,380**, and the monitored canonical
+owner passes **100/100 packages and 9,600 tests in about 282s** with captured
+exit code 0. Retirement derives **1,445** executable-family paths and **131**
+source Fungi assets. Effect-name derivation, mask provenance, TypeScript, and
+all consumers remain active; repository-wide closure remains **UNKNOWN**
+because crash-linked full tooling, normal phase-close, graph-all, and monolithic
+memory evaluation remain excluded.
 
 Twenty-fifth physical conversion slice 2026-08-12: exported
 `computeExecutionSignature` now has exact package-owned pure
