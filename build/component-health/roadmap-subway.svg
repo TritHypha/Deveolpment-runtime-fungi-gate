@@ -12,9 +12,9 @@
 </style>
 <rect width="100%" height="100%" fill="var(--paper)"/>
 <text x="342" y="34" text-anchor="end" class="title">Where the project is</text>
-<text x="360" y="34" class="sub">v1.0.0-beta.2 · 100 packages · 9599 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
+<text x="360" y="34" class="sub">v1.0.0-beta.2 · 100 packages · 9600 tests · ship-readiness 100.0% · Zero-Trust thesis avg 78% · build avg 75%</text>
 <text x="360" y="50" class="sub">generated from the closed assurance dependency DAG + component-health + the RD-0528/RD-0361 authority ledgers; exact producer identities are in focused provenance sidecars</text>
-<text x="360" y="66" class="stn">Assurance DAG: UNKNOWN · root d44334b5b047b4834f8461bf0249b1a8f978923977d7e759d01a620b3abcd14b · non-authorizing</text>
+<text x="360" y="66" class="stn">Assurance DAG: UNKNOWN · root b1eb92c7a5f56ed9cb54fa9df48b4081ae4310830d74c3072f729efbc04a27a2 · non-authorizing</text>
 <text x="342" y="62" text-anchor="end" class="line-name" fill="#c8102e">Self-hosting</text>
 <text x="342" y="76" text-anchor="end" class="sub">RD-0528 · authority ladder</text>
 <line x1="360" y1="96" x2="1470" y2="96" stroke="#c8102e" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
