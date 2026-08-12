@@ -2,7 +2,7 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-third conversion slice continues to use local
+Current checkpoint: the twenty-fourth conversion slice continues to use local
 SLIDE `42b94af`; it requires no new SLIDE change or registry widening. The
 affected pure-scalar, external-record, and transitive-work neighborhood remains
 **27/27**. The last complete SLIDE evidence remains the earlier `ac8a041`
@@ -28,6 +28,26 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-fourth physical conversion slice 2026-08-12: exported
+`sharesGovernanceShape` now has exact package-owned pure
+`sharesGovernanceShapeFungi`. It compares only the two extracted signature-hash
+Strings byte-for-byte. It deliberately performs no trimming, normalization,
+hash-format validation, or authentication; equality means only that the two
+provided values are equal. The differential proof passes **1/1**. Independent
+SLIDE publishes and re-admits one physical `.slide`, then verifies **14**
+canonical and hostile typed VOK Bool vectors (**1/1**, zero skips). Wrong
+arity/type, lone-surrogate input, inadequate fuel, and source, receipt,
+envelope, or artifact mutation refuse under pinned registry
+`slide.registry.executable-gir.v2c-immutable-value-ops.v1` with digest
+`956e5f12ea00599f67fc4892774c01b78bedcc5d630df70f0164730ee8a25703`.
+Strict Fungi checking is clean, compiler is **6,378/6,378**, Golden Pack is
+**11/11**, and the canonical owner passes **100/100 packages and 9,598 tests
+in 278.7s**. Retirement records **1,443** executable-family paths and **129**
+source Fungi assets. TypeScript, `ProofGraph` extraction, and all consumers
+remain active; repository-wide closure remains **UNKNOWN** because crash-linked
+full tooling, normal phase-close, and monolithic memory evaluation remain
+excluded.
 
 Twenty-third physical conversion slice 2026-08-12: the Boolean authority
 decision inside exported `canHonour` now has exact package-owned pure

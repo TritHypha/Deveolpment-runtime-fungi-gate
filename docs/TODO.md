@@ -4,6 +4,29 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-fourth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `sharesGovernanceShape` as package-owned pure
+  `sharesGovernanceShapeFungi(leftSignatureHash: String,
+  rightSignatureHash: String) -> Bool`.
+- [x] Preserve the exact live semantics: compare only the two extracted
+  signature-hash Strings byte-for-byte. Do not trim, normalize, validate, or
+  treat equality as authentication. The differential proof passes **1/1**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  **14** canonical and hostile typed VOK Bool vectors (**1/1**, zero skips).
+  Wrong arity/type, lone-surrogate input, inadequate fuel, source, receipt,
+  envelope, and artifact mutation all refuse under pinned immutable-value-ops
+  registry `slide.registry.executable-gir.v2c-immutable-value-ops.v1` with
+  digest `956e5f12ea00599f67fc4892774c01b78bedcc5d630df70f0164730ee8a25703`.
+- [x] Pass strict Fungi checking with zero errors/warnings, compiler
+  **6,378/6,378**, Golden Pack **11/11**, and the canonical owner **100/100
+  packages and 9,598 tests in 278.7s**. Retirement records **1,443**
+  executable-family paths and **129** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Keep TypeScript, `ProofGraph` extraction, and every consumer active; grant no
+  authentication, consumer-switch, production, release, or retirement
+  authority.
+
 ### Twenty-third physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the security-authorizing Boolean inside exported `canHonour` as
