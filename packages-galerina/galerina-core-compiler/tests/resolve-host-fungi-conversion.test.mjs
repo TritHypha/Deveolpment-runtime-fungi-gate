@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 
 import {
+  canHonour,
   checkEffects,
   executeFlow,
   parseProgram,
@@ -29,6 +30,24 @@ const VECTORS = Object.freeze([
   "MLOCK_POSIX",
   "mlock_pos\u0131x",
   "mlock_posix\u0000tail",
+]);
+const CEILINGS = Object.freeze([
+  "register_only",
+  "no_dram_spill",
+  "no_swap",
+  "no_disk",
+  "unrestricted",
+]);
+const HOSTILE_CEILINGS = Object.freeze([
+  "",
+  "unknown",
+  "__proto__",
+  "constructor",
+  " no_swap",
+  "no_swap ",
+  "NO_SWAP",
+  "n\u00f8_swap",
+  "no_swap\u0000tail",
 ]);
 
 function compileCandidate() {
@@ -84,6 +103,32 @@ describe("compiler package-owned Fungi host resolution", () => {
         resolveHost(name),
         `resolveHost(${String(name)})`,
       );
+    }
+  });
+
+  it("preserves the complete host honour decision and rejects hostile ceilings", async () => {
+    const { program } = compileCandidate();
+    for (const name of VECTORS) {
+      const host = resolveHost(name);
+      for (const ceiling of [...CEILINGS, ...HOSTILE_CEILINGS]) {
+        const interpreted = await executeFlow(
+          "canHonourFungi",
+          new Map([
+            ["ceiling", { __tag: "string", value: ceiling }],
+            ["canRegisterPin", { __tag: "bool", value: host.canRegisterPin }],
+            ["canNoDramSpill", { __tag: "bool", value: host.canNoDramSpill }],
+            ["canNoSwap", { __tag: "bool", value: host.canNoSwap }],
+            ["canNoDisk", { __tag: "bool", value: host.canNoDisk }],
+          ]),
+          program.ast,
+          program.flows,
+        );
+        assert.deepEqual(
+          interpreted.value,
+          { __tag: "bool", value: canHonour(ceiling, host).ok },
+          `${name ?? "<absent>"}:${ceiling}`,
+        );
+      }
     }
   });
 });
