@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Thirty-second physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Refuse the localhost predicate before implementation because the selected
+  physical SLIDE profile has exact trim but no lowercase operation. Do not
+  claim parity for `trim().toLowerCase()` from the frontend alone.
+- [x] Admit only private
+  `registry-index.ts#isLiteralVerificationSuccess`, not signature checking,
+  registry admission or either production caller.
+- [x] Map the complete `boolean | "no-key"` source union through explicit
+  physical tags `1`, `0` and `-1`. Terminal `_ =>` returns false for every
+  surplus i32; no truthiness or coercion is admitted.
+- [x] Pass strict checking, the complete differential **2/2**, app-kernel
+  **231/231**, physical SLIDE/VOK **1/1** with zero skips, and governed focus
+  **28/28** with zero skips.
+- [x] Pass the canonical package owner **100/100 packages and 9,612 tests in
+  284.5 seconds**, exit 0.
+- [x] Update and independently verify the public translation skill's reusable
+  closed-union ABI-tag rule at commit `0b60eb7`. `writing-fungi` needs no
+  change because exhaustive `match` and surplus wildcard denial are already
+  binding.
+- [ ] Refresh all individual bounded owners, roadmap/subway and both indexes;
+  do not run crash-linked full tooling, normal phase-close, `graph-all` or the
+  monolithic memory evaluator.
+- [x] Keep TypeScript and both callers active. This grants no consumer switch,
+  production, release, signing, durability or retirement authority;
+  repository-wide closure remains `UNKNOWN`.
+
 ### Thirty-first physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Refuse the first JSON safe-integer candidate before implementation:

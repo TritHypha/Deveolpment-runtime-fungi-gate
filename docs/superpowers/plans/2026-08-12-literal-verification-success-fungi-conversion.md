@@ -52,7 +52,7 @@ VOK.
 
 - [x] Register the physical test in the governed tooling manifest.
 - [ ] Update TODOs, active roadmap, subway and a dated report.
-- [ ] Review both public Fungi skills and record the exact disposition.
+- [x] Review both public Fungi skills and record the exact disposition.
 - [ ] Run only bounded package/physical and owner checks.
 - [ ] Refresh primary graph and Myco at the final commit and verify the symbol
   and scoped queue are queryable.

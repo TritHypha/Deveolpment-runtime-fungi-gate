@@ -2,14 +2,32 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the thirty-first conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute the test CLI's exact
-private Boolean marker through a typed String boundary. It changes no SLIDE
-contract, registry, or limit. SLIDE passes
+Current checkpoint: the thirty-second conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute the app-kernel's
+exact private literal-verification decision through a typed Boolean boundary.
+It changes no SLIDE contract, registry, or limit. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
 Complete current security closure remains non-authorizing at K3 `0`.
+
+Thirty-second physical conversion slice 2026-08-12: the localhost candidate
+was refused because the selected physical profile has exact trim but no
+lowercase operation; frontend expressibility was not recast as physical
+parity. The replacement proof admits only private
+`registry-index.ts#isLiteralVerificationSuccess`. Its complete
+`boolean | "no-key"` source union maps through an explicit physical ABI:
+`true -> 1 -> true`, `false -> 0 -> false`, and
+`"no-key" -> -1 -> false`; terminal `_ =>` returns false for every surplus
+i32 without truthiness or coercion. Strict checking is clean, differential
+parity is **2/2**, app-kernel is **231/231**, and independent SLIDE/VOK is
+**1/1** with zero skips. The governed manifest focus is **28/28**, while the
+canonical owner passes **100/100 packages and 9,612 tests in 284.5 seconds**.
+The public translation skill records the reusable closed-union ABI rule at
+`0b60eb7`; `writing-fungi` needs no duplicate change. TypeScript, signature
+verification, registry admission and both callers remain active. Crash-linked
+full tooling, normal phase-close, graph-all and monolithic memory evaluation
+remain excluded, so repository-wide closure remains **UNKNOWN**.
 
 Before Slice 31, the conversion lane now has a fail-closed reusable hardening
 gate. Failed package children retain bounded digest-bound evidence; Galerina
