@@ -57,7 +57,7 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Refresh all bounded generated owners and graphs: Golden **11/11 +
   11/11**, retirement **1,449 executable-family / 133 source Fungi**, package
   graph **100 packages / 201 outputs**, project graph **5/5**, KB graph **4/4**,
-  Fungi inventory **133**, semantic graph **3/3 with 940 test nodes**, code
+  Fungi inventory **133**, semantic graph **3/3 with 944 test nodes**, code
   index **974**, canonical claims **7/7**, roadmap/subway **5/5**, and the
   path-leak audit clean. The primary graph conserves **51,014 nodes / 51,013
   expected** and **136,201 edges / 136,200 expected**; Myco indexes **5,107

@@ -69,7 +69,7 @@ Hallmark, border grant or host API.
   passes.
 - Graph owners: package **100 packages / 201 outputs**, project **5/5**, KB
   **4/4**, Fungi capability inventory **133 files**, and semantic assurance
-  **3/3 with 0 routes / 100 packages / 940 tests**.
+  **3/3 with 0 routes / 100 packages / 944 tests**.
 - Index and status owners: code index **974**, percent evidence
   **78% zero-trust thesis / 75% build / 31 tracked items**, canonical rendered
   claims **7/7**, and roadmap/subway **5/5**.
