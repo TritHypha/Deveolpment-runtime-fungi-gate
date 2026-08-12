@@ -1,0 +1,23 @@
+{
+  "schema": "galerina.benchmark.million-iteration-source-pair.v1",
+  "benchmark": "verified-native-operation",
+  "flowName": "readMillionValues",
+  "iterations": 1000000,
+  "expectedResult": 999999,
+  "subjects": [
+    {
+      "role": "checked",
+      "path": "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
+      "sha256": "a3156f896f163db38f99fada4b14ae8c61351d05a42f95de8e9659d4111a4421",
+      "bytes": 815
+    },
+    {
+      "role": "verified",
+      "path": "docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi",
+      "sha256": "07844b5dd9ea561f482e5f591d676e6fef43c2c0c1aeeba762138096362dc764",
+      "bytes": 932
+    }
+  ],
+  "referenceOnly": true,
+  "authorityReleased": false
+}

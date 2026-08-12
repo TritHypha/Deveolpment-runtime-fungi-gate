@@ -32,6 +32,7 @@
       "src/diagnostic-runner.mjs",
       "src/gpu-detect.mjs",
       "src/history.mjs",
+      "src/million-iteration-source-pair.mjs",
       "src/noise-gate.mjs",
       "src/report.mjs",
       "src/runner.mjs",
@@ -47,6 +48,7 @@
     ],
     "loadedAssets": [
       "contracts/galerina-slide-transition-v1.json",
+      "contracts/million-iteration-source-pair-v1.json",
       "contracts/slide-v2g-vade-admission-v1.json",
       "contracts/slide-verified-native-operation-admission-v1.json",
       "contracts/slide-reference-suite-v1.json",
