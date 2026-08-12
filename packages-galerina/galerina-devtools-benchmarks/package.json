@@ -35,6 +35,8 @@
       "src/report.mjs",
       "src/runner.mjs",
       "src/slide-vade-adapter.mjs",
+      "src/slide-zero-publication.mjs",
+      "src/slide-zero-report.mjs",
       "src/verified-native-operation-adapter.mjs",
       "src/verified-native-operation-report.mjs",
       "src/snapshot.mjs",

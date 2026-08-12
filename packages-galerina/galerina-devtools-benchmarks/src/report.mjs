@@ -5,8 +5,9 @@
 //   3. future Galerina/SLIDE versus one exact archived Galerina/Wasm baseline.
 // =============================================================================
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -16,6 +17,12 @@ import {
   buildReportMarkdown,
 } from "./report-model.mjs";
 import { buildSlideTransition, validateTransitionContract } from "./slide-transition.mjs";
+import {
+  buildSlideZeroChartHtml,
+  buildSlideZeroModel,
+  buildSlideZeroTableHtml,
+} from "./slide-zero-report.mjs";
+import { publishSlideZeroArtifacts } from "./slide-zero-publication.mjs";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const resultsDir = join(root, "results");
@@ -26,6 +33,32 @@ if (!existsSync(latestPath)) {
 }
 const latestRaw = readFileSync(latestPath, "utf8");
 const latest = JSON.parse(latestRaw);
+
+function exactCommand(command, args, cwd = undefined) {
+  const result = spawnSync(command, args, {
+    cwd,
+    encoding: "utf8",
+    shell: false,
+    timeout: 10_000,
+    maxBuffer: 1024 * 1024,
+  });
+  const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
+  if (result.status !== 0 || output.length === 0) {
+    throw new Error(`reference probe failed: ${command} ${args.join(" ")}`);
+  }
+  return output;
+}
+
+function pythonVersion() {
+  for (const [command, args] of [["python", ["--version"]], ["py", ["-3", "--version"]]]) {
+    try { return exactCommand(command, args); } catch { /* try the next installed launcher */ }
+  }
+  throw new Error("reference probe failed: Python toolchain is unavailable");
+}
+
+function gitCommit(repository) {
+  return exactCommand("git", ["rev-parse", "HEAD"], repository);
+}
 
 // Find the last distinct archive for the ordinary run-to-run diff. The explicit
 // flag is fail-closed: a miss cannot silently select another baseline.
@@ -108,8 +141,31 @@ const slideTransition = buildSlideTransition({
   current: latest,
 });
 
+const galerinaRepository = resolve(root, "..", "..");
+const slideRepository = resolve(galerinaRepository, "..", "SLIDE");
+const generatedAt = new Date().toISOString();
+const runMetadata = Object.freeze({
+  generatedAt,
+  resultSha256: createHash("sha256").update(latestRaw, "utf8").digest("hex"),
+  galerinaCommit: gitCommit(galerinaRepository),
+  slideCommit: gitCommit(slideRepository),
+  toolchains: Object.freeze({
+    node: process.version,
+    python: pythonVersion(),
+    rust: exactCommand("rustc", ["--version"]),
+    go: exactCommand("go", ["version"]),
+  }),
+  wasmReference: Object.freeze({
+    archiveDirectory: transitionContract.archiveDirectory,
+    archiveResultsSha256: transitionContract.archiveResultsSha256,
+    measuredGalerinaCommit: transitionContract.measuredGalerinaCommit,
+  }),
+});
+
 const crossLanguage = buildCrossLanguageRows(latest);
 const report = {
+  generatedAt,
+  references: runMetadata,
   baseline: baselineLabel,
   runtimes: REPORT_RUNTIMES.map((runtime) => runtime.label),
   runtimeCatalog: REPORT_RUNTIMES.map((runtime) => ({
@@ -133,6 +189,19 @@ try {
 } catch (error) {
   console.warn(`⚠ chart skipped: ${error?.message ?? error}`);
 }
+
+const slideZeroModel = buildSlideZeroModel({ latest, metadata: runMetadata });
+const slideZeroChart = buildSlideZeroChartHtml(slideZeroModel);
+const slideZeroTable = buildSlideZeroTableHtml(slideZeroModel);
+const publication = publishSlideZeroArtifacts({
+  resultsDir,
+  generatedAt,
+  latestRaw,
+  metadata: runMetadata,
+  chart: slideZeroChart,
+  table: slideZeroTable,
+});
+console.log(`✅ SLIDE-zero chart/table: ${publication.runDirectory} (${slideZeroModel.status})`);
 
 console.log("✅ report: results/benchmark-report-latest.{md,json}");
 console.log(`   view 1 — diff vs "${baselineLabel ?? "none"}": ${diffFromLast.length} pairs${diffFromLast.length ? ` (top: ${diffFromLast[0].benchmark}/${diffFromLast[0].runtime} ${diffFromLast[0].deltaPct >= 0 ? "+" : ""}${diffFromLast[0].deltaPct.toFixed(0)}%)` : ""}`);
