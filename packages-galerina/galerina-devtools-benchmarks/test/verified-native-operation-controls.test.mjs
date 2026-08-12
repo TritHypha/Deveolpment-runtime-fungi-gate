@@ -36,8 +36,8 @@ function assertControl(result, runtime) {
   assert.notEqual(result.antiElision.length, 0);
 }
 
-function available(command) {
-  const probe = spawnSync(command, ["--version"], {
+function available(command, args = ["--version"]) {
+  const probe = spawnSync(command, args, {
     cwd: TEMP,
     encoding: "utf8",
     timeout: 10_000,
@@ -61,6 +61,10 @@ test("external runtime probes execute only inside the disposable control directo
 const python = available("python3") ? "python3" : available("python") ? "python" : null;
 test("Python traverses the complete one-million-value control", { skip: python === null }, () => {
   assertControl(run(python, [join(BENCHMARK, "python.py")]), "python");
+});
+
+test("Go traverses the complete one-million-value control", { skip: !available("go", ["version"]) }, () => {
+  assertControl(run("go", ["run", join(BENCHMARK, "bench.go")]), "go");
 });
 
 test("optimized Rust retains every one-million-value read", { skip: !available("rustc") }, () => {

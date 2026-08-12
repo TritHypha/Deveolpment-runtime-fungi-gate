@@ -9,7 +9,7 @@ const CONTRACT_PATH = fileURLToPath(new URL(
   "../contracts/slide-verified-native-operation-admission-v1.json",
   import.meta.url,
 ));
-const CONTRACT_SHA256 = "551c08ddcc948bee3820ac54890ae425c59f713275eacf37c3f941cbde639ac4";
+const CONTRACT_SHA256 = "c4779c675e6a533559b6bf514f09941319adcb283672de91dc3a8a3e1f9e2777";
 const REFUSAL_ID = "GALERINA-VERIFIED-NATIVE-OPERATION-EVIDENCE-REFUSED";
 const RATE_NUMERATOR = 1_000_000_000_000_000;
 

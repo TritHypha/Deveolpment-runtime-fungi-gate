@@ -29,7 +29,46 @@ function fixture() {
     { benchmark: "beta", metricClass: "cpu-throughput", units: aligned, results: { wasm: { normThroughput: 80 } } },
   ];
   const current = [
-    { benchmark: "verified-native-operation", metricClass: "cpu-throughput", units: aligned, results: { slideReference: { normThroughput: 110, referenceOnly: true } } },
+    {
+      benchmark: "verified-native-operation",
+      metricClass: "cpu-throughput",
+      units: { comparable: true, status: "PASS", unit: "element-reads/s" },
+      results: {
+        slideReference: {
+          normThroughput: 100,
+          operationsPerSecond: 100,
+          iterations: 1_000_000,
+          result: 999_999,
+          unit: "element-reads/s",
+          referenceOnly: true,
+          authorityReleased: false,
+        },
+        rust: {
+          normThroughput: 150,
+          iterations: 1_000_000,
+          result: 999_999,
+          unit: "element-reads/s",
+        },
+        rustAvx2: {
+          normThroughput: 160,
+          iterations: 1_000_000,
+          result: 999_999,
+          unit: "element-reads/s",
+        },
+        nodejs: {
+          normThroughput: 80,
+          iterations: 1_000_000,
+          result: 999_999,
+          unit: "element-reads/s",
+        },
+        python: {
+          normThroughput: 10,
+          iterations: 1_000_000,
+          result: 999_999,
+          unit: "element-reads/s",
+        },
+      },
+    },
   ];
   const metadata = {
     generatedAt: "2026-08-12T17:19:05.632Z",
@@ -54,6 +93,65 @@ function fixture() {
   return { wasmArchive, current, metadata, archiveMeta, sources };
 }
 
+test("verified SLIDE reference is zero and same-work peers receive signed deltas", () => {
+  const model = buildSlideWasmHistoryModel(fixture());
+  const comparison = model.slideReferenceComparison;
+
+  assert.equal(comparison.status, "MEASURED_NON_AUTHORIZING");
+  assert.equal(comparison.authorityReleased, false);
+  assert.equal(comparison.baseline.product, "Galerina/SLIDE reference");
+  assert.equal(comparison.baseline.deltaPct, 0);
+  assert.equal(comparison.baseline.value, 100);
+  assert.equal(comparison.winner, "Rust AVX2");
+  assert.equal(comparison.galerinaPlace, 3);
+  assert.deepEqual(
+    comparison.peers.map((peer) => [peer.product, peer.deltaPct]),
+    [
+      ["Rust AVX2", 60],
+      ["Rust", 50],
+      ["Node.js", -20],
+      ["Python", -90],
+    ],
+  );
+  assert.deepEqual(comparison.unavailable, ["Go"]);
+});
+
+test("verified SLIDE reference comparison refuses authority-bearing or malformed evidence", () => {
+  const authorityBearing = fixture();
+  authorityBearing.current[0].results.slideReference.authorityReleased = true;
+  assert.throws(
+    () => buildSlideWasmHistoryModel(authorityBearing),
+    /verified SLIDE reference evidence refused/u,
+  );
+
+  const wrongWork = fixture();
+  wrongWork.current[0].results.slideReference.iterations = 999_999;
+  assert.throws(
+    () => buildSlideWasmHistoryModel(wrongWork),
+    /verified SLIDE reference evidence refused/u,
+  );
+});
+
+test("history page renders the approved SLIDE-zero reference panel without weakening production status", () => {
+  const page = buildSlideWasmHistoryHtml(buildSlideWasmHistoryModel(fixture()));
+
+  assert.match(page, /Verified SLIDE reference comparison/u);
+  assert.match(page, /SLIDE reference = 0 baseline/u);
+  assert.match(page, /Rust AVX2 \+60%/u);
+  assert.match(page, new RegExp(`Node\\.js ${String.fromCodePoint(0x2212)}20%`, "u"));
+  assert.match(page, /Winner: Rust AVX2/u);
+  assert.match(page, /Galerina place: 3 of 5/u);
+  assert.match(page, /Go: not measured/u);
+  assert.match(page, /MEASURED_NON_AUTHORIZING/u);
+  assert.match(page, /<table class="comparison-table"/u);
+  assert.match(page, /<th>Product<\/th><th>Throughput<\/th><th>Relative to SLIDE reference<\/th><th>Rank<\/th>/u);
+  assert.match(page, /data-reference-table-row="Galerina\/SLIDE reference"/u);
+  assert.match(page, /data-reference-table-row="Rust AVX2"/u);
+  assert.match(page, /Production SLIDE remains unmeasured/u);
+  assert.match(page, /Historic Galerina\/WASM evidence/u);
+  assert.doesNotMatch(page, /<script|https?:\/\//iu);
+});
+
 test("historical chart uses per-workload WASM-zero rows and keeps SLIDE reference evidence non-production", () => {
   const model = buildSlideWasmHistoryModel(fixture());
 
@@ -77,7 +175,7 @@ test("historical chart uses per-workload WASM-zero rows and keeps SLIDE referenc
   assert.match(page, /faster \+/u);
   assert.match(page, /slower −/u);
   assert.doesNotMatch(page, /<script|https?:\/\//iu);
-  assert.doesNotMatch(page, /winner|ranked [0-9]|performance ratio: [+-]?[0-9]/iu);
+  assert.doesNotMatch(page, /production (winner|ranked [0-9])|production performance ratio: [+-]?[0-9]/iu);
   assert.match(page, /results\/archive\/2026-08-02_galerina-wasm-before-slide\/results\.json/u);
   assert.match(page, new RegExp("d{64}"));
   assert.match(page, /2026-08-12T17:19:05\.632Z/u);

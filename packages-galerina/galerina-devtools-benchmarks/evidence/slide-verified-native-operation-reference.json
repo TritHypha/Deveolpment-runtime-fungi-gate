@@ -15,186 +15,186 @@
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          1714400,
-          1724100,
-          1699000,
-          1704900,
-          1703100,
-          1704300,
-          1711800,
-          1728800,
-          1875700
+          1719200,
+          1758100,
+          1708900,
+          1707300,
+          1708700,
+          2422300,
+          1705300,
+          1713100,
+          1713100
         ],
-        "medianNs": 1711800
+        "medianNs": 1713100
       },
       "directControl": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          559800,
-          595800,
-          546300,
-          522300,
-          527600,
-          525100,
-          1282800,
-          526600,
-          527900
+          567200,
+          565300,
+          526800,
+          531000,
+          540800,
+          529000,
+          1369000,
+          561400,
+          546000
         ],
-        "medianNs": 527900
+        "medianNs": 546000
       },
       "sourcePreparation": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          9053200,
-          9000100,
-          9034700,
-          8837300,
-          8960000,
-          9040500,
-          12016400,
-          8759100,
-          8771600
+          9394900,
+          9272700,
+          9489000,
+          9111300,
+          9092900,
+          10276000,
+          10012300,
+          9200900,
+          9072900
         ],
-        "medianNs": 9000100
+        "medianNs": 9272700
       },
       "sourceDemand": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          608100,
-          606800,
-          609600,
-          616600,
-          705900,
-          619200,
-          2934100,
-          1255800,
-          449400
+          665600,
+          734900,
+          664000,
+          617700,
+          639200,
+          3040900,
+          769100,
+          465000,
+          475900
         ],
-        "medianNs": 616600
+        "medianNs": 664000
       },
       "sourceTotal": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          9661300,
-          9606900,
-          9644300,
-          9453900,
+          10060500,
+          10007600,
+          10153000,
+          9729000,
+          9732100,
+          13316900,
+          10781400,
           9665900,
-          9659700,
-          14950500,
-          10014900,
-          9221000
+          9548800
         ],
-        "medianNs": 9659700
+        "medianNs": 10007600
       },
       "slideCompilation": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          302100,
-          318900,
-          313900,
-          248000,
-          649500,
-          155400,
-          240900,
-          200600,
-          161300
+          312800,
+          373600,
+          283500,
+          759900,
+          178500,
+          221600,
+          246300,
+          252600,
+          191500
         ],
-        "medianNs": 248000
+        "medianNs": 252600
       },
       "slidePreparation": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          9006400,
-          8968000,
-          9150700,
-          8884500,
-          8748000,
-          8796100,
-          9056900,
-          8903400,
-          8800100
+          9150000,
+          9186600,
+          9276400,
+          9079300,
+          8926200,
+          9069300,
+          9063700,
+          9169300,
+          8962400
         ],
-        "medianNs": 8903400
+        "medianNs": 9079300
       },
       "slideDemand": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          613000,
-          970200,
-          717400,
-          609800,
-          602900,
-          622700,
-          629900,
-          1270300,
-          452800
+          653900,
+          645700,
+          693700,
+          653300,
+          654800,
+          644200,
+          1296600,
+          1298100,
+          490300
         ],
-        "medianNs": 622700
+        "medianNs": 653900
       },
       "slidePreparedTotal": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          9619400,
-          9938200,
-          9868100,
-          9494300,
-          9350900,
-          9418800,
-          9686800,
-          10173700,
-          9252900
+          9803900,
+          9832300,
+          9970100,
+          9732600,
+          9581000,
+          9713500,
+          10360300,
+          10467400,
+          9452700
         ],
-        "medianNs": 9619400
+        "medianNs": 9803900
       },
       "slideEndToEndTotal": {
         "direction": "lower-is-better",
         "unit": "nanoseconds-per-million-iteration-flow",
         "samplesNs": [
-          9921500,
-          10257100,
-          10182000,
-          9742300,
-          10000400,
-          9574200,
-          9927700,
-          10374300,
-          9414200
+          10116700,
+          10205900,
+          10253600,
+          10492500,
+          9759500,
+          9935100,
+          10606600,
+          10720000,
+          9644200
         ],
-        "medianNs": 9927700
+        "medianNs": 10205900
       }
     },
     "comparisons": {
-      "slidePreparationVsSourcePreparation": 0.9892556749369451,
-      "slideDemandVsSourceDemand": 1.0098929614012326,
-      "slideDemandVsChecked": 0.3637691319079332,
-      "slidePreparedTotalVsSourceTotal": 0.995828027785542,
-      "slideEndToEndVsSourceTotal": 1.0277441328405643
+      "slidePreparationVsSourcePreparation": 0.9791430759110076,
+      "slideDemandVsSourceDemand": 0.984789156626506,
+      "slideDemandVsChecked": 0.3817056797618353,
+      "slidePreparedTotalVsSourceTotal": 0.9796454694432232,
+      "slideEndToEndVsSourceTotal": 1.0198149406451098
     },
     "checks": {
       "expectedValue": 999999,
       "exactResults": 90,
       "failures": 0
     },
-    "evidenceDigest": "sha256:7c2e83d8033e6ee4bd4cffb70971c7d58a8f17d7d5a2a40c028af98032c6d342"
+    "evidenceDigest": "sha256:f1c1f04496aa4821a863c615150b2ede5db6ceb51a248b13b1250ca7bd7ea820"
   },
   "provenance": {
-    "commit": "710271581fa1806afe2f2820fb463592f17d7e63",
+    "commit": "6de4d91ba20a7e86c53c8898fcdae2ef4b6cee28",
     "dirty": false,
-    "generatedAt": "2026-08-03T08:44:26.667Z",
+    "generatedAt": "2026-08-12T18:44:00.656Z",
     "platform": "win32",
     "release": "10.0.19045",
     "architecture": "x64",
     "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
     "node": "v24.18.0"
   },
-  "publicationDigest": "sha256:75b4ea4d18c4e60be8c6cda37a49fafec10e3feff9a7a00e059501cdcb74fe1d"
+  "publicationDigest": "sha256:2fd80630bf860b4b14b0deebf85161d28b11aec3154e9c5116b6d7cd26e155b6"
 }
