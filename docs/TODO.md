@@ -29,10 +29,15 @@ counts or open items that a newer section explicitly supersedes.
   outputs are **3/3** with **897** test nodes, retirement tracks **1,427**
   executable-family paths and **118** `.fungi` source assets, and Myco indexes
   **4,983 files**.
-- [ ] Finish the eighth slice's percentage/status/roadmap/count/Golden/code
-  indexes and exact primary graph rebuild. Full tooling, normal phase-close,
-  graph-all-after-roadmap and whole-memory evaluation stay excluded; until the
-  bounded owner matrix closes, repository-wide closure is **UNKNOWN**.
+- [x] Finish the eighth slice's bounded owner matrix: percentage freshness,
+  status, roadmap **5/5**, canonical counts **7/7** plus anti-neutering
+  self-test, Golden **11/11 checked + 11/11 execution vectors**, diagnostic
+  code index, semantic outputs **3/3**, retirement, pinned SLIDE evidence and
+  path-leak enforcement are current. The primary graph is force-rebuilt at the
+  final committed head and independently checked for exact head, conserved
+  node/edge totals and `stale: false`. Full tooling, normal phase-close,
+  graph-all-after-roadmap and whole-memory evaluation stay excluded;
+  repository-wide closure remains **UNKNOWN**.
 - [x] Keep `naming-checker.ts`, its private TypeScript decision,
   `checkNaming`, `runNamingAudit`, the CLI and every consumer active. This
   reference-only proof grants no consumer-switch, production, release or

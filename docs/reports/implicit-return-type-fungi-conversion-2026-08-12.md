@@ -49,8 +49,15 @@ Boolean decisions. It contains no `null`, `NaN`, `else if`, `throw`,
 - Generated graph owners pass 7/7 in both generate and check modes; semantic
   outputs are 3/3 current with 100 packages and 897 test nodes. Retirement
   evidence records 1,427 executable-family paths and 118 `.fungi` assets.
-- Myco indexes 4,983 files. The primary code graph is deliberately not claimed
-  current until its final forced rebuild reaches the committed closure head.
+- Myco indexes 4,983 files. The primary code graph is force-rebuilt after the
+  final closure commit and independently checked for an exact indexed/Git head,
+  conserved node and edge totals, `stale: false`, and queryability of the new
+  physical proof. Volatile graph counts remain in the graph status rather than
+  being copied into this report.
+- The bounded owner matrix is current: percentage freshness; status; roadmap
+  5/5; canonical counts 7/7 plus anti-neutering self-test; Golden 11/11 checked
+  plus 11/11 execution vectors; diagnostic code index; semantic outputs 3/3;
+  retirement; pinned SLIDE evidence; and path-leak enforcement.
 
 ## Resolved blocker
 
