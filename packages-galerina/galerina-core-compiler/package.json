@@ -80,6 +80,7 @@
       "src/self-hosted/slide-v2e-frontend-schema.fungi",
       "src/self-hosted/slide-v2e-frontend-validator.fungi",
       "src/self-hosted/slide-v2e-signature-evidence.fungi",
+      "src/self-hosted/tensor-dimension-count-compatibility.fungi",
       "src/self-hosted/tensor-element-type-compatibility.fungi",
       "src/self-hosted/type-checker.fungi",
       "src/self-hosted/verified-loop-envelope.fungi",

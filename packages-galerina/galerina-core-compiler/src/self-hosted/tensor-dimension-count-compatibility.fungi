@@ -1,0 +1,12 @@
+@version 1
+
+/// Tensor dimension counts are compatible only when both normalized shapes
+/// contain the same number of opaque rank tokens. Token values are not read.
+pure flow tensorDimensionCountsCompatibleFungi(expected: Array<Int>, actual: Array<Int>) -> Bool
+contract { intent { "Compare tensor ranks without interpreting dimension tokens." } }
+{
+  if expected.count() == actual.count() {
+    return true
+  }
+  return false
+}
