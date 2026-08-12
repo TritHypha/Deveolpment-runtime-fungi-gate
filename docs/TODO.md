@@ -4,6 +4,33 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Deferred SLIDE call-chain performance investigation - 2026-08-12
+
+- [ ] Investigate why the exact **50,000-chain / seven-calls-per-chain**
+  Galerina/SLIDE reference measured about **177,271 chains/s**, approximately
+  **305x slower** than the **54,119,000 chains/s** legacy WASM lane, despite
+  returning the required checksum **57,984**. Do not begin this investigation
+  as part of the benchmark-publication task and do not treat the result as a
+  production SLIDE measurement or optimization authority.
+- [ ] Decompose the timed path without weakening admission: measure the
+  prepared V2C executor alone, Portable VEO/VOK enter-and-consume boundary,
+  reference-bundle receipt construction, transcript/input digest and JSON
+  serialization work, function-dispatch/Map lookup, step-budget accounting,
+  and any allocation or garbage-collection cost. Keep compilation and bundle
+  preparation separate because the current execution timer excludes them.
+- [ ] Reconfirm exact work equivalence independently: **50,000** chains,
+  **seven** calls per chain, identical arithmetic and checksum, identical
+  chains/s normalization, fixed toolchain/build points, adequate warm-up and
+  multiple distributions rather than one aggregate. Include scaling runs that
+  distinguish fixed admission/receipt cost from per-instruction interpreter
+  cost.
+- [ ] Produce an evidence-backed cost attribution and at least three bounded
+  improvement options. Preserve single-use affine handles, VOK admission,
+  fail-closed receipts, transcript integrity, K3 `0`, an unreleased authority
+  result, and the absence of fallback. Any faster path must pass the same
+  hostile mutation, work-budget and checksum controls before it can replace
+  the reference implementation.
+
 ### Private Fungi skill repository custody - 2026-08-12
 
 - [x] Keep `writing-fungi` at `d2d955e` and
