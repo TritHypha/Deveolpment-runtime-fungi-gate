@@ -52,8 +52,26 @@ Source-shape checks retain the project prohibitions on null, NaN, `else if`,
 `else`, exceptions and every loop form.
 
 The physical test must independently compile, publish, re-admit and execute the
-exact Fungi bytes, pin the derived registry identity, registry digest and
-record-descriptor digest, verify a typed record receipt, and refuse source,
+exact Fungi bytes, require the no-successor registry fields to remain absent,
+pin the record-descriptor digest, verify a typed record receipt, and refuse source,
 publication, receipt-envelope and resource-budget mutation. No consumer
 switch, TypeScript/MJS retirement, production, signing, release, platform or
 runtime-residency authority follows.
+
+## Physical-boundary reconciliation
+
+The first physical RED run refused before packaging. A four-way reduction
+proved that K3 `Verdict`, record construction, zero arguments and String fields
+are already supported. The actual mismatch is identifier syntax: Fungi and the
+external record descriptor admit camelCase field names such as `retypedTo`,
+while SLIDE's internal reference GIR descriptor admits lower-snake identifiers
+only.
+
+The adopted repair keeps both authorities unchanged. The checked-Fungi lowerer
+maps record members to deterministic internal slots (`field_1`, `field_2`, ...)
+for reference GIR construction and projection, while the authenticated external
+record descriptor retains the exact Fungi field names and order. The descriptor
+already binds each ordered field name and type ID, and V2C independently checks
+the ordered field types, so no name is trusted across the internal boundary and
+no syntax is widened. Relaxing the GIR identifier grammar or coercing `Verdict`
+to `Int` are refused alternatives.

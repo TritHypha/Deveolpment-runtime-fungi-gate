@@ -62,7 +62,8 @@ Expected: one failure because `spillRetypeFungi` is absent.
 
 - [ ] **Step 1: Add the exact record and flow**
 
-Add this source after `refute`:
+Declare the record immediately after the version/module comments so it remains
+inside the bounded SLIDE record profile, then add the flow after `refute`:
 
 ```fungi
 record SpillOutcomeFungi {
@@ -104,6 +105,8 @@ Commit only the Fungi source and differential test with message
 
 **Files:**
 - Create: `scripts/tests/spill-retype-fungi-slide.integration.test.mjs`
+- Modify: `../SLIDE/src/checked-fungi-pure-scalar-compiler.mjs`
+- Modify: `../SLIDE/tests/v2c-external-record-abi.test.mjs`
 
 **Interfaces:**
 - Consumes: exact governed Fungi bytes and zero arguments.
@@ -111,12 +114,19 @@ Commit only the Fungi source and differential test with message
 
 - [ ] **Step 1: Write the physical RED test**
 
-Compile and publish `spillRetypeFungi`; initially pin the registry and record
-descriptor as `UNPINNED` so the first admitted build exposes their exact
-identities. Verify the record value, schema, safe-value record type, descriptor
+Compile and publish `spillRetypeFungi`; require the parent/no-successor profile
+to omit registry-set fields and initially pin the record descriptor as
+`UNPINNED` so the first admitted build exposes its exact identity. Verify the
+record value, schema, safe-value record type, descriptor
 digest and authority flag. Add refusals for surplus arguments, inadequate step
 fuel, source mutation, published artifact mutation, receipt-field mutation and
 safe-value-envelope mutation.
+
+If this test refuses before packaging, reduce the failure against the bounded
+record ABI. The confirmed reduction is the camelCase external field
+`retypedTo`: add a SLIDE RED test that requires an exact camelCase external
+descriptor and typed K3 record value, then map ordered members to deterministic
+lower-snake internal slots without changing the external descriptor.
 
 - [ ] **Step 2: Run RED and pin exact observed identities**
 

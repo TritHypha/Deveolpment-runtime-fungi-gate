@@ -3,6 +3,12 @@
 /// TypeScript remains the executing compiler reference until the bootstrap,
 /// consumer-switch and retirement gates are independently proved.
 
+record SpillOutcomeFungi {
+  retypedTo: Verdict
+  code: String
+  reason: String
+}
+
 pure flow combineTrust(left: Verdict, right: Verdict) -> Verdict
 contract { intent { "Return the least-trusted K3 operand without manufacturing trust." } }
 {
@@ -43,12 +49,6 @@ pure flow refute() -> Verdict
 contract { intent { "Return the sticky hard-negative trust state." } }
 {
   return Verdict.Deny
-}
-
-record SpillOutcomeFungi {
-  retypedTo: Verdict
-  code: String
-  reason: String
 }
 
 pure flow spillRetypeFungi() -> SpillOutcomeFungi
