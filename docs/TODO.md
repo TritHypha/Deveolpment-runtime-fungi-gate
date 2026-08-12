@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Public Fungi skill release custody - 2026-08-12
+
+- [x] Publish `writing-fungi` at `d2d955e` and
+  `translating-typescript-to-fungi` at `9654753`. Both repositories are
+  anonymously visible, retain Apache-2.0 ownership notices and expose only
+  the audited public skill corpus.
+- [x] Add independent removed-history refusal tests and bounded reachable-Git
+  scans. Both local tests pass **1/1**, both public-release audits pass, and
+  both Codex and pinned Agent Skills validators accept the exact repositories.
+- [x] Require the public `verify` workflow on protected `main`. Both published
+  workflows are green on their exact commits; force-push and branch deletion
+  are disabled, linear history and resolved conversations are required, and
+  administrators cannot bypass the check.
+- [x] Enable private vulnerability reporting and complete each repository's
+  public description and topics.
+- [ ] Keep Slice 63 paused until the pin-bound SLIDE capability reconciliation
+  matrix is complete. Public skill custody does not authorize conversion,
+  retirement, signing, production admission or release.
+
 ### Physical TypeScript-to-Fungi batch 33-62 - 2026-08-12
 
 - [x] Complete the bounded 30-slice run with Slice 62 recorded as `BLOCKED`,

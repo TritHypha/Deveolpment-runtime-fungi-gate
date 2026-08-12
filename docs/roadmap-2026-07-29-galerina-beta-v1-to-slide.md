@@ -26,6 +26,19 @@ wide closure is **UNKNOWN**. The last published canonical aggregate remains
 **100/100 packages and 9,612 tests**; it is historical evidence, not a fresh
 batch-wide rerun.
 
+Conversion slices were then paused for the public-skill custody gate. The
+`writing-fungi` repository is publicly verified at `d2d955e`; the
+`translating-typescript-to-fungi` repository is publicly verified at
+`9654753`. Each repository now scans its current corpus and every bounded
+reachable Git blob, carries an independent removed-history refusal test, runs
+the pinned public `verify` workflow, exposes private vulnerability reporting,
+and protects `main` with the required green check, linear history, resolved
+conversations and no administrative bypass. Both public workflows pass on the
+named commits. This closes repository publication custody only: Slice 63 has
+not started, and no TypeScript retirement, SLIDE/VOK admission, signing,
+production or release authority follows. The next permitted activity is the
+pin-bound SLIDE capability reconciliation matrix before any further slice.
+
 The prior thirty-second conversion slice uses local SLIDE `6de4d91` to
 publish, independently re-admit, and execute the app-kernel's exact private
 literal-verification decision through a typed Boolean boundary. It changes no
