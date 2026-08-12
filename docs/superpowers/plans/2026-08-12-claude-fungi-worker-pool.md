@@ -24,6 +24,8 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Model `opus`; effort `high`.
 - Both public Fungi skill directories are mounted and named in every prompt.
 - One exact symbol and owning package per worker.
+- Run the mandatory live/dead, duplicate, floor, custody and physical-domain
+  preflight before assigning each scope.
 - Workers never commit, push, change authority ledgers, widen profiles or run
   the crash-linked aggregate lanes.
 - Codex owns admission, review, shared files, verification and local commits.
@@ -41,8 +43,8 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Read: `packages-galerina/galerina-cpu-kernels/src/index.ts`
 - Read: `build/ts-retirement/ts-retirement.json`
 
-**Produces:** three independent dossier results for Slices 38-40; later scopes
-remain queued until the product-owner gate.
+**Produces:** three independent dossier results per wave. Slices 38-40 and
+Slices 41-43 have completed their product-owner gates.
 
 - [x] Start three background sessions with the exact Slice 38-40 scopes in the
   design.
@@ -65,14 +67,18 @@ remain queued until the product-owner gate.
 **Produces:** an owner-reviewed, digest-bound queue extension containing only
 newly admitted symbols.
 
-- [ ] Re-read every source, caller, test, type, constant and retirement row.
-- [ ] Reject any bootstrap-floor, unsupported-domain or ambiguous candidate.
-- [ ] Bind exact decisions/effects, physical profiles and hostile vectors in
+- [x] Re-read every source, caller, test, type, constant and retirement row.
+- [x] Treat a dead-code finding as deletion/adjudication work, never as an
+  otherwise successful conversion candidate.
+- [x] Reject any bootstrap-floor, unsupported-domain or ambiguous candidate.
+- [x] Bind exact decisions/effects, physical profiles and hostile vectors in
   the second design.
-- [ ] Add only sorted, unique `SYMBOLS` decisions that remain admitted. A
+- [x] Add only sorted, unique `SYMBOLS` decisions that remain admitted. A
   blocked, duplicate or superseded scope is recorded and replaced only in a
-  later wave.
-- [ ] Regenerate and check the bounded queue with zero whole-file claims.
+  later wave. No new candidate survived these waves, so no authority row was
+  added.
+- [x] Retain the already checked bounded queue with zero whole-file claims;
+  regeneration is unnecessary because candidate authority did not change.
 
 ### Task 3: Isolated implementation wave
 
@@ -109,14 +115,14 @@ blockers.
   inputs/artifacts.
 - [ ] Preserve blockers as blockers; do not force a green receipt.
 
-### Task 5: Ten-slice shared closure
+### Task 5: Bounded shared closure
 
 **Files:** the active TODO, roadmap, subway, live file register, generated
 bounded owners and public skills selected by the final slice review.
 
-**Produces:** one locally committed ten-slice checkpoint; no push.
+**Produces:** one locally committed bounded checkpoint; no push.
 
-- [ ] Run the ten focused slice lanes and applicable owning package suites.
+- [ ] Run the focused slice lanes and applicable owning package suites.
 - [ ] Review both public Fungi skills and apply only reusable proved guidance.
 - [ ] Run bounded owners once in dependency order.
 - [ ] Refresh graph and Myco once at final HEAD and verify new symbols.

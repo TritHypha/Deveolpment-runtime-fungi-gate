@@ -1,9 +1,9 @@
-# Fungi Conversion Batch 33–42 File Status
+# Fungi Conversion Batch 33–43 File Status
 
-This is the live operational register for the ten-slice batch. The binding
+This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
 [`../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md`](../superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md).
-The active roadmap is updated once after all ten slices settle.
+The active roadmap is updated once at the bounded batch exit.
 
 ## Status vocabulary
 
@@ -28,18 +28,21 @@ The active roadmap is updated once after all ten slices settle.
 | 38 | `packages-galerina/galerina-web/src/index.ts#isServerOnlyImport` | not created | not created | The exact 28-name membership decision exceeds the freshly proved seven-arm physical String-match ceiling; the smaller 18-label Slice 37 helper shapes already refuse. Live graph confirms one production caller and two focused test callers; the package passes 25/25. No profile widening is authorized. | `BLOCKED` |
 | 39 | `packages-galerina/galerina-target-js/src/index.ts#isServerOnlyImport` | not created | not created | The exact 28-name membership decision exceeds the current 16-block physical ceiling; the 256-byte and well-formed-Unicode physical boundaries also narrow the unbounded TypeScript String domain. Live graph confirms the production/test callers and the package passes 13/13. No narrowing or profile widening is authorized. | `BLOCKED` |
 | 40 | `packages-galerina/galerina-devtools-provenance/src/analyzer.ts#isGateCall` | not created | not created | The live graph proves its only caller is nested inside `analyzeFlowAst`, which itself has zero callers. A reference twin could never satisfy live differential or consumer-switch retirement gates. Owner classification is blocked pending dead-code deletion adjudication; the package remains green 25/25. | `BLOCKED` |
-| 41 | `packages-galerina/galerina-core-network/src/index.ts#isUnsafeNetworkBackend` | pending owner admission | pending owner admission | Queued behind the three-worker product-owner gate. | `PENDING` |
+| 41 | `packages-galerina/galerina-core-network/src/index.ts#isUnsafeNetworkBackend` | not created | not created | The physical frontend has no exact boundary for the source's nominal six-field record with optional Boolean state. A scalar bridge would move the absence decision back into TypeScript. The live graph also shows its caller is package-test-only; core-network remains green **192/192**. | `BLOCKED` |
 | 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | `packages-galerina/galerina-cpu-kernels/src/self-hosted/low-bit-kernel-routing.fungi` | `packages-galerina/galerina-cpu-kernels/tests/low-bit-kernel-routing-fungi-conversion.test.mjs` | Already proved in Slice 29; no duplicate conversion is permitted. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
+| 42 replacement | `packages-galerina/galerina-core-tasks/src/check-permissions.ts#isSafeEnvironmentName` | not created | not created | The source is an open regular-language decision over an unbounded JavaScript String. The selected physical profile has no Boolean `while`, text length or character accessor, and its bounded well-formed text admission narrows the source domain. Core-tasks remains green **9/9**. | `BLOCKED` |
+| 43 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#containsCardKeyword` | not created | not created | Physical text containment exists, but exact JavaScript case folding does not; the bounded well-formed physical text domain is narrower too. Devtools-pci remains green **29/29**. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
 | File | Responsibility | Status |
 |---|---|---|
-| `docs/superpowers/specs/2026-08-12-five-scalar-classifiers-fungi-conversion-design.md` | Bound design for Slices 33–37; a second bound design is required before Slices 38–42 are admitted. | `DONE` |
+| `docs/superpowers/specs/2026-08-12-five-scalar-classifiers-fungi-conversion-design.md` | Bound design for Slices 33–37. | `DONE` |
+| `docs/superpowers/specs/2026-08-12-five-follow-on-fungi-conversions-design.md` | Product-owner negative adjudication for Slices 38–43, including the superseded original Slice 42 scope. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
-| `governance/conversion-queue-decisions.json` | Five current symbol-scoped candidate decisions; five more are pending. | `IN_PROGRESS` |
-| `build/conversion-queue/queue.json` | Generated five-candidate queue; regenerate after Slices 38–42 are selected. | `IN_PROGRESS` |
-| `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `IN_PROGRESS` |
+| `governance/conversion-queue-decisions.json` | Five current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
+| `build/conversion-queue/queue.json` | Generated five-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
+| `build/conversion-queue/QUEUE.md` | Human-readable generated queue; no regeneration is required because no candidate authority changed. | `DONE` |
 | `scripts/lib/scalar-classifier-fungi-proof.mjs` | Shared interpreter and signed-Wasm differential proof helper. | `DONE` |
 | `packages-galerina/galerina-core-compiler/src/interpreter.ts` | Preserve quoted reserved names as String match patterns. | `DONE` |
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
@@ -48,7 +51,7 @@ The active roadmap is updated once after all ten slices settle.
 
 ## Deferred shared closure files
 
-These remain `NOT_STARTED` until all ten slice proofs settle:
+These remain `NOT_STARTED` until the bounded batch exit:
 
 - `docs/TODO.md`
 - `docs/roadmap-2026-07-29-galerina-beta-v1-to-slide.md`
@@ -61,7 +64,7 @@ These remain `NOT_STARTED` until all ten slice proofs settle:
 
 `packages-galerina/galerina-devtools-graph-algorithms/src/graphs/boundary-graph.ts#requiresAuth`
 is `BLOCKED_BY_BOOTSTRAP_FLOOR`. Its negative design record is complete; it is
-not one of Slices 33–42 and no Fungi asset was produced.
+not one of Slices 33–43 and no Fungi asset was produced.
 
 ## Current focused evidence
 

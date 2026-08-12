@@ -4,7 +4,7 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-42 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-43 - 2026-08-12
 
 - [x] Bind Slices 33-37 to exact symbols and package-owned Fungi assets.
   Fresh focused evidence passes **10/10** package conversion checks and **6/6**
@@ -29,7 +29,12 @@ counts or open items that a newer section explicitly supersedes.
   and Unicode-well-formedness boundaries narrow the source String domain. The
   live graph confirms its callers and the owning package passes **13/13**. No
   source-contract narrowing or profile widening is authorized.
-- [ ] Select the following three scopes only after the product-owner gate.
+- [x] Complete the next three-scope product-owner gate. Slice 41 is blocked by
+  its optional-record physical ABI and package-test-only consumer shape;
+  replacement Slice 42 is blocked by the missing physical regular-language
+  iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
+  folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
+- [ ] Select the following three scopes only after this product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or
   `SUPERSEDED_BY_EXISTING_FUNGI`.

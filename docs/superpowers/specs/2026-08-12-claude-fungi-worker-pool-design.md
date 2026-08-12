@@ -18,11 +18,31 @@ widening, integration, completion claims, commits or pushes.
 - Never let two workers edit the same package, queue, roadmap, generated owner,
   shared proof helper or public skill repository.
 
-Every new scope begins with a read-only dossier. The first wave covers Slices
-38-40; Slices 41-42 remain queued until the product-owner gate. Codex verifies
-the current source, retirement floor, selected SLIDE/VOK profile and queue
-scope after each wave. Only admitted candidates enter a later,
-worktree-isolated implementation wave.
+Every new scope begins with a read-only dossier. The first wave covered Slices
+38-40. The second wave covers Slices 41-43 after replacing a duplicate Slice 42
+scope. Codex verifies the current source, retirement floor, selected SLIDE/VOK
+profile and queue scope after each wave. Only admitted candidates enter a
+later, worktree-isolated implementation wave.
+
+## Mandatory scope preflight
+
+Before a worker starts, Codex must prove all of the following from current
+graph, retirement and queue evidence:
+
+1. the exact symbol is live or has an explicit deletion/adjudication purpose;
+2. the symbol has not already been converted, superseded or assigned in this
+   or an earlier slice;
+3. its file and symbol floors do not reserve it to a bootstrap or other
+   authority boundary;
+4. no concurrent worker owns the package or any shared proof surface;
+5. the complete source domain has a named candidate physical profile, or the
+   dossier is explicitly a blocker investigation.
+
+A dead symbol is not a conversion candidate merely because its body is easy to
+translate. A duplicate is recorded as `SUPERSEDED_BY_EXISTING_FUNGI`, not
+counted as a new slice. A profile that represents only a narrowed scalar
+convenience input does not prove parity for an object, optional field,
+unbounded String or other wider source boundary.
 
 ## Required worker authorities
 
@@ -45,6 +65,8 @@ remain the source of truth.
 | 40 | `packages-galerina/galerina-devtools-provenance/src/analyzer.ts#isGateCall` | none |
 | 41 | `packages-galerina/galerina-core-network/src/index.ts#isUnsafeNetworkBackend` | none |
 | 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | superseded by Slice 29 |
+| 42 replacement | `packages-galerina/galerina-core-tasks/src/check-permissions.ts#isSafeEnvironmentName` | none |
+| 43 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#containsCardKeyword` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
@@ -52,6 +74,10 @@ the current retirement owner declares `bounded-bootstrap-floor`.
 `requiresLowBitKernel` must not be reconverted. The current repository already
 contains the package-owned asset, differential test and physical Slice 29
 evidence; its queued classification is `SUPERSEDED_BY_EXISTING_FUNGI`.
+
+The replacement does not erase that refusal record: the original Slice 42
+scope stays recorded as superseded, while the replacement receives its own
+source dossier and owner decision.
 
 ## Worker restrictions
 
@@ -91,3 +117,17 @@ profile domains, binds the accepted design and queue decisions, and runs all
 focused checks. Claude output is advice or an isolated patch, never authority.
 Unknown evidence remains blocked. Integration uses explicit paths and local
 commits only; the owner performs all pushes.
+
+## Classification accounting
+
+- A physical compile refusal is evidence about the named profile, not a
+  conversion success.
+- A frontend strict-check is not physical `.slide` or VOK evidence.
+- A worker recommendation is non-authoritative until Codex reproduces its
+  source, caller, domain and focused-test evidence.
+- Dead code follows a deletion/adjudication path; it cannot satisfy a consumer
+  switch by receiving an unused Fungi twin.
+- Graph content that is current for code but behind an output-only generated
+  commit may guide symbol discovery only when the exact source is unchanged;
+  formal graph-head freshness remains `UNKNOWN` until the index build point
+  matches the repository head.
