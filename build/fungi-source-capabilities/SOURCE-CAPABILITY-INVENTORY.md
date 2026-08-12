@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 130
-- Flows: 851
-- Bytes: 1130237
-- Retirement graph: `sha256:b905f791d8d4d9f255c6e0609839a5ead1d34113c898fd81472010cf5e3d2a43`
+- Files: 131
+- Flows: 852
+- Bytes: 1130660
+- Retirement graph: `sha256:540e62d47c0e3e5a93a8fbda7a9f7eeb7a0357d55dc0c0592152d033b7957571`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18962 |
-| `callExpr` | 7260 |
-| `binaryExpr` | 6045 |
+| `identifier` | 18966 |
+| `callExpr` | 7261 |
+| `binaryExpr` | 6046 |
 | `numberLiteral` | 5722 |
-| `block` | 5043 |
+| `block` | 5045 |
 | `stringLiteral` | 4831 |
 | `memberExpr` | 4683 |
-| `returnStmt` | 3037 |
-| `paramDecl` | 2837 |
-| `typeRef` | 2511 |
-| `ifStmt` | 2272 |
+| `returnStmt` | 3039 |
+| `paramDecl` | 2839 |
+| `typeRef` | 2514 |
+| `ifStmt` | 2273 |
 | `assignStmt` | 2120 |
 | `letDecl` | 1861 |
-| `boolLiteral` | 1615 |
+| `boolLiteral` | 1617 |
 | `matchArm` | 1244 |
-| `contractDecl` | 844 |
-| `intentDecl` | 844 |
-| `pureFlowDecl` | 839 |
+| `contractDecl` | 845 |
+| `intentDecl` | 845 |
+| `pureFlowDecl` | 840 |
 | `mutDecl` | 810 |
 | `matchExpr` | 378 |
 | `whileStmt` | 340 |
 | `checkArm` | 315 |
 | `unaryExpr` | 251 |
 | `recordDecl` | 209 |
-| `program` | 130 |
+| `program` | 131 |
 | `listLiteral` | 115 |
 | `checkExpr` | 105 |
 | `trapDecl` | 50 |
@@ -58,9 +58,9 @@ admission, execution parity, retirement credit or production authority.
 
 | Type | Count |
 |---|---:|
-| `Int` | 535 |
+| `Int` | 537 |
 | `String` | 450 |
-| `Bool` | 401 |
+| `Bool` | 402 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -319,8 +319,8 @@ admission, execution parity, retirement credit or production authority.
 | `sha256Hex` | 33 |
 | `charAt` | 25 |
 | `isEmpty` | 14 |
+| `bitAnd` | 13 |
 | `fromHex` | 13 |
-| `bitAnd` | 12 |
 | `toInt` | 12 |
 | `isDigit` | 11 |
 | `codePoint` | 9 |
@@ -348,7 +348,7 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 1848 |
+| `==` | 1849 |
 | `+` | 1009 |
 | `!=` | 979 |
 | `\|\|` | 749 |
