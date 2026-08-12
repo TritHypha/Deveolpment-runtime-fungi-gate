@@ -177,6 +177,29 @@ work exhaustion, source mutation and one-byte artifact mutation refuse
 packages and 9,570 tests** in **279.7s** with captured exit code 0. TypeScript
 and all consumers remain active; repository-wide closure remains **UNKNOWN**.
 
+Tenth physical conversion slice 2026-08-12: Tower-Citizen's exported
+`authorize` trust-boundary decision now has package-owned `authorizeVerdict`
+in `galerina-tower-citizen/src/self-hosted/authorization-boundary.fungi`.
+Exhaustive typed `check` returns true only for exact Allow; Unknown and Deny
+remain false. Differential parity is **2/2**, the complete Tower package at
+that slice is **503/503**, and independent SLIDE `dc1add7` publishes and
+re-admits one physical `.slide` through VOK with typed Bool receipts (**1/1**,
+zero skips). Malformed arguments and source/artifact mutation refuse. The
+TypeScript function and callers remain active; no production or retirement
+authority follows.
+
+Eleventh physical conversion slice 2026-08-12: the adjacent exported
+`collapse` decision now has package-owned `collapseVerdict` in the same Fungi
+asset. Exact Allow maps to `"allow"`; Unknown and Deny map to `"deny"`.
+Differential parity is **2/2**, the combined authorization/collapse
+neighborhood is **4/4**, Tower-Citizen is **505/505**, and one independently
+admitted physical `.slide` returns typed String receipts through VOK (**1/1**,
+zero skips; combined physical neighborhood **2/2**). The monitored complete
+owner passes **100/100 packages and 9,574 tests in 277.8s** with captured exit
+code 0. Retirement records **1,430** executable-family paths and **120**
+`.fungi` source assets. TypeScript and every consumer remain active;
+repository-wide closure remains **UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
@@ -2752,6 +2775,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,570 tests** in 279.7 seconds. The normal custody close remains fail-closed:
+9,574 tests** in 277.8 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.

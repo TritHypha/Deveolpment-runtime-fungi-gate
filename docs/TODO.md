@@ -4,6 +4,53 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Eleventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express Tower-Citizen's exported `collapse` K3 trust-boundary decision
+  as the package-owned `collapseVerdict` flow in
+  `src/self-hosted/authorization-boundary.fungi`. Exhaustive typed `check`
+  maps only Allow to `"allow"`; Unknown and Deny both map to `"deny"`. The
+  source contains no null, NaN, `else if`, exception syntax, `for`, `while`,
+  or `loop`.
+- [x] Prove the complete K3 collapse table against real TypeScript (**2/2**),
+  keep the combined authorization/collapse neighborhood at **4/4**, and run
+  the complete Tower-Citizen package at **505/505**.
+- [x] Publish one physical `.slide` through independent SLIDE `dc1add7`,
+  independently re-admit it through VOK, verify typed String receipts, keep
+  Unknown closed, and refuse malformed arguments plus source/artifact
+  mutations (**1/1**, zero skips; combined physical neighborhood **2/2**).
+- [x] Run the bounded complete package owner: **100/100 packages and 9,574
+  tests** pass in **277.8s** with captured exit code 0. Retirement now tracks
+  **1,430** executable-family paths and **120** `.fungi` source assets.
+- [ ] Finish the shared ninth-through-eleventh semantic/graph/percentage/
+  status/roadmap/count/Golden/code-index/Myco/primary-graph owner wave. Full
+  tooling, normal phase-close, graph-all-after-roadmap and whole-memory
+  evaluation stay excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Keep `three-valued-governance.ts`, `collapse`, `decideAtBoundary` and
+  every caller active. This reference-only proof grants no consumer-switch,
+  production, release or retirement authority.
+
+### Tenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express Tower-Citizen's exported `authorize` decision as package-owned
+  `authorizeVerdict`. Exact Allow returns true; Unknown and Deny return false.
+  The exhaustive typed source contains no null, NaN, `else if`, exception
+  syntax, `for`, `while`, or `loop`.
+- [x] Prove the complete K3 authorization table against exported TypeScript
+  (**2/2**) and run the complete Tower-Citizen package at **503/503**.
+- [x] Publish one physical `.slide` through independent SLIDE `dc1add7`,
+  independently re-admit it through VOK, verify typed Bool receipts, and
+  refuse malformed arguments plus source/artifact mutations (**1/1**, zero
+  skips).
+- [x] Record the aggregate honestly: the monitored owner reached Tower after
+  the adjacent eleventh proof joined, so its captured result is the combined
+  **100/100 packages and 9,574 tests in 277.8s**, not an invented isolated
+  tenth-only total. Tenth retirement evidence was **1,429** executable-family
+  paths and **120** `.fungi` source assets.
+- [ ] Close generated owners in the shared ninth-through-eleventh wave.
+- [x] Keep the TypeScript decision and every caller active; no consumer-switch,
+  production, release or retirement authority follows.
+
 ### Ninth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the naming tool's private deterministic `isGenericTypeName`
@@ -313,8 +360,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the current complete package lane passes **100/100 packages and 9,570 tests**
-  in 279.7 seconds. These are verification evidence, not release authority.
+  the current complete package lane passes **100/100 packages and 9,574 tests**
+  in 277.8 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
