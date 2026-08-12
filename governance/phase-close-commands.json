@@ -5192,6 +5192,7 @@
           "scripts/tests/residency-tighten-fungi-slide.integration.test.mjs",
           "scripts/tests/resolve-host-fungi-slide.integration.test.mjs",
           "scripts/tests/spill-retype-fungi-slide.integration.test.mjs",
+          "scripts/tests/test-marker-fungi-slide.integration.test.mjs",
           "scripts/tests/tensor-dimension-count-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/tensor-element-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/transport-permit-data-fungi-slide.integration.test.mjs",
@@ -5344,13 +5345,14 @@
           "scripts/tests/residency-tighten-fungi-slide.integration.test.mjs",
           "scripts/tests/resolve-host-fungi-slide.integration.test.mjs",
           "scripts/tests/spill-retype-fungi-slide.integration.test.mjs",
+          "scripts/tests/test-marker-fungi-slide.integration.test.mjs",
           "scripts/tests/tensor-dimension-count-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/tensor-element-type-compatibility-fungi-slide.integration.test.mjs",
           "scripts/tests/transport-permit-data-fungi-slide.integration.test.mjs",
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 131
+        "expectedCount": 132
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,
