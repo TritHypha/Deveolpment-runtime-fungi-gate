@@ -11,6 +11,9 @@
 [x] Define diagnostic summary contract
 [x] Define build report contract
 [x] Define security report contract
+[x] Add package-owned `ReportStatusCounts` and `selectReportStatus` Fungi semantic twin
+[x] Prove all 27 bounded priority combinations through interpretation, signed Wasm and physical SLIDE/VOK
+[x] Keep the TypeScript selector and `summarizeDiagnostics` consumer active pending an authorised switch
 [ ] Define policy index, definitions, effective, conflict and AI-summary report contracts
 [ ] Define malicious data, exploit-resistance, resource-budget, taint-flow and hardware-risk report contracts
 [ ] Define specialist hardware, AI accelerator capability, accelerator fallback, data-sensitivity and precision-compatibility report contracts

@@ -4,6 +4,42 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Thirtieth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the reports package's private `selectReportStatus` priority
+  decision as package-owned pure
+  `selectReportStatus(input: ReportStatusCounts) -> String` with an exact
+  three-`Int` nominal record.
+- [x] Preserve the complete **27-vector** `{-1, 0, 1}^3` priority cube exactly:
+  `critical > error > warning > ok`. Public TypeScript parity is tied through
+  `summarizeDiagnostics`; typed interpretation and signed/admitted Wasm pass
+  **2/2**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  27 typed VOK String receipts (**1/1**, zero skips) under registry
+  `slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1`. Missing,
+  surplus, inherited, accessor and proxy record shapes, float and NaN fields,
+  wrong arity, inadequate work, source, receipt, every safe-value envelope
+  byte, and artifact mutation all refuse.
+- [x] Reconcile the governed tooling manifest with the physical proof corpus:
+  add the exact **22** previously unlisted Fungi-to-SLIDE tests to both command
+  and subject sets, conserve **131/131** entries with zero duplicates, and pass
+  the manifest/tooling/test-runner focus **27/27** without running the
+  crash-linked full tooling lane.
+- [x] Pass the serial canonical owner **100/100 packages and 9,608 tests in
+  442.6s** with count publication. The earlier package-concurrent attempt
+  retained one compiler child refusal; the exact named rerun then passed
+  **6,382/6,382**, so the refusal remains recorded rather than relabelled.
+- [x] Review and independently verify both public Fungi skills; record reusable
+  exact-record, reporting-boundary, text-budget and slice-close guidance at
+  skills commit `f92c5ab`.
+- [ ] Refresh all bounded generated owners, graphs, indexes and roadmap/subway
+  evidence, then record the final local commit.
+- [x] Keep TypeScript, `selectReportStatus`, `summarizeDiagnostics`, and every
+  consumer active. This grants no consumer-switch, production, release,
+  durability, or retirement authority; repository-wide closure remains
+  `UNKNOWN` because crash-linked full tooling, normal phase-close, graph-all,
+  and monolithic memory evaluation stay excluded.
+
 ### Twenty-ninth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express CPU kernels' exported `requiresLowBitKernel` decision as

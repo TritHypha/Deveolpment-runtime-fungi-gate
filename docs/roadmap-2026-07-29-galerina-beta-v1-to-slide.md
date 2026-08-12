@@ -2,10 +2,10 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-ninth conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute the CPU-kernel
-package's exact low-bit routing decision. It changes no SLIDE contract,
-registry, or limit. SLIDE passes
+Current checkpoint: the thirtieth conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute the reports package's
+exact status-priority decision through a nominal three-`Int` record. It changes
+no SLIDE contract, registry, or limit. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
@@ -29,6 +29,35 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Thirtieth physical conversion slice 2026-08-12: the reports package's private
+`selectReportStatus` decision now has package-owned pure
+`selectReportStatus(input: ReportStatusCounts) -> String`. The nominal record
+preserves the exact TypeScript input shape and field order. The flow preserves
+the complete 27-vector `{-1, 0, 1}^3` priority cube as
+`critical > error > warning > ok`; the public `summarizeDiagnostics` caller,
+typed interpreter and signed/admitted Wasm differential pass **2/2**.
+Independent SLIDE publishes and re-admits one physical `.slide`, then verifies
+all 27 typed VOK String receipts (**1/1**, zero skips) under pinned registry
+`slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1` with digest
+`d805dae4b822392e5092126ce4f0fb27e8bfa6aa2de8862ee88e09e23eed43cc`.
+Missing, surplus, inherited, accessor and proxy record shapes, float and NaN
+fields, wrong arity, inadequate work, source, receipt, every safe-value
+envelope byte, and artifact mutation refuse. The governed tooling manifest was
+also reconciled with the physical proof corpus: 22 previously unlisted
+Fungi-to-SLIDE tests are now present in both exact command and subject sets,
+which conserve **131/131** paths with zero duplicates; the focused manifest,
+tooling-contract and runner-policy proof passes **27/27**. TypeScript,
+`selectReportStatus`, `summarizeDiagnostics`, and every consumer remain active.
+The serial canonical owner passes **100/100 packages and 9,608 tests in
+442.6s** with count publication; the exact compiler rerun is **6,382/6,382**.
+The earlier package-concurrent attempt's single compiler child refusal remains
+in the record. Both public Fungi skills were reviewed and independently
+verified at skills commit `f92c5ab`; the translation workflow now requires a
+skill update or explicit `NO_SKILL_UPDATE` record at every slice close.
+Generated-owner closure is refreshed below before this slice is called
+complete; crash-linked full tooling, normal phase-close, graph-all, and
+monolithic memory evaluation remain excluded.
 
 Twenty-ninth physical conversion slice 2026-08-12: CPU kernels' exported
 `requiresLowBitKernel` decision now has exact package-owned pure
