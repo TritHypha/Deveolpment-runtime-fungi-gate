@@ -37,12 +37,12 @@ through independent SLIDE/VOK and retain TypeScript as the executing layer.
 
 ### Task 3: Physical SLIDE/VOK proof
 
-- [ ] Publish and independently re-admit the exact named flow.
-- [ ] Pin only an independently observed registry identity or exact absence.
-- [ ] Verify declared and hostile Strings through typed String receipts.
-- [ ] Prove invalid arguments, inadequate work, source/receipt/envelope bytes,
+- [x] Publish and independently re-admit the exact named flow.
+- [x] Pin only an independently observed registry identity or exact absence.
+- [x] Verify declared and hostile Strings through typed String receipts.
+- [x] Prove invalid arguments, inadequate work, source/receipt/envelope bytes,
   and physical artifact mutation refuse.
-- [ ] Commit the physical proof.
+- [x] Commit the physical proof.
 
 ### Task 4: Bounded owner closure
 
