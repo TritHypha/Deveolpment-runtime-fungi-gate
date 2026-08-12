@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 184 |
+| Files | 185 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -60,6 +60,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 ## Loaded Assets
 - `src/self-hosted/capability-normalization.fungi`
 - `src/self-hosted/compiler.capabilities.fungi`
+- `src/self-hosted/decimal-round-mode.fungi`
 - `src/self-hosted/effect-checker.fungi`
 - `src/self-hosted/floor-normalisation.fungi`
 - `src/self-hosted/gir-emitter.fungi`
