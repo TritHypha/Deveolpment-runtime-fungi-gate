@@ -55,4 +55,3 @@ class, `experimental`.
   receipt, safe-value envelope, and artifact mutation all refuse.
 - No null, NaN, `else`, `else if`, exception syntax, or loop form.
 - No registry widening, raised limit, consumer switch, or retirement claim.
-

@@ -51,4 +51,3 @@ through independent SLIDE/VOK and retain TypeScript as the executing layer.
 - [ ] Update TODO, active roadmap, subway, and a focused report.
 - [ ] Run the bounded matrix without crash-linked aggregate wrappers.
 - [ ] Commit locally, refresh both indexes at exact final HEAD, and do not push.
-
