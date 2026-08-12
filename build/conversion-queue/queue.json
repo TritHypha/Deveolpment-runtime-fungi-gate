@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sourceDigest": "32b377eb65c3e5ead487c4073181c3df1f967be21468f94fc4527de542718c09",
-  "decisionsDigest": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "decisionsDigest": "55b598245449aab2f90a4c0b370de7299d7778223dbbf45d83057a8f58645ff3",
   "counts": {
     "total": 1449,
     "CANDIDATE": 0,
@@ -10,6 +10,22 @@
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
   },
+  "scopedCandidateCount": 2,
+  "scopedCandidateFileCount": 1,
+  "scopedCandidates": [
+    {
+      "path": "packages-galerina/galerina-data-json/src/index.ts",
+      "symbol": "isNonNegativeSafeInteger",
+      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
+      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+    },
+    {
+      "path": "packages-galerina/galerina-data-json/src/index.ts",
+      "symbol": "isPositiveSafeInteger",
+      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
+      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+    }
+  ],
   "entries": [
     {
       "path": "packages-galerina/galerina-ai-agent/src/index.ts",
@@ -6704,8 +6720,8 @@
       "package": "galerina-data-json",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
     },
     {
       "path": "packages-galerina/galerina-data-json/tests/json-contracts.test.mjs",

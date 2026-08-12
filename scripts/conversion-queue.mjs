@@ -12,8 +12,9 @@ const CLASSIFICATIONS = [
   "SUPERSEDED_BY_EXISTING_FUNGI",
   "BOOTSTRAP_FLOOR",
 ];
-const DECISION_FIELDS = ["classification", "evidenceDigest", "path", "reason"];
+const DECISION_FIELDS = ["classification", "evidenceDigest", "path", "reason", "scope", "symbols"];
 const DIGEST = /^[0-9a-f]{64}$/u;
+const SYMBOL = /^[A-Za-z_$][A-Za-z0-9_$]*$/u;
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -62,7 +63,7 @@ function loadInputs(root) {
     throw new Error("retirement graph does not conserve executable-family paths");
   }
   if (!exactRecord(decisions, ["decisions", "schemaVersion"])
-      || decisions.schemaVersion !== 1
+      || decisions.schemaVersion !== 2
       || !Array.isArray(decisions.decisions)) {
     throw new Error("invalid conversion queue decisions root");
   }
@@ -80,6 +81,16 @@ function deriveQueue(root) {
   const pathSet = new Set(paths);
   const decisionMap = new Map();
   for (const decision of decisions) {
+    const wholeFile = decision?.scope === "WHOLE_FILE"
+      && Array.isArray(decision?.symbols)
+      && decision.symbols.length === 0;
+    const scopedSymbols = decision?.scope === "SYMBOLS"
+      && decision?.classification === "CANDIDATE"
+      && Array.isArray(decision?.symbols)
+      && decision.symbols.length > 0
+      && decision.symbols.every((symbol, index) => typeof symbol === "string"
+        && SYMBOL.test(symbol)
+        && (index === 0 || decision.symbols[index - 1] < symbol));
     if (!exactRecord(decision, DECISION_FIELDS)
         || typeof decision.path !== "string"
         || !pathSet.has(decision.path)
@@ -87,7 +98,8 @@ function deriveQueue(root) {
         || !CLASSIFICATIONS.slice(0, 4).includes(decision.classification)
         || typeof decision.reason !== "string"
         || !/^[A-Z0-9]+(?:_[A-Z0-9]+)*$/u.test(decision.reason)
-        || !DIGEST.test(decision.evidenceDigest)) {
+        || !DIGEST.test(decision.evidenceDigest)
+        || (!wholeFile && !scopedSymbols)) {
       throw new Error("invalid, duplicate or unknown conversion decision");
     }
     decisionMap.set(decision.path, decision);
@@ -102,6 +114,9 @@ function deriveQueue(root) {
       return { path, package: ledger.package, tranche: ledger.dependencyTranche, classification: "BOOTSTRAP_FLOOR", reason: "FIXPOINT_OR_PLATFORM_EVIDENCE_REQUIRED", evidenceDigest: null };
     }
     if (decision !== undefined) {
+      if (decision.scope === "SYMBOLS") {
+        return { path, package: ledger.package, tranche: ledger.dependencyTranche, classification: "BLOCKED", reason: "SCOPED_CANDIDATES_ONLY", evidenceDigest: decision.evidenceDigest };
+      }
       return { path, package: ledger.package, tranche: ledger.dependencyTranche, classification: decision.classification, reason: decision.reason, evidenceDigest: decision.evidenceDigest };
     }
     return {
@@ -118,11 +133,23 @@ function deriveQueue(root) {
   if (CLASSIFICATIONS.reduce((sum, classification) => sum + counts[classification], 0) !== counts.total) {
     throw new Error("conversion queue classification is not conserved");
   }
+  const scopedCandidates = decisions
+    .filter((decision) => decision.scope === "SYMBOLS")
+    .flatMap((decision) => decision.symbols.map((symbol) => ({
+      path: decision.path,
+      symbol,
+      reason: decision.reason,
+      evidenceDigest: decision.evidenceDigest,
+    })))
+    .sort((left, right) => left.path.localeCompare(right.path) || left.symbol.localeCompare(right.symbol));
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     sourceDigest: sha256(retirementBytes),
     decisionsDigest: sha256(decisionsBytes),
     counts,
+    scopedCandidateCount: scopedCandidates.length,
+    scopedCandidateFileCount: new Set(scopedCandidates.map((candidate) => candidate.path)).size,
+    scopedCandidates,
     entries,
   };
 }
@@ -137,6 +164,8 @@ function renderMarkdown(queue) {
     "|---|---:|",
     ...CLASSIFICATIONS.map((name) => `| ${name} | ${queue.counts[name]} |`),
     `| TOTAL | ${queue.counts.total} |`,
+    "",
+    `Scoped symbol candidates: **${queue.scopedCandidateCount}** across **${queue.scopedCandidateFileCount}** files.`,
     "",
     "A zero candidate count means no source has an evidence-bound admission decision; it does not mean the corpus is complete.",
     "",
@@ -159,7 +188,7 @@ function main() {
       if (readFileSync(path, "utf8") !== contents) throw new Error(`stale conversion queue output: ${path}`);
     }
   }
-  console.log(`conversion-queue: ${queue.counts.total}/${queue.counts.total} classified; ${queue.counts.CANDIDATE} candidates; ${queue.counts.BLOCKED} blocked`);
+  console.log(`conversion-queue: ${queue.counts.total}/${queue.counts.total} classified; ${queue.counts.CANDIDATE} whole-file candidates; ${queue.scopedCandidateCount} scoped candidates; ${queue.counts.BLOCKED} blocked`);
 }
 
 try {

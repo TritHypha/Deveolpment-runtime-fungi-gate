@@ -1,4 +1,16 @@
 {
-  "schemaVersion": 1,
-  "decisions": []
+  "schemaVersion": 2,
+  "decisions": [
+    {
+      "path": "packages-galerina/galerina-data-json/src/index.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isNonNegativeSafeInteger",
+        "isPositiveSafeInteger"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
+      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+    }
+  ]
 }
