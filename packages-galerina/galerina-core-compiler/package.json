@@ -26,6 +26,7 @@
       "src/self-hosted/governance-qualifier-escalation.fungi",
       "src/self-hosted/hardening-trust-boundary.fungi",
       "src/self-hosted/lexer.fungi",
+      "src/self-hosted/package-scalar-quote-stripping.fungi",
       "src/self-hosted/parser.fungi",
       "src/self-hosted/plugin-type-compatibility.fungi",
       "src/self-hosted/runtime.fungi",

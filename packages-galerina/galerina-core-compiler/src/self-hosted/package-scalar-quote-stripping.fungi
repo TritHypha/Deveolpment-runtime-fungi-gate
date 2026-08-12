@@ -1,0 +1,27 @@
+@version 1
+
+/// Trim one package scalar and remove one balanced outer quote pair.
+/// Escapes, inner quotes, Unicode and every unbalanced scalar remain unchanged.
+pure flow hasBalancedOuterQuotes(value: String, quote: String) -> Bool
+contract { intent { "Recognize one exact balanced outer quote pair." } }
+{
+  if value.startsWith(quote) {
+    if value.endsWith(quote) {
+      return true
+    }
+  }
+  return false
+}
+
+pure flow stripPackageScalarQuotes(value: String) -> String
+contract { intent { "Remove only one balanced package-scalar quote pair." } }
+{
+  let trimmedValue: String = value.trim()
+  if hasBalancedOuterQuotes(trimmedValue, "\u0022") {
+    return trimmedValue.slice(1, -1)
+  }
+  if hasBalancedOuterQuotes(trimmedValue, "'") {
+    return trimmedValue.slice(1, -1)
+  }
+  return trimmedValue
+}
