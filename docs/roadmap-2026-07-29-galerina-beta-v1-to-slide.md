@@ -2856,7 +2856,7 @@ unknown; this neither closes terminal retirement nor grants production,
 conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
-family is **74/74**, and the latest complete package lane is **100/100 packages
-and 9,589 tests** in 273.8 seconds. The normal custody close remains fail-closed:
+family is **74/74**, and the complete package lane is **100/100 packages and
+9,589 tests** in 273.8 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
