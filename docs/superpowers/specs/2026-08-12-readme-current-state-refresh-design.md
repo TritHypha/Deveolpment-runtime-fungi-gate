@@ -63,7 +63,7 @@ The `SUBWAY:BEGIN` to `SUBWAY:END` region remains generator-owned. The rewrite m
 
 - No statement calls WASM the future production path.
 - No statement calls bounded SLIDE/VOK evidence production authority.
-- Current package and test counts have one canonical rendered claim.
+- Current package and test counts appear only in the two distinct README claim shapes required by the canonical-count audit, plus the generator-owned subway summary.
 - Examples come from the strict Golden Pack.
 - CLI commands match live help.
 - Links, path-leak, generated-roadmap and README claim checks pass.
