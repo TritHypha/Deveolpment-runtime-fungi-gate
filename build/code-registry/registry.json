@@ -5668,8 +5668,8 @@
       ],
       "defs": 1,
       "emits": 2,
-      "tests": 4,
-      "docs": 8
+      "tests": 6,
+      "docs": 12
     },
     {
       "code": "FUNGI-HARDEN-008",
