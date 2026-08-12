@@ -109,6 +109,13 @@ describe("compiler package-owned Fungi governance change-class maximum", () => {
         "src/self-hosted/governance-qualifier-escalation.fungi",
       ),
     );
+    const fungiSource = readFileSync(SOURCE, "utf8").replace(/^\uFEFF/u, "");
+    const executableFungi = fungiSource.replace(/^\s*\/\/\/.*$/gmu, "");
+    assert.doesNotMatch(
+      executableFungi,
+      /\b(?:null|NaN|else|throw|try|catch|for|while|loop)\b/u,
+      "the bounded Fungi asset must not contain forbidden control or value forms",
+    );
     const reference = readFileSync(REFERENCE_SOURCE, "utf8").replace(/^\uFEFF/u, "");
     assert.match(
       reference,

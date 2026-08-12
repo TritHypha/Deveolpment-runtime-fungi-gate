@@ -16,3 +16,32 @@ pure flow qualifierEscalated(before: String, after: String) -> Bool {
   if qualifierRank(after) > qualifierRank(before) { return true }
   return false
 }
+
+/// Close the physical String border to the four declared governance classes.
+/// An unrecognised value becomes the most conservative declared class.
+pure flow normalizeChangeClass(value: String) -> String {
+  if value == "neutral" { return "neutral" }
+  if value == "tightening" { return "tightening" }
+  if value == "expansion" { return "expansion" }
+  if value == "experimental" { return "experimental" }
+  return "experimental"
+}
+
+/// Return the source-authoritative rank after fail-closed normalization.
+pure flow changeClassRank(value: String) -> Int {
+  let normalized: String = normalizeChangeClass(value)
+  if normalized == "neutral" { return 0 }
+  if normalized == "tightening" { return 1 }
+  if normalized == "expansion" { return 2 }
+  return 3
+}
+
+/// Preserve the source maximum and its left-biased equal-rank result.
+pure flow maxChangeClass(left: String, right: String) -> String {
+  let normalizedLeft: String = normalizeChangeClass(left)
+  let normalizedRight: String = normalizeChangeClass(right)
+  if changeClassRank(normalizedLeft) >= changeClassRank(normalizedRight) {
+    return normalizedLeft
+  }
+  return normalizedRight
+}

@@ -30,10 +30,10 @@ through independent SLIDE/VOK and retain TypeScript as the executing layer.
 
 ### Task 2: Minimal Fungi implementation
 
-- [ ] Add normalization, rank, and maximum flows to the existing asset.
-- [ ] Strict-check the complete asset with zero errors and warnings.
-- [ ] Re-run the differential proof to green.
-- [ ] Commit only the source change.
+- [x] Add normalization, rank, and maximum flows to the existing asset.
+- [x] Strict-check the complete asset with zero errors and warnings.
+- [x] Re-run the differential proof to green.
+- [x] Commit only the source change.
 
 ### Task 3: Physical SLIDE/VOK proof
 
