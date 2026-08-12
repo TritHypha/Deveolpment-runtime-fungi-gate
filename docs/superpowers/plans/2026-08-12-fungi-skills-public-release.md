@@ -173,11 +173,11 @@ Run `gh repo edit TritHypha/translating-typescript-to-fungi --visibility public 
 
 Record both repository commits, visibility results, verification commands, and any remaining non-authorizing concerns. Do not record local absolute paths or credentials.
 
-- [ ] **Step 2: Run only bounded owners**
+- [x] **Step 2: Run only bounded owners**
 
 Run the directly affected roadmap/status owners and focused path/private-document checks. Do not run full tooling, phase-close, graph-all, or whole-memory evaluation.
 
-- [ ] **Step 3: Commit exact Galerina files**
+- [x] **Step 3: Commit exact Galerina files**
 
 Preserve the unrelated untracked SLIDE capability plan. Commit only the public-release plan status and directly affected tracking outputs. Conversion Slice 63 remains unstarted until this closure commit is clean.
 
