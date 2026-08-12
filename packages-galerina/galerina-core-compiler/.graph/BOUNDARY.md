@@ -11,7 +11,7 @@
 
 | Metric | Count |
 |---|---|
-| Files | 187 |
+| Files | 188 |
 | Internal edges | 367 |
 | External dependencies | 17 |
 | ├─ Node core | 8 |
@@ -72,6 +72,7 @@ _none_ -- every file is reachable from an internal import or has an exact owners
 - `src/self-hosted/package-scalar-quote-stripping.fungi`
 - `src/self-hosted/parser.fungi`
 - `src/self-hosted/plugin-type-compatibility.fungi`
+- `src/self-hosted/proof-governance-shape.fungi`
 - `src/self-hosted/residency-strictness.fungi`
 - `src/self-hosted/retry-strategy.fungi`
 - `src/self-hosted/runtime.fungi`
