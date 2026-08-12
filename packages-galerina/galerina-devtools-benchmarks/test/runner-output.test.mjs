@@ -1,10 +1,20 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  benchmarkProcessArgs,
   publicationOutputName,
   runSlideVadeObservation,
   slideVadeInputFromArgs,
 } from "../src/runner.mjs";
+
+test("call-chain control processes receive the exact manifest work count", () => {
+  assert.deepEqual(benchmarkProcessArgs({ id: "call-chain", exactIterations: 50000 }), ["--iterations", "50000"]);
+  assert.deepEqual(benchmarkProcessArgs({ id: "compute-mix" }), []);
+  assert.throws(
+    () => benchmarkProcessArgs({ id: "call-chain", exactIterations: 50001 }),
+    /REFUSED/u,
+  );
+});
 
 test("only an unfiltered full run can replace publication latest.json", () => {
   assert.equal(publicationOutputName(null), "latest.json");

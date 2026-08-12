@@ -4,7 +4,7 @@ import json, os, platform, sys, time, gc, tracemalloc
 # Mirrors benchmark.fungi: controller -> service.method() -> util function,
 # 7 calls per outer iteration (1 service + 2 domain + 4 leaf), same salting.
 
-DEFAULT_ITERATIONS = 1_000_000  # ~1-2s in CPython
+DEFAULT_ITERATIONS = 50_000
 
 def leaf_compute(salt, x):
     return (salt + x) * 2 + 1
@@ -23,7 +23,7 @@ def chain(iterations):
     service = ServiceLayer()
     checksum = 0
     for i in range(iterations):
-        checksum += service.process(i, i)
+        checksum = (checksum + service.process(i, i)) % 65536
     return checksum
 
 def run_bench(iterations):

@@ -7,7 +7,7 @@ import { performance } from "node:perf_hooks";
 
 // 50,000 outer chains takes well under a millisecond in Node, so we run many
 // iterations to get a stable rate; the runner compares ops/second.
-const DEFAULT_ITERATIONS = 2_000_000;
+const DEFAULT_ITERATIONS = 50_000;
 
 // leaf "util function"
 function leafCompute(salt, x) {
@@ -35,7 +35,7 @@ function chain(iterations) {
   const service = new ServiceLayer();
   let checksum = 0;
   for (let i = 0; i < iterations; i++) {
-    checksum += service.process(i, i);
+    checksum = (checksum + service.process(i, i)) % 65536;
   }
   return checksum;
 }

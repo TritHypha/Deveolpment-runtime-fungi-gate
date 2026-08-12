@@ -80,7 +80,7 @@ export const BENCHMARKS = [
   // In Galerina: main → serviceLayer → domainLayer → leafCompute (7 flow calls per chain).
   // One op = one outer chain; 50,000 chains per run. Isolates flow-call cost (arg binding
   // + governed frame), salted by loop index so the pure-flow memo cache never short-circuits.
-  { id: "call-chain", dir: "call-chain", galerinaOpsPerRun: 50000, passiveCallCount: 5 },
+  { id: "call-chain", dir: "call-chain", galerinaOpsPerRun: 50000, passiveCallCount: 5, exactIterations: 50000 },
   // N-body: pairwise gravitational force (scaled-integer, governed). One run =
   // simulate(64, 8) = steps×n×n = 32,768 softened inverse-distance force evals.
   // Array-free index-math kernel; checksum (536024) is identical across Node,
@@ -189,6 +189,14 @@ async function runGalerina(fungiPath, mode, bench) {
   } catch(e) { return { error: true, reason: String(e), runtime: `galerina-${mode}` }; }
 }
 
+export function benchmarkProcessArgs(bench) {
+  if (bench?.exactIterations === undefined) return [];
+  if (bench.id !== "call-chain" || bench.exactIterations !== 50000) {
+    throw new Error("BENCHMARK_PROCESS_ARGS_REFUSED:UNREGISTERED_EXACT_WORK");
+  }
+  return ["--iterations", "50000"];
+}
+
 export async function runBenchmark(bench) {
   const dir = join(benchDir, bench.dir);
   const res = {};
@@ -196,13 +204,15 @@ export async function runBenchmark(bench) {
   // time-based benchmarks get --target-ms flag to override defaults in quick mode
   const timeBased  = bench.timeBased === true;
   const targetArgs = timeBased && QUICK_MODE ? ["--target-ms", "3000", "--warmup-ms", "500"] : [];
+  const workArgs = benchmarkProcessArgs(bench);
+  const processArgs = [...targetArgs, ...workArgs];
 
   const node = join(dir, "node.mjs");
-  if (existsSync(node)) { console.log(`  node...`); res.nodejs = runProc("node", [node, ...targetArgs]); }
+  if (existsSync(node)) { console.log(`  node...`); res.nodejs = runProc("node", [node, ...processArgs]); }
 
   const py = join(dir, "python.py");
   const python = existsSync(py) ? resolvePythonExecutable() : undefined;
-  if (python !== undefined) { console.log(`  python...`); res.python = runProc(python, [py, ...targetArgs]); }
+  if (python !== undefined) { console.log(`  python...`); res.python = runProc(python, [py, ...processArgs]); }
 
   // ── Native hardware variants ─────────────────────────────────────────────
   // Naming convention:
@@ -221,7 +231,7 @@ export async function runBenchmark(bench) {
     for (const suf of suffixes) {
       const bin = join(dir, suf); const binE = bin + ".exe";
       const exe = existsSync(bin)?bin:existsSync(binE)?binE:null;
-      if (exe) { console.log(`  ${key}...`); res[key] = runProc(exe); break; }
+      if (exe) { console.log(`  ${key}...`); res[key] = runProc(exe, workArgs); break; }
     }
   }
 
@@ -230,7 +240,7 @@ export async function runBenchmark(bench) {
   // discipline: the bench.go must match the reference algorithm + N so its `result` checksum agrees. ─────────
   const goBench = join(dir, "bench.go");
   const goBin = existsSync(goBench) ? resolveGoBin() : null;
-  if (goBin) { console.log(`  go...`); res.go = runProc(goBin, ["run", goBench]); }
+  if (goBin) { console.log(`  go...`); res.go = runProc(goBin, ["run", goBench, ...workArgs]); }
 
   // ── WASM execution (Phase 27 — requires wat-wasm assembler) ─────────────
   const wasmRunner = join(dir, "bench-wasm.mjs");
@@ -246,7 +256,9 @@ export async function runBenchmark(bench) {
     try {
       const observation = await (await import(pathToFileURL(slideReferenceRunner).href))
         .runSlideReferenceBenchmark();
-      if (observation.verdict === 1) {
+      if (observation.runtime === "galerina-slide-reference") {
+        res.slideReference = { ...observation, samples: [...observation.samples] };
+      } else if (observation.verdict === 1) {
         res.checkedReference = { ...observation.checkedReference };
         res.slideReference = {
           ...observation.slideReference,
