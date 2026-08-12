@@ -47,7 +47,11 @@ export function publishSlideWasmHistoryArtifact({ resultsDir }) {
   const latestMetadataPath = join(resultsDir, "benchmark-run-metadata-latest.json");
   const latestMetadataRaw = readBoundedRegular(latestMetadataPath, MAX_METADATA_BYTES, "latest benchmark metadata");
   const latestMetadata = parseJson(latestMetadataRaw, "latest benchmark metadata");
-  const stamp = publicationStamp(latestMetadata.generatedAt);
+  const stamp = publicationStamp(
+    latestMetadata.publication === undefined
+      ? latestMetadata.generatedAt
+      : latestMetadata.publication.generatedAt,
+  );
   const runDirectory = join(resultsDir, "runs", stamp);
   const datedMetadataPath = join(runDirectory, "metadata.json");
   const datedMetadataRaw = readBoundedRegular(datedMetadataPath, MAX_METADATA_BYTES, "dated benchmark metadata");

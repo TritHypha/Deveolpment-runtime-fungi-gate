@@ -101,6 +101,11 @@ function fixture() {
     resultSha256: "a".repeat(64),
     galerinaCommit: "b".repeat(40),
     slideCommit: "c".repeat(40),
+    publication: {
+      generatedAt: "2026-08-12T18:00:00.000Z",
+      galerinaCommit: "1".repeat(40),
+      slideCommit: "2".repeat(40),
+    },
     wasmReference: {
       archiveDirectory: "2026-08-02_galerina-wasm-before-slide",
       archiveResultsSha256: "d".repeat(64),
@@ -305,13 +310,20 @@ test("malformed provenance and disguised lane names refuse", () => {
   const duplicate = fixture();
   duplicate.current.push({ ...duplicate.current[1] });
   assert.throws(() => buildSlideWasmHistoryModel(duplicate), /duplicate closed-suite workload/u);
+
+  const malformedPublication = fixture();
+  malformedPublication.metadata.publication.galerinaCommit = "not-a-commit";
+  assert.throws(
+    () => buildSlideWasmHistoryModel(malformedPublication),
+    /metadata\.publication\.galerinaCommit/u,
+  );
 });
 
 test("publication verifies raw digests before atomically replacing the chart", () => {
   const root = mkdtempSync(join(tmpdir(), "slide-wasm-history-"));
   temporaryDirectories.push(root);
   const archiveDirectory = join(root, "archive", "2026-08-02_galerina-wasm-before-slide");
-  const runDirectory = join(root, "runs", "2026-08-12T17-19-05-632Z");
+  const runDirectory = join(root, "runs", "2026-08-12T18-00-00-000Z");
   mkdirSync(archiveDirectory, { recursive: true });
   mkdirSync(runDirectory, { recursive: true });
 

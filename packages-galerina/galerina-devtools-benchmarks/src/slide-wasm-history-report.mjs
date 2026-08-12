@@ -50,6 +50,18 @@ function validateMetadata(value) {
   if (!HEX_40.test(value.wasmReference.measuredGalerinaCommit)) {
     throw new TypeError("metadata.wasmReference.measuredGalerinaCommit must be a Git commit");
   }
+  if (value.publication !== undefined) {
+    plainRecord(value.publication, "metadata.publication");
+    if (!UTC_STAMP.test(value.publication.generatedAt)) {
+      throw new TypeError("metadata.publication.generatedAt must be a UTC timestamp");
+    }
+    if (!HEX_40.test(value.publication.galerinaCommit)) {
+      throw new TypeError("metadata.publication.galerinaCommit must be a Git commit");
+    }
+    if (!HEX_40.test(value.publication.slideCommit)) {
+      throw new TypeError("metadata.publication.slideCommit must be a Git commit");
+    }
+  }
   return value;
 }
 
