@@ -112,6 +112,19 @@ checkboxes remain intentionally unmet.
 - [x] Record the record/array and wide-numeric R&D triggers without creating
   placeholder assets or candidate authority.
 
+## Task 3E: Settle Slices 53-55
+
+- [x] Reject three proposed duplicate scopes before assignment because exact
+  package-owned Fungi assets and proofs already exist.
+- [x] Refuse Slice 53 and bind it to the existing post-beta narrow Fungi Wasm
+  compatibility-engine plan rather than creating a competing one-off twin.
+- [x] Refuse Slice 54 at the two-record, crypto/codec/JSON and failure-algebra
+  boundaries; record the missing source-oracle vectors.
+- [x] Refuse Slice 55 at recursive AST, case-fold, String-array and bounded-text
+  boundaries.
+- [x] Create no placeholder asset or candidate authority and record
+  `NO_SKILL_UPDATE` for both public skills.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.

@@ -4,7 +4,20 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-52 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-55 - 2026-08-12
+
+- [x] Settle Slices 53-55 as `BLOCKED` without placeholder assets. Slice 53
+  remains inside the approved post-beta narrow Fungi Wasm compatibility-engine
+  sequence. Slice 54 lacks exact two-record, SHA-256, base64, JSON and failure
+  boundaries. Slice 55 lacks exact recursive AST, case-fold, `Array<String>`
+  and text-work boundaries. Packages pass **27/27**, **10/10**, and **29/29**.
+- [ ] Expand the Slice 53 and 54 TypeScript oracle tests before future
+  conversion: export-kind/name collisions and malformed modules; wrong proof
+  protocol/curve, malformed base64/JSON, optional-result states, and the
+  current uncaught failure path.
+- [x] Reject proposed duplicate scopes `qualifierEscalated`, `permitData`, and
+  `is64BitWatType` during preflight because exact package-owned Fungi assets
+  and focused proofs already exist.
 
 - [x] Settle Slices 50-52 as `BLOCKED` without placeholder assets. Slice 50
   requires an exact capability-record and SIMD-array physical ABI. Slices 51
@@ -67,7 +80,7 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after the Slice 50-52
+- [ ] Select the following three scopes only after the Slice 53-55
   product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or

@@ -44,7 +44,7 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Read: `build/ts-retirement/ts-retirement.json`
 
 **Produces:** three independent dossier results per wave. Slices 38-40 and
-Slices 41-43, 44-46, 47-49 and 50-52 have completed their product-owner gates.
+Slices 41-43, 44-46, 47-49, 50-52 and 53-55 have completed their product-owner gates.
 
 - [x] Start three background sessions with the exact Slice 38-40 scopes in the
   design.

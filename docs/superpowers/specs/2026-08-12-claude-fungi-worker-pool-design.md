@@ -29,6 +29,8 @@ later, worktree-isolated implementation wave.
 The fourth wave covers Slices 47-49 and tests regex-dependent text decisions.
 The fifth wave covers Slices 50-52 and tests exact record/array and wide
 JavaScript numeric boundaries.
+The sixth wave covers Slices 53-55 and tests host-module inspection,
+crypto/codec/JSON proof validation, and recursive AST text analysis.
 
 ## Mandatory scope preflight
 
@@ -85,6 +87,9 @@ remain the source of truth.
 | 50 | `packages-galerina/galerina-target-cpu/src/index.ts#canUseLowBitCpuPath` | none |
 | 51 | `packages-galerina/galerina-db-postgres/src/index.ts#isPositiveSafeInteger` | none |
 | 52 | `packages-galerina/galerina-data-database/src/index.ts#isNonNegativeSafeInteger` | none |
+| 53 | `packages-galerina/galerina-core-runtime-wasm/src/seam-adapters.ts#moduleDefinesExport` | none; owned by the approved post-beta compatibility-engine sequence |
+| 54 | `packages-galerina/galerina-ext-proof-snarkjs/src/circuit.ts#verifyPhase1Proof` | none |
+| 55 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#isPaymentFlow` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
