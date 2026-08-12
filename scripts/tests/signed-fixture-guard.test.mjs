@@ -258,15 +258,16 @@ test("build --package: git-TRACKED signed manifest → refused; untracked dev-si
 
 // ── 6. the rebuild guard: same discovery + committed predicate as the detector ──
 // rebuild-fusable-packages --root on a git fixture: a committed ceremony-signed
-// package is 🔒-skipped even when stale; a committed-placeholder package rebuilds;
-// --force bypasses LOUDLY (⚠️ names the package) and actually rebuilds.
-test("rebuild guard: committed-signed skipped when stale; placeholder rebuilds; --force is loud",
+// package is locked even when stale; a committed-placeholder package rebuilds;
+// --rebuild-all ignores freshness without touching ceremony custody; --allow-signed
+// is the only loud custody bypass.
+test("rebuild guard: full unsigned rebuild stays signed-locked; signed bypass is explicit and loud",
   { skip: !gitAvailable && "git not available" }, () => {
   const repo = join(tmp, "rebuild-repo");
   mkdirSync(repo, { recursive: true });
   assert.equal(git(repo, "init", "-q").status, 0);
   const sealed = makePkg(repo, "sealed", { signature: REAL_SIG });          // stale: src exists, no .wasm
-  makePkg(repo, "loose", { signature: { ...REAL_SIG, signature: "placeholder:sha256:seed" } });
+  const loose = makePkg(repo, "loose", { signature: { ...REAL_SIG, signature: "placeholder:sha256:seed" } });
   assert.equal(git(repo, "add", "-A").status, 0);
   assert.equal(git(repo, "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "fixture").status, 0);
 
@@ -279,17 +280,31 @@ test("rebuild guard: committed-signed skipped when stale; placeholder rebuilds; 
   const first = rebuild();
   assert.equal(first.status, 0, "rebuild is informational — always exit 0");
   assert.match(first.stdout, /🔒 sealed: committed ceremony-SIGNED/, "stale committed-signed package is locked, not rebuilt");
-  assert.doesNotMatch(first.stdout, /rebuilt sealed/, "sealed must not be rebuilt without --force");
+  assert.doesNotMatch(first.stdout, /rebuilt sealed/, "sealed must not be rebuilt without --allow-signed");
   assert.match(first.stdout, /✅ rebuilt loose/, `committed-placeholder package rebuilds freely: ${first.stdout}`);
   assert.equal(readFileSync(sealedMan, "utf8"), beforeSealed, "sealed manifest must be byte-identical");
 
-  const forced = rebuild("--force");
-  assert.equal(forced.status, 0);
-  assert.match(forced.stdout, /⚠️ {2}sealed: FORCED rebuild of a committed ceremony-SIGNED package/,
+  const looseWasm = join(loose, "dist", "loose.wasm");
+  writeFileSync(looseWasm, "fresh-sentinel");
+  const rebuiltAll = rebuild("--rebuild-all");
+  assert.equal(rebuiltAll.status, 0, rebuiltAll.stderr || rebuiltAll.stdout);
+  assert.match(rebuiltAll.stdout, /✅ rebuilt loose/, "--rebuild-all rebuilds an otherwise fresh unsigned package");
+  assert.notEqual(readFileSync(looseWasm, "utf8"), "fresh-sentinel", "the full unsigned rebuild replaces the fresh artifact");
+  assert.doesNotMatch(rebuiltAll.stdout, /rebuilt sealed/, "--rebuild-all cannot bypass ceremony custody");
+  assert.equal(readFileSync(sealedMan, "utf8"), beforeSealed, "full unsigned rebuild keeps the ceremony manifest byte-identical");
+
+  const allowed = rebuild("--allow-signed");
+  assert.equal(allowed.status, 0);
+  assert.match(allowed.stdout, /⚠️ {2}sealed: ALLOWED rebuild of a committed ceremony-SIGNED package/,
     "the CG-7 bypass must be loud and name the package");
-  assert.match(forced.stdout, /✅ rebuilt sealed/, `forced rebuild must actually proceed: ${forced.stdout}`);
+  assert.match(allowed.stdout, /✅ rebuilt sealed/, `allowed signed rebuild must actually proceed: ${allowed.stdout}`);
   assert.notEqual(readFileSync(sealedMan, "utf8"), beforeSealed,
-    "forced rebuild mints a fresh (locally signed) manifest");
+    "allowed signed rebuild mints a fresh (locally signed) manifest");
+
+  const ambiguous = rebuild("--force");
+  assert.equal(ambiguous.status, 2, "legacy --force must refuse instead of choosing a custody meaning");
+  assert.match(ambiguous.stderr, /--rebuild-all/u);
+  assert.match(ambiguous.stderr, /--allow-signed/u);
 });
 
 test("rebuild guard: --strict refuses a failed child and clears after the source is fixed", () => {

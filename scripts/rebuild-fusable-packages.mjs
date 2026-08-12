@@ -14,7 +14,7 @@
 // `--strict` is the authorizing final-build mode: a failed/indeterminate
 // child or empty discovery surface returns non-zero.
 // Skip with:  GALERINA_SKIP_FUSE_REBUILD=1
-// Run manually:  node scripts/rebuild-fusable-packages.mjs [--strict] [--force] [--root <dir>]
+// Run manually:  node scripts/rebuild-fusable-packages.mjs [--strict] [--rebuild-all] [--allow-signed] [--root <dir>]
 //   --root  operate on a different tree (fixture testing); default = repo root.
 //
 // Signed detection (#21 unification, 2026-07-10): discovery + protection come
@@ -38,7 +38,8 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const argv = process.argv.slice(2);
 let customRoot = false;
 let ROOT = REPO;
-let FORCE = false;
+let REBUILD_ALL = false;
+let ALLOW_SIGNED = false;
 let STRICT = false;
 const seen = new Set();
 for (let index = 0; index < argv.length; index += 1) {
@@ -55,13 +56,18 @@ for (let index = 0; index < argv.length; index += 1) {
     customRoot = true;
     continue;
   }
-  if (argument === "--force" || argument === "--strict") {
+  if (argument === "--force") {
+    console.error("fuse-rebuild: --force is ambiguous; use --rebuild-all for every unsigned package or --allow-signed for a deliberate ceremony-custody bypass");
+    process.exit(2);
+  }
+  if (["--rebuild-all", "--allow-signed", "--strict"].includes(argument)) {
     if (seen.has(argument)) {
       console.error(`fuse-rebuild: duplicate argument ${argument}`);
       process.exit(2);
     }
     seen.add(argument);
-    if (argument === "--force") FORCE = true;
+    if (argument === "--rebuild-all") REBUILD_ALL = true;
+    if (argument === "--allow-signed") ALLOW_SIGNED = true;
     if (argument === "--strict") STRICT = true;
     continue;
   }
@@ -72,8 +78,8 @@ const isWin = process.platform === "win32";
 // Cascade guard override (owner-directed 2026-07-01, forwarding approved
 // 2026-07-02): a committed ceremony-signed package is NEVER auto-rebuilt —
 // replacing its offline-ceremony .lmanifest with a locally minted UNSIGNED one
-// makes the fuse loader fail-close (FUNGI-FUSE-UNSIGNED). --force overrides
-// for the deliberate pre-re-sign rebuild — LOUDLY, naming each bypass.
+// makes the fuse loader fail-close (FUNGI-FUSE-UNSIGNED). --allow-signed
+// overrides for the deliberate pre-re-sign rebuild — LOUDLY, naming each bypass.
 if (process.env.GALERINA_SKIP_FUSE_REBUILD === "1") {
   console.log(
     "⏭️  fuse-rebuild skipped (GALERINA_SKIP_FUSE_REBUILD=1)"
@@ -118,9 +124,9 @@ for (const pkg of packages) {
   // Committed ceremony-signed package → the committed dist artifacts ARE the
   // signed build. Never regenerate locally (would be unsigned); the offline
   // re-sign ceremony owns it. Same predicate the CG-7 drift audit gates on.
-  if (!FORCE && pkg.committedSigned) {
+  if (!ALLOW_SIGNED && pkg.committedSigned) {
     lockedSigned++;
-    details.push(`🔒 ${name}: committed ceremony-SIGNED .lmanifest — never auto-rebuilt (offline ceremony owns it; --force to override)`);
+    details.push(`🔒 ${name}: committed ceremony-SIGNED .lmanifest — never auto-rebuilt (offline ceremony owns it; --allow-signed to override)`);
     continue;
   }
 
@@ -135,20 +141,19 @@ for (const pkg of packages) {
 
   const wasmMtime = existsSync(wasm) ? statSync(wasm).mtimeMs : 0;
 
-  if (wasmMtime > 0 && wasmMtime >= srcMtime) { fresh++; continue; } // up to date — skip
+  if (!REBUILD_ALL && wasmMtime > 0 && wasmMtime >= srcMtime) { fresh++; continue; } // up to date — skip
 
   // The CG-7 bypass is deliberate (pre-re-sign rebuild) — never silent. Printed
-  // only when the forced rebuild actually proceeds (--force does NOT bypass the
-  // freshness skip above; that is unchanged owner-approved behavior).
-  if (FORCE && pkg.committedSigned) {
-    details.push(`⚠️  ${name}: FORCED rebuild of a committed ceremony-SIGNED package — CG-7 bypass (pre-re-sign only; the fuse loader fail-closes on the unsigned result until re-signed)`);
+  // only when the signed rebuild actually proceeds.
+  if (ALLOW_SIGNED && pkg.committedSigned) {
+    details.push(`⚠️  ${name}: ALLOWED rebuild of a committed ceremony-SIGNED package — CG-7 bypass (pre-re-sign only; the fuse loader fail-closes on the unsigned result until re-signed)`);
   }
 
-  // Forward --force to the child build: when this rebuild is deliberately forced (FORCE bypasses the
+  // Forward --force to the child build: when this rebuild is deliberately allowed (ALLOW_SIGNED bypasses the
   // signed-skip above), the child `build --package` must also accept the CG-7 direct-invocation guard's
   // override, or a forced rebuild of a signed package would be refused downstream.
   const buildArgs = [join(REPO, "galerina.mjs"), "build", "--package", dir];
-  if (FORCE) buildArgs.push("--force");
+  if (ALLOW_SIGNED) buildArgs.push("--force");
   const r = spawnSync("node", buildArgs,
     { cwd: REPO, encoding: "utf8", shell: isWin, timeout: 60000 });
   if (r.status === 0) { rebuilt++; details.push(`✅ rebuilt ${name}`); }
