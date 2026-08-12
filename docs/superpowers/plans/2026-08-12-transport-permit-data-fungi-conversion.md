@@ -62,6 +62,6 @@ executing differential layer.
 - [x] Regenerate only owners whose exact checks refuse as stale.
 - [x] Update TODO, active roadmap, subway SVG, and a focused report with exact
   counts and non-authority boundaries.
-- [ ] Run the bounded final matrix without crash-linked aggregate wrappers.
-- [ ] Commit locally, refresh the primary graph and Myco, verify exact HEAD and
+- [x] Run the bounded final matrix without crash-linked aggregate wrappers.
+- [x] Commit locally, refresh the primary graph and Myco, verify exact HEAD and
   symbol queryability, and do not push.
