@@ -2,9 +2,9 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-eighth conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute the compiler's
-package-owned governance change-class maximum. It changes no SLIDE contract,
+Current checkpoint: the twenty-ninth conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute the CPU-kernel
+package's exact low-bit routing decision. It changes no SLIDE contract,
 registry, or limit. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
@@ -29,6 +29,30 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-ninth physical conversion slice 2026-08-12: CPU kernels' exported
+`requiresLowBitKernel` decision now has exact package-owned pure
+`requiresLowBitKernel(inputType: String, operation: String) -> Bool`. The flow
+accepts only the two fields observed by the source rather than widening the
+physical boundary to the complete plan record. It preserves all 42 declared
+data-type and operation pairs exactly; eight hostile String pairs return false
+and cannot gain low-bit status. The differential proof passes **2/2**.
+Independent SLIDE publishes and re-admits one physical `.slide`, then verifies
+all 50 declared-plus-hostile typed VOK Bool receipts (**1/1**, zero skips)
+under pinned registry
+`slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1` with digest
+`d805dae4b822392e5092126ce4f0fb27e8bfa6aa2de8862ee88e09e23eed43cc`.
+Wrong arity/type, invalid Unicode, inadequate work, source, receipt, every
+safe-value envelope byte, and artifact mutation refuse. Strict Fungi checking
+is clean, CPU kernels are **5/5 across two suites**, compiler is **6,382/6,382
+across 1,259 suites**, and the monitored canonical owner passes **100/100
+packages and 9,606 tests in 287s** with captured exit code 0. Golden remains
+current at **11/11 checked examples and 11/11 execution vectors**; retirement
+derives **1,448** executable-family paths and **132** source Fungi assets.
+TypeScript, `requiresLowBitKernel`, `validateCpuKernelPlan`, report generation,
+and all consumers remain active; repository-wide closure remains **UNKNOWN**
+because crash-linked full tooling, normal phase-close, graph-all, and
+monolithic memory evaluation remain excluded.
 
 Twenty-eighth physical conversion slice 2026-08-12: the private `maxClass`
 fold in `governance-diff.ts` now has exact package-owned pure

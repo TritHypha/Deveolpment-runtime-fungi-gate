@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-ninth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express CPU kernels' exported `requiresLowBitKernel` decision as
+  package-owned pure
+  `requiresLowBitKernel(inputType: String, operation: String) -> Bool`.
+- [x] Preserve all **42** declared data-type and operation pairs exactly. The
+  eight hostile String pairs return false and gain no low-bit status; the
+  differential proof passes **2/2**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  50 declared-plus-hostile typed VOK Bool receipts (**1/1**, zero skips) under
+  registry `slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1`.
+  Wrong arity/type, invalid Unicode, inadequate work, source, receipt, every
+  safe-value envelope byte, and artifact mutation all refuse.
+- [x] Pass strict Fungi checking with zero errors/warnings, CPU kernels **5/5
+  across two suites**, compiler **6,382/6,382 across 1,259 suites**, and the
+  monitored canonical owner **100/100 packages and 9,606 tests in 287s** with
+  captured exit code 0. Golden remains current at **11/11 + 11/11**;
+  retirement derives **1,448** executable-family paths and **132** source
+  Fungi assets.
+- [ ] Keep TypeScript, `requiresLowBitKernel`, `validateCpuKernelPlan`, report
+  generation, and every consumer active. This grants no consumer-switch,
+  production, release, durability, or retirement authority; repository-wide
+  closure remains `UNKNOWN` because crash-linked full tooling, normal
+  phase-close, graph-all, and monolithic memory evaluation stay excluded.
+
 ### Twenty-eighth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the compiler's private governance-diff `maxClass` decision as

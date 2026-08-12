@@ -11,4 +11,8 @@
 [x] Define low-bit matrix operation diagnostics
 [x] Add examples
 [x] Add tests
+[x] Add package-owned pure Fungi reference for `requiresLowBitKernel`
+[x] Prove all 42 declared routing pairs plus hostile String labels
+[x] Publish and independently re-admit the named flow through SLIDE/VOK
+[ ] Switch the production validator only after general consumer and retirement authority
 ```
