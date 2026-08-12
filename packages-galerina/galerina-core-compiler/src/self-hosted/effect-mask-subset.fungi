@@ -1,0 +1,8 @@
+@version 1
+/// Compare two already-derived signed 32-bit effect masks. This does not
+/// authenticate either mask or replace authoritative effect-name checks.
+pure flow effectsSubsetFungi(required: Int, declared: Int) -> Bool
+contract { intent { "Require every bit in the required effect mask to be present in the declared mask." } }
+{
+  return Int.bitAnd(required, declared) == required
+}
