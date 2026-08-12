@@ -39,12 +39,12 @@ GIR/WAT, independent SLIDE checked-Fungi package compiler, VOK typed receipts.
 - Produces: a failing proof that requires a package-owned
   `requiresLowBitKernel(inputType: String, operation: String) -> Bool` flow.
 
-- [ ] **Step 1: Register the expected package-owned asset**
+- [x] **Step 1: Register the expected package-owned asset**
 
 Add `packageGraph.loadedAssets` containing exactly
 `src/self-hosted/low-bit-kernel-routing.fungi`; do not create the asset yet.
 
-- [ ] **Step 2: Write the failing real-behaviour test**
+- [x] **Step 2: Write the failing real-behaviour test**
 
 Import the compiled TypeScript function and compiler runtime. Enumerate these
 literal domains independently:
@@ -62,7 +62,7 @@ compare the TypeScript export, interpreted Fungi result and signed Wasm result,
 and add hostile String pairs that must be false. Assert the exact Fungi source
 has none of the forbidden forms from the global constraints.
 
-- [ ] **Step 3: Run the test and verify RED**
+- [x] **Step 3: Run the test and verify RED**
 
 Run:
 
@@ -73,7 +73,7 @@ node --test packages-galerina/galerina-cpu-kernels/tests/low-bit-kernel-routing-
 
 Expected: fail only because the registered Fungi asset is absent.
 
-- [ ] **Step 4: Commit the RED proof**
+- [x] **Step 4: Commit the RED proof**
 
 Stage only the manifest and test; commit as
 `test: define CPU low-bit Fungi routing parity`.
@@ -87,7 +87,7 @@ Stage only the manifest and test; commit as
 - Consumes: two admitted Strings named `inputType` and `operation`.
 - Produces: pure Boolean flow `requiresLowBitKernel`.
 
-- [ ] **Step 1: Add the minimal candidate**
+- [x] **Step 1: Add the minimal candidate**
 
 Create an `@version 1` asset whose flow performs four terminal equality checks
 in source order and ends with `return false`:
@@ -102,7 +102,7 @@ pure flow requiresLowBitKernel(inputType: String, operation: String) -> Bool {
 }
 ```
 
-- [ ] **Step 2: Strict-check the exact candidate**
+- [x] **Step 2: Strict-check the exact candidate**
 
 Run:
 
@@ -112,11 +112,11 @@ node galerina.mjs check packages-galerina/galerina-cpu-kernels/src/self-hosted/l
 
 Expected: zero errors and warnings.
 
-- [ ] **Step 3: Re-run differential proof to GREEN**
+- [x] **Step 3: Re-run differential proof to GREEN**
 
 Run the exact Task 1 test. Expected: all tests pass with no skips.
 
-- [ ] **Step 4: Commit the source**
+- [x] **Step 4: Commit the source**
 
 Stage only the Fungi asset; commit as
 `feat: add CPU low-bit Fungi routing reference`.
@@ -131,7 +131,7 @@ Stage only the Fungi asset; commit as
 - Produces: one physical `.slide` plus independently verified typed Boolean
   receipts with `authorityReleased === false`.
 
-- [ ] **Step 1: Write the physical integration test**
+- [x] **Step 1: Write the physical integration test**
 
 Compile package identity `@galerina/cpu-kernels`, export
 `requiresLowBitKernel`, and the exact source flow. Assert the observed registry
@@ -140,12 +140,12 @@ hostile vector. Verify wrong arity/type, invalid Unicode, inadequate work,
 source mutation, receipt mutation, every safe-value envelope byte and artifact
 mutation all refuse.
 
-- [ ] **Step 2: Run the physical proof**
+- [x] **Step 2: Run the physical proof**
 
 Set `GALERINA_SLIDE_REPO` to the sibling SLIDE checkout for this isolated
 process and run the exact integration test. Expected: one pass and zero skips.
 
-- [ ] **Step 3: Commit the physical proof**
+- [x] **Step 3: Commit the physical proof**
 
 Stage only the integration test; commit as
 `test: prove physical CPU low-bit Fungi routing`.
@@ -165,26 +165,26 @@ Stage only the integration test; commit as
   digests.
 - Produces: reference-only roadmap evidence with no switch or retirement claim.
 
-- [ ] **Step 1: Run bounded regression owners**
+- [x] **Step 1: Run bounded regression owners**
 
 Run the CPU package test, compiler package test, monitored canonical 100-package
 owner, Golden owner/check, retirement owner/check/self-test, and individual
 registered graph/audit owners. Do not run the excluded aggregate lanes.
 
-- [ ] **Step 2: Publish the exact report and roadmap state**
+- [x] **Step 2: Publish the exact report and roadmap state**
 
 Record source/Fungi/SLIDE identities, typed and hostile vector counts, focused
 test counts, registry identity or exact absence, graph/index freshness, and the
 unchanged reference-only authority boundary. Update active TODOs and roadmap;
 regenerate subway rather than hand-editing its SVG.
 
-- [ ] **Step 3: Refresh both indexes at the final commit**
+- [x] **Step 3: Refresh both indexes at the final commit**
 
 Run the primary codebase graph moderate index and verify `indexed_head_sha`,
 node/expected-node conservation and a query for the new flow. Refresh Myco and
 query the same symbol.
 
-- [ ] **Step 4: Commit and verify the final state**
+- [x] **Step 4: Commit and verify the final state**
 
 Commit explicit owner groups locally, rerun direct freshness checks, require a
 clean tracked worktree, and do not push.
