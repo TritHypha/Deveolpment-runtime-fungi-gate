@@ -44,3 +44,19 @@ contract { intent { "Return the sticky hard-negative trust state." } }
 {
   return Verdict.Deny
 }
+
+record SpillOutcomeFungi {
+  retypedTo: Verdict
+  code: String
+  reason: String
+}
+
+pure flow spillRetypeFungi() -> SpillOutcomeFungi
+contract { intent { "Return the exact governed spill downgrade as a closed record." } }
+{
+  return SpillOutcomeFungi {
+    retypedTo: refute()
+    code: "FUNGI-HARDEN-007"
+    reason: "The value provably spills past its residency ceiling, so its compile-time type-state is downgraded to `Refuted` (sticky + contagious, RD-0337) — it can no longer be released at a trust boundary, and anything derived from it inherits the refutation. This is the governed downgrade (RD-0358 §3-2), not a silent spill."
+  }
+}
