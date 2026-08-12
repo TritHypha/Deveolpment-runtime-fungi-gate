@@ -1,0 +1,12 @@
+@version 1
+/// Compare only the two already-extracted governance-shape identities.
+/// Equality does not authenticate either ProofGraph or release authority.
+pure flow sharesGovernanceShapeFungi(
+  leftSignatureHash: String,
+  rightSignatureHash: String
+) -> Bool
+contract { intent { "Compare exact governance-shape identity Strings without normalizing or authenticating them." } }
+{
+  if leftSignatureHash == rightSignatureHash { return true }
+  return false
+}
