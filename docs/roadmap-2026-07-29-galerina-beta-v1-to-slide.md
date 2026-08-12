@@ -30,6 +30,27 @@ one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
 
+Twentieth physical conversion slice 2026-08-12: exported `spillRetype` now has
+the exact package-owned pure `spillRetypeFungi` decision in the governed
+hardening trust module. It returns a closed record whose `retypedTo` field is
+typed K3 Deny, whose code is `FUNGI-HARDEN-007`, and whose reason is byte-exact
+to the live TypeScript diagnostic. Differential evidence proves the Deny cannot
+cross `boundaryTrusted` and remains contagious under `combineTrust` (**1/1**).
+The first physical RED exposed an identifier-boundary mismatch rather than a
+K3 gap: Fungi's external descriptor admits camelCase `retypedTo`, while the
+internal SLIDE GIR grammar is lower-snake. SLIDE `4024d39` now maps ordered
+members to deterministic internal slots and preserves the authenticated
+external descriptor unchanged; construction and projection regressions pass
+**36/36**. Independent SLIDE publishes and re-admits one physical `.slide`,
+then verifies the exact typed VOK record receipt (**1/1**, zero skips); wrong
+arity, inadequate fuel and source, receipt, envelope or artifact mutation
+refuse. Compiler is **6,374/6,374**, Golden Pack **11/11**, and the canonical
+owner is **100/100 packages and 9,594 tests in 290.2s**. Retirement records
+**1,440** executable-family paths and **127** source Fungi assets. TypeScript,
+the governance verifier and all consumers remain active; repository-wide
+closure remains **UNKNOWN** because crash-linked full tooling, normal
+phase-close and monolithic memory evaluation remain excluded.
+
 First physical conversion slice 2026-08-11: the four closed Tri operations in
 `galerina-core-logic/src/index.ts` now have a package-owned typed `Verdict`
 translation at `src/self-hosted/tri-ops.fungi`. Strict Galerina checking reports

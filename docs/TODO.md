@@ -4,6 +4,25 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twentieth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `spillRetype` as package-owned pure
+  `spillRetypeFungi`, returning the exact closed `SpillOutcomeFungi` record:
+  typed K3 Deny, `FUNGI-HARDEN-007`, and its byte-exact governed reason.
+- [x] Preserve the exact camelCase external field `retypedTo` while mapping
+  ordered record members to deterministic internal SLIDE slots. No K3-to-Int
+  coercion and no internal GIR grammar relaxation were allowed.
+- [x] Prove differential trust consequences (**1/1**) plus physical `.slide`
+  publication, re-admission and typed VOK record receipt (**1/1**, zero skips).
+  Wrong arity, inadequate fuel, source, receipt, envelope and artifact mutation
+  all refuse.
+- [x] Pass compiler **6,374/6,374**, Golden Pack **11/11**, and canonical owner
+  **100/100 packages and 9,594 tests in 290.2s**. Retirement records **1,440**
+  executable-family paths and **127** source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Keep TypeScript and every consumer active; grant no consumer-switch,
+  production, runtime-residency, release or retirement authority.
+
 ### Nineteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `stricterResidency` as package-owned pure
