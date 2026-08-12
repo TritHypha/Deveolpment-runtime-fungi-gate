@@ -55,8 +55,9 @@ The monitored canonical owner completed with recorded exit code 0: **100/100
 packages and 9,600 tests** in about **282 seconds**. Retirement derives
 **1,445** executable-family paths and **131** source Fungi assets. The Golden
 and retirement checks correctly refused stale generated owners after the new
-source and test were committed; those owners must be regenerated before their
-freshness can be claimed.
+source and test were committed. Their registered generators refreshed the
+owners; Golden is current at **11/11 checked examples and 11/11 execution
+vectors**, and retirement plus its **17/17** anti-neutering tests are green.
 
 `effectsSubset`, `effectsToFlags`, authoritative effect-name checks, and every
 consumer remain active. This slice does not authenticate either mask or prove

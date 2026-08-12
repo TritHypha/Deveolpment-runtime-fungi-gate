@@ -24,8 +24,9 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Pass strict Fungi checking with zero errors/warnings, compiler
   **6,380/6,380**, and the monitored canonical owner **100/100 packages and
   9,600 tests in about 282s** with captured exit code 0. Retirement derives
-  **1,445** executable-family paths and **131** source Fungi assets; generated
-  retirement and Golden owners are being refreshed from their exact refusals.
+  **1,445** executable-family paths and **131** source Fungi assets; Golden is
+  current at **11/11 checked examples and 11/11 execution vectors**, and both
+  regenerated owners now pass their freshness checks.
 - [ ] Keep effect-name derivation, mask provenance, TypeScript, and every
   consumer active. This reference proof grants no authentication,
   consumer-switch, production, release, durability, or retirement authority;
