@@ -2,10 +2,10 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-seventh conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute Tower-Citizen's
-package-owned transport permit projection. It changes no SLIDE contract or
-registry. SLIDE passes
+Current checkpoint: the twenty-eighth conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute the compiler's
+package-owned governance change-class maximum. It changes no SLIDE contract,
+registry, or limit. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
@@ -29,6 +29,31 @@ package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-eighth physical conversion slice 2026-08-12: the private `maxClass`
+fold in `governance-diff.ts` now has exact package-owned pure
+`maxChangeClass(left: String, right: String) -> String`, with supporting
+normalization and rank flows in the existing governance qualifier asset. It
+preserves `neutral < tightening < expansion < experimental`, all 16 typed
+pairs, and left-biased ties. Every unknown physical String becomes conservative
+`experimental`; the differential proof passes **2/2**. The first physical
+probe correctly refused a depth-three `maximum -> rank -> normalize` shape.
+The final source uses ordered checks after normalization and stays within the
+verified depth-two ceiling without a SLIDE change. Independent SLIDE publishes
+and re-admits one physical `.slide`, then verifies the full declared-plus-
+hostile String matrix (**1/1**, zero skips) under pinned registry
+`slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1` with digest
+`d805dae4b822392e5092126ce4f0fb27e8bfa6aa2de8862ee88e09e23eed43cc`.
+Wrong arity/type, invalid Unicode, inadequate work, source, receipt, envelope,
+and artifact mutation refuse. Strict Fungi checking is clean, compiler is
+**6,382/6,382 across 1,259 suites**, and the monitored canonical owner passes
+**100/100 packages and 9,604 tests in 310.6s** with captured exit code 0.
+Golden is current at **11/11 checked examples and 11/11 execution vectors**;
+retirement derives **1,447** executable-family paths and **131** source Fungi
+assets. TypeScript, `CLASS_RANK`, `diffGovernance`, and all consumers remain
+active; repository-wide closure remains **UNKNOWN** because crash-linked full
+tooling, normal phase-close, graph-all, and monolithic memory evaluation remain
+excluded.
 
 Twenty-seventh physical conversion slice 2026-08-12: Tower-Citizen's exported
 `permitData` decision now has exact package-owned pure

@@ -4,6 +4,32 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-eighth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the compiler's private governance-diff `maxClass` decision as
+  package-owned pure `maxChangeClass(left: String, right: String) -> String`,
+  with supporting normalization and rank flows in the existing asset.
+- [x] Preserve the complete four-class order and all **16** typed pairs,
+  including left-biased ties. Normalize every unknown physical String to
+  conservative `experimental`; the differential proof passes **2/2**.
+- [x] Keep the source within SLIDE's verified two-flow call-depth ceiling by
+  using ordered checks after normalization. Do not raise a limit or change
+  SLIDE. Publish and independently re-admit one physical `.slide`; the full
+  declared-plus-hostile String matrix passes **1/1** with zero skips under
+  registry `slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1`.
+- [x] Refuse wrong arity/type, invalid Unicode, inadequate work, source,
+  receipt, every safe-value envelope byte, and artifact mutation. Pass strict
+  Fungi checking with zero errors/warnings, compiler **6,382/6,382 across
+  1,259 suites**, and the monitored canonical owner **100/100 packages and
+  9,604 tests in 310.6s** with captured exit code 0. Golden is current at
+  **11/11 + 11/11**; retirement derives **1,447** executable-family paths and
+  **131** source Fungi assets with its staged-index self-test green.
+- [ ] Keep TypeScript, `CLASS_RANK`, `diffGovernance`, all classifiers, and all
+  consumers active. This grants no consumer-switch, production, release,
+  durability, or retirement authority; repository-wide closure remains
+  `UNKNOWN` because crash-linked full tooling, normal phase-close, graph-all,
+  and monolithic memory evaluation stay excluded.
+
 ### Twenty-seventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express Tower-Citizen's exported `permitData` decision as package-owned
