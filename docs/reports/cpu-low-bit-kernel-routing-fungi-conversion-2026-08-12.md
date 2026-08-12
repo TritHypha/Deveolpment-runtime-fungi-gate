@@ -55,7 +55,7 @@ execution vectors**. Retirement derives **1,448** executable-family paths and
 **132** source Fungi assets.
 
 The package, project, KB, Fungi inventory and semantic owners were refreshed
-or checked individually. Project integrity is **9,325 nodes / 9,555 edges**
+or checked individually. Project integrity is **9,326 nodes / 9,556 edges**
 with zero dangling edges, duplicate IDs, dependency cycles, or violations; the
 semantic graph records **938** tests. These are generated navigation and
 assurance evidence, not production authority.
