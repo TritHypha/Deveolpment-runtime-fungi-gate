@@ -1,0 +1,49 @@
+@version 1
+
+/// Preserve the closed resource lifecycle transition table.
+pure flow validateTransition(from: String, to: String) -> Bool
+contract { intent { "Admit only a declared resource lifecycle transition." } }
+{
+  if from == "declared" {
+    match to {
+      "planned" => return true
+      "failed" => return true
+      _ => return false
+    }
+  }
+  if from == "planned" {
+    match to {
+      "initializing" => return true
+      "failed" => return true
+      _ => return false
+    }
+  }
+  if from == "initializing" {
+    match to {
+      "ready" => return true
+      "failed" => return true
+      _ => return false
+    }
+  }
+  if from == "ready" {
+    match to {
+      "shutting_down" => return true
+      "failed" => return true
+      _ => return false
+    }
+  }
+  if from == "failed" {
+    match to {
+      "shutting_down" => return true
+      _ => return false
+    }
+  }
+  if from == "shutting_down" {
+    match to {
+      "closed" => return true
+      "failed" => return true
+      _ => return false
+    }
+  }
+  return false
+}

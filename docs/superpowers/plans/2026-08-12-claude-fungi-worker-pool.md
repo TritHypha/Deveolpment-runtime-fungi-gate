@@ -44,7 +44,7 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Read: `build/ts-retirement/ts-retirement.json`
 
 **Produces:** three independent dossier results per wave. Slices 38-40 and
-Slices 41-43 have completed their product-owner gates.
+Slices 41-43 and 44-46 have completed their product-owner gates.
 
 - [x] Start three background sessions with the exact Slice 38-40 scopes in the
   design.
@@ -53,6 +53,9 @@ Slices 41-43 have completed their product-owner gates.
 - [x] Require read-only behavior and the ten-field dossier return schema.
 - [x] Capture every process exit and terminal status in the live per-file
   register.
+- [x] Correct the preflight after duplicate-selection pressure: require the
+  live register, retirement floor, every package loaded asset, exact/sibling
+  Fungi assets and governed mirrors before a worker is launched.
 
 ### Task 2: Product-owner admission
 

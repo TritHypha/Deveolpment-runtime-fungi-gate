@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "sourceDigest": "35af1aa19a4f3911e71617f2570ac456aa66fad82a471924433371c213e244c1",
-  "decisionsDigest": "f61c527324bac873b517cb46afa3a934c050d1833ed28196a25476cd33622fb5",
+  "decisionsDigest": "e463dede0d4c0a279207901d0588365f9dcee515dc4b956ffd0bbc2be4c4d926",
   "counts": {
     "total": 1456,
     "CANDIDATE": 0,
@@ -10,14 +10,20 @@
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
   },
-  "scopedCandidateCount": 5,
-  "scopedCandidateFileCount": 5,
+  "scopedCandidateCount": 7,
+  "scopedCandidateFileCount": 7,
   "scopedCandidates": [
     {
       "path": "packages-galerina/galerina-core-config/src/index.ts",
       "symbol": "isEnvironmentMode",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-core-logic/src/omni/omni-state.ts",
+      "symbol": "isOmniUncertain",
+      "reason": "COMPLETE_SLICES_44_46_DOSSIER",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     },
     {
       "path": "packages-galerina/galerina-core-runtime/src/structured-await.ts",
@@ -42,6 +48,12 @@
       "symbol": "isBuiltin",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "symbol": "validateTransition",
+      "reason": "COMPLETE_SLICES_44_46_DOSSIER",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     }
   ],
   "entries": [
@@ -5418,8 +5430,8 @@
       "package": "galerina-core-logic",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     },
     {
       "path": "packages-galerina/galerina-core-logic/src/omni/omni-to-decision.ts",
@@ -8618,8 +8630,8 @@
       "package": "galerina-devtools-project-graph",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     },
     {
       "path": "packages-galerina/galerina-devtools-project-graph/src/index.ts",

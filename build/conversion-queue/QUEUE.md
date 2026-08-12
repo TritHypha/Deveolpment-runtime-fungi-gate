@@ -11,7 +11,7 @@ Source digest: `35af1aa19a4f3911e71617f2570ac456aa66fad82a471924433371c213e244c1
 | BOOTSTRAP_FLOOR | 629 |
 | TOTAL | 1456 |
 
-Scoped symbol candidates: **5** across **5** files.
+Scoped symbol candidates: **7** across **7** files.
 
 A zero candidate count means no source has an evidence-bound admission decision; it does not mean the corpus is complete.
 

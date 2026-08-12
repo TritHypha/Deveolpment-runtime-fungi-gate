@@ -1,0 +1,16 @@
+@version 1
+
+/// Identify only the six uncertain Omni states.
+pure flow isOmniUncertain(state: String) -> Bool
+contract { intent { "Recognize only an uncertain Omni state." } }
+{
+  match state {
+    "unknown" => return true
+    "partial_true" => return true
+    "partial_false" => return true
+    "conflicted" => return true
+    "deferred" => return true
+    "inconsistent" => return true
+    _ => return false
+  }
+}

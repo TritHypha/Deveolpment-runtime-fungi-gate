@@ -1,12 +1,12 @@
-# Ten-Slice Fungi Conversion Batch Plan
+# Rolling Fungi Conversion Batch Plan
 
 Live per-file status:
 [`../../reports/fungi-conversion-batch-33-42-file-status.md`](../../reports/fungi-conversion-batch-33-42-file-status.md).
 
-**Goal:** Complete Slices 33–42 in one ten-slice batch. Slices 33–37 begin as
-five independent String-to-Bool `.fungi` twins; Slices 38–42 require a second
-bound design before queue admission. Perform one shared governed closure only
-after all ten rows settle.
+**Goal:** Complete bounded conversion waves beginning with Slices 33-46.
+Slices 33-37 begin as five independent String-to-Bool `.fungi` twins;
+follow-on waves require a fresh product-owner gate before queue admission.
+Perform shared roadmap, subway and index closure only at the bounded batch exit.
 
 **Architecture:** Each source path receives a symbol-scoped queue decision, a
 package-owned source asset, a focused differential proof and a distinct
@@ -69,12 +69,33 @@ Slice 37 is blocked by the current non-composable physical profile limits.
 - [ ] Add each source, differential proof and physical status to the linked
   per-file register before implementation begins.
 
+The Slices 38-43 gate settled without a new candidate: six scopes are blocked
+and the original Slice 42 scope is superseded by an existing Slice 29 asset.
+Those negative outcomes are complete even though the original admission
+checkboxes remain intentionally unmet.
+
+## Task 3B: Settle Slices 44-46
+
+- [x] Preflight all three exact symbols against the live register, retirement
+  floor, package loaded assets, existing Fungi tests and governed mirrors.
+- [x] Add the exact Slice 44 Omni uncertainty twin and prove its complete
+  declared and hostile domain through differential and physical surfaces.
+- [x] Add the exact Slice 45 resource-transition twin and prove all 49 declared
+  pairs plus hostile labels through interpretation and signed Wasm.
+- [x] Conserve Slice 45's physical refusal: the selected profile has no exact
+  two-String external boundary, and host-side tuple packing is forbidden.
+- [x] Block Slice 46 at its nested-record and eleven-field report boundary;
+  create no placeholder asset.
+- [x] Extend the governed focused physical lane to 8/8 with zero skips.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.
-- [ ] Record reusable lessons for bootstrap-floor authority and exact record-
+- [x] Record reusable lessons for bootstrap-floor authority and exact record-
   union ABI conservation.
-- [ ] Apply compatible skill changes once after the five reviews.
+- [x] Add the proved duplicate-conversion preflight covering live registers,
+  retirement floors, package loaded assets, exact/sibling assets and mirrors.
+- [x] Apply and validate the compatible translation-skill changes.
 - [ ] Run the skill validation and public-artifact checks.
 
 ## Task 5: One shared governed closure

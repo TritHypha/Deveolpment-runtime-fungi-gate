@@ -95,6 +95,38 @@ const CANDIDATES = Object.freeze([
       ["", "auditlog", "Validate", " return", "false\u0000", "constructor"],
     ),
   }),
+  Object.freeze({
+    slice: 44,
+    packageIdentity: "@galerina/core-logic",
+    packageDirectory: "galerina-core-logic",
+    sourceFile: "omni-uncertain.fungi",
+    flowName: "isOmniUncertain",
+    physicalExpectation: "PROVE",
+    usesTextComparisonBudget: true,
+    values: cases(
+      [
+        "unknown",
+        "partial_true",
+        "partial_false",
+        "conflicted",
+        "deferred",
+        "inconsistent",
+      ],
+      [
+        "true",
+        "false",
+        "",
+        "Unknown",
+        "partial-true",
+        "partial_True",
+        " unknown",
+        "unknown ",
+        "unknown\n",
+        "unknown\uFEFF",
+        "unknown\u0000",
+      ],
+    ),
+  }),
 ]);
 
 async function loadSlide() {
@@ -236,6 +268,7 @@ async function proveCandidate(slide, candidate) {
       [true],
       [validValue, "extra"],
       ["\ud800"],
+      ["x".repeat(257)],
     ]) {
       const refused = slide.executeTypedCheckedFungiPackagePublication(
         await prepare(slide, candidate, publicationDirectory, context),
@@ -296,7 +329,7 @@ async function proveCandidate(slide, candidate) {
   }
 }
 
-describe("five scalar classifiers through physical SLIDE/VOK", () => {
+describe("scalar classifiers through physical SLIDE/VOK", () => {
   it(
     "records the exact seven-pass/eight-refuse flat String-match boundary",
     { skip: !SLIDE_AVAILABLE },
@@ -332,4 +365,37 @@ describe("five scalar classifiers through physical SLIDE/VOK", () => {
       },
     );
   }
+  it(
+    "Slice 45 records the exact two-String physical profile refusal for validateTransition",
+    { skip: !SLIDE_AVAILABLE },
+    async () => {
+      const slide = await loadSlide();
+      const context = slide.portableVeoReferenceContext();
+      const sourceBytes = Uint8Array.from(readFileSync(join(
+        ROOT,
+        "packages-galerina",
+        "galerina-devtools-project-graph",
+        "src",
+        "self-hosted",
+        "resource-transition.fungi",
+      )));
+      const compiled = slide.compileCheckedFungiPackageSet({
+        packages: [{
+          identity: "@galerina/devtools-project-graph",
+          version: "1.0.0-beta.2",
+          exports: [{
+            name: "validateTransition",
+            sourceFlowName: "validateTransition",
+            sourceBytes,
+          }],
+          dependencies: [],
+          resources: [],
+        }],
+        context,
+        gates: ALL_ALLOW,
+      });
+      assert.equal(compiled.verdict, -1, JSON.stringify(compiled));
+      assert.equal(Object.hasOwn(compiled, "packageBuildHandle"), false);
+    },
+  );
 });

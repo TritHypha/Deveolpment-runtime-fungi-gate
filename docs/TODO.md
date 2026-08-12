@@ -4,7 +4,21 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-43 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-46 - 2026-08-12
+
+- [x] Settle Slices 44-46 under the product-owner gate. Slice 44 has an exact
+  package-owned Fungi twin and full physical SLIDE/VOK proof. Slice 45 has an
+  exact reference twin with complete **49-pair** declared-domain differential
+  proof, while its required two-String physical boundary remains blocked.
+  Slice 46 remains blocked by its nested record and eleven-field report shape;
+  no scalar shortcut or placeholder asset is authorized.
+- [x] Extend the focused physical lane to **8/8** with four admitted proofs,
+  three conserved compile refusals and one executable profile-boundary check.
+  A refusal is evidence, not conversion success.
+- [x] Correct the public translation skill preflight: inspect the live register,
+  retirement floor, every owning-package `packageGraph.loadedAssets` entry,
+  exact and sibling Fungi assets/tests, and governed mirrors before selecting a
+  scope. A missing graph result does not prove absence.
 
 - [x] Bind Slices 33-37 to exact symbols and package-owned Fungi assets.
   Fresh focused evidence passes **10/10** package conversion checks and **6/6**
@@ -34,7 +48,8 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after this product-owner gate.
+- [ ] Select the following three scopes only after the Slice 44-46
+  product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or
   `SUPERSEDED_BY_EXISTING_FUNGI`.

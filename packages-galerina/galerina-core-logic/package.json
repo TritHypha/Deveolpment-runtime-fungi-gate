@@ -13,6 +13,7 @@
       "src/tri/index.ts"
     ],
     "loadedAssets": [
+      "src/self-hosted/omni-uncertain.fungi",
       "src/self-hosted/tri-ops.fungi"
     ]
   },

@@ -20,7 +20,9 @@ widening, integration, completion claims, commits or pushes.
 
 Every new scope begins with a read-only dossier. The first wave covered Slices
 38-40. The second wave covers Slices 41-43 after replacing a duplicate Slice 42
-scope. Codex verifies the current source, retirement floor, selected SLIDE/VOK
+scope. The third wave covers Slices 44-46. Codex verifies the current source,
+retirement floor, complete owning-package `packageGraph.loadedAssets`, exact and
+sibling Fungi assets/tests, governed mirrors, selected SLIDE/VOK
 profile and queue scope after each wave. Only admitted candidates enter a
 later, worktree-isolated implementation wave.
 
@@ -37,6 +39,9 @@ graph, retirement and queue evidence:
 4. no concurrent worker owns the package or any shared proof surface;
 5. the complete source domain has a named candidate physical profile, or the
    dossier is explicitly a blocker investigation.
+6. the live conversion register, every owning-package loaded asset, exact and
+   sibling Fungi assets/tests, and governed mirrors show no earlier conversion
+   or competing ownership.
 
 A dead symbol is not a conversion candidate merely because its body is easy to
 translate. A duplicate is recorded as `SUPERSEDED_BY_EXISTING_FUNGI`, not
@@ -67,6 +72,9 @@ remain the source of truth.
 | 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | superseded by Slice 29 |
 | 42 replacement | `packages-galerina/galerina-core-tasks/src/check-permissions.ts#isSafeEnvironmentName` | none |
 | 43 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#containsCardKeyword` | none |
+| 44 | `packages-galerina/galerina-core-logic/src/omni/omni-state.ts#isOmniUncertain` | none |
+| 45 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | none |
+| 46 | `packages-galerina/galerina-tools-benchmark/src/index.ts#isBenchmarkReportShareable` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.

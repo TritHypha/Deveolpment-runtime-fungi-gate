@@ -1,4 +1,4 @@
-# Fungi Conversion Batch 33–43 File Status
+# Fungi Conversion Batch 33-46 File Status
 
 This is the live operational register for the bounded conversion batch. The binding
 design and work ledger are in
@@ -32,6 +32,9 @@ The active roadmap is updated once at the bounded batch exit.
 | 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | `packages-galerina/galerina-cpu-kernels/src/self-hosted/low-bit-kernel-routing.fungi` | `packages-galerina/galerina-cpu-kernels/tests/low-bit-kernel-routing-fungi-conversion.test.mjs` | Already proved in Slice 29; no duplicate conversion is permitted. | `DONE` (`SUPERSEDED_BY_EXISTING_FUNGI`) |
 | 42 replacement | `packages-galerina/galerina-core-tasks/src/check-permissions.ts#isSafeEnvironmentName` | not created | not created | The source is an open regular-language decision over an unbounded JavaScript String. The selected physical profile has no Boolean `while`, text length or character accessor, and its bounded well-formed text admission narrows the source domain. Core-tasks remains green **9/9**. | `BLOCKED` |
 | 43 | `packages-galerina/galerina-devtools-pci/src/pci-checker.ts#containsCardKeyword` | not created | not created | Physical text containment exists, but exact JavaScript case folding does not; the bounded well-formed physical text domain is narrower too. Devtools-pci remains green **29/29**. | `BLOCKED` |
+| 44 | `packages-galerina/galerina-core-logic/src/omni/omni-state.ts#isOmniUncertain` | `packages-galerina/galerina-core-logic/src/self-hosted/omni-uncertain.fungi` | `packages-galerina/galerina-core-logic/tests/omni-uncertain-fungi-conversion.test.mjs` | Full physical publication, VOK re-admission, hostile-input, exhaustion and mutation proof passes. | `DONE` |
+| 45 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | `packages-galerina/galerina-devtools-project-graph/src/self-hosted/resource-transition.fungi` | `packages-galerina/galerina-devtools-project-graph/tests/resource-transition-fungi-conversion.test.mjs` | The exact seven-by-seven declared matrix and hostile labels pass interpretation and signed Wasm. Physical publication is blocked because the selected profile accepts one scalar argument, not the required two-String boundary; host-side tuple packing is refused. | `BLOCKED` (physical) |
+| 46 | `packages-galerina/galerina-tools-benchmark/src/index.ts#isBenchmarkReportShareable` | not created | not created | The source consumes two nested records, including an eleven-field report. The selected physical profile cannot preserve the exact record boundary; flattening or precomputing would move authority into the host. The owning package remains green **9/9**. | `BLOCKED` |
 
 ## Shared implementation and governance files
 
@@ -39,15 +42,18 @@ The active roadmap is updated once at the bounded batch exit.
 |---|---|---|
 | `docs/superpowers/specs/2026-08-12-five-scalar-classifiers-fungi-conversion-design.md` | Bound design for Slices 33–37. | `DONE` |
 | `docs/superpowers/specs/2026-08-12-five-follow-on-fungi-conversions-design.md` | Product-owner negative adjudication for Slices 38–43, including the superseded original Slice 42 scope. | `DONE` |
+| `docs/superpowers/specs/2026-08-12-slices-44-46-fungi-conversion-design.md` | Product-owner design and physical adjudication for Slices 44-46. | `DONE` |
 | `docs/superpowers/plans/2026-08-12-five-scalar-classifiers-fungi-conversion.md` | Batch work ledger and link to this register. | `IN_PROGRESS` |
-| `governance/conversion-queue-decisions.json` | Five current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
-| `build/conversion-queue/queue.json` | Generated five-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
-| `build/conversion-queue/QUEUE.md` | Human-readable generated queue; no regeneration is required because no candidate authority changed. | `DONE` |
+| `governance/conversion-queue-decisions.json` | Seven current symbol-scoped candidate decisions; blocked follow-on scopes grant no candidate authority. | `DONE` |
+| `build/conversion-queue/queue.json` | Generated seven-candidate queue; follow-on blockers do not enter the candidate authority list. | `DONE` |
+| `build/conversion-queue/QUEUE.md` | Human-readable generated queue. | `DONE` |
 | `scripts/lib/scalar-classifier-fungi-proof.mjs` | Shared interpreter and signed-Wasm differential proof helper. | `DONE` |
 | `packages-galerina/galerina-core-compiler/src/interpreter.ts` | Preserve quoted reserved names as String match patterns. | `DONE` |
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
-| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34 and 36; exact compile-refusal evidence for Slices 35 and 37; executable seven-pass/eight-refuse profile boundary. | `DONE` |
+| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34, 36 and 44; exact compile-refusal evidence for Slices 35, 37 and 45; executable seven-pass/eight-refuse profile boundary. | `DONE` |
 | `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `DONE` |
+| Public `translating-typescript-to-fungi` skill | Duplicate-conversion preflight now binds the live register, retirement floor, package loaded assets, exact/sibling assets and governed mirrors; local skill commit `15c70bd`. | `DONE` |
+| Public `writing-fungi` skill | `NO_SKILL_UPDATE`: the new lessons concern candidate discovery and physical arity, while its syntax, exhaustive-exit and typed-boundary rules already cover the emitted source. | `DONE` |
 
 ## Deferred shared closure files
 
@@ -58,7 +64,7 @@ These remain `NOT_STARTED` until the bounded batch exit:
 - `build/component-health/roadmap-subway.svg`
 - generated package, project, KB, inventory, semantic, status, percentage and
   code-index outputs
-- public Fungi skill repositories
+- final batch-level review of both public Fungi skill repositories
 
 ## Verified refusal retained outside the batch
 
@@ -68,10 +74,17 @@ not one of Slices 33–43 and no Fungi asset was produced.
 
 ## Current focused evidence
 
-- Governed focused physical lane: `6/6` passed, `0` failed, `0` skipped. The
-  six checks are three complete physical proofs, two exact compile refusals,
+- Governed focused physical lane: `8/8` passed, `0` failed, `0` skipped. The
+  eight checks are four complete physical proofs, three exact compile refusals,
   and one executable profile-boundary check; the refusals are not conversion
   success.
+- Slice 44 proves all eight declared Omni labels plus hostile strings through
+  the differential and physical surfaces.
+- Slice 45 proves all 49 declared transition pairs plus hostile labels through
+  interpretation and signed Wasm; its two-argument physical boundary remains
+  an exact refusal.
+- Slice 46 remains blocked at the nested-record boundary and has no placeholder
+  Fungi asset.
 - A generated one-flow probe establishes the current flat-match boundary:
   seven explicit String labels compile; eight and above refuse.
 - Slice 35's four-plus-four helper decomposition compiled to the bounded

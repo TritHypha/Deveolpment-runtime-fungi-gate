@@ -12,6 +12,16 @@
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
     },
     {
+      "path": "packages-galerina/galerina-core-logic/src/omni/omni-state.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "isOmniUncertain"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_SLICES_44_46_DOSSIER",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
+    },
+    {
       "path": "packages-galerina/galerina-core-runtime/src/structured-await.ts",
       "scope": "SYMBOLS",
       "symbols": [
@@ -50,6 +60,16 @@
       "classification": "CANDIDATE",
       "reason": "COMPLETE_FIVE_SCALAR_CLASSIFIER_DOSSIER",
       "evidenceDigest": "fcd476bfb7e88c8f6d980e43dd58587bfdf3a882ca63ec71121fd7f63a0e9db1"
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "scope": "SYMBOLS",
+      "symbols": [
+        "validateTransition"
+      ],
+      "classification": "CANDIDATE",
+      "reason": "COMPLETE_SLICES_44_46_DOSSIER",
+      "evidenceDigest": "c30fd3eaf55abe1b3e258379ca3891ca6d8a58cb071f94224fa383cc09edf2e6"
     }
   ]
 }
