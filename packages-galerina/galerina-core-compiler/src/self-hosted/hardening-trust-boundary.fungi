@@ -9,15 +9,6 @@ record SpillOutcomeFungi {
   reason: String
 }
 
-record HostResidencyCapabilityFungi {
-  name: String
-  canRegisterPin: Bool
-  canNoDramSpill: Bool
-  canNoSwap: Bool
-  canNoDisk: Bool
-  keyCustody: String
-}
-
 pure flow combineTrust(left: Verdict, right: Verdict) -> Verdict
 contract { intent { "Return the least-trusted K3 operand without manufacturing trust." } }
 {
@@ -67,45 +58,6 @@ contract { intent { "Discharge trust from typed verification evidence without re
     deny: { return Verdict.Deny }
     ambig: { return verification }
     if: { return verification }
-  }
-}
-
-pure flow resolveHostFungi(name: String) -> HostResidencyCapabilityFungi
-contract { intent { "Resolve only exact declared host profiles and fail closed to no capabilities." } }
-{
-  match name {
-    "mlock_posix" => return HostResidencyCapabilityFungi {
-      name: "mlock_posix"
-      canRegisterPin: false
-      canNoDramSpill: false
-      canNoSwap: true
-      canNoDisk: true
-      keyCustody: "env-spore"
-    }
-    "register_pinned" => return HostResidencyCapabilityFungi {
-      name: "register_pinned"
-      canRegisterPin: true
-      canNoDramSpill: true
-      canNoSwap: true
-      canNoDisk: true
-      keyCustody: "hardware-signer"
-    }
-    "browser_secure_context" => return HostResidencyCapabilityFungi {
-      name: "browser_secure_context"
-      canRegisterPin: false
-      canNoDramSpill: false
-      canNoSwap: false
-      canNoDisk: true
-      keyCustody: "env-spore"
-    }
-    _ => return HostResidencyCapabilityFungi {
-      name: "<undeclared>"
-      canRegisterPin: false
-      canNoDramSpill: false
-      canNoSwap: false
-      canNoDisk: false
-      keyCustody: "env-spore"
-    }
   }
 }
 

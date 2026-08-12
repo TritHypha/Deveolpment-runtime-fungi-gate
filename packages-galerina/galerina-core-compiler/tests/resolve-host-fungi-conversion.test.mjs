@@ -13,7 +13,7 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = join(HERE, "..");
-const SOURCE = join(PACKAGE_ROOT, "src", "self-hosted", "hardening-trust-boundary.fungi");
+const SOURCE = join(PACKAGE_ROOT, "src", "self-hosted", "hardening-host-capability.fungi");
 const PACKAGE = join(PACKAGE_ROOT, "package.json");
 const VECTORS = Object.freeze([
   "mlock_posix",
@@ -33,7 +33,7 @@ const VECTORS = Object.freeze([
 
 function compileCandidate() {
   const source = readFileSync(SOURCE, "utf8").replace(/^\uFEFF/u, "");
-  const program = parseProgram(source, "hardening-trust-boundary.fungi");
+  const program = parseProgram(source, "hardening-host-capability.fungi");
   assert.deepEqual(
     (program.diagnostics ?? []).filter((diagnostic) => diagnostic.severity === "error"),
     [],
@@ -60,9 +60,9 @@ describe("compiler package-owned Fungi host resolution", () => {
     const packageJson = JSON.parse(readFileSync(PACKAGE, "utf8"));
     assert.ok(
       packageJson.packageGraph.loadedAssets.includes(
-        "src/self-hosted/hardening-trust-boundary.fungi",
+        "src/self-hosted/hardening-host-capability.fungi",
       ),
-      "the compiler package must own the Fungi hardening trust module",
+      "the compiler package must own the Fungi host-capability module",
     );
     assert.ok(existsSync(SOURCE));
 
