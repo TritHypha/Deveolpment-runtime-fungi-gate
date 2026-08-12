@@ -22,10 +22,16 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Run the bounded complete package owner: **100/100 packages and 9,574
   tests** pass in **277.8s** with captured exit code 0. Retirement now tracks
   **1,430** executable-family paths and **120** `.fungi` source assets.
-- [ ] Finish the shared ninth-through-eleventh semantic/graph/percentage/
-  status/roadmap/count/Golden/code-index/Myco/primary-graph owner wave. Full
-  tooling, normal phase-close, graph-all-after-roadmap and whole-memory
-  evaluation stay excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Finish the shared ninth-through-eleventh bounded owner wave: graph
+  generation is **7/7**, semantic outputs are **3/3** with **903** test nodes,
+  roadmap is **5/5**, canonical counts are **7/7** plus self-test, Golden is
+  **11/11 checked + 11/11 execution vectors**, and retirement, percentage,
+  status, code-index, pinned SLIDE and path-leak checks are current. The full
+  primary graph conserves **50,112 nodes / 133,585 edges** at its exact Git
+  head with `stale: false`, the new collapse proof is queryable, and Myco is
+  refreshed. Full tooling, normal phase-close, graph-all-after-roadmap and
+  whole-memory evaluation stay excluded; repository-wide closure remains
+  **UNKNOWN**.
 - [x] Keep `three-valued-governance.ts`, `collapse`, `decideAtBoundary` and
   every caller active. This reference-only proof grants no consumer-switch,
   production, release or retirement authority.
@@ -47,7 +53,8 @@ counts or open items that a newer section explicitly supersedes.
   **100/100 packages and 9,574 tests in 277.8s**, not an invented isolated
   tenth-only total. Tenth retirement evidence was **1,429** executable-family
   paths and **120** `.fungi` source assets.
-- [ ] Close generated owners in the shared ninth-through-eleventh wave.
+- [x] Close generated owners in the shared ninth-through-eleventh wave; the
+  exact bounded matrix is recorded in the eleventh checkpoint above.
 - [x] Keep the TypeScript decision and every caller active; no consumer-switch,
   production, release or retirement authority follows.
 
@@ -71,10 +78,10 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Run the bounded complete package owner: **100/100 packages and 9,570
   tests** pass in **279.7s** with captured exit code 0. Retirement now tracks
   **1,428** executable-family paths and **119** `.fungi` source assets.
-- [ ] Finish the ninth slice's semantic/graph/percentage/status/roadmap/count/
-  Golden/code-index/Myco/primary-graph owner wave. Full tooling, normal
-  phase-close, graph-all-after-roadmap and whole-memory evaluation stay
-  excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Finish the ninth slice's generated owners in the shared bounded wave
+  recorded by the eleventh checkpoint. Full tooling, normal phase-close,
+  graph-all-after-roadmap and whole-memory evaluation stay excluded;
+  repository-wide closure remains **UNKNOWN**.
 - [x] Keep `naming-checker.ts`, `isGenericTypeName`, `checkNaming`,
   `runNamingAudit`, the CLI and every consumer active. This reference-only
   proof grants no consumer-switch, production, release or retirement
