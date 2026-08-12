@@ -269,6 +269,19 @@ records **1,435** executable-family paths and **124** source Fungi assets.
 TypeScript and every consumer remain active; repository-wide closure remains
 **UNKNOWN**.
 
+Sixteenth physical conversion slice 2026-08-12: exported
+`tensorDimensionCountsCompatible` now has exact package-owned
+`tensorDimensionCountsCompatibleFungi` over cardinality-preserving opaque rank
+tokens. Typed parity and the real `FUNGI-TYPE-016` caller pass **3/3**.
+Independent SLIDE `053cc75` uses the frozen immutable-array registry to publish
+and independently re-admit one physical `.slide` with typed Bool receipts
+(**1/1**, zero skips); malformed types/arity, oversized arrays, work exhaustion
+and source/artifact mutations refuse. The focused neighborhood is **44/44**,
+Golden Pack **11/11**, compiler **6,369/6,369**, and the canonical owner
+**100/100 packages and 9,589 tests in 273.8s**. Retirement records **1,436**
+executable-family paths and **125** source Fungi assets. TypeScript and every
+consumer remain active; repository-wide closure remains **UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
@@ -2843,7 +2856,7 @@ unknown; this neither closes terminal retirement nor grants production,
 conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
-family is **74/74**, and the complete package lane is **100/100 packages and
-9,586 tests** in 279.6 seconds. The normal custody close remains fail-closed:
+family is **74/74**, and the latest complete package lane is **100/100 packages
+and 9,589 tests** in 273.8 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.

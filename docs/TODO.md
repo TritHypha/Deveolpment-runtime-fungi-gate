@@ -4,6 +4,22 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Sixteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express exported `tensorDimensionCountsCompatible` as package-owned pure
+  `tensorDimensionCountsCompatibleFungi` over cardinality-preserving opaque
+  rank tokens while keeping TypeScript and callers.
+- [x] Prove typed parity and the real `FUNGI-TYPE-016` caller (**3/3**), plus
+  physical SLIDE/VOK Bool receipts (**1/1**, zero skips) under the frozen
+  immutable-array registry. Malformed, oversized, exhausted and mutated inputs
+  refuse.
+- [x] Pass the focused neighborhood **44/44**, compiler **6,369/6,369**, Golden
+  Pack **11/11**, and canonical owner **100/100 packages and 9,589 tests in
+  273.8s**. Retirement records **1,436** executable-family paths and **125**
+  source Fungi assets.
+- [x] Keep null, NaN, `else if`, `else`, exceptions and all loop forms absent.
+  Grant no consumer-switch, production, release or retirement authority.
+
 ### Fifteenth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `tensorElementTypesCompatible` as package-owned pure
@@ -470,8 +486,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the current complete package lane passes **100/100 packages and 9,586 tests**
-  in 279.6 seconds. These are verification evidence, not release authority.
+  the latest complete package lane passes **100/100 packages and 9,589 tests**
+  in 273.8 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 
