@@ -1,11 +1,12 @@
-# Five Scalar Classifiers Fungi Conversion Batch Plan
+# Ten-Slice Fungi Conversion Batch Plan
 
 Live per-file status:
 [`../../reports/fungi-conversion-batch-33-42-file-status.md`](../../reports/fungi-conversion-batch-33-42-file-status.md).
 
-**Goal:** Complete Slices 33–37 as five independent String-to-Bool `.fungi`
-twins with physical SLIDE/VOK evidence, then perform one shared governed
-closure.
+**Goal:** Complete Slices 33–42 in one ten-slice batch. Slices 33–37 begin as
+five independent String-to-Bool `.fungi` twins; Slices 38–42 require a second
+bound design before queue admission. Perform one shared governed closure only
+after all ten rows settle.
 
 **Architecture:** Each source path receives a symbol-scoped queue decision, a
 package-owned source asset, a focused differential proof and a distinct
@@ -24,23 +25,23 @@ canonical package suite are batched.
 - Do not run full tooling, `graph-all`, normal phase-close or monolithic memory
   evaluation.
 
-## Task 1: Five exact queue admissions
+## Task 1: First five exact queue admissions
 
-- [ ] Commit the batch design and plan.
-- [ ] Replace the completed Slice 32 decision with five sorted `SYMBOLS`
+- [x] Commit the batch design and plan.
+- [x] Replace the completed Slice 32 decision with five sorted `SYMBOLS`
   decisions bound to the design digest.
-- [ ] Regenerate and check the queue.
-- [ ] Require zero whole-file candidates and exactly five scoped candidates.
+- [x] Regenerate and check the queue.
+- [x] Require zero whole-file candidates and exactly five scoped candidates.
 
 ## Task 2: Differential RED/GREEN for Slices 33–37
 
-- [ ] Add one initially failing focused test in each owning package.
-- [ ] Require the exact absent Fungi asset and loaded-asset declaration.
-- [ ] Add the minimal package-owned match flow.
-- [ ] Strict-check each exact source.
-- [ ] Prove fixed true values, fixed false values and hostile surplus Strings
+- [x] Add one initially failing focused test in each owning package.
+- [x] Require the exact absent Fungi asset and loaded-asset declaration.
+- [x] Add the minimal package-owned match flow.
+- [x] Strict-check each exact source.
+- [x] Prove fixed true values, fixed false values and hostile surplus Strings
   through typed interpretation and signed Wasm.
-- [ ] Run each owning package test with no skips.
+- [x] Run each owning package test with no skips.
 
 ## Task 3: Independent physical evidence
 
@@ -51,7 +52,22 @@ canonical package suite are batched.
 - [ ] Refuse missing, surplus, non-String, invalid UTF-16 and exhausted-work
   arguments for every candidate.
 - [ ] Refuse source, receipt, safe-value and physical artifact mutations.
-- [ ] Register and run the focused physical command with zero skips.
+- [x] Register and run the focused physical command with zero skips. The lane
+  passes by proving three admitted slices and conserving two exact refusals;
+  it does not promote those refusals to completion.
+
+Current physical state is recorded in the linked file register. Three slices
+are green, Slice 35 has a proved decomposition awaiting design amendment, and
+Slice 37 is blocked by the current non-composable physical profile limits.
+
+## Task 3A: Admit Slices 38–42
+
+- [ ] Select five more exact, non-bootstrap-floor symbols.
+- [ ] Bind their dossiers and decision/effect ledgers in a second design.
+- [ ] Extend the queue to exactly ten scoped candidates with zero whole-file
+  candidates.
+- [ ] Add each source, differential proof and physical status to the linked
+  per-file register before implementation begins.
 
 ## Task 4: Per-slice skill review
 

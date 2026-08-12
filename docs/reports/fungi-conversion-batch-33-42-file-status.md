@@ -20,11 +20,11 @@ The active roadmap is updated once after all ten slices settle.
 
 | Slice | TypeScript/MJS source | Fungi asset | Focused test | Physical status | Overall |
 |---:|---|---|---|---|---|
-| 33 | `packages-galerina/galerina-core-config/src/index.ts#isEnvironmentMode` | `packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi` | `packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs` | Candidate compiles and executes; exhaustion probe must use the step budget. | `IN_PROGRESS` |
-| 34 | `packages-galerina/galerina-core-runtime/src/structured-await.ts#isTerminalScope` | `packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi` | `packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs` | Candidate compiles and executes; exhaustion probe must use the step budget. | `IN_PROGRESS` |
-| 35 | `packages-galerina/galerina-core-tasks/src/load-tasks.ts#isTaskEffect` | `packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi` | `packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs` | Independent SLIDE scalar compiler refuses the exact source; root cause is being isolated. | `ERROR` |
-| 36 | `packages-galerina/galerina-data-model/src/index.ts#isResponseSafeClassification` | `packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi` | `packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs` | Candidate compiles; one exact runtime input is refused and is being isolated. | `ERROR` |
-| 37 | `packages-galerina/galerina-devtools-context/src/receipt-generator.ts#isBuiltin` | `packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi` | `packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs` | Independent SLIDE scalar compiler refuses the exact source; root cause is being isolated. | `ERROR` |
+| 33 | `packages-galerina/galerina-core-config/src/index.ts#isEnvironmentMode` | `packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi` | `packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs` | Full physical publication, VOK re-admission, hostile-input, exhaustion and mutation proof passes. | `DONE` |
+| 34 | `packages-galerina/galerina-core-runtime/src/structured-await.ts#isTerminalScope` | `packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi` | `packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs` | Full physical publication, VOK re-admission, hostile-input, exhaustion and mutation proof passes. | `DONE` |
+| 35 | `packages-galerina/galerina-core-tasks/src/load-tasks.ts#isTaskEffect` | `packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi` | `packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs` | The flat eight-label match exceeds the current physical wide-control ceiling. A two-helper, four-plus-four exact decomposition compiles and executes the first, last and surplus vectors; the bound design and asset still need amendment. | `IN_PROGRESS` |
+| 36 | `packages-galerina/galerina-data-model/src/index.ts#isResponseSafeClassification` | `packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi` | `packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs` | Full physical publication, VOK re-admission, hostile-input, exhaustion and mutation proof passes. The earlier refusal was the harness supplying a surplus text-work budget to an exact step-only profile. | `DONE` |
+| 37 | `packages-galerina/galerina-devtools-context/src/receipt-generator.ts#isBuiltin` | `packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi` | `packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs` | The flat eighteen-label match exceeds the current physical wide-control ceiling. Tested helper decompositions also refuse because the current profile cannot compose the required wide control-flow and function graph. No physical claim is made. | `BLOCKED` |
 | 38 | selection pending | not created | not created | not started | `NOT_STARTED` |
 | 39 | selection pending | not created | not created | not started | `NOT_STARTED` |
 | 40 | selection pending | not created | not created | not started | `NOT_STARTED` |
@@ -43,8 +43,8 @@ The active roadmap is updated once after all ten slices settle.
 | `scripts/lib/scalar-classifier-fungi-proof.mjs` | Shared interpreter and signed-Wasm differential proof helper. | `DONE` |
 | `packages-galerina/galerina-core-compiler/src/interpreter.ts` | Preserve quoted reserved names as String match patterns. | `DONE` |
 | `packages-galerina/galerina-core-compiler/tests/wat-string-match.test.mjs` | Interpreter/Wasm regression for quoted reserved names. | `DONE` |
-| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts and refusals for the batch. | `IN_PROGRESS` |
-| `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `IN_PROGRESS` |
+| `scripts/tests/five-scalar-classifiers-fungi-slide.integration.test.mjs` | Distinct physical SLIDE/VOK receipts for Slices 33, 34 and 36; exact compile-refusal evidence for Slices 35 and 37; executable seven-pass/eight-refuse profile boundary. | `DONE` |
+| `governance/phase-close-commands.json` | Register the physical batch test in the governed test inventory. | `DONE` |
 
 ## Deferred shared closure files
 
@@ -62,3 +62,18 @@ These remain `NOT_STARTED` until all ten slice proofs settle:
 `packages-galerina/galerina-devtools-graph-algorithms/src/graphs/boundary-graph.ts#requiresAuth`
 is `BLOCKED_BY_BOOTSTRAP_FLOOR`. Its negative design record is complete; it is
 not one of Slices 33–42 and no Fungi asset was produced.
+
+## Current focused evidence
+
+- Governed focused physical lane: `6/6` passed, `0` failed, `0` skipped. The
+  six checks are three complete physical proofs, two exact compile refusals,
+  and one executable profile-boundary check; the refusals are not conversion
+  success.
+- A generated one-flow probe establishes the current flat-match boundary:
+  seven explicit String labels compile; eight and above refuse.
+- Slice 35's four-plus-four helper decomposition compiled to the bounded
+  wide-control profile and returned `true`, `true`, and `false` for the first,
+  last, and surplus probes respectively.
+- Slice 37 remains blocked: both a three-helper flat composition and a bounded
+  helper tree refused. Widening a registry ceiling is not authorized by these
+  probes.
