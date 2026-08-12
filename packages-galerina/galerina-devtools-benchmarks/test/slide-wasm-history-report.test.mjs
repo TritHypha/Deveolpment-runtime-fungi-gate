@@ -54,19 +54,24 @@ function fixture() {
   return { wasmArchive, current, metadata, archiveMeta, sources };
 }
 
-test("historical chart has exactly two products and keeps SLIDE reference evidence non-production", () => {
+test("historical chart uses per-workload WASM-zero rows and keeps SLIDE reference evidence non-production", () => {
   const model = buildSlideWasmHistoryModel(fixture());
 
   assert.equal(model.status, "REFERENCE_ONLY_NO_PRODUCTION_SLIDE");
   assert.deepEqual(model.rows.map((row) => row.product), ["Galerina/SLIDE", "Galerina/WASM"]);
   assert.deepEqual(model.rows.map((row) => row.productionObservations), [0, 2]);
   assert.deepEqual(model.rows.map((row) => row.referenceObservations), [1, 0]);
+  assert.deepEqual(
+    model.workloads.map((row) => [row.benchmark, row.wasmValue, row.unit, row.slideDeltaPct]),
+    [["alpha", 90, "ops/s", null], ["beta", 80, "ops/s", null]],
+  );
   assert.equal(model.sharedProductionWorkloads, 0);
 
   const page = buildSlideWasmHistoryHtml(model);
-  assert.equal((page.match(/data-product-row=/gu) ?? []).length, 2);
-  assert.match(page, /Reference-only observation; production SLIDE is unmeasured/u);
-  assert.match(page, /Historic measured lane/u);
+  assert.equal((page.match(/data-workload-row=/gu) ?? []).length, 2);
+  assert.match(page, /alpha/u);
+  assert.match(page, /WASM 90 ops\/s = 0/u);
+  assert.match(page, /SLIDE not measured/u);
   assert.match(page, /Evidence coverage, not a speed comparison/u);
   assert.match(page, /WASM = 0 baseline/u);
   assert.match(page, /faster \+/u);
@@ -93,6 +98,7 @@ test("a real aligned production SLIDE lane is counted separately from slideRefer
   assert.equal(model.rows[0].productionObservations, 1);
   assert.equal(model.rows[0].referenceObservations, 1);
   assert.equal(model.sharedProductionWorkloads, 1);
+  assert.equal(model.workloads[0].slideDeltaPct, 100 / 3);
 });
 
 test("malformed provenance and disguised lane names refuse", () => {

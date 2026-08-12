@@ -136,10 +136,24 @@ export function buildSlideWasmHistoryModel(input) {
       sharedProductionWorkloads += 1;
     }
   }
+  const workloads = [...wasm.values()].map((baseline) => {
+    const candidate = slide.get(baseline.benchmark);
+    const aligned = candidate !== undefined
+      && candidate.metricClass === baseline.metricClass
+      && candidate.unit === baseline.unit;
+    return Object.freeze({
+      benchmark: baseline.benchmark,
+      unit: baseline.unit,
+      wasmValue: baseline.value,
+      slideValue: aligned ? candidate.value : null,
+      slideDeltaPct: aligned ? ((candidate.value - baseline.value) * 100) / baseline.value : null,
+    });
+  });
 
   return Object.freeze({
     status: slide.size === 0 ? "REFERENCE_ONLY_NO_PRODUCTION_SLIDE" : "COMPARABLE_PRODUCTION_HISTORY",
     sharedProductionWorkloads,
+    workloads: Object.freeze(workloads),
     rows: Object.freeze([
       Object.freeze({
         product: "Galerina/SLIDE",
@@ -178,19 +192,42 @@ function html(value) {
     .replaceAll("'", "&#39;");
 }
 
+function formatMeasurement(value) {
+  for (const [divisor, suffix] of [[1_000_000_000, "B"], [1_000_000, "M"], [1_000, "K"]]) {
+    if (value >= divisor) {
+      const scaled = value / divisor;
+      const decimals = scaled >= 100 ? 0 : scaled >= 10 ? 1 : 2;
+      return `${Number(scaled.toFixed(decimals))}${suffix}`;
+    }
+  }
+  return String(Number(value.toFixed(value >= 10 ? 1 : 3)));
+}
+
+function formatDelta(value) {
+  const rounded = Number(Math.abs(value).toFixed(1));
+  return `${value >= 0 ? "+" : "−"}${rounded}%`;
+}
+
 export function buildSlideWasmHistoryHtml(model) {
   plainRecord(model, "history model");
-  const maximum = Math.max(1, ...model.rows.map((row) => row.productionObservations + row.referenceObservations));
-  const productRows = model.rows.map((row) => {
-    const productionWidth = Math.round((row.productionObservations / maximum) * 680);
-    const referenceWidth = Math.round((row.referenceObservations / maximum) * 680);
-    return `<section class="product" data-product-row="${html(row.product)}"><div class="copy"><h2>${html(row.product)}</h2><p>${html(row.state)}</p><p class="counts">Production measured: ${row.productionObservations} · reference-only: ${row.referenceObservations}</p></div><svg role="img" aria-label="${html(row.product)} recorded evidence coverage" viewBox="0 0 720 52"><rect class="track" x="0" y="8" width="680" height="16" rx="8"/><rect class="production" x="0" y="8" width="${productionWidth}" height="16" rx="8"/><rect class="reference" x="0" y="30" width="${referenceWidth}" height="12" rx="6"/><text x="690" y="21">${row.productionObservations}</text><text x="690" y="42">${row.referenceObservations}</text></svg></section>`;
+  const scale = Math.max(25, ...model.workloads.map((row) => Math.abs(row.slideDeltaPct ?? 0)));
+  const workloadRows = model.workloads.map((row) => {
+    const delta = row.slideDeltaPct;
+    const width = delta === null ? 0 : Math.min(45, (Math.abs(delta) / scale) * 45);
+    const side = delta === null ? "unmeasured" : delta >= 0 ? "positive" : "negative";
+    const barStyle = side === "negative"
+      ? `left:${50 - width}%;width:${width}%`
+      : `left:50%;width:${width}%`;
+    const result = delta === null
+      ? "SLIDE not measured"
+      : `SLIDE ${formatDelta(delta)} · ${formatMeasurement(row.slideValue)} ${html(row.unit)}`;
+    return `<section class="workload" data-workload-row="${html(row.benchmark)}"><div class="workload-copy"><h2>${html(row.benchmark)}</h2><p>WASM ${formatMeasurement(row.wasmValue)} ${html(row.unit)} = 0</p></div><div class="plot" aria-label="${html(row.benchmark)}: historic WASM is the zero baseline; ${html(result)}"><span class="quarter q1"></span><span class="quarter q3"></span><span class="zero"></span>${delta === null ? "" : `<span class="bar ${side}" style="${barStyle}"></span>`}<span class="result ${side}" style="${delta !== null && delta < 0 ? `right:${50 + width}%;` : `left:${delta === null ? 50 : 50 + width}%;`}">${html(result)}</span></div></section>`;
   }).join("");
   const sourceRows = Object.values(model.sources).map((item) => `<tr><td><code>${html(item.path)}</code></td><td><code>${html(item.sha256)}</code></td></tr>`).join("");
   const comparison = model.sharedProductionWorkloads === 0
     ? "No shared admitted production workload exists in these records, so no performance ratio or ranking is published."
     : `${model.sharedProductionWorkloads} shared admitted production workload(s) are recorded.`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Galerina/SLIDE and Galerina/WASM historical evidence</title><style>
-  :root{color-scheme:light dark;--bg:#f4f7fb;--card:#fff;--ink:#152230;--muted:#5c6b7a;--line:#d7dfe8;--slide:#6d28d9;--wasm:#0f766e;--reference:#d97706}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,Arial,sans-serif;line-height:1.5}main{width:min(1080px,100%);margin:auto;padding:20px 14px 48px}header,.product,.notice,.sources{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}h1,h2{margin:0 0 8px}.eyebrow{font-weight:700;color:var(--slide);letter-spacing:.04em;text-transform:uppercase}.lede,.counts,.notice p{color:var(--muted)}.product{display:grid;gap:18px;grid-template-columns:minmax(240px,1fr) minmax(380px,1.6fr);align-items:center}.product svg{width:100%;height:auto}.track{fill:var(--line)}.production{fill:var(--wasm)}.product:first-of-type .production{fill:var(--slide)}.reference{fill:var(--reference)}svg text{fill:currentColor;font:14px Roboto,Arial,sans-serif}.legend{display:flex;gap:16px;flex-wrap:wrap}.key::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:var(--wasm)}.key.reference::before{background:var(--reference)}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}code{overflow-wrap:anywhere}.status{font-weight:700;color:var(--slide)}@media(prefers-color-scheme:dark){:root{--bg:#10161d;--card:#18222d;--ink:#edf3f8;--muted:#b6c1cc;--line:#354554;--slide:#c4a7ff;--wasm:#5eead4;--reference:#fdba74}}@media(max-width:720px){main{padding:10px 8px 32px}header,.product,.notice,.sources{padding:15px;border-radius:10px}.product{grid-template-columns:1fr}.sources{overflow:auto}table{min-width:760px}}
-  </style></head><body><main><header><p class="eyebrow">Historical benchmark evidence</p><h1>Galerina/SLIDE and Galerina/WASM</h1><p class="lede">Evidence coverage, not a speed comparison. The products are shown together, but only like-for-like admitted workloads may support a performance conclusion.</p><p class="axis-rule">WASM = 0 baseline · faster + · slower −</p><p class="status">${html(model.status)}</p></header><div class="legend"><p class="key">production measurement</p><p class="key reference">reference-only observation</p></div>${productRows}<section class="notice"><h2>Comparison boundary</h2><p>${html(comparison)}</p><p>The <code>slideReference</code> record remains reference-only and does not establish production SLIDE execution authority.</p></section><section class="sources"><h2>Recorded JSON sources</h2><table><thead><tr><th>Record</th><th>SHA-256</th></tr></thead><tbody>${sourceRows}</tbody></table><dl><dt>WASM captured</dt><dd>${html(model.metadata.wasmCapturedAt)}</dd><dt>Current record generated</dt><dd>${html(model.metadata.generatedAt)}</dd><dt>Galerina revision</dt><dd><code>${html(model.metadata.galerinaCommit)}</code></dd><dt>SLIDE revision</dt><dd><code>${html(model.metadata.slideCommit)}</code></dd><dt>Historic WASM measured Galerina revision</dt><dd><code>${html(model.metadata.wasmMeasuredGalerinaCommit)}</code></dd><dt>Archive Git record</dt><dd><code>${html(model.metadata.archiveGitCommit)}</code> · ${html(model.metadata.archiveGitBranch)}</dd></dl></section></main></body></html>`;
+  :root{color-scheme:dark;--bg:#050706;--panel:#0a0d0b;--ink:#f2f4f2;--muted:#9da39f;--line:#323733;--line-soft:#202521;--slide:#20ae89;--slow:#d96d34;--zero:#c7cbc8;--accent:#d5ff5c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,Arial,sans-serif;line-height:1.45}main{width:min(1440px,100%);margin:auto;padding:28px 18px 64px}header,.chart,.notice,.sources{background:var(--panel);border:1px solid var(--line);padding:24px;margin-bottom:18px}header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end}h1,h2,p{margin-top:0}h1{font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.02;margin-bottom:14px}h2{font-size:1rem;margin-bottom:4px}.eyebrow{font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}.lede,.notice p,.workload-copy p{color:var(--muted)}.status{font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.04em;text-align:right}.chart{overflow-x:auto}.chart-inner{min-width:1020px}.axis,.workload{display:grid;grid-template-columns:260px minmax(700px,1fr)}.axis{align-items:end;padding-bottom:14px;border-bottom:1px solid var(--line)}.axis-copy{color:var(--muted);font-size:.9rem}.axis-plot{position:relative;height:54px}.axis-plot strong{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:1.15rem;white-space:nowrap}.axis-plot .slower,.axis-plot .faster{position:absolute;bottom:0;color:var(--muted)}.axis-plot .slower{left:0}.axis-plot .faster{right:0}.workload{min-height:86px;border-bottom:1px solid var(--line);align-items:stretch}.workload-copy{padding:18px 20px 14px 0;text-align:right}.workload-copy h2{font-size:1.05rem}.workload-copy p{font-size:.82rem;margin:0}.plot{position:relative;min-height:86px;background:linear-gradient(to right,transparent 24.9%,var(--line-soft) 25%,transparent 25.1%,transparent 49.9%,var(--line) 50%,transparent 50.1%,transparent 74.9%,var(--line-soft) 75%,transparent 75.1%)}.zero{position:absolute;left:50%;top:27px;width:3px;height:32px;background:var(--zero);transform:translateX(-1px)}.bar{position:absolute;top:31px;height:22px}.bar.positive{background:var(--slide)}.bar.negative{background:var(--slow)}.result{position:absolute;top:32px;font-size:.88rem;white-space:nowrap}.result.positive,.result.unmeasured{color:#d7ded9;margin-left:10px}.result.negative{color:#f1c5ae;margin-right:10px}.notice{border-color:#3f4c43}.notice h2,.sources h2{font-size:1.3rem}.notice code{color:var(--accent)}table{border-collapse:collapse;width:100%;font-size:.86rem}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:500}code{overflow-wrap:anywhere;color:#c9d2cc}dl{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:6px 18px;margin-bottom:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}@media(max-width:720px){main{padding:10px 8px 32px}header,.chart,.notice,.sources{padding:16px}header{grid-template-columns:1fr}.status{text-align:left}.sources{overflow:auto}.sources table{min-width:760px}dl{grid-template-columns:1fr}dd{margin-bottom:8px}}
+  </style></head><body><main><header><div><p class="eyebrow">Historical benchmark evidence</p><h1>Galerina/SLIDE vs Galerina/WASM</h1><p class="lede">Evidence coverage, not a speed comparison. Historic WASM measurements are the zero baseline for every workload. A SLIDE bar appears only when a production SLIDE result uses the same admitted workload, metric class and unit.</p></div><p class="status">${html(model.status)}</p></header><section class="chart" aria-label="SLIDE performance relative to historic WASM"><div class="chart-inner"><div class="axis"><div class="axis-copy">Old WASM result shown for reference</div><div class="axis-plot"><strong>WASM = 0 baseline</strong><span class="slower">← slower −</span><span class="faster">faster + →</span></div></div>${workloadRows}</div></section><section class="notice"><h2>Comparison boundary</h2><p>${html(comparison)}</p><p>Old WASM values are displayed as the recorded reference at zero. The <code>slideReference</code> record remains reference-only and cannot create a SLIDE performance bar or production authority.</p></section><section class="sources"><h2>Recorded JSON sources</h2><table><thead><tr><th>Record</th><th>SHA-256</th></tr></thead><tbody>${sourceRows}</tbody></table><dl><dt>WASM captured</dt><dd>${html(model.metadata.wasmCapturedAt)}</dd><dt>Current record generated</dt><dd>${html(model.metadata.generatedAt)}</dd><dt>Galerina revision</dt><dd><code>${html(model.metadata.galerinaCommit)}</code></dd><dt>SLIDE revision</dt><dd><code>${html(model.metadata.slideCommit)}</code></dd><dt>Historic WASM measured Galerina revision</dt><dd><code>${html(model.metadata.wasmMeasuredGalerinaCommit)}</code></dd><dt>Archive Git record</dt><dd><code>${html(model.metadata.archiveGitCommit)}</code> · ${html(model.metadata.archiveGitBranch)}</dd></dl></section></main></body></html>`;
 }
