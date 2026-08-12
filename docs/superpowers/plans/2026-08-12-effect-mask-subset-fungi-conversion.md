@@ -126,7 +126,7 @@ closed profile without trusting a guessed value.
 - [ ] **Step 2: Run the physical test and classify the result**
 
 ```powershell
-$env:GALERINA_SLIDE_REPO='C:\Users\phill\Documents\GitHub\SLIDE'
+$env:GALERINA_SLIDE_REPO=(Resolve-Path ..\SLIDE).Path
 node --test scripts\tests\effect-mask-subset-fungi-slide.integration.test.mjs
 ```
 
