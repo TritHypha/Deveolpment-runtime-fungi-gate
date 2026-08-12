@@ -22,6 +22,8 @@ const SOURCE = join(
   "self-hosted",
   "capability-normalization.fungi",
 );
+const REGISTRY_ID = "slide.registry.executable-gir.v2c-bounded-wide-control-flow.v1";
+const REGISTRY_DIGEST = "d805dae4b822392e5092126ce4f0fb27e8bfa6aa2de8862ee88e09e23eed43cc";
 const ALL_ALLOW = Object.freeze({
   identity: 1,
   provenance: 1,
@@ -84,6 +86,8 @@ async function prepare(slide, publicationDirectory, context) {
     gates: ALL_ALLOW,
   });
   assert.equal(prepared.verdict, 1, JSON.stringify(prepared));
+  assert.equal(prepared.registrySetId, REGISTRY_ID);
+  assert.equal(prepared.registrySetDigest, REGISTRY_DIGEST);
   return prepared.packageExecutionHandle;
 }
 
