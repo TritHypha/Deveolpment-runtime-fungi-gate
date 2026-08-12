@@ -2,15 +2,14 @@
   "schemaVersion": 2,
   "decisions": [
     {
-      "path": "packages-galerina/galerina-data-json/src/index.ts",
+      "path": "packages-galerina/galerina-test/src/cli.ts",
       "scope": "SYMBOLS",
       "symbols": [
-        "isNonNegativeSafeInteger",
-        "isPositiveSafeInteger"
+        "mark"
       ],
       "classification": "CANDIDATE",
-      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
-      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+      "reason": "COMPLETE_BOOL_MARKER_DOSSIER",
+      "evidenceDigest": "34eb5d84367dc7a090ccf919f83e1b8d1a884583d6e7bcd0f83e4d2d5ec7aa01"
     }
   ]
 }

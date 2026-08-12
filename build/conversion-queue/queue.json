@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "sourceDigest": "32b377eb65c3e5ead487c4073181c3df1f967be21468f94fc4527de542718c09",
-  "decisionsDigest": "55b598245449aab2f90a4c0b370de7299d7778223dbbf45d83057a8f58645ff3",
+  "decisionsDigest": "b472f5676776385177b5dd435861422840c62fa4af622936dbb2159ee715c1cc",
   "counts": {
     "total": 1449,
     "CANDIDATE": 0,
@@ -10,20 +10,14 @@
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
   },
-  "scopedCandidateCount": 2,
+  "scopedCandidateCount": 1,
   "scopedCandidateFileCount": 1,
   "scopedCandidates": [
     {
-      "path": "packages-galerina/galerina-data-json/src/index.ts",
-      "symbol": "isNonNegativeSafeInteger",
-      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
-      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
-    },
-    {
-      "path": "packages-galerina/galerina-data-json/src/index.ts",
-      "symbol": "isPositiveSafeInteger",
-      "reason": "BOUNDED_PURE_SAFE_INTEGER_DOSSIER",
-      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+      "path": "packages-galerina/galerina-test/src/cli.ts",
+      "symbol": "mark",
+      "reason": "COMPLETE_BOOL_MARKER_DOSSIER",
+      "evidenceDigest": "34eb5d84367dc7a090ccf919f83e1b8d1a884583d6e7bcd0f83e4d2d5ec7aa01"
     }
   ],
   "entries": [
@@ -6720,8 +6714,8 @@
       "package": "galerina-data-json",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "SCOPED_CANDIDATES_ONLY",
-      "evidenceDigest": "cf6522f6922860830b79c7d0f114a78d04ee6404441a24b03e1a637409b077a6"
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
     },
     {
       "path": "packages-galerina/galerina-data-json/tests/json-contracts.test.mjs",
@@ -10304,8 +10298,8 @@
       "package": "galerina-test",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
-      "reason": "DOSSIER_REQUIRED",
-      "evidenceDigest": null
+      "reason": "SCOPED_CANDIDATES_ONLY",
+      "evidenceDigest": "34eb5d84367dc7a090ccf919f83e1b8d1a884583d6e7bcd0f83e4d2d5ec7aa01"
     },
     {
       "path": "packages-galerina/galerina-test/src/index.ts",
