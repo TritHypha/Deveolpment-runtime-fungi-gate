@@ -5184,6 +5184,7 @@
           "scripts/tests/generic-type-name-fungi-slide.integration.test.mjs",
           "scripts/tests/governance-change-class-max-fungi-slide.integration.test.mjs",
           "scripts/tests/implicit-return-type-fungi-slide.integration.test.mjs",
+          "scripts/tests/literal-verification-success-fungi-slide.integration.test.mjs",
           "scripts/tests/package-scalar-quote-stripping-fungi-slide.integration.test.mjs",
           "scripts/tests/proof-execution-signature-fungi-slide.integration.test.mjs",
           "scripts/tests/proof-governance-shape-fungi-slide.integration.test.mjs",
@@ -5337,6 +5338,7 @@
           "scripts/tests/generic-type-name-fungi-slide.integration.test.mjs",
           "scripts/tests/governance-change-class-max-fungi-slide.integration.test.mjs",
           "scripts/tests/implicit-return-type-fungi-slide.integration.test.mjs",
+          "scripts/tests/literal-verification-success-fungi-slide.integration.test.mjs",
           "scripts/tests/package-scalar-quote-stripping-fungi-slide.integration.test.mjs",
           "scripts/tests/proof-execution-signature-fungi-slide.integration.test.mjs",
           "scripts/tests/proof-governance-shape-fungi-slide.integration.test.mjs",
@@ -5352,7 +5354,7 @@
           "scripts/tests/wasmtime-oracle-layout.test.mjs",
           "scripts/tests/web-stub-guard.test.mjs"
         ],
-        "expectedCount": 132
+        "expectedCount": 133
       },
       "timeoutMs": 600000,
       "maxOutputBytes": 67108864,

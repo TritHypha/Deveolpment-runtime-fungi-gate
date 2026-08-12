@@ -42,15 +42,15 @@ VOK.
 
 ## Task 3: Physical SLIDE/VOK proof
 
-- [ ] Add a physical SLIDE/VOK integration test.
-- [ ] Publish and independently re-admit the exact source.
-- [ ] Verify typed Boolean receipts for all source states and surplus denial.
-- [ ] Prove typed-border, custody and physical mutation refusals with zero
+- [x] Add a physical SLIDE/VOK integration test.
+- [x] Publish and independently re-admit the exact source.
+- [x] Verify typed Boolean receipts for all source states and surplus denial.
+- [x] Prove typed-border, custody and physical mutation refusals with zero
   skips.
 
 ## Task 4: Governed closure
 
-- [ ] Register the physical test in the governed tooling manifest.
+- [x] Register the physical test in the governed tooling manifest.
 - [ ] Update TODOs, active roadmap, subway and a dated report.
 - [ ] Review both public Fungi skills and record the exact disposition.
 - [ ] Run only bounded package/physical and owner checks.
