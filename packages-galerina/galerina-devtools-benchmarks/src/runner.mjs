@@ -7,10 +7,13 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { benchmarkSpec, normalizeThroughput, assertBenchmarkUnits, metricClassOf } from "./throughput-units.mjs";
 import { admitSlideVadeEvidence } from "./slide-vade-adapter.mjs";
 import { resolvePythonExecutable } from "./python-runtime.mjs";
+import { buildMeasurementRecord } from "./measurement-provenance.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const benchDir   = join(__dirname, "..", "benchmarks");
 const resultsDir  = join(__dirname, "..", "results");
+const galerinaRepository = resolve(__dirname, "..", "..", "..");
+const slideRepository = resolve(galerinaRepository, "..", "SLIDE");
 const DEFAULT_SLIDE_VADE_EVIDENCE = join(
   __dirname,
   "..",
@@ -408,6 +411,37 @@ export function publicationOutputName(filter) {
   return `${filter}-latest.json`;
 }
 
+function exactReference(command, args, cwd = undefined) {
+  const result = spawnSync(command, args, {
+    cwd,
+    encoding: "utf8",
+    shell: false,
+    timeout: 10_000,
+    maxBuffer: 1024 * 1024,
+  });
+  const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
+  if (result.status !== 0 || output.length === 0) {
+    throw new Error(`REFUSED: benchmark measurement reference unavailable: ${command} ${args.join(" ")}`);
+  }
+  return output;
+}
+
+function captureMeasurementRecord(resultRaw) {
+  const python = resolvePythonExecutable();
+  return buildMeasurementRecord({
+    measuredAt: new Date().toISOString(),
+    resultRaw,
+    galerinaCommit: exactReference("git", ["rev-parse", "HEAD"], galerinaRepository),
+    slideCommit: exactReference("git", ["rev-parse", "HEAD"], slideRepository),
+    toolchains: {
+      node: process.version,
+      python: exactReference(python, ["--version"]),
+      rust: exactReference("rustc", ["--version"]),
+      go: exactReference("go", ["version"]),
+    },
+  });
+}
+
 async function main() {
   const filterIdx = process.argv.indexOf("--benchmark");
   const filter    = filterIdx >= 0 ? process.argv[filterIdx+1] : null;
@@ -439,7 +473,15 @@ async function main() {
   const outputName = publicationOutputName(filter);
   if (outputName !== null) {
     const outPath = join(resultsDir, outputName);
-    writeFileSync(outPath, JSON.stringify(all, null, 2));
+    const resultRaw = JSON.stringify(all, null, 2);
+    writeFileSync(outPath, resultRaw);
+    if (outputName === "latest.json") {
+      const measurement = captureMeasurementRecord(resultRaw);
+      writeFileSync(
+        join(resultsDir, "benchmark-measurement-latest.json"),
+        JSON.stringify(measurement, null, 2),
+      );
+    }
     console.log(`\nResults: ${outPath}`);
   }
 

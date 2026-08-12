@@ -17,6 +17,7 @@ import {
   buildReportMarkdown,
 } from "./report-model.mjs";
 import { buildSlideTransition, validateTransitionContract } from "./slide-transition.mjs";
+import { validateMeasurementRecord } from "./measurement-provenance.mjs";
 import {
   buildSlideZeroChartHtml,
   buildSlideZeroModel,
@@ -33,6 +34,15 @@ if (!existsSync(latestPath)) {
 }
 const latestRaw = readFileSync(latestPath, "utf8");
 const latest = JSON.parse(latestRaw);
+const measurementPath = join(resultsDir, "benchmark-measurement-latest.json");
+if (!existsSync(measurementPath)) {
+  console.error("benchmark measurement provenance is missing — run `npm run run` (full) first");
+  process.exit(2);
+}
+const measurement = validateMeasurementRecord(
+  JSON.parse(readFileSync(measurementPath, "utf8")),
+  latestRaw,
+);
 
 function exactCommand(command, args, cwd = undefined) {
   const result = spawnSync(command, args, {
@@ -47,13 +57,6 @@ function exactCommand(command, args, cwd = undefined) {
     throw new Error(`reference probe failed: ${command} ${args.join(" ")}`);
   }
   return output;
-}
-
-function pythonVersion() {
-  for (const [command, args] of [["python", ["--version"]], ["py", ["-3", "--version"]]]) {
-    try { return exactCommand(command, args); } catch { /* try the next installed launcher */ }
-  }
-  throw new Error("reference probe failed: Python toolchain is unavailable");
 }
 
 function gitCommit(repository) {
@@ -145,15 +148,15 @@ const galerinaRepository = resolve(root, "..", "..");
 const slideRepository = resolve(galerinaRepository, "..", "SLIDE");
 const generatedAt = new Date().toISOString();
 const runMetadata = Object.freeze({
-  generatedAt,
-  resultSha256: createHash("sha256").update(latestRaw, "utf8").digest("hex"),
-  galerinaCommit: gitCommit(galerinaRepository),
-  slideCommit: gitCommit(slideRepository),
-  toolchains: Object.freeze({
-    node: process.version,
-    python: pythonVersion(),
-    rust: exactCommand("rustc", ["--version"]),
-    go: exactCommand("go", ["version"]),
+  generatedAt: measurement.measuredAt,
+  resultSha256: measurement.resultSha256,
+  galerinaCommit: measurement.galerinaCommit,
+  slideCommit: measurement.slideCommit,
+  toolchains: measurement.toolchains,
+  publication: Object.freeze({
+    generatedAt,
+    galerinaCommit: gitCommit(galerinaRepository),
+    slideCommit: gitCommit(slideRepository),
   }),
   wasmReference: Object.freeze({
     archiveDirectory: transitionContract.archiveDirectory,
