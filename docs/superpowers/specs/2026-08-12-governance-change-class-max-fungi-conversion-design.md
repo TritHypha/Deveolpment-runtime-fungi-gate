@@ -27,8 +27,8 @@ Extend `governance-qualifier-escalation.fungi` with three pure flows:
 - `normalizeChangeClass(String) -> String` returns the exact four declared
   names and maps every other String to `experimental`;
 - `changeClassRank(String) -> Int` ranks the normalized family `0..3`;
-- `maxChangeClass(String, String) -> String` compares the ranks and returns the
-  normalized left value on a tie, otherwise the normalized right value.
+- `maxChangeClass(String, String) -> String` uses ordered checks over the four
+  normalized values and returns the normalized left value on a tie.
 
 This keeps the typed 4 x 4 matrix byte-exact. The physical String boundary is
 strictly safer than unchecked JavaScript: an unrecognised class cannot escape
@@ -45,6 +45,9 @@ class, `experimental`.
 3. Convert the complete `diffGovernance` loop. That combines maps, arrays,
    optional values, classification, and aggregation. It needs a separate
    bounded design and must not be smuggled through a leaf conversion.
+4. Raise SLIDE's verified two-flow call-depth ceiling. The direct
+   `maximum -> rank -> normalize` shape would require depth three; ordered
+   checks express the same bounded decision without widening the compiler.
 
 ## Proof boundary
 

@@ -40,8 +40,11 @@ pure flow changeClassRank(value: String) -> Int {
 pure flow maxChangeClass(left: String, right: String) -> String {
   let normalizedLeft: String = normalizeChangeClass(left)
   let normalizedRight: String = normalizeChangeClass(right)
-  if changeClassRank(normalizedLeft) >= changeClassRank(normalizedRight) {
-    return normalizedLeft
-  }
-  return normalizedRight
+  if normalizedLeft == "experimental" { return normalizedLeft }
+  if normalizedRight == "experimental" { return normalizedRight }
+  if normalizedLeft == "expansion" { return normalizedLeft }
+  if normalizedRight == "expansion" { return normalizedRight }
+  if normalizedLeft == "tightening" { return normalizedLeft }
+  if normalizedRight == "tightening" { return normalizedRight }
+  return normalizedLeft
 }
