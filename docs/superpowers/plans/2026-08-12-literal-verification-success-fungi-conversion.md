@@ -54,6 +54,6 @@ VOK.
 - [x] Update TODOs, active roadmap, subway and a dated report.
 - [x] Review both public Fungi skills and record the exact disposition.
 - [x] Run only bounded package/physical and owner checks.
-- [ ] Refresh primary graph and Myco at the final commit and verify the symbol
+- [x] Refresh primary graph and Myco at the final commit and verify the symbol
   and scoped queue are queryable.
-- [ ] Verify a clean tracked worktree and local commits; do not push.
+- [x] Verify a clean tracked worktree and local commits; do not push.
