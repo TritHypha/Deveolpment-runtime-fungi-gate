@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Ninth physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express the naming tool's private deterministic `isGenericTypeName`
+  decision from `naming-checker.ts` in the package-owned
+  `src/self-hosted/generic-type-name.fungi`. It applies exact immutable String
+  edge trimming and accepts only `Any`, `Object`, or `unknown`; the source
+  contains no null, NaN, `else if`, exception syntax, `for`, `while`, or
+  `loop`.
+- [x] Prove exact parity with the real public `checkNaming` caller across 18
+  canonical and hostile Strings (**2/2**), with the complete naming package at
+  **19/19**.
+- [x] Reuse independent SLIDE `dc1add7`, Contract 83 and the closed immutable
+  text-trim registry without widening its opcode or policy surface. Publish
+  one physical `.slide`, independently re-admit it through VOK, verify typed
+  Bool receipts, and refuse malformed arguments, surplus input, invalid
+  UTF-16, work exhaustion, source mutation and artifact mutation (**1/1**,
+  zero skips).
+- [x] Run the bounded complete package owner: **100/100 packages and 9,570
+  tests** pass in **279.7s** with captured exit code 0. Retirement now tracks
+  **1,428** executable-family paths and **119** `.fungi` source assets.
+- [ ] Finish the ninth slice's semantic/graph/percentage/status/roadmap/count/
+  Golden/code-index/Myco/primary-graph owner wave. Full tooling, normal
+  phase-close, graph-all-after-roadmap and whole-memory evaluation stay
+  excluded; repository-wide closure remains **UNKNOWN**.
+- [x] Keep `naming-checker.ts`, `isGenericTypeName`, `checkNaming`,
+  `runNamingAudit`, the CLI and every consumer active. This reference-only
+  proof grants no consumer-switch, production, release or retirement
+  authority.
+
 ### Eighth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express the naming tool's private deterministic
@@ -284,8 +313,8 @@ counts or open items that a newer section explicitly supersedes.
   or retirement authority follows.
 - [x] Re-run the integration surface: the roadmap/graph/phase-close tests pass
   **16/16**, the explicit assurance-family enumeration passes **74/74**, and
-  the current complete package lane passes **100/100 packages and 9,568 tests**
-  in 274.9 seconds. These are verification evidence, not release authority.
+  the current complete package lane passes **100/100 packages and 9,570 tests**
+  in 279.7 seconds. These are verification evidence, not release authority.
 
 ### VOK assurance fabric Chapter 1 implementation - 2026-08-10
 

@@ -162,6 +162,21 @@ reference-only proof grants no consumer-switch, production, release or
 retirement authority; crash-linked full tooling and normal phase-close remain
 excluded, so repository-wide closure remains **UNKNOWN**.
 
+Ninth physical conversion slice 2026-08-12: the naming tool's private
+`isGenericTypeName` decision in `naming-checker.ts` now has an exact
+package-owned pure String-to-Bool translation at
+`galerina-devtools-naming/src/self-hosted/generic-type-name.fungi`. It reuses
+the closed immutable String edge-trim operation and returns true only for exact
+`Any`, `Object`, or `unknown`. The real public `checkNaming` caller and typed
+Fungi interpreter agree across 18 canonical and hostile Strings (**2/2**), and
+the naming package passes **19/19**. Independent SLIDE `dc1add7` needs no
+registry widening: it publishes one physical `.slide`, independently re-admits
+it through VOK and verifies typed Bool receipts, while malformed arguments,
+work exhaustion, source mutation and one-byte artifact mutation refuse
+(**1/1**, zero skips). The complete Galerina package owner passes **100/100
+packages and 9,570 tests** in **279.7s** with captured exit code 0. TypeScript
+and all consumers remain active; repository-wide closure remains **UNKNOWN**.
+
 Current-state rule: this opening 2026-08-12 checkpoint supersedes lower dated
 counts and open/closed labels. Lower sections remain a chronological evidence
 ledger and must not be reinterpreted as current authority.
@@ -2737,6 +2752,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,568 tests** in 274.9 seconds. The normal custody close remains fail-closed:
+9,570 tests** in 279.7 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
