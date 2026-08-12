@@ -1,0 +1,12 @@
+@version 1
+
+/// Tensor element types are compatible only after exact canonical trimming.
+/// Case, Unicode normalization, aliases and precision remain significant.
+pure flow tensorElementTypesCompatibleFungi(expected: String, actual: String) -> Bool
+contract { intent { "Compare two tensor element-type names without widening identity." } }
+{
+  if expected.trim() == actual.trim() {
+    return true
+  }
+  return false
+}
