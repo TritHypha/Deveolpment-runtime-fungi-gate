@@ -1,0 +1,14 @@
+@version 1
+
+/// Collapse a closed K3 Verdict to binary authorization without coercion.
+/// Only proven Allow authorizes; Unknown and Deny both remain closed.
+/// This reference-only flow cannot switch the executing Tower-Citizen path.
+pure flow authorizeVerdict(candidateVerdict: Verdict) -> Bool
+contract { intent { "Release only a proven Allow verdict." } }
+{
+  check(candidateVerdict) {
+    deny: { return false }
+    ambig: { return false }
+    if: { return true }
+  }
+}
