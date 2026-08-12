@@ -1,0 +1,38 @@
+@version 1
+/// Preserve the already-derived execution-signature facts exactly. This record
+/// does not authenticate the inputs or release execution authority.
+
+record ExecutionSignatureFungi {
+  effectMask: Int
+  governanceMask: Int
+  inputVsFlags: Int
+  outputVsFlags: Int
+  nodeFlagsMask: Int
+  effectCount: Int
+  capabilityCallCount: Int
+  hasBoundaryCrossings: Bool
+}
+
+pure flow computeExecutionSignatureFungi(
+  effectMask: Int,
+  governanceMask: Int,
+  inputVsFlags: Int,
+  outputVsFlags: Int,
+  nodeFlagsMask: Int,
+  effectCount: Int,
+  capabilityCallCount: Int,
+  hasBoundaryCrossings: Bool
+) -> ExecutionSignatureFungi
+contract { intent { "Preserve eight caller-derived execution-signature facts without interpreting or authenticating them." } }
+{
+  return ExecutionSignatureFungi {
+    effectMask: effectMask
+    governanceMask: governanceMask
+    inputVsFlags: inputVsFlags
+    outputVsFlags: outputVsFlags
+    nodeFlagsMask: nodeFlagsMask
+    effectCount: effectCount
+    capabilityCallCount: capabilityCallCount
+    hasBoundaryCrossings: hasBoundaryCrossings
+  }
+}

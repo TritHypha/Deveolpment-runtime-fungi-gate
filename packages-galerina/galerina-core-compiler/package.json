@@ -32,6 +32,7 @@
       "src/self-hosted/package-scalar-quote-stripping.fungi",
       "src/self-hosted/parser.fungi",
       "src/self-hosted/plugin-type-compatibility.fungi",
+      "src/self-hosted/proof-execution-signature.fungi",
       "src/self-hosted/proof-governance-shape.fungi",
       "src/self-hosted/runtime.fungi",
       "src/self-hosted/slide-checked-decision-frontend.fungi",
