@@ -135,4 +135,3 @@ The reconciliation chapter is complete when the matrix is deterministic,
 pin-bound, non-vacuous, hostile-tested and every Slice 35-62 blocker maps to one
 exact row and classification. It grants no TypeScript deletion, consumer
 switch, production admission, signing, release or push authority.
-
