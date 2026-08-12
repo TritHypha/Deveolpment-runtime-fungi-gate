@@ -51,6 +51,16 @@ contract { intent { "Return the sticky hard-negative trust state." } }
   return Verdict.Deny
 }
 
+pure flow dischargeTrustFungi(current: Verdict, verification: Verdict) -> Verdict
+contract { intent { "Discharge trust from typed verification evidence without resurrecting a refutation." } }
+{
+  check(current) {
+    deny: { return Verdict.Deny }
+    ambig: { return verification }
+    if: { return verification }
+  }
+}
+
 pure flow spillRetypeFungi() -> SpillOutcomeFungi
 contract { intent { "Return the exact governed spill downgrade as a closed record." } }
 {
