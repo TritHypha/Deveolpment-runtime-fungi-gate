@@ -1,7 +1,7 @@
 {
   "tool": "ts-retirement-graph",
   "authority": "NONE",
-  "gitCommit": "812d1e4fed8a2b9718278b21d8851ec0b59aaee6",
-  "builtAt": "2026-08-12T02:31:05.000Z",
+  "gitCommit": "521335397a215f8642abb4849afbfed4f8d8920c",
+  "builtAt": "2026-08-12T03:00:33.000Z",
   "node": "v24.18.0"
 }

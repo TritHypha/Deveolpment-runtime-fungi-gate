@@ -269,6 +269,19 @@ records **1,435** executable-family paths and **124** source Fungi assets.
 TypeScript and every consumer remain active; repository-wide closure remains
 **UNKNOWN**.
 
+Seventeenth physical conversion slice 2026-08-12: exported `isRoundMode` now
+has exact package-owned `isRoundModeFungi`. Two closed helper matches partition
+the seven canonical policies within SLIDE's five-branch bound; their wildcards
+return false and the public composition never trims, normalizes, aliases or
+defaults a rounding mode. Typed parity is **2/2**. Independent SLIDE `053cc75`
+publishes and re-admits one physical `.slide` with typed Bool receipts (**1/1**,
+zero skips); wrong ABI shape, inadequate work and source/artifact mutations
+refuse. The focused Decimal neighborhood is **28/28**, Golden Pack **11/11**,
+compiler **6,371/6,371**, and the canonical owner **100/100 packages and 9,591
+tests in 275.4s**. Retirement records **1,437** executable-family paths and
+**126** source Fungi assets. TypeScript and all consumers remain active;
+repository-wide closure remains **UNKNOWN**.
+
 Sixteenth physical conversion slice 2026-08-12: exported
 `tensorDimensionCountsCompatible` now has exact package-owned
 `tensorDimensionCountsCompatibleFungi` over cardinality-preserving opaque rank
@@ -2857,6 +2870,6 @@ conversion, signing, execution or release authority.
 
 Fresh Chapter 3 integration evidence is **16/16**, the explicit assurance
 family is **74/74**, and the complete package lane is **100/100 packages and
-9,589 tests** in 273.8 seconds. The normal custody close remains fail-closed:
+9,591 tests** in 275.4 seconds. The normal custody close remains fail-closed:
 its unrelated Golden runtime-closure and flat-package-root-lock drift are
 recorded separately and are not recast as Chapter 3 success.
