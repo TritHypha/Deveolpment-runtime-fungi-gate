@@ -22,6 +22,8 @@ test("focused result verifies both permission variants and native controls", () 
   assert.equal(verified.slideReference.authorityReleased, false);
   assert.equal(verified.iterations, 1_000_000);
   assert.equal(verified.result, 999_999);
+  assert.equal(verified.sourcePair.verdict, 1);
+  assert.equal(verified.sourcePair.authorityReleased, false);
 });
 
 test("Markdown separates higher-is-better throughput from lower-is-better phases", () => {
@@ -34,6 +36,8 @@ test("Markdown separates higher-is-better throughput from lower-is-better phases
   assert.match(markdown, /cannot win/u);
   assert.match(markdown, /does not mean Galerina won/u);
   assert.match(markdown, /Reference demand speed-up/u);
+  assert.match(markdown, /CHECKED-MILLION-ITERATION-LOOP\.fungi/u);
+  assert.match(markdown, /VERIFIED-MILLION-ITERATION-LOOP\.fungi/u);
 });
 
 test("SVG shows both variants and declares the direction", () => {
@@ -44,6 +48,8 @@ test("SVG shows both variants and declares the direction", () => {
   assert.match(svg, /Checked ref - no permission/u);
   assert.match(svg, /SLIDE ref - permission present/u);
   assert.match(svg, /reference only/u);
+  assert.match(svg, /CHECKED-MILLION-ITERATION-LOOP\.fungi/u);
+  assert.match(svg, /VERIFIED-MILLION-ITERATION-LOOP\.fungi/u);
 });
 
 test("renderer refuses semantic or authority forgery", () => {
@@ -52,4 +58,12 @@ test("renderer refuses semantic or authority forgery", () => {
   wrong[0].results.slideReference.authorityReleased = true;
   assert.equal(verifyVerifiedNativeOperationResult(wrong).verdict, -1);
   assert.throws(() => renderVerifiedNativeOperationMarkdown(wrong), /REFUSED/u);
+
+  const missingPair = structuredClone(result);
+  delete missingPair[0].sourcePair;
+  assert.equal(verifyVerifiedNativeOperationResult(missingPair).verdict, -1);
+
+  const authorityPair = structuredClone(result);
+  authorityPair[0].sourcePair.authorityReleased = true;
+  assert.equal(verifyVerifiedNativeOperationResult(authorityPair).verdict, -1);
 });

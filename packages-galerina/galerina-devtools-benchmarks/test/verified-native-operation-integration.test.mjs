@@ -88,5 +88,22 @@ test("the standard runner normalizes both frozen reference subjects", async () =
   assert.equal(result.results.slideReference.throughputUnit, "element-reads/s");
   assert.equal(result.results.checkedReference.referenceOnly, true);
   assert.equal(result.results.slideReference.referenceOnly, true);
+  assert.equal(result.sourcePair.verdict, 1);
+  assert.equal(result.sourcePair.authorityReleased, false);
+  assert.deepEqual(
+    result.sourcePair.subjects.map(({ role, path, sha256 }) => ({ role, path, sha256 })),
+    [
+      {
+        role: "checked",
+        path: "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
+        sha256: "a3156f896f163db38f99fada4b14ae8c61351d05a42f95de8e9659d4111a4421",
+      },
+      {
+        role: "verified",
+        path: "docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi",
+        sha256: "07844b5dd9ea561f482e5f591d676e6fef43c2c0c1aeeba762138096362dc764",
+      },
+    ],
+  );
   assert.equal(existsSync(join(process.cwd(), "Python")), false);
 });

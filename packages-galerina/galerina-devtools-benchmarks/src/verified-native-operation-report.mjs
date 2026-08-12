@@ -16,6 +16,26 @@ const LABELS = Object.freeze({
   checkedReference: "Checked reference - no permission",
   slideReference: "SLIDE reference - permission present",
 });
+const SOURCE_SUBJECTS = Object.freeze([
+  Object.freeze({
+    role: "checked",
+    path: "docs/examples/CHECKED-MILLION-ITERATION-LOOP.fungi",
+    sha256: "a3156f896f163db38f99fada4b14ae8c61351d05a42f95de8e9659d4111a4421",
+    bytes: 815,
+    candidate: false,
+    k3: -1,
+    failureIds: Object.freeze(["VERIFIED_NATIVE_PERMISSION_MISSING"]),
+  }),
+  Object.freeze({
+    role: "verified",
+    path: "docs/examples/VERIFIED-MILLION-ITERATION-LOOP.fungi",
+    sha256: "07844b5dd9ea561f482e5f591d676e6fef43c2c0c1aeeba762138096362dc764",
+    bytes: 932,
+    candidate: true,
+    k3: 0,
+    failureIds: Object.freeze(["INDEPENDENT_VERIFIER_UNAVAILABLE"]),
+  }),
+]);
 
 function refusal() {
   return Object.freeze({ verdict: -1, status: "REFUSED" });
@@ -44,6 +64,35 @@ function validLane(lane, reference) {
     && (!reference || (lane.referenceOnly === true && lane.authorityReleased === false));
 }
 
+function validSourcePair(sourcePair) {
+  if (
+    sourcePair === null
+    || typeof sourcePair !== "object"
+    || sourcePair.schema !== "galerina.benchmark.million-iteration-source-pair-receipt.v1"
+    || sourcePair.verdict !== 1
+    || sourcePair.status !== "VERIFIED_NON_AUTHORIZING"
+    || sourcePair.benchmark !== "verified-native-operation"
+    || sourcePair.flowName !== "readMillionValues"
+    || sourcePair.iterations !== ITERATIONS
+    || sourcePair.expectedResult !== 999_999
+    || sourcePair.referenceOnly !== true
+    || sourcePair.authorityReleased !== false
+    || !Array.isArray(sourcePair.subjects)
+    || sourcePair.subjects.length !== SOURCE_SUBJECTS.length
+  ) return false;
+  return sourcePair.subjects.every((subject, index) => {
+    const expected = SOURCE_SUBJECTS[index];
+    return expected !== undefined
+      && subject.role === expected.role
+      && subject.path === expected.path
+      && subject.sha256 === expected.sha256
+      && subject.bytes === expected.bytes
+      && subject.candidate === expected.candidate
+      && subject.k3 === expected.k3
+      && JSON.stringify(subject.failureIds) === JSON.stringify(expected.failureIds);
+  });
+}
+
 function verifiedRecord(value) {
   try {
     if (!Array.isArray(value) || value.length !== 1) return refusal();
@@ -63,6 +112,7 @@ function verifiedRecord(value) {
       || !validLane(entry.results?.python, false)
       || !validLane(entry.results?.checkedReference, true)
       || !validLane(entry.results?.slideReference, true)
+      || !validSourcePair(entry.sourcePair)
     ) return refusal();
     for (const key of ["rust", "rustAvx2"]) {
       if (entry.results[key] !== undefined && !validLane(entry.results[key], false)) return refusal();
@@ -95,6 +145,7 @@ function verifiedRecord(value) {
       entry,
       checkedReference: entry.results.checkedReference,
       slideReference: entry.results.slideReference,
+      sourcePair: entry.sourcePair,
     });
   } catch {
     return refusal();
@@ -152,6 +203,13 @@ The workload traverses 1,000,000 signed 32-bit values and returns 999999.
 The permission-absent and permission-present lanes are reference evidence and
 cannot win or count as Galerina production.
 
+## Bound Galerina sources
+
+- \`${verified.sourcePair.subjects[0].path}\` - checked, permission absent, K3 \`-1\`.
+- \`${verified.sourcePair.subjects[1].path}\` - verified candidate, permission present, K3 \`0\`.
+
+The source-pair receipt is compiler-derived, reference-only and non-authorizing.
+
 | Runtime or path | Throughput | Ranking status |
 |---|---:|---|
 ${rows}
@@ -205,7 +263,7 @@ export function renderVerifiedNativeOperationSvg(value) {
   ];
   const maximum = Math.max(...lanes.map((lane) => lane.rate));
   const rows = lanes.map((lane, index) => {
-    const y = 130 + index * 58;
+    const y = 174 + index * 58;
     const width = Math.max(2, Math.round((lane.rate / maximum) * 520));
     const reference = lane.key.endsWith("Reference");
     const colour = reference ? (lane.key === "slideReference" ? "#a78bfa" : "#60a5fa") : "#34d399";
@@ -213,7 +271,7 @@ export function renderVerifiedNativeOperationSvg(value) {
   <rect x="310" y="${y}" width="${width}" height="28" rx="5" fill="${colour}"/>
   <text x="${Math.min(842, 320 + width)}" y="${y + 19}" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="13">${formatRate(lane.rate)}</text>`;
   }).join("\n  ");
-  const height = 190 + lanes.length * 58;
+  const height = 234 + lanes.length * 58;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="${height}" viewBox="0 0 960 ${height}" role="img" aria-labelledby="title description">
   <title id="title">Verified native-operation one-million traversal</title>
   <desc id="description">Throughput in element reads per second; higher is better. Checked and SLIDE lanes are reference only.</desc>
@@ -221,6 +279,8 @@ export function renderVerifiedNativeOperationSvg(value) {
   <text x="32" y="48" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="26" font-weight="700">One-million verified operation</text>
   <text x="32" y="78" fill="#99f6e4" font-family="Segoe UI,Arial,sans-serif" font-size="15">element-reads/s - higher is better</text>
   <text x="32" y="102" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="13">Blue/purple lanes are reference only and cannot establish a production winner.</text>
+  <text x="32" y="126" fill="#93c5fd" font-family="Segoe UI,Arial,sans-serif" font-size="12">CHECKED-MILLION-ITERATION-LOOP.fungi - permission absent, K3 -1</text>
+  <text x="32" y="148" fill="#c4b5fd" font-family="Segoe UI,Arial,sans-serif" font-size="12">VERIFIED-MILLION-ITERATION-LOOP.fungi - permission present, K3 0</text>
   ${rows}
 </svg>`;
 }

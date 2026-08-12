@@ -16,11 +16,20 @@
  *      reintroduced unit mismatch flipping the result.
  */
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { verifyMillionIterationSourcePair } from "./million-iteration-source-pair.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const dataPath  = join(__dirname, "..", "results", "latest.json");
+const repositoryRoot = resolve(__dirname, "..", "..", "..");
+const sourcePairManifest = join(
+  __dirname,
+  "..",
+  "contracts",
+  "million-iteration-source-pair-v1.json",
+);
 
 let data;
 try { data = JSON.parse(readFileSync(dataPath, "utf8")); }
@@ -107,6 +116,17 @@ for (const id of ["nbody", "collection-pipeline", "low-memory", "compute-mix", "
   if (gov == null || node == null) { console.log(`  – ${id}: missing gov/node throughput (skipped)`); continue; }
   if (gov < node) pass(`${id}: Node ${(node / gov).toFixed(0)}× the tree-walker (honest)`);
   else fail(`${id}: tree-walker (${gov}) ≥ Node (${node}) — unit inflation may have returned!`);
+}
+
+console.log("\n5. Checked/verified million-iteration source pair");
+const sourcePair = await verifyMillionIterationSourcePair({
+  repositoryRoot,
+  manifestPath: sourcePairManifest,
+});
+if (sourcePair.verdict === 1 && sourcePair.authorityReleased === false) {
+  pass("exact checked and verified .fungi subjects are compiler-clean and non-authorizing");
+} else {
+  fail(`million-iteration source pair refused: ${sourcePair.failureId ?? "UNKNOWN"}`);
 }
 
 console.log(`\n${fails === 0 ? "✅ TRUTH AUDIT PASSED" : `❌ TRUTH AUDIT FAILED — ${fails} violation(s)`}`);

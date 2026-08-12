@@ -203,6 +203,7 @@ export function benchmarkProcessArgs(bench) {
 export async function runBenchmark(bench) {
   const dir = join(benchDir, bench.dir);
   const res = {};
+  let sourcePair;
 
   // time-based benchmarks get --target-ms flag to override defaults in quick mode
   const timeBased  = bench.timeBased === true;
@@ -261,7 +262,12 @@ export async function runBenchmark(bench) {
         .runSlideReferenceBenchmark();
       if (observation.runtime === "galerina-slide-reference") {
         res.slideReference = { ...observation, samples: [...observation.samples] };
-      } else if (observation.verdict === 1) {
+      } else if (
+        observation.verdict === 1
+        && observation.sourcePair?.verdict === 1
+        && observation.sourcePair.authorityReleased === false
+      ) {
+        sourcePair = observation.sourcePair;
         res.checkedReference = { ...observation.checkedReference };
         res.slideReference = {
           ...observation.slideReference,
@@ -342,7 +348,13 @@ export async function runBenchmark(bench) {
 
   // metricClass (additive — measurements unchanged) groups this benchmark into its per-metric report
   // table and lets the UI chart tab by metric without importing throughput-units. R&D co-design 2026-07-17.
-  return { benchmark: bench.id, metricClass: metricClassOf(bench.id), results: res, ...(units ? { units } : {}) };
+  return {
+    benchmark: bench.id,
+    metricClass: metricClassOf(bench.id),
+    results: res,
+    ...(sourcePair === undefined ? {} : { sourcePair }),
+    ...(units ? { units } : {}),
+  };
 }
 
 // --quick: use 3s for time-based benchmarks (compute-mix), halve iteration counts.
