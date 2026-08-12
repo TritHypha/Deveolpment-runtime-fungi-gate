@@ -24,11 +24,11 @@ VOK.
 
 ## Task 1: Exact queue admission
 
-- [ ] Commit this design before granting candidate authority.
-- [ ] Replace the completed marker decision with exactly
+- [x] Commit this design before granting candidate authority.
+- [x] Replace the completed marker decision with exactly
   `registry-index.ts#isLiteralVerificationSuccess`.
-- [ ] Bind the committed design digest and regenerate/check the queue.
-- [ ] Require zero whole-file and one scoped candidate.
+- [x] Bind the committed design digest and regenerate/check the queue.
+- [x] Require zero whole-file and one scoped candidate.
 
 ## Task 2: Differential RED/GREEN
 

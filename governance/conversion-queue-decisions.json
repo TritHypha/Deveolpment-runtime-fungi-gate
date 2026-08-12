@@ -2,14 +2,14 @@
   "schemaVersion": 2,
   "decisions": [
     {
-      "path": "packages-galerina/galerina-test/src/cli.ts",
+      "path": "packages-galerina/galerina-framework-app-kernel/src/registry-index.ts",
       "scope": "SYMBOLS",
       "symbols": [
-        "mark"
+        "isLiteralVerificationSuccess"
       ],
       "classification": "CANDIDATE",
-      "reason": "COMPLETE_BOOL_MARKER_DOSSIER",
-      "evidenceDigest": "34eb5d84367dc7a090ccf919f83e1b8d1a884583d6e7bcd0f83e4d2d5ec7aa01"
+      "reason": "COMPLETE_LITERAL_VERIFICATION_DOSSIER",
+      "evidenceDigest": "a08100f6bf9f96093d1de5cc5d2da858476b29cd2d5b0d9e082b8b59d283b199"
     }
   ]
 }
