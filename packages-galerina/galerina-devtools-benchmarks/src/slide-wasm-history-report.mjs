@@ -158,6 +158,10 @@ const CALL_CHAIN_UNIT = "chains/s";
 const CALL_CHAIN_ITERATIONS = 50_000;
 const CALL_CHAIN_RESULT = 57_984;
 const CALL_CHAIN_CALLS_PER_ITERATION = 7;
+const SCALAR_REFERENCE_PROFILES = Object.freeze({
+  "compute-mix": Object.freeze({ unit: "mix-ops/s", workCount: 50_000, result: -11_971 }),
+  "collection-pipeline": Object.freeze({ unit: "elements/s", workCount: 10_000, result: 49_990_000 }),
+});
 const WASM_ZERO_PEERS = Object.freeze([
   Object.freeze({ lane: "rustAvx2", product: "Rust AVX2" }),
   Object.freeze({ lane: "rust", product: "Rust" }),
@@ -397,12 +401,55 @@ function buildHistoricWasmComparison(entry) {
   });
 }
 
+function addScalarSlideReference(comparison, currentEntry) {
+  const profile = SCALAR_REFERENCE_PROFILES[comparison.benchmark];
+  if (profile === undefined || currentEntry === undefined) return comparison;
+  plainRecord(currentEntry, `${comparison.benchmark} current workload`);
+  plainRecord(currentEntry.results, `${comparison.benchmark} current workload results`);
+  const reference = currentEntry.results.slideReference;
+  if (reference === undefined) return comparison;
+  plainRecord(reference, `${comparison.benchmark} SLIDE reference`);
+  const value = measuredValue(currentEntry, "slideReference");
+  if (
+    currentEntry.units?.comparable !== true
+    || currentEntry.units?.status !== "PASS"
+    || currentEntry.units?.unit !== profile.unit
+    || comparison.unit !== profile.unit
+    || reference.referenceOnly !== true
+    || reference.authorityReleased !== false
+    || reference.k3 !== 0
+    || reference.workCount !== profile.workCount
+    || reference.throughputUnit !== profile.unit
+    || exactScalarResult(reference.result, `${comparison.benchmark} SLIDE reference result`) !== profile.result
+    || value === undefined
+  ) throw new TypeError(`${comparison.benchmark} SLIDE reference refused`);
+  const entries = [...comparison.entries, Object.freeze({
+    product: "Galerina/SLIDE reference",
+    value,
+    factor: signedFactor(value, comparison.baseline.value),
+    deltaPct: ((value - comparison.baseline.value) * 100) / comparison.baseline.value,
+  })];
+  const ranking = [...entries]
+    .sort((left, right) => right.value - left.value || left.product.localeCompare(right.product));
+  return Object.freeze({
+    ...comparison,
+    status: "MEASURED_NON_AUTHORIZING",
+    workCount: profile.workCount,
+    result: profile.result,
+    entries: Object.freeze(entries),
+    unavailable: Object.freeze(comparison.unavailable.filter((product) => product !== "Galerina/SLIDE")),
+    winner: ranking[0].product,
+    galerinaPlace: ranking.findIndex((candidate) => candidate.product === "Galerina/SLIDE reference") + 1,
+  });
+}
+
 function buildWasmZeroComparisons(currentEntries, archiveEntries) {
   if (!Array.isArray(archiveEntries) || types.isProxy(archiveEntries)) {
     throw new TypeError("historic Wasm results must be an array");
   }
   const suiteIds = new Set(SLIDE_REFERENCE_SUITE_IDS);
   const comparisons = new Map();
+  const currentByBenchmark = new Map(currentEntries.map((entry) => [entry.benchmark, entry]));
   const seen = new Set();
   for (const entry of archiveEntries) {
     plainRecord(entry, "historic Wasm workload");
@@ -410,7 +457,10 @@ function buildWasmZeroComparisons(currentEntries, archiveEntries) {
     if (seen.has(entry.benchmark)) throw new TypeError(`duplicate historic suite workload: ${entry.benchmark}`);
     seen.add(entry.benchmark);
     const comparison = buildHistoricWasmComparison(entry);
-    if (comparison !== undefined) comparisons.set(comparison.benchmark, comparison);
+    if (comparison !== undefined) comparisons.set(
+      comparison.benchmark,
+      addScalarSlideReference(comparison, currentByBenchmark.get(comparison.benchmark)),
+    );
   }
   const callChain = buildCallChainWasmZeroComparisons(currentEntries)[0];
   if (callChain !== undefined) comparisons.set(callChain.benchmark, callChain);
@@ -587,7 +637,9 @@ export function buildSlideWasmHistoryHtml(model) {
       : comparison.unavailable.map((product) => `${product}: not measured`).join(" · ");
     const detail = comparison.status === "HISTORIC_CONTROL_ONLY"
       ? "Archived same-run controls. No production SLIDE measurement exists for this workload."
-      : `${comparison.iterations.toLocaleString("en-GB")} chains, ${comparison.callsPerIteration} calls per chain, exact checksum ${comparison.result.toLocaleString("en-GB")}.`;
+      : comparison.benchmark === CALL_CHAIN_ID
+        ? `${comparison.iterations.toLocaleString("en-GB")} chains, ${comparison.callsPerIteration} calls per chain, exact checksum ${comparison.result.toLocaleString("en-GB")}.`
+        : `${comparison.workCount.toLocaleString("en-GB")} exact ${comparison.unit.replace(/\/s$/u, "")} per execution, checksum ${comparison.result.toLocaleString("en-GB")}.`;
     const place = comparison.galerinaPlace === null
       ? "Galerina/SLIDE: not measured."
       : `Galerina/SLIDE place: ${comparison.galerinaPlace} of ${comparison.entries.length}. The measured reference remains K3 0 and releases no production authority.`;

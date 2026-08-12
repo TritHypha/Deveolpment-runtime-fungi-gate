@@ -113,15 +113,15 @@ the result remains reference-only and releases no authority.
 - Consumes: one closed manifest entry, tracked source bytes and the registered SLIDE compiler/admission/execution entry points.
 - Produces: `{ verdict, status, failureId, benchmark, result, workCount, throughput, throughputUnit, phases, provenance, referenceOnly, authorityReleased }`.
 
-- [ ] **Step 1: Write RED runner tests**
+- [x] **Step 1: Write RED runner tests**
 
 Start with `call-chain`. Assert exact result against its Node oracle, exact 50,000 work count, `chains/s`, positive finite throughput, physical artifact digests and reference-only flags. Add source mutation, wrong entry flow, wrong work count, wrong unit, wrong checksum and forged-authority refusals.
 
-- [ ] **Step 2: Prove RED**
+- [x] **Step 2: Prove RED**
 
 Run the new runner test and require failure because no generic admitted runner exists.
 
-- [ ] **Step 3: Implement the smallest admitted runner**
+- [x] **Step 3: Implement the smallest admitted runner**
 
 Read only the manifest-owned source, compile, independently re-admit, execute fixed arguments, verify result and calculate timing outside the executed program. Never accept a caller-supplied function or path.
 
@@ -132,6 +132,18 @@ In this order add `compute-mix`, `collection-pipeline`, `low-memory`, `gpu-compu
 - [ ] **Step 5: Prove cohort closure and commit**
 
 Require 11/11 admitted reference observations, all peer checksum controls, compiler refusal tests and benchmark package tests. Commit Galerina source/runner evidence separately from generated output.
+
+Chapter checkpoint, 2026-08-12: the reusable closed runner now admits
+`call-chain`, `compute-mix`, and `collection-pipeline`; together with the
+existing `verified-native-operation`, published reference coverage is **4/18**
+while production remains **0/18**. The complete benchmark owner exited 0 in
+349.7 seconds and retained physical-bundle, independent-prepare, exact
+work/unit/checksum, K3 `0`, reference-only and no-authority constraints. Task 3
+is intentionally still open: the remaining eight scalar profiles have not
+been measured, and `record-allocation` belongs to Task 4 because scalar locals
+are not evidence of real record allocation. End-of-chapter skill review:
+`NO_SKILL_UPDATE`; this slice changed compiler/benchmark infrastructure but no
+reusable `.fungi` authoring or TypeScript-to-Fungi translation rule.
 
 ---
 

@@ -19,19 +19,40 @@ counts or open items that a newer section explicitly supersedes.
   historic WASM groups have detailed zero-baseline charts and HTML result
   tables. Missing SLIDE or WASM measurements receive no synthetic factor,
   winner, rank or authority.
-- [ ] Production Galerina/SLIDE remains **0/18**. Two bounded
-  `slideReference` groups are measured and non-authorizing; they must not be
-  promoted to production results. The remaining benchmark work is execution
-  coverage, not a chart-publication omission.
+- [ ] Production Galerina/SLIDE remains **0/18**. Four bounded
+  `slideReference` groups are now measured and non-authorizing:
+  `call-chain`, `compute-mix`, `collection-pipeline`, and the existing
+  `verified-native-operation`. They must not be promoted to production
+  results. The remaining benchmark work is execution coverage, not a
+  chart-publication omission.
+- [x] Add a closed reusable SLIDE reference runner for the three admitted
+  scalar profiles, independently prepare each physical bundle, verify exact
+  work count/unit/checksum, and refuse caller-selected paths or workloads.
+  The complete non-quick benchmark owner exited **0** in **349.7 seconds**;
+  all comparable-unit and checksum controls passed.
+- [x] Publish the current measured scalar references in the historic
+  WASM-zero page without inventing production authority. The page retains the
+  old WASM observations as the zero baseline and renders missing lanes as
+  `not measured`.
+- [ ] Continue Task 3 of the benchmark-suite plan with the remaining scalar
+  workloads. `record-allocation` remains deliberately excluded until the
+  executor proves real record construction/accounting rather than scalar-local
+  substitution.
 
 ### Deferred SLIDE call-chain performance investigation - 2026-08-12
 
 - [ ] Investigate why the exact **50,000-chain / seven-calls-per-chain**
-  Galerina/SLIDE reference measured about **177,271 chains/s**, approximately
-  **305x slower** than the **54,119,000 chains/s** legacy WASM lane, despite
+  Galerina/SLIDE reference measured about **172,357 chains/s**, approximately
+  **299x slower** than the same-run **51,611,000 chains/s** legacy WASM lane, despite
   returning the required checksum **57,984**. Do not begin this investigation
   as part of the benchmark-publication task and do not treat the result as a
   production SLIDE measurement or optimization authority.
+- [ ] Include the two other newly admitted scalar outliers in that later
+  attribution work: `compute-mix` measured about **171,527 mix-ops/s** versus
+  **71,704,000** for same-run WASM (about **418x slower**), and
+  `collection-pipeline` measured **517,681 elements/s** versus
+  **384,146,300** for same-run WASM (about **742x slower**). Preserve the exact
+  checksums and do not infer a cause from throughput alone.
 - [ ] Decompose the timed path without weakening admission: measure the
   prepared V2C executor alone, Portable VEO/VOK enter-and-consume boundary,
   reference-bundle receipt construction, transcript/input digest and JSON

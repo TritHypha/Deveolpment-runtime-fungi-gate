@@ -36,6 +36,7 @@
       "src/noise-gate.mjs",
       "src/report.mjs",
       "src/runner.mjs",
+      "src/slide-reference-runner.mjs",
       "src/slide-reference-suite.mjs",
       "src/slide-vade-adapter.mjs",
       "src/slide-zero-publication.mjs",

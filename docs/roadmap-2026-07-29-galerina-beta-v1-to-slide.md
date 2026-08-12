@@ -2273,9 +2273,16 @@ historic runtime control archive and accounts for all 30/30 recorded benchmark
 groups; WASM is not presented as the current Galerina runtime. The SLIDE
 transition page separately accounts for all 18/18 registered migration groups,
 renders detailed historic WASM-zero charts for all 12 admitted archive groups,
-and keeps missing measurements visible. Production SLIDE remains 0/18. The two
-measured `slideReference` groups remain K3 `0`, non-authorizing evidence and do
-not satisfy the production lane.
+and keeps missing measurements visible. Production SLIDE remains 0/18. Four
+measured `slideReference` groups now remain K3 `0`, non-authorizing evidence:
+`call-chain`, `compute-mix`, `collection-pipeline`, and the existing
+`verified-native-operation`. They do not satisfy the production lane. The
+three scalar observations use one closed reusable runner, independently
+prepare physical SLIDE bundles, and require exact workload, unit and checksum
+agreement. The full non-quick owner completed in 349.7 seconds with comparable
+unit and checksum controls passing. Remaining suite work is execution coverage;
+`record-allocation` stays unmeasured until real record construction/accounting
+is proven.
 
 Roadmap refresh: the full publication-fidelity benchmark has now run at
 Galerina `54c15058...` after rebuilding the core chain and native lanes. The

@@ -163,6 +163,22 @@ test("call-chain comparison uses legacy Wasm as zero and derives signed factors"
 
 test("historic WASM panels include every admitted archived suite group with real peer measurements", () => {
   const input = fixture();
+  input.current.push({
+    benchmark: "compute-mix",
+    metricClass: "cpu-throughput",
+    units: { comparable: true, status: "PASS", unit: "mix-ops/s" },
+    results: {
+      slideReference: {
+        normThroughput: 4,
+        result: -11_971,
+        workCount: 50_000,
+        throughputUnit: "mix-ops/s",
+        referenceOnly: true,
+        authorityReleased: false,
+        k3: 0,
+      },
+    },
+  });
   input.wasmArchive.push({
     benchmark: "compute-mix",
     metricClass: "cpu-throughput",
@@ -178,13 +194,13 @@ test("historic WASM panels include every admitted archived suite group with real
   const model = buildSlideWasmHistoryModel(input);
   const comparison = model.wasmZeroComparisons.find((row) => row.benchmark === "compute-mix");
 
-  assert.equal(comparison.status, "HISTORIC_CONTROL_ONLY");
+  assert.equal(comparison.status, "MEASURED_NON_AUTHORIZING");
   assert.equal(comparison.baseline.product, "Galerina/WASM (legacy)");
   assert.equal(comparison.entries.find((row) => row.product === "Rust").factor, 2.5);
   assert.equal(comparison.entries.find((row) => row.product === "Node.js").factor, -1.25);
-  assert.equal(comparison.entries.some((row) => row.product.includes("SLIDE")), false);
+  assert.equal(comparison.entries.find((row) => row.product === "Galerina/SLIDE reference").factor, -25);
   assert.equal(comparison.winner, "Rust");
-  assert.equal(comparison.galerinaPlace, null);
+  assert.equal(comparison.galerinaPlace, 5);
 });
 
 test("an explicit null runtime slot remains an unavailable measurement", () => {
