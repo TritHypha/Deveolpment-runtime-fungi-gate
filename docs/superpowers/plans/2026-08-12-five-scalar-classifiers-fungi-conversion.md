@@ -184,6 +184,8 @@ checkboxes remain intentionally unmet.
 - [x] Run the focused candidate checks and owning package suites; do not run
   the crash-linked canonical aggregate lane.
 - [x] Run bounded owners in dependency order, including roadmap and subway.
-- [x] Refresh the codebase graph and Myco once at final owner HEAD and verify the
+- [ ] Refresh the codebase graph and Myco once at final owner HEAD and verify the
   bounded source symbols, admitted flows and queue candidates are queryable.
+  Myco is current and both indexes find Slice 62, but exact-HEAD graph freshness
+  remains `UNKNOWN`: the server retained `e40f63ba` after excluded-only commits.
 - [x] Verify clean tracked worktrees and local commits; do not push.
