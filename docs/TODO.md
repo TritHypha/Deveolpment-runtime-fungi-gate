@@ -26,7 +26,7 @@ counts or open items that a newer section explicitly supersedes.
   focused manifest/tooling/runner lane **35/35** with zero skips. Review the
   public skills and record translation-skill commit `c06c72b`; writing-Fungi
   needs no change for this translation-authority lesson.
-- [ ] Refresh every bounded owner, roadmap/subway and both indexes, then close
+- [x] Refresh every bounded owner, roadmap/subway and both indexes, then close
   the slice without running crash-linked full tooling, normal phase-close,
   `graph-all` or monolithic memory evaluation.
 - [x] Keep TypeScript, `mark`, `printHuman` and every consumer active. This

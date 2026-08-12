@@ -54,12 +54,16 @@ at commit `c06c72b`; the writing skill needs no change. TypeScript, `mark`,
 normal phase-close, graph-all and monolithic memory evaluation remain excluded,
 so repository-wide closure remains **UNKNOWN**.
 
-Slice 31 bounded owners are being refreshed from their individual generators.
-The retirement and queue owners are already current at **1,450 executable-
-family paths / 134 source Fungi** and **1,450/1,450 classified** respectively;
-the queue has **629** floors, **821** file-level blocked paths, zero whole-file
-candidates and one scoped candidate. Remaining bounded-owner and index results
-must be current before the slice is called complete.
+Slice 31 bounded owners are current: Golden **11/11 checked + 11/11
+execution**, retirement **1,450 executable-family paths / 134 source Fungi**,
+queue **1,450/1,450** with **629** floors, **821** file-level blocked paths,
+zero whole-file candidates and one scoped candidate, package graph **100
+packages / 201 outputs**, project graph **5/5**, KB graph **4/4**, Fungi
+inventory **134**, semantic graph **3/3 with 946 test nodes**, code index
+**974**, canonical owner **100/100 packages and 9,610 tests in 320.6 seconds**,
+canonical claims **7/7**, and roadmap/subway **5/5**. Both navigation indexes
+are refreshed and verified against the final local commit before handoff; they
+grant no authority.
 
 The last pre-exclusion aggregate custody baseline was green: normal phase-close
 passed every blocking gate in **660.4s**, the direct aggregate passed **100/100 packages and
