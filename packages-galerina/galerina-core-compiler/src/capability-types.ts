@@ -155,7 +155,10 @@ export const ADMISSION_CAPABILITIES: ReadonlySet<string> = new Set<string>([
 
 /** Normalise an admission capability spelling to its canonical name. */
 export function normalizeCapability(name: string): string {
-  return CAPABILITY_ALIASES[name] ?? name;
+  if (typeof name !== "string") return "";
+  if (!Object.prototype.hasOwnProperty.call(CAPABILITY_ALIASES, name)) return name;
+  const alias = CAPABILITY_ALIASES[name];
+  return alias === undefined ? name : alias;
 }
 
 /** True iff `name` (after alias normalisation) is on the unified admission allow-list. */

@@ -74,6 +74,21 @@ test("unknown capabilities and wildcard roots are refused (deny-by-default)", ()
   }
 });
 
+test("prototype property names cannot escape the closed alias table", () => {
+  for (const hostileName of [
+    "constructor",
+    "toString",
+    "valueOf",
+    "hasOwnProperty",
+    "__proto__",
+  ]) {
+    const normalized = normalizeCapability(hostileName);
+    assert.equal(typeof normalized, "string", `${hostileName} must remain typed text`);
+    assert.equal(normalized, hostileName, `${hostileName} is not an alias`);
+    assert.equal(isAdmissibleCapability(hostileName), false, `${hostileName} must remain denied`);
+  }
+});
+
 test("a non-string capability is not admissible (no throw)", () => {
   for (const junk of [null, undefined, 42, {}, []]) {
     // normalizeCapability/isAdmissibleCapability must tolerate junk and refuse it.
