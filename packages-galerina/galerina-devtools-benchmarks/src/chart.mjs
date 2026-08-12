@@ -159,7 +159,7 @@ function metricChart(crossLanguage) {
 
   const H = Math.round(y + 6);
   const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Benchmark results grouped by metric class; CPU throughput, GPU and I/O show the WASM-over-Node ratio per benchmark, while Memory (bytes/op) and Governance (internal tier ratio) carry no cross-runtime bar">${body}</svg>`;
-  const comparable = totalPairs ? `WASM production path beats Node on ${totalWins} of ${totalPairs} comparable ratio-class benchmarks. ` : "";
+  const comparable = totalPairs ? `The legacy WASM lane beats Node on ${totalWins} of ${totalPairs} comparable ratio-class benchmarks. ` : "";
   const caption = `${comparable}Grouped by metric — each class is ranked within itself, never across metrics. CPU throughput · GPU · I/O compare WASM ÷ Node (teal = WASM faster · gray = Node's JIT faster · dashed = Node parity); Memory reports bytes/op and Governance is a Galerina-internal tier ratio — neither carries a cross-runtime bar.`;
   return { svg, caption };
 }
@@ -186,8 +186,8 @@ function diffChart(diffFromLast) {
   return { svg, caption: "Read against the noise floor: single-run cross-session diffs are dominated by machine variance (untouched native controls routinely swing ±20–28%), not code — see the harness-standardisation note." };
 }
 
-// ── View 0 (owner-requested 2026-07-19): every LANGUAGE RUNTIME relative to the WASM production
-//    path. WASM is the 0 line; a runtime faster than WASM plots RIGHT (+, teal), slower plots LEFT
+// ── View 0 (owner-requested 2026-07-19): every LANGUAGE RUNTIME relative to the legacy WASM
+//    lane. WASM is the 0 line; a runtime faster than WASM plots RIGHT (+, teal), slower plots LEFT
 //    (−, orange) on a symmetric LOG axis (ratios span ~0.01×–130×; linear would be unreadable). Each
 //    benchmark is its own lane framed by a pair of horizontal "tramlines". Honest-by-construction:
 //    only benchmarks with a WASM baseline AND a comparable per-benchmark unit are plotted; governance
@@ -247,7 +247,7 @@ function wasmRelativeChart(crossLanguage) {
     y += laneH + laneGap;
   }
 
-  const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Each language runtime's throughput relative to the WASM production path, per benchmark; right of the dashed WASM=0 line is faster than WASM and left is slower, on a log scale, with each test in its own tramlined lane">${body}</svg>`;
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Each language runtime's throughput relative to the legacy WASM lane, per benchmark; right of the dashed WASM=0 line is faster than WASM and left is slower, on a log scale, with each test in its own tramlined lane">${body}</svg>`;
   const excl = noBase.length ? ` ${noBase.length} benchmark(s) carry no WASM value and are omitted here (${noBase.slice(0, 6).map((r) => r.benchmark).join(", ")}${noBase.length > 6 ? ", …" : ""}).` : "";
   const caption = `WASM is the 0 line. A bar to the RIGHT (teal, +) is that runtime FASTER than Galerina's WASM path; to the LEFT (orange, −) is SLOWER — log scale, so +10× and −10× sit symmetrically. Each test is its own tramlined lane. Governance is internal-only and excluded; a hatched bar with a trailing "≈" is work-UNALIGNED (the ratio is not yet a certified work-equivalent comparison — read it against the noise floor).${excl}`;
   return { svg, caption };
@@ -275,7 +275,7 @@ export function buildChartHtml(report) {
 <div class="bench-chart">
   <h1>Galerina benchmark — runtimes vs the WASM baseline</h1>
   <p class="sub">Baseline: ${esc(report.baseline ?? "none")}. Pre-rendered SVG · no external dependency · opens offline.</p>
-  <h2>Every runtime relative to WASM (0 = the WASM production path)</h2>
+  <h2>Every runtime relative to WASM (0 = the legacy WASM lane)</h2>
   <p class="sub">${esc(v0.caption ?? "")}</p>
   ${v0.svg ?? v0}
   <h2>Results by metric class</h2>

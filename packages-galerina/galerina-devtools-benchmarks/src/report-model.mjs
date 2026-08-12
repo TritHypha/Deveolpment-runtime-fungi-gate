@@ -8,7 +8,7 @@ export const REPORT_RUNTIMES = Object.freeze([
   Object.freeze({ key: "rust", label: "Rust", ranked: true }),
   Object.freeze({ key: "cpp", label: "C++", ranked: true }),
   Object.freeze({ key: "nodejs", label: "Node.js", ranked: true }),
-  Object.freeze({ key: "wasm", label: "Galerina/Wasm production", ranked: true, productionGalerina: true }),
+  Object.freeze({ key: "wasm", label: "Galerina/Wasm legacy lane", ranked: true, productionGalerina: false }),
   Object.freeze({ key: "checkedReference", label: "Checked reference - no permission", ranked: false }),
   Object.freeze({ key: "slideReference", label: "SLIDE reference - permission present", ranked: false }),
   Object.freeze({ key: "galerinaGoverned", label: "Galerina governed diagnostic", ranked: false }),
@@ -106,7 +106,7 @@ export function buildReportMarkdown({ baseline, diffFromLast, crossLanguage, sli
   output += "- **Lower is better** for memory allocation measured as heap bytes per operation. Throughput shown on those rows is secondary and does not choose the winner.\n";
   output += "- **✅ means the workload is work-equivalent and unit-aligned for cross-runtime ranking; it does not mean Galerina won.**\n";
   output += "- A row without ✅ may show observations, but it receives no admitted winner or product place.\n";
-  output += "- **Galerina** in the place column means the Galerina/Wasm production lane. The governed interpreter is diagnostic evidence and is not counted as another competing product.\n\n";
+  output += "- The production Galerina place remains unmeasured until an admitted `slide` lane exists. The legacy Wasm lane remains ranked historical evidence; neither it nor the diagnostic interpreter may claim that product place.\n\n";
   output += "- **Checked reference - no permission** and **SLIDE reference - permission present** are non-authorizing laboratory observations. They are visible for the one-million-loop comparison but cannot win or count as Galerina production.\n\n";
 
   output += "## 1. Difference from the last run\n\n";
@@ -122,7 +122,7 @@ export function buildReportMarkdown({ baseline, diffFromLast, crossLanguage, sli
   } else output += "_No prior distinct snapshot to diff against._\n";
 
   output += "\n## 2. Cross-language (current run)\n\n";
-  output += `| Benchmark | Unit | Better | Winner | Galerina production place | Comment | ${REPORT_RUNTIMES.map((runtime) => runtime.label).join(" | ")} |\n`;
+  output += `| Benchmark | Unit | Better | Winner | Galerina/SLIDE production place | Comment | ${REPORT_RUNTIMES.map((runtime) => runtime.label).join(" | ")} |\n`;
   output += `|---|---|---|---|---|---|${REPORT_RUNTIMES.map(() => "--:").join("|")}|\n`;
   for (const row of crossLanguage) {
     const interpretation = row.interpretation;

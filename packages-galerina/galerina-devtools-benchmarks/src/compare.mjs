@@ -28,11 +28,11 @@ const LABEL = {
   // The three Galerina interpreter tiers are STAGE-A DIAGNOSTIC probes (they exist
   // to MEASURE the cost of pre-planning vs not, and to verify the WASM compiler
   // against the reference interpreter). They are NOT the production path. The
-  // production governed runtime is `galerina run` → WAT → WASM (the WASM row).
+  // WASM row is retained as a legacy execution baseline while SLIDE is adopted.
   galerinaPassive:  "Galerina passive ⟨interp⟩",
   galerinaManifest: "Galerina manifest ⟨interp⟩",
   galerinaGoverned: "Galerina governed ⟨interp⟩",
-  wasm:           "WASM ▶ production",
+  wasm:           "Galerina/WASM legacy lane",
   denoWebGpu:     "Deno WebGPU (GPU)", // real GPU name filled at runtime from results (see GPU_NAME)
 };
 
@@ -257,9 +257,9 @@ console.log("**Runtimes:**");
 console.log("- **Rust (generic / AVX2)** — native compiled baseline (ceiling).");
 console.log("- **Node.js** — V8 JIT (production baseline for traffic lights).");
 console.log("- **Python** — CPython interpreter (comparison floor).");
-console.log("- **WASM ▶ production** — `galerina run` → WAT → WebAssembly. Governance gates compiled IN. **This is the production governed runtime** — the row to read for shipping cost.");
+console.log("- **Galerina/WASM legacy lane** — `galerina run` → WAT → WebAssembly. Retained as measured historical and differential evidence; it is not the current production target.");
 console.log("");
-console.log("> **Taxonomy — read this before the governance numbers.** The three `⟨interp⟩` rows below are **Stage-A interpreter diagnostic tiers**, NOT the production path. They exist to (a) *measure* the cost of pre-planning vs runtime proving, and (b) *verify* the WASM compiler against the reference interpreter. Do not read the interpreter's governed throughput as the shipping governance cost — read the **WASM ▶ production** row for that.");
+console.log("> **Taxonomy — read this before the governance numbers.** The three `⟨interp⟩` rows below are Stage-A diagnostic tiers. The WASM row is a legacy baseline. Production Galerina/SLIDE remains a separate admitted lane and is not manufactured from either observation.");
 console.log("- **Galerina governed ⟨interp⟩** — Stage-A: full governance tree-walker (capabilities + audit + proof rebuilt per call). *Diagnostic worst-case.*");
 console.log("- **Galerina manifest ⟨interp⟩** — Stage-A: pre-verified runtime manifest, governance erased at runtime. *Diagnostic.*");
 console.log("- **Galerina passive ⟨interp⟩** — Stage-A: pre-compiled deployment model with LRU result cache (warm path). *Diagnostic.*\n");
@@ -348,10 +348,10 @@ for (const cls of METRIC_ORDER) {
       rows.push(`| ${id} | ${wasmStr} | ${vsRust} | ${vsNode} | ${govStr} | ${impl} |`);
     }
     console.log("### CPU Throughput — inner-ops/s (cross-runtime; certified lanes only)\n");
-    console.log("> 🚦 **vs Rust / vs Node** compare the **WASM ▶ production** lane to native. A traffic-light ratio");
+    console.log("> 🚦 **vs Rust / vs Node** compare the **Galerina/WASM legacy lane** to native. A traffic-light ratio");
     console.log("> appears ONLY for work-equivalence-certified benchmarks; `UNCERTIFIED` lanes show raw throughput and");
     console.log("> NO ratio (their N/work is not yet proven equivalent across runtimes).\n");
-    console.log("| Benchmark | WASM ▶ production | vs Rust | vs Node | Galerina governed ⟨interp⟩ | Implication |");
+    console.log("| Benchmark | Galerina/WASM legacy lane | vs Rust | vs Node | Galerina governed ⟨interp⟩ | Implication |");
     console.log("|---|---|---|---|---|---|");
     for (const r of rows) console.log(r);
     console.log("\n> 🚦 🟢 ≥0.9 (≈native) · ⚪ ≥0.5 (within 2×) · 🟡 ≥0.1 (2–10× slower) · 🔴 ≥0.01 (10–100×) · ⚫ <0.01 (100×+).");
@@ -389,7 +389,7 @@ for (const cls of METRIC_ORDER) {
     console.log("### GPU — kernel-evals/s (GPU-shaped workload; matrix-multiply dual-homes here)\n");
     console.log("> Cross-runtime. Deno WebGPU is the only real-dispatch path; where it produced no number on this");
     console.log("> machine it shows **⏳ GPU pending** — the honest status, never a fabricated GPU rate.\n");
-    console.log("| Benchmark | 🏆 Winner | Speed | WASM ▶ production | GPU (Deno WebGPU) | vs Node (WASM) | Implication |");
+    console.log("| Benchmark | 🏆 Winner | Speed | Galerina/WASM legacy lane | GPU (Deno WebGPU) | vs Node (WASM) | Implication |");
     console.log("|---|---|---|---|---|---|---|");
     for (const bench of members) {
       const id = bench.benchmark;
@@ -402,7 +402,7 @@ for (const cls of METRIC_ORDER) {
       const impl = winRt === "denoWebGpu" ? "real GPU dispatch wins" : "CPU/WASM lanes lead — real GPU dispatch pending (see §4b)";
       console.log(`| ${id} | ${winRt ? LABEL[winRt] : "—"} | ${winSpeed ? fmtT(winSpeed) : "—"} | ${wasmStr} | ${gpuCell(bench.results?.denoWebGpu)} | ${vsNode} | ${impl} |`);
     }
-    console.log("\n> **vs Node (WASM)** compares the WASM ▶ production lane to Node.js on the kernel. matrix-multiply also");
+    console.log("\n> **vs Node (WASM)** compares the Galerina/WASM legacy lane to Node.js on the kernel. matrix-multiply also");
     console.log("> appears in the CPU Throughput table (dual-home) — it has both a compute lane and a WebGPU lane.\n");
     continue;
   }
@@ -437,7 +437,7 @@ for (const cls of METRIC_ORDER) {
     console.log("> This table's columns are Galerina tiers ONLY — there is **no rust/node/python/cpp column**, so a");
     console.log("> cross-runtime `N× slower` is structurally impossible here. The old six-figure governance-cost artifact");
     console.log("> came from dividing the governed tier by a native rate — a division this table cannot express.\n");
-    console.log("| Benchmark | Galerina governed ⟨interp⟩ | Galerina manifest ⟨interp⟩ | WASM ▶ production | governed/manifest (gov overhead) |");
+    console.log("| Benchmark | Galerina governed ⟨interp⟩ | Galerina manifest ⟨interp⟩ | Galerina/WASM legacy lane | governed/manifest (gov overhead) |");
     console.log("|---|---|---|---|---|");
     for (const bench of members) {
       const id = bench.benchmark;
@@ -731,7 +731,7 @@ if (gpuBench) {
   console.log(`| Node.js | WebGPU | 🖥️ CPU only | ⏳ toolchain required (no navigator.gpu in Node.js) |`);
   console.log(`| Deno | WebGPU (built-in) | ${denoWebGpuAvail ? `🎮 GPU (${GPU_NAME})` : "🖥️ CPU"} | ${denoWebGpuAvail ? "✅ available — real GPU dispatch detected (Phase 38 ready)" : "⏳ not installed"} |`);
   console.log(`| **Galerina** | WebGPUComputePlan → WGSL | 🖥️ CPU (GPU pending) | ❌ **pending Phase 38** — stub only, no measured number (by design) |`);
-  console.log(`\n> Per the project's honesty rule (same as the Runtime-in-Galerina 0% metric): no GPU number is shown until a backend actually executes. Galerina's real result on this workload is its **WASM/CPU** row above.`);
+  console.log(`\n> Per the project's honesty rule (same as the Runtime-in-Galerina 0% metric): no GPU number is shown until a backend actually executes. The **WASM/CPU** row above is legacy reference evidence, not a production SLIDE result.`);
   console.log(`> 🖥️ CPU = running on CPU cores. 🎮 GPU = real GPU dispatch via WebGPU/WGSL. Deno WebGPU is the only path currently capable of real GPU execution.\n`);
 }
 

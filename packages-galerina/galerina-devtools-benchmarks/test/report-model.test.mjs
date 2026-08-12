@@ -18,7 +18,7 @@ const transition = Object.freeze({
   exclusions: Object.freeze([]),
 });
 
-test("cross-language rows derive winner, direction and production Galerina place from raw facts", () => {
+test("legacy Wasm is ranked but cannot claim the production Galerina place", () => {
   const rows = buildCrossLanguageRows([{
     benchmark: "compute-fixture",
     metricClass: "cpu-throughput",
@@ -33,7 +33,7 @@ test("cross-language rows derive winner, direction and production Galerina place
 
   assert.equal(rows[0].interpretation.direction, "higher is better");
   assert.equal(rows[0].interpretation.winner, "Rust");
-  assert.equal(rows[0].interpretation.galerinaPlace, "2nd of 3");
+  assert.equal(rows[0].interpretation.galerinaPlace, "not measured");
   assert.equal(rows[0].wasm, 200);
 });
 
@@ -59,12 +59,13 @@ test("generated Markdown explains every ranking column and the green tick", () =
     slideTransition: transition,
   });
 
-  assert.match(markdown, /\| Benchmark \| Unit \| Better \| Winner \| Galerina production place \| Comment \|/u);
+  assert.match(markdown, /\| Benchmark \| Unit \| Better \| Winner \| Galerina\/SLIDE production place \| Comment \|/u);
   assert.match(markdown, /compute-fixture ✅/u);
-  assert.match(markdown, /higher is better \| Rust \| 2nd of 2/u);
+  assert.match(markdown, /higher is better \| Rust \| not measured/u);
   assert.match(markdown, /legacy-fixture \| per-call \| not certified \| no admitted winner \| not ranked/u);
   assert.match(markdown, /✅.*work-equivalent.*unit-aligned.*does not mean Galerina won/isu);
-  assert.match(markdown, /Galerina\/Wasm production/u);
+  assert.match(markdown, /Galerina\/Wasm legacy lane/u);
+  assert.match(markdown, /production Galerina place remains unmeasured until an admitted `slide` lane exists/u);
 });
 
 test("memory rows display the lower-is-better bytes/op scores that actually choose the winner", () => {
