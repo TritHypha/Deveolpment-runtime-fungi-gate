@@ -133,7 +133,7 @@ lower-snake internal slots without changing the external descriptor.
 Run:
 
 ```powershell
-$env:GALERINA_SLIDE_REPO='C:\Users\phill\Documents\GitHub\SLIDE'
+$env:GALERINA_SLIDE_REPO='<sibling-SLIDE-repository>'
 node --test scripts/tests/spill-retype-fungi-slide.integration.test.mjs
 ```
 
