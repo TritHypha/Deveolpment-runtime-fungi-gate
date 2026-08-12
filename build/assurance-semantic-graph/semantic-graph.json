@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "authoritativeInputsDigest": "66f6425676323a88dab203278e6e9f53460f5a147a7f6d67fc593388de0c883a",
+  "authoritativeInputsDigest": "1a18d4508cbc1a5e3ce664da3e75f999ac140efd6ffb9825f387ab832aa6693e",
   "nodes": [
     {
       "id": "requirement:vok-sem-001",
@@ -2859,6 +2859,13 @@
       "id": "test:auto-7b0e91d48ddac2ad6190ef00",
       "kind": "test",
       "evidencePath": "packages-galerina/galerina-core-compiler/tests/reserved-keyword-param.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
+      "id": "test:auto-74d372f599c32fea2764e505",
+      "kind": "test",
+      "evidencePath": "packages-galerina/galerina-core-compiler/tests/residency-strictness-fungi-conversion.test.mjs",
       "class": "system-contract",
       "polarity": "neutral"
     },
@@ -7105,6 +7112,13 @@
       "polarity": "neutral"
     },
     {
+      "id": "test:auto-dbd2ee0da5a45d07f858df12",
+      "kind": "test",
+      "evidencePath": "scripts/tests/residency-strictness-fungi-slide.integration.test.mjs",
+      "class": "system-contract",
+      "polarity": "neutral"
+    },
+    {
       "id": "test:auto-3cecdc72754408dcb6f36ab1",
       "kind": "test",
       "evidencePath": "scripts/tests/restore-verdict-slide-candidate.integration.test.mjs",
@@ -8770,6 +8784,11 @@
     },
     {
       "from": "test:auto-7b0e91d48ddac2ad6190ef00",
+      "to": "package:galerina-core-compiler",
+      "type": "CLASSIFIES"
+    },
+    {
+      "from": "test:auto-74d372f599c32fea2764e505",
       "to": "package:galerina-core-compiler",
       "type": "CLASSIFIES"
     },
@@ -11804,6 +11823,11 @@
       "type": "CLASSIFIES"
     },
     {
+      "from": "test:auto-dbd2ee0da5a45d07f858df12",
+      "to": "system-contract:repository-governance",
+      "type": "CLASSIFIES"
+    },
+    {
       "from": "test:auto-3cecdc72754408dcb6f36ab1",
       "to": "system-contract:repository-governance",
       "type": "CLASSIFIES"
@@ -12014,9 +12038,9 @@
     "systemContracts": 1,
     "routes": 0,
     "packages": 100,
-    "tests": 916,
+    "tests": 918,
     "detectors": 6,
-    "executableFamily": 1437,
+    "executableFamily": 1438,
     "legacyUnmapped": 0
   },
   "verdictTrit": 1,
