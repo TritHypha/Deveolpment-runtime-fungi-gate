@@ -2,9 +2,10 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the twenty-sixth conversion slice uses local SLIDE
-`6de4d91`, which freezes and implements exact signed Int32 bitwise AND as
-Contract 85 without changing Contracts 1 through 84. SLIDE passes
+Current checkpoint: the twenty-seventh conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute Tower-Citizen's
+package-owned transport permit projection. It changes no SLIDE contract or
+registry. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
@@ -20,14 +21,34 @@ durability and production authority remain explicit later exits. TritMesh:QL
 is excluded from the admitted mechanical-conversion scope until its six scan
 findings close; this exclusion is not a claim that the component is secure.
 
-Current Galerina custody is green: normal phase-close passes every blocking
-gate in **660.4s**, the direct aggregate passes **100/100 packages and
+The last pre-exclusion aggregate custody baseline was green: normal phase-close
+passed every blocking gate in **660.4s**, the direct aggregate passed **100/100 packages and
 9,556/9,556 tests** in **293.7s**, and exhaustive phase-close passes every
 blocking gate in **844.9s**. The first exhaustive attempt refused only at the
 package aggregate after all preceding gates passed; the direct owner rerun and
 one unchanged-tree terminal retry both passed. The refusal remains part of the
 evidence record and is not relabelled as a pass. A fresh four-repository
 security recheck remains an explicit pre-conversion exit.
+
+Twenty-seventh physical conversion slice 2026-08-12: Tower-Citizen's exported
+`permitData` decision now has exact package-owned pure
+`s4PermitData(state: Int) -> Bool` in its existing transport FSM asset. It
+preserves the frozen encoding exactly: only `Established` (`0`) returns true;
+`Recovering`, `Closed`, and every unknown signed Int32 encoding return false.
+The differential proof passes **2/2**. Independent SLIDE publishes and
+re-admits one physical `.slide`, then verifies seven typed VOK Bool receipts
+(**1/1**, zero skips). This comparison needs no optional operation registry;
+the proof pins its exact absence. Wrong arity/type, non-finite or fractional
+numbers, out-of-range Int, inadequate work, and source, receipt, envelope, or
+artifact mutation refuse. Strict Fungi checking is clean, Tower-Citizen is
+**507/507 across 59 suites**, and the monitored canonical owner passes
+**100/100 packages and 9,602 tests in 301.0s** with captured exit code 0.
+Golden is current at **11/11 checked examples and 11/11 execution vectors**.
+Retirement derives **1,446** executable-family paths and **131** source Fungi
+assets. The complete transport FSM, key custody, timeouts, TypeScript, and all
+consumers remain active; repository-wide closure remains **UNKNOWN** because
+crash-linked full tooling, normal phase-close, graph-all, and monolithic memory
+evaluation remain excluded.
 
 Twenty-sixth physical conversion slice 2026-08-12: exported `effectsSubset`
 now has exact package-owned pure `effectsSubsetFungi(required: Int, declared:

@@ -4,6 +4,31 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Twenty-seventh physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Express Tower-Citizen's exported `permitData` decision as package-owned
+  pure `s4PermitData(state: Int) -> Bool` in the existing transport FSM asset.
+- [x] Preserve the frozen state encoding exactly: `Established` (`0`) returns
+  true; `Recovering`, `Closed`, and every unknown signed Int32 encoding return
+  false. The complete differential proof passes **2/2**.
+- [x] Publish one physical `.slide`, independently re-admit it, and verify all
+  seven typed VOK Bool receipts (**1/1**, zero skips). The comparison needs no
+  optional operation registry, and the proof pins its exact absence. Wrong
+  arity/type, non-finite or fractional numbers, out-of-range Int, inadequate
+  work, source, receipt, envelope, and artifact mutation all refuse.
+- [x] Pass strict Fungi checking with zero errors/warnings, Tower-Citizen
+  **507/507 across 59 suites**, and the monitored canonical owner **100/100
+  packages and 9,602 tests in 301.0s** with captured exit code 0. Golden is
+  current at **11/11 checked examples and 11/11 execution vectors**;
+  retirement derives **1,446** executable-family paths and **131** source
+  Fungi assets, with its staged-index anti-neutering proof green.
+- [ ] Keep `permitData`, the complete transport FSM, key custody, timeouts,
+  TypeScript, and every consumer active. This reference proof grants no state
+  authentication, consumer-switch, production, release, durability, or
+  retirement authority; repository-wide closure remains `UNKNOWN` because
+  crash-linked full tooling, normal phase-close, graph-all, and monolithic
+  memory evaluation stay excluded.
+
 ### Twenty-sixth physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Express exported `effectsSubset` as package-owned pure
