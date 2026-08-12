@@ -300,7 +300,9 @@ Current views:
 On the exact one-million-element reference workload, Rust AVX2 wins and the
 Galerina/SLIDE reference is fourth of six, ahead of Go and Python. This is
 bounded reference evidence only: it does not release authority or fill the
-unmeasured production SLIDE lane. The benchmark truth audit excludes diagnostic
+unmeasured production SLIDE lane. The current full run contains 30 benchmark
+groups and 18 comparable groups, but production SLIDE coverage is **0/18**;
+one separately labelled SLIDE reference group is measured. The benchmark truth audit excludes diagnostic
 interpreters from production rankings and refuses ratios for mismatched work or
 units.
 

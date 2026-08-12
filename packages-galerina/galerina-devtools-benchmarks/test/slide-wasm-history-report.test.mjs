@@ -152,6 +152,26 @@ test("history page renders the approved SLIDE-zero reference panel without weake
   assert.doesNotMatch(page, /<script|https?:\/\//iu);
 });
 
+test("history page states the complete benchmark and SLIDE coverage counts", () => {
+  const model = buildSlideWasmHistoryModel(fixture());
+  const page = buildSlideWasmHistoryHtml(model);
+
+  assert.deepEqual(model.coverage, {
+    benchmarkGroups: 1,
+    comparableGroups: 1,
+    expectedProductionSlideGroups: 1,
+    productionSlideGroups: 0,
+    referenceSlideGroups: 1,
+    historicWasmGroups: 2,
+  });
+  assert.match(page, /<strong>1<\/strong><span>benchmark group run/u);
+  assert.match(page, /<strong>1<\/strong><span>comparable group expected for full production SLIDE coverage/u);
+  assert.match(page, /<strong>0 of 1<\/strong><span>production SLIDE group measured/u);
+  assert.match(page, /<strong>1<\/strong><span>SLIDE reference group measured/u);
+  assert.match(page, /<strong>2<\/strong><span>historic WASM groups recorded/u);
+  assert.match(page, /grid-template-columns:repeat\(auto-fit,minmax\(180px,1fr\)\)/u);
+});
+
 test("historical chart uses per-workload WASM-zero rows and keeps SLIDE reference evidence non-production", () => {
   const model = buildSlideWasmHistoryModel(fixture());
 

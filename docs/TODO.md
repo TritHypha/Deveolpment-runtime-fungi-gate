@@ -8302,6 +8302,13 @@ Suggested order: RD-0240 → BK-2 → BK-1 → BK-3 → BK-4 → BK-5, each RED�
   18 comparable unit checks and the freshness audit.
 - [ ] Add a real admitted production SLIDE lane. Until then the production
   chart and table must remain `DEFERRED_NO_SLIDE_LANE`, with K3 authority `0`.
+  Current coverage is **0/18** comparable production SLIDE groups; the one
+  measured `slideReference` group remains separate and non-authorizing.
+- [ ] Expand the bounded SLIDE compiler/executor profile for the benchmark
+  corpus. A direct current-profile probe refused all 14 comparable workloads
+  that already have `benchmark.fungi` with `SLIDE-CHECKED-PURE-SCALAR-001`;
+  the remaining four comparable groups need governed `.fungi` benchmark
+  subjects before they can enter the same gate.
 - [ ] Repeat the historic matrix-multiply/Python outlier in a matched pinned
   environment before assigning a cause or making a performance claim.
 - [ ] Expand Go beyond the single verified-native-operation control and add a
