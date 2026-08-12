@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "32b377eb65c3e5ead487c4073181c3df1f967be21468f94fc4527de542718c09",
+  "sourceDigest": "c2bb392004eed8b0563d46832b85e03b69b94dc9b31a636a334efddfd9f6399d",
   "decisionsDigest": "b472f5676776385177b5dd435861422840c62fa4af622936dbb2159ee715c1cc",
   "counts": {
-    "total": 1449,
+    "total": 1450,
     "CANDIDATE": 0,
-    "BLOCKED": 820,
+    "BLOCKED": 821,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
@@ -10367,6 +10367,14 @@
     },
     {
       "path": "packages-galerina/galerina-test/tests/runners.test.mjs",
+      "package": "galerina-test",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-test/tests/test-marker-fungi-conversion.test.mjs",
       "package": "galerina-test",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",

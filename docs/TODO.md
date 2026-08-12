@@ -4,6 +4,35 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Thirty-first physical TypeScript-to-Fungi conversion slice - 2026-08-12
+
+- [x] Refuse the first JSON safe-integer candidate before implementation:
+  current physical SLIDE `Int` is i32 and cannot prove the TypeScript safe-
+  integer domain through `2^53 - 1`. Resume it only after a reviewed typed
+  `Int64` SLIDE/VOK boundary exists.
+- [x] Upgrade the conversion queue to schema v2 so a symbol proof authorizes
+  only exact named symbols. Conserve **1,450/1,450** executable-family paths:
+  **629** bootstrap floors, **821** file-level blocked paths, zero whole-file
+  candidates and exactly one scoped candidate, `cli.ts#mark`.
+- [x] Express the test CLI's private Boolean marker as package-owned pure
+  `mark(ok: Bool) -> String`. Preserve the complete two-value mapping exactly;
+  strict checking is clean, the differential passes **2/2**, and the owning
+  package passes **43/43**.
+- [x] Publish one physical `.slide`, independently re-admit it and verify both
+  typed VOK String receipts (**1/1**, zero skips). Missing, surplus, wrong-
+  typed and non-Boolean arguments, inadequate work, source, receipt, every
+  safe-value envelope byte and artifact mutation all refuse.
+- [x] Register the physical proof in the governed manifest and pass the
+  focused manifest/tooling/runner lane **35/35** with zero skips. Review the
+  public skills and record translation-skill commit `c06c72b`; writing-Fungi
+  needs no change for this translation-authority lesson.
+- [ ] Refresh every bounded owner, roadmap/subway and both indexes, then close
+  the slice without running crash-linked full tooling, normal phase-close,
+  `graph-all` or monolithic memory evaluation.
+- [x] Keep TypeScript, `mark`, `printHuman` and every consumer active. This
+  grants no consumer switch, production, release, durability or retirement
+  authority; repository-wide closure remains `UNKNOWN`.
+
 ### Pre-Slice-31 zero-trust hardening gate - 2026-08-12
 
 - [x] Retain every failed package child's bounded exit/signal, byte count,
@@ -23,7 +52,7 @@ counts or open items that a newer section explicitly supersedes.
 - [x] Define and hostile-test `zt.bounded-closure.v1`. It validates a fixed
   gate set and explicit crash-linked exclusions without launching an aggregate
   process or claiming repository-wide closure.
-- [ ] Select the next source only after recording its evidence-bound queue
+- [x] Select the next source only after recording its evidence-bound queue
   decision. This is the intentional exit before Slice 31.
 
 ### Thirtieth physical TypeScript-to-Fungi conversion slice - 2026-08-12

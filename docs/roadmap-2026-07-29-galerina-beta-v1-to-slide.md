@@ -2,10 +2,10 @@
 
 Date: 2026-08-12
 Branch: `codex/rd-0792-synthesize-only`
-Current checkpoint: the thirtieth conversion slice uses local SLIDE
-`6de4d91` to publish, independently re-admit, and execute the reports package's
-exact status-priority decision through a nominal three-`Int` record. It changes
-no SLIDE contract, registry, or limit. SLIDE passes
+Current checkpoint: the thirty-first conversion slice uses local SLIDE
+`6de4d91` to publish, independently re-admit, and execute the test CLI's exact
+private Boolean marker through a typed String boundary. It changes no SLIDE
+contract, registry, or limit. SLIDE passes
 **1,006/1,006 across 101 suites**; its 91-file tool manifest is
 `sha256:b07a9e75b6cb2377fb964bce64f0d37ddb4ff0427cf44776f9ac069ae8ff9b32`,
 its V2 contract partition covers 96 files, and the catalog covers 101 files.
@@ -17,10 +17,11 @@ and SLIDE share the exact non-authorizing `zt.error-envelope.v1` data contract
 rather than ambient logging authority; every new conversion report requires a
 machine-checked skill/threadability/classification/closure receipt; and bounded
 closure receipts validate evidence without relaunching the crash-linked
-aggregates. The conserved queue accounts for **1,449/1,449** executable-family
-paths: **629** are bootstrap floors, **820** remain blocked pending exact
-dossiers or consumer-authority evidence, and **0** are currently admitted
-candidates. Slice 31 cannot start until one exact queue decision is added.
+aggregates. Queue schema v2 now preserves exact `WHOLE_FILE` versus `SYMBOLS`
+authority. The conserved queue accounts for **1,450/1,450** executable-family
+paths: **629** are bootstrap floors, **821** remain file-level blocked, zero
+whole-file candidates are admitted, and exactly one scoped candidate is bound
+to `cli.ts#mark`.
 
 Both Galerina source manifests are now bound to the exact current portable-VEO
 policy and verifier context, and both committed physical `.slide` publications
@@ -31,6 +32,34 @@ authentication handle. External deployment authentication, signing, platform
 durability and production authority remain explicit later exits. TritMesh:QL
 is excluded from the admitted mechanical-conversion scope until its six scan
 findings close; this exclusion is not a claim that the component is secure.
+
+Thirty-first physical conversion slice 2026-08-12: the first selected JSON
+safe-integer candidate was refused before implementation. Current checked-
+Fungi SLIDE maps `Int` to physical i32, which cannot prove the TypeScript
+source domain through `2^53 - 1`; the exact candidate remains blocked until a
+reviewed typed `Int64` SLIDE/VOK boundary exists. The replacement proof admits
+only the private `mark` symbol in the test CLI, not its sibling parsing,
+rendering, I/O or exit behavior. Package-owned pure
+`mark(ok: Bool) -> String` preserves the complete two-value Unicode marker
+mapping. Strict checking is clean, typed interpretation plus signed/admitted
+Wasm passes **2/2**, and the owning package passes **43/43**. Independent
+SLIDE publishes and re-admits one physical `.slide`, verifies both typed VOK
+String receipts (**1/1**, zero skips), and refuses missing, surplus, wrong-
+typed and non-Boolean arguments, insufficient work, source, receipt, every
+safe-value envelope byte and artifact mutation. The governed manifest focus
+passes **35/35** with zero skips. The public translation skill now conserves
+symbol-vs-file authority and requires source-domain-to-physical-width checks
+at commit `c06c72b`; the writing skill needs no change. TypeScript, `mark`,
+`printHuman` and all consumers remain active. Crash-linked full tooling,
+normal phase-close, graph-all and monolithic memory evaluation remain excluded,
+so repository-wide closure remains **UNKNOWN**.
+
+Slice 31 bounded owners are being refreshed from their individual generators.
+The retirement and queue owners are already current at **1,450 executable-
+family paths / 134 source Fungi** and **1,450/1,450 classified** respectively;
+the queue has **629** floors, **821** file-level blocked paths, zero whole-file
+candidates and one scoped candidate. Remaining bounded-owner and index results
+must be current before the slice is called complete.
 
 The last pre-exclusion aggregate custody baseline was green: normal phase-close
 passed every blocking gate in **660.4s**, the direct aggregate passed **100/100 packages and
