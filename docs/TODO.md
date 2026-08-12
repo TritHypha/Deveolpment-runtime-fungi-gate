@@ -4,7 +4,16 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-49 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-52 - 2026-08-12
+
+- [x] Settle Slices 50-52 as `BLOCKED` without placeholder assets. Slice 50
+  requires an exact capability-record and SIMD-array physical ABI. Slices 51
+  and 52 repeat the complete JavaScript safe-integer versus signed-i32
+  boundary already proved by the JSON adjudication. Owning packages pass
+  **3/3**, **24/24**, and **22/22**; the compiler i32 range lane passes **7/7**.
+- [ ] R&D an exact record/array SLIDE/VOK boundary before revisiting Slice 50,
+  and a reviewed wide numeric/binary64 border before revisiting Slices 51-52.
+  Host-precomputed booleans and silent source-domain narrowing are forbidden.
 
 - [x] Settle Slices 47-49 as `BLOCKED` without placeholder assets. TriRegex
   certifies the core Slice 47 and 48 patterns, but the Fungi execution path
@@ -58,7 +67,7 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after the Slice 47-49
+- [ ] Select the following three scopes only after the Slice 50-52
   product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or

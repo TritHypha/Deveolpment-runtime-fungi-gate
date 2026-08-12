@@ -99,6 +99,19 @@ checkboxes remain intentionally unmet.
   or candidate authority.
 - [x] Record the reviewed TriRegex-backed typed boundary as the R&D trigger.
 
+## Task 3D: Settle Slices 50-52
+
+- [x] Preflight the three exact symbols against the live graph, retirement
+  ledger, package manifests/assets, current register and governed mirrors.
+- [x] Refuse Slice 50 because no exact physical record/array ABI exists and a
+  precomputed host Boolean bridge would move decision authority.
+- [x] Refuse Slices 51-52 because JavaScript safe integers extend beyond the
+  current signed-i32 Fungi/SLIDE domain.
+- [x] Reconcile the existing JSON safe-integer adjudication and prove it did
+  not create a superseding asset.
+- [x] Record the record/array and wide-numeric R&D triggers without creating
+  placeholder assets or candidate authority.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.

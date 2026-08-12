@@ -27,6 +27,8 @@ profile and queue scope after each wave. Only admitted candidates enter a
 later, worktree-isolated implementation wave.
 
 The fourth wave covers Slices 47-49 and tests regex-dependent text decisions.
+The fifth wave covers Slices 50-52 and tests exact record/array and wide
+JavaScript numeric boundaries.
 
 ## Mandatory scope preflight
 
@@ -80,6 +82,9 @@ remain the source of truth.
 | 47 | `packages-galerina/galerina-tower-citizen/src/key-rotation.ts#isWellFormedCommit` | none |
 | 48 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isSafeLabel` | none |
 | 49 | `packages-galerina/galerina-devtools-fungi-scan/src/inline-fixtures.ts#looksLikeFungi` | none |
+| 50 | `packages-galerina/galerina-target-cpu/src/index.ts#canUseLowBitCpuPath` | none |
+| 51 | `packages-galerina/galerina-db-postgres/src/index.ts#isPositiveSafeInteger` | none |
+| 52 | `packages-galerina/galerina-data-database/src/index.ts#isNonNegativeSafeInteger` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
