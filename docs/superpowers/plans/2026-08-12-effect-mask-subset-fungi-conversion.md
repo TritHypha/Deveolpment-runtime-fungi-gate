@@ -75,7 +75,10 @@ git commit -m "test: specify fungi effect mask subset"
 pure flow effectsSubsetFungi(required: Int, declared: Int) -> Bool
 contract { intent { "Require every bit in the required effect mask to be present in the declared mask." } }
 {
-  return Int.bitAnd(required, declared) == required
+  if Int.bitAnd(required, declared) == required {
+    return true
+  }
+  return false
 }
 ```
 
