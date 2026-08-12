@@ -69,6 +69,32 @@ function fixture() {
         },
       },
     },
+    {
+      benchmark: "call-chain",
+      metricClass: "cpu-throughput",
+      units: { comparable: true, status: "PASS", unit: "chains/s" },
+      results: {
+        slideReference: {
+          normThroughput: 179_248,
+          iterationsPerSecond: 179_248,
+          iterations: 50_000,
+          result: 57_984,
+          callsPerIteration: 7,
+          referenceOnly: true,
+          authorityReleased: false,
+          k3: 0,
+        },
+        wasm: {
+          normThroughput: 54_561_500,
+          result: { __tag: "int", value: 57_984 },
+        },
+        rustAvx2: { normThroughput: 153_657_037, iterations: 50_000, result: 57_984, callsPerIteration: 7 },
+        rust: { normThroughput: 154_368_632, iterations: 50_000, result: 57_984, callsPerIteration: 7 },
+        go: { normThroughput: 141_487_543, iterations: 50_000, result: 57_984, callsPerIteration: 7 },
+        nodejs: { normThroughput: 40_893_105, iterations: 50_000, result: 57_984, callsPerIteration: 7 },
+        python: { normThroughput: 1_276_360, iterations: 50_000, result: 57_984, callsPerIteration: 7 },
+      },
+    },
   ];
   const metadata = {
     generatedAt: "2026-08-12T17:19:05.632Z",
@@ -116,6 +142,20 @@ test("verified SLIDE reference is zero and same-work peers receive signed deltas
   assert.deepEqual(comparison.unavailable, ["Go"]);
 });
 
+test("call-chain comparison uses legacy Wasm as zero and derives signed factors", () => {
+  const model = buildSlideWasmHistoryModel(fixture());
+  const comparison = model.wasmZeroComparisons[0];
+
+  assert.equal(comparison.benchmark, "call-chain");
+  assert.equal(comparison.baseline.product, "Galerina/WASM (legacy)");
+  assert.equal(comparison.baseline.factor, 0);
+  assert.equal(comparison.winner, "Rust");
+  assert.equal(comparison.galerinaPlace, 7);
+  assert.equal(comparison.entries.find((entry) => entry.product === "Galerina/SLIDE reference").factor < -304, true);
+  assert.equal(comparison.entries.find((entry) => entry.product === "Node.js").factor < -1.3, true);
+  assert.equal(comparison.entries.find((entry) => entry.product === "Rust").factor > 2.8, true);
+});
+
 test("verified SLIDE reference comparison refuses authority-bearing or malformed evidence", () => {
   const authorityBearing = fixture();
   authorityBearing.current[0].results.slideReference.authorityReleased = true;
@@ -129,6 +169,29 @@ test("verified SLIDE reference comparison refuses authority-bearing or malformed
   assert.throws(
     () => buildSlideWasmHistoryModel(wrongWork),
     /verified SLIDE reference evidence refused/u,
+  );
+});
+
+test("WASM-zero call-chain comparison refuses widened authority and unequal work", () => {
+  const authorityBearing = fixture();
+  authorityBearing.current[1].results.slideReference.authorityReleased = true;
+  assert.throws(
+    () => buildSlideWasmHistoryModel(authorityBearing),
+    /Galerina\/SLIDE call-chain reference refused/u,
+  );
+
+  const wrongIterationCount = fixture();
+  wrongIterationCount.current[1].results.rust.iterations = 49_999;
+  assert.throws(
+    () => buildSlideWasmHistoryModel(wrongIterationCount),
+    /Rust call-chain refused/u,
+  );
+
+  const wrongHistoricResult = fixture();
+  wrongHistoricResult.current[1].results.wasm.result.value = 57_983;
+  assert.throws(
+    () => buildSlideWasmHistoryModel(wrongHistoricResult),
+    /historic Galerina\/WASM call-chain refused/u,
   );
 });
 
@@ -157,17 +220,17 @@ test("history page states the complete benchmark and SLIDE coverage counts", () 
   const page = buildSlideWasmHistoryHtml(model);
 
   assert.deepEqual(model.coverage, {
-    benchmarkGroups: 1,
-    comparableGroups: 1,
+    benchmarkGroups: 2,
+    comparableGroups: 2,
     expectedProductionSlideGroups: 18,
     productionSlideGroups: 0,
-    referenceSlideGroups: 1,
+    referenceSlideGroups: 2,
     historicWasmGroups: 2,
   });
-  assert.match(page, /<strong>1<\/strong><span>benchmark group run/u);
-  assert.match(page, /<strong>1<\/strong><span>comparable group expected for full production SLIDE coverage/u);
+  assert.match(page, /<strong>2<\/strong><span>benchmark groups run/u);
+  assert.match(page, /<strong>2<\/strong><span>comparable groups expected for full production SLIDE coverage/u);
   assert.match(page, /<strong>0 of 18<\/strong><span>production SLIDE groups measured/u);
-  assert.match(page, /<strong>1<\/strong><span>SLIDE reference group measured/u);
+  assert.match(page, /<strong>2 of 18<\/strong><span>SLIDE reference groups measured/u);
   assert.match(page, /<strong>2<\/strong><span>historic WASM groups recorded/u);
   assert.match(page, /grid-template-columns:repeat\(auto-fit,minmax\(180px,1fr\)\)/u);
 });
@@ -178,7 +241,7 @@ test("historical chart uses per-workload WASM-zero rows and keeps SLIDE referenc
   assert.equal(model.status, "REFERENCE_ONLY_NO_PRODUCTION_SLIDE");
   assert.deepEqual(model.rows.map((row) => row.product), ["Galerina/SLIDE", "Galerina/WASM"]);
   assert.deepEqual(model.rows.map((row) => row.productionObservations), [0, 2]);
-  assert.deepEqual(model.rows.map((row) => row.referenceObservations), [1, 0]);
+  assert.deepEqual(model.rows.map((row) => row.referenceObservations), [2, 0]);
   assert.deepEqual(
     model.workloads.map((row) => [row.benchmark, row.wasmValue, row.unit, row.slideDeltaPct]),
     [["alpha", 90, "ops/s", null], ["beta", 80, "ops/s", null]],
@@ -192,6 +255,11 @@ test("historical chart uses per-workload WASM-zero rows and keeps SLIDE referenc
   assert.match(page, /SLIDE not measured/u);
   assert.match(page, /Evidence coverage, not a speed comparison/u);
   assert.match(page, /WASM = 0 baseline/u);
+  assert.match(page, /call-chain/u);
+  assert.match(page, /Galerina\/WASM \(legacy\) 0/u);
+  assert.match(page, /Galerina\/SLIDE reference −304/u);
+  assert.match(page, /2 of 18/u);
+  assert.match(page, /16 not measured/u);
   assert.match(page, /faster \+/u);
   assert.match(page, /slower −/u);
   assert.doesNotMatch(page, /<script|https?:\/\//iu);
@@ -202,21 +270,16 @@ test("historical chart uses per-workload WASM-zero rows and keeps SLIDE referenc
   assert.match(page, /Roboto/u);
 });
 
-test("a real aligned production SLIDE lane is counted separately from slideReference", () => {
+test("a real closed-suite production SLIDE lane is counted separately from slideReference", () => {
   const input = fixture();
-  input.current.push({
-    benchmark: "alpha",
-    metricClass: "cpu-throughput",
-    units: { comparable: true, status: "PASS", unit: "ops/s" },
-    results: { slide: { normThroughput: 120 } },
-  });
+  input.current[1].results.slide = { normThroughput: 120 };
 
   const model = buildSlideWasmHistoryModel(input);
   assert.equal(model.status, "COMPARABLE_PRODUCTION_HISTORY");
   assert.equal(model.rows[0].productionObservations, 1);
-  assert.equal(model.rows[0].referenceObservations, 1);
-  assert.equal(model.sharedProductionWorkloads, 1);
-  assert.equal(model.workloads[0].slideDeltaPct, 100 / 3);
+  assert.equal(model.rows[0].referenceObservations, 2);
+  assert.equal(model.sharedProductionWorkloads, 0);
+  assert.equal(model.workloads[0].slideDeltaPct, null);
 });
 
 test("malformed provenance and disguised lane names refuse", () => {
@@ -227,6 +290,21 @@ test("malformed provenance and disguised lane names refuse", () => {
   const disguised = fixture();
   disguised.current[0].results["slide "] = { normThroughput: 100 };
   assert.throws(() => buildSlideWasmHistoryModel(disguised), /unexpected SLIDE-like lane/u);
+
+  let proxyReads = 0;
+  const proxiedEntry = fixture();
+  proxiedEntry.current[0] = new Proxy({}, {
+    get() {
+      proxyReads += 1;
+      throw new Error("must not execute");
+    },
+  });
+  assert.throws(() => buildSlideWasmHistoryModel(proxiedEntry), /must be plain data/u);
+  assert.equal(proxyReads, 0);
+
+  const duplicate = fixture();
+  duplicate.current.push({ ...duplicate.current[1] });
+  assert.throws(() => buildSlideWasmHistoryModel(duplicate), /duplicate closed-suite workload/u);
 });
 
 test("publication verifies raw digests before atomically replacing the chart", () => {
