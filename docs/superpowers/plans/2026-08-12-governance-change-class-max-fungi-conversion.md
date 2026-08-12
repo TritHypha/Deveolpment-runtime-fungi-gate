@@ -22,11 +22,11 @@ through independent SLIDE/VOK and retain TypeScript as the executing layer.
 
 ### Task 1: RED differential proof
 
-- [ ] Create a package test that binds the exact TypeScript source decision.
-- [ ] Require package ownership of the exact Fungi asset and named flows.
-- [ ] Cover every declared pair, tie direction, and unknown normalization.
-- [ ] Retain the expected RED caused only by the absent Fungi flows.
-- [ ] Commit the RED proof.
+- [x] Create a package test that binds the exact TypeScript source decision.
+- [x] Require package ownership of the exact Fungi asset and named flows.
+- [x] Cover every declared pair, tie direction, and unknown normalization.
+- [x] Retain the expected RED caused only by the absent Fungi flows.
+- [x] Commit the RED proof.
 
 ### Task 2: Minimal Fungi implementation
 
