@@ -32,13 +32,13 @@ VOK.
 
 ## Task 2: Differential RED/GREEN
 
-- [ ] Add a package-owned conversion test and observe the missing-source RED.
-- [ ] Add `src/self-hosted/literal-verification-success.fungi` and the loaded
+- [x] Add a package-owned conversion test and observe the missing-source RED.
+- [x] Add `src/self-hosted/literal-verification-success.fungi` and the loaded
   asset entry.
-- [ ] Check strict types/governance and the exact source decision.
-- [ ] Prove interpreter plus signed Wasm for all three source states and
+- [x] Check strict types/governance and the exact source decision.
+- [x] Prove interpreter plus signed Wasm for all three source states and
   surplus integer denial.
-- [ ] Run the owning app-kernel package.
+- [x] Run the owning app-kernel package.
 
 ## Task 3: Physical SLIDE/VOK proof
 

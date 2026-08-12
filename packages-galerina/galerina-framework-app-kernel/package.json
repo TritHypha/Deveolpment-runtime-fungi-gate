@@ -9,6 +9,7 @@
     "loadedAssets": [
       "src/self-hosted/fuse-admission.fungi",
       "src/self-hosted/kernel.fungi",
+      "src/self-hosted/literal-verification-success.fungi",
       "src/self-hosted/package-admission.fungi",
       "src/self-hosted/registry-activation-terminal.fungi",
       "src/self-hosted/registry-generation-forward-probe.fungi",

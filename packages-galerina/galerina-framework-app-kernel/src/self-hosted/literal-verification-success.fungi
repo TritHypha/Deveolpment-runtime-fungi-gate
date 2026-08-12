@@ -1,0 +1,12 @@
+@version 1
+
+/// Collapse the verifier's closed three-state result to literal success.
+/// Tags: true = 1, false = 0, no-key = -1. Every surplus tag stays denied.
+pure flow isLiteralVerificationSuccess(resultTag: Int) -> Bool
+contract { intent { "Admit only the literal successful verification tag." } }
+{
+  match resultTag {
+    1 => return true
+    _ => return false
+  }
+}
