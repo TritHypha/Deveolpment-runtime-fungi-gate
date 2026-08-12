@@ -3,9 +3,9 @@
   "provenance": {
     "available": true,
     "branch": "codex/rd-0792-synthesize-only",
-    "sha": "5ececadc",
+    "sha": "ee7a59c6",
     "detached": false,
-    "dirty": false
+    "dirty": true
   },
   "shipReadinessPct": 100,
   "ztAvg": 78,
@@ -20,7 +20,7 @@
         {
           "label": "Compiler",
           "pct": 100,
-          "note": "✅ shipped — complete compiler 6,361/6,361; all 7 self-hosted stages are authoritative and byte-pinned",
+          "note": "✅ shipped — complete compiler 6,363/6,363; all 7 self-hosted stages are authoritative and byte-pinned",
           "evidence": {
             "asserted": "no countable ladder — 'shipped' is a judgement over the twin corpus; candidate ladder = per-stage twin checker-clean + RD-0361 differential ≡"
           }
@@ -36,7 +36,7 @@
         {
           "label": "Packages",
           "pct": 98,
-          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 122 unexecuted .fungi sources, 45 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
+          "note": "◑ signed hybrid admission and flat-package rules are built; the live retirement ledger still records 519 tracked package TypeScript paths, 123 unexecuted .fungi sources, 45 unowned host boundaries, 95 node_modules trees and 1 nested native identity",
           "evidence": {
             "asserted": "signed admission is built, while conversion and retirement are measured separately by the exact retirement ledger"
           }
@@ -291,7 +291,7 @@
         {
           "item": "Workspace package families",
           "state": "shipped",
-          "detail": "100/100 component families green; 100 workspace packages, 9,581 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
+          "detail": "100/100 component families green; 100 workspace packages, 9,583 recorded tests and 0 unadjudicated orphans, all derived from the live workspace and version ledgers"
         },
         {
           "item": "Devtools audit suite",
@@ -341,7 +341,7 @@
         {
           "item": "Package retirement",
           "state": "building",
-          "detail": "519 tracked package TypeScript paths · 122/122 .fungi sources unexecuted · 0/45 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
+          "detail": "519 tracked package TypeScript paths · 123/123 .fungi sources unexecuted · 0/45 host bridges owned · 95 node_modules trees · 1 nested native identity. All exact debts must reach zero before terminal retirement authority."
         },
         {
           "item": "Value-unit types (RD-0349)",

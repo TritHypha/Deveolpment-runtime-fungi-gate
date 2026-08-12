@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 122
-- Flows: 834
-- Bytes: 1120946
-- Retirement graph: `sha256:88490a73a383073b30f725d4d2d33ecc8d548937b02af6d42a6543d8506dcd78`
+- Files: 123
+- Flows: 836
+- Bytes: 1121754
+- Retirement graph: `sha256:fc71bbc8269cf684d52571f90551dda1d7b69c8ab7037dbdc705193be223682e`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 18872 |
-| `callExpr` | 7235 |
+| `identifier` | 18882 |
+| `callExpr` | 7242 |
 | `binaryExpr` | 6034 |
-| `numberLiteral` | 5708 |
-| `block` | 5011 |
-| `stringLiteral` | 4818 |
+| `numberLiteral` | 5712 |
+| `block` | 5017 |
+| `stringLiteral` | 4820 |
 | `memberExpr` | 4682 |
-| `returnStmt` | 2987 |
-| `paramDecl` | 2785 |
-| `typeRef` | 2459 |
-| `ifStmt` | 2260 |
+| `returnStmt` | 2992 |
+| `paramDecl` | 2788 |
+| `typeRef` | 2464 |
+| `ifStmt` | 2264 |
 | `assignStmt` | 2120 |
-| `letDecl` | 1856 |
-| `boolLiteral` | 1576 |
+| `letDecl` | 1857 |
+| `boolLiteral` | 1578 |
 | `matchArm` | 1219 |
-| `contractDecl` | 827 |
-| `intentDecl` | 827 |
-| `pureFlowDecl` | 822 |
+| `contractDecl` | 829 |
+| `intentDecl` | 829 |
+| `pureFlowDecl` | 824 |
 | `mutDecl` | 810 |
 | `matchExpr` | 373 |
 | `whileStmt` | 340 |
 | `checkArm` | 312 |
-| `unaryExpr` | 249 |
+| `unaryExpr` | 251 |
 | `recordDecl` | 206 |
-| `program` | 122 |
+| `program` | 123 |
 | `listLiteral` | 115 |
 | `checkExpr` | 104 |
 | `trapDecl` | 50 |
@@ -59,8 +59,8 @@ admission, execution parity, retirement credit or production authority.
 | Type | Count |
 |---|---:|
 | `Int` | 525 |
-| `String` | 431 |
-| `Bool` | 386 |
+| `String` | 435 |
+| `Bool` | 387 |
 | `Bytes` | 143 |
 | `Array<Auto>` | 75 |
 | `Array<Token>` | 44 |
@@ -325,16 +325,16 @@ admission, execution parity, retirement credit or production authority.
 | `bitOr` | 7 |
 | `isLetter` | 6 |
 | `last` | 6 |
-| `startsWith` | 5 |
+| `startsWith` | 6 |
+| `slice` | 4 |
+| `trim` | 3 |
 | `charCount` | 2 |
 | `decode` | 2 |
+| `endsWith` | 2 |
 | `getInt` | 2 |
 | `is_empty` | 2 |
 | `scan` | 2 |
-| `slice` | 2 |
 | `split` | 2 |
-| `trim` | 2 |
-| `endsWith` | 1 |
 | `fromCode` | 1 |
 | `generate_monotonic_id` | 1 |
 | `toHex` | 1 |
@@ -351,7 +351,7 @@ admission, execution parity, retirement credit or production authority.
 | `\|\|` | 747 |
 | `<` | 503 |
 | `&&` | 439 |
-| `-` | 424 |
+| `-` | 426 |
 | `>` | 177 |
 | `>=` | 63 |
 | `*` | 42 |

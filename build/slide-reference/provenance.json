@@ -1,9 +1,9 @@
 {
   "tool": "verify-slide-reference-evidence",
   "authority": "NONE",
-  "gitCommit": "aee6f56e74d5b3f34fcd2d3417a0d45a8d7de76f",
-  "builtAt": "2026-08-11T23:17:12.000Z",
+  "gitCommit": "9849f8e182501e7af3f4556614338c30b6366096",
+  "builtAt": "2026-08-12T01:55:50.000Z",
   "node": "v24.18.0",
-  "externalInputDigest": "8bb0334fe6909945f37625a498f40e29f701163e4c6880fb8eaac7f93cb364ea",
+  "externalInputDigest": "d2008ee842855f5a6f7c38b201535b33762561caa0fc37e159d883deacb8da54",
   "externalDocumentCount": 91
 }
