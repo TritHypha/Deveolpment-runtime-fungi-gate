@@ -6,8 +6,9 @@ Binding design:
 > **For agentic workers:** REQUIRED SUB-SKILL: use the repository's public
 > `translating-typescript-to-fungi` and `writing-fungi` skills task-by-task.
 
-**Goal:** Use five isolated Claude Opus/high sessions to prepare Slices 38–42
-without transferring product authority or weakening zero-trust gates.
+**Goal:** Use three Claude Opus/high sessions at a time to prepare bounded
+three-slice waves, for no more than 30 slices under this plan, without
+transferring product authority or weakening zero-trust gates.
 
 **Architecture:** Run a read-only dossier wave first. Codex verifies and binds
 the second batch design and queue, then starts one isolated implementation
@@ -18,7 +19,8 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 
 ## Global Constraints
 
-- Maximum five concurrent Claude sessions.
+- Maximum three concurrent Claude sessions.
+- Product-owner verification and admission runs after every three-worker wave.
 - Model `opus`; effort `high`.
 - Both public Fungi skill directories are mounted and named in every prompt.
 - One exact symbol and owning package per worker.
@@ -39,13 +41,15 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Read: `packages-galerina/galerina-cpu-kernels/src/index.ts`
 - Read: `build/ts-retirement/ts-retirement.json`
 
-**Produces:** five independent dossier results for Slices 38–42.
+**Produces:** three independent dossier results for Slices 38-40; later scopes
+remain queued until the product-owner gate.
 
-- [ ] Start five background sessions with the exact scopes in the design.
-- [ ] Mount `../skills/translating-typescript-to-fungi`,
+- [x] Start three background sessions with the exact Slice 38-40 scopes in the
+  design.
+- [x] Mount `../skills/translating-typescript-to-fungi`,
   `../skills/writing-fungi` and the sibling SLIDE repository.
-- [ ] Require read-only behavior and the ten-field dossier return schema.
-- [ ] Capture every session ID and terminal status in the live per-file
+- [x] Require read-only behavior and the ten-field dossier return schema.
+- [x] Capture every process exit and terminal status in the live per-file
   register.
 
 ### Task 2: Product-owner admission
@@ -58,15 +62,17 @@ Node.js focused tests, SLIDE/VOK physical admission, codebase-memory and Myco.
 - Regenerate: `build/conversion-queue/queue.json`
 - Regenerate: `build/conversion-queue/QUEUE.md`
 
-**Produces:** an owner-reviewed, digest-bound five-symbol queue extension.
+**Produces:** an owner-reviewed, digest-bound queue extension containing only
+newly admitted symbols.
 
 - [ ] Re-read every source, caller, test, type, constant and retirement row.
 - [ ] Reject any bootstrap-floor, unsupported-domain or ambiguous candidate.
 - [ ] Bind exact decisions/effects, physical profiles and hostile vectors in
   the second design.
-- [ ] Add exactly five sorted `SYMBOLS` decisions only if all five remain
-  admitted; otherwise replace a rejected scope before authoring.
-- [ ] Regenerate and check a ten-candidate queue with zero whole-file claims.
+- [ ] Add only sorted, unique `SYMBOLS` decisions that remain admitted. A
+  blocked, duplicate or superseded scope is recorded and replaced only in a
+  later wave.
+- [ ] Regenerate and check the bounded queue with zero whole-file claims.
 
 ### Task 3: Isolated implementation wave
 

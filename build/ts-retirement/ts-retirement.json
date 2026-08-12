@@ -99,7 +99,7 @@
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-router/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web-state/node_modules'",
     "post-SLIDE package topology forbids bootstrap node_modules tree 'galerina-web/node_modules'",
-    "post-SLIDE retirement requires zero tracked package executable-family paths; found 1451",
+    "post-SLIDE retirement requires zero tracked package executable-family paths; found 1456",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-api-protocol-rest/src/index.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/capability-normalization.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/compiler.capabilities.fungi'",
@@ -176,6 +176,7 @@
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-compiler/src/self-hosted/wat-64-bit-type.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-network/src/self-hosted/admission-feedback.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-network/src/self-hosted/b8-admission.fungi'",
@@ -186,6 +187,7 @@
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-network/src/self-hosted/inbound-guard.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-reports/src/self-hosted/report-status.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-security/src/dss/capability-map.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-security/src/dss/dag-validator.fungi'",
@@ -211,7 +213,10 @@
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-cpu-kernels/src/self-hosted/low-bit-kernel-routing.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi'",
+    "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-devtools-naming/src/self-hosted/generic-type-name.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-devtools-naming/src/self-hosted/implicit-return-type.fungi'",
     "post-SLIDE retirement forbids unexecuted Fungi source 'packages-galerina/galerina-framework-app-kernel/src/self-hosted/fuse-admission.fungi'",
@@ -1452,6 +1457,7 @@
     "packages-galerina/galerina-core-config/src/posture.ts",
     "packages-galerina/galerina-core-config/tests/config-contracts.test.mjs",
     "packages-galerina/galerina-core-config/tests/egress-tls.test.mjs",
+    "packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
     "packages-galerina/galerina-core-config/tests/governance.test.mjs",
     "packages-galerina/galerina-core-config/tests/posture.test.mjs",
     "packages-galerina/galerina-core-config/tests/secret-report-invariant.test.mjs",
@@ -1526,6 +1532,7 @@
     "packages-galerina/galerina-core-runtime/tests/runtime-executor-composition.test.mjs",
     "packages-galerina/galerina-core-runtime/tests/runtime-seam.test.mjs",
     "packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+    "packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
     "packages-galerina/galerina-core-runtime/tests/vok-authority-admission-execution.test.mjs",
     "packages-galerina/galerina-core-runtime/tests/vok-authority-native-benchmark-contract.test.mjs",
     "packages-galerina/galerina-core-runtime/tests/vok-authority-native-parity.test.mjs",
@@ -1614,6 +1621,7 @@
     "packages-galerina/galerina-core-tasks/src/task-report.ts",
     "packages-galerina/galerina-core-tasks/src/types.ts",
     "packages-galerina/galerina-core-tasks/tests/load-tasks.test.mjs",
+    "packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
     "packages-galerina/galerina-core-vector/src/index.ts",
     "packages-galerina/galerina-core-vector/tests/vector-contracts.test.mjs",
     "packages-galerina/galerina-core/compiler/formatter.js",
@@ -1643,6 +1651,7 @@
     "packages-galerina/galerina-data-json/tests/json-contracts.test.mjs",
     "packages-galerina/galerina-data-model/src/index.ts",
     "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
+    "packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
     "packages-galerina/galerina-data-pipeline/src/index.ts",
     "packages-galerina/galerina-data-pipeline/tests/pipeline-contracts.test.mjs",
     "packages-galerina/galerina-data-query/src/index.ts",
@@ -1773,6 +1782,7 @@
     "packages-galerina/galerina-devtools-context/src/receipt-generator.ts",
     "packages-galerina/galerina-devtools-context/src/types.ts",
     "packages-galerina/galerina-devtools-context/src/webassembly-shim.d.ts",
+    "packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
     "packages-galerina/galerina-devtools-context/tests/context.test.mjs",
     "packages-galerina/galerina-devtools-flowgraph/src/cli.ts",
     "packages-galerina/galerina-devtools-flowgraph/src/diagnostics.ts",
@@ -3281,6 +3291,7 @@
       "packages-galerina/galerina-core-compute/tests/compute-contracts.test.mjs",
       "packages-galerina/galerina-core-config/tests/config-contracts.test.mjs",
       "packages-galerina/galerina-core-config/tests/egress-tls.test.mjs",
+      "packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
       "packages-galerina/galerina-core-config/tests/governance.test.mjs",
       "packages-galerina/galerina-core-config/tests/posture.test.mjs",
       "packages-galerina/galerina-core-config/tests/secret-report-invariant.test.mjs",
@@ -3316,6 +3327,7 @@
       "packages-galerina/galerina-core-runtime/tests/runtime-executor-composition.test.mjs",
       "packages-galerina/galerina-core-runtime/tests/runtime-seam.test.mjs",
       "packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+      "packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
       "packages-galerina/galerina-core-runtime/tests/vok-authority-admission-execution.test.mjs",
       "packages-galerina/galerina-core-runtime/tests/vok-authority-native-benchmark-contract.test.mjs",
       "packages-galerina/galerina-core-runtime/tests/vok-authority-native-parity.test.mjs",
@@ -3364,6 +3376,7 @@
       "packages-galerina/galerina-core-sentinel-time/tests/rd0361-execution-cutover.test.mjs",
       "packages-galerina/galerina-core-sentinel-time/tests/synchronization-gate.test.mjs",
       "packages-galerina/galerina-core-tasks/tests/load-tasks.test.mjs",
+      "packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
       "packages-galerina/galerina-core-vector/tests/vector-contracts.test.mjs",
       "packages-galerina/galerina-core/tests/core-contracts.test.mjs",
       "packages-galerina/galerina-core/tests/version-header-lexer.test.mjs",
@@ -3375,6 +3388,7 @@
       "packages-galerina/galerina-data-html/tests/html-contracts.test.mjs",
       "packages-galerina/galerina-data-json/tests/json-contracts.test.mjs",
       "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
+      "packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
       "packages-galerina/galerina-data-pipeline/tests/pipeline-contracts.test.mjs",
       "packages-galerina/galerina-data-query/tests/query-contracts.test.mjs",
       "packages-galerina/galerina-data-reports/tests/reports-contracts.test.mjs",
@@ -3486,6 +3500,7 @@
       "packages-galerina/galerina-devtools-benchmarks/test/verified-native-operation-controls.test.mjs",
       "packages-galerina/galerina-devtools-benchmarks/test/verified-native-operation-integration.test.mjs",
       "packages-galerina/galerina-devtools-benchmarks/test/verified-native-operation-report.test.mjs",
+      "packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
       "packages-galerina/galerina-devtools-context/tests/context.test.mjs",
       "packages-galerina/galerina-devtools-flowgraph/tests/flowgraph.test.mjs",
       "packages-galerina/galerina-devtools-fungi-scan/tests/fungi-scan.test.mjs",
@@ -3800,6 +3815,7 @@
     "packages-galerina/galerina-core-compiler/src/self-hosted/type-checker.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/verified-loop-envelope.fungi",
     "packages-galerina/galerina-core-compiler/src/self-hosted/wat-64-bit-type.fungi",
+    "packages-galerina/galerina-core-config/src/self-hosted/environment-mode.fungi",
     "packages-galerina/galerina-core-logic/src/self-hosted/tri-ops.fungi",
     "packages-galerina/galerina-core-network/src/self-hosted/admission-feedback.fungi",
     "packages-galerina/galerina-core-network/src/self-hosted/b8-admission.fungi",
@@ -3810,6 +3826,7 @@
     "packages-galerina/galerina-core-network/src/self-hosted/inbound-guard.fungi",
     "packages-galerina/galerina-core-reports/src/self-hosted/report-status.fungi",
     "packages-galerina/galerina-core-runtime/src/self-hosted/passive-plan-replay-admission.fungi",
+    "packages-galerina/galerina-core-runtime/src/self-hosted/terminal-scope.fungi",
     "packages-galerina/galerina-core-runtime/src/self-hosted/vok-authority-admission.fungi",
     "packages-galerina/galerina-core-security/src/dss/capability-map.fungi",
     "packages-galerina/galerina-core-security/src/dss/dag-validator.fungi",
@@ -3835,7 +3852,10 @@
     "packages-galerina/galerina-core-sentinel-power/src/self-hosted/power-governor.fungi",
     "packages-galerina/galerina-core-sentinel-state/src/self-hosted/cold-boot.fungi",
     "packages-galerina/galerina-core-sentinel-time/src/self-hosted/synchronization-gate.fungi",
+    "packages-galerina/galerina-core-tasks/src/self-hosted/task-effect.fungi",
     "packages-galerina/galerina-cpu-kernels/src/self-hosted/low-bit-kernel-routing.fungi",
+    "packages-galerina/galerina-data-model/src/self-hosted/response-safe-classification.fungi",
+    "packages-galerina/galerina-devtools-context/src/self-hosted/builtin-name.fungi",
     "packages-galerina/galerina-devtools-naming/src/self-hosted/generic-type-name.fungi",
     "packages-galerina/galerina-devtools-naming/src/self-hosted/implicit-return-type.fungi",
     "packages-galerina/galerina-framework-app-kernel/src/self-hosted/fuse-admission.fungi",
@@ -11697,6 +11717,18 @@
       "retirementState": "physical-executable-family-present"
     },
     {
+      "path": "packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "package": "galerina-core-config",
+      "dependencyTranche": "T2-runtime-core",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-core-config",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-executable-family-present"
+    },
+    {
       "path": "packages-galerina/galerina-core-config/tests/governance.test.mjs",
       "package": "galerina-core-config",
       "dependencyTranche": "T2-runtime-core",
@@ -12574,6 +12606,18 @@
     },
     {
       "path": "packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+      "package": "galerina-core-runtime",
+      "dependencyTranche": "T2-runtime-core",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-core-runtime",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-executable-family-present"
+    },
+    {
+      "path": "packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
       "package": "galerina-core-runtime",
       "dependencyTranche": "T2-runtime-core",
       "fungiReplacement": null,
@@ -13641,6 +13685,18 @@
       "retirementState": "physical-executable-family-present"
     },
     {
+      "path": "packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "package": "galerina-core-tasks",
+      "dependencyTranche": "T2-runtime-core",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-core-tasks",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-executable-family-present"
+    },
+    {
       "path": "packages-galerina/galerina-core-vector/src/index.ts",
       "package": "galerina-core-vector",
       "dependencyTranche": "T2-runtime-core",
@@ -13978,6 +14034,18 @@
     },
     {
       "path": "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
+      "package": "galerina-data-model",
+      "dependencyTranche": "T3-package-graph",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-data-model",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-executable-family-present"
+    },
+    {
+      "path": "packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
       "package": "galerina-data-model",
       "dependencyTranche": "T3-package-graph",
       "fungiReplacement": null,
@@ -15538,6 +15606,18 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-context/src/webassembly-shim.d.ts",
+      "package": "galerina-devtools-context",
+      "dependencyTranche": "T3-package-graph",
+      "fungiReplacement": null,
+      "executionAuthority": "none",
+      "legacyShadowAuthority": false,
+      "declaredFloor": null,
+      "replacementOwner": "galerina-devtools-context",
+      "evidenceStatus": "replacement-absent",
+      "retirementState": "physical-executable-family-present"
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
       "package": "galerina-devtools-context",
       "dependencyTranche": "T3-package-graph",
       "fungiReplacement": null,
@@ -21425,19 +21505,19 @@
   "totals": {
     "ts": 489,
     "allTrackedTs": 519,
-    "allTrackedExecutable": 1451,
+    "allTrackedExecutable": 1456,
     "tsSource": 504,
     "declarationTs": 15,
     "mts": 0,
     "cts": 0,
-    "mjs": 920,
+    "mjs": 925,
     "js": 12,
     "cjs": 0,
     "twinned": 30,
     "compilerCore": 107,
     "floor": 17,
     "program": 335,
-    "fungiInSrc": 135,
+    "fungiInSrc": 140,
     "packages": 95,
     "finderDrift": 0,
     "compilerAuthoritativeFlips": 7,
@@ -21445,12 +21525,12 @@
     "authoritativeFlips": 36,
     "compilerStageTotal": 7,
     "compilerDifferential": 0,
-    "governedTwinTotal": 38,
-    "governedDifferential": 9,
-    "allTrackedFungi": 135,
+    "governedTwinTotal": 39,
+    "governedDifferential": 10,
+    "allTrackedFungi": 140,
     "candidateFungi": 2,
     "executedFungi": 0,
-    "unexecutedFungi": 135,
+    "unexecutedFungi": 140,
     "hostBridges": 45,
     "ownedHostBridges": 0,
     "unownedHostBridges": 45,
@@ -21512,7 +21592,7 @@
     "galerina-core-config": {
       "ts": 3,
       "twinned": 0,
-      "fungi": 0
+      "fungi": 1
     },
     "galerina-core-economics": {
       "ts": 1,
@@ -21547,7 +21627,7 @@
     "galerina-core-runtime": {
       "ts": 2,
       "twinned": 0,
-      "fungi": 2
+      "fungi": 3
     },
     "galerina-core-security": {
       "ts": 1,
@@ -21587,7 +21667,7 @@
     "galerina-core-tasks": {
       "ts": 8,
       "twinned": 0,
-      "fungi": 0
+      "fungi": 1
     },
     "galerina-core-vector": {
       "ts": 1,
@@ -21632,7 +21712,7 @@
     "galerina-data-model": {
       "ts": 1,
       "twinned": 0,
-      "fungi": 0
+      "fungi": 1
     },
     "galerina-data-pipeline": {
       "ts": 1,
@@ -21692,7 +21772,7 @@
     "galerina-devtools-context": {
       "ts": 5,
       "twinned": 0,
-      "fungi": 0
+      "fungi": 1
     },
     "galerina-devtools-flowgraph": {
       "ts": 4,

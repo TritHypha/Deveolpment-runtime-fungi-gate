@@ -4,6 +4,50 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### Physical TypeScript-to-Fungi batch 33-42 - 2026-08-12
+
+- [x] Bind Slices 33-37 to exact symbols and package-owned Fungi assets.
+  Fresh focused evidence passes **10/10** package conversion checks and **6/6**
+  physical SLIDE/VOK checks. Slices 33, 34 and 36 have complete physical
+  receipts; Slices 35 and 37 retain exact profile refusals and are not counted
+  as converted.
+- [x] Operate external dossier workers as read-only groundwork: at most three
+  Claude Opus/high sessions at once, each supplied both public Fungi skills and
+  one exact symbol. Codex retains source verification, admission, integration,
+  physical proof and completion authority between every three-worker wave.
+- [x] Settle Slice 38 as `BLOCKED`: its exact 28-name membership decision
+  exceeds the freshly proved physical String-match ceiling, the live graph
+  confirms its bounded caller set, and the owning package passes **25/25**.
+  No profile widening or placeholder Fungi asset is authorized.
+- [x] Reject the proposed Slice 40 Fungi twin. The live graph proves
+  `analyzeFlowAst` has zero callers, so its nested `isGateCall` cannot satisfy a
+  live differential or consumer-switch retirement gate. Record it as
+  `BLOCKED` pending a separate dead-code deletion adjudication; the owning
+  package remains green **25/25**.
+- [x] Settle Slice 39 as `BLOCKED`: its exact 28-name membership decision
+  exceeds the current physical control-flow ceiling, while physical text-size
+  and Unicode-well-formedness boundaries narrow the source String domain. The
+  live graph confirms its callers and the owning package passes **13/13**. No
+  source-contract narrowing or profile widening is authorized.
+- [ ] Select the following three scopes only after the product-owner gate.
+  Continue the bounded pipeline for at most 30 slices, recording every symbol
+  as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or
+  `SUPERSEDED_BY_EXISTING_FUNGI`.
+- [x] Reject `requiresLowBitKernel` as a new Slice 42 candidate: the exact
+  symbol already has package-owned `low-bit-kernel-routing.fungi`, focused
+  differential coverage and physical SLIDE/VOK evidence from Slice 29. Keep it
+  as `SUPERSEDED_BY_EXISTING_FUNGI`, not a second conversion claim.
+- [ ] After each admitted slice, review both public Fungi skills and record a
+  verified skill commit or `NO_SKILL_UPDATE`. Refresh shared owners, roadmap,
+  subway and indexes once at the bounded batch exit, not after each slice.
+- [x] Regenerate the TypeScript-retirement owner after the active three-worker
+  dossier wave: **1,456** executable-family paths and **140** source Fungi
+  assets. Refresh its dependent conversion queue to **1,456/1,456** classified,
+  zero whole-file candidates, five scoped candidates and **827** blocked.
+- [x] Keep all TypeScript/MJS sources and consumers active. No item in this
+  batch authorizes a consumer switch, retirement, production, signing, release
+  or push; repository-wide closure remains `UNKNOWN`.
+
 ### Thirty-second physical TypeScript-to-Fungi conversion slice - 2026-08-12
 
 - [x] Refuse the localhost predicate before implementation because the selected
@@ -143,7 +187,7 @@ counts or open items that a newer section explicitly supersedes.
   captured exit code 0. Golden remains current at **11/11 + 11/11**;
   retirement derives **1,448** executable-family paths and **132** source
   Fungi assets.
-- [ ] Keep TypeScript, `requiresLowBitKernel`, `validateCpuKernelPlan`, report
+- [x] Keep TypeScript, `requiresLowBitKernel`, `validateCpuKernelPlan`, report
   generation, and every consumer active. This grants no consumer-switch,
   production, release, durability, or retirement authority; repository-wide
   closure remains `UNKNOWN` because crash-linked full tooling, normal
@@ -169,7 +213,7 @@ counts or open items that a newer section explicitly supersedes.
   9,604 tests in 310.6s** with captured exit code 0. Golden is current at
   **11/11 + 11/11**; retirement derives **1,447** executable-family paths and
   **131** source Fungi assets with its staged-index self-test green.
-- [ ] Keep TypeScript, `CLASS_RANK`, `diffGovernance`, all classifiers, and all
+- [x] Keep TypeScript, `CLASS_RANK`, `diffGovernance`, all classifiers, and all
   consumers active. This grants no consumer-switch, production, release,
   durability, or retirement authority; repository-wide closure remains
   `UNKNOWN` because crash-linked full tooling, normal phase-close, graph-all,
@@ -193,7 +237,7 @@ counts or open items that a newer section explicitly supersedes.
   current at **11/11 checked examples and 11/11 execution vectors**;
   retirement derives **1,446** executable-family paths and **131** source
   Fungi assets, with its staged-index anti-neutering proof green.
-- [ ] Keep `permitData`, the complete transport FSM, key custody, timeouts,
+- [x] Keep `permitData`, the complete transport FSM, key custody, timeouts,
   TypeScript, and every consumer active. This reference proof grants no state
   authentication, consumer-switch, production, release, durability, or
   retirement authority; repository-wide closure remains `UNKNOWN` because
@@ -223,7 +267,7 @@ counts or open items that a newer section explicitly supersedes.
   **1,445** executable-family paths and **131** source Fungi assets; Golden is
   current at **11/11 checked examples and 11/11 execution vectors**, and both
   regenerated owners now pass their freshness checks.
-- [ ] Keep effect-name derivation, mask provenance, TypeScript, and every
+- [x] Keep effect-name derivation, mask provenance, TypeScript, and every
   consumer active. This reference proof grants no authentication,
   consumer-switch, production, release, durability, or retirement authority;
   repository-wide closure remains `UNKNOWN` because crash-linked full tooling,

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "sourceDigest": "34d2260815f53aabd7872562ecf8aa2958da75186a070de755cd75d754d648b0",
+  "sourceDigest": "35af1aa19a4f3911e71617f2570ac456aa66fad82a471924433371c213e244c1",
   "decisionsDigest": "f61c527324bac873b517cb46afa3a934c050d1833ed28196a25476cd33622fb5",
   "counts": {
-    "total": 1451,
+    "total": 1456,
     "CANDIDATE": 0,
-    "BLOCKED": 822,
+    "BLOCKED": 827,
     "NO_RUNTIME_BEHAVIOR": 0,
     "SUPERSEDED_BY_EXISTING_FUNGI": 0,
     "BOOTSTRAP_FLOOR": 629
@@ -5238,6 +5238,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-core-config/tests/environment-mode-fungi-conversion.test.mjs",
+      "package": "galerina-core-config",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-core-config/tests/governance.test.mjs",
       "package": "galerina-core-config",
       "tranche": "T2-runtime-core",
@@ -5823,6 +5831,14 @@
     },
     {
       "path": "packages-galerina/galerina-core-runtime/tests/structured-await-reducer.test.mjs",
+      "package": "galerina-core-runtime",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-core-runtime/tests/terminal-scope-fungi-conversion.test.mjs",
       "package": "galerina-core-runtime",
       "tranche": "T2-runtime-core",
       "classification": "BLOCKED",
@@ -6534,6 +6550,14 @@
       "evidenceDigest": null
     },
     {
+      "path": "packages-galerina/galerina-core-tasks/tests/task-effect-fungi-conversion.test.mjs",
+      "package": "galerina-core-tasks",
+      "tranche": "T2-runtime-core",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
       "path": "packages-galerina/galerina-core-vector/src/index.ts",
       "package": "galerina-core-vector",
       "tranche": "T2-runtime-core",
@@ -6759,6 +6783,14 @@
     },
     {
       "path": "packages-galerina/galerina-data-model/tests/model-contracts.test.mjs",
+      "package": "galerina-data-model",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-data-model/tests/response-safe-classification-fungi-conversion.test.mjs",
       "package": "galerina-data-model",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",
@@ -7799,6 +7831,14 @@
     },
     {
       "path": "packages-galerina/galerina-devtools-context/src/webassembly-shim.d.ts",
+      "package": "galerina-devtools-context",
+      "tranche": "T3-package-graph",
+      "classification": "BLOCKED",
+      "reason": "DOSSIER_REQUIRED",
+      "evidenceDigest": null
+    },
+    {
+      "path": "packages-galerina/galerina-devtools-context/tests/builtin-name-fungi-conversion.test.mjs",
       "package": "galerina-devtools-context",
       "tranche": "T3-package-graph",
       "classification": "BLOCKED",

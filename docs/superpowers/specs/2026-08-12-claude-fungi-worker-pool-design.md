@@ -2,24 +2,27 @@
 
 ## Purpose
 
-Use up to five Claude CLI sessions to accelerate independent `.ts`/`.mjs` to
+Use up to three Claude CLI sessions at a time to accelerate independent `.ts`/`.mjs` to
 `.fungi` slices while Codex remains the product owner. Workers gather bounded
 evidence and prepare isolated changes; they do not own admission, profile
 widening, integration, completion claims, commits or pushes.
 
 ## Worker topology
 
-- Run no more than five sessions concurrently.
+- Run no more than three sessions concurrently.
+- Cycle through no more than 30 assigned slices under this design, with a
+  product-owner admission and verification gate after every three-worker wave.
 - Use the Claude CLI Opus alias with high effort.
 - Give every editing session its own CLI-managed Git worktree.
 - Assign one exact source symbol and one owning package to each worker.
 - Never let two workers edit the same package, queue, roadmap, generated owner,
   shared proof helper or public skill repository.
 
-The first wave is read-only. It produces five source dossiers and proposed
-decision/effect ledgers. Codex then verifies the current source, retirement
-floor, selected SLIDE/VOK profile and queue scope. Only admitted candidates
-enter the second, worktree-isolated implementation wave.
+Every new scope begins with a read-only dossier. The first wave covers Slices
+38-40; Slices 41-42 remain queued until the product-owner gate. Codex verifies
+the current source, retirement floor, selected SLIDE/VOK profile and queue
+scope after each wave. Only admitted candidates enter a later,
+worktree-isolated implementation wave.
 
 ## Required worker authorities
 
@@ -41,10 +44,14 @@ remain the source of truth.
 | 39 | `packages-galerina/galerina-target-js/src/index.ts#isServerOnlyImport` | none |
 | 40 | `packages-galerina/galerina-devtools-provenance/src/analyzer.ts#isGateCall` | none |
 | 41 | `packages-galerina/galerina-core-network/src/index.ts#isUnsafeNetworkBackend` | none |
-| 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | none |
+| 42 | `packages-galerina/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel` | superseded by Slice 29 |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
+
+`requiresLowBitKernel` must not be reconverted. The current repository already
+contains the package-owned asset, differential test and physical Slice 29
+evidence; its queued classification is `SUPERSEDED_BY_EXISTING_FUNGI`.
 
 ## Worker restrictions
 
