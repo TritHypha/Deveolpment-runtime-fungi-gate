@@ -4,7 +4,17 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
-### Physical TypeScript-to-Fungi batch 33-46 - 2026-08-12
+### Physical TypeScript-to-Fungi batch 33-49 - 2026-08-12
+
+- [x] Settle Slices 47-49 as `BLOCKED` without placeholder assets. TriRegex
+  certifies the core Slice 47 and 48 patterns, but the Fungi execution path
+  leaves `matchesPattern` unresolved and WAT refuses the undefined callee.
+  Slice 49 additionally needs word-boundary semantics absent from TriRegex
+  v0.1. The owning packages pass **507/507**, **21/21**, and **25/25**.
+- [ ] R&D and build a reviewed TriRegex-backed typed Fungi-to-SLIDE boundary
+  before revisiting regex-dependent conversions. It must bind pattern
+  certification, typed failure, exact class/anchor semantics, GIR/WAT lowering,
+  VOK work receipts, source-domain policy and word-boundary support or refusal.
 
 - [x] Settle Slices 44-46 under the product-owner gate. Slice 44 has an exact
   package-owned Fungi twin and full physical SLIDE/VOK proof. Slice 45 has an
@@ -48,7 +58,7 @@ counts or open items that a newer section explicitly supersedes.
   replacement Slice 42 is blocked by the missing physical regular-language
   iteration/text surface; Slice 43 is blocked by missing exact JavaScript case
   folding. Owning packages remain green **192/192**, **9/9**, and **29/29**.
-- [ ] Select the following three scopes only after the Slice 44-46
+- [ ] Select the following three scopes only after the Slice 47-49
   product-owner gate.
   Continue the bounded pipeline for at most 30 slices, recording every symbol
   as `CANDIDATE`, `BLOCKED`, `NO_RUNTIME_BEHAVIOR`, or

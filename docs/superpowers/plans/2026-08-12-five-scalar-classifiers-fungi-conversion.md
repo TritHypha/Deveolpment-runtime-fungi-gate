@@ -88,6 +88,17 @@ checkboxes remain intentionally unmet.
   create no placeholder asset.
 - [x] Extend the governed focused physical lane to 8/8 with zero skips.
 
+## Task 3C: Settle Slices 47-49
+
+- [x] Prove the exact regex/text source domains, callers, tests, floors, package
+  assets and mirror rules for all three scopes.
+- [x] Independently compile the exact pattern families through TriRegex.
+- [x] Prove that Fungi `matchesPattern` lacks executable interpretation and WAT
+  lowering at the current build point.
+- [x] Record all three scopes as blocked and create no placeholder Fungi asset
+  or candidate authority.
+- [x] Record the reviewed TriRegex-backed typed boundary as the R&D trigger.
+
 ## Task 4: Per-slice skill review
 
 - [ ] Review both public Fungi skills after each slice.

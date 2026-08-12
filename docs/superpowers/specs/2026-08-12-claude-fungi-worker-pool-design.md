@@ -26,6 +26,8 @@ sibling Fungi assets/tests, governed mirrors, selected SLIDE/VOK
 profile and queue scope after each wave. Only admitted candidates enter a
 later, worktree-isolated implementation wave.
 
+The fourth wave covers Slices 47-49 and tests regex-dependent text decisions.
+
 ## Mandatory scope preflight
 
 Before a worker starts, Codex must prove all of the following from current
@@ -75,6 +77,9 @@ remain the source of truth.
 | 44 | `packages-galerina/galerina-core-logic/src/omni/omni-state.ts#isOmniUncertain` | none |
 | 45 | `packages-galerina/galerina-devtools-project-graph/src/graphs/resource-graph.ts#validateTransition` | none |
 | 46 | `packages-galerina/galerina-tools-benchmark/src/index.ts#isBenchmarkReportShareable` | none |
+| 47 | `packages-galerina/galerina-tower-citizen/src/key-rotation.ts#isWellFormedCommit` | none |
+| 48 | `packages-galerina/galerina-governance-telemetry/src/exposition.ts#isSafeLabel` | none |
+| 49 | `packages-galerina/galerina-devtools-fungi-scan/src/inline-fixtures.ts#looksLikeFungi` | none |
 
 `galerina-core-security/src/index.ts#isHighRiskPermissionAction` is excluded:
 the current retirement owner declares `bounded-bootstrap-floor`.
