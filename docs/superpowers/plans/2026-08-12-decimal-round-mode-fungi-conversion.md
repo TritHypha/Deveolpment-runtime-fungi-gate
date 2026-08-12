@@ -27,8 +27,10 @@ TypeScript consumers.
 
 - Create
   `packages-galerina/galerina-core-compiler/src/self-hosted/decimal-round-mode.fungi`.
-- Implement `pure flow isRoundModeFungi(mode: String) -> Bool` with one exact
-  `match` and terminal `_ => return false`.
+- Implement two bounded exact-match helper flows (four and three modes) with
+  terminal `_ => return false`, then implement
+  `isRoundModeFungi(mode: String) -> Bool` as their dependency-ordered public
+  composition. This stays inside SLIDE's five-branch registry ceiling.
 - Register the source once in the compiler package's `loadedAssets`.
 - Strict-check the exact source and rerun the differential test.
 

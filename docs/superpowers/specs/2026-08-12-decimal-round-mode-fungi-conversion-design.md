@@ -3,9 +3,11 @@
 ## Decision
 
 Express the exported TypeScript `isRoundMode` predicate as a package-owned pure
-Fungi flow named `isRoundModeFungi`. The flow accepts one `String`, matches the
-seven exact canonical spellings, and returns `false` through the mandatory
-terminal wildcard for every other value.
+Fungi module whose public flow is named `isRoundModeFungi`. Two private-by-use
+pure flows partition the seven exact spellings into bounded groups of four and
+three. The public flow returns true if group one admits; otherwise it returns
+group two's exact result. Every group has a mandatory terminal wildcard that
+returns `false`.
 
 This is a reference-only conversion slice. TypeScript and every caller remain
 active until consumer-switch, bootstrap-fixpoint and retirement gates are
@@ -20,8 +22,10 @@ non-canonical or unknown String returns `false`; malformed ABI values refuse
 before execution. No value is silently converted to `halfEven` or any other
 mode.
 
-The candidate contains no null, NaN, `else if`, `else`, exceptions, host APIs,
-or loop forms. It is pure and releases no authority.
+The split is required by SLIDE's fail-closed bounded-wide-control-flow registry,
+which admits at most five non-wildcard String branches in one flow. The module
+contains no null, NaN, `else if`, `else`, exceptions, host APIs, or loop forms.
+It is pure and releases no authority.
 
 ## Exact mapping
 

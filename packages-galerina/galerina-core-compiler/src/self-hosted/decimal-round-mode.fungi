@@ -1,18 +1,37 @@
 @version 1
 
+/// First bounded exact-membership partition for canonical rounding policies.
+pure flow isRoundModeGroupOne(mode: String) -> Bool
+contract { intent { "Recognize the first bounded set of exact decimal rounding modes." } }
+{
+  match mode {
+    "halfEven" => return true
+    "halfUp" => return true
+    "halfDown" => return true
+    "up" => return true
+    _ => return false
+  }
+}
+
+/// Second bounded exact-membership partition for canonical rounding policies.
+pure flow isRoundModeGroupTwo(mode: String) -> Bool
+contract { intent { "Recognize the second bounded set of exact decimal rounding modes." } }
+{
+  match mode {
+    "down" => return true
+    "ceiling" => return true
+    "floor" => return true
+    _ => return false
+  }
+}
+
 /// Admit only an explicit canonical decimal rounding policy. Unknown,
 /// malformed and non-canonical text remains outside the RoundMode domain.
 pure flow isRoundModeFungi(mode: String) -> Bool
 contract { intent { "Recognize exact decimal rounding modes without normalization or defaults." } }
 {
-  match mode {
-    "halfEven" => { return true }
-    "halfUp" => { return true }
-    "halfDown" => { return true }
-    "up" => { return true }
-    "down" => { return true }
-    "ceiling" => { return true }
-    "floor" => { return true }
-    _ => { return false }
+  if isRoundModeGroupOne(mode) {
+    return true
   }
+  return isRoundModeGroupTwo(mode)
 }
